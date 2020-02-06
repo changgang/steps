@@ -76,10 +76,10 @@ class PSASPS5 : public STABILIZER_MODEL
         FIRST_ORDER_BLOCK sensor_1, sensor_2;
         DIFFERENTIAL_BLOCK dedc_block_1, dedc_block_2, dedc_block_3;
         FIRST_ORDER_BLOCK speed_amplifier;
-        double K2;
-        double a, p;
-        double K;
-        double Vsmax, Vsmin;
+        float K2;
+        float a, p;
+        float K;
+        float Vsmax, Vsmin;
 };
 
 #endif // PSASPS5_H

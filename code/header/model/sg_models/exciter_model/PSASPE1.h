@@ -73,7 +73,7 @@ class PSASPE1: public EXCITER_MODEL
         FIRST_ORDER_BLOCK regulator;
         DIFFERENTIAL_BLOCK feedbacker;
         FIRST_ORDER_BLOCK exciter;
-        double VAmax, VAmin;
+        float VAmax, VAmin;
         double Efd0;
 };
 

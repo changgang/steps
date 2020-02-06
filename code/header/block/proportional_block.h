@@ -20,6 +20,6 @@ class PROPORTIONAL_BLOCK : public BLOCK
     private:
         void integrate();
         void update();
-        double K;
+        float K;
 };
 #endif // PROPORTIONAL_BLOCK_H

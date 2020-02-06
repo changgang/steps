@@ -68,11 +68,11 @@ class PSASPS1 : public STABILIZER_MODEL
     private:
         void copy_from_const_model(const PSASPS1& model);
 
-        double Kq1, Kq2, Kq3;
+        float Kq1, Kq2, Kq3;
         unsigned int K;
         DIFFERENTIAL_BLOCK dedc_block;
         LEAD_LAG_BLOCK phase_tuner_1, phase_tuner_2, phase_tuner_3;
-        double Vsmax, Vsmin;
+        float Vsmax, Vsmin;
 
         double speed_deviation_ref_pu, Pe_ref_pu, Vterminal_ref_pu;
 };

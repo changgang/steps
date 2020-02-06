@@ -280,7 +280,7 @@ void LINE::set_fault(unsigned int to_bus, double location, const FAULT& fault)
         if(to_bus == get_receiving_side_bus())
             location = 1.0-location;
 
-        map<double,FAULT>::iterator iter;
+        map<float,FAULT>::iterator iter;
         for(iter=faults.begin(); iter!=faults.end(); ++iter)
         {
             if(fabs(iter->first-location)<FLOAT_EPSILON)
@@ -294,7 +294,7 @@ void LINE::set_fault(unsigned int to_bus, double location, const FAULT& fault)
         }
         else
         {
-            faults.insert(pair<double,FAULT>(location, fault));
+            faults.insert(pair<float,FAULT>(location, fault));
         }
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
@@ -304,7 +304,7 @@ double LINE::get_fault_location_of_fault(unsigned int index) const
 {
     if(index<get_fault_count())
     {
-        map<double,FAULT>::const_iterator iter=faults.begin();
+        map<float,FAULT>::const_iterator iter=faults.begin();
 
         for(unsigned int i=0; i!=index; ++i)
             ++iter;
@@ -329,7 +329,7 @@ FAULT LINE::get_fault_at_location(unsigned int to_bus, double location) const
         if(to_bus == get_receiving_side_bus())
             location = 1.0-location;
 
-        map<double,FAULT>::const_iterator iter;
+        map<float,FAULT>::const_iterator iter;
         for(iter=faults.begin(); iter!=faults.end(); ++iter)
         {
             if(fabs(iter->first-location)<FLOAT_EPSILON)
@@ -358,7 +358,7 @@ void LINE::clear_fault_at_location(unsigned int to_bus, double location)
         if(to_bus == get_receiving_side_bus())
             location = 1.0-location;
 
-        map<double,FAULT>::iterator iter;
+        map<float,FAULT>::iterator iter;
         for(iter=faults.begin(); iter!=faults.end(); ++iter)
         {
             if(fabs(iter->first-location)<FLOAT_EPSILON)

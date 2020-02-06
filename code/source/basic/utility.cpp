@@ -4,7 +4,7 @@
 
 #include <cstdio>
 #include <algorithm>
-#include <cmath>
+//#include <cmath>
 #include <istream>
 #include <iostream>
 #include <fstream>

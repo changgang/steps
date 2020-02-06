@@ -185,9 +185,19 @@ class STEPS():
         ftype = self.__get_c_char_p_of_string(ftype)
         STEPS_LIB.api_load_powerflow_data_from_file(file, ftype, self.toolkit_index)
 
-    def save_powerflow_data(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
-        print("Warning. API save_powerflow_data() is updated as save_powerflow_data_in_keep_mode(). save_powerflow_data() will be deprecated later.")
-        self.save_powerflow_data_in_keep_mode(file, ftype, export_zero_line, export_out_of_service_bus)
+    def save_powerflow_data(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True, export_mode=0):
+        if export_mode not in (0,1,2,3):
+            export_mode = 0;
+        if export_mode==0:
+            self.save_powerflow_data_in_keep_mode(file, ftype, export_zero_line, export_out_of_service_bus)
+        elif export_mode==1:
+            self.save_powerflow_data_in_bus_number_ordered_mode(file, ftype, export_zero_line, export_out_of_service_bus)
+        elif export_mode==2:
+            self.save_powerflow_data_in_bus_name_ordered_mode(file, ftype, export_zero_line, export_out_of_service_bus)
+        elif export_mode==3:
+            self.save_powerflow_data_in_dynamic_optimized_mode(file, ftype, export_zero_line, export_out_of_service_bus)
+        else:
+            print("parameter export_mode is invalid in save_powerflow_data()")
         
     def save_powerflow_data_in_keep_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
         global STEPS_LIB
@@ -195,17 +205,23 @@ class STEPS():
         ftype = self.__get_c_char_p_of_string(ftype)
         STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 0, self.toolkit_index)
         
-    def save_powerflow_data_in_ordered_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
+    def save_powerflow_data_in_bus_number_ordered_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
         STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 1, self.toolkit_index)
         
-    def save_powerflow_data_in_optimized_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
+    def save_powerflow_data_in_bus_name_ordered_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
         STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 2, self.toolkit_index)
+        
+    def save_powerflow_data_in_dynamic_optimized_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        ftype = self.__get_c_char_p_of_string(ftype)
+        STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 3, self.toolkit_index)
 
     def load_powerflow_result(self, file, ftype):
         global STEPS_LIB

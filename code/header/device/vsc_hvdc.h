@@ -139,23 +139,23 @@ class VSC_HVDC : public DEVICE
         string identifier;
         string vsc_hvdc_name;
         bool status;
-        double line_R_in_ohm;
+        float line_R_in_ohm;
 
         VSC_HVDC_DC_CONTROL_MODE dc_control_mode[2];
         VSC_HVDC_AC_CONTROL_MODE ac_control_mode[2];
 
-        double nominal_dc_voltage_in_kV[2], nominal_dc_power_in_MW[2], nominal_dc_current_in_amp;
-        double nominal_ac_voltage_in_pu[2], nominal_ac_power_factor[2];
+        float nominal_dc_voltage_in_kV[2], nominal_dc_power_in_MW[2], nominal_dc_current_in_amp;
+        float nominal_ac_voltage_in_pu[2], nominal_ac_power_factor[2];
 
-        double converter_loss_coefficient_A_in_kW[2], converter_loss_coefficient_B_in_kW_per_amp[2], min_converter_loss_in_kW[2];
+        float converter_loss_coefficient_A_in_kW[2], converter_loss_coefficient_B_in_kW_per_amp[2], min_converter_loss_in_kW[2];
 
-        double converter_MVA_rating_in_MVA[2], converter_current_rating_in_amp[2];
+        float converter_MVA_rating_in_MVA[2], converter_current_rating_in_amp[2];
 
-        double power_weighting_factor[2];
-        double Qmax_MVar[2], Qmin_MVar[2];
+        float power_weighting_factor[2];
+        float Qmax_MVar[2], Qmin_MVar[2];
 
         unsigned int remote_bus_to_regulate[2];
-        double remote_regulation_percent[2];
+        float remote_regulation_percent[2];
     private:
         bool nominal_dc_setpoints_initialized;
         double actual_dc_power_command_MW[2], actual_dc_voltage_command_kV[2], actual_dc_current_command_in_amp, actual_ac_power_factor_command[2];

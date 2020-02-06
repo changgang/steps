@@ -48,7 +48,7 @@ class BLOCK : public BASE
     private:
         double state, new_state, dstate, store;
         LIMITER_TYPE limiter_type;
-        double upper_limit, lower_limit;
+        float upper_limit, lower_limit;
         double input, output;
 };
 #endif // BLOCK_H

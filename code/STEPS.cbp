@@ -23,6 +23,7 @@
 					<Add option="-malign-double" />
 					<Add option="-minline-all-stringops" />
 					<Add option="-fopenmp" />
+					<Add option="-ffast-math" />
 					<Add directory="../code" />
 					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
@@ -754,7 +755,6 @@
 		<Unit filename="source/toolkit/powerflow_case_generator/powerflow_case_generator_test.cpp" />
 		<Unit filename="source/toolkit/powerflow_solver/powerflow_solver.cpp" />
 		<Unit filename="source/toolkit/powerflow_solver/powerflow_solver_test.cpp" />
-		<Unit filename="version.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

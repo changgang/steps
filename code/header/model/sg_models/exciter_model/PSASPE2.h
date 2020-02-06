@@ -83,9 +83,9 @@ class PSASPE2: public EXCITER_MODEL
         PI_BLOCK tuner1_pi;
         LEAD_LAG_BLOCK tuner2;
         FIRST_ORDER_BLOCK regulator;
-        double Efdmax, Efdmin;
-        double Vta, Vtb;
-        double Kpt, Kit, Ke;
+        float Efdmax, Efdmin;
+        float Vta, Vtb;
+        float Kpt, Kit, Ke;
 
         double Efd0;
         double Vt0;

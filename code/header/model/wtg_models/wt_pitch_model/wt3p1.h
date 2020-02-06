@@ -62,7 +62,7 @@ class WT3P1 : public WT_PITCH_MODEL
         PI_BLOCK speed_controller;
         PI_BLOCK power_controller;
         INTEGRAL_BLOCK pitch_integrator;
-        double ratePitchmax;
+        float ratePitchmax;
 };
 
 #endif // WT3P1_H

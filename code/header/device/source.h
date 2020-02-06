@@ -73,13 +73,14 @@ class SOURCE : public DEVICE
 
         string source_identifier;
         bool status;
-        double mbase_MVA, one_over_mbase;
+        float mbase_MVA;
+        double one_over_mbase;
 
         double p_generation_MW, q_generation_MVar;
-        double p_max_MW, p_min_MW, q_max_MVar, q_min_MVar;
-        double voltage_to_regulate_pu;
+        float p_max_MW, p_min_MW, q_max_MVar, q_min_MVar;
+        float voltage_to_regulate_pu;
         unsigned int bus_to_regulate;
 
-        complex<double> source_Z_pu;
+        complex<float> source_Z_pu;
 };
 #endif // SOURCE_H

@@ -339,12 +339,8 @@ void PSSE_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impeda
 
     set_export_zero_impedance_line_logic(export_zero_impedance_line);
     set_powerflow_data_save_mode(save_mode);
-    if(save_mode==OPTIMIZE_POWERFLOW_DATA)
-    {
-        NETWORK_MATRIX& network = toolkit.get_network_matrix();
-        network.optimize_network_ordering();
-        network.build_network_Y_matrix();
-    }
+
+    setup_ordered_buses_with_powerflow_data_save_mode(save_mode);
 
     if(export_zero_impedance_line==false)
         psdb.update_overshadowed_bus_count();
@@ -425,44 +421,17 @@ string PSSE_IMEXPORTER::export_all_bus_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
+    const vector<unsigned int>& ordered_buses = get_ordered_buses();
+    unsigned int n = ordered_buses.size();
     vector<BUS*> buses;
-    POWERFLOW_DATA_SAVE_MODE save_mode = get_powerflow_data_save_mode();
-    switch(save_mode)
+    buses.reserve(n);
+
+    for(unsigned int i=0; i!=n; ++i)
     {
-        case OPTIMIZE_POWERFLOW_DATA:
-        {
-            NETWORK_MATRIX& network = toolkit.get_network_matrix();
-            unsigned int n = psdb.get_in_service_bus_count();
-            for(unsigned int i=0; i!=n; ++i)
-                buses.push_back(psdb.get_bus(network.get_physical_bus_number_of_internal_bus(i)));
-            n = psdb.get_bus_count();
-            vector<unsigned int> buses_number = psdb.get_all_buses_number();
-            for(unsigned int i=0; i!=n; ++i)
-            {
-                BUS* bus = psdb.get_bus(buses_number[i]);
-                if(bus->get_bus_type()==OUT_OF_SERVICE)
-                    buses.push_back(bus);
-            }
-            break;
-        }
-        case ORDER_POWERFLOW_DATA:
-        {
-            vector<unsigned int> buses_number = psdb.get_all_buses_number();
-            sort(buses_number.begin(), buses_number.end());
-            unsigned int n = buses_number.size();
-            for(unsigned int i=0; i!=n; ++i)
-                buses.push_back(psdb.get_bus(buses_number[i]));
-            break;
-        }
-        case KEEP_POWERFLOW_DATA:
-        default:
-        {
-            buses = psdb.get_all_buses();
-            break;
-        }
+        BUS* bus = psdb.get_bus(ordered_buses[i]);
+        buses.push_back(bus);
     }
 
-    unsigned int n = buses.size();
     for(unsigned int i=0; i!=n; ++i)
         osstream<<export_bus_data(buses[i], buses);
 
@@ -543,54 +512,20 @@ string PSSE_IMEXPORTER::export_all_load_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
+    const vector<unsigned int>& ordered_buses = get_ordered_buses();
+    unsigned int n = ordered_buses.size();
+
     vector<LOAD*> loads;
-    POWERFLOW_DATA_SAVE_MODE save_mode = get_powerflow_data_save_mode();
-    switch(save_mode)
+    for(unsigned int i=0; i<n; ++i)
     {
-        case OPTIMIZE_POWERFLOW_DATA:
-        {
-            NETWORK_MATRIX& network = toolkit.get_network_matrix();
-            unsigned int n = psdb.get_in_service_bus_count();
-            for(unsigned int i=0; i!=n; ++i)
-            {
-                vector<LOAD*> loads_at_bus = psdb.get_loads_connecting_to_bus(network.get_physical_bus_number_of_internal_bus(i));
-                unsigned int m = loads_at_bus.size();
-                for(unsigned int j=0; j!=m; ++j)
-                    loads.push_back(loads_at_bus[j]);
-            }
-            n = psdb.get_bus_count();
-            vector<unsigned int> buses_number = psdb.get_all_buses_number();
-            for(unsigned int i=0; i!=n; ++i)
-            {
-                BUS* bus = psdb.get_bus(buses_number[i]);
-                if(bus->get_bus_type()==OUT_OF_SERVICE)
-                {
-                    vector<LOAD*> loads_at_bus = psdb.get_loads_connecting_to_bus(network.get_physical_bus_number_of_internal_bus(buses_number[i]));
-                    unsigned int m = loads_at_bus.size();
-                    for(unsigned int j=0; j!=m; ++j)
-                        loads.push_back(loads_at_bus[j]);
-                }
-            }
-            break;
-        }
-        case ORDER_POWERFLOW_DATA:
-        {
-            vector<DEVICE_ID> dids = psdb.get_all_loads_device_id();
-            sort(dids.begin(), dids.end());
-            unsigned int n = dids.size();
-            for(unsigned int i=0; i!=n; ++i)
-                loads.push_back(psdb.get_load(dids[i]));
-            break;
-        }
-        case KEEP_POWERFLOW_DATA:
-        default:
-        {
-            loads = psdb.get_all_loads();
-            break;
-        }
+        unsigned int bus = ordered_buses[i];
+        vector<LOAD*> loads_at_bus = psdb.get_loads_connecting_to_bus(bus);
+        unsigned int m = loads_at_bus.size();
+        for(unsigned int j=0; j<m; ++j)
+            loads.push_back(loads_at_bus[j]);
     }
 
-    unsigned int n = loads.size();
+    n = loads.size();
     for(unsigned int i=0; i!=n; ++i)
         osstream<<export_load_data(loads[i]);
     return osstream.str();
@@ -636,16 +571,20 @@ string PSSE_IMEXPORTER::export_all_fixed_shunt_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    //vector<FIXED_SHUNT*> fshunts = psdb.get_all_fixed_shunts();
-    //unsigned int n = fshunts.size();
+    const vector<unsigned int>& ordered_buses = get_ordered_buses();
+    unsigned int n = ordered_buses.size();
 
-    vector<DEVICE_ID> dids = psdb.get_all_fixed_shunts_device_id();
-    sort(dids.begin(), dids.end());
     vector<FIXED_SHUNT*> fshunts;
-    unsigned int n = dids.size();
-    for(unsigned int i=0; i!=n; ++i)
-        fshunts.push_back(psdb.get_fixed_shunt(dids[i]));
+    for(unsigned int i=0; i<n; ++i)
+    {
+        unsigned int bus = ordered_buses[i];
+        vector<FIXED_SHUNT*> fshunts_at_bus = psdb.get_fixed_shunts_connecting_to_bus(bus);
+        unsigned int m = fshunts_at_bus.size();
+        for(unsigned int j=0; j<m; ++j)
+            fshunts.push_back(fshunts_at_bus[j]);
+    }
 
+    n = fshunts.size();
     for(unsigned int i=0; i!=n; ++i)
         osstream<<export_fixed_shunt_data(fshunts[i]);
     return osstream.str();
@@ -693,54 +632,20 @@ string PSSE_IMEXPORTER::export_all_generator_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
+    const vector<unsigned int>& ordered_buses = get_ordered_buses();
+    unsigned int n = ordered_buses.size();
+
     vector<GENERATOR*> generators;
-    POWERFLOW_DATA_SAVE_MODE save_mode = get_powerflow_data_save_mode();
-    switch(save_mode)
+    for(unsigned int i=0; i<n; ++i)
     {
-        case OPTIMIZE_POWERFLOW_DATA:
-        {
-            NETWORK_MATRIX& network = toolkit.get_network_matrix();
-            unsigned int n = psdb.get_in_service_bus_count();
-            for(unsigned int i=0; i!=n; ++i)
-            {
-                vector<GENERATOR*> gens_at_bus = psdb.get_generators_connecting_to_bus(network.get_physical_bus_number_of_internal_bus(i));
-                unsigned int m = gens_at_bus.size();
-                for(unsigned int j=0; j!=m; ++j)
-                    generators.push_back(gens_at_bus[j]);
-            }
-            n = psdb.get_bus_count();
-            vector<unsigned int> buses_number = psdb.get_all_buses_number();
-            for(unsigned int i=0; i!=n; ++i)
-            {
-                BUS* bus = psdb.get_bus(buses_number[i]);
-                if(bus->get_bus_type()==OUT_OF_SERVICE)
-                {
-                    vector<GENERATOR*> gens_at_bus = psdb.get_generators_connecting_to_bus(network.get_physical_bus_number_of_internal_bus(buses_number[i]));
-                    unsigned int m = gens_at_bus.size();
-                    for(unsigned int j=0; j!=m; ++j)
-                        generators.push_back(gens_at_bus[j]);
-                }
-            }
-            break;
-        }
-        case ORDER_POWERFLOW_DATA:
-        {
-            vector<DEVICE_ID> dids = psdb.get_all_generators_device_id();
-            sort(dids.begin(), dids.end());
-            unsigned int n = dids.size();
-            for(unsigned int i=0; i!=n; ++i)
-                generators.push_back(psdb.get_generator(dids[i]));
-            break;
-        }
-        case KEEP_POWERFLOW_DATA:
-        default:
-        {
-            generators = psdb.get_all_generators();
-            break;
-        }
+        unsigned int bus = ordered_buses[i];
+        vector<GENERATOR*> generators_at_bus = psdb.get_generators_connecting_to_bus(bus);
+        unsigned int m = generators_at_bus.size();
+        for(unsigned int j=0; j<m; ++j)
+            generators.push_back(generators_at_bus[j]);
     }
 
-    unsigned int n = generators.size();
+    n = generators.size();
     for(unsigned int i=0; i!=n; ++i)
         osstream<<export_generator_data(generators[i]);
     return osstream.str();
@@ -766,54 +671,20 @@ string PSSE_IMEXPORTER::export_all_wt_generator_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
+    const vector<unsigned int>& ordered_buses = get_ordered_buses();
+    unsigned int n = ordered_buses.size();
+
     vector<WT_GENERATOR*> wt_generators;
-    POWERFLOW_DATA_SAVE_MODE save_mode = get_powerflow_data_save_mode();
-    switch(save_mode)
+    for(unsigned int i=0; i<n; ++i)
     {
-        case OPTIMIZE_POWERFLOW_DATA:
-        {
-            NETWORK_MATRIX& network = toolkit.get_network_matrix();
-            unsigned int n = psdb.get_in_service_bus_count();
-            for(unsigned int i=0; i!=n; ++i)
-            {
-                vector<WT_GENERATOR*> gens_at_bus = psdb.get_wt_generators_connecting_to_bus(network.get_physical_bus_number_of_internal_bus(i));
-                unsigned int m = gens_at_bus.size();
-                for(unsigned int j=0; j!=m; ++j)
-                    wt_generators.push_back(gens_at_bus[j]);
-            }
-            n = psdb.get_bus_count();
-            vector<unsigned int> buses_number = psdb.get_all_buses_number();
-            for(unsigned int i=0; i!=n; ++i)
-            {
-                BUS* bus = psdb.get_bus(buses_number[i]);
-                if(bus->get_bus_type()==OUT_OF_SERVICE)
-                {
-                    vector<WT_GENERATOR*> gens_at_bus = psdb.get_wt_generators_connecting_to_bus(network.get_physical_bus_number_of_internal_bus(buses_number[i]));
-                    unsigned int m = gens_at_bus.size();
-                    for(unsigned int j=0; j!=m; ++j)
-                        wt_generators.push_back(gens_at_bus[j]);
-                }
-            }
-            break;
-        }
-        case ORDER_POWERFLOW_DATA:
-        {
-            vector<DEVICE_ID> dids = psdb.get_all_wt_generators_device_id();
-            sort(dids.begin(), dids.end());
-            unsigned int n = dids.size();
-            for(unsigned int i=0; i!=n; ++i)
-                wt_generators.push_back(psdb.get_wt_generator(dids[i]));
-            break;
-        }
-        case KEEP_POWERFLOW_DATA:
-        default:
-        {
-            wt_generators = psdb.get_all_wt_generators();
-            break;
-        }
+        unsigned int bus = ordered_buses[i];
+        vector<WT_GENERATOR*> wt_generators_at_bus = psdb.get_wt_generators_connecting_to_bus(bus);
+        unsigned int m = wt_generators_at_bus.size();
+        for(unsigned int j=0; j<m; ++j)
+            wt_generators.push_back(wt_generators_at_bus[j]);
     }
 
-    unsigned int n = wt_generators.size();
+    n = wt_generators.size();
     for(unsigned int i=0; i!=n; ++i)
         osstream<<export_wt_generator_data(wt_generators[i]);
     return osstream.str();
@@ -843,54 +714,20 @@ string PSSE_IMEXPORTER::export_all_pv_unit_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
+    const vector<unsigned int>& ordered_buses = get_ordered_buses();
+    unsigned int n = ordered_buses.size();
+
     vector<PV_UNIT*> pv_units;
-    POWERFLOW_DATA_SAVE_MODE save_mode = get_powerflow_data_save_mode();
-    switch(save_mode)
+    for(unsigned int i=0; i<n; ++i)
     {
-        case OPTIMIZE_POWERFLOW_DATA:
-        {
-            NETWORK_MATRIX& network = toolkit.get_network_matrix();
-            unsigned int n = psdb.get_in_service_bus_count();
-            for(unsigned int i=0; i!=n; ++i)
-            {
-                vector<PV_UNIT*> pvs_at_bus = psdb.get_pv_units_connecting_to_bus(network.get_physical_bus_number_of_internal_bus(i));
-                unsigned int m = pvs_at_bus.size();
-                for(unsigned int j=0; j!=m; ++j)
-                    pv_units.push_back(pvs_at_bus[j]);
-            }
-            n = psdb.get_bus_count();
-            vector<unsigned int> buses_number = psdb.get_all_buses_number();
-            for(unsigned int i=0; i!=n; ++i)
-            {
-                BUS* bus = psdb.get_bus(buses_number[i]);
-                if(bus->get_bus_type()==OUT_OF_SERVICE)
-                {
-                    vector<PV_UNIT*> pvs_at_bus = psdb.get_pv_units_connecting_to_bus(network.get_physical_bus_number_of_internal_bus(buses_number[i]));
-                    unsigned int m = pvs_at_bus.size();
-                    for(unsigned int j=0; j!=m; ++j)
-                        pv_units.push_back(pvs_at_bus[j]);
-                }
-            }
-            break;
-        }
-        case ORDER_POWERFLOW_DATA:
-        {
-            vector<DEVICE_ID> dids = psdb.get_all_pv_units_device_id();
-            sort(dids.begin(), dids.end());
-            unsigned int n = dids.size();
-            for(unsigned int i=0; i!=n; ++i)
-                pv_units.push_back(psdb.get_pv_unit(dids[i]));
-            break;
-        }
-        case KEEP_POWERFLOW_DATA:
-        default:
-        {
-            pv_units = psdb.get_all_pv_units();
-            break;
-        }
+        unsigned int bus = ordered_buses[i];
+        vector<PV_UNIT*> pv_units_at_bus = psdb.get_pv_units_connecting_to_bus(bus);
+        unsigned int m = pv_units_at_bus.size();
+        for(unsigned int j=0; j<m; ++j)
+            pv_units.push_back(pv_units_at_bus[j]);
     }
 
-    unsigned int n = pv_units.size();
+    n = pv_units.size();
     for(unsigned int i=0; i!=n; ++i)
         osstream<<export_pv_unit_data(pv_units[i]);
     return osstream.str();
@@ -920,16 +757,20 @@ string PSSE_IMEXPORTER::export_all_energy_storage_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    //vector<ENERGY_STORAGE*> estorages = psdb.get_all_energy_storages();
-    //unsigned int n = estorages.size();
+    const vector<unsigned int>& ordered_buses = get_ordered_buses();
+    unsigned int n = ordered_buses.size();
 
-    vector<DEVICE_ID> dids = psdb.get_all_energy_storages_device_id();
-    sort(dids.begin(), dids.end());
     vector<ENERGY_STORAGE*> estorages;
-    unsigned int n = dids.size();
-    for(unsigned int i=0; i!=n; ++i)
-        estorages.push_back(psdb.get_energy_storage(dids[i]));
+    for(unsigned int i=0; i<n; ++i)
+    {
+        unsigned int bus = ordered_buses[i];
+        vector<ENERGY_STORAGE*> estorages_at_bus = psdb.get_energy_storages_connecting_to_bus(bus);
+        unsigned int m = estorages_at_bus.size();
+        for(unsigned int j=0; j<m; ++j)
+            estorages.push_back(estorages_at_bus[j]);
+    }
 
+    n = estorages.size();
     for(unsigned int i=0; i!=n; ++i)
         osstream<<export_energy_storage_data(estorages[i]);
     return osstream.str();

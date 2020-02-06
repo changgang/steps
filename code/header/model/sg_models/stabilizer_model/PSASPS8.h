@@ -69,7 +69,7 @@ class PSASPS8 : public STABILIZER_MODEL
 
         FIRST_ORDER_BLOCK sensor;
         LEAD_LAG_BLOCK phase_tuner_1, phase_tuner_2, phase_tuner_3;
-        double Vsmax, Vsmin;
+        float Vsmax, Vsmin;
 
         double V_ref_pu;
 };

@@ -72,10 +72,10 @@ class LCFB1 : public TURBINE_LOAD_CONTROLLER_MODEL
         double get_Pelec0() const;
 
         bool frequency_regulation_flag, power_regulation_flag;
-        double Fb;
+        float Fb;
         FIRST_ORDER_BLOCK Pelec_sensor;
-        double db, Emax;
-        double Kp;
+        float db, Emax;
+        float Kp;
         INTEGRAL_BLOCK error_integrator;
         double Pref0, Pelec0;
 };

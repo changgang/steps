@@ -44,23 +44,28 @@ void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_ze
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     string string_file_type = string2upper(file_type);
-    POWERFLOW_DATA_SAVE_MODE save_mode = KEEP_POWERFLOW_DATA;
+    POWERFLOW_DATA_SAVE_MODE save_mode = SAVE_TO_KEEP_ORIGINAL_BUS_ORDER;
     switch(powerflow_data_save_mode)
     {
+        case 3:
+        {
+            save_mode = SAVE_TO_ORDER_BUS_WITH_DYNAMIC_DEVICE_ORDER;
+            break;
+        }
         case 2:
         {
-            save_mode = OPTIMIZE_POWERFLOW_DATA;
+            save_mode = SAVE_TO_ORDER_BUS_WITH_BUS_NAME;
             break;
         }
         case 1:
         {
-            save_mode = ORDER_POWERFLOW_DATA;
+            save_mode = SAVE_TO_ORDER_BUS_WITH_BUS_NUMBER;
             break;
         }
         case 0:
         default:
         {
-            save_mode = KEEP_POWERFLOW_DATA;
+            save_mode = SAVE_TO_KEEP_ORIGINAL_BUS_ORDER;
             break;
         }
     }

@@ -61,8 +61,8 @@ class FILEWIND : public WIND_SPEED_MODEL
         unsigned int get_wind_record_count() const;
 
         char wind_speed_file[STEPS_LONG_STRING_SIZE];
-        double wind_data[STEPS_MAX_WIND_RECORD_SIZE][3];
-        double current_time, current_wind_speed, current_wind_direction;
+        float wind_data[STEPS_MAX_WIND_RECORD_SIZE][3];
+        float current_time, current_wind_speed, current_wind_direction;
         unsigned int previous_position;
 };
 

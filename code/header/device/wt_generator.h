@@ -62,7 +62,7 @@ class WT_GENERATOR : public SOURCE
     private:
 
         unsigned int number_of_lumped_wt_generators;
-        double rated_power_per_wt_generator_in_MW;
+        float rated_power_per_wt_generator_in_MW;
 
         WT_GENERATOR_MODEL* wt_generator_model;
         WT_AERODYNAMIC_MODEL* wt_aerodynamic_model;

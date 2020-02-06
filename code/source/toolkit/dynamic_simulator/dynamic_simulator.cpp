@@ -9,8 +9,10 @@
 #include <istream>
 #include <iostream>
 #include <ctime>
+#include <chrono>
 
 using namespace std;
+using namespace chrono;
 
 #define ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
 
@@ -122,7 +124,11 @@ void DYNAMICS_SIMULATOR::set_max_DAE_iteration(unsigned int iteration)
 void DYNAMICS_SIMULATOR::set_min_DAE_iteration(unsigned int iteration)
 {
     if(iteration>0)
+    {
+        if(iteration<2) iteration = 2;
+
         this->min_DAE_iteration = iteration;
+    }
 }
 
 void DYNAMICS_SIMULATOR::set_max_network_iteration(unsigned int iteration)
@@ -1914,8 +1920,8 @@ complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_
 
 void DYNAMICS_SIMULATOR::start()
 {
-    clock_elapse_of_differential_equations_in_a_step = 0;
-    clock_elapse_of_network_solution_in_a_step = 0;
+    microseconds_elapse_of_differential_equations_in_a_step = 0;
+    microseconds_elapse_of_network_solution_in_a_step = 0;
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.update_device_thread_number();
@@ -1927,7 +1933,7 @@ void DYNAMICS_SIMULATOR::start()
 
     show_dynamic_simulator_configuration();
 
-    time_t clock_start = clock();
+    auto clock_start = system_clock::now();
 
     ostringstream osstream;
     osstream<<"Dynamics initialization starts.";
@@ -1991,9 +1997,10 @@ void DYNAMICS_SIMULATOR::start()
     toolkit.show_information_with_leading_time_stamp(osstream);
 
 
-    time_elapse_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock()-clock_start);
-    time_elapse_of_differential_equations_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock_elapse_of_differential_equations_in_a_step);
-    time_elapse_of_network_solution_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock_elapse_of_network_solution_in_a_step);
+    auto tduration = duration_cast<microseconds>(system_clock::now()-clock_start);
+    time_elapse_in_a_step = tduration.count()*0.001;
+    time_elapse_of_differential_equations_in_a_step = 0.001*microseconds_elapse_of_differential_equations_in_a_step;
+    time_elapse_of_network_solution_in_a_step = 0.001*microseconds_elapse_of_network_solution_in_a_step;
 
     save_meter_information();
     save_meter_values();
@@ -2100,9 +2107,9 @@ void DYNAMICS_SIMULATOR::run_to(double time)
 
 void DYNAMICS_SIMULATOR::run_a_step()
 {
-    time_t clock_start = clock();
-    clock_elapse_of_differential_equations_in_a_step = 0;
-    clock_elapse_of_network_solution_in_a_step = 0;
+    auto clock_start = system_clock::now();
+    microseconds_elapse_of_differential_equations_in_a_step = 0;
+    microseconds_elapse_of_network_solution_in_a_step = 0;
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
@@ -2174,18 +2181,19 @@ void DYNAMICS_SIMULATOR::run_a_step()
     update();
     update_relay_models();
 
-    time_elapse_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock()-clock_start);
-    time_elapse_of_differential_equations_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock_elapse_of_differential_equations_in_a_step);
-    time_elapse_of_network_solution_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock_elapse_of_network_solution_in_a_step);
+    auto tduration = duration_cast<microseconds>(system_clock::now()-clock_start);
+    time_elapse_in_a_step = tduration.count()*0.001;
+    time_elapse_of_differential_equations_in_a_step = 0.001*microseconds_elapse_of_differential_equations_in_a_step;
+    time_elapse_of_network_solution_in_a_step = 0.001*microseconds_elapse_of_network_solution_in_a_step;
 
     save_meter_values();
 }
 
 void DYNAMICS_SIMULATOR::update_with_event()
 {
-    time_t clock_start = clock();
-    clock_elapse_of_differential_equations_in_a_step = 0;
-    clock_elapse_of_network_solution_in_a_step = 0;
+    auto clock_start = system_clock::now();
+    microseconds_elapse_of_differential_equations_in_a_step = 0;
+    microseconds_elapse_of_network_solution_in_a_step = 0;
 
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -2222,9 +2230,11 @@ void DYNAMICS_SIMULATOR::update_with_event()
     update_bus_frequency_blocks();
     update();
 
-    time_elapse_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock()-clock_start);
-    time_elapse_of_differential_equations_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock_elapse_of_differential_equations_in_a_step);
-    time_elapse_of_network_solution_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock_elapse_of_network_solution_in_a_step);
+
+    auto tduration = duration_cast<microseconds>(system_clock::now()-clock_start);
+    time_elapse_in_a_step = tduration.count()*0.001;
+    time_elapse_of_differential_equations_in_a_step = 0.001*microseconds_elapse_of_differential_equations_in_a_step;
+    time_elapse_of_network_solution_in_a_step = 0.001*microseconds_elapse_of_network_solution_in_a_step;
 
     save_meter_values();
 }
@@ -2258,8 +2268,6 @@ void DYNAMICS_SIMULATOR::update()
         toolkit.show_information_with_leading_time_stamp(buffer);
     }
     //update_bus_frequency_blocks();
-
-    //cout<<"    elapsed time for export meters: "<<double(clock()-start)/CLOCKS_PER_SEC*1000.0<<" ms"<<endl;
 }
 
 void DYNAMICS_SIMULATOR::update_relay_models()
@@ -2273,7 +2281,7 @@ void DYNAMICS_SIMULATOR::update_relay_models()
 
 void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 {
-    time_t tstart = clock();
+    auto clock_start = system_clock::now();
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -2363,7 +2371,8 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         model->run(mode);
     }
 
-    clock_elapse_of_differential_equations_in_a_step += (clock()-tstart);
+    auto tduration = duration_cast<microseconds>(system_clock::now()-clock_start);
+    microseconds_elapse_of_differential_equations_in_a_step += tduration.count();
 }
 
 void DYNAMICS_SIMULATOR::update_bus_frequency_blocks()
@@ -2440,10 +2449,9 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_output()
 
 bool DYNAMICS_SIMULATOR::solve_network()
 {
+    auto clock_start = system_clock::now();
+
     ostringstream osstream;
-
-    time_t tstart = clock();
-
     bool converged = false;
 
     network_iteration_count = 0;
@@ -2473,8 +2481,6 @@ bool DYNAMICS_SIMULATOR::solve_network()
         {
             if(network_iter_count<network_iter_max)
             {
-                //build_bus_current_mismatch_vector();
-                //delta_V = I_vec/jacobian;
                 delta_V = I_mismatch/jacobian;
 
                 update_bus_voltage();
@@ -2542,7 +2548,8 @@ bool DYNAMICS_SIMULATOR::solve_network()
 
     network_iteration_count = network_iter_count;
 
-    clock_elapse_of_network_solution_in_a_step += (clock()-tstart);
+    auto tduration = duration_cast<microseconds>(system_clock::now()-clock_start);
+    microseconds_elapse_of_network_solution_in_a_step += tduration.count();
     return converged;
 }
 
@@ -3204,13 +3211,46 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     unsigned int n = delta_V.size();
-    //n = n>>1;
 
-    //NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+    for(unsigned int i=0; i<n; ++i)
+    {
+        BUS* bus = in_service_buses[i];
+        unsigned int ex_bus = bus->get_bus_number();
+        double vang0 = bus->get_positive_sequence_angle_in_rad();
+        complex<double> V0 = bus->get_positive_sequence_complex_voltage_in_pu();
+
+        unsigned int in_bus = network.get_internal_bus_number_of_physical_bus(ex_bus);
+
+        complex<double> delta_v = delta_V[in_bus];
+        complex<double> V = V0+delta_v*alpha;
+
+		double vmag_new = steps_fast_complex_abs(V);
+
+		double x = V.real(), y = V.imag();
+		double x0 = V0.real(), y0 = V0.imag();
+		complex<double> z(x*x0 + y*y0, x0*y - y0*x);
+        double delta_vang = steps_fast_complex_arg(z);
+        double vang_new = vang0+delta_vang;
+
+        if(vmag_new>0.0 and vmag_new<3.0)
+            ;
+        else
+        {
+            if(vmag_new<0.0) vmag_new=0.0;
+            else vmag_new = 3.0;
+        }
+
+        bus->set_positive_sequence_voltage_in_pu(vmag_new);
+        bus->set_positive_sequence_angle_in_rad(vang_new);
+
+        internal_bus_complex_voltage_in_pu[in_bus] = bus->get_positive_sequence_complex_voltage_in_pu();
+    }
+    /*
     for(unsigned int i=0; i<n; ++i)
     {
         BUS* bus = internal_bus_pointers[i];
@@ -3243,6 +3283,7 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
 
         internal_bus_complex_voltage_in_pu[i] = bus->get_positive_sequence_complex_voltage_in_pu();
     }
+    */
 }
 
 

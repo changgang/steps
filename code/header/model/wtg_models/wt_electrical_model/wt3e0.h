@@ -127,9 +127,9 @@ class WT3E0: public WT_ELECTRICAL_MODEL
 
         void trip_frequency_regulation();
 
-        double Xcomp;
+        float Xcomp;
         FIRST_ORDER_BLOCK voltage_sensor;
-        double Fn;
+        float Fn;
         FIRST_ORDER_BLOCK voltage_regulator_first_order_block;
         INTEGRAL_BLOCK voltage_regulator_integrator;
         FIRST_ORDER_BLOCK voltage_regulator_filter;
@@ -137,18 +137,18 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         INTEGRAL_BLOCK Q_error_integrator;
         unsigned int Voltage_Flag;
         INTEGRAL_BLOCK V_error_integrator;
-        double EQmax, EQmin;
+        float EQmax, EQmin;
 
         FIRST_ORDER_BLOCK wind_turbine_speed_reference_sensor;
         PI_BLOCK torque_PI_regulator;
         DIFFERENTIAL_BLOCK virtual_inertia_emulator;
         FIRST_ORDER_BLOCK frequency_droop_controller;
 
-        double f_upper_pu, f_lower_pu;
+        float f_upper_pu, f_lower_pu;
         INTEGRAL_BLOCK frequency_integral_controller;
-        double max_torque_rate, min_torque_rate;
+        float max_torque_rate, min_torque_rate;
         INTEGRAL_BLOCK power_order_integrator;
-        double IPmax;
+        float IPmax;
 
         bool frequency_regulation_enabled;
 

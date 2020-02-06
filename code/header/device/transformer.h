@@ -150,31 +150,31 @@ class TRANSFORMER : public DEVICE
         bool winding_breaker_status[3];
         unsigned int non_metered_end_bus;
         TRANSFORMER_WINDING_CONNECTION_TYPE winding_connection_type[3];
-        double winding_nominal_capacity_in_MVA[3];
-        double winding_nominal_voltage_in_kV[3];
+        float winding_nominal_capacity_in_MVA[3];
+        float winding_nominal_voltage_in_kV[3];
         RATING winding_rating_in_MVA[3];
 
-        complex<double> zl_primary2secondary_in_pu, zl_secondary2tertiary_in_pu,
-                        zl_primary2tertiary_in_pu,  y_magnetizing_in_pu;
+        complex<float> zl_primary2secondary_in_pu, zl_secondary2tertiary_in_pu,
+                       zl_primary2tertiary_in_pu,  y_magnetizing_in_pu;
 
-        double winding_turn_ratio_in_pu[3], winding_angle_shift_in_deg[3];
+        float winding_turn_ratio_in_pu[3], winding_angle_shift_in_deg[3];
 
         unsigned int winding_number_of_taps[3];
 
-        double winding_max_turn_ratio_in_pu[3], winding_min_turn_ratio_in_pu[3];
+        float winding_max_turn_ratio_in_pu[3], winding_min_turn_ratio_in_pu[3];
 
-        double winding_max_angle_shift_in_deg[3], winding_min_angle_shift_in_deg[3];
+        float winding_max_angle_shift_in_deg[3], winding_min_angle_shift_in_deg[3];
 
         TRANSFORMER_WINDING_CONTROL_MODE winding_control_mode[3];
 
         unsigned int winding_controlled_bus[3];
 
-        double winding_controlled_max_bus_voltage_in_pu[3], winding_controlled_min_bus_voltage_in_pu[3];
+        float winding_controlled_max_bus_voltage_in_pu[3], winding_controlled_min_bus_voltage_in_pu[3];
 
-        double controlled_max_reactive_power_into_winding_in_MVar[3],
-               controlled_min_reactive_power_into_winding_in_MVar[3];
+        float controlled_max_reactive_power_into_winding_in_MVar[3],
+              controlled_min_reactive_power_into_winding_in_MVar[3];
 
-        double controlled_max_active_power_into_winding_in_MW[3],
-               controlled_min_active_power_into_winding_in_MW[3];
+        float controlled_max_active_power_into_winding_in_MW[3],
+              controlled_min_active_power_into_winding_in_MW[3];
 };
 #endif // TRANSFORMER_H

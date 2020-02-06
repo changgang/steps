@@ -19,7 +19,7 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
 
         void load_one_model(string data);
 
-        virtual void export_powerflow_data(string file, bool export_zero_impedance_line=true, POWERFLOW_DATA_SAVE_MODE save_mode = KEEP_POWERFLOW_DATA);
+        virtual void export_powerflow_data(string file, bool export_zero_impedance_line=true, POWERFLOW_DATA_SAVE_MODE save_mode = SAVE_TO_KEEP_ORIGINAL_BUS_ORDER);
         virtual void export_dynamic_data(string file);
         virtual void export_sequence_data(string file);
     private:

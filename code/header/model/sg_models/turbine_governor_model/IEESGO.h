@@ -74,7 +74,7 @@ class IEESGO : public TURBINE_GOVERNOR_MODEL
 
         LEAD_LAG_BLOCK governor_tuner;
         FIRST_ORDER_BLOCK governor;
-        double pmax, pmin;
+        float pmax, pmin;
         FIRST_ORDER_BLOCK high_pressure_turbine;
         FIRST_ORDER_BLOCK medium_pressure_turbine;
         FIRST_ORDER_BLOCK low_pressure_turbine;

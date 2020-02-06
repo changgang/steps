@@ -60,7 +60,7 @@ class WT3T0 : public WT_TURBINE_MODEL
         INTEGRAL_BLOCK generator_inertia_block;
         INTEGRAL_BLOCK generator_rotor_angle_block;
 
-        double Dshaft;
+        float Dshaft;
 };
 
 #endif // WT3T0_H

@@ -65,8 +65,8 @@ class CDC4T: public HVDC_MODEL
         void copy_from_const_model(const CDC4T& model);
 
         FIRST_ORDER_BLOCK inverter_dc_voltage_sensor, dc_current_sensor;
-        double rectifier_ac_instantaneous_blocking_voltage_in_pu, rectifier_ac_instantaneous_unblocking_voltage_in_pu;
-        double inverter_dc_instantaneous_bypassing_voltage_in_kV, inverter_ac_instantaneous_unbypassing_voltage_in_pu;
+        float rectifier_ac_instantaneous_blocking_voltage_in_pu, rectifier_ac_instantaneous_unblocking_voltage_in_pu;
+        float inverter_dc_instantaneous_bypassing_voltage_in_kV, inverter_ac_instantaneous_unbypassing_voltage_in_pu;
 };
 
 #endif // EXCITER_MODEL_H

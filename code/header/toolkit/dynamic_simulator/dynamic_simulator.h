@@ -237,7 +237,7 @@ class DYNAMICS_SIMULATOR: public BASE
         double TIME;
 
         unsigned int ITER_DAE, ITER_NET;
-        time_t clock_elapse_of_differential_equations_in_a_step, clock_elapse_of_network_solution_in_a_step;
+        size_t microseconds_elapse_of_differential_equations_in_a_step, microseconds_elapse_of_network_solution_in_a_step;
         double time_elapse_in_a_step, time_elapse_of_differential_equations_in_a_step, time_elapse_of_network_solution_in_a_step;
         double P_threshold_in_MW, Q_threshold_in_MVar;
         unsigned int network_iteration_count, DAE_iteration_count;

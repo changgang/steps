@@ -106,15 +106,16 @@ class ESTR0 : public ENERGY_STORAGE_MODEL
 
         LEAD_LAG_BLOCK active_lead_lag_1, active_lead_lag_2;
         PID_BLOCK active_pid_block;
-        double Pmax;
+        float Pmax;
         FIRST_ORDER_BLOCK active_power_filter;
         INTEGRAL_BLOCK energy_state_block;
-        double E0, Enominal;
+        double E0;
+        float Enominal;
 
-        double Effin, Effout;
+        float Effin, Effout;
         LEAD_LAG_BLOCK reactive_lead_lag_1, reactive_lead_lag_2;
         INTEGRAL_BLOCK reactive_integral_block;
-        double Dq;
+        float Dq;
 
 
 };
