@@ -449,7 +449,7 @@ void WT_AERODYNAMIC_MODEL::initialize_turbine_blade_radius_with_nominal_paramete
     double cp_max = get_cpmax_at_zero_pitch();
 
     double blade_area = 2.0*pn/(cp_max*rou*v3);
-    double blade_radius = sqrt(blade_area*ONE_OVER_PI);
+    double blade_radius = steps_sqrt(blade_area*ONE_OVER_PI);
     set_turbine_blade_radius_in_m(blade_radius);
 
     if(toolkit.is_detailed_log_enabled())

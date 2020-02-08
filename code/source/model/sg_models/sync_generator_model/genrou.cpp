@@ -322,7 +322,7 @@ void GENROU::initialize_rotor_angle()
     double rotor_angle_EQ = steps_fast_complex_arg(EQ/Vxy) + steps_fast_complex_arg(Vxy);
     double rotor_angle = 0.0;
     if(C != 0.0)
-        rotor_angle = atan(D/C);
+        rotor_angle = steps_atan(D/C);
     else
         rotor_angle = PI*0.5;
 

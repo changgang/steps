@@ -437,7 +437,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_internal_bus(unsigne
                 g = y.real();
                 b = y.imag();
                 dangle = anglei - anglej;
-                der = -Vim*Vjm*(g*sin(dangle)-b*cos(dangle));
+                der = -Vim*Vjm*(g*steps_sin(dangle)-b*steps_cos(dangle));
             }
         }
         else
@@ -458,7 +458,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_internal_bus(unsigne
                     g = y.real();
                     b = y.imag();
                     dangle = anglei - anglej;
-                    der += Vjm*(g*sin(dangle)-b*cos(dangle));
+                    der += Vjm*(g*steps_sin(dangle)-b*steps_cos(dangle));
                 }
             }
             der *= Vim;
@@ -502,7 +502,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_internal_bus(unsig
                 g = y.real();
                 b = y.imag();
                 dangle = anglei - anglej;
-                der = -Vim*(g*cos(dangle)+b*sin(dangle));
+                der = -Vim*(g*steps_cos(dangle)+b*steps_sin(dangle));
             }
         }
         else
@@ -525,7 +525,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_internal_bus(unsig
                     dangle = anglei - anglej;
 
                     if(ibus != jbus)
-                        der -= Vjm*(g*cos(dangle)+b*sin(dangle));
+                        der -= Vjm*(g*steps_cos(dangle)+b*steps_sin(dangle));
                     else
                         der -= 2.0*Vim*g;
                 }
@@ -570,7 +570,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_internal_bus(unsigne
                 g = y.real();
                 b = y.imag();
                 dangle = anglei - anglej;
-                der = Vim*Vjm*(g*cos(dangle)+b*sin(dangle));
+                der = Vim*Vjm*(g*steps_cos(dangle)+b*steps_sin(dangle));
             }
         }
         else
@@ -591,7 +591,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_internal_bus(unsigne
                     g = y.real();
                     b = y.imag();
                     dangle = anglei - anglej;
-                    der -= Vjm*(g*cos(dangle)+b*sin(dangle));
+                    der -= Vjm*(g*steps_cos(dangle)+b*steps_sin(dangle));
                 }
             }
             der *= Vim;
@@ -635,7 +635,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_internal_bus(unsig
                 g = y.real();
                 b = y.imag();
                 dangle = anglei - anglej;
-                der = -Vim*(g*sin(dangle)-b*cos(dangle));
+                der = -Vim*(g*steps_sin(dangle)-b*steps_cos(dangle));
             }
         }
         else
@@ -658,7 +658,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_internal_bus(unsig
                     dangle = anglei - anglej;
 
                     if(ibus != jbus)
-                        der -= Vjm*(g*sin(dangle)-b*cos(dangle));
+                        der -= Vjm*(g*steps_sin(dangle)-b*steps_cos(dangle));
                     else
                         der += 2.0*Vim*b;
                 }

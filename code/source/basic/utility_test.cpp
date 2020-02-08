@@ -28,6 +28,12 @@ UTILITY_TEST::UTILITY_TEST()
     TEST_ADD(UTILITY_TEST::test_round_angle_to_PI);
     TEST_ADD(UTILITY_TEST::test_steps_fast_complex_abs);
     TEST_ADD(UTILITY_TEST::test_steps_fast_complex_arg);
+    TEST_ADD(UTILITY_TEST::test_steps_fast_sin);
+    TEST_ADD(UTILITY_TEST::test_steps_fast_cos);
+    TEST_ADD(UTILITY_TEST::test_steps_fast_tan);
+    TEST_ADD(UTILITY_TEST::test_steps_fast_sqrt);
+    TEST_ADD(UTILITY_TEST::test_steps_fast_inv_sqrt);
+
     TEST_ADD(UTILITY_TEST::test_radps2hz);
     TEST_ADD(UTILITY_TEST::test_hz2radps);
 
@@ -223,6 +229,82 @@ void UTILITY_TEST::test_steps_fast_complex_arg()
 	TEST_ASSERT(fabs(steps_fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
 	V = complex<double>(1.0, -1.0);
 	TEST_ASSERT(fabs(steps_fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
+}
+
+
+void UTILITY_TEST::test_steps_fast_sin()
+{
+	show_test_information_for_function_of_class(__FUNCTION__, "UTILITY_TEST");
+
+	double angle = 0.01;
+	TEST_ASSERT(fabs(steps_fast_sin(angle)-sin(angle))<1e-8);
+	angle = 0.1;
+	TEST_ASSERT(fabs(steps_fast_sin(angle)-sin(angle))<1e-8);
+	angle = 1.0;
+	TEST_ASSERT(fabs(steps_fast_sin(angle)-sin(angle))<1e-8);
+	angle = 10.0;
+	TEST_ASSERT(fabs(steps_fast_sin(angle)-sin(angle))<1e-8);
+	cout<<__FUNCTION__<<": "<<steps_fast_sin(angle)<<", "<<sin(angle)<<endl;
+}
+
+void UTILITY_TEST::test_steps_fast_cos()
+{
+	show_test_information_for_function_of_class(__FUNCTION__, "UTILITY_TEST");
+
+	double angle = 0.01;
+	TEST_ASSERT(fabs(steps_fast_cos(angle)-cos(angle))<1e-8);
+	angle = 0.1;
+	TEST_ASSERT(fabs(steps_fast_cos(angle)-cos(angle))<1e-8);
+	angle = 1.0;
+	TEST_ASSERT(fabs(steps_fast_cos(angle)-cos(angle))<1e-8);
+	angle = 10.0;
+	TEST_ASSERT(fabs(steps_fast_cos(angle)-cos(angle))<1e-8);
+	cout<<__FUNCTION__<<": "<<steps_fast_cos(angle)<<", "<<cos(angle)<<endl;
+}
+
+void UTILITY_TEST::test_steps_fast_tan()
+{
+	show_test_information_for_function_of_class(__FUNCTION__, "UTILITY_TEST");
+
+	double angle = 0.01;
+	TEST_ASSERT(fabs(steps_fast_tan(angle)-tan(angle))<1e-8);
+	angle = 0.1;
+	TEST_ASSERT(fabs(steps_fast_tan(angle)-tan(angle))<1e-8);
+	angle = 1.0;
+	TEST_ASSERT(fabs(steps_fast_tan(angle)-tan(angle))<1e-8);
+	angle = 10.0;
+	TEST_ASSERT(fabs(steps_fast_tan(angle)-tan(angle))<1e-8);
+	cout<<__FUNCTION__<<": "<<steps_fast_tan(angle)<<", "<<tan(angle)<<endl;
+}
+
+void UTILITY_TEST::test_steps_fast_sqrt()
+{
+	show_test_information_for_function_of_class(__FUNCTION__, "UTILITY_TEST");
+
+	double x = 0.01;
+	TEST_ASSERT(fabs(steps_fast_sqrt(x)-sqrt(x))<1e-8);
+	x = 0.1;
+	TEST_ASSERT(fabs(steps_fast_sqrt(x)-sqrt(x))<1e-8);
+	x = 1.0;
+	TEST_ASSERT(fabs(steps_fast_sqrt(x)-sqrt(x))<1e-8);
+	x = 10.0;
+	TEST_ASSERT(fabs(steps_fast_sqrt(x)-sqrt(x))<1e-8);
+	cout<<__FUNCTION__<<": "<<steps_fast_sqrt(x)<<", "<<sqrt(x)<<endl;
+}
+
+void UTILITY_TEST::test_steps_fast_inv_sqrt()
+{
+	show_test_information_for_function_of_class(__FUNCTION__, "UTILITY_TEST");
+
+	double x = 0.01;
+	TEST_ASSERT(fabs(steps_fast_inv_sqrt(x)-1.0/sqrt(x))<1e-4);
+	x = 0.1;
+	TEST_ASSERT(fabs(steps_fast_inv_sqrt(x)-1.0/sqrt(x))<1e-4);
+	x = 1.0;
+	TEST_ASSERT(fabs(steps_fast_inv_sqrt(x)-1.0/sqrt(x))<1e-4);
+	x = 10.0;
+	TEST_ASSERT(fabs(steps_fast_inv_sqrt(x)-1.0/sqrt(x))<1e-4);
+	cout<<__FUNCTION__<<": "<<steps_fast_inv_sqrt(x)<<", "<<1.0/sqrt(x)<<endl;
 }
 
 void UTILITY_TEST::test_radps2hz()

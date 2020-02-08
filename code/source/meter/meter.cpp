@@ -1212,7 +1212,7 @@ double METER::get_meter_value_as_a_generator() const
                 {
                     double p = gen_model->get_terminal_active_power_in_pu_based_on_mbase();
                     double q = gen_model->get_terminal_reactive_power_in_pu_based_on_mbase();
-                    return sqrt(p*p+q*q);
+                    return steps_sqrt(p*p+q*q);
                 }
             }
             if(meter_type =="TERMINAL APPRAENT POWER IN PU ON SBASE")
@@ -1223,7 +1223,7 @@ double METER::get_meter_value_as_a_generator() const
                 {
                     double p = gen_model->get_terminal_active_power_in_pu_based_on_mbase();
                     double q = gen_model->get_terminal_reactive_power_in_pu_based_on_mbase();
-                    return sqrt(p*p+q*q)*(mbase*one_over_sbase);
+                    return steps_sqrt(p*p+q*q)*(mbase*one_over_sbase);
                 }
             }
             if(meter_type =="TERMINAL APPRAENT POWER IN MVA")
@@ -1234,7 +1234,7 @@ double METER::get_meter_value_as_a_generator() const
                 {
                     double p = gen_model->get_terminal_active_power_in_pu_based_on_mbase();
                     double q = gen_model->get_terminal_reactive_power_in_pu_based_on_mbase();
-                    return sqrt(p*p+q*q)*mbase;
+                    return steps_sqrt(p*p+q*q)*mbase;
                 }
             }
             if(meter_type =="AIRGAP POWER IN PU ON MBASE")
@@ -1500,7 +1500,7 @@ double METER::get_meter_value_as_a_wt_generator() const
                 {
                     double p = gen_model->get_terminal_active_power_in_pu_based_on_mbase();
                     double q = gen_model->get_terminal_reactive_power_in_pu_based_on_mbase();
-                    return sqrt(p*p+q*q);
+                    return steps_sqrt(p*p+q*q);
                 }
                 else
                     return 0.0;
@@ -1511,7 +1511,7 @@ double METER::get_meter_value_as_a_wt_generator() const
                 {
                     double p = gen_model->get_terminal_active_power_in_MW()*one_over_sbase;
                     double q = gen_model->get_terminal_reactive_power_in_MVar()*one_over_sbase;
-                    return sqrt(p*p+q*q);
+                    return steps_sqrt(p*p+q*q);
                 }
                 else
                     return 0.0;
@@ -1522,7 +1522,7 @@ double METER::get_meter_value_as_a_wt_generator() const
                 {
                     double p = gen_model->get_terminal_active_power_in_MW();
                     double q = gen_model->get_terminal_reactive_power_in_MVar();
-                    return sqrt(p*p+q*q);
+                    return steps_sqrt(p*p+q*q);
                 }
                 else
                     return 0.0;
@@ -1882,7 +1882,7 @@ double METER::get_meter_value_as_a_pv_unit() const
                 {
                     double p = converter_model->get_terminal_active_power_in_pu_based_on_mbase();
                     double q = converter_model->get_terminal_reactive_power_in_pu_based_on_mbase();
-                    return sqrt(p*p+q*q);
+                    return steps_sqrt(p*p+q*q);
                 }
                 else
                     return 0.0;
@@ -1893,7 +1893,7 @@ double METER::get_meter_value_as_a_pv_unit() const
                 {
                     double p = converter_model->get_terminal_active_power_in_MW()*one_over_sbase;
                     double q = converter_model->get_terminal_reactive_power_in_MVar()*one_over_sbase;
-                    return sqrt(p*p+q*q);
+                    return steps_sqrt(p*p+q*q);
                 }
                 else
                     return 0.0;
@@ -1904,7 +1904,7 @@ double METER::get_meter_value_as_a_pv_unit() const
                 {
                     double p = converter_model->get_terminal_active_power_in_MW();
                     double q = converter_model->get_terminal_reactive_power_in_MVar();
-                    return sqrt(p*p+q*q);
+                    return steps_sqrt(p*p+q*q);
                 }
                 else
                     return 0.0;

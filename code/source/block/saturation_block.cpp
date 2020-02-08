@@ -101,12 +101,12 @@ double SATURATION_BLOCK::get_saturation(double V)
                 // ((V1-A)/(V2-A))^2 = (S1/S2)/(V2/V1) = (S1*V1)/(S2*V2) = C2
 
                 //double C2 = (S1*V1)/(S2*V2);
-                //double C = sqrt(C2);
+                //double C = steps_sqrt(C2);
 
                 if(C==INFINITE_THRESHOLD)
                 {
                     double C2 = (S1*V1)/(S2*V2);
-                    C = sqrt(C2);
+                    C = steps_sqrt(C2);
                 }
 
 

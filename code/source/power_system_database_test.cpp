@@ -8636,7 +8636,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_bus_complex_voltage()
     bus->set_positive_sequence_voltage_in_pu(1.05);
     bus->set_positive_sequence_angle_in_rad(0.5);
 
-    complex<double> V(1.05*cos(0.5), 1.05*sin(0.5));
+    complex<double> V(1.05*steps_cos(0.5), 1.05*steps_sin(0.5));
     TEST_ASSERT(abs(psdb.get_bus_positive_sequence_complex_voltage_in_pu(1)-V)<FLOAT_EPSILON);
 }
 

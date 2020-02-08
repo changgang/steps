@@ -45,6 +45,12 @@ class UTILITY_TEST : public Test::Suite
         void test_steps_fast_complex_abs();
         void test_steps_fast_complex_arg();
 
+        void test_steps_fast_sin();
+        void test_steps_fast_cos();
+        void test_steps_fast_tan();
+        void test_steps_fast_sqrt();
+        void test_steps_fast_inv_sqrt();
+
         void test_radps2hz();
         void test_hz2radps();
 

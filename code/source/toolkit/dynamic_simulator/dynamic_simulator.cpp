@@ -270,6 +270,7 @@ void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
 {
     ostringstream osstream;
     osstream<<"Configuration of dynamic simulator:\n"
+            <<"Fast sin/cos/tan function: "<<(use_steps_fast_math?"Enabled":"Disabled")<<"\n"
             <<"Time step: "<<get_dynamic_simulation_time_step_in_s()<<" s\n"
             <<"Allowed maximum power imbalance: "<<get_allowed_max_power_imbalance_in_MVA()<<" MVA\n"
             <<"Maximum iteration for DAE solution: "<<get_max_DAE_iteration()<<"\n"

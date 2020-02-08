@@ -587,7 +587,7 @@ void LINE_TEST::test_get_line_voltage_at_two_sides()
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
 
-    complex<double> Vs(1.1*cos(0.1), 1.1*sin(0.1)), Vr(1.05, 0.0);
+    complex<double> Vs(1.1*steps_cos(0.1), 1.1*steps_sin(0.1)), Vr(1.05, 0.0);
 
     TEST_ASSERT(abs(line.get_line_complex_voltage_at_sending_side_in_pu()-Vs)<1e-10);
     TEST_ASSERT(abs(line.get_line_complex_voltage_at_receiving_side_in_pu()-Vr)<1e-10);
@@ -611,7 +611,7 @@ void LINE_TEST::test_get_line_current_at_two_sides()
     line.set_shunt_positive_sequence_y_at_receiving_side_in_pu(Yshunt_r);
 
 
-    complex<double> Vs(1.1*cos(0.1), 1.1*sin(0.1)), Vr(1.05, 0.0);
+    complex<double> Vs(1.1*steps_cos(0.1), 1.1*steps_sin(0.1)), Vr(1.05, 0.0);
     complex<double> Isr, Is, Ir;
     double Ibase = 100.0/(SQRT3*110.0);
 
@@ -678,7 +678,7 @@ void LINE_TEST::test_get_line_power_at_two_sides()
     line.set_shunt_positive_sequence_y_at_receiving_side_in_pu(Yshunt_r);
 
 
-    complex<double> Vs(1.1*cos(0.1), 1.1*sin(0.1)), Vr(1.05, 0.0);
+    complex<double> Vs(1.1*steps_cos(0.1), 1.1*steps_sin(0.1)), Vr(1.05, 0.0);
     complex<double> Isr, Is, Ir, Ss, Sr;
 
     Isr = (Vs-Vr)/Zline;
@@ -749,7 +749,7 @@ void LINE_TEST::test_get_line_apparent_impedance_at_two_sides()
     line.set_shunt_positive_sequence_y_at_receiving_side_in_pu(Yshunt_r);
 
 
-    complex<double> Vs(1.1*cos(0.1), 1.1*sin(0.1)), Vr(1.05, 0.0);
+    complex<double> Vs(1.1*steps_cos(0.1), 1.1*steps_sin(0.1)), Vr(1.05, 0.0);
     complex<double> Isr, Is, Ir, Zs, Zr;
     double Zbase = 110.0*110.0/100.0;
 

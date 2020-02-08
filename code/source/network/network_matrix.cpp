@@ -577,8 +577,8 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_network(const TRANSFORMER& t
         double angle_secondary = trans.get_winding_angle_shift_in_deg(SECONDARY_SIDE);
         angle_secondary = deg2rad(angle_secondary);
 
-        complex<double> kp(tap_primary*cos(angle_primary),tap_primary*sin(angle_primary)),
-                        ks(tap_secondary*cos(angle_secondary),tap_secondary*sin(angle_secondary));
+        complex<double> kp(tap_primary*steps_cos(angle_primary),tap_primary*steps_sin(angle_primary)),
+                        ks(tap_secondary*steps_cos(angle_secondary),tap_secondary*steps_sin(angle_secondary));
 
 
         complex<double> V, I, Vstar;
@@ -806,9 +806,9 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_network(const TRANSFORMER&
         double angle_tertiary = trans.get_winding_angle_shift_in_deg(TERTIARY_SIDE);
         angle_tertiary = deg2rad(angle_tertiary);
 
-        complex<double> kp(tap_primary*cos(angle_primary),tap_primary*sin(angle_primary)),
-                        ks(tap_secondary*cos(angle_secondary),tap_secondary*sin(angle_secondary)),
-                        kt(tap_tertiary*cos(angle_tertiary),tap_tertiary*sin(angle_tertiary));
+        complex<double> kp(tap_primary*steps_cos(angle_primary),tap_primary*steps_sin(angle_primary)),
+                        ks(tap_secondary*steps_cos(angle_secondary),tap_secondary*steps_sin(angle_secondary)),
+                        kt(tap_tertiary*steps_cos(angle_tertiary),tap_tertiary*steps_sin(angle_tertiary));
 
         complex<double> V, I, Vstar;
         complex<double> ypp, yps, ypt, ysp, yss, yst, ytp, yts, ytt, Yeq, Zeq;
@@ -1072,8 +1072,8 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_network_v2(const TRANSFORMER
         double angle_secondary = trans.get_winding_angle_shift_in_deg(SECONDARY_SIDE);
         angle_secondary = deg2rad(angle_secondary);
 
-        complex<double> kp(tap_primary*cos(angle_primary),tap_primary*sin(angle_primary)),
-                        ks(tap_secondary*cos(angle_secondary),tap_secondary*sin(angle_secondary));
+        complex<double> kp(tap_primary*steps_cos(angle_primary),tap_primary*steps_sin(angle_primary)),
+                        ks(tap_secondary*steps_cos(angle_secondary),tap_secondary*steps_sin(angle_secondary));
 
 
         complex<double> V, I, Vstar;
@@ -1336,9 +1336,9 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_decoupled_network(const TR
         double angle_tertiary = trans.get_winding_angle_shift_in_deg(TERTIARY_SIDE);
         angle_tertiary = deg2rad(angle_tertiary);
 
-        complex<double> kp(tap_primary*cos(angle_primary),tap_primary*sin(angle_primary)),
-                        ks(tap_secondary*cos(angle_secondary),tap_secondary*sin(angle_secondary)),
-                        kt(tap_tertiary*cos(angle_tertiary),tap_tertiary*sin(angle_tertiary));
+        complex<double> kp(tap_primary*steps_cos(angle_primary),tap_primary*steps_sin(angle_primary)),
+                        ks(tap_secondary*steps_cos(angle_secondary),tap_secondary*steps_sin(angle_secondary)),
+                        kt(tap_tertiary*steps_cos(angle_tertiary),tap_tertiary*steps_sin(angle_tertiary));
 
         complex<double> V, I, Vstar;
         complex<double> ypp, yps, ypt, ysp, yss, yst, ytp, yts, ytt, Yeq, Zeq;
@@ -1890,8 +1890,8 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_decoupled_network_v2(const T
         double angle_secondary = trans.get_winding_angle_shift_in_deg(SECONDARY_SIDE);
         angle_secondary = deg2rad(angle_secondary);
 
-        complex<double> kp(tap_primary*cos(angle_primary),tap_primary*sin(angle_primary)),
-                        ks(tap_secondary*cos(angle_secondary),tap_secondary*sin(angle_secondary));
+        complex<double> kp(tap_primary*steps_cos(angle_primary),tap_primary*steps_sin(angle_primary)),
+                        ks(tap_secondary*steps_cos(angle_secondary),tap_secondary*steps_sin(angle_secondary));
 
 
         complex<double> V, I, Vstar;

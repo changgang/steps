@@ -671,10 +671,10 @@ double HVDC::get_rectifier_nominal_dc_power_command_in_MW() const
                 {
                     // (Vn-Idc*Rdc)*Idc = Pn
                     // Rdc*Idc2-Vn*Idc+Pn = 0
-                    // Idc = (Vn+-sqrt(Vn2-4*Rdc*Pn))/(2*Rdc)
+                    // Idc = (Vn+-steps_sqrt(Vn2-4*Rdc*Pn))/(2*Rdc)
                     // use
-                    // Idc = (Vn-sqrt(Vn2-4*Rdc*Pn))/(2*Rdc)
-                    double Idc = (Vn-sqrt(Vn*Vn-4.0*Rdc*Pn))/(2.0*Rdc);
+                    // Idc = (Vn-steps_sqrt(Vn2-4*Rdc*Pn))/(2*Rdc)
+                    double Idc = (Vn-steps_sqrt(Vn*Vn-4.0*Rdc*Pn))/(2.0*Rdc);
                     double Vdci = Pn/Idc;
                     double Vdcr = Vdci+Rdc*Idc;
                     return Vdcr*Idc;
@@ -683,8 +683,8 @@ double HVDC::get_rectifier_nominal_dc_power_command_in_MW() const
                 {
                     // (Vn-Idc*Rcomp)*Idc = Pn;
                     // use
-                    // Idc = (Vn-sqrt(Vn2-4*Rcomp*Pn))/(2*Rcomp)
-                    double Idc = (Vn-sqrt(Vn*Vn-4.0*Rcomp*Pn))/(2.0*Rcomp);
+                    // Idc = (Vn-steps_sqrt(Vn2-4*Rcomp*Pn))/(2*Rcomp)
+                    double Idc = (Vn-steps_sqrt(Vn*Vn-4.0*Rcomp*Pn))/(2.0*Rcomp);
                     double Vdci = Pn/Idc;
                     double Vdcr = Vdci+Rdc*Idc;
                     return Vdcr*Idc;
@@ -742,13 +742,13 @@ double HVDC::get_rectifier_nominal_dc_current_command_in_kA() const
                 {
                     // Pn = (Vn+Rdc*Idc)*Idc
                     // Rdc*Idc2 +Vn*Idc -Pn = 0
-                    double Idc = (-Vn+sqrt(Vn*Vn+4.0*Rdc*Pn))/(2.0*Rdc);
+                    double Idc = (-Vn+steps_sqrt(Vn*Vn+4.0*Rdc*Pn))/(2.0*Rdc);
                     return Idc;
                 }
                 else
                 {
                     // Pn = (Vn+(Rdc-Rcomp)*Idc)*Idc;
-                    double Idc = (-Vn+sqrt(Vn*Vn+4.0*(Rdc-Rcomp)*Pn))/(2.0*(Rdc-Rcomp));
+                    double Idc = (-Vn+steps_sqrt(Vn*Vn+4.0*(Rdc-Rcomp)*Pn))/(2.0*(Rdc-Rcomp));
                     return Idc;
                 }
             }
@@ -766,18 +766,18 @@ double HVDC::get_rectifier_nominal_dc_current_command_in_kA() const
                 {
                     // (Vn-Idc*Rdc)*Idc = Pn
                     // Rdc*Idc2-Vn*Idc+Pn = 0
-                    // Idc = (Vn+-sqrt(Vn2-4*Rdc*Pn))/(2*Rdc)
+                    // Idc = (Vn+-steps_sqrt(Vn2-4*Rdc*Pn))/(2*Rdc)
                     // use
-                    // Idc = (Vn-sqrt(Vn2-4*Rdc*Pn))/(2*Rdc)
-                    double Idc = (Vn-sqrt(Vn*Vn-4.0*Rdc*Pn))/(2.0*Rdc);
+                    // Idc = (Vn-steps_sqrt(Vn2-4*Rdc*Pn))/(2*Rdc)
+                    double Idc = (Vn-steps_sqrt(Vn*Vn-4.0*Rdc*Pn))/(2.0*Rdc);
                     return Idc;
                 }
                 else
                 {
                     // (Vn-Idc*Rcomp)*Idc = Pn;
                     // use
-                    // Idc = (Vn-sqrt(Vn2-4*Rcomp*Pn))/(2*Rcomp)
-                    double Idc = (Vn-sqrt(Vn*Vn-4.0*Rcomp*Pn))/(2.0*Rcomp);
+                    // Idc = (Vn-steps_sqrt(Vn2-4*Rcomp*Pn))/(2*Rcomp)
+                    double Idc = (Vn-steps_sqrt(Vn*Vn-4.0*Rcomp*Pn))/(2.0*Rcomp);
                     return Idc;
                 }
             }
@@ -1474,7 +1474,7 @@ double HVDC::get_converter_commutating_overlap_angle_in_deg(HVDC_CONVERTER_SIDE 
     double Idc = get_line_dc_current_in_kA();
     double alpha_gamma = deg2rad(get_converter_alpha_or_gamma_in_deg(converter));
 
-    double mu = acos(cos(alpha_gamma)-SQRT2*Idc*Xc/Eac)-alpha_gamma;
+    double mu = steps_acos(steps_cos(alpha_gamma)-SQRT2*Idc*Xc/Eac)-alpha_gamma;
 
     return rad2deg(mu);
 }
@@ -1538,7 +1538,7 @@ double HVDC::get_converter_ac_reactive_power_in_MVar(HVDC_CONVERTER_SIDE convert
     double Pac = get_converter_ac_active_power_in_MW(converter);
     double pf = get_converter_ac_power_factor(converter);
 
-    return Pac*sqrt(1.0-pf*pf)/pf;
+    return Pac*steps_sqrt(1.0-pf*pf)/pf;
 }
 
 double HVDC::get_converter_ac_apparent_power_in_MVA(HVDC_CONVERTER_SIDE converter) const
@@ -1568,10 +1568,10 @@ double HVDC::get_converter_ac_power_factor(HVDC_CONVERTER_SIDE converter) const
     double alpha_gamma = get_converter_alpha_or_gamma_in_deg(converter);
     alpha_gamma = deg2rad(alpha_gamma);
 
-    double tanPhi = 2*mu+sin(2*alpha_gamma)-sin(2.0*(mu+alpha_gamma));
-    tanPhi /= (cos(2.0*alpha_gamma)-cos(2.0*(mu+alpha_gamma)));
+    double tanPhi = 2*mu+steps_sin(2*alpha_gamma)-steps_sin(2.0*(mu+alpha_gamma));
+    tanPhi /= (steps_cos(2.0*alpha_gamma)-steps_cos(2.0*(mu+alpha_gamma)));
 
-    return cos(atan(tanPhi));
+    return steps_cos(steps_atan(tanPhi));
 }
 
 
@@ -1668,7 +1668,7 @@ bool HVDC::solve_converter_transformer_tap_and_desired_firing_angle(HVDC_CONVERT
 
     double angle_min = get_converter_min_alpha_or_gamma_in_deg(converter);
     angle_min = deg2rad(angle_min);
-    double cos_angle_min = cos(angle_min);
+    double cos_angle_min = steps_cos(angle_min);
     bool minAngleReached = false;
     double cosAngle =  0.0;
     while(true)// try to decrease tap
@@ -1700,7 +1700,7 @@ bool HVDC::solve_converter_transformer_tap_and_desired_firing_angle(HVDC_CONVERT
     }
     // set firing angle
     if(not minAngleReached)
-        set_converter_alpha_or_gamma_in_deg(converter, rad2deg(acos(cosAngle)));
+        set_converter_alpha_or_gamma_in_deg(converter, rad2deg(steps_acos(cosAngle)));
     else
         set_converter_alpha_or_gamma_in_deg(converter, get_converter_min_alpha_or_gamma_in_deg(converter));
 
@@ -1744,7 +1744,7 @@ void HVDC::solve_best_converter_transformer_tap_with_min_angle(HVDC_CONVERTER_SI
 
     double Eac_cosAngle = Vdc/N+(3.0*ONE_OVER_PI)*Z.imag()*Idc+2.0*Z.real()*Idc+Vdrop;
     Eac_cosAngle /= (3.0*SQRT2*ONE_OVER_PI);
-    double Eac = Eac_cosAngle/cos(angle_min);
+    double Eac = Eac_cosAngle/steps_cos(angle_min);
     double Tap = Vbus/(Eac*TurnRatio); // desired
     Tap = minTap +  TapStep*floor((Tap-minTap)/TapStep); // actual
     if(Tap < minTap) Tap = minTap; // apply limit
@@ -1873,11 +1873,11 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
         // with solved Tap, solve Idc again
         EacI = VbusI/TurnRatioI/TapI;
         double a = (-3.0*ONE_OVER_PI)*ZI.imag()+2.0*ZI.real();
-        double b = (3.0*SQRT2*ONE_OVER_PI)*EacI*cos(gamma_min)-VdropI;
+        double b = (3.0*SQRT2*ONE_OVER_PI)*EacI*steps_cos(gamma_min)-VdropI;
         double c = -Pn/NI;
         double Idc1, Idc2;
-        Idc1 = (-b+sqrt(b*b-4*a*c))/(2*a);
-        Idc2 = (-b-sqrt(b*b-4*a*c))/(2*a);
+        Idc1 = (-b+steps_sqrt(b*b-4*a*c))/(2*a);
+        Idc2 = (-b-steps_sqrt(b*b-4*a*c))/(2*a);
         Idc = (fabs(Idc1-In)<fabs(Idc2-In)) ? Idc1:Idc2;
 
         VdcI = solve_converter_dc_voltage_in_kV_with_dc_current_and_transformer_tap(INVERTER, Idc, TapI);
@@ -1887,13 +1887,13 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
         TapR =  get_converter_transformer_tap_in_pu(RECTIFIER);
         // with Tap, solve alpha
         cosAlpha = solve_desired_converter_cosAngle_with_desired_dc_voltage_current_and_transformer_tap(RECTIFIER, VdcR, Idc, TapR);
-        if(cosAlpha>=cos(alpha_min))
+        if(cosAlpha>=steps_cos(alpha_min))
         {
             set_converter_alpha_or_gamma_in_deg(RECTIFIER, get_converter_min_alpha_or_gamma_in_deg(RECTIFIER));
             temp_converter_firing_angle_fixed[RECTIFIER] = true;
         }
         else//solved
-            set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(acos(cosAlpha)));
+            set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(steps_acos(cosAlpha)));
     }
     else //RECTIFIER
     {
@@ -1910,7 +1910,7 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
         TapR = get_converter_transformer_tap_in_pu(RECTIFIER);
         // solve cosAlpha
         cosAlpha = solve_desired_converter_cosAngle_with_desired_dc_voltage_current_and_transformer_tap(RECTIFIER, VdcR, Idc, TapR);
-        if(cosAlpha>=cos(alpha_min))
+        if(cosAlpha>=steps_cos(alpha_min))
         {
             set_converter_alpha_or_gamma_in_deg(RECTIFIER, get_converter_min_alpha_or_gamma_in_deg(RECTIFIER));
             temp_converter_firing_angle_fixed[RECTIFIER] = true;
@@ -1955,13 +1955,13 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_gamma()
     double TapR = get_converter_transformer_tap_in_pu(RECTIFIER);
     // with Tap, solve alpha
     cosAlpha = solve_desired_converter_cosAngle_with_desired_dc_voltage_current_and_transformer_tap(RECTIFIER, VdcR, Idc, TapR);
-    if(cosAlpha>=cos(alpha_min))
+    if(cosAlpha>=steps_cos(alpha_min))
     {
         set_converter_alpha_or_gamma_in_deg(RECTIFIER, get_converter_min_alpha_or_gamma_in_deg(RECTIFIER));
         temp_converter_firing_angle_fixed[RECTIFIER] = true;
     }
     else//solved
-        set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(acos(cosAlpha)));
+        set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(steps_acos(cosAlpha)));
 
     solve_with_solved_tap_and_firing_angle();
 }
@@ -1999,13 +1999,13 @@ void HVDC::solve_as_rectifier_regulating_alpha_and_inverter_regulating_current()
     // with Tap, solve alpha
     double cosGamma = solve_desired_converter_cosAngle_with_desired_dc_voltage_current_and_transformer_tap(INVERTER, VdcI, Idc, TapI);
 
-    if(cosGamma>=cos(gamma_min))
+    if(cosGamma>=steps_cos(gamma_min))
     {
         set_converter_alpha_or_gamma_in_deg(INVERTER, get_converter_min_alpha_or_gamma_in_deg(INVERTER));
         temp_converter_firing_angle_fixed[INVERTER] = true;
     }
     else//solved
-        set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(acos(cosGamma)));
+        set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(steps_acos(cosGamma)));
 
     solve_with_solved_tap_and_firing_angle();
 }
@@ -2052,17 +2052,17 @@ void HVDC::solve_with_solved_tap_and_firing_angle()
     double Rceq_r = NR*(3.0*ONE_OVER_PI*ZR.imag()+2.0*ZR.real());
     double Rceq_i = NI*(3.0*ONE_OVER_PI*ZI.imag()+2.0*ZI.real());
 
-    double Idc = Vdc0_r*cos(alpha)-NR*VdropR - (Vdc0_i*cos(gamma)-NI*VdropI);
+    double Idc = Vdc0_r*steps_cos(alpha)-NR*VdropR - (Vdc0_i*steps_cos(gamma)-NI*VdropI);
     Idc /= (R+Rceq_r-Rceq_i);
 
-    double VdcR = Vdc0_r*cos(alpha)-Rceq_r*Idc-NR*VdropR;
-    double VdcI = Vdc0_i*cos(gamma)-Rceq_i*Idc-NI*VdropI;
+    double VdcR = Vdc0_r*steps_cos(alpha)-Rceq_r*Idc-NR*VdropR;
+    double VdcI = Vdc0_i*steps_cos(gamma)-Rceq_i*Idc-NI*VdropI;
 
-    //double Idc = NR*(3.0*SQRT2*ONE_OVER_PI*EacR*cos(alpha) - VdropR) - NI*(3.0*SQRT2*ONE_OVER_PI*EacI*cos(gamma) - VdropI);
+    //double Idc = NR*(3.0*SQRT2*ONE_OVER_PI*EacR*steps_cos(alpha) - VdropR) - NI*(3.0*SQRT2*ONE_OVER_PI*EacI*steps_cos(gamma) - VdropI);
     //Idc /= (R+NR*3.0*ZR.imag()*ONE_OVER_PI-NI*3.0*ZI.imag()*ONE_OVER_PI+NR*2.0*ZR.real()+NI*2.0*ZI.real());
 
-    //double VdcR = NR*(3.0*SQRT2*ONE_OVER_PI*EacR*cos(alpha) - 3.0*ZR.imag()*ONE_OVER_PI*Idc - 2.0*ZR.real()*Idc- VdropR);
-    //double VdcI = NI*(3.0*SQRT2*ONE_OVER_PI*EacI*cos(gamma) - 3.0*ZI.imag()*ONE_OVER_PI*Idc + 2.0*ZI.real()*Idc- VdropI);
+    //double VdcR = NR*(3.0*SQRT2*ONE_OVER_PI*EacR*steps_cos(alpha) - 3.0*ZR.imag()*ONE_OVER_PI*Idc - 2.0*ZR.real()*Idc- VdropR);
+    //double VdcI = NI*(3.0*SQRT2*ONE_OVER_PI*EacI*steps_cos(gamma) - 3.0*ZI.imag()*ONE_OVER_PI*Idc + 2.0*ZI.real()*Idc- VdropI);
 
     set_line_dc_current_in_kA(Idc);
     set_converter_dc_voltage_in_kV(RECTIFIER, VdcR);
@@ -2116,7 +2116,7 @@ double HVDC::solve_converter_dc_voltage_in_kV_with_dc_current_and_transformer_ta
 
     double Vbus = psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(converter));
     double Eac = Vbus/(TurnRatio*Tap);
-    double Vdc = N*((3.0*SQRT2*ONE_OVER_PI)*Eac*cos(angle_min)-(3.0*ONE_OVER_PI)*Z.imag()*Idc-2.0*Z.real()*Idc-Vdrop);
+    double Vdc = N*((3.0*SQRT2*ONE_OVER_PI)*Eac*steps_cos(angle_min)-(3.0*ONE_OVER_PI)*Z.imag()*Idc-2.0*Z.real()*Idc-Vdrop);
     return Vdc;
 }
 

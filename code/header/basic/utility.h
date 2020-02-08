@@ -32,16 +32,39 @@ double deg2rad(double angle);
 double radps2hz(double w);
 double hz2radps(double f);
 
+double steps_sin(double angle_in_rad);
+double steps_fast_sin(double angle_in_rad);
+
+double steps_cos(double angle_in_rad);
+double steps_fast_cos(double angle_in_rad);
+
+double steps_tan(double angle_in_rad);
+double steps_fast_tan(double angle_in_rad);
+
+double steps_asin(double x);
+double steps_fast_asin(double x);
+
+double steps_acos(double x);
+double steps_fast_acos(double x);
+
+double steps_atan(double x);
+double steps_fast_atan(double x);
+
 double round_angle_in_rad_to_PI(double angle);
+double round_angle_in_rad_to_HALF_PI(double angle);
+
 double steps_fast_complex_abs(const complex<double>& z);
 double steps_fast_complex_arg(const complex<double>& z);
 double steps_fast_pow(double base, double exp);
-double steps_fast_sine(double angle_in_rad);
-double steps_fast_arcsine(double angle_in_rad);
-double steps_fast_cosine(double angle_in_rad);
-double steps_fast_arccosine(double angle_in_rad);
-double steps_fast_tangent(double angle_in_rad);
-double steps_fast_arctangent(double angle_in_rad);
+
+double steps_sqrt(double x);
+double steps_fast_sqrt(double x);
+
+double steps_inv_sqrt(double x);
+double steps_fast_inv_sqrt(double x);
+float quick_inv_sqrt_Quake3(float x);
+float quick_inv_sqrt_Lomont(float x);
+double quick_double_inv_sqrt_Lomont(double x);
 
 string trim_string(string str, const string& garbage="");
 string replace_string_contents(string str, const string& source, const string& destination);

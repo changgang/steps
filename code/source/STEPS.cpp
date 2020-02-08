@@ -1,6 +1,7 @@
 #include "header/STEPS.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
+#include "header/basic/steps_enum.h"
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -8,6 +9,8 @@ using namespace std;
 
 STEPS::STEPS(const string& name, const string& log_file)
 {
+    enable_use_steps_fast_math_logic();
+
     ostringstream osstream;
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
@@ -66,6 +69,22 @@ void STEPS::set_toolkit_name(const string& name)
 string STEPS::get_toolkit_name() const
 {
     return toolkit_name;
+}
+
+
+void STEPS::enable_use_steps_fast_math_logic()
+{
+    use_steps_fast_math = true;
+}
+
+void STEPS::disable_use_steps_fast_math_logic()
+{
+    use_steps_fast_math = false;
+}
+
+bool STEPS::get_use_steps_fast_math_logic()
+{
+    return use_steps_fast_math;
 }
 
 void STEPS::set_thread_number(unsigned int n)

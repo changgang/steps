@@ -859,7 +859,7 @@ string PSSE_IMEXPORTER::export_source_var_control_data(const SOURCE* source) con
     }
     else
     {
-        double pf = p/sqrt(p*p+qmax*qmax);
+        double pf = p/steps_sqrt(p*p+qmax*qmax);
         osstream<<"2, "<<setprecision(6)<<pf;
     }
     return osstream.str();

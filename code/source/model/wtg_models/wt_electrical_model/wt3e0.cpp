@@ -995,7 +995,7 @@ void WT3E0::run(DYNAMIC_MODE mode)
                 if(var_mode==CONSTANT_POWER_FACTOR_MODE)
                 {
                     double pf = get_power_factor_reference_in_pu();
-                    qcmd = sqrt(1.0-pf*pf)/pf*active_power_sensor.get_output();
+                    qcmd = steps_sqrt(1.0-pf*pf)/pf*active_power_sensor.get_output();
                 }
                 else
                     qcmd = voltage_regulator_filter.get_output();
@@ -1087,7 +1087,7 @@ double WT3E0::get_reactive_power_command_in_pu_based_on_mbase()
             double pf = get_power_factor_reference_in_pu();
             double p = active_power_sensor.get_output();
 
-            return p*sqrt(1.0-pf*pf)/pf;
+            return p*steps_sqrt(1.0-pf*pf)/pf;
         }
         case CONSTANT_VOLTAGE_MODE:
         {

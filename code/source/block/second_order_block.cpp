@@ -75,8 +75,8 @@ void SECOND_ORDER_BLOCK::initialize()
 {
     // when d!=0
     // (ds+e)/(as^2+bs+c)=k(s+h)/[(s+f)(s+g)]
-    // where: f = -[-b+sqrt(b^2-4ac)]/(2a)
-    //        g = -[-b-sqrt(b^2-4ac)]/(2a)
+    // where: f = -[-b+steps_sqrt(b^2-4ac)]/(2a)
+    //        g = -[-b-steps_sqrt(b^2-4ac)]/(2a)
     //        h = e/d
     //        k = d/a
     // k(s+h)/[(s+f)(s+g)]=k(s+g+h-g)/[(s+f)(s+g)]=k/(s+f)*[1+(h-g)/(s+g)]
@@ -86,8 +86,8 @@ void SECOND_ORDER_BLOCK::initialize()
 
     // when d=0
     // (ds+e)/(as^2+bs+c)=k/[(s+f)(s+g)]
-    // where: f = -[-b+sqrt(b^2-4ac)]/(2a)
-    //        g = -[-b-sqrt(b^2-4ac)]/(2a)
+    // where: f = -[-b+steps_sqrt(b^2-4ac)]/(2a)
+    //        g = -[-b-steps_sqrt(b^2-4ac)]/(2a)
     //        k = e/a
     // k/[(s+f)(s+g)] = k/(s+f)*(1/(s+g))
     // therefore, block1 is: k/(s+f)
@@ -99,7 +99,7 @@ void SECOND_ORDER_BLOCK::initialize()
     block2.set_toolkit(toolkit);
 
     double b2_minus_4ac = b*b-4.0*a*c;
-    double root_of_b2_minus_4ac = sqrt(b2_minus_4ac);
+    double root_of_b2_minus_4ac = steps_sqrt(b2_minus_4ac);
     double f = -(-b+root_of_b2_minus_4ac)/(2.0*a);
     double g = -(-b-root_of_b2_minus_4ac)/(2.0*a);
     if(d!=0)

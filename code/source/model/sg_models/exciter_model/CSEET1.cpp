@@ -615,7 +615,7 @@ double CSEET1::get_Fex(double Ve, double Ifd) const
         else
         {
             if(In<0.75)
-                Fex = sqrt(0.75-In*In);
+                Fex = steps_sqrt(0.75-In*In);
             else
             {
                 if(In<=1.0)

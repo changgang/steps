@@ -1057,8 +1057,8 @@ complex<double> TRANSFORMER::get_two_winding_trans_star_bus_complex_voltage_in_p
             double angle_secondary = get_winding_angle_shift_in_deg(SECONDARY_SIDE);
             angle_secondary = deg2rad(angle_secondary);
 
-            complex<double> k_primary(tap_primary*cos(angle_primary),tap_primary*sin(angle_primary));
-            complex<double> k_secondary(tap_secondary*cos(angle_secondary),tap_secondary*sin(angle_secondary));
+            complex<double> k_primary(tap_primary*steps_cos(angle_primary),tap_primary*steps_sin(angle_primary));
+            complex<double> k_secondary(tap_secondary*steps_cos(angle_secondary),tap_secondary*steps_sin(angle_secondary));
 
             complex<double> Vp = V_primary/k_primary, Vs = V_secondary/k_secondary;
 
@@ -1123,9 +1123,9 @@ complex<double> TRANSFORMER::get_three_winding_trans_star_bus_complex_voltage_in
             double angle_tertiary = get_winding_angle_shift_in_deg(TERTIARY_SIDE);
             angle_tertiary = deg2rad(angle_tertiary);
 
-            complex<double> k_primary(tap_primary*cos(angle_primary),tap_primary*sin(angle_primary));
-            complex<double> k_secondary(tap_secondary*cos(angle_secondary),tap_secondary*sin(angle_secondary));
-            complex<double> k_tertiary(tap_tertiary*cos(angle_tertiary),tap_tertiary*sin(angle_tertiary));
+            complex<double> k_primary(tap_primary*steps_cos(angle_primary),tap_primary*steps_sin(angle_primary));
+            complex<double> k_secondary(tap_secondary*steps_cos(angle_secondary),tap_secondary*steps_sin(angle_secondary));
+            complex<double> k_tertiary(tap_tertiary*steps_cos(angle_tertiary),tap_tertiary*steps_sin(angle_tertiary));
 
             complex<double> Vp = V_primary/k_primary, Vs = V_secondary/k_secondary, Vt = V_tertiary/k_tertiary;
 
@@ -1268,7 +1268,7 @@ complex<double> TRANSFORMER::get_two_winding_trans_primary_winding_complex_curre
         double angle_primary = get_winding_angle_shift_in_deg(PRIMARY_SIDE);
         angle_primary = deg2rad(angle_primary);
 
-        complex<double> k_primary(tap_primary*cos(angle_primary),tap_primary*sin(angle_primary));
+        complex<double> k_primary(tap_primary*steps_cos(angle_primary),tap_primary*steps_sin(angle_primary));
 
         complex<double> V_primary = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_winding_bus(PRIMARY_SIDE));
 
@@ -1300,7 +1300,7 @@ complex<double> TRANSFORMER::get_two_winding_trans_secondary_winding_complex_cur
         double angle_secondary = get_winding_angle_shift_in_deg(SECONDARY_SIDE);
         angle_secondary = deg2rad(angle_secondary);
 
-        complex<double> k_secondary(tap_secondary*cos(angle_secondary),tap_secondary*sin(angle_secondary));
+        complex<double> k_secondary(tap_secondary*steps_cos(angle_secondary),tap_secondary*steps_sin(angle_secondary));
 
         complex<double> V_secondary = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_winding_bus(SECONDARY_SIDE));
 
@@ -1336,7 +1336,7 @@ complex<double> TRANSFORMER::get_three_winding_trans_primary_winding_complex_cur
         double angle_primary = get_winding_angle_shift_in_deg(PRIMARY_SIDE);
         angle_primary = deg2rad(angle_primary);
 
-        complex<double> k_primary(tap_primary*cos(angle_primary),tap_primary*sin(angle_primary));
+        complex<double> k_primary(tap_primary*steps_cos(angle_primary),tap_primary*steps_sin(angle_primary));
 
         complex<double> Vp = V_primary/k_primary;
 
@@ -1370,7 +1370,7 @@ complex<double> TRANSFORMER::get_three_winding_trans_secondary_winding_complex_c
         double angle_secondary = get_winding_angle_shift_in_deg(SECONDARY_SIDE);
         angle_secondary = deg2rad(angle_secondary);
 
-        complex<double> k_secondary(tap_secondary*cos(angle_secondary),tap_secondary*sin(angle_secondary));
+        complex<double> k_secondary(tap_secondary*steps_cos(angle_secondary),tap_secondary*steps_sin(angle_secondary));
 
         complex<double> Vs = V_secondary/k_secondary;
 
@@ -1404,7 +1404,7 @@ complex<double> TRANSFORMER::get_three_winding_trans_tertiary_winding_complex_cu
         double angle_tertiary = get_winding_angle_shift_in_deg(TERTIARY_SIDE);
         angle_tertiary = deg2rad(angle_tertiary);
 
-        complex<double> k_tertiary(tap_tertiary*cos(angle_tertiary),tap_tertiary*sin(angle_tertiary));
+        complex<double> k_tertiary(tap_tertiary*steps_cos(angle_tertiary),tap_tertiary*steps_sin(angle_tertiary));
 
         complex<double> Vt = V_tertiary/k_tertiary;
 

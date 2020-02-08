@@ -329,7 +329,7 @@ void VSC_HVDC::initialize_dc_power_and_voltage_command()
             {
                 // rec_P = (inv_V-IR)*I
                 // R*I^2 - inv_V*I + rec_P = 0
-                I =(inv_V-sqrt(inv_V*inv_V-4.0*R*rec_P))/(2.0*R);
+                I =(inv_V-steps_sqrt(inv_V*inv_V-4.0*R*rec_P))/(2.0*R);
                 set_converter_nominal_dc_voltage_command_in_kV(RECTIFIER, inv_V-I*R);
                 set_converter_nominal_dc_power_command_in_MW(INVERTER, -(rec_P+I*I*R));
                 set_nominal_dc_current_command_in_kA(I);
@@ -339,7 +339,7 @@ void VSC_HVDC::initialize_dc_power_and_voltage_command()
                 rec_P = -rec_P;
                 // rec_P = (inv_V+IR)*I
                 // R*I^2 + inv_V*I - rec_P = 0
-                I =(-inv_V+sqrt(inv_V*inv_V+4.0*R*rec_P))/(2.0*R);
+                I =(-inv_V+steps_sqrt(inv_V*inv_V+4.0*R*rec_P))/(2.0*R);
                 set_converter_nominal_dc_voltage_command_in_kV(RECTIFIER, inv_V+I*R);
                 set_converter_nominal_dc_power_command_in_MW(INVERTER, rec_P-I*I*R);
                 set_nominal_dc_current_command_in_kA(I);
@@ -355,7 +355,7 @@ void VSC_HVDC::initialize_dc_power_and_voltage_command()
                 {
                     // inv_P = (rec_V-IR)*I
                     // R*I^2 - rec_V*I + inv_P = 0
-                    I =(rec_V-sqrt(rec_V*rec_V-4.0*R*inv_P))/(2.0*R);
+                    I =(rec_V-steps_sqrt(rec_V*rec_V-4.0*R*inv_P))/(2.0*R);
                     set_converter_nominal_dc_voltage_command_in_kV(INVERTER, rec_V-I*R);
                     set_converter_nominal_dc_power_command_in_MW(RECTIFIER, -(inv_P+I*I*R));
                     set_nominal_dc_current_command_in_kA(I);
@@ -365,7 +365,7 @@ void VSC_HVDC::initialize_dc_power_and_voltage_command()
                     inv_P = -inv_P;
                     // inv_P = (rec_V+IR)*I
                     // R*I^2 + rec_V*I - inv_P = 0
-                    I =(-rec_V+sqrt(rec_V*rec_V+4.0*R*inv_P))/(2.0*R);
+                    I =(-rec_V+steps_sqrt(rec_V*rec_V+4.0*R*inv_P))/(2.0*R);
                     set_converter_nominal_dc_voltage_command_in_kV(INVERTER, rec_V+I*R);
                     set_converter_nominal_dc_power_command_in_MW(RECTIFIER, inv_P-I*I*R);
                     set_nominal_dc_current_command_in_kA(I);

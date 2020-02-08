@@ -114,7 +114,7 @@ void PSASPVC::initialize()
         double P = gen->get_p_generation_in_MW();
         double Q = gen->get_q_generation_in_MVar();
 
-        sin_phi = Q/sqrt(P*P+Q*Q);
+        sin_phi = Q/steps_sqrt(P*P+Q*Q);
 
         set_flag_model_initialized_as_false();
     }

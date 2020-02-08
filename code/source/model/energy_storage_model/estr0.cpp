@@ -372,7 +372,7 @@ void ESTR0::initialize()
     double iP = P/V;
     double iQ = Q/V;
 
-    double Iqmax = sqrt(iacmax*iacmax-iP*iP);
+    double Iqmax = steps_sqrt(iacmax*iacmax-iP*iP);
     reactive_integral_block.set_upper_limit(Iqmax);
     reactive_integral_block.set_lower_limit(-Iqmax);
 
@@ -478,7 +478,7 @@ void ESTR0::run(DYNAMIC_MODE mode)
     reactive_lead_lag_2.run(mode);
 
     double iP = P/V;
-    double Iqmax = sqrt(iacmax*iacmax-iP*iP);
+    double Iqmax = steps_sqrt(iacmax*iacmax-iP*iP);
     reactive_integral_block.set_upper_limit(Iqmax);
     reactive_integral_block.set_lower_limit(-Iqmax);
 

@@ -200,6 +200,7 @@ void POWERFLOW_SOLVER::show_powerflow_solver_configuration() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     osstream<<"Configuration of powerflow solver:\n"
+            <<"Fast sin/cos/tan functions: "<<(use_steps_fast_math?"Enabled":"Disabled")<<"\n"
             <<"Maximum iteration: "<<get_max_iteration()<<"\n"
             <<"Iteration accelerator: "<<get_iteration_accelerator()<<"\n"
             <<"Allowed maximum P mismatch: "<<get_allowed_max_active_power_imbalance_in_MW()<<" MW\n"

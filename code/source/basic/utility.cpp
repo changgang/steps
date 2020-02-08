@@ -177,39 +177,27 @@ double hz2radps(double f)
 
 double round_angle_in_rad_to_PI(double angle)
 {
-    while(fabs(angle)>PI)
-    {
-        if(angle>PI)
-            angle -= PI2;
-        else
-        {
-            if(angle<-PI)
-                angle += PI2;
-        }
-    }
-    return angle;
-/*
-    if(angle>PI)
-    {
-        angle -= (PI+PI);
-    }
+    double abs_angle = fabs(angle);
+    if(abs_angle>PI)
+        return (angle>0.0?1.0:-1.0)*(abs_angle - ceil((abs_angle-PI)*ONE_OVER_PI2)*PI2);
     else
-    {
-        if(angle<(-PI))
-            angle += (PI+PI);
-    }
-    if(fabs(angle)<=PI)
         return angle;
+}
+
+double round_angle_in_rad_to_HALF_PI(double angle)
+{
+    double abs_angle = fabs(angle);
+    if(abs_angle>HALF_PI)
+        return (angle>0.0?1.0:-1.0)*(abs_angle - ceil((abs_angle-HALF_PI)*ONE_OVER_PI)*PI);
     else
-        return round_angle_in_rad_to_PI(angle);
-*/
+        return angle;
 }
 
 double steps_fast_complex_abs(const complex<double>& z)
 {
 	double x = z.real();
 	double y = z.imag();
-	return sqrt(x*x+y*y);
+	return steps_sqrt(x*x+y*y);
 }
 
 double steps_fast_complex_arg(const complex<double>& z)
@@ -219,7 +207,7 @@ double steps_fast_complex_arg(const complex<double>& z)
 
 	if(x != 0.0 and y != 0.0)
 	{
-	    double angle = atan(y / x);
+	    double angle = steps_atan(y / x);
         if (x < 0.0)
         {
             if (y > 0.0)
@@ -276,18 +264,41 @@ double steps_fast_pow(double base, double exp)
 		return base*base*base;
 }
 
-double steps_fast_sine(double angle_in_rad)
+double steps_sin(double angle_in_rad)
 {
+    if(use_steps_fast_math==true)
+        return steps_fast_sin(angle_in_rad);
+    else
+        return sin(angle_in_rad);
+}
+
+double steps_fast_sin(double angle_in_rad)
+{
+    //return sin(angle_in_rad);
     double x = angle_in_rad;
-    // round to [-PI, PI]
-    while(x<-PI or x>PI)
-    {
-        if(x<-PI) x+=PI2;
-        else
-        {
-            if(x>PI) x-=PI2;
-        }
-    }
+    x = round_angle_in_rad_to_PI(x);
+    if(x>HALF_PI)
+        x = PI-x;
+    else
+        if(x<-HALF_PI)
+            x = -PI - x;
+
+    double x2 = x*x;
+    double x3 = x*x2;
+    double x5 = x3*x2;
+    double x7 = x5*x2;
+    double x9 = x7*x2;
+    double x11 = x9*x2;
+    double x13 = x11*x2;
+
+    return x-0.1666666666666666666666666666667*x3
+            +8.3333333333333333333333333333333e-3*x5
+            -1.984126984126984126984126984127e-4*x7
+            +2.7557319223985890652557319223986e-6*x9
+            -2.5052108385441718775052108385442e-8*x11
+            +1.6059043836821614599392377170155e-10*x13;
+
+    return 0.99999660*x-0.16664824*x3+0.00830629*x5-0.00018363*x7;
     //compute sine
     double sin = 0.0;
     if (x < 0)
@@ -304,29 +315,153 @@ double steps_fast_sine(double angle_in_rad)
     }
     return sin;
 }
-double steps_fast_arcsine(double angle_in_rad)
+
+double steps_cos(double angle_in_rad)
 {
-    return 0.0;
-}
-double steps_fast_cosine(double angle_in_rad)
-{
-    angle_in_rad+= HALF_PI;
-    return steps_fast_sine(angle_in_rad);
+    if(use_steps_fast_math==true)
+        return steps_fast_cos(angle_in_rad);
+    else
+        return cos(angle_in_rad);
 }
 
-double steps_fast_arccosine(double angle_in_rad)
+double steps_fast_cos(double angle_in_rad)
 {
-    return 0.0;
+    angle_in_rad += HALF_PI;
+    return steps_fast_sin(angle_in_rad);
 }
 
-double steps_fast_tangent(double angle_in_rad)
+double steps_tan(double angle_in_rad)
 {
-    return 0.0;
+    if(use_steps_fast_math==true)
+        return steps_fast_tan(angle_in_rad);
+    else
+        return tan(angle_in_rad);
 }
 
-double steps_fast_arctangent(double angle_in_rad)
+double steps_fast_tan(double angle_in_rad)
 {
-    return 0.0;
+    //return tan(angle_in_rad);
+    angle_in_rad = round_angle_in_rad_to_PI(angle_in_rad);
+    double sin = steps_fast_sin(angle_in_rad);
+    double cos = steps_fast_cos(angle_in_rad);
+    if(cos!=0.0)
+        return sin/cos;
+    else
+    {
+        cout<<"Fatal error of steps_fast_tan(). Inf found.\n";
+        return INFINITE_THRESHOLD;
+    }
+}
+
+double steps_asin(double x)
+{
+    if(use_steps_fast_math==true)
+        return steps_fast_asin(x);
+    else
+        return asin(x);
+}
+
+double steps_fast_asin(double x)
+{
+    return asin(x);
+}
+
+double steps_acos(double x)
+{
+    if(use_steps_fast_math==true)
+        return steps_fast_acos(x);
+    else
+        return acos(x);
+}
+
+double steps_fast_acos(double x)
+{
+    return acos(x);
+}
+
+double steps_atan(double x)
+{
+    if(use_steps_fast_math==true)
+        return steps_fast_atan(x);
+    else
+        return atan(x);
+}
+
+double steps_fast_atan(double x)
+{
+    return atan(x);
+}
+
+double steps_sqrt(double x)
+{
+    return sqrt(x);
+    if(use_steps_fast_math==true)
+        return steps_fast_sqrt(x);
+    else
+        return sqrt(x);
+}
+
+double steps_fast_sqrt(double x)
+{
+    return x*quick_inv_sqrt_Lomont(x);
+}
+
+double steps_inv_sqrt(double x)
+{
+    if(use_steps_fast_math==true)
+        return steps_fast_inv_sqrt(x);
+    else
+        return 1.0/sqrt(x);
+}
+
+double steps_fast_inv_sqrt(double x)
+{
+    return quick_inv_sqrt_Lomont(x);
+}
+
+float quick_inv_sqrt_Quake3(float x)
+{
+	float xhalf = 0.5f*x;
+	union
+	{
+	    float x;
+	    int i;
+	} u;
+	u.x = x;
+	u.i = 0x5f3759df- (u.i>>1); // gives initial guess y0
+	for(unsigned int i=0; i<5; ++i)
+        u.x *= (1.5f-xhalf*u.x*u.x); // Newton step, repeating increases accuracy
+	return u.x;
+}
+
+float quick_inv_sqrt_Lomont(float x)
+{
+	float xhalf = 0.5f*x;
+	union
+	{
+	    float x;
+	    int i;
+	} u;
+	u.x = x;
+	u.i = 0x5f375a86- (u.i>>1); // gives initial guess y0
+	for(unsigned int i=0; i<5; ++i)
+        u.x *= (1.5f-xhalf*u.x*u.x); // Newton step, repeating increases accuracy
+	return u.x;
+}
+
+double quick_double_inv_sqrt_Lomont(double x)
+{
+	double xhalf = 0.5F*x;
+	union
+	{
+	    double x;
+	    long i;
+	} u;
+	u.x = x;
+	u.i = 0x5fe6ec85e7de30da- (u.i>>1); // gives initial guess y0
+	for(unsigned int i=0; i<5; ++i)
+        u.x *= (1.5F-xhalf*u.x*u.x); // Newton step, repeating increases accuracy
+	return u.x;
 }
 
 string trim_string(string str, const string& garbage)
@@ -504,7 +639,7 @@ complex<double> xy2dq_with_angle_in_deg(const complex<double>& V, double angle)
 complex<double> xy2dq_with_angle_in_rad(const complex<double>& V, double angle)
 {
     // (Vx+jVy)*(sin+jcos) =(Vx*sin-Vy*cos)+j(Vx*cos+Vy*sin)
-    complex<double> rotation(sin(angle), cos(angle));
+    complex<double> rotation(steps_sin(angle), steps_cos(angle));
     return V*rotation;
 }
 
@@ -517,7 +652,7 @@ complex<double> dq2xy_with_angle_in_deg(const complex<double>& V, double angle)
 complex<double> dq2xy_with_angle_in_rad(const complex<double>& V, double angle)
 {
     // (Vd+jVq)*(sin-jcos) =(Vd*sin+Vq*cos)+j(Vq*sin-Vd*cos)
-    complex<double> rotation(sin(angle), -cos(angle));
+    complex<double> rotation(steps_sin(angle), -steps_cos(angle));
     return V*rotation;
 }
 

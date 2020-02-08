@@ -21,6 +21,10 @@ class STEPS
         void set_toolkit_name(const string& name);
         string get_toolkit_name() const;
 
+        void enable_use_steps_fast_math_logic();
+        void disable_use_steps_fast_math_logic();
+        bool get_use_steps_fast_math_logic();
+
         void set_thread_number(unsigned int n);
         unsigned int get_thread_number() const;
 
@@ -78,7 +82,6 @@ class STEPS
     public:
         char steps_char_buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         STEPS_API_SEARCH_BUFFER api_search_buffer;
-
     private:
         string toolkit_name;
 

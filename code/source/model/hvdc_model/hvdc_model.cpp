@@ -858,7 +858,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
 
     double alpha_in_rad = 0.0, gamma_in_rad = 0.0;
     double cos_alpha = 0.0, cos_gamma = 0.0;
-    double cos_alpha_min = cos(alpha_min_in_rad), cos_gamma_min = cos(gamma_min_in_rad);
+    double cos_alpha_min = steps_cos(alpha_min_in_rad), cos_gamma_min = steps_cos(gamma_min_in_rad);
 
     double tap_r = hvdc->get_converter_transformer_tap_in_pu(RECTIFIER);
     double tap_i = hvdc->get_converter_transformer_tap_in_pu(INVERTER);
@@ -916,7 +916,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
             cos_alpha = (Vdcr+rceq_r*Iset_kA)/vdc0_r;
             if(cos_alpha<cos_alpha_min)
             {
-                alpha_in_rad = acos(cos_alpha);
+                alpha_in_rad = steps_acos(cos_alpha);
                 hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
             }
             else
@@ -933,7 +933,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
                 cos_alpha = (Vdcr+rceq_r*Iset_kA)/vdc0_r;
                 if(cos_alpha<cos_alpha_min)
                 {
-                    alpha_in_rad = acos(cos_alpha);
+                    alpha_in_rad = steps_acos(cos_alpha);
                     osstream<<"Rectifier can hold the reduced current with alpha = "<<rad2deg(alpha_in_rad)<<" deg.";
                     //show_information_with_leading_time_stamp(osstream);
                 }
@@ -957,13 +957,13 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
             cos_alpha = (Vdcr+rceq_r*Iset_kA)/vdc0_r; // test if alpha can hold dc current
             if(cos_alpha<cos_alpha_min) // alpha can hold dc current
             {
-                alpha_in_rad = acos(cos_alpha);
+                alpha_in_rad = steps_acos(cos_alpha);
                 hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
 
                 cos_gamma = (Vdci+rceq_i*Iset_kA)/vdc0_i; // test if gamma can hold dc voltage
                 if(cos_gamma<cos_gamma_min) // gamma can hold dc voltage
                 {
-                    gamma_in_rad = acos(cos_gamma);
+                    gamma_in_rad = steps_acos(cos_gamma);
                     hvdc->set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
                 }
                 else // gamma can not hold dc voltage
@@ -995,7 +995,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
                         cos_alpha = (vdc0_i*cos_gamma_min-rceq_i*Iset_kA+Rdc*Iset_kA+rceq_r*Iset_kA)/vdc0_r;
                         if(cos_alpha<cos_alpha_min)
                         {
-                            alpha_in_rad = acos(cos_alpha);
+                            alpha_in_rad = steps_acos(cos_alpha);
                             osstream<<"Rectifier can hold the current with alpha = "<<rad2deg(alpha_in_rad)<<" deg.";
                         }
                         else//
@@ -1011,7 +1011,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
                             cos_alpha = (vdc0_i*cos_gamma_min-rceq_i*Iset_kA+Rdc*Iset_kA+rceq_r*Iset_kA)/vdc0_r;
                             if(cos_alpha<cos_alpha_min)
                             {
-                                alpha_in_rad = acos(cos_alpha);
+                                alpha_in_rad = steps_acos(cos_alpha);
                                 osstream<<"Rectifier can hold reduced current with alpha = "<<rad2deg(alpha_in_rad)<<" deg.";
                             }
                             else
@@ -1048,7 +1048,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
                 cos_gamma = (vdc0_r*cos_alpha_min-rceq_r*Iset_kA-Rdc*Iset_kA+rceq_i*Iset_kA)/vdc0_i;
                 if(cos_gamma<cos_gamma_min) // gamma can hold the current
                 {
-                    gamma_in_rad = acos(cos_gamma);
+                    gamma_in_rad = steps_acos(cos_gamma);
                     osstream<<"Inverter can hold reduced current with gamma = "<<rad2deg(gamma_in_rad)<<" deg.";
                 }
                 else // gamma can not hold dc current
@@ -1069,8 +1069,8 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
             }
         }
 
-        cos_alpha = cos(alpha_in_rad);
-        cos_gamma = cos(gamma_in_rad);
+        cos_alpha = steps_cos(alpha_in_rad);
+        cos_gamma = steps_cos(gamma_in_rad);
 
         Idc = (vdc0_r*cos_alpha-vdc0_i*cos_gamma)/(Rdc+rceq_r-rceq_i);
         Vdcr = vdc0_r*cos_alpha - rceq_r*Idc;
@@ -1113,8 +1113,8 @@ void HVDC_MODEL::solve_hvdc_as_bypassed(double Iset_kA)
     double alpha_in_rad = 0.0, gamma_in_rad = 0.0;
     double cos_alpha = 0.0;
     //double cos_gamma = 0.0;
-    double cos_alpha_min = cos(alpha_min_in_rad);
-    //double cos_gamma_min = cos(gamma_min_in_rad);
+    double cos_alpha_min = steps_cos(alpha_min_in_rad);
+    //double cos_gamma_min = steps_cos(gamma_min_in_rad);
 
     double tap_r = hvdc->get_converter_transformer_tap_in_pu(RECTIFIER);
     //double tap_i = hvdc->get_converter_transformer_tap_in_pu(INVERTER);
@@ -1166,14 +1166,14 @@ void HVDC_MODEL::solve_hvdc_as_bypassed(double Iset_kA)
         alpha_in_rad = alpha_min_in_rad;
     else
     {
-        if(cos_alpha<=cos(alpha_max_in_rad))
+        if(cos_alpha<=steps_cos(alpha_max_in_rad))
             alpha_in_rad = alpha_max_in_rad;
         else
-            alpha_in_rad = acos(cos_alpha);
+            alpha_in_rad = steps_acos(cos_alpha);
     }
     gamma_in_rad = PI*0.5;
 
-    cos_alpha = cos(alpha_in_rad);
+    cos_alpha = steps_cos(alpha_in_rad);
     //cout<<"alpha during bypassed is :"<<rad2deg(alpha_in_rad)<<" deg"<<endl;
 
     Idc = (vdc0_r*cos_alpha)/(Rdc+rceq_r);
@@ -1203,7 +1203,7 @@ void HVDC_MODEL::solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset
 
     double alpha_in_rad = 0.0, gamma_in_rad = 0.0;
     double cos_alpha = 0.0, cos_gamma = 0.0;
-    double cos_alpha_min = cos(alpha_min_in_rad), cos_gamma_min = cos(gamma_min_in_rad);
+    double cos_alpha_min = steps_cos(alpha_min_in_rad), cos_gamma_min = steps_cos(gamma_min_in_rad);
 
     double tap_r = hvdc->get_converter_transformer_tap_in_pu(RECTIFIER);
     double tap_i = hvdc->get_converter_transformer_tap_in_pu(INVERTER);
@@ -1258,7 +1258,7 @@ void HVDC_MODEL::solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset
             if(cos_alpha>=cos_alpha_min)
                 alpha_in_rad = alpha_min_in_rad;
             else
-                alpha_in_rad = acos(cos_alpha);
+                alpha_in_rad = steps_acos(cos_alpha);
             hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
         }
         else
@@ -1267,19 +1267,19 @@ void HVDC_MODEL::solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset
             if(cos_alpha>=cos_alpha_min)
                 alpha_in_rad = alpha_min_in_rad;
             else
-                alpha_in_rad = acos(cos_alpha);
+                alpha_in_rad = steps_acos(cos_alpha);
             hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
 
             cos_gamma = (Vdci+rceq_i*Idc)/vdc0_i;
             if(cos_gamma>=cos_gamma_min)
                 gamma_in_rad = gamma_min_in_rad;
             else
-                gamma_in_rad = acos(cos_gamma);
+                gamma_in_rad = steps_acos(cos_gamma);
             hvdc->set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
         }
 
-        cos_alpha = cos(alpha_in_rad);
-        cos_gamma = cos(gamma_in_rad);
+        cos_alpha = steps_cos(alpha_in_rad);
+        cos_gamma = steps_cos(gamma_in_rad);
 
         Idc = (vdc0_r*cos_alpha-vdc0_i*cos_gamma)/(Rdc+rceq_r-rceq_i);
         Vdcr = vdc0_r*cos_alpha - rceq_r*Idc;
@@ -1303,14 +1303,14 @@ void HVDC_MODEL::solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset
             alpha_in_rad = alpha_min_in_rad;
         else
         {
-            if(cos_alpha<cos(alpha_max_in_rad))
+            if(cos_alpha<steps_cos(alpha_max_in_rad))
                 alpha_in_rad = alpha_max_in_rad;
             else
-                alpha_in_rad = acos(cos_alpha);
+                alpha_in_rad = steps_acos(cos_alpha);
         }
         gamma_in_rad = PI*0.5;
 
-        cos_alpha = cos(alpha_in_rad);
+        cos_alpha = steps_cos(alpha_in_rad);
 
         Idc = (vdc0_r*cos_alpha)/(Rdc+rceq_r);
         Vdcr = vdc0_r*cos_alpha - rceq_r*Idc;
@@ -1406,8 +1406,8 @@ double HVDC_MODEL::get_converter_commutation_overlap_angle_in_deg(HVDC_CONVERTER
     double tap = hvdc->get_converter_transformer_tap_in_pu(converter);
     double eac = vac*vbase_converter/(vbase_grid*tap);
 
-    double mu = cos(angle)-SQRT2*idc*xc/eac;
-    mu = acos(mu)-angle;
+    double mu = steps_cos(angle)-SQRT2*idc*xc/eac;
+    mu = steps_acos(mu)-angle;
 
     return rad2deg(mu);
 }
@@ -1437,7 +1437,7 @@ complex<double> HVDC_MODEL::get_converter_ac_complex_power_in_MVA(HVDC_CONVERTER
     if(phi==0.0)
         return P;
 
-    double Q = P*tan(phi);
+    double Q = P*steps_tan(phi);
 
     switch(converter)
     {
@@ -1479,7 +1479,7 @@ double HVDC_MODEL::get_converter_ac_power_factor_angle_in_deg(HVDC_CONVERTER_SID
     double vdc0 = N*3.0*SQRT2*ONE_OVER_PI*eac;
     double vdc = get_converter_dc_voltage_in_kV(converter);
 
-    return rad2deg(acos(vdc/vdc0));*/
+    return rad2deg(steps_acos(vdc/vdc0));*/
 
 
     double angle = deg2rad(get_converter_alpha_or_gamma_in_deg(converter));
@@ -1488,10 +1488,10 @@ double HVDC_MODEL::get_converter_ac_power_factor_angle_in_deg(HVDC_CONVERTER_SID
     double angle2 = angle*2.0;
     double mu2 = mu*2.0;
     double total_angle_2 = (angle+mu)*2.0;
-    double tan_phi = mu2+sin(angle2)-sin(total_angle_2);
-    tan_phi /= (cos(angle2)-cos(total_angle_2));
+    double tan_phi = mu2+steps_sin(angle2)-steps_sin(total_angle_2);
+    tan_phi /= (steps_cos(angle2)-steps_cos(total_angle_2));
 
-    return rad2deg(atan(tan_phi));
+    return rad2deg(steps_atan(tan_phi));
 }
 
 complex<double> HVDC_MODEL::get_converter_ac_current_in_pu(HVDC_CONVERTER_SIDE converter) const

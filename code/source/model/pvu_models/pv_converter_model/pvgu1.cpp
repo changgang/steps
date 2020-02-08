@@ -259,8 +259,8 @@ void PVGU1::initialize()
             double Ix = Ixy.real();
             double Iy = Ixy.imag();
 
-            double IP = Ix*cos(angle_in_rad) + Iy*sin(angle_in_rad);
-            double IQ =-Ix*sin(angle_in_rad) + Iy*cos(angle_in_rad);
+            double IP = Ix*steps_cos(angle_in_rad) + Iy*steps_sin(angle_in_rad);
+            double IQ =-Ix*steps_sin(angle_in_rad) + Iy*steps_cos(angle_in_rad);
 
             double EQ = IQ*(-xeq);
 
@@ -377,8 +377,8 @@ complex<double> PVGU1::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
 
     double pll_angle = get_pll_angle_in_rad();
 
-    double Ix = Ip*cos(pll_angle) - Iq*sin(pll_angle);
-    double Iy = Ip*sin(pll_angle) + Iq*cos(pll_angle);
+    double Ix = Ip*steps_cos(pll_angle) - Iq*steps_sin(pll_angle);
+    double Iy = Ip*steps_sin(pll_angle) + Iq*steps_cos(pll_angle);
 
     complex<double> Ixy(Ix, Iy);
     //cout<<"Norton Ixy based on mbase = "<<Ixy<<endl;

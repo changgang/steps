@@ -157,6 +157,10 @@ bool api_get_toolkit_bool_data(char* parameter_name, unsigned int toolkit_index)
     {
         return toolkit.is_optimize_network_enabled();
     }
+    if(PARAMETER_NAME=="USE STEPS FAST MATH LOGIC")
+    {
+        return toolkit.get_use_steps_fast_math_logic();
+    }
 
     show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
     return toolkit.steps_char_buffer;
@@ -180,6 +184,13 @@ void api_set_toolkit_bool_data(char* parameter_name, bool value, unsigned int to
             return toolkit.enable_optimize_network();
         else
             return toolkit.disable_optimize_network();
+    }
+    if(PARAMETER_NAME=="USE STEPS FAST MATH LOGIC")
+    {
+        if(value==true)
+            return toolkit.enable_use_steps_fast_math_logic();
+        else
+            return toolkit.disable_use_steps_fast_math_logic();
     }
 
     show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);

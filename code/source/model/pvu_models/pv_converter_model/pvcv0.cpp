@@ -328,8 +328,8 @@ void PVCV0::initialize()
             double Ix = Isource.real();
             double Iy = Isource.imag();
 
-            double IP = Ix*cos(angle_in_rad) + Iy*sin(angle_in_rad);
-            double IQ =-Ix*sin(angle_in_rad) + Iy*cos(angle_in_rad);
+            double IP = Ix*steps_cos(angle_in_rad) + Iy*steps_sin(angle_in_rad);
+            double IQ =-Ix*steps_sin(angle_in_rad) + Iy*steps_cos(angle_in_rad);
             //complex<double> IPQ = xy2dq_with_angle_in_rad(Isource, angle_in_rad);
             //double IP = IPQ.real();
             //double IQ = IPQ.imag();
@@ -426,7 +426,7 @@ void PVCV0::run(DYNAMIC_MODE mode)
             double Vi = Vxy.imag();
 
             double angle = get_pll_angle_in_rad();
-            double Vy = -Vr*sin(angle)+Vi*cos(angle);
+            double Vy = -Vr*steps_sin(angle)+Vi*steps_cos(angle);
 
             input = Vy*kpll/wbase;
             PLL_frequency_integrator.set_input(input);
@@ -501,8 +501,8 @@ complex<double> PVCV0::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
     //complex<double> Ipq(Ip, Iq);
     //complex<double> Ixy = dq2xy_with_angle_in_rad(Ipq, pll_angle);
 
-    double Ix = Ip*cos(pll_angle) - Iq*sin(pll_angle);
-    double Iy = Ip*sin(pll_angle) + Iq*cos(pll_angle);
+    double Ix = Ip*steps_cos(pll_angle) - Iq*steps_sin(pll_angle);
+    double Iy = Ip*steps_sin(pll_angle) + Iq*steps_cos(pll_angle);
 
     complex<double> Ixy(Ix, Iy);
     //cout<<"Norton Ixy based on mbase = "<<Ixy<<endl;
@@ -745,7 +745,7 @@ double PVCV0::get_pll_frequency_deviation_in_pu()
         double Vi = Vxy.imag();
 
         double angle = get_pll_angle_in_rad();
-        double Vy = -Vr*sin(angle)+Vi*cos(angle);
+        double Vy = -Vr*steps_sin(angle)+Vi*steps_cos(angle);
 
         double input = Vy*kpll/wbase;
 

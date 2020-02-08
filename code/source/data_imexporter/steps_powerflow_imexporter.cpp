@@ -806,7 +806,7 @@ void STEPS_IMEXPORTER::load_source_var_control_data(vector<string>& data, SOURCE
                 if(pf==1.0)
                     qmax = 0.0;
                 else
-                    qmax = pgen/pf*sqrt(1.0-pf*pf);
+                    qmax = pgen/pf*steps_sqrt(1.0-pf*pf);
                 source->set_q_max_in_MVar(qmax);
                 source->set_q_min_in_MVar(-qmax);
                 break;
@@ -1530,7 +1530,7 @@ void STEPS_IMEXPORTER::add_transformer_impedance_admittance_data(TRANSFORMER& tr
         case IMPEDANCE_LOSS_IN_WATT_AND_Z_IN_PU_ON_WINDINGS_POWER_AND_WINDING_NOMINAL_VOLTAGE:
         {
             r = r/s;
-            x = sqrt(x*x-r*r);
+            x = steps_sqrt(x*x-r*r);
             break;
         }
         default: // IMPEDANCE_IN_PU_ON_WINDINGS_POWER_AND_WINDING_NOMINAL_VOLTAGE is default of steps
@@ -1568,7 +1568,7 @@ void STEPS_IMEXPORTER::add_transformer_impedance_admittance_data(TRANSFORMER& tr
             case IMPEDANCE_LOSS_IN_WATT_AND_Z_IN_PU_ON_WINDINGS_POWER_AND_WINDING_NOMINAL_VOLTAGE:
             {
                 r = r/s;
-                x = sqrt(x*x-r*r);
+                x = steps_sqrt(x*x-r*r);
                 break;
             }
             default:// IMPEDANCE_IN_PU_ON_WINDINGS_POWER_AND_WINDING_NOMINAL_VOLTAGE is default of steps
@@ -1604,7 +1604,7 @@ void STEPS_IMEXPORTER::add_transformer_impedance_admittance_data(TRANSFORMER& tr
             case IMPEDANCE_LOSS_IN_WATT_AND_Z_IN_PU_ON_WINDINGS_POWER_AND_WINDING_NOMINAL_VOLTAGE:
             {
                 r = r/s;
-                x = sqrt(x*x-r*r);
+                x = steps_sqrt(x*x-r*r);
                 break;
             }
             default: // IMPEDANCE_IN_PU_ON_WINDINGS_POWER_AND_WINDING_NOMINAL_VOLTAGE is default of steps
@@ -1626,7 +1626,7 @@ void STEPS_IMEXPORTER::add_transformer_impedance_admittance_data(TRANSFORMER& tr
             vbase = psdb.get_bus_base_voltage_in_kV(trans.get_winding_bus(PRIMARY_SIDE));
             g = g/(sbase/(vbase*vbase));
             b = b/(sbase/(vbase*vbase));
-            b = sqrt(b*b-g*g);
+            b = steps_sqrt(b*b-g*g);
             b = -b;
             trans.set_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu(complex<double>(g,b));
             break;
@@ -2338,7 +2338,7 @@ string STEPS_IMEXPORTER::export_source_var_control_data(SOURCE* source) const
     }
     else
     {
-        double pf = p/sqrt(p*p+qmax*qmax);
+        double pf = p/steps_sqrt(p*p+qmax*qmax);
         osstream<<"2, "<<setprecision(6)<<pf;
     }
     return osstream.str();

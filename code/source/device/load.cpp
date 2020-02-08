@@ -349,7 +349,7 @@ double LOAD::get_load_scale_with_Imax_and_voltage(double Imax, double v, double 
             //double vscale = v/vth-1.0;
             double vscale = v/vth-1.0;
 
-            double I = sqrt(1.0-vscale*vscale)*Imax;
+            double I = steps_sqrt(1.0-vscale*vscale)*Imax;
             return v*I;
         }
         case LOAD_LINEAR_CV:
