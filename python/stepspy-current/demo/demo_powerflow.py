@@ -176,6 +176,14 @@ simulator.set_powerflow_solver_parameter(data_type, data_name, value)
 
 simulator.solve_powerflow('NR')
 
+newfile = "IEEE9.new.raw"
+file_type = "PSS/E"
+export_mode = 0 # keep as original
+export_mode = 1 # order with bus number
+export_mode = 2 # order with bus name
+export_mode = 3 # order for dynamic simulation
+simulator.save_powerflow_data(newfile, file_type, export_mode)
+
 
 simulator.build_network_Y_matrix()
 simulator.save_network_Y_matrix('ymatrix_pf.csv')

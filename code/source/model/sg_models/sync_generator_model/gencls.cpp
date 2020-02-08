@@ -349,6 +349,14 @@ void GENCLS::set_model_data_with_name(string par_name, double value)
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
 }
 
+double GENCLS::get_minimum_nonzero_time_constant_in_s()
+{
+    double mint = INFINITE_THRESHOLD;
+    double h = get_H_in_s();
+    if(get_H_in_s()!=0.0 and mint>get_H_in_s())
+        mint = get_H_in_s();
+    return mint;
+}
 
 void GENCLS::prepare_model_internal_variable_table()
 {

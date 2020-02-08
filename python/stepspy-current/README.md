@@ -23,6 +23,7 @@ STEPS is a simulation toolkit for powerflow and dynamic simulation of large-scal
 
 ## Realse Note
 
+- 0.12.0. Feb.  8, 2020. Add new APIs: check_dynamic_least_time_constants(). Recover the save_powerflow_data() API of v0.9.0.
 - 0.11.5. Jan. 20, 2020. Add new APIs: set/get_dynamic_model_database_capacity().
 - 0.11.4. Jan.  2, 2020. Fix bug of c_unit in pylibsteps.py. 
 - 0.11.3. Dec. 27, 2019. Add API to set toolkit log file: set_toolkit_log_file(log_file, log_file_append_mode). This version has fatal bug. DONOT use it. Use new version instead.

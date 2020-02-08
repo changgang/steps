@@ -697,6 +697,11 @@ void WT3G2::set_model_data_with_name(string par_name, double value)
     return;
 }
 
+double WT3G2::get_minimum_nonzero_time_constant_in_s()
+{
+    return INFINITE_THRESHOLD;
+}
+
 void WT3G2::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();

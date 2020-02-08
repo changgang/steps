@@ -550,6 +550,11 @@ void IEEEG3::set_model_data_with_name(string par_name, double value)
         return set_a23(value);
 }
 
+double IEEEG3::get_minimum_nonzero_time_constant_in_s()
+{
+    return INFINITE_THRESHOLD;
+}
+
 void IEEEG3::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();

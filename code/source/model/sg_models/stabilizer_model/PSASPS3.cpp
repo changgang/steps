@@ -697,6 +697,20 @@ void PSASPS3::set_model_data_with_name(string par_name, double value)
     return;
 }
 
+double PSASPS3::get_minimum_nonzero_time_constant_in_s()
+{
+    double mint = INFINITE_THRESHOLD;
+    if(get_Tacc_in_s()!=0.0 and mint>get_Tacc_in_s())
+        mint = get_Tacc_in_s();
+    if(get_TD_in_s()!=0.0 and mint>get_TD_in_s())
+        mint = get_TD_in_s();
+    if(get_Ti2_in_s()!=0.0 and mint>get_Ti2_in_s())
+        mint = get_Ti2_in_s();
+    if(get_Ti4_in_s()!=0.0 and mint>get_Ti4_in_s())
+        mint = get_Ti4_in_s();
+    return mint;
+}
+
 void PSASPS3::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();

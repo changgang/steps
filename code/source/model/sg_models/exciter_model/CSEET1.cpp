@@ -1385,6 +1385,32 @@ void CSEET1::set_model_data_with_name(string par_name, double value)
     return;
 }
 
+double CSEET1::get_minimum_nonzero_time_constant_in_s()
+{
+    double mint = INFINITE_THRESHOLD;
+    if(get_tuner_type()==SERIAL_TUNER)
+    {
+        if(get_serial_tuner_T2_in_s()!=0.0 and mint>get_serial_tuner_T2_in_s())
+            mint = get_serial_tuner_T2_in_s();
+        if(get_serial_tuner_T4_in_s()!=0.0 and mint>get_serial_tuner_T4_in_s())
+            mint = get_serial_tuner_T4_in_s();
+    }
+    else
+    {
+        if(get_parallel_tuner_TD_in_s()!=0.0 and mint>get_parallel_tuner_TD_in_s())
+            mint = get_parallel_tuner_TD_in_s();
+    }
+    if(get_TA_in_s()!=0.0 and mint>get_TA_in_s())
+        mint = get_TA_in_s();
+    if(get_TF_in_s()!=0.0 and mint>get_TF_in_s())
+        mint = get_TF_in_s();
+    if(get_T5_in_s()!=0.0 and mint>get_T5_in_s())
+        mint = get_T5_in_s();
+    if(get_TE_in_s()!=0.0 and mint>get_TE_in_s())
+        mint = get_TE_in_s();
+    return mint;
+}
+
 void CSEET1::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();

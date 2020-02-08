@@ -517,6 +517,11 @@ void UVLS::set_model_data_with_name(string par_name, double value)
     return;
 }
 
+double UVLS::get_minimum_nonzero_time_constant_in_s()
+{
+    return INFINITE_THRESHOLD;
+}
+
 void UVLS::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();

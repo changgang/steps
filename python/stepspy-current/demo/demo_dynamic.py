@@ -1,7 +1,13 @@
 from stepspy import STEPS, POUCH_CSV
 
-simulator = STEPS(is_default = False, log_file = 'test.log', enable_parallel = False)
+simulator = STEPS(is_default = False, log_file = 'test.log')
 simulator.info()
+
+simulator.set_toolkit_log_file("newtest.log", log_file_append_mode=False)
+
+simulator.set_parallel_thread_number(1)
+
+simulator.set_dynamic_model_database_capacity(10000000)
 
 max_bus = simulator.get_allowed_maximum_bus_number()
 info = "The default maximum bus number is: "+str(max_bus)
@@ -75,6 +81,7 @@ simulator.set_dynamic_model_database_capacity(1000000)
 simulator.load_dynamic_data('IEEE39.dyr','psse')
 simulator.check_missing_models()
 simulator.check_dynamic_data()
+simulator.check_least_dynamic_time_constants()
 
 
 print("here goes generator dynamic data")
@@ -92,12 +99,17 @@ for gen in gens:
     data = simulator.get_generator_related_model_parameter_pair(gen, "gen")
     print(gen_model, data)
 
-simulator.set_dynamic_simulator_parameter('i', 'max_DAE_iter', 3)
-simulator.set_dynamic_simulator_parameter('i', 'max_NET_iter', 25)
-simulator.set_dynamic_simulator_parameter('i', 'max_UPDATE_iter', 1)
-simulator.set_dynamic_simulator_parameter('i', 'max_network_divergent_threshold', 2)
-simulator.set_dynamic_simulator_parameter('b', 'bin export logic', False)
-simulator.set_dynamic_simulator_parameter('b', 'csv export logic', True)
+simulator.set_dynamic_simulator_parameter('b','bin export logic',False)
+simulator.set_dynamic_simulator_parameter('b','csv export logic',True)
+simulator.set_dynamic_simulator_parameter('d','ITERATION ACCELERATOR',1.0)
+simulator.set_dynamic_simulator_parameter('d','MAX POWER IMBALANCE IN MVA',0.1)
+simulator.set_dynamic_simulator_parameter('i','MAX DAE ITERATION',3)
+simulator.set_dynamic_simulator_parameter('i','MIN DAE ITERATION',3)
+simulator.set_dynamic_simulator_parameter('i','MAX NETWORK ITERATION',100)
+simulator.set_dynamic_simulator_parameter('i','MAX UPDATE ITERATION',3)
+simulator.set_dynamic_simulator_parameter('b','AUTOMATIC ACCELERATOR TUNE LOGIC',False)
+simulator.set_dynamic_simulator_parameter('b','ANGLE STABILITY SURVEILLANCE LOGIC',False)
+simulator.set_dynamic_simulator_parameter('d','ANGLE STABILITY THRESHOLD IN DEG',360.0)
 simulator.set_dynamic_simulation_time_step(0.01)
 simulator.set_dynamic_simulator_output_file('ieee39')
 

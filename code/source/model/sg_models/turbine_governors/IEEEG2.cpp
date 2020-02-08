@@ -397,6 +397,11 @@ void IEEEG2::set_model_data_with_name(string par_name, double value)
         return set_T4_in_s(value);
 }
 
+double IEEEG2::get_minimum_nonzero_time_constant_in_s()
+{
+    return INFINITE_THRESHOLD;
+}
+
 void IEEEG2::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();

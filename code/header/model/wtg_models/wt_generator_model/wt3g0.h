@@ -66,6 +66,7 @@ class WT3G0 : public WT_GENERATOR_MODEL
 
         virtual double get_model_data_with_name(string par_name) const;
         virtual void set_model_data_with_name(string par_name, double value);
+        virtual double get_minimum_nonzero_time_constant_in_s();
         virtual double get_model_internal_variable_with_name(string var_name);
 
         virtual complex<double> get_terminal_complex_power_in_pu_based_on_mbase();

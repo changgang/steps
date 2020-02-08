@@ -50,6 +50,7 @@ void DYNAMICS_SIMULATOR::clear()
     set_allowed_max_power_imbalance_in_MVA(0.001);
     set_iteration_accelerator(1.0);
     set_non_divergent_solution_logic(false);
+    set_automatic_iteration_accelerator_tune_logic(false);
     set_rotor_angle_stability_surveillance_flag(false);
     set_rotor_angle_stability_threshold_in_deg(360.0);
     generators_in_islands.clear();
@@ -169,6 +170,26 @@ void DYNAMICS_SIMULATOR::set_non_divergent_solution_logic(bool logic)
     non_divergent_solution_enabled = logic;
 }
 
+void DYNAMICS_SIMULATOR::set_automatic_iteration_accelerator_tune_logic(bool logic)
+{
+    automatic_iteration_accelerator_tune_enabled = logic;
+    if(logic==true)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        ostringstream osstream;
+        osstream<<"*******************************\n"
+                <<"******************************\n"
+                <<"******************************\n"
+                <<"ALERT!\n"
+                <<"Automatic iteration accelerator tune is enabled for dynamic simulation. Your simulation may malfunction.\n"
+                <<"You are supposed to modify function DYNAMIC_SIMULATOR::tune_iteration_accelerator_based_on_maximum_current_mismatch() for you specific simulation.\n"
+                <<"******************************\n"
+                <<"******************************\n"
+                <<"******************************";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+}
+
 void DYNAMICS_SIMULATOR::set_rotor_angle_stability_surveillance_flag(bool flag)
 {
     this->flag_rotor_angle_stability_surveillance = flag;
@@ -228,6 +249,11 @@ double DYNAMICS_SIMULATOR::get_iteration_accelerator() const
 bool DYNAMICS_SIMULATOR::get_non_divergent_solution_logic() const
 {
     return non_divergent_solution_enabled;
+}
+
+bool DYNAMICS_SIMULATOR::get_automatic_iteration_accelerator_tune_logic() const
+{
+    return automatic_iteration_accelerator_tune_enabled;
 }
 
 bool DYNAMICS_SIMULATOR::get_rotor_angle_stability_surveillance_flag() const
@@ -1852,10 +1878,10 @@ void DYNAMICS_SIMULATOR::save_meter_values()
             }
 
             if(is_csv_file_export_enabled() and csv_output_file.is_open())
-                csv_output_file<<temp_str<<endl;
+                csv_output_file<<temp_str<<"\n";
 
             if(is_json_file_export_enabled() and json_output_file.is_open())
-                json_output_file<<","<<endl
+                json_output_file<<","<<"\n"
                                 <<"                       ["<<temp_str<<"]";
         }
     }
@@ -2470,6 +2496,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
     /*calculate_bus_power_mismatch_in_MVA();
     double smax = get_max_power_mismatch_struct().greatest_power_mismatch_in_MVA;
     if(smax<get_allowed_max_power_imbalance_in_MVA())*/
+    double original_alpha = get_iteration_accelerator();
     double imax = get_max_current_mismatch_struct().greatest_current_mismatch_in_pu;
     if(imax<imax_th_pu)
     {
@@ -2481,6 +2508,9 @@ bool DYNAMICS_SIMULATOR::solve_network()
         {
             if(network_iter_count<network_iter_max)
             {
+                if(get_automatic_iteration_accelerator_tune_logic()==true)
+                    tune_iteration_accelerator_based_on_maximum_current_mismatch(imax);
+
                 delta_V = I_mismatch/jacobian;
 
                 update_bus_voltage();
@@ -2546,6 +2576,8 @@ bool DYNAMICS_SIMULATOR::solve_network()
         }
     }
 
+    set_iteration_accelerator(original_alpha);
+
     network_iteration_count = network_iter_count;
 
     auto tduration = duration_cast<microseconds>(system_clock::now()-clock_start);
@@ -2553,6 +2585,55 @@ bool DYNAMICS_SIMULATOR::solve_network()
     return converged;
 }
 
+void DYNAMICS_SIMULATOR::tune_iteration_accelerator_based_on_maximum_current_mismatch(double imax)
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    double mbase = toolkit.get_system_base_power_in_MVA();
+    double smax = imax*mbase;
+    if(smax<0.1)
+        set_iteration_accelerator(1.0);
+    else
+    {
+        if(smax<1.0)
+            set_iteration_accelerator(0.8);
+        else
+        {
+            if(smax<5.0)
+                set_iteration_accelerator(0.7);
+            else
+            {
+                if(smax<10.0)
+                    set_iteration_accelerator(0.65);
+                else
+                {
+                    if(smax<20.0)
+                        set_iteration_accelerator(0.625);
+                    else
+                        set_iteration_accelerator(0.6);
+                    /*{
+                        if(smax<50.0)
+                            set_iteration_accelerator(0.75);
+                        else
+                        {
+                            if(smax<75.0)
+                                set_iteration_accelerator(0.7);
+                            else
+                            {
+                                if(smax<100.0)
+                                    set_iteration_accelerator(0.65);
+                                else
+                                    set_iteration_accelerator(0.6);
+                            }
+                        }
+                    }*/
+                }
+            }
+        }
+    }
+    //ostringstream osstream;
+    //osstream<<"At time "<<TIME<<", dynamic simulation iteration accelerator is automatically tuned: ("<<smax<<"MVA, "<<get_iteration_accelerator()<<").";
+    //toolkit.show_information_with_leading_time_stamp(osstream);
+}
 
 void DYNAMICS_SIMULATOR::solve_hvdcs_without_integration()
 {

@@ -1097,6 +1097,11 @@ void CDC6T::set_model_data_with_name(string par_name, double value)
     return;
 }
 
+double CDC6T::get_minimum_nonzero_time_constant_in_s()
+{
+    return INFINITE_THRESHOLD;
+}
+
 
 void CDC6T::prepare_model_internal_variable_table()
 {

@@ -79,6 +79,8 @@ class MODEL : public BASE
         virtual void prepare_model_data_table() = 0;
         virtual double get_model_data_with_name(string par_name) const = 0;
         virtual void set_model_data_with_name(string par_name, double value) = 0;
+        virtual double get_minimum_nonzero_time_constant_in_s() = 0;
+
         void set_model_data_with_index(unsigned int index, double value);
         double get_model_data_with_index(unsigned int index);
 

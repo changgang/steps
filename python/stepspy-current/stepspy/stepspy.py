@@ -6,8 +6,11 @@ global STEPS_LIB
 
 class STEPS():
     def info(self):
-        version = "0.11.5"
-        date = "2020/1/19"
+        """
+        Show information of the stepspy mudule, including, version, date, authors.
+        """
+        version = "0.12.0"
+        date = "2020/2/7"
         authors = (("Changgang Li", "lichangang@sdu.edu.cn"),("Yue Wu","sduyuewu2018@163.com"))
         info = 'STEPS '+version+', built on '+date+', by '
         for author in authors:
@@ -15,9 +18,11 @@ class STEPS():
         info = info.rstrip(", ")
         print(info)
         
-    def __init__(self, is_default=False, log_file=""):        
+    def __init__(self, is_default=False, log_file=""):
+        """
+        STEPS initialization.
+        """
         global STEPS_LIB
-
         if 'STEPS_LIB' not in globals():
             STEPS_LIB = pylibsteps.load_library()
 
@@ -28,22 +33,52 @@ class STEPS():
             self.toolkit_index = STEPS_LIB.api_generate_new_toolkit(log_file)
         
     def __del__(self):
+        """
+        STEPS destruction.
+        """
         global STEPS_LIB
         if 'STEPS_LIB' in globals():
             STEPS_LIB.api_delete_toolkit(self.toolkit_index)
 
     def __extract_single_bus_device_id(self, did):
+        """
+        Private function to extract bus and identifier from single bus device id tuple.
+        Input:
+            (1) did: tuple with two elements, device id. e.g.: (1, "A")
+        Output:
+            (1) bus: integer, device bus number
+            (2) ickt: string, device identifier
+        """
         bus = did[0]
         ickt = did[1]
         return bus, ickt
 
     def __extract_double_bus_device_id(self, did):
+        """
+        Private function to extract bus and identifier from two bus device id tuple.
+        Input:
+            (1) did: tuple with three elements, device id. e.g.: (1, 2, "A")
+        Output:
+            (1) ibus: integer, device first bus number
+            (2) jbus: integer, device second bus number
+            (3) ickt: string, device identifier
+        """
         ibus = did[0]
         jbus = did[1]
         ickt = did[2]
         return ibus, jbus, ickt
     
     def __extract_triple_bus_device_id(self, did):
+        """
+        Private function to extract bus and identifier from three bus device id tuple.
+        Input:
+            (1) did: tuple with four elements, device id. e.g.: (1, 2, 3, "A"). If the third element is 0, it can be omitted, i.e., (1, 2, "A"), or (1, 2, 0, "A").
+        Output:
+            (1) ibus: integer, device first bus number
+            (2) jbus: integer, device second bus number
+            (3) kbus: integer, device third bus number
+            (4) ickt: string, device identifier
+        """
         ibus = did[0]
         jbus = did[1]
         kbus = 0
@@ -53,6 +88,13 @@ class STEPS():
         return ibus, jbus, kbus, ickt
         
     def __get_c_char_p_of_string(self, data):
+        """
+        Private function to get the char* pointer of C Language from the input string data. It is usually used to pass Python string to STEPS kernel.
+        Input:
+            (1) data: string, any Python string
+        Output:
+            (1) char*: char* pointer. If Python version is not 2 or 3, None will be returned
+        """
         python_version = platform.python_version_tuple()
         python_version = python_version[0]
         if python_version == '3':
@@ -63,6 +105,13 @@ class STEPS():
             return None
             
     def __get_string_from_c_char_p(self, data):
+        """
+        Private function to get the Python string from the char* pointer of C Language. It is usually used to pass the char* of STEPS kernel to Python string.
+        Input:
+            (1) data: char* pointer
+        Output:
+            (1) Python string
+        """
         python_version = platform.python_version_tuple()
         python_version = python_version[0]
         if python_version == '3':
@@ -73,310 +122,543 @@ class STEPS():
             return None
             
     def set_toolkit_log_file(self, log_file="", log_file_append_mode=False):
+        """
+        Set toolkit log file. The default mode is to write to new file.
+        Input:
+            (1) log_file: string, target log file name. If none file is set (""), the log will be exported to stdout.
+            (2) log_file_append_mode: boolean, log file append mode. True for writting to new file, False for appending to existing file. Default is False.
+        Output: N/A
+        """
         global STEPS_LIB
         log_file = self.__get_c_char_p_of_string(log_file)
         STEPS_LIB.api_set_toolkit_log_file(log_file, log_file_append_mode, self.toolkit_index)
         return      
 
     def set_parallel_thread_number(self, num=1):
+        """
+        Set parallel thread number for parallel simulation.
+        Input:
+            (1) num: integer, parallel thread number. If num=1, serial simulation is used. num should be < number of CPU physical cores.
+        Output: N/A
+        """
         global STEPS_LIB
         STEPS_LIB.api_set_toolkit_parallel_thread_number(num, self.toolkit_index)
         return
         
     def get_parallel_thread_number(self):
+        """
+        Set parallel thread number for parallel simulation.        
+        Input: N/A
+        Output:
+            (1) parallel thread number, integer
+        """
         global STEPS_LIB
         return STEPS_LIB.api_get_toolkit_parallel_thread_number(self.toolkit_index)
 
     def set_dynamic_model_database_capacity(self, cap=1):
+        """
+        Set capacity of dynamic model database. If the capacity is not enough, dynamic data cannot be successfully loaded.
+        Input:
+            (1) cap: integer, database capacity, in bytes.
+        Output:
+            (1) N/A
+        """
         global STEPS_LIB
         STEPS_LIB.api_set_toolkit_dynamic_model_database_capacity(cap, self.toolkit_index)
         return
         
     def get_dynamic_model_database_capacity(self):
+        """
+        Get capacity of dynamic model database. 
+        Input: N/A
+        Output:
+            (1) database capacity in bytes, integer
+        """
         global STEPS_LIB
         return STEPS_LIB.api_get_toolkit_dynamic_model_database_capacity(self.toolkit_index)
         
     def clear_toolkit(self):
+        """
+        Clear all data in the toolkit.
+        Input: N/A
+        Output: N/A
+        """
         global STEPS_LIB
         STEPS_LIB.api_clear_toolkit(self.toolkit_index)
         return
 
     def terminate_toolkit(self):
+        """
+        Terminate the toolkit. This API is not used in applications. Just keep for future use.
+        Input: N/A
+        Output: N/A
+        """
         global STEPS_LIB
         STEPS_LIB = None
         #STEPS_LIB.api_terminate_toolkit(self.toolkit_index)
         return          
     
     def get_toolkit_float_data(self, dataname):
+        """
+        """
         global STEPS_LIB
         dataname = self.__get_c_char_p_of_string(dataname)
         return STEPS_LIB.api_get_toolkit_float_data(dataname, self.toolkit_index)
 
     def set_toolkit_float_data(self, dataname, value):
+        """
+        """
         global STEPS_LIB
         dataname = self.__get_c_char_p_of_string(dataname)
         return STEPS_LIB.api_set_toolkit_float_data(dataname, value, self.toolkit_index)
     
     def get_system_base_power_in_MVA(self):
+        """
+        """
         global STEPS_LIB
         return self.get_toolkit_float_data("SBASE")
     
     def set_system_base_power_in_MVA(self, sbase):
+        """
+        """
         global STEPS_LIB
         return self.set_toolkit_float_data("SBASE", sbase)
     
     def get_toolkit_string_data(self, dataname):
+        """
+        """
         global STEPS_LIB
         dataname = self.__get_c_char_p_of_string(dataname)
         return self.__get_source_data(STEPS_LIB.api_get_toolkit_string_data(dataname, self.toolkit_index))
 
     def set_toolkit_string_data(self, dataname, value):
+        """
+        """
         global STEPS_LIB
         dataname = self.__get_c_char_p_of_string(dataname)
         value = self.__get_c_char_p_of_string(value)
         return self.__get_source_data(STEPS_LIB.api_set_toolkit_string_data(dataname, value, self.toolkit_index))
     
     def get_case_information(self):
+        """
+        """
         global STEPS_LIB
         return self.__get_source_data(self.get_toolkit_string_data("CASE INFORMATION"))
     
     def get_case_additional_information(self):
+        """
+        """
         global STEPS_LIB
         return self.__get_source_data(self.get_toolkit_string_data("CASE ADDITIONAL INFORMATION"))
     
     def set_case_information(self, value):
+        """
+        """
         global STEPS_LIB
         return self.set_toolkit_string_data("CASE INFORMATION", value)
     
     def set_case_additional_information(self, value):
+        """
+        """
         global STEPS_LIB
         return self.set_toolkit_string_data("CASE ADDITIONAL INFORMATION", value)    
 
     def get_toolkit_bool_data(self, dataname):
+        """
+        """
         global STEPS_LIB
         dataname = self.__get_c_char_p_of_string(dataname)
         return STEPS_LIB.api_get_toolkit_bool_data(dataname, self.toolkit_index)        
 
     def set_toolkit_bool_data(self, dataname, value):
+        """
+        """
         global STEPS_LIB
         dataname = self.__get_c_char_p_of_string(dataname)
         return STEPS_LIB.api_set_toolkit_bool_data(dataname, value, self.toolkit_index)
     
     def get_toolkit_detailed_log_logic(self):
+        """
+        """
         global STEPS_LIB
         return self.get_toolkit_bool_data("DETAILED LOG LOGIC")
     
     def set_toolkit_detailed_log_logic(self, logic):
+        """
+        """
         global STEPS_LIB
         return self.set_toolkit_bool_data("DETAILED LOG LOGIC", logic)
     
 
     def get_allowed_maximum_bus_number(self):
+        """
+        """
         global STEPS_LIB
         return int(STEPS_LIB.api_get_allowed_maximum_bus_number(self.toolkit_index))
 
     def set_allowed_maximum_bus_number(self, max_bus_number):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_set_allowed_maximum_bus_number(max_bus_number, self.toolkit_index)
 
     def load_powerflow_data(self, file, ftype):
+        """
+        Load powerflow data from file.
+        Input:
+            (1) file: string, source powerflow file name.
+            (2) ftype: string, powerflow data format.
+        Output: N/A
+        """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
         STEPS_LIB.api_load_powerflow_data_from_file(file, ftype, self.toolkit_index)
 
     def save_powerflow_data(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True, export_mode=0):
+        """
+        Save powerflow data to file.
+        Input:
+            (1) file: string, target powerflow file name.
+            (2) ftype: string, powerflow data format.
+            (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
+            (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
+            (5) export_mode: integer, export mode (0,1,2,3). 0 for exporting data as import, 1 for exporting data ordered by bus number in ascending order, 2 for exporting data ordered by bus name in ascending order, 3 for exporting buses in the order of generator, load, hvdc buses.
+        Output: N/A
+        """
         if export_mode not in (0,1,2,3):
             export_mode = 0;
         if export_mode==0:
-            self.save_powerflow_data_in_keep_mode(file, ftype, export_zero_line, export_out_of_service_bus)
+            self.__save_powerflow_data_in_keep_mode(file, ftype, export_zero_line, export_out_of_service_bus)
         elif export_mode==1:
-            self.save_powerflow_data_in_bus_number_ordered_mode(file, ftype, export_zero_line, export_out_of_service_bus)
+            self.__save_powerflow_data_in_bus_number_ordered_mode(file, ftype, export_zero_line, export_out_of_service_bus)
         elif export_mode==2:
-            self.save_powerflow_data_in_bus_name_ordered_mode(file, ftype, export_zero_line, export_out_of_service_bus)
+            self.__save_powerflow_data_in_bus_name_ordered_mode(file, ftype, export_zero_line, export_out_of_service_bus)
         elif export_mode==3:
-            self.save_powerflow_data_in_dynamic_optimized_mode(file, ftype, export_zero_line, export_out_of_service_bus)
+            self.__save_powerflow_data_in_dynamic_optimized_mode(file, ftype, export_zero_line, export_out_of_service_bus)
         else:
             print("parameter export_mode is invalid in save_powerflow_data()")
         
-    def save_powerflow_data_in_keep_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
+    def __save_powerflow_data_in_keep_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
+        """
+        Save powerflow data to file in keep as original mode
+        Input:
+            (1) file: string, target powerflow file name.
+            (2) ftype: string, powerflow data format.
+            (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
+            (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
+        Output: N/A
+        """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
         STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 0, self.toolkit_index)
         
-    def save_powerflow_data_in_bus_number_ordered_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
+    def __save_powerflow_data_in_bus_number_ordered_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
+        """
+        Save powerflow data to file in bus number ascending order.
+        Input:
+            (1) file: string, target powerflow file name.
+            (2) ftype: string, powerflow data format.
+            (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
+            (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
+        Output: N/A
+        """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
         STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 1, self.toolkit_index)
         
-    def save_powerflow_data_in_bus_name_ordered_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
+    def __save_powerflow_data_in_bus_name_ordered_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
+        """
+        Save powerflow data to file in bus name ascending order.
+        Input:
+            (1) file: string, target powerflow file name.
+            (2) ftype: string, powerflow data format.
+            (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
+            (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
+        Output: N/A
+        """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
         STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 2, self.toolkit_index)
         
-    def save_powerflow_data_in_dynamic_optimized_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
+    def __save_powerflow_data_in_dynamic_optimized_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
+        """
+        Save powerflow data to file in generator, load, hvdc bus order. This method is used for improving dynamic simulation performance.
+        Input:
+            (1) file: string, target powerflow file name.
+            (2) ftype: string, powerflow data format.
+            (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
+            (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
+        Output: N/A
+        """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
         STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 3, self.toolkit_index)
 
     def load_powerflow_result(self, file, ftype):
+        """
+        Load powerflow result from file.
+        Input:
+            (1) file: string, source powerflow result file name.
+            (2) ftype: string, powerflow result data format.
+        Output: N/A
+        """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
         STEPS_LIB.api_load_powerflow_result_from_file(file, ftype, self.toolkit_index)
         
     def load_dynamic_data(self, file, ftype):
+        """
+        Load dynamic data from file.
+        Input:
+            (1) file: string, source dynamic data file name.
+            (2) ftype: string, dynamic data format.
+        Output: N/A
+        """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
         STEPS_LIB.api_load_dynamic_data_from_file(file, ftype, self.toolkit_index)
         
     def save_dynamic_data(self, file, ftype):
+        """
+        Save dynamic data to file.
+        Input:
+            (1) file: string, target dynamic data file name.
+            (2) ftype: string, dynamic data format.
+        Output: N/A
+        """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
         STEPS_LIB.api_save_dynamic_data_to_file(file, ftype, self.toolkit_index)
 
     def check_powerflow_data(self):
+        """
+        Check powerflow data. If any inappropriate data is set, report will be sent to log file.
+        Input: N/A
+        Output: N/A
+        """
         global STEPS_LIB
         STEPS_LIB.api_check_powerflow_data(self.toolkit_index)
-
-    def check_database(self):
-        print("Warning. API check_database() is obsolete, and will be deprecated later. Use check_powerflow_data() instead.")
-        self.check_powerflow_data()
         
     def check_dynamic_data(self):
+        """
+        Check dynamic model data. If any inappropriate data is set, report will be sent to log file.
+        Input: N/A
+        Output: N/A        
+        """
         global STEPS_LIB
         STEPS_LIB.api_check_dynamic_data(self.toolkit_index)
         
     def check_missing_models(self):
+        """
+        Check missing models. If any compulsory model is missing, report will be sent to log file.
+        Input: N/A
+        Output: N/A
+        """
         global STEPS_LIB
         STEPS_LIB.api_check_missing_models(self.toolkit_index)
         
+    def check_least_dynamic_time_constants(self):
+        """
+        Check the least dynamic time constants. Report of the first few time constants will be sent to log file. The dynamic simulation time step should be < half of the lead time constant.
+        Input: N/A
+        Output: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_check_least_dynamic_time_constants(self.toolkit_index)
+        
     def check_network_connectivity(self, remove_void_islands=False):
+        """
+        Check network connectivity. 
+        Input: N/A
+        Output: N/A
+        """
         global STEPS_LIB
         STEPS_LIB.api_check_network_connectivity(remove_void_islands, self.toolkit_index)
         
     def get_bus_capacity(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("BUS")
         return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
     def get_generator_capacity(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Generator")
         return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
     def get_wt_generator_capacity(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("WT Generator")
         return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
     def get_pv_unit_capacity(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("PV Unit")
         return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
     def get_load_capacity(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Load")
         return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
     def get_fixed_shunt_capacity(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Fixed Shunt")
         return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
     def get_line_capacity(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Line")
         return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
     def get_transformer_capacity(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Transformer")
         return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
     def get_hvdc_capacity(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("HVDC")
         return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
     def get_equivalent_device_capacity(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Equivalent Device")
         return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
     def get_energy_storage_capacity(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Energy Storage")
         return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
     def get_area_capacity(self):
+        """
+        """
         global STEPS_LIB
         return int(STEPS_LIB.api_get_area_capacity(self.toolkit_index))
     def get_zone_capacity(self):
+        """
+        """
         global STEPS_LIB
         return int(STEPS_LIB.api_get_zone_capacity(self.toolkit_index))
     def get_owner_capacity(self):
+        """
+        """
         global STEPS_LIB
         return int(STEPS_LIB.api_get_owner_capacity(self.toolkit_index))
 
     def set_bus_capacity(self, capacity):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("BUS")
         return STEPS_LIB.api_set_device_capacity("BUS", capacity, self.toolkit_index)
     def set_generator_capacity(self, capacity):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Generator")
         return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
     def set_wt_generator_capacity(self, capacity):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Wt Generator")
         return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
     def set_pv_unit_capacity(self, capacity):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("PV Unit")
         return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
     def set_load_capacity(self, capacity):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Load")
         return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
     def set_fixed_shunt_capacity(self, capacity):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Fixed Shunt")
         return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
     def set_line_capacity(self, capacity):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Line")
         return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
     def set_transformer_capacity(self, capacity):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Transformer")
         return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
     def set_hvdc_capacity(self, capacity):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("HVDC")
         return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
     def set_equivalent_device_capacity(self, capacity):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Equivalent Device")
         return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
     def set_energy_storage_capacity(self, capacity):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Energy Storage")
         return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
     def set_area_capacity(self, capacity):
+        """
+        """
         global STEPS_LIB
         return STEPS_LIB.api_set_area_capacity(capacity, self.toolkit_index)
     def set_zone_capacity(self, capacity):
+        """
+        """
         global STEPS_LIB
         return STEPS_LIB.api_set_zone_capacity(capacity, self.toolkit_index)
     def set_owner_capacity(self, capacity):
+        """
+        """
         global STEPS_LIB
         return STEPS_LIB.api_set_owner_capacity(capacity, self.toolkit_index)
 
 
     def add_bus(self, busnumber, busname, basevoltage):
+        """
+        """
         global STEPS_LIB
         busname = self.__get_c_char_p_of_string(busname)
         STEPS_LIB.api_add_bus(busnumber, busname, basevoltage, self.toolkit_index)
         return
 
     def add_generator(self, generator):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -384,12 +666,16 @@ class STEPS():
         return
 
     def add_wt_generator(self, generator):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         STEPS_LIB.api_add_wt_generator(bus, ickt, self.toolkit_index)
 
     def add_pv_unit(self, unit):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(unit)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -397,6 +683,8 @@ class STEPS():
         return
 
     def add_load(self, load):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(load)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -404,6 +692,8 @@ class STEPS():
         return
 
     def add_fixed_shunt(self, shunt):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(shunt)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -411,6 +701,8 @@ class STEPS():
         return
 
     def add_line(self, line):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -418,6 +710,8 @@ class STEPS():
         return
 
     def add_hvdc(self, hvdc):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -425,6 +719,8 @@ class STEPS():
         return
 
     def add_transformer(self, transformer):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, kbus, ickt = self.__extract_triple_bus_device_id(transformer)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -432,6 +728,8 @@ class STEPS():
         return
 
     def add_equivalent_device(self, device):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(device)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -439,6 +737,8 @@ class STEPS():
         return
 
     def add_energy_storage(self, storage):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(storage)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -446,29 +746,39 @@ class STEPS():
         return
 
     def add_area(self, areanumber, areaname):
+        """
+        """
         global STEPS_LIB
         areaname = self.__get_c_char_p_of_string(areaname)
         STEPS_LIB.api_add_area(areanumber, areaname, self.toolkit_index)
         return
 
     def add_zone(self, zonenumber, zonename):
+        """
+        """
         global STEPS_LIB
         zonename = self.__get_c_char_p_of_string(zonename)
         STEPS_LIB.api_add_zone(zonenumber, zonename, self.toolkit_index)
         return
 
     def add_owner(self, ownernumber, ownername):
+        """
+        """
         global STEPS_LIB
         ownername = self.__get_c_char_p_of_string(ownername)
         STEPS_LIB.api_add_owner(ownernumber, ownername, self.toolkit_index)
         return
 
     def remove_bus(self, busnumber):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_remove_bus(busnumber, self.toolkit_index)
         return
 
     def remove_generator(self, generator):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -476,6 +786,8 @@ class STEPS():
         return
 
     def remove_wt_generator(self, generator):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -483,6 +795,8 @@ class STEPS():
         return
 
     def remove_pv_unit(self, unit):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(unit)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -490,6 +804,8 @@ class STEPS():
         return
 
     def remove_load(self, load):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(load)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -497,6 +813,8 @@ class STEPS():
         return
 
     def remove_fixed_shunt(self, shunt):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(shunt)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -504,6 +822,8 @@ class STEPS():
         return
 
     def remove_line(self, line):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -511,6 +831,8 @@ class STEPS():
         return
 
     def remove_hvdc(self, hvdc):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -518,6 +840,8 @@ class STEPS():
         return
 
     def remove_transformer(self, transformer):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, kbus, ickt = self.__extract_triple_bus_device_id(transformer)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -525,6 +849,8 @@ class STEPS():
         return
 
     def remove_equivalent_device(self, device):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(device)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -532,6 +858,8 @@ class STEPS():
         return
 
     def remove_energy_storage(self, storage):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(storage)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -539,162 +867,232 @@ class STEPS():
         return
 
     def remove_area(self, areanumber):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_remove_area(areanumber, self.toolkit_index)
         return
 
     def remove_zone(self, zonenumber):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_remove_zone(zonenumber, self.toolkit_index)
         return
 
     def remove_owner(self, ownernumber):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_remove_owner(ownernumber, self.toolkit_index)
         return
     
     def get_bus_count(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("BUS")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
     def get_generator_count(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Generator")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
     def get_wt_generator_count(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("WT Generator")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
     def get_pv_unit_count(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("PV Unit")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
     def get_load_count(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Load")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
     def get_fixed_shunt_count(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Fixed Shunt")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
     def get_line_count(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Line")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
     def get_transformer_count(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Transformer")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
     def get_hvdc_count(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("HVDC")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
     def get_equivalent_device_count(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Equivalent Device")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
     def get_energy_storage_count(self):
+        """
+        """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Energy Storage")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
     def get_area_count(self):
+        """
+        """
         global STEPS_LIB
         return STEPS_LIB.api_get_area_count(self.toolkit_index)
     def get_zone_count(self):
+        """
+        """
         global STEPS_LIB
         return STEPS_LIB.api_get_zone_count(self.toolkit_index)
     def get_owner_count(self):
+        """
+        """
         global STEPS_LIB
         return STEPS_LIB.api_get_owner_count(self.toolkit_index)
     def get_in_service_bus_count(self):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_get_in_service_bus_count(self.toolkit_index)
         return
     def update_overshadowed_buses(self):
+        """
+        """
         global STEPS_LIB
         return STEPS_LIB.api_update_overshadowed_buses(self.toolkit_index)
     def set_all_buses_un_overshadowed(self):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_set_all_buses_un_overshadowed(self.toolkit_index)
         return
     def get_overshadowed_bus_count(self):
+        """
+        """
         global STEPS_LIB
         return STEPS_LIB.api_get_overshadowed_bus_count(self.toolkit_index)
 
     def is_bus_exist(self, bus):
+        """
+        """
         global STEPS_LIB
         return STEPS_LIB.api_is_bus_exist(bus, self.toolkit_index)
 
     def is_generator_exist(self, generator):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_is_generator_exist(bus, ickt, self.toolkit_index)
 
     def is_wt_generator_exist(self, generator):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_is_wt_generator_exist(bus, ickt, self.toolkit_index)
 
     def is_pv_unit_exist(self, pv_unit):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(pv_unit)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_is_pv_unit_exist(bus, ickt, self.toolkit_index)
 
     def is_load_exist(self, load):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(load)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_is_load_exist(bus, ickt, self.toolkit_index)
 
     def is_fixed_shunt_exist(self, shunt):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(shunt)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_is_fixed_shunt_exist(bus, ickt, self.toolkit_index)
 
     def is_line_exist(self, line):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_is_line_exist(ibus, jbus, ickt, self.toolkit_index)
 
     def is_transformer_exist(self, transformer):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, kbus, ickt = self.__extract_triple_bus_device_id(transformer)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_is_transformer_exist(ibus, jbus, kbus, ickt, self.toolkit_index)
 
     def is_hvdc_exist(self, hvdc):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_is_hvdc_exist(ibus, jbus, ickt, self.toolkit_index)
 
     def is_equivalent_device_exist(self, equivalent_device):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(equivalent_device)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_is_equivalent_device_exist(bus, ickt, self.toolkit_index)
 
     def is_energy_storage_exist(self, energy_storage):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(energy_storage)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_is_energy_storage_exist(bus, ickt, self.toolkit_index)
     
     def bus_name2number(self, name):
+        """
+        """
         global STEPS_LIB
         name = self.__get_c_char_p_of_string(name)
         return int(STEPS_LIB.api_bus_name2bus_number(name, self.toolkit_index))
 
     def bus_number2name(self, bus):
+        """
+        """
         global STEPS_LIB
         return self.__get_string_from_c_char_p(STEPS_LIB.api_bus_number2bus_name(bus, self.toolkit_index))
 
     def get_all_buses(self):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_initialize_all_bus_search(self.toolkit_index)
         buses = []
@@ -707,6 +1105,8 @@ class STEPS():
         return tuple(buses)
 
     def __get_buses_with_constraints_deprecated(self, constraints):
+        """
+        """
         print("Warning. __get_buses_with_constraints_deprecated(constraints) will be removed later.")
         buses = []
         if len(constraints)<7:
@@ -721,6 +1121,8 @@ class STEPS():
         return self.get_buses_with_constraints(vbase_min, vbase_max, v_min, v_max, area, zone, owner)
         
     def get_buses_with_constraints(self, vbase_min=0.0, vbase_max=10000000.0, v_min=0.0, v_max=10000000.0, area=0, zone=0, owner=0):
+        """
+        """
         if isinstance(vbase_min, list) or isinstance(vbase_min, tuple):
             print("Warning. get_buses_with_constraints(constraints) is obsolete and has been updated to get_buses_with_constraints(vbase_min=0.0, vbase_max=10000000.0, v_min=0.0, v_max=10000000.0, area=0, zone=0, owner=0). Use __get_buses_with_constraints_deprecated(constraints) for compatibility.")
             constraints = tuple(vbase_min)
@@ -738,9 +1140,13 @@ class STEPS():
             return tuple(buses)
                 
     def get_all_generators(self):
+        """
+        """
         return self.get_generators_at_bus(0)
         
     def get_generators_at_bus(self, bus):
+        """
+        """
         global STEPS_LIB
         device = "GENERATOR"
         device = self.__get_c_char_p_of_string(device)
@@ -758,9 +1164,13 @@ class STEPS():
         return tuple(generators)
         
     def get_all_wt_generators(self):
+        """
+        """
         return self.get_wt_generators_at_bus(0)
         
     def get_wt_generators_at_bus(self, bus):
+        """
+        """
         global STEPS_LIB
         device = "WT GENERATOR"
         device = self.__get_c_char_p_of_string(device)
@@ -778,9 +1188,13 @@ class STEPS():
         return tuple(wt_generators)
         
     def get_all_pv_units(self):
+        """
+        """
         return self.get_pv_units_at_bus(0)
         
     def get_pv_units_at_bus(self, bus):
+        """
+        """
         global STEPS_LIB
         device = "PV UNIT"
         device = self.__get_c_char_p_of_string(device)
@@ -798,9 +1212,13 @@ class STEPS():
         return tuple(pv_units)
         
     def get_all_energy_storages(self):
+        """
+        """
         return self.get_energy_storages_at_bus(0)
         
     def get_energy_storages_at_bus(self, bus):
+        """
+        """
         global STEPS_LIB
         device = "ENERGY STORAGE"
         device = self.__get_c_char_p_of_string(device)
@@ -818,9 +1236,13 @@ class STEPS():
         return tuple(energy_storages)
         
     def get_all_loads(self):
+        """
+        """
         return self.get_loads_at_bus(0)
         
     def get_loads_at_bus(self, bus):
+        """
+        """
         global STEPS_LIB
         device = "LOAD"
         device = self.__get_c_char_p_of_string(device)
@@ -838,9 +1260,13 @@ class STEPS():
         return tuple(loads)
         
     def get_all_fixed_shunts(self):
+        """
+        """
         return self.get_fixed_shunts_at_bus(0)
         
     def get_fixed_shunts_at_bus(self, bus):
+        """
+        """
         global STEPS_LIB
         device = "FIXED SHUNT"
         device = self.__get_c_char_p_of_string(device)
@@ -858,9 +1284,13 @@ class STEPS():
         return tuple(fixed_shunts)
                 
     def get_all_equivalent_devices(self):
+        """
+        """
         return self.get_equivalent_devices_at_bus(0)
         
     def get_equivalent_devices_at_bus(self, bus):
+        """
+        """
         global STEPS_LIB
         device = "EQUIVALENT DEVICE"
         device = self.__get_c_char_p_of_string(device)
@@ -878,9 +1308,13 @@ class STEPS():
         return tuple(equivalent_devices)
 
     def get_all_lines(self):
+        """
+        """
         return self.get_lines_at_bus(0)
         
     def get_lines_at_bus(self, bus):
+        """
+        """
         global STEPS_LIB
         device = "LINE"
         device = self.__get_c_char_p_of_string(device)
@@ -900,9 +1334,13 @@ class STEPS():
         return tuple(lines)
 
     def get_all_transformers(self):
+        """
+        """
         return self.get_transformers_at_bus(0)
         
     def get_transformers_at_bus(self, bus):
+        """
+        """
         global STEPS_LIB
         device = "TRANSFORMER"
         device = self.__get_c_char_p_of_string(device)
@@ -924,9 +1362,13 @@ class STEPS():
         return tuple(transformers)
 
     def get_all_hvdcs(self):
+        """
+        """
         return self.get_hvdcs_at_bus(0)
         
     def get_hvdcs_at_bus(self, bus):
+        """
+        """
         global STEPS_LIB
         device = "HVDC"
         device = self.__get_c_char_p_of_string(device)
@@ -946,6 +1388,8 @@ class STEPS():
         return tuple(hvdcs)
 
     def get_generators_with_constraints(self, area=0, zone=0):
+        """
+        """
         all_gens = self.get_generators_at_bus(0)
         if area==0 and zone==0:
             return all_gens
@@ -973,6 +1417,8 @@ class STEPS():
         return tuple(gens)
         
     def get_wt_generators_with_constraints(self, area=0, zone=0):
+        """
+        """
         all_gens = self.get_wt_generators_at_bus(0)
         if area==0 and zone==0:
             return all_gens
@@ -1000,6 +1446,8 @@ class STEPS():
         return tuple(gens)
 
     def get_pv_units_with_constraints(self, area=0, zone=0):
+        """
+        """
         all_pvs = self.get_pv_units_at_bus(0)
         if area==0 and zone==0:
             return all_pvs
@@ -1027,6 +1475,8 @@ class STEPS():
         return tuple(pvs)
 
     def get_loads_with_constraints(self, area=0, zone=0):
+        """
+        """
         all_loads = self.get_loads_at_bus(0)
         if area==0 and zone==0:
             return all_loads
@@ -1054,9 +1504,13 @@ class STEPS():
         return tuple(loads)
         
     def get_areas(self):
+        """
+        """
         return self.get_all_areas()
         
     def get_all_areas(self):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_initialize_area_search(self.toolkit_index)
         areas = []
@@ -1069,9 +1523,13 @@ class STEPS():
         return tuple(areas)
 
     def get_zones(self):
+        """
+        """
         return self.get_all_zones()
         
     def get_all_zones(self):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_initialize_zone_search(self.toolkit_index)
         zones = []
@@ -1084,9 +1542,13 @@ class STEPS():
         return tuple(zones)
 
     def get_owners(self):
+        """
+        """
         return self.get_all_owners()
         
     def get_all_owners(self):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_initialize_owner_search(self.toolkit_index)
         owners = []
@@ -1099,6 +1561,8 @@ class STEPS():
         return tuple(owners)
 
     def get_bus_data(self, bus, par_type, par_name):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1115,6 +1579,8 @@ class STEPS():
         return None
 
     def __get_source_data(self, source, par_type, par_name):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1133,22 +1599,32 @@ class STEPS():
         return None
 
     def get_generator_data(self, generator, par_type, par_name):
+        """
+        """
         global STEPS_LIB
         return self.__get_source_data(generator, par_type, par_name)
 
     def get_wt_generator_data(self, wt_generator, par_type, par_name):
+        """
+        """
         global STEPS_LIB
         return self.__get_source_data(wt_generator, par_type, par_name)
 
     def get_pv_unit_data(self, pv_unit, par_type, par_name):
+        """
+        """
         global STEPS_LIB
         return self.__get_source_data(pv_unit, par_type, par_name)
 
     def get_energy_storage_data(self, energy_storage, par_type, par_name):
+        """
+        """
         global STEPS_LIB
         return self.__get_source_data(energy_storage, par_type, par_name)
 
     def get_load_data(self, load, par_type, par_name):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1167,6 +1643,8 @@ class STEPS():
         return None
 
     def get_fixed_shunt_data(self, fixed_shunt, par_type, par_name):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1185,6 +1663,8 @@ class STEPS():
         return None
 
     def get_equivalent_device_data(self, equivalent_device, par_type, par_name):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1203,6 +1683,8 @@ class STEPS():
         return None
 
     def get_line_data(self, line, par_type, par_name):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1221,6 +1703,8 @@ class STEPS():
         return None
 
     def get_transformer_data(self, transformer, par_type, side, par_name):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1243,6 +1727,8 @@ class STEPS():
         return None
 
     def get_hvdc_data(self, hvdc, par_type, side, par_name):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1265,6 +1751,8 @@ class STEPS():
         return None
 
     def get_area_data(self, area, par_type, par_name):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1281,6 +1769,8 @@ class STEPS():
         return None
 
     def get_zone_data(self, zone, par_type, par_name):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1297,6 +1787,8 @@ class STEPS():
         return None
     
     def get_owner_data(self, owner, par_type, par_name):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1314,6 +1806,8 @@ class STEPS():
 
         
     def set_bus_data(self, bus, par_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1332,6 +1826,8 @@ class STEPS():
         return
 
     def __set_source_data(self, source, par_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1351,22 +1847,32 @@ class STEPS():
         return
 
     def set_generator_data(self, generator, par_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         return self.__set_source_data(generator, par_type, par_name, value)
 
     def set_wt_generator_data(self, wt_generator, par_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         return self.__set_source_data(wt_generator, par_type, par_name, value)
 
     def set_pv_unit_data(self, pv_unit, par_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         return self.__set_source_data(pv_unit, par_type, par_name, value)
 
     def set_energy_storage_data(self, energy_storage, par_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         return self.__set_source_data(energy_storage, par_type, par_name, value)
 
     def set_load_data(self, load, par_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1386,6 +1892,8 @@ class STEPS():
         return
 
     def set_fixed_shunt_data(self, fixed_shunt, par_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1405,6 +1913,8 @@ class STEPS():
         return
 
     def set_equivalent_device_data(self, equivalent_device, par_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1424,6 +1934,8 @@ class STEPS():
         return
 
     def set_line_data(self, line, par_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1443,6 +1955,8 @@ class STEPS():
         return
 
     def set_transformer_data(self, transformer, par_type, side, par_name, value):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1463,6 +1977,8 @@ class STEPS():
         return
 
     def set_hvdc_data(self, hvdc, par_type, side, par_name, value):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1483,6 +1999,8 @@ class STEPS():
         return
 
     def set_area_data(self, area, par_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1500,6 +2018,8 @@ class STEPS():
         return
 
     def set_zone_data(self, zone, par_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1517,6 +2037,8 @@ class STEPS():
         return
 
     def set_owner_data(self, owner, par_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1534,6 +2056,8 @@ class STEPS():
         return
 
     def set_dynamic_model(self, data, file_type):
+        """
+        """
         global STEPS_LIB
         data = self.__get_c_char_p_of_string(data)
         file_type = self.__get_c_char_p_of_string(file_type)        
@@ -1541,6 +2065,8 @@ class STEPS():
         return
     
     def get_generator_related_model_name(self, generator, model_type):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1551,6 +2077,8 @@ class STEPS():
         return model_name
 
     def get_generator_related_model_data(self, generator, model_type, par_name):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1559,6 +2087,8 @@ class STEPS():
         return STEPS_LIB.api_get_generator_related_model_float_parameter(ibus, ickt, model_type, par_name, self.toolkit_index)
         
     def set_generator_related_model_data(self, generator, model_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1567,6 +2097,8 @@ class STEPS():
         return STEPS_LIB.api_set_generator_related_model_float_parameter(ibus, ickt, model_type, par_name, value, self.toolkit_index)
     
     def get_generator_related_model_parameter_pair(self, generator, model_type):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1581,6 +2113,8 @@ class STEPS():
         return tuple(parameters)
     
     def get_wt_generator_related_model_name(self, generator, model_type):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1591,6 +2125,8 @@ class STEPS():
         return model_name
 
     def get_wt_generator_related_model_data(self, generator, model_type, par_name):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1599,6 +2135,8 @@ class STEPS():
         return STEPS_LIB.api_get_wt_generator_related_model_float_parameter(ibus, ickt, model_type, par_name, self.toolkit_index)
         
     def set_wt_generator_related_model_data(self, generator, model_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1607,6 +2145,8 @@ class STEPS():
         return STEPS_LIB.api_set_wt_generator_related_model_float_parameter(ibus, ickt, model_type, par_name, value, self.toolkit_index)
         
     def get_wt_generator_related_model_parameter_pair(self, generator, model_type):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1621,6 +2161,8 @@ class STEPS():
         return tuple(parameters)
         
     def get_pv_unit_related_model_name(self, pv_unit, model_type):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(pv_unit)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1631,6 +2173,8 @@ class STEPS():
         return model_name
 
     def get_pv_unit_related_model_data(self, pv_unit, model_type, par_name):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(pv_unit)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1639,6 +2183,8 @@ class STEPS():
         return STEPS_LIB.api_get_pv_unit_related_model_float_parameter(ibus, ickt, model_type, par_name, self.toolkit_index)
         
     def set_pv_unit_related_model_data(self, pv_unit, model_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(pv_unit)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1647,6 +2193,8 @@ class STEPS():
         return STEPS_LIB.api_set_pv_unit_related_model_float_parameter(ibus, ickt, model_type, par_name, value, self.toolkit_index)
         
     def get_pv_unit_related_model_parameter_pair(self, pv_unit, model_type):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(pv_unit)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1661,6 +2209,8 @@ class STEPS():
         return tuple(parameters)
          
     def get_load_related_model_name(self, load, model_type):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(load)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1671,6 +2221,8 @@ class STEPS():
         return model_name
 
     def get_load_related_model_data(self, load, model_type, par_name):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(load)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1679,6 +2231,8 @@ class STEPS():
         return STEPS_LIB.api_get_load_related_model_float_parameter(ibus, ickt, model_type, par_name, self.toolkit_index)
         
     def set_load_related_model_data(self, load, model_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(load)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1687,6 +2241,8 @@ class STEPS():
         return STEPS_LIB.api_set_load_related_model_float_parameter(ibus, ickt, model_type, par_name, value, self.toolkit_index)
         
     def get_load_related_model_parameter_pair(self, load, model_type):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(load)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1701,6 +2257,8 @@ class STEPS():
         return tuple(parameters)
         
     def get_line_related_model_name(self, line, model_type):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1711,6 +2269,8 @@ class STEPS():
         return model_name
 
     def get_line_related_model_data(self, line, model_type, par_name):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1719,6 +2279,8 @@ class STEPS():
         return STEPS_LIB.api_get_line_related_model_float_parameter(ibus, jbus, ickt, model_type, par_name, self.toolkit_index)
         
     def set_line_related_model_data(self, line, model_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1727,6 +2289,8 @@ class STEPS():
         return STEPS_LIB.api_set_line_related_model_float_parameter(ibus, jbus, ickt, model_type, par_name, value, self.toolkit_index)
         
     def get_line_related_model_parameter_pair(self, line, model_type):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1741,6 +2305,8 @@ class STEPS():
         return tuple(parameters)
         
     def get_hvdc_related_model_name(self, hvdc, model_type):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1751,6 +2317,8 @@ class STEPS():
         return model_name
 
     def get_hvdc_related_model_data(self, hvdc, model_type, par_name):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1759,6 +2327,8 @@ class STEPS():
         return STEPS_LIB.api_get_hvdc_related_model_float_parameter(ibus, jbus, ickt, model_type, par_name, self.toolkit_index)
         
     def set_hvdc_related_model_data(self, hvdc, model_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1767,6 +2337,8 @@ class STEPS():
         return STEPS_LIB.api_set_hvdc_related_model_float_parameter(ibus, jbus, ickt, model_type, par_name, value, self.toolkit_index)
         
     def get_hvdc_related_model_parameter_pair(self, hvdc, model_type):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -1781,6 +2353,8 @@ class STEPS():
         return tuple(parameters)
         
     def get_powerflow_solver_parameter(self, par_type, par_name):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
@@ -1795,6 +2369,8 @@ class STEPS():
         return None
 
     def set_powerflow_solver_parameter(self, par_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
@@ -1809,21 +2385,29 @@ class STEPS():
         return
     
     def show_powerflow_solver_configuration(self):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_show_powerflow_solver_configuration(self.toolkit_index)
         return
         
     def solve_powerflow(self, method):
+        """
+        """
         global STEPS_LIB
         method = self.__get_c_char_p_of_string(method)
         STEPS_LIB.api_solve_powerflow(method, self.toolkit_index)
         return
 
     def is_powerflow_converged(self):
+        """
+        """
         global STEPS_LIB
         return STEPS_LIB.api_is_powerflow_converged(self.toolkit_index)
     
     def get_powerflow_loss(self):
+        """
+        """
         global STEPS_LIB
         p_gen = 0.0
         gens = self.get_generators_at_bus(0)
@@ -1851,78 +2435,106 @@ class STEPS():
         
             
     def show_powerflow_result(self):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_show_powerflow_result(self.toolkit_index)
         return
         
     def save_powerflow_result(self, file):
+        """
+        """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         STEPS_LIB.api_save_powerflow_result(file, self.toolkit_index)
         return
     
     def save_extended_powerflow_result(self, file):
+        """
+        """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         STEPS_LIB.api_save_extended_powerflow_result(file, self.toolkit_index)
         return
         
     def save_jacobian_matrix(self, file):
+        """
+        """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         STEPS_LIB.api_save_jacobian_matrix(file, self.toolkit_index)
         return
 
     def build_network_Y_matrix(self):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_build_network_Y_matrix(self.toolkit_index)
         return
 
     def build_decoupled_network_B_matrix(self):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_build_decoupled_network_B_matrix(self.toolkit_index)
         return
 
     def build_dc_network_B_matrix(self):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_build_dc_network_B_matrix(self.toolkit_index)
         return
 
     def build_dynamic_network_Y_matrix(self):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_build_dynamic_network_Y_matrix(self.toolkit_index)
         return
 
     def build_network_Z_matrix(self):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_build_network_Z_matrix(self.toolkit_index)
         return
         
     def save_network_Y_matrix(self, file):
+        """
+        """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         STEPS_LIB.api_save_network_Y_matrix(file, self.toolkit_index)
         return
         
     def save_decoupled_network_B_matrix(self, file):
+        """
+        """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         STEPS_LIB.api_save_decoupled_network_B_matrix(file, self.toolkit_index)
         return
         
     def save_dc_network_B_matrix(self, file):
+        """
+        """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         STEPS_LIB.api_save_dc_network_B_matrix(file, self.toolkit_index)
         return
         
     def save_dynamic_network_Y_matrix(self, file):
+        """
+        """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         STEPS_LIB.api_save_dynamic_network_Y_matrix(file, self.toolkit_index)
         return
         
     def save_network_Z_matrix(self, file):
+        """
+        """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         STEPS_LIB.api_save_network_Z_matrix(file, self.toolkit_index)
@@ -1930,6 +2542,8 @@ class STEPS():
         
         
     def get_dynamic_simulator_parameter(self, par_type, par_name):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1946,6 +2560,8 @@ class STEPS():
         return None
 
     def set_dynamic_simulator_parameter(self, par_type, par_name, value):
+        """
+        """
         global STEPS_LIB
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
@@ -1963,32 +2579,46 @@ class STEPS():
         return None
         
     def get_dynamic_simulator_output_file(self):
+        """
+        """
         global STEPS_LIB
         return self.__get_string_from_c_char_p(STEPS_LIB.api_get_dynamic_simulator_output_file(self.toolkit_index))
         
     def set_dynamic_simulator_output_file(self, file):
+        """
+        """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         return STEPS_LIB.api_set_dynamic_simulator_output_file(file, self.toolkit_index)
         
     def get_dynamic_simulation_time_step(self):
+        """
+        """
         global STEPS_LIB
         return STEPS_LIB.api_get_dynamic_simulation_time_step(self.toolkit_index)
         
     def set_dynamic_simulation_time_step(self, step):
+        """
+        """
         global STEPS_LIB
         return STEPS_LIB.api_set_dynamic_simulation_time_step(step, self.toolkit_index)
 
     def show_dynamic_simulation_configuration(self):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_show_dynamic_simulation_configuration(self.toolkit_index)
         return
     
     def get_dynamic_simulation_time(self):
+        """
+        """
         global STEPS_LIB
         return STEPS_LIB.api_get_dynamic_simulation_time(self.toolkit_index)
         
     def prepare_meters(self, device_type):
+        """
+        """
         global STEPS_LIB
         device_type = device_type.upper()
         if device_type not in ['ALL', 'BUS', 'GENERATOR', 'WT GENERATOR', 'LOAD', 'LINE', 'TRANSFORMER', 'HVDC', 'EQUIVALENT DEVICE']:
@@ -2029,12 +2659,16 @@ class STEPS():
         return
 
     def prepare_bus_meter(self, bus, meter_type):
+        """
+        """
         global STEPS_LIB
         meter_type = self.__get_c_char_p_of_string(meter_type)
         STEPS_LIB.api_prepare_bus_related_meter(bus, meter_type, self.toolkit_index)
         return
 
     def prepare_generator_meter(self, generator, meter_type, var_name=""):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2044,6 +2678,8 @@ class STEPS():
         return
 
     def prepare_wt_generator_meter(self, generator, meter_type, var_name=""):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2053,6 +2689,8 @@ class STEPS():
         return
 
     def prepare_pv_unit_meter(self, pvunit, meter_type, var_name=""):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(pvunit)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2062,6 +2700,8 @@ class STEPS():
         return
 
     def prepare_energy_storage_meter(self, estorage, meter_type, var_name=""):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(estorage)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2071,6 +2711,8 @@ class STEPS():
         return
 
     def prepare_load_meter(self, load, meter_type, var_name=""):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(load)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2080,6 +2722,8 @@ class STEPS():
         return
 
     def prepare_line_meter(self, line, meter_type, side, var_name=""):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2090,6 +2734,8 @@ class STEPS():
         return
 
     def prepare_transformer_meter(self, trans, meter_type, side, var_name=""):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, kbus, ickt = self.__extract_triple_bus_device_id(trans)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2100,6 +2746,8 @@ class STEPS():
         return
 
     def prepare_hvdc_meter(self, hvdc, meter_type, side, var_name=""):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2110,6 +2758,8 @@ class STEPS():
         return
 
     def prepare_equivalent_device_meter(self, edevice, meter_type, var_name=""):
+        """
+        """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(equivalent_device)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2119,43 +2769,59 @@ class STEPS():
         return
 
     def start_dynamic_simulation(self):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_start_dynamic_simulation(self.toolkit_index)
         return
 
     def stop_dynamic_simulation(self):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_stop_dynamic_simulation(self.toolkit_index)
         return
 
     def run_dynamic_simulation_to_time(self, time):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_run_simulation_to_time(time, self.toolkit_index)
         return
 
     def run_a_step(self):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_run_a_step(self.toolkit_index)
         return
 
     def set_bus_fault(self, bus, fault_type, fault_shunt):
+        """
+        """
         global STEPS_LIB
         fault_type = self.__get_c_char_p_of_string(fault_type)
         STEPS_LIB.api_set_bus_fault(bus, fault_type, fault_shunt[0], fault_shunt[1], self.toolkit_index)
         return
 
     def clear_bus_fault(self, bus, fault_type):
+        """
+        """
         global STEPS_LIB
         fault_type = self.__get_c_char_p_of_string(fault_type)
         STEPS_LIB.api_clear_bus_fault(bus, fault_type, self.toolkit_index)
         return
 
     def trip_bus(self, bus):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_trip_bus(bus, self.toolkit_index)
         return
 
     def set_line_fault(self, line, fault_type, fault_location, fault_shunt):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2164,6 +2830,8 @@ class STEPS():
         return
 
     def clear_line_fault(self, line, fault_type, fault_location):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2172,6 +2840,8 @@ class STEPS():
         return
 
     def trip_line(self, line):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2179,6 +2849,8 @@ class STEPS():
         return
 
     def trip_line_breaker(self, line, side):
+        """
+        """
         global STEPS_LIB
         if side not in line:
             return
@@ -2194,6 +2866,8 @@ class STEPS():
         
 
     def close_line(self, line):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2201,6 +2875,8 @@ class STEPS():
         return
 
     def close_line_breaker(self, line, side):
+        """
+        """
         global STEPS_LIB
         if side not in line:
             return
@@ -2216,6 +2892,8 @@ class STEPS():
         
 
     def trip_transformer(self, transformer):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, kbus, ickt = self.__extract_triple_bus_device_id(transformer)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2223,6 +2901,8 @@ class STEPS():
         return
 
     def trip_transformer_breaker(self, transformer, side):
+        """
+        """
         global STEPS_LIB
         if side not in transformer or side==0:
             return
@@ -2239,6 +2919,8 @@ class STEPS():
         
 
     def close_transformer(self, transformer):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, kbus, ickt = self.__extract_triple_bus_device_id(transformer)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2246,6 +2928,8 @@ class STEPS():
         return
 
     def close_transformer_breaker(self, transformer, side):
+        """
+        """
         global STEPS_LIB
         if side not in transformer or side==0:
             return
@@ -2261,6 +2945,8 @@ class STEPS():
         return
         
     def trip_generator(self, generator):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2268,6 +2954,8 @@ class STEPS():
         return
 
     def shed_generator(self, generator, percent):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2275,6 +2963,8 @@ class STEPS():
         return
 
     def trip_load(self, load):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(load)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2282,6 +2972,8 @@ class STEPS():
         return
 
     def close_load(self, load):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(load)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2289,6 +2981,8 @@ class STEPS():
         return
 
     def scale_load(self, load, percent):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(load)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2296,11 +2990,15 @@ class STEPS():
         return
 
     def scale_all_loads(self, percent):
+        """
+        """
         global STEPS_LIB
         STEPS_LIB.api_scale_all_loads(percent, self.toolkit_index)
         return
 
     def trip_fixed_shunt(self, shunt):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(shunt)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2308,6 +3006,8 @@ class STEPS():
         return
 
     def close_fixed_shunt(self, shunt):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(shunt)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2315,6 +3015,8 @@ class STEPS():
         return
 
     def manually_bypass_hvdc(self, hvdc):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2322,6 +3024,8 @@ class STEPS():
         return
 
     def manually_block_hvdc(self, hvdc):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2329,6 +3033,8 @@ class STEPS():
         return
 
     def manually_unbypass_hvdc(self, hvdc):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2336,6 +3042,8 @@ class STEPS():
         return
 
     def manually_unblock_hvdc(self, hvdc):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
         ickt = self.__get_c_char_p_of_string(ickt)
@@ -2343,84 +3051,112 @@ class STEPS():
         return
 
     def get_generator_voltage_reference_in_pu(self, generator):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_get_generator_voltage_reference_in_pu(ibus, ickt, self.toolkit_index)
 
     def get_generator_mechanical_power_reference_in_pu(self, generator):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_get_generator_mechanical_power_reference_in_pu_based_on_mbase(ibus, ickt, self.toolkit_index)
 
     def get_generator_mechanical_power_reference_in_MW(self, generator):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_get_generator_mechanical_power_reference_in_MW(ibus, ickt, self.toolkit_index)
 
     def set_generator_voltage_reference_in_pu(self, generator, value):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_set_generator_voltage_reference_in_pu(ibus, ickt, value, self.toolkit_index)
 
     def set_generator_mechanical_power_reference_in_pu(self, generator, value):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_set_generator_mechanical_power_reference_in_pu_based_on_mbase(ibus, ickt, value, self.toolkit_index)
         
     def set_generator_mechanical_power_reference_in_MW(self, generator, value):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_set_generator_mechanical_power_reference_in_MW(ibus, ickt, value, self.toolkit_index)
         
     def get_generator_excitation_voltage_in_pu(self, generator):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_get_generator_excitation_voltage_in_pu(ibus, ickt, self.toolkit_index)
 
     def get_generator_mechanical_power_in_pu(self, generator):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_get_generator_mechanical_power_in_pu_based_on_mbase(ibus, ickt, self.toolkit_index)
 
     def get_generator_mechanical_power_in_MW(self, generator):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_get_generator_mechanical_power_in_MW(ibus, ickt, self.toolkit_index)
 
     def set_generator_excitation_voltage_in_pu(self, generator, value):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_set_generator_excitation_voltage_in_pu(ibus, ickt, value, self.toolkit_index)
 
     def set_generator_mechanical_power_in_pu(self, generator, value):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_set_generator_mechanical_power_in_pu_based_on_mbase(ibus, ickt, value, self.toolkit_index)
         
     def set_generator_mechanical_power_in_MW(self, generator, value):
+        """
+        """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_set_generator_mechanical_power_in_MW(ibus, ickt, value, self.toolkit_index)
 
     def get_hvdc_power_order_in_MW(self, hvdc):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_get_hvdc_power_order_in_MW(ibus, jbus, ickt, self.toolkit_index)
         
     def set_hvdc_power_order_in_MW(self, hvdc, value):
+        """
+        """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
         ickt = self.__get_c_char_p_of_string(ickt)

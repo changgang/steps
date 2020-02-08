@@ -57,6 +57,7 @@ class LCFB1 : public TURBINE_LOAD_CONTROLLER_MODEL
 
         virtual double get_model_data_with_name(string par_name) const;
         virtual void set_model_data_with_name(string par_name, double value);
+        virtual double get_minimum_nonzero_time_constant_in_s();
 
         virtual double get_model_internal_variable_with_name(string var_name);
 

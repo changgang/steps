@@ -822,6 +822,11 @@ void GAST2A::set_model_data_with_name(string par_name, double value)
         return set_gas_min_in_pu(value);
 }
 
+double GAST2A::get_minimum_nonzero_time_constant_in_s()
+{
+    return INFINITE_THRESHOLD;
+}
+
 void GAST2A::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();

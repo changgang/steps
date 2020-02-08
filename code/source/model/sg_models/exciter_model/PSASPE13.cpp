@@ -567,6 +567,20 @@ void PSASPE13::set_model_data_with_name(string par_name, double value)
     return;
 }
 
+double PSASPE13::get_minimum_nonzero_time_constant_in_s()
+{
+    double mint = INFINITE_THRESHOLD;
+    if(get_TR_in_s()!=0.0 and mint>get_TR_in_s())
+        mint = get_TR_in_s();
+    if(get_TB_in_s()!=0.0 and mint>get_TB_in_s())
+        mint = get_TB_in_s();
+    if(get_TA_in_s()!=0.0 and mint>get_TA_in_s())
+        mint = get_TA_in_s();
+    if(get_TF_in_s()!=0.0 and mint>get_TF_in_s())
+        mint = get_TF_in_s();
+    return mint;
+}
+
 
 void PSASPE13::prepare_model_internal_variable_table()
 {

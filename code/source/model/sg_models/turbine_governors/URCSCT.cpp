@@ -1357,6 +1357,11 @@ void URCSCT::set_model_data_with_name(string par_name, double value)
         return set_Pmin_in_pu(value);
 }
 
+double URCSCT::get_minimum_nonzero_time_constant_in_s()
+{
+    return INFINITE_THRESHOLD;
+}
+
 void URCSCT::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();

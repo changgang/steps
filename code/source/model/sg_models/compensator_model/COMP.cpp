@@ -191,6 +191,11 @@ void COMP::set_model_data_with_name(string par_name, double value)
     return;
 }
 
+double COMP::get_minimum_nonzero_time_constant_in_s()
+{
+    return INFINITE_THRESHOLD;
+}
+
 void COMP::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();

@@ -644,6 +644,22 @@ void IEE2ST::set_model_data_with_name(string par_name, double value)
     return;
 }
 
+double IEE2ST::get_minimum_nonzero_time_constant_in_s()
+{
+    double mint = INFINITE_THRESHOLD;
+    if(get_T2_in_s()!=0.0 and mint>get_T2_in_s())
+        mint = get_T2_in_s();
+    if(get_T4_in_s()!=0.0 and mint>get_T4_in_s())
+        mint = get_T4_in_s();
+    if(get_T6_in_s()!=0.0 and mint>get_T6_in_s())
+        mint = get_T6_in_s();
+    if(get_T8_in_s()!=0.0 and mint>get_T8_in_s())
+        mint = get_T8_in_s();
+    if(get_T10_in_s()!=0.0 and mint>get_T10_in_s())
+        mint = get_T10_in_s();
+    return mint;
+}
+
 void IEE2ST::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();

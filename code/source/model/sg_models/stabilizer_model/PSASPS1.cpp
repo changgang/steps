@@ -526,6 +526,18 @@ void PSASPS1::set_model_data_with_name(string par_name, double value)
     return;
 }
 
+double PSASPS1::get_minimum_nonzero_time_constant_in_s()
+{
+    double mint = INFINITE_THRESHOLD;
+    if(get_Tq_in_s()!=0.0 and mint>get_Tq_in_s())
+        mint = get_Tq_in_s();
+    if(get_T2e_in_s()!=0.0 and mint>get_T2e_in_s())
+        mint = get_T2e_in_s();
+    if(get_T4e_in_s()!=0.0 and mint>get_T4e_in_s())
+        mint = get_T4e_in_s();
+    return mint;
+}
+
 void PSASPS1::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();

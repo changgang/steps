@@ -167,6 +167,8 @@ bool api_get_dynamic_simulator_boolean_parameter(char* parameter_name, unsigned 
         return ds.get_rotor_angle_stability_surveillance_flag();
     if(PARAMETER_NAME=="NON DIVERGENT SOLUTION LOGIC")
         return ds.get_non_divergent_solution_logic();
+    if(PARAMETER_NAME=="AUTOMATIC ACCELERATOR TUNE LOGIC")
+        return ds.get_automatic_iteration_accelerator_tune_logic();
     if(PARAMETER_NAME=="BIN EXPORT LOGIC")
         return ds.is_bin_file_export_enabled();
     if(PARAMETER_NAME=="CSV EXPORT LOGIC")
@@ -194,6 +196,11 @@ void api_set_dynamic_simulator_boolean_parameter(char* parameter_name, bool valu
     if(PARAMETER_NAME=="NON DIVERGENT SOLUTION LOGIC")
     {
         ds.set_non_divergent_solution_logic(value);
+        return;
+    }
+    if(PARAMETER_NAME=="AUTOMATIC ACCELERATOR TUNE LOGIC")
+    {
+        ds.set_automatic_iteration_accelerator_tune_logic(value);
         return;
     }
     if(PARAMETER_NAME=="BIN EXPORT LOGIC")

@@ -71,6 +71,7 @@ class IEEL : public LOAD_MODEL
 
         virtual double get_model_data_with_name(string par_name) const;
         virtual void set_model_data_with_name(string par_name, double value);
+        virtual double get_minimum_nonzero_time_constant_in_s();
         virtual double get_model_internal_variable_with_name(string var_name);
 
         complex<double> get_initial_load_power_in_MVA() const;

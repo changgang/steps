@@ -105,6 +105,9 @@ def load_library():
     libsteps.api_check_missing_models.restype = None
     libsteps.api_check_missing_models.argtypes = (c_uint, )
     
+    libsteps.api_check_least_dynamic_time_constants.restype = None
+    libsteps.api_check_least_dynamic_time_constants.argtypes = (c_uint, )
+    
     libsteps.api_check_network_connectivity.restype = None
     libsteps.api_check_network_connectivity.argtypes = (c_bool, c_uint)
 

@@ -20,6 +20,8 @@ class DYNAMIC_MODEL_DATABASE : public BASE
     public:
         void add_model(MODEL* model);
         void remove_the_last_model();
+
+        void check_device_model_minimum_time_constants();
     private:
         unsigned int get_model_size(MODEL* model) const;
         void common_set_model(MODEL* model, unsigned int model_size);

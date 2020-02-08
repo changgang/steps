@@ -419,6 +419,7 @@ EXPORT_STEPS_DLL void api_set_hvdc_power_order_in_MW(unsigned int ibus, unsigned
 EXPORT_STEPS_DLL void api_check_powerflow_data(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_check_dynamic_data(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_check_missing_models(unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_check_least_dynamic_time_constants(unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void api_check_network_connectivity(bool remove_void_island=false, unsigned int toolkit_index=INDEX_NOT_EXIST);
 

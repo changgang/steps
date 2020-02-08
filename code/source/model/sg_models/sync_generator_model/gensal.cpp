@@ -569,6 +569,19 @@ void GENSAL::set_model_data_with_name(string par_name, double value)
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
 }
 
+double GENSAL::get_minimum_nonzero_time_constant_in_s()
+{
+    double mint = INFINITE_THRESHOLD;
+    if(get_H_in_s()!=0.0 and mint>get_H_in_s())
+        mint = get_H_in_s();
+    if(get_Td0p_in_s()!=0.0 and mint>get_Td0p_in_s())
+        mint = get_Td0p_in_s();
+    if(get_Td0pp_in_s()!=0.0 and mint>get_Td0pp_in_s())
+        mint = get_Td0pp_in_s();
+    if(get_Tq0pp_in_s()!=0.0 and mint>get_Tq0pp_in_s())
+        mint = get_Tq0pp_in_s();
+    return mint;
+}
 
 void GENSAL::prepare_model_internal_variable_table()
 {

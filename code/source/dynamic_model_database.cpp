@@ -75,9 +75,15 @@ void DYNAMIC_MODEL_DATABASE::add_model(MODEL* model)
     if(occupied_warehouse_capacity+model_size>warehouse_capacity)
     {
         is_full = true;
-        osstream<<"Error. Dynamic model database is full. No more model will be added. Increase dynamic model database size with API.\n"
+        osstream<<"******************************\n"
+                <<"*****************************\n"
+                <<"*****************************\n"
+                <<"Error. Dynamic model database is full. No more model will be added. Increase dynamic model database size with API.\n"
                 <<"The first model failing to append is: \n"
-                <<model->get_dynamic_data_in_psse_format();
+                <<model->get_dynamic_data_in_psse_format()<<"\n"
+                <<"*****************************\n"
+                <<"*****************************\n"
+                <<"*****************************";
         cout<<osstream.str()<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
@@ -322,4 +328,82 @@ void DYNAMIC_MODEL_DATABASE::remove_the_last_model()
             model_starting_position_table.pop_back();
             return;
     }
+}
+
+
+struct DEVICE_MODEL_MIN_T
+{
+    DEVICE_ID did;
+    string model_name;
+    double min_t_in_s;
+};
+
+void DYNAMIC_MODEL_DATABASE::check_device_model_minimum_time_constants()
+{
+    vector<DEVICE_MODEL_MIN_T> mint_list;
+    unsigned int max_record_count = 100;
+    mint_list.reserve(max_record_count);
+
+    unsigned int n = model_starting_position_table.size();
+    for(unsigned int i=0; i<n; ++i)
+    {
+        MODEL* model = (MODEL*) (model_warehouse+model_starting_position_table[i]);
+        DEVICE_ID did = model->get_device_id();
+        string model_name = model->get_model_name();
+        double mint = model->get_minimum_nonzero_time_constant_in_s();
+
+        if(mint>0.0 and mint<1.0)
+        {
+            DEVICE_MODEL_MIN_T newrecord; // build new record
+            newrecord.did = did;
+            newrecord.model_name = model_name;
+            newrecord.min_t_in_s = mint;
+            if(mint_list.size()==max_record_count)// if list is full, try to replace the last one
+            {
+                double t_max = mint_list[max_record_count-1].min_t_in_s;
+                if(mint>=t_max)
+                    continue;
+                else
+                    mint_list[max_record_count-1] = newrecord;
+            }
+            else //if list is not full, add new record
+                mint_list.push_back(newrecord);
+            // then sort records
+            unsigned int m = mint_list.size();
+            for(unsigned int j=0; j<m-1; ++j)
+            {
+                for(unsigned int k=1; k<m; ++k)
+                {
+                    double tprevious = mint_list[k-1].min_t_in_s;
+                    double tnext = mint_list[k].min_t_in_s;
+                    if(tnext<tprevious)
+                    {
+                        DEVICE_MODEL_MIN_T previous_record = mint_list[k-1];
+                        mint_list[k-1] = mint_list[k];
+                        mint_list[k] = previous_record;
+                    }
+                }
+            }
+        }
+    }
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    n = mint_list.size();
+
+    ostringstream osstream;
+    osstream<<"The first "<<(n<max_record_count?n:max_record_count)<<" least dynamic time constants and its device and model name are listed as follows:\n"
+            <<"No.    T(s)        Device              Model name\n";
+    for(unsigned int i=0; i<n; ++i)
+    {
+        if(mint_list[i].min_t_in_s != INFINITE_THRESHOLD)
+            osstream<<setw(4)<<i
+                    <<setw(10)<<setprecision(4)<<mint_list[i].min_t_in_s
+                    <<setw(30)<<mint_list[i].did.get_device_name()
+                    <<setw(10)<<mint_list[i].model_name<<"\n";
+        else
+            osstream<<setw(4)<<i
+                    <<setw(10)<<"-infinite-"
+                    <<setw(30)<<mint_list[i].did.get_device_name()
+                    <<setw(10)<<mint_list[i].model_name<<"\n";
+    }
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
