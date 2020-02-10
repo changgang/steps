@@ -467,7 +467,16 @@ void PSASPS8::set_model_data_with_name(string par_name, double value)
 
 double PSASPS8::get_minimum_nonzero_time_constant_in_s()
 {
-    return INFINITE_THRESHOLD;
+    double mint = INFINITE_THRESHOLD;
+    if(get_Tqv_in_s()!=0.0 and mint>get_Tqv_in_s())
+        mint = get_Tqv_in_s();
+    if(get_Tq1_in_s()!=0.0 and mint>get_Tq1_in_s())
+        mint = get_Tq1_in_s();
+    if(get_Tq2_in_s()!=0.0 and mint>get_Tq2_in_s())
+        mint = get_Tq2_in_s();
+    if(get_Tq3_in_s()!=0.0 and mint>get_Tq3_in_s())
+        mint = get_Tq3_in_s();
+    return mint;
 }
 
 void PSASPS8::prepare_model_internal_variable_table()

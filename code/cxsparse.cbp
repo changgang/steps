@@ -18,6 +18,7 @@
 					<Add option="-O3" />
 					<Add option="-Wall" />
 					<Add option="-ffast-math" />
+					<Add option="-fopenmp" />
 					<Add directory="../code" />
 					<Add directory="thirdparty/SuiteSparse/CXSparse/Include" />
 					<Add directory="thirdparty/cpptest" />

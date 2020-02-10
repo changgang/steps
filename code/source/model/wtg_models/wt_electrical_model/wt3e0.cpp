@@ -1381,7 +1381,24 @@ void WT3E0::set_model_data_with_name(string par_name, double value)
 
 double WT3E0::get_minimum_nonzero_time_constant_in_s()
 {
-    return INFINITE_THRESHOLD;
+    double mint = INFINITE_THRESHOLD;
+    if(get_TRV_in_s()!=0.0 and mint>get_TRV_in_s())
+        mint = get_TRV_in_s();
+    if(get_TV_in_s()!=0.0 and mint>get_TV_in_s())
+        mint = get_TV_in_s();
+    if(get_TFV_in_s()!=0.0 and mint>get_TFV_in_s())
+        mint = get_TFV_in_s();
+    if(get_TP_in_s()!=0.0 and mint>get_TP_in_s())
+        mint = get_TP_in_s();
+    if(get_Tspeed_in_s()!=0.0 and mint>get_Tspeed_in_s())
+        mint = get_Tspeed_in_s();
+    if(get_Tvi_in_s()!=0.0 and mint>get_Tvi_in_s())
+        mint = get_Tvi_in_s();
+    if(get_Tdroop_in_s()!=0.0 and mint>get_Tdroop_in_s())
+        mint = get_Tdroop_in_s();
+    if(get_TFP_in_s()!=0.0 and mint>get_TFP_in_s())
+        mint = get_TFP_in_s();
+    return mint;
 }
 
 void WT3E0::prepare_model_internal_variable_table()

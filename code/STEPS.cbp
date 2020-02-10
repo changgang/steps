@@ -403,7 +403,10 @@
 		<Unit filename="main_powerflow.cpp">
 			<Option link="0" />
 		</Unit>
-		<Unit filename="main_tests.cpp" />
+		<Unit filename="main_tests.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="main_ufls_simulation.cpp">
 			<Option link="0" />
 		</Unit>

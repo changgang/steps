@@ -676,7 +676,26 @@ void PSASPS6::set_model_data_with_name(string par_name, double value)
 
 double PSASPS6::get_minimum_nonzero_time_constant_in_s()
 {
-    return INFINITE_THRESHOLD;
+    double mint = INFINITE_THRESHOLD;
+    if(get_Trw_in_s()!=0.0 and mint>get_Trw_in_s())
+        mint = get_Trw_in_s();
+    if(get_T6_in_s()!=0.0 and mint>get_T6_in_s())
+        mint = get_T6_in_s();
+    if(get_T7_in_s()!=0.0 and mint>get_T7_in_s())
+        mint = get_T7_in_s();
+    if(get_Trp_in_s()!=0.0 and mint>get_Trp_in_s())
+        mint = get_Trp_in_s();
+    if(get_Tw1_in_s()!=0.0 and mint>get_Tw1_in_s())
+        mint = get_Tw1_in_s();
+    if(get_Tw2_in_s()!=0.0 and mint>get_Tw2_in_s())
+        mint = get_Tw2_in_s();
+    if(get_T2_in_s()!=0.0 and mint>get_T2_in_s())
+        mint = get_T2_in_s();
+    if(get_T14_in_s()!=0.0 and mint>get_T14_in_s())
+        mint = get_T14_in_s();
+    if(get_T4_in_s()!=0.0 and mint>get_T4_in_s())
+        mint = get_T4_in_s();
+    return mint;
 }
 
 void PSASPS6::prepare_model_internal_variable_table()

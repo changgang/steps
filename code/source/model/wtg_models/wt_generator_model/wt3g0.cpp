@@ -706,7 +706,14 @@ void WT3G0::set_model_data_with_name(string par_name, double value)
 
 double WT3G0::get_minimum_nonzero_time_constant_in_s()
 {
-    return INFINITE_THRESHOLD;
+    double mint = INFINITE_THRESHOLD;
+    if(get_converter_activer_current_command_T_in_s()!=0.0 and mint>get_converter_activer_current_command_T_in_s())
+        mint = get_converter_activer_current_command_T_in_s();
+    if(get_converter_reactiver_voltage_command_T_in_s()!=0.0 and mint>get_converter_reactiver_voltage_command_T_in_s())
+        mint = get_converter_reactiver_voltage_command_T_in_s();
+    if(get_LVPL_voltage_sensor_T_in_s()!=0.0 and mint>get_LVPL_voltage_sensor_T_in_s())
+        mint = get_LVPL_voltage_sensor_T_in_s();
+    return mint;
 }
 
 void WT3G0::prepare_model_internal_variable_table()

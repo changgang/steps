@@ -274,7 +274,6 @@ double steps_sin(double angle_in_rad)
 
 double steps_fast_sin(double angle_in_rad)
 {
-    //return sin(angle_in_rad);
     double x = angle_in_rad;
     x = round_angle_in_rad_to_PI(x);
     if(x>HALF_PI)
@@ -290,30 +289,15 @@ double steps_fast_sin(double angle_in_rad)
     double x9 = x7*x2;
     double x11 = x9*x2;
     double x13 = x11*x2;
+    double x15 = x13*x2;
 
     return x-0.1666666666666666666666666666667*x3
             +8.3333333333333333333333333333333e-3*x5
             -1.984126984126984126984126984127e-4*x7
             +2.7557319223985890652557319223986e-6*x9
             -2.5052108385441718775052108385442e-8*x11
-            +1.6059043836821614599392377170155e-10*x13;
-
-    return 0.99999660*x-0.16664824*x3+0.00830629*x5-0.00018363*x7;
-    //compute sine
-    double sin = 0.0;
-    if (x < 0)
-    {
-        sin= four_over_pi* x + four_over_pi2 * x* x;
-        if (sin< 0) sin= 0.225*(sin*(-sin)- sin)+ sin;
-        else        sin= 0.225*(sin*  sin - sin)+ sin;
-    }
-    else
-    {
-        sin= four_over_pi * x-four_over_pi2 * x* x;
-        if (sin< 0) sin= 0.225 * (sin*(-sin)- sin) + sin;
-        else        sin= 0.225 * (sin*  sin-  sin) + sin;
-    }
-    return sin;
+            +1.6059043836821614599392377170155e-10*x13
+            -7.6471637318198164759011319857881e-13*x15;
 }
 
 double steps_cos(double angle_in_rad)
@@ -340,8 +324,8 @@ double steps_tan(double angle_in_rad)
 
 double steps_fast_tan(double angle_in_rad)
 {
-    //return tan(angle_in_rad);
-    angle_in_rad = round_angle_in_rad_to_PI(angle_in_rad);
+    return tan(angle_in_rad);
+    /*angle_in_rad = round_angle_in_rad_to_PI(angle_in_rad);
     double sin = steps_fast_sin(angle_in_rad);
     double cos = steps_fast_cos(angle_in_rad);
     if(cos!=0.0)
@@ -350,7 +334,7 @@ double steps_fast_tan(double angle_in_rad)
     {
         cout<<"Fatal error of steps_fast_tan(). Inf found.\n";
         return INFINITE_THRESHOLD;
-    }
+    }*/
 }
 
 double steps_asin(double x)
@@ -364,6 +348,39 @@ double steps_asin(double x)
 double steps_fast_asin(double x)
 {
     return asin(x);
+    if(x==0.0)
+        return 0.0;
+
+    double y = fabs(x);
+    if(y<1.0)
+    {
+        // the following atan function is built based on:
+        // Approximation Eq. 4.4.46 on P81 of "Handbook of Mathematical Functions", by Milton Abramowitz and Irene A. Stegun, 1970
+        double y2 = y*y;
+        double y3 = y2*y;
+        double y4 = y3*y;
+        double y5 = y4*y;
+        double y6 = y5*y;
+        double y7 = y6*y;
+
+        double z = HALF_PI - steps_sqrt(1.0-y)*(1.5707963050+
+                                                -0.2145988016*y
+                                                +0.0889789874*y2
+                                                -0.0501743046*y3
+                                                +0.0308918810*y4
+                                                -0.0170881256*y5
+                                                +0.0066700901*y6
+                                                -0.0012624911*y7
+                                                );
+        return (x>0?1:-1)*z;
+    }
+    else
+    {
+        if(x>0.0)
+            return HALF_PI;
+        else
+            return -HALF_PI;
+    }
 }
 
 double steps_acos(double x)
@@ -377,6 +394,7 @@ double steps_acos(double x)
 double steps_fast_acos(double x)
 {
     return acos(x);
+    //return HALF_PI-steps_fast_asin(x);
 }
 
 double steps_atan(double x)
@@ -390,6 +408,47 @@ double steps_atan(double x)
 double steps_fast_atan(double x)
 {
     return atan(x);
+    if(x==0.0)
+        return 0.0;
+
+    // the following atan function is built based on:
+    // 1. Approximation Eq. 4.4.49 on P81 of "Handbook of Mathematical Functions", by Milton Abramowitz and Irene A. Stegun, 1970
+    // 2. Identity Eq. 4.45.8 arctan(x)=2*arctan(y) if y=x/(1+sqrt(1+x*x)), on https://dlmf.nist.gov/4.45, accessed on Feb. 9, 2020
+    double y = fabs(x);
+    if(y>1.0) y = 1.0/y;
+
+    bool scaled = false;
+    if(y>0.5)
+    {
+        y = y/(1.0+steps_sqrt(1.0+y*y));
+        scaled = true;
+    }
+
+    // from Handbook of functions, Abramowitz&Stegun
+    double y2 = y*y;
+    double y4 = y2*y2;
+    double y6 = y4*y2;
+    double y8 = y6*y2;
+    double y10 = y8*y2;
+    double y12 = y10*y2;
+    double y14 = y12*y2;
+    double y16 = y14*y2;
+
+    double z = 1.0-0.3333314528*y2
+                  +0.1999355085*y4
+                  -0.1420889944*y6
+                  +0.1065626393*y8
+                  -0.0752896400*y10
+                  +0.0429096138*y12
+                  -0.0161657367*y14
+                  +0.0028662257*y16;
+    z *= y;
+
+    if(scaled==true)
+        z += z;
+
+    if(fabs(x)>1) z = HALF_PI-z;
+    return (x>0?1:-1)*z;
 }
 
 double steps_sqrt(double x)
@@ -444,7 +503,7 @@ float quick_inv_sqrt_Lomont(float x)
 	} u;
 	u.x = x;
 	u.i = 0x5f375a86- (u.i>>1); // gives initial guess y0
-	for(unsigned int i=0; i<5; ++i)
+	for(unsigned int i=0; i<10; ++i)
         u.x *= (1.5f-xhalf*u.x*u.x); // Newton step, repeating increases accuracy
 	return u.x;
 }
@@ -459,7 +518,7 @@ double quick_double_inv_sqrt_Lomont(double x)
 	} u;
 	u.x = x;
 	u.i = 0x5fe6ec85e7de30da- (u.i>>1); // gives initial guess y0
-	for(unsigned int i=0; i<5; ++i)
+	for(unsigned int i=0; i<10; ++i)
         u.x *= (1.5F-xhalf*u.x*u.x); // Newton step, repeating increases accuracy
 	return u.x;
 }
