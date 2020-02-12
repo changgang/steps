@@ -348,8 +348,6 @@ double steps_asin(double x)
 double steps_fast_asin(double x)
 {
     return asin(x);
-    if(x==0.0)
-        return 0.0;
 
     double y = fabs(x);
     if(y<1.0)

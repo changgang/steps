@@ -9,6 +9,10 @@ Currently, it supports powerflow solution and dynamic simulation. In the future,
 The data format of STEPS is improved based on PSS/E raw and dyr data format. BPA dat format is also supported.  
 You are encourage to join us for further development.
 
+## Major versions
+V0.0: Initialize project on March 21, 2018
+V1.0: Improved performance version on Feb. 12, 2020. Support synchronous generator, wind turbine generator, (basic) PV unit, HVDC, static and dynamic loads.
+
 ## Dependency
 STEPS depends on CSparse, CXSparse, CppTest, and RapidJSON. The CXSparse is modified to avoid confliction between CSparse and CXSparse by changing prefix cs_ and CS_ to cxs_ and CSX_ .
 Though BLAS, CBLAS, and other SuiteSparse codes are included in the package, they will be removed in future.
