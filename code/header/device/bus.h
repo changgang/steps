@@ -123,8 +123,8 @@ class BUS : public DEVICE
     private:
         unsigned int bus_number;
         string bus_name;
-        float base_voltage_in_kV;
-        float fn_Hz, tn_s;
+        double base_voltage_in_kV;
+        double fn_Hz, tn_s;
         BUS_TYPE bus_type;
         unsigned int area_number;
         unsigned int zone_number;
@@ -141,12 +141,12 @@ class BUS : public DEVICE
         complex<double> negative_sequence_Euler_complex_number;
         complex<double> zero_sequence_Euler_complex_number;
 
-        float normal_voltage_upper_limit_in_pu;
-        float normal_voltage_lower_limit_in_pu;
-        float emergency_voltage_upper_limit_in_pu;
-        float emergency_voltage_lower_limit_in_pu;
+        double normal_voltage_upper_limit_in_pu;
+        double normal_voltage_lower_limit_in_pu;
+        double emergency_voltage_upper_limit_in_pu;
+        double emergency_voltage_lower_limit_in_pu;
 
-        float voltage_to_regulate_in_pu;
+        double voltage_to_regulate_in_pu;
 
         unsigned int equivalent_bus_number;
 

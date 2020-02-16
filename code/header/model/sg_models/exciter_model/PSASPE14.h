@@ -82,7 +82,7 @@ class PSASPE14: public EXCITER_MODEL
 
         FIRST_ORDER_BLOCK sensor, regulator, ifd_feedback, rectifier;
         PI_BLOCK regulator_pi, current_pi;
-        float Efdmax, Efdmin;
+        double Efdmax, Efdmin;
 };
 
 #endif // EXCITER_MODEL_H

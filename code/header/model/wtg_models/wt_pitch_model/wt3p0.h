@@ -76,7 +76,7 @@ class WT3P0 : public WT_PITCH_MODEL
         FIRST_ORDER_BLOCK frequency_sensor;
         PID_BLOCK frequency_controller;
         INTEGRAL_BLOCK pitch_integrator;
-        float ratePitchmax;
+        double ratePitchmax;
 };
 
 #endif // WT3P0_H

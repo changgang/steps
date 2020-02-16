@@ -90,21 +90,21 @@ class CDC6T: public HVDC_MODEL
 
         FIRST_ORDER_BLOCK inverter_dc_voltage_sensor, dc_current_sensor, rectifier_dc_voltage_sensor;
 
-        float rectifier_ac_instantaneous_blocking_voltage_in_pu;
-        float rectifier_ac_delayed_blocking_voltage_in_pu, rectifier_ac_delayed_blocking_time_in_s;
-        float inverter_ac_instantaneous_blocking_voltage_in_pu;
-        float minimum_blocking_time_in_s;
-        float rectifier_ac_delayed_unblocking_voltage_in_pu, rectifier_ac_delayed_unblocking_time_in_s;
-        float inverter_ac_delayed_unblocking_time_in_s;
+        double rectifier_ac_instantaneous_blocking_voltage_in_pu;
+        double rectifier_ac_delayed_blocking_voltage_in_pu, rectifier_ac_delayed_blocking_time_in_s;
+        double inverter_ac_instantaneous_blocking_voltage_in_pu;
+        double minimum_blocking_time_in_s;
+        double rectifier_ac_delayed_unblocking_voltage_in_pu, rectifier_ac_delayed_unblocking_time_in_s;
+        double inverter_ac_delayed_unblocking_time_in_s;
 
-        float communication_delay_between_converters_in_s;
+        double communication_delay_between_converters_in_s;
 
-        float inverter_dc_instantaneous_bypassing_voltage_in_kV;
-        float inverter_ac_delayed_bypassing_voltage_in_pu, inverter_ac_delayed_bypassing_time_in_s;
-        float minimum_bypassing_time_in_s;
-        float inverter_ac_delayed_unbypassing_voltage_in_pu, inverter_ac_delayed_unbypassing_time_in_s;
+        double inverter_dc_instantaneous_bypassing_voltage_in_kV;
+        double inverter_ac_delayed_bypassing_voltage_in_pu, inverter_ac_delayed_bypassing_time_in_s;
+        double minimum_bypassing_time_in_s;
+        double inverter_ac_delayed_unbypassing_voltage_in_pu, inverter_ac_delayed_unbypassing_time_in_s;
 
-        float minimum_time_in_switched_mode;
+        double minimum_time_in_switched_mode;
     private:
         // blocking related timers
         TIMER rec_ac_blocking_timer,

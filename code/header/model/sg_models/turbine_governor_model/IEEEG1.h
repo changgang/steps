@@ -91,17 +91,17 @@ class IEEEG1 : public TURBINE_GOVERNOR_MODEL
         void copy_from_const_model(const IEEEG1& model);
 
         LEAD_LAG_BLOCK droop;
-        float Tservo;
-        float Uo, Uc;
+        double Tservo;
+        double Uo, Uc;
         INTEGRAL_BLOCK servo_motor;
         FIRST_ORDER_BLOCK delayer1;
-        float K1, K2;
+        double K1, K2;
         FIRST_ORDER_BLOCK delayer2;
-        float K3, K4;
+        double K3, K4;
         FIRST_ORDER_BLOCK delayer3;
-        float K5, K6;
+        double K5, K6;
         FIRST_ORDER_BLOCK delayer4;
-        float K7, K8;
+        double K7, K8;
 };
 
 #endif // IEEEG1_H

@@ -96,14 +96,14 @@ class PVCV0 : public PV_CONVERTER_MODEL
         void copy_from_const_model(const PVCV0& model);
 
         INTEGRAL_BLOCK active_current_commander;
-        float LVPL_active_power_change_rate;
+        double LVPL_active_power_change_rate;
         FIRST_ORDER_BLOCK LVPL_voltage_sensor;
         LVPL lvpl;
 
         FIRST_ORDER_BLOCK reactive_voltage_commander;
-        float HVRCR_voltage, HVRCR_current;
+        double HVRCR_voltage, HVRCR_current;
 
-        float KPLL;
+        double KPLL;
         INTEGRAL_BLOCK PLL_frequency_integrator, PLL_angle_integrator;
 };
 

@@ -84,8 +84,8 @@ class IEE2ST : public STABILIZER_MODEL
         FIRST_ORDER_BLOCK sensor_1, sensor_2;
         DIFFERENTIAL_BLOCK filter; FIRST_ORDER_BLOCK alternative_filter;
         LEAD_LAG_BLOCK phase_tuner_1, phase_tuner_2, phase_tuner_3;
-        float Vsmax, Vsmin;
-        float Vcmax, Vcmin;
+        double Vsmax, Vsmin;
+        double Vcmax, Vcmin;
 };
 
 #endif // IEE2ST_H

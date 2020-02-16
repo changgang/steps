@@ -31,7 +31,7 @@ class BUS_FREQUENCY_MODEL : public BASE
         virtual void clear();
         DIFFERENTIAL_BLOCK frequency_block;
         BUS* bus_ptr;
-        float fbase_Hz, tbase_s;
+        double fbase_Hz, tbase_s;
 };
 
 #endif // BUS_FREQUENCY_MODEL_H

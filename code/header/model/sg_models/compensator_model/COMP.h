@@ -45,7 +45,7 @@ class COMP: public COMPENSATOR_MODEL
     private:
         void copy_from_const_model(const COMP& model);
 
-        float Xe;
+        double Xe;
 };
 
 #endif // EXCITER_MODEL_H

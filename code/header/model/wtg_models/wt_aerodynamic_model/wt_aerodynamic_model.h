@@ -132,13 +132,13 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         double get_current_pelec_including_loss_per_turbine_in_MW() const;
         double get_current_turbine_speed_reference_without_limit_in_rad_per_s() const;
         // turbine nominals
-        float nominal_wind_speed_in_mps;
+        double nominal_wind_speed_in_mps;
         double turbine_blade_radius_in_m;
-        float nominal_air_density_in_kgpm3;
+        double nominal_air_density_in_kgpm3;
 
         unsigned int number_of_pole_pairs;
         double generator_to_turbine_gear_ratio;
-        float gear_efficiency;
+        double gear_efficiency;
 
         // operation parameter
         double initial_wind_speed_in_mps;
@@ -151,7 +151,7 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         double turbine_speed_in_rad_per_s;
         WTG_TURBINE_SPEED_MODE speed_mode;
 
-        float max_steady_state_turbine_speed_in_pu, min_steady_state_turbine_speed_in_pu;
+        double max_steady_state_turbine_speed_in_pu, min_steady_state_turbine_speed_in_pu;
 
         double cpmax_at_zero_pitch;
         double current_pitch_angle_in_deg, current_lambda_at_cpmax;

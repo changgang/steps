@@ -95,14 +95,14 @@ class LOAD : public DEVICE
 
         string identifier;
         bool status;
-        complex<float> s_constant_power_in_MVA,
+        complex<double> s_constant_power_in_MVA,
                        s_constant_current_in_MVA,
                        s_constant_impedance_in_MVA;
         unsigned int area_number, zone_number, owner_number;
         bool interruptable;
 
-        static float voltage_threshold_of_constant_power_load_in_pu;
-        static float voltage_threshold_of_constant_current_load_in_pu;
+        static double voltage_threshold_of_constant_power_load_in_pu;
+        static double voltage_threshold_of_constant_current_load_in_pu;
 
         double manually_scale_in_pu;
 

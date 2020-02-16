@@ -59,7 +59,7 @@ class AERD0 : public WT_AERODYNAMIC_MODEL
     private:
         void copy_from_const_model(const AERD0& model);
         // Cp function parameters
-        float Cp_Coefficients[8];
+        double Cp_Coefficients[8];
 };
 
 #endif // AERD0_H

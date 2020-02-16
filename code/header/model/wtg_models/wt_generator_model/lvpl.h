@@ -28,7 +28,7 @@ class LVPL
 
     private:
         void copy_from_const_object(const LVPL& lvpl);
-        float v_low, v_high, g_high;
+        double v_low, v_high, g_high;
 };
 
 #endif // LVPL_H

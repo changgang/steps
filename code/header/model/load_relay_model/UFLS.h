@@ -78,8 +78,8 @@ class UFLS : public LOAD_FREQUENCY_RELAY_MODEL
 
         FIRST_ORDER_BLOCK frequency_sensor;
 
-        float frequency_threshold_in_Hz[STEPS_MAX_LOAD_RELAY_STAGE];
-        float scale_in_pu[STEPS_MAX_LOAD_RELAY_STAGE];
+        double frequency_threshold_in_Hz[STEPS_MAX_LOAD_RELAY_STAGE];
+        double scale_in_pu[STEPS_MAX_LOAD_RELAY_STAGE];
 
         TIMER stage_timer[STEPS_MAX_LOAD_RELAY_STAGE];
         TIMER breaker_timer[STEPS_MAX_LOAD_RELAY_STAGE];

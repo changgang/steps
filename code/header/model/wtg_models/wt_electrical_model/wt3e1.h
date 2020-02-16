@@ -112,9 +112,9 @@ class WT3E1: public WT_ELECTRICAL_MODEL
         unsigned int transformer_from_bus, transformer_to_bus;
         string transformer_id;
 
-        float Xcomp;
+        double Xcomp;
         FIRST_ORDER_BLOCK voltage_sensor;
-        float Fn;
+        double Fn;
         FIRST_ORDER_BLOCK voltage_regulator_first_order_block;
         INTEGRAL_BLOCK voltage_regulator_integrator;
         FIRST_ORDER_BLOCK voltage_regulator_filter;
@@ -122,13 +122,13 @@ class WT3E1: public WT_ELECTRICAL_MODEL
         INTEGRAL_BLOCK Q_error_integrator;
         unsigned int Voltage_Flag;
         INTEGRAL_BLOCK V_error_integrator;
-        float EQmax, EQmin;
+        double EQmax, EQmin;
 
         FIRST_ORDER_BLOCK wind_turbine_speed_reference_sensor;
         PI_BLOCK torque_PI_regulator;
-        float max_torque_rate, min_torque_rate;
+        double max_torque_rate, min_torque_rate;
         INTEGRAL_BLOCK power_order_integrator;
-        float IPmax;
+        double IPmax;
 };
 
 #endif // EXCITER_MODEL_H

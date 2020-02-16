@@ -179,27 +179,27 @@ class HVDC : public DEVICE
         string hvdc_name;
         bool status;
         HVDC_POLE pole_number;
-        float line_R_in_ohm, line_L_in_H, line_C_in_F;
-        float smoothing_L_in_H[2], smoothing_R_in_ohm[2];
-        float demand_power_in_MW, demand_voltage_in_kV, demand_current_in_kA;
+        double line_R_in_ohm, line_L_in_H, line_C_in_F;
+        double smoothing_L_in_H[2], smoothing_R_in_ohm[2];
+        double demand_power_in_MW, demand_voltage_in_kV, demand_current_in_kA;
         HVDC_CONVERTER_SIDE hvdc_side_to_hold_power;
-        float compensating_R_to_hold_dc_voltage_in_ohm;
+        double compensating_R_to_hold_dc_voltage_in_ohm;
 
-        float mode_switching_voltage_in_kV;
+        double mode_switching_voltage_in_kV;
 
-        float dc_current_power_margin;
+        double dc_current_power_margin;
 
         HVDC_CONVERTER_SIDE meter_end;
 
         HVDC_OPERATION_MODE operation_mode[2];
         unsigned int bridge_number[2];
-        float voltage_drop_per_bridge_in_kV[2];
-        float max_firing_angle_in_deg[2], min_firing_angle_in_deg[2];
+        double voltage_drop_per_bridge_in_kV[2];
+        double max_firing_angle_in_deg[2], min_firing_angle_in_deg[2];
 
-        float converter_transformer_grid_side_base_voltage_in_kV[2], converter_transformer_converter_side_base_voltage_in_kV[2];
-        complex<float> converter_transformer_Z_in_ohm[2], converter_transformer_Y_in_siemens[2];
+        double converter_transformer_grid_side_base_voltage_in_kV[2], converter_transformer_converter_side_base_voltage_in_kV[2];
+        complex<double> converter_transformer_Z_in_ohm[2], converter_transformer_Y_in_siemens[2];
         // transformer Z is used for commutation, Y is not used at all.
-        float converter_transformer_max_tap_in_pu[2], converter_transformer_min_tap_in_pu[2];
+        double converter_transformer_max_tap_in_pu[2], converter_transformer_min_tap_in_pu[2];
         unsigned int converter_transformer_number_of_taps[2];
 
         double converter_firing_angle_in_deg[2], converter_transformer_tap_in_pu[2];

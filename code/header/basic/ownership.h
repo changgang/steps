@@ -33,7 +33,7 @@ class OWNERSHIP
         void copy_from_const_ownership(const OWNERSHIP& ownership);
 
         bool has_owner(const unsigned int owner) const;
-        map<unsigned int,float> ownership_pair;
+        map<unsigned int,double> ownership_pair;
 };
 
 #endif // OWNERSHIP_H

@@ -1820,36 +1820,38 @@ void DYNAMICS_SIMULATOR::save_meter_values()
         if(is_bin_file_export_enabled() and bin_output_file.is_open())
         {
             float fvalue=0.0;
+            char* fdata = (char *)(&fvalue);
             int ivalue=0;
+            char* idata = (char *)(&ivalue);
 
             fvalue = TIME;
-            bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
+            bin_output_file.write(fdata, sizeof(float));
 
-            fvalue = float(ITER_DAE);
-            bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
+            ivalue = ITER_DAE;
+            bin_output_file.write(fdata, sizeof(int));
 
-            fvalue = float(ITER_NET);
-            bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
+            ivalue = ITER_NET;
+            bin_output_file.write(fdata, sizeof(int));
 
             fvalue = smax;
-            bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
+            bin_output_file.write(fdata, sizeof(float));
 
             ivalue = smax_bus;
-            bin_output_file.write((char *)(&ivalue), sizeof(int));
+            bin_output_file.write(idata, sizeof(int));
 
             fvalue = time_elapse_of_differential_equations_in_a_step;
-            bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
+            bin_output_file.write(fdata, sizeof(float));
 
             fvalue = time_elapse_of_network_solution_in_a_step;
-            bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
+            bin_output_file.write(fdata, sizeof(float));
 
             fvalue = time_elapse_in_a_step;
-            bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
+            bin_output_file.write(fdata, sizeof(float));
 
             for (unsigned int i = 0; i != n; ++i)
             {
                 fvalue = meter_values[i];
-                bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
+                bin_output_file.write(fdata, sizeof(float));
             }
         }
 

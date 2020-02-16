@@ -76,11 +76,11 @@ class PSASPS2 : public STABILIZER_MODEL
     private:
         void copy_from_const_model(const PSASPS2& model);
 
-        float Kw, Kp, Kt;
+        double Kw, Kp, Kt;
         FIRST_ORDER_BLOCK sensor_w, sensor_p, sensor_t;
         DIFFERENTIAL_BLOCK dedc_block_1, dedc_block_2;
         LEAD_LAG_BLOCK phase_tuner_1, phase_tuner_2, phase_tuner_3;
-        float Vsmax, Vsmin;
+        double Vsmax, Vsmin;
 
         double speed_deviation_ref_pu, Pe_ref_pu, Pmech_ref_pu;
 };

@@ -36,7 +36,7 @@ class AREA : public BASE
         unsigned int area_number;
         string area_name;
         unsigned int area_swing_bus;
-        float expected_power_leaving_area_in_MW;
-        float area_power_mismatch_tolerance_in_MW;
+        double expected_power_leaving_area_in_MW;
+        double area_power_mismatch_tolerance_in_MW;
 };
 #endif // AREA_H

@@ -31,7 +31,7 @@ class SECOND_ORDER_BLOCK : public BLOCK
     private:
         void integrate();
         void update();
-        float a, b, c, d, e;
+        double a, b, c, d, e;
         FIRST_ORDER_BLOCK block1, block2;
 
         double one_over_t, one_over_h, one_over_k, t_over_h, h_plus_2t, one_over_h_plus_2t, h_minus_2t;
