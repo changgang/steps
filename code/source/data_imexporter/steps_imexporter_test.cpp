@@ -38,16 +38,18 @@ STEPS_IMEXPORTER_TEST::STEPS_IMEXPORTER_TEST()
 
 void STEPS_IMEXPORTER_TEST::setup()
 {
-    importer.set_toolkit(default_toolkit);
+    importer = new STEPS_IMEXPORTER(default_toolkit);
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100000);
 
-    importer.load_powerflow_data("../../../bench/sample.raw");
+    importer->load_powerflow_data("../../../bench/sample.raw");
 }
 
 void STEPS_IMEXPORTER_TEST::tear_down()
 {
+    delete importer;
+
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.clear();
 
@@ -60,7 +62,7 @@ void STEPS_IMEXPORTER_TEST::test_load_case_data()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     TEST_ASSERT(psdb.get_system_base_power_in_MVA()==100.0);
-    TEST_ASSERT(importer.get_data_version()==31);
+    TEST_ASSERT(importer->get_data_version()==31);
 }
 
 void STEPS_IMEXPORTER_TEST::test_load_bus_data()
@@ -618,14 +620,14 @@ void STEPS_IMEXPORTER_TEST::test_export_powerflow_data_imported_from_psse()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"STEPS_IMEXPORTER_TEST");
 
-    importer.export_powerflow_data("export_sample_model_with_STEPS_IMEXPORTER_data_imported_with_STEPS_IMEXPORTER.raw");
+    importer->export_powerflow_data("export_sample_model_with_STEPS_IMEXPORTER_data_imported_with_STEPS_IMEXPORTER.raw");
 }
 
 void STEPS_IMEXPORTER_TEST::test_export_powerflow_data_imported_from_bpa()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"STEPS_IMEXPORTER_TEST");
 
-    importer.export_powerflow_data("export_sample_model_with_STEPS_IMEXPORTER_data_imported_with_BPA_IMEXPORTER.raw");
+    importer->export_powerflow_data("export_sample_model_with_STEPS_IMEXPORTER_data_imported_with_BPA_IMEXPORTER.raw");
 }
 
 void STEPS_IMEXPORTER_TEST::test_load_dynamic_data()
@@ -634,8 +636,8 @@ void STEPS_IMEXPORTER_TEST::test_load_dynamic_data()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.clear();
-    importer.load_powerflow_data("../../../bench/ieee9.raw");
-    importer.load_dynamic_data("../../../bench/ieee9.dyr");
+    importer->load_powerflow_data("../../../bench/ieee9.raw");
+    importer->load_dynamic_data("../../../bench/ieee9.dyr");
 }
 
 

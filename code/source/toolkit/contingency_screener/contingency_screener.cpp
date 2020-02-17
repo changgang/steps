@@ -13,7 +13,7 @@ using namespace std;
 
 CONTINGENCY_SCREENER::CONTINGENCY_SCREENER()
 {
-    psdb.set_allowed_max_bus_number(10000);
+    default_toolkit.get_power_system_database().set_allowed_max_bus_number(10000);
 
     set_powerflow_data_filename("");
     set_dynamic_data_filename("");
@@ -35,18 +35,17 @@ CONTINGENCY_SCREENER::CONTINGENCY_SCREENER()
 
 CONTINGENCY_SCREENER::~CONTINGENCY_SCREENER()
 {
-    ;
 }
 
 
 void CONTINGENCY_SCREENER::set_power_system_database_maximum_bus_number(unsigned int number)
 {
-    psdb.set_allowed_max_bus_number(number);
+    default_toolkit.get_power_system_database().set_allowed_max_bus_number(number);
 }
 
 unsigned int CONTINGENCY_SCREENER::get_power_system_database_maximum_bus_number() const
 {
-    return psdb.get_allowed_max_bus_number();
+    return default_toolkit.get_power_system_database().get_allowed_max_bus_number();
 }
 
 void CONTINGENCY_SCREENER::set_powerflow_data_filename(string filename)
@@ -217,13 +216,12 @@ void CONTINGENCY_SCREENER::append_generator_to_monitor(const DEVICE_ID& did)
 
 double CONTINGENCY_SCREENER::search_cct()
 {
-    STEPS& toolkit = get_default_toolkit();
     ostringstream osstream;
     if(not is_searcher_is_properly_set())
     {
         osstream<<"CCT searcher is not properly set. No CCT will be searched."<<endl
-          <<"0.0 will be returned.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+                <<"0.0 will be returned.";
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -250,7 +248,7 @@ double CONTINGENCY_SCREENER::search_cct()
 
             clearing_time_max += delt;
             osstream<<"Now go on checking clearing time "<<clearing_time_max<<" s.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            default_toolkit.show_information_with_leading_time_stamp(osstream);
 
             is_clearing_time_max_stable = perform_simulation_with_clearing_time(clearing_time_max);
         }
@@ -266,7 +264,7 @@ double CONTINGENCY_SCREENER::search_cct()
 
                 clearing_time_max = clearing_time_min+0.5*delt;
                 osstream<<"Now go on checking clearing time "<<clearing_time_max<<" s.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
+                default_toolkit.show_information_with_leading_time_stamp(osstream);
 
                 is_clearing_time_max_stable = perform_simulation_with_clearing_time(clearing_time_max);
             }
@@ -282,7 +280,7 @@ double CONTINGENCY_SCREENER::search_cct()
 
                     clearing_time_min *=0.5;
                     osstream<<"Now go on checking clearing time "<<clearing_time_min<<" s.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
                     is_clearing_time_min_stable = perform_simulation_with_clearing_time(clearing_time_min);
                 }
@@ -294,7 +292,7 @@ double CONTINGENCY_SCREENER::search_cct()
                       <<", but stable when fault clearing time is "<<clearing_time_max<<endl
                       <<"This is impossible for power system operation."<<endl
                       <<"If you observe this message, CONGRATULATIONS, you find something interesting. Go on working on it.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
                     break;
                 }
@@ -315,7 +313,6 @@ double CONTINGENCY_SCREENER::search_cct()
 bool CONTINGENCY_SCREENER::is_searcher_is_properly_set() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_default_toolkit();
 
     bool is_properly_set = true;
     osstream<<"CCT searcher is not properly set due to:"<<endl;
@@ -365,28 +362,27 @@ bool CONTINGENCY_SCREENER::is_searcher_is_properly_set() const
         osstream<<"Less than 2 generators are monitored."<<endl;
     }
     if(not is_properly_set)
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
     return is_properly_set;
 }
 
 bool CONTINGENCY_SCREENER::perform_simulation_with_clearing_time(double clearing_time)
 {
-    STEPS& toolkit = get_default_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.clear();
 
-    PSSE_IMEXPORTER importer;
+    PSSE_IMEXPORTER importer(default_toolkit);
 
     importer.load_powerflow_data(get_powerflow_data_filename());
     importer.load_dynamic_data(get_dynamic_data_filename());
 
-    POWERFLOW_SOLVER solver(toolkit);
+    POWERFLOW_SOLVER solver(default_toolkit);
     solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
     solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.00001);
     solver.set_flat_start_logic(false);
     solver.solve_with_full_Newton_Raphson_solution();
 
-    DYNAMICS_SIMULATOR simulator(toolkit);
+    DYNAMICS_SIMULATOR simulator(default_toolkit);
     simulator.set_allowed_max_power_imbalance_in_MVA(get_simulator_allowed_max_power_imbalance_in_MVA());
     simulator.set_max_network_iteration(get_simulator_max_iteration());
     simulator.set_iteration_accelerator(get_simulator_iteration_accelerator());
@@ -406,16 +402,16 @@ bool CONTINGENCY_SCREENER::perform_simulation_with_clearing_time(double clearing
     clear_fault(simulator);
 
     double tend = get_simulation_time_span_in_s();
-    //double delt = toolkit.get_dynamic_simulation_time_step_in_s();
+    //double delt = default_toolkit.get_dynamic_simulation_time_step_in_s();
 
     simulator.run_to(tend-1.0);
 
     bool is_stable = true;
-    double TIME = toolkit.get_dynamic_simulation_time_in_s();
+    double TIME = default_toolkit.get_dynamic_simulation_time_in_s();
     while(TIME<tend)
     {
         simulator.run_a_step();
-        TIME = toolkit.get_dynamic_simulation_time_in_s();
+        TIME = default_toolkit.get_dynamic_simulation_time_in_s();
         is_stable = check_if_system_is_stable(simulator);
         if(is_stable)
             continue;
@@ -444,10 +440,8 @@ DEVICE_ID CONTINGENCY_SCREENER::get_monitored_generator(unsigned int i) const
 
 void CONTINGENCY_SCREENER::set_meters(DYNAMICS_SIMULATOR& simulator)
 {
-    STEPS& toolkit = simulator.get_toolkit(__PRETTY_FUNCTION__);
-
     METER_SETTER setter;
-    setter.set_toolkit(toolkit);
+    setter.set_toolkit(default_toolkit);
 
     simulator.clear_meters();
 

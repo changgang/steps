@@ -9,7 +9,7 @@
 class PSSE_IMEXPORTER : public DATA_IMEXPORTER
 {
     public:
-        PSSE_IMEXPORTER();
+        PSSE_IMEXPORTER(STEPS& toolkit);
         ~PSSE_IMEXPORTER();
 
         virtual void load_powerflow_data(string file);

@@ -11,7 +11,7 @@ void STEPS_IMEXPORTER::load_dynamic_data(string file)
 {
     ostringstream osstream;
     osstream<<"Loading dynamic data from STEPS file: "<<file;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     //file = string2upper(file);
@@ -30,7 +30,7 @@ void STEPS_IMEXPORTER::load_dynamic_data_from_steps_vector(vector<vector<string>
 
 void STEPS_IMEXPORTER::load_dynamic_data_into_ram(string file)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     splitted_sdyr_data_in_ram.clear();
@@ -170,7 +170,7 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
 
 
     osstream<<"Warning. Dynamic model '"<<model_name<<"' is not supported. Check line "<<__LINE__<<" in file "<<__FILE__;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 
 }
@@ -327,7 +327,7 @@ DEVICE_ID STEPS_IMEXPORTER::get_hvdc_device_id_from_string_vector(vector<string>
     DEVICE_ID did;
     did.set_device_type("HVDC");
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(data.size()<2)
@@ -389,7 +389,7 @@ void STEPS_IMEXPORTER::add_GENCLS_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -420,7 +420,7 @@ void STEPS_IMEXPORTER::add_GENROU_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -451,7 +451,7 @@ void STEPS_IMEXPORTER::add_GENSAL_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -482,7 +482,7 @@ void STEPS_IMEXPORTER::add_COMP_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -513,7 +513,7 @@ void STEPS_IMEXPORTER::add_IEEEVC_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -545,7 +545,7 @@ void STEPS_IMEXPORTER::add_PSASPVC_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -576,7 +576,7 @@ void STEPS_IMEXPORTER::add_IEE2ST_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -607,7 +607,7 @@ void STEPS_IMEXPORTER::add_PSASPS1_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -637,7 +637,7 @@ void STEPS_IMEXPORTER::add_PSASPS2_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -667,7 +667,7 @@ void STEPS_IMEXPORTER::add_PSASPS3_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -697,7 +697,7 @@ void STEPS_IMEXPORTER::add_PSASPS4_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -727,7 +727,7 @@ void STEPS_IMEXPORTER::add_PSASPS5_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -758,7 +758,7 @@ void STEPS_IMEXPORTER::add_PSASPS6_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -789,7 +789,7 @@ void STEPS_IMEXPORTER::add_PSASPS8_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -820,7 +820,7 @@ void STEPS_IMEXPORTER::add_SEXS_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -851,7 +851,7 @@ void STEPS_IMEXPORTER::add_IEEET1_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -882,7 +882,7 @@ void STEPS_IMEXPORTER::add_PSASPE1_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -913,7 +913,7 @@ void STEPS_IMEXPORTER::add_PSASPE2_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -944,7 +944,7 @@ void STEPS_IMEXPORTER::add_CSEET1_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -975,7 +975,7 @@ void STEPS_IMEXPORTER::add_CSEET2_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -1006,7 +1006,7 @@ void STEPS_IMEXPORTER::add_PSASPE13_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -1037,7 +1037,7 @@ void STEPS_IMEXPORTER::add_PSASPE14_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -1068,7 +1068,7 @@ void STEPS_IMEXPORTER::add_TGOV1_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -1099,7 +1099,7 @@ void STEPS_IMEXPORTER::add_IEEEG1_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -1130,7 +1130,7 @@ void STEPS_IMEXPORTER::add_IEEEG2_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -1161,7 +1161,7 @@ void STEPS_IMEXPORTER::add_IEEEG3_model(vector<string>& data)
 
     if(data.size()>=3)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
         DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -1194,7 +1194,7 @@ void STEPS_IMEXPORTER::add_IEESGO_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -1225,7 +1225,7 @@ void STEPS_IMEXPORTER::add_IEEEG1SB_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -1256,7 +1256,7 @@ void STEPS_IMEXPORTER::add_GAST2A_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -1287,7 +1287,7 @@ void STEPS_IMEXPORTER::add_URCSCT_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -1318,7 +1318,7 @@ void STEPS_IMEXPORTER::add_LCFB1_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
@@ -1361,7 +1361,7 @@ vector<LOAD*> STEPS_IMEXPORTER::get_all_loads_of(vector<string>& data)
        )
         return loads;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(data.size()<3)
@@ -1446,7 +1446,7 @@ void STEPS_IMEXPORTER::add_IEEL_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     IEEL model;
     model.set_toolkit(toolkit);
@@ -1473,7 +1473,7 @@ void STEPS_IMEXPORTER::add_CIM6_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     CIM6 model;
     model.set_toolkit(toolkit);
@@ -1499,7 +1499,7 @@ void STEPS_IMEXPORTER::add_UVLS_model(vector<string>& data)
 
     if(data.size()<3)
         return;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     UVLS model;
     model.set_toolkit(toolkit);
@@ -1526,7 +1526,7 @@ void STEPS_IMEXPORTER::add_UFLS_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     UFLS model;
     model.set_toolkit(toolkit);
@@ -1553,7 +1553,7 @@ void STEPS_IMEXPORTER::add_PUFLS_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     PUFLS model;
     model.set_toolkit(toolkit);
@@ -1578,7 +1578,7 @@ void STEPS_IMEXPORTER::add_CDC4T_model(vector<string>& data)
     if(data.size()<2)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     DEVICE_ID did = get_hvdc_device_id_from_string_vector(data);
@@ -1610,7 +1610,7 @@ void STEPS_IMEXPORTER::add_CDC6T_model(vector<string>& data)
     if(data.size()<2)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     DEVICE_ID did = get_hvdc_device_id_from_string_vector(data);
@@ -1641,7 +1641,7 @@ void STEPS_IMEXPORTER::add_WT3G1_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
@@ -1673,7 +1673,7 @@ void STEPS_IMEXPORTER::add_WT3G0_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
@@ -1705,7 +1705,7 @@ void STEPS_IMEXPORTER::add_WT3G2_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
@@ -1736,7 +1736,7 @@ void STEPS_IMEXPORTER::add_AERD0_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
@@ -1767,7 +1767,7 @@ void STEPS_IMEXPORTER::add_WT3T0_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
@@ -1798,7 +1798,7 @@ void STEPS_IMEXPORTER::add_WT3E0_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
@@ -1829,7 +1829,7 @@ void STEPS_IMEXPORTER::add_WT3E1_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
@@ -1860,7 +1860,7 @@ void STEPS_IMEXPORTER::add_WT3P0_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
@@ -1891,7 +1891,7 @@ void STEPS_IMEXPORTER::add_FILEWIND_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
@@ -1922,7 +1922,7 @@ void STEPS_IMEXPORTER::add_WTRLY0_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
@@ -1954,7 +1954,7 @@ void STEPS_IMEXPORTER::add_PVGU1_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
     DEVICE_ID did = get_pv_unit_device_id_from_string_vector(data);

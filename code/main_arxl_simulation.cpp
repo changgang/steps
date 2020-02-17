@@ -24,7 +24,7 @@ void prepare_training_load_scale_case()
     simulator.set_allowed_max_power_imbalance_in_MVA(0.0001);
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
 
-    PSSE_IMEXPORTER importer;
+    PSSE_IMEXPORTER importer(default_toolkit);
 
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1.dyr");
@@ -73,7 +73,7 @@ void prepare_training_generation_shed_case()
     simulator.set_allowed_max_power_imbalance_in_MVA(0.0001);
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
 
-    PSSE_IMEXPORTER importer;
+    PSSE_IMEXPORTER importer(default_toolkit);
 
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1.dyr");
@@ -130,7 +130,7 @@ int main()
     simulator.set_iteration_accelerator(0.7);
 
 
-    PSSE_IMEXPORTER importer;
+    PSSE_IMEXPORTER importer(default_toolkit);
 
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("../../../IEEE39_GENROU_SEXS_IEEEG1.dyr");

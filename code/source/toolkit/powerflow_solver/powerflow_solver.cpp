@@ -13,14 +13,20 @@ using namespace std;
 
 POWERFLOW_SOLVER::POWERFLOW_SOLVER(STEPS& toolkit)
 {
-    set_toolkit(toolkit);
     this->toolkit = (&toolkit);
+    jacobian_builder = new JACOBIAN_BUILDER(toolkit);
     clear();
 }
 
 POWERFLOW_SOLVER::~POWERFLOW_SOLVER()
 {
     toolkit = nullptr;
+    delete jacobian_builder;
+}
+
+STEPS& POWERFLOW_SOLVER::get_toolkit() const
+{
+    return *toolkit;
 }
 
 void POWERFLOW_SOLVER::clear()
@@ -54,8 +60,7 @@ void POWERFLOW_SOLVER::clear()
 
 NETWORK_MATRIX& POWERFLOW_SOLVER::get_network_matrix()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    return toolkit.get_network_matrix();
+    return toolkit->get_network_matrix();
 }
 
 void POWERFLOW_SOLVER::set_max_iteration(unsigned int iteration)
@@ -74,11 +79,10 @@ void POWERFLOW_SOLVER::set_allowed_max_active_power_imbalance_in_MW(double P)
         P_threshold_in_MW = P;
     else
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Non-positive (%fMW) is not allowed for setting convergence threshold of"
                  "active power imbalance for powerflow solution.\n0.01MW will be set automatically.", P);
-        toolkit.show_information_with_leading_time_stamp(buffer);
+        toolkit->show_information_with_leading_time_stamp(buffer);
         P_threshold_in_MW = 0.01;
     }
 }
@@ -89,11 +93,10 @@ void POWERFLOW_SOLVER::set_allowed_max_reactive_power_imbalance_in_MVar(double Q
         Q_threshold_in_MVar = Q;
     else
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Non-positive (%fMVar) is not allowed for setting convergence threshold of"
                  "reactive power imbalance for powerflow solution.\n0.01MVar will be set automatically.", Q);
-        toolkit.show_information_with_leading_time_stamp(buffer);
+        toolkit->show_information_with_leading_time_stamp(buffer);
         Q_threshold_in_MVar = 0.01;
     }
 }
@@ -199,7 +202,6 @@ bool POWERFLOW_SOLVER::get_export_jacobian_matrix_step_by_step_logic() const
 
 void POWERFLOW_SOLVER::show_powerflow_solver_configuration() const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     osstream<<"Configuration of powerflow solver:\n"
             <<"Fast sin/cos/tan functions: "<<(use_steps_fast_math?"Enabled":"Disabled")<<"\n"
@@ -213,20 +215,19 @@ void POWERFLOW_SOLVER::show_powerflow_solver_configuration() const
             <<"Transformer tap adjustment: "<<(get_transformer_tap_adjustment_logic()?"Enabled":"Disabled")<<"\n"
             <<"Non-divergent solution: "<<(get_non_divergent_solution_logic()?"Enabled":"Disabled")<<"\n"
             <<"Var limit check: "<<(get_var_limit_check_logic()?"Enabled":"Disabled")<<"\n"
-            <<"Network ordering optimization: "<<toolkit.is_optimize_network_enabled()<<"\n"
+            <<"Network ordering optimization: "<<toolkit->is_optimize_network_enabled()<<"\n"
             <<"Export jacobian matrix step by step: "<<(get_export_jacobian_matrix_step_by_step_logic()?"Enabled":"Disabled");
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 }
 
 void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     if(psdb.get_bus_count()!=0)
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Start solve powerflow with Full Newton Raphson solution.");
-        toolkit.show_information_with_leading_time_stamp(buffer);
+        toolkit->show_information_with_leading_time_stamp(buffer);
 
         initialize_powerflow_solver();
 
@@ -238,13 +239,13 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
         network_matrix.build_network_Y_matrix();
 
         update_P_and_Q_equation_internal_buses();
-        jacobian_builder.build_seprate_jacobians();
+        jacobian_builder->build_seprate_jacobians();
 
         while(true)
         {
             char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Iteration %u:",iteration_count);
-            toolkit.show_information_with_leading_time_stamp(buffer);
+            toolkit->show_information_with_leading_time_stamp(buffer);
 
             try_to_solve_hvdc_steady_state();
             calculate_raw_bus_power_mismatch();
@@ -275,7 +276,7 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
                 set_convergence_flag(true);
 
                 snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Powerflow converged within %u iterations.",iteration_count);
-                toolkit.show_information_with_leading_time_stamp(buffer);
+                toolkit->show_information_with_leading_time_stamp(buffer);
                 break;
             }
             else
@@ -284,15 +285,15 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
             if(get_iteration_count()>=get_max_iteration())
             {
                 snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Powerflow failed to converge within %u iterations.",get_max_iteration());
-                toolkit.show_information_with_leading_time_stamp(buffer);
+                toolkit->show_information_with_leading_time_stamp(buffer);
                 break;
             }
 
             build_bus_power_mismatch_vector_for_coupled_solution();
 
-            jacobian_builder.update_seprate_jacobians();
+            jacobian_builder->update_seprate_jacobians();
 
-            jacobian = jacobian_builder.get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(internal_P_equation_buses,
+            jacobian = jacobian_builder->get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(internal_P_equation_buses,
                                                                                                        internal_Q_equation_buses);
 
             if(get_export_jacobian_matrix_step_by_step_logic()==true)
@@ -311,15 +312,14 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
 
 void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     ostringstream osstream;
 
     if(psdb.get_bus_count()!=0)
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Start solve powerflow with Fast Decoupled solution.");
-        toolkit.show_information_with_leading_time_stamp(buffer);
+        toolkit->show_information_with_leading_time_stamp(buffer);
 
         initialize_powerflow_solver();
 
@@ -335,8 +335,8 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
         //cout<<"Y matrix identity is: "<<get_sparse_matrix_identity(Y)<<endl;
 
         update_P_and_Q_equation_internal_buses();
-        BP = jacobian_builder.get_decoupled_B_jacobian_with_P_equation_internal_buses(internal_P_equation_buses);
-        BQ = jacobian_builder.get_decoupled_B_jacobian_with_Q_equation_internal_buses(internal_Q_equation_buses);
+        BP = jacobian_builder->get_decoupled_B_jacobian_with_P_equation_internal_buses(internal_P_equation_buses);
+        BQ = jacobian_builder->get_decoupled_B_jacobian_with_Q_equation_internal_buses(internal_Q_equation_buses);
         //BP.LU_factorization(1, 1e-13);
         //BQ.LU_factorization(1, 1e-13);
         //BP.report_brief();
@@ -349,7 +349,7 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
 
             char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Iteration %u:",iteration_count);
-            toolkit.show_information_with_leading_time_stamp(buffer);
+            toolkit->show_information_with_leading_time_stamp(buffer);
 
             try_to_solve_hvdc_steady_state();
             calculate_raw_bus_power_mismatch();
@@ -366,8 +366,8 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
             if(bus_type_changed)
             {
                 update_P_and_Q_equation_internal_buses();
-                //BP = jacobian_builder.get_decoupled_B_jacobian_with_P_equation_internal_buses(internal_P_equation_buses);
-                BQ = jacobian_builder.get_decoupled_B_jacobian_with_Q_equation_internal_buses(internal_Q_equation_buses);
+                //BP = jacobian_builder->get_decoupled_B_jacobian_with_P_equation_internal_buses(internal_P_equation_buses);
+                BQ = jacobian_builder->get_decoupled_B_jacobian_with_Q_equation_internal_buses(internal_Q_equation_buses);
                 BQ.LU_factorization(1, 1e-13);
 
                 try_to_solve_hvdc_steady_state();
@@ -390,7 +390,7 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
                 set_convergence_flag(true);
 
                 snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Powerflow converged within %u iterations.",iteration_count);
-                toolkit.show_information_with_leading_time_stamp(buffer);
+                toolkit->show_information_with_leading_time_stamp(buffer);
                 break;
             }
             else
@@ -399,7 +399,7 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
             if(get_iteration_count()>=get_max_iteration())
             {
                 snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Powerflow failed to converge within %u iterations.",get_max_iteration());
-                toolkit.show_information_with_leading_time_stamp(buffer);
+                toolkit->show_information_with_leading_time_stamp(buffer);
                 break;
             }
 
@@ -407,7 +407,7 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
             unsigned int n = internal_P_equation_buses.size();
 
             #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-                set_openmp_number_of_threads(toolkit.get_thread_number());
+                set_openmp_number_of_threads(toolkit->get_thread_number());
                 #pragma omp parallel for schedule(static)
             #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
             for(unsigned int i=0; i<n; ++i)
@@ -437,7 +437,7 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
             build_bus_Q_power_mismatch_vector_for_decoupled_solution();
             n = internal_Q_equation_buses.size();
             #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-                set_openmp_number_of_threads(toolkit.get_thread_number());
+                set_openmp_number_of_threads(toolkit->get_thread_number());
                 #pragma omp parallel for schedule(static)
             #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
             for(unsigned int i=0; i<n; ++i)
@@ -465,21 +465,18 @@ void POWERFLOW_SOLVER::solve_with_modified_Gaussian_Seidel_solution()
 
 void POWERFLOW_SOLVER::initialize_powerflow_solver()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Initializing powerflow solver.");
-    toolkit.show_information_with_leading_time_stamp(buffer);
+    toolkit->show_information_with_leading_time_stamp(buffer);
 
     show_powerflow_solver_configuration();
 
     NETWORK_MATRIX& network_matrix = get_network_matrix();
-    network_matrix.set_toolkit(toolkit);
 
-    jacobian_builder.set_toolkit(toolkit);
-    jacobian_builder.set_network_matrix(network_matrix);
+    jacobian_builder->set_network_matrix(network_matrix);
 
 
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     psdb.update_in_service_bus_count();
 
     prepare_devices_for_solution();
@@ -497,13 +494,12 @@ void POWERFLOW_SOLVER::initialize_powerflow_solver()
     Q_mismatch.reserve(n_bus);
 
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Done initializing powerflow solver.");
-    toolkit.show_information_with_leading_time_stamp(buffer);
+    toolkit->show_information_with_leading_time_stamp(buffer);
 }
 
 void POWERFLOW_SOLVER::prepare_devices_for_solution()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     buses = psdb.get_all_buses();
     sources = psdb.get_all_sources();
@@ -523,8 +519,7 @@ void POWERFLOW_SOLVER::prepare_devices_for_solution()
 
 void POWERFLOW_SOLVER::initialize_bus_type()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     //vector<BUS*> buses = psdb.get_all_buses();
     unsigned int nbus = buses.size();
@@ -532,7 +527,7 @@ void POWERFLOW_SOLVER::initialize_bus_type()
     if(get_flat_start_logic()==true)
     {
         #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-            set_openmp_number_of_threads(toolkit.get_thread_number());
+            set_openmp_number_of_threads(toolkit->get_thread_number());
             #pragma omp parallel for schedule(static)
         #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
         for(unsigned int i=0; i<nbus; ++i)
@@ -545,7 +540,7 @@ void POWERFLOW_SOLVER::initialize_bus_type()
     }
 
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit.get_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nbus; ++i)
@@ -571,11 +566,10 @@ void POWERFLOW_SOLVER::initialize_bus_type()
 
 void POWERFLOW_SOLVER::initialize_bus_voltage_to_regulate()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     //vector<SOURCE*> sources = psdb.get_all_sources();
     unsigned int nsource = sources.size();
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit.get_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nsource; ++i)
@@ -597,7 +591,7 @@ void POWERFLOW_SOLVER::initialize_bus_voltage_to_regulate()
     //vector<BUS*> buses = psdb.get_all_buses();
     unsigned int nbus = buses.size();
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit.get_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nbus; ++i)
@@ -615,15 +609,13 @@ void POWERFLOW_SOLVER::initialize_bus_voltage_to_regulate()
 
 void POWERFLOW_SOLVER::initialize_bus_voltage()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-
     //vector<BUS*> buses = psdb.get_all_buses();
     unsigned int nbus = buses.size();
 
     if(get_flat_start_logic()==true)
     {
         #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-            set_openmp_number_of_threads(toolkit.get_thread_number());
+            set_openmp_number_of_threads(toolkit->get_thread_number());
             #pragma omp parallel for schedule(static)
         #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
         for(unsigned int i=0; i<nbus; ++i)
@@ -645,15 +637,15 @@ void POWERFLOW_SOLVER::initialize_bus_voltage()
 
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Initial bus voltage and angle are listed as follows.");
-    toolkit.show_information_with_leading_time_stamp(buffer);
+    toolkit->show_information_with_leading_time_stamp(buffer);
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "bus      voltage(pu) angle(deg)");
-    toolkit.show_information_with_leading_time_stamp(buffer);
+    toolkit->show_information_with_leading_time_stamp(buffer);
     nbus = nbus>200 ? 200 : nbus;
     for(unsigned int i=0; i!=nbus; ++i)
     {
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f",
                  buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg());
-        toolkit.show_information_with_leading_time_stamp(buffer);
+        toolkit->show_information_with_leading_time_stamp(buffer);
     }
 }
 
@@ -666,7 +658,7 @@ void POWERFLOW_SOLVER::optimize_bus_numbers()
     set_internal_bus_pointer();
 
     /*ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     unsigned int n = psdb.get_in_service_bus_count();
     unsigned int ibus=0;
     osstream<<"Powerflow bus number, physical vs internal"<<endl;
@@ -675,14 +667,13 @@ void POWERFLOW_SOLVER::optimize_bus_numbers()
         ibus = network_matrix.get_physical_bus_number_of_internal_bus(i);
         osstream<<ibus<<", "<<i<<endl;
     }
-    toolkit.show_information_with_leading_time_stamp(osstream);*/
+    toolkit->show_information_with_leading_time_stamp(osstream);*/
 
 }
 
 void POWERFLOW_SOLVER::set_internal_bus_pointer()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     unsigned int nbus = psdb.get_in_service_bus_count();
 
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -709,12 +700,11 @@ double POWERFLOW_SOLVER::get_bus_positive_sequence_voltage_in_pu_with_internal_b
 
 void POWERFLOW_SOLVER::update_P_and_Q_equation_internal_buses()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Updating powerflow P equation buses and Q equation buses.");
-    toolkit.show_information_with_leading_time_stamp(buffer);
+    toolkit->show_information_with_leading_time_stamp(buffer);
 
     unsigned int nbus = psdb.get_in_service_bus_count();
 
@@ -738,24 +728,24 @@ void POWERFLOW_SOLVER::update_P_and_Q_equation_internal_buses()
     }
 	/*
     osstream<<"Buses with P equations (physical bus):" << endl;
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
     unsigned int n = internal_P_equation_buses.size();
     for(unsigned int i=0; i!=n; ++i)
     {
         osstream<<network_matrix.get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i]) << endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }
     osstream<<"Buses with Q equations (physical bus):"<<endl;
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
     n = internal_Q_equation_buses.size();
     for(unsigned int i=0; i!=n; ++i)
     {
         osstream<< network_matrix.get_physical_bus_number_of_internal_bus(internal_Q_equation_buses[i]) << endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }*/
 
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Done updating powerflow P equation buses and Q equation buses.");
-    toolkit.show_information_with_leading_time_stamp(buffer);
+    toolkit->show_information_with_leading_time_stamp(buffer);
 }
 
 void POWERFLOW_SOLVER::set_convergence_flag(bool flag)
@@ -770,10 +760,9 @@ bool POWERFLOW_SOLVER::get_convergence_flag() const
 
 bool POWERFLOW_SOLVER::is_converged()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     osstream<<"Check maximum active and reactive power mismatch.";
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     try_to_solve_hvdc_steady_state();
     calculate_raw_bus_power_mismatch();
@@ -792,11 +781,10 @@ bool POWERFLOW_SOLVER::is_converged()
 
 void POWERFLOW_SOLVER::try_to_solve_hvdc_steady_state()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     //vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     unsigned int nhvdc = hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit.get_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nhvdc; ++i)
@@ -812,80 +800,78 @@ void POWERFLOW_SOLVER::try_to_solve_hvdc_steady_state()
 void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
 {
     ostringstream osstream;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     unsigned int nbus = psdb.get_in_service_bus_count();
 
     calculate_raw_bus_power_into_network();
-    if(toolkit.is_detailed_log_enabled())
+    if(toolkit->is_detailed_log_enabled())
     {
         for(unsigned int i=0; i!=nbus; ++i)
         {
             if(isnan(bus_power[i].real()) or isnan(bus_power[i].imag()))
             {
                 osstream<<"after  calculate_raw_bus_power_into_network NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
-                toolkit.show_information_with_leading_time_stamp(osstream);
+                toolkit->show_information_with_leading_time_stamp(osstream);
             }
         }
     }
 
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit.get_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nbus; ++i)
         bus_power[i] = -bus_power[i];
 
     add_source_to_bus_power_mismatch();
-    if(toolkit.is_detailed_log_enabled())
+    if(toolkit->is_detailed_log_enabled())
     {
         for(unsigned int i=0; i!=nbus; ++i)
         {
             if(isnan(bus_power[i].real()) or isnan(bus_power[i].imag()))
             {
                 osstream<<"after adding source NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
-                toolkit.show_information_with_leading_time_stamp(osstream);
+                toolkit->show_information_with_leading_time_stamp(osstream);
             }
         }
     }
 
     add_load_to_bus_power_mismatch();
-    if(toolkit.is_detailed_log_enabled())
+    if(toolkit->is_detailed_log_enabled())
     {
         for(unsigned int i=0; i!=nbus; ++i)
         {
             if(isnan(bus_power[i].real()) or isnan(bus_power[i].imag()))
             {
                 osstream<<"after adding load NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
-                toolkit.show_information_with_leading_time_stamp(osstream);
+                toolkit->show_information_with_leading_time_stamp(osstream);
             }
         }
     }
 
     add_hvdc_to_bus_power_mismatch();
-    if(toolkit.is_detailed_log_enabled())
+    if(toolkit->is_detailed_log_enabled())
     {
         for(unsigned int i=0; i!=nbus; ++i)
         {
             if(isnan(bus_power[i].real()) or isnan(bus_power[i].imag()))
             {
                 osstream<<"after adding hvdc NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
-                toolkit.show_information_with_leading_time_stamp(osstream);
+                toolkit->show_information_with_leading_time_stamp(osstream);
             }
         }
     }
 
     /*ostringstream osstream;
     osstream<<"Power mismatch of buses.";
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
     osstream<<"bus     Pmismatch(MW) Qmismatch(MVar)";
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     unsigned int bus;
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     NETWORK_MATRIX* network_matrix = get_network_Y_matrix();
     double sbase = psdb.get_system_base_power_in_MVA();
     for(unsigned int i=0; i!=nbus; ++i)
@@ -900,30 +886,28 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
             p = 0.0;
         osstream<<setw(6)<<bus<<", "<<setw(8)<<setprecision(6)<<p<<", "<<setw(8)<<setprecision(6)<<q;
 
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }*/
 }
 
 void POWERFLOW_SOLVER::calculate_raw_bus_power_into_network()
 {
     ostringstream osstream;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     calculate_raw_bus_current_into_network();
     bus_power = bus_current;
 
     unsigned int nbus = psdb.get_in_service_bus_count();
-    if(toolkit.is_detailed_log_enabled())
+    if(toolkit->is_detailed_log_enabled())
     {
         for(unsigned int i=0; i!=nbus; ++i)
         {
             if(isnan(bus_power[i].real()) or isnan(bus_power[i].imag()))
             {
                 osstream<<"after  calculate_raw_bus_current_into_network NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
-                toolkit.show_information_with_leading_time_stamp(osstream);
+                toolkit->show_information_with_leading_time_stamp(osstream);
             }
         }
     }
@@ -932,7 +916,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_into_network()
     //unsigned int physical_bus_number;
 
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit.get_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nbus; ++i)
@@ -946,24 +930,23 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_into_network()
 
     /*ostringstream osstream;
     osstream<<"Power flowing into network (physical bus).");
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
     osstream<<"bus     P(pu)    P(pu)");
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     unsigned int bus;
     for(unsigned int i=0; i!=nbus; ++i)
     {
         bus = get_physical_bus_number_of_internal_bus(i);
         osstream<<"%-8u %-10f %-10f",bus, bus_power[i].real(), bus_power[i].imag());
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }*/
 }
 
 
 void POWERFLOW_SOLVER::calculate_raw_bus_current_into_network()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     const STEPS_COMPLEX_SPARSE_MATRIX& Y = network_matrix.get_network_Y_matrix();
@@ -979,7 +962,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_current_into_network()
     else
     {
         #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-            set_openmp_number_of_threads(toolkit.get_thread_number());
+            set_openmp_number_of_threads(toolkit->get_thread_number());
             #pragma omp parallel for schedule(static)
         #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
         for(unsigned int i=0; i<nbus; ++i)
@@ -1012,15 +995,14 @@ void POWERFLOW_SOLVER::calculate_raw_bus_current_into_network()
 
 void POWERFLOW_SOLVER::add_source_to_bus_power_mismatch()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit->get_one_over_system_base_power_in_one_over_MVA();
 
     unsigned int nsource = sources.size();
 
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit.get_generator_thread_number());
+        set_openmp_number_of_threads(toolkit->get_generator_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nsource; ++i)
@@ -1052,15 +1034,14 @@ void POWERFLOW_SOLVER::add_source_to_bus_power_mismatch()
 
 void POWERFLOW_SOLVER::add_load_to_bus_power_mismatch()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit->get_one_over_system_base_power_in_one_over_MVA();
 
     unsigned int nload = loads.size();
 
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit.get_load_thread_number());
+        set_openmp_number_of_threads(toolkit->get_load_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nload; ++i)
@@ -1079,15 +1060,14 @@ void POWERFLOW_SOLVER::add_load_to_bus_power_mismatch()
 
 void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit->get_one_over_system_base_power_in_one_over_MVA();
 
     unsigned int nhvdc = hvdcs.size();
 
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit.get_hvdc_thread_number());
+        set_openmp_number_of_threads(toolkit->get_hvdc_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nhvdc; ++i)
@@ -1108,7 +1088,7 @@ void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
 
             //ostringstream osstream;
             //osstream<<hvdcs[i]->get_device_name()<<": Srec = "<<S_rec<<" MVA, Sinv = "<<S_inv<<" MVA."<<endl;
-            //toolkit.show_information_with_leading_time_stamp(osstream);
+            //toolkit->show_information_with_leading_time_stamp(osstream);
 
             bus_power[internal_bus_rec] -= S_rec*one_over_sbase;
             bus_power[internal_bus_inv] += S_inv*one_over_sbase;
@@ -1118,9 +1098,8 @@ void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
 
 double POWERFLOW_SOLVER::get_maximum_active_power_mismatch_in_MW() const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    NETWORK_MATRIX& network_matrix = toolkit.get_network_matrix();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    NETWORK_MATRIX& network_matrix = toolkit->get_network_matrix();
 
     unsigned int nP = internal_P_equation_buses.size();
     unsigned int internal_bus, physical_bus;
@@ -1145,16 +1124,15 @@ double POWERFLOW_SOLVER::get_maximum_active_power_mismatch_in_MW() const
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Maximum   active power mismatch found: %10.6fMW   at bus %u.",
              max_P_error_in_MW,max_P_error_physical_bus);
-    toolkit.show_information_with_leading_time_stamp(buffer);
+    toolkit->show_information_with_leading_time_stamp(buffer);
 
     return max_P_error_in_MW;
 }
 
 double POWERFLOW_SOLVER::get_maximum_reactive_power_mismatch_in_MVar() const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    NETWORK_MATRIX& network_matrix = toolkit.get_network_matrix();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    NETWORK_MATRIX& network_matrix = toolkit->get_network_matrix();
 
     unsigned int nQ = internal_Q_equation_buses.size();
     unsigned int internal_bus, physical_bus;
@@ -1178,7 +1156,7 @@ double POWERFLOW_SOLVER::get_maximum_reactive_power_mismatch_in_MVar() const
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Maximum reactive power mismatch found: %10.6fMVar at bus %u.",
              max_Q_error_in_MVar,max_Q_error_physical_bus);
-    toolkit.show_information_with_leading_time_stamp(buffer);
+    toolkit->show_information_with_leading_time_stamp(buffer);
 
     return max_Q_error_in_MVar;
 }
@@ -1224,8 +1202,7 @@ bool POWERFLOW_SOLVER::check_bus_type_constraints()
 
 void POWERFLOW_SOLVER::check_SLACK_bus_constraint_of_physical_bus(unsigned int physical_bus)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     //BUS* bus = psdb.get_bus(physical_bus);
@@ -1271,8 +1248,7 @@ void POWERFLOW_SOLVER::check_SLACK_bus_constraint_of_physical_bus(unsigned int p
 
 bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int physical_bus)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
@@ -1296,10 +1272,10 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
             bus_type_changed = true;
             set_all_sources_at_physical_bus_to_q_max(physical_bus);
 
-            if(toolkit.is_detailed_log_enabled())
+            if(toolkit->is_detailed_log_enabled())
             {
                 snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %u changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q max reached.", physical_bus);
-                toolkit.show_information_with_leading_time_stamp(buffer);
+                toolkit->show_information_with_leading_time_stamp(buffer);
             }
 
             return bus_type_changed;
@@ -1312,10 +1288,10 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
             bus->set_bus_type(PV_TO_PQ_TYPE_3);
             bus_type_changed = true;
 
-            if(toolkit.is_detailed_log_enabled())
+            if(toolkit->is_detailed_log_enabled())
             {
                 snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %u changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q max reached.", physical_bus);
-                toolkit.show_information_with_leading_time_stamp(buffer);
+                toolkit->show_information_with_leading_time_stamp(buffer);
             }
 
             set_all_sources_at_physical_bus_to_q_max(physical_bus);
@@ -1327,10 +1303,10 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
             bus->set_bus_type(PV_TO_PQ_TYPE_3);
             bus_type_changed = true;
 
-            if(toolkit.is_detailed_log_enabled())
+            if(toolkit->is_detailed_log_enabled())
             {
                 snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %u changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q min reached.", physical_bus);
-                toolkit.show_information_with_leading_time_stamp(buffer);
+                toolkit->show_information_with_leading_time_stamp(buffer);
             }
 
             set_all_sources_at_physical_bus_to_q_min(physical_bus);
@@ -1359,8 +1335,7 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
 
 bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned int physical_bus)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
@@ -1387,10 +1362,10 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
         {
             bus->set_bus_type(PV_TO_PQ_TYPE_3);
             bus_type_changed = true;
-            if(toolkit.is_detailed_log_enabled())
+            if(toolkit->is_detailed_log_enabled())
             {
                 osstream<<"Bus "<<physical_bus<<" changed from PV_TYPE to PV_TO_PQ_TYPE_3.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
+                toolkit->show_information_with_leading_time_stamp(osstream);
             }
 
             set_all_sources_at_physical_bus_to_q_max(physical_bus);
@@ -1441,10 +1416,10 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
                     bus->set_bus_type(PV_TYPE);
                     bus_type_changed = true;
                     bus->set_positive_sequence_voltage_in_pu(voltage_to_regulated);
-                    if(toolkit.is_detailed_log_enabled())
+                    if(toolkit->is_detailed_log_enabled())
                     {
                         osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
-                        toolkit.show_information_with_leading_time_stamp(osstream);
+                        toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;
                 default:
@@ -1477,10 +1452,10 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
                     bus->set_bus_type(PV_TYPE);
                     bus_type_changed = true;
                     bus->set_positive_sequence_voltage_in_pu(voltage_to_regulated);
-                    if(toolkit.is_detailed_log_enabled())
+                    if(toolkit->is_detailed_log_enabled())
                     {
                         osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
-                        toolkit.show_information_with_leading_time_stamp(osstream);
+                        toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;
                 default:
@@ -1498,7 +1473,7 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
             bus->set_bus_type(PV_TO_PQ_TYPE_3);
             set_all_sources_at_physical_bus_to_q_max(physical_bus);
             osstream<<"Var of sources at bus "<<physical_bus<<" are set to max.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            toolkit->show_information_with_leading_time_stamp(osstream);
         }
         else
         {
@@ -1506,36 +1481,36 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
             {
                 case PV_TO_PQ_TYPE_4:
                     bus->set_bus_type(PV_TO_PQ_TYPE_3);
-                    if(toolkit.is_detailed_log_enabled())
+                    if(toolkit->is_detailed_log_enabled())
                     {
                         osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_4 to PV_TO_PQ_TYPE_3.";
-                        toolkit.show_information_with_leading_time_stamp(osstream);
+                        toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;
                 case PV_TO_PQ_TYPE_3:
                     bus->set_bus_type(PV_TO_PQ_TYPE_2);
-                    if(toolkit.is_detailed_log_enabled())
+                    if(toolkit->is_detailed_log_enabled())
                     {
                         osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_3 to PV_TO_PQ_TYPE_2.";
-                        toolkit.show_information_with_leading_time_stamp(osstream);
+                        toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;
                 case PV_TO_PQ_TYPE_2:
                     bus->set_bus_type(PV_TO_PQ_TYPE_1);
-                    if(toolkit.is_detailed_log_enabled())
+                    if(toolkit->is_detailed_log_enabled())
                     {
                         osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_2 to PV_TO_PQ_TYPE_1.";
-                        toolkit.show_information_with_leading_time_stamp(osstream);
+                        toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;
                 case PV_TO_PQ_TYPE_1:
                     bus->set_bus_type(PV_TYPE);
                     bus_type_changed = true;
                     bus->set_positive_sequence_voltage_in_pu(voltage_to_regulated);
-                    if(toolkit.is_detailed_log_enabled())
+                    if(toolkit->is_detailed_log_enabled())
                     {
                         osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
-                        toolkit.show_information_with_leading_time_stamp(osstream);
+                        toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;
                 default:
@@ -1550,7 +1525,7 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
             bus->set_bus_type(PV_TO_PQ_TYPE_3);
             set_all_sources_at_physical_bus_to_q_min(physical_bus);
             osstream<<"Var of sources at bus "<<physical_bus<<" are set to min.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            toolkit->show_information_with_leading_time_stamp(osstream);
         }
         else
         {
@@ -1558,36 +1533,36 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
             {
                 case PV_TO_PQ_TYPE_4:
                     bus->set_bus_type(PV_TO_PQ_TYPE_3);
-                    if(toolkit.is_detailed_log_enabled())
+                    if(toolkit->is_detailed_log_enabled())
                     {
                         osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_4 to PV_TO_PQ_TYPE_3.";
-                        toolkit.show_information_with_leading_time_stamp(osstream);
+                        toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;
                 case PV_TO_PQ_TYPE_3:
                     bus->set_bus_type(PV_TO_PQ_TYPE_2);
-                    if(toolkit.is_detailed_log_enabled())
+                    if(toolkit->is_detailed_log_enabled())
                     {
                         osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_3 to PV_TO_PQ_TYPE_2.";
-                        toolkit.show_information_with_leading_time_stamp(osstream);
+                        toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;
                 case PV_TO_PQ_TYPE_2:
                     bus->set_bus_type(PV_TO_PQ_TYPE_1);
-                    if(toolkit.is_detailed_log_enabled())
+                    if(toolkit->is_detailed_log_enabled())
                     {
                         osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_2 to PV_TO_PQ_TYPE_1.";
-                        toolkit.show_information_with_leading_time_stamp(osstream);
+                        toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;
                 case PV_TO_PQ_TYPE_1:
                     bus->set_bus_type(PV_TYPE);
                     bus_type_changed = true;
                     bus->set_positive_sequence_voltage_in_pu(voltage_to_regulated);
-                    if(toolkit.is_detailed_log_enabled())
+                    if(toolkit->is_detailed_log_enabled())
                     {
                         osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
-                        toolkit.show_information_with_leading_time_stamp(osstream);
+                        toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;
                 default:
@@ -1600,8 +1575,7 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
 
 void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_min(unsigned int physical_bus)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
 
     unsigned int n = sources.size();
@@ -1610,8 +1584,7 @@ void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_min(unsigned int phy
 }
 void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_max(unsigned int physical_bus)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
 
     unsigned int n = sources.size();
@@ -1622,11 +1595,10 @@ void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_max(unsigned int phy
 
 void POWERFLOW_SOLVER::update_source_power_without_constraints()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     unsigned int nbus = buses.size();
 
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit.get_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nbus; ++i)
@@ -1652,8 +1624,7 @@ void POWERFLOW_SOLVER::update_source_power_without_constraints()
 
 void POWERFLOW_SOLVER::update_SLACK_bus_source_power_of_physical_bus(unsigned int physical_bus)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     //BUS* bus = psdb.get_bus(physical_bus);
@@ -1699,8 +1670,7 @@ void POWERFLOW_SOLVER::update_SLACK_bus_source_power_of_physical_bus(unsigned in
 
 void POWERFLOW_SOLVER::update_PV_bus_source_power_of_physical_bus(unsigned int physical_bus)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     //BUS* bus = psdb.get_bus(physical_bus);
@@ -1738,14 +1708,13 @@ void POWERFLOW_SOLVER::update_PV_bus_source_power_of_physical_bus(unsigned int p
 
 void POWERFLOW_SOLVER::build_bus_power_mismatch_vector_for_coupled_solution()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     unsigned int nP = internal_P_equation_buses.size();
     unsigned int nQ = internal_Q_equation_buses.size();
 
     S_mismatch.resize(nP+nQ);
 
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit.get_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nP; ++i)
@@ -1755,7 +1724,7 @@ void POWERFLOW_SOLVER::build_bus_power_mismatch_vector_for_coupled_solution()
         S_mismatch[i] = -bus_power[internal_bus].real();
     }
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit.get_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nQ; ++i)
@@ -1768,13 +1737,12 @@ void POWERFLOW_SOLVER::build_bus_power_mismatch_vector_for_coupled_solution()
 
 void POWERFLOW_SOLVER::build_bus_P_power_mismatch_vector_for_decoupled_solution()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     unsigned int nP = internal_P_equation_buses.size();
 
     P_mismatch.resize(nP);
 
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit.get_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nP; ++i)
@@ -1787,13 +1755,12 @@ void POWERFLOW_SOLVER::build_bus_P_power_mismatch_vector_for_decoupled_solution(
 
 void POWERFLOW_SOLVER::build_bus_Q_power_mismatch_vector_for_decoupled_solution()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     unsigned int nQ = internal_Q_equation_buses.size();
 
     Q_mismatch.resize(nQ);
 
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit.get_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nQ; ++i)
@@ -1807,9 +1774,6 @@ void POWERFLOW_SOLVER::build_bus_Q_power_mismatch_vector_for_decoupled_solution(
 void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
 {
     ostringstream osstream;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-
     unsigned int nP = internal_P_equation_buses.size();
     unsigned int nQ = internal_Q_equation_buses.size();
 
@@ -1827,14 +1791,14 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
     }
     osstream<<"Maximum angle   change is: "<<max_dangle<<" rad ("<<rad2deg(max_dangle)<<" deg).\n"
             <<"Maximum voltage change is: "<<max_dv<<" pu.";
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     double limit = get_maximum_angle_change_in_rad();
     if(max_dangle>limit)
     {
         double scale = limit/max_dangle;
         #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-            set_openmp_number_of_threads(toolkit.get_thread_number());
+            set_openmp_number_of_threads(toolkit->get_thread_number());
             #pragma omp parallel for schedule(static)
         #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
         for(unsigned int i=0; i<nP; ++i)
@@ -1847,7 +1811,7 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
     {
         double scale = limit/max_dv;
         #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-            set_openmp_number_of_threads(toolkit.get_thread_number());
+            set_openmp_number_of_threads(toolkit->get_thread_number());
             #pragma omp parallel for schedule(static)
         #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
         for(unsigned int i=nP; i<nv; ++i)
@@ -1864,7 +1828,7 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
     double alpha_Q = alpha;
 
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit.get_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nP; ++i)
@@ -1882,7 +1846,7 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
     }
 
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit.get_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nQ; ++i)
@@ -1917,7 +1881,7 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
                 {
                     alpha_P *= 0.5;
                     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-                        set_openmp_number_of_threads(toolkit.get_thread_number());
+                        set_openmp_number_of_threads(toolkit->get_thread_number());
                         #pragma omp parallel for schedule(static)
                     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
                     for(unsigned int i=0; i<nP; ++i)
@@ -1938,7 +1902,7 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
                 {
                     alpha_Q *= 0.5;
                     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-                        set_openmp_number_of_threads(toolkit.get_thread_number());
+                        set_openmp_number_of_threads(toolkit->get_thread_number());
                         #pragma omp parallel for schedule(static)
                     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
                     for(unsigned int i=0; i<nQ; ++i)
@@ -1963,7 +1927,6 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
 void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     double limit = get_maximum_voltage_change_in_pu();
@@ -1983,13 +1946,13 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
         }
     }
     osstream<<"Maximum voltage change is: "<<max_dv<<" pu at physical bus "<<max_delta_v_bus;
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     if(max_dv>limit)
     {
         double scale = limit/max_dv;
         #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-            set_openmp_number_of_threads(toolkit.get_thread_number());
+            set_openmp_number_of_threads(toolkit->get_thread_number());
             #pragma omp parallel for schedule(static)
         #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
         for(unsigned int i=0; i<nv; ++i)
@@ -2006,7 +1969,7 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
     double alpha = get_iteration_accelerator();
 
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit.get_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nQ; ++i)
@@ -2033,7 +1996,7 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
             {
                 alpha *= 0.5;
                 #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-                    set_openmp_number_of_threads(toolkit.get_thread_number());
+                    set_openmp_number_of_threads(toolkit->get_thread_number());
                     #pragma omp parallel for schedule(static)
                 #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
                 for(unsigned int i=0; i<nQ; ++i)
@@ -2061,7 +2024,6 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
 void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     double limit = get_maximum_angle_change_in_rad();
@@ -2081,13 +2043,13 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
         }
     }
     osstream<<"Maximum angle   change is: "<<max_dv<<" rad ("<<rad2deg(max_dv)<<" deg) at physical bus "<<max_delta_angle_bus;
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     if(max_dv>limit)
     {
         double scale = limit/max_dv;
         #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-            set_openmp_number_of_threads(toolkit.get_thread_number());
+            set_openmp_number_of_threads(toolkit->get_thread_number());
             #pragma omp parallel for schedule(static)
         #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
         for(unsigned int i=0; i<nv; ++i)
@@ -2103,7 +2065,7 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
     double alpha = get_iteration_accelerator();
 
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit.get_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nP; ++i)
@@ -2131,7 +2093,7 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
             {
                 alpha *= 0.5;
                 #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-                    set_openmp_number_of_threads(toolkit.get_thread_number());
+                    set_openmp_number_of_threads(toolkit->get_thread_number());
                     #pragma omp parallel for schedule(static)
                 #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
                 for(unsigned int i=0; i<nP; ++i)
@@ -2156,8 +2118,7 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
 
 void POWERFLOW_SOLVER::show_powerflow_result()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
 
     ostringstream osstream;
@@ -2170,15 +2131,15 @@ void POWERFLOW_SOLVER::show_powerflow_result()
     else
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Powerflow failed to converge within %u iterations. Results of the last iteration are listed as follows.",
                 get_iteration_count());
-    toolkit.show_information_with_leading_time_stamp(buffer);
+    toolkit->show_information_with_leading_time_stamp(buffer);
 
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Solved bus voltage and angle:");
-    toolkit.show_information_with_leading_time_stamp(buffer);
+    toolkit->show_information_with_leading_time_stamp(buffer);
 
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "bus      voltage(pu)     angle(deg)");
-    toolkit.show_information_with_leading_time_stamp(buffer);
+    toolkit->show_information_with_leading_time_stamp(buffer);
 
-    NETWORK_MATRIX& network_matrix = toolkit.get_network_matrix();
+    NETWORK_MATRIX& network_matrix = toolkit->get_network_matrix();
 
     //vector<BUS*> buses = psdb.get_all_buses();
     unsigned int nbus = buses.size();
@@ -2191,7 +2152,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         {
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
                     buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
-            toolkit.show_information_with_leading_time_stamp(buffer);
+            toolkit->show_information_with_leading_time_stamp(buffer);
         }
     }
     for(unsigned int i=0; i!=nbus; ++i)
@@ -2203,7 +2164,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         {
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
                     buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
-            toolkit.show_information_with_leading_time_stamp(buffer);
+            toolkit->show_information_with_leading_time_stamp(buffer);
         }
     }
     for(unsigned int i=0; i!=nbus; ++i)
@@ -2215,7 +2176,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         {
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
                     buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
-            toolkit.show_information_with_leading_time_stamp(buffer);
+            toolkit->show_information_with_leading_time_stamp(buffer);
         }
     }
     for(unsigned int i=0; i!=nbus; ++i)
@@ -2227,7 +2188,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         {
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
                     buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
-            toolkit.show_information_with_leading_time_stamp(buffer);
+            toolkit->show_information_with_leading_time_stamp(buffer);
         }
     }
     for(unsigned int i=0; i!=nbus; ++i)
@@ -2239,7 +2200,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         {
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
                     buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
-            toolkit.show_information_with_leading_time_stamp(buffer);
+            toolkit->show_information_with_leading_time_stamp(buffer);
         }
     }
     for(unsigned int i=0; i!=nbus; ++i)
@@ -2251,7 +2212,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         {
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
                     buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
-            toolkit.show_information_with_leading_time_stamp(buffer);
+            toolkit->show_information_with_leading_time_stamp(buffer);
         }
     }
     for(unsigned int i=0; i!=nbus; ++i)
@@ -2263,7 +2224,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         {
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
                     buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
-            toolkit.show_information_with_leading_time_stamp(buffer);
+            toolkit->show_information_with_leading_time_stamp(buffer);
         }
     }
     for(unsigned int i=0; i!=nbus; ++i)
@@ -2275,7 +2236,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         {
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
                     buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
-            toolkit.show_information_with_leading_time_stamp(buffer);
+            toolkit->show_information_with_leading_time_stamp(buffer);
         }
     }
     for(unsigned int i=0; i!=nbus; ++i)
@@ -2287,15 +2248,15 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         {
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s",
                     buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg(),(buses[i]->get_bus_name()).c_str());
-            toolkit.show_information_with_leading_time_stamp(buffer);
+            toolkit->show_information_with_leading_time_stamp(buffer);
         }
     }
 
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Solved machine power:");
-    toolkit.show_information_with_leading_time_stamp(buffer);
+    toolkit->show_information_with_leading_time_stamp(buffer);
 
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "  bus      id       P(MW)        Q(MVar)");
-    toolkit.show_information_with_leading_time_stamp(buffer);
+    toolkit->show_information_with_leading_time_stamp(buffer);
 
     //vector<SOURCE*> sources = psdb.get_all_sources();
     unsigned int nsource = sources.size();
@@ -2314,13 +2275,12 @@ void POWERFLOW_SOLVER::show_powerflow_result()
                      sources[i]->get_source_bus(),(sources[i]->get_identifier()).c_str(),
                      sources[i]->get_p_generation_in_MW(),sources[i]->get_q_generation_in_MVar(), (sources[i]->get_device_name()).c_str(), psdb.bus_number2bus_name(sources[i]->get_source_bus()).c_str());
         }
-        toolkit.show_information_with_leading_time_stamp(buffer);
+        toolkit->show_information_with_leading_time_stamp(buffer);
     }
 }
 void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     ostringstream osstream;
 
@@ -2494,15 +2454,14 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
     {
         osstream<<"File '"<<filename<<"' cannot be opened for saving powerflow result to file."<<endl
           <<"No powerflow result will be exported.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
 }
 
 void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(const string& filename) const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     ostringstream osstream;
 
@@ -2700,30 +2659,27 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(const string& file
     {
         osstream<<"File '"<<filename<<"' cannot be opened for saving extended powerflow result to file."<<endl
           <<"No powerflow result will be exported.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
 }
 
 void POWERFLOW_SOLVER::save_network_Y_matrix_to_file(const string& filename) const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    NETWORK_MATRIX& network_matrix = toolkit.get_network_matrix();
+    NETWORK_MATRIX& network_matrix = toolkit->get_network_matrix();
     network_matrix.save_network_Y_matrix_to_file(filename);
 }
 
 void POWERFLOW_SOLVER::save_jacobian_matrix_to_file(const string& filename)
 {
-    jacobian_builder.build_seprate_jacobians();
+    jacobian_builder->build_seprate_jacobians();
 
-    jacobian_builder.save_jacobian_matrix_to_file(filename);
+    jacobian_builder->save_jacobian_matrix_to_file(filename);
 }
 
 void POWERFLOW_SOLVER::save_bus_powerflow_result_to_file(const string& filename) const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-
     ofstream file(filename);
     if(file.is_open())
     {
@@ -2743,7 +2699,7 @@ void POWERFLOW_SOLVER::save_bus_powerflow_result_to_file(const string& filename)
     {
         osstream<<"File '"<<filename<<"' cannot be opened for saving bus powerflow result to file."<<endl
           <<"No bus powerflow result will be exported.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
 }
@@ -2751,15 +2707,4 @@ void POWERFLOW_SOLVER::save_bus_powerflow_result_to_file(const string& filename)
 unsigned int POWERFLOW_SOLVER::get_iteration_count() const
 {
     return iteration_count;
-}
-
-
-bool POWERFLOW_SOLVER::is_valid() const
-{
-    return true;
-}
-
-void POWERFLOW_SOLVER::check()
-{
-    ;
 }

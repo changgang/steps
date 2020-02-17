@@ -26,16 +26,18 @@ using namespace std;
 class MODEL;
 class SOURCE;
 
-class POWER_SYSTEM_DATABASE : public BASE
+class POWER_SYSTEM_DATABASE
 {
     public:
-        POWER_SYSTEM_DATABASE();
+        POWER_SYSTEM_DATABASE(STEPS& toolkit);
         ~POWER_SYSTEM_DATABASE();
+
+        STEPS& get_toolkit() const;
 
         void check_powerflow_data();
 
-        virtual void check();
-        virtual void clear();
+        void check();
+        void clear();
 
         void set_zero_impedance_threshold_in_pu(double z);
         double get_zero_impedance_threshold_in_pu() const;
@@ -481,6 +483,8 @@ class POWER_SYSTEM_DATABASE : public BASE
         void check_hvdc_status_for_out_of_service_bus(unsigned int bus);
         void check_energy_storage_status_for_out_of_service_bus(unsigned int bus);
 
+        STEPS* toolkit;
+
         string system_name;
         double system_base_power_in_MVA, one_over_system_base_power;
 
@@ -510,8 +514,5 @@ class POWER_SYSTEM_DATABASE : public BASE
         DEVICE_INDEX_MAP generator_index, wt_generator_index, pv_unit_index, load_index, fixed_shunt_index, switched_shunt_index,
                             line_index, transformer_index, hvdc_index, equivalent_device_index, energy_storage_index;
         map<unsigned int,  unsigned int> area_index, zone_index, owner_index;
-
-    private:
-        virtual bool is_valid() const;
 };
 #endif // POWER_SYSTEM_DATABASE_H

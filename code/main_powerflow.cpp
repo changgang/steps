@@ -9,7 +9,7 @@ using namespace std;
 
 int main()
 {
-    PSSE_IMEXPORTER importer;
+    PSSE_IMEXPORTER importer(default_toolkit);
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
 
     POWERFLOW_SOLVER solver(default_toolkit);

@@ -38,16 +38,18 @@ PSSE_IMEXPORTER_TEST::PSSE_IMEXPORTER_TEST()
 
 void PSSE_IMEXPORTER_TEST::setup()
 {
-    importer.set_toolkit(default_toolkit);
+    importer = new PSSE_IMEXPORTER(default_toolkit);
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100000);
 
-    importer.load_powerflow_data("../../../bench/sample.raw");
+    importer->load_powerflow_data("../../../bench/sample.raw");
 }
 
 void PSSE_IMEXPORTER_TEST::tear_down()
 {
+    delete importer;
+
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.clear();
 
@@ -618,14 +620,14 @@ void PSSE_IMEXPORTER_TEST::test_export_powerflow_data_imported_from_psse()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSSE_IMEXPORTER_TEST");
 
-    importer.export_powerflow_data("export_sample_model_with_PSSE_IMEXPORTER_data_imported_with_PSSE_IMEXPORTER.raw");
+    importer->export_powerflow_data("export_sample_model_with_PSSE_IMEXPORTER_data_imported_with_PSSE_IMEXPORTER.raw");
 }
 
 void PSSE_IMEXPORTER_TEST::test_export_powerflow_data_imported_from_bpa()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSSE_IMEXPORTER_TEST");
 
-    importer.export_powerflow_data("export_sample_model_with_PSSE_IMEXPORTER_data_imported_with_BPA_IMEXPORTER.raw");
+    importer->export_powerflow_data("export_sample_model_with_PSSE_IMEXPORTER_data_imported_with_BPA_IMEXPORTER.raw");
 }
 
 void PSSE_IMEXPORTER_TEST::test_load_dynamic_data()
@@ -634,8 +636,8 @@ void PSSE_IMEXPORTER_TEST::test_load_dynamic_data()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.clear();
-    importer.load_powerflow_data("../../../bench/ieee9.raw");
-    importer.load_dynamic_data("../../../bench/ieee9.dyr");
+    importer->load_powerflow_data("../../../bench/ieee9.raw");
+    importer->load_dynamic_data("../../../bench/ieee9.dyr");
 }
 
 

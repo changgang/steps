@@ -42,15 +42,17 @@ BPA_IMEXPORTER_TEST::BPA_IMEXPORTER_TEST()
 
 void BPA_IMEXPORTER_TEST::setup()
 {
-    importer.set_toolkit(default_toolkit);
+    importer = new BPA_IMEXPORTER(default_toolkit);
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100000);
 
-    importer.load_powerflow_data("山东电网简化.dat");
+    importer->load_powerflow_data("山东电网简化.dat");
 }
 
 void BPA_IMEXPORTER_TEST::tear_down()
 {
+    delete importer;
+
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.clear();
 
@@ -69,7 +71,7 @@ void BPA_IMEXPORTER_TEST::test_load_case_data()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     TEST_ASSERT(psdb.get_system_base_power_in_MVA()==100.0);
-    TEST_ASSERT(importer.get_data_version()==31);
+    TEST_ASSERT(importer->get_data_version()==31);
 }
 
 
@@ -454,46 +456,46 @@ void BPA_IMEXPORTER_TEST::test_convert_data_into_bpa_format()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    TEST_ASSERT(importer.convert_data_into_bpa_format("ABC", "A3")=="ABC");
-    TEST_ASSERT(importer.convert_data_into_bpa_format("AB", "A3")=="AB ");
-    TEST_ASSERT(importer.convert_data_into_bpa_format("ABCD", "A3")=="ABC");
+    TEST_ASSERT(importer->convert_data_into_bpa_format("ABC", "A3")=="ABC");
+    TEST_ASSERT(importer->convert_data_into_bpa_format("AB", "A3")=="AB ");
+    TEST_ASSERT(importer->convert_data_into_bpa_format("ABCD", "A3")=="ABC");
 
-    TEST_ASSERT(importer.convert_data_into_bpa_format((unsigned int)(1), "I3")=="  1");
-    TEST_ASSERT(importer.convert_data_into_bpa_format((unsigned int)(10), "I3")==" 10");
-    TEST_ASSERT(importer.convert_data_into_bpa_format((unsigned int)(999), "I3")=="999");
+    TEST_ASSERT(importer->convert_data_into_bpa_format((unsigned int)(1), "I3")=="  1");
+    TEST_ASSERT(importer->convert_data_into_bpa_format((unsigned int)(10), "I3")==" 10");
+    TEST_ASSERT(importer->convert_data_into_bpa_format((unsigned int)(999), "I3")=="999");
 
-    TEST_ASSERT(importer.convert_data_into_bpa_format(int(1), "I3")=="  1");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(int(10), "I3")==" 10");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(int(999), "I3")=="999");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(int(-1), "I3")==" -1");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(int(-10), "I3")=="-10");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(int(-99), "I3")=="-99");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(int(1), "I3")=="  1");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(int(10), "I3")==" 10");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(int(999), "I3")=="999");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(int(-1), "I3")==" -1");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(int(-10), "I3")=="-10");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(int(-99), "I3")=="-99");
 
-    TEST_ASSERT(importer.convert_data_into_bpa_format(1.23, "F5.0")==" 1.23");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(1.23, "F5.1")==" 1.23");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(1.23, "F5.2")==" 1.23");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(1.23, "F5.3")==" 1.23");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(1.23, "F5.4")==" 1.23");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(1.23, "F5.0")==" 1.23");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(1.23, "F5.1")==" 1.23");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(1.23, "F5.2")==" 1.23");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(1.23, "F5.3")==" 1.23");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(1.23, "F5.4")==" 1.23");
 
-    TEST_ASSERT(importer.convert_data_into_bpa_format(12.3456, "F5.0")=="12.34");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(12.3456, "F5.1")=="12.34");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(12.3456, "F5.2")=="12.34");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(12.3456, "F5.3")=="12.34");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(12.3456, "F5.4")=="12.34");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(12.3456, "F5.0")=="12.34");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(12.3456, "F5.1")=="12.34");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(12.3456, "F5.2")=="12.34");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(12.3456, "F5.3")=="12.34");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(12.3456, "F5.4")=="12.34");
 
-    TEST_ASSERT(importer.convert_data_into_bpa_format(123.456, "F5.0")=="123.4");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(123.456, "F5.1")=="123.4");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(123.456, "F5.2")=="123.4");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(123.456, "F5.3")=="123.4");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(123.456, "F5.4")=="123.4");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(123.456, "F5.0")=="123.4");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(123.456, "F5.1")=="123.4");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(123.456, "F5.2")=="123.4");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(123.456, "F5.3")=="123.4");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(123.456, "F5.4")=="123.4");
 
-    TEST_ASSERT(importer.convert_data_into_bpa_format(1234.56, "F5.0")=="1234.");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(1234.56, "F5.1")=="1234.");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(1234.56, "F5.2")=="1234.");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(1234.56, "F5.3")=="1234.");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(1234.56, "F5.4")=="1234.");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(1234.56, "F5.0")=="1234.");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(1234.56, "F5.1")=="1234.");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(1234.56, "F5.2")=="1234.");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(1234.56, "F5.3")=="1234.");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(1234.56, "F5.4")=="1234.");
 
-    TEST_ASSERT(importer.convert_data_into_bpa_format(12345.6, "F5.0")=="12345");
+    TEST_ASSERT(importer->convert_data_into_bpa_format(12345.6, "F5.0")=="12345");
 }
 
 
@@ -503,21 +505,20 @@ void BPA_IMEXPORTER_TEST::test_export_powerflow_data()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.clear();
-    //importer.load_powerflow_data("")
-    PSSE_IMEXPORTER psse_importer;
-    psse_importer.set_toolkit(default_toolkit);
+    //importer->load_powerflow_data("")
+    PSSE_IMEXPORTER psse_importer(default_toolkit);
     psse_importer.load_powerflow_data("../../../bench/bench_yunnan.raw");
 
     //psse_importer.load_powerflow_data("../../../bench/sample.raw");
 
     //psse_importer.export_powerflow_data("export_sample_model_with_PSSE_IMEXPORTER.raw");
 
-    importer.export_powerflow_data("test_log/export_sd_model_with_BPA_IMEXPORTER.dat");
+    importer->export_powerflow_data("test_log/export_sd_model_with_BPA_IMEXPORTER.dat");
     psse_importer.export_powerflow_data("test_log/export_sd_model_with_PSSE_IMEXPORTER.raw");
 
     psdb.clear();
-    importer.load_powerflow_data("../../../云南网500kV简化网络.dat");
-    importer.export_powerflow_data("test_log/export_yn_model_with_BPA_IMEXPORTER.dat");
+    importer->load_powerflow_data("../../../云南网500kV简化网络.dat");
+    importer->export_powerflow_data("test_log/export_yn_model_with_BPA_IMEXPORTER.dat");
     psse_importer.export_powerflow_data("test_log/export_yn_model_with_PSSE_IMEXPORTER.raw");
 
 }
@@ -526,14 +527,14 @@ void BPA_IMEXPORTER_TEST::test_export_powerflow_data_imported_from_psse()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    importer.export_powerflow_data("test_log/export_sample_model_with_BPA_IMEXPORTER.raw");
+    importer->export_powerflow_data("test_log/export_sample_model_with_BPA_IMEXPORTER.raw");
 }
 
 void BPA_IMEXPORTER_TEST::test_export_powerflow_data_imported_from_bpa()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    importer.export_powerflow_data("test_log/export_sample_model_with_BPA_IMEXPORTER.raw");
+    importer->export_powerflow_data("test_log/export_sample_model_with_BPA_IMEXPORTER.raw");
 }
 
 void BPA_IMEXPORTER_TEST::test_load_dynamic_data()

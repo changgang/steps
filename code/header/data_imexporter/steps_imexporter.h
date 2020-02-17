@@ -9,7 +9,7 @@
 class STEPS_IMEXPORTER : public DATA_IMEXPORTER
 {
     public:
-        STEPS_IMEXPORTER();
+        STEPS_IMEXPORTER(STEPS& toolkit);
         ~STEPS_IMEXPORTER();
 
         virtual void load_powerflow_data(string file);

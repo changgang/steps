@@ -14,6 +14,7 @@
 
 #include "header/network/network_matrix.h"
 #include "header/STEPS.h"
+#include "header/steps_namespace.h"
 
 using namespace std;
 
@@ -34,7 +35,7 @@ class NETWORK_MATRIX_TEST : public Test::Suite
         void test_save_network_Y_matrix_to_file();
         void test_build_network_with_bus_out_of_service();
     private:
-        NETWORK_MATRIX network_matrix;
+        NETWORK_MATRIX* network_matrix;
 };
 
 #endif//NETWORK_MATRIX_TEST_H

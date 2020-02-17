@@ -27,13 +27,13 @@ NETWORK_MATRIX_TEST::NETWORK_MATRIX_TEST()
 
 void NETWORK_MATRIX_TEST::setup()
 {
-    network_matrix.set_toolkit(default_toolkit);
+    network_matrix = new NETWORK_MATRIX(default_toolkit);
     prepare_IEEE_9_bus_model();
 }
 
 void NETWORK_MATRIX_TEST::tear_down()
 {
-    network_matrix.clear();
+    delete network_matrix;
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.clear();
@@ -48,43 +48,43 @@ void NETWORK_MATRIX_TEST::test_build_and_get_network_Y_matrix()
 
     ostringstream osstream;
 
-    network_matrix.build_network_Y_matrix();
+    network_matrix->build_network_Y_matrix();
 
-    STEPS_COMPLEX_SPARSE_MATRIX& Y = network_matrix.get_network_Y_matrix();
+    STEPS_COMPLEX_SPARSE_MATRIX& Y = network_matrix->get_network_Y_matrix();
 
     osstream<<"Network Y matrix with initial physical bus : internal bus pair:";
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
-    network_matrix.report_network_matrix();
+    network_matrix->report_network_matrix();
 
-    network_matrix.optimize_network_ordering();
+    network_matrix->optimize_network_ordering();
 
-    network_matrix.build_network_Y_matrix();
+    network_matrix->build_network_Y_matrix();
 
-    Y = network_matrix.get_network_Y_matrix();
+    Y = network_matrix->get_network_Y_matrix();
 
-    network_matrix.report_network_matrix();
+    network_matrix->report_network_matrix();
 }
 
 void NETWORK_MATRIX_TEST::test_build_and_get_decoupled_network_B_matrix()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"NETWORK_MATRIX_TEST");
 
-    network_matrix.build_decoupled_network_B_matrix();
+    network_matrix->build_decoupled_network_B_matrix();
 
-    STEPS_SPARSE_MATRIX& BP = network_matrix.get_decoupled_network_BP_matrix();
-    STEPS_SPARSE_MATRIX& BQ = network_matrix.get_decoupled_network_BQ_matrix();
+    STEPS_SPARSE_MATRIX& BP = network_matrix->get_decoupled_network_BP_matrix();
+    STEPS_SPARSE_MATRIX& BQ = network_matrix->get_decoupled_network_BQ_matrix();
 
-    network_matrix.report_decoupled_network_matrix();
+    network_matrix->report_decoupled_network_matrix();
 
-    network_matrix.optimize_network_ordering();
+    network_matrix->optimize_network_ordering();
 
-    network_matrix.build_decoupled_network_B_matrix();
+    network_matrix->build_decoupled_network_B_matrix();
 
-    BP = network_matrix.get_decoupled_network_BP_matrix();
-    BQ = network_matrix.get_decoupled_network_BQ_matrix();
+    BP = network_matrix->get_decoupled_network_BP_matrix();
+    BQ = network_matrix->get_decoupled_network_BQ_matrix();
 
-    network_matrix.report_decoupled_network_matrix();
+    network_matrix->report_decoupled_network_matrix();
 }
 
 void NETWORK_MATRIX_TEST::test_build_and_get_dynamic_network_Y_matrix()
@@ -93,25 +93,25 @@ void NETWORK_MATRIX_TEST::test_build_and_get_dynamic_network_Y_matrix()
 
     ostringstream osstream;
 
-    network_matrix.build_dynamic_network_Y_matrix();
+    network_matrix->build_dynamic_network_Y_matrix();
 
-    STEPS_COMPLEX_SPARSE_MATRIX Y = network_matrix.get_dynamic_network_Y_matrix();
+    STEPS_COMPLEX_SPARSE_MATRIX Y = network_matrix->get_dynamic_network_Y_matrix();
 
     osstream<<"Dynamic network Y matrix with initial physical bus : internal bus pair:";
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
-    network_matrix.report_dynamic_network_matrix();
+    network_matrix->report_dynamic_network_matrix();
 
-    network_matrix.optimize_network_ordering();
+    network_matrix->optimize_network_ordering();
 
-    network_matrix.build_dynamic_network_Y_matrix();
+    network_matrix->build_dynamic_network_Y_matrix();
 
-    Y = network_matrix.get_dynamic_network_Y_matrix();
+    Y = network_matrix->get_dynamic_network_Y_matrix();
 
     osstream<<"Dynamic network Y matrix with new physical bus : internal bus pair:";
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
-    network_matrix.report_network_matrix();
+    network_matrix->report_network_matrix();
 }
 
 void NETWORK_MATRIX_TEST::test_optimize_network_ordering()
@@ -121,7 +121,7 @@ void NETWORK_MATRIX_TEST::test_optimize_network_ordering()
     ostringstream osstream;
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    network_matrix.build_dynamic_network_Y_matrix();
+    network_matrix->build_dynamic_network_Y_matrix();
 
     unsigned int nbus = psdb.get_in_service_bus_count();
     osstream<<"Initial physical bus : internal bus pair:";
@@ -130,19 +130,19 @@ void NETWORK_MATRIX_TEST::test_optimize_network_ordering()
     unsigned int physical_bus;
     for(unsigned int i=0; i!=nbus; ++i)
     {
-        physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
+        physical_bus = network_matrix->get_physical_bus_number_of_internal_bus(i);
         osstream<<setw(8)<<physical_bus<<" : "<<setw(8)<<i;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
     }
 
-    network_matrix.optimize_network_ordering();
+    network_matrix->optimize_network_ordering();
 
     osstream<<"Optimized physical bus : internal bus pair:";
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     for(unsigned int i=0; i!=nbus; ++i)
     {
-        physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
+        physical_bus = network_matrix->get_physical_bus_number_of_internal_bus(i);
         osstream<<setw(8)<<physical_bus<<" : "<<setw(8)<<i;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
     }
@@ -152,9 +152,9 @@ void NETWORK_MATRIX_TEST::test_check_network_connectivity()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"NETWORK_MATRIX_TEST");
 
-    network_matrix.build_network_Y_matrix();
+    network_matrix->build_network_Y_matrix();
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    network_matrix.check_network_connectivity();
+    network_matrix->check_network_connectivity();
 
     ostringstream osstream;
     osstream<<"Islands when tripping line 4-5 and 4-6";
@@ -184,7 +184,7 @@ void NETWORK_MATRIX_TEST::test_check_network_connectivity()
     line->set_sending_side_breaker_status(false);
     line->set_receiving_side_breaker_status(false);
 
-    network_matrix.check_network_connectivity();
+    network_matrix->check_network_connectivity();
 
     osstream<<"Islands when tripping line 4-5, 4-6, and 8-9";
     default_toolkit.show_information_with_leading_time_stamp(osstream);
@@ -199,19 +199,19 @@ void NETWORK_MATRIX_TEST::test_check_network_connectivity()
     line->set_sending_side_breaker_status(false);
     line->set_receiving_side_breaker_status(false);
 
-    network_matrix.check_network_connectivity();
+    network_matrix->check_network_connectivity();
 }
 
 void NETWORK_MATRIX_TEST::test_get_islands()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"NETWORK_MATRIX_TEST");
 
-    network_matrix.build_network_Y_matrix();
+    network_matrix->build_network_Y_matrix();
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
-    vector< vector<unsigned int> > islands_internal = network_matrix.get_islands_with_internal_bus_number();
-    vector< vector<unsigned int> > islands_physical = network_matrix.get_islands_with_physical_bus_number();
+    vector< vector<unsigned int> > islands_internal = network_matrix->get_islands_with_internal_bus_number();
+    vector< vector<unsigned int> > islands_physical = network_matrix->get_islands_with_physical_bus_number();
 
     unsigned int n = islands_internal.size();
     TEST_ASSERT(n==1);
@@ -232,10 +232,10 @@ void NETWORK_MATRIX_TEST::test_get_islands()
     line->set_sending_side_breaker_status(false);
     line->set_receiving_side_breaker_status(false);
 
-    network_matrix.build_network_Y_matrix();
+    network_matrix->build_network_Y_matrix();
 
-    islands_internal = network_matrix.get_islands_with_internal_bus_number();
-    islands_physical = network_matrix.get_islands_with_physical_bus_number();
+    islands_internal = network_matrix->get_islands_with_internal_bus_number();
+    islands_physical = network_matrix->get_islands_with_physical_bus_number();
     n = islands_internal.size();
     TEST_ASSERT(n==1);
     n = islands_physical.size();
@@ -252,10 +252,10 @@ void NETWORK_MATRIX_TEST::test_get_islands()
     line->set_sending_side_breaker_status(false);
     line->set_receiving_side_breaker_status(false);
 
-    network_matrix.build_network_Y_matrix();
+    network_matrix->build_network_Y_matrix();
 
-    islands_internal = network_matrix.get_islands_with_internal_bus_number();
-    islands_physical = network_matrix.get_islands_with_physical_bus_number();
+    islands_internal = network_matrix->get_islands_with_internal_bus_number();
+    islands_physical = network_matrix->get_islands_with_physical_bus_number();
     n = islands_internal.size();
     TEST_ASSERT(n==2);
     n = islands_physical.size();
@@ -272,10 +272,10 @@ void NETWORK_MATRIX_TEST::test_get_islands()
     line->set_sending_side_breaker_status(false);
     line->set_receiving_side_breaker_status(false);
 
-    network_matrix.build_network_Y_matrix();
+    network_matrix->build_network_Y_matrix();
 
-    islands_internal = network_matrix.get_islands_with_internal_bus_number();
-    islands_physical = network_matrix.get_islands_with_physical_bus_number();
+    islands_internal = network_matrix->get_islands_with_internal_bus_number();
+    islands_physical = network_matrix->get_islands_with_physical_bus_number();
     n = islands_internal.size();
     TEST_ASSERT(n==3);
     n = islands_physical.size();
@@ -286,7 +286,7 @@ void NETWORK_MATRIX_TEST::test_get_islands()
         TEST_ASSERT(islands_internal[i].size()==islands_physical[i].size());
         unsigned int m = islands_internal[i].size();
         for(unsigned int j=0; j!=m; ++j)
-            TEST_ASSERT(network_matrix.get_physical_bus_number_of_internal_bus(islands_internal[i][j])==islands_physical[i][j]);
+            TEST_ASSERT(network_matrix->get_physical_bus_number_of_internal_bus(islands_internal[i][j])==islands_physical[i][j]);
     }
 
     // 1,4
@@ -347,8 +347,8 @@ void NETWORK_MATRIX_TEST::test_save_network_Y_matrix_to_file()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"NETWORK_MATRIX_TEST");
 
-    network_matrix.build_network_Y_matrix();
-    network_matrix.save_network_Y_matrix_to_file("test_log/network_matrix_exported.csv");
+    network_matrix->build_network_Y_matrix();
+    network_matrix->save_network_Y_matrix_to_file("test_log/network_matrix_exported.csv");
 }
 
 
@@ -360,14 +360,14 @@ void NETWORK_MATRIX_TEST::test_build_network_with_bus_out_of_service()
     BUS* busptr = psdb.get_bus(4);
     busptr->set_bus_type(OUT_OF_SERVICE);
 
-    network_matrix.build_network_Y_matrix();
-    network_matrix.save_network_Y_matrix_to_file("test_log/network_matrix_with_bus_out_of_service_exported.csv");
+    network_matrix->build_network_Y_matrix();
+    network_matrix->save_network_Y_matrix_to_file("test_log/network_matrix_with_bus_out_of_service_exported.csv");
 
-    network_matrix.optimize_network_ordering();
-    network_matrix.build_network_Y_matrix();
-    network_matrix.save_network_Y_matrix_to_file("test_log/network_matrix_with_bus_out_of_service_optimized_exported.csv");
+    network_matrix->optimize_network_ordering();
+    network_matrix->build_network_Y_matrix();
+    network_matrix->save_network_Y_matrix_to_file("test_log/network_matrix_with_bus_out_of_service_optimized_exported.csv");
 
-    network_matrix.check_network_connectivity();
+    network_matrix->check_network_connectivity();
 }
 
 #endif

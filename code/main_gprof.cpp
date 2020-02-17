@@ -24,8 +24,7 @@ int main()
     file += ".txt";
     default_toolkit.open_log_file(file);
 
-    PSSE_IMEXPORTER importer;
-    importer.set_toolkit(default_toolkit);
+    PSSE_IMEXPORTER importer(default_toolkit);
 
     psdb.set_allowed_max_bus_number(1000);
 

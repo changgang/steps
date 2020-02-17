@@ -13,7 +13,7 @@
 #include <iostream>
 using namespace std;
 
-STEPS_IMEXPORTER::STEPS_IMEXPORTER()
+STEPS_IMEXPORTER::STEPS_IMEXPORTER(STEPS& toolkit) : DATA_IMEXPORTER(toolkit)
 {
     splitted_sraw_data_in_ram.clear();
     splitted_sdyr_data_in_ram.clear();
@@ -27,7 +27,7 @@ void STEPS_IMEXPORTER::load_powerflow_data(string file)
 {
     ostringstream osstream;
     osstream<<"Loading powerflow data from STEPS file: "<<file;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     load_powerflow_data_into_ram(file);
@@ -71,7 +71,7 @@ void STEPS_IMEXPORTER::load_powerflow_result(string file)
 {
     ostringstream osstream;
     osstream<<"Loading powerflow result from STEPS file: "<<file;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     vector<string> data_in_ram = load_powerflow_result_into_ram(file);
@@ -109,7 +109,7 @@ void STEPS_IMEXPORTER::load_powerflow_data_from_steps_vector(vector<vector<vecto
         ostringstream osstream;
         osstream<<"No data in the given STEPS powerflow vector <splitted_sraw_data_in_ram>."<<endl
                 <<"Please check if the vector contents exist or not.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
 
         return;
@@ -127,7 +127,7 @@ void STEPS_IMEXPORTER::load_powerflow_data_into_ram(string file)
     if(fid == NULL)
     {
         osstream<<"STEPS sraw file '"<<file<<"' is not accessible. Loading STEPS sraw data is failed.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -214,7 +214,7 @@ string STEPS_IMEXPORTER::trim_steps_comment(string str)
 
 void STEPS_IMEXPORTER::load_case_data()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(splitted_sraw_data_in_ram.size()<1)
@@ -265,7 +265,7 @@ unsigned int STEPS_IMEXPORTER::get_data_version() const
 
 void STEPS_IMEXPORTER::load_bus_data()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(splitted_sraw_data_in_ram.size()<2)
@@ -361,7 +361,7 @@ void STEPS_IMEXPORTER::load_bus_data()
 }
 void STEPS_IMEXPORTER::load_load_data()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(splitted_sraw_data_in_ram.size()<3)
@@ -451,7 +451,7 @@ void STEPS_IMEXPORTER::load_load_data()
 }
 void STEPS_IMEXPORTER::load_fixed_shunt_data()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(splitted_sraw_data_in_ram.size()<4)
@@ -566,7 +566,7 @@ void STEPS_IMEXPORTER::load_source_data()
             {
                 char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
                 snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Invalid source type is detected in STEPS sraw file of line:\n%s",string_vector2csv(data).c_str());
-                STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+                STEPS& toolkit = get_toolkit();
                 toolkit.show_information_with_leading_time_stamp(buffer);
                 break;
             }
@@ -582,7 +582,7 @@ void STEPS_IMEXPORTER::load_source_data()
 
 void STEPS_IMEXPORTER::load_generator_data(vector<string>& data)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     GENERATOR generator;
@@ -595,7 +595,7 @@ void STEPS_IMEXPORTER::load_generator_data(vector<string>& data)
 
 void STEPS_IMEXPORTER::load_wt_generator_data(vector<string>& data)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     WT_GENERATOR wt_generator;
@@ -610,7 +610,7 @@ void STEPS_IMEXPORTER::load_wt_generator_data(vector<string>& data)
 
 void STEPS_IMEXPORTER::load_pv_unit_data(vector<string>& data)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     PV_UNIT pv_unit;
@@ -625,7 +625,7 @@ void STEPS_IMEXPORTER::load_pv_unit_data(vector<string>& data)
 
 void STEPS_IMEXPORTER::load_energy_storage_data(vector<string>& data)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     ENERGY_STORAGE estorage;
@@ -639,7 +639,7 @@ void STEPS_IMEXPORTER::load_energy_storage_data(vector<string>& data)
 
 void STEPS_IMEXPORTER::load_source_common_data(vector<string>& data, SOURCE* source)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double rs = 0.0, xs = 0.0;
@@ -825,7 +825,7 @@ void STEPS_IMEXPORTER::load_source_var_control_data(vector<string>& data, SOURCE
 
 void STEPS_IMEXPORTER::load_line_data()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(splitted_sraw_data_in_ram.size()<6)
@@ -1030,7 +1030,7 @@ void STEPS_IMEXPORTER::load_transformer_data()
 
 void STEPS_IMEXPORTER::add_transformer_with_data(vector<vector<string> > trans_data)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     TRANSFORMER trans;
@@ -1262,7 +1262,7 @@ void STEPS_IMEXPORTER::add_transformer_basic_data(TRANSFORMER& trans, vector<str
 }
 void STEPS_IMEXPORTER::add_transformer_winding_data(TRANSFORMER&trans, TRANSFORMER_WINDING_SIDE winding, vector<string> data, TRANSFORMER_WINDING_TAP_CODE winding_code)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(data.size()<2)
@@ -1493,7 +1493,7 @@ void STEPS_IMEXPORTER::add_transformer_winding_data(TRANSFORMER&trans, TRANSFORM
 
 void STEPS_IMEXPORTER::add_transformer_impedance_admittance_data(TRANSFORMER& trans, vector<string> data, TRANSFORMER_IMPEDANCE_CODE impedance_code, TRANSFORMER_ADMITTANCE_CODE magnetizing_code)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double g = trans.get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu().real();
@@ -1637,7 +1637,7 @@ void STEPS_IMEXPORTER::add_transformer_impedance_admittance_data(TRANSFORMER& tr
 
 void STEPS_IMEXPORTER::load_area_data()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(splitted_sraw_data_in_ram.size()<8)
@@ -1700,7 +1700,7 @@ void STEPS_IMEXPORTER::load_hvdc_data()
 
 void STEPS_IMEXPORTER::add_hvdc_with_data(vector<vector<string> > hvdc_data)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     HVDC hvdc;
@@ -1896,7 +1896,7 @@ void STEPS_IMEXPORTER::load_zone_data()
 {
     if(splitted_sraw_data_in_ram.size()<14)
         return;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<vector<string> > DATA = splitted_sraw_data_in_ram[13];
@@ -1926,7 +1926,7 @@ void STEPS_IMEXPORTER::load_interarea_transfer_data()
 
 void STEPS_IMEXPORTER::load_owner_data()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(splitted_sraw_data_in_ram.size()<16)
@@ -1965,7 +1965,7 @@ void STEPS_IMEXPORTER::load_switched_shunt_data()
 void STEPS_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line, POWERFLOW_DATA_SAVE_MODE save_mode)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     ofstream ofs(file);
@@ -2034,7 +2034,7 @@ void STEPS_IMEXPORTER::export_powerflow_data(string file, bool export_zero_imped
 string STEPS_IMEXPORTER::export_case_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     char buffer[1000];
@@ -2054,7 +2054,7 @@ string STEPS_IMEXPORTER::export_case_data() const
 string STEPS_IMEXPORTER::export_bus_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<BUS*> buses = psdb.get_all_buses();
@@ -2094,7 +2094,7 @@ string STEPS_IMEXPORTER::export_bus_data() const
 string STEPS_IMEXPORTER::export_load_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<LOAD*> loads = psdb.get_all_loads();
@@ -2139,7 +2139,7 @@ string STEPS_IMEXPORTER::export_load_data() const
 string STEPS_IMEXPORTER::export_fixed_shunt_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<FIXED_SHUNT*> fshunts = psdb.get_all_fixed_shunts();
@@ -2186,7 +2186,7 @@ string STEPS_IMEXPORTER::export_source_data() const
 string STEPS_IMEXPORTER::export_generator_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<GENERATOR*> generators = psdb.get_all_generators();
@@ -2206,7 +2206,7 @@ string STEPS_IMEXPORTER::export_generator_data() const
 string STEPS_IMEXPORTER::export_wt_generator_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
@@ -2228,7 +2228,7 @@ string STEPS_IMEXPORTER::export_wt_generator_data() const
 string STEPS_IMEXPORTER::export_pv_unit_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
@@ -2251,7 +2251,7 @@ string STEPS_IMEXPORTER::export_pv_unit_data() const
 string STEPS_IMEXPORTER::export_energy_storage_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<ENERGY_STORAGE*> estorages = psdb.get_all_energy_storages();
@@ -2273,7 +2273,7 @@ string STEPS_IMEXPORTER::export_energy_storage_data() const
 string STEPS_IMEXPORTER::export_source_common_data(SOURCE* source) const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int bus = source->get_source_bus();
@@ -2347,7 +2347,7 @@ string STEPS_IMEXPORTER::export_source_var_control_data(SOURCE* source) const
 string STEPS_IMEXPORTER::export_line_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<LINE*> lines = psdb.get_all_lines();
@@ -2407,7 +2407,7 @@ string STEPS_IMEXPORTER::export_line_data() const
 string STEPS_IMEXPORTER::export_transformer_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
@@ -2698,7 +2698,7 @@ string STEPS_IMEXPORTER::export_transformer_data() const
 string STEPS_IMEXPORTER::export_area_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<AREA*> areas = psdb.get_all_areas();
@@ -2725,7 +2725,7 @@ string STEPS_IMEXPORTER::export_area_data() const
 string STEPS_IMEXPORTER::export_hvdc_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
@@ -2838,7 +2838,7 @@ string STEPS_IMEXPORTER::export_multi_section_line_data() const
 string STEPS_IMEXPORTER::export_zone_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<ZONE*> zones = psdb.get_all_zones();
@@ -2862,7 +2862,7 @@ string STEPS_IMEXPORTER::export_interarea_transfer_data() const
 string STEPS_IMEXPORTER::export_owner_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<OWNER*> owners = psdb.get_all_owners();
@@ -2923,7 +2923,7 @@ unsigned int STEPS_IMEXPORTER::get_data_column_index_in_powerflow_result(const v
 vector<string> STEPS_IMEXPORTER::load_powerflow_result_into_ram(string file)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
 
     vector<string> result_in_ram;
 
@@ -2955,7 +2955,7 @@ vector<string> STEPS_IMEXPORTER::load_powerflow_result_into_ram(string file)
 void STEPS_IMEXPORTER::load_bus_powerflow_result(const vector<string>& data)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int starting_index = get_starting_index_of_device_powerflow_result(data, "% Bus");
@@ -3001,7 +3001,7 @@ void STEPS_IMEXPORTER::load_bus_powerflow_result(const vector<string>& data)
 void STEPS_IMEXPORTER::load_generator_powerflow_result(const vector<string>& data)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int n_data = data.size();
@@ -3051,7 +3051,7 @@ void STEPS_IMEXPORTER::load_generator_powerflow_result(const vector<string>& dat
 void STEPS_IMEXPORTER::load_wt_generator_powerflow_result(const vector<string>& data)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int n_data = data.size();
@@ -3101,7 +3101,7 @@ void STEPS_IMEXPORTER::load_wt_generator_powerflow_result(const vector<string>& 
 void STEPS_IMEXPORTER::load_pv_unit_powerflow_result(const vector<string>& data)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int n_data = data.size();
@@ -3151,7 +3151,7 @@ void STEPS_IMEXPORTER::load_pv_unit_powerflow_result(const vector<string>& data)
 void STEPS_IMEXPORTER::load_energy_storage_powerflow_result(const vector<string>& data)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int n_data = data.size();
@@ -3201,7 +3201,7 @@ void STEPS_IMEXPORTER::load_energy_storage_powerflow_result(const vector<string>
 void STEPS_IMEXPORTER::load_transformer_powerflow_result(const vector<string>& data)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int n_data = data.size();
@@ -3262,7 +3262,7 @@ void STEPS_IMEXPORTER::load_transformer_powerflow_result(const vector<string>& d
 void STEPS_IMEXPORTER::load_hvdc_powerflow_result(const vector<string>& data)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int n_data = data.size();

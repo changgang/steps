@@ -7,12 +7,15 @@
 
 class BUS;
 class SOURCE;
-class POWERFLOW_SOLVER : public BASE
+class POWERFLOW_SOLVER
 {
     public:
         POWERFLOW_SOLVER(STEPS& toolkit);
         ~POWERFLOW_SOLVER();
-        virtual void clear();
+
+        STEPS& get_toolkit() const;
+
+        void clear();
 
         NETWORK_MATRIX& get_network_matrix();
 
@@ -117,7 +120,7 @@ class POWERFLOW_SOLVER : public BASE
 
         STEPS* toolkit;
 
-        JACOBIAN_BUILDER jacobian_builder;
+        JACOBIAN_BUILDER* jacobian_builder;
 
         STEPS_SPARSE_MATRIX jacobian, BP, BQ;
 
@@ -154,9 +157,6 @@ class POWERFLOW_SOLVER : public BASE
         vector<EQUIVALENT_DEVICE*> e_devices;
 
         vector<BUS*> internal_bus_pointers;
-    private:
-        virtual bool is_valid() const;
-        virtual void check();
 };
 
 #endif // POWERFLOW_SOLVER_H

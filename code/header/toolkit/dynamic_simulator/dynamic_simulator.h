@@ -10,12 +10,14 @@
 
 class POWER_SYSTEM_DATABASE;
 
-class DYNAMICS_SIMULATOR: public BASE
+class DYNAMICS_SIMULATOR
 {
     public:
         DYNAMICS_SIMULATOR(STEPS& toolkit);
         ~DYNAMICS_SIMULATOR();
-        virtual void clear();
+        STEPS& get_toolkit() const;
+
+        void clear();
 
         void set_dynamic_simulation_time_step_in_s(double delt);
         double get_dynamic_simulation_time_step_in_s() const;
@@ -296,9 +298,6 @@ class DYNAMICS_SIMULATOR: public BASE
         bool detailed_log_enabled;
 
         bool network_matrix_update_required;
-    private:
-        virtual bool is_valid() const;
-        virtual void check();
 };
 
 #endif // DYNAMICS_SIMULATOR_H

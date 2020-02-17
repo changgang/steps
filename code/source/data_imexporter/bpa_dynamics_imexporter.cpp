@@ -10,7 +10,7 @@ using namespace std;
 
 void BPA_IMEXPORTER::load_dynamic_data(string file)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     osstream<<"Loading dynamic data from BPA file: "<<file;
     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -34,7 +34,7 @@ void BPA_IMEXPORTER::load_dynamic_data(string file)
 
 void BPA_IMEXPORTER::load_dynamic_data_into_ram(string file)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     swi_data_in_ram.clear();
 
@@ -434,7 +434,7 @@ void BPA_IMEXPORTER::load_one_model(string data)
 {
     ostringstream osstream;
     osstream<<"Now go parsing dynamic data: "<<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     string model_name = get_dynamic_model_name(data);
@@ -594,7 +594,7 @@ vector<LOAD*> BPA_IMEXPORTER::get_all_loads_of(string data)
        model_name!="CIM5AL" and model_name!="CIM5AR" and model_name!="CIM5ZN" and
        model_name!="CIM5BL")
         return loads;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<string> swidata = split_string(data,",");

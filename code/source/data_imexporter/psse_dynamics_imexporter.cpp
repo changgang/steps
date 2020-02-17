@@ -12,7 +12,7 @@ void PSSE_IMEXPORTER::load_dynamic_data(string file)
 {
     ostringstream osstream;
     osstream<<"Loading dynamic data from PSS/E file: "<<file;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     //file = string2upper(file);
@@ -39,7 +39,7 @@ void PSSE_IMEXPORTER::load_dynamic_data(string file)
 
 void PSSE_IMEXPORTER::load_dynamic_data_into_ram(string file)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     dyr_data_in_ram.clear();
@@ -107,8 +107,7 @@ void PSSE_IMEXPORTER::load_one_model(string data)
     vector<string> record = psse_dyr_string2steps_string_vector(data);
     //for(unsigned int i=0; i<record.size();++i)
     //    cout<<record[i]<<endl;
-    STEPS_IMEXPORTER importer;
-    importer.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    STEPS_IMEXPORTER importer(get_toolkit());
     importer.load_one_model(record);
     //cout<<"done. Now go to next one"<<endl;
 }
@@ -116,7 +115,7 @@ void PSSE_IMEXPORTER::load_one_model(string data)
 void PSSE_IMEXPORTER::export_dynamic_data(string file)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     ofstream ofs(file);

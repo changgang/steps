@@ -12,16 +12,14 @@ void api_set_dynamic_model(char* model_string, char* file_type, unsigned int too
     FileType = string2upper(FileType);
     if(FileType=="PSSE" or FileType=="PSS/E")
 	{
-	    PSSE_IMEXPORTER importer;
-	    importer.set_toolkit(toolkit);
+	    PSSE_IMEXPORTER importer(toolkit);
         importer.load_one_model(data);
 	}
 	else
     {
         if(FileType=="BPA")
         {
-            BPA_IMEXPORTER importer;
-            importer.set_toolkit(toolkit);
+            BPA_IMEXPORTER importer(toolkit);
             importer.load_one_model(data);
         }
         else

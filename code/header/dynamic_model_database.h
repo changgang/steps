@@ -9,14 +9,16 @@ using namespace std;
 class MODEL;
 class SOURCE;
 
-class DYNAMIC_MODEL_DATABASE : public BASE
+class DYNAMIC_MODEL_DATABASE
 {
     public:
-        DYNAMIC_MODEL_DATABASE();
+        DYNAMIC_MODEL_DATABASE(STEPS& toolkit);
         ~DYNAMIC_MODEL_DATABASE();
 
-        virtual void check();
-        virtual void clear();
+        STEPS& get_toolkit() const;
+
+        void check();
+        void clear();
     public:
         void add_model(MODEL* model);
         void remove_the_last_model();
@@ -28,13 +30,13 @@ class DYNAMIC_MODEL_DATABASE : public BASE
         void shrink_model_starting_position_table_at_position(void *pos);
         bool load_related_model_is_to_update(MODEL* old_model, MODEL* new_model);
 
+        STEPS* toolkit;
+
         char *model_warehouse;
         unsigned int warehouse_capacity;
 
         bool is_full;
         unsigned int occupied_warehouse_capacity;
         vector<unsigned int> model_starting_position_table;
-    private:
-        virtual bool is_valid() const;
 };
 #endif // DYNAMIC_MODEL_DATABASE_H

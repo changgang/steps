@@ -9,11 +9,13 @@
 #include <set>
 
 using namespace std;
-class DATA_IMEXPORTER : public BASE
+class DATA_IMEXPORTER
 {
     public:
-        DATA_IMEXPORTER();
+        DATA_IMEXPORTER(STEPS& toolkit);
         virtual ~DATA_IMEXPORTER();
+
+        STEPS& get_toolkit() const;
 
         void set_base_frequency_in_Hz(double fbase);
         void set_export_zero_impedance_line_logic(bool logic);
@@ -52,9 +54,8 @@ class DATA_IMEXPORTER : public BASE
         vector<unsigned int> get_all_fixed_shunt_buses();
         void append_buses_to_ordered_buses(const vector<unsigned int>& buses, set<unsigned int>& existing_buses);
 
-        virtual bool is_valid() const;
-        virtual void check();
-        virtual void clear();
+        STEPS* toolkit;
+
         double base_frequency_in_Hz;
         bool export_zero_impedance_line;
         bool export_out_of_service_bus;

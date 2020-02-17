@@ -19,14 +19,20 @@ class SUBLINE
 };
 
 
-NETWORK_MATRIX::NETWORK_MATRIX()
+NETWORK_MATRIX::NETWORK_MATRIX(STEPS& toolkit)
 {
+    this->toolkit = (&toolkit);
     clear();
 }
 
-
 NETWORK_MATRIX::~NETWORK_MATRIX()
 {
+    toolkit = nullptr;
+}
+
+STEPS& NETWORK_MATRIX::get_toolkit() const
+{
+    return *toolkit;
 }
 
 void NETWORK_MATRIX::clear()
@@ -463,8 +469,7 @@ complex<double> NETWORK_MATRIX::get_zero_sequence_mutual_impedance_between_physi
 
 void NETWORK_MATRIX::add_lines_to_network()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<LINE*> lines = psdb.get_all_lines();
 
     unsigned int n = lines.size();
@@ -481,7 +486,7 @@ void NETWORK_MATRIX::add_line_to_network(const LINE& line)
         /*ostringstream osstream;
         osstream<<"Adding line '%s' connecting to bus %u and %u to network Y matrix.", (line.get_identifier()).c_str(),
                       line.get_sending_side_bus(), line.get_receiving_side_bus());
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         */
 
         unsigned int sending_bus = line.get_sending_side_bus();
@@ -530,8 +535,7 @@ void NETWORK_MATRIX::add_line_to_network(const LINE& line)
 
 void NETWORK_MATRIX::add_transformers_to_network()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
 
     unsigned int n = transformers.size();
@@ -555,7 +559,7 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_network(const TRANSFORMER& t
         /*ostringstream osstream;
         osstream<<"Adding two-winding transformer '%s' connecting to bus %u and %u to network Y matrix.", (trans.get_identifier()).c_str(),
                       trans.get_winding_bus(PRIMARY_SIDE), trans.get_winding_bus(SECONDARY_SIDE));
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         */
 
         unsigned int primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
@@ -776,7 +780,7 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_network(const TRANSFORMER&
         /*ostringstream osstream;
         osstream<<"Adding three-winding transformer '%s' connecting to bus %u, %u, and %u to network Y matrix.", (trans.get_identifier()).c_str(),
                       trans.get_winding_bus(PRIMARY_SIDE), trans.get_winding_bus(SECONDARY_SIDE), trans.get_winding_bus(TERTIARY_SIDE));
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         */
 
         unsigned int primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
@@ -1050,7 +1054,7 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_network_v2(const TRANSFORMER
         /*ostringstream osstream;
         osstream<<"Adding two-winding transformer '%s' connecting to bus %u and %u to network Y matrix.", (trans.get_identifier()).c_str(),
                       trans.get_winding_bus(PRIMARY_SIDE), trans.get_winding_bus(SECONDARY_SIDE));
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         */
 
         unsigned int primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
@@ -1148,8 +1152,7 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_network_v2(const TRANSFORMER
 
 void NETWORK_MATRIX::add_fixed_shunts_to_network()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<FIXED_SHUNT*> shunts = psdb.get_all_fixed_shunts();
 
     unsigned int n = shunts.size();
@@ -1165,7 +1168,7 @@ void NETWORK_MATRIX::add_fixed_shunt_to_network(const FIXED_SHUNT& shunt)
         /*ostringstream osstream;
         osstream<<"Adding fixed shunt '%s' at bus %u to network Y matrix.", (shunt.get_identifier()).c_str(),
                       shunt.get_shunt_bus());
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         */
 
         unsigned int bus = shunt.get_shunt_bus();
@@ -1180,8 +1183,7 @@ void NETWORK_MATRIX::add_fixed_shunt_to_network(const FIXED_SHUNT& shunt)
 
 void NETWORK_MATRIX::add_lines_to_decoupled_network()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<LINE*> lines = psdb.get_all_lines();
 
     unsigned int n = lines.size();
@@ -1199,7 +1201,7 @@ void NETWORK_MATRIX::add_line_to_decoupled_network(const LINE& line)
         /*ostringstream osstream;
         osstream<<"Adding line '%s' connecting to bus %u and %u to network Y matrix.", (line.get_identifier()).c_str(),
                       line.get_sending_side_bus(), line.get_receiving_side_bus());
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         */
 
         unsigned int sending_bus = line.get_sending_side_bus();
@@ -1277,8 +1279,7 @@ void NETWORK_MATRIX::add_line_to_decoupled_network(const LINE& line)
 
 void NETWORK_MATRIX::add_transformers_to_decoupled_network()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
 
     unsigned int n = transformers.size();
@@ -1306,7 +1307,7 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_decoupled_network(const TR
         /*ostringstream osstream;
         osstream<<"Adding three-winding transformer '%s' connecting to bus %u, %u, and %u to network Y matrix.", (trans.get_identifier()).c_str(),
                       trans.get_winding_bus(PRIMARY_SIDE), trans.get_winding_bus(SECONDARY_SIDE), trans.get_winding_bus(TERTIARY_SIDE));
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         */
 
         unsigned int primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
@@ -1868,7 +1869,7 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_decoupled_network_v2(const T
         /*ostringstream osstream;
         osstream<<"Adding two-winding transformer '%s' connecting to bus %u and %u to network Y matrix.", (trans.get_identifier()).c_str(),
                       trans.get_winding_bus(PRIMARY_SIDE), trans.get_winding_bus(SECONDARY_SIDE));
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         */
 
         unsigned int primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
@@ -2027,8 +2028,7 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_decoupled_network_v2(const T
 
 void NETWORK_MATRIX::add_fixed_shunts_to_decoupled_network()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<FIXED_SHUNT*> shunts = psdb.get_all_fixed_shunts();
 
     unsigned int n = shunts.size();
@@ -2045,7 +2045,7 @@ void NETWORK_MATRIX::add_fixed_shunt_to_decoupled_network(const FIXED_SHUNT& shu
         /*ostringstream osstream;
         osstream<<"Adding fixed shunt '%s' at bus %u to network Y matrix.", (shunt.get_identifier()).c_str(),
                       shunt.get_shunt_bus());
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         */
 
         unsigned int bus = shunt.get_shunt_bus();
@@ -2063,8 +2063,7 @@ void NETWORK_MATRIX::add_fixed_shunt_to_decoupled_network(const FIXED_SHUNT& shu
 
 void NETWORK_MATRIX::add_lines_to_dc_network()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<LINE*> lines = psdb.get_all_lines();
 
     unsigned int n = lines.size();
@@ -2080,7 +2079,7 @@ void NETWORK_MATRIX::add_line_to_dc_network(const LINE& line)
         /*ostringstream osstream;
         osstream<<"Adding line '%s' connecting to bus %u and %u to network Y matrix.", (line.get_identifier()).c_str(),
                       line.get_sending_side_bus(), line.get_receiving_side_bus());
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         */
 
         unsigned int sending_bus = line.get_sending_side_bus();
@@ -2106,8 +2105,7 @@ void NETWORK_MATRIX::add_line_to_dc_network(const LINE& line)
 
 void NETWORK_MATRIX::add_transformers_to_dc_network()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
 
     unsigned int n = transformers.size();
@@ -2133,7 +2131,7 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_dc_network(const TRANSFORM
         /*ostringstream osstream;
         osstream<<"Adding three-winding transformer '%s' connecting to bus %u, %u, and %u to network Y matrix.", (trans.get_identifier()).c_str(),
                       trans.get_winding_bus(PRIMARY_SIDE), trans.get_winding_bus(SECONDARY_SIDE), trans.get_winding_bus(TERTIARY_SIDE));
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         */
 
         unsigned int primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
@@ -2234,7 +2232,7 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_dc_network(const TRANSFORMER
         /*ostringstream osstream;
         osstream<<"Adding two-winding transformer '%s' connecting to bus %u and %u to network Y matrix.", (trans.get_identifier()).c_str(),
                       trans.get_winding_bus(PRIMARY_SIDE), trans.get_winding_bus(SECONDARY_SIDE));
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         */
 
         unsigned int primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
@@ -2261,8 +2259,7 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_dc_network(const TRANSFORMER
 
 void NETWORK_MATRIX::add_bus_fault_to_dynamic_network()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<BUS*> buses = psdb.get_all_buses();
 
     unsigned int n = buses.size();
@@ -2290,8 +2287,7 @@ void NETWORK_MATRIX::add_bus_fault_to_dynamic_network()
 
 void NETWORK_MATRIX::add_lines_to_dynamic_network()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<LINE*> lines = psdb.get_all_lines();
 
     unsigned int n = lines.size();
@@ -2314,7 +2310,7 @@ void NETWORK_MATRIX::add_faulted_line_to_dynamic_network(const LINE& line)
             /*ostringstream osstream;
             osstream<<"Adding line '%s' connecting to bus %u and %u to network Y matrix.", (line.get_identifier()).c_str(),
                           line.get_sending_side_bus(), line.get_receiving_side_bus());
-            toolkit.show_information_with_leading_time_stamp(osstream);*/
+            toolkit->show_information_with_leading_time_stamp(osstream);*/
 
             unsigned int sending_bus = line.get_sending_side_bus();
             unsigned int receiving_bus = line.get_receiving_side_bus();
@@ -2490,8 +2486,7 @@ void NETWORK_MATRIX::add_faulted_line_to_dynamic_network(const LINE& line)
 
 void NETWORK_MATRIX::add_generators_to_dynamic_network()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<GENERATOR*> generators = psdb.get_all_generators();
 
     unsigned int n= generators.size();
@@ -2504,8 +2499,7 @@ void NETWORK_MATRIX::add_generator_to_dynamic_network(const GENERATOR& gen)
 {
     if(gen.get_status()==true)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         complex<double> Z = gen.get_source_impedance_in_pu();
         double one_over_mbase = gen.get_one_over_mbase_in_one_over_MVA();
         double sbase = psdb.get_system_base_power_in_MVA();
@@ -2519,8 +2513,7 @@ void NETWORK_MATRIX::add_generator_to_dynamic_network(const GENERATOR& gen)
 
 void NETWORK_MATRIX::add_wt_generators_to_dynamic_network()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<WT_GENERATOR*> generators = psdb.get_all_wt_generators();
 
     unsigned int n= generators.size();
@@ -2533,13 +2526,12 @@ void NETWORK_MATRIX::add_wt_generator_to_dynamic_network(WT_GENERATOR& gen)
 {
     if(gen.get_status()==true)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         WT_GENERATOR_MODEL* genmodel = gen.get_wt_generator_model();
         if(genmodel!=NULL)
         {
             if(genmodel->is_voltage_source())
             {
-                POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+                POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
                 complex<double> Z = gen.get_source_impedance_in_pu();
                 double one_over_mbase = gen.get_one_over_mbase_in_one_over_MVA();
                 double sbase = psdb.get_system_base_power_in_MVA();
@@ -2557,7 +2549,7 @@ void NETWORK_MATRIX::add_wt_generator_to_dynamic_network(WT_GENERATOR& gen)
             ostringstream osstream;
             osstream<<"Error. No WT_GENERATOR_MODEL is provided for "<<gen.get_device_name()<<endl
                     <<"Its source impedance will not be added to network matrix.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
     }
@@ -2566,8 +2558,7 @@ void NETWORK_MATRIX::add_wt_generator_to_dynamic_network(WT_GENERATOR& gen)
 
 void NETWORK_MATRIX::add_motor_loads_to_dynamic_network()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<LOAD*> loads = psdb.get_all_loads();
 
     unsigned int n= loads.size();
@@ -2608,9 +2599,7 @@ void NETWORK_MATRIX::optimize_network_ordering()
 {
     initialize_physical_internal_bus_pair();
     build_network_Y_matrix();
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    if(toolkit.is_optimize_network_enabled())
+    if(toolkit->is_optimize_network_enabled())
     {
         reorder_physical_internal_bus_pair();
         /*for(unsigned int i=0; i<1; ++i)
@@ -2628,8 +2617,7 @@ bool NETWORK_MATRIX::is_condition_ok() const
 
 void NETWORK_MATRIX::initialize_physical_internal_bus_pair()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     psdb.check_device_status_for_out_of_service_buses();
     vector<BUS*> buses = psdb.get_all_buses();
 
@@ -2659,14 +2647,13 @@ void NETWORK_MATRIX::reorder_physical_internal_bus_pair()
     inphno.update_with_new_internal_bus_permutation(permutation);
     ostringstream osstream;
     osstream<<"Network internal bus numbers are optimized.";
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     /*os<<"After optimizing the network with network optimizer, the internal buses are listed as follows");
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     osstream<<"internal   physical   storage");
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     unsigned int bus, index, nbus;
 
@@ -2677,17 +2664,17 @@ void NETWORK_MATRIX::reorder_physical_internal_bus_pair()
         bus = get_physical_bus_number_of_internal_bus(i);
         index = get_bus_index(bus);
         osstream<<"%-10u %-10u %-10u",i, bus, index);
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }*/
 
     /*os<<"Permutation for reorder internal bus:");
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     unsigned int nperm = permutation.size();
     for(unsigned int i=0; i!=nperm; ++i)
     {
         osstream<<"%u ---> %u",i,permutation[i]);
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }
     */
 
@@ -2695,8 +2682,7 @@ void NETWORK_MATRIX::reorder_physical_internal_bus_pair()
 
 void NETWORK_MATRIX::check_network_connectivity(bool remove_void_island)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     vector< vector<unsigned int> > islands = get_islands_with_physical_bus_number();
 
@@ -2704,7 +2690,7 @@ void NETWORK_MATRIX::check_network_connectivity(bool remove_void_island)
 
     ostringstream osstream;
     osstream<<"There are "<<nislands<<" islands.";
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     unsigned int physical_bus;
     bool there_is_slack_bus_in_island;
@@ -2712,7 +2698,7 @@ void NETWORK_MATRIX::check_network_connectivity(bool remove_void_island)
     for(unsigned int i=0; i!=nislands; ++i)
     {
         osstream<<"Island "<<i<<":";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
 
         osstream<<"Areas in island "<<i<<":\n";
         unsigned int nbus = islands[i].size();
@@ -2732,11 +2718,11 @@ void NETWORK_MATRIX::check_network_connectivity(bool remove_void_island)
             unsigned int area = *iter;
             osstream<<"("<<setw(3)<<area_count<<") "<<area<<" ["<<psdb.area_number2area_name(area)<<"]\n";
         }
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
 
 
         osstream<<"Physical buses in island "<<i<<":";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         there_is_slack_bus_in_island = false;
         for(unsigned int j=0; j!=nbus; ++j)
         {
@@ -2749,12 +2735,12 @@ void NETWORK_MATRIX::check_network_connectivity(bool remove_void_island)
                 osstream<<" (Slack bus)";
                 there_is_slack_bus_in_island = true;
             }
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            toolkit->show_information_with_leading_time_stamp(osstream);
         }
         if(not there_is_slack_bus_in_island)
         {
             osstream<<"No slack bus is found in island "<<i<<".";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            toolkit->show_information_with_leading_time_stamp(osstream);
             if(remove_void_island==true)
             {
                 for(unsigned int j=0; j!=nbus; ++j)
@@ -2764,7 +2750,7 @@ void NETWORK_MATRIX::check_network_connectivity(bool remove_void_island)
                     bus->set_bus_type(OUT_OF_SERVICE);
                 }
                 osstream<<"All buses in island "<<i<<" are set as OUT OF SERVICE.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
+                toolkit->show_information_with_leading_time_stamp(osstream);
             }
         }
     }
@@ -2777,8 +2763,7 @@ vector< vector<unsigned int> > NETWORK_MATRIX::get_islands_with_internal_bus_num
     if(inphno.empty())
         initialize_physical_internal_bus_pair();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     //build_network_Y_matrix();
     //network_Y_matrix.report_brief();
@@ -2882,8 +2867,7 @@ void NETWORK_MATRIX::report_network_matrix()
     ostringstream osstream;
 
     osstream<<"Network Y matrix lists begin:";
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     set_this_Y_and_Z_matrix_as(network_Y_matrix);
     report_network_matrix_common();
@@ -2894,11 +2878,10 @@ void NETWORK_MATRIX::report_decoupled_network_matrix() const
     ostringstream osstream;
 
     osstream<<"Network decoupled B matrix lists begin:";
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     osstream<<"row   [  bus  ]  column[  bus  ]     BP       BQ";
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     unsigned int i, ibus, jbus;
     unsigned int n = network_BP_matrix.get_matrix_size();
@@ -2926,12 +2909,12 @@ void NETWORK_MATRIX::report_decoupled_network_matrix() const
               <<setw(10)<<setprecision(6)<<fixed<<bp<<", "
               <<setw(10)<<setprecision(6)<<fixed<<bq<<endl;
 
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            toolkit->show_information_with_leading_time_stamp(osstream);
         }
         k_starting = k_ending;
     }
     osstream<<"Network decoupled B matrix lists finished.";
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 }
 
 void NETWORK_MATRIX::report_dc_network_matrix() const
@@ -2939,11 +2922,10 @@ void NETWORK_MATRIX::report_dc_network_matrix() const
     ostringstream osstream;
 
     osstream<<"DC network B matrix lists begin:";
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     osstream<<"row   [  bus  ]  column[  bus  ]     B";
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     unsigned int i, ibus, jbus;
     unsigned int n = network_DC_B_matrix.get_matrix_size();
@@ -2968,12 +2950,12 @@ void NETWORK_MATRIX::report_dc_network_matrix() const
               <<setw(7)<<jbus<<"]  "
               <<setw(10)<<setprecision(6)<<fixed<<b<<endl;
 
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            toolkit->show_information_with_leading_time_stamp(osstream);
         }
         k_starting = k_ending;
     }
     osstream<<"DC network B matrix lists finished.";
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 }
 
 void NETWORK_MATRIX::report_dynamic_network_matrix()
@@ -2981,8 +2963,7 @@ void NETWORK_MATRIX::report_dynamic_network_matrix()
     ostringstream osstream;
 
     osstream<<"Network dynamic Y matrix lists begin:";
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     set_this_Y_and_Z_matrix_as(network_Y1_matrix);
 	report_network_matrix_common();
@@ -2993,8 +2974,7 @@ void NETWORK_MATRIX::report_network_matrix_common() const
     ostringstream osstream;
 
     osstream<<"row   [  bus  ]  column[  bus  ]     real       imaginary";
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     unsigned int i, ibus, jbus;
     unsigned int n = this_Y_matrix_pointer->get_matrix_size();
@@ -3017,20 +2997,18 @@ void NETWORK_MATRIX::report_network_matrix_common() const
               <<setw(7)<<jbus<<"]  "
               <<setw(10)<<setprecision(6)<<fixed<<y.real()<<", "
               <<setw(10)<<setprecision(6)<<fixed<<y.imag()<<endl;
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            toolkit->show_information_with_leading_time_stamp(osstream);
         }
         k_starting = k_ending;
     }
     osstream<<"Network matrix lists finished.";
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 }
 
 
 void NETWORK_MATRIX::save_network_Y_matrix_to_file(const string& filename)
 {
     ostringstream osstream;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ofstream file(filename);
     if(file.is_open())
     {
@@ -3042,14 +3020,13 @@ void NETWORK_MATRIX::save_network_Y_matrix_to_file(const string& filename)
     {
         osstream<<"File '"<<filename<<"' cannot be opened for saving network matrix to file."<<endl
           <<"No network matrix will be exported.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
 
 
 void NETWORK_MATRIX::save_decoupled_network_B_matrix_to_file(const string& filename) const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     ofstream file(filename);
@@ -3088,13 +3065,12 @@ void NETWORK_MATRIX::save_decoupled_network_B_matrix_to_file(const string& filen
     {
         osstream<<"File '"<<filename<<"' cannot be opened for saving decoupled network matrix to file."<<endl
           <<"No decoupled network matrix will be exported.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void NETWORK_MATRIX::save_dc_network_B_matrix_to_file(const string& filename) const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     ofstream file(filename);
@@ -3131,13 +3107,12 @@ void NETWORK_MATRIX::save_dc_network_B_matrix_to_file(const string& filename) co
     {
         osstream<<"File '"<<filename<<"' cannot be opened for saving DC network matrix to file."<<endl
           <<"No DC network matrix will be exported.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void NETWORK_MATRIX::save_dynamic_network_Y_matrix_to_file(const string& filename)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     ofstream file(filename);
@@ -3151,7 +3126,7 @@ void NETWORK_MATRIX::save_dynamic_network_Y_matrix_to_file(const string& filenam
     {
         osstream<<"File '"<<filename<<"' cannot be opened for saving dynamic network matrix to file."<<endl
           <<"No dynamic network matrix will be exported.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -3189,7 +3164,6 @@ void NETWORK_MATRIX::save_network_matrix_common(ofstream& file) const
 
 void NETWORK_MATRIX::save_network_Z_matrix_to_file(const string& filename) const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     ofstream file(filename);
@@ -3227,26 +3201,11 @@ void NETWORK_MATRIX::save_network_Z_matrix_to_file(const string& filename) const
     {
         osstream<<"File '"<<filename<<"' cannot be opened for saving network Z matrix to file."<<endl
           <<"No network Z matrix will be exported.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
-
-
-
 
 void NETWORK_MATRIX::report_physical_internal_bus_number_pair() const
 {
     inphno.report();
-}
-
-
-
-
-bool NETWORK_MATRIX::is_valid() const
-{
-    return true; // disabled.
-}
-void NETWORK_MATRIX::check()
-{
-    ;// disabled.
 }

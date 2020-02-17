@@ -10,8 +10,10 @@
 
 using namespace std;
 
-DYNAMIC_MODEL_DATABASE::DYNAMIC_MODEL_DATABASE()
+DYNAMIC_MODEL_DATABASE::DYNAMIC_MODEL_DATABASE(STEPS& toolkit)
 {
+    this->toolkit = (&toolkit);
+
     warehouse_capacity = 0;
     occupied_warehouse_capacity = 0;
     is_full = false;
@@ -23,6 +25,12 @@ DYNAMIC_MODEL_DATABASE::DYNAMIC_MODEL_DATABASE()
 DYNAMIC_MODEL_DATABASE::~DYNAMIC_MODEL_DATABASE()
 {
     clear();
+    toolkit = nullptr;
+}
+
+STEPS& DYNAMIC_MODEL_DATABASE::get_toolkit() const
+{
+    return *toolkit;
 }
 
 void DYNAMIC_MODEL_DATABASE::check()
@@ -48,23 +56,17 @@ void DYNAMIC_MODEL_DATABASE::clear()
     }
 }
 
-bool DYNAMIC_MODEL_DATABASE::is_valid() const
-{
-    return true;
-}
-
 void DYNAMIC_MODEL_DATABASE::add_model(MODEL* model)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     if(model_warehouse==nullptr)
     {
-        warehouse_capacity = toolkit.get_dynamic_model_database_size_in_bytes();
+        warehouse_capacity = toolkit->get_dynamic_model_database_size_in_bytes();
         model_warehouse = (char*) malloc(warehouse_capacity);
         if(model_warehouse==nullptr)
         {
             osstream<<"Error. Cannot allocate dynamic model database. Check codes.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            toolkit->show_information_with_leading_time_stamp(osstream);
         }
     }
 
@@ -85,11 +87,11 @@ void DYNAMIC_MODEL_DATABASE::add_model(MODEL* model)
                 <<"*****************************\n"
                 <<"*****************************";
         cout<<osstream.str()<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }
     else
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         DEVICE_ID did_new = model->get_device_id();
         string model_type = model->get_model_type();
         DEVICE* device = psdb.get_device(did_new);
@@ -221,12 +223,11 @@ unsigned int DYNAMIC_MODEL_DATABASE::get_model_size(MODEL* model) const
 
     if(model_name=="ARXL") return sizeof(ARXL);
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     osstream<<"Model '"<<model_name<<"' is not supported in DYNAMIC_MODEL_DATABASE::"<<__FUNCTION__<<". Fatal error may occur.\n"
             <<"Update DYNAMIC_MODEL_DATABASE::"<<__FUNCTION__<<"() is required to include the new model.\n"
             <<"Consult developer if required.";
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     return 0;
 }
@@ -386,7 +387,6 @@ void DYNAMIC_MODEL_DATABASE::check_device_model_minimum_time_constants()
             }
         }
     }
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     n = mint_list.size();
 
     ostringstream osstream;
@@ -405,5 +405,5 @@ void DYNAMIC_MODEL_DATABASE::check_device_model_minimum_time_constants()
                     <<setw(30)<<mint_list[i].did.get_device_name()
                     <<setw(10)<<mint_list[i].model_name<<"\n";
     }
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 }

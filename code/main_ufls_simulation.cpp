@@ -13,7 +13,7 @@ int main()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
-    PSSE_IMEXPORTER importer;
+    PSSE_IMEXPORTER importer(default_toolkit);
 
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("../../../bench/IEEE39_GENROU_SEXS_IEEEG1_UFLS.dyr");

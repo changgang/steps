@@ -10,11 +10,12 @@
 
 #include <ctime>
 
-class JACOBIAN_BUILDER : public BASE
+class JACOBIAN_BUILDER
 {
     public:
-        JACOBIAN_BUILDER();
+        JACOBIAN_BUILDER(STEPS& toolkit);
         ~JACOBIAN_BUILDER();
+        STEPS& get_toolkit() const;
 
         void set_network_matrix(NETWORK_MATRIX& network_matrix);
         NETWORK_MATRIX* get_network_Y_matrix() const;
@@ -45,10 +46,7 @@ class JACOBIAN_BUILDER : public BASE
         void show_seprate_jacobians();
         void save_jacobian_matrix_to_file(const string& filename) const;
     private:
-        virtual bool is_valid() const;
-        virtual void check();
-        virtual void clear();
-
+        STEPS* toolkit;
         NETWORK_MATRIX* network_matrix;
         void update_jacobian_delta_p_over_angle();
         void update_jacobian_delta_p_over_voltage();

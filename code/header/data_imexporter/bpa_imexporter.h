@@ -10,7 +10,7 @@
 class BPA_IMEXPORTER : public DATA_IMEXPORTER
 {
     public:
-        BPA_IMEXPORTER();
+        BPA_IMEXPORTER(STEPS& toolkit);
         ~BPA_IMEXPORTER();
 
         virtual void load_powerflow_data(string file);

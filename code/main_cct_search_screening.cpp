@@ -16,7 +16,7 @@ int main()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database(); // create a new database
     psdb.set_allowed_max_bus_number(1000); // set the max bus number of the database
 
-    PSSE_IMEXPORTER importer; // create an imexporter
+    PSSE_IMEXPORTER importer(default_toolkit); // create an imexporter
 
     importer.load_powerflow_data("IEEE9_classical.raw"); // load powerflow
     vector<DEVICE_ID> lines = psdb.get_all_lines_device_id(); // the powerflow data is only used for get line device id

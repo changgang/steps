@@ -100,8 +100,6 @@ class CONTINGENCY_SCREENER
         unsigned int max_iteration;
 
         vector<DEVICE_ID> monitored_generators;
-
-        POWER_SYSTEM_DATABASE psdb;
     private:
         virtual bool is_valid() const;
         virtual void check();

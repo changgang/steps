@@ -10,12 +10,14 @@
 
 using namespace std;
 
-class NETWORK_MATRIX : public BASE
+class NETWORK_MATRIX
 {
     public:
-        NETWORK_MATRIX();
+        NETWORK_MATRIX(STEPS& toolkit);
         ~NETWORK_MATRIX();
-        virtual void clear();
+        STEPS& get_toolkit() const;
+
+        void clear();
 
         void build_network_Y_matrix();
         void build_decoupled_network_B_matrix();
@@ -144,6 +146,8 @@ class NETWORK_MATRIX : public BASE
         void report_network_matrix_common() const;
         void save_network_matrix_common(ofstream& file) const;
     private:
+        STEPS* toolkit;
+
         STEPS_COMPLEX_SPARSE_MATRIX network_Y1_matrix, network_Y2_matrix, network_Y0_matrix;
         STEPS_COMPLEX_SPARSE_MATRIX network_Z1_matrix, network_Z2_matrix, network_Z0_matrix;
         STEPS_COMPLEX_SPARSE_MATRIX network_Y_matrix;
@@ -153,8 +157,5 @@ class NETWORK_MATRIX : public BASE
         STEPS_COMPLEX_SPARSE_MATRIX* this_Z_matrix_pointer;
         STEPS_SPARSE_MATRIX this_jacobian;
         INPHNO inphno;
-    private:
-        virtual bool is_valid() const;
-        virtual void check();
 };
 #endif // NETWORK_MATRIX_H

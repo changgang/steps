@@ -605,8 +605,7 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model()
 
 void prepare_IEEE_9_bus_model_complete_dynamic_model()
 {
-    PSSE_IMEXPORTER importer;
-    importer.set_toolkit(default_toolkit);
+    PSSE_IMEXPORTER importer(default_toolkit);
     importer.load_dynamic_data("ieee9.dyr");
 }
 

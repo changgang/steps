@@ -85,13 +85,13 @@ class STEPS
     private:
         string toolkit_name;
 
-        POWER_SYSTEM_DATABASE power_system_db;
-        DYNAMIC_MODEL_DATABASE dynamic_model_db;
+        POWER_SYSTEM_DATABASE *power_system_db;
+        DYNAMIC_MODEL_DATABASE *dynamic_model_db;
 
         POWERFLOW_SOLVER *powerflow_solver;
         DYNAMICS_SIMULATOR *dynamic_simulator;
 
-        NETWORK_MATRIX network_matrix;
+        NETWORK_MATRIX *network_matrix;
 
         time_t clock_when_system_started;
 

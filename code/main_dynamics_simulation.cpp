@@ -22,7 +22,7 @@ int main()
     simulator.set_max_network_iteration(1);
     simulator.set_iteration_accelerator(0.8);
 
-    PSSE_IMEXPORTER importer;
+    PSSE_IMEXPORTER importer(default_toolkit);
 
     //importer.load_powerflow_data("../../../bench/IEEE39.raw");
     //importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1.dyr");

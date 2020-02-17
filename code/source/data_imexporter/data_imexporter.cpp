@@ -6,8 +6,10 @@
 
 using namespace std;
 
-DATA_IMEXPORTER::DATA_IMEXPORTER()
+DATA_IMEXPORTER::DATA_IMEXPORTER(STEPS& toolkit)
 {
+    this->toolkit = (&toolkit);
+
     set_base_frequency_in_Hz(50.0);
     set_export_zero_impedance_line_logic(true);
     set_export_zero_impedance_line_logic(true);
@@ -16,9 +18,13 @@ DATA_IMEXPORTER::DATA_IMEXPORTER()
 
 DATA_IMEXPORTER::~DATA_IMEXPORTER()
 {
-    ;
+    toolkit = nullptr;
 }
 
+STEPS& DATA_IMEXPORTER::get_toolkit() const
+{
+    return *toolkit;
+}
 void DATA_IMEXPORTER::set_base_frequency_in_Hz(double fbase)
 {
     base_frequency_in_Hz = fbase;
@@ -63,14 +69,13 @@ POWERFLOW_DATA_SAVE_MODE DATA_IMEXPORTER::get_powerflow_data_save_mode() const
 void DATA_IMEXPORTER::export_shadowed_bus_pair(string file) const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     ofstream ofs(file);
     if(!ofs)
     {
         osstream<<"Warning. Shadowed bus pair file "<<file<<" cannot be opened for exporting shadowed bus data.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
     map<unsigned int, vector<unsigned int> > bus_pairs;
@@ -152,16 +157,14 @@ const vector<unsigned int>& DATA_IMEXPORTER::get_ordered_buses() const
 
 void DATA_IMEXPORTER::setup_ordered_buses_with_mode_SAVE_TO_KEEP_ORIGINAL_BUS_ORDER()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     ordered_buses_to_export = psdb.get_all_buses_number();
 }
 
 void DATA_IMEXPORTER::setup_ordered_buses_with_mode_SAVE_TO_ORDER_BUS_WITH_BUS_NUMBER()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     ordered_buses_to_export = psdb.get_all_buses_number();
     unsigned int n = ordered_buses_to_export.size();
@@ -188,8 +191,7 @@ void DATA_IMEXPORTER::setup_ordered_buses_with_mode_SAVE_TO_ORDER_BUS_WITH_BUS_N
 
 void DATA_IMEXPORTER::setup_ordered_buses_with_mode_SAVE_TO_ORDER_BUS_WITH_BUS_NAME()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     ordered_buses_to_export = psdb.get_all_buses_number();
     unsigned int n = ordered_buses_to_export.size();
@@ -216,8 +218,7 @@ void DATA_IMEXPORTER::setup_ordered_buses_with_mode_SAVE_TO_ORDER_BUS_WITH_BUS_N
 
 void DATA_IMEXPORTER::setup_ordered_buses_with_mode_SAVE_TO_ORDER_BUS_WITH_DYNAMIC_DEVICE_ORDER()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     unsigned int n = psdb.get_bus_count();
     ordered_buses_to_export.reserve(n);
@@ -255,8 +256,7 @@ void DATA_IMEXPORTER::setup_ordered_buses_with_mode_SAVE_TO_ORDER_BUS_WITH_DYNAM
 
 vector<unsigned int> DATA_IMEXPORTER::get_all_generator_buses()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     vector<unsigned int> buses;
     vector<GENERATOR*> devices = psdb.get_all_generators();
@@ -274,8 +274,7 @@ vector<unsigned int> DATA_IMEXPORTER::get_all_generator_buses()
 
 vector<unsigned int> DATA_IMEXPORTER::get_all_wt_generator_buses()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     vector<unsigned int> buses;
     vector<WT_GENERATOR*> devices = psdb.get_all_wt_generators();
@@ -293,8 +292,7 @@ vector<unsigned int> DATA_IMEXPORTER::get_all_wt_generator_buses()
 
 vector<unsigned int> DATA_IMEXPORTER::get_all_pv_unit_buses()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     vector<unsigned int> buses;
     vector<PV_UNIT*> devices = psdb.get_all_pv_units();
@@ -312,8 +310,7 @@ vector<unsigned int> DATA_IMEXPORTER::get_all_pv_unit_buses()
 
 vector<unsigned int> DATA_IMEXPORTER::get_all_energy_storage_buses()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     vector<unsigned int> buses;
     vector<ENERGY_STORAGE*> devices = psdb.get_all_energy_storages();
@@ -331,8 +328,7 @@ vector<unsigned int> DATA_IMEXPORTER::get_all_energy_storage_buses()
 
 vector<unsigned int> DATA_IMEXPORTER::get_all_load_buses()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     vector<unsigned int> buses;
     vector<LOAD*> devices = psdb.get_all_loads();
@@ -350,8 +346,7 @@ vector<unsigned int> DATA_IMEXPORTER::get_all_load_buses()
 
 vector<unsigned int> DATA_IMEXPORTER::get_all_hvdc_buses()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     vector<unsigned int> buses;
     vector<HVDC*> devices = psdb.get_all_hvdcs();
@@ -370,8 +365,7 @@ vector<unsigned int> DATA_IMEXPORTER::get_all_hvdc_buses()
 
 vector<unsigned int> DATA_IMEXPORTER::get_all_fixed_shunt_buses()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     vector<unsigned int> buses;
     vector<FIXED_SHUNT*> devices = psdb.get_all_fixed_shunts();
@@ -403,19 +397,4 @@ void DATA_IMEXPORTER::append_buses_to_ordered_buses(const vector<unsigned int>& 
         else
             continue;
     }
-}
-
-bool DATA_IMEXPORTER::is_valid() const
-{
-    return true;
-}
-
-void DATA_IMEXPORTER::check()
-{
-    ;
-}
-
-void DATA_IMEXPORTER::clear()
-{
-    ;
 }

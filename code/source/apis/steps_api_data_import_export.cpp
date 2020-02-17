@@ -11,16 +11,14 @@ void api_load_powerflow_data_from_file(char* file, char* file_type, unsigned int
     string string_file_type = string2upper(file_type);
     if(string_file_type=="PSSE" or string_file_type=="PSS/E")
     {
-        PSSE_IMEXPORTER importer;
-        importer.set_toolkit(toolkit);
+        PSSE_IMEXPORTER importer(toolkit);
         importer.load_powerflow_data(file);
     }
     else
     {
         if(string_file_type=="BPA")
         {
-            BPA_IMEXPORTER importer;
-            importer.set_toolkit(toolkit);
+            BPA_IMEXPORTER importer(toolkit);
             importer.load_powerflow_data(file);
         }
     }
@@ -32,8 +30,7 @@ void api_load_powerflow_result_from_file(char* file, char* file_type, unsigned i
     string string_file_type = string2upper(file_type);
     if(string_file_type=="STEPS")
     {
-        STEPS_IMEXPORTER importer;
-        importer.set_toolkit(toolkit);
+        STEPS_IMEXPORTER importer(toolkit);
         importer.load_powerflow_result(file);
     }
 
@@ -71,8 +68,7 @@ void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_ze
     }
     if(string_file_type=="PSSE" or string_file_type=="PSS/E")
     {
-        PSSE_IMEXPORTER exporter;
-        exporter.set_toolkit(toolkit);
+        PSSE_IMEXPORTER exporter(toolkit);
         exporter.set_export_out_of_service_bus_logic(export_out_of_service_bus);
         exporter.export_powerflow_data(file, export_zero_impedance_line, save_mode);
     }
@@ -80,8 +76,7 @@ void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_ze
     {
         if(string_file_type=="BPA")
         {
-            BPA_IMEXPORTER exporter;
-            exporter.set_toolkit(toolkit);
+            BPA_IMEXPORTER exporter(toolkit);
             exporter.set_export_out_of_service_bus_logic(export_out_of_service_bus);
             exporter.export_powerflow_data(file, export_zero_impedance_line, save_mode);
         }
@@ -95,16 +90,14 @@ void api_load_dynamic_data_from_file(char* file, char* file_type, unsigned int t
     string string_file_type = string2upper(file_type);
     if(string_file_type=="PSSE" or string_file_type=="PSS/E")
     {
-        PSSE_IMEXPORTER importer;
-        importer.set_toolkit(toolkit);
+        PSSE_IMEXPORTER importer(toolkit);
         importer.load_dynamic_data(file);
     }
     else
     {
         if(string_file_type=="BPA")
         {
-            BPA_IMEXPORTER importer;
-            importer.set_toolkit(toolkit);
+            BPA_IMEXPORTER importer(toolkit);
             importer.load_dynamic_data(file);
         }
     }
@@ -116,16 +109,14 @@ void api_save_dynamic_data_to_file(char* file, char* file_type, unsigned int too
     string string_file_type = string2upper(file_type);
     if(string_file_type=="PSSE" or string_file_type=="PSS/E")
     {
-        PSSE_IMEXPORTER exporter;
-        exporter.set_toolkit(toolkit);
+        PSSE_IMEXPORTER exporter(toolkit);
         exporter.export_dynamic_data(file);
     }
     else
     {
         if(string_file_type=="BPA")
         {
-            BPA_IMEXPORTER exporter;
-            exporter.set_toolkit(toolkit);
+            BPA_IMEXPORTER exporter(toolkit);
             exporter.export_dynamic_data(file);
         }
     }

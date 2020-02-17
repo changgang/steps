@@ -15,7 +15,7 @@
 #include <algorithm>
 using namespace std;
 
-PSSE_IMEXPORTER::PSSE_IMEXPORTER()
+PSSE_IMEXPORTER::PSSE_IMEXPORTER(STEPS& toolkit) : DATA_IMEXPORTER(toolkit)
 {
     raw_data_in_ram.clear();
     dyr_data_in_ram.clear();
@@ -29,7 +29,7 @@ void PSSE_IMEXPORTER::load_powerflow_data(string file)
 {
     ostringstream osstream;
     osstream<<"Loading powerflow data from PSS/E file: "<<file;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     load_powerflow_data_into_ram(file);
@@ -41,8 +41,7 @@ void PSSE_IMEXPORTER::load_powerflow_data(string file)
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
-    STEPS_IMEXPORTER steps_importer;
-    steps_importer.set_toolkit(toolkit);
+    STEPS_IMEXPORTER steps_importer(toolkit);
 
     vector<vector<vector<string> > > data = convert_psse_raw_data2steps_vector();
 
@@ -92,7 +91,7 @@ void PSSE_IMEXPORTER::load_sequence_data(string sq_source)
 void PSSE_IMEXPORTER::load_powerflow_data_into_ram(string file)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
 
     raw_data_in_ram.clear();
 
@@ -326,7 +325,7 @@ vector<vector<string> > PSSE_IMEXPORTER::convert_switched_shunt_data2steps_vecto
 void PSSE_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line, POWERFLOW_DATA_SAVE_MODE save_mode)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     ofstream ofs(file);
@@ -398,7 +397,7 @@ void PSSE_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impeda
 string PSSE_IMEXPORTER::export_case_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     char buffer[1000];
@@ -418,7 +417,7 @@ string PSSE_IMEXPORTER::export_case_data() const
 string PSSE_IMEXPORTER::export_all_bus_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     const vector<unsigned int>& ordered_buses = get_ordered_buses();
@@ -441,7 +440,7 @@ string PSSE_IMEXPORTER::export_all_bus_data() const
 string PSSE_IMEXPORTER::export_bus_data(const BUS* bus, const vector<BUS*> buses) const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus->get_bus_number())!=0)
@@ -509,7 +508,7 @@ string PSSE_IMEXPORTER::export_bus_data(const BUS* bus, const vector<BUS*> buses
 string PSSE_IMEXPORTER::export_all_load_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     const vector<unsigned int>& ordered_buses = get_ordered_buses();
@@ -534,7 +533,7 @@ string PSSE_IMEXPORTER::export_all_load_data() const
 string PSSE_IMEXPORTER::export_load_data(const LOAD* load) const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int bus = load->get_load_bus();
@@ -568,7 +567,7 @@ string PSSE_IMEXPORTER::export_load_data(const LOAD* load) const
 string PSSE_IMEXPORTER::export_all_fixed_shunt_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     const vector<unsigned int>& ordered_buses = get_ordered_buses();
@@ -593,7 +592,7 @@ string PSSE_IMEXPORTER::export_all_fixed_shunt_data() const
 string PSSE_IMEXPORTER::export_fixed_shunt_data(const FIXED_SHUNT* shunt) const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int bus = shunt->get_shunt_bus();
@@ -629,7 +628,7 @@ string PSSE_IMEXPORTER::export_all_source_data() const
 string PSSE_IMEXPORTER::export_all_generator_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     const vector<unsigned int>& ordered_buses = get_ordered_buses();
@@ -654,7 +653,7 @@ string PSSE_IMEXPORTER::export_all_generator_data() const
 string PSSE_IMEXPORTER::export_generator_data(const GENERATOR* generator) const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(get_export_out_of_service_bus_logic()==false and psdb.get_bus_type(generator->get_source_bus())==OUT_OF_SERVICE)
@@ -668,7 +667,7 @@ string PSSE_IMEXPORTER::export_generator_data(const GENERATOR* generator) const
 string PSSE_IMEXPORTER::export_all_wt_generator_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     const vector<unsigned int>& ordered_buses = get_ordered_buses();
@@ -694,7 +693,7 @@ string PSSE_IMEXPORTER::export_all_wt_generator_data() const
 string PSSE_IMEXPORTER::export_wt_generator_data(const WT_GENERATOR* wt_generator) const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(get_export_out_of_service_bus_logic()==false and psdb.get_bus_type(wt_generator->get_source_bus())==OUT_OF_SERVICE)
@@ -711,7 +710,7 @@ string PSSE_IMEXPORTER::export_wt_generator_data(const WT_GENERATOR* wt_generato
 string PSSE_IMEXPORTER::export_all_pv_unit_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     const vector<unsigned int>& ordered_buses = get_ordered_buses();
@@ -737,7 +736,7 @@ string PSSE_IMEXPORTER::export_all_pv_unit_data() const
 string PSSE_IMEXPORTER::export_pv_unit_data(const PV_UNIT* pv_unit) const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(get_export_out_of_service_bus_logic()==false and psdb.get_bus_type(pv_unit->get_source_bus())==OUT_OF_SERVICE)
@@ -754,7 +753,7 @@ string PSSE_IMEXPORTER::export_pv_unit_data(const PV_UNIT* pv_unit) const
 string PSSE_IMEXPORTER::export_all_energy_storage_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     const vector<unsigned int>& ordered_buses = get_ordered_buses();
@@ -779,7 +778,7 @@ string PSSE_IMEXPORTER::export_all_energy_storage_data() const
 string PSSE_IMEXPORTER::export_energy_storage_data(const ENERGY_STORAGE* estorage) const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(get_export_out_of_service_bus_logic()==false and psdb.get_bus_type(estorage->get_source_bus())==OUT_OF_SERVICE)
@@ -796,7 +795,7 @@ string PSSE_IMEXPORTER::export_energy_storage_data(const ENERGY_STORAGE* estorag
 string PSSE_IMEXPORTER::export_source_common_data(const SOURCE* source) const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int bus = source->get_source_bus();
@@ -868,7 +867,7 @@ string PSSE_IMEXPORTER::export_source_var_control_data(const SOURCE* source) con
 string PSSE_IMEXPORTER::export_all_line_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     //vector<LINE*> lines = psdb.get_all_lines();
@@ -889,7 +888,7 @@ string PSSE_IMEXPORTER::export_all_line_data() const
 string PSSE_IMEXPORTER::export_line_data(const LINE* line) const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int ibus = line->get_sending_side_bus();
@@ -941,7 +940,7 @@ string PSSE_IMEXPORTER::export_line_data(const LINE* line) const
 string PSSE_IMEXPORTER::export_all_transformer_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     //vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
@@ -962,7 +961,7 @@ string PSSE_IMEXPORTER::export_all_transformer_data() const
 string PSSE_IMEXPORTER::export_transformer_data(const TRANSFORMER* trans) const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int ibus = trans->get_winding_bus(PRIMARY_SIDE);
@@ -1244,7 +1243,7 @@ string PSSE_IMEXPORTER::export_transformer_data(const TRANSFORMER* trans) const
 string PSSE_IMEXPORTER::export_all_area_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     //vector<AREA*> areas = psdb.get_all_areas();
@@ -1266,7 +1265,7 @@ string PSSE_IMEXPORTER::export_all_area_data() const
 string PSSE_IMEXPORTER::export_area_data(const AREA* area) const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int bus = area->get_area_swing_bus();
@@ -1287,7 +1286,7 @@ string PSSE_IMEXPORTER::export_area_data(const AREA* area) const
 string PSSE_IMEXPORTER::export_all_hvdc_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     //vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
@@ -1309,7 +1308,7 @@ string PSSE_IMEXPORTER::export_all_hvdc_data() const
 string PSSE_IMEXPORTER::export_hvdc_data(const HVDC* hvdc) const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int rbus = hvdc->get_converter_bus(RECTIFIER);
@@ -1413,7 +1412,7 @@ string PSSE_IMEXPORTER::export_all_multi_section_line_data() const
 string PSSE_IMEXPORTER::export_all_zone_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     //vector<ZONE*> zones = psdb.get_all_zones();
@@ -1450,7 +1449,7 @@ string PSSE_IMEXPORTER::export_all_interarea_transfer_data() const
 string PSSE_IMEXPORTER::export_all_owner_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     //vector<OWNER*> owners = psdb.get_all_owners();
