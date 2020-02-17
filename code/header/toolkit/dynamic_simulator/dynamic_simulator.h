@@ -13,7 +13,7 @@ class POWER_SYSTEM_DATABASE;
 class DYNAMICS_SIMULATOR: public BASE
 {
     public:
-        DYNAMICS_SIMULATOR();
+        DYNAMICS_SIMULATOR(STEPS* toolkit);
         ~DYNAMICS_SIMULATOR();
         virtual void clear();
 
@@ -38,6 +38,7 @@ class DYNAMICS_SIMULATOR: public BASE
         void set_min_DAE_iteration(unsigned int iteration);
         void set_max_network_iteration(unsigned int iteration);
         void set_max_update_iteration(unsigned int iteration);
+        void set_max_event_update_iteration(unsigned int iteration);
         void set_max_network_solution_divergent_threshold(unsigned int div_th);
         void set_allowed_max_power_imbalance_in_MVA(double tol);
         void set_iteration_accelerator(double alpha);
@@ -50,6 +51,7 @@ class DYNAMICS_SIMULATOR: public BASE
         unsigned int get_min_DAE_iteration() const;
         unsigned int get_max_network_iteration() const;
         unsigned int get_max_update_iteration() const;
+        unsigned int get_max_event_update_iteration() const;
         unsigned int get_max_network_solution_divergent_threshold() const;
         double get_allowed_max_power_imbalance_in_MVA() const;
         double get_iteration_accelerator() const;
@@ -236,6 +238,8 @@ class DYNAMICS_SIMULATOR: public BASE
         void update_generators_in_islands();
         bool is_system_angular_stable() const;
 
+        STEPS* toolkit;
+
         double DELT;
         double TIME;
 
@@ -244,11 +248,14 @@ class DYNAMICS_SIMULATOR: public BASE
         double time_elapse_in_a_step, time_elapse_of_differential_equations_in_a_step, time_elapse_of_network_solution_in_a_step;
         double P_threshold_in_MW, Q_threshold_in_MVar;
         unsigned int network_iteration_count, DAE_iteration_count;
-        unsigned int max_network_iteration, max_DAE_iteration, max_update_iteration, min_DAE_iteration, max_network_solution_divergent_threshold;
+        unsigned int max_network_iteration, max_DAE_iteration, max_update_iteration, max_event_update_iteration, min_DAE_iteration, max_network_solution_divergent_threshold;
         unsigned int current_max_network_iteration;
         double alpha;
         bool non_divergent_solution_enabled;
         bool automatic_iteration_accelerator_tune_enabled;
+
+        double max_current_mismatch_pu, max_power_mismatch_MVA;
+        unsigned int max_mismatch_bus;
 
         vector<BUS*> in_service_buses;
         vector<GENERATOR*> generators;

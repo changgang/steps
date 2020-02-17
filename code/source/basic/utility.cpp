@@ -325,7 +325,7 @@ double steps_tan(double angle_in_rad)
 double steps_fast_tan(double angle_in_rad)
 {
     return tan(angle_in_rad);
-    /*angle_in_rad = round_angle_in_rad_to_PI(angle_in_rad);
+    angle_in_rad = round_angle_in_rad_to_PI(angle_in_rad);
     double sin = steps_fast_sin(angle_in_rad);
     double cos = steps_fast_cos(angle_in_rad);
     if(cos!=0.0)
@@ -334,7 +334,7 @@ double steps_fast_tan(double angle_in_rad)
     {
         cout<<"Fatal error of steps_fast_tan(). Inf found.\n";
         return INFINITE_THRESHOLD;
-    }*/
+    }
 }
 
 double steps_asin(double x)

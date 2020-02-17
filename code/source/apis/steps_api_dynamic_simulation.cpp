@@ -20,6 +20,8 @@ unsigned int api_get_dynamic_simulator_integer_parameter(char* parameter_name, u
         return ds.get_max_network_iteration();
     if(PARAMETER_NAME=="MAX_UPDATE_ITER" or PARAMETER_NAME=="MAX UPDATE ITERATION")
         return ds.get_max_update_iteration();
+    if(PARAMETER_NAME=="MAX_EVENT_UPDATE_ITER" or PARAMETER_NAME=="MAX EVENT UPDATE ITERATION")
+        return ds.get_max_event_update_iteration();
     if(PARAMETER_NAME=="MAX_NET_DIVERGENT_THRESHOLD" or PARAMETER_NAME=="MAX NETWORK DIVERGENT THRESHOLD")
         return ds.get_max_network_solution_divergent_threshold();
 
@@ -54,6 +56,11 @@ void api_set_dynamic_simulator_integer_parameter(char* parameter_name, int value
     if(PARAMETER_NAME=="MAX_UPDATE_ITER" or PARAMETER_NAME=="MAX UPDATE ITERATION")
     {
         ds.set_max_update_iteration(value);
+        return;
+    }
+    if(PARAMETER_NAME=="MAX_EVENT_UPDATE_ITER" or PARAMETER_NAME=="MAX EVENT UPDATE ITERATION")
+    {
+        ds.set_max_event_update_iteration(value);
         return;
     }
     if(PARAMETER_NAME=="MAX_NET_DIVERGENT_THRESHOLD" or PARAMETER_NAME=="MAX NETWORK DIVERGENT THRESHOLD")

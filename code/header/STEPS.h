@@ -89,7 +89,7 @@ class STEPS
         DYNAMIC_MODEL_DATABASE dynamic_model_db;
 
         POWERFLOW_SOLVER powerflow_solver;
-        DYNAMICS_SIMULATOR dynamic_simulator;
+        DYNAMICS_SIMULATOR *dynamic_simulator;
 
         NETWORK_MATRIX network_matrix;
 

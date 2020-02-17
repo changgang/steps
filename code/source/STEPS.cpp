@@ -32,7 +32,8 @@ STEPS::STEPS(const string& name, const string& log_file)
 
     powerflow_solver.set_toolkit(*this);
 
-    dynamic_simulator.set_toolkit(*this);
+    //dynamic_simulator->set_toolkit(*this);
+    dynamic_simulator = new DYNAMICS_SIMULATOR(this);
 
     network_matrix.set_toolkit(*this);
 
@@ -53,6 +54,11 @@ STEPS::~STEPS()
     if(toolkit_name!="TK DFLT")
         show_information_with_leading_time_stamp("STEPS simulation toolkit ["+toolkit_name+"] @ 0X"+num2hex_str(size_t(this))+" is deleted.");
     close_log_file();
+    if(dynamic_simulator!=nullptr)
+    {
+        delete dynamic_simulator;
+        dynamic_simulator = nullptr;
+    }
 }
 
 void STEPS::set_toolkit_name(const string& name)
@@ -289,7 +295,7 @@ void STEPS::clear()
     dynamic_model_db.clear();
 
     powerflow_solver.clear();
-    dynamic_simulator.clear();
+    dynamic_simulator->clear();
 
     network_matrix.clear();
 }
@@ -384,7 +390,7 @@ POWERFLOW_SOLVER& STEPS::get_powerflow_solver()
 
 DYNAMICS_SIMULATOR& STEPS::get_dynamic_simulator()
 {
-    return dynamic_simulator;
+    return *dynamic_simulator;
 }
 
 NETWORK_MATRIX& STEPS::get_network_matrix()
@@ -404,22 +410,22 @@ double STEPS::get_one_over_system_base_power_in_one_over_MVA() const
 
 void STEPS::set_dynamic_simulation_time_step_in_s(double delt)
 {
-    dynamic_simulator.set_dynamic_simulation_time_step_in_s(delt);
+    dynamic_simulator->set_dynamic_simulation_time_step_in_s(delt);
 }
 
 double STEPS::get_dynamic_simulation_time_step_in_s()
 {
-    return dynamic_simulator.get_dynamic_simulation_time_step_in_s();;
+    return dynamic_simulator->get_dynamic_simulation_time_step_in_s();;
 }
 
 void STEPS::set_dynamic_simulation_time_in_s(double time)
 {
-    dynamic_simulator.set_dynamic_simulation_time_in_s(time);
+    dynamic_simulator->set_dynamic_simulation_time_in_s(time);
 }
 
 double STEPS::get_dynamic_simulation_time_in_s()
 {
-    return dynamic_simulator.get_dynamic_simulation_time_in_s();;
+    return dynamic_simulator->get_dynamic_simulation_time_in_s();;
 }
 
 void STEPS::show_information_with_leading_time_stamp(ostringstream& stream)

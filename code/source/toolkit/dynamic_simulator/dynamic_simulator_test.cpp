@@ -32,6 +32,7 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_min_DAE_iteration);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_network_iteration);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_update_iteration);
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_event_update_iteration);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_network_solution_divergent_threshold);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_allowed_max_power_imbalance_in_MVA);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_iteration_accelerator);
@@ -219,6 +220,17 @@ void DYNAMICS_SIMULATOR_TEST::test_set_get_max_update_iteration()
     TEST_ASSERT(simulator.get_max_update_iteration()==200);
     simulator.set_max_update_iteration(100);
     TEST_ASSERT(simulator.get_max_update_iteration()==100);
+}
+
+void DYNAMICS_SIMULATOR_TEST::test_set_get_max_event_update_iteration()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+
+    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    simulator.set_max_event_update_iteration(200);
+    TEST_ASSERT(simulator.get_max_event_update_iteration()==200);
+    simulator.set_max_event_update_iteration(100);
+    TEST_ASSERT(simulator.get_max_event_update_iteration()==100);
 }
 
 void DYNAMICS_SIMULATOR_TEST::test_set_get_max_network_solution_divergent_threshold()
