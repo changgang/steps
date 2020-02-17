@@ -53,7 +53,7 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_single_machine_model_IEEEG1);
 
 
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_trip_bus);
+  //  TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_trip_bus);
 
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_with_rotor_angle_surveillance);

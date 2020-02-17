@@ -414,7 +414,7 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::LU_factorization(int order, double tolerance
         }
         else
         {
-            snprintf(buffer, 256, "ALERT!  LU factorization for sparse matrix(CSparse) failed! (line %d in file %s)\n",__LINE__,__FILE__);
+            snprintf(buffer, 256, "ALERT!  LU factorization for sparse matrix(CXSparse) failed! (line %d in file %s)\n",__LINE__,__FILE__);
             show_information_with_leading_time_stamp_with_default_toolkit(buffer);
         }
     }
@@ -613,8 +613,8 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::save_matrix_to_file(string filename) const
     }
     else
     {
-        osstream<<"File '"<<filename<<"' cannot be opened for saving sparse matrix(CSparse) contents."<<endl
-          <<"No sparse matrix(CSparse) will be exported.";
+        osstream<<"File '"<<filename<<"' cannot be opened for saving sparse matrix(CXSparse) contents."<<endl
+          <<"No sparse matrix(CXSparse) will be exported.";
         show_information_with_leading_time_stamp_with_default_toolkit(osstream);
         return;
     }

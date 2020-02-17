@@ -33,8 +33,8 @@ class TIMER : public BASE
 
         virtual TIMER& operator=(const TIMER& timer);
     private:
-        float time_interval_in_s;
-        float time_when_timer_is_started_in_s;
+        double time_interval_in_s;
+        double time_when_timer_is_started_in_s;
         DEVICE* device_ptr;
 };
 #endif // TIMER_H
