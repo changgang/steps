@@ -10,7 +10,7 @@ class SOURCE;
 class POWERFLOW_SOLVER : public BASE
 {
     public:
-        POWERFLOW_SOLVER();
+        POWERFLOW_SOLVER(STEPS& toolkit);
         ~POWERFLOW_SOLVER();
         virtual void clear();
 
@@ -114,6 +114,8 @@ class POWERFLOW_SOLVER : public BASE
         void extract_bus_power_mismatch_for_solution();
 
         void set_convergence_flag(bool flag);
+
+        STEPS* toolkit;
 
         JACOBIAN_BUILDER jacobian_builder;
 

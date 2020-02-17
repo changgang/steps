@@ -390,13 +390,13 @@ bool CCT_SEARCHER::perform_simulation_with_clearing_time(double clearing_time)
     importer.load_powerflow_data(get_powerflow_data_filename());
     importer.load_dynamic_data(get_dynamic_data_filename());
 
-    POWERFLOW_SOLVER solver;
+    POWERFLOW_SOLVER solver(toolkit);
     solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
     solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.00001);
     solver.set_flat_start_logic(false);
     solver.solve_with_full_Newton_Raphson_solution();
 
-    DYNAMICS_SIMULATOR simulator(&toolkit);
+    DYNAMICS_SIMULATOR simulator(toolkit);
     simulator.set_allowed_max_power_imbalance_in_MVA(get_simulator_allowed_max_power_imbalance_in_MVA());
     simulator.set_max_DAE_iteration(10);
     simulator.set_max_network_iteration(get_simulator_max_iteration());

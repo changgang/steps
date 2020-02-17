@@ -20,10 +20,10 @@ class STEPS;
 
 #define USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
 
-DYNAMICS_SIMULATOR::DYNAMICS_SIMULATOR(STEPS* toolkit)
+DYNAMICS_SIMULATOR::DYNAMICS_SIMULATOR(STEPS& toolkit)
 {
-    //set_toolkit(*toolkit);
-    this->toolkit = toolkit;
+    set_toolkit(toolkit);
+    this->toolkit = (&toolkit);
 
     DELT = 0.01;
     clear();

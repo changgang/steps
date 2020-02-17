@@ -30,10 +30,8 @@ STEPS::STEPS(const string& name, const string& log_file)
 
     dynamic_model_db.set_toolkit(*this);
 
-    powerflow_solver.set_toolkit(*this);
-
-    //dynamic_simulator->set_toolkit(*this);
-    dynamic_simulator = new DYNAMICS_SIMULATOR(this);
+    powerflow_solver = new POWERFLOW_SOLVER(*this);
+    dynamic_simulator = new DYNAMICS_SIMULATOR(*this);
 
     network_matrix.set_toolkit(*this);
 
@@ -54,6 +52,11 @@ STEPS::~STEPS()
     if(toolkit_name!="TK DFLT")
         show_information_with_leading_time_stamp("STEPS simulation toolkit ["+toolkit_name+"] @ 0X"+num2hex_str(size_t(this))+" is deleted.");
     close_log_file();
+    if(powerflow_solver!=nullptr)
+    {
+        delete powerflow_solver;
+        powerflow_solver = nullptr;
+    }
     if(dynamic_simulator!=nullptr)
     {
         delete dynamic_simulator;
@@ -294,7 +297,7 @@ void STEPS::clear()
     power_system_db.clear();
     dynamic_model_db.clear();
 
-    powerflow_solver.clear();
+    powerflow_solver->clear();
     dynamic_simulator->clear();
 
     network_matrix.clear();
@@ -385,7 +388,7 @@ DYNAMIC_MODEL_DATABASE& STEPS::get_dynamic_model_database()
 
 POWERFLOW_SOLVER& STEPS::get_powerflow_solver()
 {
-    return powerflow_solver;
+    return *powerflow_solver;
 }
 
 DYNAMICS_SIMULATOR& STEPS::get_dynamic_simulator()

@@ -204,7 +204,7 @@ void POWERFLOW_CASE_GENERATOR::generate_case_with_load_random(vector<double> loa
             uniform_gen_scale = uniform_gen_scale_new;
     }
 
-    POWERFLOW_SOLVER solver;
+    POWERFLOW_SOLVER solver(default_toolkit);
     solver.set_flat_start_logic(false);
     solver.set_max_iteration(100);
 

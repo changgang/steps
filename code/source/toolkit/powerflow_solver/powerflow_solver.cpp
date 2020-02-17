@@ -11,14 +11,16 @@ using namespace std;
 
 #define ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
 
-POWERFLOW_SOLVER::POWERFLOW_SOLVER()
+POWERFLOW_SOLVER::POWERFLOW_SOLVER(STEPS& toolkit)
 {
+    set_toolkit(toolkit);
+    this->toolkit = (&toolkit);
     clear();
 }
 
 POWERFLOW_SOLVER::~POWERFLOW_SOLVER()
 {
-    ;
+    toolkit = nullptr;
 }
 
 void POWERFLOW_SOLVER::clear()

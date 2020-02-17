@@ -13,7 +13,7 @@ class POWER_SYSTEM_DATABASE;
 class DYNAMICS_SIMULATOR: public BASE
 {
     public:
-        DYNAMICS_SIMULATOR(STEPS* toolkit);
+        DYNAMICS_SIMULATOR(STEPS& toolkit);
         ~DYNAMICS_SIMULATOR();
         virtual void clear();
 

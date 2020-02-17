@@ -32,7 +32,7 @@ int main()
     importer.load_dynamic_data("IEEE9_wind.dyr");
     //importer.load_dynamic_data("bench_shandong_with_avr.dyr");
 
-    POWERFLOW_SOLVER powerflow_solver;
+    POWERFLOW_SOLVER powerflow_solver(default_toolkit);
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);

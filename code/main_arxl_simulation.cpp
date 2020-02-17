@@ -29,7 +29,7 @@ void prepare_training_load_scale_case()
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1.dyr");
 
-    POWERFLOW_SOLVER powerflow_solver;
+    POWERFLOW_SOLVER powerflow_solver(default_toolkit);
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -78,7 +78,7 @@ void prepare_training_generation_shed_case()
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1.dyr");
 
-    POWERFLOW_SOLVER powerflow_solver;
+    POWERFLOW_SOLVER powerflow_solver(default_toolkit);
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -138,7 +138,7 @@ int main()
     EQUIVALENT_MODEL_IMEXPORTER eqimporter;
     eqimporter.load_equivalent_model("C:/Users/charles/Desktop/arx/arx_model.eqv");
 
-    POWERFLOW_SOLVER powerflow_solver;
+    POWERFLOW_SOLVER powerflow_solver(default_toolkit);
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);

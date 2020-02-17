@@ -1,6 +1,7 @@
 #include <istream>
 #include <iostream>
 #include "header/power_system_database.h"
+#include "header/steps_namespace.h"
 #include "header/toolkit/powerflow_solver/powerflow_solver.h"
 #include "header/basic/utility.h"
 #include "header/data_imexporter/psse_imexporter.h"
@@ -11,7 +12,7 @@ int main()
     PSSE_IMEXPORTER importer;
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
 
-    POWERFLOW_SOLVER solver;
+    POWERFLOW_SOLVER solver(default_toolkit);
     solver.set_max_iteration(30);
     solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
     solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.00001);
