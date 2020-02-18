@@ -8,7 +8,7 @@
 
 using namespace std;
 
-EQUIVALENT_DEVICE::EQUIVALENT_DEVICE()
+EQUIVALENT_DEVICE::EQUIVALENT_DEVICE(STEPS& toolkit) : DEVICE(toolkit)
 {
     clear();
 }
@@ -25,12 +25,12 @@ void EQUIVALENT_DEVICE::set_equivalent_device_bus(unsigned int device_bus)
     {
         osstream<<"Warning. Zero bus number (0) is not allowed for setting up equivalent device bus."<<endl
           <<"0 will be set to indicate invalid equivalent device.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
         this->bus = device_bus;
         return;
     }
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     if(not psdb.is_bus_exist(device_bus))
     {
@@ -175,7 +175,7 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_generation_in_MVA() const
     complex<double> E = get_equivalent_voltage_source_voltage_in_pu();
     complex<double> Z = get_equivalent_voltage_source_impedance_in_pu();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     unsigned int bus = get_equivalent_device_bus();
     complex<double> V = psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
@@ -194,7 +194,7 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_load_in_MVA() const
     complex<double> SI = get_equivalent_nominal_constant_current_load_in_MVA();
     complex<double> SZ = get_equivalent_nominal_constant_impedance_load_in_MVA();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     unsigned int bus = get_equivalent_device_bus();
     double V = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
@@ -205,21 +205,21 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_load_in_MVA() const
 
 complex<double> EQUIVALENT_DEVICE::get_equivalent_nominal_constant_power_load_in_pu() const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     return equivalent_load_s_constant_power_in_MVA*one_over_sbase;
 }
 
 complex<double> EQUIVALENT_DEVICE::get_equivalent_nominal_constant_current_load_in_pu() const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     return equivalent_load_s_constant_current_in_MVA*one_over_sbase;
 }
 
 complex<double> EQUIVALENT_DEVICE::get_equivalent_nominal_constant_impedance_load_in_pu() const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     return equivalent_load_s_constant_impedance_in_MVA*one_over_sbase;
 }
@@ -236,7 +236,7 @@ complex<double> EQUIVALENT_DEVICE::get_total_equivalent_power_as_load_in_pu() co
     if(get_equivalent_voltage_source_status()==true)
         S -= get_equivalent_generation_in_MVA();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     return S*one_over_sbase;
@@ -250,7 +250,7 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_generation_in_pu() const
     complex<double> E = get_equivalent_voltage_source_voltage_in_pu();
     complex<double> Z = get_equivalent_voltage_source_impedance_in_pu();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     unsigned int bus = get_equivalent_device_bus();
     complex<double> V = psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
@@ -271,7 +271,7 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_load_in_pu() const
     complex<double> SI = get_equivalent_nominal_constant_current_load_in_MVA();
     complex<double> SZ = get_equivalent_nominal_constant_impedance_load_in_MVA();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     unsigned int bus = get_equivalent_device_bus();
     double V = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
@@ -288,7 +288,7 @@ void EQUIVALENT_DEVICE::switch_on()
     {
         ostringstream osstream;
         osstream<<"Equivalent model is found :"<<model->get_model_name();
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
         model->switch_output_to_equivalent_device();
     }
@@ -330,7 +330,7 @@ bool EQUIVALENT_DEVICE::is_connected_to_bus(unsigned int target_bus) const
 
 bool EQUIVALENT_DEVICE::is_in_area(unsigned int area) const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     BUS* busptr = psdb.get_bus(get_equivalent_device_bus());
@@ -342,7 +342,7 @@ bool EQUIVALENT_DEVICE::is_in_area(unsigned int area) const
 
 bool EQUIVALENT_DEVICE::is_in_zone(unsigned int zone) const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     BUS* busptr = psdb.get_bus(get_equivalent_device_bus());
@@ -364,7 +364,7 @@ void EQUIVALENT_DEVICE::report() const
             <<"P+jQ[P part] = "<<setw(6)<<setprecision(2)<<fixed<<get_equivalent_nominal_constant_power_load_in_MVA()<<"MVA, "
             <<"P+jQ[I part] = "<<setw(6)<<setprecision(2)<<fixed<<get_equivalent_nominal_constant_current_load_in_MVA()<<"MVA, "
             <<"P+jQ[Z part] = "<<setw(6)<<setprecision(2)<<fixed<<get_equivalent_nominal_constant_impedance_load_in_MVA()<<"MVA.";
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -378,9 +378,9 @@ EQUIVALENT_DEVICE& EQUIVALENT_DEVICE::operator=(const EQUIVALENT_DEVICE& device)
 {
     if(this==(&device)) return *this;
 
+    set_toolkit(device.get_toolkit());
     clear();
 
-    set_toolkit(device.get_toolkit(__PRETTY_FUNCTION__));
 
     set_equivalent_device_bus(device.get_equivalent_device_bus());
     set_identifier(device.get_identifier());

@@ -15,8 +15,10 @@ class POWER_SYSTEM_DATABASE;
 class DEVICE : public BASE
 {
     public:
-        DEVICE();
+        DEVICE(STEPS& toolkit);
         virtual ~DEVICE();
+        void set_toolkit(STEPS& toolkit);
+        STEPS& get_toolkit() const;
 
         //double get_dynamic_simulator_time_in_s() const;
 
@@ -30,6 +32,9 @@ class DEVICE : public BASE
         virtual bool is_in_area(unsigned int area) const = 0;
         virtual bool is_in_zone(unsigned int zone) const = 0;
 
+        virtual bool is_valid() const = 0;
+        virtual void check() = 0;
+        virtual void clear()  = 0;
 
         virtual void report() const = 0;
         virtual void save() const = 0;
@@ -40,6 +45,7 @@ class DEVICE : public BASE
         virtual void set_model(const MODEL* model) = 0;
         virtual MODEL* get_model_of_type(string model_type) = 0;
     private:
+        STEPS* toolkit;
         OWNERSHIP ownership;
 
 };

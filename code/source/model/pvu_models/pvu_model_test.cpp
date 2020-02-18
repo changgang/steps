@@ -25,7 +25,7 @@ void PVU_MODEL_TEST::setup()
     psdb.set_allowed_max_bus_number(100);
     psdb.set_system_base_power_in_MVA(100.0);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_bus_type(PV_TYPE);
     bus.set_base_voltage_in_kV(0.69);
@@ -35,8 +35,7 @@ void PVU_MODEL_TEST::setup()
 
     psdb.append_bus(bus);
 
-    PV_UNIT pv_unit;
-    pv_unit.set_toolkit(default_toolkit);
+    PV_UNIT pv_unit(default_toolkit);
     pv_unit.set_unit_bus(1);
     pv_unit.set_identifier("#1");
     pv_unit.set_status(true);

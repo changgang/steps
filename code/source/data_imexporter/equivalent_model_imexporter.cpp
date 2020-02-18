@@ -109,7 +109,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::add_equivalent_device(vector< vector<string> >
     // new ARX model found
     unsigned int side_bus = get_integer_data(data_line[4],"0");
 
-    EQUIVALENT_DEVICE edevice;
+    EQUIVALENT_DEVICE edevice(*toolkit);
     edevice.set_equivalent_device_bus(side_bus);
     if(data_line[0]=="ARXL")
         edevice.set_identifier("ARXL");

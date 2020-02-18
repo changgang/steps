@@ -18,7 +18,7 @@
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
 
-LINE_TEST::LINE_TEST()
+LINE_TEST::LINE_TEST() : line(default_toolkit)
 {
     TEST_ADD(LINE_TEST::test_constructor);
     TEST_ADD(LINE_TEST::test_set_get_sending_receiving_side_bus);
@@ -53,13 +53,11 @@ LINE_TEST::LINE_TEST()
 
 void LINE_TEST::setup()
 {
-    line.set_toolkit(default_toolkit);
-
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_system_base_power_in_MVA(100.0);
     psdb.set_allowed_max_bus_number(100);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(110.0);
     bus.set_positive_sequence_voltage_in_pu(1.1);

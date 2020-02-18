@@ -461,8 +461,7 @@ void BPA_IMEXPORTER::load_area_data()
             unsigned int area_number = psdb.area_name2area_number(area_name);
             if(area_number == 0)
             {
-                AREA area;
-                area.set_toolkit(toolkit);
+                AREA area(toolkit);
                 area.set_area_name(area_name);
 
                 unsigned int area_count = psdb.get_area_count();
@@ -504,8 +503,7 @@ void BPA_IMEXPORTER::load_zone_data()
             unsigned int zone_number = psdb.zone_name2zone_number(zone_name);
             if(zone_number == 0)
             {
-                ZONE zone;
-                zone.set_toolkit(toolkit);
+                ZONE zone(toolkit);
                 zone.set_zone_name(zone_name);
 
                 unsigned int zone_count = psdb.get_zone_count();
@@ -542,8 +540,7 @@ void BPA_IMEXPORTER::load_owner_data()
             unsigned int owner_number = psdb.owner_name2owner_number(owner_name);
             if(owner_number == 0)
             {
-                OWNER owner;
-                owner.set_toolkit(toolkit);
+                OWNER owner(toolkit);
                 owner.set_owner_name(owner_name);
 
                 unsigned int owner_count = psdb.get_owner_count();
@@ -572,8 +569,7 @@ void BPA_IMEXPORTER::load_bus_data()
            card_type == "BL" or // PV
            card_type=="BS")
         {
-            BUS bus;
-            bus.set_toolkit(toolkit);
+            BUS bus(toolkit);
 
             unsigned int bus_count = psdb.get_bus_count();
             bus.set_bus_number(bus_count+1);
@@ -767,8 +763,7 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
            card_type == "BL" or // PV
            card_type=="BS")
         {
-            LOAD load;
-            load.set_toolkit(toolkit);
+            LOAD load(toolkit);
 
             data = grow_string_to_at_least_size(data, 80);
 
@@ -892,8 +887,7 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
             {
                 if(S_p==0.0 and S_i==0.0)
                 {
-                    FIXED_SHUNT fshunt;
-                    fshunt.set_toolkit(toolkit);
+                    FIXED_SHUNT fshunt(toolkit);
 
                     fshunt.set_shunt_bus(loads[i]->get_load_bus());
                     fshunt.set_identifier(loads[i]->get_identifier());
@@ -959,8 +953,7 @@ void BPA_IMEXPORTER::load_generator_data()
             string qmin_str = data.substr(52, 5);
             string v_schedule_str = data.substr(57, 4);
 
-            GENERATOR generator;
-            generator.set_toolkit(toolkit);
+            GENERATOR generator(toolkit);
 
             generator.set_generator_bus(bus_number);
             generator.set_bus_to_regulate(bus_number);
@@ -1064,8 +1057,7 @@ void BPA_IMEXPORTER::load_line_data()
             length_str = format_bpa_data_to_readable_data(length_str, "F4.1");
             double length = get_double_data(length_str,"0.0");
 
-            LINE line;
-            line.set_toolkit(toolkit);
+            LINE line(toolkit);
 
             line.set_sending_side_bus(ibus);
             line.set_receiving_side_bus(jbus);
@@ -1182,8 +1174,7 @@ void BPA_IMEXPORTER::load_line_data()
             double base_voltage = psdb.get_bus_base_voltage_in_kV(ibus);
             rate = SQRT3*rate*base_voltage;
 
-            LINE line;
-            line.set_toolkit(toolkit);
+            LINE line(toolkit);
 
             line.set_sending_side_bus(ibus);
             line.set_receiving_side_bus(jbus);
@@ -1370,8 +1361,7 @@ void BPA_IMEXPORTER::load_transformer_data()
             phase_shift_between_primary_and_secondary_str=format_bpa_data_to_readable_data(phase_shift_between_primary_and_secondary_str,"F5.2");
             double phase_shift_between_primary_and_secondary = get_double_data(phase_shift_between_primary_and_secondary_str,"0.0");
 
-            TRANSFORMER trans;
-            trans.set_toolkit(toolkit);
+            TRANSFORMER trans(toolkit);
 
             trans.set_identifier(identifier);
             if(owner != 0)
@@ -1716,8 +1706,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
             else
                 from_converter_grid_bus_name_to_pole_number[bus_names_of_two_converters] = 1;
 
-            HVDC hvdc;
-            hvdc.set_toolkit(toolkit);
+            HVDC hvdc(toolkit);
 
             hvdc.set_converter_bus(RECTIFIER,rectifier_grid_side_bus);
             hvdc.set_converter_bus(INVERTER,inverter_grid_side_bus);

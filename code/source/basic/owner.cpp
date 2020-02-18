@@ -7,14 +7,25 @@
 using namespace std;
 
 
-OWNER::OWNER()
+OWNER::OWNER(STEPS& toolkit)
 {
+    set_toolkit(toolkit);
     clear();
 }
 
 OWNER::~OWNER()
 {
     ;
+}
+
+void OWNER::set_toolkit(STEPS& toolkit)
+{
+    this->toolkit = (&toolkit);
+}
+
+STEPS& OWNER::get_toolkit() const
+{
+    return (*toolkit);
 }
 
 void OWNER::set_owner_number(unsigned int number)
@@ -25,7 +36,7 @@ void OWNER::set_owner_number(unsigned int number)
     {
         ostringstream osstream;
         osstream<<"0 is not allowed for setting owner number. 0 will be set to indicated invalid owner.";
-        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
+        //toolkit->show_information_with_leading_time_stamp(osstream);
 
         this->owner_number = 0;
     }
@@ -61,7 +72,7 @@ void OWNER::check()
     {
         ostringstream osstream;
         osstream<<"Error. Zero (0) is not allowed for owner number.";
-        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
+        //toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -76,12 +87,14 @@ void OWNER::report() const
     ostringstream osstream;
 
     osstream<<"Owner "<<get_owner_number()<<" ("<<get_owner_name()<<").";
-    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
+    //toolkit->show_information_with_leading_time_stamp(osstream);
 }
 
 OWNER& OWNER::operator=(const OWNER& owner)
 {
     if(this==(&owner)) return *this;
+
+    set_toolkit(owner.get_toolkit());
 
     if(owner.get_owner_number()!=0)
         set_owner_number(owner.get_owner_number());

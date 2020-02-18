@@ -21,7 +21,7 @@
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
 
-HVDC_TEST::HVDC_TEST()
+HVDC_TEST::HVDC_TEST() : hvdc(default_toolkit)
 {
     TEST_ADD(HVDC_TEST::test_constructor);
     TEST_ADD(HVDC_TEST::test_set_get_converter_bus);
@@ -82,13 +82,11 @@ HVDC_TEST::HVDC_TEST()
 
 void HVDC_TEST::setup()
 {
-    hvdc.set_toolkit(default_toolkit);
-
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_system_base_power_in_MVA(100.0);
     psdb.set_allowed_max_bus_number(100);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(500.0);
     bus.set_positive_sequence_voltage_in_pu(1.0);

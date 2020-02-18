@@ -47,7 +47,7 @@ void METER_TEST::setup()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(110.0);
     bus.set_bus_type(PQ_TYPE);
@@ -59,15 +59,13 @@ void METER_TEST::setup()
     bus.set_base_voltage_in_kV(110.0);
     psdb.append_bus(bus);
 
-    LINE line;
-    line.set_toolkit(default_toolkit);
+    LINE line(default_toolkit);
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
     line.set_identifier("#1");
     psdb.append_line(line);
 
-    TRANSFORMER transformer;
-    transformer.set_toolkit(default_toolkit);
+    TRANSFORMER transformer(default_toolkit);
     transformer.set_winding_bus(PRIMARY_SIDE, 1);
     transformer.set_winding_bus(SECONDARY_SIDE, 2);
     transformer.set_identifier("#1");
@@ -76,8 +74,7 @@ void METER_TEST::setup()
     transformer.set_winding_bus(TERTIARY_SIDE, 3);
     psdb.append_transformer(transformer);
 
-    GENERATOR generator;
-    generator.set_toolkit(default_toolkit);
+    GENERATOR generator(default_toolkit);
     generator.set_generator_bus(1);
     generator.set_identifier("#1");
     psdb.append_generator(generator);
@@ -86,35 +83,30 @@ void METER_TEST::setup()
     model.set_H_in_s(3.0);
     dmdb.add_model(&model);
 
-    LOAD load;
-    load.set_toolkit(default_toolkit);
+    LOAD load(default_toolkit);
     load.set_load_bus(1);
     load.set_identifier("#1");
     psdb.append_load(load);
 
-    WT_GENERATOR wt_generator;
-    wt_generator.set_toolkit(default_toolkit);
+    WT_GENERATOR wt_generator(default_toolkit);
     wt_generator.set_source_bus(1);
     wt_generator.set_identifier("#1");
     psdb.append_wt_generator(wt_generator);
 
-    HVDC hvdc;
-    hvdc.set_toolkit(default_toolkit);
+    HVDC hvdc(default_toolkit);
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
     hvdc.set_identifier("#1");
     psdb.append_hvdc(hvdc);
 
-    EQUIVALENT_DEVICE edevice;
-    edevice.set_toolkit(default_toolkit);
+    EQUIVALENT_DEVICE edevice(default_toolkit);
     edevice.set_equivalent_device_bus(1);
     edevice.set_identifier("#1");
     edevice.set_status(true);
     psdb.append_equivalent_device(edevice);
 
 
-    ENERGY_STORAGE estorage;
-    estorage.set_toolkit(default_toolkit);
+    ENERGY_STORAGE estorage(default_toolkit);
     estorage.set_energy_storage_bus(1);
     estorage.set_identifier("#1");
     estorage.set_status(true);

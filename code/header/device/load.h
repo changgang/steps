@@ -14,7 +14,7 @@ class BUS;
 class LOAD : public DEVICE
 {
     public:
-        LOAD();
+        LOAD(STEPS& toolkit);
         virtual ~LOAD();
 
         void set_load_bus(unsigned int bus);

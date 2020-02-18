@@ -20,8 +20,7 @@ void prepare_ISO_New_England_39_bus_model_buses()
     psdb.set_allowed_max_bus_number(50);
     psdb.set_system_base_power_in_MVA(100.0);
 
-    BUS bus;
-    bus.set_toolkit(default_toolkit);
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_bus_name("BUS_1");
     bus.set_base_voltage_in_kV(100.0);
@@ -341,8 +340,7 @@ void prepare_ISO_New_England_39_bus_model_buses()
 void prepare_ISO_New_England_39_bus_model_generators()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    GENERATOR generator;
-    generator.set_toolkit(default_toolkit);
+    GENERATOR generator(default_toolkit);
     complex<double> gen_z(0.0);
 
     generator.set_generator_bus(30);
@@ -440,8 +438,7 @@ void prepare_ISO_New_England_39_bus_model_generators()
 void prepare_ISO_New_England_39_bus_model_loads()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    LOAD load;
-    load.set_toolkit(default_toolkit);
+    LOAD load(default_toolkit);
     complex<double> s(0.0,0.0);
 
     load.set_load_bus(3);
@@ -567,8 +564,7 @@ void prepare_ISO_New_England_39_bus_model_loads()
 void prepare_ISO_New_England_39_bus_model_lines()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    LINE line;
-    line.set_toolkit(default_toolkit);
+    LINE line(default_toolkit);
     complex<double> z(0.0), y(0.0);
 
     line.set_sending_side_bus(1);
@@ -918,8 +914,7 @@ void prepare_ISO_New_England_39_bus_model_lines()
 void prepare_ISO_New_England_39_bus_model_transformers()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    TRANSFORMER trans;
-    trans.set_toolkit(default_toolkit);
+    TRANSFORMER trans(default_toolkit);
     complex<double> z(0.0), y(0.0);
 
     trans.set_winding_bus(PRIMARY_SIDE, 2);
@@ -1045,8 +1040,7 @@ void prepare_ISO_New_England_39_bus_model_transformers()
 void prepare_ISO_New_England_39_bus_model_areas()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    AREA area;
-    area.set_toolkit(default_toolkit);
+    AREA area(default_toolkit);
 
     area.set_area_number(1);
     area.set_area_swing_bus(0);
@@ -1059,8 +1053,7 @@ void prepare_ISO_New_England_39_bus_model_areas()
 void prepare_ISO_New_England_39_bus_model_zones()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    ZONE zone;
-    zone.set_toolkit(default_toolkit);
+    ZONE zone(default_toolkit);
 
     zone.set_zone_number(1);
 
@@ -1070,8 +1063,7 @@ void prepare_ISO_New_England_39_bus_model_zones()
 void prepare_ISO_New_England_39_bus_model_owners()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    OWNER owner;
-    owner.set_toolkit(default_toolkit);
+    OWNER owner(default_toolkit);
 
     owner.set_owner_number(1);
 

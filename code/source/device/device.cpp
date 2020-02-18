@@ -5,14 +5,25 @@
 
 using namespace std;
 
-DEVICE::DEVICE()
+DEVICE::DEVICE(STEPS& toolkit)
 {
+    set_toolkit(toolkit);
     ownership.clear();
 }
 
 DEVICE::~DEVICE()
 {
     ;
+}
+
+void DEVICE::set_toolkit(STEPS& toolkit)
+{
+    this->toolkit = (&toolkit);
+}
+
+STEPS& DEVICE::get_toolkit() const
+{
+    return (*toolkit);
 }
 
 void DEVICE::set_ownership(const OWNERSHIP& os)

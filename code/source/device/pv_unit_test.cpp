@@ -18,7 +18,7 @@
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
 
-PV_UNIT_TEST::PV_UNIT_TEST()
+PV_UNIT_TEST::PV_UNIT_TEST() : pv_unit(default_toolkit)
 {
     TEST_ADD(PV_UNIT_TEST::test_constructor);
     TEST_ADD(PV_UNIT_TEST::test_set_get_unit_bus);
@@ -29,14 +29,12 @@ PV_UNIT_TEST::PV_UNIT_TEST()
 
 void PV_UNIT_TEST::setup()
 {
-    pv_unit.set_toolkit(default_toolkit);
-
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_system_base_power_in_MVA(100.0);
     psdb.set_allowed_max_bus_number(100);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_bus_name("bus 1");
     bus.set_base_voltage_in_kV(35.0);

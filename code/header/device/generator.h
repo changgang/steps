@@ -16,7 +16,7 @@ using namespace std;
 class GENERATOR : public SOURCE
 {
     public:
-        GENERATOR();
+        GENERATOR(STEPS& toolkit);
         virtual ~GENERATOR();
 
         void set_generator_bus(unsigned int bus);

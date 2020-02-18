@@ -8,14 +8,14 @@
 
 using namespace std;
 
-BUS::BUS()
+BUS::BUS(STEPS& toolkit) : DEVICE(toolkit)
 {
     clear();
 
     bus_frequency_model.set_bus_pointer(this);
 }
 
-BUS::BUS(const BUS& bus)
+BUS::BUS(const BUS& bus) : DEVICE(bus.get_toolkit())
 {
     copy_from_const_bus(bus);
     bus_frequency_model.set_bus_pointer(this);
@@ -52,7 +52,7 @@ void BUS::set_base_voltage_in_kV(double voltage)
         ostringstream osstream;
         osstream<<"Error. Non-positive kV ("<<voltage<<" kV) is not allowed for setting up bus base voltage."<<endl
           <<"0 will be set to indicate invalid bus.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
         base_voltage_in_kV = 0.0;
     }
@@ -86,7 +86,7 @@ void BUS::set_positive_sequence_voltage_in_pu(double voltage)
         positive_sequence_voltage_in_pu = voltage;
     else
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         ostringstream osstream;
         osstream<<"Warning. Non-positive voltage ("<<voltage<<" pu) is not allowed for setting up voltage for bus "
                <<get_bus_number()<<" ("<<get_bus_name()<<")."<<endl
@@ -112,7 +112,7 @@ void BUS::set_positive_sequence_voltage_in_kV(double voltage)
         osstream<<"Invalid to set bus positive sequence voltage ("<<voltage<<" kV) with zero base voltage for bus "
                <<get_bus_number()<<" ("<<get_bus_name()<<")."<<endl
                <<"0 will be set automatically.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
         set_positive_sequence_voltage_in_pu(0.0);
     }
@@ -145,7 +145,7 @@ void BUS::set_negative_sequence_voltage_in_kV(double voltage)
         osstream<<"Invalid to set bus negative sequence voltage ("<<voltage<<" kV) with zero base voltage for bus "
                <<get_bus_number()<<" ("<<get_bus_name()<<")."<<endl
                <<"0 will be set automatically.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
         set_negative_sequence_voltage_in_pu(0.0);
     }
@@ -178,7 +178,7 @@ void BUS::set_zero_sequence_voltage_in_kV(double voltage)
         osstream<<"Invalid to set bus zero sequence voltage ("<<voltage<<" kV) with zero base voltage for bus "
                <<get_bus_number()<<" ("<<get_bus_name()<<")."<<endl
                <<"0 will be set automatically.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
         set_zero_sequence_voltage_in_pu(0.0);
     }
@@ -269,7 +269,7 @@ void BUS::set_voltage_to_regulate_in_pu(double voltage)
             osstream<<"Warning. New voltage to regulate ("<<voltage<<" pu) is not allowed to set for bus "<<get_bus_number()
                     <<" with existing voltage to regulate: "<<get_voltage_to_regulate_in_pu()<<" pu."<<endl
                     <<"Voltage to regulate will not be changed.";
-            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+            STEPS& toolkit = get_toolkit();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -480,7 +480,7 @@ void BUS::check()
     if(get_bus_number()==0)
     {
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Invalid bus number 0 is detected.");
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(buffer);
     }
 }
@@ -551,7 +551,7 @@ void BUS::set_fault(const FAULT& bus_fault)
     {
         osstream<<"Warning. Non-faulted fault is given for bus "<<get_bus_number()<<"."<<endl
                <<"Fault will not be set.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -565,7 +565,7 @@ void BUS::set_fault(const FAULT& bus_fault)
             osstream<<"Fault is already set for bus "<<get_bus_number()<<" with fault shunt "<<this->fault.get_fault_shunt_in_pu()<<" pu."<<endl
                    <<"New "<<fault_type<<" is set for bus "<<get_bus_number()<<" with fault shunt "<<y<<" pu";
 
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
         this->fault = bus_fault;
     }
@@ -582,7 +582,7 @@ void BUS::clear_fault()
     if(is_faulted())
     {
         osstream<<"Fault at bus "<<get_bus_number()<<" is cleared.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
         fault.clear();
     }
@@ -590,7 +590,7 @@ void BUS::clear_fault()
     {
         osstream<<"No fault was set for bus "<<get_bus_number()<<"."<<endl
                <<"No fault will be cleared.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -614,9 +614,9 @@ BUS& BUS::operator=(const BUS& bus)
 
 void BUS::copy_from_const_bus(const BUS& bus)
 {
-    clear();
+    set_toolkit(bus.get_toolkit());
 
-    set_toolkit(bus.get_toolkit(__PRETTY_FUNCTION__));
+    clear();
 
     set_bus_number(bus.get_bus_number());
     set_bus_name(bus.get_bus_name());
@@ -646,7 +646,7 @@ void BUS::report() const
       <<(get_bus_type()==SLACK_TYPE?"Slack":(get_bus_type()==PQ_TYPE?"PQ":(get_bus_type()==OUT_OF_SERVICE?"Out of service":"PV")))<<", "
       <<setprecision(6)<<fixed<<get_positive_sequence_voltage_in_pu()<<" pu, "
       <<setprecision(6)<<fixed<<get_positive_sequence_angle_in_deg()<<" deg.";
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -688,7 +688,7 @@ void BUS::set_model(const MODEL* model)
 {
     ostringstream osstream;
     osstream<<"BUS::"<<__FUNCTION__<<"() has not been implemented yet. Input model name is:"<<(model==NULL?"":model->get_model_name());
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

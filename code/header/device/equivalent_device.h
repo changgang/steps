@@ -11,7 +11,7 @@ using namespace std;
 class EQUIVALENT_DEVICE : public DEVICE
 {
     public:
-        EQUIVALENT_DEVICE();
+        EQUIVALENT_DEVICE(STEPS& toolkit);
         virtual ~EQUIVALENT_DEVICE();
 
         void set_equivalent_device_bus(unsigned int bus);

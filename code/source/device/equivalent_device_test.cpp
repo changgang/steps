@@ -18,7 +18,7 @@
 using namespace std;
 
 
-EQUIVALENT_DEVICE_TEST::EQUIVALENT_DEVICE_TEST()
+EQUIVALENT_DEVICE_TEST::EQUIVALENT_DEVICE_TEST() : edevice(default_toolkit)
 {
     TEST_ADD(EQUIVALENT_DEVICE_TEST::test_constructor);
     TEST_ADD(EQUIVALENT_DEVICE_TEST::test_set_get_equivalent_device_bus);
@@ -42,13 +42,11 @@ EQUIVALENT_DEVICE_TEST::EQUIVALENT_DEVICE_TEST()
 
 void EQUIVALENT_DEVICE_TEST::setup()
 {
-    edevice.set_toolkit(default_toolkit);
-
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_system_base_power_in_MVA(100.0);
     psdb.set_allowed_max_bus_number(10);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(100.0);
     bus.set_bus_type(PQ_TYPE);

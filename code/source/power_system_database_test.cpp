@@ -345,8 +345,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     psdb.set_allowed_max_bus_number(100);
 
     {
-        BUS bus;
-        bus.set_toolkit(default_toolkit);
+        BUS bus(default_toolkit);
 
         bus.set_bus_number(1);
         bus.set_bus_name("BUS A");
@@ -378,8 +377,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     }
 
     {
-        GENERATOR generator;
-        generator.set_toolkit(default_toolkit);
+        GENERATOR generator(default_toolkit);
         generator.set_generator_bus(1);
         generator.set_identifier("#1");
         generator.set_status(true);
@@ -445,8 +443,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     }
 
     {
-        WT_GENERATOR wt_generator;
-        wt_generator.set_toolkit(default_toolkit);
+        WT_GENERATOR wt_generator(default_toolkit);
 
         wt_generator.set_source_bus(1);
         wt_generator.set_identifier("#1");
@@ -513,8 +510,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     }
 
     {
-        PV_UNIT pv_unit;
-        pv_unit.set_toolkit(default_toolkit);
+        PV_UNIT pv_unit(default_toolkit);
 
         pv_unit.set_unit_bus(1);
         pv_unit.set_identifier("#1");
@@ -581,8 +577,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     }
 
     {
-        ENERGY_STORAGE energy_storage;
-        energy_storage.set_toolkit(default_toolkit);
+        ENERGY_STORAGE energy_storage(default_toolkit);
 
         energy_storage.set_energy_storage_bus(1);
         energy_storage.set_identifier("#1");
@@ -649,8 +644,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     }
 
     {
-        LOAD load;
-        load.set_toolkit(default_toolkit);
+        LOAD load(default_toolkit);
 
         load.set_load_bus(1);
         load.set_identifier("#1");
@@ -688,8 +682,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     }
 
     {
-        FIXED_SHUNT shunt;
-        shunt.set_toolkit(default_toolkit);
+        FIXED_SHUNT shunt(default_toolkit);
 
         shunt.set_shunt_bus(1);
         shunt.set_identifier("#1");
@@ -714,8 +707,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     }
 
     {
-        LINE line;
-        line.set_toolkit(default_toolkit);
+        LINE line(default_toolkit);
 
         line.set_sending_side_bus(1);
         line.set_receiving_side_bus(2);
@@ -743,8 +735,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     }
 
     {
-        TRANSFORMER transformer;
-        transformer.set_toolkit(default_toolkit);
+        TRANSFORMER transformer(default_toolkit);
 
         transformer.set_winding_bus(PRIMARY_SIDE, 1);
         transformer.set_winding_bus(SECONDARY_SIDE, 2);
@@ -778,8 +769,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     }
 
     {
-        HVDC hvdc;
-        hvdc.set_toolkit(default_toolkit);
+        HVDC hvdc(default_toolkit);
 
         hvdc.set_converter_bus(RECTIFIER, 1);
         hvdc.set_converter_bus(INVERTER, 2);
@@ -813,8 +803,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     }
 
     {
-        EQUIVALENT_DEVICE edevice;
-        edevice.set_toolkit(default_toolkit);
+        EQUIVALENT_DEVICE edevice(default_toolkit);
 
         edevice.set_equivalent_device_bus(1);
         edevice.set_identifier("#1");
@@ -846,8 +835,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
 
 
     {
-        AREA area;
-        area.set_toolkit(default_toolkit);
+        AREA area(default_toolkit);
 
         area.set_area_number(1);
         area.set_area_name("AREA A");
@@ -866,8 +854,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     }
 
     {
-        ZONE zone;
-        zone.set_toolkit(default_toolkit);
+        ZONE zone(default_toolkit);
 
         zone.set_zone_number(1);
         zone.set_zone_name("ZONE A");
@@ -883,8 +870,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     }
 
     {
-        OWNER owner;
-        owner.set_toolkit(default_toolkit);
+        OWNER owner(default_toolkit);
 
         owner.set_owner_number(1);
         owner.set_owner_name("OWNER A");
@@ -1197,7 +1183,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_bus()
 
     psdb.set_allowed_max_bus_number(100);
 
-    BUS bus;
+    BUS bus(default_toolkit);
 
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(110.0);
@@ -1264,14 +1250,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_generator()
 
     psdb.set_allowed_max_bus_number(100);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(18.0);
     bus.set_positive_sequence_voltage_in_pu(1.0);
     psdb.append_bus(bus);
 
-    GENERATOR generator;
-    generator.set_toolkit(default_toolkit);
+    GENERATOR generator(default_toolkit);
     generator.set_generator_bus(1);
     generator.set_identifier("#1");
     generator.set_status(true);
@@ -1319,14 +1304,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_wt_generator()
 
     psdb.set_allowed_max_bus_number(100);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(18.0);
     bus.set_positive_sequence_voltage_in_pu(1.0);
     psdb.append_bus(bus);
 
-    WT_GENERATOR wt_generator;
-    wt_generator.set_toolkit(default_toolkit);
+    WT_GENERATOR wt_generator(default_toolkit);
 
     wt_generator.set_source_bus(1);
     wt_generator.set_identifier("#1");
@@ -1376,14 +1360,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_pv_unit()
 
     psdb.set_allowed_max_bus_number(100);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(18.0);
     bus.set_positive_sequence_voltage_in_pu(1.0);
     psdb.append_bus(bus);
 
-    PV_UNIT pv_unit;
-    pv_unit.set_toolkit(default_toolkit);
+    PV_UNIT pv_unit(default_toolkit);
 
     pv_unit.set_unit_bus(1);
     pv_unit.set_identifier("#1");
@@ -1432,14 +1415,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_load()
 
     psdb.set_allowed_max_bus_number(100);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(35.0);
     bus.set_positive_sequence_voltage_in_pu(1.0);
     psdb.append_bus(bus);
 
-    LOAD load;
-    load.set_toolkit(default_toolkit);
+    LOAD load(default_toolkit);
 
     load.set_load_bus(1);
     load.set_identifier("#1");
@@ -1488,7 +1470,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_line()
 
     psdb.set_allowed_max_bus_number(100);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(110.0);
     psdb.append_bus(bus);
@@ -1497,8 +1479,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_line()
     bus.set_base_voltage_in_kV(110.0);
     psdb.append_bus(bus);
 
-    LINE line;
-    line.set_toolkit(default_toolkit);
+    LINE line(default_toolkit);
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
@@ -1556,7 +1537,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_transformer()
 
     psdb.set_allowed_max_bus_number(100);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(525.0);
     psdb.append_bus(bus);
@@ -1569,8 +1550,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_transformer()
     bus.set_base_voltage_in_kV(35.0);
     psdb.append_bus(bus);
 
-    TRANSFORMER transformer;
-    transformer.set_toolkit(default_toolkit);
+    TRANSFORMER transformer(default_toolkit);
 
     transformer.set_winding_bus(PRIMARY_SIDE, 1);
     transformer.set_winding_bus(SECONDARY_SIDE, 2);
@@ -1637,13 +1617,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_fixed_shunt()
 
     psdb.set_allowed_max_bus_number(100);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(110.0);
     psdb.append_bus(bus);
 
-    FIXED_SHUNT shunt;
-    shunt.set_toolkit(default_toolkit);
+    FIXED_SHUNT shunt(default_toolkit);
 
     shunt.set_shunt_bus(1);
     shunt.set_identifier("#1");
@@ -1692,7 +1671,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_hvdc()
 
     psdb.set_allowed_max_bus_number(100);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(525.0);
     psdb.append_bus(bus);
@@ -1701,8 +1680,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_hvdc()
     bus.set_base_voltage_in_kV(525.0);
     psdb.append_bus(bus);
 
-    HVDC hvdc;
-    hvdc.set_toolkit(default_toolkit);
+    HVDC hvdc(default_toolkit);
 
     hvdc.set_name("DC1");
     hvdc.set_converter_bus(RECTIFIER, 1);
@@ -1760,13 +1738,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_equivalent_device()
 
     psdb.set_allowed_max_bus_number(100);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(525.0);
     psdb.append_bus(bus);
 
-    EQUIVALENT_DEVICE edevice;
-    edevice.set_toolkit(default_toolkit);
+    EQUIVALENT_DEVICE edevice(default_toolkit);
 
     edevice.set_equivalent_device_bus(1);
     edevice.set_identifier("#1");
@@ -1813,13 +1790,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_energy_storage()
 
     psdb.set_allowed_max_bus_number(100);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(525.0);
     psdb.append_bus(bus);
 
-    ENERGY_STORAGE estorage;
-    estorage.set_toolkit(default_toolkit);
+    ENERGY_STORAGE estorage(default_toolkit);
 
     estorage.set_energy_storage_bus(1);
     estorage.set_identifier("#1");
@@ -1866,7 +1842,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_area()
 
     psdb.set_allowed_max_bus_number(100);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_area_number(1);
     bus.set_base_voltage_in_kV(525.0);
@@ -1879,8 +1855,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_area()
     bus.set_bus_type(SLACK_TYPE);
     psdb.append_bus(bus);
 
-    AREA area;
-    area.set_toolkit(default_toolkit);
+    AREA area(default_toolkit);
 
     area.set_area_number(1);
     area.set_area_name("area 1");
@@ -1926,8 +1901,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_zone()
 
     psdb.set_allowed_max_bus_number(100);
 
-    ZONE zone;
-    zone.set_toolkit(default_toolkit);
+    ZONE zone(default_toolkit);
 
     zone.set_zone_number(1);
     zone.set_zone_name("zone 1");
@@ -1964,8 +1938,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_owner()
 
     psdb.set_allowed_max_bus_number(100);
 
-    OWNER owner;
-    owner.set_toolkit(default_toolkit);
+    OWNER owner(default_toolkit);
 
     owner.set_owner_number(1);
     owner.set_owner_name("owner 1");
@@ -5460,8 +5433,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_overshadowed_bus_count()
     psdb.set_allowed_max_bus_number(100);
 
     {
-        BUS bus;
-        bus.set_toolkit(default_toolkit);
+        BUS bus(default_toolkit);
 
         bus.set_bus_number(1);
         bus.set_bus_name("BUS A");
@@ -5512,8 +5484,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_overshadowed_bus_count()
 
     {
         //1-2-3-5-4-1
-        LINE line;
-        line.set_toolkit(default_toolkit);
+        LINE line(default_toolkit);
 
         line.set_sending_side_bus(1);
         line.set_receiving_side_bus(2);

@@ -19,7 +19,7 @@ class HVDC_MODEL;
 class HVDC : public DEVICE
 {
     public:
-        HVDC();
+        HVDC(STEPS& toolkit);
         virtual ~HVDC();
 
         void set_converter_bus(HVDC_CONVERTER_SIDE converter, const unsigned int bus);

@@ -17,7 +17,7 @@ using namespace std;
 class WT_GENERATOR : public SOURCE
 {
     public:
-        WT_GENERATOR();
+        WT_GENERATOR(STEPS& toolkit);
         virtual ~WT_GENERATOR();
         virtual void clear();
     public:

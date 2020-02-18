@@ -15,7 +15,7 @@ class BUS;
 class LINE : public DEVICE
 {
     public:
-        LINE();
+        LINE(STEPS& toolkit);
         virtual ~LINE();
 
         void set_sending_side_bus(unsigned int bus);

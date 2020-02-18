@@ -25,7 +25,7 @@ void HVDC_MODEL_TEST::setup()
     psdb.set_allowed_max_bus_number(100);
     psdb.set_system_base_power_in_MVA(100.0);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_bus_name("RECBUS");
     bus.set_bus_type(PQ_TYPE);
@@ -44,8 +44,7 @@ void HVDC_MODEL_TEST::setup()
 
     psdb.append_bus(bus);
 
-    HVDC hvdc;
-    hvdc.set_toolkit(default_toolkit);
+    HVDC hvdc(default_toolkit);
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
     hvdc.set_identifier("DC");

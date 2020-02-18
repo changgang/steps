@@ -11,7 +11,7 @@ using namespace std;
 class ENERGY_STORAGE : public SOURCE
 {
     public:
-        ENERGY_STORAGE();
+        ENERGY_STORAGE(STEPS& toolkit);
         virtual ~ENERGY_STORAGE();
 
         void set_energy_storage_bus(unsigned int bus);
@@ -38,10 +38,8 @@ class ENERGY_STORAGE : public SOURCE
         virtual void save() const;
 
         virtual ENERGY_STORAGE& operator=(const ENERGY_STORAGE& estorage);
-
     private:
         ENERGY_STORAGE_MODEL* energy_storage_model;
-
     private:
         virtual complex<double> get_complex_internal_voltage_in_pu_in_xy_axis() const;
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power();

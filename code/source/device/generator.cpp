@@ -14,7 +14,7 @@
 
 using namespace std;
 
-GENERATOR::GENERATOR() : SOURCE()
+GENERATOR::GENERATOR(STEPS& toolkit) : SOURCE(toolkit)
 {
     clear();
 }
@@ -104,7 +104,7 @@ void GENERATOR::set_model(const MODEL* model)
         }
         ostringstream osstream;
         osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up generator-related model.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -295,7 +295,7 @@ void GENERATOR::report() const
       <<"Qmax = "<<setw(8)<<setprecision(4)<<fixed<<get_q_max_in_MVar()<<" MVar, "
       <<"Qmin = "<<setw(8)<<setprecision(4)<<fixed<<get_q_min_in_MVar()<<" MVar"<<endl
       <<"Zsource = "<<setw(8)<<setprecision(6)<<fixed<<get_generator_impedance_in_pu();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -308,9 +308,8 @@ GENERATOR& GENERATOR::operator=(const GENERATOR& gen)
 {
     if(this==(&gen)) return *this;
 
+    set_toolkit(gen.get_toolkit());
     clear();
-
-    set_toolkit(gen.get_toolkit(__PRETTY_FUNCTION__));
 
     set_generator_bus(gen.get_generator_bus());
     set_identifier(gen.get_identifier());
@@ -347,7 +346,7 @@ complex<double> GENERATOR::get_source_dynamic_current_in_pu_based_on_system_base
 
     if(get_status()==true and generator_model!=NULL)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         double mbase = get_mbase_in_MVA();
         double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
         complex<double> I = generator_model->get_terminal_current_in_pu_based_on_mbase();

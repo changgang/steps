@@ -11,7 +11,7 @@ class BUS;
 class FIXED_SHUNT : public DEVICE
 {
     public:
-        FIXED_SHUNT();
+        FIXED_SHUNT(STEPS& toolkit);
         virtual ~FIXED_SHUNT();
 
         void set_shunt_bus(unsigned int bus);

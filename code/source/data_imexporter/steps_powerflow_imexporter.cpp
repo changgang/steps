@@ -277,8 +277,7 @@ void STEPS_IMEXPORTER::load_bus_data()
     for(unsigned int i=0; i!=ndata; ++i)
     {
         data = DATA[i];
-        BUS bus;
-        bus.set_toolkit(toolkit);
+        BUS bus(toolkit);
         bus.set_base_frequency_in_Hz(get_base_frequency_in_Hz());
 
         if(data.size()>0)
@@ -374,8 +373,7 @@ void STEPS_IMEXPORTER::load_load_data()
     for(unsigned int i=0; i!=ndata; ++i)
     {
         data = DATA[i];
-        LOAD load;
-        load.set_toolkit(toolkit);
+        LOAD load(toolkit);
 
         if(data.size()>0)
         {
@@ -465,8 +463,7 @@ void STEPS_IMEXPORTER::load_fixed_shunt_data()
     for(unsigned int i=0; i!=ndata; ++i)
     {
         data = DATA[i];
-        FIXED_SHUNT shunt;
-        shunt.set_toolkit(toolkit);
+        FIXED_SHUNT shunt(toolkit);
 
         if(data.size()>0)
         {
@@ -585,8 +582,7 @@ void STEPS_IMEXPORTER::load_generator_data(vector<string>& data)
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    GENERATOR generator;
-    generator.set_toolkit(toolkit);
+    GENERATOR generator(toolkit);
 
     load_source_common_data(data, &generator);
 
@@ -598,8 +594,7 @@ void STEPS_IMEXPORTER::load_wt_generator_data(vector<string>& data)
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    WT_GENERATOR wt_generator;
-    wt_generator.set_toolkit(toolkit);
+    WT_GENERATOR wt_generator(toolkit);
 
     load_source_common_data(data, &wt_generator);
     load_source_var_control_data(data, &wt_generator);
@@ -613,8 +608,7 @@ void STEPS_IMEXPORTER::load_pv_unit_data(vector<string>& data)
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    PV_UNIT pv_unit;
-    pv_unit.set_toolkit(toolkit);
+    PV_UNIT pv_unit(toolkit);
 
     load_source_common_data(data, &pv_unit);
     load_source_var_control_data(data, &pv_unit);
@@ -628,8 +622,7 @@ void STEPS_IMEXPORTER::load_energy_storage_data(vector<string>& data)
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    ENERGY_STORAGE estorage;
-    estorage.set_toolkit(toolkit);
+    ENERGY_STORAGE estorage(toolkit);
 
     load_source_common_data(data, &estorage);
     load_source_var_control_data(data, &estorage);
@@ -842,8 +835,7 @@ void STEPS_IMEXPORTER::load_line_data()
     for(unsigned int i=0; i!=ndata; ++i)
     {
         data = DATA[i];
-        LINE line;
-        line.set_toolkit(toolkit);
+        LINE line(toolkit);
 
         if(data.size()>0)
         {
@@ -1033,8 +1025,7 @@ void STEPS_IMEXPORTER::add_transformer_with_data(vector<vector<string> > trans_d
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    TRANSFORMER trans;
-    trans.set_toolkit(toolkit);
+    TRANSFORMER trans(toolkit);
 
     vector<string> data_trans = trans_data[0];
     vector<string> data_z = trans_data[1];
@@ -1652,8 +1643,7 @@ void STEPS_IMEXPORTER::load_area_data()
     {
         data = DATA[i];
 
-        AREA area;
-        area.set_toolkit(toolkit);
+        AREA area(toolkit);
 
         area.set_area_number(get_integer_data(data[0],"0"));
         area.set_area_swing_bus(get_integer_data(data[1],"0"));
@@ -1703,8 +1693,7 @@ void STEPS_IMEXPORTER::add_hvdc_with_data(vector<vector<string> > hvdc_data)
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    HVDC hvdc;
-    hvdc.set_toolkit(toolkit);
+    HVDC hvdc(toolkit);
 
     vector<string> data_hvdc = hvdc_data[0];
     vector<string> data_rec = hvdc_data[1];
@@ -1909,8 +1898,7 @@ void STEPS_IMEXPORTER::load_zone_data()
     {
         data = DATA[i];
 
-        ZONE zone;
-        zone.set_toolkit(toolkit);
+        ZONE zone(toolkit);
 
         zone.set_zone_number(get_integer_data(data[0],"0"));
         zone.set_zone_name(get_string_data(data[1],""));
@@ -1941,8 +1929,7 @@ void STEPS_IMEXPORTER::load_owner_data()
     {
         data = DATA[i];
 
-        OWNER owner;
-        owner.set_toolkit(toolkit);
+        OWNER owner(toolkit);
 
         owner.set_owner_number(get_integer_data(data[0],"0"));
         owner.set_owner_name(get_string_data(data[1],""));

@@ -13,7 +13,7 @@ class BUS;
 class SOURCE : public DEVICE
 {
     public:
-        SOURCE();
+        SOURCE(STEPS& toolkit);
         virtual ~SOURCE();
 
         void set_source_bus(unsigned int bus);

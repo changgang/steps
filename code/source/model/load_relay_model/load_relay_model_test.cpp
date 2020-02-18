@@ -24,7 +24,7 @@ void LOAD_RELAY_MODEL_TEST::setup()
     psdb.set_allowed_max_bus_number(100);
     psdb.set_system_base_power_in_MVA(100.0);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_bus_type(PQ_TYPE);
     bus.set_base_voltage_in_kV(110.0);
@@ -33,8 +33,7 @@ void LOAD_RELAY_MODEL_TEST::setup()
 
     psdb.append_bus(bus);
 
-    LOAD load;
-    load.set_toolkit(default_toolkit);
+    LOAD load(default_toolkit);
     load.set_load_bus(1);
     load.set_identifier("#1");
     load.set_status(true);

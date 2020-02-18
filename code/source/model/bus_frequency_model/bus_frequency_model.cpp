@@ -45,7 +45,7 @@ void BUS_FREQUENCY_MODEL::initialize()
         fbase_Hz = bus_ptr->get_base_frequency_in_Hz();
         tbase_s = bus_ptr->get_base_period_in_s();
 
-        STEPS& toolkit = bus_ptr->get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = bus_ptr->get_toolkit();
         set_toolkit(toolkit);
 
         double DELT = toolkit.get_dynamic_simulation_time_step_in_s();

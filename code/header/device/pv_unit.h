@@ -14,7 +14,7 @@ using namespace std;
 class PV_UNIT : public SOURCE
 {
     public:
-        PV_UNIT();
+        PV_UNIT(STEPS& toolkit);
         virtual ~PV_UNIT();
         virtual void clear();
     public:

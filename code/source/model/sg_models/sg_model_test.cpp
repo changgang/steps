@@ -24,8 +24,7 @@ void SG_MODEL_TEST::setup()
     psdb.set_allowed_max_bus_number(100);
     psdb.set_system_base_power_in_MVA(100.0);
 
-    BUS bus;
-    bus.set_toolkit(default_toolkit);
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_bus_type(PV_TYPE);
     bus.set_base_voltage_in_kV(21.0);
@@ -35,8 +34,7 @@ void SG_MODEL_TEST::setup()
 
     psdb.append_bus(bus);
 
-    GENERATOR generator;
-    generator.set_toolkit(default_toolkit);
+    GENERATOR generator(default_toolkit);
     generator.set_generator_bus(1);
     generator.set_identifier("#1");
     generator.set_status(true);

@@ -18,7 +18,7 @@
 using namespace std;
 
 
-TRANSFORMER_TEST::TRANSFORMER_TEST()
+TRANSFORMER_TEST::TRANSFORMER_TEST() : transformer(default_toolkit)
 {
     TEST_ADD(TRANSFORMER_TEST::test_constructor);
     TEST_ADD(TRANSFORMER_TEST::test_set_get_winding_buses);
@@ -53,13 +53,11 @@ TRANSFORMER_TEST::TRANSFORMER_TEST()
 
 void TRANSFORMER_TEST::setup()
 {
-    transformer.set_toolkit(default_toolkit);
-
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_system_base_power_in_MVA(100.0);
     psdb.set_allowed_max_bus_number(10);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_bus_type(PQ_TYPE);
     bus.set_base_voltage_in_kV(13.8);
@@ -574,7 +572,7 @@ void TRANSFORMER_TEST::test_copy_with_operator_equal()
     transformer.set_winding_min_angle_shift_in_deg(TERTIARY_SIDE, -60.0);
 
 
-    TRANSFORMER newtransformer;
+    TRANSFORMER newtransformer(default_toolkit);
 
     newtransformer = transformer;
 

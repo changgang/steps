@@ -12,7 +12,7 @@
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
 
-ZONE_TEST::ZONE_TEST()
+ZONE_TEST::ZONE_TEST() : zone(default_toolkit)
 {
     TEST_ADD(ZONE_TEST::test_constructor);
     TEST_ADD(ZONE_TEST::test_set_get_zone_number);
@@ -24,7 +24,6 @@ ZONE_TEST::ZONE_TEST()
 
 void ZONE_TEST::setup()
 {
-    zone.set_toolkit(default_toolkit);
 }
 
 void ZONE_TEST::tear_down()

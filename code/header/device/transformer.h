@@ -14,7 +14,7 @@ using namespace std;
 class TRANSFORMER : public DEVICE
 {
     public:
-        TRANSFORMER();
+        TRANSFORMER(STEPS& toolkit);
         virtual ~TRANSFORMER();
 
         void set_identifier(string identifier);

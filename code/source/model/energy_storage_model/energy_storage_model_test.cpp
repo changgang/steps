@@ -33,7 +33,7 @@ void ENERGY_STORAGE_MODEL_TEST::setup()
     psdb.set_allowed_max_bus_number(100);
     psdb.set_system_base_power_in_MVA(100.0);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_bus_type(PV_TYPE);
     bus.set_base_voltage_in_kV(21.0);
@@ -42,7 +42,7 @@ void ENERGY_STORAGE_MODEL_TEST::setup()
 
     psdb.append_bus(bus);
 
-    ENERGY_STORAGE estorage;
+    ENERGY_STORAGE estorage(default_toolkit);
     estorage.set_energy_storage_bus(1);
     estorage.set_identifier("#1");
     estorage.set_status(true);

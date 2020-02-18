@@ -8,7 +8,7 @@
 
 using namespace std;
 
-SOURCE::SOURCE()
+SOURCE::SOURCE(STEPS& toolkit) : DEVICE(toolkit)
 {
     clear();
 }
@@ -22,7 +22,7 @@ void SOURCE::set_source_bus(unsigned int bus)
 {
     ostringstream osstream;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     if(bus==0)
     {
         osstream<<"Warning. Zero bus number (0) is not allowed for setting up source bus."<<endl
@@ -65,7 +65,7 @@ void SOURCE::set_mbase_in_MVA(double mbase)
     }
     else
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         ostringstream osstream;
         osstream<<"Negative MBASE ("<<mbase<<" MVA) is not allowed for setting up power source '"<<get_identifier()<<"' at bus "<<get_source_bus()<<"."<<endl
           <<"Source MBASE will not be changed.";
@@ -108,7 +108,7 @@ void SOURCE::set_voltage_to_regulate_in_pu(double v_pu)
 {
     if(v_pu<=0.0)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         ostringstream osstream;
         osstream<<"Non-positive voltage ("<<v_pu<<") is not supported for voltage to regulate when setting up power source '"<<get_identifier()<<"' at bus "<<get_source_bus()<<"."<<endl
           <<"1.0 p.u. will set automatically.";
@@ -127,7 +127,7 @@ void SOURCE::set_bus_to_regulate(unsigned int bus)
         ostringstream osstream;
         osstream<<"Warning. Currently generators are not supposed to regulate voltage at bus different from its terminal bus.\n"
                 <<"Terminal bus "<<get_source_bus()<<" will be set to regulate. New bus "<<bus<<" is discarded.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
         bus_to_regulate = get_source_bus();
     }
@@ -233,7 +233,7 @@ bool SOURCE::is_valid() const
 void SOURCE::check()
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string error_leading_string = "Error detected when checking "+get_device_name()+": ";
@@ -282,7 +282,7 @@ bool SOURCE::is_connected_to_bus(unsigned int bus) const
 
 bool SOURCE::is_in_area(unsigned int area) const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     BUS* busptr = psdb.get_bus(get_source_bus());
     if(busptr!=NULL)
@@ -295,7 +295,7 @@ bool SOURCE::is_in_area(unsigned int area) const
 
 bool SOURCE::is_in_zone(unsigned int zone) const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     BUS* busptr = psdb.get_bus(get_source_bus());
     if(busptr!=NULL)

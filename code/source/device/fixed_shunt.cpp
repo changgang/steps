@@ -6,7 +6,7 @@
 
 using namespace std;
 
-FIXED_SHUNT::FIXED_SHUNT()
+FIXED_SHUNT::FIXED_SHUNT(STEPS& toolkit) : DEVICE(toolkit)
 {
     clear();
 }
@@ -22,7 +22,7 @@ void FIXED_SHUNT::set_shunt_bus(unsigned int shunt_bus)
 
     if(shunt_bus!=0)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         if(psdb.is_bus_exist(shunt_bus))
         {
@@ -41,7 +41,7 @@ void FIXED_SHUNT::set_shunt_bus(unsigned int shunt_bus)
     {
         osstream<<"Warning. Zero bus number (0) is not allowed for setting up fixed shunt bus."<<endl
                 <<"0 will be set to indicate invalid fixed shunt.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
         this->bus = 0;
         return;
@@ -95,7 +95,7 @@ complex<double> FIXED_SHUNT::get_nominal_impedance_shunt_in_pu() const
 
     ostringstream osstream;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double sbase = psdb.get_system_base_power_in_MVA();
@@ -140,7 +140,7 @@ bool FIXED_SHUNT::is_connected_to_bus(unsigned int target_bus) const
 
 bool FIXED_SHUNT::is_in_area(unsigned int area) const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     BUS* busptr = psdb.get_bus(get_shunt_bus());
     if(busptr!=NULL)
@@ -153,7 +153,7 @@ bool FIXED_SHUNT::is_in_area(unsigned int area) const
 
 bool FIXED_SHUNT::is_in_zone(unsigned int zone) const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     BUS* busptr = psdb.get_bus(get_shunt_bus());
     if(busptr!=NULL)
@@ -169,7 +169,7 @@ void FIXED_SHUNT::report() const
     ostringstream osstream;
     osstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
             <<"P+jQ[Z] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_impedance_shunt_in_MVA()<<" MVA.";
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -182,7 +182,7 @@ void FIXED_SHUNT::set_model(const MODEL* model)
 {
     ostringstream osstream;
     osstream<<"FIXED_SHUNT::"<<__FUNCTION__<<"() has not been implemented yet. Input model name is:"<<(model==NULL?"":model->get_model_name());
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -199,9 +199,8 @@ FIXED_SHUNT& FIXED_SHUNT::operator=(const FIXED_SHUNT& fixed_shunt)
 {
     if(this==(&fixed_shunt)) return *this;
 
+    set_toolkit(fixed_shunt.get_toolkit());
     clear();
-
-    set_toolkit(fixed_shunt.get_toolkit(__PRETTY_FUNCTION__));
 
     set_shunt_bus(fixed_shunt.get_shunt_bus());
     set_identifier(fixed_shunt.get_identifier());
@@ -233,7 +232,7 @@ complex<double> FIXED_SHUNT::get_actual_impedance_shunt_in_MVA() const
     {
         complex<double> S0 = get_nominal_impedance_shunt_in_MVA();
 
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         BUS* busptr = psdb.get_bus(get_shunt_bus());

@@ -6,11 +6,12 @@
 #include <cstring>
 #include <iostream>
 #include <cstdio>
+#include "header/steps_namespace.h"
 
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
 
-OWNER_TEST::OWNER_TEST()
+OWNER_TEST::OWNER_TEST() : owner(default_toolkit)
 {
     TEST_ADD(OWNER_TEST::test_constructor);
     TEST_ADD(OWNER_TEST::test_set_get_owner_number);

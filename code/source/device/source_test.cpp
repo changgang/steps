@@ -18,7 +18,7 @@
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
 
-SOURCE_TEST::SOURCE_TEST()
+SOURCE_TEST::SOURCE_TEST() : generator(default_toolkit)
 {
     TEST_ADD(SOURCE_TEST::test_constructor);
     TEST_ADD(SOURCE_TEST::test_set_get_source_bus);
@@ -39,13 +39,11 @@ SOURCE_TEST::SOURCE_TEST()
 
 void SOURCE_TEST::setup()
 {
-    generator.set_toolkit(default_toolkit);
-
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_system_base_power_in_MVA(100.0);
     psdb.set_allowed_max_bus_number(100);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_bus_name("bus 1");
     bus.set_base_voltage_in_kV(35.0);

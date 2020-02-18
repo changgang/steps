@@ -7,14 +7,25 @@
 
 using namespace std;
 
-ZONE::ZONE()
+ZONE::ZONE(STEPS& toolkit)
 {
+    set_toolkit(toolkit);
     clear();
 }
 
 ZONE::~ZONE()
 {
     ;
+}
+
+void ZONE::set_toolkit(STEPS& toolkit)
+{
+    this->toolkit = (&toolkit);
+}
+
+STEPS& ZONE::get_toolkit() const
+{
+    return (*toolkit);
 }
 
 void ZONE::set_zone_number(unsigned int number)
@@ -25,8 +36,7 @@ void ZONE::set_zone_number(unsigned int number)
     {
         ostringstream osstream;
         osstream<<"0 is not allowed for setting zone number. 0 will be set to indicated invalid zone.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
 
         this->zone_number = 0;
     }
@@ -70,13 +80,14 @@ void ZONE::report() const
 {
     ostringstream osstream;
     osstream<<"Zone "<<get_zone_number()<<" ("<<get_zone_name()<<")";
-    STEPS& toolkit=get_toolkit(__PRETTY_FUNCTION__);
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 }
 
 ZONE& ZONE::operator=(const ZONE& zone)
 {
     if(this==(&zone)) return *this;
+
+    set_toolkit(zone.get_toolkit());
 
     clear();
 

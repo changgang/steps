@@ -14,8 +14,7 @@ void prepare_basic_buses()
 
     psdb.set_allowed_max_bus_number(10);
 
-    BUS bus;
-    bus.set_toolkit(default_toolkit);
+    BUS bus(default_toolkit);
 
     bus.set_bus_number(1);
     bus.set_bus_name("bus 1");
@@ -43,8 +42,7 @@ void prepare_basic_generators()
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
-    GENERATOR generator;
-    generator.set_toolkit(default_toolkit);
+    GENERATOR generator(default_toolkit);
     generator.set_generator_bus(1);
     generator.set_identifier("1#");
     generator.set_status(true);
@@ -160,8 +158,7 @@ void prepare_basic_wt_generators()
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
-    WT_GENERATOR wt_generator;
-    wt_generator.set_toolkit(default_toolkit);
+    WT_GENERATOR wt_generator(default_toolkit);
     wt_generator.set_generator_bus(1);
     wt_generator.set_identifier("1#");
 
@@ -278,8 +275,7 @@ void prepare_basic_pv_units()
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
-    PV_UNIT pv_unit;
-    pv_unit.set_toolkit(default_toolkit);
+    PV_UNIT pv_unit(default_toolkit);
 
     pv_unit.set_unit_bus(1);
     pv_unit.set_identifier("1#");
@@ -316,8 +312,7 @@ void prepare_basic_energy_strorages()
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
-    ENERGY_STORAGE estorage;
-    estorage.set_toolkit(default_toolkit);
+    ENERGY_STORAGE estorage(default_toolkit);
     estorage.set_energy_storage_bus(1);
     estorage.set_identifier("#1");
     psdb.append_energy_storage(estorage);
@@ -352,8 +347,7 @@ void prepare_basic_loads()
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
-    LOAD load;
-    load.set_toolkit(default_toolkit);
+    LOAD load(default_toolkit);
     load.set_load_bus(1);
     load.set_identifier("1#");
     psdb.append_load(load);
@@ -434,8 +428,7 @@ void prepare_basic_lines()
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
-    LINE line;
-    line.set_toolkit(default_toolkit);
+    LINE line(default_toolkit);
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
@@ -459,8 +452,7 @@ void prepare_basic_transformers()
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
-    TRANSFORMER transformer;
-    transformer.set_toolkit(default_toolkit);
+    TRANSFORMER transformer(default_toolkit);
 
     transformer.set_winding_bus(PRIMARY_SIDE, 1);
     transformer.set_winding_bus(SECONDARY_SIDE, 2);
@@ -488,8 +480,7 @@ void prepare_basic_fixed_shunts()
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
-    FIXED_SHUNT shunt;
-    shunt.set_toolkit(default_toolkit);
+    FIXED_SHUNT shunt(default_toolkit);
 
     shunt.set_shunt_bus(1);
     shunt.set_identifier("1#");
@@ -517,8 +508,7 @@ void prepare_basic_hvdcs()
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
-    HVDC hvdc;
-    hvdc.set_toolkit(default_toolkit);
+    HVDC hvdc(default_toolkit);
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
     hvdc.set_identifier("P");
@@ -555,8 +545,7 @@ void prepare_basic_equivalent_devices()
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
-    EQUIVALENT_DEVICE edevice;
-    edevice.set_toolkit(default_toolkit);
+    EQUIVALENT_DEVICE edevice(default_toolkit);
 
     edevice.set_equivalent_device_bus(1);
     edevice.set_identifier("E1");

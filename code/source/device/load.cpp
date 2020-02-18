@@ -12,7 +12,7 @@ using namespace std;
 double LOAD::voltage_threshold_of_constant_power_load_in_pu = 0.7;
 double LOAD::voltage_threshold_of_constant_current_load_in_pu = 0.5;
 
-LOAD::LOAD()
+LOAD::LOAD(STEPS& toolkit) : DEVICE(toolkit)
 {
     clear();
 }
@@ -24,7 +24,7 @@ LOAD::~LOAD()
 void LOAD::set_load_bus(unsigned int load_bus)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
 
     if(load_bus!=0)
     {
@@ -213,7 +213,7 @@ void LOAD::report() const
       <<"P+jQ[P part] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_constant_power_load_in_MVA()<<" MVA, "
       <<"P+jQ[I part] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_constant_current_load_in_MVA()<<" MVA, "
       <<"P+jQ[Z part] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_constant_impedance_load_in_MVA()<<" MVA.";
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -227,9 +227,9 @@ LOAD& LOAD::operator=(const LOAD& load)
 {
     if(this==(&load)) return *this;
 
+    set_toolkit(load.get_toolkit());
     clear();
 
-    set_toolkit(load.get_toolkit(__PRETTY_FUNCTION__));
     set_load_bus(load.get_load_bus());
     set_identifier(load.get_identifier());
     set_status(load.get_status());
@@ -527,7 +527,7 @@ complex<double> LOAD::get_dynamic_load_in_MVA()
 
 complex<double> LOAD::get_dynamic_load_in_pu()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     return get_dynamic_load_in_MVA()*one_over_sbase;
@@ -579,12 +579,12 @@ complex<double> LOAD::get_dynamics_load_current_in_pu_based_on_system_base_power
             return scale*(load_model->get_load_current_in_pu_based_on_SBASE());
         else
         {
-            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+            STEPS& toolkit = get_toolkit();
             double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
             complex<double> V = get_bus_pointer()->get_positive_sequence_complex_voltage_in_pu();
             return (scale*one_over_sbase)*conj(get_actual_total_load_in_MVA()/V);
         }
-        /*STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        /*STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         complex<double> S = get_dynamic_load_in_pu();
 

@@ -30,7 +30,7 @@ void TIMER_TEST::setup()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(1000);
 
-    BUS bus;
+    BUS bus(default_toolkit);
 
     bus.set_bus_number(1);
     bus.set_bus_name("bus");

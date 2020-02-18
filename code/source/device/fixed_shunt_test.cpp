@@ -18,7 +18,7 @@
 using namespace std;
 
 
-FIXED_SHUNT_TEST::FIXED_SHUNT_TEST()
+FIXED_SHUNT_TEST::FIXED_SHUNT_TEST() : fixed_shunt(default_toolkit)
 {
     TEST_ADD(FIXED_SHUNT_TEST::test_constructor);
     TEST_ADD(FIXED_SHUNT_TEST::test_set_get_shunt_bus);
@@ -38,13 +38,11 @@ FIXED_SHUNT_TEST::FIXED_SHUNT_TEST()
 
 void FIXED_SHUNT_TEST::setup()
 {
-    fixed_shunt.set_toolkit(default_toolkit);
-
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_system_base_power_in_MVA(100.0);
     psdb.set_allowed_max_bus_number(10);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(100.0);
     bus.set_bus_type(PQ_TYPE);

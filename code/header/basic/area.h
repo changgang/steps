@@ -1,15 +1,18 @@
 #ifndef AREA_H
 #define AREA_H
 
-#include "header/basic/base.h"
 #include <string>
 using namespace std;
 
-class AREA : public BASE
+class STEPS;
+
+class AREA
 {
     public:
-        AREA();
+        AREA(STEPS& toolkit);
         virtual ~AREA();
+        void set_toolkit(STEPS& toolkit);
+        STEPS& get_toolkit() const;
 
         void set_area_number(unsigned int area_number);
         void set_area_name(string area_name);
@@ -23,9 +26,9 @@ class AREA : public BASE
         double get_expected_power_leaving_area_in_MW() const;
         double get_area_power_mismatch_tolerance_in_MW() const;
 
-        virtual bool is_valid() const;
-        virtual void check();
-        virtual void clear();
+        bool is_valid() const;
+        void check();
+        void clear();
         void report() const;
 
         virtual AREA& operator=(const AREA& area);
@@ -33,6 +36,9 @@ class AREA : public BASE
     private:
         void set_area_swing_bus_with_zero_input();
         void set_area_swing_bus_with_existing_bus(unsigned int bus);
+
+        STEPS* toolkit;
+
         unsigned int area_number;
         string area_name;
         unsigned int area_swing_bus;

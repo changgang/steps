@@ -19,7 +19,7 @@
 using namespace std;
 
 
-BUS_TEST::BUS_TEST()
+BUS_TEST::BUS_TEST() : bus(default_toolkit)
 {
     TEST_ADD(BUS_TEST::test_constructor);
     TEST_ADD(BUS_TEST::test_set_get_bus_number);
@@ -61,7 +61,6 @@ BUS_TEST::BUS_TEST()
 
 void BUS_TEST::setup()
 {
-    bus.set_toolkit(default_toolkit);
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100);
 }

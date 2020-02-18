@@ -9,7 +9,7 @@
 
 using namespace std;
 
-VSC_HVDC::VSC_HVDC()
+VSC_HVDC::VSC_HVDC(STEPS& toolkit) : DEVICE(toolkit)
 {
     clear();
 }
@@ -36,7 +36,7 @@ void VSC_HVDC::set_converter_bus(HVDC_CONVERTER_SIDE converter, const unsigned i
 
     if(bus!=0)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         if(psdb.is_bus_exist(bus))
@@ -56,7 +56,7 @@ void VSC_HVDC::set_converter_bus(HVDC_CONVERTER_SIDE converter, const unsigned i
     {
         osstream<<"Warning. Zero bus number (0) is not allowed for setting up "<<converter_name<<" bus of vsc-hvdc link."<<endl
                 <<"0 will be set to indicate invalid vsc-hvdc link.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
         converter_bus[converter] = bus;
     }
@@ -87,7 +87,7 @@ void VSC_HVDC::set_line_resistance_in_ohm(const double R)
         ostringstream osstream;
         osstream<<"Error. Non-positive ("<<R<<" ohm) is not allowed for setting VSC_HVDC line resistance of "<<get_device_name()<<endl
           <<"0.0 will be set to indicate invalid VSC_HVDC link.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
         this->line_R_in_ohm = 0.0;
     }
@@ -99,7 +99,7 @@ void VSC_HVDC::set_converter_dc_operation_mode(HVDC_CONVERTER_SIDE converter, co
     if(get_converter_dc_operation_mode(RECTIFIER)==VSC_DC_POWER_CONTORL and
        get_converter_dc_operation_mode(INVERTER)==VSC_DC_POWER_CONTORL)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         ostringstream osstream;
         osstream<<"Error. It is invalid to set both converters to be operated in DC power control mode for "<<get_device_name()<<endl
                 <<"Check input of VSC-HVDC DC operation mode. "<<endl
@@ -373,7 +373,7 @@ void VSC_HVDC::initialize_dc_power_and_voltage_command()
             }
             else // both VSC_DC_POWER_CONTORL
             {
-                STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+                STEPS& toolkit = get_toolkit();
                 ostringstream osstream;
                 osstream<<"Error. Both converters are operated in DC power control mode for "<<get_device_name()<<".\n"
                         <<"Check input data";
@@ -595,7 +595,7 @@ bool VSC_HVDC::is_connected_to_bus(unsigned int bus) const
 
 bool VSC_HVDC::is_in_area(unsigned int area) const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     BUS* busptr_rec = psdb.get_bus(get_converter_bus(RECTIFIER));
     BUS* busptr_inv = psdb.get_bus(get_converter_bus(INVERTER));
@@ -614,7 +614,7 @@ bool VSC_HVDC::is_in_area(unsigned int area) const
 
 bool VSC_HVDC::is_in_zone(unsigned int zone) const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     BUS* busptr_rec = psdb.get_bus(get_converter_bus(RECTIFIER));
     BUS* busptr_inv = psdb.get_bus(get_converter_bus(INVERTER));
@@ -635,7 +635,7 @@ void VSC_HVDC::report() const
 {
     ostringstream osstream;
     osstream<<"VSC_HVDC '"<<get_name()<<"': Rdc = "<<get_line_resistance_in_ohm()<<" ohm";
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     /*
@@ -691,7 +691,7 @@ void VSC_HVDC::set_model(const MODEL* model)
         {
             ostringstream osstream;
             osstream<<"Waring. Neither AUXILIARY SIGNAL model nor VSC_HVDC model is given to set dynamic model for "<<get_device_name();
-            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+            STEPS& toolkit = get_toolkit();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -732,7 +732,7 @@ AUXILIARY_SIGNAL_MODEL* VSC_HVDC::get_auxiliary_signal_model() const
 
 void VSC_HVDC::run(DYNAMIC_MODE mode)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     if(get_status()==true)
     {
@@ -771,9 +771,8 @@ VSC_HVDC& VSC_HVDC::operator=(const VSC_HVDC& vsc_hvdc)
 {
     if(this == (&vsc_hvdc)) return *this;
 
+    set_toolkit(vsc_hvdc.get_toolkit());
     clear();
-
-    set_toolkit(vsc_hvdc.get_toolkit(__PRETTY_FUNCTION__));
 
     if(vsc_hvdc.get_converter_bus(RECTIFIER)!=0)
         set_converter_bus(RECTIFIER, vsc_hvdc.get_converter_bus(RECTIFIER));

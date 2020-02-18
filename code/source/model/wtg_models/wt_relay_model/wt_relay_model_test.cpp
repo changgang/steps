@@ -38,8 +38,7 @@ void WT_RELAY_MODEL_TEST::setup()
     wt_gen->set_rated_power_per_wt_generator_in_MW(1.5);
     wt_gen->set_number_of_lumped_wt_generators(20);
 
-    WT3G0 genmodel;
-    genmodel.set_toolkit(default_toolkit);
+    WT3G0 genmodel(default_toolkit);
     genmodel.set_device_id(wt_gen->get_device_id());
     genmodel.set_converter_activer_current_command_T_in_s(0.2);
     genmodel.set_converter_reactiver_voltage_command_T_in_s(0.2);
@@ -58,8 +57,7 @@ void WT_RELAY_MODEL_TEST::setup()
 
     dmdb.add_model(&genmodel);
 
-    AERD0 aeromodel;
-    areomodel.set_toolkit(default_toolkit);
+    AERD0 aeromodel(default_toolkit);
     aeromodel.set_device_id(wt_gen->get_device_id());
 
     aeromodel.set_number_of_pole_pairs(2);

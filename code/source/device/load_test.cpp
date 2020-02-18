@@ -21,7 +21,7 @@
 using namespace std;
 
 
-LOAD_TEST::LOAD_TEST()
+LOAD_TEST::LOAD_TEST() : load(default_toolkit)
 {
     TEST_ADD(LOAD_TEST::test_constructor);
     TEST_ADD(LOAD_TEST::test_set_get_load_bus);
@@ -55,12 +55,10 @@ LOAD_TEST::LOAD_TEST()
 
 void LOAD_TEST::setup()
 {
-    load.set_toolkit(default_toolkit);
-
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(100.0);
     bus.set_bus_type(PQ_TYPE);

@@ -18,7 +18,7 @@
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
 
-WT_GENERATOR_TEST::WT_GENERATOR_TEST()
+WT_GENERATOR_TEST::WT_GENERATOR_TEST() : wt_generator(default_toolkit)
 {
     TEST_ADD(WT_GENERATOR_TEST::test_constructor);
     TEST_ADD(WT_GENERATOR_TEST::test_set_get_generator_bus);
@@ -29,14 +29,12 @@ WT_GENERATOR_TEST::WT_GENERATOR_TEST()
 
 void WT_GENERATOR_TEST::setup()
 {
-    wt_generator.set_toolkit(default_toolkit);
-
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_system_base_power_in_MVA(100.0);
     psdb.set_allowed_max_bus_number(100);
 
-    BUS bus;
+    BUS bus(default_toolkit);
     bus.set_bus_number(1);
     bus.set_bus_name("bus 1");
     bus.set_base_voltage_in_kV(35.0);
