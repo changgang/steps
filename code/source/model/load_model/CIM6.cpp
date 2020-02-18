@@ -555,6 +555,8 @@ void CIM6::setup_model_dynamic_parameters()
 
 void CIM6::initialize()
 {
+    synchronize_bus_voltage_and_frequency();
+
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     setup_block_toolkit_and_parameters();
@@ -845,6 +847,8 @@ void CIM6::initialize_to_start()
 {
     if(not is_model_initialized())
     {
+        synchronize_bus_voltage_and_frequency();
+
         setup_block_toolkit_and_parameters();
 
         transient_block_x_axis.set_output(0);

@@ -52,8 +52,7 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_single_machine_model_IEEET1);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_single_machine_model_IEEEG1);
 
-
-  //  TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_trip_bus);
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_trip_bus);
 
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_with_rotor_angle_surveillance);
@@ -75,7 +74,6 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models);
 
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models);
-
 }
 
 void DYNAMICS_SIMULATOR_TEST::setup()
@@ -1291,7 +1289,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_CIM6
 
     simulator.set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e5));
 
-    simulator.run_to(1.8);
+    simulator.run_to(1.3);
 
     simulator.clear_line_fault(did,17, 0.0);
     simulator.trip_line(did);
@@ -1619,7 +1617,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    //simulator.prepare_meters();
+    simulator.prepare_meters();
     simulator.set_output_file("test_log/bench_shandong_100_bus_model_dynamic_test_result_GENROU_CDC4T");
 
     simulator.set_output_file("test_log/bench_shandong_100_bus_model_dynamic_test_result_GENROU_CDC4T");
@@ -1810,6 +1808,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
     powerflow_solver.set_transformer_tap_adjustment_logic(true);
 
     powerflow_solver.solve_with_fast_decoupled_solution();
+    powerflow_solver.show_powerflow_result();
 
     /*METER meter;
     METER_SETTER setter;
@@ -1875,7 +1874,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
     simulator.trip_line(did);*/
     simulator.shed_generator(gendid_1, 0.2);
 
-    simulator.run_to(100.0);
+    simulator.run_to(20.0);
 
     default_toolkit.close_log_file();
 }

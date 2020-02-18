@@ -9,7 +9,7 @@ using namespace std;
 
 STEPS::STEPS(const string& name, const string& log_file)
 {
-    enable_use_steps_fast_math_logic();
+    disable_use_steps_fast_math_logic();
 
     ostringstream osstream;
     std::this_thread::sleep_for(std::chrono::milliseconds(10));

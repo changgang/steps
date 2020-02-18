@@ -581,13 +581,15 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_undersp
 
     if(w>wmax)
     {
-        osstream<<"Initialized turbine speed exceed maximum value "<<wmax<<" rad/s.";
+        osstream<<"Initialized turbine speed of "<<get_device_name()<<" exceed maximum value "<<wmax<<" rad/s.\n"
+                <<"Desired turbine speed is "<<w<<" rad/s.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         set_initial_turbine_speed_in_rad_per_s(wmax);
     }
     else
     {
-        osstream<<"Initialized turbine speed exceed minimum value "<<wmin<<" rad/s.";
+        osstream<<"Initialized turbine speed of "<<get_device_name()<<" exceed minimum value "<<wmin<<" rad/s.\n"
+                <<"Desired turbine speed is "<<w<<" rad/s.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         set_initial_turbine_speed_in_rad_per_s(wmin);
     }

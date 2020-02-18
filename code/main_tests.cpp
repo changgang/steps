@@ -211,8 +211,6 @@ int main(int argc, char* argv[])
         Test::Suite ts;
         #ifdef ENABLE_STEPS_TEST
 
-        default_toolkit.disable_use_steps_fast_math_logic();
-/*
         ts.add(unique_ptr<Test::Suite>(new TERMINAL_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new DEVICE_ID_TEST));
@@ -339,7 +337,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new FILEWIND_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new PVGU1_TEST));
-*/
+
         ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));
 
         //ts.add(unique_ptr<Test::Suite>(new CCT_SEARCHER_TEST));

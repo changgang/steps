@@ -2882,10 +2882,11 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
     for(unsigned int i=0; i<n; ++i)
     {
         unsigned int ibus = net.get_physical_bus_number_of_internal_bus(i);
-        //osstream<<ibus<<", "<<I_mismatch[i]<<endl;
-        //toolkit->show_information_with_leading_time_stamp(osstream);
+        osstream<<ibus<<", "<<I_mismatch[i]<<endl;
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }
     */
+
     /*
     double maxmismatch = 0.0;
     complex<double> cmaxmismatch = 0.0;
@@ -3021,7 +3022,6 @@ void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
                 //complex<double> I = gen_model->get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
                 //I_mismatch[internal_bus] += I;
                 I_mismatch[internal_bus] += gen_model->get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
-
                 /*os<< "Generator %u source current: %f + j%f",physical_bus, I.real(), I.imag());
                 toolkit->show_information_with_leading_time_stamp(osstream);
                 complex<double> Edq = gen_model->get_internal_voltage_in_pu_in_dq_axis();
@@ -3065,7 +3065,6 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
                 //cout<<generator->get_device_name()<<" terminal or Norton current is: "<<I<<endl;
 
                 I_mismatch[internal_bus] += I;
-
                 /*os<< "Generator %u source current: %f + j%f",physical_bus, I.real(), I.imag());
                 toolkit->show_information_with_leading_time_stamp(osstream);
                 complex<double> Edq = gen_model->get_internal_voltage_in_pu_in_dq_axis();
@@ -3801,6 +3800,8 @@ void DYNAMICS_SIMULATOR::trip_bus(unsigned int bus)
             toolkit->show_information_with_leading_time_stamp(osstream);
 
             psdb.trip_bus(bus);
+
+            in_service_buses = psdb.get_all_in_service_buses();
 
             optimize_network_ordering();
             //network_matrix.build_dynamic_network_Y_matrix();
