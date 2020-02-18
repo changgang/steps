@@ -1,11 +1,11 @@
 #include "header/basic/owner.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 #include <istream>
 #include <iostream>
 #include <cmath>
 
 using namespace std;
-
 
 OWNER::OWNER(STEPS& toolkit)
 {
@@ -36,7 +36,7 @@ void OWNER::set_owner_number(unsigned int number)
     {
         ostringstream osstream;
         osstream<<"0 is not allowed for setting owner number. 0 will be set to indicated invalid owner.";
-        //toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
 
         this->owner_number = 0;
     }
@@ -72,7 +72,7 @@ void OWNER::check()
     {
         ostringstream osstream;
         osstream<<"Error. Zero (0) is not allowed for owner number.";
-        //toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -87,7 +87,7 @@ void OWNER::report() const
     ostringstream osstream;
 
     osstream<<"Owner "<<get_owner_number()<<" ("<<get_owner_name()<<").";
-    //toolkit->show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 }
 
 OWNER& OWNER::operator=(const OWNER& owner)
