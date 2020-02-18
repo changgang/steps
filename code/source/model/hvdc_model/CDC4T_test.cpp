@@ -18,8 +18,7 @@ void CDC4T_TEST::setup()
 
     HVDC* hvdcptr = get_test_hvdc();
 
-    CDC4T model;
-    model.set_toolkit(default_toolkit);
+    CDC4T model(default_toolkit);
     model.set_device_id(hvdcptr->get_device_id());
 
     model.set_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER, 5.0);

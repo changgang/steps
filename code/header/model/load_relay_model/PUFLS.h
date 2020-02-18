@@ -11,7 +11,7 @@
 class PUFLS : public LOAD_FREQUENCY_RELAY_MODEL
 {
     public:
-        PUFLS();
+        PUFLS(STEPS& toolkit);
         PUFLS(const PUFLS& model);
         virtual ~PUFLS();
         virtual PUFLS& operator=(const PUFLS& model);

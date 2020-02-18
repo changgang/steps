@@ -11,7 +11,7 @@
 class CDC6T: public HVDC_MODEL
 {
     public:
-        CDC6T();
+        CDC6T(STEPS& toolkit);
         CDC6T(const CDC6T& model);
         virtual ~CDC6T();
         virtual CDC6T& operator=(const CDC6T& model);

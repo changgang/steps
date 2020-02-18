@@ -5,7 +5,7 @@
 #include <iostream>
 using namespace std;
 
-UFLS::UFLS()
+UFLS::UFLS(STEPS& toolkit) : LOAD_FREQUENCY_RELAY_MODEL(toolkit)
 {
     clear();
 }
@@ -39,6 +39,8 @@ void UFLS::clear()
 }
 void UFLS::copy_from_const_model(const UFLS& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
     set_frequency_sensor_time_in_s(model.get_frequency_sensor_time_in_s());
     for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
@@ -52,7 +54,7 @@ void UFLS::copy_from_const_model(const UFLS& model)
     this->set_breaker_time_in_s(model.get_breaker_time_in_s());
 }
 
-UFLS::UFLS(const UFLS& model) : LOAD_FREQUENCY_RELAY_MODEL()
+UFLS::UFLS(const UFLS& model) : LOAD_FREQUENCY_RELAY_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -208,14 +210,14 @@ bool UFLS::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void UFLS::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     frequency_sensor.set_toolkit(toolkit);
     for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
     {
@@ -255,7 +257,7 @@ void UFLS::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double current_time = toolkit.get_dynamic_simulation_time_in_s();
 
     double freq = get_bus_frequency_in_Hz();
@@ -389,7 +391,7 @@ bool UFLS::is_stage_breaker_timer_timed_out(unsigned int i) const
 void UFLS::trip_stage(unsigned int i)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     if(i<STEPS_MAX_LOAD_RELAY_STAGE)
     {
         if(not is_stage_tripped(i))

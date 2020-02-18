@@ -7,7 +7,7 @@
 #include <iostream>
 
 using namespace std;
-CDC6T::CDC6T()
+CDC6T::CDC6T(STEPS& toolkit) : HVDC_MODEL(toolkit)
 {
     clear();
 }
@@ -41,6 +41,8 @@ void CDC6T::clear()
 
 void CDC6T::copy_from_const_model(const CDC6T& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
     this->set_inverter_dc_voltage_sensor_T_in_s(model.get_inverter_dc_voltage_sensor_T_in_s());
     this->set_rectifier_dc_voltage_sensor_T_in_s(model.get_rectifier_dc_voltage_sensor_T_in_s());
@@ -71,7 +73,7 @@ void CDC6T::copy_from_const_model(const CDC6T& model)
     this->set_minimum_time_in_switched_mode_in_s(model.get_minimum_time_in_switched_mode_in_s());
 }
 
-CDC6T::CDC6T(const CDC6T& model) : HVDC_MODEL()
+CDC6T::CDC6T(const CDC6T& model) : HVDC_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -362,7 +364,7 @@ bool CDC6T::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
@@ -371,7 +373,7 @@ void CDC6T::setup_block_toolkit_and_parameters()
 {
     set_common_timer_toolkit();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     inverter_dc_voltage_sensor.set_toolkit(toolkit);
     dc_current_sensor.set_toolkit(toolkit);
     rectifier_dc_voltage_sensor.set_toolkit(toolkit);
@@ -475,7 +477,7 @@ void CDC6T::check_blocking_logic()
 
     if(is_manual_blocked())
         return;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
     ostringstream osstream;
@@ -678,7 +680,7 @@ void CDC6T::check_bypassing_logic()
     if(is_manual_bypassed())
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
     ostringstream osstream;
@@ -804,7 +806,7 @@ void CDC6T::check_mode_switching_logic()
     if(is_blocked() or is_bypassed())
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
     double t_unblock = get_unblocking_time();
@@ -852,7 +854,7 @@ void CDC6T::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -1112,7 +1114,7 @@ double CDC6T::get_model_internal_variable_with_name(string var_name)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }

@@ -2,7 +2,7 @@
 #include "header/basic/utility.h"
 #include "header/STEPS.h"
 #include <cstdio>
-IEEL::IEEL()
+IEEL::IEEL(STEPS& toolkit) : LOAD_MODEL(toolkit)
 {
     clear();
 }
@@ -20,6 +20,8 @@ void IEEL::clear()
 
 void IEEL::copy_from_const_model(const IEEL& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     //this->set_power_system_database(model.toolkit.get_power_system_database());
@@ -45,7 +47,7 @@ void IEEL::copy_from_const_model(const IEEL& model)
 
 }
 
-IEEL::IEEL(const IEEL& model) : LOAD_MODEL()
+IEEL::IEEL(const IEEL& model) : LOAD_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -288,7 +290,7 @@ bool IEEL::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
@@ -403,7 +405,7 @@ complex<double> IEEL::get_load_power_in_MVA()
 
 complex<double> IEEL::get_load_current_in_pu_based_on_SBASE()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     complex<double> S = get_load_power_in_MVA();
@@ -424,7 +426,7 @@ void IEEL::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 void IEEL::save()

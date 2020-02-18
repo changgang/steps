@@ -16,7 +16,7 @@
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
 
-METER_TEST::METER_TEST()
+METER_TEST::METER_TEST() : meter(default_toolkit)
 {
     TEST_ADD(METER_TEST::test_constructor);
     TEST_ADD(METER_TEST::test_set_get_device_id_and_type);
@@ -43,8 +43,6 @@ METER_TEST::METER_TEST()
 void METER_TEST::setup()
 {
     default_toolkit.clear();
-
-    meter.set_toolkit(default_toolkit);
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
@@ -83,8 +81,7 @@ void METER_TEST::setup()
     generator.set_generator_bus(1);
     generator.set_identifier("#1");
     psdb.append_generator(generator);
-    GENCLS model;
-    model.set_toolkit(default_toolkit);
+    GENCLS model(default_toolkit);
     model.set_device_id(generator.get_device_id());
     model.set_H_in_s(3.0);
     dmdb.add_model(&model);

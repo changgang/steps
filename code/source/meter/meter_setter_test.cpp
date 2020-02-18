@@ -14,7 +14,7 @@
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
 
-METER_SETTER_TEST::METER_SETTER_TEST()
+METER_SETTER_TEST::METER_SETTER_TEST() : setter(default_toolkit)
 {
     TEST_ADD(METER_SETTER_TEST::test_constructor);
     TEST_ADD(METER_SETTER_TEST::test_prepare_bus_related_meters);
@@ -31,7 +31,7 @@ METER_SETTER_TEST::METER_SETTER_TEST()
 
 void METER_SETTER_TEST::setup()
 {
-    setter.set_toolkit(default_toolkit);
+    ;
 }
 
 void METER_SETTER_TEST::tear_down()
@@ -52,8 +52,7 @@ void METER_SETTER_TEST::test_prepare_bus_related_meters()
 
     prepare_basic_buses();
 
-    METER meter;
-    meter.set_toolkit(default_toolkit);
+    METER meter(default_toolkit);
 
     DEVICE_ID did;
     TERMINAL terminal;
@@ -117,8 +116,7 @@ void METER_SETTER_TEST::test_prepare_line_related_meters()
 
     prepare_basic_lines();
 
-    METER meter;
-    meter.set_toolkit(default_toolkit);
+    METER meter(default_toolkit);
 
     DEVICE_ID did;
     TERMINAL terminal;
@@ -236,8 +234,7 @@ void METER_SETTER_TEST::test_prepare_transformer_related_meters()
 
     prepare_basic_transformers();
 
-    METER meter;
-    meter.set_toolkit(default_toolkit);
+    METER meter(default_toolkit);
 
     DEVICE_ID did;
     TERMINAL terminal;
@@ -409,8 +406,7 @@ void METER_SETTER_TEST::test_prepare_load_related_meters()
 
     prepare_basic_loads();
 
-    METER meter;
-    meter.set_toolkit(default_toolkit);
+    METER meter(default_toolkit);
 
     DEVICE_ID did;
     TERMINAL terminal;
@@ -478,8 +474,7 @@ void METER_SETTER_TEST::test_prepare_generator_related_meters()
 
     prepare_basic_generators();
 
-    METER meter;
-    meter.set_toolkit(default_toolkit);
+    METER meter(default_toolkit);
 
     DEVICE_ID did;
     TERMINAL terminal;
@@ -638,8 +633,7 @@ void METER_SETTER_TEST::test_prepare_wt_generator_related_meters()
 
     prepare_basic_wt_generators();
 
-    METER meter;
-    meter.set_toolkit(default_toolkit);
+    METER meter(default_toolkit);
 
     DEVICE_ID did;
     TERMINAL terminal;
@@ -794,8 +788,7 @@ void METER_SETTER_TEST::test_prepare_pv_unit_related_meters()
 
     prepare_basic_pv_units();
 
-    METER meter;
-    meter.set_toolkit(default_toolkit);
+    METER meter(default_toolkit);
 
     DEVICE_ID did;
     TERMINAL terminal;
@@ -872,8 +865,7 @@ void METER_SETTER_TEST::test_prepare_energy_storage_related_meters()
 
     prepare_basic_energy_strorages();
 
-    METER meter;
-    meter.set_toolkit(default_toolkit);
+    METER meter(default_toolkit);
 
     DEVICE_ID did;
     TERMINAL terminal;
@@ -923,8 +915,7 @@ void METER_SETTER_TEST::test_prepare_hvdc_related_meters()
 
     prepare_basic_hvdcs();
 
-    METER meter;
-    meter.set_toolkit(default_toolkit);
+    METER meter(default_toolkit);
 
     DEVICE_ID did;
     TERMINAL terminal;
@@ -1015,8 +1006,7 @@ void METER_SETTER_TEST::test_prepare_equivalent_device_related_meters()
 
     prepare_basic_equivalent_devices();
 
-    METER meter;
-    meter.set_toolkit(default_toolkit);
+    METER meter(default_toolkit);
 
     DEVICE_ID did;
     TERMINAL terminal;

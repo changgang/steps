@@ -43,6 +43,6 @@ class STEPS_IMEXPORTER_TEST : public Test::Suite
 
         void test_load_dynamic_data();
     private:
-        STEPS_IMEXPORTER* importer;
+        STEPS_IMEXPORTER importer;
 };
 #endif // STEPS_IMEXPORTER_TEST_H

@@ -14,7 +14,7 @@ this model can be found in W.I. Rowen, "Simplified Mathematical Representations 
 class GAST2A : public TURBINE_GOVERNOR_MODEL
 {
     public:
-        GAST2A();
+        GAST2A(STEPS& toolkit);
         GAST2A(const GAST2A&model);
         virtual ~GAST2A();
         virtual GAST2A& operator=(const GAST2A& model);

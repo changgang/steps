@@ -9,7 +9,7 @@ class EQUIVALENT_DEVICE;
 class EQUIVALENT_MODEL : public MODEL
 {
     public:
-        EQUIVALENT_MODEL();
+        EQUIVALENT_MODEL(STEPS& toolkit);
         virtual ~EQUIVALENT_MODEL();
         EQUIVALENT_DEVICE* get_equivalent_device_pointer() const;
         // common equivalent model

@@ -6,7 +6,7 @@
 class COMP: public COMPENSATOR_MODEL
 {
     public:
-        COMP();
+        COMP(STEPS& toolkit);
         COMP(const COMP& model);
         virtual ~COMP();
         virtual COMP& operator=(const COMP& model);

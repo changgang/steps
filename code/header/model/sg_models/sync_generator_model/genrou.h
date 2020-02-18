@@ -8,7 +8,7 @@
 class GENROU : public SYNC_GENERATOR_MODEL
 {
     public:
-        GENROU();
+        GENROU(STEPS& toolkit);
         GENROU(const GENROU& model);
         virtual ~GENROU();
         virtual GENROU& operator=(const GENROU& model);

@@ -25,9 +25,8 @@ void WT3G2_TEST::setup()
 
     WT_GENERATOR* wt_gen = get_test_wt_generator();
 
-    WT3G2 model;
+    WT3G2 model(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    model.set_toolkit(default_toolkit);
     model.set_device_id(wt_gen->get_device_id());
 
     wt_gen->set_number_of_lumped_wt_generators(50);

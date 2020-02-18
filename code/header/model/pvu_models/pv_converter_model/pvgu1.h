@@ -9,7 +9,7 @@
 class PVGU1 : public PV_CONVERTER_MODEL
 {
     public:
-        PVGU1();
+        PVGU1(STEPS& toolkit);
         PVGU1(const PVGU1& model);
         virtual ~PVGU1();
         virtual PVGU1& operator=(const PVGU1&);

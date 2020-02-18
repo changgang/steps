@@ -6,7 +6,7 @@
 #include <iostream>
 using namespace std;
 
-PVGU1::PVGU1()
+PVGU1::PVGU1(STEPS& toolkit) : PV_CONVERTER_MODEL(toolkit)
 {
     clear();
 }
@@ -32,6 +32,8 @@ void PVGU1::clear()
 
 void PVGU1::copy_from_const_model(const PVGU1& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
     set_converter_activer_current_command_T_in_s(model.get_converter_activer_current_command_T_in_s());
     set_LVPL_max_rate_of_active_current_change(model.get_LVPL_max_rate_of_active_current_change());
@@ -43,7 +45,7 @@ void PVGU1::copy_from_const_model(const PVGU1& model)
     set_HVRC_current_in_pu(model.get_HVRC_current_in_pu());
 }
 
-PVGU1::PVGU1(const PVGU1& model):PV_CONVERTER_MODEL()
+PVGU1::PVGU1(const PVGU1& model):PV_CONVERTER_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -165,7 +167,7 @@ bool PVGU1::setup_model_with_steps_string_vector(vector<string>& data)
             t_lvpl = get_double_data(data[i],"0.0");
 
             DEVICE_ID did = get_pv_unit_device_id(ibus, id);
-            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+            STEPS& toolkit = get_toolkit();
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
             PV_UNIT* pv = psdb.get_pv_unit(did);
             if(pv!=NULL)
@@ -217,14 +219,14 @@ bool PVGU1::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void PVGU1::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     active_current_commander.set_toolkit(toolkit);
     LVPL_voltage_sensor.set_toolkit(toolkit);
     reactive_voltage_commander.set_toolkit(toolkit);
@@ -232,7 +234,7 @@ void PVGU1::setup_block_toolkit_and_parameters()
 
 void PVGU1::initialize()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     if(not is_model_initialized())
     {
@@ -337,7 +339,7 @@ void PVGU1::run(DYNAMIC_MODE mode)
 
 complex<double> PVGU1::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     double mbase = get_mbase_in_MVA();
 
@@ -388,7 +390,7 @@ complex<double> PVGU1::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
 
 complex<double> PVGU1::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
     double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
@@ -423,7 +425,7 @@ void PVGU1::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -625,7 +627,7 @@ double PVGU1::get_pll_angle_in_deg()
 
 double PVGU1::get_pll_frequency_deviation_in_pu()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     PV_UNIT* pv = (PV_UNIT*) get_device_pointer();
     unsigned int bus = pv->get_unit_bus();
@@ -656,7 +658,7 @@ complex<double> PVGU1::get_internal_voltage_in_pu_in_xy_axis()
     complex<double> Ixy = get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
     complex<double> Z = get_source_impedance_in_pu_based_on_mbase();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
     double one_over_mbase = get_one_over_mbase_in_one_over_MVA();

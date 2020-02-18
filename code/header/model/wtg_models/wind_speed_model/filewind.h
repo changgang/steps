@@ -12,7 +12,7 @@ class FILEWIND : public WIND_SPEED_MODEL
         vwind: wind speed in mps
     */
     public:
-        FILEWIND();
+        FILEWIND(STEPS& toolkit);
         FILEWIND(const FILEWIND& model);
         virtual ~FILEWIND();
         virtual FILEWIND& operator=(const FILEWIND& model);

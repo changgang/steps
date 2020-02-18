@@ -8,7 +8,7 @@
 class WTRLY0 : public WT_RELAY_MODEL
 {
     public:
-        WTRLY0();
+        WTRLY0(STEPS& toolkit);
         WTRLY0(const WTRLY0& model);
         virtual ~WTRLY0();
         virtual WTRLY0& operator=(const WTRLY0& model);

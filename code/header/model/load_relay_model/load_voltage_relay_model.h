@@ -6,7 +6,7 @@
 class LOAD_VOLTAGE_RELAY_MODEL : public LOAD_RELAY_MODEL
 {
     public:
-        LOAD_VOLTAGE_RELAY_MODEL();
+        LOAD_VOLTAGE_RELAY_MODEL(STEPS& toolkit);
         virtual ~LOAD_VOLTAGE_RELAY_MODEL();
 
         virtual string get_model_type() const;

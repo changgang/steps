@@ -6,12 +6,13 @@
 #include "header/device/device.h"
 #include "header/basic/base.h"
 
-class METER : public BASE
+class METER
 {
     public:
-        METER();
+        METER(STEPS& toolkit);
         METER(const METER& meter);
         METER& operator=(const METER& meter);
+        STEPS& get_toolkit() const;
         ~METER();
 
         void set_device_id(const DEVICE_ID& device_id);
@@ -60,8 +61,7 @@ class METER : public BASE
         double get_meter_value_as_an_equivalent_device() const;
         double get_meter_value_as_an_energy_storage() const;
 
-        virtual void check();
-
+        STEPS* toolkit;
         DEVICE* device_pointer;
         char meter_type[STEPS_METER_TYPE_STRING_SIZE];
         unsigned int meter_side_bus;

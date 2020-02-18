@@ -4,7 +4,7 @@
 #include <cstdio>
 #include "header/basic/utility.h"
 #include <vector>
-IEE2ST::IEE2ST()
+IEE2ST::IEE2ST(STEPS& toolkit) : STABILIZER_MODEL(toolkit)
 {
     clear();
 }
@@ -20,6 +20,8 @@ void IEE2ST::clear()
 
 void IEE2ST::copy_from_const_model(const IEE2ST& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     //this->set_power_system_database(model.toolkit.get_power_system_database());
@@ -52,7 +54,7 @@ void IEE2ST::copy_from_const_model(const IEE2ST& model)
     this->set_Vcmin(model.get_Vcmin());
 
 }
-IEE2ST::IEE2ST(const IEE2ST& model) : STABILIZER_MODEL()
+IEE2ST::IEE2ST(const IEE2ST& model) : STABILIZER_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -305,14 +307,14 @@ bool IEE2ST::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void IEE2ST::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     sensor_1.set_toolkit(toolkit);
     sensor_2.set_toolkit(toolkit);
     filter.set_toolkit(toolkit);
@@ -462,7 +464,7 @@ void IEE2ST::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

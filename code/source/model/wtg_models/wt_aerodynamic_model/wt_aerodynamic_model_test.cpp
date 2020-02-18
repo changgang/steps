@@ -58,9 +58,8 @@ void WT_AERODYNAMIC_MODEL_TEST::setup()
     wt_gen->set_rated_power_per_wt_generator_in_MW(1.5);
     wt_gen->set_number_of_lumped_wt_generators(20);
 
-    WT3G0 genmodel;
+    WT3G0 genmodel(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    genmodel.set_toolkit(default_toolkit);
     genmodel.set_device_id(wt_gen->get_device_id());
 
     genmodel.set_converter_activer_current_command_T_in_s(0.2);

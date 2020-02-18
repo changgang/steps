@@ -21,7 +21,7 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
             speed: wt rotor speed, in pu, or rad/s. not speed deviation
     */
     public:
-        WT_AERODYNAMIC_MODEL();
+        WT_AERODYNAMIC_MODEL(STEPS& toolkit);
         WT_AERODYNAMIC_MODEL(const WT_AERODYNAMIC_MODEL& model);
         virtual ~WT_AERODYNAMIC_MODEL();
         virtual WT_AERODYNAMIC_MODEL& operator=(const WT_AERODYNAMIC_MODEL& model);

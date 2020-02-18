@@ -4,7 +4,7 @@
 #include "header/STEPS.h"
 #include <cstdio>
 
-WT_RELAY_MODEL::WT_RELAY_MODEL()
+WT_RELAY_MODEL::WT_RELAY_MODEL(STEPS& toolkit) : WTG_MODEL(toolkit)
 {
     common_constructor();
 }
@@ -72,7 +72,7 @@ double WT_RELAY_MODEL::get_bus_frequency_in_pu() const
         unsigned int bus = generator->get_source_bus();
         if(bus!=0)
         {
-            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+            STEPS& toolkit = get_toolkit();
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
             return psdb.get_bus_frequency_in_pu(bus);
         }

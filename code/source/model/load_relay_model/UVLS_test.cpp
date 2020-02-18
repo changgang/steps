@@ -25,9 +25,8 @@ void UVLS_TEST::setup()
 
     LOAD* load = get_load();
 
-    UVLS model;
+    UVLS model(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    model.set_toolkit(default_toolkit);
     model.set_device_id(load->get_device_id());
 
     unsigned int stage = 0;

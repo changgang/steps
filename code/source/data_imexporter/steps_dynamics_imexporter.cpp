@@ -397,8 +397,7 @@ void STEPS_IMEXPORTER::add_GENCLS_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            GENCLS model;
-            model.set_toolkit(toolkit);
+            GENCLS model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -428,8 +427,7 @@ void STEPS_IMEXPORTER::add_GENROU_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            GENROU model;
-            model.set_toolkit(toolkit);
+            GENROU model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -459,8 +457,7 @@ void STEPS_IMEXPORTER::add_GENSAL_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            GENSAL model;
-            model.set_toolkit(toolkit);
+            GENSAL model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -490,8 +487,7 @@ void STEPS_IMEXPORTER::add_COMP_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            COMP model;
-            model.set_toolkit(toolkit);
+            COMP model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -521,8 +517,7 @@ void STEPS_IMEXPORTER::add_IEEEVC_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            IEEEVC model;
-            model.set_toolkit(toolkit);
+            IEEEVC model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -553,8 +548,7 @@ void STEPS_IMEXPORTER::add_PSASPVC_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            PSASPVC model;
-            model.set_toolkit(toolkit);
+            PSASPVC model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -584,8 +578,7 @@ void STEPS_IMEXPORTER::add_IEE2ST_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            IEE2ST model;
-            model.set_toolkit(toolkit);
+            IEE2ST model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -615,8 +608,7 @@ void STEPS_IMEXPORTER::add_PSASPS1_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            PSASPS1 model;
-            model.set_toolkit(toolkit);
+            PSASPS1 model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -645,8 +637,7 @@ void STEPS_IMEXPORTER::add_PSASPS2_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            PSASPS2 model;
-            model.set_toolkit(toolkit);
+            PSASPS2 model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -675,8 +666,7 @@ void STEPS_IMEXPORTER::add_PSASPS3_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            PSASPS3 model;
-            model.set_toolkit(toolkit);
+            PSASPS3 model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -705,8 +695,7 @@ void STEPS_IMEXPORTER::add_PSASPS4_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            PSASPS4 model;
-            model.set_toolkit(toolkit);
+            PSASPS4 model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -735,8 +724,7 @@ void STEPS_IMEXPORTER::add_PSASPS5_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            PSASPS5 model;
-            model.set_toolkit(toolkit);
+            PSASPS5 model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -766,8 +754,7 @@ void STEPS_IMEXPORTER::add_PSASPS6_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            PSASPS6 model;
-            model.set_toolkit(toolkit);
+            PSASPS6 model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -797,8 +784,7 @@ void STEPS_IMEXPORTER::add_PSASPS8_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            PSASPS8 model;
-            model.set_toolkit(toolkit);
+            PSASPS8 model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -828,8 +814,7 @@ void STEPS_IMEXPORTER::add_SEXS_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            SEXS model;
-            model.set_toolkit(toolkit);
+            SEXS model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -859,8 +844,7 @@ void STEPS_IMEXPORTER::add_IEEET1_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            IEEET1 model;
-            model.set_toolkit(toolkit);
+            IEEET1 model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -890,8 +874,7 @@ void STEPS_IMEXPORTER::add_PSASPE1_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            PSASPE1 model;
-            model.set_toolkit(toolkit);
+            PSASPE1 model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -921,8 +904,7 @@ void STEPS_IMEXPORTER::add_PSASPE2_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            PSASPE2 model;
-            model.set_toolkit(toolkit);
+            PSASPE2 model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -952,8 +934,7 @@ void STEPS_IMEXPORTER::add_CSEET1_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            CSEET1 model;
-            model.set_toolkit(toolkit);
+            CSEET1 model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -983,8 +964,7 @@ void STEPS_IMEXPORTER::add_CSEET2_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            CSEET2 model;
-            model.set_toolkit(toolkit);
+            CSEET2 model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -1014,8 +994,7 @@ void STEPS_IMEXPORTER::add_PSASPE13_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            PSASPE13 model;
-            model.set_toolkit(toolkit);
+            PSASPE13 model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -1045,8 +1024,7 @@ void STEPS_IMEXPORTER::add_PSASPE14_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            PSASPE14 model;
-            model.set_toolkit(toolkit);
+            PSASPE14 model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -1076,8 +1054,7 @@ void STEPS_IMEXPORTER::add_TGOV1_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            TGOV1 model;
-            model.set_toolkit(toolkit);
+            TGOV1 model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -1107,8 +1084,7 @@ void STEPS_IMEXPORTER::add_IEEEG1_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            IEEEG1 model;
-            model.set_toolkit(toolkit);
+            IEEEG1 model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -1138,8 +1114,7 @@ void STEPS_IMEXPORTER::add_IEEEG2_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            IEEEG2 model;
-            model.set_toolkit(toolkit);
+            IEEEG2 model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -1169,8 +1144,7 @@ void STEPS_IMEXPORTER::add_IEEEG3_model(vector<string>& data)
         GENERATOR* generator = psdb.get_generator(did);
         if(generator != NULL)
         {
-            IEEEG3 model;
-            model.set_toolkit(toolkit);
+            IEEEG3 model(toolkit);
             model.set_device_id(did);
             bool successful = model.setup_model_with_steps_string_vector(data);
             if(successful)
@@ -1202,8 +1176,7 @@ void STEPS_IMEXPORTER::add_IEESGO_model(vector<string>& data)
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
-        IEESGO model;
-        model.set_toolkit(toolkit);
+        IEESGO model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -1233,8 +1206,7 @@ void STEPS_IMEXPORTER::add_IEEEG1SB_model(vector<string>& data)
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
-        IEEEG1SB model;
-        model.set_toolkit(toolkit);
+        IEEEG1SB model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -1264,8 +1236,7 @@ void STEPS_IMEXPORTER::add_GAST2A_model(vector<string>& data)
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
-        GAST2A model;
-        model.set_toolkit(toolkit);
+        GAST2A model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -1295,8 +1266,7 @@ void STEPS_IMEXPORTER::add_URCSCT_model(vector<string>& data)
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
-        URCSCT model;
-        model.set_toolkit(toolkit);
+        URCSCT model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -1326,8 +1296,7 @@ void STEPS_IMEXPORTER::add_LCFB1_model(vector<string>& data)
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
-        LCFB1 model;
-        model.set_toolkit(toolkit);
+        LCFB1 model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -1448,8 +1417,7 @@ void STEPS_IMEXPORTER::add_IEEL_model(vector<string>& data)
 
     STEPS& toolkit = get_toolkit();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
-    IEEL model;
-    model.set_toolkit(toolkit);
+    IEEL model(toolkit);
     bool successful = model.setup_model_with_steps_string_vector(data);
     if(successful)
     {
@@ -1475,8 +1443,7 @@ void STEPS_IMEXPORTER::add_CIM6_model(vector<string>& data)
 
     STEPS& toolkit = get_toolkit();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
-    CIM6 model;
-    model.set_toolkit(toolkit);
+    CIM6 model(toolkit);
     bool successful = model.setup_model_with_steps_string_vector(data);
     if(successful)
     {
@@ -1501,8 +1468,7 @@ void STEPS_IMEXPORTER::add_UVLS_model(vector<string>& data)
         return;
     STEPS& toolkit = get_toolkit();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
-    UVLS model;
-    model.set_toolkit(toolkit);
+    UVLS model(toolkit);
     bool successful = model.setup_model_with_steps_string_vector(data);
     if(successful)
     {
@@ -1528,8 +1494,7 @@ void STEPS_IMEXPORTER::add_UFLS_model(vector<string>& data)
 
     STEPS& toolkit = get_toolkit();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
-    UFLS model;
-    model.set_toolkit(toolkit);
+    UFLS model(toolkit);
     bool successful = model.setup_model_with_steps_string_vector(data);
     if(successful)
     {
@@ -1555,8 +1520,7 @@ void STEPS_IMEXPORTER::add_PUFLS_model(vector<string>& data)
 
     STEPS& toolkit = get_toolkit();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
-    PUFLS model;
-    model.set_toolkit(toolkit);
+    PUFLS model(toolkit);
     bool successful = model.setup_model_with_steps_string_vector(data);
     if(successful)
     {
@@ -1586,8 +1550,7 @@ void STEPS_IMEXPORTER::add_CDC4T_model(vector<string>& data)
     HVDC* hvdc = psdb.get_hvdc(did);
     if(hvdc != NULL)
     {
-        CDC4T model;
-        model.set_toolkit(toolkit);
+        CDC4T model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -1618,8 +1581,7 @@ void STEPS_IMEXPORTER::add_CDC6T_model(vector<string>& data)
     HVDC* hvdc = psdb.get_hvdc(did);
     if(hvdc != NULL)
     {
-        CDC6T model;
-        model.set_toolkit(toolkit);
+        CDC6T model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -1649,8 +1611,7 @@ void STEPS_IMEXPORTER::add_WT3G1_model(vector<string>& data)
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
-        WT3G1 model;
-        model.set_toolkit(toolkit);
+        WT3G1 model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -1681,8 +1642,7 @@ void STEPS_IMEXPORTER::add_WT3G0_model(vector<string>& data)
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
-        WT3G0 model;
-        model.set_toolkit(toolkit);
+        WT3G0 model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -1713,8 +1673,7 @@ void STEPS_IMEXPORTER::add_WT3G2_model(vector<string>& data)
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
-        WT3G2 model;
-        model.set_toolkit(toolkit);
+        WT3G2 model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -1744,8 +1703,7 @@ void STEPS_IMEXPORTER::add_AERD0_model(vector<string>& data)
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
-        AERD0 model;
-        model.set_toolkit(toolkit);
+        AERD0 model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -1775,8 +1733,7 @@ void STEPS_IMEXPORTER::add_WT3T0_model(vector<string>& data)
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
-        WT3T0 model;
-        model.set_toolkit(toolkit);
+        WT3T0 model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -1806,8 +1763,7 @@ void STEPS_IMEXPORTER::add_WT3E0_model(vector<string>& data)
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
-        WT3E0 model;
-        model.set_toolkit(toolkit);
+        WT3E0 model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -1837,8 +1793,7 @@ void STEPS_IMEXPORTER::add_WT3E1_model(vector<string>& data)
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
-        WT3E1 model;
-        model.set_toolkit(toolkit);
+        WT3E1 model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -1868,8 +1823,7 @@ void STEPS_IMEXPORTER::add_WT3P0_model(vector<string>& data)
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
-        WT3P0 model;
-        model.set_toolkit(toolkit);
+        WT3P0 model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -1899,8 +1853,7 @@ void STEPS_IMEXPORTER::add_FILEWIND_model(vector<string>& data)
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
-        FILEWIND model;
-        model.set_toolkit(toolkit);
+        FILEWIND model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -1930,8 +1883,7 @@ void STEPS_IMEXPORTER::add_WTRLY0_model(vector<string>& data)
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
-        WTRLY0 model;
-        model.set_toolkit(toolkit);
+        WTRLY0 model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -1962,8 +1914,7 @@ void STEPS_IMEXPORTER::add_PVGU1_model(vector<string>& data)
     PV_UNIT* pvu = psdb.get_pv_unit(did);
     if(pvu != NULL)
     {
-        PVGU1 model;
-        model.set_toolkit(toolkit);
+        PVGU1 model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)

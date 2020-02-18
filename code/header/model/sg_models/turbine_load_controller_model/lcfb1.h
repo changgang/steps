@@ -8,7 +8,7 @@
 class LCFB1 : public TURBINE_LOAD_CONTROLLER_MODEL
 {
     public:
-        LCFB1();
+        LCFB1(STEPS& toolkit);
         LCFB1(const LCFB1& model);
         virtual ~LCFB1();
         virtual LCFB1& operator=(const LCFB1& model);

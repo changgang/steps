@@ -7,7 +7,7 @@
 class PVP0 : public PV_PANEL_MODEL
 {
     public:
-        PVP0();
+        PVP0(STEPS& toolkit);
         PVP0(const PVP0& model);
         virtual ~PVP0();
         virtual PVP0& operator=(const PVP0& model);

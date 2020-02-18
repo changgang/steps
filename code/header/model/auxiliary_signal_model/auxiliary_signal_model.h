@@ -14,7 +14,7 @@ class AUXILIARY_SIGNAL_MODEL : public MODEL
         Excitation voltage
     */
     public:
-        AUXILIARY_SIGNAL_MODEL();
+        AUXILIARY_SIGNAL_MODEL(STEPS& toolkit);
         virtual ~AUXILIARY_SIGNAL_MODEL();
     public: // exciter common
         virtual string get_model_type() const;

@@ -6,7 +6,7 @@
 #include <iostream>
 
 using namespace std;
-PSASPE1::PSASPE1()
+PSASPE1::PSASPE1(STEPS& toolkit) : EXCITER_MODEL(toolkit)
 {
     clear();
 }
@@ -24,6 +24,8 @@ void PSASPE1::clear()
 }
 void PSASPE1::copy_from_const_model(const PSASPE1& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
     this->set_KR(model.get_KR());
     this->set_TR_in_s(model.get_TR_in_s());
@@ -36,7 +38,7 @@ void PSASPE1::copy_from_const_model(const PSASPE1& model)
     this->set_TF_in_s(model.get_TF_in_s());
 }
 
-PSASPE1::PSASPE1(const PSASPE1& model) : EXCITER_MODEL()
+PSASPE1::PSASPE1(const PSASPE1& model) : EXCITER_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -219,14 +221,14 @@ bool PSASPE1::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void PSASPE1::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     sensor.set_toolkit(toolkit);
     regulator.set_toolkit(toolkit);
     feedbacker.set_toolkit(toolkit);
@@ -241,7 +243,7 @@ void PSASPE1::initialize()
         GENERATOR* generator = get_generator_pointer();
         if(generator!=NULL)
         {
-            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+            STEPS& toolkit = get_toolkit();
             SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
             if(gen_model!=NULL)
             {
@@ -351,7 +353,7 @@ double PSASPE1::get_excitation_voltage_in_pu()
 void PSASPE1::check()
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
 
     osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_device_name()<<".\n";
     bool error_found = false;
@@ -392,7 +394,7 @@ void PSASPE1::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

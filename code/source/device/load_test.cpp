@@ -386,8 +386,7 @@ void LOAD_TEST::test_set_get_load_model()
 
     LOAD* ld = psdb.get_load(did);
 
-    IEEL model;
-    model.set_toolkit(default_toolkit);
+    IEEL model(default_toolkit);
     model.set_device_id(did);
 
     model.set_subsystem_type(AREA_SUBSYSTEM_TYPE);

@@ -163,8 +163,7 @@ void ENERGY_STORAGE_TEST::test_set_get_energy_storage_model()
 
     ENERGY_STORAGE* estorage = psdb.get_energy_storage(did);
 
-    ESTR0 model;
-    model.set_toolkit(default_toolkit);
+    ESTR0 model(default_toolkit);
     model.set_device_id(did);
 
     model.set_Tp1_in_s(1.0);

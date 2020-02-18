@@ -440,8 +440,7 @@ DEVICE_ID CONTINGENCY_SCREENER::get_monitored_generator(unsigned int i) const
 
 void CONTINGENCY_SCREENER::set_meters(DYNAMICS_SIMULATOR& simulator)
 {
-    METER_SETTER setter;
-    setter.set_toolkit(default_toolkit);
+    METER_SETTER setter(default_toolkit);
 
     simulator.clear_meters();
 

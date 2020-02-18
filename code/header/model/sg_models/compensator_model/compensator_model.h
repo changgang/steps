@@ -16,7 +16,7 @@ class COMPENSATOR_MODEL : public SG_MODEL
         Compensated voltage
     */
     public:
-        COMPENSATOR_MODEL();
+        COMPENSATOR_MODEL(STEPS& toolkit);
         virtual ~COMPENSATOR_MODEL();
     public: // compensator common
         virtual string get_model_type() const;

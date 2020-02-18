@@ -18,7 +18,7 @@ class WT_GENERATOR_MODEL : public WTG_MODEL
     */
 
     public:
-        WT_GENERATOR_MODEL();
+        WT_GENERATOR_MODEL(STEPS& toolkit);
         virtual ~WT_GENERATOR_MODEL();
 
     public: // sync generator common

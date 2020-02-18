@@ -18,9 +18,8 @@ void CDC6T_TEST::setup()
 
     HVDC* hvdcptr = get_test_hvdc();
 
-    CDC6T model;
+    CDC6T model(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    model.set_toolkit(default_toolkit);
     model.set_device_id(hvdcptr->get_device_id());
 
     model.set_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER, 5.0);

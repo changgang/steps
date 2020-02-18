@@ -5,7 +5,7 @@
 #include <iostream>
 using namespace std;
 
-UVLS::UVLS()
+UVLS::UVLS(STEPS& toolkit) : LOAD_VOLTAGE_RELAY_MODEL(toolkit)
 {
     clear();
 }
@@ -39,6 +39,8 @@ void UVLS::clear()
 }
 void UVLS::copy_from_const_model(const UVLS& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
     set_voltage_sensor_time_in_s(model.get_voltage_sensor_time_in_s());
     for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
@@ -52,7 +54,7 @@ void UVLS::copy_from_const_model(const UVLS& model)
     this->set_breaker_time_in_s(model.get_breaker_time_in_s());
 }
 
-UVLS::UVLS(const UVLS& model) : LOAD_VOLTAGE_RELAY_MODEL()
+UVLS::UVLS(const UVLS& model) : LOAD_VOLTAGE_RELAY_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -207,14 +209,14 @@ bool UVLS::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void UVLS::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     voltage_sensor.set_toolkit(toolkit);
     for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
     {
@@ -255,7 +257,7 @@ void UVLS::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double current_time = toolkit.get_dynamic_simulation_time_in_s();
 
     double volt = get_bus_positive_sequence_voltage_in_pu();
@@ -388,7 +390,7 @@ bool UVLS::is_stage_breaker_timer_timed_out(unsigned int i) const
 
 void UVLS::trip_stage(unsigned int i)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     if(i<STEPS_MAX_LOAD_RELAY_STAGE)
     {

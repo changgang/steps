@@ -94,7 +94,7 @@ void SECOND_ORDER_BLOCK::initialize()
     //            block2 is: 1/(s+g)
     // the whole block is: block1*block2
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     block1.set_toolkit(toolkit);
     block2.set_toolkit(toolkit);
 

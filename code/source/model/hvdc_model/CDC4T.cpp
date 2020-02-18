@@ -7,7 +7,7 @@
 #include <iostream>
 
 using namespace std;
-CDC4T::CDC4T()
+CDC4T::CDC4T(STEPS& toolkit) : HVDC_MODEL(toolkit)
 {
     clear();
 }
@@ -30,6 +30,8 @@ void CDC4T::clear()
 
 void CDC4T::copy_from_const_model(const CDC4T& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
     this->set_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER,model.get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER));
     this->set_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER,model.get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER));
@@ -50,7 +52,7 @@ void CDC4T::copy_from_const_model(const CDC4T& model)
     this->set_minimum_time_in_switched_mode_in_s(model.get_minimum_time_in_switched_mode_in_s());
 }
 
-CDC4T::CDC4T(const CDC4T& model) : HVDC_MODEL()
+CDC4T::CDC4T(const CDC4T& model) : HVDC_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -215,7 +217,7 @@ bool CDC4T::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
@@ -224,7 +226,7 @@ void CDC4T::setup_block_toolkit_and_parameters()
 {
     set_common_timer_toolkit();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     inverter_dc_voltage_sensor.set_toolkit(toolkit);
     dc_current_sensor.set_toolkit(toolkit);
 }
@@ -306,7 +308,7 @@ void CDC4T::check_blocking_logic()
     if(is_manual_blocked())
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
     //unsigned int bus_r = hvdc->get_converter_bus(RECTIFIER);
@@ -353,7 +355,7 @@ void CDC4T::check_bypassing_logic()
     if(is_manual_bypassed())
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
     if(not is_bypassed())
@@ -408,7 +410,7 @@ void CDC4T::check_mode_switching_logic()
     if(is_blocked() or is_bypassed())
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
     double t_unblock = get_unblocking_time();
@@ -457,7 +459,7 @@ void CDC4T::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

@@ -4,7 +4,7 @@
 #include <cstdio>
 #include "header/basic/utility.h"
 #include <vector>
-LCFB1::LCFB1()
+LCFB1::LCFB1(STEPS& toolkit) : TURBINE_LOAD_CONTROLLER_MODEL(toolkit)
 {
     clear();
 }
@@ -36,6 +36,8 @@ void LCFB1::clear()
 
 void LCFB1::copy_from_const_model(const LCFB1& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     this->set_frequency_regulation_flag(model.get_frequency_regulation_flag());
@@ -49,7 +51,7 @@ void LCFB1::copy_from_const_model(const LCFB1& model)
     this->set_Irmax(model.get_Irmax());
 }
 
-LCFB1::LCFB1(const LCFB1& model) : TURBINE_LOAD_CONTROLLER_MODEL()
+LCFB1::LCFB1(const LCFB1& model) : TURBINE_LOAD_CONTROLLER_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -236,14 +238,14 @@ bool LCFB1::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void LCFB1::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     Pelec_sensor.set_toolkit(toolkit);
     error_integrator.set_toolkit(toolkit);
 }
@@ -370,7 +372,7 @@ void LCFB1::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -481,7 +483,7 @@ void LCFB1::set_model_data_with_name(string par_name, double value)
     if(par_name=="IRMAX")
         return set_Irmax(value);
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }

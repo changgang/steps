@@ -5,7 +5,7 @@
 #include <iostream>
 
 using namespace std;
-IEEEVC::IEEEVC()
+IEEEVC::IEEEVC(STEPS& toolkit) : COMPENSATOR_MODEL(toolkit)
 {
     clear();
 }
@@ -20,6 +20,8 @@ void IEEEVC::clear()
 
 void IEEEVC::copy_from_const_model(const IEEEVC& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
     //this->set_power_system_database(model.toolkit.get_power_system_database());
     //this->set_device_id(model.get_device_id());
@@ -27,7 +29,7 @@ void IEEEVC::copy_from_const_model(const IEEEVC& model)
     this->set_Xc(model.get_Xc());
 }
 
-IEEEVC::IEEEVC(const IEEEVC& model) : COMPENSATOR_MODEL()
+IEEEVC::IEEEVC(const IEEEVC& model) : COMPENSATOR_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -102,7 +104,7 @@ bool IEEEVC::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
@@ -148,7 +150,7 @@ void IEEEVC::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 void IEEEVC::save()
@@ -188,7 +190,7 @@ double IEEEVC::get_model_data_with_name(string par_name) const
         if(par_name=="RC") return get_Rc();
         if(par_name=="XC") return get_Xc();
     }
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
@@ -200,7 +202,7 @@ void IEEEVC::set_model_data_with_name(string par_name, double value)
         if(par_name=="RC") return set_Rc(value);
         if(par_name=="XC") return set_Xc(value);
     }
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }

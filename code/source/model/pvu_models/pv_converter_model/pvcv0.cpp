@@ -5,7 +5,7 @@
 #include <istream>
 #include <iostream>
 using namespace std;
-PVCV0::PVCV0()
+PVCV0::PVCV0(STEPS& toolkit) : PV_CONVERTER_MODEL(toolkit)
 {
     clear();
 }
@@ -33,6 +33,8 @@ void PVCV0::clear()
 
 void PVCV0::copy_from_const_model(const PVCV0& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
     set_current_source_flag(model.get_current_source_flag());
     set_converter_activer_current_command_T_in_s(model.get_converter_activer_current_command_T_in_s());
@@ -50,7 +52,7 @@ void PVCV0::copy_from_const_model(const PVCV0& model)
     set_PLLmin(model.get_PLLmin());
 }
 
-PVCV0::PVCV0(const PVCV0& model):PV_CONVERTER_MODEL()
+PVCV0::PVCV0(const PVCV0& model):PV_CONVERTER_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -183,7 +185,7 @@ string PVCV0::get_model_name() const
 
 bool PVCV0::setup_model_with_steps_string_vector(vector<string>& data)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     bool is_successful = false;
     if(data.size()>=18)
@@ -267,7 +269,7 @@ bool PVCV0::setup_model_with_psse_string(string data)
 
 bool PVCV0::setup_model_with_bpa_string(string data)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
@@ -277,7 +279,7 @@ bool PVCV0::setup_model_with_bpa_string(string data)
 
 void PVCV0::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     LVPL_voltage_sensor.set_toolkit(toolkit);
     reactive_voltage_commander.set_toolkit(toolkit);
 }
@@ -457,7 +459,7 @@ void PVCV0::run(DYNAMIC_MODE mode)
 
 complex<double> PVCV0::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     double mbase = get_mbase_in_MVA();
 
@@ -512,7 +514,7 @@ complex<double> PVCV0::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
 
 complex<double> PVCV0::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
     double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
@@ -522,7 +524,7 @@ complex<double> PVCV0::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mb
 
 complex<double> PVCV0::get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
     double mbase = get_mbase_in_MVA();
@@ -556,7 +558,7 @@ void PVCV0::check()
 
 void PVCV0::report()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     osstream<<get_standard_psse_string();
     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -778,7 +780,7 @@ double PVCV0::get_pll_frequency_in_Hz()
 
 complex<double> PVCV0::get_internal_voltage_in_pu_in_xy_axis()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     complex<double> Ixy = get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
     complex<double> Z = get_source_impedance_in_pu_based_on_mbase();
 

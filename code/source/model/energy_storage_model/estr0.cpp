@@ -5,7 +5,7 @@
 #include <istream>
 #include <iostream>
 using namespace std;
-ESTR0::ESTR0() : ENERGY_STORAGE_MODEL()
+ESTR0::ESTR0(STEPS& toolkit) : ENERGY_STORAGE_MODEL(toolkit)
 {
     clear();
 }
@@ -23,6 +23,8 @@ void ESTR0::clear()
 
 void ESTR0::copy_from_const_model(const ESTR0& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     //this->set_power_system_database(model.toolkit.get_power_system_database());
@@ -52,7 +54,7 @@ void ESTR0::copy_from_const_model(const ESTR0& model)
     this->set_Dq(model.get_Dq());
 }
 
-ESTR0::ESTR0(const ESTR0& model):ENERGY_STORAGE_MODEL()
+ESTR0::ESTR0(const ESTR0& model) : ENERGY_STORAGE_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -333,14 +335,14 @@ bool ESTR0::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void ESTR0::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
 
     active_lead_lag_1.set_toolkit(toolkit);
     active_lead_lag_2.set_toolkit(toolkit);
@@ -551,7 +553,7 @@ complex<double> ESTR0::get_terminal_complex_current_in_pu_based_on_sbase() const
     complex<double> I = get_terminal_complex_current_in_pu_based_on_mbase();
     double mbase = get_mbase_in_MVA();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     return I*(mbase*one_over_sbase);
@@ -565,7 +567,7 @@ complex<double> ESTR0::get_terminal_complex_current_in_kA() const
     ENERGY_STORAGE* estorage = (ENERGY_STORAGE*) get_device_pointer();
     unsigned int bus = estorage->get_energy_storage_bus();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double vbase = psdb.get_bus_base_voltage_in_kV(bus);
 
@@ -605,7 +607,7 @@ void ESTR0::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

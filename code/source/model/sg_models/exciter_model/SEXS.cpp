@@ -6,7 +6,7 @@
 #include <iostream>
 
 using namespace std;
-SEXS::SEXS()
+SEXS::SEXS(STEPS& toolkit) : EXCITER_MODEL(toolkit)
 {
     clear();
 }
@@ -25,6 +25,8 @@ void SEXS::clear()
 
 void SEXS::copy_from_const_model(const SEXS& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     //this->set_power_system_database(model.toolkit.get_power_system_database());
@@ -38,7 +40,7 @@ void SEXS::copy_from_const_model(const SEXS& model)
     this->set_Efdmin_in_pu(model.get_Efdmin_in_pu());
 
 }
-SEXS::SEXS(const SEXS& model) : EXCITER_MODEL()
+SEXS::SEXS(const SEXS& model) : EXCITER_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -166,14 +168,14 @@ bool SEXS::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void SEXS::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     phase_tuner.set_toolkit(toolkit);
     exciter.set_toolkit(toolkit);
 }
@@ -194,7 +196,7 @@ void SEXS::initialize()
 
                 setup_block_toolkit_and_parameters();
 
-                STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+                STEPS& toolkit = get_toolkit();
 
                 double Ecomp = get_compensated_voltage_in_pu();
 
@@ -268,7 +270,7 @@ void SEXS::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -329,7 +331,7 @@ double SEXS::get_model_data_with_name(string par_name) const
         if(par_name=="EFDMAX") return get_Efdmax_in_pu();
         if(par_name=="EFDMIN") return get_Efdmin_in_pu();
     }
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
@@ -346,7 +348,7 @@ void SEXS::set_model_data_with_name(string par_name, double value)
         if(par_name=="EFDMAX") return set_Efdmax_in_pu(value);
         if(par_name=="EFDMIN") return set_Efdmin_in_pu(value);
     }
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
 }
 

@@ -9,13 +9,18 @@
 
 using namespace std;
 
-EQUIVALENT_MODEL_IMEXPORTER::EQUIVALENT_MODEL_IMEXPORTER()
+EQUIVALENT_MODEL_IMEXPORTER::EQUIVALENT_MODEL_IMEXPORTER(STEPS& toolkit)
 {
+    this->toolkit = (&toolkit);
     data_in_ram.clear();
 }
 EQUIVALENT_MODEL_IMEXPORTER::~EQUIVALENT_MODEL_IMEXPORTER()
 {
     ;
+}
+STEPS& EQUIVALENT_MODEL_IMEXPORTER::get_toolkit() const
+{
+    return *toolkit;
 }
 void EQUIVALENT_MODEL_IMEXPORTER::load_equivalent_model(string file)
 {
@@ -48,7 +53,6 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_equivalent_model(string file)
 
 void EQUIVALENT_MODEL_IMEXPORTER::load_data_into_ram(string file)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     data_in_ram.clear();
@@ -57,7 +61,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_data_into_ram(string file)
     if(fid==NULL)
     {
         osstream<<"equivalent model file cannot be open"<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -96,9 +100,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::add_equivalent_device(vector< vector<string> >
     unsigned int n = model_data.size();
     if(n==0)
         return;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     ostringstream osstream;
 
@@ -115,24 +117,21 @@ void EQUIVALENT_MODEL_IMEXPORTER::add_equivalent_device(vector< vector<string> >
     psdb.append_equivalent_device(edevice);
 
     osstream<<"Equivalent device added: "<<edevice.get_device_name();
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 }
 
 METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & data_line, unsigned int& delay, double& coefficient)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
-    METER_SETTER setter;
-    setter.set_toolkit(toolkit);
+    METER_SETTER setter(*toolkit);
 
-    METER meter;
-    meter.set_toolkit(toolkit);
+    METER meter(*toolkit);
 
     if(data_line.size()==0)
     {
         osstream<<"FATAL error. No data is found in the data line. Cannot generate meter for equivalent model.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return meter;
     }
 
@@ -320,9 +319,8 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
     if(n==0)
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = toolkit->get_dynamic_model_database();
 
     ostringstream osstream;
 
@@ -345,8 +343,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
 
     EQUIVALENT_DEVICE* pedevice = psdb.get_equivalent_device(did);
 
-    ARXL model;
-    model.set_toolkit(toolkit);
+    ARXL model(*toolkit);
     model.set_device_id(did);
 
     did.set_device_type("LINE");
@@ -358,11 +355,9 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
 
     model.set_output_line(did, side_bus);
 
-    METER_SETTER setter;
-    setter.set_toolkit(toolkit);
+    METER_SETTER setter(*toolkit);
 
-    METER meter;
-    meter.set_toolkit(toolkit);
+    METER meter(*toolkit);
     unsigned int delay = 0;
     double coefficient = 0.0;
     for(unsigned int i=1; i!=n; ++i)
@@ -382,7 +377,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
             osstream<<"Warning. Invalid meter is detected in ARXL model data: "<<endl;
             for(unsigned int k=0; k<data_line.size(); ++k)
                osstream<<data_line[k]<<", ";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            toolkit->show_information_with_leading_time_stamp(osstream);
         }
     }
 
@@ -395,26 +390,9 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
     EQUIVALENT_MODEL* emodel = pedevice->get_equivalent_model();
 
     osstream<<"ARXL model added to "<<pedevice->get_device_name();
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
     osstream<<emodel->get_standard_psse_string();
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    toolkit->show_information_with_leading_time_stamp(osstream);
 
 }
-
-
-bool EQUIVALENT_MODEL_IMEXPORTER::is_valid() const
-{
-    return true;
-}
-
-void EQUIVALENT_MODEL_IMEXPORTER::check()
-{
-    ;
-}
-
-void EQUIVALENT_MODEL_IMEXPORTER::clear()
-{
-    ;
-}
-

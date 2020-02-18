@@ -6,7 +6,7 @@
 
 using namespace std;
 
-AERD0::AERD0()
+AERD0::AERD0(STEPS& toolkit) : WT_AERODYNAMIC_MODEL(toolkit)
 {
     set_C1(0.22);
     set_C2(116.0);
@@ -19,7 +19,7 @@ AERD0::AERD0()
     set_C8(0.035);
 }
 
-AERD0::AERD0(const AERD0& model):WT_AERODYNAMIC_MODEL()
+AERD0::AERD0(const AERD0& model):WT_AERODYNAMIC_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -44,6 +44,8 @@ void AERD0::clear()
 
 void AERD0::copy_from_const_model(const AERD0& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     WT_AERODYNAMIC_MODEL::copy_from_const_model(model);
@@ -264,7 +266,7 @@ bool AERD0::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return true;
 }
@@ -426,7 +428,7 @@ double AERD0::get_model_data_with_name(string par_name) const
     if(par_name=="C8")
         return get_C8();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
@@ -500,7 +502,7 @@ void AERD0::set_model_data_with_name(string par_name, double value)
     if(par_name=="C8")
         return set_C8(value);
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }

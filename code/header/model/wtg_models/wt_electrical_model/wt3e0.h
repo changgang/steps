@@ -9,7 +9,7 @@
 class WT3E0: public WT_ELECTRICAL_MODEL
 {
     public:
-        WT3E0();
+        WT3E0(STEPS& toolkit);
         WT3E0(const WT3E0& model);
         virtual ~WT3E0();
         virtual WT3E0& operator=(const WT3E0& model);

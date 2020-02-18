@@ -25,9 +25,8 @@ void PVCV0_TEST::setup()
 
     PV_UNIT* pv_unit = get_test_pv_unit();
 
-    PVCV0 model;
+    PVCV0 model(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    model.set_toolkit(default_toolkit);
     model.set_device_id(pv_unit->get_device_id());
 
     pv_unit->set_number_of_lumped_pv_units(50);

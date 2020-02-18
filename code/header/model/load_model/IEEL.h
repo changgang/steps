@@ -7,7 +7,7 @@
 class IEEL : public LOAD_MODEL
 {
     public:
-        IEEL();
+        IEEL(STEPS& toolkit);
         IEEL(const IEEL& model);
         virtual ~IEEL();
         virtual IEEL& operator=(const IEEL& model);

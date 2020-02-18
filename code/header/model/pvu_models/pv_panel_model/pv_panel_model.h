@@ -21,7 +21,7 @@ class PV_PANEL_MODEL : public PVU_MODEL
             speed: wt rotor speed, in pu, or rad/s. not speed deviation
     */
     public:
-        PV_PANEL_MODEL();
+        PV_PANEL_MODEL(STEPS& toolkit);
         PV_PANEL_MODEL(const PV_PANEL_MODEL& model);
         virtual ~PV_PANEL_MODEL();
         virtual PV_PANEL_MODEL& operator=(const PV_PANEL_MODEL& model);

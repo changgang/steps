@@ -6,7 +6,7 @@
 #include <iostream>
 
 using namespace std;
-IEEET1::IEEET1()
+IEEET1::IEEET1(STEPS& toolkit) : EXCITER_MODEL(toolkit)
 {
     clear();
 }
@@ -24,6 +24,8 @@ void IEEET1::clear()
 
 void IEEET1::copy_from_const_model(const IEEET1& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
     this->set_TR_in_s(model.get_TR_in_s());
     this->set_KA(model.get_KA());
@@ -40,7 +42,7 @@ void IEEET1::copy_from_const_model(const IEEET1& model)
     this->set_SE2_in_pu(model.get_SE2_in_pu());
 
 }
-IEEET1::IEEET1(const IEEET1& model) : EXCITER_MODEL()
+IEEET1::IEEET1(const IEEET1& model) : EXCITER_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -251,14 +253,14 @@ bool IEEET1::setup_model_with_bpa_string(string data)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input data is provided: "<<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void IEEET1::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     sensor.set_toolkit(toolkit);
     regulator.set_toolkit(toolkit);
     feedbacker.set_toolkit(toolkit);
@@ -281,7 +283,7 @@ void IEEET1::initialize()
 
                 setup_block_toolkit_and_parameters();
 
-                STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+                STEPS& toolkit = get_toolkit();
                 double Ecomp = get_compensated_voltage_in_pu();
 
                 sensor.set_output(Ecomp);
@@ -374,7 +376,7 @@ void IEEET1::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

@@ -6,7 +6,7 @@
 
 using namespace std;
 
-WT_AERODYNAMIC_MODEL::WT_AERODYNAMIC_MODEL()
+WT_AERODYNAMIC_MODEL::WT_AERODYNAMIC_MODEL(STEPS& toolkit) : WTG_MODEL(toolkit)
 {
     set_number_of_pole_pairs(2);
     set_generator_to_turbine_gear_ratio(100.0);
@@ -31,7 +31,7 @@ WT_AERODYNAMIC_MODEL::WT_AERODYNAMIC_MODEL()
     //set_initial_turbine_speed_in_rad_per_s(get_nominal_turbine_speed_in_rad_per_s());
 }
 
-WT_AERODYNAMIC_MODEL::WT_AERODYNAMIC_MODEL(const WT_AERODYNAMIC_MODEL& model)
+WT_AERODYNAMIC_MODEL::WT_AERODYNAMIC_MODEL(const WT_AERODYNAMIC_MODEL& model) : WTG_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -52,6 +52,8 @@ WT_AERODYNAMIC_MODEL& WT_AERODYNAMIC_MODEL::operator=(const WT_AERODYNAMIC_MODEL
 
 void WT_AERODYNAMIC_MODEL::copy_from_const_model(const WT_AERODYNAMIC_MODEL& model)
 {
+    set_toolkit(model.get_toolkit());
+
     set_number_of_pole_pairs(model.get_number_of_pole_pairs());
     set_generator_to_turbine_gear_ratio(model.get_generator_to_turbine_gear_ratio());
     set_gear_efficiency(model.get_gear_efficiency());
@@ -312,7 +314,7 @@ void WT_AERODYNAMIC_MODEL::setup_block_toolkit_and_parameters()
 
 void WT_AERODYNAMIC_MODEL::initialize()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     /*
     osstream<<"Now go initialize "<<get_model_name()<<" model of "<<get_device_name()<<endl;
@@ -393,7 +395,7 @@ void WT_AERODYNAMIC_MODEL::initialize_wind_turbine_blade_radius_and_gear_ratio()
 
 void WT_AERODYNAMIC_MODEL::initialize_turbine_blade_radius_with_nominal_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     if(get_rated_power_per_wt_generator_in_MW()<=0.0)
     {
@@ -463,7 +465,7 @@ void WT_AERODYNAMIC_MODEL::initialize_turbine_blade_radius_with_nominal_paramete
 
 void WT_AERODYNAMIC_MODEL::initialize_generator_to_turbine_gear_ratio()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     double lambda_mppt = get_lambda_at_Cpmax(0.0);
@@ -499,7 +501,7 @@ double WT_AERODYNAMIC_MODEL::get_cpmax_at_zero_pitch() const
 
 void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(toolkit.is_detailed_log_enabled())
@@ -538,7 +540,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed()
 
 void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_underspeed_or_overspeed_mode()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(toolkit.is_detailed_log_enabled())
@@ -614,7 +616,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_undersp
 
 void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mode()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(toolkit.is_detailed_log_enabled())
@@ -776,7 +778,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
 void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
 
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen!=NULL)
@@ -1020,7 +1022,7 @@ void WT_AERODYNAMIC_MODEL::set_current_pitch_angle_in_deg(double pitch)
 
 void WT_AERODYNAMIC_MODEL::update_current_lambda_at_cpmax_with_current_pitch_angle()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     double pitch = get_current_pitch_angle_in_deg();
@@ -1116,7 +1118,7 @@ void WT_AERODYNAMIC_MODEL::set_current_pelec_including_loss_per_turbine_in_MW(do
 
 void WT_AERODYNAMIC_MODEL::update_current_turbine_speed_reference_without_limit()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     double pitch = get_current_pitch_angle_in_deg();

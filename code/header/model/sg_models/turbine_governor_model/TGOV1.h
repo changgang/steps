@@ -9,7 +9,7 @@
 class TGOV1 : public TURBINE_GOVERNOR_MODEL
 {
     public:
-        TGOV1();
+        TGOV1(STEPS& toolkit);
         TGOV1(const TGOV1&model);
         virtual ~TGOV1();
         virtual TGOV1& operator=(const TGOV1& model);

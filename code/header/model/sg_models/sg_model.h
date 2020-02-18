@@ -10,7 +10,7 @@ class GENERATOR;
 class SG_MODEL : public MODEL
 {
     public:
-        SG_MODEL();
+        SG_MODEL(STEPS& toolkit);
         virtual ~SG_MODEL();
 
         GENERATOR* get_generator_pointer() const;

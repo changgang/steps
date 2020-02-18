@@ -8,7 +8,7 @@
 class GENSAL : public SYNC_GENERATOR_MODEL
 {
     public:
-        GENSAL();
+        GENSAL(STEPS& toolkit);
         GENSAL(const GENSAL& model);
         virtual ~GENSAL();
         virtual GENSAL& operator=(const GENSAL& model);

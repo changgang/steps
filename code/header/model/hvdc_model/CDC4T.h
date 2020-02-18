@@ -10,7 +10,7 @@
 class CDC4T: public HVDC_MODEL
 {
     public:
-        CDC4T();
+        CDC4T(STEPS& toolkit);
         CDC4T(const CDC4T& model);
         virtual ~CDC4T();
         virtual CDC4T& operator=(const CDC4T& model);

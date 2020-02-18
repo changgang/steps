@@ -4,11 +4,12 @@
 #include "header/power_system_database.h"
 #include "header/basic/base.h"
 #include <vector>
-class EQUIVALENT_MODEL_IMEXPORTER : public BASE
+class EQUIVALENT_MODEL_IMEXPORTER
 {
     public:
-        EQUIVALENT_MODEL_IMEXPORTER();
+        EQUIVALENT_MODEL_IMEXPORTER(STEPS& toolkit);
         ~EQUIVALENT_MODEL_IMEXPORTER();
+        STEPS& get_toolkit() const;
 
         void load_equivalent_model(string file);
     private:
@@ -17,9 +18,7 @@ class EQUIVALENT_MODEL_IMEXPORTER : public BASE
         void add_equivalent_device(vector< vector<string> >& model_data);
         void load_ARXL_model(vector< vector<string> >& model_data);
     private:
-        virtual bool is_valid() const;
-        virtual void check();
-        virtual void clear();
+        STEPS* toolkit;
         vector< vector< vector<string> > > data_in_ram;
 
 };

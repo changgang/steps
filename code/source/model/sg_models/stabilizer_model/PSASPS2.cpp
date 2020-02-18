@@ -4,7 +4,7 @@
 #include <cstdio>
 #include "header/basic/utility.h"
 #include <vector>
-PSASPS2::PSASPS2()
+PSASPS2::PSASPS2(STEPS& toolkit) : STABILIZER_MODEL(toolkit)
 {
     clear();
 }
@@ -20,6 +20,8 @@ void PSASPS2::clear()
 
 void PSASPS2::copy_from_const_model(const PSASPS2& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     //this->set_power_system_database(model.toolkit.get_power_system_database());
@@ -49,7 +51,7 @@ void PSASPS2::copy_from_const_model(const PSASPS2& model)
     this->set_Vsmax(model.get_Vsmax());
     this->set_Vsmin(model.get_Vsmin());
 }
-PSASPS2::PSASPS2(const PSASPS2& model) : STABILIZER_MODEL()
+PSASPS2::PSASPS2(const PSASPS2& model) : STABILIZER_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -278,14 +280,14 @@ bool PSASPS2::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void PSASPS2::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     sensor_w.set_toolkit(toolkit);
     sensor_p.set_toolkit(toolkit);
     sensor_t.set_toolkit(toolkit);
@@ -418,7 +420,7 @@ double PSASPS2::get_stabilizing_signal_in_pu()
 void PSASPS2::check()
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double vsmax = get_Vsmax();
     double vsmin = get_Vsmin();
 
@@ -472,7 +474,7 @@ void PSASPS2::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

@@ -9,7 +9,7 @@ class PV_UNIT;
 class PVU_MODEL : public MODEL
 {
 public:
-        PVU_MODEL();
+        PVU_MODEL(STEPS& toolkit);
         virtual ~PVU_MODEL();
 
         PV_UNIT* get_pv_unit_pointer() const;

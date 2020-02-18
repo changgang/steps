@@ -11,7 +11,7 @@
 class URCSCT : public TURBINE_GOVERNOR_MODEL
 {
     public:
-        URCSCT();
+        URCSCT(STEPS& toolkit);
         URCSCT(const URCSCT&model);
         virtual ~URCSCT();
         virtual URCSCT& operator=(const URCSCT& model);

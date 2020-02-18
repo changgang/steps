@@ -20,7 +20,7 @@ class PV_ELECTRICAL_MODEL : public PVU_MODEL
         iqcmd: reactive current command in pu
     */
     public:
-        PV_ELECTRICAL_MODEL();
+        PV_ELECTRICAL_MODEL(STEPS& toolkit);
         virtual ~PV_ELECTRICAL_MODEL();
     public: // pe elctricla control common
         virtual string get_model_type() const;

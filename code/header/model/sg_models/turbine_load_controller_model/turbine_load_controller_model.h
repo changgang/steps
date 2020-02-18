@@ -19,7 +19,7 @@ class TURBINE_LOAD_CONTROLLER_MODEL : public SG_MODEL
         load control signal to turbine governor model
     */
     public:
-        TURBINE_LOAD_CONTROLLER_MODEL();
+        TURBINE_LOAD_CONTROLLER_MODEL(STEPS& toolkit);
         virtual ~TURBINE_LOAD_CONTROLLER_MODEL();
 
     public: // stabilizer common

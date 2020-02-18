@@ -2,7 +2,7 @@
 #include "header/basic/utility.h"
 #include "header/STEPS.h"
 
-WT3T0::WT3T0()
+WT3T0::WT3T0(STEPS& toolkit) : WT_TURBINE_MODEL(toolkit)
 {
     clear();
 }
@@ -18,6 +18,8 @@ void WT3T0::clear()
 
 void WT3T0::copy_from_const_model(const WT3T0& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     set_damping_in_pu(model.get_damping_in_pu());
@@ -27,7 +29,7 @@ void WT3T0::copy_from_const_model(const WT3T0& model)
     set_Dshaft_in_pu(model.get_Dshaft_in_pu());
 }
 
-WT3T0::WT3T0(const WT3T0& model) : WT_TURBINE_MODEL()
+WT3T0::WT3T0(const WT3T0& model) : WT_TURBINE_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -134,14 +136,14 @@ bool WT3T0::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void WT3T0::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     shaft_twist_block.set_toolkit(toolkit);
     turbine_inertia_block.set_toolkit(toolkit);
     generator_inertia_block.set_toolkit(toolkit);
@@ -153,7 +155,7 @@ void WT3T0::initialize()
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen!=NULL)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         WT_GENERATOR_MODEL* gen_model = gen->get_wt_generator_model();
@@ -316,7 +318,7 @@ void WT3T0::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

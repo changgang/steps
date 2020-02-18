@@ -4,12 +4,12 @@
 #include "header/STEPS.h"
 #include "header/basic/utility.h"
 
-WT3E1::WT3E1()
+WT3E1::WT3E1(STEPS& toolkit) : WT_ELECTRICAL_MODEL(toolkit)
 {
     clear();
 }
 
-WT3E1::WT3E1(const WT3E1& model)
+WT3E1::WT3E1(const WT3E1& model) : WT_ELECTRICAL_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -44,6 +44,8 @@ void WT3E1::clear()
 
 void WT3E1::copy_from_const_model(const WT3E1& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     set_bus_to_regulate(model.get_bus_to_regulate());
@@ -173,7 +175,7 @@ void WT3E1::set_voltage_flag(unsigned int flag)
     {
         ostringstream osstream;
         osstream<<"Error. "<<flag<<" is not allowed to set up voltage flag for "<<get_model_name()<<" model. 0, 1, or 2 is allowed.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -529,14 +531,14 @@ bool WT3E1::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void WT3E1::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     voltage_sensor.set_toolkit(toolkit);
     voltage_regulator_first_order_block.set_toolkit(toolkit);
     voltage_regulator_integrator.set_toolkit(toolkit);
@@ -565,7 +567,7 @@ void WT3E1::initialize()
 
                 setup_block_toolkit_and_parameters();
 
-                STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+                STEPS& toolkit = get_toolkit();
 
                 double vterm = get_terminal_bus_voltage_in_pu();
                 double iterm = gen_model->get_terminal_current_in_pu_based_on_mbase();
@@ -926,7 +928,7 @@ void WT3E1::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -1121,7 +1123,7 @@ double WT3E1::get_model_internal_variable_with_name(string var_name)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }

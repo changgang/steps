@@ -6,7 +6,7 @@
 
 using namespace std;
 
-AERDF::AERDF()
+AERDF::AERDF(STEPS& toolkit) : WT_AERODYNAMIC_MODEL(toolkit)
 {
     cp_file_name = new string;
     pitch_angles = new vector<double>;
@@ -15,7 +15,7 @@ AERDF::AERDF()
     clear();
 }
 
-AERDF::AERDF(const AERDF& model):WT_AERODYNAMIC_MODEL()
+AERDF::AERDF(const AERDF& model):WT_AERODYNAMIC_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -38,6 +38,8 @@ AERDF& AERDF::operator=(const AERDF& model)
 
 void AERDF::copy_from_const_model(const AERDF& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
     WT_AERODYNAMIC_MODEL::copy_from_const_model(model);
     set_Cp_file(model.get_Cp_file());
@@ -45,7 +47,7 @@ void AERDF::copy_from_const_model(const AERDF& model)
 
 void AERDF::set_Cp_file(string file)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     (*cp_file_name) = file;
     load_data_from_Cp_file();
     if(pitch_angles->size()==0)
@@ -65,7 +67,7 @@ string AERDF::get_Cp_file() const
 
 void AERDF::load_data_from_Cp_file()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     if(cp_file_name->size()<1)
     {
@@ -119,7 +121,7 @@ void AERDF::load_pitch_angles()
 
 void AERDF::load_tip_speed_ratios()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     tip_speed_ratios->clear();
 
     ifstream fid((*cp_file_name));
@@ -154,7 +156,7 @@ void AERDF::load_tip_speed_ratios()
 
 void AERDF::load_Cp_matrix()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     Cp_Matrix->clear();
 
     ifstream fid((*cp_file_name));
@@ -330,7 +332,7 @@ bool AERDF::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return true;
 }
@@ -453,7 +455,7 @@ double AERDF::get_model_data_with_name(string par_name) const
     if(par_name=="AIR DENSITY IN KG/M3")
         return get_air_density_in_kgpm3();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
@@ -503,7 +505,7 @@ void AERDF::set_model_data_with_name(string par_name, double value)
     if(par_name=="AIR DENSITY IN KG/M3")
         return set_air_density_in_kgpm3(value);
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }
@@ -531,7 +533,7 @@ double AERDF::get_model_internal_variable_with_name(string var_name)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }

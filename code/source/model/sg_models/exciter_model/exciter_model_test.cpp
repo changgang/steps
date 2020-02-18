@@ -28,24 +28,21 @@ void EXCITER_MODEL_TEST::setup()
 
     GENERATOR* genptr = get_test_generator();
 
-    GENCLS gen_model;
+    GENCLS gen_model(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    gen_model.set_toolkit(default_toolkit);
     gen_model.set_device_id(genptr->get_device_id());
 
     gen_model.set_Tj_in_s(6.0);
     gen_model.set_D(2.0);
     dmdb.add_model(&gen_model);
 
-    COMP comp_model;
-    comp_model.set_toolkit(default_toolkit);
+    COMP comp_model(default_toolkit);
     comp_model.set_device_id(genptr->get_device_id());
 
     comp_model.set_Xe(0.1);
     dmdb.add_model(&comp_model);
 
-    IEE2ST pss_model;
-    pss_model.set_toolkit(default_toolkit);
+    IEE2ST pss_model(default_toolkit);
     pss_model.set_device_id(genptr->get_device_id());
 
     pss_model.set_K1(1.0);

@@ -5,11 +5,17 @@
 #include <iostream>
 
 using namespace std;
-STABILIZER_MODEL::STABILIZER_MODEL()
+STABILIZER_MODEL::STABILIZER_MODEL(STEPS& toolkit) : SG_MODEL(toolkit),
+                                                     signal_0(toolkit),signal_1(toolkit),
+                                                     signal_2(toolkit),signal_3(toolkit),
+                                                     signal_4(toolkit)
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("GENERATOR");
-    for(unsigned int slot=0; slot!=STEPS_MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++slot)
-        signals[slot].clear();
+    for(unsigned int slot=0; slot<STEPS_MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++slot)
+    {
+        SIGNAL* signal = get_nonconst_pointer_of_signal_at_slot(slot);
+        signal->clear();
+    }
 }
 
 STABILIZER_MODEL::~STABILIZER_MODEL()
@@ -21,9 +27,81 @@ string STABILIZER_MODEL::get_model_type() const
     return "STABILIZER";
 }
 
+const SIGNAL* STABILIZER_MODEL::get_const_pointer_of_signal_at_slot(unsigned int slot) const
+{
+    const SIGNAL* signal = nullptr;
+    switch(slot)
+    {
+        case 0:
+        {
+            signal = &signal_0;
+            break;
+        }
+        case 1:
+        {
+            signal = &signal_1;
+            break;
+        }
+        case 2:
+        {
+            signal = &signal_2;
+            break;
+        }
+        case 3:
+        {
+            signal = &signal_3;
+            break;
+        }
+        case 4:
+        {
+            signal = &signal_4;
+            break;
+        }
+        default:
+            break;
+    }
+    return signal;
+}
+
+SIGNAL* STABILIZER_MODEL::get_nonconst_pointer_of_signal_at_slot(unsigned int slot)
+{
+    SIGNAL* signal = nullptr;
+    switch(slot)
+    {
+        case 0:
+        {
+            signal = &signal_0;
+            break;
+        }
+        case 1:
+        {
+            signal = &signal_1;
+            break;
+        }
+        case 2:
+        {
+            signal = &signal_2;
+            break;
+        }
+        case 3:
+        {
+            signal = &signal_3;
+            break;
+        }
+        case 4:
+        {
+            signal = &signal_4;
+            break;
+        }
+        default:
+            break;
+    }
+    return signal;
+}
+
 void STABILIZER_MODEL::set_input_signal_at_slot(unsigned int slot, SIGNAL& signal)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     if(not signal.is_valid())
     {
@@ -38,22 +116,24 @@ void STABILIZER_MODEL::set_input_signal_at_slot(unsigned int slot, SIGNAL& signa
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
-    if(signals[slot].is_valid())
+    SIGNAL* signal_ptr = get_nonconst_pointer_of_signal_at_slot(slot);
+    if(signal_ptr->is_valid())
     {
-        osstream<<"Warning. Signal slot "<<slot<<" has already been assigned to signal "<<signals[slot].get_meter_name()<<" when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_device_name()<<"."<<endl
+        osstream<<"Warning. Signal slot "<<slot<<" has already been assigned to signal "<<signal_ptr->get_meter_name()<<" when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_device_name()<<"."<<endl
                 <<"It will be updated to new signal ("<<signal.get_meter_name()<<").";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
-    signals[slot] = signal;
+    (*signal_ptr) = signal;
 }
 
 SIGNAL STABILIZER_MODEL::get_input_signal_at_slot(unsigned int slot) const
 {
-    SIGNAL signal;
+    SIGNAL signal(get_toolkit());
     if(slot<STEPS_MAX_STABILIZER_INPUT_SIGNAL_SLOT)
     {
-        if(signals[slot].is_valid())
-            return signals[slot];
+        const SIGNAL* signal_ptr = get_const_pointer_of_signal_at_slot(slot);
+        if(signal_ptr->is_valid())
+            return *signal_ptr;
         else
             return signal;
     }
@@ -65,7 +145,8 @@ bool STABILIZER_MODEL::is_slot_valid(unsigned int slot) const
 {
     if(slot<STEPS_MAX_STABILIZER_INPUT_SIGNAL_SLOT)
     {
-        if(signals[slot].is_valid())
+        const SIGNAL* signal_ptr = (const SIGNAL*) get_const_pointer_of_signal_at_slot(slot);
+        if(signal_ptr->is_valid())
             return true;
         else
             return false;
@@ -77,7 +158,10 @@ bool STABILIZER_MODEL::is_slot_valid(unsigned int slot) const
 double STABILIZER_MODEL::get_signal_value_of_slot(unsigned int slot) const
 {
     if(is_slot_valid(slot))
-        return signals[slot].get_meter_value();
+    {
+        const SIGNAL* signal_ptr = get_const_pointer_of_signal_at_slot(slot);
+        return signal_ptr->get_meter_value();
+    }
     else
         return 0.0;
 }
@@ -127,11 +211,10 @@ string STABILIZER_MODEL::convert_signal_type_number_to_string(unsigned int signa
 
 SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(unsigned int signal_type, unsigned int bus)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    SIGNAL signal;
-    signal.set_toolkit(toolkit);
+    SIGNAL signal(toolkit);
 
     if(bus!=0)
     {
@@ -227,11 +310,10 @@ SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(unsigned int si
 
 SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_device_id(unsigned int signal_type, DEVICE_ID did)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    SIGNAL signal;
-    signal.set_toolkit(toolkit);
+    SIGNAL signal(toolkit);
 
     if(did.is_valid())
     {

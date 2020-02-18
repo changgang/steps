@@ -6,7 +6,7 @@
 class IEEEVC: public COMPENSATOR_MODEL
 {
     public:
-        IEEEVC();
+        IEEEVC(STEPS& toolkit);
         IEEEVC(const IEEEVC& model);
         virtual ~IEEEVC();
         virtual IEEEVC& operator=(const IEEEVC& model);

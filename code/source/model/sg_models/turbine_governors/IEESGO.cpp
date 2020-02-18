@@ -1,7 +1,7 @@
 #include "header/model/sg_models/turbine_governor_model/IEESGO.h"
 #include "header/basic/utility.h"
 #include "header/STEPS.h"
-IEESGO::IEESGO()
+IEESGO::IEESGO(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit)
 {
     clear();
 }
@@ -25,6 +25,8 @@ void IEESGO::clear()
 
 void IEESGO::copy_from_const_model(const IEESGO& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     this->set_K1(model.get_K1());
@@ -40,7 +42,7 @@ void IEESGO::copy_from_const_model(const IEESGO& model)
     this->set_Pmin_in_pu(model.get_Pmin_in_pu());
 }
 
-IEESGO::IEESGO(const IEESGO&model) : TURBINE_GOVERNOR_MODEL()
+IEESGO::IEESGO(const IEESGO&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -227,14 +229,14 @@ bool IEESGO::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void IEESGO::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     governor_tuner.set_toolkit(toolkit);
     governor.set_toolkit(toolkit);
     high_pressure_turbine.set_toolkit(toolkit);
@@ -248,7 +250,7 @@ void IEESGO::initialize()
 
     ostringstream osstream;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
 
     double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
 
@@ -355,7 +357,7 @@ void IEESGO::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 void IEESGO::save()

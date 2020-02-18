@@ -7,7 +7,7 @@ class CSEET2: public EXCITER_MODEL
 {
     // PSASP 11-12
     public:
-        CSEET2();
+        CSEET2(STEPS& toolkit);
         CSEET2(const CSEET2& model);
         virtual ~CSEET2();
         virtual CSEET2& operator=(const CSEET2& model);

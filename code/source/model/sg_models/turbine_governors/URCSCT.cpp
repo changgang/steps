@@ -4,7 +4,7 @@
 #include <istream>
 #include <iostream>
 using namespace std;
-URCSCT::URCSCT()
+URCSCT::URCSCT(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit)
 {
     clear();
 }
@@ -81,6 +81,8 @@ void URCSCT::clear()
 }
 void URCSCT::copy_from_const_model(const URCSCT& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     set_gas_W(model.get_gas_W());
@@ -145,7 +147,7 @@ void URCSCT::copy_from_const_model(const URCSCT& model)
     set_SToutC_in_MW(model.get_SToutC_in_MW());
 }
 
-URCSCT::URCSCT(const URCSCT&model) : TURBINE_GOVERNOR_MODEL()
+URCSCT::URCSCT(const URCSCT&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -840,14 +842,14 @@ bool URCSCT::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void URCSCT::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double delt = toolkit.get_dynamic_simulation_time_step_in_s();
 
     gas_governor_droop.set_toolkit(toolkit);
@@ -923,7 +925,7 @@ void URCSCT::initialize()
 
                 setup_block_toolkit_and_parameters();
 
-                STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+                STEPS& toolkit = get_toolkit();
                 double time = toolkit.get_dynamic_simulation_time_in_s();
 
                 double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
@@ -1078,7 +1080,7 @@ void URCSCT::initialize()
 
 void URCSCT::run(DYNAMIC_MODE mode)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double time = toolkit.get_dynamic_simulation_time_in_s();
 
     double Pref = get_mechanical_power_reference_in_pu_based_on_mbase();
@@ -1220,7 +1222,7 @@ void URCSCT::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 void URCSCT::save()

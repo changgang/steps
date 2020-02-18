@@ -25,9 +25,8 @@ void WT3P0_TEST::setup()
 
     WT_GENERATOR* wt_gen = get_test_wt_generator();
 
-    WT3P0 model;
+    WT3P0 model(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    model.set_toolkit(default_toolkit);
     model.set_device_id(wt_gen->get_device_id());
 
     model.set_Tp_in_s(0.5);

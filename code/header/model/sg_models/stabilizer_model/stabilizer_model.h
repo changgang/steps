@@ -21,7 +21,7 @@ class STABILIZER_MODEL : public SG_MODEL
         stabilizing signal to exciter model
     */
     public:
-        STABILIZER_MODEL();
+        STABILIZER_MODEL(STEPS& toolkit);
         virtual ~STABILIZER_MODEL();
 
     public: // stabilizer common
@@ -68,7 +68,10 @@ class STABILIZER_MODEL : public SG_MODEL
         virtual string get_dynamic_data_in_steps_format() const = 0;
 
     private:
-        SIGNAL signals[STEPS_MAX_STABILIZER_INPUT_SIGNAL_SLOT];
+        const SIGNAL* get_const_pointer_of_signal_at_slot(unsigned int slot) const;
+        SIGNAL* get_nonconst_pointer_of_signal_at_slot(unsigned int slot);
+    private:
+        SIGNAL signal_0, signal_1, signal_2, signal_3, signal_4;
 };
 
 #endif // STABILIZER_MODEL_H

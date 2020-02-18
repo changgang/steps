@@ -7,7 +7,7 @@
 class GENCLS : public SYNC_GENERATOR_MODEL
 {
     public:
-        GENCLS();
+        GENCLS(STEPS& toolkit);
         GENCLS(const GENCLS& model);
         virtual ~GENCLS();
         virtual GENCLS& operator=(const GENCLS&);

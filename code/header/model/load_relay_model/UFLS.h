@@ -9,7 +9,7 @@
 class UFLS : public LOAD_FREQUENCY_RELAY_MODEL
 {
     public:
-        UFLS();
+        UFLS(STEPS& toolkit);
         UFLS(const UFLS& model);
         virtual ~UFLS();
         virtual UFLS& operator=(const UFLS& model);

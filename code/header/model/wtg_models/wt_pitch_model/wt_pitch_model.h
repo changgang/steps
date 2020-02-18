@@ -14,7 +14,7 @@ class WT_PITCH_MODEL : public WTG_MODEL
         pitch: pitch angle in deg
     */
     public:
-        WT_PITCH_MODEL();
+        WT_PITCH_MODEL(STEPS& toolkit);
         virtual ~WT_PITCH_MODEL();
 
         virtual string get_model_type() const;

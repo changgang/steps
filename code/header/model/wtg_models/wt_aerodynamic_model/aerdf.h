@@ -7,7 +7,7 @@
 class AERDF : public WT_AERODYNAMIC_MODEL
 {
     public:
-        AERDF();
+        AERDF(STEPS& toolkit);
         AERDF(const AERDF& model);
         virtual ~AERDF();
         virtual AERDF& operator=(const AERDF& model);

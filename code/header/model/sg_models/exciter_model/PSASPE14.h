@@ -8,7 +8,7 @@
 class PSASPE14: public EXCITER_MODEL
 {
     public:
-        PSASPE14();
+        PSASPE14(STEPS& toolkit);
         PSASPE14(const PSASPE14& model);
         virtual ~PSASPE14();
         virtual PSASPE14& operator=(const PSASPE14& model);

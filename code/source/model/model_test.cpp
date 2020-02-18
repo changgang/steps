@@ -6,7 +6,7 @@
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
 
-MODEL_TEST::MODEL_TEST()
+MODEL_TEST::MODEL_TEST() : model(default_toolkit)
 {
     TEST_ADD(MODEL_TEST::test_get_device_pointer_and_device_id)
     TEST_ADD(MODEL_TEST::test_set_get_flag_model_initialized)
@@ -47,7 +47,6 @@ void MODEL_TEST::setup()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    model.set_toolkit(default_toolkit);
     model.set_device_id(did);
 }
 

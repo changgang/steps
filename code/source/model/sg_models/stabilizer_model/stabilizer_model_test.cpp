@@ -20,9 +20,8 @@ void STABILIZER_MODEL_TEST::setup()
 
     GENERATOR* genptr = get_test_generator();
 
-    SEXS exciter_model;
+    SEXS exciter_model(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    exciter_model.set_toolkit(default_toolkit);
     exciter_model.set_device_id(genptr->get_device_id());
 
     dmdb.add_model(&exciter_model);
@@ -53,8 +52,7 @@ void STABILIZER_MODEL_TEST::test_set_get_input_signal()
     GENERATOR* generator = get_test_generator();
 
     cout<<__FILE__<<__LINE__<<endl;
-    SIGNAL signal;
-    signal.set_toolkit(default_toolkit);
+    SIGNAL signal(default_toolkit);
 
     cout<<__FILE__<<__LINE__<<endl;
     signal.set_device_id(generator->get_device_id());

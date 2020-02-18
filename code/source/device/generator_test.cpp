@@ -172,8 +172,7 @@ void GENERATOR_TEST::test_set_get_sync_generator_model()
 
     GENERATOR* gen = psdb.get_generator(did);
 
-    GENCLS model;
-    model.set_toolkit(default_toolkit);
+    GENCLS model(default_toolkit);
     model.set_device_id(did);
 
     model.set_Rs(0.0);
@@ -211,8 +210,7 @@ void GENERATOR_TEST::test_set_get_compensator_model()
 
     GENERATOR* gen = psdb.get_generator(did);
 
-    COMP model;
-    model.set_toolkit(default_toolkit);
+    COMP model(default_toolkit);
     model.set_device_id(did);
 
     model.set_Xe(0.1);
@@ -247,8 +245,7 @@ void GENERATOR_TEST::test_set_get_exciter_model()
 
     GENERATOR* gen = psdb.get_generator(did);
 
-    SEXS model;
-    model.set_toolkit(default_toolkit);
+    SEXS model(default_toolkit);
     model.set_device_id(did);
 
     model.set_TA_in_s(0.1);
@@ -291,8 +288,7 @@ void GENERATOR_TEST::test_set_get_stabilizer_model()
 
     GENERATOR* gen = psdb.get_generator(did);
 
-    IEE2ST model;
-    model.set_toolkit(default_toolkit);
+    IEE2ST model(default_toolkit);
     model.set_device_id(did);
 
     model.set_K1(1.0);
@@ -349,8 +345,7 @@ void GENERATOR_TEST::test_set_get_turbine_governor_model()
 
     GENERATOR* gen = psdb.get_generator(did);
 
-    TGOV1 model;
-    model.set_toolkit(default_toolkit);
+    TGOV1 model(default_toolkit);
     model.set_device_id(did);
 
     model.set_R(0.5);

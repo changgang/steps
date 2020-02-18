@@ -8,7 +8,7 @@
 class MOTOR : public LOAD_MODEL
 {
     public:
-        MOTOR();
+        MOTOR(STEPS& toolkit);
         MOTOR(const MOTOR& model);
         virtual ~MOTOR();
 

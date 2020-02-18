@@ -27,8 +27,7 @@ void WT3T0_TEST::setup()
 
     WT_GENERATOR* wt_gen = get_test_wt_generator();
 
-    WT3T0 model;
-    model.set_toolkit(default_toolkit);
+    WT3T0 model(default_toolkit);
     model.set_device_id(wt_gen->get_device_id());
 
     model.set_Hturbine_in_s(5.0);

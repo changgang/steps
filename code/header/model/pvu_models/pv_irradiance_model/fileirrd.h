@@ -5,7 +5,7 @@
 class FILEIRRAD : public PV_IRRADIANCE_MODEL
 {
     public:
-        FILEIRRAD();
+        FILEIRRAD(STEPS& toolkit);
         FILEIRRAD(const FILEIRRAD& model);
         virtual ~FILEIRRAD();
         virtual FILEIRRAD& operator=(const FILEIRRAD& model);

@@ -3,7 +3,7 @@
 #include "header/basic/utility.h"
 #include <fstream>
 
-PV_IRRADIANCE_MODEL::PV_IRRADIANCE_MODEL()
+PV_IRRADIANCE_MODEL::PV_IRRADIANCE_MODEL(STEPS& toolkit) : PVU_MODEL(toolkit)
 {
 }
 

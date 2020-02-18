@@ -4,7 +4,7 @@
 #include "header/STEPS.h"
 #include <cstdio>
 
-WT_PITCH_MODEL::WT_PITCH_MODEL()
+WT_PITCH_MODEL::WT_PITCH_MODEL(STEPS& toolkit) : WTG_MODEL(toolkit)
 {
     common_constructor();
 }
@@ -64,7 +64,7 @@ double WT_PITCH_MODEL::get_bus_frequency_in_pu() const
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen!=NULL)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         unsigned int bus = gen->get_generator_bus();
@@ -79,7 +79,7 @@ double WT_PITCH_MODEL::get_bus_frequency_deviation_in_pu() const
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen!=NULL)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         unsigned int bus = gen->get_generator_bus();

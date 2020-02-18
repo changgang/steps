@@ -9,7 +9,7 @@
 class IEEEG2 : public TURBINE_GOVERNOR_MODEL
 {
     public:
-        IEEEG2();
+        IEEEG2(STEPS& toolkit);
         IEEEG2(const IEEEG2&model);
         virtual ~IEEEG2();
         virtual IEEEG2& operator=(const IEEEG2& model);

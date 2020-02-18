@@ -6,7 +6,7 @@
 
 class STEPS_SPARSE_MATRIX;
 using namespace std;
-CIM6::CIM6()
+CIM6::CIM6(STEPS& toolkit) : LOAD_MODEL(toolkit)
 {
     clear();
 }
@@ -27,6 +27,8 @@ void CIM6::clear()
 
 void CIM6::copy_from_const_model(const CIM6& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     //this->set_power_system_database(model.toolkit.get_power_system_database());
@@ -60,7 +62,7 @@ void CIM6::copy_from_const_model(const CIM6& model)
     this->set_Tnom_in_pu(model.get_Tnom_in_pu());
 }
 
-CIM6::CIM6(const CIM6& model) : LOAD_MODEL()
+CIM6::CIM6(const CIM6& model) : LOAD_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -435,7 +437,7 @@ bool CIM6::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
@@ -443,7 +445,7 @@ bool CIM6::setup_model_with_bpa_string(string data)
 complex<double> CIM6::get_dynamic_source_admittance_in_pu_based_on_SBASE()
 {
     complex<double> y = 1.0/Zsource;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     double mbase = Mbase;
     return y*mbase*one_over_sbase;
@@ -451,7 +453,7 @@ complex<double> CIM6::get_dynamic_source_admittance_in_pu_based_on_SBASE()
 
 complex<double> CIM6::get_additional_admittance_in_pu_based_on_SBASE()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     return complex<double>(0.0, nominal_shunt_in_MVar*one_over_sbase);
 }
@@ -460,7 +462,7 @@ void CIM6::setup_block_toolkit_and_parameters()
 {
     setup_model_dynamic_parameters();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     speed_block.set_toolkit(toolkit);
     transient_block_x_axis.set_toolkit(toolkit);
     subtransient_block_x_axis.set_toolkit(toolkit);
@@ -557,7 +559,7 @@ void CIM6::initialize()
 {
     synchronize_bus_voltage_and_frequency();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
 
     setup_block_toolkit_and_parameters();
 
@@ -993,7 +995,7 @@ complex<double> CIM6::get_internal_voltage_in_pu() const
 
 complex<double> CIM6::get_load_current_in_pu_based_on_SBASE()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     complex<double> S = get_load_power_in_MVA()*one_over_sbase;
@@ -1007,7 +1009,7 @@ complex<double> CIM6::get_norton_current_in_pu_based_on_SBASE()
     complex<double> E = get_internal_voltage_in_pu();
     complex<double> I = E/Zsource;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     return I*Mbase*one_over_sbase;
 }
@@ -1020,7 +1022,7 @@ void CIM6::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 void CIM6::save()

@@ -207,7 +207,7 @@ void GENERATOR::run(DYNAMIC_MODE mode)
                     gen->initialize();
                 else
                     return;
-                STEPS& toolkit = gen->get_toolkit(__PRETTY_FUNCTION__);
+                STEPS& toolkit = gen->get_toolkit();
                 POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
                 COMPENSATOR_MODEL* comp = get_compensator_model();
                 if(comp!=NULL)

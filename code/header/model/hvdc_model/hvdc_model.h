@@ -14,7 +14,7 @@ class BUS;
 class HVDC_MODEL : public MODEL
 {
     public:
-        HVDC_MODEL();
+        HVDC_MODEL(STEPS& toolkit);
         virtual ~HVDC_MODEL();
         HVDC* get_hvdc_pointer() const;
     public: // hvdc common

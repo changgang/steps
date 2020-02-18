@@ -3,7 +3,7 @@
 #include "header/STEPS.h"
 #include "header/meter/meter_setter.h"
 #include <cstdio>
-ARXL::ARXL() : EQUIVALENT_MODEL()
+ARXL::ARXL(STEPS& toolkit) : EQUIVALENT_MODEL(toolkit)
 {
     clear();
 }
@@ -24,7 +24,7 @@ void ARXL::copy_from_constant_model(const ARXL& model)
     q_coefficients = model.get_Q_coefficients();
 }
 
-ARXL::ARXL(const ARXL& model) : EQUIVALENT_MODEL()
+ARXL::ARXL(const ARXL& model) : EQUIVALENT_MODEL(model.get_toolkit())
 {
     copy_from_constant_model(model);
 }
@@ -57,7 +57,7 @@ void ARXL::clear()
 void ARXL::set_output_line(DEVICE_ID did, unsigned int meter_side)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
 
     if(did.get_device_type()!="LINE")
     {
@@ -85,11 +85,9 @@ void ARXL::set_output_line(DEVICE_ID did, unsigned int meter_side)
 
     clear();
 
-    METER_SETTER setter;
-    setter.set_toolkit(toolkit);
+    METER_SETTER setter(toolkit);
 
-    METER meter;
-    meter.set_toolkit(toolkit);
+    METER meter(get_toolkit());
 
     meter = setter.prepare_line_active_power_in_MW_meter(did, meter_side);
     add_P_input_item(meter, 0, 0.0);
@@ -239,7 +237,7 @@ bool ARXL::setup_model_with_steps_string_vector(vector<string>& data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<string_vector2csv(data);
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
@@ -255,14 +253,14 @@ bool ARXL::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void ARXL::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     unsigned int n = p_meters.size();
     for(unsigned int i=0; i!=n; ++i)
         p_meter_buffers[i].set_toolkit(toolkit);
@@ -275,7 +273,7 @@ void ARXL::initialize()
 {
     setup_block_toolkit_and_parameters();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double time = toolkit.get_dynamic_simulation_time_in_s();
     unsigned int n = p_meters.size();
     for(unsigned int i=0; i!=n; ++i)
@@ -321,7 +319,7 @@ void ARXL::run(DYNAMIC_MODE mode)
 
 void ARXL::update_meters_buffer()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double time = toolkit.get_dynamic_simulation_time_in_s();
 
     unsigned int n = p_meters.size();
@@ -345,7 +343,7 @@ void ARXL::update_equivalent_outputs()
 void ARXL::update_equivalent_constant_power_load()
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
 
     double P = 0.0;
     unsigned int n = p_meters.size();
@@ -427,7 +425,7 @@ complex<double> ARXL::get_equivalent_nominal_constant_impedance_load_in_MVA() co
 
 complex<double> ARXL::get_total_load_power_in_MVA() const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     EQUIVALENT_DEVICE* edevice = get_equivalent_device_pointer();
     double vbus = psdb.get_bus_positive_sequence_voltage_in_pu(edevice->get_equivalent_device_bus());
@@ -451,7 +449,7 @@ void ARXL::switch_output_to_equivalent_device()
 {
     ostringstream osstream;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double current_time = toolkit.get_dynamic_simulation_time_in_s();
@@ -499,8 +497,7 @@ void ARXL::switch_output_to_equivalent_device()
 
 
     // change 0-meters into equivalent device meters
-    METER_SETTER setter;
-    setter.set_toolkit(toolkit);
+    METER_SETTER setter(toolkit);
 
     DEVICE_ID  edevice_did = edevice->get_device_id();
 
@@ -530,7 +527,7 @@ void ARXL::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 void ARXL::save()
@@ -541,7 +538,7 @@ string ARXL::get_standard_psse_string() const
 {
     string data;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = p_meters[0].get_device_id();
     LINE* line = psdb.get_line(did);
@@ -619,7 +616,7 @@ string ARXL::get_line_meter_string(const METER& meter) const
                 if(meter.get_meter_type().find("ACTIVE POWER IN PU")!=string::npos)
                     data += "ACTIVE_POWER_PU,";
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = meter.get_device_id();
     LINE* line = psdb.get_line(did);
@@ -648,7 +645,7 @@ string ARXL::get_transformer_meter_string(const METER& meter) const
                 if(meter.get_meter_type().find("ACTIVE POWER IN PU")!=string::npos)
                     data += "ACTIVE_POWER_PU,";
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = meter.get_device_id();
     TRANSFORMER* trans = psdb.get_transformer(did);
@@ -675,7 +672,7 @@ string ARXL::get_bus_meter_string(const METER& meter) const
             data += "FREQUENCY_DEVIATION_PU,";
     }
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = meter.get_device_id();
     BUS* bus = psdb.get_bus(did);
@@ -701,7 +698,7 @@ string ARXL::get_generator_meter_string(const METER& meter) const
                     data += "MECHANICAL_POWER_MW,";
 
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = meter.get_device_id();
     GENERATOR* gen = psdb.get_generator(did);
@@ -722,7 +719,7 @@ string ARXL::get_load_meter_string(const METER& meter) const
             data += "ACTIVE_POWER_MW,";
 
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = meter.get_device_id();
     LOAD* load = psdb.get_load(did);

@@ -18,7 +18,7 @@ class SYNC_GENERATOR_MODEL : public SG_MODEL
     */
 
     public:
-        SYNC_GENERATOR_MODEL();
+        SYNC_GENERATOR_MODEL(STEPS& toolkit);
         virtual ~SYNC_GENERATOR_MODEL();
 
     public: // sync generator common

@@ -295,8 +295,7 @@ void DYNAMICS_SIMULATOR_TEST::test_append_and_get_meter()
     prepare_IEEE_9_bus_model();
     prepare_IEEE_9_bus_model_classical_dynamic_model();
 
-    METER meter;
-    meter.set_toolkit(default_toolkit);
+    METER meter(default_toolkit);
     DEVICE_ID did;
     TERMINAL terminal;
 
@@ -344,8 +343,7 @@ void DYNAMICS_SIMULATOR_TEST::test_get_meter_count()
     prepare_IEEE_9_bus_model();
     prepare_IEEE_9_bus_model_classical_dynamic_model();
 
-    METER meter;
-    meter.set_toolkit(default_toolkit);
+    METER meter(default_toolkit);
     DEVICE_ID did;
     TERMINAL terminal;
 
@@ -376,8 +374,7 @@ void DYNAMICS_SIMULATOR_TEST::test_get_all_meters_value()
     prepare_IEEE_9_bus_model();
     prepare_IEEE_9_bus_model_classical_dynamic_model();
 
-    METER meter;
-    meter.set_toolkit(default_toolkit);
+    METER meter(default_toolkit);
     DEVICE_ID did;
     TERMINAL terminal;
 
@@ -438,8 +435,7 @@ void DYNAMICS_SIMULATOR_TEST::test_clear_meters()
     prepare_IEEE_9_bus_model();
     prepare_IEEE_9_bus_model_classical_dynamic_model();
 
-    METER meter;
-    meter.set_toolkit(default_toolkit);
+    METER meter(default_toolkit);
     DEVICE_ID did;
     TERMINAL terminal;
 
@@ -542,13 +538,11 @@ void DYNAMICS_SIMULATOR_TEST::run_single_machine_model_for_model_test()
 
     //cout<<psdb.get_generator(did)->get_sync_generator_model()->get_standard_psse_string()<<endl;
 
-    METER_SETTER setter;
-    setter.set_toolkit(default_toolkit);
+    METER_SETTER setter(default_toolkit);
 
     ostringstream osstream;
 
-    METER meter;
-    meter.set_toolkit(default_toolkit);
+    METER meter(default_toolkit);
     meter = setter.prepare_bus_voltage_in_pu_meter(1);
     simulator.append_meter(meter);
     meter = setter.prepare_bus_angle_in_deg_meter(1);
@@ -1696,9 +1690,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    /*METER meter;
-    METER_SETTER setter;
-    setter.set_toolkit(default_toolkit);
+    /*METER meter(default_toolkit);
+    METER_SETTER setter(default_toolkit);
     setter.set_power_system_database;
     meter = setter.prepare_bus_voltage_in_pu_meter(3);
     simulator.append_meter(meter);
@@ -1810,9 +1803,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
     powerflow_solver.solve_with_fast_decoupled_solution();
     powerflow_solver.show_powerflow_result();
 
-    /*METER meter;
-    METER_SETTER setter;
-    setter.set_toolkit(default_toolkit);
+    /*METER meter(default_toolkit);
+    METER_SETTER setter(default_toolkit);
     setter.set_power_system_database;
     meter = setter.prepare_bus_voltage_in_pu_meter(3);
     simulator.append_meter(meter);

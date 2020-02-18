@@ -26,8 +26,7 @@ void WTRLY0_TEST::setup()
 
     WT_GENERATOR* wt_gen = get_test_wt_generator();
 
-    WTRLY0 model;
-    model.set_toolkit(default_toolkit);
+    WTRLY0 model(default_toolkit);
     model.set_device_id(wt_gen->get_device_id());
 
     model.set_wind_speed_relay_pair_in_pu_s(0, 0.3, 0.0);

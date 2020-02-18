@@ -4,7 +4,7 @@
 #include <istream>
 #include <iostream>
 using namespace std;
-GAST2A::GAST2A()
+GAST2A::GAST2A(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit)
 {
     clear();
 }
@@ -57,6 +57,8 @@ void GAST2A::clear()
 }
 void GAST2A::copy_from_const_model(const GAST2A& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     set_gas_W(model.get_gas_W());
@@ -92,7 +94,7 @@ void GAST2A::copy_from_const_model(const GAST2A& model)
     set_gas_TC_in_deg(model.get_gas_TC_in_deg());
 }
 
-GAST2A::GAST2A(const GAST2A&model) : TURBINE_GOVERNOR_MODEL()
+GAST2A::GAST2A(const GAST2A&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -488,14 +490,14 @@ bool GAST2A::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void GAST2A::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double delt = toolkit.get_dynamic_simulation_time_step_in_s();
 
     gas_governor_droop.set_toolkit(toolkit);
@@ -561,7 +563,7 @@ void GAST2A::initialize()
 
                 setup_block_toolkit_and_parameters();
 
-                STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+                STEPS& toolkit = get_toolkit();
                 double time = toolkit.get_dynamic_simulation_time_in_s();
 
                 double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
@@ -637,7 +639,7 @@ void GAST2A::initialize()
 
 void GAST2A::run(DYNAMIC_MODE mode)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double time = toolkit.get_dynamic_simulation_time_in_s();
 
     double Pref = get_mechanical_power_reference_in_pu_based_on_mbase();
@@ -737,7 +739,7 @@ void GAST2A::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 void GAST2A::save()

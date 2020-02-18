@@ -4,7 +4,7 @@
 #include "header/STEPS.h"
 #include <cstdio>
 
-LOAD_MODEL::LOAD_MODEL()
+LOAD_MODEL::LOAD_MODEL(STEPS& toolkit) : MODEL(toolkit)
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("LOAD");
 }

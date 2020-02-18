@@ -135,7 +135,7 @@ int main()
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("../../../IEEE39_GENROU_SEXS_IEEEG1.dyr");
 
-    EQUIVALENT_MODEL_IMEXPORTER eqimporter;
+    EQUIVALENT_MODEL_IMEXPORTER eqimporter(default_toolkit);
     eqimporter.load_equivalent_model("C:/Users/charles/Desktop/arx/arx_model.eqv");
 
     POWERFLOW_SOLVER powerflow_solver(default_toolkit);

@@ -1347,8 +1347,7 @@ void HVDC_TEST::test_set_get_hvdc_model()
     TEST_ASSERT(hvdcptr!=NULL);
     TEST_ASSERT(hvdcptr->get_hvdc_model()==NULL);
 
-    CDC4T model;
-    model.set_toolkit(default_toolkit);
+    CDC4T model(default_toolkit);
     model.set_device_id(did);
 
     model.set_inverter_dc_voltage_sensor_T_in_s(0.1);

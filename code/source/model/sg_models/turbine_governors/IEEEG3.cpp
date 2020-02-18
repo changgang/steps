@@ -4,7 +4,7 @@
 #include <istream>
 #include <iostream>
 using namespace std;
-IEEEG3::IEEEG3()
+IEEEG3::IEEEG3(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit)
 {
     clear();
 }
@@ -28,6 +28,8 @@ void IEEEG3::clear()
 }
 void IEEEG3::copy_from_const_model(const IEEEG3& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     this->set_TG_in_s(model.get_TG_in_s());
@@ -46,7 +48,7 @@ void IEEEG3::copy_from_const_model(const IEEEG3& model)
     this->set_a23(model.get_a23());
 }
 
-IEEEG3::IEEEG3(const IEEEG3&model) : TURBINE_GOVERNOR_MODEL()
+IEEEG3::IEEEG3(const IEEEG3&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -270,14 +272,14 @@ bool IEEEG3::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void IEEEG3::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     governor.set_toolkit(toolkit);
     servo_motor.set_toolkit(toolkit);
     feedbacker.set_toolkit(toolkit);
@@ -300,7 +302,7 @@ void IEEEG3::initialize()
 
                 setup_block_toolkit_and_parameters();
 
-                STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+                STEPS& toolkit = get_toolkit();
 
                 double delta = get_delta();
                 double TR = get_TR_in_s();
@@ -407,7 +409,7 @@ void IEEEG3::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 void IEEEG3::save()

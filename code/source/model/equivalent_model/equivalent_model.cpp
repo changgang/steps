@@ -3,7 +3,7 @@
 #include "header/basic/utility.h"
 #include <cstdio>
 
-EQUIVALENT_MODEL::EQUIVALENT_MODEL()
+EQUIVALENT_MODEL::EQUIVALENT_MODEL(STEPS& toolkit) : MODEL(toolkit)
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("EQUIVALENT DEVICE");
 }

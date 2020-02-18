@@ -8,7 +8,7 @@
 class WT3P1 : public WT_PITCH_MODEL
 {
     public:
-        WT3P1();
+        WT3P1(STEPS& toolkit);
         WT3P1(const WT3P1&model);
         virtual ~WT3P1();
         virtual WT3P1& operator=(const WT3P1& model);

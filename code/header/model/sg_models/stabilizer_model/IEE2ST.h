@@ -9,7 +9,7 @@
 class IEE2ST : public STABILIZER_MODEL
 {
     public:
-        IEE2ST();
+        IEE2ST(STEPS& toolkit);
         IEE2ST(const IEE2ST& model);
         virtual ~IEE2ST();
         virtual IEE2ST& operator=(const IEE2ST& model);

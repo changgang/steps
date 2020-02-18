@@ -31,9 +31,8 @@ void WIND_SPEED_MODEL_TEST::setup()
     wt_gen->set_rated_power_per_wt_generator_in_MW(1.5);
     wt_gen->set_number_of_lumped_wt_generators(20);
 
-    AERD0 aeromodel;
+    AERD0 aeromodel(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    aeromodel.set_toolkit(default_toolkit);
     aeromodel.set_device_id(wt_gen->get_device_id());
 
     aeromodel.set_nominal_wind_speed_in_mps(13.0);

@@ -23,9 +23,8 @@ void TURBINE_LOAD_CONTROLLER_MODEL_TEST::setup()
 
     GENERATOR* genptr = get_test_generator();
 
-    GENCLS sg_model;
+    GENCLS sg_model(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    sg_model.set_toolkit(default_toolkit);
     sg_model.set_device_id(genptr->get_device_id());
 
     sg_model.set_H_in_s(3.0);
@@ -33,8 +32,7 @@ void TURBINE_LOAD_CONTROLLER_MODEL_TEST::setup()
 
     dmdb.add_model(&sg_model);
 
-    IEEEG1 tg_model;
-    tg_model.set_toolkit(default_toolkit);
+    IEEEG1 tg_model(default_toolkit);
     tg_model.set_device_id(genptr->get_device_id());
 
     tg_model.set_K(20.0);

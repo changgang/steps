@@ -19,9 +19,8 @@ void PSASPE13_TEST::setup()
     EXCITER_MODEL_TEST::setup();
     GENERATOR* genptr = get_test_generator();
 
-    PSASPE13 model;
+    PSASPE13 model(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    model.set_toolkit(default_toolkit);
     model.set_device_id(genptr->get_device_id());
 
     model.set_TR_in_s(0.03);

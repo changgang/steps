@@ -447,8 +447,7 @@ void prepare_IEEE_9_bus_model_dynamic_model()
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
 
-    GENCLS gen1_model;
-    gen1_model.set_toolkit(default_toolkit);
+    GENCLS gen1_model(default_toolkit);
     gen1_model.set_device_id(did);
 
     gen1_model.set_H_in_s(9.5515);
@@ -459,8 +458,7 @@ void prepare_IEEE_9_bus_model_dynamic_model()
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
 
-    GENCLS gen2_model;
-    gen2_model.set_toolkit(default_toolkit);
+    GENCLS gen2_model(default_toolkit);
     gen2_model.set_device_id(did);
 
     gen2_model.set_H_in_s(3.3333);
@@ -471,8 +469,7 @@ void prepare_IEEE_9_bus_model_dynamic_model()
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
 
-    GENCLS gen3_model;
-    gen3_model.set_toolkit(default_toolkit);
+    GENCLS gen3_model(default_toolkit);
     gen3_model.set_device_id(did);
 
     gen3_model.set_H_in_s(2.3516);
@@ -482,8 +479,7 @@ void prepare_IEEE_9_bus_model_dynamic_model()
     did.set_device_type("LOAD");
 
 
-    IEEL load_model;
-    load_model.set_toolkit(default_toolkit);
+    IEEL load_model(default_toolkit);
 
     load_model.set_P_alpha_1(1.0);
     load_model.set_P_alpha_2(0.0);
@@ -525,8 +521,7 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model()
 
     GENERATOR* generator;
 
-    GENCLS gen1_model;
-    gen1_model.set_toolkit(default_toolkit);
+    GENCLS gen1_model(default_toolkit);
     gen1_model.set_device_id(did);
 
     gen1_model.set_H_in_s(9.5515);
@@ -542,8 +537,7 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model()
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
 
-    GENCLS gen2_model;
-    gen2_model.set_toolkit(default_toolkit);
+    GENCLS gen2_model(default_toolkit);
     gen2_model.set_device_id(did);
 
     gen2_model.set_H_in_s(3.3333);
@@ -559,8 +553,7 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model()
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
 
-    GENCLS gen3_model;
-    gen3_model.set_toolkit(default_toolkit);
+    GENCLS gen3_model(default_toolkit);
     gen3_model.set_device_id(did);
 
     gen3_model.set_H_in_s(2.3516);
@@ -573,8 +566,7 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model()
 
     did.set_device_type("LOAD");
 
-    IEEL load_model;
-    load_model.set_toolkit(default_toolkit);
+    IEEL load_model(default_toolkit);
 
     load_model.set_P_alpha_1(1.0);
     load_model.set_P_alpha_2(0.0);

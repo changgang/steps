@@ -7,7 +7,11 @@
 #include <thread>
 using namespace std;
 
-STEPS::STEPS(const string& name, const string& log_file)
+STEPS::STEPS(const string& name, const string& log_file) : power_system_db(*this),
+                                                           dynamic_model_db(*this),
+                                                           powerflow_solver(*this),
+                                                           dynamic_simulator(*this),
+                                                           network_matrix(*this)
 {
     disable_use_steps_fast_math_logic();
 
@@ -25,15 +29,8 @@ STEPS::STEPS(const string& name, const string& log_file)
 
     toolkit_name = name;
 
-    power_system_db = new POWER_SYSTEM_DATABASE(*this);
-    power_system_db->set_database_capacity();
-
-    dynamic_model_db = new DYNAMIC_MODEL_DATABASE(*this);
-
-    powerflow_solver = new POWERFLOW_SOLVER(*this);
-    dynamic_simulator = new DYNAMICS_SIMULATOR(*this);
-
-    network_matrix = new NETWORK_MATRIX(*this);
+    //power_system_db = new POWER_SYSTEM_DATABASE(*this);
+    power_system_db.set_database_capacity();
 
     set_thread_number(1);
 
@@ -52,12 +49,6 @@ STEPS::~STEPS()
     if(toolkit_name!="TK DFLT")
         show_information_with_leading_time_stamp("STEPS simulation toolkit ["+toolkit_name+"] @ 0X"+num2hex_str(size_t(this))+" is deleted.");
     close_log_file();
-
-    delete power_system_db;
-    delete dynamic_model_db;
-    delete powerflow_solver;
-    delete dynamic_simulator;
-    delete network_matrix;
 }
 
 void STEPS::set_toolkit_name(const string& name)
@@ -107,7 +98,7 @@ void STEPS::set_thread_number(unsigned int n)
     vsc_hvdc_thread_number = 1;;
     equivalent_device_thread_number = 1;
 
-    if(power_system_db->get_bus_count()!=0)
+    if(power_system_db.get_bus_count()!=0)
         update_device_thread_number();
 }
 
@@ -290,13 +281,13 @@ void STEPS::clear()
 {
     current_alphabeta = 'Z';
 
-    power_system_db->clear();
-    dynamic_model_db->clear();
+    power_system_db.clear();
+    dynamic_model_db.clear();
 
-    powerflow_solver->clear();
-    dynamic_simulator->clear();
+    powerflow_solver.clear();
+    dynamic_simulator.clear();
 
-    network_matrix->clear();
+    network_matrix.clear();
 }
 
 void STEPS::open_log_file(const string& file, bool log_file_append_mode)
@@ -361,7 +352,7 @@ void STEPS::reset()
     osstream<<"STEPS simulation toolkit is reset.";
     show_information_with_leading_time_stamp(osstream);
 
-    power_system_db->clear();
+    power_system_db.clear();
 }
 
 void STEPS::terminate()
@@ -374,57 +365,57 @@ void STEPS::terminate()
 
 POWER_SYSTEM_DATABASE& STEPS::get_power_system_database()
 {
-    return *power_system_db;
+    return power_system_db;
 }
 
 DYNAMIC_MODEL_DATABASE& STEPS::get_dynamic_model_database()
 {
-    return *dynamic_model_db;
+    return dynamic_model_db;
 }
 
 POWERFLOW_SOLVER& STEPS::get_powerflow_solver()
 {
-    return *powerflow_solver;
+    return powerflow_solver;
 }
 
 DYNAMICS_SIMULATOR& STEPS::get_dynamic_simulator()
 {
-    return *dynamic_simulator;
+    return dynamic_simulator;
 }
 
 NETWORK_MATRIX& STEPS::get_network_matrix()
 {
-    return *network_matrix;
+    return network_matrix;
 }
 
 double STEPS::get_system_base_power_in_MVA() const
 {
-    return power_system_db->get_system_base_power_in_MVA();
+    return power_system_db.get_system_base_power_in_MVA();
 }
 
 double STEPS::get_one_over_system_base_power_in_one_over_MVA() const
 {
-    return power_system_db->get_one_over_system_base_power_in_one_over_MVA();
+    return power_system_db.get_one_over_system_base_power_in_one_over_MVA();
 }
 
 void STEPS::set_dynamic_simulation_time_step_in_s(double delt)
 {
-    dynamic_simulator->set_dynamic_simulation_time_step_in_s(delt);
+    dynamic_simulator.set_dynamic_simulation_time_step_in_s(delt);
 }
 
 double STEPS::get_dynamic_simulation_time_step_in_s()
 {
-    return dynamic_simulator->get_dynamic_simulation_time_step_in_s();;
+    return dynamic_simulator.get_dynamic_simulation_time_step_in_s();;
 }
 
 void STEPS::set_dynamic_simulation_time_in_s(double time)
 {
-    dynamic_simulator->set_dynamic_simulation_time_in_s(time);
+    dynamic_simulator.set_dynamic_simulation_time_in_s(time);
 }
 
 double STEPS::get_dynamic_simulation_time_in_s()
 {
-    return dynamic_simulator->get_dynamic_simulation_time_in_s();;
+    return dynamic_simulator.get_dynamic_simulation_time_in_s();;
 }
 
 void STEPS::show_information_with_leading_time_stamp(ostringstream& stream)

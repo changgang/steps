@@ -10,7 +10,7 @@
 class IEEEG1SB : public TURBINE_GOVERNOR_MODEL
 {
     public:
-        IEEEG1SB();
+        IEEEG1SB(STEPS& toolkit);
         IEEEG1SB(const IEEEG1SB&model);
         virtual ~IEEEG1SB();
         virtual IEEEG1SB& operator=(const IEEEG1SB& model);

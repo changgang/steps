@@ -4,7 +4,7 @@
 #include <istream>
 #include <iostream>
 using namespace std;
-IEEEG1SB::IEEEG1SB()
+IEEEG1SB::IEEEG1SB(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit)
 {
     clear();
 }
@@ -39,6 +39,8 @@ void IEEEG1SB::clear()
 }
 void IEEEG1SB::copy_from_const_model(const IEEEG1SB& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     this->set_K(model.get_K());
@@ -70,7 +72,7 @@ void IEEEG1SB::copy_from_const_model(const IEEEG1SB& model)
     this->set_Kb(model.get_Kb());
 }
 
-IEEEG1SB::IEEEG1SB(const IEEEG1SB&model) : TURBINE_GOVERNOR_MODEL()
+IEEEG1SB::IEEEG1SB(const IEEEG1SB&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -451,14 +453,14 @@ bool IEEEG1SB::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void IEEEG1SB::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     droop.set_toolkit(toolkit);
     servo_motor.set_toolkit(toolkit);
     delayer1.set_toolkit(toolkit);
@@ -477,7 +479,7 @@ void IEEEG1SB::initialize()
     ostringstream osstream;
     if(not is_model_initialized())
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
 
         GENERATOR* generator = get_generator_pointer();
         if(generator!=NULL)
@@ -637,7 +639,7 @@ void IEEEG1SB::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 void IEEEG1SB::save()

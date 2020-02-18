@@ -2,7 +2,7 @@
 #include "header/basic/utility.h"
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
-ENERGY_STORAGE_MODEL::ENERGY_STORAGE_MODEL()
+ENERGY_STORAGE_MODEL::ENERGY_STORAGE_MODEL(STEPS& toolkit) : MODEL(toolkit)
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("ENERGY STORAGE");
 }
@@ -45,7 +45,7 @@ complex<double> ENERGY_STORAGE_MODEL::get_terminal_bus_complex_voltage_in_pu() c
     ENERGY_STORAGE* estorage = get_energy_storage_pointer();
     if(estorage==NULL)
         return 0.0;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int bus = estorage->get_energy_storage_bus();
@@ -57,7 +57,7 @@ double ENERGY_STORAGE_MODEL::get_terminal_bus_voltage_in_pu() const
     ENERGY_STORAGE* estorage = get_energy_storage_pointer();
     if(estorage==NULL)
         return 0.0;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int bus = estorage->get_energy_storage_bus();
@@ -69,7 +69,7 @@ double ENERGY_STORAGE_MODEL::get_terminal_bus_angle_in_rad() const
     ENERGY_STORAGE* estorage = get_energy_storage_pointer();
     if(estorage==NULL)
         return 0.0;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int bus = estorage->get_energy_storage_bus();
@@ -83,7 +83,7 @@ double ENERGY_STORAGE_MODEL::get_terminal_bus_frequency_deviation_in_pu() const
     if(estorage==NULL)
         return 0.0;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int bus = estorage->get_energy_storage_bus();

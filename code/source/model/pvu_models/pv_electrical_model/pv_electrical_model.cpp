@@ -4,7 +4,7 @@
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
 
-PV_ELECTRICAL_MODEL::PV_ELECTRICAL_MODEL()
+PV_ELECTRICAL_MODEL::PV_ELECTRICAL_MODEL(STEPS& toolkit) : PVU_MODEL(toolkit)
 {
 }
 
@@ -48,7 +48,7 @@ complex<double> PV_ELECTRICAL_MODEL::get_terminal_bus_complex_voltage_in_pu() co
     PV_UNIT* pv_unit = get_pv_unit_pointer();
     if(pv_unit!=NULL)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         unsigned int bus = pv_unit->get_unit_bus();
@@ -75,7 +75,7 @@ double PV_ELECTRICAL_MODEL::get_terminal_bus_frequency_deviation_in_pu() const
     PV_UNIT* pv_unit = get_pv_unit_pointer();
     if(pv_unit!=NULL)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         unsigned int bus = pv_unit->get_unit_bus();
@@ -128,7 +128,7 @@ void PV_ELECTRICAL_MODEL::set_voltage_reference_in_pu_with_bus_to_regulate()
     PV_UNIT* source = get_pv_unit_pointer();
     if(source!=NULL)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         unsigned int bus = get_bus_to_regulate();

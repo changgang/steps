@@ -5,7 +5,7 @@
 #include <istream>
 #include <iostream>
 using namespace std;
-GENCLS::GENCLS()
+GENCLS::GENCLS(STEPS& toolkit) : SYNC_GENERATOR_MODEL(toolkit)
 {
     clear();
 }
@@ -20,6 +20,8 @@ void GENCLS::clear()
 }
 void GENCLS::copy_from_const_model(const GENCLS& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     this->set_Tj_in_s(model.get_Tj_in_s());
@@ -28,7 +30,7 @@ void GENCLS::copy_from_const_model(const GENCLS& model)
     this->set_Xdp(model.get_Xdp());
 
 }
-GENCLS::GENCLS(const GENCLS& model):SYNC_GENERATOR_MODEL()
+GENCLS::GENCLS(const GENCLS& model):SYNC_GENERATOR_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -101,7 +103,7 @@ bool GENCLS::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
@@ -109,7 +111,7 @@ bool GENCLS::setup_model_with_bpa_string(string data)
 void GENCLS::initialize()
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     setup_block_toolkit_and_parameters();
 
     update_source_impedance();
@@ -220,7 +222,7 @@ complex<double> GENCLS::get_source_Norton_equivalent_complex_current_in_pu_in_xy
     complex<double> Exy = get_internal_voltage_in_pu_in_xy_axis();
     complex<double> Z(get_Rs(), get_Xdp());
     double mbase = get_mbase_in_MVA();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     complex<double> I = Exy/Z*(mbase*one_over_sbase);
     if(isnan(I.real()) or isnan(I.imag()))
@@ -258,7 +260,7 @@ complex<double> GENCLS::get_terminal_complex_current_in_pu_in_xy_axis_based_on_s
     complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
     double mbase = get_mbase_in_MVA();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     return Ixy*(mbase*one_over_sbase);
@@ -274,7 +276,7 @@ double GENCLS::get_terminal_current_in_pu_based_on_sbase()
     double I = get_terminal_current_in_pu_based_on_mbase();
     double mbase = get_mbase_in_MVA();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     return I*(mbase*one_over_sbase);
@@ -290,7 +292,7 @@ void GENCLS::report()
 {
     ostringstream osstream;
     osstream<< get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -332,7 +334,7 @@ double GENCLS::get_model_data_with_name(string par_name) const
         if(par_name=="H")  return get_H_in_s();
         if(par_name=="D")  return get_D();
     }
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
@@ -345,7 +347,7 @@ void GENCLS::set_model_data_with_name(string par_name, double value)
         if(par_name == "H") return set_H_in_s(value);
         if(par_name == "D") return set_D(value);
     }
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
 }
 

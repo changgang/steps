@@ -21,7 +21,7 @@ class WT_ELECTRICAL_MODEL : public WTG_MODEL
         iqcmd: reactive current command in pu
     */
     public:
-        WT_ELECTRICAL_MODEL();
+        WT_ELECTRICAL_MODEL(STEPS& toolkit);
         virtual ~WT_ELECTRICAL_MODEL();
     public: // pe elctricla control common
         virtual string get_model_type() const;

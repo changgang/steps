@@ -4,7 +4,7 @@
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
 
-LOAD_FREQUENCY_RELAY_MODEL::LOAD_FREQUENCY_RELAY_MODEL() : LOAD_RELAY_MODEL()
+LOAD_FREQUENCY_RELAY_MODEL::LOAD_FREQUENCY_RELAY_MODEL(STEPS& toolkit) : LOAD_RELAY_MODEL(toolkit)
 {
     ;
 }

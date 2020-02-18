@@ -4,7 +4,7 @@
 #include <istream>
 #include <iostream>
 using namespace std;
-IEEEG2::IEEEG2()
+IEEEG2::IEEEG2(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit)
 {
     clear();
 }
@@ -25,6 +25,8 @@ void IEEEG2::clear()
 }
 void IEEEG2::copy_from_const_model(const IEEEG2& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     this->set_K(model.get_K());
@@ -36,7 +38,7 @@ void IEEEG2::copy_from_const_model(const IEEEG2& model)
     this->set_T4_in_s(model.get_T4_in_s());
 }
 
-IEEEG2::IEEEG2(const IEEEG2&model) : TURBINE_GOVERNOR_MODEL()
+IEEEG2::IEEEG2(const IEEEG2&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -176,14 +178,14 @@ bool IEEEG2::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void IEEEG2::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     droop.set_toolkit(toolkit);
     tuner.set_toolkit(toolkit);
     water_hammer.set_toolkit(toolkit);
@@ -206,7 +208,7 @@ void IEEEG2::initialize()
 
                 setup_block_toolkit_and_parameters();
 
-                STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+                STEPS& toolkit = get_toolkit();
 
                 double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
 
@@ -303,7 +305,7 @@ void IEEEG2::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 void IEEEG2::save()

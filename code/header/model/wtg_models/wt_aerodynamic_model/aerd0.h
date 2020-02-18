@@ -7,7 +7,7 @@
 class AERD0 : public WT_AERODYNAMIC_MODEL
 {
     public:
-        AERD0();
+        AERD0(STEPS& toolkit);
         AERD0(const AERD0& model);
         virtual ~AERD0();
         virtual AERD0& operator=(const AERD0& model);

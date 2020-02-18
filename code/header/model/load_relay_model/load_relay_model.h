@@ -10,7 +10,7 @@ class LOAD;
 class LOAD_RELAY_MODEL : public MODEL
 {
     public:
-        LOAD_RELAY_MODEL();
+        LOAD_RELAY_MODEL(STEPS& toolkit);
         virtual ~LOAD_RELAY_MODEL();
 
         LOAD* get_load_pointer() const;

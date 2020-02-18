@@ -6,7 +6,7 @@
 class PSASPVC: public COMPENSATOR_MODEL
 {
     public:
-        PSASPVC();
+        PSASPVC(STEPS& toolkit);
         PSASPVC(const PSASPVC& model);
         virtual ~PSASPVC();
         virtual PSASPVC& operator=(const PSASPVC& model);

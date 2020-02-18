@@ -15,7 +15,7 @@ class CSEET1: public EXCITER_MODEL
 {
     // PSASP 3-10
     public:
-        CSEET1();
+        CSEET1(STEPS& toolkit);
         CSEET1(const CSEET1& model);
         virtual ~CSEET1();
         virtual CSEET1& operator=(const CSEET1& model);

@@ -8,7 +8,7 @@
 
 using namespace std;
 
-PV_CONVERTER_MODEL::PV_CONVERTER_MODEL()
+PV_CONVERTER_MODEL::PV_CONVERTER_MODEL(STEPS& toolkit) : PVU_MODEL(toolkit)
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("PV UNIT");
 

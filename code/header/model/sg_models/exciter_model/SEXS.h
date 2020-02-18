@@ -7,7 +7,7 @@
 class SEXS: public EXCITER_MODEL
 {
     public:
-        SEXS();
+        SEXS(STEPS& toolkit);
         SEXS(const SEXS& model);
         virtual ~SEXS();
         virtual SEXS& operator=(const SEXS& model);

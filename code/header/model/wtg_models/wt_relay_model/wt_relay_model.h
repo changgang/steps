@@ -15,7 +15,7 @@ class WT_RELAY_MODEL : public WTG_MODEL
         trip wt generator if necessary
     */
     public:
-        WT_RELAY_MODEL();
+        WT_RELAY_MODEL(STEPS& toolkit);
         virtual ~WT_RELAY_MODEL();
 
         virtual string get_model_type() const;

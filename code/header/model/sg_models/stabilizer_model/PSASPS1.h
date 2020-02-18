@@ -9,7 +9,7 @@
 class PSASPS1 : public STABILIZER_MODEL
 {
     public:
-        PSASPS1();
+        PSASPS1(STEPS& toolkit);
         PSASPS1(const PSASPS1& model);
         virtual ~PSASPS1();
         virtual PSASPS1& operator=(const PSASPS1& model);

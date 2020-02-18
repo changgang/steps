@@ -7,7 +7,7 @@
 class WT3T0 : public WT_TURBINE_MODEL
 {
     public:
-        WT3T0();
+        WT3T0(STEPS& toolkit);
         WT3T0(const WT3T0& model);
         virtual ~WT3T0();
         virtual WT3T0& operator=(const WT3T0& model);

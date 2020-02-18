@@ -31,9 +31,8 @@ void PUFLS_TEST::setup()
 
     LOAD* load = get_load();
 
-    PUFLS model;
+    PUFLS model(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    model.set_toolkit(default_toolkit);
     model.set_device_id(load->get_device_id());
 
     model.set_frequency_sensor_time_in_s(0.0);

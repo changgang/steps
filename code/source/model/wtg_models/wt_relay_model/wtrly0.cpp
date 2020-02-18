@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace std;
 
-WTRLY0::WTRLY0()
+WTRLY0::WTRLY0(STEPS& toolkit) : WT_RELAY_MODEL(toolkit)
 {
     clear();
 }
@@ -28,6 +28,8 @@ void WTRLY0::clear()
 
 void WTRLY0::copy_from_const_model(const WTRLY0& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     for(unsigned int i=0; i<STEPS_MAX_RELAY_COUNT; ++i)
@@ -39,7 +41,7 @@ void WTRLY0::copy_from_const_model(const WTRLY0& model)
     }
 }
 
-WTRLY0::WTRLY0(const WTRLY0& model) : WT_RELAY_MODEL()
+WTRLY0::WTRLY0(const WTRLY0& model) : WT_RELAY_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -319,14 +321,14 @@ bool WTRLY0::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void WTRLY0::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     for(unsigned int i=0; i<STEPS_MAX_RELAY_COUNT; ++i)
     {
         vwind_relay_timer[i].set_toolkit(toolkit);
@@ -392,7 +394,7 @@ void WTRLY0::check_wind_speed_relay()
         ostringstream osstream;
         DEVICE_ID did = get_device_id();
 
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
 
         double vwind = get_wind_speed_in_pu();
@@ -468,7 +470,7 @@ void WTRLY0::check_rotor_speed_relay()
         ostringstream osstream;
         DEVICE_ID did = get_device_id();
 
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
 
         double speed = get_wt_generator_rotor_speed_in_pu();
@@ -544,7 +546,7 @@ void WTRLY0::check_bus_frequency_relay()
         ostringstream osstream;
         DEVICE_ID did = get_device_id();
 
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
 
         double freq = get_bus_frequency_in_pu();
@@ -620,7 +622,7 @@ void WTRLY0::check_bus_voltage_relay()
         ostringstream osstream;
         DEVICE_ID did = get_device_id();
 
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
 
         //double volt = get_bus_positive_sequence_voltage_in_pu();
@@ -699,7 +701,7 @@ void WTRLY0::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

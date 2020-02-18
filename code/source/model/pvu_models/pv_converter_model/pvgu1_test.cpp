@@ -24,9 +24,8 @@ void PVGU1_TEST::setup()
 
     PV_UNIT* pv_unit = get_test_pv_unit();
 
-    PVGU1 model;
+    PVGU1 model(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    model.set_toolkit(default_toolkit);
     model.set_device_id(pv_unit->get_device_id());
 
     model.set_converter_activer_current_command_T_in_s(0.2);

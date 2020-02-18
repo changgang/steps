@@ -21,9 +21,8 @@ void TURBINE_GOVERNOR_MODEL_TEST::setup()
 
     GENERATOR* genptr = get_test_generator();
 
-    GENCLS gen_model;
+    GENCLS gen_model(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    gen_model.set_toolkit(default_toolkit);
     gen_model.set_device_id(genptr->get_device_id());
 
     gen_model.set_Tj_in_s(6.0);
@@ -156,8 +155,7 @@ void TURBINE_GOVERNOR_MODEL_TEST::test_get_rotor_speed()
     GENERATOR* genptr = get_test_generator();
     SYNC_GENERATOR_MODEL* genmodel = get_test_sync_generator_model();
 
-    TGOV1 model;
-    model.set_toolkit(default_toolkit);
+    TGOV1 model(default_toolkit);
     model.set_device_id(genptr->get_device_id());
 
     TEST_ASSERT(fabs(model.get_rotor_speed_deviation_in_pu_from_sync_generator_model()-genmodel->get_rotor_speed_deviation_in_pu())<FLOAT_EPSILON);

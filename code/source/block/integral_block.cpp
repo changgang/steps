@@ -40,7 +40,7 @@ void INTEGRAL_BLOCK::initialize()
         double vmax = get_upper_limit();
         double vmin = get_lower_limit();
 
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
         one_over_t = 1.0/t;

@@ -9,7 +9,7 @@
 class IEESGO : public TURBINE_GOVERNOR_MODEL
 {
     public:
-        IEESGO();
+        IEESGO(STEPS& toolkit);
         IEESGO(const IEESGO&model);
         virtual ~IEESGO();
         virtual IEESGO& operator=(const IEESGO& model);

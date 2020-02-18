@@ -26,8 +26,7 @@ void ESTR0_TEST::setup()
 
     ENERGY_STORAGE* esptr = get_test_energy_storage();
 
-    ESTR0 model;
-    model.set_toolkit(default_toolkit);
+    ESTR0 model(default_toolkit);
     model.set_device_id(esptr->get_device_id());
 
     model.set_Tp1_in_s(0.01);

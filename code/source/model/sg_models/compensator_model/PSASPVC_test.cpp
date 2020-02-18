@@ -23,9 +23,8 @@ void PSASPVC_TEST::setup()
 
     GENERATOR* generator  = get_test_generator();
 
-    PSASPVC model;
+    PSASPVC model(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    model.set_toolkit(default_toolkit);
     model.set_device_id(generator->get_device_id());
 
     model.set_Xc(0.1);

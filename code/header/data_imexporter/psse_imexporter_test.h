@@ -43,6 +43,6 @@ class PSSE_IMEXPORTER_TEST : public Test::Suite
 
         void test_load_dynamic_data();
     private:
-        PSSE_IMEXPORTER* importer;
+        PSSE_IMEXPORTER importer;
 };
 #endif // PSSE_IMEXPORTER_TEST_H

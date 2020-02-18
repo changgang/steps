@@ -9,7 +9,7 @@
 class PVCV0 : public PV_CONVERTER_MODEL
 {
     public:
-        PVCV0();
+        PVCV0(STEPS& toolkit);
         PVCV0(const PVCV0& model);
         virtual ~PVCV0();
         virtual PVCV0& operator=(const PVCV0&);

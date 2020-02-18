@@ -6,9 +6,9 @@
 
 using namespace std;
 
-METER_SETTER::METER_SETTER()
+METER_SETTER::METER_SETTER(STEPS& toolkit)
 {
-    ;
+    this->toolkit = (&toolkit);
 }
 
 METER_SETTER::~METER_SETTER()
@@ -16,6 +16,10 @@ METER_SETTER::~METER_SETTER()
     ;
 }
 
+STEPS& METER_SETTER::get_toolkit() const
+{
+    return *toolkit;
+}
 
 bool METER_SETTER::prepare_bus_meter(METER& meter, const unsigned int bus)
 {
@@ -23,14 +27,13 @@ bool METER_SETTER::prepare_bus_meter(METER& meter, const unsigned int bus)
 
     ostringstream osstream;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     if(not psdb.is_bus_exist(bus))
     {
         osstream<<"Bus "<<bus<<" doesn't exist in power system database '"<<psdb.get_system_name()<<"'."<<endl
           <<"Invalid meter will be returned.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -45,8 +48,7 @@ bool METER_SETTER::prepare_bus_meter(METER& meter, const unsigned int bus)
 
 METER METER_SETTER::prepare_bus_voltage_in_pu_meter(unsigned int bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -60,8 +62,7 @@ METER METER_SETTER::prepare_bus_voltage_in_pu_meter(unsigned int bus)
 }
 METER METER_SETTER::prepare_bus_voltage_in_kV_meter(unsigned int bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -76,8 +77,7 @@ METER METER_SETTER::prepare_bus_voltage_in_kV_meter(unsigned int bus)
 
 METER METER_SETTER::prepare_bus_angle_in_deg_meter(unsigned int bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -92,8 +92,7 @@ METER METER_SETTER::prepare_bus_angle_in_deg_meter(unsigned int bus)
 
 METER METER_SETTER::prepare_bus_angle_in_rad_meter(unsigned int bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -108,8 +107,7 @@ METER METER_SETTER::prepare_bus_angle_in_rad_meter(unsigned int bus)
 
 METER METER_SETTER::prepare_bus_frequency_in_pu_meter(unsigned int bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -120,8 +118,7 @@ METER METER_SETTER::prepare_bus_frequency_in_pu_meter(unsigned int bus)
 
 METER METER_SETTER::prepare_bus_frequency_in_Hz_meter(unsigned int bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -132,8 +129,7 @@ METER METER_SETTER::prepare_bus_frequency_in_Hz_meter(unsigned int bus)
 
 METER METER_SETTER::prepare_bus_frequency_deviation_in_pu_meter(unsigned int bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -144,8 +140,7 @@ METER METER_SETTER::prepare_bus_frequency_deviation_in_pu_meter(unsigned int bus
 
 METER METER_SETTER::prepare_bus_frequency_deviation_in_Hz_meter(unsigned int bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -156,8 +151,7 @@ METER METER_SETTER::prepare_bus_frequency_deviation_in_Hz_meter(unsigned int bus
 
 METER METER_SETTER::prepare_bus_ROCOV_in_pu_per_s_meter(unsigned int bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -168,8 +162,7 @@ METER METER_SETTER::prepare_bus_ROCOV_in_pu_per_s_meter(unsigned int bus)
 
 METER METER_SETTER::prepare_bus_ROCOV_in_kV_per_s_meter(unsigned int bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -180,8 +173,7 @@ METER METER_SETTER::prepare_bus_ROCOV_in_kV_per_s_meter(unsigned int bus)
 
 METER METER_SETTER::prepare_bus_ROCOF_in_pu_per_s_meter(unsigned int bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -192,8 +184,7 @@ METER METER_SETTER::prepare_bus_ROCOF_in_pu_per_s_meter(unsigned int bus)
 
 METER METER_SETTER::prepare_bus_ROCOF_in_Hz_per_s_meter(unsigned int bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -209,15 +200,14 @@ bool METER_SETTER::prepare_line_meter(METER& meter, const DEVICE_ID& device_id, 
     bool successful = false;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     string device_type = device_id.get_device_type();
     if(device_type!="LINE")
     {
         osstream<<"Warning. This device given ("<<device_type<<") is not a line when trying to set up a line meter. "
           <<"No line meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -225,7 +215,7 @@ bool METER_SETTER::prepare_line_meter(METER& meter, const DEVICE_ID& device_id, 
     {
         osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No line meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -239,7 +229,7 @@ bool METER_SETTER::prepare_line_meter(METER& meter, const DEVICE_ID& device_id, 
     {
         osstream<<"Warning. The side bus "<<side_bus<<" is neither the sending bus nor receiving bus of "<<device_id.get_device_name()<<". "
           <<"No line meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -250,8 +240,7 @@ bool METER_SETTER::prepare_line_meter(METER& meter, const DEVICE_ID& device_id, 
 
 METER METER_SETTER::prepare_line_current_in_kA_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -262,8 +251,7 @@ METER METER_SETTER::prepare_line_current_in_kA_meter(const DEVICE_ID& device_id,
 
 METER METER_SETTER::prepare_line_active_power_in_MW_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -275,8 +263,7 @@ METER METER_SETTER::prepare_line_active_power_in_MW_meter(const DEVICE_ID& devic
 
 METER METER_SETTER::prepare_line_reactive_power_in_MVar_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -288,8 +275,7 @@ METER METER_SETTER::prepare_line_reactive_power_in_MVar_meter(const DEVICE_ID& d
 
 METER METER_SETTER::prepare_line_apparent_impedance_in_Ohm_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -301,8 +287,7 @@ METER METER_SETTER::prepare_line_apparent_impedance_in_Ohm_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_line_apparent_impedance_angle_in_deg_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -314,8 +299,7 @@ METER METER_SETTER::prepare_line_apparent_impedance_angle_in_deg_meter(const DEV
 
 METER METER_SETTER::prepare_line_current_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -326,8 +310,7 @@ METER METER_SETTER::prepare_line_current_in_pu_meter(const DEVICE_ID& device_id,
 
 METER METER_SETTER::prepare_line_active_power_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -339,8 +322,7 @@ METER METER_SETTER::prepare_line_active_power_in_pu_meter(const DEVICE_ID& devic
 
 METER METER_SETTER::prepare_line_reactive_power_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -352,8 +334,7 @@ METER METER_SETTER::prepare_line_reactive_power_in_pu_meter(const DEVICE_ID& dev
 
 METER METER_SETTER::prepare_line_apparent_impedance_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -365,8 +346,7 @@ METER METER_SETTER::prepare_line_apparent_impedance_in_pu_meter(const DEVICE_ID&
 
 METER METER_SETTER::prepare_line_apparent_impedance_angle_in_rad_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -382,15 +362,14 @@ bool METER_SETTER::prepare_transformer_meter(METER& meter, const DEVICE_ID& devi
     bool successful = false;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     string device_type = device_id.get_device_type();
     if(device_type!="TRANSFORMER")
     {
         osstream<<"Warning. This device given ("<<device_type<<") is not a transformer when trying to set up a transformer meter. "
           <<"No line meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -399,7 +378,7 @@ bool METER_SETTER::prepare_transformer_meter(METER& meter, const DEVICE_ID& devi
     {
         osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No transformer meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -413,7 +392,7 @@ bool METER_SETTER::prepare_transformer_meter(METER& meter, const DEVICE_ID& devi
     {
         osstream<<"Warning. The side bus "<<side_bus<<" is not primary, secondary, or tertiary bus of "<<device_id.get_device_name()<<". "
           <<"No transformer meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -425,8 +404,7 @@ bool METER_SETTER::prepare_transformer_meter(METER& meter, const DEVICE_ID& devi
 
 METER METER_SETTER::prepare_transformer_current_in_kA_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_transformer_meter(meter, device_id, side_bus);
 
@@ -438,8 +416,7 @@ METER METER_SETTER::prepare_transformer_current_in_kA_meter(const DEVICE_ID& dev
 
 METER METER_SETTER::prepare_transformer_active_power_in_MW_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_transformer_meter(meter, device_id, side_bus);
 
@@ -451,8 +428,7 @@ METER METER_SETTER::prepare_transformer_active_power_in_MW_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_transformer_reactive_power_in_MVar_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_transformer_meter(meter, device_id, side_bus);
 
@@ -465,8 +441,7 @@ METER METER_SETTER::prepare_transformer_reactive_power_in_MVar_meter(const DEVIC
 
 METER METER_SETTER::prepare_transformer_current_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_transformer_meter(meter, device_id, side_bus);
 
@@ -478,8 +453,7 @@ METER METER_SETTER::prepare_transformer_current_in_pu_meter(const DEVICE_ID& dev
 
 METER METER_SETTER::prepare_transformer_active_power_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_transformer_meter(meter, device_id, side_bus);
 
@@ -491,8 +465,7 @@ METER METER_SETTER::prepare_transformer_active_power_in_pu_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_transformer_reactive_power_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_transformer_meter(meter, device_id, side_bus);
 
@@ -507,15 +480,14 @@ bool METER_SETTER::prepare_load_meter(METER& meter, const DEVICE_ID& device_id)
     bool successful = false;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     string device_type = device_id.get_device_type();
     if(device_type!="LOAD")
     {
         osstream<<"Warning. This device given ("<<device_type<<") is not a load when trying to set up a load meter. "
           <<"No load meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -523,7 +495,7 @@ bool METER_SETTER::prepare_load_meter(METER& meter, const DEVICE_ID& device_id)
     {
         osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No load meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -537,8 +509,7 @@ bool METER_SETTER::prepare_load_meter(METER& meter, const DEVICE_ID& device_id)
 
 METER METER_SETTER::prepare_load_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -550,8 +521,7 @@ METER METER_SETTER::prepare_load_current_in_kA_meter(const DEVICE_ID& device_id)
 
 METER METER_SETTER::prepare_load_active_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -563,8 +533,7 @@ METER METER_SETTER::prepare_load_active_power_in_MW_meter(const DEVICE_ID& devic
 
 METER METER_SETTER::prepare_load_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -576,8 +545,7 @@ METER METER_SETTER::prepare_load_reactive_power_in_MVar_meter(const DEVICE_ID& d
 
 METER METER_SETTER::prepare_load_current_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -589,8 +557,7 @@ METER METER_SETTER::prepare_load_current_in_pu_meter(const DEVICE_ID& device_id)
 
 METER METER_SETTER::prepare_load_active_power_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -602,8 +569,7 @@ METER METER_SETTER::prepare_load_active_power_in_pu_meter(const DEVICE_ID& devic
 
 METER METER_SETTER::prepare_load_reactive_power_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -615,8 +581,7 @@ METER METER_SETTER::prepare_load_reactive_power_in_pu_meter(const DEVICE_ID& dev
 
 METER METER_SETTER::prepare_load_total_scale_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -628,8 +593,7 @@ METER METER_SETTER::prepare_load_total_scale_in_pu_meter(const DEVICE_ID& device
 
 METER METER_SETTER::prepare_load_manually_scale_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -641,8 +605,7 @@ METER METER_SETTER::prepare_load_manually_scale_in_pu_meter(const DEVICE_ID& dev
 
 METER METER_SETTER::prepare_load_relay_shed_scale_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -654,8 +617,7 @@ METER METER_SETTER::prepare_load_relay_shed_scale_in_pu_meter(const DEVICE_ID& d
 
 METER METER_SETTER::prepare_load_load_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -670,8 +632,7 @@ METER METER_SETTER::prepare_load_load_model_internal_variable_meter(const DEVICE
 
 METER METER_SETTER::prepare_load_frequency_relay_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -686,8 +647,7 @@ METER METER_SETTER::prepare_load_frequency_relay_model_internal_variable_meter(c
 
 METER METER_SETTER::prepare_load_voltage_relay_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -705,15 +665,14 @@ bool METER_SETTER::prepare_generator_meter(METER& meter, const DEVICE_ID& device
     bool successful = false;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     string device_type = device_id.get_device_type();
     if(device_type!="GENERATOR")
     {
         osstream<<"Warning. This device given ("<<device_type<<") is not a generator when trying to set up a generator meter. "
           <<"No generator meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -721,7 +680,7 @@ bool METER_SETTER::prepare_generator_meter(METER& meter, const DEVICE_ID& device
     {
         osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No generator meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -735,8 +694,7 @@ bool METER_SETTER::prepare_generator_meter(METER& meter, const DEVICE_ID& device
 
 METER METER_SETTER::prepare_generator_rotor_angle_in_deg_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -748,8 +706,7 @@ METER METER_SETTER::prepare_generator_rotor_angle_in_deg_meter(const DEVICE_ID& 
 
 METER METER_SETTER::prepare_generator_rotor_speed_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -761,8 +718,7 @@ METER METER_SETTER::prepare_generator_rotor_speed_in_pu_meter(const DEVICE_ID& d
 
 METER METER_SETTER::prepare_generator_rotor_speed_in_Hz_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -774,8 +730,7 @@ METER METER_SETTER::prepare_generator_rotor_speed_in_Hz_meter(const DEVICE_ID& d
 
 METER METER_SETTER::prepare_generator_rotor_speed_deviation_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -787,8 +742,7 @@ METER METER_SETTER::prepare_generator_rotor_speed_deviation_in_pu_meter(const DE
 
 METER METER_SETTER::prepare_generator_rotor_speed_deviation_in_Hz_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -800,8 +754,7 @@ METER METER_SETTER::prepare_generator_rotor_speed_deviation_in_Hz_meter(const DE
 
 METER METER_SETTER::prepare_generator_terminal_voltage_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -813,8 +766,7 @@ METER METER_SETTER::prepare_generator_terminal_voltage_in_pu_meter(const DEVICE_
 
 METER METER_SETTER::prepare_generator_internal_voltage_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -826,8 +778,7 @@ METER METER_SETTER::prepare_generator_internal_voltage_in_pu_meter(const DEVICE_
 
 METER METER_SETTER::prepare_generator_terminal_current_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -839,8 +790,7 @@ METER METER_SETTER::prepare_generator_terminal_current_in_pu_on_mbase_meter(cons
 
 METER METER_SETTER::prepare_generator_terminal_current_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -853,8 +803,7 @@ METER METER_SETTER::prepare_generator_terminal_current_in_pu_on_sbase_meter(cons
 
 METER METER_SETTER::prepare_generator_terminal_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -866,8 +815,7 @@ METER METER_SETTER::prepare_generator_terminal_current_in_kA_meter(const DEVICE_
 
 METER METER_SETTER::prepare_generator_terminal_active_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -880,8 +828,7 @@ METER METER_SETTER::prepare_generator_terminal_active_power_in_pu_on_mbase_meter
 
 METER METER_SETTER::prepare_generator_terminal_active_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -893,8 +840,7 @@ METER METER_SETTER::prepare_generator_terminal_active_power_in_pu_on_sbase_meter
 
 METER METER_SETTER::prepare_generator_terminal_active_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -906,8 +852,7 @@ METER METER_SETTER::prepare_generator_terminal_active_power_in_MW_meter(const DE
 
 METER METER_SETTER::prepare_generator_terminal_reactive_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -919,8 +864,7 @@ METER METER_SETTER::prepare_generator_terminal_reactive_power_in_pu_on_mbase_met
 
 METER METER_SETTER::prepare_generator_terminal_reactive_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -932,8 +876,7 @@ METER METER_SETTER::prepare_generator_terminal_reactive_power_in_pu_on_sbase_met
 
 METER METER_SETTER::prepare_generator_terminal_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -945,8 +888,7 @@ METER METER_SETTER::prepare_generator_terminal_reactive_power_in_MVar_meter(cons
 
 METER METER_SETTER::prepare_generator_airgap_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -958,8 +900,7 @@ METER METER_SETTER::prepare_generator_airgap_power_in_pu_on_mbase_meter(const DE
 
 METER METER_SETTER::prepare_generator_airgap_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -971,8 +912,7 @@ METER METER_SETTER::prepare_generator_airgap_power_in_pu_on_sbase_meter(const DE
 
 METER METER_SETTER::prepare_generator_airgap_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -984,8 +924,7 @@ METER METER_SETTER::prepare_generator_airgap_power_in_MW_meter(const DEVICE_ID& 
 
 METER METER_SETTER::prepare_generator_accelerating_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -997,8 +936,7 @@ METER METER_SETTER::prepare_generator_accelerating_power_in_pu_on_mbase_meter(co
 
 METER METER_SETTER::prepare_generator_accelerating_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1010,8 +948,7 @@ METER METER_SETTER::prepare_generator_accelerating_power_in_pu_on_sbase_meter(co
 
 METER METER_SETTER::prepare_generator_accelerating_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1023,8 +960,7 @@ METER METER_SETTER::prepare_generator_accelerating_power_in_MW_meter(const DEVIC
 
 METER METER_SETTER::prepare_generator_mechanical_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1036,8 +972,7 @@ METER METER_SETTER::prepare_generator_mechanical_power_in_pu_on_mbase_meter(cons
 
 METER METER_SETTER::prepare_generator_mechanical_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1049,8 +984,7 @@ METER METER_SETTER::prepare_generator_mechanical_power_in_pu_on_sbase_meter(cons
 
 METER METER_SETTER::prepare_generator_mechanical_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1062,8 +996,7 @@ METER METER_SETTER::prepare_generator_mechanical_power_in_MW_meter(const DEVICE_
 
 METER METER_SETTER::prepare_generator_mechanical_power_reference_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1075,8 +1008,7 @@ METER METER_SETTER::prepare_generator_mechanical_power_reference_in_pu_on_mbase_
 
 METER METER_SETTER::prepare_generator_mechanical_power_reference_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1088,8 +1020,7 @@ METER METER_SETTER::prepare_generator_mechanical_power_reference_in_pu_on_sbase_
 
 METER METER_SETTER::prepare_generator_mechanical_power_reference_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1101,8 +1032,7 @@ METER METER_SETTER::prepare_generator_mechanical_power_reference_in_MW_meter(con
 
 METER METER_SETTER::prepare_generator_excitation_voltage_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1114,8 +1044,7 @@ METER METER_SETTER::prepare_generator_excitation_voltage_in_pu_meter(const DEVIC
 
 METER METER_SETTER::prepare_generator_compensated_voltage_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1127,8 +1056,7 @@ METER METER_SETTER::prepare_generator_compensated_voltage_in_pu_meter(const DEVI
 
 METER METER_SETTER::prepare_generator_stabilizing_signal_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1140,8 +1068,7 @@ METER METER_SETTER::prepare_generator_stabilizing_signal_in_pu_meter(const DEVIC
 
 METER METER_SETTER::prepare_generator_sync_generator_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1156,8 +1083,7 @@ METER METER_SETTER::prepare_generator_sync_generator_model_internal_variable_met
 
 METER METER_SETTER::prepare_generator_compensator_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1172,8 +1098,7 @@ METER METER_SETTER::prepare_generator_compensator_model_internal_variable_meter(
 
 METER METER_SETTER::prepare_generator_stabilizer_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1188,8 +1113,7 @@ METER METER_SETTER::prepare_generator_stabilizer_model_internal_variable_meter(c
 
 METER METER_SETTER::prepare_generator_exciter_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1204,8 +1128,7 @@ METER METER_SETTER::prepare_generator_exciter_model_internal_variable_meter(cons
 
 METER METER_SETTER::prepare_generator_turbine_governor_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1219,8 +1142,7 @@ METER METER_SETTER::prepare_generator_turbine_governor_model_internal_variable_m
 }
 METER METER_SETTER::prepare_generator_turbine_load_controller_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1238,15 +1160,14 @@ bool METER_SETTER::prepare_wt_generator_meter(METER& meter, const DEVICE_ID& dev
     bool successful = false;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     string device_type = device_id.get_device_type();
     if(device_type!="WT GENERATOR")
     {
         osstream<<"Warning. This device given ("<<device_type<<") is not a wt generator when trying to set up a wt generator meter. "
           <<"No wt generator meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -1254,7 +1175,7 @@ bool METER_SETTER::prepare_wt_generator_meter(METER& meter, const DEVICE_ID& dev
     {
         osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No wt generator meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -1267,8 +1188,7 @@ bool METER_SETTER::prepare_wt_generator_meter(METER& meter, const DEVICE_ID& dev
 
 METER METER_SETTER::prepare_wt_generator_terminal_current_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1279,8 +1199,7 @@ METER METER_SETTER::prepare_wt_generator_terminal_current_in_pu_on_mbase_meter(c
 }
 METER METER_SETTER::prepare_wt_generator_terminal_current_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1292,8 +1211,7 @@ METER METER_SETTER::prepare_wt_generator_terminal_current_in_pu_on_sbase_meter(c
 
 METER METER_SETTER::prepare_wt_generator_terminal_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1305,8 +1223,7 @@ METER METER_SETTER::prepare_wt_generator_terminal_current_in_kA_meter(const DEVI
 
 METER METER_SETTER::prepare_wt_generator_terminal_active_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1318,8 +1235,7 @@ METER METER_SETTER::prepare_wt_generator_terminal_active_power_in_MW_meter(const
 
 METER METER_SETTER::prepare_wt_generator_terminal_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1331,8 +1247,7 @@ METER METER_SETTER::prepare_wt_generator_terminal_reactive_power_in_MVar_meter(c
 
 METER METER_SETTER::prepare_wt_generator_mechanical_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1344,8 +1259,7 @@ METER METER_SETTER::prepare_wt_generator_mechanical_power_in_MW_meter(const DEVI
 
 METER METER_SETTER::prepare_wt_generator_max_available_mechanical_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1357,8 +1271,7 @@ METER METER_SETTER::prepare_wt_generator_max_available_mechanical_power_in_MW_me
 
 METER METER_SETTER::prepare_wt_generator_speed_reference_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1370,8 +1283,7 @@ METER METER_SETTER::prepare_wt_generator_speed_reference_in_pu_meter(const DEVIC
 
 METER METER_SETTER::prepare_wt_generator_speed_reference_in_rad_per_s_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1383,8 +1295,7 @@ METER METER_SETTER::prepare_wt_generator_speed_reference_in_rad_per_s_meter(cons
 
 METER METER_SETTER::prepare_wt_generator_turbine_speed_deviation_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1396,8 +1307,7 @@ METER METER_SETTER::prepare_wt_generator_turbine_speed_deviation_in_pu_meter(con
 
 METER METER_SETTER::prepare_wt_generator_turbine_speed_deviation_in_Hz_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1409,8 +1319,7 @@ METER METER_SETTER::prepare_wt_generator_turbine_speed_deviation_in_Hz_meter(con
 
 METER METER_SETTER::prepare_wt_generator_turbine_speed_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1422,8 +1331,7 @@ METER METER_SETTER::prepare_wt_generator_turbine_speed_in_pu_meter(const DEVICE_
 
 METER METER_SETTER::prepare_wt_generator_turbine_speed_in_Hz_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1435,8 +1343,7 @@ METER METER_SETTER::prepare_wt_generator_turbine_speed_in_Hz_meter(const DEVICE_
 
 METER METER_SETTER::prepare_wt_generator_rotor_speed_deviation_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1448,8 +1355,7 @@ METER METER_SETTER::prepare_wt_generator_rotor_speed_deviation_in_pu_meter(const
 
 METER METER_SETTER::prepare_wt_generator_rotor_speed_deviation_in_Hz_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1461,8 +1367,7 @@ METER METER_SETTER::prepare_wt_generator_rotor_speed_deviation_in_Hz_meter(const
 
 METER METER_SETTER::prepare_wt_generator_rotor_speed_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1474,8 +1379,7 @@ METER METER_SETTER::prepare_wt_generator_rotor_speed_in_pu_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_wt_generator_rotor_speed_in_Hz_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1487,8 +1391,7 @@ METER METER_SETTER::prepare_wt_generator_rotor_speed_in_Hz_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_wt_generator_rotor_angle_in_deg_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1500,8 +1403,7 @@ METER METER_SETTER::prepare_wt_generator_rotor_angle_in_deg_meter(const DEVICE_I
 
 METER METER_SETTER::prepare_wt_generator_rotor_angle_in_rad_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1513,8 +1415,7 @@ METER METER_SETTER::prepare_wt_generator_rotor_angle_in_rad_meter(const DEVICE_I
 
 METER METER_SETTER::prepare_wt_generator_active_current_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1526,8 +1427,7 @@ METER METER_SETTER::prepare_wt_generator_active_current_command_in_pu_meter(cons
 
 METER METER_SETTER::prepare_wt_generator_reactive_current_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1539,8 +1439,7 @@ METER METER_SETTER::prepare_wt_generator_reactive_current_command_in_pu_meter(co
 
 METER METER_SETTER::prepare_wt_generator_active_power_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1552,8 +1451,7 @@ METER METER_SETTER::prepare_wt_generator_active_power_command_in_pu_meter(const 
 
 METER METER_SETTER::prepare_wt_generator_reactive_power_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1565,8 +1463,7 @@ METER METER_SETTER::prepare_wt_generator_reactive_power_command_in_pu_meter(cons
 
 METER METER_SETTER::prepare_wt_generator_reactive_voltage_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1578,8 +1475,7 @@ METER METER_SETTER::prepare_wt_generator_reactive_voltage_command_in_pu_meter(co
 
 METER METER_SETTER::prepare_wt_generator_pitch_angle_in_deg_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1591,8 +1487,7 @@ METER METER_SETTER::prepare_wt_generator_pitch_angle_in_deg_meter(const DEVICE_I
 
 METER METER_SETTER::prepare_wt_generator_wind_speed_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1604,8 +1499,7 @@ METER METER_SETTER::prepare_wt_generator_wind_speed_in_pu_meter(const DEVICE_ID&
 
 METER METER_SETTER::prepare_wt_generator_wind_speed_in_mps_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1617,8 +1511,7 @@ METER METER_SETTER::prepare_wt_generator_wind_speed_in_mps_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_wt_generator_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1633,8 +1526,7 @@ METER METER_SETTER::prepare_wt_generator_model_internal_variable_meter(const DEV
 
 METER METER_SETTER::prepare_wt_aerodynamic_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1649,8 +1541,7 @@ METER METER_SETTER::prepare_wt_aerodynamic_model_internal_variable_meter(const D
 
 METER METER_SETTER::prepare_wt_turbine_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1665,8 +1556,7 @@ METER METER_SETTER::prepare_wt_turbine_model_internal_variable_meter(const DEVIC
 
 METER METER_SETTER::prepare_wt_electrical_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1681,8 +1571,7 @@ METER METER_SETTER::prepare_wt_electrical_model_internal_variable_meter(const DE
 
 METER METER_SETTER::prepare_wt_pitch_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1697,8 +1586,7 @@ METER METER_SETTER::prepare_wt_pitch_model_internal_variable_meter(const DEVICE_
 
 METER METER_SETTER::prepare_wind_speed_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1716,15 +1604,14 @@ bool METER_SETTER::prepare_pv_unit_meter(METER& meter, const DEVICE_ID& device_i
     bool successful = false;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     string device_type = device_id.get_device_type();
     if(device_type!="PV UNIT")
     {
         osstream<<"Warning. This device given ("<<device_type<<") is not a PV unit when trying to set up a PV unit meter. "
           <<"No PV unit meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -1732,7 +1619,7 @@ bool METER_SETTER::prepare_pv_unit_meter(METER& meter, const DEVICE_ID& device_i
     {
         osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No PV unit meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -1745,8 +1632,7 @@ bool METER_SETTER::prepare_pv_unit_meter(METER& meter, const DEVICE_ID& device_i
 
 METER METER_SETTER::prepare_pv_unit_terminal_current_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1758,8 +1644,7 @@ METER METER_SETTER::prepare_pv_unit_terminal_current_in_pu_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_pv_unit_terminal_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1771,8 +1656,7 @@ METER METER_SETTER::prepare_pv_unit_terminal_current_in_kA_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_pv_unit_terminal_active_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1784,8 +1668,7 @@ METER METER_SETTER::prepare_pv_unit_terminal_active_power_in_MW_meter(const DEVI
 
 METER METER_SETTER::prepare_pv_unit_terminal_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1797,8 +1680,7 @@ METER METER_SETTER::prepare_pv_unit_terminal_reactive_power_in_MVar_meter(const 
 
 METER METER_SETTER::prepare_pv_unit_active_current_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1810,8 +1692,7 @@ METER METER_SETTER::prepare_pv_unit_active_current_command_in_pu_meter(const DEV
 
 METER METER_SETTER::prepare_pv_unit_reactive_current_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1823,8 +1704,7 @@ METER METER_SETTER::prepare_pv_unit_reactive_current_command_in_pu_meter(const D
 
 METER METER_SETTER::prepare_pv_unit_active_power_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1836,8 +1716,7 @@ METER METER_SETTER::prepare_pv_unit_active_power_command_in_pu_meter(const DEVIC
 
 METER METER_SETTER::prepare_pv_unit_reactive_power_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1849,8 +1728,7 @@ METER METER_SETTER::prepare_pv_unit_reactive_power_command_in_pu_meter(const DEV
 
 METER METER_SETTER::prepare_pv_unit_reactive_voltage_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1862,8 +1740,7 @@ METER METER_SETTER::prepare_pv_unit_reactive_voltage_command_in_pu_meter(const D
 
 METER METER_SETTER::prepare_pv_unit_solar_irradiance_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1875,8 +1752,7 @@ METER METER_SETTER::prepare_pv_unit_solar_irradiance_in_pu_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_pv_panel_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1891,8 +1767,7 @@ METER METER_SETTER::prepare_pv_panel_model_internal_variable_meter(const DEVICE_
 
 METER METER_SETTER::prepare_pv_converter_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1907,8 +1782,7 @@ METER METER_SETTER::prepare_pv_converter_model_internal_variable_meter(const DEV
 
 METER METER_SETTER::prepare_pv_electrical_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1923,8 +1797,7 @@ METER METER_SETTER::prepare_pv_electrical_model_internal_variable_meter(const DE
 
 METER METER_SETTER::prepare_pv_irradiance_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1943,15 +1816,14 @@ bool METER_SETTER::prepare_energy_storage_meter(METER& meter, const DEVICE_ID& d
     bool successful = false;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     string device_type = device_id.get_device_type();
     if(device_type!="ENERGY STORAGE")
     {
         osstream<<"Warning. This device given ("<<device_type<<") is not an energy storage when trying to set up an energy storage meter. "
           <<"No energy storage meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -1959,7 +1831,7 @@ bool METER_SETTER::prepare_energy_storage_meter(METER& meter, const DEVICE_ID& d
     {
         osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No energy storage meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -1973,8 +1845,7 @@ bool METER_SETTER::prepare_energy_storage_meter(METER& meter, const DEVICE_ID& d
 
 METER METER_SETTER::prepare_energy_storage_state_of_energy_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
@@ -1987,8 +1858,7 @@ METER METER_SETTER::prepare_energy_storage_state_of_energy_in_pu_meter(const DEV
 
 METER METER_SETTER::prepare_energy_storage_active_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
@@ -2000,8 +1870,7 @@ METER METER_SETTER::prepare_energy_storage_active_power_in_MW_meter(const DEVICE
 
 METER METER_SETTER::prepare_energy_storage_active_power_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
@@ -2013,8 +1882,7 @@ METER METER_SETTER::prepare_energy_storage_active_power_in_pu_meter(const DEVICE
 
 METER METER_SETTER::prepare_energy_storage_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
@@ -2026,8 +1894,7 @@ METER METER_SETTER::prepare_energy_storage_reactive_power_in_MVar_meter(const DE
 
 METER METER_SETTER::prepare_energy_storage_reactive_power_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
@@ -2040,8 +1907,7 @@ METER METER_SETTER::prepare_energy_storage_reactive_power_in_pu_meter(const DEVI
 
 METER METER_SETTER::prepare_energy_storage_terminal_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
@@ -2053,8 +1919,7 @@ METER METER_SETTER::prepare_energy_storage_terminal_current_in_kA_meter(const DE
 
 METER METER_SETTER::prepare_energy_storage_terminal_current_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
@@ -2066,8 +1931,7 @@ METER METER_SETTER::prepare_energy_storage_terminal_current_in_pu_meter(const DE
 
 METER METER_SETTER::prepare_energy_storage_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
@@ -2087,15 +1951,14 @@ bool METER_SETTER::prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
     bool successful = false;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     string device_type = device_id.get_device_type();
     if(device_type!="HVDC")
     {
         osstream<<"Warning. This device given ("<<device_type<<") is not an hvdc when trying to set up an hvdc meter. "
           <<"No hvdc meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -2103,7 +1966,7 @@ bool METER_SETTER::prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
     {
         osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No hvdc meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -2116,8 +1979,7 @@ bool METER_SETTER::prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
 
 METER METER_SETTER::prepare_hvdc_dc_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2129,8 +1991,7 @@ METER METER_SETTER::prepare_hvdc_dc_current_in_kA_meter(const DEVICE_ID& device_
 
 METER METER_SETTER::prepare_hvdc_rectifier_dc_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2142,8 +2003,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_dc_current_in_kA_meter(const DEVICE_I
 
 METER METER_SETTER::prepare_hvdc_inverter_dc_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2155,8 +2015,7 @@ METER METER_SETTER::prepare_hvdc_inverter_dc_current_in_kA_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_hvdc_rectifier_dc_voltage_in_kV_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2168,8 +2027,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_dc_voltage_in_kV_meter(const DEVICE_I
 
 METER METER_SETTER::prepare_hvdc_rectifier_ac_voltage_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2181,8 +2039,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_ac_voltage_in_pu_meter(const DEVICE_I
 
 METER METER_SETTER::prepare_hvdc_rectifier_alpha_in_deg_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2194,8 +2051,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_alpha_in_deg_meter(const DEVICE_ID& d
 
 METER METER_SETTER::prepare_hvdc_rectifier_mu_in_deg_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2207,8 +2063,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_mu_in_deg_meter(const DEVICE_ID& devi
 
 METER METER_SETTER::prepare_hvdc_rectifier_dc_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2220,8 +2075,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_dc_power_in_MW_meter(const DEVICE_ID&
 
 METER METER_SETTER::prepare_hvdc_rectifier_ac_active_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2233,8 +2087,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_ac_active_power_in_MW_meter(const DEV
 
 METER METER_SETTER::prepare_hvdc_rectifier_ac_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2246,8 +2099,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_ac_reactive_power_in_MVar_meter(const
 
 METER METER_SETTER::prepare_hvdc_rectifier_ac_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2259,8 +2111,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_ac_current_in_kA_meter(const DEVICE_I
 
 METER METER_SETTER::prepare_hvdc_inverter_dc_voltage_in_kV_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2272,8 +2123,7 @@ METER METER_SETTER::prepare_hvdc_inverter_dc_voltage_in_kV_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_hvdc_inverter_ac_voltage_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2285,8 +2135,7 @@ METER METER_SETTER::prepare_hvdc_inverter_ac_voltage_in_pu_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_hvdc_inverter_gamma_in_deg_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2298,8 +2147,7 @@ METER METER_SETTER::prepare_hvdc_inverter_gamma_in_deg_meter(const DEVICE_ID& de
 
 METER METER_SETTER::prepare_hvdc_inverter_mu_in_deg_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2311,8 +2159,7 @@ METER METER_SETTER::prepare_hvdc_inverter_mu_in_deg_meter(const DEVICE_ID& devic
 
 METER METER_SETTER::prepare_hvdc_inverter_dc_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2324,8 +2171,7 @@ METER METER_SETTER::prepare_hvdc_inverter_dc_power_in_MW_meter(const DEVICE_ID& 
 
 METER METER_SETTER::prepare_hvdc_inverter_ac_active_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2337,8 +2183,7 @@ METER METER_SETTER::prepare_hvdc_inverter_ac_active_power_in_MW_meter(const DEVI
 
 METER METER_SETTER::prepare_hvdc_inverter_ac_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2350,8 +2195,7 @@ METER METER_SETTER::prepare_hvdc_inverter_ac_reactive_power_in_MVar_meter(const 
 
 METER METER_SETTER::prepare_hvdc_inverter_ac_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2363,8 +2207,7 @@ METER METER_SETTER::prepare_hvdc_inverter_ac_current_in_kA_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_hvdc_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2383,15 +2226,14 @@ bool METER_SETTER::prepare_equivalent_device_meter(METER& meter, const DEVICE_ID
     bool successful = false;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     string device_type = device_id.get_device_type();
     if(device_type!="EQUIVALENT DEVICE")
     {
         osstream<<"Warning. This device given ("<<device_type<<") is not an equivalent device when trying to set up an equivalent device meter. "
           <<"No equivalent device meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -2399,7 +2241,7 @@ bool METER_SETTER::prepare_equivalent_device_meter(METER& meter, const DEVICE_ID
     {
         osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No equivalent device meter will be added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -2412,8 +2254,7 @@ bool METER_SETTER::prepare_equivalent_device_meter(METER& meter, const DEVICE_ID
 
 METER METER_SETTER::prepare_equivalent_device_voltage_source_voltage_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2425,8 +2266,7 @@ METER METER_SETTER::prepare_equivalent_device_voltage_source_voltage_in_pu_meter
 
 METER METER_SETTER::prepare_equivalent_device_voltage_source_voltage_angle_in_deg_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2438,8 +2278,7 @@ METER METER_SETTER::prepare_equivalent_device_voltage_source_voltage_angle_in_de
 
 METER METER_SETTER::prepare_equivalent_device_voltage_source_resistance_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2451,8 +2290,7 @@ METER METER_SETTER::prepare_equivalent_device_voltage_source_resistance_in_pu_me
 
 METER METER_SETTER::prepare_equivalent_device_voltage_source_reactance_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2464,8 +2302,7 @@ METER METER_SETTER::prepare_equivalent_device_voltage_source_reactance_in_pu_met
 
 METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_power_load_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2477,8 +2314,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_power_load
 
 METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_power_load_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2490,8 +2326,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_power_lo
 
 METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_current_load_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2503,8 +2338,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_current_lo
 
 METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_current_load_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2516,8 +2350,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_current_
 
 METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_impedance_load_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2529,8 +2362,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_impedance_
 
 METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_impedance_load_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2542,8 +2374,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_impedanc
 
 METER METER_SETTER::prepare_equivalent_device_active_power_generation_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2556,8 +2387,7 @@ METER METER_SETTER::prepare_equivalent_device_active_power_generation_in_MW_mete
 
 METER METER_SETTER::prepare_equivalent_device_reactive_power_generation_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2569,8 +2399,7 @@ METER METER_SETTER::prepare_equivalent_device_reactive_power_generation_in_MVar_
 
 METER METER_SETTER::prepare_equivalent_device_active_power_load_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2583,8 +2412,7 @@ METER METER_SETTER::prepare_equivalent_device_active_power_load_in_MW_meter(cons
 
 METER METER_SETTER::prepare_equivalent_device_reactive_power_load_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2596,8 +2424,7 @@ METER METER_SETTER::prepare_equivalent_device_reactive_power_load_in_MVar_meter(
 
 METER METER_SETTER::prepare_equivalent_device_active_power_net_load_in_MW_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2610,8 +2437,7 @@ METER METER_SETTER::prepare_equivalent_device_active_power_net_load_in_MW_meter(
 
 METER METER_SETTER::prepare_equivalent_device_reactive_power_net_load_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2625,8 +2451,7 @@ METER METER_SETTER::prepare_equivalent_device_reactive_power_net_load_in_MVar_me
 
 METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_power_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2638,8 +2463,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_power_load
 
 METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_power_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2651,8 +2475,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_power_lo
 
 METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_current_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2664,8 +2487,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_current_lo
 
 METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_current_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2677,8 +2499,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_current_
 
 METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_impedance_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2690,8 +2511,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_impedance_
 
 METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_impedance_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2703,8 +2523,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_impedanc
 
 METER METER_SETTER::prepare_equivalent_device_active_power_generation_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2717,8 +2536,7 @@ METER METER_SETTER::prepare_equivalent_device_active_power_generation_in_pu_mete
 
 METER METER_SETTER::prepare_equivalent_device_reactive_power_generation_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2730,8 +2548,7 @@ METER METER_SETTER::prepare_equivalent_device_reactive_power_generation_in_pu_me
 
 METER METER_SETTER::prepare_equivalent_device_active_power_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2744,8 +2561,7 @@ METER METER_SETTER::prepare_equivalent_device_active_power_load_in_pu_meter(cons
 
 METER METER_SETTER::prepare_equivalent_device_reactive_power_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2757,8 +2573,7 @@ METER METER_SETTER::prepare_equivalent_device_reactive_power_load_in_pu_meter(co
 
 METER METER_SETTER::prepare_equivalent_device_active_power_net_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2771,8 +2586,7 @@ METER METER_SETTER::prepare_equivalent_device_active_power_net_load_in_pu_meter(
 
 METER METER_SETTER::prepare_equivalent_device_reactive_power_net_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    METER meter;
-    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    METER meter(get_toolkit());
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2780,19 +2594,4 @@ METER METER_SETTER::prepare_equivalent_device_reactive_power_net_load_in_pu_mete
         meter.set_meter_type("REACTIVE POWER NET LOAD IN PU");
 
     return meter;
-}
-
-bool METER_SETTER::is_valid() const
-{
-    return true;
-}
-
-void METER_SETTER::check()
-{
-    ;
-}
-
-void METER_SETTER::clear()
-{
-    ;
 }

@@ -367,8 +367,7 @@ void DYNAMICS_SIMULATOR::prepare_bus_related_meters()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    METER_SETTER setter;
-    setter.set_toolkit(*toolkit);
+    METER_SETTER setter(*toolkit);
 
     unsigned int n = psdb.get_bus_count();
     vector<BUS*> buses = psdb.get_all_buses();
@@ -404,8 +403,7 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meters()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    METER_SETTER setter;
-    setter.set_toolkit(*toolkit);
+    METER_SETTER setter(*toolkit);
 
     unsigned int n;
 
@@ -466,8 +464,7 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    METER_SETTER setter;
-    setter.set_toolkit(*toolkit);
+    METER_SETTER setter(*toolkit);
 
     unsigned int n;
 
@@ -583,8 +580,7 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meters()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    METER_SETTER setter;
-    setter.set_toolkit(*toolkit);
+    METER_SETTER setter(*toolkit);
 
     unsigned int n;
 
@@ -656,8 +652,7 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meters()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    METER_SETTER setter;
-    setter.set_toolkit(*toolkit);
+    METER_SETTER setter(*toolkit);
 
     unsigned int n;
 
@@ -685,8 +680,7 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meters()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    METER_SETTER setter;
-    setter.set_toolkit(*toolkit);
+    METER_SETTER setter(*toolkit);
 
     unsigned int n;
 
@@ -716,8 +710,7 @@ void DYNAMICS_SIMULATOR::prepare_transformer_related_meters()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    METER_SETTER setter;
-    setter.set_toolkit(*toolkit);
+    METER_SETTER setter(*toolkit);
 
     unsigned int n;
 
@@ -755,8 +748,7 @@ void DYNAMICS_SIMULATOR::prepare_hvdc_related_meters()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    METER_SETTER setter;
-    setter.set_toolkit(*toolkit);
+    METER_SETTER setter(*toolkit);
 
     unsigned int n;
 
@@ -827,8 +819,7 @@ void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meters()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    METER_SETTER setter;
-    setter.set_toolkit(*toolkit);
+    METER_SETTER setter(*toolkit);
 
     unsigned int n;
 
@@ -866,11 +857,9 @@ void DYNAMICS_SIMULATOR::prepare_bus_related_meter(unsigned int bus, string mete
 
     if(psdb.is_bus_exist(bus))
     {
-        METER_SETTER setter;
-        setter.set_toolkit(*toolkit);
+        METER_SETTER setter(*toolkit);
 
-        METER meter;
-        meter.set_toolkit(*toolkit);
+        METER meter(*toolkit);
 
         meter_type = string2upper(meter_type);
 
@@ -911,11 +900,9 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meter(const DEVICE_ID& did, s
     {
         if(psdb.is_generator_exist(did))
         {
-            METER_SETTER setter;
-            setter.set_toolkit(*toolkit);
+            METER_SETTER setter(*toolkit);
 
-            METER meter;
-            meter.set_toolkit(*toolkit);
+            METER meter(*toolkit);
 
             meter_type = string2upper(meter_type);
 
@@ -992,11 +979,9 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(const DEVICE_ID& did
     {
         if(psdb.is_wt_generator_exist(did))
         {
-            METER_SETTER setter;
-            setter.set_toolkit(*toolkit);
+            METER_SETTER setter(*toolkit);
 
-            METER meter;
-            meter.set_toolkit(*toolkit);
+            METER meter(*toolkit);
 
             meter_type = string2upper(meter_type);
 
@@ -1081,11 +1066,9 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meter(const DEVICE_ID& did, str
     {
         if(psdb.is_pv_unit_exist(did))
         {
-            METER_SETTER setter;
-            setter.set_toolkit(*toolkit);
+            METER_SETTER setter(*toolkit);
 
-            METER meter;
-            meter.set_toolkit(*toolkit);
+            METER meter(*toolkit);
 
             meter_type = string2upper(meter_type);
 
@@ -1146,13 +1129,9 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(const DEVICE_ID& d
     {
         if(psdb.is_pv_unit_exist(did))
         {
-            METER_SETTER setter;
-            setter.set_toolkit(*toolkit);
+            METER_SETTER setter(*toolkit);
 
-            METER meter;
-            meter.set_toolkit(*toolkit);
-
-            meter.set_toolkit(*toolkit);
+            METER meter(*toolkit);
 
             meter_type = string2upper(meter_type);
 
@@ -1233,11 +1212,9 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meter(const DEVICE_ID& did, string
     {
         if(psdb.is_load_exist(did))
         {
-            METER_SETTER setter;
-            setter.set_toolkit(*toolkit);
+            METER_SETTER setter(*toolkit);
 
-            METER meter;
-            meter.set_toolkit(*toolkit);
+            METER meter(*toolkit);
 
             meter_type = string2upper(meter_type);
 
@@ -1284,11 +1261,9 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meter(const DEVICE_ID& did, string
     {
         if(psdb.is_line_exist(did))
         {
-            METER_SETTER setter;
-            setter.set_toolkit(*toolkit);
+            METER_SETTER setter(*toolkit);
 
-            METER meter;
-            meter.set_toolkit(*toolkit);
+            METER meter(*toolkit);
 
             meter_type = string2upper(meter_type);
             side = string2upper(side);
@@ -1340,11 +1315,9 @@ void DYNAMICS_SIMULATOR::prepare_transformer_related_meter(const DEVICE_ID& did,
     {
         if(psdb.is_line_exist(did))
         {
-            METER_SETTER setter;
-            setter.set_toolkit(*toolkit);
+            METER_SETTER setter(*toolkit);
 
-            METER meter;
-            meter.set_toolkit(*toolkit);
+            METER meter(*toolkit);
 
             meter_type = string2upper(meter_type);
             side = string2upper(side);
@@ -1399,11 +1372,9 @@ void DYNAMICS_SIMULATOR::prepare_hvdc_related_meter(const DEVICE_ID& did, string
     {
         if(psdb.is_hvdc_exist(did))
         {
-            METER_SETTER setter;
-            setter.set_toolkit(*toolkit);
+            METER_SETTER setter(*toolkit);
 
-            METER meter;
-            meter.set_toolkit(*toolkit);
+            METER meter(*toolkit);
 
             meter_type = string2upper(meter_type);
             side = string2upper(side);
@@ -1481,11 +1452,9 @@ void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meter(const DEVICE_ID
     {
         if(psdb.is_equivalent_device_exist(did))
         {
-            METER_SETTER setter;
-            setter.set_toolkit(*toolkit);
+            METER_SETTER setter(*toolkit);
 
-            METER meter;
-            meter.set_toolkit(*toolkit);
+            METER meter(*toolkit);
 
             meter_type = string2upper(meter_type);
 
@@ -1531,8 +1500,7 @@ unsigned int DYNAMICS_SIMULATOR::get_meter_count() const
 
 METER DYNAMICS_SIMULATOR::get_meter(unsigned int i)
 {
-    METER voidmeter;
-    voidmeter.set_toolkit(get_toolkit());
+    METER voidmeter(get_toolkit());
 
     if(meters.size()!=0)
     {

@@ -3,7 +3,7 @@
 #include "header/basic/utility.h"
 #include <cstdio>
 
-WT_TURBINE_MODEL::WT_TURBINE_MODEL()
+WT_TURBINE_MODEL::WT_TURBINE_MODEL(STEPS& toolkit) : WTG_MODEL(toolkit)
 {
     common_constructor();
 }

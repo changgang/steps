@@ -9,7 +9,7 @@ class ENERGY_STORAGE;
 class ENERGY_STORAGE_MODEL : public MODEL
 {
 public:
-        ENERGY_STORAGE_MODEL();
+        ENERGY_STORAGE_MODEL(STEPS& toolkit);
         virtual ~ENERGY_STORAGE_MODEL();
 
         ENERGY_STORAGE* get_energy_storage_pointer() const;

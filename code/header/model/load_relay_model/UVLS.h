@@ -9,7 +9,7 @@
 class UVLS : public LOAD_VOLTAGE_RELAY_MODEL
 {
     public:
-        UVLS();
+        UVLS(STEPS& toolkit);
         UVLS(const UVLS& model);
         virtual ~UVLS();
         virtual UVLS& operator=(const UVLS& model);

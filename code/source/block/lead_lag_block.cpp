@@ -24,7 +24,7 @@ void LEAD_LAG_BLOCK::set_K(double k)
     {
         ostringstream osstream;
         osstream<<"Error. Zero amplifier K is not allowed for LEAD_LAG_BLOCK.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -62,7 +62,7 @@ void LEAD_LAG_BLOCK::initialize()
     double t2 = get_T2_in_s();
     if(t1!=0.0)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
         one_over_t1 = 1.0/t1;
@@ -95,7 +95,7 @@ void LEAD_LAG_BLOCK::initialize()
     }
     else
     {
-        first_order_block.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+        first_order_block.set_toolkit(get_toolkit());
         first_order_block.set_limiter_type(this->get_limiter_type());
         first_order_block.set_upper_limit(this->get_upper_limit());
         first_order_block.set_lower_limit(this->get_lower_limit());

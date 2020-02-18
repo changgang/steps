@@ -9,7 +9,7 @@
 class CIM6 : public LOAD_MODEL
 {
     public:
-        CIM6();
+        CIM6(STEPS& toolkit);
         CIM6(const CIM6& model);
         virtual ~CIM6();
         virtual CIM6& operator=(const CIM6& model);

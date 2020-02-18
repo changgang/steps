@@ -5,7 +5,7 @@
 class WIND_SPEED_MODEL : public WTG_MODEL
 {
     public:
-        WIND_SPEED_MODEL();
+        WIND_SPEED_MODEL(STEPS& toolkit);
         virtual ~WIND_SPEED_MODEL();
 
         virtual string get_model_type() const;

@@ -4,7 +4,7 @@
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
 
-WT_ELECTRICAL_MODEL::WT_ELECTRICAL_MODEL()
+WT_ELECTRICAL_MODEL::WT_ELECTRICAL_MODEL(STEPS& toolkit) : WTG_MODEL(toolkit)
 {
     ;
 }
@@ -49,7 +49,7 @@ complex<double> WT_ELECTRICAL_MODEL::get_terminal_bus_complex_voltage_in_pu() co
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen!=NULL)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         unsigned int bus = gen->get_generator_bus();
@@ -76,7 +76,7 @@ double WT_ELECTRICAL_MODEL::get_terminal_bus_frequency_deviation_in_pu() const
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen!=NULL)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         unsigned int bus = gen->get_generator_bus();

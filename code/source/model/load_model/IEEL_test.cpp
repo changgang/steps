@@ -18,9 +18,8 @@ void IEEL_TEST::setup()
 
     LOAD* load = get_load();
 
-    IEEL model;
+    IEEL model(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    model.set_toolkit(default_toolkit);
     model.set_device_id(load->get_device_id());
 
     model.set_subsystem_type(BUS_SUBSYSTEM_TYPE);

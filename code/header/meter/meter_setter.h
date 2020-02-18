@@ -5,10 +5,11 @@
 
 class POWER_SYSTEM_DATABASE;
 
-class METER_SETTER : public BASE
+class METER_SETTER
 {
     public:
-        METER_SETTER();
+        METER_SETTER(STEPS& toolkit);
+        STEPS& get_toolkit() const;
         ~METER_SETTER();
 
         METER prepare_bus_voltage_in_pu_meter(unsigned int bus);
@@ -211,9 +212,7 @@ class METER_SETTER : public BASE
         bool prepare_energy_storage_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_equivalent_device_meter(METER& meter, const DEVICE_ID& device_id);
-
-        virtual bool is_valid() const;
-        virtual void check();
-        virtual void clear();
+    private:
+        STEPS* toolkit;
 };
 #endif // METER_SETTER_H

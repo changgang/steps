@@ -18,7 +18,7 @@ class PV_CONVERTER_MODEL : public PVU_MODEL
     */
 
     public:
-        PV_CONVERTER_MODEL();
+        PV_CONVERTER_MODEL(STEPS& toolkit);
         virtual ~PV_CONVERTER_MODEL();
 
     public: // sync generator common

@@ -1,7 +1,7 @@
 #include "header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model.h"
 #include <cstdio>
 #include "header/basic/utility.h"
-TURBINE_LOAD_CONTROLLER_MODEL::TURBINE_LOAD_CONTROLLER_MODEL()
+TURBINE_LOAD_CONTROLLER_MODEL::TURBINE_LOAD_CONTROLLER_MODEL(STEPS& toolkit) : SG_MODEL(toolkit)
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("GENERATOR");
 }

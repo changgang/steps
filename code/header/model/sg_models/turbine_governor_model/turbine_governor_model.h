@@ -5,7 +5,7 @@
 class TURBINE_GOVERNOR_MODEL : public SG_MODEL
 {
     public:
-        TURBINE_GOVERNOR_MODEL();
+        TURBINE_GOVERNOR_MODEL(STEPS& toolkit);
         virtual ~TURBINE_GOVERNOR_MODEL();
 
         virtual string get_model_type() const;

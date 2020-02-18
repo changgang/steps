@@ -30,9 +30,8 @@ void FILEWIND_TEST::setup()
 
     string file = "filewind_demo.csv";
     prepare_wind_speed_file(file);
-    FILEWIND model;
+    FILEWIND model(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    model.set_toolkit(default_toolkit);
     model.set_device_id(wt_gen->get_device_id());
 
     model.set_wind_speed_serial_file(file);

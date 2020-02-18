@@ -79,7 +79,7 @@ void PI_BLOCK::initialize()
 {
     ostringstream osstream;
 
-    pid_block.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    pid_block.set_toolkit(get_toolkit());
     pid_block.set_output(get_output());
 
     pid_block.initialize();
@@ -97,7 +97,7 @@ void PI_BLOCK::initialize()
         if(s>vmax)
         {
             osstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
-            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+            STEPS& toolkit = get_toolkit();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
         else
@@ -105,7 +105,7 @@ void PI_BLOCK::initialize()
             if(s<vmin)
             {
                 osstream<<"Initialization Error. State ("<<s<<") exceeds lower limit bound ("<<vmin<<").";
-                STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+                STEPS& toolkit = get_toolkit();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }

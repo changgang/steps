@@ -4,7 +4,7 @@
 #include <cstdio>
 #include "header/basic/utility.h"
 #include <vector>
-PSASPS1::PSASPS1()
+PSASPS1::PSASPS1(STEPS& toolkit) : STABILIZER_MODEL(toolkit)
 {
     clear();
 }
@@ -23,6 +23,8 @@ void PSASPS1::clear()
 
 void PSASPS1::copy_from_const_model(const PSASPS1& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     //this->set_power_system_database(model.toolkit.get_power_system_database());
@@ -49,7 +51,7 @@ void PSASPS1::copy_from_const_model(const PSASPS1& model)
     this->set_Vsmax(model.get_Vsmax());
     this->set_Vsmin(model.get_Vsmin());
 }
-PSASPS1::PSASPS1(const PSASPS1& model) : STABILIZER_MODEL()
+PSASPS1::PSASPS1(const PSASPS1& model) : STABILIZER_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -243,14 +245,14 @@ bool PSASPS1::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void PSASPS1::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     dedc_block.set_toolkit(toolkit);
     phase_tuner_1.set_toolkit(toolkit);
     phase_tuner_2.set_toolkit(toolkit);
@@ -366,7 +368,7 @@ double PSASPS1::get_stabilizing_signal_in_pu()
 void PSASPS1::check()
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double vsmax = get_Vsmax();
     double vsmin = get_Vsmin();
 
@@ -400,7 +402,7 @@ void PSASPS1::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

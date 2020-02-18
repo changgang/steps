@@ -6,7 +6,7 @@
 class PV_IRRADIANCE_MODEL : public PVU_MODEL
 {
     public:
-        PV_IRRADIANCE_MODEL();
+        PV_IRRADIANCE_MODEL(STEPS& toolkit);
         virtual ~PV_IRRADIANCE_MODEL();
 
         virtual string get_model_type() const;

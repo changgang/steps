@@ -4,6 +4,7 @@
 
 BLOCK::BLOCK()
 {
+    toolkit = nullptr;
     set_limiter_type(NO_LIMITER);
     state = 0.0;
     new_state = 0.0;
@@ -20,14 +21,23 @@ BLOCK::~BLOCK()
     ;
 }
 
-bool BLOCK::is_valid() const
+
+void BLOCK::set_toolkit(STEPS& toolkit)
 {
-    return true;
+    this->toolkit = (&toolkit);
 }
 
-void BLOCK::clear()
+STEPS& BLOCK::get_toolkit() const
 {
-    ;
+    if(toolkit!=nullptr)
+        return *toolkit;
+    else
+    {
+        ostringstream osstream;
+        osstream<<"FATAL error. No toolkit is found in block.";
+        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
+        return *toolkit;
+    }
 }
 
 void BLOCK::set_state(double value)
@@ -141,7 +151,7 @@ void BLOCK::check_limiter() const
         {
             ostringstream osstream;
             osstream<<"Error. Limiter upper bound ("<<upper_limit<<") is less than lower bound ("<<lower_limit<<").";
-            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+            STEPS& toolkit = get_toolkit();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }

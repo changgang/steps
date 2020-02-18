@@ -5,7 +5,7 @@
 #include <iostream>
 
 using namespace std;
-PSASPVC::PSASPVC()
+PSASPVC::PSASPVC(STEPS& toolkit) : COMPENSATOR_MODEL(toolkit)
 {
     clear();
 }
@@ -20,13 +20,15 @@ void PSASPVC::clear()
 
 void PSASPVC::copy_from_const_model(const PSASPVC& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
     //this->set_power_system_database(model.toolkit.get_power_system_database());
     //this->set_device_id(model.get_device_id());
     this->set_Xc(model.get_Xc());
 }
 
-PSASPVC::PSASPVC(const PSASPVC& model) : COMPENSATOR_MODEL()
+PSASPVC::PSASPVC(const PSASPVC& model) : COMPENSATOR_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -93,7 +95,7 @@ bool PSASPVC::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
@@ -142,7 +144,7 @@ void PSASPVC::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 void PSASPVC::save()
@@ -179,7 +181,7 @@ double PSASPVC::get_model_data_with_name(string par_name) const
     {
         if(par_name=="XC") return get_Xc();
     }
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
@@ -190,7 +192,7 @@ void PSASPVC::set_model_data_with_name(string par_name, double value)
     {
         if(par_name=="XC") return set_Xc(value);
     }
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }

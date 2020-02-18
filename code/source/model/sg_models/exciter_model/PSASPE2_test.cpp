@@ -20,9 +20,8 @@ void PSASPE2_TEST::setup()
 
     GENERATOR* genptr = get_test_generator();
 
-    PSASPE2 model;
+    PSASPE2 model(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    model.set_toolkit(default_toolkit);
     model.set_device_id(genptr->get_device_id());
 
     model.set_KR(1.0);

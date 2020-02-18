@@ -10,7 +10,7 @@ class WT_GENERATOR;
 class WTG_MODEL : public MODEL
 {
     public:
-        WTG_MODEL();
+        WTG_MODEL(STEPS& toolkit);
         virtual ~WTG_MODEL();
 
         WT_GENERATOR* get_wt_generator_pointer() const;

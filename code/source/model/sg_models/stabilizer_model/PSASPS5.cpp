@@ -4,7 +4,7 @@
 #include <cstdio>
 #include "header/basic/utility.h"
 #include <vector>
-PSASPS5::PSASPS5()
+PSASPS5::PSASPS5(STEPS& toolkit) : STABILIZER_MODEL(toolkit)
 {
     clear();
 }
@@ -20,6 +20,8 @@ void PSASPS5::clear()
 
 void PSASPS5::copy_from_const_model(const PSASPS5& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     this->set_T1_in_s(model.get_T1_in_s());
@@ -37,7 +39,7 @@ void PSASPS5::copy_from_const_model(const PSASPS5& model)
     this->set_Vsmin(model.get_Vsmin());
 }
 
-PSASPS5::PSASPS5(const PSASPS5& model) : STABILIZER_MODEL()
+PSASPS5::PSASPS5(const PSASPS5& model) : STABILIZER_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -250,7 +252,7 @@ bool PSASPS5::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
@@ -311,7 +313,7 @@ void PSASPS5::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

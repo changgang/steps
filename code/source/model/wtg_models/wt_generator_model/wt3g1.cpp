@@ -6,7 +6,7 @@
 #include <iostream>
 using namespace std;
 
-WT3G1::WT3G1()
+WT3G1::WT3G1(STEPS& toolkit) : WT_GENERATOR_MODEL(toolkit)
 {
     clear();
 }
@@ -38,6 +38,8 @@ void WT3G1::clear()
 
 void WT3G1::copy_from_const_model(const WT3G1& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
     set_Xeq_in_pu(model.get_Xeq_in_pu());
     set_KPLL(model.get_KPLL());
@@ -45,7 +47,7 @@ void WT3G1::copy_from_const_model(const WT3G1& model)
     set_PLLmax(model.get_PLLmax());
 }
 
-WT3G1::WT3G1(const WT3G1& model):WT_GENERATOR_MODEL()
+WT3G1::WT3G1(const WT3G1& model):WT_GENERATOR_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -131,7 +133,7 @@ bool WT3G1::setup_model_with_steps_string_vector(vector<string>& data)
             prate = get_double_data(data[i],"0.0");
 
             DEVICE_ID did = get_wt_generator_device_id(ibus, id);
-            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+            STEPS& toolkit = get_toolkit();
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
             WT_GENERATOR* gen = psdb.get_wt_generator(did);
             if(gen==NULL)
@@ -194,14 +196,14 @@ bool WT3G1::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void WT3G1::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     active_current_commander.set_toolkit(toolkit);
     reactive_voltage_commander.set_toolkit(toolkit);
     PLL_frequency_integrator.set_toolkit(toolkit);
@@ -210,7 +212,7 @@ void WT3G1::setup_block_toolkit_and_parameters()
 
 void WT3G1::initialize()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     if(not is_model_initialized())
     {
@@ -363,7 +365,7 @@ void WT3G1::run(DYNAMIC_MODE mode)
 
 complex<double> WT3G1::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     double mbase = get_mbase_in_MVA();
 
@@ -385,7 +387,7 @@ complex<double> WT3G1::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
 
 complex<double> WT3G1::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
     double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
@@ -395,7 +397,7 @@ complex<double> WT3G1::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mb
 
 complex<double> WT3G1::get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
     double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
@@ -430,7 +432,7 @@ void WT3G1::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -667,7 +669,7 @@ complex<double> WT3G1::get_internal_voltage_in_pu_in_xy_axis()
     complex<double> Ixy = get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
     complex<double> Z(0.0, get_Xeq_in_pu());
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
     double one_over_mbase = get_one_over_mbase_in_one_over_MVA();

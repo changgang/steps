@@ -75,7 +75,7 @@ void PID_BLOCK::set_Td_in_s(double T)
     {
         ostringstream osstream;
         osstream<<"Error. Non-positive time constant Td is not allowed for PID_BLOCK.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -153,9 +153,9 @@ void PID_BLOCK::initialize()
 {
     ostringstream osstream;
 
-    p_block.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
-    i_block.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
-    d_block.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    p_block.set_toolkit(get_toolkit());
+    i_block.set_toolkit(get_toolkit());
+    d_block.set_toolkit(get_toolkit());
 
     p_block.set_output(0.0);
     i_block.set_output(get_output());
@@ -178,7 +178,7 @@ void PID_BLOCK::initialize()
         if(s>vmax)
         {
             osstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
-            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+            STEPS& toolkit = get_toolkit();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
         else
@@ -186,7 +186,7 @@ void PID_BLOCK::initialize()
             if(s<vmin)
             {
                 osstream<<"Initialization Error. State ("<<s<<") exceeds lower limit bound ("<<vmin<<").";
-                STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+                STEPS& toolkit = get_toolkit();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }

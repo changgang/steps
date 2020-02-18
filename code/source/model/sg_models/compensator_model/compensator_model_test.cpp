@@ -19,9 +19,8 @@ void COMPENSATOR_MODEL_TEST::setup()
 
     GENERATOR* genptr = get_test_generator();
 
-    GENROU genmodel;
+    GENROU genmodel(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    genmodel.set_toolkit(default_toolkit);
     genmodel.set_device_id(genptr->get_device_id());
 
     genmodel.set_Rs(0.01);
@@ -161,8 +160,7 @@ void COMPENSATOR_MODEL_TEST::test_get_generator_terminal_voltage()
     show_test_information_for_function_of_class(__FUNCTION__,"COMPENSATOR_MODEL_TEST");
 
     GENERATOR* genptr = get_test_generator();
-    COMP model;
-    model.set_toolkit(default_toolkit);
+    COMP model(default_toolkit);
     model.set_device_id(genptr->get_device_id());
     TEST_ASSERT(model.get_generator_terminal_voltage_in_pu()==1.0);
 }
@@ -175,8 +173,7 @@ void COMPENSATOR_MODEL_TEST::test_get_generator_terminal_current()
     GENERATOR* genptr = get_test_generator();
     (genptr->get_sync_generator_model())->initialize();
 
-    COMP model;
-    model.set_toolkit(default_toolkit);
+    COMP model(default_toolkit);
     model.set_device_id(genptr->get_device_id());
 
     TEST_ASSERT(abs(model.get_generator_terminal_complex_current_in_pu()-complex<double>(1.0,-0.3)*0.5)<FLOAT_EPSILON);

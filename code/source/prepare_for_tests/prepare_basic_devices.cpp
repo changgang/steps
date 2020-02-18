@@ -58,23 +58,12 @@ void prepare_basic_generators()
 
     DEVICE_ID did = generator.get_device_id();
 
-    GENCLS gen_model;
-    gen_model.set_toolkit(default_toolkit);
-
-    IEEET1 ex_model;
-    ex_model.set_toolkit(default_toolkit);
-
-    COMP comp_model;
-    comp_model.set_toolkit(default_toolkit);
-
-    IEE2ST pss_model;
-    pss_model.set_toolkit(default_toolkit);
-
-    IEEEG1 turbine_model;
-    turbine_model.set_toolkit(default_toolkit);
-
-    LCFB1 turbine_load_controller_model;
-    turbine_load_controller_model.set_toolkit(default_toolkit);
+    GENCLS gen_model(default_toolkit);
+    IEEET1 ex_model(default_toolkit);
+    COMP comp_model(default_toolkit);
+    IEE2ST pss_model(default_toolkit);
+    IEEEG1 turbine_model(default_toolkit);
+    LCFB1 turbine_load_controller_model(default_toolkit);
 
     gen_model.set_device_id(did);
     ex_model.set_device_id(did);
@@ -187,23 +176,12 @@ void prepare_basic_wt_generators()
     psdb.append_wt_generator(wt_generator);
     DEVICE_ID did = wt_generator.get_device_id();
 
-    WT3G0 gen_model;
-    gen_model.set_toolkit(default_toolkit);
-
-    AERD0 aerd_model;
-    aerd_model.set_toolkit(default_toolkit);
-
-    WT3T0 turbine_model;
-    turbine_model.set_toolkit(default_toolkit);
-
-    WT3E0 elec_model;
-    elec_model.set_toolkit(default_toolkit);
-
-    WT3P0 pitch_model;
-    pitch_model.set_toolkit(default_toolkit);
-
-    FILEWIND wind_model;
-    wind_model.set_toolkit(default_toolkit);
+    WT3G0 gen_model(default_toolkit);
+    AERD0 aerd_model(default_toolkit);
+    WT3T0 turbine_model(default_toolkit);
+    WT3E0 elec_model(default_toolkit);
+    WT3P0 pitch_model(default_toolkit);
+    FILEWIND wind_model(default_toolkit);
 
     gen_model.set_device_id(did);
     aerd_model.set_device_id(did);
@@ -346,8 +324,7 @@ void prepare_basic_energy_strorages()
 
     DEVICE_ID did = estorage.get_device_id();
 
-    ESTR0 model;
-    model.set_toolkit(default_toolkit);
+    ESTR0 model(default_toolkit);
     model.set_device_id(did);
 
     dmdb.add_model(&model);
@@ -383,16 +360,13 @@ void prepare_basic_loads()
 
     DEVICE_ID did = load.get_device_id();
 
-    IEEL load_model;
-    load_model.set_toolkit(default_toolkit);
+    IEEL load_model(default_toolkit);
     load_model.set_subsystem_type(BUS_SUBSYSTEM_TYPE);
 
-    UFLS freq_model;
-    freq_model.set_toolkit(default_toolkit);
+    UFLS freq_model(default_toolkit);
     freq_model.set_subsystem_type(BUS_SUBSYSTEM_TYPE);
 
-    UVLS volt_model;
-    volt_model.set_toolkit(default_toolkit);
+    UVLS volt_model(default_toolkit);
     volt_model.set_subsystem_type(BUS_SUBSYSTEM_TYPE);
 
     load_model.set_device_id(did);
@@ -552,8 +526,7 @@ void prepare_basic_hvdcs()
 
     DEVICE_ID did = hvdc.get_device_id();
 
-    CDC4T model;
-    model.set_toolkit(default_toolkit);
+    CDC4T model(default_toolkit);
     model.set_device_id(did);
 
     dmdb.add_model(&model);

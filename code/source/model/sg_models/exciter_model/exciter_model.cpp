@@ -9,7 +9,7 @@
 
 using namespace std;
 
-EXCITER_MODEL::EXCITER_MODEL()
+EXCITER_MODEL::EXCITER_MODEL(STEPS& toolkit) : SG_MODEL(toolkit)
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("GENERATOR");
 }

@@ -17,7 +17,7 @@ class WT_TURBINE_MODEL : public WTG_MODEL
         angle: wind turbine generator rotor angle
     */
     public:
-        WT_TURBINE_MODEL();
+        WT_TURBINE_MODEL(STEPS& toolkit);
         virtual ~WT_TURBINE_MODEL();
 
         virtual string get_model_type() const;

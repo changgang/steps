@@ -8,15 +8,16 @@
 
 using namespace std;
 
-class BLOCK : public BASE
+class BLOCK
 {
     public:
         BLOCK();
         virtual ~BLOCK();
 
-        virtual bool is_valid() const;
+        void set_toolkit(STEPS& toolkit);
+        STEPS& get_toolkit() const;
+
         virtual void check() = 0;
-        virtual void clear();
 
         void set_input(double input);
         void set_output(double output);
@@ -46,6 +47,7 @@ class BLOCK : public BASE
         void set_dstate(double value);
         void set_store(double value);
     private:
+        STEPS* toolkit;
         double state, new_state, dstate, store;
         LIMITER_TYPE limiter_type;
         double upper_limit, lower_limit;

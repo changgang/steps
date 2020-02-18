@@ -11,7 +11,7 @@ class LOAD;
 class LOAD_MODEL : public MODEL
 {
     public:
-        LOAD_MODEL();
+        LOAD_MODEL(STEPS& toolkit);
         virtual ~LOAD_MODEL();
         LOAD* get_load_pointer() const;
 

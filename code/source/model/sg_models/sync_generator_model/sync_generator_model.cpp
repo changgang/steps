@@ -5,7 +5,7 @@
 #include <cstdio>
 #include <iostream>
 
-SYNC_GENERATOR_MODEL::SYNC_GENERATOR_MODEL()
+SYNC_GENERATOR_MODEL::SYNC_GENERATOR_MODEL(STEPS& toolkit) : SG_MODEL(toolkit)
 {
     common_constructor();
 }
@@ -185,7 +185,7 @@ double SYNC_GENERATOR_MODEL::get_Xpp() const
         return Xdpp;
     else
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        STEPS& toolkit = get_toolkit();
         ostringstream osstream;
         osstream<<"Warning. Subtransient Xd\"("<<Xdpp<<") is not equal to Xq\"("<<Xqpp<<"). Xd\" will be returned.";
         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -364,7 +364,7 @@ double SYNC_GENERATOR_MODEL::get_excitation_voltage_in_pu()
 
 void SYNC_GENERATOR_MODEL::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     transient_block_d_axis.set_toolkit(toolkit);
     subtransient_block_d_axis.set_toolkit(toolkit);
     transient_block_q_axis.set_toolkit(toolkit);

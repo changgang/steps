@@ -10,7 +10,7 @@
 class IEEEG3 : public TURBINE_GOVERNOR_MODEL
 {
     public:
-        IEEEG3();
+        IEEEG3(STEPS& toolkit);
         IEEEG3(const IEEEG3&model);
         virtual ~IEEEG3();
         virtual IEEEG3& operator=(const IEEEG3& model);

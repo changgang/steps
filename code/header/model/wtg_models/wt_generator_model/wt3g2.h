@@ -9,7 +9,7 @@
 class WT3G2 : public WT_GENERATOR_MODEL
 {
     public:
-        WT3G2();
+        WT3G2(STEPS& toolkit);
         WT3G2(const WT3G2& model);
         virtual ~WT3G2();
         virtual WT3G2& operator=(const WT3G2&);

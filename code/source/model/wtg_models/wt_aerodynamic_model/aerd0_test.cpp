@@ -24,9 +24,8 @@ void AERD0_TEST::setup()
 
     WT_GENERATOR* wt_gen = get_test_wt_generator();
 
-    AERD0 model;
+    AERD0 model(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
-    model.set_toolkit(default_toolkit);
     model.set_device_id(wt_gen->get_device_id());
 
     model.set_number_of_pole_pairs(2);

@@ -13,7 +13,7 @@ It should be noted that, the first De-DC block of Pelec is a FIRST_ORDER_BLOCK i
 However, it is modeled as a DIFFERENTIAL_BLOCK in STEPS.
 Further check is necessary.
 ***/
-PSASPS4::PSASPS4()
+PSASPS4::PSASPS4(STEPS& toolkit) : STABILIZER_MODEL(toolkit)
 {
     clear();
 }
@@ -29,6 +29,8 @@ void PSASPS4::clear()
 
 void PSASPS4::copy_from_const_model(const PSASPS4& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     //this->set_power_system_database(model.toolkit.get_power_system_database());
@@ -68,7 +70,7 @@ void PSASPS4::copy_from_const_model(const PSASPS4& model)
     this->set_Vsmin(model.get_Vsmin());
 
 }
-PSASPS4::PSASPS4(const PSASPS4& model) : STABILIZER_MODEL()
+PSASPS4::PSASPS4(const PSASPS4& model) : STABILIZER_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -409,14 +411,14 @@ bool PSASPS4::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void PSASPS4::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     speed_sensor.set_toolkit(toolkit);
     pelec_sensor.set_toolkit(toolkit);
     speed_dedc_block_1.set_toolkit(toolkit);
@@ -585,7 +587,7 @@ double PSASPS4::get_stabilizing_signal_in_pu()
 void PSASPS4::check()
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double vsmax = get_Vsmax();
     double vsmin = get_Vsmin();
 
@@ -674,7 +676,7 @@ void PSASPS4::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

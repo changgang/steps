@@ -14,7 +14,7 @@ class EXCITER_MODEL : public SG_MODEL
         Excitation voltage
     */
     public:
-        EXCITER_MODEL();
+        EXCITER_MODEL(STEPS& toolkit);
         virtual ~EXCITER_MODEL();
     public: // exciter common
         virtual string get_model_type() const;

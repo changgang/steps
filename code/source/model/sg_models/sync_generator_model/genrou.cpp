@@ -5,7 +5,7 @@
 #include <istream>
 #include <iostream>
 using namespace std;
-GENROU::GENROU() : SYNC_GENERATOR_MODEL()
+GENROU::GENROU(STEPS& toolkit) : SYNC_GENERATOR_MODEL(toolkit)
 {
     clear();
 }
@@ -19,6 +19,8 @@ void GENROU::clear()
 }
 void GENROU::copy_from_const_model(const GENROU& model)
 {
+    set_toolkit(model.get_toolkit());
+
     clear();
 
     //this->set_power_system_database(model.toolkit.get_power_system_database());
@@ -40,7 +42,7 @@ void GENROU::copy_from_const_model(const GENROU& model)
     this->set_saturation_at_1(model.get_saturation_at_1());
     this->set_saturation_at_1p2(model.get_saturation_at_1p2());
 }
-GENROU::GENROU(const GENROU& model):SYNC_GENERATOR_MODEL()
+GENROU::GENROU(const GENROU& model):SYNC_GENERATOR_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -62,7 +64,7 @@ string GENROU::get_model_name() const
 
 void GENROU::update_source_impedance()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     GENERATOR* generator = get_generator_pointer();
     if(generator!=NULL)
     {
@@ -147,7 +149,7 @@ bool GENROU::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
@@ -423,7 +425,7 @@ complex<double> GENROU::get_source_Norton_equivalent_complex_current_in_pu_in_xy
     complex<double> Exy = get_internal_voltage_in_pu_in_xy_axis();
     complex<double> Z(get_Rs(), get_Xpp());
     double mbase = get_mbase_in_MVA();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
 
@@ -458,7 +460,7 @@ complex<double> GENROU::get_terminal_complex_current_in_pu_in_xy_axis_based_on_s
     complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
     double mbase = get_mbase_in_MVA();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     return Ixy*(mbase*one_over_sbase);
@@ -474,7 +476,7 @@ double GENROU::get_terminal_current_in_pu_based_on_sbase()
     double I = get_terminal_current_in_pu_based_on_mbase();
     double mbase = get_mbase_in_MVA();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     return I*(mbase*one_over_sbase);
@@ -484,7 +486,7 @@ double GENROU::get_terminal_current_in_pu_based_on_sbase()
 void GENROU::check()
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     double xd = get_Xd();
     double xq = get_Xq();
     double xdp = get_Xdp();
@@ -560,7 +562,7 @@ void GENROU::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -640,7 +642,7 @@ double GENROU::get_model_data_with_name(string par_name) const
         if(par_name == "S1") return get_saturation_at_1();
         if(par_name == "S1.2")  return get_saturation_at_1p2();
     }
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
@@ -666,7 +668,7 @@ void GENROU::set_model_data_with_name(string par_name, double value)
         if(par_name == "S1") return set_saturation_at_1(value);
         if(par_name == "S1.2") return set_saturation_at_1p2(value);
     }
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
 }
 

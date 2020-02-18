@@ -7,8 +7,10 @@
 #include <cstring>
 using namespace std;
 
-MODEL::MODEL()
+MODEL::MODEL(STEPS& toolkit)
 {
+    set_toolkit(toolkit);
+
     device_pointer = NULL;
 
     for(unsigned int i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
@@ -27,6 +29,16 @@ MODEL::MODEL()
 
     user_input_time_series_file = nullptr;
     user_input_time_series = nullptr;
+}
+
+STEPS& MODEL::get_toolkit() const
+{
+    return *toolkit;
+}
+
+void MODEL::set_toolkit(STEPS& toolkit)
+{
+    this->toolkit = (&toolkit);
 }
 
 MODEL::~MODEL()
@@ -90,8 +102,7 @@ void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRU
     {
         ostringstream osstream;
         osstream<<"Warning. Device type '"<<device_type<<"' is not supported when setting up dynamic model.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
 vector<string> MODEL::get_allowed_device_types() const
@@ -175,23 +186,21 @@ bool MODEL::is_model_data_exist(unsigned int var_index) const
 
 void MODEL::set_model_data_with_index(unsigned int index, double value)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     string var_name = get_model_data_name(index);
     if(var_name!="")
         set_model_data_with_name(var_name, value);
     else
-        toolkit.show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
+        toolkit->show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
 }
 
 double MODEL::get_model_data_with_index(unsigned int index)
 {
     string var_name = get_model_data_name(index);
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(var_name!="")
         return get_model_data_with_name(var_name);
     else
     {
-        toolkit.show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
+        toolkit->show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
         return 0.0;
     }
 }
@@ -250,12 +259,11 @@ double MODEL::get_model_internal_variable_with_index(unsigned int index)
 void MODEL::set_device_id(DEVICE_ID did)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(not did.is_valid())
     {
         osstream<<"Warning. Invalid device id (possible of "<<did.get_device_type()<<") is given to build model. "
           <<"Model device id will not be updated.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -268,17 +276,17 @@ void MODEL::set_device_id(DEVICE_ID did)
                 osstream<<allowed_device_types[i]<<"\n";
         }
         osstream<<"Model device id will not be updated.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
 
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     /*if(get_device_pointer()!=NULL)
     {
         osstream<<"Warning. Valid device ("<<get_device_name()<<") has already been set for "<<get_model_type()<<" model '"<<get_model_name()<<"'."<<endl
           <<"New device ("<<did.get_device_name()<<") will be updated.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }*/
 
     device_pointer = psdb.get_device(did);
@@ -286,7 +294,7 @@ void MODEL::set_device_id(DEVICE_ID did)
     if(device_pointer==NULL)
     {
         osstream<<"Warning. No valid device can be found for dynamic model.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -353,19 +361,5 @@ void MODEL::deactivate_model()
 bool MODEL::is_model_active() const
 {
     return flag_model_active;
-}
-
-
-bool MODEL::is_valid() const
-{
-    // should never be called
-    return false;
-
-    /*POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    DEVICE_ID did = get_device_id();
-    if(psdb==NULL or (not did.is_valid()))
-        return false;
-    else
-        return true;*/
 }
 

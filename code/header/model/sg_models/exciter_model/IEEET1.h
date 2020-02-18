@@ -9,7 +9,7 @@
 class IEEET1: public EXCITER_MODEL
 {
     public:
-        IEEET1();
+        IEEET1(STEPS& toolkit);
         IEEET1(const IEEET1& model);
         virtual ~IEEET1();
         virtual IEEET1& operator=(const IEEET1& model);
