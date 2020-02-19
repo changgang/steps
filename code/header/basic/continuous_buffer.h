@@ -2,6 +2,7 @@
 #define CONTINUOUS_BUFFER_H
 
 #include "header/device/device.h"
+#include "header/basic/base.h"
 
 #include <cstdlib>
 

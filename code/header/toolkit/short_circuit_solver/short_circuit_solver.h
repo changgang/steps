@@ -7,12 +7,13 @@
 
 class BUS;
 class SOURCE;
-class SHORT_CIRCUIT_SOLVER : public BASE
+class SHORT_CIRCUIT_SOLVER
 {
     public:
-        SHORT_CIRCUIT_SOLVER();
+        SHORT_CIRCUIT_SOLVER(STEPS& toolkit);
         ~SHORT_CIRCUIT_SOLVER();
-        virtual void clear();
+        STEPS& get_toolkit() const;
+        void clear();
 
         void set_maximum_iteration(unsigned int itermax);
         unsigned int get_maximum_iteration() const;
@@ -37,6 +38,7 @@ class SHORT_CIRCUIT_SOLVER : public BASE
         void save_short_circuit_result_to_file(const string& filename) const;
         void save_extended_short_circuit_result_to_file(const string& filename) const;
     private:
+        STEPS* toolkit;
         unsigned int iteration_count, max_iteration;
         bool converged;
 
@@ -44,9 +46,6 @@ class SHORT_CIRCUIT_SOLVER : public BASE
         vector< complex<double> > Z1, Z2, Z0;
 
         vector<BUS*> internal_bus_pointers;
-    private:
-        virtual bool is_valid() const;
-        virtual void check();
 };
 
 #endif // SHORT_CIRCUIT_SOLVER_H

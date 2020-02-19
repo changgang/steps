@@ -36,7 +36,6 @@
 					<Add directory="thirdparty/SuiteSparse/CXSparse/Include" />
 				</Compiler>
 				<Linker>
-					<Add option="-O3" />
 					<Add option="-static-libstdc++" />
 					<Add option="-static-libgcc" />
 					<Add option="-static" />

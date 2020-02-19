@@ -4,7 +4,6 @@
 #include <cstdlib>
 #include <vector>
 
-#include "header/basic/base.h"
 #include "header/basic/constants.h"
 using namespace std;
 

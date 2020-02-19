@@ -1,7 +1,6 @@
 #ifndef NETWORK_MATRIX_H
 #define NETWORK_MATRIX_H
 
-#include "header/basic/base.h"
 #include "header/power_system_database.h"
 #include "header/basic/sparse_matrix_define.h"
 #include "header/basic/inphno.h"

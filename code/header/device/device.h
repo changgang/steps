@@ -1,7 +1,6 @@
 #ifndef DEVICE_H
 #define DEVICE_H
 
-#include "header/basic/base.h"
 #include "header/basic/ownership.h"
 #include "header/basic/device_id.h"
 #include "header/block/block.h"
@@ -12,7 +11,7 @@
 
 class POWER_SYSTEM_DATABASE;
 
-class DEVICE : public BASE
+class DEVICE
 {
     public:
         DEVICE(STEPS& toolkit);

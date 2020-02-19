@@ -1,7 +1,6 @@
 #ifndef DYNAMICS_SIMULATOR_H
 #define DYNAMICS_SIMULATOR_H
 
-#include "header/basic/base.h"
 #include "header/basic/power_mismatch_struct.h"
 #include "header/meter/meter.h"
 #include "header/network/network_matrix.h"

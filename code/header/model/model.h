@@ -1,7 +1,6 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include "header/basic/base.h"
 #include "header/basic/device_id.h"
 #include "header/basic/time_series.h"
 #include "header/block/block.h"

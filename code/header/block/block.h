@@ -2,11 +2,11 @@
 #define BLOCK_H
 
 #include "header/basic/steps_enum.h"
-#include "header/basic/base.h"
 #include <vector>
 
-
 using namespace std;
+
+class STEPS;
 
 class BLOCK
 {

@@ -2,7 +2,6 @@
 #define EQUIVALENT_MODEL_IMEXPORTER_H
 
 #include "header/power_system_database.h"
-#include "header/basic/base.h"
 #include <vector>
 class EQUIVALENT_MODEL_IMEXPORTER
 {

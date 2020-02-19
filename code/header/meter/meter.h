@@ -4,7 +4,6 @@
 #include "header/basic/constants.h"
 #include "header/basic/device_id.h"
 #include "header/device/device.h"
-#include "header/basic/base.h"
 
 class METER
 {

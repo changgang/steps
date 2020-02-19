@@ -1,7 +1,6 @@
 #ifndef DYNAMIC_MODEL_DATABASE_H
 #define DYNAMIC_MODEL_DATABASE_H
 
-#include "header/basic/base.h"
 #include "header/model/model.h"
 #include <vector>
 using namespace std;
