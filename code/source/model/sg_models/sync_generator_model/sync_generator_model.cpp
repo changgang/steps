@@ -5,7 +5,13 @@
 #include <cstdio>
 #include <iostream>
 
-SYNC_GENERATOR_MODEL::SYNC_GENERATOR_MODEL(STEPS& toolkit) : SG_MODEL(toolkit)
+SYNC_GENERATOR_MODEL::SYNC_GENERATOR_MODEL(STEPS& toolkit) : SG_MODEL(toolkit),
+                                                             transient_block_d_axis(toolkit),
+                                                             subtransient_block_d_axis(toolkit),
+                                                             transient_block_q_axis(toolkit),
+                                                             subtransient_block_q_axis(toolkit),
+                                                             rotor_angle_block(toolkit),
+                                                             rotor_speed_block(toolkit)
 {
     common_constructor();
 }
@@ -35,6 +41,16 @@ void SYNC_GENERATOR_MODEL::common_constructor()
 SYNC_GENERATOR_MODEL::~SYNC_GENERATOR_MODEL()
 {
     ;
+}
+
+void SYNC_GENERATOR_MODEL::set_blocks_toolkit(STEPS& toolkit)
+{
+    transient_block_d_axis.set_toolkit(toolkit);
+    subtransient_block_d_axis.set_toolkit(toolkit);
+    transient_block_q_axis.set_toolkit(toolkit);
+    subtransient_block_q_axis.set_toolkit(toolkit);
+    rotor_angle_block.set_toolkit(toolkit);
+    rotor_speed_block.set_toolkit(toolkit);
 }
 
 string SYNC_GENERATOR_MODEL::get_model_type() const

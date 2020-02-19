@@ -8,14 +8,14 @@
 
 using namespace std;
 
-BUS::BUS(STEPS& toolkit) : DEVICE(toolkit)
+BUS::BUS(STEPS& toolkit) : DEVICE(toolkit), bus_frequency_model(toolkit)
 {
     clear();
 
     bus_frequency_model.set_bus_pointer(this);
 }
 
-BUS::BUS(const BUS& bus) : DEVICE(bus.get_toolkit())
+BUS::BUS(const BUS& bus) : DEVICE(bus.get_toolkit()), bus_frequency_model(bus.get_toolkit())
 {
     copy_from_const_bus(bus);
     bus_frequency_model.set_bus_pointer(this);
@@ -615,6 +615,7 @@ BUS& BUS::operator=(const BUS& bus)
 void BUS::copy_from_const_bus(const BUS& bus)
 {
     set_toolkit(bus.get_toolkit());
+    bus_frequency_model.set_toolkit(bus.get_toolkit());
 
     clear();
 

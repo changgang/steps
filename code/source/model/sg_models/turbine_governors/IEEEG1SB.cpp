@@ -4,7 +4,18 @@
 #include <istream>
 #include <iostream>
 using namespace std;
-IEEEG1SB::IEEEG1SB(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit)
+IEEEG1SB::IEEEG1SB(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit),
+                                     droop(toolkit),
+                                     servo_motor(toolkit),
+                                     delayer1(toolkit),
+                                     delayer2(toolkit),
+                                     delayer3(toolkit),
+                                     delayer4(toolkit),
+                                     boiler_PI(toolkit),
+                                     fuel_producer(toolkit),
+                                     fuel_delayer1(toolkit),
+                                     fuel_delayer2(toolkit),
+                                     drum(toolkit)
 {
     clear();
 }
@@ -39,7 +50,19 @@ void IEEEG1SB::clear()
 }
 void IEEEG1SB::copy_from_const_model(const IEEEG1SB& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    droop.set_toolkit(toolkit);
+    servo_motor.set_toolkit(toolkit);
+    delayer1.set_toolkit(toolkit);
+    delayer2.set_toolkit(toolkit);
+    delayer3.set_toolkit(toolkit);
+    delayer4.set_toolkit(toolkit);
+    boiler_PI.set_toolkit(toolkit);
+    fuel_producer.set_toolkit(toolkit);
+    fuel_delayer1.set_toolkit(toolkit);
+    fuel_delayer2.set_toolkit(toolkit);
+    drum.set_toolkit(toolkit);
 
     clear();
 
@@ -72,7 +95,18 @@ void IEEEG1SB::copy_from_const_model(const IEEEG1SB& model)
     this->set_Kb(model.get_Kb());
 }
 
-IEEEG1SB::IEEEG1SB(const IEEEG1SB&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit())
+IEEEG1SB::IEEEG1SB(const IEEEG1SB&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit()),
+                                           droop(model.get_toolkit()),
+                                           servo_motor(model.get_toolkit()),
+                                           delayer1(model.get_toolkit()),
+                                           delayer2(model.get_toolkit()),
+                                           delayer3(model.get_toolkit()),
+                                           delayer4(model.get_toolkit()),
+                                           boiler_PI(model.get_toolkit()),
+                                           fuel_producer(model.get_toolkit()),
+                                           fuel_delayer1(model.get_toolkit()),
+                                           fuel_delayer2(model.get_toolkit()),
+                                           drum(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -460,18 +494,6 @@ bool IEEEG1SB::setup_model_with_bpa_string(string data)
 
 void IEEEG1SB::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    droop.set_toolkit(toolkit);
-    servo_motor.set_toolkit(toolkit);
-    delayer1.set_toolkit(toolkit);
-    delayer2.set_toolkit(toolkit);
-    delayer3.set_toolkit(toolkit);
-    delayer4.set_toolkit(toolkit);
-    boiler_PI.set_toolkit(toolkit);
-    fuel_producer.set_toolkit(toolkit);
-    fuel_delayer1.set_toolkit(toolkit);
-    fuel_delayer2.set_toolkit(toolkit);
-    drum.set_toolkit(toolkit);
 }
 
 void IEEEG1SB::initialize()

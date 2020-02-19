@@ -1,7 +1,12 @@
 #include "header/model/sg_models/turbine_governor_model/IEESGO.h"
 #include "header/basic/utility.h"
 #include "header/STEPS.h"
-IEESGO::IEESGO(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit)
+IEESGO::IEESGO(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit),
+                                 governor_tuner(toolkit),
+                                 governor(toolkit),
+                                 high_pressure_turbine(toolkit),
+                                 medium_pressure_turbine(toolkit),
+                                 low_pressure_turbine(toolkit)
 {
     clear();
 }
@@ -25,7 +30,13 @@ void IEESGO::clear()
 
 void IEESGO::copy_from_const_model(const IEESGO& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    governor_tuner.set_toolkit(toolkit);
+    governor.set_toolkit(toolkit);
+    high_pressure_turbine.set_toolkit(toolkit);
+    medium_pressure_turbine.set_toolkit(toolkit);
+    low_pressure_turbine.set_toolkit(toolkit);
 
     clear();
 
@@ -42,7 +53,12 @@ void IEESGO::copy_from_const_model(const IEESGO& model)
     this->set_Pmin_in_pu(model.get_Pmin_in_pu());
 }
 
-IEESGO::IEESGO(const IEESGO&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit())
+IEESGO::IEESGO(const IEESGO&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit()),
+                                     governor_tuner(model.get_toolkit()),
+                                     governor(model.get_toolkit()),
+                                     high_pressure_turbine(model.get_toolkit()),
+                                     medium_pressure_turbine(model.get_toolkit()),
+                                     low_pressure_turbine(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -236,12 +252,6 @@ bool IEESGO::setup_model_with_bpa_string(string data)
 
 void IEESGO::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    governor_tuner.set_toolkit(toolkit);
-    governor.set_toolkit(toolkit);
-    high_pressure_turbine.set_toolkit(toolkit);
-    medium_pressure_turbine.set_toolkit(toolkit);
-    low_pressure_turbine.set_toolkit(toolkit);
 }
 
 void IEESGO::initialize()

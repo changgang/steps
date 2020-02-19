@@ -20,7 +20,9 @@ void GENCLS::clear()
 }
 void GENCLS::copy_from_const_model(const GENCLS& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    set_blocks_toolkit(toolkit);
 
     clear();
 
@@ -354,7 +356,6 @@ void GENCLS::set_model_data_with_name(string par_name, double value)
 double GENCLS::get_minimum_nonzero_time_constant_in_s()
 {
     double mint = INFINITE_THRESHOLD;
-    double h = get_H_in_s();
     if(get_H_in_s()!=0.0 and mint>get_H_in_s())
         mint = get_H_in_s();
     return mint;

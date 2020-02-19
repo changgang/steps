@@ -2,9 +2,9 @@
 #include "header/steps_namespace.h"
 #include "header/basic/utility.h"
 
-BLOCK::BLOCK()
+BLOCK::BLOCK(STEPS& toolkit)
 {
-    toolkit = nullptr;
+    set_toolkit(toolkit);
     set_limiter_type(NO_LIMITER);
     state = 0.0;
     new_state = 0.0;
@@ -21,7 +21,6 @@ BLOCK::~BLOCK()
     ;
 }
 
-
 void BLOCK::set_toolkit(STEPS& toolkit)
 {
     this->toolkit = (&toolkit);
@@ -29,15 +28,7 @@ void BLOCK::set_toolkit(STEPS& toolkit)
 
 STEPS& BLOCK::get_toolkit() const
 {
-    if(toolkit!=nullptr)
-        return *toolkit;
-    else
-    {
-        ostringstream osstream;
-        osstream<<"FATAL error. No toolkit is found in block.";
-        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
-        return *toolkit;
-    }
+    return *toolkit;
 }
 
 void BLOCK::set_state(double value)

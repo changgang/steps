@@ -6,28 +6,45 @@
 
 class STEPS_SPARSE_MATRIX;
 using namespace std;
-CIM6::CIM6(STEPS& toolkit) : LOAD_MODEL(toolkit)
+CIM6::CIM6(STEPS& toolkit) : LOAD_MODEL(toolkit),
+                             speed_block(toolkit),
+                             transient_block_x_axis(toolkit),
+                             subtransient_block_x_axis(toolkit),
+                             transient_block_y_axis(toolkit),
+                             subtransient_block_y_axis(toolkit)
 {
     clear();
 }
 
-CIM6::~CIM6()
+CIM6::CIM6(const CIM6& model) : LOAD_MODEL(model.get_toolkit()),
+                                speed_block(model.get_toolkit()),
+                                transient_block_x_axis(model.get_toolkit()),
+                                subtransient_block_x_axis(model.get_toolkit()),
+                                transient_block_y_axis(model.get_toolkit()),
+                                subtransient_block_y_axis(model.get_toolkit())
 {
+    copy_from_const_model(model);
 }
 
-void CIM6::clear()
+CIM6& CIM6::operator=(const CIM6& model)
 {
-    set_voltage_source_flag(true);
+    if(this==&model)
+        return *this;
 
-    set_model_float_parameter_count(23);
+    copy_from_const_model(model);
 
-    saturation.set_saturation_type(QUADRATIC_SATURATION_TYPE);
-    set_Mbase_in_MVA(0.0);
+    return (*this);
 }
 
 void CIM6::copy_from_const_model(const CIM6& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    speed_block.set_toolkit(toolkit);
+    transient_block_x_axis.set_toolkit(toolkit);
+    subtransient_block_x_axis.set_toolkit(toolkit);
+    transient_block_y_axis.set_toolkit(toolkit);
+    subtransient_block_y_axis.set_toolkit(toolkit);
 
     clear();
 
@@ -62,19 +79,18 @@ void CIM6::copy_from_const_model(const CIM6& model)
     this->set_Tnom_in_pu(model.get_Tnom_in_pu());
 }
 
-CIM6::CIM6(const CIM6& model) : LOAD_MODEL(model.get_toolkit())
+CIM6::~CIM6()
 {
-    copy_from_const_model(model);
 }
 
-CIM6& CIM6::operator=(const CIM6& model)
+void CIM6::clear()
 {
-    if(this==&model)
-        return *this;
+    set_voltage_source_flag(true);
 
-    copy_from_const_model(model);
+    set_model_float_parameter_count(23);
 
-    return (*this);
+    saturation.set_saturation_type(QUADRATIC_SATURATION_TYPE);
+    set_Mbase_in_MVA(0.0);
 }
 
 string CIM6::get_model_name() const
@@ -462,12 +478,6 @@ void CIM6::setup_block_toolkit_and_parameters()
 {
     setup_model_dynamic_parameters();
 
-    STEPS& toolkit = get_toolkit();
-    speed_block.set_toolkit(toolkit);
-    transient_block_x_axis.set_toolkit(toolkit);
-    subtransient_block_x_axis.set_toolkit(toolkit);
-    transient_block_y_axis.set_toolkit(toolkit);
-    subtransient_block_y_axis.set_toolkit(toolkit);
     saturation.set_saturation_type(QUADRATIC_SATURATION_TYPE);
 
     transient_block_x_axis.set_T_in_s(Tp);

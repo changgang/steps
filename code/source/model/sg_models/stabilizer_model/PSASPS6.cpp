@@ -13,7 +13,16 @@ It should be noted that, the first Dae-DC block of Pelec is a FIRST_ORDER_BLOCK 
 However, it is modeled as a DIFFERENTIAL_BLOCK in STEPS.
 Further check is necessary.
 ***/
-PSASPS6::PSASPS6(STEPS& toolkit) : STABILIZER_MODEL(toolkit)
+PSASPS6::PSASPS6(STEPS& toolkit) : STABILIZER_MODEL(toolkit),
+                                   speed_sensor(toolkit),
+                                   pelec_sensor(toolkit),
+                                   speed_dedc_block_1(toolkit),
+                                   speed_dedc_block_2(toolkit),
+                                   pelec_dedc_block_1(toolkit),
+                                   pelec_dedc_block_2(toolkit),
+                                   phase_tuner_1(toolkit),
+                                   phase_tuner_2(toolkit),
+                                   phase_tuner_3(toolkit)
 {
     clear();
 }
@@ -28,7 +37,17 @@ void PSASPS6::clear()
 
 void PSASPS6::copy_from_const_model(const PSASPS6& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    speed_sensor.set_toolkit(toolkit);
+    pelec_sensor.set_toolkit(toolkit);
+    speed_dedc_block_1.set_toolkit(toolkit);
+    speed_dedc_block_2.set_toolkit(toolkit);
+    pelec_dedc_block_1.set_toolkit(toolkit);
+    pelec_dedc_block_2.set_toolkit(toolkit);
+    phase_tuner_1.set_toolkit(toolkit);
+    phase_tuner_2.set_toolkit(toolkit);
+    phase_tuner_3.set_toolkit(toolkit);
 
     clear();
 
@@ -66,7 +85,16 @@ void PSASPS6::copy_from_const_model(const PSASPS6& model)
     this->set_Vsmin(model.get_Vsmin());
 
 }
-PSASPS6::PSASPS6(const PSASPS6& model) : STABILIZER_MODEL(model.get_toolkit())
+PSASPS6::PSASPS6(const PSASPS6& model) : STABILIZER_MODEL(model.get_toolkit()),
+                                         speed_sensor(model.get_toolkit()),
+                                         pelec_sensor(model.get_toolkit()),
+                                         speed_dedc_block_1(model.get_toolkit()),
+                                         speed_dedc_block_2(model.get_toolkit()),
+                                         pelec_dedc_block_1(model.get_toolkit()),
+                                         pelec_dedc_block_2(model.get_toolkit()),
+                                         phase_tuner_1(model.get_toolkit()),
+                                         phase_tuner_2(model.get_toolkit()),
+                                         phase_tuner_3(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -371,16 +399,6 @@ bool PSASPS6::setup_model_with_bpa_string(string data)
 
 void PSASPS6::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    speed_sensor.set_toolkit(toolkit);
-    pelec_sensor.set_toolkit(toolkit);
-    speed_dedc_block_1.set_toolkit(toolkit);
-    speed_dedc_block_2.set_toolkit(toolkit);
-    pelec_dedc_block_1.set_toolkit(toolkit);
-    pelec_dedc_block_2.set_toolkit(toolkit);
-    phase_tuner_1.set_toolkit(toolkit);
-    phase_tuner_2.set_toolkit(toolkit);
-    phase_tuner_3.set_toolkit(toolkit);
 }
 
 void PSASPS6::initialize()

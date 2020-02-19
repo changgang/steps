@@ -6,7 +6,10 @@
 #include <iostream>
 using namespace std;
 
-PVGU1::PVGU1(STEPS& toolkit) : PV_CONVERTER_MODEL(toolkit)
+PVGU1::PVGU1(STEPS& toolkit) : PV_CONVERTER_MODEL(toolkit),
+                               active_current_commander(toolkit),
+                               LVPL_voltage_sensor(toolkit),
+                               reactive_voltage_commander(toolkit)
 {
     clear();
 }
@@ -32,7 +35,11 @@ void PVGU1::clear()
 
 void PVGU1::copy_from_const_model(const PVGU1& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    active_current_commander.set_toolkit(toolkit);
+    LVPL_voltage_sensor.set_toolkit(toolkit);
+    reactive_voltage_commander.set_toolkit(toolkit);
 
     clear();
     set_converter_activer_current_command_T_in_s(model.get_converter_activer_current_command_T_in_s());
@@ -45,7 +52,10 @@ void PVGU1::copy_from_const_model(const PVGU1& model)
     set_HVRC_current_in_pu(model.get_HVRC_current_in_pu());
 }
 
-PVGU1::PVGU1(const PVGU1& model):PV_CONVERTER_MODEL(model.get_toolkit())
+PVGU1::PVGU1(const PVGU1& model):PV_CONVERTER_MODEL(model.get_toolkit()),
+                                 active_current_commander(model.get_toolkit()),
+                                 LVPL_voltage_sensor(model.get_toolkit()),
+                                 reactive_voltage_commander(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -226,10 +236,6 @@ bool PVGU1::setup_model_with_bpa_string(string data)
 
 void PVGU1::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    active_current_commander.set_toolkit(toolkit);
-    LVPL_voltage_sensor.set_toolkit(toolkit);
-    reactive_voltage_commander.set_toolkit(toolkit);
 }
 
 void PVGU1::initialize()

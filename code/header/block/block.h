@@ -11,7 +11,7 @@ using namespace std;
 class BLOCK
 {
     public:
-        BLOCK();
+        BLOCK(STEPS& toolkit);
         virtual ~BLOCK();
 
         void set_toolkit(STEPS& toolkit);

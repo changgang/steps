@@ -5,7 +5,8 @@
 #include <iostream>
 using namespace std;
 
-UVLS::UVLS(STEPS& toolkit) : LOAD_VOLTAGE_RELAY_MODEL(toolkit)
+UVLS::UVLS(STEPS& toolkit) : LOAD_VOLTAGE_RELAY_MODEL(toolkit),
+                             voltage_sensor(toolkit)
 {
     clear();
 }
@@ -39,7 +40,9 @@ void UVLS::clear()
 }
 void UVLS::copy_from_const_model(const UVLS& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    voltage_sensor.set_toolkit(toolkit);
 
     clear();
     set_voltage_sensor_time_in_s(model.get_voltage_sensor_time_in_s());
@@ -54,7 +57,8 @@ void UVLS::copy_from_const_model(const UVLS& model)
     this->set_breaker_time_in_s(model.get_breaker_time_in_s());
 }
 
-UVLS::UVLS(const UVLS& model) : LOAD_VOLTAGE_RELAY_MODEL(model.get_toolkit())
+UVLS::UVLS(const UVLS& model) : LOAD_VOLTAGE_RELAY_MODEL(model.get_toolkit()),
+                                voltage_sensor(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -217,7 +221,6 @@ bool UVLS::setup_model_with_bpa_string(string data)
 void UVLS::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit();
-    voltage_sensor.set_toolkit(toolkit);
     for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
     {
         stage_timer[i].set_toolkit(toolkit);

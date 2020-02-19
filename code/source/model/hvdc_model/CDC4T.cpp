@@ -7,30 +7,35 @@
 #include <iostream>
 
 using namespace std;
-CDC4T::CDC4T(STEPS& toolkit) : HVDC_MODEL(toolkit)
+CDC4T::CDC4T(STEPS& toolkit) : HVDC_MODEL(toolkit),
+                               inverter_dc_voltage_sensor(toolkit),
+                               dc_current_sensor(toolkit)
 {
     clear();
 }
 
-CDC4T::~CDC4T()
+CDC4T::CDC4T(const CDC4T& model) : HVDC_MODEL(model.get_toolkit()),
+                                   inverter_dc_voltage_sensor(model.get_toolkit()),
+                                   dc_current_sensor(model.get_toolkit())
 {
+    copy_from_const_model(model);
 }
 
-void CDC4T::clear()
+CDC4T& CDC4T::operator=(const CDC4T& model)
 {
-    set_model_float_parameter_count(22);
+    if(this==(&model)) return *this;
 
-    set_converter_dynamic_max_alpha_or_gamma_in_deg(RECTIFIER, 90.0);
-    set_converter_dynamic_max_alpha_or_gamma_in_deg(INVERTER, 90.0);
-    inverter_dc_voltage_sensor.set_limiter_type(NO_LIMITER);
-    inverter_dc_voltage_sensor.set_K(1.0);
-    dc_current_sensor.set_limiter_type(NO_LIMITER);
-    dc_current_sensor.set_K(1.0);
+    copy_from_const_model(model);
+
+    return (*this);
 }
 
 void CDC4T::copy_from_const_model(const CDC4T& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    inverter_dc_voltage_sensor.set_toolkit(toolkit);
+    dc_current_sensor.set_toolkit(toolkit);
 
     clear();
     this->set_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER,model.get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER));
@@ -52,18 +57,20 @@ void CDC4T::copy_from_const_model(const CDC4T& model)
     this->set_minimum_time_in_switched_mode_in_s(model.get_minimum_time_in_switched_mode_in_s());
 }
 
-CDC4T::CDC4T(const CDC4T& model) : HVDC_MODEL(model.get_toolkit())
+CDC4T::~CDC4T()
 {
-    copy_from_const_model(model);
 }
 
-CDC4T& CDC4T::operator=(const CDC4T& model)
+void CDC4T::clear()
 {
-    if(this==(&model)) return *this;
+    set_model_float_parameter_count(22);
 
-    copy_from_const_model(model);
-
-    return (*this);
+    set_converter_dynamic_max_alpha_or_gamma_in_deg(RECTIFIER, 90.0);
+    set_converter_dynamic_max_alpha_or_gamma_in_deg(INVERTER, 90.0);
+    inverter_dc_voltage_sensor.set_limiter_type(NO_LIMITER);
+    inverter_dc_voltage_sensor.set_K(1.0);
+    dc_current_sensor.set_limiter_type(NO_LIMITER);
+    dc_current_sensor.set_K(1.0);
 }
 
 string CDC4T::get_model_name() const
@@ -225,10 +232,6 @@ bool CDC4T::setup_model_with_bpa_string(string data)
 void CDC4T::setup_block_toolkit_and_parameters()
 {
     set_common_timer_toolkit();
-
-    STEPS& toolkit = get_toolkit();
-    inverter_dc_voltage_sensor.set_toolkit(toolkit);
-    dc_current_sensor.set_toolkit(toolkit);
 }
 
 void CDC4T::initialize()

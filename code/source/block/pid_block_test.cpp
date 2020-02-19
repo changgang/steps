@@ -11,7 +11,7 @@
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
 
-PID_BLOCK_TEST::PID_BLOCK_TEST()
+PID_BLOCK_TEST::PID_BLOCK_TEST() : block(default_toolkit)
 {
     TEST_ADD(PID_BLOCK_TEST::test_constructor);
     TEST_ADD(PID_BLOCK_TEST::test_set_get_Kp);
@@ -23,7 +23,6 @@ PID_BLOCK_TEST::PID_BLOCK_TEST()
 
 void PID_BLOCK_TEST::setup()
 {
-    block.set_toolkit(default_toolkit);
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 }
 

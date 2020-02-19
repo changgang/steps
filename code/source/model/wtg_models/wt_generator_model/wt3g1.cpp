@@ -6,7 +6,11 @@
 #include <iostream>
 using namespace std;
 
-WT3G1::WT3G1(STEPS& toolkit) : WT_GENERATOR_MODEL(toolkit)
+WT3G1::WT3G1(STEPS& toolkit) : WT_GENERATOR_MODEL(toolkit),
+                               active_current_commander(toolkit),
+                               reactive_voltage_commander(toolkit),
+                               PLL_frequency_integrator(toolkit),
+                               PLL_angle_integrator(toolkit)
 {
     clear();
 }
@@ -38,7 +42,12 @@ void WT3G1::clear()
 
 void WT3G1::copy_from_const_model(const WT3G1& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    active_current_commander.set_toolkit(toolkit);
+    reactive_voltage_commander.set_toolkit(toolkit);
+    PLL_frequency_integrator.set_toolkit(toolkit);
+    PLL_angle_integrator.set_toolkit(toolkit);
 
     clear();
     set_Xeq_in_pu(model.get_Xeq_in_pu());
@@ -47,7 +56,11 @@ void WT3G1::copy_from_const_model(const WT3G1& model)
     set_PLLmax(model.get_PLLmax());
 }
 
-WT3G1::WT3G1(const WT3G1& model):WT_GENERATOR_MODEL(model.get_toolkit())
+WT3G1::WT3G1(const WT3G1& model):WT_GENERATOR_MODEL(model.get_toolkit()),
+                                 active_current_commander(model.get_toolkit()),
+                                 reactive_voltage_commander(model.get_toolkit()),
+                                 PLL_frequency_integrator(model.get_toolkit()),
+                                 PLL_angle_integrator(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -203,11 +216,6 @@ bool WT3G1::setup_model_with_bpa_string(string data)
 
 void WT3G1::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    active_current_commander.set_toolkit(toolkit);
-    reactive_voltage_commander.set_toolkit(toolkit);
-    PLL_frequency_integrator.set_toolkit(toolkit);
-    PLL_angle_integrator.set_toolkit(toolkit);
 }
 
 void WT3G1::initialize()

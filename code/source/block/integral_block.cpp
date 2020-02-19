@@ -6,7 +6,7 @@
 
 using namespace std;
 
-INTEGRAL_BLOCK::INTEGRAL_BLOCK()
+INTEGRAL_BLOCK::INTEGRAL_BLOCK(STEPS& toolkit) : BLOCK(toolkit)
 {
     set_T_in_s(999.0);
 }

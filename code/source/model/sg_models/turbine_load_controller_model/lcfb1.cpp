@@ -4,7 +4,9 @@
 #include <cstdio>
 #include "header/basic/utility.h"
 #include <vector>
-LCFB1::LCFB1(STEPS& toolkit) : TURBINE_LOAD_CONTROLLER_MODEL(toolkit)
+LCFB1::LCFB1(STEPS& toolkit) : TURBINE_LOAD_CONTROLLER_MODEL(toolkit),
+                               Pelec_sensor(toolkit),
+                               error_integrator(toolkit)
 {
     clear();
 }
@@ -36,7 +38,10 @@ void LCFB1::clear()
 
 void LCFB1::copy_from_const_model(const LCFB1& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    Pelec_sensor.set_toolkit(toolkit);
+    error_integrator.set_toolkit(toolkit);
 
     clear();
 
@@ -51,7 +56,9 @@ void LCFB1::copy_from_const_model(const LCFB1& model)
     this->set_Irmax(model.get_Irmax());
 }
 
-LCFB1::LCFB1(const LCFB1& model) : TURBINE_LOAD_CONTROLLER_MODEL(model.get_toolkit())
+LCFB1::LCFB1(const LCFB1& model) : TURBINE_LOAD_CONTROLLER_MODEL(model.get_toolkit()),
+                                   Pelec_sensor(model.get_toolkit()),
+                                   error_integrator(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -245,9 +252,6 @@ bool LCFB1::setup_model_with_bpa_string(string data)
 
 void LCFB1::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    Pelec_sensor.set_toolkit(toolkit);
-    error_integrator.set_toolkit(toolkit);
 }
 
 void LCFB1::initialize()

@@ -6,7 +6,11 @@
 #include <iostream>
 
 using namespace std;
-PSASPE13::PSASPE13(STEPS& toolkit) : EXCITER_MODEL(toolkit)
+PSASPE13::PSASPE13(STEPS& toolkit) : EXCITER_MODEL(toolkit),
+                                     sensor(toolkit),
+                                     tuner(toolkit),
+                                     regulator(toolkit),
+                                     feedbacker(toolkit)
 {
     clear();
 }
@@ -25,7 +29,12 @@ void PSASPE13::clear()
 }
 void PSASPE13::copy_from_const_model(const PSASPE13& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    sensor.set_toolkit(toolkit);
+    tuner.set_toolkit(toolkit);
+    regulator.set_toolkit(toolkit);
+    feedbacker.set_toolkit(toolkit);
 
     clear();
     this->set_TR_in_s(model.get_TR_in_s());
@@ -44,7 +53,11 @@ void PSASPE13::copy_from_const_model(const PSASPE13& model)
     this->set_KC(model.get_KC());
 }
 
-PSASPE13::PSASPE13(const PSASPE13& model) : EXCITER_MODEL(model.get_toolkit())
+PSASPE13::PSASPE13(const PSASPE13& model) : EXCITER_MODEL(model.get_toolkit()),
+                                            sensor(model.get_toolkit()),
+                                            tuner(model.get_toolkit()),
+                                            regulator(model.get_toolkit()),
+                                            feedbacker(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -272,11 +285,6 @@ bool PSASPE13::setup_model_with_bpa_string(string data)
 
 void PSASPE13::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    sensor.set_toolkit(toolkit);
-    tuner.set_toolkit(toolkit);
-    regulator.set_toolkit(toolkit);
-    feedbacker.set_toolkit(toolkit);
 }
 
 void PSASPE13::initialize()

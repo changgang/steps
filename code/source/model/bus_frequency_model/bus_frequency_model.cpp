@@ -7,8 +7,9 @@
 
 using namespace std;
 
-BUS_FREQUENCY_MODEL::BUS_FREQUENCY_MODEL()
+BUS_FREQUENCY_MODEL::BUS_FREQUENCY_MODEL(STEPS& toolkit) : frequency_block(toolkit)
 {
+    set_toolkit(toolkit);
     frequency_block.set_K(1.0/(2.0*PI));
     bus_ptr = NULL;
 }
@@ -16,6 +17,16 @@ BUS_FREQUENCY_MODEL::BUS_FREQUENCY_MODEL()
 BUS_FREQUENCY_MODEL::~BUS_FREQUENCY_MODEL()
 {
     ;
+}
+
+void BUS_FREQUENCY_MODEL::set_toolkit(STEPS& toolkit)
+{
+    this->toolkit = (&toolkit);
+}
+
+STEPS& BUS_FREQUENCY_MODEL::get_toolkit() const
+{
+    return *toolkit;
 }
 
 void BUS_FREQUENCY_MODEL::set_bus_pointer(BUS* bus)
@@ -38,18 +49,12 @@ unsigned int BUS_FREQUENCY_MODEL::get_bus() const
 
 void BUS_FREQUENCY_MODEL::initialize()
 {
-    ostringstream osstream;
-
     if(bus_ptr!=NULL)
     {
         fbase_Hz = bus_ptr->get_base_frequency_in_Hz();
         tbase_s = bus_ptr->get_base_period_in_s();
 
-        STEPS& toolkit = bus_ptr->get_toolkit();
-        set_toolkit(toolkit);
-
-        double DELT = toolkit.get_dynamic_simulation_time_step_in_s();
-        frequency_block.set_toolkit(toolkit);
+        double DELT = toolkit->get_dynamic_simulation_time_step_in_s();
         frequency_block.set_T_in_s(DELT*4.0);
 
         frequency_block.set_input(bus_ptr->get_positive_sequence_angle_in_rad());
@@ -58,9 +63,9 @@ void BUS_FREQUENCY_MODEL::initialize()
     }
     else
     {
+        ostringstream osstream;
         osstream<<"Warning. Bus frequency model is not properly set since bus pointer is NULL. This line should never appear.";
-        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
-        return;
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -117,18 +122,4 @@ double BUS_FREQUENCY_MODEL::get_frequency_in_pu() const
 double BUS_FREQUENCY_MODEL::get_frequency_in_Hz() const
 {
     return fbase_Hz+get_frequency_deviation_in_Hz();
-}
-
-
-bool BUS_FREQUENCY_MODEL::is_valid() const
-{
-    return true; // function is disabled
-}
-void BUS_FREQUENCY_MODEL::check()
-{
-    ; // function is disabled
-}
-void BUS_FREQUENCY_MODEL::clear()
-{
-    ; // function is disabled
 }

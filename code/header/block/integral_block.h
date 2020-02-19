@@ -7,7 +7,7 @@ class INTEGRAL_BLOCK : public BLOCK
 {
     // 1/(sT)
     public:
-        INTEGRAL_BLOCK();
+        INTEGRAL_BLOCK(STEPS& toolkit);
         ~INTEGRAL_BLOCK();
 
         void set_T_in_s(double T);

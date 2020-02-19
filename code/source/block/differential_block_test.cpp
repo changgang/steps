@@ -11,7 +11,7 @@
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
 
-DIFFERENTIAL_BLOCK_TEST::DIFFERENTIAL_BLOCK_TEST()
+DIFFERENTIAL_BLOCK_TEST::DIFFERENTIAL_BLOCK_TEST() : block(default_toolkit)
 {
     TEST_ADD(DIFFERENTIAL_BLOCK_TEST::test_constructor);
     TEST_ADD(DIFFERENTIAL_BLOCK_TEST::test_set_get_K);
@@ -21,7 +21,6 @@ DIFFERENTIAL_BLOCK_TEST::DIFFERENTIAL_BLOCK_TEST()
 
 void DIFFERENTIAL_BLOCK_TEST::setup()
 {
-    block.set_toolkit(default_toolkit);
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 }
 

@@ -19,7 +19,9 @@ void GENROU::clear()
 }
 void GENROU::copy_from_const_model(const GENROU& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    set_blocks_toolkit(toolkit);
 
     clear();
 

@@ -8,7 +8,7 @@ class LEAD_LAG_BLOCK : public BLOCK
 {
     // K(1+sT1)/(1+sT2)
     public:
-        LEAD_LAG_BLOCK();
+        LEAD_LAG_BLOCK(STEPS& toolkit);
         ~LEAD_LAG_BLOCK();
 
         void set_K(double K);

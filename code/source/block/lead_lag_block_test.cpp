@@ -11,7 +11,7 @@
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
 
-LEAD_LAG_BLOCK_TEST::LEAD_LAG_BLOCK_TEST()
+LEAD_LAG_BLOCK_TEST::LEAD_LAG_BLOCK_TEST() : block(default_toolkit)
 {
     TEST_ADD(LEAD_LAG_BLOCK_TEST::test_constructor);
     TEST_ADD(LEAD_LAG_BLOCK_TEST::test_set_get_K);
@@ -24,7 +24,6 @@ LEAD_LAG_BLOCK_TEST::LEAD_LAG_BLOCK_TEST()
 
 void LEAD_LAG_BLOCK_TEST::setup()
 {
-    block.set_toolkit(default_toolkit);
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 }
 

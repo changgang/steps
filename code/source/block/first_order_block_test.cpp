@@ -11,7 +11,7 @@
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
 
-FIRST_ORDER_BLOCK_TEST::FIRST_ORDER_BLOCK_TEST()
+FIRST_ORDER_BLOCK_TEST::FIRST_ORDER_BLOCK_TEST() : block(default_toolkit)
 {
     TEST_ADD(FIRST_ORDER_BLOCK_TEST::test_constructor);
     TEST_ADD(FIRST_ORDER_BLOCK_TEST::test_set_get_K);
@@ -23,7 +23,6 @@ FIRST_ORDER_BLOCK_TEST::FIRST_ORDER_BLOCK_TEST()
 
 void FIRST_ORDER_BLOCK_TEST::setup()
 {
-    block.set_toolkit(default_toolkit);
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 }
 

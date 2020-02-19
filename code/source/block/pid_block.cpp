@@ -6,7 +6,7 @@
 
 using namespace std;
 
-PID_BLOCK::PID_BLOCK()
+PID_BLOCK::PID_BLOCK(STEPS& toolkit) : BLOCK(toolkit),p_block(toolkit),i_block(toolkit),d_block(toolkit)
 {
     set_Kp(1.0);
     set_Ki(1.0);
@@ -152,10 +152,6 @@ double PID_BLOCK::get_store() const
 void PID_BLOCK::initialize()
 {
     ostringstream osstream;
-
-    p_block.set_toolkit(get_toolkit());
-    i_block.set_toolkit(get_toolkit());
-    d_block.set_toolkit(get_toolkit());
 
     p_block.set_output(0.0);
     i_block.set_output(get_output());

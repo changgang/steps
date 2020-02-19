@@ -5,7 +5,12 @@
 #include <istream>
 #include <iostream>
 using namespace std;
-PVCV0::PVCV0(STEPS& toolkit) : PV_CONVERTER_MODEL(toolkit)
+PVCV0::PVCV0(STEPS& toolkit) : PV_CONVERTER_MODEL(toolkit),
+                               active_current_commander(toolkit),
+                               LVPL_voltage_sensor(toolkit),
+                               reactive_voltage_commander(toolkit),
+                               PLL_frequency_integrator(toolkit),
+                               PLL_angle_integrator(toolkit)
 {
     clear();
 }
@@ -33,7 +38,13 @@ void PVCV0::clear()
 
 void PVCV0::copy_from_const_model(const PVCV0& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    active_current_commander.set_toolkit(toolkit);
+    LVPL_voltage_sensor.set_toolkit(toolkit);
+    reactive_voltage_commander.set_toolkit(toolkit);
+    PLL_frequency_integrator.set_toolkit(toolkit);
+    PLL_angle_integrator.set_toolkit(toolkit);
 
     clear();
     set_current_source_flag(model.get_current_source_flag());
@@ -52,7 +63,12 @@ void PVCV0::copy_from_const_model(const PVCV0& model)
     set_PLLmin(model.get_PLLmin());
 }
 
-PVCV0::PVCV0(const PVCV0& model):PV_CONVERTER_MODEL(model.get_toolkit())
+PVCV0::PVCV0(const PVCV0& model):PV_CONVERTER_MODEL(model.get_toolkit()),
+                                 active_current_commander(model.get_toolkit()),
+                                 LVPL_voltage_sensor(model.get_toolkit()),
+                                 reactive_voltage_commander(model.get_toolkit()),
+                                 PLL_frequency_integrator(model.get_toolkit()),
+                                 PLL_angle_integrator(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -279,9 +295,6 @@ bool PVCV0::setup_model_with_bpa_string(string data)
 
 void PVCV0::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    LVPL_voltage_sensor.set_toolkit(toolkit);
-    reactive_voltage_commander.set_toolkit(toolkit);
 }
 
 void PVCV0::initialize()

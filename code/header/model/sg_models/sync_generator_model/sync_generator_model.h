@@ -20,6 +20,7 @@ class SYNC_GENERATOR_MODEL : public SG_MODEL
     public:
         SYNC_GENERATOR_MODEL(STEPS& toolkit);
         virtual ~SYNC_GENERATOR_MODEL();
+        void set_blocks_toolkit(STEPS& toolkit);
 
     public: // sync generator common
         virtual string get_model_type() const;

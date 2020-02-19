@@ -6,7 +6,7 @@
 
 using namespace std;
 
-PD_BLOCK::PD_BLOCK()
+PD_BLOCK::PD_BLOCK(STEPS& toolkit) : BLOCK(toolkit), p_block(toolkit), d_block(toolkit)
 {
     set_Kp(1.0);
     set_Kd(1.0);
@@ -85,9 +85,6 @@ double PD_BLOCK::get_differentiator_store() const
 
 void PD_BLOCK::initialize()
 {
-    p_block.set_toolkit(get_toolkit());
-    d_block.set_toolkit(get_toolkit());
-
     double y = get_output();
     p_block.set_output(y);
     d_block.set_input(0.0);

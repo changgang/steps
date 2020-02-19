@@ -9,7 +9,7 @@ class PD_BLOCK : public BLOCK
 {
     // Kp+sKd/(1+sTd)
     public:
-        PD_BLOCK();
+        PD_BLOCK(STEPS& toolkit);
         ~PD_BLOCK();
 
         void set_Kp(double K);

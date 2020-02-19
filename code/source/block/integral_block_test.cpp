@@ -11,7 +11,7 @@
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
 
-INTEGRAL_BLOCK_TEST::INTEGRAL_BLOCK_TEST()
+INTEGRAL_BLOCK_TEST::INTEGRAL_BLOCK_TEST() : block(default_toolkit)
 {
     TEST_ADD(INTEGRAL_BLOCK_TEST::test_constructor);
     TEST_ADD(INTEGRAL_BLOCK_TEST::test_set_get_T);
@@ -23,7 +23,6 @@ INTEGRAL_BLOCK_TEST::INTEGRAL_BLOCK_TEST()
 
 void INTEGRAL_BLOCK_TEST::setup()
 {
-    block.set_toolkit(default_toolkit);
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 }
 

@@ -6,7 +6,13 @@
 #include <iostream>
 
 using namespace std;
-PSASPE14::PSASPE14(STEPS& toolkit) : EXCITER_MODEL(toolkit)
+PSASPE14::PSASPE14(STEPS& toolkit) : EXCITER_MODEL(toolkit),
+                                     sensor(toolkit),
+                                     regulator(toolkit),
+                                     ifd_feedback(toolkit),
+                                     rectifier(toolkit),
+                                     regulator_pi(toolkit),
+                                     current_pi(toolkit)
 {
     clear();
 }
@@ -23,7 +29,14 @@ void PSASPE14::clear()
 
 void PSASPE14::copy_from_const_model(const PSASPE14& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    sensor.set_toolkit(toolkit);
+    regulator.set_toolkit(toolkit);
+    regulator_pi.set_toolkit(toolkit);
+    ifd_feedback.set_toolkit(toolkit);
+    current_pi.set_toolkit(toolkit);
+    rectifier.set_toolkit(toolkit);
 
     clear();
 
@@ -46,7 +59,13 @@ void PSASPE14::copy_from_const_model(const PSASPE14& model)
     set_Efdmin_in_pu(model.get_Efdmin_in_pu());
 }
 
-PSASPE14::PSASPE14(const PSASPE14& model) : EXCITER_MODEL(model.get_toolkit())
+PSASPE14::PSASPE14(const PSASPE14& model) : EXCITER_MODEL(model.get_toolkit()),
+                                            sensor(model.get_toolkit()),
+                                            regulator(model.get_toolkit()),
+                                            ifd_feedback(model.get_toolkit()),
+                                            rectifier(model.get_toolkit()),
+                                            regulator_pi(model.get_toolkit()),
+                                            current_pi(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -291,14 +310,6 @@ bool PSASPE14::setup_model_with_bpa_string(string data)
 
 void PSASPE14::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-
-    sensor.set_toolkit(toolkit);
-    regulator.set_toolkit(toolkit);
-    regulator_pi.set_toolkit(toolkit);
-    ifd_feedback.set_toolkit(toolkit);
-    current_pi.set_toolkit(toolkit);
-    rectifier.set_toolkit(toolkit);
 }
 
 void PSASPE14::initialize()

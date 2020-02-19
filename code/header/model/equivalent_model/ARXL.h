@@ -11,8 +11,8 @@ class ARXL : public EQUIVALENT_MODEL
     public:
         ARXL(STEPS& toolkit);
         ARXL(const ARXL& model);
-        virtual ~ARXL();
         virtual ARXL& operator=(const ARXL& model);
+        virtual ~ARXL();
 
         virtual string get_model_name() const;
 

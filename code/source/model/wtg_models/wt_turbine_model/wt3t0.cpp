@@ -2,7 +2,11 @@
 #include "header/basic/utility.h"
 #include "header/STEPS.h"
 
-WT3T0::WT3T0(STEPS& toolkit) : WT_TURBINE_MODEL(toolkit)
+WT3T0::WT3T0(STEPS& toolkit) : WT_TURBINE_MODEL(toolkit),
+                               shaft_twist_block(toolkit),
+                               turbine_inertia_block(toolkit),
+                               generator_inertia_block(toolkit),
+                               generator_rotor_angle_block(toolkit)
 {
     clear();
 }
@@ -18,7 +22,12 @@ void WT3T0::clear()
 
 void WT3T0::copy_from_const_model(const WT3T0& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    shaft_twist_block.set_toolkit(toolkit);
+    turbine_inertia_block.set_toolkit(toolkit);
+    generator_inertia_block.set_toolkit(toolkit);
+    generator_rotor_angle_block.set_toolkit(toolkit);
 
     clear();
 
@@ -29,7 +38,11 @@ void WT3T0::copy_from_const_model(const WT3T0& model)
     set_Dshaft_in_pu(model.get_Dshaft_in_pu());
 }
 
-WT3T0::WT3T0(const WT3T0& model) : WT_TURBINE_MODEL(model.get_toolkit())
+WT3T0::WT3T0(const WT3T0& model) : WT_TURBINE_MODEL(model.get_toolkit()),
+                                   shaft_twist_block(model.get_toolkit()),
+                                   turbine_inertia_block(model.get_toolkit()),
+                                   generator_inertia_block(model.get_toolkit()),
+                                   generator_rotor_angle_block(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -143,11 +156,6 @@ bool WT3T0::setup_model_with_bpa_string(string data)
 
 void WT3T0::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    shaft_twist_block.set_toolkit(toolkit);
-    turbine_inertia_block.set_toolkit(toolkit);
-    generator_inertia_block.set_toolkit(toolkit);
-    generator_rotor_angle_block.set_toolkit(toolkit);
 }
 
 void WT3T0::initialize()

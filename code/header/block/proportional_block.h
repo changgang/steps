@@ -7,7 +7,7 @@ class PROPORTIONAL_BLOCK : public BLOCK
 {
     // K
     public:
-        PROPORTIONAL_BLOCK();
+        PROPORTIONAL_BLOCK(STEPS& toolkit);
         ~PROPORTIONAL_BLOCK();
 
         void set_K(double K);

@@ -4,7 +4,13 @@
 #include <cstdio>
 #include "header/basic/utility.h"
 #include <vector>
-PSASPS5::PSASPS5(STEPS& toolkit) : STABILIZER_MODEL(toolkit)
+PSASPS5::PSASPS5(STEPS& toolkit) : STABILIZER_MODEL(toolkit),
+                                   sensor_1(toolkit),
+                                   sensor_2(toolkit),
+                                   dedc_block_1(toolkit),
+                                   dedc_block_2(toolkit),
+                                   dedc_block_3(toolkit),
+                                   speed_amplifier(toolkit)
 {
     clear();
 }
@@ -20,7 +26,14 @@ void PSASPS5::clear()
 
 void PSASPS5::copy_from_const_model(const PSASPS5& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    sensor_1.set_toolkit(toolkit);
+    sensor_2.set_toolkit(toolkit);
+    dedc_block_1.set_toolkit(toolkit);
+    dedc_block_2.set_toolkit(toolkit);
+    dedc_block_3.set_toolkit(toolkit);
+    speed_amplifier.set_toolkit(toolkit);
 
     clear();
 
@@ -39,7 +52,13 @@ void PSASPS5::copy_from_const_model(const PSASPS5& model)
     this->set_Vsmin(model.get_Vsmin());
 }
 
-PSASPS5::PSASPS5(const PSASPS5& model) : STABILIZER_MODEL(model.get_toolkit())
+PSASPS5::PSASPS5(const PSASPS5& model) : STABILIZER_MODEL(model.get_toolkit()),
+                                         sensor_1(model.get_toolkit()),
+                                         sensor_2(model.get_toolkit()),
+                                         dedc_block_1(model.get_toolkit()),
+                                         dedc_block_2(model.get_toolkit()),
+                                         dedc_block_3(model.get_toolkit()),
+                                         speed_amplifier(model.get_toolkit())
 {
     copy_from_const_model(model);
 }

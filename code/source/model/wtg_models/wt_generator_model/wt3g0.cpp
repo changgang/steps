@@ -6,7 +6,12 @@
 #include <iostream>
 using namespace std;
 
-WT3G0::WT3G0(STEPS& toolkit) : WT_GENERATOR_MODEL(toolkit)
+WT3G0::WT3G0(STEPS& toolkit) : WT_GENERATOR_MODEL(toolkit),
+                               active_current_commander(toolkit),
+                               LVPL_voltage_sensor(toolkit),
+                               reactive_voltage_commander(toolkit),
+                               PLL_frequency_integrator(toolkit),
+                               PLL_angle_integrator(toolkit)
 {
     clear();
 }
@@ -36,7 +41,13 @@ void WT3G0::clear()
 
 void WT3G0::copy_from_const_model(const WT3G0& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    active_current_commander.set_toolkit(toolkit);
+    LVPL_voltage_sensor.set_toolkit(toolkit);
+    reactive_voltage_commander.set_toolkit(toolkit);
+    PLL_frequency_integrator.set_toolkit(toolkit);
+    PLL_angle_integrator.set_toolkit(toolkit);
 
     clear();
     set_converter_activer_current_command_T_in_s(model.get_converter_activer_current_command_T_in_s());
@@ -54,7 +65,12 @@ void WT3G0::copy_from_const_model(const WT3G0& model)
     set_PLLmin(model.get_PLLmin());
 }
 
-WT3G0::WT3G0(const WT3G0& model):WT_GENERATOR_MODEL(model.get_toolkit())
+WT3G0::WT3G0(const WT3G0& model):WT_GENERATOR_MODEL(model.get_toolkit()),
+                                 active_current_commander(model.get_toolkit()),
+                                 LVPL_voltage_sensor(model.get_toolkit()),
+                                 reactive_voltage_commander(model.get_toolkit()),
+                                 PLL_frequency_integrator(model.get_toolkit()),
+                                 PLL_angle_integrator(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -286,12 +302,6 @@ bool WT3G0::setup_model_with_bpa_string(string data)
 
 void WT3G0::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    active_current_commander.set_toolkit(toolkit);
-    LVPL_voltage_sensor.set_toolkit(toolkit);
-    reactive_voltage_commander.set_toolkit(toolkit);
-    PLL_frequency_integrator.set_toolkit(toolkit);
-    PLL_angle_integrator.set_toolkit(toolkit);
 }
 
 void WT3G0::initialize()

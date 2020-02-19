@@ -8,7 +8,7 @@ class PI_BLOCK : public BLOCK
 {
     // Kp+Ki/s
     public:
-        PI_BLOCK();
+        PI_BLOCK(STEPS& toolkit);
         ~PI_BLOCK();
 
         void set_Kp(double K);

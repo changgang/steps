@@ -3,7 +3,7 @@
 #include "header/STEPS.h"
 #include <cstdio>
 
-PROPORTIONAL_BLOCK::PROPORTIONAL_BLOCK()
+PROPORTIONAL_BLOCK::PROPORTIONAL_BLOCK(STEPS& toolkit) : BLOCK(toolkit)
 {
     set_K(1.0);
 }

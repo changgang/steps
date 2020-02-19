@@ -4,7 +4,14 @@
 #include <cstdio>
 #include "header/basic/utility.h"
 #include <vector>
-IEE2ST::IEE2ST(STEPS& toolkit) : STABILIZER_MODEL(toolkit)
+IEE2ST::IEE2ST(STEPS& toolkit) : STABILIZER_MODEL(toolkit),
+                                 sensor_1(toolkit),
+                                 sensor_2(toolkit),
+                                 filter(toolkit),
+                                 alternative_filter(toolkit),
+                                 phase_tuner_1(toolkit),
+                                 phase_tuner_2(toolkit),
+                                 phase_tuner_3(toolkit)
 {
     clear();
 }
@@ -20,7 +27,15 @@ void IEE2ST::clear()
 
 void IEE2ST::copy_from_const_model(const IEE2ST& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    sensor_1.set_toolkit(toolkit);
+    sensor_2.set_toolkit(toolkit);
+    filter.set_toolkit(toolkit);
+    alternative_filter.set_toolkit(toolkit);
+    phase_tuner_1.set_toolkit(toolkit);
+    phase_tuner_2.set_toolkit(toolkit);
+    phase_tuner_3.set_toolkit(toolkit);
 
     clear();
 
@@ -54,7 +69,14 @@ void IEE2ST::copy_from_const_model(const IEE2ST& model)
     this->set_Vcmin(model.get_Vcmin());
 
 }
-IEE2ST::IEE2ST(const IEE2ST& model) : STABILIZER_MODEL(model.get_toolkit())
+IEE2ST::IEE2ST(const IEE2ST& model) : STABILIZER_MODEL(model.get_toolkit()),
+                                      sensor_1(model.get_toolkit()),
+                                      sensor_2(model.get_toolkit()),
+                                      filter(model.get_toolkit()),
+                                      alternative_filter(model.get_toolkit()),
+                                      phase_tuner_1(model.get_toolkit()),
+                                      phase_tuner_2(model.get_toolkit()),
+                                      phase_tuner_3(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -314,14 +336,6 @@ bool IEE2ST::setup_model_with_bpa_string(string data)
 
 void IEE2ST::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    sensor_1.set_toolkit(toolkit);
-    sensor_2.set_toolkit(toolkit);
-    filter.set_toolkit(toolkit);
-    alternative_filter.set_toolkit(toolkit);
-    phase_tuner_1.set_toolkit(toolkit);
-    phase_tuner_2.set_toolkit(toolkit);
-    phase_tuner_3.set_toolkit(toolkit);
 }
 
 void IEE2ST::initialize()

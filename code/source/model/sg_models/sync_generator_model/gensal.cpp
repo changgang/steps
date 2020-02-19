@@ -21,7 +21,9 @@ void GENSAL::clear()
 
 void GENSAL::copy_from_const_model(const GENSAL& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    set_blocks_toolkit(toolkit);
 
     clear();
     this->set_Tj_in_s(model.get_Tj_in_s());

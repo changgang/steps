@@ -6,7 +6,12 @@
 #include <iostream>
 
 using namespace std;
-PSASPE2::PSASPE2(STEPS& toolkit) : EXCITER_MODEL(toolkit)
+PSASPE2::PSASPE2(STEPS& toolkit) : EXCITER_MODEL(toolkit),
+                                   sensor(toolkit),
+                                   tuner1_lead_lag(toolkit),
+                                   tuner1_pi(toolkit),
+                                   tuner2(toolkit),
+                                   regulator(toolkit)
 {
     clear();
 }
@@ -29,7 +34,13 @@ void PSASPE2::clear()
 }
 void PSASPE2::copy_from_const_model(const PSASPE2& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    sensor.set_toolkit(toolkit);
+    tuner1_lead_lag.set_toolkit(toolkit);
+    tuner1_pi.set_toolkit(toolkit);
+    tuner2.set_toolkit(toolkit);
+    regulator.set_toolkit(toolkit);
 
     clear();
     this->set_KR(model.get_KR());
@@ -49,7 +60,12 @@ void PSASPE2::copy_from_const_model(const PSASPE2& model)
     this->set_Kit(model.get_Kit());
     this->set_Ke(model.get_Ke());
 }
-PSASPE2::PSASPE2(const PSASPE2& model) : EXCITER_MODEL(model.get_toolkit())
+PSASPE2::PSASPE2(const PSASPE2& model) : EXCITER_MODEL(model.get_toolkit()),
+                                         sensor(model.get_toolkit()),
+                                         tuner1_lead_lag(model.get_toolkit()),
+                                         tuner1_pi(model.get_toolkit()),
+                                         tuner2(model.get_toolkit()),
+                                         regulator(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -302,12 +318,6 @@ bool PSASPE2::setup_model_with_bpa_string(string data)
 
 void PSASPE2::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    sensor.set_toolkit(toolkit);
-    tuner1_lead_lag.set_toolkit(toolkit);
-    tuner1_pi.set_toolkit(toolkit);
-    tuner2.set_toolkit(toolkit);
-    regulator.set_toolkit(toolkit);
 }
 
 void PSASPE2::initialize()

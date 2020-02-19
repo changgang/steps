@@ -6,7 +6,7 @@
 
 using namespace std;
 
-LEAD_LAG_BLOCK::LEAD_LAG_BLOCK()
+LEAD_LAG_BLOCK::LEAD_LAG_BLOCK(STEPS& toolkit) : BLOCK(toolkit), first_order_block(toolkit)
 {
     set_K(1.0);
     set_T1_in_s(999.0);
@@ -95,7 +95,6 @@ void LEAD_LAG_BLOCK::initialize()
     }
     else
     {
-        first_order_block.set_toolkit(get_toolkit());
         first_order_block.set_limiter_type(this->get_limiter_type());
         first_order_block.set_upper_limit(this->get_upper_limit());
         first_order_block.set_lower_limit(this->get_lower_limit());

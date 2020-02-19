@@ -6,7 +6,7 @@
 
 using namespace std;
 
-PI_BLOCK::PI_BLOCK()
+PI_BLOCK::PI_BLOCK(STEPS& toolkit) : BLOCK(toolkit), pid_block(toolkit)
 {
     pid_block.set_Kp(1.0);
     pid_block.set_Ki(1.0);
@@ -79,7 +79,6 @@ void PI_BLOCK::initialize()
 {
     ostringstream osstream;
 
-    pid_block.set_toolkit(get_toolkit());
     pid_block.set_output(get_output());
 
     pid_block.initialize();

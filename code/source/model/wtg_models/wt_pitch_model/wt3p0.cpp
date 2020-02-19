@@ -5,7 +5,12 @@
 #include <iostream>
 
 using namespace std;
-WT3P0::WT3P0(STEPS& toolkit) : WT_PITCH_MODEL(toolkit)
+WT3P0::WT3P0(STEPS& toolkit) : WT_PITCH_MODEL(toolkit),
+                               speed_reference_sensor(toolkit),
+                               speed_controller(toolkit),
+                               frequency_sensor(toolkit),
+                               frequency_controller(toolkit),
+                               pitch_integrator(toolkit)
 {
     clear();
 }
@@ -38,7 +43,13 @@ void WT3P0::clear()
 
 void WT3P0::copy_from_const_model(const WT3P0& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    speed_reference_sensor.set_toolkit(toolkit);
+    speed_controller.set_toolkit(toolkit);
+    frequency_sensor.set_toolkit(toolkit);
+    frequency_controller.set_toolkit(toolkit);
+    pitch_integrator.set_toolkit(toolkit);
 
     clear();
 
@@ -62,7 +73,12 @@ void WT3P0::copy_from_const_model(const WT3P0& model)
     set_hold_wtg_speed_flag(model.get_hold_wtg_speed_flag());
 }
 
-WT3P0::WT3P0(const WT3P0&model) : WT_PITCH_MODEL(model.get_toolkit())
+WT3P0::WT3P0(const WT3P0&model) : WT_PITCH_MODEL(model.get_toolkit()),
+                                  speed_reference_sensor(model.get_toolkit()),
+                                  speed_controller(model.get_toolkit()),
+                                  frequency_sensor(model.get_toolkit()),
+                                  frequency_controller(model.get_toolkit()),
+                                  pitch_integrator(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -279,12 +295,6 @@ bool WT3P0::setup_model_with_bpa_string(string data)
 
 void WT3P0::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    speed_reference_sensor.set_toolkit(toolkit);
-    speed_controller.set_toolkit(toolkit);
-    frequency_sensor.set_toolkit(toolkit);
-    frequency_controller.set_toolkit(toolkit);
-    pitch_integrator.set_toolkit(toolkit);
 }
 
 void WT3P0::initialize()

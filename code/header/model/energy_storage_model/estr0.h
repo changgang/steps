@@ -13,8 +13,8 @@ class ESTR0 : public ENERGY_STORAGE_MODEL
     public:
         ESTR0(STEPS& toolkit);
         ESTR0(const ESTR0& model);
-        virtual ~ESTR0();
         virtual ESTR0& operator=(const ESTR0& model);
+        virtual ~ESTR0();
 
         virtual string get_model_name() const;
     public:

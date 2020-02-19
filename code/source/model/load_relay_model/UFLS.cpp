@@ -5,7 +5,8 @@
 #include <iostream>
 using namespace std;
 
-UFLS::UFLS(STEPS& toolkit) : LOAD_FREQUENCY_RELAY_MODEL(toolkit)
+UFLS::UFLS(STEPS& toolkit) : LOAD_FREQUENCY_RELAY_MODEL(toolkit),
+                             frequency_sensor(toolkit)
 {
     clear();
 }
@@ -39,7 +40,9 @@ void UFLS::clear()
 }
 void UFLS::copy_from_const_model(const UFLS& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    frequency_sensor.set_toolkit(toolkit);
 
     clear();
     set_frequency_sensor_time_in_s(model.get_frequency_sensor_time_in_s());
@@ -54,7 +57,8 @@ void UFLS::copy_from_const_model(const UFLS& model)
     this->set_breaker_time_in_s(model.get_breaker_time_in_s());
 }
 
-UFLS::UFLS(const UFLS& model) : LOAD_FREQUENCY_RELAY_MODEL(model.get_toolkit())
+UFLS::UFLS(const UFLS& model) : LOAD_FREQUENCY_RELAY_MODEL(model.get_toolkit()),
+                                frequency_sensor(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -218,7 +222,6 @@ bool UFLS::setup_model_with_bpa_string(string data)
 void UFLS::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit();
-    frequency_sensor.set_toolkit(toolkit);
     for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
     {
         stage_timer[i].set_toolkit(toolkit);

@@ -1,7 +1,10 @@
 #include "header/model/sg_models/turbine_governor_model/TGOV1.h"
 #include "header/basic/utility.h"
 #include "header/STEPS.h"
-TGOV1::TGOV1(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit)
+TGOV1::TGOV1(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit),
+                               governor(toolkit),
+                               turbine(toolkit),
+                               damping(toolkit)
 {
     clear();
 }
@@ -20,7 +23,11 @@ void TGOV1::clear()
 
 void TGOV1::copy_from_const_model(const TGOV1& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    governor.set_toolkit(toolkit);
+    turbine.set_toolkit(toolkit);
+    damping.set_toolkit(toolkit);
 
     clear();
 
@@ -37,7 +44,10 @@ void TGOV1::copy_from_const_model(const TGOV1& model)
     this->set_D(model.get_D());
 }
 
-TGOV1::TGOV1(const TGOV1&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit())
+TGOV1::TGOV1(const TGOV1&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit()),
+                                  governor(model.get_toolkit()),
+                                  turbine(model.get_toolkit()),
+                                  damping(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -181,10 +191,6 @@ bool TGOV1::setup_model_with_bpa_string(string data)
 
 void TGOV1::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    governor.set_toolkit(toolkit);
-    turbine.set_toolkit(toolkit);
-    damping.set_toolkit(toolkit);
 }
 
 void TGOV1::initialize()

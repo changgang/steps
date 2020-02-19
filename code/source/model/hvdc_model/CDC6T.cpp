@@ -7,41 +7,39 @@
 #include <iostream>
 
 using namespace std;
-CDC6T::CDC6T(STEPS& toolkit) : HVDC_MODEL(toolkit)
+CDC6T::CDC6T(STEPS& toolkit) : HVDC_MODEL(toolkit),
+                               inverter_dc_voltage_sensor(toolkit),
+                               dc_current_sensor(toolkit),
+                               rectifier_dc_voltage_sensor(toolkit)
 {
     clear();
 }
 
-CDC6T::~CDC6T()
+CDC6T::CDC6T(const CDC6T& model) : HVDC_MODEL(model.get_toolkit()),
+                                   inverter_dc_voltage_sensor(model.get_toolkit()),
+                                   dc_current_sensor(model.get_toolkit()),
+                                   rectifier_dc_voltage_sensor(model.get_toolkit())
 {
-    ;
+    copy_from_const_model(model);
 }
 
-void CDC6T::clear()
+CDC6T& CDC6T::operator=(const CDC6T& model)
 {
-    set_model_float_parameter_count(32);
+    if(this==(&model)) return *this;
 
-    set_converter_dynamic_max_alpha_or_gamma_in_deg(RECTIFIER, 90.0);
-    set_converter_dynamic_max_alpha_or_gamma_in_deg(INVERTER, 90.0);
-    inverter_dc_voltage_sensor.set_limiter_type(NO_LIMITER);
-    inverter_dc_voltage_sensor.set_K(1.0);
-    dc_current_sensor.set_limiter_type(NO_LIMITER);
-    dc_current_sensor.set_K(1.0);
+    copy_from_const_model(model);
 
-
-    //time_when_rectifier_ac_voltage_below_delayed_blocking_voltage = INFINITE_THRESHOLD;
-    //time_when_rectifier_ac_voltage_above_delayed_unblocking_voltage = INFINITE_THRESHOLD;
-    //time_when_inverter_ac_voltage_below_instataneous_blocking_voltage = INFINITE_THRESHOLD;
-    //time_when_inverter_ac_voltage_above_instataneous_unblocking_voltage = INFINITE_THRESHOLD;
-    //time_when_inverter_ac_unblocking_signal_is_sent = INFINITE_THRESHOLD;
-
-    //time_when_inverter_ac_voltage_below_delayed_bypassing_voltage = INFINITE_THRESHOLD;
-    //time_when_inverter_ac_voltage_above_delayed_unbypassing_voltage = INFINITE_THRESHOLD;
+    return (*this);
 }
+
 
 void CDC6T::copy_from_const_model(const CDC6T& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    inverter_dc_voltage_sensor.set_toolkit(toolkit);
+    dc_current_sensor.set_toolkit(toolkit);
+    rectifier_dc_voltage_sensor.set_toolkit(toolkit);
 
     clear();
     this->set_inverter_dc_voltage_sensor_T_in_s(model.get_inverter_dc_voltage_sensor_T_in_s());
@@ -73,18 +71,31 @@ void CDC6T::copy_from_const_model(const CDC6T& model)
     this->set_minimum_time_in_switched_mode_in_s(model.get_minimum_time_in_switched_mode_in_s());
 }
 
-CDC6T::CDC6T(const CDC6T& model) : HVDC_MODEL(model.get_toolkit())
+CDC6T::~CDC6T()
 {
-    copy_from_const_model(model);
+    ;
 }
 
-CDC6T& CDC6T::operator=(const CDC6T& model)
+void CDC6T::clear()
 {
-    if(this==(&model)) return *this;
+    set_model_float_parameter_count(32);
 
-    copy_from_const_model(model);
+    set_converter_dynamic_max_alpha_or_gamma_in_deg(RECTIFIER, 90.0);
+    set_converter_dynamic_max_alpha_or_gamma_in_deg(INVERTER, 90.0);
+    inverter_dc_voltage_sensor.set_limiter_type(NO_LIMITER);
+    inverter_dc_voltage_sensor.set_K(1.0);
+    dc_current_sensor.set_limiter_type(NO_LIMITER);
+    dc_current_sensor.set_K(1.0);
 
-    return (*this);
+
+    //time_when_rectifier_ac_voltage_below_delayed_blocking_voltage = INFINITE_THRESHOLD;
+    //time_when_rectifier_ac_voltage_above_delayed_unblocking_voltage = INFINITE_THRESHOLD;
+    //time_when_inverter_ac_voltage_below_instataneous_blocking_voltage = INFINITE_THRESHOLD;
+    //time_when_inverter_ac_voltage_above_instataneous_unblocking_voltage = INFINITE_THRESHOLD;
+    //time_when_inverter_ac_unblocking_signal_is_sent = INFINITE_THRESHOLD;
+
+    //time_when_inverter_ac_voltage_below_delayed_bypassing_voltage = INFINITE_THRESHOLD;
+    //time_when_inverter_ac_voltage_above_delayed_unbypassing_voltage = INFINITE_THRESHOLD;
 }
 
 string CDC6T::get_model_name() const
@@ -374,9 +385,6 @@ void CDC6T::setup_block_toolkit_and_parameters()
     set_common_timer_toolkit();
 
     STEPS& toolkit = get_toolkit();
-    inverter_dc_voltage_sensor.set_toolkit(toolkit);
-    dc_current_sensor.set_toolkit(toolkit);
-    rectifier_dc_voltage_sensor.set_toolkit(toolkit);
 
     rec_ac_blocking_timer.set_toolkit(toolkit);
     inv_ac_blocking_signal_transmitting_timer.set_toolkit(toolkit);

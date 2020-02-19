@@ -4,7 +4,11 @@
 #include <cstdio>
 #include "header/basic/utility.h"
 #include <vector>
-PSASPS1::PSASPS1(STEPS& toolkit) : STABILIZER_MODEL(toolkit)
+PSASPS1::PSASPS1(STEPS& toolkit) : STABILIZER_MODEL(toolkit),
+                                   dedc_block(toolkit),
+                                   phase_tuner_1(toolkit),
+                                   phase_tuner_2(toolkit),
+                                   phase_tuner_3(toolkit)
 {
     clear();
 }
@@ -23,7 +27,12 @@ void PSASPS1::clear()
 
 void PSASPS1::copy_from_const_model(const PSASPS1& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    dedc_block.set_toolkit(toolkit);
+    phase_tuner_1.set_toolkit(toolkit);
+    phase_tuner_2.set_toolkit(toolkit);
+    phase_tuner_3.set_toolkit(toolkit);
 
     clear();
 
@@ -51,7 +60,11 @@ void PSASPS1::copy_from_const_model(const PSASPS1& model)
     this->set_Vsmax(model.get_Vsmax());
     this->set_Vsmin(model.get_Vsmin());
 }
-PSASPS1::PSASPS1(const PSASPS1& model) : STABILIZER_MODEL(model.get_toolkit())
+PSASPS1::PSASPS1(const PSASPS1& model) : STABILIZER_MODEL(model.get_toolkit()),
+                                         dedc_block(model.get_toolkit()),
+                                         phase_tuner_1(model.get_toolkit()),
+                                         phase_tuner_2(model.get_toolkit()),
+                                         phase_tuner_3(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -252,11 +265,6 @@ bool PSASPS1::setup_model_with_bpa_string(string data)
 
 void PSASPS1::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    dedc_block.set_toolkit(toolkit);
-    phase_tuner_1.set_toolkit(toolkit);
-    phase_tuner_2.set_toolkit(toolkit);
-    phase_tuner_3.set_toolkit(toolkit);
 }
 
 void PSASPS1::initialize()

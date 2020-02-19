@@ -4,7 +4,13 @@
 #include <cstdio>
 #include "header/basic/utility.h"
 #include <vector>
-PSASPS3::PSASPS3(STEPS& toolkit) : STABILIZER_MODEL(toolkit)
+PSASPS3::PSASPS3(STEPS& toolkit) : STABILIZER_MODEL(toolkit),
+                                   dedc_block_1(toolkit),
+                                   dedc_block_2(toolkit),
+                                   phase_tuner_1(toolkit),
+                                   phase_tuner_2(toolkit),
+                                   phase_tuner_3(toolkit),
+                                   phase_tuner_4(toolkit)
 {
     clear();
 }
@@ -20,7 +26,14 @@ void PSASPS3::clear()
 
 void PSASPS3::copy_from_const_model(const PSASPS3& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    dedc_block_1.set_toolkit(toolkit);
+    dedc_block_2.set_toolkit(toolkit);
+    phase_tuner_1.set_toolkit(toolkit);
+    phase_tuner_2.set_toolkit(toolkit);
+    phase_tuner_3.set_toolkit(toolkit);
+    phase_tuner_4.set_toolkit(toolkit);
 
     clear();
 
@@ -55,7 +68,13 @@ void PSASPS3::copy_from_const_model(const PSASPS3& model)
     this->set_Vsmax(model.get_Vsmax());
     this->set_Vsmin(model.get_Vsmin());
 }
-PSASPS3::PSASPS3(const PSASPS3& model) : STABILIZER_MODEL(model.get_toolkit())
+PSASPS3::PSASPS3(const PSASPS3& model) : STABILIZER_MODEL(model.get_toolkit()),
+                                         dedc_block_1(model.get_toolkit()),
+                                         dedc_block_2(model.get_toolkit()),
+                                         phase_tuner_1(model.get_toolkit()),
+                                         phase_tuner_2(model.get_toolkit()),
+                                         phase_tuner_3(model.get_toolkit()),
+                                         phase_tuner_4(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -339,13 +358,6 @@ bool PSASPS3::setup_model_with_bpa_string(string data)
 
 void PSASPS3::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    dedc_block_1.set_toolkit(toolkit);
-    dedc_block_2.set_toolkit(toolkit);
-    phase_tuner_1.set_toolkit(toolkit);
-    phase_tuner_2.set_toolkit(toolkit);
-    phase_tuner_3.set_toolkit(toolkit);
-    phase_tuner_4.set_toolkit(toolkit);
 }
 
 void PSASPS3::initialize()

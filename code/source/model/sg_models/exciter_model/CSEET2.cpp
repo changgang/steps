@@ -6,7 +6,15 @@
 #include <iostream>
 
 using namespace std;
-CSEET2::CSEET2(STEPS& toolkit) : EXCITER_MODEL(toolkit)
+CSEET2::CSEET2(STEPS& toolkit) : EXCITER_MODEL(toolkit),
+                                 sensor(toolkit),
+                                 serial_tuner1_lead_lag(toolkit),
+                                 serial_tuner1_pi(toolkit),
+                                 serial_tuner2(toolkit),
+                                 parallel_integral(toolkit),
+                                 parallel_differential(toolkit),
+                                 regulator(toolkit),
+                                 feedbacker(toolkit)
 {
     clear();
 }
@@ -51,7 +59,16 @@ void CSEET2::clear()
 }
 void CSEET2::copy_from_const_model(const CSEET2& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    sensor.set_toolkit(toolkit);
+    serial_tuner1_lead_lag.set_toolkit(toolkit);
+    serial_tuner1_pi.set_toolkit(toolkit);
+    serial_tuner2.set_toolkit(toolkit);
+    parallel_integral.set_toolkit(toolkit);
+    parallel_differential.set_toolkit(toolkit);
+    regulator.set_toolkit(toolkit);
+    feedbacker.set_toolkit(toolkit);
 
     clear();
 
@@ -98,7 +115,15 @@ CSEET2::~CSEET2()
     ;
 }
 
-CSEET2::CSEET2(const CSEET2& model) : EXCITER_MODEL(model.get_toolkit())
+CSEET2::CSEET2(const CSEET2& model) : EXCITER_MODEL(model.get_toolkit()),
+                                      sensor(model.get_toolkit()),
+                                      serial_tuner1_lead_lag(model.get_toolkit()),
+                                      serial_tuner1_pi(model.get_toolkit()),
+                                      serial_tuner2(model.get_toolkit()),
+                                      parallel_integral(model.get_toolkit()),
+                                      parallel_differential(model.get_toolkit()),
+                                      regulator(model.get_toolkit()),
+                                      feedbacker(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -541,15 +566,6 @@ bool CSEET2::setup_model_with_bpa_string(string data)
 
 void CSEET2::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    sensor.set_toolkit(toolkit);
-    serial_tuner1_lead_lag.set_toolkit(toolkit);
-    serial_tuner1_pi.set_toolkit(toolkit);
-    serial_tuner2.set_toolkit(toolkit);
-    parallel_integral.set_toolkit(toolkit);
-    parallel_differential.set_toolkit(toolkit);
-    regulator.set_toolkit(toolkit);
-    feedbacker.set_toolkit(toolkit);
 }
 
 void CSEET2::initialize()

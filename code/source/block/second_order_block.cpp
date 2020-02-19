@@ -6,7 +6,7 @@
 
 using namespace std;
 
-SECOND_ORDER_BLOCK::SECOND_ORDER_BLOCK()
+SECOND_ORDER_BLOCK::SECOND_ORDER_BLOCK(STEPS& toolkit) : BLOCK(toolkit),block1(toolkit),block2(toolkit)
 {
     set_a(0.0);
     set_b(0.0);
@@ -93,10 +93,6 @@ void SECOND_ORDER_BLOCK::initialize()
     // therefore, block1 is: k/(s+f)
     //            block2 is: 1/(s+g)
     // the whole block is: block1*block2
-
-    STEPS& toolkit = get_toolkit();
-    block1.set_toolkit(toolkit);
-    block2.set_toolkit(toolkit);
 
     double b2_minus_4ac = b*b-4.0*a*c;
     double root_of_b2_minus_4ac = steps_sqrt(b2_minus_4ac);

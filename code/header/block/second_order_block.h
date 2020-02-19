@@ -9,7 +9,7 @@ class SECOND_ORDER_BLOCK : public BLOCK
 {
     // (ds+e)/(as^2+bs+c)
     public:
-        SECOND_ORDER_BLOCK();
+        SECOND_ORDER_BLOCK(STEPS& toolkit);
         ~SECOND_ORDER_BLOCK();
 
         void set_a(double a);

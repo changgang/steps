@@ -4,7 +4,15 @@
 #include <cstdio>
 #include "header/basic/utility.h"
 #include <vector>
-PSASPS2::PSASPS2(STEPS& toolkit) : STABILIZER_MODEL(toolkit)
+PSASPS2::PSASPS2(STEPS& toolkit) : STABILIZER_MODEL(toolkit),
+                                   sensor_w(toolkit),
+                                   sensor_p(toolkit),
+                                   sensor_t(toolkit),
+                                   dedc_block_1(toolkit),
+                                   dedc_block_2(toolkit),
+                                   phase_tuner_1(toolkit),
+                                   phase_tuner_2(toolkit),
+                                   phase_tuner_3(toolkit)
 {
     clear();
 }
@@ -20,7 +28,16 @@ void PSASPS2::clear()
 
 void PSASPS2::copy_from_const_model(const PSASPS2& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    sensor_w.set_toolkit(toolkit);
+    sensor_p.set_toolkit(toolkit);
+    sensor_t.set_toolkit(toolkit);
+    dedc_block_1.set_toolkit(toolkit);
+    dedc_block_2.set_toolkit(toolkit);
+    phase_tuner_1.set_toolkit(toolkit);
+    phase_tuner_2.set_toolkit(toolkit);
+    phase_tuner_3.set_toolkit(toolkit);
 
     clear();
 
@@ -51,7 +68,15 @@ void PSASPS2::copy_from_const_model(const PSASPS2& model)
     this->set_Vsmax(model.get_Vsmax());
     this->set_Vsmin(model.get_Vsmin());
 }
-PSASPS2::PSASPS2(const PSASPS2& model) : STABILIZER_MODEL(model.get_toolkit())
+PSASPS2::PSASPS2(const PSASPS2& model) : STABILIZER_MODEL(model.get_toolkit()),
+                                         sensor_w(model.get_toolkit()),
+                                         sensor_p(model.get_toolkit()),
+                                         sensor_t(model.get_toolkit()),
+                                         dedc_block_1(model.get_toolkit()),
+                                         dedc_block_2(model.get_toolkit()),
+                                         phase_tuner_1(model.get_toolkit()),
+                                         phase_tuner_2(model.get_toolkit()),
+                                         phase_tuner_3(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -287,15 +312,6 @@ bool PSASPS2::setup_model_with_bpa_string(string data)
 
 void PSASPS2::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    sensor_w.set_toolkit(toolkit);
-    sensor_p.set_toolkit(toolkit);
-    sensor_t.set_toolkit(toolkit);
-    dedc_block_1.set_toolkit(toolkit);
-    dedc_block_2.set_toolkit(toolkit);
-    phase_tuner_1.set_toolkit(toolkit);
-    phase_tuner_2.set_toolkit(toolkit);
-    phase_tuner_3.set_toolkit(toolkit);
 }
 
 void PSASPS2::initialize()

@@ -4,7 +4,13 @@
 #include <istream>
 #include <iostream>
 using namespace std;
-IEEEG1::IEEEG1(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit)
+IEEEG1::IEEEG1(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit),
+                                 droop(toolkit),
+                                 servo_motor(toolkit),
+                                 delayer1(toolkit),
+                                 delayer2(toolkit),
+                                 delayer3(toolkit),
+                                 delayer4(toolkit)
 {
     clear();
 }
@@ -33,7 +39,14 @@ void IEEEG1::clear()
 }
 void IEEEG1::copy_from_const_model(const IEEEG1& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    droop.set_toolkit(toolkit);
+    servo_motor.set_toolkit(toolkit);
+    delayer1.set_toolkit(toolkit);
+    delayer2.set_toolkit(toolkit);
+    delayer3.set_toolkit(toolkit);
+    delayer4.set_toolkit(toolkit);
 
     clear();
 
@@ -59,7 +72,13 @@ void IEEEG1::copy_from_const_model(const IEEEG1& model)
     this->set_K8(model.get_K8());
 }
 
-IEEEG1::IEEEG1(const IEEEG1&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit())
+IEEEG1::IEEEG1(const IEEEG1&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit()),
+                                     droop(model.get_toolkit()),
+                                     servo_motor(model.get_toolkit()),
+                                     delayer1(model.get_toolkit()),
+                                     delayer2(model.get_toolkit()),
+                                     delayer3(model.get_toolkit()),
+                                     delayer4(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -342,13 +361,6 @@ bool IEEEG1::setup_model_with_bpa_string(string data)
 
 void IEEEG1::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    droop.set_toolkit(toolkit);
-    servo_motor.set_toolkit(toolkit);
-    delayer1.set_toolkit(toolkit);
-    delayer2.set_toolkit(toolkit);
-    delayer3.set_toolkit(toolkit);
-    delayer4.set_toolkit(toolkit);
 }
 
 void IEEEG1::initialize()

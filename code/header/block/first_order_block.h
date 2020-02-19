@@ -8,7 +8,7 @@ class FIRST_ORDER_BLOCK : public BLOCK
 {
     // K/(1+sT)
     public:
-        FIRST_ORDER_BLOCK();
+        FIRST_ORDER_BLOCK(STEPS& toolkit);
         ~FIRST_ORDER_BLOCK();
 
         void set_K(double K);

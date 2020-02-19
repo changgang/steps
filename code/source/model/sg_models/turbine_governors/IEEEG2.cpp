@@ -4,7 +4,10 @@
 #include <istream>
 #include <iostream>
 using namespace std;
-IEEEG2::IEEEG2(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit)
+IEEEG2::IEEEG2(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit),
+                                 droop(toolkit),
+                                 tuner(toolkit),
+                                 water_hammer(toolkit)
 {
     clear();
 }
@@ -25,7 +28,11 @@ void IEEEG2::clear()
 }
 void IEEEG2::copy_from_const_model(const IEEEG2& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    droop.set_toolkit(toolkit);
+    tuner.set_toolkit(toolkit);
+    water_hammer.set_toolkit(toolkit);
 
     clear();
 
@@ -38,7 +45,10 @@ void IEEEG2::copy_from_const_model(const IEEEG2& model)
     this->set_T4_in_s(model.get_T4_in_s());
 }
 
-IEEEG2::IEEEG2(const IEEEG2&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit())
+IEEEG2::IEEEG2(const IEEEG2&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit()),
+                                     droop(model.get_toolkit()),
+                                     tuner(model.get_toolkit()),
+                                     water_hammer(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -185,10 +195,6 @@ bool IEEEG2::setup_model_with_bpa_string(string data)
 
 void IEEEG2::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    droop.set_toolkit(toolkit);
-    tuner.set_toolkit(toolkit);
-    water_hammer.set_toolkit(toolkit);
 }
 
 void IEEEG2::initialize()

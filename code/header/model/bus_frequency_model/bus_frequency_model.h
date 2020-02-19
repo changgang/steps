@@ -5,11 +5,13 @@
 
 class BUS;
 
-class BUS_FREQUENCY_MODEL : public BASE
+class BUS_FREQUENCY_MODEL
 {
     public:
-        BUS_FREQUENCY_MODEL();
+        BUS_FREQUENCY_MODEL(STEPS& toolkit);
         virtual ~BUS_FREQUENCY_MODEL();
+        void set_toolkit(STEPS& toolkit);
+        STEPS& get_toolkit() const;
 
         void set_bus_pointer(BUS* bus);
         BUS* get_bus_pointer() const;
@@ -24,11 +26,8 @@ class BUS_FREQUENCY_MODEL : public BASE
         double get_frequency_deviation_in_Hz() const;
         double get_frequency_in_pu() const;
         double get_frequency_in_Hz() const;
-
     private:
-        virtual bool is_valid() const;
-        virtual void check();
-        virtual void clear();
+        STEPS* toolkit;
         DIFFERENTIAL_BLOCK frequency_block;
         BUS* bus_ptr;
         double fbase_Hz, tbase_s;

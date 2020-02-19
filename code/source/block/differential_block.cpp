@@ -6,7 +6,7 @@
 
 using namespace std;
 
-DIFFERENTIAL_BLOCK::DIFFERENTIAL_BLOCK()
+DIFFERENTIAL_BLOCK::DIFFERENTIAL_BLOCK(STEPS& toolkit) : BLOCK(toolkit)
 {
     set_K(1.0);
     set_T_in_s(999.0);

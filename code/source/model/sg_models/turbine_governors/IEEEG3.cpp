@@ -4,7 +4,11 @@
 #include <istream>
 #include <iostream>
 using namespace std;
-IEEEG3::IEEEG3(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit)
+IEEEG3::IEEEG3(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit),
+                                 governor(toolkit),
+                                 servo_motor(toolkit),
+                                 feedbacker(toolkit),
+                                 water_hammer(toolkit)
 {
     clear();
 }
@@ -28,7 +32,12 @@ void IEEEG3::clear()
 }
 void IEEEG3::copy_from_const_model(const IEEEG3& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    governor.set_toolkit(toolkit);
+    servo_motor.set_toolkit(toolkit);
+    feedbacker.set_toolkit(toolkit);
+    water_hammer.set_toolkit(toolkit);
 
     clear();
 
@@ -48,7 +57,11 @@ void IEEEG3::copy_from_const_model(const IEEEG3& model)
     this->set_a23(model.get_a23());
 }
 
-IEEEG3::IEEEG3(const IEEEG3&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit())
+IEEEG3::IEEEG3(const IEEEG3&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit()),
+                                     governor(model.get_toolkit()),
+                                     servo_motor(model.get_toolkit()),
+                                     feedbacker(model.get_toolkit()),
+                                     water_hammer(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -279,11 +292,6 @@ bool IEEEG3::setup_model_with_bpa_string(string data)
 
 void IEEEG3::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    governor.set_toolkit(toolkit);
-    servo_motor.set_toolkit(toolkit);
-    feedbacker.set_toolkit(toolkit);
-    water_hammer.set_toolkit(toolkit);
 }
 
 void IEEEG3::initialize()

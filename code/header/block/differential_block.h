@@ -7,7 +7,7 @@ class DIFFERENTIAL_BLOCK : public BLOCK
 {
     // sK/(1+sT), a.k.a., washout
     public:
-        DIFFERENTIAL_BLOCK();
+        DIFFERENTIAL_BLOCK(STEPS& toolkit);
         ~DIFFERENTIAL_BLOCK();
 
         void set_K(double K);

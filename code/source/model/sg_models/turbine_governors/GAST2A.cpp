@@ -4,7 +4,15 @@
 #include <istream>
 #include <iostream>
 using namespace std;
-GAST2A::GAST2A(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit)
+GAST2A::GAST2A(STEPS& toolkit) : TURBINE_GOVERNOR_MODEL(toolkit),
+                                 gas_governor_droop(toolkit),
+                                 gas_governor_iso(toolkit),
+                                 gas_valve_positioner(toolkit),
+                                 gas_fuel_system(toolkit),
+                                 gas_radiation_shield(toolkit),
+                                 gas_thermocouple(toolkit),
+                                 gas_temperature_control(toolkit),
+                                 gas_turbine_dynamic(toolkit)
 {
     clear();
 }
@@ -57,7 +65,19 @@ void GAST2A::clear()
 }
 void GAST2A::copy_from_const_model(const GAST2A& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    gas_governor_droop.set_toolkit(toolkit);
+    gas_governor_iso.set_toolkit(toolkit);
+    gas_fuel_control.set_toolkit(toolkit);
+    gas_valve_positioner.set_toolkit(toolkit);
+    gas_fuel_system.set_toolkit(toolkit);
+    gas_combustor.set_toolkit(toolkit);
+    gas_turbine_exhaust.set_toolkit(toolkit);
+    gas_radiation_shield.set_toolkit(toolkit);
+    gas_thermocouple.set_toolkit(toolkit);
+    gas_temperature_control.set_toolkit(toolkit);
+    gas_turbine_dynamic.set_toolkit(toolkit);
 
     clear();
 
@@ -94,7 +114,15 @@ void GAST2A::copy_from_const_model(const GAST2A& model)
     set_gas_TC_in_deg(model.get_gas_TC_in_deg());
 }
 
-GAST2A::GAST2A(const GAST2A&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit())
+GAST2A::GAST2A(const GAST2A&model) : TURBINE_GOVERNOR_MODEL(model.get_toolkit()),
+                                     gas_governor_droop(model.get_toolkit()),
+                                     gas_governor_iso(model.get_toolkit()),
+                                     gas_valve_positioner(model.get_toolkit()),
+                                     gas_fuel_system(model.get_toolkit()),
+                                     gas_radiation_shield(model.get_toolkit()),
+                                     gas_thermocouple(model.get_toolkit()),
+                                     gas_temperature_control(model.get_toolkit()),
+                                     gas_turbine_dynamic(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -498,52 +526,45 @@ bool GAST2A::setup_model_with_bpa_string(string data)
 void GAST2A::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit();
+    gas_fuel_control.set_toolkit(toolkit);
+    gas_combustor.set_toolkit(toolkit);
+    gas_turbine_exhaust.set_toolkit(toolkit);
+
     double delt = toolkit.get_dynamic_simulation_time_step_in_s();
 
-    gas_governor_droop.set_toolkit(toolkit);
     gas_governor_droop.set_K(get_gas_W());
     gas_governor_droop.set_T1_in_s(get_gas_X_in_s());
     gas_governor_droop.set_T2_in_s(get_gas_Y_in_s());
     gas_governor_droop.set_upper_limit(get_gas_max_in_pu());
     gas_governor_droop.set_lower_limit(get_gas_min_in_pu());
 
-    gas_governor_iso.set_toolkit(toolkit);
     gas_governor_iso.set_Kp(get_gas_W()*get_gas_X_in_s()/get_gas_Y_in_s());
     gas_governor_iso.set_Ki(get_gas_W()/get_gas_Y_in_s());
     gas_governor_iso.set_upper_limit(get_gas_max_in_pu());
     gas_governor_iso.set_lower_limit(get_gas_min_in_pu());
 
-    gas_fuel_control.set_toolkit(toolkit);
     gas_fuel_control.set_buffer_size(round(get_gas_T_in_s()/delt));
 
-    gas_valve_positioner.set_toolkit(toolkit);
     gas_valve_positioner.set_K(get_gas_a()/get_gas_c());
     gas_valve_positioner.set_T_in_s(get_gas_b_in_s()/get_gas_c());
 
-    gas_fuel_system.set_toolkit(toolkit);
     gas_fuel_system.set_K(1.0);
     gas_fuel_system.set_T_in_s(get_gas_Tf_in_s());
 
-    gas_combustor.set_toolkit(toolkit);
     gas_combustor.set_buffer_size(round(get_gas_ECR_in_s()/delt));
 
-    gas_turbine_exhaust.set_toolkit(toolkit);
     gas_turbine_exhaust.set_buffer_size(round(get_gas_ETD_in_s()/delt));
 
-    gas_radiation_shield.set_toolkit(toolkit);
     gas_radiation_shield.set_K(get_gas_K5());
     gas_radiation_shield.set_T_in_s(get_gas_T3_in_s());
 
-    gas_thermocouple.set_toolkit(toolkit);
     gas_thermocouple.set_T_in_s(get_gas_T4_in_s());
 
-    gas_temperature_control.set_toolkit(toolkit);
     gas_temperature_control.set_upper_limit(get_gas_max_in_pu());
     gas_temperature_control.set_lower_limit(-INFINITE_THRESHOLD);
     gas_temperature_control.set_Kp(get_gas_T5_in_s()/get_gas_Tt_in_s());
     gas_temperature_control.set_Ki(1.0/get_gas_Tt_in_s());
 
-    gas_turbine_dynamic.set_toolkit(toolkit);
     gas_turbine_dynamic.set_T_in_s(get_gas_TCD_in_s());
 }
 

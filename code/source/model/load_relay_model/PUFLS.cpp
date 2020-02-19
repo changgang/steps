@@ -6,12 +6,14 @@
 
 using namespace std;
 
-PUFLS::PUFLS(STEPS& toolkit) : LOAD_FREQUENCY_RELAY_MODEL(toolkit)
+PUFLS::PUFLS(STEPS& toolkit) : LOAD_FREQUENCY_RELAY_MODEL(toolkit),
+                               frequency_sensor(toolkit)
 {
     clear();
 }
 
-PUFLS::PUFLS(const PUFLS& model) : LOAD_FREQUENCY_RELAY_MODEL(model.get_toolkit())
+PUFLS::PUFLS(const PUFLS& model) : LOAD_FREQUENCY_RELAY_MODEL(model.get_toolkit()),
+                                   frequency_sensor(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -49,7 +51,9 @@ void PUFLS::clear()
 
 void PUFLS::copy_from_const_model(const PUFLS& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    frequency_sensor.set_toolkit(toolkit);
 
     clear();
     set_frequency_sensor_time_in_s(model.get_frequency_sensor_time_in_s());
@@ -297,7 +301,6 @@ void PUFLS::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit();
 
-    frequency_sensor.set_toolkit(toolkit);
     additional_stage_timer.set_toolkit(toolkit);
     for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
         discrete_stage_timer[i].set_toolkit(toolkit);

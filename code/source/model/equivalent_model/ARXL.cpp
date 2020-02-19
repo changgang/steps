@@ -8,22 +8,6 @@ ARXL::ARXL(STEPS& toolkit) : EQUIVALENT_MODEL(toolkit)
     clear();
 }
 
-ARXL::~ARXL()
-{
-}
-
-void ARXL::copy_from_constant_model(const ARXL& model)
-{
-    clear();
-
-    p_meters = model.get_P_meters();
-    p_delays = model.get_P_delays();
-    p_coefficients = model.get_P_coefficients();
-    q_meters = model.get_Q_meters();
-    q_delays = model.get_Q_delays();
-    q_coefficients = model.get_Q_coefficients();
-}
-
 ARXL::ARXL(const ARXL& model) : EQUIVALENT_MODEL(model.get_toolkit())
 {
     copy_from_constant_model(model);
@@ -37,6 +21,24 @@ ARXL& ARXL::operator=(const ARXL& model)
     copy_from_constant_model(model);
 
     return (*this);
+}
+
+ARXL::~ARXL()
+{
+}
+
+void ARXL::copy_from_constant_model(const ARXL& model)
+{
+    set_toolkit(model.get_toolkit());
+
+    clear();
+
+    p_meters = model.get_P_meters();
+    p_delays = model.get_P_delays();
+    p_coefficients = model.get_P_coefficients();
+    q_meters = model.get_Q_meters();
+    q_delays = model.get_Q_delays();
+    q_coefficients = model.get_Q_coefficients();
 }
 
 string ARXL::get_model_name() const

@@ -10,7 +10,7 @@ class PID_BLOCK : public BLOCK
 {
     // Kp+Ki/s+sKd/(1+sTd)
     public:
-        PID_BLOCK();
+        PID_BLOCK(STEPS& toolkit);
         ~PID_BLOCK();
 
         void set_Kp(double K);

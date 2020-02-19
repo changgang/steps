@@ -6,7 +6,9 @@
 #include <iostream>
 
 using namespace std;
-SEXS::SEXS(STEPS& toolkit) : EXCITER_MODEL(toolkit)
+SEXS::SEXS(STEPS& toolkit) : EXCITER_MODEL(toolkit),
+                             phase_tuner(toolkit),
+                             exciter(toolkit)
 {
     clear();
 }
@@ -25,7 +27,10 @@ void SEXS::clear()
 
 void SEXS::copy_from_const_model(const SEXS& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    phase_tuner.set_toolkit(toolkit);
+    exciter.set_toolkit(toolkit);
 
     clear();
 
@@ -40,7 +45,9 @@ void SEXS::copy_from_const_model(const SEXS& model)
     this->set_Efdmin_in_pu(model.get_Efdmin_in_pu());
 
 }
-SEXS::SEXS(const SEXS& model) : EXCITER_MODEL(model.get_toolkit())
+SEXS::SEXS(const SEXS& model) : EXCITER_MODEL(model.get_toolkit()),
+                                phase_tuner(model.get_toolkit()),
+                                exciter(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -175,9 +182,6 @@ bool SEXS::setup_model_with_bpa_string(string data)
 
 void SEXS::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    phase_tuner.set_toolkit(toolkit);
-    exciter.set_toolkit(toolkit);
 }
 
 void SEXS::initialize()

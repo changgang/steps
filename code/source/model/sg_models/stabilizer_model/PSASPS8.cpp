@@ -4,7 +4,11 @@
 #include <cstdio>
 #include "header/basic/utility.h"
 #include <vector>
-PSASPS8::PSASPS8(STEPS& toolkit) : STABILIZER_MODEL(toolkit)
+PSASPS8::PSASPS8(STEPS& toolkit) : STABILIZER_MODEL(toolkit),
+                                   sensor(toolkit),
+                                   phase_tuner_1(toolkit),
+                                   phase_tuner_2(toolkit),
+                                   phase_tuner_3(toolkit)
 {
     clear();
 }
@@ -19,7 +23,12 @@ void PSASPS8::clear()
 
 void PSASPS8::copy_from_const_model(const PSASPS8& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    sensor.set_toolkit(toolkit);
+    phase_tuner_1.set_toolkit(toolkit);
+    phase_tuner_2.set_toolkit(toolkit);
+    phase_tuner_3.set_toolkit(toolkit);
 
     clear();
 
@@ -46,7 +55,11 @@ void PSASPS8::copy_from_const_model(const PSASPS8& model)
     this->set_Vsmax(model.get_Vsmax());
     this->set_Vsmin(model.get_Vsmin());
 }
-PSASPS8::PSASPS8(const PSASPS8& model) : STABILIZER_MODEL(model.get_toolkit())
+PSASPS8::PSASPS8(const PSASPS8& model) : STABILIZER_MODEL(model.get_toolkit()),
+                                         sensor(model.get_toolkit()),
+                                         phase_tuner_1(model.get_toolkit()),
+                                         phase_tuner_2(model.get_toolkit()),
+                                         phase_tuner_3(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -230,11 +243,6 @@ bool PSASPS8::setup_model_with_bpa_string(string data)
 
 void PSASPS8::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    sensor.set_toolkit(toolkit);
-    phase_tuner_1.set_toolkit(toolkit);
-    phase_tuner_2.set_toolkit(toolkit);
-    phase_tuner_3.set_toolkit(toolkit);
 }
 
 void PSASPS8::initialize()

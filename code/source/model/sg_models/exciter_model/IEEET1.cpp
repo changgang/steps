@@ -6,7 +6,11 @@
 #include <iostream>
 
 using namespace std;
-IEEET1::IEEET1(STEPS& toolkit) : EXCITER_MODEL(toolkit)
+IEEET1::IEEET1(STEPS& toolkit) : EXCITER_MODEL(toolkit),
+                                 sensor(toolkit),
+                                 regulator(toolkit),
+                                 feedbacker(toolkit),
+                                 exciter(toolkit)
 {
     clear();
 }
@@ -24,7 +28,12 @@ void IEEET1::clear()
 
 void IEEET1::copy_from_const_model(const IEEET1& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    sensor.set_toolkit(toolkit);
+    regulator.set_toolkit(toolkit);
+    feedbacker.set_toolkit(toolkit);
+    exciter.set_toolkit(toolkit);
 
     clear();
     this->set_TR_in_s(model.get_TR_in_s());
@@ -42,7 +51,11 @@ void IEEET1::copy_from_const_model(const IEEET1& model)
     this->set_SE2_in_pu(model.get_SE2_in_pu());
 
 }
-IEEET1::IEEET1(const IEEET1& model) : EXCITER_MODEL(model.get_toolkit())
+IEEET1::IEEET1(const IEEET1& model) : EXCITER_MODEL(model.get_toolkit()),
+                                      sensor(model.get_toolkit()),
+                                      regulator(model.get_toolkit()),
+                                      feedbacker(model.get_toolkit()),
+                                      exciter(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -260,11 +273,6 @@ bool IEEET1::setup_model_with_bpa_string(string data)
 
 void IEEET1::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    sensor.set_toolkit(toolkit);
-    regulator.set_toolkit(toolkit);
-    feedbacker.set_toolkit(toolkit);
-    exciter.set_toolkit(toolkit);
 }
 
 void IEEET1::initialize()

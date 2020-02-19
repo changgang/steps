@@ -4,12 +4,32 @@
 #include "header/STEPS.h"
 #include "header/basic/utility.h"
 
-WT3E1::WT3E1(STEPS& toolkit) : WT_ELECTRICAL_MODEL(toolkit)
+WT3E1::WT3E1(STEPS& toolkit) : WT_ELECTRICAL_MODEL(toolkit),
+                               voltage_sensor(toolkit),
+                               voltage_regulator_first_order_block(toolkit),
+                               voltage_regulator_integrator(toolkit),
+                               voltage_regulator_filter(toolkit),
+                               active_power_sensor(toolkit),
+                               Q_error_integrator(toolkit),
+                               V_error_integrator(toolkit),
+                               wind_turbine_speed_reference_sensor(toolkit),
+                               torque_PI_regulator(toolkit),
+                               power_order_integrator(toolkit)
 {
     clear();
 }
 
-WT3E1::WT3E1(const WT3E1& model) : WT_ELECTRICAL_MODEL(model.get_toolkit())
+WT3E1::WT3E1(const WT3E1& model) : WT_ELECTRICAL_MODEL(model.get_toolkit()),
+                                   voltage_sensor(model.get_toolkit()),
+                                   voltage_regulator_first_order_block(model.get_toolkit()),
+                                   voltage_regulator_integrator(model.get_toolkit()),
+                                   voltage_regulator_filter(model.get_toolkit()),
+                                   active_power_sensor(model.get_toolkit()),
+                                   Q_error_integrator(model.get_toolkit()),
+                                   V_error_integrator(model.get_toolkit()),
+                                   wind_turbine_speed_reference_sensor(model.get_toolkit()),
+                                   torque_PI_regulator(model.get_toolkit()),
+                                   power_order_integrator(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -44,7 +64,18 @@ void WT3E1::clear()
 
 void WT3E1::copy_from_const_model(const WT3E1& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    voltage_sensor.set_toolkit(toolkit);
+    voltage_regulator_first_order_block.set_toolkit(toolkit);
+    voltage_regulator_integrator.set_toolkit(toolkit);
+    voltage_regulator_filter.set_toolkit(toolkit);
+    active_power_sensor.set_toolkit(toolkit);
+    Q_error_integrator.set_toolkit(toolkit);
+    V_error_integrator.set_toolkit(toolkit);
+    wind_turbine_speed_reference_sensor.set_toolkit(toolkit);
+    torque_PI_regulator.set_toolkit(toolkit);
+    power_order_integrator.set_toolkit(toolkit);
 
     clear();
 
@@ -538,17 +569,6 @@ bool WT3E1::setup_model_with_bpa_string(string data)
 
 void WT3E1::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-    voltage_sensor.set_toolkit(toolkit);
-    voltage_regulator_first_order_block.set_toolkit(toolkit);
-    voltage_regulator_integrator.set_toolkit(toolkit);
-    voltage_regulator_filter.set_toolkit(toolkit);
-    active_power_sensor.set_toolkit(toolkit);
-    Q_error_integrator.set_toolkit(toolkit);
-    V_error_integrator.set_toolkit(toolkit);
-    wind_turbine_speed_reference_sensor.set_toolkit(toolkit);
-    torque_PI_regulator.set_toolkit(toolkit);
-    power_order_integrator.set_toolkit(toolkit);
 }
 
 void WT3E1::initialize()

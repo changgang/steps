@@ -5,9 +5,40 @@
 #include <istream>
 #include <iostream>
 using namespace std;
-ESTR0::ESTR0(STEPS& toolkit) : ENERGY_STORAGE_MODEL(toolkit)
+ESTR0::ESTR0(STEPS& toolkit) : ENERGY_STORAGE_MODEL(toolkit),
+                               active_lead_lag_1(toolkit),
+                               active_lead_lag_2(toolkit),
+                               active_pid_block(toolkit),
+                               active_power_filter(toolkit),
+                               energy_state_block(toolkit),
+                               reactive_lead_lag_1(toolkit),
+                               reactive_lead_lag_2(toolkit),
+                               reactive_integral_block(toolkit)
 {
     clear();
+}
+
+ESTR0::ESTR0(const ESTR0& model) : ENERGY_STORAGE_MODEL(model.get_toolkit()),
+                                   active_lead_lag_1(model.get_toolkit()),
+                                   active_lead_lag_2(model.get_toolkit()),
+                                   active_pid_block(model.get_toolkit()),
+                                   active_power_filter(model.get_toolkit()),
+                                   energy_state_block(model.get_toolkit()),
+                                   reactive_lead_lag_1(model.get_toolkit()),
+                                   reactive_lead_lag_2(model.get_toolkit()),
+                                   reactive_integral_block(model.get_toolkit())
+{
+    copy_from_const_model(model);
+}
+
+ESTR0& ESTR0::operator=(const ESTR0& model)
+{
+    if(this==&model)
+        return *this;
+
+    copy_from_const_model(model);
+
+    return (*this);
 }
 
 ESTR0::~ESTR0()
@@ -23,7 +54,16 @@ void ESTR0::clear()
 
 void ESTR0::copy_from_const_model(const ESTR0& model)
 {
-    set_toolkit(model.get_toolkit());
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    active_lead_lag_1.set_toolkit(toolkit);
+    active_lead_lag_2.set_toolkit(toolkit);
+    active_pid_block.set_toolkit(toolkit);
+    active_power_filter.set_toolkit(toolkit);
+    energy_state_block.set_toolkit(toolkit);
+    reactive_lead_lag_1.set_toolkit(toolkit);
+    reactive_lead_lag_2.set_toolkit(toolkit);
+    reactive_integral_block.set_toolkit(toolkit);
 
     clear();
 
@@ -52,21 +92,6 @@ void ESTR0::copy_from_const_model(const ESTR0& model)
     this->set_Tq4_in_s(model.get_Tq4_in_s());
     this->set_Kq(model.get_Kq());
     this->set_Dq(model.get_Dq());
-}
-
-ESTR0::ESTR0(const ESTR0& model) : ENERGY_STORAGE_MODEL(model.get_toolkit())
-{
-    copy_from_const_model(model);
-}
-
-ESTR0& ESTR0::operator=(const ESTR0& model)
-{
-    if(this==&model)
-        return *this;
-
-    copy_from_const_model(model);
-
-    return (*this);
 }
 
 string ESTR0::get_model_name() const
@@ -342,16 +367,6 @@ bool ESTR0::setup_model_with_bpa_string(string data)
 
 void ESTR0::setup_block_toolkit_and_parameters()
 {
-    STEPS& toolkit = get_toolkit();
-
-    active_lead_lag_1.set_toolkit(toolkit);
-    active_lead_lag_2.set_toolkit(toolkit);
-    active_pid_block.set_toolkit(toolkit);
-    active_power_filter.set_toolkit(toolkit);
-    energy_state_block.set_toolkit(toolkit);
-    reactive_lead_lag_1.set_toolkit(toolkit);
-    reactive_lead_lag_2.set_toolkit(toolkit);
-    reactive_integral_block.set_toolkit(toolkit);
 }
 
 void ESTR0::initialize()
