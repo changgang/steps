@@ -84,9 +84,6 @@ void DIFFERENTIAL_BLOCK::run(DYNAMIC_MODE mode)
 
 void DIFFERENTIAL_BLOCK::integrate()
 {
-    //STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    //double h = toolkit.get_dynamic_simulation_time_step_in_s();
-
     //double k = get_K();
     //double t = get_T_in_s();
 
@@ -114,9 +111,6 @@ void DIFFERENTIAL_BLOCK::integrate()
 
 void DIFFERENTIAL_BLOCK::update()
 {
-    //STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    //double h = toolkit.get_dynamic_simulation_time_step_in_s();
-
     //double k = get_K();
     //double t = get_T_in_s();
 

@@ -402,7 +402,6 @@ bool CONTINGENCY_SCREENER::perform_simulation_with_clearing_time(double clearing
     clear_fault(simulator);
 
     double tend = get_simulation_time_span_in_s();
-    //double delt = default_toolkit.get_dynamic_simulation_time_step_in_s();
 
     simulator.run_to(tend-1.0);
 

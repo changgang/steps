@@ -405,13 +405,43 @@ double steps_atan(double x)
 
 double steps_fast_atan(double x)
 {
-    return atan(x);
-    if(x==0.0)
-        return 0.0;
+    //return atan(x);
 
+    /*user polynomial with maximum error <0.4e-11*/
+    double y = fabs(x);
+    if(y>1.0) y = 1.0/y;
+
+    double y2 = y*y;
+    double y3 = y2*y;
+    double y5 = y3*y2;
+    double y7 = y5*y2;
+    double y9 = y7*y2;
+    double y11 = y9*y2;
+    double y13 = y11*y2;
+    double y15 = y13*y2;
+    double y17 = y15*y2;
+
+    double z =   0.9999999999018119*y
+                -0.3333333167717403*y3
+                +0.1999991076162263*y5
+                -0.14283152496616747*y7
+                +0.11056848230911817*y9
+                -0.07513116523199578*y11
+                -0.07802246093181216*y7*y5 /*y12*/
+                +0.2699603659514348*y13
+                -0.27810373457929133*y7*y7 /*y14*/
+                +0.15078314291241518*y15
+                -0.04398393524366868*y9*y7 /*y16*/
+                +0.005493202428206681*y17;
+
+    if(fabs(x)>1.0) z = HALF_PI-z;
+    return (x>=0?z:-z);
+
+    /*
     // the following atan function is built based on:
     // 1. Approximation Eq. 4.4.49 on P81 of "Handbook of Mathematical Functions", by Milton Abramowitz and Irene A. Stegun, 1970
     // 2. Identity Eq. 4.45.8 arctan(x)=2*arctan(y) if y=x/(1+sqrt(1+x*x)), on https://dlmf.nist.gov/4.45, accessed on Feb. 9, 2020
+
     double y = fabs(x);
     if(y>1.0) y = 1.0/y;
 
@@ -422,7 +452,6 @@ double steps_fast_atan(double x)
         scaled = true;
     }
 
-    // from Handbook of functions, Abramowitz&Stegun
     double y2 = y*y;
     double y4 = y2*y2;
     double y6 = y4*y2;
@@ -446,12 +475,13 @@ double steps_fast_atan(double x)
         z += z;
 
     if(fabs(x)>1) z = HALF_PI-z;
-    return (x>0?1:-1)*z;
+    return (x>=0?z:-z);
+    */
+
 }
 
 double steps_sqrt(double x)
 {
-    return sqrt(x);
     if(use_steps_fast_math==true)
         return steps_fast_sqrt(x);
     else
@@ -460,6 +490,7 @@ double steps_sqrt(double x)
 
 double steps_fast_sqrt(double x)
 {
+    return sqrt(x);
     return x*quick_inv_sqrt_Lomont(x);
 }
 

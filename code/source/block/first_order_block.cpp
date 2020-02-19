@@ -46,6 +46,9 @@ double FIRST_ORDER_BLOCK::get_T_in_s() const
 
 void FIRST_ORDER_BLOCK::initialize()
 {
+    STEPS& toolkit = get_toolkit();
+    h = toolkit.get_dynamic_simulation_time_step_in_s();
+
     double k = get_K();
     double t = get_T_in_s();
     if(k!=0.0)
@@ -53,9 +56,6 @@ void FIRST_ORDER_BLOCK::initialize()
     if(t!=0.0)
     {
         ostringstream osstream;
-
-        STEPS& toolkit = get_toolkit();
-        double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
         one_over_t = 1.0/t;
         one_over_h = 1.0/h;
@@ -148,9 +148,6 @@ void FIRST_ORDER_BLOCK::integrate()
     double k = get_K();
     if(k!=0.0)
     {
-        STEPS& toolkit = get_toolkit();
-        double h = toolkit.get_dynamic_simulation_time_step_in_s();
-
         double t = get_T_in_s();
 
         LIMITER_TYPE limiter_type = get_limiter_type();
@@ -220,9 +217,6 @@ void FIRST_ORDER_BLOCK::update()
     double k = get_K();
     if(k!=0.0)
     {
-        //STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        //double h = toolkit.get_dynamic_simulation_time_step_in_s();
-
         double t = get_T_in_s();
 
         LIMITER_TYPE limiter_type = get_limiter_type();

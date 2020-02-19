@@ -95,9 +95,6 @@ void INTEGRAL_BLOCK::run(DYNAMIC_MODE mode)
 
 void INTEGRAL_BLOCK::integrate()
 {
-    //STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    //double h = toolkit.get_dynamic_simulation_time_step_in_s();
-
     double t = get_T_in_s();
     if(fabs(t)>FLOAT_EPSILON and fabs(t-INFINITE_THRESHOLD)>FLOAT_EPSILON)
     {
@@ -157,8 +154,6 @@ void INTEGRAL_BLOCK::integrate()
 
 void INTEGRAL_BLOCK::update()
 {
-    //STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    //double h = toolkit.get_dynamic_simulation_time_step_in_s();
     double t = get_T_in_s();
     if(fabs(t)>FLOAT_EPSILON and fabs(t-INFINITE_THRESHOLD)>FLOAT_EPSILON)
     {
