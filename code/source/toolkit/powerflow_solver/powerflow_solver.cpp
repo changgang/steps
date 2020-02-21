@@ -2708,3 +2708,38 @@ unsigned int POWERFLOW_SOLVER::get_iteration_count() const
 {
     return iteration_count;
 }
+
+unsigned int POWERFLOW_SOLVER::get_memory_usage_in_bytes()
+{
+    return jacobian.get_memory_usage_in_bytes()+
+           BP.get_memory_usage_in_bytes()+
+           BQ.get_memory_usage_in_bytes()+
+
+           bus_active_power_mismatch_in_pu.capacity()*sizeof(double)+
+           bus_reactive_power_mismatch_in_pu.capacity()*sizeof(double)+
+
+           internal_P_equation_buses.capacity()*sizeof(unsigned int)+
+           internal_Q_equation_buses.capacity()*sizeof(unsigned int)+
+
+           S_mismatch.capacity()*sizeof(double)+
+           P_mismatch.capacity()*sizeof(double)+
+           Q_mismatch.capacity()*sizeof(double)+
+
+           bus_current.capacity()*sizeof(complex<double>)+
+           bus_power.capacity()*sizeof(complex<double>)+
+
+           buses.capacity()*sizeof(BUS*)+
+           sources.capacity()*sizeof(SOURCE*)+
+           generators.capacity()*sizeof(GENERATOR*)+
+           wt_generators.capacity()*sizeof(WT_GENERATOR*)+
+           pv_units.capacity()*sizeof(PV_UNIT*)+
+           e_storages.capacity()*sizeof(ENERGY_STORAGE*)+
+           loads.capacity()*sizeof(LOAD*)+
+           lines.capacity()*sizeof(LINE*)+
+           transformers.capacity()*sizeof(TRANSFORMER*)+
+           hvdcs.capacity()*sizeof(HVDC*)+
+           e_devices.capacity()*sizeof(EQUIVALENT_DEVICE*)+
+
+
+           internal_bus_pointers.capacity()*sizeof(BUS*);
+}

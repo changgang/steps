@@ -45,6 +45,8 @@ class STEPS
         void set_dynamic_model_database_size_in_bytes(unsigned int n);
         unsigned int get_dynamic_model_database_size_in_bytes();
 
+        void report_toolkit_memory_usage();
+
         char get_next_alphabeta();
         void open_log_file(const string& file, bool log_file_append_mode=false);
         void close_log_file();

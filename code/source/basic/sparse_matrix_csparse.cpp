@@ -680,3 +680,23 @@ vector<double>& operator/(vector<double>&b, SPARSE_MATRIX_CSPARSE& A)
 {
     return A.solve_Ax_eq_b(b);
 }
+
+unsigned int SPARSE_MATRIX_CSPARSE::get_memory_usage_in_bytes()
+{
+    unsigned int n = matrix_real->nzmax*(sizeof(csi)+sizeof(double))+
+                     matrix_real->n*sizeof(csi);
+    if(matrix_imag!=nullptr)
+        n += matrix_imag->nzmax*(sizeof(csi)+sizeof(double))+
+             matrix_imag->n*sizeof(csi);
+
+    if(LU!=nullptr)
+        n += LU->L->nzmax*(sizeof(csi)+sizeof(double))+
+             LU->L->n*sizeof(csi)+
+             LU->U->nzmax*(sizeof(csi)+sizeof(double))+
+             LU->U->n*sizeof(csi)+
+             LU->L->n*sizeof(csi)+
+             LU->L->n*sizeof(double);
+    n += matrix_real->n*sizeof(double)+
+         bb_size*sizeof(double);
+    return n;
+}

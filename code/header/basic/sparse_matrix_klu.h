@@ -50,6 +50,7 @@ public:
     virtual void report_full()  const;
     virtual void save_matrix_to_file(string filename)  const;
 
+    virtual unsigned int get_memory_usage_in_bytes();
 private:
     void copy_from_const_matrix(const SPARSE_MATRIX_KLU& matrix);
     vector<unsigned int> triplet_row_index, triplet_column_index;

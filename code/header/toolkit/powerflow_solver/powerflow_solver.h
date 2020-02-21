@@ -65,6 +65,8 @@ class POWERFLOW_SOLVER
         void save_jacobian_matrix_to_file(const string& filename);
         void save_bus_powerflow_result_to_file(const string& filename) const;
         unsigned int get_iteration_count() const;
+
+        unsigned int get_memory_usage_in_bytes();
     private:
         void prepare_devices_for_solution();
         void initialize_bus_type();

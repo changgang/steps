@@ -270,3 +270,7 @@ bool DEVICE_INDEX_MAP::is_given_device_of_the_same_type_as_existing_devices_umap
     else
         return false;
 }
+unsigned int DEVICE_INDEX_MAP::get_map_size() const
+{
+    return index_map.size();
+}

@@ -81,6 +81,8 @@ class NETWORK_MATRIX
         void save_dc_network_B_matrix_to_file(const string& filename) const;
         void save_dynamic_network_Y_matrix_to_file(const string& filename);
         void save_network_Z_matrix_to_file(const string& filename) const;
+
+        unsigned int get_memory_usage_in_bytes();
     private:
         void add_lines_to_network();
         void add_transformers_to_network();

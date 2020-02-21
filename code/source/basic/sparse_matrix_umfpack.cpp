@@ -554,3 +554,8 @@ vector<double>& operator/(vector<double>&b, SPARSE_MATRIX_UMFPACK& A)
 {
     return A.solve_Ax_eq_b(b);
 }
+
+unsigned int SPARSE_MATRIX_UMFPACK::get_memory_usage_in_bytes()
+{
+    return 0;
+}

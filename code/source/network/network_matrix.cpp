@@ -3209,3 +3209,24 @@ void NETWORK_MATRIX::report_physical_internal_bus_number_pair() const
 {
     inphno.report();
 }
+
+unsigned int NETWORK_MATRIX::get_memory_usage_in_bytes()
+{
+    return network_Y1_matrix.get_memory_usage_in_bytes()+
+           network_Y2_matrix.get_memory_usage_in_bytes()+
+           network_Y0_matrix.get_memory_usage_in_bytes()+
+
+           network_Z1_matrix.get_memory_usage_in_bytes()+
+           network_Z2_matrix.get_memory_usage_in_bytes()+
+           network_Z0_matrix.get_memory_usage_in_bytes()+
+
+           network_Y_matrix.get_memory_usage_in_bytes()+
+
+           network_BP_matrix.get_memory_usage_in_bytes()+
+           network_BQ_matrix.get_memory_usage_in_bytes()+
+           network_DC_B_matrix.get_memory_usage_in_bytes()+
+
+           this_jacobian.get_memory_usage_in_bytes()+
+
+           inphno.get_table_size()*2*sizeof(unsigned int);
+}

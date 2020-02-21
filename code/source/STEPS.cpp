@@ -46,6 +46,8 @@ STEPS::STEPS(const string& name, const string& log_file) : power_system_db(*this
 
 STEPS::~STEPS()
 {
+    report_toolkit_memory_usage();
+
     if(toolkit_name!="TK DFLT")
         show_information_with_leading_time_stamp("STEPS simulation toolkit ["+toolkit_name+"] @ 0X"+num2hex_str(size_t(this))+" is deleted.");
     close_log_file();
@@ -275,6 +277,18 @@ void STEPS::set_dynamic_model_database_size_in_bytes(unsigned int n)
 unsigned int STEPS::get_dynamic_model_database_size_in_bytes()
 {
     return dynamic_model_db_size;
+}
+
+void STEPS::report_toolkit_memory_usage()
+{
+    ostringstream osstream;
+    osstream<<"Gross report of toolkit memory usage:\n"
+            <<"Power System Database : "<<setw(9)<<power_system_db.get_memory_usage_in_bytes()<<" B\n"
+            <<"Dynamic Model Database: "<<setw(9)<<dynamic_model_db.get_memory_usage_in_bytes()<<" B\n"
+            <<"Powerflow Solver      : "<<setw(9)<<powerflow_solver.get_memory_usage_in_bytes()<<" B\n"
+            <<"Dynamic Simulator     : "<<setw(9)<<dynamic_simulator.get_memory_usage_in_bytes()<<" B\n"
+            <<"Network Matrix        : "<<setw(9)<<network_matrix.get_memory_usage_in_bytes()<<" B";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void STEPS::clear()

@@ -145,6 +145,11 @@ void INPHNO::clear()
     internal_to_physical_lookup_table.clear();
 }
 
+unsigned int INPHNO::get_table_size() const
+{
+    return physical_to_internal_lookup_table.size();
+}
+
 unsigned int INPHNO::get_internal_bus_number_of_physical_bus_number(unsigned int bus) const
 {
     if(not empty())

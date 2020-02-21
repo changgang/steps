@@ -407,3 +407,8 @@ void DYNAMIC_MODEL_DATABASE::check_device_model_minimum_time_constants()
     }
     toolkit->show_information_with_leading_time_stamp(osstream);
 }
+
+unsigned int DYNAMIC_MODEL_DATABASE::get_memory_usage_in_bytes()
+{
+    return warehouse_capacity*sizeof(char)+model_starting_position_table.capacity()*sizeof(unsigned int);
+}

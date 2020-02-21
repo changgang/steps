@@ -63,6 +63,8 @@ class DYNAMICS_SIMULATOR
 
         void show_dynamic_simulator_configuration() const;
 
+        unsigned int get_memory_usage_in_bytes();
+
         void set_network_matrix_update_as_unrequired();
         void set_network_matrix_update_as_required();
         bool is_network_matrix_update_required() const;

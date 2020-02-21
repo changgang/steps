@@ -26,6 +26,7 @@ class DEVICE_INDEX_MAP
         unsigned int get_index_of_device(const DEVICE_ID& device_id) const;
         unsigned int operator[](const DEVICE_ID& device_id) const;
 
+        unsigned int get_map_size() const;
     private:
         bool is_given_device_of_the_same_type_as_existing_devices(const DEVICE_ID& device_id) const;
         bool is_given_device_of_the_same_type_as_existing_devices_map(const DEVICE_ID& device_id) const;

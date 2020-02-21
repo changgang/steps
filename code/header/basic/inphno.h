@@ -20,6 +20,8 @@ class INPHNO
         bool empty() const;
         void clear();
 
+        unsigned int get_table_size() const;
+
         unsigned int get_internal_bus_number_of_physical_bus_number(unsigned int bus) const;
         unsigned int get_physical_bus_number_of_internal_bus_number(unsigned int bus) const;
 

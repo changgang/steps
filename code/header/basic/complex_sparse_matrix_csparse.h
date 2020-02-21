@@ -53,6 +53,8 @@ public:
     virtual void report_full()  const;
     virtual void save_matrix_to_file(string filename)  const;
 
+    virtual unsigned int get_memory_usage_in_bytes();
+
 private:
     void solve_Lx_eq_b(vector<complex<double> >& b);
     void solve_xU_eq_b(vector<complex<double> >& b);

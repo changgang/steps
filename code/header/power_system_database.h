@@ -474,6 +474,8 @@ class POWER_SYSTEM_DATABASE
         void set_all_buses_un_overshadowed();
         void update_overshadowed_bus_count();
         unsigned int get_equivalent_bus_of_bus(unsigned int bus);
+
+        unsigned int get_memory_usage_in_bytes();
     private:
         void check_source_status_for_out_of_service_bus(unsigned int bus);
         void check_load_status_for_out_of_service_bus(unsigned int bus);

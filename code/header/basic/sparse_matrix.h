@@ -66,6 +66,7 @@ public:
     virtual void report_brief()  const = 0;
     virtual void report_full()  const = 0;
     virtual void save_matrix_to_file(string filename)  const = 0;
+    virtual unsigned int get_memory_usage_in_bytes() = 0;
 private:
     clock_t clock_when_matrix_is_changed;
     clock_t clock_when_LU_factorization_is_performed;

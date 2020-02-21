@@ -624,3 +624,21 @@ vector<complex<double> >& operator/(vector<complex<double> >&b, COMPLEX_SPARSE_M
 {
     return A.solve_Ax_eq_b(b);
 }
+
+unsigned int COMPLEX_SPARSE_MATRIX_CSPARSE::get_memory_usage_in_bytes()
+{
+    unsigned int n = matrix_complex->nzmax*(sizeof(int)+sizeof(complex<double>))+
+                     matrix_complex->n*sizeof(int);
+
+    if(LU!=nullptr)
+        n += LU->L->nzmax*(sizeof(int)+sizeof(complex<double>))+
+             LU->L->n*sizeof(int)+
+             LU->U->nzmax*(sizeof(int)+sizeof(complex<double>))+
+             LU->U->n*sizeof(int)+
+             LU->L->n*sizeof(int)+
+             LU->L->n*sizeof(complex<double>);
+
+    n += matrix_complex->n*sizeof(complex<double>)+
+         bb_size*sizeof(complex<double>);
+    return n;
+}

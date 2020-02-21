@@ -5983,3 +5983,35 @@ complex<double> POWER_SYSTEM_DATABASE::get_total_loss_power_in_MVA()
     return get_total_generation_power_in_MVA()-get_total_load_power_in_MVA();
 }
 
+unsigned int POWER_SYSTEM_DATABASE::get_memory_usage_in_bytes()
+{
+    return Bus.capacity()*sizeof(BUS)+
+           Generator.capacity()*sizeof(GENERATOR)+
+           WT_Generator.capacity()*sizeof(WT_GENERATOR)+
+           PV_Unit.capacity()*sizeof(PV_UNIT)+
+           Load.capacity()*sizeof(LOAD)+
+           Line.capacity()*sizeof(LINE)+
+           Transformer.capacity()*sizeof(TRANSFORMER)+
+           Fixed_shunt.capacity()*sizeof(FIXED_SHUNT)+
+           Hvdc.capacity()*sizeof(HVDC)+
+           Equivalent_device.capacity()*sizeof(EQUIVALENT_DEVICE)+
+           Energy_storage.capacity()*sizeof(ENERGY_STORAGE)+
+           Area.capacity()*sizeof(AREA)+
+           Zone.capacity()*sizeof(ZONE)+
+           Owner.capacity()*sizeof(OWNER)+
+           bus_index.get_max_bus_number()*sizeof(unsigned int)+
+           generator_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
+           wt_generator_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
+           pv_unit_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
+           load_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
+           fixed_shunt_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
+           switched_shunt_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
+           line_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
+           transformer_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
+           hvdc_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
+           equivalent_device_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
+           energy_storage_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
+           area_index.size()*sizeof(unsigned int)*2+
+           zone_index.size()*sizeof(unsigned int)*2+
+           owner_index.size()*sizeof(unsigned int)*2;
+}

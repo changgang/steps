@@ -317,6 +317,31 @@ void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
     toolkit->show_information_with_leading_time_stamp(osstream);
 }
 
+unsigned int DYNAMICS_SIMULATOR::get_memory_usage_in_bytes()
+{
+    return in_service_buses.capacity()*sizeof(BUS*)+
+           generators.capacity()*sizeof(GENERATOR*)+
+           wt_generators.capacity()*sizeof(WT_GENERATOR*)+
+           pv_units.capacity()*sizeof(PV_UNIT*)+
+           e_storages.capacity()*sizeof(ENERGY_STORAGE*)+
+           loads.capacity()*sizeof(LOAD*)+
+           lines.capacity()*sizeof(LINE*)+
+           hvdcs.capacity()*sizeof(HVDC*)+
+           e_devices.capacity()*sizeof(EQUIVALENT_DEVICE*)+
+
+           internal_bus_pointers.capacity()*sizeof(BUS*)+
+           internal_bus_voltage_in_pu.capacity()*sizeof(double)+
+           internal_bus_complex_voltage_in_pu.capacity()*sizeof(complex<double>)+
+           I_mismatch.capacity()*sizeof(complex<double>)+
+           S_mismatch.capacity()*sizeof(complex<double>)+
+           I_vec.capacity()*sizeof(double)+
+           delta_V.capacity()*sizeof(complex<double>)+
+
+           jacobian.get_memory_usage_in_bytes()+
+
+           meters.capacity()*sizeof(METER)+
+           meter_values.capacity()*sizeof(double);
+}
 
 void DYNAMICS_SIMULATOR::set_network_matrix_update_as_unrequired()
 {
