@@ -2289,10 +2289,12 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    unsigned int n = psdb.get_generator_count();
+    unsigned int n = 0;
 
+    n = generators.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_generator_thread_number());
+        //set_openmp_number_of_threads(toolkit->get_generator_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2303,9 +2305,10 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
             generator->run(mode);
     }
 
-    n = psdb.get_wt_generator_count();
+    n = wt_generators.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_wt_generator_thread_number());
+        //set_openmp_number_of_threads(toolkit->get_wt_generator_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2316,9 +2319,10 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
             wtgen->run(mode);
     }
 
-    n = psdb.get_pv_unit_count();
+    n = pv_units.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_pv_unit_thread_number());
+        //set_openmp_number_of_threads(toolkit->get_pv_unit_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2329,9 +2333,10 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
             pv->run(mode);
     }
 
-    n = psdb.get_load_count();
+    n = loads.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_load_thread_number());
+        //set_openmp_number_of_threads(toolkit->get_load_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2342,9 +2347,10 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
             load->run(mode);
     }
 
-    n = psdb.get_hvdc_count();
+    n = hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_hvdc_thread_number());
+        //set_openmp_number_of_threads(toolkit->get_hvdc_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2355,9 +2361,10 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
             hvdc->run(mode);
     }
 
-    n = psdb.get_equivalent_device_count();
+    n = e_devices.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_equivalent_device_thread_number());
+        //set_openmp_number_of_threads(toolkit->get_equivalent_device_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2370,7 +2377,8 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 
     n = in_service_buses.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_bus_thread_number());
+        //set_openmp_number_of_threads(toolkit->get_bus_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2390,7 +2398,8 @@ void DYNAMICS_SIMULATOR::update_bus_frequency_blocks()
     unsigned int n = in_service_buses.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_bus_thread_number());
+        //set_openmp_number_of_threads(toolkit->get_bus_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2427,7 +2436,8 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_buffer()
     unsigned int n = e_devices.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_equivalent_device_thread_number());
+        //set_openmp_number_of_threads(toolkit->get_equivalent_device_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2442,7 +2452,8 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_output()
 {
     unsigned int n = e_devices.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_equivalent_device_thread_number());
+        //set_openmp_number_of_threads(toolkit->get_equivalent_device_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2655,7 +2666,8 @@ void DYNAMICS_SIMULATOR::solve_hvdcs_without_integration()
 {
     unsigned int n = hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_hvdc_thread_number());
+        //set_openmp_number_of_threads(toolkit->get_hvdc_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
