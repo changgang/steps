@@ -410,5 +410,8 @@ void DYNAMIC_MODEL_DATABASE::check_device_model_minimum_time_constants()
 
 unsigned int DYNAMIC_MODEL_DATABASE::get_memory_usage_in_bytes()
 {
+    ostringstream osstream;
+    osstream<<"Dynamic model database warehouse used "<<model_starting_position_table[model_starting_position_table.size()-1]<<"B.";
+    toolkit->show_information_with_leading_time_stamp(osstream);
     return warehouse_capacity*sizeof(char)+model_starting_position_table.capacity()*sizeof(unsigned int);
 }

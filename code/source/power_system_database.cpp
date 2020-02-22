@@ -5985,6 +5985,24 @@ complex<double> POWER_SYSTEM_DATABASE::get_total_loss_power_in_MVA()
 
 unsigned int POWER_SYSTEM_DATABASE::get_memory_usage_in_bytes()
 {
+    ostringstream osstream;
+    osstream<<"Power system database device used:\n"
+            <<"Bus         : "<<setw(9)<<Bus.capacity()*sizeof(BUS)<<"B, "<<setw(9)<<Bus.size()*sizeof(BUS)<<"B, "<<setw(9)<<sizeof(BUS)<<"B\n"
+            <<"Generator   : "<<setw(9)<<Generator.capacity()*sizeof(GENERATOR)<<"B, "<<setw(9)<<Generator.size()*sizeof(GENERATOR)<<"B, "<<setw(9)<<sizeof(GENERATOR)<<"B\n"
+            <<"WT Generator: "<<setw(9)<<WT_Generator.capacity()*sizeof(WT_GENERATOR)<<"B, "<<setw(9)<<WT_Generator.size()*sizeof(WT_GENERATOR)<<"B, "<<setw(9)<<sizeof(WT_GENERATOR)<<"B\n"
+            <<"PV unit     : "<<setw(9)<<PV_Unit.capacity()*sizeof(PV_UNIT)<<"B, "<<setw(9)<<PV_Unit.size()*sizeof(PV_UNIT)<<"B, "<<setw(9)<<sizeof(PV_UNIT)<<"B\n"
+            <<"Load        : "<<setw(9)<<Load.capacity()*sizeof(LOAD)<<"B, "<<setw(9)<<Load.size()*sizeof(LOAD)<<"B, "<<setw(9)<<sizeof(LOAD)<<"B\n"
+            <<"Line        : "<<setw(9)<<Line.capacity()*sizeof(LINE)<<"B, "<<setw(9)<<Line.size()*sizeof(LINE)<<"B, "<<setw(9)<<sizeof(LINE)<<"B\n"
+            <<"Transformer : "<<setw(9)<<Transformer.capacity()*sizeof(TRANSFORMER)<<"B, "<<setw(9)<<Transformer.size()*sizeof(TRANSFORMER)<<"B, "<<setw(9)<<sizeof(TRANSFORMER)<<"B\n"
+            <<"Fixed shunt : "<<setw(9)<<Fixed_shunt.capacity()*sizeof(FIXED_SHUNT)<<"B, "<<setw(9)<<Fixed_shunt.size()*sizeof(FIXED_SHUNT)<<"B, "<<setw(9)<<sizeof(FIXED_SHUNT)<<"B\n"
+            <<"Equiv device: "<<setw(9)<<Equivalent_device.capacity()*sizeof(EQUIVALENT_DEVICE)<<"B, "<<setw(9)<<Equivalent_device.size()*sizeof(EQUIVALENT_DEVICE)<<"B, "<<setw(9)<<sizeof(EQUIVALENT_DEVICE)<<"B\n"
+            <<"Energy strge: "<<setw(9)<<Energy_storage.capacity()*sizeof(ENERGY_STORAGE)<<"B, "<<setw(9)<<Energy_storage.size()*sizeof(ENERGY_STORAGE)<<"B, "<<setw(9)<<sizeof(ENERGY_STORAGE)<<"B\n"
+            <<"Hvdc        : "<<setw(9)<<Hvdc.capacity()*sizeof(HVDC)<<"B, "<<setw(9)<<Hvdc.size()*sizeof(HVDC)<<"B, "<<setw(9)<<sizeof(HVDC)<<"B\n"
+            <<"Area        : "<<setw(9)<<Area.capacity()*sizeof(AREA)<<"B, "<<setw(9)<<Area.size()*sizeof(AREA)<<"B, "<<setw(9)<<sizeof(AREA)<<"B\n"
+            <<"Zone        : "<<setw(9)<<Zone.capacity()*sizeof(ZONE)<<"B, "<<setw(9)<<Zone.size()*sizeof(ZONE)<<"B, "<<setw(9)<<sizeof(ZONE)<<"B\n"
+            <<"Owner       : "<<setw(9)<<Owner.capacity()*sizeof(OWNER)<<"B, "<<setw(9)<<Owner.size()*sizeof(OWNER)<<"B, "<<setw(9)<<sizeof(OWNER)<<"B";
+    toolkit->show_information_with_leading_time_stamp(osstream);
+
     return Bus.capacity()*sizeof(BUS)+
            Generator.capacity()*sizeof(GENERATOR)+
            WT_Generator.capacity()*sizeof(WT_GENERATOR)+

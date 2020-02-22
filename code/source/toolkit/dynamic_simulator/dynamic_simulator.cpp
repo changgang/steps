@@ -2312,8 +2312,6 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 {
     auto clock_start = system_clock::now();
 
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-
     unsigned int n = 0;
 
     n = generators.size();
