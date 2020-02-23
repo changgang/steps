@@ -296,6 +296,35 @@ void MODEL::set_device_id(DEVICE_ID did)
         osstream<<"Warning. No valid device can be found for dynamic model.";
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
+    else
+    {
+        string device_type = did.get_device_type();
+        if(device_type=="GENERATOR")
+        {
+            bus_pointer = ((GENERATOR*) device_pointer)->get_bus_pointer();
+            return;
+        }
+        if(device_type=="WT GENERATOR")
+        {
+            bus_pointer = ((WT_GENERATOR*) device_pointer)->get_bus_pointer();
+            return;
+        }
+        if(device_type=="PV UNIT")
+        {
+            bus_pointer = ((PV_UNIT*) device_pointer)->get_bus_pointer();
+            return;
+        }
+        if(device_type=="ENERGY STORAGE")
+        {
+            bus_pointer = ((ENERGY_STORAGE*) device_pointer)->get_bus_pointer();
+            return;
+        }
+        if(device_type=="LOAD")
+        {
+            bus_pointer = ((LOAD*) device_pointer)->get_bus_pointer();
+            return;
+        }
+    }
 }
 
 DEVICE* MODEL::get_device_pointer() const
@@ -316,6 +345,11 @@ DEVICE_ID MODEL::get_device_id() const
 string MODEL::get_device_name() const
 {
     return get_device_id().get_device_name();
+}
+
+BUS* MODEL::get_bus_pointer() const
+{
+    return bus_pointer;
 }
 
 void MODEL::set_flag_model_initialized_as_false()

@@ -66,45 +66,18 @@ string LOAD_RELAY_MODEL::get_detailed_model_name() const
 
 double LOAD_RELAY_MODEL::get_bus_frequency_in_Hz() const
 {
-    LOAD* load = get_load_pointer();
-    if(load!=NULL)
-    {
-        BUS* bus = load->get_bus_pointer();
-        if(bus!=NULL)
-            return bus->get_frequency_in_Hz();
-        else
-            return 0.0;
-    }
-    else
-        return 0.0;
+    BUS* bus = get_bus_pointer();
+    return bus->get_frequency_in_Hz();
 }
 
 double LOAD_RELAY_MODEL::get_bus_base_frequency_in_Hz() const
 {
-    LOAD* load = get_load_pointer();
-    if(load!=NULL)
-    {
-        BUS* bus = load->get_bus_pointer();
-        if(bus!=NULL)
-            return bus->get_base_frequency_in_Hz();
-        else
-            return 0.0;
-    }
-    else
-        return 0.0;
+    BUS* bus = get_bus_pointer();
+    return bus->get_base_frequency_in_Hz();
 }
 
 double LOAD_RELAY_MODEL::get_bus_positive_sequence_voltage_in_pu() const
 {
-    LOAD* load = get_load_pointer();
-    if(load!=NULL)
-    {
-        BUS* bus = load->get_bus_pointer();
-        if(bus!=NULL)
-            return bus->get_positive_sequence_voltage_in_pu();
-        else
-            return 0.0;
-    }
-    else
-        return 0.0;
+    BUS* bus = get_bus_pointer();
+    return bus->get_positive_sequence_voltage_in_pu();
 }

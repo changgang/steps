@@ -8,7 +8,7 @@
 
 class POWER_SYSTEM_DATABASE;
 class DEVICE;
-
+class BUS;
 class MODEL
 {
     public:// common model level
@@ -44,6 +44,7 @@ class MODEL
         DEVICE* get_device_pointer() const;
         DEVICE_ID get_device_id() const;
         string get_device_name() const;
+        BUS* get_bus_pointer() const;
 
         void set_flag_model_initialized_as_false();
         void set_flag_model_initialized_as_true();
@@ -98,6 +99,7 @@ class MODEL
         STEPS* toolkit;
         char allowed_device_types[STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT][STEPS_SHORT_STRING_SIZE];
         DEVICE* device_pointer;
+        BUS* bus_pointer;
 
         unsigned int n_parameters;
 

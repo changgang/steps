@@ -19,90 +19,48 @@ PV_UNIT* PVU_MODEL::get_pv_unit_pointer() const
 
 double PVU_MODEL::get_mbase_in_MVA() const
 {
-    PV_UNIT* gen = get_pv_unit_pointer();
-    if(gen!=NULL)
-        return gen->get_mbase_in_MVA();
-    else
-        return 0.0;
+    PV_UNIT* pv_unit = get_pv_unit_pointer();
+    return pv_unit->get_mbase_in_MVA();
 }
 
 double PVU_MODEL::get_one_over_mbase_in_one_over_MVA() const
 {
-    PV_UNIT* gen = get_pv_unit_pointer();
-    if(gen!=NULL)
-        return gen->get_one_over_mbase_in_one_over_MVA();
-    else
-        return 0.0;
+    PV_UNIT* pv_unit = get_pv_unit_pointer();
+    return pv_unit->get_one_over_mbase_in_one_over_MVA();
 }
 
 unsigned int PVU_MODEL::get_number_of_lumped_pv_units() const
 {
-    PV_UNIT* gen = get_pv_unit_pointer();
-    if(gen!=NULL)
-        return gen->get_number_of_lumped_pv_units();
-    else
-        return 0;
+    PV_UNIT* pv_unit = get_pv_unit_pointer();
+    return pv_unit->get_number_of_lumped_pv_units();
 }
 
 double PVU_MODEL::get_rated_power_per_pv_unit_in_MW() const
 {
-    PV_UNIT* gen = get_pv_unit_pointer();
-    if(gen!=NULL)
-        return gen->get_rated_power_per_pv_unit_in_MW();
-    else
-        return 0.0;
+    PV_UNIT* pv_unit = get_pv_unit_pointer();
+    return pv_unit->get_rated_power_per_pv_unit_in_MW();
 }
 
 double PVU_MODEL::get_terminal_voltage_in_pu() const
 {
-    PV_UNIT* pvu = get_pv_unit_pointer();
-    if(pvu!=NULL)
-    {
-        BUS* bus = pvu->get_bus_pointer();
-        if(bus!=NULL)
-            return bus->get_positive_sequence_voltage_in_pu();
-        else
-            return 0.0;
-    }
-    else
-        return 0.0;
+    BUS* bus = get_bus_pointer();
+    return bus->get_positive_sequence_voltage_in_pu();
 }
 
 complex<double> PVU_MODEL::get_terminal_complex_voltage_in_pu() const
 {
-    PV_UNIT* pvu = get_pv_unit_pointer();
-    if(pvu!=NULL)
-    {
-        BUS* bus = pvu->get_bus_pointer();
-        if(bus!=NULL)
-            return bus->get_positive_sequence_complex_voltage_in_pu();
-        else
-            return 0.0;
-    }
-    else
-        return 0.0;
+    BUS* bus = get_bus_pointer();
+    return bus->get_positive_sequence_complex_voltage_in_pu();
 }
 
 double PVU_MODEL::get_bus_base_frequency_in_Hz() const
 {
-    PV_UNIT* pvu = get_pv_unit_pointer();
-    if(pvu!=NULL)
-    {
-        BUS* bus = pvu->get_bus_pointer();
-        if(bus!=NULL)
-            return bus->get_base_frequency_in_Hz();
-        else
-            return 0.0;
-    }
-    else
-        return 0.0;
+    BUS* bus = get_bus_pointer();
+    return bus->get_base_frequency_in_Hz();
 }
 
 complex<double> PVU_MODEL::get_source_impedance_in_pu_based_on_mbase() const
 {
     PV_UNIT* pv_unit = get_pv_unit_pointer();
-    if(pv_unit!=NULL)
-        return pv_unit->get_source_impedance_in_pu();
-    else
-        return 0.0;
+    return pv_unit->get_source_impedance_in_pu();
 }

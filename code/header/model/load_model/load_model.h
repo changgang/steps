@@ -19,8 +19,6 @@ class LOAD_MODEL : public MODEL
         bool get_voltage_source_flag() const;
         bool is_voltage_source() const;
 
-        void set_bus_pointer();
-        BUS* get_bus_pointer() const;
         // common load model
         virtual string get_model_type() const;
         // common inputs

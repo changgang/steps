@@ -20,19 +20,13 @@ ENERGY_STORAGE* ENERGY_STORAGE_MODEL::get_energy_storage_pointer() const
 double ENERGY_STORAGE_MODEL::get_mbase_in_MVA() const
 {
     ENERGY_STORAGE* estorage = get_energy_storage_pointer();
-    if(estorage!=NULL)
-        return estorage->get_mbase_in_MVA();
-    else
-        return 0.0;
+    return estorage->get_mbase_in_MVA();
 }
 
 double ENERGY_STORAGE_MODEL::get_one_over_mbase_in_one_over_MVA() const
 {
     ENERGY_STORAGE* estorage = get_energy_storage_pointer();
-    if(estorage!=NULL)
-        return estorage->get_one_over_mbase_in_one_over_MVA();
-    else
-        return 0.0;
+    return estorage->get_one_over_mbase_in_one_over_MVA();
 }
 
 string ENERGY_STORAGE_MODEL::get_model_type() const
@@ -42,52 +36,27 @@ string ENERGY_STORAGE_MODEL::get_model_type() const
 
 complex<double> ENERGY_STORAGE_MODEL::get_terminal_bus_complex_voltage_in_pu() const
 {
-    ENERGY_STORAGE* estorage = get_energy_storage_pointer();
-    if(estorage==NULL)
-        return 0.0;
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    unsigned int bus = estorage->get_energy_storage_bus();
-    return psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
+    BUS* bus = get_bus_pointer();
+    return bus->get_positive_sequence_complex_voltage_in_pu();
 }
 
 double ENERGY_STORAGE_MODEL::get_terminal_bus_voltage_in_pu() const
 {
-    ENERGY_STORAGE* estorage = get_energy_storage_pointer();
-    if(estorage==NULL)
-        return 0.0;
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    unsigned int bus = estorage->get_energy_storage_bus();
-    return psdb.get_bus_positive_sequence_voltage_in_pu(bus);
+    BUS* bus = get_bus_pointer();
+    return bus->get_positive_sequence_voltage_in_pu();
 }
 
 double ENERGY_STORAGE_MODEL::get_terminal_bus_angle_in_rad() const
 {
-    ENERGY_STORAGE* estorage = get_energy_storage_pointer();
-    if(estorage==NULL)
-        return 0.0;
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    unsigned int bus = estorage->get_energy_storage_bus();
-    return psdb.get_bus_positive_sequence_angle_in_rad(bus);
+    BUS* bus = get_bus_pointer();
+    return bus->get_positive_sequence_angle_in_rad();
 }
 
 
 double ENERGY_STORAGE_MODEL::get_terminal_bus_frequency_deviation_in_pu() const
 {
-    ENERGY_STORAGE* estorage = get_energy_storage_pointer();
-    if(estorage==NULL)
-        return 0.0;
-
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    unsigned int bus = estorage->get_energy_storage_bus();
-    return psdb.get_bus_frequency_deviation_in_pu(bus);
+    BUS* bus = get_bus_pointer();
+    return bus->get_frequency_deviation_in_pu();
 }
 
 void ENERGY_STORAGE_MODEL::set_Pmax_in_pu(double p)

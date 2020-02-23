@@ -5988,9 +5988,12 @@ unsigned int POWER_SYSTEM_DATABASE::get_memory_usage_in_bytes()
     ostringstream osstream;
 
     osstream<<"Size of some basic types:\n"
-            <<"unsigned int: "<<setw(9)<<sizeof(unsigned int)<<"B\n"
+            <<"ownership   : "<<setw(9)<<sizeof(OWNERSHIP)<<"B\n"
+            <<"fault       : "<<setw(9)<<sizeof(FAULT)<<"B\n"
             <<"bus freq mdl: "<<setw(9)<<sizeof(BUS_FREQUENCY_MODEL)<<"B\n"
+            <<"unsigned int: "<<setw(9)<<sizeof(unsigned int)<<"B\n"
             <<"pointer     : "<<setw(9)<<sizeof(BUS*)<<"B\n"
+            <<"bool        : "<<setw(9)<<sizeof(bool)<<"B\n"
             <<"string      : "<<setw(9)<<sizeof(string)<<"B";
     toolkit->show_information_with_leading_time_stamp(osstream);
 

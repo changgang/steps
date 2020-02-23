@@ -20,89 +20,47 @@ WT_GENERATOR* WTG_MODEL::get_wt_generator_pointer() const
 double WTG_MODEL::get_mbase_in_MVA() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen!=NULL)
-        return gen->get_mbase_in_MVA();
-    else
-        return 0.0;
+    return gen->get_mbase_in_MVA();
 }
 
 double WTG_MODEL::get_one_over_mbase_in_one_over_MVA() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen!=NULL)
-        return gen->get_one_over_mbase_in_one_over_MVA();
-    else
-        return 0.0;
+    return gen->get_one_over_mbase_in_one_over_MVA();
 }
 
 unsigned int WTG_MODEL::get_number_of_lumped_wt_generators() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen!=NULL)
-        return gen->get_number_of_lumped_wt_generators();
-    else
-        return 0;
+    return gen->get_number_of_lumped_wt_generators();
 }
 
 double WTG_MODEL::get_rated_power_per_wt_generator_in_MW() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen!=NULL)
-        return gen->get_rated_power_per_wt_generator_in_MW();
-    else
-        return 0.0;
+    return gen->get_rated_power_per_wt_generator_in_MW();
 }
 
 double WTG_MODEL::get_terminal_voltage_in_pu() const
 {
-    WT_GENERATOR* generator = get_wt_generator_pointer();
-    if(generator!=NULL)
-    {
-        BUS* bus = generator->get_bus_pointer();
-        if(bus!=NULL)
-            return bus->get_positive_sequence_voltage_in_pu();
-        else
-            return 0.0;
-    }
-    else
-        return 0.0;
+    BUS* bus = get_bus_pointer();
+    return bus->get_positive_sequence_voltage_in_pu();
 }
 
 complex<double> WTG_MODEL::get_terminal_complex_voltage_in_pu() const
 {
-    WT_GENERATOR* generator = get_wt_generator_pointer();
-    if(generator!=NULL)
-    {
-        BUS* bus = generator->get_bus_pointer();
-        if(bus!=NULL)
-            return bus->get_positive_sequence_complex_voltage_in_pu();
-        else
-            return 0.0;
-    }
-    else
-        return 0.0;
+    BUS* bus = get_bus_pointer();
+    return bus->get_positive_sequence_complex_voltage_in_pu();
 }
 
 double WTG_MODEL::get_bus_base_frequency_in_Hz() const
 {
-    WT_GENERATOR* generator = get_wt_generator_pointer();
-    if(generator!=NULL)
-    {
-        BUS* bus = generator->get_bus_pointer();
-        if(bus!=NULL)
-            return bus->get_base_frequency_in_Hz();
-        else
-            return 0.0;
-    }
-    else
-        return 0.0;
+    BUS* bus = get_bus_pointer();
+    return bus->get_base_frequency_in_Hz();
 }
 
 complex<double> WTG_MODEL::get_source_impedance_in_pu_based_on_mbase() const
 {
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
-    if(wt_generator!=NULL)
-        return wt_generator->get_source_impedance_in_pu();
-    else
-        return 0.0;
+    return wt_generator->get_source_impedance_in_pu();
 }

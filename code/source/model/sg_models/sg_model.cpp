@@ -20,62 +20,29 @@ GENERATOR* SG_MODEL::get_generator_pointer() const
 double SG_MODEL::get_mbase_in_MVA() const
 {
     GENERATOR* gen = get_generator_pointer();
-    if(gen!=NULL)
-        return gen->get_mbase_in_MVA();
-    else
-        return 0.0;
+    return gen->get_mbase_in_MVA();
 }
 
 double SG_MODEL::get_one_over_mbase_in_one_over_MVA() const
 {
     GENERATOR* gen = get_generator_pointer();
-    if(gen!=NULL)
-        return gen->get_one_over_mbase_in_one_over_MVA();
-    else
-        return 0.0;
+    return gen->get_one_over_mbase_in_one_over_MVA();
 }
 
 double SG_MODEL::get_bus_base_frequency_in_Hz() const
 {
-    GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
-    {
-        BUS* bus = generator->get_bus_pointer();
-        if(bus!=NULL)
-            return bus->get_base_frequency_in_Hz();
-        else
-            return 0.0;
-    }
-    else
-        return 0.0;
+    BUS* bus = get_bus_pointer();
+    return bus->get_base_frequency_in_Hz();
 }
 
 complex<double> SG_MODEL::get_terminal_complex_voltage_in_pu() const
 {
-    GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
-    {
-        BUS* bus = generator->get_bus_pointer();
-        if(bus!=NULL)
-            return bus->get_positive_sequence_complex_voltage_in_pu();
-        else
-            return 0.0;
-    }
-    else
-        return 0.0;
+    BUS* bus = get_bus_pointer();
+    return bus->get_positive_sequence_complex_voltage_in_pu();
 }
 
 double SG_MODEL::get_terminal_voltage_in_pu() const
 {
-    GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
-    {
-        BUS* bus = generator->get_bus_pointer();
-        if(bus!=NULL)
-            return bus->get_positive_sequence_voltage_in_pu();
-        else
-            return 0.0;
-    }
-    else
-        return 0.0;
+    BUS* bus = get_bus_pointer();
+    return bus->get_positive_sequence_voltage_in_pu();
 }
