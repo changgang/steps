@@ -47,14 +47,12 @@ void INTEGRAL_BLOCK::initialize()
         h_over_t = h*one_over_t;
 
         double s = y;
-        double ds = 0.0;
         double x = 0.0;
         //double z = s+0.5*h/t*x;
         double z = s+0.5*h_over_t*x;
 
         set_state(s);
         set_store(z);
-        set_dstate(ds);
         set_input(x);
 
         if(limiter != NO_LIMITER)
@@ -75,7 +73,6 @@ void INTEGRAL_BLOCK::initialize()
     {
         set_state(y);
         set_store(0.0);
-        set_dstate(0.0);
         set_input(0.0);
     }
 }
@@ -202,7 +199,6 @@ void INTEGRAL_BLOCK::update()
         //z = s+0.5*h/t*x;
         z = s+0.5*h_over_t*x;
         set_store(z);
-        set_dstate(ds);
         set_output(y);
     }
 }

@@ -18,8 +18,6 @@ class PI_BLOCK : public BLOCK
         double get_Ki() const;
 
         double get_state() const;
-        double get_new_state() const;
-        double get_dstate() const;
         double get_store() const;
 
         void initialize();

@@ -19,7 +19,7 @@ class INTEGRAL_BLOCK : public BLOCK
     private:
         void integrate();
         void update();
-        double T;
+        float T;
 
         double one_over_t, h_over_t;
 };

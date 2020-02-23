@@ -25,16 +25,10 @@ class PID_BLOCK : public BLOCK
 
         double get_integrator_state() const;
         double get_differentiator_state() const;
-        double get_integrator_new_state() const;
-        double get_differentiator_new_state() const;
-        double get_integrator_dstate() const;
-        double get_differentiator_dstate() const;
         double get_integrator_store() const;
         double get_differentiator_store() const;
 
         double get_state() const;
-        double get_new_state() const;
-        double get_dstate() const;
         double get_store() const;
 
         void initialize();

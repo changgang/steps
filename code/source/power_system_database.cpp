@@ -5986,6 +5986,14 @@ complex<double> POWER_SYSTEM_DATABASE::get_total_loss_power_in_MVA()
 unsigned int POWER_SYSTEM_DATABASE::get_memory_usage_in_bytes()
 {
     ostringstream osstream;
+
+    osstream<<"Size of some basic types:\n"
+            <<"unsigned int: "<<setw(9)<<sizeof(unsigned int)<<"B\n"
+            <<"bus freq mdl: "<<setw(9)<<sizeof(BUS_FREQUENCY_MODEL)<<"B\n"
+            <<"pointer     : "<<setw(9)<<sizeof(BUS*)<<"B\n"
+            <<"string      : "<<setw(9)<<sizeof(string)<<"B";
+    toolkit->show_information_with_leading_time_stamp(osstream);
+
     osstream<<"Power system database device used:\n"
             <<"Bus         : "<<setw(9)<<Bus.capacity()*sizeof(BUS)<<"B, "<<setw(9)<<Bus.size()*sizeof(BUS)<<"B, "<<setw(9)<<sizeof(BUS)<<"B\n"
             <<"Generator   : "<<setw(9)<<Generator.capacity()*sizeof(GENERATOR)<<"B, "<<setw(9)<<Generator.size()*sizeof(GENERATOR)<<"B, "<<setw(9)<<sizeof(GENERATOR)<<"B\n"

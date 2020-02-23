@@ -68,16 +68,6 @@ double PD_BLOCK::get_differentiator_state() const
     return d_block.get_state();
 }
 
-double PD_BLOCK::get_differentiator_new_state() const
-{
-    return d_block.get_new_state();
-}
-
-double PD_BLOCK::get_differentiator_dstate() const
-{
-    return d_block.get_dstate();
-}
-
 double PD_BLOCK::get_differentiator_store() const
 {
     return d_block.get_store();

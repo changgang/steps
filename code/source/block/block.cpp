@@ -7,8 +7,6 @@ BLOCK::BLOCK(STEPS& toolkit)
     set_toolkit(toolkit);
     set_limiter_type(NO_LIMITER);
     state = 0.0;
-    new_state = 0.0;
-    dstate = 0.0;
     store  = 0.0;
     upper_limit = 0.0;
     lower_limit = 0.0;
@@ -41,16 +39,6 @@ void BLOCK::set_state_WITH_CAUTION(double value)
     set_state(value);
 }
 
-void BLOCK::set_new_state(double value)
-{
-    new_state = value;
-}
-
-void BLOCK::set_dstate(double value)
-{
-    dstate = value;
-}
-
 void BLOCK::set_store(double value)
 {
     store = value;
@@ -59,16 +47,6 @@ void BLOCK::set_store(double value)
 double BLOCK::get_state() const
 {
     return state;
-}
-
-double BLOCK::get_new_state() const
-{
-    return new_state;
-}
-
-double BLOCK::get_dstate() const
-{
-    return dstate;
 }
 
 double BLOCK::get_store() const

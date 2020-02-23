@@ -23,7 +23,7 @@ class DIFFERENTIAL_BLOCK : public BLOCK
     private:
         void integrate();
         void update();
-        double K, T;
+        float K, T;
 
         double k_over_t, t_over_h, one_over_t;
 };

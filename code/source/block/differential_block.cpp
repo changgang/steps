@@ -61,17 +61,15 @@ void DIFFERENTIAL_BLOCK::initialize()
 
     double y = 0.0;
 
-    double s, ds, z;
+    double s, z;
 
     //s = x*k/t;
     //z = k/t*x-(1.0-2.0*t/h)*s;
     s = x*k_over_t;
     z = k_over_t*x-(1.0-2.0*t_over_h)*s;
-    ds = 0.0;
 
     set_state(s);
     set_store(z);
-    set_dstate(ds);
     set_output(y);
 }
 void DIFFERENTIAL_BLOCK::run(DYNAMIC_MODE mode)
@@ -116,7 +114,7 @@ void DIFFERENTIAL_BLOCK::update()
 
     double x = get_input();
 
-    double s, ds, z, y;
+    double s, z, y;
 
     s = get_state();
     //y = k/t*x-s;
@@ -124,9 +122,7 @@ void DIFFERENTIAL_BLOCK::update()
     //ds = y/t;
     y = k_over_t*x-s;
     z = k_over_t*x-(1.0-2.0*t_over_h)*s;
-    ds = y*one_over_t;
 
-    set_dstate(ds);
     set_store(z);
     set_output(y);
 }

@@ -34,8 +34,6 @@ class BLOCK
         double get_lower_limit() const;
 
         double get_state() const;
-        double get_new_state() const;
-        double get_dstate() const;
         double get_store() const;
 
         void check_limiter() const;
@@ -43,14 +41,13 @@ class BLOCK
         void set_state_WITH_CAUTION(double value);
     protected:
         void set_state(double value);
-        void set_new_state(double value);
-        void set_dstate(double value);
         void set_store(double value);
     private:
         STEPS* toolkit;
-        double state, new_state, dstate, store;
+        double state, store;
+        //double new_state, dstate;
         LIMITER_TYPE limiter_type;
-        double upper_limit, lower_limit;
+        float upper_limit, lower_limit;
         double input, output;
 };
 #endif // BLOCK_H

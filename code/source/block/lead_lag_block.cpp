@@ -80,17 +80,15 @@ void LEAD_LAG_BLOCK::initialize()
 
         double y = get_output();
 
-        double s, ds, z, x;
+        double s, z, x;
 
         s = y;
         x = y/k;
         //z = (1.0-h/(2.0*t1))*s+h/(2.0*t1)*y;
         z = (1.0-h_over_2t1)*s+h_over_2t1*y;
-        ds = 0.0;
 
         set_state(s);
         set_store(z);
-        set_dstate(ds);
         set_input(x);
     }
     else
@@ -105,7 +103,6 @@ void LEAD_LAG_BLOCK::initialize()
         first_order_block.initialize();
 
         this->set_state(first_order_block.get_state());
-        this->set_dstate(first_order_block.get_dstate());
         this->set_store(first_order_block.get_store());
         this->set_input(first_order_block.get_input());
     }
@@ -127,7 +124,6 @@ void LEAD_LAG_BLOCK::run(DYNAMIC_MODE mode)
         first_order_block.run(mode);
 
         this->set_state(first_order_block.get_state());
-        this->set_dstate(first_order_block.get_dstate());
         this->set_store(first_order_block.get_store());
         this->set_output(first_order_block.get_output());
     }
@@ -177,7 +173,7 @@ void LEAD_LAG_BLOCK::update()
 
     double x = get_input();
 
-    double s, ds, z, y;
+    double s, z, y;
 
 
     s = get_state();
@@ -186,11 +182,9 @@ void LEAD_LAG_BLOCK::update()
     //z = (1.0-h/(2.0*t1))*s+h/(2.0*t1)*y;
 
     y = t1_over_t2*(k*x+(t2_over_t1-1.0)*s);
-    ds = (y-s)*one_over_t1;
     //z = (1.0-h_over_2t1)*s+h_over_2t1*y;
     z = s+h_over_2t1*(y-s);
 
-    set_dstate(ds);
     set_store(z);
     set_output(y);
 }

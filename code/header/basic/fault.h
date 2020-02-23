@@ -28,7 +28,7 @@ class FAULT
 
     private:
         FAULT_TYPE fault_type;
-        complex<double> fault_shunt_in_pu;
+        complex<float> fault_shunt_in_pu;
 };
 
 #endif // FAULT_H

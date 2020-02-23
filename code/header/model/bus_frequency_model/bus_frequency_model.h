@@ -9,7 +9,7 @@ class BUS_FREQUENCY_MODEL
 {
     public:
         BUS_FREQUENCY_MODEL(STEPS& toolkit);
-        virtual ~BUS_FREQUENCY_MODEL();
+        ~BUS_FREQUENCY_MODEL();
         void set_toolkit(STEPS& toolkit);
         STEPS& get_toolkit() const;
 
@@ -17,8 +17,8 @@ class BUS_FREQUENCY_MODEL
         BUS* get_bus_pointer() const;
         unsigned int get_bus() const;
 
-        virtual void initialize();
-        virtual void run(DYNAMIC_MODE mode);
+        void initialize();
+        void run(DYNAMIC_MODE mode);
         void update_for_applying_event();
     public:
         void set_frequency_deviation_in_pu(double f);
@@ -30,7 +30,7 @@ class BUS_FREQUENCY_MODEL
         STEPS* toolkit;
         DIFFERENTIAL_BLOCK frequency_block;
         BUS* bus_ptr;
-        double fbase_Hz, tbase_s;
+        float fbase_Hz, tbase_s;
 };
 
 #endif // BUS_FREQUENCY_MODEL_H

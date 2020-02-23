@@ -21,9 +21,9 @@ class RATING
         void clear();
 
     private:
-        double rating_A_MVA;
-        double rating_B_MVA;
-        double rating_C_MVA;
+        float rating_A_MVA;
+        float rating_B_MVA;
+        float rating_C_MVA;
 };
 
 #endif // RATING_H

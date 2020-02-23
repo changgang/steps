@@ -65,7 +65,6 @@ void INTEGRAL_BLOCK_TEST::test_initialize_integrate_update_once()
     TEST_ASSERT(block.get_input()==0.0);
     TEST_ASSERT(block.get_state()==10.0);
     TEST_ASSERT(block.get_store()==10.0);
-    TEST_ASSERT(block.get_dstate()==0.0);
 
     block.set_input(0.2);
     block.run(UPDATE_MODE);
@@ -82,7 +81,6 @@ void INTEGRAL_BLOCK_TEST::test_initialize_integrate_update_once()
     TEST_ASSERT(fabs(block.get_output()-(10.0+0.2/0.5*h))<FLOAT_EPSILON);
     TEST_ASSERT(fabs(block.get_state()-(10.0+h*0.2/0.5))<FLOAT_EPSILON);
     TEST_ASSERT(fabs(block.get_store()-(10.0+0.2/0.5*h+0.5*0.2/0.5*h))<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(block.get_dstate()-(0.2/0.5))<FLOAT_EPSILON);
 }
 void INTEGRAL_BLOCK_TEST::test_step_response_without_limiter()
 {

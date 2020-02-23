@@ -78,7 +78,7 @@ void FIRST_ORDER_BLOCK::initialize()
             set_output(0.0);
         }
 
-        double s, ds, z, x;
+        double s, z, x;
 
         s = y;
         //z = y-(1.0-2.0*t/h)*s;
@@ -86,7 +86,6 @@ void FIRST_ORDER_BLOCK::initialize()
         //z =2.0*t/h*s;
         z =2.0*t_over_h*s;
 
-        ds = 0.0;
         if(k!=0)
         {
             //x = y/k;
@@ -97,7 +96,6 @@ void FIRST_ORDER_BLOCK::initialize()
 
         set_state(s);
         set_store(z);
-        set_dstate(ds);
         set_input(x);
 
         if(limiter_type != NO_LIMITER)
@@ -121,7 +119,6 @@ void FIRST_ORDER_BLOCK::initialize()
     {
         set_state(0.0);
         set_store(0.0);
-        set_dstate(0.0);
         if(k!=0.0)
         {
             //set_input(get_output()/get_K());
@@ -265,7 +262,6 @@ void FIRST_ORDER_BLOCK::update()
             //z = k*x-(1.0-2.0*t/h)*s;
             //z = k*x-(h-2.0*t)*s/h;
             z = k*x-h_minus_2t*s*one_over_h;
-            set_dstate(ds);
             set_store(z);
         }
         else

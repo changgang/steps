@@ -21,8 +21,6 @@ class PD_BLOCK : public BLOCK
         double get_Td_in_s() const;
 
         double get_differentiator_state() const;
-        double get_differentiator_new_state() const;
-        double get_differentiator_dstate() const;
         double get_differentiator_store() const;
 
         void initialize();

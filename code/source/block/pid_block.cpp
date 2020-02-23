@@ -97,26 +97,6 @@ double PID_BLOCK::get_differentiator_state() const
     return d_block.get_state();
 }
 
-double PID_BLOCK::get_integrator_new_state() const
-{
-    return i_block.get_new_state();
-}
-
-double PID_BLOCK::get_differentiator_new_state() const
-{
-    return d_block.get_new_state();
-}
-
-double PID_BLOCK::get_integrator_dstate() const
-{
-    return i_block.get_dstate();
-}
-
-double PID_BLOCK::get_differentiator_dstate() const
-{
-    return d_block.get_dstate();
-}
-
 double PID_BLOCK::get_integrator_store() const
 {
     return i_block.get_store();
@@ -130,16 +110,6 @@ double PID_BLOCK::get_differentiator_store() const
 double PID_BLOCK::get_state() const
 {
     return get_integrator_state();
-}
-
-double PID_BLOCK::get_new_state() const
-{
-    return get_integrator_new_state();
-}
-
-double PID_BLOCK::get_dstate() const
-{
-    return get_integrator_dstate();
 }
 
 double PID_BLOCK::get_store() const

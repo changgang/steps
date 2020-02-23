@@ -22,7 +22,7 @@ class BUS_INDEX
         unsigned int operator[](const unsigned int bus) const;
     private:
 		unsigned int max_bus_number;
-        vector<unsigned int> index;
+        //vector<unsigned int> index;
         unsigned int* index_array;
 };
 

@@ -58,16 +58,6 @@ double PI_BLOCK::get_state() const
     return pid_block.get_integrator_state();
 }
 
-double PI_BLOCK::get_new_state() const
-{
-    return pid_block.get_integrator_new_state();
-}
-
-double PI_BLOCK::get_dstate() const
-{
-    return pid_block.get_integrator_dstate();
-}
-
 double PI_BLOCK::get_store() const
 {
     return pid_block.get_integrator_store();

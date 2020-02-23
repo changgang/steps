@@ -2321,12 +2321,8 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(unsigned int i=0; i<n; i++)
-    {
-        GENERATOR* generator = generators[i];
-        if(generator->get_status()==true)
-            generator->run(mode);
-    }
+    for(unsigned int i=0; i<n; ++i)
+        generators[i]->run(mode);
 
     n = wt_generators.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2336,11 +2332,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
-    {
-        WT_GENERATOR* wtgen = wt_generators[i];
-        if(wtgen->get_status()==true)
-            wtgen->run(mode);
-    }
+        wt_generators[i]->run(mode);
 
     n = pv_units.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2350,11 +2342,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
-    {
-        PV_UNIT* pv = pv_units[i];
-        if(pv->get_status()==true)
-            pv->run(mode);
-    }
+        pv_units[i]->run(mode);
 
     n = loads.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2364,11 +2352,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
-    {
-        LOAD* load = loads[i];
-        if(load->get_status()==true)
-            load->run(mode);
-    }
+        loads[i]->run(mode);
 
     n = hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
