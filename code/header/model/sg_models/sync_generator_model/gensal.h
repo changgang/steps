@@ -75,10 +75,6 @@ class GENSAL : public SYNC_GENERATOR_MODEL
         void set_rotor_speed_deviation_in_pu(double speed);
     private:
         void copy_from_const_model(const GENSAL& model);
-
-        /*INTEGRAL_BLOCK transient_block_d_axis, subtransient_block_d_axis;
-        INTEGRAL_BLOCK subtransient_block_q_axis;
-        INTEGRAL_BLOCK rotor_angle_block, rotor_speed_block;*/
 };
 
 

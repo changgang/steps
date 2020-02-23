@@ -83,9 +83,9 @@ class IEEL : public LOAD_MODEL
         void copy_from_const_model(const IEEL& model);
 
         double P0, Q0;
-        double P_alpha_1, P_alpha_2, P_alpha_3, Q_alpha_1, Q_alpha_2, Q_alpha_3;
-        double P_n_power_1, P_n_power_2, P_n_power_3, Q_n_power_1, Q_n_power_2, Q_n_power_3;
-        double P_Kf, Q_Kf;
+        float P_alpha_1, P_alpha_2, P_alpha_3, Q_alpha_1, Q_alpha_2, Q_alpha_3;
+        float P_n_power_1, P_n_power_2, P_n_power_3, Q_n_power_1, Q_n_power_2, Q_n_power_3;
+        float P_Kf, Q_Kf;
 
 };
 #endif // IEEL_H

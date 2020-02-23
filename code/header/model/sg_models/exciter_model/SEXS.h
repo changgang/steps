@@ -59,7 +59,6 @@ class SEXS: public EXCITER_MODEL
 
         LEAD_LAG_BLOCK phase_tuner;
         FIRST_ORDER_BLOCK exciter;
-
 };
 
 #endif // EXCITER_MODEL_H

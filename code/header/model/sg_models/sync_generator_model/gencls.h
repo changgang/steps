@@ -69,9 +69,6 @@ class GENCLS : public SYNC_GENERATOR_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const GENCLS& model);
-
-        //INTEGRAL_BLOCK rotor_angle_block, rotor_speed_block;
-
 };
 
 #endif // GENERATOR_MODEL_H

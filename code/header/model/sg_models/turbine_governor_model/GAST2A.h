@@ -116,43 +116,43 @@ class GAST2A : public TURBINE_GOVERNOR_MODEL
     private:
         void copy_from_const_model(const GAST2A& model);
 
-        double gas_governor_W, gas_governor_X, gas_governor_Y;
+        float gas_governor_W, gas_governor_X, gas_governor_Y;
         unsigned int gas_governor_Z;
-        double gas_governor_MAX, gas_governor_MIN;
+        float gas_governor_MAX, gas_governor_MIN;
         LEAD_LAG_BLOCK gas_governor_droop;
         PI_BLOCK gas_governor_iso;
 
-        double gas_K3;
-        double gas_T;
+        float gas_K3;
+        float gas_T;
         CONTINUOUS_BUFFER gas_fuel_control;
 
-        double gas_K6, gas_Kf;
+        float gas_K6, gas_Kf;
 
-        double gas_a, gas_b, gas_c;
+        float gas_a, gas_b, gas_c;
         FIRST_ORDER_BLOCK gas_valve_positioner;
 
         FIRST_ORDER_BLOCK gas_fuel_system;
 
-        double gas_ECR;
+        float gas_ECR;
         CONTINUOUS_BUFFER gas_combustor;
 
-        double gas_ETD;
+        float gas_ETD;
         CONTINUOUS_BUFFER gas_turbine_exhaust;
-        double gas_TR, gas_af1, gas_bf1;
+        float gas_TR, gas_af1, gas_bf1;
 
-        double gas_K4;
+        float gas_K4;
         FIRST_ORDER_BLOCK gas_radiation_shield;
 
         FIRST_ORDER_BLOCK gas_thermocouple;
 
-        double gas_TC;
-        double gas_T5, gas_Tt;
+        float gas_TC;
+        float gas_T5, gas_Tt;
         PI_BLOCK gas_temperature_control;
 
         FIRST_ORDER_BLOCK gas_turbine_dynamic;
 
-        double gas_af2, gas_bf2, gas_cf2;
-        double gas_turbine_rate_MW;
+        float gas_af2, gas_bf2, gas_cf2;
+        float gas_turbine_rate_MW;
 };
 
 #endif // GAST2A_H

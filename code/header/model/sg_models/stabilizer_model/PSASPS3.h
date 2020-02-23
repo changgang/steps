@@ -85,12 +85,12 @@ class PSASPS3 : public STABILIZER_MODEL
     private:
         void copy_from_const_model(const PSASPS3& model);
 
-        double Macc, Iacc, Nacc;
+        float Macc, Iacc, Nacc;
         bool dedc_block_1_flag;
         DIFFERENTIAL_BLOCK dedc_block_1, dedc_block_2;
         INTEGRAL_BLOCK phase_tuner_1, phase_tuner_2, phase_tuner_3, phase_tuner_4;
-        double K0, K1, K2, K3, K4, KP;
-        double Vsmax, Vsmin;
+        float K0, K1, K2, K3, K4, KP;
+        float Vsmax, Vsmin;
 
         double speed_deviation_ref_pu, Pe_ref_pu, Pmech_ref_pu;
 };

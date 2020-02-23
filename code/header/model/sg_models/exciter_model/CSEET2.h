@@ -122,14 +122,14 @@ class CSEET2: public EXCITER_MODEL
         PI_BLOCK serial_tuner1_pi;
         LEAD_LAG_BLOCK serial_tuner2;
         // parallel
-        double KP;
+        float KP;
         INTEGRAL_BLOCK parallel_integral;
         DIFFERENTIAL_BLOCK parallel_differential;
         // common
         FIRST_ORDER_BLOCK regulator;
         DIFFERENTIAL_BLOCK feedbacker;
-        double VRmax, VRmin;
-        double KC;
+        float VRmax, VRmin;
+        float KC;
 
 };
 

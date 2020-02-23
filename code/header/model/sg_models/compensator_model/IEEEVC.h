@@ -48,7 +48,7 @@ class IEEEVC: public COMPENSATOR_MODEL
     private:
         void copy_from_const_model(const IEEEVC& model);
 
-        double Rc, Xc;
+        float Rc, Xc;
 };
 
 #endif // EXCITER_MODEL_H

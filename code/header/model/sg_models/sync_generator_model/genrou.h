@@ -77,9 +77,6 @@ class GENROU : public SYNC_GENERATOR_MODEL
         void copy_from_const_model(const GENROU& model);
 
         double get_initial_rotor_angle() const;
-        /*INTEGRAL_BLOCK transient_block_d_axis, subtransient_block_d_axis;
-        INTEGRAL_BLOCK transient_block_q_axis, subtransient_block_q_axis;
-        INTEGRAL_BLOCK rotor_angle_block, rotor_speed_block;*/
 };
 
 

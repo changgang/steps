@@ -155,23 +155,23 @@ class HVDC_MODEL : public MODEL
         void append_bypass_record(double time);
         unsigned int get_bypass_record_count() const;
 
-        double firing_angle_max[2], firing_angle_min[2];
+        float firing_angle_max[2], firing_angle_min[2];
         TIMER block_timer, bypass_timer, mode_switch_timer;
         bool bypassed, mode_switched, manual_blocked, manual_bypassed;
-        double time_when_unblocking, time_when_unbypassing, time_when_mode_unswitching;
+        float time_when_unblocking, time_when_unbypassing, time_when_mode_unswitching;
         bool unblocking, unbypassing;
         bool dc_current_recovered_after_unblocking, dc_voltage_recovered_after_unblocking;
 
-        double dc_voltage_command_recovery_rate_in_pu_per_second;
-        double dc_current_command_recovery_rate_in_pu_per_second;
+        float dc_voltage_command_recovery_rate_in_pu_per_second;
+        float dc_current_command_recovery_rate_in_pu_per_second;
 
-        double minimum_dc_voltage_in_kV_following_unblocking_and_unbypassing;
-        double minimum_dc_current_in_kA_following_unblocking;
+        float minimum_dc_voltage_in_kV_following_unblocking_and_unbypassing;
+        float minimum_dc_current_in_kA_following_unblocking;
 
-        double minimum_dc_current_command_in_kA;
+        float minimum_dc_current_command_in_kA;
         VDCOL vdcol_limiter;
 
-        double record_of_bypass_time[STEPS_MAX_HVDC_BYPASS_RECORD_SIZE];
+        float record_of_bypass_time[STEPS_MAX_HVDC_BYPASS_RECORD_SIZE];
         unsigned int max_count_of_bypass_before_blocked;
 };
 

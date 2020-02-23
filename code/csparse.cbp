@@ -17,6 +17,10 @@
 				<Compiler>
 					<Add option="-O3" />
 					<Add option="-Wall" />
+					<Add option="-march=native" />
+					<Add option="-funroll-loops" />
+					<Add option="-malign-double" />
+					<Add option="-minline-all-stringops" />
 					<Add option="-ffast-math" />
 					<Add directory="../code" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />

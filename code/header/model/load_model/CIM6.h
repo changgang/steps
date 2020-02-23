@@ -111,14 +111,14 @@ class CIM6 : public LOAD_MODEL
         double P0, Q0;
 
         unsigned int Motor_type;
-        double Ra, Xa, Xm, R1, X1, R2, X2;
+        float Ra, Xa, Xm, R1, X1, R2, X2;
         SATURATION_BLOCK saturation;
         double Mbase;
-        double Pmult;
-        double H;
-        double VI, TI, TB;
-        double A, B, C, D, E;
-        double Tnominal;
+        float Pmult;
+        float H;
+        float VI, TI, TB;
+        float A, B, C, D, E;
+        float Tnominal;
 
         INTEGRAL_BLOCK speed_block;
         INTEGRAL_BLOCK transient_block_x_axis, subtransient_block_x_axis;

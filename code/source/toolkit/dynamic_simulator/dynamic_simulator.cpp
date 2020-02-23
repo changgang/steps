@@ -2310,7 +2310,7 @@ void DYNAMICS_SIMULATOR::update_relay_models()
 
 void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 {
-    auto clock_start = system_clock::now();
+    auto clock_start = steady_clock::now();
 
     unsigned int n = 0;
 
@@ -2391,12 +2391,13 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
     {
-        BUS* bus = in_service_buses[i];
+        (in_service_buses[i]->get_bus_frequency_model())->run(mode);
+        /*BUS* bus = in_service_buses[i];
         BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
-        model->run(mode);
+        model->run(mode);*/
     }
 
-    auto tduration = duration_cast<microseconds>(system_clock::now()-clock_start);
+    auto tduration = duration_cast<microseconds>(steady_clock::now()-clock_start);
     microseconds_elapse_of_differential_equations_in_a_step += tduration.count();
 }
 
@@ -2412,14 +2413,10 @@ void DYNAMICS_SIMULATOR::update_bus_frequency_blocks()
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
     {
-        BUS* bus = in_service_buses[i];
+        (in_service_buses[i]->get_bus_frequency_model())->update_for_applying_event();
+        /*BUS* bus = in_service_buses[i];
         BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
-        model->update_for_applying_event();
-        /*if(bus->get_bus_type()!=OUT_OF_SERVICE)
-        {
-            BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
-            model->update_for_applying_event();
-        }*/
+        model->update_for_applying_event();*/
     }
 }
 
@@ -2477,7 +2474,7 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_output()
 
 bool DYNAMICS_SIMULATOR::solve_network()
 {
-    auto clock_start = system_clock::now();
+    auto clock_start = steady_clock::now();
 
     max_current_mismatch_pu = 0.0;
     max_power_mismatch_MVA = 0.0;
@@ -2615,7 +2612,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
 
     network_iteration_count = network_iter_count;
 
-    auto tduration = duration_cast<microseconds>(system_clock::now()-clock_start);
+    auto tduration = duration_cast<microseconds>(steady_clock::now()-clock_start);
     microseconds_elapse_of_network_solution_in_a_step += tduration.count();
     return converged;
 }
@@ -3284,17 +3281,18 @@ GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_current_misma
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     double Imax = 0.0;
-    unsigned int Imax_bus = 0;
+    unsigned int Imax_bus = 0, Imax_internal_bus = 0;
     unsigned int n = I_mismatch.size();
-    for(unsigned int i=0; i!=n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         double I = steps_fast_complex_abs(I_mismatch[i]);
         if(I>Imax)
         {
             Imax = I;
-            Imax_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
+            Imax_internal_bus = i;
         }
     }
+    Imax_bus = network_matrix.get_physical_bus_number_of_internal_bus(Imax_internal_bus);
     GREATEST_POWER_CURRENT_MISMATCH_STRUCT i_mismatch;
     i_mismatch.greatest_current_mismatch_in_pu = Imax;
     i_mismatch.bus_with_greatest_current_mismatch = Imax_bus;
@@ -3327,7 +3325,7 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
 
     NETWORK_MATRIX& network = toolkit->get_network_matrix();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_bus_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR

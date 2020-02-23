@@ -66,7 +66,7 @@ class WT_TURBINE_MODEL : public WTG_MODEL
     private:
         void common_constructor();
 
-        double damping;
+        float damping;
 };
 
 #endif // WT_TURBINE_MODEL_H

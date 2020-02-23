@@ -81,11 +81,11 @@ class WT3G1 : public WT_GENERATOR_MODEL
     private:
         void copy_from_const_model(const WT3G1& model);
 
-        double Xeq;
+        float Xeq;
         FIRST_ORDER_BLOCK active_current_commander;
         FIRST_ORDER_BLOCK reactive_voltage_commander;
 
-        double KPLL;
+        float KPLL;
         INTEGRAL_BLOCK PLL_frequency_integrator, PLL_angle_integrator;
 };
 

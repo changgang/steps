@@ -68,10 +68,10 @@ class WTRLY0 : public WT_RELAY_MODEL
         void check_bus_voltage_relay();
 
         //  threshold, time delay, start time
-        double vwind_th[STEPS_MAX_RELAY_COUNT];
-        double speed_th[STEPS_MAX_RELAY_COUNT];
-        double freq_th[STEPS_MAX_RELAY_COUNT];
-        double volt_th[STEPS_MAX_RELAY_COUNT];
+        float vwind_th[STEPS_MAX_RELAY_COUNT];
+        float speed_th[STEPS_MAX_RELAY_COUNT];
+        float freq_th[STEPS_MAX_RELAY_COUNT];
+        float volt_th[STEPS_MAX_RELAY_COUNT];
 
         TIMER vwind_relay_timer[STEPS_MAX_RELAY_COUNT], speed_relay_timer[STEPS_MAX_RELAY_COUNT],
               freq_relay_timer[STEPS_MAX_RELAY_COUNT], volt_relay_timer[STEPS_MAX_RELAY_COUNT];

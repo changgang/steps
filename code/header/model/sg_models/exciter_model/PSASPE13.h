@@ -75,12 +75,12 @@ class PSASPE13: public EXCITER_MODEL
         void copy_from_const_model(const PSASPE13& model);
 
         FIRST_ORDER_BLOCK sensor;
-        double VImax, VImin;
+        float VImax, VImin;
         LEAD_LAG_BLOCK tuner;
         FIRST_ORDER_BLOCK regulator;
         DIFFERENTIAL_BLOCK feedbacker;
-        double Efdmax, Efdmin;
-        double KC;
+        float Efdmax, Efdmin;
+        float KC;
 };
 
 #endif // EXCITER_MODEL_H

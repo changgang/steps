@@ -96,14 +96,14 @@ class WT3G0 : public WT_GENERATOR_MODEL
         void copy_from_const_model(const WT3G0& model);
 
         INTEGRAL_BLOCK active_current_commander;
-        double LVPL_active_power_change_rate;
+        float LVPL_active_power_change_rate;
         FIRST_ORDER_BLOCK LVPL_voltage_sensor;
         LVPL lvpl;
 
         FIRST_ORDER_BLOCK reactive_voltage_commander;
-        double HVRCR_voltage, HVRCR_current;
+        float HVRCR_voltage, HVRCR_current;
 
-        double KPLL;
+        float KPLL;
         INTEGRAL_BLOCK PLL_frequency_integrator, PLL_angle_integrator;
 };
 

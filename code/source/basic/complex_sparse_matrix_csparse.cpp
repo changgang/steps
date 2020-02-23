@@ -276,12 +276,14 @@ int COMPLEX_SPARSE_MATRIX_CSPARSE::get_matrix_entry_count() const
 
 int COMPLEX_SPARSE_MATRIX_CSPARSE::get_starting_index_of_column(int col) const
 {
+    return matrix_complex->p[col];
     if(col>=0 and col<=get_matrix_size()) return matrix_complex->p[col];
     else                                  return INDEX_NOT_EXIST;
 }
 
 int COMPLEX_SPARSE_MATRIX_CSPARSE::get_row_number_of_entry_index(int index) const
 {
+    return matrix_complex->i[index];
     int n = get_matrix_size();
     if(index<=get_starting_index_of_column(n))  return matrix_complex->i[index];
     else                                        return INDEX_NOT_EXIST;
@@ -305,7 +307,9 @@ int COMPLEX_SPARSE_MATRIX_CSPARSE::get_entry_index(int row, int col) const
 
         if(row < get_matrix_size() and col < get_matrix_size())
         {
-            for(int k=matrix_complex->p[col]; k!=matrix_complex->p[col+1]; ++k)
+            int kstart = matrix_complex->p[col];
+            int kend = matrix_complex->p[col+1];
+            for(int k=kstart; k!=kend; ++k)
             {
                 if(matrix_complex->i[k] > row) break; // if no entry of (row, col)
                 if(matrix_complex->i[k] == row)
@@ -323,6 +327,7 @@ int COMPLEX_SPARSE_MATRIX_CSPARSE::get_entry_index(int row, int col) const
 
 complex<double> COMPLEX_SPARSE_MATRIX_CSPARSE::get_complex_entry_value(int index)  const
 {
+    return matrix_complex->x[index];
     if(index>=0 && index<=matrix_complex->p[matrix_complex->n]) // this condition is equivalent to previous line
         return matrix_complex->x[index];
     else

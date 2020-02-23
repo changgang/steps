@@ -49,6 +49,6 @@ class FIXED_SHUNT : public DEVICE
         BUS* busptr;
         string identifier;
         bool status;
-        complex<double> nominal_impedance_shunt_in_MVA;
+        complex<float> nominal_impedance_shunt_in_MVA;
 };
 #endif // FIXED_SHUNT_H

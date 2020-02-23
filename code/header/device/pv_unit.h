@@ -53,7 +53,7 @@ class PV_UNIT : public SOURCE
     private:
 
         unsigned int number_of_lumped_pv_units;
-        double rated_power_per_pv_unit_in_MW;
+        float rated_power_per_pv_unit_in_MW;
 
         PV_CONVERTER_MODEL* pv_converter_model;
         PV_PANEL_MODEL* pv_panel_model;

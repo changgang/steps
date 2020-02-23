@@ -68,19 +68,19 @@ class SOURCE : public DEVICE
         virtual complex<double> get_complex_internal_voltage_in_pu_in_xy_axis() const = 0;
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power() = 0;
     private:
-        unsigned int source_bus;
+        string source_identifier;
+        double p_generation_MW, q_generation_MVar;
         BUS* busptr;
 
-        string source_identifier;
-        bool status;
-        double mbase_MVA;
-        double one_over_mbase;
-
-        double p_generation_MW, q_generation_MVar;
-        double p_max_MW, p_min_MW, q_max_MVar, q_min_MVar;
-        double voltage_to_regulate_pu;
+        unsigned int source_bus;
         unsigned int bus_to_regulate;
 
-        complex<double> source_Z_pu;
+        complex<float> source_Z_pu;
+        float mbase_MVA;
+        float one_over_mbase;
+
+        float p_max_MW, p_min_MW, q_max_MVar, q_min_MVar;
+        float voltage_to_regulate_pu;
+        bool status;
 };
 #endif // SOURCE_H

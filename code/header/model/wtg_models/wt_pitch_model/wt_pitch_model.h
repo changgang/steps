@@ -67,7 +67,7 @@ class WT_PITCH_MODEL : public WTG_MODEL
     private:
         void common_constructor();
 
-        double frequency_deadband_upper_in_pu, frequency_deadband_lower_in_pu;
+        float frequency_deadband_upper_in_pu, frequency_deadband_lower_in_pu;
         bool hold_wtg_speed_flag;
         double const_wtg_speed_reference;
 };
