@@ -400,8 +400,6 @@ void CDC6T::initialize()
         return;
 
     HVDC* hvdc = get_hvdc_pointer();
-    if(hvdc==NULL)
-        return;
 
     setup_block_toolkit_and_parameters();
 
@@ -431,11 +429,7 @@ void CDC6T::initialize()
 
 void CDC6T::run(DYNAMIC_MODE mode)
 {
-    ostringstream osstream;
-
     HVDC* hvdc = get_hvdc_pointer();
-    if(hvdc==NULL)
-        return;
 
     //solve_hvdc_model_without_integration();
 
@@ -457,12 +451,6 @@ void CDC6T::run(DYNAMIC_MODE mode)
 
 void CDC6T::solve_hvdc_model_without_integration()
 {
-    ostringstream osstream;
-
-    HVDC* hvdc = get_hvdc_pointer();
-    if(hvdc==NULL)
-        return;
-
     check_blocking_logic();
     check_bypassing_logic();
     check_mode_switching_logic();
@@ -479,198 +467,195 @@ void CDC6T::solve_hvdc_model_without_integration()
 
 void CDC6T::check_blocking_logic()
 {
-    HVDC* hvdc = get_hvdc_pointer();
-    if(hvdc==NULL)
-        return;
-
-    if(is_manual_blocked())
-        return;
-    STEPS& toolkit = get_toolkit();
-    double TIME = toolkit.get_dynamic_simulation_time_in_s();
-
-    ostringstream osstream;
-
-    //unsigned int bus_r = hvdc->get_converter_bus(RECTIFIER);
-    //unsigned int bus_i = hvdc->get_converter_bus(INVERTER);
-    //double vac_r = psdb.get_bus_positive_sequence_voltage_in_pu(bus_r);
-    //double vac_i = psdb.get_bus_positive_sequence_voltage_in_pu(bus_i);
-    double vac_r = get_converter_ac_voltage_in_pu(RECTIFIER);
-    double vac_i = get_converter_ac_voltage_in_pu(INVERTER);
-
-    if(not is_blocked())
+    if(not is_manual_blocked())
     {
-        double vacr_iblock = get_rectifier_ac_instantaneous_blocking_voltage_in_pu();
-        double vacr_dblock = get_rectifier_ac_delayed_blocking_voltage_in_pu();
-        double tr_dblock = get_rectifier_ac_delayed_blocking_time_in_s();
-        double vaci_iblock = get_inverter_ac_instantaneous_blocking_voltage_in_pu();
-        double t_comm = get_communication_delay_between_converters_in_s();
+        STEPS& toolkit = get_toolkit();
+        double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
-        bool block_flag = false;
+        ostringstream osstream;
 
-        if(vac_r<vacr_iblock) // rectifier instantaneous blcok
+        //unsigned int bus_r = hvdc->get_converter_bus(RECTIFIER);
+        //unsigned int bus_i = hvdc->get_converter_bus(INVERTER);
+        //double vac_r = psdb.get_bus_positive_sequence_voltage_in_pu(bus_r);
+        //double vac_i = psdb.get_bus_positive_sequence_voltage_in_pu(bus_i);
+        double vac_r = get_converter_ac_voltage_in_pu(RECTIFIER);
+        double vac_i = get_converter_ac_voltage_in_pu(INVERTER);
+
+        if(not is_blocked())
         {
-            osstream<<hvdc->get_device_name()<<" will be blocked at time "<<TIME<<" s due to instantaneous drop of rectifier AC voltage."<<endl;
-            osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and rectifier AC blocking voltage threshold is "<<vacr_iblock<<" pu.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            double vacr_iblock = get_rectifier_ac_instantaneous_blocking_voltage_in_pu();
+            double vacr_dblock = get_rectifier_ac_delayed_blocking_voltage_in_pu();
+            double tr_dblock = get_rectifier_ac_delayed_blocking_time_in_s();
+            double vaci_iblock = get_inverter_ac_instantaneous_blocking_voltage_in_pu();
+            double t_comm = get_communication_delay_between_converters_in_s();
 
-            block_flag = true;
-        }
+            bool block_flag = false;
 
-        if(not rec_ac_blocking_timer.is_started()) // set or clear rectifier delay block time
-        {
-            if(vac_r<vacr_dblock)
+            if(vac_r<vacr_iblock) // rectifier instantaneous blcok
             {
-                rec_ac_blocking_timer.start();
-
-                osstream<<hvdc->get_device_name()<<" rectifier AC blocking timer is started at time "<<TIME<<" s due to drop of rectifier AC voltage."<<endl;
-                osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and rectifier AC delayed blocking voltage threshold is "<<vacr_dblock<<" pu.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            if(vac_r>vacr_dblock)
-            {
-                rec_ac_blocking_timer.reset();
-
-                osstream<<hvdc->get_device_name()<<" rectifier AC blocking timer is reset at time "<<TIME<<" s due to recovery of rectifier AC voltage."<<endl;
-                osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and rectifier AC delayed blocking voltage threshold is "<<vacr_dblock<<" pu.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-        }
-
-        if(rec_ac_blocking_timer.is_started()) // check rectifier delayed blocked logic
-        {
-            if(rec_ac_blocking_timer.is_timed_out())
-            {
-                osstream<<hvdc->get_device_name()<<" rectifier AC blocking timer is timed out and will be blocked at time "<<TIME<<" s due to remaining drop of rectifier AC voltage for "<<tr_dblock<<" s."<<endl;
-                osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and AC delayed blocking voltage threshold is "<<vacr_dblock<<" pu.";
+                osstream<<get_device_name()<<" will be blocked at time "<<TIME<<" s due to instantaneous drop of rectifier AC voltage."<<endl;
+                osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and rectifier AC blocking voltage threshold is "<<vacr_iblock<<" pu.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
 
                 block_flag = true;
             }
-        }
 
-        if(not inv_ac_blocking_signal_transmitting_timer.is_started())
-        {
-            if(vac_i<vaci_iblock) // set inverter instantaneous block time
+            if(not rec_ac_blocking_timer.is_started()) // set or clear rectifier delay block time
             {
-                osstream<<hvdc->get_device_name()<<" inverter AC blocking timer is started and block signal is sent to rectifier at time "<<TIME<<" s due to drop of inverter AC voltage"<<endl;
-                osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC instantaneous blocking voltage threshold is "<<vaci_iblock<<" pu.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-
-                inv_ac_blocking_signal_transmitting_timer.start();
-            }
-        }
-        if(inv_ac_blocking_signal_transmitting_timer.is_started()) // check inverter block logic
-        {
-            if(inv_ac_blocking_signal_transmitting_timer.is_timed_out())
-            {
-                osstream<<hvdc->get_device_name()<<" inverter AC blocking timer is timed out and will be blocked at time "<<TIME<<" s due to drop of inverter AC voltage after "<<t_comm<<" s."<<endl;
-                osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC instantaneous blocking voltage threshold is "<<vaci_iblock<<" pu.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-
-                block_flag = true;
-            }
-        }
-
-        if(block_flag) // ready to block hvdc
-        {
-            block_hvdc();
-            rec_ac_blocking_timer.reset();
-            inv_ac_blocking_signal_transmitting_timer.reset();
-
-            rec_ac_unblocking_timer.reset();
-
-            inv_ac_unblocking_timer.reset();
-            inv_ac_unblocking_signal_transmitting_timer.reset();
-        }
-    }
-    else
-    {
-        double vacr_dunblock = get_rectifier_ac_delayed_unblocking_voltage_in_pu();
-        double tr_dunblock = get_rectifier_ac_delayed_unblocking_time_in_s();
-        double vaci_dunblock = get_inverter_ac_delayed_unbypassing_voltage_in_pu();
-        //double ti_dunblock = get_inverter_ac_delayed_unblocking_time_in_s();
-        //double t_comm = get_communication_delay_between_converters_in_s();
-
-        //bool rectifier_unblock_logic = false;
-        //bool inverter_unblock_logic = false;
-        //bool timer_unblock_logic = false;
-
-        if(not rec_ac_unblocking_timer.is_started())
-        {
-            if(vac_r >= vacr_dunblock)
-            {
-                osstream<<hvdc->get_device_name()<<" rectifier AC unblocking timer is started at time "<<TIME<<" s due to recovery of rectifier AC voltage."<<endl;
-                osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and rectifier AC delayed unblocking voltage threshold is "<<vacr_dunblock<<" pu.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-
-                rec_ac_unblocking_timer.start();
-            }
-        }
-        else
-        {
-            if(vac_r < vacr_dunblock)
-            {
-                osstream<<hvdc->get_device_name()<<" rectifier AC unblocking timer is reset at time "<<TIME<<" s due to drop of rectifier AC voltage."<<endl;
-                osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and rectifier AC delayed unblocking voltage threshold is "<<vacr_dunblock<<" pu.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-
-                rec_ac_unblocking_timer.reset();
-            }
-        }
-
-        if(not inv_ac_unblocking_signal_transmitting_timer.is_started()) // signal not set
-        {
-            if(not inv_ac_unblocking_timer.is_started())
-            {
-                if(vac_i >= vaci_dunblock)
+                if(vac_r<vacr_dblock)
                 {
-                    osstream<<hvdc->get_device_name()<<" inverter AC unblocking timer is started at time "<<TIME<<" s due to recovery of inverter AC voltage."<<endl;
-                    osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC delayed unblocking voltage threshold is "<<vaci_dunblock<<" pu.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    rec_ac_blocking_timer.start();
 
-                    inv_ac_unblocking_timer.start();
+                    osstream<<get_device_name()<<" rectifier AC blocking timer is started at time "<<TIME<<" s due to drop of rectifier AC voltage."<<endl;
+                    osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and rectifier AC delayed blocking voltage threshold is "<<vacr_dblock<<" pu.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                 }
             }
             else
             {
-                if(vac_i < vaci_dunblock)
+                if(vac_r>vacr_dblock)
                 {
-                    osstream<<hvdc->get_device_name()<<" inverter AC unblocking timer is reset at time "<<TIME<<" s due to drop of inverter AC voltage."<<endl;
-                    osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC delayed unblocking voltage threshold is "<<vaci_dunblock<<" pu.";
+                    rec_ac_blocking_timer.reset();
+
+                    osstream<<get_device_name()<<" rectifier AC blocking timer is reset at time "<<TIME<<" s due to recovery of rectifier AC voltage."<<endl;
+                    osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and rectifier AC delayed blocking voltage threshold is "<<vacr_dblock<<" pu.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+            }
+
+            if(rec_ac_blocking_timer.is_started()) // check rectifier delayed blocked logic
+            {
+                if(rec_ac_blocking_timer.is_timed_out())
+                {
+                    osstream<<get_device_name()<<" rectifier AC blocking timer is timed out and will be blocked at time "<<TIME<<" s due to remaining drop of rectifier AC voltage for "<<tr_dblock<<" s."<<endl;
+                    osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and AC delayed blocking voltage threshold is "<<vacr_dblock<<" pu.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
 
-                    inv_ac_unblocking_timer.reset();
+                    block_flag = true;
+                }
+            }
+
+            if(not inv_ac_blocking_signal_transmitting_timer.is_started())
+            {
+                if(vac_i<vaci_iblock) // set inverter instantaneous block time
+                {
+                    osstream<<get_device_name()<<" inverter AC blocking timer is started and block signal is sent to rectifier at time "<<TIME<<" s due to drop of inverter AC voltage"<<endl;
+                    osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC instantaneous blocking voltage threshold is "<<vaci_iblock<<" pu.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+
+                    inv_ac_blocking_signal_transmitting_timer.start();
+                }
+            }
+            if(inv_ac_blocking_signal_transmitting_timer.is_started()) // check inverter block logic
+            {
+                if(inv_ac_blocking_signal_transmitting_timer.is_timed_out())
+                {
+                    osstream<<get_device_name()<<" inverter AC blocking timer is timed out and will be blocked at time "<<TIME<<" s due to drop of inverter AC voltage after "<<t_comm<<" s."<<endl;
+                    osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC instantaneous blocking voltage threshold is "<<vaci_iblock<<" pu.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+
+                    block_flag = true;
+                }
+            }
+
+            if(block_flag) // ready to block hvdc
+            {
+                block_hvdc();
+                rec_ac_blocking_timer.reset();
+                inv_ac_blocking_signal_transmitting_timer.reset();
+
+                rec_ac_unblocking_timer.reset();
+
+                inv_ac_unblocking_timer.reset();
+                inv_ac_unblocking_signal_transmitting_timer.reset();
+            }
+        }
+        else
+        {
+            double vacr_dunblock = get_rectifier_ac_delayed_unblocking_voltage_in_pu();
+            double tr_dunblock = get_rectifier_ac_delayed_unblocking_time_in_s();
+            double vaci_dunblock = get_inverter_ac_delayed_unbypassing_voltage_in_pu();
+            //double ti_dunblock = get_inverter_ac_delayed_unblocking_time_in_s();
+            //double t_comm = get_communication_delay_between_converters_in_s();
+
+            //bool rectifier_unblock_logic = false;
+            //bool inverter_unblock_logic = false;
+            //bool timer_unblock_logic = false;
+
+            if(not rec_ac_unblocking_timer.is_started())
+            {
+                if(vac_r >= vacr_dunblock)
+                {
+                    osstream<<get_device_name()<<" rectifier AC unblocking timer is started at time "<<TIME<<" s due to recovery of rectifier AC voltage."<<endl;
+                    osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and rectifier AC delayed unblocking voltage threshold is "<<vacr_dunblock<<" pu.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+
+                    rec_ac_unblocking_timer.start();
+                }
+            }
+            else
+            {
+                if(vac_r < vacr_dunblock)
+                {
+                    osstream<<get_device_name()<<" rectifier AC unblocking timer is reset at time "<<TIME<<" s due to drop of rectifier AC voltage."<<endl;
+                    osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and rectifier AC delayed unblocking voltage threshold is "<<vacr_dunblock<<" pu.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+
+                    rec_ac_unblocking_timer.reset();
+                }
+            }
+
+            if(not inv_ac_unblocking_signal_transmitting_timer.is_started()) // signal not set
+            {
+                if(not inv_ac_unblocking_timer.is_started())
+                {
+                    if(vac_i >= vaci_dunblock)
+                    {
+                        osstream<<get_device_name()<<" inverter AC unblocking timer is started at time "<<TIME<<" s due to recovery of inverter AC voltage."<<endl;
+                        osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC delayed unblocking voltage threshold is "<<vaci_dunblock<<" pu.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+
+                        inv_ac_unblocking_timer.start();
+                    }
                 }
                 else
                 {
-                    if(inv_ac_unblocking_timer.is_timed_out())
+                    if(vac_i < vaci_dunblock)
                     {
-                        osstream<<hvdc->get_device_name()<<" inverter AC unblocking timer is timed out and unblocking signal is sent to rectifier side at time "<<TIME<<" s since inverter unblocking timer is timed out."<<endl;
+                        osstream<<get_device_name()<<" inverter AC unblocking timer is reset at time "<<TIME<<" s due to drop of inverter AC voltage."<<endl;
                         osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC delayed unblocking voltage threshold is "<<vaci_dunblock<<" pu.";
                         toolkit.show_information_with_leading_time_stamp(osstream);
 
                         inv_ac_unblocking_timer.reset();
-                        inv_ac_unblocking_signal_transmitting_timer.start();
+                    }
+                    else
+                    {
+                        if(inv_ac_unblocking_timer.is_timed_out())
+                        {
+                            osstream<<get_device_name()<<" inverter AC unblocking timer is timed out and unblocking signal is sent to rectifier side at time "<<TIME<<" s since inverter unblocking timer is timed out."<<endl;
+                            osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC delayed unblocking voltage threshold is "<<vaci_dunblock<<" pu.";
+                            toolkit.show_information_with_leading_time_stamp(osstream);
+
+                            inv_ac_unblocking_timer.reset();
+                            inv_ac_unblocking_signal_transmitting_timer.start();
+                        }
                     }
                 }
             }
-        }
 
-        if(rec_ac_unblocking_timer.is_started() and inv_ac_unblocking_signal_transmitting_timer.is_started())
-        {
-            if(is_block_timer_timed_out() and rec_ac_unblocking_timer.is_timed_out() and inv_ac_unblocking_signal_transmitting_timer.is_timed_out())
+            if(rec_ac_unblocking_timer.is_started() and inv_ac_unblocking_signal_transmitting_timer.is_started())
             {
-                osstream<<hvdc->get_device_name()<<" block timer, rectifier AC unblocking timer, and inverter AC unblocking signal transmitting timer are timed out, and will be unblocked at time "<<TIME<<" s due to recovery of rectifier and inverter AC voltage for at least "<<tr_dunblock<<" s"<<endl
-                  <<"Rectifier AC voltage is "<<vac_r<<" pu, and rectifier AC unblocking voltage threshold is "<<vacr_dunblock<<" pu."<<endl
-                  <<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC unblocking voltage threshold is "<<vaci_dunblock<<" pu.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
+                if(is_block_timer_timed_out() and rec_ac_unblocking_timer.is_timed_out() and inv_ac_unblocking_signal_transmitting_timer.is_timed_out())
+                {
+                    osstream<<get_device_name()<<" block timer, rectifier AC unblocking timer, and inverter AC unblocking signal transmitting timer are timed out, and will be unblocked at time "<<TIME<<" s due to recovery of rectifier and inverter AC voltage for at least "<<tr_dunblock<<" s"<<endl
+                      <<"Rectifier AC voltage is "<<vac_r<<" pu, and rectifier AC unblocking voltage threshold is "<<vacr_dunblock<<" pu."<<endl
+                      <<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC unblocking voltage threshold is "<<vaci_dunblock<<" pu.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
 
-                unblock_hvdc();
-                rec_ac_unblocking_timer.reset();
-                inv_ac_unblocking_signal_transmitting_timer.reset();
+                    unblock_hvdc();
+                    rec_ac_unblocking_timer.reset();
+                    inv_ac_unblocking_signal_transmitting_timer.reset();
+                }
             }
         }
     }
@@ -678,128 +663,121 @@ void CDC6T::check_blocking_logic()
 
 void CDC6T::check_bypassing_logic()
 {
-    HVDC* hvdc = get_hvdc_pointer();
-    if(hvdc==NULL)
-        return;
-
-    if(is_blocked())
-        return;
-
-    if(is_manual_bypassed())
-        return;
-
-    STEPS& toolkit = get_toolkit();
-    double TIME = toolkit.get_dynamic_simulation_time_in_s();
-
-    ostringstream osstream;
-
-    if(not is_bypassed())
+    if(not is_blocked() and not is_manual_bypassed())
     {
-        double t_unblock = get_unblocking_time();
-        if(fabs(t_unblock - INFINITE_THRESHOLD)>FLOAT_EPSILON)
-            return;
+        STEPS& toolkit = get_toolkit();
+        double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
-        double t_unbypass = get_unbypassing_time();
-        if(t_unbypass==INFINITE_THRESHOLD) // not unbypassing
+        ostringstream osstream;
+
+        if(not is_bypassed())
         {
-            double vdc_i = get_converter_dc_voltage_in_kV(INVERTER);
-            double vdc_ibypass = get_inverter_dc_instantaneous_bypassing_voltage_in_kV();
-            bool bypass_logic = false;
-            if(vdc_i<vdc_ibypass)
-            {
-                osstream<<hvdc->get_device_name()<<" will be bypassed at time "<<TIME<<" s due to instantaneous drop of inverter DC voltage."<<endl;
-                osstream<<"Inverter DC voltage is "<<vdc_i<<" kV, and inverter DC bypassing voltage threshold is "<<vdc_ibypass<<" kV.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
+            double t_unblock = get_unblocking_time();
+            if(fabs(t_unblock - INFINITE_THRESHOLD)>FLOAT_EPSILON)
+                return;
 
-                bypass_logic = true;
-            }
-
-            //double vac_i = psdb.get_bus_positive_sequence_voltage_in_pu(hvdc->get_converter_bus(INVERTER));
-            double vac_i = get_converter_ac_voltage_in_pu(INVERTER);
-            double vaci_dbypass = get_inverter_ac_delayed_bypassing_voltage_in_pu();
-            //double ti_dbypass = get_inverter_ac_delayed_bypassing_time_in_s();
-            if(not inv_ac_bypassing_timer.is_started())
+            double t_unbypass = get_unbypassing_time();
+            if(t_unbypass==INFINITE_THRESHOLD) // not unbypassing
             {
-                if(vac_i<=vaci_dbypass)
+                double vdc_i = get_converter_dc_voltage_in_kV(INVERTER);
+                double vdc_ibypass = get_inverter_dc_instantaneous_bypassing_voltage_in_kV();
+                bool bypass_logic = false;
+                if(vdc_i<vdc_ibypass)
                 {
-                    osstream<<hvdc->get_device_name()<<" inverter AC bypassing timer is started at time "<<TIME<<" s due to drop of inverter AC voltage."<<endl;
-                    osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC bypassing voltage threshold is "<<vaci_dbypass<<" pu.";
+                    osstream<<get_device_name()<<" will be bypassed at time "<<TIME<<" s due to instantaneous drop of inverter DC voltage."<<endl;
+                    osstream<<"Inverter DC voltage is "<<vdc_i<<" kV, and inverter DC bypassing voltage threshold is "<<vdc_ibypass<<" kV.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
 
-                    inv_ac_bypassing_timer.start();
+                    bypass_logic = true;
                 }
-            }
-            else
-            {
-                if(vac_i>vaci_dbypass)
-                {
-                    osstream<<hvdc->get_device_name()<<" inverter AC bypassing timer is reset at time "<<TIME<<" s due to recovery of inverter AC voltage."<<endl;
-                    osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC bypassing voltage threshold is "<<vaci_dbypass<<" pu.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
 
-                    inv_ac_bypassing_timer.reset();
-                }
-                else
+                //double vac_i = psdb.get_bus_positive_sequence_voltage_in_pu(hvdc->get_converter_bus(INVERTER));
+                double vac_i = get_converter_ac_voltage_in_pu(INVERTER);
+                double vaci_dbypass = get_inverter_ac_delayed_bypassing_voltage_in_pu();
+                //double ti_dbypass = get_inverter_ac_delayed_bypassing_time_in_s();
+                if(not inv_ac_bypassing_timer.is_started())
                 {
-                    if(inv_ac_bypassing_timer.is_timed_out())
+                    if(vac_i<=vaci_dbypass)
                     {
-                        osstream<<hvdc->get_device_name()<<" inverter AC bypassing timer is timed out and will be bypassed at time "<<TIME<<" s due to timed out timer of inverter AC voltage drop."<<endl;
+                        osstream<<get_device_name()<<" inverter AC bypassing timer is started at time "<<TIME<<" s due to drop of inverter AC voltage."<<endl;
                         osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC bypassing voltage threshold is "<<vaci_dbypass<<" pu.";
                         toolkit.show_information_with_leading_time_stamp(osstream);
 
-                        bypass_logic = true;
+                        inv_ac_bypassing_timer.start();
                     }
                 }
-            }
-            if(bypass_logic==true)
-            {
-                bypass_hvdc();
-                inv_ac_bypassing_timer.reset(); // clear timer
-            }
-        }
-    }
-    else
-    {
-        //unsigned int bus_i = hvdc->get_converter_bus(INVERTER);
-        //double vac_i = psdb.get_bus_positive_sequence_voltage_in_pu(bus_i);
-        double vac_i = get_converter_ac_voltage_in_pu(INVERTER);
+                else
+                {
+                    if(vac_i>vaci_dbypass)
+                    {
+                        osstream<<get_device_name()<<" inverter AC bypassing timer is reset at time "<<TIME<<" s due to recovery of inverter AC voltage."<<endl;
+                        osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC bypassing voltage threshold is "<<vaci_dbypass<<" pu.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
 
-        double vac_dunbypass = get_inverter_ac_delayed_unbypassing_voltage_in_pu();
-        //double t_dunbypass = get_inverter_ac_delayed_unbypassing_time_in_s();
-        if(not inv_ac_unbypassing_timer.is_started())
-        {
-            if(vac_i>vac_dunbypass and get_time_duration_to_the_last_bypass_in_s()>=get_mininum_bypassing_time_in_s())
-            {
-                osstream<<hvdc->get_device_name()<<" inverter AC unbypassing timer is started at time "<<TIME<<" s due to recovery of inverter AC voltage and time to the last bypass exceeds."<<endl;
-                osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and AC unbypassing voltage threshold is "<<vac_dunbypass<<" pu.\n"
-                        <<"The last bypass occurred at "<<get_time_of_the_last_bypass_in_s()<<" s.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
+                        inv_ac_bypassing_timer.reset();
+                    }
+                    else
+                    {
+                        if(inv_ac_bypassing_timer.is_timed_out())
+                        {
+                            osstream<<get_device_name()<<" inverter AC bypassing timer is timed out and will be bypassed at time "<<TIME<<" s due to timed out timer of inverter AC voltage drop."<<endl;
+                            osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC bypassing voltage threshold is "<<vaci_dbypass<<" pu.";
+                            toolkit.show_information_with_leading_time_stamp(osstream);
 
-                inv_ac_unbypassing_timer.start();
+                            bypass_logic = true;
+                        }
+                    }
+                }
+                if(bypass_logic==true)
+                {
+                    bypass_hvdc();
+                    inv_ac_bypassing_timer.reset(); // clear timer
+                }
             }
         }
         else
         {
-            if(vac_i<vac_dunbypass)
-            {
-                osstream<<hvdc->get_device_name()<<" inverter AC unbypassing timer is reset at time "<<TIME<<" s due to drop of inverter AC voltage."<<endl;
-                osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and AC unbypassing voltage threshold is "<<vac_dunbypass<<" pu.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
+            //unsigned int bus_i = hvdc->get_converter_bus(INVERTER);
+            //double vac_i = psdb.get_bus_positive_sequence_voltage_in_pu(bus_i);
+            double vac_i = get_converter_ac_voltage_in_pu(INVERTER);
 
-                inv_ac_unbypassing_timer.reset();
+            double vac_dunbypass = get_inverter_ac_delayed_unbypassing_voltage_in_pu();
+            //double t_dunbypass = get_inverter_ac_delayed_unbypassing_time_in_s();
+            if(not inv_ac_unbypassing_timer.is_started())
+            {
+                if(vac_i>vac_dunbypass and get_time_duration_to_the_last_bypass_in_s()>=get_mininum_bypassing_time_in_s())
+                {
+                    osstream<<get_device_name()<<" inverter AC unbypassing timer is started at time "<<TIME<<" s due to recovery of inverter AC voltage and time to the last bypass exceeds."<<endl;
+                    osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and AC unbypassing voltage threshold is "<<vac_dunbypass<<" pu.\n"
+                            <<"The last bypass occurred at "<<get_time_of_the_last_bypass_in_s()<<" s.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+
+                    inv_ac_unbypassing_timer.start();
+                }
             }
-        }
-
-        if(inv_ac_unbypassing_timer.is_started())
-        {
-            if(is_bypass_timer_timed_out() and inv_ac_unbypassing_timer.is_timed_out())
+            else
             {
-                osstream<<hvdc->get_device_name()<<" bypass timer and inverter AC unbypassing timer are timed out, and will be unbypassed at time "<<TIME<<" s due to recovery of inverter AC voltage."<<endl;
-                osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC unbypassing voltage threshold is "<<vac_dunbypass<<" pu.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
+                if(vac_i<vac_dunbypass)
+                {
+                    osstream<<get_device_name()<<" inverter AC unbypassing timer is reset at time "<<TIME<<" s due to drop of inverter AC voltage."<<endl;
+                    osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and AC unbypassing voltage threshold is "<<vac_dunbypass<<" pu.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
 
-                unbypass_hvdc();
-                inv_ac_unbypassing_timer.reset();
+                    inv_ac_unbypassing_timer.reset();
+                }
+            }
+
+            if(inv_ac_unbypassing_timer.is_started())
+            {
+                if(is_bypass_timer_timed_out() and inv_ac_unbypassing_timer.is_timed_out())
+                {
+                    osstream<<get_device_name()<<" bypass timer and inverter AC unbypassing timer are timed out, and will be unbypassed at time "<<TIME<<" s due to recovery of inverter AC voltage."<<endl;
+                    osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC unbypassing voltage threshold is "<<vac_dunbypass<<" pu.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+
+                    unbypass_hvdc();
+                    inv_ac_unbypassing_timer.reset();
+                }
             }
         }
     }
@@ -807,48 +785,45 @@ void CDC6T::check_bypassing_logic()
 
 void CDC6T::check_mode_switching_logic()
 {
-    HVDC* hvdc = get_hvdc_pointer();
-    if(hvdc==NULL)
-        return;
-
-    if(is_blocked() or is_bypassed())
-        return;
-
-    STEPS& toolkit = get_toolkit();
-    double TIME = toolkit.get_dynamic_simulation_time_in_s();
-
-    double t_unblock = get_unblocking_time();
-    double t_unbypass = get_unbypassing_time();
-    if(fabs(t_unblock-INFINITE_THRESHOLD)>FLOAT_EPSILON or fabs(t_unbypass-INFINITE_THRESHOLD)>FLOAT_EPSILON) // unblocking or unbypassing
-        return;
-
-    double vdc_i = hvdc->get_converter_dc_voltage_in_kV(INVERTER);
-    double vmode = hvdc->get_threshold_dc_voltage_for_constant_power_and_constant_current_mode_in_kV();
-    if(not is_mode_switched())
+    if(not is_blocked() and not is_bypassed())
     {
-        if(hvdc->get_converter_operation_mode(RECTIFIER)==RECTIFIER_CONSTANT_POWER)
-        {
-            if(vdc_i<vmode)
-            {
-                ostringstream osstream;
-                osstream<<hvdc->get_device_name()<<" will switch mode from holding DC power to holding DC current at time "<<TIME<<" s due to drop of inverter DC voltage."<<endl;
-                osstream<<"Inverter DC voltage is "<<vdc_i<<" kV, and DC mode switch voltage threshold is "<<vmode<<" kV.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
+        HVDC* hvdc = get_hvdc_pointer();
+        STEPS& toolkit = get_toolkit();
+        double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
-                switch_hvdc_mode();
+        double t_unblock = get_unblocking_time();
+        double t_unbypass = get_unbypassing_time();
+        if(fabs(t_unblock-INFINITE_THRESHOLD)>FLOAT_EPSILON or fabs(t_unbypass-INFINITE_THRESHOLD)>FLOAT_EPSILON) // unblocking or unbypassing
+            return;
+
+        double vdc_i = hvdc->get_converter_dc_voltage_in_kV(INVERTER);
+        double vmode = hvdc->get_threshold_dc_voltage_for_constant_power_and_constant_current_mode_in_kV();
+        if(not is_mode_switched())
+        {
+            if(hvdc->get_converter_operation_mode(RECTIFIER)==RECTIFIER_CONSTANT_POWER)
+            {
+                if(vdc_i<vmode)
+                {
+                    ostringstream osstream;
+                    osstream<<get_device_name()<<" will switch mode from holding DC power to holding DC current at time "<<TIME<<" s due to drop of inverter DC voltage."<<endl;
+                    osstream<<"Inverter DC voltage is "<<vdc_i<<" kV, and DC mode switch voltage threshold is "<<vmode<<" kV.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+
+                    switch_hvdc_mode();
+                }
             }
         }
-    }
-    else
-    {
-        if(is_mode_switch_timer_timed_out() and vdc_i> vmode)
+        else
         {
-            ostringstream osstream;
-            osstream<<hvdc->get_device_name()<<" mode switch timer is timed out, and will switch back to DC power control mode at time "<<TIME<<" s due to recovery of inverter DC voltage."<<endl;
-            osstream<<"Inverter DC voltage is "<<vdc_i<<" pu, andDC mode switch voltage threshold is "<<vmode<<" pu.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            if(is_mode_switch_timer_timed_out() and vdc_i> vmode)
+            {
+                ostringstream osstream;
+                osstream<<get_device_name()<<" mode switch timer is timed out, and will switch back to DC power control mode at time "<<TIME<<" s due to recovery of inverter DC voltage."<<endl;
+                osstream<<"Inverter DC voltage is "<<vdc_i<<" pu, andDC mode switch voltage threshold is "<<vmode<<" pu.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
-            switch_hvdc_mode_back();
+                switch_hvdc_mode_back();
+            }
         }
     }
 }
