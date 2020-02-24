@@ -601,7 +601,7 @@ double CSEET1::get_initial_Ve_with_Fex_function() const
             newFex = get_Fex(Ve, Ifd);
             oldFex = Fex;
 
-            if(fabs(Fex-newFex)>FLOAT_EPSILON)
+            if(fabs(Fex-newFex)>DOUBLE_EPSILON)
                 Fex = newFex;
             else
                 break;

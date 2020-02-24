@@ -499,7 +499,7 @@ unsigned int PUFLS::get_number_of_discrete_stage_to_meet_total_continuous_shed_s
     {
         double shed_scale_of_stage = get_discrete_stage_shed_scale_in_pu(stage);
 
-        if((discrete_shed_command-(total_to_shed+shed_scale_of_stage))<=FLOAT_EPSILON)
+        if((discrete_shed_command-(total_to_shed+shed_scale_of_stage))<=DOUBLE_EPSILON)
             break;
         total_to_shed += shed_scale_of_stage;
         N++;
@@ -597,7 +597,7 @@ void PUFLS::try_to_shed_additional_stage()
 
 bool PUFLS::is_additional_stage_set() const
 {
-    return fabs(get_additional_stage_shed_scale_in_pu())>FLOAT_EPSILON;
+    return fabs(get_additional_stage_shed_scale_in_pu())>DOUBLE_EPSILON;
 }
 
 
@@ -744,7 +744,7 @@ bool PUFLS::is_frequency_recovering_beyond_current_minimum_frequency() const
     double current_freq = frequency_sensor.get_output();
     double current_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_head();
 
-    return (current_freq-current_minimum_freq)>FLOAT_EPSILON;
+    return (current_freq-current_minimum_freq)>DOUBLE_EPSILON;
 }
 
 bool PUFLS::is_minimum_frequency_declining() const
@@ -752,7 +752,7 @@ bool PUFLS::is_minimum_frequency_declining() const
     double current_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_head();
     double previous_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_delay_index(1);
 
-    return (current_minimum_freq-previous_minimum_freq)<-FLOAT_EPSILON;
+    return (current_minimum_freq-previous_minimum_freq)<-DOUBLE_EPSILON;
 }
 
 bool PUFLS::is_minimum_frequency_not_changing() const

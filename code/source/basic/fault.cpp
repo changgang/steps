@@ -58,7 +58,7 @@ complex<double> FAULT::get_fault_shunt_in_pu() const
 
 bool FAULT::is_faulted() const
 {
-    if(steps_fast_complex_abs(get_fault_shunt_in_pu())>FLOAT_EPSILON)
+    if(steps_fast_complex_abs(get_fault_shunt_in_pu())>DOUBLE_EPSILON)
         return true;
     else
         return false;

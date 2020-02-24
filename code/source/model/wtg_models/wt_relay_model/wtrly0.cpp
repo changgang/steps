@@ -198,7 +198,7 @@ unsigned int WTRLY0::get_number_of_wind_speed_realy() const
     unsigned int n=0;
     for(unsigned int i=0; i<STEPS_MAX_RELAY_COUNT; ++i)
     {
-        if(fabs(vwind_th[i])<FLOAT_EPSILON and fabs(vwind_th[i]-1.0)<FLOAT_EPSILON)
+        if(fabs(vwind_th[i])<DOUBLE_EPSILON and fabs(vwind_th[i]-1.0)<DOUBLE_EPSILON)
             continue;
         else
             ++n;
@@ -211,7 +211,7 @@ unsigned int WTRLY0::get_number_of_rotor_speed_realy() const
     unsigned int n=0;
     for(unsigned int i=0; i<STEPS_MAX_RELAY_COUNT; ++i)
     {
-        if(fabs(speed_th[i])<FLOAT_EPSILON and fabs(speed_th[i]-1.0)<FLOAT_EPSILON)
+        if(fabs(speed_th[i])<DOUBLE_EPSILON and fabs(speed_th[i]-1.0)<DOUBLE_EPSILON)
             continue;
         else
             ++n;
@@ -224,7 +224,7 @@ unsigned int WTRLY0::get_number_of_bus_frequency_realy() const
     unsigned int n=0;
     for(unsigned int i=0; i<STEPS_MAX_RELAY_COUNT; ++i)
     {
-        if(fabs(freq_th[i])<FLOAT_EPSILON and fabs(freq_th[i]-1.0)<FLOAT_EPSILON)
+        if(fabs(freq_th[i])<DOUBLE_EPSILON and fabs(freq_th[i]-1.0)<DOUBLE_EPSILON)
             continue;
         else
             ++n;
@@ -237,7 +237,7 @@ unsigned int WTRLY0::get_number_of_bus_voltage_realy() const
     unsigned int n=0;
     for(unsigned int i=0; i<STEPS_MAX_RELAY_COUNT; ++i)
     {
-        if(fabs(volt_th[i])<FLOAT_EPSILON and fabs(volt_th[i]-1.0)<FLOAT_EPSILON)
+        if(fabs(volt_th[i])<DOUBLE_EPSILON and fabs(volt_th[i]-1.0)<DOUBLE_EPSILON)
             continue;
         else
             ++n;
@@ -398,7 +398,7 @@ void WTRLY0::check_wind_speed_relay()
 
         for(unsigned int i=0; i<STEPS_MAX_RELAY_COUNT; ++i)
         {
-            if(fabs(vwind_th[i])>FLOAT_EPSILON and fabs(vwind_th[i]-1.0)>FLOAT_EPSILON)
+            if(fabs(vwind_th[i])>DOUBLE_EPSILON and fabs(vwind_th[i]-1.0)>DOUBLE_EPSILON)
             {
                 if(not vwind_relay_timer[i].is_started())
                 {
@@ -474,7 +474,7 @@ void WTRLY0::check_rotor_speed_relay()
 
         for(unsigned int i=0; i<STEPS_MAX_RELAY_COUNT; ++i)
         {
-            if(fabs(speed_th[i])>FLOAT_EPSILON and fabs(speed_th[i]-1.0)>FLOAT_EPSILON)
+            if(fabs(speed_th[i])>DOUBLE_EPSILON and fabs(speed_th[i]-1.0)>DOUBLE_EPSILON)
             {
                 if(not speed_relay_timer[i].is_started())
                 {
@@ -550,7 +550,7 @@ void WTRLY0::check_bus_frequency_relay()
 
         for(unsigned int i=0; i<STEPS_MAX_RELAY_COUNT; ++i)
         {
-            if(fabs(freq_th[i])>FLOAT_EPSILON and fabs(freq_th[i]-1.0)>FLOAT_EPSILON)
+            if(fabs(freq_th[i])>DOUBLE_EPSILON and fabs(freq_th[i]-1.0)>DOUBLE_EPSILON)
             {
                 if(not freq_relay_timer[i].is_started())
                 {
@@ -628,7 +628,7 @@ void WTRLY0::check_bus_voltage_relay()
         {
             for(unsigned int i=0; i<STEPS_MAX_RELAY_COUNT; ++i)
             {
-                if(fabs(volt_th[i])>FLOAT_EPSILON and fabs(volt_th[i]-1.0)>FLOAT_EPSILON)
+                if(fabs(volt_th[i])>DOUBLE_EPSILON and fabs(volt_th[i]-1.0)>DOUBLE_EPSILON)
                 {
                     if(not volt_relay_timer[i].is_started())
                     {
@@ -728,7 +728,7 @@ string WTRLY0::get_standard_psse_string() const
 
     for(unsigned int i=0; i<STEPS_MAX_RELAY_COUNT; ++i)
     {
-        if(fabs(vwind_th[i])<FLOAT_EPSILON and fabs(vwind_th[i]-1.0)<FLOAT_EPSILON)
+        if(fabs(vwind_th[i])<DOUBLE_EPSILON and fabs(vwind_th[i]-1.0)<DOUBLE_EPSILON)
             continue;
         else
         {
@@ -744,7 +744,7 @@ string WTRLY0::get_standard_psse_string() const
     osstream<<setw(8)<<n<<", ";
     for(unsigned int i=0; i<STEPS_MAX_RELAY_COUNT; ++i)
     {
-        if(fabs(speed_th[i])<FLOAT_EPSILON and fabs(speed_th[i]-1.0)<FLOAT_EPSILON)
+        if(fabs(speed_th[i])<DOUBLE_EPSILON and fabs(speed_th[i]-1.0)<DOUBLE_EPSILON)
             continue;
         else
         {
@@ -760,7 +760,7 @@ string WTRLY0::get_standard_psse_string() const
     osstream<<setw(8)<<n<<", ";
     for(unsigned int i=0; i<STEPS_MAX_RELAY_COUNT; ++i)
     {
-        if(fabs(freq_th[i])<FLOAT_EPSILON and fabs(freq_th[i]-1.0)<FLOAT_EPSILON)
+        if(fabs(freq_th[i])<DOUBLE_EPSILON and fabs(freq_th[i]-1.0)<DOUBLE_EPSILON)
             continue;
         else
         {
@@ -776,7 +776,7 @@ string WTRLY0::get_standard_psse_string() const
     osstream<<setw(8)<<n;
     for(unsigned int i=0; i<STEPS_MAX_RELAY_COUNT; ++i)
     {
-        if(fabs(volt_th[i])<FLOAT_EPSILON and fabs(volt_th[i]-1.0)<FLOAT_EPSILON)
+        if(fabs(volt_th[i])<DOUBLE_EPSILON and fabs(volt_th[i]-1.0)<DOUBLE_EPSILON)
             continue;
         else
         {

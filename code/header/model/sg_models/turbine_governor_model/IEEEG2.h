@@ -67,8 +67,8 @@ class IEEEG2 : public TURBINE_GOVERNOR_MODEL
         FIRST_ORDER_BLOCK droop;
         LEAD_LAG_BLOCK tuner;
         LEAD_LAG_BLOCK water_hammer;
-        float Pmax, Pmin;
-        float K3, K4;
+        double Pmax, Pmin;
+        double K3, K4;
 };
 
 #endif // IEEEG2_H

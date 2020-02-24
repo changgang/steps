@@ -403,11 +403,16 @@ bool METER::is_internal_variable_name_valid(string& name) const
 
 void METER::set_meter_side_bus(unsigned int meter_side)
 {
-    DEVICE* device = get_device_pointer();
-    if(device->is_connected_to_bus(meter_side))
-        meter_side_bus = meter_side;
-    else
+    if(get_device_type()=="BUS")
         meter_side_bus = 0;
+    else
+    {
+        NONBUS_DEVICE* device = get_nonbus_device_pointer();
+        if(device->is_connected_to_bus(meter_side))
+            meter_side_bus = meter_side;
+        else
+            meter_side_bus = 0;
+    }
 }
 
 
@@ -505,6 +510,11 @@ string METER::get_internal_variable_name() const
 DEVICE* METER::get_device_pointer() const
 {
     return device_pointer;
+}
+
+NONBUS_DEVICE* METER::get_nonbus_device_pointer() const
+{
+    return nonbus_device_pointer;
 }
 
 string METER::get_meter_name() const
@@ -1330,24 +1340,24 @@ double METER::get_meter_value_as_a_generator() const
             }
             if(meter_type =="STABILIZING SIGNAL IN PU")
             {
-                if(exciter_model == NULL)
-                    return 0.0;
-                else
+                if(exciter_model != NULL)
                     return exciter_model->get_stabilizing_signal_in_pu();
+                else
+                    return 0.0;
             }
             if(meter_type =="EXCITATION VOLTAGE IN PU")
             {
-                if(gen_model == NULL)
-                    return 0.0;
-                else
+                if(gen_model != NULL)
                     return gen_model->get_excitation_voltage_in_pu();
+                else
+                    return 0.0;
             }
             if(meter_type=="SYNC GENERATOR MODEL INTERNAL VARIABLE")
             {
-                if(gen_model==NULL)
-                    return 0.0;
-                else
+                if(gen_model!=NULL)
                     return gen_model->get_model_internal_variable_with_name(internal_variable_name);
+                else
+                    return 0.0;
             }
             if(meter_type=="COMPENSATOR MODEL INTERNAL VARIABLE")
             {
@@ -1358,24 +1368,24 @@ double METER::get_meter_value_as_a_generator() const
             }
             if(meter_type=="STABILIZER MODEL INTERNAL VARIABLE")
             {
-                if(stabilizer_model==NULL)
-                    return 0.0;
-                else
+                if(stabilizer_model!=NULL)
                     return stabilizer_model->get_model_internal_variable_with_name(internal_variable_name);
+                else
+                    return 0.0;
             }
             if(meter_type=="EXCITER MODEL INTERNAL VARIABLE")
             {
-                if(exciter_model==NULL)
-                    return 0.0;
-                else
+                if(exciter_model!=NULL)
                     return exciter_model->get_model_internal_variable_with_name(internal_variable_name);
+                else
+                    return 0.0;
             }
             if(meter_type=="TURBINE GOVERNOR MODEL INTERNAL VARIABLE")
             {
-                if(turbine_governor_model==NULL)
-                    return 0.0;
-                else
+                if(turbine_governor_model!=NULL)
                     return turbine_governor_model->get_model_internal_variable_with_name(internal_variable_name);
+                else
+                    return 0.0;
             }
             if(meter_type=="TURBINE LOAD CONTROLLER MODEL INTERNAL VARIABLE")
             {

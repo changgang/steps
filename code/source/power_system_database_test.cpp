@@ -1215,7 +1215,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_bus()
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
 
-    pbus = psdb.get_bus(did);
+    pbus = psdb.get_bus(1);
     TEST_ASSERT(pbus!=NULL);
     TEST_ASSERT(pbus->get_bus_number()==1);
     TEST_ASSERT(fabs(pbus->get_base_voltage_in_kV()-110.0)<FLOAT_EPSILON);
@@ -1234,7 +1234,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_bus()
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
 
-    pbus = psdb.get_bus(did);
+    pbus = psdb.get_bus(2);
     TEST_ASSERT(pbus!=NULL);
     TEST_ASSERT(pbus->get_bus_number()==2);
     TEST_ASSERT(fabs(pbus->get_base_voltage_in_kV()-220.0)<FLOAT_EPSILON);

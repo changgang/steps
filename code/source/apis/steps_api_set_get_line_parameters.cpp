@@ -27,7 +27,7 @@ int api_get_line_integer_data(unsigned int ibus, unsigned int jbus, char* identi
 
 
         if(PARAMETER_NAME=="OWNER1" or PARAMETER_NAME=="OWNER2" or PARAMETER_NAME=="OWNER3" or PARAMETER_NAME=="OWNER4")
-            return get_owner_of_device(lineptr, PARAMETER_NAME);
+            return get_owner_of_nonbus_device(lineptr, PARAMETER_NAME);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return 0;
@@ -60,7 +60,7 @@ void api_set_line_integer_data(unsigned int ibus, unsigned int jbus, char* ident
             return lineptr->set_meter_end_bus(value);
 
         if(PARAMETER_NAME=="OWNER1" or PARAMETER_NAME=="OWNER2" or PARAMETER_NAME=="OWNER3" or PARAMETER_NAME=="OWNER4")
-            return set_owner_of_device(lineptr, PARAMETER_NAME, value);
+            return set_owner_of_nonbus_device(lineptr, PARAMETER_NAME, value);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
     }
@@ -140,7 +140,7 @@ double api_get_line_float_data(unsigned int ibus, unsigned int jbus, char* ident
             return lineptr->get_length();
 
         if(PARAMETER_NAME=="FRAC1" or PARAMETER_NAME=="FRAC2" or PARAMETER_NAME=="FRAC3" or PARAMETER_NAME=="FRAC4")
-            return get_owner_fraction_of_device(lineptr, parameter_name);
+            return get_owner_fraction_of_nonbus_device(lineptr, parameter_name);
 
         if(PARAMETER_NAME=="PSEND_MW")
             return lineptr->get_line_complex_power_at_sending_side_in_MVA().real();
@@ -299,7 +299,7 @@ void api_set_line_float_data(unsigned int ibus, unsigned int jbus, char* identif
             return lineptr->set_length(value);
 
         if(PARAMETER_NAME=="FRAC1" or PARAMETER_NAME=="FRAC2" or PARAMETER_NAME=="FRAC3" or PARAMETER_NAME=="FRAC4")
-            return set_owner_fraction_of_device(lineptr, PARAMETER_NAME, value);
+            return set_owner_fraction_of_nonbus_device(lineptr, PARAMETER_NAME, value);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
     }

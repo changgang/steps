@@ -49,7 +49,6 @@ BUS_TEST::BUS_TEST() : bus(default_toolkit)
     TEST_ADD(BUS_TEST::test_is_valid);
     TEST_ADD(BUS_TEST::test_clear);
     TEST_ADD(BUS_TEST::test_copy_with_operator_equal);
-    TEST_ADD(BUS_TEST::test_is_connected_to_bus);
 
     TEST_ADD(BUS_TEST::test_get_device_id);
 
@@ -420,21 +419,21 @@ void BUS_TEST::test_set_get_fault()
     TEST_ASSERT(fault2.get_fault_shunt_in_pu()==y);
 
     fault.set_fault_type(DOUBLE_PHASES_GROUNDED_FAULT);
-    y = complex<double>(0.0,-3e10);
+    y = complex<double>(0.0,-4e10);
     fault.set_fault_shunt_in_pu(y);
     bus.set_fault(fault);
     fault2 = bus.get_fault();
     TEST_ASSERT(fault2.get_fault_type()==DOUBLE_PHASES_GROUNDED_FAULT);
-    TEST_ASSERT(fault2.get_fault_shunt_in_pu()==y);
+    TEST_ASSERT(abs(fault2.get_fault_shunt_in_pu()-y)<FLOAT_EPSILON);
 
 
     fault.set_fault_type(THREE_PHASES_FAULT);
-    y = complex<double>(0.0,-3e10);
+    y = complex<double>(0.0,-4e10);
     fault.set_fault_shunt_in_pu(y);
     bus.set_fault(fault);
     fault2 = bus.get_fault();
     TEST_ASSERT(fault2.get_fault_type()==THREE_PHASES_FAULT);
-    TEST_ASSERT(fault2.get_fault_shunt_in_pu()==y);
+    TEST_ASSERT(abs(fault2.get_fault_shunt_in_pu()-y)<FLOAT_EPSILON);
 }
 
 void BUS_TEST::test_clear_fault()
@@ -539,15 +538,6 @@ void BUS_TEST::test_copy_with_operator_equal()
     fault = newbus.get_fault();
     TEST_ASSERT(fault.get_fault_type()==SINGLE_PHASE_GROUNDED_FAULT);
     TEST_ASSERT(fault.get_fault_shunt_in_pu()==complex<double>(0.0, -2e10));
-}
-
-void BUS_TEST::test_is_connected_to_bus()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"BUS_TEST");
-
-    bus.set_bus_number(2);
-    TEST_ASSERT(bus.is_connected_to_bus(2)==true);
-    TEST_ASSERT(bus.is_connected_to_bus(1)==false);
 }
 
 void BUS_TEST::test_set_get_frequency_deviation()

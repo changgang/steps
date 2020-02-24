@@ -2316,9 +2316,9 @@ string STEPS_IMEXPORTER::export_source_var_control_data(SOURCE* source) const
 
     double qmax = source->get_q_max_in_MVar();
     double qmin = source->get_q_min_in_MVar();
-    if(fabs(qmax+qmin)>FLOAT_EPSILON)
+    if(fabs(qmax+qmin)>DOUBLE_EPSILON)
     {
-        if(fabs(qmax-qmin)>FLOAT_EPSILON)
+        if(fabs(qmax-qmin)>DOUBLE_EPSILON)
             osstream<<"0, 0.0";
         else
             osstream<<"3, 0.0";

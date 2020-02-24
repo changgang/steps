@@ -53,7 +53,7 @@ void PID_BLOCK::set_Ki(double K)
 
 double PID_BLOCK::get_Ki() const
 {
-    if(fabs(i_block.get_T_in_s()-INFINITE_THRESHOLD)<FLOAT_EPSILON)
+    if(fabs(i_block.get_T_in_s()-INFINITE_THRESHOLD)<DOUBLE_EPSILON)
         return 0.0;
     else
         return 1.0/i_block.get_T_in_s();
@@ -133,14 +133,13 @@ void PID_BLOCK::initialize()
 
     set_input(p_block.get_input());
 
-    LIMITER_TYPE limiter = get_limiter_type();
-    double vmax = get_upper_limit();
-    double vmin = get_lower_limit();
-
-    double s = get_integrator_state();
-
-    if(limiter != NO_LIMITER)
+    if(get_limiter_type() != NO_LIMITER)
     {
+        double vmax = get_upper_limit();
+        double vmin = get_lower_limit();
+
+        double s = get_integrator_state();
+
         if(s>vmax)
         {
             osstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
@@ -175,13 +174,14 @@ void PID_BLOCK::run(DYNAMIC_MODE mode)
             update();
     }
 
-    LIMITER_TYPE limiter = get_limiter_type();
-    double vmax = get_upper_limit();
-    double vmin = get_lower_limit();
-
     double y = p_block.get_output() + i_block.get_output() + d_block.get_output();
-    if(limiter != NO_LIMITER)
+
+    if(get_limiter_type() == NO_LIMITER)
+        set_output(y);
+    else
     {
+        double vmax = get_upper_limit();
+        double vmin = get_lower_limit();
         if(y>vmax)
             y = vmax;
         else
@@ -189,8 +189,9 @@ void PID_BLOCK::run(DYNAMIC_MODE mode)
             if(y<vmin)
                 y = vmin;
         }
+        set_output(y);
     }
-    set_output(y);
+
 }
 
 void PID_BLOCK::integrate()

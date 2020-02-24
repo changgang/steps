@@ -8,7 +8,7 @@
 using namespace std;
 
 
-TRANSFORMER::TRANSFORMER(STEPS& toolkit) : DEVICE(toolkit)
+TRANSFORMER::TRANSFORMER(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
 {
     clear();
 }

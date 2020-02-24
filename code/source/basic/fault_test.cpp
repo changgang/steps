@@ -60,7 +60,7 @@ void FAULT_TEST::test_set_get_fault_shunt()
 
     y = complex<double>(0.2, -2e8);
     fault.set_fault_shunt_in_pu(y);
-    TEST_ASSERT(fault.get_fault_shunt_in_pu()==y);
+    TEST_ASSERT(abs(fault.get_fault_shunt_in_pu()-y)<FLOAT_EPSILON);
 
     y = complex<double>(0.0, 0.0);
     fault.set_fault_shunt_in_pu(y);
@@ -116,7 +116,7 @@ void FAULT_TEST::test_copy_with_opeartor_equal()
     FAULT newfault = fault;
 
     TEST_ASSERT(newfault.get_fault_type()==THREE_PHASES_FAULT);
-    TEST_ASSERT(newfault.get_fault_shunt_in_pu()==y);
+    TEST_ASSERT(abs(fault.get_fault_shunt_in_pu()-y)<FLOAT_EPSILON);
 }
 
 

@@ -96,12 +96,12 @@ class IEEEG1 : public TURBINE_GOVERNOR_MODEL
         FIRST_ORDER_BLOCK delayer2;
         FIRST_ORDER_BLOCK delayer3;
         FIRST_ORDER_BLOCK delayer4;
-        float Tservo;
-        float Uo, Uc;
-        float K1, K2;
-        float K3, K4;
-        float K5, K6;
-        float K7, K8;
+        double Tservo;
+        double Uo, Uc;
+        double K1, K2;
+        double K3, K4;
+        double K5, K6;
+        double K7, K8;
 };
 
 #endif // IEEEG1_H

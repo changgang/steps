@@ -64,42 +64,39 @@ void FIRST_ORDER_BLOCK::initialize()
         one_over_h_plus_2t = 1.0/h_plus_2t;
         h_minus_2t = h-2.0*t;
 
-
-        LIMITER_TYPE limiter_type = get_limiter_type();
-        double vmax = get_upper_limit();
-        double vmin = get_lower_limit();
-
         double y = get_output();
-        if(k!=0.0)
-            ;
-        else
-        {
-            y=0.0;
-            set_output(0.0);
-        }
-
         double s, z, x;
-
-        s = y;
-        //z = y-(1.0-2.0*t/h)*s;
-        //z = s-(1.0-2.0*t/h)*s;
-        //z =2.0*t/h*s;
-        z =2.0*t_over_h*s;
-
-        if(k!=0)
+        if(k!=0.0)
         {
+            s = y;
+            //z = y-(1.0-2.0*t/h)*s;
+            //z = s-(1.0-2.0*t/h)*s;
+            //z =2.0*t/h*s;
+            z = 2.0*t_over_h*s;
+
             //x = y/k;
             x = y*one_over_k;
         }
         else
+        {
+            y=0.0;
+            set_output(0.0);
+            s = y;
+            //z = y-(1.0-2.0*t/h)*s;
+            //z = s-(1.0-2.0*t/h)*s;
+            //z =2.0*t/h*s;
+            z = 2.0*t_over_h*s;
             x = 0.0;
+        }
 
         set_state(s);
         set_store(z);
         set_input(x);
 
-        if(limiter_type != NO_LIMITER)
+        if(get_limiter_type() != NO_LIMITER)
         {
+            double vmax = get_upper_limit();
+            double vmin = get_lower_limit();
             if(s>vmax)
             {
                 osstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
@@ -147,10 +144,6 @@ void FIRST_ORDER_BLOCK::integrate()
     {
         double t = get_T_in_s();
 
-        LIMITER_TYPE limiter_type = get_limiter_type();
-        double vmax = get_upper_limit();
-        double vmin = get_lower_limit();
-
         double x = get_input();
 
         double s, z, y;
@@ -165,13 +158,16 @@ void FIRST_ORDER_BLOCK::integrate()
 
             //double ds = (k*x-s)/t;
             //double ds = (k*x-s)*one_over_t;
-            //if(fabs(ds)<FLOAT_EPSILON)
+            //if(fabs(ds)<DOUBLE_EPSILON)
             //    return;
             //if(fabs(ds)>DSTATE_THRESHOLD)
             //    cout<<"Derivative of state is changed dramatically in FIRST_ORDER_BLOCK\n";
 
+            LIMITER_TYPE limiter_type = get_limiter_type();
             if(limiter_type != NO_LIMITER)
             {
+                double vmax = get_upper_limit();
+                double vmin = get_lower_limit();
                 if(limiter_type == WINDUP_LIMITER)
                 {
                     if(y>vmax)
@@ -216,10 +212,6 @@ void FIRST_ORDER_BLOCK::update()
     {
         double t = get_T_in_s();
 
-        LIMITER_TYPE limiter_type = get_limiter_type();
-        double vmax = get_upper_limit();
-        double vmin = get_lower_limit();
-
         double x = get_input();
 
         double s, ds, z, y;
@@ -230,8 +222,12 @@ void FIRST_ORDER_BLOCK::update()
             //ds = (k*x-s)/t;
             ds = (k*x-s)*one_over_t;
             y = s;
+
+            LIMITER_TYPE limiter_type = get_limiter_type();
             if(limiter_type != NO_LIMITER)
             {
+                double vmax = get_upper_limit();
+                double vmin = get_lower_limit();
                 if(limiter_type == WINDUP_LIMITER)
                 {
                     if(y>vmax)

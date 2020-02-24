@@ -195,7 +195,7 @@ void POWERFLOW_CASE_GENERATOR::generate_case_with_load_random(vector<double> loa
         double Pgen_new = psdb.get_total_generation_power_in_MVA().real();
         double uniform_gen_scale_new = (Pload+Ploss-Pgen_new)/Pgen_new;
 
-        if(fabs(uniform_gen_scale-uniform_gen_scale_new)<FLOAT_EPSILON)
+        if(fabs(uniform_gen_scale-uniform_gen_scale_new)<DOUBLE_EPSILON)
         {
             load_level_exceeds_max_generation = true;
             break;

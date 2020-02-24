@@ -47,7 +47,7 @@ class BLOCK
         double state, store;
         //double new_state, dstate;
         LIMITER_TYPE limiter_type;
-        float upper_limit, lower_limit;
+        double upper_limit, lower_limit;
         double input, output;
 };
 #endif // BLOCK_H

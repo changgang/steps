@@ -601,7 +601,7 @@ void POWERFLOW_SOLVER::initialize_bus_voltage_to_regulate()
             continue;
         else // PV, SLACK
         {
-            if(fabs(buses[i]->get_voltage_to_regulate_in_pu())<FLOAT_EPSILON)
+            if(fabs(buses[i]->get_voltage_to_regulate_in_pu())<DOUBLE_EPSILON)
                 buses[i]->set_voltage_to_regulate_in_pu(1.0);
         }
     }
@@ -1354,7 +1354,7 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
     double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
     double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
 
-    if(fabs(total_q_max_in_MVar-total_q_min_in_MVar)>FLOAT_EPSILON)
+    if(fabs(total_q_max_in_MVar-total_q_min_in_MVar)>DOUBLE_EPSILON)
         ;
     else
     {
@@ -1930,7 +1930,7 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     double limit = get_maximum_voltage_change_in_pu();
-    if(fabs(limit)<FLOAT_EPSILON)
+    if(fabs(limit)<DOUBLE_EPSILON)
         return;
 
     double max_dv=0.0;
@@ -2027,7 +2027,7 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     double limit = get_maximum_angle_change_in_rad();
-    if(fabs(limit)<FLOAT_EPSILON)
+    if(fabs(limit)<DOUBLE_EPSILON)
         return;
 
     double max_dv=0.0;

@@ -248,7 +248,7 @@ double FILEWIND::get_wind_speed_in_pu()
     STEPS& toolkit = get_toolkit();
     double simulation_time = toolkit.get_dynamic_simulation_time_in_s();
 
-    if(fabs(simulation_time-current_time)<FLOAT_EPSILON)
+    if(fabs(simulation_time-current_time)<DOUBLE_EPSILON)
         return current_wind_speed;
 
     search_wind_data_at_simulation_time();
@@ -264,7 +264,7 @@ double FILEWIND::get_wind_direction_in_deg()
     STEPS& toolkit = get_toolkit();
     double simulation_time = toolkit.get_dynamic_simulation_time_in_s();
 
-    if(fabs(simulation_time-current_time)<FLOAT_EPSILON)
+    if(fabs(simulation_time-current_time)<DOUBLE_EPSILON)
         return current_wind_direction;
 
     search_wind_data_at_simulation_time();
@@ -322,7 +322,7 @@ void FILEWIND::search_wind_data_at_simulation_time()
             {
                 unsigned int temp_index = ((previous_index+next_index)>>1);
                 double temp_time = wind_data[temp_index][0];
-                if(fabs(temp_time-current_time)<FLOAT_EPSILON)
+                if(fabs(temp_time-current_time)<DOUBLE_EPSILON)
                 {
                     current_wind_speed = wind_data[temp_index][1];
                     current_wind_direction = wind_data[temp_index][2];

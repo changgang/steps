@@ -139,7 +139,6 @@ void LEAD_LAG_BLOCK::integrate()
 
     double s, z, y;
 
-    s = get_state();
     z = get_store();
     // with equations:
     // y = t1/t2*(k*x+(t2/t1-1.0)*s);
@@ -155,7 +154,7 @@ void LEAD_LAG_BLOCK::integrate()
     y = t1_over_t2*(k*x+(t2_over_t1-1.0)*s);
     //double ds = (k*x-s)*one_over_t2;
 
-    //if(fabs(ds)>FLOAT_EPSILON)
+    //if(fabs(ds)>DOUBLE_EPSILON)
     //{
         set_state(s);
         set_output(y);

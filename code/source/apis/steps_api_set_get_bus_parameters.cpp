@@ -12,7 +12,7 @@ int api_get_bus_integer_data(unsigned int bus, char* parameter_name, unsigned in
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    BUS* busptr = psdb.get_bus(did);
+    BUS* busptr = psdb.get_bus(bus);
     if(busptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);

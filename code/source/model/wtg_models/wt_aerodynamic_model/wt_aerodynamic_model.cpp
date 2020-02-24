@@ -98,8 +98,8 @@ void WT_AERODYNAMIC_MODEL::set_number_of_pole_pairs(unsigned int n)
 
 void WT_AERODYNAMIC_MODEL::set_generator_to_turbine_gear_ratio(double r)
 {
-    if(r<FLOAT_EPSILON)
-        r = FLOAT_EPSILON;
+    if(r<DOUBLE_EPSILON)
+        r = DOUBLE_EPSILON;
     generator_to_turbine_gear_ratio = r;
 }
 
@@ -107,29 +107,29 @@ void WT_AERODYNAMIC_MODEL::set_gear_efficiency(double eta)
 {
     if(eta>1.0)
         eta = 1.0;
-    if(eta<FLOAT_EPSILON)
-        eta = FLOAT_EPSILON;
+    if(eta<DOUBLE_EPSILON)
+        eta = DOUBLE_EPSILON;
     gear_efficiency = eta;
 }
 
 void WT_AERODYNAMIC_MODEL::set_turbine_blade_radius_in_m(double r)
 {
-    if(r<FLOAT_EPSILON)
-        r = FLOAT_EPSILON;
+    if(r<DOUBLE_EPSILON)
+        r = DOUBLE_EPSILON;
     turbine_blade_radius_in_m = r;
 }
 
 void WT_AERODYNAMIC_MODEL::set_nominal_wind_speed_in_mps(double v)
 {
-    if(v<FLOAT_EPSILON)
-        v = FLOAT_EPSILON;
+    if(v<DOUBLE_EPSILON)
+        v = DOUBLE_EPSILON;
     nominal_wind_speed_in_mps = v;
 }
 
 void WT_AERODYNAMIC_MODEL::set_nominal_air_density_in_kgpm3(double rou)
 {
-    if(rou<FLOAT_EPSILON)
-        rou = FLOAT_EPSILON;
+    if(rou<DOUBLE_EPSILON)
+        rou = DOUBLE_EPSILON;
     nominal_air_density_in_kgpm3 = rou;
 }
 
@@ -200,8 +200,8 @@ double WT_AERODYNAMIC_MODEL::get_initial_turbine_speed_in_pu()
 
 void WT_AERODYNAMIC_MODEL::set_air_density_in_kgpm3(double rou)
 {
-    if(rou<FLOAT_EPSILON)
-        rou = FLOAT_EPSILON;
+    if(rou<DOUBLE_EPSILON)
+        rou = DOUBLE_EPSILON;
     air_density_in_kgpm3 = rou;
 }
 
@@ -638,7 +638,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
     double pmech_low = pelec+(D*w_low)*(w_mppt_low/wn)*(mbase/n);
     if(pmech_low<=pmax*cpmax_low)
     {
-        if(fabs(pmech_low-pmax*cpmax_low)>FLOAT_EPSILON)
+        if(fabs(pmech_low-pmax*cpmax_low)>DOUBLE_EPSILON)
         {
             unsigned int iter_max = 100;
             unsigned int iter = 0;
@@ -680,7 +680,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
 
                 //osstream<<"pitch = "<<pitch<<", w_mppt = "<<w_mppt<<", w = "<<w<<", pmechmax = "<<pmax*cpmax;
                 //show_information_with_leading_time_stamp(osstream);
-                if(fabs(pmech-pmax*cpmax)>FLOAT_EPSILON)
+                if(fabs(pmech-pmax*cpmax)>DOUBLE_EPSILON)
                 {
                     if(pmech>pmax*cpmax)
                         pitch_high = pitch;
@@ -828,7 +828,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
             double pnew = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
             osstream<<"Iteration "<<iter_count<<": pitch = "<<pitch_new<<" deg, pmech = "<<pnew<<" MW"<<endl;
 
-            if(fabs(pnew-pmech)>FLOAT_EPSILON)
+            if(fabs(pnew-pmech)>DOUBLE_EPSILON)
             {
                 if(pnew>pmech)
                     pitch_low = pitch_new;
@@ -950,8 +950,8 @@ double WT_AERODYNAMIC_MODEL::get_turbine_reference_speed_in_rad_per_s_without_sp
         double pelec = selec.real();
 
         double pitch = get_pitch_angle_in_deg();
-        if(fabs(get_current_pelec_including_loss_per_turbine_in_MW()-pelec)<FLOAT_EPSILON and
-           fabs(get_current_pitch_angle_in_deg()-pitch)<FLOAT_EPSILON)
+        if(fabs(get_current_pelec_including_loss_per_turbine_in_MW()-pelec)<DOUBLE_EPSILON and
+           fabs(get_current_pitch_angle_in_deg()-pitch)<DOUBLE_EPSILON)
             return get_current_turbine_speed_reference_without_limit_in_rad_per_s();
         else
         {
@@ -977,7 +977,7 @@ double WT_AERODYNAMIC_MODEL::get_mppt_speed_in_rad_per_s(double pitch_in_deg)
 
 void WT_AERODYNAMIC_MODEL::set_current_pitch_angle_in_deg(double pitch)
 {
-    if(fabs(get_current_pitch_angle_in_deg()-pitch)<FLOAT_EPSILON)
+    if(fabs(get_current_pitch_angle_in_deg()-pitch)<DOUBLE_EPSILON)
         return;
 
     current_pitch_angle_in_deg = pitch;
@@ -1055,7 +1055,7 @@ void WT_AERODYNAMIC_MODEL::update_current_lambda_at_cpmax_with_current_pitch_ang
     {
         lambda_new = 0.5*(lambda_low+lambda_high);
         double der_new =  get_derivative_of_Cp_over_lambda(lambda_new, pitch);
-        if(fabs(der_new)>FLOAT_EPSILON)
+        if(fabs(der_new)>DOUBLE_EPSILON)
         {
             if(der_new>0.0)
                 lambda_low = lambda_new;
@@ -1077,7 +1077,7 @@ void WT_AERODYNAMIC_MODEL::update_current_lambda_at_cpmax_with_current_pitch_ang
 
 void WT_AERODYNAMIC_MODEL::set_current_pelec_including_loss_per_turbine_in_MW(double pelec)
 {
-    if(fabs(get_current_pelec_including_loss_per_turbine_in_MW()-pelec)>FLOAT_EPSILON)
+    if(fabs(get_current_pelec_including_loss_per_turbine_in_MW()-pelec)>DOUBLE_EPSILON)
         current_pelec_including_loss_per_turbine = pelec;
 }
 
@@ -1201,7 +1201,7 @@ void WT_AERODYNAMIC_MODEL::update_current_turbine_speed_reference_without_limit(
             //cout<<"pelec = "<<telec*w_new<<", pdamp = "<<tdamp*w_new<<", pmech = "<<tmech*w_new<<endl;
             pmech = tmech*w_new;
             pmech /= eta;
-            if(fabs(p_new-pmech)>FLOAT_EPSILON)
+            if(fabs(p_new-pmech)>DOUBLE_EPSILON)
             {
                 if(get_turbine_speed_mode()==WT_UNDERSPEED_MODE)
                 {
@@ -1304,7 +1304,7 @@ double WT_AERODYNAMIC_MODEL::get_lambda_at_Cpmax(double pitch_deg)
             <<", "<<get_current_lambda_at_cpmax()<<"]";
     toolkit.show_information_with_leading_time_stamp(osstream);*/
 
-    if(fabs(get_current_pitch_angle_in_deg()-pitch_deg)<FLOAT_EPSILON)
+    if(fabs(get_current_pitch_angle_in_deg()-pitch_deg)<DOUBLE_EPSILON)
         return get_current_lambda_at_cpmax();
 
     set_current_pitch_angle_in_deg(pitch_deg);

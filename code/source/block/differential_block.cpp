@@ -97,7 +97,7 @@ void DIFFERENTIAL_BLOCK::integrate()
     y = k_over_t*x-s;
     //double ds = (k_over_t*x-s)*one_over_t;
 
-    //if(fabs(ds)>FLOAT_EPSILON)
+    //if(fabs(ds)>DOUBLE_EPSILON)
     //{
         set_state(s);
         set_output(y);

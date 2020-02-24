@@ -15,9 +15,9 @@ void show_device_not_exist_with_api(DEVICE_ID did, string api_func, unsigned int
 void show_parameter_not_supported_for_area_zone_owner_with_api(string par_name, unsigned int no, string api_func, unsigned int toolkit_index=INDEX_NOT_EXIST);
 void show_area_zone_owner_not_exist_with_api(unsigned int no, string api_func, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
-unsigned int get_owner_of_device(DEVICE* device, string parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
-void set_owner_of_device(DEVICE* device, string parameter_name, int value, unsigned int toolkit_index=INDEX_NOT_EXIST);
-double get_owner_fraction_of_device(DEVICE* device, string parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
-void set_owner_fraction_of_device(DEVICE* device, string parameter_name, double value, unsigned int toolkit_index=INDEX_NOT_EXIST);
+unsigned int get_owner_of_nonbus_device(NONBUS_DEVICE* device, string parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
+void set_owner_of_nonbus_device(NONBUS_DEVICE* device, string parameter_name, int value, unsigned int toolkit_index=INDEX_NOT_EXIST);
+double get_owner_fraction_of_nonbus_device(NONBUS_DEVICE* device, string parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
+void set_owner_fraction_of_nonbus_device(NONBUS_DEVICE* device, string parameter_name, double value, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 #endif // STEPS_API_COMMON_H

@@ -9,7 +9,7 @@
 
 using namespace std;
 
-HVDC::HVDC(STEPS& toolkit) : DEVICE(toolkit)
+HVDC::HVDC(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
 {
     clear();
 }
@@ -659,7 +659,7 @@ double HVDC::get_rectifier_nominal_dc_power_command_in_MW() const
             return Pn;
         else // inverter side
         {
-            if(fabs(Rcomp)<FLOAT_EPSILON)
+            if(fabs(Rcomp)<DOUBLE_EPSILON)
             {
                 double Idc = Pn/Vn;
                 double Vdcr = Vn+Rdc*Idc;
@@ -667,7 +667,7 @@ double HVDC::get_rectifier_nominal_dc_power_command_in_MW() const
             }
             else
             {
-                if(fabs(Rdc-Rcomp)<FLOAT_EPSILON)
+                if(fabs(Rdc-Rcomp)<DOUBLE_EPSILON)
                 {
                     // (Vn-Idc*Rdc)*Idc = Pn
                     // Rdc*Idc2-Vn*Idc+Pn = 0
@@ -695,13 +695,13 @@ double HVDC::get_rectifier_nominal_dc_power_command_in_MW() const
     else // rectifier in constant current mode
     {
         double Idc = get_nominal_dc_current_per_pole_in_kA();
-        if(fabs(Rcomp-Rdc)<FLOAT_EPSILON)
+        if(fabs(Rcomp-Rdc)<DOUBLE_EPSILON)
         {
             return Idc*Vn;
         }
         else
         {
-            if(fabs(Rcomp)<FLOAT_EPSILON)
+            if(fabs(Rcomp)<DOUBLE_EPSILON)
             {
                 double Vdcr = Vn+Rdc*Idc;
                 return Vdcr*Idc;
@@ -731,14 +731,14 @@ double HVDC::get_rectifier_nominal_dc_current_command_in_kA() const
         double Rdc = get_line_resistance_in_ohm();
         if(Pside == RECTIFIER)
         {
-            if(fabs(Rcomp-Rdc)<FLOAT_EPSILON)
+            if(fabs(Rcomp-Rdc)<DOUBLE_EPSILON)
             {
                 double Idc = Pn/Vn;
                 return Idc;
             }
             else
             {
-                if(fabs(Rcomp)<FLOAT_EPSILON)
+                if(fabs(Rcomp)<DOUBLE_EPSILON)
                 {
                     // Pn = (Vn+Rdc*Idc)*Idc
                     // Rdc*Idc2 +Vn*Idc -Pn = 0
@@ -755,14 +755,14 @@ double HVDC::get_rectifier_nominal_dc_current_command_in_kA() const
         }
         else // inverter side
         {
-            if(fabs(Rcomp)<FLOAT_EPSILON)
+            if(fabs(Rcomp)<DOUBLE_EPSILON)
             {
                 double Idc = Pn/Vn;
                 return Idc;
             }
             else
             {
-                if(fabs(Rdc-Rcomp)<FLOAT_EPSILON)
+                if(fabs(Rdc-Rcomp)<DOUBLE_EPSILON)
                 {
                     // (Vn-Idc*Rdc)*Idc = Pn
                     // Rdc*Idc2-Vn*Idc+Pn = 0
@@ -790,14 +790,14 @@ double HVDC::get_inverter_nominal_dc_voltage_command_in_kV() const
     double Vn = get_nominal_dc_voltage_per_pole_in_kV();
     double Rcomp = get_compensating_resistance_to_hold_dc_voltage_in_ohm();
     double Rdc = get_line_resistance_in_ohm();
-    if(fabs(Rcomp)<FLOAT_EPSILON)
+    if(fabs(Rcomp)<DOUBLE_EPSILON)
     {
         return Vn;
     }
     else
     {
         double Idc = get_rectifier_nominal_dc_current_command_in_kA();
-        if(fabs(Rdc-Rcomp)<FLOAT_EPSILON)
+        if(fabs(Rdc-Rcomp)<DOUBLE_EPSILON)
         {
             double Vdci = Vn - Rdc*Idc;
             return Vdci;
@@ -1683,9 +1683,9 @@ bool HVDC::solve_converter_transformer_tap_and_desired_firing_angle(HVDC_CONVERT
             double Tapmax = get_converter_transformer_min_tap_in_pu(converter);
             double Tapmin = get_converter_transformer_min_tap_in_pu(converter);
             unsigned int nTap = get_converter_transformer_number_of_taps(converter);
-            if(nTap==1 or fabs(Tapmax-Tapmin)<FLOAT_EPSILON) // tap not changeable
+            if(nTap==1 or fabs(Tapmax-Tapmin)<DOUBLE_EPSILON) // tap not changeable
                 break;
-            if(fabs(Tap-Tapmin)<FLOAT_EPSILON) //reach the minimum
+            if(fabs(Tap-Tapmin)<DOUBLE_EPSILON) //reach the minimum
                 break;
             double TapStep = (Tapmax-Tapmin)/(nTap-1);
             Tap -= TapStep;
@@ -1724,7 +1724,7 @@ void HVDC::solve_best_converter_transformer_tap_with_min_angle(HVDC_CONVERTER_SI
     double minTap = get_converter_transformer_min_tap_in_pu(converter);
     unsigned int nTap = get_converter_transformer_number_of_taps(converter);
 
-    if(fabs(maxTap-minTap)<FLOAT_EPSILON or nTap == 1)
+    if(fabs(maxTap-minTap)<DOUBLE_EPSILON or nTap == 1)
     {
         set_converter_transformer_tap_in_pu(converter, minTap);
         return;

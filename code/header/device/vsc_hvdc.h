@@ -1,7 +1,7 @@
 #ifndef VSC_HVDC_H
 #define VSC_HVDC_H
 
-#include "header/device/device.h"
+#include "header/device/nonbus_device.h"
 #include "header/basic/device_id.h"
 #include "header/basic/steps_enum.h"
 #include "header/model/vsc_hvdc_model/vsc_hvdc_model.h"
@@ -16,7 +16,7 @@ using namespace std;
 class BUS;
 class VSC_HVDC_MODEL;
 
-class VSC_HVDC : public DEVICE
+class VSC_HVDC : public NONBUS_DEVICE
 {
     public:
         VSC_HVDC(STEPS& toolkit);

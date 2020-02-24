@@ -1,14 +1,14 @@
 #ifndef EQUIVALENT_DEVICE_H
 #define EQUIVALENT_DEVICE_H
 
-#include "header/device/device.h"
+#include "header/device/nonbus_device.h"
 #include "header/model/equivalent_model/equivalent_model.h"
 #include <string>
 #include <complex>
 
 using namespace std;
 
-class EQUIVALENT_DEVICE : public DEVICE
+class EQUIVALENT_DEVICE : public NONBUS_DEVICE
 {
     public:
         EQUIVALENT_DEVICE(STEPS& toolkit);

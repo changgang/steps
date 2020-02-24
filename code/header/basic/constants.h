@@ -58,8 +58,12 @@
 #endif // SQRT6
 
 #ifndef FLOAT_EPSILON
-    #define FLOAT_EPSILON 1e-10
+    #define FLOAT_EPSILON 1e-6
 #endif // FLOAT_EPSILON
+
+#ifndef DOUBLE_EPSILON
+    #define DOUBLE_EPSILON 1e-10
+#endif // DOUBLE_EPSILON
 
 #ifndef DSTATE_THRESHOLD
     #define DSTATE_THRESHOLD 100.0

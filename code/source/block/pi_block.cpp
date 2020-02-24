@@ -75,14 +75,11 @@ void PI_BLOCK::initialize()
 
     set_input(pid_block.get_input());
 
-    LIMITER_TYPE limiter = get_limiter_type();
-    double vmax = get_upper_limit();
-    double vmin = get_lower_limit();
-
-    double s = get_state();
-
-    if(limiter != NO_LIMITER)
+    if(get_limiter_type() != NO_LIMITER)
     {
+        double s = get_state();
+        double vmax = get_upper_limit();
+        double vmin = get_lower_limit();
         if(s>vmax)
         {
             osstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
@@ -109,13 +106,13 @@ void PI_BLOCK::run(DYNAMIC_MODE mode)
     if(mode==UPDATE_MODE)
         update();
 
-    LIMITER_TYPE limiter = get_limiter_type();
-    double vmax = get_upper_limit();
-    double vmin = get_lower_limit();
-
     double y = pid_block.get_output();
-    if(limiter != NO_LIMITER)
+    if(get_limiter_type() == NO_LIMITER)
+        set_output(y);
+    else
     {
+        double vmax = get_upper_limit();
+        double vmin = get_lower_limit();
         if(y>vmax)
             y = vmax;
         else
@@ -123,8 +120,8 @@ void PI_BLOCK::run(DYNAMIC_MODE mode)
             if(y<vmin)
                 y = vmin;
         }
+        set_output(y);
     }
-    set_output(y);
 }
 
 void PI_BLOCK::integrate()

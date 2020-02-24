@@ -284,7 +284,7 @@ void WT3E0::set_frequency_deviation_lower_deadband_in_pu(double f)
 void WT3E0::set_Kfint(double K)
 {
     double t = 0.0;
-    if(fabs(K)<FLOAT_EPSILON)
+    if(fabs(K)<DOUBLE_EPSILON)
         t = INFINITE_THRESHOLD;
     else
         t = 1.0/K;
@@ -454,7 +454,7 @@ double WT3E0::get_Kfint() const
 {
     double t = frequency_integral_controller.get_T_in_s();
     double k = 0.0;
-    if(fabs(t-INFINITE_THRESHOLD)<FLOAT_EPSILON)
+    if(fabs(t-INFINITE_THRESHOLD)<DOUBLE_EPSILON)
         k = 0.0;
     else
         k = 1.0/t;

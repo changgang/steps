@@ -8,7 +8,7 @@
 
 using namespace std;
 
-SOURCE::SOURCE(STEPS& toolkit) : DEVICE(toolkit)
+SOURCE::SOURCE(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
 {
     clear();
 }
@@ -241,7 +241,7 @@ void SOURCE::check()
     unsigned int bus = get_source_bus();
     double qmax = get_q_max_in_MVar();
     double qmin = get_q_min_in_MVar();
-    if(fabs(qmax-qmin)<FLOAT_EPSILON)
+    if(fabs(qmax-qmin)<DOUBLE_EPSILON)
     {
         BUS_TYPE btype = psdb.get_bus_type(bus);
         if(btype==SLACK_TYPE)

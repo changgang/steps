@@ -46,7 +46,7 @@ class PSASPVC: public COMPENSATOR_MODEL
         void copy_from_const_model(const PSASPVC& model);
 
         double sin_phi;
-        float Xc;
+        double Xc;
 };
 
 #endif // EXCITER_MODEL_H

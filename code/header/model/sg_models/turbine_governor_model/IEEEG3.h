@@ -83,9 +83,9 @@ class IEEEG3 : public TURBINE_GOVERNOR_MODEL
         INTEGRAL_BLOCK servo_motor;
         DIFFERENTIAL_BLOCK feedbacker;
         LEAD_LAG_BLOCK water_hammer;
-        float delta, sigma;
-        float TW;
-        float a11, a13, a21, a23;
+        double delta, sigma;
+        double TW;
+        double a11, a13, a21, a23;
 };
 
 #endif // IEEEG3_H

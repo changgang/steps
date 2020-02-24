@@ -4,6 +4,9 @@
 #include <cstdio>
 #include "header/basic/utility.h"
 #include <vector>
+#include <iostream>
+
+using namespace std;
 PSASPS1::PSASPS1(STEPS& toolkit) : STABILIZER_MODEL(toolkit),
                                    dedc_block(toolkit),
                                    phase_tuner_1(toolkit),

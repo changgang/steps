@@ -9,7 +9,7 @@
 
 using namespace std;
 
-VSC_HVDC::VSC_HVDC(STEPS& toolkit) : DEVICE(toolkit)
+VSC_HVDC::VSC_HVDC(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
 {
     clear();
 }

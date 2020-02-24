@@ -90,8 +90,8 @@ class PVGU1 : public PV_CONVERTER_MODEL
 
         FIRST_ORDER_BLOCK reactive_voltage_commander;
 
-        float LVPL_active_power_change_rate;
-        float HVRCR_voltage, HVRCR_current;
+        double LVPL_active_power_change_rate;
+        double HVRCR_voltage, HVRCR_current;
 };
 
 #endif // GENERATOR_MODEL_H

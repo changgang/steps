@@ -97,14 +97,12 @@ class BUS : public DEVICE
         virtual bool is_valid() const;
         virtual void check();
         virtual void clear();
-        virtual bool is_connected_to_bus(unsigned int bus) const;
         virtual bool is_in_area(unsigned int area) const;
         virtual bool is_in_zone(unsigned int zone) const;
         virtual void report() const;
-        virtual void save() const;
 
-        virtual bool operator<(const BUS& bus) const;
-        virtual BUS& operator=(const BUS& bus);
+        bool operator<(const BUS& bus) const;
+        BUS& operator=(const BUS& bus);
 
         virtual DEVICE_ID get_device_id() const;
         //virtual string get_device_name() const;
@@ -123,8 +121,8 @@ class BUS : public DEVICE
     private:
         unsigned int bus_number;
         string bus_name;
-        float base_voltage_in_kV;
-        float fn_Hz, tn_s;
+        double base_voltage_in_kV;
+        double fn_Hz, tn_s;;
         BUS_TYPE bus_type;
         unsigned int area_number;
         unsigned int zone_number;
@@ -141,12 +139,12 @@ class BUS : public DEVICE
         complex<double> negative_sequence_Euler_complex_number;
         complex<double> zero_sequence_Euler_complex_number;
 
-        float normal_voltage_upper_limit_in_pu;
-        float normal_voltage_lower_limit_in_pu;
-        float emergency_voltage_upper_limit_in_pu;
-        float emergency_voltage_lower_limit_in_pu;
+        double normal_voltage_upper_limit_in_pu;
+        double normal_voltage_lower_limit_in_pu;
+        double emergency_voltage_upper_limit_in_pu;
+        double emergency_voltage_lower_limit_in_pu;
 
-        float voltage_to_regulate_in_pu;
+        double voltage_to_regulate_in_pu;
 
         unsigned int equivalent_bus_number;
 
@@ -155,8 +153,6 @@ class BUS : public DEVICE
         FAULT fault;
     private:
         void copy_from_const_bus(const BUS& bus);
-        virtual void set_model(const MODEL* model);
-        virtual MODEL* get_model_of_type(string model_type);
 };
 
 #endif // BUS_H

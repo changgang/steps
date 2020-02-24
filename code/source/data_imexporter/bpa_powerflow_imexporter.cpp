@@ -1096,8 +1096,8 @@ void BPA_IMEXPORTER::load_line_data()
                         BUS* jbus_ptr = psdb.get_bus(jbus);
                         if(ibus_ptr!=NULL and jbus_ptr!=NULL)
                         {
-                            unsigned int iowner = ibus_ptr->get_owner_of_index(0);
-                            unsigned int jowner = jbus_ptr->get_owner_of_index(0);
+                            unsigned int iowner = ibus_ptr->get_owner_number();
+                            unsigned int jowner = jbus_ptr->get_owner_number();
                             if(iowner==jowner)
                                 line.set_meter_end_bus(ibus);
                             else
@@ -1212,8 +1212,8 @@ void BPA_IMEXPORTER::load_line_data()
                         BUS* jbus_ptr = psdb.get_bus(jbus);
                         if(ibus_ptr!=NULL and jbus_ptr!=NULL)
                         {
-                            unsigned int iowner = ibus_ptr->get_owner_of_index(0);
-                            unsigned int jowner = jbus_ptr->get_owner_of_index(0);
+                            unsigned int iowner = ibus_ptr->get_owner_number();
+                            unsigned int jowner = jbus_ptr->get_owner_number();
                             if(iowner==jowner)
                                 line.set_meter_end_bus(ibus);
                             else
@@ -1386,8 +1386,8 @@ void BPA_IMEXPORTER::load_transformer_data()
                         BUS* secondary_bus_ptr = psdb.get_bus(secondary_bus);
                         if(primary_bus_ptr!=NULL and secondary_bus_ptr!=NULL)
                         {
-                            unsigned int primary_bus_owner = primary_bus_ptr->get_owner_of_index(0);
-                            unsigned int secondary_bus_owner = secondary_bus_ptr->get_owner_of_index(0);
+                            unsigned int primary_bus_owner = primary_bus_ptr->get_owner_number();
+                            unsigned int secondary_bus_owner = secondary_bus_ptr->get_owner_number();
                             if(primary_bus_owner==secondary_bus_owner)
                                  trans.set_non_metered_end_bus(secondary_bus_owner);
                             else

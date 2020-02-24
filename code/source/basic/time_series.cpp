@@ -96,7 +96,7 @@ vector<double> TIME_SERIES::get_values_at_time(double t)
     {
         if(current_time_index>=n) current_time_index=0;
         double current_time = time[current_time_index];
-        if(fabs(current_time-t)<FLOAT_EPSILON)
+        if(fabs(current_time-t)<DOUBLE_EPSILON)
             return value[current_time_index];
         else
         {

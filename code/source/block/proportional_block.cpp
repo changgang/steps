@@ -34,18 +34,10 @@ double PROPORTIONAL_BLOCK::get_K() const
 void PROPORTIONAL_BLOCK::initialize()
 {
     double k = get_K();
-    if(fabs(k)>FLOAT_EPSILON)
+    if(k==0.0)
     {
         double y = get_output();
-        double x;
-        if(k==0.0)
-        {
-            y = 0.0;
-            set_output(y);
-            x = 0.0;
-        }
-        else
-            x = y/k;
+        double x = y/k;
 
         set_input(x);
 
@@ -83,18 +75,18 @@ void PROPORTIONAL_BLOCK::initialize()
 void PROPORTIONAL_BLOCK::run(DYNAMIC_MODE mode)
 {
     double k = get_K();
-    if(fabs(k)>FLOAT_EPSILON)
+    if(k!=0.0)
     {
-        LIMITER_TYPE limiter = get_limiter_type();
-        double vmax = get_upper_limit();
-        double vmin = get_lower_limit();
+        double y = k*get_input();
 
-        double x = get_input();
-
-        double y = k*x;
-
-        if(limiter!=NO_LIMITER)
+        if(get_limiter_type()==NO_LIMITER)
         {
+            set_output(y);
+        }
+        else
+        {
+            double vmax = get_upper_limit();
+            double vmin = get_lower_limit();
             if(y>vmax)
                 y = vmax;
             else
@@ -102,8 +94,8 @@ void PROPORTIONAL_BLOCK::run(DYNAMIC_MODE mode)
                 if(y<vmin)
                     y = vmin;
             }
+            set_output(y);
         }
-        set_output(y);
     }
 }
 

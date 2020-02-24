@@ -34,7 +34,7 @@ class VDCOL
         bool is_valid() const;
         void check();
 
-        float vdcol_parameters[STEPS_MAX_VDCOL_TABLE_SIZE][2];
+        double vdcol_parameters[STEPS_MAX_VDCOL_TABLE_SIZE][2];
 };
 
 #endif // VDCOL_H

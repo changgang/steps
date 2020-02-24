@@ -64,7 +64,7 @@ void TIMER::reset()
 
 bool TIMER::is_started() const
 {
-    if(fabs(time_when_timer_is_started_in_s-INFINITE_THRESHOLD)<FLOAT_EPSILON)
+    if(fabs(time_when_timer_is_started_in_s-INFINITE_THRESHOLD)<DOUBLE_EPSILON)
         return false;
     else
         return true;
@@ -77,7 +77,7 @@ bool TIMER::is_timed_out() const
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
-        if(TIME>(time_when_timer_is_started_in_s+time_interval_in_s-FLOAT_EPSILON))
+        if(TIME>(time_when_timer_is_started_in_s+time_interval_in_s-DOUBLE_EPSILON))
             return true;
         else
             return false;

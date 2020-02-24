@@ -54,7 +54,6 @@ class BUS_TEST : public Test::Suite
         void test_is_valid();
         void test_clear();
         void test_copy_with_operator_equal();
-        void test_is_connected_to_bus();
 
         void test_get_device_id();
 

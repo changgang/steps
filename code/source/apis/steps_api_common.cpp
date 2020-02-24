@@ -70,7 +70,7 @@ void show_area_zone_owner_not_exist_with_api(unsigned int no, string api_func, u
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
-unsigned int get_owner_of_device(DEVICE* device, string parameter_name, unsigned int toolkit_index)
+unsigned int get_owner_of_nonbus_device(NONBUS_DEVICE* device, string parameter_name, unsigned int toolkit_index)
 {
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="OWNER1")
@@ -96,7 +96,7 @@ unsigned int get_owner_of_device(DEVICE* device, string parameter_name, unsigned
     return 0;
 }
 
-void set_owner_of_device(DEVICE* device, string parameter_name, int value, unsigned int toolkit_index)
+void set_owner_of_nonbus_device(NONBUS_DEVICE* device, string parameter_name, int value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     string PARAMETER_NAME = string2upper(parameter_name);
@@ -168,7 +168,7 @@ void set_owner_of_device(DEVICE* device, string parameter_name, int value, unsig
     return;
 }
 
-double get_owner_fraction_of_device(DEVICE* device, string parameter_name, unsigned int toolkit_index)
+double get_owner_fraction_of_nonbus_device(NONBUS_DEVICE* device, string parameter_name, unsigned int toolkit_index)
 {
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="FRAC1")
@@ -194,7 +194,7 @@ double get_owner_fraction_of_device(DEVICE* device, string parameter_name, unsig
     return 0;
 }
 
-void set_owner_fraction_of_device(DEVICE* device, string parameter_name, double value, unsigned int toolkit_index)
+void set_owner_fraction_of_nonbus_device(NONBUS_DEVICE* device, string parameter_name, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     string PARAMETER_NAME = string2upper(parameter_name);

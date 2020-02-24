@@ -160,10 +160,10 @@ void LINE_TEST::test_set_get_line_z120()
     z=complex<double>(0.01, 0.05);
 
     line.set_line_positive_sequence_z_in_pu(z);
-    TEST_ASSERT(line.get_line_positive_sequence_z_in_pu()==z);
+    TEST_ASSERT(abs(line.get_line_positive_sequence_z_in_pu()-z)<FLOAT_EPSILON);
 
     line.set_line_zero_sequence_z_in_pu(z);
-    TEST_ASSERT(line.get_line_zero_sequence_z_in_pu()==z);
+    TEST_ASSERT(abs(line.get_line_zero_sequence_z_in_pu()-z)<FLOAT_EPSILON);
 }
 
 void LINE_TEST::test_set_get_line_y120()
@@ -174,10 +174,10 @@ void LINE_TEST::test_set_get_line_y120()
     y=complex<double>(0.00001, 0.024);
 
     line.set_line_positive_sequence_y_in_pu(y);
-    TEST_ASSERT(line.get_line_positive_sequence_y_in_pu()==y);
+    TEST_ASSERT(abs(line.get_line_positive_sequence_y_in_pu()-y)<FLOAT_EPSILON);
 
     line.set_line_zero_sequence_y_in_pu(y);
-    TEST_ASSERT(line.get_line_zero_sequence_y_in_pu()==y);
+    TEST_ASSERT(abs(line.get_line_zero_sequence_y_in_pu()-y)<FLOAT_EPSILON);
 }
 
 void LINE_TEST::test_set_get_shunt_y120_at_sending_side()
@@ -188,10 +188,10 @@ void LINE_TEST::test_set_get_shunt_y120_at_sending_side()
     y=complex<double>(0.00001, 0.024);
 
     line.set_shunt_positive_sequence_y_at_sending_side_in_pu(y);
-    TEST_ASSERT(line.get_shunt_positive_sequence_y_at_sending_side_in_pu()==y);
+    TEST_ASSERT(abs(line.get_shunt_positive_sequence_y_at_sending_side_in_pu()-y)<FLOAT_EPSILON);
 
     line.set_shunt_zero_sequence_y_at_sending_side_in_pu(y);
-    TEST_ASSERT(line.get_shunt_zero_sequence_y_at_sending_side_in_pu()==y);
+    TEST_ASSERT(abs(line.get_shunt_zero_sequence_y_at_sending_side_in_pu()-y)<FLOAT_EPSILON);
 }
 
 void LINE_TEST::test_set_get_shunt_y120_at_receiving_side()
@@ -201,10 +201,10 @@ void LINE_TEST::test_set_get_shunt_y120_at_receiving_side()
     complex<double> y;
     y=complex<double>(0.00001, 0.024);
     line.set_shunt_positive_sequence_y_at_receiving_side_in_pu(y);
-    TEST_ASSERT(line.get_shunt_positive_sequence_y_at_receiving_side_in_pu()==y);
+    TEST_ASSERT(abs(line.get_shunt_positive_sequence_y_at_receiving_side_in_pu()-y)<FLOAT_EPSILON);
 
     line.set_shunt_zero_sequence_y_at_receiving_side_in_pu(y);
-    TEST_ASSERT(line.get_shunt_zero_sequence_y_at_receiving_side_in_pu()==y);
+    TEST_ASSERT(abs(line.get_shunt_zero_sequence_y_at_receiving_side_in_pu()-y)<FLOAT_EPSILON);
 }
 
 void LINE_TEST::test_set_get_rating()
@@ -337,32 +337,32 @@ void LINE_TEST::test_set_get_fault()
         FAULT fault2 = line.get_fault_at_location(line.get_sending_side_bus(),loc);
         if(fabs(loc-0.0)<FLOAT_EPSILON)
         {
-            TEST_ASSERT(fault2.get_fault_shunt_in_pu()==y[0])
+            TEST_ASSERT(abs(fault2.get_fault_shunt_in_pu()-y[0])<FLOAT_EPSILON)
             continue;
         }
         if(fabs(loc-0.8)<FLOAT_EPSILON)
         {
-            TEST_ASSERT(fault2.get_fault_shunt_in_pu()==y[1])
+            TEST_ASSERT(abs(fault2.get_fault_shunt_in_pu()-y[1])<FLOAT_EPSILON)
             continue;
         }
         if(fabs(loc-0.3)<FLOAT_EPSILON)
         {
-            TEST_ASSERT(fault2.get_fault_shunt_in_pu()==y[2])
+            TEST_ASSERT(abs(fault2.get_fault_shunt_in_pu()-y[2])<FLOAT_EPSILON)
             continue;
         }
         if(fabs(loc-0.5)<FLOAT_EPSILON)
         {
-            TEST_ASSERT(fault2.get_fault_shunt_in_pu()==y[3])
+            TEST_ASSERT(abs(fault2.get_fault_shunt_in_pu()-y[3])<FLOAT_EPSILON)
             continue;
         }
         if(fabs(loc-0.6)<FLOAT_EPSILON)
         {
-            TEST_ASSERT(fault2.get_fault_shunt_in_pu()==y[4])
+            TEST_ASSERT(abs(fault2.get_fault_shunt_in_pu()-y[4])<FLOAT_EPSILON)
             continue;
         }
         if(fabs(loc-1.0)<FLOAT_EPSILON)
         {
-            TEST_ASSERT(fault2.get_fault_shunt_in_pu()==y[5])
+            TEST_ASSERT(abs(fault2.get_fault_shunt_in_pu()-y[5])<FLOAT_EPSILON)
             continue;
         }
         TEST_ASSERT(false);
@@ -516,8 +516,8 @@ void LINE_TEST::test_copy_with_operator_equal()
     TEST_ASSERT(newline.get_sending_side_breaker_status()==false);
     TEST_ASSERT(newline.get_receiving_side_breaker_status()==false);
     TEST_ASSERT(newline.get_length()==234.0);
-    TEST_ASSERT(newline.get_line_positive_sequence_z_in_pu()==complex<double>(0.01,0.05));
-    TEST_ASSERT(newline.get_shunt_zero_sequence_y_at_receiving_side_in_pu()==complex<double>(0.01,0.05));
+    TEST_ASSERT(abs(newline.get_line_positive_sequence_z_in_pu()-complex<double>(0.01,0.05))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(newline.get_shunt_zero_sequence_y_at_receiving_side_in_pu()-complex<double>(0.01,0.05))<FLOAT_EPSILON);
     TEST_ASSERT(newline.get_meter_end_bus()==1);
     TEST_ASSERT(newline.get_length()==234.0);
 
@@ -587,10 +587,10 @@ void LINE_TEST::test_get_line_voltage_at_two_sides()
 
     complex<double> Vs(1.1*steps_cos(0.1), 1.1*steps_sin(0.1)), Vr(1.05, 0.0);
 
-    TEST_ASSERT(abs(line.get_line_complex_voltage_at_sending_side_in_pu()-Vs)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_voltage_at_receiving_side_in_pu()-Vr)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_voltage_at_sending_side_in_kV()-Vs*110.0)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_voltage_at_receiving_side_in_kV()-Vr*110.0)<1e-10);
+    TEST_ASSERT(abs(line.get_line_complex_voltage_at_sending_side_in_pu()-Vs)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_voltage_at_receiving_side_in_pu()-Vr)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_voltage_at_sending_side_in_kV()-Vs*110.0)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_voltage_at_receiving_side_in_kV()-Vr*110.0)<FLOAT_EPSILON);
 }
 
 void LINE_TEST::test_get_line_current_at_two_sides()
@@ -617,11 +617,11 @@ void LINE_TEST::test_get_line_current_at_two_sides()
     Is = Isr+Vs*(0.5*Yline+Yshunt_s);
     Ir = -Isr+Vr*(0.5*Yline+Yshunt_r);
 
-    TEST_ASSERT(abs(line.get_line_complex_current_at_sending_side_in_pu()-Is)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_current_at_receiving_side_in_pu()-Ir)<1e-10);
+    TEST_ASSERT(abs(line.get_line_complex_current_at_sending_side_in_pu()-Is)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_current_at_receiving_side_in_pu()-Ir)<FLOAT_EPSILON);
 
-    TEST_ASSERT(abs(line.get_line_complex_current_at_sending_side_in_kA()-Is*Ibase)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_current_at_receiving_side_in_kA()-Ir*Ibase)<1e-10);
+    TEST_ASSERT(abs(line.get_line_complex_current_at_sending_side_in_kA()-Is*Ibase)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_current_at_receiving_side_in_kA()-Ir*Ibase)<FLOAT_EPSILON);
 
     line.set_sending_side_breaker_status(true);
     line.set_receiving_side_breaker_status(false);
@@ -629,11 +629,11 @@ void LINE_TEST::test_get_line_current_at_two_sides()
     Is = Vs*(0.5*Yline+Yshunt_s+1.0/(Zline+1.0/(0.5*Yline+Yshunt_r)));
     Ir = 0.0;
 
-    TEST_ASSERT(abs(line.get_line_complex_current_at_sending_side_in_pu()-Is)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_current_at_receiving_side_in_pu()-Ir)<1e-10);
+    TEST_ASSERT(abs(line.get_line_complex_current_at_sending_side_in_pu()-Is)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_current_at_receiving_side_in_pu()-Ir)<FLOAT_EPSILON);
 
-    TEST_ASSERT(abs(line.get_line_complex_current_at_sending_side_in_kA()-Is*Ibase)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_current_at_receiving_side_in_kA()-Ir*Ibase)<1e-10);
+    TEST_ASSERT(abs(line.get_line_complex_current_at_sending_side_in_kA()-Is*Ibase)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_current_at_receiving_side_in_kA()-Ir*Ibase)<FLOAT_EPSILON);
 
     line.set_sending_side_breaker_status(false);
     line.set_receiving_side_breaker_status(true);
@@ -641,11 +641,11 @@ void LINE_TEST::test_get_line_current_at_two_sides()
     Is = 0.0;
     Ir = Vr*(0.5*Yline+Yshunt_r+1.0/(Zline+1.0/(0.5*Yline+Yshunt_s)));
 
-    TEST_ASSERT(abs(line.get_line_complex_current_at_sending_side_in_pu()-Is)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_current_at_receiving_side_in_pu()-Ir)<1e-10);
+    TEST_ASSERT(abs(line.get_line_complex_current_at_sending_side_in_pu()-Is)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_current_at_receiving_side_in_pu()-Ir)<FLOAT_EPSILON);
 
-    TEST_ASSERT(abs(line.get_line_complex_current_at_sending_side_in_kA()-Is*Ibase)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_current_at_receiving_side_in_kA()-Ir*Ibase)<1e-10);
+    TEST_ASSERT(abs(line.get_line_complex_current_at_sending_side_in_kA()-Is*Ibase)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_current_at_receiving_side_in_kA()-Ir*Ibase)<FLOAT_EPSILON);
 
     line.set_sending_side_breaker_status(false);
     line.set_receiving_side_breaker_status(false);
@@ -653,11 +653,11 @@ void LINE_TEST::test_get_line_current_at_two_sides()
     Is = 0.0;
     Ir = 0.0;
 
-    TEST_ASSERT(abs(line.get_line_complex_current_at_sending_side_in_pu()-Is)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_current_at_receiving_side_in_pu()-Ir)<1e-10);
+    TEST_ASSERT(abs(line.get_line_complex_current_at_sending_side_in_pu()-Is)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_current_at_receiving_side_in_pu()-Ir)<FLOAT_EPSILON);
 
-    TEST_ASSERT(abs(line.get_line_complex_current_at_sending_side_in_kA()-Is*Ibase)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_current_at_receiving_side_in_kA()-Ir*Ibase)<1e-10);
+    TEST_ASSERT(abs(line.get_line_complex_current_at_sending_side_in_kA()-Is*Ibase)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_current_at_receiving_side_in_kA()-Ir*Ibase)<FLOAT_EPSILON);
 }
 
 void LINE_TEST::test_get_line_power_at_two_sides()
@@ -685,10 +685,11 @@ void LINE_TEST::test_get_line_power_at_two_sides()
     Ss = Vs*conj(Is);
     Sr = Vr*conj(Ir);
 
-    TEST_ASSERT(abs(line.get_line_complex_power_at_sending_side_in_pu()-Ss)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_power_at_receiving_side_in_pu()-Sr)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_power_at_sending_side_in_MVA()-Ss*100.0)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_power_at_receiving_side_in_MVA()-Sr*100.0)<1e-10);
+    TEST_ASSERT(abs(line.get_line_complex_power_at_sending_side_in_pu()-Ss)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_power_at_receiving_side_in_pu()-Sr)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_power_at_sending_side_in_MVA()-Ss*100.0)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_power_at_receiving_side_in_MVA()-Sr*100.0)<FLOAT_EPSILON);
+    cout<<"calculated line power error "<<line.get_line_complex_power_at_receiving_side_in_MVA()-Sr*100.0<<endl;
 
     line.set_sending_side_breaker_status(true);
     line.set_receiving_side_breaker_status(false);
@@ -698,10 +699,10 @@ void LINE_TEST::test_get_line_power_at_two_sides()
     Ss = Vs*conj(Is);
     Sr = Vr*conj(Ir);
 
-    TEST_ASSERT(abs(line.get_line_complex_power_at_sending_side_in_pu()-Ss)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_power_at_receiving_side_in_pu()-Sr)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_power_at_sending_side_in_MVA()-Ss*100.0)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_power_at_receiving_side_in_MVA()-Sr*100.0)<1e-10);
+    TEST_ASSERT(abs(line.get_line_complex_power_at_sending_side_in_pu()-Ss)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_power_at_receiving_side_in_pu()-Sr)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_power_at_sending_side_in_MVA()-Ss*100.0)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_power_at_receiving_side_in_MVA()-Sr*100.0)<FLOAT_EPSILON);
 
     line.set_sending_side_breaker_status(false);
     line.set_receiving_side_breaker_status(true);
@@ -711,10 +712,10 @@ void LINE_TEST::test_get_line_power_at_two_sides()
     Ss = Vs*conj(Is);
     Sr = Vr*conj(Ir);
 
-    TEST_ASSERT(abs(line.get_line_complex_power_at_sending_side_in_pu()-Ss)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_power_at_receiving_side_in_pu()-Sr)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_power_at_sending_side_in_MVA()-Ss*100.0)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_power_at_receiving_side_in_MVA()-Sr*100.0)<1e-10);
+    TEST_ASSERT(abs(line.get_line_complex_power_at_sending_side_in_pu()-Ss)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_power_at_receiving_side_in_pu()-Sr)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_power_at_sending_side_in_MVA()-Ss*100.0)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_power_at_receiving_side_in_MVA()-Sr*100.0)<FLOAT_EPSILON);
 
     line.set_sending_side_breaker_status(false);
     line.set_receiving_side_breaker_status(false);
@@ -724,10 +725,10 @@ void LINE_TEST::test_get_line_power_at_two_sides()
     Ss = Vs*conj(Is);
     Sr = Vr*conj(Ir);
 
-    TEST_ASSERT(abs(line.get_line_complex_power_at_sending_side_in_pu()-Ss)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_power_at_receiving_side_in_pu()-Sr)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_power_at_sending_side_in_MVA()-Ss*100.0)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_power_at_receiving_side_in_MVA()-Sr*100.0)<1e-10);
+    TEST_ASSERT(abs(line.get_line_complex_power_at_sending_side_in_pu()-Ss)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_power_at_receiving_side_in_pu()-Sr)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_power_at_sending_side_in_MVA()-Ss*100.0)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_power_at_receiving_side_in_MVA()-Sr*100.0)<FLOAT_EPSILON);
 
 }
 
@@ -757,10 +758,10 @@ void LINE_TEST::test_get_line_apparent_impedance_at_two_sides()
     Zs = Vs/Is;
     Zr = Vr/Ir;
 
-    TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_sending_side_in_pu()-Zs)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_receiving_side_in_pu()-Zr)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_sending_side_in_ohm()-Zs*Zbase)<1e-10);
-    TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_receiving_side_in_ohm()-Zr*Zbase)<1e-10);
+    TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_sending_side_in_pu()-Zs)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_receiving_side_in_pu()-Zr)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_sending_side_in_ohm()-Zs*Zbase)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_receiving_side_in_ohm()-Zr*Zbase)<FLOAT_EPSILON);
 
     line.set_sending_side_breaker_status(true);
     line.set_receiving_side_breaker_status(false);
@@ -769,9 +770,9 @@ void LINE_TEST::test_get_line_apparent_impedance_at_two_sides()
     Ir = 0.0;
     Zs = Vs/Is;
 
-    TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_sending_side_in_pu()-Zs)<1e-10);
+    TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_sending_side_in_pu()-Zs)<FLOAT_EPSILON);
     TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_receiving_side_in_pu())>1e6);
-    TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_sending_side_in_ohm()-Zs*Zbase)<1e-10);
+    TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_sending_side_in_ohm()-Zs*Zbase)<FLOAT_EPSILON);
     TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_receiving_side_in_ohm())>1e6);
 
     line.set_sending_side_breaker_status(false);
@@ -782,9 +783,9 @@ void LINE_TEST::test_get_line_apparent_impedance_at_two_sides()
     Zr = Vr/Ir;
 
     TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_sending_side_in_pu())>1e6);
-    TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_receiving_side_in_pu()-Zr)<1e-10);
+    TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_receiving_side_in_pu()-Zr)<FLOAT_EPSILON);
     TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_sending_side_in_ohm())>1e6);
-    TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_receiving_side_in_ohm()-Zr*Zbase)<1e-10);
+    TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_receiving_side_in_ohm()-Zr*Zbase)<FLOAT_EPSILON);
 
     line.set_sending_side_breaker_status(false);
     line.set_receiving_side_breaker_status(false);

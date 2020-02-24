@@ -177,7 +177,7 @@ bool WT3G1::setup_model_with_steps_string_vector(vector<string>& data)
             set_PLLmax(pllmax);
 
             complex<double> Z = gen->get_source_impedance_in_pu();
-            if(fabs(Z.imag()-xeq)>FLOAT_EPSILON)
+            if(fabs(Z.imag()-xeq)>DOUBLE_EPSILON)
             {
                 osstream<<"Warning. The Xeq of "<<get_model_name()<<" model is different from imaginary part of ZSOURCE of "<<did.get_device_name()<<endl
                        <<"Xeq = "<<xeq<<" and XSource = "<<Z.imag()<<endl

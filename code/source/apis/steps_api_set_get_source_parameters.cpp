@@ -34,7 +34,7 @@ int api_get_source_integer_data(unsigned int bus, char* identifier, char* parame
             return sourceptr->get_bus_to_regulate();
 
         if(PARAMETER_NAME=="OWNER1" or PARAMETER_NAME=="OWNER2" or PARAMETER_NAME=="OWNER3" or PARAMETER_NAME=="OWNER4")
-            return get_owner_of_device(sourceptr, PARAMETER_NAME);
+            return get_owner_of_nonbus_device(sourceptr, PARAMETER_NAME);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, sourceptr->get_device_id(), __FUNCTION__);
         return 0;
@@ -79,7 +79,7 @@ void api_set_source_integer_data(unsigned int bus, char* identifier, char* param
             return sourceptr->set_bus_to_regulate(value);
 
         if(PARAMETER_NAME=="OWNER1" or PARAMETER_NAME=="OWNER2" or PARAMETER_NAME=="OWNER3" or PARAMETER_NAME=="OWNER4")
-            return set_owner_of_device(sourceptr, PARAMETER_NAME, value);
+            return set_owner_of_nonbus_device(sourceptr, PARAMETER_NAME, value);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, sourceptr->get_device_id(), __FUNCTION__);
     }
@@ -149,7 +149,7 @@ double api_get_source_float_data(unsigned int bus, char* identifier, char* param
 
 
         if(PARAMETER_NAME=="FRAC1" or PARAMETER_NAME=="FRAC2" or PARAMETER_NAME=="FRAC3" or PARAMETER_NAME=="FRAC4")
-            return get_owner_fraction_of_device(sourceptr, parameter_name);
+            return get_owner_fraction_of_nonbus_device(sourceptr, parameter_name);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, sourceptr->get_device_id(), __FUNCTION__);
         return 0.0;
@@ -226,7 +226,7 @@ void api_set_source_float_data(unsigned int bus, char* identifier, char* paramet
         }
 
         if(PARAMETER_NAME=="FRAC1" or PARAMETER_NAME=="FRAC2" or PARAMETER_NAME=="FRAC3" or PARAMETER_NAME=="FRAC4")
-            return set_owner_fraction_of_device(sourceptr, PARAMETER_NAME, value);
+            return set_owner_fraction_of_nonbus_device(sourceptr, PARAMETER_NAME, value);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, sourceptr->get_device_id(), __FUNCTION__);
     }

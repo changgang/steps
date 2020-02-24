@@ -1,4 +1,4 @@
-#include "header/device/device.h"
+#include "header/device/nonbus_device.h"
 #include "header/basic/utility.h"
 #include "header/model/equivalent_model/equivalent_model.h"
 #include "header/model/equivalent_model/equivalent_models.h"
@@ -8,7 +8,7 @@
 
 using namespace std;
 
-EQUIVALENT_DEVICE::EQUIVALENT_DEVICE(STEPS& toolkit) : DEVICE(toolkit)
+EQUIVALENT_DEVICE::EQUIVALENT_DEVICE(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
 {
     clear();
 }

@@ -1,7 +1,7 @@
 #ifndef LOAD_H
 #define LOAD_H
 
-#include "header/device/device.h"
+#include "header/device/nonbus_device.h"
 #include "header/model/load_model/load_model.h"
 #include "header/model/load_relay_model/load_voltage_relay_model.h"
 #include "header/model/load_relay_model/load_frequency_relay_model.h"
@@ -11,7 +11,7 @@
 using namespace std;
 
 class BUS;
-class LOAD : public DEVICE
+class LOAD : public NONBUS_DEVICE
 {
     public:
         LOAD(STEPS& toolkit);
@@ -95,16 +95,16 @@ class LOAD : public DEVICE
 
         string identifier;
         bool status;
-        complex<float> s_constant_power_in_MVA,
+        complex<double> s_constant_power_in_MVA,
                        s_constant_current_in_MVA,
                        s_constant_impedance_in_MVA;
         unsigned int area_number, zone_number, owner_number;
         bool interruptable;
 
-        static float voltage_threshold_of_constant_power_load_in_pu;
-        static float voltage_threshold_of_constant_current_load_in_pu;
+        static double voltage_threshold_of_constant_power_load_in_pu;
+        static double voltage_threshold_of_constant_current_load_in_pu;
 
-        float manually_scale_in_pu;
+        double manually_scale_in_pu;
 
         LOAD_MODEL* load_model;
         LOAD_VOLTAGE_RELAY_MODEL* load_voltage_relay_model;

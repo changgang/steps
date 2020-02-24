@@ -195,7 +195,7 @@ void WT3T0::initialize()
 
             turbine_inertia_block.set_output(dspeed);
             double hturbine = get_Hturbine_in_s();
-            if(fabs(hturbine)>FLOAT_EPSILON)
+            if(fabs(hturbine)>DOUBLE_EPSILON)
                 turbine_inertia_block.initialize();
 
             double pelec = gen_model->get_active_power_generation_including_stator_loss_in_pu_based_on_mbase();
@@ -237,7 +237,7 @@ void WT3T0::run(DYNAMIC_MODE mode)
     double gspeed = gdspeed+1.0;
     double telec = pelec/gspeed;
 
-    if(fabs(get_Hturbine_in_s())>FLOAT_EPSILON)
+    if(fabs(get_Hturbine_in_s())>DOUBLE_EPSILON)
     {
         double tdspeed = turbine_inertia_block.get_output();
         double tspeed = 1.0+tdspeed;
@@ -293,7 +293,7 @@ void WT3T0::run(DYNAMIC_MODE mode)
 
 double WT3T0::get_turbine_speed_in_pu() const
 {
-    if(fabs(get_Hturbine_in_s())>FLOAT_EPSILON)
+    if(fabs(get_Hturbine_in_s())>DOUBLE_EPSILON)
         return turbine_inertia_block.get_output()+1.0;
     else
         return get_generator_speed_in_pu();

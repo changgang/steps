@@ -67,13 +67,13 @@ class WT3T1 : public WT_TURBINE_MODEL
         INTEGRAL_BLOCK generator_inertia;
         INTEGRAL_BLOCK generator_rotor_angle;
 
-        float Htotal;
-        float Damp;
-        float Kaero;
-        float Theta2;
-        float Htfrac;
-        float Freq1;
-        float Dshaft;
+        double Htotal;
+        double Damp;
+        double Kaero;
+        double Theta2;
+        double Htfrac;
+        double Freq1;
+        double Dshaft;
 };
 
 #endif // WT3T1_H

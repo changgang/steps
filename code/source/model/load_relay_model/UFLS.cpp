@@ -450,7 +450,7 @@ string UFLS::get_standard_psse_string() const
         fth = get_frequency_threshold_in_Hz_of_stage(i);
         tdelay = get_time_delay_in_s_of_stage(i);
         scale = get_scale_in_pu_of_stage(i);
-        if(fabs(fth)<FLOAT_EPSILON)
+        if(fabs(fth)<DOUBLE_EPSILON)
             break;
         osstream<<setw(8)<<setprecision(4)<<fixed<<fth<<", ";
         n_content++;
@@ -481,7 +481,7 @@ string UFLS::get_standard_psse_string() const
     fth = get_frequency_threshold_in_Hz_of_stage(i);
     tdelay = get_time_delay_in_s_of_stage(i);
     scale = get_scale_in_pu_of_stage(i);
-    if(fabs(fth)>=FLOAT_EPSILON)
+    if(fabs(fth)>=DOUBLE_EPSILON)
     {
         osstream<<setw(8)<<setprecision(4)<<fixed<<fth<<", ";
         n_content++;

@@ -9,10 +9,10 @@
 
 using namespace std;
 
-float LOAD::voltage_threshold_of_constant_power_load_in_pu = 0.7;
-float LOAD::voltage_threshold_of_constant_current_load_in_pu = 0.5;
+double LOAD::voltage_threshold_of_constant_power_load_in_pu = 0.7;
+double LOAD::voltage_threshold_of_constant_current_load_in_pu = 0.5;
 
-LOAD::LOAD(STEPS& toolkit) : DEVICE(toolkit)
+LOAD::LOAD(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
 {
     clear();
 }

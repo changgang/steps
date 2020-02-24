@@ -80,7 +80,7 @@ double LVPL::get_LVPL_order(double v) const
 
     if(v1!=0.0 or v2!=0.0)
     {
-        if(fabs(v1-v2)>FLOAT_EPSILON)
+        if(fabs(v1-v2)>DOUBLE_EPSILON)
         {
             if(v>v1 and v<v2)
             {

@@ -30,7 +30,7 @@ class BUS_FREQUENCY_MODEL
         STEPS* toolkit;
         DIFFERENTIAL_BLOCK frequency_block;
         BUS* bus_ptr;
-        float fbase_Hz, tbase_s;
+        double fbase_Hz, tbase_s;
 };
 
 #endif // BUS_FREQUENCY_MODEL_H

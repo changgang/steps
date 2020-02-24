@@ -136,12 +136,12 @@ void TRANSFORMER_TEST::test_constructor()
     TEST_ASSERT(transformer.get_winding_number_of_taps(PRIMARY_SIDE)==DEFAULT_WINDING_NUMBER_OF_TAPS);
     TEST_ASSERT(transformer.get_winding_number_of_taps(SECONDARY_SIDE)==DEFAULT_WINDING_NUMBER_OF_TAPS);
     TEST_ASSERT(transformer.get_winding_number_of_taps(TERTIARY_SIDE)==DEFAULT_WINDING_NUMBER_OF_TAPS);
-    TEST_ASSERT(transformer.get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(PRIMARY_SIDE)==1.1);
-    TEST_ASSERT(transformer.get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(SECONDARY_SIDE)==1.1);
-    TEST_ASSERT(transformer.get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(TERTIARY_SIDE)==1.1);
-    TEST_ASSERT(transformer.get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(PRIMARY_SIDE)==0.9);
-    TEST_ASSERT(transformer.get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(SECONDARY_SIDE)==0.9);
-    TEST_ASSERT(transformer.get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(TERTIARY_SIDE)==0.9);
+    TEST_ASSERT(fabs(transformer.get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(PRIMARY_SIDE)-1.1)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(transformer.get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(SECONDARY_SIDE)-1.1)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(transformer.get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(TERTIARY_SIDE)-1.1)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(transformer.get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(PRIMARY_SIDE)-0.9)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(transformer.get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(SECONDARY_SIDE)-0.9)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(transformer.get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(TERTIARY_SIDE)-0.9)<FLOAT_EPSILON);
     TEST_ASSERT(transformer.get_winding_max_angle_shift_in_deg(PRIMARY_SIDE)==0.0);
     TEST_ASSERT(transformer.get_winding_max_angle_shift_in_deg(SECONDARY_SIDE)==0.0);
     TEST_ASSERT(transformer.get_winding_max_angle_shift_in_deg(TERTIARY_SIDE)==0.0);
@@ -154,12 +154,12 @@ void TRANSFORMER_TEST::test_constructor()
     TEST_ASSERT(transformer.get_winding_controlled_bus(PRIMARY_SIDE)==0);
     TEST_ASSERT(transformer.get_winding_controlled_bus(SECONDARY_SIDE)==0);
     TEST_ASSERT(transformer.get_winding_controlled_bus(TERTIARY_SIDE)==0);
-    TEST_ASSERT(transformer.get_winding_controlled_max_voltage_in_pu(PRIMARY_SIDE)==1.1);
-    TEST_ASSERT(transformer.get_winding_controlled_max_voltage_in_pu(SECONDARY_SIDE)==1.1);
-    TEST_ASSERT(transformer.get_winding_controlled_max_voltage_in_pu(TERTIARY_SIDE)==1.1);
-    TEST_ASSERT(transformer.get_winding_controlled_min_voltage_in_pu(PRIMARY_SIDE)==0.9);
-    TEST_ASSERT(transformer.get_winding_controlled_min_voltage_in_pu(SECONDARY_SIDE)==0.9);
-    TEST_ASSERT(transformer.get_winding_controlled_min_voltage_in_pu(TERTIARY_SIDE)==0.9);
+    TEST_ASSERT(fabs(transformer.get_winding_controlled_max_voltage_in_pu(PRIMARY_SIDE)-1.1)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(transformer.get_winding_controlled_max_voltage_in_pu(SECONDARY_SIDE)-1.1)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(transformer.get_winding_controlled_max_voltage_in_pu(TERTIARY_SIDE)-1.1)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(transformer.get_winding_controlled_min_voltage_in_pu(PRIMARY_SIDE)-0.9)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(transformer.get_winding_controlled_min_voltage_in_pu(SECONDARY_SIDE)-0.9)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(transformer.get_winding_controlled_min_voltage_in_pu(TERTIARY_SIDE)-0.9)<FLOAT_EPSILON);
     TEST_ASSERT(transformer.get_controlled_max_reactive_power_into_winding_in_MVar(PRIMARY_SIDE)==0.0);
     TEST_ASSERT(transformer.get_controlled_max_reactive_power_into_winding_in_MVar(SECONDARY_SIDE)==0.0);
     TEST_ASSERT(transformer.get_controlled_max_reactive_power_into_winding_in_MVar(TERTIARY_SIDE)==0.0);
@@ -290,11 +290,11 @@ void TRANSFORMER_TEST::test_set_get_winding_leakage_impedance()
     z=complex<double>(0.001, 0.02);
 
     transformer.set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, z);
-    TEST_ASSERT(transformer.get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE)==z);
+    TEST_ASSERT(abs(transformer.get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE)-z)<FLOAT_EPSILON);
     transformer.set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE, z);
-    TEST_ASSERT(transformer.get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE)==z);
+    TEST_ASSERT(abs(transformer.get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE)-z)<FLOAT_EPSILON);
     transformer.set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, TERTIARY_SIDE, z);
-    TEST_ASSERT(transformer.get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, TERTIARY_SIDE)==z);
+    TEST_ASSERT(abs(transformer.get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, TERTIARY_SIDE)-z)<FLOAT_EPSILON);
 }
 
 void TRANSFORMER_TEST::test_set_get_magnetizing_admittance()
@@ -304,7 +304,7 @@ void TRANSFORMER_TEST::test_set_get_magnetizing_admittance()
     prepare_three_winding_transformer_bus_and_identifier();
     complex<double>y(0.0, -0.02);
     transformer.set_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu(y);
-    TEST_ASSERT(transformer.get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu()==y)
+    TEST_ASSERT(abs(transformer.get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu()-y)<FLOAT_EPSILON);
 }
 
 void TRANSFORMER_TEST::test_set_get_winding_turn_ratio()
@@ -314,11 +314,11 @@ void TRANSFORMER_TEST::test_set_get_winding_turn_ratio()
     prepare_three_winding_transformer_bus_and_identifier();
 
     transformer.set_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(PRIMARY_SIDE, 1.2);
-    TEST_ASSERT(transformer.get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(PRIMARY_SIDE)==1.2);
+    TEST_ASSERT(fabs(transformer.get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(PRIMARY_SIDE)-1.2)<FLOAT_EPSILON);
     transformer.set_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(SECONDARY_SIDE, 1.2);
-    TEST_ASSERT(transformer.get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(SECONDARY_SIDE)==1.2);
+    TEST_ASSERT(fabs(transformer.get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(SECONDARY_SIDE)-1.2)<FLOAT_EPSILON);
     transformer.set_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(TERTIARY_SIDE, 1.2);
-    TEST_ASSERT(transformer.get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(TERTIARY_SIDE)==1.2);
+    TEST_ASSERT(fabs(transformer.get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(TERTIARY_SIDE)-1.2)<FLOAT_EPSILON);
 }
 
 void TRANSFORMER_TEST::test_set_get_winding_angle_shift()
@@ -377,18 +377,18 @@ void TRANSFORMER_TEST::test_set_get_winding_max_min_turn_ratio()
     prepare_three_winding_transformer_bus_and_identifier();
 
     transformer.set_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(PRIMARY_SIDE, 1.2);
-    TEST_ASSERT(transformer.get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(PRIMARY_SIDE)==1.2);
+    TEST_ASSERT(fabs(transformer.get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(PRIMARY_SIDE)-1.2)<FLOAT_EPSILON);
     transformer.set_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(SECONDARY_SIDE, 1.2);
-    TEST_ASSERT(transformer.get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(SECONDARY_SIDE)==1.2);
+    TEST_ASSERT(fabs(transformer.get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(SECONDARY_SIDE)-1.2)<FLOAT_EPSILON);
     transformer.set_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(TERTIARY_SIDE, 1.2);
-    TEST_ASSERT(transformer.get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(TERTIARY_SIDE)==1.2);
+    TEST_ASSERT(fabs(transformer.get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(TERTIARY_SIDE)-1.2)<FLOAT_EPSILON);
 
     transformer.set_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(PRIMARY_SIDE, 0.8);
-    TEST_ASSERT(transformer.get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(PRIMARY_SIDE)==0.8);
+    TEST_ASSERT(fabs(transformer.get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(PRIMARY_SIDE)-0.8)<FLOAT_EPSILON);
     transformer.set_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(SECONDARY_SIDE, 0.8);
-    TEST_ASSERT(transformer.get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(SECONDARY_SIDE)==0.8);
+    TEST_ASSERT(fabs(transformer.get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(SECONDARY_SIDE)-0.8)<FLOAT_EPSILON);
     transformer.set_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(TERTIARY_SIDE, 0.8);
-    TEST_ASSERT(transformer.get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(TERTIARY_SIDE)==0.8);
+    TEST_ASSERT(fabs(transformer.get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(TERTIARY_SIDE)-0.8)<FLOAT_EPSILON);
 }
 
 void TRANSFORMER_TEST::test_set_get_winding_max_min_angle_shift()
@@ -447,18 +447,18 @@ void TRANSFORMER_TEST::test_set_get_winding_controlled_max_min_voltage()
     prepare_three_winding_transformer_bus_and_identifier();
 
     transformer.set_winding_controlled_max_voltage_in_pu(PRIMARY_SIDE, 1.1);
-    TEST_ASSERT(transformer.get_winding_controlled_max_voltage_in_pu(PRIMARY_SIDE)==1.1);
+    TEST_ASSERT(fabs(transformer.get_winding_controlled_max_voltage_in_pu(PRIMARY_SIDE)-1.1)<FLOAT_EPSILON);
     transformer.set_winding_controlled_max_voltage_in_pu(SECONDARY_SIDE, 1.2);
-    TEST_ASSERT(transformer.get_winding_controlled_max_voltage_in_pu(SECONDARY_SIDE)==1.2);
+    TEST_ASSERT(fabs(transformer.get_winding_controlled_max_voltage_in_pu(SECONDARY_SIDE)-1.2)<FLOAT_EPSILON);
     transformer.set_winding_controlled_max_voltage_in_pu(TERTIARY_SIDE, 1.03);
-    TEST_ASSERT(transformer.get_winding_controlled_max_voltage_in_pu(TERTIARY_SIDE)==1.03);
+    TEST_ASSERT(fabs(transformer.get_winding_controlled_max_voltage_in_pu(TERTIARY_SIDE)-1.03)<FLOAT_EPSILON);
 
     transformer.set_winding_controlled_min_voltage_in_pu(PRIMARY_SIDE, 0.9);
-    TEST_ASSERT(transformer.get_winding_controlled_min_voltage_in_pu(PRIMARY_SIDE)==0.9);
+    TEST_ASSERT(fabs(transformer.get_winding_controlled_min_voltage_in_pu(PRIMARY_SIDE)-0.9)<FLOAT_EPSILON);
     transformer.set_winding_controlled_min_voltage_in_pu(SECONDARY_SIDE, 0.8);
-    TEST_ASSERT(transformer.get_winding_controlled_min_voltage_in_pu(SECONDARY_SIDE)==0.8);
+    TEST_ASSERT(fabs(transformer.get_winding_controlled_min_voltage_in_pu(SECONDARY_SIDE)-0.8)<FLOAT_EPSILON);
     transformer.set_winding_controlled_min_voltage_in_pu(TERTIARY_SIDE, 0.97);
-    TEST_ASSERT(transformer.get_winding_controlled_min_voltage_in_pu(TERTIARY_SIDE)==0.97);
+    TEST_ASSERT(fabs(transformer.get_winding_controlled_min_voltage_in_pu(TERTIARY_SIDE)-0.97)<FLOAT_EPSILON);
 }
 
 void TRANSFORMER_TEST::test_set_get_controlled_reactive_power_into_windings()

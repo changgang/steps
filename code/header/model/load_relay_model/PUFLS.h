@@ -105,18 +105,18 @@ class PUFLS : public LOAD_FREQUENCY_RELAY_MODEL
 
 
         FIRST_ORDER_BLOCK frequency_sensor;
-        float continuous_frequency_threshold_in_Hz;
-        float K;
-        float t_delay;
-        float max_continuous_shed_scale;
+        double continuous_frequency_threshold_in_Hz;
+        double K;
+        double t_delay;
+        double max_continuous_shed_scale;
 
         UFLS_TRIGGER_SIGNAL trigger_signal;
-        float additional_stage_frequency_threshold_in_Hz;
+        double additional_stage_frequency_threshold_in_Hz;
         TIMER additional_stage_timer;
-        float additional_shed_scale;
+        double additional_shed_scale;
         bool flag_additional_stage_is_tripped;
 
-        float discrete_stage_shed_scale_in_pu[STEPS_MAX_LOAD_RELAY_STAGE];
+        double discrete_stage_shed_scale_in_pu[STEPS_MAX_LOAD_RELAY_STAGE];
         TIMER discrete_stage_timer[STEPS_MAX_LOAD_RELAY_STAGE];
         bool flag_discrete_stage_is_tripped[STEPS_MAX_LOAD_RELAY_STAGE];
 

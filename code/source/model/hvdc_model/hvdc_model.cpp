@@ -82,10 +82,10 @@ double HVDC_MODEL::get_auxiliary_signal_in_MW() const
     HVDC* hvdc = get_hvdc_pointer();
 
     AUXILIARY_SIGNAL_MODEL* auxiliary_signal_model = hvdc->get_auxiliary_signal_model();
-    if(auxiliary_signal_model != NULL)
-        return auxiliary_signal_model->get_auxiliary_signal_in_MW();
-    else
+    if(auxiliary_signal_model == NULL)
         return 0.0;
+    else
+        return auxiliary_signal_model->get_auxiliary_signal_in_MW();
 }
 
 void HVDC_MODEL::set_converter_dynamic_max_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter, double angle)
@@ -243,7 +243,6 @@ void HVDC_MODEL::set_attached_device_of_common_meters()
 
 double HVDC_MODEL::get_rectifier_dc_current_command_in_kA(double Vdci_measured, double Idc_measured)
 {
-
     if(not is_blocked())
     {
         STEPS& toolkit = get_toolkit();

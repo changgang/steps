@@ -1577,37 +1577,79 @@ DEVICE* POWER_SYSTEM_DATABASE::get_device(const DEVICE_ID& device_id)
     {
         string dtype = device_id.get_device_type();
         if(dtype=="BUS")
-            return (DEVICE*) get_bus(device_id);
+            return get_bus(device_id);
 
         if(dtype=="GENERATOR")
-            return (DEVICE*) get_generator(device_id);
+            return get_generator(device_id);
 
         if(dtype=="WT GENERATOR")
-            return (DEVICE*) get_wt_generator(device_id);
+            return get_wt_generator(device_id);
 
         if(dtype=="PV UNIT")
-            return (DEVICE*) get_pv_unit(device_id);
+            return get_pv_unit(device_id);
 
         if(dtype=="ENERGY STORAGE")
-            return (DEVICE*) get_energy_storage(device_id);
+            return get_energy_storage(device_id);
 
         if(dtype=="LOAD")
-            return (DEVICE*) get_load(device_id);
+            return get_load(device_id);
 
         if(dtype=="FIXED SHUNT")
-            return (DEVICE*) get_fixed_shunt(device_id);
+            return get_fixed_shunt(device_id);
 
         if(dtype=="LINE")
-            return (DEVICE*) get_line(device_id);
+            return get_line(device_id);
 
         if(dtype=="HVDC")
-            return (DEVICE*) get_hvdc(device_id);
+            return get_hvdc(device_id);
 
         if(dtype=="TRANSFORMER")
-            return (DEVICE*) get_transformer(device_id);
+            return get_transformer(device_id);
 
         if(dtype=="EQUIVALENT DEVICE")
-            return (DEVICE*) get_equivalent_device(device_id);
+            return get_equivalent_device(device_id);
+
+        return NULL;
+    }
+    else
+        return NULL;
+}
+
+NONBUS_DEVICE* POWER_SYSTEM_DATABASE::get_nonbus_device(const DEVICE_ID& device_id)
+{
+    // this function is not tested
+    if(device_id.is_valid())
+    {
+        string dtype = device_id.get_device_type();
+        if(dtype=="GENERATOR")
+            return get_generator(device_id);
+
+        if(dtype=="WT GENERATOR")
+            return get_wt_generator(device_id);
+
+        if(dtype=="PV UNIT")
+            return get_pv_unit(device_id);
+
+        if(dtype=="ENERGY STORAGE")
+            return get_energy_storage(device_id);
+
+        if(dtype=="LOAD")
+            return get_load(device_id);
+
+        if(dtype=="FIXED SHUNT")
+            return get_fixed_shunt(device_id);
+
+        if(dtype=="LINE")
+            return get_line(device_id);
+
+        if(dtype=="HVDC")
+            return get_hvdc(device_id);
+
+        if(dtype=="TRANSFORMER")
+            return get_transformer(device_id);
+
+        if(dtype=="EQUIVALENT DEVICE")
+            return get_equivalent_device(device_id);
 
         return NULL;
     }

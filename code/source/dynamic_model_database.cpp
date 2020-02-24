@@ -94,7 +94,7 @@ void DYNAMIC_MODEL_DATABASE::add_model(MODEL* model)
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         DEVICE_ID did_new = model->get_device_id();
         string model_type = model->get_model_type();
-        DEVICE* device = psdb.get_device(did_new);
+        NONBUS_DEVICE* device = psdb.get_nonbus_device(did_new);
         MODEL* old_model = device->get_model_of_type(model_type);
         if(old_model==nullptr)
         {
@@ -243,7 +243,7 @@ void DYNAMIC_MODEL_DATABASE::common_set_model(MODEL* model, unsigned int model_s
     model_pointer->prepare_model_data_table();
     model_pointer->prepare_model_internal_variable_table();
 
-    DEVICE* device = model_pointer->get_device_pointer();
+    NONBUS_DEVICE* device = model_pointer->get_device_pointer();
     device->set_model(model_pointer);
 
     occupied_warehouse_capacity += model_size;
@@ -411,7 +411,10 @@ void DYNAMIC_MODEL_DATABASE::check_device_model_minimum_time_constants()
 unsigned int DYNAMIC_MODEL_DATABASE::get_memory_usage_in_bytes()
 {
     ostringstream osstream;
-    osstream<<"Dynamic model database warehouse used "<<model_starting_position_table[model_starting_position_table.size()-1]<<"B.";
+    if(model_starting_position_table.size()!=0)
+        osstream<<"Dynamic model database warehouse used "<<model_starting_position_table[model_starting_position_table.size()-1]<<"B.";
+    else
+        osstream<<"Dynamic model database warehouse used 0 B.";
     toolkit->show_information_with_leading_time_stamp(osstream);
     return warehouse_capacity*sizeof(char)+model_starting_position_table.capacity()*sizeof(unsigned int);
 }

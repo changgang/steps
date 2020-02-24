@@ -6,7 +6,7 @@
 
 using namespace std;
 
-FIXED_SHUNT::FIXED_SHUNT(STEPS& toolkit) : DEVICE(toolkit)
+FIXED_SHUNT::FIXED_SHUNT(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
 {
     clear();
 }

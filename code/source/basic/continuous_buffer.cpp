@@ -137,7 +137,7 @@ void CONTINUOUS_BUFFER::append_data(double time, double value)
     else
     {
         double time_at_head = get_buffer_time_at_head();
-        if(fabs(time-time_at_head)<FLOAT_EPSILON)
+        if(fabs(time-time_at_head)<DOUBLE_EPSILON)
             buffer[index_of_buffer_head][1] = value;
         else
         {
@@ -213,9 +213,9 @@ unsigned int CONTINUOUS_BUFFER::get_delay_index_of_time(double time) const
     double time_at_head = get_buffer_time_at_head();
     double time_at_tail = buffer[index_of_buffer_tail][0];
 
-    if(fabs(time_at_head-time)<FLOAT_EPSILON)
+    if(fabs(time_at_head-time)<DOUBLE_EPSILON)
         return 0;
-    if(fabs(time_at_tail-time)<FLOAT_EPSILON)
+    if(fabs(time_at_tail-time)<DOUBLE_EPSILON)
         return buffer_size-1;
 
     if(time<time_at_tail or time>time_at_head)

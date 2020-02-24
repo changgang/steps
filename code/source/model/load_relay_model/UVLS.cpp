@@ -446,7 +446,7 @@ string UVLS::get_standard_psse_string() const
         vth = get_voltage_threshold_in_pu_of_stage(i);
         tdelay = get_time_delay_in_s_of_stage(i);
         scale = get_scale_in_pu_of_stage(i);
-        if(fabs(vth)<FLOAT_EPSILON)
+        if(fabs(vth)<DOUBLE_EPSILON)
             break;
         osstream<<", ";
         osstream<<setprecision(3)<<fixed<<vth<<", "

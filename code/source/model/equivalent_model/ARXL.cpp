@@ -103,7 +103,7 @@ void ARXL::add_P_input_item(METER meter, unsigned int delay, double coef)
     if(not is_P_meter_exist(meter))
         add_P_meter(meter);
 
-    if(fabs(coef)<FLOAT_EPSILON)
+    if(fabs(coef)<DOUBLE_EPSILON)
         return;
 
     unsigned int index = get_P_meter_index(meter);

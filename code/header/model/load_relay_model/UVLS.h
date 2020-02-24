@@ -81,8 +81,8 @@ class UVLS : public LOAD_VOLTAGE_RELAY_MODEL
 
         FIRST_ORDER_BLOCK voltage_sensor;
 
-        float voltage_threshold_in_pu[STEPS_MAX_LOAD_RELAY_STAGE];
-        float scale_in_pu[STEPS_MAX_LOAD_RELAY_STAGE];
+        double voltage_threshold_in_pu[STEPS_MAX_LOAD_RELAY_STAGE];
+        double scale_in_pu[STEPS_MAX_LOAD_RELAY_STAGE];
 
         TIMER stage_timer[STEPS_MAX_LOAD_RELAY_STAGE];
         TIMER breaker_timer[STEPS_MAX_LOAD_RELAY_STAGE];

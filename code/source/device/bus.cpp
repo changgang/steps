@@ -510,12 +510,6 @@ void BUS::clear()
     fault.clear();
 }
 
-bool BUS::is_connected_to_bus(unsigned int bus) const
-{
-    if(get_bus_number()==bus) return true;
-    else                      return false;
-}
-
 bool BUS::is_in_area(unsigned int area) const
 {
     return get_area_number()==area;
@@ -651,10 +645,7 @@ void BUS::report() const
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-void BUS::save() const
-{
-    ;
-}
+
 BUS_FREQUENCY_MODEL* BUS::get_bus_frequency_model()
 {
     return &bus_frequency_model;
@@ -683,17 +674,4 @@ double BUS::get_frequency_in_pu() const
 double BUS::get_frequency_in_Hz() const
 {
     return get_frequency_deviation_in_Hz()+get_base_frequency_in_Hz();
-}
-
-void BUS::set_model(const MODEL* model)
-{
-    ostringstream osstream;
-    osstream<<"BUS::"<<__FUNCTION__<<"() has not been implemented yet. Input model name is:"<<(model==NULL?"":model->get_model_name());
-    STEPS& toolkit = get_toolkit();
-    toolkit.show_information_with_leading_time_stamp(osstream);
-}
-
-MODEL* BUS::get_model_of_type(string model_type)
-{
-    return nullptr;
 }

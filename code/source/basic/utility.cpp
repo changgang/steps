@@ -254,13 +254,13 @@ double steps_fast_complex_arg(const complex<double>& z)
 double steps_fast_pow(double base, double exp)
 {
 	return pow(base, exp);
-	if (fabs(exp - 0.0) < FLOAT_EPSILON)
+	if (fabs(exp - 0.0) < DOUBLE_EPSILON)
 		return 1.0;
-	if (fabs(exp - 1.0) < FLOAT_EPSILON)
+	if (fabs(exp - 1.0) < DOUBLE_EPSILON)
 		return base;
-	if (fabs(exp - 2.0) < FLOAT_EPSILON)
+	if (fabs(exp - 2.0) < DOUBLE_EPSILON)
 		return base*base;
-	if (fabs(exp - 3.0) < FLOAT_EPSILON)
+	if (fabs(exp - 3.0) < DOUBLE_EPSILON)
 		return base*base*base;
 }
 

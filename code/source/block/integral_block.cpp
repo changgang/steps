@@ -34,12 +34,8 @@ void INTEGRAL_BLOCK::initialize()
     double t = get_T_in_s();
     double y = get_output();
 
-    if(fabs(t)>FLOAT_EPSILON and fabs(t-INFINITE_THRESHOLD)>FLOAT_EPSILON)
+    if(fabs(t)>DOUBLE_EPSILON and fabs(t-INFINITE_THRESHOLD)>DOUBLE_EPSILON)
     {
-        LIMITER_TYPE limiter = get_limiter_type();
-        double vmax = get_upper_limit();
-        double vmin = get_lower_limit();
-
         STEPS& toolkit = get_toolkit();
         double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
@@ -55,8 +51,10 @@ void INTEGRAL_BLOCK::initialize()
         set_store(z);
         set_input(x);
 
-        if(limiter != NO_LIMITER)
+        if(get_limiter_type() != NO_LIMITER)
         {
+            double vmax = get_upper_limit();
+            double vmin = get_lower_limit();
             if(s>vmax)
             {
                 osstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
@@ -81,7 +79,7 @@ void INTEGRAL_BLOCK::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;
     double t = get_T_in_s();
-    if(fabs(t)>FLOAT_EPSILON and fabs(t-INFINITE_THRESHOLD)>FLOAT_EPSILON)
+    if(fabs(t)>DOUBLE_EPSILON and fabs(t-INFINITE_THRESHOLD)>DOUBLE_EPSILON)
     {
         if(mode==INTEGRATE_MODE)
             integrate();
@@ -93,18 +91,14 @@ void INTEGRAL_BLOCK::run(DYNAMIC_MODE mode)
 void INTEGRAL_BLOCK::integrate()
 {
     double t = get_T_in_s();
-    if(fabs(t)>FLOAT_EPSILON and fabs(t-INFINITE_THRESHOLD)>FLOAT_EPSILON)
+    if(fabs(t)>DOUBLE_EPSILON and fabs(t-INFINITE_THRESHOLD)>DOUBLE_EPSILON)
     {
-        LIMITER_TYPE limiter = get_limiter_type();
-        double vmax = get_upper_limit();
-        double vmin = get_lower_limit();
-
         double x = get_input();
 
         //double ds = x/t;
         //double ds = x*one_over_t;
 
-        //if(fabs(ds)>FLOAT_EPSILON)
+        //if(fabs(ds)>DOUBLE_EPSILON)
         //{
             double s, z, y;
 
@@ -112,20 +106,26 @@ void INTEGRAL_BLOCK::integrate()
             //s = z + 0.5*h/t*x;
             s = z + 0.5*h_over_t*x;
             y = s;
-            if(limiter == WINDUP_LIMITER)
+
+            switch(get_limiter_type())
             {
-                if(y>vmax)
-                    y = vmax;
-                else
+                case WINDUP_LIMITER:
                 {
-                    if(y<vmin)
-                        y = vmin;
+                    double vmax = get_upper_limit();
+                    double vmin = get_lower_limit();
+                    if(y>vmax)
+                        y = vmax;
+                    else
+                    {
+                        if(y<vmin)
+                            y = vmin;
+                    }
+                    break;
                 }
-            }
-            else
-            {
-                if(limiter == NON_WINDUP_LIMITER)
+                case NON_WINDUP_LIMITER:
                 {
+                    double vmax = get_upper_limit();
+                    double vmin = get_lower_limit();
                     if(s>vmax)
                     {
                         s = vmax;
@@ -139,7 +139,11 @@ void INTEGRAL_BLOCK::integrate()
                             y = vmin;
                         }
                     }
+                    break;
                 }
+                case NO_LIMITER:
+                default:
+                    break;
             }
             set_state(s);
             set_output(y);
@@ -152,12 +156,8 @@ void INTEGRAL_BLOCK::integrate()
 void INTEGRAL_BLOCK::update()
 {
     double t = get_T_in_s();
-    if(fabs(t)>FLOAT_EPSILON and fabs(t-INFINITE_THRESHOLD)>FLOAT_EPSILON)
+    if(fabs(t)>DOUBLE_EPSILON and fabs(t-INFINITE_THRESHOLD)>DOUBLE_EPSILON)
     {
-        LIMITER_TYPE limiter = get_limiter_type();
-        double vmax = get_upper_limit();
-        double vmin = get_lower_limit();
-
         double x = get_input();
 
         double s, z, ds, y;
@@ -167,20 +167,25 @@ void INTEGRAL_BLOCK::update()
         s = get_state();
         y = s;
 
-        if(limiter == WINDUP_LIMITER)
+        switch(get_limiter_type())
         {
-            if(y>vmax)
-                y = vmax;
-            else
+            case WINDUP_LIMITER:
             {
-                if(y<vmin)
-                    y = vmin;
+                double vmax = get_upper_limit();
+                double vmin = get_lower_limit();
+                if(y>vmax)
+                    y = vmax;
+                else
+                {
+                    if(y<vmin)
+                        y = vmin;
+                }
+                break;
             }
-        }
-        else
-        {
-            if(limiter == NON_WINDUP_LIMITER)
+            case NON_WINDUP_LIMITER:
             {
+                double vmax = get_upper_limit();
+                double vmin = get_lower_limit();
                 if(s>=vmax and ds>0.0)
                 {
                     y = vmax;
@@ -194,7 +199,11 @@ void INTEGRAL_BLOCK::update()
                         ds = 0.0;
                     }
                 }
+                break;
             }
+            case NO_LIMITER:
+            default:
+                break;
         }
         //z = s+0.5*h/t*x;
         z = s+0.5*h_over_t*x;

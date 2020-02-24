@@ -2099,12 +2099,12 @@ void DYNAMICS_SIMULATOR::run_to(double time)
     update_with_event();
     if(get_rotor_angle_stability_surveillance_flag()==false)
     {
-        while(TIME<=time-FLOAT_EPSILON)
+        while(TIME<=time-DOUBLE_EPSILON)
             run_a_step();
     }
     else
     {
-        while(TIME<=time-FLOAT_EPSILON)
+        while(TIME<=time-DOUBLE_EPSILON)
         {
             run_a_step();
 
@@ -3716,7 +3716,7 @@ void DYNAMICS_SIMULATOR::set_bus_fault(unsigned int bus, const complex<double>& 
     if(busptr!=NULL)
     {
         string busname = busptr->get_bus_name();
-        if(steps_fast_complex_abs(fault_shunt)>FLOAT_EPSILON)
+        if(steps_fast_complex_abs(fault_shunt)>DOUBLE_EPSILON)
         {
             FAULT fault;
             fault.set_fault_type(THREE_PHASES_FAULT);
@@ -3818,7 +3818,7 @@ void DYNAMICS_SIMULATOR::set_line_fault(const DEVICE_ID& line_id, unsigned int s
             {
                 if(location>=0.0 and location<=1.0)
                 {
-                    if(steps_fast_complex_abs(fault_shunt)>FLOAT_EPSILON)
+                    if(steps_fast_complex_abs(fault_shunt)>DOUBLE_EPSILON)
                     {
                         FAULT fault;
                         fault.set_fault_type(THREE_PHASES_FAULT);
@@ -4406,7 +4406,7 @@ void DYNAMICS_SIMULATOR::shed_generator(const DEVICE_ID& gen_id,double percent)
         {
             string busname = psdb.bus_number2bus_name(generator->get_generator_bus());
 
-            if(fabs(percent)>FLOAT_EPSILON)
+            if(fabs(percent)>DOUBLE_EPSILON)
             {
                 double mbase = generator->get_mbase_in_MVA();
                 osstream<<generator->get_device_name()<<" is shed by "<<percent*100.0<<"% at time "<<TIME<<" s."<<endl
@@ -4590,7 +4590,7 @@ void DYNAMICS_SIMULATOR::scale_load(const DEVICE_ID& load_id, double percent)
         {
             string busname = psdb.bus_number2bus_name(load->get_load_bus());
 
-            if(fabs(percent)>FLOAT_EPSILON)
+            if(fabs(percent)>DOUBLE_EPSILON)
             {
                 if(load->get_status()==true)
                 {
@@ -4632,7 +4632,7 @@ void DYNAMICS_SIMULATOR::scale_load(const DEVICE_ID& load_id, double percent)
 void DYNAMICS_SIMULATOR::scale_all_load(double percent)
 {
     ostringstream osstream;
-    if(fabs(percent)>FLOAT_EPSILON)
+    if(fabs(percent)>DOUBLE_EPSILON)
     {
         unsigned int n = loads.size();
         for(unsigned int i=0; i!=n; ++i)

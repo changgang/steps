@@ -7,7 +7,7 @@
 #include "header/model/model_var_table.h"
 
 class POWER_SYSTEM_DATABASE;
-class DEVICE;
+class NONBUS_DEVICE;
 class BUS;
 class MODEL
 {
@@ -41,7 +41,7 @@ class MODEL
         bool is_model_inernal_variable_exist(unsigned int var_index) const;
 
         void set_device_id(DEVICE_ID did);
-        DEVICE* get_device_pointer() const;
+        NONBUS_DEVICE* get_device_pointer() const;
         DEVICE_ID get_device_id() const;
         string get_device_name() const;
         BUS* get_bus_pointer() const;
@@ -101,7 +101,7 @@ class MODEL
     private:
         STEPS* toolkit;
         char allowed_device_types[STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT][STEPS_SHORT_STRING_SIZE];
-        DEVICE* device_pointer;
+        NONBUS_DEVICE* device_pointer;
         union
         {
             BUS* bus_pointer;

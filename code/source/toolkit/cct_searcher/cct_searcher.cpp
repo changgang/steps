@@ -83,7 +83,7 @@ void CCT_SEARCHER::set_fault_location_to_fault_side_bus_in_pu(double location)
 
 void CCT_SEARCHER::set_fault_shunt_in_pu(complex<double> shunt)
 {
-    if(steps_fast_complex_abs(shunt)>FLOAT_EPSILON)
+    if(steps_fast_complex_abs(shunt)>DOUBLE_EPSILON)
         fault_shunt_in_pu = shunt;
 }
 
@@ -347,22 +347,22 @@ bool CCT_SEARCHER::is_searcher_is_properly_set() const
         is_properly_set = false;
         osstream<<"Fault side bus is not set."<<endl;
     }
-    if(steps_fast_complex_abs(get_fault_shunt_in_pu())<FLOAT_EPSILON)
+    if(steps_fast_complex_abs(get_fault_shunt_in_pu())<DOUBLE_EPSILON)
     {
         is_properly_set = false;
         osstream<<"Fault shunt is not set."<<endl;
     }
-    if(fabs(get_minimum_clearing_time_in_s()-get_maximum_clearing_time_in_s())<FLOAT_EPSILON)
+    if(fabs(get_minimum_clearing_time_in_s()-get_maximum_clearing_time_in_s())<DOUBLE_EPSILON)
     {
         is_properly_set = false;
         osstream<<"Minimum clearing time and maximum clearing time are identical."<<endl;
     }
-    if(fabs(get_simulation_time_span_in_s())<FLOAT_EPSILON)
+    if(fabs(get_simulation_time_span_in_s())<DOUBLE_EPSILON)
     {
         is_properly_set = false;
         osstream<<"Simulation time span is not set."<<endl;
     }
-    if(fabs(get_angle_difference_threshold_in_deg())<FLOAT_EPSILON)
+    if(fabs(get_angle_difference_threshold_in_deg())<DOUBLE_EPSILON)
     {
         is_properly_set = false;
         osstream<<"Angle difference threshold is not set."<<endl;

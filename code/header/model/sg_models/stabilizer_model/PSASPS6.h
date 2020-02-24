@@ -91,9 +91,9 @@ class PSASPS6 : public STABILIZER_MODEL
         FIRST_ORDER_BLOCK speed_sensor, pelec_sensor;
         DIFFERENTIAL_BLOCK speed_dedc_block_1, speed_dedc_block_2, pelec_dedc_block_1, pelec_dedc_block_2;
         //FIRST_ORDER_BLOCK pelec_dedc_block_1;
-        float Ks;
+        double Ks;
         LEAD_LAG_BLOCK phase_tuner_1, phase_tuner_2, phase_tuner_3;
-        float Vsmax, Vsmin;
+        double Vsmax, Vsmin;
 
         double speed_deviation_ref_pu, Pe_ref_pu;
 };

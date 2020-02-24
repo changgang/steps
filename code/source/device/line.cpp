@@ -6,7 +6,7 @@
 #include <iostream>
 
 using namespace std;
-LINE::LINE(STEPS& toolkit) : DEVICE(toolkit)
+LINE::LINE(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
 {
     clear();
 }
@@ -243,7 +243,7 @@ bool LINE::is_zero_impedance_line() const
     double z_th = psdb.get_zero_impedance_threshold_in_pu();
     double y = abs(get_line_positive_sequence_y_in_pu());
     double z = abs(get_line_positive_sequence_z_in_pu());
-    if(y<FLOAT_EPSILON and (z<=z_th or (z-z_th)<FLOAT_EPSILON))
+    if(y<DOUBLE_EPSILON and (z<=z_th or (z-z_th)<DOUBLE_EPSILON))
         return true;
     else
         return false;
@@ -280,7 +280,7 @@ void LINE::set_fault(unsigned int to_bus, double location, const FAULT& fault)
         if(to_bus == get_receiving_side_bus())
             location = 1.0-location;
 
-        map<float,FAULT>::iterator iter;
+        map<double,FAULT>::iterator iter;
         for(iter=faults.begin(); iter!=faults.end(); ++iter)
         {
             if(fabs(iter->first-location)<FLOAT_EPSILON)
@@ -294,7 +294,7 @@ void LINE::set_fault(unsigned int to_bus, double location, const FAULT& fault)
         }
         else
         {
-            faults.insert(pair<float,FAULT>(location, fault));
+            faults.insert(pair<double,FAULT>(location, fault));
         }
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
@@ -304,7 +304,7 @@ double LINE::get_fault_location_of_fault(unsigned int index) const
 {
     if(index<get_fault_count())
     {
-        map<float,FAULT>::const_iterator iter=faults.begin();
+        map<double,FAULT>::const_iterator iter=faults.begin();
 
         for(unsigned int i=0; i!=index; ++i)
             ++iter;
@@ -329,7 +329,7 @@ FAULT LINE::get_fault_at_location(unsigned int to_bus, double location) const
         if(to_bus == get_receiving_side_bus())
             location = 1.0-location;
 
-        map<float,FAULT>::const_iterator iter;
+        map<double,FAULT>::const_iterator iter;
         for(iter=faults.begin(); iter!=faults.end(); ++iter)
         {
             if(fabs(iter->first-location)<FLOAT_EPSILON)
@@ -358,7 +358,7 @@ void LINE::clear_fault_at_location(unsigned int to_bus, double location)
         if(to_bus == get_receiving_side_bus())
             location = 1.0-location;
 
-        map<float,FAULT>::iterator iter;
+        map<double,FAULT>::iterator iter;
         for(iter=faults.begin(); iter!=faults.end(); ++iter)
         {
             if(fabs(iter->first-location)<FLOAT_EPSILON)

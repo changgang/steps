@@ -213,7 +213,7 @@ bool AERDF::is_Cp_point_exist(double pitch, double lambda)
     bool pitch_found = false;
     for(unsigned int i=0; i<N_pitch; ++i)
     {
-        if(fabs((*pitch_angles)[i]-pitch)<FLOAT_EPSILON)
+        if(fabs((*pitch_angles)[i]-pitch)<DOUBLE_EPSILON)
         {
             pitch_found = true;
             break;
@@ -228,7 +228,7 @@ bool AERDF::is_Cp_point_exist(double pitch, double lambda)
     bool lambda_found = false;
     for(unsigned int i=0; i<N_lambda; ++i)
     {
-        if(fabs((*tip_speed_ratios)[i]-lambda)<FLOAT_EPSILON)
+        if(fabs((*tip_speed_ratios)[i]-lambda)<DOUBLE_EPSILON)
         {
             lambda_found = true;
             break;

@@ -265,8 +265,6 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::transpose()
 
 int COMPLEX_SPARSE_MATRIX_CSPARSE::get_matrix_size() const
 {
-    return matrix_complex->n;
-
     if(matrix_complex!=NULL) return matrix_complex->n;
     else                  return 0;
 }

@@ -92,7 +92,7 @@ bool WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::is_power_record_exist(double power) 
     bool record_exist = false;
     for(unsigned int i=0; i<n; ++i)
     {
-        if(fabs(power_speed_table[i][0]-power)<FLOAT_EPSILON)
+        if(fabs(power_speed_table[i][0]-power)<DOUBLE_EPSILON)
         {
             record_exist = true;
             break;

@@ -1,14 +1,14 @@
 #ifndef FIXED_SHUNT_H
 #define FIXED_SHUNT_H
 
-#include "header/device/device.h"
+#include "header/device/nonbus_device.h"
 #include <string>
 #include <complex>
 
 using namespace std;
 
 class BUS;
-class FIXED_SHUNT : public DEVICE
+class FIXED_SHUNT : public NONBUS_DEVICE
 {
     public:
         FIXED_SHUNT(STEPS& toolkit);
@@ -49,6 +49,6 @@ class FIXED_SHUNT : public DEVICE
         BUS* busptr;
         string identifier;
         bool status;
-        complex<float> nominal_impedance_shunt_in_MVA;
+        complex<double> nominal_impedance_shunt_in_MVA;
 };
 #endif // FIXED_SHUNT_H

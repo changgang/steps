@@ -613,7 +613,7 @@ void CIM6::initialize()
                 if(maxerror<fabs(Error[i]))
                     maxerror = fabs(Error[i]);
             }
-            if(maxerror<FLOAT_EPSILON or n_iteration>20)
+            if(maxerror<DOUBLE_EPSILON or n_iteration>20)
             {
                 double speed = slip/W0;
                 speed_block.set_output(speed);
@@ -732,7 +732,7 @@ void CIM6::initialize()
                 if(maxerror<fabs(Error[i]))
                     maxerror = fabs(Error[i]);
             }
-            if(maxerror<FLOAT_EPSILON or n_iteration>20)
+            if(maxerror<DOUBLE_EPSILON or n_iteration>20)
             {
                 double speed = slip/W0;
                 speed_block.set_output(speed);

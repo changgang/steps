@@ -12,6 +12,7 @@
 #include "header/device/fixed_shunt.h"
 #include "header/device/hvdc.h"
 #include "header/device/equivalent_device.h"
+#include "header/device/source.h"
 #include "header/basic/area.h"
 #include "header/basic/zone.h"
 #include "header/basic/owner.h"
@@ -127,6 +128,7 @@ class POWER_SYSTEM_DATABASE
         void change_bus_number(unsigned int original_bus_number, unsigned int new_bus_number);
 
         DEVICE* get_device(const DEVICE_ID& device_id);
+        NONBUS_DEVICE* get_nonbus_device(const DEVICE_ID& device_id);
         BUS* get_bus(unsigned int bus);
         BUS* get_bus(const DEVICE_ID & device_id);
         GENERATOR* get_generator(const DEVICE_ID & device_id);

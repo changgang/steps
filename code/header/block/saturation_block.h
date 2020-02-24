@@ -27,10 +27,12 @@ class SATURATION_BLOCK
         bool is_saturation_considered() const;
         virtual void check();
     private:
-        SATURATION_TYPE type;
-        float V1, V2, S1, S2;
+        inline bool is_ABC_initialized() const;
 
+        SATURATION_TYPE type;
+        bool is_initialized;
         double A, B, C;
+        double V1, V2, S1, S2;
         //S=B(V-A)^2/V or
         //S=A*V^X
 };

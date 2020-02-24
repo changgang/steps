@@ -96,13 +96,13 @@ void PD_BLOCK::run(DYNAMIC_MODE mode)
     if(mode==UPDATE_MODE)
         update();
 
-    LIMITER_TYPE limiter = get_limiter_type();
-    double vmax = get_upper_limit();
-    double vmin = get_lower_limit();
-
     double y = p_block.get_output() + d_block.get_output();
-    if(limiter != NO_LIMITER)
+    if(get_limiter_type() == NO_LIMITER)
+        set_output(y);
+    else
     {
+        double vmax = get_upper_limit();
+        double vmin = get_lower_limit();
         if(y>vmax)
             y = vmax;
         else
@@ -110,8 +110,8 @@ void PD_BLOCK::run(DYNAMIC_MODE mode)
             if(y<vmin)
                 y = vmin;
         }
+        set_output(y);
     }
-    set_output(y);
 }
 
 void PD_BLOCK::integrate()

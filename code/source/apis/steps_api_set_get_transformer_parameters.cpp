@@ -31,7 +31,7 @@ int api_get_transformer_integer_data(unsigned int ibus, unsigned int jbus, unsig
                 return transptr->get_non_metered_end_bus();
 
             if(PARAMETER_NAME=="OWNER1" or PARAMETER_NAME=="OWNER2" or PARAMETER_NAME=="OWNER3" or PARAMETER_NAME=="OWNER4")
-                return get_owner_of_device(transptr, PARAMETER_NAME);
+                return get_owner_of_nonbus_device(transptr, PARAMETER_NAME);
         }
         else
         {
@@ -105,7 +105,7 @@ void api_set_transformer_integer_data(unsigned int ibus, unsigned int jbus, unsi
             if(PARAMETER_NAME == "BUS_NMETER" or PARAMETER_NAME == "NON METERED END BUS")
                 return transptr->set_non_metered_end_bus(value);
             if(PARAMETER_NAME=="OWNER1" or PARAMETER_NAME=="OWNER2" or PARAMETER_NAME=="OWNER3" or PARAMETER_NAME=="OWNER4")
-                return set_owner_of_device(transptr, PARAMETER_NAME, value);
+                return set_owner_of_nonbus_device(transptr, PARAMETER_NAME, value);
         }
         else
         {
@@ -199,7 +199,7 @@ double api_get_transformer_float_data(unsigned int ibus, unsigned int jbus, unsi
             if(PARAMETER_NAME == "ASTAR_DEG" or PARAMETER_NAME == "STAR BUS ANGLE IN DEG")
                 return rad2deg(steps_fast_complex_arg(transptr->get_star_bus_complex_voltage_in_pu()));
             if(PARAMETER_NAME=="FRAC1" or PARAMETER_NAME=="FRAC2" or PARAMETER_NAME=="FRAC3" or PARAMETER_NAME=="FRAC4")
-                return get_owner_fraction_of_device(transptr, parameter_name);
+                return get_owner_fraction_of_nonbus_device(transptr, parameter_name);
         }
         else
         {
@@ -370,7 +370,7 @@ void api_set_transformer_float_data(unsigned int ibus, unsigned int jbus, unsign
                 return;
             }
             if(PARAMETER_NAME=="FRAC1" or PARAMETER_NAME=="FRAC2" or PARAMETER_NAME=="FRAC3" or PARAMETER_NAME=="FRAC4")
-                return set_owner_fraction_of_device(transptr, PARAMETER_NAME, value);
+                return set_owner_fraction_of_nonbus_device(transptr, PARAMETER_NAME, value);
         }
         else
         {

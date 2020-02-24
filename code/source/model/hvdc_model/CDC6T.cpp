@@ -396,35 +396,35 @@ void CDC6T::setup_block_toolkit_and_parameters()
 }
 void CDC6T::initialize()
 {
-    if(is_model_initialized())
-        return;
+    if(not is_model_initialized())
+    {
+        HVDC* hvdc = get_hvdc_pointer();
 
-    HVDC* hvdc = get_hvdc_pointer();
+        setup_block_toolkit_and_parameters();
 
-    setup_block_toolkit_and_parameters();
+        rec_ac_blocking_timer.set_attached_device(hvdc);
+        inv_ac_blocking_signal_transmitting_timer.set_attached_device(hvdc);
+        rec_ac_unblocking_timer.set_attached_device(hvdc);
+        inv_ac_unblocking_timer.set_attached_device(hvdc);
+        inv_ac_unblocking_signal_transmitting_timer.set_attached_device(hvdc);
+        inv_ac_bypassing_timer.set_attached_device(hvdc);
+        inv_ac_unbypassing_timer.set_attached_device(hvdc);
+        set_attached_device_of_common_meters();
 
-    rec_ac_blocking_timer.set_attached_device(hvdc);
-    inv_ac_blocking_signal_transmitting_timer.set_attached_device(hvdc);
-    rec_ac_unblocking_timer.set_attached_device(hvdc);
-    inv_ac_unblocking_timer.set_attached_device(hvdc);
-    inv_ac_unblocking_signal_transmitting_timer.set_attached_device(hvdc);
-    inv_ac_bypassing_timer.set_attached_device(hvdc);
-    inv_ac_unbypassing_timer.set_attached_device(hvdc);
-    set_attached_device_of_common_meters();
+        double Vdcr = hvdc->get_converter_dc_voltage_in_kV(RECTIFIER);
+        rectifier_dc_voltage_sensor.set_output(Vdcr);
+        rectifier_dc_voltage_sensor.initialize();
 
-    double Vdcr = hvdc->get_converter_dc_voltage_in_kV(RECTIFIER);
-    rectifier_dc_voltage_sensor.set_output(Vdcr);
-    rectifier_dc_voltage_sensor.initialize();
+        double Vdci = hvdc->get_converter_dc_voltage_in_kV(INVERTER);
+        inverter_dc_voltage_sensor.set_output(Vdci);
+        inverter_dc_voltage_sensor.initialize();
 
-    double Vdci = hvdc->get_converter_dc_voltage_in_kV(INVERTER);
-    inverter_dc_voltage_sensor.set_output(Vdci);
-    inverter_dc_voltage_sensor.initialize();
+        double Idc = hvdc->get_line_dc_current_in_kA();
+        dc_current_sensor.set_output(Idc);
+        dc_current_sensor.initialize();
 
-    double Idc = hvdc->get_line_dc_current_in_kA();
-    dc_current_sensor.set_output(Idc);
-    dc_current_sensor.initialize();
-
-    set_flag_model_initialized_as_true();
+        set_flag_model_initialized_as_true();
+    }
 }
 
 void CDC6T::run(DYNAMIC_MODE mode)
@@ -673,7 +673,7 @@ void CDC6T::check_bypassing_logic()
         if(not is_bypassed())
         {
             double t_unblock = get_unblocking_time();
-            if(fabs(t_unblock - INFINITE_THRESHOLD)>FLOAT_EPSILON)
+            if(fabs(t_unblock - INFINITE_THRESHOLD)>DOUBLE_EPSILON)
                 return;
 
             double t_unbypass = get_unbypassing_time();
@@ -793,7 +793,7 @@ void CDC6T::check_mode_switching_logic()
 
         double t_unblock = get_unblocking_time();
         double t_unbypass = get_unbypassing_time();
-        if(fabs(t_unblock-INFINITE_THRESHOLD)>FLOAT_EPSILON or fabs(t_unbypass-INFINITE_THRESHOLD)>FLOAT_EPSILON) // unblocking or unbypassing
+        if(fabs(t_unblock-INFINITE_THRESHOLD)>DOUBLE_EPSILON or fabs(t_unbypass-INFINITE_THRESHOLD)>DOUBLE_EPSILON) // unblocking or unbypassing
             return;
 
         double vdc_i = hvdc->get_converter_dc_voltage_in_kV(INVERTER);

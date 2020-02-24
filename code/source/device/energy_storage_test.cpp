@@ -77,6 +77,7 @@ void ENERGY_STORAGE_TEST::test_constructor()
     TEST_ASSERT(energy_storage.get_q_min_in_MVar()==0.0);
     TEST_ASSERT(energy_storage.get_voltage_to_regulate_in_pu()==1.0);
     TEST_ASSERT(energy_storage.get_bus_to_regulate()==0);
+    TEST_ASSERT(energy_storage.get_model_of_type("ENERGY STORAGE")==NULL);
 }
 
 void ENERGY_STORAGE_TEST::test_set_get_energy_storage_bus()
@@ -169,7 +170,6 @@ void ENERGY_STORAGE_TEST::test_set_get_energy_storage_model()
     model.set_Tr_in_s(3.0);
 
     dmdb.add_model(&model);
-
 
     ENERGY_STORAGE_MODEL* modelptr = estorage->get_energy_storage_model();
     TEST_ASSERT(modelptr!=NULL);

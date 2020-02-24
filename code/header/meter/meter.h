@@ -38,6 +38,7 @@ class METER
         bool operator!=(const METER& meter);
 
         DEVICE* get_device_pointer() const;
+        NONBUS_DEVICE* get_nonbus_device_pointer() const;
 
         double get_meter_value() const;
     private:
@@ -61,7 +62,11 @@ class METER
         double get_meter_value_as_an_energy_storage() const;
 
         STEPS* toolkit;
-        DEVICE* device_pointer;
+        union
+        {
+            DEVICE* device_pointer;
+            NONBUS_DEVICE* nonbus_device_pointer;
+        };
         char meter_type[STEPS_METER_TYPE_STRING_SIZE];
         unsigned int meter_side_bus;
         char internal_variable_name[STEPS_METER_TYPE_STRING_SIZE];

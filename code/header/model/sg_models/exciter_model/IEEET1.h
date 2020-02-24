@@ -78,7 +78,7 @@ class IEEET1: public EXCITER_MODEL
         DIFFERENTIAL_BLOCK feedbacker;
         INTEGRAL_BLOCK exciter;
         SATURATION_BLOCK saturation_block;
-        float KE;
+        double KE;
 };
 
 #endif // EXCITER_MODEL_H

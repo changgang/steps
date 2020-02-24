@@ -103,9 +103,9 @@ class PVCV0 : public PV_CONVERTER_MODEL
 
         INTEGRAL_BLOCK PLL_frequency_integrator, PLL_angle_integrator;
 
-        float LVPL_active_power_change_rate;
-        float HVRCR_voltage, HVRCR_current;
-        float KPLL;
+        double LVPL_active_power_change_rate;
+        double HVRCR_voltage, HVRCR_current;
+        double KPLL;
 };
 
 #endif // GENERATOR_MODEL_H
