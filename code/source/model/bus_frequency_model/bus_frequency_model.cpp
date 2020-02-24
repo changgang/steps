@@ -41,32 +41,20 @@ BUS* BUS_FREQUENCY_MODEL::get_bus_pointer() const
 
 unsigned int BUS_FREQUENCY_MODEL::get_bus() const
 {
-    if(bus_ptr!=NULL)
-        return bus_ptr->get_bus_number();
-    else
-        return 0;
+    return bus_ptr->get_bus_number();
 }
 
 void BUS_FREQUENCY_MODEL::initialize()
 {
-    if(bus_ptr!=NULL)
-    {
-        fbase_Hz = bus_ptr->get_base_frequency_in_Hz();
-        tbase_s = bus_ptr->get_base_period_in_s();
+    fbase_Hz = bus_ptr->get_base_frequency_in_Hz();
+    tbase_s = bus_ptr->get_base_period_in_s();
 
-        double DELT = toolkit->get_dynamic_simulation_time_step_in_s();
-        frequency_block.set_T_in_s(DELT*4.0);
+    double DELT = toolkit->get_dynamic_simulation_time_step_in_s();
+    frequency_block.set_T_in_s(DELT*4.0);
 
-        frequency_block.set_input(bus_ptr->get_positive_sequence_angle_in_rad());
+    frequency_block.set_input(bus_ptr->get_positive_sequence_angle_in_rad());
 
-        frequency_block.initialize();
-    }
-    else
-    {
-        ostringstream osstream;
-        osstream<<"Warning. Bus frequency model is not properly set since bus pointer is NULL. This line should never appear.";
-        toolkit->show_information_with_leading_time_stamp(osstream);
-    }
+    frequency_block.initialize();
 }
 
 void BUS_FREQUENCY_MODEL::run(DYNAMIC_MODE mode)

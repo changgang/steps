@@ -581,55 +581,55 @@ double CSEET1::get_initial_Ve_with_Fex_function() const
     STEPS& toolkit = get_toolkit();
 
     GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
-        return 0.0;
 
     SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-    if(gen_model==NULL)
-        return  0.0;
-
-    double Efd = gen_model->get_initial_excitation_voltage_in_pu();
-    double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
-
-    double Fex = 1.0, newFex = 0.0;
-    double Ve = 0.0;
-    double oldFex=0.0;
-
-    unsigned int iter_count = 0;
-    while(true)
+    if(gen_model!=NULL)
     {
-        ++iter_count;
+        double Efd = gen_model->get_initial_excitation_voltage_in_pu();
+        double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
 
-        Ve = Efd/Fex;
-        newFex = get_Fex(Ve, Ifd);
-        oldFex = Fex;
+        double Fex = 1.0, newFex = 0.0;
+        double Ve = 0.0;
+        double oldFex=0.0;
 
-        if(fabs(Fex-newFex)>FLOAT_EPSILON)
-            Fex = newFex;
-        else
-            break;
-
-        if(Fex != 0.0)
-            ;
-        else
+        unsigned int iter_count = 0;
+        while(true)
         {
-            osstream<<"Fatal error. Fex = 0.0 is encountered when initializing exciter CSEET1 of "<<get_device_name()<<".";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-            Ve = 0.0;
-            break;
-        }
+            ++iter_count;
 
-        if(iter_count<=100)
-            ;
-        else
-        {
-            osstream<<"Warning. Initial Ve is not solved within 100 iterations when initializing exciter CSEET1 of "<<get_device_name()<<".\n"
-                    <<"Old Fex = "<<oldFex<<", New Fex = "<<Fex;
-            toolkit.show_information_with_leading_time_stamp(osstream);
-            break;
+            Ve = Efd/Fex;
+            newFex = get_Fex(Ve, Ifd);
+            oldFex = Fex;
+
+            if(fabs(Fex-newFex)>FLOAT_EPSILON)
+                Fex = newFex;
+            else
+                break;
+
+            if(Fex != 0.0)
+                ;
+            else
+            {
+                osstream<<"Fatal error. Fex = 0.0 is encountered when initializing exciter CSEET1 of "<<get_device_name()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                Ve = 0.0;
+                break;
+            }
+
+            if(iter_count<=100)
+                ;
+            else
+            {
+                osstream<<"Warning. Initial Ve is not solved within 100 iterations when initializing exciter CSEET1 of "<<get_device_name()<<".\n"
+                        <<"Old Fex = "<<oldFex<<", New Fex = "<<Fex;
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                break;
+            }
         }
+        return Ve;
     }
-    return Ve;
+    else
+        return  0.0;
 }
 double CSEET1::get_Fex(double Ve, double Ifd) const
 {

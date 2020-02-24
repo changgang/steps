@@ -237,8 +237,8 @@ bool PVCV0::setup_model_with_steps_string_vector(vector<string>& data)
 
             DEVICE_ID did = get_pv_unit_device_id(ibus, id);
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-            PV_UNIT* gen = psdb.get_pv_unit(did);
-            if(gen==NULL)
+            PV_UNIT* pvunit = psdb.get_pv_unit(did);
+            if(pvunit==NULL)
             {
                 osstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_device_name()<<endl
                        <<"No such wt pv_unit exists in the power system database.";
@@ -246,8 +246,8 @@ bool PVCV0::setup_model_with_steps_string_vector(vector<string>& data)
                 return is_successful;
             }
 
-            gen->set_number_of_lumped_pv_units(n_lumped_turbine);
-            gen->set_rated_power_per_pv_unit_in_MW(prate);
+            pvunit->set_number_of_lumped_pv_units(n_lumped_turbine);
+            pvunit->set_rated_power_per_pv_unit_in_MW(prate);
 
             set_converter_activer_current_command_T_in_s(t_IPcmd);
             set_LVPL_max_rate_of_active_current_change(lvpl_rate);

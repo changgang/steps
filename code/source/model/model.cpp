@@ -11,7 +11,10 @@ MODEL::MODEL(STEPS& toolkit)
 {
     set_toolkit(toolkit);
 
-    device_pointer = NULL;
+    device_pointer = nullptr;
+
+    bus_pointer = nullptr;
+    //inverter_bus_pointer = nullptr;
 
     for(unsigned int i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
         allowed_device_types[i][0]='\0';
@@ -291,12 +294,7 @@ void MODEL::set_device_id(DEVICE_ID did)
 
     device_pointer = psdb.get_device(did);
 
-    if(device_pointer==NULL)
-    {
-        osstream<<"Warning. No valid device can be found for dynamic model.";
-        toolkit->show_information_with_leading_time_stamp(osstream);
-    }
-    else
+    if(device_pointer!=NULL)
     {
         string device_type = did.get_device_type();
         if(device_type=="GENERATOR")
@@ -324,6 +322,30 @@ void MODEL::set_device_id(DEVICE_ID did)
             bus_pointer = ((LOAD*) device_pointer)->get_bus_pointer();
             return;
         }
+        /*if(device_type=="LINE")
+        {
+            sending_bus_pointer = ((LINE*) device_pointer)->get_sending_side_bus_pointer();
+            receiving_bus_pointer = ((LINE*) device_pointer)->get_receiving_side_bus_pointer();
+            return;
+        }
+        if(device_type=="HVDC")
+        {
+            rectifier_bus_pointer = ((HVDC*) device_pointer)->get_bus_pointer(RECTIFIER);
+            inverter_bus_pointer = ((HVDC*) device_pointer)->get_bus_pointer(INVERTER);
+            return;
+        }
+        if(device_type=="TRANSFORMER")
+        {
+            primary_winding_bus_pointer = ((TRANSFORMER*) device_pointer)->get_winding_bus_pointer(PRIMARY_SIDE);
+            secondary_winding_bus_pointer = ((TRANSFORMER*) device_pointer)->get_winding_bus_pointer(SECONDARY_SIDE);
+            //tertiary_winding_bus_pointer = ((TRANSFORMER*) device_pointer)->get_winding_bus_pointer(TERTIARY_SIDE);
+            return;
+        }*/
+    }
+    else
+    {
+        osstream<<"Warning. No valid device can be found for dynamic model.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -351,6 +373,37 @@ BUS* MODEL::get_bus_pointer() const
 {
     return bus_pointer;
 }
+
+
+/*BUS* MODEL::get_bus_pointer(HVDC_CONVERTER_SIDE converter) const
+{
+    if(converter==RECTIFIER)
+        return rectifier_bus_pointer;
+    else
+        return inverter_bus_pointer;
+}
+
+BUS* MODEL::get_bus_pointer(LINE_SIDE side) const
+{
+    if(side==SENDING_SIDE)
+        return sending_bus_pointer;
+    else
+        return receiving_bus_pointer;
+}
+
+BUS* MODEL::get_bus_pointer(TRANSFORMER_WINDING_SIDE winding) const
+{
+    switch(winding)
+    {
+        case PRIMARY_SIDE:
+            return primary_winding_bus_pointer;
+        case SECONDARY_SIDE:
+            return secondary_winding_bus_pointer;
+        default:
+            return primary_winding_bus_pointer;
+            //return tertiary_winding_bus_pointer;
+    }
+}*/
 
 void MODEL::set_flag_model_initialized_as_false()
 {

@@ -317,6 +317,8 @@ void SPARSE_MATRIX_CSPARSE::transpose()
 
 int SPARSE_MATRIX_CSPARSE::get_matrix_size() const
 {
+    return matrix_real->n;
+
     if(matrix_real!=NULL) return matrix_real->n;
     else                  return 0;
 }
@@ -328,12 +330,16 @@ int SPARSE_MATRIX_CSPARSE::get_matrix_entry_count() const
 
 int SPARSE_MATRIX_CSPARSE::get_starting_index_of_column(int col) const
 {
+    return matrix_real->p[col];
+
     if(col>=0 and col<=get_matrix_size()) return matrix_real->p[col];
     else                                  return INDEX_NOT_EXIST;
 }
 
 int SPARSE_MATRIX_CSPARSE::get_row_number_of_entry_index(int index) const
 {
+    return matrix_real->i[index];
+
     int n = get_matrix_size();
     if(index<=get_starting_index_of_column(n))  return matrix_real->i[index];
     else                                        return INDEX_NOT_EXIST;
@@ -345,29 +351,31 @@ int SPARSE_MATRIX_CSPARSE::get_entry_index(int row, int col) const
 
     if(row >= 0 and col >= 0)
     {
-        if(not matrix_in_compressed_column_form())
+        if(matrix_in_compressed_column_form())
+        {
+            int index = INDEX_NOT_EXIST;
+
+            if(row < get_matrix_size() and col < get_matrix_size())
+            {
+                for(int k=matrix_real->p[col]; k!=matrix_real->p[col+1]; ++k)
+                {
+                    if(matrix_real->i[k] > row) break; // if no entry of (row, col)
+                    if(matrix_real->i[k] == row)
+                    {
+                        index = k;
+                        break;
+                    }
+                }
+            }
+            return index;
+        }
+        else
         {
             ostringstream osstream;
             osstream<<"Error. Sparse matrix not in compressed form when getting entry index.\nINDEX_NOT_EXIST will be returned.";
             show_information_with_leading_time_stamp_with_default_toolkit(osstream);
             return INDEX_NOT_EXIST;
         }
-
-        int index = INDEX_NOT_EXIST;
-
-        if(row < get_matrix_size() and col < get_matrix_size())
-        {
-            for(int k=matrix_real->p[col]; k!=matrix_real->p[col+1]; ++k)
-            {
-                if(matrix_real->i[k] > row) break; // if no entry of (row, col)
-                if(matrix_real->i[k] == row)
-                {
-                    index = k;
-                    break;
-                }
-            }
-        }
-        return index;
     }
     else
         return INDEX_NOT_EXIST;
@@ -375,6 +383,8 @@ int SPARSE_MATRIX_CSPARSE::get_entry_index(int row, int col) const
 
 complex<double> SPARSE_MATRIX_CSPARSE::get_complex_entry_value(int index)  const
 {
+    return complex<double>(matrix_real->x[index], matrix_imag->x[index]);
+
     if(index>=0 && index<=matrix_real->p[matrix_real->n]) // this condition is equivalent to previous line
         return complex<double>(matrix_real->x[index], matrix_imag->x[index]);
     else
@@ -383,6 +393,8 @@ complex<double> SPARSE_MATRIX_CSPARSE::get_complex_entry_value(int index)  const
 
 double SPARSE_MATRIX_CSPARSE::get_real_entry_value(int index) const
 {
+    return matrix_real->x[index];
+
     if(index>=0 && index<=get_starting_index_of_column(get_matrix_size()))
         return matrix_real->x[index];
     else
@@ -391,6 +403,8 @@ double SPARSE_MATRIX_CSPARSE::get_real_entry_value(int index) const
 
 double SPARSE_MATRIX_CSPARSE::get_imag_entry_value(int index) const
 {
+    return matrix_imag->x[index];
+
     if(index>=0 && index<=get_starting_index_of_column(get_matrix_size()))
         return matrix_imag->x[index];
     else
