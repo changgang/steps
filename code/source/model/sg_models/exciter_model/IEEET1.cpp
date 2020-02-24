@@ -281,94 +281,87 @@ void IEEET1::initialize()
     if(not is_model_initialized())
     {
         GENERATOR* generator = get_generator_pointer();
-        if(generator!=NULL)
+        SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+        if(gen_model!=NULL)
         {
-            SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-            if(gen_model!=NULL)
+            if(not gen_model->is_model_initialized())
+                gen_model->initialize();
+
+            setup_block_toolkit_and_parameters();
+
+            STEPS& toolkit = get_toolkit();
+            double Ecomp = get_compensated_voltage_in_pu();
+
+            sensor.set_output(Ecomp);
+            sensor.initialize();
+
+            double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
+
+            exciter.set_output(Efd);
+            exciter.initialize();
+
+            feedbacker.set_input(Efd);
+            feedbacker.initialize();
+
+            double KE = get_KE();
+            double SE = saturation_block.get_saturation(Efd);
+            double input = (KE+SE)*Efd;
+
+            if(input>get_VRmax_in_pu())
             {
-                if(not gen_model->is_model_initialized())
-                    gen_model->initialize();
-
-                setup_block_toolkit_and_parameters();
-
-                STEPS& toolkit = get_toolkit();
-                double Ecomp = get_compensated_voltage_in_pu();
-
-                sensor.set_output(Ecomp);
-                sensor.initialize();
-
-                double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
-
-                exciter.set_output(Efd);
-                exciter.initialize();
-
-                feedbacker.set_input(Efd);
-                feedbacker.initialize();
-
-                double KE = get_KE();
-                double SE = saturation_block.get_saturation(Efd);
-                double input = (KE+SE)*Efd;
-
-                if(input>get_VRmax_in_pu())
-                {
-                    osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-                      <<"VR is "<<input<<", and VRmax is "<<get_VRmax_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-                if(input<get_VRmin_in_pu())
-                {
-                    osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-                      <<"VR is "<<input<<", and VRmin is "<<get_VRmin_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-
-                regulator.set_output(input);
-                regulator.initialize();
-
-                input = regulator.get_input();
-
-                double Vref = input+Ecomp;
-                set_voltage_reference_in_pu(Vref);
-
-                set_flag_model_initialized_as_true();
+                osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                  <<"VR is "<<input<<", and VRmax is "<<get_VRmax_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
+            if(input<get_VRmin_in_pu())
+            {
+                osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                  <<"VR is "<<input<<", and VRmin is "<<get_VRmin_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+
+            regulator.set_output(input);
+            regulator.initialize();
+
+            input = regulator.get_input();
+
+            double Vref = input+Ecomp;
+            set_voltage_reference_in_pu(Vref);
+
+            set_flag_model_initialized_as_true();
         }
     }
 }
 
 void IEEET1::run(DYNAMIC_MODE mode)
 {
-    GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
-    {
-        double Ecomp = get_compensated_voltage_in_pu();
-        double Vref = get_voltage_reference_in_pu();
-        double Vs = get_stabilizing_signal_in_pu();
+    double Ecomp = get_compensated_voltage_in_pu();
+    double Vref = get_voltage_reference_in_pu();
+    double Vs = get_stabilizing_signal_in_pu();
 
-        sensor.set_input(Ecomp);
-        sensor.run(mode);
+    sensor.set_input(Ecomp);
+    sensor.run(mode);
 
-        double Efd = exciter.get_output();
-        feedbacker.set_input(Efd);
-        feedbacker.run(mode);
+    double Efd = exciter.get_output();
+    feedbacker.set_input(Efd);
+    feedbacker.run(mode);
 
-        double input = Vref-sensor.get_output()+Vs-feedbacker.get_output();
+    double input = Vref-sensor.get_output()+Vs-feedbacker.get_output();
 
-        regulator.set_input(input);
-        regulator.run(mode);
+    regulator.set_input(input);
+    regulator.run(mode);
 
-        double KE = get_KE();
-        double SE = saturation_block.get_saturation(Efd);
-        input = regulator.get_output()-(KE+SE)*Efd;
+    double KE = get_KE();
+    double SE = saturation_block.get_saturation(Efd);
+    input = regulator.get_output()-(KE+SE)*Efd;
 
-        exciter.set_input(input);
-        exciter.run(mode);
+    exciter.set_input(input);
+    exciter.run(mode);
 
-        //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
+    //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
 
-        if(mode == UPDATE_MODE)
-            set_flag_model_updated_as_true();
-    }
+    if(mode == UPDATE_MODE)
+        set_flag_model_updated_as_true();
 }
 
 double IEEET1::get_excitation_voltage_in_pu()

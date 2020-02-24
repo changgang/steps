@@ -81,44 +81,29 @@ double WT_GENERATOR_MODEL::get_initial_reactive_voltage_command_in_pu() const
 double WT_GENERATOR_MODEL::get_active_current_command_in_pu_based_on_mbase()
 {
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
-    if(wt_generator!=NULL)
-    {
-        WT_ELECTRICAL_MODEL* model = wt_generator->get_wt_electrical_model();
-        if(model!=NULL and model->is_model_initialized())
-            return model->get_active_current_command_in_pu_based_on_mbase();
-        else
-            return get_initial_active_current_command_in_pu_based_on_mbase();
-    }
+    WT_ELECTRICAL_MODEL* model = wt_generator->get_wt_electrical_model();
+    if(model!=NULL and model->is_model_initialized())
+        return model->get_active_current_command_in_pu_based_on_mbase();
     else
-        return 0.0;
+        return get_initial_active_current_command_in_pu_based_on_mbase();
 }
 
 double WT_GENERATOR_MODEL::get_reactive_current_command_in_pu_based_on_mbase()
 {
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
-    if(wt_generator!=NULL)
-    {
-        WT_ELECTRICAL_MODEL* model = wt_generator->get_wt_electrical_model();
-        if(model!=NULL and model->is_model_initialized())
-            return model->get_reactive_current_command_in_pu_based_on_mbase();
-        else
-            return get_initial_reactive_current_command_in_pu_based_on_mbase();
-    }
+    WT_ELECTRICAL_MODEL* model = wt_generator->get_wt_electrical_model();
+    if(model!=NULL and model->is_model_initialized())
+        return model->get_reactive_current_command_in_pu_based_on_mbase();
     else
-        return 0.0;
+        return get_initial_reactive_current_command_in_pu_based_on_mbase();
 }
 
 double WT_GENERATOR_MODEL::get_reactive_voltage_command_in_pu() const
 {
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
-    if(wt_generator!=NULL)
-    {
-        WT_ELECTRICAL_MODEL* model = wt_generator->get_wt_electrical_model();
-        if(model!=NULL and model->is_model_initialized())
-            return model->get_reactive_voltage_command_in_pu();
-        else
-            return get_initial_reactive_voltage_command_in_pu();
-    }
+    WT_ELECTRICAL_MODEL* model = wt_generator->get_wt_electrical_model();
+    if(model!=NULL and model->is_model_initialized())
+        return model->get_reactive_voltage_command_in_pu();
     else
-        return 0.0;
+        return get_initial_reactive_voltage_command_in_pu();
 }

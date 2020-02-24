@@ -249,103 +249,96 @@ void PSASPE1::initialize()
     if(not is_model_initialized())
     {
         GENERATOR* generator = get_generator_pointer();
-        if(generator!=NULL)
+        STEPS& toolkit = get_toolkit();
+        SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+        if(gen_model!=NULL)
         {
-            STEPS& toolkit = get_toolkit();
-            SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-            if(gen_model!=NULL)
+            if(not gen_model->is_model_initialized())
+                gen_model->initialize();
+
+            setup_block_toolkit_and_parameters();
+
+            double Ecomp = get_compensated_voltage_in_pu();
+
+            set_voltage_reference_in_pu(Ecomp);
+
+            sensor.set_output(0.0);
+            sensor.initialize();
+
+            double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
+            Efd0 = Efd;
+
+            if(Efd>get_Efdmax_in_pu())
             {
-                if(not gen_model->is_model_initialized())
-                    gen_model->initialize();
-
-                setup_block_toolkit_and_parameters();
-
-                double Ecomp = get_compensated_voltage_in_pu();
-
-                set_voltage_reference_in_pu(Ecomp);
-
-                sensor.set_output(0.0);
-                sensor.initialize();
-
-                double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
-                Efd0 = Efd;
-
-                if(Efd>get_Efdmax_in_pu())
-                {
-                    osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-                            <<"Efd is "<<Efd<<", and Efdmax is "<<get_Efdmax_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-                if(Efd<get_Efdmin_in_pu())
-                {
-                    osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-                            <<"Efd is "<<Efd<<", and Efdmin is "<<get_Efdmin_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-
-                if(Efd>get_VAmax_in_pu())
-                {
-                    osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-                            <<"Efd is "<<Efd<<", and VAmax is "<<get_VAmax_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-                if(Efd<get_VAmin_in_pu())
-                {
-                    osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-                            <<"Efd is "<<Efd<<", and VAmin is "<<get_VAmin_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-
-                exciter.set_output(Efd);
-                exciter.initialize();
-
-                feedbacker.set_input(Efd);
-                feedbacker.initialize();
-
-                regulator.set_output(0.0);
-                regulator.initialize();
-
-                set_flag_model_initialized_as_true();
+                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                        <<"Efd is "<<Efd<<", and Efdmax is "<<get_Efdmax_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
+            if(Efd<get_Efdmin_in_pu())
+            {
+                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                        <<"Efd is "<<Efd<<", and Efdmin is "<<get_Efdmin_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+
+            if(Efd>get_VAmax_in_pu())
+            {
+                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                        <<"Efd is "<<Efd<<", and VAmax is "<<get_VAmax_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            if(Efd<get_VAmin_in_pu())
+            {
+                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                        <<"Efd is "<<Efd<<", and VAmin is "<<get_VAmin_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+
+            exciter.set_output(Efd);
+            exciter.initialize();
+
+            feedbacker.set_input(Efd);
+            feedbacker.initialize();
+
+            regulator.set_output(0.0);
+            regulator.initialize();
+
+            set_flag_model_initialized_as_true();
         }
     }
 }
 
 void PSASPE1::run(DYNAMIC_MODE mode)
 {
-    GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
-    {
-        double Ecomp = get_compensated_voltage_in_pu();
-        double Vref = get_voltage_reference_in_pu();
-        double Vs = get_stabilizing_signal_in_pu();
+    double Ecomp = get_compensated_voltage_in_pu();
+    double Vref = get_voltage_reference_in_pu();
+    double Vs = get_stabilizing_signal_in_pu();
 
-        double input = Vref-Ecomp;
-        sensor.set_input(input);
-        sensor.run(mode);
+    double input = Vref-Ecomp;
+    sensor.set_input(input);
+    sensor.run(mode);
 
-        input = sensor.get_output()+Vs-feedbacker.get_output();
-        regulator.set_input(input);
-        regulator.run(mode);
+    input = sensor.get_output()+Vs-feedbacker.get_output();
+    regulator.set_input(input);
+    regulator.run(mode);
 
-        input = Efd0+regulator.get_output();
-        double VAmax = get_VAmax_in_pu();
-        double VAmin = get_VAmin_in_pu();
-        if(input>VAmax) input = VAmax;
-        if(input<VAmin) input = VAmin;
+    input = Efd0+regulator.get_output();
+    double VAmax = get_VAmax_in_pu();
+    double VAmin = get_VAmin_in_pu();
+    if(input>VAmax) input = VAmax;
+    if(input<VAmin) input = VAmin;
 
-        exciter.set_input(input);
-        exciter.run(mode);
+    exciter.set_input(input);
+    exciter.run(mode);
 
-        double Efd = get_excitation_voltage_in_pu();
+    double Efd = get_excitation_voltage_in_pu();
 
-        feedbacker.set_input(Efd);
-        feedbacker.run(mode);
-        //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
+    feedbacker.set_input(Efd);
+    feedbacker.run(mode);
+    //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
 
-        if(mode == UPDATE_MODE)
-            set_flag_model_updated_as_true();
-    }
+    if(mode == UPDATE_MODE)
+        set_flag_model_updated_as_true();
 }
 
 double PSASPE1::get_excitation_voltage_in_pu()

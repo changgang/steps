@@ -314,89 +314,86 @@ void WT3G2::initialize()
     if(not is_model_initialized())
     {
         WT_GENERATOR* wt_generator = get_wt_generator_pointer();
-        if(wt_generator!=NULL)
+        setup_block_toolkit_and_parameters();
+
+        unsigned int n_lumped = get_number_of_lumped_wt_generators();
+        double fbase = get_bus_base_frequency_in_Hz();
+        double wbase = 2.0*PI*fbase;
+
+        double kipll = get_KIPLL();
+        if(kipll!=0.0)
         {
-            setup_block_toolkit_and_parameters();
+            PLL_frequency_integrator.set_T_in_s(1.0/kipll);
+            double pllmax = get_PLLmax();
+            PLL_frequency_integrator.set_upper_limit(pllmax);
+            PLL_frequency_integrator.set_lower_limit(-pllmax);
+        }
 
-            unsigned int n_lumped = get_number_of_lumped_wt_generators();
-            double fbase = get_bus_base_frequency_in_Hz();
-            double wbase = 2.0*PI*fbase;
+        PLL_angle_integrator.set_T_in_s(1.0/wbase);
 
-            double kipll = get_KIPLL();
-            if(kipll!=0.0)
-            {
-                PLL_frequency_integrator.set_T_in_s(1.0/kipll);
-                double pllmax = get_PLLmax();
-                PLL_frequency_integrator.set_upper_limit(pllmax);
-                PLL_frequency_integrator.set_lower_limit(-pllmax);
-            }
+        double mbase = get_mbase_in_MVA();
+        mbase /= n_lumped;
 
-            PLL_angle_integrator.set_T_in_s(1.0/wbase);
+        complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
+        double xeq = Zsource.imag();
 
-            double mbase = get_mbase_in_MVA();
-            mbase /= n_lumped;
-
-            complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
-            double xeq = Zsource.imag();
-
-            double P = wt_generator->get_p_generation_in_MW()/n_lumped;
-            double Q = wt_generator->get_q_generation_in_MVar()/n_lumped;
-            complex<double> S(P/mbase,Q/mbase);
+        double P = wt_generator->get_p_generation_in_MW()/n_lumped;
+        double Q = wt_generator->get_q_generation_in_MVar()/n_lumped;
+        complex<double> S(P/mbase,Q/mbase);
 
 
-            complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-            double V = steps_fast_complex_abs(Vxy);
-            double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
-            // ignore voltage angle
-            complex<double> Ixy = conj(S/Vxy);
-            double Ix = Ixy.real();
-            double Iy = Ixy.imag();
+        complex<double> Vxy = get_terminal_complex_voltage_in_pu();
+        double V = steps_fast_complex_abs(Vxy);
+        double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
+        // ignore voltage angle
+        complex<double> Ixy = conj(S/Vxy);
+        double Ix = Ixy.real();
+        double Iy = Ixy.imag();
 
-            double IP = Ix*steps_cos(angle_in_rad) + Iy*steps_sin(angle_in_rad);
-            double IQ =-Ix*steps_sin(angle_in_rad) + Iy*steps_cos(angle_in_rad);
+        double IP = Ix*steps_cos(angle_in_rad) + Iy*steps_sin(angle_in_rad);
+        double IQ =-Ix*steps_sin(angle_in_rad) + Iy*steps_cos(angle_in_rad);
 
-            double EQ = IQ*(-xeq);
+        double EQ = IQ*(-xeq);
 
-            active_current_commander.set_output(IP);
-            active_current_commander.initialize();
-            set_initial_active_current_command_in_pu_based_on_mbase(IP);
+        active_current_commander.set_output(IP);
+        active_current_commander.initialize();
+        set_initial_active_current_command_in_pu_based_on_mbase(IP);
 
-            reactive_voltage_commander.set_output(EQ);
-            reactive_voltage_commander.initialize();
-            set_initial_reactive_voltage_command_in_pu(EQ);
-            set_initial_reactive_current_command_in_pu_based_on_mbase(IQ);
+        reactive_voltage_commander.set_output(EQ);
+        reactive_voltage_commander.initialize();
+        set_initial_reactive_voltage_command_in_pu(EQ);
+        set_initial_reactive_current_command_in_pu_based_on_mbase(IQ);
 
-            if(kipll!=0.0)
-            {
-                PLL_frequency_integrator.set_output(0.0);
-                PLL_frequency_integrator.initialize();
-            }
+        if(kipll!=0.0)
+        {
+            PLL_frequency_integrator.set_output(0.0);
+            PLL_frequency_integrator.initialize();
+        }
 
-            PLL_angle_integrator.set_output(angle_in_rad);
-            PLL_angle_integrator.initialize();
+        PLL_angle_integrator.set_output(angle_in_rad);
+        PLL_angle_integrator.initialize();
 
-            LVPL_voltage_sensor.set_output(V);
-            LVPL_voltage_sensor.initialize();
+        LVPL_voltage_sensor.set_output(V);
+        LVPL_voltage_sensor.initialize();
 
-            set_flag_model_initialized_as_true();
+        set_flag_model_initialized_as_true();
 
-            if(toolkit.is_detailed_log_enabled())
-            {
-                osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
-                        <<"(1) Initial active current command = "<<get_initial_active_current_command_in_pu_based_on_mbase()<<endl
-                        <<"(2) Initial reactive current command = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
-                        <<"(3) Initial reactive voltage command = "<<get_initial_reactive_voltage_command_in_pu()<<endl
-                        <<"(4) States of blocks"<<endl
-                        <<"    active_current_commander block state: "<<active_current_commander.get_state()<<endl
-                        <<"    reactive_voltage_commander block state: "<<reactive_voltage_commander.get_state()<<endl
-                        <<"    PLL_frequency_integrator block state: "<<PLL_frequency_integrator.get_state()<<endl
-                        <<"    PLL_angle_integrator block state: "<<PLL_angle_integrator.get_state()<<endl
-                        <<"    LVPL_voltage_sensor block state: "<<LVPL_voltage_sensor.get_state()<<endl
-                        <<"(5) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
-                        <<"(6) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
-                        <<"(7) terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
+        if(toolkit.is_detailed_log_enabled())
+        {
+            osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+                    <<"(1) Initial active current command = "<<get_initial_active_current_command_in_pu_based_on_mbase()<<endl
+                    <<"(2) Initial reactive current command = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
+                    <<"(3) Initial reactive voltage command = "<<get_initial_reactive_voltage_command_in_pu()<<endl
+                    <<"(4) States of blocks"<<endl
+                    <<"    active_current_commander block state: "<<active_current_commander.get_state()<<endl
+                    <<"    reactive_voltage_commander block state: "<<reactive_voltage_commander.get_state()<<endl
+                    <<"    PLL_frequency_integrator block state: "<<PLL_frequency_integrator.get_state()<<endl
+                    <<"    PLL_angle_integrator block state: "<<PLL_angle_integrator.get_state()<<endl
+                    <<"    LVPL_voltage_sensor block state: "<<LVPL_voltage_sensor.get_state()<<endl
+                    <<"(5) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
+                    <<"(6) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
+                    <<"(7) terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu";
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -672,8 +669,7 @@ void WT3G2::set_model_data_with_name(string par_name, double value)
     if(par_name=="N")
     {
         WT_GENERATOR* gen = get_wt_generator_pointer();
-        if(gen!=NULL)
-            return gen->set_number_of_lumped_wt_generators((unsigned int)(value));
+        return gen->set_number_of_lumped_wt_generators((unsigned int)(value));
     }
     if(par_name=="TV")
         return set_converter_reactiver_voltage_command_T_in_s(value);
@@ -688,8 +684,7 @@ void WT3G2::set_model_data_with_name(string par_name, double value)
     if(par_name=="PN")
     {
         WT_GENERATOR* gen = get_wt_generator_pointer();
-        if(gen!=NULL)
-            return gen->set_rated_power_per_wt_generator_in_MW(value);
+        return gen->set_rated_power_per_wt_generator_in_MW(value);
     }
     if(par_name=="VL LVPL")
         return;

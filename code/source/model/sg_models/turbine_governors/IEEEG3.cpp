@@ -300,68 +300,65 @@ void IEEEG3::initialize()
     if(not is_model_initialized())
     {
         GENERATOR* generator = get_generator_pointer();
-        if(generator!=NULL)
+        SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+        if(gen_model!=NULL)
         {
-            SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-            if(gen_model!=NULL)
+            if(not gen_model->is_model_initialized())
+                gen_model->initialize();
+
+            setup_block_toolkit_and_parameters();
+
+            STEPS& toolkit = get_toolkit();
+
+            double delta = get_delta();
+            double TR = get_TR_in_s();
+            feedbacker.set_K(delta*TR);
+
+            double a11 = get_a11();
+            double a13 = get_a13();
+            double a21 = get_a21();
+            double a23 = get_a23();
+            double TW = get_TW_in_s();
+
+            water_hammer.set_K(a23);
+            water_hammer.set_T1_in_s((a11-a13*a21/a23)*TW);
+            water_hammer.set_T2_in_s(a11*TW);
+
+
+            double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
+
+            water_hammer.set_output(pmech0);
+            water_hammer.initialize();
+
+            double valve = water_hammer.get_input();
+            feedbacker.set_input(valve);
+            feedbacker.initialize();
+
+
+            if(valve>get_Pmax_in_pu())
             {
-                if(not gen_model->is_model_initialized())
-                    gen_model->initialize();
-
-                setup_block_toolkit_and_parameters();
-
-                STEPS& toolkit = get_toolkit();
-
-                double delta = get_delta();
-                double TR = get_TR_in_s();
-                feedbacker.set_K(delta*TR);
-
-                double a11 = get_a11();
-                double a13 = get_a13();
-                double a21 = get_a21();
-                double a23 = get_a23();
-                double TW = get_TW_in_s();
-
-                water_hammer.set_K(a23);
-                water_hammer.set_T1_in_s((a11-a13*a21/a23)*TW);
-                water_hammer.set_T2_in_s(a11*TW);
-
-
-                double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
-
-                water_hammer.set_output(pmech0);
-                water_hammer.initialize();
-
-                double valve = water_hammer.get_input();
-                feedbacker.set_input(valve);
-                feedbacker.initialize();
-
-
-                if(valve>get_Pmax_in_pu())
-                {
-                    osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-                      <<"Valve is "<<valve<<", and Pmax is "<<get_Pmax_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-                if(valve<get_Pmin_in_pu())
-                {
-                    osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-                      <<"Valve is "<<valve<<", and Pmin is "<<get_Pmin_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-
-                servo_motor.set_output(valve);
-                servo_motor.initialize();
-
-                governor.set_output(0.0);
-                governor.initialize();
-
-                double Pref = get_sigma()*valve;
-
-                set_initial_mechanical_power_reference_in_pu_based_on_mbase(Pref);
-
-                set_flag_model_initialized_as_true();
+                osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                  <<"Valve is "<<valve<<", and Pmax is "<<get_Pmax_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
+            if(valve<get_Pmin_in_pu())
+            {
+                osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                  <<"Valve is "<<valve<<", and Pmin is "<<get_Pmin_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+
+            servo_motor.set_output(valve);
+            servo_motor.initialize();
+
+            governor.set_output(0.0);
+            governor.initialize();
+
+            double Pref = get_sigma()*valve;
+
+            set_initial_mechanical_power_reference_in_pu_based_on_mbase(Pref);
+
+            set_flag_model_initialized_as_true();
         }
     }
 }

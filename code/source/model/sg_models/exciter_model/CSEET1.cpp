@@ -829,164 +829,161 @@ void CSEET1::initialize()
     if(not is_model_initialized())
     {
         GENERATOR* generator = get_generator_pointer();
-        if(generator!=NULL)
+        STEPS& toolkit = get_toolkit();
+        SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+        if(gen_model!=NULL)
         {
-            STEPS& toolkit = get_toolkit();
-            SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-            if(gen_model!=NULL)
+            if(not gen_model->is_model_initialized())
+                gen_model->initialize();
+
+            setup_block_toolkit_and_parameters();
+
+            if(get_tuner_type()==SERIAL_TUNER)
             {
-                if(not gen_model->is_model_initialized())
-                    gen_model->initialize();
-
-                setup_block_toolkit_and_parameters();
-
-                if(get_tuner_type()==SERIAL_TUNER)
+                if(get_serial_tuner_KV()==false)
                 {
-                    if(get_serial_tuner_KV()==false)
-                    {
-                        double K = get_serial_tuner_K();
-                        double T1 = get_serial_tuner_T1_in_s();
-                        double T2 = get_serial_tuner_T2_in_s();
-                        double VA1max = get_serial_tuner_VA1max_in_pu();
-                        double VA1min = get_serial_tuner_VA1min_in_pu();
+                    double K = get_serial_tuner_K();
+                    double T1 = get_serial_tuner_T1_in_s();
+                    double T2 = get_serial_tuner_T2_in_s();
+                    double VA1max = get_serial_tuner_VA1max_in_pu();
+                    double VA1min = get_serial_tuner_VA1min_in_pu();
 
-                        serial_tuner1_pi.set_Kp(K*T1/T2);
-                        serial_tuner1_pi.set_Ki(K/T2);
-                        serial_tuner1_pi.set_upper_limit(VA1max);
-                        serial_tuner1_pi.set_lower_limit(VA1min);
-                    }
+                    serial_tuner1_pi.set_Kp(K*T1/T2);
+                    serial_tuner1_pi.set_Ki(K/T2);
+                    serial_tuner1_pi.set_upper_limit(VA1max);
+                    serial_tuner1_pi.set_lower_limit(VA1min);
                 }
-
-                double Efd = get_initial_excitation_voltage_in_pu_from_sync_generator_model();
-                if(Efd>get_Efdmax_in_pu())
-                {
-                    osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-                      <<"Efd is "<<Efd<<", and Efdmax is "<<get_Efdmax_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-
-                double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
-                //double Vt = psdb.get_bus_positive_sequence_voltage_in_pu(generator->get_generator_bus());
-                double Vt = get_terminal_voltage_in_pu();
-
-                double Ve = get_initial_Ve_with_Fex_function();
-                if(Ve>get_Vemax_in_pu())
-                {
-                    osstream<<"Initialization error. Output of exciter of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-                      <<"Ve is "<<Ve<<", and Vemax is "<<get_Vemax_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-                exciter.set_output(Ve);
-                exciter.initialize();
-
-                double SE = saturation_block.get_saturation(Ve);
-
-                double KE = get_KE();
-                double KD = get_KD();
-
-                double Vfe = (SE+KE)*Ve+Ifd*KD;
-                double Vr = Vfe;
-                regulator2.set_output(Vr);
-                regulator2.initialize();
-
-                if(get_excitation_source()==SEPARATE_EXCITATION)
-                {
-                    if(Vr>get_VRmax_in_pu())
-                    {
-                        osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-                          <<"Vr is "<<Vr<<", and VRmax is "<<get_VRmax_in_pu()<<".";
-                        toolkit.show_information_with_leading_time_stamp(osstream);
-                    }
-                    if(Vr<get_VRmin_in_pu())
-                    {
-                        osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-                          <<"Vr is "<<Vr<<", and VRmin is "<<get_VRmin_in_pu()<<".";
-                        toolkit.show_information_with_leading_time_stamp(osstream);
-                    }
-                }
-                else
-                {
-                    if(Vr>get_VRmax_in_pu()*Vt)
-                    {
-                        osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-                          <<"Vr is "<<Vr<<", and VRmax*Vt is "<<get_VRmax_in_pu()*Vt<<".";
-                        toolkit.show_information_with_leading_time_stamp(osstream);
-                    }
-                    if(Vr<get_VRmin_in_pu()*Vt)
-                    {
-                        osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-                          <<"Vr is "<<Vr<<", and VRmin*Vt is "<<get_VRmin_in_pu()*Vt<<".";
-                        toolkit.show_information_with_leading_time_stamp(osstream);
-                    }
-                }
-
-                double V_input_to_feedbacker = 0.0;
-
-                if(get_exciter_brush()==WITHOUT_BRUSH)
-                    V_input_to_feedbacker = Vfe;
-                else
-                    V_input_to_feedbacker = Efd;
-
-                feedbacker.set_input(V_input_to_feedbacker);
-                feedbacker.initialize();
-
-                double KH = get_KH();
-                double V_regulator1 = regulator2.get_input()+KH*V_input_to_feedbacker;
-                if(V_regulator1>get_VAmax_in_pu())
-                {
-                    osstream<<"Initialization error. Output of regulator 1 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-                      <<"Va is "<<V_regulator1<<", and VAmax is "<<get_VAmax_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-                if(V_regulator1<get_VAmin_in_pu())
-                {
-                    osstream<<"Initialization error. Output of regulator 1 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-                      <<"Va is "<<V_regulator1<<", and VAmin is "<<get_VAmin_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-                regulator1.set_output(V_regulator1);
-                regulator1.initialize();
-
-                double V_input_to_tuner;
-                if(get_tuner_type()==SERIAL_TUNER)
-                {
-                    serial_tuner2.set_output(regulator1.get_input());
-                    serial_tuner2.initialize();
-
-
-                    if(get_serial_tuner_KV()==true)
-                    {
-                        serial_tuner1_lead_lag.set_output(serial_tuner2.get_input());
-                        serial_tuner1_lead_lag.initialize();
-                        V_input_to_tuner = serial_tuner1_lead_lag.get_input();
-                    }
-                    else
-                    {
-                        serial_tuner1_pi.set_output(serial_tuner2.get_input());
-                        serial_tuner1_pi.initialize();
-                        V_input_to_tuner = serial_tuner1_pi.get_input();
-                    }
-                }
-                else
-                {
-                    parallel_tuner_integral.set_output(regulator1.get_input());
-                    parallel_tuner_integral.initialize();
-
-                    V_input_to_tuner = 0.0;
-                    parallel_tuner_differential.set_input(V_input_to_tuner);
-                    parallel_tuner_differential.initialize();
-                }
-
-                double Ecomp = get_compensated_voltage_in_pu();
-
-                sensor.set_output(Ecomp);
-                sensor.initialize();
-
-                double Vref = V_input_to_tuner+Ecomp;
-                set_voltage_reference_in_pu(Vref);
-
-                set_flag_model_initialized_as_true();
             }
+
+            double Efd = get_initial_excitation_voltage_in_pu_from_sync_generator_model();
+            if(Efd>get_Efdmax_in_pu())
+            {
+                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                  <<"Efd is "<<Efd<<", and Efdmax is "<<get_Efdmax_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+
+            double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
+            //double Vt = psdb.get_bus_positive_sequence_voltage_in_pu(generator->get_generator_bus());
+            double Vt = get_terminal_voltage_in_pu();
+
+            double Ve = get_initial_Ve_with_Fex_function();
+            if(Ve>get_Vemax_in_pu())
+            {
+                osstream<<"Initialization error. Output of exciter of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                  <<"Ve is "<<Ve<<", and Vemax is "<<get_Vemax_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            exciter.set_output(Ve);
+            exciter.initialize();
+
+            double SE = saturation_block.get_saturation(Ve);
+
+            double KE = get_KE();
+            double KD = get_KD();
+
+            double Vfe = (SE+KE)*Ve+Ifd*KD;
+            double Vr = Vfe;
+            regulator2.set_output(Vr);
+            regulator2.initialize();
+
+            if(get_excitation_source()==SEPARATE_EXCITATION)
+            {
+                if(Vr>get_VRmax_in_pu())
+                {
+                    osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                      <<"Vr is "<<Vr<<", and VRmax is "<<get_VRmax_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                if(Vr<get_VRmin_in_pu())
+                {
+                    osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                      <<"Vr is "<<Vr<<", and VRmin is "<<get_VRmin_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+            }
+            else
+            {
+                if(Vr>get_VRmax_in_pu()*Vt)
+                {
+                    osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                      <<"Vr is "<<Vr<<", and VRmax*Vt is "<<get_VRmax_in_pu()*Vt<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                if(Vr<get_VRmin_in_pu()*Vt)
+                {
+                    osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                      <<"Vr is "<<Vr<<", and VRmin*Vt is "<<get_VRmin_in_pu()*Vt<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+            }
+
+            double V_input_to_feedbacker = 0.0;
+
+            if(get_exciter_brush()==WITHOUT_BRUSH)
+                V_input_to_feedbacker = Vfe;
+            else
+                V_input_to_feedbacker = Efd;
+
+            feedbacker.set_input(V_input_to_feedbacker);
+            feedbacker.initialize();
+
+            double KH = get_KH();
+            double V_regulator1 = regulator2.get_input()+KH*V_input_to_feedbacker;
+            if(V_regulator1>get_VAmax_in_pu())
+            {
+                osstream<<"Initialization error. Output of regulator 1 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                  <<"Va is "<<V_regulator1<<", and VAmax is "<<get_VAmax_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            if(V_regulator1<get_VAmin_in_pu())
+            {
+                osstream<<"Initialization error. Output of regulator 1 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                  <<"Va is "<<V_regulator1<<", and VAmin is "<<get_VAmin_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            regulator1.set_output(V_regulator1);
+            regulator1.initialize();
+
+            double V_input_to_tuner;
+            if(get_tuner_type()==SERIAL_TUNER)
+            {
+                serial_tuner2.set_output(regulator1.get_input());
+                serial_tuner2.initialize();
+
+
+                if(get_serial_tuner_KV()==true)
+                {
+                    serial_tuner1_lead_lag.set_output(serial_tuner2.get_input());
+                    serial_tuner1_lead_lag.initialize();
+                    V_input_to_tuner = serial_tuner1_lead_lag.get_input();
+                }
+                else
+                {
+                    serial_tuner1_pi.set_output(serial_tuner2.get_input());
+                    serial_tuner1_pi.initialize();
+                    V_input_to_tuner = serial_tuner1_pi.get_input();
+                }
+            }
+            else
+            {
+                parallel_tuner_integral.set_output(regulator1.get_input());
+                parallel_tuner_integral.initialize();
+
+                V_input_to_tuner = 0.0;
+                parallel_tuner_differential.set_input(V_input_to_tuner);
+                parallel_tuner_differential.initialize();
+            }
+
+            double Ecomp = get_compensated_voltage_in_pu();
+
+            sensor.set_output(Ecomp);
+            sensor.initialize();
+
+            double Vref = V_input_to_tuner+Ecomp;
+            set_voltage_reference_in_pu(Vref);
+
+            set_flag_model_initialized_as_true();
         }
     }
 }
@@ -994,142 +991,134 @@ void CSEET1::initialize()
 void CSEET1::run(DYNAMIC_MODE mode)
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
+    SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+    if(gen_model!=NULL)
     {
-        SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-        if(gen_model!=NULL)
+        double Ecomp = get_compensated_voltage_in_pu();
+        double Vref = get_voltage_reference_in_pu();
+        double Vs = get_stabilizing_signal_in_pu();
+        double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
+
+        double Ve = exciter.get_output();
+        double Vemax = get_Vemax_in_pu();
+        if(Ve>Vemax)
+            Ve = Vemax;
+
+        double Efd = get_excitation_voltage_in_pu();
+
+        double SE = saturation_block.get_saturation(Ve);
+        double KE = get_KE();
+        double KD = get_KD();
+
+        double Vfe = (SE+KE)*Ve+KD*Ifd;
+        double V_to_feedback = Vfe;
+        if(get_exciter_brush()==WITH_BRUSH)
+            V_to_feedback = Efd;
+
+        feedbacker.set_input(V_to_feedback);
+        feedbacker.run(mode);
+
+        sensor.set_input(Ecomp);
+        sensor.run(mode);
+
+        double input;
+        input = Vref+Vs-sensor.get_output();
+
+        if(get_feedback_slot()==AT_VOLTAGE_ERROR)
+            input -= feedbacker.get_output();
+
+        if(get_tuner_type()==SERIAL_TUNER)
         {
-            double Ecomp = get_compensated_voltage_in_pu();
-            double Vref = get_voltage_reference_in_pu();
-            double Vs = get_stabilizing_signal_in_pu();
-            double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
-
-            double Ve = exciter.get_output();
-            double Vemax = get_Vemax_in_pu();
-            if(Ve>Vemax)
-                Ve = Vemax;
-
-            double Efd = get_excitation_voltage_in_pu();
-
-            double SE = saturation_block.get_saturation(Ve);
-            double KE = get_KE();
-            double KD = get_KD();
-
-            double Vfe = (SE+KE)*Ve+KD*Ifd;
-            double V_to_feedback = Vfe;
-            if(get_exciter_brush()==WITH_BRUSH)
-                V_to_feedback = Efd;
-
-            feedbacker.set_input(V_to_feedback);
-            feedbacker.run(mode);
-
-            sensor.set_input(Ecomp);
-            sensor.run(mode);
-
-            double input;
-            input = Vref+Vs-sensor.get_output();
-
-            if(get_feedback_slot()==AT_VOLTAGE_ERROR)
-                input -= feedbacker.get_output();
-
-            if(get_tuner_type()==SERIAL_TUNER)
+            if(get_serial_tuner_KV()==true)
             {
-                if(get_serial_tuner_KV()==true)
-                {
-                    serial_tuner1_lead_lag.set_input(input);
-                    serial_tuner1_lead_lag.run(mode);
-                    input = serial_tuner1_lead_lag.get_output();
-                }
-                else
-                {
-                    serial_tuner1_pi.set_input(input);
-                    serial_tuner1_pi.run(mode);
-                    input = serial_tuner1_pi.get_output();
-                }
-
-                serial_tuner2.set_input(input);
-                serial_tuner2.run(mode);
-                input = serial_tuner2.get_output();
+                serial_tuner1_lead_lag.set_input(input);
+                serial_tuner1_lead_lag.run(mode);
+                input = serial_tuner1_lead_lag.get_output();
             }
             else
             {
-                parallel_tuner_integral.set_input(input);
-                parallel_tuner_integral.run(mode);
-                parallel_tuner_differential.set_input(input);
-                parallel_tuner_differential.run(mode);
-
-                input = input*get_parallel_tuner_KP()+parallel_tuner_integral.get_output()+parallel_tuner_differential.get_output();
+                serial_tuner1_pi.set_input(input);
+                serial_tuner1_pi.run(mode);
+                input = serial_tuner1_pi.get_output();
             }
 
-            if(get_feedback_slot()==AT_REGULATOR)
-                input -= feedbacker.get_output();
-
-            regulator1.set_input(input);
-            regulator1.run(mode);
-            input = regulator1.get_output();
-
-            double KH = get_KH();
-            input = input-KH*V_to_feedback;
-
-            regulator2.set_input(input);
-            regulator2.run(mode);
-
-            double Vr = regulator2.get_output();
-            double Vrmax = get_VRmax_in_pu();
-            double Vrmin = get_VRmin_in_pu();
-
-            //double Vt = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
-            double Vt = get_terminal_voltage_in_pu();
-
-            if(get_excitation_source()==SELF_EXCITATION)
-            {
-                Vrmax *= Vt;
-                Vrmin *= Vt;
-            }
-
-            if(Vr>Vrmax)
-                Vr = Vrmax;
-
-            if(Vr<Vrmin)
-                Vr = Vrmin;
-
-            input = Vr-Vfe;
-            exciter.set_input(input);
-            exciter.run(mode);
-
-            //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
-
-            if(mode == UPDATE_MODE)
-                set_flag_model_updated_as_true();
+            serial_tuner2.set_input(input);
+            serial_tuner2.run(mode);
+            input = serial_tuner2.get_output();
         }
+        else
+        {
+            parallel_tuner_integral.set_input(input);
+            parallel_tuner_integral.run(mode);
+            parallel_tuner_differential.set_input(input);
+            parallel_tuner_differential.run(mode);
+
+            input = input*get_parallel_tuner_KP()+parallel_tuner_integral.get_output()+parallel_tuner_differential.get_output();
+        }
+
+        if(get_feedback_slot()==AT_REGULATOR)
+            input -= feedbacker.get_output();
+
+        regulator1.set_input(input);
+        regulator1.run(mode);
+        input = regulator1.get_output();
+
+        double KH = get_KH();
+        input = input-KH*V_to_feedback;
+
+        regulator2.set_input(input);
+        regulator2.run(mode);
+
+        double Vr = regulator2.get_output();
+        double Vrmax = get_VRmax_in_pu();
+        double Vrmin = get_VRmin_in_pu();
+
+        //double Vt = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
+        double Vt = get_terminal_voltage_in_pu();
+
+        if(get_excitation_source()==SELF_EXCITATION)
+        {
+            Vrmax *= Vt;
+            Vrmin *= Vt;
+        }
+
+        if(Vr>Vrmax)
+            Vr = Vrmax;
+
+        if(Vr<Vrmin)
+            Vr = Vrmin;
+
+        input = Vr-Vfe;
+        exciter.set_input(input);
+        exciter.run(mode);
+
+        //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
+
+        if(mode == UPDATE_MODE)
+            set_flag_model_updated_as_true();
     }
 }
 
 double CSEET1::get_excitation_voltage_in_pu()
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
+    SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+    if(gen_model!=NULL)
     {
-        SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-        if(gen_model!=NULL)
-        {
-            double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
+        double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
 
-            double Ve = exciter.get_output();
-            double Vemax = get_Vemax_in_pu();
-            if(Ve>Vemax)
-                Ve = Vemax;
+        double Ve = exciter.get_output();
+        double Vemax = get_Vemax_in_pu();
+        if(Ve>Vemax)
+            Ve = Vemax;
 
-            double Fex = get_Fex(Ve, Ifd);
-            double Efd = Ve*Fex;
-            double Efdmax = get_Efdmax_in_pu();
-            if(Efd>Efdmax)
-                Efd = Efdmax;
+        double Fex = get_Fex(Ve, Ifd);
+        double Efd = Ve*Fex;
+        double Efdmax = get_Efdmax_in_pu();
+        if(Efd>Efdmax)
+            Efd = Efdmax;
 
-            return Efd;
-        }
-        else
-            return 0.0;
+        return Efd;
     }
     else
         return 0.0;

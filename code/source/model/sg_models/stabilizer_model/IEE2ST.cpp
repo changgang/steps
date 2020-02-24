@@ -345,55 +345,50 @@ void IEE2ST::initialize()
         return;
 
     GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
+    EXCITER_MODEL* exciter = generator->get_exciter_model();
+    if(exciter!=NULL)
     {
-        EXCITER_MODEL* exciter = generator->get_exciter_model();
-        if(exciter!=NULL)
+        if(not exciter->is_model_initialized())
+            exciter->initialize();
+
+        setup_block_toolkit_and_parameters();
+
+        phase_tuner_3.set_output(0.0);
+        phase_tuner_3.initialize();
+
+        phase_tuner_2.set_output(0.0);
+        phase_tuner_2.initialize();
+
+        phase_tuner_1.set_output(0.0);
+        phase_tuner_1.initialize();
+
+        double value_slot_1 = get_signal_value_of_slot(0);
+        double value_slot_2 = get_signal_value_of_slot(1);
+        double value_sensor_1 = value_slot_1*get_K1();
+        double value_sensor_2 = value_slot_2*get_K2();
+
+        sensor_1.set_output(value_sensor_1);
+        sensor_1.initialize();
+
+        sensor_2.set_output(value_sensor_2);
+        sensor_2.initialize();
+
+        double value_sum = value_sensor_1 + value_sensor_2;
+
+        double T3 = get_T3_in_s();
+        if(T3>0.0)
         {
-            if(not exciter->is_model_initialized())
-                exciter->initialize();
-
-            setup_block_toolkit_and_parameters();
-
-            phase_tuner_3.set_output(0.0);
-            phase_tuner_3.initialize();
-
-            phase_tuner_2.set_output(0.0);
-            phase_tuner_2.initialize();
-
-            phase_tuner_1.set_output(0.0);
-            phase_tuner_1.initialize();
-
-            double value_slot_1 = get_signal_value_of_slot(0);
-            double value_slot_2 = get_signal_value_of_slot(1);
-            double value_sensor_1 = value_slot_1*get_K1();
-            double value_sensor_2 = value_slot_2*get_K2();
-
-            sensor_1.set_output(value_sensor_1);
-            sensor_1.initialize();
-
-            sensor_2.set_output(value_sensor_2);
-            sensor_2.initialize();
-
-            double value_sum = value_sensor_1 + value_sensor_2;
-
-            double T3 = get_T3_in_s();
-            if(T3>0.0)
-            {
-                filter.set_input(value_sum);
-                filter.initialize();
-            }
-            else
-            {
-                osstream<<"Initialization failed. T3<=0.0 in model "<<get_model_name()<<" of "
-                  <<get_generator_pointer()->get_device_name()<<" requires input signals with 0 steady state value."<<endl
-                  <<"However, "<<value_sum<<" is given. Check input signals in slots.";
-                alternative_filter.set_output(0.0);
-                alternative_filter.initialize();
-            }
+            filter.set_input(value_sum);
+            filter.initialize();
         }
         else
-            deactivate_model();
+        {
+            osstream<<"Initialization failed. T3<=0.0 in model "<<get_model_name()<<" of "
+              <<get_generator_pointer()->get_device_name()<<" requires input signals with 0 steady state value."<<endl
+              <<"However, "<<value_sum<<" is given. Check input signals in slots.";
+            alternative_filter.set_output(0.0);
+            alternative_filter.initialize();
+        }
     }
     else
         deactivate_model();

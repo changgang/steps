@@ -341,34 +341,31 @@ void WTRLY0::setup_block_toolkit_and_parameters()
 void WTRLY0::initialize()
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen!=NULL)
+    WT_GENERATOR_MODEL* gen_model = gen->get_wt_generator_model();
+    if(gen_model!=NULL)
     {
-        WT_GENERATOR_MODEL* gen_model = gen->get_wt_generator_model();
-        if(gen_model!=NULL)
+        if(not gen_model->is_model_initialized())
+            gen_model->initialize();
+
+        WT_AERODYNAMIC_MODEL* aero_model = gen->get_wt_aerodynamic_model();
+        if(aero_model!=NULL)
         {
-            if(not gen_model->is_model_initialized())
-                gen_model->initialize();
+            if(not aero_model->is_model_initialized())
+                aero_model->initialize();
 
-            WT_AERODYNAMIC_MODEL* aero_model = gen->get_wt_aerodynamic_model();
-            if(aero_model!=NULL)
+            setup_block_toolkit_and_parameters();
+
+            for(unsigned int i=0; i<STEPS_MAX_RELAY_COUNT; ++i)
             {
-                if(not aero_model->is_model_initialized())
-                    aero_model->initialize();
+                vwind_relay_timer[i].set_attached_device(get_wt_generator_pointer());
+                speed_relay_timer[i].set_attached_device(get_wt_generator_pointer());
+                freq_relay_timer[i].set_attached_device(get_wt_generator_pointer());
+                volt_relay_timer[i].set_attached_device(get_wt_generator_pointer());
 
-                setup_block_toolkit_and_parameters();
-
-                for(unsigned int i=0; i<STEPS_MAX_RELAY_COUNT; ++i)
-                {
-                    vwind_relay_timer[i].set_attached_device(get_wt_generator_pointer());
-                    speed_relay_timer[i].set_attached_device(get_wt_generator_pointer());
-                    freq_relay_timer[i].set_attached_device(get_wt_generator_pointer());
-                    volt_relay_timer[i].set_attached_device(get_wt_generator_pointer());
-
-                    vwind_relay_timer[i].reset();
-                    speed_relay_timer[i].reset();
-                    freq_relay_timer[i].reset();
-                    volt_relay_timer[i].reset();
-                }
+                vwind_relay_timer[i].reset();
+                speed_relay_timer[i].reset();
+                freq_relay_timer[i].reset();
+                volt_relay_timer[i].reset();
             }
         }
     }

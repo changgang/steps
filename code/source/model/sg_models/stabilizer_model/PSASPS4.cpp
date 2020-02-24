@@ -465,68 +465,61 @@ void PSASPS4::setup_block_toolkit_and_parameters()
 
 void PSASPS4::initialize()
 {
-    ostringstream osstream;
-
     GENERATOR* generator = get_generator_pointer();
     DEVICE_ID did = generator->get_device_id();
-    if(generator!=NULL)
+    EXCITER_MODEL* exciter = generator->get_exciter_model();
+    if(exciter!=NULL)
     {
-        EXCITER_MODEL* exciter = generator->get_exciter_model();
-        if(exciter!=NULL)
-        {
-            if(not exciter->is_model_initialized())
-                exciter->initialize();
+        if(not exciter->is_model_initialized())
+            exciter->initialize();
 
-            setup_block_toolkit_and_parameters();
+        setup_block_toolkit_and_parameters();
 
-            SIGNAL signal = prepare_signal_with_signal_type_and_device_id(1, did);
-            if(signal.is_valid())
-                set_input_signal_at_slot(0, signal);
+        SIGNAL signal = prepare_signal_with_signal_type_and_device_id(1, did);
+        if(signal.is_valid())
+            set_input_signal_at_slot(0, signal);
 
-            signal = prepare_signal_with_signal_type_and_device_id(3, did);
-            if(signal.is_valid())
-                set_input_signal_at_slot(1, signal);
+        signal = prepare_signal_with_signal_type_and_device_id(3, did);
+        if(signal.is_valid())
+            set_input_signal_at_slot(1, signal);
 
-            phase_tuner_3.set_output(0.0);
-            phase_tuner_3.initialize();
+        phase_tuner_3.set_output(0.0);
+        phase_tuner_3.initialize();
 
-            phase_tuner_2.set_output(0.0);
-            phase_tuner_2.initialize();
+        phase_tuner_2.set_output(0.0);
+        phase_tuner_2.initialize();
 
-            phase_tuner_1.set_output(0.0);
-            phase_tuner_1.initialize();
+        phase_tuner_1.set_output(0.0);
+        phase_tuner_1.initialize();
 
-            notch_filter_first_order_block_4.set_output(0.0);
-            notch_filter_first_order_block_4.initialize();
-            notch_filter_first_order_block_3.set_output(0.0);
-            notch_filter_first_order_block_3.initialize();
-            notch_filter_first_order_block_2.set_output(0.0);
-            notch_filter_first_order_block_2.initialize();
-            notch_filter_first_order_block_1.set_output(0.0);
-            notch_filter_first_order_block_1.initialize();
+        notch_filter_first_order_block_4.set_output(0.0);
+        notch_filter_first_order_block_4.initialize();
+        notch_filter_first_order_block_3.set_output(0.0);
+        notch_filter_first_order_block_3.initialize();
+        notch_filter_first_order_block_2.set_output(0.0);
+        notch_filter_first_order_block_2.initialize();
+        notch_filter_first_order_block_1.set_output(0.0);
+        notch_filter_first_order_block_1.initialize();
 
-            notch_filter_phase_tuner.set_output(0.0);
-            notch_filter_phase_tuner.initialize();
+        notch_filter_phase_tuner.set_output(0.0);
+        notch_filter_phase_tuner.initialize();
 
-            pelec_dedc_block_2.set_output(0.0);
-            pelec_dedc_block_2.initialize();
-            pelec_dedc_block_1.set_output(0.0);
-            pelec_dedc_block_1.initialize();
-            pelec_sensor.set_output(0.0);
-            pelec_sensor.initialize();
+        pelec_dedc_block_2.set_output(0.0);
+        pelec_dedc_block_2.initialize();
+        pelec_dedc_block_1.set_output(0.0);
+        pelec_dedc_block_1.initialize();
+        pelec_sensor.set_output(0.0);
+        pelec_sensor.initialize();
 
-            speed_dedc_block_2.set_output(0.0);
-            speed_dedc_block_2.initialize();
-            speed_dedc_block_1.set_output(0.0);
-            speed_dedc_block_1.initialize();
-            speed_sensor.set_output(0.0);
-            speed_sensor.initialize();
+        speed_dedc_block_2.set_output(0.0);
+        speed_dedc_block_2.initialize();
+        speed_dedc_block_1.set_output(0.0);
+        speed_dedc_block_1.initialize();
+        speed_sensor.set_output(0.0);
+        speed_sensor.initialize();
 
-            speed_deviation_ref_pu = get_signal_value_of_slot(0);
-            Pe_ref_pu = get_signal_value_of_slot(1);
-        }
-        else
-            deactivate_model();
+        speed_deviation_ref_pu = get_signal_value_of_slot(0);
+        Pe_ref_pu = get_signal_value_of_slot(1);
     }
     else
         deactivate_model();

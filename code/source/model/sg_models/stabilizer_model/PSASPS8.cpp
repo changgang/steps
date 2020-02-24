@@ -250,44 +250,39 @@ void PSASPS8::initialize()
     ostringstream osstream;
 
     GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
+    EXCITER_MODEL* exciter = generator->get_exciter_model();
+    if(exciter!=NULL)
     {
-        EXCITER_MODEL* exciter = generator->get_exciter_model();
-        if(exciter!=NULL)
-        {
-            if(not exciter->is_model_initialized())
-                exciter->initialize();
+        if(not exciter->is_model_initialized())
+            exciter->initialize();
 
-            setup_block_toolkit_and_parameters();
+        setup_block_toolkit_and_parameters();
 
-            unsigned int bus = generator->get_generator_bus();
+        unsigned int bus = generator->get_generator_bus();
 
-            DEVICE_ID bus_device;
-            bus_device.set_device_type("BUS");
-            TERMINAL terminal;
-            terminal.append_bus(bus);
-            bus_device.set_device_terminal(terminal);
+        DEVICE_ID bus_device;
+        bus_device.set_device_type("BUS");
+        TERMINAL terminal;
+        terminal.append_bus(bus);
+        bus_device.set_device_terminal(terminal);
 
-            SIGNAL signal = prepare_signal_with_signal_type_and_device_id(5, bus_device);
-            if(signal.is_valid())
-                set_input_signal_at_slot(0, signal);
+        SIGNAL signal = prepare_signal_with_signal_type_and_device_id(5, bus_device);
+        if(signal.is_valid())
+            set_input_signal_at_slot(0, signal);
 
-            phase_tuner_3.set_output(0.0);
-            phase_tuner_3.initialize();
+        phase_tuner_3.set_output(0.0);
+        phase_tuner_3.initialize();
 
-            phase_tuner_2.set_output(0.0);
-            phase_tuner_2.initialize();
+        phase_tuner_2.set_output(0.0);
+        phase_tuner_2.initialize();
 
-            phase_tuner_1.set_output(0.0);
-            phase_tuner_1.initialize();
+        phase_tuner_1.set_output(0.0);
+        phase_tuner_1.initialize();
 
-            sensor.set_output(0.0);
-            sensor.initialize();
+        sensor.set_output(0.0);
+        sensor.initialize();
 
-            V_ref_pu = get_signal_value_of_slot(0);
-        }
-        else
-            deactivate_model();
+        V_ref_pu = get_signal_value_of_slot(0);
     }
     else
         deactivate_model();

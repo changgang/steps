@@ -109,7 +109,7 @@ void TRANSFORMER::set_winding_bus(TRANSFORMER_WINDING_SIDE winding, unsigned int
         return;
     }
     winding_bus[winding] = bus;
-    winding_busptr[winding] = psdb.get_bus(bus);
+    //winding_busptr[winding] = psdb.get_bus(bus);
 }
 
 void TRANSFORMER::set_winding_breaker_status(TRANSFORMER_WINDING_SIDE winding, bool status)
@@ -340,10 +340,10 @@ unsigned int TRANSFORMER::get_winding_bus(TRANSFORMER_WINDING_SIDE winding) cons
     return winding_bus[winding];
 }
 
-BUS* TRANSFORMER::get_winding_bus_pointer(TRANSFORMER_WINDING_SIDE winding) const
+/*BUS* TRANSFORMER::get_winding_bus_pointer(TRANSFORMER_WINDING_SIDE winding) const
 {
     return winding_busptr[winding];
-}
+}*/
 
 bool TRANSFORMER::get_winding_breaker_status(TRANSFORMER_WINDING_SIDE winding) const
 {
@@ -631,9 +631,9 @@ void TRANSFORMER::clear()
     winding_bus[PRIMARY_SIDE] = 0;
     winding_bus[SECONDARY_SIDE] = 0;
     winding_bus[TERTIARY_SIDE] = 0;
-    winding_busptr[PRIMARY_SIDE] = nullptr;
+    /*winding_busptr[PRIMARY_SIDE] = nullptr;
     winding_busptr[SECONDARY_SIDE] = nullptr;
-    winding_busptr[TERTIARY_SIDE] = nullptr;
+    winding_busptr[TERTIARY_SIDE] = nullptr;*/
     set_identifier("");
     set_transformer_name("");
     set_winding_breaker_status(PRIMARY_SIDE, false);

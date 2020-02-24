@@ -245,102 +245,95 @@ void PVGU1::initialize()
     if(not is_model_initialized())
     {
         PV_UNIT* pv_unit = get_pv_unit_pointer();
-        if(pv_unit!=NULL)
+        setup_block_toolkit_and_parameters();
+
+        double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
+
+        complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
+        double xeq = Zsource.imag();
+
+        double P = pv_unit->get_p_generation_in_MW();
+        double Q = pv_unit->get_q_generation_in_MVar();
+        complex<double> S(P*one_over_mbase,Q*one_over_mbase);
+
+
+        complex<double> Vxy = get_terminal_complex_voltage_in_pu();
+        double V = steps_fast_complex_abs(Vxy);
+        double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
+        // ignore voltage angle
+        complex<double> Ixy = conj(S/Vxy);
+        double Ix = Ixy.real();
+        double Iy = Ixy.imag();
+
+        double IP = Ix*steps_cos(angle_in_rad) + Iy*steps_sin(angle_in_rad);
+        double IQ =-Ix*steps_sin(angle_in_rad) + Iy*steps_cos(angle_in_rad);
+
+        double EQ = IQ*(-xeq);
+
+        active_current_commander.set_output(IP);
+        active_current_commander.initialize();
+        set_initial_active_current_command_in_pu_based_on_mbase(IP);
+
+        reactive_voltage_commander.set_output(EQ);
+        reactive_voltage_commander.initialize();
+
+        set_initial_reactive_voltage_command_in_pu(EQ);
+        set_initial_reactive_current_command_in_pu_based_on_mbase(IQ);
+
+        LVPL_voltage_sensor.set_output(V);
+        LVPL_voltage_sensor.initialize();
+
+        set_flag_model_initialized_as_true();
+
+        if(toolkit.is_detailed_log_enabled())
         {
-            setup_block_toolkit_and_parameters();
-
-            double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
-
-            complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
-            double xeq = Zsource.imag();
-
-            double P = pv_unit->get_p_generation_in_MW();
-            double Q = pv_unit->get_q_generation_in_MVar();
-            complex<double> S(P*one_over_mbase,Q*one_over_mbase);
-
-
-            complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-            double V = steps_fast_complex_abs(Vxy);
-            double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
-            // ignore voltage angle
-            complex<double> Ixy = conj(S/Vxy);
-            double Ix = Ixy.real();
-            double Iy = Ixy.imag();
-
-            double IP = Ix*steps_cos(angle_in_rad) + Iy*steps_sin(angle_in_rad);
-            double IQ =-Ix*steps_sin(angle_in_rad) + Iy*steps_cos(angle_in_rad);
-
-            double EQ = IQ*(-xeq);
-
-            active_current_commander.set_output(IP);
-            active_current_commander.initialize();
-            set_initial_active_current_command_in_pu_based_on_mbase(IP);
-
-            reactive_voltage_commander.set_output(EQ);
-            reactive_voltage_commander.initialize();
-
-            set_initial_reactive_voltage_command_in_pu(EQ);
-            set_initial_reactive_current_command_in_pu_based_on_mbase(IQ);
-
-            LVPL_voltage_sensor.set_output(V);
-            LVPL_voltage_sensor.initialize();
-
-            set_flag_model_initialized_as_true();
-
-            if(toolkit.is_detailed_log_enabled())
-            {
-                osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
-                        <<"(1) Initial active current command = "<<get_initial_active_current_command_in_pu_based_on_mbase()<<endl
-                        <<"(2) Initial reactive current command = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
-                        <<"(3) Initial reactive voltage command = "<<get_initial_reactive_voltage_command_in_pu()<<endl
-                        <<"(4) States of blocks"<<endl
-                        <<"    active_current_commander block state: "<<active_current_commander.get_state()<<endl
-                        <<"    reactive_voltage_commander block state: "<<reactive_voltage_commander.get_state()<<endl
-                        <<"    LVPL_voltage_sensor block state: "<<LVPL_voltage_sensor.get_state()<<endl
-                        <<"(5) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
-                        <<"(6) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
-                        <<"(7) terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
+            osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+                    <<"(1) Initial active current command = "<<get_initial_active_current_command_in_pu_based_on_mbase()<<endl
+                    <<"(2) Initial reactive current command = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
+                    <<"(3) Initial reactive voltage command = "<<get_initial_reactive_voltage_command_in_pu()<<endl
+                    <<"(4) States of blocks"<<endl
+                    <<"    active_current_commander block state: "<<active_current_commander.get_state()<<endl
+                    <<"    reactive_voltage_commander block state: "<<reactive_voltage_commander.get_state()<<endl
+                    <<"    LVPL_voltage_sensor block state: "<<LVPL_voltage_sensor.get_state()<<endl
+                    <<"(5) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
+                    <<"(6) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
+                    <<"(7) terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu";
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
 
 void PVGU1::run(DYNAMIC_MODE mode)
 {
-    PV_UNIT* pv_unit = get_pv_unit_pointer();
-    if(pv_unit!=NULL)
-    {
-        complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-        double V = steps_fast_complex_abs(Vxy);
+    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
+    double V = steps_fast_complex_abs(Vxy);
 
-        LVPL_voltage_sensor.set_input(V);
-        LVPL_voltage_sensor.run(mode);
+    LVPL_voltage_sensor.set_input(V);
+    LVPL_voltage_sensor.run(mode);
 
-        double lvpl_order = lvpl.get_LVPL_order(LVPL_voltage_sensor.get_output());
+    double lvpl_order = lvpl.get_LVPL_order(LVPL_voltage_sensor.get_output());
 
-        double IP = get_active_current_command_in_pu_based_on_mbase();
+    double IP = get_active_current_command_in_pu_based_on_mbase();
 
-        double input = active_current_commander.get_output();
-        if(input>lvpl_order)
-            input = lvpl_order;
+    double input = active_current_commander.get_output();
+    if(input>lvpl_order)
+        input = lvpl_order;
 
-        input = IP - input;
-        double lvpl_rate_max = get_LVPL_max_rate_of_active_current_change();
-        if(input>lvpl_rate_max)
-            input = lvpl_rate_max;
+    input = IP - input;
+    double lvpl_rate_max = get_LVPL_max_rate_of_active_current_change();
+    if(input>lvpl_rate_max)
+        input = lvpl_rate_max;
 
-        active_current_commander.set_input(input);
-        active_current_commander.run(mode);
+    active_current_commander.set_input(input);
+    active_current_commander.run(mode);
 
-        double EQ = get_reactive_voltage_command_in_pu();
+    double EQ = get_reactive_voltage_command_in_pu();
 
-        reactive_voltage_commander.set_input(EQ);
-        reactive_voltage_commander.run(mode);
+    reactive_voltage_commander.set_input(EQ);
+    reactive_voltage_commander.run(mode);
 
-        if(mode==UPDATE_MODE)
-            set_flag_model_updated_as_true();
-    }
+    if(mode==UPDATE_MODE)
+        set_flag_model_updated_as_true();
 }
 
 complex<double> PVGU1::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase()

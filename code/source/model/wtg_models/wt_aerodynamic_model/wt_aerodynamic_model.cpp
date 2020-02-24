@@ -82,14 +82,9 @@ string WT_AERODYNAMIC_MODEL::get_model_type() const
 double WT_AERODYNAMIC_MODEL::get_damping_in_pu() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen!=NULL)
-    {
-        WT_TURBINE_MODEL* turbine = gen->get_wt_turbine_model();
-        if(turbine!=NULL)
-            return turbine->get_damping_in_pu();
-        else
-            return 0.0;
-    }
+    WT_TURBINE_MODEL* turbine = gen->get_wt_turbine_model();
+    if(turbine!=NULL)
+        return turbine->get_damping_in_pu();
     else
         return 0.0;
 }
@@ -248,48 +243,32 @@ double WT_AERODYNAMIC_MODEL::get_min_steady_state_turbine_speed_in_pu() const
 double WT_AERODYNAMIC_MODEL::get_wind_speed_in_mps() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen!=NULL)
-    {
-        WIND_SPEED_MODEL* model = gen->get_wind_speed_model();
-        if(model!=NULL and model->is_model_initialized())
-            return model->get_wind_speed_in_mps();
-        else
-            return get_nominal_wind_speed_in_mps();
-    }
+    WIND_SPEED_MODEL* model = gen->get_wind_speed_model();
+    if(model!=NULL and model->is_model_initialized())
+        return model->get_wind_speed_in_mps();
     else
-        return 0.0;
-
+        return get_nominal_wind_speed_in_mps();
 }
 
 
 double WT_AERODYNAMIC_MODEL::get_pitch_angle_in_deg() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen!=NULL)
-    {
-        WT_PITCH_MODEL* model = gen->get_wt_pitch_model();
-        if(model!=NULL and model->is_model_initialized())
-            return model->get_pitch_angle_in_deg();
-        else
-            return get_initial_pitch_angle_in_deg();
-    }
+    WT_PITCH_MODEL* model = gen->get_wt_pitch_model();
+    if(model!=NULL and model->is_model_initialized())
+        return model->get_pitch_angle_in_deg();
     else
-        return 0.0;
+        return get_initial_pitch_angle_in_deg();
 }
 
 double WT_AERODYNAMIC_MODEL::get_turbine_speed_in_rad_per_s()
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen!=NULL)
-    {
-        WT_TURBINE_MODEL* model = gen->get_wt_turbine_model();
-        if(model!=NULL and model->is_model_initialized())
-            return model->get_turbine_speed_in_pu()*get_nominal_turbine_speed_in_rad_per_s();
-        else
-            return get_initial_turbine_speed_in_rad_per_s();
-    }
+    WT_TURBINE_MODEL* model = gen->get_wt_turbine_model();
+    if(model!=NULL and model->is_model_initialized())
+        return model->get_turbine_speed_in_pu()*get_nominal_turbine_speed_in_rad_per_s();
     else
-        return 0.0;
+        return get_initial_turbine_speed_in_rad_per_s();
 }
 
 double WT_AERODYNAMIC_MODEL::get_turbine_frequency_in_Hz()
@@ -322,67 +301,64 @@ void WT_AERODYNAMIC_MODEL::initialize()
     */
 
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen!=NULL)
+    WT_GENERATOR_MODEL* genmodel = gen->get_wt_generator_model();
+    if(genmodel!=NULL)
     {
-        WT_GENERATOR_MODEL* genmodel = gen->get_wt_generator_model();
-        if(genmodel!=NULL)
+        if(not genmodel->is_model_initialized())
+            genmodel->initialize();
+
+        setup_block_toolkit_and_parameters();
+
+        set_cpmax_at_zero_pitch();
+
+        initialize_wind_turbine_blade_radius_and_gear_ratio();
+        //current_turbine_speed_reference_without_limit_in_rad_per_s = get_turbine_reference_speed_in_rad_per_s_without_speed_limit();
+
+        double pmax = get_maximum_available_mechanical_power_per_wt_generator_in_MW(get_wind_speed_in_mps());
+        double cp_max = get_cpmax_at_zero_pitch();
+        double pmech = gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators()/get_gear_efficiency();
+        if(pmax<pmech)
         {
-            if(not genmodel->is_model_initialized())
-                genmodel->initialize();
+            osstream<<"Initialization error. Wind speed "<<get_wind_speed_in_mps()<<" m/s is not enough to generate power for "<<get_device_name()
+                   <<endl
+                   <<"Maximum available mechanical power is "<<pmax<<" MW with Cpmax = "<<cp_max<<" and MPPT lambda = "<<get_lambda_at_Cpmax(0.0)<<" at 0.0 pitch angle.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
 
-            setup_block_toolkit_and_parameters();
+        initialize_pitch_angle_and_turbine_speed();
 
-            set_cpmax_at_zero_pitch();
+        set_flag_model_initialized_as_true();
 
-            initialize_wind_turbine_blade_radius_and_gear_ratio();
-            //current_turbine_speed_reference_without_limit_in_rad_per_s = get_turbine_reference_speed_in_rad_per_s_without_speed_limit();
+        if(toolkit.is_detailed_log_enabled())
+        {
+            osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+                    <<"(1) Turbine radius is "<<get_turbine_blade_radius_in_m()<<" m"<<endl
+                    <<"(2) Gear turn ratio is "<<get_generator_to_turbine_gear_ratio()<<endl
+                    <<"(3) Initial turbine speed is "<<get_initial_turbine_speed_in_pu()<<" pu"<<endl
+                    <<"(4) Initial pitch angle is "<<get_initial_pitch_angle_in_deg()<<" deg"<<endl;
 
-            double pmax = get_maximum_available_mechanical_power_per_wt_generator_in_MW(get_wind_speed_in_mps());
-            double cp_max = get_cpmax_at_zero_pitch();
-            double pmech = gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators()/get_gear_efficiency();
-            if(pmax<pmech)
+            double lambda = get_initial_turbine_speed_in_rad_per_s()*get_turbine_blade_radius_in_m()/get_wind_speed_in_mps();
+            double pitch = get_initial_pitch_angle_in_deg();
+            double der = get_derivative_of_Cp_over_lambda(lambda, pitch);
+            osstream<<"With initial pitch angle and rotor speed, the initial operating point is located at the ";
+            if(fabs(der)<1e-5)
+                osstream<<"MPPT";
+            else
             {
-                osstream<<"Initialization error. Wind speed "<<get_wind_speed_in_mps()<<" m/s is not enough to generate power for "<<get_device_name()
-                       <<endl
-                       <<"Maximum available mechanical power is "<<pmax<<" MW with Cpmax = "<<cp_max<<" and MPPT lambda = "<<get_lambda_at_Cpmax(0.0)<<" at 0.0 pitch angle.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-
-            initialize_pitch_angle_and_turbine_speed();
-
-            set_flag_model_initialized_as_true();
-
-            if(toolkit.is_detailed_log_enabled())
-            {
-                osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
-                        <<"(1) Turbine radius is "<<get_turbine_blade_radius_in_m()<<" m"<<endl
-                        <<"(2) Gear turn ratio is "<<get_generator_to_turbine_gear_ratio()<<endl
-                        <<"(3) Initial turbine speed is "<<get_initial_turbine_speed_in_pu()<<" pu"<<endl
-                        <<"(4) Initial pitch angle is "<<get_initial_pitch_angle_in_deg()<<" deg"<<endl;
-
-                double lambda = get_initial_turbine_speed_in_rad_per_s()*get_turbine_blade_radius_in_m()/get_wind_speed_in_mps();
-                double pitch = get_initial_pitch_angle_in_deg();
-                double der = get_derivative_of_Cp_over_lambda(lambda, pitch);
-                osstream<<"With initial pitch angle and rotor speed, the initial operating point is located at the ";
-                if(fabs(der)<1e-5)
-                    osstream<<"MPPT";
+                if(der>0.0)
+                    osstream<<"ascending";
                 else
-                {
-                    if(der>0.0)
-                        osstream<<"ascending";
-                    else
-                        osstream<<"descending";
-                }
-                osstream<<" side of Cp curve (Cp v.s. w)";
-                double w0 = get_initial_turbine_speed_in_rad_per_s();
-                osstream<<"With pitch = "<<pitch<<" deg and initial w = "<<w0<<" rad/s, the near OPs are: "<<endl;
-                for(double w = w0-0.2; w<w0+0.21; w+=0.1)
-                {
-                    double pmax = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
-                    osstream<<pitch<<"deg, "<<w<<"rad/s, "<<pmax*get_number_of_lumped_wt_generators()<<"MW"<<endl;
-                }
-                toolkit.show_information_with_leading_time_stamp(osstream);
+                    osstream<<"descending";
             }
+            osstream<<" side of Cp curve (Cp v.s. w)";
+            double w0 = get_initial_turbine_speed_in_rad_per_s();
+            osstream<<"With pitch = "<<pitch<<" deg and initial w = "<<w0<<" rad/s, the near OPs are: "<<endl;
+            for(double w = w0-0.2; w<w0+0.21; w+=0.1)
+            {
+                double pmax = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
+                osstream<<pitch<<"deg, "<<w<<"rad/s, "<<pmax*get_number_of_lumped_wt_generators()<<"MW"<<endl;
+            }
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -626,152 +602,149 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
     }
 
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen!=NULL)
+    double D = get_damping_in_pu();
+    double mbase = get_mbase_in_MVA();
+    complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
+
+    complex<double> selec = gen->get_complex_generation_in_MVA();
+    complex<double> vterm = get_terminal_complex_voltage_in_pu();
+
+    selec /= mbase;
+    double iterm = steps_fast_complex_abs(selec)/ steps_fast_complex_abs(vterm);
+    selec += (iterm*iterm*zsource);
+
+    selec *= mbase;
+
+    double pelec = selec.real();
+    unsigned int n = get_number_of_lumped_wt_generators();
+    pelec /= n;
+
+    double vwind = get_wind_speed_in_mps();
+
+    double pmax = get_total_wind_power_per_wt_generator_in_MW(vwind);
+
+    double wn = get_nominal_turbine_speed_in_rad_per_s();
+
+    double pitch_low = 0.0, pitch_high = 0.0;
+    double pitch_step = 2.0;
+    double w_mppt_low = 0.0, w_mppt_high = 0.0;
+
+    w_mppt_low = get_mppt_speed_in_rad_per_s(pitch_low);
+
+    double w_low = (w_mppt_low-wn)/wn;
+    double cpmax_low = get_Cpmax(pitch_low);
+    //osstream<<"pitch_low = "<<pitch_low<<", w_mppt_low = "<<w_mppt_low<<", w_low = "<<w_low<<", pmechmax = "<<pmax*cpmax_low;
+    //show_information_with_leading_time_stamp(osstream);
+    double pmech_low = pelec+(D*w_low)*(w_mppt_low/wn)*(mbase/n);
+    if(pmech_low<=pmax*cpmax_low)
     {
-        double D = get_damping_in_pu();
-        double mbase = get_mbase_in_MVA();
-        complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
-
-        complex<double> selec = gen->get_complex_generation_in_MVA();
-        complex<double> vterm = get_terminal_complex_voltage_in_pu();
-
-        selec /= mbase;
-        double iterm = steps_fast_complex_abs(selec)/ steps_fast_complex_abs(vterm);
-        selec += (iterm*iterm*zsource);
-
-        selec *= mbase;
-
-        double pelec = selec.real();
-        unsigned int n = get_number_of_lumped_wt_generators();
-        pelec /= n;
-
-        double vwind = get_wind_speed_in_mps();
-
-        double pmax = get_total_wind_power_per_wt_generator_in_MW(vwind);
-
-        double wn = get_nominal_turbine_speed_in_rad_per_s();
-
-        double pitch_low = 0.0, pitch_high = 0.0;
-        double pitch_step = 2.0;
-        double w_mppt_low = 0.0, w_mppt_high = 0.0;
-
-        w_mppt_low = get_mppt_speed_in_rad_per_s(pitch_low);
-
-        double w_low = (w_mppt_low-wn)/wn;
-        double cpmax_low = get_Cpmax(pitch_low);
-        //osstream<<"pitch_low = "<<pitch_low<<", w_mppt_low = "<<w_mppt_low<<", w_low = "<<w_low<<", pmechmax = "<<pmax*cpmax_low;
-        //show_information_with_leading_time_stamp(osstream);
-        double pmech_low = pelec+(D*w_low)*(w_mppt_low/wn)*(mbase/n);
-        if(pmech_low<=pmax*cpmax_low)
+        if(fabs(pmech_low-pmax*cpmax_low)>FLOAT_EPSILON)
         {
-            if(fabs(pmech_low-pmax*cpmax_low)>FLOAT_EPSILON)
+            unsigned int iter_max = 100;
+            unsigned int iter = 0;
+
+            while(true)
             {
-                unsigned int iter_max = 100;
-                unsigned int iter = 0;
+                pitch_high = pitch_low+pitch_step;
+                w_mppt_high = get_mppt_speed_in_rad_per_s(pitch_high);
 
-                while(true)
+                double w_high = (w_mppt_high-wn)/wn;
+                double cpmax_high = get_Cpmax(pitch_high);
+                double pmech_high = pelec+(D*w_high)*(w_mppt_high/wn)*(mbase/n);
+                if(pmech_high<=pmax*cpmax_high)
                 {
-                    pitch_high = pitch_low+pitch_step;
-                    w_mppt_high = get_mppt_speed_in_rad_per_s(pitch_high);
-
-                    double w_high = (w_mppt_high-wn)/wn;
-                    double cpmax_high = get_Cpmax(pitch_high);
-                    double pmech_high = pelec+(D*w_high)*(w_mppt_high/wn)*(mbase/n);
-                    if(pmech_high<=pmax*cpmax_high)
+                    pitch_low = pitch_high;
+                    w_mppt_low = w_mppt_high;
+                }
+                else
+                    break;
+                ++iter;
+                if(iter>iter_max)
+                {
+                    if(toolkit.is_detailed_log_enabled())
                     {
-                        pitch_low = pitch_high;
-                        w_mppt_low = w_mppt_high;
+                        osstream<<"Warning. Failed to exit loop within "<<iter_max<<" iterations @ line "<<__LINE__<<" of "<<__FILE__;
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                     }
+                    break;
+                }
+            }
+            iter = 0;
+            while(true)
+            {
+                double pitch = 0.5*(pitch_low+pitch_high);
+                double w_mppt = get_mppt_speed_in_rad_per_s(pitch);
+                double w = (w_mppt-wn)/wn;
+                double pmech = pelec+(D*w)*(w_mppt/wn)*(mbase/n);
+                double cpmax = get_Cpmax(pitch);
+
+                //osstream<<"pitch = "<<pitch<<", w_mppt = "<<w_mppt<<", w = "<<w<<", pmechmax = "<<pmax*cpmax;
+                //show_information_with_leading_time_stamp(osstream);
+                if(fabs(pmech-pmax*cpmax)>FLOAT_EPSILON)
+                {
+                    if(pmech>pmax*cpmax)
+                        pitch_high = pitch;
                     else
-                        break;
+                        pitch_low = pitch;
+
                     ++iter;
                     if(iter>iter_max)
                     {
-                        if(toolkit.is_detailed_log_enabled())
-                        {
-                            osstream<<"Warning. Failed to exit loop within "<<iter_max<<" iterations @ line "<<__LINE__<<" of "<<__FILE__;
-                            toolkit.show_information_with_leading_time_stamp(osstream);
-                        }
-                        break;
-                    }
-                }
-                iter = 0;
-                while(true)
-                {
-                    double pitch = 0.5*(pitch_low+pitch_high);
-                    double w_mppt = get_mppt_speed_in_rad_per_s(pitch);
-                    double w = (w_mppt-wn)/wn;
-                    double pmech = pelec+(D*w)*(w_mppt/wn)*(mbase/n);
-                    double cpmax = get_Cpmax(pitch);
-
-                    //osstream<<"pitch = "<<pitch<<", w_mppt = "<<w_mppt<<", w = "<<w<<", pmechmax = "<<pmax*cpmax;
-                    //show_information_with_leading_time_stamp(osstream);
-                    if(fabs(pmech-pmax*cpmax)>FLOAT_EPSILON)
-                    {
-                        if(pmech>pmax*cpmax)
-                            pitch_high = pitch;
-                        else
-                            pitch_low = pitch;
-
-                        ++iter;
-                        if(iter>iter_max)
-                        {
-                            osstream<<"Warning. Failed to initialize pitch angle and turbine speed within "<<iter_max<<" iterations when turbine speed mode is WT_MPPT_MODE."<<endl
-                                    <<"Initial pitch angle is set as "<<pitch<<" deg, and initial turbine speed is set as "<<w_mppt<<" rad/s";
-                            toolkit.show_information_with_leading_time_stamp(osstream);
-                            set_initial_pitch_angle_in_deg(pitch);
-                            set_initial_turbine_speed_in_rad_per_s(w_mppt);
-                            break;
-                        }
-                    }
-                    else
-                    {
+                        osstream<<"Warning. Failed to initialize pitch angle and turbine speed within "<<iter_max<<" iterations when turbine speed mode is WT_MPPT_MODE."<<endl
+                                <<"Initial pitch angle is set as "<<pitch<<" deg, and initial turbine speed is set as "<<w_mppt<<" rad/s";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                         set_initial_pitch_angle_in_deg(pitch);
                         set_initial_turbine_speed_in_rad_per_s(w_mppt);
                         break;
                     }
                 }
-
-                double w = get_initial_turbine_speed_in_rad_per_s();
-                double wmax = get_max_steady_state_turbine_speed_in_pu();
-                double wmin = get_min_steady_state_turbine_speed_in_pu();
-                if(w>wmax*wn)
+                else
                 {
-                    if(toolkit.is_detailed_log_enabled())
-                    {
-                        osstream<<"In WT_MPPT_MODE, initialized turbine speed = "<<w<<" rad/s, greater than wmax = "<<wmax*wn<<" rad/s."<<endl
-                                <<"Initial turbine speed will be set as wmax = "<<wmax*wn<<" rad/s";
-                        toolkit.show_information_with_leading_time_stamp(osstream);
-                    }
-                    set_initial_turbine_speed_in_rad_per_s(wmax*wn);
-                    initialize_pitch_angle();
-                    return;
-                }
-                if(w<wmin*wn)
-                {
-                    if(toolkit.is_detailed_log_enabled())
-                    {
-                        osstream<<"In WT_MPPT_MODE, initialized turbine speed = "<<w<<" rad/s, less than wmin = "<<wmin*wn<<" rad/s."<<endl
-                                <<"Initial turbine speed will be set as wmin = "<<wmin*wn<<" rad/s";
-                        toolkit.show_information_with_leading_time_stamp(osstream);
-                    }
-                    set_initial_turbine_speed_in_rad_per_s(wmin*wn);
-                    initialize_pitch_angle();
-                    return;
+                    set_initial_pitch_angle_in_deg(pitch);
+                    set_initial_turbine_speed_in_rad_per_s(w_mppt);
+                    break;
                 }
             }
-            else
+
+            double w = get_initial_turbine_speed_in_rad_per_s();
+            double wmax = get_max_steady_state_turbine_speed_in_pu();
+            double wmin = get_min_steady_state_turbine_speed_in_pu();
+            if(w>wmax*wn)
             {
-                set_initial_pitch_angle_in_deg(pitch_low);
-                set_initial_turbine_speed_in_rad_per_s(w_mppt_low);
+                if(toolkit.is_detailed_log_enabled())
+                {
+                    osstream<<"In WT_MPPT_MODE, initialized turbine speed = "<<w<<" rad/s, greater than wmax = "<<wmax*wn<<" rad/s."<<endl
+                            <<"Initial turbine speed will be set as wmax = "<<wmax*wn<<" rad/s";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                set_initial_turbine_speed_in_rad_per_s(wmax*wn);
+                initialize_pitch_angle();
+                return;
+            }
+            if(w<wmin*wn)
+            {
+                if(toolkit.is_detailed_log_enabled())
+                {
+                    osstream<<"In WT_MPPT_MODE, initialized turbine speed = "<<w<<" rad/s, less than wmin = "<<wmin*wn<<" rad/s."<<endl
+                            <<"Initial turbine speed will be set as wmin = "<<wmin*wn<<" rad/s";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                set_initial_turbine_speed_in_rad_per_s(wmin*wn);
+                initialize_pitch_angle();
+                return;
             }
         }
         else
         {
-            osstream<<"Error. Mechanical power with Cpmax at 0 pitch angle is less than required mechanical power."<<endl
-                    <<"Initialization of "<<get_model_name()<<" of "<<get_device_name()<<" failed.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            set_initial_pitch_angle_in_deg(pitch_low);
+            set_initial_turbine_speed_in_rad_per_s(w_mppt_low);
         }
+    }
+    else
+    {
+        osstream<<"Error. Mechanical power with Cpmax at 0 pitch angle is less than required mechanical power."<<endl
+                <<"Initialization of "<<get_model_name()<<" of "<<get_device_name()<<" failed.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -781,123 +754,120 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
     STEPS& toolkit = get_toolkit();
 
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen!=NULL)
+    double D = get_damping_in_pu();
+    double mbase = get_mbase_in_MVA();
+    complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
+
+    complex<double> selec = gen->get_complex_generation_in_MVA();
+    complex<double> vterm = get_terminal_complex_voltage_in_pu();
+
+    selec /= mbase;
+    double iterm = steps_fast_complex_abs(selec)/ steps_fast_complex_abs(vterm);
+    selec += (iterm*iterm*zsource);
+
+    selec *= mbase;
+
+    double pelec = selec.real();
+    unsigned int n = get_number_of_lumped_wt_generators();
+    pelec /= n;
+
+    double pn = get_rated_power_per_wt_generator_in_MW();
+
+    if(pelec<=pn)
     {
-        double D = get_damping_in_pu();
-        double mbase = get_mbase_in_MVA();
-        complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
+        double wn = get_nominal_turbine_speed_in_rad_per_s();
+        double w = get_initial_turbine_speed_in_rad_per_s();
+        double dspeed = (w-wn)/wn;
+        double pdamp = D*dspeed*(mbase/wn)*w/n;
+        double eta = get_gear_efficiency();
+        double pmech = (pelec+pdamp)/eta;
 
-        complex<double> selec = gen->get_complex_generation_in_MVA();
-        complex<double> vterm = get_terminal_complex_voltage_in_pu();
+        double pitch_low = 0.0, pitch_high = 0.0;
+        double pitch_step = 2.0;
 
-        selec /= mbase;
-        double iterm = steps_fast_complex_abs(selec)/ steps_fast_complex_abs(vterm);
-        selec += (iterm*iterm*zsource);
+        set_initial_pitch_angle_in_deg(pitch_low);
+        double pwind = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
 
-        selec *= mbase;
-
-        double pelec = selec.real();
-        unsigned int n = get_number_of_lumped_wt_generators();
-        pelec /= n;
-
-        double pn = get_rated_power_per_wt_generator_in_MW();
-
-        if(pelec<=pn)
+        unsigned int iter_count = 0, iter_max = 100;
+        while(true)
         {
-            double wn = get_nominal_turbine_speed_in_rad_per_s();
-            double w = get_initial_turbine_speed_in_rad_per_s();
-            double dspeed = (w-wn)/wn;
-            double pdamp = D*dspeed*(mbase/wn)*w/n;
-            double eta = get_gear_efficiency();
-            double pmech = (pelec+pdamp)/eta;
+            pitch_high = pitch_low + pitch_step;
 
-            double pitch_low = 0.0, pitch_high = 0.0;
-            double pitch_step = 2.0;
+            set_initial_pitch_angle_in_deg(pitch_high);
+            pwind = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
 
-            set_initial_pitch_angle_in_deg(pitch_low);
-            double pwind = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
-
-            unsigned int iter_count = 0, iter_max = 100;
-            while(true)
+            if(pwind>pelec)
+                pitch_low = pitch_high;
+            else
+                break;
+            ++iter_count;
+            if(iter_count<=iter_max)
+                ;
+            else
             {
-                pitch_high = pitch_low + pitch_step;
+                osstream<<"Warning. Failed to exit loop within "<<iter_max<<" iterations @ line "<<__LINE__<<" of "<<__FILE__;
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                break;
+            }
+        }
 
-                set_initial_pitch_angle_in_deg(pitch_high);
-                pwind = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
+        set_initial_pitch_angle_in_deg(pitch_low);
+        double pwind_low = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
+        set_initial_pitch_angle_in_deg(pitch_high);
+        double pwind_high = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
 
-                if(pwind>pelec)
-                    pitch_low = pitch_high;
-                else
-                    break;
+        osstream<<"Desired pmech = "<<pmech<<" MW (per wind turbine)"<<endl
+                <<"Initial pitch angle: low pitch = "<<pitch_low<<" deg, pmech = "<<pwind_low<<" MW"<<endl
+                <<"                     high pitch = "<<pitch_high<<" deg, pmech = "<<pwind_high<<" MW"<<endl;
+
+        iter_count = 0;
+        while(true)
+        {
+            double pitch_new = 0.5*(pitch_low+pitch_high);
+            set_initial_pitch_angle_in_deg(pitch_new);
+            double pnew = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
+            osstream<<"Iteration "<<iter_count<<": pitch = "<<pitch_new<<" deg, pmech = "<<pnew<<" MW"<<endl;
+
+            if(fabs(pnew-pmech)>FLOAT_EPSILON)
+            {
+                if(pnew>pmech)
+                    pitch_low = pitch_new;
+                if(pnew<pmech)
+                    pitch_high = pitch_new;
+
                 ++iter_count;
                 if(iter_count<=iter_max)
                     ;
                 else
                 {
-                    osstream<<"Warning. Failed to exit loop within "<<iter_max<<" iterations @ line "<<__LINE__<<" of "<<__FILE__;
+                    string iteration_info = osstream.str();
+                    osstream.str("");
+
+                    osstream<<"Error. Failed to get initial pitch angle in "<<iter_max<<" iterations."<<endl
+                            <<"Pitch angle is initialized as "<<pitch_new<<" deg."<<endl
+                            <<"Check "<<get_model_name()<<" model of "<<get_device_name()<<endl
+                            <<"Below are iteration:"<<endl
+                            <<iteration_info;
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     break;
                 }
             }
-
-            set_initial_pitch_angle_in_deg(pitch_low);
-            double pwind_low = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
-            set_initial_pitch_angle_in_deg(pitch_high);
-            double pwind_high = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
-
-            osstream<<"Desired pmech = "<<pmech<<" MW (per wind turbine)"<<endl
-                    <<"Initial pitch angle: low pitch = "<<pitch_low<<" deg, pmech = "<<pwind_low<<" MW"<<endl
-                    <<"                     high pitch = "<<pitch_high<<" deg, pmech = "<<pwind_high<<" MW"<<endl;
-
-            iter_count = 0;
-            while(true)
+            else
             {
-                double pitch_new = 0.5*(pitch_low+pitch_high);
-                set_initial_pitch_angle_in_deg(pitch_new);
-                double pnew = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
-                osstream<<"Iteration "<<iter_count<<": pitch = "<<pitch_new<<" deg, pmech = "<<pnew<<" MW"<<endl;
-
-                if(fabs(pnew-pmech)>FLOAT_EPSILON)
+                osstream<<__FUNCTION__<<"() takes "<<iter_count<<" iterations.";
+                if(toolkit.is_detailed_log_enabled())
                 {
-                    if(pnew>pmech)
-                        pitch_low = pitch_new;
-                    if(pnew<pmech)
-                        pitch_high = pitch_new;
-
-                    ++iter_count;
-                    if(iter_count<=iter_max)
-                        ;
-                    else
-                    {
-                        string iteration_info = osstream.str();
-                        osstream.str("");
-
-                        osstream<<"Error. Failed to get initial pitch angle in "<<iter_max<<" iterations."<<endl
-                                <<"Pitch angle is initialized as "<<pitch_new<<" deg."<<endl
-                                <<"Check "<<get_model_name()<<" model of "<<get_device_name()<<endl
-                                <<"Below are iteration:"<<endl
-                                <<iteration_info;
-                        toolkit.show_information_with_leading_time_stamp(osstream);
-                        break;
-                    }
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                 }
-                else
-                {
-                    osstream<<__FUNCTION__<<"() takes "<<iter_count<<" iterations.";
-                    if(toolkit.is_detailed_log_enabled())
-                    {
-                        toolkit.show_information_with_leading_time_stamp(osstream);
-                    }
-                    break;
-                }
+                break;
             }
         }
-        else
-        {
-            osstream<<"Error when getting initial turbine speed of "<<get_model_name()<<" model of "<<get_device_name()<<". Initial power exceeds WT nominal power.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-            return;
-        }
+    }
+    else
+    {
+        osstream<<"Error when getting initial turbine speed of "<<get_model_name()<<" model of "<<get_device_name()<<". Initial power exceeds WT nominal power.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
     }
 }
 
@@ -965,36 +935,31 @@ double WT_AERODYNAMIC_MODEL::get_turbine_reference_speed_in_rad_per_s_without_sp
     ostringstream osstream;
 
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen!=NULL)
+    WT_GENERATOR_MODEL* wtgenmodel = gen->get_wt_generator_model();
+    if(wtgenmodel!=NULL)
     {
-        WT_GENERATOR_MODEL* wtgenmodel = gen->get_wt_generator_model();
-        if(wtgenmodel!=NULL)
-        {
-            complex<double> selec = wtgenmodel->get_terminal_complex_power_in_MVA();
-            double iterm = wtgenmodel->get_terminal_current_in_pu_based_on_mbase();
-            complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
-            double mbase = get_mbase_in_MVA();
-            selec += (iterm*iterm*zsource)*mbase;
+        complex<double> selec = wtgenmodel->get_terminal_complex_power_in_MVA();
+        double iterm = wtgenmodel->get_terminal_current_in_pu_based_on_mbase();
+        complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
+        double mbase = get_mbase_in_MVA();
+        selec += (iterm*iterm*zsource)*mbase;
 
-            unsigned int n = get_number_of_lumped_wt_generators();
-            selec /= n;
+        unsigned int n = get_number_of_lumped_wt_generators();
+        selec /= n;
 
-            double pelec = selec.real();
+        double pelec = selec.real();
 
-            double pitch = get_pitch_angle_in_deg();
-            if(fabs(get_current_pelec_including_loss_per_turbine_in_MW()-pelec)<FLOAT_EPSILON and
-               fabs(get_current_pitch_angle_in_deg()-pitch)<FLOAT_EPSILON)
-                return get_current_turbine_speed_reference_without_limit_in_rad_per_s();
-            else
-            {
-                set_current_pitch_angle_in_deg(pitch);
-                set_current_pelec_including_loss_per_turbine_in_MW(pelec);
-                update_current_turbine_speed_reference_without_limit();
-                return get_current_turbine_speed_reference_without_limit_in_rad_per_s();
-            }
-        }
+        double pitch = get_pitch_angle_in_deg();
+        if(fabs(get_current_pelec_including_loss_per_turbine_in_MW()-pelec)<FLOAT_EPSILON and
+           fabs(get_current_pitch_angle_in_deg()-pitch)<FLOAT_EPSILON)
+            return get_current_turbine_speed_reference_without_limit_in_rad_per_s();
         else
-            return 0.0;
+        {
+            set_current_pitch_angle_in_deg(pitch);
+            set_current_pelec_including_loss_per_turbine_in_MW(pelec);
+            update_current_turbine_speed_reference_without_limit();
+            return get_current_turbine_speed_reference_without_limit_in_rad_per_s();
+        }
     }
     else
         return 0.0;

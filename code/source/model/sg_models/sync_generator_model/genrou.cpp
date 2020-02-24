@@ -68,21 +68,18 @@ void GENROU::update_source_impedance()
 {
     STEPS& toolkit = get_toolkit();
     GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
+    complex<double> Z(get_Rs(),get_Xpp());
+    complex<double> Zsource = generator->get_source_impedance_in_pu();
+    if(Zsource.imag()!=Z.imag())
     {
-        complex<double> Z(get_Rs(),get_Xpp());
-        complex<double> Zsource = generator->get_source_impedance_in_pu();
-        if(Zsource.imag()!=Z.imag())
-        {
-            ostringstream osstream;
-            osstream<<"Warning. The subtransient reactance ("<<get_Xpp()<<") is not equal to generator source reactance ("<<Zsource.imag()<<") for '"<<get_model_name()<<"' of "<<get_device_name()<<"."<<endl
-              <<"Source reactance will be updated with subtransient reactance.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-            Zsource = complex<double>(Zsource.real(), Z.imag());
-            generator->set_source_impedance_in_pu(Zsource);
-        }
-        set_Rs(Zsource.real());
+        ostringstream osstream;
+        osstream<<"Warning. The subtransient reactance ("<<get_Xpp()<<") is not equal to generator source reactance ("<<Zsource.imag()<<") for '"<<get_model_name()<<"' of "<<get_device_name()<<"."<<endl
+          <<"Source reactance will be updated with subtransient reactance.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        Zsource = complex<double>(Zsource.real(), Z.imag());
+        generator->set_source_impedance_in_pu(Zsource);
     }
+    set_Rs(Zsource.real());
 }
 
 bool GENROU::setup_model_with_steps_string_vector(vector<string>& data)

@@ -335,21 +335,16 @@ double SYNC_GENERATOR_MODEL::get_initial_excitation_voltage_in_pu() const
 double SYNC_GENERATOR_MODEL::get_mechanical_power_in_pu_based_on_mbase() const
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator != NULL)
+    TURBINE_GOVERNOR_MODEL* turbine_governor = generator->get_turbine_governor_model();
+    if(turbine_governor != NULL)
     {
-        TURBINE_GOVERNOR_MODEL* turbine_governor = generator->get_turbine_governor_model();
-        if(turbine_governor != NULL)
-        {
-            if(turbine_governor->is_model_initialized())
-                return turbine_governor->get_mechanical_power_in_pu_based_on_mbase();
-            else
-                return get_initial_mechanical_power_in_pu_based_on_mbase();
-        }
+        if(turbine_governor->is_model_initialized())
+            return turbine_governor->get_mechanical_power_in_pu_based_on_mbase();
         else
             return get_initial_mechanical_power_in_pu_based_on_mbase();
     }
     else
-        return 0.0;
+        return get_initial_mechanical_power_in_pu_based_on_mbase();
 }
 
 double SYNC_GENERATOR_MODEL::get_mechanical_power_in_MW() const
@@ -360,21 +355,16 @@ double SYNC_GENERATOR_MODEL::get_mechanical_power_in_MW() const
 double SYNC_GENERATOR_MODEL::get_excitation_voltage_in_pu()
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator != NULL)
+    EXCITER_MODEL* exciter = generator->get_exciter_model();
+    if(exciter != NULL)
     {
-        EXCITER_MODEL* exciter = generator->get_exciter_model();
-        if(exciter != NULL)
-        {
-            if(exciter->is_model_initialized())
-                return exciter->get_excitation_voltage_in_pu();
-            else
-                return get_initial_excitation_voltage_in_pu();
-        }
+        if(exciter->is_model_initialized())
+            return exciter->get_excitation_voltage_in_pu();
         else
             return get_initial_excitation_voltage_in_pu();
     }
     else
-        return 0.0;
+        return get_initial_excitation_voltage_in_pu();
 }
 
 
@@ -391,16 +381,12 @@ void SYNC_GENERATOR_MODEL::setup_block_toolkit_and_parameters()
 
 void SYNC_GENERATOR_MODEL::set_rotor_angle_in_deg(double angle)
 {
-    INTEGRAL_BLOCK* rotor_angle_block = get_rotor_angle_block();
-
-    rotor_angle_block->set_output(deg2rad(angle));
-    rotor_angle_block->initialize(); // the initialize function is used to update STORE
+    rotor_angle_block.set_output(deg2rad(angle));
+    rotor_angle_block.initialize(); // the initialize function is used to update STORE
 }
 
 void SYNC_GENERATOR_MODEL::set_rotor_speed_deviation_in_pu(double speed)
 {
-    INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
-
-    rotor_speed_block->set_output(speed);
-    rotor_speed_block->initialize();
+    rotor_speed_block.set_output(speed);
+    rotor_speed_block.initialize();
 }

@@ -943,165 +943,162 @@ void URCSCT::initialize()
     if(not is_model_initialized())
     {
         GENERATOR* generator = get_generator_pointer();
-        if(generator!=NULL)
+        SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+        if(gen_model!=NULL)
         {
-            SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-            if(gen_model!=NULL)
+            if(not gen_model->is_model_initialized())
+                gen_model->initialize();
+
+            setup_block_toolkit_and_parameters();
+
+            STEPS& toolkit = get_toolkit();
+            double time = toolkit.get_dynamic_simulation_time_in_s();
+
+            double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
+            double mbase = get_mbase_in_MVA();
+
+            double pplant = pmech0*mbase;
+            double slope=0.0, psteam = 0.0, pgas = 0.0;
+            if(pplant<=PoutB)
             {
-                if(not gen_model->is_model_initialized())
-                    gen_model->initialize();
-
-                setup_block_toolkit_and_parameters();
-
-                STEPS& toolkit = get_toolkit();
-                double time = toolkit.get_dynamic_simulation_time_in_s();
-
-                double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
-                double mbase = get_mbase_in_MVA();
-
-                double pplant = pmech0*mbase;
-                double slope=0.0, psteam = 0.0, pgas = 0.0;
-                if(pplant<=PoutB)
+                slope = (PoutB-PoutA)/(SToutB-SToutA);
+                double deltaS = 0.0;
+                deltaS = (pplant-PoutA)/slope;
+                psteam = SToutA + deltaS;
+                if(psteam<0.0)
+                    psteam = 0.0;
+            }
+            else
+            {
+                if(pplant<=PoutC)
                 {
-                    slope = (PoutB-PoutA)/(SToutB-SToutA);
+                    slope = (PoutC-PoutB)/(SToutC-SToutB);
                     double deltaS = 0.0;
-                    deltaS = (pplant-PoutA)/slope;
-                    psteam = SToutA + deltaS;
-                    if(psteam<0.0)
-                        psteam = 0.0;
+                    deltaS = (pplant-PoutB)/slope;
+                    psteam = SToutB + deltaS;
                 }
                 else
                 {
-                    if(pplant<=PoutC)
+                    double ptotal = ST+get_gas_Prate_in_MW();
+                    if(pplant<=ptotal)
                     {
-                        slope = (PoutC-PoutB)/(SToutC-SToutB);
+                        slope = (ptotal-PoutC)/(ST-SToutC);
                         double deltaS = 0.0;
-                        deltaS = (pplant-PoutB)/slope;
-                        psteam = SToutB + deltaS;
+                        deltaS = (pplant-PoutC)/slope;
+                        psteam = SToutC + deltaS;
                     }
                     else
                     {
-                        double ptotal = ST+get_gas_Prate_in_MW();
-                        if(pplant<=ptotal)
-                        {
-                            slope = (ptotal-PoutC)/(ST-SToutC);
-                            double deltaS = 0.0;
-                            deltaS = (pplant-PoutC)/slope;
-                            psteam = SToutC + deltaS;
-                        }
-                        else
-                        {
-                            psteam = ST;
-                            osstream<<"Initialization error. Total mechanical power of URCSCT model of "<<get_device_name()<<" exceeds sum of steam and gas turbine nominal power. \n"
-                                    <<"Mechanical power is "<<pplant<<"MW. Gas turbine nominal power is "<<get_gas_Prate_in_MW()<<"MW. Steam turbine nominal power is "<<ST<<"MW.";
-                            toolkit.show_information_with_leading_time_stamp(osstream);
-                        }
+                        psteam = ST;
+                        osstream<<"Initialization error. Total mechanical power of URCSCT model of "<<get_device_name()<<" exceeds sum of steam and gas turbine nominal power. \n"
+                                <<"Mechanical power is "<<pplant<<"MW. Gas turbine nominal power is "<<get_gas_Prate_in_MW()<<"MW. Steam turbine nominal power is "<<ST<<"MW.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                     }
                 }
-                pgas = pplant-psteam;//MW
-
-                double prate = get_gas_Prate_in_MW();
-
-                double f2 = pgas/prate;
-                double wf2 = (f2-get_gas_af2())/get_gas_bf2();
-
-                gas_turbine_dynamic.set_output(wf2);
-                gas_turbine_dynamic.initialize();
-
-                gas_combustor.initialize_buffer(time, wf2);
-
-                gas_turbine_exhaust.initialize_buffer(time, wf2);
-
-                double wf1 = wf2;
-
-                double f1 = get_gas_TR_in_deg() - get_gas_af1()*(1.0-wf1);
-
-                gas_radiation_shield.set_output(f1*get_gas_K5());
-                gas_radiation_shield.initialize();
-
-                gas_thermocouple.set_output((get_gas_K4()+get_gas_K5())*f1);
-                gas_thermocouple.initialize();
-
-                gas_temperature_control.set_output(get_gas_max_in_pu());
-                gas_temperature_control.initialize();
-
-                gas_fuel_system.set_output(wf2);
-                gas_fuel_system.initialize();
-
-                gas_valve_positioner.set_output(wf2);
-                gas_valve_positioner.initialize();
-
-                double gfc = gas_valve_positioner.get_input()+get_gas_Kf()*wf2-get_gas_K6();
-                gas_fuel_control.initialize_buffer(time, gfc);
-
-                double output = gfc/get_gas_K3();
-                if(output>get_gas_max_in_pu())
-                {
-                    osstream<<"Initialization error. Governor of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-                      <<"Governor is "<<output<<", and max is "<<get_gas_max_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-                if(output<get_gas_min_in_pu())
-                {
-                    osstream<<"Initialization error. Governor of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-                      <<"Governor is "<<output<<", and min is "<<get_gas_min_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-
-                double input = 0.0;
-                if(get_gas_Z()!=0.0)
-                {
-                    gas_governor_droop.set_output(output);
-                    gas_governor_droop.initialize();
-                    input = gas_governor_droop.get_input();
-                }
-                else
-                {
-                    gas_governor_iso.set_output(output);
-                    gas_governor_iso.initialize();
-                    input = gas_governor_iso.get_input();
-                }
-                set_initial_mechanical_power_reference_in_pu_based_on_mbase(input);
-
-
-                psteam = psteam/ST;
-
-                droop.set_output(0.0);
-                droop.initialize();
-
-                double sumK=get_K1()+get_K3()+get_K5()+get_K7();
-
-                double valve = psteam/sumK;
-
-                if(valve>get_Pmax_in_pu())
-                {
-                    osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-                      <<"Valve is "<<valve<<", and Pmax is "<<get_Pmax_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-                if(valve<get_Pmin_in_pu())
-                {
-                    osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-                      <<"Valve is "<<valve<<", and Pmin is "<<get_Pmin_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-
-                servo_motor.set_output(valve);
-                delayer1.set_output(valve);
-                delayer2.set_output(valve);
-                delayer3.set_output(valve);
-                delayer4.set_output(valve);
-
-                servo_motor.initialize();
-                delayer1.initialize();
-                delayer2.initialize();
-                delayer3.initialize();
-                delayer4.initialize();
-
-                steam_pmech_ref = valve;
-
-                set_flag_model_initialized_as_true();
             }
+            pgas = pplant-psteam;//MW
+
+            double prate = get_gas_Prate_in_MW();
+
+            double f2 = pgas/prate;
+            double wf2 = (f2-get_gas_af2())/get_gas_bf2();
+
+            gas_turbine_dynamic.set_output(wf2);
+            gas_turbine_dynamic.initialize();
+
+            gas_combustor.initialize_buffer(time, wf2);
+
+            gas_turbine_exhaust.initialize_buffer(time, wf2);
+
+            double wf1 = wf2;
+
+            double f1 = get_gas_TR_in_deg() - get_gas_af1()*(1.0-wf1);
+
+            gas_radiation_shield.set_output(f1*get_gas_K5());
+            gas_radiation_shield.initialize();
+
+            gas_thermocouple.set_output((get_gas_K4()+get_gas_K5())*f1);
+            gas_thermocouple.initialize();
+
+            gas_temperature_control.set_output(get_gas_max_in_pu());
+            gas_temperature_control.initialize();
+
+            gas_fuel_system.set_output(wf2);
+            gas_fuel_system.initialize();
+
+            gas_valve_positioner.set_output(wf2);
+            gas_valve_positioner.initialize();
+
+            double gfc = gas_valve_positioner.get_input()+get_gas_Kf()*wf2-get_gas_K6();
+            gas_fuel_control.initialize_buffer(time, gfc);
+
+            double output = gfc/get_gas_K3();
+            if(output>get_gas_max_in_pu())
+            {
+                osstream<<"Initialization error. Governor of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                  <<"Governor is "<<output<<", and max is "<<get_gas_max_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            if(output<get_gas_min_in_pu())
+            {
+                osstream<<"Initialization error. Governor of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                  <<"Governor is "<<output<<", and min is "<<get_gas_min_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+
+            double input = 0.0;
+            if(get_gas_Z()!=0.0)
+            {
+                gas_governor_droop.set_output(output);
+                gas_governor_droop.initialize();
+                input = gas_governor_droop.get_input();
+            }
+            else
+            {
+                gas_governor_iso.set_output(output);
+                gas_governor_iso.initialize();
+                input = gas_governor_iso.get_input();
+            }
+            set_initial_mechanical_power_reference_in_pu_based_on_mbase(input);
+
+
+            psteam = psteam/ST;
+
+            droop.set_output(0.0);
+            droop.initialize();
+
+            double sumK=get_K1()+get_K3()+get_K5()+get_K7();
+
+            double valve = psteam/sumK;
+
+            if(valve>get_Pmax_in_pu())
+            {
+                osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                  <<"Valve is "<<valve<<", and Pmax is "<<get_Pmax_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            if(valve<get_Pmin_in_pu())
+            {
+                osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                  <<"Valve is "<<valve<<", and Pmin is "<<get_Pmin_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+
+            servo_motor.set_output(valve);
+            delayer1.set_output(valve);
+            delayer2.set_output(valve);
+            delayer3.set_output(valve);
+            delayer4.set_output(valve);
+
+            servo_motor.initialize();
+            delayer1.initialize();
+            delayer2.initialize();
+            delayer3.initialize();
+            delayer4.initialize();
+
+            steam_pmech_ref = valve;
+
+            set_flag_model_initialized_as_true();
         }
     }
 }

@@ -313,40 +313,37 @@ void PUFLS::initialize()
         return;
 
     LOAD* load = get_load_pointer();
-    if(load!=NULL)
+    setup_block_toolkit_and_parameters();
+
+    STEPS& toolkit = get_toolkit();
+
+    double fbase = get_bus_base_frequency_in_Hz();
+
+    additional_stage_timer.set_attached_device(load);
+    for(unsigned int stage=0; stage!=STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
+        discrete_stage_timer[stage].set_attached_device(load);
+
+    double t_delay = get_time_delay_in_s();
+    double delt = toolkit.get_dynamic_simulation_time_step_in_s();
+
+    frequency_sensor.set_output(fbase);
+    frequency_sensor.initialize();
+
+    double current_time = toolkit.get_dynamic_simulation_time_in_s();
+
+    history_minimum_frequency_buffer.set_buffer_size(2*(unsigned int)(t_delay/delt)+2);
+    history_minimum_frequency_buffer.initialize_buffer(current_time, fbase);
+
+    additional_stage_timer.reset();
+    flag_additional_stage_is_tripped = false;
+
+    for(unsigned int stage=0; stage!=STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
     {
-        setup_block_toolkit_and_parameters();
-
-        STEPS& toolkit = get_toolkit();
-
-        double fbase = get_bus_base_frequency_in_Hz();
-
-        additional_stage_timer.set_attached_device(load);
-        for(unsigned int stage=0; stage!=STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
-            discrete_stage_timer[stage].set_attached_device(load);
-
-        double t_delay = get_time_delay_in_s();
-        double delt = toolkit.get_dynamic_simulation_time_step_in_s();
-
-        frequency_sensor.set_output(fbase);
-        frequency_sensor.initialize();
-
-        double current_time = toolkit.get_dynamic_simulation_time_in_s();
-
-        history_minimum_frequency_buffer.set_buffer_size(2*(unsigned int)(t_delay/delt)+2);
-        history_minimum_frequency_buffer.initialize_buffer(current_time, fbase);
-
-        additional_stage_timer.reset();
-        flag_additional_stage_is_tripped = false;
-
-        for(unsigned int stage=0; stage!=STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
-        {
-            discrete_stage_timer[stage].reset();
-            flag_discrete_stage_is_tripped[stage] = false;
-        }
-
-        current_continuous_shed_command_in_pu = 0.0;
+        discrete_stage_timer[stage].reset();
+        flag_discrete_stage_is_tripped[stage] = false;
     }
+
+    current_continuous_shed_command_in_pu = 0.0;
 }
 
 void PUFLS::run(DYNAMIC_MODE mode)

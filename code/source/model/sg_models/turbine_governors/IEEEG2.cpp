@@ -204,46 +204,43 @@ void IEEEG2::initialize()
     if(not is_model_initialized())
     {
         GENERATOR* generator = get_generator_pointer();
-        if(generator!=NULL)
+        SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+        if(gen_model!=NULL)
         {
-            SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-            if(gen_model!=NULL)
+            if(not gen_model->is_model_initialized())
+                gen_model->initialize();
+
+            setup_block_toolkit_and_parameters();
+
+            STEPS& toolkit = get_toolkit();
+
+            double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
+
+            droop.set_output(0.0);
+            droop.initialize();
+
+            tuner.set_output(0.0);
+            tuner.initialize();
+
+            if(pmech0>get_Pmax_in_pu())
             {
-                if(not gen_model->is_model_initialized())
-                    gen_model->initialize();
-
-                setup_block_toolkit_and_parameters();
-
-                STEPS& toolkit = get_toolkit();
-
-                double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
-
-                droop.set_output(0.0);
-                droop.initialize();
-
-                tuner.set_output(0.0);
-                tuner.initialize();
-
-                if(pmech0>get_Pmax_in_pu())
-                {
-                    osstream<<"Initialization error. Pmech of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-                      <<"Pmech is "<<pmech0<<", and Pmax is "<<get_Pmax_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-                if(pmech0<get_Pmin_in_pu())
-                {
-                    osstream<<"Initialization error. Pmech of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-                      <<"Pmech is "<<pmech0<<", and Pmin is "<<get_Pmin_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-
-                water_hammer.set_output(pmech0);
-                water_hammer.initialize();
-
-                set_initial_mechanical_power_reference_in_pu_based_on_mbase(pmech0);
-
-                set_flag_model_initialized_as_true();
+                osstream<<"Initialization error. Pmech of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                  <<"Pmech is "<<pmech0<<", and Pmax is "<<get_Pmax_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
+            if(pmech0<get_Pmin_in_pu())
+            {
+                osstream<<"Initialization error. Pmech of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                  <<"Pmech is "<<pmech0<<", and Pmin is "<<get_Pmin_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+
+            water_hammer.set_output(pmech0);
+            water_hammer.initialize();
+
+            set_initial_mechanical_power_reference_in_pu_based_on_mbase(pmech0);
+
+            set_flag_model_initialized_as_true();
         }
     }
 }
@@ -251,37 +248,34 @@ void IEEEG2::initialize()
 void IEEEG2::run(DYNAMIC_MODE mode)
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
+    SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+    if(gen_model!=NULL)
     {
-        SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-        if(gen_model!=NULL)
-        {
-            double Pref = get_mechanical_power_reference_in_pu_based_on_mbase();
-            double speed = get_rotor_speed_deviation_in_pu_from_sync_generator_model();
+        double Pref = get_mechanical_power_reference_in_pu_based_on_mbase();
+        double speed = get_rotor_speed_deviation_in_pu_from_sync_generator_model();
 
-            droop.set_input(speed);
-            droop.run(mode);
+        droop.set_input(speed);
+        droop.run(mode);
 
-            double input = droop.get_output();
+        double input = droop.get_output();
 
-            tuner.set_input(input);
-            tuner.run(mode);
+        tuner.set_input(input);
+        tuner.run(mode);
 
-            input = Pref - tuner.get_output();
+        input = Pref - tuner.get_output();
 
-            double Pmax = get_Pmax_in_pu();
-            double Pmin = get_Pmin_in_pu();
-            if(input>Pmax)
-                input = Pmax;
-            if(input<Pmin)
-                input = Pmin;
+        double Pmax = get_Pmax_in_pu();
+        double Pmin = get_Pmin_in_pu();
+        if(input>Pmax)
+            input = Pmax;
+        if(input<Pmin)
+            input = Pmin;
 
-            water_hammer.set_input(input);
-            water_hammer.run(mode);
+        water_hammer.set_input(input);
+        water_hammer.run(mode);
 
-            if(mode==UPDATE_MODE)
-                set_flag_model_updated_as_true();
-        }
+        if(mode==UPDATE_MODE)
+            set_flag_model_updated_as_true();
     }
 }
 

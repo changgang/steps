@@ -574,86 +574,83 @@ void GAST2A::initialize()
     if(not is_model_initialized())
     {
         GENERATOR* generator = get_generator_pointer();
-        if(generator!=NULL)
+        SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+        if(gen_model!=NULL)
         {
-            SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-            if(gen_model!=NULL)
+            if(not gen_model->is_model_initialized())
+                gen_model->initialize();
+
+            setup_block_toolkit_and_parameters();
+
+            STEPS& toolkit = get_toolkit();
+            double time = toolkit.get_dynamic_simulation_time_in_s();
+
+            double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
+            double mbase = get_mbase_in_MVA();
+            double prate = get_gas_Prate_in_MW();
+
+            double f2 = pmech0*mbase/prate;
+            double wf2 = (f2-get_gas_af2())/get_gas_bf2();
+
+            gas_turbine_dynamic.set_output(wf2);
+            gas_turbine_dynamic.initialize();
+
+            gas_combustor.initialize_buffer(time, wf2);
+
+            gas_turbine_exhaust.initialize_buffer(time, wf2);
+
+            double wf1 = wf2;
+
+            double f1 = get_gas_TR_in_deg() - get_gas_af1()*(1.0-wf1);
+
+            gas_radiation_shield.set_output(f1*get_gas_K5());
+            gas_radiation_shield.initialize();
+
+            gas_thermocouple.set_output((get_gas_K4()+get_gas_K5())*f1);
+            gas_thermocouple.initialize();
+
+            gas_temperature_control.set_output(get_gas_max_in_pu());
+            gas_temperature_control.initialize();
+
+            gas_fuel_system.set_output(wf2);
+            gas_fuel_system.initialize();
+
+            gas_valve_positioner.set_output(wf2);
+            gas_valve_positioner.initialize();
+
+            double gfc = gas_valve_positioner.get_input()+get_gas_Kf()*wf2-get_gas_K6();
+            gas_fuel_control.initialize_buffer(time, gfc);
+
+            double output = gfc/get_gas_K3();
+            if(output>get_gas_max_in_pu())
             {
-                if(not gen_model->is_model_initialized())
-                    gen_model->initialize();
-
-                setup_block_toolkit_and_parameters();
-
-                STEPS& toolkit = get_toolkit();
-                double time = toolkit.get_dynamic_simulation_time_in_s();
-
-                double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
-                double mbase = get_mbase_in_MVA();
-                double prate = get_gas_Prate_in_MW();
-
-                double f2 = pmech0*mbase/prate;
-                double wf2 = (f2-get_gas_af2())/get_gas_bf2();
-
-                gas_turbine_dynamic.set_output(wf2);
-                gas_turbine_dynamic.initialize();
-
-                gas_combustor.initialize_buffer(time, wf2);
-
-                gas_turbine_exhaust.initialize_buffer(time, wf2);
-
-                double wf1 = wf2;
-
-                double f1 = get_gas_TR_in_deg() - get_gas_af1()*(1.0-wf1);
-
-                gas_radiation_shield.set_output(f1*get_gas_K5());
-                gas_radiation_shield.initialize();
-
-                gas_thermocouple.set_output((get_gas_K4()+get_gas_K5())*f1);
-                gas_thermocouple.initialize();
-
-                gas_temperature_control.set_output(get_gas_max_in_pu());
-                gas_temperature_control.initialize();
-
-                gas_fuel_system.set_output(wf2);
-                gas_fuel_system.initialize();
-
-                gas_valve_positioner.set_output(wf2);
-                gas_valve_positioner.initialize();
-
-                double gfc = gas_valve_positioner.get_input()+get_gas_Kf()*wf2-get_gas_K6();
-                gas_fuel_control.initialize_buffer(time, gfc);
-
-                double output = gfc/get_gas_K3();
-                if(output>get_gas_max_in_pu())
-                {
-                    osstream<<"Initialization error. Governor of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-                      <<"Governor is "<<output<<", and max is "<<get_gas_max_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-                if(output<get_gas_min_in_pu())
-                {
-                    osstream<<"Initialization error. Governor of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-                      <<"Governor is "<<output<<", and min is "<<get_gas_min_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-
-                double input = 0.0;
-                if(get_gas_Z()!=0.0)
-                {
-                    gas_governor_droop.set_output(output);
-                    gas_governor_droop.initialize();
-                    input = gas_governor_droop.get_input();
-                }
-                else
-                {
-                    gas_governor_iso.set_output(output);
-                    gas_governor_iso.initialize();
-                    input = gas_governor_iso.get_input();
-                }
-                set_initial_mechanical_power_reference_in_pu_based_on_mbase(input);
-
-                set_flag_model_initialized_as_true();
+                osstream<<"Initialization error. Governor of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                  <<"Governor is "<<output<<", and max is "<<get_gas_max_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
+            if(output<get_gas_min_in_pu())
+            {
+                osstream<<"Initialization error. Governor of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                  <<"Governor is "<<output<<", and min is "<<get_gas_min_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+
+            double input = 0.0;
+            if(get_gas_Z()!=0.0)
+            {
+                gas_governor_droop.set_output(output);
+                gas_governor_droop.initialize();
+                input = gas_governor_droop.get_input();
+            }
+            else
+            {
+                gas_governor_iso.set_output(output);
+                gas_governor_iso.initialize();
+                input = gas_governor_iso.get_input();
+            }
+            set_initial_mechanical_power_reference_in_pu_based_on_mbase(input);
+
+            set_flag_model_initialized_as_true();
         }
     }
 }

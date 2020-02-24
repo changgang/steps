@@ -27,51 +27,35 @@ string EXCITER_MODEL::get_model_type() const
 double EXCITER_MODEL::get_initial_excitation_voltage_in_pu_from_sync_generator_model() const
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
-    {
-        SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-        if(gen_model!=NULL)
-            return gen_model->get_initial_excitation_voltage_in_pu();
-        else
-            return 0.0;
-    }
+    SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+    if(gen_model!=NULL)
+        return gen_model->get_initial_excitation_voltage_in_pu();
     else
         return 0.0;
-
 }
 
 double EXCITER_MODEL::get_compensated_voltage_in_pu()
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
-    {
-        COMPENSATOR_MODEL* comp_model = generator->get_compensator_model();
-        if(comp_model!=NULL)
-            return comp_model->get_compensated_voltage_in_pu();
-        else
-        {
-            //unsigned int bus = generator->get_generator_bus();
-            //return psdb.get_bus_positive_sequence_voltage_in_pu(bus);
-            return get_terminal_voltage_in_pu();
-        }
-    }
+    COMPENSATOR_MODEL* comp_model = generator->get_compensator_model();
+    if(comp_model!=NULL)
+        return comp_model->get_compensated_voltage_in_pu();
     else
-        return 0.0;
+    {
+        //unsigned int bus = generator->get_generator_bus();
+        //return psdb.get_bus_positive_sequence_voltage_in_pu(bus);
+        return get_terminal_voltage_in_pu();
+    }
 }
 
 double EXCITER_MODEL::get_stabilizing_signal_in_pu()
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
+    STABILIZER_MODEL* pss = generator->get_stabilizer_model();
+    if(pss!=NULL)
     {
-        STABILIZER_MODEL* pss = generator->get_stabilizer_model();
-        if(pss!=NULL)
-        {
-            if(pss->is_model_initialized())
-                return pss->get_stabilizing_signal_in_pu();
-            else
-                return 0.0;
-        }
+        if(pss->is_model_initialized())
+            return pss->get_stabilizing_signal_in_pu();
         else
             return 0.0;
     }
@@ -83,14 +67,9 @@ double EXCITER_MODEL::get_stabilizing_signal_in_pu()
 double EXCITER_MODEL::get_field_current_in_pu() const
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
-    {
-        SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-        if(gen_model!=NULL)
-            return gen_model->get_field_current_in_pu_based_on_mbase();
-        else
-            return 0.0;
-    }
+    SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+    if(gen_model!=NULL)
+        return gen_model->get_field_current_in_pu_based_on_mbase();
     else
         return 0.0;
 }

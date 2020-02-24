@@ -326,140 +326,49 @@ void PSASPE2::initialize()
     if(not is_model_initialized())
     {
         GENERATOR* generator = get_generator_pointer();
-        if(generator!=NULL)
-        {
-            SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-            if(gen_model!=NULL)
-            {
-                if(not gen_model->is_model_initialized())
-                    gen_model->initialize();
-
-                setup_block_toolkit_and_parameters();
-
-                STEPS& toolkit = get_toolkit();
-
-                double Ecomp = get_compensated_voltage_in_pu();
-
-                set_voltage_reference_in_pu(Ecomp);
-
-                sensor.set_output(0.0);
-                sensor.initialize();
-
-                if(get_K2()==true)
-                {
-                    tuner1_lead_lag.set_output(0.0);
-                    tuner1_lead_lag.initialize();
-                }
-                else
-                {
-                    tuner1_pi.set_output(0.0);
-                    tuner1_pi.initialize();
-                }
-
-                tuner2.set_output(0.0);
-                tuner2.initialize();
-
-                regulator.set_output(0.0);
-                regulator.initialize();
-
-                double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
-                this->Efd0 = Efd;
-
-                //unsigned int bus = generator->get_generator_bus();
-                //this->Vt0 = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
-                this->Vt0 = get_terminal_voltage_in_pu();
-
-                //complex<double> Vt = psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
-                complex<double> Vt = get_terminal_complex_voltage_in_pu();
-                //complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
-                complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
-                double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
-
-                double Efdmax = get_Efdmax_in_pu();
-                double Efdmin = get_Efdmin_in_pu();
-
-                double Vta = get_Vta_in_pu(), Vtb = get_Vtb_in_pu();
-                double Kv1 = 1.0/(Vt0*Vta), Kv2 = 1.0/(Vt0/Vtb);
-
-                double Kpt = get_Kpt(), Kit = get_Kit(), Ke = get_Ke();
-                complex<double> imag_1(0.0, 1.0);
-
-                double scale = abs(Kpt*Vt + imag_1*Kit*It);
-                Efdmax = Kv1*scale*Efdmax - Ke*Ifd;
-                Efdmin = Kv2*scale*Efdmin - Ke*Ifd;
-
-                if(Efd>Efdmax)
-                {
-                    osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-                      <<"Efd is "<<Efd<<", and Efdmax(~) is "<<Efdmax<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-                if(Efd<Efdmin)
-                {
-                    osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-                      <<"Efd is "<<Efd<<", and Efdmin(~) is "<<Efdmin<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-
-                set_flag_model_initialized_as_true();
-            }
-        }
-    }
-}
-
-void PSASPE2::run(DYNAMIC_MODE mode)
-{
-    GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
-    {
-        double Ecomp = get_compensated_voltage_in_pu();
-        double Vref = get_voltage_reference_in_pu();
-        double Vs = get_stabilizing_signal_in_pu();
-
-        double input = Vref-Ecomp+Vs;
-        sensor.set_input(input);
-        sensor.run(mode);
-
-        input = sensor.get_output();
-        if(get_K2()==true)
-        {
-            tuner1_lead_lag.set_input(input);
-            tuner1_lead_lag.run(mode);
-            input = tuner1_lead_lag.get_output();
-        }
-        else
-        {
-            tuner1_pi.set_input(input);
-            tuner1_pi.run(mode);
-            input = tuner1_pi.get_output();
-        }
-
-        tuner2.set_input(input);
-        tuner2.run(mode);
-
-        input = tuner2.get_output();
-        regulator.set_input(input);
-        regulator.run(mode);
-
-        //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
-
-        if(mode == UPDATE_MODE)
-            set_flag_model_updated_as_true();
-    }
-}
-
-double PSASPE2::get_excitation_voltage_in_pu()
-{
-    GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
-    {
         SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
         if(gen_model!=NULL)
         {
+            if(not gen_model->is_model_initialized())
+                gen_model->initialize();
+
+            setup_block_toolkit_and_parameters();
+
             STEPS& toolkit = get_toolkit();
-            POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-            unsigned int bus = generator->get_generator_bus();
-            complex<double> Vt = psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
+
+            double Ecomp = get_compensated_voltage_in_pu();
+
+            set_voltage_reference_in_pu(Ecomp);
+
+            sensor.set_output(0.0);
+            sensor.initialize();
+
+            if(get_K2()==true)
+            {
+                tuner1_lead_lag.set_output(0.0);
+                tuner1_lead_lag.initialize();
+            }
+            else
+            {
+                tuner1_pi.set_output(0.0);
+                tuner1_pi.initialize();
+            }
+
+            tuner2.set_output(0.0);
+            tuner2.initialize();
+
+            regulator.set_output(0.0);
+            regulator.initialize();
+
+            double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
+            this->Efd0 = Efd;
+
+            //unsigned int bus = generator->get_generator_bus();
+            //this->Vt0 = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
+            this->Vt0 = get_terminal_voltage_in_pu();
+
+            //complex<double> Vt = psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
+            complex<double> Vt = get_terminal_complex_voltage_in_pu();
             //complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
             complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
             double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
@@ -477,15 +386,94 @@ double PSASPE2::get_excitation_voltage_in_pu()
             Efdmax = Kv1*scale*Efdmax - Ke*Ifd;
             Efdmin = Kv2*scale*Efdmin - Ke*Ifd;
 
-            double Efd = Efd0 + regulator.get_output();
+            if(Efd>Efdmax)
+            {
+                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                  <<"Efd is "<<Efd<<", and Efdmax(~) is "<<Efdmax<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            if(Efd<Efdmin)
+            {
+                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                  <<"Efd is "<<Efd<<", and Efdmin(~) is "<<Efdmin<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
 
-            if(Efd>Efdmax) Efd = Efdmax;
-            if(Efd<Efdmin) Efd = Efdmin;
-
-            return Efd;
+            set_flag_model_initialized_as_true();
         }
-        else
-            return 0.0;
+    }
+}
+
+void PSASPE2::run(DYNAMIC_MODE mode)
+{
+    double Ecomp = get_compensated_voltage_in_pu();
+    double Vref = get_voltage_reference_in_pu();
+    double Vs = get_stabilizing_signal_in_pu();
+
+    double input = Vref-Ecomp+Vs;
+    sensor.set_input(input);
+    sensor.run(mode);
+
+    input = sensor.get_output();
+    if(get_K2()==true)
+    {
+        tuner1_lead_lag.set_input(input);
+        tuner1_lead_lag.run(mode);
+        input = tuner1_lead_lag.get_output();
+    }
+    else
+    {
+        tuner1_pi.set_input(input);
+        tuner1_pi.run(mode);
+        input = tuner1_pi.get_output();
+    }
+
+    tuner2.set_input(input);
+    tuner2.run(mode);
+
+    input = tuner2.get_output();
+    regulator.set_input(input);
+    regulator.run(mode);
+
+    //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
+
+    if(mode == UPDATE_MODE)
+        set_flag_model_updated_as_true();
+}
+
+double PSASPE2::get_excitation_voltage_in_pu()
+{
+    GENERATOR* generator = get_generator_pointer();
+    SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+    if(gen_model!=NULL)
+    {
+        STEPS& toolkit = get_toolkit();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        unsigned int bus = generator->get_generator_bus();
+        complex<double> Vt = psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
+        //complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+        complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
+        double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
+
+        double Efdmax = get_Efdmax_in_pu();
+        double Efdmin = get_Efdmin_in_pu();
+
+        double Vta = get_Vta_in_pu(), Vtb = get_Vtb_in_pu();
+        double Kv1 = 1.0/(Vt0*Vta), Kv2 = 1.0/(Vt0/Vtb);
+
+        double Kpt = get_Kpt(), Kit = get_Kit(), Ke = get_Ke();
+        complex<double> imag_1(0.0, 1.0);
+
+        double scale = abs(Kpt*Vt + imag_1*Kit*It);
+        Efdmax = Kv1*scale*Efdmax - Ke*Ifd;
+        Efdmin = Kv2*scale*Efdmin - Ke*Ifd;
+
+        double Efd = Efd0 + regulator.get_output();
+
+        if(Efd>Efdmax) Efd = Efdmax;
+        if(Efd<Efdmin) Efd = Efdmin;
+
+        return Efd;
     }
     else
         return 0.0;

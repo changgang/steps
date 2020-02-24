@@ -77,11 +77,7 @@ void PVP0::initialize()
     ostringstream osstream;
     if(not is_model_initialized())
     {
-        PV_UNIT* pv_unit = get_pv_unit_pointer();
-        if(pv_unit!=NULL)
-        {
-            setup_block_toolkit_and_parameters();
-        }
+        setup_block_toolkit_and_parameters();
     }
 }
 

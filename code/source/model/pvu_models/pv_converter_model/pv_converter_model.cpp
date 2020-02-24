@@ -80,45 +80,30 @@ double PV_CONVERTER_MODEL::get_initial_reactive_voltage_command_in_pu() const
 double PV_CONVERTER_MODEL::get_active_current_command_in_pu_based_on_mbase()
 {
     PV_UNIT* pv_unit = get_pv_unit_pointer();
-    if(pv_unit!=NULL)
-    {
-        PV_ELECTRICAL_MODEL* model = pv_unit->get_pv_electrical_model();
-        if(model!=NULL and model->is_model_initialized())
-            return model->get_active_current_command_in_pu_based_on_mbase();
-        else
-            return get_initial_active_current_command_in_pu_based_on_mbase();
-    }
+    PV_ELECTRICAL_MODEL* model = pv_unit->get_pv_electrical_model();
+    if(model!=NULL and model->is_model_initialized())
+        return model->get_active_current_command_in_pu_based_on_mbase();
     else
-        return 0.0;
+        return get_initial_active_current_command_in_pu_based_on_mbase();
 }
 
 double PV_CONVERTER_MODEL::get_reactive_current_command_in_pu_based_on_mbase()
 {
     PV_UNIT* pv_unit = get_pv_unit_pointer();
-    if(pv_unit!=NULL)
-    {
-        PV_ELECTRICAL_MODEL* model = pv_unit->get_pv_electrical_model();
-        if(model!=NULL and model->is_model_initialized())
-            return model->get_reactive_current_command_in_pu_based_on_mbase();
-        else
-            return get_initial_reactive_current_command_in_pu_based_on_mbase();
-    }
+    PV_ELECTRICAL_MODEL* model = pv_unit->get_pv_electrical_model();
+    if(model!=NULL and model->is_model_initialized())
+        return model->get_reactive_current_command_in_pu_based_on_mbase();
     else
-        return 0.0;
+        return get_initial_reactive_current_command_in_pu_based_on_mbase();
 }
 
 
 double PV_CONVERTER_MODEL::get_reactive_voltage_command_in_pu() const
 {
     PV_UNIT* pv_unit = get_pv_unit_pointer();
-    if(pv_unit!=NULL)
-    {
-        PV_ELECTRICAL_MODEL* model = pv_unit->get_pv_electrical_model();
-        if(model!=NULL and model->is_model_initialized())
-            return model->get_reactive_voltage_command_in_pu();
-        else
-            return get_initial_reactive_voltage_command_in_pu();
-    }
+    PV_ELECTRICAL_MODEL* model = pv_unit->get_pv_electrical_model();
+    if(model!=NULL and model->is_model_initialized())
+        return model->get_reactive_voltage_command_in_pu();
     else
-        return 0.0;
+        return get_initial_reactive_voltage_command_in_pu();
 }

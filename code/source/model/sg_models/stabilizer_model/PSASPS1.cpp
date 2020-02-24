@@ -273,54 +273,49 @@ void PSASPS1::initialize()
 
     GENERATOR* generator = get_generator_pointer();
     DEVICE_ID did = generator->get_device_id();
-    if(generator!=NULL)
+    EXCITER_MODEL* exciter = generator->get_exciter_model();
+    if(exciter!=NULL)
     {
-        EXCITER_MODEL* exciter = generator->get_exciter_model();
-        if(exciter!=NULL)
-        {
-            if(not exciter->is_model_initialized())
-                exciter->initialize();
+        if(not exciter->is_model_initialized())
+            exciter->initialize();
 
-            setup_block_toolkit_and_parameters();
+        setup_block_toolkit_and_parameters();
 
-            unsigned int bus = generator->get_generator_bus();
+        unsigned int bus = generator->get_generator_bus();
 
-            SIGNAL signal = prepare_signal_with_signal_type_and_device_id(1, did);
-            if(signal.is_valid())
-                set_input_signal_at_slot(0, signal);
+        SIGNAL signal = prepare_signal_with_signal_type_and_device_id(1, did);
+        if(signal.is_valid())
+            set_input_signal_at_slot(0, signal);
 
-            signal = prepare_signal_with_signal_type_and_device_id(3, did);
-            if(signal.is_valid())
-                set_input_signal_at_slot(1, signal);
+        signal = prepare_signal_with_signal_type_and_device_id(3, did);
+        if(signal.is_valid())
+            set_input_signal_at_slot(1, signal);
 
-            DEVICE_ID bus_device;
-            bus_device.set_device_type("BUS");
-            TERMINAL terminal;
-            terminal.append_bus(bus);
-            bus_device.set_device_terminal(terminal);
+        DEVICE_ID bus_device;
+        bus_device.set_device_type("BUS");
+        TERMINAL terminal;
+        terminal.append_bus(bus);
+        bus_device.set_device_terminal(terminal);
 
-            signal = prepare_signal_with_signal_type_and_device_id(5, bus_device);
-            if(signal.is_valid())
-                set_input_signal_at_slot(2, signal);
+        signal = prepare_signal_with_signal_type_and_device_id(5, bus_device);
+        if(signal.is_valid())
+            set_input_signal_at_slot(2, signal);
 
-            phase_tuner_3.set_output(0.0);
-            phase_tuner_3.initialize();
+        phase_tuner_3.set_output(0.0);
+        phase_tuner_3.initialize();
 
-            phase_tuner_2.set_output(0.0);
-            phase_tuner_2.initialize();
+        phase_tuner_2.set_output(0.0);
+        phase_tuner_2.initialize();
 
-            phase_tuner_1.set_output(0.0);
-            phase_tuner_1.initialize();
+        phase_tuner_1.set_output(0.0);
+        phase_tuner_1.initialize();
 
-            dedc_block.set_output(0.0);
-            dedc_block.initialize();
+        dedc_block.set_output(0.0);
+        dedc_block.initialize();
 
-            speed_deviation_ref_pu = get_signal_value_of_slot(0);
-            Pe_ref_pu = get_signal_value_of_slot(1);
-            Vterminal_ref_pu = get_signal_value_of_slot(2);
-        }
-        else
-            deactivate_model();
+        speed_deviation_ref_pu = get_signal_value_of_slot(0);
+        Pe_ref_pu = get_signal_value_of_slot(1);
+        Vterminal_ref_pu = get_signal_value_of_slot(2);
     }
     else
         deactivate_model();

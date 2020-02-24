@@ -53,7 +53,7 @@ class TRANSFORMER : public DEVICE
         complex<double> get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu() const;
 
         unsigned int get_winding_bus(TRANSFORMER_WINDING_SIDE winding) const;
-        BUS* get_winding_bus_pointer(TRANSFORMER_WINDING_SIDE winding) const;
+        //BUS* get_winding_bus_pointer(TRANSFORMER_WINDING_SIDE winding) const;
         bool get_winding_breaker_status(TRANSFORMER_WINDING_SIDE winding) const;
         TRANSFORMER_WINDING_CONNECTION_TYPE get_winding_connection_type(TRANSFORMER_WINDING_SIDE winding) const;
         double get_winding_nominal_voltage_in_kV(TRANSFORMER_WINDING_SIDE winding) const;
@@ -147,7 +147,7 @@ class TRANSFORMER : public DEVICE
         complex<double> get_three_winding_trans_tertiary_winding_complex_current_in_pu() const;
 
         unsigned int winding_bus[3];
-        BUS* winding_busptr[3];
+        //BUS* winding_busptr[3];
         string identifier, name;
         bool winding_breaker_status[3];
         unsigned int non_metered_end_bus;

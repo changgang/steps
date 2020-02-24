@@ -231,28 +231,25 @@ void UVLS::setup_block_toolkit_and_parameters()
 void UVLS::initialize()
 {
     LOAD* load = get_load_pointer();
-    if(load!=NULL)
+    setup_block_toolkit_and_parameters();
+
+    //double volt = psdb.get_bus_positive_sequence_voltage_in_pu(load->get_load_bus());
+    double volt = get_bus_positive_sequence_voltage_in_pu();
+
+    for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
     {
-        setup_block_toolkit_and_parameters();
+        stage_timer[i].set_attached_device(load);
+        breaker_timer[i].set_attached_device(load);
+    }
 
-        //double volt = psdb.get_bus_positive_sequence_voltage_in_pu(load->get_load_bus());
-        double volt = get_bus_positive_sequence_voltage_in_pu();
+    voltage_sensor.set_output(volt);
+    voltage_sensor.initialize();
 
-        for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
-        {
-            stage_timer[i].set_attached_device(load);
-            breaker_timer[i].set_attached_device(load);
-        }
-
-        voltage_sensor.set_output(volt);
-        voltage_sensor.initialize();
-
-        for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
-        {
-            stage_timer[i].reset();
-            breaker_timer[i].reset();
-            flag_stage_is_tripped[i]=false;
-        }
+    for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
+    {
+        stage_timer[i].reset();
+        breaker_timer[i].reset();
+        flag_stage_is_tripped[i]=false;
     }
 }
 

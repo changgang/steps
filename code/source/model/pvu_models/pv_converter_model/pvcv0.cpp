@@ -303,171 +303,164 @@ void PVCV0::initialize()
     if(not is_model_initialized())
     {
         PV_UNIT* pv_unit = get_pv_unit_pointer();
-        if(pv_unit!=NULL)
+        setup_block_toolkit_and_parameters();
+
+        unsigned int n_lumped = get_number_of_lumped_pv_units();
+        double fbase = get_bus_base_frequency_in_Hz();
+        double wbase = 2.0*PI*fbase;
+
+        double kipll = get_KIPLL();
+        if(kipll!=0.0)
         {
-            setup_block_toolkit_and_parameters();
-
-            unsigned int n_lumped = get_number_of_lumped_pv_units();
-            double fbase = get_bus_base_frequency_in_Hz();
-            double wbase = 2.0*PI*fbase;
-
-            double kipll = get_KIPLL();
-            if(kipll!=0.0)
-            {
-                PLL_frequency_integrator.set_T_in_s(1.0/kipll);
-                double pllmax = get_PLLmax();
-                PLL_frequency_integrator.set_upper_limit(pllmax);
-                PLL_frequency_integrator.set_lower_limit(-pllmax);
-            }
-
-            PLL_angle_integrator.set_T_in_s(1.0/wbase);
-
-            double mbase = get_mbase_in_MVA();
-            mbase /= n_lumped;
-
-            complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
-            double xeq = Zsource.imag();
-
-            double P = pv_unit->get_p_generation_in_MW()/n_lumped;
-            double Q = pv_unit->get_q_generation_in_MVar()/n_lumped;
-            complex<double> S(P/mbase,Q/mbase);
-
-
-            complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-            double V = steps_fast_complex_abs(Vxy);
-            double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
-            // ignore voltage angle
-            complex<double> Ixy = conj(S/Vxy);
-            complex<double> Isource = Ixy + Vxy/Zsource;
-
-            double Ix = Isource.real();
-            double Iy = Isource.imag();
-
-            double IP = Ix*steps_cos(angle_in_rad) + Iy*steps_sin(angle_in_rad);
-            double IQ =-Ix*steps_sin(angle_in_rad) + Iy*steps_cos(angle_in_rad);
-            //complex<double> IPQ = xy2dq_with_angle_in_rad(Isource, angle_in_rad);
-            //double IP = IPQ.real();
-            //double IQ = IPQ.imag();
-
-            double EQ = IQ*(-xeq);
-
-            active_current_commander.set_output(IP);
-            active_current_commander.initialize();
-
-            reactive_voltage_commander.set_output(EQ);
-            reactive_voltage_commander.initialize();
-
-            if(kipll!=0.0)
-            {
-                PLL_frequency_integrator.set_output(0.0);
-                PLL_frequency_integrator.initialize();
-            }
-
-            PLL_angle_integrator.set_output(angle_in_rad);
-            PLL_angle_integrator.initialize();
-
-            LVPL_voltage_sensor.set_output(V);
-            LVPL_voltage_sensor.initialize();
-
-            set_initial_active_current_command_in_pu_based_on_mbase(IP);
-            set_initial_reactive_current_command_in_pu_based_on_mbase(IQ);
-
-            set_flag_model_initialized_as_true();
-
-            osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
-                    <<"(1) Initial active current command = "<<get_initial_active_current_command_in_pu_based_on_mbase()<<endl
-                    <<"(2) Initial reactive current command = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
-                    <<"(3) States of blocks"<<endl
-                    <<"    active_current_commander block state: "<<active_current_commander.get_state()<<endl
-                    <<"    reactive_voltage_commander block state: "<<reactive_voltage_commander.get_state()<<endl
-                    <<"    PLL_frequency_integrator block state: "<<PLL_frequency_integrator.get_state()<<endl
-                    <<"    PLL_angle_integrator block state: "<<PLL_angle_integrator.get_state()<<endl
-                    <<"    LVPL_voltage_sensor block state: "<<LVPL_voltage_sensor.get_state()<<endl
-                    <<"(4) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
-                    <<"(5) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
-                    <<"(6) terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu";
-            //show_information_with_leading_time_stamp(osstream);
+            PLL_frequency_integrator.set_T_in_s(1.0/kipll);
+            double pllmax = get_PLLmax();
+            PLL_frequency_integrator.set_upper_limit(pllmax);
+            PLL_frequency_integrator.set_lower_limit(-pllmax);
         }
+
+        PLL_angle_integrator.set_T_in_s(1.0/wbase);
+
+        double mbase = get_mbase_in_MVA();
+        mbase /= n_lumped;
+
+        complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
+        double xeq = Zsource.imag();
+
+        double P = pv_unit->get_p_generation_in_MW()/n_lumped;
+        double Q = pv_unit->get_q_generation_in_MVar()/n_lumped;
+        complex<double> S(P/mbase,Q/mbase);
+
+
+        complex<double> Vxy = get_terminal_complex_voltage_in_pu();
+        double V = steps_fast_complex_abs(Vxy);
+        double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
+        // ignore voltage angle
+        complex<double> Ixy = conj(S/Vxy);
+        complex<double> Isource = Ixy + Vxy/Zsource;
+
+        double Ix = Isource.real();
+        double Iy = Isource.imag();
+
+        double IP = Ix*steps_cos(angle_in_rad) + Iy*steps_sin(angle_in_rad);
+        double IQ =-Ix*steps_sin(angle_in_rad) + Iy*steps_cos(angle_in_rad);
+        //complex<double> IPQ = xy2dq_with_angle_in_rad(Isource, angle_in_rad);
+        //double IP = IPQ.real();
+        //double IQ = IPQ.imag();
+
+        double EQ = IQ*(-xeq);
+
+        active_current_commander.set_output(IP);
+        active_current_commander.initialize();
+
+        reactive_voltage_commander.set_output(EQ);
+        reactive_voltage_commander.initialize();
+
+        if(kipll!=0.0)
+        {
+            PLL_frequency_integrator.set_output(0.0);
+            PLL_frequency_integrator.initialize();
+        }
+
+        PLL_angle_integrator.set_output(angle_in_rad);
+        PLL_angle_integrator.initialize();
+
+        LVPL_voltage_sensor.set_output(V);
+        LVPL_voltage_sensor.initialize();
+
+        set_initial_active_current_command_in_pu_based_on_mbase(IP);
+        set_initial_reactive_current_command_in_pu_based_on_mbase(IQ);
+
+        set_flag_model_initialized_as_true();
+
+        osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+                <<"(1) Initial active current command = "<<get_initial_active_current_command_in_pu_based_on_mbase()<<endl
+                <<"(2) Initial reactive current command = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
+                <<"(3) States of blocks"<<endl
+                <<"    active_current_commander block state: "<<active_current_commander.get_state()<<endl
+                <<"    reactive_voltage_commander block state: "<<reactive_voltage_commander.get_state()<<endl
+                <<"    PLL_frequency_integrator block state: "<<PLL_frequency_integrator.get_state()<<endl
+                <<"    PLL_angle_integrator block state: "<<PLL_angle_integrator.get_state()<<endl
+                <<"    LVPL_voltage_sensor block state: "<<LVPL_voltage_sensor.get_state()<<endl
+                <<"(4) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
+                <<"(5) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
+                <<"(6) terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu";
+        //show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void PVCV0::run(DYNAMIC_MODE mode)
 {
-    PV_UNIT* pv_unit = get_pv_unit_pointer();
-    if(pv_unit!=NULL)
+    double fbase = get_bus_base_frequency_in_Hz();
+    double wbase = 2.0*PI*fbase;
+    complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
+    double Xeq = Zsource.imag();
+
+    //complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
+
+    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
+    double V = steps_fast_complex_abs(Vxy);
+    double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
+    double angle_in_deg = rad2deg(angle_in_rad);
+
+    LVPL_voltage_sensor.set_input(V);
+    LVPL_voltage_sensor.run(mode);
+
+    double lvpl_order = lvpl.get_LVPL_order(LVPL_voltage_sensor.get_output());
+
+    double IP = get_active_current_command_in_pu_based_on_mbase();
+
+    double input = active_current_commander.get_output();
+    if(input>lvpl_order)
+        input = lvpl_order;
+
+    input = IP - input;
+    double lvpl_rate_max = get_LVPL_max_rate_of_active_current_change();
+    if(input>lvpl_rate_max)
+        input = lvpl_rate_max;
+
+    active_current_commander.set_input(input);
+    active_current_commander.run(mode);
+
+    double IQ = get_reactive_current_command_in_pu_based_on_mbase();
+
+    double EQ = IQ*(-Xeq);
+    reactive_voltage_commander.set_input(EQ);
+    reactive_voltage_commander.run(mode);
+
+    double kpll = get_KPLL();
+    double kipll = get_KIPLL();
+    if(kpll!=0.0 or kipll!=0.0)
     {
-        double fbase = get_bus_base_frequency_in_Hz();
-        double wbase = 2.0*PI*fbase;
-        complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
-        double Xeq = Zsource.imag();
+        double Vr = Vxy.real();
+        double Vi = Vxy.imag();
 
-        //complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
+        double angle = get_pll_angle_in_rad();
+        double Vy = -Vr*steps_sin(angle)+Vi*steps_cos(angle);
 
-        complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-        double V = steps_fast_complex_abs(Vxy);
-        double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
-        double angle_in_deg = rad2deg(angle_in_rad);
+        input = Vy*kpll/wbase;
+        PLL_frequency_integrator.set_input(input);
+        PLL_frequency_integrator.run(mode);
 
-        LVPL_voltage_sensor.set_input(V);
-        LVPL_voltage_sensor.run(mode);
+        double output = PLL_frequency_integrator.get_output();
+        input += output;
 
-        double lvpl_order = lvpl.get_LVPL_order(LVPL_voltage_sensor.get_output());
+        double pllmax = get_PLLmax();
+        if(input>pllmax)
+            input = pllmax;
+        if(input<-pllmax)
+            input = -pllmax;
 
-        double IP = get_active_current_command_in_pu_based_on_mbase();
-
-        double input = active_current_commander.get_output();
-        if(input>lvpl_order)
-            input = lvpl_order;
-
-        input = IP - input;
-        double lvpl_rate_max = get_LVPL_max_rate_of_active_current_change();
-        if(input>lvpl_rate_max)
-            input = lvpl_rate_max;
-
-        active_current_commander.set_input(input);
-        active_current_commander.run(mode);
-
-        double IQ = get_reactive_current_command_in_pu_based_on_mbase();
-
-        double EQ = IQ*(-Xeq);
-        reactive_voltage_commander.set_input(EQ);
-        reactive_voltage_commander.run(mode);
-
-        double kpll = get_KPLL();
-        double kipll = get_KIPLL();
-        if(kpll!=0.0 or kipll!=0.0)
-        {
-            double Vr = Vxy.real();
-            double Vi = Vxy.imag();
-
-            double angle = get_pll_angle_in_rad();
-            double Vy = -Vr*steps_sin(angle)+Vi*steps_cos(angle);
-
-            input = Vy*kpll/wbase;
-            PLL_frequency_integrator.set_input(input);
-            PLL_frequency_integrator.run(mode);
-
-            double output = PLL_frequency_integrator.get_output();
-            input += output;
-
-            double pllmax = get_PLLmax();
-            if(input>pllmax)
-                input = pllmax;
-            if(input<-pllmax)
-                input = -pllmax;
-
-            PLL_angle_integrator.set_input(input);
-            PLL_angle_integrator.run(mode);
-        }
-        else
-        {
-            set_pll_angle_in_deg(angle_in_deg);
-        }
-        IP = get_active_current_command_in_pu_based_on_mbase();
-
-        if(mode==UPDATE_MODE)
-            set_flag_model_updated_as_true();
+        PLL_angle_integrator.set_input(input);
+        PLL_angle_integrator.run(mode);
     }
+    else
+    {
+        set_pll_angle_in_deg(angle_in_deg);
+    }
+    IP = get_active_current_command_in_pu_based_on_mbase();
+
+    if(mode==UPDATE_MODE)
+        set_flag_model_updated_as_true();
 }
 
 complex<double> PVCV0::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase()

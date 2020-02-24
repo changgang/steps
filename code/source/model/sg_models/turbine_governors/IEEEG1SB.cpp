@@ -504,69 +504,66 @@ void IEEEG1SB::initialize()
         STEPS& toolkit = get_toolkit();
 
         GENERATOR* generator = get_generator_pointer();
-        if(generator!=NULL)
+        SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+        if(gen_model!=NULL)
         {
-            SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-            if(gen_model!=NULL)
+            if(not gen_model->is_model_initialized())
+                gen_model->initialize();
+
+            setup_block_toolkit_and_parameters();
+
+            double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
+
+            droop.set_output(0.0);
+            droop.initialize();
+
+            double sumK=get_K1()+get_K3()+get_K5()+get_K7();
+
+            double valve = pmech0/sumK;
+
+            if(valve>get_Pmax_in_pu())
             {
-                if(not gen_model->is_model_initialized())
-                    gen_model->initialize();
-
-                setup_block_toolkit_and_parameters();
-
-                double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
-
-                droop.set_output(0.0);
-                droop.initialize();
-
-                double sumK=get_K1()+get_K3()+get_K5()+get_K7();
-
-                double valve = pmech0/sumK;
-
-                if(valve>get_Pmax_in_pu())
-                {
-                    osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-                      <<"Valve is "<<valve<<", and Pmax is "<<get_Pmax_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-                if(valve<get_Pmin_in_pu())
-                {
-                    osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-                      <<"Valve is "<<valve<<", and Pmin is "<<get_Pmin_in_pu()<<".";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-
-                servo_motor.set_output(valve);
-                delayer1.set_output(valve);
-                delayer2.set_output(valve);
-                delayer3.set_output(valve);
-                delayer4.set_output(valve);
-
-                servo_motor.initialize();
-                delayer1.initialize();
-                delayer2.initialize();
-                delayer3.initialize();
-                delayer4.initialize();
-
-                set_initial_mechanical_power_reference_in_pu_based_on_mbase(valve);
-
-                drum.set_output(1.0+get_Kb()*valve*valve);
-                drum.initialize();
-
-                fuel_delayer2.set_output(valve);
-                fuel_delayer2.initialize();
-
-                fuel_delayer1.set_output(valve);
-                fuel_delayer1.initialize();
-
-                fuel_producer.set_output(valve);
-                fuel_producer.initialize();
-
-                boiler_PI.set_output(valve);
-                boiler_PI.initialize();
-
-                set_flag_model_initialized_as_true();
+                osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                  <<"Valve is "<<valve<<", and Pmax is "<<get_Pmax_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
+            if(valve<get_Pmin_in_pu())
+            {
+                osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                  <<"Valve is "<<valve<<", and Pmin is "<<get_Pmin_in_pu()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+
+            servo_motor.set_output(valve);
+            delayer1.set_output(valve);
+            delayer2.set_output(valve);
+            delayer3.set_output(valve);
+            delayer4.set_output(valve);
+
+            servo_motor.initialize();
+            delayer1.initialize();
+            delayer2.initialize();
+            delayer3.initialize();
+            delayer4.initialize();
+
+            set_initial_mechanical_power_reference_in_pu_based_on_mbase(valve);
+
+            drum.set_output(1.0+get_Kb()*valve*valve);
+            drum.initialize();
+
+            fuel_delayer2.set_output(valve);
+            fuel_delayer2.initialize();
+
+            fuel_delayer1.set_output(valve);
+            fuel_delayer1.initialize();
+
+            fuel_producer.set_output(valve);
+            fuel_producer.initialize();
+
+            boiler_PI.set_output(valve);
+            boiler_PI.initialize();
+
+            set_flag_model_initialized_as_true();
         }
     }
 }

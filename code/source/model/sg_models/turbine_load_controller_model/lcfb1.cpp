@@ -256,32 +256,21 @@ void LCFB1::setup_block_toolkit_and_parameters()
 
 void LCFB1::initialize()
 {
-    ostringstream osstream;
+    setup_block_toolkit_and_parameters();
 
-    GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
-    {
-        setup_block_toolkit_and_parameters();
+    double pref = get_initial_mechanical_power_reference_in_pu_based_on_mbase_from_turbine_governor_model();
+    set_Pref0(pref);
 
-        double pref = get_initial_mechanical_power_reference_in_pu_based_on_mbase_from_turbine_governor_model();
-        set_Pref0(pref);
+    error_integrator.set_output(0.0);
+    error_integrator.initialize();
 
-        error_integrator.set_output(0.0);
-        error_integrator.initialize();
+    double pelec = get_terminal_active_power_in_pu_based_on_mbase_from_generator_model();
+    Pelec_sensor.set_output(pelec);
+    Pelec_sensor.initialize();
 
-        double pelec = get_terminal_active_power_in_pu_based_on_mbase_from_generator_model();
-        Pelec_sensor.set_output(pelec);
-        Pelec_sensor.initialize();
+    set_Pelec0(pelec);
 
-        set_Pelec0(pelec);
-
-        set_flag_model_initialized_as_true();
-    }
-    else
-    {
-        deactivate_model();
-        set_flag_model_initialized_as_true();
-    }
+    set_flag_model_initialized_as_true();
 }
 
 void LCFB1::run(DYNAMIC_MODE mode)

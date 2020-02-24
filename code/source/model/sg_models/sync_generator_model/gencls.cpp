@@ -55,14 +55,11 @@ string GENCLS::get_model_name() const
 void GENCLS::update_source_impedance()
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
-    {
-        complex<double> Zs = generator->get_source_impedance_in_pu();
-        double rs = Zs.real();
-        double xs = Zs.imag();
-        set_Rs(rs);
-        set_Xdp(xs);
-    }
+    complex<double> Zs = generator->get_source_impedance_in_pu();
+    double rs = Zs.real();
+    double xs = Zs.imag();
+    set_Rs(rs);
+    set_Xdp(xs);
 }
 
 

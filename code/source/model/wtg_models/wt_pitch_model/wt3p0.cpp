@@ -301,64 +301,61 @@ void WT3P0::initialize()
 {
     ostringstream osstream;
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
-    if(wt_generator!=NULL)
+    WT_AERODYNAMIC_MODEL* aerdmodel = wt_generator->get_wt_aerodynamic_model();
+    if(aerdmodel!=NULL)
     {
-        WT_AERODYNAMIC_MODEL* aerdmodel = wt_generator->get_wt_aerodynamic_model();
-        if(aerdmodel!=NULL)
+        if(not aerdmodel->is_model_initialized())
+            aerdmodel->initialize();
+
+        setup_block_toolkit_and_parameters();
+
+        STEPS& toolkit = get_toolkit();
+
+        double pitch0 = get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model();
+
+        double pmax = get_Pitchmax_in_deg();
+        double pmin = get_Pitchmin_in_deg();
+        if(pitch0>pmax)
         {
-            if(not aerdmodel->is_model_initialized())
-                aerdmodel->initialize();
+            osstream<<"Initialization error. Pitch of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+              <<"Pitch angle is "<<pitch0<<" deg, and Pitchmax is "<<pmax<<" deg.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+        if(pitch0<pmin)
+        {
+            osstream<<"Initialization error. Pitch of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+              <<"Pitch angle is "<<pitch0<<" deg, and Pitchmin is "<<pmin<<" deg.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
 
-            setup_block_toolkit_and_parameters();
+        pitch_integrator.set_output(pitch0);
+        pitch_integrator.initialize();
 
-            STEPS& toolkit = get_toolkit();
+        speed_controller.set_output(pitch0);
+        speed_controller.initialize();
 
-            double pitch0 = get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model();
+        double speed_ref = get_wt_generator_reference_speed_in_pu();
+        speed_reference_sensor.set_output(speed_ref);
+        speed_reference_sensor.initialize();
+        if(get_hold_wtg_speed_flag()==true)
+            set_const_wtg_speed_reference_in_pu(speed_ref);
 
-            double pmax = get_Pitchmax_in_deg();
-            double pmin = get_Pitchmin_in_deg();
-            if(pitch0>pmax)
-            {
-                osstream<<"Initialization error. Pitch of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-                  <<"Pitch angle is "<<pitch0<<" deg, and Pitchmax is "<<pmax<<" deg.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-            if(pitch0<pmin)
-            {
-                osstream<<"Initialization error. Pitch of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-                  <<"Pitch angle is "<<pitch0<<" deg, and Pitchmin is "<<pmin<<" deg.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
+        frequency_sensor.set_output(0.0);
+        frequency_sensor.initialize();
 
-            pitch_integrator.set_output(pitch0);
-            pitch_integrator.initialize();
+        frequency_controller.set_output(0.0);
+        frequency_controller.initialize();
 
-            speed_controller.set_output(pitch0);
-            speed_controller.initialize();
+        set_flag_model_initialized_as_true();
 
-            double speed_ref = get_wt_generator_reference_speed_in_pu();
-            speed_reference_sensor.set_output(speed_ref);
-            speed_reference_sensor.initialize();
-            if(get_hold_wtg_speed_flag()==true)
-                set_const_wtg_speed_reference_in_pu(speed_ref);
-
-            frequency_sensor.set_output(0.0);
-            frequency_sensor.initialize();
-
-            frequency_controller.set_output(0.0);
-            frequency_controller.initialize();
-
-            set_flag_model_initialized_as_true();
-
-            if(toolkit.is_detailed_log_enabled())
-            {
-                osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
-                        <<"(1) speed regulator state: "<<speed_controller.get_state()<<endl
-                        <<"(2) frequency regulator state: "<<frequency_controller.get_state()<<endl
-                        <<"(3) pitch integrator state: "<<pitch_integrator.get_state()<<endl
-                        <<"(4) pitch angle is "<<get_pitch_angle_in_deg()<<" deg";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
+        if(toolkit.is_detailed_log_enabled())
+        {
+            osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+                    <<"(1) speed regulator state: "<<speed_controller.get_state()<<endl
+                    <<"(2) frequency regulator state: "<<frequency_controller.get_state()<<endl
+                    <<"(3) pitch integrator state: "<<pitch_integrator.get_state()<<endl
+                    <<"(4) pitch angle is "<<get_pitch_angle_in_deg()<<" deg";
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }

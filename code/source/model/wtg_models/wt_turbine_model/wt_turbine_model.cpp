@@ -38,18 +38,13 @@ double WT_TURBINE_MODEL::get_damping_in_pu() const
 double WT_TURBINE_MODEL::get_wt_generator_active_power_generation_in_MW() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen != NULL)
+    WT_GENERATOR_MODEL* genmodel = gen->get_wt_generator_model();
+    if(genmodel != NULL)
     {
-        WT_GENERATOR_MODEL* genmodel = gen->get_wt_generator_model();
-        if(genmodel != NULL)
-        {
-            if(not genmodel->is_model_initialized())
-                genmodel->initialize();
+        if(not genmodel->is_model_initialized())
+            genmodel->initialize();
 
-            return genmodel->get_terminal_active_power_in_MW();
-        }
-        else
-            return 0.0;
+        return genmodel->get_terminal_active_power_in_MW();
     }
     else
         return 0.0;
@@ -58,18 +53,13 @@ double WT_TURBINE_MODEL::get_wt_generator_active_power_generation_in_MW() const
 double WT_TURBINE_MODEL::get_initial_wind_turbine_speed_in_pu_from_wt_areodynamic_model() const
 {
     WT_GENERATOR* generator = get_wt_generator_pointer();
-    if(generator!=NULL)
+    WT_AERODYNAMIC_MODEL* aero_model = generator->get_wt_aerodynamic_model();
+    if(aero_model!=NULL)
     {
-        WT_AERODYNAMIC_MODEL* aero_model = generator->get_wt_aerodynamic_model();
-        if(aero_model!=NULL)
-        {
-            if(not aero_model->is_model_initialized())
-                aero_model->initialize();
+        if(not aero_model->is_model_initialized())
+            aero_model->initialize();
 
-            return aero_model->get_initial_turbine_speed_in_pu();
-        }
-        else
-            return 0.0;
+        return aero_model->get_initial_turbine_speed_in_pu();
     }
     else
         return 0.0;
@@ -78,19 +68,14 @@ double WT_TURBINE_MODEL::get_initial_wind_turbine_speed_in_pu_from_wt_areodynami
 double WT_TURBINE_MODEL::get_mechanical_power_in_pu_from_wt_aerodynamic_model() const
 {
     WT_GENERATOR* generator = get_wt_generator_pointer();
-    if(generator!=NULL)
+    WT_AERODYNAMIC_MODEL* aero_model = generator->get_wt_aerodynamic_model();
+    if(aero_model!=NULL)
     {
-        WT_AERODYNAMIC_MODEL* aero_model = generator->get_wt_aerodynamic_model();
-        if(aero_model!=NULL)
-        {
-            if(not aero_model->is_model_initialized())
-                aero_model->initialize();
+        if(not aero_model->is_model_initialized())
+            aero_model->initialize();
 
-            double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
-            return aero_model->get_turbine_mechanical_power_in_MW()*one_over_mbase;
-        }
-        else
-            return 0.0;
+        double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
+        return aero_model->get_turbine_mechanical_power_in_MW()*one_over_mbase;
     }
     else
         return 0.0;

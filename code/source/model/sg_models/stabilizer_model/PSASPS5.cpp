@@ -283,23 +283,16 @@ void PSASPS5::setup_block_toolkit_and_parameters()
 
 void PSASPS5::initialize()
 {
-    ostringstream osstream;
-
     GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
+    EXCITER_MODEL* exciter = generator->get_exciter_model();
+    if(exciter!=NULL)
     {
-        EXCITER_MODEL* exciter = generator->get_exciter_model();
-        if(exciter!=NULL)
-        {
-            if(not exciter->is_model_initialized())
-                exciter->initialize();
+        if(not exciter->is_model_initialized())
+            exciter->initialize();
 
-            setup_block_toolkit_and_parameters();
-            return;
+        setup_block_toolkit_and_parameters();
+        return;
 
-        }
-        else
-            deactivate_model();
     }
     else
         deactivate_model();
