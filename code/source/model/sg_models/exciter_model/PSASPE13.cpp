@@ -387,20 +387,26 @@ void PSASPE13::run(DYNAMIC_MODE mode)
     sensor.set_input(Ecomp);
     sensor.run(mode);
 
-    double input = Vref-sensor.get_output()+Vs+feedbacker.get_output();
     double VImax = get_VImax_in_pu();
     double VImin = get_VImin_in_pu();
-    if(input>VImax) input = VImax;
-    if(input<VImin) input = VImin;
+    for(unsigned int i=0; i<STEPS_MODEL_FEEDBACK_LOOP_INTEGRATION_COUNT; ++i)
+    {
+        double input = Vref-sensor.get_output()+Vs+feedbacker.get_output();
+        if(input>VImax) input = VImax;
+        if(input<VImin) input = VImin;
 
-    tuner.set_input(input);
-    tuner.run(mode);
+        tuner.set_input(input);
+        tuner.run(mode);
 
-    regulator.set_input(tuner.get_output());
-    regulator.run(mode);
+        regulator.set_input(tuner.get_output());
+        regulator.run(mode);
 
-    feedbacker.set_input(regulator.get_output());
-    feedbacker.run(mode);
+        feedbacker.set_input(regulator.get_output());
+        feedbacker.run(mode);
+
+        if(feedbacker.get_K()==0.0)
+            break;
+    }
     //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
 
     if(mode == UPDATE_MODE)

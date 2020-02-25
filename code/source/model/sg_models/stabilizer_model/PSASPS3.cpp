@@ -433,24 +433,29 @@ void PSASPS3::run(DYNAMIC_MODE mode)
 
         dedc_block_2.set_input(input);
         dedc_block_2.run(mode);
-        input = dedc_block_2.get_output();
 
-        input -= (phase_tuner_1.get_output()+phase_tuner_2.get_output()+phase_tuner_3.get_output()+phase_tuner_4.get_output());
 
-        phase_tuner_1.set_input(input);
-        phase_tuner_1.run(mode);
-        input = phase_tuner_1.get_output();
+        for(unsigned int i=0; i<STEPS_MODEL_FEEDBACK_LOOP_INTEGRATION_COUNT; ++i)
+        {
+            input = dedc_block_2.get_output();
 
-        phase_tuner_2.set_input(input);
-        phase_tuner_2.run(mode);
-        input = phase_tuner_2.get_output();
+            input -= (phase_tuner_1.get_output()+phase_tuner_2.get_output()+phase_tuner_3.get_output()+phase_tuner_4.get_output());
 
-        phase_tuner_3.set_input(input);
-        phase_tuner_3.run(mode);
-        input = phase_tuner_3.get_output();
+            phase_tuner_1.set_input(input);
+            phase_tuner_1.run(mode);
+            input = phase_tuner_1.get_output();
 
-        phase_tuner_4.set_input(input);
-        phase_tuner_4.run(mode);
+            phase_tuner_2.set_input(input);
+            phase_tuner_2.run(mode);
+            input = phase_tuner_2.get_output();
+
+            phase_tuner_3.set_input(input);
+            phase_tuner_3.run(mode);
+            input = phase_tuner_3.get_output();
+
+            phase_tuner_4.set_input(input);
+            phase_tuner_4.run(mode);
+        }
 
         if(mode==UPDATE_MODE)
             set_flag_model_updated_as_true();

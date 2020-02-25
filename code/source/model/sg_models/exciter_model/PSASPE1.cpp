@@ -318,23 +318,29 @@ void PSASPE1::run(DYNAMIC_MODE mode)
     sensor.set_input(input);
     sensor.run(mode);
 
-    input = sensor.get_output()+Vs-feedbacker.get_output();
-    regulator.set_input(input);
-    regulator.run(mode);
-
-    input = Efd0+regulator.get_output();
     double VAmax = get_VAmax_in_pu();
     double VAmin = get_VAmin_in_pu();
-    if(input>VAmax) input = VAmax;
-    if(input<VAmin) input = VAmin;
+    for(unsigned int i=0; i<STEPS_MODEL_FEEDBACK_LOOP_INTEGRATION_COUNT; ++i)
+    {
+        input = sensor.get_output()+Vs-feedbacker.get_output();
+        regulator.set_input(input);
+        regulator.run(mode);
 
-    exciter.set_input(input);
-    exciter.run(mode);
+        input = Efd0+regulator.get_output();
+        if(input>VAmax) input = VAmax;
+        if(input<VAmin) input = VAmin;
 
-    double Efd = get_excitation_voltage_in_pu();
+        exciter.set_input(input);
+        exciter.run(mode);
 
-    feedbacker.set_input(Efd);
-    feedbacker.run(mode);
+        double Efd = get_excitation_voltage_in_pu();
+
+        feedbacker.set_input(Efd);
+        feedbacker.run(mode);
+
+        if(feedbacker.get_K()==0.0)
+            break;
+    }
     //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
 
     if(mode == UPDATE_MODE)

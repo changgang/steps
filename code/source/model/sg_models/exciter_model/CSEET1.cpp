@@ -995,103 +995,106 @@ void CSEET1::run(DYNAMIC_MODE mode)
     if(gen_model!=NULL)
     {
         double Ecomp = get_compensated_voltage_in_pu();
-        double Vref = get_voltage_reference_in_pu();
-        double Vs = get_stabilizing_signal_in_pu();
-        double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
-
-        double Ve = exciter.get_output();
-        double Vemax = get_Vemax_in_pu();
-        if(Ve>Vemax)
-            Ve = Vemax;
-
-        double Efd = get_excitation_voltage_in_pu();
-
-        double SE = saturation_block.get_saturation(Ve);
-        double KE = get_KE();
-        double KD = get_KD();
-
-        double Vfe = (SE+KE)*Ve+KD*Ifd;
-        double V_to_feedback = Vfe;
-        if(get_exciter_brush()==WITH_BRUSH)
-            V_to_feedback = Efd;
-
-        feedbacker.set_input(V_to_feedback);
-        feedbacker.run(mode);
-
         sensor.set_input(Ecomp);
         sensor.run(mode);
 
-        double input;
-        input = Vref+Vs-sensor.get_output();
+        double Vref = get_voltage_reference_in_pu();
+        double Vs = get_stabilizing_signal_in_pu();
+        double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
+        double Vt = get_terminal_voltage_in_pu();
 
-        if(get_feedback_slot()==AT_VOLTAGE_ERROR)
-            input -= feedbacker.get_output();
-
-        if(get_tuner_type()==SERIAL_TUNER)
-        {
-            if(get_serial_tuner_KV()==true)
-            {
-                serial_tuner1_lead_lag.set_input(input);
-                serial_tuner1_lead_lag.run(mode);
-                input = serial_tuner1_lead_lag.get_output();
-            }
-            else
-            {
-                serial_tuner1_pi.set_input(input);
-                serial_tuner1_pi.run(mode);
-                input = serial_tuner1_pi.get_output();
-            }
-
-            serial_tuner2.set_input(input);
-            serial_tuner2.run(mode);
-            input = serial_tuner2.get_output();
-        }
-        else
-        {
-            parallel_tuner_integral.set_input(input);
-            parallel_tuner_integral.run(mode);
-            parallel_tuner_differential.set_input(input);
-            parallel_tuner_differential.run(mode);
-
-            input = input*get_parallel_tuner_KP()+parallel_tuner_integral.get_output()+parallel_tuner_differential.get_output();
-        }
-
-        if(get_feedback_slot()==AT_REGULATOR)
-            input -= feedbacker.get_output();
-
-        regulator1.set_input(input);
-        regulator1.run(mode);
-        input = regulator1.get_output();
-
+        double Vemax = get_Vemax_in_pu();
+        double KE = get_KE();
+        double KD = get_KD();
         double KH = get_KH();
-        input = input-KH*V_to_feedback;
-
-        regulator2.set_input(input);
-        regulator2.run(mode);
-
-        double Vr = regulator2.get_output();
         double Vrmax = get_VRmax_in_pu();
         double Vrmin = get_VRmin_in_pu();
 
-        //double Vt = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
-        double Vt = get_terminal_voltage_in_pu();
-
-        if(get_excitation_source()==SELF_EXCITATION)
+        for(unsigned int i=0; i<STEPS_MODEL_FEEDBACK_LOOP_INTEGRATION_COUNT; ++i)
         {
-            Vrmax *= Vt;
-            Vrmin *= Vt;
+            double Ve = exciter.get_output();
+            if(Ve>Vemax)
+                Ve = Vemax;
+
+            double SE = saturation_block.get_saturation(Ve);
+
+            double Efd = get_excitation_voltage_in_pu();
+
+            double Vfe = (SE+KE)*Ve+KD*Ifd;
+            double V_to_feedback = Vfe;
+            if(get_exciter_brush()==WITH_BRUSH)
+                V_to_feedback = Efd;
+
+            feedbacker.set_input(V_to_feedback);
+            feedbacker.run(mode);
+
+            double input;
+            input = Vref+Vs-sensor.get_output();
+
+            if(get_feedback_slot()==AT_VOLTAGE_ERROR)
+                input -= feedbacker.get_output();
+
+            if(get_tuner_type()==SERIAL_TUNER)
+            {
+                if(get_serial_tuner_KV()==true)
+                {
+                    serial_tuner1_lead_lag.set_input(input);
+                    serial_tuner1_lead_lag.run(mode);
+                    input = serial_tuner1_lead_lag.get_output();
+                }
+                else
+                {
+                    serial_tuner1_pi.set_input(input);
+                    serial_tuner1_pi.run(mode);
+                    input = serial_tuner1_pi.get_output();
+                }
+
+                serial_tuner2.set_input(input);
+                serial_tuner2.run(mode);
+                input = serial_tuner2.get_output();
+            }
+            else
+            {
+                parallel_tuner_integral.set_input(input);
+                parallel_tuner_integral.run(mode);
+                parallel_tuner_differential.set_input(input);
+                parallel_tuner_differential.run(mode);
+
+                input = input*get_parallel_tuner_KP()+parallel_tuner_integral.get_output()+parallel_tuner_differential.get_output();
+            }
+
+            if(get_feedback_slot()==AT_REGULATOR)
+                input -= feedbacker.get_output();
+
+            regulator1.set_input(input);
+            regulator1.run(mode);
+            input = regulator1.get_output();
+
+            input = input-KH*V_to_feedback;
+
+            regulator2.set_input(input);
+            regulator2.run(mode);
+
+            double Vr = regulator2.get_output();
+
+            //double Vt = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
+
+            if(get_excitation_source()==SELF_EXCITATION)
+            {
+                Vrmax *= Vt;
+                Vrmin *= Vt;
+            }
+
+            if(Vr>Vrmax)
+                Vr = Vrmax;
+
+            if(Vr<Vrmin)
+                Vr = Vrmin;
+
+            input = Vr-Vfe;
+            exciter.set_input(input);
+            exciter.run(mode);
         }
-
-        if(Vr>Vrmax)
-            Vr = Vrmax;
-
-        if(Vr<Vrmin)
-            Vr = Vrmin;
-
-        input = Vr-Vfe;
-        exciter.set_input(input);
-        exciter.run(mode);
-
         //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
 
         if(mode == UPDATE_MODE)

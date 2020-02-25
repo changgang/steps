@@ -47,37 +47,48 @@ double DIFFERENTIAL_BLOCK::get_T_in_s() const
 
 void DIFFERENTIAL_BLOCK::initialize()
 {
-    STEPS& toolkit = get_toolkit();
-    double h = toolkit.get_dynamic_simulation_time_step_in_s();
-
     double k = get_K();
-    double t = get_T_in_s();
+    if(k!=0.0)
+    {
+        STEPS& toolkit = get_toolkit();
+        double h = toolkit.get_dynamic_simulation_time_step_in_s();
+        double t = get_T_in_s();
 
-    one_over_t = 1.0/t;
-    k_over_t = k*one_over_t;
-    t_over_h = t/h;
+        one_over_t = 1.0/t;
+        k_over_t = k*one_over_t;
+        t_over_h = t/h;
 
-    double x = get_input();
+        double x = get_input();
 
-    double y = 0.0;
+        double y = 0.0;
 
-    double s, z;
+        double s, z;
 
-    //s = x*k/t;
-    //z = k/t*x-(1.0-2.0*t/h)*s;
-    s = x*k_over_t;
-    z = k_over_t*x-(1.0-2.0*t_over_h)*s;
+        //s = x*k/t;
+        //z = k/t*x-(1.0-2.0*t/h)*s;
+        s = x*k_over_t;
+        z = k_over_t*x-(1.0-2.0*t_over_h)*s;
 
-    set_state(s);
-    set_store(z);
-    set_output(y);
+        set_state(s);
+        set_store(z);
+        set_output(y);
+    }
+    else
+    {
+        set_state(0.0);
+        set_store(0.0);
+        set_output(0.0);
+    }
 }
 void DIFFERENTIAL_BLOCK::run(DYNAMIC_MODE mode)
 {
-    if(mode==INTEGRATE_MODE)
-        integrate();
-    if(mode==UPDATE_MODE)
-        update();
+    if(get_K()!=0.0)
+    {
+        if(mode==INTEGRATE_MODE)
+            integrate();
+        if(mode==UPDATE_MODE)
+            update();
+    }
 }
 
 void DIFFERENTIAL_BLOCK::integrate()

@@ -723,17 +723,22 @@ void CSEET2::run(DYNAMIC_MODE mode)
             input = get_parallel_tuner_KP()*input+parallel_integral.get_output()+parallel_differential.get_output();
         }
 
+        for(unsigned int i=0; i<STEPS_MODEL_FEEDBACK_LOOP_INTEGRATION_COUNT; ++i)
+        {
+            double input2 = input - feedbacker.get_output();
+            if(get_stabilizer_slot()==AT_REGULATOR)
+                input2 += Vs;
 
-        input -= feedbacker.get_output();
-        if(get_stabilizer_slot()==AT_REGULATOR)
-            input += Vs;
+            regulator.set_input(input2);
+            regulator.run(mode);
+            input2 = regulator.get_output();
 
-        regulator.set_input(input);
-        regulator.run(mode);
-        input = regulator.get_output();
+            feedbacker.set_input(input2);
+            feedbacker.run(mode);
 
-        feedbacker.set_input(input);
-        feedbacker.run(mode);
+            if(feedbacker.get_K()==0.0)
+                break;
+        }
 
         //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
 
