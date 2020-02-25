@@ -361,7 +361,7 @@ complex<double> GENSAL::get_source_Norton_equivalent_complex_current_in_pu_in_xy
     STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
-    return Exy/Z*(mbase*one_over_sbase);
+    return (Exy/Z)*(mbase*one_over_sbase);
 }
 
 complex<double> GENSAL::get_terminal_complex_current_in_pu_in_dq_axis_based_on_mbase()
@@ -768,10 +768,11 @@ complex<double> GENSAL::get_internal_voltage_in_pu_in_dq_axis()
 
     double flux_q = -subtransient_block_q_axis->get_output();
 
-    complex<double> Flux_dq(flux_d, flux_q);
+    return complex<double>(-flux_q, flux_d);
+    /*complex<double> Flux_dq(flux_d, flux_q);
     complex<double> Edq = Flux_dq/complex<double>(0.0, -1.0);  // omega is ignored when converting from flux to voltage
 
-    return Edq;
+    return Edq;*/
 }
 
 complex<double> GENSAL::get_internal_voltage_in_pu_in_xy_axis()

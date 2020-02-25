@@ -223,7 +223,7 @@ complex<double> GENCLS::get_source_Norton_equivalent_complex_current_in_pu_in_xy
     double mbase = get_mbase_in_MVA();
     STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
-    complex<double> I = Exy/Z*(mbase*one_over_sbase);
+    complex<double> I = (Exy/Z)*(mbase*one_over_sbase);
     if(isnan(I.real()) or isnan(I.imag()))
     {
         ostringstream osstream;

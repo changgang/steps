@@ -3116,7 +3116,7 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
             unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
             LOAD_MODEL* model = load->get_load_model();
-            if(not model->is_voltage_source())
+            if(model==NULL or not model->is_voltage_source())
                 I_mismatch[internal_bus] -= load->get_dynamics_load_current_in_pu_based_on_system_base_power();
             else
                 I_mismatch[internal_bus] += load->get_dynamics_load_norton_current_in_pu_based_on_system_base_power();

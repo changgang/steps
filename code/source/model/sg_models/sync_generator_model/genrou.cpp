@@ -425,10 +425,9 @@ complex<double> GENROU::get_source_Norton_equivalent_complex_current_in_pu_in_xy
     complex<double> Z(get_Rs(), get_Xpp());
     double mbase = get_mbase_in_MVA();
     STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double sbase = psdb.get_system_base_power_in_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
-    return (Exy*mbase)/(Z*sbase);
+    return (Exy/Z)*(mbase*one_over_sbase);
 }
 
 complex<double> GENROU::get_terminal_complex_current_in_pu_in_dq_axis_based_on_mbase()
@@ -884,13 +883,16 @@ complex<double> GENROU::get_internal_voltage_in_pu_in_dq_axis()
 
     double flux_q = transient_block_q_axis->get_output()*(get_Xpp()-get_Xl())+subtransient_block_q_axis->get_output()*(get_Xqp()-get_Xpp());
     flux_q /= (get_Xqp()-get_Xl());
-    flux_q = -flux_q;
 
+    return complex<double>(flux_q, flux_d);
+
+    /*
+    flux_q = -flux_q;
     complex<double> Flux_dq(flux_d, flux_q);
     complex<double> Edq = Flux_dq/complex<double>(0.0, -1.0);  // omega is ignored when converting from flux to voltage
     //cout<<"Flux_dq = "<<Flux_dq<<", Edq = "<<Edq<<", Eq0'="<<transient_block_q_axis->get_output()<<", Eq0''="<<subtransient_block_q_axis->get_output()<<endl;
 
-    return Edq;
+    return Edq;*/
 }
 
 
