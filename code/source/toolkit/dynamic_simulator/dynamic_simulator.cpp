@@ -2133,9 +2133,7 @@ void DYNAMICS_SIMULATOR::run_a_step()
     ostringstream osstream;
 
     TIME += DELT;
-    if(not detailed_log_enabled)
-        ;
-    else
+    if(detailed_log_enabled)
     {
         osstream<<"Run dynamic simulation at time "<<TIME<<"s.";
         toolkit->show_information_with_leading_time_stamp(osstream);
@@ -2157,9 +2155,7 @@ void DYNAMICS_SIMULATOR::run_a_step()
     while(true)
     {
         ++ITER_DAE;
-        if(not detailed_log_enabled)
-            ;
-        else
+        if(detailed_log_enabled)
         {
             osstream<<"Solve DAE with iteration "<<ITER_DAE<<" at time "<<TIME<<"s.";
             toolkit->show_information_with_leading_time_stamp(osstream);
@@ -2172,15 +2168,10 @@ void DYNAMICS_SIMULATOR::run_a_step()
 
             ITER_NET += network_iteration_count;
 
-            if(not detailed_log_enabled)
-                ;
-            else
+            if(detailed_log_enabled and not network_converged)
             {
-                if(not network_converged)
-                {
-                    osstream<<"Failed to solve network in "<<max_network_iteration<<" iterations during DAE iteration "<<ITER_DAE<<" when integrating at time "<<TIME<<" s.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
-                }
+                osstream<<"Failed to solve network in "<<max_network_iteration<<" iterations during DAE iteration "<<ITER_DAE<<" when integrating at time "<<TIME<<" s.";
+                toolkit->show_information_with_leading_time_stamp(osstream);
             }
             if(ITER_DAE>=get_min_DAE_iteration() and network_converged) // DAE solution converged
                 break;

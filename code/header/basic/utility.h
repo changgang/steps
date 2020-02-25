@@ -55,7 +55,8 @@ double round_angle_in_rad_to_HALF_PI(double angle);
 
 double steps_fast_complex_abs(const complex<double>& z);
 double steps_fast_complex_arg(const complex<double>& z);
-double steps_fast_pow(double base, double exp);
+
+double steps_pow(double base, double exp);
 
 double steps_sqrt(double x);
 double steps_fast_sqrt(double x);

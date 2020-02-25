@@ -91,20 +91,19 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
 
     if(get_status()==true)
     {
-        STEPS& toolkit = get_toolkit();
-
         WT_GENERATOR_MODEL* gen = get_wt_generator_model();
-        WT_AERODYNAMIC_MODEL* aero = get_wt_aerodynamic_model();
         WT_TURBINE_MODEL* turbine = get_wt_turbine_model();
         WT_ELECTRICAL_MODEL* elec = get_wt_electrical_model();
         WT_PITCH_MODEL* pitch = get_wt_pitch_model();
-        WIND_SPEED_MODEL* wind = get_wind_speed_model();
         WT_RELAY_MODEL* relay = get_wt_relay_model();
 
         switch(mode)
         {
             case INITIALIZE_MODE:
             {
+                STEPS& toolkit = get_toolkit();
+                WT_AERODYNAMIC_MODEL* aero = get_wt_aerodynamic_model();
+                WIND_SPEED_MODEL* wind = get_wind_speed_model();
                 if(gen!=NULL)
                     gen->initialize();
                 else

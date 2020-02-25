@@ -69,6 +69,8 @@ class LOAD : public NONBUS_DEVICE
         static void set_voltage_threshold_of_constant_current_load_in_pu(double v);
         static double get_voltage_threshold_of_constant_power_load_in_pu();
         static double get_voltage_threshold_of_constant_current_load_in_pu();
+        static double get_one_over_voltage_threshold_of_constant_power_load_in_pu();
+        static double get_one_over_voltage_threshold_of_constant_current_load_in_pu();
 
         virtual void set_model(const MODEL* model);
         virtual MODEL* get_model_of_type(string model_type);
@@ -103,6 +105,8 @@ class LOAD : public NONBUS_DEVICE
 
         static double voltage_threshold_of_constant_power_load_in_pu;
         static double voltage_threshold_of_constant_current_load_in_pu;
+        static double one_over_voltage_threshold_of_constant_power_load_in_pu;
+        static double one_over_voltage_threshold_of_constant_current_load_in_pu;
 
         double manually_scale_in_pu;
 

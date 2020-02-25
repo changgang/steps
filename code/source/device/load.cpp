@@ -11,6 +11,8 @@ using namespace std;
 
 double LOAD::voltage_threshold_of_constant_power_load_in_pu = 0.7;
 double LOAD::voltage_threshold_of_constant_current_load_in_pu = 0.5;
+double LOAD::one_over_voltage_threshold_of_constant_power_load_in_pu = 1.0/0.7;
+double LOAD::one_over_voltage_threshold_of_constant_current_load_in_pu = 2.0;
 
 LOAD::LOAD(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
 {
@@ -276,7 +278,8 @@ complex<double> LOAD::get_actual_constant_power_load_in_MVA() const
 
         double v = busptr->get_positive_sequence_voltage_in_pu();
 
-        return S0*get_load_scale_with_voltage(0.0, v, LOAD_ELLIPTICAL_CV);
+        //return S0*get_load_scale_with_voltage(0.0, v, LOAD_ELLIPTICAL_CV);
+        return S0*get_load_scale_with_voltage(0.0, v, LOAD_LINEAR_CV);
     }
     else
         return 0.0;
@@ -289,7 +292,8 @@ complex<double> LOAD::get_actual_constant_current_load_in_MVA() const
         complex<double> S0 = get_nominal_constant_current_load_in_MVA();
         double v = busptr->get_positive_sequence_voltage_in_pu();
 
-        return S0*get_load_scale_with_voltage(1.0, v, LOAD_ELLIPTICAL_CV);
+        //return S0*get_load_scale_with_voltage(1.0, v, LOAD_ELLIPTICAL_CV);
+        return S0*get_load_scale_with_voltage(1.0, v, LOAD_LINEAR_CV);
     }
     else
         return 0.0;
@@ -310,8 +314,56 @@ complex<double> LOAD::get_actual_constant_impedance_load_in_MVA() const
 
 double LOAD::get_load_scale_with_voltage(double exp, double v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type)
 {
+    if(exp==0.0) // constant power
+    {
+        double vth = get_voltage_threshold_of_constant_power_load_in_pu();
+        if(v>=vth)
+            return 1.0;
+        else
+        {
+            double Imax = get_one_over_voltage_threshold_of_constant_power_load_in_pu();
+            return get_load_scale_with_Imax_and_voltage(Imax, v, vth, cv_type);
+        }
+    }
+    else
+    {
+        if(exp==1.0) // constant current
+        {
+            double vth = get_voltage_threshold_of_constant_current_load_in_pu();
+            if(v>vth)
+                return v;
+            else
+            {
+                double Imax = 1.0;
+                return get_load_scale_with_Imax_and_voltage(Imax, v, vth, cv_type);
+            }
+        }
+        else
+        {
+            if(exp==2.0) // constant power
+                return v*v;
+            else
+            {
+                if(exp>2.0) // higher than constant power
+                    return steps_pow(v, exp);
+                else // otherwise, treat as constant current
+                {
+                    double vth = get_voltage_threshold_of_constant_current_load_in_pu();
+                    if(v>=vth)
+                        return steps_pow(v, exp);
+                    else
+                    {
+                        double Imax = 1.0/steps_pow(vth, exp-1.0);
+                        return get_load_scale_with_Imax_and_voltage(Imax, v, vth, cv_type);
+                    }
+                }
+            }
+        }
+    }
+
+    /*
     if(exp>=2.0)// higher than constant impedance
-        return pow(v, exp);
+        return steps_pow(v, exp);
     else
     {
         if(exp==0.0) // constant power
@@ -328,21 +380,40 @@ double LOAD::get_load_scale_with_voltage(double exp, double v, LOAD_CURRENT_VOLT
         else // otherwise, including constant current
         {
             double vth = get_voltage_threshold_of_constant_current_load_in_pu();
-            if(v>=vth)
-                return pow(v, exp);
+            if(exp==1.0)
+            {
+                if(v>vth)
+                    return v;
+                else
+                {
+                    double Imax = 1.0;
+                    return get_load_scale_with_Imax_and_voltage(Imax, v, vth, cv_type);
+                }
+            }
             else
             {
-                double Imax = 1.0/pow(vth, exp-1.0);
-                return get_load_scale_with_Imax_and_voltage(Imax, v, vth, cv_type);
+                if(v>=vth)
+                    return steps_pow(v, exp);
+                else
+                {
+                    double Imax = 1.0/steps_pow(vth, exp-1.0);
+                    return get_load_scale_with_Imax_and_voltage(Imax, v, vth, cv_type);
+                }
             }
         }
     }
+    */
 }
 
 double LOAD::get_load_scale_with_Imax_and_voltage(double Imax, double v, double vth, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type)
 {
     switch(cv_type)
     {
+        case LOAD_LINEAR_CV:
+        {
+            double I = Imax*v/vth;
+            return v*I;
+        }
         case LOAD_ELLIPTICAL_CV:
         {
             // (v-vth)^2/vth^2+I^2/Imax^2=1
@@ -350,11 +421,6 @@ double LOAD::get_load_scale_with_Imax_and_voltage(double Imax, double v, double 
             double vscale = v/vth-1.0;
 
             double I = steps_sqrt(1.0-vscale*vscale)*Imax;
-            return v*I;
-        }
-        case LOAD_LINEAR_CV:
-        {
-            double I = Imax*v/vth;
             return v*I;
         }
         default: // LOAD_CONSTANT_CV
@@ -367,13 +433,19 @@ double LOAD::get_load_scale_with_Imax_and_voltage(double Imax, double v, double 
 void LOAD::set_voltage_threshold_of_constant_power_load_in_pu(double v)
 {
     if(v>0.0)
+    {
         voltage_threshold_of_constant_power_load_in_pu = v;
+        one_over_voltage_threshold_of_constant_power_load_in_pu = 1.0/v;
+    }
 }
 
 void LOAD::set_voltage_threshold_of_constant_current_load_in_pu(double v)
 {
     if(v>0.0)
+    {
         voltage_threshold_of_constant_current_load_in_pu = v;
+        one_over_voltage_threshold_of_constant_current_load_in_pu = 1.0/v;
+    }
 }
 
 double LOAD::get_voltage_threshold_of_constant_power_load_in_pu()
@@ -384,6 +456,16 @@ double LOAD::get_voltage_threshold_of_constant_power_load_in_pu()
 double LOAD::get_voltage_threshold_of_constant_current_load_in_pu()
 {
     return voltage_threshold_of_constant_current_load_in_pu;
+}
+
+double LOAD::get_one_over_voltage_threshold_of_constant_power_load_in_pu()
+{
+    return one_over_voltage_threshold_of_constant_power_load_in_pu;
+}
+
+double LOAD::get_one_over_voltage_threshold_of_constant_current_load_in_pu()
+{
+    return one_over_voltage_threshold_of_constant_current_load_in_pu;
 }
 
 void LOAD::set_model(const MODEL* model)
@@ -458,22 +540,22 @@ void LOAD::run(DYNAMIC_MODE mode)
 {
     if(get_status()==true)
     {
+        LOAD_VOLTAGE_RELAY_MODEL* uvls = get_load_voltage_relay_model();
+        LOAD_FREQUENCY_RELAY_MODEL* ufls = get_load_frequency_relay_model();
+        LOAD_MODEL* load = get_load_model();
         switch(mode)
         {
             case INITIALIZE_MODE:
             {
                 set_load_manually_scale_factor_in_pu(0.0);
 
-                LOAD_MODEL* load = get_load_model();
                 if(load != NULL)
                 {
                     load->initialize();
 
-                    LOAD_VOLTAGE_RELAY_MODEL* uvls = get_load_voltage_relay_model();
                     if(uvls!=NULL)
                         uvls->initialize();
 
-                    LOAD_FREQUENCY_RELAY_MODEL* ufls = get_load_frequency_relay_model();
                     if(ufls!=NULL)
                         ufls->initialize();
                 }
@@ -482,26 +564,21 @@ void LOAD::run(DYNAMIC_MODE mode)
             case INTEGRATE_MODE:
             case UPDATE_MODE:
             {
-                LOAD_VOLTAGE_RELAY_MODEL* uvls = get_load_voltage_relay_model();
                 if(uvls!=NULL and uvls->is_model_active())
                     uvls->run(mode);
 
-                LOAD_FREQUENCY_RELAY_MODEL* ufls = get_load_frequency_relay_model();
                 if(ufls!=NULL and ufls->is_model_active())
                     ufls->run(mode);
 
-                LOAD_MODEL* load = get_load_model();
                 if(load!=NULL and load->is_model_active())
                     load->run(mode);
                 break;
             }
             case RELAY_MODE:
             {
-                LOAD_VOLTAGE_RELAY_MODEL* uvls = get_load_voltage_relay_model();
                 if(uvls!=NULL and uvls->is_model_active())
                     uvls->run(mode);
 
-                LOAD_FREQUENCY_RELAY_MODEL* ufls = get_load_frequency_relay_model();
                 if(ufls!=NULL and ufls->is_model_active())
                     ufls->run(mode);
             }
