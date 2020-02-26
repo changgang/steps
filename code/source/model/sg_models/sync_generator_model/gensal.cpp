@@ -713,6 +713,7 @@ double GENSAL::get_field_current_in_pu_based_on_mbase()
     double fluxd = transient_block_d_axis->get_output()*(xpp-xl)/(xdp-xl) + subtransient_block_d_axis->get_output()*(xdp-xpp)/(xdp-xl);
     double fluxq = -subtransient_block_q_axis->get_output();
     complex<double> Flux_dq(fluxd, fluxq);
+    double Flux = steps_fast_complex_abs(Flux_dq);
 
     complex<double> Edq = Flux_dq/(complex<double>(0.0, -1.0));
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
@@ -720,7 +721,7 @@ double GENSAL::get_field_current_in_pu_based_on_mbase()
     complex<double> Zsource(get_Rs(), get_Xpp());
     complex<double> Idq = (Edq-Vdq)/Zsource;
 
-    double saturation = get_saturation_with_flux(steps_fast_complex_abs(Flux_dq));
+    double saturation = get_saturation_with_flux(Flux);
 
     double xadifd;
     // d-axis
@@ -728,7 +729,7 @@ double GENSAL::get_field_current_in_pu_based_on_mbase()
     xadifd = transient_block_d_axis->get_output()-subtransient_block_d_axis->get_output()-Idq.real()*(xdp-xl);
 
     xadifd = transient_block_d_axis->get_output()+(xd-xdp)*(Idq.real()+xadifd*(xdp-xpp)/((xdp-xl)*(xdp-xl)))+
-            Flux_dq.real()/ steps_fast_complex_abs(Flux_dq)*saturation;
+            Flux_dq.real()/ Flux*saturation;
 
     return xadifd/(xd-xl);
 }

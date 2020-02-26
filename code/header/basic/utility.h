@@ -80,6 +80,11 @@ complex<double> xy2dq_with_angle_in_rad(const complex<double>& V, double angle);
 complex<double> dq2xy_with_angle_in_deg(const complex<double>& V, double angle);
 complex<double> dq2xy_with_angle_in_rad(const complex<double>& V, double angle);
 
+complex<double> get_xy2dq_rotation_with_angle_in_deg(double angle);
+complex<double> get_xy2dq_rotation_with_angle_in_rad(double angle);
+complex<double> get_dq2xy_rotation_with_angle_in_deg(double angle);
+complex<double> get_dq2xy_rotation_with_angle_in_rad(double angle);
+
 bool is_file_exist(const string& file);
 
 void show_information_with_leading_time_stamp_with_default_toolkit(const string& info);

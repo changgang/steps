@@ -53,6 +53,12 @@ complex<double> PVU_MODEL::get_terminal_complex_voltage_in_pu() const
     return bus->get_positive_sequence_complex_voltage_in_pu();
 }
 
+double PVU_MODEL::get_terminal_voltage_angle_in_rad() const
+{
+    BUS* bus = get_bus_pointer();
+    return bus->get_positive_sequence_angle_in_rad();
+}
+
 double PVU_MODEL::get_bus_base_frequency_in_Hz() const
 {
     BUS* bus = get_bus_pointer();

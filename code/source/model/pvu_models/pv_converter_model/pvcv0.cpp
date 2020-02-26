@@ -332,8 +332,8 @@ void PVCV0::initialize()
 
 
         complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-        double V = steps_fast_complex_abs(Vxy);
-        double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
+        double V = get_terminal_voltage_in_pu();
+        double angle_in_rad = get_terminal_voltage_angle_in_rad();
         // ignore voltage angle
         complex<double> Ixy = conj(S/Vxy);
         complex<double> Isource = Ixy + Vxy/Zsource;
@@ -341,11 +341,10 @@ void PVCV0::initialize()
         double Ix = Isource.real();
         double Iy = Isource.imag();
 
-        double IP = Ix*steps_cos(angle_in_rad) + Iy*steps_sin(angle_in_rad);
-        double IQ =-Ix*steps_sin(angle_in_rad) + Iy*steps_cos(angle_in_rad);
-        //complex<double> IPQ = xy2dq_with_angle_in_rad(Isource, angle_in_rad);
-        //double IP = IPQ.real();
-        //double IQ = IPQ.imag();
+        double sine = steps_sin(angle_in_rad), cosine = steps_cos(angle_in_rad);
+
+        double IP = Ix*cosine + Iy*sine;
+        double IQ =-Ix*sine + Iy*cosine;
 
         double EQ = IQ*(-xeq);
 
@@ -398,8 +397,8 @@ void PVCV0::run(DYNAMIC_MODE mode)
     //complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
 
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-    double V = steps_fast_complex_abs(Vxy);
-    double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
+    double V = get_terminal_voltage_in_pu();
+    double angle_in_rad = get_terminal_voltage_angle_in_rad();
     double angle_in_deg = rad2deg(angle_in_rad);
 
     LVPL_voltage_sensor.set_input(V);
@@ -469,8 +468,7 @@ complex<double> PVCV0::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     double mbase = get_mbase_in_MVA();
 
-    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-    double V = steps_fast_complex_abs(Vxy);
+    double V = get_terminal_voltage_in_pu();
 
     complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
     double Xeq = Zsource.imag();
@@ -506,11 +504,10 @@ complex<double> PVCV0::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
 
     double pll_angle = get_pll_angle_in_rad();
 
-    //complex<double> Ipq(Ip, Iq);
-    //complex<double> Ixy = dq2xy_with_angle_in_rad(Ipq, pll_angle);
+    double sine = steps_sin(pll_angle), cosine = steps_cos(pll_angle);
 
-    double Ix = Ip*steps_cos(pll_angle) - Iq*steps_sin(pll_angle);
-    double Iy = Ip*steps_sin(pll_angle) + Iq*steps_cos(pll_angle);
+    double Ix = Ip*cosine - Iq*sine;
+    double Iy = Ip*sine + Iq*cosine;
 
     complex<double> Ixy(Ix, Iy);
     //cout<<"Norton Ixy based on mbase = "<<Ixy<<endl;
@@ -726,11 +723,7 @@ double PVCV0::get_pll_angle_in_rad()
     if(kpll!=0.0 or kipll!=0.0)
         return PLL_angle_integrator.get_output();
     else
-    {
-        complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-        double angle = atan2(Vxy.imag(), Vxy.real());
-        return angle;
-    }
+        return get_terminal_voltage_angle_in_rad();
 }
 
 double PVCV0::get_pll_angle_in_deg()

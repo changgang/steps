@@ -340,15 +340,16 @@ void WT3G0::initialize()
 
 
         complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-        double V = steps_fast_complex_abs(Vxy);
-        double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
+        double V = get_terminal_voltage_in_pu();
+        double angle_in_rad = get_terminal_voltage_angle_in_rad();
         // ignore voltage angle
         complex<double> Ixy = conj(S/Vxy);
         double Ix = Ixy.real();
         double Iy = Ixy.imag();
 
-        double IP = Ix*steps_cos(angle_in_rad) + Iy*steps_sin(angle_in_rad);
-        double IQ =-Ix*steps_sin(angle_in_rad) + Iy*steps_cos(angle_in_rad);
+        double sine = steps_sin(angle_in_rad), cosin = steps_cos(angle_in_rad);
+        double IP = Ix*cosin + Iy*sine;
+        double IQ =-Ix*sine + Iy*cosin;
 
         double EQ = IQ*(-xeq);
 
@@ -401,8 +402,8 @@ void WT3G0::run(DYNAMIC_MODE mode)
     double wbase = 2.0*PI*fbase;
 
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-    double V = steps_fast_complex_abs(Vxy);
-    double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
+    double V = get_terminal_voltage_in_pu();
+    double angle_in_rad = get_terminal_voltage_angle_in_rad();
     double angle_in_deg = rad2deg(angle_in_rad);
 
     LVPL_voltage_sensor.set_input(V);
@@ -475,8 +476,7 @@ complex<double> WT3G0::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     double mbase = get_mbase_in_MVA();
 
-    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-    double V = steps_fast_complex_abs(Vxy);
+    double V = get_terminal_voltage_in_pu();
 
     complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
     double Xeq = Zsource.imag();
@@ -512,11 +512,9 @@ complex<double> WT3G0::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
     double pll_angle = get_pll_angle_in_rad();
     //cout<<get_device_name()<<" model "<<get_model_name()<<": Ip= "<<Ip<<", Iq="<<Iq<<", Pllangle = "<<pll_angle<<endl;
 
-    //complex<double> Ipq(Ip, Iq);
-    //complex<double> Ixy = dq2xy_with_angle_in_rad(Ipq, pll_angle);
-
-    double Ix = Ip*steps_cos(pll_angle) - Iq*steps_sin(pll_angle);
-    double Iy = Ip*steps_sin(pll_angle) + Iq*steps_cos(pll_angle);
+    double sine = steps_sin(pll_angle), cosine = steps_cos(pll_angle);
+    double Ix = Ip*cosine - Iq*sine;
+    double Iy = Ip*sine + Iq*cosine;
 
     complex<double> Ixy(Ix, Iy);
     //cout<<"Norton Ixy based on mbase = "<<Ixy<<endl;
@@ -806,11 +804,7 @@ double WT3G0::get_pll_angle_in_rad()
     if(kpll!=0.0 or kipll!=0.0)
         return PLL_angle_integrator.get_output();
     else
-    {
-        complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-        double angle = atan2(Vxy.imag(), Vxy.real());
-        return angle;
-    }
+        return get_terminal_voltage_angle_in_rad();
 }
 
 double WT3G0::get_pll_angle_in_deg()

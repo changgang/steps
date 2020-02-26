@@ -737,9 +737,7 @@ complex<double> xy2dq_with_angle_in_deg(const complex<double>& V, double angle)
 
 complex<double> xy2dq_with_angle_in_rad(const complex<double>& V, double angle)
 {
-    // (Vx+jVy)*(sin+jcos) =(Vx*sin-Vy*cos)+j(Vx*cos+Vy*sin)
-    complex<double> rotation(steps_sin(angle), steps_cos(angle));
-    return V*rotation;
+    return V*get_xy2dq_rotation_with_angle_in_rad(angle);
 }
 
 complex<double> dq2xy_with_angle_in_deg(const complex<double>& V, double angle)
@@ -750,11 +748,32 @@ complex<double> dq2xy_with_angle_in_deg(const complex<double>& V, double angle)
 
 complex<double> dq2xy_with_angle_in_rad(const complex<double>& V, double angle)
 {
-    // (Vd+jVq)*(sin-jcos) =(Vd*sin+Vq*cos)+j(Vq*sin-Vd*cos)
-    complex<double> rotation(steps_sin(angle), -steps_cos(angle));
-    return V*rotation;
+    return V*get_dq2xy_rotation_with_angle_in_rad(angle);
 }
 
+complex<double> get_xy2dq_rotation_with_angle_in_deg(double angle)
+{
+    // (Vx+jVy)*(sin+jcos) =(Vx*sin-Vy*cos)+j(Vx*cos+Vy*sin)
+    return get_xy2dq_rotation_with_angle_in_rad(deg2rad(angle));
+}
+
+complex<double> get_xy2dq_rotation_with_angle_in_rad(double angle)
+{
+    // (Vx+jVy)*(sin+jcos) =(Vx*sin-Vy*cos)+j(Vx*cos+Vy*sin)
+    return complex<double> (steps_sin(angle), steps_cos(angle));
+}
+
+complex<double> get_dq2xy_rotation_with_angle_in_deg(double angle)
+{
+    // (Vd+jVq)*(sin-jcos) =(Vd*sin+Vq*cos)+j(Vq*sin-Vd*cos)
+    return get_dq2xy_rotation_with_angle_in_rad(deg2rad(angle));
+}
+
+complex<double> get_dq2xy_rotation_with_angle_in_rad(double angle)
+{
+    // (Vd+jVq)*(sin-jcos) =(Vd*sin+Vq*cos)+j(Vq*sin-Vd*cos)
+    return complex<double> (steps_sin(angle), -steps_cos(angle));
+}
 
 bool is_file_exist(const string& file)
 {

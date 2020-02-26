@@ -21,6 +21,7 @@ class WTG_MODEL : public MODEL
         double get_rated_power_per_wt_generator_in_MW() const;
         double get_terminal_voltage_in_pu() const;
         complex<double> get_terminal_complex_voltage_in_pu() const;
+        double get_terminal_voltage_angle_in_rad() const;
         double get_bus_base_frequency_in_Hz() const;
         complex<double> get_source_impedance_in_pu_based_on_mbase() const;
 

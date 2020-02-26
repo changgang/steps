@@ -254,7 +254,7 @@ void WT3G1::initialize()
 
 
         complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-        double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
+        double angle_in_rad = get_terminal_voltage_angle_in_rad();
         // ignore voltage angle
         complex<double> Ixy = conj(S/Vxy);
         complex<double> Isource = Ixy + Vxy/Zsource;
@@ -262,8 +262,9 @@ void WT3G1::initialize()
         double Ix = Isource.real();
         double Iy = Isource.imag();
 
-        double IP = Ix*steps_cos(angle_in_rad) + Iy*steps_sin(angle_in_rad);
-        double IQ =-Ix*steps_sin(angle_in_rad) + Iy*steps_cos(angle_in_rad);
+        double sine = steps_sin(angle_in_rad), cosine = steps_cos(angle_in_rad);
+        double IP = Ix*cosine + Iy*sine;
+        double IQ =-Ix*sine + Iy*cosine;
 
         double EQ = IQ*(-xeq);
 
@@ -312,7 +313,7 @@ void WT3G1::run(DYNAMIC_MODE mode)
     double wbase = 2.0*PI*fbase;
 
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-    double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
+    double angle_in_rad = get_terminal_voltage_angle_in_rad();
     double angle_in_deg = rad2deg(angle_in_rad);
 
     double IP = get_active_current_command_in_pu_based_on_mbase();
@@ -377,8 +378,9 @@ complex<double> WT3G1::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
 
     double pll_angle = get_pll_angle_in_rad();
 
-    double Ix = Ip*steps_cos(pll_angle) - Iq*steps_sin(pll_angle);
-    double Iy = Ip*steps_sin(pll_angle) + Iq*steps_cos(pll_angle);
+    double sine = steps_sin(pll_angle), cosine = steps_cos(pll_angle);
+    double Ix = Ip*cosine - Iq*sine;
+    double Iy = Ip*sine + Iq*cosine;
 
     complex<double> Ixy(Ix, Iy);
     //cout<<"Norton Ixy based on mbase = "<<Ixy<<endl;
@@ -605,11 +607,7 @@ double WT3G1::get_pll_angle_in_rad()
     if(kpll!=0.0 or kipll!=0.0)
         return PLL_angle_integrator.get_output();
     else
-    {
-        complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-        double angle = atan2(Vxy.imag(), Vxy.real());
-        return angle;
-    }
+        return get_terminal_voltage_angle_in_rad();
 }
 
 double WT3G1::get_pll_angle_in_deg()

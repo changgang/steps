@@ -110,7 +110,7 @@ bool GENCLS::setup_model_with_bpa_string(string data)
 void GENCLS::initialize()
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+
     setup_block_toolkit_and_parameters();
 
     update_source_impedance();
@@ -146,14 +146,6 @@ void GENCLS::initialize()
     complex<double> Exy = Vxy+Ixy*Zsource;
     double efd0 = steps_fast_complex_abs(Exy);
     set_initial_excitation_voltage_in_pu(efd0);
-
-    Exy = get_internal_voltage_in_pu_in_xy_axis();
-    if(isnan(Exy.real()) or isnan(Exy.imag()))
-    {
-        osstream<<"NAN is detected when initializing GENCLS model of "<<get_generator_pointer()->get_device_name()<<endl
-                <<"efd0="<<efd0<<", Vxy="<<Vxy<<", Ixy="<<Ixy<<", Zs="<<Zsource<<", angle = "<<get_rotor_angle_in_deg();
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
 }
 
 void GENCLS::initialize_rotor_angle()
@@ -223,16 +215,7 @@ complex<double> GENCLS::get_source_Norton_equivalent_complex_current_in_pu_in_xy
     double mbase = get_mbase_in_MVA();
     STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
-    complex<double> I = (Exy/Z)*(mbase*one_over_sbase);
-    if(isnan(I.real()) or isnan(I.imag()))
-    {
-        ostringstream osstream;
-        osstream<<"NAN is detected when getting Norton current of GENCLS model of "<<get_generator_pointer()->get_device_name()<<endl
-                <<"Exy = "<<Exy<<", Z = "<<Z<<", mbase="<<mbase<<", sbase="<<toolkit.get_system_base_power_in_MVA();
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-
-    return I;
+    return (Exy/Z)*(mbase*one_over_sbase);
 }
 
 complex<double> GENCLS::get_terminal_complex_current_in_pu_in_dq_axis_based_on_mbase()
