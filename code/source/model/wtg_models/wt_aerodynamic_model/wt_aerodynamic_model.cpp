@@ -282,7 +282,7 @@ double WT_AERODYNAMIC_MODEL::get_total_wind_power_per_wt_generator_in_MW(double 
     double r = get_turbine_blade_radius_in_m();
     double r2 = r*r;
     double v3 = vwind*vwind*vwind;
-    return 0.5*rou*PI*r2*v3*1e-6;
+    return 1e-6*HALF_PI*rou*r2*v3;
 }
 
 
@@ -452,7 +452,7 @@ void WT_AERODYNAMIC_MODEL::initialize_generator_to_turbine_gear_ratio()
 
     unsigned int n = get_number_of_pole_pairs();
     double fbase = get_bus_base_frequency_in_Hz();
-    double wg = 2.0*PI*fbase/n;
+    double wg = DOUBLE_PI*fbase/n;
     double turnratio = wg/wt;
     set_generator_to_turbine_gear_ratio(turnratio);
 

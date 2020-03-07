@@ -15,9 +15,6 @@
 
 using namespace std;
 
-double four_over_pi = 4.0*ONE_OVER_PI;
-double four_over_pi2 = 4.0*ONE_OVER_PI*ONE_OVER_PI;
-
 string num2str(int number)
 {
     char str[1000];
@@ -155,31 +152,29 @@ string string2upper(string str)
 
 double rad2deg(double angle)
 {
-    return angle*(180.0*ONE_OVER_PI);
+    return angle*ONE_EIGHTY_OVER_PI;
 }
 
 double deg2rad(double angle)
 {
-    return angle*(PI/180.0);
+    return angle*PI_OVER_180;
 }
 
 double radps2hz(double w)
 {
-    return w*ONE_OVER_PI2;
-    //return w/(2.0*PI);
+    return w*ONE_OVER_DOUBLE_PI;
 }
 
 double hz2radps(double f)
 {
-    return PI2*f;
-    //return 2.0*PI*f;
+    return DOUBLE_PI*f;
 }
 
 double round_angle_in_rad_to_PI(double angle)
 {
     double abs_angle = fabs(angle);
     if(abs_angle>PI)
-        return (angle>0.0?1.0:-1.0)*(abs_angle - ceil((abs_angle-PI)*ONE_OVER_PI2)*PI2);
+        return (angle>0.0?1.0:-1.0)*(abs_angle - ceil((abs_angle-PI)*ONE_OVER_DOUBLE_PI)*DOUBLE_PI);
     else
         return angle;
 }
@@ -222,11 +217,11 @@ double steps_fast_complex_arg(const complex<double>& z)
         if (x == 0.0 and y != 0.0)
         {
             if (y > 0)
-                return PI * 0.5;
+                return HALF_PI;
             else
             {
                 if (y < 0.0)
-                    return -PI * 0.5;
+                    return -HALF_PI;
                 else
                     return 0.0;
             }

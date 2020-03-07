@@ -1500,7 +1500,7 @@ double HVDC::get_converter_ac_current_in_kA(HVDC_CONVERTER_SIDE converter) const
     double turnRatio = get_converter_transformer_grid_side_base_voltage_in_kV(converter)/get_converter_transformer_converter_side_base_voltage_in_kV(converter);
     double tap = get_converter_transformer_tap_in_pu(converter);
 
-    return SQRT6*N*ONE_OVER_PI*Idc/(turnRatio*tap);
+    return SQRT6_OVER_PI*N*Idc/(turnRatio*tap);
 }
 
 double HVDC::get_converter_dc_power_in_MW(HVDC_CONVERTER_SIDE converter) const
@@ -1741,8 +1741,8 @@ void HVDC::solve_best_converter_transformer_tap_with_min_angle(HVDC_CONVERTER_SI
 
     double Vbus = psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(converter));
 
-    double Eac_cosAngle = Vdc/N+(3.0*ONE_OVER_PI)*Z.imag()*Idc+2.0*Z.real()*Idc+Vdrop;
-    Eac_cosAngle /= (3.0*SQRT2*ONE_OVER_PI);
+    double Eac_cosAngle = Vdc/N+THREE_OVER_PI*Z.imag()*Idc+2.0*Z.real()*Idc+Vdrop;
+    Eac_cosAngle *= PI_OVER_THREE_SQRT2;
     double Eac = Eac_cosAngle/steps_cos(angle_min);
     double Tap = Vbus/(Eac*TurnRatio); // desired
     Tap = minTap +  TapStep*floor((Tap-minTap)/TapStep); // actual
@@ -1871,8 +1871,8 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
         TapI = get_converter_transformer_tap_in_pu(INVERTER);
         // with solved Tap, solve Idc again
         EacI = VbusI/TurnRatioI/TapI;
-        double a = (-3.0*ONE_OVER_PI)*ZI.imag()+2.0*ZI.real();
-        double b = (3.0*SQRT2*ONE_OVER_PI)*EacI*steps_cos(gamma_min)-VdropI;
+        double a = -THREE_OVER_PI*ZI.imag()+2.0*ZI.real();
+        double b = THREE_SQRT2_OVER_PI*EacI*steps_cos(gamma_min)-VdropI;
         double c = -Pn/NI;
         double Idc1, Idc2;
         Idc1 = (-b+steps_sqrt(b*b-4*a*c))/(2*a);
@@ -2045,11 +2045,11 @@ void HVDC::solve_with_solved_tap_and_firing_angle()
     double EacR = VbusR/(TurnRatioR*TapR);
     double EacI = VbusI/(TurnRatioI*TapI);
 
-    double Vdc0_r = 3.0*SQRT2*ONE_OVER_PI*NR*EacR;
-    double Vdc0_i = 3.0*SQRT2*ONE_OVER_PI*NI*EacI;
+    double Vdc0_r = THREE_SQRT2_OVER_PI*NR*EacR;
+    double Vdc0_i = THREE_SQRT2_OVER_PI*NI*EacI;
 
-    double Rceq_r = NR*(3.0*ONE_OVER_PI*ZR.imag()+2.0*ZR.real());
-    double Rceq_i = NI*(3.0*ONE_OVER_PI*ZI.imag()+2.0*ZI.real());
+    double Rceq_r = NR*(THREE_OVER_PI*ZR.imag()+2.0*ZR.real());
+    double Rceq_i = NI*(THREE_OVER_PI*ZI.imag()+2.0*ZI.real());
 
     double Idc = Vdc0_r*steps_cos(alpha)-NR*VdropR - (Vdc0_i*steps_cos(gamma)-NI*VdropI);
     Idc /= (R+Rceq_r-Rceq_i);
@@ -2057,11 +2057,11 @@ void HVDC::solve_with_solved_tap_and_firing_angle()
     double VdcR = Vdc0_r*steps_cos(alpha)-Rceq_r*Idc-NR*VdropR;
     double VdcI = Vdc0_i*steps_cos(gamma)-Rceq_i*Idc-NI*VdropI;
 
-    //double Idc = NR*(3.0*SQRT2*ONE_OVER_PI*EacR*steps_cos(alpha) - VdropR) - NI*(3.0*SQRT2*ONE_OVER_PI*EacI*steps_cos(gamma) - VdropI);
-    //Idc /= (R+NR*3.0*ZR.imag()*ONE_OVER_PI-NI*3.0*ZI.imag()*ONE_OVER_PI+NR*2.0*ZR.real()+NI*2.0*ZI.real());
+    //double Idc = NR*(THREE_SQRT2_OVER_PI*EacR*steps_cos(alpha) - VdropR) - NI*(THREE_SQRT2_OVER_PI*EacI*steps_cos(gamma) - VdropI);
+    //Idc /= (R+NR*ZR.imag()*THREE_OVER_PI-NI*ZI.imag()*THREE_OVER_PI+NR*2.0*ZR.real()+NI*2.0*ZI.real());
 
-    //double VdcR = NR*(3.0*SQRT2*ONE_OVER_PI*EacR*steps_cos(alpha) - 3.0*ZR.imag()*ONE_OVER_PI*Idc - 2.0*ZR.real()*Idc- VdropR);
-    //double VdcI = NI*(3.0*SQRT2*ONE_OVER_PI*EacI*steps_cos(gamma) - 3.0*ZI.imag()*ONE_OVER_PI*Idc + 2.0*ZI.real()*Idc- VdropI);
+    //double VdcR = NR*(THREE_SQRT2_OVER_PI*EacR*steps_cos(alpha) - ZR.imag()*THREE_OVER_PI*Idc - 2.0*ZR.real()*Idc- VdropR);
+    //double VdcI = NI*(THREE_SQRT2_OVER_PI*EacI*steps_cos(gamma) - ZI.imag()*THREE_OVER_PI*Idc + 2.0*ZI.real()*Idc- VdropI);
 
     set_line_dc_current_in_kA(Idc);
     set_converter_dc_voltage_in_kV(RECTIFIER, VdcR);
@@ -2089,8 +2089,8 @@ double HVDC::solve_desired_converter_cosAngle_with_desired_dc_voltage_current_an
 
     double Vbus = psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(converter));
     double Eac = Vbus/(TurnRatio*Tap); // actual EacR
-    double Eac_cosAngle = Vdc/N+(3.0*ONE_OVER_PI)*Z.imag()*Idc+2.0*Z.real()*Idc+Vdrop;
-           Eac_cosAngle /= (3.0*SQRT2*ONE_OVER_PI);
+    double Eac_cosAngle = Vdc/N+THREE_OVER_PI*Z.imag()*Idc+2.0*Z.real()*Idc+Vdrop;
+           Eac_cosAngle *= PI_OVER_THREE_SQRT2;
     double cosAngle = Eac_cosAngle/Eac; // desired alpha
 
     return cosAngle;
@@ -2115,7 +2115,7 @@ double HVDC::solve_converter_dc_voltage_in_kV_with_dc_current_and_transformer_ta
 
     double Vbus = psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(converter));
     double Eac = Vbus/(TurnRatio*Tap);
-    double Vdc = N*((3.0*SQRT2*ONE_OVER_PI)*Eac*steps_cos(angle_min)-(3.0*ONE_OVER_PI)*Z.imag()*Idc-2.0*Z.real()*Idc-Vdrop);
+    double Vdc = N*(THREE_SQRT2_OVER_PI*Eac*steps_cos(angle_min)-THREE_OVER_PI*Z.imag()*Idc-2.0*Z.real()*Idc-Vdrop);
     return Vdc;
 }
 

@@ -200,7 +200,7 @@ void GENCLS::run(DYNAMIC_MODE mode)
 
     speed = get_rotor_speed_deviation_in_pu();
 
-    speed = 2.0*PI*fbase*speed;
+    speed = DOUBLE_PI*fbase*speed;
     rotor_angle_block->set_input(speed);
     rotor_angle_block->run(mode);
 

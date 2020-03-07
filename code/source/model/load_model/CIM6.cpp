@@ -506,7 +506,7 @@ void CIM6::setup_model_dynamic_parameters()
         Mbase = P*Pmult;
     }
 
-    W0 = PI2 * get_bus_base_frequency_in_Hz();
+    W0 = DOUBLE_PI * get_bus_base_frequency_in_Hz();
     if(is_single_cage)
     {
         Tp = (Xm+X1)/(W0*R1);

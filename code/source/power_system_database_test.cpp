@@ -8661,7 +8661,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_bus_angle()
     bus->set_positive_sequence_angle_in_rad(0.5);
 
     TEST_ASSERT(fabs(psdb.get_bus_positive_sequence_angle_in_rad(1)-0.5)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(psdb.get_bus_positive_sequence_angle_in_deg(1)-(0.5*ONE_OVER_PI*180.0))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(psdb.get_bus_positive_sequence_angle_in_deg(1)-(0.5*ONE_EIGHTY_OVER_PI))<FLOAT_EPSILON);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_voltage_to_regulate_of_physical_bus_in_pu()

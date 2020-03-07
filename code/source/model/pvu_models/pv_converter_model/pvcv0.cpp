@@ -307,7 +307,7 @@ void PVCV0::initialize()
 
         unsigned int n_lumped = get_number_of_lumped_pv_units();
         double fbase = get_bus_base_frequency_in_Hz();
-        double wbase = 2.0*PI*fbase;
+        double wbase = DOUBLE_PI*fbase;
 
         double kipll = get_KIPLL();
         if(kipll!=0.0)
@@ -390,7 +390,7 @@ void PVCV0::initialize()
 void PVCV0::run(DYNAMIC_MODE mode)
 {
     double fbase = get_bus_base_frequency_in_Hz();
-    double wbase = 2.0*PI*fbase;
+    double wbase = DOUBLE_PI*fbase;
     complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
     double Xeq = Zsource.imag();
 
@@ -734,7 +734,7 @@ double PVCV0::get_pll_angle_in_deg()
 double PVCV0::get_pll_frequency_deviation_in_pu()
 {
     double fbase = get_bus_base_frequency_in_Hz();
-    double wbase = 2.0*PI*fbase;
+    double wbase = DOUBLE_PI*fbase;
 
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
 

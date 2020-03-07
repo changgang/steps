@@ -167,7 +167,7 @@ double POWERFLOW_SOLVER::get_maximum_angle_change_in_deg() const
 
 double POWERFLOW_SOLVER::get_maximum_angle_change_in_rad() const
 {
-    return get_maximum_angle_change_in_deg()/180.0*PI;
+    return get_maximum_angle_change_in_deg()*PI_OVER_180;
 }
 
 bool POWERFLOW_SOLVER::get_flat_start_logic() const

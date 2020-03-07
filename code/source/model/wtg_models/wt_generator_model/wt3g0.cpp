@@ -315,7 +315,7 @@ void WT3G0::initialize()
 
         unsigned int n_lumped = get_number_of_lumped_wt_generators();
         double fbase = get_bus_base_frequency_in_Hz();
-        double wbase = 2.0*PI*fbase;
+        double wbase = DOUBLE_PI*fbase;
 
         double kipll = get_KIPLL();
         if(kipll!=0.0)
@@ -399,7 +399,7 @@ void WT3G0::initialize()
 void WT3G0::run(DYNAMIC_MODE mode)
 {
     double fbase = get_bus_base_frequency_in_Hz();
-    double wbase = 2.0*PI*fbase;
+    double wbase = DOUBLE_PI*fbase;
 
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
     double V = get_terminal_voltage_in_pu();
@@ -815,7 +815,7 @@ double WT3G0::get_pll_angle_in_deg()
 double WT3G0::get_pll_frequency_deviation_in_pu()
 {
     double fbase = get_bus_base_frequency_in_Hz();
-    double wbase = 2.0*PI*fbase;
+    double wbase = DOUBLE_PI*fbase;
 
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
 

@@ -226,7 +226,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_get_nominal_turbine_speed()
         double fbase = model->get_bus_base_frequency_in_Hz();
         unsigned int npole = model->get_number_of_pole_pairs();
         double turn_ratio = model->get_generator_to_turbine_gear_ratio();
-        double w = 2*PI*fbase;
+        double w = DOUBLE_PI*fbase;
         w = w/npole/turn_ratio;
         TEST_ASSERT(fabs(model->get_nominal_turbine_speed_in_rad_per_s()-w)<FLOAT_EPSILON);
     }
@@ -390,7 +390,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_get_turbine_frequency()
         {
             double speed = turbinemodel->get_turbine_speed_in_pu();
             speed *= model->get_nominal_turbine_speed_in_rad_per_s();
-            speed /=(2.0*PI);
+            speed *= ONE_OVER_DOUBLE_PI;
             TEST_ASSERT(fabs(model->get_turbine_frequency_in_Hz()-speed)<FLOAT_EPSILON);
         }
         else

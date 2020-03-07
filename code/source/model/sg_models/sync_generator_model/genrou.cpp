@@ -325,11 +325,11 @@ void GENROU::initialize_rotor_angle()
     if(C != 0.0)
         rotor_angle = steps_atan(D/C);
     else
-        rotor_angle = PI*0.5;
+        rotor_angle = HALF_PI;
 
     while(true)
     {
-        if(fabs(rotor_angle-rotor_angle_EQ)>PI*0.5)
+        if(fabs(rotor_angle-rotor_angle_EQ)>HALF_PI)
         {
             if(rotor_angle>rotor_angle_EQ)
                 rotor_angle -= PI;
@@ -410,7 +410,7 @@ void GENROU::run(DYNAMIC_MODE mode)
 
     speed = get_rotor_speed_deviation_in_pu();
 
-    speed = 2.0*PI*fbase*speed;
+    speed = DOUBLE_PI*fbase*speed;
     rotor_angle_block->set_input(speed);
     rotor_angle_block->run(mode);
 

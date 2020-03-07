@@ -10,7 +10,7 @@ using namespace std;
 BUS_FREQUENCY_MODEL::BUS_FREQUENCY_MODEL(STEPS& toolkit) : frequency_block(toolkit)
 {
     set_toolkit(toolkit);
-    frequency_block.set_K(1.0/(2.0*PI));
+    frequency_block.set_K(ONE_OVER_DOUBLE_PI);
     bus_ptr = NULL;
 }
 

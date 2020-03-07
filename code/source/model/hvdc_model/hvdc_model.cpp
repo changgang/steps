@@ -806,11 +806,11 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
         double eac_r = vac_r*ebase_converter_r/(tap_r*ebase_grid_r);
         double eac_i = vac_i*ebase_converter_i/(tap_i*ebase_grid_i);
 
-        double vdc0_r = Nr*3.0*SQRT2*ONE_OVER_PI*eac_r;
-        double vdc0_i = Ni*3.0*SQRT2*ONE_OVER_PI*eac_i;
+        double vdc0_r = Nr*THREE_SQRT2_OVER_PI*eac_r;
+        double vdc0_i = Ni*THREE_SQRT2_OVER_PI*eac_i;
 
-        double rceq_r = Nr*(3.0*ONE_OVER_PI*Xc_r+2.0*Rc_r);
-        double rceq_i = Ni*(3.0*ONE_OVER_PI*Xc_i+2.0*Rc_i);
+        double rceq_r = Nr*(THREE_OVER_PI*Xc_r+2.0*Rc_r);
+        double rceq_i = Ni*(THREE_OVER_PI*Xc_i+2.0*Rc_i);
 
         double Vdci = Vset_kV - Rcomp*Iset_kA;
         double Vdcr = Vdci + Rdc*Iset_kA;
@@ -1051,11 +1051,11 @@ void HVDC_MODEL::solve_hvdc_as_bypassed(double Iset_kA)
         double eac_r = vac_r*ebase_converter_r/(tap_r*ebase_grid_r);
         //double eac_i = vac_i*ebase_converter_i/(tap_i*ebase_grid_i);
 
-        double vdc0_r = Nr*3.0*SQRT2*ONE_OVER_PI*eac_r;
-        //double vdc0_i = Ni*3.0*SQRT2*ONE_OVER_PI*eac_i;
+        double vdc0_r = Nr*THREE_SQRT2_OVER_PI*eac_r;
+        //double vdc0_i = Ni*THREE_SQRT2_OVER_PI*eac_i;
 
-        double rceq_r = Nr*(3.0*ONE_OVER_PI*Xc_r+2.0*Rc_r);
-        //double rceq_i = Ni*(3.0*ONE_OVER_PI*Xc_i+2.0*Rc_i);
+        double rceq_r = Nr*(THREE_OVER_PI*Xc_r+2.0*Rc_r);
+        //double rceq_i = Ni*(THREE_OVER_PI*Xc_i+2.0*Rc_i);
 
         double Vdci = 0.0;
         double Vdcr = Vdci + Rdc*Iset_kA;
@@ -1077,7 +1077,7 @@ void HVDC_MODEL::solve_hvdc_as_bypassed(double Iset_kA)
             else
                 alpha_in_rad = steps_acos(cos_alpha);
         }
-        gamma_in_rad = PI*0.5;
+        gamma_in_rad = HALF_PI;
 
         cos_alpha = steps_cos(alpha_in_rad);
         //cout<<"alpha during bypassed is :"<<rad2deg(alpha_in_rad)<<" deg"<<endl;
@@ -1136,11 +1136,11 @@ void HVDC_MODEL::solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset
         double eac_r = vac_r*ebase_converter_r/(tap_r*ebase_grid_r);
         double eac_i = vac_i*ebase_converter_i/(tap_i*ebase_grid_i);
 
-        double vdc0_r = Nr*3.0*SQRT2*ONE_OVER_PI*eac_r;
-        double vdc0_i = Ni*3.0*SQRT2*ONE_OVER_PI*eac_i;
+        double vdc0_r = Nr*THREE_SQRT2_OVER_PI*eac_r;
+        double vdc0_i = Ni*THREE_SQRT2_OVER_PI*eac_i;
 
-        double rceq_r = Nr*(3.0*ONE_OVER_PI*Xc_r+2.0*Rc_r);
-        double rceq_i = Ni*(3.0*ONE_OVER_PI*Xc_i+2.0*Rc_i);
+        double rceq_r = Nr*(THREE_OVER_PI*Xc_r+2.0*Rc_r);
+        double rceq_i = Ni*(THREE_OVER_PI*Xc_i+2.0*Rc_i);
 
         double Idc = Iset_kA;
         double Vdci = Vset_kV - Rcomp*get_converter_dc_current_in_kA(INVERTER);
@@ -1211,7 +1211,7 @@ void HVDC_MODEL::solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset
                 else
                     alpha_in_rad = steps_acos(cos_alpha);
             }
-            gamma_in_rad = PI*0.5;
+            gamma_in_rad = HALF_PI;
 
             cos_alpha = steps_cos(alpha_in_rad);
 

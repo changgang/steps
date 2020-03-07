@@ -1611,7 +1611,7 @@ double METER::get_meter_value_as_a_wt_generator() const
             {
                 if(turbine_model != NULL)
                 {
-                    double fn = aerd_model->get_nominal_turbine_speed_in_rad_per_s()/(2.0*PI);
+                    double fn = aerd_model->get_nominal_turbine_speed_in_rad_per_s()*ONE_OVER_DOUBLE_PI;
                     return (turbine_model->get_turbine_speed_in_pu()-1.0)*fn;
                 }
                 else
@@ -1628,7 +1628,7 @@ double METER::get_meter_value_as_a_wt_generator() const
             {
                 if(turbine_model != NULL)
                 {
-                    double wn = aerd_model->get_nominal_turbine_speed_in_rad_per_s()/(2.0*PI);
+                    double wn = aerd_model->get_nominal_turbine_speed_in_rad_per_s()*ONE_OVER_DOUBLE_PI;
                     return turbine_model->get_turbine_speed_in_pu()*wn;
                 }
                 else

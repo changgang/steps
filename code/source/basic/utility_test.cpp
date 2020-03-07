@@ -169,7 +169,7 @@ void UTILITY_TEST::test_rad2deg()
     show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
 
     double angle = 0.234;
-    double angle2 = angle*ONE_OVER_PI*180.0;
+    double angle2 = angle*180.0/PI;
     TEST_ASSERT(fabs(rad2deg(angle)-angle2)<FLOAT_EPSILON);
 }
 
@@ -178,7 +178,7 @@ void UTILITY_TEST::test_deg2rad()
     show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
 
     double angle = 23.45;
-    double angle2 = angle/180.0*PI;
+    double angle2 = angle*PI/180.0;
     TEST_ASSERT(fabs(deg2rad(angle)-angle2)<FLOAT_EPSILON);
 }
 
@@ -187,10 +187,10 @@ void UTILITY_TEST::test_round_angle_to_PI()
     show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
 
     double angle = 3.2;
-    TEST_ASSERT(fabs(round_angle_in_rad_to_PI(angle)-(angle-2*PI))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(round_angle_in_rad_to_PI(angle)-(angle-DOUBLE_PI))<FLOAT_EPSILON);
 
     angle = -3.2;
-    TEST_ASSERT(fabs(round_angle_in_rad_to_PI(angle)-(angle+2*PI))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(round_angle_in_rad_to_PI(angle)-(angle+DOUBLE_PI))<FLOAT_EPSILON);
 }
 
 void UTILITY_TEST::test_steps_fast_complex_abs()
@@ -307,7 +307,7 @@ void UTILITY_TEST::test_radps2hz()
     show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
 
     double w = 1.0;
-    double f = w*ONE_OVER_PI2;
+    double f = w*ONE_OVER_DOUBLE_PI;
     TEST_ASSERT(fabs(radps2hz(w)-f)<FLOAT_EPSILON);
 }
 
@@ -316,7 +316,7 @@ void UTILITY_TEST::test_hz2radps()
     show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
 
     double f = 1.0;
-    double w = f*PI2;
+    double w = f*DOUBLE_PI;
     TEST_ASSERT(fabs(hz2radps(f)-w)<FLOAT_EPSILON);
 }
 

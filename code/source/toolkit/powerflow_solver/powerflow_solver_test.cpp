@@ -140,11 +140,11 @@ void POWERFLOW_SOLVER_TEST::test_set_get_maximum_angle_change()
 
     powerflow_solver.set_maximum_angle_change_in_deg(20.0);
     TEST_ASSERT(fabs(powerflow_solver.get_maximum_angle_change_in_deg()-20.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(powerflow_solver.get_maximum_angle_change_in_rad()-(20.0/180.*PI))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(powerflow_solver.get_maximum_angle_change_in_rad()-(20.0*PI_OVER_180))<FLOAT_EPSILON);
 
     powerflow_solver.set_maximum_angle_change_in_deg(30.0);
     TEST_ASSERT(fabs(powerflow_solver.get_maximum_angle_change_in_deg()-30.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(powerflow_solver.get_maximum_angle_change_in_rad()-(30.0/180.*PI))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(powerflow_solver.get_maximum_angle_change_in_rad()-(30.0*PI_OVER_180))<FLOAT_EPSILON);
 }
 
 void POWERFLOW_SOLVER_TEST::test_set_get_flat_start_logic()
