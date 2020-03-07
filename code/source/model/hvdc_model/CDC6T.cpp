@@ -393,6 +393,8 @@ void CDC6T::setup_block_toolkit_and_parameters()
     inv_ac_unblocking_signal_transmitting_timer.set_toolkit(toolkit);
     inv_ac_bypassing_timer.set_toolkit(toolkit);
     inv_ac_unbypassing_timer.set_toolkit(toolkit);
+
+    set_cos_firing_angle_max_min();
 }
 void CDC6T::initialize()
 {

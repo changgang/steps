@@ -61,6 +61,8 @@ class HVDC_MODEL : public MODEL
         void set_VDCOL(const VDCOL& limiter);
         VDCOL get_VDCOL() const;
 
+        void set_cos_firing_angle_max_min();
+
         void set_attached_device_of_common_meters();
 
         double get_inverter_dc_voltage_command_in_kV();
@@ -157,6 +159,7 @@ class HVDC_MODEL : public MODEL
         unsigned int get_bypass_record_count() const;
 
         double firing_angle_max[2], firing_angle_min[2];
+        double cos_firing_angle_max[2], cos_firing_angle_min[2];
         TIMER block_timer, bypass_timer, mode_switch_timer;
         bool bypassed, mode_switched, manual_blocked, manual_bypassed;
         double time_when_unblocking, time_when_unbypassing, time_when_mode_unswitching;

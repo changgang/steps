@@ -3323,35 +3323,26 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
     for(unsigned int i=0; i<n; ++i)
     {
         BUS* bus = in_service_buses[i];
-        unsigned int ex_bus = bus->get_bus_number();
-        double vang0 = bus->get_positive_sequence_angle_in_rad();
-        complex<double> V0 = bus->get_positive_sequence_complex_voltage_in_pu();
 
+        unsigned int ex_bus = bus->get_bus_number();
         unsigned int in_bus = network.get_internal_bus_number_of_physical_bus(ex_bus);
 
-        complex<double> delta_v = delta_V[in_bus];
-        complex<double> V = V0+delta_v*alpha;
+        complex<double> V0 = bus->get_positive_sequence_complex_voltage_in_pu();
+        complex<double> V = V0+delta_V[in_bus]*alpha;
+        internal_bus_complex_voltage_in_pu[in_bus] = V;
 
 		double vmag_new = steps_fast_complex_abs(V);
+        //vmag_new = (vmag_new<3.0)?vmag_new:3.0;
+        bus->set_positive_sequence_voltage_in_pu(vmag_new);
 
 		double x = V.real(), y = V.imag();
 		double x0 = V0.real(), y0 = V0.imag();
 		complex<double> z(x*x0 + y*y0, x0*y - y0*x);
         double delta_vang = steps_fast_complex_arg(z);
+        double vang0 = bus->get_positive_sequence_angle_in_rad();
         double vang_new = vang0+delta_vang;
 
-        if(vmag_new>0.0 and vmag_new<3.0)
-            ;
-        else
-        {
-            if(vmag_new<0.0) vmag_new=0.0;
-            else vmag_new = 3.0;
-        }
-
-        bus->set_positive_sequence_voltage_in_pu(vmag_new);
-        bus->set_positive_sequence_angle_in_rad(vang_new);
-
-        internal_bus_complex_voltage_in_pu[in_bus] = bus->get_positive_sequence_complex_voltage_in_pu();
+        bus->set_positive_sequence_angle_in_rad(vang_new, V/vmag_new);
     }
     /*
     for(unsigned int i=0; i<n; ++i)

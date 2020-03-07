@@ -34,7 +34,7 @@ class BUS : public DEVICE
         void set_owner_number(unsigned int number);
         void set_positive_sequence_voltage_in_pu(double voltage);
         void set_positive_sequence_voltage_in_kV(double voltage);
-        void set_positive_sequence_angle_in_rad(double angle);
+        void set_positive_sequence_angle_in_rad(double angle, complex<double> euler=0.0);
         void set_positive_sequence_angle_in_deg(double angle);
         void set_negative_sequence_voltage_in_pu(double voltage);
         void set_negative_sequence_voltage_in_kV(double voltage);

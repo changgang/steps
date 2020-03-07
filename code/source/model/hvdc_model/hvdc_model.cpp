@@ -233,6 +233,14 @@ VDCOL HVDC_MODEL::get_VDCOL() const
     return vdcol_limiter;
 }
 
+void HVDC_MODEL::set_cos_firing_angle_max_min()
+{
+    cos_firing_angle_max[RECTIFIER] = steps_cos(deg2rad(firing_angle_max[RECTIFIER]));
+    cos_firing_angle_max[INVERTER] = steps_cos(deg2rad(firing_angle_max[INVERTER]));
+    cos_firing_angle_min[RECTIFIER] = steps_cos(deg2rad(firing_angle_min[RECTIFIER]));
+    cos_firing_angle_min[INVERTER] = steps_cos(deg2rad(firing_angle_min[INVERTER]));
+}
+
 void HVDC_MODEL::set_attached_device_of_common_meters()
 {
     HVDC* hvdc = get_hvdc_pointer();
@@ -772,7 +780,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
 
         double alpha_in_rad = 0.0, gamma_in_rad = 0.0;
         double cos_alpha = 0.0, cos_gamma = 0.0;
-        double cos_alpha_min = steps_cos(alpha_min_in_rad), cos_gamma_min = steps_cos(gamma_min_in_rad);
+        double cos_alpha_min = cos_firing_angle_min[RECTIFIER], cos_gamma_min = cos_firing_angle_min[INVERTER];
 
         double tap_r = hvdc->get_converter_transformer_tap_in_pu(RECTIFIER);
         double tap_i = hvdc->get_converter_transformer_tap_in_pu(INVERTER);
@@ -1019,8 +1027,8 @@ void HVDC_MODEL::solve_hvdc_as_bypassed(double Iset_kA)
         double alpha_in_rad = 0.0, gamma_in_rad = 0.0;
         double cos_alpha = 0.0;
         //double cos_gamma = 0.0;
-        double cos_alpha_min = steps_cos(alpha_min_in_rad);
-        //double cos_gamma_min = steps_cos(gamma_min_in_rad);
+        double cos_alpha_min = cos_firing_angle_min[RECTIFIER];
+        //double cos_gamma_min = cos_firing_angle_min[INVERTER];
 
         double tap_r = hvdc->get_converter_transformer_tap_in_pu(RECTIFIER);
         //double tap_i = hvdc->get_converter_transformer_tap_in_pu(INVERTER);
@@ -1072,7 +1080,7 @@ void HVDC_MODEL::solve_hvdc_as_bypassed(double Iset_kA)
             alpha_in_rad = alpha_min_in_rad;
         else
         {
-            if(cos_alpha<=steps_cos(alpha_max_in_rad))
+            if(cos_alpha<=cos_firing_angle_max[RECTIFIER])
                 alpha_in_rad = alpha_max_in_rad;
             else
                 alpha_in_rad = steps_acos(cos_alpha);
@@ -1106,7 +1114,7 @@ void HVDC_MODEL::solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset
 
         double alpha_in_rad = 0.0, gamma_in_rad = 0.0;
         double cos_alpha = 0.0, cos_gamma = 0.0;
-        double cos_alpha_min = steps_cos(alpha_min_in_rad), cos_gamma_min = steps_cos(gamma_min_in_rad);
+        double cos_alpha_min = cos_firing_angle_min[RECTIFIER], cos_gamma_min = cos_firing_angle_min[INVERTER];
 
         double tap_r = hvdc->get_converter_transformer_tap_in_pu(RECTIFIER);
         double tap_i = hvdc->get_converter_transformer_tap_in_pu(INVERTER);
@@ -1206,7 +1214,7 @@ void HVDC_MODEL::solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset
                 alpha_in_rad = alpha_min_in_rad;
             else
             {
-                if(cos_alpha<steps_cos(alpha_max_in_rad))
+                if(cos_alpha<cos_firing_angle_max[RECTIFIER])
                     alpha_in_rad = alpha_max_in_rad;
                 else
                     alpha_in_rad = steps_acos(cos_alpha);

@@ -232,6 +232,8 @@ bool CDC4T::setup_model_with_bpa_string(string data)
 void CDC4T::setup_block_toolkit_and_parameters()
 {
     set_common_timer_toolkit();
+
+    set_cos_firing_angle_max_min();
 }
 
 void CDC4T::initialize()

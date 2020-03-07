@@ -411,9 +411,28 @@ double steps_atan(double x)
 
 double steps_fast_atan(double x)
 {
-    //return atan(x);
+    if(x>-0.25 and x<0.25)
+    {
+        //user polynomial with maximum error <6.284e-13
+        double x2 = x*x;
+        double x3 = x2*x;
+        double x5 = x3*x2;
+        double x7 = x5*x2;
+        double x9 = x7*x2;
+        double x11 = x9*x2;
 
-    /*user polynomial with maximum error <0.4e-11*/
+        return 0.9999999999909259*x
+              -0.33333332897282747*x3
+              +0.19999940506845645*x5
+              -0.14282246141361374*x7
+              +0.11012658805577266*x9
+              -0.07731634628276322*x11;
+    }
+    else
+        return atan(x);
+
+    /*
+    //user polynomial with maximum error <0.4e-11
     double y = fabs(x);
     if(y>1.0) y = 1.0/y;
 
@@ -433,15 +452,16 @@ double steps_fast_atan(double x)
                 -0.14283152496616747*y7
                 +0.11056848230911817*y9
                 -0.07513116523199578*y11
-                -0.07802246093181216*y7*y5 /*y12*/
+                -0.07802246093181216*y7*y5 //y12
                 +0.2699603659514348*y13
-                -0.27810373457929133*y7*y7 /*y14*/
+                -0.27810373457929133*y7*y7 //y14
                 +0.15078314291241518*y15
-                -0.04398393524366868*y9*y7 /*y16*/
+                -0.04398393524366868*y9*y7 //y16
                 +0.005493202428206681*y17;
 
     if(fabs(x)>1.0) z = HALF_PI-z;
     return (x>=0?z:-z);
+    */
 
     /*
     // the following atan function is built based on:
@@ -488,6 +508,7 @@ double steps_fast_atan(double x)
 
 double steps_sqrt(double x)
 {
+    return sqrt(x);
     if(use_steps_fast_math==true)
         return steps_fast_sqrt(x);
     else
@@ -497,7 +518,7 @@ double steps_sqrt(double x)
 double steps_fast_sqrt(double x)
 {
     return sqrt(x);
-    return x*quick_inv_sqrt_Lomont(x);
+    //return x*quick_inv_sqrt_Lomont(x);
 }
 
 double steps_inv_sqrt(double x)
