@@ -390,9 +390,7 @@ void IEEEG3::run(DYNAMIC_MODE mode)
 
 double IEEEG3::get_mechanical_power_in_pu_based_on_mbase() const
 {
-    double Pmech = water_hammer.get_output();
-
-    return Pmech;
+    return water_hammer.get_output();
 }
 
 double IEEEG3::get_mechanical_power_upper_limit_in_pu_based_on_mbase() const

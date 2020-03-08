@@ -154,10 +154,13 @@ void BUS::set_negative_sequence_voltage_in_kV(double voltage)
     }
 }
 
-void BUS::set_negative_sequence_angle_in_rad(double angle)
+void BUS::set_negative_sequence_angle_in_rad(double angle, complex<double> euler)
 {
     negative_sequence_angle_in_rad = angle;
-    negative_sequence_Euler_complex_number = complex<double>(steps_cos(negative_sequence_angle_in_rad), steps_sin(negative_sequence_angle_in_rad));
+    if(euler!=0.0)
+        negative_sequence_Euler_complex_number = euler;
+    else
+        negative_sequence_Euler_complex_number = complex<double>(steps_cos(negative_sequence_angle_in_rad), steps_sin(negative_sequence_angle_in_rad));
 }
 
 void BUS::set_negative_sequence_angle_in_deg(double angle)
@@ -187,10 +190,13 @@ void BUS::set_zero_sequence_voltage_in_kV(double voltage)
     }
 }
 
-void BUS::set_zero_sequence_angle_in_rad(double angle)
+void BUS::set_zero_sequence_angle_in_rad(double angle, complex<double> euler)
 {
     zero_sequence_angle_in_rad = angle;
-    zero_sequence_Euler_complex_number = complex<double>(steps_cos(zero_sequence_angle_in_rad), steps_sin(zero_sequence_angle_in_rad));
+    if(euler!=0.0)
+        zero_sequence_Euler_complex_number = euler;
+    else
+        zero_sequence_Euler_complex_number = complex<double>(steps_cos(zero_sequence_angle_in_rad), steps_sin(zero_sequence_angle_in_rad));
 }
 
 void BUS::set_zero_sequence_angle_in_deg(double angle)

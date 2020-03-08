@@ -38,11 +38,11 @@ class BUS : public DEVICE
         void set_positive_sequence_angle_in_deg(double angle);
         void set_negative_sequence_voltage_in_pu(double voltage);
         void set_negative_sequence_voltage_in_kV(double voltage);
-        void set_negative_sequence_angle_in_rad(double angle);
+        void set_negative_sequence_angle_in_rad(double angle, complex<double> euler=0.0);
         void set_negative_sequence_angle_in_deg(double angle);
         void set_zero_sequence_voltage_in_pu(double voltage);
         void set_zero_sequence_voltage_in_kV(double voltage);
-        void set_zero_sequence_angle_in_rad(double angle);
+        void set_zero_sequence_angle_in_rad(double angle, complex<double> euler=0.0);
         void set_zero_sequence_angle_in_deg(double angle);
         void set_normal_voltage_upper_limit_in_pu(double voltage);
         void set_normal_voltage_lower_limit_in_pu(double voltage);

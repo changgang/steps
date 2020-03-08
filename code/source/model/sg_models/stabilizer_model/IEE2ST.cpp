@@ -400,17 +400,15 @@ void IEE2ST::run(DYNAMIC_MODE mode)
 {
     if(is_model_active())
     {
-        double value_slot_1 = get_signal_value_of_slot(0);
-        sensor_1.set_input(value_slot_1);
+        double slot_value = get_signal_value_of_slot(0);
+        sensor_1.set_input(slot_value);
         sensor_1.run(mode);
-        double output1 = sensor_1.get_output();
 
-        double value_slot_2 = get_signal_value_of_slot(1);
-        sensor_2.set_input(value_slot_2);
+        slot_value = get_signal_value_of_slot(1);
+        sensor_2.set_input(slot_value);
         sensor_2.run(mode);
-        double output2 = sensor_2.get_output();
 
-        double input = output1+output2;
+        double input = sensor_1.get_output()+sensor_2.get_output();
         double T3 = get_T3_in_s();
         if(T3>0.0)
         {

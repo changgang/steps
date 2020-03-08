@@ -463,12 +463,10 @@ void IEEEG1::run(DYNAMIC_MODE mode)
 
 double IEEEG1::get_mechanical_power_in_pu_based_on_mbase() const
 {
-    double Pmech = delayer1.get_output()*get_K1()+
-                   delayer2.get_output()*get_K3()+
-                   delayer3.get_output()*get_K5()+
-                   delayer4.get_output()*get_K7();
-
-    return Pmech;
+    return delayer1.get_output()*get_K1()+
+           delayer2.get_output()*get_K3()+
+           delayer3.get_output()*get_K5()+
+           delayer4.get_output()*get_K7();
 }
 
 double IEEEG1::get_mechanical_power_upper_limit_in_pu_based_on_mbase() const

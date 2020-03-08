@@ -294,18 +294,19 @@ void GENSAL::run(DYNAMIC_MODE mode)
 
     double fbase = get_bus_base_frequency_in_Hz();
 
-
     double xd = get_Xd();
     double xdp = get_Xdp();
     double xpp = get_Xpp();
     double xq = get_Xq();
     double xl = get_Xl();
 
-    double fluxd = transient_block_d_axis->get_output()*(xpp-xl)/(xdp-xl) + subtransient_block_d_axis->get_output()*(xdp-xpp)/(xdp-xl);
+    double one_over_xdp_minus_xl = 1.0/(xdp-xl);
+
+    double fluxd = (transient_block_d_axis->get_output()*(xpp-xl) + subtransient_block_d_axis->get_output()*(xdp-xpp))*one_over_xdp_minus_xl;
     double fluxq = -subtransient_block_q_axis->get_output();
     complex<double> Flux_dq(fluxd, fluxq);
     double Flux = steps_fast_complex_abs(Flux_dq);
-    double saturation = get_saturation_with_flux(Flux)*Flux;
+    double saturation = get_saturation_with_flux(Flux);
 
     complex<double> Idq = get_terminal_complex_current_in_pu_in_dq_axis_based_on_mbase();
 
@@ -313,8 +314,8 @@ void GENSAL::run(DYNAMIC_MODE mode)
     double input;
     // d-axis
     input = transient_block_d_axis->get_output()-subtransient_block_d_axis->get_output()-Idq.real()*(xdp-xl);
-    input = get_excitation_voltage_in_pu()-transient_block_d_axis->get_output()-(xd-xdp)*(Idq.real()+input*(xdp-xpp)/((xdp-xl)*(xdp-xl)))-
-            Flux_dq.real()/Flux*saturation;
+    input = get_excitation_voltage_in_pu()-transient_block_d_axis->get_output()-(xd-xdp)*(Idq.real()+input*(xdp-xpp)*one_over_xdp_minus_xl*one_over_xdp_minus_xl)-
+            Flux_dq.real()*saturation;
     transient_block_d_axis->set_input(input);
     transient_block_d_axis->run(mode);
 
@@ -323,21 +324,21 @@ void GENSAL::run(DYNAMIC_MODE mode)
     subtransient_block_d_axis->run(mode);
 
     // q-axis
-    input = saturation*(Flux_dq.imag()/Flux*(xq-xl)/(xd-xl)) - subtransient_block_q_axis->get_output()+Idq.imag()*(xq-xpp);
+    input = saturation*Flux_dq.imag()*(xq-xl)/(xd-xl) - subtransient_block_q_axis->get_output()+Idq.imag()*(xq-xpp);
     subtransient_block_q_axis->set_input(input);
     subtransient_block_q_axis->run(mode);
 
 
     double pmech = get_mechanical_power_in_pu_based_on_mbase();
     double speed = get_rotor_speed_deviation_in_pu();
-    double omega = get_rotor_speed_in_pu();
-    double tmech = pmech/omega;
+    double one_over_omega = 1.0/get_rotor_speed_in_pu();
+    double tmech = pmech*one_over_omega;
 
     double telec = get_air_gap_torque_in_pu_based_on_mbase();
 
     double damping = get_D();
 
-    double delta_torque = tmech-telec-damping*speed/omega;
+    double delta_torque = tmech-telec-damping*speed*one_over_omega;
 
     rotor_speed_block->set_input(delta_torque);
     rotor_speed_block->run(mode);

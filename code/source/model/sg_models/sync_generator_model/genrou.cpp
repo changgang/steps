@@ -362,20 +362,23 @@ void GENROU::run(DYNAMIC_MODE mode)
     double xqp = get_Xqp();
     double xl = get_Xl();
 
-    double fluxd = transient_block_d_axis->get_output()*(xpp-xl)/(xdp-xl) + subtransient_block_d_axis->get_output()*(xdp-xpp)/(xdp-xl);
-    double fluxq = transient_block_q_axis->get_output()*(xpp-xl)/(xqp-xl) + subtransient_block_q_axis->get_output()*(xqp-xpp)/(xqp-xl);
+    double one_over_xdp_minus_xl = 1.0/(xdp-xl);
+    double one_over_xqp_minus_xl = 1.0/(xqp-xl);
+
+    double fluxd = (transient_block_d_axis->get_output()*(xpp-xl) + subtransient_block_d_axis->get_output()*(xdp-xpp))*one_over_xdp_minus_xl;
+    double fluxq = (transient_block_q_axis->get_output()*(xpp-xl) + subtransient_block_q_axis->get_output()*(xqp-xpp))*one_over_xqp_minus_xl;
     fluxq = -fluxq;
     complex<double> Flux_dq(fluxd, fluxq);
     double Flux = steps_fast_complex_abs(Flux_dq);
-    double delta_XadIfd = get_saturation_with_flux(Flux)*Flux;
+    double saturation = get_saturation_with_flux(Flux);
 
     complex<double> Idq = get_terminal_complex_current_in_pu_in_dq_axis_based_on_mbase();
 
     double input;
     // d-axis
     input = transient_block_d_axis->get_output()-subtransient_block_d_axis->get_output()-Idq.real()*(xdp-xl);
-    input = get_excitation_voltage_in_pu()-transient_block_d_axis->get_output()-(xd-xdp)*(Idq.real()+input*(xdp-xpp)/((xdp-xl)*(xdp-xl)))-
-            Flux_dq.real()*delta_XadIfd/Flux;
+    input = get_excitation_voltage_in_pu()-transient_block_d_axis->get_output()-(xd-xdp)*(Idq.real()+input*(xdp-xpp)*one_over_xdp_minus_xl*one_over_xdp_minus_xl)-
+            Flux_dq.real()*saturation;
     transient_block_d_axis->set_input(input);
     transient_block_d_axis->run(mode);
 
@@ -385,8 +388,8 @@ void GENROU::run(DYNAMIC_MODE mode)
 
     // q-axis
     input = transient_block_q_axis->get_output()-subtransient_block_q_axis->get_output()+Idq.imag()*(xqp-xl);
-    input = -transient_block_q_axis->get_output()+(xq-xqp)*(Idq.imag()-input*(xqp-xpp)/((xqp-xl)*(xqp-xl)))+
-            Flux_dq.imag()*(xq-xl)/(xd-xl)*delta_XadIfd/Flux;
+    input = -transient_block_q_axis->get_output()+(xq-xqp)*(Idq.imag()-input*(xqp-xpp)*one_over_xqp_minus_xl*one_over_xqp_minus_xl)+
+            Flux_dq.imag()*(xq-xl)/(xd-xl)*saturation;
     transient_block_q_axis->set_input(input);
     transient_block_q_axis->run(mode);
 
@@ -398,12 +401,12 @@ void GENROU::run(DYNAMIC_MODE mode)
 
     double pmech = get_mechanical_power_in_pu_based_on_mbase();
     double speed = get_rotor_speed_deviation_in_pu();
-    double omega = get_rotor_speed_in_pu();
-    double tmech = pmech/omega;
+    double one_over_omega = 1.0/get_rotor_speed_in_pu();
+    double tmech = pmech*one_over_omega;
 
     double telec = get_air_gap_torque_in_pu_based_on_mbase();
 
-    double delta_torque = tmech-telec-damping*speed/omega;
+    double delta_torque = tmech-telec-damping*speed*one_over_omega;
 
     rotor_speed_block->set_input(delta_torque);
     rotor_speed_block->run(mode);

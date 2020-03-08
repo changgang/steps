@@ -401,80 +401,76 @@ void WT3G2::initialize()
 
 void WT3G2::run(DYNAMIC_MODE mode)
 {
-    WT_GENERATOR* wt_generator = get_wt_generator_pointer();
-    if(wt_generator!=NULL)
+    double fbase = get_bus_base_frequency_in_Hz();
+    double wbase = DOUBLE_PI*fbase;
+
+    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
+    double V = get_terminal_voltage_in_pu();
+    double angle_in_rad = get_terminal_voltage_angle_in_rad();
+    double angle_in_deg = rad2deg(angle_in_rad);
+
+    LVPL_voltage_sensor.set_input(V);
+    LVPL_voltage_sensor.run(mode);
+
+    double lvpl_order = lvpl.get_LVPL_order(LVPL_voltage_sensor.get_output());
+
+    double IP = get_active_current_command_in_pu_based_on_mbase();
+
+    double input = active_current_commander.get_output();
+    if(input>lvpl_order)
+        input = lvpl_order;
+
+    input = IP - input;
+    double lvpl_rate_max = get_LVPL_max_rate_of_active_current_change();
+    if(input>lvpl_rate_max)
+        input = lvpl_rate_max;
+
+    active_current_commander.set_input(input);
+    active_current_commander.run(mode);
+
+    double EQ = get_reactive_voltage_command_in_pu();
+
+    reactive_voltage_commander.set_input(EQ);
+    reactive_voltage_commander.run(mode);
+
+    double kpll = get_KPLL();
+    double kipll = get_KIPLL();
+    if(kpll!=0.0 or kipll!=0.0)
     {
-        double fbase = get_bus_base_frequency_in_Hz();
-        double wbase = DOUBLE_PI*fbase;
+        double Vr = Vxy.real();
+        double Vi = Vxy.imag();
 
-        complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-        double V = get_terminal_voltage_in_pu();
-        double angle_in_rad = get_terminal_voltage_angle_in_rad();
-        double angle_in_deg = rad2deg(angle_in_rad);
+        double angle = get_pll_angle_in_rad();
+        double Vy = -Vr*steps_sin(angle)+Vi*steps_cos(angle);
 
-        LVPL_voltage_sensor.set_input(V);
-        LVPL_voltage_sensor.run(mode);
+        input = Vy*kpll/wbase;
+        PLL_frequency_integrator.set_input(input);
+        PLL_frequency_integrator.run(mode);
 
-        double lvpl_order = lvpl.get_LVPL_order(LVPL_voltage_sensor.get_output());
+        double output = PLL_frequency_integrator.get_output();
+        input += output;
 
-        double IP = get_active_current_command_in_pu_based_on_mbase();
-
-        double input = active_current_commander.get_output();
-        if(input>lvpl_order)
-            input = lvpl_order;
-
-        input = IP - input;
-        double lvpl_rate_max = get_LVPL_max_rate_of_active_current_change();
-        if(input>lvpl_rate_max)
-            input = lvpl_rate_max;
-
-        active_current_commander.set_input(input);
-        active_current_commander.run(mode);
-
-        double EQ = get_reactive_voltage_command_in_pu();
-
-        reactive_voltage_commander.set_input(EQ);
-        reactive_voltage_commander.run(mode);
-
-        double kpll = get_KPLL();
-        double kipll = get_KIPLL();
-        if(kpll!=0.0 or kipll!=0.0)
-        {
-            double Vr = Vxy.real();
-            double Vi = Vxy.imag();
-
-            double angle = get_pll_angle_in_rad();
-            double Vy = -Vr*steps_sin(angle)+Vi*steps_cos(angle);
-
-            input = Vy*kpll/wbase;
-            PLL_frequency_integrator.set_input(input);
-            PLL_frequency_integrator.run(mode);
-
-            double output = PLL_frequency_integrator.get_output();
-            input += output;
-
-            double pllmax = get_PLLmax();
-            if(input>=-pllmax and input<=pllmax)
-                ;
-            else
-            {
-                if(input>pllmax)
-                    input = pllmax;
-                else
-                    input = -pllmax;
-            }
-
-            PLL_angle_integrator.set_input(input);
-            PLL_angle_integrator.run(mode);
-        }
+        double pllmax = get_PLLmax();
+        if(input>=-pllmax and input<=pllmax)
+            ;
         else
         {
-            set_pll_angle_in_deg(angle_in_deg);
+            if(input>pllmax)
+                input = pllmax;
+            else
+                input = -pllmax;
         }
 
-        if(mode==UPDATE_MODE)
-            set_flag_model_updated_as_true();
+        PLL_angle_integrator.set_input(input);
+        PLL_angle_integrator.run(mode);
     }
+    else
+    {
+        set_pll_angle_in_deg(angle_in_deg);
+    }
+
+    if(mode==UPDATE_MODE)
+        set_flag_model_updated_as_true();
 }
 
 complex<double> WT3G2::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase()

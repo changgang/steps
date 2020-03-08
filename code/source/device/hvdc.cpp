@@ -337,6 +337,8 @@ void HVDC::set_converter_max_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter
     }
     else
         this->max_firing_angle_in_deg[converter] = 0.0;
+
+    cos_max_firing_angle[converter] = steps_cos(deg2rad(this->max_firing_angle_in_deg[converter]));
 }
 
 void HVDC::set_converter_min_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter, const double angle)
@@ -345,6 +347,7 @@ void HVDC::set_converter_min_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter
         this->min_firing_angle_in_deg[converter] = angle;
     else
         this->min_firing_angle_in_deg[converter] = 0.0;
+    cos_min_firing_angle[converter] = steps_cos(deg2rad(this->min_firing_angle_in_deg[converter]));
 }
 
 void HVDC::set_converter_transformer_grid_side_base_voltage_in_kV(HVDC_CONVERTER_SIDE converter, const double V)
@@ -563,6 +566,16 @@ double HVDC::get_converter_max_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE convert
 double HVDC::get_converter_min_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter) const
 {
     return min_firing_angle_in_deg[converter];
+}
+
+double HVDC::get_converter_cos_max_alpha_or_gamma(HVDC_CONVERTER_SIDE converter) const
+{
+    return cos_max_firing_angle[converter];
+}
+
+double HVDC::get_converter_cos_min_alpha_or_gamma(HVDC_CONVERTER_SIDE converter) const
+{
+    return cos_min_firing_angle[converter];
 }
 
 double HVDC::get_converter_transformer_grid_side_base_voltage_in_kV(HVDC_CONVERTER_SIDE converter) const
@@ -1413,12 +1426,22 @@ void HVDC::show_solved_hvdc_steady_state() const
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-void HVDC::set_converter_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter, double angle)
+void HVDC::set_converter_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter, double angle, double cos_angle)
 {
     if(angle>=0.0)
         converter_firing_angle_in_deg[converter] = angle;
     else
         converter_firing_angle_in_deg[converter] = 0.0;
+
+    if(cos_angle!=0.0)
+        cos_converter_firing_angle[converter] = cos_angle;
+    else
+        cos_converter_firing_angle[converter] = steps_cos(deg2rad(converter_firing_angle_in_deg[converter]));
+}
+
+double HVDC::get_converter_cos_alpha_or_gamma(HVDC_CONVERTER_SIDE converter) const
+{
+    return cos_converter_firing_angle[converter];
 }
 
 void HVDC::set_converter_transformer_tap_in_pu(HVDC_CONVERTER_SIDE converter, double tap)
@@ -1473,7 +1496,7 @@ double HVDC::get_converter_commutating_overlap_angle_in_deg(HVDC_CONVERTER_SIDE 
     double Idc = get_line_dc_current_in_kA();
     double alpha_gamma = deg2rad(get_converter_alpha_or_gamma_in_deg(converter));
 
-    double mu = steps_acos(steps_cos(alpha_gamma)-SQRT2*Idc*Xc/Eac)-alpha_gamma;
+    double mu = steps_acos(cos_converter_firing_angle[converter]-SQRT2*Idc*Xc/Eac)-alpha_gamma;
 
     return rad2deg(mu);
 }
@@ -1665,9 +1688,7 @@ bool HVDC::solve_converter_transformer_tap_and_desired_firing_angle(HVDC_CONVERT
     solve_best_converter_transformer_tap_with_min_angle(converter, Vdc, Idc);
     double Tap = get_converter_transformer_tap_in_pu(converter);
 
-    double angle_min = get_converter_min_alpha_or_gamma_in_deg(converter);
-    angle_min = deg2rad(angle_min);
-    double cos_angle_min = steps_cos(angle_min);
+    double cos_angle_min = cos_min_firing_angle[converter];
     bool minAngleReached = false;
     double cosAngle =  0.0;
     while(true)// try to decrease tap
@@ -1699,9 +1720,9 @@ bool HVDC::solve_converter_transformer_tap_and_desired_firing_angle(HVDC_CONVERT
     }
     // set firing angle
     if(not minAngleReached)
-        set_converter_alpha_or_gamma_in_deg(converter, rad2deg(steps_acos(cosAngle)));
+        set_converter_alpha_or_gamma_in_deg(converter, rad2deg(steps_acos(cosAngle)), cosAngle);
     else
-        set_converter_alpha_or_gamma_in_deg(converter, get_converter_min_alpha_or_gamma_in_deg(converter));
+        set_converter_alpha_or_gamma_in_deg(converter, get_converter_min_alpha_or_gamma_in_deg(converter), cos_min_firing_angle[converter]);
 
     //osstream<<get_device_name()<<": trying to solve "<<get_converter_side_name(converter)<<" transformer tap = "<<get_converter_transformer_tap_in_pu(converter)
     //       <<", best firing angle = "<<get_converter_alpha_or_gamma_in_deg(converter)<<" deg";
@@ -1736,14 +1757,11 @@ void HVDC::solve_best_converter_transformer_tap_with_min_angle(HVDC_CONVERTER_SI
 
     double Vdrop = get_converter_voltage_drop_per_bridge_in_kV(converter);
 
-    double angle_min = get_converter_min_alpha_or_gamma_in_deg(converter);
-    angle_min = deg2rad(angle_min);
-
     double Vbus = psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(converter));
 
     double Eac_cosAngle = Vdc/N+THREE_OVER_PI*Z.imag()*Idc+2.0*Z.real()*Idc+Vdrop;
     Eac_cosAngle *= PI_OVER_THREE_SQRT2;
-    double Eac = Eac_cosAngle/steps_cos(angle_min);
+    double Eac = Eac_cosAngle/cos_min_firing_angle[converter];
     double Tap = Vbus/(Eac*TurnRatio); // desired
     Tap = minTap +  TapStep*floor((Tap-minTap)/TapStep); // actual
     if(Tap < minTap) Tap = minTap; // apply limit
@@ -1847,9 +1865,6 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
 
     complex<double> ZI = get_converter_transformer_impedance_in_ohm(INVERTER);
 
-    double alpha_min = get_converter_min_alpha_or_gamma_in_deg(RECTIFIER); alpha_min = deg2rad(alpha_min);
-    double gamma_min = get_converter_min_alpha_or_gamma_in_deg(INVERTER);  gamma_min = deg2rad(gamma_min);
-
     unsigned int NI = get_converter_number_of_bridge(INVERTER);
 
 
@@ -1861,7 +1876,7 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
 
     double TapR, TapI;
 
-    set_converter_alpha_or_gamma_in_deg(INVERTER, get_converter_min_alpha_or_gamma_in_deg(INVERTER));
+    set_converter_alpha_or_gamma_in_deg(INVERTER, get_converter_min_alpha_or_gamma_in_deg(INVERTER), cos_min_firing_angle[INVERTER]);
     if(Pside == INVERTER)
     {
         Idc = In; // desired
@@ -1872,7 +1887,7 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
         // with solved Tap, solve Idc again
         EacI = VbusI/TurnRatioI/TapI;
         double a = -THREE_OVER_PI*ZI.imag()+2.0*ZI.real();
-        double b = THREE_SQRT2_OVER_PI*EacI*steps_cos(gamma_min)-VdropI;
+        double b = THREE_SQRT2_OVER_PI*EacI*cos_min_firing_angle[INVERTER]-VdropI;
         double c = -Pn/NI;
         double Idc1, Idc2;
         Idc1 = (-b+steps_sqrt(b*b-4*a*c))/(2*a);
@@ -1886,13 +1901,13 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
         TapR =  get_converter_transformer_tap_in_pu(RECTIFIER);
         // with Tap, solve alpha
         cosAlpha = solve_desired_converter_cosAngle_with_desired_dc_voltage_current_and_transformer_tap(RECTIFIER, VdcR, Idc, TapR);
-        if(cosAlpha>=steps_cos(alpha_min))
+        if(cosAlpha>=cos_min_firing_angle[RECTIFIER])
         {
-            set_converter_alpha_or_gamma_in_deg(RECTIFIER, get_converter_min_alpha_or_gamma_in_deg(RECTIFIER));
+            set_converter_alpha_or_gamma_in_deg(RECTIFIER, get_converter_min_alpha_or_gamma_in_deg(RECTIFIER), cos_min_firing_angle[RECTIFIER]);
             temp_converter_firing_angle_fixed[RECTIFIER] = true;
         }
         else//solved
-            set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(steps_acos(cosAlpha)));
+            set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(steps_acos(cosAlpha)), cosAlpha);
     }
     else //RECTIFIER
     {
@@ -1909,13 +1924,13 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
         TapR = get_converter_transformer_tap_in_pu(RECTIFIER);
         // solve cosAlpha
         cosAlpha = solve_desired_converter_cosAngle_with_desired_dc_voltage_current_and_transformer_tap(RECTIFIER, VdcR, Idc, TapR);
-        if(cosAlpha>=steps_cos(alpha_min))
+        if(cosAlpha>=cos_min_firing_angle[RECTIFIER])
         {
-            set_converter_alpha_or_gamma_in_deg(RECTIFIER, get_converter_min_alpha_or_gamma_in_deg(RECTIFIER));
+            set_converter_alpha_or_gamma_in_deg(RECTIFIER, get_converter_min_alpha_or_gamma_in_deg(RECTIFIER), cos_min_firing_angle[RECTIFIER]);
             temp_converter_firing_angle_fixed[RECTIFIER] = true;
         }
         else
-            set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(cosAlpha));
+            set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(steps_acos(cosAlpha)), cosAlpha);
     }
     solve_with_solved_tap_and_firing_angle();
 }
@@ -1928,14 +1943,12 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_gamma()
     //os<<"Solve %s as constant current (R) + constant gamma (I) mode.",
     //              get_device_name().c_str());
     //show_information_with_leading_time_stamp(osstream);
-    set_converter_alpha_or_gamma_in_deg(INVERTER, get_converter_min_alpha_or_gamma_in_deg(INVERTER));
+    set_converter_alpha_or_gamma_in_deg(INVERTER, get_converter_min_alpha_or_gamma_in_deg(INVERTER), cos_min_firing_angle[INVERTER]);
 
     double Vn = get_nominal_dc_voltage_per_pole_in_kV();
     double In = get_nominal_dc_current_per_pole_in_kA();
 
     double R = get_line_resistance_in_ohm();
-    double alpha_min = get_converter_min_alpha_or_gamma_in_deg(RECTIFIER); alpha_min = deg2rad(alpha_min);
-    double gamma_min = get_converter_min_alpha_or_gamma_in_deg(INVERTER);  gamma_min = deg2rad(gamma_min);
 
     double VdcR, VdcI, Idc, cosAlpha;
 
@@ -1954,13 +1967,13 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_gamma()
     double TapR = get_converter_transformer_tap_in_pu(RECTIFIER);
     // with Tap, solve alpha
     cosAlpha = solve_desired_converter_cosAngle_with_desired_dc_voltage_current_and_transformer_tap(RECTIFIER, VdcR, Idc, TapR);
-    if(cosAlpha>=steps_cos(alpha_min))
+    if(cosAlpha>=cos_min_firing_angle[RECTIFIER])
     {
-        set_converter_alpha_or_gamma_in_deg(RECTIFIER, get_converter_min_alpha_or_gamma_in_deg(RECTIFIER));
+        set_converter_alpha_or_gamma_in_deg(RECTIFIER, get_converter_min_alpha_or_gamma_in_deg(RECTIFIER), cos_min_firing_angle[RECTIFIER]);
         temp_converter_firing_angle_fixed[RECTIFIER] = true;
     }
     else//solved
-        set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(steps_acos(cosAlpha)));
+        set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(steps_acos(cosAlpha)), cosAlpha);
 
     solve_with_solved_tap_and_firing_angle();
 }
@@ -1973,7 +1986,7 @@ void HVDC::solve_as_rectifier_regulating_alpha_and_inverter_regulating_current()
     //os<<"Solve %s as constant alpha (R) + constant current (I) mode.",
     //              get_device_name().c_str());
     //show_information_with_leading_time_stamp(osstream);
-    set_converter_alpha_or_gamma_in_deg(RECTIFIER, get_converter_min_alpha_or_gamma_in_deg(RECTIFIER));
+    set_converter_alpha_or_gamma_in_deg(RECTIFIER, get_converter_min_alpha_or_gamma_in_deg(RECTIFIER), cos_min_firing_angle[RECTIFIER]);
 
     double In = get_rectifier_nominal_dc_current_command_in_kA();
     double margin = get_current_power_margin();
@@ -1982,8 +1995,6 @@ void HVDC::solve_as_rectifier_regulating_alpha_and_inverter_regulating_current()
     double VdcI = get_inverter_nominal_dc_voltage_command_in_kV();
 
     double R = get_line_resistance_in_ohm();
-    double alpha_min = get_converter_min_alpha_or_gamma_in_deg(RECTIFIER); alpha_min = deg2rad(alpha_min);
-    double gamma_min = get_converter_min_alpha_or_gamma_in_deg(INVERTER);  gamma_min = deg2rad(gamma_min);
 
     double VdcR = VdcI+Idc*R;
     //solve TapR with desired Idc, and VdcR
@@ -1998,13 +2009,13 @@ void HVDC::solve_as_rectifier_regulating_alpha_and_inverter_regulating_current()
     // with Tap, solve alpha
     double cosGamma = solve_desired_converter_cosAngle_with_desired_dc_voltage_current_and_transformer_tap(INVERTER, VdcI, Idc, TapI);
 
-    if(cosGamma>=steps_cos(gamma_min))
+    if(cosGamma>=cos_min_firing_angle[INVERTER])
     {
-        set_converter_alpha_or_gamma_in_deg(INVERTER, get_converter_min_alpha_or_gamma_in_deg(INVERTER));
+        set_converter_alpha_or_gamma_in_deg(INVERTER, get_converter_min_alpha_or_gamma_in_deg(INVERTER), cos_min_firing_angle[INVERTER]);
         temp_converter_firing_angle_fixed[INVERTER] = true;
     }
     else//solved
-        set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(steps_acos(cosGamma)));
+        set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(steps_acos(cosGamma)), cosGamma);
 
     solve_with_solved_tap_and_firing_angle();
 }
@@ -2030,9 +2041,6 @@ void HVDC::solve_with_solved_tap_and_firing_angle()
     double TapR = get_converter_transformer_tap_in_pu(RECTIFIER);
     double TapI = get_converter_transformer_tap_in_pu(INVERTER);
 
-    double alpha = get_converter_alpha_or_gamma_in_deg(RECTIFIER); alpha = deg2rad(alpha);
-    double gamma = get_converter_alpha_or_gamma_in_deg(INVERTER);  gamma = deg2rad(gamma);
-
     complex<double> ZR = get_converter_transformer_impedance_in_ohm(RECTIFIER);
     complex<double> ZI = get_converter_transformer_impedance_in_ohm(INVERTER);
 
@@ -2051,17 +2059,17 @@ void HVDC::solve_with_solved_tap_and_firing_angle()
     double Rceq_r = NR*(THREE_OVER_PI*ZR.imag()+2.0*ZR.real());
     double Rceq_i = NI*(THREE_OVER_PI*ZI.imag()+2.0*ZI.real());
 
-    double Idc = Vdc0_r*steps_cos(alpha)-NR*VdropR - (Vdc0_i*steps_cos(gamma)-NI*VdropI);
+    double Idc = Vdc0_r*cos_converter_firing_angle[RECTIFIER]-NR*VdropR - (Vdc0_i*cos_converter_firing_angle[INVERTER]-NI*VdropI);
     Idc /= (R+Rceq_r-Rceq_i);
 
-    double VdcR = Vdc0_r*steps_cos(alpha)-Rceq_r*Idc-NR*VdropR;
-    double VdcI = Vdc0_i*steps_cos(gamma)-Rceq_i*Idc-NI*VdropI;
+    double VdcR = Vdc0_r*cos_converter_firing_angle[RECTIFIER]-Rceq_r*Idc-NR*VdropR;
+    double VdcI = Vdc0_i*cos_converter_firing_angle[INVERTER]-Rceq_i*Idc-NI*VdropI;
 
-    //double Idc = NR*(THREE_SQRT2_OVER_PI*EacR*steps_cos(alpha) - VdropR) - NI*(THREE_SQRT2_OVER_PI*EacI*steps_cos(gamma) - VdropI);
+    //double Idc = NR*(THREE_SQRT2_OVER_PI*EacR*cos_converter_firing_angle[RECTIFIER] - VdropR) - NI*(THREE_SQRT2_OVER_PI*EacI*cos_converter_firing_angle[INVERTER] - VdropI);
     //Idc /= (R+NR*ZR.imag()*THREE_OVER_PI-NI*ZI.imag()*THREE_OVER_PI+NR*2.0*ZR.real()+NI*2.0*ZI.real());
 
-    //double VdcR = NR*(THREE_SQRT2_OVER_PI*EacR*steps_cos(alpha) - ZR.imag()*THREE_OVER_PI*Idc - 2.0*ZR.real()*Idc- VdropR);
-    //double VdcI = NI*(THREE_SQRT2_OVER_PI*EacI*steps_cos(gamma) - ZI.imag()*THREE_OVER_PI*Idc + 2.0*ZI.real()*Idc- VdropI);
+    //double VdcR = NR*(THREE_SQRT2_OVER_PI*EacR*cos_converter_firing_angle[RECTIFIER] - ZR.imag()*THREE_OVER_PI*Idc - 2.0*ZR.real()*Idc- VdropR);
+    //double VdcI = NI*(THREE_SQRT2_OVER_PI*EacI*cos_converter_firing_angle[INVERTER] - ZI.imag()*THREE_OVER_PI*Idc + 2.0*ZI.real()*Idc- VdropI);
 
     set_line_dc_current_in_kA(Idc);
     set_converter_dc_voltage_in_kV(RECTIFIER, VdcR);
@@ -2108,14 +2116,11 @@ double HVDC::solve_converter_dc_voltage_in_kV_with_dc_current_and_transformer_ta
 
     complex<double> Z = get_converter_transformer_impedance_in_ohm(converter);
 
-    double angle_min = get_converter_min_alpha_or_gamma_in_deg(converter);
-    angle_min = deg2rad(angle_min);
-
     unsigned int N = get_converter_number_of_bridge(converter);
 
     double Vbus = psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(converter));
     double Eac = Vbus/(TurnRatio*Tap);
-    double Vdc = N*(THREE_SQRT2_OVER_PI*Eac*steps_cos(angle_min)-THREE_OVER_PI*Z.imag()*Idc-2.0*Z.real()*Idc-Vdrop);
+    double Vdc = N*(THREE_SQRT2_OVER_PI*Eac*cos_min_firing_angle[RECTIFIER]-THREE_OVER_PI*Z.imag()*Idc-2.0*Z.real()*Idc-Vdrop);
     return Vdc;
 }
 

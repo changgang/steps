@@ -678,110 +678,94 @@ void CSEET2::initialize()
 
 void CSEET2::run(DYNAMIC_MODE mode)
 {
-    GENERATOR* generator = get_generator_pointer();
-    SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-    if(gen_model!=NULL)
+    sensor.set_input(get_compensated_voltage_in_pu());
+    sensor.run(mode);
+
+    double Vs = get_stabilizing_signal_in_pu();
+    double input = get_voltage_reference_in_pu()-sensor.get_output();
+    if(get_stabilizer_slot()==AT_VOLTAGE_ERROR)
+        input += Vs;
+
+    if(get_tuner_type()==SERIAL_TUNER)
     {
-        double Ecomp = get_compensated_voltage_in_pu();
-        double Vref = get_voltage_reference_in_pu();
-        double Vs = get_stabilizing_signal_in_pu();
-
-        double input;
-        sensor.set_input(Ecomp);
-        sensor.run(mode);
-
-        input = Vref-sensor.get_output();
-        if(get_stabilizer_slot()==AT_VOLTAGE_ERROR)
-            input += Vs;
-
-        if(get_tuner_type()==SERIAL_TUNER)
+        if(get_serial_tuner_KV()==true)
         {
-            if(get_serial_tuner_KV()==true)
-            {
-                serial_tuner1_lead_lag.set_input(input);
-                serial_tuner1_lead_lag.run(mode);
-                input = serial_tuner1_lead_lag.get_output();
-            }
-            else
-            {
-                serial_tuner1_pi.set_input(input);
-                serial_tuner1_pi.run(mode);
-                input = serial_tuner1_pi.get_output();
-            }
-            serial_tuner2.set_input(input);
-            serial_tuner2.run(mode);
-            input = serial_tuner2.get_output();
+            serial_tuner1_lead_lag.set_input(input);
+            serial_tuner1_lead_lag.run(mode);
+            input = serial_tuner1_lead_lag.get_output();
         }
-        else // parallel tuner
+        else
         {
-            parallel_integral.set_input(input);
-            parallel_integral.run(mode);
-
-            parallel_differential.set_input(input);
-            parallel_differential.run(mode);
-
-            input = get_parallel_tuner_KP()*input+parallel_integral.get_output()+parallel_differential.get_output();
+            serial_tuner1_pi.set_input(input);
+            serial_tuner1_pi.run(mode);
+            input = serial_tuner1_pi.get_output();
         }
-
-        for(unsigned int i=0; i<STEPS_MODEL_FEEDBACK_LOOP_INTEGRATION_COUNT; ++i)
-        {
-            double input2 = input - feedbacker.get_output();
-            if(get_stabilizer_slot()==AT_REGULATOR)
-                input2 += Vs;
-
-            regulator.set_input(input2);
-            regulator.run(mode);
-            input2 = regulator.get_output();
-
-            feedbacker.set_input(input2);
-            feedbacker.run(mode);
-
-            if(feedbacker.get_K()==0.0)
-                break;
-        }
-
-        //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
-
-        if(mode == UPDATE_MODE)
-            set_flag_model_updated_as_true();
+        serial_tuner2.set_input(input);
+        serial_tuner2.run(mode);
+        input = serial_tuner2.get_output();
     }
+    else // parallel tuner
+    {
+        parallel_integral.set_input(input);
+        parallel_integral.run(mode);
+
+        parallel_differential.set_input(input);
+        parallel_differential.run(mode);
+
+        input = get_parallel_tuner_KP()*input+parallel_integral.get_output()+parallel_differential.get_output();
+    }
+
+    for(unsigned int i=0; i<STEPS_MODEL_FEEDBACK_LOOP_INTEGRATION_COUNT; ++i)
+    {
+        double input2 = input - feedbacker.get_output();
+        if(get_stabilizer_slot()==AT_REGULATOR)
+            input2 += Vs;
+
+        regulator.set_input(input2);
+        regulator.run(mode);
+        input2 = regulator.get_output();
+
+        feedbacker.set_input(input2);
+        feedbacker.run(mode);
+
+        if(feedbacker.get_K()==0.0)
+            break;
+    }
+
+    //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
+
+    if(mode == UPDATE_MODE)
+        set_flag_model_updated_as_true();
 }
 
 double CSEET2::get_excitation_voltage_in_pu()
 {
     GENERATOR* generator = get_generator_pointer();
     SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-    if(gen_model!=NULL)
+
+    double Efd = regulator.get_output();
+    double Vrmax = get_VRmax_in_pu();
+    double Vrmin = get_VRmin_in_pu();
+
+    //unsigned int bus = generator->get_generator_bus();
+    //double Vt = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
+
+    if(get_excitation_source()==SELF_EXCITATION)
     {
-        double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
-
-        double Efd = regulator.get_output();
-        double Vrmax = get_VRmax_in_pu();
-        double Vrmin = get_VRmin_in_pu();
-
-        //unsigned int bus = generator->get_generator_bus();
-        //double Vt = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
         double Vt = get_terminal_voltage_in_pu();
-
-        if(get_excitation_source()==SELF_EXCITATION)
-        {
-            Vrmax *= Vt;
-            Vrmin *= Vt;
-        }
-
-        if(Efd>Vrmax)
-            Efd = Vrmax;
-
-        if(Efd<Vrmin)
-            Efd = Vrmin;
-
-        double Kc = get_KC();
-        Efd -= Kc*Ifd;
-
-        return Efd;
+        Vrmax *= Vt;
+        Vrmin *= Vt;
     }
-    else
-        return 0.0;
+
+    if(Efd>Vrmax)
+        Efd = Vrmax;
+
+    if(Efd<Vrmin)
+        Efd = Vrmin;
+
+    Efd -= get_KC()*gen_model->get_field_current_in_pu_based_on_mbase();
+
+    return Efd;
 }
 void CSEET2::check()
 {

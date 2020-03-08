@@ -165,58 +165,56 @@ void WT3T0::initialize()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     WT_GENERATOR_MODEL* gen_model = gen->get_wt_generator_model();
-    if(gen_model!=NULL)
+
+    if(not gen_model->is_model_initialized())
+        gen_model->initialize();
+
+    WT_AERODYNAMIC_MODEL* aero_model = gen->get_wt_aerodynamic_model();
+    if(aero_model!=NULL)
     {
-        if(not gen_model->is_model_initialized())
-            gen_model->initialize();
+        if(not aero_model->is_model_initialized())
+            aero_model->initialize();
 
-        WT_AERODYNAMIC_MODEL* aero_model = gen->get_wt_aerodynamic_model();
-        if(aero_model!=NULL)
+        setup_block_toolkit_and_parameters();
+
+        unsigned int bus = gen->get_generator_bus();
+
+        double fbase = get_bus_base_frequency_in_Hz();
+        double wbase = DOUBLE_PI*fbase;
+
+        generator_rotor_angle_block.set_T_in_s(1.0/wbase);
+        generator_rotor_angle_block.set_output(psdb.get_bus_positive_sequence_angle_in_rad(bus));
+        generator_rotor_angle_block.initialize();
+
+        double speed = get_initial_wind_turbine_speed_in_pu_from_wt_areodynamic_model();
+        double dspeed = speed-1.0;
+
+        generator_inertia_block.set_output(dspeed);
+        generator_inertia_block.initialize();
+
+        turbine_inertia_block.set_output(dspeed);
+        double hturbine = get_Hturbine_in_s();
+        if(fabs(hturbine)>DOUBLE_EPSILON)
+            turbine_inertia_block.initialize();
+
+        double pelec = gen_model->get_active_power_generation_including_stator_loss_in_pu_based_on_mbase();
+        double telec = pelec/speed;
+        double tmech = get_damping_in_pu()*dspeed+telec;
+
+        shaft_twist_block.set_output(tmech);
+        shaft_twist_block.initialize();
+
+        set_flag_model_initialized_as_true();
+
+        ostringstream osstream;
+        if(toolkit.is_detailed_log_enabled())
         {
-            if(not aero_model->is_model_initialized())
-                aero_model->initialize();
-
-            setup_block_toolkit_and_parameters();
-
-            unsigned int bus = gen->get_generator_bus();
-
-            double fbase = get_bus_base_frequency_in_Hz();
-            double wbase = DOUBLE_PI*fbase;
-
-            generator_rotor_angle_block.set_T_in_s(1.0/wbase);
-            generator_rotor_angle_block.set_output(psdb.get_bus_positive_sequence_angle_in_rad(bus));
-            generator_rotor_angle_block.initialize();
-
-            double speed = get_initial_wind_turbine_speed_in_pu_from_wt_areodynamic_model();
-            double dspeed = speed-1.0;
-
-            generator_inertia_block.set_output(dspeed);
-            generator_inertia_block.initialize();
-
-            turbine_inertia_block.set_output(dspeed);
-            double hturbine = get_Hturbine_in_s();
-            if(fabs(hturbine)>DOUBLE_EPSILON)
-                turbine_inertia_block.initialize();
-
-            double pelec = gen_model->get_active_power_generation_including_stator_loss_in_pu_based_on_mbase();
-            double telec = pelec/speed;
-            double tmech = get_damping_in_pu()*dspeed+telec;
-
-            shaft_twist_block.set_output(tmech);
-            shaft_twist_block.initialize();
-
-            set_flag_model_initialized_as_true();
-
-            ostringstream osstream;
-            if(toolkit.is_detailed_log_enabled())
-            {
-                osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
-                        <<"(1) Turbine speed is "<<get_turbine_speed_in_pu()<<" pu"<<endl
-                        <<"(2) Generator speed is "<<get_generator_speed_in_pu()<<" pu"<<endl
-                        <<"(3) Generator rotor angle is "<<get_rotor_angle_in_deg()<<" deg"<<endl
-                        <<"(4) Shaft block state is "<<shaft_twist_block.get_state();
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
+            osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+                    <<"(1) Turbine speed is "<<get_turbine_speed_in_pu()<<" pu"<<endl
+                    <<"(2) Generator speed is "<<get_generator_speed_in_pu()<<" pu"<<endl
+                    <<"(3) Generator rotor angle is "<<get_rotor_angle_in_deg()<<" deg"<<endl
+                    <<"(4) Shaft block state is "<<shaft_twist_block.get_state();
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }

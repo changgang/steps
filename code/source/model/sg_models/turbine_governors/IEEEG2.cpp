@@ -247,43 +247,36 @@ void IEEEG2::initialize()
 
 void IEEEG2::run(DYNAMIC_MODE mode)
 {
-    GENERATOR* generator = get_generator_pointer();
-    SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-    if(gen_model!=NULL)
-    {
-        double Pref = get_mechanical_power_reference_in_pu_based_on_mbase();
-        double speed = get_rotor_speed_deviation_in_pu_from_sync_generator_model();
+    double Pref = get_mechanical_power_reference_in_pu_based_on_mbase();
+    double speed = get_rotor_speed_deviation_in_pu_from_sync_generator_model();
 
-        droop.set_input(speed);
-        droop.run(mode);
+    droop.set_input(speed);
+    droop.run(mode);
 
-        double input = droop.get_output();
+    double input = droop.get_output();
 
-        tuner.set_input(input);
-        tuner.run(mode);
+    tuner.set_input(input);
+    tuner.run(mode);
 
-        input = Pref - tuner.get_output();
+    input = Pref - tuner.get_output();
 
-        double Pmax = get_Pmax_in_pu();
-        double Pmin = get_Pmin_in_pu();
-        if(input>Pmax)
-            input = Pmax;
-        if(input<Pmin)
-            input = Pmin;
+    double Pmax = get_Pmax_in_pu();
+    double Pmin = get_Pmin_in_pu();
+    if(input>Pmax)
+        input = Pmax;
+    if(input<Pmin)
+        input = Pmin;
 
-        water_hammer.set_input(input);
-        water_hammer.run(mode);
+    water_hammer.set_input(input);
+    water_hammer.run(mode);
 
-        if(mode==UPDATE_MODE)
-            set_flag_model_updated_as_true();
-    }
+    if(mode==UPDATE_MODE)
+        set_flag_model_updated_as_true();
 }
 
 double IEEEG2::get_mechanical_power_in_pu_based_on_mbase() const
 {
-    double Pmech = water_hammer.get_output();
-
-    return Pmech;
+    return water_hammer.get_output();
 }
 
 double IEEEG2::get_mechanical_power_upper_limit_in_pu_based_on_mbase() const

@@ -2301,8 +2301,10 @@ void DYNAMICS_SIMULATOR::update_relay_models()
 
 void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 {
+    //ostringstream osstream;
     auto clock_start = steady_clock::now();
 
+    //auto clock_1 = steady_clock::now();
     unsigned int n = 0;
 
     n = generators.size();
@@ -2315,6 +2317,12 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     for(unsigned int i=0; i<n; ++i)
         generators[i]->run(mode);
 
+    /*auto clock_2 = steady_clock::now();
+    auto tduration = duration_cast<nanoseconds>(clock_2-clock_1);
+    osstream<<"at time "<<TIME<<", generator models run takes "<<tduration.count()<<" ns.";
+    toolkit->show_information_with_leading_time_stamp(osstream);
+    clock_1 = clock_2;*/
+
     n = wt_generators.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         //set_openmp_number_of_threads(toolkit->get_wt_generator_thread_number());
@@ -2324,6 +2332,12 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
         wt_generators[i]->run(mode);
+
+    /*clock_2 = steady_clock::now();
+    tduration = duration_cast<nanoseconds>(clock_2-clock_1);
+    osstream<<"at time "<<TIME<<", wt generator models run takes "<<tduration.count()<<" ns.";
+    toolkit->show_information_with_leading_time_stamp(osstream);
+    clock_1 = clock_2;*/
 
     n = pv_units.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2335,6 +2349,12 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     for(unsigned int i=0; i<n; ++i)
         pv_units[i]->run(mode);
 
+    /*clock_2 = steady_clock::now();
+    tduration = duration_cast<nanoseconds>(clock_2-clock_1);
+    osstream<<"at time "<<TIME<<", pv models run takes "<<tduration.count()<<" ns.";
+    toolkit->show_information_with_leading_time_stamp(osstream);
+    clock_1 = clock_2;*/
+
     n = loads.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         //set_openmp_number_of_threads(toolkit->get_load_thread_number());
@@ -2344,6 +2364,12 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
         loads[i]->run(mode);
+
+    /*clock_2 = steady_clock::now();
+    tduration = duration_cast<nanoseconds>(clock_2-clock_1);
+    osstream<<"at time "<<TIME<<", load models run takes "<<tduration.count()<<" ns.";
+    toolkit->show_information_with_leading_time_stamp(osstream);
+    clock_1 = clock_2;*/
 
     n = hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2359,6 +2385,12 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
             hvdc->run(mode);
     }
 
+    /*clock_2 = steady_clock::now();
+    tduration = duration_cast<nanoseconds>(clock_2-clock_1);
+    osstream<<"at time "<<TIME<<", hvdc models run takes "<<tduration.count()<<" ns.";
+    toolkit->show_information_with_leading_time_stamp(osstream);
+    clock_1 = clock_2;*/
+
     n = e_devices.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         //set_openmp_number_of_threads(toolkit->get_equivalent_device_thread_number());
@@ -2372,6 +2404,12 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         if(edevice->get_status()==true)
             edevice->run(mode);
     }
+
+    /*clock_2 = steady_clock::now();
+    tduration = duration_cast<nanoseconds>(clock_2-clock_1);
+    osstream<<"at time "<<TIME<<", equivalent device models run takes "<<tduration.count()<<" ns.";
+    toolkit->show_information_with_leading_time_stamp(osstream);
+    clock_1 = clock_2;*/
 
     n = in_service_buses.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2387,9 +2425,18 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
         model->run(mode);*/
     }
+    /*clock_2 = steady_clock::now();
+    tduration = duration_cast<nanoseconds>(clock_2-clock_1);
+    osstream<<"at time "<<TIME<<", bus frequency models run takes "<<tduration.count()<<" ns.";
+    toolkit->show_information_with_leading_time_stamp(osstream);
+    clock_1 = clock_2;
 
-    auto tduration = duration_cast<microseconds>(steady_clock::now()-clock_start);
-    microseconds_elapse_of_differential_equations_in_a_step += tduration.count();
+    tduration = duration_cast<nanoseconds>(steady_clock::now()-clock_start);
+    osstream<<"at time "<<TIME<<", all models run takes "<<tduration.count()<<" ns.";
+    toolkit->show_information_with_leading_time_stamp(osstream);*/
+
+    auto tdurationx = duration_cast<microseconds>(steady_clock::now()-clock_start);
+    microseconds_elapse_of_differential_equations_in_a_step += tdurationx.count();
 }
 
 void DYNAMICS_SIMULATOR::update_bus_frequency_blocks()

@@ -445,38 +445,33 @@ double PSASPE2::get_excitation_voltage_in_pu()
 {
     GENERATOR* generator = get_generator_pointer();
     SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-    if(gen_model!=NULL)
-    {
-        STEPS& toolkit = get_toolkit();
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        unsigned int bus = generator->get_generator_bus();
-        complex<double> Vt = psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
-        //complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
-        complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
-        double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    unsigned int bus = generator->get_generator_bus();
+    complex<double> Vt = psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
+    //complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+    complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
+    double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
 
-        double Efdmax = get_Efdmax_in_pu();
-        double Efdmin = get_Efdmin_in_pu();
+    double Efdmax = get_Efdmax_in_pu();
+    double Efdmin = get_Efdmin_in_pu();
 
-        double Vta = get_Vta_in_pu(), Vtb = get_Vtb_in_pu();
-        double Kv1 = 1.0/(Vt0*Vta), Kv2 = 1.0/(Vt0/Vtb);
+    double Vta = get_Vta_in_pu(), Vtb = get_Vtb_in_pu();
+    double Kv1 = 1.0/(Vt0*Vta), Kv2 = 1.0/(Vt0/Vtb);
 
-        double Kpt = get_Kpt(), Kit = get_Kit(), Ke = get_Ke();
-        complex<double> imag_1(0.0, 1.0);
+    double Kpt = get_Kpt(), Kit = get_Kit(), Ke = get_Ke();
+    complex<double> imag_1(0.0, 1.0);
 
-        double scale = abs(Kpt*Vt + imag_1*Kit*It);
-        Efdmax = Kv1*scale*Efdmax - Ke*Ifd;
-        Efdmin = Kv2*scale*Efdmin - Ke*Ifd;
+    double scale = abs(Kpt*Vt + imag_1*Kit*It);
+    Efdmax = Kv1*scale*Efdmax - Ke*Ifd;
+    Efdmin = Kv2*scale*Efdmin - Ke*Ifd;
 
-        double Efd = Efd0 + regulator.get_output();
+    double Efd = Efd0 + regulator.get_output();
 
-        if(Efd>Efdmax) Efd = Efdmax;
-        if(Efd<Efdmin) Efd = Efdmin;
+    if(Efd>Efdmax) Efd = Efdmax;
+    if(Efd<Efdmin) Efd = Efdmin;
 
-        return Efd;
-    }
-    else
-        return 0.0;
+    return Efd;
 }
 void PSASPE2::check()
 {

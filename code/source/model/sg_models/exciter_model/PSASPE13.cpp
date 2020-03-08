@@ -404,7 +404,9 @@ void PSASPE13::run(DYNAMIC_MODE mode)
         feedbacker.set_input(regulator.get_output());
         feedbacker.run(mode);
 
-        if(feedbacker.get_K()==0.0)
+        if(feedbacker.get_K()!=0.0)
+            continue;
+        else
             break;
     }
     //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
@@ -417,28 +419,23 @@ double PSASPE13::get_excitation_voltage_in_pu()
 {
     GENERATOR* generator = get_generator_pointer();
     SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-    if(gen_model!=NULL)
-    {
-        //unsigned int bus = generator->get_generator_bus();
-        //double Vt = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
-        double Vt = get_terminal_voltage_in_pu();
-        double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
+    //unsigned int bus = generator->get_generator_bus();
+    //double Vt = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
+    double Vt = get_terminal_voltage_in_pu();
+    double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
 
-        double Efd = regulator.get_output();
-        double Efdmax = get_Efdmax_in_pu();
-        double Efdmin = get_Efdmin_in_pu();
-        double KC = get_KC();
+    double Efd = regulator.get_output();
+    double Efdmax = get_Efdmax_in_pu();
+    double Efdmin = get_Efdmin_in_pu();
+    double KC = get_KC();
 
-        Efdmax = Vt*Efdmax-KC*Ifd;
-        Efdmin= Vt*Efdmin-KC*Ifd;
+    Efdmax = Vt*Efdmax-KC*Ifd;
+    Efdmin= Vt*Efdmin-KC*Ifd;
 
-        if(Efd>Efdmax) Efd = Efdmax;
-        if(Efd<Efdmin) Efd = Efdmin;
+    if(Efd>Efdmax) Efd = Efdmax;
+    if(Efd<Efdmin) Efd = Efdmin;
 
-        return Efd;
-    }
-    else
-        return 0.0;
+    return Efd;
 }
 void PSASPE13::check()
 {

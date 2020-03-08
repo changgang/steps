@@ -84,6 +84,8 @@ class HVDC : public NONBUS_DEVICE
         double get_converter_voltage_drop_per_bridge_in_kV(HVDC_CONVERTER_SIDE converter) const;
         double get_converter_max_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter) const;
         double get_converter_min_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter) const;
+        double get_converter_cos_max_alpha_or_gamma(HVDC_CONVERTER_SIDE converter) const;
+        double get_converter_cos_min_alpha_or_gamma(HVDC_CONVERTER_SIDE converter) const;
 
         double get_converter_transformer_grid_side_base_voltage_in_kV(HVDC_CONVERTER_SIDE converter) const;
         double get_converter_transformer_converter_side_base_voltage_in_kV(HVDC_CONVERTER_SIDE converter) const;
@@ -131,7 +133,8 @@ class HVDC : public NONBUS_DEVICE
         void show_solved_hvdc_steady_state() const;
 
 
-        void set_converter_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter, double angle);
+        void set_converter_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter, double angle, double cos_angle=0.0);
+        double get_converter_cos_alpha_or_gamma(HVDC_CONVERTER_SIDE converter) const;
         void set_converter_transformer_tap_in_pu(HVDC_CONVERTER_SIDE converter, double tap);
 
         void set_converter_dc_voltage_in_kV(HVDC_CONVERTER_SIDE converter, const double V);
@@ -202,8 +205,11 @@ class HVDC : public NONBUS_DEVICE
         double converter_transformer_max_tap_in_pu[2], converter_transformer_min_tap_in_pu[2];
         unsigned int converter_transformer_number_of_taps[2];
 
-        double converter_firing_angle_in_deg[2], converter_transformer_tap_in_pu[2];
+        double converter_firing_angle_in_deg[2];
+        double converter_transformer_tap_in_pu[2];
         double converter_dc_voltage_in_kV[2], line_dc_current_in_kA[2];
+        double cos_max_firing_angle[2], cos_min_firing_angle[2];
+        double cos_converter_firing_angle[2];
     private:
         HVDC_MODEL* hvdc_model;
         AUXILIARY_SIGNAL_MODEL* auxiliary_signal_model;

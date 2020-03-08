@@ -338,7 +338,9 @@ void PSASPE1::run(DYNAMIC_MODE mode)
         feedbacker.set_input(Efd);
         feedbacker.run(mode);
 
-        if(feedbacker.get_K()==0.0)
+        if(feedbacker.get_K()!=0.0)
+            continue;
+        else
             break;
     }
     //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;

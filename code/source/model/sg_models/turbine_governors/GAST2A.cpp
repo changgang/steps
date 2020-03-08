@@ -735,7 +735,7 @@ double GAST2A::get_mechanical_power_in_pu_based_on_mbase() const
 
     double pmech = f2*(1.0+speed);
 
-    return pmech*get_gas_Prate_in_MW()/get_mbase_in_MVA();
+    return pmech*get_gas_Prate_in_MW()*get_one_over_mbase_in_one_over_MVA();
 }
 
 double GAST2A::get_mechanical_power_upper_limit_in_pu_based_on_mbase() const

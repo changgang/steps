@@ -624,19 +624,16 @@ void IEEEG1SB::run(DYNAMIC_MODE mode)
     drum.set_input(fuel_delayer2.get_output()-delayer1.get_output());
     drum.run(mode);
 
-
     if(mode==UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 
 double IEEEG1SB::get_mechanical_power_in_pu_based_on_mbase() const
 {
-    double Pmech = delayer1.get_output()*get_K1()+
-                   delayer2.get_output()*get_K3()+
-                   delayer3.get_output()*get_K5()+
-                   delayer4.get_output()*get_K7();
-
-    return Pmech;
+    return delayer1.get_output()*get_K1()+
+           delayer2.get_output()*get_K3()+
+           delayer3.get_output()*get_K5()+
+           delayer4.get_output()*get_K7();
 }
 
 double IEEEG1SB::get_mechanical_power_upper_limit_in_pu_based_on_mbase() const
