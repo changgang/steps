@@ -1,1 +1,2 @@
-rm -f *.make
+rm -f thirdparty/*.make
+rm -f steps/*.make

@@ -1,3 +1,4 @@
-cbp2make -in cpptest.cbp -out cpptest.make
-cbp2make -in csparse.cbp -out csparse.make
-cbp2make -in STEPS.cbp -out STEPS.make
+cbp2make -in thirdparty/cpptest.cbp -out thirdparty/cpptest.make
+cbp2make -in thirdparty/csparse.cbp -out thirdparty/csparse.make
+cbp2make -in thirdparty/cxsparse.cbp -out thirdparty/cxsparse.make
+cbp2make -in steps/STEPS.cbp -out steps/STEPS.make

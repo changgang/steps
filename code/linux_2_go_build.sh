@@ -1,5 +1,7 @@
-make -f cpptest.make
+make -f thirdparty/cpptest.make
 
-make -f csparse.make
+make -f thirdparty/csparse.make
 
-make -f STEPS.make
+make -f thirdparty/cxsparse.make
+
+make -f steps/STEPS.make
