@@ -533,8 +533,8 @@ double GENSAL::get_model_data_with_name(string par_name) const
         if(par_name == "TD0'") return get_Td0p_in_s();
         if(par_name == "TD0\"") return get_Td0pp_in_s();
         if(par_name == "TQ0\"") return get_Tq0pp_in_s();
-        if(par_name=="H") return get_H_in_s();
-        if(par_name=="D") return get_D();
+        if(par_name =="H") return get_H_in_s();
+        if(par_name =="D") return get_D();
         if(par_name == "XD") return get_Xd();
         if(par_name == "XQ") return get_Xq();
         if(par_name == "XD'") return get_Xdp();

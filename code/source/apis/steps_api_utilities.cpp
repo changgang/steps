@@ -33,15 +33,13 @@ void api_delete_toolkit(unsigned int toolkit_index)
 
 void api_initialize_toolkit(unsigned int toolkit_index)
 {
-    STEPS& toolkit = get_toolkit(toolkit_index);
-    toolkit.clear();
+    api_clear_toolkit(toolkit_index);
 }
 
 void api_clear_toolkit(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    toolkit.get_power_system_database().clear();
-    toolkit.get_dynamic_simulator().clear();
+    toolkit.clear();
 }
 
 void api_set_toolkit_parallel_thread_number(unsigned int n, unsigned int toolkit_index)
@@ -145,9 +143,6 @@ void api_set_toolkit_string_data(char* parameter_name, char* value, unsigned int
 
 bool api_get_toolkit_bool_data(char* parameter_name, unsigned int toolkit_index)
 {
-    STEPS& toolkit = get_toolkit(toolkit_index);
-    snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s","");
-
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="DETAILED LOG LOGIC")
     {
@@ -163,7 +158,7 @@ bool api_get_toolkit_bool_data(char* parameter_name, unsigned int toolkit_index)
     }
 
     show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
-    return toolkit.steps_char_buffer;
+    return false;
 }
 
 void api_set_toolkit_bool_data(char* parameter_name, bool value, unsigned int toolkit_index)
@@ -194,7 +189,6 @@ void api_set_toolkit_bool_data(char* parameter_name, bool value, unsigned int to
     }
 
     show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
-    return;
 }
 
 unsigned int api_get_allowed_maximum_bus_number(unsigned int toolkit_index)

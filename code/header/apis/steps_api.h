@@ -87,6 +87,8 @@ EXPORT_STEPS_DLL void api_remove_area(unsigned int area_number, unsigned int too
 EXPORT_STEPS_DLL void api_remove_zone(unsigned int zone_number, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_remove_owner(unsigned int owner_number, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
+EXPORT_STEPS_DLL void api_change_bus_number(unsigned int original_bus_number, unsigned int new_bus_number, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_change_bus_number_with_file(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 
 EXPORT_STEPS_DLL bool api_is_bus_exist(unsigned int bus, unsigned int toolkit_index=INDEX_NOT_EXIST);
@@ -382,6 +384,9 @@ EXPORT_STEPS_DLL void api_close_transformer_breaker(unsigned int ibus, unsigned 
 
 EXPORT_STEPS_DLL void api_trip_generator(unsigned int bus, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_shed_generator(unsigned int bus, char* identifier, double percent, unsigned int toolkit_index=INDEX_NOT_EXIST);
+
+EXPORT_STEPS_DLL void api_trip_wt_generator(unsigned int bus, char* identifier, unsigned int n, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_shed_wt_generator(unsigned int bus, char* identifier, double percent, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void api_trip_load(unsigned int bus, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_close_load(unsigned int bus, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);

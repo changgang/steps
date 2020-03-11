@@ -290,8 +290,12 @@ def load_library():
     libsteps.api_remove_zone.argtypes = (c_uint, c_uint)
     libsteps.api_remove_owner.restype = None
     libsteps.api_remove_owner.argtypes = (c_uint, c_uint)
-
-
+    
+    
+    libsteps.api_change_bus_number.restype = None
+    libsteps.api_change_bus_number.argtypes = (c_uint, c_uint, c_uint)    
+    libsteps.api_change_bus_number_with_file.restype = None
+    libsteps.api_change_bus_number_with_file.argtypes = (c_char_p, c_uint)
 
 
     libsteps.api_get_bus_integer_data.restype = (c_int)
@@ -679,6 +683,11 @@ def load_library():
     libsteps.api_trip_generator.argtypes = (c_uint, c_char_p, c_uint)
     libsteps.api_shed_generator.restype = None
     libsteps.api_shed_generator.argtypes = (c_uint, c_char_p, c_double, c_uint)
+
+    libsteps.api_trip_wt_generator.restype = None
+    libsteps.api_trip_wt_generator.argtypes = (c_uint, c_char_p, c_uint, c_uint)
+    libsteps.api_shed_wt_generator.restype = None
+    libsteps.api_shed_wt_generator.argtypes = (c_uint, c_char_p, c_double, c_uint)
 
     libsteps.api_trip_load.restype = None
     libsteps.api_trip_load.argtypes = (c_uint, c_char_p, c_uint)

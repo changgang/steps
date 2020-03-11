@@ -313,8 +313,8 @@ double GENCLS::get_model_data_with_name(string par_name) const
     par_name = string2upper(par_name);
     if(is_model_data_exist(par_name))
     {
-        if(par_name=="H")  return get_H_in_s();
-        if(par_name=="D")  return get_D();
+        if(par_name == "H")  return get_H_in_s();
+        if(par_name == "D")  return get_D();
     }
     STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);

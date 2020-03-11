@@ -1557,6 +1557,15 @@ void POWER_SYSTEM_DATABASE::change_bus_number(unsigned int original_bus_number, 
             DEVICE_ID new_did = trans->get_device_id();
             transformer_index.set_device_index(new_did, index);
         }
+
+        vector<AREA*> areas = get_all_areas();
+        unsigned int narea = areas.size();
+        for(unsigned int i=0; i!=narea; ++i)
+        {
+            AREA* area = areas[i];
+            if(area->get_area_swing_bus()==original_bus_number)
+                area->set_area_swing_bus(new_bus_number);
+        }
     }
     else
     {
@@ -1568,6 +1577,39 @@ void POWER_SYSTEM_DATABASE::change_bus_number(unsigned int original_bus_number, 
             osstream<<"Warning. The new bus number to change ("<<new_bus_number<<") exceeds the allowed maximum bus number range [1, "<<get_allowed_max_bus_number()<<"] in the power system database. No bus number will be changed.";
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
+}
+
+void POWER_SYSTEM_DATABASE::change_bus_number_with_file(string file)
+{
+    FILE* fid = fopen(file.c_str(),"rt");
+    if(fid == NULL)
+    {
+        ostringstream osstream;
+        osstream<<"Bus number pair file '"<<file<<"' is not accessible. Change bus number with file is failed.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    const unsigned int buffer_size = 64;
+    char buffer[buffer_size];
+    string sbuffer;
+    vector<string> splitted_str;
+    while(true)
+    {
+        if(fgets(buffer, buffer_size, fid)==NULL)
+            break;
+        sbuffer = trim_string(buffer);
+        splitted_str = split_string(sbuffer, ", ");
+        if(splitted_str.size()==2)
+        {
+            unsigned int original_bus_number = str2int(splitted_str[0]);
+            unsigned int new_bus_number = str2int(splitted_str[1]);
+            change_bus_number(original_bus_number, new_bus_number);
+        }
+        else
+            break;
+    }
+    fclose(fid);
 }
 
 DEVICE* POWER_SYSTEM_DATABASE::get_device(const DEVICE_ID& device_id)

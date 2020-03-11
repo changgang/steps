@@ -752,6 +752,46 @@ void api_shed_generator(unsigned int bus, char* identifier, double percent, unsi
     ds.shed_generator(did, percent);
 }
 
+void api_trip_wt_generator(unsigned int bus, char* identifier, unsigned int n, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    DEVICE_ID did = get_wt_generator_device_id(bus, identifier);
+
+    if(not psdb.is_wt_generator_exist(did))
+    {
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                 (did.get_device_name()).c_str(), __FUNCTION__);
+        toolkit.show_information_with_leading_time_stamp(buffer);
+        return;
+    }
+
+    ds.trip_wt_generator(did, n);
+}
+
+void api_shed_wt_generator(unsigned int bus, char* identifier, double percent, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    DEVICE_ID did = get_wt_generator_device_id(bus, identifier);
+
+    if(not psdb.is_wt_generator_exist(did))
+    {
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                 (did.get_device_name()).c_str(), __FUNCTION__);
+        toolkit.show_information_with_leading_time_stamp(buffer);
+        return;
+    }
+
+    ds.shed_wt_generator(did, percent);
+}
+
 void api_trip_load(unsigned int bus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

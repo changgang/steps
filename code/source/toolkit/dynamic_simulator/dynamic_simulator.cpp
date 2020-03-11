@@ -383,6 +383,7 @@ void DYNAMICS_SIMULATOR::prepare_meters()
     prepare_energy_storage_related_meters();
     prepare_load_related_meters();
     prepare_line_related_meters();
+    prepare_transformer_related_meters();
     prepare_hvdc_related_meters();
     prepare_equivalent_device_related_meters();
 }
@@ -4437,35 +4438,42 @@ void DYNAMICS_SIMULATOR::shed_generator(const DEVICE_ID& gen_id,double percent)
 
             if(fabs(percent)>DOUBLE_EPSILON)
             {
-                double mbase = generator->get_mbase_in_MVA();
-                osstream<<generator->get_device_name()<<" is shed by "<<percent*100.0<<"% at time "<<TIME<<" s."<<endl
-                  <<"MBASE is changed from "<<mbase<<" MVA to ";
+                if(percent==1.0)
+                {
+                    osstream<<generator->get_device_name()<<" is shed by "<<100.0<<"% at time "<<TIME<<" s."<<endl
+                            <<"Generator is to be tripped.";
+                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    trip_generator(gen_id);
+                }
+                else
+                {
+                    double mbase = generator->get_mbase_in_MVA();
+                    osstream<<generator->get_device_name()<<" is shed by "<<percent*100.0<<"% at time "<<TIME<<" s."<<endl
+                            <<"MBASE is changed from "<<mbase<<" MVA to ";
 
-                generator->set_mbase_in_MVA(mbase*(1.0-percent));
-                osstream<<generator->get_mbase_in_MVA()<<" MVA.";
-                toolkit->show_information_with_leading_time_stamp(osstream);
-
-                //network_matrix.build_dynamic_network_Y_matrix();
-                //build_jacobian();
+                    generator->set_mbase_in_MVA(mbase*(1.0-percent));
+                    osstream<<generator->get_mbase_in_MVA()<<" MVA.";
+                    toolkit->show_information_with_leading_time_stamp(osstream);
+                }
             }
             else
             {
-                osstream<<"Generator relay percent is 0.0 for "<<generator->get_device_name()<<endl
-                       <<"No generator will be shed at time "<<TIME<<" s."<<endl;
+                osstream<<"Generator shed percent is 0.0 for "<<generator->get_device_name()<<endl
+                        <<"No generator will be shed at time "<<TIME<<" s."<<endl;
                 toolkit->show_information_with_leading_time_stamp(osstream);
             }
         }
         else
         {
             osstream<<"Warning. "<<gen_id.get_device_name()<<" does not exist in power system database."<<endl
-                   <<"No generator will be shed at time "<<TIME<<" s.";
+                    <<"No generator will be shed at time "<<TIME<<" s.";
             toolkit->show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
-        osstream<<"The given device is not a GENERATOR (it is a "<<gen_id.get_device_type()<<") for relay generator."<<endl
-               <<"No generator will be shed at time "<<TIME<<" s."<<endl;
+        osstream<<"The given device is not a GENERATOR (it is a "<<gen_id.get_device_type()<<") for shedding generator."<<endl
+                <<"No generator will be shed at time "<<TIME<<" s."<<endl;
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -4518,14 +4526,69 @@ void DYNAMICS_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id, unsigned int
         else
         {
             osstream<<"Warning. "<<gen_id.get_device_name()<<" does not exist in power system database."<<endl
-                   <<"No wt generator will be tripped at time "<<TIME<<" s.";
+                    <<"No wt generator will be tripped at time "<<TIME<<" s.";
             toolkit->show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a WT GENERATOR (it is a "<<gen_id.get_device_type()<<") for tripping wt generator."<<endl
-               <<"No wt generator will be tripped at time "<<TIME<<" s."<<endl;
+                <<"No wt generator will be tripped at time "<<TIME<<" s."<<endl;
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void DYNAMICS_SIMULATOR::shed_wt_generator(const DEVICE_ID& gen_id,double percent)
+{
+    ostringstream osstream;
+
+    if(gen_id.get_device_type()=="WT GENERATOR")
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        WT_GENERATOR* generator = psdb.get_wt_generator(gen_id);
+        if(generator!=NULL)
+        {
+            string busname = psdb.bus_number2bus_name(generator->get_generator_bus());
+
+            if(fabs(percent)>DOUBLE_EPSILON)
+            {
+                if(percent==1.0)
+                {
+                    osstream<<generator->get_device_name()<<" is shed by "<<100.0<<"% at time "<<TIME<<" s."<<endl
+                            <<"WT generator is to be tripped.";
+                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    unsigned int N = generator->get_number_of_lumped_wt_generators();
+                    trip_wt_generator(gen_id, N);
+                }
+                else
+                {
+                    double mbase = generator->get_mbase_in_MVA();
+                    osstream<<generator->get_device_name()<<" is shed by "<<percent*100.0<<"% at time "<<TIME<<" s."<<endl
+                            <<"MBASE is changed from "<<mbase<<" MVA to ";
+
+                    generator->set_mbase_in_MVA(mbase*(1.0-percent));
+                    osstream<<generator->get_mbase_in_MVA()<<" MVA.";
+                    toolkit->show_information_with_leading_time_stamp(osstream);
+                }
+            }
+            else
+            {
+                osstream<<"WT generator shed percent is 0.0 for "<<generator->get_device_name()<<endl
+                        <<"No WT generator will be shed at time "<<TIME<<" s."<<endl;
+                toolkit->show_information_with_leading_time_stamp(osstream);
+            }
+        }
+        else
+        {
+            osstream<<"Warning. "<<gen_id.get_device_name()<<" does not exist in power system database."<<endl
+                    <<"No WT generator will be shed at time "<<TIME<<" s.";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<"The given device is not a WT GENERATOR (it is a "<<gen_id.get_device_type()<<") for shedding WT generator."<<endl
+                <<"No WT generator will be shed at time "<<TIME<<" s."<<endl;
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }

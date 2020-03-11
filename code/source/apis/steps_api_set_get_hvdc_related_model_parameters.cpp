@@ -26,7 +26,7 @@ const char* api_get_hvdc_related_model_name(unsigned int ibus, unsigned int jbus
 			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (model->get_model_name()).c_str());
 		return toolkit.steps_char_buffer;;
     }
-    show_parameter_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
+    show_model_type_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
     return toolkit.steps_char_buffer;
 }
 
@@ -51,7 +51,7 @@ double api_get_hvdc_related_model_float_parameter(unsigned int ibus, unsigned in
         else
             return 0.0;
     }
-    show_parameter_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
+    show_model_type_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
     return 0.0;
 }
 
@@ -76,7 +76,7 @@ void api_set_hvdc_related_model_float_parameter(unsigned int ibus, unsigned int 
         else
             return;
     }
-    show_parameter_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
+    show_model_type_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
 }
 
 unsigned int api_get_hvdc_related_model_float_parameter_count(unsigned int ibus, unsigned int jbus, char* identifier, char* model_type, unsigned int toolkit_index)
@@ -99,7 +99,7 @@ unsigned int api_get_hvdc_related_model_float_parameter_count(unsigned int ibus,
         else
             return 0;
     }
-    show_parameter_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
+    show_model_type_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
     return 0;
 }
 
@@ -125,7 +125,7 @@ const char* api_get_hvdc_related_model_float_parameter_name(unsigned int ibus, u
         snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
         return toolkit.steps_char_buffer;
     }
-    show_parameter_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
+    show_model_type_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
     snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
     return toolkit.steps_char_buffer;
 }

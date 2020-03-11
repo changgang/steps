@@ -137,9 +137,10 @@ class DYNAMICS_SIMULATOR
         void close_transformer_breaker(const DEVICE_ID& trans_id, unsigned int side_bus);
 
         void trip_generator(const DEVICE_ID& gen_id);
-        void shed_generator(const DEVICE_ID& gen_id,double percent);
+        void shed_generator(const DEVICE_ID& gen_id, double percent);
 
         void trip_wt_generator(const DEVICE_ID& gen_id, unsigned int n);
+        void shed_wt_generator(const DEVICE_ID& gen_id, double percent);
 
         void trip_load(const DEVICE_ID& load_id);
         void close_load(const DEVICE_ID& load_id);

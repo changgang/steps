@@ -103,13 +103,14 @@ void PSSE_IMEXPORTER::load_powerflow_data_into_ram(string file)
         return;
     }
 
-    char buffer[4096];
+    const unsigned int buffer_size = 4096;
+    char buffer[buffer_size];
     string sbuffer;
 
     vector<string> data_of_one_type;
     data_of_one_type.clear();
 
-    if(fgets(buffer, 4096, fid)==NULL)
+    if(fgets(buffer, buffer_size, fid)==NULL)
     {
         fclose(fid);
         return;
@@ -124,7 +125,7 @@ void PSSE_IMEXPORTER::load_powerflow_data_into_ram(string file)
 
     for(unsigned int i=0; i!=2; ++i)
     {
-        if(fgets(buffer, 1024, fid)==NULL)
+        if(fgets(buffer, buffer_size, fid)==NULL)
         {
             fclose(fid);
             return;
@@ -139,7 +140,7 @@ void PSSE_IMEXPORTER::load_powerflow_data_into_ram(string file)
 
     while(true)
     {
-        if(fgets(buffer, 1024, fid)==NULL)
+        if(fgets(buffer, buffer_size, fid)==NULL)
         {
             if(data_of_one_type.size()!=0)
             {

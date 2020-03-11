@@ -8,7 +8,7 @@ void show_side_not_supported_for_device_with_api(string side, DEVICE_ID did, str
     STEPS& toolkit = get_toolkit(toolkit_index);
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Side '%s' is not supported for %s with api %s.\n"
-             "Nothing will be chaged.\n"
+             "Nothing will be changed.\n"
              "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
              side.c_str(), (did.get_device_name()).c_str(), api_func.c_str());
     toolkit.show_information_with_leading_time_stamp(buffer);
@@ -19,7 +19,7 @@ void show_parameter_not_supported_for_device_with_api(string par_name, DEVICE_ID
     STEPS& toolkit = get_toolkit(toolkit_index);
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for %s with api %s.\n"
-             "Nothing will be chaged.\n"
+             "Nothing will be changed.\n"
              "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
              par_name.c_str(), (did.get_device_name()).c_str(), api_func.c_str());
     toolkit.show_information_with_leading_time_stamp(buffer);
@@ -30,7 +30,7 @@ void show_parameter_not_supported_with_api(string par_name, string api_func, uns
     STEPS& toolkit = get_toolkit(toolkit_index);
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported with api %s.\n"
-             "Nothing will be chaged.\n"
+             "Nothing will be changed.\n"
              "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
              par_name.c_str(), api_func.c_str());
     toolkit.show_information_with_leading_time_stamp(buffer);
@@ -41,9 +41,20 @@ void show_device_not_exist_with_api(DEVICE_ID did, string api_func, unsigned int
     STEPS& toolkit = get_toolkit(toolkit_index);
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Device %s does not exist in database with api %s.\n"
-             "Nothing will be chaged.\n"
+             "Nothing will be changed.\n"
              "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
              (did.get_device_name()).c_str(), api_func.c_str());
+    toolkit.show_information_with_leading_time_stamp(buffer);
+}
+
+void show_model_type_not_supported_for_device_with_api(string model_type, DEVICE_ID did, string api_func, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Model type %s is not supported for device %s with api %s.\n"
+             "Nothing will be changed.\n"
+             "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
+             model_type.c_str(), (did.get_device_name()).c_str(), api_func.c_str());
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
@@ -53,7 +64,7 @@ void show_parameter_not_supported_for_area_zone_owner_with_api(string par_name, 
     STEPS& toolkit = get_toolkit(toolkit_index);
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for Area/Zone/Owner %u with api %s.\n"
-             "Nothing will be chaged.\n"
+             "Nothing will be changed.\n"
              "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
              par_name.c_str(), no, api_func.c_str());
     toolkit.show_information_with_leading_time_stamp(buffer);
@@ -64,7 +75,7 @@ void show_area_zone_owner_not_exist_with_api(unsigned int no, string api_func, u
     STEPS& toolkit = get_toolkit(toolkit_index);
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Area/Zone/Owner %u does not exist in database with api %s.\n"
-             "Nothing will be chaged.\n"
+             "Nothing will be changed.\n"
              "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
              no, api_func.c_str());
     toolkit.show_information_with_leading_time_stamp(buffer);

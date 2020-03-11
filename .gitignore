@@ -3,5 +3,6 @@ test/
 python/*.pyc
 python/*.pyd
 python/*.xlsx
+python/*.txt
 code/*.layout
 .gitignore

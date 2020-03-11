@@ -225,3 +225,17 @@ void api_add_owner(unsigned int owner_number, char* owner_name, unsigned int too
         psdb.append_owner(newowner);
     }
 }
+
+void api_change_bus_number(unsigned int original_bus_number, unsigned int new_bus_number, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    psdb.change_bus_number(original_bus_number, new_bus_number);
+}
+
+void api_change_bus_number_with_file(char* file, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    psdb.change_bus_number_with_file(file);
+}

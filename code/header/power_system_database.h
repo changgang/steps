@@ -126,6 +126,7 @@ class POWER_SYSTEM_DATABASE
         bool is_owner_exist(const unsigned int no) const;
 
         void change_bus_number(unsigned int original_bus_number, unsigned int new_bus_number);
+        void change_bus_number_with_file(string file);
 
         DEVICE* get_device(const DEVICE_ID& device_id);
         NONBUS_DEVICE* get_nonbus_device(const DEVICE_ID& device_id);

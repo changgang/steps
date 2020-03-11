@@ -23,6 +23,7 @@ STEPS is a simulation toolkit for powerflow and dynamic simulation of large-scal
 
 ## Realse Note
 
+- 0.13.0-alpha. Mar.  9, 2020. Add new APIs: change_bus_number() and change_bus_number_with_file(). get_areas(), get_zones(), and get_owners() are marked as deprecated. STEPS kernel version should be >=1.1.1.
 - 0.12.0. Feb.  8, 2020. Add new APIs: check_dynamic_least_time_constants(). Recover the save_powerflow_data() API of v0.9.0.
 - 0.11.5. Jan. 20, 2020. Add new APIs: set/get_dynamic_model_database_capacity().
 - 0.11.4. Jan.  2, 2020. Fix bug of c_unit in pylibsteps.py. 
