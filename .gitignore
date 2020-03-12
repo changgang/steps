@@ -1,5 +1,5 @@
 build/
-test/
+bench_bak/
 python/*.pyc
 python/*.pyd
 python/*.xlsx

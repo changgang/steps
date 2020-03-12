@@ -1982,6 +1982,7 @@ void DYNAMICS_SIMULATOR::start()
     prepare_devices_for_run();
 
     run_all_models(INITIALIZE_MODE);
+    run_bus_frequency_blocks(INITIALIZE_MODE);
 
     network_matrix.build_dynamic_network_Y_matrix();
     build_jacobian();
@@ -2166,6 +2167,7 @@ void DYNAMICS_SIMULATOR::run_a_step()
         {
             integrate();
             bool network_converged = solve_network();
+            run_bus_frequency_blocks(INTEGRATE_MODE);
 
             ITER_NET += network_iteration_count;
 
@@ -2191,6 +2193,8 @@ void DYNAMICS_SIMULATOR::run_a_step()
         }
     }
     update();
+    run_bus_frequency_blocks(INTEGRATE_MODE);
+    run_bus_frequency_blocks(UPDATE_MODE);
     update_relay_models();
 
     auto tduration = duration_cast<microseconds>(system_clock::now()-clock_start);
@@ -2238,9 +2242,8 @@ void DYNAMICS_SIMULATOR::update_with_event()
         else
             break;
     }
-    update_bus_frequency_blocks();
     update();
-
+    update_bus_frequency_blocks_when_applying_event();
 
     auto tduration = duration_cast<microseconds>(system_clock::now()-clock_start);
     time_elapse_in_a_step = tduration.count()*0.001;
@@ -2263,6 +2266,7 @@ void DYNAMICS_SIMULATOR::update()
 
     update_equivalent_devices_buffer();
     run_all_models(UPDATE_MODE);
+
 
     bool network_converged = false;
 
@@ -2288,7 +2292,6 @@ void DYNAMICS_SIMULATOR::update()
                  current_max_network_iteration, TIME);
         toolkit->show_information_with_leading_time_stamp(buffer);
     }
-    //update_bus_frequency_blocks();
 }
 
 void DYNAMICS_SIMULATOR::update_relay_models()
@@ -2412,20 +2415,6 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     toolkit->show_information_with_leading_time_stamp(osstream);
     clock_1 = clock_2;*/
 
-    n = in_service_buses.size();
-    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_bus_thread_number());
-        set_openmp_number_of_threads(toolkit->get_thread_number());
-        #pragma omp parallel for schedule(static)
-        //#pragma omp parallel for num_threads(2)
-    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(unsigned int i=0; i<n; ++i)
-    {
-        (in_service_buses[i]->get_bus_frequency_model())->run(mode);
-        /*BUS* bus = in_service_buses[i];
-        BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
-        model->run(mode);*/
-    }
     /*clock_2 = steady_clock::now();
     tduration = duration_cast<nanoseconds>(clock_2-clock_1);
     osstream<<"at time "<<TIME<<", bus frequency models run takes "<<tduration.count()<<" ns.";
@@ -2440,7 +2429,29 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     microseconds_elapse_of_differential_equations_in_a_step += tdurationx.count();
 }
 
-void DYNAMICS_SIMULATOR::update_bus_frequency_blocks()
+void DYNAMICS_SIMULATOR::run_bus_frequency_blocks(DYNAMIC_MODE mode)
+{
+    auto clock_start = steady_clock::now();
+
+    unsigned int n = in_service_buses.size();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        //set_openmp_number_of_threads(toolkit->get_bus_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
+        #pragma omp parallel for schedule(static)
+        //#pragma omp parallel for num_threads(2)
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+    for(unsigned int i=0; i<n; ++i)
+    {
+        (in_service_buses[i]->get_bus_frequency_model())->run(mode);
+        /*BUS* bus = in_service_buses[i];
+        BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
+        model->run(mode);*/
+    }
+    auto tdurationx = duration_cast<microseconds>(steady_clock::now()-clock_start);
+    microseconds_elapse_of_differential_equations_in_a_step += tdurationx.count();
+}
+
+void DYNAMICS_SIMULATOR::update_bus_frequency_blocks_when_applying_event()
 {
     unsigned int n = in_service_buses.size();
 

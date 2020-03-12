@@ -108,7 +108,8 @@ class DYNAMICS_SIMULATOR
         void run_a_step();
         void update_with_event();
         void run_all_models(DYNAMIC_MODE mode);
-        void update_bus_frequency_blocks();
+        void run_bus_frequency_blocks(DYNAMIC_MODE mode);
+        void update_bus_frequency_blocks_when_applying_event();
         void update_equivalent_devices_buffer();
         void update_equivalent_devices_output();
     public:

@@ -53,34 +53,11 @@ class DYNAMICS_SIMULATOR_TEST : public Test::Suite
 
         void test_set_get_output_file();
 
-        void test_events();
+        void test_run_single_machine_model();
+        void test_run_IEEE_9_bus_classical_model();
+        void test_run_IEEE_39_bus_model();
+        void test_run_SD_133_bus_model();
 
-        void test_start();
-
-        void test_single_machine_model_GENCLS_IEEL();
-        void test_single_machine_model_GENROU();
-        void test_single_machine_model_IEEET1();
-        void test_single_machine_model_IEEEG1();
-
-
-        void test_run_IEEE_9_bus_model_classic_trip_bus();
-
-        void test_run_IEEE_9_bus_model_classic();
-
-        void test_run_IEEE_9_bus_model_classic_with_rotor_angle_surveillance();
-
-        void test_run_IEEE_9_bus_model_complete();
-        void test_run_IEEE_39_bus_model_GENROU();
-        void test_run_IEEE_39_bus_model_GENSAL();
-        void test_run_IEEE_39_bus_model_GENROU_IEEET1();
-        void test_run_IEEE_39_bus_model_GENROU_IEEEG1();
-        void test_run_IEEE_39_bus_model_GENROU_IEEET1_IEEEG1();
-        void test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1();
-        void test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_CIM6();
-        void test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_LCFB1();
-        void test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_without_UFLS();
-        void test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_UFLS();
-        void test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_PUFLS();
         void test_run_IEEE_39_bus_model_with_wind();
         void test_get_admittance_matrix_from_IEEE_39_bus_model_GENROU();
         void test_run_bench_shandong_100_bus_model_with_dc_GENROU_CDC4T();
