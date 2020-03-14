@@ -434,13 +434,13 @@ string UFLS::get_standard_psse_string() const
     unsigned int bus = load->get_load_bus();
     string identifier = "'"+load->get_identifier()+"'";
 
-    string model_name = "'"+get_model_name()+"'";
+    string model_name = "'"+get_model_name()+"BL'";
 
     osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "
             <<setw(6)<<identifier<<", "
             <<setw(8)<<setprecision(4)<<fixed<<get_frequency_sensor_time_in_s()<<", "
-            <<setw(8)<<setprecision(4)<<fixed<<get_breaker_time_in_s()<<", ";
+            <<setw(8)<<setprecision(4)<<fixed<<get_breaker_time_in_s();
 
     unsigned int n_content = 5;
     double fth, tdelay, scale;
@@ -452,7 +452,8 @@ string UFLS::get_standard_psse_string() const
         scale = get_scale_in_pu_of_stage(i);
         if(fabs(fth)<DOUBLE_EPSILON)
             break;
-        osstream<<setw(8)<<setprecision(4)<<fixed<<fth<<", ";
+        osstream<<", "
+                <<setw(8)<<setprecision(4)<<fixed<<fth<<", ";
         n_content++;
         if(n_content==10)
         {
@@ -468,7 +469,7 @@ string UFLS::get_standard_psse_string() const
                     <<setw(10)<<"";
             n_content = 1;
         }
-        osstream<<setw(8)<<setprecision(4)<<fixed<<scale<<", ";
+        osstream<<setw(8)<<setprecision(4)<<fixed<<scale;
         n_content++;
         if(n_content==10)
         {
@@ -483,7 +484,8 @@ string UFLS::get_standard_psse_string() const
     scale = get_scale_in_pu_of_stage(i);
     if(fabs(fth)>=DOUBLE_EPSILON)
     {
-        osstream<<setw(8)<<setprecision(4)<<fixed<<fth<<", ";
+        osstream<<", "
+                <<setw(8)<<setprecision(4)<<fixed<<fth<<", ";
         n_content++;
         if(n_content==10)
         {
@@ -499,14 +501,11 @@ string UFLS::get_standard_psse_string() const
                     <<setw(10)<<"";
             n_content = 1;
         }
-        osstream<<setw(8)<<setprecision(4)<<fixed<<scale<<", ";
+        osstream<<setw(8)<<setprecision(4)<<fixed<<scale;
     }
-    string model_string = osstream.str();
-    osstream.str("");
+    osstream<<" /";
 
-    model_string = trim_string(model_string, ", ")+" /";
-
-    return model_string;
+    return osstream.str();
 }
 
 void UFLS::prepare_model_data_table()

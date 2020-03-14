@@ -406,7 +406,7 @@ string PSSE_IMEXPORTER::export_case_data() const
     double fbase = 50.0;
     if(buses.size()!=0)
         fbase = psdb.get_bus_base_frequency_in_Hz(buses[0]);
-    snprintf(buffer, 1000, "0, %f, 33, 0, 0, %f", psdb.get_system_base_power_in_MVA(), fbase);
+    snprintf(buffer, 1000, "0, %.2f, 33, 0, 0, %f", psdb.get_system_base_power_in_MVA(), fbase);
     osstream<<buffer<<endl;
     snprintf(buffer, 1000, "%s", (psdb.get_case_information()).c_str());
     osstream<<buffer<<endl;
@@ -488,7 +488,9 @@ string PSSE_IMEXPORTER::export_bus_data(const BUS* bus, const vector<BUS*> buses
 
     osstream<<right
             <<setw(8)<<bus->get_bus_number()<<", \""
+            <<left
             <<setw(20)<<bus->get_bus_name()<<"\", "
+            <<right
             <<setw(8)<<setprecision(2)<<fixed<<bus->get_base_voltage_in_kV()<<", "
             <<setw(2)<<type<<", "
             <<setw(4)<<bus->get_area_number()<<", "
@@ -661,7 +663,7 @@ string PSSE_IMEXPORTER::export_generator_data(const GENERATOR* generator) const
         return "";
 
     osstream<<export_source_common_data(generator);
-    osstream<<"0, 0.0, 0"<<endl;
+    osstream<<"0, 0.00, 0"<<endl;
     return osstream.str();
 }
 
@@ -853,14 +855,14 @@ string PSSE_IMEXPORTER::export_source_var_control_data(const SOURCE* source) con
     if(fabs(qmax+qmin)>DOUBLE_EPSILON)
     {
         if(fabs(qmax-qmin)>DOUBLE_EPSILON)
-            osstream<<"0, 0.0";
+            osstream<<"0, 0.00";
         else
-            osstream<<"3, 0.0";
+            osstream<<"3, 0.00";
     }
     else
     {
         double pf = p/steps_sqrt(p*p+qmax*qmax);
-        osstream<<"2, "<<setprecision(6)<<pf;
+        osstream<<"2, "<<setw(4)<<setiosflags(ios::fixed)<<setprecision(2)<<pf;
     }
     return osstream.str();
 }
@@ -1059,9 +1061,10 @@ string PSSE_IMEXPORTER::export_transformer_data(const TRANSFORMER* trans) const
           <<"\"\""<<endl;
     if(trans->is_two_winding_transformer())
     {
-        osstream<<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE).real()<<", "
-          <<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE).imag()<<", "
-          <<trans->get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE)<<endl;
+        osstream<<"          "
+                <<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE).real()<<", "
+                <<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE).imag()<<", "
+                <<trans->get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE)<<endl;
 
         TRANSFORMER_WINDING_SIDE winding = PRIMARY_SIDE;
 
@@ -1091,70 +1094,73 @@ string PSSE_IMEXPORTER::export_transformer_data(const TRANSFORMER* trans) const
                 break;
         }
 
-        osstream<<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
-          <<setw(7)<<setprecision(2)<<fixed<<trans->get_winding_nominal_voltage_in_kV(winding)<<", "
-          <<setw(6)<<setprecision(2)<<fixed<<trans->get_winding_angle_shift_in_deg(winding)<<", "
-          <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_rating_in_MVA(winding).get_rating_A_MVA()<<", "
-          <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_rating_in_MVA(winding).get_rating_B_MVA()<<", "
-          <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_rating_in_MVA(winding).get_rating_C_MVA()<<", "
-          <<control_mode<<", ";
+        osstream<<"          "
+                <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
+                <<setw(7)<<setprecision(2)<<fixed<<trans->get_winding_nominal_voltage_in_kV(winding)<<", "
+                <<setw(6)<<setprecision(2)<<fixed<<trans->get_winding_angle_shift_in_deg(winding)<<", "
+                <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_rating_in_MVA(winding).get_rating_A_MVA()<<", "
+                <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_rating_in_MVA(winding).get_rating_B_MVA()<<", "
+                <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_rating_in_MVA(winding).get_rating_C_MVA()<<", "
+                <<control_mode<<", ";
         switch(trans->get_winding_control_mode(winding))
         {
             case TRANSFORMER_TAP_VOLTAGE_CONTROL:
                 osstream<<trans->get_winding_controlled_bus(winding)<<", "
-                  <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
-                  <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
-                  <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_max_voltage_in_pu(winding)<<", "
-                  <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_min_voltage_in_pu(winding)<<", ";
+                        <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
+                        <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
+                        <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_max_voltage_in_pu(winding)<<", "
+                        <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_min_voltage_in_pu(winding)<<", ";
                 break;
             case TRANSFORMER_TAP_REACTIVE_POWER_CONTROL:
                 osstream<<trans->get_winding_controlled_bus(winding)<<", "
-                  <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
-                  <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
-                  <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_max_reactive_power_into_winding_in_MVar(winding)<<", "
-                  <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_min_reactive_power_into_winding_in_MVar(winding)<<", ";
+                        <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
+                        <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
+                        <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_max_reactive_power_into_winding_in_MVar(winding)<<", "
+                        <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_min_reactive_power_into_winding_in_MVar(winding)<<", ";
                 break;
             case TRANSFORMER_TAP_ACTIVE_POWER_CONTROL:
             case TRANSFORMER_TAP_ASYMMETRIC_ACTIVE_POWER_CONTROL:
                 osstream<<trans->get_winding_controlled_bus(winding)<<", "
-                  <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_angle_shift_in_deg(winding)<<", "
-                  <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_angle_shift_in_deg(winding)<<", "
-                  <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_max_active_power_into_winding_in_MW(winding)<<", "
-                  <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_min_active_power_into_winding_in_MW(winding)<<", ";
+                        <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_angle_shift_in_deg(winding)<<", "
+                        <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_angle_shift_in_deg(winding)<<", "
+                        <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_max_active_power_into_winding_in_MW(winding)<<", "
+                        <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_min_active_power_into_winding_in_MW(winding)<<", ";
                 break;
             case TRANSFORMER_TAP_NO_CONTROL:
             case TRANSFORMER_TAP_HVDC_LINE_CONTROL:
             default:
                 osstream<<0<<", "
-                  <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
-                  <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
-                  <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_max_voltage_in_pu(winding)<<", "
-                  <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_min_voltage_in_pu(winding)<<", ";
+                        <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
+                        <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
+                        <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_max_voltage_in_pu(winding)<<", "
+                        <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_min_voltage_in_pu(winding)<<", ";
                 break;
         }
 
         osstream<<setw(3)<<setprecision(0)<<trans->get_winding_number_of_taps(winding)<<", "
-          <<setw(3)<<setprecision(0)<<0<<", "
-          <<setw(3)<<setprecision(1)<<0.0<<", "
-          <<setw(3)<<setprecision(1)<<0.0<<", "
-          <<setw(3)<<setprecision(1)<<0.0<<endl;
+                <<setw(3)<<setprecision(0)<<0<<", "
+                <<setw(3)<<setprecision(1)<<0.0<<", "
+                <<setw(3)<<setprecision(1)<<0.0<<", "
+                <<setw(3)<<setprecision(1)<<0.0<<endl;
 
         winding = SECONDARY_SIDE;
-        osstream<<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
-          <<setw(7)<<setprecision(2)<<fixed<<trans->get_winding_nominal_voltage_in_kV(winding)<<endl;
+        osstream<<"          "
+                <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
+                <<setw(7)<<setprecision(2)<<fixed<<trans->get_winding_nominal_voltage_in_kV(winding)<<endl;
     }
     else
     {
-        osstream<<setw(8)<<setprecision(6)<<fixed<<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE).real()<<", "
-          <<setw(8)<<setprecision(6)<<fixed<<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE).imag()<<", "
-          <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE)<<", "
-          <<setw(8)<<setprecision(6)<<fixed<<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE).real()<<", "
-          <<setw(8)<<setprecision(6)<<fixed<<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE).imag()<<", "
-          <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_nominal_capacity_in_MVA(SECONDARY_SIDE, TERTIARY_SIDE)<<", "
-          <<setw(8)<<setprecision(6)<<fixed<<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, TERTIARY_SIDE).real()<<", "
-          <<setw(8)<<setprecision(6)<<fixed<<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, TERTIARY_SIDE).imag()<<", "
-          <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, TERTIARY_SIDE)<<", "
-          <<"1.0, 0.0"<<endl;
+        osstream<<"          "
+                <<setw(8)<<setprecision(6)<<fixed<<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE).real()<<", "
+                <<setw(8)<<setprecision(6)<<fixed<<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE).imag()<<", "
+                <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE)<<", "
+                <<setw(8)<<setprecision(6)<<fixed<<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE).real()<<", "
+                <<setw(8)<<setprecision(6)<<fixed<<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE).imag()<<", "
+                <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_nominal_capacity_in_MVA(SECONDARY_SIDE, TERTIARY_SIDE)<<", "
+                <<setw(8)<<setprecision(6)<<fixed<<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, TERTIARY_SIDE).real()<<", "
+                <<setw(8)<<setprecision(6)<<fixed<<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, TERTIARY_SIDE).imag()<<", "
+                <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, TERTIARY_SIDE)<<", "
+                <<"1.0, 0.0"<<endl;
 
         for(unsigned int j=1; j!=4; ++j)
         {
@@ -1189,53 +1195,54 @@ string PSSE_IMEXPORTER::export_transformer_data(const TRANSFORMER* trans) const
                     break;
             }
 
-            osstream<<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
-              <<setw(7)<<setprecision(2)<<fixed<<trans->get_winding_nominal_voltage_in_kV(winding)<<", "
-              <<setw(6)<<setprecision(2)<<fixed<<trans->get_winding_angle_shift_in_deg(winding)<<", "
-              <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_rating_in_MVA(winding).get_rating_A_MVA()<<", "
-              <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_rating_in_MVA(winding).get_rating_B_MVA()<<", "
-              <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_rating_in_MVA(winding).get_rating_C_MVA()<<", "
-              <<control_mode<<", ";
+            osstream<<"          "
+                    <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
+                    <<setw(7)<<setprecision(2)<<fixed<<trans->get_winding_nominal_voltage_in_kV(winding)<<", "
+                    <<setw(6)<<setprecision(2)<<fixed<<trans->get_winding_angle_shift_in_deg(winding)<<", "
+                    <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_rating_in_MVA(winding).get_rating_A_MVA()<<", "
+                    <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_rating_in_MVA(winding).get_rating_B_MVA()<<", "
+                    <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_rating_in_MVA(winding).get_rating_C_MVA()<<", "
+                    <<control_mode<<", ";
             switch(trans->get_winding_control_mode(winding))
             {
                 case TRANSFORMER_TAP_VOLTAGE_CONTROL:
                     osstream<<trans->get_winding_controlled_bus(winding)<<", "
-                      <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
-                      <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
-                      <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_max_voltage_in_pu(winding)<<", "
-                      <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_min_voltage_in_pu(winding)<<", ";
+                            <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
+                            <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
+                            <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_max_voltage_in_pu(winding)<<", "
+                            <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_min_voltage_in_pu(winding)<<", ";
                     break;
                 case TRANSFORMER_TAP_REACTIVE_POWER_CONTROL:
                     osstream<<trans->get_winding_controlled_bus(winding)<<", "
-                      <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
-                      <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
-                      <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_max_reactive_power_into_winding_in_MVar(winding)<<", "
-                      <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_min_reactive_power_into_winding_in_MVar(winding)<<", ";
+                            <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
+                            <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
+                            <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_max_reactive_power_into_winding_in_MVar(winding)<<", "
+                            <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_min_reactive_power_into_winding_in_MVar(winding)<<", ";
                     break;
                 case TRANSFORMER_TAP_ACTIVE_POWER_CONTROL:
                 case TRANSFORMER_TAP_ASYMMETRIC_ACTIVE_POWER_CONTROL:
                     osstream<<trans->get_winding_controlled_bus(winding)<<", "
-                      <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_angle_shift_in_deg(winding)<<", "
-                      <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_angle_shift_in_deg(winding)<<", "
-                      <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_max_active_power_into_winding_in_MW(winding)<<", "
-                      <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_min_active_power_into_winding_in_MW(winding)<<", ";
+                            <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_angle_shift_in_deg(winding)<<", "
+                            <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_angle_shift_in_deg(winding)<<", "
+                            <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_max_active_power_into_winding_in_MW(winding)<<", "
+                            <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_min_active_power_into_winding_in_MW(winding)<<", ";
                     break;
                 case TRANSFORMER_TAP_NO_CONTROL:
                 case TRANSFORMER_TAP_HVDC_LINE_CONTROL:
                 default:
                     osstream<<0<<", "
-                      <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
-                      <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
-                      <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_max_voltage_in_pu(winding)<<", "
-                      <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_min_voltage_in_pu(winding)<<", ";
+                            <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
+                            <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
+                            <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_max_voltage_in_pu(winding)<<", "
+                            <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_min_voltage_in_pu(winding)<<", ";
                     break;
             }
 
             osstream<<setw(3)<<setprecision(0)<<trans->get_winding_number_of_taps(winding)<<", "
-              <<setw(3)<<setprecision(0)<<0<<", "
-              <<setw(3)<<setprecision(1)<<0.0<<", "
-              <<setw(3)<<setprecision(1)<<0.0<<", "
-              <<setw(3)<<setprecision(1)<<0.0<<endl;
+                    <<setw(3)<<setprecision(0)<<0<<", "
+                    <<setw(3)<<setprecision(1)<<0.0<<", "
+                    <<setw(3)<<setprecision(1)<<0.0<<", "
+                    <<setw(3)<<setprecision(1)<<0.0<<endl;
         }
     }
     return osstream.str();
@@ -1276,10 +1283,10 @@ string PSSE_IMEXPORTER::export_area_data(const AREA* area) const
     }
 
     osstream<<setw(8)<<area->get_area_number()<<", "
-      <<bus<<", "
-      <<setprecision(3)<<area->get_expected_power_leaving_area_in_MW()<<", "
-      <<setprecision(3)<<area->get_area_power_mismatch_tolerance_in_MW()<<", "
-      <<"\""<<area->get_area_name()<<"\""<<endl;
+            <<bus<<", "
+            <<setprecision(3)<<area->get_expected_power_leaving_area_in_MW()<<", "
+            <<setprecision(3)<<area->get_area_power_mismatch_tolerance_in_MW()<<", "
+            <<"\""<<area->get_area_name()<<"\""<<endl;
 
     return osstream.str();
 }
@@ -1326,7 +1333,7 @@ string PSSE_IMEXPORTER::export_hvdc_data(const HVDC* hvdc) const
     if(get_export_out_of_service_bus_logic()==false and (psdb.get_bus_type(rbus)==OUT_OF_SERVICE or psdb.get_bus_type(ibus)==OUT_OF_SERVICE))
         return "";
 
-    osstream<<setw(20)<<("\""+hvdc->get_name()+"\"")<<", ";
+    osstream<<setw(16)<<("\""+hvdc->get_name()+"\"")<<", ";
 
     bool status = hvdc->get_status();
     HVDC_OPERATION_MODE mode = hvdc->get_converter_operation_mode(RECTIFIER);
@@ -1367,19 +1374,20 @@ string PSSE_IMEXPORTER::export_hvdc_data(const HVDC* hvdc) const
         if(j==1){converter = INVERTER; bus = ibus;}
 
 
-        osstream<<setw(8)<<bus<<", ";
-        osstream<<hvdc->get_converter_number_of_bridge(converter)<<", ";
-        osstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_converter_max_alpha_or_gamma_in_deg(converter)<<", ";
-        osstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_converter_min_alpha_or_gamma_in_deg(converter)<<", ";
-        osstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_impedance_in_ohm(converter).real()<<", ";
-        osstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_impedance_in_ohm(converter).imag()<<", ";
-        osstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(converter)<<", ";
+        osstream<<"        "
+                <<setw(8)<<bus<<", "
+                <<hvdc->get_converter_number_of_bridge(converter)<<", "
+                <<setw(6)<<setprecision(2)<<fixed<<hvdc->get_converter_max_alpha_or_gamma_in_deg(converter)<<", "
+                <<setw(6)<<setprecision(2)<<fixed<<hvdc->get_converter_min_alpha_or_gamma_in_deg(converter)<<", "
+                <<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_impedance_in_ohm(converter).real()<<", "
+                <<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_impedance_in_ohm(converter).imag()<<", "
+                <<setw(6)<<setprecision(2)<<fixed<<hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(converter)<<", ";
         double turn_ratio = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(converter)/
                    hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(converter);
-        osstream<<setw(6)<<setprecision(4)<<fixed<<turn_ratio<<", ";
-        osstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_tap_in_pu(converter)<<", ";
-        osstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_max_tap_in_pu(converter)<<", ";
-        osstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_min_tap_in_pu(converter)<<", ";
+        osstream<<setw(6)<<setprecision(4)<<fixed<<turn_ratio<<", "
+                <<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_tap_in_pu(converter)<<", "
+                <<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_max_tap_in_pu(converter)<<", "
+                <<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_min_tap_in_pu(converter)<<", ";
         double tap_step = (hvdc->get_converter_transformer_max_tap_in_pu(converter)-
                            hvdc->get_converter_transformer_min_tap_in_pu(converter))/
                            (hvdc->get_converter_transformer_number_of_taps(converter)-1);

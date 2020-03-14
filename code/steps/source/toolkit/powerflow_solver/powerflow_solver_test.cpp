@@ -34,10 +34,6 @@ POWERFLOW_SOLVER_TEST::POWERFLOW_SOLVER_TEST()
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_fast_decoupled_solution);
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_fast_decoupled_and_full_Newton_Raphson_solution);
 
-    TEST_ADD(POWERFLOW_SOLVER_TEST::test_solve_NPCC_140_bus_model_with_full_Newton_Raphson_solution);
-    TEST_ADD(POWERFLOW_SOLVER_TEST::test_solve_NPCC_140_bus_model_with_fast_decoupled_solution);
-    TEST_ADD(POWERFLOW_SOLVER_TEST::test_solve_NPCC_140_bus_model_with_fast_decoupled_and_full_Newton_Raphson_solution);
-
 
     //TEST_ADD(POWERFLOW_SOLVER_TEST::test_solve_Shandong_2000_bus_model_with_full_Newton_Raphson_solution);
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_solve_Shandong_2000_bus_model_with_fast_decoupled_solution);
@@ -47,10 +43,7 @@ POWERFLOW_SOLVER_TEST::POWERFLOW_SOLVER_TEST()
 
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_solve_Shandong_benchmark_100_bus_model_with_HVDC_with_fast_decoupled_solution);
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_solve_Northwest_benchmark_100_bus_model_with_HVDC_with_fast_decoupled_solution);
-    TEST_ADD(POWERFLOW_SOLVER_TEST::test_solve_Yunnan_benchmark_100_bus_model_with_HVDC_with_fast_decoupled_solution);
 
-    TEST_ADD(POWERFLOW_SOLVER_TEST::test_solve_IEEE_9_bus_model_with_WTG_with_full_Newton_Raphson_solution);
-    TEST_ADD(POWERFLOW_SOLVER_TEST::test_solve_IEEE_39_bus_model_with_WTG_with_full_Newton_Raphson_solution);
 }
 
 void POWERFLOW_SOLVER_TEST::setup()
@@ -340,7 +333,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_full_Ne
 
     psdb.set_allowed_max_bus_number(200);
     PSSE_IMEXPORTER importer(default_toolkit);
-    importer.load_powerflow_data("../../../bench/IEEE39.raw");
+    importer.load_powerflow_data("../../../bench/ieee39.raw");
 
     TEST_ASSERT(psdb.get_bus_count()==39);
     TEST_ASSERT(psdb.get_generator_count()==10);
@@ -403,54 +396,6 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_full_Ne
     default_toolkit.close_log_file();
 }
 
-void POWERFLOW_SOLVER_TEST::test_solve_NPCC_140_bus_model_with_full_Newton_Raphson_solution()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"POWERFLOW_SOLVER_TEST");
-
-    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
-    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-
-    default_toolkit.open_log_file("test_log/test_solve_NPCC_140_bus_model_with_full_Newton_Raphson_solution.txt");
-
-    ostringstream osstream;
-
-    psdb.set_allowed_max_bus_number(200);
-    PSSE_IMEXPORTER importer(default_toolkit);
-    importer.load_powerflow_data("../../../bench/npcc.raw");
-
-    osstream<<"Test 1: Solve powerflow with flat start logic disabled.";
-    default_toolkit.show_information_with_leading_time_stamp(osstream);
-
-    powerflow_solver.set_max_iteration(30);
-    powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.001);
-    powerflow_solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.001);
-    powerflow_solver.set_flat_start_logic(false);
-    powerflow_solver.set_transformer_tap_adjustment_logic(true);
-
-    powerflow_solver.solve_with_full_Newton_Raphson_solution();
-    TEST_ASSERT(powerflow_solver.is_converged());
-    //network_matrix.report_network_matrix();
-
-    check_NPCC_140_bus_model_powerflow_result();
-    //default_toolkit.close_log_file();
-
-    //default_toolkit.open_log_file("test_log/test_solve_NPCC_140_bus_model_with_full_Newton_Raphson_solution_2.txt");
-    osstream<<"Test 2: Solve powerflow with flat start logic enabled.";
-    default_toolkit.show_information_with_leading_time_stamp(osstream);
-
-    powerflow_solver.set_max_iteration(30);
-    powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.001);
-    powerflow_solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.001);
-    powerflow_solver.set_flat_start_logic(true);
-    powerflow_solver.set_transformer_tap_adjustment_logic(true);
-
-    powerflow_solver.solve_with_full_Newton_Raphson_solution();
-    TEST_ASSERT(powerflow_solver.is_converged());
-
-    check_NPCC_140_bus_model_powerflow_result();
-    default_toolkit.close_log_file();
-}
-
 void POWERFLOW_SOLVER_TEST::test_solve_Shandong_2000_bus_model_with_full_Newton_Raphson_solution()
 {
     ostringstream osstream;
@@ -468,7 +413,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_Shandong_2000_bus_model_with_full_Newton_
     osstream<<"Test 1: Solve non-var limit powerflow with flat start logic enable.";
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
-    importer.load_powerflow_data("../../../bench/sd2010_nodc_no_var_limit.raw");
+    importer.load_powerflow_data("../../../bench/sd2038.raw");
 
     powerflow_solver.set_max_iteration(100);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.0001);
@@ -601,7 +546,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_fast_de
 
     psdb.set_allowed_max_bus_number(200);
     PSSE_IMEXPORTER importer(default_toolkit);
-    importer.load_powerflow_data("../../../bench/IEEE39.raw");
+    importer.load_powerflow_data("../../../bench/ieee39.raw");
 
     TEST_ASSERT(psdb.get_bus_count()==39);
     TEST_ASSERT(psdb.get_generator_count()==10);
@@ -669,49 +614,6 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_fast_de
 
     default_toolkit.close_log_file();
 }
-
-void POWERFLOW_SOLVER_TEST::test_solve_NPCC_140_bus_model_with_fast_decoupled_solution()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"POWERFLOW_SOLVER_TEST");
-
-    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
-    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-
-    ostringstream osstream;
-
-    default_toolkit.open_log_file("test_log/test_solve_NPCC_140_bus_model_with_fast_decoupled_solution.txt");
-
-    psdb.set_allowed_max_bus_number(200);
-
-    PSSE_IMEXPORTER importer(default_toolkit);
-    importer.load_powerflow_data("../../../bench/npcc.raw");
-
-    powerflow_solver.set_max_iteration(30);
-    powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
-    powerflow_solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.00001);
-    powerflow_solver.set_flat_start_logic(false);
-    powerflow_solver.set_transformer_tap_adjustment_logic(true);
-
-    osstream<<"Test 1: Solve powerflow with flat start logic disabled.";
-    default_toolkit.show_information_with_leading_time_stamp(osstream);
-
-    powerflow_solver.solve_with_fast_decoupled_solution();
-    TEST_ASSERT(powerflow_solver.is_converged());
-
-    check_NPCC_140_bus_model_powerflow_result();
-    //default_toolkit.close_log_file();
-
-    //default_toolkit.open_log_file("test_log/test_solve_NPCC_140_bus_model_with_fast_decoupled_solution_2.txt");
-    osstream<<"Test 2: Solve powerflow with flat start logic enabled.";
-    default_toolkit.show_information_with_leading_time_stamp(osstream);
-
-    powerflow_solver.set_flat_start_logic(true);
-    powerflow_solver.solve_with_fast_decoupled_solution();
-    TEST_ASSERT(powerflow_solver.is_converged());
-
-    check_NPCC_140_bus_model_powerflow_result();
-    default_toolkit.close_log_file();
-}
 void POWERFLOW_SOLVER_TEST::test_solve_Shandong_2000_bus_model_with_fast_decoupled_solution()
 {
     ostringstream osstream;
@@ -727,7 +629,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_Shandong_2000_bus_model_with_fast_decoupl
     osstream<<"Test 1: Solve non-var limit powerflow with flat start logic enable.";
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
-    importer.load_powerflow_data("../../../bench/sd2010_nodc_no_var_limit.raw");
+    importer.load_powerflow_data("../../../bench/sd2038.raw");
 
     powerflow_solver.set_max_iteration(50);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.0001);
@@ -745,7 +647,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_Shandong_2000_bus_model_with_fast_decoupl
     osstream<<"Test 2: Solve var limit powerflow with flat start logic enable.";
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
-    importer.load_powerflow_data("../../../bench/sd2010_nodc.raw");
+    importer.load_powerflow_data("../../../bench/sd2038.raw");
 
     powerflow_solver.set_max_iteration(50);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.0001);
@@ -770,7 +672,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_Shandong_2000_bus_model_with_HVDC_with_fa
     psdb.set_allowed_max_bus_number(160000);
     PSSE_IMEXPORTER importer(default_toolkit);
 
-    importer.load_powerflow_data("../../../bench/sd2010.raw");
+    importer.load_powerflow_data("../../../bench/sd2038.raw");
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.0001);
@@ -796,7 +698,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_fast_de
     psdb.set_allowed_max_bus_number(200);
     PSSE_IMEXPORTER importer(default_toolkit);
 
-    importer.load_powerflow_data("../../../bench/IEEE39.raw");
+    importer.load_powerflow_data("../../../bench/ieee39.raw");
 
     powerflow_solver.set_max_iteration(3);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.001);
@@ -816,37 +718,6 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_fast_de
 }
 
 
-void POWERFLOW_SOLVER_TEST::test_solve_NPCC_140_bus_model_with_fast_decoupled_and_full_Newton_Raphson_solution()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"POWERFLOW_SOLVER_TEST");
-
-    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
-    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-
-    default_toolkit.open_log_file("test_log/test_solve_NPCC_140_bus_model_with_fast_decoupled_and_full_Newton_Raphson_solution.txt");
-    psdb.set_allowed_max_bus_number(200);
-    PSSE_IMEXPORTER importer(default_toolkit);
-
-    importer.load_powerflow_data("../../../bench/npcc.raw");
-
-    powerflow_solver.set_max_iteration(4);
-    powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.001);
-    powerflow_solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.001);
-    powerflow_solver.set_flat_start_logic(true);
-    powerflow_solver.set_transformer_tap_adjustment_logic(true);
-
-    powerflow_solver.solve_with_fast_decoupled_solution();
-
-    powerflow_solver.set_flat_start_logic(false);
-    powerflow_solver.set_max_iteration(30);
-    powerflow_solver.solve_with_full_Newton_Raphson_solution();
-    TEST_ASSERT(powerflow_solver.is_converged());
-
-    check_NPCC_140_bus_model_powerflow_result();
-    default_toolkit.close_log_file();
-}
-
-
 void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_and_Shandong_2000_bus_model_with_fast_decoupled_solution()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWERFLOW_SOLVER_TEST");
@@ -858,8 +729,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_and_Shandong
     psdb.set_allowed_max_bus_number(160000);
     PSSE_IMEXPORTER importer(default_toolkit);
 
-    importer.load_powerflow_data("../../../bench/IEEE39.raw");
-    importer.load_powerflow_data("../../../bench/sd2010_nodc_no_var_limit.raw");
+    importer.load_powerflow_data("../../../bench/ieee39_sd133.raw");
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.001);
@@ -1402,159 +1272,6 @@ void POWERFLOW_SOLVER_TEST::test_solve_Northwest_benchmark_100_bus_model_with_HV
 
     BPA_IMEXPORTER exporter(default_toolkit);
     exporter.export_powerflow_data("test_log/bench_northwest.dat");
-
-    default_toolkit.close_log_file();
-}
-
-void POWERFLOW_SOLVER_TEST::test_solve_Yunnan_benchmark_100_bus_model_with_HVDC_with_fast_decoupled_solution()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"POWERFLOW_SOLVER_TEST");
-
-    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
-    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-
-    default_toolkit.open_log_file("test_log/test_solve_Yunnan_benchmark_100_bus_model_with_HVDC_with_fast_decoupled_solution.txt");
-    psdb.set_allowed_max_bus_number(160000);
-    PSSE_IMEXPORTER importer(default_toolkit);
-
-    importer.load_powerflow_data("../../../bench/bench_yunnan.raw");
-
-    powerflow_solver.set_max_iteration(100);
-    powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(10.0);
-    powerflow_solver.set_allowed_max_reactive_power_imbalance_in_MVar(10.0);
-    powerflow_solver.set_flat_start_logic(true);
-    powerflow_solver.set_transformer_tap_adjustment_logic(true);
-
-    powerflow_solver.solve_with_fast_decoupled_solution();
-    TEST_ASSERT(powerflow_solver.is_converged());
-
-    powerflow_solver.set_flat_start_logic(false);
-    powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.0001);
-    powerflow_solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.0001);
-    powerflow_solver.solve_with_full_Newton_Raphson_solution();
-    TEST_ASSERT(powerflow_solver.is_converged());
-
-    BPA_IMEXPORTER exporter(default_toolkit);
-    exporter.export_powerflow_data("test_log/bench_yunnan.dat");
-
-    default_toolkit.close_log_file();
-}
-
-void POWERFLOW_SOLVER_TEST::test_solve_IEEE_9_bus_model_with_WTG_with_full_Newton_Raphson_solution()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"POWERFLOW_SOLVER_TEST");
-    ostringstream osstream;
-
-    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
-    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-
-    default_toolkit.open_log_file("test_log/test_solve_IEEE_9_bus_model_with_WTG_with_full_Newton_Raphson_solution.txt");
-
-    PSSE_IMEXPORTER importer(default_toolkit);
-
-    importer.load_powerflow_data("../../../bench/IEEE9_wind.raw");
-
-    powerflow_solver.set_max_iteration(20);
-    powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.001);
-    powerflow_solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.001);
-    powerflow_solver.set_transformer_tap_adjustment_logic(true);
-    powerflow_solver.set_flat_start_logic(true);
-
-    DEVICE_ID did;
-    did.set_device_type("WT GENERATOR");
-    TERMINAL terminal;
-    terminal.append_bus(3);
-    did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
-    WT_GENERATOR* wtgen = psdb.get_wt_generator(did);
-
-    osstream<<"Test 1: Solution with flat start option when WTG is in Q in (-999.0, 999.0)MVar";
-    default_toolkit.show_information_with_leading_time_stamp(osstream);
-    wtgen->set_q_max_in_MVar(999.0);
-    wtgen->set_q_min_in_MVar(-999.0);
-    powerflow_solver.solve_with_full_Newton_Raphson_solution();
-    TEST_ASSERT(powerflow_solver.is_converged());
-
-    osstream<<"Test 2: Solution with flat start option when WTG is in Q in (-10.0, -10.0)MVar";
-    default_toolkit.show_information_with_leading_time_stamp(osstream);
-    wtgen->set_q_max_in_MVar(-10.0);
-    wtgen->set_q_min_in_MVar(-10.0);
-    powerflow_solver.solve_with_full_Newton_Raphson_solution();
-    TEST_ASSERT(powerflow_solver.is_converged());
-
-    osstream<<"Test 3: Solution with flat start option when WTG is in Q in (0.0, 0.0)MVar";
-    default_toolkit.show_information_with_leading_time_stamp(osstream);
-    wtgen->set_q_max_in_MVar(0.0);
-    wtgen->set_q_min_in_MVar(0.0);
-    powerflow_solver.solve_with_full_Newton_Raphson_solution();
-    TEST_ASSERT(powerflow_solver.is_converged());
-
-    default_toolkit.close_log_file();
-}
-
-void POWERFLOW_SOLVER_TEST::test_solve_IEEE_39_bus_model_with_WTG_with_full_Newton_Raphson_solution()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"POWERFLOW_SOLVER_TEST");
-    ostringstream osstream;
-
-    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
-    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-
-    default_toolkit.open_log_file("test_log/test_solve_IEEE_39_bus_model_with_WTG_with_full_Newton_Raphson_solution.txt");
-
-    PSSE_IMEXPORTER importer(default_toolkit);
-
-    importer.load_powerflow_data("../../../bench/IEEE39_wind.raw");
-
-    powerflow_solver.set_max_iteration(20);
-    powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.001);
-    powerflow_solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.001);
-    powerflow_solver.set_transformer_tap_adjustment_logic(true);
-    powerflow_solver.set_flat_start_logic(true);
-
-    DEVICE_ID did;
-    did.set_device_type("WT GENERATOR");
-    TERMINAL terminal;
-    terminal.append_bus(36);
-    did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
-    WT_GENERATOR* wtgen36 = psdb.get_wt_generator(did);
-    terminal.clear();
-    terminal.append_bus(37);
-    did.set_device_terminal(terminal);
-    WT_GENERATOR* wtgen37 = psdb.get_wt_generator(did);
-
-    osstream<<"Test 1: Solution with flat start option when WTG is as default";
-    default_toolkit.show_information_with_leading_time_stamp(osstream);
-    powerflow_solver.solve_with_full_Newton_Raphson_solution();
-    TEST_ASSERT(powerflow_solver.is_converged());
-
-    osstream<<"Test 2: Solution with flat start option when WTG is in Q in (-999.0, 999.0)MVar";
-    default_toolkit.show_information_with_leading_time_stamp(osstream);
-    wtgen36->set_q_max_in_MVar(999.0);
-    wtgen36->set_q_min_in_MVar(-999.0);
-    wtgen37->set_q_max_in_MVar(999.0);
-    wtgen37->set_q_min_in_MVar(-999.0);
-    powerflow_solver.solve_with_full_Newton_Raphson_solution();
-    TEST_ASSERT(powerflow_solver.is_converged());
-
-    osstream<<"Test 3: Solution with flat start option when WTG is in Q in (-10.0, -10.0)MVar";
-    default_toolkit.show_information_with_leading_time_stamp(osstream);
-    wtgen36->set_q_max_in_MVar(-10.0);
-    wtgen36->set_q_min_in_MVar(-10.0);
-    wtgen37->set_q_max_in_MVar(-10.0);
-    wtgen37->set_q_min_in_MVar(-10.0);
-    powerflow_solver.solve_with_full_Newton_Raphson_solution();
-    TEST_ASSERT(powerflow_solver.is_converged());
-
-    osstream<<"Test 4: Solution with flat start option when WTG is in Q in (0.0, 0.0)MVar";
-    default_toolkit.show_information_with_leading_time_stamp(osstream);
-    wtgen36->set_q_max_in_MVar(0.0);
-    wtgen36->set_q_min_in_MVar(0.0);
-    wtgen37->set_q_max_in_MVar(0.0);
-    wtgen37->set_q_min_in_MVar(0.0);
-    powerflow_solver.solve_with_full_Newton_Raphson_solution();
-    TEST_ASSERT(powerflow_solver.is_converged());
 
     default_toolkit.close_log_file();
 }

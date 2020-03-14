@@ -433,27 +433,79 @@ string UVLS::get_standard_psse_string() const
     ostringstream osstream;
     LOAD* load = get_load_pointer();
     unsigned int bus = load->get_load_bus();
-    string identifier = load->get_identifier();
-    osstream<<bus<<", "
-      <<"'"<<get_detailed_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setprecision(4)<<fixed<<get_voltage_sensor_time_in_s()<<", "
-      <<setprecision(4)<<fixed<<get_breaker_time_in_s();
+    string identifier = "'"+load->get_identifier()+"'";
 
+    string model_name = "'"+get_model_name()+"BL'";
+
+    osstream<<setw(8)<<bus<<", "
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<setprecision(4)<<fixed<<get_voltage_sensor_time_in_s()<<", "
+            <<setw(8)<<setprecision(4)<<fixed<<get_breaker_time_in_s();
+
+    unsigned int n_content = 5;
     double vth, tdelay, scale;
-    for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
+    unsigned int i=0;
+    for(i=0; i!=(STEPS_MAX_LOAD_RELAY_STAGE-1); ++i)
     {
         vth = get_voltage_threshold_in_pu_of_stage(i);
         tdelay = get_time_delay_in_s_of_stage(i);
         scale = get_scale_in_pu_of_stage(i);
         if(fabs(vth)<DOUBLE_EPSILON)
             break;
-        osstream<<", ";
-        osstream<<setprecision(3)<<fixed<<vth<<", "
-          <<setprecision(3)<<fixed<<tdelay<<", "
-          <<setprecision(3)<<fixed<<scale;
+        osstream<<", "
+                <<setw(8)<<setprecision(4)<<fixed<<vth<<", ";
+        n_content++;
+        if(n_content==10)
+        {
+            osstream<<"\n"
+                    <<setw(10)<<"";
+            n_content = 1;
+        }
+        osstream<<setw(8)<<setprecision(4)<<fixed<<tdelay<<", ";
+        n_content++;
+        if(n_content==10)
+        {
+            osstream<<"\n"
+                    <<setw(10)<<"";
+            n_content = 1;
+        }
+        osstream<<setw(8)<<setprecision(4)<<fixed<<scale;
+        n_content++;
+        if(n_content==10)
+        {
+            osstream<<"\n"
+                    <<setw(10)<<"";
+            n_content = 1;
+        }
+    }
+    i = STEPS_MAX_LOAD_RELAY_STAGE - 1;
+    vth = get_voltage_threshold_in_pu_of_stage(i);
+    tdelay = get_time_delay_in_s_of_stage(i);
+    scale = get_scale_in_pu_of_stage(i);
+    if(fabs(vth)>=DOUBLE_EPSILON)
+    {
+        osstream<<", "
+                <<setw(8)<<setprecision(4)<<fixed<<vth<<", ";
+        n_content++;
+        if(n_content==10)
+        {
+            osstream<<"\n"
+                    <<setw(10)<<"";
+            n_content = 1;
+        }
+        osstream<<setw(8)<<setprecision(4)<<fixed<<tdelay<<", ";
+        n_content++;
+        if(n_content==10)
+        {
+            osstream<<"\n"
+                    <<setw(10)<<"";
+            n_content = 1;
+        }
+        osstream<<setw(8)<<setprecision(4)<<fixed<<scale;
     }
     osstream<<" /";
+
     return osstream.str();
 }
 

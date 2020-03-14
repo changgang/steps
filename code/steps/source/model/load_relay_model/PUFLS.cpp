@@ -803,7 +803,7 @@ string PUFLS::get_standard_psse_string() const
     unsigned int bus = load->get_load_bus();
     string identifier = "'"+load->get_identifier()+"'";
 
-    string model_name = "'"+get_model_name()+"'";
+    string model_name = "'"+get_model_name()+"BL'";
 
     osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "

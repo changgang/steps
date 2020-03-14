@@ -48,15 +48,10 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
 
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_single_machine_model);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_classical_model);
-
-
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_with_wind);
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model);
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_SD_133_bus_model);
 
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENROU_CDC4T);
-
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models);
-
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models);
 }
 
 void DYNAMICS_SIMULATOR_TEST::setup()
@@ -563,9 +558,23 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_classical_model()
 }
 
 
-void DYNAMICS_SIMULATOR_TEST::run_single_machine_model_for_model_test()
+
+void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model()
 {
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+
     DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+
+    ostringstream osstream;
+    string file = "test_log/";
+    file += __FUNCTION__;
+    file += ".txt";
+    default_toolkit.open_log_file(file);
+
+    PSSE_IMEXPORTER importer(default_toolkit);
+
+    importer.load_powerflow_data("../../../bench/IEEE39_model.raw");
+    importer.load_dynamic_data("../../../bench/IEEE39_model.dyr");
 
     POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
@@ -577,78 +586,89 @@ void DYNAMICS_SIMULATOR_TEST::run_single_machine_model_for_model_test()
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
+    simulator.prepare_meters();
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
-    simulator.set_max_DAE_iteration(200);
-    simulator.set_max_network_iteration(20);
 
-
-    DEVICE_ID did;
-    did.set_device_type("GENERATOR");
-    TERMINAL terminal;
-    terminal.append_bus(1);
-    did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
-
-    //cout<<psdb.get_generator(did)->get_sync_generator_model()->get_standard_psse_string()<<endl;
-
-    METER_SETTER setter(default_toolkit);
-
-    ostringstream osstream;
-
-    METER meter(default_toolkit);
-    meter = setter.prepare_bus_voltage_in_pu_meter(1);
-    simulator.append_meter(meter);
-    meter = setter.prepare_bus_angle_in_deg_meter(1);
-    simulator.append_meter(meter);
-    meter = setter.prepare_bus_frequency_deviation_in_pu_meter(1);
-    simulator.append_meter(meter);
-
-
-    did.set_device_type("GENERATOR");
-    terminal.clear();
-    terminal.append_bus(1);
-    did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
-
-    meter = setter.prepare_generator_rotor_angle_in_deg_meter(did);
-    simulator.append_meter(meter);
-    meter = setter.prepare_generator_rotor_speed_deviation_in_pu_meter(did);
-    simulator.append_meter(meter);
-    meter = setter.prepare_generator_excitation_voltage_in_pu_meter(did);
-    simulator.append_meter(meter);
-    meter = setter.prepare_generator_mechanical_power_in_pu_on_mbase_meter(did);
-    simulator.append_meter(meter);
-    meter = setter.prepare_generator_terminal_active_power_in_pu_on_sbase_meter(did);
-    simulator.append_meter(meter);
-    meter = setter.prepare_generator_terminal_reactive_power_in_pu_on_sbase_meter(did);
-    simulator.append_meter(meter);
+    simulator.set_output_file("test_log/test_run_IEEE_39_bus_model");
 
     simulator.start();
     simulator.run_to(1.0);
 
-    did.set_device_type("LINE");
-    terminal.clear();
-    terminal.append_bus(3);
-    terminal.append_bus(4);
+    DEVICE_ID did;
+    did.set_device_type("GENERATOR");
+    TERMINAL terminal;
+    terminal.append_bus(30);
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
 
-    simulator.set_line_fault(did, 3, 0.0, complex<double>(0.0, -2e5));
+    simulator.trip_generator(did);
 
-    DEVICE_ID load_did;
-    load_did.set_device_type("LOAD");
-    terminal.clear();
-    terminal.append_bus(2);
-    load_did.set_device_terminal(terminal);
-    load_did.set_device_identifier("1");
+    simulator.run_to(10);
 
-    //simulator.scale_load(load_did, 0.1);
+    default_toolkit.close_log_file();
+}
 
-    simulator.run_to(1.05);
+void DYNAMICS_SIMULATOR_TEST::test_run_SD_133_bus_model()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
 
-    simulator.clear_line_fault(did, 3, 0.0);
+    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+
+    string file = "test_log/";
+    file += __FUNCTION__;
+    file += ".txt";
+    default_toolkit.open_log_file(file);
+
+    PSSE_IMEXPORTER importer(default_toolkit);
+
+    psdb.set_allowed_max_bus_number(1000);
+
+    importer.load_powerflow_data("../../../bench/SD133_model.raw");
+    importer.load_dynamic_data("../../../bench/SD133_model.dyr");
+
+    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
+    unsigned int n = hvdcs.size();
+    for(unsigned int i=0; i!=n; ++i)
+        hvdcs[i]->turn_rectifier_constant_power_mode_into_constant_current_mode();
+
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
+
+    powerflow_solver.set_max_iteration(30);
+    powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
+    powerflow_solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.00001);
+    powerflow_solver.set_flat_start_logic(false);
+    powerflow_solver.set_transformer_tap_adjustment_logic(true);
+
+    powerflow_solver.solve_with_fast_decoupled_solution();
+
+    simulator.prepare_meters();
+    simulator.set_output_file("test_log/test_run_SD_133_bus_model");
+
+    simulator.set_allowed_max_power_imbalance_in_MVA(0.001);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
+
+    simulator.start();
+    simulator.run_to(1.0);
+
+    DEVICE_ID did;
+    did.set_device_type("LINE");
+    TERMINAL terminal;
+    terminal.append_bus(60);
+    terminal.append_bus(62);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("1");
+
+    simulator.set_line_fault(did, 60, 0.0, complex<double>(0.0, -1e6));
+
+    simulator.run_to(1.1);
+
+    simulator.clear_line_fault(did, 60, 0.0);
+    simulator.trip_line(did);
 
     simulator.run_to(5.0);
+
+    default_toolkit.close_log_file();
 }
 
 

@@ -780,7 +780,7 @@ void STEPS_IMEXPORTER::load_source_var_control_data(vector<string>& data, SOURCE
             data.erase(data.begin());
         }
         if(pf==0.0)
-            pf = 1.0;
+            pf = 0.01;
         if(pf<0.0)
             pf = -pf;
         if(pf>1.0)
@@ -2185,7 +2185,7 @@ string STEPS_IMEXPORTER::export_generator_data() const
             continue;
 
         osstream<<export_source_common_data(generator);
-        osstream<<"0, 0.0, 0"<<endl;
+        osstream<<"0, 0.00, 0"<<endl;
     }
     return osstream.str();
 }
@@ -2319,14 +2319,14 @@ string STEPS_IMEXPORTER::export_source_var_control_data(SOURCE* source) const
     if(fabs(qmax+qmin)>DOUBLE_EPSILON)
     {
         if(fabs(qmax-qmin)>DOUBLE_EPSILON)
-            osstream<<"0, 0.0";
+            osstream<<"0, 0.00";
         else
-            osstream<<"3, 0.0";
+            osstream<<"3, 0.00";
     }
     else
     {
         double pf = p/steps_sqrt(p*p+qmax*qmax);
-        osstream<<"2, "<<setprecision(6)<<pf;
+        osstream<<"2, "<<setw(4)<<setiosflags(ios::fixed)<<setprecision(2)<<pf;
     }
     return osstream.str();
 }
