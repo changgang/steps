@@ -16,7 +16,6 @@
 				<Compiler>
 					<Add option="-O3" />
 					<Add option="-Wall" />
-					<Add option="-std=c++1z" />
 					<Add option="-fPIC" />
 					<Add option="-march=native" />
 					<Add option="-funroll-loops" />

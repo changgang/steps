@@ -4,5 +4,7 @@ python/*.pyc
 python/*.pyd
 python/*.xlsx
 python/*.txt
+python/*.tex
 code/*.layout
+doc/
 .gitignore
