@@ -18,7 +18,7 @@ DATA_IMEXPORTER::DATA_IMEXPORTER(STEPS& toolkit)
 
 DATA_IMEXPORTER::~DATA_IMEXPORTER()
 {
-    toolkit = nullptr;
+    toolkit = NULL;
 }
 
 STEPS& DATA_IMEXPORTER::get_toolkit() const

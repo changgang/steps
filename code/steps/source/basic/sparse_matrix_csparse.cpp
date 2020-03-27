@@ -699,11 +699,11 @@ unsigned int SPARSE_MATRIX_CSPARSE::get_memory_usage_in_bytes()
 {
     unsigned int n = matrix_real->nzmax*(sizeof(csi)+sizeof(double))+
                      matrix_real->n*sizeof(csi);
-    if(matrix_imag!=nullptr)
+    if(matrix_imag!=NULL)
         n += matrix_imag->nzmax*(sizeof(csi)+sizeof(double))+
              matrix_imag->n*sizeof(csi);
 
-    if(LU!=nullptr)
+    if(LU!=NULL)
         n += LU->L->nzmax*(sizeof(csi)+sizeof(double))+
              LU->L->n*sizeof(csi)+
              LU->U->nzmax*(sizeof(csi)+sizeof(double))+

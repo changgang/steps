@@ -29,7 +29,7 @@ string STABILIZER_MODEL::get_model_type() const
 
 const SIGNAL* STABILIZER_MODEL::get_const_pointer_of_signal_at_slot(unsigned int slot) const
 {
-    const SIGNAL* signal = nullptr;
+    const SIGNAL* signal = NULL;
     switch(slot)
     {
         case 0:
@@ -65,7 +65,7 @@ const SIGNAL* STABILIZER_MODEL::get_const_pointer_of_signal_at_slot(unsigned int
 
 SIGNAL* STABILIZER_MODEL::get_nonconst_pointer_of_signal_at_slot(unsigned int slot)
 {
-    SIGNAL* signal = nullptr;
+    SIGNAL* signal = NULL;
     switch(slot)
     {
         case 0:

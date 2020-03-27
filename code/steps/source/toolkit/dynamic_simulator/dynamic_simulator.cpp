@@ -32,7 +32,7 @@ DYNAMICS_SIMULATOR::DYNAMICS_SIMULATOR(STEPS& toolkit)
 DYNAMICS_SIMULATOR::~DYNAMICS_SIMULATOR()
 {
     stop();
-    toolkit = nullptr;
+    toolkit = NULL;
 }
 
 STEPS& DYNAMICS_SIMULATOR::get_toolkit() const

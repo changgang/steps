@@ -279,7 +279,7 @@ MODEL* WT_GENERATOR::get_model_of_type(string model_type)
         return get_wind_speed_model();
     if(model_type=="WT RELAY")
         return get_wt_relay_model();
-    return nullptr;
+    return NULL;
 }
 
 void WT_GENERATOR::set_wt_generator_model(WT_GENERATOR_MODEL* model)

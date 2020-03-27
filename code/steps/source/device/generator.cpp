@@ -124,7 +124,7 @@ MODEL* GENERATOR::get_model_of_type(string model_type)
         return get_turbine_governor_model();
     if(model_type=="TURBINE LOAD CONTROLLER")
         return get_turbine_load_controller_model();
-    return nullptr;
+    return NULL;
 }
 
 void GENERATOR::set_sync_generator_model(SYNC_GENERATOR_MODEL* model)

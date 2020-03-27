@@ -578,8 +578,8 @@ MODEL* LINE::get_model_of_type(string model_type)
 {
     model_type = string2upper(model_type);
     if(model_type=="LINE RELAY")
-        return nullptr;
-    return nullptr;
+        return NULL;
+    return NULL;
 }
 
 LINE& LINE::operator=(const LINE& line)

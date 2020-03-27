@@ -27,7 +27,7 @@ NETWORK_MATRIX::NETWORK_MATRIX(STEPS& toolkit)
 
 NETWORK_MATRIX::~NETWORK_MATRIX()
 {
-    toolkit = nullptr;
+    toolkit = NULL;
 }
 
 STEPS& NETWORK_MATRIX::get_toolkit() const

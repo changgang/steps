@@ -11,16 +11,16 @@ MODEL::MODEL(STEPS& toolkit)
 {
     set_toolkit(toolkit);
 
-    device_pointer = nullptr;
+    device_pointer = NULL;
 
-    bus_pointer = nullptr;
-    //inverter_bus_pointer = nullptr;
+    bus_pointer = NULL;
+    //inverter_bus_pointer = NULL;
 
     for(unsigned int i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
         allowed_device_types[i][0]='\0';
 
-    model_data_table = nullptr;
-    model_internal_variable_table = nullptr;
+    model_data_table = NULL;
+    model_internal_variable_table = NULL;
 
     set_flag_model_initialized_as_false();
 
@@ -30,8 +30,8 @@ MODEL::MODEL(STEPS& toolkit)
 
     set_model_float_parameter_count(0);
 
-    user_input_time_series_file = nullptr;
-    user_input_time_series = nullptr;
+    user_input_time_series_file = NULL;
+    user_input_time_series = NULL;
 }
 
 STEPS& MODEL::get_toolkit() const
@@ -46,7 +46,7 @@ void MODEL::set_toolkit(STEPS& toolkit)
 
 MODEL::~MODEL()
 {
-    /*if(allowed_device_types!=nullptr)
+    /*if(allowed_device_types!=NULL)
         delete allowed_device_types;*/
 
     destroy_manually_allocated_storage();
@@ -54,30 +54,30 @@ MODEL::~MODEL()
 
 void MODEL::allocate_model_variables()
 {
-    /*if(allowed_device_types==nullptr)
+    /*if(allowed_device_types==NULL)
         allowed_device_types = new vector<string>;*/
 
-    if(model_data_table==nullptr)
+    if(model_data_table==NULL)
         model_data_table =  new MODEL_VAR_TABLE;
-    if(model_internal_variable_table==nullptr)
+    if(model_internal_variable_table==NULL)
         model_internal_variable_table =  new MODEL_VAR_TABLE;
 
-    if(user_input_time_series_file==nullptr)
+    if(user_input_time_series_file==NULL)
         user_input_time_series_file = new string;
-    if(user_input_time_series==nullptr)
+    if(user_input_time_series==NULL)
         user_input_time_series = new TIME_SERIES;
 }
 
 void MODEL::destroy_manually_allocated_storage()
 {
-    if(model_data_table!=nullptr)
+    if(model_data_table!=NULL)
         delete model_data_table;
-    if(model_internal_variable_table!=nullptr)
+    if(model_internal_variable_table!=NULL)
         delete model_internal_variable_table;
 
-    if(user_input_time_series_file!=nullptr)
+    if(user_input_time_series_file!=NULL)
         delete user_input_time_series_file;
-    if(user_input_time_series!=nullptr)
+    if(user_input_time_series!=NULL)
         delete user_input_time_series;
 }
 
@@ -145,19 +145,19 @@ unsigned int MODEL::get_model_float_parameter_count() const
 
 void MODEL::clear_model_data_table()
 {
-    if(model_data_table!=nullptr)
+    if(model_data_table!=NULL)
         model_data_table->clear();
 }
 
 void MODEL::add_model_data_name_and_index_pair(string var_name, unsigned int var_index)
 {
-    if(model_data_table!=nullptr)
+    if(model_data_table!=NULL)
         model_data_table->add_variable_name_index_pair(var_name, var_index);
 }
 
 unsigned int MODEL::get_model_data_index(string var_name) const
 {
-    if(model_data_table!=nullptr)
+    if(model_data_table!=NULL)
         return (*model_data_table)[var_name];
     else
         return INDEX_NOT_EXIST;
@@ -165,7 +165,7 @@ unsigned int MODEL::get_model_data_index(string var_name) const
 
 string MODEL::get_model_data_name(unsigned int var_index) const
 {
-    if(model_data_table!=nullptr)
+    if(model_data_table!=NULL)
         return (*model_data_table)[var_index];
     else
         return "";
@@ -173,7 +173,7 @@ string MODEL::get_model_data_name(unsigned int var_index) const
 
 bool MODEL::is_model_data_exist(string var_name) const
 {
-    if(model_data_table!=nullptr)
+    if(model_data_table!=NULL)
         return (*model_data_table)[var_name]!=INDEX_NOT_EXIST;
     else
         return false;
@@ -181,7 +181,7 @@ bool MODEL::is_model_data_exist(string var_name) const
 
 bool MODEL::is_model_data_exist(unsigned int var_index) const
 {
-    if(model_data_table!=nullptr)
+    if(model_data_table!=NULL)
         return (*model_data_table)[var_index]!="";
     else
         return false;
@@ -210,19 +210,19 @@ double MODEL::get_model_data_with_index(unsigned int index)
 
 void MODEL::clear_model_internal_variable_table()
 {
-    if(model_internal_variable_table!=nullptr)
+    if(model_internal_variable_table!=NULL)
         model_internal_variable_table->clear();
 }
 
 void MODEL::add_model_inernal_variable_name_and_index_pair(string var_name, unsigned int var_index)
 {
-    if(model_internal_variable_table!=nullptr)
+    if(model_internal_variable_table!=NULL)
         model_internal_variable_table->add_variable_name_index_pair(var_name, var_index);
 }
 
 unsigned int MODEL::get_model_inernal_variable_index(string var_name) const
 {
-    if(model_internal_variable_table!=nullptr)
+    if(model_internal_variable_table!=NULL)
         return (*model_internal_variable_table)[var_name];
     else
         return INDEX_NOT_EXIST;
@@ -230,7 +230,7 @@ unsigned int MODEL::get_model_inernal_variable_index(string var_name) const
 
 string MODEL::get_model_inernal_variable_name(unsigned int var_index) const
 {
-    if(model_internal_variable_table!=nullptr)
+    if(model_internal_variable_table!=NULL)
         return (*model_internal_variable_table)[var_index];
     else
         return "";
@@ -238,7 +238,7 @@ string MODEL::get_model_inernal_variable_name(unsigned int var_index) const
 
 bool MODEL::is_model_inernal_variable_exist(string var_name) const
 {
-    if(model_internal_variable_table!=nullptr)
+    if(model_internal_variable_table!=NULL)
         return (*model_internal_variable_table)[var_name]!=INDEX_NOT_EXIST;
     else
         return false;
@@ -246,7 +246,7 @@ bool MODEL::is_model_inernal_variable_exist(string var_name) const
 
 bool MODEL::is_model_inernal_variable_exist(unsigned int var_index) const
 {
-    if(model_internal_variable_table!=nullptr)
+    if(model_internal_variable_table!=NULL)
         return (*model_internal_variable_table)[var_index]!="";
     else
         return false;

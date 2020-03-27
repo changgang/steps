@@ -17,7 +17,7 @@ JACOBIAN_BUILDER::JACOBIAN_BUILDER(STEPS& toolkit)
 
 JACOBIAN_BUILDER::~JACOBIAN_BUILDER()
 {
-    toolkit = nullptr;
+    toolkit = NULL;
     /*
     jacobian_delta_p_over_angle.clear();
     jacobian_delta_p_over_voltage.clear();

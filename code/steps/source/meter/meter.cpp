@@ -256,7 +256,7 @@ void METER::set_device_id(const DEVICE_ID& did)
 void METER::set_meter_type(string meter_type)
 {
     ostringstream osstream;
-    if(device_pointer!=nullptr)
+    if(device_pointer!=NULL)
     {
         meter_type = string2upper(meter_type);
 
@@ -282,7 +282,7 @@ void METER::set_meter_type(string meter_type)
 void METER::set_internal_variable_name(string name)
 {
     ostringstream osstream;
-    if(device_pointer!=nullptr)
+    if(device_pointer!=NULL)
     {
         string meter_type = this->meter_type;
         if(meter_type.find("INTERNAL VARIABLE") != string::npos)
@@ -435,7 +435,7 @@ void METER::change_meter_internal_variable_name(const string& name)
 
 bool METER::is_valid_meter_type(string& meter_type) const
 {
-    if(device_pointer!=nullptr)
+    if(device_pointer!=NULL)
     {
         string device_type = get_device_type();
         meter_type = string2upper(meter_type);
@@ -478,7 +478,7 @@ bool METER::is_valid_meter_type_of_device(const string& meter_type, string& devi
 DEVICE_ID METER::get_device_id() const
 {
     DEVICE_ID did;
-    if(device_pointer!=nullptr)
+    if(device_pointer!=NULL)
         return device_pointer->get_device_id();
     else
         return did;
@@ -496,7 +496,7 @@ unsigned int METER::get_meter_side_bus() const
 
 string METER::get_device_type() const
 {
-    if(device_pointer!=nullptr)
+    if(device_pointer!=NULL)
         return device_pointer->get_device_id().get_device_type();
     else
         return "NONE";
@@ -543,7 +543,7 @@ string METER::get_meter_name() const
 
 bool METER::is_valid() const
 {
-    if(device_pointer!=nullptr and meter_type[0]!='\0')
+    if(device_pointer!=NULL and meter_type[0]!='\0')
     {
         string device_type = get_device_type();
         if(device_type=="LINE" or device_type=="TRANSFORMER")
@@ -562,7 +562,7 @@ bool METER::is_valid() const
 
 void METER::clear()
 {
-    device_pointer = nullptr;
+    device_pointer = NULL;
     meter_type[0] = '\0';
     meter_side_bus = 0;
     internal_variable_name[0] = '\0';
@@ -599,13 +599,13 @@ void METER::set_device_pointer(DEVICE_ID device_id)
 
     if(not device_id.is_valid())
     {
-        device_pointer = nullptr;
+        device_pointer = NULL;
         return;
     }
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     string device_type = device_id.get_device_type();
-    DEVICE* deviceptr = nullptr;
+    DEVICE* deviceptr = NULL;
     if(device_type=="BUS")
     {
         TERMINAL terminal = device_id.get_device_terminal();

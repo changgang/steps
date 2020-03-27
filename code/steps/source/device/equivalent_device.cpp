@@ -427,7 +427,7 @@ MODEL* EQUIVALENT_DEVICE::get_model_of_type(string model_type)
     if(model_type=="EQUIVALENT MODEL")
         return get_equivalent_model();
     else
-        return nullptr;
+        return NULL;
 }
 
 void EQUIVALENT_DEVICE::set_equivalent_model(EQUIVALENT_MODEL* model)

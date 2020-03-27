@@ -190,9 +190,9 @@ MODEL* FIXED_SHUNT::get_model_of_type(string model_type)
 {
     model_type = string2upper(model_type);
     if(model_type=="FIXED SHUNT")
-        return nullptr;
+        return NULL;
     else
-        return nullptr;
+        return NULL;
 }
 
 FIXED_SHUNT& FIXED_SHUNT::operator=(const FIXED_SHUNT& fixed_shunt)

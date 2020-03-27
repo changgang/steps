@@ -639,7 +639,7 @@ unsigned int COMPLEX_SPARSE_MATRIX_CSPARSE::get_memory_usage_in_bytes()
     unsigned int n = matrix_complex->nzmax*(sizeof(int)+sizeof(complex<double>))+
                      matrix_complex->n*sizeof(int);
 
-    if(LU!=nullptr)
+    if(LU!=NULL)
         n += LU->L->nzmax*(sizeof(int)+sizeof(complex<double>))+
              LU->L->n*sizeof(int)+
              LU->U->nzmax*(sizeof(int)+sizeof(complex<double>))+

@@ -631,9 +631,9 @@ void TRANSFORMER::clear()
     winding_bus[PRIMARY_SIDE] = 0;
     winding_bus[SECONDARY_SIDE] = 0;
     winding_bus[TERTIARY_SIDE] = 0;
-    /*winding_busptr[PRIMARY_SIDE] = nullptr;
-    winding_busptr[SECONDARY_SIDE] = nullptr;
-    winding_busptr[TERTIARY_SIDE] = nullptr;*/
+    /*winding_busptr[PRIMARY_SIDE] = NULL;
+    winding_busptr[SECONDARY_SIDE] = NULL;
+    winding_busptr[TERTIARY_SIDE] = NULL;*/
     set_identifier("");
     set_transformer_name("");
     set_winding_breaker_status(PRIMARY_SIDE, false);
@@ -863,8 +863,8 @@ MODEL* TRANSFORMER::get_model_of_type(string model_type)
 {
     model_type = string2upper(model_type);
     if(model_type=="")
-        return nullptr;
-    return nullptr;
+        return NULL;
+    return NULL;
 }
 
 TRANSFORMER& TRANSFORMER::operator=(const TRANSFORMER& transformer)

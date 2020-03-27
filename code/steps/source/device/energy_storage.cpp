@@ -80,7 +80,7 @@ MODEL* ENERGY_STORAGE::get_model_of_type(string model_type)
     if(model_type=="ENERGY STORAGE")
         return get_energy_storage_model();
     else
-        return nullptr;
+        return NULL;
 }
 
 void ENERGY_STORAGE::set_energy_storage_model(ENERGY_STORAGE_MODEL* model)

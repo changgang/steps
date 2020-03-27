@@ -499,7 +499,7 @@ MODEL* LOAD::get_model_of_type(string model_type)
         return get_load_voltage_relay_model();
     if(model_type=="LOAD FREQUENCY RELAY")
         return get_load_frequency_relay_model();
-    return nullptr;
+    return NULL;
 }
 
 void LOAD::set_load_model(LOAD_MODEL* model)

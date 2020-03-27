@@ -17,7 +17,7 @@ DYNAMIC_MODEL_DATABASE::DYNAMIC_MODEL_DATABASE(STEPS& toolkit)
     warehouse_capacity = 0;
     occupied_warehouse_capacity = 0;
     is_full = false;
-    model_warehouse = nullptr;
+    model_warehouse = NULL;
     model_starting_position_table.clear();
 }
 
@@ -25,7 +25,7 @@ DYNAMIC_MODEL_DATABASE::DYNAMIC_MODEL_DATABASE(STEPS& toolkit)
 DYNAMIC_MODEL_DATABASE::~DYNAMIC_MODEL_DATABASE()
 {
     clear();
-    toolkit = nullptr;
+    toolkit = NULL;
 }
 
 STEPS& DYNAMIC_MODEL_DATABASE::get_toolkit() const
@@ -49,21 +49,21 @@ void DYNAMIC_MODEL_DATABASE::clear()
     is_full = false;
     occupied_warehouse_capacity = 0;
     model_starting_position_table.clear();
-    if(model_warehouse!=nullptr)
+    if(model_warehouse!=NULL)
     {
         free(model_warehouse);
-        model_warehouse = nullptr;
+        model_warehouse = NULL;
     }
 }
 
 void DYNAMIC_MODEL_DATABASE::add_model(MODEL* model)
 {
     ostringstream osstream;
-    if(model_warehouse==nullptr)
+    if(model_warehouse==NULL)
     {
         warehouse_capacity = toolkit->get_dynamic_model_database_size_in_bytes();
         model_warehouse = (char*) malloc(warehouse_capacity);
-        if(model_warehouse==nullptr)
+        if(model_warehouse==NULL)
         {
             osstream<<"Error. Cannot allocate dynamic model database. Check codes.";
             toolkit->show_information_with_leading_time_stamp(osstream);
@@ -96,7 +96,7 @@ void DYNAMIC_MODEL_DATABASE::add_model(MODEL* model)
         string model_type = model->get_model_type();
         NONBUS_DEVICE* device = psdb.get_nonbus_device(did_new);
         MODEL* old_model = device->get_model_of_type(model_type);
-        if(old_model==nullptr)
+        if(old_model==NULL)
         {
             common_set_model(model, model_size);
         }

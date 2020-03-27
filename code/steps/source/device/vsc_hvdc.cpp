@@ -705,7 +705,7 @@ MODEL* VSC_HVDC::get_model_of_type(string model_type)
         return get_vsc_hvdc_model();
     if(model_type=="AUXILIARY SIGNAL")
         return get_auxiliary_signal_model();
-    return nullptr;
+    return NULL;
 }
 
 void VSC_HVDC::set_vsc_hvdc_model(VSC_HVDC_MODEL* model)

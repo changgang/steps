@@ -20,7 +20,7 @@ POWERFLOW_SOLVER::POWERFLOW_SOLVER(STEPS& toolkit)
 
 POWERFLOW_SOLVER::~POWERFLOW_SOLVER()
 {
-    toolkit = nullptr;
+    toolkit = NULL;
     delete jacobian_builder;
 }
 

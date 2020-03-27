@@ -204,7 +204,7 @@ MODEL* PV_UNIT::get_model_of_type(string model_type)
         return get_pv_electrical_model();
     if(model_type=="PV IRRADIANCE")
         return get_pv_irradiance_model();
-    return nullptr;
+    return NULL;
 }
 
 void PV_UNIT::set_pv_converter_model(PV_CONVERTER_MODEL* model)

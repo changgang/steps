@@ -34,7 +34,7 @@ POWER_SYSTEM_DATABASE::~POWER_SYSTEM_DATABASE()
 {
     clear();
 
-    toolkit = nullptr;
+    toolkit = NULL;
 }
 
 STEPS& POWER_SYSTEM_DATABASE::get_toolkit() const
