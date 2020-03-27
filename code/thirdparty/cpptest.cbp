@@ -17,11 +17,10 @@
 				<Compiler>
 					<Add option="-O3" />
 					<Add option="-Wall" />
-					<Add option="-std=c++1z" />
 					<Add option="-fPIC" />
 					<Add directory="../../code" />
-					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
-					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
+					<Add directory="SuiteSparse/UMFPACK/Include" />
+					<Add directory="SuiteSparse/CSparse/Include" />
 				</Compiler>
 			</Target>
 		</Build>
@@ -29,28 +28,27 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="thirdparty/cpptest/collectoroutput.cpp" />
-		<Unit filename="thirdparty/cpptest/compileroutput.cpp" />
-		<Unit filename="thirdparty/cpptest/cpptest-assert.h" />
-		<Unit filename="thirdparty/cpptest/cpptest-collectoroutput.h" />
-		<Unit filename="thirdparty/cpptest/cpptest-compileroutput.h" />
-		<Unit filename="thirdparty/cpptest/cpptest-htmloutput.h" />
-		<Unit filename="thirdparty/cpptest/cpptest-output.h" />
-		<Unit filename="thirdparty/cpptest/cpptest-source.h" />
-		<Unit filename="thirdparty/cpptest/cpptest-suite.h" />
-		<Unit filename="thirdparty/cpptest/cpptest-textoutput.h" />
-		<Unit filename="thirdparty/cpptest/cpptest-time.h" />
-		<Unit filename="thirdparty/cpptest/cpptest.h" />
-		<Unit filename="thirdparty/cpptest/htmloutput.cpp" />
-		<Unit filename="thirdparty/cpptest/missing.cpp" />
-		<Unit filename="thirdparty/cpptest/missing.h" />
-		<Unit filename="thirdparty/cpptest/source_cpptest.cpp" />
-		<Unit filename="thirdparty/cpptest/suite.cpp" />
-		<Unit filename="thirdparty/cpptest/textoutput.cpp" />
-		<Unit filename="thirdparty/cpptest/time.cpp" />
-		<Unit filename="thirdparty/cpptest/utils.cpp" />
-		<Unit filename="thirdparty/cpptest/utils.h" />
-		<Unit filename="version.h" />
+		<Unit filename="cpptest/collectoroutput.cpp" />
+		<Unit filename="cpptest/compileroutput.cpp" />
+		<Unit filename="cpptest/cpptest-assert.h" />
+		<Unit filename="cpptest/cpptest-collectoroutput.h" />
+		<Unit filename="cpptest/cpptest-compileroutput.h" />
+		<Unit filename="cpptest/cpptest-htmloutput.h" />
+		<Unit filename="cpptest/cpptest-output.h" />
+		<Unit filename="cpptest/cpptest-source.h" />
+		<Unit filename="cpptest/cpptest-suite.h" />
+		<Unit filename="cpptest/cpptest-textoutput.h" />
+		<Unit filename="cpptest/cpptest-time.h" />
+		<Unit filename="cpptest/cpptest.h" />
+		<Unit filename="cpptest/htmloutput.cpp" />
+		<Unit filename="cpptest/missing.cpp" />
+		<Unit filename="cpptest/missing.h" />
+		<Unit filename="cpptest/source_cpptest.cpp" />
+		<Unit filename="cpptest/suite.cpp" />
+		<Unit filename="cpptest/textoutput.cpp" />
+		<Unit filename="cpptest/time.cpp" />
+		<Unit filename="cpptest/utils.cpp" />
+		<Unit filename="cpptest/utils.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
