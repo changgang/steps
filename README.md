@@ -1,7 +1,7 @@
 # Simulation Toolkit for Electrical Power Systems
 - Maintainer: Changgang Li <lichgang@sdu.edu.cn> from School of Electrical Engineering, Shandong University.
 - Documentation: [N/A]
-- Date of Readme: March. 8, 2020
+- Date of Readme: March. 29, 2020
 
 ## Major functions
 Simulation Toolkit for Electrical Power Systems (STEPS) is an open source power system simulator designed for balanced large-scale AC-DC hybrid power system analysis.  
@@ -20,7 +20,7 @@ Though BLAS, CBLAS, and other SuiteSparse codes are included in the package, the
 
 ## Prerequisite
 1. Install Code::Blocks.
-2. Install C and C++ compiler supprting C++17. GCC is recommended.
+2. Install C and C++ compiler supprting C++14. GCC>=4.9 is recommended. 
   - For Unix-like systems, follow guides to install gcc and g++ with the latest version.
   - For Windows system, MinGW-64 is suggested.
     - Go to http://mingw-w64.org/ and go to its sourceforge download site for the latest version.
@@ -28,7 +28,7 @@ Though BLAS, CBLAS, and other SuiteSparse codes are included in the package, the
 3. Start Code::Blocks, and configure its toolchain exectuable.
 4. Install Python if you want to try the stepspy module. 64-bit version is recommended. However, if you want to use 32-bit dynamic library of STEPS, you should install Python of the 32-bit version.
 
-## How to build
+## How to build with Code::Blocks
 1. Compile CSparse
   1. Open csparse.cbp in the code/ folder with Code::Blocks.
   2. Go 'Project'-'Properties'-'Build targets'and set type as 'static library'.
@@ -55,6 +55,13 @@ Here is a complete procedure of how to build STEPS.
 2. Compile CXSparse as static library. You can find CXSparse.cbp in the code/ folder.
 3. Compile CppTest as static library. You can find CppTest.cbp in the code/ folder.
 4. Compile STEPS as dynamic library or exectuable file. Include libCSparse.a, libCXSparse.a, and libCpptest.a.
+
+## How to build in shell mode (Linux)
+To build in Linux shell mode, you can simply run the linux_make.sh. 
+There is the procedure:
+1. Download and install the cbp2make from https://sourceforge.net/projects/cbp2make/. Remember to add x mode to the cbp2make file to make executable.
+2. Add x mode to the linux_make.sh file to make it executable.
+3. Run linux_make.sh.
 
 ## How to use stepspy
 stepspy is a Python module of advanced APIs of STEPS. It enables most of STEPS applications. It is recommended to use stepspy in Python 3 of 64-bit version.

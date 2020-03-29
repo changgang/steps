@@ -39,7 +39,6 @@
 				<Linker>
 					<Add option="-static-libstdc++" />
 					<Add option="-static-libgcc" />
-					<Add option="-static" />
 					<Add option="-fopenmp" />
 					<Add option="-march=native" />
 					<Add library="../../build/bin/release/libCSparse.a" />
@@ -405,7 +404,6 @@
 			<Option link="0" />
 		</Unit>
 		<Unit filename="main_tests.cpp">
-			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
 		<Unit filename="main_ufls_simulation.cpp">

@@ -18,6 +18,7 @@
 					<Add option="-O3" />
 					<Add option="-Wall" />
 					<Add option="-std=c++14" />
+					<Add option="-fPIC" />
 					<Add option="-march=native" />
 					<Add option="-funroll-loops" />
 					<Add option="-malign-double" />
