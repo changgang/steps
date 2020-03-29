@@ -1488,15 +1488,15 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_decoupled_network(const TR
             I /= conj(ks);
             yst = I;
 
-            if(isnan(ypp.real()) or isnan(ypp.imag()) or
-               isnan(yps.real()) or isnan(yps.imag()) or
-               isnan(ypt.real()) or isnan(ypt.imag()) or
-               isnan(ysp.real()) or isnan(ysp.imag()) or
-               isnan(yss.real()) or isnan(yss.imag()) or
-               isnan(yst.real()) or isnan(yst.imag()) or
-               isnan(ytp.real()) or isnan(ytp.imag()) or
-               isnan(yts.real()) or isnan(yts.imag()) or
-               isnan(ytt.real()) or isnan(ytt.imag()) )
+            if(std::isnan(ypp.real()) or std::isnan(ypp.imag()) or
+               std::isnan(yps.real()) or std::isnan(yps.imag()) or
+               std::isnan(ypt.real()) or std::isnan(ypt.imag()) or
+               std::isnan(ysp.real()) or std::isnan(ysp.imag()) or
+               std::isnan(yss.real()) or std::isnan(yss.imag()) or
+               std::isnan(yst.real()) or std::isnan(yst.imag()) or
+               std::isnan(ytp.real()) or std::isnan(ytp.imag()) or
+               std::isnan(yts.real()) or std::isnan(yts.imag()) or
+               std::isnan(ytt.real()) or std::isnan(ytt.imag()) )
                 cout<<"NAN is detected when adding "<<trans.get_device_name()<<" to BQ"<<endl;
             network_BQ_matrix.add_entry(p,p,ypp);
             network_BQ_matrix.add_entry(p,s,yps);
@@ -1977,10 +1977,10 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_decoupled_network_v2(const T
             I /= conj(kp);
             yps = I;
 
-            if(isnan(ypp.real()) or isnan(ypp.imag()) or
-               isnan(yps.real()) or isnan(yps.imag()) or
-               isnan(ysp.real()) or isnan(ysp.imag()) or
-               isnan(yss.real()) or isnan(yss.imag()) )
+            if(std::isnan(ypp.real()) or std::isnan(ypp.imag()) or
+               std::isnan(yps.real()) or std::isnan(yps.imag()) or
+               std::isnan(ysp.real()) or std::isnan(ysp.imag()) or
+               std::isnan(yss.real()) or std::isnan(yss.imag()) )
                 cout<<"NAN is detected when adding "<<trans.get_device_name()<<" to BQ"<<endl;
             network_BQ_matrix.add_entry(p,p,ypp);
             network_BQ_matrix.add_entry(p,s,yps);

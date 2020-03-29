@@ -810,7 +810,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
     {
         for(unsigned int i=0; i!=nbus; ++i)
         {
-            if(isnan(bus_power[i].real()) or isnan(bus_power[i].imag()))
+            if(std::isnan(bus_power[i].real()) or std::isnan(bus_power[i].imag()))
             {
                 osstream<<"after  calculate_raw_bus_power_into_network NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
                 toolkit->show_information_with_leading_time_stamp(osstream);
@@ -830,7 +830,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
     {
         for(unsigned int i=0; i!=nbus; ++i)
         {
-            if(isnan(bus_power[i].real()) or isnan(bus_power[i].imag()))
+            if(std::isnan(bus_power[i].real()) or std::isnan(bus_power[i].imag()))
             {
                 osstream<<"after adding source NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
                 toolkit->show_information_with_leading_time_stamp(osstream);
@@ -843,7 +843,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
     {
         for(unsigned int i=0; i!=nbus; ++i)
         {
-            if(isnan(bus_power[i].real()) or isnan(bus_power[i].imag()))
+            if(std::isnan(bus_power[i].real()) or std::isnan(bus_power[i].imag()))
             {
                 osstream<<"after adding load NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
                 toolkit->show_information_with_leading_time_stamp(osstream);
@@ -856,7 +856,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
     {
         for(unsigned int i=0; i!=nbus; ++i)
         {
-            if(isnan(bus_power[i].real()) or isnan(bus_power[i].imag()))
+            if(std::isnan(bus_power[i].real()) or std::isnan(bus_power[i].imag()))
             {
                 osstream<<"after adding hvdc NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
                 toolkit->show_information_with_leading_time_stamp(osstream);
@@ -904,7 +904,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_into_network()
     {
         for(unsigned int i=0; i!=nbus; ++i)
         {
-            if(isnan(bus_power[i].real()) or isnan(bus_power[i].imag()))
+            if(std::isnan(bus_power[i].real()) or std::isnan(bus_power[i].imag()))
             {
                 osstream<<"after  calculate_raw_bus_current_into_network NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
                 toolkit->show_information_with_leading_time_stamp(osstream);

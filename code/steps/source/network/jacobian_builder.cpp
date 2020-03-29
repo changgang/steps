@@ -83,7 +83,7 @@ void JACOBIAN_BUILDER::build_seprate_jacobians()
             jbus = nw_db->get_physical_bus_number_of_internal_bus(column);
 
             der = get_jacobian_delta_p_over_angle_of_internal_bus(row,column);
-            if(not isnan(der))
+            if(not std::isnan(der))
                 ;
             else
             {
@@ -92,7 +92,7 @@ void JACOBIAN_BUILDER::build_seprate_jacobians()
             }
             jacobian_delta_p_over_angle.add_entry(row,column, der);
             der = get_jacobian_delta_p_over_voltage_of_internal_bus(row,column);
-            if(not isnan(der))
+            if(not std::isnan(der))
                 ;
             else
             {
@@ -101,7 +101,7 @@ void JACOBIAN_BUILDER::build_seprate_jacobians()
             }
             jacobian_delta_p_over_voltage.add_entry(row,column, der);
             der = get_jacobian_delta_q_over_angle_of_internal_bus(row,column);
-            if(not isnan(der))
+            if(not std::isnan(der))
                 ;
             else
             {
@@ -110,7 +110,7 @@ void JACOBIAN_BUILDER::build_seprate_jacobians()
             }
             jacobian_delta_q_over_angle.add_entry(row,column, der);
             der = get_jacobian_delta_q_over_voltage_of_internal_bus(row,column);
-            if(not isnan(der))
+            if(not std::isnan(der))
                 ;
             else
             {

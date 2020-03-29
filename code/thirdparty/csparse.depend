@@ -1,0 +1,162 @@
+# depslib dependency file v1.0
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_add.c
+	"cs.h"
+
+1574318720 d:\steps\code\thirdparty\suitesparse\csparse\include\cs.h
+	<stdlib.h>
+	<limits.h>
+	<math.h>
+	<stdio.h>
+	<stddef.h>
+	"mex.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_amd.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_chol.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_cholsol.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_compress.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_counts.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_cumsum.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_dfs.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_dmperm.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_droptol.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_dropzeros.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_dupl.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_entry.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_ereach.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_etree.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_fkeep.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_gaxpy.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_happly.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_house.c
+	"cs.h"
+
+1579501048 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_ipvec.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_leaf.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_load.c
+	"cs.h"
+
+1579501048 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_lsolve.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_ltsolve.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_lu.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_lusol.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_malloc.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_maxtrans.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_multiply.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_norm.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_permute.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_pinv.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_post.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_print.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_pvec.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_qr.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_qrsol.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_randperm.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_reach.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_scatter.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_scc.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_schol.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_spsolve.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_sqr.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_symperm.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_tdfs.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_transpose.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_updown.c
+	"cs.h"
+
+1579501048 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_usolve.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_util.c
+	"cs.h"
+
+1574318720 source:d:\steps\code\thirdparty\suitesparse\csparse\source\cs_utsolve.c
+	"cs.h"
+

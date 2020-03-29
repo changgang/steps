@@ -93,7 +93,7 @@ void BUS::set_positive_sequence_voltage_in_pu(double voltage)
                <<"0.0 will be set automatically. [current dynamic simulation time is: "<<toolkit.get_dynamic_simulation_time_in_s()<<"s]";
         toolkit.show_information_with_leading_time_stamp(osstream);
         positive_sequence_voltage_in_pu = 0.0;
-        if(isnan(voltage))
+        if(std::isnan(voltage))
         {
             osstream<<"STEPS will exit abnormally.";
             toolkit.show_information_with_leading_time_stamp(osstream);

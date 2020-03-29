@@ -17,6 +17,7 @@
 				<Compiler>
 					<Add option="-O3" />
 					<Add option="-Wall" />
+					<Add option="-std=c++14" />
 					<Add option="-fPIC" />
 					<Add directory="../../code" />
 					<Add directory="SuiteSparse/UMFPACK/Include" />
