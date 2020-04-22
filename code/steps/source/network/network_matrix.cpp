@@ -37,7 +37,7 @@ STEPS& NETWORK_MATRIX::get_toolkit() const
 
 void NETWORK_MATRIX::clear()
 {
-    network_Y_matrix.clear();
+    network_Y1_matrix.clear();
     network_BP_matrix.clear();
     network_BQ_matrix.clear();
     network_DC_B_matrix.clear();
@@ -61,22 +61,22 @@ void NETWORK_MATRIX::build_network_Y_matrix()
     if(inphno.empty())
         initialize_physical_internal_bus_pair();
 
-    network_Y_matrix.clear();
-    set_this_Y_and_Z_matrix_as(network_Y_matrix);
+    network_Y1_matrix.clear();
+    set_this_Y_and_Z_matrix_as(network_Y1_matrix);
 
     add_lines_to_network();
     add_transformers_to_network();
     add_fixed_shunts_to_network();
 
-    network_Y_matrix.compress_and_merge_duplicate_entries();
+    network_Y1_matrix.compress_and_merge_duplicate_entries();
 }
 
 STEPS_COMPLEX_SPARSE_MATRIX& NETWORK_MATRIX::get_network_Y_matrix()
 {
-    if(network_Y_matrix.matrix_in_triplet_form())
+    if(network_Y1_matrix.matrix_in_triplet_form())
         build_network_Y_matrix();
 
-    return network_Y_matrix;
+    return network_Y1_matrix;
 }
 
 void NETWORK_MATRIX::build_decoupled_network_B_matrix()
@@ -248,6 +248,7 @@ void NETWORK_MATRIX::build_sequence_network_Z_matrix()
 void NETWORK_MATRIX::build_positive_sequence_network_Z_matrix()
 {
     set_this_Y_and_Z_matrix_as(network_Y1_matrix);
+    network_Y1_matrix.report_brief();
     build_network_Z_matrix_from_this_Y_matrix();
 }
 
@@ -287,14 +288,14 @@ STEPS_COMPLEX_SPARSE_MATRIX& NETWORK_MATRIX::get_zero_sequence_network_Z_matrix(
 complex<double> NETWORK_MATRIX::get_positive_sequence_self_admittance_of_physical_bus(unsigned int bus)
 {
     int b = get_internal_bus_number_of_physical_bus(bus);
-    return network_Y_matrix.get_entry_value(b, b);
+    return network_Y1_matrix.get_entry_value(b, b);
 }
 
 complex<double> NETWORK_MATRIX::get_positive_sequence_mutual_admittance_between_physical_bus(unsigned int ibus, unsigned int jbus)
 {
     int ib = get_internal_bus_number_of_physical_bus(ibus);
     int jb = get_internal_bus_number_of_physical_bus(jbus);
-    return network_Y_matrix.get_entry_value(ib, jb);
+    return network_Y1_matrix.get_entry_value(ib, jb);
 }
 
 void NETWORK_MATRIX::set_this_Y_and_Z_matrix_as(STEPS_COMPLEX_SPARSE_MATRIX& matrix)
@@ -2605,7 +2606,7 @@ void NETWORK_MATRIX::optimize_network_ordering()
         /*for(unsigned int i=0; i<1; ++i)
         {
             reorder_physical_internal_bus_pair();
-            build_network_Y_matrix();
+            build_network_Y1_matrix();
         }*/
     }
 }
@@ -2643,7 +2644,7 @@ void NETWORK_MATRIX::initialize_physical_internal_bus_pair()
 
 void NETWORK_MATRIX::reorder_physical_internal_bus_pair()
 {
-    vector<unsigned int> permutation = network_Y_matrix.get_reorder_permutation();
+    vector<unsigned int> permutation = network_Y1_matrix.get_reorder_permutation();
     inphno.update_with_new_internal_bus_permutation(permutation);
     ostringstream osstream;
     osstream<<"Network internal bus numbers are optimized.";
@@ -2765,8 +2766,8 @@ vector< vector<unsigned int> > NETWORK_MATRIX::get_islands_with_internal_bus_num
 
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    //build_network_Y_matrix();
-    //network_Y_matrix.report_brief();
+    //build_network_Y1_matrix();
+    //network_Y1_matrix.report_brief();
 
     unsigned int nbus = psdb.get_in_service_bus_count();
 
@@ -2809,12 +2810,12 @@ vector< vector<unsigned int> > NETWORK_MATRIX::get_islands_with_internal_bus_num
             for(unsigned int i=0; i!=nbus_in_island; ++i)
             {
                 searching_bus = this_island[i];
-                int k_start = network_Y_matrix.get_starting_index_of_column(searching_bus);
-                int k_end = network_Y_matrix.get_starting_index_of_column(searching_bus+1);
+                int k_start = network_Y1_matrix.get_starting_index_of_column(searching_bus);
+                int k_end = network_Y1_matrix.get_starting_index_of_column(searching_bus+1);
                 int row_bus;
                 for(int k=k_start; k!=k_end; ++k)
                 {
-                    row_bus = network_Y_matrix.get_row_number_of_entry_index(k);
+                    row_bus = network_Y1_matrix.get_row_number_of_entry_index(k);
                     if(row_bus!=searching_bus)
                     {
                         if(bus_searched_flag[row_bus]==false)
@@ -2869,7 +2870,7 @@ void NETWORK_MATRIX::report_network_matrix()
     osstream<<"Network Y matrix lists begin:";
     toolkit->show_information_with_leading_time_stamp(osstream);
 
-    set_this_Y_and_Z_matrix_as(network_Y_matrix);
+    set_this_Y_and_Z_matrix_as(network_Y1_matrix);
     report_network_matrix_common();
 }
 
@@ -3012,7 +3013,7 @@ void NETWORK_MATRIX::save_network_Y_matrix_to_file(const string& filename)
     ofstream file(filename);
     if(file.is_open())
     {
-        set_this_Y_and_Z_matrix_as(network_Y_matrix);
+        set_this_Y_and_Z_matrix_as(network_Y1_matrix);
         save_network_matrix_common(file);
         file.close();
     }
@@ -3220,7 +3221,7 @@ unsigned int NETWORK_MATRIX::get_memory_usage_in_bytes()
            network_Z2_matrix.get_memory_usage_in_bytes()+
            network_Z0_matrix.get_memory_usage_in_bytes()+
 
-           network_Y_matrix.get_memory_usage_in_bytes()+
+           network_Y1_matrix.get_memory_usage_in_bytes()+
 
            network_BP_matrix.get_memory_usage_in_bytes()+
            network_BQ_matrix.get_memory_usage_in_bytes()+

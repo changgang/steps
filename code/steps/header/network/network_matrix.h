@@ -151,7 +151,6 @@ class NETWORK_MATRIX
 
         STEPS_COMPLEX_SPARSE_MATRIX network_Y1_matrix, network_Y2_matrix, network_Y0_matrix;
         STEPS_COMPLEX_SPARSE_MATRIX network_Z1_matrix, network_Z2_matrix, network_Z0_matrix;
-        STEPS_COMPLEX_SPARSE_MATRIX network_Y_matrix;
         STEPS_SPARSE_MATRIX network_BP_matrix, network_BQ_matrix, network_DC_B_matrix;
 
         STEPS_COMPLEX_SPARSE_MATRIX* this_Y_matrix_pointer;

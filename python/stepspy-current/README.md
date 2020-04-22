@@ -80,8 +80,8 @@ After install the stepspy, you still need to compile and install the dynamic lib
 3, Move the dynamic library of STEPS to stepspy/libsteps/ in the PYTHONPATH/Lib/site-packages/.
 4, If the VC runtime is missing, download and install Microsoft Visual C++ 2017 Redistributable of 32 or 64 bit version.
 5, If VC runtime or Mingw Runtime is missing, install vcredit or copy libwinpthread-1.dll from mingw compiler/bin/ to c:/windows/system32 and c:/windows/SysWOW64
+6, For Windows platform, Python 3.7 and 3.8 may suffer path searching problem for some unknown reason. In this case, copy all dlls in the mingw/bin folder to the same folder of libsteps.dll.
 
-Follow README of STEPS if you want to use both serial and parallel library.
 
 ## Usage
 
