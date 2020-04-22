@@ -462,6 +462,13 @@ void api_run_a_step(unsigned int toolkit_index)
     ds.run_a_step();
 }
 
+bool api_get_system_angular_stable_flag(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    return ds.get_system_angular_stable_flag();
+}
+
 void api_set_bus_fault(unsigned int bus, char* fault_type, double fault_G, double fault_B, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

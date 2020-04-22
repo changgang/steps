@@ -366,6 +366,7 @@ EXPORT_STEPS_DLL void api_start_dynamic_simulation(unsigned int toolkit_index=IN
 EXPORT_STEPS_DLL void api_stop_dynamic_simulation(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_run_simulation_to_time(double t_end, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_run_a_step(unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL bool api_get_system_angular_stable_flag(unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void api_set_bus_fault(unsigned int bus, char* fault_type, double fault_G, double fault_B, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_clear_bus_fault(unsigned int bus, char* fault_type, unsigned int toolkit_index=INDEX_NOT_EXIST);

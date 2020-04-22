@@ -651,6 +651,8 @@ def load_library():
     libsteps.api_run_simulation_to_time.argtypes = (c_double, c_uint)
     libsteps.api_run_a_step.restype = None
     libsteps.api_run_a_step.argtypes = (c_uint, )
+    libsteps.api_get_system_angular_stable_flag.restype = c_bool
+    libsteps.api_get_system_angular_stable_flag.argtypes = (c_uint, )
 
     libsteps.api_set_bus_fault.restype = None
     libsteps.api_set_bus_fault.argtypes = (c_uint, c_char_p, c_double, c_double, c_uint)

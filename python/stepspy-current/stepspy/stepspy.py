@@ -1902,6 +1902,27 @@ class STEPS():
             lines.append((int(ibus), int(jbus), id))
             STEPS_LIB.api_goto_next_device(device, self.toolkit_index)
         return tuple(lines)
+        
+    def get_lines_between_buses(self, ibus, jbus):
+        """
+        Get all transmission lines between ibus and jbus.
+        Args:
+            (1) ibus: i-side bus number
+            (2) jbus: j-side bus number
+        Rets:
+            (1) Tuple of all transmission lines between given buses. Empty tuple if no transmission lines between given buses.
+        Example:
+            get_lines_between_buses(1,2)
+        """
+        lines = self.get_lines_at_bus(ibus)
+        if len(lines)==0:
+            return lines
+        else:
+            lns = []
+            for line in lines:
+                if jbus in line:
+                    lns.append(line) 
+            return tuple(lns)
 
     def get_all_transformers(self):
         """
@@ -1939,7 +1960,31 @@ class STEPS():
             transformers.append((int(ibus), int(jbus), int(kbus), id))
             STEPS_LIB.api_goto_next_device(device, self.toolkit_index)
         return tuple(transformers)
-
+    
+    def get_transformers_between_buses(self, ibus, jbus, kbus=0):
+        """
+        Get all transformers between ibus, jbus, and kbus. If kbus=0, two-winding transformers are returned.
+        Args:
+            (1) ibus: i-side bus number
+            (2) jbus: j-side bus number
+            (3) kbus: k-side bus number, 0 for two-winding transformers
+        Rets:
+            (1) Tuple of all transformers between given buses. Empty tuple if no transformers between given buses.
+        Example:
+            get_transformers_between_buses(1,2)
+            get_transformers_between_buses(1,2,0)
+            get_transformers_between_buses(1,2,3)
+        """
+        transformers = self.get_transformers_at_bus(ibus)
+        if len(transformers)==0:
+            return transformers
+        else:
+            transes = []
+            for trans in transformers:
+                if jbus in trans and kbus in trans:
+                    transes.append(trans) 
+            return tuple(transes)
+            
     def get_all_hvdcs(self):
         """
         Get all HVDC links in the database.
@@ -1974,6 +2019,27 @@ class STEPS():
             hvdcs.append((int(ibus), int(jbus), id))
             STEPS_LIB.api_goto_next_device(device, self.toolkit_index)
         return tuple(hvdcs)
+
+    def get_hvdcs_between_buses(self, ibus, jbus):
+        """
+        Get all HVDC links between ibus and jbus.
+        Args:
+            (1) ibus: i-side bus number
+            (2) jbus: j-side bus number
+        Rets:
+            (1) Tuple of all HVDC links between given buses. Empty tuple if no HVDC links between given buses.
+        Example:
+            get_hvdcs_between_buses(1,2)
+        """
+        hvdcs = self.get_hvdcs_at_bus(ibus)
+        if len(hvdcs)==0:
+            return hvdcs
+        else:
+            dcs = []
+            for dc in hvdcs:
+                if jbus in dc:
+                    dcs.append(dc) 
+            return tuple(dcs)
 
     def get_generators_with_constraints(self, area=0, zone=0):
         """
@@ -2696,7 +2762,63 @@ class STEPS():
         """
         global STEPS_LIB
         return self.__set_source_data(energy_storage, par_type, par_name, value)
-
+    
+    def set_generator_power(self, generator, s):
+        """
+        Set generator power.
+        Args:
+            (1) generator: Generator device id in format of (bus, ickt).
+            (2) s: Complex power generation in MVA.
+        Rets: N/A
+        Tips: N/A
+        Example: 
+            set_generator_power((1,"#1"), 100+20j)
+        """
+        self.set_generator_data(generator, "F", "PGEN_MW", s.real)
+        self.set_generator_data(generator, "F", "QGEN_MVAR", s.imag)
+    
+    def set_wt_generator_power(self, wt_generator, s):
+        """
+        Set wt generator power.
+        Args:
+            (1) wt_generator: WT generator device id in format of (bus, ickt).
+            (2) s: Complex power generation in MVA.
+        Rets: N/A
+        Tips: N/A
+        Example: 
+            set_wt_generator_power((1,"#1"), 100+20j)
+        """
+        self.set_wt_generator_data(generator, "F", "PGEN_MW", s.real)
+        self.set_wt_generator_data(generator, "F", "QGEN_MVAR", s.imag)
+    
+    def set_pv_unit_power(self, pv_unit, s):
+        """
+        Set pv unit power.
+        Args:
+            (1) pv_unit: PV unit device id in format of (bus, ickt).
+            (2) s: Complex power generation in MVA.
+        Rets: N/A
+        Tips: N/A
+        Example: 
+            set_pv_unit_power((1,"#1"), 100+20j)
+        """
+        self.set_pv_unit_data(generator, "F", "PGEN_MW", s.real)
+        self.set_pv_unit_data(generator, "F", "QGEN_MVAR", s.imag)
+    
+    def set_energy_storage_power(self, energy_storage, s):
+        """
+        Set energy storage power.
+        Args:
+            (1) energy_storage: Energy storage device id in format of (bus, ickt).
+            (2) s: Complex power generation in MVA.
+        Rets: N/A
+        Tips: N/A
+        Example: 
+            set_energy_storage_power((1,"#1"), 100+20j)
+        """
+        self.set_energy_storage_data(energy_storage, "F", "PGEN_MW", s.real)
+        self.set_energy_storage_data(energy_storage, "F", "QGEN_MVAR", s.imag)
+        
     def set_load_data(self, load, par_type, par_name, value):
         """
         Set load data.
@@ -2729,6 +2851,31 @@ class STEPS():
             return STEPS_LIB.api_set_load_string_data(bus, ickt, par_name, value, self.toolkit_index)
         return
 
+    def set_load_power(self, load, sp=None, si=None, sz=None):
+        """
+        Set load power.
+        Args:
+            (1) load: Load device id in format of (bus, ickt).
+            (2) sp: Complex constant power load in MVA.
+            (3) si: Complex constant current load in MVA.
+            (4) sz: Complex constant impedance load in MVA.
+        Rets: N/A
+        Tips: 
+            If the load component is None, the specific component is ignored.
+        Example: 
+            set_load_power((1,"#1"), 100+20j) # set constant power part only
+            set_load_power((1,"#1"), sz = 60+10j) # set constant impedance part only
+        """
+        if sp!=None:
+            self.set_load_data(load, "F", "PP0_MW",sp.real)
+            self.set_load_data(load, "F", "QP0_MVAR",sp.imag)
+        if si!=None:
+            self.set_load_data(load, "F", "PI0_MW",si.real)
+            self.set_load_data(load, "F", "QI0_MVAR",si.imag)
+        if sz!=None:
+            self.set_load_data(load, "F", "PZ0_MW",sz.real)
+            self.set_load_data(load, "F", "QZ0_MVAR",sz.imag)
+    
     def set_fixed_shunt_data(self, fixed_shunt, par_type, par_name, value):
         """
         Set fixed shunt data.
@@ -2893,7 +3040,19 @@ class STEPS():
             value = self.__get_c_char_p_of_string(value)
             return STEPS_LIB.api_set_hvdc_string_data(ibus, jbus, ickt, side, par_name, value, self.toolkit_index)
         return
-
+    def set_hvdc_power(self, hvdc, p):
+        """
+        Set HVDC link power command.
+        Args:
+            (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
+            (2) p: power command in MW.
+        Rets: N/A
+        Example:
+            set_hvdc_power((1,2,"DC1"), 2000)
+        """
+        self.set_hvdc_data(hvdc, "F", "HVDC", "PDCN_MW", p)
+        return
+        
     def set_area_data(self, area, par_type, par_name, value):
         """
         Set area data.
@@ -4216,6 +4375,20 @@ class STEPS():
         global STEPS_LIB
         STEPS_LIB.api_run_a_step(self.toolkit_index)
         return
+
+    def is_system_angular_stable(self):
+        """
+        Check if the system is angular stable or not. It is only VALID when system rotor angle stability surveillance flag is enabled.
+        If the surveillance flag is not enabled, True is always returned.
+        Args: N/A
+        Rets:
+            (1) flag: True if system is angular stable, and False if unstable.
+        Tips:
+            If the surveillance flag is enabled, False is returned if the maximum rotor angle difference in any island exceeds the threshold.
+            Other, True is returned.
+        """
+        global STEPS_LIB
+        return STEPS_LIB.api_get_system_angular_stable_flag(self.toolkit_index)
 
     def set_bus_fault(self, bus, fault_type, fault_shunt):
         """

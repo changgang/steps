@@ -112,6 +112,7 @@ class DYNAMICS_SIMULATOR
         void update_bus_frequency_blocks_when_applying_event();
         void update_equivalent_devices_buffer();
         void update_equivalent_devices_output();
+        bool get_system_angular_stable_flag() const;
     public:
         void enable_relay_action_flag();
     private:
@@ -290,6 +291,7 @@ class DYNAMICS_SIMULATOR
         bool flag_rotor_angle_stability_surveillance;
         double rotor_angle_stability_threshold_in_deg;
         vector< vector<GENERATOR*> > generators_in_islands;
+        bool flag_rotor_angle_stable;
 
         string output_filename;
         ofstream csv_output_file, json_output_file, bin_output_file;

@@ -67,6 +67,7 @@ void DYNAMICS_SIMULATOR::clear()
     set_rotor_angle_stability_surveillance_flag(false);
     set_rotor_angle_stability_threshold_in_deg(360.0);
     generators_in_islands.clear();
+    flag_rotor_angle_stable = true;
 }
 
 void DYNAMICS_SIMULATOR::set_dynamic_simulation_time_step_in_s(double delt)
@@ -1976,6 +1977,7 @@ void DYNAMICS_SIMULATOR::start()
     meter_values.resize(meters.size(), 0.0);
 
     TIME = -2.0*DELT;
+    flag_rotor_angle_stable = true;
 
     optimize_network_ordering();
 
@@ -2111,8 +2113,8 @@ void DYNAMICS_SIMULATOR::run_to(double time)
             run_a_step();
 
             update_generators_in_islands();
-            bool stable = is_system_angular_stable();
-            if(stable==true)
+            flag_rotor_angle_stable = is_system_angular_stable();
+            if(flag_rotor_angle_stable==true)
                 ;
             else
             {
@@ -2520,6 +2522,11 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_output()
         osstream<<"At time "<<TIME<<" s, equivalent load of "<<edevice->get_device_name()<<" is: "<<edevice->get_total_equivalent_power_as_load_in_MVA()<<"MVA";
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
+}
+
+bool DYNAMICS_SIMULATOR::get_system_angular_stable_flag() const
+{
+    return flag_rotor_angle_stable;
 }
 
 bool DYNAMICS_SIMULATOR::solve_network()
