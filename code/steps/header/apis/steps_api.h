@@ -338,6 +338,7 @@ EXPORT_STEPS_DLL double api_get_dynamic_simulation_time(unsigned int toolkit_ind
 
 EXPORT_STEPS_DLL void api_show_dynamic_simulation_configuration(unsigned int toolkit_index=INDEX_NOT_EXIST);
 
+EXPORT_STEPS_DLL void api_clear_meters(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_meters(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_bus_related_meters(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_generator_related_meters(unsigned int toolkit_index=INDEX_NOT_EXIST);

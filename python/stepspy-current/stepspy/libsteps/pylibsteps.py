@@ -2,8 +2,8 @@ from ctypes import *
 import platform
 import os
 
-libsteps_version = "0.11.2"
-libsteps_date = "2020/1/19"
+libsteps_version = "0.12.0"
+libsteps_date = "2020/4/22"
 
 def get_base_library():
     dirname, filename = os.path.split(os.path.abspath(__file__))
@@ -596,6 +596,8 @@ def load_library():
     libsteps.api_show_dynamic_simulation_configuration.restype = None
     libsteps.api_show_dynamic_simulation_configuration.argtypes = (c_uint, )
 
+    libsteps.api_clear_meters.restype = None
+    libsteps.api_clear_meters.argtypes = (c_uint, )
     libsteps.api_prepare_meters.restype = None
     libsteps.api_prepare_meters.argtypes = (c_uint, )
     libsteps.api_prepare_bus_related_meters.restype = None

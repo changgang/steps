@@ -271,6 +271,13 @@ void api_show_dynamic_simulation_configuration(unsigned int toolkit_index)
     ds.show_dynamic_simulator_configuration();
 }
 
+void api_clear_meters(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    ds.clear_meters();
+}
+
 void api_prepare_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

@@ -3899,6 +3899,18 @@ class STEPS():
         global STEPS_LIB
         return STEPS_LIB.api_get_dynamic_simulation_time(self.toolkit_index)
         
+    def clear_meters(self):
+        """
+        Clear all meters in the current simulator.
+        Args: N/A
+        Rets: N/A
+        Tips:
+            If STEPS() is created with is_default=True, this api can help to clear all meters to avoid adding duplicate meters. 
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_clear_meters(self.toolkit_index)
+        return
+  
     def prepare_meters(self, device_type):
         """
         Automatically prepare general meters of all devices of specific device type.
