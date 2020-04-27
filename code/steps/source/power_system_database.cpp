@@ -4088,14 +4088,17 @@ void POWER_SYSTEM_DATABASE::check_generator_related_dynamic_data()
         if(tlcmodel!=NULL)
             tlcmodel->check();
 
-        osstream<<"Model entry address of "<<generator->get_device_name()<<":\n"
-                <<"Compensator: "<<compmodel<<"\n"
-                <<"PSS:         "<<pssmodel<<"\n"
-                <<"Exciter:     "<<avrmodel<<"\n"
-                <<"TurbineLCtrl:"<<tlcmodel<<"\n"
-                <<"Turbine:     "<<govmodel<<"\n"
-                <<"Generator:   "<<genmodel;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        if(toolkit->is_detailed_log_enabled())
+        {
+            osstream<<"Model entry address of "<<generator->get_device_name()<<":\n"
+                    <<"Compensator: "<<compmodel<<"\n"
+                    <<"PSS:         "<<pssmodel<<"\n"
+                    <<"Exciter:     "<<avrmodel<<"\n"
+                    <<"TurbineLCtrl:"<<tlcmodel<<"\n"
+                    <<"Turbine:     "<<govmodel<<"\n"
+                    <<"Generator:   "<<genmodel;
+            toolkit->show_information_with_leading_time_stamp(osstream);
+        }
     }
 }
 
@@ -4198,11 +4201,14 @@ void POWER_SYSTEM_DATABASE::check_load_related_dynamic_data()
         if(uflsmodel!=NULL)
             uflsmodel->check();
 
-        osstream<<"Model entry address of "<<load->get_device_name()<<":\n"
-                <<"uvls: "<<uvlsmodel<<"\n"
-                <<"ufls: "<<uflsmodel<<"\n"
-                <<"load: "<<loadmodel;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        if(toolkit->is_detailed_log_enabled())
+        {
+            osstream<<"Model entry address of "<<load->get_device_name()<<":\n"
+                    <<"uvls: "<<uvlsmodel<<"\n"
+                    <<"ufls: "<<uflsmodel<<"\n"
+                    <<"load: "<<loadmodel;
+            toolkit->show_information_with_leading_time_stamp(osstream);
+        }
     }
 }
 

@@ -281,14 +281,17 @@ unsigned int STEPS::get_dynamic_model_database_size_in_bytes()
 
 void STEPS::report_toolkit_memory_usage()
 {
-    ostringstream osstream;
-    osstream<<"Gross report of toolkit memory usage:\n"
-            <<"Power System Database : "<<setw(9)<<power_system_db.get_memory_usage_in_bytes()<<" B\n"
-            <<"Dynamic Model Database: "<<setw(9)<<dynamic_model_db.get_memory_usage_in_bytes()<<" B\n"
-            <<"Powerflow Solver      : "<<setw(9)<<powerflow_solver.get_memory_usage_in_bytes()<<" B\n"
-            <<"Dynamic Simulator     : "<<setw(9)<<dynamic_simulator.get_memory_usage_in_bytes()<<" B\n"
-            <<"Network Matrix        : "<<setw(9)<<network_matrix.get_memory_usage_in_bytes()<<" B";
-    show_information_with_leading_time_stamp(osstream);
+    if(is_detailed_log_enabled())
+    {
+        ostringstream osstream;
+        osstream<<"Gross report of toolkit memory usage:\n"
+                <<"Power System Database : "<<setw(9)<<power_system_db.get_memory_usage_in_bytes()<<" B\n"
+                <<"Dynamic Model Database: "<<setw(9)<<dynamic_model_db.get_memory_usage_in_bytes()<<" B\n"
+                <<"Powerflow Solver      : "<<setw(9)<<powerflow_solver.get_memory_usage_in_bytes()<<" B\n"
+                <<"Dynamic Simulator     : "<<setw(9)<<dynamic_simulator.get_memory_usage_in_bytes()<<" B\n"
+                <<"Network Matrix        : "<<setw(9)<<network_matrix.get_memory_usage_in_bytes()<<" B";
+        show_information_with_leading_time_stamp(osstream);
+    }
 }
 
 void STEPS::clear()
