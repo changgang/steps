@@ -298,7 +298,7 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
 
             if(get_export_jacobian_matrix_step_by_step_logic()==true)
             {
-                jacobian.save_matrix_to_file("Jacobian-NR-Iter-"+num2str(get_iteration_count())+".csv");
+                jacobian_builder->save_jacobian_matrix_to_file("Jacobian-NR-Iter-"+num2str(get_iteration_count())+".csv");
             }
             bus_delta_voltage_angle = S_mismatch/jacobian;
 
@@ -378,11 +378,11 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
                 //continue;
             }
 
-            if(get_export_jacobian_matrix_step_by_step_logic()==true)
+            /*if(get_export_jacobian_matrix_step_by_step_logic()==true)
             {
                 BP.save_matrix_to_file("Jacobian-BP-PQ-Iter-"+num2str(get_iteration_count())+".csv");
                 BQ.save_matrix_to_file("Jacobian-BQ-PQ-Iter-"+num2str(get_iteration_count())+".csv");
-            }
+            }*/
 
             if(max_P_mismatch_in_MW < get_allowed_max_active_power_imbalance_in_MW() and
                max_Q_mismatch_in_MW < get_allowed_max_reactive_power_imbalance_in_MVar())
