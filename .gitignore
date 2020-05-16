@@ -6,5 +6,5 @@ python/*.xlsx
 python/*.txt
 python/*.tex
 code/*.layout
-doc/
+doc/latex/
 .gitignore

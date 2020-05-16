@@ -1,0 +1,2699 @@
+API 1
+Format: set_toolkit_log_file(log_file="", log_file_append_mode=False)
+Description: Set toolkit log file. The default mode is to write to new file.
+Args:
+    (1) log_file: string, target log file name. If no file is set (""), the log will be exported to stdout.
+    (2) log_file_append_mode: boolean, log file append mode. True for writting to new file, False for appending to existing file. Default is False.
+Rets: N/A
+
+API 2
+Format: set_parallel_thread_number(num=1)
+Description: Set parallel thread number for parallel simulation.
+Args:
+    (1) num: integer, parallel thread number. If num=1, serial simulation is used. num should be < number of CPU physical cores.
+Rets: N/A
+
+API 3
+Format: get_parallel_thread_number()
+Description: Set parallel thread number for parallel simulation.
+Args: N/A
+Rets:
+    (1) parallel thread number, integer
+
+API 4
+Format: set_dynamic_model_database_capacity(cap=10000000)
+Description: Set capacity of dynamic model database. If the capacity is not enough, dynamic data cannot be successfully loaded.
+Args:
+    (1) cap: integer, database capacity, in bytes.
+Rets:
+    (1) N/A
+
+API 5
+Format: get_dynamic_model_database_capacity()
+Description: Get capacity of dynamic model database.
+Args: N/A
+Rets:
+    (1) database capacity in bytes, integer
+
+API 6
+Format: clear_toolkit()
+Description: Clear all data in the toolkit.
+Args: N/A
+Rets: N/A
+
+API 7
+Format: get_toolkit_float_data(dataname)
+Description: Get toolkit general float data.
+Args:
+    (1) dataname: String of variable name.
+Rets:
+    (1) Value of the variable. 0 if the variable name is invalid.
+
+API 8
+Format: set_toolkit_float_data(dataname, value)
+Description: Set toolkit general float data.
+Args:
+    (1) dataname: String of variable name.
+    (2) value: Value to set.
+Rets: N/A
+
+API 9
+Format: get_system_base_power_in_MVA()
+Description: Get toolkit system base power.
+Args: N/A
+Rets:
+    (1) System base power in MVA.
+
+API 10
+Format: set_system_base_power_in_MVA(sbase)
+Description: Set toolkit system base power.
+Args:
+    (1) sbase: System base power in MVA.
+Rets: N/A
+
+API 11
+Format: get_toolkit_string_data(dataname)
+Description: Get toolkit general string variable.
+Args:
+    (1) dataname: String of variable name.
+Rets:
+    (1) String to variable.
+
+API 12
+Format: set_toolkit_string_data(dataname, value)
+Description: Set toolkit general string variable.
+Args:
+    (1) dataname: String of variable name.
+    (2) value: String to set.
+Rets: N/A
+
+API 13
+Format: get_case_information()
+Description: Get case information string.
+Args: N/A
+Rets:
+    (1) String of case information.
+
+API 14
+Format: get_case_additional_information()
+Description: Get case additional information string.
+Args: N/A
+Rets:
+    (1) String of case additional information.
+
+API 15
+Format: set_case_information(value)
+Description: Set case information.
+Args:
+    (1) value: String of case information.
+Rets: N/A
+
+API 16
+Format: set_case_additional_information(value)
+Description: Set case additional information string.
+Args:
+    (1) value: String of case additional information.
+Rets: N/A
+
+API 17
+Format: get_toolkit_bool_data(dataname)
+Description: Get toolkit general boolean data.
+Args:
+    (1) dataname: String of variable name.
+Rets:
+    (1) Boolean value of given dataname. If data name is invalid, False is returned.
+
+API 18
+Format: set_toolkit_bool_data(dataname, value)
+Description: Set toolkit general boolean data.
+Args:
+    (1) dataname: String of variable name.
+    (2) value: Boolean value.
+Rets: N/A
+
+API 19
+Format: get_toolkit_detailed_log_logic()
+Description: Get toolkit detailed log logic.
+Args: N/A
+Rets:
+    (1) Boolean value of the detailed log logic. True if detailed log is enabled, False if otherwise.
+
+API 20
+Format: set_toolkit_detailed_log_logic(logic)
+Description: Set toolkit detailed log logic.
+Args:
+    (1) logic: True to enable detailed log, False to disable detailed log.
+Rets: N/A
+
+API 21
+Format: get_allowed_maximum_bus_number()
+Description: Get allowed maximum bus number.
+Args: N/A
+Rets:
+    (1) Allowed maximum bus number.
+
+API 22
+Format: set_allowed_maximum_bus_number(max_bus_number)
+Description: Set allowed maximum bus number. All buses in the database should be less than the give max bus number.
+Args:
+    (1) max_bus_number: Allowed maximum bus number.
+Rets: N/A
+
+API 23
+Format: get_bus_capacity()
+Description: Get capacity for storing buses in database.
+Args: N/A
+Rets:
+    (1) Maximum number of buses that can be stored in the database.
+
+API 24
+Format: get_generator_capacity()
+Description: Get capacity for storing generators in database.
+Args: N/A
+Rets:
+    (1) Maximum number of generators that can be stored in the database.
+
+API 25
+Format: get_wt_generator_capacity()
+Description: Get capacity for storing wind turbine generators in database.
+Args: N/A
+Rets:
+    (1) Maximum number of wind turbine generators that can be stored in the database.
+
+API 26
+Format: get_pv_unit_capacity()
+Description: Get capacity for storing PV units in database.
+Args: N/A
+Rets:
+    (1) Maximum number of PV units that can be stored in the database.
+
+API 27
+Format: get_load_capacity()
+Description: Get capacity for storing loads in database.
+Args: N/A
+Rets:
+    (1) Maximum number of loads that can be stored in the database.
+
+API 28
+Format: get_fixed_shunt_capacity()
+Description: Get capacity for storing fixed shunts in database.
+Args: N/A
+Rets:
+    (1) Maximum number of fixed shunts that can be stored in the database.
+
+API 29
+Format: get_line_capacity()
+Description: Get capacity for storing transmission lines in database.
+Args: N/A
+Rets:
+    (1) Maximum number of transmission lines that can be stored in the database.
+
+API 30
+Format: get_transformer_capacity()
+Description: Get capacity for storing transformers in database.
+Args: N/A
+Rets:
+    (1) Maximum number of transformers that can be stored in the database.
+
+API 31
+Format: get_hvdc_capacity()
+Description: Get capacity for storing HVDC links in database.
+Args: N/A
+Rets:
+    (1) Maximum number of HVDC links that can be stored in the database.
+
+API 32
+Format: get_equivalent_device_capacity()
+Description: Get capacity for storing equivalent devices in database.
+Args: N/A
+Rets:
+    (1) Maximum number of equivalent devices that can be stored in the database.
+
+API 33
+Format: get_energy_storage_capacity()
+Description: Get capacity for storing energy storages in database.
+Args: N/A
+Rets:
+    (1) Maximum number of energy storages that can be stored in the database.
+
+API 34
+Format: get_area_capacity()
+Description: Get capacity for storing areas in database.
+Args: N/A
+Rets:
+    (1) Maximum number of areas that can be stored in the database.
+
+API 35
+Format: get_zone_capacity()
+Description: Get capacity for storing zones in database.
+Args: N/A
+Rets:
+    (1) Maximum number of zones that can be stored in the database.
+
+API 36
+Format: get_owner_capacity()
+Description: Get capacity for storing owners in database.
+Args: N/A
+Rets:
+    (1) Maximum number of owners that can be stored in the database.
+
+API 37
+Format: set_bus_capacity(capacity)
+Description: Set capacity for storing buses in database.
+Args:
+    (1) capacity: Maximum number of buses that can be stored in the database.
+Rets: N/A
+Tips:
+    This function SHOULD be called before adding devices to the database.
+
+API 38
+Format: set_generator_capacity(capacity)
+Description: Set capacity for storing generators in database.
+Args:
+    (1) capacity: Maximum number of generators that can be stored in the database.
+Rets: N/A
+Tips:
+    This function SHOULD be called before adding devices to the database.
+
+API 39
+Format: set_wt_generator_capacity(capacity)
+Description: Set capacity for storing wind turbine generators in database.
+Args:
+    (1) capacity: Maximum number of wind turbine generators that can be stored in the database.
+Rets: N/A
+Tips:
+    This function SHOULD be called before adding devices to the database.
+
+API 40
+Format: set_pv_unit_capacity(capacity)
+Description: Set capacity for storing PV units in database.
+Args:
+    (1) capacity: Maximum number of PV units that can be stored in the database.
+Rets: N/A
+Tips:
+    This function SHOULD be called before adding devices to the database.
+
+API 41
+Format: set_load_capacity(capacity)
+Description: Set capacity for storing loads in database.
+Args:
+    (1) capacity: Maximum number of loads that can be stored in the database.
+Rets: N/A
+Tips:
+    This function SHOULD be called before adding devices to the database.
+
+API 42
+Format: set_fixed_shunt_capacity(capacity)
+Description: Set capacity for storing fixed shunts in database.
+Args:
+    (1) capacity: Maximum number of fixed shunts that can be stored in the database.
+Rets: N/A
+Tips:
+    This function SHOULD be called before adding devices to the database.
+
+API 43
+Format: set_line_capacity(capacity)
+Description: Set capacity for storing transmission lines in database.
+Args:
+    (1) capacity: Maximum number of transmission lines that can be stored in the database.
+Rets: N/A
+Tips:
+    This function SHOULD be called before adding devices to the database.
+
+API 44
+Format: set_transformer_capacity(capacity)
+Description: Set capacity for storing transformers in database.
+Args:
+    (1) capacity: Maximum number of transformers that can be stored in the database.
+Rets: N/A
+Tips:
+    This function SHOULD be called before adding devices to the database.
+
+API 45
+Format: set_hvdc_capacity(capacity)
+Description: Set capacity for storing HVDC links in database.
+Args:
+    (1) capacity: Maximum number of HVDC links that can be stored in the database.
+Rets: N/A
+Tips:
+    This function SHOULD be called before adding devices to the database.
+
+API 46
+Format: set_equivalent_device_capacity(capacity)
+Description: Set capacity for storing equivalent devices in database.
+Args:
+    (1) capacity: Maximum number of equivalent devices that can be stored in the database.
+Rets: N/A
+Tips:
+    This function SHOULD be called before adding devices to the database.
+
+API 47
+Format: set_energy_storage_capacity(capacity)
+Description: Set capacity for storing energy storages in database.
+Args:
+    (1) capacity: Maximum number of energy storages that can be stored in the database.
+Rets: N/A
+Tips:
+    This function SHOULD be called before adding devices to the database.
+
+API 48
+Format: set_area_capacity(capacity)
+Description: Set capacity for storing areas in database.
+Args:
+    (1) capacity: Maximum number of areas that can be stored in the database.
+Rets: N/A
+Tips:
+    This function SHOULD be called before adding devices to the database.
+
+API 49
+Format: set_zone_capacity(capacity)
+Description: Set capacity for storing zones in database.
+Args:
+    (1) capacity: Maximum number of zones that can be stored in the database.
+Rets: N/A
+Tips:
+    This function SHOULD be called before adding devices to the database.
+
+API 50
+Format: set_owner_capacity(capacity)
+Description: Set capacity for storing owners in database.
+Args:
+    (1) capacity: Maximum number of owners that can be stored in the database.
+Rets: N/A
+Tips:
+    This function SHOULD be called before adding devices to the database.
+
+API 51
+Format: load_powerflow_data(file, ftype)
+Description: Load powerflow data from file.
+Args:
+    (1) file: string, source powerflow file name.
+    (2) ftype: string, powerflow data format.
+Rets: N/A
+
+API 52
+Format: save_powerflow_data(file, ftype, export_zero_line=True, export_out_of_service_bus=True, export_mode=0)
+Description: Save powerflow data to file.
+Args:
+    (1) file: string, target powerflow file name.
+    (2) ftype: string, powerflow data format.
+    (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
+    (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
+    (5) export_mode: integer, export mode (0,1,2,3). 0 for exporting data as import, 1 for exporting data ordered by bus number in ascending order, 2 for exporting data ordered by bus name in ascending order, 3 for exporting buses in the order of generator, load, hvdc buses.
+Rets: N/A
+
+API 53
+Format: load_powerflow_result(file, ftype)
+Description: Load powerflow result from file.
+Args:
+    (1) file: string, source powerflow result file name.
+    (2) ftype: string, powerflow result data format.
+Rets: N/A
+
+API 54
+Format: load_dynamic_data(file, ftype)
+Description: Load dynamic data from file.
+Args:
+    (1) file: string, source dynamic data file name.
+    (2) ftype: string, dynamic data format.
+Rets: N/A
+
+API 55
+Format: save_dynamic_data(file, ftype)
+Description: Save dynamic data to file.
+Args:
+    (1) file: string, target dynamic data file name.
+    (2) ftype: string, dynamic data format.
+Rets: N/A
+
+API 56
+Format: check_powerflow_data()
+Description: Check powerflow data. If any inappropriate data is set, report will be sent to log file.
+Args: N/A
+Rets: N/A
+
+API 57
+Format: check_dynamic_data()
+Description: Check dynamic model data. If any inappropriate data is set, report will be sent to log file.
+Args: N/A
+Rets: N/A
+
+API 58
+Format: check_missing_models()
+Description: Check missing models. If any compulsory models are missing, report will be sent to log file.
+Args: N/A
+Rets: N/A
+
+API 59
+Format: check_least_dynamic_time_constants()
+Description: Check the least dynamic time constants. Report of the first least time constants in models will be sent to log file. The dynamic simulation time step should be < one fourth of the least time constant.
+Args: N/A
+Rets: N/A
+
+API 60
+Format: check_network_connectivity(remove_void_islands=False)
+Description: Check network connectivity.
+Args: N/A
+Rets: N/A
+
+API 61
+Format: add_bus(busnumber, busname, basevoltage)
+Description: Add new bus with bus number, bus name, and base voltage.
+Args:
+    (1) busnumber: Bus number.
+    (2) busname: String of bus name.
+    (3) basevoltage: Base voltage in kV.
+Rets: N/A
+
+API 62
+Format: add_generator(generator)
+Description: Add new generator with device id.
+Args:
+    (1) generator: Tuple device id in format of (bus, ickt).
+Rets: N/A
+
+API 63
+Format: add_wt_generator(generator)
+Description: Add new wind turbine generator with device id.
+Args:
+    (1) generator: Tuple device id in format of (bus, ickt).
+Rets: N/A
+
+API 64
+Format: add_pv_unit(unit)
+Description: Add new PV unit with device id.
+Args:
+    (1) unit: Tuple device id in format of (bus, ickt).
+Rets: N/A
+
+API 65
+Format: add_load(load)
+Description: Add new load with device id.
+Args:
+    (1) load: Tuple device id in format of (bus, ickt).
+Rets: N/A
+
+API 66
+Format: add_fixed_shunt(shunt)
+Description: Add new fixed shunt with device id.
+Args:
+    (1) shunt: Tuple device id in format of (bus, ickt).
+Rets: N/A
+
+API 67
+Format: add_line(line)
+Description: Add new transmission line with device id.
+Args:
+    (1) line: Tuple device id in format of (ibus, jbus, ickt).
+Rets: N/A
+
+API 68
+Format: add_hvdc(hvdc)
+Description: Add new HVDC link with device id.
+Args:
+    (1) hvdc: Tuple device id in format of (ibus, jbus, ickt).
+Rets: N/A
+
+API 69
+Format: add_transformer(transformer)
+Description: Add new transformer with device id.
+Args:
+    (1) transformer: Tuple device id in format of (ibus, jbus, ickt) or (ibus, jbus, kbus, ickt).
+Rets: N/A
+Tips:
+    kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
+
+API 70
+Format: add_equivalent_device(device)
+Description: Add new equivalent device with device id.
+Args:
+    (1) device: Tuple device id in format of (bus, ickt).
+Rets: N/A
+
+API 71
+Format: add_energy_storage(storage)
+Description: Add new energy storage with device id.
+Args:
+    (1) storage: Tuple device id in format of (bus, ickt).
+Rets: N/A
+
+API 72
+Format: add_area(areanumber, areaname)
+Description: Add new area with area number and area name.
+Args:
+    (1) areanumber: Area number.
+    (2) areaname: String of area name.
+Rets: N/A
+
+API 73
+Format: add_zone(zonenumber, zonename)
+Description: Add new zone with zone number and zone name.
+Args:
+    (1) zonenumber: Zone number.
+    (2) zonename: String of zone name.
+Rets: N/A
+
+API 74
+Format: add_owner(ownernumber, ownername)
+Description: Add new owner with owner number and owner name.
+Args:
+    (1) ownernumber: Owner number.
+    (2) ownername: String of owner name.
+Rets: N/A
+
+API 75
+Format: remove_bus(busnumber)
+Description: Remove bus of bus number.
+Args:
+    (1) busnumber: Bus number.
+Rets: N/A
+
+API 76
+Format: remove_generator(generator)
+Description: Remove generator with device id.
+Args:
+    (1) generator: Tuple generator device id in format of (bus, ickt).
+Rets: N/A
+
+API 77
+Format: remove_wt_generator(generator)
+Description: Remove wind turbine generator with device id.
+Args:
+    (1) generator: Tuple wind turbine generator device id in format of (bus, ickt).
+Rets: N/A
+
+API 78
+Format: remove_pv_unit(unit)
+Description: Remove PV unit with device id.
+Args:
+    (1) unit: Tuple PV unit device id in format of (bus, ickt).
+Rets: N/A
+
+API 79
+Format: remove_load(load)
+Description: Remove load with device id.
+Args:
+    (1) load: Tuple load device id in format of (bus, ickt).
+Rets: N/A
+
+API 80
+Format: remove_fixed_shunt(shunt)
+Description: Remove fixed shunt with device id.
+Args:
+    (1) shunt: Tuple fixed shunt device id in format of (bus, ickt).
+Rets: N/A
+
+API 81
+Format: remove_line(line)
+Description: Remove transmission line with device id.
+Args:
+    (1) line: Tuple transmission line device id in format of (ibus, jbus, ickt).
+Rets: N/A
+
+API 82
+Format: remove_hvdc(hvdc)
+Description: Remove HVDC link with device id.
+Args:
+    (1) hvdc: Tuple HVDC link device id in format of (ibus, jbus, ickt).
+Rets: N/A
+
+API 83
+Format: remove_transformer(transformer)
+Description: Remove transformer with device id.
+Args:
+    (1) transformer: Tuple transformer device id in format of (ibus, jbus, ickt) or (ibus, jbus, kbus, ickt).
+Rets: N/A
+Tips:
+    kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
+
+API 84
+Format: remove_equivalent_device(device)
+Description: Remove equivalent device with device id.
+Args:
+    (1) device: Tuple equivalent device device id in format of (bus, ickt).
+Rets: N/A
+
+API 85
+Format: remove_energy_storage(storage)
+Description: Remove energy storage with device id.
+Args:
+    (1) storage: Tuple energy storage device id in format of (bus, ickt).
+Rets: N/A
+
+API 86
+Format: remove_area(areanumber)
+Description: Remove area with area number.
+Args:
+    (1) arenumber: area number to remove.
+Rets: N/A
+
+API 87
+Format: remove_zone(zonenumber)
+Description: Remove zone with zone number.
+Args:
+    (1) zonenumber: zone number to remove.
+Rets: N/A
+
+API 88
+Format: remove_owner(ownernumber)
+Description: Remove owner with owner number.
+Args:
+    (1) ownernumber: owner number to remove.
+Rets: N/A
+
+API 89
+Format: change_bus_number(old_number, new_number)
+Description: Change bus number in the database..
+Args:
+    (1) old_number: Old bus number.
+    (2) new_number: New bus number.
+Rets: N/A
+Tips:
+    The new_number should be valid, a.k.a, should be positive and < system allowed maximum bus number.
+
+API 90
+Format: change_bus_number_with_file(file)
+Description: Change bus number in the database with csv file.
+Args:
+    (1) file: Bus pair csv file.
+Rets: N/A
+Tips:
+    The bus pair csv should have no header lines. Each line is a record, and each record should have the following format: "original_number, new_number".
+    It is recommended that there should be no intersection between the sets of new bus numbers and old bus numbers.
+
+API 91
+Format: get_bus_count()
+Description: Return number of buses, including both in-service and out-of-service buses.
+Args: N/A
+Rets:
+    (1) Number of buses.
+
+API 92
+Format: get_generator_count()
+Description: Return number of generators.
+Args: N/A
+Rets:
+    (1) Number of generators.
+
+API 93
+Format: get_wt_generator_count()
+Description: Return number of wind turbine generators.
+Args: N/A
+Rets:
+    (1) Number of wind turbine generators.
+
+API 94
+Format: get_pv_unit_count()
+Description: Return number of PV units.
+Args: N/A
+Rets:
+    (1) Number of PV units.
+
+API 95
+Format: get_load_count()
+Description: Return number of loads.
+Args: N/A
+Rets:
+    (1) Number of loads.
+
+API 96
+Format: get_fixed_shunt_count()
+Description: Return number of fixed shunt.
+Args: N/A
+Rets:
+    (1) Number of fixed shunts.
+
+API 97
+Format: get_line_count()
+Description: Return number of transmission lines.
+Args: N/A
+Rets:
+    (1) Number of transmission lines.
+
+API 98
+Format: get_transformer_count()
+Description: Return number of transformers.
+Args: N/A
+Rets:
+    (1) Number of transformers.
+
+API 99
+Format: get_hvdc_count()
+Description: Return number of HVDC links.
+Args: N/A
+Rets:
+    (1) Number of HVDC links.
+
+API 100
+Format: get_equivalent_device_count()
+Description: Return number of equivalent devices.
+Args: N/A
+Rets:
+    (1) Number of equivalent devices.
+
+API 101
+Format: get_energy_storage_count()
+Description: Return number of energy storages.
+Args: N/A
+Rets:
+    (1) Number of energy storages.
+
+API 102
+Format: get_area_count()
+Description: Return number of areas.
+Args: N/A
+Rets:
+    (1) Number of areas.
+
+API 103
+Format: get_zone_count()
+Description: Return number of zones.
+Args: N/A
+Rets:
+    (1) Number of zones.
+
+API 104
+Format: get_owner_count()
+Description: Return number of owners.
+Args: N/A
+Rets:
+    (1) Number of owners.
+
+API 105
+Format: get_in_service_bus_count()
+Description: Return number of in-service buses.
+Args: N/A
+Rets:
+    (1) Number of in-service buses.
+
+API 106
+Format: update_overshadowed_buses()
+Description: Update overshowed buses.
+Args: N/A
+Rets: N/A
+
+API 107
+Format: set_all_buses_un_overshadowed()
+Description: Set all buses as un-overshowed.
+Args: N/A
+Rets: N/A
+
+API 108
+Format: get_overshadowed_bus_count()
+Description: Get number of overshowed buses. If there are n buses directly connected by zero impedance line or lines, n-1 buses are overshadowed by one of them.
+Args: N/A
+Rets:
+    (1) Number of overshadowed buses.
+Tips:
+    This function calls api to update overshadowed buses first.
+
+API 109
+Format: is_bus_exist(bus)
+Description: Check if given bus exists or not.
+Args:
+    (1) bus: bus number.
+Rets:
+    (1) True if the bus exists, False otherwise.
+
+API 110
+Format: is_generator_exist(generator)
+Description: Check if given generator exists or not.
+Args:
+    (1) generator: tuple of generator device id in format of (bus, ickt).
+Rets:
+    (1) True if the generator exists, False otherwise.
+
+API 111
+Format: is_wt_generator_exist(generator)
+Description: Check if given wind turbine generator exists or not.
+Args:
+    (1) generator: tuple of wind turbine generator device id in format of (bus, ickt).
+Rets:
+    (1) True if the wind turbine generator exists, False otherwise.
+
+API 112
+Format: is_pv_unit_exist(pv_unit)
+Description: Check if given PV unit exists or not.
+Args:
+    (1) pv_unit: tuple of PV unit device id in format of (bus, ickt).
+Rets:
+    (1) True if the PV unit exists, False otherwise.
+
+API 113
+Format: is_load_exist(load)
+Description: Check if given load exists or not.
+Args:
+    (1) load: tuple of load device id in format of (bus, ickt).
+Rets:
+    (1) True if the load exists, False otherwise.
+
+API 114
+Format: is_fixed_shunt_exist(shunt)
+Description: Check if given fixed shunt exists or not.
+Args:
+    (1) shunt: tuple of fixed shunt device id in format of (bus, ickt).
+Rets:
+    (1) True if the fixed shunt exists, False otherwise.
+
+API 115
+Format: is_line_exist(line)
+Description: Check if given transmission line exists or not.
+Args:
+    (1) line: tuple of transmission line device id in format of (ibus, jbus, ickt).
+Rets:
+    (1) True if the transmission line exists, False otherwise.
+
+API 116
+Format: is_transformer_exist(transformer)
+Description: Check if given transformer exists or not.
+Args:
+    (1) transformer: tuple of transformer device id in format of (ibus, jbus, ickt) or (ibus, jbus, kbus, ickt).
+Rets:
+    (1) True if the transformer exists, False otherwise.
+Tips:
+    kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
+
+API 117
+Format: is_hvdc_exist(hvdc)
+Description: Check if given HVDC link exists or not.
+Args:
+    (1) hvdc: tuple of HVDC link device id in format of (ibus, jbus, ickt).
+Rets:
+    (1) True if the HVDC link exists, False otherwise.
+
+API 118
+Format: is_equivalent_device_exist(equivalent_device)
+Description: Check if given equivalent device exists or not.
+Args:
+    (1) equivalent_device: tuple of equivalent device device id in format of (bus, ickt).
+Rets:
+    (1) True if the equivalent device exists, False otherwise.
+
+API 119
+Format: is_energy_storage_exist(energy_storage)
+Description: Check if given energy storage device exists or not.
+Args:
+    (1) energy_storage: tuple of energy storage device id in format of (bus, ickt).
+Rets:
+    (1) True if the energy storage device exists, False otherwise.
+
+API 120
+Format: bus_name2number(name)
+Description: Converter bus name to bus number.
+Args:
+    (1) name: bus name.
+Rets:
+    (1) Bus number. 0 if bus does not exist.
+Tips:
+    If two or more buses have the same bus name, only the first bus is returned.
+
+API 121
+Format: bus_number2name(bus)
+Description: Converter bus number to bus name.
+Args:
+    (1) bus: bus number.
+Rets:
+    (1) String of bus name. Empty string if bus does not exist.
+
+API 122
+Format: get_all_buses()
+Description: Get all buses in the database.
+Args: N/A
+Rets:
+    (1) Tuple of all buses. Empty tuple if no buses in the database.
+
+API 123
+Format: get_buses_with_constraints(vbase_min=0.0, vbase_max=10000000.0, v_min=0.0, v_max=10000000.0, area=0, zone=0, owner=0)
+Description: Get all buses in the database satisfying all constraints.
+Args:
+    (1) vbase_min: minimum base voltage in kV. Returned buses must have base voltage >= vbase_min.
+    (2) vbase_max: maximum base voltage in kV. Returned buses must have base voltage <= vbase_max.
+    (3) v_min: minimum voltage in pu. Returned buses must have pu voltage >= v_min.
+    (4) v_max: maximum voltage in pu. Returned buses must have pu voltage <= v_max.
+    (5) area: area number. Returned buses must be in the area. Ignore the area constraint if area=0.
+    (6) zone: zone number. Returned buses must be in the zone. Ignore the zone constraint if zone=0.
+    (8) owner: owner number. Returned buses must be of the owner. Ignore the owner constraint if owner=0.
+Rets:
+    (1) Tuple of buses satisfying all constraints. Empty tuple if no buses are satisfying the constants.
+
+API 124
+Format: get_all_generators()
+Description: Get all generators in the database.
+Args: N/A
+Rets:
+    (1) Tuple of all generators. Empty tuple if no generators in the database.
+
+API 125
+Format: get_generators_at_bus(bus)
+Description: Get all generators in the database.
+Args: N/A
+Rets:
+    (1) Tuple of all generators. Empty tuple if no generators in the database.
+
+API 126
+Format: get_all_wt_generators()
+Description: Get all wind turbine generators in the database.
+Args: N/A
+Rets:
+    (1) Tuple of all wind turbine generators. Empty tuple if no wind turbine generators in the database.
+
+API 127
+Format: get_wt_generators_at_bus(bus)
+Description: Get all wind turbine generators at given bus.
+Args:
+    (1) bus: bus number
+Rets:
+    (1) Tuple of all wind turbine generators at given bus. Empty tuple if no wind turbine generators at given bus.
+
+API 128
+Format: get_all_pv_units()
+Description: Get all PV units in the database.
+Args: N/A
+Rets:
+    (1) Tuple of all PV units. Empty tuple if no PV units in the database.
+
+API 129
+Format: get_pv_units_at_bus(bus)
+Description: Get all PV units at given bus.
+Args:
+    (1) bus: bus number
+Rets:
+    (1) Tuple of all PV units at given bus. Empty tuple if no PV units at given bus.
+
+API 130
+Format: get_all_energy_storages()
+Description: Get all energy storages in the database.
+Args: N/A
+Rets:
+    (1) Tuple of all energy storages. Empty tuple if no energy storages in the database.
+
+API 131
+Format: get_energy_storages_at_bus(bus)
+Description: Get all energy storages at bus with input bus number.
+Args:
+    (1) bus: bus number
+Rets:
+    (1) Tuple of all energy storages at given bus. Empty tuple if no energy storages at given bus.
+
+API 132
+Format: get_all_loads()
+Description: Get all loads in the database.
+Args: N/A
+Rets:
+    (1) Tuple of all loads. Empty tuple if no loads in the database.
+
+API 133
+Format: get_loads_at_bus(bus)
+Description: Get all loads at bus with input bus number.
+Args:
+    (1) bus: bus number
+Rets:
+    (1) Tuple of all loads at given bus. Empty tuple if no loads at given bus.
+
+API 134
+Format: get_all_fixed_shunts()
+Description: Get all fixed shunts in the database.
+Args: N/A
+Rets:
+    (1) Tuple of all fixed shunt. Empty tuple if no fixed shunts in the database.
+
+API 135
+Format: get_fixed_shunts_at_bus(bus)
+Description: Get all fixed shunts at bus with input bus number.
+Args:
+    (1) bus: bus number
+Rets:
+    (1) Tuple of all fixed shunts at given bus. Empty tuple if no fixed shunts at given bus.
+
+API 136
+Format: get_all_equivalent_devices()
+Description: Get all equivalent devices in the database.
+Args: N/A
+Rets:
+    (1) Tuple of all equivalent devices. Empty tuple if no equivalent devices in the database.
+
+API 137
+Format: get_equivalent_devices_at_bus(bus)
+Description: Get all equivalent devices at bus with input bus number.
+Args:
+    (1) bus: bus number
+Rets:
+    (1) Tuple of all equivalent devices at given bus. Empty tuple if no equivalent devices at given bus.
+
+API 138
+Format: get_all_lines()
+Description: Get all transmission lines in the database.
+Args: N/A
+Rets:
+    (1) Tuple of all transmission lines. Empty tuple if no transmission lines in the database.
+
+API 139
+Format: get_lines_at_bus(bus)
+Description: Get all transmission lines at bus with input bus number.
+Args:
+    (1) bus: bus number
+Rets:
+    (1) Tuple of all transmission lines at given bus. Empty tuple if no transmission lines at given bus.
+
+API 140
+Format: get_lines_between_buses(ibus, jbus)
+Description: Get all transmission lines between ibus and jbus.
+Args:
+    (1) ibus: i-side bus number
+    (2) jbus: j-side bus number
+Rets:
+    (1) Tuple of all transmission lines between given buses. Empty tuple if no transmission lines between given buses.
+Example:
+    get_lines_between_buses(1,2)
+
+API 141
+Format: get_all_transformers()
+Description: Get all transformers in the database.
+Args: N/A
+Rets:
+    (1) Tuple of all transformers. Empty tuple if no transformers in the database.
+
+API 142
+Format: get_transformers_at_bus(bus)
+Description: Get all transformers at bus with input bus number.
+Args:
+    (1) bus: bus number
+Rets:
+    (1) Tuple of all transformers at given bus. Empty tuple if no transformers at given bus.
+
+API 143
+Format: get_transformers_between_buses(ibus, jbus, kbus=0)
+Description: Get all transformers between ibus, jbus, and kbus. If kbus=0, two-winding transformers are returned.
+Args:
+    (1) ibus: i-side bus number
+    (2) jbus: j-side bus number
+    (3) kbus: k-side bus number, 0 for two-winding transformers
+Rets:
+    (1) Tuple of all transformers between given buses. Empty tuple if no transformers between given buses.
+Example:
+    get_transformers_between_buses(1,2)
+    get_transformers_between_buses(1,2,0)
+    get_transformers_between_buses(1,2,3)
+
+API 144
+Format: get_all_hvdcs()
+Description: Get all HVDC links in the database.
+Args: N/A
+Rets:
+    (1) Tuple of all HVDC links. Empty tuple if no HVDC links in the database.
+
+API 145
+Format: get_hvdcs_at_bus(bus)
+Description: Get all HVDC links at bus with input bus number.
+Args:
+    (1) bus: bus number
+Rets:
+    (1) Tuple of all HVDC links at given bus. Empty tuple if no HVDC links at given bus.
+
+API 146
+Format: get_hvdcs_between_buses(ibus, jbus)
+Description: Get all HVDC links between ibus and jbus.
+Args:
+    (1) ibus: i-side bus number
+    (2) jbus: j-side bus number
+Rets:
+    (1) Tuple of all HVDC links between given buses. Empty tuple if no HVDC links between given buses.
+Example:
+    get_hvdcs_between_buses(1,2)
+
+API 147
+Format: get_generators_with_constraints(area=0, zone=0)
+Description: Get all generators satisfying area and zone constraints.
+Args:
+    (1) area: Area number. Retured generators must be in the area. Area constraint is ignored if area=0.
+    (2) zone: Zone number. Retured generators must be in the zone. Zone constraint is ignored if zone=0.
+Rets:
+    (1) Tuple of all generators in given area and zone. Empty tuple if none in given area and zone.
+
+API 148
+Format: get_wt_generators_with_constraints(area=0, zone=0)
+Description: Get all wind trubine generators satisfying area and zone constraints.
+Args:
+    (1) area: Area number. Retured wind turbine generators must be in the area. Area constraint is ignored if area=0.
+    (2) zone: Zone number. Retured wind turbine generators must be in the zone. Zone constraint is ignored if zone=0.
+Rets:
+    (1) Tuple of all wind turbine generators in given area and zone. Empty tuple if none in given area and zone.
+
+API 149
+Format: get_pv_units_with_constraints(area=0, zone=0)
+Description: Get all PV units satisfying area and zone constraints.
+Args:
+    (1) area: Area number. Retured PV units must be in the area. Area constraint is ignored if area=0.
+    (2) zone: Zone number. Retured PV units must be in the zone. Zone constraint is ignored if zone=0.
+Rets:
+    (1) Tuple of all PV units in given area and zone. Empty tuple if none in given area and zone.
+
+API 150
+Format: get_loads_with_constraints(area=0, zone=0)
+Description: Get all loads satisfying area and zone constraints.
+Args:
+    (1) area: Area number. Retured loads must be in the area. Area constraint is ignored if area=0.
+    (2) zone: Zone number. Retured loads must be in the zone. Zone constraint is ignored if zone=0.
+Rets:
+    (1) Tuple of all loads in given area and zone. Empty tuple if none in given area and zone.
+
+API 151
+Format: get_all_areas()
+Description: Get all areas in the database.
+Args: N/A
+Rets:
+    (1) Tuple of all areas number. Empty tuple if no areas in the database.
+
+API 152
+Format: get_all_zones()
+Description: Get all zones in the database.
+Args: N/A
+Rets:
+    (1) Tuple of all zones number. Empty tuple if no zones in the database.
+
+API 153
+Format: get_all_owners()
+Description: Get all owners in the database.
+Args: N/A
+Rets:
+    (1) Tuple of all owners number. Empty tuple if no owners in the database.
+
+API 154
+Format: get_bus_data(bus, par_type, par_name)
+Description: Get bus data.
+Args:
+    (1) bus: bus number.
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter.
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+
+API 155
+Format: get_generator_data(generator, par_type, par_name)
+Description: Get generator data.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt)
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter.
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+
+API 156
+Format: get_wt_generator_data(wt_generator, par_type, par_name)
+Description: Get wind turbine generator data.
+Args:
+    (1) wt_generator: Wind turbine generator device id in format of (bus, ickt)
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter.
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+
+API 157
+Format: get_pv_unit_data(pv_unit, par_type, par_name)
+Description: Get PV unit data.
+Args:
+    (1) pv_unit: PV unit device id in format of (bus, ickt)
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter.
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+
+API 158
+Format: get_energy_storage_data(energy_storage, par_type, par_name)
+Description: Get energy storage data.
+Args:
+    (1) energy_storage: Energy storage device id in format of (bus, ickt)
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter.
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+
+API 159
+Format: get_load_data(load, par_type, par_name)
+Description: Get load data.
+Args:
+    (1) load: Load device id in format of (bus, ickt)
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter.
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+
+API 160
+Format: get_fixed_shunt_data(fixed_shunt, par_type, par_name)
+Description: Get fixed shunt data.
+Args:
+    (1) fixed_shunt: Fixed shunt device id in format of (bus, ickt)
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter.
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+
+API 161
+Format: get_equivalent_device_data(equivalent_device, par_type, par_name)
+Description: Get equivalent device data.
+Args:
+    (1) equivalent_device: Equivalent device device id in format of (bus, ickt)
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter.
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+
+API 162
+Format: get_line_data(line, par_type, par_name)
+Description: Get tranmission line data.
+Args:
+    (1) line: Transmission line device id in format of (ibus, jbus, ickt)
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter.
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+
+API 163
+Format: get_transformer_data(transformer, par_type, side, par_name)
+Description: Get transformer data.
+Args:
+    (1) transformer: Transformer device id in format of (ibus, jbus, ickt) or (ibus, jbus, kbus, ickt).
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) side: String of side. One of {"PRIMARY", "SECONDARY", "TERTIARY", "TRANSFORMER"}
+    (4) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter.
+Tips:
+    kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+
+API 164
+Format: get_hvdc_data(hvdc, par_type, side, par_name)
+Description: Get HVDC link data.
+Args:
+    (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt)
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) side: String of side. One of {"RECTIFIER", "INVERTER", "HVDC"}
+    (4) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter.
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+
+API 165
+Format: get_area_data(area, par_type, par_name)
+Description: Get area data.
+Args:
+    (1) area: Area number.
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter.
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+
+API 166
+Format: get_zone_data(zone, par_type, par_name)
+Description: Get zone data.
+Args:
+    (1) zone: Zone number.
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter.
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+
+API 167
+Format: get_owner_data(owner, par_type, par_name)
+Description: Get owner data.
+Args:
+    (1) owner: Owner number.
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter.
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+
+API 168
+Format: set_bus_data(bus, par_type, par_name, value)
+Description: Set bus data.
+Args:
+    (1) bus: bus number.
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+    (4) value: Value of parameter.
+Rets: N/A
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+    The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+
+API 169
+Format: set_generator_data(generator, par_type, par_name, value)
+Description: Set generator data.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+    (4) value: Value of parameter.
+Rets: N/A
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+    The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+
+API 170
+Format: set_wt_generator_data(wt_generator, par_type, par_name, value)
+Description: Set wind turbine generator data.
+Args:
+    (1) wt_generator: Wind turbine generator device id in format of (bus, ickt).
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+    (4) value: Value of parameter.
+Rets: N/A
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+    The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+
+API 171
+Format: set_pv_unit_data(pv_unit, par_type, par_name, value)
+Description: Set PV unit data.
+Args:
+    (1) pv_unit: PV unit device id in format of (bus, ickt).
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+    (4) value: Value of parameter.
+Rets: N/A
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+    The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+
+API 172
+Format: set_energy_storage_data(energy_storage, par_type, par_name, value)
+Description: Set energy storage data.
+Args:
+    (1) energy_storage: Energy storage device id in format of (bus, ickt).
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+    (4) value: Value of parameter.
+Rets: N/A
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+    The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+
+API 173
+Format: set_generator_power(generator, s)
+Description: Set generator power.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+    (2) s: Complex power generation in MVA.
+Rets: N/A
+Tips: N/A
+Example:
+    set_generator_power((1,"#1"), 100+20j)
+
+API 174
+Format: set_wt_generator_power(wt_generator, s)
+Description: Set wt generator power.
+Args:
+    (1) wt_generator: WT generator device id in format of (bus, ickt).
+    (2) s: Complex power generation in MVA.
+Rets: N/A
+Tips: N/A
+Example:
+    set_wt_generator_power((1,"#1"), 100+20j)
+
+API 175
+Format: set_pv_unit_power(pv_unit, s)
+Description: Set pv unit power.
+Args:
+    (1) pv_unit: PV unit device id in format of (bus, ickt).
+    (2) s: Complex power generation in MVA.
+Rets: N/A
+Tips: N/A
+Example:
+    set_pv_unit_power((1,"#1"), 100+20j)
+
+API 176
+Format: set_energy_storage_power(energy_storage, s)
+Description: Set energy storage power.
+Args:
+    (1) energy_storage: Energy storage device id in format of (bus, ickt).
+    (2) s: Complex power generation in MVA.
+Rets: N/A
+Tips: N/A
+Example:
+    set_energy_storage_power((1,"#1"), 100+20j)
+
+API 177
+Format: set_load_data(load, par_type, par_name, value)
+Description: Set load data.
+Args:
+    (1) load: Load device id in format of (bus, ickt).
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+    (4) value: Value of parameter.
+Rets: N/A
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+    The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+
+API 178
+Format: set_load_power(load, sp=None, si=None, sz=None)
+Description: Set load power.
+Args:
+    (1) load: Load device id in format of (bus, ickt).
+    (2) sp: Complex constant power load in MVA.
+    (3) si: Complex constant current load in MVA.
+    (4) sz: Complex constant impedance load in MVA.
+Rets: N/A
+Tips:
+    If the load component is None, the specific component is ignored.
+Example:
+    set_load_power((1,"#1"), 100+20j) # set constant power part only
+    set_load_power((1,"#1"), sz = 60+10j) # set constant impedance part only
+
+API 179
+Format: set_fixed_shunt_data(fixed_shunt, par_type, par_name, value)
+Description: Set fixed shunt data.
+Args:
+    (1) fixed_shunt: Fixed shunt device id in format of (bus, ickt).
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+    (4) value: Value of parameter.
+Rets: N/A
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+    The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+
+API 180
+Format: set_equivalent_device_data(equivalent_device, par_type, par_name, value)
+Description: Set equivalent device data.
+Args:
+    (1) equivalent_device: Equivalent device device id in format of (bus, ickt).
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+    (4) value: Value of parameter.
+Rets: N/A
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+    The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+
+API 181
+Format: set_line_data(line, par_type, par_name, value)
+Description: Set transmission line data.
+Args:
+    (1) line: Transmission line device id in format of (ibus, jbus, ickt).
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+    (4) value: Value of parameter.
+Rets: N/A
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+    The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+
+API 182
+Format: set_transformer_data(transformer, par_type, side, par_name, value)
+Description: Set transformer data.
+Args:
+    (1) transformer: Transformer device id in format of (ibus, jbus, ickt) or (ibus, jbus, kbus, ickt).
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) side: String of side. One of {"PRIMARY", "SECONDARY", "TERTIARY", "TRANSFORMER"}
+    (4) par_name: String of parameter name.
+    (5) value: Value of parameter.
+Rets: N/A
+Tips:
+    kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+    The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+
+API 183
+Format: set_hvdc_data(hvdc, par_type, side, par_name, value)
+Description: Set HVDC link data.
+Args:
+    (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) side: String of side. One of {"RECTIFIER", "INVERTER", "HVDC"}
+    (4) par_name: String of parameter name.
+    (5) value: Value of parameter.
+Rets: N/A
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+    The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+
+API 184
+Format: set_hvdc_power(hvdc, p)
+Description: Set HVDC link power command.
+Args:
+    (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
+    (2) p: power command in MW.
+Rets: N/A
+Example:
+    set_hvdc_power((1,2,"DC1"), 2000)
+
+API 185
+Format: set_area_data(area, par_type, par_name, value)
+Description: Set area data.
+Args:
+    (1) ownew: Area number.
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+    (4) value: Value of parameter.
+Rets: N/A
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+    The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+
+API 186
+Format: set_zone_data(zone, par_type, par_name, value)
+Description: Set zone data.
+Args:
+    (1) ownew: Zone number.
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+    (4) value: Value of parameter.
+Rets: N/A
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+    The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+
+API 187
+Format: set_owner_data(owner, par_type, par_name, value)
+Description: Set owner data.
+Args:
+    (1) ownew: Owner number.
+    (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (3) par_name: String of parameter name.
+    (4) value: Value of parameter.
+Rets: N/A
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+    The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+
+API 188
+Format: set_dynamic_model(data, file_type)
+Description: Set dynamic model from string.
+Args:
+    (1) data: String of model data.
+    (2) file_type: Model data type.
+Rets: N/A
+
+API 189
+Format: get_generator_related_model_name(generator, model_type)
+Description: Get generator related model name.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+    (2) model_type: String of model type.
+Rets:
+    (1) String of model name.
+Tips:
+    If model type is not supported, empty string is returned.
+
+API 190
+Format: get_generator_related_model_data(generator, model_type, par_name)
+Description: Get generator related model data.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+    (2) model_type: String of model type.
+    (3) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter
+Tips:
+    If model type or parameter name is not supported, 0.0 is returned.
+
+API 191
+Format: set_generator_related_model_data(generator, model_type, par_name, value)
+Description: Set generator related model data.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+    (2) model_type: String of model type.
+    (3) par_name: String of parameter name.
+    (4) value: Value of parameter.
+Rets: N/A
+Tips:
+    If model type or parameter name is not supported, nothing will be changed.
+    If value is not a number, function may malfunction and package may exit with error.
+
+API 192
+Format: get_generator_related_model_parameter_pair(generator, model_type)
+Description: Get generator related model parameter pair.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+    (2) model_type: String of model type.
+Rets:
+    (1) Tuple of parameter name and value pairs. Each parameter name and value pair is in format of (string of parameter name, value of parameter).
+Tips:
+    If model type is not supported, empty tuple is returned.
+
+API 193
+Format: get_wt_generator_related_model_name(generator, model_type)
+Description: Get wind turbine generator related model name.
+Args:
+    (1) generator: Wind turbine generator device id in format of (bus, ickt).
+    (2) model_type: String of model type.
+Rets:
+    (1) String of model name.
+Tips:
+    If model type is not supported, empty string is returned.
+
+API 194
+Format: get_wt_generator_related_model_data(generator, model_type, par_name)
+Description: Get wind turbine generator related model data.
+Args:
+    (1) generator: Wind turbine generator device id in format of (bus, ickt).
+    (2) model_type: String of model type.
+    (3) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter
+Tips:
+    If model type or parameter name is not supported, 0.0 is returned.
+
+API 195
+Format: set_wt_generator_related_model_data(generator, model_type, par_name, value)
+Description: Set wind turbine generator related model data.
+Args:
+    (1) generator: Wind turbine generator device id in format of (bus, ickt).
+    (2) model_type: String of model type.
+    (3) par_name: String of parameter name.
+    (4) value: Value of parameter.
+Rets: N/A
+Tips:
+    If model type or parameter name is not supported, nothing will be changed.
+    If value is not a number, function may malfunction and package may exit with error.
+
+API 196
+Format: get_wt_generator_related_model_parameter_pair(generator, model_type)
+Description: Get wind turbine generator related model parameter pair.
+Args:
+    (1) generator: Wind turbine generator device id in format of (bus, ickt).
+    (2) model_type: String of model type.
+Rets:
+    (1) Tuple of parameter name and value pairs. Each parameter name and value pair is in format of (string of parameter name, value of parameter).
+Tips:
+    If model type is not supported, empty tuple is returned.
+
+API 197
+Format: get_pv_unit_related_model_name(pv_unit, model_type)
+Description: Get PV unit related model name.
+Args:
+    (1) pv_unit: PV unit device id in format of (bus, ickt).
+    (2) model_type: String of model type.
+Rets:
+    (1) String of model name.
+Tips:
+    If model type is not supported, empty string is returned.
+
+API 198
+Format: get_pv_unit_related_model_data(pv_unit, model_type, par_name)
+Description: Get PV unit related model data.
+Args:
+    (1) pv_unit: PV unit device id in format of (bus, ickt).
+    (2) model_type: String of model type.
+    (3) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter
+Tips:
+    If model type or parameter name is not supported, 0.0 is returned.
+
+API 199
+Format: set_pv_unit_related_model_data(pv_unit, model_type, par_name, value)
+Description: Set PV unit related model data.
+Args:
+    (1) pv_unit: PV unit device id in format of (bus, ickt).
+    (2) model_type: String of model type.
+    (3) par_name: String of parameter name.
+    (4) value: Value of parameter.
+Rets: N/A
+Tips:
+    If model type or parameter name is not supported, nothing will be changed.
+    If value is not a number, function may malfunction and package may exit with error.
+
+API 200
+Format: get_pv_unit_related_model_parameter_pair(pv_unit, model_type)
+Description: Get pv unit related model parameter pair.
+Args:
+    (1) pv_unit: PV unit device id in format of (bus, ickt).
+    (2) model_type: String of model type.
+Rets:
+    (1) Tuple of parameter name and value pairs. Each parameter name and value pair is in format of (string of parameter name, value of parameter).
+Tips:
+    If model type is not supported, empty tuple is returned.
+
+API 201
+Format: get_load_related_model_name(load, model_type)
+Description: Get load related model name.
+Args:
+    (1) load: Load device id in format of (bus, ickt).
+    (2) model_type: String of model type.
+Rets:
+    (1) String of model name.
+Tips:
+    If model type is not supported, empty string is returned.
+
+API 202
+Format: get_load_related_model_data(load, model_type, par_name)
+Description: Get load related model data.
+Args:
+    (1) load: Load device id in format of (bus, ickt).
+    (2) model_type: String of model type.
+    (3) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter
+Tips:
+    If model type or parameter name is not supported, 0.0 is returned.
+
+API 203
+Format: set_load_related_model_data(load, model_type, par_name, value)
+Description: Set load related model data.
+Args:
+    (1) load: Load device id in format of (bus, ickt).
+    (2) model_type: String of model type.
+    (3) par_name: String of parameter name.
+    (4) value: Value of parameter.
+Rets: N/A
+Tips:
+    If model type or parameter name is not supported, nothing will be changed.
+    If value is not a number, function may malfunction and package may exit with error.
+
+API 204
+Format: get_load_related_model_parameter_pair(load, model_type)
+Description: Get load related model parameter pair.
+Args:
+    (1) load: Load device id in format of (bus, ickt).
+    (2) model_type: String of model type.
+Rets:
+    (1) Tuple of parameter name and value pairs. Each parameter name and value pair is in format of (string of parameter name, value of parameter).
+Tips:
+    If model type is not supported, empty tuple is returned.
+
+API 205
+Format: get_line_related_model_name(line, model_type)
+Description: Get transmission line related model name.
+Args:
+    (1) line: Transmission line device id in format of (ibus, jbus, ickt).
+    (2) model_type: String of model type.
+Rets:
+    (1) String of model name.
+Tips:
+    If model type is not supported, empty string is returned.
+
+API 206
+Format: get_line_related_model_data(line, model_type, par_name)
+Description: Get transmission line related model data.
+Args:
+    (1) line: Transmission line device id in format of (ibus, jbus, ickt).
+    (2) model_type: String of model type.
+    (3) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter
+Tips:
+    If model type or parameter name is not supported, 0.0 is returned.
+
+API 207
+Format: set_line_related_model_data(line, model_type, par_name, value)
+Description: Set transmission line related model data.
+Args:
+    (1) line: Transmission line device id in format of (ibus, jbus, ickt).
+    (2) model_type: String of model type.
+    (3) par_name: String of parameter name.
+    (4) value: Value of parameter.
+Rets: N/A
+Tips:
+    If model type or parameter name is not supported, nothing will be changed.
+    If value is not a number, function may malfunction and package may exit with error.
+
+API 208
+Format: get_line_related_model_parameter_pair(line, model_type)
+Description: Get transmission line related model parameter pair.
+Args:
+    (1) line: Transmission line device id in format of (ibus, jbus, ickt).
+    (2) model_type: String of model type.
+Rets:
+    (1) Tuple of parameter name and value pairs. Each parameter name and value pair is in format of (string of parameter name, value of parameter).
+Tips:
+    If model type is not supported, empty tuple is returned.
+
+API 209
+Format: get_hvdc_related_model_name(hvdc, model_type)
+Description: Get HVDC link related model name.
+Args:
+    (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
+    (2) model_type: String of model type.
+Rets:
+    (1) String of model name.
+Tips:
+    If model type is not supported, empty string is returned.
+
+API 210
+Format: get_hvdc_related_model_data(hvdc, model_type, par_name)
+Description: Get HVDC link related model data.
+Args:
+    (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
+    (2) model_type: String of model type.
+    (3) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter
+Tips:
+    If model type or parameter name is not supported, 0.0 is returned.
+
+API 211
+Format: set_hvdc_related_model_data(hvdc, model_type, par_name, value)
+Description: Set HVDC linke related model data.
+Args:
+    (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
+    (2) model_type: String of model type.
+    (3) par_name: String of parameter name.
+    (4) value: Value of parameter.
+Rets: N/A
+Tips:
+    If model type or parameter name is not supported, nothing will be changed.
+    If value is not a number, function may malfunction and package may exit with error.
+
+API 212
+Format: get_hvdc_related_model_parameter_pair(hvdc, model_type)
+Description: Get HVDC link related model parameter pair.
+Args:
+    (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
+    (2) model_type: String of model type.
+Rets:
+    (1) Tuple of parameter name and value pairs. Each parameter name and value pair is in format of (string of parameter name, value of parameter).
+Tips:
+    If model type is not supported, empty tuple is returned.
+
+API 213
+Format: get_powerflow_solver_parameter(par_type, par_name)
+Description: Get powerflow solver configuration parameter.
+Args:
+    (1) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (2) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter.
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+
+API 214
+Format: set_powerflow_solver_parameter(par_type, par_name, value)
+Description: Set powerflow solver configuration parameter.
+Args:
+    (1) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (2) par_name: String of parameter name.
+    (3) value: Value of parameter.
+Rets: N/A
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be changed.
+
+API 215
+Format: show_powerflow_solver_configuration()
+Description: Show powerflow solver configuration. Report is sent to log.
+Args: N/A
+Rets: N/A
+
+API 216
+Format: solve_powerflow(method)
+Description: Solve powerflow.
+Args:
+    (1) method: String of powerflow solution method. Should be one of {"NR", "PQ"}
+Rets: N/A
+
+API 217
+Format: is_powerflow_converged()
+Description: Check if powerflow is converged or not.
+Args: N/A
+Rets:
+    (1) Boolean value. True for converged, False for not converged.
+
+API 218
+Format: get_powerflow_loss()
+Description: Get active power loss of solved powerflow.
+Args: N/A
+Rets:
+    (1) System power loss in MW.
+Tips:
+    If powerflow is not converged, the return result is meaningless.
+
+API 219
+Format: show_powerflow_result()
+Description: Show powerflow result in log.
+Args: N/A
+Rets: N/A
+
+API 220
+Format: save_powerflow_result(file)
+Description: Save powerflow result to file.
+Args:
+    (1) file: String of target file name.
+Rets: N/A
+Tips:
+    The result exported by save_powerflow_result() is briefer than that exported by save_extended_powerflow_result().
+
+API 221
+Format: save_extended_powerflow_result(file)
+Description: Save extended powerflow result to file.
+Args:
+    (1) file: String of target file name.
+Rets: N/A
+Tips:
+    The result exported by save_extended_powerflow_result() is more detailed than that exported by save_powerflow_result().
+
+API 222
+Format: save_jacobian_matrix(file)
+Description: Save jacobian matrix of powerflow solver to file.
+Args:
+    (1) file: String of target file name.
+Rets: N/A
+
+API 223
+Format: build_network_Y_matrix()
+Description: Build newwork complex Y matrix for powerflow solution.
+Args: N/A
+Rets: N/A
+
+API 224
+Format: build_decoupled_network_B_matrix()
+Description: Build newwork real B' and B" matrix for decoupled powerflow solution.
+Args: N/A
+Rets: N/A
+
+API 225
+Format: build_dc_network_B_matrix()
+Description: Build newwork real B matrix for DC powerflow solution.
+Args: N/A
+Rets: N/A
+Tips:
+    DC powerflow solution is not supported.
+
+API 226
+Format: build_dynamic_network_Y_matrix()
+Description: Build newwork complex Y matrix for dynamic simulation.
+Args: N/A
+Rets: N/A
+Tips:
+    The faults and source impedance are included in the Y matrix.
+
+API 227
+Format: build_network_Z_matrix()
+Description: Build newwork complex Z matrix.
+Args: N/A
+Rets: N/A
+
+API 228
+Format: save_network_Y_matrix(file)
+Description: Save newwork complex Y matrix to file.
+Args:
+    (1) file: String of target file name.
+Rets: N/A
+
+API 229
+Format: save_decoupled_network_B_matrix(file)
+Description: Save newwork decoupled real B' and B" matrix to file.
+Args:
+    (1) file: String of target file name.
+Rets: N/A
+
+API 230
+Format: save_dc_network_B_matrix(file)
+Description: Save newwork real DC B matrix to file.
+Args:
+    (1) file: String of target file name.
+Rets: N/A
+
+API 231
+Format: save_dynamic_network_Y_matrix(file)
+Description: Save newwork dynamic complex Y matrix to file.
+Args:
+    (1) file: String of target file name.
+Rets: N/A
+
+API 232
+Format: save_network_Z_matrix(file)
+Description: Save newwork complex Z matrix to file.
+Args:
+    (1) file: String of target file name.
+Rets: N/A
+
+API 233
+Format: get_dynamic_simulator_parameter(par_type, par_name)
+Description: Get dynamic simulator configuration parameter.
+Args:
+    (1) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (2) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter.
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+
+API 234
+Format: set_dynamic_simulator_parameter(par_type, par_name, value)
+Description: Set dynamic simulator configuration parameter.
+Args:
+    (1) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (2) par_name: String of parameter name.
+    (3) value: Value of parameter.
+Rets: N/A
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be changed
+
+API 235
+Format: get_dynamic_simulator_output_file()
+Description: Get dynamic simulator output file name.
+Args: N/A
+Rets:
+    (1) String of output file name.
+
+API 236
+Format: set_dynamic_simulator_output_file(file)
+Description: Set dynamic simulator output file name.
+Args:
+    (1) file: String of output file name.
+Rets: N/A
+
+API 237
+Format: get_dynamic_simulation_time_step()
+Description: Get dynamic simulation time step.
+Args: N/A
+Rets:
+    (1) Value of dynamic simulation time step in seconds.
+
+API 238
+Format: set_dynamic_simulation_time_step(step)
+Description: Set dynamic simulation time step.
+Args:
+    (1) step: Dynamic simulation time step in seconds.
+Rets: N/A
+Tips:
+    The time step MUST be less than 1/2 of the least time constant of all dynamic models. It is general practice to set time step to 1/4 of the least time constant.
+    Run check_least_dynamic_time_constants() to report the least time constants.
+
+API 239
+Format: show_dynamic_simulation_configuration()
+Description: Show dynamic simulation configuration. Report is sent to log.
+Args: N/A
+Rets: N/A
+
+API 240
+Format: get_dynamic_simulation_time()
+Description: Get current dynamic simulation time.
+Args: N/A
+Rets:
+    (1) Value of dynamic simulation time in seconds.
+Tips:
+    In STEPS, the minimum simulation time is -2*simulation time step.
+
+API 241
+Format: clear_meters()
+Description: Clear all meters in the current simulator.
+Args: N/A
+Rets: N/A
+Tips:
+    If STEPS() is created with is_default=True, this api can help to clear all meters to avoid adding duplicate meters.
+
+API 242
+Format: prepare_meters(device_type)
+Description: Automatically prepare general meters of all devices of specific device type.
+Args:
+    (1) device_type: String of device type.
+Rets: N/A
+Tips:
+    The device type should be one of {"ALL", "BUS", "GENERATOR", "WT GENERATOR", "PV UNIT", "ENERGY STORAGE", "LOAD", "LINE", "TRANSFORMER", "HVDC", "EQUIVALENT DEVICE"}.
+    If "ALL" is set, all general meters of {"BUS", "GENERATOR", "WT GENERATOR", "PV UNIT", "ENERGY STORAGE", "LOAD", "LINE", "TRANSFORMER", "HVDC", "EQUIVALENT DEVICE"} are set.
+    For the supported general meters, see implementation of the following functions of STEPS:
+DYNAMIC_SIMULATOR::prepare_bus_related_meters()
+DYNAMIC_SIMULATOR::prepare_generator_related_meters()
+DYNAMIC_SIMULATOR::prepare_wt_generator_related_meters()
+DYNAMIC_SIMULATOR::prepare_pv_unit_related_meters()
+DYNAMIC_SIMULATOR::prepare_energy_storage_related_meters()
+DYNAMIC_SIMULATOR::prepare_load_related_meters()
+DYNAMIC_SIMULATOR::prepare_line_related_meters()
+DYNAMIC_SIMULATOR::prepare_transformer_related_meters()
+DYNAMIC_SIMULATOR::prepare_hvdc_related_meters()
+DYNAMIC_SIMULATOR::prepare_equivalent_device_related_meters()
+
+API 243
+Format: prepare_bus_meter(bus, meter_type)
+Description: Prepare specific bus meter.
+Args:
+    (1) bus: Bus number.
+    (2) meter_type: String of bus type.
+Rets: N/A
+Tips:
+    For the supported meter types, see implementation of the following function of STEPS:
+DYNAMIC_SIMULATOR::prepare_bus_related_meter()
+
+API 244
+Format: prepare_generator_meter(generator, meter_type, var_name="")
+Description: Prepare specific generator meter.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+    (2) meter_type: String of bus type.
+    (3) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
+Rets: N/A
+Tips:
+    For the supported meter types, see implementation of the following function of STEPS:
+DYNAMIC_SIMULATOR::prepare_generator_related_meter()
+
+API 245
+Format: prepare_wt_generator_meter(generator, meter_type, var_name="")
+Description: Prepare specific wind turbine generator meter.
+Args:
+    (1) generator: Wind turbine generator device id in format of (bus, ickt).
+    (2) meter_type: String of bus type.
+    (3) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
+Rets: N/A
+Tips:
+    For the supported meter types, see implementation of the following function of STEPS:
+DYNAMIC_SIMULATOR::prepare_wt_generator_related_meter()
+
+API 246
+Format: prepare_pv_unit_meter(pvunit, meter_type, var_name="")
+Description: Prepare specific PV unit meter.
+Args:
+    (1) pvunit: PV unit device id in format of (bus, ickt).
+    (2) meter_type: String of bus type.
+    (3) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
+Rets: N/A
+Tips:
+    For the supported meter types, see implementation of the following function of STEPS:
+DYNAMIC_SIMULATOR::prepare_pv_unit_related_meter()
+
+API 247
+Format: prepare_energy_storage_meter(estorage, meter_type, var_name="")
+Description: Prepare specific energy storage meter.
+Args:
+    (1) estorage: Energy storage device id in format of (bus, ickt).
+    (2) meter_type: String of bus type.
+    (3) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
+Rets: N/A
+Tips:
+    For the supported meter types, see implementation of the following function of STEPS:
+DYNAMIC_SIMULATOR::prepare_energy_storage_related_meter()
+
+API 248
+Format: prepare_load_meter(load, meter_type, var_name="")
+Description: Prepare specific load meter.
+Args:
+    (1) load: Load device id in format of (bus, ickt).
+    (2) meter_type: String of bus type.
+    (3) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
+Rets: N/A
+Tips:
+    For the supported meter types, see implementation of the following function of STEPS:
+DYNAMIC_SIMULATOR::prepare_load_related_meter()
+
+API 249
+Format: prepare_line_meter(line, meter_type, side, var_name="")
+Description: Prepare specific transmission line meter.
+Args:
+    (1) line: Transmission line device id in format of (ibus, jbus, ickt).
+    (2) meter_type: String of bus type.
+    (3) side: String of line side. One of {"SENDING", "RECEIVING"} or {"S", "R"}.
+    (4) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
+Rets: N/A
+Tips:
+    For the supported meter types, see implementation of the following function of STEPS:
+DYNAMIC_SIMULATOR::prepare_line_related_meter()
+
+API 250
+Format: prepare_transformer_meter(trans, meter_type, side, var_name="")
+Description: Prepare specific transformer meter.
+Args:
+    (1) trans: Transformer device id in format of (ibus, jbus, ickt) or (ibus, jbus, kbus, ickt).
+    (2) meter_type: String of bus type.
+    (3) side: String of transformer side. One of {"PRIMARY", "SECONDARY", "TERTIARY"} or {"P", "S", "T"}.
+    (4) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
+Rets: N/A
+Tips:
+    kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
+    For the supported meter types, see implementation of the following function of STEPS:
+DYNAMIC_SIMULATOR::prepare_transformer_related_meter()
+
+API 251
+Format: prepare_hvdc_meter(hvdc, meter_type, side, var_name="")
+Description: Prepare specific HVDC link meter.
+Args:
+    (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
+    (2) meter_type: String of bus type.
+    (3) side: String of converter side. One of {"RECTIFIER", "INVERTER"} or {"R", "I"}.
+    (4) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
+Rets: N/A
+Tips:
+    For the supported meter types, see implementation of the following function of STEPS:
+DYNAMIC_SIMULATOR::prepare_hvdc_related_meter()
+
+API 252
+Format: prepare_equivalent_device_meter(edevice, meter_type, var_name="")
+Description: Prepare specific equivalent device meter.
+Args:
+    (1) edevice: Equivalent device device id in format of (bus, ickt).
+    (2) meter_type: String of bus type.
+    (3) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
+Rets: N/A
+Tips:
+    For the supported meter types, see implementation of the following function of STEPS:
+DYNAMIC_SIMULATOR::prepare_equivalent_device_related_meter()
+
+API 253
+Format: start_dynamic_simulation()
+Description: Start dynamic simulation. Dynamic initialization is performed.
+Args: N/A
+Rets: N/A
+
+API 254
+Format: stop_dynamic_simulation()
+Description: Stop dynamic simulation. No further dynamic simulation should be performed once dynamic simulation is stopped.
+Args: N/A
+Rets: N/A
+
+API 255
+Format: run_dynamic_simulation_to_time(time)
+Description: Run dynamic simulation to time.
+Args:
+    (1) time: Time in second.
+Rets: N/A
+Tips:
+    The input time is the time when the dynamic simulation is paused. For example, if the current dynamic simulation time returned from get_dynamic_simulation_time() is 1.0s, and the returned time of get_dynamic_simulation_time() will become 1.5s after run_dynamic_simulation_to_time(1.5) is called.
+
+API 256
+Format: run_a_step()
+Description: Run a dynamic simulation step. The dynamic simulation time is increased by one time step once the function is called.
+Args: N/A
+Rets: N/A
+
+API 257
+Format: is_system_angular_stable()
+Description: Check if the system is angular stable or not. It is only VALID when system rotor angle stability surveillance flag is enabled.
+If the surveillance flag is not enabled, True is always returned.
+Args: N/A
+Rets:
+    (1) flag: True if system is angular stable, and False if unstable.
+Tips:
+    If the surveillance flag is enabled, False is returned if the maximum rotor angle difference in any island exceeds the threshold.
+    Other, True is returned.
+
+API 258
+Format: set_bus_fault(bus, fault_type, fault_shunt)
+Description: Set bus fault.
+Args:
+    (1) bus: Bus number.
+    (2) fault_type: String of fault type. Currently, only "THREE PHASE FAULT" is supported.
+    (3) fault_shunt: Complex per unit fault shunt in the form of (g+jb).
+Rets: N/A
+Tips:
+    The fault shunt is represented as conductance and susceptance based on system base power and bus base voltage.
+    The susceptance is usually set as NEGATIVE to mimic the voltage drop due to fault.
+    The absolute value of the fault shunt should not be too great. Otherwise, network solution may fail to converge. Typically, |b|<1e6.
+
+API 259
+Format: clear_bus_fault(bus, fault_type)
+Description: Clear bus fault without tripping bus.
+Args:
+    (1) bus: Bus number.
+    (2) fault_type: String of fault type. Currently, only "THREE PHASE FAULT" is supported.
+Rets: N/A
+
+API 260
+Format: trip_bus(bus)
+Description: Trip bus. All devices connecting to the bus are disconnected.
+Args:
+    (1) bus: Bus number.
+Rets: N/A
+
+API 261
+Format: set_line_fault(line, fault_type, fault_location, fault_shunt)
+Description: Set transmission line fault.
+Args:
+    (1) line: Transmission line device id in format of (ibus, jbus, ickt).
+    (2) fault_type: String of fault type. Currently, only "THREE PHASE FAULT" is supported.
+    (3) fault_location: Relative fault location to ibus.
+    (4) fault_shunt: Complex per unit fault shunt in the form of (g+jb).
+Rets: N/A
+Tips:
+    The fault location should be in the range of [0, 1.0], including 0 and 1.0. It represent the relative location of the fault on the line to the ibus.
+    For example, 0.5 means the fault is set at the middle of the line. 0 means the fault is set at exactly ibus. 1.0 means the fault is set at exactly jbus.
+    The fault shunt is represented as conductance and susceptance based on system base power and bus base voltage.
+    The susceptance is usually set as NEGATIVE to mimic the voltage drop due to fault.
+    The absolute value of the fault shunt should not be too great. Otherwise, network solution may fail to converge. Typically, |b|<1e6.
+    Multiple faults are supported on single line at different fault locations.
+
+API 262
+Format: clear_line_fault(line, fault_type, fault_location)
+Description: Clear transmission line fault without tripping the line.
+Args:
+    (1) line: Transmission line device id in format of (ibus, jbus, ickt).
+    (2) fault_type: String of fault type. Currently, only "THREE PHASE FAULT" is supported.
+    (3) fault_location: Relative fault location to ibus.
+Rets: N/A
+Tips:
+    The fault location should be in the range of [0, 1.0], including 0 and 1.0. It represent the relative location of the fault on the line to the ibus.
+    For example, 0.5 means the fault at the middle of the line will be cleared. 0 means the fault at ibus will be cleared. 1.0 means the fault at jbus will be cleared.
+
+API 263
+Format: trip_line(line)
+Description: Trip transmission line. Breakers at the two sides of the line are both tripped.
+Args:
+    (1) line: Transmission line device id in format of (ibus, jbus, ickt).
+Rets: N/A
+
+API 264
+Format: trip_line_breaker(line, side)
+Description: Trip transmission line breaker at specific side.
+Args:
+    (1) line: Transmission line device id in format of (ibus, jbus, ickt).
+    (2) side: String of transmission line side. One of {"SENDING", "RECEIVING"} or {"S", "R"}.
+Rets: N/A
+Tips:
+    The sending side bus is not necessarily ibus. The receiving bus is not necessarily jbus.
+    It is up to the user to check which side to trip.
+
+API 265
+Format: close_line(line)
+Description: Close transmission line. Breakers at the two sides of the line are both closed.
+Args:
+    (1) line: Transmission line device id in format of (ibus, jbus, ickt).
+Rets: N/A
+
+API 266
+Format: close_line_breaker(line, side)
+Description: Close transmission line breaker at specific side.
+Args:
+    (1) line: Transmission line device id in format of (ibus, jbus, ickt).
+    (2) side: String of transmission line side. One of {"SENDING", "RECEIVING"} or {"S", "R"}.
+Rets: N/A
+Tips:
+    The sending side bus is not necessarily ibus. The receiving bus is not necessarily jbus.
+    It is up to the user to check which side to close.
+
+API 267
+Format: trip_transformer(transformer)
+Description: Trip transformer. Breakers at the two or three winding sides of the transformer are all tripped.
+Args:
+    (1) transformer: Transformer device id in format of (ibus, jbus, ickt) or (ibus, jbus, kbus, ickt).
+Rets: N/A
+Tips:
+    kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
+
+API 268
+Format: trip_transformer_breaker(transformer, side)
+Description: Trip transformer breaker at specific side.
+Args:
+    (1) transformer: Transformer device id in format of (ibus, jbus, ickt) or (ibus, jbus, kbus, ickt).
+    (2) side: String of transformer winding side. One of {"PRIMARY", "SECONDARY", "TERTIARY"} or {"P", "S", "T"}.
+Rets: N/A
+Tips:
+    kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
+    The primary side bus is not necessarily ibus. The secondary bus is not necessarily jbus. The tertiary bus is not necessarily kbus.
+    It is up to the user to check which side to trip.
+
+API 269
+Format: close_transformer(transformer)
+Description: Close transformer. Breakers at the two or three winding sides of the transformer are all closed.
+Args:
+    (1) transformer: Transformer device id in format of (ibus, jbus, ickt) or (ibus, jbus, kbus, ickt).
+Rets: N/A
+Tips:
+    kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
+
+API 270
+Format: close_transformer_breaker(transformer, side)
+Description: Close transformer breaker at specific side.
+Args:
+    (1) transformer: Transformer device id in format of (ibus, jbus, ickt) or (ibus, jbus, kbus, ickt).
+    (2) side: String of transformer winding side. One of {"PRIMARY", "SECONDARY", "TERTIARY"} or {"P", "S", "T"}.
+Rets: N/A
+Tips:
+    kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
+    The primary side bus is not necessarily ibus. The secondary bus is not necessarily jbus. The tertiary bus is not necessarily kbus.
+    It is up to the user to check which side to close.
+
+API 271
+Format: trip_generator(generator)
+Description: Trip generator.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+Rets: N/A
+
+API 272
+Format: shed_generator(generator, percent)
+Description: Shed generator by percent.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+    (2) percent: Per unit percent of the generator to shed.
+Rets: N/A
+Tips:
+    The percent is USUALLY in range [0, 1.0] including 0 and 1.0. If percent=0.0, generator is not shed at all. If percent=1.0, the generator will be tripped.
+    The percent CAN be set as negative to mimic increase of generation. But it is rarely used.
+    If a generator with MBASE=100MVA is shed by 0.2, its MBASE becomes 80MVA. If it is then shed by 0.3, its MBASE becomes 56MVA.
+
+API 273
+Format: trip_wt_generator(generator, n)
+Description: Trip wind turbine generator.
+Args:
+    (1) generator: Wind turbine generator device id in format of (bus, ickt).
+    (2) n: Number of lumped wind turbine generators to trip.
+Rets: N/A
+Tips:
+    The number of lunmped wind turbine generators should be less than the available lumped wind turbine generators.
+
+API 274
+Format: shed_generator(generator, percent)
+Description: Shed wind turbine generator by percent.
+Args:
+    (1) generator: Wind turbine generator device id in format of (bus, ickt).
+    (2) percent: Per unit percent of the wind turbine generator to shed.
+Rets: N/A
+Tips:
+    The percent is USUALLY in range [0, 1.0] including 0 and 1.0. If percent=0.0, wind turbine generator is not shed at all. If percent=1.0, the wind turbine generator will be totally tripped.
+    The percent CAN be set as negative to mimic increase of wind turbine generation. But it is rarely used.
+    If a wind turbine generator with MBASE=100MVA is shed by 0.2, its MBASE becomes 80MVA. If it is then shed by 0.3, its MBASE becomes 56MVA.
+
+API 275
+Format: trip_load(load)
+Description: Trip load.
+Args:
+    (1) load: Load device id in format of (bus, ickt).
+Rets: N/A
+
+API 276
+Format: close_load(load)
+Description: Close load.
+Args:
+    (1) load: Load device id in format of (bus, ickt).
+Rets: N/A
+
+API 277
+Format: scale_load(load, percent)
+Description: Scale load by percent.
+Args:
+    (1) load: Load device id in format of (bus, ickt).
+    (2) percent: Per unit percent of the load to scale. Positve for scaling up, and Negative for scaling down.
+Rets: N/A
+
+API 278
+Format: scale_all_loads(percent)
+Description: Scale all loads by percent.
+Args:
+    (1) percent: Per unit percent of all loads to scale. Positve for scaling up, and Negative for scaling down.
+Rets: N/A
+
+API 279
+Format: trip_fixed_shunt(shunt)
+Description: Trip fixed shunt.
+Args:
+    (1) shunt: Fixed shunt device id in format of (bus, ickt).
+Rets: N/A
+
+API 280
+Format: close_fixed_shunt(shunt)
+Description: Close fixed shunt.
+Args:
+    (1) shunt: Fixed shunt device id in format of (bus, ickt).
+Rets: N/A
+
+API 281
+Format: manually_bypass_hvdc(hvdc)
+Description: Manually bypass HVDC link.
+Args:
+    (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
+Rets: N/A
+Tips:
+    The HVDC link won't recover unless manually_unbypass_hvdc() is called.
+
+API 282
+Format: manually_block_hvdc(hvdc)
+Description: Manually block HVDC link.
+Args:
+    (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
+Rets: N/A
+Tips:
+    The HVDC link won't recover unless manually_unblock_hvdc() is called.
+
+API 283
+Format: manually_unbypass_hvdc(hvdc)
+Description: Manually unbypass HVDC link.
+Args:
+    (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
+Rets: N/A
+
+API 284
+Format: manually_unblock_hvdc(hvdc)
+Description: Manually unblock HVDC link.
+Args:
+    (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
+Rets: N/A
+
+API 285
+Format: get_generator_voltage_reference_in_pu(generator)
+Description: Get generator voltage reference of exciter model. If there is no exciter model for the generator, 0 will be returned.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+Rets:
+    (1) Voltage reference in pu.
+
+API 286
+Format: get_generator_mechanical_power_reference_in_pu(generator)
+Description: Get generator mechanical power reference of turbine governor model. If there is no turbine governor model for the generator, 0 will be returned.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+Rets:
+    (1) Mechanical power reference in pu based on generator MBASE.
+
+API 287
+Format: get_generator_mechanical_power_reference_in_MW(generator)
+Description: Get generator mechanical power reference of turbine governor model. If there is no turbine governor model for the generator, 0 will be returned.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+Rets:
+    (1) Mechanical power reference in MW.
+
+API 288
+Format: set_generator_voltage_reference_in_pu(generator, value)
+Description: Set generator voltage reference of exciter model. If there is no exciter model for the generator, nothing will be changed.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+    (2) value: New voltage reference in pu.
+Rets: N/A
+
+API 289
+Format: set_generator_mechanical_power_reference_in_pu(generator, value)
+Description: Set generator mechanical power reference of turbine governor model. If there is no turbine governor model for the generator, nothing will be changed.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+    (2) value: New mechanical power reference in pu based on generator MBASE.
+Rets: N/A
+
+API 290
+Format: set_generator_mechanical_power_reference_in_MW(generator, value)
+Description: Set generator mechanical power reference of turbine governor model. If there is no turbine governor model for the generator, nothing will be changed.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+    (2) value: New mechanical power reference in MW.
+Rets: N/A
+
+API 291
+Format: get_generator_excitation_voltage_in_pu(generator)
+Description: Get generator excitation voltage.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+Rets:
+    (1) Excitation voltage in pu.
+
+API 292
+Format: get_generator_mechanical_power_in_pu(generator)
+Description: Get generator mechanical power.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+Rets:
+    (1) Mechanical power in pu based on generator MBASE.
+
+API 293
+Format: get_generator_mechanical_power_in_MW(generator)
+Description: Get generator mechanical power.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+Rets:
+    (1) Mechanical power in MW.
+
+API 294
+Format: set_generator_excitation_voltage_in_pu(generator, value)
+Description: Set generator excitation voltage. If exciter model exists for the generator, nothing will be changed.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+    (2) value: New excitation voltage in pu.
+Rets: N/A
+
+API 295
+Format: set_generator_mechanical_power_in_pu(generator, value)
+Description: Set generator mechanical power. If turbine governor model exists for the generator, nothing will be changed.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+    (2) value: New mechanical power in pu based on generator MBASE.
+Rets: N/A
+
+API 296
+Format: set_generator_mechanical_power_in_MW(generator, value)
+Description: Set generator mechanical power. If turbine governor model exists for the generator, nothing will be changed.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+    (2) value: New mechanical power in MW.
+Rets: N/A
+
+API 297
+Format: get_hvdc_power_order_in_MW(hvdc)
+Description: Get HVDC link power order.
+Args:
+    (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
+Rets:
+    (1) Power order in MW.
+
+API 298
+Format: set_hvdc_power_order_in_MW(hvdc, value)
+Description: Set HVDC link power order.
+Args:
+    (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
+    (2) value: New power order in MW.
+Rets: N/A
+
