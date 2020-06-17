@@ -23,6 +23,7 @@ LINE_TEST::LINE_TEST() : line(default_toolkit)
     TEST_ADD(LINE_TEST::test_constructor);
     TEST_ADD(LINE_TEST::test_set_get_sending_receiving_side_bus);
     TEST_ADD(LINE_TEST::test_set_get_identifier);
+    TEST_ADD(LINE_TEST::test_set_get_name);
     TEST_ADD(LINE_TEST::test_set_get_breaker_status);
     TEST_ADD(LINE_TEST::test_set_get_line_z120);
     TEST_ADD(LINE_TEST::test_set_get_line_y120);
@@ -90,6 +91,7 @@ void LINE_TEST::test_constructor()
     TEST_ASSERT(line.get_sending_side_bus()==0);
     TEST_ASSERT(line.get_receiving_side_bus()==0);
     TEST_ASSERT(line.get_identifier()=="");
+    TEST_ASSERT(line.get_name()=="");
     TEST_ASSERT(line.get_sending_side_breaker_status()==false);
     TEST_ASSERT(line.get_receiving_side_breaker_status()==false);
     TEST_ASSERT(line.get_line_positive_sequence_z_in_pu()==0.0);
@@ -136,6 +138,14 @@ void LINE_TEST::test_set_get_identifier()
 
     line.set_identifier("1#");
     TEST_ASSERT(line.get_identifier()=="1#");
+}
+
+void LINE_TEST::test_set_get_name()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+
+    line.set_name("line-1#");
+    TEST_ASSERT(line.get_name()=="line-1#");
 }
 
 void LINE_TEST::test_set_get_breaker_status()
@@ -498,6 +508,8 @@ void LINE_TEST::test_copy_with_operator_equal()
 
     line.set_sending_side_bus(2);
     line.set_receiving_side_bus(1);
+    line.set_identifier("1#");
+    line.set_name("line-1#");
     line.set_sending_side_breaker_status(false);
     line.set_receiving_side_breaker_status(false);
     line.set_line_positive_sequence_z_in_pu(complex<double>(0.01, 0.05));
@@ -513,6 +525,8 @@ void LINE_TEST::test_copy_with_operator_equal()
     LINE newline = line;
     TEST_ASSERT(newline.get_sending_side_bus()==2);
     TEST_ASSERT(newline.get_receiving_side_bus()==1);
+    TEST_ASSERT(newline.get_identifier()=="1#");
+    TEST_ASSERT(newline.get_name()=="line-1#");
     TEST_ASSERT(newline.get_sending_side_breaker_status()==false);
     TEST_ASSERT(newline.get_receiving_side_breaker_status()==false);
     TEST_ASSERT(newline.get_length()==234.0);

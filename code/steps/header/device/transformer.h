@@ -18,7 +18,7 @@ class TRANSFORMER : public NONBUS_DEVICE
         virtual ~TRANSFORMER();
 
         void set_identifier(string identifier);
-        void set_transformer_name(string name);
+        void set_name(string name);
         void set_non_metered_end_bus(unsigned int bus);
         void set_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu(complex<double> y);
 
@@ -48,7 +48,7 @@ class TRANSFORMER : public NONBUS_DEVICE
 
 
         string get_identifier() const;
-        string get_transformer_name() const;
+        string get_name() const;
         unsigned int get_non_metered_end_bus() const;
         complex<double> get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu() const;
 

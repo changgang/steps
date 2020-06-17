@@ -53,6 +53,11 @@ void FIXED_SHUNT::set_identifier(string shunt_id)
     this->identifier = trim_string(shunt_id);
 }
 
+void FIXED_SHUNT::set_name(string name)
+{
+    this->name = trim_string(name);
+}
+
 void FIXED_SHUNT::set_status(bool status)
 {
     this->status = status;
@@ -76,6 +81,11 @@ BUS* FIXED_SHUNT::get_bus_pointer() const
 string FIXED_SHUNT::get_identifier() const
 {
     return identifier;
+}
+
+string FIXED_SHUNT::get_name() const
+{
+    return name;
 }
 
 bool FIXED_SHUNT::get_status() const
@@ -128,6 +138,7 @@ void FIXED_SHUNT::clear()
     bus = 0;
     busptr = NULL;
     set_identifier("");
+    set_name("");
     set_status(false);
     set_nominal_impedance_shunt_in_MVA(0.0);
 }
@@ -204,6 +215,7 @@ FIXED_SHUNT& FIXED_SHUNT::operator=(const FIXED_SHUNT& fixed_shunt)
 
     set_shunt_bus(fixed_shunt.get_shunt_bus());
     set_identifier(fixed_shunt.get_identifier());
+    set_name(fixed_shunt.get_name());
     set_status(fixed_shunt.get_status());
     set_nominal_impedance_shunt_in_MVA(fixed_shunt.get_nominal_impedance_shunt_in_MVA());
 

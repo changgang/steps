@@ -1051,7 +1051,7 @@ string PSSE_IMEXPORTER::export_transformer_data(const TRANSFORMER* trans) const
           <<setprecision(6)<<fixed<<trans->get_magnetizing_admittance_based_on_winding_norminal_voltage_and_system_base_power_in_pu().imag()<<", "
           <<nonmeterend<<", "
           <<"\""<<left
-          <<setw(16)<<trans->get_transformer_name()<<"\", "
+          <<setw(16)<<trans->get_name()<<"\", "
           <<right
           <<status<<", "
           <<trans->get_owner_of_index(0)<<", "<<setprecision(6)<<fixed<<trans->get_fraction_of_owner_of_index(0)<<", "

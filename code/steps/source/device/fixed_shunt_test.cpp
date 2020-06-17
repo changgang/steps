@@ -23,6 +23,7 @@ FIXED_SHUNT_TEST::FIXED_SHUNT_TEST() : fixed_shunt(default_toolkit)
     TEST_ADD(FIXED_SHUNT_TEST::test_constructor);
     TEST_ADD(FIXED_SHUNT_TEST::test_set_get_shunt_bus);
     TEST_ADD(FIXED_SHUNT_TEST::test_set_get_identifier);
+    TEST_ADD(FIXED_SHUNT_TEST::test_set_get_name);
     TEST_ADD(FIXED_SHUNT_TEST::test_set_get_status);
     TEST_ADD(FIXED_SHUNT_TEST::test_set_get_nominal_impedance_shunt);
 
@@ -65,6 +66,7 @@ void FIXED_SHUNT_TEST::test_constructor()
 
     TEST_ASSERT(fixed_shunt.get_shunt_bus()==0);
     TEST_ASSERT(fixed_shunt.get_identifier()=="");
+    TEST_ASSERT(fixed_shunt.get_name()=="");
     TEST_ASSERT(fixed_shunt.get_status()==false);
     TEST_ASSERT(fixed_shunt.get_nominal_impedance_shunt_in_MVA()==0.0);
 }
@@ -85,6 +87,14 @@ void FIXED_SHUNT_TEST::test_set_get_identifier()
 
     fixed_shunt.set_identifier("1#");
     TEST_ASSERT(fixed_shunt.get_identifier()=="1#");
+}
+
+void FIXED_SHUNT_TEST::test_set_get_name()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"FIXED_SHUNT_TEST");
+
+    fixed_shunt.set_name("shunt-1#");
+    TEST_ASSERT(fixed_shunt.get_name()=="shunt-1#");
 }
 
 void FIXED_SHUNT_TEST::test_set_get_status()
@@ -137,6 +147,7 @@ void FIXED_SHUNT_TEST::test_copy_with_operator_equal()
 
     fixed_shunt.set_shunt_bus(1);
     fixed_shunt.set_identifier("1#");
+    fixed_shunt.set_name("shunt-1#");
     fixed_shunt.set_status(false);
     fixed_shunt.set_nominal_impedance_shunt_in_MVA(complex<double>(10.0, 300.0));
 
@@ -144,6 +155,7 @@ void FIXED_SHUNT_TEST::test_copy_with_operator_equal()
 
     TEST_ASSERT(fixed_shunt2.get_shunt_bus()==1);
     TEST_ASSERT(fixed_shunt2.get_identifier()=="1#");
+    TEST_ASSERT(fixed_shunt2.get_name()=="shunt-1#");
     TEST_ASSERT(fixed_shunt2.get_status()==false);
     TEST_ASSERT(fixed_shunt2.get_nominal_impedance_shunt_in_MVA()==complex<double>(10.0, 300.0));
 }

@@ -2896,7 +2896,7 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    string transformer_name=trans->get_transformer_name();
+    string transformer_name=trans->get_name();
     string neutral_point_name="&" + transformer_name;
     double neutral_voltage_in_kv=1.0;
     unsigned int owner = trans->get_owner_of_index(0);

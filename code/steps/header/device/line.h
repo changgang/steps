@@ -21,6 +21,7 @@ class LINE : public NONBUS_DEVICE
         void set_sending_side_bus(unsigned int bus);
         void set_receiving_side_bus(unsigned int bus);
         void set_identifier(string identifier);
+        void set_name(string name);
         void set_sending_side_breaker_status(bool status);
         void set_receiving_side_breaker_status(bool status);
 
@@ -44,6 +45,7 @@ class LINE : public NONBUS_DEVICE
         BUS* get_receiving_side_bus_pointer() const;
 
         string get_identifier() const;
+        string get_name() const;
         bool get_sending_side_breaker_status() const;
         bool get_receiving_side_breaker_status() const;
 
@@ -111,6 +113,7 @@ class LINE : public NONBUS_DEVICE
         unsigned int sending_side_bus, receiving_side_bus;
         BUS* sending_side_busptr, *receiving_side_busptr;
         string   identifier;
+        string   name;
         bool sending_side_breaker_status, receiving_side_breaker_status;
         complex<double> line_z_12, line_z_0,
                        line_y_12, line_y_0,

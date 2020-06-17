@@ -37,7 +37,7 @@ void TRANSFORMER::set_identifier(string trans_id)
     this->identifier = trim_string(trans_id);
 }
 
-void TRANSFORMER::set_transformer_name(string trans_name)
+void TRANSFORMER::set_name(string trans_name)
 {
     this->name = trim_string(trans_name);
 }
@@ -320,7 +320,7 @@ string TRANSFORMER::get_identifier() const
     return identifier;
 }
 
-string TRANSFORMER::get_transformer_name() const
+string TRANSFORMER::get_name() const
 {
     return name;
 }
@@ -635,7 +635,7 @@ void TRANSFORMER::clear()
     winding_busptr[SECONDARY_SIDE] = NULL;
     winding_busptr[TERTIARY_SIDE] = NULL;*/
     set_identifier("");
-    set_transformer_name("");
+    set_name("");
     set_winding_breaker_status(PRIMARY_SIDE, false);
     set_winding_breaker_status(SECONDARY_SIDE, false);
     set_winding_breaker_status(TERTIARY_SIDE, false);
@@ -881,7 +881,7 @@ TRANSFORMER& TRANSFORMER::operator=(const TRANSFORMER& transformer)
         set_winding_bus(SECONDARY_SIDE, transformer.get_winding_bus(SECONDARY_SIDE));
     set_winding_bus(TERTIARY_SIDE, transformer.get_winding_bus(TERTIARY_SIDE));
     set_identifier(transformer.get_identifier());
-    set_transformer_name(transformer.get_transformer_name());
+    set_name(transformer.get_name());
     set_winding_breaker_status(PRIMARY_SIDE, transformer.get_winding_breaker_status(PRIMARY_SIDE));
     set_winding_breaker_status(SECONDARY_SIDE, transformer.get_winding_breaker_status(SECONDARY_SIDE));
     set_winding_breaker_status(TERTIARY_SIDE, transformer.get_winding_breaker_status(TERTIARY_SIDE));

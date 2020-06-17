@@ -28,6 +28,7 @@ class FIXED_SHUNT_TEST : public Test::Suite
         void test_constructor();
         void test_set_get_shunt_bus();
         void test_set_get_identifier();
+        void test_set_get_name();
         void test_set_get_status();
         void test_set_get_nominal_impedance_shunt();
 

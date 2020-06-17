@@ -16,12 +16,14 @@ class FIXED_SHUNT : public NONBUS_DEVICE
 
         void set_shunt_bus(unsigned int bus);
         void set_identifier(string identifier);
+        void set_name(string name);
         void set_status(bool status);
         void set_nominal_impedance_shunt_in_MVA(complex<double> s);
 
         unsigned int get_shunt_bus() const;
         BUS* get_bus_pointer() const;
         string get_identifier() const;
+        string get_name() const;
         bool get_status() const;
         complex<double> get_nominal_impedance_shunt_in_MVA() const;
         complex<double> get_nominal_impedance_shunt_in_pu() const;
@@ -48,6 +50,7 @@ class FIXED_SHUNT : public NONBUS_DEVICE
         unsigned int bus;
         BUS* busptr;
         string identifier;
+        string name;
         bool status;
         complex<double> nominal_impedance_shunt_in_MVA;
 };

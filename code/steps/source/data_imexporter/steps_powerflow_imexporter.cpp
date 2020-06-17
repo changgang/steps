@@ -1174,7 +1174,7 @@ void STEPS_IMEXPORTER::add_transformer_basic_data(TRANSFORMER& trans, vector<str
     }
     if(data.size()>0)
     {
-        trans.set_transformer_name(get_string_data(data.front(),""));
+        trans.set_name(get_string_data(data.front(),""));
         data.erase(data.begin());
     }
     if(data.size()>0)
@@ -2490,7 +2490,7 @@ string STEPS_IMEXPORTER::export_transformer_data() const
               <<setprecision(6)<<fixed<<trans->get_magnetizing_admittance_based_on_winding_norminal_voltage_and_system_base_power_in_pu().imag()<<", "
               <<nonmeterend<<", "
               <<"\""<<left
-              <<setw(16)<<trans->get_transformer_name()<<"\", "
+              <<setw(16)<<trans->get_name()<<"\", "
               <<right
               <<status<<", "
               <<trans->get_owner_of_index(0)<<", "<<setprecision(6)<<fixed<<trans->get_fraction_of_owner_of_index(0)<<", "

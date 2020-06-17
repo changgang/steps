@@ -28,6 +28,7 @@ class LINE_TEST : public Test::Suite
         void test_constructor();
         void test_set_get_sending_receiving_side_bus();
         void test_set_get_identifier();
+        void test_set_get_name();
         void test_set_get_breaker_status();
         void test_set_get_line_z120();
         void test_set_get_line_y120();

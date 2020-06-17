@@ -80,6 +80,11 @@ void LINE::set_identifier(string line_id)
     this->identifier = trim_string(line_id);
 }
 
+void LINE::set_name(string name)
+{
+    this->name = trim_string(name);
+}
+
 void LINE::set_sending_side_breaker_status(bool status)
 {
     this->sending_side_breaker_status = status;
@@ -169,6 +174,11 @@ BUS* LINE::get_receiving_side_bus_pointer() const
 string LINE::get_identifier() const
 {
     return identifier;
+}
+
+string LINE::get_name() const
+{
+    return name;
 }
 
 bool LINE::get_sending_side_breaker_status() const
@@ -485,6 +495,7 @@ void LINE::clear()
     sending_side_busptr = NULL;
     receiving_side_busptr = NULL;
     set_identifier("");
+    set_name("");
     set_sending_side_breaker_status(false);
     set_receiving_side_breaker_status(false);
     set_line_positive_sequence_z_in_pu(0.0);
@@ -592,6 +603,7 @@ LINE& LINE::operator=(const LINE& line)
     set_sending_side_bus(line.get_sending_side_bus());
     set_receiving_side_bus(line.get_receiving_side_bus());
     set_identifier(line.get_identifier());
+    set_name(line.get_name());
     set_sending_side_breaker_status(line.get_sending_side_breaker_status());
     set_receiving_side_breaker_status(line.get_receiving_side_breaker_status());
     set_line_positive_sequence_z_in_pu(line.get_line_positive_sequence_z_in_pu());

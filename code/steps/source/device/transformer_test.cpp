@@ -204,8 +204,8 @@ void TRANSFORMER_TEST::test_set_get_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"TRANSFORMER_TEST");
 
-    transformer.set_transformer_name("trans 1");
-    TEST_ASSERT(transformer.get_transformer_name()=="trans 1");
+    transformer.set_name("trans 1");
+    TEST_ASSERT(transformer.get_name()=="trans 1");
 }
 
 void TRANSFORMER_TEST::test_set_get_winding_breaker_status()
