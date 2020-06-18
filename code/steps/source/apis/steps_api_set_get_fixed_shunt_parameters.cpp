@@ -184,6 +184,16 @@ const char* api_get_fixed_shunt_string_data(unsigned int bus, char* identifier, 
     if(shuntptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
+		if (PARAMETER_NAME == "ID" or PARAMETER_NAME == "IDENTIFIER")
+		{
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (shuntptr->get_identifier()).c_str());
+			return toolkit.steps_char_buffer;
+		}
+		if (PARAMETER_NAME == "NAME")
+		{
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (shuntptr->get_name()).c_str());
+			return toolkit.steps_char_buffer;
+		}
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return toolkit.steps_char_buffer;
@@ -206,6 +216,10 @@ void api_set_fixed_shunt_string_data(unsigned int bus, char* identifier, char* p
     if(shuntptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
+        if(PARAMETER_NAME=="ID" or PARAMETER_NAME=="IDENTIFIER")
+            return shuntptr->set_identifier(value);
+        if(PARAMETER_NAME=="NAME")
+            return shuntptr->set_name(value);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
     }

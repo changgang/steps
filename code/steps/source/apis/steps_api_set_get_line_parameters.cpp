@@ -325,6 +325,11 @@ const char* api_get_line_string_data(unsigned int ibus, unsigned int jbus, char*
 			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (lineptr->get_identifier()).c_str());
 			return toolkit.steps_char_buffer;
 		}
+		if (PARAMETER_NAME == "NAME")
+		{
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (lineptr->get_name()).c_str());
+			return toolkit.steps_char_buffer;
+		}
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return toolkit.steps_char_buffer;
@@ -349,6 +354,8 @@ void api_set_line_string_data(unsigned int ibus, unsigned int jbus, char* identi
         string PARAMETER_NAME = string2upper(parameter_name);
         if(PARAMETER_NAME=="ID" or PARAMETER_NAME=="IDENTIFIER")
             return lineptr->set_identifier(value);
+        if(PARAMETER_NAME=="NAME")
+            return lineptr->set_name(value);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
     }

@@ -480,6 +480,11 @@ const char* api_get_transformer_string_data(unsigned int ibus, unsigned int jbus
 				snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (transptr->get_identifier()).c_str());
 				return toolkit.steps_char_buffer;
 			}
+			if (PARAMETER_NAME == "NAME")
+			{
+				snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (transptr->get_name()).c_str());
+				return toolkit.steps_char_buffer;
+			}
         }
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
@@ -514,11 +519,9 @@ void api_set_transformer_string_data(unsigned int ibus, unsigned int jbus, unsig
         else
         {
             if(PARAMETER_NAME=="ID" or PARAMETER_NAME=="IDENTIFIER")
-            {
-                transptr->set_identifier(value);
-                return;
-            }
-
+                return transptr->set_identifier(value);
+            if(PARAMETER_NAME=="NAME")
+                return transptr->set_name(value);
         }
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
