@@ -130,8 +130,6 @@
 		<Unit filename="header/data_imexporter/steps_imexporter_test.h" />
 		<Unit filename="header/device/bus.h" />
 		<Unit filename="header/device/bus_test.h" />
-		<Unit filename="header/device/converter.h" />
-		<Unit filename="header/device/converter_station.h" />
 		<Unit filename="header/device/device.h" />
 		<Unit filename="header/device/energy_storage.h" />
 		<Unit filename="header/device/engergy_storage_test.h" />
@@ -522,8 +520,6 @@
 		<Unit filename="source/data_imexporter/steps_powerflow_imexporter.cpp" />
 		<Unit filename="source/device/bus.cpp" />
 		<Unit filename="source/device/bus_test.cpp" />
-		<Unit filename="source/device/converter.cpp" />
-		<Unit filename="source/device/converter_station.cpp" />
 		<Unit filename="source/device/device.cpp" />
 		<Unit filename="source/device/energy_storage.cpp" />
 		<Unit filename="source/device/energy_storage_test.cpp" />
