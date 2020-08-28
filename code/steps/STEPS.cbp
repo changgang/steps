@@ -130,6 +130,8 @@
 		<Unit filename="header/data_imexporter/steps_imexporter_test.h" />
 		<Unit filename="header/device/bus.h" />
 		<Unit filename="header/device/bus_test.h" />
+		<Unit filename="header/device/converter.h" />
+		<Unit filename="header/device/converter_station.h" />
 		<Unit filename="header/device/device.h" />
 		<Unit filename="header/device/energy_storage.h" />
 		<Unit filename="header/device/engergy_storage_test.h" />
@@ -141,6 +143,9 @@
 		<Unit filename="header/device/generator_test.h" />
 		<Unit filename="header/device/hvdc.h" />
 		<Unit filename="header/device/hvdc_test.h" />
+		<Unit filename="header/device/lcc.h" />
+		<Unit filename="header/device/lcc_converter_station.h" />
+		<Unit filename="header/device/lcc_hvdc.h" />
 		<Unit filename="header/device/line.h" />
 		<Unit filename="header/device/line_test.h" />
 		<Unit filename="header/device/load.h" />
@@ -520,6 +525,8 @@
 		<Unit filename="source/data_imexporter/steps_powerflow_imexporter.cpp" />
 		<Unit filename="source/device/bus.cpp" />
 		<Unit filename="source/device/bus_test.cpp" />
+		<Unit filename="source/device/converter.cpp" />
+		<Unit filename="source/device/converter_station.cpp" />
 		<Unit filename="source/device/device.cpp" />
 		<Unit filename="source/device/energy_storage.cpp" />
 		<Unit filename="source/device/energy_storage_test.cpp" />
@@ -531,6 +538,9 @@
 		<Unit filename="source/device/generator_test.cpp" />
 		<Unit filename="source/device/hvdc.cpp" />
 		<Unit filename="source/device/hvdc_test.cpp" />
+		<Unit filename="source/device/lcc.cpp" />
+		<Unit filename="source/device/lcc_converter_station.cpp" />
+		<Unit filename="source/device/lcc_hvdc.cpp" />
 		<Unit filename="source/device/line.cpp" />
 		<Unit filename="source/device/line_test.cpp" />
 		<Unit filename="source/device/load.cpp" />

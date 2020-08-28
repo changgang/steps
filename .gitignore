@@ -8,18 +8,10 @@ python/*.tex
 code/*.layout
 doc/latex/
 
-code/steps/header/device/converter.h
-code/steps/header/device/converter_station.h
-code/steps/header/device/lcc.h
-code/steps/header/device/lcc_converter_station.h
 code/steps/header/device/lcc_hvdc_2t.h
 code/steps/header/device/nhvdc.h
 code/steps/header/device/nhvdc_test.h
 code/steps/header/device/vsc.h
-code/steps/source/device/converter.cpp
-code/steps/source/device/converter_station.cpp
-code/steps/source/device/lcc.cpp
-code/steps/source/device/lcc_converter_station.cpp
 code/steps/source/device/lcc_hvdc_2t.cpp
 code/steps/source/device/vsc.cpp
 .gitignore

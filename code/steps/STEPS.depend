@@ -31,7 +31,7 @@
 	"header/basic/device_index_map.h"
 	<string>
 
-1592749431 d:\steps\code\steps\header\device\bus.h
+1598590744 d:\steps\code\steps\header\device\bus.h
 	"header/device/device.h"
 	"header/basic/area.h"
 	"header/basic/zone.h"
@@ -43,7 +43,7 @@
 	<complex>
 	<map>
 
-1592749432 d:\steps\code\steps\header\device\device.h
+1598590744 d:\steps\code\steps\header\device\device.h
 	"header/basic/ownership.h"
 	"header/basic/device_id.h"
 	"header/block/block.h"
@@ -56,14 +56,14 @@
 	<vector>
 	<map>
 
-1598539665 d:\steps\code\steps\header\basic\device_id.h
+1598590744 d:\steps\code\steps\header\basic\device_id.h
 	"header/basic/constants.h"
 	<vector>
 	<string>
 	<functional>
 	"terminal.h"
 
-1592705304 d:\steps\code\steps\header\basic\constants.h
+1598590744 d:\steps\code\steps\header\basic\constants.h
 
 1583938871 d:\steps\code\steps\header\basic\terminal.h
 	<vector>
@@ -73,10 +73,10 @@
 	"header/basic/steps_enum.h"
 	<vector>
 
-1592646454 d:\steps\code\steps\header\basic\steps_enum.h
+1598606729 d:\steps\code\steps\header\basic\steps_enum.h
 	<iso646.h>
 
-1592749431 d:\steps\code\steps\header\model\model.h
+1598590744 d:\steps\code\steps\header\model\model.h
 	"header/basic/device_id.h"
 	"header/basic/time_series.h"
 	"header/block/block.h"
@@ -109,7 +109,7 @@
 1583938871 d:\steps\code\steps\header\block\differential_block.h
 	"header/block/block.h"
 
-1592749431 d:\steps\code\steps\header\device\generator.h
+1598590744 d:\steps\code\steps\header\device\generator.h
 	<string>
 	<complex>
 	"header/device/source.h"
@@ -120,7 +120,7 @@
 	"header/model/sg_models/turbine_governor_model/turbine_governor_model.h"
 	"header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model.h"
 
-1592749432 d:\steps\code\steps\header\device\source.h
+1598590744 d:\steps\code\steps\header\device\source.h
 	<string>
 	<complex>
 	"header/device/nonbus_device.h"
@@ -254,7 +254,7 @@
 1583938871 d:\steps\code\steps\header\model\pvu_models\pv_irradiance_model\pv_irradiance_model.h
 	"header/model/pvu_models/pvu_model.h"
 
-1592749431 d:\steps\code\steps\header\device\energy_storage.h
+1598590744 d:\steps\code\steps\header\device\energy_storage.h
 	<complex>
 	<string>
 	"header/device/source.h"
@@ -264,7 +264,7 @@
 	"header/model/model.h"
 	<complex>
 
-1592749431 d:\steps\code\steps\header\device\load.h
+1598590744 d:\steps\code\steps\header\device\load.h
 	"header/device/nonbus_device.h"
 	"header/model/load_model/load_model.h"
 	"header/model/load_relay_model/load_voltage_relay_model.h"
@@ -289,7 +289,7 @@
 1583938871 d:\steps\code\steps\header\model\load_relay_model\load_frequency_relay_model.h
 	"header/model/load_relay_model/load_relay_model.h"
 
-1592749431 d:\steps\code\steps\header\device\line.h
+1598590744 d:\steps\code\steps\header\device\line.h
 	"header/device/nonbus_device.h"
 	"header/basic/device_id.h"
 	"header/basic/rating.h"
@@ -299,19 +299,19 @@
 
 1583938871 d:\steps\code\steps\header\basic\rating.h
 
-1592749432 d:\steps\code\steps\header\device\transformer.h
+1598590744 d:\steps\code\steps\header\device\transformer.h
 	"header/device/nonbus_device.h"
 	"header/basic/steps_enum.h"
 	"header/basic/rating.h"
 	<string>
 	<complex>
 
-1592749432 d:\steps\code\steps\header\device\fixed_shunt.h
+1598590744 d:\steps\code\steps\header\device\fixed_shunt.h
 	"header/device/nonbus_device.h"
 	<string>
 	<complex>
 
-1592749431 d:\steps\code\steps\header\device\hvdc.h
+1598590744 d:\steps\code\steps\header\device\hvdc.h
 	"header/device/nonbus_device.h"
 	"header/basic/device_id.h"
 	"header/basic/steps_enum.h"
@@ -320,7 +320,7 @@
 	<complex>
 	<string>
 
-1592622077 d:\steps\code\steps\header\model\hvdc_model\hvdc_model.h
+1598590744 d:\steps\code\steps\header\model\hvdc_model\hvdc_model.h
 	"header/basic/timer.h"
 	"header/model/hvdc_model/vdcol.h"
 	"header/basic/steps_enum.h"
@@ -345,7 +345,7 @@
 	"header/model/model.h"
 	"header/block/integral_block.h"
 
-1592749431 d:\steps\code\steps\header\device\equivalent_device.h
+1598590744 d:\steps\code\steps\header\device\equivalent_device.h
 	"header/device/nonbus_device.h"
 	"header/model/equivalent_model/equivalent_model.h"
 	<string>
@@ -5813,7 +5813,7 @@
 	<complex>
 	<string>
 
-1592622077 source:d:\steps\code\steps\source\device\lcc_hvdc.cpp
+1598614230 source:d:\steps\code\steps\source\device\lcc_hvdc.cpp
 	"header/device/lcc_hvdc.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -5823,9 +5823,9 @@
 	<iostream>
 	<cstdio>
 
-1592707137 d:\steps\code\steps\header\device\lcc_hvdc.h
+1598614154 d:\steps\code\steps\header\device\lcc_hvdc.h
 	"header/device/nonbus_device.h"
-	"header/device/converter_station.h"
+	"header/device/lcc_converter_station.h"
 	"header/basic/device_id.h"
 	"header/basic/steps_enum.h"
 	"header/model/hvdc_model/hvdc_model.h"
@@ -5833,7 +5833,7 @@
 	<complex>
 	<string>
 
-1592716785 d:\steps\code\steps\header\device\lcc.h
+1598593014 d:\steps\code\steps\header\device\lcc.h
 	"header/device/converter.h"
 	"header/basic/device_id.h"
 	"header/basic/steps_enum.h"
@@ -5849,7 +5849,7 @@
 	<iostream>
 	<cstdio>
 
-1592740030 source:d:\steps\code\steps\source\device\converter_station.cpp
+1598604952 source:d:\steps\code\steps\source\device\converter_station.cpp
 	"header/device/converter_station.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -5858,7 +5858,7 @@
 	<iostream>
 	<cstdio>
 
-1592740024 d:\steps\code\steps\header\device\converter_station.h
+1598606767 d:\steps\code\steps\header\device\converter_station.h
 	"header/device/nonbus_device.h"
 	"header/device/lcc.h"
 	"header/device/vsc.h"
@@ -5883,7 +5883,7 @@
 	<iostream>
 	<cstdio>
 
-1592740138 source:d:\steps\code\steps\source\device\lcc_converter_station.cpp
+1598596383 source:d:\steps\code\steps\source\device\lcc_converter_station.cpp
 	"header/device/lcc_converter_station.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -5892,7 +5892,7 @@
 	<iostream>
 	<cstdio>
 
-1592740132 d:\steps\code\steps\header\device\lcc_converter_station.h
+1598612251 d:\steps\code\steps\header\device\lcc_converter_station.h
 	"header/device/nonbus_device.h"
 	"header/device/converter_station.h"
 	"header/device/vsc.h"
