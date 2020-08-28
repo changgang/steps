@@ -116,7 +116,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::add_equivalent_device(vector< vector<string> >
 
     psdb.append_equivalent_device(edevice);
 
-    osstream<<"Equivalent device added: "<<edevice.get_device_name();
+    osstream<<"Equivalent device added: "<<edevice.get_compound_device_name();
     toolkit->show_information_with_leading_time_stamp(osstream);
 }
 
@@ -389,7 +389,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
 
     EQUIVALENT_MODEL* emodel = pedevice->get_equivalent_model();
 
-    osstream<<"ARXL model added to "<<pedevice->get_device_name();
+    osstream<<"ARXL model added to "<<pedevice->get_compound_device_name();
     toolkit->show_information_with_leading_time_stamp(osstream);
 
     osstream<<emodel->get_standard_psse_string();

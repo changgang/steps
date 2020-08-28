@@ -86,7 +86,7 @@ void FILEWIND::load_wind_speed_from_file()
     string file = get_wind_speed_serial_file();
     if(file.size()<1)
     {
-        osstream<<"Initialization error. No file is provided for loading wind speed data. Check model "<<get_model_name()<<" of "<<get_device_name();
+        osstream<<"Initialization error. No file is provided for loading wind speed data. Check model "<<get_model_name()<<" of "<<get_compound_device_name();
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -141,7 +141,7 @@ void FILEWIND::load_wind_speed_from_file()
     }
     else
     {
-        osstream<<"Initialization error. Fail to load wind speed data from file '"<<file<<"'. Check model "<<get_model_name()<<" of "<<get_device_name();
+        osstream<<"Initialization error. Fail to load wind speed data from file '"<<file<<"'. Check model "<<get_model_name()<<" of "<<get_compound_device_name();
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }

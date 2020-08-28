@@ -29,7 +29,7 @@ DEVICE_ID_TEST::DEVICE_ID_TEST()
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_multidc);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_general);
     TEST_ADD(DEVICE_ID_TEST::test_set_get_device_identifier);
-    TEST_ADD(DEVICE_ID_TEST::test_get_device_name);
+    TEST_ADD(DEVICE_ID_TEST::test_get_compound_device_name);
     TEST_ADD(DEVICE_ID_TEST::test_is_valid);
     TEST_ADD(DEVICE_ID_TEST::test_clear);
     TEST_ADD(DEVICE_ID_TEST::test_copy_with_operator_equal);
@@ -317,7 +317,7 @@ void DEVICE_ID_TEST::test_set_get_device_identifier()
     TEST_ASSERT(device_id.get_device_identifier()=="xy");
 }
 
-void DEVICE_ID_TEST::test_get_device_name()
+void DEVICE_ID_TEST::test_get_compound_device_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
@@ -326,7 +326,7 @@ void DEVICE_ID_TEST::test_get_device_name()
     device_id.set_device_type("BUS");
     terminal.append_bus(1);
     device_id.set_device_terminal(terminal);
-    TEST_ASSERT(device_id.get_device_name()=="BUS 1");
+    TEST_ASSERT(device_id.get_compound_device_name()=="BUS 1");
 
     device_id.clear();
     terminal.clear();
@@ -335,7 +335,7 @@ void DEVICE_ID_TEST::test_get_device_name()
     terminal.append_bus(2);
     device_id.set_device_terminal(terminal);
     device_id.set_device_identifier("#1");
-    TEST_ASSERT(device_id.get_device_name()=="LINE #1 LINKING BUS 1 AND 2");
+    TEST_ASSERT(device_id.get_compound_device_name()=="LINE #1 LINKING BUS 1 AND 2");
 
     device_id.clear();
     terminal.clear();
@@ -344,7 +344,7 @@ void DEVICE_ID_TEST::test_get_device_name()
     terminal.append_bus(2);
     device_id.set_device_terminal(terminal);
     device_id.set_device_identifier("#1");
-    TEST_ASSERT(device_id.get_device_name()=="HVDC #1 LINKING BUS 1 AND 2");
+    TEST_ASSERT(device_id.get_compound_device_name()=="HVDC #1 LINKING BUS 1 AND 2");
 
     device_id.clear();
     terminal.clear();
@@ -353,7 +353,7 @@ void DEVICE_ID_TEST::test_get_device_name()
     terminal.append_bus(2);
     device_id.set_device_terminal(terminal);
     device_id.set_device_identifier("#1");
-    TEST_ASSERT(device_id.get_device_name()=="VSC HVDC #1 LINKING BUS 1 AND 2");
+    TEST_ASSERT(device_id.get_compound_device_name()=="VSC HVDC #1 LINKING BUS 1 AND 2");
 
     device_id.clear();
     terminal.clear();
@@ -362,7 +362,7 @@ void DEVICE_ID_TEST::test_get_device_name()
     terminal.append_bus(2);
     device_id.set_device_terminal(terminal);
     device_id.set_device_identifier("#1");
-    TEST_ASSERT(device_id.get_device_name()=="TRANSFORMER #1 LINKING BUS 1 AND 2");
+    TEST_ASSERT(device_id.get_compound_device_name()=="TRANSFORMER #1 LINKING BUS 1 AND 2");
 
     device_id.clear();
     terminal.clear();
@@ -372,7 +372,7 @@ void DEVICE_ID_TEST::test_get_device_name()
     terminal.append_bus(3);
     device_id.set_device_terminal(terminal);
     device_id.set_device_identifier("#1");
-    TEST_ASSERT(device_id.get_device_name()=="TRANSFORMER #1 LINKING BUS 1 2 AND 3");
+    TEST_ASSERT(device_id.get_compound_device_name()=="TRANSFORMER #1 LINKING BUS 1 2 AND 3");
 
     device_id.clear();
     terminal.clear();
@@ -380,7 +380,7 @@ void DEVICE_ID_TEST::test_get_device_name()
     terminal.append_bus(1);
     device_id.set_device_terminal(terminal);
     device_id.set_device_identifier("#1");
-    TEST_ASSERT(device_id.get_device_name()=="GENERATOR #1 AT BUS 1");
+    TEST_ASSERT(device_id.get_compound_device_name()=="GENERATOR #1 AT BUS 1");
 
     device_id.clear();
     terminal.clear();
@@ -388,7 +388,7 @@ void DEVICE_ID_TEST::test_get_device_name()
     terminal.append_bus(1);
     device_id.set_device_terminal(terminal);
     device_id.set_device_identifier("#1");
-    TEST_ASSERT(device_id.get_device_name()=="WT GENERATOR #1 AT BUS 1");
+    TEST_ASSERT(device_id.get_compound_device_name()=="WT GENERATOR #1 AT BUS 1");
 
     device_id.clear();
     terminal.clear();
@@ -396,7 +396,7 @@ void DEVICE_ID_TEST::test_get_device_name()
     terminal.append_bus(1);
     device_id.set_device_terminal(terminal);
     device_id.set_device_identifier("#1");
-    TEST_ASSERT(device_id.get_device_name()=="LOAD #1 AT BUS 1");
+    TEST_ASSERT(device_id.get_compound_device_name()=="LOAD #1 AT BUS 1");
 
     device_id.clear();
     terminal.clear();
@@ -404,7 +404,7 @@ void DEVICE_ID_TEST::test_get_device_name()
     terminal.append_bus(1);
     device_id.set_device_terminal(terminal);
     device_id.set_device_identifier("#1");
-    TEST_ASSERT(device_id.get_device_name()=="FIXED SHUNT #1 AT BUS 1");
+    TEST_ASSERT(device_id.get_compound_device_name()=="FIXED SHUNT #1 AT BUS 1");
 
     device_id.clear();
     terminal.clear();
@@ -412,7 +412,7 @@ void DEVICE_ID_TEST::test_get_device_name()
     terminal.append_bus(1);
     device_id.set_device_terminal(terminal);
     device_id.set_device_identifier("#1");
-    TEST_ASSERT(device_id.get_device_name()=="SWITCHED SHUNT #1 AT BUS 1");
+    TEST_ASSERT(device_id.get_compound_device_name()=="SWITCHED SHUNT #1 AT BUS 1");
 
     device_id.clear();
     terminal.clear();
@@ -420,7 +420,7 @@ void DEVICE_ID_TEST::test_get_device_name()
     terminal.append_bus(1);
     device_id.set_device_terminal(terminal);
     device_id.set_device_identifier("#1");
-    TEST_ASSERT(device_id.get_device_name()=="EQUIVALENT DEVICE #1 AT BUS 1");
+    TEST_ASSERT(device_id.get_compound_device_name()=="EQUIVALENT DEVICE #1 AT BUS 1");
 
     device_id.clear();
     terminal.clear();
@@ -428,7 +428,7 @@ void DEVICE_ID_TEST::test_get_device_name()
     terminal.append_bus(1);
     device_id.set_device_terminal(terminal);
     device_id.set_device_identifier("#1");
-    TEST_ASSERT(device_id.get_device_name()=="ENERGY STORAGE #1 AT BUS 1");
+    TEST_ASSERT(device_id.get_compound_device_name()=="ENERGY STORAGE #1 AT BUS 1");
 }
 
 void DEVICE_ID_TEST::test_is_valid()

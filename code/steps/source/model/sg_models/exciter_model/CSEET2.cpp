@@ -603,25 +603,25 @@ void CSEET2::initialize()
             double Vr = Efd + Kc*Ifd;
             if(Vr>get_VRmax_in_pu())
             {
-                osstream<<"Initialization error. Regulating excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. Regulating excitation voltage of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                   <<"Vr is "<<Vr<<", and Vrmax is "<<get_VRmax_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(Vr<get_VRmin_in_pu())
             {
-                osstream<<"Initialization error. Regulating excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                osstream<<"Initialization error. Regulating excitation voltage of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                   <<"Vr is "<<Vr<<", and Vrmin is "<<get_VRmin_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(Vr>get_VAmax_in_pu())
             {
-                osstream<<"Initialization error. Regulating excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. Regulating excitation voltage of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                   <<"Va is "<<Vr<<", and VAmax is "<<get_VAmax_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(Vr<get_VAmin_in_pu())
             {
-                osstream<<"Initialization error. Regulating excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                osstream<<"Initialization error. Regulating excitation voltage of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                   <<"Va is "<<Vr<<", and VAmin is "<<get_VAmin_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
@@ -772,7 +772,7 @@ void CSEET2::check()
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
 
-    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_device_name()<<".\n";
+    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_compound_device_name()<<".\n";
     bool error_found = false;
     if(get_tuner_type()==SERIAL_TUNER)
     {

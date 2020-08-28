@@ -44,6 +44,8 @@ const unsigned int STEPS_MEDIUM_STRING_SIZE = 128;
 const unsigned int STEPS_LONG_STRING_SIZE = 256;
 const unsigned int STEPS_METER_TYPE_STRING_SIZE = STEPS_SHORT_STRING_SIZE;
 const unsigned int STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT = 2;
+const unsigned int STEPS_MAX_DC_NETWORK_BUS_SIZE = 20;
+const unsigned int STEPS_MAX_DC_NETWORK_LINE_SIZE = 10;
 
 const int STEPS_MAGIC1 = 621877636;
 const int STEPS_MAGIC2 = 40966531;

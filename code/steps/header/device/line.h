@@ -87,7 +87,7 @@ class LINE : public NONBUS_DEVICE
         virtual LINE& operator=(const LINE& line);
 
         virtual DEVICE_ID get_device_id() const;
-        //virtual string get_device_name() const;
+        //virtual string get_compound_device_name() const;
 
         double get_line_base_voltage_in_kV() const;
 

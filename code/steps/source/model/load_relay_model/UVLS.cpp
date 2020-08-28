@@ -279,7 +279,7 @@ void UVLS::run(DYNAMIC_MODE mode)
             {
                 if(is_stage_breaker_timer_timed_out(i)) // breaker timed out
                 {
-                    osstream<<"UVLS stage "<<i<<" timer of "<<get_device_name()<<" is timed out at time "<<current_time<<" s."<<endl
+                    osstream<<"UVLS stage "<<i<<" timer of "<<get_compound_device_name()<<" is timed out at time "<<current_time<<" s."<<endl
                       <<get_scale_in_pu_of_stage(i)*100.0<<"% loads are tripped.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
 
@@ -292,7 +292,7 @@ void UVLS::run(DYNAMIC_MODE mode)
             {
                 if(is_stage_delayer_timer_timed_out(i)) // delayer timed out
                 {
-                    osstream<<"UVLS stage "<<i<<" timer of "<<get_device_name()<<" is sending tripping signal to breaker at time "<<current_time<<" s since stage delayer timer is timed out."<<endl
+                    osstream<<"UVLS stage "<<i<<" timer of "<<get_compound_device_name()<<" is sending tripping signal to breaker at time "<<current_time<<" s since stage delayer timer is timed out."<<endl
                       <<"Current voltage is "<<v<<" pu, and stage voltage threshold is "<<get_voltage_threshold_in_pu_of_stage(i)<<" pu.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     start_stage_breaker_timer(i); // start breaker;
@@ -304,7 +304,7 @@ void UVLS::run(DYNAMIC_MODE mode)
                     else
                     {
                         // need to reset
-                        osstream<<"UVLS stage "<<i<<" timer of "<<get_device_name()<<" is reset at time "<<current_time<<" s due to recovery of voltage."<<endl
+                        osstream<<"UVLS stage "<<i<<" timer of "<<get_compound_device_name()<<" is reset at time "<<current_time<<" s due to recovery of voltage."<<endl
                           <<"Current voltage is "<<v<<" pu, and stage voltage threshold is "<<get_voltage_threshold_in_pu_of_stage(i)<<" pu.";
                         toolkit.show_information_with_leading_time_stamp(osstream);
                         reset_stage_delayer_timer(i);
@@ -316,7 +316,7 @@ void UVLS::run(DYNAMIC_MODE mode)
             {
                 if(v<get_voltage_threshold_in_pu_of_stage(i))
                 {
-                    osstream<<"UVLS stage "<<i<<" timer of "<<get_device_name()<<" is started at time "<<current_time<<" s due to drop of voltage."<<endl
+                    osstream<<"UVLS stage "<<i<<" timer of "<<get_compound_device_name()<<" is started at time "<<current_time<<" s due to drop of voltage."<<endl
                       <<"Current voltage is "<<v<<" pu, and stage voltage threshold is "<<get_voltage_threshold_in_pu_of_stage(i)<<" pu.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     start_stage_delayer_timer(i);

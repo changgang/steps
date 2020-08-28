@@ -267,7 +267,7 @@ void LINE::set_fault(unsigned int to_bus, double location, const FAULT& fault)
         ostringstream osstream;
         if(location<0.0 or location>1.0)
         {
-            osstream<<"Warning. Fault location ("<<location<<") is out of allowed range [0.0, 1.0] for "<<get_device_name()<<"."<<endl
+            osstream<<"Warning. Fault location ("<<location<<") is out of allowed range [0.0, 1.0] for "<<get_compound_device_name()<<"."<<endl
                     <<"No fault will be set.";
             toolkit.show_information_with_leading_time_stamp(osstream);
             return;
@@ -275,7 +275,7 @@ void LINE::set_fault(unsigned int to_bus, double location, const FAULT& fault)
 
         if(not fault.is_faulted())
         {
-            osstream<<"Warning. Given fault is not faulted for "<<get_device_name()<<"."<<endl
+            osstream<<"Warning. Given fault is not faulted for "<<get_compound_device_name()<<"."<<endl
                    <<"No fault will be set.";
             toolkit.show_information_with_leading_time_stamp(osstream);
             return;
@@ -284,7 +284,7 @@ void LINE::set_fault(unsigned int to_bus, double location, const FAULT& fault)
         string fault_type = fault.get_fault_type_string();
 
         complex<double> y = fault.get_fault_shunt_in_pu();
-        osstream<<fault_type<<" fault is set for "<<get_device_name()<<"."<<endl
+        osstream<<fault_type<<" fault is set for "<<get_compound_device_name()<<"."<<endl
                <<"Fault shunt is "<<y<<" pu at location "<<location<<" to bus "<<to_bus;
 
         if(to_bus == get_receiving_side_bus())
@@ -298,7 +298,7 @@ void LINE::set_fault(unsigned int to_bus, double location, const FAULT& fault)
         }
         if(iter!=faults.end())
         {
-            osstream<<"Fault at location "<<location<<" (to sending side bus) already exist for "<<get_device_name()<<"."<<endl
+            osstream<<"Fault at location "<<location<<" (to sending side bus) already exist for "<<get_compound_device_name()<<"."<<endl
                   <<"Setting fault at this location will remove the previous one";
             iter->second = fault;
         }
@@ -382,10 +382,10 @@ void LINE::clear_fault_at_location(unsigned int to_bus, double location)
             complex<double> y = fault.get_fault_shunt_in_pu();
 
             if(to_bus==get_sending_side_bus())
-                osstream<<fault_type_str<<" is cleared for "<<get_device_name()<<endl
+                osstream<<fault_type_str<<" is cleared for "<<get_compound_device_name()<<endl
                   <<"Fault shunt "<<y<<" pu at location "<<location<<" to bus "<<get_sending_side_bus()<<".";
             else
-                osstream<<fault_type_str<<" is cleared for "<<get_device_name()<<endl
+                osstream<<fault_type_str<<" is cleared for "<<get_compound_device_name()<<endl
                   <<"Fault shunt "<<y<<" pu at location "<<1.0-location<<" to bus "<<get_receiving_side_bus()<<".";
             toolkit.show_information_with_leading_time_stamp(osstream);
             faults.erase(iter);
@@ -425,7 +425,7 @@ void LINE::check()
     double ivbase = psdb.get_bus_base_voltage_in_kV(ibus);
     double jvbase = psdb.get_bus_base_voltage_in_kV(jbus);
 
-    osstream<<"Warning detected when checking "<<ivbase<<"kV "<<get_device_name()<<"["
+    osstream<<"Warning detected when checking "<<ivbase<<"kV "<<get_compound_device_name()<<"["
             <<psdb.bus_number2bus_name(get_sending_side_bus())<<"-"
             <<psdb.bus_number2bus_name(get_receiving_side_bus())<<"]:\n";
 
@@ -564,7 +564,7 @@ void LINE::report() const
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
-    osstream<<get_device_name()<<": "<<((get_sending_side_breaker_status()==true and get_receiving_side_breaker_status()==true)?"in service":"out of service")<<", "
+    osstream<<get_compound_device_name()<<": "<<((get_sending_side_breaker_status()==true and get_receiving_side_breaker_status()==true)?"in service":"out of service")<<", "
       <<"line R+jX = "<<setw(8)<<setprecision(4)<<fixed<<get_line_positive_sequence_z_in_pu()<<" pu, "
       <<"line G+jB = "<<setw(8)<<setprecision(4)<<fixed<<get_line_positive_sequence_y_in_pu()<<" pu, "
       <<"sending shunt G+jB = "<<setw(8)<<setprecision(4)<<fixed<<get_shunt_positive_sequence_y_at_sending_side_in_pu()<<" pu, "

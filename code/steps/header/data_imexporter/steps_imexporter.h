@@ -59,7 +59,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void load_hvdc_data();
         void add_hvdc_with_data(vector<vector<string> > hvdc_data);
         void add_hvdc_basic_data(HVDC& hvdc, vector<string> data);
-        void add_hvdc_converter_data(HVDC& hvdc, HVDC_CONVERTER_SIDE converter, vector<string> data);
+        void add_hvdc_converter_data(HVDC& hvdc, CONVERTER_SIDE converter, vector<string> data);
         void load_vsc_hvdc_data();
         void load_transformer_impedance_correction_table_data();
         void load_multi_terminal_hvdc_data();

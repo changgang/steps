@@ -123,7 +123,7 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
 void ENERGY_STORAGE::report() const
 {
     ostringstream osstream;
-    osstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
+    osstream<<get_compound_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
             <<"MBASE = "<<setw(6)<<setprecision(2)<<fixed<<get_mbase_in_MVA()<<" MVA"<<endl
             <<"P = "<<setw(8)<<setprecision(4)<<fixed<<get_p_generation_in_MW()<<" MW, "
             <<"Pmax = "<<setw(8)<<setprecision(4)<<fixed<<get_p_max_in_MW()<<" MW, "

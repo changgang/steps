@@ -25,8 +25,8 @@ class HVDC_MODEL : public MODEL
         double get_auxiliary_signal_in_MW() const;
 
         // common setter and getter
-        void set_converter_dynamic_max_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter, double angle);
-        void set_converter_dynamic_min_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter, double angle);
+        void set_converter_dynamic_max_alpha_or_gamma_in_deg(CONVERTER_SIDE converter, double angle);
+        void set_converter_dynamic_min_alpha_or_gamma_in_deg(CONVERTER_SIDE converter, double angle);
 
         void set_dc_voltage_command_recovery_rate_in_pu_per_second(double rate);
         void set_dc_current_command_recovery_rate_in_pu_per_second(double rate);
@@ -40,8 +40,8 @@ class HVDC_MODEL : public MODEL
         void set_mininum_bypassing_time_in_s(double t);
         void set_minimum_time_in_switched_mode_in_s(double t);
 
-        double get_converter_dynamic_max_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter) const;
-        double get_converter_dynamic_min_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter) const;
+        double get_converter_dynamic_max_alpha_or_gamma_in_deg(CONVERTER_SIDE converter) const;
+        double get_converter_dynamic_min_alpha_or_gamma_in_deg(CONVERTER_SIDE converter) const;
 
         double get_dc_voltage_command_recovery_rate_in_pu_per_second() const;
         double get_dc_current_command_recovery_rate_in_pu_per_second() const;
@@ -78,7 +78,7 @@ class HVDC_MODEL : public MODEL
         bool is_manual_blocked() const;
         double get_blocked_time() const;
         double get_unblocking_time() const;
-        void clear_unblocking_time(HVDC_CONVERTER_SIDE converter);
+        void clear_unblocking_time(CONVERTER_SIDE converter);
         bool is_block_timer_timed_out() const;
 
         void bypass_hvdc();
@@ -104,18 +104,18 @@ class HVDC_MODEL : public MODEL
         void solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset_kV);
         //
 
-        double get_converter_dc_voltage_in_kV(HVDC_CONVERTER_SIDE converter) const;
-        double get_converter_dc_current_in_kA(HVDC_CONVERTER_SIDE converter) const;
-        double get_converter_dc_power_in_MW(HVDC_CONVERTER_SIDE converter) const;
-        double get_converter_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter) const;
-        double get_converter_commutation_overlap_angle_in_deg(HVDC_CONVERTER_SIDE converter) const;
-        complex<double> get_converter_ac_complex_power_in_MVA(HVDC_CONVERTER_SIDE converter) const;
-        double get_converter_ac_power_factor_angle_in_deg(HVDC_CONVERTER_SIDE converter) const;
-        complex<double> get_converter_ac_current_in_pu(HVDC_CONVERTER_SIDE converter) const;
-        complex<double> get_converter_ac_current_in_kA(HVDC_CONVERTER_SIDE converter) const;
-        double get_converter_ac_voltage_in_pu(HVDC_CONVERTER_SIDE converter) const;
-        double get_converter_ac_voltage_in_kV(HVDC_CONVERTER_SIDE converter) const;
-        complex<double> get_converter_ac_complex_voltage_in_pu(HVDC_CONVERTER_SIDE converter) const;
+        double get_converter_dc_voltage_in_kV(CONVERTER_SIDE converter) const;
+        double get_converter_dc_current_in_kA(CONVERTER_SIDE converter) const;
+        double get_converter_dc_power_in_MW(CONVERTER_SIDE converter) const;
+        double get_converter_alpha_or_gamma_in_deg(CONVERTER_SIDE converter) const;
+        double get_converter_commutation_overlap_angle_in_deg(CONVERTER_SIDE converter) const;
+        complex<double> get_converter_ac_complex_power_in_MVA(CONVERTER_SIDE converter) const;
+        double get_converter_ac_power_factor_angle_in_deg(CONVERTER_SIDE converter) const;
+        complex<double> get_converter_ac_current_in_pu(CONVERTER_SIDE converter) const;
+        complex<double> get_converter_ac_current_in_kA(CONVERTER_SIDE converter) const;
+        double get_converter_ac_voltage_in_pu(CONVERTER_SIDE converter) const;
+        double get_converter_ac_voltage_in_kV(CONVERTER_SIDE converter) const;
+        complex<double> get_converter_ac_complex_voltage_in_pu(CONVERTER_SIDE converter) const;
 
         double get_time_duration_to_the_last_bypass_in_s() const;
         double get_time_of_the_last_bypass_in_s() const;

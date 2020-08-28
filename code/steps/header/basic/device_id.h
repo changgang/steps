@@ -25,7 +25,7 @@ class DEVICE_ID
         unsigned int get_minimum_allowed_terminal_count() const;
         unsigned int get_maximum_allowed_terminal_count() const;
 
-        string get_device_name() const;
+        string get_compound_device_name() const;
 
         bool is_valid() const;
 

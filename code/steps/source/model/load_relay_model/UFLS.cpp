@@ -279,7 +279,7 @@ void UFLS::run(DYNAMIC_MODE mode)
             {
                 if(is_stage_breaker_timer_timed_out(i)) // breaker timed out
                 {
-                    osstream<<"UFLS stage "<<i<<" timer of "<<get_device_name()<<" is timed out at time "<<current_time<<" s."<<endl
+                    osstream<<"UFLS stage "<<i<<" timer of "<<get_compound_device_name()<<" is timed out at time "<<current_time<<" s."<<endl
                       <<get_scale_in_pu_of_stage(i)*100.0<<"% loads are tripped.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
 
@@ -292,7 +292,7 @@ void UFLS::run(DYNAMIC_MODE mode)
             {
                 if(is_stage_delayer_timer_timed_out(i)) // delayer timed out
                 {
-                    osstream<<"UFLS stage "<<i<<" timer of "<<get_device_name()<<" is sending tripping signal to breaker at time "<<current_time<<" s since stage delayer timer is timed out."<<endl
+                    osstream<<"UFLS stage "<<i<<" timer of "<<get_compound_device_name()<<" is sending tripping signal to breaker at time "<<current_time<<" s since stage delayer timer is timed out."<<endl
                       <<"Current frequency is "<<f<<" Hz, and stage frequency threshold is "<<get_frequency_threshold_in_Hz_of_stage(i)<<" Hz.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     start_stage_breaker_timer(i); // start breaker;
@@ -304,7 +304,7 @@ void UFLS::run(DYNAMIC_MODE mode)
                     else
                     {
                         // need to reset
-                        osstream<<"UFLS stage "<<i<<" timer of "<<get_device_name()<<" is reset at time "<<current_time<<" s due to recovery of frequency."<<endl
+                        osstream<<"UFLS stage "<<i<<" timer of "<<get_compound_device_name()<<" is reset at time "<<current_time<<" s due to recovery of frequency."<<endl
                           <<"Current frequency is "<<f<<" Hz, and stage frequency threshold is "<<get_frequency_threshold_in_Hz_of_stage(i)<<" Hz.";
                         toolkit.show_information_with_leading_time_stamp(osstream);
                         reset_stage_delayer_timer(i);
@@ -316,7 +316,7 @@ void UFLS::run(DYNAMIC_MODE mode)
             {
                 if(f<get_frequency_threshold_in_Hz_of_stage(i))
                 {
-                    osstream<<"UFLS stage "<<i<<" timer of "<<get_device_name()<<" is started at time "<<current_time<<" s due to drop of frequency."<<endl
+                    osstream<<"UFLS stage "<<i<<" timer of "<<get_compound_device_name()<<" is started at time "<<current_time<<" s due to drop of frequency."<<endl
                       <<"Current frequency is "<<f<<" Hz, and stage frequency threshold is "<<get_frequency_threshold_in_Hz_of_stage(i)<<" Hz.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     start_stage_delayer_timer(i);

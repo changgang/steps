@@ -22,37 +22,37 @@ class VSC_HVDC : public NONBUS_DEVICE
         VSC_HVDC(STEPS& toolkit);
         virtual ~VSC_HVDC();
 
-        void set_converter_bus(HVDC_CONVERTER_SIDE converter, const unsigned int bus);
+        void set_converter_bus(CONVERTER_SIDE converter, const unsigned int bus);
         void set_identifier(const string identifier);
         void set_name(const string name);
         void set_status(const bool status);
         void set_line_resistance_in_ohm(const double R);
 
-        void set_converter_dc_operation_mode(HVDC_CONVERTER_SIDE converter, const VSC_HVDC_DC_CONTROL_MODE mode);
-        void set_converter_ac_operation_mode(HVDC_CONVERTER_SIDE converter, const VSC_HVDC_AC_CONTROL_MODE mode);
+        void set_converter_dc_operation_mode(CONVERTER_SIDE converter, const VSC_HVDC_DC_CONTROL_MODE mode);
+        void set_converter_ac_operation_mode(CONVERTER_SIDE converter, const VSC_HVDC_AC_CONTROL_MODE mode);
 
-        void set_converter_nominal_dc_power_command_in_MW(HVDC_CONVERTER_SIDE converter, double P);
-        void set_converter_nominal_dc_voltage_command_in_kV(HVDC_CONVERTER_SIDE converter, double V);
+        void set_converter_nominal_dc_power_command_in_MW(CONVERTER_SIDE converter, double P);
+        void set_converter_nominal_dc_voltage_command_in_kV(CONVERTER_SIDE converter, double V);
 
-        void set_converter_nominal_ac_voltage_command_in_pu(HVDC_CONVERTER_SIDE converter, double V);
-        void set_converter_nominal_ac_power_factor_command(HVDC_CONVERTER_SIDE converter, double pf);
+        void set_converter_nominal_ac_voltage_command_in_pu(CONVERTER_SIDE converter, double V);
+        void set_converter_nominal_ac_power_factor_command(CONVERTER_SIDE converter, double pf);
 
-        void set_converter_loss_factor_A_in_kW(HVDC_CONVERTER_SIDE converter, double A);
-        void set_converter_loss_factor_B_in_kW_per_amp(HVDC_CONVERTER_SIDE converter, double B);
-        void set_converter_minimum_loss_in_kW(HVDC_CONVERTER_SIDE converter, double P);
+        void set_converter_loss_factor_A_in_kW(CONVERTER_SIDE converter, double A);
+        void set_converter_loss_factor_B_in_kW_per_amp(CONVERTER_SIDE converter, double B);
+        void set_converter_minimum_loss_in_kW(CONVERTER_SIDE converter, double P);
 
-        void set_converter_MVA_rating_in_MVA(HVDC_CONVERTER_SIDE converter, double S);
-        void set_converter_current_rating_in_amp(HVDC_CONVERTER_SIDE converter, double I);
+        void set_converter_MVA_rating_in_MVA(CONVERTER_SIDE converter, double S);
+        void set_converter_current_rating_in_amp(CONVERTER_SIDE converter, double I);
 
-        void set_converter_power_weighting_factor(HVDC_CONVERTER_SIDE converter, double pwf);
-        void set_converter_Qmax_in_MVar(HVDC_CONVERTER_SIDE converter, double Q);
-        void set_converter_Qmin_in_MVar(HVDC_CONVERTER_SIDE converter, double Q);
+        void set_converter_power_weighting_factor(CONVERTER_SIDE converter, double pwf);
+        void set_converter_Qmax_in_MVar(CONVERTER_SIDE converter, double Q);
+        void set_converter_Qmin_in_MVar(CONVERTER_SIDE converter, double Q);
 
-        void set_converter_remote_bus_to_regulate(HVDC_CONVERTER_SIDE converter, unsigned int bus);
-        void set_converter_remote_regulation_percent(HVDC_CONVERTER_SIDE converter, double rmpct);
+        void set_converter_remote_bus_to_regulate(CONVERTER_SIDE converter, unsigned int bus);
+        void set_converter_remote_regulation_percent(CONVERTER_SIDE converter, double rmpct);
 
-        unsigned int get_converter_bus(HVDC_CONVERTER_SIDE converter) const;
-        BUS* get_converter_bus_pointer(HVDC_CONVERTER_SIDE converter) const;
+        unsigned int get_converter_bus(CONVERTER_SIDE converter) const;
+        BUS* get_converter_bus_pointer(CONVERTER_SIDE converter) const;
 
         string get_identifier() const;
         string get_name() const;
@@ -60,43 +60,43 @@ class VSC_HVDC : public NONBUS_DEVICE
 
         double get_line_resistance_in_ohm() const;
 
-        VSC_HVDC_DC_CONTROL_MODE get_converter_dc_operation_mode(HVDC_CONVERTER_SIDE converter) const;
-        VSC_HVDC_AC_CONTROL_MODE get_converter_ac_operation_mode(HVDC_CONVERTER_SIDE converter) const;
+        VSC_HVDC_DC_CONTROL_MODE get_converter_dc_operation_mode(CONVERTER_SIDE converter) const;
+        VSC_HVDC_AC_CONTROL_MODE get_converter_ac_operation_mode(CONVERTER_SIDE converter) const;
 
-        double get_converter_nominal_dc_power_command_in_MW(HVDC_CONVERTER_SIDE converter) const;
-        double get_converter_nominal_dc_voltage_command_in_kV(HVDC_CONVERTER_SIDE converter) const;
+        double get_converter_nominal_dc_power_command_in_MW(CONVERTER_SIDE converter) const;
+        double get_converter_nominal_dc_voltage_command_in_kV(CONVERTER_SIDE converter) const;
 
-        double get_converter_nominal_ac_voltage_command_in_pu(HVDC_CONVERTER_SIDE converter) const;
-        double get_converter_nominal_ac_power_factor_command(HVDC_CONVERTER_SIDE converter) const;
+        double get_converter_nominal_ac_voltage_command_in_pu(CONVERTER_SIDE converter) const;
+        double get_converter_nominal_ac_power_factor_command(CONVERTER_SIDE converter) const;
 
-        double get_converter_loss_factor_A_in_kW(HVDC_CONVERTER_SIDE converter) const;
-        double get_converter_loss_factor_B_in_kW_per_amp(HVDC_CONVERTER_SIDE converter) const;
-        double get_converter_minimum_loss_in_kW(HVDC_CONVERTER_SIDE converter) const;
+        double get_converter_loss_factor_A_in_kW(CONVERTER_SIDE converter) const;
+        double get_converter_loss_factor_B_in_kW_per_amp(CONVERTER_SIDE converter) const;
+        double get_converter_minimum_loss_in_kW(CONVERTER_SIDE converter) const;
 
-        double get_converter_MVA_rating_in_MVA(HVDC_CONVERTER_SIDE converter) const;
-        double get_converter_current_rating_in_amp(HVDC_CONVERTER_SIDE converter) const;
+        double get_converter_MVA_rating_in_MVA(CONVERTER_SIDE converter) const;
+        double get_converter_current_rating_in_amp(CONVERTER_SIDE converter) const;
 
-        double get_converter_power_weighting_factor(HVDC_CONVERTER_SIDE converter) const;
-        double get_converter_Qmax_in_MVar(HVDC_CONVERTER_SIDE converter) const;
-        double get_converter_Qmin_in_MVar(HVDC_CONVERTER_SIDE converter) const;
+        double get_converter_power_weighting_factor(CONVERTER_SIDE converter) const;
+        double get_converter_Qmax_in_MVar(CONVERTER_SIDE converter) const;
+        double get_converter_Qmin_in_MVar(CONVERTER_SIDE converter) const;
 
-        unsigned int get_converter_remote_bus_to_regulate(HVDC_CONVERTER_SIDE converter) const;
-        double get_converter_remote_regulation_percent(HVDC_CONVERTER_SIDE converter) const;
+        unsigned int get_converter_remote_bus_to_regulate(CONVERTER_SIDE converter) const;
+        double get_converter_remote_regulation_percent(CONVERTER_SIDE converter) const;
 
     public:
         void initialize_dc_power_and_voltage_command();
 
         void set_nominal_dc_current_command_in_kA(double I);
-        void set_converter_actual_dc_power_command_in_MW(HVDC_CONVERTER_SIDE converter, double P);
-        void set_converter_actual_dc_voltage_command_in_kV(HVDC_CONVERTER_SIDE converter, double V);
+        void set_converter_actual_dc_power_command_in_MW(CONVERTER_SIDE converter, double P);
+        void set_converter_actual_dc_voltage_command_in_kV(CONVERTER_SIDE converter, double V);
         void set_actual_dc_current_command_in_kA(double I);
-        void set_converter_actual_ac_power_factor_command(HVDC_CONVERTER_SIDE converter, double eta);
+        void set_converter_actual_ac_power_factor_command(CONVERTER_SIDE converter, double eta);
 
         double get_nominal_dc_current_command_in_kA() const;
-        double get_converter_actual_dc_power_command_in_MW(HVDC_CONVERTER_SIDE converter) const;
-        double get_converter_actual_dc_voltage_command_in_kV(HVDC_CONVERTER_SIDE converter) const;
+        double get_converter_actual_dc_power_command_in_MW(CONVERTER_SIDE converter) const;
+        double get_converter_actual_dc_voltage_command_in_kV(CONVERTER_SIDE converter) const;
         double get_actual_dc_current_command_in_kA() const;
-        double get_converter_actual_ac_power_factor_command(HVDC_CONVERTER_SIDE converter) const;
+        double get_converter_actual_ac_power_factor_command(CONVERTER_SIDE converter) const;
 
         void reverse_converters();
 
@@ -123,15 +123,15 @@ class VSC_HVDC : public NONBUS_DEVICE
         virtual VSC_HVDC& operator=(const VSC_HVDC& hvdc);
 
         virtual DEVICE_ID get_device_id() const;
-        //virtual string get_device_name() const;
+        //virtual string get_compound_device_name() const;
 
-        void calculate_converter_power_factor_in_ac_voltage_control_mode(HVDC_CONVERTER_SIDE converter, double Qerror, double Qderivative);
+        void calculate_converter_power_factor_in_ac_voltage_control_mode(CONVERTER_SIDE converter, double Qerror, double Qderivative);
         void solve_steady_state();
         void show_solved_hvdc_steady_state() const;
 
-        complex<double> get_converter_dynamic_current_in_pu_based_on_system_base_power(HVDC_CONVERTER_SIDE converter);
+        complex<double> get_converter_dynamic_current_in_pu_based_on_system_base_power(CONVERTER_SIDE converter);
     private:
-        string get_converter_side_name(HVDC_CONVERTER_SIDE converter) const;
+        string get_converter_side_name(CONVERTER_SIDE converter) const;
 
         unsigned int converter_bus[2];
         BUS* converter_busptr[2];

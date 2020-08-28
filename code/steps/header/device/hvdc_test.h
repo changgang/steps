@@ -32,13 +32,12 @@ class HVDC_TEST : public Test::Suite
         void test_set_get_name();
         void test_set_get_status();
         void test_is_blocked();
-        void test_set_get_number_of_poles();
         void test_set_get_line_resistance();
         void test_set_get_line_inductance();
         void test_set_get_line_capacitance();
         void test_set_get_line_smoothing_inductance();
         void test_set_get_line_smoothing_resistance();
-        void test_set_get_nominal_dc_power_per_pole();
+        void test_set_get_nominal_dc_power();
         void test_set_get_side_to_hold_power();
         void test_set_get_nominal_dc_current();
         void test_set_get_nominal_dc_voltage();

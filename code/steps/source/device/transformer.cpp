@@ -134,7 +134,7 @@ void TRANSFORMER::set_winding_nominal_voltage_in_kV(TRANSFORMER_WINDING_SIDE win
     {
         ostringstream osstream;
         DEVICE_ID did = get_device_id();
-        string device = did.get_device_name();
+        string device = did.get_compound_device_name();
         osstream<<"Error. Zero (0.0kV) nominal voltage is not allowed for setting up "<<get_winding_name(winding)<<" winding nominal voltage of "<<device<<"."<<endl
           <<"0.0 will be set to indicate invalid transformer";
         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -189,7 +189,7 @@ void TRANSFORMER::set_leakage_impedance_between_windings_based_on_winding_nomina
         if(z==0.0)
         {
             STEPS& toolkit = get_toolkit();
-            osstream<<"Warning. The leakage impedance between "<<get_winding_name(winding1)<<" and "<<get_winding_name(winding2)<<" windings is zero for "<<get_device_name()<<endl
+            osstream<<"Warning. The leakage impedance between "<<get_winding_name(winding1)<<" and "<<get_winding_name(winding2)<<" windings is zero for "<<get_compound_device_name()<<endl
                     <<"Correction is required. Check original data.\n"
                     <<"Impedance will be set as 0.001.";
             toolkit.show_information_with_leading_time_stamp(osstream);
@@ -277,7 +277,7 @@ void TRANSFORMER::set_winding_controlled_bus(TRANSFORMER_WINDING_SIDE winding, u
         else
         {
             osstream<<"Bus "<<bus<<" does not exist in power system database '"<<psdb.get_system_name()<<"' for setting up controlled bus by "
-              <<get_winding_name(winding)<<" winding of "<<get_device_name()<<endl
+              <<get_winding_name(winding)<<" winding of "<<get_compound_device_name()<<endl
               <<get_winding_name(winding)<<" winding controlled bus will be set automatically as "<<get_winding_name(winding)<<" winding bus "<<winding_bus<<".";
             toolkit.show_information_with_leading_time_stamp(osstream);
             winding_controlled_bus[winding] = winding_bus;
@@ -517,11 +517,11 @@ void TRANSFORMER::check()
     unsigned int kbus = get_winding_bus(TERTIARY_SIDE);
 
     if(is_two_winding_transformer())
-        osstream<<"Warning detected when checking "<<get_device_name()+"["
+        osstream<<"Warning detected when checking "<<get_compound_device_name()+"["
                 <<psdb.bus_number2bus_name(ibus)<<"-"
                 <<psdb.bus_number2bus_name(jbus)<<"]: \n";
     else
-        osstream<<"Warning detected when checking "<<get_device_name()+"["
+        osstream<<"Warning detected when checking "<<get_compound_device_name()+"["
                 <<psdb.bus_number2bus_name(ibus)<<"-"
                 <<psdb.bus_number2bus_name(jbus)<<"-"
                 <<psdb.bus_number2bus_name(kbus)<<"]: \n";

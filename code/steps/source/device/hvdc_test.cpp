@@ -30,13 +30,11 @@ HVDC_TEST::HVDC_TEST() : hvdc(default_toolkit)
     TEST_ADD(HVDC_TEST::test_set_get_name);
     TEST_ADD(HVDC_TEST::test_set_get_status);
     TEST_ADD(HVDC_TEST::test_is_blocked);
-    TEST_ADD(HVDC_TEST::test_set_get_number_of_poles);
     TEST_ADD(HVDC_TEST::test_set_get_line_resistance);
     TEST_ADD(HVDC_TEST::test_set_get_line_inductance);
     TEST_ADD(HVDC_TEST::test_set_get_line_capacitance);
     TEST_ADD(HVDC_TEST::test_set_get_line_smoothing_inductance);
     TEST_ADD(HVDC_TEST::test_set_get_line_smoothing_resistance);
-    TEST_ADD(HVDC_TEST::test_set_get_nominal_dc_power_per_pole);
     TEST_ADD(HVDC_TEST::test_set_get_side_to_hold_power);
     TEST_ADD(HVDC_TEST::test_set_get_nominal_dc_current);
     TEST_ADD(HVDC_TEST::test_set_get_nominal_dc_voltage);
@@ -125,9 +123,9 @@ void HVDC_TEST::test_constructor()
     TEST_ASSERT(hvdc.get_line_resistance_in_ohm()==0.0);
     TEST_ASSERT(hvdc.get_line_inductance_in_mH()==0.0);
     TEST_ASSERT(hvdc.get_line_capacitance_in_uF()==0.0);
-    TEST_ASSERT(hvdc.get_nominal_dc_power_per_pole_in_MW()==0.0);
-    TEST_ASSERT(hvdc.get_nominal_dc_voltage_per_pole_in_kV()==0.0);
-    TEST_ASSERT(hvdc.get_nominal_dc_current_per_pole_in_kA()==0.0);
+    TEST_ASSERT(hvdc.get_nominal_dc_power_in_MW()==0.0);
+    TEST_ASSERT(hvdc.get_nominal_dc_voltage_in_kV()==0.0);
+    TEST_ASSERT(hvdc.get_nominal_dc_current_in_kA()==0.0);
 }
 
 void HVDC_TEST::test_set_get_converter_bus()
@@ -195,17 +193,6 @@ void HVDC_TEST::test_is_blocked()
     hvdc.set_status(true);
     TEST_ASSERT(hvdc.is_blocked()==false);
 
-}
-void HVDC_TEST::test_set_get_number_of_poles()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
-
-    prepare_hvdc_buses();
-
-    hvdc.set_number_of_poles(SINGLE_POLE);
-    TEST_ASSERT(hvdc.get_number_of_poles()==SINGLE_POLE);
-    hvdc.set_number_of_poles(DOUBLE_POLE);
-    TEST_ASSERT(hvdc.get_number_of_poles()==DOUBLE_POLE);
 }
 
 void HVDC_TEST::test_set_get_line_resistance()
@@ -278,18 +265,18 @@ void HVDC_TEST::test_set_get_line_smoothing_resistance()
     TEST_ASSERT(hvdc.get_line_smooting_resistance_in_ohm(RECTIFIER)==0.0);
 }
 
-void HVDC_TEST::test_set_get_nominal_dc_power_per_pole()
+void HVDC_TEST::test_set_get_nominal_dc_power()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
 
     prepare_hvdc_buses();
 
-    hvdc.set_nominal_dc_power_per_pole_in_MW(4000.0);
-    TEST_ASSERT(hvdc.get_nominal_dc_power_per_pole_in_MW()==4000.0);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(-4000.0);
-    TEST_ASSERT(hvdc.get_nominal_dc_power_per_pole_in_MW()==0.0);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(0.0);
-    TEST_ASSERT(hvdc.get_nominal_dc_power_per_pole_in_MW()==0.0);
+    hvdc.set_nominal_dc_power_in_MW(4000.0);
+    TEST_ASSERT(hvdc.get_nominal_dc_power_in_MW()==4000.0);
+    hvdc.set_nominal_dc_power_in_MW(-4000.0);
+    TEST_ASSERT(hvdc.get_nominal_dc_power_in_MW()==0.0);
+    hvdc.set_nominal_dc_power_in_MW(0.0);
+    TEST_ASSERT(hvdc.get_nominal_dc_power_in_MW()==0.0);
 }
 
 void HVDC_TEST::test_set_get_side_to_hold_power()
@@ -310,12 +297,12 @@ void HVDC_TEST::test_set_get_nominal_dc_current()
 
     prepare_hvdc_buses();
 
-    hvdc.set_nominal_dc_current_per_pole_in_kA(5.0);
-    TEST_ASSERT(hvdc.get_nominal_dc_current_per_pole_in_kA()==5.0);
-    hvdc.set_nominal_dc_current_per_pole_in_kA(-5.0);
-    TEST_ASSERT(hvdc.get_nominal_dc_current_per_pole_in_kA()==0.0);
-    hvdc.set_nominal_dc_current_per_pole_in_kA(0.0);
-    TEST_ASSERT(hvdc.get_nominal_dc_current_per_pole_in_kA()==0.0);
+    hvdc.set_nominal_dc_current_in_kA(5.0);
+    TEST_ASSERT(hvdc.get_nominal_dc_current_in_kA()==5.0);
+    hvdc.set_nominal_dc_current_in_kA(-5.0);
+    TEST_ASSERT(hvdc.get_nominal_dc_current_in_kA()==0.0);
+    hvdc.set_nominal_dc_current_in_kA(0.0);
+    TEST_ASSERT(hvdc.get_nominal_dc_current_in_kA()==0.0);
 }
 
 void HVDC_TEST::test_set_get_nominal_dc_voltage()
@@ -324,12 +311,12 @@ void HVDC_TEST::test_set_get_nominal_dc_voltage()
 
     prepare_hvdc_buses();
 
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(800.0);
-    TEST_ASSERT(hvdc.get_nominal_dc_voltage_per_pole_in_kV()==800.0);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(-800.0);
-    TEST_ASSERT(hvdc.get_nominal_dc_voltage_per_pole_in_kV()==0.0);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(0.0);
-    TEST_ASSERT(hvdc.get_nominal_dc_voltage_per_pole_in_kV()==0.0);
+    hvdc.set_nominal_dc_voltage_in_kV(800.0);
+    TEST_ASSERT(hvdc.get_nominal_dc_voltage_in_kV()==800.0);
+    hvdc.set_nominal_dc_voltage_in_kV(-800.0);
+    TEST_ASSERT(hvdc.get_nominal_dc_voltage_in_kV()==0.0);
+    hvdc.set_nominal_dc_voltage_in_kV(0.0);
+    TEST_ASSERT(hvdc.get_nominal_dc_voltage_in_kV()==0.0);
 }
 
 void HVDC_TEST::test_set_get_compensating_resistance_to_hold_voltage()
@@ -649,40 +636,40 @@ void HVDC_TEST::test_get_rectifier_dc_power_command()
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_side_to_hold_power(RECTIFIER);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(1000.0);
+    hvdc.set_nominal_dc_power_in_MW(1000.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(0.0);
 
     TEST_ASSERT(fabs(hvdc.get_rectifier_nominal_dc_power_command_in_MW()-1000.0)<FLOAT_EPSILON);
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_side_to_hold_power(RECTIFIER);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(1000.0);
+    hvdc.set_nominal_dc_power_in_MW(1000.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(10.0);
 
     TEST_ASSERT(fabs(hvdc.get_rectifier_nominal_dc_power_command_in_MW()-1000.0)<FLOAT_EPSILON);
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_side_to_hold_power(RECTIFIER);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(1000.0);
+    hvdc.set_nominal_dc_power_in_MW(1000.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(5.0);
 
     TEST_ASSERT(fabs(hvdc.get_rectifier_nominal_dc_power_command_in_MW()-1000.0)<FLOAT_EPSILON);
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_side_to_hold_power(INVERTER);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(1000.0);
+    hvdc.set_nominal_dc_power_in_MW(1000.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(0.0);
 
     // vdci = 500, Idc = 2.0, Vdcr = 520, Pdcr = 1040
@@ -690,10 +677,10 @@ void HVDC_TEST::test_get_rectifier_dc_power_command()
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_side_to_hold_power(INVERTER);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(1000.0);
+    hvdc.set_nominal_dc_power_in_MW(1000.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(10.0);
 
     // vdcr = 500,  (500-10*Idc)*Idc = 1000, 10*Idc2-500*Idc+1000=0, Idc2-50*Idc+100=0, Idc = (50-steps_sqrt(50*50-400))/2=2.08712152522079996705976403136
@@ -702,10 +689,10 @@ void HVDC_TEST::test_get_rectifier_dc_power_command()
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_side_to_hold_power(INVERTER);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(1000.0);
+    hvdc.set_nominal_dc_power_in_MW(1000.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(5.0);
 
     // vdci = 500-5.0*Idc, (500-5*Idc)*Idc = 1000, 5*Idc2-500*Idc+1000=0, Idc2-100*Idc+200=0,
@@ -717,30 +704,30 @@ void HVDC_TEST::test_get_rectifier_dc_power_command()
     // constant current mode
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_CURRENT);
     hvdc.set_side_to_hold_power(RECTIFIER);
-    hvdc.set_nominal_dc_current_per_pole_in_kA(2.0);
+    hvdc.set_nominal_dc_current_in_kA(2.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(0.0);
     // vdci = 500; vdcr = 520; Pdcr = 1040
     TEST_ASSERT(fabs(hvdc.get_rectifier_nominal_dc_power_command_in_MW()-1040.0)<FLOAT_EPSILON);
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_CURRENT);
     hvdc.set_side_to_hold_power(RECTIFIER);
-    hvdc.set_nominal_dc_current_per_pole_in_kA(2.0);
+    hvdc.set_nominal_dc_current_in_kA(2.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(10.0);
     // vdcr = 500, pdcr = 1000
     TEST_ASSERT(fabs(hvdc.get_rectifier_nominal_dc_power_command_in_MW()-1000.0)<FLOAT_EPSILON);
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_CURRENT);
     hvdc.set_side_to_hold_power(RECTIFIER);
-    hvdc.set_nominal_dc_current_per_pole_in_kA(2.0);
+    hvdc.set_nominal_dc_current_in_kA(2.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(5.0);
     // vdcr = 500+5*2=510, pdcr = 1020
     TEST_ASSERT(fabs(hvdc.get_rectifier_nominal_dc_power_command_in_MW()-1020.0)<FLOAT_EPSILON);
@@ -758,60 +745,60 @@ void HVDC_TEST::test_get_rectifier_dc_current_command()
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_side_to_hold_power(RECTIFIER);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(1000.0);
+    hvdc.set_nominal_dc_power_in_MW(1000.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(0.0);
     // (500+10*Idc)*Idc=1000, 10*Idc2+500*Idc-1000=0, Idc2+50*Idc-100=0, Idc= (-50+steps_sqrt(50*50+400))/2=1.9258240356725201562535524577016
     TEST_ASSERT(fabs(hvdc.get_rectifier_nominal_dc_current_command_in_kA()-1.9258240356725201562535524577016)<FLOAT_EPSILON);
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_side_to_hold_power(RECTIFIER);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(1000.0);
+    hvdc.set_nominal_dc_power_in_MW(1000.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(10.0);
 
     TEST_ASSERT(fabs(hvdc.get_rectifier_nominal_dc_current_command_in_kA()-2.0)<FLOAT_EPSILON);
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_side_to_hold_power(RECTIFIER);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(1000.0);
+    hvdc.set_nominal_dc_power_in_MW(1000.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(5.0);
     // (500+5*Idc)*Idc = 1000,5*Idc2+500*Idc-1000=0, Idc2+100*Idc-200=0, Idc = (-100+steps_sqrt(100*100+800))/2=1.9615242270663188058233902451762
     TEST_ASSERT(fabs(hvdc.get_rectifier_nominal_dc_current_command_in_kA()-1.9615242270663188058233902451762)<FLOAT_EPSILON);
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_side_to_hold_power(INVERTER);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(1000.0);
+    hvdc.set_nominal_dc_power_in_MW(1000.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(0.0);
 
     TEST_ASSERT(fabs(hvdc.get_rectifier_nominal_dc_current_command_in_kA()-2.0)<FLOAT_EPSILON);
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_side_to_hold_power(INVERTER);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(1000.0);
+    hvdc.set_nominal_dc_power_in_MW(1000.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(10.0);
     // (500-10*Idc)*Idc=1000, 10*Idc2-500*Idc+1000=0, Idc2-50*Idc+100=0, Idc = (50-steps_sqrt(50*50-400))/2=2.08712152522079996705976403136
     TEST_ASSERT(fabs(hvdc.get_rectifier_nominal_dc_current_command_in_kA()-2.08712152522079996705976403136)<FLOAT_EPSILON);
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_side_to_hold_power(INVERTER);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(1000.0);
+    hvdc.set_nominal_dc_power_in_MW(1000.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(5.0);
     // (500-5*Idc)*Idc=1000, 5*Idc2-500*Idc+1000=0, Idc2-100Idc+200=0, Idc = (100-steps_sqrt(100*100-800))/2=2.0416847668728045840256193583731
     TEST_ASSERT(fabs(hvdc.get_rectifier_nominal_dc_current_command_in_kA()-2.0416847668728045840256193583731)<FLOAT_EPSILON);
@@ -819,30 +806,30 @@ void HVDC_TEST::test_get_rectifier_dc_current_command()
     // constant current mode
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_CURRENT);
     hvdc.set_side_to_hold_power(RECTIFIER);
-    hvdc.set_nominal_dc_current_per_pole_in_kA(2.0);
+    hvdc.set_nominal_dc_current_in_kA(2.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(0.0);
 
     TEST_ASSERT(fabs(hvdc.get_rectifier_nominal_dc_current_command_in_kA()-2.0)<FLOAT_EPSILON);
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_CURRENT);
     hvdc.set_side_to_hold_power(RECTIFIER);
-    hvdc.set_nominal_dc_current_per_pole_in_kA(2.0);
+    hvdc.set_nominal_dc_current_in_kA(2.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(10.0);
 
     TEST_ASSERT(fabs(hvdc.get_rectifier_nominal_dc_current_command_in_kA()-2.0)<FLOAT_EPSILON);
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_CURRENT);
     hvdc.set_side_to_hold_power(RECTIFIER);
-    hvdc.set_nominal_dc_current_per_pole_in_kA(2.0);
+    hvdc.set_nominal_dc_current_in_kA(2.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(5.0);
 
     TEST_ASSERT(fabs(hvdc.get_rectifier_nominal_dc_current_command_in_kA()-2.0)<FLOAT_EPSILON);
@@ -860,30 +847,30 @@ void HVDC_TEST::test_get_inverter_dc_voltage_command()
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_side_to_hold_power(RECTIFIER);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(1000.0);
+    hvdc.set_nominal_dc_power_in_MW(1000.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(0.0);
 
     TEST_ASSERT(fabs(hvdc.get_inverter_nominal_dc_voltage_command_in_kV()-500.0)<FLOAT_EPSILON);
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_side_to_hold_power(RECTIFIER);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(1000.0);
+    hvdc.set_nominal_dc_power_in_MW(1000.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(10.0);
     // idc=2, vdci = 500-2*10=480
     TEST_ASSERT(fabs(hvdc.get_inverter_nominal_dc_voltage_command_in_kV()-480.0)<FLOAT_EPSILON);
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_side_to_hold_power(RECTIFIER);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(1000.0);
+    hvdc.set_nominal_dc_power_in_MW(1000.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(5.0);
     //(500+5*Idc)*Idc=1000, 5Idc2+500Idc-1000=0, Idc2+100Idc-200=0, Idc=(-100+steps_sqrt(100*100+800))/2=1.9615242270663188058233902451762
     // vdci = 500-5*idc=490.19237886466840597088304877412
@@ -891,20 +878,20 @@ void HVDC_TEST::test_get_inverter_dc_voltage_command()
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_side_to_hold_power(INVERTER);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(1000.0);
+    hvdc.set_nominal_dc_power_in_MW(1000.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(0.0);
 
     TEST_ASSERT(fabs(hvdc.get_inverter_nominal_dc_voltage_command_in_kV()-500.0)<FLOAT_EPSILON);
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_side_to_hold_power(INVERTER);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(1000.0);
+    hvdc.set_nominal_dc_power_in_MW(1000.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(10.0);
     //(500-10Idc)Idc=1000, 10Idc2-500Idc+1000=0, Idc2-50Idc+100=0, Idc=(50-steps_sqrt(50*50-400))/2=2.08712152522079996705976403136
     // vdci = 500-10Idc=479.1287847477920003294023596864
@@ -912,10 +899,10 @@ void HVDC_TEST::test_get_inverter_dc_voltage_command()
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_side_to_hold_power(INVERTER);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(1000.0);
+    hvdc.set_nominal_dc_power_in_MW(1000.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(5.0);
     // (500-5*Idc)*Idc=1000, 5*Idc2-500*Idc+1000=0, Idc2-100Idc+200=0, Idc = (100-steps_sqrt(100*100-800))/2=2.0416847668728045840256193583731
     // vdci = 500-5*Idc
@@ -924,30 +911,30 @@ void HVDC_TEST::test_get_inverter_dc_voltage_command()
     // constant current mode
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_CURRENT);
     hvdc.set_side_to_hold_power(RECTIFIER);
-    hvdc.set_nominal_dc_current_per_pole_in_kA(2.0);
+    hvdc.set_nominal_dc_current_in_kA(2.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(0.0);
 
     TEST_ASSERT(fabs(hvdc.get_inverter_nominal_dc_voltage_command_in_kV()-500.0)<FLOAT_EPSILON);
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_CURRENT);
     hvdc.set_side_to_hold_power(RECTIFIER);
-    hvdc.set_nominal_dc_current_per_pole_in_kA(2.0);
+    hvdc.set_nominal_dc_current_in_kA(2.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(10.0);
     // 500-10*2=480
     TEST_ASSERT(fabs(hvdc.get_inverter_nominal_dc_voltage_command_in_kV()-480.0)<FLOAT_EPSILON);
 
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_CURRENT);
     hvdc.set_side_to_hold_power(RECTIFIER);
-    hvdc.set_nominal_dc_current_per_pole_in_kA(2.0);
+    hvdc.set_nominal_dc_current_in_kA(2.0);
 
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(500.0);
+    hvdc.set_nominal_dc_voltage_in_kV(500.0);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(5.0);
     // 500-5*2=490
     TEST_ASSERT(fabs(hvdc.get_inverter_nominal_dc_voltage_command_in_kV()-490.0)<FLOAT_EPSILON);
@@ -1161,9 +1148,8 @@ void HVDC_TEST::test_solve_hvdc()
     hvdc.set_identifier("P");
     hvdc.set_status(true);
     hvdc.set_line_resistance_in_ohm(10.0);
-    hvdc.set_number_of_poles(SINGLE_POLE);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(800.0);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(4000.0);
+    hvdc.set_nominal_dc_voltage_in_kV(800.0);
+    hvdc.set_nominal_dc_power_in_MW(4000.0);
     hvdc.set_current_power_margin(0.15);
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_side_to_hold_power(INVERTER);

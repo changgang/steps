@@ -27,15 +27,6 @@ int api_get_hvdc_integer_data(unsigned int ibus, unsigned int jbus, char* identi
 
         if(SIDE=="HVDC")
         {
-            if(PARAMETER_NAME=="NPOLE" or PARAMETER_NAME=="POLE NUMBER")
-            {
-                HVDC_POLE poles = hvdcptr->get_number_of_poles();
-                if(poles==SINGLE_POLE)
-                    return 1;
-                else
-                    return 2;
-            }
-
             if(PARAMETER_NAME=="BUS_METER" or PARAMETER_NAME=="METER END BUS NUMBER")
                 return hvdcptr->get_converter_bus(hvdcptr->get_meter_end());
 
@@ -47,7 +38,7 @@ int api_get_hvdc_integer_data(unsigned int ibus, unsigned int jbus, char* identi
         }
         else
         {
-            HVDC_CONVERTER_SIDE con_side = (SIDE=="RECTIFIER"?RECTIFIER:INVERTER);
+            CONVERTER_SIDE con_side = (SIDE=="RECTIFIER"?RECTIFIER:INVERTER);
 
             if(PARAMETER_NAME=="BUS" or PARAMETER_NAME=="BUS NUMBER")
                 return hvdcptr->get_converter_bus(con_side);
@@ -91,12 +82,6 @@ void api_set_hvdc_integer_data(unsigned int ibus, unsigned int jbus, char* ident
 
         if(SIDE=="HVDC")
         {
-            if(PARAMETER_NAME=="NPOLE" or PARAMETER_NAME=="POLE NUMBER")
-            {
-                HVDC_POLE poles = (value==1?SINGLE_POLE:DOUBLE_POLE);
-                return hvdcptr->set_number_of_poles(poles);
-            }
-
             if(PARAMETER_NAME=="BUS_METER" or PARAMETER_NAME=="METER END BUS NUMBER")
                 return hvdcptr->set_meter_end(((unsigned int)(value)==hvdcptr->get_converter_bus(RECTIFIER)?RECTIFIER:INVERTER));
 
@@ -108,7 +93,7 @@ void api_set_hvdc_integer_data(unsigned int ibus, unsigned int jbus, char* ident
         }
         else
         {
-            HVDC_CONVERTER_SIDE con_side = (SIDE=="RECTIFIER"?RECTIFIER:INVERTER);
+            CONVERTER_SIDE con_side = (SIDE=="RECTIFIER"?RECTIFIER:INVERTER);
 
             if(PARAMETER_NAME=="BUS" or PARAMETER_NAME=="BUS NUMBER")
                 return hvdcptr->set_converter_bus(con_side, value);
@@ -161,14 +146,14 @@ double api_get_hvdc_float_data(unsigned int ibus, unsigned int jbus, char* ident
             if(PARAMETER_NAME=="C_UF" or PARAMETER_NAME=="LINE C IN UF")
                 return hvdcptr->get_line_capacitance_in_uF();
 
-            if(PARAMETER_NAME=="PDCN_MW" or PARAMETER_NAME=="NOMINAL DC POWER PER POLE IN MW")
-                return hvdcptr->get_nominal_dc_power_per_pole_in_MW();
+            if(PARAMETER_NAME=="PDCN_MW" or PARAMETER_NAME=="NOMINAL DC POWER IN MW")
+                return hvdcptr->get_nominal_dc_power_in_MW();
 
-            if(PARAMETER_NAME=="IDCN_KA" or PARAMETER_NAME=="NOMINAL DC CURRENT PER POLE IN KA")
-                return hvdcptr->get_nominal_dc_current_per_pole_in_kA();
+            if(PARAMETER_NAME=="IDCN_KA" or PARAMETER_NAME=="NOMINAL DC CURRENT IN KA")
+                return hvdcptr->get_nominal_dc_current_in_kA();
 
-            if(PARAMETER_NAME=="VDCN_KV" or PARAMETER_NAME=="NOMINAL DC VOLTAGE PER POLE IN KV")
-                return hvdcptr->get_nominal_dc_voltage_per_pole_in_kV();
+            if(PARAMETER_NAME=="VDCN_KV" or PARAMETER_NAME=="NOMINAL DC VOLTAGE IN KV")
+                return hvdcptr->get_nominal_dc_voltage_in_kV();
 
             if(PARAMETER_NAME=="RCOMP_OHM" or PARAMETER_NAME=="COMPENSATING RESISTANCE TO HOLD DC VOLTAGE IN OHM")
                 return hvdcptr->get_compensating_resistance_to_hold_dc_voltage_in_ohm();
@@ -214,7 +199,7 @@ double api_get_hvdc_float_data(unsigned int ibus, unsigned int jbus, char* ident
                     return hvdcptr->get_converter_alpha_or_gamma_in_deg(INVERTER);
             }
 
-            HVDC_CONVERTER_SIDE con_side = (SIDE=="RECTIFIER"?RECTIFIER:INVERTER);
+            CONVERTER_SIDE con_side = (SIDE=="RECTIFIER"?RECTIFIER:INVERTER);
 
             if(PARAMETER_NAME=="RS_OHM" or PARAMETER_NAME=="LINE SMOOTING R IN OHM")
                 return hvdcptr->get_line_smooting_resistance_in_ohm(con_side);
@@ -322,14 +307,14 @@ void api_set_hvdc_float_data(unsigned int ibus, unsigned int jbus, char* identif
             if(PARAMETER_NAME=="C_UF" or PARAMETER_NAME=="LINE C IN UF")
                 return hvdcptr->set_line_capacitance_in_uF(value);
 
-            if(PARAMETER_NAME=="PDCN_MW" or PARAMETER_NAME=="NOMINAL DC POWER PER POLE IN MW")
-                return hvdcptr->set_nominal_dc_power_per_pole_in_MW(value);
+            if(PARAMETER_NAME=="PDCN_MW" or PARAMETER_NAME=="NOMINAL DC POWER IN MW")
+                return hvdcptr->set_nominal_dc_power_in_MW(value);
 
-            if(PARAMETER_NAME=="IDCN_KA" or PARAMETER_NAME=="NOMINAL DC CURRENT PER POLE IN KA")
-                return hvdcptr->set_nominal_dc_current_per_pole_in_kA(value);
+            if(PARAMETER_NAME=="IDCN_KA" or PARAMETER_NAME=="NOMINAL DC CURRENT IN KA")
+                return hvdcptr->set_nominal_dc_current_in_kA(value);
 
-            if(PARAMETER_NAME=="VDCN_KV" or PARAMETER_NAME=="NOMINAL DC VOLTAGE PER POLE IN KV")
-                return hvdcptr->set_nominal_dc_voltage_per_pole_in_kV(value);
+            if(PARAMETER_NAME=="VDCN_KV" or PARAMETER_NAME=="NOMINAL DC VOLTAGE IN KV")
+                return hvdcptr->set_nominal_dc_voltage_in_kV(value);
 
             if(PARAMETER_NAME=="RCOMP_OHM" or PARAMETER_NAME=="COMPENSATING RESISTANCE TO HOLD DC VOLTAGE IN OHM")
                 return hvdcptr->set_compensating_resistance_to_hold_dc_voltage_in_ohm(value);
@@ -366,7 +351,7 @@ void api_set_hvdc_float_data(unsigned int ibus, unsigned int jbus, char* identif
                     return hvdcptr->set_converter_alpha_or_gamma_in_deg(INVERTER,value);
             }
 
-            HVDC_CONVERTER_SIDE con_side = (SIDE=="RECTIFIER"?RECTIFIER:INVERTER);
+            CONVERTER_SIDE con_side = (SIDE=="RECTIFIER"?RECTIFIER:INVERTER);
 
             if(PARAMETER_NAME=="RS_OHM" or PARAMETER_NAME=="LINE SMOOTING R IN OHM")
                 return hvdcptr->set_line_smooting_resistance_in_ohm(con_side,value);

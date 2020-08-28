@@ -405,7 +405,7 @@ void STEPS_IMEXPORTER::add_GENCLS_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid GENCLS model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid GENCLS model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -435,7 +435,7 @@ void STEPS_IMEXPORTER::add_GENROU_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid GENROU model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid GENROU model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -465,7 +465,7 @@ void STEPS_IMEXPORTER::add_GENSAL_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid GENSAL model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid GENSAL model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -495,7 +495,7 @@ void STEPS_IMEXPORTER::add_COMP_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid COMP model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid COMP model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -525,7 +525,7 @@ void STEPS_IMEXPORTER::add_IEEEVC_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid IEEEVC model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid IEEEVC model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -556,7 +556,7 @@ void STEPS_IMEXPORTER::add_PSASPVC_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid PSASPVC model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid PSASPVC model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -586,7 +586,7 @@ void STEPS_IMEXPORTER::add_IEE2ST_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid IEE2ST model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid IEE2ST model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -616,7 +616,7 @@ void STEPS_IMEXPORTER::add_PSASPS1_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid PSASPS1 model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid PSASPS1 model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -645,7 +645,7 @@ void STEPS_IMEXPORTER::add_PSASPS2_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid PSASPS2 model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid PSASPS2 model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -674,7 +674,7 @@ void STEPS_IMEXPORTER::add_PSASPS3_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid PSASPS3 model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid PSASPS3 model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -703,7 +703,7 @@ void STEPS_IMEXPORTER::add_PSASPS4_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid PSASPS4 model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid PSASPS4 model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -732,7 +732,7 @@ void STEPS_IMEXPORTER::add_PSASPS5_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid PSASPS5 model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid PSASPS5 model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -762,7 +762,7 @@ void STEPS_IMEXPORTER::add_PSASPS6_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid PSASPS6 model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid PSASPS6 model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -792,7 +792,7 @@ void STEPS_IMEXPORTER::add_PSASPS8_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid PSASPS8 model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid PSASPS8 model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -822,7 +822,7 @@ void STEPS_IMEXPORTER::add_SEXS_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid SEXS model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid SEXS model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -852,7 +852,7 @@ void STEPS_IMEXPORTER::add_IEEET1_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid IEEET1 model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid IEEET1 model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -882,7 +882,7 @@ void STEPS_IMEXPORTER::add_PSASPE1_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid PSASPE1 model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid PSASPE1 model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -912,7 +912,7 @@ void STEPS_IMEXPORTER::add_PSASPE2_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid PSASPE2 model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid PSASPE2 model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -942,7 +942,7 @@ void STEPS_IMEXPORTER::add_CSEET1_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid CSEET1 model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid CSEET1 model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -972,7 +972,7 @@ void STEPS_IMEXPORTER::add_CSEET2_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid CSEET2 model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid CSEET2 model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -1002,7 +1002,7 @@ void STEPS_IMEXPORTER::add_PSASPE13_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid PSASPE13 model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid PSASPE13 model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -1032,7 +1032,7 @@ void STEPS_IMEXPORTER::add_PSASPE14_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid PSASPE14 model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid PSASPE14 model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -1062,7 +1062,7 @@ void STEPS_IMEXPORTER::add_TGOV1_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid TGOV1 model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid TGOV1 model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -1092,7 +1092,7 @@ void STEPS_IMEXPORTER::add_IEEEG1_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid IEEEG1 model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid IEEEG1 model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -1122,7 +1122,7 @@ void STEPS_IMEXPORTER::add_IEEEG2_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid IEEEG2 model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid IEEEG2 model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -1152,7 +1152,7 @@ void STEPS_IMEXPORTER::add_IEEEG3_model(vector<string>& data)
             else
             {
                 ostringstream osstream;
-                osstream<<"Warning. Invalid IEEEG3 model is built, but will not be set for "<<generator->get_device_name();
+                osstream<<"Warning. Invalid IEEEG3 model is built, but will not be set for "<<generator->get_compound_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -1184,7 +1184,7 @@ void STEPS_IMEXPORTER::add_IEESGO_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid IEESGO model is built, but will not be set for "<<generator->get_device_name();
+            osstream<<"Warning. Invalid IEESGO model is built, but will not be set for "<<generator->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -1214,7 +1214,7 @@ void STEPS_IMEXPORTER::add_IEEEG1SB_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid IEEEG1SB model is built, but will not be set for "<<generator->get_device_name();
+            osstream<<"Warning. Invalid IEEEG1SB model is built, but will not be set for "<<generator->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -1244,7 +1244,7 @@ void STEPS_IMEXPORTER::add_GAST2A_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid GAST2A model is built, but will not be set for "<<generator->get_device_name();
+            osstream<<"Warning. Invalid GAST2A model is built, but will not be set for "<<generator->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -1274,7 +1274,7 @@ void STEPS_IMEXPORTER::add_URCSCT_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid URCSCT model is built, but will not be set for "<<generator->get_device_name();
+            osstream<<"Warning. Invalid URCSCT model is built, but will not be set for "<<generator->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -1304,7 +1304,7 @@ void STEPS_IMEXPORTER::add_LCFB1_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid LCFB1 model is built, but will not be set for "<<generator->get_device_name();
+            osstream<<"Warning. Invalid LCFB1 model is built, but will not be set for "<<generator->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -1558,7 +1558,7 @@ void STEPS_IMEXPORTER::add_CDC4T_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid CDC4T model is built, but will not be set for "<<hvdc->get_device_name();
+            osstream<<"Warning. Invalid CDC4T model is built, but will not be set for "<<hvdc->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -1589,7 +1589,7 @@ void STEPS_IMEXPORTER::add_CDC6T_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid CDC6T model is built, but will not be set for "<<hvdc->get_device_name();
+            osstream<<"Warning. Invalid CDC6T model is built, but will not be set for "<<hvdc->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -1619,7 +1619,7 @@ void STEPS_IMEXPORTER::add_WT3G1_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid WT3G1 model is built, but will not be set for "<<gen->get_device_name();
+            osstream<<"Warning. Invalid WT3G1 model is built, but will not be set for "<<gen->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -1650,7 +1650,7 @@ void STEPS_IMEXPORTER::add_WT3G0_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid WT3G0 model is built, but will not be set for "<<gen->get_device_name();
+            osstream<<"Warning. Invalid WT3G0 model is built, but will not be set for "<<gen->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -1681,7 +1681,7 @@ void STEPS_IMEXPORTER::add_WT3G2_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid WT3G2 model is built, but will not be set for "<<gen->get_device_name();
+            osstream<<"Warning. Invalid WT3G2 model is built, but will not be set for "<<gen->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -1711,7 +1711,7 @@ void STEPS_IMEXPORTER::add_AERD0_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid AERD0 model is built, but will not be set for "<<gen->get_device_name();
+            osstream<<"Warning. Invalid AERD0 model is built, but will not be set for "<<gen->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -1741,7 +1741,7 @@ void STEPS_IMEXPORTER::add_WT3T0_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid WT3T0 model is built, but will not be set for "<<gen->get_device_name();
+            osstream<<"Warning. Invalid WT3T0 model is built, but will not be set for "<<gen->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -1771,7 +1771,7 @@ void STEPS_IMEXPORTER::add_WT3E0_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid WT3E0 model is built, but will not be set for "<<gen->get_device_name();
+            osstream<<"Warning. Invalid WT3E0 model is built, but will not be set for "<<gen->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -1801,7 +1801,7 @@ void STEPS_IMEXPORTER::add_WT3E1_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid WT3E1 model is built, but will not be set for "<<gen->get_device_name();
+            osstream<<"Warning. Invalid WT3E1 model is built, but will not be set for "<<gen->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -1831,7 +1831,7 @@ void STEPS_IMEXPORTER::add_WT3P0_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid WT3P0 model is built, but will not be set for "<<gen->get_device_name();
+            osstream<<"Warning. Invalid WT3P0 model is built, but will not be set for "<<gen->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -1861,7 +1861,7 @@ void STEPS_IMEXPORTER::add_FILEWIND_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid FILEWIND model is built, but will not be set for "<<gen->get_device_name();
+            osstream<<"Warning. Invalid FILEWIND model is built, but will not be set for "<<gen->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -1891,7 +1891,7 @@ void STEPS_IMEXPORTER::add_WTRLY0_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid WTRLY0 model is built, but will not be set for "<<gen->get_device_name();
+            osstream<<"Warning. Invalid WTRLY0 model is built, but will not be set for "<<gen->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -1922,7 +1922,7 @@ void STEPS_IMEXPORTER::add_PVGU1_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid PVGU1 model is built, but will not be set for "<<pvu->get_device_name();
+            osstream<<"Warning. Invalid PVGU1 model is built, but will not be set for "<<pvu->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }

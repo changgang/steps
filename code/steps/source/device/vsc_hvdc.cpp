@@ -18,7 +18,7 @@ VSC_HVDC::~VSC_HVDC()
 {
 }
 
-string VSC_HVDC::get_converter_side_name(HVDC_CONVERTER_SIDE converter) const
+string VSC_HVDC::get_converter_side_name(CONVERTER_SIDE converter) const
 {
     switch(converter)
     {
@@ -29,7 +29,7 @@ string VSC_HVDC::get_converter_side_name(HVDC_CONVERTER_SIDE converter) const
     }
 }
 
-void VSC_HVDC::set_converter_bus(HVDC_CONVERTER_SIDE converter, const unsigned int bus)
+void VSC_HVDC::set_converter_bus(CONVERTER_SIDE converter, const unsigned int bus)
 {
     ostringstream osstream;
     string converter_name = get_converter_side_name(converter);
@@ -85,7 +85,7 @@ void VSC_HVDC::set_line_resistance_in_ohm(const double R)
     else
     {
         ostringstream osstream;
-        osstream<<"Error. Non-positive ("<<R<<" ohm) is not allowed for setting VSC_HVDC line resistance of "<<get_device_name()<<endl
+        osstream<<"Error. Non-positive ("<<R<<" ohm) is not allowed for setting VSC_HVDC line resistance of "<<get_compound_device_name()<<endl
           <<"0.0 will be set to indicate invalid VSC_HVDC link.";
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -93,7 +93,7 @@ void VSC_HVDC::set_line_resistance_in_ohm(const double R)
     }
 }
 
-void VSC_HVDC::set_converter_dc_operation_mode(HVDC_CONVERTER_SIDE converter, const VSC_HVDC_DC_CONTROL_MODE mode)
+void VSC_HVDC::set_converter_dc_operation_mode(CONVERTER_SIDE converter, const VSC_HVDC_DC_CONTROL_MODE mode)
 {
     dc_control_mode[converter] =  mode;
     if(get_converter_dc_operation_mode(RECTIFIER)==VSC_DC_POWER_CONTORL and
@@ -101,7 +101,7 @@ void VSC_HVDC::set_converter_dc_operation_mode(HVDC_CONVERTER_SIDE converter, co
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. It is invalid to set both converters to be operated in DC power control mode for "<<get_device_name()<<endl
+        osstream<<"Error. It is invalid to set both converters to be operated in DC power control mode for "<<get_compound_device_name()<<endl
                 <<"Check input of VSC-HVDC DC operation mode. "<<endl
                 <<"The converter "<<get_converter_side_name(converter)<<" will be set as DC voltage control mode.";
         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -109,88 +109,88 @@ void VSC_HVDC::set_converter_dc_operation_mode(HVDC_CONVERTER_SIDE converter, co
     }
 }
 
-void VSC_HVDC::set_converter_ac_operation_mode(HVDC_CONVERTER_SIDE converter, const VSC_HVDC_AC_CONTROL_MODE mode)
+void VSC_HVDC::set_converter_ac_operation_mode(CONVERTER_SIDE converter, const VSC_HVDC_AC_CONTROL_MODE mode)
 {
     ac_control_mode[converter] =  mode;
 }
 
-void VSC_HVDC::set_converter_nominal_dc_power_command_in_MW(HVDC_CONVERTER_SIDE converter, double P)
+void VSC_HVDC::set_converter_nominal_dc_power_command_in_MW(CONVERTER_SIDE converter, double P)
 {
     nominal_dc_power_in_MW[converter] = P;
 }
 
-void VSC_HVDC::set_converter_nominal_dc_voltage_command_in_kV(HVDC_CONVERTER_SIDE converter, double V)
+void VSC_HVDC::set_converter_nominal_dc_voltage_command_in_kV(CONVERTER_SIDE converter, double V)
 {
     nominal_dc_voltage_in_kV[converter] = V;
 }
 
-void VSC_HVDC::set_converter_nominal_ac_voltage_command_in_pu(HVDC_CONVERTER_SIDE converter, double V)
+void VSC_HVDC::set_converter_nominal_ac_voltage_command_in_pu(CONVERTER_SIDE converter, double V)
 {
     nominal_ac_voltage_in_pu[converter] = V;
 }
 
-void VSC_HVDC::set_converter_nominal_ac_power_factor_command(HVDC_CONVERTER_SIDE converter, double pf)
+void VSC_HVDC::set_converter_nominal_ac_power_factor_command(CONVERTER_SIDE converter, double pf)
 {
     nominal_ac_power_factor[converter] = pf;
     actual_ac_power_factor_command[converter] = pf;
 }
 
-void VSC_HVDC::set_converter_loss_factor_A_in_kW(HVDC_CONVERTER_SIDE converter, double A)
+void VSC_HVDC::set_converter_loss_factor_A_in_kW(CONVERTER_SIDE converter, double A)
 {
     converter_loss_coefficient_A_in_kW[converter] = A;
 }
 
-void VSC_HVDC::set_converter_loss_factor_B_in_kW_per_amp(HVDC_CONVERTER_SIDE converter, double B)
+void VSC_HVDC::set_converter_loss_factor_B_in_kW_per_amp(CONVERTER_SIDE converter, double B)
 {
     converter_loss_coefficient_B_in_kW_per_amp[converter]  = B;
 }
 
-void VSC_HVDC::set_converter_minimum_loss_in_kW(HVDC_CONVERTER_SIDE converter, double P)
+void VSC_HVDC::set_converter_minimum_loss_in_kW(CONVERTER_SIDE converter, double P)
 {
     min_converter_loss_in_kW[converter] = P;
 }
 
-void VSC_HVDC::set_converter_MVA_rating_in_MVA(HVDC_CONVERTER_SIDE converter, double S)
+void VSC_HVDC::set_converter_MVA_rating_in_MVA(CONVERTER_SIDE converter, double S)
 {
     converter_MVA_rating_in_MVA[converter] = S;
 }
 
-void VSC_HVDC::set_converter_current_rating_in_amp(HVDC_CONVERTER_SIDE converter, double I)
+void VSC_HVDC::set_converter_current_rating_in_amp(CONVERTER_SIDE converter, double I)
 {
     converter_current_rating_in_amp[converter] = I;
 }
 
-void VSC_HVDC::set_converter_power_weighting_factor(HVDC_CONVERTER_SIDE converter, double pwf)
+void VSC_HVDC::set_converter_power_weighting_factor(CONVERTER_SIDE converter, double pwf)
 {
     power_weighting_factor[converter] = pwf;
 }
 
-void VSC_HVDC::set_converter_Qmax_in_MVar(HVDC_CONVERTER_SIDE converter, double Q)
+void VSC_HVDC::set_converter_Qmax_in_MVar(CONVERTER_SIDE converter, double Q)
 {
     Qmax_MVar[converter] = Q;
 }
 
-void VSC_HVDC::set_converter_Qmin_in_MVar(HVDC_CONVERTER_SIDE converter, double Q)
+void VSC_HVDC::set_converter_Qmin_in_MVar(CONVERTER_SIDE converter, double Q)
 {
     Qmin_MVar[converter] = Q;
 }
 
-void VSC_HVDC::set_converter_remote_bus_to_regulate(HVDC_CONVERTER_SIDE converter, unsigned int bus)
+void VSC_HVDC::set_converter_remote_bus_to_regulate(CONVERTER_SIDE converter, unsigned int bus)
 {
     remote_bus_to_regulate[converter] = bus;
 }
 
-void VSC_HVDC::set_converter_remote_regulation_percent(HVDC_CONVERTER_SIDE converter, double rmpct)
+void VSC_HVDC::set_converter_remote_regulation_percent(CONVERTER_SIDE converter, double rmpct)
 {
     remote_regulation_percent[converter] = rmpct;
 }
 
-unsigned int VSC_HVDC::get_converter_bus(HVDC_CONVERTER_SIDE converter) const
+unsigned int VSC_HVDC::get_converter_bus(CONVERTER_SIDE converter) const
 {
     return converter_bus[converter];
 }
 
-BUS* VSC_HVDC::get_converter_bus_pointer(HVDC_CONVERTER_SIDE converter) const
+BUS* VSC_HVDC::get_converter_bus_pointer(CONVERTER_SIDE converter) const
 {
     return converter_busptr[converter];
 }
@@ -215,82 +215,82 @@ double VSC_HVDC::get_line_resistance_in_ohm() const
     return line_R_in_ohm;
 }
 
-VSC_HVDC_DC_CONTROL_MODE VSC_HVDC::get_converter_dc_operation_mode(HVDC_CONVERTER_SIDE converter) const
+VSC_HVDC_DC_CONTROL_MODE VSC_HVDC::get_converter_dc_operation_mode(CONVERTER_SIDE converter) const
 {
     return dc_control_mode[converter];
 }
 
-VSC_HVDC_AC_CONTROL_MODE VSC_HVDC::get_converter_ac_operation_mode(HVDC_CONVERTER_SIDE converter) const
+VSC_HVDC_AC_CONTROL_MODE VSC_HVDC::get_converter_ac_operation_mode(CONVERTER_SIDE converter) const
 {
     return ac_control_mode[converter];
 }
 
-double VSC_HVDC::get_converter_nominal_dc_power_command_in_MW(HVDC_CONVERTER_SIDE converter) const
+double VSC_HVDC::get_converter_nominal_dc_power_command_in_MW(CONVERTER_SIDE converter) const
 {
     return nominal_dc_power_in_MW[converter];
 }
 
-double VSC_HVDC::get_converter_nominal_dc_voltage_command_in_kV(HVDC_CONVERTER_SIDE converter) const
+double VSC_HVDC::get_converter_nominal_dc_voltage_command_in_kV(CONVERTER_SIDE converter) const
 {
     return nominal_dc_voltage_in_kV[converter];
 }
 
-double VSC_HVDC::get_converter_nominal_ac_voltage_command_in_pu(HVDC_CONVERTER_SIDE converter) const
+double VSC_HVDC::get_converter_nominal_ac_voltage_command_in_pu(CONVERTER_SIDE converter) const
 {
     return nominal_ac_voltage_in_pu[converter];
 }
 
-double VSC_HVDC::get_converter_nominal_ac_power_factor_command(HVDC_CONVERTER_SIDE converter) const
+double VSC_HVDC::get_converter_nominal_ac_power_factor_command(CONVERTER_SIDE converter) const
 {
     return nominal_ac_power_factor[converter];
 }
 
-double VSC_HVDC::get_converter_loss_factor_A_in_kW(HVDC_CONVERTER_SIDE converter) const
+double VSC_HVDC::get_converter_loss_factor_A_in_kW(CONVERTER_SIDE converter) const
 {
     return converter_loss_coefficient_A_in_kW[converter];
 }
 
-double VSC_HVDC::get_converter_loss_factor_B_in_kW_per_amp(HVDC_CONVERTER_SIDE converter) const
+double VSC_HVDC::get_converter_loss_factor_B_in_kW_per_amp(CONVERTER_SIDE converter) const
 {
     return converter_loss_coefficient_B_in_kW_per_amp[converter];
 }
 
-double VSC_HVDC::get_converter_minimum_loss_in_kW(HVDC_CONVERTER_SIDE converter) const
+double VSC_HVDC::get_converter_minimum_loss_in_kW(CONVERTER_SIDE converter) const
 {
     return min_converter_loss_in_kW[converter];
 }
 
-double VSC_HVDC::get_converter_MVA_rating_in_MVA(HVDC_CONVERTER_SIDE converter) const
+double VSC_HVDC::get_converter_MVA_rating_in_MVA(CONVERTER_SIDE converter) const
 {
     return converter_MVA_rating_in_MVA[converter];
 }
 
-double VSC_HVDC::get_converter_current_rating_in_amp(HVDC_CONVERTER_SIDE converter) const
+double VSC_HVDC::get_converter_current_rating_in_amp(CONVERTER_SIDE converter) const
 {
     return converter_current_rating_in_amp[converter];
 }
 
-double VSC_HVDC::get_converter_power_weighting_factor(HVDC_CONVERTER_SIDE converter) const
+double VSC_HVDC::get_converter_power_weighting_factor(CONVERTER_SIDE converter) const
 {
     return power_weighting_factor[converter];
 }
 
-double VSC_HVDC::get_converter_Qmax_in_MVar(HVDC_CONVERTER_SIDE converter) const
+double VSC_HVDC::get_converter_Qmax_in_MVar(CONVERTER_SIDE converter) const
 {
     return Qmax_MVar[converter];
 }
 
-double VSC_HVDC::get_converter_Qmin_in_MVar(HVDC_CONVERTER_SIDE converter) const
+double VSC_HVDC::get_converter_Qmin_in_MVar(CONVERTER_SIDE converter) const
 {
     return Qmin_MVar[converter];
 }
 
-unsigned int VSC_HVDC::get_converter_remote_bus_to_regulate(HVDC_CONVERTER_SIDE converter) const
+unsigned int VSC_HVDC::get_converter_remote_bus_to_regulate(CONVERTER_SIDE converter) const
 {
     return remote_bus_to_regulate[converter];
 }
 
-double VSC_HVDC::get_converter_remote_regulation_percent(HVDC_CONVERTER_SIDE converter) const
+double VSC_HVDC::get_converter_remote_regulation_percent(CONVERTER_SIDE converter) const
 {
     return remote_regulation_percent[converter];
 }
@@ -375,7 +375,7 @@ void VSC_HVDC::initialize_dc_power_and_voltage_command()
             {
                 STEPS& toolkit = get_toolkit();
                 ostringstream osstream;
-                osstream<<"Error. Both converters are operated in DC power control mode for "<<get_device_name()<<".\n"
+                osstream<<"Error. Both converters are operated in DC power control mode for "<<get_compound_device_name()<<".\n"
                         <<"Check input data";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
@@ -398,12 +398,12 @@ void VSC_HVDC::set_nominal_dc_current_command_in_kA(double I)
     nominal_dc_current_in_amp = I*1000.0;
 }
 
-void VSC_HVDC::set_converter_actual_dc_power_command_in_MW(HVDC_CONVERTER_SIDE converter, double P)
+void VSC_HVDC::set_converter_actual_dc_power_command_in_MW(CONVERTER_SIDE converter, double P)
 {
     actual_dc_power_command_MW[converter] = P;
 }
 
-void VSC_HVDC::set_converter_actual_dc_voltage_command_in_kV(HVDC_CONVERTER_SIDE converter, double V)
+void VSC_HVDC::set_converter_actual_dc_voltage_command_in_kV(CONVERTER_SIDE converter, double V)
 {
     actual_dc_voltage_command_kV[converter] = V;
 }
@@ -413,7 +413,7 @@ void VSC_HVDC::set_actual_dc_current_command_in_kA(double I)
     actual_dc_current_command_in_amp = I*1000.0;
 }
 
-void VSC_HVDC::set_converter_actual_ac_power_factor_command(HVDC_CONVERTER_SIDE converter, double eta)
+void VSC_HVDC::set_converter_actual_ac_power_factor_command(CONVERTER_SIDE converter, double eta)
 {
     actual_ac_power_factor_command[converter] = eta;
 }
@@ -424,12 +424,12 @@ double VSC_HVDC::get_nominal_dc_current_command_in_kA() const
     return nominal_dc_current_in_amp*0.001;
 }
 
-double VSC_HVDC::get_converter_actual_dc_power_command_in_MW(HVDC_CONVERTER_SIDE converter) const
+double VSC_HVDC::get_converter_actual_dc_power_command_in_MW(CONVERTER_SIDE converter) const
 {
     return actual_dc_power_command_MW[converter];
 }
 
-double VSC_HVDC::get_converter_actual_dc_voltage_command_in_kV(HVDC_CONVERTER_SIDE converter) const
+double VSC_HVDC::get_converter_actual_dc_voltage_command_in_kV(CONVERTER_SIDE converter) const
 {
     return actual_dc_voltage_command_kV[converter];
 }
@@ -439,7 +439,7 @@ double VSC_HVDC::get_actual_dc_current_command_in_kA() const
     return actual_dc_current_command_in_amp*0.001;
 }
 
-double VSC_HVDC::get_converter_actual_ac_power_factor_command(HVDC_CONVERTER_SIDE converter) const
+double VSC_HVDC::get_converter_actual_ac_power_factor_command(CONVERTER_SIDE converter) const
 {
     return actual_ac_power_factor_command[converter];
 }
@@ -639,9 +639,9 @@ void VSC_HVDC::report() const
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     /*
-    osstream<<"Vdc = "<<get_nominal_dc_voltage_per_pole_in_kV()<<" kV, "
-            <<"Idc = "<<get_nominal_dc_current_per_pole_in_kA()<<" kA, "
-            <<"Pdc = "<<get_nominal_dc_power_per_pole_in_MW()<<" MW";
+    osstream<<"Vdc = "<<get_nominal_dc_voltage_in_kV()<<" kV, "
+            <<"Idc = "<<get_nominal_dc_current_in_kA()<<" kA, "
+            <<"Pdc = "<<get_nominal_dc_power_in_MW()<<" MW";
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     osstream<<"Compensating R = "<<get_compensating_resistance_to_hold_dc_voltage_in_ohm()<<" ohm";
@@ -690,7 +690,7 @@ void VSC_HVDC::set_model(const MODEL* model)
         else
         {
             ostringstream osstream;
-            osstream<<"Waring. Neither AUXILIARY SIGNAL model nor VSC_HVDC model is given to set dynamic model for "<<get_device_name();
+            osstream<<"Waring. Neither AUXILIARY SIGNAL model nor VSC_HVDC model is given to set dynamic model for "<<get_compound_device_name();
             STEPS& toolkit = get_toolkit();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
@@ -751,7 +751,7 @@ void VSC_HVDC::run(DYNAMIC_MODE mode)
                     vsc_hvdc_model->initialize();
                 else
                 {
-                    osstream<<"VSC_HVDC model is missing for "<<get_device_name();
+                    osstream<<"VSC_HVDC model is missing for "<<get_compound_device_name();
                     toolkit.show_information_with_leading_time_stamp(osstream);
                 }
                 break;
@@ -850,7 +850,7 @@ DEVICE_ID VSC_HVDC::get_device_id() const
     return did;
 }
 
-void VSC_HVDC::calculate_converter_power_factor_in_ac_voltage_control_mode(HVDC_CONVERTER_SIDE converter, double Qerror, double Qderivative)
+void VSC_HVDC::calculate_converter_power_factor_in_ac_voltage_control_mode(CONVERTER_SIDE converter, double Qerror, double Qderivative)
 {
     if(get_converter_ac_operation_mode(converter)==VSC_AC_VOLTAGE_CONTROL)
     {
@@ -874,7 +874,7 @@ void VSC_HVDC::show_solved_hvdc_steady_state() const
 }
 
 
-complex<double> VSC_HVDC::get_converter_dynamic_current_in_pu_based_on_system_base_power(HVDC_CONVERTER_SIDE converter)
+complex<double> VSC_HVDC::get_converter_dynamic_current_in_pu_based_on_system_base_power(CONVERTER_SIDE converter)
 {
     if(get_status() == true)
     {

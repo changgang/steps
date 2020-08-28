@@ -286,14 +286,14 @@ void IEESGO::initialize()
     if(pmech0>pmax)
     {
         osstream<<"Initialization Error. Initial mechanical power exceeds upper limit when initializing "
-               <<get_model_type()<<" model "<<get_model_name()<<" of "<<get_device_name()<<endl
+               <<get_model_type()<<" model "<<get_model_name()<<" of "<<get_compound_device_name()<<endl
                <<"Initial mechanical power is "<<pmech0<<" p.u., upper limit is "<<pmax;
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
     if(pmech0<pmin)
     {
         osstream<<"Initialization Error. Initial mechanical power exceeds lower limit when initializing "
-               <<get_model_type()<<" model "<<get_model_name()<<" of "<<get_device_name()<<endl
+               <<get_model_type()<<" model "<<get_model_name()<<" of "<<get_compound_device_name()<<endl
                <<"Initial mechanical power is "<<pmech0<<" p.u., lower limit is "<<pmin;
         toolkit.show_information_with_leading_time_stamp(osstream);
     }

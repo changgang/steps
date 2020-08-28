@@ -397,12 +397,12 @@ void DYNAMIC_MODEL_DATABASE::check_device_model_minimum_time_constants()
         if(mint_list[i].min_t_in_s != INFINITE_THRESHOLD)
             osstream<<setw(4)<<i
                     <<setw(10)<<setprecision(4)<<mint_list[i].min_t_in_s
-                    <<setw(30)<<mint_list[i].did.get_device_name()
+                    <<setw(30)<<mint_list[i].did.get_compound_device_name()
                     <<setw(10)<<mint_list[i].model_name<<"\n";
         else
             osstream<<setw(4)<<i
                     <<setw(10)<<"-infinite-"
-                    <<setw(30)<<mint_list[i].did.get_device_name()
+                    <<setw(30)<<mint_list[i].did.get_compound_device_name()
                     <<setw(10)<<mint_list[i].model_name<<"\n";
     }
     toolkit->show_information_with_leading_time_stamp(osstream);

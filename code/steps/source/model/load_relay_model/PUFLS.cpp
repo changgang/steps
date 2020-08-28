@@ -377,7 +377,7 @@ void PUFLS::run(DYNAMIC_MODE mode)
                 {
                     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
                     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "PUFLS discrete stage %u timer of %s is timed out at time %.3fs.\n"
-                            "%f%% loads are tripped.",stage,get_device_name().c_str(),TIME,
+                            "%f%% loads are tripped.",stage,get_compound_device_name().c_str(),TIME,
                             get_discrete_stage_shed_scale_in_pu(stage)*100.0);
                     toolkit.show_information_with_leading_time_stamp(buffer);
                     trip_discrete_stage(stage);
@@ -388,7 +388,7 @@ void PUFLS::run(DYNAMIC_MODE mode)
             {
                 char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
                 snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "PUFLS discrete stage %u timer of %s is started at time %.3fs.\n"
-                        "%f%% loads are tripped.",stage,get_device_name().c_str(),TIME,
+                        "%f%% loads are tripped.",stage,get_compound_device_name().c_str(),TIME,
                         get_discrete_stage_shed_scale_in_pu(stage)*100.0);
                 toolkit.show_information_with_leading_time_stamp(buffer);
                 start_discrete_stage_timer_of_stage(stage);
@@ -424,7 +424,7 @@ void PUFLS::append_new_minimum_frequency()
     if(bus==3)
     {
         osstream<<setw(10)<<setprecision(6)
-                <<"At time "<<current_time<<"s, "<<get_device_name()<<endl
+                <<"At time "<<current_time<<"s, "<<get_compound_device_name()<<endl
                 <<"Current bus frequency is: "<<get_bus_frequency_in_Hz()<<"Hz"<<endl
                 <<"Current sensed frequency is: "<<frequency_sensor.get_output()<<"Hz"<<endl
                 <<"Current minimum frequency is: "<<history_minimum_frequency_buffer.get_buffer_value_at_head()<<"Hz";
@@ -456,7 +456,7 @@ void PUFLS::update_continuous_shed_command()
             if(bus==3)
             {
                 osstream<<setw(10)<<setprecision(6)
-                        <<"At time "<<current_time<<"s, "<<get_device_name()<<" minimum frequency is declining."<<endl
+                        <<"At time "<<current_time<<"s, "<<get_compound_device_name()<<" minimum frequency is declining."<<endl
                         <<"Current bus frequency is: "<<get_bus_frequency_in_Hz()<<"Hz"<<endl
                         <<"Current sensed frequency is: "<<frequency_sensor.get_output()<<"Hz"<<endl
                         <<"Current minimum frequency is: "<<history_minimum_frequency_buffer.get_buffer_value_at_head()<<"Hz"<<endl
@@ -624,7 +624,7 @@ void PUFLS::trip_additional_stage()
         double current_time = toolkit.get_dynamic_simulation_time_in_s();
 
         ostringstream osstream;
-        osstream<<"PUFLS additional stage of "<<get_device_name()<<" is timed out at time "
+        osstream<<"PUFLS additional stage of "<<get_compound_device_name()<<" is timed out at time "
           <<setprecision(3)<<fixed<<current_time<<" s. "<<endl
           <<setprecision(4)<<fixed<<get_additional_stage_shed_scale_in_pu()*100.0<<"% loads is tripped.";
         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -649,7 +649,7 @@ void PUFLS::try_to_start_additional_stage_timer()
             {
                 if(current_freq<f_th)
                 {
-                    osstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is started at time "<<current_time
+                    osstream<<"PUFLS additional stage timer of "<<get_compound_device_name()<<" is started at time "<<current_time
                       <<" s due to drop of frequency."<<endl
                       <<"Current frequency is "<<current_freq<<" Hz, and stage frequency threshold is "<<f_th<<" Hz.",
                     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -663,7 +663,7 @@ void PUFLS::try_to_start_additional_stage_timer()
                 {
                     if(is_frequency_recovering_beyond_current_minimum_frequency()) // frequency is recovering
                     {
-                        osstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is started at time "
+                        osstream<<"PUFLS additional stage timer of "<<get_compound_device_name()<<" is started at time "
                           <<current_time<<" s due to recovery of frequency."<<endl
                           <<"Current frequency is "<<current_freq<<" Hz.";
                         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -673,7 +673,7 @@ void PUFLS::try_to_start_additional_stage_timer()
                     {
                         if(is_minimum_frequency_not_changing())
                         {
-                            osstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is started at time "
+                            osstream<<"PUFLS additional stage timer of "<<get_compound_device_name()<<" is started at time "
                               <<current_time<<" s since minimum frequency is not changing."<<endl
                               <<"Current frequency is "<<current_freq<<" Hz.";
                             toolkit.show_information_with_leading_time_stamp(osstream);
@@ -710,7 +710,7 @@ void PUFLS::try_to_reset_additional_stage_timer()
                 {
                     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
                     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "PUFLS additional stage timer of %s is reset at time %.3fs due to recovery of frequency.\n"
-                            "Current frequency is %.4fHz, and stage frequency threshold is %.4fHz.",get_device_name().c_str(),current_time,
+                            "Current frequency is %.4fHz, and stage frequency threshold is %.4fHz.",get_compound_device_name().c_str(),current_time,
                             current_freq,f_th);
                     toolkit.show_information_with_leading_time_stamp(buffer);
                     reset_additional_stage_timer();
@@ -721,7 +721,7 @@ void PUFLS::try_to_reset_additional_stage_timer()
             {
                 if(is_minimum_frequency_declining())
                 {
-                    osstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is reset at time "<<current_time
+                    osstream<<"PUFLS additional stage timer of "<<get_compound_device_name()<<" is reset at time "<<current_time
                       <<" s due to declining of minimum frequency."<<endl
                       <<"Current frequency is "<<current_freq<<" Hz.";
                     toolkit.show_information_with_leading_time_stamp(osstream);

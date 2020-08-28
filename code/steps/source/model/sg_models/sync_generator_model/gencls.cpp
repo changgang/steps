@@ -317,7 +317,7 @@ double GENCLS::get_model_data_with_name(string par_name) const
         if(par_name == "D")  return get_D();
     }
     STEPS& toolkit = get_toolkit();
-    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
@@ -330,7 +330,7 @@ void GENCLS::set_model_data_with_name(string par_name, double value)
         if(par_name == "D") return set_D(value);
     }
     STEPS& toolkit = get_toolkit();
-    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
 }
 
 double GENCLS::get_minimum_nonzero_time_constant_in_s()

@@ -1744,10 +1744,10 @@ void STEPS_IMEXPORTER::add_hvdc_basic_data(HVDC& hvdc, vector<string> data)
         switch(hvdc.get_converter_operation_mode(RECTIFIER))
         {
             case RECTIFIER_CONSTANT_CURRENT:
-                hvdc.set_nominal_dc_current_per_pole_in_kA(value*1e-3);
+                hvdc.set_nominal_dc_current_in_kA(value*1e-3);
                 break;
             default:// constant power + blocked
-                hvdc.set_nominal_dc_power_per_pole_in_MW(fabs(value));
+                hvdc.set_nominal_dc_power_in_MW(fabs(value));
                 if(value>0.0)
                     hvdc.set_side_to_hold_power(RECTIFIER);
                 else
@@ -1757,7 +1757,7 @@ void STEPS_IMEXPORTER::add_hvdc_basic_data(HVDC& hvdc, vector<string> data)
     }
     if(data.size()>0)
     {
-        hvdc.set_nominal_dc_voltage_per_pole_in_kV(get_double_data(data.front(),"0.0"));
+        hvdc.set_nominal_dc_voltage_in_kV(get_double_data(data.front(),"0.0"));
         data.erase(data.begin());
     }
     if(data.size()>0)
@@ -1786,7 +1786,7 @@ void STEPS_IMEXPORTER::add_hvdc_basic_data(HVDC& hvdc, vector<string> data)
     }
 }
 
-void STEPS_IMEXPORTER::add_hvdc_converter_data(HVDC& hvdc, HVDC_CONVERTER_SIDE converter, vector<string> data)
+void STEPS_IMEXPORTER::add_hvdc_converter_data(HVDC& hvdc, CONVERTER_SIDE converter, vector<string> data)
 {
     if(data.size()>0)
     {
@@ -2752,17 +2752,17 @@ string STEPS_IMEXPORTER::export_hvdc_data() const
         }
         osstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_line_resistance_in_ohm()<<", ";
         if(mode==RECTIFIER_CONSTANT_CURRENT)
-            osstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_nominal_dc_current_per_pole_in_kA()*100.0<<", ";
+            osstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_nominal_dc_current_in_kA()*100.0<<", ";
         else
         {
-            HVDC_CONVERTER_SIDE side = hvdc->get_side_to_hold_dc_power();
+            CONVERTER_SIDE side = hvdc->get_side_to_hold_dc_power();
             if(side==RECTIFIER)
-                osstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_nominal_dc_power_per_pole_in_MW()<<", ";
+                osstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_nominal_dc_power_in_MW()<<", ";
             else
-                osstream<<setw(6)<<setprecision(2)<<fixed<<-hvdc->get_nominal_dc_power_per_pole_in_MW()<<", ";
+                osstream<<setw(6)<<setprecision(2)<<fixed<<-hvdc->get_nominal_dc_power_in_MW()<<", ";
         }
 
-        osstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_nominal_dc_voltage_per_pole_in_kV()<<", ";
+        osstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_nominal_dc_voltage_in_kV()<<", ";
         osstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_threshold_dc_voltage_for_constant_power_and_constant_current_mode_in_kV()<<", ";
         osstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_compensating_resistance_to_hold_dc_voltage_in_ohm()<<", ";
         osstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_current_power_margin()<<", ";
@@ -2772,7 +2772,7 @@ string STEPS_IMEXPORTER::export_hvdc_data() const
 
         for(unsigned int j=0; j!=2; ++j)
         {
-            HVDC_CONVERTER_SIDE converter=RECTIFIER;
+            CONVERTER_SIDE converter=RECTIFIER;
             unsigned int bus = rbus;
             if(j==0) converter = RECTIFIER;
             if(j==1){converter = INVERTER; bus = ibus;}

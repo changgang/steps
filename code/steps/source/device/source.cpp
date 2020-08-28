@@ -236,7 +236,7 @@ void SOURCE::check()
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    string error_leading_string = "Error detected when checking "+get_device_name()+": ";
+    string error_leading_string = "Error detected when checking "+get_compound_device_name()+": ";
 
     unsigned int bus = get_source_bus();
     double qmax = get_q_max_in_MVar();

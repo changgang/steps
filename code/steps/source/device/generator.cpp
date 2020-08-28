@@ -222,7 +222,7 @@ void GENERATOR::run(DYNAMIC_MODE mode)
                 {
                     if(gen->get_model_name()=="GENCLS")
                     {
-                        osstream<<"Warning. Stabilizer model "<<pss->get_model_name()<<" is incompatible with generator model GENCLS for "<<get_device_name()<<"["<<psdb.bus_number2bus_name(get_generator_bus())<<"]\n"
+                        osstream<<"Warning. Stabilizer model "<<pss->get_model_name()<<" is incompatible with generator model GENCLS for "<<get_compound_device_name()<<"["<<psdb.bus_number2bus_name(get_generator_bus())<<"]\n"
                                 <<"Stabilizer model "<<pss->get_model_name()<<" will be removed.";
                         toolkit.show_information_with_leading_time_stamp(osstream);
                         pss->deactivate_model();
@@ -237,7 +237,7 @@ void GENERATOR::run(DYNAMIC_MODE mode)
                 {
                     if(gen->get_model_name()=="GENCLS")
                     {
-                        osstream<<"Warning. Exciter model "<<exciter->get_model_name()<<" is incompatible with generator model GENCLS for "<<get_device_name()<<"["<<psdb.bus_number2bus_name(get_generator_bus())<<"]\n"
+                        osstream<<"Warning. Exciter model "<<exciter->get_model_name()<<" is incompatible with generator model GENCLS for "<<get_compound_device_name()<<"["<<psdb.bus_number2bus_name(get_generator_bus())<<"]\n"
                                 <<"Exciter model "<<exciter->get_model_name()<<" will be removed.";
                         toolkit.show_information_with_leading_time_stamp(osstream);
                         exciter->deactivate_model();
@@ -287,7 +287,7 @@ void GENERATOR::run(DYNAMIC_MODE mode)
 void GENERATOR::report() const
 {
     ostringstream osstream;
-    osstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
+    osstream<<get_compound_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
       <<"MBASE = "<<setw(6)<<setprecision(2)<<fixed<<get_mbase_in_MVA()<<" MVA"<<endl
       <<"P = "<<setw(8)<<setprecision(4)<<fixed<<get_p_generation_in_MW()<<" MW, "
       <<"Pmax = "<<setw(8)<<setprecision(4)<<fixed<<get_p_max_in_MW()<<" MW, "

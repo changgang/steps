@@ -237,7 +237,7 @@ bool WT3G2::setup_model_with_steps_string_vector(vector<string>& data)
                 n_lumped_turbine = round(mbase/prate);
                 if(fabs(mbase-n_lumped_turbine*prate)>1e-2)
                 {
-                    osstream<<"Warning. The MBASE of "<<did.get_device_name()<<" is far way from n times of the Prate of "<<get_model_name()<<" model."<<endl
+                    osstream<<"Warning. The MBASE of "<<did.get_compound_device_name()<<" is far way from n times of the Prate of "<<get_model_name()<<" model."<<endl
                            <<"MBASE = "<<mbase<<" MVA and Prate = "<<prate<<" MW."<<endl
                            <<"Machine MBASE will be updated as "<<n_lumped_turbine*prate<<" MVA.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -270,7 +270,7 @@ bool WT3G2::setup_model_with_steps_string_vector(vector<string>& data)
             }
             else
             {
-                osstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_device_name()<<endl
+                osstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_compound_device_name()<<endl
                        <<"No such wt generator exists in the power system database.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 return is_successful;
@@ -381,7 +381,7 @@ void WT3G2::initialize()
 
         if(toolkit.is_detailed_log_enabled())
         {
-            osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+            osstream<<get_model_name()<<" model of "<<get_compound_device_name()<<" is initialized."<<endl
                     <<"(1) Initial active current command = "<<get_initial_active_current_command_in_pu_based_on_mbase()<<endl
                     <<"(2) Initial reactive current command = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
                     <<"(3) Initial reactive voltage command = "<<get_initial_reactive_voltage_command_in_pu()<<endl

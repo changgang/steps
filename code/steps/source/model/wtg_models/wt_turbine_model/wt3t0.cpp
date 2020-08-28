@@ -209,7 +209,7 @@ void WT3T0::initialize()
         ostringstream osstream;
         if(toolkit.is_detailed_log_enabled())
         {
-            osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+            osstream<<get_model_name()<<" model of "<<get_compound_device_name()<<" is initialized."<<endl
                     <<"(1) Turbine speed is "<<get_turbine_speed_in_pu()<<" pu"<<endl
                     <<"(2) Generator speed is "<<get_generator_speed_in_pu()<<" pu"<<endl
                     <<"(3) Generator rotor angle is "<<get_rotor_angle_in_deg()<<" deg"<<endl
@@ -278,7 +278,7 @@ void WT3T0::run(DYNAMIC_MODE mode)
         if(w<wmin or w>wmax*1.1)
         {
             ostringstream osstream;
-            osstream<<get_device_name()<<" is tripped at time "<<toolkit.get_dynamic_simulation_time_in_s()<<"s due to ";
+            osstream<<get_compound_device_name()<<" is tripped at time "<<toolkit.get_dynamic_simulation_time_in_s()<<"s due to ";
             if(w<wmin)
                 osstream<<"rotor w<wmin: "<<w<<"<"<<wmin<<" pu";
             else

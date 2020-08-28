@@ -52,8 +52,8 @@ void HVDC_MODEL_TEST::setup()
     hvdc.set_status(true);
     hvdc.set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     hvdc.set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
-    hvdc.set_nominal_dc_power_per_pole_in_MW(2000.0);
-    hvdc.set_nominal_dc_voltage_per_pole_in_kV(660.0);
+    hvdc.set_nominal_dc_power_in_MW(2000.0);
+    hvdc.set_nominal_dc_voltage_in_kV(660.0);
     hvdc.set_line_resistance_in_ohm(9.5);
     hvdc.set_compensating_resistance_to_hold_dc_voltage_in_ohm(0.0);
     hvdc.set_current_power_margin(0.1);
@@ -140,7 +140,7 @@ void HVDC_MODEL_TEST::export_meter_values(double time)
     volt_rec = psdb.get_bus_positive_sequence_voltage_in_pu(1);
     volt_inv = psdb.get_bus_positive_sequence_voltage_in_pu(2);
 
-    HVDC_CONVERTER_SIDE converter;
+    CONVERTER_SIDE converter;
 
     converter = RECTIFIER;
     p_rec = model->get_converter_ac_complex_power_in_MVA(converter).real();
@@ -226,7 +226,7 @@ void HVDC_MODEL_TEST::test_rectifier_voltage_ramp_response()
 
     double TIME = -delt*2.0;
     double vdcr;
-    HVDC_CONVERTER_SIDE converter;
+    CONVERTER_SIDE converter;
 
     export_meter_titles();
     export_meter_values(TIME);
@@ -393,7 +393,7 @@ void HVDC_MODEL_TEST::test_inverter_voltage_ramp_response()
 
     double TIME = -delt*2.0;
     double vdcr;
-    HVDC_CONVERTER_SIDE converter;
+    CONVERTER_SIDE converter;
 
     export_meter_titles();
     export_meter_values(TIME);
@@ -558,7 +558,7 @@ void HVDC_MODEL_TEST::test_manual_block_and_unblock()
 
     double TIME = -delt*2.0;
     double vdcr;
-    HVDC_CONVERTER_SIDE converter;
+    CONVERTER_SIDE converter;
 
     export_meter_titles();
     export_meter_values(TIME);
@@ -673,7 +673,7 @@ void HVDC_MODEL_TEST::test_manual_bypass_and_unbypass()
 
     double TIME = -delt*2.0;
     double vdcr;
-    HVDC_CONVERTER_SIDE converter;
+    CONVERTER_SIDE converter;
 
     export_meter_titles();
     export_meter_values(TIME);

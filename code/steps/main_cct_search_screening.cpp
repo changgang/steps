@@ -61,11 +61,11 @@ int main()
         searcher.set_flag_trip_line_after_clearing_fault(true);
 
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Now go searching CCT for fault at side %u of %s.",
-                 searcher.get_fault_side_bus(),(did.get_device_name()).c_str());
+                 searcher.get_fault_side_bus(),(did.get_compound_device_name()).c_str());
         default_toolkit.show_information_with_leading_time_stamp(buffer);
         double cct = searcher.search_cct();
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Now done searching CCT for fault at side %u of %s.",
-                 searcher.get_fault_side_bus(),(did.get_device_name()).c_str());
+                 searcher.get_fault_side_bus(),(did.get_compound_device_name()).c_str());
         default_toolkit.show_information_with_leading_time_stamp(buffer);
         ccts[i] = cct;
 
@@ -78,7 +78,7 @@ int main()
     default_toolkit.show_information_with_leading_time_stamp(buffer);
     for(unsigned int i=0; i!=n_events; ++i)
     {
-        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s at fault side %u: %fs.\n",(fault_lines[i].get_device_name()).c_str(),
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s at fault side %u: %fs.\n",(fault_lines[i].get_compound_device_name()).c_str(),
                  fault_side_buses[i], ccts[i]);
         default_toolkit.show_information_with_leading_time_stamp(buffer);
     }

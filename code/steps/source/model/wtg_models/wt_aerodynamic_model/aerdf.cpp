@@ -53,7 +53,7 @@ void AERDF::set_Cp_file(string file)
     if(pitch_angles->size()==0)
     {
         ostringstream osstream;
-        osstream<<"Error. Fail to load wind turbine Cp data from file '"<<file<<"'. Check model "<<get_model_name()<<" of "<<get_device_name();
+        osstream<<"Error. Fail to load wind turbine Cp data from file '"<<file<<"'. Check model "<<get_model_name()<<" of "<<get_compound_device_name();
         toolkit.show_information_with_leading_time_stamp(osstream);
         (*cp_file_name) = "";
         return;
@@ -71,7 +71,7 @@ void AERDF::load_data_from_Cp_file()
     ostringstream osstream;
     if(cp_file_name->size()<1)
     {
-        osstream<<"Initialization error. No file is provided for loading wind turbine Cp data. Check model "<<get_model_name()<<" of "<<get_device_name();
+        osstream<<"Initialization error. No file is provided for loading wind turbine Cp data. Check model "<<get_model_name()<<" of "<<get_compound_device_name();
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -80,7 +80,7 @@ void AERDF::load_data_from_Cp_file()
         fid.close();
     else
     {
-        osstream<<"Initialization error. Fail to open wind turbine Cp data file '"<<(*cp_file_name)<<"'. Check model "<<get_model_name()<<" of "<<get_device_name();
+        osstream<<"Initialization error. Fail to open wind turbine Cp data file '"<<(*cp_file_name)<<"'. Check model "<<get_model_name()<<" of "<<get_compound_device_name();
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -144,7 +144,7 @@ void AERDF::load_tip_speed_ratios()
         unsigned int n = datavec.size();
         if(n==0)
         {
-            osstream<<"Warning. No more tip speed ratio lines in wind turbine Cp data file '"<<(*cp_file_name)<<"' of "<<get_model_name()<<" of "<<get_device_name()<<".";
+            osstream<<"Warning. No more tip speed ratio lines in wind turbine Cp data file '"<<(*cp_file_name)<<"' of "<<get_model_name()<<" of "<<get_compound_device_name()<<".";
             toolkit.show_information_with_leading_time_stamp(osstream);
             break;
         }
@@ -181,7 +181,7 @@ void AERDF::load_Cp_matrix()
         unsigned int n = datavec.size();
         if(n<N_pitch+1)
         {
-            osstream<<"Warning. Different length of tip speed ratio line is detected in wind turbine Cp data file '"<<(*cp_file_name)<<"' of "<<get_model_name()<<" of "<<get_device_name()<<":"<<endl
+            osstream<<"Warning. Different length of tip speed ratio line is detected in wind turbine Cp data file '"<<(*cp_file_name)<<"' of "<<get_model_name()<<" of "<<get_compound_device_name()<<":"<<endl
                     <<data<<endl
                     <<"No more data will be loaded from Cp data file '"<<(*cp_file_name)<<"'.";
             toolkit.show_information_with_leading_time_stamp(osstream);
@@ -456,7 +456,7 @@ double AERDF::get_model_data_with_name(string par_name) const
         return get_air_density_in_kgpm3();
 
     STEPS& toolkit = get_toolkit();
-    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
@@ -506,7 +506,7 @@ void AERDF::set_model_data_with_name(string par_name, double value)
         return set_air_density_in_kgpm3(value);
 
     STEPS& toolkit = get_toolkit();
-    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }
 

@@ -105,21 +105,21 @@ void STABILIZER_MODEL::set_input_signal_at_slot(unsigned int slot, SIGNAL& signa
     ostringstream osstream;
     if(not signal.is_valid())
     {
-        osstream<<"Warning. Invalid signal ("<<signal.get_meter_name()<<") is not allowed when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_device_name()<<".";
+        osstream<<"Warning. Invalid signal ("<<signal.get_meter_name()<<") is not allowed when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_compound_device_name()<<".";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(slot>=STEPS_MAX_STABILIZER_INPUT_SIGNAL_SLOT)
     {
-        osstream<<"Warning. Signal slot "<<slot<<" is beyond the capacity of slots when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_device_name()<<".";
+        osstream<<"Warning. Signal slot "<<slot<<" is beyond the capacity of slots when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_compound_device_name()<<".";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
     SIGNAL* signal_ptr = get_nonconst_pointer_of_signal_at_slot(slot);
     if(signal_ptr->is_valid())
     {
-        osstream<<"Warning. Signal slot "<<slot<<" has already been assigned to signal "<<signal_ptr->get_meter_name()<<" when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_device_name()<<"."<<endl
+        osstream<<"Warning. Signal slot "<<slot<<" has already been assigned to signal "<<signal_ptr->get_meter_name()<<" when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_compound_device_name()<<"."<<endl
                 <<"It will be updated to new signal ("<<signal.get_meter_name()<<").";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }

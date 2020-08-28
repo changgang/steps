@@ -73,14 +73,14 @@ void ARXL::set_output_line(DEVICE_ID did, unsigned int meter_side)
     LINE* line = psdb.get_line(did);
     if(line==NULL)
     {
-        osstream<<"Warning. "<<did.get_device_name()<<" is not found in power system database when setting up ARXL model.";
+        osstream<<"Warning. "<<did.get_compound_device_name()<<" is not found in power system database when setting up ARXL model.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(line->get_sending_side_breaker_status()==false and line->get_receiving_side_breaker_status()==false)
     {
-        osstream<<"Warning. "<<did.get_device_name()<<" is out-of-service when setting up ARXL model.";
+        osstream<<"Warning. "<<did.get_compound_device_name()<<" is out-of-service when setting up ARXL model.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -494,7 +494,7 @@ void ARXL::switch_output_to_equivalent_device()
     edevice->set_equivalent_nominal_constant_current_load_in_MVA(0.0);
     edevice->set_equivalent_nominal_constant_impedance_load_in_MVA(0.0);
 
-    osstream<<edevice->get_device_name()<<" is switched on at time "<<current_time<<" s. Desired equivalent load is "<<edevice->get_equivalent_load_in_MVA();
+    osstream<<edevice->get_compound_device_name()<<" is switched on at time "<<current_time<<" s. Desired equivalent load is "<<edevice->get_equivalent_load_in_MVA();
     toolkit.show_information_with_leading_time_stamp(osstream);
 
 

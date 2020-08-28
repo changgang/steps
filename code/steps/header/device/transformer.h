@@ -93,7 +93,7 @@ class TRANSFORMER : public NONBUS_DEVICE
         bool is_three_winding_transformer() const;
 
         virtual DEVICE_ID get_device_id() const;
-        //virtual string get_device_name() const;
+        //virtual string get_compound_device_name() const;
 
         complex<double> get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(TRANSFORMER_WINDING_SIDE winding1, TRANSFORMER_WINDING_SIDE winding2) const;
         complex<double> get_magnetizing_admittance_based_on_winding_norminal_voltage_and_system_base_power_in_pu() const;

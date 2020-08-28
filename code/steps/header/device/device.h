@@ -29,7 +29,7 @@ class DEVICE
         virtual void report() const = 0;
 
         virtual DEVICE_ID get_device_id() const = 0;
-        string get_device_name() const;
+        string get_compound_device_name() const;
     private:
         STEPS* toolkit;
 

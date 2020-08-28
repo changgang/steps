@@ -403,7 +403,7 @@ bool CCT_SEARCHER::perform_simulation_with_clearing_time(double clearing_time)
     string filename = get_search_title();
     if(filename != "")
     {
-        filename += "_fault_at_bus_"+num2str(get_fault_side_bus())+"_of_"+get_fault_device().get_device_name()+"_cleared_after_"+num2str(clearing_time)+"s";
+        filename += "_fault_at_bus_"+num2str(get_fault_side_bus())+"_of_"+get_fault_device().get_compound_device_name()+"_cleared_after_"+num2str(clearing_time)+"s";
         if(get_flag_trip_line_after_clearing_fault())
             filename += "_with_tripping_line";
         else
@@ -547,7 +547,7 @@ bool CCT_SEARCHER::check_if_system_is_stable() const
             {
                 GENERATOR* generator = generators_in_island[i];
                 SYNC_GENERATOR_MODEL* genmodel = generator->get_sync_generator_model();
-                osstream<<generator->get_device_name()<<"  "<<genmodel->get_rotor_angle_in_deg()<<endl;
+                osstream<<generator->get_compound_device_name()<<"  "<<genmodel->get_rotor_angle_in_deg()<<endl;
             }
             default_toolkit.show_information_with_leading_time_stamp(osstream);
             break;

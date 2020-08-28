@@ -390,13 +390,13 @@ void IEEEG1::initialize()
 
             if(valve>get_Pmax_in_pu())
             {
-                osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                   <<"Valve is "<<valve<<", and Pmax is "<<get_Pmax_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(valve<get_Pmin_in_pu())
             {
-                osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                   <<"Valve is "<<valve<<", and Pmin is "<<get_Pmin_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }

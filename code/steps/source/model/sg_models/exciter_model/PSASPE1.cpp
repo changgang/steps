@@ -270,26 +270,26 @@ void PSASPE1::initialize()
 
             if(Efd>get_Efdmax_in_pu())
             {
-                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                         <<"Efd is "<<Efd<<", and Efdmax is "<<get_Efdmax_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(Efd<get_Efdmin_in_pu())
             {
-                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                         <<"Efd is "<<Efd<<", and Efdmin is "<<get_Efdmin_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
 
             if(Efd>get_VAmax_in_pu())
             {
-                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                         <<"Efd is "<<Efd<<", and VAmax is "<<get_VAmax_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(Efd<get_VAmin_in_pu())
             {
-                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                         <<"Efd is "<<Efd<<", and VAmin is "<<get_VAmin_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
@@ -364,7 +364,7 @@ void PSASPE1::check()
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
 
-    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_device_name()<<".\n";
+    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_compound_device_name()<<".\n";
     bool error_found = false;
     if(get_TA_in_s()==0.0)
     {

@@ -57,7 +57,7 @@ class SOURCE : public NONBUS_DEVICE
 
 
         virtual DEVICE_ID get_device_id() const = 0;
-        //virtual string get_device_name() const = 0;
+        //virtual string get_compound_device_name() const = 0;
 
         virtual void report() const = 0;
         virtual void save() const = 0;

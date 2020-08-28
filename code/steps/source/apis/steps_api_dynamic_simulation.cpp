@@ -520,7 +520,7 @@ void api_set_line_fault(unsigned int ibus, unsigned int jbus, char* identifier, 
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -549,7 +549,7 @@ void api_clear_line_fault(unsigned int ibus, unsigned int jbus, char* identifier
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -578,7 +578,7 @@ void api_trip_line(unsigned int ibus, unsigned int jbus, char* identifier, unsig
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -598,7 +598,7 @@ void api_trip_line_breaker(unsigned int ibus, unsigned int jbus, char* identifie
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -618,7 +618,7 @@ void api_close_line(unsigned int ibus, unsigned int jbus, char* identifier, unsi
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -638,7 +638,7 @@ void api_close_line_breaker(unsigned int ibus, unsigned int jbus, char* identifi
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -658,7 +658,7 @@ void api_trip_transformer(unsigned int ibus, unsigned int jbus, unsigned int kbu
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -678,7 +678,7 @@ void api_trip_transformer_breaker(unsigned int ibus, unsigned int jbus, unsigned
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -698,7 +698,7 @@ void api_close_transformer(unsigned int ibus, unsigned int jbus, unsigned int kb
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -718,7 +718,7 @@ void api_close_transformer_breaker(unsigned int ibus, unsigned int jbus, unsigne
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -738,7 +738,7 @@ void api_trip_generator(unsigned int bus, char* identifier, unsigned int toolkit
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -758,7 +758,7 @@ void api_shed_generator(unsigned int bus, char* identifier, double percent, unsi
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -778,7 +778,7 @@ void api_trip_wt_generator(unsigned int bus, char* identifier, unsigned int n, u
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -798,7 +798,7 @@ void api_shed_wt_generator(unsigned int bus, char* identifier, double percent, u
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -818,7 +818,7 @@ void api_trip_load(unsigned int bus, char* identifier, unsigned int toolkit_inde
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -838,7 +838,7 @@ void api_close_load(unsigned int bus, char* identifier, unsigned int toolkit_ind
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -858,7 +858,7 @@ void api_scale_load(unsigned int bus, char* identifier, double percent, unsigned
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -886,7 +886,7 @@ void api_trip_fixed_shunt(unsigned int bus, char* identifier, unsigned int toolk
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -906,7 +906,7 @@ void api_close_fixed_shunt(unsigned int bus, char* identifier, unsigned int tool
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -926,7 +926,7 @@ void api_manually_bypass_hvdc(unsigned int ibus, unsigned int jbus, char* identi
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -946,7 +946,7 @@ void api_manually_unbypass_hvdc(unsigned int ibus, unsigned int jbus, char* iden
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -966,7 +966,7 @@ void api_manually_block_hvdc(unsigned int ibus, unsigned int jbus, char* identif
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -985,7 +985,7 @@ void api_manually_unblock_hvdc(unsigned int ibus, unsigned int jbus, char* ident
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
+                 (did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -1137,11 +1137,11 @@ double api_search_cct(char* pf_file, char* dy_file, unsigned int ibus, unsigned 
 
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Now go searching CCT for fault at side %u of %s.",
-             searcher.get_fault_side_bus(), (did.get_device_name()).c_str());
+             searcher.get_fault_side_bus(), (did.get_compound_device_name()).c_str());
     toolkit.show_information_with_leading_time_stamp(buffer);
     double cct = searcher.search_cct();
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Now done searching CCT for fault at side %u of %s.",
-             searcher.get_fault_side_bus(), (did.get_device_name()).c_str());
+             searcher.get_fault_side_bus(), (did.get_compound_device_name()).c_str());
     toolkit.show_information_with_leading_time_stamp(buffer);
 
     searcher.run_case_with_clearing_time(cct);

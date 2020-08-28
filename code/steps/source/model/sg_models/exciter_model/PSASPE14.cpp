@@ -333,13 +333,13 @@ void PSASPE14::initialize()
 
             if(Efd>get_Efdmax_in_pu())
             {
-                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                         <<"Efd is "<<Efd<<", and Efdmax is "<<get_Efdmax_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(Efd<get_Efdmin_in_pu())
             {
-                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                         <<"Efd is "<<Efd<<", and Efdmin is "<<get_Efdmin_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
@@ -349,13 +349,13 @@ void PSASPE14::initialize()
             double VF = Efd/get_Kt();
             if(VF>get_Vfmax_in_pu())
             {
-                osstream<<"Initialization error. VF of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. VF of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                         <<"VF is "<<VF<<", and VFmax is "<<get_Vfmax_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(VF<get_Vfmin_in_pu())
             {
-                osstream<<"Initialization error. VF of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                osstream<<"Initialization error. VF of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                         <<"VF is "<<VF<<", and VFmin is "<<get_Vfmin_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
@@ -369,13 +369,13 @@ void PSASPE14::initialize()
 
             if(Vr>get_Vrmax_in_pu())
             {
-                osstream<<"Initialization error. Vr of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. Vr of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                         <<"Vr is "<<Vr<<", and VRmax is "<<get_Vrmax_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(VF<get_Vrmin_in_pu())
             {
-                osstream<<"Initialization error. Vr of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                osstream<<"Initialization error. Vr of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                         <<"Vr is "<<Vr<<", and VRmin is "<<get_Vrmin_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
@@ -446,7 +446,7 @@ void PSASPE14::check()
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
 
-    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_device_name()<<".\n";
+    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_compound_device_name()<<".\n";
     bool error_found = false;
     if(get_Ta_in_s()==0.0)
     {

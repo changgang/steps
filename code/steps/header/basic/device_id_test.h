@@ -55,7 +55,7 @@ class DEVICE_ID_TEST : public Test::Suite
 
         void test_set_get_device_identifier();
 
-        void test_get_device_name();
+        void test_get_compound_device_name();
 
         void test_is_valid();
 

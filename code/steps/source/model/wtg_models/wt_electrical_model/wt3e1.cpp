@@ -600,7 +600,7 @@ void WT3E1::initialize()
             double ipmax = get_IPmax_in_pu();
             if(ipcmd>ipmax)
             {
-                osstream<<"Initialization error. IPcmd (Active current command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. IPcmd (Active current command) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                   <<"IPcmd is "<<ipcmd<<", and IPmax is "<<ipmax<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
@@ -610,13 +610,13 @@ void WT3E1::initialize()
             power_order_integrator.set_output(porder);
             if(porder>pmax)
             {
-                osstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                   <<"Porder is "<<porder<<", and Pmax is "<<pmax<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(porder<pmin)
             {
-                osstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                osstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                   <<"Porder is "<<porder<<", and Pmin is "<<pmin<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
@@ -661,13 +661,13 @@ void WT3E1::initialize()
                 V_error_integrator.set_output(eqcmd);
                 if(eqcmd>vmax)
                 {
-                    osstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                    osstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                       <<"Eqcmd is "<<eqcmd<<", and Vmax is "<<vmax<<".";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                 }
                 if(eqcmd<vmin)
                 {
-                    osstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                    osstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                       <<"Eqcmd is "<<eqcmd<<", and Vmin is "<<vmin<<".";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                 }
@@ -681,13 +681,13 @@ void WT3E1::initialize()
             Q_error_integrator.set_output(vcmd);
             if(vcmd>vmax)
             {
-                osstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                   <<"Vcmd is "<<vcmd<<", and Vmax is "<<vmax<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(vcmd<vmin)
             {
-                osstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                osstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                   <<"Vcmd is "<<vcmd<<", and Vmin is "<<vmin<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
@@ -698,13 +698,13 @@ void WT3E1::initialize()
             double qmin = get_Qmin_in_pu();
             if(qcmd>qmax)
             {
-                osstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                   <<"Qcmd is "<<qcmd<<", and Qmax is "<<qmax<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(qcmd<qmin)
             {
-                osstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                osstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                   <<"Qcmd is "<<qcmd<<", and Qmin is "<<qmin<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }

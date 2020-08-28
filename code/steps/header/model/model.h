@@ -43,9 +43,9 @@ class MODEL
         void set_device_id(DEVICE_ID did);
         NONBUS_DEVICE* get_device_pointer() const;
         DEVICE_ID get_device_id() const;
-        string get_device_name() const;
+        string get_compound_device_name() const;
         BUS* get_bus_pointer() const;
-        //BUS* get_bus_pointer(HVDC_CONVERTER_SIDE converter) const;
+        //BUS* get_bus_pointer(CONVERTER_SIDE converter) const;
         //BUS* get_bus_pointer(LINE_SIDE side) const;
         //BUS* get_bus_pointer(TRANSFORMER_WINDING_SIDE winding) const;
 

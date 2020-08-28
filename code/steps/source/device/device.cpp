@@ -25,7 +25,7 @@ STEPS& DEVICE::get_toolkit() const
     return (*toolkit);
 }
 
-string DEVICE::get_device_name() const
+string DEVICE::get_compound_device_name() const
 {
-    return get_device_id().get_device_name();
+    return get_device_id().get_compound_device_name();
 }

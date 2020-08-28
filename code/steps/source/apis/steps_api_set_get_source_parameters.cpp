@@ -44,8 +44,8 @@ int api_get_source_integer_data(unsigned int bus, char* identifier, char* parame
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
                  "0 will be returned.",
-                 (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
-                 (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
+                 (generator_did.get_compound_device_name()).c_str(), (wt_generator_did.get_compound_device_name()).c_str(),
+                 (pv_unit_did.get_compound_device_name()).c_str(), (energy_storage_did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return 0;
     }
@@ -88,8 +88,8 @@ void api_set_source_integer_data(unsigned int bus, char* identifier, char* param
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
                  "Nothing will be changed.",
-                 (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
-                 (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
+                 (generator_did.get_compound_device_name()).c_str(), (wt_generator_did.get_compound_device_name()).c_str(),
+                 (pv_unit_did.get_compound_device_name()).c_str(), (energy_storage_did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
     }
 }
@@ -159,8 +159,8 @@ double api_get_source_float_data(unsigned int bus, char* identifier, char* param
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
                  "0.0 will be returned.",
-                 (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
-                 (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
+                 (generator_did.get_compound_device_name()).c_str(), (wt_generator_did.get_compound_device_name()).c_str(),
+                 (pv_unit_did.get_compound_device_name()).c_str(), (energy_storage_did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return 0.0;
     }
@@ -235,8 +235,8 @@ void api_set_source_float_data(unsigned int bus, char* identifier, char* paramet
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
                  "Nothing will be changed.",
-                 (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
-                 (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
+                 (generator_did.get_compound_device_name()).c_str(), (wt_generator_did.get_compound_device_name()).c_str(),
+                 (pv_unit_did.get_compound_device_name()).c_str(), (energy_storage_did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
     }
 }
@@ -275,8 +275,8 @@ const char* api_get_source_string_data(unsigned int bus, char* identifier, char*
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
                  "EMPTY STRING will be returned.",
-                 (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
-                 (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
+                 (generator_did.get_compound_device_name()).c_str(), (wt_generator_did.get_compound_device_name()).c_str(),
+                 (pv_unit_did.get_compound_device_name()).c_str(), (energy_storage_did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return toolkit.steps_char_buffer;
     }
@@ -314,8 +314,8 @@ void api_set_source_string_data(unsigned int bus, char* identifier, char* parame
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
                  "Nothing will be changed.",
-                 (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
-                 (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
+                 (generator_did.get_compound_device_name()).c_str(), (wt_generator_did.get_compound_device_name()).c_str(),
+                 (pv_unit_did.get_compound_device_name()).c_str(), (energy_storage_did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
     }
 }
@@ -355,8 +355,8 @@ bool api_get_source_boolean_data(unsigned int bus, char* identifier, char* param
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
                  "False will be returned.",
-                 (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
-                 (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
+                 (generator_did.get_compound_device_name()).c_str(), (wt_generator_did.get_compound_device_name()).c_str(),
+                 (pv_unit_did.get_compound_device_name()).c_str(), (energy_storage_did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return false;
     }
@@ -397,8 +397,8 @@ void api_set_source_boolean_data(unsigned int bus, char* identifier, char* param
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
                  "Nothing will be changed.",
-                 (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
-                 (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
+                 (generator_did.get_compound_device_name()).c_str(), (wt_generator_did.get_compound_device_name()).c_str(),
+                 (pv_unit_did.get_compound_device_name()).c_str(), (energy_storage_did.get_compound_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
     }
 }

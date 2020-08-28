@@ -206,13 +206,13 @@ void SEXS::initialize()
 
             if(Efd>get_Efdmax_in_pu())
             {
-                osstream<<"Initialization error. Efd of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. Efd of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                   <<"Efd is "<<Efd<<", and Efdmax is "<<get_Efdmax_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(Efd<get_Efdmin_in_pu())
             {
-                osstream<<"Initialization error. Efd of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                osstream<<"Initialization error. Efd of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                   <<"Efd is "<<Efd<<", and Efdmin is "<<get_Efdmin_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
@@ -329,7 +329,7 @@ double SEXS::get_model_data_with_name(string par_name) const
         if(par_name=="EFDMIN") return get_Efdmin_in_pu();
     }
     STEPS& toolkit = get_toolkit();
-    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
@@ -346,7 +346,7 @@ void SEXS::set_model_data_with_name(string par_name, double value)
         if(par_name=="EFDMIN") return set_Efdmin_in_pu(value);
     }
     STEPS& toolkit = get_toolkit();
-    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
 }
 
 double SEXS::get_minimum_nonzero_time_constant_in_s()

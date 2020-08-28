@@ -271,7 +271,7 @@ bool WT3G0::setup_model_with_steps_string_vector(vector<string>& data)
             }
             else
             {
-                osstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_device_name()<<endl
+                osstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_compound_device_name()<<endl
                        <<"No such wt generator exists in the power system database.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 return is_successful;
@@ -378,7 +378,7 @@ void WT3G0::initialize()
 
         if(toolkit.is_detailed_log_enabled())
         {
-            osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+            osstream<<get_model_name()<<" model of "<<get_compound_device_name()<<" is initialized."<<endl
                     <<"(1) Initial active current command = "<<get_initial_active_current_command_in_pu_based_on_mbase()<<endl
                     <<"(2) Initial reactive current command = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
                     <<"(3) Initial reactive voltage command = "<<get_initial_reactive_voltage_command_in_pu()<<endl
@@ -510,7 +510,7 @@ complex<double> WT3G0::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
         Iq = -hvrc_i;
 
     double pll_angle = get_pll_angle_in_rad();
-    //cout<<get_device_name()<<" model "<<get_model_name()<<": Ip= "<<Ip<<", Iq="<<Iq<<", Pllangle = "<<pll_angle<<endl;
+    //cout<<get_compound_device_name()<<" model "<<get_model_name()<<": Ip= "<<Ip<<", Iq="<<Iq<<", Pllangle = "<<pll_angle<<endl;
 
     double sine = steps_sin(pll_angle), cosine = steps_cos(pll_angle);
     double Ix = Ip*cosine - Iq*sine;

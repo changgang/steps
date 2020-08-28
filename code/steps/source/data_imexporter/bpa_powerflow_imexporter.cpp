@@ -1716,15 +1716,15 @@ void BPA_IMEXPORTER::load_hvdc_data()
             hvdc.set_line_resistance_in_ohm(line_resistance_in_ohm);
             hvdc.set_line_inductance_in_mH(line_inductance_in_mH);
             hvdc.set_line_capacitance_in_uF(line_capacitance_in_uF);
-            hvdc.set_nominal_dc_power_per_pole_in_MW(nominal_dc_power_per_pole_in_MW);
+            hvdc.set_nominal_dc_power_in_MW(nominal_dc_power_per_pole_in_MW);
 
             if(power_controlled_side_flag=="R")
                 hvdc.set_side_to_hold_power(RECTIFIER);
             else if(power_controlled_side_flag=="I")
                 hvdc.set_side_to_hold_power(INVERTER);
 
-            hvdc.set_nominal_dc_current_per_pole_in_kA(nominal_dc_current_per_pole_in_kA);
-            hvdc.set_nominal_dc_voltage_per_pole_in_kV(nominal_dc_voltage_per_pole_in_kV);
+            hvdc.set_nominal_dc_current_in_kA(nominal_dc_current_per_pole_in_kA);
+            hvdc.set_nominal_dc_voltage_in_kV(nominal_dc_voltage_per_pole_in_kV);
 
 
             while(psdb.is_hvdc_exist(hvdc.get_device_id()))
@@ -1769,7 +1769,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
                 continue;
 
             vector<HVDC*> hvdcs = psdb.get_hvdcs_connecting_to_bus(converter_grid_side_bus_number);
-            HVDC_CONVERTER_SIDE converter_side_type;
+            CONVERTER_SIDE converter_side_type;
             for(unsigned int j=0; j<hvdcs.size(); ++j)
             {
                 HVDC* hvdc_ptr = hvdcs[j];
@@ -1889,7 +1889,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
 
             vector<HVDC*> hvdcs = psdb.get_hvdcs_connecting_to_bus(converter_bus);
 
-            HVDC_CONVERTER_SIDE converter_side_type;
+            CONVERTER_SIDE converter_side_type;
             for(unsigned int j=0; j<hvdcs.size(); ++j)
             {
                 HVDC* hvdc_ptr = hvdcs[j];
@@ -1907,7 +1907,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
             /*
             if(from_valve_side_bus_name_to_grid_side_bus_name[secondary_bus_name] == primary_bus_name)
             {
-                HVDC_CONVERTER_SIDE converter_side_type;
+                CONVERTER_SIDE converter_side_type;
                 string inverter_grid_side_bus_name;
                 string rectifier_valve_side_bus_name;
                 string rectifier_grid_side_bus_name;
@@ -1993,7 +1993,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
 
             vector<HVDC*> hvdcs = psdb.get_hvdcs_connecting_to_bus(converter_bus);
 
-            HVDC_CONVERTER_SIDE converter_side_type;
+            CONVERTER_SIDE converter_side_type;
             for(unsigned int j=0; j<hvdcs.size(); ++j)
             {
                 HVDC* hvdc_ptr = hvdcs[j];
@@ -2010,7 +2010,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
             /*
             if(from_valve_side_bus_name_to_grid_side_bus_name[secondary_bus_name]==primary_bus_name)
             {
-                HVDC_CONVERTER_SIDE converter_side_type;
+                CONVERTER_SIDE converter_side_type;
 
                 string inverter_grid_side_bus_name;
                 string rectifier_valve_side_bus_name;
@@ -2053,37 +2053,6 @@ void BPA_IMEXPORTER::load_hvdc_data()
             */
         }
     }
-
-/*
-    HVDC_POLE hvdc_pole_number;
-    vector <BUS*> bus_ptr_vector=psdb.get_all_buses();
-    unsigned int m=bus_ptr_vector.size();
-    vector <HVDC*> hvdc_ptr_vector;
-    for(unsigned int i=0; i<m; ++i)
-    {
-        hvdc_ptr_vector=psdb.get_hvdcs_connecting_to_bus(bus_ptr_vector[i]->get_bus_number());
-
-        unsigned int hvdc_number = hvdc_ptr_vector.size();
-
-        for(unsigned int j=0; j<hvdc_number; ++j)
-        {
-            HVDC* hvdc_ptr = hvdc_ptr_vector[j];
-
-            unsigned int rectifier_grid_side_bus=hvdc_ptr->get_converter_bus(RECTIFIER);
-            string rectifier_grid_side_bus_name=psdb.bus_number2bus_name(rectifier_grid_side_bus);
-
-            unsigned int inverter_grid_side_bus=hvdc_ptr->get_converter_bus(INVERTER);
-            string inverter_grid_side_bus_name=psdb.bus_number2bus_name(inverter_grid_side_bus);
-
-            int pole_number=from_converter_grid_bus_name_to_pole_number[rectifier_grid_side_bus_name+","+inverter_grid_side_bus_name];
-
-            if(pole_number==1) hvdc_pole_number=SINGLE_POLE;
-            if(pole_number==2) hvdc_pole_number=DOUBLE_POLE;
-
-            hvdc_ptr->set_number_of_poles(hvdc_pole_number);
-        }
-    }
-    */
 }
 
 void BPA_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line, POWERFLOW_DATA_SAVE_MODE save_mode)
@@ -3122,20 +3091,17 @@ string BPA_IMEXPORTER::export_hvdc_data() const
 
         unsigned int pole_number = 1;
 
-        if (hvdc->get_number_of_poles()==SINGLE_POLE) pole_number=1;
-        else if (hvdc->get_number_of_poles()==DOUBLE_POLE) pole_number=2;
-
         double line_resistance_in_ohm=hvdc->get_line_resistance_in_ohm();
         double line_inductance_in_mH=hvdc->get_line_inductance_in_mH();
         double line_capacitance_in_uF=hvdc->get_line_capacitance_in_uF();
         double line_rectifier_smooting_inductance_in_mH=hvdc->get_line_smooting_inductance_in_mH(RECTIFIER);
         double line_inverter_smooting_inductance_in_mH=hvdc->get_line_smooting_inductance_in_mH(INVERTER);
-        double nominal_dc_power_per_pole_in_MW=hvdc->get_nominal_dc_power_per_pole_in_MW();
+        double nominal_dc_power_per_pole_in_MW=hvdc->get_nominal_dc_power_in_MW();
 
-        HVDC_CONVERTER_SIDE power_controlled_side=hvdc->get_side_to_hold_dc_power();
+        CONVERTER_SIDE power_controlled_side=hvdc->get_side_to_hold_dc_power();
 
-        double nominal_dc_current_per_pole_in_A=hvdc->get_nominal_dc_current_per_pole_in_kA()*1000;
-        double nominal_dc_voltage_per_pole_in_kV=hvdc->get_nominal_dc_voltage_per_pole_in_kV();
+        double nominal_dc_current_per_pole_in_A=hvdc->get_nominal_dc_current_in_kA()*1000;
+        double nominal_dc_voltage_per_pole_in_kV=hvdc->get_nominal_dc_voltage_in_kV();
 
         //double rectifier_number_of_bridge=hvdc->get_converter_number_of_bridge(RECTIFIER);
         //double inverter_number_of_bridge=hvdc->get_converter_number_of_bridge(INVERTER);

@@ -317,13 +317,13 @@ void WT3P0::initialize()
         double pmin = get_Pitchmin_in_deg();
         if(pitch0>pmax)
         {
-            osstream<<"Initialization error. Pitch of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+            osstream<<"Initialization error. Pitch of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
               <<"Pitch angle is "<<pitch0<<" deg, and Pitchmax is "<<pmax<<" deg.";
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
         if(pitch0<pmin)
         {
-            osstream<<"Initialization error. Pitch of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+            osstream<<"Initialization error. Pitch of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
               <<"Pitch angle is "<<pitch0<<" deg, and Pitchmin is "<<pmin<<" deg.";
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
@@ -350,7 +350,7 @@ void WT3P0::initialize()
 
         if(toolkit.is_detailed_log_enabled())
         {
-            osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+            osstream<<get_model_name()<<" model of "<<get_compound_device_name()<<" is initialized."<<endl
                     <<"(1) speed regulator state: "<<speed_controller.get_state()<<endl
                     <<"(2) frequency regulator state: "<<frequency_controller.get_state()<<endl
                     <<"(3) pitch integrator state: "<<pitch_integrator.get_state()<<endl
@@ -563,7 +563,7 @@ void WT3P0::set_model_data_with_name(string par_name, double value)
     if(par_name == "T PITCH IN S")            return set_Tp_in_s(value);
 
     STEPS& toolkit = get_toolkit();
-    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }
 

@@ -336,7 +336,7 @@ void PSASPS8::check()
     double vsmax = get_Vsmax();
     double vsmin = get_Vsmin();
 
-    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_device_name()<<".\n";
+    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_compound_device_name()<<".\n";
     bool error_found = false;
     if(vsmax<=vsmin)
     {

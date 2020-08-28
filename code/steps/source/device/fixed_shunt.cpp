@@ -178,7 +178,7 @@ bool FIXED_SHUNT::is_in_zone(unsigned int zone) const
 void FIXED_SHUNT::report() const
 {
     ostringstream osstream;
-    osstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
+    osstream<<get_compound_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
             <<"P+jQ[Z] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_impedance_shunt_in_MVA()<<" MVA.";
     STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -256,7 +256,7 @@ complex<double> FIXED_SHUNT::get_actual_impedance_shunt_in_MVA() const
         }
         else
         {
-            osstream<<"Bus "<<get_shunt_bus()<<" is not found when getting the actual impedance shunt of "<<get_device_name()<<". Nominal impedance shunt in MVA will be returned.";
+            osstream<<"Bus "<<get_shunt_bus()<<" is not found when getting the actual impedance shunt of "<<get_compound_device_name()<<". Nominal impedance shunt in MVA will be returned.";
             toolkit.show_information_with_leading_time_stamp(osstream);
             return S0;
         }

@@ -624,13 +624,13 @@ void GAST2A::initialize()
             double output = gfc/get_gas_K3();
             if(output>get_gas_max_in_pu())
             {
-                osstream<<"Initialization error. Governor of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. Governor of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                   <<"Governor is "<<output<<", and max is "<<get_gas_max_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(output<get_gas_min_in_pu())
             {
-                osstream<<"Initialization error. Governor of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                osstream<<"Initialization error. Governor of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                   <<"Governor is "<<output<<", and min is "<<get_gas_min_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }

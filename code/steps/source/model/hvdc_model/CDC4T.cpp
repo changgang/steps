@@ -311,7 +311,7 @@ void CDC4T::check_blocking_logic()
         {
             if(vac_r<vblock)
             {
-                osstream<<get_device_name()<<" will be blocked at time "<<TIME<<" s due to drop of rectifier AC voltage."<<endl;
+                osstream<<get_compound_device_name()<<" will be blocked at time "<<TIME<<" s due to drop of rectifier AC voltage."<<endl;
                 osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and AC blocking voltage threshold is "<<vblock<<" pu.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
 
@@ -322,7 +322,7 @@ void CDC4T::check_blocking_logic()
         {
             if(is_block_timer_timed_out() and vac_r>vunblock)
             {
-                osstream<<get_device_name()<<" block timer is timed out, and will unblock at time "<<TIME<<" s due to recovery of rectifier AC voltage."<<endl;
+                osstream<<get_compound_device_name()<<" block timer is timed out, and will unblock at time "<<TIME<<" s due to recovery of rectifier AC voltage."<<endl;
                 osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and AC unblocking voltage threshold is "<<vunblock<<" pu.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
 
@@ -355,7 +355,7 @@ void CDC4T::check_bypassing_logic()
                 if(vdc_i<vbypass)
                 {
                     ostringstream osstream;
-                    osstream<<get_device_name()<<" will be bypassed at time "<<TIME<<" s due to drop of inverter DC voltage."<<endl;
+                    osstream<<get_compound_device_name()<<" will be bypassed at time "<<TIME<<" s due to drop of inverter DC voltage."<<endl;
                     osstream<<"Inverter DC voltage is "<<vdc_i<<" kV, and DC bypassing voltage threshold is "<<vbypass<<" kV.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
 
@@ -373,7 +373,7 @@ void CDC4T::check_bypassing_logic()
             if(is_bypass_timer_timed_out() and vac_i>vunbypass)
             {
                 ostringstream osstream;
-                osstream<<get_device_name()<<" bypass timer is timed out, and will unbypass at time "<<TIME<<" s due to recovery of inverter AC voltage."<<endl;
+                osstream<<get_compound_device_name()<<" bypass timer is timed out, and will unbypass at time "<<TIME<<" s due to recovery of inverter AC voltage."<<endl;
                 osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and AC unbypassing voltage threshold is "<<vunbypass<<" pu.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
 
@@ -405,7 +405,7 @@ void CDC4T::check_mode_switching_logic()
                 if(vdc_i<vmode)
                 {
                     ostringstream osstream;
-                    osstream<<get_device_name()<<" will switch mode from holding DC power to holding DC current at time "<<TIME<<" s due to drop of inverter DC voltage."<<endl;
+                    osstream<<get_compound_device_name()<<" will switch mode from holding DC power to holding DC current at time "<<TIME<<" s due to drop of inverter DC voltage."<<endl;
                     osstream<<"Inverter DC voltage is "<<vdc_i<<" kV, and DC mode switch voltage threshold is "<<vmode<<" kV.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
 
@@ -418,7 +418,7 @@ void CDC4T::check_mode_switching_logic()
             if(is_mode_switch_timer_timed_out() and vdc_i> vmode)
             {
                 ostringstream osstream;
-                osstream<<get_device_name()<<" mode switch timer is timed out, and will switch back to DC power control mode at time "<<TIME<<" s due to recovery of inverter DC voltage."<<endl;
+                osstream<<get_compound_device_name()<<" mode switch timer is timed out, and will switch back to DC power control mode at time "<<TIME<<" s due to recovery of inverter DC voltage."<<endl;
                 osstream<<"Inverter DC voltage is "<<vdc_i<<" pu, andDC mode switch voltage threshold is "<<vmode<<" pu.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
 

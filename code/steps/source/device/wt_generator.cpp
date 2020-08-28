@@ -108,7 +108,7 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
                     gen->initialize();
                 else
                 {
-                    osstream<<"Error. No WT_GENERATOR_MODEL is provided for "<<get_device_name()<<" for dynamic initialization.";
+                    osstream<<"Error. No WT_GENERATOR_MODEL is provided for "<<get_compound_device_name()<<" for dynamic initialization.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     return;
                 }
@@ -120,7 +120,7 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
                     aero->initialize();
                 else
                 {
-                    osstream<<"Error. No WT_AERO_DYNAMIC_MODEL is provided for "<<get_device_name()<<" for dynamic initialization.";
+                    osstream<<"Error. No WT_AERO_DYNAMIC_MODEL is provided for "<<get_compound_device_name()<<" for dynamic initialization.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     return;
                 }
@@ -129,7 +129,7 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
                     turbine->initialize();
                 else
                 {
-                    osstream<<"Error. No WT_TURBINE_MODEL is provided for "<<get_device_name()<<" for dynamic initialization.";
+                    osstream<<"Error. No WT_TURBINE_MODEL is provided for "<<get_compound_device_name()<<" for dynamic initialization.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     return;
                 }
@@ -188,7 +188,7 @@ void WT_GENERATOR::report() const
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
-    osstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
+    osstream<<get_compound_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
       <<"MBASE = "<<setw(6)<<setprecision(2)<<fixed<<get_mbase_in_MVA()<<" MVA"<<endl
       <<"P = "<<setw(8)<<setprecision(4)<<fixed<<get_p_generation_in_MW()<<" MW, "
       <<"Pmax = "<<setw(8)<<setprecision(4)<<fixed<<get_p_max_in_MW()<<" MW, "

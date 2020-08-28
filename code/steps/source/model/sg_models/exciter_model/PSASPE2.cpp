@@ -388,13 +388,13 @@ void PSASPE2::initialize()
 
             if(Efd>Efdmax)
             {
-                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                   <<"Efd is "<<Efd<<", and Efdmax(~) is "<<Efdmax<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(Efd<Efdmin)
             {
-                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                   <<"Efd is "<<Efd<<", and Efdmin(~) is "<<Efdmin<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
@@ -479,7 +479,7 @@ void PSASPE2::check()
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
 
-    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_device_name()<<".\n";
+    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_compound_device_name()<<".\n";
     bool error_found = false;
     if(get_T2_in_s()==0.0)
     {

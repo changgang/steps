@@ -355,7 +355,7 @@ bool EQUIVALENT_DEVICE::is_in_zone(unsigned int zone) const
 void EQUIVALENT_DEVICE::report() const
 {
     ostringstream osstream;
-    osstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<endl
+    osstream<<get_compound_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<endl
             <<"equivalent voltage source: "<<(get_equivalent_voltage_source_status()==true?"in service":"out of service")<<", "
             <<"V = "<<setw(8)<<setprecision(6)<<fixed<< steps_fast_complex_abs(get_equivalent_voltage_source_voltage_in_pu())<<" pu, "
             <<"Angle = "<<setw(8)<<setprecision(6)<<fixed<<rad2deg(steps_fast_complex_arg(get_equivalent_voltage_source_voltage_in_pu()))<<" deg, "

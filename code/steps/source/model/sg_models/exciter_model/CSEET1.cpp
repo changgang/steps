@@ -610,7 +610,7 @@ double CSEET1::get_initial_Ve_with_Fex_function() const
                 ;
             else
             {
-                osstream<<"Fatal error. Fex = 0.0 is encountered when initializing exciter CSEET1 of "<<get_device_name()<<".";
+                osstream<<"Fatal error. Fex = 0.0 is encountered when initializing exciter CSEET1 of "<<get_compound_device_name()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 Ve = 0.0;
                 break;
@@ -620,7 +620,7 @@ double CSEET1::get_initial_Ve_with_Fex_function() const
                 ;
             else
             {
-                osstream<<"Warning. Initial Ve is not solved within 100 iterations when initializing exciter CSEET1 of "<<get_device_name()<<".\n"
+                osstream<<"Warning. Initial Ve is not solved within 100 iterations when initializing exciter CSEET1 of "<<get_compound_device_name()<<".\n"
                         <<"Old Fex = "<<oldFex<<", New Fex = "<<Fex;
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 break;
@@ -858,7 +858,7 @@ void CSEET1::initialize()
             double Efd = get_initial_excitation_voltage_in_pu_from_sync_generator_model();
             if(Efd>get_Efdmax_in_pu())
             {
-                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                   <<"Efd is "<<Efd<<", and Efdmax is "<<get_Efdmax_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
@@ -870,7 +870,7 @@ void CSEET1::initialize()
             double Ve = get_initial_Ve_with_Fex_function();
             if(Ve>get_Vemax_in_pu())
             {
-                osstream<<"Initialization error. Output of exciter of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. Output of exciter of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                   <<"Ve is "<<Ve<<", and Vemax is "<<get_Vemax_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
@@ -891,13 +891,13 @@ void CSEET1::initialize()
             {
                 if(Vr>get_VRmax_in_pu())
                 {
-                    osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                    osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                       <<"Vr is "<<Vr<<", and VRmax is "<<get_VRmax_in_pu()<<".";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                 }
                 if(Vr<get_VRmin_in_pu())
                 {
-                    osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                    osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                       <<"Vr is "<<Vr<<", and VRmin is "<<get_VRmin_in_pu()<<".";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                 }
@@ -906,13 +906,13 @@ void CSEET1::initialize()
             {
                 if(Vr>get_VRmax_in_pu()*Vt)
                 {
-                    osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                    osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                       <<"Vr is "<<Vr<<", and VRmax*Vt is "<<get_VRmax_in_pu()*Vt<<".";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                 }
                 if(Vr<get_VRmin_in_pu()*Vt)
                 {
-                    osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                    osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                       <<"Vr is "<<Vr<<", and VRmin*Vt is "<<get_VRmin_in_pu()*Vt<<".";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                 }
@@ -932,13 +932,13 @@ void CSEET1::initialize()
             double V_regulator1 = regulator2.get_input()+KH*V_input_to_feedbacker;
             if(V_regulator1>get_VAmax_in_pu())
             {
-                osstream<<"Initialization error. Output of regulator 1 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. Output of regulator 1 of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                   <<"Va is "<<V_regulator1<<", and VAmax is "<<get_VAmax_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(V_regulator1<get_VAmin_in_pu())
             {
-                osstream<<"Initialization error. Output of regulator 1 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                osstream<<"Initialization error. Output of regulator 1 of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                   <<"Va is "<<V_regulator1<<", and VAmin is "<<get_VAmin_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
@@ -1123,7 +1123,7 @@ void CSEET1::check()
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
 
-    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_device_name()<<".\n";
+    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_compound_device_name()<<".\n";
     bool error_found = false;
     if(get_tuner_type()==SERIAL_TUNER)
     {

@@ -193,7 +193,7 @@ void MODEL::set_model_data_with_index(unsigned int index, double value)
     if(var_name!="")
         set_model_data_with_name(var_name, value);
     else
-        toolkit->show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
+        toolkit->show_set_get_model_data_with_index_error(get_compound_device_name(), get_model_name(), __FUNCTION__, index);
 }
 
 double MODEL::get_model_data_with_index(unsigned int index)
@@ -203,7 +203,7 @@ double MODEL::get_model_data_with_index(unsigned int index)
         return get_model_data_with_name(var_name);
     else
     {
-        toolkit->show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
+        toolkit->show_set_get_model_data_with_index_error(get_compound_device_name(), get_model_name(), __FUNCTION__, index);
         return 0.0;
     }
 }
@@ -287,8 +287,8 @@ void MODEL::set_device_id(DEVICE_ID did)
 
     /*if(get_device_pointer()!=NULL)
     {
-        osstream<<"Warning. Valid device ("<<get_device_name()<<") has already been set for "<<get_model_type()<<" model '"<<get_model_name()<<"'."<<endl
-          <<"New device ("<<did.get_device_name()<<") will be updated.";
+        osstream<<"Warning. Valid device ("<<get_compound_device_name()<<") has already been set for "<<get_model_type()<<" model '"<<get_model_name()<<"'."<<endl
+          <<"New device ("<<did.get_compound_device_name()<<") will be updated.";
         toolkit->show_information_with_leading_time_stamp(osstream);
     }*/
 
@@ -364,9 +364,9 @@ DEVICE_ID MODEL::get_device_id() const
     return did;
 }
 
-string MODEL::get_device_name() const
+string MODEL::get_compound_device_name() const
 {
-    return get_device_id().get_device_name();
+    return get_device_id().get_compound_device_name();
 }
 
 BUS* MODEL::get_bus_pointer() const
@@ -375,7 +375,7 @@ BUS* MODEL::get_bus_pointer() const
 }
 
 
-/*BUS* MODEL::get_bus_pointer(HVDC_CONVERTER_SIDE converter) const
+/*BUS* MODEL::get_bus_pointer(CONVERTER_SIDE converter) const
 {
     if(converter==RECTIFIER)
         return rectifier_bus_pointer;

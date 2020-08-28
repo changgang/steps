@@ -266,7 +266,7 @@ void METER::set_meter_type(string meter_type)
         }
         else
         {
-            osstream<<"Warning, Invalid meter type '"<<meter_type<<"' is not supported for setting up meter type of "<<device_pointer->get_device_name()<<".";
+            osstream<<"Warning, Invalid meter type '"<<meter_type<<"' is not supported for setting up meter type of "<<device_pointer->get_compound_device_name()<<".";
             toolkit->show_information_with_leading_time_stamp(osstream);
             change_meter_type("");
         }
@@ -527,8 +527,8 @@ string METER::get_meter_name() const
         if(meter_type.find("INTERNAL VARIABLE")!=string::npos)
             name += " " + get_internal_variable_name();
 
-        //name += " OF "+get_device_id().get_device_name()+" IN PS "+toolkit->get_power_system_database()->get_system_name();
-        name += " @ "+get_device_id().get_device_name();
+        //name += " OF "+get_device_id().get_compound_device_name()+" IN PS "+toolkit->get_power_system_database()->get_system_name();
+        name += " @ "+get_device_id().get_compound_device_name();
 
         string device_type = get_device_type();
         if(device_type=="LINE" or device_type=="TRANSFORMER" )
@@ -643,7 +643,7 @@ void METER::set_device_pointer(DEVICE_ID device_id)
     if(deviceptr==NULL)
     {
         ostringstream osstream;
-        osstream<<"Device cannot be found in database for setting meter. Device is "<<device_id.get_device_name();
+        osstream<<"Device cannot be found in database for setting meter. Device is "<<device_id.get_compound_device_name();
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }

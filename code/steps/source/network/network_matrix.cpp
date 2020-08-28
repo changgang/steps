@@ -1498,7 +1498,7 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_decoupled_network(const TR
                std::isnan(ytp.real()) or std::isnan(ytp.imag()) or
                std::isnan(yts.real()) or std::isnan(yts.imag()) or
                std::isnan(ytt.real()) or std::isnan(ytt.imag()) )
-                cout<<"NAN is detected when adding "<<trans.get_device_name()<<" to BQ"<<endl;
+                cout<<"NAN is detected when adding "<<trans.get_compound_device_name()<<" to BQ"<<endl;
             network_BQ_matrix.add_entry(p,p,ypp);
             network_BQ_matrix.add_entry(p,s,yps);
             network_BQ_matrix.add_entry(p,t,ypt);
@@ -1982,7 +1982,7 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_decoupled_network_v2(const T
                std::isnan(yps.real()) or std::isnan(yps.imag()) or
                std::isnan(ysp.real()) or std::isnan(ysp.imag()) or
                std::isnan(yss.real()) or std::isnan(yss.imag()) )
-                cout<<"NAN is detected when adding "<<trans.get_device_name()<<" to BQ"<<endl;
+                cout<<"NAN is detected when adding "<<trans.get_compound_device_name()<<" to BQ"<<endl;
             network_BQ_matrix.add_entry(p,p,ypp);
             network_BQ_matrix.add_entry(p,s,yps);
             network_BQ_matrix.add_entry(s,p,ysp);
@@ -2548,7 +2548,7 @@ void NETWORK_MATRIX::add_wt_generator_to_dynamic_network(WT_GENERATOR& gen)
         else
         {
             ostringstream osstream;
-            osstream<<"Error. No WT_GENERATOR_MODEL is provided for "<<gen.get_device_name()<<endl
+            osstream<<"Error. No WT_GENERATOR_MODEL is provided for "<<gen.get_compound_device_name()<<endl
                     <<"Its source impedance will not be added to network matrix.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;

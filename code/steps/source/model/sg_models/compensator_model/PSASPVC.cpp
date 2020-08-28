@@ -182,7 +182,7 @@ double PSASPVC::get_model_data_with_name(string par_name) const
         if(par_name=="XC") return get_Xc();
     }
     STEPS& toolkit = get_toolkit();
-    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
@@ -193,7 +193,7 @@ void PSASPVC::set_model_data_with_name(string par_name, double value)
         if(par_name=="XC") return set_Xc(value);
     }
     STEPS& toolkit = get_toolkit();
-    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }
 

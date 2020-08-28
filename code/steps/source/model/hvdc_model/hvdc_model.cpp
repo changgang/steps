@@ -88,7 +88,7 @@ double HVDC_MODEL::get_auxiliary_signal_in_MW() const
         return auxiliary_signal_model->get_auxiliary_signal_in_MW();
 }
 
-void HVDC_MODEL::set_converter_dynamic_max_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter, double angle)
+void HVDC_MODEL::set_converter_dynamic_max_alpha_or_gamma_in_deg(CONVERTER_SIDE converter, double angle)
 {
     if(angle>90.0)
         angle = 90.0;
@@ -98,7 +98,7 @@ void HVDC_MODEL::set_converter_dynamic_max_alpha_or_gamma_in_deg(HVDC_CONVERTER_
     firing_angle_max[converter] = angle;
 }
 
-void HVDC_MODEL::set_converter_dynamic_min_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter, double angle)
+void HVDC_MODEL::set_converter_dynamic_min_alpha_or_gamma_in_deg(CONVERTER_SIDE converter, double angle)
 {
     if(angle>90.0)
         angle = 90.0;
@@ -108,12 +108,12 @@ void HVDC_MODEL::set_converter_dynamic_min_alpha_or_gamma_in_deg(HVDC_CONVERTER_
     firing_angle_min[converter] = angle;
 }
 
-double HVDC_MODEL::get_converter_dynamic_max_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter) const
+double HVDC_MODEL::get_converter_dynamic_max_alpha_or_gamma_in_deg(CONVERTER_SIDE converter) const
 {
     return firing_angle_max[converter];
 }
 
-double HVDC_MODEL::get_converter_dynamic_min_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter)  const
+double HVDC_MODEL::get_converter_dynamic_min_alpha_or_gamma_in_deg(CONVERTER_SIDE converter)  const
 {
     return firing_angle_min[converter];
 }
@@ -407,7 +407,7 @@ void HVDC_MODEL::block_hvdc()
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
         ostringstream osstream;
-        osstream<<get_device_name()<<" is blocked at time "<<TIME<<" s.";
+        osstream<<get_compound_device_name()<<" is blocked at time "<<TIME<<" s.";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -426,7 +426,7 @@ void HVDC_MODEL::unblock_hvdc()
         time_when_unblocking = TIME;
 
         ostringstream osstream;
-        osstream<<get_device_name()<<" is unblocking at time "<<TIME<<" s.";
+        osstream<<get_compound_device_name()<<" is unblocking at time "<<TIME<<" s.";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -440,7 +440,7 @@ void HVDC_MODEL::manual_block_hvdc()
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
         ostringstream osstream;
-        osstream<<get_device_name()<<" is manually blocked at time "<<TIME<<" s.";
+        osstream<<get_compound_device_name()<<" is manually blocked at time "<<TIME<<" s.";
         toolkit.show_information_with_leading_time_stamp(osstream);
 
         if(not is_blocked())
@@ -459,7 +459,7 @@ void HVDC_MODEL::manual_unblock_hvdc()
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
         ostringstream osstream;
-        osstream<<get_device_name()<<" is manually unblocked at time "<<TIME<<" s.";
+        osstream<<get_compound_device_name()<<" is manually unblocked at time "<<TIME<<" s.";
         toolkit.show_information_with_leading_time_stamp(osstream);
 
         if(is_manual_blocked())
@@ -500,7 +500,7 @@ double HVDC_MODEL::get_unblocking_time() const
     return time_when_unblocking;
 }
 
-void HVDC_MODEL::clear_unblocking_time(HVDC_CONVERTER_SIDE converter)
+void HVDC_MODEL::clear_unblocking_time(CONVERTER_SIDE converter)
 {
     STEPS& toolkit = get_toolkit();
     double TIME = toolkit.get_dynamic_simulation_time_in_s();
@@ -510,22 +510,22 @@ void HVDC_MODEL::clear_unblocking_time(HVDC_CONVERTER_SIDE converter)
     {
         dc_current_recovered_after_unblocking = true;
 
-        osstream<<get_device_name()<<"'s DC current command has been recovered from blocking at time "<<TIME<<" s.";
+        osstream<<get_compound_device_name()<<"'s DC current command has been recovered from blocking at time "<<TIME<<" s.";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
     else
     {
         dc_voltage_recovered_after_unblocking = true;
 
-        osstream<<get_device_name()<<"'s DC voltage command has been recovered from blocking at time "<<TIME<<" s.";
+        osstream<<get_compound_device_name()<<"'s DC voltage command has been recovered from blocking at time "<<TIME<<" s.";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
     if(dc_current_recovered_after_unblocking and dc_voltage_recovered_after_unblocking)
     {
         time_when_unblocking = INFINITE_THRESHOLD;
 
-        osstream<<get_device_name()<<"'s DC current and voltage commands have been recovered from blocking at time "<<TIME<<" s."<<endl
-          <<get_device_name()<<" is fully unblocked.";
+        osstream<<get_compound_device_name()<<"'s DC current and voltage commands have been recovered from blocking at time "<<TIME<<" s."<<endl
+          <<get_compound_device_name()<<" is fully unblocked.";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -557,13 +557,13 @@ void HVDC_MODEL::bypass_hvdc()
 
             ostringstream osstream;
 
-            osstream<<get_device_name()<<" is bypassed at time "<<TIME<<" s.";
+            osstream<<get_compound_device_name()<<" is bypassed at time "<<TIME<<" s.";
             toolkit.show_information_with_leading_time_stamp(osstream);
 
             append_bypass_record(TIME);
             if(get_bypass_record_count()>=get_maximum_count_of_bypassing_before_blocked())
             {
-                osstream<<get_device_name()<<" will be blocked at time "<<setprecision(5)<<fixed<<TIME
+                osstream<<get_compound_device_name()<<" will be blocked at time "<<setprecision(5)<<fixed<<TIME
                   <<" s since the max count of bypassing is reached ("<<get_maximum_count_of_bypassing_before_blocked()<<").";
                 toolkit.show_information_with_leading_time_stamp(osstream);
 
@@ -579,7 +579,7 @@ void HVDC_MODEL::append_bypass_record(double time)
     if(n==STEPS_MAX_HVDC_BYPASS_RECORD_SIZE)
     {
         ostringstream osstream;
-        osstream<<"Warning. HVDC bypass record table of "<<get_device_name()<<" is full. No more HVDC bypass event will be recorded.\n"
+        osstream<<"Warning. HVDC bypass record table of "<<get_compound_device_name()<<" is full. No more HVDC bypass event will be recorded.\n"
                 <<"Please consider decrease the maximum count of bypass before blocked or increase STEPS_MAX_HVDC_BYPASS_RECORD_SIZE in header/basic/constants.h";
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -617,7 +617,7 @@ void HVDC_MODEL::unbypass_hvdc()
             time_when_unbypassing = TIME;
             bypass_timer.reset();
 
-            osstream<<get_device_name()<<" is unbypassing at time "<<TIME<<" s.";
+            osstream<<get_compound_device_name()<<" is unbypassing at time "<<TIME<<" s.";
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -631,7 +631,7 @@ void HVDC_MODEL::manual_bypass_hvdc()
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
         ostringstream osstream;
-        osstream<<get_device_name()<<" is manually bypassed at time "<<TIME<<" s.";
+        osstream<<get_compound_device_name()<<" is manually bypassed at time "<<TIME<<" s.";
         toolkit.show_information_with_leading_time_stamp(osstream);
 
         bypass_hvdc();
@@ -647,7 +647,7 @@ void HVDC_MODEL::manual_unbypass_hvdc()
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
         ostringstream osstream;
-        osstream<<get_device_name()<<" is manually unbypassed at time "<<TIME<<" s.";
+        osstream<<get_compound_device_name()<<" is manually unbypassed at time "<<TIME<<" s.";
         toolkit.show_information_with_leading_time_stamp(osstream);
 
         if(is_manual_bypassed())
@@ -713,7 +713,7 @@ void HVDC_MODEL::switch_hvdc_mode()
         mode_switched = true;
         mode_switch_timer.start();
 
-        osstream<<get_device_name()<<" is mode switched at time "<<TIME<<" s.";
+        osstream<<get_compound_device_name()<<" is mode switched at time "<<TIME<<" s.";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -734,7 +734,7 @@ void HVDC_MODEL::switch_hvdc_mode_back()
         mode_switched = false;
         mode_switch_timer.reset();
 
-        osstream<<get_device_name()<<"'s mode is switched back at time "<<TIME<<" s.";
+        osstream<<get_compound_device_name()<<"'s mode is switched back at time "<<TIME<<" s.";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -765,7 +765,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
         STEPS& toolkit = get_toolkit();
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
-        //osstream<<"solving "<<get_device_name()<<" with I command = "<<Iset_kA<<"kA, V command = "<<Vset_kV;
+        //osstream<<"solving "<<get_compound_device_name()<<" with I command = "<<Iset_kA<<"kA, V command = "<<Vset_kV;
         //toolkit.show_information_with_leading_time_stamp(osstream);
 
         double alpha_min_in_rad = deg2rad(get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER));
@@ -843,7 +843,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
                 }
                 else
                 {
-                    osstream<<"Warning. At time "<<TIME<<" s, "<<get_device_name()<<" inverter is operating in Constant Gamma mode, but Rectifier cannot hold current/power with alpha.("
+                    osstream<<"Warning. At time "<<TIME<<" s, "<<get_compound_device_name()<<" inverter is operating in Constant Gamma mode, but Rectifier cannot hold current/power with alpha.("
                            <<"line "<<__LINE__<<" of file "<<__FILE__<<")."<<endl
                            <<"Minimum alpha is reached."<<endl
                            <<"Hvdc current command will be reduced from "<<Iset_kA<<" kA to ";
@@ -890,7 +890,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
                     }
                     else // gamma can not hold dc voltage
                     {
-                        osstream<<"Warning. At time "<<TIME<<" s, "<<get_device_name()<<" inverter cannot hold voltage with gamma.("
+                        osstream<<"Warning. At time "<<TIME<<" s, "<<get_compound_device_name()<<" inverter cannot hold voltage with gamma.("
                                <<"line "<<__LINE__<<" of file "<<__FILE__<<")."<<endl
                                <<"Minimum gamma is reached."<<endl
                                <<"Rectifier will try to regulate current as "<<Iset_kA<<" kA."<<endl;
@@ -959,7 +959,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
                     alpha_in_rad = alpha_min_in_rad;
                     hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
 
-                    osstream<<"Warning. At time "<<TIME<<" s, "<<get_device_name()<<" Rectifier cannot hold current with alpha.("
+                    osstream<<"Warning. At time "<<TIME<<" s, "<<get_compound_device_name()<<" Rectifier cannot hold current with alpha.("
                            <<"line "<<__LINE__<<" of file "<<__FILE__<<")."<<endl
                            <<"Minimum alpha is reached."<<endl
                            <<"Hvdc current command will be reduced from "<<Iset_kA<<" kA to ";
@@ -1205,7 +1205,7 @@ void HVDC_MODEL::solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset
         {
             // bypassed
             Vdci = 0.0;
-            Idc = hvdc->get_nominal_dc_current_per_pole_in_kA();
+            Idc = hvdc->get_nominal_dc_current_in_kA();
             Vdcr = Idc*Rdc;
 
             cos_alpha = (Vdcr+rceq_r*Idc)/vdc0_r;
@@ -1238,7 +1238,7 @@ void HVDC_MODEL::solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset
 }
 
 
-double HVDC_MODEL::get_converter_dc_voltage_in_kV(HVDC_CONVERTER_SIDE converter) const
+double HVDC_MODEL::get_converter_dc_voltage_in_kV(CONVERTER_SIDE converter) const
 {
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {
@@ -1249,7 +1249,7 @@ double HVDC_MODEL::get_converter_dc_voltage_in_kV(HVDC_CONVERTER_SIDE converter)
         return 0.0;
 }
 
-double HVDC_MODEL::get_converter_dc_current_in_kA(HVDC_CONVERTER_SIDE converter) const
+double HVDC_MODEL::get_converter_dc_current_in_kA(CONVERTER_SIDE converter) const
 {
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {
@@ -1260,7 +1260,7 @@ double HVDC_MODEL::get_converter_dc_current_in_kA(HVDC_CONVERTER_SIDE converter)
         return 0.0;
 }
 
-double HVDC_MODEL::get_converter_dc_power_in_MW(HVDC_CONVERTER_SIDE converter) const
+double HVDC_MODEL::get_converter_dc_power_in_MW(CONVERTER_SIDE converter) const
 {
     double V = get_converter_dc_voltage_in_kV(converter);
     double I = get_converter_dc_current_in_kA(converter);
@@ -1268,7 +1268,7 @@ double HVDC_MODEL::get_converter_dc_power_in_MW(HVDC_CONVERTER_SIDE converter) c
     return V*I;
 }
 
-double HVDC_MODEL::get_converter_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter) const
+double HVDC_MODEL::get_converter_alpha_or_gamma_in_deg(CONVERTER_SIDE converter) const
 {
     HVDC* hvdc = get_hvdc_pointer();
     if(not is_blocked())
@@ -1283,7 +1283,7 @@ double HVDC_MODEL::get_converter_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE conve
 
 }
 
-double HVDC_MODEL::get_converter_commutation_overlap_angle_in_deg(HVDC_CONVERTER_SIDE converter) const
+double HVDC_MODEL::get_converter_commutation_overlap_angle_in_deg(CONVERTER_SIDE converter) const
 {
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {
@@ -1307,7 +1307,7 @@ double HVDC_MODEL::get_converter_commutation_overlap_angle_in_deg(HVDC_CONVERTER
         return 0.0;
 }
 
-complex<double> HVDC_MODEL::get_converter_ac_complex_power_in_MVA(HVDC_CONVERTER_SIDE converter) const
+complex<double> HVDC_MODEL::get_converter_ac_complex_power_in_MVA(CONVERTER_SIDE converter) const
 {
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {
@@ -1339,7 +1339,7 @@ complex<double> HVDC_MODEL::get_converter_ac_complex_power_in_MVA(HVDC_CONVERTER
         return 0.0;
 }
 
-double HVDC_MODEL::get_converter_ac_power_factor_angle_in_deg(HVDC_CONVERTER_SIDE converter) const
+double HVDC_MODEL::get_converter_ac_power_factor_angle_in_deg(CONVERTER_SIDE converter) const
 {
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {
@@ -1358,7 +1358,7 @@ double HVDC_MODEL::get_converter_ac_power_factor_angle_in_deg(HVDC_CONVERTER_SID
         return 0.0;
 }
 
-complex<double> HVDC_MODEL::get_converter_ac_current_in_pu(HVDC_CONVERTER_SIDE converter) const
+complex<double> HVDC_MODEL::get_converter_ac_current_in_pu(CONVERTER_SIDE converter) const
 {
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {
@@ -1375,7 +1375,7 @@ complex<double> HVDC_MODEL::get_converter_ac_current_in_pu(HVDC_CONVERTER_SIDE c
         return 0.0;
 }
 
-complex<double> HVDC_MODEL::get_converter_ac_current_in_kA(HVDC_CONVERTER_SIDE converter) const
+complex<double> HVDC_MODEL::get_converter_ac_current_in_kA(CONVERTER_SIDE converter) const
 {
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {
@@ -1394,21 +1394,21 @@ complex<double> HVDC_MODEL::get_converter_ac_current_in_kA(HVDC_CONVERTER_SIDE c
 }
 
 
-double HVDC_MODEL::get_converter_ac_voltage_in_pu(HVDC_CONVERTER_SIDE converter) const
+double HVDC_MODEL::get_converter_ac_voltage_in_pu(CONVERTER_SIDE converter) const
 {
     HVDC* hvdc = get_hvdc_pointer();
     BUS* bus = hvdc->get_bus_pointer(converter);
     return bus->get_positive_sequence_voltage_in_pu();
 }
 
-double HVDC_MODEL::get_converter_ac_voltage_in_kV(HVDC_CONVERTER_SIDE converter) const
+double HVDC_MODEL::get_converter_ac_voltage_in_kV(CONVERTER_SIDE converter) const
 {
     HVDC* hvdc = get_hvdc_pointer();
     BUS* bus = hvdc->get_bus_pointer(converter);
     return bus->get_positive_sequence_voltage_in_kV();
 }
 
-complex<double> HVDC_MODEL::get_converter_ac_complex_voltage_in_pu(HVDC_CONVERTER_SIDE converter) const
+complex<double> HVDC_MODEL::get_converter_ac_complex_voltage_in_pu(CONVERTER_SIDE converter) const
 {
     HVDC* hvdc = get_hvdc_pointer();
     BUS* bus = hvdc->get_bus_pointer(converter);

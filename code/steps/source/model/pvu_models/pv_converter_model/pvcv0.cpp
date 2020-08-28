@@ -240,7 +240,7 @@ bool PVCV0::setup_model_with_steps_string_vector(vector<string>& data)
             PV_UNIT* pvunit = psdb.get_pv_unit(did);
             if(pvunit==NULL)
             {
-                osstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_device_name()<<endl
+                osstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_compound_device_name()<<endl
                        <<"No such wt pv_unit exists in the power system database.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 return is_successful;
@@ -371,7 +371,7 @@ void PVCV0::initialize()
 
         set_flag_model_initialized_as_true();
 
-        osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+        osstream<<get_model_name()<<" model of "<<get_compound_device_name()<<" is initialized."<<endl
                 <<"(1) Initial active current command = "<<get_initial_active_current_command_in_pu_based_on_mbase()<<endl
                 <<"(2) Initial reactive current command = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
                 <<"(3) States of blocks"<<endl

@@ -990,7 +990,7 @@ void URCSCT::initialize()
                     else
                     {
                         psteam = ST;
-                        osstream<<"Initialization error. Total mechanical power of URCSCT model of "<<get_device_name()<<" exceeds sum of steam and gas turbine nominal power. \n"
+                        osstream<<"Initialization error. Total mechanical power of URCSCT model of "<<get_compound_device_name()<<" exceeds sum of steam and gas turbine nominal power. \n"
                                 <<"Mechanical power is "<<pplant<<"MW. Gas turbine nominal power is "<<get_gas_Prate_in_MW()<<"MW. Steam turbine nominal power is "<<ST<<"MW.";
                         toolkit.show_information_with_leading_time_stamp(osstream);
                     }
@@ -1035,13 +1035,13 @@ void URCSCT::initialize()
             double output = gfc/get_gas_K3();
             if(output>get_gas_max_in_pu())
             {
-                osstream<<"Initialization error. Governor of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. Governor of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                   <<"Governor is "<<output<<", and max is "<<get_gas_max_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(output<get_gas_min_in_pu())
             {
-                osstream<<"Initialization error. Governor of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                osstream<<"Initialization error. Governor of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                   <<"Governor is "<<output<<", and min is "<<get_gas_min_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
@@ -1073,13 +1073,13 @@ void URCSCT::initialize()
 
             if(valve>get_Pmax_in_pu())
             {
-                osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                   <<"Valve is "<<valve<<", and Pmax is "<<get_Pmax_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(valve<get_Pmin_in_pu())
             {
-                osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                   <<"Valve is "<<valve<<", and Pmin is "<<get_Pmin_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }

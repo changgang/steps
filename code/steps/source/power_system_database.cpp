@@ -390,7 +390,7 @@ void POWER_SYSTEM_DATABASE::append_bus(BUS& bus)
 
     if(not this->is_bus_in_allowed_range(bus_number))
     {
-        osstream<<"Warning. Bus number "<<bus_number<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<bus.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus number "<<bus_number<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<bus.get_compound_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Bus will not be appended into the database.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -437,7 +437,7 @@ void POWER_SYSTEM_DATABASE::append_generator(GENERATOR& generator)
 
     if(not this->is_bus_in_allowed_range(generator_bus))
     {
-        osstream<<"Warning. Bus number "<<generator_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<generator.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus number "<<generator_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<generator.get_compound_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Generator will not be appended into the database.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -453,7 +453,7 @@ void POWER_SYSTEM_DATABASE::append_generator(GENERATOR& generator)
 
     if(this->is_generator_exist(device_id))
     {
-        osstream<<"Warning. "<<generator.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Generator."<<endl
+        osstream<<"Warning. "<<generator.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Generator."<<endl
           <<"Duplicate copy is not allowed.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -489,7 +489,7 @@ void POWER_SYSTEM_DATABASE::append_wt_generator(WT_GENERATOR& wt_generator)
 
     if(not this->is_bus_in_allowed_range(wt_generator_bus))
     {
-        osstream<<"Warning. Bus "<<wt_generator_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<wt_generator.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<wt_generator_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<wt_generator.get_compound_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"WT generator will not be appended into the database.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -505,7 +505,7 @@ void POWER_SYSTEM_DATABASE::append_wt_generator(WT_GENERATOR& wt_generator)
 
     if(this->is_wt_generator_exist(device_id))
     {
-        osstream<<"Warning. "<<wt_generator.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': WT_Generator."<<endl
+        osstream<<"Warning. "<<wt_generator.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': WT_Generator."<<endl
           <<"Duplicate copy is not allowed.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -541,7 +541,7 @@ void POWER_SYSTEM_DATABASE::append_pv_unit(PV_UNIT& pv_unit)
 
     if(not this->is_bus_in_allowed_range(pv_unit_bus))
     {
-        osstream<<"Warning. Bus "<<pv_unit_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<pv_unit.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<pv_unit_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<pv_unit.get_compound_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"PV unit will not be appended into the database.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -557,7 +557,7 @@ void POWER_SYSTEM_DATABASE::append_pv_unit(PV_UNIT& pv_unit)
 
     if(this->is_pv_unit_exist(device_id))
     {
-        osstream<<"Warning. "<<pv_unit.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': PV_Unit."<<endl
+        osstream<<"Warning. "<<pv_unit.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': PV_Unit."<<endl
           <<"Duplicate copy is not allowed.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -593,7 +593,7 @@ void POWER_SYSTEM_DATABASE::append_energy_storage(ENERGY_STORAGE& estorage)
 
     if(not this->is_bus_in_allowed_range(bus))
     {
-        osstream<<"Warning. Bus "<<bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<estorage.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<estorage.get_compound_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Energy storage will not be appended into the database.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -609,7 +609,7 @@ void POWER_SYSTEM_DATABASE::append_energy_storage(ENERGY_STORAGE& estorage)
 
     if(this->is_energy_storage_exist(device_id))
     {
-        osstream<<"Warning. "<<estorage.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Energy_storage.\n"
+        osstream<<"Warning. "<<estorage.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Energy_storage.\n"
           <<"Duplicate copy is not allowed.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -645,7 +645,7 @@ void POWER_SYSTEM_DATABASE::append_load(LOAD& load)
 
     if(not this->is_bus_in_allowed_range(load_bus))
     {
-        osstream<<"Warning. Bus "<<load_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<load.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<load_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<load.get_compound_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Load will not be appended into the database.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -661,7 +661,7 @@ void POWER_SYSTEM_DATABASE::append_load(LOAD& load)
 
     if(is_load_exist(device_id))
     {
-        osstream<<"Warning. "<<load.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Load."<<endl
+        osstream<<"Warning. "<<load.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Load."<<endl
           <<"Duplicate copy is not allowed.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -698,14 +698,14 @@ void POWER_SYSTEM_DATABASE::append_line(LINE& line)
 
     if(not this->is_bus_in_allowed_range(sending_side_bus))
     {
-        osstream<<"Warning. Bus "<<sending_side_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<line.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<sending_side_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<line.get_compound_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Line will not be appended into the database.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
     if(not this->is_bus_in_allowed_range(receiving_side_bus))
     {
-        osstream<<"Warning. Bus "<<receiving_side_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<line.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<receiving_side_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<line.get_compound_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Line will not be appended into the database.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -722,7 +722,7 @@ void POWER_SYSTEM_DATABASE::append_line(LINE& line)
 
     if(this->is_line_exist(device_id))
     {
-        osstream<<"Warning. "<<line.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Line."<<endl
+        osstream<<"Warning. "<<line.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Line."<<endl
           <<"Duplicate copy is not allowed.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -759,21 +759,21 @@ void POWER_SYSTEM_DATABASE::append_transformer(TRANSFORMER& transformer)
 
     if(not is_bus_in_allowed_range(primary_winding_bus))
     {
-        osstream<<"Warning. Bus "<<primary_winding_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<transformer.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<primary_winding_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<transformer.get_compound_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Transformer will not be appended into the database.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
     if(not is_bus_in_allowed_range(secondary_winding_bus))
     {
-        osstream<<"Warning. Bus "<<secondary_winding_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<transformer.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<secondary_winding_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<transformer.get_compound_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Transformer will not be appended into the database.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
     if(not(is_bus_in_allowed_range(tertiary_winding_bus) or tertiary_winding_bus==0))
     {
-        osstream<<"Warning. Bus "<<tertiary_winding_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<transformer.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<tertiary_winding_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<transformer.get_compound_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Transformer will not be appended into the database.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -791,7 +791,7 @@ void POWER_SYSTEM_DATABASE::append_transformer(TRANSFORMER& transformer)
 
     if(is_transformer_exist(device_id))
     {
-        osstream<<"Warning. "<<transformer.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"':Transformer.\n"
+        osstream<<"Warning. "<<transformer.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"':Transformer.\n"
           <<"Duplicate copy is not allowed.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -827,7 +827,7 @@ void POWER_SYSTEM_DATABASE::append_fixed_shunt(FIXED_SHUNT& shunt)
 
     if(not this->is_bus_in_allowed_range(shunt_bus))
     {
-        osstream<<"Warning. Bus "<<shunt_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<shunt.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<shunt_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<shunt.get_compound_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Fixed shunt will not be appended into the database.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -843,7 +843,7 @@ void POWER_SYSTEM_DATABASE::append_fixed_shunt(FIXED_SHUNT& shunt)
 
     if(this->is_fixed_shunt_exist(device_id))
     {
-        osstream<<"Warning. "<<shunt.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Fixed_shunt.\n"
+        osstream<<"Warning. "<<shunt.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Fixed_shunt.\n"
           <<"Duplicate copy is not allowed.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -880,14 +880,14 @@ void POWER_SYSTEM_DATABASE::append_hvdc(HVDC& hvdc)
 
     if(not this->is_bus_in_allowed_range(rec_bus))
     {
-        osstream<<"Warning. Bus "<<rec_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<hvdc.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<rec_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<hvdc.get_compound_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Hvdc will not be appended into the database.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
     if(not this->is_bus_in_allowed_range(inv_bus))
     {
-        osstream<<"Warning. Bus "<<inv_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<hvdc.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<inv_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<hvdc.get_compound_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Hvdc will not be appended into the database.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -904,7 +904,7 @@ void POWER_SYSTEM_DATABASE::append_hvdc(HVDC& hvdc)
 
     if(this->is_hvdc_exist(device_id))
     {
-        osstream<<"Warning. "<<hvdc.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Hvdc.\n"
+        osstream<<"Warning. "<<hvdc.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Hvdc.\n"
           <<"Duplicate copy is not allowed.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -940,7 +940,7 @@ void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
 
     if(not this->is_bus_in_allowed_range(bus))
     {
-        osstream<<"Warning. Bus "<<bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<edevice.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<edevice.get_compound_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Equivalent device will not be appended into the database.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -956,7 +956,7 @@ void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
 
     if(this->is_equivalent_device_exist(device_id))
     {
-        osstream<<"Warning. "<<edevice.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Equivalent_device.\n"
+        osstream<<"Warning. "<<edevice.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Equivalent_device.\n"
           <<"Duplicate copy is not allowed.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -1092,13 +1092,13 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
     {
         if(not is_generator_exist(did_old))
         {
-            osstream<<"Warning. The old device "<<did_old.get_device_name()<<" does not exist in database. No device id will be updated.";
+            osstream<<"Warning. The old device "<<did_old.get_compound_device_name()<<" does not exist in database. No device id will be updated.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
         if(is_generator_exist(did_new))
         {
-            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" already exist in database. No device id will be updated.";
+            osstream<<"Warning. The new device "<<did_new.get_compound_device_name()<<" already exist in database. No device id will be updated.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
@@ -1113,13 +1113,13 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
     {
         if(not is_wt_generator_exist(did_old))
         {
-            osstream<<"Warning. The old device "<<did_old.get_device_name()<<" does not exist in database. No device id will be updated.";
+            osstream<<"Warning. The old device "<<did_old.get_compound_device_name()<<" does not exist in database. No device id will be updated.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
         if(is_wt_generator_exist(did_new))
         {
-            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" already exist in database. No device id will be updated.";
+            osstream<<"Warning. The new device "<<did_new.get_compound_device_name()<<" already exist in database. No device id will be updated.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
@@ -1134,13 +1134,13 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
     {
         if(not is_pv_unit_exist(did_old))
         {
-            osstream<<"Warning. The old device "<<did_old.get_device_name()<<" does not exist in database. No device id will be updated.";
+            osstream<<"Warning. The old device "<<did_old.get_compound_device_name()<<" does not exist in database. No device id will be updated.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
         if(is_pv_unit_exist(did_new))
         {
-            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" already exist in database. No device id will be updated.";
+            osstream<<"Warning. The new device "<<did_new.get_compound_device_name()<<" already exist in database. No device id will be updated.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
@@ -1155,13 +1155,13 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
     {
         if(not is_energy_storage_exist(did_old))
         {
-            osstream<<"Warning. The old device "<<did_old.get_device_name()<<" does not exist in database. No device id will be updated.";
+            osstream<<"Warning. The old device "<<did_old.get_compound_device_name()<<" does not exist in database. No device id will be updated.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
         if(is_energy_storage_exist(did_new))
         {
-            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" already exist in database. No device id will be updated.";
+            osstream<<"Warning. The new device "<<did_new.get_compound_device_name()<<" already exist in database. No device id will be updated.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
@@ -1176,13 +1176,13 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
     {
         if(not is_load_exist(did_old))
         {
-            osstream<<"Warning. The old device "<<did_old.get_device_name()<<" does not exist in database. No device id will be updated.";
+            osstream<<"Warning. The old device "<<did_old.get_compound_device_name()<<" does not exist in database. No device id will be updated.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
         if(is_load_exist(did_new))
         {
-            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" already exist in database. No device id will be updated.";
+            osstream<<"Warning. The new device "<<did_new.get_compound_device_name()<<" already exist in database. No device id will be updated.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
@@ -1197,13 +1197,13 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
     {
         if(not is_fixed_shunt_exist(did_old))
         {
-            osstream<<"Warning. The old device "<<did_old.get_device_name()<<" does not exist in database. No device id will be updated.";
+            osstream<<"Warning. The old device "<<did_old.get_compound_device_name()<<" does not exist in database. No device id will be updated.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
         if(is_fixed_shunt_exist(did_new))
         {
-            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" already exist in database. No device id will be updated.";
+            osstream<<"Warning. The new device "<<did_new.get_compound_device_name()<<" already exist in database. No device id will be updated.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
@@ -1218,13 +1218,13 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
     {
         if(not is_line_exist(did_old))
         {
-            osstream<<"Warning. The old device "<<did_old.get_device_name()<<" does not exist in database. No device id will be updated.";
+            osstream<<"Warning. The old device "<<did_old.get_compound_device_name()<<" does not exist in database. No device id will be updated.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
         if(is_line_exist(did_new))
         {
-            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" already exist in database. No device id will be updated.";
+            osstream<<"Warning. The new device "<<did_new.get_compound_device_name()<<" already exist in database. No device id will be updated.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
@@ -1240,20 +1240,20 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
     {
         if(not is_transformer_exist(did_old))
         {
-            osstream<<"Warning. The old device "<<did_old.get_device_name()<<" does not exist in database. No device id will be updated.";
+            osstream<<"Warning. The old device "<<did_old.get_compound_device_name()<<" does not exist in database. No device id will be updated.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
         if(is_transformer_exist(did_new))
         {
-            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" already exist in database. No device id will be updated.";
+            osstream<<"Warning. The new device "<<did_new.get_compound_device_name()<<" already exist in database. No device id will be updated.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
         TERMINAL old_terminal = did_old.get_device_terminal();
         if(old_terminal.get_bus_count()!=new_terminal.get_bus_count())
         {
-            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" bus count is inconsistent with the old device "<<did_old.get_device_name()<<". No device id will be updated.";
+            osstream<<"Warning. The new device "<<did_new.get_compound_device_name()<<" bus count is inconsistent with the old device "<<did_old.get_compound_device_name()<<". No device id will be updated.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
@@ -1270,13 +1270,13 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
     {
         if(not is_hvdc_exist(did_old))
         {
-            osstream<<"Warning. The old device "<<did_old.get_device_name()<<" does not exist in database. No device id will be updated.";
+            osstream<<"Warning. The old device "<<did_old.get_compound_device_name()<<" does not exist in database. No device id will be updated.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
         if(is_hvdc_exist(did_new))
         {
-            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" already exist in database. No device id will be updated.";
+            osstream<<"Warning. The new device "<<did_new.get_compound_device_name()<<" already exist in database. No device id will be updated.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
@@ -4090,7 +4090,7 @@ void POWER_SYSTEM_DATABASE::check_generator_related_dynamic_data()
 
         if(toolkit->is_detailed_log_enabled())
         {
-            osstream<<"Model entry address of "<<generator->get_device_name()<<":\n"
+            osstream<<"Model entry address of "<<generator->get_compound_device_name()<<":\n"
                     <<"Compensator: "<<compmodel<<"\n"
                     <<"PSS:         "<<pssmodel<<"\n"
                     <<"Exciter:     "<<avrmodel<<"\n"
@@ -4203,7 +4203,7 @@ void POWER_SYSTEM_DATABASE::check_load_related_dynamic_data()
 
         if(toolkit->is_detailed_log_enabled())
         {
-            osstream<<"Model entry address of "<<load->get_device_name()<<":\n"
+            osstream<<"Model entry address of "<<load->get_compound_device_name()<<":\n"
                     <<"uvls: "<<uvlsmodel<<"\n"
                     <<"ufls: "<<uflsmodel<<"\n"
                     <<"load: "<<loadmodel;
@@ -4280,7 +4280,7 @@ void POWER_SYSTEM_DATABASE::check_missing_generator_related_model()
         SYNC_GENERATOR_MODEL* genmodel = generator->get_sync_generator_model();
         if(genmodel==NULL)
         {
-            osstream<<generator->get_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
+            osstream<<generator->get_compound_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
             model_missing_detected = true;
         }
     }
@@ -4300,7 +4300,7 @@ void POWER_SYSTEM_DATABASE::check_missing_generator_related_model()
             EXCITER_MODEL* avrmodel = generator->get_exciter_model();
             if(avrmodel==NULL)
             {
-                osstream<<generator->get_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
+                osstream<<generator->get_compound_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
                 model_missing_detected = true;
             }
         }
@@ -4318,7 +4318,7 @@ void POWER_SYSTEM_DATABASE::check_missing_generator_related_model()
         TURBINE_GOVERNOR_MODEL* govmodel = generator->get_turbine_governor_model();
         if(govmodel==NULL)
         {
-            osstream<<generator->get_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
+            osstream<<generator->get_compound_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
             model_missing_detected = true;
         }
     }
@@ -4344,7 +4344,7 @@ void POWER_SYSTEM_DATABASE::check_missing_wt_generator_related_model()
         WT_GENERATOR_MODEL* genmodel = generator->get_wt_generator_model();
         if(genmodel==NULL)
         {
-            osstream<<generator->get_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
+            osstream<<generator->get_compound_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
             model_missing_detected = true;
         }
     }
@@ -4362,7 +4362,7 @@ void POWER_SYSTEM_DATABASE::check_missing_wt_generator_related_model()
         WT_TURBINE_MODEL* turbmodel = generator->get_wt_turbine_model();
         if(turbmodel==NULL)
         {
-            osstream<<generator->get_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
+            osstream<<generator->get_compound_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
             model_missing_detected = true;
         }
     }
@@ -4380,7 +4380,7 @@ void POWER_SYSTEM_DATABASE::check_missing_wt_generator_related_model()
         WT_ELECTRICAL_MODEL* elecmodel = generator->get_wt_electrical_model();
         if(elecmodel==NULL)
         {
-            osstream<<generator->get_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
+            osstream<<generator->get_compound_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
             model_missing_detected = true;
         }
     }
@@ -4398,7 +4398,7 @@ void POWER_SYSTEM_DATABASE::check_missing_wt_generator_related_model()
         WT_AERODYNAMIC_MODEL* aerdmodel = generator->get_wt_aerodynamic_model();
         if(aerdmodel==NULL)
         {
-            osstream<<generator->get_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
+            osstream<<generator->get_compound_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
             model_missing_detected = true;
         }
     }
@@ -4416,7 +4416,7 @@ void POWER_SYSTEM_DATABASE::check_missing_wt_generator_related_model()
         WT_ELECTRICAL_MODEL* elecmodel = generator->get_wt_electrical_model();
         if(elecmodel==NULL)
         {
-            osstream<<generator->get_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
+            osstream<<generator->get_compound_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
             model_missing_detected = true;
         }
     }
@@ -4434,7 +4434,7 @@ void POWER_SYSTEM_DATABASE::check_missing_wt_generator_related_model()
         WT_PITCH_MODEL* pitchmodel = generator->get_wt_pitch_model();
         if(pitchmodel==NULL)
         {
-            osstream<<generator->get_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
+            osstream<<generator->get_compound_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
             model_missing_detected = true;
         }
     }
@@ -4460,7 +4460,7 @@ void POWER_SYSTEM_DATABASE::check_missing_pv_unit_related_model()
         PV_CONVERTER_MODEL* convmodel = pv->get_pv_converter_model();
         if(convmodel==NULL)
         {
-            osstream<<pv->get_device_name()<<" ["<<bus_number2bus_name(pv->get_unit_bus())<<"]";
+            osstream<<pv->get_compound_device_name()<<" ["<<bus_number2bus_name(pv->get_unit_bus())<<"]";
             model_missing_detected = true;
         }
     }
@@ -4490,7 +4490,7 @@ void POWER_SYSTEM_DATABASE::check_missing_energy_storage_related_model()
         ENERGY_STORAGE_MODEL* esmodel = estorage->get_energy_storage_model();
         if(esmodel==NULL)
         {
-            osstream<<estorage->get_device_name()<<" ["<<bus_number2bus_name(estorage->get_energy_storage_bus())<<"]";
+            osstream<<estorage->get_compound_device_name()<<" ["<<bus_number2bus_name(estorage->get_energy_storage_bus())<<"]";
             model_missing_detected = true;
         }
     }
@@ -4516,7 +4516,7 @@ void POWER_SYSTEM_DATABASE::check_missing_load_related_model()
         LOAD_MODEL* loadmodel = load->get_load_model();
         if(loadmodel==NULL)
         {
-            osstream<<load->get_device_name()<<" ["<<bus_number2bus_name(load->get_load_bus())<<"]";
+            osstream<<load->get_compound_device_name()<<" ["<<bus_number2bus_name(load->get_load_bus())<<"]";
             model_missing_detected = true;
         }
     }
@@ -4550,7 +4550,7 @@ void POWER_SYSTEM_DATABASE::check_missing_hvdc_related_model()
         HVDC_MODEL* hvdcmodel = hvdc->get_hvdc_model();
         if(hvdcmodel==NULL)
         {
-            osstream<<hvdc->get_device_name()<<" ["<<bus_number2bus_name(hvdc->get_converter_bus(RECTIFIER))<<" -- "<<bus_number2bus_name(hvdc->get_converter_bus(INVERTER))<<"]";
+            osstream<<hvdc->get_compound_device_name()<<" ["<<bus_number2bus_name(hvdc->get_converter_bus(RECTIFIER))<<" -- "<<bus_number2bus_name(hvdc->get_converter_bus(INVERTER))<<"]";
             model_missing_detected = true;
         }
     }
@@ -5423,7 +5423,7 @@ void POWER_SYSTEM_DATABASE::trip_bus(unsigned int bus)
                 if(gens[i]->get_status()==true)
                 {
                     gens[i]->set_status(false);
-                    osstream<<gens[i]->get_device_name()<<endl;
+                    osstream<<gens[i]->get_compound_device_name()<<endl;
                 }
             }
 
@@ -5434,7 +5434,7 @@ void POWER_SYSTEM_DATABASE::trip_bus(unsigned int bus)
                 if(wts[i]->get_status()==true)
                 {
                     wts[i]->set_status(false);
-                    osstream<<wts[i]->get_device_name()<<endl;
+                    osstream<<wts[i]->get_compound_device_name()<<endl;
                 }
             }
 
@@ -5445,7 +5445,7 @@ void POWER_SYSTEM_DATABASE::trip_bus(unsigned int bus)
                 if(pvs[i]->get_status()==true)
                 {
                     pvs[i]->set_status(false);
-                    osstream<<pvs[i]->get_device_name()<<endl;
+                    osstream<<pvs[i]->get_compound_device_name()<<endl;
                 }
             }
 
@@ -5456,7 +5456,7 @@ void POWER_SYSTEM_DATABASE::trip_bus(unsigned int bus)
                 if(ess[i]->get_status()==true)
                 {
                     ess[i]->set_status(false);
-                    osstream<<ess[i]->get_device_name()<<endl;
+                    osstream<<ess[i]->get_compound_device_name()<<endl;
                 }
             }
 
@@ -5467,7 +5467,7 @@ void POWER_SYSTEM_DATABASE::trip_bus(unsigned int bus)
                 if(loads[i]->get_status()==true)
                 {
                     loads[i]->set_status(false);
-                    osstream<<loads[i]->get_device_name()<<endl;
+                    osstream<<loads[i]->get_compound_device_name()<<endl;
                 }
             }
 
@@ -5478,7 +5478,7 @@ void POWER_SYSTEM_DATABASE::trip_bus(unsigned int bus)
                 if(fshunts[i]->get_status()==true)
                 {
                     fshunts[i]->set_status(false);
-                    osstream<<fshunts[i]->get_device_name()<<endl;
+                    osstream<<fshunts[i]->get_compound_device_name()<<endl;
                 }
             }
 
@@ -5490,7 +5490,7 @@ void POWER_SYSTEM_DATABASE::trip_bus(unsigned int bus)
                 {
                     lines[i]->set_sending_side_breaker_status(false);
                     lines[i]->set_receiving_side_breaker_status(false);
-                    osstream<<lines[i]->get_device_name()<<endl;
+                    osstream<<lines[i]->get_compound_device_name()<<endl;
                 }
             }
 
@@ -5508,7 +5508,7 @@ void POWER_SYSTEM_DATABASE::trip_bus(unsigned int bus)
                     else
                         transes[i]->set_winding_breaker_status(TERTIARY_SIDE, false);
 
-                    osstream<<transes[i]->get_device_name()<<endl;
+                    osstream<<transes[i]->get_compound_device_name()<<endl;
                 }
             }
 
@@ -5519,7 +5519,7 @@ void POWER_SYSTEM_DATABASE::trip_bus(unsigned int bus)
                 if(hvdcs[i]->get_status()==true)
                 {
                     hvdcs[i]->set_status(false);
-                    osstream<<hvdcs[i]->get_device_name()<<endl;
+                    osstream<<hvdcs[i]->get_compound_device_name()<<endl;
                 }
             }
 
@@ -5530,7 +5530,7 @@ void POWER_SYSTEM_DATABASE::trip_bus(unsigned int bus)
                 if(edevices[i]->get_status()==true)
                 {
                     edevices[i]->set_status(false);
-                    osstream<<edevices[i]->get_device_name()<<endl;
+                    osstream<<edevices[i]->get_compound_device_name()<<endl;
                 }
             }
 

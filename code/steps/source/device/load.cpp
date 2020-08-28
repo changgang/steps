@@ -211,7 +211,7 @@ bool LOAD::is_in_zone(unsigned int zone) const
 void LOAD::report() const
 {
     ostringstream osstream;
-    osstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
+    osstream<<get_compound_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
       <<"P+jQ[P part] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_constant_power_load_in_MVA()<<" MVA, "
       <<"P+jQ[I part] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_constant_current_load_in_MVA()<<" MVA, "
       <<"P+jQ[Z part] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_constant_impedance_load_in_MVA()<<" MVA.";

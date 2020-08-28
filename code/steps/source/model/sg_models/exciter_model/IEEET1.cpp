@@ -309,13 +309,13 @@ void IEEET1::initialize()
 
             if(input>get_VRmax_in_pu())
             {
-                osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
                   <<"VR is "<<input<<", and VRmax is "<<get_VRmax_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(input<get_VRmin_in_pu())
             {
-                osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
                   <<"VR is "<<input<<", and VRmin is "<<get_VRmin_in_pu()<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }

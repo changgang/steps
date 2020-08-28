@@ -73,7 +73,7 @@ void GENROU::update_source_impedance()
     if(Zsource.imag()!=Z.imag())
     {
         ostringstream osstream;
-        osstream<<"Warning. The subtransient reactance ("<<get_Xpp()<<") is not equal to generator source reactance ("<<Zsource.imag()<<") for '"<<get_model_name()<<"' of "<<get_device_name()<<"."<<endl
+        osstream<<"Warning. The subtransient reactance ("<<get_Xpp()<<") is not equal to generator source reactance ("<<Zsource.imag()<<") for '"<<get_model_name()<<"' of "<<get_compound_device_name()<<"."<<endl
           <<"Source reactance will be updated with subtransient reactance.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         Zsource = complex<double>(Zsource.real(), Z.imag());
@@ -498,7 +498,7 @@ void GENROU::check()
     double td0pp = get_Td0pp_in_s();
     double tq0p = get_Tq0p_in_s();
     double tq0pp = get_Tq0pp_in_s();
-    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_device_name()<<".\n";
+    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_compound_device_name()<<".\n";
     bool error_found = false;
     if(xdp==xpp)
     {
@@ -644,7 +644,7 @@ double GENROU::get_model_data_with_name(string par_name) const
         if(par_name == "S1.2")  return get_saturation_at_1p2();
     }
     STEPS& toolkit = get_toolkit();
-    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
@@ -670,7 +670,7 @@ void GENROU::set_model_data_with_name(string par_name, double value)
         if(par_name == "S1.2") return set_saturation_at_1p2(value);
     }
     STEPS& toolkit = get_toolkit();
-    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
 }
 
 double GENROU::get_minimum_nonzero_time_constant_in_s()

@@ -213,7 +213,7 @@ bool METER_SETTER::prepare_line_meter(METER& meter, const DEVICE_ID& device_id, 
 
     if(not psdb.is_line_exist(device_id))
     {
-        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+        osstream<<"Warning. "<<device_id.get_compound_device_name()<<" does not exist in current power system database. "
           <<"No line meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
@@ -227,7 +227,7 @@ bool METER_SETTER::prepare_line_meter(METER& meter, const DEVICE_ID& device_id, 
         meter.set_meter_side_bus(side_bus);
     else
     {
-        osstream<<"Warning. The side bus "<<side_bus<<" is neither the sending bus nor receiving bus of "<<device_id.get_device_name()<<". "
+        osstream<<"Warning. The side bus "<<side_bus<<" is neither the sending bus nor receiving bus of "<<device_id.get_compound_device_name()<<". "
           <<"No line meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
@@ -376,7 +376,7 @@ bool METER_SETTER::prepare_transformer_meter(METER& meter, const DEVICE_ID& devi
 
     if(not psdb.is_transformer_exist(device_id))
     {
-        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+        osstream<<"Warning. "<<device_id.get_compound_device_name()<<" does not exist in current power system database. "
           <<"No transformer meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
@@ -390,7 +390,7 @@ bool METER_SETTER::prepare_transformer_meter(METER& meter, const DEVICE_ID& devi
         meter.set_meter_side_bus(side_bus);
     else
     {
-        osstream<<"Warning. The side bus "<<side_bus<<" is not primary, secondary, or tertiary bus of "<<device_id.get_device_name()<<". "
+        osstream<<"Warning. The side bus "<<side_bus<<" is not primary, secondary, or tertiary bus of "<<device_id.get_compound_device_name()<<". "
           <<"No transformer meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
@@ -493,7 +493,7 @@ bool METER_SETTER::prepare_load_meter(METER& meter, const DEVICE_ID& device_id)
 
     if(not psdb.is_load_exist(device_id))
     {
-        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+        osstream<<"Warning. "<<device_id.get_compound_device_name()<<" does not exist in current power system database. "
           <<"No load meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
@@ -678,7 +678,7 @@ bool METER_SETTER::prepare_generator_meter(METER& meter, const DEVICE_ID& device
 
     if(not psdb.is_generator_exist(device_id))
     {
-        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+        osstream<<"Warning. "<<device_id.get_compound_device_name()<<" does not exist in current power system database. "
           <<"No generator meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
@@ -1173,7 +1173,7 @@ bool METER_SETTER::prepare_wt_generator_meter(METER& meter, const DEVICE_ID& dev
 
     if(not psdb.is_wt_generator_exist(device_id))
     {
-        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+        osstream<<"Warning. "<<device_id.get_compound_device_name()<<" does not exist in current power system database. "
           <<"No wt generator meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
@@ -1617,7 +1617,7 @@ bool METER_SETTER::prepare_pv_unit_meter(METER& meter, const DEVICE_ID& device_i
 
     if(not psdb.is_pv_unit_exist(device_id))
     {
-        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+        osstream<<"Warning. "<<device_id.get_compound_device_name()<<" does not exist in current power system database. "
           <<"No PV unit meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
@@ -1829,7 +1829,7 @@ bool METER_SETTER::prepare_energy_storage_meter(METER& meter, const DEVICE_ID& d
 
     if(not psdb.is_energy_storage_exist(device_id))
     {
-        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+        osstream<<"Warning. "<<device_id.get_compound_device_name()<<" does not exist in current power system database. "
           <<"No energy storage meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
@@ -1964,7 +1964,7 @@ bool METER_SETTER::prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
 
     if(not psdb.is_hvdc_exist(device_id))
     {
-        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+        osstream<<"Warning. "<<device_id.get_compound_device_name()<<" does not exist in current power system database. "
           <<"No hvdc meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
@@ -2239,7 +2239,7 @@ bool METER_SETTER::prepare_equivalent_device_meter(METER& meter, const DEVICE_ID
 
     if(not psdb.is_equivalent_device_exist(device_id))
     {
-        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+        osstream<<"Warning. "<<device_id.get_compound_device_name()<<" does not exist in current power system database. "
           <<"No equivalent device meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;

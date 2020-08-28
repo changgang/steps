@@ -1087,7 +1087,7 @@ void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
             complex<double> S_inv = complex<double>(hvdcs[i]->get_converter_ac_active_power_in_MW(INVERTER), -hvdcs[i]->get_converter_ac_reactive_power_in_MVar(INVERTER));
 
             //ostringstream osstream;
-            //osstream<<hvdcs[i]->get_device_name()<<": Srec = "<<S_rec<<" MVA, Sinv = "<<S_inv<<" MVA."<<endl;
+            //osstream<<hvdcs[i]->get_compound_device_name()<<": Srec = "<<S_rec<<" MVA, Sinv = "<<S_inv<<" MVA."<<endl;
             //toolkit->show_information_with_leading_time_stamp(osstream);
 
             bus_power[internal_bus_rec] -= S_rec*one_over_sbase;
@@ -2267,13 +2267,13 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         {
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%8u '%4s'  %12.6f  %12.6f  %-30s[%s]",
                      sources[i]->get_source_bus(),(sources[i]->get_identifier()).c_str(),
-                     sources[i]->get_p_generation_in_MW(),sources[i]->get_q_generation_in_MVar(), (sources[i]->get_device_name()).c_str(), psdb.bus_number2bus_name(sources[i]->get_source_bus()).c_str());
+                     sources[i]->get_p_generation_in_MW(),sources[i]->get_q_generation_in_MVar(), (sources[i]->get_compound_device_name()).c_str(), psdb.bus_number2bus_name(sources[i]->get_source_bus()).c_str());
         }
         else
         {
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%8u '%4s'  %12.6f  %12.6f  %-30s[%s] [slack bus]",
                      sources[i]->get_source_bus(),(sources[i]->get_identifier()).c_str(),
-                     sources[i]->get_p_generation_in_MW(),sources[i]->get_q_generation_in_MVar(), (sources[i]->get_device_name()).c_str(), psdb.bus_number2bus_name(sources[i]->get_source_bus()).c_str());
+                     sources[i]->get_p_generation_in_MW(),sources[i]->get_q_generation_in_MVar(), (sources[i]->get_compound_device_name()).c_str(), psdb.bus_number2bus_name(sources[i]->get_source_bus()).c_str());
         }
         toolkit->show_information_with_leading_time_stamp(buffer);
     }

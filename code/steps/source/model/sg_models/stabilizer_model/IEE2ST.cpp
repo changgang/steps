@@ -384,7 +384,7 @@ void IEE2ST::initialize()
         else
         {
             osstream<<"Initialization failed. T3<=0.0 in model "<<get_model_name()<<" of "
-              <<get_generator_pointer()->get_device_name()<<" requires input signals with 0 steady state value."<<endl
+              <<get_generator_pointer()->get_compound_device_name()<<" requires input signals with 0 steady state value."<<endl
               <<"However, "<<value_sum<<" is given. Check input signals in slots.";
             alternative_filter.set_output(0.0);
             alternative_filter.initialize();

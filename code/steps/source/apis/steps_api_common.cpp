@@ -10,7 +10,7 @@ void show_side_not_supported_for_device_with_api(string side, DEVICE_ID did, str
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Side '%s' is not supported for %s with api %s.\n"
              "Nothing will be changed.\n"
              "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
-             side.c_str(), (did.get_device_name()).c_str(), api_func.c_str());
+             side.c_str(), (did.get_compound_device_name()).c_str(), api_func.c_str());
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
@@ -21,7 +21,7 @@ void show_parameter_not_supported_for_device_with_api(string par_name, DEVICE_ID
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for %s with api %s.\n"
              "Nothing will be changed.\n"
              "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
-             par_name.c_str(), (did.get_device_name()).c_str(), api_func.c_str());
+             par_name.c_str(), (did.get_compound_device_name()).c_str(), api_func.c_str());
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
@@ -43,7 +43,7 @@ void show_device_not_exist_with_api(DEVICE_ID did, string api_func, unsigned int
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Device %s does not exist in database with api %s.\n"
              "Nothing will be changed.\n"
              "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
-             (did.get_device_name()).c_str(), api_func.c_str());
+             (did.get_compound_device_name()).c_str(), api_func.c_str());
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
@@ -54,7 +54,7 @@ void show_model_type_not_supported_for_device_with_api(string model_type, DEVICE
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Model type %s is not supported for device %s with api %s.\n"
              "Nothing will be changed.\n"
              "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
-             model_type.c_str(), (did.get_device_name()).c_str(), api_func.c_str());
+             model_type.c_str(), (did.get_compound_device_name()).c_str(), api_func.c_str());
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
@@ -118,7 +118,7 @@ void set_owner_of_nonbus_device(NONBUS_DEVICE* device, string parameter_name, in
         if(n>=1)
         {
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Owner 1 already set and will not be set again for %s.",
-                     (device->get_device_name()).c_str());
+                     (device->get_compound_device_name()).c_str());
             toolkit.show_information_with_leading_time_stamp(buffer);
             return;
         }
@@ -134,7 +134,7 @@ void set_owner_of_nonbus_device(NONBUS_DEVICE* device, string parameter_name, in
         if(n>=2)
         {
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Owner 2 already set and will not be set again for %s.",
-                     (device->get_device_name()).c_str());
+                     (device->get_compound_device_name()).c_str());
             toolkit.show_information_with_leading_time_stamp(buffer);
             return;
         }
@@ -150,7 +150,7 @@ void set_owner_of_nonbus_device(NONBUS_DEVICE* device, string parameter_name, in
         if(n>=3)
         {
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Owner 3 already set and will not be set again for %s.",
-                     (device->get_device_name()).c_str());
+                     (device->get_compound_device_name()).c_str());
             toolkit.show_information_with_leading_time_stamp(buffer);
             return;
         }
@@ -166,7 +166,7 @@ void set_owner_of_nonbus_device(NONBUS_DEVICE* device, string parameter_name, in
         if(n>=4)
         {
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Owner 4 already set and will not be set again for %s.",
-                     (device->get_device_name()).c_str());
+                     (device->get_compound_device_name()).c_str());
             toolkit.show_information_with_leading_time_stamp(buffer);
             return;
         }
@@ -216,7 +216,7 @@ void set_owner_fraction_of_nonbus_device(NONBUS_DEVICE* device, string parameter
         if(n<1)
         {
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Owner 1 does not exist and owner fraction will not be set for %s.",
-                     (device->get_device_name()).c_str());
+                     (device->get_compound_device_name()).c_str());
             toolkit.show_information_with_leading_time_stamp(buffer);
             return;
         }
@@ -234,7 +234,7 @@ void set_owner_fraction_of_nonbus_device(NONBUS_DEVICE* device, string parameter
         if(n<2)
         {
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Owner 2 does not exist and owner fraction will not be set for %s.",
-                     (device->get_device_name()).c_str());
+                     (device->get_compound_device_name()).c_str());
             toolkit.show_information_with_leading_time_stamp(buffer);
             return;
         }
@@ -252,7 +252,7 @@ void set_owner_fraction_of_nonbus_device(NONBUS_DEVICE* device, string parameter
         if(n<3)
         {
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Owner 3 does not exist and owner fraction will not be set for %s.",
-                     (device->get_device_name()).c_str());
+                     (device->get_compound_device_name()).c_str());
             toolkit.show_information_with_leading_time_stamp(buffer);
             return;
         }
@@ -270,7 +270,7 @@ void set_owner_fraction_of_nonbus_device(NONBUS_DEVICE* device, string parameter
         if(n<4)
         {
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Owner 4 does not exist and owner fraction will not be set for %s.",
-                     (device->get_device_name()).c_str());
+                     (device->get_compound_device_name()).c_str());
             toolkit.show_information_with_leading_time_stamp(buffer);
             return;
         }

@@ -151,7 +151,7 @@ bool WT3G1::setup_model_with_steps_string_vector(vector<string>& data)
             WT_GENERATOR* gen = psdb.get_wt_generator(did);
             if(gen==NULL)
             {
-                osstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_device_name()<<endl
+                osstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_compound_device_name()<<endl
                        <<"No such wt generator exists in the power system database.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 return is_successful;
@@ -161,7 +161,7 @@ bool WT3G1::setup_model_with_steps_string_vector(vector<string>& data)
             n_lumped_turbine = round(mbase/prate);
             if(fabs(mbase-n_lumped_turbine*prate)>1e-2)
             {
-                osstream<<"Warning. The MBASE of "<<did.get_device_name()<<" is far way from n times of the Prate of "<<get_model_name()<<" model."<<endl
+                osstream<<"Warning. The MBASE of "<<did.get_compound_device_name()<<" is far way from n times of the Prate of "<<get_model_name()<<" model."<<endl
                        <<"MBASE = "<<mbase<<" MVA and Prate = "<<prate<<" MW."<<endl
                        <<"Machine MBASE will be updated as "<<n_lumped_turbine*prate<<" MVA.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
@@ -179,7 +179,7 @@ bool WT3G1::setup_model_with_steps_string_vector(vector<string>& data)
             complex<double> Z = gen->get_source_impedance_in_pu();
             if(fabs(Z.imag()-xeq)>DOUBLE_EPSILON)
             {
-                osstream<<"Warning. The Xeq of "<<get_model_name()<<" model is different from imaginary part of ZSOURCE of "<<did.get_device_name()<<endl
+                osstream<<"Warning. The Xeq of "<<get_model_name()<<" model is different from imaginary part of ZSOURCE of "<<did.get_compound_device_name()<<endl
                        <<"Xeq = "<<xeq<<" and XSource = "<<Z.imag()<<endl
                        <<"XSource will be updated as "<<xeq;
                 toolkit.show_information_with_leading_time_stamp(osstream);
@@ -291,7 +291,7 @@ void WT3G1::initialize()
 
         if(toolkit.is_detailed_log_enabled())
         {
-            osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+            osstream<<get_model_name()<<" model of "<<get_compound_device_name()<<" is initialized."<<endl
                     <<"(1) Initial active current command = "<<get_initial_active_current_command_in_pu_based_on_mbase()<<endl
                     <<"(2) Initial reactive current command = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
                     <<"(3) States of blocks"<<endl

@@ -217,7 +217,7 @@ unsigned int DEVICE_ID::get_maximum_allowed_terminal_count() const
     return maximum_terminal_count;
 }
 
-string DEVICE_ID::get_device_name() const
+string DEVICE_ID::get_compound_device_name() const
 {
     string device_name = "INVALID DEVICE (possible of type "+get_device_type()+")";
     if(is_valid())

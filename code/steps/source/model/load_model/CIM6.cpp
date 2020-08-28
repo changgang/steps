@@ -639,7 +639,7 @@ void CIM6::initialize()
                 if(n_iteration>20)
                 {
                     ostringstream osstream;
-                    osstream<<"Warning. Fail to initialize CIM6 model of "<<get_device_name()<<" in 20 iterations.\n"
+                    osstream<<"Warning. Fail to initialize CIM6 model of "<<get_compound_device_name()<<" in 20 iterations.\n"
                             <<"Max error is "<<maxerror<<" with the best estimation:\n"
                             <<"(1) Er\' ="<<Erp<<"\n"
                             <<"(2) Ei\' ="<<Eip<<"\n"
@@ -759,7 +759,7 @@ void CIM6::initialize()
                 if(n_iteration>20)
                 {
                     ostringstream osstream;
-                    osstream<<"Warning. Fail to initialize CIM6 model of "<<get_device_name()<<" in 20 iterations.\n"
+                    osstream<<"Warning. Fail to initialize CIM6 model of "<<get_compound_device_name()<<" in 20 iterations.\n"
                             <<"Max error is "<<maxerror<<" with the best estimation:\n"
                             <<"(1) Er\" ="<<Erpp<<"\n"
                             <<"(2) Ei\" ="<<Eipp<<"\n"
