@@ -60,6 +60,10 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_hvdc_with_data(vector<vector<string> > hvdc_data);
         void add_hvdc_basic_data(HVDC& hvdc, vector<string> data);
         void add_hvdc_converter_data(HVDC& hvdc, CONVERTER_SIDE converter, vector<string> data);
+        void load_lcc_hvdc_data();
+        void add_lcc_hvdc_with_data(vector<vector<string> > hvdc_data);
+        void add_lcc_hvdc_basic_data(LCC_HVDC& hvdc, vector<string> data);
+        void add_lcc_hvdc_converter_data(LCC_HVDC& hvdc, CONVERTER_SIDE side, unsigned int converter_index, vector<string> data);
         void load_vsc_hvdc_data();
         void load_transformer_impedance_correction_table_data();
         void load_multi_terminal_hvdc_data();
@@ -85,6 +89,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         string export_transformer_data() const;
         string export_area_data() const;
         string export_hvdc_data() const;
+        string export_lcc_hvdc_data() const;
         string export_vsc_hvdc_data() const;
         string export_transformer_impedance_correction_table_data() const;
         string export_multi_terminal_hvdc_data() const;

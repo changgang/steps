@@ -1,5 +1,5 @@
-#ifndef HVDC_H
-#define HVDC_H
+#ifndef LCC_HVDC_H
+#define LCC_HVDC_H
 
 #include "header/device/nonbus_device.h"
 #include "header/device/lcc_converter_station.h"
@@ -15,7 +15,6 @@
 using namespace std;
 
 class BUS;
-class HVDC_MODEL;
 
 class LCC_HVDC : public NONBUS_DEVICE
 {
@@ -64,7 +63,7 @@ class LCC_HVDC : public NONBUS_DEVICE
         string get_name() const;
         unsigned int get_converter_count(CONVERTER_SIDE side) const;
         unsigned int get_converter_bus(CONVERTER_SIDE side, const unsigned int converter_index) const;
-        BUS* get_converter_bus_pointer(CONVERTER_SIDE side, const unsigned int converter_index) const;
+        //BUS* get_converter_bus_pointer(CONVERTER_SIDE side, const unsigned int converter_index) const;
         string get_converter_valve_side_bus_name(CONVERTER_SIDE side, const unsigned int converter_index) const;
         double get_converter_power_percent(CONVERTER_SIDE side, const unsigned int converter_index) const;
 
@@ -120,6 +119,9 @@ class LCC_HVDC : public NONBUS_DEVICE
         virtual void report() const;
         virtual void save() const;
 
+        virtual void set_model(const MODEL* model);
+        virtual MODEL* get_model_of_type(string model_type);
+
         virtual void run(DYNAMIC_MODE mode);
 
         virtual LCC_HVDC& operator=(const LCC_HVDC& hvdc);
@@ -128,7 +130,6 @@ class LCC_HVDC : public NONBUS_DEVICE
         //virtual string get_device_name() const;
 
         void solve_steady_state();
-        void solve_converter_transformer_tap_and_angle(CONVERTER_SIDE side, unsigned int converter_index, double Vdc, double Idc);
         void show_solved_hvdc_steady_state() const;
     private:
         string get_converter_side_name(CONVERTER_SIDE side) const;
@@ -158,4 +159,4 @@ class LCC_HVDC : public NONBUS_DEVICE
         //LCC_HVDC_MODEL* hvdc_model;
         //AUXILIARY_SIGNAL_MODEL* auxiliary_signal_model;
 };
-#endif // HVDC_H
+#endif // LCC_HVDC_H

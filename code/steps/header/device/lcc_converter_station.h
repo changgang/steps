@@ -21,6 +21,8 @@ class LCC_CONVERTER_STATION : public CONVERTER_STATION
         virtual ~LCC_CONVERTER_STATION();
         void clear();
 
+        virtual LCC_CONVERTER_STATION& operator=(const LCC_CONVERTER_STATION& station);
+
         void set_number_of_converters(unsigned int n);
         void set_converter(unsigned int converter_index, LCC& converter);
 
@@ -29,15 +31,17 @@ class LCC_CONVERTER_STATION : public CONVERTER_STATION
         LCC* get_mutable_converter(unsigned int converter_index);
         unsigned int get_total_power_percent_of_converter_station() const;
 
-        void solve_transformer_tap_and_angle(double Vdc, double Idc);
+        void solve_with_desired_dc_voltage_and_current(double Vdc, double Idc);
+        //void solve_transformer_tap_and_angle(double Vdc, double Idc);
 
         double get_no_load_dc_voltage_in_kV_with_solved_transformer_tap_and_angle() const;
         double get_dc_voltage_drop_multiple_in_kV_per_A() const;
 
         void report() const;
-    public:
-        virtual LCC_CONVERTER_STATION& operator=(const LCC_CONVERTER_STATION& station);
-    private:
+
+        bool is_connected_to_bus(unsigned int bus) const;
+        bool is_in_area(unsigned int area) const;
+        bool is_in_zone(unsigned int zone) const;
     private:
         LCC* converters;
         unsigned int nconverters;

@@ -19,6 +19,8 @@ LCC_CONVERTER_STATION::~LCC_CONVERTER_STATION() { clear(); }
 
 void LCC_CONVERTER_STATION::clear()
 {
+    CONVERTER_STATION::clear();
+
     if(converters != nullptr)
     {
         free(converters);
@@ -27,6 +29,17 @@ void LCC_CONVERTER_STATION::clear()
     nconverters = 0;
 }
 
+LCC_CONVERTER_STATION& LCC_CONVERTER_STATION::operator=(const LCC_CONVERTER_STATION& station)
+{
+    if(this==&station) return *this;
+    clear();
+    copy_from_const_converter_station(station);
+
+    set_number_of_converters(station.get_number_of_converters());
+    for(unsigned int i=0; i<get_number_of_converters(); ++i)
+        converters[i] = *(station.get_converter(i));
+    return *this;
+}
 
 void LCC_CONVERTER_STATION::set_number_of_converters(unsigned int n)
 {
@@ -87,11 +100,11 @@ unsigned int LCC_CONVERTER_STATION::get_total_power_percent_of_converter_station
     return percent;
 }
 
-void LCC_CONVERTER_STATION::solve_transformer_tap_and_angle(double Vdc, double Idc)
+void LCC_CONVERTER_STATION::solve_with_desired_dc_voltage_and_current(double Vdc, double Idc)
 {
     for(unsigned int i = 0; i < nconverters; ++i)
     {
-        converters[i].solve_transformer_tap_and_angle(Vdc*converters[i].get_power_percent()*0.01, Idc);
+        converters[i].solve_with_desired_dc_voltage_and_current(Vdc*converters[i].get_power_percent()*0.01, Idc);
     }
 }
 
@@ -129,17 +142,29 @@ void LCC_CONVERTER_STATION::report() const
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-LCC_CONVERTER_STATION& LCC_CONVERTER_STATION::operator=(const LCC_CONVERTER_STATION& station)
+bool LCC_CONVERTER_STATION::is_connected_to_bus(unsigned int bus) const
 {
-    if(this == (&station)) return *this;
-    clear();
+    unsigned int n = get_number_of_converters();
+    for(unsigned i = 0; i<n; ++i)
+        if(converters[i].is_connected_to_bus(bus))
+            return true;
+    return false;
+}
 
-    set_toolkit(station.get_toolkit());
-    set_name(station.get_name());
-    set_converter_side(station.get_converter_side());
+bool LCC_CONVERTER_STATION::is_in_area(unsigned int area) const
+{
+    unsigned int n = get_number_of_converters();
+    for(unsigned i = 0; i<n; ++i)
+        if(converters[i].is_in_area(area))
+            return true;
+    return false;
+}
 
-    set_number_of_converters(station.get_number_of_converters());
-    for(unsigned int converter_index = 0; converter_index < nconverters; ++converter_index)
-        converters[converter_index] = *(station.get_converter(converter_index));
-    return *this;
+bool LCC_CONVERTER_STATION::is_in_zone(unsigned int zone) const
+{
+    unsigned int n = get_number_of_converters();
+    for(unsigned i = 0; i<n; ++i)
+        if(converters[i].is_in_zone(zone))
+            return true;
+    return false;
 }

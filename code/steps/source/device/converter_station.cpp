@@ -18,6 +18,16 @@ CONVERTER_STATION::~CONVERTER_STATION() { clear(); }
 void CONVERTER_STATION::clear()
 {
     toolkit = nullptr;
+    set_name("");
+    set_converter_side(RECTIFIER);
+}
+
+void CONVERTER_STATION::copy_from_const_converter_station(const CONVERTER_STATION& station)
+{
+    clear();
+    set_toolkit(station.get_toolkit());
+    set_name(station.get_name());
+    set_converter_side(station.get_converter_side());
 }
 
 void CONVERTER_STATION::set_toolkit(STEPS& toolkit) { this->toolkit = (&toolkit); }

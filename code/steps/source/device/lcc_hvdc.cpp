@@ -315,14 +315,14 @@ unsigned int LCC_HVDC::get_converter_bus(CONVERTER_SIDE side, const unsigned int
     return converter->get_bus();
 }
 
-BUS* LCC_HVDC::get_converter_bus_pointer(CONVERTER_SIDE side, unsigned int converter_index) const
+/*BUS* LCC_HVDC::get_converter_bus_pointer(CONVERTER_SIDE side, unsigned int converter_index) const
 {
     const LCC* converter = get_immutable_converter(side, converter_index);
     if(converter != nullptr)
         return converter->get_bus_pointer();
     else
         return nullptr;
-}
+}*/
 string LCC_HVDC::get_converter_valve_side_bus_name(CONVERTER_SIDE side, const unsigned int converter_index) const
 {
     const LCC* converter = get_immutable_converter(side, converter_index);
@@ -616,68 +616,41 @@ void LCC_HVDC::clear()
 
 bool LCC_HVDC::is_connected_to_bus(unsigned int bus) const
 {
-    bool is_connected = false;
     for(unsigned int converter=0; converter<2; ++converter)
     {
         CONVERTER_SIDE side = RECTIFIER;
         if(converter==1) side = INVERTER;
-        unsigned int n = station[side].get_number_of_converters();
-        for(unsigned int converter_index=0; converter_index<n; ++converter_index)
-        {
-            if(get_converter_bus(side, converter_index)== bus)
-            {
-                is_connected = true;
-                break;
-            }
-        }
-        if(is_connected)
-            break;
+
+        if(station[side].is_connected_to_bus(bus))
+            return true;
     }
-    return is_connected;
+    return false;
 }
 
 bool LCC_HVDC::is_in_area(unsigned int area) const
 {
-    bool is_in = false;
     for(unsigned int converter=0; converter<2; ++converter)
     {
         CONVERTER_SIDE side = RECTIFIER;
         if(converter==1) side = INVERTER;
-        unsigned int n = station[side].get_number_of_converters();
-        for(unsigned int converter_index=0; converter_index<n; ++converter_index)
-        {
-            if(get_converter_bus_pointer(side, converter_index)->is_in_area(area))
-            {
-                is_in = true;
-                break;
-            }
-        }
-        if(is_in)
-            break;
+
+        if(station[side].is_in_area(area))
+            return true;
     }
-    return is_in;
+    return false;
 }
 
 bool LCC_HVDC::is_in_zone(unsigned int zone) const
 {
-    bool is_in = false;
     for(unsigned int converter=0; converter<2; ++converter)
     {
         CONVERTER_SIDE side = RECTIFIER;
         if(converter==1) side = INVERTER;
-        unsigned int n = station[side].get_number_of_converters();
-        for(unsigned int converter_index=0; converter_index<n; ++converter_index)
-        {
-            if(get_converter_bus_pointer(side, converter_index)->is_in_zone(zone))
-            {
-                is_in = true;
-                break;
-            }
-        }
-        if(is_in)
-            break;
+
+        if(station[side].is_in_zone(zone))
+            return true;
     }
-    return is_in;
+    return false;
 }
 
 void LCC_HVDC::report() const
@@ -778,30 +751,20 @@ void LCC_HVDC::solve_steady_state()
     double Rdc = get_line_resistance_in_ohm();
     double Vdcr = Vdci+Idc*Rdc;
 
+    double Vdc[2]={Vdcr, Vdci};
+
     for(unsigned int converter=0; converter<2; ++converter)
     {
         CONVERTER_SIDE side = RECTIFIER;
         if(converter==1) side = INVERTER;
-        n = get_converter_count(side);
 
-        for(unsigned int converter_index=0; converter_index<n; ++converter_index)
-        {
-            double Vdc = Vdcr*get_converter_power_percent(side, converter_index);
-            solve_converter_transformer_tap_and_angle(side, converter_index, Vdc, Idc);
-        }
+        station[side].solve_with_desired_dc_voltage_and_current(Vdc[side], Idc);
     }
-}
-
-void LCC_HVDC::solve_converter_transformer_tap_and_angle(CONVERTER_SIDE side, unsigned int converter_index, double Vdc, double Idc)
-{
-    LCC* converter = get_mutable_converter(side, converter_index);
-    converter->solve_transformer_tap_and_angle(Vdc, Idc);
 }
 
 void LCC_HVDC::show_solved_hvdc_steady_state() const
 {
     STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = toolkit.get_system_base_power_in_MVA();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
@@ -849,7 +812,7 @@ void LCC_HVDC::show_solved_hvdc_steady_state() const
             toolkit.show_information_with_leading_time_stamp(osstream);
 
             osstream<<"Vdc = "<<converter->get_dc_voltage_in_kV()<<" kV, "
-                    <<"Vac = "<<psdb.get_bus_positive_sequence_voltage_in_kV(converter->get_bus())<<" kV";
+                    <<"Vac = "<<converter->get_bus_positive_sequence_voltage_in_kV()<<" kV";
             toolkit.show_information_with_leading_time_stamp(osstream);
 
             osstream<<"Transformer tap = "<<converter->get_transformer_tap_in_pu()<<" pu.";
@@ -865,10 +828,10 @@ void LCC_HVDC::show_solved_hvdc_steady_state() const
             double P = converter->get_ac_active_power_in_MW();
             double Q = converter->get_ac_reactive_power_in_MVar();
             complex<double> S(P,Q);
-            complex<double> V = psdb.get_bus_positive_sequence_complex_voltage_in_pu(converter->get_bus());
+            complex<double> V = converter->get_bus_positive_sequence_complex_voltage_in_pu();
             S *=  one_over_sbase;
             complex<double> I = conj(S/V);
-            I *= (sbase/(SQRT3*psdb.get_bus_base_voltage_in_kV(converter->get_bus())));
+            I *= (sbase/(SQRT3*converter->get_bus_base_voltage_in_kV()));
 
             osstream<<"Pdc = "<<converter->get_dc_power_in_MW()<<" MW, "
                     <<"Pac = "<<converter->get_ac_active_power_in_MW()<<" MW, "
@@ -884,4 +847,19 @@ void LCC_HVDC::show_solved_hvdc_steady_state() const
 double LCC_HVDC::get_line_dc_current_in_kA() const
 {
     return get_nominal_dc_current_in_kA();
+}
+
+
+void LCC_HVDC::set_model(const MODEL* model)
+{
+    return;
+}
+
+MODEL* LCC_HVDC::get_model_of_type(string model_type)
+{
+    return nullptr;
+}
+void LCC_HVDC::run(DYNAMIC_MODE mode)
+{
+    ;
 }

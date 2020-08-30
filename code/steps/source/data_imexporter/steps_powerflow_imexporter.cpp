@@ -56,6 +56,7 @@ void STEPS_IMEXPORTER::load_all_devices()
     load_transformer_data();
     load_area_data();
     load_hvdc_data();
+    load_lcc_hvdc_data();
     load_vsc_hvdc_data();
     load_transformer_impedance_correction_table_data();
     load_multi_terminal_hvdc_data();
@@ -1861,6 +1862,27 @@ void STEPS_IMEXPORTER::add_hvdc_converter_data(HVDC& hvdc, CONVERTER_SIDE conver
     }
 }
 
+
+void STEPS_IMEXPORTER::load_lcc_hvdc_data()
+{
+
+}
+
+void STEPS_IMEXPORTER::add_lcc_hvdc_with_data(vector<vector<string> > hvdc_data)
+{
+
+}
+
+void STEPS_IMEXPORTER::add_lcc_hvdc_basic_data(LCC_HVDC& hvdc, vector<string> data)
+{
+
+}
+
+void STEPS_IMEXPORTER::add_lcc_hvdc_converter_data(LCC_HVDC& hvdc, CONVERTER_SIDE side, unsigned int converter_index, vector<string> data)
+{
+
+}
+
 void STEPS_IMEXPORTER::load_vsc_hvdc_data()
 {
     ;
@@ -2798,6 +2820,15 @@ string STEPS_IMEXPORTER::export_hvdc_data() const
             osstream<<"0, 0, 0, \"1\", 0.0"<<endl;
         }
     }
+
+    return osstream.str();
+}
+
+string STEPS_IMEXPORTER::export_lcc_hvdc_data() const
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     return osstream.str();
 }

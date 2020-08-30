@@ -46,6 +46,10 @@
 #include "header/device/engergy_storage_test.h"
 //#include "header/device/virtual_generator_load_pair_test.h"
 
+#include "header/device/converter_test.h"
+#include "header/device/converter_station_test.h"
+#include "header/device/lcc_test.h"
+
 #include "header/power_system_database_test.h"
 
 #include "header/data_imexporter/steps_imexporter_test.h"
@@ -145,10 +149,7 @@
 #include "header/toolkit/powerflow_case_generator/powerflow_case_generator_test.h"
 
 
-
 #include "header/steps_namespace.h"
-
-#define ENABLE_STEPS_TEST
 
 using namespace std;
 
@@ -211,6 +212,8 @@ int main(int argc, char* argv[])
         Test::Suite ts;
         #ifdef ENABLE_STEPS_TEST
 
+        ts.add(unique_ptr<Test::Suite>(new DEVICE_ID_TEST));
+        /*
         ts.add(unique_ptr<Test::Suite>(new TERMINAL_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new DEVICE_ID_TEST));
@@ -342,6 +345,10 @@ int main(int argc, char* argv[])
 
         //ts.add(unique_ptr<Test::Suite>(new CCT_SEARCHER_TEST));
         //ts.add(unique_ptr<Test::Suite>(new POWERFLOW_CASE_GENERATOR_TEST));
+        */
+        ts.add(unique_ptr<Test::Suite>(new CONVERTER_TEST));
+        ts.add(unique_ptr<Test::Suite>(new LCC_TEST));
+        ts.add(unique_ptr<Test::Suite>(new CONVERTER_STATION_TEST));
 
         #endif // ENABLE_STEPS_TEST
 

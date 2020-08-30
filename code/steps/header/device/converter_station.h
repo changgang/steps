@@ -21,6 +21,8 @@ class CONVERTER_STATION
         virtual ~CONVERTER_STATION();
         void clear();
 
+        void copy_from_const_converter_station(const CONVERTER_STATION& station);
+
         void set_toolkit(STEPS&);
         STEPS& get_toolkit() const;
 
