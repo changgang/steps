@@ -2524,7 +2524,7 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/bpa_imexporter.h"
 
-1598590744 source:d:\steps\code\steps\source\apis\steps_api_set_get_transformer_parameters.cpp
+1598964586 source:d:\steps\code\steps\source\apis\steps_api_set_get_transformer_parameters.cpp
 	"header/apis/steps_api.h"
 	"header/apis/steps_api_common.h"
 	"header/basic/utility.h"
@@ -3647,7 +3647,7 @@
 	<iostream>
 	<cstdio>
 
-1598590744 source:d:\steps\code\steps\source\device\hvdc.cpp
+1598971519 source:d:\steps\code\steps\source\device\hvdc.cpp
 	"header/device/hvdc.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -5780,7 +5780,7 @@
 	<cstdio>
 	<cmath>
 
-1598590744 source:d:\steps\code\steps\source\toolkit\powerflow_solver\powerflow_solver.cpp
+1599044006 source:d:\steps\code\steps\source\toolkit\powerflow_solver\powerflow_solver.cpp
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -5817,7 +5817,7 @@
 	<complex>
 	<string>
 
-1598798549 source:d:\steps\code\steps\source\device\lcc_hvdc.cpp
+1598924965 source:d:\steps\code\steps\source\device\lcc_hvdc.cpp
 	"header/device/lcc_hvdc.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -5827,9 +5827,9 @@
 	<iostream>
 	<cstdio>
 
-1598797856 d:\steps\code\steps\header\device\lcc_hvdc.h
+1598932264 d:\steps\code\steps\header\device\lcc_hvdc.h
 	"header/device/nonbus_device.h"
-	"header/device/lcc_converter_station.h"
+	"header/device/lcc_station.h"
 	"header/basic/device_id.h"
 	"header/basic/steps_enum.h"
 	"header/model/hvdc_model/hvdc_model.h"
@@ -5896,7 +5896,7 @@
 	<iostream>
 	<cstdio>
 
-1598781872 d:\steps\code\steps\header\device\lcc_converter_station.h
+1598924965 d:\steps\code\steps\header\device\lcc_converter_station.h
 	"header/device/nonbus_device.h"
 	"header/device/converter_station.h"
 	"header/device/vsc.h"
@@ -5998,6 +5998,48 @@
 	<iostream>
 	"cpptest.h"
 	"header/device/lcc_converter_station.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+
+1598924965 d:\steps\code\steps\header\device\lcc_station.h
+	"header/device/nonbus_device.h"
+	"header/device/converter_station.h"
+	"header/device/vsc.h"
+	"header/basic/device_id.h"
+	"header/basic/steps_enum.h"
+	<complex>
+	<string>
+
+1598924995 source:d:\steps\code\steps\source\device\lcc_station.cpp
+	"header/device/lcc_station.h"
+	"header/basic/utility.h"
+	"header/basic/constants.h"
+	"header/STEPS.h"
+	<istream>
+	<iostream>
+	<cstdio>
+
+1599026841 source:d:\steps\code\steps\source\device\lcc_station_test.cpp
+	<cmath>
+	"cpptest.h"
+	"header/basic/test_macro.h"
+	"header/device/lcc_station_test.h"
+	"header/basic/constants.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<cstdlib>
+	<cstring>
+	<istream>
+	<iostream>
+	<cstdio>
+
+1599026846 d:\steps\code\steps\header\device\lcc_station_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"cpptest.h"
+	"header/device/lcc_station.h"
 	"header/power_system_database.h"
 	"header/STEPS.h"
 

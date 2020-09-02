@@ -1,4 +1,4 @@
-#include "header/device/lcc_converter_station.h"
+#include "header/device/lcc_station.h"
 #include "header/basic/utility.h"
 #include "header/basic/constants.h"
 #include "header/STEPS.h"
@@ -8,16 +8,16 @@
 
 using namespace std;
 
-LCC_CONVERTER_STATION::LCC_CONVERTER_STATION()
+LCC_STATION::LCC_STATION()
 {
     converters = nullptr;
     nconverters = 0;
     clear();
 }
 
-LCC_CONVERTER_STATION::~LCC_CONVERTER_STATION() { clear(); }
+LCC_STATION::~LCC_STATION() { clear(); }
 
-void LCC_CONVERTER_STATION::clear()
+void LCC_STATION::clear()
 {
     CONVERTER_STATION::clear();
 
@@ -29,7 +29,7 @@ void LCC_CONVERTER_STATION::clear()
     nconverters = 0;
 }
 
-LCC_CONVERTER_STATION& LCC_CONVERTER_STATION::operator=(const LCC_CONVERTER_STATION& station)
+LCC_STATION& LCC_STATION::operator=(const LCC_STATION& station)
 {
     if(this==&station) return *this;
     clear();
@@ -41,7 +41,7 @@ LCC_CONVERTER_STATION& LCC_CONVERTER_STATION::operator=(const LCC_CONVERTER_STAT
     return *this;
 }
 
-void LCC_CONVERTER_STATION::set_number_of_converters(unsigned int n)
+void LCC_STATION::set_number_of_converters(unsigned int n)
 {
     clear();
     nconverters = n;
@@ -53,18 +53,18 @@ void LCC_CONVERTER_STATION::set_number_of_converters(unsigned int n)
     }
 }
 
-void LCC_CONVERTER_STATION::set_converter(unsigned int converter_index, LCC& converter)
+void LCC_STATION::set_converter(unsigned int converter_index, LCC& converter)
 {
     if(converter_index < nconverters)
         converters[converter_index] = converter;
 }
 
-unsigned int LCC_CONVERTER_STATION::get_number_of_converters() const
+unsigned int LCC_STATION::get_number_of_converters() const
 {
     return nconverters;
 }
 
-const LCC* LCC_CONVERTER_STATION::get_converter(unsigned int converter_index) const
+const LCC* LCC_STATION::get_converter(unsigned int converter_index) const
 {
     if(converter_index < nconverters)
         return converters+converter_index;
@@ -78,7 +78,7 @@ const LCC* LCC_CONVERTER_STATION::get_converter(unsigned int converter_index) co
     }
 }
 
-LCC* LCC_CONVERTER_STATION::get_mutable_converter(unsigned int converter_index)
+LCC* LCC_STATION::get_mutable_converter(unsigned int converter_index)
 {
     if(converter_index < nconverters)
         return converters+converter_index;
@@ -92,7 +92,7 @@ LCC* LCC_CONVERTER_STATION::get_mutable_converter(unsigned int converter_index)
     }
 }
 
-unsigned int LCC_CONVERTER_STATION::get_total_power_percent_of_converter_station() const
+unsigned int LCC_STATION::get_total_power_percent_of_converter_station() const
 {
     double percent = 0.0;
     for(unsigned int i = 0; i < nconverters; ++i)
@@ -100,7 +100,7 @@ unsigned int LCC_CONVERTER_STATION::get_total_power_percent_of_converter_station
     return percent;
 }
 
-void LCC_CONVERTER_STATION::solve_with_desired_dc_voltage_and_current(double Vdc, double Idc)
+void LCC_STATION::solve_with_desired_dc_voltage_and_current(double Vdc, double Idc)
 {
     for(unsigned int i = 0; i < nconverters; ++i)
     {
@@ -108,7 +108,7 @@ void LCC_CONVERTER_STATION::solve_with_desired_dc_voltage_and_current(double Vdc
     }
 }
 
-double LCC_CONVERTER_STATION::get_no_load_dc_voltage_in_kV_with_solved_transformer_tap_and_angle() const
+double LCC_STATION::get_no_load_dc_voltage_in_kV_with_solved_transformer_tap_and_angle() const
 {
     double Vdc0 = 0.0;
     for(unsigned int i = 0; i < nconverters; ++i)
@@ -116,7 +116,7 @@ double LCC_CONVERTER_STATION::get_no_load_dc_voltage_in_kV_with_solved_transform
     return Vdc0;
 }
 
-double LCC_CONVERTER_STATION::get_dc_voltage_drop_multiple_in_kV_per_A() const
+double LCC_STATION::get_dc_voltage_drop_multiple_in_kV_per_A() const
 {
     double Vdc_drop_mult = 0.0;
     for(unsigned int i = 0; i < nconverters; ++i)
@@ -124,7 +124,7 @@ double LCC_CONVERTER_STATION::get_dc_voltage_drop_multiple_in_kV_per_A() const
     return Vdc_drop_mult;
 }
 
-void LCC_CONVERTER_STATION::report() const
+void LCC_STATION::report() const
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
@@ -142,7 +142,7 @@ void LCC_CONVERTER_STATION::report() const
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-bool LCC_CONVERTER_STATION::is_connected_to_bus(unsigned int bus) const
+bool LCC_STATION::is_connected_to_bus(unsigned int bus) const
 {
     unsigned int n = get_number_of_converters();
     for(unsigned i = 0; i<n; ++i)
@@ -151,7 +151,7 @@ bool LCC_CONVERTER_STATION::is_connected_to_bus(unsigned int bus) const
     return false;
 }
 
-bool LCC_CONVERTER_STATION::is_in_area(unsigned int area) const
+bool LCC_STATION::is_in_area(unsigned int area) const
 {
     unsigned int n = get_number_of_converters();
     for(unsigned i = 0; i<n; ++i)
@@ -160,7 +160,7 @@ bool LCC_CONVERTER_STATION::is_in_area(unsigned int area) const
     return false;
 }
 
-bool LCC_CONVERTER_STATION::is_in_zone(unsigned int zone) const
+bool LCC_STATION::is_in_zone(unsigned int zone) const
 {
     unsigned int n = get_number_of_converters();
     for(unsigned i = 0; i<n; ++i)

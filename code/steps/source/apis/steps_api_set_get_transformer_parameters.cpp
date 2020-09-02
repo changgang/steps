@@ -238,13 +238,13 @@ double api_get_transformer_float_data(unsigned int ibus, unsigned int jbus, unsi
                 return transptr->get_winding_controlled_max_voltage_in_pu(winding);
             if(PARAMETER_NAME=="VMIN_PU" or PARAMETER_NAME=="CONTROLLED MIN V IN PU")
                 return transptr->get_winding_controlled_min_voltage_in_pu(winding);
-            if(PARAMETER_NAME=="QMAX_PU" or PARAMETER_NAME=="CONTROLLED MAX Q INTO WINDING IN MVAR ")
+            if(PARAMETER_NAME=="QMAX_MVAR" or PARAMETER_NAME=="CONTROLLED MAX Q INTO WINDING IN MVAR ")
                 return transptr->get_controlled_max_reactive_power_into_winding_in_MVar(winding);
-            if(PARAMETER_NAME=="QMIN_PU" or PARAMETER_NAME=="CONTROLLED MIN Q INTO WINDING IN MVAR")
+            if(PARAMETER_NAME=="QMIN_MVAR" or PARAMETER_NAME=="CONTROLLED MIN Q INTO WINDING IN MVAR")
                 return transptr->get_controlled_min_reactive_power_into_winding_in_MVar(winding);
-            if(PARAMETER_NAME=="PMAX_PU" or PARAMETER_NAME=="CONTROLLED MAX P INTO WINDING IN MW")
+            if(PARAMETER_NAME=="PMAX_MW" or PARAMETER_NAME=="CONTROLLED MAX P INTO WINDING IN MW")
                 return transptr->get_controlled_max_active_power_into_winding_in_MW(winding);
-            if(PARAMETER_NAME=="PMIN_PU" or PARAMETER_NAME=="CONTROLLED MIN P INTO WINDING IN MW")
+            if(PARAMETER_NAME=="PMIN_MW" or PARAMETER_NAME=="CONTROLLED MIN P INTO WINDING IN MW")
                 return transptr->get_controlled_min_active_power_into_winding_in_MW(winding);
             if(PARAMETER_NAME=="K_PU" or PARAMETER_NAME=="OFF NOMINAL TURN RATIO IN PU")
                 return transptr->get_winding_off_nominal_turn_ratio_in_pu(winding);
@@ -425,7 +425,7 @@ void api_set_transformer_float_data(unsigned int ibus, unsigned int jbus, unsign
             }
 
             if(PARAMETER_NAME=="TAP_MAX_PU" or PARAMETER_NAME=="MAX TURN RATIO BASED ON  NOMINAL V IN PU")
-                transptr->set_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding,value);
+                return transptr->set_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding,value);
             if(PARAMETER_NAME=="TAP_MIN_PU" or PARAMETER_NAME=="MIN TURN RATIO BASED ON  NOMINAL V IN PU")
                 return transptr->set_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding,value);
             if(PARAMETER_NAME=="ANGLE_MAX_DEG" or PARAMETER_NAME=="MAX ANGLE SHIFT IN DEG")
@@ -436,13 +436,13 @@ void api_set_transformer_float_data(unsigned int ibus, unsigned int jbus, unsign
                 return transptr->set_winding_controlled_max_voltage_in_pu(winding,value);
             if(PARAMETER_NAME=="VMIN_PU" or PARAMETER_NAME=="CONTROLLED MIN V IN PU")
                 return transptr->set_winding_controlled_min_voltage_in_pu(winding,value);
-            if(PARAMETER_NAME=="QMAX_PU" or PARAMETER_NAME=="CONTROLLED MAX Q INTO WINDING IN MVAR ")
+            if(PARAMETER_NAME=="QMAX_MVAR" or PARAMETER_NAME=="CONTROLLED MAX Q INTO WINDING IN MVAR ")
                 return transptr->set_controlled_max_reactive_power_into_winding_in_MVar(winding,value);
-            if(PARAMETER_NAME=="QMIN_PU" or PARAMETER_NAME=="CONTROLLED MIN Q INTO WINDING IN MVAR")
+            if(PARAMETER_NAME=="QMIN_MVAR" or PARAMETER_NAME=="CONTROLLED MIN Q INTO WINDING IN MVAR")
                 return transptr->set_controlled_min_reactive_power_into_winding_in_MVar(winding,value);
-            if(PARAMETER_NAME=="PMAX_PU" or PARAMETER_NAME=="CONTROLLED MAX P INTO WINDING IN MW")
+            if(PARAMETER_NAME=="PMAX_MW" or PARAMETER_NAME=="CONTROLLED MAX P INTO WINDING IN MW")
                 return transptr->set_controlled_max_active_power_into_winding_in_MW(winding,value);
-            if(PARAMETER_NAME=="PMIN_PU" or PARAMETER_NAME=="CONTROLLED MIN P INTO WINDING IN MW")
+            if(PARAMETER_NAME=="PMIN_MW" or PARAMETER_NAME=="CONTROLLED MIN P INTO WINDING IN MW")
                 return transptr->set_controlled_min_active_power_into_winding_in_MW(winding,value);
 
         }

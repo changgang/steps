@@ -491,7 +491,7 @@ unsigned int LCC_HVDC::get_converter_transformer_number_of_taps(CONVERTER_SIDE s
     else return 0;
 }
 
-const LCC_CONVERTER_STATION& LCC_HVDC::get_station(CONVERTER_SIDE side) const
+const LCC_STATION& LCC_HVDC::get_station(CONVERTER_SIDE side) const
 {
     return station[side];
 }
@@ -577,7 +577,7 @@ double LCC_HVDC::get_inverter_nominal_dc_voltage_command_in_kV() const
 
 void LCC_HVDC::reverse_converters()
 {
-    LCC_CONVERTER_STATION temp_station = station[RECTIFIER];
+    LCC_STATION temp_station = station[RECTIFIER];
     station[RECTIFIER] = station[INVERTER];
     station[INVERTER] = temp_station;
 }

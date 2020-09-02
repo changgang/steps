@@ -1,5 +1,5 @@
-#ifndef LCC_CONVERTER_STATION_H
-#define LCC_CONVERTER_STATION_H
+#ifndef LCC_STATION_H
+#define LCC_STATION_H
 
 #include "header/device/nonbus_device.h"
 #include "header/device/converter_station.h"
@@ -14,14 +14,14 @@ using namespace std;
 
 class BUS;
 
-class LCC_CONVERTER_STATION : public CONVERTER_STATION
+class LCC_STATION : public CONVERTER_STATION
 {
     public:
-        LCC_CONVERTER_STATION();
-        virtual ~LCC_CONVERTER_STATION();
+        LCC_STATION();
+        virtual ~LCC_STATION();
         void clear();
 
-        virtual LCC_CONVERTER_STATION& operator=(const LCC_CONVERTER_STATION& station);
+        virtual LCC_STATION& operator=(const LCC_STATION& station);
 
         void set_number_of_converters(unsigned int n);
         void set_converter(unsigned int converter_index, LCC& converter);

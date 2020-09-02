@@ -1,5 +1,5 @@
-#ifndef LCC_CONVERTER_STATION_TEST_H
-#define LCC_CONVERTER_STATION_TEST_H
+#ifndef LCC_STATION_TEST_H
+#define LCC_STATION_TEST_H
 
 #include <istream>
 #include <cstdlib>
@@ -12,16 +12,16 @@
 
 #include "cpptest.h"
 
-#include "header/device/lcc_converter_station.h"
+#include "header/device/lcc_station.h"
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
 
 using namespace std;
 
-class LCC_CONVERTER_STATION_TEST : public Test::Suite
+class LCC_STATION_TEST : public Test::Suite
 {
     public:
-        LCC_CONVERTER_STATION_TEST();
+        LCC_STATION_TEST();
     protected:
         virtual void setup();
         virtual void tear_down();
@@ -36,7 +36,7 @@ class LCC_CONVERTER_STATION_TEST : public Test::Suite
         void test_is_in_zone();
         void test_solve();
     private:
-        LCC_CONVERTER_STATION station;
+        LCC_STATION station;
 };
 
 #endif

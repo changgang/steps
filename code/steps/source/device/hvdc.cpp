@@ -915,6 +915,7 @@ void HVDC::clear()
     demand_power_in_MW = 0.0; demand_current_in_kA = 0.0; demand_voltage_in_kV = 0.0;
     mode_switching_voltage_in_kV = 0.0;
     set_meter_end(INVERTER);
+    set_side_to_hold_power(RECTIFIER);
 
     set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
     set_converter_operation_mode(INVERTER, INVERTER_CONSTANT_VOLTAGE);
@@ -938,8 +939,8 @@ void HVDC::clear()
     set_converter_transformer_max_tap_in_pu(INVERTER, 0.0);
     set_converter_transformer_min_tap_in_pu(RECTIFIER, 0.0);
     set_converter_transformer_min_tap_in_pu(INVERTER, 0.0);
-    set_converter_transformer_number_of_taps(RECTIFIER, 0);
-    set_converter_transformer_number_of_taps(INVERTER, 0);
+    set_converter_transformer_number_of_taps(RECTIFIER, 1);
+    set_converter_transformer_number_of_taps(INVERTER, 1);
 
     set_converter_alpha_or_gamma_in_deg(RECTIFIER, 0.0);
     set_converter_alpha_or_gamma_in_deg(INVERTER, 0.0);

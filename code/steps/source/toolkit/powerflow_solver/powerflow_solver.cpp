@@ -1686,19 +1686,24 @@ void POWERFLOW_SOLVER::update_PV_bus_source_power_of_physical_bus(unsigned int p
         double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
         double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
 
-        unsigned int n;
+        vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
+        unsigned int n = sources.size();
 
         double Q_loading_percentage = (bus_Q_mismatch_in_MVar-total_q_min_in_MVar);
-        Q_loading_percentage /= (total_q_max_in_MVar - total_q_min_in_MVar);
+        if(total_q_max_in_MVar != total_q_min_in_MVar)
+            Q_loading_percentage /= (total_q_max_in_MVar - total_q_min_in_MVar);
+        else
+            Q_loading_percentage = 1/n;
 
-        vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
-        n = sources.size();
         for(unsigned int i=0; i!=n; ++i)
         {
             if(sources[i]->get_status() == true)
             {
                 double Q_loading_in_MVar = sources[i]->get_q_max_in_MVar() - sources[i]->get_q_min_in_MVar();
-                Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + sources[i]->get_q_min_in_MVar();
+                if(total_q_max_in_MVar!=total_q_min_in_MVar)
+                    Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + sources[i]->get_q_min_in_MVar();
+                else
+                    Q_loading_in_MVar = bus_Q_mismatch_in_MVar*Q_loading_percentage;
                 sources[i]->set_q_generation_in_MVar(Q_loading_in_MVar);
             }
         }

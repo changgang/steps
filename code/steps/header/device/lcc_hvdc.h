@@ -2,7 +2,7 @@
 #define LCC_HVDC_H
 
 #include "header/device/nonbus_device.h"
-#include "header/device/lcc_converter_station.h"
+#include "header/device/lcc_station.h"
 #include "header/basic/device_id.h"
 #include "header/basic/steps_enum.h"
 #include "header/model/hvdc_model/hvdc_model.h"
@@ -97,7 +97,7 @@ class LCC_HVDC : public NONBUS_DEVICE
         double get_converter_transformer_min_tap_in_pu(CONVERTER_SIDE side, const unsigned int converter_index) const;
         unsigned int get_converter_transformer_number_of_taps(CONVERTER_SIDE side, const unsigned int converter_index) const;
 
-        const LCC_CONVERTER_STATION& get_station(CONVERTER_SIDE side) const;
+        const LCC_STATION& get_station(CONVERTER_SIDE side) const;
 
         void set_status(const bool status);
 
@@ -135,7 +135,7 @@ class LCC_HVDC : public NONBUS_DEVICE
         string get_converter_side_name(CONVERTER_SIDE side) const;
         double get_line_dc_current_in_kA() const;
     private:
-        LCC_CONVERTER_STATION station[2];
+        LCC_STATION station[2];
         LCC_HVDC_OPERATION_MODE mode;
 
         string name;
