@@ -438,6 +438,8 @@ bool CSEET2::setup_model_with_steps_string_vector(vector<string>& data)
     bool is_successful = false;
     if(data.size()>=24)
     {
+        ostringstream osstream;
+        STEPS& toolkit = get_toolkit();
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
@@ -487,6 +489,16 @@ bool CSEET2::setup_model_with_steps_string_vector(vector<string>& data)
                 t3 = get_double_data(data[i],"1.0"); i++;
                 t4 = get_double_data(data[i],"1.0"); i++;
 
+                if(t2==0.0)
+                {
+                    osstream<<"Error. T2 in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                if(t4==0.0)
+                {
+                    osstream<<"Error. T4 in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
                 set_serial_tuner_K(serial_k);
                 set_serial_tuner_KV(serial_kv);
                 set_serial_tuner_T1_in_s(t1);
@@ -507,6 +519,11 @@ bool CSEET2::setup_model_with_steps_string_vector(vector<string>& data)
                 vdmax = get_double_data(data[i],"999.0"); i++;
                 vdmin = get_double_data(data[i],"-999.0"); i++;
 
+                if(parallel_td==0.0)
+                {
+                    osstream<<"Error. Td in parallel mode in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
                 set_parallel_tuner_KP(parallel_kp);
                 set_parallel_tuner_KI(parallel_ki);
                 set_parallel_tuner_VImax_in_pu(vimax);
@@ -527,6 +544,11 @@ bool CSEET2::setup_model_with_steps_string_vector(vector<string>& data)
             vrmin = get_double_data(data[i],"0.0"); i++;
             kc = get_double_data(data[i],"0.0"); i++;
 
+            if(tf==0.0)
+            {
+                osstream<<"Error. Tf in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
             set_KA(ka);
             set_TA_in_s(ta);
             set_VAmax_in_pu(vamax);
@@ -575,6 +597,8 @@ void CSEET2::initialize()
     {
         GENERATOR* generator = get_generator_pointer();
         STEPS& toolkit = get_toolkit();
+        //osstream<<"now go initialize "<<get_model_name()<<" for "<<get_compound_device_name();
+        //toolkit.show_information_with_leading_time_stamp(osstream);
         SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
         if(gen_model!=NULL)
         {
@@ -648,6 +672,8 @@ void CSEET2::initialize()
                 }
                 else
                 {
+                    //osstream<<"serial tuner output :"<<output;
+                    //toolkit.show_information_with_leading_time_stamp(osstream);
                     serial_tuner1_pi.set_output(output);
                     serial_tuner1_pi.initialize();
                     output = serial_tuner1_pi.get_input();

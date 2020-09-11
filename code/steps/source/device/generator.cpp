@@ -53,6 +53,13 @@ void GENERATOR::clear()
     stabilizer_model = NULL;
     turbine_governor_model = NULL;
     turbine_load_controller_model = NULL;
+
+    sync_generator_model_disabled = false;
+    compensator_model_disabled = false;
+    exciter_model_disabled = false;
+    stabilizer_model_disabled = false;
+    turbine_governor_model_disabled = false;
+    turbine_load_controller_model_disabled = false;
 }
 
 DEVICE_ID GENERATOR::get_device_id() const
@@ -127,6 +134,77 @@ MODEL* GENERATOR::get_model_of_type(string model_type)
     return NULL;
 }
 
+void GENERATOR::disable_mode_of_type(string model_type)
+{
+    model_type = string2upper(model_type);
+    if(model_type=="SYNC GENERATOR")
+    {
+        sync_generator_model_disabled = true;
+        return;
+    }
+    if(model_type=="COMPENSATOR")
+    {
+        compensator_model_disabled = true;
+        return;
+    }
+    if(model_type=="EXCITER")
+    {
+        exciter_model_disabled = true;
+        return;
+    }
+    if(model_type=="STABILIZER")
+    {
+        stabilizer_model_disabled = true;
+        return;
+    }
+    if(model_type=="TURBINE GOVERNOR")
+    {
+        turbine_governor_model_disabled = true;
+        return;
+    }
+    if(model_type=="TURBINE LOAD CONTROLLER")
+    {
+        turbine_load_controller_model_disabled = true;
+        return;
+    }
+}
+
+
+void GENERATOR::enable_mode_of_type(string model_type)
+{
+    model_type = string2upper(model_type);
+    if(model_type=="SYNC GENERATOR")
+    {
+        sync_generator_model_disabled = false;
+        return;
+    }
+    if(model_type=="COMPENSATOR")
+    {
+        compensator_model_disabled = false;
+        return;
+    }
+    if(model_type=="EXCITER")
+    {
+        exciter_model_disabled = false;
+        return;
+    }
+    if(model_type=="STABILIZER")
+    {
+        stabilizer_model_disabled = false;
+        return;
+    }
+    if(model_type=="TURBINE GOVERNOR")
+    {
+        turbine_governor_model_disabled = false;
+        return;
+    }
+    if(model_type=="TURBINE LOAD CONTROLLER")
+    {
+        turbine_load_controller_model_disabled = false;
+        return;
+    }
+}
+
 void GENERATOR::set_sync_generator_model(SYNC_GENERATOR_MODEL* model)
 {
     if(model!=NULL)
@@ -165,32 +243,50 @@ void GENERATOR::set_turbine_load_controller_model(TURBINE_LOAD_CONTROLLER_MODEL*
 
 SYNC_GENERATOR_MODEL* GENERATOR::get_sync_generator_model() const
 {
-    return sync_generator_model;
+    if(not sync_generator_model_disabled)
+        return sync_generator_model;
+    else
+        return NULL;
 }
 
 COMPENSATOR_MODEL* GENERATOR::get_compensator_model() const
 {
-    return compensator_model;
+    if(not compensator_model_disabled)
+        return compensator_model;
+    else
+        return NULL;
 }
 
 EXCITER_MODEL* GENERATOR::get_exciter_model() const
 {
-    return exciter_model;
+    if(not exciter_model_disabled)
+        return exciter_model;
+    else
+        return NULL;
 }
 
 STABILIZER_MODEL* GENERATOR::get_stabilizer_model() const
 {
-    return stabilizer_model;
+    if(not stabilizer_model_disabled)
+        return stabilizer_model;
+    else
+        return NULL;
 }
 
 TURBINE_GOVERNOR_MODEL* GENERATOR::get_turbine_governor_model() const
 {
-    return turbine_governor_model;
+    if(not turbine_governor_model_disabled)
+        return turbine_governor_model;
+    else
+        return NULL;
 }
 
 TURBINE_LOAD_CONTROLLER_MODEL* GENERATOR::get_turbine_load_controller_model() const
 {
-    return turbine_load_controller_model;
+    if(not turbine_load_controller_model_disabled)
+        return turbine_load_controller_model;
+    else
+        return NULL;
 }
 
 void GENERATOR::run(DYNAMIC_MODE mode)

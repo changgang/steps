@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="stepspy",
-    version="1.1.0",
+    version="1.2.1",
     author="Changgang Li",
     author_email="lichgang@sdu.edu.cn",
     description="Python module of Simulation Toolkit for Electrical Power Systems",

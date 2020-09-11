@@ -23,6 +23,7 @@ STEPS is a simulation toolkit for powerflow and dynamic simulation of large-scal
 
 ## Realse Note
 
+- 1.2.1. Sep.  9, 2020. Add new API: set/get_encode(), disable/enable_generator_related_mode(). Default encoding is GB18030.
 - 1.1.0. Apr. 22, 2020. Add new API: get_(lines/transformers/hvdcs)_between_lines(), set_(generator/wt_generator/pv_unit/energy_storage/load/hvdc)_power(), and is_system_angular_stable().  STEPS kernel version should be >=1.3.
 - 1.0.0. Apr. 22, 2020. Add new API: clear_meters() to clear all meters for dynamic simulation. STEPS kernel version should be >=1.2.
 - 0.13.0-alpha. Mar.  9, 2020. Add new APIs: change_bus_number() and change_bus_number_with_file(). get_areas(), get_zones(), and get_owners() are marked as deprecated. STEPS kernel version should be >=1.1.1.

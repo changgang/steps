@@ -5,6 +5,10 @@ python/*.pyd
 python/*.xlsx
 python/*.txt
 python/*.tex
+python/*.log
+python/stepspy-current/build/
+python/stepspy-current/dist/
+python/stepspy-current/stepspy.egg-info
 code/*.layout
 doc/latex/
 
@@ -14,4 +18,4 @@ code/steps/header/device/nhvdc_test.h
 code/steps/header/device/vsc.h
 code/steps/source/device/lcc_hvdc_2t.cpp
 code/steps/source/device/vsc.cpp
-.gitignore
+

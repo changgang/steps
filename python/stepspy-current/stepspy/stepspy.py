@@ -18,6 +18,7 @@ class STEPS():
         STEPS initialization.
         """
         global STEPS_LIB
+        self.__encoding = "gb18030"
         if 'STEPS_LIB' not in globals():
             STEPS_LIB = pylibsteps.load_library()
         if is_default==True:
@@ -92,7 +93,7 @@ class STEPS():
         python_version = platform.python_version_tuple()
         python_version = python_version[0]
         if python_version == '3':
-            return c_char_p(bytes(data, 'utf-8'))
+            return c_char_p(bytes(data, self.__encoding))
         elif python_version == '2':
             return c_char_p(bytes(data))
         else:
@@ -109,12 +110,18 @@ class STEPS():
         python_version = platform.python_version_tuple()
         python_version = python_version[0]
         if python_version == '3':
-            return str(data, encoding='utf-8')
+            return str(data, encoding = self.__encoding)
         elif python_version == '2':
             return str(data)
         else:
             return None
-            
+    
+    def set_encode(self, encode):
+        self.__encoding = encode
+    
+    def get_encode(self):
+        return self.__encoding
+        
     def set_toolkit_log_file(self, log_file="", log_file_append_mode=False):
         """
         Set toolkit log file. The default mode is to write to new file.
@@ -3157,6 +3164,36 @@ class STEPS():
         STEPS_LIB.api_set_dynamic_model(data, file_type, self.toolkit_index)
         return
     
+    def disable_generator_related_model(self, generator, model_type):
+        """
+        Disable generator related model of specific type.
+        Args:
+            (1) generator: Generator device id in format of (bus, ickt).
+            (2) model_type: String of model type.
+        Rets: N/A
+        """
+        global STEPS_LIB
+        ibus, ickt = self.__extract_single_bus_device_id(generator)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        STEPS_LIB.api_disable_generator_related_model(ibus, ickt, model_type, self.toolkit_index)
+        return
+    
+    def enable_generator_related_model(self, generator, model_type):
+        """
+        Enable generator related model of specific type.
+        Args:
+            (1) generator: Generator device id in format of (bus, ickt).
+            (2) model_type: String of model type.
+        Rets: N/A
+        """
+        global STEPS_LIB
+        ibus, ickt = self.__extract_single_bus_device_id(generator)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        STEPS_LIB.api_enable_generator_related_model(ibus, ickt, model_type, self.toolkit_index)
+        return
+
     def get_generator_related_model_name(self, generator, model_type):
         """
         Get generator related model name.

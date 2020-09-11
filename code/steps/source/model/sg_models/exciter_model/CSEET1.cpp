@@ -667,6 +667,9 @@ bool CSEET1::setup_model_with_steps_string_vector(vector<string>& data)
     bool is_successful = false;
     if(data.size()>=35)
     {
+        ostringstream osstream;
+        STEPS& toolkit = get_toolkit();
+
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
@@ -722,6 +725,17 @@ bool CSEET1::setup_model_with_steps_string_vector(vector<string>& data)
                 t3 = get_double_data(data[i],"1.0"); i++;
                 t4 = get_double_data(data[i],"1.0"); i++;
 
+                if(t2==0.0)
+                {
+                    osstream<<"Error. T2 in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                if(t4==0.0)
+                {
+                    osstream<<"Error. T4 in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+
                 set_serial_tuner_K(serial_k);
                 set_serial_tuner_KV(serial_kv);
                 set_serial_tuner_T1_in_s(t1);
@@ -742,6 +756,11 @@ bool CSEET1::setup_model_with_steps_string_vector(vector<string>& data)
                 vdmax = get_double_data(data[i],"999.0"); i++;
                 vdmin = get_double_data(data[i],"-999.0"); i++;
 
+                if(parallel_td==0.0)
+                {
+                    osstream<<"Error. Td in parallel mode in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
                 set_parallel_tuner_KP(parallel_kp);
                 set_parallel_tuner_KI(parallel_ki);
                 set_parallel_tuner_VImax_in_pu(vimax);
@@ -772,6 +791,21 @@ bool CSEET1::setup_model_with_steps_string_vector(vector<string>& data)
             kd = get_double_data(data[i],"0.0"); i++;
             efdmax = get_double_data(data[i],"0.0"); i++;
 
+            if(tf==0.0)
+            {
+                osstream<<"Error. Tf in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            if(t5==0.0)
+            {
+                osstream<<"Error. T5 in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            if(te==0.0)
+            {
+                osstream<<"Error. Te in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
             set_KA(ka);
             set_TA_in_s(ta);
             set_VAmax_in_pu(vamax);

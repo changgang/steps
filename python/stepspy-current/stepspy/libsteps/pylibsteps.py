@@ -2,8 +2,8 @@ from ctypes import *
 import platform
 import os
 
-libsteps_version = "0.12.0"
-libsteps_date = "2020/4/22"
+libsteps_version = "0.13.0"
+libsteps_date = "2020/09/09"
 
 def get_base_library():
     dirname, filename = os.path.split(os.path.abspath(__file__))
@@ -446,6 +446,11 @@ def load_library():
 
     libsteps.api_set_dynamic_model.restype = None
     libsteps.api_set_dynamic_model.argtypes = (c_char_p, c_char_p, c_uint)
+    
+    libsteps.api_disable_generator_related_model.restype = None
+    libsteps.api_disable_generator_related_model.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
+    libsteps.api_enable_generator_related_model.restype = None
+    libsteps.api_enable_generator_related_model.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
     
     libsteps.api_get_generator_related_model_name.restype = c_char_p
     libsteps.api_get_generator_related_model_name.argtypes = (c_uint, c_char_p, c_char_p, c_uint)

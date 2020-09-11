@@ -245,6 +245,9 @@ bool PSASPS2::setup_model_with_steps_string_vector(vector<string>& data)
     bool is_successful = false;
     if(data.size()>=17)
     {
+        ostringstream osstream;
+        STEPS& toolkit = get_toolkit();
+
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
@@ -265,6 +268,17 @@ bool PSASPS2::setup_model_with_steps_string_vector(vector<string>& data)
             t6 = get_double_data(data[i],"0.0"); i++;
             vsmax = get_double_data(data[i],"0.0"); i++;
             vsmin = get_double_data(data[i],"0.0"); i++;
+
+            if(tw1==0.0)
+            {
+                osstream<<"Error. Tw1 in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            if(tw2==0.0)
+            {
+                osstream<<"Error. Tw2 in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
 
             set_Kw(kw);
             set_Kp(kp);

@@ -378,6 +378,8 @@ bool PSASPS4::setup_model_with_steps_string_vector(vector<string>& data)
     bool is_successful = false;
     if(data.size()>=26)
     {
+        ostringstream osstream;
+        STEPS& toolkit = get_toolkit();
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
@@ -409,6 +411,61 @@ bool PSASPS4::setup_model_with_steps_string_vector(vector<string>& data)
             vsmax = get_double_data(data[i],"0.0"); i++;
             vsmin = get_double_data(data[i],"0.0"); i++;
 
+            if(trw==0.0)
+            {
+                osstream<<"Error. Trw in "<<get_model_name()<<" is zero for "<<get_compound_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            if(t6==0.0)
+            {
+                osstream<<"Error. T6 in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            if(t7==0.0)
+            {
+                osstream<<"Error. T7 in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            if(trp==0.0)
+            {
+                osstream<<"Error. Trp in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            if(tw1==0.0)
+            {
+                osstream<<"Error. Tw1 in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            if(tw2==0.0)
+            {
+                osstream<<"Error. Tw2 in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            if(t10==0.0)
+            {
+                osstream<<"Error. T10 in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            if(t12==0.0)
+            {
+                osstream<<"Error. T12 in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            if(t2==0.0)
+            {
+                osstream<<"Error. T2 in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            if(t14==0.0)
+            {
+                osstream<<"Error. T14 in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            if(t4==0.0)
+            {
+                osstream<<"Error. T4 in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
             set_Kw(kw);
             set_Trw_in_s(trw);
             set_T5_in_s(t5);

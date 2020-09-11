@@ -32,6 +32,8 @@ class GENERATOR : public SOURCE
 
         virtual void set_model(const MODEL* model);
         virtual MODEL* get_model_of_type(string model_type);
+        void disable_mode_of_type(string model_type);
+        void enable_mode_of_type(string model_type);
 
         void set_sync_generator_model(SYNC_GENERATOR_MODEL* model);
         void set_compensator_model(COMPENSATOR_MODEL* model);
@@ -39,6 +41,7 @@ class GENERATOR : public SOURCE
         void set_stabilizer_model(STABILIZER_MODEL* model);
         void set_turbine_governor_model(TURBINE_GOVERNOR_MODEL* model);
         void set_turbine_load_controller_model(TURBINE_LOAD_CONTROLLER_MODEL* model);
+
 
         SYNC_GENERATOR_MODEL* get_sync_generator_model() const;
         COMPENSATOR_MODEL* get_compensator_model() const;
@@ -63,5 +66,8 @@ class GENERATOR : public SOURCE
         STABILIZER_MODEL* stabilizer_model;
         TURBINE_GOVERNOR_MODEL* turbine_governor_model;
         TURBINE_LOAD_CONTROLLER_MODEL* turbine_load_controller_model;
+
+        bool sync_generator_model_disabled, compensator_model_disabled, exciter_model_disabled,
+             stabilizer_model_disabled, turbine_governor_model_disabled, turbine_load_controller_model_disabled;
 };
 #endif // GENERATOR_H

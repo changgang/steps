@@ -240,6 +240,8 @@ EXPORT_STEPS_DLL bool api_get_owner_boolean_data(unsigned int owner, char* param
 EXPORT_STEPS_DLL void api_set_owner_boolean_data(unsigned int owner, char* parameter_name, bool value, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void api_set_dynamic_model(char* model_string, char* file_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_disable_generator_related_model(unsigned int bus, char* identifier, char* model_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_enable_generator_related_model(unsigned int bus, char* identifier, char* model_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL const char* api_get_generator_related_model_name(unsigned int bus, char* identifier, char* model_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_generator_related_model_float_parameter(unsigned int bus, char* identifier, char* model_type, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);

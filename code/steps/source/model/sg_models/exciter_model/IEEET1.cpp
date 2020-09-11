@@ -210,6 +210,8 @@ bool IEEET1::setup_model_with_steps_string_vector(vector<string>& data)
     bool is_successful = false;
     if(data.size()>=17)
     {
+        ostringstream osstream;
+        STEPS& toolkit = get_toolkit();
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
@@ -231,6 +233,11 @@ bool IEEET1::setup_model_with_steps_string_vector(vector<string>& data)
             e2 = get_double_data(data[i],"0.0"); i++;
             se2 = get_double_data(data[i],"0.0");
 
+            if(tf==0.0)
+            {
+                osstream<<"Error. Tf in "<<get_model_name()<<" is zero for"<<get_compound_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
             set_TR_in_s(tr);
             set_KA(ka);
             set_TA_in_s(ta);

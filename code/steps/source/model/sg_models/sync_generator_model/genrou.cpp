@@ -156,6 +156,8 @@ bool GENROU::setup_model_with_bpa_string(string data)
 void GENROU::initialize()
 {
     ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+
     setup_block_toolkit_and_parameters();
 
     update_source_impedance();
@@ -234,6 +236,11 @@ void GENROU::initialize()
     // excitation voltage
     double efd0 = sdp+Idq.real()*(xd-xdp)+Flux_dq.real()*delta_XadIfd/Flux;
     set_initial_excitation_voltage_in_pu(efd0);
+    if(efd0>5.0)
+    {
+        osstream<<"Warning. Initial EFD is "<<efd0<<" for "<<get_model_name()<<" model of "<<get_compound_device_name();
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
 
     // q axis
     double xqp = get_Xqp();
