@@ -1,15 +1,18 @@
 # Simulation Toolkit for Electrical Power Systems
 - Maintainer: Changgang Li <lichgang@sdu.edu.cn> from School of Electrical Engineering, Shandong University.
 - Documentation: [N/A]
-- Date of Readme: March. 29, 2020
+- Date of Readme: Sep. 13, 2020
 
 ## Major functions
 Simulation Toolkit for Electrical Power Systems (STEPS) is an open source power system simulator designed for balanced large-scale AC-DC hybrid power system analysis.  
 Currently, it supports powerflow solution and dynamic simulation. In the future, short circuit analysis and eigenvalue analysis will be supported with no timetable.  
-The data format of STEPS is improved based on PSS/E raw and dyr data format. BPA dat format is also supported.  
+The data format of STEPS is improved based on PSS/E raw and dyr data format. 
+Though BPA dat format is supported, it will be supported in the future version in stepspy and BPA data importer will be removed.[Sep. 13, 2020]
 You are encourage to join us for further development.
 
 ## Major versions
+- v1.3.1: Fix minor bug in IEEEG1 when T1 or T2 is non-zero. Released on Sep. 13, 2020. 
+- v1.3: Fix minor bug in building Z matrix. Released on April 22, 2020. This version is available for better compatibility.
 - v1.1: Improved performance version on March 8, 2020. About 20~30% improvement comparing to v1.0.
 - v1.0: Improved performance version on Feb. 12, 2020. Support synchronous generator, wind turbine generator, (basic) PV unit, HVDC, static and dynamic loads.
 - v0.0: Initialize project on March 21, 2018
