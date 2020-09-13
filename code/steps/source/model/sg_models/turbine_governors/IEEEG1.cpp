@@ -106,12 +106,12 @@ void IEEEG1::set_K(double K)
 
 void IEEEG1::set_T1_in_s(double T)
 {
-    droop.set_T1_in_s(T);
+    droop.set_T2_in_s(T);
 }
 
 void IEEEG1::set_T2_in_s(double T)
 {
-    droop.set_T2_in_s(T);
+    droop.set_T1_in_s(T);
 }
 
 void IEEEG1::set_T3_in_s(double T)
@@ -207,12 +207,12 @@ double IEEEG1::get_K() const
 
 double IEEEG1::get_T1_in_s() const
 {
-    return droop.get_T1_in_s();
+    return droop.get_T2_in_s();
 }
 
 double IEEEG1::get_T2_in_s() const
 {
-    return droop.get_T2_in_s();
+    return droop.get_T1_in_s();
 }
 
 double IEEEG1::get_T3_in_s() const

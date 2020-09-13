@@ -915,10 +915,10 @@ string CSEET2::get_standard_psse_string() const
 
     if(get_tuner_type()==SERIAL_TUNER)
     {
+        double K = get_serial_tuner_K();
         bool KV = get_serial_tuner_KV();
         unsigned int selector = 0;
         if(KV) selector = 1;
-        double K = get_serial_tuner_K();
         double T1 = get_serial_tuner_T1_in_s();
         double T2 = get_serial_tuner_T2_in_s();
         double VA1max = get_serial_tuner_VA1max_in_pu();

@@ -1310,10 +1310,10 @@ string CSEET1::get_standard_psse_string() const
 
     if(get_tuner_type()==SERIAL_TUNER)
     {
+        tuner_K = get_serial_tuner_K();
         tuner_KV = get_serial_tuner_KV();
         tuner_selector = 0;
         if(tuner_KV) tuner_selector = 1;
-        tuner_K = get_serial_tuner_K();
         tuner_T1 = get_serial_tuner_T1_in_s();
         tuner_T2 = get_serial_tuner_T2_in_s();
         tuner_VA1max = get_serial_tuner_VA1max_in_pu();

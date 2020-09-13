@@ -10,8 +10,7 @@ using namespace std;
 
 /***
 It should be noted that, the first De-DC block of Pelec is a FIRST_ORDER_BLOCK in manual of PSASP V7.3, July 2017.
-However, it is modeled as a DIFFERENTIAL_BLOCK in STEPS.
-Further check is necessary.
+It was modeled as a DIFFERENTIAL_BLOCK in STEPS before, and is now modeled as FIRST_ORDER_BLOCK.
 ***/
 PSASPS4::PSASPS4(STEPS& toolkit) : STABILIZER_MODEL(toolkit),
                                    speed_sensor(toolkit),
