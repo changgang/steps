@@ -1409,8 +1409,44 @@ void CSEET1::prepare_model_data_table()
 double CSEET1::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return 0.0;
+    if(par_name=="KA")
+        return get_KA();
+    if(par_name=="TA")
+        return get_TA_in_s();
+    if(par_name=="VAMAX")
+        return get_VAmax_in_pu();
+    if(par_name=="VAMIN")
+        return get_VAmin_in_pu();
+    if(par_name=="KH")
+        return get_KH();
+    if(par_name=="KF")
+        return get_KF();
+    if(par_name=="TF")
+        return get_TF_in_s();
+    if(par_name=="KB")
+        return get_KB();
+    if(par_name=="T5")
+        return get_T5_in_s();
+    if(par_name=="VRMAX")
+        return get_VRmax_in_pu();
+    if(par_name=="VRMIN")
+        return get_VRmin_in_pu();
+    if(par_name=="KE")
+        return get_KE();
+    if(par_name=="TE")
+        return get_TE_in_s();
+    if(par_name=="VEMAX")
+        return get_Vemax_in_pu();
+    if(par_name=="SE75")
+        return get_SE75_in_pu();
+    if(par_name=="SE100")
+        return get_SE100_in_pu();
+    if(par_name=="KC")
+        return get_KC();
+    if(par_name=="KD")
+        return get_KD();
+    if(par_name=="EFDMAX")
+        return get_Efdmax_in_pu();
 
     return 0.0;
 }
@@ -1418,8 +1454,44 @@ double CSEET1::get_model_data_with_name(string par_name) const
 void CSEET1::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return;
+    if(par_name=="KA")
+        return set_KA(value);
+    if(par_name=="TA")
+        return set_TA_in_s(value);
+    if(par_name=="VAMAX")
+        return set_VAmax_in_pu(value);
+    if(par_name=="VAMIN")
+        return set_VAmin_in_pu(value);
+    if(par_name=="KH")
+        return set_KH(value);
+    if(par_name=="KF")
+        return set_KF(value);
+    if(par_name=="TF")
+        return set_TF_in_s(value);
+    if(par_name=="KB")
+        return set_KB(value);
+    if(par_name=="T5")
+        return set_T5_in_s(value);
+    if(par_name=="VRMAX")
+        return set_VRmax_in_pu(value);
+    if(par_name=="VRMIN")
+        return set_VRmin_in_pu(value);
+    if(par_name=="KE")
+        return set_KE(value);
+    if(par_name=="TE")
+        return set_TE_in_s(value);
+    if(par_name=="VEMAX")
+        return set_Vemax_in_pu(value);
+    if(par_name=="SE75")
+        return set_SE75_in_pu(value);
+    if(par_name=="SE100")
+        return set_SE100_in_pu(value);
+    if(par_name=="KC")
+        return set_KC(value);
+    if(par_name=="KD")
+        return set_KD(value);
+    if(par_name=="EFDMAX")
+        return set_Efdmax_in_pu(value);
 
     return;
 }
