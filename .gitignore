@@ -3,7 +3,6 @@ bench_bak/
 python/*.pyc
 python/*.pyd
 python/*.xlsx
-python/*.txt
 python/*.tex
 python/*.log
 python/stepspy-current/build/
