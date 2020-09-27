@@ -466,6 +466,11 @@ void PSASPE13::check()
         osstream<<"VImax<=VImin was detected: VImax="<<vimax<<", VImin="<<vimin<<"\n";
         error_found = true;
     }
+    if(vimax<=0.0)
+    {
+        osstream<<"VImax<=0.0 was detected: VImax="<<vimax<<"\n";
+        error_found = true;
+    }
     double vrmax = get_VRmax_in_pu();
     double vrmin = get_VRmin_in_pu();
     if(vrmax<=vrmin)
@@ -473,11 +478,21 @@ void PSASPE13::check()
         osstream<<"VRmax<=VRmin was detected: VRmax="<<vrmax<<", VRmin="<<vrmin<<"\n";
         error_found = true;
     }
+    if(vrmax<=0.0)
+    {
+        osstream<<"VRmax<=0.0 was detected: VRmax="<<vrmax<<"\n";
+        error_found = true;
+    }
     double efdmax = get_Efdmax_in_pu();
     double efdmin = get_Efdmin_in_pu();
     if(efdmax<=efdmin)
     {
         osstream<<"Efdmax<=Efdmin was detected: Efdmax="<<efdmax<<", Efdmin="<<efdmin<<"\n";
+        error_found = true;
+    }
+    if(efdmax<=0.0)
+    {
+        osstream<<"Efdmax<=0.0 was detected: Efdmax="<<efdmax<<"\n";
         error_found = true;
     }
     if(error_found)

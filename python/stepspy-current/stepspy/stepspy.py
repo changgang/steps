@@ -3150,6 +3150,12 @@ class STEPS():
             return STEPS_LIB.api_set_owner_string_data(owner, par_name, value, self.toolkit_index)
         return
 
+    def converte_hvdc_to_load(self, hvdc):
+        """
+        to be implemented
+        """
+        pass
+        
     def set_dynamic_model(self, data, file_type):
         """
         Set dynamic model from string.
@@ -3691,6 +3697,124 @@ class STEPS():
             par_name = self.__get_string_from_c_char_p(par_name)
             parameters.append((par_name, par_value))
         return tuple(parameters)
+        
+    def get_generator_governor_pmax(self, gen):
+        """
+        Get generator pmax in MW from turbine governor model.
+        Args:
+            (1) gen: generator id in format of (ibus, ickt)
+        Rets:
+            (1) Pmax in MW
+        """
+        gov_name = self.get_generator_related_model_name(gen, "gov")
+        if gov_name is None:
+            pgen = self.get_generator_data(gen, "d", "PGEN_MW")
+            return pgen
+        else:
+            mbase = self.get_generator_data(gen, "d", "MBASE_MVA")
+            pmax = self.get_generator_related_model_data(gen, "gov", "pmax")
+            return pmax*mbase
+        
+    def get_generator_governor_pmin(self, gen):
+        """
+        Get generator pmin in MW from turbine governor model.
+        Args:
+            (1) gen: generator id in format of (ibus, ickt)
+        Rets:
+            (1) Pmin in MW
+        """
+        gov_name = self.get_generator_related_model_name(gen, "gov")
+        if gov_name is None:
+            pgen = self.get_generator_data(gen, "d", "PGEN_MW")
+            return pgen
+        else:
+            mbase = self.get_generator_data(gen, "d", "MBASE_MVA")
+            pmin = self.get_generator_related_model_data(gen, "gov", "pmin")
+            return pmin*mbase
+        
+    def get_generator_governor_up_spinning_reserve(self, gen):
+        """
+        Get up spinning reserve of generator.
+        Args:
+            (1) gen: generator id in format of (ibus, ickt)
+        Rets:
+            (1) up spinning reserve in MW
+        """
+        pgen = self.get_generator_data(gen, "d", "PGEN_MW")
+        pmax = self.get_generator_governor_pmax(gen)
+        return pmax - pgen
+        
+    def get_generator_governor_down_spinning_reserve(self, gen):
+        """
+        Get down spinning reserve of generator.
+        Args:
+            (1) gen: generator id in format of (ibus, ickt)
+        Rets:
+            (1) down spinning reserve in MW
+        """
+        pgen = self.get_generator_data(gen, "d", "PGEN_MW")
+        pmin = self.get_generator_governor_pmin(gen)
+        return pgen - pmin
+
+    def get_generator_governor_total_up_spinning_reserve_with_constraints(self, area=0,zone=0):
+        """
+        Get up spinning reserve of generators in area.
+        Args:
+            (1) area: area number, default is 0
+            (2) zone: zone number, default is 0
+        Rets:
+            (1) total up spinning reserve in MW
+        """
+        pup = 0.0
+        gens = self.get_generators_with_constraints(area=area,zone=zone)
+        for gen in gens:
+            pup += self.get_generator_governor_up_spinning_reserve(gen)
+        return pup
+
+    def get_generator_governor_total_down_spinning_reserve_with_constraints(self, area=0,zone=0):
+        """
+        Get down spinning reserve of generators in area.
+        Args:
+            (1) area: area number, default is 0
+            (2) zone: zone number, default is 0
+        Rets:
+            (1) total down spinning reserve in MW
+        """
+        pdown = 0.0
+        gens = self.get_generators_with_constraints(area=area,zone=zone)
+        for gen in gens:
+            pdown += self.get_generator_governor_down_spinning_reserve(gen)
+        return pdown
+
+    def get_generator_governor_total_pmax_with_constraints(self, area=0,zone=0):
+        """
+        Get total pmax of generators in area and zone.
+        Args:
+            (1) area: area number, default is 0
+            (2) zone: zone number, default is 0
+        Rets:
+            (1) total pmax in MW
+        """
+        pmax = 0.0
+        gens = self.get_generators_with_constraints(area=area,zone=zone)
+        for gen in gens:
+            pmax += self.get_generator_governor_pmax(gen)
+        return pmax
+
+    def get_generator_governor_total_pmin_with_constraints(self, area=0,zone=0):
+        """
+        Get total pmin of generators in area and zone.
+        Args:
+            (1) area: area number, default is 0
+            (2) zone: zone number, default is 0
+        Rets:
+            (1) total pmin in MW
+        """
+        pmin = 0.0
+        gens = self.get_generators_with_constraints(area=area,zone=zone)
+        for gen in gens:
+            pmin += self.get_generator_governor_pmin(gen)
+        return pmin
         
     def get_powerflow_solver_parameter(self, par_type, par_name):
         """

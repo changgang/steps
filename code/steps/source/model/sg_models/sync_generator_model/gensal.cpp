@@ -419,6 +419,7 @@ void GENSAL::check()
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
+    double xd = get_Xd();
     double xq = get_Xq();
     double xdp = get_Xdp();
     double xpp = get_Xpp();
@@ -462,6 +463,28 @@ void GENSAL::check()
         osstream<<"Td0'<=Td0\" was detected: Td0'="<<td0p<<", Td0\"="<<td0pp<<"\n";
         error_found = true;
     }
+    /*
+    if(xd<xdp*2)
+    {
+        osstream<<"Xd<2Xd\' was detected: Xd="<<xd<<", Xd\'="<<xdp<<"\n";
+        error_found = true;
+    }
+    if(xdp<xpp*2)
+    {
+        osstream<<"Xd\'<2Xd\" was detected: Xd\'="<<xdp<<", X\"="<<xpp<<"\n";
+        error_found = true;
+    }
+    if(xq<xpp*2)
+    {
+        osstream<<"Xq<2X\" was detected: Xq="<<xq<<", X\"="<<xpp<<"\n";
+        error_found = true;
+    }
+    if(xpp<xl*1.5)
+    {
+        osstream<<"X\"<1.5Xl was detected: X\"="<<xpp<<", Xl="<<xl<<"\n";
+        error_found = true;
+    }
+    */
     if(error_found)
         toolkit.show_information_with_leading_time_stamp(osstream);
 }

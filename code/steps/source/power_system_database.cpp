@@ -6,6 +6,7 @@
 #include "thirdparty/rapidjson/document.h"
 #include "thirdparty/rapidjson/prettywriter.h"
 #include "thirdparty/rapidjson/stringbuffer.h"
+#include "header/data_imexporter/psse_imexporter.h"
 #include <istream>
 #include <iostream>
 #include <fstream>
@@ -4496,8 +4497,12 @@ void POWER_SYSTEM_DATABASE::check_missing_generator_related_model()
         SYNC_GENERATOR_MODEL* genmodel = generator->get_sync_generator_model();
         if(genmodel==NULL)
         {
-            osstream<<generator->get_compound_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
+            osstream<<generator->get_compound_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]\n"
+                    <<"Use default GENCLS model with H=1.0, D=0.0";
             model_missing_detected = true;
+            string model_string = num2str(generator->get_generator_bus())+", GENCLS, "+generator->get_identifier()+", 1.0, 0.0/";
+            PSSE_IMEXPORTER importer(*toolkit);
+            importer.load_one_model(model_string);
         }
     }
     if(model_missing_detected==true)

@@ -820,6 +820,41 @@ void CSEET2::check()
             osstream<<"Parallel tuner TD=0 was detected\n";
             error_found = true;
         }
+        double vimax = get_parallel_tuner_VImax_in_pu();
+        double vimin = get_parallel_tuner_VImin_in_pu();
+        if(vimax<=0.0)
+        {
+            osstream<<"VImax<=0.0 was detected for parallel tuner: VImax="<<vimax<<"\n";
+            error_found = true;
+        }
+        if(vimin>=0.0)
+        {
+            osstream<<"VImin>=0.0 was detected for parallel tuner: VImin="<<vimin<<"\n";
+            error_found = true;
+        }
+        if(vimax<=vimin)
+        {
+            osstream<<"VImax<=VImin was detected for parallel tuner: VImax="<<vimax<<", VImin="<<vimin<<"\n";
+            error_found = true;
+        }
+
+        double vdmax = get_parallel_tuner_VDmax_in_pu();
+        double vdmin = get_parallel_tuner_VDmin_in_pu();
+        if(vdmax<=0.0)
+        {
+            osstream<<"VDmax<=0.0 was detected for parallel tuner: VDmax="<<vdmax<<"\n";
+            error_found = true;
+        }
+        if(vdmin>=0.0)
+        {
+            osstream<<"VDmin>=0.0 was detected for parallel tuner: VDmin="<<vdmin<<"\n";
+            error_found = true;
+        }
+        if(vdmax<=vdmin)
+        {
+            osstream<<"VDmax<=VDmin was detected for parallel tuner: VDmax="<<vdmax<<", VDmin="<<vdmin<<"\n";
+            error_found = true;
+        }
     }
     if(get_TA_in_s()==0.0)
     {
@@ -838,11 +873,21 @@ void CSEET2::check()
         osstream<<"VAmax<=VAmin was detected: VAmax="<<vamax<<", VAmin="<<vamin<<"\n";
         error_found = true;
     }
+    if(vamax<=0.0)
+    {
+        osstream<<"VAmax<=0.0 was detected: VAmax="<<vamax<<"\n";
+        error_found = true;
+    }
     double vrmax = get_VRmax_in_pu();
     double vrmin = get_VRmin_in_pu();
     if(vrmax<=vrmin)
     {
         osstream<<"VRmax<=VRmin was detected: VRmax="<<vrmax<<", VRmin="<<vrmin<<"\n";
+        error_found = true;
+    }
+    if(vrmax<=0.0)
+    {
+        osstream<<"VRmax<=0.0 was detected: VRmax="<<vrmax<<"\n";
         error_found = true;
     }
     if(error_found)

@@ -2008,6 +2008,14 @@ void DYNAMICS_SIMULATOR::start()
 		++iter_count;
 		//osstream<<"Network iteration "<<iter_count;
 		//toolkit->show_information_with_leading_time_stamp(osstream);
+
+        if(detailed_log_enabled)
+        {
+            POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+            ostringstream osstream;
+            osstream<<"Initialization iteration "<<iter_count<<":";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+        }
         converged = solve_network();
         ITER_NET += network_iteration_count;
         if(converged or iter_count>200)
@@ -3353,6 +3361,14 @@ GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_current_misma
     GREATEST_POWER_CURRENT_MISMATCH_STRUCT i_mismatch;
     i_mismatch.greatest_current_mismatch_in_pu = Imax;
     i_mismatch.bus_with_greatest_current_mismatch = Imax_bus;
+
+    if(toolkit->is_detailed_log_enabled())
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        ostringstream osstream;
+        osstream<<"Maximum current mismatch at bus "<<Imax_bus<<"("<<psdb.bus_number2bus_name(Imax_bus)<<"): "<<Imax;
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
 
     return i_mismatch;
 }

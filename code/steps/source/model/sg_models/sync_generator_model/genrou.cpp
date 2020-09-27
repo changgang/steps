@@ -562,6 +562,33 @@ void GENROU::check()
         osstream<<"Tq0'<=Tq0\" was detected: Tq0'="<<tq0p<<", Tq0\"="<<tq0pp<<"\n";
         error_found = true;
     }
+    /*
+    if(xd<xdp*2)
+    {
+        osstream<<"Xd<2Xd\' was detected: Xd="<<xd<<", Xd\'="<<xdp<<"\n";
+        error_found = true;
+    }
+    if(xdp<xpp*2)
+    {
+        osstream<<"Xd\'<2Xd\" was detected: Xd\'="<<xdp<<", X\"="<<xpp<<"\n";
+        error_found = true;
+    }
+    if(xq<xqp*2)
+    {
+        osstream<<"Xq<2Xq\' was detected: Xq="<<xq<<", Xq\'="<<xqp<<"\n";
+        error_found = true;
+    }
+    if(xqp<xpp*2)
+    {
+        osstream<<"Xq\'<2Xd\" was detected: Xq\'="<<xqp<<", X\"="<<xpp<<"\n";
+        error_found = true;
+    }
+    if(xpp<xl*1.5)
+    {
+        osstream<<"X\"<1.5Xl was detected: X\"="<<xpp<<", Xl="<<xl<<"\n";
+        error_found = true;
+    }
+    */
     if(error_found)
         toolkit.show_information_with_leading_time_stamp(osstream);
 }

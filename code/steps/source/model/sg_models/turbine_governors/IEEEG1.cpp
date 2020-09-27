@@ -481,7 +481,41 @@ double IEEEG1::get_mechanical_power_lower_limit_in_pu_based_on_mbase() const
 
 void IEEEG1::check()
 {
-    ;
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    double pmax = get_Pmax_in_pu();
+    double pmin = get_Pmin_in_pu();
+    double uo = get_Uo_in_pu();
+    double uc = get_Uc_in_pu();
+    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_compound_device_name()<<".\n";
+    bool error_found = false;
+    if(pmax<=0.0)
+    {
+        osstream<<"Pmax<=0.0 was detected: Pmax="<<pmax<<"\n";
+        error_found = true;
+    }
+    if(pmax<=pmin)
+    {
+        osstream<<"Pmax<=Pmin was detected: Pmax="<<pmax<<", Pmin="<<pmin<<"\n";
+        error_found = true;
+    }
+    if(uo<=0.0)
+    {
+        osstream<<"Uo<=0.0 was detected: Uo="<<uo<<"\n";
+        error_found = true;
+    }
+    if(uc>=0.0)
+    {
+        osstream<<"Uc>=0.0 was detected: Uc>="<<uc<<"\n";
+        error_found = true;
+    }
+    if(uo<=uc)
+    {
+        osstream<<"Uo<=Uc was detected: Uo="<<uo<<", Uc="<<Uc<<"\n";
+        error_found = true;
+    }
+    if(error_found)
+        toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void IEEEG1::report()

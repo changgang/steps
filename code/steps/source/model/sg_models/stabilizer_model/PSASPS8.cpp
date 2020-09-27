@@ -343,6 +343,16 @@ void PSASPS8::check()
         osstream<<"Vsmax<=Vsmin was detected: Vsmax="<<vsmax<<", Vsmin="<<vsmin<<"\n";
         error_found = true;
     }
+    if(vsmax<=0.0)
+    {
+        osstream<<"Vsmax<=0.0 was detected: Vsmax="<<vsmax<<"\n";
+        error_found = true;
+    }
+    if(vsmin>=0.0)
+    {
+        osstream<<"Vsmin>=0.0 was detected: Vsmin="<<vsmin<<"\n";
+        error_found = true;
+    }
     if(error_found)
         toolkit.show_information_with_leading_time_stamp(osstream);
 }

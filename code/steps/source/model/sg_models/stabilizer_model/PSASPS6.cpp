@@ -529,6 +529,16 @@ void PSASPS6::check()
         osstream<<"Vsmax<=Vsmin was detected: Vsmax="<<vsmax<<", Vsmin="<<vsmin<<"\n";
         error_found = true;
     }
+    if(vsmax<=0.0)
+    {
+        osstream<<"Vsmax<=0.0 was detected: Vsmax="<<vsmax<<"\n";
+        error_found = true;
+    }
+    if(vsmin>=0.0)
+    {
+        osstream<<"Vsmin>=0.0 was detected: Vsmin="<<vsmin<<"\n";
+        error_found = true;
+    }
     if(get_Trw_in_s()==0.0)
     {
         osstream<<"Trw=0.0 was detected\n";
