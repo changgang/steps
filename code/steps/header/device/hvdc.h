@@ -111,7 +111,7 @@ class HVDC : public NONBUS_DEVICE
         virtual void report() const;
         virtual void save() const;
 
-        virtual void set_model(const MODEL* model);
+        virtual void set_model(MODEL* model);
         virtual MODEL* get_model_of_type(string model_type);
 
         void set_hvdc_model(HVDC_MODEL* model);

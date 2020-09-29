@@ -62,7 +62,7 @@ class SOURCE : public NONBUS_DEVICE
         virtual void report() const = 0;
         virtual void save() const = 0;
 
-        virtual void set_model(const MODEL* model) = 0;
+        virtual void set_model(MODEL* model) = 0;
         virtual MODEL* get_model_of_type(string model_type) = 0;
 
         virtual complex<double> get_complex_internal_voltage_in_pu_in_xy_axis() const = 0;

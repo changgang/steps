@@ -189,7 +189,7 @@ void FIXED_SHUNT::save() const
     ;
 }
 
-void FIXED_SHUNT::set_model(const MODEL* model)
+void FIXED_SHUNT::set_model(MODEL* model)
 {
     ostringstream osstream;
     osstream<<"FIXED_SHUNT::"<<__FUNCTION__<<"() has not been implemented yet. Input model name is:"<<(model==NULL?"":model->get_model_name());

@@ -242,6 +242,10 @@ LOAD& LOAD::operator=(const LOAD& load)
     set_zone_number(load.get_zone_number());
     set_owner_number(load.get_owner_number());
 
+    set_model(load.get_load_model());
+    set_model(load.get_load_voltage_relay_model());
+    set_model(load.get_load_frequency_relay_model());
+
     return *this;
 }
 
@@ -468,10 +472,11 @@ double LOAD::get_one_over_voltage_threshold_of_constant_current_load_in_pu()
     return one_over_voltage_threshold_of_constant_current_load_in_pu;
 }
 
-void LOAD::set_model(const MODEL* model)
+void LOAD::set_model(MODEL* model)
 {
-    if(model->has_allowed_device_type("LOAD"))
+    if(model != NULL and model->has_allowed_device_type("LOAD"))
     {
+        model->set_device_id(get_device_id());
         if(model->get_model_type()=="LOAD CHARACTERISTICS")
         {
             set_load_model((LOAD_MODEL*) model);

@@ -37,7 +37,7 @@ class FIXED_SHUNT : public NONBUS_DEVICE
         virtual bool is_in_zone(unsigned int zone) const;
         virtual void report() const;
         virtual void save() const;
-        virtual void set_model(const MODEL* model);
+        virtual void set_model(MODEL* model);
         virtual MODEL* get_model_of_type(string model_type);
 
         virtual FIXED_SHUNT& operator=(const FIXED_SHUNT& load);

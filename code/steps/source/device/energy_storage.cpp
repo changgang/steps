@@ -58,10 +58,11 @@ DEVICE_ID ENERGY_STORAGE::get_device_id() const
     return did;
 }
 
-void ENERGY_STORAGE::set_model(const MODEL* model)
+void ENERGY_STORAGE::set_model(MODEL* model)
 {
     if(model!=NULL and model->has_allowed_device_type("ENERGY STORAGE"))
     {
+        model->set_device_id(get_device_id());
         if(model->get_model_type()=="ENERGY STORAGE")
             set_energy_storage_model((ENERGY_STORAGE_MODEL*) model);
         else
@@ -161,6 +162,7 @@ ENERGY_STORAGE& ENERGY_STORAGE::operator=(const ENERGY_STORAGE& estorage)
     set_bus_to_regulate(estorage.get_bus_to_regulate());
     set_voltage_to_regulate_in_pu(estorage.get_voltage_to_regulate_in_pu());
 
+    set_model(estorage.get_energy_storage_model());
     return *this;
 }
 

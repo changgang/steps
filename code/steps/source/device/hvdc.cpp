@@ -1043,23 +1043,25 @@ void HVDC::save() const
     ;
 }
 
-void HVDC::set_model(const MODEL* model)
+void HVDC::set_model(MODEL* model)
 {
-    if(model->get_model_type()=="HVDC")
+    if(model != NULL and model->has_allowed_device_type("HVDC"))
     {
-        set_hvdc_model((HVDC_MODEL*) model);
-    }
-    else
-    {
-        if(model->get_model_type()=="AUXILIARY SIGNAL")
-            set_auxiliary_signal_model((AUXILIARY_SIGNAL_MODEL*) model);
-        else
+        model->set_device_id(get_device_id());
+        if(model->get_model_type()=="HVDC")
         {
-            ostringstream osstream;
-            osstream<<"Waring. Neither AUXILIARY SIGNAL model nor HVDC model is given to set dynamic model for "<<get_compound_device_name();
-            STEPS& toolkit = get_toolkit();
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            set_hvdc_model((HVDC_MODEL*) model);
+            return;
         }
+        if(model->get_model_type()=="AUXILIARY SIGNAL")
+        {
+            set_auxiliary_signal_model((AUXILIARY_SIGNAL_MODEL*) model);
+            return;
+        }
+        ostringstream osstream;
+        osstream<<"Waring. Neither AUXILIARY SIGNAL model nor HVDC model is given to set dynamic model for "<<get_compound_device_name();
+        STEPS& toolkit = get_toolkit();
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -1188,6 +1190,9 @@ HVDC& HVDC::operator=(const HVDC& hvdc)
     set_converter_transformer_min_tap_in_pu(INVERTER, hvdc.get_converter_transformer_min_tap_in_pu(INVERTER));
     set_converter_transformer_number_of_taps(RECTIFIER, hvdc.get_converter_transformer_number_of_taps(RECTIFIER));
     set_converter_transformer_number_of_taps(INVERTER, hvdc.get_converter_transformer_number_of_taps(INVERTER));
+
+    set_model(hvdc.get_hvdc_model());
+    set_auxiliary_signal_model(hvdc.get_auxiliary_signal_model());
 
     return *this;
 }

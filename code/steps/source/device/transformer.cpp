@@ -851,7 +851,7 @@ void TRANSFORMER::save() const
     ;
 }
 
-void TRANSFORMER::set_model(const MODEL* model)
+void TRANSFORMER::set_model(MODEL* model)
 {
     ostringstream osstream;
     osstream<<"TRANSFORMER::"<<__FUNCTION__<<"() has not been implemented yet. Input model name is:"<<(model==NULL?"":model->get_model_name());

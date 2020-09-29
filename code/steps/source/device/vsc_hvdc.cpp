@@ -679,21 +679,25 @@ void VSC_HVDC::save() const
     ;
 }
 
-void VSC_HVDC::set_model(const MODEL* model)
+void VSC_HVDC::set_model(MODEL* model)
 {
-    if(model->get_model_type()=="VSC_HVDC")
-        set_vsc_hvdc_model((VSC_HVDC_MODEL*) model);
-    else
+    if(model != NULL and model->has_allowed_device_type("VSC HVDC"))
     {
-        if(model->get_model_type()=="AUXILIARY SIGNAL")
-            set_auxiliary_signal_model((AUXILIARY_SIGNAL_MODEL*) model);
-        else
+        model->set_device_id(get_device_id());
+        if(model->get_model_type()=="VSC_HVDC")
         {
-            ostringstream osstream;
-            osstream<<"Waring. Neither AUXILIARY SIGNAL model nor VSC_HVDC model is given to set dynamic model for "<<get_compound_device_name();
-            STEPS& toolkit = get_toolkit();
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            set_vsc_hvdc_model((VSC_HVDC_MODEL*) model);
+            return;
         }
+        if(model->get_model_type()=="AUXILIARY SIGNAL")
+        {
+            set_auxiliary_signal_model((AUXILIARY_SIGNAL_MODEL*) model);
+            return;
+        }
+        ostringstream osstream;
+        osstream<<"Waring. Neither AUXILIARY SIGNAL model nor VSC HVDC model is given to set dynamic model for "<<get_compound_device_name();
+        STEPS& toolkit = get_toolkit();
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -832,6 +836,9 @@ VSC_HVDC& VSC_HVDC::operator=(const VSC_HVDC& vsc_hvdc)
 
     set_converter_remote_regulation_percent(RECTIFIER, vsc_hvdc.get_converter_remote_regulation_percent(RECTIFIER));
     set_converter_remote_regulation_percent(INVERTER, vsc_hvdc.get_converter_remote_regulation_percent(INVERTER));
+
+    set_vsc_hvdc_model(vsc_hvdc.get_vsc_hvdc_model());
+    set_auxiliary_signal_model(vsc_hvdc.get_auxiliary_signal_model());
 
     return *this;
 }

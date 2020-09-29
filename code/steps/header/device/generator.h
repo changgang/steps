@@ -30,7 +30,7 @@ class GENERATOR : public SOURCE
         virtual DEVICE_ID get_device_id() const;
         //virtual string get_compound_device_name() const;
 
-        virtual void set_model(const MODEL* model);
+        virtual void set_model(MODEL* model);
         virtual MODEL* get_model_of_type(string model_type);
         void disable_mode_of_type(string model_type);
         void enable_mode_of_type(string model_type);

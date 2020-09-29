@@ -4498,7 +4498,7 @@ void POWER_SYSTEM_DATABASE::check_missing_generator_related_model()
         if(genmodel==NULL)
         {
             osstream<<generator->get_compound_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]\n"
-                    <<"Use default GENCLS model with H=1.0, D=0.0";
+                    <<"Use default GENCLS model with H=1.0, D=0.0\n";
             model_missing_detected = true;
             string model_string = num2str(generator->get_generator_bus())+", GENCLS, "+generator->get_identifier()+", 1.0, 0.0/";
             PSSE_IMEXPORTER importer(*toolkit);
@@ -5127,7 +5127,9 @@ void POWER_SYSTEM_DATABASE::clear_generator(const DEVICE_ID& device_id)
         vector<GENERATOR>::iterator iter_generator = Generator.begin();
 
         std::advance(iter_generator, current_index);
+
         Generator.erase(iter_generator);
+
         generator_index.set_device_index(device_id, INDEX_NOT_EXIST);
 
         generator_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);

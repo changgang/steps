@@ -72,7 +72,7 @@ class LOAD : public NONBUS_DEVICE
         static double get_one_over_voltage_threshold_of_constant_power_load_in_pu();
         static double get_one_over_voltage_threshold_of_constant_current_load_in_pu();
 
-        virtual void set_model(const MODEL* model);
+        virtual void set_model(MODEL* model);
         virtual MODEL* get_model_of_type(string model_type);
 
         void set_load_model(LOAD_MODEL* model);

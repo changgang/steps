@@ -2011,7 +2011,6 @@ void DYNAMICS_SIMULATOR::start()
 
         if(detailed_log_enabled)
         {
-            POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
             ostringstream osstream;
             osstream<<"Initialization iteration "<<iter_count<<":";
             toolkit->show_information_with_leading_time_stamp(osstream);

@@ -32,7 +32,7 @@ class WT_GENERATOR : public SOURCE
         unsigned int get_number_of_lumped_wt_generators() const;
         double get_rated_power_per_wt_generator_in_MW() const;
 
-        virtual void set_model(const MODEL* model);
+        virtual void set_model(MODEL* model);
         virtual MODEL* get_model_of_type(string model_type);
 
         void set_wt_generator_model(WT_GENERATOR_MODEL* model);
@@ -43,13 +43,13 @@ class WT_GENERATOR : public SOURCE
         void set_wind_speed_model(WIND_SPEED_MODEL* model);
         void set_wt_relay_model(WT_RELAY_MODEL* model);
 
-        WT_GENERATOR_MODEL* get_wt_generator_model();
-        WT_AERODYNAMIC_MODEL* get_wt_aerodynamic_model();
-        WT_TURBINE_MODEL* get_wt_turbine_model();
-        WT_ELECTRICAL_MODEL* get_wt_electrical_model();
-        WT_PITCH_MODEL* get_wt_pitch_model();
-        WIND_SPEED_MODEL* get_wind_speed_model();
-        WT_RELAY_MODEL* get_wt_relay_model();
+        WT_GENERATOR_MODEL* get_wt_generator_model() const;
+        WT_AERODYNAMIC_MODEL* get_wt_aerodynamic_model() const;
+        WT_TURBINE_MODEL* get_wt_turbine_model() const;
+        WT_ELECTRICAL_MODEL* get_wt_electrical_model() const;
+        WT_PITCH_MODEL* get_wt_pitch_model() const;
+        WIND_SPEED_MODEL* get_wind_speed_model() const;
+        WT_RELAY_MODEL* get_wt_relay_model() const;
 
         virtual void run(DYNAMIC_MODE mode);
         virtual void report() const;

@@ -393,6 +393,7 @@ EQUIVALENT_DEVICE& EQUIVALENT_DEVICE::operator=(const EQUIVALENT_DEVICE& device)
     set_equivalent_nominal_constant_current_load_in_MVA(device.get_equivalent_nominal_constant_current_load_in_MVA());
     set_equivalent_nominal_constant_impedance_load_in_MVA(device.get_equivalent_nominal_constant_impedance_load_in_MVA());
 
+    set_model(device.get_equivalent_model());
     return *this;
 }
 
@@ -409,10 +410,11 @@ DEVICE_ID EQUIVALENT_DEVICE::get_device_id() const
     return did;
 }
 
-void EQUIVALENT_DEVICE::set_model(const MODEL* model)
+void EQUIVALENT_DEVICE::set_model(MODEL* model)
 {
     if(model != NULL and model->has_allowed_device_type("EQUIVALENT DEVICE"))
     {
+        model->set_device_id(get_device_id());
         if(model->get_model_type()=="EQUIVALENT MODEL")
         {
             set_equivalent_model((EQUIVALENT_MODEL*) model);

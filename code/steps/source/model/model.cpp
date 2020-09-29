@@ -358,8 +358,14 @@ DEVICE_ID MODEL::get_device_id() const
 {
     DEVICE_ID did;
     DEVICE* ptr = get_device_pointer();
+    //cout<<__FILE__<<"  "<<__LINE__<<endl;
     if(ptr!=NULL)
+    {
+        //cout<<__FILE__<<"  "<<__LINE__<<", device pointer is "<<ptr<<endl;
         did = ptr->get_device_id();
+        //cout<<__FILE__<<"  "<<__LINE__<<endl;
+    }
+    //cout<<__FILE__<<"  "<<__LINE__<<endl;
 
     return did;
 }

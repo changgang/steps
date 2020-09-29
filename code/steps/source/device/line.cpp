@@ -577,7 +577,7 @@ void LINE::save() const
     ;
 }
 
-void LINE::set_model(const MODEL* model)
+void LINE::set_model(MODEL* model)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();

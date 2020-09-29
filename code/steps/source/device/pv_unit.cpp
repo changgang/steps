@@ -155,41 +155,39 @@ void PV_UNIT::save() const
     ;
 }
 
-void PV_UNIT::set_model(const MODEL* model)
+void PV_UNIT::set_model(MODEL* model)
 {
-    if(model != NULL)
+    if(model != NULL and model->has_allowed_device_type("PV UNIT"))
     {
-        if(model->has_allowed_device_type("PV UNIT"))
+        model->set_device_id(get_device_id());
+        if(model->get_model_type()=="PV CONVERTER")
         {
-            if(model->get_model_type()=="PV CONVERTER")
-            {
-                set_pv_converter_model((PV_CONVERTER_MODEL*) model);
-                return;
-            }
-
-            if(model->get_model_type()=="PV PANEL")
-            {
-                set_pv_panel_model((PV_PANEL_MODEL*) model);
-                return;
-            }
-
-            if(model->get_model_type()=="PV ELECTRICAL")
-            {
-                set_pv_electrical_model((PV_ELECTRICAL_MODEL*) model);
-                return;
-            }
-
-            if(model->get_model_type()=="PV IRRADIANCE")
-            {
-                set_pv_irradiance_model((PV_IRRADIANCE_MODEL*) model);
-                return;
-            }
-
-            ostringstream osstream;
-            osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up pv unit-related model.";
-            STEPS& toolkit = get_toolkit();
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            set_pv_converter_model((PV_CONVERTER_MODEL*) model);
+            return;
         }
+
+        if(model->get_model_type()=="PV PANEL")
+        {
+            set_pv_panel_model((PV_PANEL_MODEL*) model);
+            return;
+        }
+
+        if(model->get_model_type()=="PV ELECTRICAL")
+        {
+            set_pv_electrical_model((PV_ELECTRICAL_MODEL*) model);
+            return;
+        }
+
+        if(model->get_model_type()=="PV IRRADIANCE")
+        {
+            set_pv_irradiance_model((PV_IRRADIANCE_MODEL*) model);
+            return;
+        }
+
+        ostringstream osstream;
+        osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up pv unit-related model.";
+        STEPS& toolkit = get_toolkit();
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -231,50 +229,54 @@ void PV_UNIT::set_pv_irradiance_model(PV_IRRADIANCE_MODEL* model)
         pv_irradiance_model = model;
 }
 
-PV_CONVERTER_MODEL* PV_UNIT::get_pv_converter_model()
+PV_CONVERTER_MODEL* PV_UNIT::get_pv_converter_model() const
 {
     return pv_converter_model;
 }
 
-PV_PANEL_MODEL* PV_UNIT::get_pv_panel_model()
+PV_PANEL_MODEL* PV_UNIT::get_pv_panel_model() const
 {
     return pv_panel_model;
 }
 
-PV_ELECTRICAL_MODEL* PV_UNIT::get_pv_electrical_model()
+PV_ELECTRICAL_MODEL* PV_UNIT::get_pv_electrical_model() const
 {
     return pv_electrical_model;
 }
 
-PV_IRRADIANCE_MODEL* PV_UNIT::get_pv_irradiance_model()
+PV_IRRADIANCE_MODEL* PV_UNIT::get_pv_irradiance_model() const
 {
     return pv_irradiance_model;
 }
 
-PV_UNIT& PV_UNIT::operator=(const PV_UNIT& gen)
+PV_UNIT& PV_UNIT::operator=(const PV_UNIT& pvu)
 {
-    if(this==(&gen)) return *this;
+    if(this==(&pvu)) return *this;
 
-    set_toolkit(gen.get_toolkit());
+    set_toolkit(pvu.get_toolkit());
     clear();
 
-    set_unit_bus(gen.get_unit_bus());
-    set_identifier(gen.get_identifier());
-    set_status(gen.get_status());
-    set_mbase_in_MVA(gen.get_mbase_in_MVA());
-    set_p_generation_in_MW(gen.get_p_generation_in_MW());
-    set_q_generation_in_MVar(gen.get_q_generation_in_MVar());
-    set_p_max_in_MW(gen.get_p_max_in_MW());
-    set_p_min_in_MW(gen.get_p_min_in_MW());
-    set_q_max_in_MVar(gen.get_q_max_in_MVar());
-    set_q_min_in_MVar(gen.get_q_min_in_MVar());
-    set_source_impedance_in_pu(gen.get_source_impedance_in_pu());
-    set_bus_to_regulate(gen.get_bus_to_regulate());
-    set_voltage_to_regulate_in_pu(gen.get_voltage_to_regulate_in_pu());
+    set_unit_bus(pvu.get_unit_bus());
+    set_identifier(pvu.get_identifier());
+    set_status(pvu.get_status());
+    set_mbase_in_MVA(pvu.get_mbase_in_MVA());
+    set_p_generation_in_MW(pvu.get_p_generation_in_MW());
+    set_q_generation_in_MVar(pvu.get_q_generation_in_MVar());
+    set_p_max_in_MW(pvu.get_p_max_in_MW());
+    set_p_min_in_MW(pvu.get_p_min_in_MW());
+    set_q_max_in_MVar(pvu.get_q_max_in_MVar());
+    set_q_min_in_MVar(pvu.get_q_min_in_MVar());
+    set_source_impedance_in_pu(pvu.get_source_impedance_in_pu());
+    set_bus_to_regulate(pvu.get_bus_to_regulate());
+    set_voltage_to_regulate_in_pu(pvu.get_voltage_to_regulate_in_pu());
 
-    set_number_of_lumped_pv_units(gen.get_number_of_lumped_pv_units());
-    set_rated_power_per_pv_unit_in_MW(gen.get_rated_power_per_pv_unit_in_MW());
+    set_number_of_lumped_pv_units(pvu.get_number_of_lumped_pv_units());
+    set_rated_power_per_pv_unit_in_MW(pvu.get_rated_power_per_pv_unit_in_MW());
 
+    set_model(pvu.get_pv_converter_model());
+    set_model(pvu.get_pv_panel_model());
+    set_model(pvu.get_pv_electrical_model());
+    set_model(pvu.get_pv_irradiance_model());
     return *this;
 }
 

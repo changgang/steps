@@ -850,7 +850,7 @@ double LCC_HVDC::get_line_dc_current_in_kA() const
 }
 
 
-void LCC_HVDC::set_model(const MODEL* model)
+void LCC_HVDC::set_model(MODEL* model)
 {
     return;
 }

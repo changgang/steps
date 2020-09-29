@@ -1121,9 +1121,11 @@ double POWERFLOW_SOLVER::get_maximum_active_power_mismatch_in_MW() const
 
     max_P_error_in_MW = max_P_error_in_pu*psdb.get_system_base_power_in_MVA();
 
+    string maxbusname = psdb.bus_number2bus_name(max_P_error_physical_bus);
+
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Maximum   active power mismatch found: %10.6fMW   at bus %u.",
-             max_P_error_in_MW,max_P_error_physical_bus);
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Maximum   active power mismatch found: %10.6fMW   at bus %u [%s].",
+             max_P_error_in_MW,max_P_error_physical_bus, maxbusname.c_str());
     toolkit->show_information_with_leading_time_stamp(buffer);
 
     return max_P_error_in_MW;
@@ -1153,9 +1155,11 @@ double POWERFLOW_SOLVER::get_maximum_reactive_power_mismatch_in_MVar() const
     }
     max_Q_error_in_MVar =  max_Q_error_in_pu*psdb.get_system_base_power_in_MVA();
 
+    string maxbusname = psdb.bus_number2bus_name(max_Q_error_physical_bus);
+
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Maximum reactive power mismatch found: %10.6fMVar at bus %u.",
-             max_Q_error_in_MVar,max_Q_error_physical_bus);
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Maximum reactive power mismatch found: %10.6fMVar at bus %u [%s].",
+             max_Q_error_in_MVar,max_Q_error_physical_bus, maxbusname.c_str());
     toolkit->show_information_with_leading_time_stamp(buffer);
 
     return max_Q_error_in_MVar;
@@ -1274,7 +1278,9 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
 
             if(toolkit->is_detailed_log_enabled())
             {
-                snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %u changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q max reached.", physical_bus);
+                string busname = psdb.bus_number2bus_name(physical_bus);
+                snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %u [%s] changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q max reached.",
+                        physical_bus, busname.c_str());
                 toolkit->show_information_with_leading_time_stamp(buffer);
             }
 
@@ -1290,7 +1296,9 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
 
             if(toolkit->is_detailed_log_enabled())
             {
-                snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %u changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q max reached.", physical_bus);
+                string busname = psdb.bus_number2bus_name(physical_bus);
+                snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %u [%s] changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q max reached.",
+                         physical_bus, busname.c_str());
                 toolkit->show_information_with_leading_time_stamp(buffer);
             }
 
@@ -1305,7 +1313,9 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
 
             if(toolkit->is_detailed_log_enabled())
             {
-                snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %u changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q min reached.", physical_bus);
+                string busname = psdb.bus_number2bus_name(physical_bus);
+                snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %u [%s] changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q min reached.",
+                         physical_bus, busname.c_str());
                 toolkit->show_information_with_leading_time_stamp(buffer);
             }
 
@@ -1364,7 +1374,8 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
             bus_type_changed = true;
             if(toolkit->is_detailed_log_enabled())
             {
-                osstream<<"Bus "<<physical_bus<<" changed from PV_TYPE to PV_TO_PQ_TYPE_3.";
+                string busname = psdb.bus_number2bus_name(physical_bus);
+                osstream<<"Bus "<<physical_bus<<" ["<<busname<<"] changed from PV_TYPE to PV_TO_PQ_TYPE_3.";
                 toolkit->show_information_with_leading_time_stamp(osstream);
             }
 
@@ -1418,7 +1429,8 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
                     bus->set_positive_sequence_voltage_in_pu(voltage_to_regulated);
                     if(toolkit->is_detailed_log_enabled())
                     {
-                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
+                        string busname = psdb.bus_number2bus_name(physical_bus);
+                        osstream<<"Bus "<<physical_bus<<" ["<<busname<<"] changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
                         toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;
@@ -1454,7 +1466,8 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
                     bus->set_positive_sequence_voltage_in_pu(voltage_to_regulated);
                     if(toolkit->is_detailed_log_enabled())
                     {
-                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
+                        string busname = psdb.bus_number2bus_name(physical_bus);
+                        osstream<<"Bus "<<physical_bus<<" ["<<busname<<"] changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
                         toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;
@@ -1472,7 +1485,9 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
         {
             bus->set_bus_type(PV_TO_PQ_TYPE_3);
             set_all_sources_at_physical_bus_to_q_max(physical_bus);
-            osstream<<"Var of sources at bus "<<physical_bus<<" are set to max.";
+
+            string busname = psdb.bus_number2bus_name(physical_bus);
+            osstream<<"Var of sources at bus "<<physical_bus<<" ["<<busname<<"] are set to max.";
             toolkit->show_information_with_leading_time_stamp(osstream);
         }
         else
@@ -1483,7 +1498,8 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
                     bus->set_bus_type(PV_TO_PQ_TYPE_3);
                     if(toolkit->is_detailed_log_enabled())
                     {
-                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_4 to PV_TO_PQ_TYPE_3.";
+                        string busname = psdb.bus_number2bus_name(physical_bus);
+                        osstream<<"Bus "<<physical_bus<<" ["<<busname<<"] changed from PV_TO_PQ_TYPE_4 to PV_TO_PQ_TYPE_3.";
                         toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;
@@ -1491,7 +1507,8 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
                     bus->set_bus_type(PV_TO_PQ_TYPE_2);
                     if(toolkit->is_detailed_log_enabled())
                     {
-                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_3 to PV_TO_PQ_TYPE_2.";
+                        string busname = psdb.bus_number2bus_name(physical_bus);
+                        osstream<<"Bus "<<physical_bus<<" ["<<busname<<"] changed from PV_TO_PQ_TYPE_3 to PV_TO_PQ_TYPE_2.";
                         toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;
@@ -1499,7 +1516,8 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
                     bus->set_bus_type(PV_TO_PQ_TYPE_1);
                     if(toolkit->is_detailed_log_enabled())
                     {
-                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_2 to PV_TO_PQ_TYPE_1.";
+                        string busname = psdb.bus_number2bus_name(physical_bus);
+                        osstream<<"Bus "<<physical_bus<<" ["<<busname<<"] changed from PV_TO_PQ_TYPE_2 to PV_TO_PQ_TYPE_1.";
                         toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;
@@ -1509,7 +1527,8 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
                     bus->set_positive_sequence_voltage_in_pu(voltage_to_regulated);
                     if(toolkit->is_detailed_log_enabled())
                     {
-                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
+                        string busname = psdb.bus_number2bus_name(physical_bus);
+                        osstream<<"Bus "<<physical_bus<<" ["<<busname<<"] changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
                         toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;
@@ -1524,7 +1543,8 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
         {
             bus->set_bus_type(PV_TO_PQ_TYPE_3);
             set_all_sources_at_physical_bus_to_q_min(physical_bus);
-            osstream<<"Var of sources at bus "<<physical_bus<<" are set to min.";
+            string busname = psdb.bus_number2bus_name(physical_bus);
+            osstream<<"Var of sources at bus "<<physical_bus<<" ["<<busname<<"] are set to min.";
             toolkit->show_information_with_leading_time_stamp(osstream);
         }
         else
@@ -1535,7 +1555,8 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
                     bus->set_bus_type(PV_TO_PQ_TYPE_3);
                     if(toolkit->is_detailed_log_enabled())
                     {
-                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_4 to PV_TO_PQ_TYPE_3.";
+                        string busname = psdb.bus_number2bus_name(physical_bus);
+                        osstream<<"Bus "<<physical_bus<<" ["<<busname<<"] changed from PV_TO_PQ_TYPE_4 to PV_TO_PQ_TYPE_3.";
                         toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;
@@ -1543,7 +1564,8 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
                     bus->set_bus_type(PV_TO_PQ_TYPE_2);
                     if(toolkit->is_detailed_log_enabled())
                     {
-                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_3 to PV_TO_PQ_TYPE_2.";
+                        string busname = psdb.bus_number2bus_name(physical_bus);
+                        osstream<<"Bus "<<physical_bus<<" ["<<busname<<"] changed from PV_TO_PQ_TYPE_3 to PV_TO_PQ_TYPE_2.";
                         toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;
@@ -1551,7 +1573,8 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
                     bus->set_bus_type(PV_TO_PQ_TYPE_1);
                     if(toolkit->is_detailed_log_enabled())
                     {
-                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_2 to PV_TO_PQ_TYPE_1.";
+                        string busname = psdb.bus_number2bus_name(physical_bus);
+                        osstream<<"Bus "<<physical_bus<<" ["<<busname<<"] changed from PV_TO_PQ_TYPE_2 to PV_TO_PQ_TYPE_1.";
                         toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;
@@ -1561,7 +1584,8 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
                     bus->set_positive_sequence_voltage_in_pu(voltage_to_regulated);
                     if(toolkit->is_detailed_log_enabled())
                     {
-                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
+                        string busname = psdb.bus_number2bus_name(physical_bus);
+                        osstream<<"Bus "<<physical_bus<<" ["<<busname<<"] changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
                         toolkit->show_information_with_leading_time_stamp(osstream);
                     }
                     break;

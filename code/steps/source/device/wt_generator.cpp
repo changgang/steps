@@ -205,60 +205,58 @@ void WT_GENERATOR::save() const
     ;
 }
 
-void WT_GENERATOR::set_model(const MODEL* model)
+void WT_GENERATOR::set_model(MODEL* model)
 {
-    if(model != NULL)
+    if(model != NULL and model->has_allowed_device_type("WT GENERATOR"))
     {
-        if(model->has_allowed_device_type("WT GENERATOR"))
+        model->set_device_id(get_device_id());
+        if(model->get_model_type()=="WT GENERATOR")
         {
-            if(model->get_model_type()=="WT GENERATOR")
-            {
-                set_wt_generator_model((WT_GENERATOR_MODEL*) model);
-                return;
-            }
-
-            if(model->get_model_type()=="WT AERODYNAMIC")
-            {
-                set_wt_aerodynamic_model((WT_AERODYNAMIC_MODEL*) model);
-                return;
-            }
-
-            if(model->get_model_type()=="WT TURBINE")
-            {
-                set_wt_turbine_model((WT_TURBINE_MODEL*) model);
-                return;
-            }
-
-            if(model->get_model_type()=="WT ELECTRICAL")
-            {
-                set_wt_electrical_model((WT_ELECTRICAL_MODEL*) model);
-                return;
-            }
-
-            if(model->get_model_type()=="WT PITCH")
-            {
-                set_wt_pitch_model((WT_PITCH_MODEL*) model);
-                return;
-            }
-
-            if(model->get_model_type()=="WIND SPEED")
-            {
-                set_wind_speed_model((WIND_SPEED_MODEL*) model);
-                return;
-            }
-
-            if(model->get_model_type()=="WT RELAY")
-            {
-                set_wt_relay_model((WT_RELAY_MODEL*) model);
-                return;
-            }
-
-            ostringstream osstream;
-            osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up wind-turbine generator-related model.";
-
-            STEPS& toolkit = get_toolkit();
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            set_wt_generator_model((WT_GENERATOR_MODEL*) model);
+            return;
         }
+
+        if(model->get_model_type()=="WT AERODYNAMIC")
+        {
+            set_wt_aerodynamic_model((WT_AERODYNAMIC_MODEL*) model);
+            return;
+        }
+
+        if(model->get_model_type()=="WT TURBINE")
+        {
+            set_wt_turbine_model((WT_TURBINE_MODEL*) model);
+            return;
+        }
+
+        if(model->get_model_type()=="WT ELECTRICAL")
+        {
+            set_wt_electrical_model((WT_ELECTRICAL_MODEL*) model);
+            return;
+        }
+
+        if(model->get_model_type()=="WT PITCH")
+        {
+            set_wt_pitch_model((WT_PITCH_MODEL*) model);
+            return;
+        }
+
+        if(model->get_model_type()=="WIND SPEED")
+        {
+            set_wind_speed_model((WIND_SPEED_MODEL*) model);
+            return;
+        }
+
+        if(model->get_model_type()=="WT RELAY")
+        {
+            set_wt_relay_model((WT_RELAY_MODEL*) model);
+            return;
+        }
+
+        ostringstream osstream;
+        osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up wind-turbine generator-related model.";
+
+        STEPS& toolkit = get_toolkit();
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -325,37 +323,37 @@ void WT_GENERATOR::set_wt_relay_model(WT_RELAY_MODEL* model)
 }
 
 
-WT_GENERATOR_MODEL* WT_GENERATOR::get_wt_generator_model()
+WT_GENERATOR_MODEL* WT_GENERATOR::get_wt_generator_model() const
 {
     return wt_generator_model;
 }
 
-WT_AERODYNAMIC_MODEL* WT_GENERATOR::get_wt_aerodynamic_model()
+WT_AERODYNAMIC_MODEL* WT_GENERATOR::get_wt_aerodynamic_model() const
 {
     return wt_aerodynamic_model;
 }
 
-WT_TURBINE_MODEL* WT_GENERATOR::get_wt_turbine_model()
+WT_TURBINE_MODEL* WT_GENERATOR::get_wt_turbine_model() const
 {
     return wt_turbine_model;
 }
 
-WT_ELECTRICAL_MODEL* WT_GENERATOR::get_wt_electrical_model()
+WT_ELECTRICAL_MODEL* WT_GENERATOR::get_wt_electrical_model() const
 {
     return wt_electrical_model;
 }
 
-WT_PITCH_MODEL* WT_GENERATOR::get_wt_pitch_model()
+WT_PITCH_MODEL* WT_GENERATOR::get_wt_pitch_model() const
 {
     return wt_pitch_model;
 }
 
-WIND_SPEED_MODEL* WT_GENERATOR::get_wind_speed_model()
+WIND_SPEED_MODEL* WT_GENERATOR::get_wind_speed_model() const
 {
     return wind_speed_model;
 }
 
-WT_RELAY_MODEL* WT_GENERATOR::get_wt_relay_model()
+WT_RELAY_MODEL* WT_GENERATOR::get_wt_relay_model() const
 {
     return wt_relay_model;
 }
@@ -384,6 +382,13 @@ WT_GENERATOR& WT_GENERATOR::operator=(const WT_GENERATOR& gen)
     set_number_of_lumped_wt_generators(gen.get_number_of_lumped_wt_generators());
     set_rated_power_per_wt_generator_in_MW(gen.get_rated_power_per_wt_generator_in_MW());
 
+    set_model(gen.get_wt_generator_model());
+    set_model(gen.get_wt_aerodynamic_model());
+    set_model(gen.get_wt_electrical_model());
+    set_model(gen.get_wt_turbine_model());
+    set_model(gen.get_wt_pitch_model());
+    set_model(gen.get_wind_speed_model());
+    set_model(gen.get_wt_relay_model());
     return *this;
 }
 

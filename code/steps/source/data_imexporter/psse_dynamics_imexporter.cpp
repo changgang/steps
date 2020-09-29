@@ -135,22 +135,34 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
         gen = gens[i];
         model = gen->get_compensator_model();
         if(model!=NULL)
+        {
             ofs<<model->get_standard_psse_string()<<"\n";
+        }
         model = gen->get_stabilizer_model();
         if(model!=NULL)
+        {
             ofs<<model->get_standard_psse_string()<<"\n";
+        }
         model = gen->get_exciter_model();
         if(model!=NULL)
+        {
             ofs<<model->get_standard_psse_string()<<"\n";
+        }
         model = gen->get_turbine_load_controller_model();
         if(model!=NULL)
+        {
             ofs<<model->get_standard_psse_string()<<"\n";
+        }
         model = gen->get_turbine_governor_model();
         if(model!=NULL)
+        {
             ofs<<model->get_standard_psse_string()<<"\n";
+        }
         model = gen->get_sync_generator_model();
         if(model!=NULL)
+        {
             ofs<<model->get_standard_psse_string()<<"\n";
+        }
     }
     vector<WT_GENERATOR*> wt_gens = psdb.get_all_wt_generators();
     WT_GENERATOR* wt_gen = NULL;

@@ -65,6 +65,7 @@ void GENERATOR::clear()
 DEVICE_ID GENERATOR::get_device_id() const
 {
     DEVICE_ID did;
+
     did.set_device_type("GENERATOR");
 
     TERMINAL terminal;
@@ -75,10 +76,11 @@ DEVICE_ID GENERATOR::get_device_id() const
     return did;
 }
 
-void GENERATOR::set_model(const MODEL* model)
+void GENERATOR::set_model(MODEL* model)
 {
     if(model!=NULL and model->has_allowed_device_type("GENERATOR"))
     {
+        model->set_device_id(get_device_id());
         if(model->get_model_type()=="SYNC GENERATOR")
         {
             set_sync_generator_model((SYNC_GENERATOR_MODEL*) model);
@@ -422,6 +424,12 @@ GENERATOR& GENERATOR::operator=(const GENERATOR& gen)
     set_bus_to_regulate(gen.get_bus_to_regulate());
     set_voltage_to_regulate_in_pu(gen.get_voltage_to_regulate_in_pu());
 
+    set_model(gen.get_sync_generator_model());
+    set_model(gen.get_compensator_model());
+    set_model(gen.get_exciter_model());
+    set_model(gen.get_stabilizer_model());
+    set_model(gen.get_turbine_governor_model());
+    set_model(gen.get_turbine_load_controller_model());
     return *this;
 }
 
