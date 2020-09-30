@@ -161,6 +161,7 @@
 		<Unit filename="header/device/source_test.h" />
 		<Unit filename="header/device/transformer.h" />
 		<Unit filename="header/device/transformer_test.h" />
+		<Unit filename="header/device/vsc.h" />
 		<Unit filename="header/device/vsc_hvdc.h" />
 		<Unit filename="header/device/vsc_hvdc_test.h" />
 		<Unit filename="header/device/wt_generator.h" />
