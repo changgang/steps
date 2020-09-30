@@ -14,7 +14,5 @@ doc/latex/
 code/steps/header/device/lcc_hvdc_2t.h
 code/steps/header/device/nhvdc.h
 code/steps/header/device/nhvdc_test.h
-code/steps/header/device/vsc.h
 code/steps/source/device/lcc_hvdc_2t.cpp
-code/steps/source/device/vsc.cpp
 
