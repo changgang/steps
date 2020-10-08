@@ -2589,6 +2589,13 @@ bool DYNAMICS_SIMULATOR::solve_network()
                 //    tune_iteration_accelerator_based_on_maximum_current_mismatch(max_current_mismatch_pu);
 
                 delta_V = I_mismatch/jacobian;
+                if(jacobian.is_lu_factorization_failed())
+                {
+                    ostringstream osstream;
+                    osstream<<"No further network solution will be attempted since LU factorization of dynamic Jacobian matrix is failed at time "<<TIME<<"s.";
+                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    break;
+                }
 
                 update_bus_voltage();
                 if(get_non_divergent_solution_logic()==true)

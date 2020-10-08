@@ -301,10 +301,18 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
                 jacobian_builder->save_jacobian_matrix_to_file("Jacobian-NR-Iter-"+num2str(get_iteration_count())+".csv");
             }
             bus_delta_voltage_angle = S_mismatch/jacobian;
+            if(jacobian.is_lu_factorization_successful())
+            {
+                update_bus_voltage_and_angle(bus_delta_voltage_angle);
 
-            update_bus_voltage_and_angle(bus_delta_voltage_angle);
-
-            ++iteration_count;
+                ++iteration_count;
+            }
+            else
+            {
+                snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "No further powerflow solution will be attempted since LU factorization of N-R Jacobian matrix is failed.");
+                toolkit->show_information_with_leading_time_stamp(buffer);
+                break;
+            }
         }
         //show_powerflow_result();
     }
@@ -417,7 +425,14 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
                 //P_mismatch[i] /= psdb.get_bus_positive_sequence_voltage_in_pu(physical_bus);
                 P_mismatch[i] /= get_bus_positive_sequence_voltage_in_pu_with_internal_bus_number(internal_bus);
             }
-            bus_delta_angle = P_mismatch/BP;
+            if(BP.is_lu_factorization_successful())
+                bus_delta_angle = P_mismatch/BP;
+            else
+            {
+                snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "No further powerflow solution will be attempted since LU factorization of P-Q BP matrix is failed.");
+                toolkit->show_information_with_leading_time_stamp(buffer);
+                break;
+            }
             //BP.report_brief();
             //for(unsigned int i=0; i<P_mismatch.size(); i++)
             //    cout<<i<<","<<P_mismatch[i]<<endl;
@@ -447,7 +462,14 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
                 //Q_mismatch[i] /= psdb.get_bus_positive_sequence_voltage_in_pu(physical_bus);
                 Q_mismatch[i] /= get_bus_positive_sequence_voltage_in_pu_with_internal_bus_number(internal_bus);
             }
-            bus_delta_voltage = Q_mismatch/BQ;
+            if(BQ.is_lu_factorization_successful())
+                bus_delta_voltage = Q_mismatch/BQ;
+            else
+            {
+                snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "No further powerflow solution will be attempted since LU factorization of P-Q BQ matrix is failed.");
+                toolkit->show_information_with_leading_time_stamp(buffer);
+                break;
+            }
 
             update_bus_voltage(bus_delta_voltage);
 

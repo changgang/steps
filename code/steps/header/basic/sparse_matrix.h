@@ -17,6 +17,10 @@ public:
     void update_clock_when_LU_factorization_is_performed();
     clock_t get_clock_when_matrix_is_changed() const;
     clock_t get_clock_when_LU_factorization_is_performed() const;
+    void set_lu_factorization_failed_flag(bool flag);
+    bool get_lu_factorization_failed_flag() const;
+    bool is_lu_factorization_failed() const;
+    bool is_lu_factorization_successful() const;
 
     void add_entry(int row, int col, double value);
     bool matrix_in_compressed_column_form()  const;
@@ -70,5 +74,6 @@ public:
 private:
     clock_t clock_when_matrix_is_changed;
     clock_t clock_when_LU_factorization_is_performed;
+    bool lu_factorization_failed;
 };
 #endif // SPARSE_MATRIX_H

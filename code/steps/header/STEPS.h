@@ -97,6 +97,7 @@ class STEPS
 
         time_t clock_when_system_started;
 
+        string log_file_name;
         ofstream log_file;
         bool detailed_log_enabled;
         bool optimize_network_enabled;

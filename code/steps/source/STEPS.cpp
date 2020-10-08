@@ -18,7 +18,8 @@ STEPS::STEPS(const string& name, const string& log_file) : power_system_db(*this
     ostringstream osstream;
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-    if(log_file!="")
+    log_file_name = string2upper(log_file);
+    if(log_file!="" and log_file_name!="BLACKHOLE")
         open_log_file(log_file, false);
 
     detailed_log_enabled = false;
@@ -437,25 +438,30 @@ double STEPS::get_dynamic_simulation_time_in_s()
 
 void STEPS::show_information_with_leading_time_stamp(ostringstream& stream)
 {
-    show_information_with_leading_time_stamp(stream.str());
+    if(log_file_name!="BLACKHOLE")
+        show_information_with_leading_time_stamp(stream.str());
+
     stream.str("");
 }
 
 void STEPS::show_information_with_leading_time_stamp(const string& info)
 {
-    vector<string> splitted_info = split_string(info,"\n");
-    unsigned int info_size = splitted_info.size();
-    if(info_size!=0)
+    if(log_file_name!="BLACKHOLE")
     {
-        string info="";
-        string sys_time = get_system_time_stamp_string();
-        info="["+get_toolkit_name()+"]"+sys_time+" "+splitted_info[0]+"\n";
-        for(unsigned int i=1; i!=info_size; ++i)
-            info+=("["+get_toolkit_name()+"]"+sys_time+" + "+splitted_info[i]+"\n");
-        if(log_file.is_open())
-            log_file<<info;
-        else
-            cout<<info;
+        vector<string> splitted_info = split_string(info,"\n");
+        unsigned int info_size = splitted_info.size();
+        if(info_size!=0)
+        {
+            string info="";
+            string sys_time = get_system_time_stamp_string();
+            info="["+get_toolkit_name()+"]"+sys_time+" "+splitted_info[0]+"\n";
+            for(unsigned int i=1; i!=info_size; ++i)
+                info+=("["+get_toolkit_name()+"]"+sys_time+" + "+splitted_info[i]+"\n");
+            if(log_file.is_open())
+                log_file<<info;
+            else
+                cout<<info;
+        }
     }
 }
 

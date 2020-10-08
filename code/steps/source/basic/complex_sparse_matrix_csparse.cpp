@@ -119,6 +119,7 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::clear()
 {
     // clear function
     update_clock_when_LU_factorization_is_performed();
+    set_lu_factorization_failed_flag(false);
 
     if(matrix_complex!=NULL) cxs_spfree(matrix_complex);
     if(LU!=NULL)          cxs_nfree(LU);
@@ -425,6 +426,7 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::LU_factorization(int order, double tolerance
         {
             snprintf(buffer, 256, "ALERT!  LU factorization for sparse matrix(CXSparse) failed! (line %d in file %s)\n",__LINE__,__FILE__);
             show_information_with_leading_time_stamp_with_default_toolkit(buffer);
+            set_lu_factorization_failed_flag(true);
         }
     }
     else
@@ -436,10 +438,18 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::LU_factorization(int order, double tolerance
 
 vector<complex<double> >& COMPLEX_SPARSE_MATRIX_CSPARSE::solve_Ax_eq_b(vector<complex<double> >& b)
 {
+    unsigned int n = b.size();
     if(LU_factorization_is_performed())
     {
-        solve_Lx_eq_b(b);
-        solve_xU_eq_b(b);
+        if(is_lu_factorization_successful())
+        {
+            solve_Lx_eq_b(b);
+            solve_xU_eq_b(b);
+        }
+        else
+        {
+            for(unsigned int i=0; i<n; ++i) b[i]=0.0;
+        }
     }
     else
     {
@@ -450,9 +460,16 @@ vector<complex<double> >& COMPLEX_SPARSE_MATRIX_CSPARSE::solve_Ax_eq_b(vector<co
         cout<<"Div LU->U->n = "<<LU->U->n<<endl;
         cout<<"Mul LU->U->p[n] = "<<LU->U->p[LU->U->n]<<endl;
         */
-        solve_Lx_eq_b(b);
+        if(is_lu_factorization_successful())
+        {
+            solve_Lx_eq_b(b);
 
-        solve_xU_eq_b(b);
+            solve_xU_eq_b(b);
+        }
+        else
+        {
+            for(unsigned int i=0; i<n; ++i) b[i]=0.0;
+        }
     }
 
     return b;

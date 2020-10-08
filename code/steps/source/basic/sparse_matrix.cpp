@@ -15,6 +15,7 @@ SPARSE_MATRIX::SPARSE_MATRIX()
     //constructor
     update_clock_when_LU_factorization_is_performed();
     update_clock_when_matrix_is_changed();
+    set_lu_factorization_failed_flag(false);
 }
 
 SPARSE_MATRIX::~SPARSE_MATRIX()
@@ -115,4 +116,24 @@ clock_t SPARSE_MATRIX::get_clock_when_matrix_is_changed() const
 clock_t SPARSE_MATRIX::get_clock_when_LU_factorization_is_performed() const
 {
     return clock_when_LU_factorization_is_performed;
+}
+
+void SPARSE_MATRIX::set_lu_factorization_failed_flag(bool flag)
+{
+    lu_factorization_failed = flag;
+}
+
+bool SPARSE_MATRIX::get_lu_factorization_failed_flag() const
+{
+    return lu_factorization_failed;
+}
+
+bool SPARSE_MATRIX::is_lu_factorization_failed() const
+{
+    return lu_factorization_failed;
+}
+
+bool SPARSE_MATRIX::is_lu_factorization_successful() const
+{
+    return !lu_factorization_failed;
 }
