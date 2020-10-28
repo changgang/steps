@@ -56,6 +56,39 @@ void NETWORK_MATRIX::clear()
     this_jacobian.clear();
 }
 
+
+void NETWORK_MATRIX::build_initial_zero_matrix(STEPS_COMPLEX_SPARSE_MATRIX& matrix)
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<BUS*> buses = psdb.get_all_buses();
+    unsigned int nbus = buses.size();
+    for(unsigned int i=0; i!=nbus; ++i)
+    {
+        BUS* bus = buses[i];
+        if(bus->get_bus_type()!=OUT_OF_SERVICE)
+        {
+            unsigned int inbus = inphno.get_internal_bus_number_of_physical_bus_number(bus->get_bus_number());
+            matrix.add_entry(inbus, inbus, 0);
+        }
+    }
+}
+
+void NETWORK_MATRIX::build_initial_zero_matrix(STEPS_SPARSE_MATRIX& matrix)
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<BUS*> buses = psdb.get_all_buses();
+    unsigned int nbus = buses.size();
+    for(unsigned int i=0; i!=nbus; ++i)
+    {
+        BUS* bus = buses[i];
+        if(bus->get_bus_type()!=OUT_OF_SERVICE)
+        {
+            unsigned int inbus = inphno.get_internal_bus_number_of_physical_bus_number(bus->get_bus_number());
+            matrix.add_entry(inbus, inbus, 0);
+        }
+    }
+}
+
 void NETWORK_MATRIX::build_network_Y_matrix()
 {
     if(inphno.empty())
@@ -63,6 +96,8 @@ void NETWORK_MATRIX::build_network_Y_matrix()
 
     network_Y1_matrix.clear();
     set_this_Y_and_Z_matrix_as(network_Y1_matrix);
+
+    //build_initial_zero_matrix(network_Y1_matrix);
 
     add_lines_to_network();
     add_transformers_to_network();
@@ -86,6 +121,9 @@ void NETWORK_MATRIX::build_decoupled_network_B_matrix()
 
     network_BP_matrix.clear();
     network_BQ_matrix.clear();
+
+    //build_initial_zero_matrix(network_BP_matrix);
+    //build_initial_zero_matrix(network_BQ_matrix);
 
     add_lines_to_decoupled_network();
     add_transformers_to_decoupled_network();
@@ -119,6 +157,8 @@ void NETWORK_MATRIX::build_dc_network_B_matrix()
 
     network_DC_B_matrix.clear();
 
+    //build_initial_zero_matrix(network_DC_B_matrix);
+
     add_lines_to_dc_network();
     add_transformers_to_dc_network();
 
@@ -141,6 +181,8 @@ void NETWORK_MATRIX::build_dynamic_network_Y_matrix()
 
     network_Y1_matrix.clear();
     set_this_Y_and_Z_matrix_as(network_Y1_matrix);
+
+    //build_initial_zero_matrix(network_Y1_matrix);
 
     add_bus_fault_to_dynamic_network();
     add_lines_to_dynamic_network();

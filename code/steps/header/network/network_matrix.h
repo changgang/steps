@@ -84,6 +84,8 @@ class NETWORK_MATRIX
 
         unsigned int get_memory_usage_in_bytes();
     private:
+        void build_initial_zero_matrix(STEPS_COMPLEX_SPARSE_MATRIX& matrix);
+        void build_initial_zero_matrix(STEPS_SPARSE_MATRIX& matrix);
         void add_lines_to_network();
         void add_transformers_to_network();
         void add_fixed_shunts_to_network();
