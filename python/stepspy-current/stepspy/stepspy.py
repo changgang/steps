@@ -23,6 +23,7 @@ class STEPS():
             STEPS_LIB = pylibsteps.load_library()
         if is_default==True:
             self.toolkit_index = STEPS_LIB.api_get_const_INDEX_NOT_EXIST()
+            self.set_toolkit_log_file(log_file)
         else:
             log_file = self.__get_c_char_p_of_string(log_file)
             self.toolkit_index = STEPS_LIB.api_generate_new_toolkit(log_file)

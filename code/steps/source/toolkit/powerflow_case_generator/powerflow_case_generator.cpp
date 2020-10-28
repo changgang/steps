@@ -212,7 +212,7 @@ void POWERFLOW_CASE_GENERATOR::generate_case_with_load_random(vector<double> loa
 
     if(not solver.is_converged())
     {
-        osstream<<"Powerflow is converged. Need to manually tune it.";
+        osstream<<"Powerflow is not converged. Need to manually tune it.";
         default_toolkit.show_information_with_leading_time_stamp(osstream);
     }
 

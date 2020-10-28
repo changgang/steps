@@ -3516,12 +3516,16 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(unsigned int bus, 
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     BUS* busptr = psdb.get_bus(bus);
+    if(busptr->get_bus_type()==OUT_OF_SERVICE)
+        return;
+
     double fault_b = fault.get_fault_shunt_in_pu().imag();
     double current_voltage = busptr->get_positive_sequence_voltage_in_pu();
     double vbase = busptr->get_base_voltage_in_kV();
     double one_over_sbase = toolkit->get_one_over_system_base_power_in_one_over_MVA();
     double zbase = vbase*vbase*one_over_sbase;
     double fault_x = -zbase/fault_b;
+
     if(fault_x<1)
         busptr->set_positive_sequence_voltage_in_pu(0.05);
     else
@@ -3541,6 +3545,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(unsigned int bus, 
             }
         }
     }
+
     NETWORK_MATRIX& network = get_network_matrix();
     unsigned int internal_bus = network.get_internal_bus_number_of_physical_bus(bus);
     internal_bus_complex_voltage_in_pu[internal_bus] = busptr->get_positive_sequence_complex_voltage_in_pu();
@@ -3792,6 +3797,12 @@ void DYNAMICS_SIMULATOR::set_bus_fault(unsigned int bus, const complex<double>& 
             fault.set_fault_type(THREE_PHASES_FAULT);
             fault.set_fault_shunt_in_pu(fault_shunt);
 
+            if(busptr->get_bus_type()==OUT_OF_SERVICE)
+            {
+                osstream<<"No "<<fault.get_fault_type_string()<<" will be set for bus "<<bus<<"["<<busname<<"] at time "<<TIME<<" s since it is out of service."<<endl;
+                toolkit->show_information_with_leading_time_stamp(osstream);
+                return;
+            }
             osstream<<fault.get_fault_type_string()<<" will be set for bus "<<bus<<"["<<busname<<"] at time "<<TIME<<" s."<<endl
                    <<"Fault shunt is"<<fault_shunt<<" pu.";
             toolkit->show_information_with_leading_time_stamp(osstream);
@@ -3827,6 +3838,13 @@ void DYNAMICS_SIMULATOR::clear_bus_fault(unsigned int bus)
         string busname = busptr->get_bus_name();
         ostringstream osstream;
 
+        if(busptr->get_bus_type()==OUT_OF_SERVICE)
+        {
+            osstream<<"No fault will be cleared for bus "<<bus<<"["<<busname<<"] at time "<<TIME<<" s since it is out of service."<<endl;
+            toolkit->show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+
         osstream<<"Fault at bus "<<bus<<"["<<busname<<"] will be cleared at time "<<TIME<<" s.";
         toolkit->show_information_with_leading_time_stamp(osstream);
 
@@ -3842,6 +3860,7 @@ void DYNAMICS_SIMULATOR::clear_bus_fault(unsigned int bus)
 void DYNAMICS_SIMULATOR::trip_bus(unsigned int bus)
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    ostringstream osstream;
 
     BUS* busptr = psdb.get_bus(bus);
     if(busptr!=NULL)
@@ -3849,7 +3868,6 @@ void DYNAMICS_SIMULATOR::trip_bus(unsigned int bus)
         string busname = busptr->get_bus_name();
         if(busptr->get_bus_type()!=OUT_OF_SERVICE)
         {
-            ostringstream osstream;
 
             osstream<<"Bus "<<bus<<"["<<busname<<"] will be tripped at time "<<TIME<<" s. Devices connecting to bus "<<bus<<" will also be tripped.";
             toolkit->show_information_with_leading_time_stamp(osstream);
@@ -3861,6 +3879,11 @@ void DYNAMICS_SIMULATOR::trip_bus(unsigned int bus)
             optimize_network_ordering();
             //network_matrix.build_dynamic_network_Y_matrix();
             //build_jacobian();
+        }
+        else
+        {
+            osstream<<"Bus "<<bus<<"["<<busname<<"] will not be tripped at time "<<TIME<<" s since it is out of service."<<endl;
+            toolkit->show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -3886,6 +3909,12 @@ void DYNAMICS_SIMULATOR::set_line_fault(const DEVICE_ID& line_id, unsigned int s
             string jbusname = psdb.bus_number2bus_name(lineptr->get_receiving_side_bus());
             if(lineptr->is_connected_to_bus(side_bus))
             {
+                if(lineptr->get_sending_side_breaker_status()==false and lineptr->get_receiving_side_breaker_status()==false)
+                {
+                    osstream<<"No fault will be set for "<<lineptr->get_compound_device_name()<<" at time "<<TIME<<" s since it is out of service."<<endl;
+                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    return;
+                }
                 if(location>=0.0 and location<=1.0)
                 {
                     if(steps_fast_complex_abs(fault_shunt)>DOUBLE_EPSILON)
@@ -3955,6 +3984,12 @@ void DYNAMICS_SIMULATOR::clear_line_fault(const DEVICE_ID& line_id, unsigned int
             string jbusname = psdb.bus_number2bus_name(lineptr->get_receiving_side_bus());
             if(lineptr->is_connected_to_bus(side_bus))
             {
+                if(lineptr->get_sending_side_breaker_status()==false and lineptr->get_receiving_side_breaker_status()==false)
+                {
+                    osstream<<"No fault will be cleared for "<<lineptr->get_compound_device_name()<<" at time "<<TIME<<" s since it is out of service."<<endl;
+                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    return;
+                }
                 if(location>=0.0 and location<=1.0)
                 {
                     osstream<<"Fault at location "<<location<<" to bus "<<side_bus<<" will be cleared for "
@@ -4020,6 +4055,12 @@ void DYNAMICS_SIMULATOR::trip_line(const DEVICE_ID& line_id)
 
                 if(lineptr->get_receiving_side_breaker_status()==true)
                     trip_line_breaker(line_id, lineptr->get_receiving_side_bus());
+            }
+            else
+            {
+                osstream<<lineptr->get_compound_device_name()<<" will not be tripped at time "<<TIME<<" s since it is out of service."<<endl;
+                toolkit->show_information_with_leading_time_stamp(osstream);
+                return;
             }
         }
         else

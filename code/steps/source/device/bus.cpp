@@ -570,6 +570,7 @@ void BUS::set_fault(const FAULT& bus_fault)
 
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
+
         this->fault = bus_fault;
     }
 }
