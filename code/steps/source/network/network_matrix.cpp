@@ -97,7 +97,7 @@ void NETWORK_MATRIX::build_network_Y_matrix()
     network_Y1_matrix.clear();
     set_this_Y_and_Z_matrix_as(network_Y1_matrix);
 
-    //build_initial_zero_matrix(network_Y1_matrix);
+    build_initial_zero_matrix(network_Y1_matrix);
 
     add_lines_to_network();
     add_transformers_to_network();

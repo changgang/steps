@@ -227,7 +227,7 @@ void STEPS_IMEXPORTER::load_case_data()
     {
         int appendCode = get_integer_data(data.front(),"0");
         data.erase(data.begin());
-        if(appendCode==0) psdb.clear(); // if not in appending mode, clear the database
+        if(appendCode==0) toolkit.clear(); // if not in appending mode, clear the toolkit
     }
     if(data.size()>0)
     {

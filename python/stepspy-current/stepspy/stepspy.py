@@ -4843,7 +4843,7 @@ class STEPS():
         STEPS_LIB.api_trip_wt_generator(ibus, ickt, n, self.toolkit_index)
         return
 
-    def shed_generator(self, generator, percent):
+    def shed_wt_generator(self, generator, percent):
         """
         Shed wind turbine generator by percent.
         Args:
