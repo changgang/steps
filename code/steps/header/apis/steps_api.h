@@ -114,7 +114,7 @@ EXPORT_STEPS_DLL unsigned int api_get_overshadowed_bus_count(unsigned int toolki
 EXPORT_STEPS_DLL void api_show_device_data(const char* device_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 
-EXPORT_STEPS_DLL unsigned int api_bus_name2bus_number(const char* bus_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL unsigned int api_bus_name2bus_number(const char* bus_name, double vbase=0.0, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL const char* api_bus_number2bus_name(unsigned int bus_number, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 
@@ -369,6 +369,9 @@ EXPORT_STEPS_DLL void api_stop_dynamic_simulation(unsigned int toolkit_index=IND
 EXPORT_STEPS_DLL void api_run_simulation_to_time(double t_end, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_run_a_step(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL bool api_get_system_angular_stable_flag(unsigned int toolkit_index=INDEX_NOT_EXIST);
+
+EXPORT_STEPS_DLL double api_get_basic_meter_value(const char* meter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_user_meter_value(int index, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void api_set_bus_fault(unsigned int bus, char* fault_type, double fault_G, double fault_B, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_clear_bus_fault(unsigned int bus, char* fault_type, unsigned int toolkit_index=INDEX_NOT_EXIST);

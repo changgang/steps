@@ -16,6 +16,7 @@ class STEPS():
     def __init__(self, is_default=False, log_file=""):
         """
         STEPS initialization.
+        Example: N/A
         """
         global STEPS_LIB
         self.__encoding = "gb18030"
@@ -31,6 +32,7 @@ class STEPS():
     def __del__(self):
         """
         STEPS destruction.
+        Example: N/A
         """
         global STEPS_LIB
         if 'STEPS_LIB' in globals():
@@ -44,6 +46,7 @@ class STEPS():
         Rets:
             (1) bus: integer, device bus number.
             (2) ickt: string, device identifier.
+        Example: N/A
         """
         bus = did[0]
         ickt = did[1]
@@ -58,6 +61,7 @@ class STEPS():
             (1) ibus: integer, device first bus number.
             (2) jbus: integer, device second bus number.
             (3) ickt: string, device identifier.
+        Example: N/A
         """
         ibus = did[0]
         jbus = did[1]
@@ -74,6 +78,7 @@ class STEPS():
             (2) jbus: integer, device second bus number.
             (3) kbus: integer, device third bus number.
             (4) ickt: string, device identifier.
+        Example: N/A
         """
         ibus = did[0]
         jbus = did[1]
@@ -90,6 +95,7 @@ class STEPS():
             (1) data: Python string.
         Rets:
             (1) char* pointer. If Python version is not 2 or 3, None will be returned.
+        Example: N/A
         """
         python_version = platform.python_version_tuple()
         python_version = python_version[0]
@@ -107,6 +113,7 @@ class STEPS():
             (1) data: char* pointer.
         Rets:
             (1) Python string.
+        Example: N/A
         """
         python_version = platform.python_version_tuple()
         python_version = python_version[0]
@@ -130,6 +137,7 @@ class STEPS():
             (1) log_file: string, target log file name. If no file is set (""), the log will be exported to stdout.
             (2) log_file_append_mode: boolean, log file append mode. True for writting to new file, False for appending to existing file. Default is False.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         log_file = self.__get_c_char_p_of_string(log_file)
@@ -142,6 +150,7 @@ class STEPS():
         Args:
             (1) num: integer, parallel thread number. If num=1, serial simulation is used. num should be < number of CPU physical cores.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_set_toolkit_parallel_thread_number(num, self.toolkit_index)
@@ -153,6 +162,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) parallel thread number, integer
+        Example: N/A
         """
         global STEPS_LIB
         return STEPS_LIB.api_get_toolkit_parallel_thread_number(self.toolkit_index)
@@ -164,6 +174,7 @@ class STEPS():
             (1) cap: integer, database capacity, in bytes.
         Rets:
             (1) N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_set_toolkit_dynamic_model_database_capacity(cap, self.toolkit_index)
@@ -175,6 +186,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) database capacity in bytes, integer
+        Example: N/A
         """
         global STEPS_LIB
         return STEPS_LIB.api_get_toolkit_dynamic_model_database_capacity(self.toolkit_index)
@@ -184,6 +196,7 @@ class STEPS():
         Clear all data in the toolkit.
         Args: N/A
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_clear_toolkit(self.toolkit_index)
@@ -196,6 +209,7 @@ class STEPS():
             (1) dataname: String of variable name.
         Rets:
             (1) Value of the variable. 0 if the variable name is invalid.
+        Example: N/A
         """
         global STEPS_LIB
         dataname = self.__get_c_char_p_of_string(dataname)
@@ -208,6 +222,7 @@ class STEPS():
             (1) dataname: String of variable name.
             (2) value: Value to set.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         dataname = self.__get_c_char_p_of_string(dataname)
@@ -219,6 +234,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) System base power in MVA.
+        Example: N/A
         """
         global STEPS_LIB
         return self.get_toolkit_float_data("SBASE")
@@ -229,6 +245,7 @@ class STEPS():
         Args:
             (1) sbase: System base power in MVA.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         return self.set_toolkit_float_data("SBASE", sbase)
@@ -240,6 +257,7 @@ class STEPS():
             (1) dataname: String of variable name.
         Rets:
             (1) String to variable.
+        Example: N/A
         """
         global STEPS_LIB
         dataname = self.__get_c_char_p_of_string(dataname)
@@ -252,6 +270,7 @@ class STEPS():
             (1) dataname: String of variable name.
             (2) value: String to set.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         dataname = self.__get_c_char_p_of_string(dataname)
@@ -264,6 +283,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) String of case information.
+        Example: N/A
         """
         return self.get_toolkit_string_data("CASE INFORMATION")
     
@@ -273,6 +293,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) String of case additional information.
+        Example: N/A
         """
         return self.get_toolkit_string_data("CASE ADDITIONAL INFORMATION")
     
@@ -282,6 +303,7 @@ class STEPS():
         Args:
             (1) value: String of case information.
         Rets: N/A
+        Example: N/A
         """
         return self.set_toolkit_string_data("CASE INFORMATION", value)
     
@@ -291,6 +313,7 @@ class STEPS():
         Args:
             (1) value: String of case additional information.
         Rets: N/A
+        Example: N/A
         """
         return self.set_toolkit_string_data("CASE ADDITIONAL INFORMATION", value)    
 
@@ -301,6 +324,7 @@ class STEPS():
             (1) dataname: String of variable name.
         Rets:
             (1) Boolean value of given dataname. If data name is invalid, False is returned.
+        Example: N/A
         """
         global STEPS_LIB
         dataname = self.__get_c_char_p_of_string(dataname)
@@ -313,6 +337,7 @@ class STEPS():
             (1) dataname: String of variable name.
             (2) value: Boolean value.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         dataname = self.__get_c_char_p_of_string(dataname)
@@ -324,6 +349,7 @@ class STEPS():
         Args: N/A
         Rets: 
             (1) Boolean value of the detailed log logic. True if detailed log is enabled, False if otherwise.
+        Example: N/A
         """
         global STEPS_LIB
         return self.get_toolkit_bool_data("DETAILED LOG LOGIC")
@@ -334,6 +360,7 @@ class STEPS():
         Args:
             (1) logic: True to enable detailed log, False to disable detailed log.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         return self.set_toolkit_bool_data("DETAILED LOG LOGIC", logic)
@@ -345,6 +372,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Allowed maximum bus number.
+        Example: N/A
         """
         global STEPS_LIB
         return int(STEPS_LIB.api_get_allowed_maximum_bus_number(self.toolkit_index))
@@ -355,6 +383,7 @@ class STEPS():
         Args:
             (1) max_bus_number: Allowed maximum bus number.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_set_allowed_maximum_bus_number(max_bus_number, self.toolkit_index)
@@ -365,6 +394,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of buses that can be stored in the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("BUS")
@@ -376,6 +406,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of generators that can be stored in the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Generator")
@@ -387,6 +418,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of wind turbine generators that can be stored in the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("WT Generator")
@@ -398,6 +430,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of PV units that can be stored in the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("PV Unit")
@@ -409,6 +442,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of loads that can be stored in the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Load")
@@ -420,6 +454,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of fixed shunts that can be stored in the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Fixed Shunt")
@@ -431,6 +466,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of transmission lines that can be stored in the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Line")
@@ -442,6 +478,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of transformers that can be stored in the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Transformer")
@@ -453,6 +490,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of HVDC links that can be stored in the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("HVDC")
@@ -464,6 +502,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of equivalent devices that can be stored in the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Equivalent Device")
@@ -475,6 +514,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of energy storages that can be stored in the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Energy Storage")
@@ -486,6 +526,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of areas that can be stored in the database.
+        Example: N/A
         """
         global STEPS_LIB
         return int(STEPS_LIB.api_get_area_capacity(self.toolkit_index))
@@ -496,6 +537,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of zones that can be stored in the database.
+        Example: N/A
         """
         global STEPS_LIB
         return int(STEPS_LIB.api_get_zone_capacity(self.toolkit_index))
@@ -506,6 +548,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of owners that can be stored in the database.
+        Example: N/A
         """
         global STEPS_LIB
         return int(STEPS_LIB.api_get_owner_capacity(self.toolkit_index))
@@ -518,6 +561,7 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("BUS")
@@ -531,6 +575,7 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Generator")
@@ -544,6 +589,7 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Wt Generator")
@@ -556,6 +602,7 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("PV Unit")
@@ -569,6 +616,7 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Load")
@@ -582,6 +630,7 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Fixed Shunt")
@@ -595,6 +644,7 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Line")
@@ -608,6 +658,7 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Transformer")
@@ -621,6 +672,7 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("HVDC")
@@ -634,6 +686,7 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Equivalent Device")
@@ -647,6 +700,7 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Energy Storage")
@@ -660,6 +714,7 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
+        Example: N/A
         """
         global STEPS_LIB
         return STEPS_LIB.api_set_area_capacity(capacity, self.toolkit_index)
@@ -672,6 +727,7 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
+        Example: N/A
         """
         global STEPS_LIB
         return STEPS_LIB.api_set_zone_capacity(capacity, self.toolkit_index)
@@ -684,6 +740,7 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
+        Example: N/A
         """
         global STEPS_LIB
         return STEPS_LIB.api_set_owner_capacity(capacity, self.toolkit_index)
@@ -695,6 +752,7 @@ class STEPS():
             (1) file: string, source powerflow file name.
             (2) ftype: string, powerflow data format.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -711,6 +769,7 @@ class STEPS():
             (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
             (5) export_mode: integer, export mode (0,1,2,3). 0 for exporting data as import, 1 for exporting data ordered by bus number in ascending order, 2 for exporting data ordered by bus name in ascending order, 3 for exporting buses in the order of generator, load, hvdc buses.
         Rets: N/A
+        Example: N/A
         """
         if export_mode not in (0,1,2,3):
             export_mode = 0;
@@ -734,6 +793,7 @@ class STEPS():
             (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
             (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -749,6 +809,7 @@ class STEPS():
             (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
             (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -764,6 +825,7 @@ class STEPS():
             (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
             (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -779,6 +841,7 @@ class STEPS():
             (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
             (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -792,6 +855,7 @@ class STEPS():
             (1) file: string, source powerflow result file name.
             (2) ftype: string, powerflow result data format.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -805,6 +869,7 @@ class STEPS():
             (1) file: string, source dynamic data file name.
             (2) ftype: string, dynamic data format.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -818,6 +883,7 @@ class STEPS():
             (1) file: string, target dynamic data file name.
             (2) ftype: string, dynamic data format.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -829,6 +895,7 @@ class STEPS():
         Check powerflow data. If any inappropriate data is set, report will be sent to log file.
         Args: N/A
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_check_powerflow_data(self.toolkit_index)
@@ -838,6 +905,7 @@ class STEPS():
         Check dynamic model data. If any inappropriate data is set, report will be sent to log file.
         Args: N/A
         Rets: N/A        
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_check_dynamic_data(self.toolkit_index)
@@ -847,6 +915,7 @@ class STEPS():
         Check missing models. If any compulsory models are missing, report will be sent to log file.
         Args: N/A
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_check_missing_models(self.toolkit_index)
@@ -856,6 +925,7 @@ class STEPS():
         Check the least dynamic time constants. Report of the first least time constants in models will be sent to log file. The dynamic simulation time step should be < one fourth of the least time constant.
         Args: N/A
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_check_least_dynamic_time_constants(self.toolkit_index)
@@ -865,6 +935,7 @@ class STEPS():
         Check network connectivity. 
         Args: N/A
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_check_network_connectivity(remove_void_islands, self.toolkit_index)
@@ -878,6 +949,7 @@ class STEPS():
             (2) busname: String of bus name.
             (3) basevoltage: Base voltage in kV.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         busname = self.__get_c_char_p_of_string(busname)
@@ -890,6 +962,7 @@ class STEPS():
         Args:
             (1) generator: Tuple device id in format of (bus, ickt).
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
@@ -903,6 +976,7 @@ class STEPS():
         Args:
             (1) generator: Tuple device id in format of (bus, ickt).
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
@@ -915,6 +989,7 @@ class STEPS():
         Args:
             (1) unit: Tuple device id in format of (bus, ickt).
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(unit)
@@ -928,6 +1003,7 @@ class STEPS():
         Args:
             (1) load: Tuple device id in format of (bus, ickt).
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(load)
@@ -941,6 +1017,7 @@ class STEPS():
         Args:
             (1) shunt: Tuple device id in format of (bus, ickt).
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(shunt)
@@ -954,6 +1031,7 @@ class STEPS():
         Args:
             (1) line: Tuple device id in format of (ibus, jbus, ickt).
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
@@ -967,6 +1045,7 @@ class STEPS():
         Args:
             (1) hvdc: Tuple device id in format of (ibus, jbus, ickt).
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
@@ -982,6 +1061,7 @@ class STEPS():
         Rets: N/A
         Tips:
             kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, kbus, ickt = self.__extract_triple_bus_device_id(transformer)
@@ -995,6 +1075,7 @@ class STEPS():
         Args:
             (1) device: Tuple device id in format of (bus, ickt).
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(device)
@@ -1008,6 +1089,7 @@ class STEPS():
         Args:
             (1) storage: Tuple device id in format of (bus, ickt).
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(storage)
@@ -1022,6 +1104,7 @@ class STEPS():
             (1) areanumber: Area number.
             (2) areaname: String of area name.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         areaname = self.__get_c_char_p_of_string(areaname)
@@ -1035,6 +1118,7 @@ class STEPS():
             (1) zonenumber: Zone number.
             (2) zonename: String of zone name.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         zonename = self.__get_c_char_p_of_string(zonename)
@@ -1048,6 +1132,7 @@ class STEPS():
             (1) ownernumber: Owner number.
             (2) ownername: String of owner name.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         ownername = self.__get_c_char_p_of_string(ownername)
@@ -1060,6 +1145,7 @@ class STEPS():
         Args:
             (1) busnumber: Bus number.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_remove_bus(busnumber, self.toolkit_index)
@@ -1071,6 +1157,7 @@ class STEPS():
         Args:
             (1) generator: Tuple generator device id in format of (bus, ickt).
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
@@ -1084,6 +1171,7 @@ class STEPS():
         Args:
             (1) generator: Tuple wind turbine generator device id in format of (bus, ickt).
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
@@ -1097,6 +1185,7 @@ class STEPS():
         Args:
             (1) unit: Tuple PV unit device id in format of (bus, ickt).
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(unit)
@@ -1110,6 +1199,7 @@ class STEPS():
         Args:
             (1) load: Tuple load device id in format of (bus, ickt).
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(load)
@@ -1123,6 +1213,7 @@ class STEPS():
         Args:
             (1) shunt: Tuple fixed shunt device id in format of (bus, ickt).
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(shunt)
@@ -1136,6 +1227,7 @@ class STEPS():
         Args:
             (1) line: Tuple transmission line device id in format of (ibus, jbus, ickt).
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
@@ -1149,6 +1241,7 @@ class STEPS():
         Args:
             (1) hvdc: Tuple HVDC link device id in format of (ibus, jbus, ickt).
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
@@ -1164,6 +1257,7 @@ class STEPS():
         Rets: N/A
         Tips:
             kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, kbus, ickt = self.__extract_triple_bus_device_id(transformer)
@@ -1177,6 +1271,7 @@ class STEPS():
         Args:
             (1) device: Tuple equivalent device device id in format of (bus, ickt).
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(device)
@@ -1190,6 +1285,7 @@ class STEPS():
         Args:
             (1) storage: Tuple energy storage device id in format of (bus, ickt).
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(storage)
@@ -1203,6 +1299,7 @@ class STEPS():
         Args:
             (1) arenumber: area number to remove.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_remove_area(areanumber, self.toolkit_index)
@@ -1214,6 +1311,7 @@ class STEPS():
         Args:
             (1) zonenumber: zone number to remove.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_remove_zone(zonenumber, self.toolkit_index)
@@ -1225,6 +1323,7 @@ class STEPS():
         Args:
             (1) ownernumber: owner number to remove.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_remove_owner(ownernumber, self.toolkit_index)
@@ -1239,6 +1338,7 @@ class STEPS():
         Rets: N/A
         Tips:
             The new_number should be valid, a.k.a, should be positive and < system allowed maximum bus number.
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_change_bus_number(old_number, new_number, self.toolkit_index)
@@ -1253,6 +1353,7 @@ class STEPS():
         Tips:
             The bus pair csv should have no header lines. Each line is a record, and each record should have the following format: "original_number, new_number".
             It is recommended that there should be no intersection between the sets of new bus numbers and old bus numbers.
+        Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -1265,6 +1366,7 @@ class STEPS():
         Args: N/A
         Rets: 
             (1) Number of buses.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("BUS")
@@ -1275,6 +1377,7 @@ class STEPS():
         Args: N/A
         Rets: 
             (1) Number of generators.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Generator")
@@ -1285,6 +1388,7 @@ class STEPS():
         Args: N/A
         Rets: 
             (1) Number of wind turbine generators.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("WT Generator")
@@ -1295,6 +1399,7 @@ class STEPS():
         Args: N/A
         Rets: 
             (1) Number of PV units.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("PV Unit")
@@ -1305,6 +1410,7 @@ class STEPS():
         Args: N/A
         Rets: 
             (1) Number of loads.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Load")
@@ -1315,6 +1421,7 @@ class STEPS():
         Args: N/A
         Rets: 
             (1) Number of fixed shunts.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Fixed Shunt")
@@ -1325,6 +1432,7 @@ class STEPS():
         Args: N/A
         Rets: 
             (1) Number of transmission lines.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Line")
@@ -1335,6 +1443,7 @@ class STEPS():
         Args: N/A
         Rets: 
             (1) Number of transformers.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Transformer")
@@ -1345,6 +1454,7 @@ class STEPS():
         Args: N/A
         Rets: 
             (1) Number of HVDC links.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("HVDC")
@@ -1355,6 +1465,7 @@ class STEPS():
         Args: N/A
         Rets: 
             (1) Number of equivalent devices.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Equivalent Device")
@@ -1365,6 +1476,7 @@ class STEPS():
         Args: N/A
         Rets: 
             (1) Number of energy storages.
+        Example: N/A
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Energy Storage")
@@ -1375,6 +1487,7 @@ class STEPS():
         Args: N/A
         Rets: 
             (1) Number of areas.
+        Example: N/A
         """
         global STEPS_LIB
         return STEPS_LIB.api_get_area_count(self.toolkit_index)
@@ -1384,6 +1497,7 @@ class STEPS():
         Args: N/A
         Rets: 
             (1) Number of zones.
+        Example: N/A
         """
         global STEPS_LIB
         return STEPS_LIB.api_get_zone_count(self.toolkit_index)
@@ -1393,6 +1507,7 @@ class STEPS():
         Args: N/A
         Rets: 
             (1) Number of owners.
+        Example: N/A
         """
         global STEPS_LIB
         return STEPS_LIB.api_get_owner_count(self.toolkit_index)
@@ -1402,6 +1517,7 @@ class STEPS():
         Args: N/A
         Rets: 
             (1) Number of in-service buses.
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_get_in_service_bus_count(self.toolkit_index)
@@ -1411,6 +1527,7 @@ class STEPS():
         Update overshowed buses.
         Args: N/A
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         return STEPS_LIB.api_update_overshadowed_buses(self.toolkit_index)
@@ -1419,6 +1536,7 @@ class STEPS():
         Set all buses as un-overshowed.
         Args: N/A
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_set_all_buses_un_overshadowed(self.toolkit_index)
@@ -1431,6 +1549,7 @@ class STEPS():
             (1) Number of overshadowed buses.
         Tips:
             This function calls api to update overshadowed buses first.
+        Example: N/A
         """
         global STEPS_LIB
         return STEPS_LIB.api_get_overshadowed_bus_count(self.toolkit_index)
@@ -1442,6 +1561,7 @@ class STEPS():
             (1) bus: bus number.
         Rets:
             (1) True if the bus exists, False otherwise.
+        Example: N/A
         """
         global STEPS_LIB
         return STEPS_LIB.api_is_bus_exist(bus, self.toolkit_index)
@@ -1453,6 +1573,7 @@ class STEPS():
             (1) generator: tuple of generator device id in format of (bus, ickt).
         Rets:
             (1) True if the generator exists, False otherwise.
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
@@ -1466,6 +1587,7 @@ class STEPS():
             (1) generator: tuple of wind turbine generator device id in format of (bus, ickt).
         Rets:
             (1) True if the wind turbine generator exists, False otherwise.
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
@@ -1479,6 +1601,7 @@ class STEPS():
             (1) pv_unit: tuple of PV unit device id in format of (bus, ickt).
         Rets:
             (1) True if the PV unit exists, False otherwise.
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(pv_unit)
@@ -1492,6 +1615,7 @@ class STEPS():
             (1) load: tuple of load device id in format of (bus, ickt).
         Rets:
             (1) True if the load exists, False otherwise.
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(load)
@@ -1505,6 +1629,7 @@ class STEPS():
             (1) shunt: tuple of fixed shunt device id in format of (bus, ickt).
         Rets:
             (1) True if the fixed shunt exists, False otherwise.
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(shunt)
@@ -1518,6 +1643,7 @@ class STEPS():
             (1) line: tuple of transmission line device id in format of (ibus, jbus, ickt).
         Rets:
             (1) True if the transmission line exists, False otherwise.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
@@ -1533,6 +1659,7 @@ class STEPS():
             (1) True if the transformer exists, False otherwise.
         Tips:
             kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, kbus, ickt = self.__extract_triple_bus_device_id(transformer)
@@ -1546,6 +1673,7 @@ class STEPS():
             (1) hvdc: tuple of HVDC link device id in format of (ibus, jbus, ickt).
         Rets:
             (1) True if the HVDC link exists, False otherwise.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
@@ -1559,6 +1687,7 @@ class STEPS():
             (1) equivalent_device: tuple of equivalent device device id in format of (bus, ickt).
         Rets:
             (1) True if the equivalent device exists, False otherwise.
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(equivalent_device)
@@ -1572,13 +1701,14 @@ class STEPS():
             (1) energy_storage: tuple of energy storage device id in format of (bus, ickt).
         Rets:
             (1) True if the energy storage device exists, False otherwise.
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(energy_storage)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_is_energy_storage_exist(bus, ickt, self.toolkit_index)
     
-    def bus_name2number(self, name):
+    def bus_name2number(self, name, vbase=0.0):
         """
         Converter bus name to bus number.
         Args:
@@ -1587,10 +1717,11 @@ class STEPS():
             (1) Bus number. 0 if bus does not exist.
         Tips:
             If two or more buses have the same bus name, only the first bus is returned.
+        Example: N/A
         """
         global STEPS_LIB
         name = self.__get_c_char_p_of_string(name)
-        return int(STEPS_LIB.api_bus_name2bus_number(name, self.toolkit_index))
+        return int(STEPS_LIB.api_bus_name2bus_number(name, vbase, self.toolkit_index))
 
     def bus_number2name(self, bus):
         """
@@ -1599,6 +1730,7 @@ class STEPS():
             (1) bus: bus number.
         Rets:
             (1) String of bus name. Empty string if bus does not exist.
+        Example: N/A
         """
         global STEPS_LIB
         return self.__get_string_from_c_char_p(STEPS_LIB.api_bus_number2bus_name(bus, self.toolkit_index))
@@ -1609,6 +1741,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Tuple of all buses. Empty tuple if no buses in the database.
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_initialize_all_bus_search(self.toolkit_index)
@@ -1634,6 +1767,7 @@ class STEPS():
             (8) owner: owner number. Returned buses must be of the owner. Ignore the owner constraint if owner=0.
         Rets:
             (1) Tuple of buses satisfying all constraints. Empty tuple if no buses are satisfying the constants.
+        Example: N/A
         """
         global STEPS_LIB
         buses = []        
@@ -1652,6 +1786,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Tuple of all generators. Empty tuple if no generators in the database.
+        Example: N/A
         """
         return self.get_generators_at_bus(0)
         
@@ -1661,6 +1796,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Tuple of all generators. Empty tuple if no generators in the database.
+        Example: N/A
         """
         global STEPS_LIB
         device = "GENERATOR"
@@ -1684,6 +1820,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Tuple of all wind turbine generators. Empty tuple if no wind turbine generators in the database.
+        Example: N/A
         """
         return self.get_wt_generators_at_bus(0)
         
@@ -1694,6 +1831,7 @@ class STEPS():
             (1) bus: bus number
         Rets:
             (1) Tuple of all wind turbine generators at given bus. Empty tuple if no wind turbine generators at given bus.
+        Example: N/A
         """
         global STEPS_LIB
         device = "WT GENERATOR"
@@ -1717,6 +1855,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Tuple of all PV units. Empty tuple if no PV units in the database.
+        Example: N/A
         """
         return self.get_pv_units_at_bus(0)
         
@@ -1727,6 +1866,7 @@ class STEPS():
             (1) bus: bus number
         Rets:
             (1) Tuple of all PV units at given bus. Empty tuple if no PV units at given bus.
+        Example: N/A
         """
         global STEPS_LIB
         device = "PV UNIT"
@@ -1750,6 +1890,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Tuple of all energy storages. Empty tuple if no energy storages in the database.
+        Example: N/A
         """
         return self.get_energy_storages_at_bus(0)
         
@@ -1760,6 +1901,7 @@ class STEPS():
             (1) bus: bus number
         Rets:
             (1) Tuple of all energy storages at given bus. Empty tuple if no energy storages at given bus.
+        Example: N/A
         """
         global STEPS_LIB
         device = "ENERGY STORAGE"
@@ -1783,6 +1925,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Tuple of all loads. Empty tuple if no loads in the database.
+        Example: N/A
         """
         return self.get_loads_at_bus(0)
         
@@ -1793,6 +1936,7 @@ class STEPS():
             (1) bus: bus number
         Rets:
             (1) Tuple of all loads at given bus. Empty tuple if no loads at given bus.
+        Example: N/A
         """
         global STEPS_LIB
         device = "LOAD"
@@ -1816,6 +1960,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Tuple of all fixed shunt. Empty tuple if no fixed shunts in the database.
+        Example: N/A
         """
         return self.get_fixed_shunts_at_bus(0)
         
@@ -1826,6 +1971,7 @@ class STEPS():
             (1) bus: bus number
         Rets:
             (1) Tuple of all fixed shunts at given bus. Empty tuple if no fixed shunts at given bus.
+        Example: N/A
         """
         global STEPS_LIB
         device = "FIXED SHUNT"
@@ -1849,6 +1995,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Tuple of all equivalent devices. Empty tuple if no equivalent devices in the database.
+        Example: N/A
         """
         return self.get_equivalent_devices_at_bus(0)
         
@@ -1859,6 +2006,7 @@ class STEPS():
             (1) bus: bus number
         Rets:
             (1) Tuple of all equivalent devices at given bus. Empty tuple if no equivalent devices at given bus.
+        Example: N/A
         """
         global STEPS_LIB
         device = "EQUIVALENT DEVICE"
@@ -1882,6 +2030,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Tuple of all transmission lines. Empty tuple if no transmission lines in the database.
+        Example: N/A
         """
         return self.get_lines_at_bus(0)
         
@@ -1892,6 +2041,7 @@ class STEPS():
             (1) bus: bus number
         Rets:
             (1) Tuple of all transmission lines at given bus. Empty tuple if no transmission lines at given bus.
+        Example: N/A
         """
         global STEPS_LIB
         device = "LINE"
@@ -1921,6 +2071,7 @@ class STEPS():
             (1) Tuple of all transmission lines between given buses. Empty tuple if no transmission lines between given buses.
         Example:
             get_lines_between_buses(1,2)
+        Example: N/A
         """
         lines = self.get_lines_at_bus(ibus)
         if len(lines)==0:
@@ -1938,6 +2089,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Tuple of all transformers. Empty tuple if no transformers in the database.
+        Example: N/A
         """
         return self.get_transformers_at_bus(0)
         
@@ -1948,6 +2100,7 @@ class STEPS():
             (1) bus: bus number
         Rets:
             (1) Tuple of all transformers at given bus. Empty tuple if no transformers at given bus.
+        Example: N/A
         """
         global STEPS_LIB
         device = "TRANSFORMER"
@@ -1982,6 +2135,7 @@ class STEPS():
             get_transformers_between_buses(1,2)
             get_transformers_between_buses(1,2,0)
             get_transformers_between_buses(1,2,3)
+        Example: N/A
         """
         transformers = self.get_transformers_at_bus(ibus)
         if len(transformers)==0:
@@ -1999,6 +2153,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Tuple of all HVDC links. Empty tuple if no HVDC links in the database.
+        Example: N/A
         """
         return self.get_hvdcs_at_bus(0)
         
@@ -2009,6 +2164,7 @@ class STEPS():
             (1) bus: bus number
         Rets:
             (1) Tuple of all HVDC links at given bus. Empty tuple if no HVDC links at given bus.
+        Example: N/A
         """
         global STEPS_LIB
         device = "HVDC"
@@ -2038,6 +2194,7 @@ class STEPS():
             (1) Tuple of all HVDC links between given buses. Empty tuple if no HVDC links between given buses.
         Example:
             get_hvdcs_between_buses(1,2)
+        Example: N/A
         """
         hvdcs = self.get_hvdcs_at_bus(ibus)
         if len(hvdcs)==0:
@@ -2057,6 +2214,7 @@ class STEPS():
             (2) zone: Zone number. Retured generators must be in the zone. Zone constraint is ignored if zone=0.
         Rets:
             (1) Tuple of all generators in given area and zone. Empty tuple if none in given area and zone.
+        Example: N/A
         """
         all_gens = self.get_all_generators()
         if area==0 and zone==0:
@@ -2092,6 +2250,7 @@ class STEPS():
             (2) zone: Zone number. Retured wind turbine generators must be in the zone. Zone constraint is ignored if zone=0.
         Rets:
             (1) Tuple of all wind turbine generators in given area and zone. Empty tuple if none in given area and zone.
+        Example: N/A
         """
         all_gens = self.get_all_wt_generators()
         if area==0 and zone==0:
@@ -2127,6 +2286,7 @@ class STEPS():
             (2) zone: Zone number. Retured PV units must be in the zone. Zone constraint is ignored if zone=0.
         Rets:
             (1) Tuple of all PV units in given area and zone. Empty tuple if none in given area and zone.
+        Example: N/A
         """
         all_pvs = self.get_all_pv_units()
         if area==0 and zone==0:
@@ -2162,6 +2322,7 @@ class STEPS():
             (2) zone: Zone number. Retured loads must be in the zone. Zone constraint is ignored if zone=0.
         Rets:
             (1) Tuple of all loads in given area and zone. Empty tuple if none in given area and zone.
+        Example: N/A
         """
         all_loads = self.get_all_loads()
         if area==0 and zone==0:
@@ -2195,6 +2356,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Tuple of all areas number. Empty tuple if no areas in the database.
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_initialize_area_search(self.toolkit_index)
@@ -2213,6 +2375,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Tuple of all zones number. Empty tuple if no zones in the database.
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_initialize_zone_search(self.toolkit_index)
@@ -2231,6 +2394,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Tuple of all owners number. Empty tuple if no owners in the database.
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_initialize_owner_search(self.toolkit_index)
@@ -2255,6 +2419,7 @@ class STEPS():
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -2283,6 +2448,7 @@ class STEPS():
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -2313,6 +2479,7 @@ class STEPS():
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
         """
         global STEPS_LIB
         return self.__get_source_data(generator, par_type, par_name)
@@ -2329,6 +2496,7 @@ class STEPS():
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
         """
         global STEPS_LIB
         return self.__get_source_data(wt_generator, par_type, par_name)
@@ -2345,6 +2513,7 @@ class STEPS():
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
         """
         global STEPS_LIB
         return self.__get_source_data(pv_unit, par_type, par_name)
@@ -2361,6 +2530,7 @@ class STEPS():
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
         """
         global STEPS_LIB
         return self.__get_source_data(energy_storage, par_type, par_name)
@@ -2377,6 +2547,7 @@ class STEPS():
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -2407,6 +2578,7 @@ class STEPS():
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -2437,6 +2609,7 @@ class STEPS():
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -2467,6 +2640,7 @@ class STEPS():
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -2499,6 +2673,7 @@ class STEPS():
             kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -2534,6 +2709,7 @@ class STEPS():
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -2568,6 +2744,7 @@ class STEPS():
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -2596,6 +2773,7 @@ class STEPS():
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -2624,6 +2802,7 @@ class STEPS():
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -2653,6 +2832,7 @@ class STEPS():
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
             The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -2684,6 +2864,7 @@ class STEPS():
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
             The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -2716,6 +2897,7 @@ class STEPS():
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
             The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+        Example: N/A
         """
         global STEPS_LIB
         return self.__set_source_data(generator, par_type, par_name, value)
@@ -2733,6 +2915,7 @@ class STEPS():
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
             The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+        Example: N/A
         """
         global STEPS_LIB
         return self.__set_source_data(wt_generator, par_type, par_name, value)
@@ -2750,6 +2933,7 @@ class STEPS():
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
             The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+        Example: N/A
         """
         global STEPS_LIB
         return self.__set_source_data(pv_unit, par_type, par_name, value)
@@ -2767,6 +2951,7 @@ class STEPS():
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
             The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+        Example: N/A
         """
         global STEPS_LIB
         return self.__set_source_data(energy_storage, par_type, par_name, value)
@@ -2781,6 +2966,7 @@ class STEPS():
         Tips: N/A
         Example: 
             set_generator_power((1,"#1"), 100+20j)
+        Example: N/A
         """
         self.set_generator_data(generator, "F", "PGEN_MW", s.real)
         self.set_generator_data(generator, "F", "QGEN_MVAR", s.imag)
@@ -2795,6 +2981,7 @@ class STEPS():
         Tips: N/A
         Example: 
             set_wt_generator_power((1,"#1"), 100+20j)
+        Example: N/A
         """
         self.set_wt_generator_data(generator, "F", "PGEN_MW", s.real)
         self.set_wt_generator_data(generator, "F", "QGEN_MVAR", s.imag)
@@ -2809,6 +2996,7 @@ class STEPS():
         Tips: N/A
         Example: 
             set_pv_unit_power((1,"#1"), 100+20j)
+        Example: N/A
         """
         self.set_pv_unit_data(generator, "F", "PGEN_MW", s.real)
         self.set_pv_unit_data(generator, "F", "QGEN_MVAR", s.imag)
@@ -2823,6 +3011,7 @@ class STEPS():
         Tips: N/A
         Example: 
             set_energy_storage_power((1,"#1"), 100+20j)
+        Example: N/A
         """
         self.set_energy_storage_data(energy_storage, "F", "PGEN_MW", s.real)
         self.set_energy_storage_data(energy_storage, "F", "QGEN_MVAR", s.imag)
@@ -2840,6 +3029,7 @@ class STEPS():
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
             The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -2873,6 +3063,7 @@ class STEPS():
         Example: 
             set_load_power((1,"#1"), 100+20j) # set constant power part only
             set_load_power((1,"#1"), sz = 60+10j) # set constant impedance part only
+        Example: N/A
         """
         if sp!=None:
             self.set_load_data(load, "F", "PP0_MW",sp.real)
@@ -2897,6 +3088,7 @@ class STEPS():
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
             The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -2929,6 +3121,7 @@ class STEPS():
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
             The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -2961,6 +3154,7 @@ class STEPS():
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
             The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -2995,6 +3189,7 @@ class STEPS():
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
             The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -3029,6 +3224,7 @@ class STEPS():
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
             The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -3057,6 +3253,7 @@ class STEPS():
         Rets: N/A
         Example:
             set_hvdc_power((1,2,"DC1"), 2000)
+        Example: N/A
         """
         self.set_hvdc_data(hvdc, "F", "HVDC", "PDCN_MW", p)
         return
@@ -3074,6 +3271,7 @@ class STEPS():
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
             The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -3104,6 +3302,7 @@ class STEPS():
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
             The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -3134,6 +3333,7 @@ class STEPS():
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
             The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -3154,6 +3354,7 @@ class STEPS():
     def converte_hvdc_to_load(self, hvdc):
         """
         to be implemented
+        Example: N/A
         """
         pass
         
@@ -3164,6 +3365,7 @@ class STEPS():
             (1) data: String of model data.
             (2) file_type: Model data type.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         data = self.__get_c_char_p_of_string(data)
@@ -3178,6 +3380,7 @@ class STEPS():
             (1) generator: Generator device id in format of (bus, ickt).
             (2) model_type: String of model type.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -3193,6 +3396,7 @@ class STEPS():
             (1) generator: Generator device id in format of (bus, ickt).
             (2) model_type: String of model type.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -3211,6 +3415,7 @@ class STEPS():
             (1) String of model name.
         Tips:
             If model type is not supported, empty string is returned.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -3232,6 +3437,7 @@ class STEPS():
             (1) Value of parameter
         Tips:
             If model type or parameter name is not supported, 0.0 is returned.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -3252,6 +3458,7 @@ class STEPS():
         Tips:
             If model type or parameter name is not supported, nothing will be changed.
             If value is not a number, function may malfunction and package may exit with error.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -3270,6 +3477,7 @@ class STEPS():
             (1) Tuple of parameter name and value pairs. Each parameter name and value pair is in format of (string of parameter name, value of parameter).
         Tips:
             If model type is not supported, empty tuple is returned.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -3294,6 +3502,7 @@ class STEPS():
             (1) String of model name.
         Tips:
             If model type is not supported, empty string is returned.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -3315,6 +3524,7 @@ class STEPS():
             (1) Value of parameter
         Tips:
             If model type or parameter name is not supported, 0.0 is returned.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -3335,6 +3545,7 @@ class STEPS():
         Tips:
             If model type or parameter name is not supported, nothing will be changed.
             If value is not a number, function may malfunction and package may exit with error.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -3353,6 +3564,7 @@ class STEPS():
             (1) Tuple of parameter name and value pairs. Each parameter name and value pair is in format of (string of parameter name, value of parameter).
         Tips:
             If model type is not supported, empty tuple is returned.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -3377,6 +3589,7 @@ class STEPS():
             (1) String of model name.
         Tips:
             If model type is not supported, empty string is returned.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(pv_unit)
@@ -3398,6 +3611,7 @@ class STEPS():
             (1) Value of parameter
         Tips:
             If model type or parameter name is not supported, 0.0 is returned.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(pv_unit)
@@ -3418,6 +3632,7 @@ class STEPS():
         Tips:
             If model type or parameter name is not supported, nothing will be changed.
             If value is not a number, function may malfunction and package may exit with error.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(pv_unit)
@@ -3436,6 +3651,7 @@ class STEPS():
             (1) Tuple of parameter name and value pairs. Each parameter name and value pair is in format of (string of parameter name, value of parameter).
         Tips:
             If model type is not supported, empty tuple is returned.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(pv_unit)
@@ -3460,6 +3676,7 @@ class STEPS():
             (1) String of model name.
         Tips:
             If model type is not supported, empty string is returned.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(load)
@@ -3481,6 +3698,7 @@ class STEPS():
             (1) Value of parameter
         Tips:
             If model type or parameter name is not supported, 0.0 is returned.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(load)
@@ -3501,6 +3719,7 @@ class STEPS():
         Tips:
             If model type or parameter name is not supported, nothing will be changed.
             If value is not a number, function may malfunction and package may exit with error.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(load)
@@ -3519,6 +3738,7 @@ class STEPS():
             (1) Tuple of parameter name and value pairs. Each parameter name and value pair is in format of (string of parameter name, value of parameter).
         Tips:
             If model type is not supported, empty tuple is returned.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(load)
@@ -3543,6 +3763,7 @@ class STEPS():
             (1) String of model name.
         Tips:
             If model type is not supported, empty string is returned.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
@@ -3564,6 +3785,7 @@ class STEPS():
             (1) Value of parameter
         Tips:
             If model type or parameter name is not supported, 0.0 is returned.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
@@ -3584,6 +3806,7 @@ class STEPS():
         Tips:
             If model type or parameter name is not supported, nothing will be changed.
             If value is not a number, function may malfunction and package may exit with error.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
@@ -3602,6 +3825,7 @@ class STEPS():
             (1) Tuple of parameter name and value pairs. Each parameter name and value pair is in format of (string of parameter name, value of parameter).
         Tips:
             If model type is not supported, empty tuple is returned.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
@@ -3626,6 +3850,7 @@ class STEPS():
             (1) String of model name.
         Tips:
             If model type is not supported, empty string is returned.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
@@ -3647,6 +3872,7 @@ class STEPS():
             (1) Value of parameter
         Tips:
             If model type or parameter name is not supported, 0.0 is returned.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
@@ -3667,6 +3893,7 @@ class STEPS():
         Tips:
             If model type or parameter name is not supported, nothing will be changed.
             If value is not a number, function may malfunction and package may exit with error.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
@@ -3685,6 +3912,7 @@ class STEPS():
             (1) Tuple of parameter name and value pairs. Each parameter name and value pair is in format of (string of parameter name, value of parameter).
         Tips:
             If model type is not supported, empty tuple is returned.
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
@@ -3706,6 +3934,7 @@ class STEPS():
             (1) gen: generator id in format of (ibus, ickt)
         Rets:
             (1) Pmax in MW
+        Example: N/A
         """
         gov_name = self.get_generator_related_model_name(gen, "gov")
         if gov_name is None:
@@ -3723,6 +3952,7 @@ class STEPS():
             (1) gen: generator id in format of (ibus, ickt)
         Rets:
             (1) Pmin in MW
+        Example: N/A
         """
         gov_name = self.get_generator_related_model_name(gen, "gov")
         if gov_name is None:
@@ -3740,6 +3970,7 @@ class STEPS():
             (1) gen: generator id in format of (ibus, ickt)
         Rets:
             (1) up spinning reserve in MW
+        Example: N/A
         """
         pgen = self.get_generator_data(gen, "d", "PGEN_MW")
         pmax = self.get_generator_governor_pmax(gen)
@@ -3752,6 +3983,7 @@ class STEPS():
             (1) gen: generator id in format of (ibus, ickt)
         Rets:
             (1) down spinning reserve in MW
+        Example: N/A
         """
         pgen = self.get_generator_data(gen, "d", "PGEN_MW")
         pmin = self.get_generator_governor_pmin(gen)
@@ -3765,6 +3997,7 @@ class STEPS():
             (2) zone: zone number, default is 0
         Rets:
             (1) total up spinning reserve in MW
+        Example: N/A
         """
         pup = 0.0
         gens = self.get_generators_with_constraints(area=area,zone=zone)
@@ -3780,6 +4013,7 @@ class STEPS():
             (2) zone: zone number, default is 0
         Rets:
             (1) total down spinning reserve in MW
+        Example: N/A
         """
         pdown = 0.0
         gens = self.get_generators_with_constraints(area=area,zone=zone)
@@ -3795,6 +4029,7 @@ class STEPS():
             (2) zone: zone number, default is 0
         Rets:
             (1) total pmax in MW
+        Example: N/A
         """
         pmax = 0.0
         gens = self.get_generators_with_constraints(area=area,zone=zone)
@@ -3810,6 +4045,7 @@ class STEPS():
             (2) zone: zone number, default is 0
         Rets:
             (1) total pmin in MW
+        Example: N/A
         """
         pmin = 0.0
         gens = self.get_generators_with_constraints(area=area,zone=zone)
@@ -3828,6 +4064,7 @@ class STEPS():
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -3853,6 +4090,7 @@ class STEPS():
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be changed.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -3872,6 +4110,7 @@ class STEPS():
         Show powerflow solver configuration. Report is sent to log.
         Args: N/A
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_show_powerflow_solver_configuration(self.toolkit_index)
@@ -3883,6 +4122,7 @@ class STEPS():
         Args:
             (1) method: String of powerflow solution method. Should be one of {"NR", "PQ"}
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         method = self.__get_c_char_p_of_string(method)
@@ -3895,6 +4135,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Boolean value. True for converged, False for not converged.
+        Example: N/A
         """
         global STEPS_LIB
         return STEPS_LIB.api_is_powerflow_converged(self.toolkit_index)
@@ -3907,6 +4148,7 @@ class STEPS():
             (1) System power loss in MW.
         Tips:
             If powerflow is not converged, the return result is meaningless.
+        Example: N/A
         """
         global STEPS_LIB
         p_gen = 0.0
@@ -3939,6 +4181,7 @@ class STEPS():
         Show powerflow result in log.
         Args: N/A
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_show_powerflow_result(self.toolkit_index)
@@ -3952,6 +4195,7 @@ class STEPS():
         Rets: N/A
         Tips:
             The result exported by save_powerflow_result() is briefer than that exported by save_extended_powerflow_result().
+        Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -3966,6 +4210,7 @@ class STEPS():
         Rets: N/A
         Tips:
             The result exported by save_extended_powerflow_result() is more detailed than that exported by save_powerflow_result().
+        Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -3978,6 +4223,7 @@ class STEPS():
         Args:
             (1) file: String of target file name.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -3989,6 +4235,7 @@ class STEPS():
         Build newwork complex Y matrix for powerflow solution.
         Args: N/A
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_build_network_Y_matrix(self.toolkit_index)
@@ -3999,6 +4246,7 @@ class STEPS():
         Build newwork real B' and B" matrix for decoupled powerflow solution.
         Args: N/A
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_build_decoupled_network_B_matrix(self.toolkit_index)
@@ -4011,6 +4259,7 @@ class STEPS():
         Rets: N/A
         Tips:
             DC powerflow solution is not supported.
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_build_dc_network_B_matrix(self.toolkit_index)
@@ -4023,6 +4272,7 @@ class STEPS():
         Rets: N/A
         Tips:
             The faults and source impedance are included in the Y matrix.
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_build_dynamic_network_Y_matrix(self.toolkit_index)
@@ -4033,6 +4283,7 @@ class STEPS():
         Build newwork complex Z matrix.
         Args: N/A
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_build_network_Z_matrix(self.toolkit_index)
@@ -4044,6 +4295,7 @@ class STEPS():
         Args:
             (1) file: String of target file name.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -4056,6 +4308,7 @@ class STEPS():
         Args:
             (1) file: String of target file name.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -4068,6 +4321,7 @@ class STEPS():
         Args:
             (1) file: String of target file name.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -4080,6 +4334,7 @@ class STEPS():
         Args:
             (1) file: String of target file name.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -4092,6 +4347,7 @@ class STEPS():
         Args:
             (1) file: String of target file name.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -4110,6 +4366,7 @@ class STEPS():
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -4137,6 +4394,7 @@ class STEPS():
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
             The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be changed
+        Example: N/A
         """
         global STEPS_LIB
         par_type = par_type.upper()
@@ -4160,6 +4418,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) String of output file name.
+        Example: N/A
         """
         global STEPS_LIB
         return self.__get_string_from_c_char_p(STEPS_LIB.api_get_dynamic_simulator_output_file(self.toolkit_index))
@@ -4170,6 +4429,7 @@ class STEPS():
         Args:
             (1) file: String of output file name.
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -4181,6 +4441,7 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Value of dynamic simulation time step in seconds.
+        Example: N/A
         """
         global STEPS_LIB
         return STEPS_LIB.api_get_dynamic_simulation_time_step(self.toolkit_index)
@@ -4194,6 +4455,7 @@ class STEPS():
         Tips:
             The time step MUST be less than 1/2 of the least time constant of all dynamic models. It is general practice to set time step to 1/4 of the least time constant.
             Run check_least_dynamic_time_constants() to report the least time constants.
+        Example: N/A
         """
         global STEPS_LIB
         return STEPS_LIB.api_set_dynamic_simulation_time_step(step, self.toolkit_index)
@@ -4203,6 +4465,7 @@ class STEPS():
         Show dynamic simulation configuration. Report is sent to log.
         Args: N/A
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_show_dynamic_simulation_configuration(self.toolkit_index)
@@ -4216,6 +4479,7 @@ class STEPS():
             (1) Value of dynamic simulation time in seconds.
         Tips:
             In STEPS, the minimum simulation time is -2*simulation time step.
+        Example: N/A
         """
         global STEPS_LIB
         return STEPS_LIB.api_get_dynamic_simulation_time(self.toolkit_index)
@@ -4227,6 +4491,7 @@ class STEPS():
         Rets: N/A
         Tips:
             If STEPS() is created with is_default=True, this api can help to clear all meters to avoid adding duplicate meters. 
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_clear_meters(self.toolkit_index)
@@ -4252,6 +4517,7 @@ class STEPS():
                 DYNAMIC_SIMULATOR::prepare_transformer_related_meters()
                 DYNAMIC_SIMULATOR::prepare_hvdc_related_meters()
                 DYNAMIC_SIMULATOR::prepare_equivalent_device_related_meters()                
+        Example: N/A
         """
         global STEPS_LIB
         device_type = device_type.upper()
@@ -4302,6 +4568,7 @@ class STEPS():
         Tips:
             For the supported meter types, see implementation of the following function of STEPS:
                 DYNAMIC_SIMULATOR::prepare_bus_related_meter() 
+        Example: N/A
         """
         global STEPS_LIB
         meter_type = self.__get_c_char_p_of_string(meter_type)
@@ -4319,6 +4586,7 @@ class STEPS():
         Tips:
             For the supported meter types, see implementation of the following function of STEPS:
                 DYNAMIC_SIMULATOR::prepare_generator_related_meter()
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
@@ -4339,6 +4607,7 @@ class STEPS():
         Tips:
             For the supported meter types, see implementation of the following function of STEPS:
                 DYNAMIC_SIMULATOR::prepare_wt_generator_related_meter()
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
@@ -4359,6 +4628,7 @@ class STEPS():
         Tips:
             For the supported meter types, see implementation of the following function of STEPS:
                 DYNAMIC_SIMULATOR::prepare_pv_unit_related_meter()
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(pvunit)
@@ -4379,6 +4649,7 @@ class STEPS():
         Tips:
             For the supported meter types, see implementation of the following function of STEPS:
                 DYNAMIC_SIMULATOR::prepare_energy_storage_related_meter()
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(estorage)
@@ -4399,6 +4670,7 @@ class STEPS():
         Tips:
             For the supported meter types, see implementation of the following function of STEPS:
                 DYNAMIC_SIMULATOR::prepare_load_related_meter()
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(load)
@@ -4420,6 +4692,7 @@ class STEPS():
         Tips:
             For the supported meter types, see implementation of the following function of STEPS:
                 DYNAMIC_SIMULATOR::prepare_line_related_meter()
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
@@ -4443,6 +4716,7 @@ class STEPS():
             kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
             For the supported meter types, see implementation of the following function of STEPS:
                 DYNAMIC_SIMULATOR::prepare_transformer_related_meter()
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, kbus, ickt = self.__extract_triple_bus_device_id(trans)
@@ -4465,6 +4739,7 @@ class STEPS():
         Tips:
             For the supported meter types, see implementation of the following function of STEPS:
                 DYNAMIC_SIMULATOR::prepare_hvdc_related_meter()
+        Example: N/A
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
@@ -4486,6 +4761,7 @@ class STEPS():
         Tips:
             For the supported meter types, see implementation of the following function of STEPS:
                 DYNAMIC_SIMULATOR::prepare_equivalent_device_related_meter()
+        Example: N/A
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(equivalent_device)
@@ -4500,6 +4776,7 @@ class STEPS():
         Start dynamic simulation. Dynamic initialization is performed.
         Args: N/A
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_start_dynamic_simulation(self.toolkit_index)
@@ -4510,6 +4787,7 @@ class STEPS():
         Stop dynamic simulation. No further dynamic simulation should be performed once dynamic simulation is stopped.
         Args: N/A
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_stop_dynamic_simulation(self.toolkit_index)
@@ -4523,6 +4801,7 @@ class STEPS():
         Rets: N/A
         Tips:
             The input time is the time when the dynamic simulation is paused. For example, if the current dynamic simulation time returned from get_dynamic_simulation_time() is 1.0s, and the returned time of get_dynamic_simulation_time() will become 1.5s after run_dynamic_simulation_to_time(1.5) is called.
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_run_simulation_to_time(time, self.toolkit_index)
@@ -4533,6 +4812,7 @@ class STEPS():
         Run a dynamic simulation step. The dynamic simulation time is increased by one time step once the function is called.
         Args: N/A
         Rets: N/A
+        Example: N/A
         """
         global STEPS_LIB
         STEPS_LIB.api_run_a_step(self.toolkit_index)
@@ -4548,22 +4828,69 @@ class STEPS():
         Tips:
             If the surveillance flag is enabled, False is returned if the maximum rotor angle difference in any island exceeds the threshold.
             Other, True is returned.
+        Example: N/A
         """
         global STEPS_LIB
         return STEPS_LIB.api_get_system_angular_stable_flag(self.toolkit_index)
 
+    def get_user_meter_value(self, index):
+        """
+        Return value of user meter in dynamic simulator.
+        Args: 
+            (1) index: meter index, starting from 1.
+        Rets:
+            (1) value: meter value. If index is invalid, 0 is returned.
+        Tips:
+            The meter index can be found in log file when calling start_dynamic_simulation()
+        Example:
+            index = 1
+            value = simulator.get_user_meter_value(index)
+            index = 2
+            value = simulator.get_user_meter_value(index)
+        """
+        global STEPS_LIB
+        return STEPS_LIB.api_get_user_meter_value(index, self.toolkit_index)
+
+    def get_basic_meter_value(self, meter_name):
+        """
+        Return value of basic meter in dynamic simulator.
+        Args: 
+            (1) meter_name: string, meter name. one of the following:
+                            "DAE ITERATION"
+                            "NETWORK ITERATION"
+                            "POWER MISMATCH IN MVA"
+                            "BUS WITH MAX POWER MISMATCH"
+                            "ELAPSED TIME OF INTEGRATION IN MS"
+                            "ELAPSED TIME OF NETWORK SOLUTION IN MS"
+                            "TOTAL ELAPSED TIME IN MS"
+        Rets:
+            (1) value: meter value. If meter name is invalid, 0 is returned.
+        Tips:
+            N/A
+        Example:
+            value = simulator.get_basic_meter_value("DAE ITERATION")
+            value = simulator.get_basic_meter_value("BUS WITH MAX POWER MISMATCH")
+        """
+        meter_name = self.__get_c_char_p_of_string(meter_name)
+        global STEPS_LIB
+        return STEPS_LIB.api_get_basic_meter_value(meter_name, self.toolkit_index)
+        
     def set_bus_fault(self, bus, fault_type, fault_shunt):
         """
         Set bus fault.
         Args:
             (1) bus: Bus number.
             (2) fault_type: String of fault type. Currently, only "THREE PHASE FAULT" is supported.
-            (3) fault_shunt: Complex per unit fault shunt in the form of (g+jb).
+            (3) fault_shunt: tuple of complex per unit fault shunt in the form of (g, b). the shunt is g+jb
         Rets: N/A
         Tips:
             The fault shunt is represented as conductance and susceptance based on system base power and bus base voltage.
             The susceptance is usually set as NEGATIVE to mimic the voltage drop due to fault.
             The absolute value of the fault shunt should not be too great. Otherwise, network solution may fail to converge. Typically, |b|<1e6.
+        Example:
+            bus = 1
+            shunt = (0.0, -2e4)
+            simulator.set_bus_fault(bus, "three phase fault", shunt)
         """
         global STEPS_LIB
         fault_type = self.__get_c_char_p_of_string(fault_type)
@@ -4577,6 +4904,11 @@ class STEPS():
             (1) bus: Bus number.
             (2) fault_type: String of fault type. Currently, only "THREE PHASE FAULT" is supported.
         Rets: N/A
+        Example:
+            bus = 1
+            shunt = 0.0+j-2e4
+            simulator.set_bus_fault(bus, "three phase fault", shunt)
+            simulator.clear_bus_fault(bus, "three pahse fault")
         """
         global STEPS_LIB
         fault_type = self.__get_c_char_p_of_string(fault_type)
@@ -4589,6 +4921,9 @@ class STEPS():
         Args:
             (1) bus: Bus number.
         Rets: N/A
+        Example:
+            bus = 1
+            simulator.trip_bus(bus)
         """
         global STEPS_LIB
         STEPS_LIB.api_trip_bus(bus, self.toolkit_index)
@@ -4601,7 +4936,7 @@ class STEPS():
             (1) line: Transmission line device id in format of (ibus, jbus, ickt).
             (2) fault_type: String of fault type. Currently, only "THREE PHASE FAULT" is supported.
             (3) fault_location: Relative fault location to ibus.
-            (4) fault_shunt: Complex per unit fault shunt in the form of (g+jb).
+            (4) fault_shunt: tuple of complex per unit fault shunt in the form of (g, b). the shunt is g+jb
         Rets: N/A
         Tips:
             The fault location should be in the range of [0, 1.0], including 0 and 1.0. It represent the relative location of the fault on the line to the ibus.
@@ -4610,6 +4945,11 @@ class STEPS():
             The susceptance is usually set as NEGATIVE to mimic the voltage drop due to fault.
             The absolute value of the fault shunt should not be too great. Otherwise, network solution may fail to converge. Typically, |b|<1e6.
             Multiple faults are supported on single line at different fault locations.
+        Example:
+            line = (1, 2, "1#")
+            location = 0.2
+            shunt = (0.0, -2e4)
+            simulator.set_line_fault(line, "three phase fault", location, shunt)
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
@@ -4629,6 +4969,12 @@ class STEPS():
         Tips:
             The fault location should be in the range of [0, 1.0], including 0 and 1.0. It represent the relative location of the fault on the line to the ibus.
             For example, 0.5 means the fault at the middle of the line will be cleared. 0 means the fault at ibus will be cleared. 1.0 means the fault at jbus will be cleared.
+        Example:
+            line = (1, 2, "1#")
+            location = 0.2
+            shunt = 0.0+j-2e4
+            simulator.set_line_fault(line, "three phase fault", location, shunt)
+            simulator.clear_line_fault(line, "three pahse fault", location)
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
@@ -4643,6 +4989,9 @@ class STEPS():
         Args:
             (1) line: Transmission line device id in format of (ibus, jbus, ickt).
         Rets: N/A
+        Example:
+            line = (1, 2, "1#")
+            simulator.trip_line(line)
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
@@ -4660,6 +5009,10 @@ class STEPS():
         Tips:
             The sending side bus is not necessarily ibus. The receiving bus is not necessarily jbus.
             It is up to the user to check which side to trip.
+        Example:
+            line = (1, 2, "1#")
+            simulator.trip_line_breaker(line, "sending")
+            simulator.trip_line_breaker(line, "receiving")
         """
         global STEPS_LIB
         if side not in line:
@@ -4681,6 +5034,9 @@ class STEPS():
         Args:
             (1) line: Transmission line device id in format of (ibus, jbus, ickt).
         Rets: N/A
+        Example:
+            line = (1, 2, "1#")
+            simulator.close_line(line)
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
@@ -4698,6 +5054,10 @@ class STEPS():
         Tips:
             The sending side bus is not necessarily ibus. The receiving bus is not necessarily jbus.
             It is up to the user to check which side to close.
+        Example:
+            line = (1, 2, "1#")
+            simulator.close_line_breaker(line, "sending")
+            simulator.close_line_breaker(line, "receiving")
         """
         global STEPS_LIB
         if side not in line:
@@ -4721,6 +5081,11 @@ class STEPS():
         Rets: N/A
         Tips:
             kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
+        Example:
+            trans = (1, 2, 3, "1#")
+            simulator.trip_transformer(trans)
+            trans = (4, 5, 0, "1#")
+            simulator.trip_transformer(trans)
         """
         global STEPS_LIB
         ibus, jbus, kbus, ickt = self.__extract_triple_bus_device_id(transformer)
@@ -4739,6 +5104,14 @@ class STEPS():
             kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
             The primary side bus is not necessarily ibus. The secondary bus is not necessarily jbus. The tertiary bus is not necessarily kbus.
             It is up to the user to check which side to trip.
+        Example:
+            trans = (1, 2, 3, "1#")
+            simulator.trip_transformer_breaker(trans, "primary")
+            simulator.trip_transformer_breaker(trans, "secondary")
+            simulator.trip_transformer_breaker(trans, "tertiary")
+            trans = (4, 5, 0, "1#")
+            simulator.trip_transformer_breaker(trans, "primary")
+            simulator.trip_transformer_breaker(trans, "secondary")
         """
         global STEPS_LIB
         if side not in transformer or side==0:
@@ -4763,6 +5136,11 @@ class STEPS():
         Rets: N/A
         Tips:
             kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
+        Example:
+            trans = (1, 2, 3, "1#")
+            simulator.close_transformer(trans)
+            trans = (4, 5, 0, "1#")
+            simulator.close_transformer(trans)
         """
         global STEPS_LIB
         ibus, jbus, kbus, ickt = self.__extract_triple_bus_device_id(transformer)
@@ -4781,6 +5159,14 @@ class STEPS():
             kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
             The primary side bus is not necessarily ibus. The secondary bus is not necessarily jbus. The tertiary bus is not necessarily kbus.
             It is up to the user to check which side to close.
+        Example:
+            trans = (1, 2, 3, "1#")
+            simulator.close_transformer_breaker(trans, "primary")
+            simulator.close_transformer_breaker(trans, "secondary")
+            simulator.close_transformer_breaker(trans, "tertiary")
+            trans = (4, 5, 0, "1#")
+            simulator.close_transformer_breaker(trans, "primary")
+            simulator.close_transformer_breaker(trans, "secondary")
         """
         global STEPS_LIB
         if side not in transformer or side==0:
@@ -4802,6 +5188,9 @@ class STEPS():
         Args:
             (1) generator: Generator device id in format of (bus, ickt).
         Rets: N/A
+        Example:
+            gen = (1, "#1")
+            simulator.trip_generator(gen)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -4820,6 +5209,10 @@ class STEPS():
             The percent is USUALLY in range [0, 1.0] including 0 and 1.0. If percent=0.0, generator is not shed at all. If percent=1.0, the generator will be tripped.
             The percent CAN be set as negative to mimic increase of generation. But it is rarely used.
             If a generator with MBASE=100MVA is shed by 0.2, its MBASE becomes 80MVA. If it is then shed by 0.3, its MBASE becomes 56MVA.            
+        Example:
+            gen = (1, "#1")
+            percent = 0.1
+            simulator.shed_generator(gen, percent)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -4836,6 +5229,10 @@ class STEPS():
         Rets: N/A
         Tips:
             The number of lunmped wind turbine generators should be less than the available lumped wind turbine generators.
+        Example:
+            gen = (1, "#1")
+            n = 2
+            simulator.trip_wt_generator(gen, n)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -4854,6 +5251,10 @@ class STEPS():
             The percent is USUALLY in range [0, 1.0] including 0 and 1.0. If percent=0.0, wind turbine generator is not shed at all. If percent=1.0, the wind turbine generator will be totally tripped.
             The percent CAN be set as negative to mimic increase of wind turbine generation. But it is rarely used.
             If a wind turbine generator with MBASE=100MVA is shed by 0.2, its MBASE becomes 80MVA. If it is then shed by 0.3, its MBASE becomes 56MVA.            
+        Example:
+            gen = (1, "#1")
+            percent = 0.1
+            simulator.shed_wt_generator(gen, percent)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -4867,6 +5268,9 @@ class STEPS():
         Args:
             (1) load: Load device id in format of (bus, ickt).
         Rets: N/A
+        Example:
+            load = (1, "#1")
+            simulator.trip_load(load)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(load)
@@ -4880,6 +5284,9 @@ class STEPS():
         Args:
             (1) load: Load device id in format of (bus, ickt).
         Rets: N/A
+        Example:
+            load = (1, "#1")
+            simulator.close_load(load)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(load)
@@ -4894,6 +5301,10 @@ class STEPS():
             (1) load: Load device id in format of (bus, ickt).
             (2) percent: Per unit percent of the load to scale. Positve for scaling up, and Negative for scaling down.
         Rets: N/A
+        Example:
+            load = (1, "#1")
+            percent = 0.1
+            simulator.scale_load(load, percent)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(load)
@@ -4907,6 +5318,9 @@ class STEPS():
         Args:
             (1) percent: Per unit percent of all loads to scale. Positve for scaling up, and Negative for scaling down.
         Rets: N/A
+        Example:
+            percent = 0.1
+            simulator.scale_all_loads(percent)
         """
         global STEPS_LIB
         STEPS_LIB.api_scale_all_loads(percent, self.toolkit_index)
@@ -4918,6 +5332,9 @@ class STEPS():
         Args:
             (1) shunt: Fixed shunt device id in format of (bus, ickt).
         Rets: N/A
+        Example:
+            shunt = (1, "#1")
+            simulator.trip_fixed_shunt(shunt)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(shunt)
@@ -4931,6 +5348,9 @@ class STEPS():
         Args:
             (1) shunt: Fixed shunt device id in format of (bus, ickt).
         Rets: N/A
+        Example:
+            shunt = (1, "#1")
+            simulator.close_fixed_shunt(shunt)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(shunt)
@@ -4946,6 +5366,9 @@ class STEPS():
         Rets: N/A
         Tips:
             The HVDC link won't recover unless manually_unbypass_hvdc() is called.
+        Example:
+            hvdc = (1, 2, "DC Link 1")
+            simulator.manually_bypass_hvdc(hvdc)
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
@@ -4961,6 +5384,9 @@ class STEPS():
         Rets: N/A
         Tips:
             The HVDC link won't recover unless manually_unblock_hvdc() is called.
+        Example:
+            hvdc = (1, 2, "DC Link 1")
+            simulator.manually_block_hvdc(hvdc)
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
@@ -4974,6 +5400,9 @@ class STEPS():
         Args:
             (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
         Rets: N/A
+        Example:
+            hvdc = (1, 2, "DC Link 1")
+            simulator.manually_unbypass_hvdc(hvdc)
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
@@ -4987,6 +5416,9 @@ class STEPS():
         Args:
             (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
         Rets: N/A
+        Example:
+            hvdc = (1, 2, "DC Link 1")
+            simulator.manually_unblock_hvdc(hvdc)
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
@@ -5001,6 +5433,9 @@ class STEPS():
             (1) generator: Generator device id in format of (bus, ickt).
         Rets:
             (1) Voltage reference in pu.
+        Example:
+            gen = (1, "#1")
+            vref = simulator.get_generator_voltage_reference_in_pu(gen)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -5014,6 +5449,9 @@ class STEPS():
             (1) generator: Generator device id in format of (bus, ickt).
         Rets:
             (1) Mechanical power reference in pu based on generator MBASE.
+        Example:
+            gen = (1, "#1")
+            pref = simulator.get_generator_mechanical_power_reference_in_pu(gen)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -5027,6 +5465,9 @@ class STEPS():
             (1) generator: Generator device id in format of (bus, ickt).
         Rets:
             (1) Mechanical power reference in MW.
+        Example:
+            gen = (1, "#1")
+            pref = simulator.get_generator_mechanical_power_reference_in_MW(gen)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -5040,6 +5481,11 @@ class STEPS():
             (1) generator: Generator device id in format of (bus, ickt).
             (2) value: New voltage reference in pu.
         Rets: N/A
+        Example:
+            gen = (1, "#1")
+            vref = simulator.get_generator_voltage_reference_in_pu(gen)
+            new_vref = vref + 0.1
+            simulator.set_generator_voltage_reference_in_pu(gen, new_vref)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -5053,6 +5499,11 @@ class STEPS():
             (1) generator: Generator device id in format of (bus, ickt).
             (2) value: New mechanical power reference in pu based on generator MBASE.
         Rets: N/A
+        Example:
+            gen = (1, "#1")
+            pref = simulator.get_generator_mechanical_power_reference_in_pu(gen)
+            new_pref = pref + 0.1
+            simulator.set_generator_mechanical_power_reference_in_pu(gen, new_pref)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -5066,6 +5517,11 @@ class STEPS():
             (1) generator: Generator device id in format of (bus, ickt).
             (2) value: New mechanical power reference in MW.
         Rets: N/A
+        Example:
+            gen = (1, "#1")
+            pref = simulator.get_generator_mechanical_power_reference_in_MW(gen)
+            new_pref = pref + 10
+            simulator.set_generator_mechanical_power_reference_in_MW(gen, new_pref)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -5079,6 +5535,9 @@ class STEPS():
             (1) generator: Generator device id in format of (bus, ickt).
         Rets:
             (1) Excitation voltage in pu.
+        Example:
+            gen = (1, "#1")
+            efd = simulator.get_generator_excitation_voltage_in_pu(gen)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -5092,6 +5551,9 @@ class STEPS():
             (1) generator: Generator device id in format of (bus, ickt).
         Rets:
             (1) Mechanical power in pu based on generator MBASE.
+        Example:
+            gen = (1, "#1")
+            pmech = simulator.get_generator_mechanical_power_in_pu(gen)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -5105,6 +5567,9 @@ class STEPS():
             (1) generator: Generator device id in format of (bus, ickt).
         Rets:
             (1) Mechanical power in MW.
+        Example:
+            gen = (1, "#1")
+            pmech = simulator.get_generator_mechanical_power_in_MW(gen)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -5118,6 +5583,11 @@ class STEPS():
             (1) generator: Generator device id in format of (bus, ickt).
             (2) value: New excitation voltage in pu.
         Rets: N/A
+        Example:
+            gen = (1, "#1")
+            efd = simulator.get_generator_excitation_voltage_in_pu(gen)
+            new_efd = efd + 0.1
+            simulator.set_generator_excitation_voltage_in_pu(gen, new_efd)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -5131,6 +5601,11 @@ class STEPS():
             (1) generator: Generator device id in format of (bus, ickt).
             (2) value: New mechanical power in pu based on generator MBASE.
         Rets: N/A
+        Example:
+            gen = (1, "#1")
+            pmech = simulator.get_generator_mechanical_power_in_pu(gen)
+            new_pmech = pmech + 0.05
+            simulator.set_generator_mechanical_power_in_pu(gen, new_pmech)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -5144,6 +5619,11 @@ class STEPS():
             (1) generator: Generator device id in format of (bus, ickt).
             (2) value: New mechanical power in MW.
         Rets: N/A
+        Example:
+            gen = (1, "#1")
+            pmech = simulator.get_generator_mechanical_power_in_MW(gen)
+            new_pmech = pmech + 10
+            simulator.set_generator_mechanical_power_in_MW(gen, new_pmech)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -5157,6 +5637,9 @@ class STEPS():
             (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
         Rets:
             (1) Power order in MW.
+        Example: 
+            hvdc = (1,2,"DC link 1")
+            order = simulator.get_hvdc_power_order_in_MW(hvdc)
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
@@ -5170,6 +5653,11 @@ class STEPS():
             (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
             (2) value: New power order in MW.
         Rets: N/A
+        Example: 
+            hvdc = (1,2,"DC link 1")
+            order = simulator.get_hvdc_power_order_in_MW(hvdc)
+            new_order = order+100
+            simulator.set_hvdc_power_order_in_MW(hvdc, new_order)
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)

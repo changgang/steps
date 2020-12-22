@@ -10,11 +10,8 @@ unsigned int api_get_const_INDEX_NOT_EXIST()
 
 void api_set_toolkit_log_file(char* log_file, bool log_file_append_mode, unsigned int toolkit_index)
 {
-    string log_file_name = "";
-    if(log_file!=NULL)
-        log_file_name = log_file;
     STEPS& toolkit = get_toolkit(toolkit_index);
-    return toolkit.open_log_file(log_file_name, log_file_append_mode);
+    return toolkit.open_log_file(log_file, log_file_append_mode);
 }
 
 unsigned int api_generate_new_toolkit(char* log_fie)

@@ -36,6 +36,11 @@ class GENERATOR_TEST : public Test::Suite
         void test_set_get_stabilizer_model();
         void test_set_get_turbine_governor_model();
 
+        void test_set_get_positive_sequence_impedance();
+        void test_set_get_negative_sequence_impedance();
+        void test_set_get_zero_sequence_impedance();
+        void test_set_get_grounding_impedance();
+
         void test_copy_with_operator_equal();
 
         void test_get_device_id();

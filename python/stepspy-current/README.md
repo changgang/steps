@@ -23,6 +23,7 @@ STEPS is a simulation toolkit for powerflow and dynamic simulation of large-scal
 
 ## Realse Note
 
+- 1.4.0. Dec. 22, 2020. Add new API get_basic/user_meter_value. Add default parameter vbase to API bus_name2number. STEPS kernel is also updated.
 - 1.3.1. Dec. 7, 2020. Rename the second "shed_generator" to "shed_wt_generator".
 - 1.3.0. Sep. 27, 2020. Add new API: get_generator_governor_pmax/pmin, get_generator_governor_up/down_spinning_reserve, get_generator_governor_total_up/down_spinning_reserve_with_constraints, get_generator_governor_total_pmax/pmin_with_constraints.
 - 1.2.1. Sep.  9, 2020. Add new API: set/get_encode(), disable/enable_generator_related_mode(). Default encoding is GB18030.

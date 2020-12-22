@@ -18,7 +18,7 @@ STEPS::STEPS(const string& name, const string& log_file) : power_system_db(*this
     ostringstream osstream;
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-    log_file_name = string2upper(log_file);
+    // log_file_name = string2upper(log_file);
     if(log_file!="")
         open_log_file(log_file, false);
 
@@ -312,6 +312,8 @@ void STEPS::open_log_file(const string& file, bool log_file_append_mode)
 {
     if(log_file.is_open())
         close_log_file();
+
+    log_file_name = string2upper(file);
 
     if(file!="" and log_file_name!="BLACKHOLE")
     {

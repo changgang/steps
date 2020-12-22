@@ -21,10 +21,29 @@ class GENERATOR : public SOURCE
 
         void set_generator_bus(unsigned int bus);
         void set_generator_impedance_in_pu(const complex<double>& z_pu);
+        void set_positive_sequence_resistance_in_pu(double r);
+        void set_positive_sequence_syncronous_reactance_in_pu(double x);
+        void set_positive_sequence_transient_reactance_in_pu(double x);
+        void set_positive_sequence_subtransient_reactance_in_pu(double x);
+        void set_negative_sequence_resistance_in_pu(double r);
+        void set_negative_sequence_reactance_in_pu(double x);
+        void set_zero_sequence_resistance_in_pu(double r);
+        void set_zero_sequence_reactance_in_pu(double x);
+        void set_grounding_resistance_in_pu(double r);
+        void set_grounding_reactance_in_pu(double x);
 
         unsigned int get_generator_bus() const;
         complex<double> get_generator_impedance_in_pu() const;
-
+        double get_positive_sequence_resistance_in_pu() const;
+        double get_positive_sequence_syncronous_reactance_in_pu() const;
+        double get_positive_sequence_transient_reactance_in_pu() const;
+        double get_positive_sequence_subtransient_reactance_in_pu() const;
+        double get_negative_sequence_resistance_in_pu() const;
+        double get_negative_sequence_reactance_in_pu() const;
+        double get_zero_sequence_resistance_in_pu() const;
+        double get_zero_sequence_reactance_in_pu() const;
+        double get_grounding_resistance_in_pu() const;
+        double get_grounding_reactance_in_pu() const;
         virtual void clear();
 
         virtual DEVICE_ID get_device_id() const;
@@ -69,5 +88,9 @@ class GENERATOR : public SOURCE
 
         bool sync_generator_model_disabled, compensator_model_disabled, exciter_model_disabled,
              stabilizer_model_disabled, turbine_governor_model_disabled, turbine_load_controller_model_disabled;
+
+        double R1, X1_sync, X1_transient, X1_subtransient;
+        double R2, X2, R0, X0;
+        double Rground, Xground;
 };
 #endif // GENERATOR_H

@@ -37,6 +37,8 @@ class LOAD_TEST : public Test::Suite
         void test_set_get_owner_number();
         void test_set_get_flag_interruptable();
         void test_set_get_load_manually_scale();
+        void test_set_get_negative_sequence_load();
+        void test_set_get_zero_sequence_load();
 
         void test_is_valid();
         void test_clear();

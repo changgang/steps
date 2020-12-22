@@ -35,6 +35,8 @@ LOAD_TEST::LOAD_TEST() : load(default_toolkit)
     TEST_ADD(LOAD_TEST::test_set_get_owner_number);
     TEST_ADD(LOAD_TEST::test_set_get_flag_interruptable);
     TEST_ADD(LOAD_TEST::test_set_get_load_manually_scale);
+    TEST_ADD(LOAD_TEST::test_set_get_negative_sequence_load);
+    TEST_ADD(LOAD_TEST::test_set_get_zero_sequence_load);
 
     TEST_ADD(LOAD_TEST::test_is_valid);
     TEST_ADD(LOAD_TEST::test_clear);
@@ -195,6 +197,24 @@ void LOAD_TEST::test_set_get_load_manually_scale()
     TEST_ASSERT(fabs(load.get_load_manually_scale_factor_in_pu()-0.2)<FLOAT_EPSILON);
     load.set_load_manually_scale_factor_in_pu(-0.2);
     TEST_ASSERT(fabs(load.get_load_manually_scale_factor_in_pu()+0.2)<FLOAT_EPSILON);
+}
+
+void LOAD_TEST::test_set_get_negative_sequence_load()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"LOAD_TEST");
+
+    complex<double> s(100, 55);
+    load.set_negative_sequence_load_in_MVA(s);
+    TEST_ASSERT(fabs(load.get_negative_sequence_load_in_MVA()-s)<FLOAT_EPSILON);
+}
+
+void LOAD_TEST::test_set_get_zero_sequence_load()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"LOAD_TEST");
+
+    complex<double> s(100, 55);
+    load.set_zero_sequence_load_in_MVA(s);
+    TEST_ASSERT(fabs(load.get_zero_sequence_load_in_MVA()-s)<FLOAT_EPSILON);
 }
 
 void LOAD_TEST::test_is_valid()

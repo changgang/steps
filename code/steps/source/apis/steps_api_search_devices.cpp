@@ -8,11 +8,11 @@
 #include <iostream>
 using namespace std;
 
-unsigned int api_bus_name2bus_number(const char* bus_name, unsigned int toolkit_index)
+unsigned int api_bus_name2bus_number(const char* bus_name, double vbase, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    return psdb.bus_name2bus_number(bus_name);
+    return psdb.bus_name2bus_number(bus_name, vbase);
 }
 
 const char* api_bus_number2bus_name(unsigned int bus_number, unsigned int toolkit_index)

@@ -316,7 +316,7 @@ class POWER_SYSTEM_DATABASE
         unsigned int get_zone_index(const unsigned int no) const;
         unsigned int get_owner_index(const unsigned int no) const;
 
-        unsigned int bus_name2bus_number(const string& name) const;
+        unsigned int bus_name2bus_number(const string& name, double vbase=0) const;
         unsigned int area_name2area_number(const string& name) const;
         unsigned int zone_name2zone_number(const string& name) const;
         unsigned int owner_name2owner_number(const string& name) const;

@@ -28,6 +28,8 @@ class LOAD : public NONBUS_DEVICE
         void set_owner_number(unsigned int num);
         void set_flag_interruptable(bool flag);
         void set_load_manually_scale_factor_in_pu(double scale);
+        void set_negative_sequence_load_in_MVA(const complex<double>& s);
+        void set_zero_sequence_load_in_MVA(const complex<double>& s);
 
         unsigned int get_load_bus() const;
         BUS* get_bus_pointer() const;
@@ -41,6 +43,8 @@ class LOAD : public NONBUS_DEVICE
         unsigned int get_zone_number() const;
         unsigned int get_owner_number() const;
         bool get_flag_interruptable() const;
+        complex<double> get_negative_sequence_load_in_MVA() const;
+        complex<double> get_zero_sequence_load_in_MVA() const;
 
         virtual bool is_valid() const;
         virtual void check();
@@ -98,8 +102,8 @@ class LOAD : public NONBUS_DEVICE
         string identifier;
         bool status;
         complex<double> s_constant_power_in_MVA,
-                       s_constant_current_in_MVA,
-                       s_constant_impedance_in_MVA;
+                        s_constant_current_in_MVA,
+                        s_constant_impedance_in_MVA;
         unsigned int area_number, zone_number, owner_number;
         bool interruptable;
 
@@ -113,5 +117,7 @@ class LOAD : public NONBUS_DEVICE
         LOAD_MODEL* load_model;
         LOAD_VOLTAGE_RELAY_MODEL* load_voltage_relay_model;
         LOAD_FREQUENCY_RELAY_MODEL* load_frequency_relay_model;
+
+        complex<double> s_negative_sequence_in_MVA, s_zero_sequence_in_MVA;
 };
 #endif // LOAD_H

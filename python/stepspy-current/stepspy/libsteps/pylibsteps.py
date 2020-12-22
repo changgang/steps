@@ -181,7 +181,7 @@ def load_library():
     libsteps.api_bus_number2bus_name.restype = c_char_p
     libsteps.api_bus_number2bus_name.argtypes = (c_uint, c_uint)
     libsteps.api_bus_name2bus_number.restype = c_uint
-    libsteps.api_bus_name2bus_number.argtypes = (c_char_p, c_uint)
+    libsteps.api_bus_name2bus_number.argtypes = (c_char_p, c_double, c_uint)
 
     libsteps.api_initialize_bus_search.restype = None
     libsteps.api_initialize_bus_search.argtypes = (c_double, c_double, c_double, c_double, c_uint, c_uint, c_uint, c_uint)
@@ -658,6 +658,11 @@ def load_library():
     libsteps.api_run_a_step.argtypes = (c_uint, )
     libsteps.api_get_system_angular_stable_flag.restype = c_bool
     libsteps.api_get_system_angular_stable_flag.argtypes = (c_uint, )
+
+    libsteps.api_get_user_meter_value.restype = c_double
+    libsteps.api_get_user_meter_value.argtypes = (c_uint, c_uint)
+    libsteps.api_get_basic_meter_value.restype = c_double
+    libsteps.api_get_basic_meter_value.argtypes = (c_char_p, c_uint)
 
     libsteps.api_set_bus_fault.restype = None
     libsteps.api_set_bus_fault.argtypes = (c_uint, c_char_p, c_double, c_double, c_uint)

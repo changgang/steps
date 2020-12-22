@@ -104,6 +104,17 @@ void LOAD::set_load_manually_scale_factor_in_pu(double scale)
     manually_scale_in_pu = scale;
 }
 
+
+void LOAD::set_negative_sequence_load_in_MVA(const complex<double>& s)
+{
+    s_negative_sequence_in_MVA = s;
+}
+
+void LOAD::set_zero_sequence_load_in_MVA(const complex<double>& s)
+{
+    s_zero_sequence_in_MVA = s;
+}
+
 unsigned int LOAD::get_load_bus() const
 {
     return bus;
@@ -159,6 +170,16 @@ bool LOAD::get_flag_interruptable() const
     return interruptable;
 }
 
+complex<double> LOAD::get_negative_sequence_load_in_MVA() const
+{
+    return s_negative_sequence_in_MVA;
+}
+
+complex<double> LOAD::get_zero_sequence_load_in_MVA() const
+{
+    return s_zero_sequence_in_MVA;
+}
+
 bool LOAD::is_valid() const
 {
     if(get_load_bus()!=0)
@@ -190,6 +211,9 @@ void LOAD::clear()
     load_model = NULL;
     load_voltage_relay_model = NULL;
     load_frequency_relay_model = NULL;
+
+    s_negative_sequence_in_MVA = 0.0;
+    s_zero_sequence_in_MVA = 0.0;
 }
 
 bool LOAD::is_connected_to_bus(unsigned int target_bus) const

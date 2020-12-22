@@ -1573,6 +1573,35 @@ vector<double> DYNAMICS_SIMULATOR::get_all_meters_value()
     return meter_values;
 }
 
+double DYNAMICS_SIMULATOR::get_user_meter_value(unsigned int i)
+{
+    if(i>0 and i<=meters.size())
+        return meter_values[i-1];
+    else
+        return 0.0;
+}
+
+double DYNAMICS_SIMULATOR::get_basic_meter_value(string meter_name)
+{
+    meter_name = string2upper(meter_name);
+
+    if(meter_name=="DAE ITERATION")
+        return ITER_DAE;
+    if(meter_name=="NETWORK ITERATION")
+        return ITER_NET;
+    if(meter_name=="POWER MISMATCH IN MVA")
+        return max_power_mismatch_MVA;
+    if(meter_name=="BUS WITH MAX POWER MISMATCH")
+        return max_mismatch_bus;
+    if(meter_name=="ELAPSED TIME OF INTEGRATION IN MS")
+        return time_elapse_of_differential_equations_in_a_step;
+    if(meter_name=="ELAPSED TIME OF NETWORK SOLUTION IN MS")
+        return time_elapse_of_network_solution_in_a_step;
+    if(meter_name=="TOTAL ELAPSED TIME IN MS")
+        return time_elapse_in_a_step;
+    return 0.0;
+}
+
 void DYNAMICS_SIMULATOR::clear_meters()
 {
     meters.clear();
@@ -1801,6 +1830,12 @@ void DYNAMICS_SIMULATOR::save_meter_information()
 
 void DYNAMICS_SIMULATOR::save_meter_values()
 {
+    #ifdef USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
+    max_power_mismatch_MVA = max_current_mismatch_pu*toolkit->get_power_system_database().get_bus_positive_sequence_voltage_in_pu(max_mismatch_bus)*toolkit->get_system_base_power_in_MVA();
+    #endif // USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
+
+    update_all_meters_value();
+
     unsigned int n = meters.size();
     if(n!=0 and (csv_output_file.is_open() or json_output_file.is_open() or bin_output_file.is_open()))
     {
@@ -1809,12 +1844,6 @@ void DYNAMICS_SIMULATOR::save_meter_values()
         //GREATEST_POWER_CURRENT_MISMATCH_STRUCT s_mismatch = get_max_power_mismatch_struct();
         //double smax = s_mismatch.greatest_power_mismatch_in_MVA;
         //unsigned int smax_bus = s_mismatch.bus_with_greatest_power_mismatch;
-
-        #ifdef USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
-        max_power_mismatch_MVA = max_current_mismatch_pu*toolkit->get_power_system_database().get_bus_positive_sequence_voltage_in_pu(max_mismatch_bus)*toolkit->get_system_base_power_in_MVA();
-        #endif // USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
-
-        update_all_meters_value();
 
         if(is_bin_file_export_enabled() and bin_output_file.is_open())
         {

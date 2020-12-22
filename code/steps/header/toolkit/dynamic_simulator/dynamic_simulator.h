@@ -97,6 +97,8 @@ class DYNAMICS_SIMULATOR
         METER get_meter(unsigned int i);
         void update_all_meters_value();
         vector<double> get_all_meters_value();
+        double get_user_meter_value(unsigned int i);
+        double get_basic_meter_value(string meter_name);
         void clear_meters();
 
         void set_output_file(string filename);

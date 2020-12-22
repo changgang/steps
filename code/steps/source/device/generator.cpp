@@ -31,6 +31,70 @@ void GENERATOR::set_generator_bus(unsigned int bus)
 void GENERATOR::set_generator_impedance_in_pu(const complex<double>& z_pu)
 {
     set_source_impedance_in_pu(z_pu);
+    set_positive_sequence_resistance_in_pu(z_pu.real());
+    set_positive_sequence_subtransient_reactance_in_pu(z_pu.imag());
+}
+
+void GENERATOR::set_positive_sequence_resistance_in_pu(double r)
+{
+    R1 = r;
+    if(get_negative_sequence_resistance_in_pu()!=0.0)
+        set_negative_sequence_resistance_in_pu(r);
+    if(get_zero_sequence_resistance_in_pu()!=0.0)
+        set_zero_sequence_resistance_in_pu(r);
+}
+
+void GENERATOR::set_positive_sequence_syncronous_reactance_in_pu(double x)
+{
+    X1_sync = x;
+}
+
+void GENERATOR::set_positive_sequence_transient_reactance_in_pu(double x)
+{
+    X1_transient = x;
+}
+
+void GENERATOR::set_positive_sequence_subtransient_reactance_in_pu(double x)
+{
+    X1_subtransient = x;
+    if(get_positive_sequence_syncronous_reactance_in_pu()==0.0)
+        set_positive_sequence_syncronous_reactance_in_pu(x);
+    if(get_positive_sequence_transient_reactance_in_pu()==0.0)
+        set_positive_sequence_transient_reactance_in_pu(x);
+    if(get_negative_sequence_reactance_in_pu()==0.0)
+        set_negative_sequence_reactance_in_pu(x);
+    if(get_zero_sequence_reactance_in_pu()==0.0)
+        set_zero_sequence_reactance_in_pu(x);
+}
+
+void GENERATOR::set_negative_sequence_resistance_in_pu(double r)
+{
+    R2 = r;
+}
+
+void GENERATOR::set_negative_sequence_reactance_in_pu(double x)
+{
+    X2 = x;
+}
+
+void GENERATOR::set_zero_sequence_resistance_in_pu(double r)
+{
+    R0 = r;
+}
+
+void GENERATOR::set_zero_sequence_reactance_in_pu(double x)
+{
+    X0 = x;
+}
+
+void GENERATOR::set_grounding_resistance_in_pu(double r)
+{
+    Rground = r;
+}
+
+void GENERATOR::set_grounding_reactance_in_pu(double x)
+{
+    Xground = x;
 }
 
 unsigned int GENERATOR::get_generator_bus() const
@@ -42,6 +106,57 @@ complex<double> GENERATOR::get_generator_impedance_in_pu() const
 {
     return get_source_impedance_in_pu();
 }
+
+double GENERATOR::get_positive_sequence_resistance_in_pu() const
+{
+    return R1;
+}
+
+double GENERATOR::get_positive_sequence_syncronous_reactance_in_pu() const
+{
+    return X1_sync;
+}
+
+double GENERATOR::get_positive_sequence_transient_reactance_in_pu() const
+{
+    return X1_transient;
+}
+
+double GENERATOR::get_positive_sequence_subtransient_reactance_in_pu() const
+{
+    return X1_subtransient;
+}
+
+double GENERATOR::get_negative_sequence_resistance_in_pu() const
+{
+    return R2;
+}
+
+double GENERATOR::get_negative_sequence_reactance_in_pu() const
+{
+    return X2;
+}
+
+double GENERATOR::get_zero_sequence_resistance_in_pu() const
+{
+    return R0;
+}
+
+double GENERATOR::get_zero_sequence_reactance_in_pu() const
+{
+    return X0;
+}
+
+double GENERATOR::get_grounding_resistance_in_pu() const
+{
+    return Rground;
+}
+
+double GENERATOR::get_grounding_reactance_in_pu() const
+{
+    return Xground;
+}
+
 
 void GENERATOR::clear()
 {
@@ -60,6 +175,17 @@ void GENERATOR::clear()
     stabilizer_model_disabled = false;
     turbine_governor_model_disabled = false;
     turbine_load_controller_model_disabled = false;
+
+    set_positive_sequence_resistance_in_pu(0.0);
+    set_positive_sequence_syncronous_reactance_in_pu(0.0);
+    set_positive_sequence_transient_reactance_in_pu(0.0);
+    set_positive_sequence_subtransient_reactance_in_pu(0.0);
+    set_negative_sequence_resistance_in_pu(0.0);
+    set_negative_sequence_reactance_in_pu(0.0);
+    set_zero_sequence_resistance_in_pu(0.0);
+    set_zero_sequence_reactance_in_pu(0.0);
+    set_grounding_resistance_in_pu(0.0);
+    set_grounding_reactance_in_pu(0.0);
 }
 
 DEVICE_ID GENERATOR::get_device_id() const

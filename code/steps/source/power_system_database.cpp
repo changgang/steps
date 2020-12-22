@@ -4012,7 +4012,7 @@ unsigned int POWER_SYSTEM_DATABASE::get_owner_index(const unsigned int no) const
     else                        return INDEX_NOT_EXIST;
 }
 
-unsigned int POWER_SYSTEM_DATABASE::bus_name2bus_number(const string&name) const
+unsigned int POWER_SYSTEM_DATABASE::bus_name2bus_number(const string&name, double vbase) const
 {
     string trimmed_name = trim_string(name);
     unsigned int n = get_bus_count();
@@ -4021,7 +4021,11 @@ unsigned int POWER_SYSTEM_DATABASE::bus_name2bus_number(const string&name) const
         if(Bus[i].get_bus_name()!=trimmed_name)
             continue;
         else
-            return Bus[i].get_bus_number();
+        {
+            if(vbase==0.0 or Bus[i].get_base_voltage_in_kV()==vbase)
+                return Bus[i].get_bus_number();
+        }
+
     }
     return 0;
 }

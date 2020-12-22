@@ -39,6 +39,11 @@ GENERATOR_TEST::GENERATOR_TEST() : generator(default_toolkit)
     TEST_ADD(GENERATOR_TEST::test_set_get_exciter_model);
     TEST_ADD(GENERATOR_TEST::test_set_get_stabilizer_model);
     TEST_ADD(GENERATOR_TEST::test_set_get_turbine_governor_model);
+
+    TEST_ADD(GENERATOR_TEST::test_set_get_positive_sequence_impedance);
+    TEST_ADD(GENERATOR_TEST::test_set_get_negative_sequence_impedance);
+    TEST_ADD(GENERATOR_TEST::test_set_get_zero_sequence_impedance);
+    TEST_ADD(GENERATOR_TEST::test_set_get_grounding_impedance);
 }
 
 void GENERATOR_TEST::setup()
@@ -372,5 +377,104 @@ void GENERATOR_TEST::test_set_get_turbine_governor_model()
 
     dmdb.remove_the_last_model();
 }
+
+
+void GENERATOR_TEST::test_set_get_positive_sequence_impedance()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"GENERATOR_TEST");
+
+    generator.set_generator_bus(1);
+    generator.set_identifier("1#");
+    generator.set_status(true);
+
+    generator.set_positive_sequence_resistance_in_pu(0.1);
+    TEST_ASSERT(fabs(generator.get_positive_sequence_resistance_in_pu()-0.1)<FLOAT_EPSILON);
+
+    generator.set_positive_sequence_syncronous_reactance_in_pu(0.2);
+    TEST_ASSERT(fabs(generator.get_positive_sequence_syncronous_reactance_in_pu()-0.2)<FLOAT_EPSILON);
+
+    generator.set_positive_sequence_transient_reactance_in_pu(0.3);
+    TEST_ASSERT(fabs(generator.get_positive_sequence_transient_reactance_in_pu()-0.3)<FLOAT_EPSILON);
+
+    generator.set_positive_sequence_subtransient_reactance_in_pu(0.4);
+    TEST_ASSERT(fabs(generator.get_positive_sequence_subtransient_reactance_in_pu()-0.4)<FLOAT_EPSILON);
+
+    generator.set_positive_sequence_resistance_in_pu(0.0);
+    generator.set_positive_sequence_syncronous_reactance_in_pu(0.0);
+    generator.set_positive_sequence_transient_reactance_in_pu(0.0);
+    generator.set_positive_sequence_subtransient_reactance_in_pu(0.0);
+
+    double r = 0.05, x = 0.5;
+    complex<double> z(r,x);
+    generator.set_generator_impedance_in_pu(z);
+    TEST_ASSERT(fabs(generator.get_positive_sequence_resistance_in_pu()-r)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(generator.get_positive_sequence_syncronous_reactance_in_pu()-x)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(generator.get_positive_sequence_transient_reactance_in_pu()-x)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(generator.get_positive_sequence_subtransient_reactance_in_pu()-x)<FLOAT_EPSILON);
+}
+
+void GENERATOR_TEST::test_set_get_negative_sequence_impedance()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"GENERATOR_TEST");
+
+    generator.set_generator_bus(1);
+    generator.set_identifier("1#");
+    generator.set_status(true);
+
+    generator.set_negative_sequence_resistance_in_pu(0.1);
+    TEST_ASSERT(fabs(generator.get_negative_sequence_resistance_in_pu()-0.1)<FLOAT_EPSILON);
+
+    generator.set_negative_sequence_reactance_in_pu(0.2);
+    TEST_ASSERT(fabs(generator.get_negative_sequence_reactance_in_pu()-0.2)<FLOAT_EPSILON);
+
+    generator.set_negative_sequence_resistance_in_pu(0.0);
+    generator.set_negative_sequence_reactance_in_pu(0.0);
+
+    double r = 0.05, x = 0.5;
+    complex<double> z(r,x);
+    generator.set_generator_impedance_in_pu(z);
+    TEST_ASSERT(fabs(generator.get_negative_sequence_resistance_in_pu()-r)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(generator.get_negative_sequence_reactance_in_pu()-x)<FLOAT_EPSILON);
+}
+
+void GENERATOR_TEST::test_set_get_zero_sequence_impedance()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"GENERATOR_TEST");
+
+    generator.set_generator_bus(1);
+    generator.set_identifier("1#");
+    generator.set_status(true);
+
+    generator.set_zero_sequence_resistance_in_pu(0.1);
+    TEST_ASSERT(fabs(generator.get_zero_sequence_resistance_in_pu()-0.1)<FLOAT_EPSILON);
+
+    generator.set_zero_sequence_reactance_in_pu(0.2);
+    TEST_ASSERT(fabs(generator.get_zero_sequence_reactance_in_pu()-0.2)<FLOAT_EPSILON);
+
+    generator.set_zero_sequence_resistance_in_pu(0.0);
+    generator.set_zero_sequence_reactance_in_pu(0.0);
+
+    double r = 0.05, x = 0.5;
+    complex<double> z(r,x);
+    generator.set_generator_impedance_in_pu(z);
+    TEST_ASSERT(fabs(generator.get_zero_sequence_resistance_in_pu()-r)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(generator.get_zero_sequence_reactance_in_pu()-x)<FLOAT_EPSILON);
+}
+
+void GENERATOR_TEST::test_set_get_grounding_impedance()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"GENERATOR_TEST");
+
+    generator.set_generator_bus(1);
+    generator.set_identifier("1#");
+    generator.set_status(true);
+
+    generator.set_grounding_resistance_in_pu(0.1);
+    TEST_ASSERT(fabs(generator.get_grounding_resistance_in_pu()-0.1)<FLOAT_EPSILON);
+
+    generator.set_grounding_reactance_in_pu(0.2);
+    TEST_ASSERT(fabs(generator.get_grounding_reactance_in_pu()-0.2)<FLOAT_EPSILON);
+}
+
 
 #endif

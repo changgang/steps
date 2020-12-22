@@ -1,5 +1,5 @@
 # program to extract stepspy APIs to text file.
-with open("./stepspy-current/stepspy/stepspy.py","rt") as fid_stepspy:
+with open("./stepspy-current/stepspy/stepspy2.py","rt") as fid_stepspy:
     with open("stepspy_api.txt","wt") as fid_api:
         napi = 0
         while True:
