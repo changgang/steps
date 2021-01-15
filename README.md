@@ -1,7 +1,11 @@
 # Simulation Toolkit for Electrical Power Systems
 - Maintainer: Changgang Li <lichgang@sdu.edu.cn> from School of Electrical Engineering, Shandong University.
 - Documentation: [N/A]
-- Date of Readme: Sep. 13, 2020
+- Date of Readme: Jan. 15, 2021
+
+# Reference
+Please cite STEPS with the following paper:
+Changgang Li, Yue Wu, Hengxu Zhang, Hua Ye, Yutian Liu and Yilu Liu, "STEPS: A Portable Numerical Simulation Toolkit for Electrical Power System Dynamic Studies," in IEEE Transactions on Power Systems, doi: 10.1109/TPWRS.2020.3045102.  https://ieeexplore.ieee.org/document/9295409
 
 ## Major functions
 Simulation Toolkit for Electrical Power Systems (STEPS) is an open source power system simulator designed for balanced large-scale AC-DC hybrid power system analysis.  
@@ -11,6 +15,9 @@ Though BPA dat format is supported, it will be supported in the future version i
 You are encourage to join us for further development.
 
 ## Major versions
+- v1.5.0. Add new function to get basic and user meter value in STEPS kernel and stepspy. Add additional parameter vbase to bus_name2number in case multi buses have the same bus name. Released on Dec. 22, 2020.
+- v1.4.1. Fix clear toolkit when reloading new powerflow data. Enable build initial zero Y matrix. Fix access violation in jacobian builder when updating seperate jacobian matrix. Add check of LU factorization failure. Special log file named 'blackhole' is supported to disable all log. Released on Dec. 7, 2020.
+- v1.4. add function to add default GENCLS model for generators without sync generator model when checking missing models. Fix bug in IEEEG1 in case T1 or T2 is not 0. Released on Sep. 27, 2020.
 - v1.3.1: Fix minor bug in IEEEG1 when T1 or T2 is non-zero. Released on Sep. 13, 2020. 
 - v1.3: Fix minor bug in building Z matrix. Released on April 22, 2020. This version is available for better compatibility.
 - v1.1: Improved performance version on March 8, 2020. About 20~30% improvement comparing to v1.0.
