@@ -360,7 +360,6 @@ void BUS_TEST::test_set_get_base_frequency_period()
     TEST_ASSERT(fabs(bus.get_base_frequency_in_Hz()-50.0)<FLOAT_EPSILON);
     bus.set_base_frequency_in_Hz(60.0);
     TEST_ASSERT(fabs(bus.get_base_frequency_in_Hz()-60.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(bus.get_base_period_in_s()-(1.0/60.0))<FLOAT_EPSILON);
 }
 
 void BUS_TEST::test_set_get_voltage_to_regulate()

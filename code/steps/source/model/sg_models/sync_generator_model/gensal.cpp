@@ -419,7 +419,6 @@ void GENSAL::check()
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
-    double xd = get_Xd();
     double xq = get_Xq();
     double xdp = get_Xdp();
     double xpp = get_Xpp();

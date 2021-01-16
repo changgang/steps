@@ -9,7 +9,9 @@ using namespace std;
 
 BUS_FREQUENCY_MODEL::BUS_FREQUENCY_MODEL(STEPS& toolkit) : frequency_block(toolkit)
 {
-    set_toolkit(toolkit);
+    fbase_Hz = 0.0;
+    tbase_s = 0.0;
+
     frequency_block.set_K(ONE_OVER_DOUBLE_PI);
     bus_ptr = NULL;
 }
@@ -19,14 +21,9 @@ BUS_FREQUENCY_MODEL::~BUS_FREQUENCY_MODEL()
     ;
 }
 
-void BUS_FREQUENCY_MODEL::set_toolkit(STEPS& toolkit)
-{
-    this->toolkit = (&toolkit);
-}
-
 STEPS& BUS_FREQUENCY_MODEL::get_toolkit() const
 {
-    return *toolkit;
+    return frequency_block.get_toolkit();
 }
 
 void BUS_FREQUENCY_MODEL::set_bus_pointer(BUS* bus)
@@ -44,12 +41,27 @@ unsigned int BUS_FREQUENCY_MODEL::get_bus() const
     return bus_ptr->get_bus_number();
 }
 
+void BUS_FREQUENCY_MODEL::set_base_frequency_in_Hz(double fn)
+{
+    if(fn<0.0)
+        fn = -fn;
+    if(fn==0.0)
+        fn = 50.0;
+    fbase_Hz = fn;
+    tbase_s = 1.0/fbase_Hz;
+}
+
+double BUS_FREQUENCY_MODEL::get_base_frequency_in_Hz() const
+{
+    return fbase_Hz;
+}
+
 void BUS_FREQUENCY_MODEL::initialize()
 {
-    fbase_Hz = bus_ptr->get_base_frequency_in_Hz();
-    tbase_s = bus_ptr->get_base_period_in_s();
+    if(get_base_frequency_in_Hz()==0.0)
+        set_base_frequency_in_Hz(50.0);
 
-    double DELT = toolkit->get_dynamic_simulation_time_step_in_s();
+    double DELT = get_toolkit().get_dynamic_simulation_time_step_in_s();
     frequency_block.set_T_in_s(DELT*4.0);
 
     frequency_block.set_input(bus_ptr->get_positive_sequence_angle_in_rad());

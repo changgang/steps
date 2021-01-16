@@ -2,6 +2,7 @@
 #define BUS_H
 
 #include "header/device/device.h"
+#include "header/device/bus_var.h"
 #include "header/basic/area.h"
 #include "header/basic/zone.h"
 #include "header/basic/owner.h"
@@ -79,7 +80,6 @@ class BUS : public DEVICE
         double get_voltage_upper_limit_in_pu() const;
         double get_voltage_lower_limit_in_pu() const;
         double get_base_frequency_in_Hz() const;
-        double get_base_period_in_s() const;
         double get_voltage_to_regulate_in_pu() const;
         complex<double> get_positive_sequence_complex_voltage_in_pu() const;
         complex<double> get_positive_sequence_complex_voltage_in_kV() const;
@@ -120,37 +120,17 @@ class BUS : public DEVICE
         double get_frequency_in_Hz() const;
     private:
         unsigned int bus_number;
-        string bus_name;
-        double base_voltage_in_kV;
-        double fn_Hz, tn_s;;
-        BUS_TYPE bus_type;
-        unsigned int area_number;
-        unsigned int zone_number;
-        unsigned int owner_number;
 
         double positive_sequence_voltage_in_pu;
         double positive_sequence_angle_in_rad;
-        double negative_sequence_voltage_in_pu;
-        double negative_sequence_angle_in_rad;
-        double zero_sequence_voltage_in_pu;
-        double zero_sequence_angle_in_rad;
 
         complex<double> positive_sequence_Euler_complex_number;
-        complex<double> negative_sequence_Euler_complex_number;
-        complex<double> zero_sequence_Euler_complex_number;
-
-        double normal_voltage_upper_limit_in_pu;
-        double normal_voltage_lower_limit_in_pu;
-        double emergency_voltage_upper_limit_in_pu;
-        double emergency_voltage_lower_limit_in_pu;
-
-        double voltage_to_regulate_in_pu;
 
         unsigned int equivalent_bus_number;
 
         BUS_FREQUENCY_MODEL bus_frequency_model;
 
-        FAULT fault;
+        BUS_VAR* other_vars;
     private:
         void copy_from_const_bus(const BUS& bus);
 };

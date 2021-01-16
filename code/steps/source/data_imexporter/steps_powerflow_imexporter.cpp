@@ -2827,8 +2827,6 @@ string STEPS_IMEXPORTER::export_hvdc_data() const
 string STEPS_IMEXPORTER::export_lcc_hvdc_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     return osstream.str();
 }

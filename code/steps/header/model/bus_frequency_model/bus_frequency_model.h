@@ -10,12 +10,13 @@ class BUS_FREQUENCY_MODEL
     public:
         BUS_FREQUENCY_MODEL(STEPS& toolkit);
         ~BUS_FREQUENCY_MODEL();
-        void set_toolkit(STEPS& toolkit);
         STEPS& get_toolkit() const;
 
         void set_bus_pointer(BUS* bus);
         BUS* get_bus_pointer() const;
         unsigned int get_bus() const;
+        void set_base_frequency_in_Hz(double fn);
+        double get_base_frequency_in_Hz() const;
 
         void initialize();
         void run(DYNAMIC_MODE mode);
@@ -27,7 +28,6 @@ class BUS_FREQUENCY_MODEL
         double get_frequency_in_pu() const;
         double get_frequency_in_Hz() const;
     private:
-        STEPS* toolkit;
         DIFFERENTIAL_BLOCK frequency_block;
         BUS* bus_ptr;
         double fbase_Hz, tbase_s;

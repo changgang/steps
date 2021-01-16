@@ -10,6 +10,8 @@ using namespace std;
 
 BUS::BUS(STEPS& toolkit) : DEVICE(toolkit), bus_frequency_model(toolkit)
 {
+    other_vars = new BUS_VAR;
+
     clear();
 
     bus_frequency_model.set_bus_pointer(this);
@@ -17,13 +19,15 @@ BUS::BUS(STEPS& toolkit) : DEVICE(toolkit), bus_frequency_model(toolkit)
 
 BUS::BUS(const BUS& bus) : DEVICE(bus.get_toolkit()), bus_frequency_model(bus.get_toolkit())
 {
+    other_vars = new BUS_VAR;
+
     copy_from_const_bus(bus);
     bus_frequency_model.set_bus_pointer(this);
 }
 
 BUS::~BUS()
 {
-    ;
+    delete other_vars;
 }
 
 void BUS::set_bus_number(unsigned int number)
@@ -40,13 +44,13 @@ void BUS::set_bus_number(unsigned int number)
 
 void BUS::set_bus_name(string name)
 {
-    bus_name = trim_string(name);
+    other_vars->bus_name = trim_string(name);
 }
 
 void BUS::set_base_voltage_in_kV(double voltage)
 {
     if(voltage>0.0)
-        base_voltage_in_kV = voltage;
+        other_vars->base_voltage_in_kV = voltage;
     else
     {
         ostringstream osstream;
@@ -54,28 +58,28 @@ void BUS::set_base_voltage_in_kV(double voltage)
           <<"0 will be set to indicate invalid bus.";
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
-        base_voltage_in_kV = 0.0;
+        other_vars->base_voltage_in_kV = 0.0;
     }
 }
 
 void BUS::set_bus_type(BUS_TYPE type)
 {
-    bus_type = type;
+    other_vars->bus_type = type;
 }
 
 void BUS::set_area_number(unsigned int number)
 {
-    area_number = number;
+    other_vars->area_number = number;
 }
 
 void BUS::set_zone_number(unsigned int number)
 {
-    zone_number = number;
+    other_vars->zone_number = number;
 }
 
 void BUS::set_owner_number(unsigned int number)
 {
-    owner_number = number;
+    other_vars->owner_number = number;
 }
 
 void BUS::set_positive_sequence_voltage_in_pu(double voltage)
@@ -135,7 +139,7 @@ void BUS::set_positive_sequence_angle_in_deg(double angle)
 
 void BUS::set_negative_sequence_voltage_in_pu(double voltage)
 {
-    negative_sequence_voltage_in_pu = voltage;
+    other_vars->negative_sequence_voltage_in_pu = voltage;
 }
 
 void BUS::set_negative_sequence_voltage_in_kV(double voltage)
@@ -156,11 +160,11 @@ void BUS::set_negative_sequence_voltage_in_kV(double voltage)
 
 void BUS::set_negative_sequence_angle_in_rad(double angle, complex<double> euler)
 {
-    negative_sequence_angle_in_rad = angle;
+    other_vars->negative_sequence_angle_in_rad = angle;
     if(euler!=0.0)
-        negative_sequence_Euler_complex_number = euler;
+        other_vars->negative_sequence_Euler_complex_number = euler;
     else
-        negative_sequence_Euler_complex_number = complex<double>(steps_cos(negative_sequence_angle_in_rad), steps_sin(negative_sequence_angle_in_rad));
+        other_vars->negative_sequence_Euler_complex_number = complex<double>(steps_cos(other_vars->negative_sequence_angle_in_rad), steps_sin(other_vars->negative_sequence_angle_in_rad));
 }
 
 void BUS::set_negative_sequence_angle_in_deg(double angle)
@@ -171,7 +175,7 @@ void BUS::set_negative_sequence_angle_in_deg(double angle)
 
 void BUS::set_zero_sequence_voltage_in_pu(double voltage)
 {
-    zero_sequence_voltage_in_pu = voltage;
+    other_vars->zero_sequence_voltage_in_pu = voltage;
 }
 
 void BUS::set_zero_sequence_voltage_in_kV(double voltage)
@@ -192,11 +196,11 @@ void BUS::set_zero_sequence_voltage_in_kV(double voltage)
 
 void BUS::set_zero_sequence_angle_in_rad(double angle, complex<double> euler)
 {
-    zero_sequence_angle_in_rad = angle;
+    other_vars->zero_sequence_angle_in_rad = angle;
     if(euler!=0.0)
-        zero_sequence_Euler_complex_number = euler;
+        other_vars->zero_sequence_Euler_complex_number = euler;
     else
-        zero_sequence_Euler_complex_number = complex<double>(steps_cos(zero_sequence_angle_in_rad), steps_sin(zero_sequence_angle_in_rad));
+        other_vars->zero_sequence_Euler_complex_number = complex<double>(steps_cos(other_vars->zero_sequence_angle_in_rad), steps_sin(other_vars->zero_sequence_angle_in_rad));
 }
 
 void BUS::set_zero_sequence_angle_in_deg(double angle)
@@ -210,7 +214,7 @@ void BUS::set_normal_voltage_upper_limit_in_pu(double voltage)
     if(voltage==0.0)
         voltage = 1.1;
 
-    normal_voltage_upper_limit_in_pu = voltage;
+    other_vars->normal_voltage_upper_limit_in_pu = voltage;
 }
 
 void BUS::set_normal_voltage_lower_limit_in_pu(double voltage)
@@ -218,7 +222,7 @@ void BUS::set_normal_voltage_lower_limit_in_pu(double voltage)
     if(voltage==0.0)
         voltage = 0.9;
 
-    normal_voltage_lower_limit_in_pu = voltage;
+    other_vars->normal_voltage_lower_limit_in_pu = voltage;
 }
 
 void BUS::set_emergency_voltage_upper_limit_in_pu(double voltage)
@@ -226,7 +230,7 @@ void BUS::set_emergency_voltage_upper_limit_in_pu(double voltage)
     if(voltage==0.0)
         voltage = 1.1;
 
-    emergency_voltage_upper_limit_in_pu = voltage;
+    other_vars->emergency_voltage_upper_limit_in_pu = voltage;
 }
 
 void BUS::set_emergency_voltage_lower_limit_in_pu(double voltage)
@@ -234,7 +238,7 @@ void BUS::set_emergency_voltage_lower_limit_in_pu(double voltage)
     if(voltage==0.0)
         voltage = 0.9;
 
-    emergency_voltage_lower_limit_in_pu = voltage;
+    other_vars->emergency_voltage_lower_limit_in_pu = voltage;
 }
 
 void BUS::set_voltage_upper_limit_in_pu(double voltage)
@@ -251,12 +255,7 @@ void BUS::set_voltage_lower_limit_in_pu(double voltage)
 
 void BUS::set_base_frequency_in_Hz(double fn)
 {
-    if(fn<0.0)
-        fn = -fn;
-    if(fn==0.0)
-        fn = 50.0;
-    fn_Hz = fn;
-    tn_s = 1.0/fn_Hz;
+    bus_frequency_model.set_base_frequency_in_Hz(fn);
 }
 
 
@@ -264,12 +263,12 @@ void BUS::set_voltage_to_regulate_in_pu(double voltage)
 {
     if(voltage == 0.0)
     {
-        voltage_to_regulate_in_pu = 0.0;
+        other_vars->voltage_to_regulate_in_pu = 0.0;
         return;
     }
 
     if(get_voltage_to_regulate_in_pu()==0.0)
-        voltage_to_regulate_in_pu = voltage;
+        other_vars->voltage_to_regulate_in_pu = voltage;
     else
     {
         if(get_voltage_to_regulate_in_pu()!=voltage)
@@ -291,32 +290,32 @@ unsigned int BUS::get_bus_number() const
 
 string BUS::get_bus_name() const
 {
-    return bus_name;
+    return other_vars->bus_name;
 }
 
 double BUS::get_base_voltage_in_kV() const
 {
-    return base_voltage_in_kV;
+    return other_vars->base_voltage_in_kV;
 }
 
 BUS_TYPE BUS::get_bus_type() const
 {
-    return bus_type;
+    return other_vars->bus_type;
 }
 
 unsigned int BUS::get_area_number() const
 {
-    return area_number;
+    return other_vars->area_number;
 }
 
 unsigned int BUS::get_zone_number() const
 {
-    return zone_number;
+    return other_vars->zone_number;
 }
 
 unsigned int BUS::get_owner_number() const
 {
-    return owner_number;
+    return other_vars->owner_number;
 }
 
 double BUS::get_positive_sequence_voltage_in_pu() const
@@ -342,7 +341,7 @@ double BUS::get_positive_sequence_angle_in_deg() const
 
 double BUS::get_negative_sequence_voltage_in_pu() const
 {
-    return negative_sequence_voltage_in_pu;
+    return other_vars->negative_sequence_voltage_in_pu;
 }
 
 double BUS::get_negative_sequence_voltage_in_kV() const
@@ -352,7 +351,7 @@ double BUS::get_negative_sequence_voltage_in_kV() const
 
 double BUS::get_negative_sequence_angle_in_rad() const
 {
-    return negative_sequence_angle_in_rad;
+    return other_vars->negative_sequence_angle_in_rad;
 }
 
 double BUS::get_negative_sequence_angle_in_deg() const
@@ -363,7 +362,7 @@ double BUS::get_negative_sequence_angle_in_deg() const
 
 double BUS::get_zero_sequence_voltage_in_pu() const
 {
-    return zero_sequence_voltage_in_pu;
+    return other_vars->zero_sequence_voltage_in_pu;
 }
 
 double BUS::get_zero_sequence_voltage_in_kV() const
@@ -373,7 +372,7 @@ double BUS::get_zero_sequence_voltage_in_kV() const
 
 double BUS::get_zero_sequence_angle_in_rad() const
 {
-    return zero_sequence_angle_in_rad;
+    return other_vars->zero_sequence_angle_in_rad;
 }
 
 double BUS::get_zero_sequence_angle_in_deg() const
@@ -383,22 +382,22 @@ double BUS::get_zero_sequence_angle_in_deg() const
 
 double BUS::get_normal_voltage_upper_limit_in_pu() const
 {
-    return normal_voltage_upper_limit_in_pu;
+    return other_vars->normal_voltage_upper_limit_in_pu;
 }
 
 double BUS::get_normal_voltage_lower_limit_in_pu() const
 {
-    return normal_voltage_lower_limit_in_pu;
+    return other_vars->normal_voltage_lower_limit_in_pu;
 }
 
 double BUS::get_emergency_voltage_upper_limit_in_pu() const
 {
-    return emergency_voltage_upper_limit_in_pu;
+    return other_vars->emergency_voltage_upper_limit_in_pu;
 }
 
 double BUS::get_emergency_voltage_lower_limit_in_pu() const
 {
-    return emergency_voltage_lower_limit_in_pu;
+    return other_vars->emergency_voltage_lower_limit_in_pu;
 }
 
 double BUS::get_voltage_upper_limit_in_pu() const
@@ -413,17 +412,12 @@ double BUS::get_voltage_lower_limit_in_pu() const
 
 double BUS::get_base_frequency_in_Hz() const
 {
-    return fn_Hz;
-}
-
-double BUS::get_base_period_in_s() const
-{
-    return tn_s;
+    return bus_frequency_model.get_base_frequency_in_Hz();
 }
 
 double BUS::get_voltage_to_regulate_in_pu() const
 {
-    return voltage_to_regulate_in_pu;
+    return other_vars->voltage_to_regulate_in_pu;
 }
 
 complex<double> BUS::get_positive_sequence_complex_voltage_in_pu() const
@@ -433,27 +427,27 @@ complex<double> BUS::get_positive_sequence_complex_voltage_in_pu() const
 
 complex<double> BUS::get_positive_sequence_complex_voltage_in_kV() const
 {
-    return base_voltage_in_kV*positive_sequence_voltage_in_pu*positive_sequence_Euler_complex_number;
+    return other_vars->base_voltage_in_kV*positive_sequence_voltage_in_pu*positive_sequence_Euler_complex_number;
 }
 
 complex<double> BUS::get_negative_sequence_complex_voltage_in_pu() const
 {
-    return negative_sequence_voltage_in_pu*negative_sequence_Euler_complex_number;
+    return other_vars->negative_sequence_voltage_in_pu*other_vars->negative_sequence_Euler_complex_number;
 }
 
 complex<double> BUS::get_negative_sequence_complex_voltage_in_kV() const
 {
-    return base_voltage_in_kV*negative_sequence_voltage_in_pu*negative_sequence_Euler_complex_number;
+    return other_vars->base_voltage_in_kV*other_vars->negative_sequence_voltage_in_pu*other_vars->negative_sequence_Euler_complex_number;
 }
 
 complex<double> BUS::get_zero_sequence_complex_voltage_in_pu() const
 {
-    return zero_sequence_voltage_in_pu*zero_sequence_Euler_complex_number;
+    return other_vars->zero_sequence_voltage_in_pu*other_vars->zero_sequence_Euler_complex_number;
 }
 
 complex<double> BUS::get_zero_sequence_complex_voltage_in_kV() const
 {
-    return base_voltage_in_kV*zero_sequence_voltage_in_pu*zero_sequence_Euler_complex_number;
+    return other_vars->base_voltage_in_kV*other_vars->zero_sequence_voltage_in_pu*other_vars->zero_sequence_Euler_complex_number;
 }
 
 
@@ -498,7 +492,7 @@ void BUS::clear()
 {
     bus_number = 0;
     set_bus_name("");
-    base_voltage_in_kV = 0.0;
+    other_vars->base_voltage_in_kV = 0.0;
     set_base_frequency_in_Hz(50.0);
     set_bus_type(OUT_OF_SERVICE);
     set_area_number(0);
@@ -516,7 +510,7 @@ void BUS::clear()
 
     set_equivalent_bus_number(0);
 
-    fault.clear();
+    other_vars->fault.clear();
 }
 
 bool BUS::is_in_area(unsigned int area) const
@@ -562,22 +556,22 @@ void BUS::set_fault(const FAULT& bus_fault)
     {
         string fault_type = bus_fault.get_fault_type_string();
         complex<double> y = bus_fault.get_fault_shunt_in_pu();
-        if(not this->fault.is_faulted())
+        if(not other_vars->fault.is_faulted())
             osstream<<fault_type<<" is set for bus "<<get_bus_number()<<" with fault shunt "<<y<<" pu";
         else
-            osstream<<"Fault is already set for bus "<<get_bus_number()<<" with fault shunt "<<this->fault.get_fault_shunt_in_pu()<<" pu."<<endl
+            osstream<<"Fault is already set for bus "<<get_bus_number()<<" with fault shunt "<<other_vars->fault.get_fault_shunt_in_pu()<<" pu."<<endl
                    <<"New "<<fault_type<<" is set for bus "<<get_bus_number()<<" with fault shunt "<<y<<" pu";
 
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
 
-        this->fault = bus_fault;
+        other_vars->fault = bus_fault;
     }
 }
 
 FAULT BUS::get_fault() const
 {
-    return fault;
+    return other_vars->fault;
 }
 
 void BUS::clear_fault()
@@ -588,7 +582,7 @@ void BUS::clear_fault()
         osstream<<"Fault at bus "<<get_bus_number()<<" is cleared.";
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
-        fault.clear();
+        other_vars->fault.clear();
     }
     else
     {
@@ -601,7 +595,7 @@ void BUS::clear_fault()
 
 bool BUS::is_faulted() const
 {
-    return fault.is_faulted();
+    return other_vars->fault.is_faulted();
 }
 
 
@@ -618,9 +612,6 @@ BUS& BUS::operator=(const BUS& bus)
 
 void BUS::copy_from_const_bus(const BUS& bus)
 {
-    set_toolkit(bus.get_toolkit());
-    bus_frequency_model.set_toolkit(bus.get_toolkit());
-
     clear();
 
     set_bus_number(bus.get_bus_number());
