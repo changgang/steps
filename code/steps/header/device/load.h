@@ -2,6 +2,7 @@
 #define LOAD_H
 
 #include "header/device/nonbus_device.h"
+#include "header/device/load_var.h"
 #include "header/model/load_model/load_model.h"
 #include "header/model/load_relay_model/load_voltage_relay_model.h"
 #include "header/model/load_relay_model/load_frequency_relay_model.h"
@@ -15,6 +16,7 @@ class LOAD : public NONBUS_DEVICE
 {
     public:
         LOAD(STEPS& toolkit);
+        LOAD(const LOAD& load);
         virtual ~LOAD();
 
         void set_load_bus(unsigned int bus);
@@ -57,6 +59,8 @@ class LOAD : public NONBUS_DEVICE
 
 
         virtual LOAD& operator=(const LOAD& load);
+
+        void copy_from_const_load(const LOAD& load);
 
         virtual DEVICE_ID get_device_id() const;
         //virtual string get_compound_device_name() const;
@@ -101,11 +105,6 @@ class LOAD : public NONBUS_DEVICE
 
         string identifier;
         bool status;
-        complex<double> s_constant_power_in_MVA,
-                        s_constant_current_in_MVA,
-                        s_constant_impedance_in_MVA;
-        unsigned int area_number, zone_number, owner_number;
-        bool interruptable;
 
         static double voltage_threshold_of_constant_power_load_in_pu;
         static double voltage_threshold_of_constant_current_load_in_pu;
@@ -118,6 +117,6 @@ class LOAD : public NONBUS_DEVICE
         LOAD_VOLTAGE_RELAY_MODEL* load_voltage_relay_model;
         LOAD_FREQUENCY_RELAY_MODEL* load_frequency_relay_model;
 
-        complex<double> s_negative_sequence_in_MVA, s_zero_sequence_in_MVA;
+        LOAD_VAR* other_vars;
 };
 #endif // LOAD_H

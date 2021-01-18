@@ -111,7 +111,7 @@
 1610692137 d:\steps\code\steps\header\block\differential_block.h
 	"header/block/block.h"
 
-1608619265 d:\steps\code\steps\header\device\generator.h
+1610950642 d:\steps\code\steps\header\device\generator.h
 	<string>
 	<complex>
 	"header/device/source.h"
@@ -122,7 +122,7 @@
 	"header/model/sg_models/turbine_governor_model/turbine_governor_model.h"
 	"header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model.h"
 
-1607318983 d:\steps\code\steps\header\device\source.h
+1610950646 d:\steps\code\steps\header\device\source.h
 	<string>
 	<complex>
 	"header/device/nonbus_device.h"
@@ -266,8 +266,9 @@
 	"header/model/model.h"
 	<complex>
 
-1608619265 d:\steps\code\steps\header\device\load.h
+1610951212 d:\steps\code\steps\header\device\load.h
 	"header/device/nonbus_device.h"
+	"header/device/load_var.h"
 	"header/model/load_model/load_model.h"
 	"header/model/load_relay_model/load_voltage_relay_model.h"
 	"header/model/load_relay_model/load_frequency_relay_model.h"
@@ -3617,7 +3618,7 @@
 	<cstdio>
 	<cstdlib>
 
-1608619265 source:d:\steps\code\steps\source\device\generator.cpp
+1610950500 source:d:\steps\code\steps\source\device\generator.cpp
 	"header/device/generator.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -3697,7 +3698,7 @@
 	<iostream>
 	<cstdio>
 
-1608619265 source:d:\steps\code\steps\source\device\load.cpp
+1610951326 source:d:\steps\code\steps\source\device\load.cpp
 	"header/device/load.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -3752,7 +3753,7 @@
 	<iostream>
 	<cstdio>
 
-1598590744 source:d:\steps\code\steps\source\device\source.cpp
+1610950500 source:d:\steps\code\steps\source\device\source.cpp
 	"header/device/source.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -6046,9 +6047,16 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1610767085 d:\steps\code\steps\header\device\bus_var.h
+1610942994 d:\steps\code\steps\header\device\bus_var.h
 	"header/basic/fault.h"
 	<string>
 	<complex>
-	<map>
+
+1610942975 d:\steps\code\steps\header\device\load_var.h
+	<complex>
+
+1610943019 d:\steps\code\steps\header\device\source_var.h
+	<complex>
+
+1610943283 d:\steps\code\steps\header\device\generator_var.h
 

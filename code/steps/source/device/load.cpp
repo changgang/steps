@@ -16,11 +16,19 @@ double LOAD::one_over_voltage_threshold_of_constant_current_load_in_pu = 2.0;
 
 LOAD::LOAD(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
 {
+    other_vars = new LOAD_VAR;
     clear();
+}
+
+LOAD::LOAD(const LOAD& load) : NONBUS_DEVICE(load.get_toolkit())
+{
+    other_vars = new LOAD_VAR;
+    copy_from_const_load(load);
 }
 
 LOAD::~LOAD()
 {
+    delete other_vars;
 }
 
 void LOAD::set_load_bus(unsigned int load_bus)
@@ -66,37 +74,37 @@ void LOAD::set_status(bool status)
 
 void LOAD::set_nominal_constant_power_load_in_MVA(const complex<double>& s)
 {
-    s_constant_power_in_MVA = s;
+    other_vars->s_constant_power_in_MVA = s;
 }
 
 void LOAD::set_nominal_constant_current_load_in_MVA(const complex<double>& s)
 {
-    s_constant_current_in_MVA = s;
+    other_vars->s_constant_current_in_MVA = s;
 }
 
 void LOAD::set_nominal_constant_impedance_load_in_MVA(const complex<double>& s)
 {
-    s_constant_impedance_in_MVA = s;
+    other_vars->s_constant_impedance_in_MVA = s;
 }
 
 void LOAD::set_area_number(unsigned int num)
 {
-    area_number = num;
+    other_vars->area_number = num;
 }
 
 void LOAD::set_zone_number(unsigned int num)
 {
-    zone_number = num;
+    other_vars->zone_number = num;
 }
 
 void LOAD::set_owner_number(unsigned int num)
 {
-    owner_number = num;
+    other_vars->owner_number = num;
 }
 
 void LOAD::set_flag_interruptable(bool flag)
 {
-    interruptable = flag;
+    other_vars->interruptable = flag;
 }
 
 void LOAD::set_load_manually_scale_factor_in_pu(double scale)
@@ -107,12 +115,12 @@ void LOAD::set_load_manually_scale_factor_in_pu(double scale)
 
 void LOAD::set_negative_sequence_load_in_MVA(const complex<double>& s)
 {
-    s_negative_sequence_in_MVA = s;
+    other_vars->s_negative_sequence_in_MVA = s;
 }
 
 void LOAD::set_zero_sequence_load_in_MVA(const complex<double>& s)
 {
-    s_zero_sequence_in_MVA = s;
+    other_vars->s_zero_sequence_in_MVA = s;
 }
 
 unsigned int LOAD::get_load_bus() const
@@ -137,47 +145,47 @@ bool LOAD::get_status() const
 
 complex<double> LOAD::get_nominal_constant_power_load_in_MVA() const
 {
-    return s_constant_power_in_MVA;
+    return other_vars->s_constant_power_in_MVA;
 }
 
 complex<double> LOAD::get_nominal_constant_current_load_in_MVA() const
 {
-    return s_constant_current_in_MVA;
+    return other_vars->s_constant_current_in_MVA;
 }
 
 complex<double> LOAD::get_nominal_constant_impedance_load_in_MVA() const
 {
-    return s_constant_impedance_in_MVA;
+    return other_vars->s_constant_impedance_in_MVA;
 }
 
 unsigned int LOAD::get_area_number() const
 {
-    return area_number;
+    return other_vars->area_number;
 }
 
 unsigned int LOAD::get_zone_number() const
 {
-    return zone_number;
+    return other_vars->zone_number;
 }
 
 unsigned int LOAD::get_owner_number() const
 {
-    return owner_number;
+    return other_vars->owner_number;
 }
 
 bool LOAD::get_flag_interruptable() const
 {
-    return interruptable;
+    return other_vars->interruptable;
 }
 
 complex<double> LOAD::get_negative_sequence_load_in_MVA() const
 {
-    return s_negative_sequence_in_MVA;
+    return other_vars->s_negative_sequence_in_MVA;
 }
 
 complex<double> LOAD::get_zero_sequence_load_in_MVA() const
 {
-    return s_zero_sequence_in_MVA;
+    return other_vars->s_zero_sequence_in_MVA;
 }
 
 bool LOAD::is_valid() const
@@ -212,8 +220,8 @@ void LOAD::clear()
     load_voltage_relay_model = NULL;
     load_frequency_relay_model = NULL;
 
-    s_negative_sequence_in_MVA = 0.0;
-    s_zero_sequence_in_MVA = 0.0;
+    set_negative_sequence_load_in_MVA(0.0);
+    set_zero_sequence_load_in_MVA(0.0);
 }
 
 bool LOAD::is_connected_to_bus(unsigned int target_bus) const
@@ -253,7 +261,13 @@ LOAD& LOAD::operator=(const LOAD& load)
 {
     if(this==(&load)) return *this;
 
-    set_toolkit(load.get_toolkit());
+    copy_from_const_load(load);
+
+    return *this;
+}
+
+void LOAD::copy_from_const_load(const LOAD& load)
+{
     clear();
 
     set_load_bus(load.get_load_bus());
@@ -269,8 +283,6 @@ LOAD& LOAD::operator=(const LOAD& load)
     set_model(load.get_load_model());
     set_model(load.get_load_voltage_relay_model());
     set_model(load.get_load_frequency_relay_model());
-
-    return *this;
 }
 
 DEVICE_ID LOAD::get_device_id() const
