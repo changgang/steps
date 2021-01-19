@@ -18,6 +18,7 @@ class WT_GENERATOR : public SOURCE
 {
     public:
         WT_GENERATOR(STEPS& toolkit);
+        WT_GENERATOR(const WT_GENERATOR& gen);
         virtual ~WT_GENERATOR();
         virtual void clear();
     public:
@@ -56,7 +57,7 @@ class WT_GENERATOR : public SOURCE
         virtual void save() const;
 
         virtual WT_GENERATOR& operator=(const WT_GENERATOR& gen);
-
+        void copy_from_const_generator(const WT_GENERATOR& gen);
         virtual complex<double> get_complex_internal_voltage_in_pu_in_xy_axis() const;
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power();
     private:

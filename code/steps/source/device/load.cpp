@@ -16,13 +16,13 @@ double LOAD::one_over_voltage_threshold_of_constant_current_load_in_pu = 2.0;
 
 LOAD::LOAD(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
 {
-    other_vars = new LOAD_VAR;
+    other_vars = new LOAD_VAR();
     clear();
 }
 
 LOAD::LOAD(const LOAD& load) : NONBUS_DEVICE(load.get_toolkit())
 {
-    other_vars = new LOAD_VAR;
+    other_vars = new LOAD_VAR();
     copy_from_const_load(load);
 }
 
@@ -260,6 +260,8 @@ void LOAD::save() const
 LOAD& LOAD::operator=(const LOAD& load)
 {
     if(this==(&load)) return *this;
+
+    other_vars = new LOAD_VAR();
 
     copy_from_const_load(load);
 

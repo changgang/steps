@@ -16,11 +16,19 @@ using namespace std;
 
 GENERATOR::GENERATOR(STEPS& toolkit) : SOURCE(toolkit)
 {
+    other_gen_vars = new GENERATOR_VAR();
     clear();
+}
+
+GENERATOR::GENERATOR(const GENERATOR& gen) : SOURCE(gen.get_toolkit())
+{
+    other_gen_vars = new GENERATOR_VAR();
+    copy_from_const_generator(gen);
 }
 
 GENERATOR::~GENERATOR()
 {
+    delete other_gen_vars;
 }
 
 void GENERATOR::set_generator_bus(unsigned int bus)
@@ -37,7 +45,7 @@ void GENERATOR::set_generator_impedance_in_pu(const complex<double>& z_pu)
 
 void GENERATOR::set_positive_sequence_resistance_in_pu(double r)
 {
-    R1 = r;
+    other_gen_vars->R1 = r;
     if(get_negative_sequence_resistance_in_pu()!=0.0)
         set_negative_sequence_resistance_in_pu(r);
     if(get_zero_sequence_resistance_in_pu()!=0.0)
@@ -46,17 +54,17 @@ void GENERATOR::set_positive_sequence_resistance_in_pu(double r)
 
 void GENERATOR::set_positive_sequence_syncronous_reactance_in_pu(double x)
 {
-    X1_sync = x;
+    other_gen_vars->X1_sync = x;
 }
 
 void GENERATOR::set_positive_sequence_transient_reactance_in_pu(double x)
 {
-    X1_transient = x;
+    other_gen_vars->X1_transient = x;
 }
 
 void GENERATOR::set_positive_sequence_subtransient_reactance_in_pu(double x)
 {
-    X1_subtransient = x;
+    other_gen_vars->X1_subtransient = x;
     if(get_positive_sequence_syncronous_reactance_in_pu()==0.0)
         set_positive_sequence_syncronous_reactance_in_pu(x);
     if(get_positive_sequence_transient_reactance_in_pu()==0.0)
@@ -69,32 +77,32 @@ void GENERATOR::set_positive_sequence_subtransient_reactance_in_pu(double x)
 
 void GENERATOR::set_negative_sequence_resistance_in_pu(double r)
 {
-    R2 = r;
+    other_gen_vars->R2 = r;
 }
 
 void GENERATOR::set_negative_sequence_reactance_in_pu(double x)
 {
-    X2 = x;
+    other_gen_vars->X2 = x;
 }
 
 void GENERATOR::set_zero_sequence_resistance_in_pu(double r)
 {
-    R0 = r;
+    other_gen_vars->R0 = r;
 }
 
 void GENERATOR::set_zero_sequence_reactance_in_pu(double x)
 {
-    X0 = x;
+    other_gen_vars->X0 = x;
 }
 
 void GENERATOR::set_grounding_resistance_in_pu(double r)
 {
-    Rground = r;
+    other_gen_vars->Rground = r;
 }
 
 void GENERATOR::set_grounding_reactance_in_pu(double x)
 {
-    Xground = x;
+    other_gen_vars->Xground = x;
 }
 
 unsigned int GENERATOR::get_generator_bus() const
@@ -109,52 +117,52 @@ complex<double> GENERATOR::get_generator_impedance_in_pu() const
 
 double GENERATOR::get_positive_sequence_resistance_in_pu() const
 {
-    return R1;
+    return other_gen_vars->R1;
 }
 
 double GENERATOR::get_positive_sequence_syncronous_reactance_in_pu() const
 {
-    return X1_sync;
+    return other_gen_vars->X1_sync;
 }
 
 double GENERATOR::get_positive_sequence_transient_reactance_in_pu() const
 {
-    return X1_transient;
+    return other_gen_vars->X1_transient;
 }
 
 double GENERATOR::get_positive_sequence_subtransient_reactance_in_pu() const
 {
-    return X1_subtransient;
+    return other_gen_vars->X1_subtransient;
 }
 
 double GENERATOR::get_negative_sequence_resistance_in_pu() const
 {
-    return R2;
+    return other_gen_vars->R2;
 }
 
 double GENERATOR::get_negative_sequence_reactance_in_pu() const
 {
-    return X2;
+    return other_gen_vars->X2;
 }
 
 double GENERATOR::get_zero_sequence_resistance_in_pu() const
 {
-    return R0;
+    return other_gen_vars->R0;
 }
 
 double GENERATOR::get_zero_sequence_reactance_in_pu() const
 {
-    return X0;
+    return other_gen_vars->X0;
 }
 
 double GENERATOR::get_grounding_resistance_in_pu() const
 {
-    return Rground;
+    return other_gen_vars->Rground;
 }
 
 double GENERATOR::get_grounding_reactance_in_pu() const
 {
-    return Xground;
+    return other_gen_vars->Xground;
 }
 
 
@@ -533,6 +541,18 @@ GENERATOR& GENERATOR::operator=(const GENERATOR& gen)
 {
     if(this==(&gen)) return *this;
 
+    SOURCE::operator=(gen);
+
+    other_gen_vars = new GENERATOR_VAR();
+
+    clear();
+    copy_from_const_generator(gen);
+
+    return *this;
+}
+
+void GENERATOR::copy_from_const_generator(const GENERATOR& gen)
+{
     set_toolkit(gen.get_toolkit());
     clear();
 
@@ -556,7 +576,6 @@ GENERATOR& GENERATOR::operator=(const GENERATOR& gen)
     set_model(gen.get_stabilizer_model());
     set_model(gen.get_turbine_governor_model());
     set_model(gen.get_turbine_load_controller_model());
-    return *this;
 }
 
 complex<double> GENERATOR::get_complex_internal_voltage_in_pu_in_xy_axis() const

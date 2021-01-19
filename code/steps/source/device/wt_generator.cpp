@@ -20,6 +20,12 @@ WT_GENERATOR::WT_GENERATOR(STEPS& toolkit) : SOURCE(toolkit)
     clear();
 }
 
+WT_GENERATOR::WT_GENERATOR(const WT_GENERATOR& gen) : SOURCE(gen.get_toolkit())
+{
+    clear();
+    copy_from_const_generator(gen);
+}
+
 WT_GENERATOR::~WT_GENERATOR()
 {
 }
@@ -362,9 +368,19 @@ WT_GENERATOR& WT_GENERATOR::operator=(const WT_GENERATOR& gen)
 {
     if(this==(&gen)) return *this;
 
+    SOURCE::operator=(gen);
+
     set_toolkit(gen.get_toolkit());
     clear();
 
+    copy_from_const_generator(gen);
+
+    return *this;
+}
+
+
+void WT_GENERATOR::copy_from_const_generator(const WT_GENERATOR& gen)
+{
     set_generator_bus(gen.get_generator_bus());
     set_identifier(gen.get_identifier());
     set_status(gen.get_status());
@@ -389,8 +405,8 @@ WT_GENERATOR& WT_GENERATOR::operator=(const WT_GENERATOR& gen)
     set_model(gen.get_wt_pitch_model());
     set_model(gen.get_wind_speed_model());
     set_model(gen.get_wt_relay_model());
-    return *this;
 }
+
 
 complex<double> WT_GENERATOR::get_complex_internal_voltage_in_pu_in_xy_axis() const
 {

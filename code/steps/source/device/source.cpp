@@ -10,12 +10,13 @@ using namespace std;
 
 SOURCE::SOURCE(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
 {
+    other_vars = new SOURCE_VAR();
     clear();
 }
 
 SOURCE::~SOURCE()
 {
-    ;
+    delete other_vars;
 }
 
 void SOURCE::set_source_bus(unsigned int bus)
@@ -76,32 +77,32 @@ void SOURCE::set_mbase_in_MVA(double mbase)
 
 void SOURCE::set_p_generation_in_MW(double p_MW)
 {
-    p_generation_MW = p_MW;
+    other_vars->p_generation_MW = p_MW;
 }
 
 void SOURCE::set_q_generation_in_MVar(double q_MVar)
 {
-    q_generation_MVar = q_MVar;
+    other_vars->q_generation_MVar = q_MVar;
 }
 
 void SOURCE::set_p_max_in_MW(double p_max)
 {
-    this->p_max_MW = p_max;
+    other_vars->p_max_MW = p_max;
 }
 
 void SOURCE::set_p_min_in_MW(double p_min)
 {
-    this->p_min_MW = p_min;
+    other_vars->p_min_MW = p_min;
 }
 
 void SOURCE::set_q_max_in_MVar(double q_max)
 {
-    this->q_max_MVar = q_max;
+    other_vars->q_max_MVar = q_max;
 }
 
 void SOURCE::set_q_min_in_MVar(double q_min)
 {
-    this->q_min_MVar = q_min;
+    other_vars->q_min_MVar = q_min;
 }
 
 void SOURCE::set_voltage_to_regulate_in_pu(double v_pu)
@@ -115,13 +116,14 @@ void SOURCE::set_voltage_to_regulate_in_pu(double v_pu)
         toolkit.show_information_with_leading_time_stamp(osstream);
         v_pu = 1.0;
     }
-    voltage_to_regulate_pu = v_pu;
+
+    other_vars->voltage_to_regulate_pu = v_pu;
 }
 
 void SOURCE::set_bus_to_regulate(unsigned int bus)
 {
     if(bus==0 or bus==get_source_bus())
-        bus_to_regulate = get_source_bus();
+        other_vars->bus_to_regulate = get_source_bus();
     else
     {
         ostringstream osstream;
@@ -129,13 +131,13 @@ void SOURCE::set_bus_to_regulate(unsigned int bus)
                 <<"Terminal bus "<<get_source_bus()<<" will be set to regulate. New bus "<<bus<<" is discarded.";
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
-        bus_to_regulate = get_source_bus();
+        other_vars->bus_to_regulate = get_source_bus();
     }
 }
 
 void SOURCE::set_source_impedance_in_pu(const complex<double>& z_pu)
 {
-    source_Z_pu = z_pu;
+    other_vars->source_Z_pu = z_pu;
 }
 
 
@@ -171,12 +173,12 @@ double SOURCE::get_one_over_mbase_in_one_over_MVA() const
 
 double SOURCE::get_p_generation_in_MW() const
 {
-    return p_generation_MW;
+    return other_vars->p_generation_MW;
 }
 
 double SOURCE::get_q_generation_in_MVar() const
 {
-    return q_generation_MVar;
+    return other_vars->q_generation_MVar;
 }
 
 complex<double> SOURCE::get_complex_generation_in_MVA() const
@@ -186,40 +188,40 @@ complex<double> SOURCE::get_complex_generation_in_MVA() const
 
 double SOURCE::get_p_max_in_MW() const
 {
-    return p_max_MW;
+    return other_vars->p_max_MW;
 }
 
 double SOURCE::get_p_min_in_MW() const
 {
-    return p_min_MW;
+    return other_vars->p_min_MW;
 }
 
 double SOURCE::get_q_max_in_MVar() const
 {
-    return q_max_MVar;
+    return other_vars->q_max_MVar;
 }
 
 double SOURCE::get_q_min_in_MVar() const
 {
-    return q_min_MVar;
+    return other_vars->q_min_MVar;
 }
 
 double SOURCE::get_voltage_to_regulate_in_pu() const
 {
-    return voltage_to_regulate_pu;
+    return other_vars->voltage_to_regulate_pu;
 }
 
 unsigned int SOURCE::get_bus_to_regulate() const
 {
-    if(bus_to_regulate!=0)
-        return bus_to_regulate;
+    if(other_vars->bus_to_regulate!=0)
+        return other_vars->bus_to_regulate;
     else
         return get_source_bus();
 }
 
 complex<double> SOURCE::get_source_impedance_in_pu() const
 {
-    return source_Z_pu;
+    return other_vars->source_Z_pu;
 }
 
 bool SOURCE::is_valid() const
@@ -306,3 +308,9 @@ bool SOURCE::is_in_zone(unsigned int zone) const
         return false;
 }
 
+SOURCE& SOURCE::operator=(const SOURCE& source)
+{
+    if(this==(&source)) return *this;
+    other_vars = new SOURCE_VAR();
+    return *this;
+}

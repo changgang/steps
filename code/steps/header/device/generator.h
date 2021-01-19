@@ -4,6 +4,7 @@
 #include <string>
 #include <complex>
 #include "header/device/source.h"
+#include "header/device/generator_var.h"
 #include "header/model/sg_models/sync_generator_model/sync_generator_model.h"
 #include "header/model/sg_models/compensator_model/compensator_model.h"
 #include "header/model/sg_models/exciter_model/exciter_model.h"
@@ -17,6 +18,7 @@ class GENERATOR : public SOURCE
 {
     public:
         GENERATOR(STEPS& toolkit);
+        GENERATOR(const GENERATOR& gen);
         virtual ~GENERATOR();
 
         void set_generator_bus(unsigned int bus);
@@ -76,6 +78,8 @@ class GENERATOR : public SOURCE
 
         virtual GENERATOR& operator=(const GENERATOR& gen);
 
+        void copy_from_const_generator(const GENERATOR& gen);
+
         virtual complex<double> get_complex_internal_voltage_in_pu_in_xy_axis() const;
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power();
     private:
@@ -89,8 +93,6 @@ class GENERATOR : public SOURCE
         bool sync_generator_model_disabled, compensator_model_disabled, exciter_model_disabled,
              stabilizer_model_disabled, turbine_governor_model_disabled, turbine_load_controller_model_disabled;
 
-        double R1, X1_sync, X1_transient, X1_subtransient;
-        double R2, X2, R0, X0;
-        double Rground, Xground;
+        GENERATOR_VAR* other_gen_vars;
 };
 #endif // GENERATOR_H

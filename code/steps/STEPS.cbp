@@ -130,6 +130,7 @@
 		<Unit filename="header/data_imexporter/steps_imexporter_test.h" />
 		<Unit filename="header/device/bus.h" />
 		<Unit filename="header/device/bus_test.h" />
+		<Unit filename="header/device/bus_var.h" />
 		<Unit filename="header/device/converter.h" />
 		<Unit filename="header/device/converter_station.h" />
 		<Unit filename="header/device/converter_station_test.h" />
@@ -143,6 +144,7 @@
 		<Unit filename="header/device/fixed_shunt_test.h" />
 		<Unit filename="header/device/generator.h" />
 		<Unit filename="header/device/generator_test.h" />
+		<Unit filename="header/device/generator_var.h" />
 		<Unit filename="header/device/hvdc.h" />
 		<Unit filename="header/device/hvdc_test.h" />
 		<Unit filename="header/device/lcc.h" />
@@ -154,11 +156,13 @@
 		<Unit filename="header/device/line_test.h" />
 		<Unit filename="header/device/load.h" />
 		<Unit filename="header/device/load_test.h" />
+		<Unit filename="header/device/load_var.h" />
 		<Unit filename="header/device/nonbus_device.h" />
 		<Unit filename="header/device/pv_unit.h" />
 		<Unit filename="header/device/pv_unit_test.h" />
 		<Unit filename="header/device/source.h" />
 		<Unit filename="header/device/source_test.h" />
+		<Unit filename="header/device/source_var.h" />
 		<Unit filename="header/device/transformer.h" />
 		<Unit filename="header/device/transformer_test.h" />
 		<Unit filename="header/device/vsc.h" />
@@ -528,6 +532,7 @@
 		<Unit filename="source/data_imexporter/steps_powerflow_imexporter.cpp" />
 		<Unit filename="source/device/bus.cpp" />
 		<Unit filename="source/device/bus_test.cpp" />
+		<Unit filename="source/device/bus_var.cpp" />
 		<Unit filename="source/device/converter.cpp" />
 		<Unit filename="source/device/converter_station.cpp" />
 		<Unit filename="source/device/converter_station_test.cpp" />
@@ -541,6 +546,7 @@
 		<Unit filename="source/device/fixed_shunt_test.cpp" />
 		<Unit filename="source/device/generator.cpp" />
 		<Unit filename="source/device/generator_test.cpp" />
+		<Unit filename="source/device/generator_var.cpp" />
 		<Unit filename="source/device/hvdc.cpp" />
 		<Unit filename="source/device/hvdc_test.cpp" />
 		<Unit filename="source/device/lcc.cpp" />
@@ -557,6 +563,7 @@
 		<Unit filename="source/device/pv_unit_test.cpp" />
 		<Unit filename="source/device/source.cpp" />
 		<Unit filename="source/device/source_test.cpp" />
+		<Unit filename="source/device/source_var.cpp" />
 		<Unit filename="source/device/transformer.cpp" />
 		<Unit filename="source/device/transformer_test.cpp" />
 		<Unit filename="source/device/vsc_hvdc.cpp" />

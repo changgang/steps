@@ -111,10 +111,11 @@
 1610692137 d:\steps\code\steps\header\block\differential_block.h
 	"header/block/block.h"
 
-1610950642 d:\steps\code\steps\header\device\generator.h
+1610952070 d:\steps\code\steps\header\device\generator.h
 	<string>
 	<complex>
 	"header/device/source.h"
+	"header/device/generator_var.h"
 	"header/model/sg_models/sync_generator_model/sync_generator_model.h"
 	"header/model/sg_models/compensator_model/compensator_model.h"
 	"header/model/sg_models/exciter_model/exciter_model.h"
@@ -122,10 +123,11 @@
 	"header/model/sg_models/turbine_governor_model/turbine_governor_model.h"
 	"header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model.h"
 
-1610950646 d:\steps\code\steps\header\device\source.h
+1611055178 d:\steps\code\steps\header\device\source.h
 	<string>
 	<complex>
 	"header/device/nonbus_device.h"
+	"header/device/source_var.h"
 	"header/basic/steps_enum.h"
 
 1607318983 d:\steps\code\steps\header\device\nonbus_device.h
@@ -180,7 +182,7 @@
 	"header/basic/constants.h"
 	"header/meter/meter.h"
 
-1607318983 d:\steps\code\steps\header\device\wt_generator.h
+1611056196 d:\steps\code\steps\header\device\wt_generator.h
 	<string>
 	<complex>
 	"header/device/source.h"
@@ -227,7 +229,7 @@
 1583938871 d:\steps\code\steps\header\model\wtg_models\wt_relay_model\wt_relay_model.h
 	"header/model/wtg_models/wtg_model.h"
 
-1607318983 d:\steps\code\steps\header\device\pv_unit.h
+1611056337 d:\steps\code\steps\header\device\pv_unit.h
 	<string>
 	<complex>
 	"header/device/source.h"
@@ -3524,7 +3526,7 @@
 	<istream>
 	<iostream>
 
-1610768401 source:d:\steps\code\steps\source\device\bus.cpp
+1611055864 source:d:\steps\code\steps\source\device\bus.cpp
 	"header/device/bus.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -3618,7 +3620,7 @@
 	<cstdio>
 	<cstdlib>
 
-1610950500 source:d:\steps\code\steps\source\device\generator.cpp
+1611054941 source:d:\steps\code\steps\source\device\generator.cpp
 	"header/device/generator.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -3698,7 +3700,7 @@
 	<iostream>
 	<cstdio>
 
-1610951326 source:d:\steps\code\steps\source\device\load.cpp
+1611054975 source:d:\steps\code\steps\source\device\load.cpp
 	"header/device/load.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -3728,7 +3730,7 @@
 	<istream>
 	<iostream>
 
-1607318983 source:d:\steps\code\steps\source\device\pv_unit.cpp
+1611056423 source:d:\steps\code\steps\source\device\pv_unit.cpp
 	"header/device/pv_unit.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -3753,7 +3755,7 @@
 	<iostream>
 	<cstdio>
 
-1610950500 source:d:\steps\code\steps\source\device\source.cpp
+1611055512 source:d:\steps\code\steps\source\device\source.cpp
 	"header/device/source.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -3859,7 +3861,7 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1607318983 source:d:\steps\code\steps\source\device\wt_generator.cpp
+1611055979 source:d:\steps\code\steps\source\device\wt_generator.cpp
 	"header/device/wt_generator.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -5433,7 +5435,7 @@
 	<cstdio>
 	<cmath>
 
-1608619265 source:d:\steps\code\steps\source\power_system_database.cpp
+1611046973 source:d:\steps\code\steps\source\power_system_database.cpp
 	"header/power_system_database.h"
 	"header/STEPS.h"
 	"header/steps_namespace.h"
@@ -5784,7 +5786,7 @@
 	<cstdio>
 	<cmath>
 
-1607318983 source:d:\steps\code\steps\source\toolkit\powerflow_solver\powerflow_solver.cpp
+1611046953 source:d:\steps\code\steps\source\toolkit\powerflow_solver\powerflow_solver.cpp
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -6047,7 +6049,7 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1610942994 d:\steps\code\steps\header\device\bus_var.h
+1611043665 d:\steps\code\steps\header\device\bus_var.h
 	"header/basic/fault.h"
 	<string>
 	<complex>
@@ -6055,8 +6057,17 @@
 1610942975 d:\steps\code\steps\header\device\load_var.h
 	<complex>
 
-1610943019 d:\steps\code\steps\header\device\source_var.h
+1611046109 d:\steps\code\steps\header\device\source_var.h
 	<complex>
 
-1610943283 d:\steps\code\steps\header\device\generator_var.h
+1611047125 d:\steps\code\steps\header\device\generator_var.h
+
+1611044021 source:d:\steps\code\steps\source\device\bus_var.cpp
+	"header/device/bus_var.h"
+
+1611046322 source:d:\steps\code\steps\source\device\source_var.cpp
+	"header/device/source_var.h"
+
+1611047204 source:d:\steps\code\steps\source\device\generator_var.cpp
+	"header/device/generator_var.h"
 

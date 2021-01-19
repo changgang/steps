@@ -10,7 +10,7 @@ using namespace std;
 
 BUS::BUS(STEPS& toolkit) : DEVICE(toolkit), bus_frequency_model(toolkit)
 {
-    other_vars = new BUS_VAR;
+    other_vars = new BUS_VAR();
 
     clear();
 
@@ -19,7 +19,7 @@ BUS::BUS(STEPS& toolkit) : DEVICE(toolkit), bus_frequency_model(toolkit)
 
 BUS::BUS(const BUS& bus) : DEVICE(bus.get_toolkit()), bus_frequency_model(bus.get_toolkit())
 {
-    other_vars = new BUS_VAR;
+    other_vars = new BUS_VAR();
 
     copy_from_const_bus(bus);
     bus_frequency_model.set_bus_pointer(this);
@@ -602,6 +602,10 @@ bool BUS::is_faulted() const
 BUS& BUS::operator=(const BUS& bus)
 {
     if(this==&bus) return *this; // to avoid self assignment
+
+    other_vars = new BUS_VAR();
+
+    clear();
 
     copy_from_const_bus(bus);
 

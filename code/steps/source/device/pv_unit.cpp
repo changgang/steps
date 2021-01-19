@@ -16,6 +16,12 @@ PV_UNIT::PV_UNIT(STEPS& toolkit) : SOURCE(toolkit)
     clear();
 }
 
+PV_UNIT::PV_UNIT(const PV_UNIT& pvu) : SOURCE(pvu.get_toolkit())
+{
+    clear();
+    copy_from_const_pvu(pvu);
+}
+
 PV_UNIT::~PV_UNIT()
 {
 }
@@ -253,9 +259,18 @@ PV_UNIT& PV_UNIT::operator=(const PV_UNIT& pvu)
 {
     if(this==(&pvu)) return *this;
 
+    SOURCE::operator=(pvu);
+
     set_toolkit(pvu.get_toolkit());
     clear();
 
+    copy_from_const_pvu(pvu);
+
+    return *this;
+}
+
+void PV_UNIT::copy_from_const_pvu(const PV_UNIT& pvu)
+{
     set_unit_bus(pvu.get_unit_bus());
     set_identifier(pvu.get_identifier());
     set_status(pvu.get_status());
@@ -277,7 +292,6 @@ PV_UNIT& PV_UNIT::operator=(const PV_UNIT& pvu)
     set_model(pvu.get_pv_panel_model());
     set_model(pvu.get_pv_electrical_model());
     set_model(pvu.get_pv_irradiance_model());
-    return *this;
 }
 
 complex<double> PV_UNIT::get_complex_internal_voltage_in_pu_in_xy_axis() const

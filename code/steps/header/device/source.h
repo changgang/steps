@@ -4,6 +4,7 @@
 #include <string>
 #include <complex>
 #include "header/device/nonbus_device.h"
+#include "header/device/source_var.h"
 #include "header/basic/steps_enum.h"
 
 using namespace std;
@@ -62,25 +63,23 @@ class SOURCE : public NONBUS_DEVICE
         virtual void report() const = 0;
         virtual void save() const = 0;
 
+        virtual SOURCE& operator=(const SOURCE& source);
+
         virtual void set_model(MODEL* model) = 0;
         virtual MODEL* get_model_of_type(string model_type) = 0;
 
         virtual complex<double> get_complex_internal_voltage_in_pu_in_xy_axis() const = 0;
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power() = 0;
     private:
-        string source_identifier;
-        double p_generation_MW, q_generation_MVar;
+        unsigned int source_bus;
         BUS* busptr;
 
-        unsigned int source_bus;
-        unsigned int bus_to_regulate;
+        string source_identifier;
 
-        complex<double> source_Z_pu;
+        bool status;
         double mbase_MVA;
         double one_over_mbase;
 
-        double p_max_MW, p_min_MW, q_max_MVar, q_min_MVar;
-        double voltage_to_regulate_pu;
-        bool status;
+        SOURCE_VAR* other_vars;
 };
 #endif // SOURCE_H
