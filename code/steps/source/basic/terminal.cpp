@@ -23,6 +23,15 @@ void TERMINAL::append_bus(unsigned int bus)
 {
     if(bus!=0 and (not has_bus(bus)))
         append_and_sort_buses(bus);
+    else
+    {
+        if(has_bus(bus))
+        {
+            ostringstream osstream;
+            osstream<<"Duplicate bus is not allowed when appending bus "<<bus<<" to terminal.";
+            show_information_with_leading_time_stamp_with_default_toolkit(osstream);
+        }
+    }
 }
 
 bool TERMINAL::has_bus(unsigned int bus)
@@ -64,6 +73,21 @@ vector<unsigned int> TERMINAL::get_buses()
 void TERMINAL::clear()
 {
     buses.clear();
+}
+
+string TERMINAL::convert2string() const
+{
+    unsigned int n = get_bus_count();
+    if(n==0)
+        return "()";
+    else
+    {
+        string terminal_string = "("+num2str(buses[0]);
+        for(unsigned int i=1; i<n; ++i)
+            terminal_string += ","+num2str(buses[i]);
+        terminal_string +=")";
+        return terminal_string;
+    }
 }
 
 TERMINAL& TERMINAL::operator= (const TERMINAL& terminal)

@@ -16,6 +16,7 @@ class TERMINAL
         unsigned int get_bus_count() const;
         vector<unsigned int> get_buses();
         void clear();
+        string convert2string() const;
 
         virtual TERMINAL& operator= (const TERMINAL& terminal);
         unsigned int operator[] (unsigned int index) const;

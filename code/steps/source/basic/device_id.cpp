@@ -213,7 +213,8 @@ void DEVICE_ID::set_device_terminal(const TERMINAL& term)
         {
             ostringstream osstream;
             osstream<<"Invalid terminal is provided for setting DEVICE_ID object. nothing is changed."<<endl
-                    <<"Possible device type is "<<get_device_type()<<".";
+                    <<"Possible device type is "<<get_device_type()<<"."<<endl
+                    <<"Given terminal is: "<<term.convert2string()<<".";
             show_information_with_leading_time_stamp_with_default_toolkit(osstream);
         }
     }
