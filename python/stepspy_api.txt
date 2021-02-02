@@ -1021,7 +1021,7 @@ Rets:
 Example: N/A
 
 API 122
-Format: bus_name2number(name)
+Format: bus_name2number(name, vbase=0.0)
 Description: Converter bus name to bus number.
 Args:
     (1) name: bus name.
@@ -2370,12 +2370,15 @@ Rets: N/A
 Example: N/A
 
 API 241
-Format: save_network_Y_matrix(file)
+Format: save_network_Y_matrix(file, export_full=False)
 Description: Save newwork complex Y matrix to file.
 Args:
-    (1) file: String of target file name.
+    (1) file: String of target file name of sparse Y matrix. If export_full is True, then 'full_' is appended to the head of file name for full matrix.
+    (2) export_full: boolean. False for saving only the sparse network matrix. True for saving both sparse and full network matrix.
 Rets: N/A
-Example: N/A
+Example:
+    simulator.save_network_Y_matrix("y.csv") # save only sparse matrix to y.csv
+    simulator.save_network_Y_matrix("y.csv", True) # save both sparse and full matrix to y.csv and full_y.csv respectively
 
 API 242
 Format: save_decoupled_network_B_matrix(file)
@@ -2695,64 +2698,88 @@ Tips:
 Example: N/A
 
 API 271
-Format: get_meter_value(index)
-Description: Return meter value of dynamic simulator.
+Format: get_user_meter_value(index)
+Description: Return value of user meter in dynamic simulator.
 Args:
-    (1) index: meter index. Negative for basic meters of DAE solution, zero and positive for user-set meters.
-       -8: elapled time in milliseconds in the previous step
-       -7: network solution time in milliseconds in the previous step
-       -6: integration time in milliseconds in the previous step
-       -5: number of bus with maximum power mismatch in the previous steps
-       -4: maximum power mismatch in MVA in the previous steps
-       -3: network iteration count in the previous steps
-       -2: DAE iteration count in the previous steps
-       -1: current time
-       >=0: for user-set meters
+    (1) index: meter index, starting from 1.
 Rets:
     (1) value: meter value. If index is invalid, 0 is returned.
 Tips:
-    N/A
-Example: N/A
+    The meter index can be found in log file when calling start_dynamic_simulation()
+Example:
+    index = 1
+    value = simulator.get_user_meter_value(index)
+    index = 2
+    value = simulator.get_user_meter_value(index)
 
 API 272
+Format: get_basic_meter_value(meter_name)
+Description: Return value of basic meter in dynamic simulator.
+Args:
+    (1) meter_name: string, meter name. one of the following:
+    "DAE ITERATION"
+    "NETWORK ITERATION"
+    "POWER MISMATCH IN MVA"
+    "BUS WITH MAX POWER MISMATCH"
+    "ELAPSED TIME OF INTEGRATION IN MS"
+    "ELAPSED TIME OF NETWORK SOLUTION IN MS"
+    "TOTAL ELAPSED TIME IN MS"
+Rets:
+    (1) value: meter value. If meter name is invalid, 0 is returned.
+Tips:
+    N/A
+Example:
+    value = simulator.get_basic_meter_value("DAE ITERATION")
+    value = simulator.get_basic_meter_value("BUS WITH MAX POWER MISMATCH")
+
+API 273
 Format: set_bus_fault(bus, fault_type, fault_shunt)
 Description: Set bus fault.
 Args:
     (1) bus: Bus number.
     (2) fault_type: String of fault type. Currently, only "THREE PHASE FAULT" is supported.
-    (3) fault_shunt: Complex per unit fault shunt in the form of (g+jb).
+    (3) fault_shunt: tuple of complex per unit fault shunt in the form of (g, b). the shunt is g+jb
 Rets: N/A
 Tips:
     The fault shunt is represented as conductance and susceptance based on system base power and bus base voltage.
     The susceptance is usually set as NEGATIVE to mimic the voltage drop due to fault.
     The absolute value of the fault shunt should not be too great. Otherwise, network solution may fail to converge. Typically, |b|<1e6.
-Example: N/A
+Example:
+    bus = 1
+    shunt = (0.0, -2e4)
+    simulator.set_bus_fault(bus, "three phase fault", shunt)
 
-API 273
+API 274
 Format: clear_bus_fault(bus, fault_type)
 Description: Clear bus fault without tripping bus.
 Args:
     (1) bus: Bus number.
     (2) fault_type: String of fault type. Currently, only "THREE PHASE FAULT" is supported.
 Rets: N/A
-Example: N/A
+Example:
+    bus = 1
+    shunt = 0.0+j-2e4
+    simulator.set_bus_fault(bus, "three phase fault", shunt)
+    simulator.clear_bus_fault(bus, "three pahse fault")
 
-API 274
+API 275
 Format: trip_bus(bus)
 Description: Trip bus. All devices connecting to the bus are disconnected.
 Args:
     (1) bus: Bus number.
 Rets: N/A
-Example: N/A
+Example:
+    bus = 1
+    simulator.trip_bus(bus)
 
-API 275
+API 276
 Format: set_line_fault(line, fault_type, fault_location, fault_shunt)
 Description: Set transmission line fault.
 Args:
     (1) line: Transmission line device id in format of (ibus, jbus, ickt).
     (2) fault_type: String of fault type. Currently, only "THREE PHASE FAULT" is supported.
     (3) fault_location: Relative fault location to ibus.
-    (4) fault_shunt: Complex per unit fault shunt in the form of (g+jb).
+    (4) fault_shunt: tuple of complex per unit fault shunt in the form of (g, b). the shunt is g+jb
 Rets: N/A
 Tips:
     The fault location should be in the range of [0, 1.0], including 0 and 1.0. It represent the relative location of the fault on the line to the ibus.
@@ -2761,9 +2788,13 @@ Tips:
     The susceptance is usually set as NEGATIVE to mimic the voltage drop due to fault.
     The absolute value of the fault shunt should not be too great. Otherwise, network solution may fail to converge. Typically, |b|<1e6.
     Multiple faults are supported on single line at different fault locations.
-Example: N/A
+Example:
+    line = (1, 2, "1#")
+    location = 0.2
+    shunt = (0.0, -2e4)
+    simulator.set_line_fault(line, "three phase fault", location, shunt)
 
-API 276
+API 277
 Format: clear_line_fault(line, fault_type, fault_location)
 Description: Clear transmission line fault without tripping the line.
 Args:
@@ -2774,17 +2805,24 @@ Rets: N/A
 Tips:
     The fault location should be in the range of [0, 1.0], including 0 and 1.0. It represent the relative location of the fault on the line to the ibus.
     For example, 0.5 means the fault at the middle of the line will be cleared. 0 means the fault at ibus will be cleared. 1.0 means the fault at jbus will be cleared.
-Example: N/A
+Example:
+    line = (1, 2, "1#")
+    location = 0.2
+    shunt = 0.0+j-2e4
+    simulator.set_line_fault(line, "three phase fault", location, shunt)
+    simulator.clear_line_fault(line, "three pahse fault", location)
 
-API 277
+API 278
 Format: trip_line(line)
 Description: Trip transmission line. Breakers at the two sides of the line are both tripped.
 Args:
     (1) line: Transmission line device id in format of (ibus, jbus, ickt).
 Rets: N/A
-Example: N/A
+Example:
+    line = (1, 2, "1#")
+    simulator.trip_line(line)
 
-API 278
+API 279
 Format: trip_line_breaker(line, side)
 Description: Trip transmission line breaker at specific side.
 Args:
@@ -2794,17 +2832,22 @@ Rets: N/A
 Tips:
     The sending side bus is not necessarily ibus. The receiving bus is not necessarily jbus.
     It is up to the user to check which side to trip.
-Example: N/A
+Example:
+    line = (1, 2, "1#")
+    simulator.trip_line_breaker(line, "sending")
+    simulator.trip_line_breaker(line, "receiving")
 
-API 279
+API 280
 Format: close_line(line)
 Description: Close transmission line. Breakers at the two sides of the line are both closed.
 Args:
     (1) line: Transmission line device id in format of (ibus, jbus, ickt).
 Rets: N/A
-Example: N/A
+Example:
+    line = (1, 2, "1#")
+    simulator.close_line(line)
 
-API 280
+API 281
 Format: close_line_breaker(line, side)
 Description: Close transmission line breaker at specific side.
 Args:
@@ -2814,9 +2857,12 @@ Rets: N/A
 Tips:
     The sending side bus is not necessarily ibus. The receiving bus is not necessarily jbus.
     It is up to the user to check which side to close.
-Example: N/A
+Example:
+    line = (1, 2, "1#")
+    simulator.close_line_breaker(line, "sending")
+    simulator.close_line_breaker(line, "receiving")
 
-API 281
+API 282
 Format: trip_transformer(transformer)
 Description: Trip transformer. Breakers at the two or three winding sides of the transformer are all tripped.
 Args:
@@ -2824,9 +2870,13 @@ Args:
 Rets: N/A
 Tips:
     kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
-Example: N/A
+Example:
+    trans = (1, 2, 3, "1#")
+    simulator.trip_transformer(trans)
+    trans = (4, 5, 0, "1#")
+    simulator.trip_transformer(trans)
 
-API 282
+API 283
 Format: trip_transformer_breaker(transformer, side)
 Description: Trip transformer breaker at specific side.
 Args:
@@ -2837,9 +2887,16 @@ Tips:
     kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
     The primary side bus is not necessarily ibus. The secondary bus is not necessarily jbus. The tertiary bus is not necessarily kbus.
     It is up to the user to check which side to trip.
-Example: N/A
+Example:
+    trans = (1, 2, 3, "1#")
+    simulator.trip_transformer_breaker(trans, "primary")
+    simulator.trip_transformer_breaker(trans, "secondary")
+    simulator.trip_transformer_breaker(trans, "tertiary")
+    trans = (4, 5, 0, "1#")
+    simulator.trip_transformer_breaker(trans, "primary")
+    simulator.trip_transformer_breaker(trans, "secondary")
 
-API 283
+API 284
 Format: close_transformer(transformer)
 Description: Close transformer. Breakers at the two or three winding sides of the transformer are all closed.
 Args:
@@ -2847,9 +2904,13 @@ Args:
 Rets: N/A
 Tips:
     kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
-Example: N/A
+Example:
+    trans = (1, 2, 3, "1#")
+    simulator.close_transformer(trans)
+    trans = (4, 5, 0, "1#")
+    simulator.close_transformer(trans)
 
-API 284
+API 285
 Format: close_transformer_breaker(transformer, side)
 Description: Close transformer breaker at specific side.
 Args:
@@ -2860,17 +2921,26 @@ Tips:
     kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
     The primary side bus is not necessarily ibus. The secondary bus is not necessarily jbus. The tertiary bus is not necessarily kbus.
     It is up to the user to check which side to close.
-Example: N/A
+Example:
+    trans = (1, 2, 3, "1#")
+    simulator.close_transformer_breaker(trans, "primary")
+    simulator.close_transformer_breaker(trans, "secondary")
+    simulator.close_transformer_breaker(trans, "tertiary")
+    trans = (4, 5, 0, "1#")
+    simulator.close_transformer_breaker(trans, "primary")
+    simulator.close_transformer_breaker(trans, "secondary")
 
-API 285
+API 286
 Format: trip_generator(generator)
 Description: Trip generator.
 Args:
     (1) generator: Generator device id in format of (bus, ickt).
 Rets: N/A
-Example: N/A
+Example:
+    gen = (1, "#1")
+    simulator.trip_generator(gen)
 
-API 286
+API 287
 Format: shed_generator(generator, percent)
 Description: Shed generator by percent.
 Args:
@@ -2881,9 +2951,12 @@ Tips:
     The percent is USUALLY in range [0, 1.0] including 0 and 1.0. If percent=0.0, generator is not shed at all. If percent=1.0, the generator will be tripped.
     The percent CAN be set as negative to mimic increase of generation. But it is rarely used.
     If a generator with MBASE=100MVA is shed by 0.2, its MBASE becomes 80MVA. If it is then shed by 0.3, its MBASE becomes 56MVA.
-Example: N/A
+Example:
+    gen = (1, "#1")
+    percent = 0.1
+    simulator.shed_generator(gen, percent)
 
-API 287
+API 288
 Format: trip_wt_generator(generator, n)
 Description: Trip wind turbine generator.
 Args:
@@ -2892,9 +2965,12 @@ Args:
 Rets: N/A
 Tips:
     The number of lunmped wind turbine generators should be less than the available lumped wind turbine generators.
-Example: N/A
+Example:
+    gen = (1, "#1")
+    n = 2
+    simulator.trip_wt_generator(gen, n)
 
-API 288
+API 289
 Format: shed_wt_generator(generator, percent)
 Description: Shed wind turbine generator by percent.
 Args:
@@ -2905,58 +2981,74 @@ Tips:
     The percent is USUALLY in range [0, 1.0] including 0 and 1.0. If percent=0.0, wind turbine generator is not shed at all. If percent=1.0, the wind turbine generator will be totally tripped.
     The percent CAN be set as negative to mimic increase of wind turbine generation. But it is rarely used.
     If a wind turbine generator with MBASE=100MVA is shed by 0.2, its MBASE becomes 80MVA. If it is then shed by 0.3, its MBASE becomes 56MVA.
-Example: N/A
+Example:
+    gen = (1, "#1")
+    percent = 0.1
+    simulator.shed_wt_generator(gen, percent)
 
-API 289
+API 290
 Format: trip_load(load)
 Description: Trip load.
 Args:
     (1) load: Load device id in format of (bus, ickt).
 Rets: N/A
-Example: N/A
+Example:
+    load = (1, "#1")
+    simulator.trip_load(load)
 
-API 290
+API 291
 Format: close_load(load)
 Description: Close load.
 Args:
     (1) load: Load device id in format of (bus, ickt).
 Rets: N/A
-Example: N/A
+Example:
+    load = (1, "#1")
+    simulator.close_load(load)
 
-API 291
+API 292
 Format: scale_load(load, percent)
 Description: Scale load by percent.
 Args:
     (1) load: Load device id in format of (bus, ickt).
     (2) percent: Per unit percent of the load to scale. Positve for scaling up, and Negative for scaling down.
 Rets: N/A
-Example: N/A
+Example:
+    load = (1, "#1")
+    percent = 0.1
+    simulator.scale_load(load, percent)
 
-API 292
+API 293
 Format: scale_all_loads(percent)
 Description: Scale all loads by percent.
 Args:
     (1) percent: Per unit percent of all loads to scale. Positve for scaling up, and Negative for scaling down.
 Rets: N/A
-Example: N/A
+Example:
+    percent = 0.1
+    simulator.scale_all_loads(percent)
 
-API 293
+API 294
 Format: trip_fixed_shunt(shunt)
 Description: Trip fixed shunt.
 Args:
     (1) shunt: Fixed shunt device id in format of (bus, ickt).
 Rets: N/A
-Example: N/A
+Example:
+    shunt = (1, "#1")
+    simulator.trip_fixed_shunt(shunt)
 
-API 294
+API 295
 Format: close_fixed_shunt(shunt)
 Description: Close fixed shunt.
 Args:
     (1) shunt: Fixed shunt device id in format of (bus, ickt).
 Rets: N/A
-Example: N/A
+Example:
+    shunt = (1, "#1")
+    simulator.close_fixed_shunt(shunt)
 
-API 295
+API 296
 Format: manually_bypass_hvdc(hvdc)
 Description: Manually bypass HVDC link.
 Args:
@@ -2964,9 +3056,11 @@ Args:
 Rets: N/A
 Tips:
     The HVDC link won't recover unless manually_unbypass_hvdc() is called.
-Example: N/A
+Example:
+    hvdc = (1, 2, "DC Link 1")
+    simulator.manually_bypass_hvdc(hvdc)
 
-API 296
+API 297
 Format: manually_block_hvdc(hvdc)
 Description: Manually block HVDC link.
 Args:
@@ -2974,147 +3068,195 @@ Args:
 Rets: N/A
 Tips:
     The HVDC link won't recover unless manually_unblock_hvdc() is called.
-Example: N/A
+Example:
+    hvdc = (1, 2, "DC Link 1")
+    simulator.manually_block_hvdc(hvdc)
 
-API 297
+API 298
 Format: manually_unbypass_hvdc(hvdc)
 Description: Manually unbypass HVDC link.
 Args:
     (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
 Rets: N/A
-Example: N/A
+Example:
+    hvdc = (1, 2, "DC Link 1")
+    simulator.manually_unbypass_hvdc(hvdc)
 
-API 298
+API 299
 Format: manually_unblock_hvdc(hvdc)
 Description: Manually unblock HVDC link.
 Args:
     (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
 Rets: N/A
-Example: N/A
+Example:
+    hvdc = (1, 2, "DC Link 1")
+    simulator.manually_unblock_hvdc(hvdc)
 
-API 299
+API 300
 Format: get_generator_voltage_reference_in_pu(generator)
 Description: Get generator voltage reference of exciter model. If there is no exciter model for the generator, 0 will be returned.
 Args:
     (1) generator: Generator device id in format of (bus, ickt).
 Rets:
     (1) Voltage reference in pu.
-Example: N/A
+Example:
+    gen = (1, "#1")
+    vref = simulator.get_generator_voltage_reference_in_pu(gen)
 
-API 300
+API 301
 Format: get_generator_mechanical_power_reference_in_pu(generator)
 Description: Get generator mechanical power reference of turbine governor model. If there is no turbine governor model for the generator, 0 will be returned.
 Args:
     (1) generator: Generator device id in format of (bus, ickt).
 Rets:
     (1) Mechanical power reference in pu based on generator MBASE.
-Example: N/A
+Example:
+    gen = (1, "#1")
+    pref = simulator.get_generator_mechanical_power_reference_in_pu(gen)
 
-API 301
+API 302
 Format: get_generator_mechanical_power_reference_in_MW(generator)
 Description: Get generator mechanical power reference of turbine governor model. If there is no turbine governor model for the generator, 0 will be returned.
 Args:
     (1) generator: Generator device id in format of (bus, ickt).
 Rets:
     (1) Mechanical power reference in MW.
-Example: N/A
+Example:
+    gen = (1, "#1")
+    pref = simulator.get_generator_mechanical_power_reference_in_MW(gen)
 
-API 302
+API 303
 Format: set_generator_voltage_reference_in_pu(generator, value)
 Description: Set generator voltage reference of exciter model. If there is no exciter model for the generator, nothing will be changed.
 Args:
     (1) generator: Generator device id in format of (bus, ickt).
     (2) value: New voltage reference in pu.
 Rets: N/A
-Example: N/A
+Example:
+    gen = (1, "#1")
+    vref = simulator.get_generator_voltage_reference_in_pu(gen)
+    new_vref = vref + 0.1
+    simulator.set_generator_voltage_reference_in_pu(gen, new_vref)
 
-API 303
+API 304
 Format: set_generator_mechanical_power_reference_in_pu(generator, value)
 Description: Set generator mechanical power reference of turbine governor model. If there is no turbine governor model for the generator, nothing will be changed.
 Args:
     (1) generator: Generator device id in format of (bus, ickt).
     (2) value: New mechanical power reference in pu based on generator MBASE.
 Rets: N/A
-Example: N/A
+Example:
+    gen = (1, "#1")
+    pref = simulator.get_generator_mechanical_power_reference_in_pu(gen)
+    new_pref = pref + 0.1
+    simulator.set_generator_mechanical_power_reference_in_pu(gen, new_pref)
 
-API 304
+API 305
 Format: set_generator_mechanical_power_reference_in_MW(generator, value)
 Description: Set generator mechanical power reference of turbine governor model. If there is no turbine governor model for the generator, nothing will be changed.
 Args:
     (1) generator: Generator device id in format of (bus, ickt).
     (2) value: New mechanical power reference in MW.
 Rets: N/A
-Example: N/A
+Example:
+    gen = (1, "#1")
+    pref = simulator.get_generator_mechanical_power_reference_in_MW(gen)
+    new_pref = pref + 10
+    simulator.set_generator_mechanical_power_reference_in_MW(gen, new_pref)
 
-API 305
+API 306
 Format: get_generator_excitation_voltage_in_pu(generator)
 Description: Get generator excitation voltage.
 Args:
     (1) generator: Generator device id in format of (bus, ickt).
 Rets:
     (1) Excitation voltage in pu.
-Example: N/A
+Example:
+    gen = (1, "#1")
+    efd = simulator.get_generator_excitation_voltage_in_pu(gen)
 
-API 306
+API 307
 Format: get_generator_mechanical_power_in_pu(generator)
 Description: Get generator mechanical power.
 Args:
     (1) generator: Generator device id in format of (bus, ickt).
 Rets:
     (1) Mechanical power in pu based on generator MBASE.
-Example: N/A
+Example:
+    gen = (1, "#1")
+    pmech = simulator.get_generator_mechanical_power_in_pu(gen)
 
-API 307
+API 308
 Format: get_generator_mechanical_power_in_MW(generator)
 Description: Get generator mechanical power.
 Args:
     (1) generator: Generator device id in format of (bus, ickt).
 Rets:
     (1) Mechanical power in MW.
-Example: N/A
+Example:
+    gen = (1, "#1")
+    pmech = simulator.get_generator_mechanical_power_in_MW(gen)
 
-API 308
+API 309
 Format: set_generator_excitation_voltage_in_pu(generator, value)
 Description: Set generator excitation voltage. If exciter model exists for the generator, nothing will be changed.
 Args:
     (1) generator: Generator device id in format of (bus, ickt).
     (2) value: New excitation voltage in pu.
 Rets: N/A
-Example: N/A
+Example:
+    gen = (1, "#1")
+    efd = simulator.get_generator_excitation_voltage_in_pu(gen)
+    new_efd = efd + 0.1
+    simulator.set_generator_excitation_voltage_in_pu(gen, new_efd)
 
-API 309
+API 310
 Format: set_generator_mechanical_power_in_pu(generator, value)
 Description: Set generator mechanical power. If turbine governor model exists for the generator, nothing will be changed.
 Args:
     (1) generator: Generator device id in format of (bus, ickt).
     (2) value: New mechanical power in pu based on generator MBASE.
 Rets: N/A
-Example: N/A
+Example:
+    gen = (1, "#1")
+    pmech = simulator.get_generator_mechanical_power_in_pu(gen)
+    new_pmech = pmech + 0.05
+    simulator.set_generator_mechanical_power_in_pu(gen, new_pmech)
 
-API 310
+API 311
 Format: set_generator_mechanical_power_in_MW(generator, value)
 Description: Set generator mechanical power. If turbine governor model exists for the generator, nothing will be changed.
 Args:
     (1) generator: Generator device id in format of (bus, ickt).
     (2) value: New mechanical power in MW.
 Rets: N/A
-Example: N/A
+Example:
+    gen = (1, "#1")
+    pmech = simulator.get_generator_mechanical_power_in_MW(gen)
+    new_pmech = pmech + 10
+    simulator.set_generator_mechanical_power_in_MW(gen, new_pmech)
 
-API 311
+API 312
 Format: get_hvdc_power_order_in_MW(hvdc)
 Description: Get HVDC link power order.
 Args:
     (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
 Rets:
     (1) Power order in MW.
-Example: N/A
+Example:
+    hvdc = (1,2,"DC link 1")
+    order = simulator.get_hvdc_power_order_in_MW(hvdc)
 
-API 312
+API 313
 Format: set_hvdc_power_order_in_MW(hvdc, value)
 Description: Set HVDC link power order.
 Args:
     (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
     (2) value: New power order in MW.
 Rets: N/A
-Example: N/A
+Example:
+    hvdc = (1,2,"DC link 1")
+    order = simulator.get_hvdc_power_order_in_MW(hvdc)
+    new_order = order+100
+    simulator.set_hvdc_power_order_in_MW(hvdc, new_order)
 

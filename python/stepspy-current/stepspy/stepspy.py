@@ -4293,9 +4293,12 @@ class STEPS():
         """
         Save newwork complex Y matrix to file.
         Args:
-            (1) file: String of target file name.
+            (1) file: String of target file name of sparse Y matrix. If export_full is True, then 'full_' is appended to the head of file name for full matrix. 
+            (2) export_full: boolean. False for saving only the sparse network matrix. True for saving both sparse and full network matrix.
         Rets: N/A
-        Example: N/A
+        Example:
+            simulator.save_network_Y_matrix("y.csv") # save only sparse matrix to y.csv
+            simulator.save_network_Y_matrix("y.csv", True) # save both sparse and full matrix to y.csv and full_y.csv respectively
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
