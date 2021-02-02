@@ -193,7 +193,7 @@ void STEPS_IMEXPORTER_TEST::test_load_fixed_shunt_data()
     TEST_ASSERT(shunt->get_shunt_bus()==151);
     TEST_ASSERT(shunt->get_identifier()=="F1");
     TEST_ASSERT(shunt->get_status()==true);
-    TEST_ASSERT(shunt->get_nominal_impedance_shunt_in_MVA()==complex<double>(5.0, 400.0));
+    TEST_ASSERT(shunt->get_nominal_positive_sequence_impedance_shunt_in_MVA()==complex<double>(5.0, 400.0));
 
     terminal.clear();
     terminal.append_bus(201);
@@ -203,7 +203,7 @@ void STEPS_IMEXPORTER_TEST::test_load_fixed_shunt_data()
     TEST_ASSERT(shunt->get_shunt_bus()==201);
     TEST_ASSERT(shunt->get_identifier()=="1");
     TEST_ASSERT(shunt->get_status()==true);
-    TEST_ASSERT(shunt->get_nominal_impedance_shunt_in_MVA()==complex<double>(3.67, 500.0));
+    TEST_ASSERT(shunt->get_nominal_positive_sequence_impedance_shunt_in_MVA()==complex<double>(3.67, 500.0));
 
     terminal.clear();
     terminal.append_bus(3022);
@@ -213,7 +213,7 @@ void STEPS_IMEXPORTER_TEST::test_load_fixed_shunt_data()
     TEST_ASSERT(shunt->get_shunt_bus()==3022);
     TEST_ASSERT(shunt->get_identifier()=="1");
     TEST_ASSERT(shunt->get_status()==true);
-    TEST_ASSERT(shunt->get_nominal_impedance_shunt_in_MVA()==complex<double>(0.0, -1080.0));
+    TEST_ASSERT(shunt->get_nominal_positive_sequence_impedance_shunt_in_MVA()==complex<double>(0.0, -1080.0));
 }
 
 void STEPS_IMEXPORTER_TEST::test_load_generator_data()

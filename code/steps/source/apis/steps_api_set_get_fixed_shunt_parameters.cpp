@@ -57,10 +57,10 @@ double api_get_fixed_shunt_float_data(unsigned int bus, char* identifier, char* 
     {
         string PARAMETER_NAME = string2upper(parameter_name);
         if(PARAMETER_NAME=="P0_MW" or PARAMETER_NAME=="NOMINAL RESISTANCE SHUNT IN MW")
-            return shuntptr->get_nominal_impedance_shunt_in_MVA().real();
+            return shuntptr->get_nominal_positive_sequence_impedance_shunt_in_MVA().real();
 
         if(PARAMETER_NAME=="Q0_MVAR" or PARAMETER_NAME=="NOMINAL REACTANCE SHUNT IN MVAR")
-            return shuntptr->get_nominal_impedance_shunt_in_MVA().imag();
+            return shuntptr->get_nominal_positive_sequence_impedance_shunt_in_MVA().imag();
 
         if(PARAMETER_NAME=="R_PU" or PARAMETER_NAME=="NOMINAL RESISTANCE SHUNT IN PU")
             return shuntptr->get_nominal_impedance_shunt_in_pu().real();
@@ -98,25 +98,25 @@ void api_set_fixed_shunt_float_data(unsigned int bus, char* identifier, char* pa
         string PARAMETER_NAME = string2upper(parameter_name);
         if(PARAMETER_NAME=="P0_MW" or PARAMETER_NAME=="NOMINAL RESISTANCE SHUNT IN MW")
         {
-            complex<double> S = shuntptr->get_nominal_impedance_shunt_in_MVA();
-            return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(value, S.imag()));
+            complex<double> S = shuntptr->get_nominal_positive_sequence_impedance_shunt_in_MVA();
+            return shuntptr->set_nominal_positive_sequence_impedance_shunt_in_MVA(complex<double>(value, S.imag()));
         }
 
         if(PARAMETER_NAME=="Q0_MVAR" or PARAMETER_NAME=="NOMINAL REACTANCE SHUNT IN MVAR")
         {
-            complex<double> S = shuntptr->get_nominal_impedance_shunt_in_MVA();
-            return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(S.real(), value));
+            complex<double> S = shuntptr->get_nominal_positive_sequence_impedance_shunt_in_MVA();
+            return shuntptr->set_nominal_positive_sequence_impedance_shunt_in_MVA(complex<double>(S.real(), value));
         }
 
         if(PARAMETER_NAME=="R_PU" or PARAMETER_NAME=="NOMINAL RESISTANCE SHUNT IN PU")
         {
-            complex<double> S = shuntptr->get_nominal_impedance_shunt_in_MVA();
+            complex<double> S = shuntptr->get_nominal_positive_sequence_impedance_shunt_in_MVA();
             if(S==0.0)
             {
                 if(value==0.0)
-                    return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(0.0, 0.0));
+                    return shuntptr->set_nominal_positive_sequence_impedance_shunt_in_MVA(complex<double>(0.0, 0.0));
                 else
-                    return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(1.0/value*sbase, 0.0));
+                    return shuntptr->set_nominal_positive_sequence_impedance_shunt_in_MVA(complex<double>(1.0/value*sbase, 0.0));
             }
             else
             {
@@ -126,19 +126,19 @@ void api_set_fixed_shunt_float_data(unsigned int bus, char* identifier, char* pa
                 Z = complex<double>(value, Z.imag());
                 Y = 1.0/Z;
                 S = Y*sbase;
-                return shuntptr->set_nominal_impedance_shunt_in_MVA(S);
+                return shuntptr->set_nominal_positive_sequence_impedance_shunt_in_MVA(S);
             }
         }
 
         if(PARAMETER_NAME=="X_PU" or PARAMETER_NAME=="NOMINAL REACTANCE SHUNT IN PU")
         {
-            complex<double> S = shuntptr->get_nominal_impedance_shunt_in_MVA();
+            complex<double> S = shuntptr->get_nominal_positive_sequence_impedance_shunt_in_MVA();
             if(S==0.0)
             {
                 if(value==0.0)
-                    return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(0.0, 0.0));
+                    return shuntptr->set_nominal_positive_sequence_impedance_shunt_in_MVA(complex<double>(0.0, 0.0));
                 else
-                    return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(0.0, 1.0/value*sbase));
+                    return shuntptr->set_nominal_positive_sequence_impedance_shunt_in_MVA(complex<double>(0.0, 1.0/value*sbase));
             }
             else
             {
@@ -148,20 +148,20 @@ void api_set_fixed_shunt_float_data(unsigned int bus, char* identifier, char* pa
                 Z = complex<double>(Z.real(),value);
                 Y = 1.0/Z;
                 S = Y*sbase;
-                return shuntptr->set_nominal_impedance_shunt_in_MVA(S);
+                return shuntptr->set_nominal_positive_sequence_impedance_shunt_in_MVA(S);
             }
         }
 
         if(PARAMETER_NAME=="G_PU" or PARAMETER_NAME=="NOMINAL CONDUCTANCE SHUNT IN PU")
         {
-            complex<double> S = shuntptr->get_nominal_impedance_shunt_in_MVA();
-            return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(value*sbase, S.imag()));
+            complex<double> S = shuntptr->get_nominal_positive_sequence_impedance_shunt_in_MVA();
+            return shuntptr->set_nominal_positive_sequence_impedance_shunt_in_MVA(complex<double>(value*sbase, S.imag()));
         }
 
         if(PARAMETER_NAME=="B_PU" or PARAMETER_NAME=="NOMINAL SUSCEPTANCE SHUNT IN PU")
         {
-            complex<double> S = shuntptr->get_nominal_impedance_shunt_in_MVA();
-            return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(S.real(), -value*sbase));
+            complex<double> S = shuntptr->get_nominal_positive_sequence_impedance_shunt_in_MVA();
+            return shuntptr->set_nominal_positive_sequence_impedance_shunt_in_MVA(complex<double>(S.real(), -value*sbase));
         }
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);

@@ -50,7 +50,11 @@ int COMPLEX_SPARSE_MATRIX::get_column_number_of_entry_index(int index) const
 
 complex<double> COMPLEX_SPARSE_MATRIX::get_entry_value(int row, int col) const
 {
-    return get_entry_value(get_entry_index(row, col));
+    int index = get_entry_index(row, col);
+    if(index!=INDEX_NOT_EXIST)
+        return get_entry_value(index);
+    else
+        return 0.0;
 }
 
 complex<double> COMPLEX_SPARSE_MATRIX::get_entry_value(int index) const

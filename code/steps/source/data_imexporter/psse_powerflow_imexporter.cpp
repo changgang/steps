@@ -612,8 +612,8 @@ string PSSE_IMEXPORTER::export_fixed_shunt_data(const FIXED_SHUNT* shunt) const
             <<setw(8)<<bus<<", "
             <<setw(6)<<("\""+ickt+"\"")<<", "
             <<shunt->get_status()<<", "
-            <<setw(12)<<setprecision(6)<<fixed<<shunt->get_nominal_impedance_shunt_in_MVA().real()<<", "
-            <<setw(12)<<setprecision(6)<<fixed<<-shunt->get_nominal_impedance_shunt_in_MVA().imag()<<endl;
+            <<setw(12)<<setprecision(6)<<fixed<<shunt->get_nominal_positive_sequence_impedance_shunt_in_MVA().real()<<", "
+            <<setw(12)<<setprecision(6)<<fixed<<-shunt->get_nominal_positive_sequence_impedance_shunt_in_MVA().imag()<<endl;
     return osstream.str();
 }
 

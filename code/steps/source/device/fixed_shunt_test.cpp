@@ -25,7 +25,7 @@ FIXED_SHUNT_TEST::FIXED_SHUNT_TEST() : fixed_shunt(default_toolkit)
     TEST_ADD(FIXED_SHUNT_TEST::test_set_get_identifier);
     TEST_ADD(FIXED_SHUNT_TEST::test_set_get_name);
     TEST_ADD(FIXED_SHUNT_TEST::test_set_get_status);
-    TEST_ADD(FIXED_SHUNT_TEST::test_set_get_nominal_impedance_shunt);
+    TEST_ADD(FIXED_SHUNT_TEST::test_set_get_nominal_positive_sequence_impedance_shunt);
 
     TEST_ADD(FIXED_SHUNT_TEST::test_is_valid);
     TEST_ADD(FIXED_SHUNT_TEST::test_clear);
@@ -68,7 +68,7 @@ void FIXED_SHUNT_TEST::test_constructor()
     TEST_ASSERT(fixed_shunt.get_identifier()=="");
     TEST_ASSERT(fixed_shunt.get_name()=="");
     TEST_ASSERT(fixed_shunt.get_status()==false);
-    TEST_ASSERT(fixed_shunt.get_nominal_impedance_shunt_in_MVA()==0.0);
+    TEST_ASSERT(fixed_shunt.get_nominal_positive_sequence_impedance_shunt_in_MVA()==0.0);
 }
 
 void FIXED_SHUNT_TEST::test_set_get_shunt_bus()
@@ -107,15 +107,26 @@ void FIXED_SHUNT_TEST::test_set_get_status()
     TEST_ASSERT(fixed_shunt.get_status()==false);
 }
 
-void FIXED_SHUNT_TEST::test_set_get_nominal_impedance_shunt()
+void FIXED_SHUNT_TEST::test_set_get_nominal_positive_sequence_impedance_shunt()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"FIXED_SHUNT_TEST");
 
     complex<double> s(10, 300);
-    fixed_shunt.set_nominal_impedance_shunt_in_MVA(s);
-    TEST_ASSERT(fixed_shunt.get_nominal_impedance_shunt_in_MVA()==s);
+    fixed_shunt.set_nominal_positive_sequence_impedance_shunt_in_MVA(s);
+    TEST_ASSERT(fixed_shunt.get_nominal_positive_sequence_impedance_shunt_in_MVA()==s);
     TEST_ASSERT(abs(fixed_shunt.get_nominal_impedance_shunt_in_pu()-conj(100.0/s))<FLOAT_EPSILON);
     TEST_ASSERT(abs(fixed_shunt.get_nominal_admittance_shunt_in_pu()-conj(s)/100.0)<FLOAT_EPSILON);
+}
+
+void FIXED_SHUNT_TEST::test_set_get_nominal_zero_sequence_impedance_shunt()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"FIXED_SHUNT_TEST");
+
+    complex<double> s(10, 300);
+    fixed_shunt.set_nominal_zero_sequence_impedance_shunt_in_MVA(s);
+    TEST_ASSERT(fixed_shunt.get_nominal_zero_sequence_impedance_shunt_in_MVA()==s);
+    TEST_ASSERT(abs(fixed_shunt.get_nominal_zero_sequence_impedance_shunt_in_pu()-conj(100.0/s))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(fixed_shunt.get_nominal_zero_sequence_admittance_shunt_in_pu()-conj(s)/100.0)<FLOAT_EPSILON);
 }
 
 void FIXED_SHUNT_TEST::test_is_valid()
@@ -149,7 +160,7 @@ void FIXED_SHUNT_TEST::test_copy_with_operator_equal()
     fixed_shunt.set_identifier("1#");
     fixed_shunt.set_name("shunt-1#");
     fixed_shunt.set_status(false);
-    fixed_shunt.set_nominal_impedance_shunt_in_MVA(complex<double>(10.0, 300.0));
+    fixed_shunt.set_nominal_positive_sequence_impedance_shunt_in_MVA(complex<double>(10.0, 300.0));
 
     FIXED_SHUNT fixed_shunt2 = fixed_shunt;
 
@@ -157,7 +168,7 @@ void FIXED_SHUNT_TEST::test_copy_with_operator_equal()
     TEST_ASSERT(fixed_shunt2.get_identifier()=="1#");
     TEST_ASSERT(fixed_shunt2.get_name()=="shunt-1#");
     TEST_ASSERT(fixed_shunt2.get_status()==false);
-    TEST_ASSERT(fixed_shunt2.get_nominal_impedance_shunt_in_MVA()==complex<double>(10.0, 300.0));
+    TEST_ASSERT(fixed_shunt2.get_nominal_positive_sequence_impedance_shunt_in_MVA()==complex<double>(10.0, 300.0));
 }
 
 void FIXED_SHUNT_TEST::test_is_connected_to_bus()
@@ -201,7 +212,7 @@ void FIXED_SHUNT_TEST::test_get_actual_impedance_shunt()
     fixed_shunt.set_shunt_bus(1);
     fixed_shunt.set_status(true);
     complex<double> s_Z(10.0, 300.0);
-    fixed_shunt.set_nominal_impedance_shunt_in_MVA(s_Z);
+    fixed_shunt.set_nominal_positive_sequence_impedance_shunt_in_MVA(s_Z);
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(fixed_shunt.get_shunt_bus());

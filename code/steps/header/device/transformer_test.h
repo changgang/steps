@@ -45,6 +45,9 @@ class TRANSFORMER_TEST : public Test::Suite
         void test_set_get_winding_controlled_max_min_voltage();
         void test_set_get_controlled_reactive_power_into_windings();
         void test_set_get_controlled_active_power_into_windings();
+        void test_set_get_winding_zero_sequence_impedance();
+        void test_set_get_zero_sequence_impedance_between_windings();
+        void test_set_get_common_zero_sequence_nutral_grouding_impedance();
 
         void test_is_valid();
         void test_clear();

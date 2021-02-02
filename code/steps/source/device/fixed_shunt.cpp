@@ -63,9 +63,14 @@ void FIXED_SHUNT::set_status(bool status)
     this->status = status;
 }
 
-void FIXED_SHUNT::set_nominal_impedance_shunt_in_MVA(complex<double> s)
+void FIXED_SHUNT::set_nominal_positive_sequence_impedance_shunt_in_MVA(complex<double> s)
 {
-    nominal_impedance_shunt_in_MVA = s;
+    nominal_positive_sequence_impedance_shunt_in_MVA = s;
+}
+
+void FIXED_SHUNT::set_nominal_zero_sequence_impedance_shunt_in_MVA(complex<double> s)
+{
+    nominal_zero_squence_impedance_shunt_in_MVA = s;
 }
 
 unsigned int FIXED_SHUNT::get_shunt_bus() const
@@ -93,14 +98,14 @@ bool FIXED_SHUNT::get_status() const
     return status;
 }
 
-complex<double> FIXED_SHUNT::get_nominal_impedance_shunt_in_MVA() const
+complex<double> FIXED_SHUNT::get_nominal_positive_sequence_impedance_shunt_in_MVA() const
 {
-    return nominal_impedance_shunt_in_MVA;
+    return nominal_positive_sequence_impedance_shunt_in_MVA;
 }
 
 complex<double> FIXED_SHUNT::get_nominal_impedance_shunt_in_pu() const
 {
-	if (get_nominal_impedance_shunt_in_MVA() == 0.0)
+	if (get_nominal_positive_sequence_impedance_shunt_in_MVA() == 0.0)
 		return complex<double>(0.0, INFINITE_THRESHOLD);
 
     ostringstream osstream;
@@ -109,15 +114,42 @@ complex<double> FIXED_SHUNT::get_nominal_impedance_shunt_in_pu() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double sbase = psdb.get_system_base_power_in_MVA();
-    return conj(sbase/get_nominal_impedance_shunt_in_MVA());
+    return conj(sbase/get_nominal_positive_sequence_impedance_shunt_in_MVA());
 }
 
 complex<double> FIXED_SHUNT::get_nominal_admittance_shunt_in_pu() const
 {
-	if (get_nominal_impedance_shunt_in_MVA() == 0.0)
+	if (get_nominal_positive_sequence_impedance_shunt_in_MVA() == 0.0)
 		return 0.0;
     else
 		return 1.0/get_nominal_impedance_shunt_in_pu();
+}
+
+complex<double> FIXED_SHUNT::get_nominal_zero_sequence_impedance_shunt_in_MVA() const
+{
+    return nominal_zero_squence_impedance_shunt_in_MVA;
+}
+
+complex<double> FIXED_SHUNT::get_nominal_zero_sequence_impedance_shunt_in_pu() const
+{
+	if (get_nominal_zero_sequence_impedance_shunt_in_MVA() == 0.0)
+		return complex<double>(0.0, INFINITE_THRESHOLD);
+
+    ostringstream osstream;
+
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    double sbase = psdb.get_system_base_power_in_MVA();
+    return conj(sbase/get_nominal_zero_sequence_impedance_shunt_in_MVA());
+}
+
+complex<double> FIXED_SHUNT::get_nominal_zero_sequence_admittance_shunt_in_pu() const
+{
+	if (get_nominal_zero_sequence_impedance_shunt_in_MVA() == 0.0)
+		return 0.0;
+    else
+		return 1.0/get_nominal_zero_sequence_impedance_shunt_in_pu();
 }
 
 bool FIXED_SHUNT::is_valid() const
@@ -140,7 +172,8 @@ void FIXED_SHUNT::clear()
     set_identifier("");
     set_name("");
     set_status(false);
-    set_nominal_impedance_shunt_in_MVA(0.0);
+    set_nominal_positive_sequence_impedance_shunt_in_MVA(0.0);
+    set_nominal_zero_sequence_impedance_shunt_in_MVA(0.0);
 }
 
 bool FIXED_SHUNT::is_connected_to_bus(unsigned int target_bus) const
@@ -179,7 +212,7 @@ void FIXED_SHUNT::report() const
 {
     ostringstream osstream;
     osstream<<get_compound_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
-            <<"P+jQ[Z] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_impedance_shunt_in_MVA()<<" MVA.";
+            <<"P+jQ[Z] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_positive_sequence_impedance_shunt_in_MVA()<<" MVA.";
     STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -217,7 +250,8 @@ FIXED_SHUNT& FIXED_SHUNT::operator=(const FIXED_SHUNT& fixed_shunt)
     set_identifier(fixed_shunt.get_identifier());
     set_name(fixed_shunt.get_name());
     set_status(fixed_shunt.get_status());
-    set_nominal_impedance_shunt_in_MVA(fixed_shunt.get_nominal_impedance_shunt_in_MVA());
+    set_nominal_positive_sequence_impedance_shunt_in_MVA(fixed_shunt.get_nominal_positive_sequence_impedance_shunt_in_MVA());
+    set_nominal_zero_sequence_impedance_shunt_in_MVA(fixed_shunt.get_nominal_zero_sequence_impedance_shunt_in_MVA());
 
     return *this;
 }
@@ -242,7 +276,7 @@ complex<double> FIXED_SHUNT::get_actual_impedance_shunt_in_MVA() const
 
     if(get_status() == true)
     {
-        complex<double> S0 = get_nominal_impedance_shunt_in_MVA();
+        complex<double> S0 = get_nominal_positive_sequence_impedance_shunt_in_MVA();
 
         STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();

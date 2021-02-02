@@ -4289,7 +4289,7 @@ class STEPS():
         STEPS_LIB.api_build_network_Z_matrix(self.toolkit_index)
         return
         
-    def save_network_Y_matrix(self, file):
+    def save_network_Y_matrix(self, file, export_full=False):
         """
         Save newwork complex Y matrix to file.
         Args:
@@ -4299,7 +4299,7 @@ class STEPS():
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
-        STEPS_LIB.api_save_network_Y_matrix(file, self.toolkit_index)
+        STEPS_LIB.api_save_network_Y_matrix(file, export_full, self.toolkit_index)
         return
         
     def save_decoupled_network_B_matrix(self, file):

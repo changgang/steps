@@ -315,6 +315,37 @@ void TRANSFORMER::set_controlled_min_active_power_into_winding_in_MW(TRANSFORMER
     controlled_min_active_power_into_winding_in_MW[winding] = p;
 }
 
+void TRANSFORMER::set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(TRANSFORMER_WINDING_SIDE winding, complex<double> z)
+{
+    z0_winding_ground_in_pu[winding] = z;
+}
+
+void TRANSFORMER::set_common_zero_sequence_nutural_grounding_impedance_based_on_winding_nominals_in_pu(complex<double> z)
+{
+    z0_common_nutral_ground_in_pu = z;
+}
+void TRANSFORMER::set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(TRANSFORMER_WINDING_SIDE winding1, TRANSFORMER_WINDING_SIDE winding2, complex<double> z)
+{
+    if((winding1==PRIMARY_SIDE and winding2==SECONDARY_SIDE) or
+       (winding1==SECONDARY_SIDE and winding2==PRIMARY_SIDE))
+    {
+        z0_primary2secondary_in_pu = z;
+        return;
+    }
+    if((winding1==PRIMARY_SIDE and winding2==TERTIARY_SIDE) or
+       (winding1==TERTIARY_SIDE and winding2==PRIMARY_SIDE))
+    {
+        z0_primary2tertiary_in_pu = z;
+        return;
+    }
+    if((winding1==TERTIARY_SIDE and winding2==SECONDARY_SIDE) or
+       (winding1==SECONDARY_SIDE and winding2==TERTIARY_SIDE))
+    {
+        z0_secondary2tertiary_in_pu = z;
+        return;
+    }
+}
+
 string TRANSFORMER::get_identifier() const
 {
     return identifier;
@@ -496,7 +527,29 @@ double TRANSFORMER::get_controlled_min_active_power_into_winding_in_MW(TRANSFORM
     return controlled_min_active_power_into_winding_in_MW[winding];
 }
 
+complex<double> TRANSFORMER::get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(TRANSFORMER_WINDING_SIDE winding) const
+{
+    return z0_winding_ground_in_pu[winding];
+}
 
+complex<double> TRANSFORMER::get_common_zero_sequence_nutural_grounding_impedance_based_on_winding_nominals_in_pu() const
+{
+    return z0_common_nutral_ground_in_pu;
+}
+
+complex<double> TRANSFORMER::get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(TRANSFORMER_WINDING_SIDE winding1, TRANSFORMER_WINDING_SIDE winding2) const
+{
+    if((winding1==PRIMARY_SIDE and winding2==SECONDARY_SIDE) or
+       (winding1==SECONDARY_SIDE and winding2==PRIMARY_SIDE))
+        return z0_primary2secondary_in_pu;
+    if((winding1==PRIMARY_SIDE and winding2==TERTIARY_SIDE) or
+       (winding1==TERTIARY_SIDE and winding2==PRIMARY_SIDE))
+        return z0_primary2tertiary_in_pu;
+    if((winding1==TERTIARY_SIDE and winding2==SECONDARY_SIDE) or
+       (winding1==SECONDARY_SIDE and winding2==TERTIARY_SIDE))
+        return z0_secondary2tertiary_in_pu;
+    return 0.0;
+}
 
 bool TRANSFORMER::is_valid() const
 {
@@ -718,6 +771,16 @@ void TRANSFORMER::clear()
     set_controlled_min_active_power_into_winding_in_MW(SECONDARY_SIDE, 0.0);
     set_controlled_max_active_power_into_winding_in_MW(TERTIARY_SIDE, 0.0);
     set_controlled_min_active_power_into_winding_in_MW(TERTIARY_SIDE, 0.0);
+
+    set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(PRIMARY_SIDE, 0.0);
+    set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(SECONDARY_SIDE, 0.0);
+    set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(TERTIARY_SIDE, 0.0);
+
+    set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, 0.0);
+    set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE, 0.0);
+    set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE, 0.0);
+
+    set_common_zero_sequence_nutural_grounding_impedance_based_on_winding_nominals_in_pu(0.0);
 }
 
 bool TRANSFORMER::is_connected_to_bus(unsigned int bus) const
@@ -997,6 +1060,21 @@ TRANSFORMER& TRANSFORMER::operator=(const TRANSFORMER& transformer)
     if(transformer.is_three_winding_transformer())
         set_controlled_min_active_power_into_winding_in_MW(TERTIARY_SIDE, transformer.get_controlled_min_active_power_into_winding_in_MW(TERTIARY_SIDE));
 
+    set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE,
+        transformer.get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE));
+    set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE,
+        transformer.get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE));
+    set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(TERTIARY_SIDE, PRIMARY_SIDE,
+        transformer.get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(TERTIARY_SIDE, PRIMARY_SIDE));
+
+    set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(PRIMARY_SIDE,
+        transformer.get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(PRIMARY_SIDE));
+    set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(SECONDARY_SIDE,
+        transformer.get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(SECONDARY_SIDE));
+    set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(TERTIARY_SIDE,
+        transformer.get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(TERTIARY_SIDE));
+
+    set_common_zero_sequence_nutural_grounding_impedance_based_on_winding_nominals_in_pu(transformer.get_common_zero_sequence_nutural_grounding_impedance_based_on_winding_nominals_in_pu());
     return *this;
 }
 

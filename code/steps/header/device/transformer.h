@@ -44,6 +44,9 @@ class TRANSFORMER : public NONBUS_DEVICE
         void set_controlled_min_reactive_power_into_winding_in_MVar(TRANSFORMER_WINDING_SIDE winding, double q);
         void set_controlled_max_active_power_into_winding_in_MW(TRANSFORMER_WINDING_SIDE winding, double p);
         void set_controlled_min_active_power_into_winding_in_MW(TRANSFORMER_WINDING_SIDE winding, double p);
+        void set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(TRANSFORMER_WINDING_SIDE winding, complex<double> z);
+        void set_common_zero_sequence_nutural_grounding_impedance_based_on_winding_nominals_in_pu(complex<double> z);
+        void set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(TRANSFORMER_WINDING_SIDE winding1, TRANSFORMER_WINDING_SIDE winding2, complex<double> z);
 
 
 
@@ -75,6 +78,9 @@ class TRANSFORMER : public NONBUS_DEVICE
         double get_controlled_min_reactive_power_into_winding_in_MVar(TRANSFORMER_WINDING_SIDE winding) const;
         double get_controlled_max_active_power_into_winding_in_MW(TRANSFORMER_WINDING_SIDE winding) const;
         double get_controlled_min_active_power_into_winding_in_MW(TRANSFORMER_WINDING_SIDE winding) const;
+        complex<double> get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(TRANSFORMER_WINDING_SIDE winding) const;
+        complex<double> get_common_zero_sequence_nutural_grounding_impedance_based_on_winding_nominals_in_pu() const;
+        complex<double> get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(TRANSFORMER_WINDING_SIDE winding1, TRANSFORMER_WINDING_SIDE winding2) const;
 
 
         virtual bool is_valid() const;
@@ -157,7 +163,7 @@ class TRANSFORMER : public NONBUS_DEVICE
         RATING winding_rating_in_MVA[3];
 
         complex<double> zl_primary2secondary_in_pu, zl_secondary2tertiary_in_pu,
-                       zl_primary2tertiary_in_pu,  y_magnetizing_in_pu;
+                        zl_primary2tertiary_in_pu,  y_magnetizing_in_pu;
 
         double winding_turn_ratio_in_pu[3], winding_angle_shift_in_deg[3];
 
@@ -174,9 +180,13 @@ class TRANSFORMER : public NONBUS_DEVICE
         double winding_controlled_max_bus_voltage_in_pu[3], winding_controlled_min_bus_voltage_in_pu[3];
 
         double controlled_max_reactive_power_into_winding_in_MVar[3],
-              controlled_min_reactive_power_into_winding_in_MVar[3];
+               controlled_min_reactive_power_into_winding_in_MVar[3];
 
         double controlled_max_active_power_into_winding_in_MW[3],
-              controlled_min_active_power_into_winding_in_MW[3];
+               controlled_min_active_power_into_winding_in_MW[3];
+
+        complex<double> z0_winding_ground_in_pu[3], z0_common_nutral_ground_in_pu;
+        complex<double> z0_primary2secondary_in_pu, z0_secondary2tertiary_in_pu,
+                        z0_primary2tertiary_in_pu;
 };
 #endif // TRANSFORMER_H

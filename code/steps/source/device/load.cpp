@@ -270,6 +270,9 @@ LOAD& LOAD::operator=(const LOAD& load)
     set_model(load.get_load_voltage_relay_model());
     set_model(load.get_load_frequency_relay_model());
 
+    set_negative_sequence_load_in_MVA(load.get_negative_sequence_load_in_MVA());
+    set_zero_sequence_load_in_MVA(load.get_zero_sequence_load_in_MVA());
+
     return *this;
 }
 

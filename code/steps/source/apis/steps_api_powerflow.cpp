@@ -296,12 +296,12 @@ void api_build_network_Z_matrix(unsigned int toolkit_index)
     network_matrix.build_positive_sequence_network_Z_matrix();
 }
 
-void api_save_network_Y_matrix(char* file, unsigned int toolkit_index)
+void api_save_network_Y_matrix(char* file, bool export_full, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
-    network_matrix.save_network_Y_matrix_to_file(file);
+    network_matrix.save_network_Y_matrix_to_file(file, export_full);
 }
 
 void api_save_decoupled_network_B_matrix(char* file, unsigned int toolkit_index)

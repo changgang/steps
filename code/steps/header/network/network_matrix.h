@@ -76,7 +76,7 @@ class NETWORK_MATRIX
         void report_dynamic_network_matrix();
         void report_physical_internal_bus_number_pair() const;
 
-        void save_network_Y_matrix_to_file(const string& filename);
+        void save_network_Y_matrix_to_file(const string& filename, bool export_full_matrix=true);
         void save_decoupled_network_B_matrix_to_file(const string& filename) const;
         void save_dc_network_B_matrix_to_file(const string& filename) const;
         void save_dynamic_network_Y_matrix_to_file(const string& filename);
@@ -148,6 +148,7 @@ class NETWORK_MATRIX
 
         void report_network_matrix_common() const;
         void save_network_matrix_common(ofstream& file) const;
+        void save_full_network_matrix_common(ofstream& file) const;
     private:
         STEPS* toolkit;
 

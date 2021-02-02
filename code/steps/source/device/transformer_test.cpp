@@ -39,6 +39,9 @@ TRANSFORMER_TEST::TRANSFORMER_TEST() : transformer(default_toolkit)
     TEST_ADD(TRANSFORMER_TEST::test_set_get_winding_controlled_max_min_voltage);
     TEST_ADD(TRANSFORMER_TEST::test_set_get_controlled_reactive_power_into_windings);
     TEST_ADD(TRANSFORMER_TEST::test_set_get_controlled_active_power_into_windings);
+    TEST_ADD(TRANSFORMER_TEST::test_set_get_winding_zero_sequence_impedance);
+    TEST_ADD(TRANSFORMER_TEST::test_set_get_zero_sequence_impedance_between_windings);
+    TEST_ADD(TRANSFORMER_TEST::test_set_get_common_zero_sequence_nutral_grouding_impedance);
 
     TEST_ADD(TRANSFORMER_TEST::test_is_valid);
     TEST_ADD(TRANSFORMER_TEST::test_clear);
@@ -172,6 +175,13 @@ void TRANSFORMER_TEST::test_constructor()
     TEST_ASSERT(transformer.get_controlled_min_active_power_into_winding_in_MW(PRIMARY_SIDE)==0.0);
     TEST_ASSERT(transformer.get_controlled_min_active_power_into_winding_in_MW(SECONDARY_SIDE)==0.0);
     TEST_ASSERT(transformer.get_controlled_min_active_power_into_winding_in_MW(TERTIARY_SIDE)==0.0);
+    TEST_ASSERT(transformer.get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(PRIMARY_SIDE)==0.0);
+    TEST_ASSERT(transformer.get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(SECONDARY_SIDE)==0.0);
+    TEST_ASSERT(transformer.get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(TERTIARY_SIDE)==0.0);
+    TEST_ASSERT(transformer.get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE,SECONDARY_SIDE)==0.0);
+    TEST_ASSERT(transformer.get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE,TERTIARY_SIDE)==0.0);
+    TEST_ASSERT(transformer.get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(TERTIARY_SIDE,PRIMARY_SIDE)==0.0);
+    TEST_ASSERT(transformer.get_common_zero_sequence_nutural_grounding_impedance_based_on_winding_nominals_in_pu()==0.0);
 }
 
 void TRANSFORMER_TEST::test_set_get_winding_buses()
@@ -499,6 +509,56 @@ void TRANSFORMER_TEST::test_set_get_controlled_active_power_into_windings()
     TEST_ASSERT(transformer.get_controlled_min_active_power_into_winding_in_MW(TERTIARY_SIDE)==60.0);
 }
 
+
+void TRANSFORMER_TEST::test_set_get_winding_zero_sequence_impedance()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"TRANSFORMER_TEST");
+
+    complex<double> z;
+
+    z = complex<double>(0.1, 0.2);
+    transformer.set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(PRIMARY_SIDE, z);
+    TEST_ASSERT(abs(transformer.get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(PRIMARY_SIDE)-z)<FLOAT_EPSILON);
+
+    z = complex<double>(0.5, 0.9);
+    transformer.set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(SECONDARY_SIDE, z);
+    TEST_ASSERT(abs(transformer.get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(SECONDARY_SIDE)-z)<FLOAT_EPSILON);
+
+    z = complex<double>(0.3, 0.7);
+    transformer.set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(TERTIARY_SIDE, z);
+    TEST_ASSERT(abs(transformer.get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(TERTIARY_SIDE)-z)<FLOAT_EPSILON);
+}
+
+void TRANSFORMER_TEST::test_set_get_zero_sequence_impedance_between_windings()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"TRANSFORMER_TEST");
+
+    complex<double> z;
+
+    z = complex<double>(0.11, 0.22);
+    transformer.set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, z);
+    TEST_ASSERT(abs(transformer.get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE)-z)<FLOAT_EPSILON);
+
+    z = complex<double>(0.33, 0.44);
+    transformer.set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE, z);
+    TEST_ASSERT(abs(transformer.get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE)-z)<FLOAT_EPSILON);
+
+    z = complex<double>(0.55, 0.66);
+    transformer.set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, TERTIARY_SIDE, z);
+    TEST_ASSERT(abs(transformer.get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, TERTIARY_SIDE)-z)<FLOAT_EPSILON);
+}
+
+void TRANSFORMER_TEST::test_set_get_common_zero_sequence_nutral_grouding_impedance()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"TRANSFORMER_TEST");
+
+    complex<double> z;
+
+    z = complex<double>(0.101, 0.202);
+    transformer.set_common_zero_sequence_nutural_grounding_impedance_based_on_winding_nominals_in_pu(z);
+    TEST_ASSERT(abs(transformer.get_common_zero_sequence_nutural_grounding_impedance_based_on_winding_nominals_in_pu()-z)<FLOAT_EPSILON);
+}
+
 void TRANSFORMER_TEST::test_is_valid()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"TRANSFORMER_TEST");
@@ -571,6 +631,14 @@ void TRANSFORMER_TEST::test_copy_with_operator_equal()
     transformer.set_winding_max_angle_shift_in_deg(TERTIARY_SIDE, 60.0);
     transformer.set_winding_min_angle_shift_in_deg(TERTIARY_SIDE, -60.0);
 
+    transformer.set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(PRIMARY_SIDE, complex<double>(0.1, 0.2));
+    transformer.set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(SECONDARY_SIDE, complex<double>(0.3, 0.4));
+    transformer.set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(TERTIARY_SIDE, complex<double>(0.5, 0.6));
+    transformer.set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, complex<double>(0.101, 0.202));
+    transformer.set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE, complex<double>(0.303, 0.404));
+    transformer.set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, TERTIARY_SIDE, complex<double>(0.505, 0.606));
+    transformer.set_common_zero_sequence_nutural_grounding_impedance_based_on_winding_nominals_in_pu(complex<double>(0.7, 0.8));
+
 
     TRANSFORMER newtransformer(default_toolkit);
 
@@ -611,6 +679,15 @@ void TRANSFORMER_TEST::test_copy_with_operator_equal()
     TEST_ASSERT(fabs(newtransformer.get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(TERTIARY_SIDE)-0.8)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(newtransformer.get_winding_max_angle_shift_in_deg(TERTIARY_SIDE)-60.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(newtransformer.get_winding_min_angle_shift_in_deg(TERTIARY_SIDE)-(-60.0))<FLOAT_EPSILON);
+
+
+    TEST_ASSERT(abs(transformer.get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(PRIMARY_SIDE)-complex<double>(0.1, 0.2))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(transformer.get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(SECONDARY_SIDE)-complex<double>(0.3, 0.4))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(transformer.get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(TERTIARY_SIDE)-complex<double>(0.5, 0.6))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(transformer.get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE)-complex<double>(0.101, 0.202))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(transformer.get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE)-complex<double>(0.303, 0.404))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(transformer.get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, TERTIARY_SIDE)-complex<double>(0.505, 0.606))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(transformer.get_common_zero_sequence_nutural_grounding_impedance_based_on_winding_nominals_in_pu()-complex<double>(0.7, 0.8))<FLOAT_EPSILON);
 }
 
 

@@ -556,6 +556,15 @@ GENERATOR& GENERATOR::operator=(const GENERATOR& gen)
     set_model(gen.get_stabilizer_model());
     set_model(gen.get_turbine_governor_model());
     set_model(gen.get_turbine_load_controller_model());
+
+    set_positive_sequence_resistance_in_pu(gen.get_positive_sequence_resistance_in_pu());
+    set_positive_sequence_syncronous_reactance_in_pu(gen.get_positive_sequence_syncronous_reactance_in_pu());
+    set_positive_sequence_transient_reactance_in_pu(gen.get_positive_sequence_transient_reactance_in_pu());
+    set_positive_sequence_subtransient_reactance_in_pu(gen.get_positive_sequence_subtransient_reactance_in_pu());
+    set_negative_sequence_resistance_in_pu(gen.get_negative_sequence_resistance_in_pu());
+    set_negative_sequence_reactance_in_pu(gen.get_negative_sequence_reactance_in_pu());
+    set_zero_sequence_resistance_in_pu(gen.get_zero_sequence_resistance_in_pu());
+    set_zero_sequence_reactance_in_pu(gen.get_zero_sequence_reactance_in_pu());
     return *this;
 }
 

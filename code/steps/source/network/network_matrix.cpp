@@ -3049,7 +3049,7 @@ void NETWORK_MATRIX::report_network_matrix_common() const
 }
 
 
-void NETWORK_MATRIX::save_network_Y_matrix_to_file(const string& filename)
+void NETWORK_MATRIX::save_network_Y_matrix_to_file(const string& filename, bool export_full_matrix)
 {
     ostringstream osstream;
     ofstream file(filename);
@@ -3058,6 +3058,13 @@ void NETWORK_MATRIX::save_network_Y_matrix_to_file(const string& filename)
         set_this_Y_and_Z_matrix_as(network_Y1_matrix);
         save_network_matrix_common(file);
         file.close();
+
+        ofstream full_file("full_"+filename);
+        if(full_file.is_open())
+        {
+            save_full_network_matrix_common(full_file);
+            full_file.close();
+        }
     }
     else
     {
@@ -3201,6 +3208,54 @@ void NETWORK_MATRIX::save_network_matrix_common(ofstream& file) const
                 <<setprecision(14)<<fixed<<y.imag()<<endl;*/
         }
         k_starting = k_ending;
+    }
+}
+
+
+void NETWORK_MATRIX::save_full_network_matrix_common(ofstream& file) const
+{
+    unsigned int i, ibus;
+    unsigned int n = this_Y_matrix_pointer->get_matrix_size();
+    complex<double> y;
+
+    file<<"internal,";
+    for(i=0; i<n; ++i)
+        file<<","<<num2str(i);
+    file<<endl;
+    file<<",physical";
+    for(i=0; i<n; ++i)
+        file<<","<<num2str(get_physical_bus_number_of_internal_bus(i));
+    file<<endl;
+    for(i=0; i<n; ++i)
+    {
+        ibus = get_physical_bus_number_of_internal_bus(i);
+        file<<num2str(i)<<","<<num2str(ibus);
+        for(unsigned int j=0; j<n; ++j)
+        {
+            y = this_Y_matrix_pointer->get_entry_value(i,j);
+            if(y==0.0)
+            {
+                file<<",";
+            }
+            else
+            {
+                if(y.imag()>=0.0)
+                {
+                    if(y.real()!=0.0)
+                        file<<","<<num2str(y.real())<<"+"<<num2str(y.imag())<<"i";
+                    else
+                        file<<","<<num2str(y.imag())<<"i";
+                }
+                else
+                {
+                    if(y.real()!=0.0)
+                        file<<","<<num2str(y.real())<<"-"<<num2str(-y.imag())<<"i";
+                    else
+                        file<<",-"<<num2str(-y.imag())<<"i";
+                }
+            }
+        }
+        file<<endl;
     }
 }
 

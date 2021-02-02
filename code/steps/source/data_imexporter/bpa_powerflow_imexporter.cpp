@@ -892,7 +892,7 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
                     fshunt.set_shunt_bus(loads[i]->get_load_bus());
                     fshunt.set_identifier(loads[i]->get_identifier());
                     fshunt.set_status(true);
-                    fshunt.set_nominal_impedance_shunt_in_MVA(S_z);
+                    fshunt.set_nominal_positive_sequence_impedance_shunt_in_MVA(S_z);
                     psdb.append_fixed_shunt(fshunt);
 
                     DEVICE_ID did = loads[i]->get_device_id();

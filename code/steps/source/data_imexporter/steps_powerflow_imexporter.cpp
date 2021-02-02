@@ -494,7 +494,7 @@ void STEPS_IMEXPORTER::load_fixed_shunt_data()
             q=get_double_data(data[n],"0.0");
             data.erase(data.begin());
         }
-        shunt.set_nominal_impedance_shunt_in_MVA(complex<double>(p,-q));
+        shunt.set_nominal_positive_sequence_impedance_shunt_in_MVA(complex<double>(p,-q));
 
         psdb.append_fixed_shunt(shunt);
     }
@@ -2175,8 +2175,8 @@ string STEPS_IMEXPORTER::export_fixed_shunt_data() const
                 <<"\""<<", "
                 <<right
                 <<shunt->get_status()<<", "
-                <<setw(12)<<setprecision(6)<<fixed<<shunt->get_nominal_impedance_shunt_in_MVA().real()<<", "
-                <<setw(12)<<setprecision(6)<<fixed<<-shunt->get_nominal_impedance_shunt_in_MVA().imag()<<endl;
+                <<setw(12)<<setprecision(6)<<fixed<<shunt->get_nominal_positive_sequence_impedance_shunt_in_MVA().real()<<", "
+                <<setw(12)<<setprecision(6)<<fixed<<-shunt->get_nominal_positive_sequence_impedance_shunt_in_MVA().imag()<<endl;
     }
     return osstream.str();
 }

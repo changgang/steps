@@ -560,7 +560,7 @@ def load_library():
     libsteps.api_build_network_Z_matrix.restype = None
     libsteps.api_build_network_Z_matrix.argtypes = (c_uint, )
     libsteps.api_save_network_Y_matrix.restype = None
-    libsteps.api_save_network_Y_matrix.argtypes = (c_char_p, c_uint)
+    libsteps.api_save_network_Y_matrix.argtypes = (c_char_p, c_bool, c_uint)
     libsteps.api_save_decoupled_network_B_matrix.restype = None
     libsteps.api_save_decoupled_network_B_matrix.argtypes = (c_char_p, c_uint)
     libsteps.api_save_dc_network_B_matrix.restype = None

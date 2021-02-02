@@ -18,16 +18,20 @@ class FIXED_SHUNT : public NONBUS_DEVICE
         void set_identifier(string identifier);
         void set_name(string name);
         void set_status(bool status);
-        void set_nominal_impedance_shunt_in_MVA(complex<double> s);
+        void set_nominal_positive_sequence_impedance_shunt_in_MVA(complex<double> s);
+        void set_nominal_zero_sequence_impedance_shunt_in_MVA(complex<double> s);
 
         unsigned int get_shunt_bus() const;
         BUS* get_bus_pointer() const;
         string get_identifier() const;
         string get_name() const;
         bool get_status() const;
-        complex<double> get_nominal_impedance_shunt_in_MVA() const;
+        complex<double> get_nominal_positive_sequence_impedance_shunt_in_MVA() const;
         complex<double> get_nominal_impedance_shunt_in_pu() const;
         complex<double> get_nominal_admittance_shunt_in_pu() const;
+        complex<double> get_nominal_zero_sequence_impedance_shunt_in_MVA() const;
+        complex<double> get_nominal_zero_sequence_impedance_shunt_in_pu() const;
+        complex<double> get_nominal_zero_sequence_admittance_shunt_in_pu() const;
 
         virtual bool is_valid() const;
         virtual void check();
@@ -52,6 +56,7 @@ class FIXED_SHUNT : public NONBUS_DEVICE
         string identifier;
         string name;
         bool status;
-        complex<double> nominal_impedance_shunt_in_MVA;
+        complex<double> nominal_positive_sequence_impedance_shunt_in_MVA;
+        complex<double> nominal_zero_squence_impedance_shunt_in_MVA;
 };
 #endif // FIXED_SHUNT_H

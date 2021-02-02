@@ -30,7 +30,8 @@ class FIXED_SHUNT_TEST : public Test::Suite
         void test_set_get_identifier();
         void test_set_get_name();
         void test_set_get_status();
-        void test_set_get_nominal_impedance_shunt();
+        void test_set_get_nominal_positive_sequence_impedance_shunt();
+        void test_set_get_nominal_zero_sequence_impedance_shunt();
 
         void test_is_valid();
         void test_clear();

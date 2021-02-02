@@ -145,10 +145,8 @@ void JACOBIAN_BUILDER::update_jacobian_delta_p_over_angle()
     if(is_network_matrix_set())
     {
         NETWORK_MATRIX* nw_db = get_network_Y_matrix();
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         const STEPS_COMPLEX_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
 
-        //unsigned int nbus = psdb.get_in_service_bus_count();
         unsigned int nbus = Y.get_matrix_size();
         double der;
         complex<double> y;
@@ -211,10 +209,8 @@ void JACOBIAN_BUILDER::update_jacobian_delta_p_over_voltage()
     if(is_network_matrix_set())
     {
         NETWORK_MATRIX* nw_db = get_network_Y_matrix();
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         const STEPS_COMPLEX_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
 
-        //unsigned int nbus = psdb.get_in_service_bus_count();
         unsigned int nbus = Y.get_matrix_size();
         double der;
         complex<double> y;
@@ -278,10 +274,8 @@ void JACOBIAN_BUILDER::update_jacobian_delta_q_over_angle()
     if(is_network_matrix_set())
     {
         NETWORK_MATRIX* nw_db = get_network_Y_matrix();
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         const STEPS_COMPLEX_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
 
-        //unsigned int nbus = psdb.get_in_service_bus_count();
         unsigned int nbus = Y.get_matrix_size();
         double der;
         complex<double> y;
@@ -345,10 +339,8 @@ void JACOBIAN_BUILDER::update_jacobian_delta_q_over_voltage()
     if(is_network_matrix_set())
     {
         NETWORK_MATRIX* nw_db = get_network_Y_matrix();
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         const STEPS_COMPLEX_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
 
-        //unsigned int nbus = psdb.get_in_service_bus_count();
         unsigned int nbus = Y.get_matrix_size();
         double der;
         complex<double> y;

@@ -316,7 +316,7 @@ EXPORT_STEPS_DLL void api_build_decoupled_network_B_matrix(unsigned int toolkit_
 EXPORT_STEPS_DLL void api_build_dc_network_B_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_build_dynamic_network_Y_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_build_network_Z_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_save_network_Y_matrix(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_save_network_Y_matrix(char* file, bool export_full=false, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_decoupled_network_B_matrix(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_dc_network_B_matrix(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_dynamic_network_Y_matrix(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
