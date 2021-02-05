@@ -1,0 +1,13 @@
+starting api name,group long name
+set_encode,Toolkit related APIs
+get_allowed_maximum_bus_number,Capacity related APIs
+add_bus,Device manipulation related APIs
+get_bus_count,Device count related APIs
+is_bus_exist,Device existance related APIs
+bus_name2number,Name2number conversion related APIs
+get_all_buses,Device retrieving related APIs
+get_bus_data,Device data manipulation related APIs
+load_powerflow_data,Powerflow related APIs
+build_network_Y_matrix,Network related APIs
+load_dynamic_data,Dynamic model related APIs
+get_dynamic_simulator_parameter,Dynamic simulation related APIs

@@ -1,15 +1,33 @@
 API 1
 Format: set_encode(encode)
+Description: Set encoding name of the toolkit.
+Args:
+    (1) encode: string, encoding name.
+Rets: N/A
+Example:
+    simulator.set_encode("utf-8")
+    simulator.set_encode("GB18030")
+
 API 2
 Format: get_encode()
+Description: Get current encoding name of the toolkit.
+Args: N/A
+Rets:
+    (1) encode: string, encoding name.
+Example:
+    encode = simulator.get_encode()
+
 API 3
 Format: set_toolkit_log_file(log_file="", log_file_append_mode=False)
 Description: Set toolkit log file. The default mode is to write to new file.
 Args:
-    (1) log_file: string, target log file name. If no file is set (""), the log will be exported to stdout.
+    (1) log_file: string, target log file name. If log_file="blackhole", all logs are disabled. If no file is set (""), the log will be exported to stdout.
     (2) log_file_append_mode: boolean, log file append mode. True for writting to new file, False for appending to existing file. Default is False.
 Rets: N/A
-Example: N/A
+Example:
+    simulator.set_toolkit_log_file("caseA.log")
+    simulator.set_toolkit_log_file("caseB.log",True)
+    simulator.set_toolkit_log_file("blackhole") # disable all logs
 
 API 4
 Format: set_parallel_thread_number(num=1)
@@ -17,7 +35,9 @@ Description: Set parallel thread number for parallel simulation.
 Args:
     (1) num: integer, parallel thread number. If num=1, serial simulation is used. num should be < number of CPU physical cores.
 Rets: N/A
-Example: N/A
+Example:
+    np = 10
+    simulator.set_parallel_thread_number(np)
 
 API 5
 Format: get_parallel_thread_number()
@@ -25,83 +45,89 @@ Description: Set parallel thread number for parallel simulation.
 Args: N/A
 Rets:
     (1) parallel thread number, integer
-Example: N/A
+Example:
+    np = simulator.get_parallel_thread_number()
 
 API 6
-Format: set_dynamic_model_database_capacity(cap=10000000)
-Description: Set capacity of dynamic model database. If the capacity is not enough, dynamic data cannot be successfully loaded.
-Args:
-    (1) cap: integer, database capacity, in bytes.
-Rets:
-    (1) N/A
-Example: N/A
-
-API 7
-Format: get_dynamic_model_database_capacity()
-Description: Get capacity of dynamic model database.
-Args: N/A
-Rets:
-    (1) database capacity in bytes, integer
-Example: N/A
-
-API 8
 Format: clear_toolkit()
 Description: Clear all data in the toolkit.
 Args: N/A
 Rets: N/A
-Example: N/A
+Example:
+    simulator.clear_toolkit()
 
-API 9
+API 7
 Format: get_toolkit_float_data(dataname)
 Description: Get toolkit general float data.
 Args:
-    (1) dataname: String of variable name.
+    (1) dataname: String of variable name. See function 'api_get_toolkit_float_data' in STEPS source for supported options.
 Rets:
     (1) Value of the variable. 0 if the variable name is invalid.
 Example: N/A
 
-API 10
+API 8
 Format: set_toolkit_float_data(dataname, value)
 Description: Set toolkit general float data.
 Args:
-    (1) dataname: String of variable name.
+    (1) dataname: String of variable name. See function 'api_set_toolkit_float_data' in STEPS source for supported options.
     (2) value: Value to set.
 Rets: N/A
 Example: N/A
 
+API 9
+Format: get_toolkit_string_data(dataname)
+Description: Get toolkit general string variable.
+Args:
+    (1) dataname: String of variable name. See function 'api_get_toolkit_string_data' in STEPS source for supported options.
+Rets:
+    (1) String to variable.
+Example: N/A
+
+API 10
+Format: set_toolkit_string_data(dataname, value)
+Description: Set toolkit general string variable.
+Args:
+    (1) dataname: String of variable name. See function 'api_set_toolkit_string_data' in STEPS source for supported options.
+    (2) value: String to set.
+Rets: N/A
+Example: N/A
+
 API 11
+Format: get_toolkit_bool_data(dataname)
+Description: Get toolkit general boolean data.
+Args:
+    (1) dataname: String of variable name. See function 'api_get_toolkit_bool_data' in STEPS source for supported options.
+Rets:
+    (1) Boolean value of given dataname. If data name is invalid, False is returned.
+Example: N/A
+
+API 12
+Format: set_toolkit_bool_data(dataname, value)
+Description: Set toolkit general boolean data.
+Args:
+    (1) dataname: String of variable name. See function 'api_set_toolkit_bool_data' in STEPS source for supported options.
+    (2) value: Boolean value.
+Rets: N/A
+Example: N/A
+
+API 13
 Format: get_system_base_power_in_MVA()
 Description: Get toolkit system base power.
 Args: N/A
 Rets:
     (1) System base power in MVA.
-Example: N/A
+Example:
+    sbase = simulator.get_system_base_power_in_MVA()
 
-API 12
+API 14
 Format: set_system_base_power_in_MVA(sbase)
 Description: Set toolkit system base power.
 Args:
     (1) sbase: System base power in MVA.
 Rets: N/A
-Example: N/A
-
-API 13
-Format: get_toolkit_string_data(dataname)
-Description: Get toolkit general string variable.
-Args:
-    (1) dataname: String of variable name.
-Rets:
-    (1) String to variable.
-Example: N/A
-
-API 14
-Format: set_toolkit_string_data(dataname, value)
-Description: Set toolkit general string variable.
-Args:
-    (1) dataname: String of variable name.
-    (2) value: String to set.
-Rets: N/A
-Example: N/A
+Example:
+    sbase = 100.0
+    simulator.set_system_base_power_in_MVA(sbase)
 
 API 15
 Format: get_case_information()
@@ -109,7 +135,8 @@ Description: Get case information string.
 Args: N/A
 Rets:
     (1) String of case information.
-Example: N/A
+Example:
+    case_info = simulator.get_case_information()
 
 API 16
 Format: get_case_additional_information()
@@ -117,7 +144,8 @@ Description: Get case additional information string.
 Args: N/A
 Rets:
     (1) String of case additional information.
-Example: N/A
+Example:
+    case_add_info = simulator.get_case_additional_information()
 
 API 17
 Format: set_case_information(value)
@@ -125,7 +153,8 @@ Description: Set case information.
 Args:
     (1) value: String of case information.
 Rets: N/A
-Example: N/A
+Example:
+    simulator.set_case_information("IEEE 9-bus model")
 
 API 18
 Format: set_case_additional_information(value)
@@ -133,171 +162,176 @@ Description: Set case additional information string.
 Args:
     (1) value: String of case additional information.
 Rets: N/A
-Example: N/A
+Example:
+    simulator.set_case_additional_information("A simplified model of WSCC system")
 
 API 19
-Format: get_toolkit_bool_data(dataname)
-Description: Get toolkit general boolean data.
-Args:
-    (1) dataname: String of variable name.
-Rets:
-    (1) Boolean value of given dataname. If data name is invalid, False is returned.
-Example: N/A
-
-API 20
-Format: set_toolkit_bool_data(dataname, value)
-Description: Set toolkit general boolean data.
-Args:
-    (1) dataname: String of variable name.
-    (2) value: Boolean value.
-Rets: N/A
-Example: N/A
-
-API 21
 Format: get_toolkit_detailed_log_logic()
 Description: Get toolkit detailed log logic.
 Args: N/A
 Rets:
     (1) Boolean value of the detailed log logic. True if detailed log is enabled, False if otherwise.
-Example: N/A
+Example:
+    simulator.get_toolkit_detailed_log_logic()
 
-API 22
+API 20
 Format: set_toolkit_detailed_log_logic(logic)
 Description: Set toolkit detailed log logic.
 Args:
     (1) logic: True to enable detailed log, False to disable detailed log.
 Rets: N/A
-Example: N/A
+Example:
+    simulator.set_toolkit_detailed_log_logic(True)
+    simulator.set_toolkit_detailed_log_logic(False)
 
-API 23
+API 21
 Format: get_allowed_maximum_bus_number()
 Description: Get allowed maximum bus number.
 Args: N/A
 Rets:
     (1) Allowed maximum bus number.
-Example: N/A
+Example:
+    num_max = simulator.get_allowed_maximum_bus_number()
 
-API 24
+API 22
 Format: set_allowed_maximum_bus_number(max_bus_number)
 Description: Set allowed maximum bus number. All buses in the database should be less than the give max bus number.
 Args:
     (1) max_bus_number: Allowed maximum bus number.
 Rets: N/A
-Example: N/A
+Example:
+    num_max = 10000
+    simulator.set_allowed_maximum_bus_number(num_max) # 1~10000
+    num_max = 9000
+    simulator.set_allowed_maximum_bus_number(num_max) # 1~9000
 
-API 25
+API 23
 Format: get_bus_capacity()
 Description: Get capacity for storing buses in database.
 Args: N/A
 Rets:
     (1) Maximum number of buses that can be stored in the database.
-Example: N/A
+Example:
+    nbus_max = simulator.get_bus_capacity()
 
-API 26
+API 24
 Format: get_generator_capacity()
 Description: Get capacity for storing generators in database.
 Args: N/A
 Rets:
     (1) Maximum number of generators that can be stored in the database.
-Example: N/A
+Example:
+    ngen_max = simulator.get_generator_capacity()
 
-API 27
+API 25
 Format: get_wt_generator_capacity()
 Description: Get capacity for storing wind turbine generators in database.
 Args: N/A
 Rets:
     (1) Maximum number of wind turbine generators that can be stored in the database.
-Example: N/A
+Example:
+    nwtgen_max = simulator.get_wt_generator_capacity()
 
-API 28
+API 26
 Format: get_pv_unit_capacity()
 Description: Get capacity for storing PV units in database.
 Args: N/A
 Rets:
     (1) Maximum number of PV units that can be stored in the database.
-Example: N/A
+Example:
+    npv_max = simulator.get_pv_unit_capacity()
 
-API 29
+API 27
 Format: get_load_capacity()
 Description: Get capacity for storing loads in database.
 Args: N/A
 Rets:
     (1) Maximum number of loads that can be stored in the database.
-Example: N/A
+Example:
+    nload_max = simulator.get_load_capacity()
 
-API 30
+API 28
 Format: get_fixed_shunt_capacity()
 Description: Get capacity for storing fixed shunts in database.
 Args: N/A
 Rets:
     (1) Maximum number of fixed shunts that can be stored in the database.
-Example: N/A
+Example:
+    nshunt_max = simulator.get_fixed_shunt_capacity()
 
-API 31
+API 29
 Format: get_line_capacity()
 Description: Get capacity for storing transmission lines in database.
 Args: N/A
 Rets:
     (1) Maximum number of transmission lines that can be stored in the database.
-Example: N/A
+Example:
+    nline_max = simulator.get_line_capacity()
 
-API 32
+API 30
 Format: get_transformer_capacity()
 Description: Get capacity for storing transformers in database.
 Args: N/A
 Rets:
     (1) Maximum number of transformers that can be stored in the database.
-Example: N/A
+Example:
+    ntrans_max = simulator.get_transformer_capacity()
 
-API 33
+API 31
 Format: get_hvdc_capacity()
 Description: Get capacity for storing HVDC links in database.
 Args: N/A
 Rets:
     (1) Maximum number of HVDC links that can be stored in the database.
-Example: N/A
+Example:
+    nhvdc_max = simulator.get_hvdc_capacity()
 
-API 34
+API 32
 Format: get_equivalent_device_capacity()
 Description: Get capacity for storing equivalent devices in database.
 Args: N/A
 Rets:
     (1) Maximum number of equivalent devices that can be stored in the database.
-Example: N/A
+Example:
+    ned_max = simulator.get_equivalent_device_capacity()
 
-API 35
+API 33
 Format: get_energy_storage_capacity()
 Description: Get capacity for storing energy storages in database.
 Args: N/A
 Rets:
     (1) Maximum number of energy storages that can be stored in the database.
-Example: N/A
+Example:
+    nstorage_max = simulator.get_energy_storage_capacity()
 
-API 36
+API 34
 Format: get_area_capacity()
 Description: Get capacity for storing areas in database.
 Args: N/A
 Rets:
     (1) Maximum number of areas that can be stored in the database.
-Example: N/A
+Example:
+    narea_max = simulator.get_area_capacity()
 
-API 37
+API 35
 Format: get_zone_capacity()
 Description: Get capacity for storing zones in database.
 Args: N/A
 Rets:
     (1) Maximum number of zones that can be stored in the database.
-Example: N/A
+Example:
+    nzone_max = simulator.get_zone_capacity()
 
-API 38
+API 36
 Format: get_owner_capacity()
 Description: Get capacity for storing owners in database.
 Args: N/A
 Rets:
     (1) Maximum number of owners that can be stored in the database.
-Example: N/A
+Example:
+    nowner_max = simulator.get_owner_capacity()
 
-API 39
+API 37
 Format: set_bus_capacity(capacity)
 Description: Set capacity for storing buses in database.
 Args:
@@ -305,9 +339,10 @@ Args:
 Rets: N/A
 Tips:
     This function SHOULD be called before adding devices to the database.
-Example: N/A
+Example:
+    nbus_max = simulator.get_bus_capacity()
 
-API 40
+API 38
 Format: set_generator_capacity(capacity)
 Description: Set capacity for storing generators in database.
 Args:
@@ -317,7 +352,7 @@ Tips:
     This function SHOULD be called before adding devices to the database.
 Example: N/A
 
-API 41
+API 39
 Format: set_wt_generator_capacity(capacity)
 Description: Set capacity for storing wind turbine generators in database.
 Args:
@@ -327,7 +362,7 @@ Tips:
     This function SHOULD be called before adding devices to the database.
 Example: N/A
 
-API 42
+API 40
 Format: set_pv_unit_capacity(capacity)
 Description: Set capacity for storing PV units in database.
 Args:
@@ -337,7 +372,7 @@ Tips:
     This function SHOULD be called before adding devices to the database.
 Example: N/A
 
-API 43
+API 41
 Format: set_load_capacity(capacity)
 Description: Set capacity for storing loads in database.
 Args:
@@ -347,7 +382,7 @@ Tips:
     This function SHOULD be called before adding devices to the database.
 Example: N/A
 
-API 44
+API 42
 Format: set_fixed_shunt_capacity(capacity)
 Description: Set capacity for storing fixed shunts in database.
 Args:
@@ -357,7 +392,7 @@ Tips:
     This function SHOULD be called before adding devices to the database.
 Example: N/A
 
-API 45
+API 43
 Format: set_line_capacity(capacity)
 Description: Set capacity for storing transmission lines in database.
 Args:
@@ -367,7 +402,7 @@ Tips:
     This function SHOULD be called before adding devices to the database.
 Example: N/A
 
-API 46
+API 44
 Format: set_transformer_capacity(capacity)
 Description: Set capacity for storing transformers in database.
 Args:
@@ -377,7 +412,7 @@ Tips:
     This function SHOULD be called before adding devices to the database.
 Example: N/A
 
-API 47
+API 45
 Format: set_hvdc_capacity(capacity)
 Description: Set capacity for storing HVDC links in database.
 Args:
@@ -387,7 +422,7 @@ Tips:
     This function SHOULD be called before adding devices to the database.
 Example: N/A
 
-API 48
+API 46
 Format: set_equivalent_device_capacity(capacity)
 Description: Set capacity for storing equivalent devices in database.
 Args:
@@ -397,7 +432,7 @@ Tips:
     This function SHOULD be called before adding devices to the database.
 Example: N/A
 
-API 49
+API 47
 Format: set_energy_storage_capacity(capacity)
 Description: Set capacity for storing energy storages in database.
 Args:
@@ -407,7 +442,7 @@ Tips:
     This function SHOULD be called before adding devices to the database.
 Example: N/A
 
-API 50
+API 48
 Format: set_area_capacity(capacity)
 Description: Set capacity for storing areas in database.
 Args:
@@ -417,7 +452,7 @@ Tips:
     This function SHOULD be called before adding devices to the database.
 Example: N/A
 
-API 51
+API 49
 Format: set_zone_capacity(capacity)
 Description: Set capacity for storing zones in database.
 Args:
@@ -427,7 +462,7 @@ Tips:
     This function SHOULD be called before adding devices to the database.
 Example: N/A
 
-API 52
+API 50
 Format: set_owner_capacity(capacity)
 Description: Set capacity for storing owners in database.
 Args:
@@ -437,90 +472,24 @@ Tips:
     This function SHOULD be called before adding devices to the database.
 Example: N/A
 
+API 51
+Format: get_dynamic_model_database_capacity()
+Description: Get capacity of dynamic model database.
+Args: N/A
+Rets:
+    (1) database capacity in bytes, integer
+Example: N/A
+
+API 52
+Format: set_dynamic_model_database_capacity(cap=10000000)
+Description: Set capacity of dynamic model database. If the capacity is not enough, dynamic data cannot be successfully loaded.
+Args:
+    (1) cap: integer, database capacity, in bytes.
+Rets:
+    (1) N/A
+Example: N/A
+
 API 53
-Format: load_powerflow_data(file, ftype)
-Description: Load powerflow data from file.
-Args:
-    (1) file: string, source powerflow file name.
-    (2) ftype: string, powerflow data format.
-Rets: N/A
-Example: N/A
-
-API 54
-Format: save_powerflow_data(file, ftype, export_zero_line=True, export_out_of_service_bus=True, export_mode=0)
-Description: Save powerflow data to file.
-Args:
-    (1) file: string, target powerflow file name.
-    (2) ftype: string, powerflow data format.
-    (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
-    (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
-    (5) export_mode: integer, export mode (0,1,2,3). 0 for exporting data as import, 1 for exporting data ordered by bus number in ascending order, 2 for exporting data ordered by bus name in ascending order, 3 for exporting buses in the order of generator, load, hvdc buses.
-Rets: N/A
-Example: N/A
-
-API 55
-Format: load_powerflow_result(file, ftype)
-Description: Load powerflow result from file.
-Args:
-    (1) file: string, source powerflow result file name.
-    (2) ftype: string, powerflow result data format.
-Rets: N/A
-Example: N/A
-
-API 56
-Format: load_dynamic_data(file, ftype)
-Description: Load dynamic data from file.
-Args:
-    (1) file: string, source dynamic data file name.
-    (2) ftype: string, dynamic data format.
-Rets: N/A
-Example: N/A
-
-API 57
-Format: save_dynamic_data(file, ftype)
-Description: Save dynamic data to file.
-Args:
-    (1) file: string, target dynamic data file name.
-    (2) ftype: string, dynamic data format.
-Rets: N/A
-Example: N/A
-
-API 58
-Format: check_powerflow_data()
-Description: Check powerflow data. If any inappropriate data is set, report will be sent to log file.
-Args: N/A
-Rets: N/A
-Example: N/A
-
-API 59
-Format: check_dynamic_data()
-Description: Check dynamic model data. If any inappropriate data is set, report will be sent to log file.
-Args: N/A
-Rets: N/A
-Example: N/A
-
-API 60
-Format: check_missing_models()
-Description: Check missing models. If any compulsory models are missing, report will be sent to log file.
-Args: N/A
-Rets: N/A
-Example: N/A
-
-API 61
-Format: check_least_dynamic_time_constants()
-Description: Check the least dynamic time constants. Report of the first least time constants in models will be sent to log file. The dynamic simulation time step should be < one fourth of the least time constant.
-Args: N/A
-Rets: N/A
-Example: N/A
-
-API 62
-Format: check_network_connectivity(remove_void_islands=False)
-Description: Check network connectivity.
-Args: N/A
-Rets: N/A
-Example: N/A
-
-API 63
 Format: add_bus(busnumber, busname, basevoltage)
 Description: Add new bus with bus number, bus name, and base voltage.
 Args:
@@ -530,7 +499,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 64
+API 54
 Format: add_generator(generator)
 Description: Add new generator with device id.
 Args:
@@ -538,7 +507,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 65
+API 55
 Format: add_wt_generator(generator)
 Description: Add new wind turbine generator with device id.
 Args:
@@ -546,7 +515,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 66
+API 56
 Format: add_pv_unit(unit)
 Description: Add new PV unit with device id.
 Args:
@@ -554,7 +523,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 67
+API 57
 Format: add_load(load)
 Description: Add new load with device id.
 Args:
@@ -562,7 +531,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 68
+API 58
 Format: add_fixed_shunt(shunt)
 Description: Add new fixed shunt with device id.
 Args:
@@ -570,7 +539,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 69
+API 59
 Format: add_line(line)
 Description: Add new transmission line with device id.
 Args:
@@ -578,7 +547,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 70
+API 60
 Format: add_hvdc(hvdc)
 Description: Add new HVDC link with device id.
 Args:
@@ -586,7 +555,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 71
+API 61
 Format: add_transformer(transformer)
 Description: Add new transformer with device id.
 Args:
@@ -596,7 +565,7 @@ Tips:
     kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
 Example: N/A
 
-API 72
+API 62
 Format: add_equivalent_device(device)
 Description: Add new equivalent device with device id.
 Args:
@@ -604,7 +573,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 73
+API 63
 Format: add_energy_storage(storage)
 Description: Add new energy storage with device id.
 Args:
@@ -612,7 +581,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 74
+API 64
 Format: add_area(areanumber, areaname)
 Description: Add new area with area number and area name.
 Args:
@@ -621,7 +590,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 75
+API 65
 Format: add_zone(zonenumber, zonename)
 Description: Add new zone with zone number and zone name.
 Args:
@@ -630,7 +599,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 76
+API 66
 Format: add_owner(ownernumber, ownername)
 Description: Add new owner with owner number and owner name.
 Args:
@@ -639,7 +608,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 77
+API 67
 Format: remove_bus(busnumber)
 Description: Remove bus of bus number.
 Args:
@@ -647,7 +616,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 78
+API 68
 Format: remove_generator(generator)
 Description: Remove generator with device id.
 Args:
@@ -655,7 +624,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 79
+API 69
 Format: remove_wt_generator(generator)
 Description: Remove wind turbine generator with device id.
 Args:
@@ -663,7 +632,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 80
+API 70
 Format: remove_pv_unit(unit)
 Description: Remove PV unit with device id.
 Args:
@@ -671,7 +640,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 81
+API 71
 Format: remove_load(load)
 Description: Remove load with device id.
 Args:
@@ -679,7 +648,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 82
+API 72
 Format: remove_fixed_shunt(shunt)
 Description: Remove fixed shunt with device id.
 Args:
@@ -687,7 +656,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 83
+API 73
 Format: remove_line(line)
 Description: Remove transmission line with device id.
 Args:
@@ -695,7 +664,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 84
+API 74
 Format: remove_hvdc(hvdc)
 Description: Remove HVDC link with device id.
 Args:
@@ -703,7 +672,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 85
+API 75
 Format: remove_transformer(transformer)
 Description: Remove transformer with device id.
 Args:
@@ -713,7 +682,7 @@ Tips:
     kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
 Example: N/A
 
-API 86
+API 76
 Format: remove_equivalent_device(device)
 Description: Remove equivalent device with device id.
 Args:
@@ -721,7 +690,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 87
+API 77
 Format: remove_energy_storage(storage)
 Description: Remove energy storage with device id.
 Args:
@@ -729,7 +698,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 88
+API 78
 Format: remove_area(areanumber)
 Description: Remove area with area number.
 Args:
@@ -737,7 +706,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 89
+API 79
 Format: remove_zone(zonenumber)
 Description: Remove zone with zone number.
 Args:
@@ -745,7 +714,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 90
+API 80
 Format: remove_owner(ownernumber)
 Description: Remove owner with owner number.
 Args:
@@ -753,7 +722,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 91
+API 81
 Format: change_bus_number(old_number, new_number)
 Description: Change bus number in the database..
 Args:
@@ -764,7 +733,7 @@ Tips:
     The new_number should be valid, a.k.a, should be positive and < system allowed maximum bus number.
 Example: N/A
 
-API 92
+API 82
 Format: change_bus_number_with_file(file)
 Description: Change bus number in the database with csv file.
 Args:
@@ -775,7 +744,7 @@ Tips:
     It is recommended that there should be no intersection between the sets of new bus numbers and old bus numbers.
 Example: N/A
 
-API 93
+API 83
 Format: get_bus_count()
 Description: Return number of buses, including both in-service and out-of-service buses.
 Args: N/A
@@ -783,7 +752,7 @@ Rets:
     (1) Number of buses.
 Example: N/A
 
-API 94
+API 84
 Format: get_generator_count()
 Description: Return number of generators.
 Args: N/A
@@ -791,7 +760,7 @@ Rets:
     (1) Number of generators.
 Example: N/A
 
-API 95
+API 85
 Format: get_wt_generator_count()
 Description: Return number of wind turbine generators.
 Args: N/A
@@ -799,7 +768,7 @@ Rets:
     (1) Number of wind turbine generators.
 Example: N/A
 
-API 96
+API 86
 Format: get_pv_unit_count()
 Description: Return number of PV units.
 Args: N/A
@@ -807,7 +776,7 @@ Rets:
     (1) Number of PV units.
 Example: N/A
 
-API 97
+API 87
 Format: get_load_count()
 Description: Return number of loads.
 Args: N/A
@@ -815,7 +784,7 @@ Rets:
     (1) Number of loads.
 Example: N/A
 
-API 98
+API 88
 Format: get_fixed_shunt_count()
 Description: Return number of fixed shunt.
 Args: N/A
@@ -823,7 +792,7 @@ Rets:
     (1) Number of fixed shunts.
 Example: N/A
 
-API 99
+API 89
 Format: get_line_count()
 Description: Return number of transmission lines.
 Args: N/A
@@ -831,7 +800,7 @@ Rets:
     (1) Number of transmission lines.
 Example: N/A
 
-API 100
+API 90
 Format: get_transformer_count()
 Description: Return number of transformers.
 Args: N/A
@@ -839,7 +808,7 @@ Rets:
     (1) Number of transformers.
 Example: N/A
 
-API 101
+API 91
 Format: get_hvdc_count()
 Description: Return number of HVDC links.
 Args: N/A
@@ -847,7 +816,7 @@ Rets:
     (1) Number of HVDC links.
 Example: N/A
 
-API 102
+API 92
 Format: get_equivalent_device_count()
 Description: Return number of equivalent devices.
 Args: N/A
@@ -855,7 +824,7 @@ Rets:
     (1) Number of equivalent devices.
 Example: N/A
 
-API 103
+API 93
 Format: get_energy_storage_count()
 Description: Return number of energy storages.
 Args: N/A
@@ -863,7 +832,7 @@ Rets:
     (1) Number of energy storages.
 Example: N/A
 
-API 104
+API 94
 Format: get_area_count()
 Description: Return number of areas.
 Args: N/A
@@ -871,7 +840,7 @@ Rets:
     (1) Number of areas.
 Example: N/A
 
-API 105
+API 95
 Format: get_zone_count()
 Description: Return number of zones.
 Args: N/A
@@ -879,7 +848,7 @@ Rets:
     (1) Number of zones.
 Example: N/A
 
-API 106
+API 96
 Format: get_owner_count()
 Description: Return number of owners.
 Args: N/A
@@ -887,7 +856,7 @@ Rets:
     (1) Number of owners.
 Example: N/A
 
-API 107
+API 97
 Format: get_in_service_bus_count()
 Description: Return number of in-service buses.
 Args: N/A
@@ -895,21 +864,21 @@ Rets:
     (1) Number of in-service buses.
 Example: N/A
 
-API 108
+API 98
 Format: update_overshadowed_buses()
 Description: Update overshowed buses.
 Args: N/A
 Rets: N/A
 Example: N/A
 
-API 109
+API 99
 Format: set_all_buses_un_overshadowed()
 Description: Set all buses as un-overshowed.
 Args: N/A
 Rets: N/A
 Example: N/A
 
-API 110
+API 100
 Format: get_overshadowed_bus_count()
 Description: Get number of overshowed buses. If there are n buses directly connected by zero impedance line or lines, n-1 buses are overshadowed by one of them.
 Args: N/A
@@ -919,7 +888,7 @@ Tips:
     This function calls api to update overshadowed buses first.
 Example: N/A
 
-API 111
+API 101
 Format: is_bus_exist(bus)
 Description: Check if given bus exists or not.
 Args:
@@ -928,7 +897,7 @@ Rets:
     (1) True if the bus exists, False otherwise.
 Example: N/A
 
-API 112
+API 102
 Format: is_generator_exist(generator)
 Description: Check if given generator exists or not.
 Args:
@@ -937,7 +906,7 @@ Rets:
     (1) True if the generator exists, False otherwise.
 Example: N/A
 
-API 113
+API 103
 Format: is_wt_generator_exist(generator)
 Description: Check if given wind turbine generator exists or not.
 Args:
@@ -946,7 +915,7 @@ Rets:
     (1) True if the wind turbine generator exists, False otherwise.
 Example: N/A
 
-API 114
+API 104
 Format: is_pv_unit_exist(pv_unit)
 Description: Check if given PV unit exists or not.
 Args:
@@ -955,7 +924,7 @@ Rets:
     (1) True if the PV unit exists, False otherwise.
 Example: N/A
 
-API 115
+API 105
 Format: is_load_exist(load)
 Description: Check if given load exists or not.
 Args:
@@ -964,7 +933,7 @@ Rets:
     (1) True if the load exists, False otherwise.
 Example: N/A
 
-API 116
+API 106
 Format: is_fixed_shunt_exist(shunt)
 Description: Check if given fixed shunt exists or not.
 Args:
@@ -973,7 +942,7 @@ Rets:
     (1) True if the fixed shunt exists, False otherwise.
 Example: N/A
 
-API 117
+API 107
 Format: is_line_exist(line)
 Description: Check if given transmission line exists or not.
 Args:
@@ -982,7 +951,7 @@ Rets:
     (1) True if the transmission line exists, False otherwise.
 Example: N/A
 
-API 118
+API 108
 Format: is_transformer_exist(transformer)
 Description: Check if given transformer exists or not.
 Args:
@@ -993,7 +962,7 @@ Tips:
     kbus can be omitted if kbus=0, a.k.a., (ibus, jbus, 0, ickt) can be simplified as (ibus, jbus, ickt).
 Example: N/A
 
-API 119
+API 109
 Format: is_hvdc_exist(hvdc)
 Description: Check if given HVDC link exists or not.
 Args:
@@ -1002,7 +971,7 @@ Rets:
     (1) True if the HVDC link exists, False otherwise.
 Example: N/A
 
-API 120
+API 110
 Format: is_equivalent_device_exist(equivalent_device)
 Description: Check if given equivalent device exists or not.
 Args:
@@ -1011,7 +980,7 @@ Rets:
     (1) True if the equivalent device exists, False otherwise.
 Example: N/A
 
-API 121
+API 111
 Format: is_energy_storage_exist(energy_storage)
 Description: Check if given energy storage device exists or not.
 Args:
@@ -1020,7 +989,7 @@ Rets:
     (1) True if the energy storage device exists, False otherwise.
 Example: N/A
 
-API 122
+API 112
 Format: bus_name2number(name, vbase=0.0)
 Description: Converter bus name to bus number.
 Args:
@@ -1031,7 +1000,7 @@ Tips:
     If two or more buses have the same bus name, only the first bus is returned.
 Example: N/A
 
-API 123
+API 113
 Format: bus_number2name(bus)
 Description: Converter bus number to bus name.
 Args:
@@ -1040,7 +1009,7 @@ Rets:
     (1) String of bus name. Empty string if bus does not exist.
 Example: N/A
 
-API 124
+API 114
 Format: get_all_buses()
 Description: Get all buses in the database.
 Args: N/A
@@ -1048,7 +1017,7 @@ Rets:
     (1) Tuple of all buses. Empty tuple if no buses in the database.
 Example: N/A
 
-API 125
+API 115
 Format: get_buses_with_constraints(vbase_min=0.0, vbase_max=10000000.0, v_min=0.0, v_max=10000000.0, area=0, zone=0, owner=0)
 Description: Get all buses in the database satisfying all constraints.
 Args:
@@ -1063,7 +1032,7 @@ Rets:
     (1) Tuple of buses satisfying all constraints. Empty tuple if no buses are satisfying the constants.
 Example: N/A
 
-API 126
+API 116
 Format: get_all_generators()
 Description: Get all generators in the database.
 Args: N/A
@@ -1071,7 +1040,7 @@ Rets:
     (1) Tuple of all generators. Empty tuple if no generators in the database.
 Example: N/A
 
-API 127
+API 117
 Format: get_generators_at_bus(bus)
 Description: Get all generators in the database.
 Args: N/A
@@ -1079,7 +1048,7 @@ Rets:
     (1) Tuple of all generators. Empty tuple if no generators in the database.
 Example: N/A
 
-API 128
+API 118
 Format: get_all_wt_generators()
 Description: Get all wind turbine generators in the database.
 Args: N/A
@@ -1087,7 +1056,7 @@ Rets:
     (1) Tuple of all wind turbine generators. Empty tuple if no wind turbine generators in the database.
 Example: N/A
 
-API 129
+API 119
 Format: get_wt_generators_at_bus(bus)
 Description: Get all wind turbine generators at given bus.
 Args:
@@ -1096,7 +1065,7 @@ Rets:
     (1) Tuple of all wind turbine generators at given bus. Empty tuple if no wind turbine generators at given bus.
 Example: N/A
 
-API 130
+API 120
 Format: get_all_pv_units()
 Description: Get all PV units in the database.
 Args: N/A
@@ -1104,7 +1073,7 @@ Rets:
     (1) Tuple of all PV units. Empty tuple if no PV units in the database.
 Example: N/A
 
-API 131
+API 121
 Format: get_pv_units_at_bus(bus)
 Description: Get all PV units at given bus.
 Args:
@@ -1113,7 +1082,7 @@ Rets:
     (1) Tuple of all PV units at given bus. Empty tuple if no PV units at given bus.
 Example: N/A
 
-API 132
+API 122
 Format: get_all_energy_storages()
 Description: Get all energy storages in the database.
 Args: N/A
@@ -1121,7 +1090,7 @@ Rets:
     (1) Tuple of all energy storages. Empty tuple if no energy storages in the database.
 Example: N/A
 
-API 133
+API 123
 Format: get_energy_storages_at_bus(bus)
 Description: Get all energy storages at bus with input bus number.
 Args:
@@ -1130,7 +1099,7 @@ Rets:
     (1) Tuple of all energy storages at given bus. Empty tuple if no energy storages at given bus.
 Example: N/A
 
-API 134
+API 124
 Format: get_all_loads()
 Description: Get all loads in the database.
 Args: N/A
@@ -1138,7 +1107,7 @@ Rets:
     (1) Tuple of all loads. Empty tuple if no loads in the database.
 Example: N/A
 
-API 135
+API 125
 Format: get_loads_at_bus(bus)
 Description: Get all loads at bus with input bus number.
 Args:
@@ -1147,7 +1116,7 @@ Rets:
     (1) Tuple of all loads at given bus. Empty tuple if no loads at given bus.
 Example: N/A
 
-API 136
+API 126
 Format: get_all_fixed_shunts()
 Description: Get all fixed shunts in the database.
 Args: N/A
@@ -1155,7 +1124,7 @@ Rets:
     (1) Tuple of all fixed shunt. Empty tuple if no fixed shunts in the database.
 Example: N/A
 
-API 137
+API 127
 Format: get_fixed_shunts_at_bus(bus)
 Description: Get all fixed shunts at bus with input bus number.
 Args:
@@ -1164,7 +1133,7 @@ Rets:
     (1) Tuple of all fixed shunts at given bus. Empty tuple if no fixed shunts at given bus.
 Example: N/A
 
-API 138
+API 128
 Format: get_all_equivalent_devices()
 Description: Get all equivalent devices in the database.
 Args: N/A
@@ -1172,7 +1141,7 @@ Rets:
     (1) Tuple of all equivalent devices. Empty tuple if no equivalent devices in the database.
 Example: N/A
 
-API 139
+API 129
 Format: get_equivalent_devices_at_bus(bus)
 Description: Get all equivalent devices at bus with input bus number.
 Args:
@@ -1181,7 +1150,7 @@ Rets:
     (1) Tuple of all equivalent devices at given bus. Empty tuple if no equivalent devices at given bus.
 Example: N/A
 
-API 140
+API 130
 Format: get_all_lines()
 Description: Get all transmission lines in the database.
 Args: N/A
@@ -1189,7 +1158,7 @@ Rets:
     (1) Tuple of all transmission lines. Empty tuple if no transmission lines in the database.
 Example: N/A
 
-API 141
+API 131
 Format: get_lines_at_bus(bus)
 Description: Get all transmission lines at bus with input bus number.
 Args:
@@ -1198,7 +1167,7 @@ Rets:
     (1) Tuple of all transmission lines at given bus. Empty tuple if no transmission lines at given bus.
 Example: N/A
 
-API 142
+API 132
 Format: get_lines_between_buses(ibus, jbus)
 Description: Get all transmission lines between ibus and jbus.
 Args:
@@ -1210,7 +1179,7 @@ Example:
     get_lines_between_buses(1,2)
 Example: N/A
 
-API 143
+API 133
 Format: get_all_transformers()
 Description: Get all transformers in the database.
 Args: N/A
@@ -1218,7 +1187,7 @@ Rets:
     (1) Tuple of all transformers. Empty tuple if no transformers in the database.
 Example: N/A
 
-API 144
+API 134
 Format: get_transformers_at_bus(bus)
 Description: Get all transformers at bus with input bus number.
 Args:
@@ -1227,7 +1196,7 @@ Rets:
     (1) Tuple of all transformers at given bus. Empty tuple if no transformers at given bus.
 Example: N/A
 
-API 145
+API 135
 Format: get_transformers_between_buses(ibus, jbus, kbus=0)
 Description: Get all transformers between ibus, jbus, and kbus. If kbus=0, two-winding transformers are returned.
 Args:
@@ -1242,7 +1211,7 @@ Example:
     get_transformers_between_buses(1,2,3)
 Example: N/A
 
-API 146
+API 136
 Format: get_all_hvdcs()
 Description: Get all HVDC links in the database.
 Args: N/A
@@ -1250,7 +1219,7 @@ Rets:
     (1) Tuple of all HVDC links. Empty tuple if no HVDC links in the database.
 Example: N/A
 
-API 147
+API 137
 Format: get_hvdcs_at_bus(bus)
 Description: Get all HVDC links at bus with input bus number.
 Args:
@@ -1259,7 +1228,7 @@ Rets:
     (1) Tuple of all HVDC links at given bus. Empty tuple if no HVDC links at given bus.
 Example: N/A
 
-API 148
+API 138
 Format: get_hvdcs_between_buses(ibus, jbus)
 Description: Get all HVDC links between ibus and jbus.
 Args:
@@ -1271,7 +1240,7 @@ Example:
     get_hvdcs_between_buses(1,2)
 Example: N/A
 
-API 149
+API 139
 Format: get_generators_with_constraints(area=0, zone=0)
 Description: Get all generators satisfying area and zone constraints.
 Args:
@@ -1281,7 +1250,7 @@ Rets:
     (1) Tuple of all generators in given area and zone. Empty tuple if none in given area and zone.
 Example: N/A
 
-API 150
+API 140
 Format: get_wt_generators_with_constraints(area=0, zone=0)
 Description: Get all wind trubine generators satisfying area and zone constraints.
 Args:
@@ -1291,7 +1260,7 @@ Rets:
     (1) Tuple of all wind turbine generators in given area and zone. Empty tuple if none in given area and zone.
 Example: N/A
 
-API 151
+API 141
 Format: get_pv_units_with_constraints(area=0, zone=0)
 Description: Get all PV units satisfying area and zone constraints.
 Args:
@@ -1301,7 +1270,7 @@ Rets:
     (1) Tuple of all PV units in given area and zone. Empty tuple if none in given area and zone.
 Example: N/A
 
-API 152
+API 142
 Format: get_loads_with_constraints(area=0, zone=0)
 Description: Get all loads satisfying area and zone constraints.
 Args:
@@ -1311,7 +1280,7 @@ Rets:
     (1) Tuple of all loads in given area and zone. Empty tuple if none in given area and zone.
 Example: N/A
 
-API 153
+API 143
 Format: get_all_areas()
 Description: Get all areas in the database.
 Args: N/A
@@ -1319,7 +1288,7 @@ Rets:
     (1) Tuple of all areas number. Empty tuple if no areas in the database.
 Example: N/A
 
-API 154
+API 144
 Format: get_all_zones()
 Description: Get all zones in the database.
 Args: N/A
@@ -1327,7 +1296,7 @@ Rets:
     (1) Tuple of all zones number. Empty tuple if no zones in the database.
 Example: N/A
 
-API 155
+API 145
 Format: get_all_owners()
 Description: Get all owners in the database.
 Args: N/A
@@ -1335,7 +1304,7 @@ Rets:
     (1) Tuple of all owners number. Empty tuple if no owners in the database.
 Example: N/A
 
-API 156
+API 146
 Format: get_bus_data(bus, par_type, par_name)
 Description: Get bus data.
 Args:
@@ -1349,7 +1318,7 @@ Tips:
     The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
 Example: N/A
 
-API 157
+API 147
 Format: get_generator_data(generator, par_type, par_name)
 Description: Get generator data.
 Args:
@@ -1363,7 +1332,7 @@ Tips:
     The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
 Example: N/A
 
-API 158
+API 148
 Format: get_wt_generator_data(wt_generator, par_type, par_name)
 Description: Get wind turbine generator data.
 Args:
@@ -1377,7 +1346,7 @@ Tips:
     The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
 Example: N/A
 
-API 159
+API 149
 Format: get_pv_unit_data(pv_unit, par_type, par_name)
 Description: Get PV unit data.
 Args:
@@ -1391,7 +1360,7 @@ Tips:
     The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
 Example: N/A
 
-API 160
+API 150
 Format: get_energy_storage_data(energy_storage, par_type, par_name)
 Description: Get energy storage data.
 Args:
@@ -1405,7 +1374,7 @@ Tips:
     The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
 Example: N/A
 
-API 161
+API 151
 Format: get_load_data(load, par_type, par_name)
 Description: Get load data.
 Args:
@@ -1419,7 +1388,7 @@ Tips:
     The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
 Example: N/A
 
-API 162
+API 152
 Format: get_fixed_shunt_data(fixed_shunt, par_type, par_name)
 Description: Get fixed shunt data.
 Args:
@@ -1433,7 +1402,7 @@ Tips:
     The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
 Example: N/A
 
-API 163
+API 153
 Format: get_equivalent_device_data(equivalent_device, par_type, par_name)
 Description: Get equivalent device data.
 Args:
@@ -1447,7 +1416,7 @@ Tips:
     The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
 Example: N/A
 
-API 164
+API 154
 Format: get_line_data(line, par_type, par_name)
 Description: Get tranmission line data.
 Args:
@@ -1461,7 +1430,7 @@ Tips:
     The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
 Example: N/A
 
-API 165
+API 155
 Format: get_transformer_data(transformer, par_type, side, par_name)
 Description: Get transformer data.
 Args:
@@ -1477,7 +1446,7 @@ Tips:
     The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
 Example: N/A
 
-API 166
+API 156
 Format: get_hvdc_data(hvdc, par_type, side, par_name)
 Description: Get HVDC link data.
 Args:
@@ -1492,7 +1461,7 @@ Tips:
     The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
 Example: N/A
 
-API 167
+API 157
 Format: get_area_data(area, par_type, par_name)
 Description: Get area data.
 Args:
@@ -1506,7 +1475,7 @@ Tips:
     The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
 Example: N/A
 
-API 168
+API 158
 Format: get_zone_data(zone, par_type, par_name)
 Description: Get zone data.
 Args:
@@ -1520,7 +1489,7 @@ Tips:
     The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
 Example: N/A
 
-API 169
+API 159
 Format: get_owner_data(owner, par_type, par_name)
 Description: Get owner data.
 Args:
@@ -1534,7 +1503,7 @@ Tips:
     The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
 Example: N/A
 
-API 170
+API 160
 Format: set_bus_data(bus, par_type, par_name, value)
 Description: Set bus data.
 Args:
@@ -1549,7 +1518,7 @@ Tips:
     The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
 Example: N/A
 
-API 171
+API 161
 Format: set_generator_data(generator, par_type, par_name, value)
 Description: Set generator data.
 Args:
@@ -1564,7 +1533,7 @@ Tips:
     The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
 Example: N/A
 
-API 172
+API 162
 Format: set_wt_generator_data(wt_generator, par_type, par_name, value)
 Description: Set wind turbine generator data.
 Args:
@@ -1579,7 +1548,7 @@ Tips:
     The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
 Example: N/A
 
-API 173
+API 163
 Format: set_pv_unit_data(pv_unit, par_type, par_name, value)
 Description: Set PV unit data.
 Args:
@@ -1594,7 +1563,7 @@ Tips:
     The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
 Example: N/A
 
-API 174
+API 164
 Format: set_energy_storage_data(energy_storage, par_type, par_name, value)
 Description: Set energy storage data.
 Args:
@@ -1609,7 +1578,7 @@ Tips:
     The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
 Example: N/A
 
-API 175
+API 165
 Format: set_generator_power(generator, s)
 Description: Set generator power.
 Args:
@@ -1621,7 +1590,7 @@ Example:
     set_generator_power((1,"#1"), 100+20j)
 Example: N/A
 
-API 176
+API 166
 Format: set_wt_generator_power(wt_generator, s)
 Description: Set wt generator power.
 Args:
@@ -1633,7 +1602,7 @@ Example:
     set_wt_generator_power((1,"#1"), 100+20j)
 Example: N/A
 
-API 177
+API 167
 Format: set_pv_unit_power(pv_unit, s)
 Description: Set pv unit power.
 Args:
@@ -1645,7 +1614,7 @@ Example:
     set_pv_unit_power((1,"#1"), 100+20j)
 Example: N/A
 
-API 178
+API 168
 Format: set_energy_storage_power(energy_storage, s)
 Description: Set energy storage power.
 Args:
@@ -1657,7 +1626,7 @@ Example:
     set_energy_storage_power((1,"#1"), 100+20j)
 Example: N/A
 
-API 179
+API 169
 Format: set_load_data(load, par_type, par_name, value)
 Description: Set load data.
 Args:
@@ -1672,7 +1641,7 @@ Tips:
     The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
 Example: N/A
 
-API 180
+API 170
 Format: set_load_power(load, sp=None, si=None, sz=None)
 Description: Set load power.
 Args:
@@ -1688,7 +1657,7 @@ Example:
     set_load_power((1,"#1"), sz = 60+10j) # set constant impedance part only
 Example: N/A
 
-API 181
+API 171
 Format: set_fixed_shunt_data(fixed_shunt, par_type, par_name, value)
 Description: Set fixed shunt data.
 Args:
@@ -1703,7 +1672,7 @@ Tips:
     The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
 Example: N/A
 
-API 182
+API 172
 Format: set_equivalent_device_data(equivalent_device, par_type, par_name, value)
 Description: Set equivalent device data.
 Args:
@@ -1718,7 +1687,7 @@ Tips:
     The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
 Example: N/A
 
-API 183
+API 173
 Format: set_line_data(line, par_type, par_name, value)
 Description: Set transmission line data.
 Args:
@@ -1733,7 +1702,7 @@ Tips:
     The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
 Example: N/A
 
-API 184
+API 174
 Format: set_transformer_data(transformer, par_type, side, par_name, value)
 Description: Set transformer data.
 Args:
@@ -1750,7 +1719,7 @@ Tips:
     The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
 Example: N/A
 
-API 185
+API 175
 Format: set_hvdc_data(hvdc, par_type, side, par_name, value)
 Description: Set HVDC link data.
 Args:
@@ -1766,7 +1735,7 @@ Tips:
     The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
 Example: N/A
 
-API 186
+API 176
 Format: set_hvdc_power(hvdc, p)
 Description: Set HVDC link power command.
 Args:
@@ -1777,7 +1746,7 @@ Example:
     set_hvdc_power((1,2,"DC1"), 2000)
 Example: N/A
 
-API 187
+API 177
 Format: set_area_data(area, par_type, par_name, value)
 Description: Set area data.
 Args:
@@ -1792,7 +1761,7 @@ Tips:
     The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
 Example: N/A
 
-API 188
+API 178
 Format: set_zone_data(zone, par_type, par_name, value)
 Description: Set zone data.
 Args:
@@ -1807,7 +1776,7 @@ Tips:
     The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
 Example: N/A
 
-API 189
+API 179
 Format: set_owner_data(owner, par_type, par_name, value)
 Description: Set owner data.
 Args:
@@ -1822,12 +1791,270 @@ Tips:
     The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
 Example: N/A
 
+API 180
+Format: load_powerflow_data(file, ftype)
+Description: Load powerflow data from file.
+Args:
+    (1) file: string, source powerflow file name.
+    (2) ftype: string, powerflow data format.
+Rets: N/A
+Example: N/A
+
+API 181
+Format: check_powerflow_data()
+Description: Check powerflow data. If any inappropriate data is set, report will be sent to log file.
+Args: N/A
+Rets: N/A
+Example: N/A
+
+API 182
+Format: save_powerflow_data(file, ftype, export_zero_line=True, export_out_of_service_bus=True, export_mode=0)
+Description: Save powerflow data to file.
+Args:
+    (1) file: string, target powerflow file name.
+    (2) ftype: string, powerflow data format.
+    (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
+    (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
+    (5) export_mode: integer, export mode (0,1,2,3). 0 for exporting data as import, 1 for exporting data ordered by bus number in ascending order, 2 for exporting data ordered by bus name in ascending order, 3 for exporting buses in the order of generator, load, hvdc buses.
+Rets: N/A
+Example: N/A
+
+API 183
+Format: load_powerflow_result(file, ftype)
+Description: Load powerflow result from file.
+Args:
+    (1) file: string, source powerflow result file name.
+    (2) ftype: string, powerflow result data format.
+Rets: N/A
+Example: N/A
+
+API 184
+Format: get_powerflow_solver_parameter(par_type, par_name)
+Description: Get powerflow solver configuration parameter.
+Args:
+    (1) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (2) par_name: String of parameter name.
+Rets:
+    (1) Value of parameter.
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+Example: N/A
+
+API 185
+Format: set_powerflow_solver_parameter(par_type, par_name, value)
+Description: Set powerflow solver configuration parameter.
+Args:
+    (1) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+    (2) par_name: String of parameter name.
+    (3) value: Value of parameter.
+Rets: N/A
+Tips:
+    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+    The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be changed.
+Example: N/A
+
+API 186
+Format: show_powerflow_solver_configuration()
+Description: Show powerflow solver configuration. Report is sent to log.
+Args: N/A
+Rets: N/A
+Example: N/A
+
+API 187
+Format: solve_powerflow(method)
+Description: Solve powerflow.
+Args:
+    (1) method: String of powerflow solution method. Should be one of {"NR", "PQ"}
+Rets: N/A
+Example: N/A
+
+API 188
+Format: is_powerflow_converged()
+Description: Check if powerflow is converged or not.
+Args: N/A
+Rets:
+    (1) Boolean value. True for converged, False for not converged.
+Example: N/A
+
+API 189
+Format: get_powerflow_loss()
+Description: Get active power loss of solved powerflow.
+Args: N/A
+Rets:
+    (1) System power loss in MW.
+Tips:
+    If powerflow is not converged, the return result is meaningless.
+Example: N/A
+
 API 190
-Format: converte_hvdc_to_load(hvdc)
-Description: to be implemented
+Format: show_powerflow_result()
+Description: Show powerflow result in log.
+Args: N/A
+Rets: N/A
 Example: N/A
 
 API 191
+Format: save_powerflow_result(file)
+Description: Save powerflow result to file.
+Args:
+    (1) file: String of target file name.
+Rets: N/A
+Tips:
+    The result exported by save_powerflow_result() is briefer than that exported by save_extended_powerflow_result().
+Example: N/A
+
+API 192
+Format: save_extended_powerflow_result(file)
+Description: Save extended powerflow result to file.
+Args:
+    (1) file: String of target file name.
+Rets: N/A
+Tips:
+    The result exported by save_extended_powerflow_result() is more detailed than that exported by save_powerflow_result().
+Example: N/A
+
+API 193
+Format: save_jacobian_matrix(file)
+Description: Save jacobian matrix of powerflow solver to file.
+Args:
+    (1) file: String of target file name.
+Rets: N/A
+Example: N/A
+
+API 194
+Format: build_network_Y_matrix()
+Description: Build newwork complex Y matrix for powerflow solution.
+Args: N/A
+Rets: N/A
+Example: N/A
+
+API 195
+Format: build_decoupled_network_B_matrix()
+Description: Build newwork real B' and B" matrix for decoupled powerflow solution.
+Args: N/A
+Rets: N/A
+Example: N/A
+
+API 196
+Format: build_dc_network_B_matrix()
+Description: Build newwork real B matrix for DC powerflow solution.
+Args: N/A
+Rets: N/A
+Tips:
+    DC powerflow solution is not supported.
+Example: N/A
+
+API 197
+Format: build_dynamic_network_Y_matrix()
+Description: Build newwork complex Y matrix for dynamic simulation.
+Args: N/A
+Rets: N/A
+Tips:
+    The faults and source impedance are included in the Y matrix.
+Example: N/A
+
+API 198
+Format: build_network_Z_matrix()
+Description: Build newwork complex Z matrix.
+Args: N/A
+Rets: N/A
+Example: N/A
+
+API 199
+Format: save_network_Y_matrix(file, export_full=False)
+Description: Save newwork complex Y matrix to file.
+Args:
+    (1) file: String of target file name of sparse Y matrix. If export_full is True, then 'full_' is appended to the head of file name for full matrix.
+    (2) export_full: boolean. False for saving only the sparse network matrix. True for saving both sparse and full network matrix.
+Rets: N/A
+Example:
+    simulator.save_network_Y_matrix("y.csv") # save only sparse matrix to y.csv
+    simulator.save_network_Y_matrix("y.csv", True) # save both sparse and full matrix to y.csv and full_y.csv respectively
+
+API 200
+Format: save_decoupled_network_B_matrix(file)
+Description: Save newwork decoupled real B' and B" matrix to file.
+Args:
+    (1) file: String of target file name.
+Rets: N/A
+Example: N/A
+
+API 201
+Format: save_dc_network_B_matrix(file)
+Description: Save newwork real DC B matrix to file.
+Args:
+    (1) file: String of target file name.
+Rets: N/A
+Example: N/A
+
+API 202
+Format: save_dynamic_network_Y_matrix(file)
+Description: Save newwork dynamic complex Y matrix to file.
+Args:
+    (1) file: String of target file name.
+Rets: N/A
+Example: N/A
+
+API 203
+Format: save_network_Z_matrix(file)
+Description: Save newwork complex Z matrix to file.
+Args:
+    (1) file: String of target file name.
+Rets: N/A
+Example: N/A
+
+API 204
+Format: check_network_connectivity(remove_void_islands=False)
+Description: Check network connectivity.
+Args: N/A
+Rets: N/A
+Example: N/A
+
+API 205
+Format: load_dynamic_data(file, ftype)
+Description: Load dynamic data from file.
+Args:
+    (1) file: string, source dynamic data file name.
+    (2) ftype: string, dynamic data format.
+Rets: N/A
+Example: N/A
+
+API 206
+Format: save_dynamic_data(file, ftype)
+Description: Save dynamic data to file.
+Args:
+    (1) file: string, target dynamic data file name.
+    (2) ftype: string, dynamic data format.
+Rets: N/A
+Example: N/A
+
+API 207
+Format: check_dynamic_data()
+Description: Check dynamic model data. If any inappropriate data is set, report will be sent to log file.
+Args: N/A
+Rets: N/A
+Example: N/A
+
+API 208
+Format: check_missing_models()
+Description: Check missing models. If any compulsory models are missing, report will be sent to log file.
+Args: N/A
+Rets: N/A
+Example: N/A
+
+API 209
+Format: check_least_dynamic_time_constants()
+Description: Check the least dynamic time constants. Report of the first least time constants in models will be sent to log file. The dynamic simulation time step should be < one fourth of the least time constant.
+Args: N/A
+Rets: N/A
+Example: N/A
+
+API 210
+Format: converte_hvdc_to_load(hvdc)
+Description: This function is to be implemented.
+
+API 211
 Format: set_dynamic_model(data, file_type)
 Description: Set dynamic model from string.
 Args:
@@ -1836,7 +2063,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 192
+API 212
 Format: disable_generator_related_model(generator, model_type)
 Description: Disable generator related model of specific type.
 Args:
@@ -1845,7 +2072,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 193
+API 213
 Format: enable_generator_related_model(generator, model_type)
 Description: Enable generator related model of specific type.
 Args:
@@ -1854,7 +2081,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 194
+API 214
 Format: get_generator_related_model_name(generator, model_type)
 Description: Get generator related model name.
 Args:
@@ -1866,7 +2093,7 @@ Tips:
     If model type is not supported, empty string is returned.
 Example: N/A
 
-API 195
+API 215
 Format: get_generator_related_model_data(generator, model_type, par_name)
 Description: Get generator related model data.
 Args:
@@ -1879,7 +2106,7 @@ Tips:
     If model type or parameter name is not supported, 0.0 is returned.
 Example: N/A
 
-API 196
+API 216
 Format: set_generator_related_model_data(generator, model_type, par_name, value)
 Description: Set generator related model data.
 Args:
@@ -1893,7 +2120,7 @@ Tips:
     If value is not a number, function may malfunction and package may exit with error.
 Example: N/A
 
-API 197
+API 217
 Format: get_generator_related_model_parameter_pair(generator, model_type)
 Description: Get generator related model parameter pair.
 Args:
@@ -1905,7 +2132,7 @@ Tips:
     If model type is not supported, empty tuple is returned.
 Example: N/A
 
-API 198
+API 218
 Format: get_wt_generator_related_model_name(generator, model_type)
 Description: Get wind turbine generator related model name.
 Args:
@@ -1917,7 +2144,7 @@ Tips:
     If model type is not supported, empty string is returned.
 Example: N/A
 
-API 199
+API 219
 Format: get_wt_generator_related_model_data(generator, model_type, par_name)
 Description: Get wind turbine generator related model data.
 Args:
@@ -1930,7 +2157,7 @@ Tips:
     If model type or parameter name is not supported, 0.0 is returned.
 Example: N/A
 
-API 200
+API 220
 Format: set_wt_generator_related_model_data(generator, model_type, par_name, value)
 Description: Set wind turbine generator related model data.
 Args:
@@ -1944,7 +2171,7 @@ Tips:
     If value is not a number, function may malfunction and package may exit with error.
 Example: N/A
 
-API 201
+API 221
 Format: get_wt_generator_related_model_parameter_pair(generator, model_type)
 Description: Get wind turbine generator related model parameter pair.
 Args:
@@ -1956,7 +2183,7 @@ Tips:
     If model type is not supported, empty tuple is returned.
 Example: N/A
 
-API 202
+API 222
 Format: get_pv_unit_related_model_name(pv_unit, model_type)
 Description: Get PV unit related model name.
 Args:
@@ -1968,7 +2195,7 @@ Tips:
     If model type is not supported, empty string is returned.
 Example: N/A
 
-API 203
+API 223
 Format: get_pv_unit_related_model_data(pv_unit, model_type, par_name)
 Description: Get PV unit related model data.
 Args:
@@ -1981,7 +2208,7 @@ Tips:
     If model type or parameter name is not supported, 0.0 is returned.
 Example: N/A
 
-API 204
+API 224
 Format: set_pv_unit_related_model_data(pv_unit, model_type, par_name, value)
 Description: Set PV unit related model data.
 Args:
@@ -1995,7 +2222,7 @@ Tips:
     If value is not a number, function may malfunction and package may exit with error.
 Example: N/A
 
-API 205
+API 225
 Format: get_pv_unit_related_model_parameter_pair(pv_unit, model_type)
 Description: Get pv unit related model parameter pair.
 Args:
@@ -2007,7 +2234,7 @@ Tips:
     If model type is not supported, empty tuple is returned.
 Example: N/A
 
-API 206
+API 226
 Format: get_load_related_model_name(load, model_type)
 Description: Get load related model name.
 Args:
@@ -2019,7 +2246,7 @@ Tips:
     If model type is not supported, empty string is returned.
 Example: N/A
 
-API 207
+API 227
 Format: get_load_related_model_data(load, model_type, par_name)
 Description: Get load related model data.
 Args:
@@ -2032,7 +2259,7 @@ Tips:
     If model type or parameter name is not supported, 0.0 is returned.
 Example: N/A
 
-API 208
+API 228
 Format: set_load_related_model_data(load, model_type, par_name, value)
 Description: Set load related model data.
 Args:
@@ -2046,7 +2273,7 @@ Tips:
     If value is not a number, function may malfunction and package may exit with error.
 Example: N/A
 
-API 209
+API 229
 Format: get_load_related_model_parameter_pair(load, model_type)
 Description: Get load related model parameter pair.
 Args:
@@ -2058,7 +2285,7 @@ Tips:
     If model type is not supported, empty tuple is returned.
 Example: N/A
 
-API 210
+API 230
 Format: get_line_related_model_name(line, model_type)
 Description: Get transmission line related model name.
 Args:
@@ -2070,7 +2297,7 @@ Tips:
     If model type is not supported, empty string is returned.
 Example: N/A
 
-API 211
+API 231
 Format: get_line_related_model_data(line, model_type, par_name)
 Description: Get transmission line related model data.
 Args:
@@ -2083,7 +2310,7 @@ Tips:
     If model type or parameter name is not supported, 0.0 is returned.
 Example: N/A
 
-API 212
+API 232
 Format: set_line_related_model_data(line, model_type, par_name, value)
 Description: Set transmission line related model data.
 Args:
@@ -2097,7 +2324,7 @@ Tips:
     If value is not a number, function may malfunction and package may exit with error.
 Example: N/A
 
-API 213
+API 233
 Format: get_line_related_model_parameter_pair(line, model_type)
 Description: Get transmission line related model parameter pair.
 Args:
@@ -2109,7 +2336,7 @@ Tips:
     If model type is not supported, empty tuple is returned.
 Example: N/A
 
-API 214
+API 234
 Format: get_hvdc_related_model_name(hvdc, model_type)
 Description: Get HVDC link related model name.
 Args:
@@ -2121,7 +2348,7 @@ Tips:
     If model type is not supported, empty string is returned.
 Example: N/A
 
-API 215
+API 235
 Format: get_hvdc_related_model_data(hvdc, model_type, par_name)
 Description: Get HVDC link related model data.
 Args:
@@ -2134,7 +2361,7 @@ Tips:
     If model type or parameter name is not supported, 0.0 is returned.
 Example: N/A
 
-API 216
+API 236
 Format: set_hvdc_related_model_data(hvdc, model_type, par_name, value)
 Description: Set HVDC linke related model data.
 Args:
@@ -2148,7 +2375,7 @@ Tips:
     If value is not a number, function may malfunction and package may exit with error.
 Example: N/A
 
-API 217
+API 237
 Format: get_hvdc_related_model_parameter_pair(hvdc, model_type)
 Description: Get HVDC link related model parameter pair.
 Args:
@@ -2160,7 +2387,7 @@ Tips:
     If model type is not supported, empty tuple is returned.
 Example: N/A
 
-API 218
+API 238
 Format: get_generator_governor_pmax(gen)
 Description: Get generator pmax in MW from turbine governor model.
 Args:
@@ -2169,7 +2396,7 @@ Rets:
     (1) Pmax in MW
 Example: N/A
 
-API 219
+API 239
 Format: get_generator_governor_pmin(gen)
 Description: Get generator pmin in MW from turbine governor model.
 Args:
@@ -2178,7 +2405,7 @@ Rets:
     (1) Pmin in MW
 Example: N/A
 
-API 220
+API 240
 Format: get_generator_governor_up_spinning_reserve(gen)
 Description: Get up spinning reserve of generator.
 Args:
@@ -2187,7 +2414,7 @@ Rets:
     (1) up spinning reserve in MW
 Example: N/A
 
-API 221
+API 241
 Format: get_generator_governor_down_spinning_reserve(gen)
 Description: Get down spinning reserve of generator.
 Args:
@@ -2196,7 +2423,7 @@ Rets:
     (1) down spinning reserve in MW
 Example: N/A
 
-API 222
+API 242
 Format: get_generator_governor_total_up_spinning_reserve_with_constraints(area=0,zone=0)
 Description: Get up spinning reserve of generators in area.
 Args:
@@ -2206,7 +2433,7 @@ Rets:
     (1) total up spinning reserve in MW
 Example: N/A
 
-API 223
+API 243
 Format: get_generator_governor_total_down_spinning_reserve_with_constraints(area=0,zone=0)
 Description: Get down spinning reserve of generators in area.
 Args:
@@ -2216,7 +2443,7 @@ Rets:
     (1) total down spinning reserve in MW
 Example: N/A
 
-API 224
+API 244
 Format: get_generator_governor_total_pmax_with_constraints(area=0,zone=0)
 Description: Get total pmax of generators in area and zone.
 Args:
@@ -2226,7 +2453,7 @@ Rets:
     (1) total pmax in MW
 Example: N/A
 
-API 225
+API 245
 Format: get_generator_governor_total_pmin_with_constraints(area=0,zone=0)
 Description: Get total pmin of generators in area and zone.
 Args:
@@ -2234,182 +2461,6 @@ Args:
     (2) zone: zone number, default is 0
 Rets:
     (1) total pmin in MW
-Example: N/A
-
-API 226
-Format: get_powerflow_solver_parameter(par_type, par_name)
-Description: Get powerflow solver configuration parameter.
-Args:
-    (1) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
-    (2) par_name: String of parameter name.
-Rets:
-    (1) Value of parameter.
-Tips:
-    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
-    The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
-Example: N/A
-
-API 227
-Format: set_powerflow_solver_parameter(par_type, par_name, value)
-Description: Set powerflow solver configuration parameter.
-Args:
-    (1) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
-    (2) par_name: String of parameter name.
-    (3) value: Value of parameter.
-Rets: N/A
-Tips:
-    The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
-    The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be changed.
-Example: N/A
-
-API 228
-Format: show_powerflow_solver_configuration()
-Description: Show powerflow solver configuration. Report is sent to log.
-Args: N/A
-Rets: N/A
-Example: N/A
-
-API 229
-Format: solve_powerflow(method)
-Description: Solve powerflow.
-Args:
-    (1) method: String of powerflow solution method. Should be one of {"NR", "PQ"}
-Rets: N/A
-Example: N/A
-
-API 230
-Format: is_powerflow_converged()
-Description: Check if powerflow is converged or not.
-Args: N/A
-Rets:
-    (1) Boolean value. True for converged, False for not converged.
-Example: N/A
-
-API 231
-Format: get_powerflow_loss()
-Description: Get active power loss of solved powerflow.
-Args: N/A
-Rets:
-    (1) System power loss in MW.
-Tips:
-    If powerflow is not converged, the return result is meaningless.
-Example: N/A
-
-API 232
-Format: show_powerflow_result()
-Description: Show powerflow result in log.
-Args: N/A
-Rets: N/A
-Example: N/A
-
-API 233
-Format: save_powerflow_result(file)
-Description: Save powerflow result to file.
-Args:
-    (1) file: String of target file name.
-Rets: N/A
-Tips:
-    The result exported by save_powerflow_result() is briefer than that exported by save_extended_powerflow_result().
-Example: N/A
-
-API 234
-Format: save_extended_powerflow_result(file)
-Description: Save extended powerflow result to file.
-Args:
-    (1) file: String of target file name.
-Rets: N/A
-Tips:
-    The result exported by save_extended_powerflow_result() is more detailed than that exported by save_powerflow_result().
-Example: N/A
-
-API 235
-Format: save_jacobian_matrix(file)
-Description: Save jacobian matrix of powerflow solver to file.
-Args:
-    (1) file: String of target file name.
-Rets: N/A
-Example: N/A
-
-API 236
-Format: build_network_Y_matrix()
-Description: Build newwork complex Y matrix for powerflow solution.
-Args: N/A
-Rets: N/A
-Example: N/A
-
-API 237
-Format: build_decoupled_network_B_matrix()
-Description: Build newwork real B' and B" matrix for decoupled powerflow solution.
-Args: N/A
-Rets: N/A
-Example: N/A
-
-API 238
-Format: build_dc_network_B_matrix()
-Description: Build newwork real B matrix for DC powerflow solution.
-Args: N/A
-Rets: N/A
-Tips:
-    DC powerflow solution is not supported.
-Example: N/A
-
-API 239
-Format: build_dynamic_network_Y_matrix()
-Description: Build newwork complex Y matrix for dynamic simulation.
-Args: N/A
-Rets: N/A
-Tips:
-    The faults and source impedance are included in the Y matrix.
-Example: N/A
-
-API 240
-Format: build_network_Z_matrix()
-Description: Build newwork complex Z matrix.
-Args: N/A
-Rets: N/A
-Example: N/A
-
-API 241
-Format: save_network_Y_matrix(file, export_full=False)
-Description: Save newwork complex Y matrix to file.
-Args:
-    (1) file: String of target file name of sparse Y matrix. If export_full is True, then 'full_' is appended to the head of file name for full matrix.
-    (2) export_full: boolean. False for saving only the sparse network matrix. True for saving both sparse and full network matrix.
-Rets: N/A
-Example:
-    simulator.save_network_Y_matrix("y.csv") # save only sparse matrix to y.csv
-    simulator.save_network_Y_matrix("y.csv", True) # save both sparse and full matrix to y.csv and full_y.csv respectively
-
-API 242
-Format: save_decoupled_network_B_matrix(file)
-Description: Save newwork decoupled real B' and B" matrix to file.
-Args:
-    (1) file: String of target file name.
-Rets: N/A
-Example: N/A
-
-API 243
-Format: save_dc_network_B_matrix(file)
-Description: Save newwork real DC B matrix to file.
-Args:
-    (1) file: String of target file name.
-Rets: N/A
-Example: N/A
-
-API 244
-Format: save_dynamic_network_Y_matrix(file)
-Description: Save newwork dynamic complex Y matrix to file.
-Args:
-    (1) file: String of target file name.
-Rets: N/A
-Example: N/A
-
-API 245
-Format: save_network_Z_matrix(file)
-Description: Save newwork complex Z matrix to file.
-Args:
-    (1) file: String of target file name.
-Rets: N/A
 Example: N/A
 
 API 246

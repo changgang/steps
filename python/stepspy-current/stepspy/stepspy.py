@@ -11,6 +11,7 @@ class STEPS():
         2) simulator = STEPS(is_default=True, log_file="case.log") # use default simulator, save log to case.log file.
         3) simulator = STEPS(is_default=False, log_file="") # create new simulator, disable log file and show information to stdout.
         4) simulator = STEPS(is_default=False, log_file="case.log") # create new simulator, save log to case.log file.
+        5) simulator = STEPS(is_default=False, log_file="blackhole") # create new simulator, disable log file and stdout.
     """
         
     def __init__(self, is_default=False, log_file=""):
@@ -125,19 +126,39 @@ class STEPS():
             return None
     
     def set_encode(self, encode):
+        """
+        Set encoding name of the toolkit.
+        Args:
+            (1) encode: string, encoding name.
+        Rets: N/A
+        Example:
+            simulator.set_encode("utf-8")
+            simulator.set_encode("GB18030")
+        """
         self.__encoding = encode
     
     def get_encode(self):
+        """
+        Get current encoding name of the toolkit.
+        Args: N/A
+        Rets:
+            (1) encode: string, encoding name.
+        Example:
+            encode = simulator.get_encode()
+        """
         return self.__encoding
         
     def set_toolkit_log_file(self, log_file="", log_file_append_mode=False):
         """
         Set toolkit log file. The default mode is to write to new file.
         Args:
-            (1) log_file: string, target log file name. If no file is set (""), the log will be exported to stdout.
+            (1) log_file: string, target log file name. If log_file="blackhole", all logs are disabled. If no file is set (""), the log will be exported to stdout.
             (2) log_file_append_mode: boolean, log file append mode. True for writting to new file, False for appending to existing file. Default is False.
         Rets: N/A
-        Example: N/A
+        Example:
+            simulator.set_toolkit_log_file("caseA.log")
+            simulator.set_toolkit_log_file("caseB.log",True)
+            simulator.set_toolkit_log_file("blackhole") # disable all logs
         """
         global STEPS_LIB
         log_file = self.__get_c_char_p_of_string(log_file)
@@ -150,7 +171,9 @@ class STEPS():
         Args:
             (1) num: integer, parallel thread number. If num=1, serial simulation is used. num should be < number of CPU physical cores.
         Rets: N/A
-        Example: N/A
+        Example:
+            np = 10
+            simulator.set_parallel_thread_number(np)
         """
         global STEPS_LIB
         STEPS_LIB.api_set_toolkit_parallel_thread_number(num, self.toolkit_index)
@@ -162,41 +185,19 @@ class STEPS():
         Args: N/A
         Rets:
             (1) parallel thread number, integer
-        Example: N/A
+        Example:
+            np = simulator.get_parallel_thread_number()
         """
         global STEPS_LIB
         return STEPS_LIB.api_get_toolkit_parallel_thread_number(self.toolkit_index)
 
-    def set_dynamic_model_database_capacity(self, cap=10000000):
-        """
-        Set capacity of dynamic model database. If the capacity is not enough, dynamic data cannot be successfully loaded.
-        Args:
-            (1) cap: integer, database capacity, in bytes.
-        Rets:
-            (1) N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        STEPS_LIB.api_set_toolkit_dynamic_model_database_capacity(cap, self.toolkit_index)
-        return
-        
-    def get_dynamic_model_database_capacity(self):
-        """
-        Get capacity of dynamic model database. 
-        Args: N/A
-        Rets:
-            (1) database capacity in bytes, integer
-        Example: N/A
-        """
-        global STEPS_LIB
-        return STEPS_LIB.api_get_toolkit_dynamic_model_database_capacity(self.toolkit_index)
-        
     def clear_toolkit(self):
         """
         Clear all data in the toolkit.
         Args: N/A
         Rets: N/A
-        Example: N/A
+        Example:
+            simulator.clear_toolkit()
         """
         global STEPS_LIB
         STEPS_LIB.api_clear_toolkit(self.toolkit_index)
@@ -206,7 +207,7 @@ class STEPS():
         """
         Get toolkit general float data.
         Args:
-            (1) dataname: String of variable name.
+            (1) dataname: String of variable name. See function 'api_get_toolkit_float_data' in STEPS source for supported options.
         Rets:
             (1) Value of the variable. 0 if the variable name is invalid.
         Example: N/A
@@ -219,7 +220,7 @@ class STEPS():
         """
         Set toolkit general float data.
         Args:
-            (1) dataname: String of variable name.
+            (1) dataname: String of variable name. See function 'api_set_toolkit_float_data' in STEPS source for supported options.
             (2) value: Value to set.
         Rets: N/A
         Example: N/A
@@ -228,33 +229,11 @@ class STEPS():
         dataname = self.__get_c_char_p_of_string(dataname)
         return STEPS_LIB.api_set_toolkit_float_data(dataname, value, self.toolkit_index)
     
-    def get_system_base_power_in_MVA(self):
-        """
-        Get toolkit system base power.
-        Args: N/A
-        Rets:
-            (1) System base power in MVA.
-        Example: N/A
-        """
-        global STEPS_LIB
-        return self.get_toolkit_float_data("SBASE")
-    
-    def set_system_base_power_in_MVA(self, sbase):
-        """
-        Set toolkit system base power.
-        Args:
-            (1) sbase: System base power in MVA.
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        return self.set_toolkit_float_data("SBASE", sbase)
-    
     def get_toolkit_string_data(self, dataname):
         """
         Get toolkit general string variable.
         Args:
-            (1) dataname: String of variable name.
+            (1) dataname: String of variable name. See function 'api_get_toolkit_string_data' in STEPS source for supported options.
         Rets:
             (1) String to variable.
         Example: N/A
@@ -267,7 +246,7 @@ class STEPS():
         """
         Set toolkit general string variable.
         Args:
-            (1) dataname: String of variable name.
+            (1) dataname: String of variable name. See function 'api_set_toolkit_string_data' in STEPS source for supported options.
             (2) value: String to set.
         Rets: N/A
         Example: N/A
@@ -277,51 +256,11 @@ class STEPS():
         value = self.__get_c_char_p_of_string(value)
         return STEPS_LIB.api_set_toolkit_string_data(dataname, value, self.toolkit_index)
     
-    def get_case_information(self):
-        """
-        Get case information string.
-        Args: N/A
-        Rets:
-            (1) String of case information.
-        Example: N/A
-        """
-        return self.get_toolkit_string_data("CASE INFORMATION")
-    
-    def get_case_additional_information(self):
-        """
-        Get case additional information string.
-        Args: N/A
-        Rets:
-            (1) String of case additional information.
-        Example: N/A
-        """
-        return self.get_toolkit_string_data("CASE ADDITIONAL INFORMATION")
-    
-    def set_case_information(self, value):
-        """
-        Set case information.
-        Args:
-            (1) value: String of case information.
-        Rets: N/A
-        Example: N/A
-        """
-        return self.set_toolkit_string_data("CASE INFORMATION", value)
-    
-    def set_case_additional_information(self, value):
-        """
-        Set case additional information string.
-        Args:
-            (1) value: String of case additional information.
-        Rets: N/A
-        Example: N/A
-        """
-        return self.set_toolkit_string_data("CASE ADDITIONAL INFORMATION", value)    
-
     def get_toolkit_bool_data(self, dataname):
         """
         Get toolkit general boolean data.
         Args:
-            (1) dataname: String of variable name.
+            (1) dataname: String of variable name. See function 'api_get_toolkit_bool_data' in STEPS source for supported options.
         Rets:
             (1) Boolean value of given dataname. If data name is invalid, False is returned.
         Example: N/A
@@ -334,7 +273,7 @@ class STEPS():
         """
         Set toolkit general boolean data.
         Args:
-            (1) dataname: String of variable name.
+            (1) dataname: String of variable name. See function 'api_set_toolkit_bool_data' in STEPS source for supported options.
             (2) value: Boolean value.
         Rets: N/A
         Example: N/A
@@ -343,13 +282,83 @@ class STEPS():
         dataname = self.__get_c_char_p_of_string(dataname)
         return STEPS_LIB.api_set_toolkit_bool_data(dataname, value, self.toolkit_index)
     
+    def get_system_base_power_in_MVA(self):
+        """
+        Get toolkit system base power.
+        Args: N/A
+        Rets:
+            (1) System base power in MVA.
+        Example:
+            sbase = simulator.get_system_base_power_in_MVA()
+        """
+        global STEPS_LIB
+        return self.get_toolkit_float_data("SBASE")
+    
+    def set_system_base_power_in_MVA(self, sbase):
+        """
+        Set toolkit system base power.
+        Args:
+            (1) sbase: System base power in MVA.
+        Rets: N/A
+        Example:
+            sbase = 100.0
+            simulator.set_system_base_power_in_MVA(sbase)
+        """
+        global STEPS_LIB
+        return self.set_toolkit_float_data("SBASE", sbase)
+    
+    def get_case_information(self):
+        """
+        Get case information string.
+        Args: N/A
+        Rets:
+            (1) String of case information.
+        Example:
+            case_info = simulator.get_case_information()
+        """
+        return self.get_toolkit_string_data("CASE INFORMATION")
+    
+    def get_case_additional_information(self):
+        """
+        Get case additional information string.
+        Args: N/A
+        Rets:
+            (1) String of case additional information.
+        Example:
+            case_add_info = simulator.get_case_additional_information()
+        """
+        return self.get_toolkit_string_data("CASE ADDITIONAL INFORMATION")
+    
+    def set_case_information(self, value):
+        """
+        Set case information.
+        Args:
+            (1) value: String of case information.
+        Rets: N/A
+        Example:
+            simulator.set_case_information("IEEE 9-bus model")
+        """
+        return self.set_toolkit_string_data("CASE INFORMATION", value)
+    
+    def set_case_additional_information(self, value):
+        """
+        Set case additional information string.
+        Args:
+            (1) value: String of case additional information.
+        Rets: N/A
+        Example:
+            simulator.set_case_additional_information("A simplified model of WSCC system")
+        """
+        return self.set_toolkit_string_data("CASE ADDITIONAL INFORMATION", value)    
+
     def get_toolkit_detailed_log_logic(self):
         """
         Get toolkit detailed log logic.
         Args: N/A
         Rets: 
             (1) Boolean value of the detailed log logic. True if detailed log is enabled, False if otherwise.
-        Example: N/A
+        Example:
+            simulator.get_toolkit_detailed_log_logic()
         """
         global STEPS_LIB
         return self.get_toolkit_bool_data("DETAILED LOG LOGIC")
@@ -360,7 +369,9 @@ class STEPS():
         Args:
             (1) logic: True to enable detailed log, False to disable detailed log.
         Rets: N/A
-        Example: N/A
+        Example:
+            simulator.set_toolkit_detailed_log_logic(True)
+            simulator.set_toolkit_detailed_log_logic(False)
         """
         global STEPS_LIB
         return self.set_toolkit_bool_data("DETAILED LOG LOGIC", logic)
@@ -372,7 +383,8 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Allowed maximum bus number.
-        Example: N/A
+        Example:
+            num_max = simulator.get_allowed_maximum_bus_number()
         """
         global STEPS_LIB
         return int(STEPS_LIB.api_get_allowed_maximum_bus_number(self.toolkit_index))
@@ -383,7 +395,11 @@ class STEPS():
         Args:
             (1) max_bus_number: Allowed maximum bus number.
         Rets: N/A
-        Example: N/A
+        Example:
+            num_max = 10000
+            simulator.set_allowed_maximum_bus_number(num_max) # 1~10000
+            num_max = 9000
+            simulator.set_allowed_maximum_bus_number(num_max) # 1~9000
         """
         global STEPS_LIB
         STEPS_LIB.api_set_allowed_maximum_bus_number(max_bus_number, self.toolkit_index)
@@ -394,7 +410,8 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of buses that can be stored in the database.
-        Example: N/A
+        Example:
+            nbus_max = simulator.get_bus_capacity()
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("BUS")
@@ -406,7 +423,8 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of generators that can be stored in the database.
-        Example: N/A
+        Example:
+            ngen_max = simulator.get_generator_capacity()
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Generator")
@@ -418,7 +436,8 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of wind turbine generators that can be stored in the database.
-        Example: N/A
+        Example:
+            nwtgen_max = simulator.get_wt_generator_capacity()
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("WT Generator")
@@ -430,7 +449,8 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of PV units that can be stored in the database.
-        Example: N/A
+        Example:
+            npv_max = simulator.get_pv_unit_capacity()
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("PV Unit")
@@ -442,7 +462,8 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of loads that can be stored in the database.
-        Example: N/A
+        Example:
+            nload_max = simulator.get_load_capacity()
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Load")
@@ -454,7 +475,8 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of fixed shunts that can be stored in the database.
-        Example: N/A
+        Example:
+            nshunt_max = simulator.get_fixed_shunt_capacity()
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Fixed Shunt")
@@ -466,7 +488,8 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of transmission lines that can be stored in the database.
-        Example: N/A
+        Example:
+            nline_max = simulator.get_line_capacity()
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Line")
@@ -478,7 +501,8 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of transformers that can be stored in the database.
-        Example: N/A
+        Example:
+            ntrans_max = simulator.get_transformer_capacity()
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Transformer")
@@ -490,7 +514,8 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of HVDC links that can be stored in the database.
-        Example: N/A
+        Example:
+            nhvdc_max = simulator.get_hvdc_capacity()
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("HVDC")
@@ -502,7 +527,8 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of equivalent devices that can be stored in the database.
-        Example: N/A
+        Example:
+            ned_max = simulator.get_equivalent_device_capacity()
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Equivalent Device")
@@ -514,7 +540,8 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of energy storages that can be stored in the database.
-        Example: N/A
+        Example:
+            nstorage_max = simulator.get_energy_storage_capacity()
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Energy Storage")
@@ -526,7 +553,8 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of areas that can be stored in the database.
-        Example: N/A
+        Example:
+            narea_max = simulator.get_area_capacity()
         """
         global STEPS_LIB
         return int(STEPS_LIB.api_get_area_capacity(self.toolkit_index))
@@ -537,7 +565,8 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of zones that can be stored in the database.
-        Example: N/A
+        Example:
+            nzone_max = simulator.get_zone_capacity()
         """
         global STEPS_LIB
         return int(STEPS_LIB.api_get_zone_capacity(self.toolkit_index))
@@ -548,7 +577,8 @@ class STEPS():
         Args: N/A
         Rets:
             (1) Maximum number of owners that can be stored in the database.
-        Example: N/A
+        Example:
+            nowner_max = simulator.get_owner_capacity()
         """
         global STEPS_LIB
         return int(STEPS_LIB.api_get_owner_capacity(self.toolkit_index))
@@ -561,7 +591,8 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
-        Example: N/A
+        Example:
+            nbus_max = simulator.get_bus_capacity()
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("BUS")
@@ -745,201 +776,29 @@ class STEPS():
         global STEPS_LIB
         return STEPS_LIB.api_set_owner_capacity(capacity, self.toolkit_index)
 
-    def load_powerflow_data(self, file, ftype):
+    def get_dynamic_model_database_capacity(self):
         """
-        Load powerflow data from file.
-        Args:
-            (1) file: string, source powerflow file name.
-            (2) ftype: string, powerflow data format.
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        file = self.__get_c_char_p_of_string(file)
-        ftype = self.__get_c_char_p_of_string(ftype)
-        STEPS_LIB.api_load_powerflow_data_from_file(file, ftype, self.toolkit_index)
-
-    def save_powerflow_data(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True, export_mode=0):
-        """
-        Save powerflow data to file.
-        Args:
-            (1) file: string, target powerflow file name.
-            (2) ftype: string, powerflow data format.
-            (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
-            (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
-            (5) export_mode: integer, export mode (0,1,2,3). 0 for exporting data as import, 1 for exporting data ordered by bus number in ascending order, 2 for exporting data ordered by bus name in ascending order, 3 for exporting buses in the order of generator, load, hvdc buses.
-        Rets: N/A
-        Example: N/A
-        """
-        if export_mode not in (0,1,2,3):
-            export_mode = 0;
-        if export_mode==0:
-            self.__save_powerflow_data_in_keep_mode(file, ftype, export_zero_line, export_out_of_service_bus)
-        elif export_mode==1:
-            self.__save_powerflow_data_in_bus_number_ordered_mode(file, ftype, export_zero_line, export_out_of_service_bus)
-        elif export_mode==2:
-            self.__save_powerflow_data_in_bus_name_ordered_mode(file, ftype, export_zero_line, export_out_of_service_bus)
-        elif export_mode==3:
-            self.__save_powerflow_data_in_dynamic_optimized_mode(file, ftype, export_zero_line, export_out_of_service_bus)
-        else:
-            print("parameter export_mode is invalid in save_powerflow_data()")
-        
-    def __save_powerflow_data_in_keep_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
-        """
-        Save powerflow data to file in keep as original mode
-        Args:
-            (1) file: string, target powerflow file name.
-            (2) ftype: string, powerflow data format.
-            (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
-            (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        file = self.__get_c_char_p_of_string(file)
-        ftype = self.__get_c_char_p_of_string(ftype)
-        STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 0, self.toolkit_index)
-        
-    def __save_powerflow_data_in_bus_number_ordered_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
-        """
-        Save powerflow data to file in bus number ascending order.
-        Args:
-            (1) file: string, target powerflow file name.
-            (2) ftype: string, powerflow data format.
-            (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
-            (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        file = self.__get_c_char_p_of_string(file)
-        ftype = self.__get_c_char_p_of_string(ftype)
-        STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 1, self.toolkit_index)
-        
-    def __save_powerflow_data_in_bus_name_ordered_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
-        """
-        Save powerflow data to file in bus name ascending order.
-        Args:
-            (1) file: string, target powerflow file name.
-            (2) ftype: string, powerflow data format.
-            (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
-            (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        file = self.__get_c_char_p_of_string(file)
-        ftype = self.__get_c_char_p_of_string(ftype)
-        STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 2, self.toolkit_index)
-        
-    def __save_powerflow_data_in_dynamic_optimized_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
-        """
-        Save powerflow data to file in generator, load, hvdc bus order. This method is used for improving dynamic simulation performance.
-        Args:
-            (1) file: string, target powerflow file name.
-            (2) ftype: string, powerflow data format.
-            (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
-            (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        file = self.__get_c_char_p_of_string(file)
-        ftype = self.__get_c_char_p_of_string(ftype)
-        STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 3, self.toolkit_index)
-
-    def load_powerflow_result(self, file, ftype):
-        """
-        Load powerflow result from file.
-        Args:
-            (1) file: string, source powerflow result file name.
-            (2) ftype: string, powerflow result data format.
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        file = self.__get_c_char_p_of_string(file)
-        ftype = self.__get_c_char_p_of_string(ftype)
-        STEPS_LIB.api_load_powerflow_result_from_file(file, ftype, self.toolkit_index)
-        
-    def load_dynamic_data(self, file, ftype):
-        """
-        Load dynamic data from file.
-        Args:
-            (1) file: string, source dynamic data file name.
-            (2) ftype: string, dynamic data format.
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        file = self.__get_c_char_p_of_string(file)
-        ftype = self.__get_c_char_p_of_string(ftype)
-        STEPS_LIB.api_load_dynamic_data_from_file(file, ftype, self.toolkit_index)
-        
-    def save_dynamic_data(self, file, ftype):
-        """
-        Save dynamic data to file.
-        Args:
-            (1) file: string, target dynamic data file name.
-            (2) ftype: string, dynamic data format.
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        file = self.__get_c_char_p_of_string(file)
-        ftype = self.__get_c_char_p_of_string(ftype)
-        STEPS_LIB.api_save_dynamic_data_to_file(file, ftype, self.toolkit_index)
-
-    def check_powerflow_data(self):
-        """
-        Check powerflow data. If any inappropriate data is set, report will be sent to log file.
+        Get capacity of dynamic model database. 
         Args: N/A
-        Rets: N/A
+        Rets:
+            (1) database capacity in bytes, integer
         Example: N/A
         """
         global STEPS_LIB
-        STEPS_LIB.api_check_powerflow_data(self.toolkit_index)
+        return STEPS_LIB.api_get_toolkit_dynamic_model_database_capacity(self.toolkit_index)
         
-    def check_dynamic_data(self):
+    def set_dynamic_model_database_capacity(self, cap=10000000):
         """
-        Check dynamic model data. If any inappropriate data is set, report will be sent to log file.
-        Args: N/A
-        Rets: N/A        
+        Set capacity of dynamic model database. If the capacity is not enough, dynamic data cannot be successfully loaded.
+        Args:
+            (1) cap: integer, database capacity, in bytes.
+        Rets:
+            (1) N/A
         Example: N/A
         """
         global STEPS_LIB
-        STEPS_LIB.api_check_dynamic_data(self.toolkit_index)
-        
-    def check_missing_models(self):
-        """
-        Check missing models. If any compulsory models are missing, report will be sent to log file.
-        Args: N/A
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        STEPS_LIB.api_check_missing_models(self.toolkit_index)
-        
-    def check_least_dynamic_time_constants(self):
-        """
-        Check the least dynamic time constants. Report of the first least time constants in models will be sent to log file. The dynamic simulation time step should be < one fourth of the least time constant.
-        Args: N/A
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        STEPS_LIB.api_check_least_dynamic_time_constants(self.toolkit_index)
-        
-    def check_network_connectivity(self, remove_void_islands=False):
-        """
-        Check network connectivity. 
-        Args: N/A
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        STEPS_LIB.api_check_network_connectivity(remove_void_islands, self.toolkit_index)
-        
+        STEPS_LIB.api_set_toolkit_dynamic_model_database_capacity(cap, self.toolkit_index)
+        return
 
     def add_bus(self, busnumber, busname, basevoltage):
         """
@@ -3351,10 +3210,508 @@ class STEPS():
             return STEPS_LIB.api_set_owner_string_data(owner, par_name, value, self.toolkit_index)
         return
 
+    def load_powerflow_data(self, file, ftype):
+        """
+        Load powerflow data from file.
+        Args:
+            (1) file: string, source powerflow file name.
+            (2) ftype: string, powerflow data format.
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        ftype = self.__get_c_char_p_of_string(ftype)
+        STEPS_LIB.api_load_powerflow_data_from_file(file, ftype, self.toolkit_index)
+
+    def check_powerflow_data(self):
+        """
+        Check powerflow data. If any inappropriate data is set, report will be sent to log file.
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_check_powerflow_data(self.toolkit_index)
+        
+    def save_powerflow_data(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True, export_mode=0):
+        """
+        Save powerflow data to file.
+        Args:
+            (1) file: string, target powerflow file name.
+            (2) ftype: string, powerflow data format.
+            (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
+            (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
+            (5) export_mode: integer, export mode (0,1,2,3). 0 for exporting data as import, 1 for exporting data ordered by bus number in ascending order, 2 for exporting data ordered by bus name in ascending order, 3 for exporting buses in the order of generator, load, hvdc buses.
+        Rets: N/A
+        Example: N/A
+        """
+        if export_mode not in (0,1,2,3):
+            export_mode = 0;
+        if export_mode==0:
+            self.__save_powerflow_data_in_keep_mode(file, ftype, export_zero_line, export_out_of_service_bus)
+        elif export_mode==1:
+            self.__save_powerflow_data_in_bus_number_ordered_mode(file, ftype, export_zero_line, export_out_of_service_bus)
+        elif export_mode==2:
+            self.__save_powerflow_data_in_bus_name_ordered_mode(file, ftype, export_zero_line, export_out_of_service_bus)
+        elif export_mode==3:
+            self.__save_powerflow_data_in_dynamic_optimized_mode(file, ftype, export_zero_line, export_out_of_service_bus)
+        else:
+            print("parameter export_mode is invalid in save_powerflow_data()")
+        
+    def __save_powerflow_data_in_keep_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
+        """
+        Save powerflow data to file in keep as original mode
+        Args:
+            (1) file: string, target powerflow file name.
+            (2) ftype: string, powerflow data format.
+            (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
+            (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        ftype = self.__get_c_char_p_of_string(ftype)
+        STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 0, self.toolkit_index)
+        
+    def __save_powerflow_data_in_bus_number_ordered_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
+        """
+        Save powerflow data to file in bus number ascending order.
+        Args:
+            (1) file: string, target powerflow file name.
+            (2) ftype: string, powerflow data format.
+            (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
+            (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        ftype = self.__get_c_char_p_of_string(ftype)
+        STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 1, self.toolkit_index)
+        
+    def __save_powerflow_data_in_bus_name_ordered_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
+        """
+        Save powerflow data to file in bus name ascending order.
+        Args:
+            (1) file: string, target powerflow file name.
+            (2) ftype: string, powerflow data format.
+            (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
+            (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        ftype = self.__get_c_char_p_of_string(ftype)
+        STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 2, self.toolkit_index)
+        
+    def __save_powerflow_data_in_dynamic_optimized_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
+        """
+        Save powerflow data to file in generator, load, hvdc bus order. This method is used for improving dynamic simulation performance.
+        Args:
+            (1) file: string, target powerflow file name.
+            (2) ftype: string, powerflow data format.
+            (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
+            (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        ftype = self.__get_c_char_p_of_string(ftype)
+        STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 3, self.toolkit_index)
+
+    def load_powerflow_result(self, file, ftype):
+        """
+        Load powerflow result from file.
+        Args:
+            (1) file: string, source powerflow result file name.
+            (2) ftype: string, powerflow result data format.
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        ftype = self.__get_c_char_p_of_string(ftype)
+        STEPS_LIB.api_load_powerflow_result_from_file(file, ftype, self.toolkit_index)
+        
+    def get_powerflow_solver_parameter(self, par_type, par_name):
+        """
+        Get powerflow solver configuration parameter.
+        Args:
+            (1) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+            (2) par_name: String of parameter name.
+        Rets:
+            (1) Value of parameter.
+        Tips:
+            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+            The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
+        """
+        global STEPS_LIB
+        par_type = par_type.upper()
+        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
+            return None
+        par_name = self.__get_c_char_p_of_string(par_name)
+        if par_type in ['I', 'INT', 'INTEGER']:
+            return int(STEPS_LIB.api_get_powerflow_solver_integer_parameter(par_name, self.toolkit_index))
+        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
+            return STEPS_LIB.api_get_powerflow_solver_float_parameter(par_name, self.toolkit_index)
+        if par_type in ['B', 'BOOL', 'BOOLEAN']:
+            return STEPS_LIB.api_get_powerflow_solver_boolean_parameter(par_name, self.toolkit_index)
+        return None
+
+    def set_powerflow_solver_parameter(self, par_type, par_name, value):
+        """
+        Set powerflow solver configuration parameter.
+        Args:
+            (1) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+            (2) par_name: String of parameter name.
+            (3) value: Value of parameter.
+        Rets: N/A
+        Tips:
+            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+            The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be changed.
+        Example: N/A
+        """
+        global STEPS_LIB
+        par_type = par_type.upper()
+        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
+            return
+        par_name = self.__get_c_char_p_of_string(par_name)
+        if par_type in ['I', 'INT', 'INTEGER']:
+            return STEPS_LIB.api_set_powerflow_solver_integer_parameter(par_name, value, self.toolkit_index)
+        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
+            return STEPS_LIB.api_set_powerflow_solver_float_parameter(par_name, value, self.toolkit_index)
+        if par_type in ['B', 'BOOL', 'BOOLEAN']:
+            return STEPS_LIB.api_set_powerflow_solver_boolean_parameter(par_name, value, self.toolkit_index)
+        return
+    
+    def show_powerflow_solver_configuration(self):
+        """
+        Show powerflow solver configuration. Report is sent to log.
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_show_powerflow_solver_configuration(self.toolkit_index)
+        return
+        
+    def solve_powerflow(self, method):
+        """
+        Solve powerflow.
+        Args:
+            (1) method: String of powerflow solution method. Should be one of {"NR", "PQ"}
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        method = self.__get_c_char_p_of_string(method)
+        STEPS_LIB.api_solve_powerflow(method, self.toolkit_index)
+        return
+
+    def is_powerflow_converged(self):
+        """
+        Check if powerflow is converged or not.
+        Args: N/A
+        Rets:
+            (1) Boolean value. True for converged, False for not converged.
+        Example: N/A
+        """
+        global STEPS_LIB
+        return STEPS_LIB.api_is_powerflow_converged(self.toolkit_index)
+    
+    def get_powerflow_loss(self):
+        """
+        Get active power loss of solved powerflow.
+        Args: N/A
+        Rets:
+            (1) System power loss in MW.
+        Tips:
+            If powerflow is not converged, the return result is meaningless.
+        Example: N/A
+        """
+        global STEPS_LIB
+        p_gen = 0.0
+        gens = self.get_all_generators()
+        for gen in gens:
+            p_gen += self.get_generator_data(gen, 'd', 'Pgen_MW')
+            
+        gens = self.get_all_wt_generators()
+        for gen in gens:
+            p_gen += self.get_wt_generator_data(gen, 'd', 'Pgen_MW')
+            
+        pvs = self.get_all_pv_units()
+        for pv in pvs:
+            p_gen += self.get_pv_unit_data(pv, 'd', 'Pgen_MW')
+            
+        eses = self.get_all_energy_storages()
+        for es in eses:
+            p_gen += self.get_energy_storage_data(es, 'd', 'Pgen_MW')
+
+        p_load = 0.0
+        loads = self.get_all_loads()
+        for load in loads:
+            p_load += self.get_load_data(load, 'd', 'P_MW')
+            
+        return p_gen-p_load
+        
+            
+    def show_powerflow_result(self):
+        """
+        Show powerflow result in log.
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_show_powerflow_result(self.toolkit_index)
+        return
+        
+    def save_powerflow_result(self, file):
+        """
+        Save powerflow result to file.
+        Args:
+            (1) file: String of target file name.
+        Rets: N/A
+        Tips:
+            The result exported by save_powerflow_result() is briefer than that exported by save_extended_powerflow_result().
+        Example: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        STEPS_LIB.api_save_powerflow_result(file, self.toolkit_index)
+        return
+    
+    def save_extended_powerflow_result(self, file):
+        """
+        Save extended powerflow result to file.
+        Args:
+            (1) file: String of target file name.
+        Rets: N/A
+        Tips:
+            The result exported by save_extended_powerflow_result() is more detailed than that exported by save_powerflow_result().
+        Example: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        STEPS_LIB.api_save_extended_powerflow_result(file, self.toolkit_index)
+        return
+        
+    def save_jacobian_matrix(self, file):
+        """
+        Save jacobian matrix of powerflow solver to file.
+        Args:
+            (1) file: String of target file name.
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        STEPS_LIB.api_save_jacobian_matrix(file, self.toolkit_index)
+        return
+
+    def build_network_Y_matrix(self):
+        """
+        Build newwork complex Y matrix for powerflow solution.
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_build_network_Y_matrix(self.toolkit_index)
+        return
+
+    def build_decoupled_network_B_matrix(self):
+        """
+        Build newwork real B' and B" matrix for decoupled powerflow solution.
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_build_decoupled_network_B_matrix(self.toolkit_index)
+        return
+
+    def build_dc_network_B_matrix(self):
+        """
+        Build newwork real B matrix for DC powerflow solution.
+        Args: N/A
+        Rets: N/A
+        Tips:
+            DC powerflow solution is not supported.
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_build_dc_network_B_matrix(self.toolkit_index)
+        return
+
+    def build_dynamic_network_Y_matrix(self):
+        """
+        Build newwork complex Y matrix for dynamic simulation.
+        Args: N/A
+        Rets: N/A
+        Tips:
+            The faults and source impedance are included in the Y matrix.
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_build_dynamic_network_Y_matrix(self.toolkit_index)
+        return
+
+    def build_network_Z_matrix(self):
+        """
+        Build newwork complex Z matrix.
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_build_network_Z_matrix(self.toolkit_index)
+        return
+        
+    def save_network_Y_matrix(self, file, export_full=False):
+        """
+        Save newwork complex Y matrix to file.
+        Args:
+            (1) file: String of target file name of sparse Y matrix. If export_full is True, then 'full_' is appended to the head of file name for full matrix. 
+            (2) export_full: boolean. False for saving only the sparse network matrix. True for saving both sparse and full network matrix.
+        Rets: N/A
+        Example:
+            simulator.save_network_Y_matrix("y.csv") # save only sparse matrix to y.csv
+            simulator.save_network_Y_matrix("y.csv", True) # save both sparse and full matrix to y.csv and full_y.csv respectively
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        STEPS_LIB.api_save_network_Y_matrix(file, export_full, self.toolkit_index)
+        return
+        
+    def save_decoupled_network_B_matrix(self, file):
+        """
+        Save newwork decoupled real B' and B" matrix to file.
+        Args:
+            (1) file: String of target file name.
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        STEPS_LIB.api_save_decoupled_network_B_matrix(file, self.toolkit_index)
+        return
+        
+    def save_dc_network_B_matrix(self, file):
+        """
+        Save newwork real DC B matrix to file.
+        Args:
+            (1) file: String of target file name.
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        STEPS_LIB.api_save_dc_network_B_matrix(file, self.toolkit_index)
+        return
+        
+    def save_dynamic_network_Y_matrix(self, file):
+        """
+        Save newwork dynamic complex Y matrix to file.
+        Args:
+            (1) file: String of target file name.
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        STEPS_LIB.api_save_dynamic_network_Y_matrix(file, self.toolkit_index)
+        return
+        
+    def save_network_Z_matrix(self, file):
+        """
+        Save newwork complex Z matrix to file.
+        Args:
+            (1) file: String of target file name.
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        STEPS_LIB.api_save_network_Z_matrix(file, self.toolkit_index)
+        return
+
+    def check_network_connectivity(self, remove_void_islands=False):
+        """
+        Check network connectivity. 
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_check_network_connectivity(remove_void_islands, self.toolkit_index)
+        
+    def load_dynamic_data(self, file, ftype):
+        """
+        Load dynamic data from file.
+        Args:
+            (1) file: string, source dynamic data file name.
+            (2) ftype: string, dynamic data format.
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        ftype = self.__get_c_char_p_of_string(ftype)
+        STEPS_LIB.api_load_dynamic_data_from_file(file, ftype, self.toolkit_index)
+        
+    def save_dynamic_data(self, file, ftype):
+        """
+        Save dynamic data to file.
+        Args:
+            (1) file: string, target dynamic data file name.
+            (2) ftype: string, dynamic data format.
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        ftype = self.__get_c_char_p_of_string(ftype)
+        STEPS_LIB.api_save_dynamic_data_to_file(file, ftype, self.toolkit_index)
+
+    def check_dynamic_data(self):
+        """
+        Check dynamic model data. If any inappropriate data is set, report will be sent to log file.
+        Args: N/A
+        Rets: N/A        
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_check_dynamic_data(self.toolkit_index)
+        
+    def check_missing_models(self):
+        """
+        Check missing models. If any compulsory models are missing, report will be sent to log file.
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_check_missing_models(self.toolkit_index)
+        
+    def check_least_dynamic_time_constants(self):
+        """
+        Check the least dynamic time constants. Report of the first least time constants in models will be sent to log file. The dynamic simulation time step should be < one fourth of the least time constant.
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_check_least_dynamic_time_constants(self.toolkit_index)
+        
     def converte_hvdc_to_load(self, hvdc):
         """
-        to be implemented
-        Example: N/A
+        This function is to be implemented.
         """
         pass
         
@@ -4052,311 +4409,6 @@ class STEPS():
         for gen in gens:
             pmin += self.get_generator_governor_pmin(gen)
         return pmin
-        
-    def get_powerflow_solver_parameter(self, par_type, par_name):
-        """
-        Get powerflow solver configuration parameter.
-        Args:
-            (1) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
-            (2) par_name: String of parameter name.
-        Rets:
-            (1) Value of parameter.
-        Tips:
-            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
-            The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
-        Example: N/A
-        """
-        global STEPS_LIB
-        par_type = par_type.upper()
-        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
-            return None
-        par_name = self.__get_c_char_p_of_string(par_name)
-        if par_type in ['I', 'INT', 'INTEGER']:
-            return int(STEPS_LIB.api_get_powerflow_solver_integer_parameter(par_name, self.toolkit_index))
-        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-            return STEPS_LIB.api_get_powerflow_solver_float_parameter(par_name, self.toolkit_index)
-        if par_type in ['B', 'BOOL', 'BOOLEAN']:
-            return STEPS_LIB.api_get_powerflow_solver_boolean_parameter(par_name, self.toolkit_index)
-        return None
-
-    def set_powerflow_solver_parameter(self, par_type, par_name, value):
-        """
-        Set powerflow solver configuration parameter.
-        Args:
-            (1) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
-            (2) par_name: String of parameter name.
-            (3) value: Value of parameter.
-        Rets: N/A
-        Tips:
-            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
-            The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be changed.
-        Example: N/A
-        """
-        global STEPS_LIB
-        par_type = par_type.upper()
-        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
-            return
-        par_name = self.__get_c_char_p_of_string(par_name)
-        if par_type in ['I', 'INT', 'INTEGER']:
-            return STEPS_LIB.api_set_powerflow_solver_integer_parameter(par_name, value, self.toolkit_index)
-        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-            return STEPS_LIB.api_set_powerflow_solver_float_parameter(par_name, value, self.toolkit_index)
-        if par_type in ['B', 'BOOL', 'BOOLEAN']:
-            return STEPS_LIB.api_set_powerflow_solver_boolean_parameter(par_name, value, self.toolkit_index)
-        return
-    
-    def show_powerflow_solver_configuration(self):
-        """
-        Show powerflow solver configuration. Report is sent to log.
-        Args: N/A
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        STEPS_LIB.api_show_powerflow_solver_configuration(self.toolkit_index)
-        return
-        
-    def solve_powerflow(self, method):
-        """
-        Solve powerflow.
-        Args:
-            (1) method: String of powerflow solution method. Should be one of {"NR", "PQ"}
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        method = self.__get_c_char_p_of_string(method)
-        STEPS_LIB.api_solve_powerflow(method, self.toolkit_index)
-        return
-
-    def is_powerflow_converged(self):
-        """
-        Check if powerflow is converged or not.
-        Args: N/A
-        Rets:
-            (1) Boolean value. True for converged, False for not converged.
-        Example: N/A
-        """
-        global STEPS_LIB
-        return STEPS_LIB.api_is_powerflow_converged(self.toolkit_index)
-    
-    def get_powerflow_loss(self):
-        """
-        Get active power loss of solved powerflow.
-        Args: N/A
-        Rets:
-            (1) System power loss in MW.
-        Tips:
-            If powerflow is not converged, the return result is meaningless.
-        Example: N/A
-        """
-        global STEPS_LIB
-        p_gen = 0.0
-        gens = self.get_all_generators()
-        for gen in gens:
-            p_gen += self.get_generator_data(gen, 'd', 'Pgen_MW')
-            
-        gens = self.get_all_wt_generators()
-        for gen in gens:
-            p_gen += self.get_wt_generator_data(gen, 'd', 'Pgen_MW')
-            
-        pvs = self.get_all_pv_units()
-        for pv in pvs:
-            p_gen += self.get_pv_unit_data(pv, 'd', 'Pgen_MW')
-            
-        eses = self.get_all_energy_storages()
-        for es in eses:
-            p_gen += self.get_energy_storage_data(es, 'd', 'Pgen_MW')
-
-        p_load = 0.0
-        loads = self.get_all_loads()
-        for load in loads:
-            p_load += self.get_load_data(load, 'd', 'P_MW')
-            
-        return p_gen-p_load
-        
-            
-    def show_powerflow_result(self):
-        """
-        Show powerflow result in log.
-        Args: N/A
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        STEPS_LIB.api_show_powerflow_result(self.toolkit_index)
-        return
-        
-    def save_powerflow_result(self, file):
-        """
-        Save powerflow result to file.
-        Args:
-            (1) file: String of target file name.
-        Rets: N/A
-        Tips:
-            The result exported by save_powerflow_result() is briefer than that exported by save_extended_powerflow_result().
-        Example: N/A
-        """
-        global STEPS_LIB
-        file = self.__get_c_char_p_of_string(file)
-        STEPS_LIB.api_save_powerflow_result(file, self.toolkit_index)
-        return
-    
-    def save_extended_powerflow_result(self, file):
-        """
-        Save extended powerflow result to file.
-        Args:
-            (1) file: String of target file name.
-        Rets: N/A
-        Tips:
-            The result exported by save_extended_powerflow_result() is more detailed than that exported by save_powerflow_result().
-        Example: N/A
-        """
-        global STEPS_LIB
-        file = self.__get_c_char_p_of_string(file)
-        STEPS_LIB.api_save_extended_powerflow_result(file, self.toolkit_index)
-        return
-        
-    def save_jacobian_matrix(self, file):
-        """
-        Save jacobian matrix of powerflow solver to file.
-        Args:
-            (1) file: String of target file name.
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        file = self.__get_c_char_p_of_string(file)
-        STEPS_LIB.api_save_jacobian_matrix(file, self.toolkit_index)
-        return
-
-    def build_network_Y_matrix(self):
-        """
-        Build newwork complex Y matrix for powerflow solution.
-        Args: N/A
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        STEPS_LIB.api_build_network_Y_matrix(self.toolkit_index)
-        return
-
-    def build_decoupled_network_B_matrix(self):
-        """
-        Build newwork real B' and B" matrix for decoupled powerflow solution.
-        Args: N/A
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        STEPS_LIB.api_build_decoupled_network_B_matrix(self.toolkit_index)
-        return
-
-    def build_dc_network_B_matrix(self):
-        """
-        Build newwork real B matrix for DC powerflow solution.
-        Args: N/A
-        Rets: N/A
-        Tips:
-            DC powerflow solution is not supported.
-        Example: N/A
-        """
-        global STEPS_LIB
-        STEPS_LIB.api_build_dc_network_B_matrix(self.toolkit_index)
-        return
-
-    def build_dynamic_network_Y_matrix(self):
-        """
-        Build newwork complex Y matrix for dynamic simulation.
-        Args: N/A
-        Rets: N/A
-        Tips:
-            The faults and source impedance are included in the Y matrix.
-        Example: N/A
-        """
-        global STEPS_LIB
-        STEPS_LIB.api_build_dynamic_network_Y_matrix(self.toolkit_index)
-        return
-
-    def build_network_Z_matrix(self):
-        """
-        Build newwork complex Z matrix.
-        Args: N/A
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        STEPS_LIB.api_build_network_Z_matrix(self.toolkit_index)
-        return
-        
-    def save_network_Y_matrix(self, file, export_full=False):
-        """
-        Save newwork complex Y matrix to file.
-        Args:
-            (1) file: String of target file name of sparse Y matrix. If export_full is True, then 'full_' is appended to the head of file name for full matrix. 
-            (2) export_full: boolean. False for saving only the sparse network matrix. True for saving both sparse and full network matrix.
-        Rets: N/A
-        Example:
-            simulator.save_network_Y_matrix("y.csv") # save only sparse matrix to y.csv
-            simulator.save_network_Y_matrix("y.csv", True) # save both sparse and full matrix to y.csv and full_y.csv respectively
-        """
-        global STEPS_LIB
-        file = self.__get_c_char_p_of_string(file)
-        STEPS_LIB.api_save_network_Y_matrix(file, export_full, self.toolkit_index)
-        return
-        
-    def save_decoupled_network_B_matrix(self, file):
-        """
-        Save newwork decoupled real B' and B" matrix to file.
-        Args:
-            (1) file: String of target file name.
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        file = self.__get_c_char_p_of_string(file)
-        STEPS_LIB.api_save_decoupled_network_B_matrix(file, self.toolkit_index)
-        return
-        
-    def save_dc_network_B_matrix(self, file):
-        """
-        Save newwork real DC B matrix to file.
-        Args:
-            (1) file: String of target file name.
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        file = self.__get_c_char_p_of_string(file)
-        STEPS_LIB.api_save_dc_network_B_matrix(file, self.toolkit_index)
-        return
-        
-    def save_dynamic_network_Y_matrix(self, file):
-        """
-        Save newwork dynamic complex Y matrix to file.
-        Args:
-            (1) file: String of target file name.
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        file = self.__get_c_char_p_of_string(file)
-        STEPS_LIB.api_save_dynamic_network_Y_matrix(file, self.toolkit_index)
-        return
-        
-    def save_network_Z_matrix(self, file):
-        """
-        Save newwork complex Z matrix to file.
-        Args:
-            (1) file: String of target file name.
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        file = self.__get_c_char_p_of_string(file)
-        STEPS_LIB.api_save_network_Z_matrix(file, self.toolkit_index)
-        return
-        
         
     def get_dynamic_simulator_parameter(self, par_type, par_name):
         """

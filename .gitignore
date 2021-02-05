@@ -5,6 +5,8 @@ python/*.pyd
 python/*.xlsx
 python/*.tex
 python/*.log
+python/*.md
+python/__*
 python/stepspy-current/build/
 python/stepspy-current/dist/
 python/stepspy-current/stepspy.egg-info
