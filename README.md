@@ -1,7 +1,10 @@
 # Simulation Toolkit for Electrical Power Systems
 - Maintainer: Changgang Li <lichgang@sdu.edu.cn> from School of Electrical Engineering, Shandong University.
-- Documentation: https://github.com/changgang/steps/wiki/
-- Date of Readme: Feb. 5, 2021
+- Trust the following pages or other credible duplications:
+  * STEPS: https://github.com/changgang/steps
+  * stepspy: https://pypi.org/project/stepspy/
+  * Documentation: https://github.com/changgang/steps/wiki/
+- Date of Readme: March 9, 2021
 
 # Reference
 Please cite STEPS with the following paper:  

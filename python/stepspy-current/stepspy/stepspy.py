@@ -455,7 +455,20 @@ class STEPS():
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("PV Unit")
         return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
-        
+                
+    def get_energy_storage_capacity(self):
+        """
+        Get capacity for storing energy storages in database.
+        Args: N/A
+        Rets:
+            (1) Maximum number of energy storages that can be stored in the database.
+        Example:
+            nstorage_max = simulator.get_energy_storage_capacity()
+        """
+        global STEPS_LIB
+        device = self.__get_c_char_p_of_string("Energy Storage")
+        return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
+
     def get_load_capacity(self):
         """
         Get capacity for storing loads in database.
@@ -532,19 +545,6 @@ class STEPS():
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Equivalent Device")
-        return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
-        
-    def get_energy_storage_capacity(self):
-        """
-        Get capacity for storing energy storages in database.
-        Args: N/A
-        Rets:
-            (1) Maximum number of energy storages that can be stored in the database.
-        Example:
-            nstorage_max = simulator.get_energy_storage_capacity()
-        """
-        global STEPS_LIB
-        device = self.__get_c_char_p_of_string("Energy Storage")
         return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
         
     def get_area_capacity(self):
@@ -639,6 +639,20 @@ class STEPS():
         device = self.__get_c_char_p_of_string("PV Unit")
         return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
         
+    def set_energy_storage_capacity(self, capacity):
+        """
+        Set capacity for storing energy storages in database.
+        Args:
+            (1) capacity: Maximum number of energy storages that can be stored in the database.
+        Rets: N/A
+        Tips:
+            This function SHOULD be called before adding devices to the database.
+        Example: N/A
+        """
+        global STEPS_LIB
+        device = self.__get_c_char_p_of_string("Energy Storage")
+        return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
+        
     def set_load_capacity(self, capacity):
         """
         Set capacity for storing loads in database.
@@ -721,20 +735,6 @@ class STEPS():
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Equivalent Device")
-        return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
-        
-    def set_energy_storage_capacity(self, capacity):
-        """
-        Set capacity for storing energy storages in database.
-        Args:
-            (1) capacity: Maximum number of energy storages that can be stored in the database.
-        Rets: N/A
-        Tips:
-            This function SHOULD be called before adding devices to the database.
-        Example: N/A
-        """
-        global STEPS_LIB
-        device = self.__get_c_char_p_of_string("Energy Storage")
         return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
         
     def set_area_capacity(self, capacity):
