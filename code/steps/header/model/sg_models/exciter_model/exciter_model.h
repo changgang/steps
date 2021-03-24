@@ -27,6 +27,9 @@ class EXCITER_MODEL : public SG_MODEL
         // reference
         void set_voltage_reference_in_pu(double vref);
         double get_voltage_reference_in_pu() const;
+
+        virtual STEPS_SPARSE_MATRIX* get_linearized_matrix(string matrix_type);
+        virtual void set_linearized_matrix(string matrix_type, STEPS_SPARSE_MATRIX* matrix);
     public: // specific exciter
         virtual string get_model_name() const = 0;
 
@@ -58,6 +61,11 @@ class EXCITER_MODEL : public SG_MODEL
         virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
         double voltage_reference_in_pu;
+
+        STEPS_SPARSE_MATRIX* avr_matrix;
+        STEPS_SPARSE_MATRIX* avr_gen_matrix;
+        STEPS_SPARSE_MATRIX* avr_pss_matrix;
+        STEPS_SPARSE_MATRIX* avr_comp_matrix;
 };
 
 #endif // EXCITER_MODEL_H

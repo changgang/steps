@@ -354,3 +354,53 @@ SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_device_id(unsigned 
     }
     return signal;
 }
+
+STEPS_SPARSE_MATRIX* STABILIZER_MODEL::get_linearized_matrix(string matrix_type)
+{
+    matrix_type = string2upper(matrix_type);
+    if(matrix_type=="PSS" and pss_matrix!=NULL) return pss_matrix;
+    if(matrix_type=="PSS-AVR" and pss_avr_matrix!=NULL) return pss_avr_matrix;
+    if(matrix_type=="PSS-GEN" and pss_gen_matrix!=NULL) return pss_gen_matrix;
+    return NULL;
+}
+
+void STABILIZER_MODEL::set_linearized_matrix(string matrix_type, STEPS_SPARSE_MATRIX* matrix)
+{
+    matrix_type = string2upper(matrix_type);
+    if(matrix_type=="PSS")
+    {
+        if(pss_matrix==NULL) pss_matrix = matrix;
+        else
+        {
+            if(pss_matrix!=matrix)
+            {
+                delete pss_matrix;
+                pss_matrix = matrix;
+            }
+        }
+    }
+    if(matrix_type=="PSS-AVR")
+    {
+        if(pss_avr_matrix==NULL) pss_avr_matrix = matrix;
+        else
+        {
+            if(pss_avr_matrix!=matrix)
+            {
+                delete pss_avr_matrix;
+                pss_avr_matrix = matrix;
+            }
+        }
+    }
+    if(matrix_type=="PSS-GEN")
+    {
+        if(pss_gen_matrix==NULL) pss_gen_matrix = matrix;
+        else
+        {
+            if(pss_gen_matrix!=matrix)
+            {
+                delete pss_gen_matrix;
+                pss_gen_matrix = matrix;
+            }
+        }
+    }
+}

@@ -13,6 +13,7 @@ class MODEL_VAR_TABLE
         virtual ~MODEL_VAR_TABLE();
         void clear();
         void add_variable_name_index_pair(string var_name, unsigned int var_index);
+        unsigned int size() const;
 
         unsigned int operator[](const string var_name) const;
         string operator[](const unsigned int var_index) const;

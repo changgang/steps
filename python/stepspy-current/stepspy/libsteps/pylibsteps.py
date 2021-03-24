@@ -36,6 +36,32 @@ def load_library():
     else:
         return None
 
+    libsteps.api_get_api_major_version.restype = c_uint
+    libsteps.api_get_api_major_version.argtype = None
+    libsteps.api_get_api_minor_version.restype = c_uint
+    libsteps.api_get_api_minor_version.argtype = None
+    libsteps.api_get_api_patch_version.restype = c_uint
+    libsteps.api_get_api_patch_version.argtype = None
+
+    major_version = libsteps.api_get_api_major_version()
+    minor_version = libsteps.api_get_api_minor_version()
+    patch_version = libsteps.api_get_api_patch_version()
+
+    required_major_version = 1
+    required_minor_version = 5
+    required_patch_version = 0
+
+    valid_flag = major_version >= required_major_version
+    if valid_flag==True and major_version==required_major_version:
+        valid_flag = valid_flag and minor_version>=required_minor_version
+    if valid_flag==True and major_version==required_major_version and minor_version==required_minor_version:
+        valid_flag = valid_flag and patch_version>=required_patch_version
+    
+    if valid_flag==False:
+        print("Invalid libsteps version {}.{}.{}. Version >= {}.{}.{} is required.".format(
+            major_version, minor_version, patch_version, required_major_version, required_minor_version, required_patch_version))
+        return None
+
     libsteps.api_get_const_INDEX_NOT_EXIST.restype = c_uint
     libsteps.api_get_const_INDEX_NOT_EXIST.argtype = None
     
@@ -462,6 +488,14 @@ def load_library():
     libsteps.api_get_generator_related_model_float_parameter_count.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
     libsteps.api_get_generator_related_model_float_parameter_name.restype = c_char_p
     libsteps.api_get_generator_related_model_float_parameter_name.argtypes = (c_uint, c_char_p, c_char_p, c_uint, c_uint)
+    libsteps.api_get_generator_related_model_internal_variable_count.restype = c_uint
+    libsteps.api_get_generator_related_model_internal_variable_count.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
+    libsteps.api_get_generator_related_model_internal_variable_with_name.restype = c_double
+    libsteps.api_get_generator_related_model_internal_variable_with_name.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_uint)
+    libsteps.api_get_generator_related_model_internal_variable_with_index.restype = c_double
+    libsteps.api_get_generator_related_model_internal_variable_with_index.argtypes = (c_uint, c_char_p, c_char_p, c_uint, c_uint)
+    libsteps.api_get_generator_related_model_internal_variable_name.restype = c_char_p
+    libsteps.api_get_generator_related_model_internal_variable_name.argtypes = (c_uint, c_char_p, c_char_p, c_uint, c_uint)
 
     libsteps.api_get_wt_generator_related_model_name.restype = c_char_p
     libsteps.api_get_wt_generator_related_model_name.argtypes = (c_uint, c_char_p, c_char_p, c_uint)

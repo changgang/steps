@@ -42,22 +42,26 @@ void MODEL_VAR_TABLE_TEST::test_add_get_variable_name_index_pair()
     table->add_variable_name_index_pair("abc", 0);
     TEST_ASSERT((*table)["abc"]==0);
     TEST_ASSERT((*table)[0]=="ABC");
+    TEST_ASSERT((*table).size()==1);
     table->add_variable_name_index_pair("def", 1);
     TEST_ASSERT((*table)["abc"]==0);
     TEST_ASSERT((*table)[0]=="ABC");
     TEST_ASSERT((*table)["def"]==1);
     TEST_ASSERT((*table)[1]=="DEF");
+    TEST_ASSERT((*table).size()==2);
     table->add_variable_name_index_pair("def", 2);
     TEST_ASSERT((*table)["abc"]==0);
     TEST_ASSERT((*table)[0]=="ABC");
     TEST_ASSERT((*table)["def"]==1);
     TEST_ASSERT((*table)[1]=="DEF");
     TEST_ASSERT((*table)[2]=="");
+    TEST_ASSERT((*table).size()==3);
     table->add_variable_name_index_pair("acf", 0);
     TEST_ASSERT((*table)["abc"]==0);
     TEST_ASSERT((*table)[0]=="ABC");
     TEST_ASSERT((*table)["def"]==1);
     TEST_ASSERT((*table)[1]=="DEF");
+    TEST_ASSERT((*table).size()==3);
     TEST_ASSERT((*table)["acf"]==INDEX_NOT_EXIST);
 }
 

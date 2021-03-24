@@ -542,10 +542,10 @@ void PVGU1::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
-    add_model_inernal_variable_name_and_index_pair("PLL ANGLE IN DEG", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@ACTIVE CURRENT COMMAND BLOCK", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@REACTIVE VOLTAGE COMMAND BLOCK", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@LVPL VOLTAGE SENSOR", i); i++;
+    add_model_internal_variable_name_and_index_pair("PLL ANGLE IN DEG", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@ACTIVE CURRENT COMMAND BLOCK", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@REACTIVE VOLTAGE COMMAND BLOCK", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@LVPL VOLTAGE SENSOR", i); i++;
 }
 
 double PVGU1::get_model_internal_variable_with_name(string var_name)

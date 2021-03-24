@@ -396,11 +396,11 @@ double WT3T0::get_minimum_nonzero_time_constant_in_s()
 void WT3T0::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    unsigned int i=1;
-    add_model_inernal_variable_name_and_index_pair("STATE@TURBINE SPEED BLOCK", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@GENERATOR SPEED BLOCK", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@SHAFT TORSION BLOCK", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@ROTOR ANGLE BLOCK", i); i++;
+    unsigned int i=0;
+    add_model_internal_variable_name_and_index_pair("STATE@TURBINE SPEED BLOCK", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@GENERATOR SPEED BLOCK", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@SHAFT TORSION BLOCK", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@ROTOR ANGLE BLOCK", i); i++;
 }
 
 double WT3T0::get_model_internal_variable_with_name(string var_name)

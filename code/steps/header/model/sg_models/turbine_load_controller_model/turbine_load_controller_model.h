@@ -27,6 +27,9 @@ class TURBINE_LOAD_CONTROLLER_MODEL : public SG_MODEL
         double get_initial_mechanical_power_reference_in_pu_based_on_mbase_from_turbine_governor_model() const;
         double get_terminal_active_power_in_pu_based_on_mbase_from_generator_model() const;
         double get_rotor_speed_deviation_in_pu_from_generator_model() const;
+
+        virtual STEPS_SPARSE_MATRIX* get_linearized_matrix(string matrix_type);
+        virtual void set_linearized_matrix(string matrix_type, STEPS_SPARSE_MATRIX* matrix);
     public: // specific model level
         virtual string get_model_name() const = 0;
 
@@ -58,6 +61,8 @@ class TURBINE_LOAD_CONTROLLER_MODEL : public SG_MODEL
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
+        STEPS_SPARSE_MATRIX* tlc_matrix;
+        STEPS_SPARSE_MATRIX* tlc_gov_matrix;
 };
 
 #endif // TURBINE_LOAD_CONTROLLER_MODEL_H

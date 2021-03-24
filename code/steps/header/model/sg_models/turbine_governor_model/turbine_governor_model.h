@@ -19,7 +19,8 @@ class TURBINE_GOVERNOR_MODEL : public SG_MODEL
 
         double get_mechanical_power_reference_in_pu_based_on_mbase() const;
 
-
+        virtual STEPS_SPARSE_MATRIX* get_linearized_matrix(string matrix_type);
+        virtual void set_linearized_matrix(string matrix_type, STEPS_SPARSE_MATRIX* matrix);
     public: // specific model level
         virtual string get_model_name() const = 0;
 
@@ -54,6 +55,10 @@ class TURBINE_GOVERNOR_MODEL : public SG_MODEL
         virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
         double initial_mechanical_power_reference_in_pu;
+
+        STEPS_SPARSE_MATRIX* gov_matrix;
+        STEPS_SPARSE_MATRIX* gov_gen_matrix;
+        STEPS_SPARSE_MATRIX* gov_tlc_matrix;
 };
 
 #endif // TURBINE_GOVERNOR_MODEL_H

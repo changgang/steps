@@ -82,3 +82,66 @@ double EXCITER_MODEL::get_voltage_reference_in_pu() const
 {
     return voltage_reference_in_pu;
 }
+
+STEPS_SPARSE_MATRIX* EXCITER_MODEL::get_linearized_matrix(string matrix_type)
+{
+    matrix_type = string2upper(matrix_type);
+    if(matrix_type=="AVR" and avr_matrix!=NULL) return avr_matrix;
+    if(matrix_type=="AVR-GEN" and avr_gen_matrix!=NULL) return avr_gen_matrix;
+    if(matrix_type=="AVR-PSS" and avr_pss_matrix!=NULL) return avr_pss_matrix;
+    if(matrix_type=="AVR-COMP" and avr_comp_matrix!=NULL) return avr_comp_matrix;
+    return NULL;
+}
+
+void EXCITER_MODEL::set_linearized_matrix(string matrix_type, STEPS_SPARSE_MATRIX* matrix)
+{
+    matrix_type = string2upper(matrix_type);
+    if(matrix_type=="AVR")
+    {
+        if(avr_matrix==NULL) avr_matrix = matrix;
+        else
+        {
+            if(avr_matrix!=matrix)
+            {
+                delete avr_matrix;
+                avr_matrix = matrix;
+            }
+        }
+    }
+    if(matrix_type=="AVR-GEN")
+    {
+        if(avr_gen_matrix==NULL) avr_gen_matrix = matrix;
+        else
+        {
+            if(avr_gen_matrix!=matrix)
+            {
+                delete avr_gen_matrix;
+                avr_gen_matrix = matrix;
+            }
+        }
+    }
+    if(matrix_type=="AVR-PSS")
+    {
+        if(avr_pss_matrix==NULL) avr_pss_matrix = matrix;
+        else
+        {
+            if(avr_pss_matrix!=matrix)
+            {
+                delete avr_pss_matrix;
+                avr_pss_matrix = matrix;
+            }
+        }
+    }
+    if(matrix_type=="AVR-COMP")
+    {
+        if(avr_comp_matrix==NULL) avr_comp_matrix = matrix;
+        else
+        {
+            if(avr_comp_matrix!=matrix)
+            {
+                delete avr_comp_matrix;
+                avr_comp_matrix = matrix;
+            }
+        }
+    }
+}

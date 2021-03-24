@@ -202,7 +202,7 @@ void COMP::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
-    add_model_inernal_variable_name_and_index_pair("COMPENSATED VOLTAGE IN PU", i); i++;
+    add_model_internal_variable_name_and_index_pair("COMPENSATED VOLTAGE IN PU", i); i++;
 }
 
 double COMP::get_model_internal_variable_with_name(string var_name)
@@ -224,4 +224,14 @@ string COMP::get_dynamic_data_in_bpa_format() const
 string COMP::get_dynamic_data_in_steps_format() const
 {
     return get_dynamic_data_in_psse_format();
+}
+
+void COMP::linearize()
+{
+    STEPS_SPARSE_MATRIX* matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("COMP", matrix);
+    // do linearization
+    matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("COMP-AVR", matrix);
+    // do linearization
 }

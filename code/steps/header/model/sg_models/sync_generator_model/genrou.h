@@ -68,6 +68,8 @@ class GENROU : public SYNC_GENERATOR_MODEL
         virtual string get_dynamic_data_in_psse_format() const;
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
+
+        virtual void linearize();
     public:
         // the following two functions are used to model GENROU as ideal voltage source
         // with set_excitation_voltage_in_pu(), GENROU is user controllable.

@@ -86,7 +86,8 @@ class SYNC_GENERATOR_MODEL : public SG_MODEL
         double get_mechanical_power_in_MW() const;
         double get_excitation_voltage_in_pu();
     public:
-
+        virtual STEPS_SPARSE_MATRIX* get_linearized_matrix(string matrix_type);
+        virtual void set_linearized_matrix(string matrix_type, STEPS_SPARSE_MATRIX* matrix);
     public: // specific sync generator model
         virtual string get_model_name() const = 0;
 
@@ -145,6 +146,8 @@ class SYNC_GENERATOR_MODEL : public SG_MODEL
         virtual string get_dynamic_data_in_psse_format() const = 0;
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
+
+        virtual void linearize() = 0;
     public:
         // the following two functions are used to model GENCLS as ideal voltage source
         // with set_excitation_voltage_in_pu(), GENCLS is user controllable.
@@ -165,6 +168,10 @@ class SYNC_GENERATOR_MODEL : public SG_MODEL
         SATURATION_TYPE saturation_type;
 
         double Pmech0, Efd0;
+
+        STEPS_SPARSE_MATRIX *gen_matrix;
+        STEPS_SPARSE_MATRIX *gen_avr_matrix;
+        STEPS_SPARSE_MATRIX *gen_gov_matrix;
 };
 
 #endif // SYNC_GENERATOR_MODEL_H

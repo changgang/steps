@@ -57,3 +57,40 @@ double TURBINE_LOAD_CONTROLLER_MODEL::get_rotor_speed_deviation_in_pu_from_gener
         return 0.0;
 }
 
+
+STEPS_SPARSE_MATRIX* TURBINE_LOAD_CONTROLLER_MODEL::get_linearized_matrix(string matrix_type)
+{
+    matrix_type = string2upper(matrix_type);
+    if(matrix_type=="TLC" and tlc_matrix!=NULL) return tlc_matrix;
+    if(matrix_type=="TLC-GOV" and tlc_gov_matrix!=NULL) return tlc_gov_matrix;
+    return NULL;
+}
+
+void TURBINE_LOAD_CONTROLLER_MODEL::set_linearized_matrix(string matrix_type, STEPS_SPARSE_MATRIX* matrix)
+{
+    matrix_type = string2upper(matrix_type);
+    if(matrix_type=="TLC")
+    {
+        if(tlc_matrix==NULL) tlc_matrix = matrix;
+        else
+        {
+            if(tlc_matrix!=matrix)
+            {
+                delete tlc_matrix;
+                tlc_matrix = matrix;
+            }
+        }
+    }
+    if(matrix_type=="TLC-GOV")
+    {
+        if(tlc_gov_matrix==NULL) tlc_gov_matrix = matrix;
+        else
+        {
+            if(tlc_gov_matrix!=matrix)
+            {
+                delete tlc_gov_matrix;
+                tlc_gov_matrix = matrix;
+            }
+        }
+    }
+}

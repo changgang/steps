@@ -602,10 +602,10 @@ void PSASPE13::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
-    add_model_inernal_variable_name_and_index_pair("STATE@SENSOR", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@TUNER", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@REGULATOR", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@FEEDBACKER", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@SENSOR", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@TUNER", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@REGULATOR", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@FEEDBACKER", i); i++;
 }
 
 double PSASPE13::get_model_internal_variable_with_name(string var_name)
@@ -640,4 +640,20 @@ string PSASPE13::get_dynamic_data_in_bpa_format() const
 string PSASPE13::get_dynamic_data_in_steps_format() const
 {
     return get_dynamic_data_in_psse_format();
+}
+
+void PSASPE13::linearize()
+{
+    STEPS_SPARSE_MATRIX* matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("AVR", matrix);
+    // do linearization
+    matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("AVR-GEN", matrix);
+    // do linearization
+    matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("AVR-PSS", matrix);
+    // do linearization
+    matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("AVR-COMP", matrix);
+    // do linearization
 }

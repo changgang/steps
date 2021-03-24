@@ -3849,6 +3849,51 @@ class STEPS():
             parameters.append((par_name, par_value))
         return tuple(parameters)
     
+    def get_generator_related_model_internal_variable(self, generator, model_type, var_name):
+        """
+        Get generator related model internal variable.
+        Args:
+            (1) generator: Generator device id in format of (bus, ickt).
+            (2) model_type: String of model type.
+            (3) var_name: String of internal variable name.
+        Rets:
+            (1) Value of internal variable
+        Tips:
+            If model type or internal variable name is not supported, 0.0 is returned.
+        Example: N/A
+        """
+        global STEPS_LIB
+        ibus, ickt = self.__extract_single_bus_device_id(generator)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        var_name = self.__get_c_char_p_of_string(var_name)
+        return STEPS_LIB.api_get_generator_related_model_internal_variable_with_name(ibus, ickt, model_type, var_name, self.toolkit_index)
+        
+    def get_generator_related_model_internal_variable_pair(self, generator, model_type):
+        """
+        Get generator related model internal variable pair.
+        Args:
+            (1) generator: Generator device id in format of (bus, ickt).
+            (2) model_type: String of model type.
+        Rets:
+            (1) Tuple of internal variable name and value pairs. Each internal variable name and value pair is in format of (string of internal variable name, value of internal variable).
+        Tips:
+            If model type is not supported, empty tuple is returned.
+        Example: N/A
+        """
+        global STEPS_LIB
+        ibus, ickt = self.__extract_single_bus_device_id(generator)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        variables = []
+        n = STEPS_LIB.api_get_generator_related_model_internal_variable_count(ibus, ickt, model_type, self.toolkit_index)
+        for variable_index in range(n):
+            var_name = STEPS_LIB.api_get_generator_related_model_internal_variable_name(ibus, ickt, model_type, variable_index, self.toolkit_index)
+            var_value = STEPS_LIB.api_get_generator_related_model_internal_variable_with_name(ibus, ickt, model_type, var_name, self.toolkit_index)
+            var_name = self.__get_string_from_c_char_p(var_name)
+            variables.append((var_name, var_value))
+        return tuple(variables)
+
     def get_wt_generator_related_model_name(self, generator, model_type):
         """
         Get wind turbine generator related model name.

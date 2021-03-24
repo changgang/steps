@@ -242,6 +242,15 @@ Example:
     npv_max = simulator.get_pv_unit_capacity()
 
 API 27
+Format: get_energy_storage_capacity()
+Description: Get capacity for storing energy storages in database.
+Args: N/A
+Rets:
+    (1) Maximum number of energy storages that can be stored in the database.
+Example:
+    nstorage_max = simulator.get_energy_storage_capacity()
+
+API 28
 Format: get_load_capacity()
 Description: Get capacity for storing loads in database.
 Args: N/A
@@ -250,7 +259,7 @@ Rets:
 Example:
     nload_max = simulator.get_load_capacity()
 
-API 28
+API 29
 Format: get_fixed_shunt_capacity()
 Description: Get capacity for storing fixed shunts in database.
 Args: N/A
@@ -259,7 +268,7 @@ Rets:
 Example:
     nshunt_max = simulator.get_fixed_shunt_capacity()
 
-API 29
+API 30
 Format: get_line_capacity()
 Description: Get capacity for storing transmission lines in database.
 Args: N/A
@@ -268,7 +277,7 @@ Rets:
 Example:
     nline_max = simulator.get_line_capacity()
 
-API 30
+API 31
 Format: get_transformer_capacity()
 Description: Get capacity for storing transformers in database.
 Args: N/A
@@ -277,7 +286,7 @@ Rets:
 Example:
     ntrans_max = simulator.get_transformer_capacity()
 
-API 31
+API 32
 Format: get_hvdc_capacity()
 Description: Get capacity for storing HVDC links in database.
 Args: N/A
@@ -286,7 +295,7 @@ Rets:
 Example:
     nhvdc_max = simulator.get_hvdc_capacity()
 
-API 32
+API 33
 Format: get_equivalent_device_capacity()
 Description: Get capacity for storing equivalent devices in database.
 Args: N/A
@@ -294,15 +303,6 @@ Rets:
     (1) Maximum number of equivalent devices that can be stored in the database.
 Example:
     ned_max = simulator.get_equivalent_device_capacity()
-
-API 33
-Format: get_energy_storage_capacity()
-Description: Get capacity for storing energy storages in database.
-Args: N/A
-Rets:
-    (1) Maximum number of energy storages that can be stored in the database.
-Example:
-    nstorage_max = simulator.get_energy_storage_capacity()
 
 API 34
 Format: get_area_capacity()
@@ -373,6 +373,16 @@ Tips:
 Example: N/A
 
 API 41
+Format: set_energy_storage_capacity(capacity)
+Description: Set capacity for storing energy storages in database.
+Args:
+    (1) capacity: Maximum number of energy storages that can be stored in the database.
+Rets: N/A
+Tips:
+    This function SHOULD be called before adding devices to the database.
+Example: N/A
+
+API 42
 Format: set_load_capacity(capacity)
 Description: Set capacity for storing loads in database.
 Args:
@@ -382,7 +392,7 @@ Tips:
     This function SHOULD be called before adding devices to the database.
 Example: N/A
 
-API 42
+API 43
 Format: set_fixed_shunt_capacity(capacity)
 Description: Set capacity for storing fixed shunts in database.
 Args:
@@ -392,7 +402,7 @@ Tips:
     This function SHOULD be called before adding devices to the database.
 Example: N/A
 
-API 43
+API 44
 Format: set_line_capacity(capacity)
 Description: Set capacity for storing transmission lines in database.
 Args:
@@ -402,7 +412,7 @@ Tips:
     This function SHOULD be called before adding devices to the database.
 Example: N/A
 
-API 44
+API 45
 Format: set_transformer_capacity(capacity)
 Description: Set capacity for storing transformers in database.
 Args:
@@ -412,7 +422,7 @@ Tips:
     This function SHOULD be called before adding devices to the database.
 Example: N/A
 
-API 45
+API 46
 Format: set_hvdc_capacity(capacity)
 Description: Set capacity for storing HVDC links in database.
 Args:
@@ -422,21 +432,11 @@ Tips:
     This function SHOULD be called before adding devices to the database.
 Example: N/A
 
-API 46
+API 47
 Format: set_equivalent_device_capacity(capacity)
 Description: Set capacity for storing equivalent devices in database.
 Args:
     (1) capacity: Maximum number of equivalent devices that can be stored in the database.
-Rets: N/A
-Tips:
-    This function SHOULD be called before adding devices to the database.
-Example: N/A
-
-API 47
-Format: set_energy_storage_capacity(capacity)
-Description: Set capacity for storing energy storages in database.
-Args:
-    (1) capacity: Maximum number of energy storages that can be stored in the database.
 Rets: N/A
 Tips:
     This function SHOULD be called before adding devices to the database.
@@ -2133,6 +2133,31 @@ Tips:
 Example: N/A
 
 API 218
+Format: get_generator_related_model_internal_variable(generator, model_type, var_name)
+Description: Get generator related model internal variable.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+    (2) model_type: String of model type.
+    (3) var_name: String of internal variable name.
+Rets:
+    (1) Value of internal variable
+Tips:
+    If model type or internal variable name is not supported, 0.0 is returned.
+Example: N/A
+
+API 219
+Format: get_generator_related_model_internal_variable_pair(generator, model_type)
+Description: Get generator related model internal variable pair.
+Args:
+    (1) generator: Generator device id in format of (bus, ickt).
+    (2) model_type: String of model type.
+Rets:
+    (1) Tuple of internal variable name and value pairs. Each internal variable name and value pair is in format of (string of internal variable name, value of internal variable).
+Tips:
+    If model type is not supported, empty tuple is returned.
+Example: N/A
+
+API 220
 Format: get_wt_generator_related_model_name(generator, model_type)
 Description: Get wind turbine generator related model name.
 Args:
@@ -2144,7 +2169,7 @@ Tips:
     If model type is not supported, empty string is returned.
 Example: N/A
 
-API 219
+API 221
 Format: get_wt_generator_related_model_data(generator, model_type, par_name)
 Description: Get wind turbine generator related model data.
 Args:
@@ -2157,7 +2182,7 @@ Tips:
     If model type or parameter name is not supported, 0.0 is returned.
 Example: N/A
 
-API 220
+API 222
 Format: set_wt_generator_related_model_data(generator, model_type, par_name, value)
 Description: Set wind turbine generator related model data.
 Args:
@@ -2171,7 +2196,7 @@ Tips:
     If value is not a number, function may malfunction and package may exit with error.
 Example: N/A
 
-API 221
+API 223
 Format: get_wt_generator_related_model_parameter_pair(generator, model_type)
 Description: Get wind turbine generator related model parameter pair.
 Args:
@@ -2183,7 +2208,7 @@ Tips:
     If model type is not supported, empty tuple is returned.
 Example: N/A
 
-API 222
+API 224
 Format: get_pv_unit_related_model_name(pv_unit, model_type)
 Description: Get PV unit related model name.
 Args:
@@ -2195,7 +2220,7 @@ Tips:
     If model type is not supported, empty string is returned.
 Example: N/A
 
-API 223
+API 225
 Format: get_pv_unit_related_model_data(pv_unit, model_type, par_name)
 Description: Get PV unit related model data.
 Args:
@@ -2208,7 +2233,7 @@ Tips:
     If model type or parameter name is not supported, 0.0 is returned.
 Example: N/A
 
-API 224
+API 226
 Format: set_pv_unit_related_model_data(pv_unit, model_type, par_name, value)
 Description: Set PV unit related model data.
 Args:
@@ -2222,7 +2247,7 @@ Tips:
     If value is not a number, function may malfunction and package may exit with error.
 Example: N/A
 
-API 225
+API 227
 Format: get_pv_unit_related_model_parameter_pair(pv_unit, model_type)
 Description: Get pv unit related model parameter pair.
 Args:
@@ -2234,7 +2259,7 @@ Tips:
     If model type is not supported, empty tuple is returned.
 Example: N/A
 
-API 226
+API 228
 Format: get_load_related_model_name(load, model_type)
 Description: Get load related model name.
 Args:
@@ -2246,7 +2271,7 @@ Tips:
     If model type is not supported, empty string is returned.
 Example: N/A
 
-API 227
+API 229
 Format: get_load_related_model_data(load, model_type, par_name)
 Description: Get load related model data.
 Args:
@@ -2259,7 +2284,7 @@ Tips:
     If model type or parameter name is not supported, 0.0 is returned.
 Example: N/A
 
-API 228
+API 230
 Format: set_load_related_model_data(load, model_type, par_name, value)
 Description: Set load related model data.
 Args:
@@ -2273,7 +2298,7 @@ Tips:
     If value is not a number, function may malfunction and package may exit with error.
 Example: N/A
 
-API 229
+API 231
 Format: get_load_related_model_parameter_pair(load, model_type)
 Description: Get load related model parameter pair.
 Args:
@@ -2285,7 +2310,7 @@ Tips:
     If model type is not supported, empty tuple is returned.
 Example: N/A
 
-API 230
+API 232
 Format: get_line_related_model_name(line, model_type)
 Description: Get transmission line related model name.
 Args:
@@ -2297,7 +2322,7 @@ Tips:
     If model type is not supported, empty string is returned.
 Example: N/A
 
-API 231
+API 233
 Format: get_line_related_model_data(line, model_type, par_name)
 Description: Get transmission line related model data.
 Args:
@@ -2310,7 +2335,7 @@ Tips:
     If model type or parameter name is not supported, 0.0 is returned.
 Example: N/A
 
-API 232
+API 234
 Format: set_line_related_model_data(line, model_type, par_name, value)
 Description: Set transmission line related model data.
 Args:
@@ -2324,7 +2349,7 @@ Tips:
     If value is not a number, function may malfunction and package may exit with error.
 Example: N/A
 
-API 233
+API 235
 Format: get_line_related_model_parameter_pair(line, model_type)
 Description: Get transmission line related model parameter pair.
 Args:
@@ -2336,7 +2361,7 @@ Tips:
     If model type is not supported, empty tuple is returned.
 Example: N/A
 
-API 234
+API 236
 Format: get_hvdc_related_model_name(hvdc, model_type)
 Description: Get HVDC link related model name.
 Args:
@@ -2348,7 +2373,7 @@ Tips:
     If model type is not supported, empty string is returned.
 Example: N/A
 
-API 235
+API 237
 Format: get_hvdc_related_model_data(hvdc, model_type, par_name)
 Description: Get HVDC link related model data.
 Args:
@@ -2361,7 +2386,7 @@ Tips:
     If model type or parameter name is not supported, 0.0 is returned.
 Example: N/A
 
-API 236
+API 238
 Format: set_hvdc_related_model_data(hvdc, model_type, par_name, value)
 Description: Set HVDC linke related model data.
 Args:
@@ -2375,7 +2400,7 @@ Tips:
     If value is not a number, function may malfunction and package may exit with error.
 Example: N/A
 
-API 237
+API 239
 Format: get_hvdc_related_model_parameter_pair(hvdc, model_type)
 Description: Get HVDC link related model parameter pair.
 Args:
@@ -2387,7 +2412,7 @@ Tips:
     If model type is not supported, empty tuple is returned.
 Example: N/A
 
-API 238
+API 240
 Format: get_generator_governor_pmax(gen)
 Description: Get generator pmax in MW from turbine governor model.
 Args:
@@ -2396,7 +2421,7 @@ Rets:
     (1) Pmax in MW
 Example: N/A
 
-API 239
+API 241
 Format: get_generator_governor_pmin(gen)
 Description: Get generator pmin in MW from turbine governor model.
 Args:
@@ -2405,7 +2430,7 @@ Rets:
     (1) Pmin in MW
 Example: N/A
 
-API 240
+API 242
 Format: get_generator_governor_up_spinning_reserve(gen)
 Description: Get up spinning reserve of generator.
 Args:
@@ -2414,7 +2439,7 @@ Rets:
     (1) up spinning reserve in MW
 Example: N/A
 
-API 241
+API 243
 Format: get_generator_governor_down_spinning_reserve(gen)
 Description: Get down spinning reserve of generator.
 Args:
@@ -2423,7 +2448,7 @@ Rets:
     (1) down spinning reserve in MW
 Example: N/A
 
-API 242
+API 244
 Format: get_generator_governor_total_up_spinning_reserve_with_constraints(area=0,zone=0)
 Description: Get up spinning reserve of generators in area.
 Args:
@@ -2433,7 +2458,7 @@ Rets:
     (1) total up spinning reserve in MW
 Example: N/A
 
-API 243
+API 245
 Format: get_generator_governor_total_down_spinning_reserve_with_constraints(area=0,zone=0)
 Description: Get down spinning reserve of generators in area.
 Args:
@@ -2443,7 +2468,7 @@ Rets:
     (1) total down spinning reserve in MW
 Example: N/A
 
-API 244
+API 246
 Format: get_generator_governor_total_pmax_with_constraints(area=0,zone=0)
 Description: Get total pmax of generators in area and zone.
 Args:
@@ -2453,7 +2478,7 @@ Rets:
     (1) total pmax in MW
 Example: N/A
 
-API 245
+API 247
 Format: get_generator_governor_total_pmin_with_constraints(area=0,zone=0)
 Description: Get total pmin of generators in area and zone.
 Args:
@@ -2463,7 +2488,7 @@ Rets:
     (1) total pmin in MW
 Example: N/A
 
-API 246
+API 248
 Format: get_dynamic_simulator_parameter(par_type, par_name)
 Description: Get dynamic simulator configuration parameter.
 Args:
@@ -2476,7 +2501,7 @@ Tips:
     The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
 Example: N/A
 
-API 247
+API 249
 Format: set_dynamic_simulator_parameter(par_type, par_name, value)
 Description: Set dynamic simulator configuration parameter.
 Args:
@@ -2489,7 +2514,7 @@ Tips:
     The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be changed
 Example: N/A
 
-API 248
+API 250
 Format: get_dynamic_simulator_output_file()
 Description: Get dynamic simulator output file name.
 Args: N/A
@@ -2497,7 +2522,7 @@ Rets:
     (1) String of output file name.
 Example: N/A
 
-API 249
+API 251
 Format: set_dynamic_simulator_output_file(file)
 Description: Set dynamic simulator output file name.
 Args:
@@ -2505,7 +2530,7 @@ Args:
 Rets: N/A
 Example: N/A
 
-API 250
+API 252
 Format: get_dynamic_simulation_time_step()
 Description: Get dynamic simulation time step.
 Args: N/A
@@ -2513,7 +2538,7 @@ Rets:
     (1) Value of dynamic simulation time step in seconds.
 Example: N/A
 
-API 251
+API 253
 Format: set_dynamic_simulation_time_step(step)
 Description: Set dynamic simulation time step.
 Args:
@@ -2524,14 +2549,14 @@ Tips:
     Run check_least_dynamic_time_constants() to report the least time constants.
 Example: N/A
 
-API 252
+API 254
 Format: show_dynamic_simulation_configuration()
 Description: Show dynamic simulation configuration. Report is sent to log.
 Args: N/A
 Rets: N/A
 Example: N/A
 
-API 253
+API 255
 Format: get_dynamic_simulation_time()
 Description: Get current dynamic simulation time.
 Args: N/A
@@ -2541,7 +2566,7 @@ Tips:
     In STEPS, the minimum simulation time is -2*simulation time step.
 Example: N/A
 
-API 254
+API 256
 Format: clear_meters()
 Description: Clear all meters in the current simulator.
 Args: N/A
@@ -2550,7 +2575,7 @@ Tips:
     If STEPS() is created with is_default=True, this api can help to clear all meters to avoid adding duplicate meters.
 Example: N/A
 
-API 255
+API 257
 Format: prepare_meters(device_type)
 Description: Automatically prepare general meters of all devices of specific device type.
 Args:
@@ -2572,7 +2597,7 @@ DYNAMIC_SIMULATOR::prepare_hvdc_related_meters()
 DYNAMIC_SIMULATOR::prepare_equivalent_device_related_meters()
 Example: N/A
 
-API 256
+API 258
 Format: prepare_bus_meter(bus, meter_type)
 Description: Prepare specific bus meter.
 Args:
@@ -2584,7 +2609,7 @@ Tips:
 DYNAMIC_SIMULATOR::prepare_bus_related_meter()
 Example: N/A
 
-API 257
+API 259
 Format: prepare_generator_meter(generator, meter_type, var_name="")
 Description: Prepare specific generator meter.
 Args:
@@ -2597,7 +2622,7 @@ Tips:
 DYNAMIC_SIMULATOR::prepare_generator_related_meter()
 Example: N/A
 
-API 258
+API 260
 Format: prepare_wt_generator_meter(generator, meter_type, var_name="")
 Description: Prepare specific wind turbine generator meter.
 Args:
@@ -2610,7 +2635,7 @@ Tips:
 DYNAMIC_SIMULATOR::prepare_wt_generator_related_meter()
 Example: N/A
 
-API 259
+API 261
 Format: prepare_pv_unit_meter(pvunit, meter_type, var_name="")
 Description: Prepare specific PV unit meter.
 Args:
@@ -2623,7 +2648,7 @@ Tips:
 DYNAMIC_SIMULATOR::prepare_pv_unit_related_meter()
 Example: N/A
 
-API 260
+API 262
 Format: prepare_energy_storage_meter(estorage, meter_type, var_name="")
 Description: Prepare specific energy storage meter.
 Args:
@@ -2636,7 +2661,7 @@ Tips:
 DYNAMIC_SIMULATOR::prepare_energy_storage_related_meter()
 Example: N/A
 
-API 261
+API 263
 Format: prepare_load_meter(load, meter_type, var_name="")
 Description: Prepare specific load meter.
 Args:
@@ -2649,7 +2674,7 @@ Tips:
 DYNAMIC_SIMULATOR::prepare_load_related_meter()
 Example: N/A
 
-API 262
+API 264
 Format: prepare_line_meter(line, meter_type, side, var_name="")
 Description: Prepare specific transmission line meter.
 Args:
@@ -2663,7 +2688,7 @@ Tips:
 DYNAMIC_SIMULATOR::prepare_line_related_meter()
 Example: N/A
 
-API 263
+API 265
 Format: prepare_transformer_meter(trans, meter_type, side, var_name="")
 Description: Prepare specific transformer meter.
 Args:
@@ -2678,7 +2703,7 @@ Tips:
 DYNAMIC_SIMULATOR::prepare_transformer_related_meter()
 Example: N/A
 
-API 264
+API 266
 Format: prepare_hvdc_meter(hvdc, meter_type, side, var_name="")
 Description: Prepare specific HVDC link meter.
 Args:
@@ -2692,7 +2717,7 @@ Tips:
 DYNAMIC_SIMULATOR::prepare_hvdc_related_meter()
 Example: N/A
 
-API 265
+API 267
 Format: prepare_equivalent_device_meter(edevice, meter_type, var_name="")
 Description: Prepare specific equivalent device meter.
 Args:
@@ -2705,21 +2730,21 @@ Tips:
 DYNAMIC_SIMULATOR::prepare_equivalent_device_related_meter()
 Example: N/A
 
-API 266
+API 268
 Format: start_dynamic_simulation()
 Description: Start dynamic simulation. Dynamic initialization is performed.
 Args: N/A
 Rets: N/A
 Example: N/A
 
-API 267
+API 269
 Format: stop_dynamic_simulation()
 Description: Stop dynamic simulation. No further dynamic simulation should be performed once dynamic simulation is stopped.
 Args: N/A
 Rets: N/A
 Example: N/A
 
-API 268
+API 270
 Format: run_dynamic_simulation_to_time(time)
 Description: Run dynamic simulation to time.
 Args:
@@ -2729,14 +2754,14 @@ Tips:
     The input time is the time when the dynamic simulation is paused. For example, if the current dynamic simulation time returned from get_dynamic_simulation_time() is 1.0s, and the returned time of get_dynamic_simulation_time() will become 1.5s after run_dynamic_simulation_to_time(1.5) is called.
 Example: N/A
 
-API 269
+API 271
 Format: run_a_step()
 Description: Run a dynamic simulation step. The dynamic simulation time is increased by one time step once the function is called.
 Args: N/A
 Rets: N/A
 Example: N/A
 
-API 270
+API 272
 Format: is_system_angular_stable()
 Description: Check if the system is angular stable or not. It is only VALID when system rotor angle stability surveillance flag is enabled.
 If the surveillance flag is not enabled, True is always returned.
@@ -2748,7 +2773,7 @@ Tips:
     Other, True is returned.
 Example: N/A
 
-API 271
+API 273
 Format: get_user_meter_value(index)
 Description: Return value of user meter in dynamic simulator.
 Args:
@@ -2763,7 +2788,7 @@ Example:
     index = 2
     value = simulator.get_user_meter_value(index)
 
-API 272
+API 274
 Format: get_basic_meter_value(meter_name)
 Description: Return value of basic meter in dynamic simulator.
 Args:
@@ -2783,7 +2808,7 @@ Example:
     value = simulator.get_basic_meter_value("DAE ITERATION")
     value = simulator.get_basic_meter_value("BUS WITH MAX POWER MISMATCH")
 
-API 273
+API 275
 Format: set_bus_fault(bus, fault_type, fault_shunt)
 Description: Set bus fault.
 Args:
@@ -2800,7 +2825,7 @@ Example:
     shunt = (0.0, -2e4)
     simulator.set_bus_fault(bus, "three phase fault", shunt)
 
-API 274
+API 276
 Format: clear_bus_fault(bus, fault_type)
 Description: Clear bus fault without tripping bus.
 Args:
@@ -2813,7 +2838,7 @@ Example:
     simulator.set_bus_fault(bus, "three phase fault", shunt)
     simulator.clear_bus_fault(bus, "three pahse fault")
 
-API 275
+API 277
 Format: trip_bus(bus)
 Description: Trip bus. All devices connecting to the bus are disconnected.
 Args:
@@ -2823,7 +2848,7 @@ Example:
     bus = 1
     simulator.trip_bus(bus)
 
-API 276
+API 278
 Format: set_line_fault(line, fault_type, fault_location, fault_shunt)
 Description: Set transmission line fault.
 Args:
@@ -2845,7 +2870,7 @@ Example:
     shunt = (0.0, -2e4)
     simulator.set_line_fault(line, "three phase fault", location, shunt)
 
-API 277
+API 279
 Format: clear_line_fault(line, fault_type, fault_location)
 Description: Clear transmission line fault without tripping the line.
 Args:
@@ -2863,7 +2888,7 @@ Example:
     simulator.set_line_fault(line, "three phase fault", location, shunt)
     simulator.clear_line_fault(line, "three pahse fault", location)
 
-API 278
+API 280
 Format: trip_line(line)
 Description: Trip transmission line. Breakers at the two sides of the line are both tripped.
 Args:
@@ -2873,7 +2898,7 @@ Example:
     line = (1, 2, "1#")
     simulator.trip_line(line)
 
-API 279
+API 281
 Format: trip_line_breaker(line, side)
 Description: Trip transmission line breaker at specific side.
 Args:
@@ -2888,7 +2913,7 @@ Example:
     simulator.trip_line_breaker(line, "sending")
     simulator.trip_line_breaker(line, "receiving")
 
-API 280
+API 282
 Format: close_line(line)
 Description: Close transmission line. Breakers at the two sides of the line are both closed.
 Args:
@@ -2898,7 +2923,7 @@ Example:
     line = (1, 2, "1#")
     simulator.close_line(line)
 
-API 281
+API 283
 Format: close_line_breaker(line, side)
 Description: Close transmission line breaker at specific side.
 Args:
@@ -2913,7 +2938,7 @@ Example:
     simulator.close_line_breaker(line, "sending")
     simulator.close_line_breaker(line, "receiving")
 
-API 282
+API 284
 Format: trip_transformer(transformer)
 Description: Trip transformer. Breakers at the two or three winding sides of the transformer are all tripped.
 Args:
@@ -2927,7 +2952,7 @@ Example:
     trans = (4, 5, 0, "1#")
     simulator.trip_transformer(trans)
 
-API 283
+API 285
 Format: trip_transformer_breaker(transformer, side)
 Description: Trip transformer breaker at specific side.
 Args:
@@ -2947,7 +2972,7 @@ Example:
     simulator.trip_transformer_breaker(trans, "primary")
     simulator.trip_transformer_breaker(trans, "secondary")
 
-API 284
+API 286
 Format: close_transformer(transformer)
 Description: Close transformer. Breakers at the two or three winding sides of the transformer are all closed.
 Args:
@@ -2961,7 +2986,7 @@ Example:
     trans = (4, 5, 0, "1#")
     simulator.close_transformer(trans)
 
-API 285
+API 287
 Format: close_transformer_breaker(transformer, side)
 Description: Close transformer breaker at specific side.
 Args:
@@ -2981,7 +3006,7 @@ Example:
     simulator.close_transformer_breaker(trans, "primary")
     simulator.close_transformer_breaker(trans, "secondary")
 
-API 286
+API 288
 Format: trip_generator(generator)
 Description: Trip generator.
 Args:
@@ -2991,7 +3016,7 @@ Example:
     gen = (1, "#1")
     simulator.trip_generator(gen)
 
-API 287
+API 289
 Format: shed_generator(generator, percent)
 Description: Shed generator by percent.
 Args:
@@ -3007,7 +3032,7 @@ Example:
     percent = 0.1
     simulator.shed_generator(gen, percent)
 
-API 288
+API 290
 Format: trip_wt_generator(generator, n)
 Description: Trip wind turbine generator.
 Args:
@@ -3021,7 +3046,7 @@ Example:
     n = 2
     simulator.trip_wt_generator(gen, n)
 
-API 289
+API 291
 Format: shed_wt_generator(generator, percent)
 Description: Shed wind turbine generator by percent.
 Args:
@@ -3037,7 +3062,7 @@ Example:
     percent = 0.1
     simulator.shed_wt_generator(gen, percent)
 
-API 290
+API 292
 Format: trip_load(load)
 Description: Trip load.
 Args:
@@ -3047,7 +3072,7 @@ Example:
     load = (1, "#1")
     simulator.trip_load(load)
 
-API 291
+API 293
 Format: close_load(load)
 Description: Close load.
 Args:
@@ -3057,7 +3082,7 @@ Example:
     load = (1, "#1")
     simulator.close_load(load)
 
-API 292
+API 294
 Format: scale_load(load, percent)
 Description: Scale load by percent.
 Args:
@@ -3069,7 +3094,7 @@ Example:
     percent = 0.1
     simulator.scale_load(load, percent)
 
-API 293
+API 295
 Format: scale_all_loads(percent)
 Description: Scale all loads by percent.
 Args:
@@ -3079,7 +3104,7 @@ Example:
     percent = 0.1
     simulator.scale_all_loads(percent)
 
-API 294
+API 296
 Format: trip_fixed_shunt(shunt)
 Description: Trip fixed shunt.
 Args:
@@ -3089,7 +3114,7 @@ Example:
     shunt = (1, "#1")
     simulator.trip_fixed_shunt(shunt)
 
-API 295
+API 297
 Format: close_fixed_shunt(shunt)
 Description: Close fixed shunt.
 Args:
@@ -3099,7 +3124,7 @@ Example:
     shunt = (1, "#1")
     simulator.close_fixed_shunt(shunt)
 
-API 296
+API 298
 Format: manually_bypass_hvdc(hvdc)
 Description: Manually bypass HVDC link.
 Args:
@@ -3111,7 +3136,7 @@ Example:
     hvdc = (1, 2, "DC Link 1")
     simulator.manually_bypass_hvdc(hvdc)
 
-API 297
+API 299
 Format: manually_block_hvdc(hvdc)
 Description: Manually block HVDC link.
 Args:
@@ -3123,7 +3148,7 @@ Example:
     hvdc = (1, 2, "DC Link 1")
     simulator.manually_block_hvdc(hvdc)
 
-API 298
+API 300
 Format: manually_unbypass_hvdc(hvdc)
 Description: Manually unbypass HVDC link.
 Args:
@@ -3133,7 +3158,7 @@ Example:
     hvdc = (1, 2, "DC Link 1")
     simulator.manually_unbypass_hvdc(hvdc)
 
-API 299
+API 301
 Format: manually_unblock_hvdc(hvdc)
 Description: Manually unblock HVDC link.
 Args:
@@ -3143,7 +3168,7 @@ Example:
     hvdc = (1, 2, "DC Link 1")
     simulator.manually_unblock_hvdc(hvdc)
 
-API 300
+API 302
 Format: get_generator_voltage_reference_in_pu(generator)
 Description: Get generator voltage reference of exciter model. If there is no exciter model for the generator, 0 will be returned.
 Args:
@@ -3154,7 +3179,7 @@ Example:
     gen = (1, "#1")
     vref = simulator.get_generator_voltage_reference_in_pu(gen)
 
-API 301
+API 303
 Format: get_generator_mechanical_power_reference_in_pu(generator)
 Description: Get generator mechanical power reference of turbine governor model. If there is no turbine governor model for the generator, 0 will be returned.
 Args:
@@ -3165,7 +3190,7 @@ Example:
     gen = (1, "#1")
     pref = simulator.get_generator_mechanical_power_reference_in_pu(gen)
 
-API 302
+API 304
 Format: get_generator_mechanical_power_reference_in_MW(generator)
 Description: Get generator mechanical power reference of turbine governor model. If there is no turbine governor model for the generator, 0 will be returned.
 Args:
@@ -3176,7 +3201,7 @@ Example:
     gen = (1, "#1")
     pref = simulator.get_generator_mechanical_power_reference_in_MW(gen)
 
-API 303
+API 305
 Format: set_generator_voltage_reference_in_pu(generator, value)
 Description: Set generator voltage reference of exciter model. If there is no exciter model for the generator, nothing will be changed.
 Args:
@@ -3189,7 +3214,7 @@ Example:
     new_vref = vref + 0.1
     simulator.set_generator_voltage_reference_in_pu(gen, new_vref)
 
-API 304
+API 306
 Format: set_generator_mechanical_power_reference_in_pu(generator, value)
 Description: Set generator mechanical power reference of turbine governor model. If there is no turbine governor model for the generator, nothing will be changed.
 Args:
@@ -3202,7 +3227,7 @@ Example:
     new_pref = pref + 0.1
     simulator.set_generator_mechanical_power_reference_in_pu(gen, new_pref)
 
-API 305
+API 307
 Format: set_generator_mechanical_power_reference_in_MW(generator, value)
 Description: Set generator mechanical power reference of turbine governor model. If there is no turbine governor model for the generator, nothing will be changed.
 Args:
@@ -3215,7 +3240,7 @@ Example:
     new_pref = pref + 10
     simulator.set_generator_mechanical_power_reference_in_MW(gen, new_pref)
 
-API 306
+API 308
 Format: get_generator_excitation_voltage_in_pu(generator)
 Description: Get generator excitation voltage.
 Args:
@@ -3226,7 +3251,7 @@ Example:
     gen = (1, "#1")
     efd = simulator.get_generator_excitation_voltage_in_pu(gen)
 
-API 307
+API 309
 Format: get_generator_mechanical_power_in_pu(generator)
 Description: Get generator mechanical power.
 Args:
@@ -3237,7 +3262,7 @@ Example:
     gen = (1, "#1")
     pmech = simulator.get_generator_mechanical_power_in_pu(gen)
 
-API 308
+API 310
 Format: get_generator_mechanical_power_in_MW(generator)
 Description: Get generator mechanical power.
 Args:
@@ -3248,7 +3273,7 @@ Example:
     gen = (1, "#1")
     pmech = simulator.get_generator_mechanical_power_in_MW(gen)
 
-API 309
+API 311
 Format: set_generator_excitation_voltage_in_pu(generator, value)
 Description: Set generator excitation voltage. If exciter model exists for the generator, nothing will be changed.
 Args:
@@ -3261,7 +3286,7 @@ Example:
     new_efd = efd + 0.1
     simulator.set_generator_excitation_voltage_in_pu(gen, new_efd)
 
-API 310
+API 312
 Format: set_generator_mechanical_power_in_pu(generator, value)
 Description: Set generator mechanical power. If turbine governor model exists for the generator, nothing will be changed.
 Args:
@@ -3274,7 +3299,7 @@ Example:
     new_pmech = pmech + 0.05
     simulator.set_generator_mechanical_power_in_pu(gen, new_pmech)
 
-API 311
+API 313
 Format: set_generator_mechanical_power_in_MW(generator, value)
 Description: Set generator mechanical power. If turbine governor model exists for the generator, nothing will be changed.
 Args:
@@ -3287,7 +3312,7 @@ Example:
     new_pmech = pmech + 10
     simulator.set_generator_mechanical_power_in_MW(gen, new_pmech)
 
-API 312
+API 314
 Format: get_hvdc_power_order_in_MW(hvdc)
 Description: Get HVDC link power order.
 Args:
@@ -3298,7 +3323,7 @@ Example:
     hvdc = (1,2,"DC link 1")
     order = simulator.get_hvdc_power_order_in_MW(hvdc)
 
-API 313
+API 315
 Format: set_hvdc_power_order_in_MW(hvdc, value)
 Description: Set HVDC link power order.
 Args:

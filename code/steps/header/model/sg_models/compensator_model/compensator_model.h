@@ -25,6 +25,9 @@ class COMPENSATOR_MODEL : public SG_MODEL
         complex<double> get_generator_terminal_complex_current_in_pu() const;
         double get_generator_terminal_voltage_in_pu();
         double get_generator_terminal_current_in_pu() const;
+
+        virtual STEPS_SPARSE_MATRIX* get_linearized_matrix(string matrix_type);
+        virtual void set_linearized_matrix(string matrix_type, STEPS_SPARSE_MATRIX* matrix);
     public: // specific compensator
         virtual string get_model_name() const = 0;
 
@@ -56,6 +59,9 @@ class COMPENSATOR_MODEL : public SG_MODEL
         virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
         double ecomp;
+
+        STEPS_SPARSE_MATRIX* comp_matrix;
+        STEPS_SPARSE_MATRIX* comp_avr_matrix;
 };
 
 #endif // COMPENSATOR_MODEL_H

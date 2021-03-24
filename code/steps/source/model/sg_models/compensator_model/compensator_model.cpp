@@ -53,3 +53,40 @@ double COMPENSATOR_MODEL::get_generator_terminal_current_in_pu() const
 {
     return abs(get_generator_terminal_complex_current_in_pu());
 }
+
+STEPS_SPARSE_MATRIX* COMPENSATOR_MODEL::get_linearized_matrix(string matrix_type)
+{
+    matrix_type = string2upper(matrix_type);
+    if(matrix_type=="COMP" and comp_matrix!=NULL) return comp_matrix;
+    if(matrix_type=="COMP-AVR" and comp_avr_matrix!=NULL) return comp_avr_matrix;
+    return NULL;
+}
+
+void COMPENSATOR_MODEL::set_linearized_matrix(string matrix_type, STEPS_SPARSE_MATRIX* matrix)
+{
+    matrix_type = string2upper(matrix_type);
+    if(matrix_type=="COMP")
+    {
+        if(comp_matrix==NULL) comp_matrix = matrix;
+        else
+        {
+            if(comp_matrix!=matrix)
+            {
+                delete comp_matrix;
+                comp_matrix = matrix;
+            }
+        }
+    }
+    if(matrix_type=="COMP-AVR")
+    {
+        if(comp_avr_matrix==NULL) comp_avr_matrix = matrix;
+        else
+        {
+            if(comp_avr_matrix!=matrix)
+            {
+                delete comp_avr_matrix;
+                comp_avr_matrix = matrix;
+            }
+        }
+    }
+}

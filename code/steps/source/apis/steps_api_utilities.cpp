@@ -3,6 +3,21 @@
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
+unsigned int api_get_api_major_version()
+{
+    return 1;
+}
+
+unsigned int api_get_api_minor_version()
+{
+    return 5;
+}
+
+unsigned int api_get_api_patch_version()
+{
+    return 0;
+}
+
 unsigned int api_get_const_INDEX_NOT_EXIST()
 {
     return INDEX_NOT_EXIST;

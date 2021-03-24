@@ -60,3 +60,53 @@ double TURBINE_GOVERNOR_MODEL::get_mechanical_power_reference_in_pu_based_on_mba
     else
         return get_initial_mechanical_power_reference_in_pu_based_on_mbase();
 }
+
+STEPS_SPARSE_MATRIX* TURBINE_GOVERNOR_MODEL::get_linearized_matrix(string matrix_type)
+{
+    matrix_type = string2upper(matrix_type);
+    if(matrix_type=="GOV" and gov_matrix!=NULL) return gov_matrix;
+    if(matrix_type=="GOV-GEN" and gov_gen_matrix!=NULL) return gov_gen_matrix;
+    if(matrix_type=="GOV-TLC" and gov_tlc_matrix!=NULL) return gov_tlc_matrix;
+    return NULL;
+}
+
+void TURBINE_GOVERNOR_MODEL::set_linearized_matrix(string matrix_type, STEPS_SPARSE_MATRIX* matrix)
+{
+    matrix_type = string2upper(matrix_type);
+    if(matrix_type=="GOV")
+    {
+        if(gov_matrix==NULL) gov_matrix = matrix;
+        else
+        {
+            if(gov_matrix!=matrix)
+            {
+                delete gov_matrix;
+                gov_matrix = matrix;
+            }
+        }
+    }
+    if(matrix_type=="GOV-GEN")
+    {
+        if(gov_gen_matrix==NULL) gov_gen_matrix = matrix;
+        else
+        {
+            if(gov_gen_matrix!=matrix)
+            {
+                delete gov_gen_matrix;
+                gov_gen_matrix = matrix;
+            }
+        }
+    }
+    if(matrix_type=="GOV-TLC")
+    {
+        if(gov_tlc_matrix==NULL) gov_tlc_matrix = matrix;
+        else
+        {
+            if(gov_tlc_matrix!=matrix)
+            {
+                delete gov_tlc_matrix;
+                gov_tlc_matrix = matrix;
+            }
+        }
+    }
+}

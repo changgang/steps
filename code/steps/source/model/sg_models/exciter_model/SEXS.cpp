@@ -362,15 +362,15 @@ double SEXS::get_minimum_nonzero_time_constant_in_s()
 void SEXS::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    unsigned int i=1;
-    add_model_inernal_variable_name_and_index_pair("STATE@TUNER", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@EXCITER", i); i++;
+    unsigned int i=0;
+    add_model_internal_variable_name_and_index_pair("STATE@TUNER", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@EXCITER", i); i++;
 }
 
 double SEXS::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
-    if(is_model_inernal_variable_exist(var_name))
+    if(is_model_internal_variable_exist(var_name))
     {
         if(var_name == "STATE@TUNER") return phase_tuner.get_state();
         if(var_name == "STATE@EXCITER") return exciter.get_state();
@@ -392,4 +392,20 @@ string SEXS::get_dynamic_data_in_bpa_format() const
 string SEXS::get_dynamic_data_in_steps_format() const
 {
     return get_dynamic_data_in_psse_format();
+}
+
+void SEXS::linearize()
+{
+    STEPS_SPARSE_MATRIX* matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("AVR", matrix);
+    // do linearization
+    matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("AVR-GEN", matrix);
+    // do linearization
+    matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("AVR-PSS", matrix);
+    // do linearization
+    matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("AVR-COMP", matrix);
+    // do linearization
 }

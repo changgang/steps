@@ -576,11 +576,11 @@ void WT3P0::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
-    add_model_inernal_variable_name_and_index_pair("STATE@SPEED REFERENCE SENSOR", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@SPEED REGULATOR", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@FREQUENCY SENSOR", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@FREQUENCY PID CONTROLLER", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@PITCH INTEGRATOR", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@SPEED REFERENCE SENSOR", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@SPEED REGULATOR", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@FREQUENCY SENSOR", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@FREQUENCY PID CONTROLLER", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@PITCH INTEGRATOR", i); i++;
 }
 
 double WT3P0::get_model_internal_variable_with_name(string var_name)

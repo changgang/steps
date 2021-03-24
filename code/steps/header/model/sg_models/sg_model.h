@@ -3,6 +3,7 @@
 
 #include "header/model/model.h"
 #include "header/device/bus.h"
+#include "header/basic/sparse_matrix_define.h"
 #include <complex>
 
 class GENERATOR;
@@ -49,6 +50,10 @@ class SG_MODEL : public MODEL
         virtual string get_dynamic_data_in_psse_format() const = 0;
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
+
+        virtual void linearize() = 0;
+        virtual STEPS_SPARSE_MATRIX* get_linearized_matrix(string matrix_type) = 0;
+        virtual void set_linearized_matrix(string matrix_type, STEPS_SPARSE_MATRIX* matrix) = 0;
     private:
 
 };

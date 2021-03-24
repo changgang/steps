@@ -1414,14 +1414,14 @@ void WT3E0::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
-    add_model_inernal_variable_name_and_index_pair("STATE@SPEED REFERENCE SENSOR", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@TORQUE REGULATOR", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@VIRTUAL INERTIA CONTROL", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@PRIMARY FREQUENCY CONTROL", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@SECONDARY FREQUENCY CONTROL", i); i++;
-    add_model_inernal_variable_name_and_index_pair("VIRTUAL INERTIA CONTROL COMMAND", i); i++;
-    add_model_inernal_variable_name_and_index_pair("PRIMARY FREQUENCY CONTROL COMMAND", i); i++;
-    add_model_inernal_variable_name_and_index_pair("SECONDARY FREQUENCY CONTROL COMMAND", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@SPEED REFERENCE SENSOR", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@TORQUE REGULATOR", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@VIRTUAL INERTIA CONTROL", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@PRIMARY FREQUENCY CONTROL", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@SECONDARY FREQUENCY CONTROL", i); i++;
+    add_model_internal_variable_name_and_index_pair("VIRTUAL INERTIA CONTROL COMMAND", i); i++;
+    add_model_internal_variable_name_and_index_pair("PRIMARY FREQUENCY CONTROL COMMAND", i); i++;
+    add_model_internal_variable_name_and_index_pair("SECONDARY FREQUENCY CONTROL COMMAND", i); i++;
 }
 
 double WT3E0::get_model_internal_variable_with_name(string var_name)

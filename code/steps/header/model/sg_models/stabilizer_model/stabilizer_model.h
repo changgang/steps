@@ -36,6 +36,9 @@ class STABILIZER_MODEL : public SG_MODEL
         //
         SIGNAL prepare_signal_with_signal_type_and_bus(unsigned int signal_type, unsigned int bus);
         SIGNAL prepare_signal_with_signal_type_and_device_id(unsigned int signal_type, DEVICE_ID did);
+
+        virtual STEPS_SPARSE_MATRIX* get_linearized_matrix(string matrix_type);
+        virtual void set_linearized_matrix(string matrix_type, STEPS_SPARSE_MATRIX* matrix);
     public: // specific model level
         virtual string get_model_name() const = 0;
 
@@ -72,6 +75,10 @@ class STABILIZER_MODEL : public SG_MODEL
         SIGNAL* get_nonconst_pointer_of_signal_at_slot(unsigned int slot);
     private:
         SIGNAL signal_0, signal_1, signal_2, signal_3, signal_4;
+
+        STEPS_SPARSE_MATRIX* pss_matrix;
+        STEPS_SPARSE_MATRIX* pss_avr_matrix;
+        STEPS_SPARSE_MATRIX* pss_gen_matrix;
 };
 
 #endif // STABILIZER_MODEL_H

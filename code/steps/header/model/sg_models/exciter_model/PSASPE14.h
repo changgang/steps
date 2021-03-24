@@ -77,6 +77,8 @@ class PSASPE14: public EXCITER_MODEL
         virtual string get_dynamic_data_in_psse_format() const;
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
+
+        virtual void linearize();
     private:
         void copy_from_const_model(const PSASPE14& model);
 

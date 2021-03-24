@@ -709,15 +709,15 @@ void ESTR0::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
-    add_model_inernal_variable_name_and_index_pair("TERMINAL P IN PU", i); i++;
-    add_model_inernal_variable_name_and_index_pair("TERMINAL P IN MW", i); i++;
-    add_model_inernal_variable_name_and_index_pair("TERMINAL Q IN PU", i); i++;
-    add_model_inernal_variable_name_and_index_pair("TERMINAL Q IN MVAR", i); i++;
-    add_model_inernal_variable_name_and_index_pair("TERMINAL S IN PU", i); i++;
-    add_model_inernal_variable_name_and_index_pair("TERMINAL S IN MVA", i); i++;
-    add_model_inernal_variable_name_and_index_pair("TERMINAL CURRENT IN PU", i); i++;
-    add_model_inernal_variable_name_and_index_pair("TERMINAL CURRENT IN KA", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE OF ENERGY", i); i++;
+    add_model_internal_variable_name_and_index_pair("TERMINAL P IN PU", i); i++;
+    add_model_internal_variable_name_and_index_pair("TERMINAL P IN MW", i); i++;
+    add_model_internal_variable_name_and_index_pair("TERMINAL Q IN PU", i); i++;
+    add_model_internal_variable_name_and_index_pair("TERMINAL Q IN MVAR", i); i++;
+    add_model_internal_variable_name_and_index_pair("TERMINAL S IN PU", i); i++;
+    add_model_internal_variable_name_and_index_pair("TERMINAL S IN MVA", i); i++;
+    add_model_internal_variable_name_and_index_pair("TERMINAL CURRENT IN PU", i); i++;
+    add_model_internal_variable_name_and_index_pair("TERMINAL CURRENT IN KA", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE OF ENERGY", i); i++;
 }
 
 double ESTR0::get_model_internal_variable_with_name(string var_name)

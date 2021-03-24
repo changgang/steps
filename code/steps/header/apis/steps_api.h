@@ -14,6 +14,10 @@
 extern "C" {
 #endif
 
+EXPORT_STEPS_DLL unsigned int api_get_api_major_version();
+EXPORT_STEPS_DLL unsigned int api_get_api_minor_version();
+EXPORT_STEPS_DLL unsigned int api_get_api_patch_version();
+
 EXPORT_STEPS_DLL unsigned int api_get_const_INDEX_NOT_EXIST();
 
 EXPORT_STEPS_DLL void api_set_toolkit_log_file(char* log_file, bool log_file_append_mode=false, unsigned int toolkit_index=INDEX_NOT_EXIST);
@@ -248,6 +252,10 @@ EXPORT_STEPS_DLL double api_get_generator_related_model_float_parameter(unsigned
 EXPORT_STEPS_DLL void api_set_generator_related_model_float_parameter(unsigned int bus, char* identifier, char* model_type, char* parameter_name, double value, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL unsigned int api_get_generator_related_model_float_parameter_count(unsigned int bus, char* identifier, char* model_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL const char* api_get_generator_related_model_float_parameter_name(unsigned int bus, char* identifier, char* model_type, unsigned int parameter_index, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL unsigned int api_get_generator_related_model_internal_variable_count(unsigned int bus, char* identifier, char* model_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_generator_related_model_internal_variable_with_name(unsigned int bus, char* identifier, char* model_type, char* variable_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_generator_related_model_internal_variable_with_index(unsigned int bus, char* identifier, char* model_type, unsigned int variable_index, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL const char* api_get_generator_related_model_internal_variable_name(unsigned int bus, char* identifier, char* model_type, unsigned int variable_index, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL const char* api_get_wt_generator_related_model_name(unsigned int bus, char* identifier, char* model_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_wt_generator_related_model_float_parameter(unsigned int bus, char* identifier, char* model_type, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);

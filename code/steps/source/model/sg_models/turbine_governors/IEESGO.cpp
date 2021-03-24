@@ -496,11 +496,11 @@ void IEESGO::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
-    add_model_inernal_variable_name_and_index_pair("STATE@GOVERNOR TUNER", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@GOVERNOR", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@HIGH TURBINE", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@MEDIUM TURBINE", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@LOW TURBINE", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@GOVERNOR TUNER", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@GOVERNOR", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@HIGH TURBINE", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@MEDIUM TURBINE", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@LOW TURBINE", i); i++;
 }
 
 double IEESGO::get_model_internal_variable_with_name(string var_name)
@@ -537,4 +537,17 @@ string IEESGO::get_dynamic_data_in_bpa_format() const
 string IEESGO::get_dynamic_data_in_steps_format() const
 {
     return get_dynamic_data_in_psse_format();
+}
+
+void IEESGO::linearize()
+{
+    STEPS_SPARSE_MATRIX* matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("GOV", matrix);
+    // do linearization
+    matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("GOV-GEN", matrix);
+    // do linearization
+    matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("GOV-TLC", matrix);
+    // do linearization
 }

@@ -41,6 +41,11 @@ void MODEL_VAR_TABLE::add_variable_name_index_pair(string var_name, unsigned int
     }
 }
 
+unsigned int MODEL_VAR_TABLE::size() const
+{
+    return var_index2name_map.size();
+}
+
 unsigned int MODEL_VAR_TABLE::operator[](const string var_name) const
 {
     return get_variable_index_from_variable_name(var_name);

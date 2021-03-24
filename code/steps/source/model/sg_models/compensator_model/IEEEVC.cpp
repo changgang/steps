@@ -237,3 +237,13 @@ string IEEEVC::get_dynamic_data_in_steps_format() const
 {
     return get_dynamic_data_in_psse_format();
 }
+
+void IEEEVC::linearize()
+{
+    STEPS_SPARSE_MATRIX* matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("COMP", matrix);
+    // do linearization
+    matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("COMP-AVR", matrix);
+    // do linearization
+}

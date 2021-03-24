@@ -611,13 +611,13 @@ double GENSAL::get_minimum_nonzero_time_constant_in_s()
 void GENSAL::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    unsigned int i=1;
-    add_model_inernal_variable_name_and_index_pair("STATE@ROTOR ANGLE BLOCK", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@ROTOR SPEED BLOCK", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@D-AXIS TRANSIENT BLOCK", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@D-AXIS SUBTRANSIENT BLOCK", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@Q-AXIS SUBTRANSIENT BLOCK", i); i++;
-    add_model_inernal_variable_name_and_index_pair("SATURATION", i); i++;
+    unsigned int i=0;
+    add_model_internal_variable_name_and_index_pair("STATE@ROTOR ANGLE BLOCK", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@ROTOR SPEED BLOCK", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@D-AXIS TRANSIENT BLOCK", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@D-AXIS SUBTRANSIENT BLOCK", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@Q-AXIS SUBTRANSIENT BLOCK", i); i++;
+    add_model_internal_variable_name_and_index_pair("SATURATION", i); i++;
 }
 
 double GENSAL::get_model_internal_variable_with_name(string var_name)
@@ -823,4 +823,17 @@ string GENSAL::get_dynamic_data_in_bpa_format() const
 string GENSAL::get_dynamic_data_in_steps_format() const
 {
     return get_dynamic_data_in_psse_format();
+}
+
+void GENSAL::linearize()
+{
+    STEPS_SPARSE_MATRIX* gen_matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("GEN", gen_matrix);
+    // do linearization
+    STEPS_SPARSE_MATRIX* gen_avr_matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("GEN-AVR", gen_avr_matrix);
+    // do linearization
+    STEPS_SPARSE_MATRIX* gen_gov_matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("GEN-GOV", gen_gov_matrix);
+    // do linearization
 }

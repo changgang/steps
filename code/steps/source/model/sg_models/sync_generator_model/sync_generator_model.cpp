@@ -37,10 +37,17 @@ void SYNC_GENERATOR_MODEL::common_constructor()
 
     set_initial_excitation_voltage_in_pu(0.0);
     set_initial_mechanical_power_in_pu_based_on_mbase(0.0);
+
+    gen_matrix = NULL;
+    gen_avr_matrix = NULL;
+    gen_gov_matrix = NULL;
+
 }
 SYNC_GENERATOR_MODEL::~SYNC_GENERATOR_MODEL()
 {
-    ;
+    if(gen_matrix != NULL) delete gen_matrix;
+    if(gen_avr_matrix != NULL) delete gen_avr_matrix;
+    if(gen_gov_matrix != NULL) delete gen_gov_matrix;
 }
 
 void SYNC_GENERATOR_MODEL::set_blocks_toolkit(STEPS& toolkit)
@@ -389,4 +396,54 @@ void SYNC_GENERATOR_MODEL::set_rotor_speed_deviation_in_pu(double speed)
 {
     rotor_speed_block.set_output(speed);
     rotor_speed_block.initialize();
+}
+
+STEPS_SPARSE_MATRIX* SYNC_GENERATOR_MODEL::get_linearized_matrix(string matrix_type)
+{
+    matrix_type = string2upper(matrix_type);
+    if(matrix_type=="GEN" and gen_matrix!=NULL) return gen_matrix;
+    if(matrix_type=="GEN-AVR" and gen_avr_matrix!=NULL) return gen_avr_matrix;
+    if(matrix_type=="GEN-GOV" and gen_gov_matrix!=NULL) return gen_gov_matrix;
+    return NULL;
+}
+
+void SYNC_GENERATOR_MODEL::set_linearized_matrix(string matrix_type, STEPS_SPARSE_MATRIX* matrix)
+{
+    matrix_type = string2upper(matrix_type);
+    if(matrix_type=="GEN")
+    {
+        if(gen_matrix==NULL) gen_matrix = matrix;
+        else
+        {
+            if(gen_matrix!=matrix)
+            {
+                delete gen_matrix;
+                gen_matrix = matrix;
+            }
+        }
+    }
+    if(matrix_type=="GEN-AVR")
+    {
+        if(gen_avr_matrix==NULL) gen_avr_matrix = matrix;
+        else
+        {
+            if(gen_avr_matrix!=matrix)
+            {
+                delete gen_avr_matrix;
+                gen_avr_matrix = matrix;
+            }
+        }
+    }
+    if(matrix_type=="GEN-GOV")
+    {
+        if(gen_gov_matrix==NULL) gen_gov_matrix = matrix;
+        else
+        {
+            if(gen_gov_matrix!=matrix)
+            {
+                delete gen_gov_matrix;
+                gen_gov_matrix = matrix;
+            }
+        }
+    }
 }

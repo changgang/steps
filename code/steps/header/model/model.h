@@ -34,11 +34,12 @@ class MODEL
         bool is_model_data_exist(unsigned int var_index) const;
 
         void clear_model_internal_variable_table();
-        void add_model_inernal_variable_name_and_index_pair(string var_name, unsigned int var_index);
-        unsigned int get_model_inernal_variable_index(string var_name) const;
-        string get_model_inernal_variable_name(unsigned int var_index) const;
-        bool is_model_inernal_variable_exist(string var_name) const;
-        bool is_model_inernal_variable_exist(unsigned int var_index) const;
+        void add_model_internal_variable_name_and_index_pair(string var_name, unsigned int var_index);
+        unsigned int get_model_internal_variable_count() const;
+        unsigned int get_model_internal_variable_index(string var_name) const;
+        string get_model_internal_variable_name(unsigned int var_index) const;
+        bool is_model_internal_variable_exist(string var_name) const;
+        bool is_model_internal_variable_exist(unsigned int var_index) const;
 
         void set_device_id(DEVICE_ID did);
         NONBUS_DEVICE* get_device_pointer() const;

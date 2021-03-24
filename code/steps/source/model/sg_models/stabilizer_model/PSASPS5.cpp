@@ -477,14 +477,14 @@ void PSASPS5::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
-    add_model_inernal_variable_name_and_index_pair("SIGNAL@SLOT 1", i); i++;
-    add_model_inernal_variable_name_and_index_pair("SIGNAL@SLOT 2", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@SENSOR 1", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@SENSOR 2", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@FILTER", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@PHASE TUNER 1", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@PHASE TUNER 2", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@PHASE TUNER 3", i); i++;
+    add_model_internal_variable_name_and_index_pair("SIGNAL@SLOT 1", i); i++;
+    add_model_internal_variable_name_and_index_pair("SIGNAL@SLOT 2", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@SENSOR 1", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@SENSOR 2", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@FILTER", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@PHASE TUNER 1", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@PHASE TUNER 2", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@PHASE TUNER 3", i); i++;
 }
 
 double PSASPS5::get_model_internal_variable_with_name(string var_name)
@@ -538,4 +538,17 @@ string PSASPS5::get_dynamic_data_in_bpa_format() const
 string PSASPS5::get_dynamic_data_in_steps_format() const
 {
     return get_dynamic_data_in_psse_format();
+}
+
+void PSASPS5::linearize()
+{
+    STEPS_SPARSE_MATRIX* matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("PSS", matrix);
+    // do linearization
+    matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("PSS-AVR", matrix);
+    // do linearization
+    matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("PSS-GEN", matrix);
+    // do linearization
 }

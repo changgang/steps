@@ -525,11 +525,11 @@ void WT3G1::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
-    add_model_inernal_variable_name_and_index_pair("PLL ANGLE IN DEG", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@ACTIVE CURRENT COMMAND BLOCK", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@REACTIVE VOLTAGE COMMAND BLOCK", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@PLL FREQUENCY BLOCK", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@PLL ANGLE BLOCK", i); i++;
+    add_model_internal_variable_name_and_index_pair("PLL ANGLE IN DEG", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@ACTIVE CURRENT COMMAND BLOCK", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@REACTIVE VOLTAGE COMMAND BLOCK", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@PLL FREQUENCY BLOCK", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@PLL ANGLE BLOCK", i); i++;
 }
 
 double WT3G1::get_model_internal_variable_with_name(string var_name)

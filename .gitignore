@@ -6,6 +6,7 @@ python/*.xlsx
 python/*.tex
 python/*.log
 python/*.md
+python/*.txt
 python/__*
 python/stepspy-current/build/
 python/stepspy-current/dist/

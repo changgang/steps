@@ -851,12 +851,12 @@ void GAST2A::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
-    add_model_inernal_variable_name_and_index_pair("STATE@DROOP", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@SERVO MOTOR", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@DELAYER 1", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@DELAYER 2", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@DELAYER 3", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@DELAYER 4", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@DROOP", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@SERVO MOTOR", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@DELAYER 1", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@DELAYER 2", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@DELAYER 3", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@DELAYER 4", i); i++;
 }
 
 double GAST2A::get_model_internal_variable_with_name(string var_name)
@@ -905,4 +905,17 @@ string GAST2A::get_dynamic_data_in_bpa_format() const
 string GAST2A::get_dynamic_data_in_steps_format() const
 {
     return get_dynamic_data_in_psse_format();
+}
+
+void GAST2A::linearize()
+{
+    STEPS_SPARSE_MATRIX* matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("GOV", matrix);
+    // do linearization
+    matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("GOV-GEN", matrix);
+    // do linearization
+    matrix = new STEPS_SPARSE_MATRIX;
+    set_linearized_matrix("GOV-TLC", matrix);
+    // do linearization
 }

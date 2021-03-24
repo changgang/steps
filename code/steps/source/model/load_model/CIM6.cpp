@@ -1231,19 +1231,19 @@ void CIM6::prepare_model_internal_variable_table()
     clear_model_internal_variable_table();
     unsigned int i=0;
 
-    add_model_inernal_variable_name_and_index_pair("TOTAL ACTIVE POWER LOAD IN MW", i); i++;
-    add_model_inernal_variable_name_and_index_pair("TOTAL REACTIVE POWER LOAD IN MVAR", i); i++;
-    add_model_inernal_variable_name_and_index_pair("MOTOR ACTIVE POWER LOAD IN MW", i); i++;
-    add_model_inernal_variable_name_and_index_pair("MOTOR REACTIVE POWER LOAD IN MVAR", i); i++;
-    add_model_inernal_variable_name_and_index_pair("SHUNT REACTIVE POWER LOAD IN MVAR", i); i++;
-    add_model_inernal_variable_name_and_index_pair("TOTAL CURRENT IN KA", i); i++;
-    add_model_inernal_variable_name_and_index_pair("MOTOR CURRENT IN KA", i); i++;
-    add_model_inernal_variable_name_and_index_pair("MOTOR SPEED DEVIATION IN PU", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@TRANSIENT BLOCK OF X AXIS", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@TRANSIENT BLOCK OF Y AXIS", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@SUBTRANSIENT BLOCK OF X AXIS", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@SUBTRANSIENT BLOCK OF Y AXIS", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@SPEED BLOCK", i); i++;
+    add_model_internal_variable_name_and_index_pair("TOTAL ACTIVE POWER LOAD IN MW", i); i++;
+    add_model_internal_variable_name_and_index_pair("TOTAL REACTIVE POWER LOAD IN MVAR", i); i++;
+    add_model_internal_variable_name_and_index_pair("MOTOR ACTIVE POWER LOAD IN MW", i); i++;
+    add_model_internal_variable_name_and_index_pair("MOTOR REACTIVE POWER LOAD IN MVAR", i); i++;
+    add_model_internal_variable_name_and_index_pair("SHUNT REACTIVE POWER LOAD IN MVAR", i); i++;
+    add_model_internal_variable_name_and_index_pair("TOTAL CURRENT IN KA", i); i++;
+    add_model_internal_variable_name_and_index_pair("MOTOR CURRENT IN KA", i); i++;
+    add_model_internal_variable_name_and_index_pair("MOTOR SPEED DEVIATION IN PU", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@TRANSIENT BLOCK OF X AXIS", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@TRANSIENT BLOCK OF Y AXIS", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@SUBTRANSIENT BLOCK OF X AXIS", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@SUBTRANSIENT BLOCK OF Y AXIS", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@SPEED BLOCK", i); i++;
 }
 
 double CIM6::get_model_internal_variable_with_name(string var_name)

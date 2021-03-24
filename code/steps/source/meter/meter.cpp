@@ -388,7 +388,7 @@ bool METER::is_internal_variable_name_valid(string& name) const
                 model = ptr->get_hvdc_model();
         }
         if(model!=NULL)
-            return model->is_model_inernal_variable_exist(name);
+            return model->is_model_internal_variable_exist(name);
         else
         {
             ostringstream osstream;

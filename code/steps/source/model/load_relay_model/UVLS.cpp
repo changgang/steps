@@ -580,7 +580,7 @@ void UVLS::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
-    add_model_inernal_variable_name_and_index_pair("SHED SCALE IN PU", i); i++;
+    add_model_internal_variable_name_and_index_pair("SHED SCALE IN PU", i); i++;
 }
 
 double UVLS::get_model_internal_variable_with_name(string var_name)

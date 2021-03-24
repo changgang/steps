@@ -629,8 +629,8 @@ void CDC4T::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
-    add_model_inernal_variable_name_and_index_pair("STATE@INVERTER DC VOLTAGE SENSOR", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@DC CURRENT SENSOR", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@INVERTER DC VOLTAGE SENSOR", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@DC CURRENT SENSOR", i); i++;
 }
 
 double CDC4T::get_model_internal_variable_with_name(string var_name)
