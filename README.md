@@ -4,7 +4,7 @@
   * STEPS: https://github.com/changgang/steps
   * stepspy: https://pypi.org/project/stepspy/
   * Documentation: https://github.com/changgang/steps/wiki/
-- Date of Readme: March 9, 2021
+- Date of Readme: March 24, 2021
 
 # Reference
 Please cite STEPS with the following paper:  
@@ -19,6 +19,7 @@ Though BPA dat format is supported, it will be supported in the future version i
 You are encouraged to join us for further development.
 
 ## Major versions
+- v1.5.2. Add new APIs to get generator related model internal variables. Start to add linearization codes. Released on March. 24, 2021.
 - v1.5.1. Add new option export_full to functions of save_network_Y_matrix and APIs. stepspy is also updated. Start to add sequential parameters to STEPS. Released on Feb. 2, 2021.
 - v1.5.0. Add new function to get basic and user meter value in STEPS kernel and stepspy. Add additional parameter vbase to bus_name2number in case multi buses have the same bus name. Released on Dec. 22, 2020.
 - v1.4.1. Fix clear toolkit when reloading new powerflow data. Enable build initial zero Y matrix. Fix access violation in jacobian builder when updating seperate jacobian matrix. Add check of LU factorization failure. Special log file named 'blackhole' is supported to disable all log. Released on Dec. 7, 2020.

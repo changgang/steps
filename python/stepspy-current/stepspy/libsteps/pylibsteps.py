@@ -49,7 +49,7 @@ def load_library():
 
     required_major_version = 1
     required_minor_version = 5
-    required_patch_version = 0
+    required_patch_version = 2
 
     valid_flag = major_version >= required_major_version
     if valid_flag==True and major_version==required_major_version:

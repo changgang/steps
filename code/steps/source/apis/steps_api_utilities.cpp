@@ -15,7 +15,7 @@ unsigned int api_get_api_minor_version()
 
 unsigned int api_get_api_patch_version()
 {
-    return 0;
+    return 2;
 }
 
 unsigned int api_get_const_INDEX_NOT_EXIST()
