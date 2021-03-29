@@ -57,6 +57,7 @@ class SPARSE_MATRIX_TEST : public Test::Suite
         void test_matrix_add();
         void test_matrix_minus();
         void test_matrix_multiply();
+        void test_matrix_inverse();
 
         void test_save_matrix_to_file();
     private:

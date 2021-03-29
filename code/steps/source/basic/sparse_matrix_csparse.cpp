@@ -760,7 +760,7 @@ SPARSE_MATRIX_CSPARSE* operator+(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE&
     SPARSE_MATRIX_CSPARSE* C=new SPARSE_MATRIX_CSPARSE;
     C->clear();
     C->set_cs_real_matrix(c);
-    cout<<"Warning. If you see this message, it means you calls operator '+' of SPARSE_MATRIX_CSPARSE. Remember to call 'delete' to delete the new pointer of SPARSE_MATRIX_CSPARSE.\n";
+    cout<<"Warning. If you see this message, it means you calls operator '+' of SPARSE_MATRIX_CSPARSE. Remember to call 'delete' to delete the returned new pointer of SPARSE_MATRIX_CSPARSE.\n";
     return C;
 }
 
@@ -774,7 +774,7 @@ SPARSE_MATRIX_CSPARSE* operator-(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE&
     SPARSE_MATRIX_CSPARSE* C=new SPARSE_MATRIX_CSPARSE;
     C->clear();
     C->set_cs_real_matrix(c);
-    cout<<"Warning. If you see this message, it means you calls operator '-' of SPARSE_MATRIX_CSPARSE. Remember to call 'delete' to delete the new pointer of SPARSE_MATRIX_CSPARSE.\n";
+    cout<<"Warning. If you see this message, it means you calls operator '-' of SPARSE_MATRIX_CSPARSE. Remember to call 'delete' to delete the returned new pointer of SPARSE_MATRIX_CSPARSE.\n";
     return C;
 }
 
@@ -788,8 +788,37 @@ SPARSE_MATRIX_CSPARSE* operator*(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE&
     SPARSE_MATRIX_CSPARSE* C=new SPARSE_MATRIX_CSPARSE;
     C->clear();
     C->set_cs_real_matrix(c);
-    cout<<"Warning. If you see this message, it means you calls operator '*' of SPARSE_MATRIX_CSPARSE. Remember to call 'delete' to delete the new pointer of SPARSE_MATRIX_CSPARSE.\n";
+    cout<<"Warning. If you see this message, it means you calls operator '*' of SPARSE_MATRIX_CSPARSE. Remember to call 'delete' to delete the returned new pointer of SPARSE_MATRIX_CSPARSE.\n";
     return C;
+}
+
+SPARSE_MATRIX_CSPARSE* operator/(double b, SPARSE_MATRIX_CSPARSE& A)
+{
+    SPARSE_MATRIX_CSPARSE* B = new SPARSE_MATRIX_CSPARSE;
+    int n = A.get_matrix_size();
+
+    double temp = INFINITE_THRESHOLD;
+    for(int i=0; i<n; ++i)
+        for(int j=0; j<n; ++j)
+            B->add_entry(i,j,temp);
+    B->compress_and_merge_duplicate_entries();
+
+    for(int j=0; j<n; ++j)
+    {
+        vector<double> I;
+        I.reserve(n);
+        for(int i=0; i<n; ++i)
+            I.push_back(0.0);
+        I[j]=1.0;
+        vector<double> c = I/A;
+        int k_start = B->get_starting_index_of_column(j);
+        for(int i=0; i<n; ++i)
+        {
+            B->change_entry_value(k_start+i, c[i]*b);
+        }
+    }
+    cout<<"Warning. If you see this message, it means you calls inverse operator '/' of SPARSE_MATRIX_CSPARSE. Remember to call 'delete' to delete the returned new pointer of SPARSE_MATRIX_CSPARSE.\n";
+    return B;
 }
 
 unsigned int SPARSE_MATRIX_CSPARSE::get_memory_usage_in_bytes()
