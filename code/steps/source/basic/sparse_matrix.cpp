@@ -61,7 +61,10 @@ complex<double> SPARSE_MATRIX::get_entry_value(int row, int col) const
 complex<double> SPARSE_MATRIX::get_entry_value(int index) const
 {
     //return complex<double>(get_real_entry_value(index), get_imag_entry_value(index));
-    return get_complex_entry_value(index);
+    if(index!=INDEX_NOT_EXIST)
+        return get_complex_entry_value(index);
+    else
+        return 0.0;
 }
 
 void SPARSE_MATRIX::change_entry_value(int row, int col, double value)

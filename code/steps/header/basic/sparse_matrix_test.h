@@ -54,6 +54,10 @@ class SPARSE_MATRIX_TEST : public Test::Suite
         void test_copy_with_operator_equal();
         void test_copy_with_copy_constructor();
 
+        void test_matrix_add();
+        void test_matrix_minus();
+        void test_matrix_multiply();
+
         void test_save_matrix_to_file();
     private:
         void prepare_basic_matrix();

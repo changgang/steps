@@ -213,7 +213,7 @@ int main(int argc, char* argv[])
         #ifdef ENABLE_STEPS_TEST
 
         ts.add(unique_ptr<Test::Suite>(new DEVICE_ID_TEST));
-        /*
+
         ts.add(unique_ptr<Test::Suite>(new TERMINAL_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new DEVICE_ID_TEST));
@@ -226,7 +226,7 @@ int main(int argc, char* argv[])
 
         ts.add(unique_ptr<Test::Suite>(new SPARSE_MATRIX_TEST));
         ts.add(unique_ptr<Test::Suite>(new COMPLEX_SPARSE_MATRIX_TEST));
-
+        /*
         ts.add(unique_ptr<Test::Suite>(new FAULT_TEST));
         ts.add(unique_ptr<Test::Suite>(new BUS_INDEX_TEST));
         ts.add(unique_ptr<Test::Suite>(new DEVICE_INDEX_MAP_TEST));

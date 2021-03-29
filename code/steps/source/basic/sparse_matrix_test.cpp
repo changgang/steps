@@ -35,6 +35,10 @@ SPARSE_MATRIX_TEST::SPARSE_MATRIX_TEST()
     TEST_ADD(SPARSE_MATRIX_TEST::test_copy_with_operator_equal);
     TEST_ADD(SPARSE_MATRIX_TEST::test_copy_with_copy_constructor);
 
+    TEST_ADD(SPARSE_MATRIX_TEST::test_matrix_add);
+    TEST_ADD(SPARSE_MATRIX_TEST::test_matrix_minus);
+    TEST_ADD(SPARSE_MATRIX_TEST::test_matrix_multiply);
+
     TEST_ADD(SPARSE_MATRIX_TEST::test_save_matrix_to_file);
 }
 
@@ -46,6 +50,7 @@ void SPARSE_MATRIX_TEST::setup()
 void SPARSE_MATRIX_TEST::tear_down()
 {
     matrix.clear();
+    TEST_ASSERT(matrix.get_matrix_size()==1);
     show_test_end_information();
 }
 
@@ -63,6 +68,7 @@ void SPARSE_MATRIX_TEST::prepare_basic_matrix()
     // solution to real*x = b where b=[2 20 5]' is
     // [2  4  3]'
 
+    matrix.clear();
     matrix.add_entry(0,0,1.0);
     matrix.add_entry(1,1,complex<double>(2.0, 5.0));
     matrix.add_entry(1,2,complex<double>(4.0, 9.0));
@@ -117,7 +123,6 @@ void SPARSE_MATRIX_TEST::test_set_get_matrix()
     TEST_ASSERT(matrix.get_entry_value(2,0)==complex<double>(1.0, 0.0));
     TEST_ASSERT(matrix.get_entry_value(2,1)==complex<double>(0.0, 0.0));
     TEST_ASSERT(matrix.get_entry_value(2,2)==complex<double>(1.0, 2.0));
-
     TEST_ASSERT(matrix.get_entry_value(0)==complex<double>(1.0, 0.0));
     TEST_ASSERT(matrix.get_entry_value(2)==complex<double>(2.0, 5.0));
     TEST_ASSERT(matrix.get_entry_value(3)==complex<double>(4.0, 9.0));
@@ -434,6 +439,90 @@ void SPARSE_MATRIX_TEST::test_copy_with_copy_constructor()
     TEST_ASSERT(newmatrix.get_entry_value(2,0)==complex<double>(1.0, 0.0));
     TEST_ASSERT(newmatrix.get_entry_value(2,1)==complex<double>(0.0, 0.0));
     TEST_ASSERT(newmatrix.get_entry_value(2,2)==complex<double>(1.0, 2.0));
+}
+
+void SPARSE_MATRIX_TEST::test_matrix_add()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"SPARSE_MATRIX_TEST");
+
+    prepare_basic_matrix();
+
+    // matrix is
+    // [1  0  0]      [0  0  0]
+    // [0  2  4]  + j [0  5  9]
+    // [1  0  1]      [0  0  2]
+
+    STEPS_SPARSE_MATRIX* tempmatrix = matrix+matrix;
+    STEPS_SPARSE_MATRIX newmatrix = (*tempmatrix);
+    delete tempmatrix;
+
+    TEST_ASSERT(newmatrix.get_matrix_size()==3);
+
+    TEST_ASSERT(newmatrix.get_real_entry_value(0,0)==2*matrix.get_real_entry_value(0,0));
+    TEST_ASSERT(newmatrix.get_real_entry_value(0,1)==2*matrix.get_real_entry_value(0,1));
+    TEST_ASSERT(newmatrix.get_real_entry_value(0,2)==2*matrix.get_real_entry_value(0,2));
+    TEST_ASSERT(newmatrix.get_real_entry_value(1,0)==2*matrix.get_real_entry_value(1,0));
+    TEST_ASSERT(newmatrix.get_real_entry_value(1,1)==2*matrix.get_real_entry_value(1,1));
+    TEST_ASSERT(newmatrix.get_real_entry_value(1,2)==2*matrix.get_real_entry_value(1,2));
+    TEST_ASSERT(newmatrix.get_real_entry_value(2,0)==2*matrix.get_real_entry_value(2,0));
+    TEST_ASSERT(newmatrix.get_real_entry_value(2,1)==2*matrix.get_real_entry_value(2,1));
+    TEST_ASSERT(newmatrix.get_real_entry_value(2,2)==2*matrix.get_real_entry_value(2,2));
+}
+
+void SPARSE_MATRIX_TEST::test_matrix_minus()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"SPARSE_MATRIX_TEST");
+
+    prepare_basic_matrix();
+
+    // matrix is
+    // [1  0  0]      [0  0  0]
+    // [0  2  4]  + j [0  5  9]
+    // [1  0  1]      [0  0  2]
+
+    STEPS_SPARSE_MATRIX* tempmatrix = matrix-matrix;
+    STEPS_SPARSE_MATRIX newmatrix = (*tempmatrix);
+    delete tempmatrix;
+
+    TEST_ASSERT(newmatrix.get_matrix_size()==3);
+
+    TEST_ASSERT(newmatrix.get_real_entry_value(0,0)==0.0);
+    TEST_ASSERT(newmatrix.get_real_entry_value(0,1)==0.0);
+    TEST_ASSERT(newmatrix.get_real_entry_value(0,2)==0.0);
+    TEST_ASSERT(newmatrix.get_real_entry_value(1,0)==0.0);
+    TEST_ASSERT(newmatrix.get_real_entry_value(1,1)==0.0);
+    TEST_ASSERT(newmatrix.get_real_entry_value(1,2)==0.0);
+    TEST_ASSERT(newmatrix.get_real_entry_value(2,0)==0.0);
+    TEST_ASSERT(newmatrix.get_real_entry_value(2,1)==0.0);
+    TEST_ASSERT(newmatrix.get_real_entry_value(2,2)==0.0);
+}
+
+void SPARSE_MATRIX_TEST::test_matrix_multiply()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"SPARSE_MATRIX_TEST");
+
+    prepare_basic_matrix();
+
+    // matrix is
+    // [1  0  0]      [0  0  0]
+    // [0  2  4]  + j [0  5  9]
+    // [1  0  1]      [0  0  2]
+
+    STEPS_SPARSE_MATRIX* tempmatrix = matrix*matrix;
+    STEPS_SPARSE_MATRIX newmatrix = (*tempmatrix);
+    delete tempmatrix;
+
+    TEST_ASSERT(newmatrix.get_matrix_size()==3);
+
+    TEST_ASSERT(newmatrix.get_real_entry_value(0,0)==1);
+    TEST_ASSERT(newmatrix.get_real_entry_value(0,1)==0);
+    TEST_ASSERT(newmatrix.get_real_entry_value(0,2)==0);
+    TEST_ASSERT(newmatrix.get_real_entry_value(1,0)==4);
+    TEST_ASSERT(newmatrix.get_real_entry_value(1,1)==4);
+    TEST_ASSERT(newmatrix.get_real_entry_value(1,2)==12);
+    TEST_ASSERT(newmatrix.get_real_entry_value(2,0)==2);
+    TEST_ASSERT(newmatrix.get_real_entry_value(2,1)==0);
+    TEST_ASSERT(newmatrix.get_real_entry_value(2,2)==1);
 }
 
 void SPARSE_MATRIX_TEST::test_save_matrix_to_file()

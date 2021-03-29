@@ -380,7 +380,7 @@ void UTILITY_TEST::test_is_file_exist()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
 
-    TEST_ASSERT(is_file_exist("../../../bench/sample.raw")==true);
+    TEST_ASSERT(is_file_exist("../../../bench/ieee9.raw")==true);
     TEST_ASSERT(is_file_exist("sample2.raw")==false);
 }
 void UTILITY_TEST::test_generate_and_delete_toolkit()

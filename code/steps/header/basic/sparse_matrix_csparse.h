@@ -39,6 +39,8 @@ public:
     virtual complex<double> get_complex_entry_value(int index)  const;
     virtual double get_real_entry_value(int index)  const;
     virtual double get_imag_entry_value(int index)  const;
+    virtual double get_real_entry_value(int row, int col)  const;
+    virtual double get_imag_entry_value(int row, int col)  const;
 
     virtual void change_real_entry_value(int index, double value);
     virtual void change_imag_entry_value(int index, double value);
@@ -56,6 +58,11 @@ public:
     virtual void save_matrix_to_file(string filename)  const;
 
     virtual unsigned int get_memory_usage_in_bytes();
+public:
+    cs* get_cs_real_matrix();
+    cs* get_cs_imag_matrix();
+    void set_cs_real_matrix(cs* matrix);
+    void set_cs_imag_matrix(cs* matrix);
 private:
     void solve_Lx_eq_b(vector<double>& b);
     void solve_xU_eq_b(vector<double>& b);
@@ -71,4 +78,7 @@ private:
 
 
 vector<double>& operator/(vector<double>&b, SPARSE_MATRIX_CSPARSE& A);
+SPARSE_MATRIX_CSPARSE* operator+(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE& B);
+SPARSE_MATRIX_CSPARSE* operator-(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE& B);
+SPARSE_MATRIX_CSPARSE* operator*(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE& B);
 #endif // SPARSE_MATRIX_CSPARSE_H

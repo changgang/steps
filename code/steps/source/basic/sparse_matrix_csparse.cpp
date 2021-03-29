@@ -95,7 +95,6 @@ void SPARSE_MATRIX_CSPARSE::copy_from_const_matrix(const SPARSE_MATRIX_CSPARSE& 
     }
     compress_and_merge_duplicate_entries();
 
-
     update_clock_when_matrix_is_changed();
 }
 
@@ -384,7 +383,11 @@ int SPARSE_MATRIX_CSPARSE::get_entry_index(int row, int col) const
 
 complex<double> SPARSE_MATRIX_CSPARSE::get_complex_entry_value(int index)  const
 {
-    return complex<double>(matrix_real->x[index], matrix_imag->x[index]);
+    if(index!=INDEX_NOT_EXIST)
+        return complex<double>(matrix_real->x[index], matrix_imag->x[index]);
+    else
+        return 0.0;
+
 
     if(index>=0 && index<=matrix_real->p[matrix_real->n]) // this condition is equivalent to previous line
         return complex<double>(matrix_real->x[index], matrix_imag->x[index]);
@@ -394,7 +397,10 @@ complex<double> SPARSE_MATRIX_CSPARSE::get_complex_entry_value(int index)  const
 
 double SPARSE_MATRIX_CSPARSE::get_real_entry_value(int index) const
 {
-    return matrix_real->x[index];
+    if(index!=INDEX_NOT_EXIST)
+        return matrix_real->x[index];
+    else
+        return 0.0;
 
     if(index>=0 && index<=get_starting_index_of_column(get_matrix_size()))
         return matrix_real->x[index];
@@ -410,6 +416,18 @@ double SPARSE_MATRIX_CSPARSE::get_imag_entry_value(int index) const
         return matrix_imag->x[index];
     else
         return 0.0;
+}
+
+double SPARSE_MATRIX_CSPARSE::get_real_entry_value(int row, int col)  const
+{
+    int index = get_entry_index(row, col);
+    return get_real_entry_value(index);
+}
+
+double SPARSE_MATRIX_CSPARSE::get_imag_entry_value(int row, int col)  const
+{
+    int index = get_entry_index(row, col);
+    return get_imag_entry_value(index);
 }
 
 void SPARSE_MATRIX_CSPARSE::change_real_entry_value(int index, double value)
@@ -707,9 +725,71 @@ void SPARSE_MATRIX_CSPARSE::save_matrix_to_file(string filename) const
     }
 }
 
+cs* SPARSE_MATRIX_CSPARSE::get_cs_real_matrix()
+{
+    return matrix_real;
+}
+
+cs* SPARSE_MATRIX_CSPARSE::get_cs_imag_matrix()
+{
+    return matrix_imag;
+}
+
+void SPARSE_MATRIX_CSPARSE::set_cs_real_matrix(cs* matrix)
+{
+    matrix_real = matrix;
+}
+
+void SPARSE_MATRIX_CSPARSE::set_cs_imag_matrix(cs* matrix)
+{
+    matrix_imag = matrix;
+}
+
 vector<double>& operator/(vector<double>&b, SPARSE_MATRIX_CSPARSE& A)
 {
     return A.solve_Ax_eq_b(b);
+}
+
+SPARSE_MATRIX_CSPARSE* operator+(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE& B)
+{
+    cs* a = A.get_cs_real_matrix();
+    cs* b = B.get_cs_real_matrix();
+
+    cs* c = cs_add(a,b,1.0, 1.0);
+
+    SPARSE_MATRIX_CSPARSE* C=new SPARSE_MATRIX_CSPARSE;
+    C->clear();
+    C->set_cs_real_matrix(c);
+    cout<<"Warning. If you see this message, it means you calls operator '+' of SPARSE_MATRIX_CSPARSE. Remember to call 'delete' to delete the new pointer of SPARSE_MATRIX_CSPARSE.\n";
+    return C;
+}
+
+SPARSE_MATRIX_CSPARSE* operator-(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE& B)
+{
+    cs* a = A.get_cs_real_matrix();
+    cs* b = B.get_cs_real_matrix();
+
+    cs* c = cs_add(a,b,1.0, -1.0);
+
+    SPARSE_MATRIX_CSPARSE* C=new SPARSE_MATRIX_CSPARSE;
+    C->clear();
+    C->set_cs_real_matrix(c);
+    cout<<"Warning. If you see this message, it means you calls operator '-' of SPARSE_MATRIX_CSPARSE. Remember to call 'delete' to delete the new pointer of SPARSE_MATRIX_CSPARSE.\n";
+    return C;
+}
+
+SPARSE_MATRIX_CSPARSE* operator*(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE& B)
+{
+    cs* a = A.get_cs_real_matrix();
+    cs* b = B.get_cs_real_matrix();
+
+    cs* c = cs_multiply(a,b);
+
+    SPARSE_MATRIX_CSPARSE* C=new SPARSE_MATRIX_CSPARSE;
+    C->clear();
+    C->set_cs_real_matrix(c);
+    cout<<"Warning. If you see this message, it means you calls operator '*' of SPARSE_MATRIX_CSPARSE. Remember to call 'delete' to delete the new pointer of SPARSE_MATRIX_CSPARSE.\n";
+    return C;
 }
 
 unsigned int SPARSE_MATRIX_CSPARSE::get_memory_usage_in_bytes()
