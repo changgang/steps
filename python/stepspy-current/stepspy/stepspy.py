@@ -3735,7 +3735,7 @@ class STEPS():
         Disable generator related model of specific type.
         Args:
             (1) generator: Generator device id in format of (bus, ickt).
-            (2) model_type: String of model type.
+            (2) model_type: String of model type. Supports "GEN", "AVR", "PSS", "COMP", "GOV", "TLC".
         Rets: N/A
         Example: N/A
         """
@@ -3751,7 +3751,7 @@ class STEPS():
         Enable generator related model of specific type.
         Args:
             (1) generator: Generator device id in format of (bus, ickt).
-            (2) model_type: String of model type.
+            (2) model_type: String of model type. See supported model types in disable_generator_related_model.
         Rets: N/A
         Example: N/A
         """
@@ -3767,12 +3767,19 @@ class STEPS():
         Get generator related model name.
         Args:
             (1) generator: Generator device id in format of (bus, ickt).
-            (2) model_type: String of model type.
+            (2) model_type: String of model type. See supported model types in disable_generator_related_model.
         Rets:
             (1) String of model name.
         Tips:
             If model type is not supported, empty string is returned.
-        Example: N/A
+        Example:
+            gen = (1,"1")
+            model_name = simulator.get_generator_related_model_name(gen, "GEN")
+            model_name = simulator.get_generator_related_model_name(gen, "AVR")
+            model_name = simulator.get_generator_related_model_name(gen, "PSS")
+            model_name = simulator.get_generator_related_model_name(gen, "COMP")
+            model_name = simulator.get_generator_related_model_name(gen, "GOV")
+            model_name = simulator.get_generator_related_model_name(gen, "TLC")
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -3788,13 +3795,17 @@ class STEPS():
         Get generator related model data.
         Args:
             (1) generator: Generator device id in format of (bus, ickt).
-            (2) model_type: String of model type.
-            (3) par_name: String of parameter name.
+            (2) model_type: String of model type. See supported model types in disable_generator_related_model.
+            (3) par_name: String of parameter name. See function prepare_model_data_table() of specific model in STEPS codes.
         Rets:
             (1) Value of parameter
         Tips:
             If model type or parameter name is not supported, 0.0 is returned.
-        Example: N/A
+        Example:
+            gen = (1,"1")
+            model_name = simulator.get_generator_related_model_name(gen, "GEN")
+            if model_name == "GENROU":
+                td0p = simulator.get_generator_related_model_data(gen, "GEN", "Td0'")
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -3808,14 +3819,19 @@ class STEPS():
         Set generator related model data.
         Args:
             (1) generator: Generator device id in format of (bus, ickt).
-            (2) model_type: String of model type.
-            (3) par_name: String of parameter name.
+            (2) model_type: String of model type. See supported model types in disable_generator_related_model.
+            (3) par_name: String of parameter name. See supported par_name in get_generator_related_model_data.
             (4) value: Value of parameter.
         Rets: N/A
         Tips:
             If model type or parameter name is not supported, nothing will be changed.
             If value is not a number, function may malfunction and package may exit with error.
-        Example: N/A
+        Example: 
+            gen = (1,"1")
+            model_name = simulator.get_generator_related_model_name(gen, "GEN")
+            if model_name == "GENROU":
+                simulator.set_generator_related_model_data(generator, "GEN", "H", 2.0)
+                simulator.set_generator_related_model_data(generator, "GEN", "Td0'", 0.2)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -3829,12 +3845,18 @@ class STEPS():
         Get generator related model parameter pair.
         Args:
             (1) generator: Generator device id in format of (bus, ickt).
-            (2) model_type: String of model type.
+            (2) model_type: String of model type. See supported model types in disable_generator_related_model.
         Rets:
             (1) Tuple of parameter name and value pairs. Each parameter name and value pair is in format of (string of parameter name, value of parameter).
         Tips:
             If model type is not supported, empty tuple is returned.
-        Example: N/A
+        Example:
+            gen = (1,"1")
+            name_values = simulator.get_generator_related_model_parameter_pair(gen, "GEN")
+            for name_value in name_values:
+                par_name = name_value[0]
+                par_value = name_value[1]
+                print("vlaue of parameter {} is {}".format(par_name,par_value))
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -3854,7 +3876,7 @@ class STEPS():
         Get generator related model internal variable.
         Args:
             (1) generator: Generator device id in format of (bus, ickt).
-            (2) model_type: String of model type.
+            (2) model_type: String of model type. See supported model types in disable_generator_related_model.
             (3) var_name: String of internal variable name.
         Rets:
             (1) Value of internal variable
@@ -3874,7 +3896,7 @@ class STEPS():
         Get generator related model internal variable pair.
         Args:
             (1) generator: Generator device id in format of (bus, ickt).
-            (2) model_type: String of model type.
+            (2) model_type: String of model type. See supported model types in disable_generator_related_model.
         Rets:
             (1) Tuple of internal variable name and value pairs. Each internal variable name and value pair is in format of (string of internal variable name, value of internal variable).
         Tips:

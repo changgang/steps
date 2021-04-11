@@ -4,7 +4,7 @@ import struct
 import csv
 import os.path
 import math
-
+import platform
 try:
     import numpy
 except ImportError:
@@ -30,7 +30,13 @@ def __save_data(file_name, dy_time, dy_value, dy_channel):
             for j in range(len(dy_channel)):
                 value.append(dy_value[i,j])
             writer.writerow(value)
-    
+def __get_cpu_clock():
+    major, minor, patch = platform.python_version().split(".")
+    if int(major)>=3 and int(minor)>=9:
+        return time.clock()
+    else:
+        return time.perf_counter()
+
 def POUCH(file_name, type, save_or_not=False, show_log=True):
     type = type.upper()
 
@@ -74,7 +80,7 @@ def POUCH_CSV(file_name, show_log=True):
         print(info)
         return numpy.array(dy_time), numpy.array(dy_value), dy_channel
 
-    start_time = time.clock()
+    start_time = __get_cpu_clock()
     
     with open(file_name, 'rt') as fid:
         data = fid.readline()
@@ -94,7 +100,7 @@ def POUCH_CSV(file_name, show_log=True):
             dy_time.append(data[0])
             dy_value.append(data[1:len(data)+1])
     if show_log==True:
-        end_time = time.clock()
+        end_time = __get_cpu_clock()
         time_elapsed = end_time - start_time
         
         info = 'Conversion finished in '+str(float(int(time_elapsed*1000.0))*0.001)+'s'
@@ -133,7 +139,7 @@ def POUCH_STEPS(file_name, save_or_not=False, show_log=True):
         print(info)
         return numpy.array(dy_time), numpy.array(dy_value), dy_channel
 
-    start_time = time.clock()
+    start_time = __get_cpu_clock()
     
     fid = open(file_name, 'rb')
     steps_bin_version = fid.read(4)
@@ -149,7 +155,7 @@ def POUCH_STEPS(file_name, save_or_not=False, show_log=True):
         __save_data(file_name, dy_time, dy_value, dy_channel)
         
         
-    end_time = time.clock()
+    end_time = __get_cpu_clock()
     time_elapsed = end_time - start_time
     if show_log==True:
         info = 'Conversion finished in '+str(float(int(time_elapsed*1000.0))*0.001)+'s'

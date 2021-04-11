@@ -1,5 +1,7 @@
 build/
 bench_bak/
+bench/demo_codes/*.txt
+bench/demo_codes/*.csv
 python/*.pyc
 python/*.pyd
 python/*.xlsx
