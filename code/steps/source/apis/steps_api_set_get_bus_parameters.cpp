@@ -158,6 +158,9 @@ double api_get_bus_float_data(unsigned int bus, char* parameter_name, unsigned i
         if(PARAMETER_NAME=="EMIN_PU" or PARAMETER_NAME=="EMERGENCY VMIN IN PU")
             return busptr->get_emergency_voltage_lower_limit_in_pu();
 
+        if(PARAMETER_NAME=="FBASE_HZ" or PARAMETER_NAME=="BASE FREQUENCY IN HZ")
+            return busptr->get_base_frequency_in_Hz();
+
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return 0.0;
     }
@@ -205,6 +208,9 @@ void api_set_bus_float_data(unsigned int bus, char* parameter_name, double value
 
         if(PARAMETER_NAME=="EMIN_PU" or PARAMETER_NAME=="EMERGENCY VMIN IN PU")
             return busptr->set_emergency_voltage_lower_limit_in_pu(value);
+
+        if(PARAMETER_NAME=="FBASE_HZ" or PARAMETER_NAME=="BASE FREQUENCY IN HZ")
+            return busptr->set_base_frequency_in_Hz(value);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
     }
