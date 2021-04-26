@@ -562,7 +562,14 @@ void CIM6::setup_model_dynamic_parameters()
     else
         Zsource = complex<double>(Ra, Xpp);
 
-    cout<<"Xs = "<<Xs<<", Xp = "<<Xp<<", Xpp = "<<Xpp<<", Xl = "<<Xleakage<<", Tp = "<<Tp<<", Tpp = "<<Tpp<<endl;
+    STEPS& toolkit = get_toolkit();
+    if(toolkit.is_detailed_log_enabled())
+    {
+        ostringstream osstream;
+        osstream<<"Dynamic parameters of model "<<get_model_name()<<" of "<<get_compound_device_name()<<":\n"
+                <<"Xs = "<<Xs<<", Xp = "<<Xp<<", Xpp = "<<Xpp<<", Xl = "<<Xleakage<<", Tp = "<<Tp<<", Tpp = "<<Tpp;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
 }
 
 void CIM6::initialize()
@@ -930,7 +937,11 @@ void CIM6::run(DYNAMIC_MODE mode)
         // x-axis
         temp = I.imag()*Xp_minum_Xleakage+Epr-Ekr;
 
-        input = Epp.imag()/EppMag*sat -
+        if(EppMag!=0.0)
+            input = Epp.imag()/EppMag*sat;
+        else
+            input = 0.0;
+        input = input -
                 Epi*Tp*slip -
                 Epr +
                 Xs_minum_Xp*(I.imag()-Xp_minum_Xpp_over_Xp_minum_Xleakage_square*temp);
@@ -943,7 +954,11 @@ void CIM6::run(DYNAMIC_MODE mode)
         // y-axis
         temp = -I.real()*Xp_minum_Xleakage+Epi-Eki;
 
-        input = -Epp.real()/EppMag*sat +
+        if(EppMag!=0.0)
+            input = -Epp.real()/EppMag*sat;
+        else
+            input = 0.0;
+        input = input +
                 Epr*Tp*slip -
                 Epi -
                 Xs_minum_Xp*(I.real()+Xp_minum_Xpp_over_Xp_minum_Xleakage_square*temp);
@@ -966,6 +981,7 @@ void CIM6::run(DYNAMIC_MODE mode)
                   get_C() +
                   get_D()*pow(speed, get_E());
     double Tload = initial_load_torque*temp;
+    if(speed<=0.0) speed = 0.001;
     speed_block.set_input(-Pelec/speed - Tload);
     speed_block.run(mode);
 

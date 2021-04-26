@@ -4685,7 +4685,7 @@ class STEPS():
         Prepare specific bus meter.
         Args:
             (1) bus: Bus number.
-            (2) meter_type: String of bus type.
+            (2) meter_type: String of meter type.
         Rets: N/A
         Tips:
             For the supported meter types, see implementation of the following function of STEPS:
@@ -4702,7 +4702,7 @@ class STEPS():
         Prepare specific generator meter.
         Args:
             (1) generator: Generator device id in format of (bus, ickt).
-            (2) meter_type: String of bus type.
+            (2) meter_type: String of meter type.
             (3) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
         Rets: N/A
         Tips:
@@ -4723,7 +4723,7 @@ class STEPS():
         Prepare specific wind turbine generator meter.
         Args:
             (1) generator: Wind turbine generator device id in format of (bus, ickt).
-            (2) meter_type: String of bus type.
+            (2) meter_type: String of meter type.
             (3) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
         Rets: N/A
         Tips:
@@ -4744,7 +4744,7 @@ class STEPS():
         Prepare specific PV unit meter.
         Args:
             (1) pvunit: PV unit device id in format of (bus, ickt).
-            (2) meter_type: String of bus type.
+            (2) meter_type: String of meter type.
             (3) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
         Rets: N/A
         Tips:
@@ -4765,7 +4765,7 @@ class STEPS():
         Prepare specific energy storage meter.
         Args:
             (1) estorage: Energy storage device id in format of (bus, ickt).
-            (2) meter_type: String of bus type.
+            (2) meter_type: String of meter type.
             (3) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
         Rets: N/A
         Tips:
@@ -4786,7 +4786,7 @@ class STEPS():
         Prepare specific load meter.
         Args:
             (1) load: Load device id in format of (bus, ickt).
-            (2) meter_type: String of bus type.
+            (2) meter_type: String of meter type.
             (3) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
         Rets: N/A
         Tips:
@@ -4807,7 +4807,7 @@ class STEPS():
         Prepare specific transmission line meter.
         Args:
             (1) line: Transmission line device id in format of (ibus, jbus, ickt).
-            (2) meter_type: String of bus type.
+            (2) meter_type: String of meter type.
             (3) side: String of line side. One of {"SENDING", "RECEIVING"} or {"S", "R"}.
             (4) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
         Rets: N/A
@@ -4830,7 +4830,7 @@ class STEPS():
         Prepare specific transformer meter.
         Args:
             (1) trans: Transformer device id in format of (ibus, jbus, ickt) or (ibus, jbus, kbus, ickt).
-            (2) meter_type: String of bus type.
+            (2) meter_type: String of meter type.
             (3) side: String of transformer side. One of {"PRIMARY", "SECONDARY", "TERTIARY"} or {"P", "S", "T"}.
             (4) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
         Rets: N/A
@@ -4854,7 +4854,7 @@ class STEPS():
         Prepare specific HVDC link meter.
         Args:
             (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
-            (2) meter_type: String of bus type.
+            (2) meter_type: String of meter type.
             (3) side: String of converter side. One of {"RECTIFIER", "INVERTER"} or {"R", "I"}.
             (4) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
         Rets: N/A
@@ -4877,7 +4877,7 @@ class STEPS():
         Prepare specific equivalent device meter.
         Args:
             (1) edevice: Equivalent device device id in format of (bus, ickt).
-            (2) meter_type: String of bus type.
+            (2) meter_type: String of meter type.
             (3) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
         Rets: N/A
         Tips:
