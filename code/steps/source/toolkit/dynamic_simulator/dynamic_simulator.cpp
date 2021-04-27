@@ -1340,7 +1340,7 @@ void DYNAMICS_SIMULATOR::prepare_transformer_related_meter(const DEVICE_ID& did,
 
     if(did.get_device_type()=="TRANSFORMER")
     {
-        if(psdb.is_line_exist(did))
+        if(psdb.is_transformer_exist(did))
         {
             METER_SETTER setter(*toolkit);
 
