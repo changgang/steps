@@ -1928,47 +1928,41 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
                 break;
             else
             {
-                if(P_is_worse)
+                alpha_P *= 0.5;
+                #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+                    set_openmp_number_of_threads(toolkit->get_thread_number());
+                    #pragma omp parallel for schedule(static)
+                #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+                for(unsigned int i=0; i<nP; ++i)
                 {
-                    alpha_P *= 0.5;
-                    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-                        set_openmp_number_of_threads(toolkit->get_thread_number());
-                        #pragma omp parallel for schedule(static)
-                    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-                    for(unsigned int i=0; i<nP; ++i)
-                    {
-                        unsigned int internal_bus = internal_P_equation_buses[i];
-                        //unsigned int physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
-                        //BUS* bus = psdb.get_bus(physical_bus);
-                        BUS* bus = internal_bus_pointers[internal_bus];
+                    unsigned int internal_bus = internal_P_equation_buses[i];
+                    //unsigned int physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
+                    //BUS* bus = psdb.get_bus(physical_bus);
+                    BUS* bus = internal_bus_pointers[internal_bus];
 
-                        double current_angle = bus->get_positive_sequence_angle_in_rad();
+                    double current_angle = bus->get_positive_sequence_angle_in_rad();
 
-                        double delta_angle = update[i];
+                    double delta_angle = update[i];
 
-                        bus->set_positive_sequence_angle_in_rad(current_angle - alpha_P*delta_angle);
-                    }
+                    bus->set_positive_sequence_angle_in_rad(current_angle - alpha_P*delta_angle);
                 }
-                if(Q_is_worse)
+                alpha_Q *= 0.5;
+                #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+                    set_openmp_number_of_threads(toolkit->get_thread_number());
+                    #pragma omp parallel for schedule(static)
+                #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+                for(unsigned int i=0; i<nQ; ++i)
                 {
-                    alpha_Q *= 0.5;
-                    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-                        set_openmp_number_of_threads(toolkit->get_thread_number());
-                        #pragma omp parallel for schedule(static)
-                    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-                    for(unsigned int i=0; i<nQ; ++i)
-                    {
-                        unsigned int internal_bus = internal_Q_equation_buses[i];
-                        //unsigned int physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
-                        //BUS* bus = psdb.get_bus(physical_bus);
-                        BUS* bus = internal_bus_pointers[internal_bus];
+                    unsigned int internal_bus = internal_Q_equation_buses[i];
+                    //unsigned int physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
+                    //BUS* bus = psdb.get_bus(physical_bus);
+                    BUS* bus = internal_bus_pointers[internal_bus];
 
-                        double current_voltage = bus->get_positive_sequence_voltage_in_pu();
+                    double current_voltage = bus->get_positive_sequence_voltage_in_pu();
 
-                        double delta_voltage = update[nP+i];
+                    double delta_voltage = update[nP+i];
 
-                        bus->set_positive_sequence_voltage_in_pu(current_voltage - alpha_Q*delta_voltage);
-                    }
+                    bus->set_positive_sequence_voltage_in_pu(current_voltage - alpha_Q*delta_voltage);
                 }
             }
         }

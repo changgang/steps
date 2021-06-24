@@ -454,6 +454,7 @@ string HVDC::get_identifier() const
 
 string HVDC::get_name() const
 {
+    return get_identifier();
     return hvdc_name;
 }
 
