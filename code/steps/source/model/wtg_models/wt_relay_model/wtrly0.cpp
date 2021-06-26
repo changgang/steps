@@ -791,7 +791,7 @@ string WTRLY0::get_standard_psse_string() const
 void WTRLY0::prepare_model_data_table()
 {
     clear_model_data_table();
-    unsigned int i=1;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("N WIND SPEED RELAY", i); i++;
     for(unsigned int j=0; j<STEPS_MAX_RELAY_COUNT; ++j)
     {

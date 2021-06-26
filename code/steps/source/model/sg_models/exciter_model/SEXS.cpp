@@ -307,7 +307,7 @@ string SEXS::get_standard_psse_string() const
 void SEXS::prepare_model_data_table()
 {
     clear_model_data_table();
-    unsigned int i=1;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("TA", i); i++;
     add_model_data_name_and_index_pair("TB", i); i++;
     add_model_data_name_and_index_pair("K", i); i++;
