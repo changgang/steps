@@ -53,8 +53,8 @@ class FIXED_SHUNT : public NONBUS_DEVICE
     private:
         unsigned int bus;
         BUS* busptr;
-        string identifier;
-        string name;
+        unsigned int identifier_index;
+        unsigned int name_index;
         bool status;
         complex<double> nominal_positive_sequence_impedance_shunt_in_MVA;
         complex<double> nominal_zero_squence_impedance_shunt_in_MVA;

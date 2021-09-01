@@ -154,7 +154,7 @@ class TRANSFORMER : public NONBUS_DEVICE
 
         unsigned int winding_bus[3];
         //BUS* winding_busptr[3];
-        string identifier, name;
+        unsigned int identifier_index, name_index;
         bool winding_breaker_status[3];
         unsigned int non_metered_end_bus;
         TRANSFORMER_WINDING_CONNECTION_TYPE winding_connection_type[3];

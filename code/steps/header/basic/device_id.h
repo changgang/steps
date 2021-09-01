@@ -24,6 +24,8 @@ class DEVICE_ID
         TERMINAL get_device_terminal() const;
         string get_device_identifier() const;
         string get_device_name() const;
+        unsigned int get_device_identifier_index() const;
+        unsigned int get_device_name_index() const;
         unsigned int get_minimum_allowed_terminal_count() const;
         unsigned int get_maximum_allowed_terminal_count() const;
 
@@ -60,8 +62,8 @@ class DEVICE_ID
         bool allow_terminal;
 
         TERMINAL terminal;
-        string device_identifier;
-        string device_name;
+        unsigned int device_identifier_index;
+        unsigned int device_name_index;
 };
 
 
@@ -90,8 +92,8 @@ namespace std
             unsigned int seed = 0;
             if(did.is_name_allowed())
             {
-                string name = did.get_device_name();
-                size_t hash_value = std::hash<std::string>{}(name);
+                unsigned int name_index = did.get_device_name_index();
+                size_t hash_value = name_index;
                 seed ^= hash_value + STEPS_MAGIC1 + (seed << 6) + (seed >> 2);
                 return seed;
             }
@@ -106,7 +108,7 @@ namespace std
                     unsigned int bus = buses[i];
                     if(bus!=0)
                     {
-                        size_t hash_value = std::hash<std::size_t>{}(bus);
+                        size_t hash_value = bus;
                         switch(i)
                         {
                             case 0:
@@ -127,12 +129,9 @@ namespace std
                 }
                 if(did.is_identifier_allowed())
                 {
-                    string id = did.get_device_identifier();
-                    if(id!="")
-                    {
-                        size_t hash_value = std::hash<std::string>{}(id);
-                        seed ^= hash_value + STEPS_MAGIC1 + (seed << 6) + (seed >> 2);
-                    }
+                    unsigned int id_index = did.get_device_identifier_index();
+                    size_t hash_value = id_index;
+                    seed ^= hash_value + STEPS_MAGIC1 + (seed << 6) + (seed >> 2);
                 }
 
                 return seed;

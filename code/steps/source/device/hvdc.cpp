@@ -64,17 +64,22 @@ void HVDC::set_converter_bus(CONVERTER_SIDE converter, const unsigned int bus)
 
 void HVDC::set_converter_valve_side_bus_name(CONVERTER_SIDE converter, string name)
 {
-    converter_valve_bus_name[converter] = trim_string(name);
+    name = trim_string(name);
+    add_string_to_str_int_map(name);
+    converter_valve_bus_name_index[converter] = get_index_of_string(name);
 }
 
 void HVDC::set_identifier(const string hvdc_id)
 {
-    this->identifier = hvdc_id;
+    string hvdc_id_temp = trim_string(hvdc_id);
+    add_string_to_str_int_map(hvdc_id_temp);
+    this->identifier_index = get_index_of_string(hvdc_id_temp);
 }
 
 void HVDC::set_name(const string name)
 {
-    this->hvdc_name = trim_string(name);
+    set_identifier(name);
+    //this->hvdc_name = trim_string(name);
 }
 
 void HVDC::set_status(const bool status)
@@ -444,18 +449,18 @@ BUS* HVDC::get_bus_pointer(CONVERTER_SIDE converter) const
 
 string HVDC::get_converter_valve_side_bus_name(CONVERTER_SIDE converter) const
 {
-    return converter_valve_bus_name[converter];
+    return get_string_of_index(converter_valve_bus_name_index[converter]);
 }
 
 string HVDC::get_identifier() const
 {
-    return identifier;
+    return get_string_of_index(identifier_index);
 }
 
 string HVDC::get_name() const
 {
     return get_identifier();
-    return hvdc_name;
+    return get_string_of_index(hvdc_name_index);
 }
 
 bool HVDC::get_status() const
@@ -901,8 +906,8 @@ void HVDC::clear()
     converter_bus[INVERTER] = 0;
     converter_busptr[RECTIFIER] = NULL;
     converter_busptr[INVERTER] = NULL;
-    converter_valve_bus_name[RECTIFIER]="";
-    converter_valve_bus_name[INVERTER]="";
+    converter_valve_bus_name_index[RECTIFIER]=get_index_of_string("");
+    converter_valve_bus_name_index[INVERTER]=get_index_of_string("");
     set_identifier(""); set_name(""); set_status(false);
     line_R_in_ohm = 0.0;
     set_line_inductance_in_mH(0.0);

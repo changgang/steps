@@ -51,7 +51,6 @@ class PV_UNIT : public SOURCE
         virtual complex<double> get_complex_internal_voltage_in_pu_in_xy_axis() const;
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power();
     private:
-
         unsigned int number_of_lumped_pv_units;
         double rated_power_per_pv_unit_in_MW;
 

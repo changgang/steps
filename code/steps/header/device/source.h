@@ -68,7 +68,7 @@ class SOURCE : public NONBUS_DEVICE
         virtual complex<double> get_complex_internal_voltage_in_pu_in_xy_axis() const = 0;
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power() = 0;
     private:
-        string source_identifier;
+        unsigned int source_identifier_index;
         double p_generation_MW, q_generation_MVar;
         BUS* busptr;
 

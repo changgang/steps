@@ -112,8 +112,8 @@ class LINE : public NONBUS_DEVICE
         //map<double,FAULT>::iterator get_iterator_of_fault_at_location_to_sending_side(double location);
         unsigned int sending_side_bus, receiving_side_bus;
         BUS* sending_side_busptr, *receiving_side_busptr;
-        string   identifier;
-        string   name;
+        unsigned int identifier_index;
+        unsigned int name_index;
         bool sending_side_breaker_status, receiving_side_breaker_status;
         complex<double> line_z_12, line_z_0,
                         line_y_12, line_y_0,

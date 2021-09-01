@@ -50,12 +50,16 @@ void FIXED_SHUNT::set_shunt_bus(unsigned int shunt_bus)
 
 void FIXED_SHUNT::set_identifier(string shunt_id)
 {
-    this->identifier = trim_string(shunt_id);
+    shunt_id = trim_string(shunt_id);
+    add_string_to_str_int_map(shunt_id);
+    this->identifier_index = get_index_of_string(shunt_id);
 }
 
 void FIXED_SHUNT::set_name(string name)
 {
-    this->name = trim_string(name);
+    name = trim_string(name);
+    add_string_to_str_int_map(name);
+    this->name_index = get_index_of_string(name);
 }
 
 void FIXED_SHUNT::set_status(bool status)
@@ -85,12 +89,12 @@ BUS* FIXED_SHUNT::get_bus_pointer() const
 
 string FIXED_SHUNT::get_identifier() const
 {
-    return identifier;
+    return get_string_of_index(identifier_index);
 }
 
 string FIXED_SHUNT::get_name() const
 {
-    return name;
+    return get_string_of_index(name_index);
 }
 
 bool FIXED_SHUNT::get_status() const

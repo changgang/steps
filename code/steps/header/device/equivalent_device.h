@@ -86,7 +86,7 @@ class EQUIVALENT_DEVICE : public NONBUS_DEVICE
     private:
     private:
         unsigned int bus;
-        string identifier;
+        unsigned int identifier_index;
         bool status;
 
         bool equivalent_voltage_source_status;

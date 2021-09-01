@@ -87,6 +87,8 @@
 		<Unit filename="header/basic/sparse_matrix_test.h" />
 		<Unit filename="header/basic/sparse_matrix_umfpack.h" />
 		<Unit filename="header/basic/steps_enum.h" />
+		<Unit filename="header/basic/string_int_map.h" />
+		<Unit filename="header/basic/string_int_map_test.h" />
 		<Unit filename="header/basic/terminal.h" />
 		<Unit filename="header/basic/terminal_test.h" />
 		<Unit filename="header/basic/test_macro.h" />
@@ -483,6 +485,8 @@
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
+		<Unit filename="source/basic/string_int_map.cpp" />
+		<Unit filename="source/basic/string_int_map_test.cpp" />
 		<Unit filename="source/basic/terminal.cpp" />
 		<Unit filename="source/basic/terminal_test.cpp" />
 		<Unit filename="source/basic/time_series.cpp" />

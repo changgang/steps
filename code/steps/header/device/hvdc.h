@@ -175,9 +175,9 @@ class HVDC : public NONBUS_DEVICE
         unsigned int converter_bus[2];
         BUS* converter_busptr[2];
 
-        string converter_valve_bus_name[2];
-        string identifier;
-        string hvdc_name;
+        unsigned int converter_valve_bus_name_index[2];
+        unsigned int identifier_index;
+        unsigned int hvdc_name_index;
         bool status;
         double line_R_in_ohm, line_L_in_H, line_C_in_F;
         double smoothing_L_in_H[2], smoothing_R_in_ohm[2];

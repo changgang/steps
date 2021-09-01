@@ -120,7 +120,7 @@ class BUS : public DEVICE
         double get_frequency_in_Hz() const;
     private:
         unsigned int bus_number;
-        string bus_name;
+        unsigned int bus_name_index;
         double base_voltage_in_kV;
         double fn_Hz, tn_s;;
         BUS_TYPE bus_type;

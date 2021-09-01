@@ -65,6 +65,8 @@ class UTILITY_TEST : public Test::Suite
 
         void test_generate_and_delete_toolkit();
         void test_get_toolkit();
+
+        void test_string_int_map_add_and_get_operations();
 };
 
 #endif//UTILITY_TEST_H

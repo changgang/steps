@@ -299,6 +299,8 @@ void STEPS::clear()
 {
     current_alphabeta = 'Z';
 
+    toolkit_str_int_map.clear();
+
     power_system_db.clear();
     dynamic_model_db.clear();
 

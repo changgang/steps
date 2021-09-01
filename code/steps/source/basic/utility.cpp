@@ -943,6 +943,21 @@ STEPS& get_toolkit(unsigned int toolkit_index)
     }
 }
 
+void add_string_to_str_int_map(const string& str)
+{
+    toolkit_str_int_map.add_new_string(str);
+}
+
+unsigned int get_index_of_string(const string& str)
+{
+    return toolkit_str_int_map[str];
+}
+
+string get_string_of_index(unsigned int index)
+{
+    return toolkit_str_int_map[index];
+}
+
 void set_openmp_number_of_threads(unsigned int n)
 {
     omp_set_num_threads(n);

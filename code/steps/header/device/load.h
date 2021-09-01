@@ -99,7 +99,7 @@ class LOAD : public NONBUS_DEVICE
         unsigned int bus;
         BUS* busptr;
 
-        string identifier;
+        unsigned int identifier_index;
         bool status;
         complex<double> s_constant_power_in_MVA,
                         s_constant_current_in_MVA,

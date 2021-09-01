@@ -40,7 +40,9 @@ void BUS::set_bus_number(unsigned int number)
 
 void BUS::set_bus_name(string name)
 {
-    bus_name = trim_string(name);
+    name = trim_string(name);
+    add_string_to_str_int_map(name);
+    bus_name_index =  get_index_of_string(name);
 }
 
 void BUS::set_base_voltage_in_kV(double voltage)
@@ -291,7 +293,7 @@ unsigned int BUS::get_bus_number() const
 
 string BUS::get_bus_name() const
 {
-    return bus_name;
+    return get_string_of_index(bus_name_index);
 }
 
 double BUS::get_base_voltage_in_kV() const

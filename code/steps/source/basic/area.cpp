@@ -43,7 +43,9 @@ void AREA::set_area_number(unsigned int number)
 
 void AREA::set_area_name(string name)
 {
-    this->area_name = trim_string(name);
+    name = trim_string(name);
+    add_string_to_str_int_map(name);
+    this->area_name_index = get_index_of_string(name);
 }
 
 void AREA::set_area_swing_bus(unsigned int bus)
@@ -155,7 +157,7 @@ unsigned int AREA::get_area_number() const
 
 string AREA::get_area_name() const
 {
-    return area_name;
+    return get_string_of_index(area_name_index);
 }
 
 unsigned int AREA::get_area_swing_bus() const

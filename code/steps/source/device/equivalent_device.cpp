@@ -45,7 +45,9 @@ void EQUIVALENT_DEVICE::set_equivalent_device_bus(unsigned int device_bus)
 
 void EQUIVALENT_DEVICE::set_identifier(string identifier)
 {
-    this->identifier = trim_string(identifier);
+    identifier = trim_string(identifier);
+    add_string_to_str_int_map(identifier);
+    this->identifier_index = get_index_of_string(identifier);
 }
 
 void EQUIVALENT_DEVICE::set_status(bool status)
@@ -95,7 +97,7 @@ unsigned int EQUIVALENT_DEVICE::get_equivalent_device_bus() const
 
 string EQUIVALENT_DEVICE::get_identifier() const
 {
-    return identifier;
+    return get_string_of_index(identifier_index);
 }
 
 bool EQUIVALENT_DEVICE::get_status() const

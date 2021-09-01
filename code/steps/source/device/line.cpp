@@ -77,12 +77,16 @@ void LINE::set_receiving_side_bus(unsigned int bus)
 
 void LINE::set_identifier(string line_id)
 {
-    this->identifier = trim_string(line_id);
+    line_id = trim_string(line_id);
+    add_string_to_str_int_map(line_id);
+    this->identifier_index = get_index_of_string(line_id);
 }
 
 void LINE::set_name(string name)
 {
-    this->name = trim_string(name);
+    name = trim_string(name);
+    add_string_to_str_int_map(name);
+    this->name_index = get_index_of_string(name);
 }
 
 void LINE::set_sending_side_breaker_status(bool status)
@@ -173,12 +177,12 @@ BUS* LINE::get_receiving_side_bus_pointer() const
 
 string LINE::get_identifier() const
 {
-    return identifier;
+    return get_string_of_index(identifier_index);
 }
 
 string LINE::get_name() const
 {
-    return name;
+    return get_string_of_index(name_index);
 }
 
 bool LINE::get_sending_side_breaker_status() const

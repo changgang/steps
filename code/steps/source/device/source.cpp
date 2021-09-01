@@ -48,7 +48,9 @@ void SOURCE::set_source_bus(unsigned int bus)
 
 void SOURCE::set_identifier(string id)
 {
-    source_identifier = trim_string(id);
+    id = trim_string(id);
+    add_string_to_str_int_map(id);
+    source_identifier_index = get_index_of_string(id);
 }
 
 void SOURCE::set_status(bool status)
@@ -151,7 +153,7 @@ BUS* SOURCE::get_bus_pointer() const
 
 string SOURCE::get_identifier() const
 {
-    return source_identifier;
+    return get_string_of_index(source_identifier_index);
 }
 
 bool SOURCE::get_status() const

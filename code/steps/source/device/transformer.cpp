@@ -34,13 +34,18 @@ string TRANSFORMER::get_winding_name(TRANSFORMER_WINDING_SIDE winding) const
 
 void TRANSFORMER::set_identifier(string trans_id)
 {
-    this->identifier = trim_string(trans_id);
+    trans_id = trim_string(trans_id);
+    add_string_to_str_int_map(trans_id);
+    this->identifier_index = get_index_of_string(trans_id);
 }
 
 void TRANSFORMER::set_name(string trans_name)
 {
-    this->name = trim_string(trans_name);
+    trans_name = trim_string(trans_name);
+    add_string_to_str_int_map(trans_name);
+    this->name_index = get_index_of_string(trans_name);
 }
+
 void TRANSFORMER::set_non_metered_end_bus(unsigned int bus)
 {
     if(bus==0)
@@ -348,12 +353,12 @@ void TRANSFORMER::set_zero_sequence_impedance_between_windings_based_on_winding_
 
 string TRANSFORMER::get_identifier() const
 {
-    return identifier;
+    return get_string_of_index(identifier_index);
 }
 
 string TRANSFORMER::get_name() const
 {
-    return name;
+    return get_string_of_index(name_index);
 }
 
 unsigned int TRANSFORMER::get_non_metered_end_bus() const
@@ -778,7 +783,7 @@ void TRANSFORMER::clear()
 
     set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, 0.0);
     set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE, 0.0);
-    set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE, 0.0);
+    set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(TERTIARY_SIDE, PRIMARY_SIDE, 0.0);
 
     set_common_zero_sequence_nutural_grounding_impedance_based_on_winding_nominals_in_pu(0.0);
 }

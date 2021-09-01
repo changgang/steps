@@ -3,9 +3,11 @@
 
 #include "header/STEPS.h"
 #include "header/basic/constants.h"
+#include "header/basic/string_int_map.h"
 
 #include <mutex>
 
+extern STR_INT_MAP toolkit_str_int_map;
 extern STEPS default_toolkit;
 extern STEPS* toolkits[STEPS_MAX_TOOLKIT_SIZE];
 extern std::mutex mtx;

@@ -40,7 +40,7 @@ class AREA
         STEPS* toolkit;
 
         unsigned int area_number;
-        string area_name;
+        unsigned int area_name_index;
         unsigned int area_swing_bus;
         double expected_power_leaving_area_in_MW;
         double area_power_mismatch_tolerance_in_MW;

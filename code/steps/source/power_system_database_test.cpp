@@ -774,31 +774,31 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
         hvdc.set_converter_bus(RECTIFIER, 1);
         hvdc.set_converter_bus(INVERTER, 2);
         hvdc.set_identifier("#1");
-        hvdc.set_name("HVDC A");
+        //hvdc.set_name("HVDC A");
         psdb.append_hvdc(hvdc);
 
         hvdc.set_identifier("#2");
-        hvdc.set_name("HVDC B");
+        //hvdc.set_name("HVDC B");
         psdb.append_hvdc(hvdc);
 
         hvdc.set_converter_bus(RECTIFIER, 2);
         hvdc.set_converter_bus(INVERTER, 3);
         hvdc.set_identifier("#1");
-        hvdc.set_name("HVDC C");
+        //hvdc.set_name("HVDC C");
         psdb.append_hvdc(hvdc);
 
         hvdc.set_identifier("#2");
-        hvdc.set_name("HVDC D");
+        //hvdc.set_name("HVDC D");
         psdb.append_hvdc(hvdc);
 
         hvdc.set_converter_bus(RECTIFIER, 1);
         hvdc.set_converter_bus(INVERTER, 3);
         hvdc.set_identifier("#1");
-        hvdc.set_name("HVDC E");
+        //hvdc.set_name("HVDC E");
         psdb.append_hvdc(hvdc);
 
         hvdc.set_identifier("#2");
-        hvdc.set_name("HVDC F");
+        //hvdc.set_name("HVDC F");
         psdb.append_hvdc(hvdc);
     }
 
@@ -1712,7 +1712,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_hvdc()
     phvdc = psdb.get_hvdc(did);
 
     TEST_ASSERT(phvdc!=NULL);
-    TEST_ASSERT(phvdc->get_name()=="DC1");
+    TEST_ASSERT(phvdc->get_name()=="#1");
     TEST_ASSERT(phvdc->get_converter_bus(RECTIFIER)==1);
     TEST_ASSERT(phvdc->get_converter_bus(INVERTER)==2);
     TEST_ASSERT(phvdc->get_identifier()=="#1");
@@ -1722,7 +1722,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_hvdc()
     phvdc = psdb.get_hvdc(did);
 
     TEST_ASSERT(phvdc!=NULL);
-    TEST_ASSERT(phvdc->get_name()=="DC2");
+    TEST_ASSERT(phvdc->get_name()=="#2");
     TEST_ASSERT(phvdc->get_converter_bus(RECTIFIER)==1);
     TEST_ASSERT(phvdc->get_converter_bus(INVERTER)==2);
     TEST_ASSERT(phvdc->get_identifier()=="#2");

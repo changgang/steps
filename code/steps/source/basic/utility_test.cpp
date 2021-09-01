@@ -47,6 +47,7 @@ UTILITY_TEST::UTILITY_TEST()
     TEST_ADD(UTILITY_TEST::test_is_file_exist);
     TEST_ADD(UTILITY_TEST::test_generate_and_delete_toolkit);
     TEST_ADD(UTILITY_TEST::test_get_toolkit);
+    TEST_ADD(UTILITY_TEST::test_string_int_map_add_and_get_operations);
 
 
     //TEST_ADD(UTILITY_TEST::test_redirect_and_recover_stdout);
@@ -448,6 +449,21 @@ void UTILITY_TEST::test_get_toolkit()
     {
         delete_toolkit(k);
     }
+}
+
+
+void UTILITY_TEST::test_string_int_map_add_and_get_operations()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
+
+    add_string_to_str_int_map("ABC");
+    unsigned int index = get_index_of_string("ABC");
+    TEST_ASSERT(get_string_of_index(index)=="ABC");
+
+
+    add_string_to_str_int_map("DEF");
+    index = get_index_of_string("DEF");
+    TEST_ASSERT(get_string_of_index(index)=="DEF");
 }
 /*void UTILITY_TEST::test_redirect_and_close_log_file()
 {

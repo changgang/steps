@@ -432,7 +432,8 @@ void GENERATOR_TEST::test_set_get_negative_sequence_impedance()
 
     double r = 0.05, x = 0.5;
     complex<double> z(r,x);
-    generator.set_generator_impedance_in_pu(z);
+    generator.set_negative_sequence_resistance_in_pu(r);
+    generator.set_negative_sequence_reactance_in_pu(x);
     TEST_ASSERT(fabs(generator.get_negative_sequence_resistance_in_pu()-r)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(generator.get_negative_sequence_reactance_in_pu()-x)<FLOAT_EPSILON);
 }
@@ -456,7 +457,8 @@ void GENERATOR_TEST::test_set_get_zero_sequence_impedance()
 
     double r = 0.05, x = 0.5;
     complex<double> z(r,x);
-    generator.set_generator_impedance_in_pu(z);
+    generator.set_zero_sequence_resistance_in_pu(r);
+    generator.set_zero_sequence_reactance_in_pu(x);
     TEST_ASSERT(fabs(generator.get_zero_sequence_resistance_in_pu()-r)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(generator.get_zero_sequence_reactance_in_pu()-x)<FLOAT_EPSILON);
 }

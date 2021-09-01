@@ -235,10 +235,11 @@ void DEVICE_ID::set_device_identifier(string identifier)
     if(allow_identifier)
     {
         identifier = trim_string(identifier);
-        this->device_identifier = identifier;
+        add_string_to_str_int_map(identifier);
+        this->device_identifier_index = get_index_of_string(identifier);
     }
     else
-        this->device_identifier = "";
+        this->device_identifier_index = get_index_of_string("");
 }
 
 void DEVICE_ID::set_device_name(string name)
@@ -246,10 +247,11 @@ void DEVICE_ID::set_device_name(string name)
     if(allow_name)
     {
         name = trim_string(name);
-        this->device_name = name;
+        add_string_to_str_int_map(name);
+        this->device_name_index = get_index_of_string(name);
     }
     else
-        this->device_name = "";
+        this->device_name_index = get_index_of_string("");
 }
 
 string DEVICE_ID::get_device_type() const
@@ -273,7 +275,7 @@ TERMINAL DEVICE_ID::get_device_terminal() const
 string DEVICE_ID::get_device_identifier() const
 {
     if(allow_identifier)
-        return device_identifier;
+        return get_string_of_index(device_identifier_index);
     else
         return "";
 }
@@ -281,9 +283,19 @@ string DEVICE_ID::get_device_identifier() const
 string DEVICE_ID::get_device_name() const
 {
     if(allow_name)
-        return device_name;
+        return get_string_of_index(device_name_index);
     else
         return "";
+}
+
+unsigned int DEVICE_ID::get_device_identifier_index() const
+{
+    return device_identifier_index;
+}
+
+unsigned int DEVICE_ID::get_device_name_index() const
+{
+    return device_name_index;
 }
 
 unsigned int DEVICE_ID::get_minimum_allowed_terminal_count() const
@@ -303,6 +315,7 @@ string DEVICE_ID::get_compound_device_name() const
     {
         string device_type = get_device_type();
         string ident = get_device_identifier();
+        string device_name = get_device_name();
         TERMINAL term = get_device_terminal();
         vector<unsigned int> buses = term.get_buses();
         unsigned int bus_count = term.get_bus_count();
@@ -389,7 +402,7 @@ bool DEVICE_ID::is_valid() const
 {
     //if(get_device_type()=="GENERAL DEVICE" or (get_device_type()!="" and terminal.get_bus_count()!=0))
     unsigned int device_type_code = get_device_type_code();
-    if(device_type_code==9999 or (is_name_allowed() and device_name != "") or (is_terminal_allowed() and terminal.get_bus_count()!=0))
+    if(device_type_code==9999 or (is_name_allowed() and device_name_index != 0) or (is_terminal_allowed() and terminal.get_bus_count()!=0))
         return true;
     else
         return false;
@@ -415,7 +428,8 @@ void DEVICE_ID::clear()
 {
     device_type = "";
     device_type_code = 0;
-    device_identifier = "";
+    device_identifier_index = 0;
+    device_name_index = 0;
     terminal.clear();
     initialize_minimum_maximum_terminal_count();
     allow_identifier = false;

@@ -12,6 +12,7 @@
 
 #include "header/basic/test_macro.h"
 
+#include "header/basic/string_int_map_test.h"
 #include "header/basic/terminal_test.h"
 #include "header/basic/device_id_test.h"
 #include "header/basic/area_test.h"
@@ -214,6 +215,8 @@ int main(int argc, char* argv[])
 
         ts.add(unique_ptr<Test::Suite>(new DEVICE_ID_TEST));
 
+        ts.add(unique_ptr<Test::Suite>(new STR_INT_MAP_TEST));
+
         ts.add(unique_ptr<Test::Suite>(new TERMINAL_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new DEVICE_ID_TEST));
@@ -226,7 +229,7 @@ int main(int argc, char* argv[])
 
         ts.add(unique_ptr<Test::Suite>(new SPARSE_MATRIX_TEST));
         ts.add(unique_ptr<Test::Suite>(new COMPLEX_SPARSE_MATRIX_TEST));
-        /*
+
         ts.add(unique_ptr<Test::Suite>(new FAULT_TEST));
         ts.add(unique_ptr<Test::Suite>(new BUS_INDEX_TEST));
         ts.add(unique_ptr<Test::Suite>(new DEVICE_INDEX_MAP_TEST));
@@ -253,7 +256,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new ENERGY_STORAGE_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new POWER_SYSTEM_DATABASE_TEST));
-
+/*
         ts.add(unique_ptr<Test::Suite>(new STEPS_IMEXPORTER_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new PSSE_IMEXPORTER_TEST));
