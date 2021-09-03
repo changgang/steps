@@ -209,7 +209,7 @@ string STEPS_IMEXPORTER::get_dynamic_model_name(vector<string>& data)
 DEVICE_ID STEPS_IMEXPORTER::get_generator_device_id_from_string_vector(vector<string>& data)
 {
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
 
     if(data.size()<3)
         return did;
@@ -224,7 +224,7 @@ DEVICE_ID STEPS_IMEXPORTER::get_generator_device_id_from_string_vector(vector<st
     TERMINAL terminal;
     terminal.append_bus(bus);
     did.set_device_terminal(terminal);
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }
@@ -232,7 +232,7 @@ DEVICE_ID STEPS_IMEXPORTER::get_generator_device_id_from_string_vector(vector<st
 DEVICE_ID STEPS_IMEXPORTER::get_wt_generator_device_id_from_string_vector(vector<string>& data)
 {
     DEVICE_ID did;
-    did.set_device_type("WT GENERATOR");
+    did.set_device_type(STEPS_WT_GENERATOR);
 
     if(data.size()<3)
         return did;
@@ -247,7 +247,7 @@ DEVICE_ID STEPS_IMEXPORTER::get_wt_generator_device_id_from_string_vector(vector
     TERMINAL terminal;
     terminal.append_bus(bus);
     did.set_device_terminal(terminal);
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }
@@ -255,7 +255,7 @@ DEVICE_ID STEPS_IMEXPORTER::get_wt_generator_device_id_from_string_vector(vector
 DEVICE_ID STEPS_IMEXPORTER::get_pv_unit_device_id_from_string_vector(vector<string>& data)
 {
     DEVICE_ID did;
-    did.set_device_type("PV UNIT");
+    did.set_device_type(STEPS_PV_UNIT);
 
     if(data.size()<3)
         return did;
@@ -270,7 +270,7 @@ DEVICE_ID STEPS_IMEXPORTER::get_pv_unit_device_id_from_string_vector(vector<stri
     TERMINAL terminal;
     terminal.append_bus(bus);
     did.set_device_terminal(terminal);
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }
@@ -278,7 +278,7 @@ DEVICE_ID STEPS_IMEXPORTER::get_pv_unit_device_id_from_string_vector(vector<stri
 DEVICE_ID STEPS_IMEXPORTER::get_load_device_id_from_string_vector(vector<string>& data)
 {
     DEVICE_ID did;
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
 
     if(data.size()<3)
         return did;
@@ -293,7 +293,7 @@ DEVICE_ID STEPS_IMEXPORTER::get_load_device_id_from_string_vector(vector<string>
     TERMINAL terminal;
     terminal.append_bus(bus);
     did.set_device_terminal(terminal);
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }
@@ -301,7 +301,7 @@ DEVICE_ID STEPS_IMEXPORTER::get_load_device_id_from_string_vector(vector<string>
 DEVICE_ID STEPS_IMEXPORTER::get_line_device_id_from_string_vector(vector<string>& data)
 {
     DEVICE_ID did;
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
 
     if(data.size()<4)
         return did;
@@ -318,14 +318,14 @@ DEVICE_ID STEPS_IMEXPORTER::get_line_device_id_from_string_vector(vector<string>
     terminal.append_bus(ibus);
     terminal.append_bus(jbus);
     did.set_device_terminal(terminal);
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }
 DEVICE_ID STEPS_IMEXPORTER::get_hvdc_device_id_from_string_vector(vector<string>& data)
 {
     DEVICE_ID did;
-    did.set_device_type("HVDC");
+    did.set_device_type(STEPS_HVDC);
 
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -348,7 +348,7 @@ DEVICE_ID STEPS_IMEXPORTER::get_hvdc_device_id_from_string_vector(vector<string>
             terminal.append_bus(hvdcs[i]->get_converter_bus(RECTIFIER));
             terminal.append_bus(hvdcs[i]->get_converter_bus(INVERTER));
             did.set_device_terminal(terminal);
-            did.set_device_identifier(hvdcs[i]->get_identifier());
+            did.set_device_identifier_index(hvdcs[i]->get_identifier_index());
             break;
         }
     }
@@ -358,7 +358,7 @@ DEVICE_ID STEPS_IMEXPORTER::get_hvdc_device_id_from_string_vector(vector<string>
 DEVICE_ID STEPS_IMEXPORTER::get_transformer_device_id_from_string_vector(vector<string>& data)
 {
     DEVICE_ID did;
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_TRANSFORMER);
 
     if(data.size()<4)
         return did;
@@ -377,7 +377,7 @@ DEVICE_ID STEPS_IMEXPORTER::get_transformer_device_id_from_string_vector(vector<
     terminal.append_bus(jbus);
     terminal.append_bus(kbus);
     did.set_device_terminal(terminal);
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }

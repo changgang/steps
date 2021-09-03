@@ -102,7 +102,7 @@ void DYNAMIC_MODEL_DATABASE::add_model(MODEL* model)
         }
         else
         {
-            if(did_new.get_device_type()=="LOAD")
+            if(did_new.get_device_type()==STEPS_LOAD)
             {
                 bool flag = load_related_model_is_to_update(old_model, model);
                 if(flag==true)

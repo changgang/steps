@@ -10,7 +10,7 @@ class HVDC;
 
 HVDC_MODEL::HVDC_MODEL(STEPS& toolkit) : MODEL(toolkit)
 {
-    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("HVDC");
+    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_HVDC);
     set_converter_dynamic_max_alpha_or_gamma_in_deg(RECTIFIER, 90.0);
     set_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER, 0.0);
     set_converter_dynamic_max_alpha_or_gamma_in_deg(INVERTER, 90.0);

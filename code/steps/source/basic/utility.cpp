@@ -958,6 +958,51 @@ string get_string_of_index(unsigned int index)
     return toolkit_str_int_map[index];
 }
 
+string device_type2string(STEPS_DEVICE_TYPE device_type)
+{
+    switch(device_type)
+    {
+        case STEPS_BUS:
+            return "BUS";
+        case STEPS_GENERATOR:
+            return "GENERATOR";
+        case STEPS_WT_GENERATOR:
+            return "WT GENERATOR";
+        case STEPS_PV_UNIT:
+            return "PV UNIT";
+        case STEPS_ENERGY_STORAGE:
+            return "ENERGY STORAGE";
+        case STEPS_LOAD:
+            return "LOAD";
+        case STEPS_FIXED_SHUNT:
+            return "FIXED SHUNT";
+        case STEPS_SWITCHED_SHUNT:
+            return "SWITCHED SHUNT";
+        case STEPS_EQUIVALENT_DEVICE:
+            return "EQUIVALENT DEVICE";
+        case STEPS_LINE:
+            return "LINE";
+        case STEPS_TRANSFORMER:
+            return "TRANSFORMER";
+        case STEPS_HVDC:
+            return "HVDC";
+        case STEPS_VSC_HVDC:
+            return "VSC_HVDC";
+        case STEPS_FACTS:
+            return "FACTS";
+        case STEPS_LCC_HVDC:
+            return "LCC HVDC";
+        case STEPS_MULTI_DC:
+            return "MULTI DC";
+        case STEPS_GENERAL_DEVICE:
+            return "GENERAL DEVICE";
+        case STEPS_INVALID_DEVICE:
+            return "INVALID DEVICE TYPE";
+        default:
+            return "UNNAMED DEVICE TYPE OF NUMBER "+num2str(device_type);
+    }
+}
+
 void set_openmp_number_of_threads(unsigned int n)
 {
     omp_set_num_threads(n);

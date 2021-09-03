@@ -128,12 +128,12 @@ void STEPS_IMEXPORTER_TEST::test_load_load_data()
     TEST_ASSERT(n==20);
 
     DEVICE_ID did;
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
     TERMINAL terminal;
     terminal.append_bus(152);
 
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
 
     LOAD* load = psdb.get_load(did);
     TEST_ASSERT(load->get_load_bus()==152);
@@ -146,7 +146,7 @@ void STEPS_IMEXPORTER_TEST::test_load_load_data()
     terminal.clear();
     terminal.append_bus(215);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("U1");
+    did.set_device_identifier_index(get_index_of_string("U1"));
     load = psdb.get_load(did);
     TEST_ASSERT(load->get_load_bus()==215);
     TEST_ASSERT(load->get_identifier()=="U1");
@@ -158,7 +158,7 @@ void STEPS_IMEXPORTER_TEST::test_load_load_data()
     terminal.clear();
     terminal.append_bus(3010);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     load = psdb.get_load(did);
     TEST_ASSERT(load->get_load_bus()==3010);
     TEST_ASSERT(load->get_identifier()=="1");
@@ -182,12 +182,12 @@ void STEPS_IMEXPORTER_TEST::test_load_fixed_shunt_data()
     TEST_ASSERT(n==13);
 
     DEVICE_ID did;
-    did.set_device_type("FIXED SHUNT");
+    did.set_device_type(STEPS_FIXED_SHUNT);
     TERMINAL terminal;
     terminal.append_bus(151);
 
     did.set_device_terminal(terminal);
-    did.set_device_identifier("F1");
+    did.set_device_identifier_index(get_index_of_string("F1"));
 
     FIXED_SHUNT* shunt = psdb.get_fixed_shunt(did);
     TEST_ASSERT(shunt->get_shunt_bus()==151);
@@ -198,7 +198,7 @@ void STEPS_IMEXPORTER_TEST::test_load_fixed_shunt_data()
     terminal.clear();
     terminal.append_bus(201);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     shunt = psdb.get_fixed_shunt(did);
     TEST_ASSERT(shunt->get_shunt_bus()==201);
     TEST_ASSERT(shunt->get_identifier()=="1");
@@ -208,7 +208,7 @@ void STEPS_IMEXPORTER_TEST::test_load_fixed_shunt_data()
     terminal.clear();
     terminal.append_bus(3022);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     shunt = psdb.get_fixed_shunt(did);
     TEST_ASSERT(shunt->get_shunt_bus()==3022);
     TEST_ASSERT(shunt->get_identifier()=="1");
@@ -227,12 +227,12 @@ void STEPS_IMEXPORTER_TEST::test_load_generator_data()
     TEST_ASSERT(n==12);
 
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(101);
 
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
 
     GENERATOR* gen = psdb.get_generator(did);
     TEST_ASSERT(gen->get_generator_bus()==101);
@@ -249,7 +249,7 @@ void STEPS_IMEXPORTER_TEST::test_load_generator_data()
     terminal.clear();
     terminal.append_bus(301);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("2");
+    did.set_device_identifier_index(get_index_of_string("2"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(gen->get_generator_bus()==301);
     TEST_ASSERT(gen->get_identifier()=="2");
@@ -265,7 +265,7 @@ void STEPS_IMEXPORTER_TEST::test_load_generator_data()
     terminal.clear();
     terminal.append_bus(3018);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("2");
+    did.set_device_identifier_index(get_index_of_string("2"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(gen->get_generator_bus()==3018);
     TEST_ASSERT(gen->get_identifier()=="2");
@@ -290,12 +290,12 @@ void STEPS_IMEXPORTER_TEST::test_load_wt_generator_data()
     TEST_ASSERT(n==3);
 
     DEVICE_ID did;
-    did.set_device_type("WT GENERATOR");
+    did.set_device_type(STEPS_WT_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(9154);
 
     did.set_device_terminal(terminal);
-    did.set_device_identifier("W1");
+    did.set_device_identifier_index(get_index_of_string("W1"));
 
     WT_GENERATOR* wt_generator = psdb.get_wt_generator(did);
     TEST_ASSERT(wt_generator->get_source_bus()==9154);
@@ -312,7 +312,7 @@ void STEPS_IMEXPORTER_TEST::test_load_wt_generator_data()
     terminal.clear();
     terminal.append_bus(93002);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("W3");
+    did.set_device_identifier_index(get_index_of_string("W3"));
     wt_generator = psdb.get_wt_generator(did);
     TEST_ASSERT(wt_generator->get_source_bus()==93002);
     TEST_ASSERT(wt_generator->get_identifier()=="W3");
@@ -337,13 +337,13 @@ void STEPS_IMEXPORTER_TEST::test_load_line_data()
     TEST_ASSERT(n==30);
 
     DEVICE_ID did;
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     TERMINAL terminal;
     terminal.append_bus(151);
     terminal.append_bus(152);
 
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
 
     LINE* line = psdb.get_line(did);
     TEST_ASSERT(line->get_sending_side_bus()==151);
@@ -361,7 +361,7 @@ void STEPS_IMEXPORTER_TEST::test_load_line_data()
     terminal.append_bus(213);
     terminal.append_bus(214);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     line = psdb.get_line(did);
     TEST_ASSERT(line->get_sending_side_bus()==213);
     TEST_ASSERT(line->get_receiving_side_bus()==214);
@@ -378,7 +378,7 @@ void STEPS_IMEXPORTER_TEST::test_load_line_data()
     terminal.append_bus(3008);
     terminal.append_bus(3009);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     line = psdb.get_line(did);
     TEST_ASSERT(line->get_sending_side_bus()==3008);
     TEST_ASSERT(line->get_receiving_side_bus()==3009);
@@ -403,14 +403,14 @@ void STEPS_IMEXPORTER_TEST::test_load_transformer_data()
     TEST_ASSERT(n==18);
 
     DEVICE_ID did;
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_TRANSFORMER);
 
     TERMINAL terminal;
     terminal.append_bus(101);
     terminal.append_bus(151);
 
     did.set_device_terminal(terminal);
-    did.set_device_identifier("T1");
+    did.set_device_identifier_index(get_index_of_string("T1"));
 
     TRANSFORMER* transptr = psdb.get_transformer(did);
     TEST_ASSERT(transptr!=NULL);
@@ -421,7 +421,7 @@ void STEPS_IMEXPORTER_TEST::test_load_transformer_data()
     terminal.append_bus(151);
 
     did.set_device_terminal(terminal);
-    did.set_device_identifier("T2");
+    did.set_device_identifier_index(get_index_of_string("T2"));
 
     transptr = psdb.get_transformer(did);
     TEST_ASSERT(transptr!=NULL);

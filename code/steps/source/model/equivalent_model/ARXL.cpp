@@ -61,7 +61,7 @@ void ARXL::set_output_line(DEVICE_ID did, unsigned int meter_side)
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
 
-    if(did.get_device_type()!="LINE")
+    if(did.get_device_type()!=STEPS_LINE)
     {
         osstream<<"Warning. The output device (of type "<<did.get_device_type()<<") is not a LINE when setting up output line for ARXL model.";
         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -583,21 +583,20 @@ string ARXL::get_standard_psse_string() const
 
 string ARXL::get_meter_string(const METER& meter) const
 {
-    if(meter.get_device_id().get_device_type()=="LINE")
-        return get_line_meter_string(meter);
-
-    if(meter.get_device_id().get_device_type()=="TRANSFORMER")
-        return get_transformer_meter_string(meter);
-
-    if(meter.get_device_id().get_device_type()=="BUS")
-        return get_bus_meter_string(meter);
-
-    if(meter.get_device_id().get_device_type()=="GENERATOR")
-        return get_generator_meter_string(meter);
-
-    if(meter.get_device_id().get_device_type()=="LOAD")
-        return get_load_meter_string(meter);
-
+    STEPS_DEVICE_TYPE device_type = meter.get_device_id().get_device_type();
+    switch(device_type)
+    {
+        case STEPS_LINE:
+            return get_line_meter_string(meter);
+        case STEPS_TRANSFORMER:
+            return get_transformer_meter_string(meter);
+        case STEPS_BUS:
+            return get_bus_meter_string(meter);
+        case STEPS_GENERATOR:
+            return get_generator_meter_string(meter);
+        case STEPS_LOAD:
+            return get_load_meter_string(meter);
+    }
     return "";
 }
 

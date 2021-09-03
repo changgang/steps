@@ -31,6 +31,7 @@ class EQUIVALENT_DEVICE : public NONBUS_DEVICE
 
         unsigned int get_equivalent_device_bus() const;
         string get_identifier() const;
+        unsigned int get_identifier_index() const;
         bool get_status() const;
 
         bool get_equivalent_voltage_source_status() const;

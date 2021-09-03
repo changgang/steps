@@ -4,7 +4,7 @@
 #include "header/STEPS.h"
 PVU_MODEL::PVU_MODEL(STEPS& toolkit) : MODEL(toolkit)
 {
-    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("PV UNIT");
+    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_PV_UNIT);
 }
 
 PVU_MODEL::~PVU_MODEL()

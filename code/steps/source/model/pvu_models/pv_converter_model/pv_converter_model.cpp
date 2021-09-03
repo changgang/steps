@@ -10,7 +10,7 @@ using namespace std;
 
 PV_CONVERTER_MODEL::PV_CONVERTER_MODEL(STEPS& toolkit) : PVU_MODEL(toolkit)
 {
-    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("PV UNIT");
+    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_PV_UNIT);
 
     set_current_source_flag(true);
     set_initial_active_current_command_in_pu_based_on_mbase(0.0);

@@ -47,11 +47,11 @@ void prepare_training_load_scale_case()
     simulator.run_to(1.0);
 
     DEVICE_ID did;
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
     TERMINAL terminal;
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
 
     simulator.scale_load(did, -0.1);
 
@@ -96,11 +96,11 @@ void prepare_training_generation_shed_case()
     simulator.run_to(1.0);
 
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(38);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
 
     simulator.shed_generator(did, 0.1);
 
@@ -156,11 +156,11 @@ int main()
     simulator.run_to(1.0);
 
     DEVICE_ID did;
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
     TERMINAL terminal;
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
 
     simulator.scale_load(did, -0.1);
 

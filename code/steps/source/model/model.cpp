@@ -17,7 +17,7 @@ MODEL::MODEL(STEPS& toolkit)
     //inverter_bus_pointer = NULL;
 
     for(unsigned int i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
-        allowed_device_types[i][0]='\0';
+        allowed_device_types[i]=STEPS_INVALID_DEVICE;
 
     model_data_table = NULL;
     model_internal_variable_table = NULL;
@@ -81,21 +81,20 @@ void MODEL::destroy_manually_allocated_storage()
         delete user_input_time_series;
 }
 
-void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(string device_type)
+void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_DEVICE_TYPE device_type)
 {
-    device_type = string2upper(device_type);
-    if(device_type=="BUS" or device_type=="GENERATOR" or device_type=="WT GENERATOR" or device_type=="PV UNIT" or
-       device_type=="LOAD" or device_type=="LINE" or device_type=="TRANSFORMER" or
-       device_type=="HVDC" or device_type=="FIXED SHUNT" or device_type=="SWITCHED SHUNT" or
-       device_type=="EQUIVALENT DEVICE" or device_type=="ENERGY STORAGE")
+    if(device_type==STEPS_BUS or device_type==STEPS_GENERATOR or device_type==STEPS_WT_GENERATOR or
+       device_type==STEPS_PV_UNIT or device_type==STEPS_LOAD or device_type==STEPS_LINE or
+       device_type==STEPS_TRANSFORMER or device_type==STEPS_HVDC or device_type==STEPS_FIXED_SHUNT or
+       device_type==STEPS_SWITCHED_SHUNT or device_type==STEPS_EQUIVALENT_DEVICE or device_type==STEPS_ENERGY_STORAGE)
     {
         if(not has_allowed_device_type(device_type))
         {
             for(unsigned int i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
             {
-                if(allowed_device_types[i][0]=='\0')
+                if(allowed_device_types[i]==STEPS_INVALID_DEVICE)
                 {
-                    strcpy(allowed_device_types[i],device_type.c_str());
+                    allowed_device_types[i] = device_type;
                     break;
                 }
             }
@@ -108,23 +107,22 @@ void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRU
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
-vector<string> MODEL::get_allowed_device_types() const
+vector<STEPS_DEVICE_TYPE> MODEL::get_allowed_device_types() const
 {
-    vector<string> temp;
+    vector<STEPS_DEVICE_TYPE> temp;
     for(unsigned int i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
     {
-        if(allowed_device_types[i][0]!='\0')
+        if(allowed_device_types[i]!=STEPS_INVALID_DEVICE)
             temp.push_back(allowed_device_types[i]);
     }
     return temp;
 }
 
-bool MODEL::has_allowed_device_type(string device_type) const
+bool MODEL::has_allowed_device_type(STEPS_DEVICE_TYPE device_type) const
 {
-    device_type = string2upper(device_type);
     for(unsigned int i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
     {
-        if(allowed_device_types[i][0]!='\0')
+        if(allowed_device_types[i]!=STEPS_INVALID_DEVICE)
         {
             if(allowed_device_types[i]==device_type)
                 return true;
@@ -280,8 +278,8 @@ void MODEL::set_device_id(DEVICE_ID did)
         osstream<<"Warning. Invalid device type ("<<did.get_device_type()<<") is given to build model for which the following types of devices is expected:\n";
         for(unsigned int i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
         {
-            if(allowed_device_types[i][0]!='\0')
-                osstream<<allowed_device_types[i]<<"\n";
+            if(allowed_device_types[i]!=STEPS_INVALID_DEVICE)
+                osstream<<device_type2string(allowed_device_types[i])<<"\n";
         }
         osstream<<"Model device id will not be updated.";
         toolkit->show_information_with_leading_time_stamp(osstream);
@@ -301,31 +299,24 @@ void MODEL::set_device_id(DEVICE_ID did)
 
     if(device_pointer!=NULL)
     {
-        string device_type = did.get_device_type();
-        if(device_type=="GENERATOR")
+        STEPS_DEVICE_TYPE device_type = did.get_device_type();
+        switch(device_type)
         {
-            bus_pointer = ((GENERATOR*) device_pointer)->get_bus_pointer();
-            return;
-        }
-        if(device_type=="WT GENERATOR")
-        {
-            bus_pointer = ((WT_GENERATOR*) device_pointer)->get_bus_pointer();
-            return;
-        }
-        if(device_type=="PV UNIT")
-        {
-            bus_pointer = ((PV_UNIT*) device_pointer)->get_bus_pointer();
-            return;
-        }
-        if(device_type=="ENERGY STORAGE")
-        {
-            bus_pointer = ((ENERGY_STORAGE*) device_pointer)->get_bus_pointer();
-            return;
-        }
-        if(device_type=="LOAD")
-        {
-            bus_pointer = ((LOAD*) device_pointer)->get_bus_pointer();
-            return;
+            case STEPS_GENERATOR:
+                bus_pointer = ((GENERATOR*) device_pointer)->get_bus_pointer();
+                return;
+            case STEPS_WT_GENERATOR:
+                bus_pointer = ((WT_GENERATOR*) device_pointer)->get_bus_pointer();
+                return;
+            case STEPS_PV_UNIT:
+                bus_pointer = ((PV_UNIT*) device_pointer)->get_bus_pointer();
+                return;
+            case STEPS_ENERGY_STORAGE:
+                bus_pointer = ((ENERGY_STORAGE*) device_pointer)->get_bus_pointer();
+                return;
+            case STEPS_LOAD:
+                bus_pointer = ((LOAD*) device_pointer)->get_bus_pointer();
+                return;
         }
         /*if(device_type=="LINE")
         {

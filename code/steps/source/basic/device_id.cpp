@@ -17,8 +17,8 @@ DEVICE_ID::DEVICE_ID(const DEVICE_ID& did)
     clear();
     set_device_type(did.get_device_type());
     set_device_terminal(did.get_device_terminal());
-    set_device_name(did.get_device_name());
-    set_device_identifier(did.get_device_identifier());
+    set_device_name_index(did.get_device_name_index());
+    set_device_identifier_index(did.get_device_identifier_index());
 }
 
 DEVICE_ID::~DEVICE_ID()
@@ -65,14 +65,14 @@ void DEVICE_ID::set_maximum_allowed_terminal_count(unsigned int n)
     maximum_terminal_count = n;
 }
 
-void DEVICE_ID::set_device_type(string device_type)
+void DEVICE_ID::set_device_type(STEPS_DEVICE_TYPE device_type)
 {
     clear();
 
     set_device_type_and_allowed_terminal_count(device_type);
 }
 
-void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
+void DEVICE_ID::set_device_type_and_allowed_terminal_count(STEPS_DEVICE_TYPE device_type)
 {
     /*
     device type code:
@@ -82,16 +82,15 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
     9999: general
     */
 
-    device_type = string2upper(device_type);
-    if(device_type=="BUS"         ||
-       device_type=="GENERATOR"   ||
-       device_type=="WT GENERATOR" ||
-       device_type=="PV UNIT"   ||
-       device_type=="ENERGY STORAGE"     ||
-       device_type=="LOAD"        ||
-       device_type=="FIXED SHUNT" ||
-       device_type=="SWITCHED SHUNT" ||
-       device_type=="EQUIVALENT DEVICE")
+    if(device_type==STEPS_BUS         ||
+       device_type==STEPS_GENERATOR   ||
+       device_type==STEPS_WT_GENERATOR ||
+       device_type==STEPS_PV_UNIT   ||
+       device_type==STEPS_ENERGY_STORAGE     ||
+       device_type==STEPS_LOAD        ||
+       device_type==STEPS_FIXED_SHUNT ||
+       device_type==STEPS_SWITCHED_SHUNT ||
+       device_type==STEPS_EQUIVALENT_DEVICE)
     {
         enable_allow_terminal();
 
@@ -99,28 +98,18 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
         set_minimum_allowed_terminal_count(1);
         set_maximum_allowed_terminal_count(1);
 
-        if(device_type == "BUS")
+        if(device_type == STEPS_BUS)
             disable_allow_identifier();
         else
             enable_allow_identifier();
 
-        if(device_type=="BUS") device_type_code = 1;
-        if(device_type_code==0 and device_type=="GENERATOR") device_type_code = 2;
-        if(device_type_code==0 and device_type=="WT GENERATOR") device_type_code = 3;
-        if(device_type_code==0 and device_type=="PV UNIT") device_type_code = 4;
-        if(device_type_code==0 and device_type=="ENERGY STORAGE") device_type_code = 5;
-        if(device_type_code==0 and device_type=="LOAD") device_type_code = 6;
-        if(device_type_code==0 and device_type=="FIXED SHUNT") device_type_code = 7;
-        if(device_type_code==0 and device_type=="SWITCHED SHUNT") device_type_code = 8;
-        if(device_type_code==0 and device_type=="EQUIVALENT DEVICE") device_type_code = 9;
-
         return;
     }
 
-    if(device_type=="LINE"    ||
-       device_type=="HVDC"    ||
-       device_type=="VSC HVDC" ||
-       device_type=="FACTS")
+    if(device_type==STEPS_LINE    ||
+       device_type==STEPS_HVDC    ||
+       device_type==STEPS_VSC_HVDC ||
+       device_type==STEPS_FACTS)
     {
         enable_allow_terminal();
         enable_allow_identifier();
@@ -129,15 +118,10 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
         set_minimum_allowed_terminal_count(2);
         set_maximum_allowed_terminal_count(2);
 
-        if(device_type=="LINE") device_type_code = 10;
-        if(device_type_code==0 and device_type=="HVDC") device_type_code = 11;
-        if(device_type_code==0 and device_type=="VSC HVDC") device_type_code = 12;
-        if(device_type_code==0 and device_type=="FACTS") device_type_code = 13;
-
         return;
     }
 
-    if(device_type=="TRANSFORMER")
+    if(device_type==STEPS_TRANSFORMER)
     {
         enable_allow_terminal();
         enable_allow_identifier();
@@ -146,12 +130,10 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
         set_minimum_allowed_terminal_count(2);
         set_maximum_allowed_terminal_count(3);
 
-        device_type_code = 14;
-
         return;
     }
 
-    if(device_type=="MULTI DC")
+    if(device_type==STEPS_MULTI_DC)
     {
         enable_allow_terminal();
         enable_allow_identifier();
@@ -160,12 +142,10 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
         set_minimum_allowed_terminal_count(3);
         set_maximum_allowed_terminal_count(100);
 
-        device_type_code = 15;
-
         return;
     }
 
-    if(device_type=="LCC HVDC")
+    if(device_type==STEPS_LCC_HVDC)
     {
         enable_allow_name();
         disable_allow_identifier();
@@ -174,12 +154,10 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
         set_minimum_allowed_terminal_count(0);
         set_maximum_allowed_terminal_count(0);
 
-        device_type_code = 1001;
-
         return;
     }
 
-    if(device_type=="GENERAL DEVICE")
+    if(device_type==STEPS_GENERAL_DEVICE)
     {
         enable_allow_terminal();
         enable_allow_identifier();
@@ -187,8 +165,6 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
         this->device_type = device_type;
         set_minimum_allowed_terminal_count(0);
         set_maximum_allowed_terminal_count(100);
-
-        device_type_code = 9999;
 
         return;
     }
@@ -200,7 +176,7 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
             <<"LINE, TRANSFORMER, HVDC, VSC HVDC, FACTS, LCC HVDC, MULTI DC, EQUIVALENT DEVICE, and GENERAL DEVICE."<<endl
             <<"Device type will be set as blank, and \"NONE\" will be returned if get_device_type() is called.";
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
-    device_type = "";
+    device_type = STEPS_INVALID_DEVICE;
 }
 
 void DEVICE_ID::set_device_terminal(const TERMINAL& term)
@@ -230,6 +206,7 @@ bool DEVICE_ID::is_given_terminal_acceptable(const TERMINAL& term)
         return false;
 }
 
+/*
 void DEVICE_ID::set_device_identifier(string identifier)
 {
     if(allow_identifier)
@@ -253,18 +230,26 @@ void DEVICE_ID::set_device_name(string name)
     else
         this->device_name_index = get_index_of_string("");
 }
+*/
 
-string DEVICE_ID::get_device_type() const
-{
-    if(device_type != "")
-        return device_type;
-    else
-        return "NONE";
+void DEVICE_ID::set_device_identifier_index(unsigned int index){
+    if(allow_identifier)
+    {
+        this->device_identifier_index = index;
+    }
 }
 
-unsigned int DEVICE_ID::get_device_type_code() const
+void DEVICE_ID::set_device_name_index(unsigned int index)
 {
-    return device_type_code;
+    if(allow_name)
+    {
+        this->device_name_index = index;
+    }
+}
+
+STEPS_DEVICE_TYPE DEVICE_ID::get_device_type() const
+{
+    return device_type;
 }
 
 TERMINAL DEVICE_ID::get_device_terminal() const
@@ -310,37 +295,38 @@ unsigned int DEVICE_ID::get_maximum_allowed_terminal_count() const
 
 string DEVICE_ID::get_compound_device_name() const
 {
-    string comp_device_name = "INVALID DEVICE (possible of type "+get_device_type()+")";
+    string comp_device_name = "INVALID DEVICE (possible of type "+num2str(get_device_type())+")";
     if(is_valid())
     {
-        string device_type = get_device_type();
+        STEPS_DEVICE_TYPE device_type = get_device_type();
+        string device_type_str = device_type2string(device_type);
         string ident = get_device_identifier();
         string device_name = get_device_name();
         TERMINAL term = get_device_terminal();
         vector<unsigned int> buses = term.get_buses();
         unsigned int bus_count = term.get_bus_count();
-        if(device_type=="BUS")
+        if(device_type==STEPS_BUS)
         {
-            comp_device_name = device_type + " "+num2str(buses[0]);
+            comp_device_name = device_type_str+" "+num2str(buses[0]);
             return comp_device_name;
         }
 
-        if(device_type=="LINE" or device_type=="HVDC" or device_type=="VSC HVDC")
+        if(device_type==STEPS_LINE or device_type==STEPS_HVDC or device_type==STEPS_VSC_HVDC)
         {
             if(ident=="")
-                comp_device_name = device_type + " ";
+                comp_device_name = device_type_str + " ";
             else
-                comp_device_name = device_type + " "+ident+" ";
+                comp_device_name = device_type_str + " "+ident+" ";
             comp_device_name += "LINKING BUS "+num2str(buses[0])+" AND "+num2str(buses[1]);
             return comp_device_name;
         }
 
-        if(device_type=="TRANSFORMER")
+        if(device_type==STEPS_TRANSFORMER)
         {
             if(ident=="")
-                comp_device_name = device_type + " ";
+                comp_device_name = device_type_str + " ";
             else
-                comp_device_name = device_type + " "+ident+" ";
+                comp_device_name = device_type_str + " "+ident+" ";
             if(bus_count==2)
                 comp_device_name += "LINKING BUS "+num2str(buses[0])+" AND "+num2str(buses[1]);
             else
@@ -348,33 +334,34 @@ string DEVICE_ID::get_compound_device_name() const
             return comp_device_name;
         }
 
-        if(device_type=="GENERATOR" or device_type=="WT GENERATOR" or device_type=="PV UNIT" or device_type=="ENERGY STORAGE" or
-           device_type=="LOAD" or device_type=="FIXED SHUNT" or device_type=="SWITCHED SHUNT" or device_type=="EQUIVALENT DEVICE")
+        if(device_type==STEPS_GENERATOR or device_type==STEPS_WT_GENERATOR or device_type==STEPS_PV_UNIT or
+           device_type==STEPS_ENERGY_STORAGE or device_type==STEPS_LOAD or device_type==STEPS_FIXED_SHUNT or
+           device_type==STEPS_SWITCHED_SHUNT or device_type==STEPS_EQUIVALENT_DEVICE)
         {
             if(ident=="")
-                comp_device_name = device_type + " ";
+                comp_device_name = device_type_str + " ";
             else
-                comp_device_name = device_type + " "+ident+" ";
+                comp_device_name = device_type_str + " "+ident+" ";
             comp_device_name += "AT BUS "+num2str(buses[0]);
             return comp_device_name;
         }
 
-        if(device_type=="LCC HVDC")
+        if(device_type==STEPS_LCC_HVDC)
         {
             if(device_name=="")
-                comp_device_name = device_type + " INVALID";
+                comp_device_name = device_type_str + " INVALID";
             else
-                comp_device_name = device_type + " "+device_name;
+                comp_device_name = device_type_str + " "+device_name;
 
             return comp_device_name;
         }
 
-        if(device_type=="GENERAL DEVICE")
+        if(device_type==STEPS_GENERAL_DEVICE)
         {
             if(ident=="")
-                comp_device_name = device_type + " ";
+                comp_device_name = device_type_str + " ";
             else
-                comp_device_name = device_type + " "+ident+" ";
+                comp_device_name = device_type_str + " "+ident+" ";
             switch(bus_count)
             {
                 case 0:
@@ -400,9 +387,7 @@ string DEVICE_ID::get_compound_device_name() const
 
 bool DEVICE_ID::is_valid() const
 {
-    //if(get_device_type()=="GENERAL DEVICE" or (get_device_type()!="" and terminal.get_bus_count()!=0))
-    unsigned int device_type_code = get_device_type_code();
-    if(device_type_code==9999 or (is_name_allowed() and device_name_index != 0) or (is_terminal_allowed() and terminal.get_bus_count()!=0))
+    if(device_type==STEPS_INVALID_DEVICE or (is_name_allowed() and device_name_index != 0) or (is_terminal_allowed() and terminal.get_bus_count()!=0))
         return true;
     else
         return false;
@@ -426,8 +411,7 @@ bool DEVICE_ID::is_identifier_allowed() const
 
 void DEVICE_ID::clear()
 {
-    device_type = "";
-    device_type_code = 0;
+    device_type = STEPS_INVALID_DEVICE;
     device_identifier_index = 0;
     device_name_index = 0;
     terminal.clear();
@@ -442,15 +426,15 @@ DEVICE_ID& DEVICE_ID::operator= (const DEVICE_ID& device_id)
 
     set_device_type(device_id.get_device_type());
     set_device_terminal(device_id.get_device_terminal());
-    set_device_identifier(device_id.get_device_identifier());
-    set_device_name(device_id.get_device_name());
+    set_device_identifier_index(device_id.get_device_identifier_index());
+    set_device_name_index(device_id.get_device_name_index());
 
     return (*this);
 }
 
 bool DEVICE_ID::operator< (const DEVICE_ID& device_id) const
 {
-    if(this->get_device_type_code() == device_id.get_device_type_code())
+    if(this->get_device_type() == device_id.get_device_type())
     {
         if(allow_name)
         {
@@ -526,7 +510,7 @@ bool DEVICE_ID::operator!=(const DEVICE_ID& device_id) const
 DEVICE_ID get_bus_device_id(unsigned int bus_number)
 {
     DEVICE_ID did;
-    did.set_device_type("BUS");
+    did.set_device_type(STEPS_BUS);
 
     TERMINAL terminal;
     terminal.append_bus(bus_number);
@@ -539,14 +523,14 @@ DEVICE_ID get_bus_device_id(unsigned int bus_number)
 DEVICE_ID get_generator_device_id(unsigned int bus, const string& identifier)
 {
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
 
     TERMINAL terminal;
     terminal.append_bus(bus);
 
     did.set_device_terminal(terminal);
 
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }
@@ -554,14 +538,14 @@ DEVICE_ID get_generator_device_id(unsigned int bus, const string& identifier)
 DEVICE_ID get_wt_generator_device_id(unsigned int bus, const string& identifier)
 {
     DEVICE_ID did;
-    did.set_device_type("WT GENERATOR");
+    did.set_device_type(STEPS_WT_GENERATOR);
 
     TERMINAL terminal;
     terminal.append_bus(bus);
 
     did.set_device_terminal(terminal);
 
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }
@@ -569,14 +553,14 @@ DEVICE_ID get_wt_generator_device_id(unsigned int bus, const string& identifier)
 DEVICE_ID get_pv_unit_device_id(unsigned int bus, const string& identifier)
 {
     DEVICE_ID did;
-    did.set_device_type("PV UNIT");
+    did.set_device_type(STEPS_PV_UNIT);
 
     TERMINAL terminal;
     terminal.append_bus(bus);
 
     did.set_device_terminal(terminal);
 
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }
@@ -584,14 +568,14 @@ DEVICE_ID get_pv_unit_device_id(unsigned int bus, const string& identifier)
 DEVICE_ID get_energy_storage_device_id(unsigned int bus, const string& identifier)
 {
     DEVICE_ID did;
-    did.set_device_type("ENERGY STORAGE");
+    did.set_device_type(STEPS_ENERGY_STORAGE);
 
     TERMINAL terminal;
     terminal.append_bus(bus);
 
     did.set_device_terminal(terminal);
 
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }
@@ -599,14 +583,14 @@ DEVICE_ID get_energy_storage_device_id(unsigned int bus, const string& identifie
 DEVICE_ID get_load_device_id(unsigned int bus, const string& identifier)
 {
     DEVICE_ID did;
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
 
     TERMINAL terminal;
     terminal.append_bus(bus);
 
     did.set_device_terminal(terminal);
 
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }
@@ -614,14 +598,14 @@ DEVICE_ID get_load_device_id(unsigned int bus, const string& identifier)
 DEVICE_ID get_fixed_shunt_device_id(unsigned int bus, const string& identifier)
 {
     DEVICE_ID did;
-    did.set_device_type("FIXED SHUNT");
+    did.set_device_type(STEPS_FIXED_SHUNT);
 
     TERMINAL terminal;
     terminal.append_bus(bus);
 
     did.set_device_terminal(terminal);
 
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }
@@ -629,7 +613,7 @@ DEVICE_ID get_fixed_shunt_device_id(unsigned int bus, const string& identifier)
 DEVICE_ID get_line_device_id(unsigned int ibus, unsigned int jbus, const string& identifier)
 {
     DEVICE_ID did;
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
 
     TERMINAL terminal;
     terminal.append_bus(ibus);
@@ -637,7 +621,7 @@ DEVICE_ID get_line_device_id(unsigned int ibus, unsigned int jbus, const string&
 
     did.set_device_terminal(terminal);
 
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }
@@ -645,7 +629,7 @@ DEVICE_ID get_line_device_id(unsigned int ibus, unsigned int jbus, const string&
 DEVICE_ID get_hvdc_device_id(unsigned int ibus, unsigned int jbus, const string& identifier)
 {
     DEVICE_ID did;
-    did.set_device_type("HVDC");
+    did.set_device_type(STEPS_HVDC);
 
     TERMINAL terminal;
     terminal.append_bus(ibus);
@@ -653,7 +637,7 @@ DEVICE_ID get_hvdc_device_id(unsigned int ibus, unsigned int jbus, const string&
 
     did.set_device_terminal(terminal);
 
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }
@@ -661,7 +645,7 @@ DEVICE_ID get_hvdc_device_id(unsigned int ibus, unsigned int jbus, const string&
 DEVICE_ID get_transformer_device_id(unsigned int ibus, unsigned int jbus, unsigned int kbus, const string& identifier)
 {
     DEVICE_ID did;
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_TRANSFORMER);
 
     TERMINAL terminal;
     terminal.append_bus(ibus);
@@ -670,7 +654,7 @@ DEVICE_ID get_transformer_device_id(unsigned int ibus, unsigned int jbus, unsign
 
     did.set_device_terminal(terminal);
 
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }
@@ -678,14 +662,14 @@ DEVICE_ID get_transformer_device_id(unsigned int ibus, unsigned int jbus, unsign
 DEVICE_ID get_equivalent_device_id(unsigned int bus, const string& identifier)
 {
     DEVICE_ID did;
-    did.set_device_type("EQUIVALENT DEVICE");
+    did.set_device_type(STEPS_EQUIVALENT_DEVICE);
 
     TERMINAL terminal;
     terminal.append_bus(bus);
 
     did.set_device_terminal(terminal);
 
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }
@@ -693,15 +677,15 @@ DEVICE_ID get_equivalent_device_id(unsigned int bus, const string& identifier)
 DEVICE_ID get_lcc_hvdc_device_id(const string& name)
 {
     DEVICE_ID did;
-    did.set_device_type("LCC HVDC");
-    did.set_device_name(name);
+    did.set_device_type(STEPS_LCC_HVDC);
+    did.set_device_name_index(get_index_of_string(name));
     return did;
 }
 
 DEVICE_ID get_general_device_id(const vector<unsigned int>& bus, const string& identifier)
 {
     DEVICE_ID did;
-    did.set_device_type("GENERAL DEVICE");
+    did.set_device_type(STEPS_GENERAL_DEVICE);
 
     TERMINAL terminal;
     unsigned int n = bus.size();
@@ -710,7 +694,7 @@ DEVICE_ID get_general_device_id(const vector<unsigned int>& bus, const string& i
 
     did.set_device_terminal(terminal);
 
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }

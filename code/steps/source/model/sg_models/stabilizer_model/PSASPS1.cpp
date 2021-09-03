@@ -295,7 +295,7 @@ void PSASPS1::initialize()
             set_input_signal_at_slot(1, signal);
 
         DEVICE_ID bus_device;
-        bus_device.set_device_type("BUS");
+        bus_device.set_device_type(STEPS_BUS);
         TERMINAL terminal;
         terminal.append_bus(bus);
         bus_device.set_device_terminal(terminal);

@@ -463,6 +463,17 @@ string HVDC::get_name() const
     return get_string_of_index(hvdc_name_index);
 }
 
+
+unsigned int HVDC::get_identifier_index() const
+{
+    return identifier_index;
+}
+
+unsigned int HVDC::get_name_index() const
+{
+    return get_identifier_index();
+}
+
 bool HVDC::get_status() const
 {
     return status;
@@ -1051,7 +1062,7 @@ void HVDC::save() const
 
 void HVDC::set_model(MODEL* model)
 {
-    if(model != NULL and model->has_allowed_device_type("HVDC"))
+    if(model != NULL and model->has_allowed_device_type(STEPS_HVDC))
     {
         model->set_device_id(get_device_id());
         if(model->get_model_type()=="HVDC")
@@ -1206,13 +1217,13 @@ HVDC& HVDC::operator=(const HVDC& hvdc)
 DEVICE_ID HVDC::get_device_id() const
 {
     DEVICE_ID did;
-    did.set_device_type("HVDC");
+    did.set_device_type(STEPS_HVDC);
 
     TERMINAL terminal;
     terminal.append_bus(get_converter_bus(RECTIFIER));
     terminal.append_bus(get_converter_bus(INVERTER));
     did.set_device_terminal(terminal);
-    did.set_device_identifier(get_identifier());
+    did.set_device_identifier_index(get_identifier_index());
 
     return did;
 }

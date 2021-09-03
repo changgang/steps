@@ -10,7 +10,7 @@ STABILIZER_MODEL::STABILIZER_MODEL(STEPS& toolkit) : SG_MODEL(toolkit),
                                                      signal_2(toolkit),signal_3(toolkit),
                                                      signal_4(toolkit)
 {
-    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("GENERATOR");
+    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_GENERATOR);
     for(unsigned int slot=0; slot<STEPS_MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++slot)
     {
         SIGNAL* signal = get_nonconst_pointer_of_signal_at_slot(slot);

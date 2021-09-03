@@ -58,12 +58,12 @@ int main()
     simulator.run_to(1.0);
 
     DEVICE_ID did;
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     TERMINAL terminal;
     terminal.append_bus(60);
     terminal.append_bus(62);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
 
     simulator.set_line_fault(did, 60, 0.0, complex<double>(0.0, -1e6));
 

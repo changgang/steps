@@ -923,7 +923,7 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meter(const DEVICE_ID& did, s
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    if(did.get_device_type()=="GENERATOR")
+    if(did.get_device_type()==STEPS_GENERATOR)
     {
         if(psdb.is_generator_exist(did))
         {
@@ -1002,7 +1002,7 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(const DEVICE_ID& did
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    if(did.get_device_type()=="WT GENERATOR")
+    if(did.get_device_type()==STEPS_WT_GENERATOR)
     {
         if(psdb.is_wt_generator_exist(did))
         {
@@ -1089,7 +1089,7 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meter(const DEVICE_ID& did, str
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    if(did.get_device_type()=="PV UNIT")
+    if(did.get_device_type()==STEPS_PV_UNIT)
     {
         if(psdb.is_pv_unit_exist(did))
         {
@@ -1152,7 +1152,7 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(const DEVICE_ID& d
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    if(did.get_device_type()=="ENERGY STORAGE")
+    if(did.get_device_type()==STEPS_ENERGY_STORAGE)
     {
         if(psdb.is_pv_unit_exist(did))
         {
@@ -1235,7 +1235,7 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meter(const DEVICE_ID& did, string
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    if(did.get_device_type()=="LOAD")
+    if(did.get_device_type()==STEPS_LOAD)
     {
         if(psdb.is_load_exist(did))
         {
@@ -1284,7 +1284,7 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meter(const DEVICE_ID& did, string
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    if(did.get_device_type()=="LINE")
+    if(did.get_device_type()==STEPS_LINE)
     {
         if(psdb.is_line_exist(did))
         {
@@ -1338,7 +1338,7 @@ void DYNAMICS_SIMULATOR::prepare_transformer_related_meter(const DEVICE_ID& did,
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    if(did.get_device_type()=="TRANSFORMER")
+    if(did.get_device_type()==STEPS_TRANSFORMER)
     {
         if(psdb.is_transformer_exist(did))
         {
@@ -1395,7 +1395,7 @@ void DYNAMICS_SIMULATOR::prepare_hvdc_related_meter(const DEVICE_ID& did, string
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    if(did.get_device_type()=="HVDC")
+    if(did.get_device_type()==STEPS_HVDC)
     {
         if(psdb.is_hvdc_exist(did))
         {
@@ -1475,7 +1475,7 @@ void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meter(const DEVICE_ID
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    if(did.get_device_type()=="EQUIVALENT DEVICE")
+    if(did.get_device_type()==STEPS_EQUIVALENT_DEVICE)
     {
         if(psdb.is_equivalent_device_exist(did))
         {
@@ -3931,7 +3931,7 @@ void DYNAMICS_SIMULATOR::set_line_fault(const DEVICE_ID& line_id, unsigned int s
 {
     ostringstream osstream;
 
-    if(line_id.get_device_type()=="LINE")
+    if(line_id.get_device_type()==STEPS_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         LINE* lineptr = psdb.get_line(line_id);
@@ -4006,7 +4006,7 @@ void DYNAMICS_SIMULATOR::clear_line_fault(const DEVICE_ID& line_id, unsigned int
 {
     ostringstream osstream;
 
-    if(line_id.get_device_type()=="LINE")
+    if(line_id.get_device_type()==STEPS_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         LINE* lineptr = psdb.get_line(line_id);
@@ -4069,7 +4069,7 @@ void DYNAMICS_SIMULATOR::trip_line(const DEVICE_ID& line_id)
 {
     ostringstream osstream;
 
-    if(line_id.get_device_type()=="LINE")
+    if(line_id.get_device_type()==STEPS_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         LINE* lineptr = psdb.get_line(line_id);
@@ -4114,7 +4114,7 @@ void DYNAMICS_SIMULATOR::trip_line_breaker(const DEVICE_ID& line_id, unsigned in
 {
     ostringstream osstream;
 
-    if(line_id.get_device_type()=="LINE")
+    if(line_id.get_device_type()==STEPS_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         LINE* lineptr = psdb.get_line(line_id);
@@ -4169,7 +4169,7 @@ void DYNAMICS_SIMULATOR::close_line(const DEVICE_ID& line_id)
 {
     ostringstream osstream;
 
-    if(line_id.get_device_type()=="LINE")
+    if(line_id.get_device_type()==STEPS_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         LINE* lineptr = psdb.get_line(line_id);
@@ -4208,7 +4208,7 @@ void DYNAMICS_SIMULATOR::close_line_breaker(const DEVICE_ID& line_id, unsigned i
 {
     ostringstream osstream;
 
-    if(line_id.get_device_type()=="LINE")
+    if(line_id.get_device_type()==STEPS_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         LINE* lineptr = psdb.get_line(line_id);
@@ -4261,7 +4261,7 @@ void DYNAMICS_SIMULATOR::trip_transformer(const DEVICE_ID& trans_id)
 {
     ostringstream osstream;
 
-    if(trans_id.get_device_type()=="TRANSFORMER")
+    if(trans_id.get_device_type()==STEPS_TRANSFORMER)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         TRANSFORMER* transptr = psdb.get_transformer(trans_id);
@@ -4308,7 +4308,7 @@ void DYNAMICS_SIMULATOR::trip_transformer_breaker(const DEVICE_ID& trans_id, uns
 {
     ostringstream osstream;
 
-    if(trans_id.get_device_type()=="TRANSFORMER")
+    if(trans_id.get_device_type()==STEPS_TRANSFORMER)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         TRANSFORMER* transptr = psdb.get_transformer(trans_id);
@@ -4384,7 +4384,7 @@ void DYNAMICS_SIMULATOR::close_transformer(const DEVICE_ID& trans_id)
 {
     ostringstream osstream;
 
-    if(trans_id.get_device_type()=="TRANSFORMER")
+    if(trans_id.get_device_type()==STEPS_TRANSFORMER)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         TRANSFORMER* transptr = psdb.get_transformer(trans_id);
@@ -4431,7 +4431,7 @@ void DYNAMICS_SIMULATOR::close_transformer_breaker(const DEVICE_ID& trans_id, un
 {
     ostringstream osstream;
 
-    if(trans_id.get_device_type()=="TRANSFORMER")
+    if(trans_id.get_device_type()==STEPS_TRANSFORMER)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         TRANSFORMER* transptr = psdb.get_transformer(trans_id);
@@ -4503,7 +4503,7 @@ void DYNAMICS_SIMULATOR::trip_generator(const DEVICE_ID& gen_id)
 
     ostringstream osstream;
 
-    if(gen_id.get_device_type()=="GENERATOR")
+    if(gen_id.get_device_type()==STEPS_GENERATOR)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         GENERATOR* generator = psdb.get_generator(gen_id);
@@ -4541,7 +4541,7 @@ void DYNAMICS_SIMULATOR::shed_generator(const DEVICE_ID& gen_id,double percent)
 {
     ostringstream osstream;
 
-    if(gen_id.get_device_type()=="GENERATOR")
+    if(gen_id.get_device_type()==STEPS_GENERATOR)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         GENERATOR* generator = psdb.get_generator(gen_id);
@@ -4596,7 +4596,7 @@ void DYNAMICS_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id, unsigned int
 {
     ostringstream osstream;
 
-    if(gen_id.get_device_type()=="WT GENERATOR")
+    if(gen_id.get_device_type()==STEPS_WT_GENERATOR)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         WT_GENERATOR* generator = psdb.get_wt_generator(gen_id);
@@ -4655,7 +4655,7 @@ void DYNAMICS_SIMULATOR::shed_wt_generator(const DEVICE_ID& gen_id,double percen
 {
     ostringstream osstream;
 
-    if(gen_id.get_device_type()=="WT GENERATOR")
+    if(gen_id.get_device_type()==STEPS_WT_GENERATOR)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         WT_GENERATOR* generator = psdb.get_wt_generator(gen_id);
@@ -4710,7 +4710,7 @@ void DYNAMICS_SIMULATOR::trip_load(const DEVICE_ID& load_id)
 {
     ostringstream osstream;
 
-    if(load_id.get_device_type()=="LOAD")
+    if(load_id.get_device_type()==STEPS_LOAD)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         LOAD* load = psdb.get_load(load_id);
@@ -4748,7 +4748,7 @@ void DYNAMICS_SIMULATOR::close_load(const DEVICE_ID& load_id)
 {
     ostringstream osstream;
 
-    if(load_id.get_device_type()=="LOAD")
+    if(load_id.get_device_type()==STEPS_LOAD)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         LOAD* load = psdb.get_load(load_id);
@@ -4787,7 +4787,7 @@ void DYNAMICS_SIMULATOR::scale_load(const DEVICE_ID& load_id, double percent)
 {
     ostringstream osstream;
 
-    if(load_id.get_device_type()=="LOAD")
+    if(load_id.get_device_type()==STEPS_LOAD)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         LOAD* load = psdb.get_load(load_id);
@@ -4859,7 +4859,7 @@ void DYNAMICS_SIMULATOR::trip_fixed_shunt(const DEVICE_ID& shunt_id)
 {
     ostringstream osstream;
 
-    if(shunt_id.get_device_type()=="FIXED SHUNT")
+    if(shunt_id.get_device_type()==STEPS_FIXED_SHUNT)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         FIXED_SHUNT* shunt = psdb.get_fixed_shunt(shunt_id);
@@ -4897,7 +4897,7 @@ void DYNAMICS_SIMULATOR::close_fixed_shunt(const DEVICE_ID& shunt_id)
 {
     ostringstream osstream;
 
-    if(shunt_id.get_device_type()=="FIXED SHUNT")
+    if(shunt_id.get_device_type()==STEPS_FIXED_SHUNT)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         FIXED_SHUNT* shunt = psdb.get_fixed_shunt(shunt_id);

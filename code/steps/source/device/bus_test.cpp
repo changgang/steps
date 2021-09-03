@@ -386,7 +386,7 @@ void BUS_TEST::test_get_device_id()
     DEVICE_ID did = bus.get_device_id();
 
     DEVICE_ID did2;
-    did2.set_device_type("BUS");
+    did2.set_device_type(STEPS_BUS);
     TERMINAL terminal;
     terminal.append_bus(1);
     did2.set_device_terminal(terminal);

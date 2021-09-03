@@ -125,11 +125,11 @@ void PV_UNIT_TEST::test_get_device_id()
     DEVICE_ID did = pv_unit.get_device_id();
 
     DEVICE_ID did2;
-    did2.set_device_type("PV UNIT");
+    did2.set_device_type(STEPS_PV_UNIT);
     TERMINAL terminal;
     terminal.append_bus(1);
     did2.set_device_terminal(terminal);
-    did2.set_device_identifier("1#");
+    did2.set_device_identifier_index(get_index_of_string("1#"));
 
     TEST_ASSERT(did==did2);
 

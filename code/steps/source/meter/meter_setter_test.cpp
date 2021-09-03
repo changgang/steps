@@ -57,7 +57,7 @@ void METER_SETTER_TEST::test_prepare_bus_related_meters()
     DEVICE_ID did;
     TERMINAL terminal;
 
-    did.set_device_type("BUS");
+    did.set_device_type(STEPS_BUS);
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
 
@@ -121,11 +121,11 @@ void METER_SETTER_TEST::test_prepare_line_related_meters()
     DEVICE_ID did;
     TERMINAL terminal;
 
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1#");
+    did.set_device_identifier_index(get_index_of_string("1#"));
 
     meter = setter.prepare_line_current_in_kA_meter(did,1);
     TEST_ASSERT(meter.get_device_id()==did);
@@ -239,11 +239,11 @@ void METER_SETTER_TEST::test_prepare_transformer_related_meters()
     DEVICE_ID did;
     TERMINAL terminal;
 
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_TRANSFORMER);
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1#");
+    did.set_device_identifier_index(get_index_of_string("1#"));
 
     meter = setter.prepare_transformer_current_in_kA_meter(did,1);
     TEST_ASSERT(meter.get_device_id()==did);
@@ -307,7 +307,7 @@ void METER_SETTER_TEST::test_prepare_transformer_related_meters()
 
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1#");
+    did.set_device_identifier_index(get_index_of_string("1#"));
 
     meter = setter.prepare_transformer_current_in_kA_meter(did,1);
     TEST_ASSERT(meter.get_device_id()==did);
@@ -411,10 +411,10 @@ void METER_SETTER_TEST::test_prepare_load_related_meters()
     DEVICE_ID did;
     TERMINAL terminal;
 
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1#");
+    did.set_device_identifier_index(get_index_of_string("1#"));
 
     meter = setter.prepare_load_active_power_in_MW_meter(did);
     TEST_ASSERT(meter.get_device_id()==did);
@@ -479,10 +479,10 @@ void METER_SETTER_TEST::test_prepare_generator_related_meters()
     DEVICE_ID did;
     TERMINAL terminal;
 
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1#");
+    did.set_device_identifier_index(get_index_of_string("1#"));
 
     meter = setter.prepare_generator_rotor_angle_in_deg_meter(did);
     TEST_ASSERT(meter.get_device_id()==did);
@@ -638,10 +638,10 @@ void METER_SETTER_TEST::test_prepare_wt_generator_related_meters()
     DEVICE_ID did;
     TERMINAL terminal;
 
-    did.set_device_type("WT GENERATOR");
+    did.set_device_type(STEPS_WT_GENERATOR);
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1#");
+    did.set_device_identifier_index(get_index_of_string("1#"));
 
     meter = setter.prepare_wt_generator_terminal_current_in_pu_on_mbase_meter(did);
     TEST_ASSERT(meter.get_device_id()==did);
@@ -793,10 +793,10 @@ void METER_SETTER_TEST::test_prepare_pv_unit_related_meters()
     DEVICE_ID did;
     TERMINAL terminal;
 
-    did.set_device_type("PV UNIT");
+    did.set_device_type(STEPS_PV_UNIT);
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1#");
+    did.set_device_identifier_index(get_index_of_string("1#"));
 
     meter = setter.prepare_pv_unit_terminal_current_in_pu_meter(did);
     TEST_ASSERT(meter.get_device_id()==did);
@@ -870,10 +870,10 @@ void METER_SETTER_TEST::test_prepare_energy_storage_related_meters()
     DEVICE_ID did;
     TERMINAL terminal;
 
-    did.set_device_type("ENERGY STORAGE");
+    did.set_device_type(STEPS_ENERGY_STORAGE);
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     meter = setter.prepare_energy_storage_state_of_energy_in_pu_meter(did);
     TEST_ASSERT(meter.get_device_id()==did);
@@ -920,11 +920,11 @@ void METER_SETTER_TEST::test_prepare_hvdc_related_meters()
     DEVICE_ID did;
     TERMINAL terminal;
 
-    did.set_device_type("HVDC");
+    did.set_device_type(STEPS_HVDC);
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("P");
+    did.set_device_identifier_index(get_index_of_string("P"));
 
     meter = setter.prepare_hvdc_dc_current_in_kA_meter(did);
     TEST_ASSERT(meter.get_device_id()==did);
@@ -1011,10 +1011,10 @@ void METER_SETTER_TEST::test_prepare_equivalent_device_related_meters()
     DEVICE_ID did;
     TERMINAL terminal;
 
-    did.set_device_type("EQUIVALENT DEVICE");
+    did.set_device_type(STEPS_EQUIVALENT_DEVICE);
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("E1");
+    did.set_device_identifier_index(get_index_of_string("E1"));
 
     meter = setter.prepare_equivalent_device_voltage_source_voltage_in_pu_meter(did);
     TEST_ASSERT(meter.get_device_id()==did);

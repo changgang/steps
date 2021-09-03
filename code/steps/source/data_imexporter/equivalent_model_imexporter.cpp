@@ -171,13 +171,13 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
     if(data_line[1]=="LINE")
     {
         DEVICE_ID did;
-        did.set_device_type("LINE");
+        did.set_device_type(STEPS_LINE);
         TERMINAL terminal;
         terminal.clear();
         terminal.append_bus(get_integer_data(data_line[3],"0"));
         terminal.append_bus(get_integer_data(data_line[4],"0"));
         did.set_device_terminal(terminal);
-        did.set_device_identifier(get_string_data(data_line[5],""));
+        did.set_device_identifier_index(get_index_of_string(get_string_data(data_line[5],"")));
 
         unsigned int side_bus = get_integer_data(data_line[6],"0");
 
@@ -207,13 +207,13 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
     if(data_line[1]=="TRANSFORMER")
     {
         DEVICE_ID did;
-        did.set_device_type("TRANSFORMER");
+        did.set_device_type(STEPS_TRANSFORMER);
         TERMINAL terminal;
         terminal.clear();
         terminal.append_bus(get_integer_data(data_line[3],"0"));
         terminal.append_bus(get_integer_data(data_line[4],"0"));
         did.set_device_terminal(terminal);
-        did.set_device_identifier(get_string_data(data_line[5],""));
+        did.set_device_identifier_index(get_index_of_string(get_string_data(data_line[5],"")));
 
         unsigned int side_bus = get_integer_data(data_line[6],"0");
 
@@ -249,12 +249,12 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
         coefficient = get_double_data(data_line[6],"0.0");
 
         DEVICE_ID did;
-        did.set_device_type("GENERATOR");
+        did.set_device_type(STEPS_GENERATOR);
         TERMINAL terminal;
         terminal.clear();
         terminal.append_bus(bus);
         did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        did.set_device_identifier_index(get_index_of_string(identifier));
 
         if(data_line[2].find("ACTIVE_POWER_MW")!=string::npos)
             meter = setter.prepare_generator_terminal_active_power_in_MW_meter(did);
@@ -288,12 +288,12 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
         coefficient = get_double_data(data_line[6],"0.0");
 
         DEVICE_ID did;
-        did.set_device_type("LOAD");
+        did.set_device_type(STEPS_LOAD);
         TERMINAL terminal;
         terminal.clear();
         terminal.append_bus(bus);
         did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        did.set_device_identifier_index(get_index_of_string(identifier));
 
         if(data_line[2].find("ACTIVE_POWER_MW")!=string::npos)
             meter = setter.prepare_load_active_power_in_MW_meter(did);
@@ -335,23 +335,23 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
     unsigned int side_bus = get_integer_data(data_line[4],"0");
 
     DEVICE_ID did;
-    did.set_device_type("EQUIVALENT DEVICE");
+    did.set_device_type(STEPS_EQUIVALENT_DEVICE);
     TERMINAL terminal;
     terminal.append_bus(side_bus);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("ARXL");
+    did.set_device_identifier_index(get_index_of_string("ARXL"));
 
     EQUIVALENT_DEVICE* pedevice = psdb.get_equivalent_device(did);
 
     ARXL model(*toolkit);
     model.set_device_id(did);
 
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     terminal.clear();
     terminal.append_bus(ibus);
     terminal.append_bus(jbus);
     did.set_device_terminal(terminal);
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     model.set_output_line(did, side_bus);
 

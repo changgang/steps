@@ -715,12 +715,12 @@ void TRANSFORMER_TEST::test_get_device_id()
     DEVICE_ID did = transformer.get_device_id();
 
     DEVICE_ID did2;
-    did2.set_device_type("TRANSFORMER");
+    did2.set_device_type(STEPS_TRANSFORMER);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
     did2.set_device_terminal(terminal);
-    did2.set_device_identifier("#1");
+    did2.set_device_identifier_index(get_index_of_string("#1"));
 
     TEST_ASSERT(did==did2);
 
@@ -744,14 +744,14 @@ void TRANSFORMER_TEST::test_get_device_id()
     did = transformer.get_device_id();
 
     did2.set_device_terminal(terminal);
-    did2.set_device_identifier("#1");
+    did2.set_device_identifier_index(get_index_of_string("#1"));
 
     terminal.clear();
     terminal.append_bus(1);
     terminal.append_bus(2);
     terminal.append_bus(3);
     did2.set_device_terminal(terminal);
-    did2.set_device_identifier("#1");
+    did2.set_device_identifier_index(get_index_of_string("#1"));
 
     TEST_ASSERT(did==did2);
 }

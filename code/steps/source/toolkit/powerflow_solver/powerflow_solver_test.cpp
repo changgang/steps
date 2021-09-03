@@ -273,12 +273,12 @@ void POWERFLOW_SOLVER_TEST::test_solve_IEEE_9_bus_model_with_full_Newton_Raphson
     powerflow_solver.set_flat_start_logic(false);
 
     DEVICE_ID did;
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_TRANSFORMER);
     TERMINAL terminal;
     terminal.append_bus(2);
     terminal.append_bus(7);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
 
     TRANSFORMER* trans = psdb.get_transformer(did);
 
@@ -297,11 +297,11 @@ void POWERFLOW_SOLVER_TEST::test_solve_IEEE_9_bus_model_with_full_Newton_Raphson
     bus->set_positive_sequence_angle_in_deg(0.0);
     powerflow_solver.set_flat_start_logic(true);
 
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     GENERATOR* gen = psdb.get_generator(did);
     gen->set_q_max_in_MVar(100.0);
     gen->set_q_min_in_MVar(100.0);
@@ -366,12 +366,12 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_full_Ne
     check_ISO_New_England_39_bus_model_powerflow_result();
 
     DEVICE_ID did;
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
 
     LINE* line = psdb.get_line(did);
 
@@ -382,7 +382,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_full_Ne
     terminal.append_bus(2);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
 
     line = psdb.get_line(did);
 
@@ -512,11 +512,11 @@ void POWERFLOW_SOLVER_TEST::test_solve_IEEE_9_bus_model_with_fast_decoupled_solu
 
     powerflow_solver.set_flat_start_logic(true);
 
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     GENERATOR* gen = psdb.get_generator(did);
     gen->set_q_max_in_MVar(100.0);
     gen->set_q_min_in_MVar(100.0);
@@ -584,12 +584,12 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_fast_de
     default_toolkit.close_log_file();
 
     DEVICE_ID did;
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
 
     LINE* line = psdb.get_line(did);
 
@@ -600,7 +600,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_fast_de
     terminal.append_bus(2);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
 
     line = psdb.get_line(did);
     line->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.0000001));
@@ -762,12 +762,12 @@ void POWERFLOW_SOLVER_TEST::check_Arthur_R_Bergen_3_bus_model_powerflow_result()
 
     GENERATOR* gen;
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
 
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-219.92)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-15.40361)<peps);
@@ -776,7 +776,7 @@ void POWERFLOW_SOLVER_TEST::check_Arthur_R_Bergen_3_bus_model_powerflow_result()
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-66.61)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-165.8286)<peps);
@@ -820,12 +820,12 @@ void POWERFLOW_SOLVER_TEST::check_IEEE_9_bus_model_powerflow_result()
 
     GENERATOR* gen;
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
 
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-71.64101)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-27.04592)<peps);
@@ -833,7 +833,7 @@ void POWERFLOW_SOLVER_TEST::check_IEEE_9_bus_model_powerflow_result()
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-163.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-6.653666)<peps);
@@ -841,7 +841,7 @@ void POWERFLOW_SOLVER_TEST::check_IEEE_9_bus_model_powerflow_result()
     terminal.clear();
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-85.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-(-10.8597))<peps);
@@ -974,12 +974,12 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
 
     GENERATOR* gen;
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
 
     terminal.append_bus(30);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-250.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-144.9194)<peps);
@@ -987,7 +987,7 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     terminal.clear();
     terminal.append_bus(31);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-572.835)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-207.0365)<peps);
@@ -995,7 +995,7 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     terminal.clear();
     terminal.append_bus(32);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-650.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-205.7312)<peps);
@@ -1003,7 +1003,7 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     terminal.clear();
     terminal.append_bus(33);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-632.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-108.9362)<peps);
@@ -1011,7 +1011,7 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     terminal.clear();
     terminal.append_bus(34);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-508.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-166.9861)<peps);
@@ -1019,7 +1019,7 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     terminal.clear();
     terminal.append_bus(35);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-650.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-211.1118)<peps);
@@ -1027,7 +1027,7 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     terminal.clear();
     terminal.append_bus(36);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-560.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-100.4377)<peps);
@@ -1035,7 +1035,7 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     terminal.clear();
     terminal.append_bus(37);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-540.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-0.64692)<peps);
@@ -1043,7 +1043,7 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     terminal.clear();
     terminal.append_bus(38);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-830.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-22.65877)<peps);
@@ -1051,7 +1051,7 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     terminal.clear();
     terminal.append_bus(39);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-1000.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-87.88259)<peps);
@@ -1121,12 +1121,12 @@ void POWERFLOW_SOLVER_TEST::check_NPCC_140_bus_model_powerflow_result()
 
     GENERATOR* gen;
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
 
     terminal.append_bus(21);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-650.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-217.7195)<peps);
@@ -1134,7 +1134,7 @@ void POWERFLOW_SOLVER_TEST::check_NPCC_140_bus_model_powerflow_result()
     terminal.clear();
     terminal.append_bus(27);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-540.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-44.97655)<peps);
@@ -1142,7 +1142,7 @@ void POWERFLOW_SOLVER_TEST::check_NPCC_140_bus_model_powerflow_result()
     terminal.clear();
     terminal.append_bus(47);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-400.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-(-3.853355))<peps);
@@ -1150,7 +1150,7 @@ void POWERFLOW_SOLVER_TEST::check_NPCC_140_bus_model_powerflow_result()
     terminal.clear();
     terminal.append_bus(60);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-410.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-96.04207)<peps);
@@ -1158,7 +1158,7 @@ void POWERFLOW_SOLVER_TEST::check_NPCC_140_bus_model_powerflow_result()
     terminal.clear();
     terminal.append_bus(78);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-461.3814)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-90.81911)<peps);
@@ -1166,7 +1166,7 @@ void POWERFLOW_SOLVER_TEST::check_NPCC_140_bus_model_powerflow_result()
     terminal.clear();
     terminal.append_bus(101);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-1200.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-164.5751)<peps);
@@ -1174,7 +1174,7 @@ void POWERFLOW_SOLVER_TEST::check_NPCC_140_bus_model_powerflow_result()
     terminal.clear();
     terminal.append_bus(139);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-115.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-18.48766)<peps);

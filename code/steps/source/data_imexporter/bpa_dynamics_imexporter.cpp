@@ -461,7 +461,7 @@ string BPA_IMEXPORTER::get_dynamic_model_name(string data)
 DEVICE_ID BPA_IMEXPORTER::get_generator_device_id_from_string(string data)
 {
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
 
     vector<string> swidata = split_string(data,",");
     if(swidata.size()<3)
@@ -477,7 +477,7 @@ DEVICE_ID BPA_IMEXPORTER::get_generator_device_id_from_string(string data)
     TERMINAL terminal;
     terminal.append_bus(bus);
     did.set_device_terminal(terminal);
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }
@@ -485,7 +485,7 @@ DEVICE_ID BPA_IMEXPORTER::get_generator_device_id_from_string(string data)
 DEVICE_ID BPA_IMEXPORTER::get_load_device_id_from_string(string data)
 {
     DEVICE_ID did;
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
 
     vector<string> swidata = split_string(data,",");
     if(swidata.size()<3)
@@ -501,7 +501,7 @@ DEVICE_ID BPA_IMEXPORTER::get_load_device_id_from_string(string data)
     TERMINAL terminal;
     terminal.append_bus(bus);
     did.set_device_terminal(terminal);
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }
@@ -509,7 +509,7 @@ DEVICE_ID BPA_IMEXPORTER::get_load_device_id_from_string(string data)
 DEVICE_ID BPA_IMEXPORTER::get_line_device_id_from_string(string data)
 {
     DEVICE_ID did;
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
 
     vector<string> swidata = split_string(data,",");
     if(swidata.size()<4)
@@ -527,14 +527,14 @@ DEVICE_ID BPA_IMEXPORTER::get_line_device_id_from_string(string data)
     terminal.append_bus(ibus);
     terminal.append_bus(jbus);
     did.set_device_terminal(terminal);
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }
 DEVICE_ID BPA_IMEXPORTER::get_hvdc_device_id_from_string(string data)
 {
     DEVICE_ID did;
-    did.set_device_type("HVDC");
+    did.set_device_type(STEPS_HVDC);
 
     vector<string> swidata = split_string(data,",");
     if(swidata.size()<4)
@@ -552,14 +552,14 @@ DEVICE_ID BPA_IMEXPORTER::get_hvdc_device_id_from_string(string data)
     terminal.append_bus(ibus);
     terminal.append_bus(jbus);
     did.set_device_terminal(terminal);
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }
 DEVICE_ID BPA_IMEXPORTER::get_transformer_device_id_from_string(string data)
 {
     DEVICE_ID did;
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_TRANSFORMER);
 
     vector<string> swidata = split_string(data,",");
     if(swidata.size()<4)
@@ -579,7 +579,7 @@ DEVICE_ID BPA_IMEXPORTER::get_transformer_device_id_from_string(string data)
     terminal.append_bus(jbus);
     terminal.append_bus(kbus);
     did.set_device_terminal(terminal);
-    did.set_device_identifier(identifier);
+    did.set_device_identifier_index(get_index_of_string(identifier));
 
     return did;
 }

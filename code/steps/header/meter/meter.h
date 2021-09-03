@@ -25,7 +25,7 @@ class METER
 
 
         DEVICE_ID get_device_id() const;
-        string get_device_type() const;
+        STEPS_DEVICE_TYPE get_device_type() const;
         string get_meter_type() const;
         unsigned int get_meter_side_bus() const;
         string get_internal_variable_name() const;
@@ -46,7 +46,7 @@ class METER
         void copy_from_const_meter(const METER& meter);
 
         bool is_valid_meter_type(string& meter_type) const;
-        bool is_valid_meter_type_of_device(const string& meter_type, string& device_type) const;
+        bool is_valid_meter_type_of_device(const string& meter_type, STEPS_DEVICE_TYPE device_type) const;
 
         bool is_internal_variable_name_valid(string& name) const;
 
@@ -83,6 +83,6 @@ extern vector<string> pv_unit_meters;
 extern vector<string> energy_storage_meters;
 extern vector<string> hvdc_meters;
 extern vector<string> equivalent_device_meters;
-extern map<string, vector<string>> SUPPORTED_METERS;
+extern map<STEPS_DEVICE_TYPE, vector<string>> SUPPORTED_METERS;
 
 #endif // METER_H

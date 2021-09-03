@@ -261,7 +261,7 @@ void PSASPS8::initialize()
         unsigned int bus = generator->get_generator_bus();
 
         DEVICE_ID bus_device;
-        bus_device.set_device_type("BUS");
+        bus_device.set_device_type(STEPS_BUS);
         TERMINAL terminal;
         terminal.append_bus(bus);
         bus_device.set_device_terminal(terminal);

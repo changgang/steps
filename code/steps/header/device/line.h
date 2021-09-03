@@ -46,6 +46,8 @@ class LINE : public NONBUS_DEVICE
 
         string get_identifier() const;
         string get_name() const;
+        unsigned int get_identifier_index() const;
+        unsigned int get_name_index() const;
         bool get_sending_side_breaker_status() const;
         bool get_receiving_side_breaker_status() const;
 

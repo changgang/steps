@@ -61,6 +61,8 @@ class HVDC : public NONBUS_DEVICE
         string get_converter_valve_side_bus_name(CONVERTER_SIDE converter) const;
         string get_identifier() const;
         string get_name() const;
+        unsigned int get_identifier_index() const;
+        unsigned int get_name_index() const;
         bool get_status() const;
         bool is_blocked() const;
         double get_line_resistance_in_ohm() const;

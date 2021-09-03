@@ -185,6 +185,16 @@ string LINE::get_name() const
     return get_string_of_index(name_index);
 }
 
+unsigned int LINE::get_identifier_index() const
+{
+    return identifier_index;
+}
+
+unsigned int LINE::get_name_index() const
+{
+    return name_index;
+}
+
 bool LINE::get_sending_side_breaker_status() const
 {
     return sending_side_breaker_status;
@@ -641,13 +651,13 @@ LINE& LINE::operator=(const LINE& line)
 DEVICE_ID LINE::get_device_id() const
 {
     DEVICE_ID did;
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
 
     TERMINAL terminal;
     terminal.append_bus(get_sending_side_bus());
     terminal.append_bus(get_receiving_side_bus());
     did.set_device_terminal(terminal);
-    did.set_device_identifier(get_identifier());
+    did.set_device_identifier_index(get_identifier_index());
 
     return did;
 }

@@ -100,6 +100,11 @@ string EQUIVALENT_DEVICE::get_identifier() const
     return get_string_of_index(identifier_index);
 }
 
+unsigned int EQUIVALENT_DEVICE::get_identifier_index() const
+{
+    return identifier_index;
+}
+
 bool EQUIVALENT_DEVICE::get_status() const
 {
     return status;
@@ -402,19 +407,19 @@ EQUIVALENT_DEVICE& EQUIVALENT_DEVICE::operator=(const EQUIVALENT_DEVICE& device)
 DEVICE_ID EQUIVALENT_DEVICE::get_device_id() const
 {
     DEVICE_ID did;
-    did.set_device_type("EQUIVALENT DEVICE");
+    did.set_device_type(STEPS_EQUIVALENT_DEVICE);
 
     TERMINAL terminal;
     terminal.append_bus(get_equivalent_device_bus());
     did.set_device_terminal(terminal);
-    did.set_device_identifier(get_identifier());
+    did.set_device_identifier_index(get_identifier_index());
 
     return did;
 }
 
 void EQUIVALENT_DEVICE::set_model(MODEL* model)
 {
-    if(model != NULL and model->has_allowed_device_type("EQUIVALENT DEVICE"))
+    if(model != NULL and model->has_allowed_device_type(STEPS_EQUIVALENT_DEVICE))
     {
         model->set_device_id(get_device_id());
         if(model->get_model_type()=="EQUIVALENT MODEL")

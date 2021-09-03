@@ -35,6 +35,7 @@ class LOAD : public NONBUS_DEVICE
         BUS* get_bus_pointer() const;
 
         string get_identifier() const;
+        unsigned int get_identifier_index() const;
         bool get_status() const;
         complex<double> get_nominal_constant_power_load_in_MVA() const;
         complex<double> get_nominal_constant_current_load_in_MVA() const;

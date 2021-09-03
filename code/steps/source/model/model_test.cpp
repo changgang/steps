@@ -39,11 +39,11 @@ void MODEL_TEST::setup()
     psdb.append_generator(generator);
 
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     model.set_device_id(did);
 }
@@ -66,11 +66,11 @@ void MODEL_TEST::test_get_device_pointer_and_device_id()
     TEST_ASSERT(device!=NULL);
 
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     TEST_ASSERT(device->get_device_id()==did);
     TEST_ASSERT(model.get_device_id()==did);

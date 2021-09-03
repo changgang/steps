@@ -433,11 +433,11 @@ void prepare_IEEE_9_bus_model_dynamic_model()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
 
     GENCLS gen1_model(default_toolkit);
     gen1_model.set_device_id(did);
@@ -468,7 +468,7 @@ void prepare_IEEE_9_bus_model_dynamic_model()
 
     dmdb.add_model(&gen3_model);
 
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
 
 
     IEEL load_model(default_toolkit);
@@ -505,11 +505,11 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
 
     GENERATOR* generator;
 
@@ -556,7 +556,7 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model()
     gen_z = complex<double>(0.0, 0.232064);
     generator->set_generator_impedance_in_pu(gen_z);
 
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
 
     IEEL load_model(default_toolkit);
 

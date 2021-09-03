@@ -61,6 +61,7 @@ class LCC_HVDC : public NONBUS_DEVICE
 
 
         string get_name() const;
+        unsigned int get_name_index() const;
         unsigned int get_converter_count(CONVERTER_SIDE side) const;
         unsigned int get_converter_bus(CONVERTER_SIDE side, const unsigned int converter_index) const;
         //BUS* get_converter_bus_pointer(CONVERTER_SIDE side, const unsigned int converter_index) const;
@@ -138,7 +139,7 @@ class LCC_HVDC : public NONBUS_DEVICE
         LCC_STATION station[2];
         LCC_HVDC_OPERATION_MODE mode;
 
-        string name;
+        unsigned int name_index;
         bool status;
 
         double line_R_in_ohm, line_L_in_H, line_C_in_F;

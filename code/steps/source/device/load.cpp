@@ -132,6 +132,11 @@ string LOAD::get_identifier() const
     return get_string_of_index(identifier_index);
 }
 
+unsigned int LOAD::get_identifier_index() const
+{
+    return identifier_index;
+}
+
 bool LOAD::get_status() const
 {
     return status;
@@ -281,12 +286,12 @@ LOAD& LOAD::operator=(const LOAD& load)
 DEVICE_ID LOAD::get_device_id() const
 {
     DEVICE_ID did;
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
 
     TERMINAL terminal;
     terminal.append_bus(get_load_bus());
     did.set_device_terminal(terminal);
-    did.set_device_identifier(get_identifier());
+    did.set_device_identifier_index(get_identifier_index());
 
     return did;
 }
@@ -503,7 +508,7 @@ double LOAD::get_one_over_voltage_threshold_of_constant_current_load_in_pu()
 
 void LOAD::set_model(MODEL* model)
 {
-    if(model != NULL and model->has_allowed_device_type("LOAD"))
+    if(model != NULL and model->has_allowed_device_type(STEPS_LOAD))
     {
         model->set_device_id(get_device_id());
         if(model->get_model_type()=="LOAD CHARACTERISTICS")

@@ -19,9 +19,9 @@ class MODEL
 
         virtual void destroy_manually_allocated_storage();
 
-        void set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(string device_type);
-        vector<string> get_allowed_device_types() const;
-        bool has_allowed_device_type(string device_type) const;
+        void set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_DEVICE_TYPE device_type);
+        vector<STEPS_DEVICE_TYPE> get_allowed_device_types() const;
+        bool has_allowed_device_type(STEPS_DEVICE_TYPE device_type) const;
 
         void set_model_float_parameter_count(unsigned int n);
         unsigned int get_model_float_parameter_count() const;
@@ -101,7 +101,7 @@ class MODEL
         void allocate_model_variables();
     private:
         STEPS* toolkit;
-        char allowed_device_types[STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT][STEPS_SHORT_STRING_SIZE];
+        STEPS_DEVICE_TYPE allowed_device_types[STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT];
         NONBUS_DEVICE* device_pointer;
         union
         {

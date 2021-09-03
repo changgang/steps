@@ -57,32 +57,32 @@ int main()
     simulator.run_to(1.0);
 
     /*DEVICE_ID did;
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
     TERMINAL terminal;
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
 
     simulator.scale_load(did, -0.1);
     */
 
-    /*did.set_device_type("GENERATOR");
+    /*did.set_device_type(STEPS_GENERATOR);
     terminal.clear();
     terminal.append_bus(38);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
 
     simulator.shed_generator(did, 0.1);
     */
 
 /*
     DEVICE_ID did;
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     TERMINAL terminal;
     terminal.append_bus(82);
     terminal.append_bus(80);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
 
     simulator.set_line_fault(did, 82, 0.0, complex<double>(0.0, -1e4));
 
@@ -91,21 +91,21 @@ int main()
     simulator.clear_line_fault(did, 82, 0.0);*/
 /*
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(140);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
 
     simulator.trip_generator(did);
 */
 
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
 
     simulator.shed_generator(did, 0.2);
 

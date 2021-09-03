@@ -60,7 +60,7 @@ void CONTINGENCY_SCREENER::set_dynamic_data_filename(string filename)
 
 void CONTINGENCY_SCREENER::set_fault_device(DEVICE_ID did)
 {
-    if(did.is_valid() and did.get_device_type()=="LINE")
+    if(did.is_valid() and did.get_device_type()==STEPS_LINE)
         fault_device = did;
 }
 
@@ -210,7 +210,7 @@ double CONTINGENCY_SCREENER::get_simulator_iteration_accelerator() const
 
 void CONTINGENCY_SCREENER::append_generator_to_monitor(const DEVICE_ID& did)
 {
-    if(did.is_valid() and did.get_device_type()=="GENERATOR")
+    if(did.is_valid() and did.get_device_type()==STEPS_GENERATOR)
         monitored_generators.push_back(did);
 }
 
@@ -447,7 +447,7 @@ void CONTINGENCY_SCREENER::set_meters(DYNAMICS_SIMULATOR& simulator)
     for(unsigned int i=0; i!=n; ++i)
     {
         DEVICE_ID did = get_monitored_generator(i);
-        if(did.is_valid() and did.get_device_type()=="GENERATOR")
+        if(did.is_valid() and did.get_device_type()==STEPS_GENERATOR)
         {
             METER meter = setter.prepare_generator_rotor_angle_in_deg_meter(did);
             simulator.append_meter(meter);

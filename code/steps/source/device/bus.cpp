@@ -540,7 +540,7 @@ bool BUS::operator<(const BUS& bus) const
 DEVICE_ID BUS::get_device_id() const
 {
     DEVICE_ID did;
-    did.set_device_type("BUS");
+    did.set_device_type(STEPS_BUS);
 
     TERMINAL terminal;
     terminal.append_bus(get_bus_number());

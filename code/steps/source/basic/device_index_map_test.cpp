@@ -85,7 +85,7 @@ void DEVICE_INDEX_MAP_TEST::test_set_get_bus_index()
     DEVICE_ID device_id;
     TERMINAL terminal;
 
-    device_id.set_device_type("BUS");
+    device_id.set_device_type(STEPS_BUS);
 
     terminal = prepare_terminal(1);
     device_id.set_device_terminal(terminal);
@@ -135,47 +135,47 @@ void DEVICE_INDEX_MAP_TEST::test_set_get_generator_index()
     DEVICE_ID device_id;
     TERMINAL terminal;
 
-    device_id.set_device_type("GENERATOR");
+    device_id.set_device_type(STEPS_GENERATOR);
 
     terminal = prepare_terminal(1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     device_index_map.set_device_index(device_id, 0);
 
     terminal = prepare_terminal(2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     device_index_map.set_device_index(device_id, 2);
 
     terminal = prepare_terminal(3);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("4#");
+    device_id.set_device_identifier_index(get_index_of_string("4#"));
     device_index_map.set_device_index(device_id, 4);
 
     terminal = prepare_terminal(4);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("2#");
+    device_id.set_device_identifier_index(get_index_of_string("2#"));
     device_index_map.set_device_index(device_id, 6);
 
 
     terminal = prepare_terminal(1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     TEST_ASSERT(device_index_map[device_id]==0);
 
     terminal = prepare_terminal(2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     TEST_ASSERT(device_index_map[device_id]==2);
 
     terminal = prepare_terminal(3);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("4#");
+    device_id.set_device_identifier_index(get_index_of_string("4#"));
     TEST_ASSERT(device_index_map[device_id]==4);
 
     terminal = prepare_terminal(4);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("2#");
+    device_id.set_device_identifier_index(get_index_of_string("2#"));
     TEST_ASSERT(device_index_map[device_id]==6);
 }
 
@@ -186,47 +186,47 @@ void DEVICE_INDEX_MAP_TEST::test_set_get_load_index()
     DEVICE_ID device_id;
     TERMINAL terminal;
 
-    device_id.set_device_type("LOAD");
+    device_id.set_device_type(STEPS_LOAD);
 
     terminal = prepare_terminal(1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     device_index_map.set_device_index(device_id, 0);
 
     terminal = prepare_terminal(2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     device_index_map.set_device_index(device_id, 2);
 
     terminal = prepare_terminal(3);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("4#");
+    device_id.set_device_identifier_index(get_index_of_string("4#"));
     device_index_map.set_device_index(device_id, 4);
 
     terminal = prepare_terminal(4);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("2#");
+    device_id.set_device_identifier_index(get_index_of_string("2#"));
     device_index_map.set_device_index(device_id, 6);
 
 
     terminal = prepare_terminal(1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     TEST_ASSERT(device_index_map[device_id]==0);
 
     terminal = prepare_terminal(2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     TEST_ASSERT(device_index_map[device_id]==2);
 
     terminal = prepare_terminal(3);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("4#");
+    device_id.set_device_identifier_index(get_index_of_string("4#"));
     TEST_ASSERT(device_index_map[device_id]==4);
 
     terminal = prepare_terminal(4);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("2#");
+    device_id.set_device_identifier_index(get_index_of_string("2#"));
     TEST_ASSERT(device_index_map[device_id]==6);
 }
 
@@ -237,47 +237,47 @@ void DEVICE_INDEX_MAP_TEST::test_set_get_fixed_shunt_index()
     DEVICE_ID device_id;
     TERMINAL terminal;
 
-    device_id.set_device_type("FIXED SHUNT");
+    device_id.set_device_type(STEPS_FIXED_SHUNT);
 
     terminal = prepare_terminal(1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     device_index_map.set_device_index(device_id, 0);
 
     terminal = prepare_terminal(2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     device_index_map.set_device_index(device_id, 2);
 
     terminal = prepare_terminal(3);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("4#");
+    device_id.set_device_identifier_index(get_index_of_string("4#"));
     device_index_map.set_device_index(device_id, 4);
 
     terminal = prepare_terminal(4);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("2#");
+    device_id.set_device_identifier_index(get_index_of_string("2#"));
     device_index_map.set_device_index(device_id, 6);
 
 
     terminal = prepare_terminal(1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     TEST_ASSERT(device_index_map[device_id]==0);
 
     terminal = prepare_terminal(2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     TEST_ASSERT(device_index_map[device_id]==2);
 
     terminal = prepare_terminal(3);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("4#");
+    device_id.set_device_identifier_index(get_index_of_string("4#"));
     TEST_ASSERT(device_index_map[device_id]==4);
 
     terminal = prepare_terminal(4);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("2#");
+    device_id.set_device_identifier_index(get_index_of_string("2#"));
     TEST_ASSERT(device_index_map[device_id]==6);
 }
 
@@ -288,47 +288,47 @@ void DEVICE_INDEX_MAP_TEST::test_set_get_switched_shunt_index()
     DEVICE_ID device_id;
     TERMINAL terminal;
 
-    device_id.set_device_type("SWITCHED SHUNT");
+    device_id.set_device_type(STEPS_SWITCHED_SHUNT);
 
     terminal = prepare_terminal(1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     device_index_map.set_device_index(device_id, 0);
 
     terminal = prepare_terminal(2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     device_index_map.set_device_index(device_id, 2);
 
     terminal = prepare_terminal(3);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("4#");
+    device_id.set_device_identifier_index(get_index_of_string("4#"));
     device_index_map.set_device_index(device_id, 4);
 
     terminal = prepare_terminal(4);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("2#");
+    device_id.set_device_identifier_index(get_index_of_string("2#"));
     device_index_map.set_device_index(device_id, 6);
 
 
     terminal = prepare_terminal(1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     TEST_ASSERT(device_index_map[device_id]==0);
 
     terminal = prepare_terminal(2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     TEST_ASSERT(device_index_map[device_id]==2);
 
     terminal = prepare_terminal(3);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("4#");
+    device_id.set_device_identifier_index(get_index_of_string("4#"));
     TEST_ASSERT(device_index_map[device_id]==4);
 
     terminal = prepare_terminal(4);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("2#");
+    device_id.set_device_identifier_index(get_index_of_string("2#"));
     TEST_ASSERT(device_index_map[device_id]==6);
 }
 
@@ -340,47 +340,47 @@ void DEVICE_INDEX_MAP_TEST::test_set_get_line_index()
     DEVICE_ID device_id;
     TERMINAL terminal;
 
-    device_id.set_device_type("LINE");
+    device_id.set_device_type(STEPS_LINE);
 
     terminal = prepare_terminal(1,2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     device_index_map.set_device_index(device_id, 0);
 
     terminal = prepare_terminal(2,4);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     device_index_map.set_device_index(device_id, 2);
 
     terminal = prepare_terminal(3,6);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("4#");
+    device_id.set_device_identifier_index(get_index_of_string("4#"));
     device_index_map.set_device_index(device_id, 4);
 
     terminal = prepare_terminal(4,3);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("2#");
+    device_id.set_device_identifier_index(get_index_of_string("2#"));
     device_index_map.set_device_index(device_id, 6);
 
 
     terminal = prepare_terminal(1,2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     TEST_ASSERT(device_index_map[device_id]==0);
 
     terminal = prepare_terminal(2,4);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     TEST_ASSERT(device_index_map[device_id]==2);
 
     terminal = prepare_terminal(3,6);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("4#");
+    device_id.set_device_identifier_index(get_index_of_string("4#"));
     TEST_ASSERT(device_index_map[device_id]==4);
 
     terminal = prepare_terminal(4,3);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("2#");
+    device_id.set_device_identifier_index(get_index_of_string("2#"));
     TEST_ASSERT(device_index_map[device_id]==6);
 }
 
@@ -392,47 +392,47 @@ void DEVICE_INDEX_MAP_TEST::test_set_get_transformer_index()
     DEVICE_ID device_id;
     TERMINAL terminal;
 
-    device_id.set_device_type("TRANSFORMER");
+    device_id.set_device_type(STEPS_TRANSFORMER);
 
     terminal = prepare_terminal(1,2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     device_index_map.set_device_index(device_id, 0);
 
     terminal = prepare_terminal(2,4,5);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     device_index_map.set_device_index(device_id, 2);
 
     terminal = prepare_terminal(3,4,6);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("4#");
+    device_id.set_device_identifier_index(get_index_of_string("4#"));
     device_index_map.set_device_index(device_id, 4);
 
     terminal = prepare_terminal(4,3,1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("2#");
+    device_id.set_device_identifier_index(get_index_of_string("2#"));
     device_index_map.set_device_index(device_id, 6);
 
 
     terminal = prepare_terminal(1,2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     TEST_ASSERT(device_index_map[device_id]==0);
 
     terminal = prepare_terminal(2,4,5);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     TEST_ASSERT(device_index_map[device_id]==2);
 
     terminal = prepare_terminal(3,4,6);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("4#");
+    device_id.set_device_identifier_index(get_index_of_string("4#"));
     TEST_ASSERT(device_index_map[device_id]==4);
 
     terminal = prepare_terminal(4,3,1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("2#");
+    device_id.set_device_identifier_index(get_index_of_string("2#"));
     TEST_ASSERT(device_index_map[device_id]==6);
 }
 
@@ -444,47 +444,47 @@ void DEVICE_INDEX_MAP_TEST::test_set_get_energy_storage_index()
     DEVICE_ID device_id;
     TERMINAL terminal;
 
-    device_id.set_device_type("ENERGY STORAGE");
+    device_id.set_device_type(STEPS_ENERGY_STORAGE);
 
     terminal = prepare_terminal(1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     device_index_map.set_device_index(device_id, 0);
 
     terminal = prepare_terminal(2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     device_index_map.set_device_index(device_id, 2);
 
     terminal = prepare_terminal(3);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("4#");
+    device_id.set_device_identifier_index(get_index_of_string("4#"));
     device_index_map.set_device_index(device_id, 4);
 
     terminal = prepare_terminal(4);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("2#");
+    device_id.set_device_identifier_index(get_index_of_string("2#"));
     device_index_map.set_device_index(device_id, 6);
 
 
     terminal = prepare_terminal(1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     TEST_ASSERT(device_index_map[device_id]==0);
 
     terminal = prepare_terminal(2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     TEST_ASSERT(device_index_map[device_id]==2);
 
     terminal = prepare_terminal(3);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("4#");
+    device_id.set_device_identifier_index(get_index_of_string("4#"));
     TEST_ASSERT(device_index_map[device_id]==4);
 
     terminal = prepare_terminal(4);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("2#");
+    device_id.set_device_identifier_index(get_index_of_string("2#"));
     TEST_ASSERT(device_index_map[device_id]==6);
 }
 
@@ -495,48 +495,48 @@ void DEVICE_INDEX_MAP_TEST::test_decrease_index_by_1_for_device_with_index_great
     DEVICE_ID device_id;
     TERMINAL terminal;
 
-    device_id.set_device_type("GENERATOR");
+    device_id.set_device_type(STEPS_GENERATOR);
 
     terminal = prepare_terminal(1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     device_index_map.set_device_index(device_id, 0);
 
     terminal = prepare_terminal(2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     device_index_map.set_device_index(device_id, INDEX_NOT_EXIST);
 
     terminal = prepare_terminal(3);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("4#");
+    device_id.set_device_identifier_index(get_index_of_string("4#"));
     device_index_map.set_device_index(device_id, 4);
 
     terminal = prepare_terminal(4);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("2#");
+    device_id.set_device_identifier_index(get_index_of_string("2#"));
     device_index_map.set_device_index(device_id, 6);
 
     device_index_map.decrease_index_by_1_for_device_with_index_greater_than(3);
 
     terminal = prepare_terminal(1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     TEST_ASSERT(device_index_map.get_index_of_device(device_id)==0)
 
     terminal = prepare_terminal(2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("1#");
+    device_id.set_device_identifier_index(get_index_of_string("1#"));
     TEST_ASSERT(device_index_map.get_index_of_device(device_id)==INDEX_NOT_EXIST)
 
     terminal = prepare_terminal(3);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("4#");
+    device_id.set_device_identifier_index(get_index_of_string("4#"));
     TEST_ASSERT(device_index_map.get_index_of_device(device_id)==3)
 
     terminal = prepare_terminal(4);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("2#");
+    device_id.set_device_identifier_index(get_index_of_string("2#"));
     TEST_ASSERT(device_index_map.get_index_of_device(device_id)==5)
 }
 
@@ -549,7 +549,7 @@ void DEVICE_INDEX_MAP_TEST::test_empty()
     DEVICE_ID device_id;
     TERMINAL terminal;
 
-    device_id.set_device_type("BUS");
+    device_id.set_device_type(STEPS_BUS);
 
     terminal = prepare_terminal(1);
     device_id.set_device_terminal(terminal);
@@ -565,7 +565,7 @@ void DEVICE_INDEX_MAP_TEST::test_clear_index()
     DEVICE_ID device_id;
     TERMINAL terminal;
 
-    device_id.set_device_type("BUS");
+    device_id.set_device_type(STEPS_BUS);
 
     terminal = prepare_terminal(1);
     device_id.set_device_terminal(terminal);
@@ -595,7 +595,7 @@ void DEVICE_INDEX_MAP_TEST::test_get_index_of_device_and_operator_bracket()
     DEVICE_ID device_id;
     TERMINAL terminal;
 
-    device_id.set_device_type("BUS");
+    device_id.set_device_type(STEPS_BUS);
 
     terminal = prepare_terminal(1);
     device_id.set_device_terminal(terminal);
@@ -646,7 +646,7 @@ void DEVICE_INDEX_MAP_TEST::test_index_performance_with_many_buses()
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_INDEX_MAP_TEST");
 
     DEVICE_ID device_id;
-    device_id.set_device_type("TRANSFORMER");
+    device_id.set_device_type(STEPS_TRANSFORMER);
 
     TERMINAL terminal;
     unsigned int MAX_TRANSFORMERS = 10000;

@@ -1135,9 +1135,9 @@ double api_search_cct(char* pf_file, char* dy_file, unsigned int ibus, unsigned 
     TERMINAL terminal;
     terminal.append_bus(ibus);
     terminal.append_bus(jbus);
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     did.set_device_terminal(terminal);
-    did.set_device_identifier(id);
+    did.set_device_identifier_index(get_index_of_string(id));
 
     searcher.set_fault_device(did);
     searcher.set_fault_side_bus(sidebus);

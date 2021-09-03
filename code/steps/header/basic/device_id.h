@@ -2,6 +2,8 @@
 #define DEVICE_ID_H
 
 #include "header/basic/constants.h"
+#include "header/basic/steps_enum.h"
+
 #include <vector>
 #include <string>
 #include <functional>
@@ -14,13 +16,14 @@ class DEVICE_ID
         DEVICE_ID();
         DEVICE_ID(const DEVICE_ID& did);
         virtual ~DEVICE_ID();
-        void set_device_type(string device_type);
+        void set_device_type(STEPS_DEVICE_TYPE device_type);
         void set_device_terminal(const TERMINAL& terminal);
-        void set_device_identifier(string device_identifier);
-        void set_device_name(string device_name);
+        /*void set_device_identifier(string device_identifier);
+        void set_device_name(string device_name);*/
+        void set_device_identifier_index(unsigned int index);
+        void set_device_name_index(unsigned int index);
 
-        string get_device_type() const;
-        unsigned int get_device_type_code() const;
+        STEPS_DEVICE_TYPE get_device_type() const;
         TERMINAL get_device_terminal() const;
         string get_device_identifier() const;
         string get_device_name() const;
@@ -45,7 +48,7 @@ class DEVICE_ID
         void initialize_minimum_maximum_terminal_count();
         void set_minimum_allowed_terminal_count(unsigned int n);
         void set_maximum_allowed_terminal_count(unsigned int n);
-        void set_device_type_and_allowed_terminal_count(string device_type);
+        void set_device_type_and_allowed_terminal_count(STEPS_DEVICE_TYPE device_type);
         bool is_given_terminal_acceptable(const TERMINAL& terminal);
 
     private:
@@ -54,8 +57,7 @@ class DEVICE_ID
         void enable_allow_identifier();
         void disable_allow_identifier();
     private:
-        string device_type;
-        unsigned int device_type_code;
+        STEPS_DEVICE_TYPE device_type;
         unsigned int minimum_terminal_count, maximum_terminal_count;
         bool allow_identifier;
         bool allow_name;

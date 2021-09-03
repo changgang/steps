@@ -64,11 +64,11 @@ void ENERGY_STORAGE_MODEL_TEST::tear_down()
 ENERGY_STORAGE* ENERGY_STORAGE_MODEL_TEST::get_test_energy_storage()
 {
     DEVICE_ID did;
-    did.set_device_type("ENERGY STORAGE");
+    did.set_device_type(STEPS_ENERGY_STORAGE);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     return psdb.get_energy_storage(did);

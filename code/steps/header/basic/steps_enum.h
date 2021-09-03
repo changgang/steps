@@ -3,6 +3,32 @@
 
 #include <iso646.h>
 
+enum STEPS_DEVICE_TYPE
+{
+    STEPS_BUS = 0,
+    // devices connecting to single bus
+    STEPS_GENERATOR =  1,
+    STEPS_WT_GENERATOR = 2,
+    STEPS_PV_UNIT = 3,
+    STEPS_ENERGY_STORAGE = 4,
+    STEPS_LOAD = 5,
+    STEPS_FIXED_SHUNT = 6,
+    STEPS_SWITCHED_SHUNT = 7,
+    STEPS_EQUIVALENT_DEVICE = 10,
+    // devices connecting to multi buses
+    STEPS_LINE = 11,
+    STEPS_TRANSFORMER = 12,
+    STEPS_HVDC = 13,
+    STEPS_VSC_HVDC = 14,
+    STEPS_FACTS = 15,
+    STEPS_LCC_HVDC = 16,
+    STEPS_MULTI_DC = 17,
+
+    STEPS_GENERAL_DEVICE = 102,
+
+    STEPS_INVALID_DEVICE = 9999,
+};
+
 // bus enum
 enum BUS_TYPE
 {

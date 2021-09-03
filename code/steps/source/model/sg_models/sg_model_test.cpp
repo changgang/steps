@@ -55,11 +55,11 @@ void SG_MODEL_TEST::tear_down()
 GENERATOR* SG_MODEL_TEST::get_test_generator()
 {
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     return psdb.get_generator(did);
 }

@@ -65,12 +65,15 @@ void VSC_HVDC::set_converter_bus(CONVERTER_SIDE converter, const unsigned int bu
 
 void VSC_HVDC::set_identifier(const string hvdc_id)
 {
-    this->identifier = hvdc_id;
+    add_string_to_str_int_map(hvdc_id);
+    this->identifier_index = get_index_of_string(hvdc_id);
 }
 
 void VSC_HVDC::set_name(const string name)
 {
-    this->vsc_hvdc_name = trim_string(name);
+    string temp_name = trim_string(name);
+    add_string_to_str_int_map(temp_name);
+    this->vsc_hvdc_name_index = get_index_of_string(temp_name);
 }
 
 void VSC_HVDC::set_status(const bool status)
@@ -197,12 +200,22 @@ BUS* VSC_HVDC::get_converter_bus_pointer(CONVERTER_SIDE converter) const
 
 string VSC_HVDC::get_identifier() const
 {
-    return identifier;
+    return get_string_of_index(identifier_index);
 }
 
 string VSC_HVDC::get_name() const
 {
-    return vsc_hvdc_name;
+    return get_string_of_index(vsc_hvdc_name_index);
+}
+
+unsigned int VSC_HVDC::get_identifier_index() const
+{
+    return identifier_index;
+}
+
+unsigned int VSC_HVDC::get_name_index() const
+{
+    return vsc_hvdc_name_index;
 }
 
 bool VSC_HVDC::get_status() const
@@ -681,7 +694,7 @@ void VSC_HVDC::save() const
 
 void VSC_HVDC::set_model(MODEL* model)
 {
-    if(model != NULL and model->has_allowed_device_type("VSC HVDC"))
+    if(model != NULL and model->has_allowed_device_type(STEPS_VSC_HVDC))
     {
         model->set_device_id(get_device_id());
         if(model->get_model_type()=="VSC_HVDC")
@@ -846,13 +859,13 @@ VSC_HVDC& VSC_HVDC::operator=(const VSC_HVDC& vsc_hvdc)
 DEVICE_ID VSC_HVDC::get_device_id() const
 {
     DEVICE_ID did;
-    did.set_device_type("VSC_HVDC");
+    did.set_device_type(STEPS_VSC_HVDC);
 
     TERMINAL terminal;
     terminal.append_bus(get_converter_bus(RECTIFIER));
     terminal.append_bus(get_converter_bus(INVERTER));
     did.set_device_terminal(terminal);
-    did.set_device_identifier(get_identifier());
+    did.set_device_identifier_index(get_identifier_index());
 
     return did;
 }

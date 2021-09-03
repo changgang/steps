@@ -22,7 +22,9 @@ LCC_HVDC::~LCC_HVDC()
 
 void LCC_HVDC::set_name(const string name)
 {
-    this->name = trim_string(name);
+    string temp_name = trim_string(name);
+    add_string_to_str_int_map(temp_name);
+    this->name_index = get_index_of_string(temp_name);
 }
 
 
@@ -301,7 +303,12 @@ void LCC_HVDC::set_converter_transformer_number_of_taps(CONVERTER_SIDE side, con
 
 string LCC_HVDC::get_name() const
 {
-    return name;
+    return get_string_of_index(name_index);
+}
+
+unsigned int LCC_HVDC::get_name_index() const
+{
+    return name_index;
 }
 
 unsigned int LCC_HVDC::get_converter_count(CONVERTER_SIDE side) const
@@ -709,7 +716,7 @@ LCC_HVDC& LCC_HVDC::operator=(const LCC_HVDC& hvdc)
 DEVICE_ID LCC_HVDC::get_device_id() const
 {
     DEVICE_ID did;
-    did.set_device_type("LCC_HVDC");
+    did.set_device_type(STEPS_LCC_HVDC);
 
     TERMINAL terminal;
     unsigned int n = get_converter_count(RECTIFIER);
@@ -719,7 +726,7 @@ DEVICE_ID LCC_HVDC::get_device_id() const
     for(unsigned int converter_index=0; converter_index<n; ++converter_index)
         terminal.append_bus(get_converter_bus(INVERTER, converter_index));
     did.set_device_terminal(terminal);
-    did.set_device_identifier(get_name());
+    did.set_device_identifier_index(get_name_index());
 
     return did;
 }

@@ -143,11 +143,11 @@ void GENERATOR_TEST::test_get_device_id()
     DEVICE_ID did = generator.get_device_id();
 
     DEVICE_ID did2;
-    did2.set_device_type("GENERATOR");
+    did2.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(1);
     did2.set_device_terminal(terminal);
-    did2.set_device_identifier("1#");
+    did2.set_device_identifier_index(get_index_of_string("1#"));
 
     TEST_ASSERT(did==did2);
 

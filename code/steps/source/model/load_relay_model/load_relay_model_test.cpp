@@ -44,11 +44,11 @@ void LOAD_RELAY_MODEL_TEST::setup()
     psdb.append_load(load);
 
     DEVICE_ID did;
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     loadptr = psdb.get_load(did);
 }

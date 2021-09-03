@@ -1210,7 +1210,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_bus()
     TEST_ASSERT(fabs(pbus->get_positive_sequence_angle_in_rad()-0.5)<FLOAT_EPSILON);
 
     DEVICE_ID did;
-    did.set_device_type("BUS");
+    did.set_device_type(STEPS_BUS);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
@@ -1229,7 +1229,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_bus()
     TEST_ASSERT(fabs(pbus->get_positive_sequence_voltage_in_pu()-0.95)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(pbus->get_positive_sequence_angle_in_rad()-0.25)<FLOAT_EPSILON);
 
-    did.set_device_type("BUS");
+    did.set_device_type(STEPS_BUS);
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
@@ -1273,11 +1273,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_generator()
 
     GENERATOR* pgenerator;
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     pgenerator = psdb.get_generator(did);
 
@@ -1286,7 +1286,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_generator()
     TEST_ASSERT(pgenerator->get_identifier()=="#1");
     TEST_ASSERT(pgenerator->get_status()==true);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     pgenerator = psdb.get_generator(did);
 
@@ -1328,11 +1328,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_wt_generator()
 
     WT_GENERATOR* pwt_generator;
     DEVICE_ID did;
-    did.set_device_type("WT GENERATOR");
+    did.set_device_type(STEPS_WT_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     pwt_generator = psdb.get_wt_generator(did);
 
@@ -1341,7 +1341,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_wt_generator()
     TEST_ASSERT(pwt_generator->get_identifier()=="#1");
     TEST_ASSERT(pwt_generator->get_status()==true);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     pwt_generator = psdb.get_wt_generator(did);
 
@@ -1384,11 +1384,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_pv_unit()
 
     PV_UNIT* ppv_unit;
     DEVICE_ID did;
-    did.set_device_type("PV UNIT");
+    did.set_device_type(STEPS_PV_UNIT);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     ppv_unit = psdb.get_pv_unit(did);
 
@@ -1397,7 +1397,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_pv_unit()
     TEST_ASSERT(ppv_unit->get_identifier()=="#1");
     TEST_ASSERT(ppv_unit->get_status()==true);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     ppv_unit = psdb.get_pv_unit(did);
 
@@ -1439,11 +1439,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_load()
 
     LOAD* pload;
     DEVICE_ID did;
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     pload = psdb.get_load(did);
 
@@ -1452,7 +1452,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_load()
     TEST_ASSERT(pload->get_identifier()=="#1");
     TEST_ASSERT(pload->get_status()==true);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     pload = psdb.get_load(did);
 
@@ -1501,12 +1501,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_line()
 
     LINE* pline;
     DEVICE_ID did;
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     pline = psdb.get_line(did);
 
@@ -1517,7 +1517,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_line()
     TEST_ASSERT(pline->get_sending_side_breaker_status()==true);
     TEST_ASSERT(pline->get_receiving_side_breaker_status()==true);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     pline = psdb.get_line(did);
 
@@ -1575,12 +1575,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_transformer()
 
     TRANSFORMER* ptransformer;
     DEVICE_ID did;
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_TRANSFORMER);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     ptransformer = psdb.get_transformer(did);
 
@@ -1594,7 +1594,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_transformer()
 
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     ptransformer = psdb.get_transformer(did);
 
@@ -1640,11 +1640,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_fixed_shunt()
 
     FIXED_SHUNT* pshunt;
     DEVICE_ID did;
-    did.set_device_type("FIXED SHUNT");
+    did.set_device_type(STEPS_FIXED_SHUNT);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     pshunt = psdb.get_fixed_shunt(did);
 
@@ -1653,7 +1653,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_fixed_shunt()
     TEST_ASSERT(pshunt->get_identifier()=="#1");
     TEST_ASSERT(pshunt->get_status()==true);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     pshunt = psdb.get_fixed_shunt(did);
 
@@ -1702,12 +1702,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_hvdc()
 
     HVDC* phvdc;
     DEVICE_ID did;
-    did.set_device_type("HVDC");
+    did.set_device_type(STEPS_HVDC);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     phvdc = psdb.get_hvdc(did);
 
@@ -1718,7 +1718,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_hvdc()
     TEST_ASSERT(phvdc->get_identifier()=="#1");
     TEST_ASSERT(phvdc->get_status()==true);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     phvdc = psdb.get_hvdc(did);
 
     TEST_ASSERT(phvdc!=NULL);
@@ -1760,11 +1760,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_equivalent_device()
 
     EQUIVALENT_DEVICE* pedevice;
     DEVICE_ID did;
-    did.set_device_type("EQUIVALENT DEVICE");
+    did.set_device_type(STEPS_EQUIVALENT_DEVICE);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     pedevice = psdb.get_equivalent_device(did);
 
@@ -1773,7 +1773,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_equivalent_device()
     TEST_ASSERT(pedevice->get_identifier()=="#1");
     TEST_ASSERT(pedevice->get_status()==true);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     pedevice = psdb.get_equivalent_device(did);
 
     TEST_ASSERT(pedevice!=NULL);
@@ -1812,11 +1812,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_energy_storage()
 
     ENERGY_STORAGE* pestorage;
     DEVICE_ID did;
-    did.set_device_type("ENERGY STORAGE");
+    did.set_device_type(STEPS_ENERGY_STORAGE);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     pestorage = psdb.get_energy_storage(did);
 
@@ -1825,7 +1825,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_energy_storage()
     TEST_ASSERT(pestorage->get_identifier()=="#1");
     TEST_ASSERT(pestorage->get_status()==true);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     pestorage = psdb.get_energy_storage(did);
 
     TEST_ASSERT(pestorage!=NULL);
@@ -1991,21 +1991,21 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_generator_exist()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(psdb.is_generator_exist(did)==true);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(psdb.is_generator_exist(did)==true);
 
-        did.set_device_identifier("#3");
+        did.set_device_identifier_index(get_index_of_string("#3"));
         TEST_ASSERT(psdb.is_generator_exist(did)==false);
     }
 }
@@ -2019,20 +2019,20 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_wt_generator_exist()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("WT GENERATOR");
+    did.set_device_type(STEPS_WT_GENERATOR);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
         TEST_ASSERT(psdb.is_wt_generator_exist(did)==true);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(psdb.is_wt_generator_exist(did)==true);
 
-        did.set_device_identifier("#3");
+        did.set_device_identifier_index(get_index_of_string("#3"));
         TEST_ASSERT(psdb.is_wt_generator_exist(did)==false);
     }
 }
@@ -2047,20 +2047,20 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_pv_unit_exist()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("PV UNIT");
+    did.set_device_type(STEPS_PV_UNIT);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
         TEST_ASSERT(psdb.is_pv_unit_exist(did)==true);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(psdb.is_pv_unit_exist(did)==true);
 
-        did.set_device_identifier("#3");
+        did.set_device_identifier_index(get_index_of_string("#3"));
         TEST_ASSERT(psdb.is_pv_unit_exist(did)==false);
     }
 }
@@ -2074,21 +2074,21 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_load_exist()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(psdb.is_load_exist(did)==true);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(psdb.is_load_exist(did)==true);
 
-        did.set_device_identifier("#3");
+        did.set_device_identifier_index(get_index_of_string("#3"));
         TEST_ASSERT(psdb.is_load_exist(did)==false);
     }
 }
@@ -2102,7 +2102,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_line_exist()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
@@ -2123,14 +2123,14 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_line_exist()
             terminal.append_bus(3);
         }
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(psdb.is_line_exist(did)==true);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(psdb.is_line_exist(did)==true);
 
-        did.set_device_identifier("#3");
+        did.set_device_identifier_index(get_index_of_string("#3"));
         TEST_ASSERT(psdb.is_line_exist(did)==false);
     }
 }
@@ -2144,7 +2144,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_transformer_exist()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_TRANSFORMER);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
@@ -2165,13 +2165,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_transformer_exist()
             terminal.append_bus(3);
         }
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
         TEST_ASSERT(psdb.is_transformer_exist(did)==true);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(psdb.is_transformer_exist(did)==true);
 
-        did.set_device_identifier("#3");
+        did.set_device_identifier_index(get_index_of_string("#3"));
         TEST_ASSERT(psdb.is_transformer_exist(did)==false);
     }
 
@@ -2180,13 +2180,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_transformer_exist()
     terminal.append_bus(2);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_transformer_exist(did)==true);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.is_transformer_exist(did)==true);
 
-    did.set_device_identifier("#3");
+    did.set_device_identifier_index(get_index_of_string("#3"));
     TEST_ASSERT(psdb.is_transformer_exist(did)==false);
 }
 
@@ -2199,21 +2199,21 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_fixed_shunt_exist()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("FIXED SHUNT");
+    did.set_device_type(STEPS_FIXED_SHUNT);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; i++)
     {
         terminal.clear();
         terminal.append_bus(i);
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(psdb.is_fixed_shunt_exist(did)==true);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(psdb.is_fixed_shunt_exist(did)==true);
 
-        did.set_device_identifier("#3");
+        did.set_device_identifier_index(get_index_of_string("#3"));
         TEST_ASSERT(psdb.is_fixed_shunt_exist(did)==false);
     }
 }
@@ -2227,7 +2227,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_hvdc_exist()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("HVDC");
+    did.set_device_type(STEPS_HVDC);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
@@ -2248,14 +2248,14 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_hvdc_exist()
             terminal.append_bus(3);
         }
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(psdb.is_hvdc_exist(did)==true);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(psdb.is_hvdc_exist(did)==true);
 
-        did.set_device_identifier("#3");
+        did.set_device_identifier_index(get_index_of_string("#3"));
         TEST_ASSERT(psdb.is_hvdc_exist(did)==false);
     }
 }
@@ -2269,21 +2269,21 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_equivalent_device_exist()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("EQUIVALENT DEVICE");
+    did.set_device_type(STEPS_EQUIVALENT_DEVICE);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(psdb.is_equivalent_device_exist(did)==true);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(psdb.is_equivalent_device_exist(did)==true);
 
-        did.set_device_identifier("#3");
+        did.set_device_identifier_index(get_index_of_string("#3"));
         TEST_ASSERT(psdb.is_equivalent_device_exist(did)==false);
     }
 }
@@ -2297,21 +2297,21 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_energy_storage_exist()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("ENERGY STORAGE");
+    did.set_device_type(STEPS_ENERGY_STORAGE);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(psdb.is_energy_storage_exist(did)==true);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(psdb.is_energy_storage_exist(did)==true);
 
-        did.set_device_identifier("#3");
+        did.set_device_identifier_index(get_index_of_string("#3"));
         TEST_ASSERT(psdb.is_energy_storage_exist(did)==false);
     }
 }
@@ -2374,38 +2374,38 @@ void POWER_SYSTEM_DATABASE_TEST::test_change_bus_number()
     TEST_ASSERT(psdb.is_bus_exist(4)==false);
 
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_generator_exist(did)==true);
 
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_load_exist(did)==true);
 
-    did.set_device_type("FIXED SHUNT");
+    did.set_device_type(STEPS_FIXED_SHUNT);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_fixed_shunt_exist(did)==true);
 
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_line_exist(did)==true);
 
-    did.set_device_type("HVDC");
+    did.set_device_type(STEPS_HVDC);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_hvdc_exist(did)==true);
 
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_TRANSFORMER);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_transformer_exist(did)==true);
 
     psdb.change_bus_number(1, 4);
@@ -2415,72 +2415,72 @@ void POWER_SYSTEM_DATABASE_TEST::test_change_bus_number()
     TEST_ASSERT(psdb.is_bus_exist(3)==true);
     TEST_ASSERT(psdb.is_bus_exist(4)==true);
 
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     terminal.clear();
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_generator_exist(did)==false);
 
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_load_exist(did)==false);
 
-    did.set_device_type("FIXED SHUNT");
+    did.set_device_type(STEPS_FIXED_SHUNT);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_fixed_shunt_exist(did)==false);
 
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_line_exist(did)==false);
 
-    did.set_device_type("HVDC");
+    did.set_device_type(STEPS_HVDC);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_hvdc_exist(did)==false);
 
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_TRANSFORMER);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_transformer_exist(did)==false);
 
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     terminal.clear();
     terminal.append_bus(4);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_generator_exist(did)==true);
 
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_load_exist(did)==true);
 
-    did.set_device_type("FIXED SHUNT");
+    did.set_device_type(STEPS_FIXED_SHUNT);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_fixed_shunt_exist(did)==true);
 
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_line_exist(did)==true);
 
-    did.set_device_type("HVDC");
+    did.set_device_type(STEPS_HVDC);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_hvdc_exist(did)==true);
 
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_TRANSFORMER);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_transformer_exist(did)==true);
 
     psdb.change_bus_number(2, 1);
@@ -2490,72 +2490,72 @@ void POWER_SYSTEM_DATABASE_TEST::test_change_bus_number()
     TEST_ASSERT(psdb.is_bus_exist(3)==true);
     TEST_ASSERT(psdb.is_bus_exist(4)==true);
 
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_generator_exist(did)==false);
 
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_load_exist(did)==false);
 
-    did.set_device_type("FIXED SHUNT");
+    did.set_device_type(STEPS_FIXED_SHUNT);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_fixed_shunt_exist(did)==false);
 
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     terminal.append_bus(4);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_line_exist(did)==false);
 
-    did.set_device_type("HVDC");
+    did.set_device_type(STEPS_HVDC);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_hvdc_exist(did)==false);
 
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_TRANSFORMER);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_transformer_exist(did)==false);
 
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     terminal.clear();
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_generator_exist(did)==true);
 
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_load_exist(did)==true);
 
-    did.set_device_type("FIXED SHUNT");
+    did.set_device_type(STEPS_FIXED_SHUNT);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_fixed_shunt_exist(did)==true);
 
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     terminal.append_bus(4);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_line_exist(did)==true);
 
-    did.set_device_type("HVDC");
+    did.set_device_type(STEPS_HVDC);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_hvdc_exist(did)==true);
 
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_TRANSFORMER);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_transformer_exist(did)==true);
 }
 
@@ -3023,7 +3023,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_connecting_to_bus
         TEST_ASSERT(dids.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(dids[j].get_device_type()=="GENERATOR");
+            TEST_ASSERT(dids[j].get_device_type()==STEPS_GENERATOR);
             TEST_ASSERT(psdb.get_generator(dids[j])->is_connected_to_bus(i)==true);
         }
     }
@@ -3045,7 +3045,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_connecting_to_
         TEST_ASSERT(dids.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(dids[j].get_device_type()=="WT GENERATOR");
+            TEST_ASSERT(dids[j].get_device_type()==STEPS_WT_GENERATOR);
             TEST_ASSERT(psdb.get_wt_generator(dids[j])->is_connected_to_bus(i)==true);
         }
     }
@@ -3068,7 +3068,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_device_id_connecting_to_bus()
         TEST_ASSERT(dids.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(dids[j].get_device_type()=="PV UNIT");
+            TEST_ASSERT(dids[j].get_device_type()==STEPS_PV_UNIT);
             TEST_ASSERT(psdb.get_pv_unit(dids[j])->is_connected_to_bus(i)==true);
         }
     }
@@ -3090,8 +3090,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_connecting_to_bus()
         TEST_ASSERT(dids.size()==8);
         for(unsigned int j=0; j!=6; ++j)
         {
-            TEST_ASSERT(dids[j].get_device_type()=="GENERATOR" or dids[j].get_device_type()=="WT GENERATOR"
-                        or dids[j].get_device_type()=="PV UNIT" or dids[j].get_device_type()=="ENERGY STORAGE");
+            STEPS_DEVICE_TYPE device_type = dids[j].get_device_type();
+            TEST_ASSERT(device_type==STEPS_GENERATOR or device_type==STEPS_WT_GENERATOR
+                        or device_type==STEPS_PV_UNIT or device_type==STEPS_ENERGY_STORAGE);
             TEST_ASSERT(psdb.get_source(dids[j])->is_connected_to_bus(i)==true);
         }
     }
@@ -3113,7 +3114,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_device_id_connecting_to_bus()
         TEST_ASSERT(dids.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(dids[j].get_device_type()=="LOAD");
+            TEST_ASSERT(dids[j].get_device_type()==STEPS_LOAD);
             TEST_ASSERT(psdb.get_load(dids[j])->is_connected_to_bus(i)==true);
         }
     }
@@ -3135,7 +3136,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_connecting_to_bus()
         TEST_ASSERT(dids.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(dids[j].get_device_type()=="LINE");
+            TEST_ASSERT(dids[j].get_device_type()==STEPS_LINE);
             TEST_ASSERT(psdb.get_line(dids[j])->is_connected_to_bus(i)==true);
         }
     }
@@ -3157,7 +3158,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformers_device_id_connecting_to_b
         TEST_ASSERT(dids.size()==6);
         for(unsigned int j=0; j!=6; ++j)
         {
-            TEST_ASSERT(dids[j].get_device_type()=="TRANSFORMER");
+            TEST_ASSERT(dids[j].get_device_type()==STEPS_TRANSFORMER);
             TEST_ASSERT(psdb.get_transformer(dids[j])->is_connected_to_bus(i)==true);
         }
     }
@@ -3179,7 +3180,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_connecting_to_b
         TEST_ASSERT(dids.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(dids[j].get_device_type()=="FIXED SHUNT");
+            TEST_ASSERT(dids[j].get_device_type()==STEPS_FIXED_SHUNT);
             TEST_ASSERT(psdb.get_fixed_shunt(dids[j])->is_connected_to_bus(i)==true);
         }
     }
@@ -3201,7 +3202,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_connecting_to_bus()
         TEST_ASSERT(dids.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(dids[j].get_device_type()=="HVDC");
+            TEST_ASSERT(dids[j].get_device_type()==STEPS_HVDC);
             TEST_ASSERT(psdb.get_hvdc(dids[j])->is_connected_to_bus(i)==true);
         }
     }
@@ -3223,7 +3224,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_connectin
         TEST_ASSERT(dids.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(dids[j].get_device_type()=="EQUIVALENT DEVICE");
+            TEST_ASSERT(dids[j].get_device_type()==STEPS_EQUIVALENT_DEVICE);
             TEST_ASSERT(psdb.get_equivalent_device(dids[j])->is_connected_to_bus(i)==true);
         }
     }
@@ -3245,7 +3246,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_connecting_t
         TEST_ASSERT(dids.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(dids[j].get_device_type()=="ENERGY STORAGE");
+            TEST_ASSERT(dids[j].get_device_type()==STEPS_ENERGY_STORAGE);
             TEST_ASSERT(psdb.get_energy_storage(dids[j])->is_connected_to_bus(i)==true);
         }
     }
@@ -3268,7 +3269,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_buses_in_area()
         TEST_ASSERT(devices.size()==1);
         for(unsigned int j=0; j!=1; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="BUS");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_BUS);
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
         }
     }
@@ -3290,7 +3291,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_in_area()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="GENERATOR");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_GENERATOR);
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
         }
     }
@@ -3312,7 +3313,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_in_area()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="WT GENERATOR");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_WT_GENERATOR);
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
         }
     }
@@ -3335,7 +3336,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_in_area()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="PV UNIT");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_PV_UNIT);
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
         }
     }
@@ -3357,10 +3358,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_in_area()
         TEST_ASSERT(devices.size()==8);
         for(unsigned int j=0; j!=8; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="GENERATOR"
-                        or devices[j]->get_device_id().get_device_type()=="WT GENERATOR"
-                        or devices[j]->get_device_id().get_device_type()=="PV UNIT"
-                        or devices[j]->get_device_id().get_device_type()=="ENERGY STORAGE");
+            STEPS_DEVICE_TYPE device_type = devices[j]->get_device_id().get_device_type();
+            TEST_ASSERT(device_type==STEPS_GENERATOR
+                        or device_type==STEPS_WT_GENERATOR
+                        or device_type==STEPS_PV_UNIT
+                        or device_type==STEPS_ENERGY_STORAGE);
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
         }
     }
@@ -3382,7 +3384,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_in_area()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="LOAD");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_LOAD);
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
         }
     }
@@ -3404,7 +3406,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_in_area()
         TEST_ASSERT(devices.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="LINE");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_LINE);
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
         }
     }
@@ -3426,7 +3428,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformers_in_area()
         TEST_ASSERT(devices.size()==6);
         for(unsigned int j=0; j!=6; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="TRANSFORMER");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_TRANSFORMER);
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
         }
     }
@@ -3448,7 +3450,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_in_area()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="FIXED SHUNT");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_FIXED_SHUNT);
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
         }
     }
@@ -3470,7 +3472,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_in_area()
         TEST_ASSERT(devices.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="HVDC");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_HVDC);
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
         }
     }
@@ -3492,7 +3494,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_in_area()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="EQUIVALENT DEVICE");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_EQUIVALENT_DEVICE);
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
         }
     }
@@ -3514,7 +3516,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_in_area()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="ENERGY STORAGE");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_ENERGY_STORAGE);
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
         }
     }
@@ -3537,7 +3539,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_buses_device_id_in_area()
         TEST_ASSERT(devices.size()==1);
         for(unsigned int j=0; j!=1; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="BUS");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_BUS);
             TEST_ASSERT(psdb.get_bus(devices[j])->is_in_area(i)==true);
         }
     }
@@ -3559,7 +3561,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_in_area()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="GENERATOR");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_GENERATOR);
             TEST_ASSERT(psdb.get_generator(devices[j])->is_in_area(i)==true);
         }
     }
@@ -3581,7 +3583,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_in_area()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="WT GENERATOR");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_WT_GENERATOR);
             TEST_ASSERT(psdb.get_wt_generator(devices[j])->is_in_area(i)==true);
         }
     }
@@ -3604,7 +3606,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_device_id_in_area()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="PV UNIT");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_PV_UNIT);
             TEST_ASSERT(psdb.get_pv_unit(devices[j])->is_in_area(i)==true);
         }
     }
@@ -3626,10 +3628,10 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_in_area()
         TEST_ASSERT(devices.size()==8);
         for(unsigned int j=0; j!=8; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="GENERATOR"
-                        or devices[j].get_device_type()=="WT GENERATOR"
-                        or devices[j].get_device_type()=="PV UNIT"
-                        or devices[j].get_device_type()=="ENERGY STORAGE");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_GENERATOR
+                        or devices[j].get_device_type()==STEPS_WT_GENERATOR
+                        or devices[j].get_device_type()==STEPS_PV_UNIT
+                        or devices[j].get_device_type()==STEPS_ENERGY_STORAGE);
             TEST_ASSERT(psdb.get_source(devices[j])->is_in_area(i)==true);
         }
     }
@@ -3651,7 +3653,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_device_id_in_area()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="LOAD");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_LOAD);
             TEST_ASSERT(psdb.get_load(devices[j])->is_in_area(i)==true);
         }
     }
@@ -3673,7 +3675,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_in_area()
         TEST_ASSERT(devices.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="LINE");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_LINE);
             TEST_ASSERT(psdb.get_line(devices[j])->is_in_area(i)==true);
         }
     }
@@ -3695,7 +3697,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformers_device_id_in_area()
         TEST_ASSERT(devices.size()==6);
         for(unsigned int j=0; j!=6; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="TRANSFORMER");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_TRANSFORMER);
             TEST_ASSERT(psdb.get_transformer(devices[j])->is_in_area(i)==true);
         }
     }
@@ -3717,7 +3719,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_in_area()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="FIXED SHUNT");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_FIXED_SHUNT);
             TEST_ASSERT(psdb.get_fixed_shunt(devices[j])->is_in_area(i)==true);
         }
     }
@@ -3739,7 +3741,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_in_area()
         TEST_ASSERT(devices.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="HVDC");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_HVDC);
             TEST_ASSERT(psdb.get_hvdc(devices[j])->is_in_area(i)==true);
         }
     }
@@ -3761,7 +3763,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_in_area()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="EQUIVALENT DEVICE");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_EQUIVALENT_DEVICE);
             TEST_ASSERT(psdb.get_equivalent_device(devices[j])->is_in_area(i)==true);
         }
     }
@@ -3783,7 +3785,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_in_area()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="ENERGY STORAGE");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_ENERGY_STORAGE);
             TEST_ASSERT(psdb.get_energy_storage(devices[j])->is_in_area(i)==true);
         }
     }
@@ -3805,7 +3807,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_buses_in_zone()
         TEST_ASSERT(devices.size()==1);
         for(unsigned int j=0; j!=1; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="BUS");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_BUS);
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
         }
     }
@@ -3827,7 +3829,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_in_zone()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="GENERATOR");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_GENERATOR);
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
         }
     }
@@ -3849,7 +3851,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_in_zone()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="WT GENERATOR");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_WT_GENERATOR);
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
         }
     }
@@ -3872,7 +3874,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_in_zone()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="PV UNIT");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_PV_UNIT);
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
         }
     }
@@ -3894,10 +3896,10 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_in_zone()
         TEST_ASSERT(devices.size()==8);
         for(unsigned int j=0; j!=8; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="GENERATOR"
-                        or devices[j]->get_device_id().get_device_type()=="WT GENERATOR"
-                        or devices[j]->get_device_id().get_device_type()=="PV UNIT"
-                        or devices[j]->get_device_id().get_device_type()=="ENERGY STORAGE");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_GENERATOR
+                        or devices[j]->get_device_id().get_device_type()==STEPS_WT_GENERATOR
+                        or devices[j]->get_device_id().get_device_type()==STEPS_PV_UNIT
+                        or devices[j]->get_device_id().get_device_type()==STEPS_ENERGY_STORAGE);
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
         }
     }
@@ -3919,7 +3921,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_in_zone()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="LOAD");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_LOAD);
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
         }
     }
@@ -3941,7 +3943,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_in_zone()
         TEST_ASSERT(devices.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="LINE");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_LINE);
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
         }
     }
@@ -3963,7 +3965,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformers_in_zone()
         TEST_ASSERT(devices.size()==6);
         for(unsigned int j=0; j!=6; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="TRANSFORMER");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_TRANSFORMER);
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
         }
     }
@@ -3985,7 +3987,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_in_zone()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="FIXED SHUNT");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_FIXED_SHUNT);
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
         }
     }
@@ -4007,7 +4009,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_in_zone()
         TEST_ASSERT(devices.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="HVDC");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_HVDC);
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
         }
     }
@@ -4029,7 +4031,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_in_zone()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="EQUIVALENT DEVICE");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_EQUIVALENT_DEVICE);
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
         }
     }
@@ -4051,7 +4053,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_in_zone()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="ENERGY STORAGE");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_ENERGY_STORAGE);
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
         }
     }
@@ -4074,7 +4076,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_buses_device_id_in_zone()
         TEST_ASSERT(devices.size()==1);
         for(unsigned int j=0; j!=1; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="BUS");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_BUS);
             TEST_ASSERT(psdb.get_bus(devices[j])->is_in_zone(i)==true);
         }
     }
@@ -4096,7 +4098,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_in_zone()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="GENERATOR");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_GENERATOR);
             TEST_ASSERT(psdb.get_generator(devices[j])->is_in_zone(i)==true);
         }
     }
@@ -4118,7 +4120,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_in_zone()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="WT GENERATOR");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_WT_GENERATOR);
             TEST_ASSERT(psdb.get_wt_generator(devices[j])->is_in_zone(i)==true);
         }
     }
@@ -4141,7 +4143,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_device_id_in_zone()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="PV UNIT");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_PV_UNIT);
             TEST_ASSERT(psdb.get_pv_unit(devices[j])->is_in_zone(i)==true);
         }
     }
@@ -4163,10 +4165,10 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_in_zone()
         TEST_ASSERT(devices.size()==8);
         for(unsigned int j=0; j!=8; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="GENERATOR"
-                        or devices[j].get_device_type()=="WT GENERATOR"
-                        or devices[j].get_device_type()=="PV UNIT"
-                        or devices[j].get_device_type()=="ENERGY STORAGE");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_GENERATOR
+                        or devices[j].get_device_type()==STEPS_WT_GENERATOR
+                        or devices[j].get_device_type()==STEPS_PV_UNIT
+                        or devices[j].get_device_type()==STEPS_ENERGY_STORAGE);
             TEST_ASSERT(psdb.get_source(devices[j])->is_in_zone(i)==true);
         }
     }
@@ -4188,7 +4190,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_device_id_in_zone()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="LOAD");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_LOAD);
             TEST_ASSERT(psdb.get_load(devices[j])->is_in_zone(i)==true);
         }
     }
@@ -4210,7 +4212,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_in_zone()
         TEST_ASSERT(devices.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="LINE");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_LINE);
             TEST_ASSERT(psdb.get_line(devices[j])->is_in_zone(i)==true);
         }
     }
@@ -4232,7 +4234,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformers_device_id_in_zone()
         TEST_ASSERT(devices.size()==6);
         for(unsigned int j=0; j!=6; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="TRANSFORMER");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_TRANSFORMER);
             TEST_ASSERT(psdb.get_transformer(devices[j])->is_in_zone(i)==true);
         }
     }
@@ -4254,7 +4256,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_in_zone()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="FIXED SHUNT");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_FIXED_SHUNT);
             TEST_ASSERT(psdb.get_fixed_shunt(devices[j])->is_in_zone(i)==true);
         }
     }
@@ -4276,7 +4278,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_in_zone()
         TEST_ASSERT(devices.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="HVDC");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_HVDC);
             TEST_ASSERT(psdb.get_hvdc(devices[j])->is_in_zone(i)==true);
         }
     }
@@ -4298,7 +4300,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_in_zone()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="EQUIVALENT DEVICE");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_EQUIVALENT_DEVICE);
             TEST_ASSERT(psdb.get_equivalent_device(devices[j])->is_in_zone(i)==true);
         }
     }
@@ -4320,7 +4322,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_in_zone()
         TEST_ASSERT(devices.size()==2);
         for(unsigned int j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="ENERGY STORAGE");
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_ENERGY_STORAGE);
             TEST_ASSERT(psdb.get_energy_storage(devices[j])->is_in_zone(i)==true);
         }
     }
@@ -4965,18 +4967,18 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_generators_device_id()
     TEST_ASSERT(device.size()==6);
 
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(device[2*(i-1)]==did);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(device[2*(i-1)+1]==did);
     }
 }
@@ -4994,18 +4996,18 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_wt_generators_device_id()
     TEST_ASSERT(device.size()==6);
 
     DEVICE_ID did;
-    did.set_device_type("WT GENERATOR");
+    did.set_device_type(STEPS_WT_GENERATOR);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(device[2*(i-1)]==did);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(device[2*(i-1)+1]==did);
     }
 }
@@ -5024,18 +5026,18 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_pv_units_device_id()
     TEST_ASSERT(device.size()==6);
 
     DEVICE_ID did;
-    did.set_device_type("PV UNIT");
+    did.set_device_type(STEPS_PV_UNIT);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(device[2*(i-1)]==did);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(device[2*(i-1)+1]==did);
     }
 }
@@ -5056,37 +5058,37 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_sources_device_id()
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
-        did.set_device_type("GENERATOR");
+        did.set_device_type(STEPS_GENERATOR);
         terminal.clear();
         terminal.append_bus(i);
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(device[2*(i-1)]==did);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(device[2*(i-1)+1]==did);
 
-        did.set_device_type("WT GENERATOR");
+        did.set_device_type(STEPS_WT_GENERATOR);
         terminal.clear();
         terminal.append_bus(i);
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(device[6+2*(i-1)]==did);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(device[6+2*(i-1)+1]==did);
 
-        did.set_device_type("PV UNIT");
+        did.set_device_type(STEPS_PV_UNIT);
         terminal.clear();
         terminal.append_bus(i);
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(device[12+2*(i-1)]==did);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(device[12+2*(i-1)+1]==did);
     }
 }
@@ -5104,18 +5106,18 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_loads_device_id()
     TEST_ASSERT(device.size()==6);
 
     DEVICE_ID did;
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(device[2*(i-1)]==did);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(device[2*(i-1)+1]==did);
     }
 }
@@ -5133,7 +5135,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_lines_device_id()
     TEST_ASSERT(device.size()==6);
 
     DEVICE_ID did;
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
@@ -5154,11 +5156,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_lines_device_id()
             terminal.append_bus(3);
         }
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(device[2*(i-1)]==did);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(device[2*(i-1)+1]==did);
     }
 }
@@ -5176,7 +5178,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_transformers_device_id()
     TEST_ASSERT(device.size()==8);
 
     DEVICE_ID did;
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_TRANSFORMER);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
@@ -5197,11 +5199,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_transformers_device_id()
             terminal.append_bus(3);
         }
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(device[2*(i-1)]==did);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(device[2*(i-1)+1]==did);
     }
     terminal.clear();
@@ -5209,9 +5211,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_transformers_device_id()
     terminal.append_bus(2);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(device[6]==did);
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(device[7]==did);
 
 }
@@ -5229,18 +5231,18 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_fixed_shunts_device_id()
     TEST_ASSERT(device.size()==6);
 
     DEVICE_ID did;
-    did.set_device_type("FIXED SHUNT");
+    did.set_device_type(STEPS_FIXED_SHUNT);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(device[2*(i-1)]==did);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(device[2*(i-1)+1]==did);
     }
 }
@@ -5258,7 +5260,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_hvdcs_device_id()
     TEST_ASSERT(device.size()==6);
 
     DEVICE_ID did;
-    did.set_device_type("HVDC");
+    did.set_device_type(STEPS_HVDC);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
@@ -5279,11 +5281,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_hvdcs_device_id()
             terminal.append_bus(3);
         }
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(device[2*(i-1)]==did);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(device[2*(i-1)+1]==did);
     }
 }
@@ -5301,18 +5303,18 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_equivalent_devices_device_id()
     TEST_ASSERT(device.size()==6);
 
     DEVICE_ID did;
-    did.set_device_type("EQUIVALENT DEVICE");
+    did.set_device_type(STEPS_EQUIVALENT_DEVICE);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(device[2*(i-1)]==did);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(device[2*(i-1)+1]==did);
     }
 }
@@ -5330,18 +5332,18 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_energy_storages_device_id()
     TEST_ASSERT(device.size()==6);
 
     DEVICE_ID did;
-    did.set_device_type("ENERGY STORAGE");
+    did.set_device_type(STEPS_ENERGY_STORAGE);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
         did.set_device_terminal(terminal);
-        did.set_device_identifier("#1");
+        did.set_device_identifier_index(get_index_of_string("#1"));
 
         TEST_ASSERT(device[2*(i-1)]==did);
 
-        did.set_device_identifier("#2");
+        did.set_device_identifier_index(get_index_of_string("#2"));
         TEST_ASSERT(device[2*(i-1)+1]==did);
     }
 }
@@ -5515,8 +5517,8 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_overshadowed_bus_count()
         psdb.append_line(line);
     }
     DEVICE_ID did;
-    did.set_device_type("LINE");
-    did.set_device_identifier("#1");
+    did.set_device_type(STEPS_LINE);
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     TERMINAL terminal;
 
@@ -5832,38 +5834,38 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generator_index()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     TEST_ASSERT(psdb.get_generator_index(did)==0);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_generator_index(did)==1);
 
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     TEST_ASSERT(psdb.get_generator_index(did)==2);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_generator_index(did)==3);
 
     terminal.clear();
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     TEST_ASSERT(psdb.get_generator_index(did)==4);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_generator_index(did)==5);
 
-    did.set_device_identifier("#3");
+    did.set_device_identifier_index(get_index_of_string("#3"));
     TEST_ASSERT(psdb.get_generator_index(did)==INDEX_NOT_EXIST);
 }
 
@@ -5876,35 +5878,35 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generator_index()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("WT GENERATOR");
+    did.set_device_type(STEPS_WT_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_wt_generator_index(did)==0);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_wt_generator_index(did)==1);
 
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_wt_generator_index(did)==2);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_wt_generator_index(did)==3);
 
     terminal.clear();
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_wt_generator_index(did)==4);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_wt_generator_index(did)==5);
 
-    did.set_device_identifier("#3");
+    did.set_device_identifier_index(get_index_of_string("#3"));
     TEST_ASSERT(psdb.get_wt_generator_index(did)==INDEX_NOT_EXIST);
 }
 
@@ -5918,35 +5920,35 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_unit_index()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("PV UNIT");
+    did.set_device_type(STEPS_PV_UNIT);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_pv_unit_index(did)==0);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_pv_unit_index(did)==1);
 
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_pv_unit_index(did)==2);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_pv_unit_index(did)==3);
 
     terminal.clear();
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_pv_unit_index(did)==4);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_pv_unit_index(did)==5);
 
-    did.set_device_identifier("#3");
+    did.set_device_identifier_index(get_index_of_string("#3"));
     TEST_ASSERT(psdb.get_pv_unit_index(did)==INDEX_NOT_EXIST);
 }
 
@@ -5959,35 +5961,35 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_load_index()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_load_index(did)==0);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_load_index(did)==1);
 
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_load_index(did)==2);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_load_index(did)==3);
 
     terminal.clear();
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_load_index(did)==4);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_load_index(did)==5);
 
-    did.set_device_identifier("#3");
+    did.set_device_identifier_index(get_index_of_string("#3"));
     TEST_ASSERT(psdb.get_load_index(did)==INDEX_NOT_EXIST);
 }
 
@@ -6000,38 +6002,38 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_line_index()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_line_index(did)==0);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_line_index(did)==1);
 
     terminal.clear();
     terminal.append_bus(2);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_line_index(did)==2);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_line_index(did)==3);
 
     terminal.clear();
     terminal.append_bus(1);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_line_index(did)==4);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_line_index(did)==5);
 
-    did.set_device_identifier("#3");
+    did.set_device_identifier_index(get_index_of_string("#3"));
     TEST_ASSERT(psdb.get_line_index(did)==INDEX_NOT_EXIST);
 }
 
@@ -6044,46 +6046,46 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformer_index()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_TRANSFORMER);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_transformer_index(did)==0);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_transformer_index(did)==1);
 
     terminal.clear();
     terminal.append_bus(2);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_transformer_index(did)==2);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_transformer_index(did)==3);
 
     terminal.clear();
     terminal.append_bus(1);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_transformer_index(did)==4);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_transformer_index(did)==5);
 
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_transformer_index(did)==6);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_transformer_index(did)==7);
 
-    did.set_device_identifier("#3");
+    did.set_device_identifier_index(get_index_of_string("#3"));
     TEST_ASSERT(psdb.get_transformer_index(did)==INDEX_NOT_EXIST);
 }
 
@@ -6096,35 +6098,35 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunt_index()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("FIXED SHUNT");
+    did.set_device_type(STEPS_FIXED_SHUNT);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_fixed_shunt_index(did)==0);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_fixed_shunt_index(did)==1);
 
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_fixed_shunt_index(did)==2);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_fixed_shunt_index(did)==3);
 
     terminal.clear();
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_fixed_shunt_index(did)==4);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_fixed_shunt_index(did)==5);
 
-    did.set_device_identifier("#3");
+    did.set_device_identifier_index(get_index_of_string("#3"));
     TEST_ASSERT(psdb.get_fixed_shunt_index(did)==INDEX_NOT_EXIST);
 }
 
@@ -6137,38 +6139,38 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdc_index()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("HVDC");
+    did.set_device_type(STEPS_HVDC);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_hvdc_index(did)==0);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_hvdc_index(did)==1);
 
     terminal.clear();
     terminal.append_bus(2);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_hvdc_index(did)==2);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_hvdc_index(did)==3);
 
     terminal.clear();
     terminal.append_bus(1);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_hvdc_index(did)==4);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_hvdc_index(did)==5);
 
-    did.set_device_identifier("#3");
+    did.set_device_identifier_index(get_index_of_string("#3"));
     TEST_ASSERT(psdb.get_hvdc_index(did)==INDEX_NOT_EXIST);
 }
 
@@ -6181,35 +6183,35 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_device_index()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("EQUIVALENT DEVICE");
+    did.set_device_type(STEPS_EQUIVALENT_DEVICE);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_equivalent_device_index(did)==0);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_equivalent_device_index(did)==1);
 
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_equivalent_device_index(did)==2);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_equivalent_device_index(did)==3);
 
     terminal.clear();
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_equivalent_device_index(did)==4);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_equivalent_device_index(did)==5);
 
-    did.set_device_identifier("#3");
+    did.set_device_identifier_index(get_index_of_string("#3"));
     TEST_ASSERT(psdb.get_equivalent_device_index(did)==INDEX_NOT_EXIST);
 }
 
@@ -6222,35 +6224,35 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storage_index()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("ENERGY STORAGE");
+    did.set_device_type(STEPS_ENERGY_STORAGE);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_energy_storage_index(did)==0);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_energy_storage_index(did)==1);
 
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_energy_storage_index(did)==2);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_energy_storage_index(did)==3);
 
     terminal.clear();
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.get_energy_storage_index(did)==4);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     TEST_ASSERT(psdb.get_energy_storage_index(did)==5);
 
-    did.set_device_identifier("#3");
+    did.set_device_identifier_index(get_index_of_string("#3"));
     TEST_ASSERT(psdb.get_energy_storage_index(did)==INDEX_NOT_EXIST);
 }
 
@@ -6424,13 +6426,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_load_power()
     complex<double> S;
 
     DEVICE_ID did;
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
     TERMINAL terminal;
 
     terminal.clear();
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     load = psdb.get_load(did);
     S = load->get_nominal_constant_power_load_in_MVA();
@@ -6442,7 +6444,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_load_power()
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     load = psdb.get_load(did);
     S = load->get_nominal_constant_power_load_in_MVA();
@@ -6616,13 +6618,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power()
     complex<double> S;
 
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
 
     terminal.clear();
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     source = psdb.get_generator(did);
     S = source->get_complex_generation_in_MVA();
@@ -6631,11 +6633,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power()
 
     TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S*(1.0+0.1))<FLOAT_EPSILON);
 
-    did.set_device_type("WT GENERATOR");
+    did.set_device_type(STEPS_WT_GENERATOR);
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     source = psdb.get_wt_generator(did);
     S = source->get_complex_generation_in_MVA();
@@ -6644,11 +6646,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power()
 
     TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S*(1.0-0.1))<FLOAT_EPSILON);
 
-    did.set_device_type("PV UNIT");
+    did.set_device_type(STEPS_PV_UNIT);
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     source = psdb.get_pv_unit(did);
     S = source->get_complex_generation_in_MVA();
@@ -6657,11 +6659,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power()
 
     TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S*(1.0-0.1))<FLOAT_EPSILON);
 
-    did.set_device_type("ENERGY STORAGE");
+    did.set_device_type(STEPS_ENERGY_STORAGE);
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     source = psdb.get_energy_storage(did);
     S = source->get_complex_generation_in_MVA();
@@ -6814,13 +6816,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_generator_power()
     complex<double> S;
 
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
 
     terminal.clear();
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     gen = psdb.get_generator(did);
     S = gen->get_complex_generation_in_MVA();
@@ -6832,7 +6834,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_generator_power()
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     gen = psdb.get_generator(did);
     S = gen->get_complex_generation_in_MVA();
@@ -6984,13 +6986,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power()
     complex<double> S;
 
     DEVICE_ID did;
-    did.set_device_type("WT GENERATOR");
+    did.set_device_type(STEPS_WT_GENERATOR);
     TERMINAL terminal;
 
     terminal.clear();
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     source = psdb.get_wt_generator(did);
     S = source->get_complex_generation_in_MVA();
@@ -7002,7 +7004,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power()
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     source = psdb.get_wt_generator(did);
     S = source->get_complex_generation_in_MVA();
@@ -7156,13 +7158,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power()
     complex<double> S;
 
     DEVICE_ID did;
-    did.set_device_type("PV UNIT");
+    did.set_device_type(STEPS_PV_UNIT);
     TERMINAL terminal;
 
     terminal.clear();
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     source = psdb.get_pv_unit(did);
     S = source->get_complex_generation_in_MVA();
@@ -7174,7 +7176,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power()
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     source = psdb.get_pv_unit(did);
     S = source->get_complex_generation_in_MVA();
@@ -7521,17 +7523,17 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_generator()
     vector<GENERATOR*> gens;
 
     DEVICE_ID did;
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_generator(did);
     TEST_ASSERT(psdb.is_generator_exist(did)==false);
     TEST_ASSERT(psdb.get_generator_count()==5);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     psdb.clear_generator(did);
     TEST_ASSERT(psdb.is_generator_exist(did)==false);
     TEST_ASSERT(psdb.get_generator_count()==4);
@@ -7539,12 +7541,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_generator()
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     psdb.clear_generator(did);
     TEST_ASSERT(psdb.is_generator_exist(did)==false);
     TEST_ASSERT(psdb.get_generator_count()==3);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     psdb.clear_generator(did);
     TEST_ASSERT(psdb.is_generator_exist(did)==false);
     TEST_ASSERT(psdb.get_generator_count()==2);
@@ -7552,12 +7554,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_generator()
     terminal.clear();
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     psdb.clear_generator(did);
     TEST_ASSERT(psdb.is_generator_exist(did)==false);
     TEST_ASSERT(psdb.get_generator_count()==1);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     psdb.clear_generator(did);
     TEST_ASSERT(psdb.is_generator_exist(did)==false);
     TEST_ASSERT(psdb.get_generator_count()==0);
@@ -7619,17 +7621,17 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_wt_generator()
     vector<WT_GENERATOR*> wt_generators;
 
     DEVICE_ID did;
-    did.set_device_type("WT GENERATOR");
+    did.set_device_type(STEPS_WT_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_wt_generator(did);
     TEST_ASSERT(psdb.is_wt_generator_exist(did)==false);
     TEST_ASSERT(psdb.get_wt_generator_count()==5);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_wt_generator(did);
     TEST_ASSERT(psdb.is_wt_generator_exist(did)==false);
@@ -7638,13 +7640,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_wt_generator()
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_wt_generator(did);
     TEST_ASSERT(psdb.is_wt_generator_exist(did)==false);
     TEST_ASSERT(psdb.get_wt_generator_count()==3);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_wt_generator(did);
     TEST_ASSERT(psdb.is_wt_generator_exist(did)==false);
@@ -7653,13 +7655,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_wt_generator()
     terminal.clear();
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_wt_generator(did);
     TEST_ASSERT(psdb.is_wt_generator_exist(did)==false);
     TEST_ASSERT(psdb.get_wt_generator_count()==1);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_wt_generator(did);
     TEST_ASSERT(psdb.is_wt_generator_exist(did)==false);
@@ -7720,17 +7722,17 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_pv_unit()
     vector<PV_UNIT*> pv_units;
 
     DEVICE_ID did;
-    did.set_device_type("PV UNIT");
+    did.set_device_type(STEPS_PV_UNIT);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_pv_unit(did);
     TEST_ASSERT(psdb.is_pv_unit_exist(did)==false);
     TEST_ASSERT(psdb.get_pv_unit_count()==5);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_pv_unit(did);
     TEST_ASSERT(psdb.is_pv_unit_exist(did)==false);
@@ -7739,13 +7741,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_pv_unit()
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_pv_unit(did);
     TEST_ASSERT(psdb.is_pv_unit_exist(did)==false);
     TEST_ASSERT(psdb.get_pv_unit_count()==3);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_pv_unit(did);
     TEST_ASSERT(psdb.is_pv_unit_exist(did)==false);
@@ -7754,13 +7756,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_pv_unit()
     terminal.clear();
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_pv_unit(did);
     TEST_ASSERT(psdb.is_pv_unit_exist(did)==false);
     TEST_ASSERT(psdb.get_pv_unit_count()==1);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_pv_unit(did);
     TEST_ASSERT(psdb.is_pv_unit_exist(did)==false);
@@ -7857,18 +7859,18 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_load()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_load(did);
 
     TEST_ASSERT(psdb.is_load_exist(did)==false);
     TEST_ASSERT(psdb.get_load_count()==5);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
     psdb.clear_load(did);
 
     TEST_ASSERT(psdb.is_load_exist(did)==false);
@@ -7877,13 +7879,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_load()
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_load(did);
     TEST_ASSERT(psdb.is_load_exist(did)==false);
     TEST_ASSERT(psdb.get_load_count()==3);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_load(did);
     TEST_ASSERT(psdb.is_load_exist(did)==false);
@@ -7892,13 +7894,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_load()
     terminal.clear();
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_load(did);
     TEST_ASSERT(psdb.is_load_exist(did)==false);
     TEST_ASSERT(psdb.get_load_count()==1);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_load(did);
     TEST_ASSERT(psdb.is_load_exist(did)==false);
@@ -7956,18 +7958,18 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_line()
     TEST_ASSERT(psdb.get_line_count()==6);
 
     DEVICE_ID did;
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_line(did);
     TEST_ASSERT(psdb.is_line_exist(did)==false);
     TEST_ASSERT(psdb.get_line_count()==5);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_line(did);
     TEST_ASSERT(psdb.is_line_exist(did)==false);
@@ -7977,13 +7979,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_line()
     terminal.append_bus(2);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_line(did);
     TEST_ASSERT(psdb.is_line_exist(did)==false);
     TEST_ASSERT(psdb.get_line_count()==3);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_line(did);
     TEST_ASSERT(psdb.is_line_exist(did)==false);
@@ -7993,13 +7995,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_line()
     terminal.append_bus(1);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_line(did);
     TEST_ASSERT(psdb.is_line_exist(did)==false);
     TEST_ASSERT(psdb.get_line_count()==1);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_line(did);
     TEST_ASSERT(psdb.is_line_exist(did)==false);
@@ -8055,18 +8057,18 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_transformer()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_TRANSFORMER);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_transformer(did);
     TEST_ASSERT(psdb.is_transformer_exist(did)==false);
     TEST_ASSERT(psdb.get_transformer_count()==7);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_transformer(did);
     TEST_ASSERT(psdb.is_transformer_exist(did)==false);
@@ -8076,13 +8078,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_transformer()
     terminal.append_bus(2);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_transformer(did);
     TEST_ASSERT(psdb.is_transformer_exist(did)==false);
     TEST_ASSERT(psdb.get_transformer_count()==5);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_transformer(did);
     TEST_ASSERT(psdb.is_transformer_exist(did)==false);
@@ -8092,13 +8094,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_transformer()
     terminal.append_bus(1);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_transformer(did);
     TEST_ASSERT(psdb.is_transformer_exist(did)==false);
     TEST_ASSERT(psdb.get_transformer_count()==3);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_transformer(did);
     TEST_ASSERT(psdb.is_transformer_exist(did)==false);
@@ -8109,13 +8111,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_transformer()
     terminal.append_bus(2);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_transformer(did);
     TEST_ASSERT(psdb.is_transformer_exist(did)==false);
     TEST_ASSERT(psdb.get_transformer_count()==1);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_transformer(did);
     TEST_ASSERT(psdb.is_transformer_exist(did)==false);
@@ -8172,17 +8174,17 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_fixed_shunt()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("FIXED SHUNT");
+    did.set_device_type(STEPS_FIXED_SHUNT);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_fixed_shunt(did);
     TEST_ASSERT(psdb.is_fixed_shunt_exist(did)==false);
     TEST_ASSERT(psdb.get_fixed_shunt_count()==5);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_fixed_shunt(did);
     TEST_ASSERT(psdb.is_fixed_shunt_exist(did)==false);
@@ -8191,13 +8193,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_fixed_shunt()
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_fixed_shunt(did);
     TEST_ASSERT(psdb.is_fixed_shunt_exist(did)==false);
     TEST_ASSERT(psdb.get_fixed_shunt_count()==3);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_fixed_shunt(did);
     TEST_ASSERT(psdb.is_fixed_shunt_exist(did)==false);
@@ -8206,13 +8208,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_fixed_shunt()
     terminal.clear();
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_fixed_shunt(did);
     TEST_ASSERT(psdb.is_fixed_shunt_exist(did)==false);
     TEST_ASSERT(psdb.get_fixed_shunt_count()==1);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_fixed_shunt(did);
     TEST_ASSERT(psdb.is_fixed_shunt_exist(did)==false);
@@ -8270,18 +8272,18 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_hvdc()
     vector<HVDC*> hvdcs;
 
     DEVICE_ID did;
-    did.set_device_type("HVDC");
+    did.set_device_type(STEPS_HVDC);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_hvdc(did);
     TEST_ASSERT(psdb.is_hvdc_exist(did)==false);
     TEST_ASSERT(psdb.get_hvdc_count()==5);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_hvdc(did);
     TEST_ASSERT(psdb.is_hvdc_exist(did)==false);
@@ -8291,13 +8293,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_hvdc()
     terminal.append_bus(2);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_hvdc(did);
     TEST_ASSERT(psdb.is_hvdc_exist(did)==false);
     TEST_ASSERT(psdb.get_hvdc_count()==3);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_hvdc(did);
     TEST_ASSERT(psdb.is_hvdc_exist(did)==false);
@@ -8307,13 +8309,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_hvdc()
     terminal.append_bus(1);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_hvdc(did);
     TEST_ASSERT(psdb.is_hvdc_exist(did)==false);
     TEST_ASSERT(psdb.get_hvdc_count()==1);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_hvdc(did);
     TEST_ASSERT(psdb.is_hvdc_exist(did)==false);
@@ -8371,17 +8373,17 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_equivalent_device()
     vector<EQUIVALENT_DEVICE*> edevices;
 
     DEVICE_ID did;
-    did.set_device_type("EQUIVALENT DEVICE");
+    did.set_device_type(STEPS_EQUIVALENT_DEVICE);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_equivalent_device(did);
     TEST_ASSERT(psdb.is_equivalent_device_exist(did)==false);
     TEST_ASSERT(psdb.get_equivalent_device_count()==5);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_equivalent_device(did);
     TEST_ASSERT(psdb.is_equivalent_device_exist(did)==false);
@@ -8390,13 +8392,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_equivalent_device()
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_equivalent_device(did);
     TEST_ASSERT(psdb.is_equivalent_device_exist(did)==false);
     TEST_ASSERT(psdb.get_equivalent_device_count()==3);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_equivalent_device(did);
     TEST_ASSERT(psdb.is_equivalent_device_exist(did)==false);
@@ -8405,13 +8407,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_equivalent_device()
     terminal.clear();
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_equivalent_device(did);
     TEST_ASSERT(psdb.is_equivalent_device_exist(did)==false);
     TEST_ASSERT(psdb.get_equivalent_device_count()==1);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_equivalent_device(did);
     TEST_ASSERT(psdb.is_equivalent_device_exist(did)==false);
@@ -8469,17 +8471,17 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_energy_storage()
     vector<ENERGY_STORAGE*> edevices;
 
     DEVICE_ID did;
-    did.set_device_type("ENERGY STORAGE");
+    did.set_device_type(STEPS_ENERGY_STORAGE);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_energy_storage(did);
     TEST_ASSERT(psdb.is_energy_storage_exist(did)==false);
     TEST_ASSERT(psdb.get_energy_storage_count()==5);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_energy_storage(did);
     TEST_ASSERT(psdb.is_energy_storage_exist(did)==false);
@@ -8488,13 +8490,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_energy_storage()
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_energy_storage(did);
     TEST_ASSERT(psdb.is_energy_storage_exist(did)==false);
     TEST_ASSERT(psdb.get_energy_storage_count()==3);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_energy_storage(did);
     TEST_ASSERT(psdb.is_energy_storage_exist(did)==false);
@@ -8503,13 +8505,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_energy_storage()
     terminal.clear();
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     psdb.clear_energy_storage(did);
     TEST_ASSERT(psdb.is_energy_storage_exist(did)==false);
     TEST_ASSERT(psdb.get_energy_storage_count()==1);
 
-    did.set_device_identifier("#2");
+    did.set_device_identifier_index(get_index_of_string("#2"));
 
     psdb.clear_energy_storage(did);
     TEST_ASSERT(psdb.is_energy_storage_exist(did)==false);

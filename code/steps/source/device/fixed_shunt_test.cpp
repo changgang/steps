@@ -190,11 +190,11 @@ void FIXED_SHUNT_TEST::test_get_device_id()
     DEVICE_ID did = fixed_shunt.get_device_id();
 
     DEVICE_ID did2;
-    did2.set_device_type("FIXED SHUNT");
+    did2.set_device_type(STEPS_FIXED_SHUNT);
     TERMINAL terminal;
     terminal.append_bus(1);
     did2.set_device_terminal(terminal);
-    did2.set_device_identifier("F1");
+    did2.set_device_identifier_index(get_index_of_string("F1"));
 
     TEST_ASSERT(did==did2);
 

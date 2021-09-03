@@ -77,8 +77,8 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_generator()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("generator");
-    TEST_ASSERT(device_id.get_device_type()=="GENERATOR");
+    device_id.set_device_type(STEPS_GENERATOR);
+    TEST_ASSERT(device_id.get_device_type()==STEPS_GENERATOR);
 
     TEST_ASSERT(device_id.is_name_allowed()==false);
     TEST_ASSERT(device_id.is_terminal_allowed()==true);
@@ -96,8 +96,8 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_wt_generator()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("wt generator");
-    TEST_ASSERT(device_id.get_device_type()=="WT GENERATOR");
+    device_id.set_device_type(STEPS_WT_GENERATOR);
+    TEST_ASSERT(device_id.get_device_type()==STEPS_WT_GENERATOR);
 
     TEST_ASSERT(device_id.is_name_allowed()==false);
     TEST_ASSERT(device_id.is_terminal_allowed()==true);
@@ -115,8 +115,8 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_pv_unit()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("pv unit");
-    TEST_ASSERT(device_id.get_device_type()=="PV UNIT");
+    device_id.set_device_type(STEPS_PV_UNIT);
+    TEST_ASSERT(device_id.get_device_type()==STEPS_PV_UNIT);
 
     TEST_ASSERT(device_id.is_name_allowed()==false);
     TEST_ASSERT(device_id.is_terminal_allowed()==true);
@@ -134,8 +134,8 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_energy_storage()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("energy storage");
-    TEST_ASSERT(device_id.get_device_type()=="ENERGY STORAGE");
+    device_id.set_device_type(STEPS_ENERGY_STORAGE);
+    TEST_ASSERT(device_id.get_device_type()==STEPS_ENERGY_STORAGE);
 
     TEST_ASSERT(device_id.is_name_allowed()==false);
     TEST_ASSERT(device_id.is_terminal_allowed()==true);
@@ -153,8 +153,8 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_load()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("load");
-    TEST_ASSERT(device_id.get_device_type()=="LOAD");
+    device_id.set_device_type(STEPS_LOAD);
+    TEST_ASSERT(device_id.get_device_type()==STEPS_LOAD);
 
     TEST_ASSERT(device_id.is_name_allowed()==false);
     TEST_ASSERT(device_id.is_terminal_allowed()==true);
@@ -172,8 +172,8 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_fixedshunt()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("fixed shunt");
-    TEST_ASSERT(device_id.get_device_type()=="FIXED SHUNT");
+    device_id.set_device_type(STEPS_FIXED_SHUNT);
+    TEST_ASSERT(device_id.get_device_type()==STEPS_FIXED_SHUNT);
 
     TEST_ASSERT(device_id.is_name_allowed()==false);
     TEST_ASSERT(device_id.is_terminal_allowed()==true);
@@ -191,8 +191,8 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_switchedshunt()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("switched shunt");
-    TEST_ASSERT(device_id.get_device_type()=="SWITCHED SHUNT");
+    device_id.set_device_type(STEPS_SWITCHED_SHUNT);
+    TEST_ASSERT(device_id.get_device_type()==STEPS_SWITCHED_SHUNT);
 
     TEST_ASSERT(device_id.is_name_allowed()==false);
     TEST_ASSERT(device_id.is_terminal_allowed()==true);
@@ -210,8 +210,8 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_equivalent_device()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("equivalent device");
-    TEST_ASSERT(device_id.get_device_type()=="EQUIVALENT DEVICE");
+    device_id.set_device_type(STEPS_EQUIVALENT_DEVICE);
+    TEST_ASSERT(device_id.get_device_type()==STEPS_EQUIVALENT_DEVICE);
 
     TEST_ASSERT(device_id.is_name_allowed()==false);
     TEST_ASSERT(device_id.is_terminal_allowed()==true);
@@ -229,8 +229,8 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_line()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("line");
-    TEST_ASSERT(device_id.get_device_type()=="LINE");
+    device_id.set_device_type(STEPS_LINE);
+    TEST_ASSERT(device_id.get_device_type()==STEPS_LINE);
 
     TEST_ASSERT(device_id.is_name_allowed()==false);
     TEST_ASSERT(device_id.is_terminal_allowed()==true);
@@ -248,8 +248,8 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_transformer()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("transformer");
-    TEST_ASSERT(device_id.get_device_type()=="TRANSFORMER");
+    device_id.set_device_type(STEPS_TRANSFORMER);
+    TEST_ASSERT(device_id.get_device_type()==STEPS_TRANSFORMER);
 
     TEST_ASSERT(device_id.is_name_allowed()==false);
     TEST_ASSERT(device_id.is_terminal_allowed()==true);
@@ -271,8 +271,8 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_hvdc()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("hvdc");
-    TEST_ASSERT(device_id.get_device_type()=="HVDC");
+    device_id.set_device_type(STEPS_HVDC);
+    TEST_ASSERT(device_id.get_device_type()==STEPS_HVDC);
 
     TEST_ASSERT(device_id.is_name_allowed()==false);
     TEST_ASSERT(device_id.is_terminal_allowed()==true);
@@ -290,8 +290,8 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_vschvdc()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("vsc hvdc");
-    TEST_ASSERT(device_id.get_device_type()=="VSC HVDC");
+    device_id.set_device_type(STEPS_VSC_HVDC);
+    TEST_ASSERT(device_id.get_device_type()==STEPS_VSC_HVDC);
 
     TEST_ASSERT(device_id.is_name_allowed()==false);
     TEST_ASSERT(device_id.is_terminal_allowed()==true);
@@ -309,8 +309,8 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_facts()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("facts");
-    TEST_ASSERT(device_id.get_device_type()=="FACTS");
+    device_id.set_device_type(STEPS_FACTS);
+    TEST_ASSERT(device_id.get_device_type()==STEPS_FACTS);
 
     TEST_ASSERT(device_id.is_name_allowed()==false);
     TEST_ASSERT(device_id.is_terminal_allowed()==true);
@@ -328,8 +328,8 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_multidc()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("multi dc");
-    TEST_ASSERT(device_id.get_device_type()=="MULTI DC");
+    device_id.set_device_type(STEPS_MULTI_DC);
+    TEST_ASSERT(device_id.get_device_type()==STEPS_MULTI_DC);
 
     TEST_ASSERT(device_id.is_name_allowed()==false);
     TEST_ASSERT(device_id.is_terminal_allowed()==true);
@@ -355,8 +355,8 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_lcc_hvdc()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("lcc hvdc");
-    TEST_ASSERT(device_id.get_device_type()=="LCC HVDC");
+    device_id.set_device_type(STEPS_LCC_HVDC);
+    TEST_ASSERT(device_id.get_device_type()==STEPS_LCC_HVDC);
 
     TEST_ASSERT(device_id.is_name_allowed()==true);
     TEST_ASSERT(device_id.is_terminal_allowed()==false);
@@ -365,7 +365,8 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_lcc_hvdc()
     TEST_ASSERT(device_id.get_minimum_allowed_terminal_count()==0);
     TEST_ASSERT(device_id.get_maximum_allowed_terminal_count()==0);
 
-    device_id.set_device_name("LCC HVDC A");
+    add_string_to_str_int_map("LCC HVDC A");
+    device_id.set_device_name_index(get_index_of_string("LCC HVDC A"));
     TEST_ASSERT(device_id.get_device_name()=="LCC HVDC A");
 }
 
@@ -373,8 +374,8 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_general()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("general device");
-    TEST_ASSERT(device_id.get_device_type()=="GENERAL DEVICE");
+    device_id.set_device_type(STEPS_GENERAL_DEVICE);
+    TEST_ASSERT(device_id.get_device_type()==STEPS_GENERAL_DEVICE);
 
     TEST_ASSERT(device_id.is_name_allowed()==false);
     TEST_ASSERT(device_id.is_terminal_allowed()==true);
@@ -388,12 +389,13 @@ void DEVICE_ID_TEST::test_set_get_device_identifier()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("generator");
-    device_id.set_device_identifier("ab");
-    TEST_ASSERT(device_id.get_device_identifier()=="ab");
+    device_id.set_device_type(STEPS_GENERATOR);
+    device_id.set_device_identifier_index(0);
+    TEST_ASSERT(device_id.get_device_identifier_index()==0);
 
-    device_id.set_device_identifier("xy");
-    TEST_ASSERT(device_id.get_device_identifier()=="xy");
+    add_string_to_str_int_map("xy");
+    device_id.set_device_identifier_index(get_index_of_string("xy"));
+    TEST_ASSERT(device_id.get_device_identifier_index()==get_index_of_string("xy"));
 }
 
 void DEVICE_ID_TEST::test_get_compound_device_name()
@@ -402,116 +404,118 @@ void DEVICE_ID_TEST::test_get_compound_device_name()
 
     TERMINAL terminal;
 
-    device_id.set_device_type("BUS");
+    device_id.set_device_type(STEPS_BUS);
     terminal.append_bus(1);
     device_id.set_device_terminal(terminal);
     TEST_ASSERT(device_id.get_compound_device_name()=="BUS 1");
 
     device_id.clear();
     terminal.clear();
-    device_id.set_device_type("LINE");
+    device_id.set_device_type(STEPS_LINE);
     terminal.append_bus(1);
     terminal.append_bus(2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("#1");
+    add_string_to_str_int_map("#1");
+    device_id.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(device_id.get_compound_device_name()=="LINE #1 LINKING BUS 1 AND 2");
 
     device_id.clear();
     terminal.clear();
-    device_id.set_device_type("HVDC");
+    device_id.set_device_type(STEPS_HVDC);
     terminal.append_bus(1);
     terminal.append_bus(2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("#1");
+    device_id.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(device_id.get_compound_device_name()=="HVDC #1 LINKING BUS 1 AND 2");
 
     device_id.clear();
     terminal.clear();
-    device_id.set_device_type("VSC HVDC");
+    device_id.set_device_type(STEPS_VSC_HVDC);
     terminal.append_bus(1);
     terminal.append_bus(2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("#1");
+    device_id.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(device_id.get_compound_device_name()=="VSC HVDC #1 LINKING BUS 1 AND 2");
 
     device_id.clear();
     terminal.clear();
-    device_id.set_device_type("TRANSFORMER");
+    device_id.set_device_type(STEPS_TRANSFORMER);
     terminal.append_bus(1);
     terminal.append_bus(2);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("#1");
+    device_id.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(device_id.get_compound_device_name()=="TRANSFORMER #1 LINKING BUS 1 AND 2");
 
     device_id.clear();
     terminal.clear();
-    device_id.set_device_type("TRANSFORMER");
+    device_id.set_device_type(STEPS_TRANSFORMER);
     terminal.append_bus(1);
     terminal.append_bus(2);
     terminal.append_bus(3);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("#1");
+    device_id.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(device_id.get_compound_device_name()=="TRANSFORMER #1 LINKING BUS 1 2 AND 3");
 
     device_id.clear();
     terminal.clear();
-    device_id.set_device_type("GENERATOR");
+    device_id.set_device_type(STEPS_GENERATOR);
     terminal.append_bus(1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("#1");
+    device_id.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(device_id.get_compound_device_name()=="GENERATOR #1 AT BUS 1");
 
     device_id.clear();
     terminal.clear();
-    device_id.set_device_type("WT GENERATOR");
+    device_id.set_device_type(STEPS_WT_GENERATOR);
     terminal.append_bus(1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("#1");
+    device_id.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(device_id.get_compound_device_name()=="WT GENERATOR #1 AT BUS 1");
 
     device_id.clear();
     terminal.clear();
-    device_id.set_device_type("LOAD");
+    device_id.set_device_type(STEPS_LOAD);
     terminal.append_bus(1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("#1");
+    device_id.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(device_id.get_compound_device_name()=="LOAD #1 AT BUS 1");
 
     device_id.clear();
     terminal.clear();
-    device_id.set_device_type("FIXED SHUNT");
+    device_id.set_device_type(STEPS_FIXED_SHUNT);
     terminal.append_bus(1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("#1");
+    device_id.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(device_id.get_compound_device_name()=="FIXED SHUNT #1 AT BUS 1");
 
     device_id.clear();
     terminal.clear();
-    device_id.set_device_type("SWITCHED SHUNT");
+    device_id.set_device_type(STEPS_SWITCHED_SHUNT);
     terminal.append_bus(1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("#1");
+    device_id.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(device_id.get_compound_device_name()=="SWITCHED SHUNT #1 AT BUS 1");
 
     device_id.clear();
     terminal.clear();
-    device_id.set_device_type("EQUIVALENT DEVICE");
+    device_id.set_device_type(STEPS_EQUIVALENT_DEVICE);
     terminal.append_bus(1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("#1");
+    device_id.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(device_id.get_compound_device_name()=="EQUIVALENT DEVICE #1 AT BUS 1");
 
     device_id.clear();
     terminal.clear();
-    device_id.set_device_type("ENERGY STORAGE");
+    device_id.set_device_type(STEPS_ENERGY_STORAGE);
     terminal.append_bus(1);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier("#1");
+    device_id.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(device_id.get_compound_device_name()=="ENERGY STORAGE #1 AT BUS 1");
 
     device_id.clear();
-    device_id.set_device_type("LCC HVDC");
-    device_id.set_device_name("LCC-A");
+    device_id.set_device_type(STEPS_LCC_HVDC);
+    add_string_to_str_int_map("LCC-A");
+    device_id.set_device_name_index(get_index_of_string("LCC-A"));
     TEST_ASSERT(device_id.get_compound_device_name()=="LCC HVDC LCC-A");
 }
 
@@ -519,13 +523,14 @@ void DEVICE_ID_TEST::test_is_valid()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("generator");
+    device_id.set_device_type(STEPS_GENERATOR);
     device_id.set_device_terminal(terminal_1_bus);
-    device_id.set_device_identifier("ab");
+    add_string_to_str_int_map("ab");
+    device_id.set_device_identifier_index(get_index_of_string("ab"));
 
     TEST_ASSERT(device_id.is_valid()==true);
 
-    device_id.set_device_type("general device");
+    device_id.set_device_type(STEPS_GENERAL_DEVICE);
     TEST_ASSERT(device_id.is_valid()==true);
 
     device_id.clear();
@@ -536,29 +541,34 @@ void DEVICE_ID_TEST::test_clear()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("generator");
+    device_id.set_device_type(STEPS_GENERATOR);
     device_id.set_device_terminal(terminal_1_bus);
-    device_id.set_device_identifier("ab");
+    add_string_to_str_int_map("ab");
+    device_id.set_device_identifier_index(get_index_of_string("ab"));
 
     device_id.clear();
 
-    TEST_ASSERT(device_id.get_device_type()=="NONE");
+    TEST_ASSERT(device_id.get_device_type()==STEPS_INVALID_DEVICE);
     TERMINAL terminal = device_id.get_device_terminal();
     TEST_ASSERT(terminal.get_bus_count()==0);
     TEST_ASSERT(device_id.get_device_identifier()=="");
+    TEST_ASSERT(device_id.get_device_identifier_index()==0);
+    TEST_ASSERT(device_id.get_device_name()=="");
+    TEST_ASSERT(device_id.get_device_name_index()==0);
 }
 
 void DEVICE_ID_TEST::test_copy_with_operator_equal()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("generator");
+    device_id.set_device_type(STEPS_GENERATOR);
     device_id.set_device_terminal(terminal_1_bus);
-    device_id.set_device_identifier("ab");
+    add_string_to_str_int_map("ab");
+    device_id.set_device_identifier_index(get_index_of_string("ab"));
 
     DEVICE_ID newdevice_id = device_id;
 
-    TEST_ASSERT(newdevice_id.get_device_type()=="GENERATOR");
+    TEST_ASSERT(newdevice_id.get_device_type()==STEPS_GENERATOR);
     TERMINAL terminal = newdevice_id.get_device_terminal();
     TEST_ASSERT(terminal[0]==1);
     TEST_ASSERT(terminal.get_bus_count()==1);
@@ -570,17 +580,19 @@ void DEVICE_ID_TEST::test_compare_less()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("GENERATOR");
+    device_id.set_device_type(STEPS_GENERATOR);
     device_id.set_device_terminal(terminal_1_bus);
-    device_id.set_device_identifier("ab");
+    add_string_to_str_int_map("ab");
+    device_id.set_device_identifier_index(get_index_of_string("ab"));
 
     DEVICE_ID newdevice_id;
-    newdevice_id.set_device_type("GENERATOR");
+    newdevice_id.set_device_type(STEPS_GENERATOR);
     newdevice_id.set_device_terminal(terminal_1_bus);
-    newdevice_id.set_device_identifier("ac");
+    add_string_to_str_int_map("ac");
+    device_id.set_device_identifier_index(get_index_of_string("ac"));
 
     TEST_ASSERT(device_id<newdevice_id);
-    newdevice_id.set_device_identifier("ab");
+    newdevice_id.set_device_identifier_index(get_index_of_string("ab"));
     TEST_ASSERT(not(device_id<newdevice_id));
     TEST_ASSERT(not(newdevice_id<device_id));
 
@@ -594,21 +606,25 @@ void DEVICE_ID_TEST::test_compare_equal_not_equal()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type("GENERATOR");
+    device_id.set_device_type(STEPS_GENERATOR);
     device_id.set_device_terminal(terminal_1_bus);
-    device_id.set_device_identifier("ab");
+    add_string_to_str_int_map("ab");
+    device_id.set_device_identifier_index(get_index_of_string("ab"));
+
 
     DEVICE_ID newdevice_id;
-    newdevice_id.set_device_type("GENERATOR");
+    device_id.set_device_type(STEPS_GENERATOR);
     newdevice_id.set_device_terminal(terminal_1_bus);
-    newdevice_id.set_device_identifier("ab");
+    add_string_to_str_int_map("ab");
+    device_id.set_device_identifier_index(get_index_of_string("ab"));
+
 
     TEST_ASSERT(device_id==newdevice_id);
 
     terminal_1_bus.clear();
     terminal_1_bus.append_bus(2);
     newdevice_id.set_device_terminal(terminal_1_bus);
-    newdevice_id.set_device_identifier("ab");
+    device_id.set_device_identifier_index(get_index_of_string("ab"));
     TEST_ASSERT(device_id!=newdevice_id);
 }
 

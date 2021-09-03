@@ -99,12 +99,12 @@ HVDC* HVDC_MODEL_TEST::get_test_hvdc()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     DEVICE_ID did;
-    did.set_device_type("HVDC");
+    did.set_device_type(STEPS_HVDC);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("DC");
+    did.set_device_identifier_index(get_index_of_string("DC"));
 
     return psdb.get_hvdc(did);
 }

@@ -25,6 +25,8 @@ class FIXED_SHUNT : public NONBUS_DEVICE
         BUS* get_bus_pointer() const;
         string get_identifier() const;
         string get_name() const;
+        unsigned int get_identifier_index() const;
+        unsigned int get_name_index() const;
         bool get_status() const;
         complex<double> get_nominal_positive_sequence_impedance_shunt_in_MVA() const;
         complex<double> get_nominal_impedance_shunt_in_pu() const;

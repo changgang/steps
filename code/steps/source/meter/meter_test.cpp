@@ -126,7 +126,7 @@ void METER_TEST::test_constructor()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 
-    TEST_ASSERT(meter.get_device_type()=="NONE");
+    TEST_ASSERT(meter.get_device_type()==STEPS_INVALID_DEVICE);
     TEST_ASSERT(meter.get_meter_type()=="");
     TEST_ASSERT(meter.get_device_pointer()==NULL);
     TEST_ASSERT(meter.is_valid()==false);
@@ -137,63 +137,63 @@ void METER_TEST::test_set_get_device_id_and_type()
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 
     DEVICE_ID did;
-    did.set_device_type("BUS");
+    did.set_device_type(STEPS_BUS);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
     meter.set_device_id(did);
-    TEST_ASSERT(meter.get_device_type()=="BUS");
+    TEST_ASSERT(meter.get_device_type()==STEPS_BUS);
 
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
     terminal.clear();
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     meter.set_device_id(did);
-    TEST_ASSERT(meter.get_device_type()=="LOAD");
+    TEST_ASSERT(meter.get_device_type()==STEPS_LOAD);
 
-    did.set_device_type("LINE");
-    terminal.clear();
-    terminal.append_bus(1);
-    terminal.append_bus(2);
-    did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
-    meter.set_device_id(did);
-    TEST_ASSERT(meter.get_device_type()=="LINE");
-
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_LINE);
     terminal.clear();
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     meter.set_device_id(did);
-    TEST_ASSERT(meter.get_device_type()=="TRANSFORMER");
+    TEST_ASSERT(meter.get_device_type()==STEPS_LINE);
 
-    did.set_device_type("GENERATOR");
-    terminal.clear();
-    terminal.append_bus(1);
-    did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
-    meter.set_device_id(did);
-    TEST_ASSERT(meter.get_device_type()=="GENERATOR");
-
-    did.set_device_type("WT GENERATOR");
-    terminal.clear();
-    terminal.append_bus(1);
-    did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
-    meter.set_device_id(did);
-    TEST_ASSERT(meter.get_device_type()=="WT GENERATOR");
-
-    did.set_device_type("HVDC");
+    did.set_device_type(STEPS_TRANSFORMER);
     terminal.clear();
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
     meter.set_device_id(did);
-    TEST_ASSERT(meter.get_device_type()=="HVDC");
+    TEST_ASSERT(meter.get_device_type()==STEPS_TRANSFORMER);
+
+    did.set_device_type(STEPS_GENERATOR);
+    terminal.clear();
+    terminal.append_bus(1);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier_index(get_index_of_string("#1"));
+    meter.set_device_id(did);
+    TEST_ASSERT(meter.get_device_type()==STEPS_GENERATOR);
+
+    did.set_device_type(STEPS_WT_GENERATOR);
+    terminal.clear();
+    terminal.append_bus(1);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier_index(get_index_of_string("#1"));
+    meter.set_device_id(did);
+    TEST_ASSERT(meter.get_device_type()==STEPS_WT_GENERATOR);
+
+    did.set_device_type(STEPS_HVDC);
+    terminal.clear();
+    terminal.append_bus(1);
+    terminal.append_bus(2);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier_index(get_index_of_string("#1"));
+    meter.set_device_id(did);
+    TEST_ASSERT(meter.get_device_type()==STEPS_HVDC);
 }
 
 void METER_TEST::test_set_get_bus_meter_type()
@@ -204,7 +204,7 @@ void METER_TEST::test_set_get_bus_meter_type()
     TERMINAL terminal;
     string meter_type;
 
-    did.set_device_type("BUS");
+    did.set_device_type(STEPS_BUS);
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
 
@@ -227,11 +227,11 @@ void METER_TEST::test_set_get_line_meter_type()
     TERMINAL terminal;
     string meter_type;
 
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     meter.set_device_id(did);
 
@@ -252,11 +252,11 @@ void METER_TEST::test_set_get_transformer_meter_type()
     TERMINAL terminal;
     string meter_type;
 
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_TRANSFORMER);
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     meter.set_device_id(did);
 
@@ -289,10 +289,10 @@ void METER_TEST::test_set_get_generator_meter_type()
     TERMINAL terminal;
     string meter_type;
 
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     meter.set_device_id(did);
 
@@ -313,10 +313,10 @@ void METER_TEST::test_set_get_load_meter_type()
     TERMINAL terminal;
     string meter_type;
 
-    did.set_device_type("LOAD");
+    did.set_device_type(STEPS_LOAD);
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     meter.set_device_id(did);
 
@@ -337,11 +337,11 @@ void METER_TEST::test_set_get_hvdc_meter_type()
     TERMINAL terminal;
     string meter_type;
 
-    did.set_device_type("HVDC");
+    did.set_device_type(STEPS_HVDC);
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     meter.set_device_id(did);
 
@@ -363,10 +363,10 @@ void METER_TEST::test_set_get_wt_generator_meter_type()
     TERMINAL terminal;
     string meter_type;
 
-    did.set_device_type("WT GENERATOR");
+    did.set_device_type(STEPS_WT_GENERATOR);
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     meter.set_device_id(did);
 
@@ -387,10 +387,10 @@ void METER_TEST::test_set_get_equivalent_device_meter_type()
     TERMINAL terminal;
     string meter_type;
 
-    did.set_device_type("EQUIVALENT DEVICE");
+    did.set_device_type(STEPS_EQUIVALENT_DEVICE);
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     meter.set_device_id(did);
 
@@ -412,10 +412,10 @@ void METER_TEST::test_set_get_energy_storage_meter_type()
     TERMINAL terminal;
     string meter_type;
 
-    did.set_device_type("ENERGY STORAGE");
+    did.set_device_type(STEPS_ENERGY_STORAGE);
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     meter.set_device_id(did);
 
@@ -433,7 +433,7 @@ void METER_TEST::test_set_get_meter_internal_variable_name()
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 
     DEVICE_ID did;
-    did.set_device_type("BUS");
+    did.set_device_type(STEPS_BUS);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
@@ -448,9 +448,9 @@ void METER_TEST::test_set_get_meter_internal_variable_name()
 
     TEST_ASSERT(meter.get_internal_variable_name()=="");
 
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     meter.set_device_id(did);
     meter.set_meter_type("ROTOR ANGLE IN DEG");
@@ -469,7 +469,7 @@ void METER_TEST::test_set_get_device_pointer()
 
 
     DEVICE_ID did;
-    did.set_device_type("BUS");
+    did.set_device_type(STEPS_BUS);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
@@ -482,12 +482,12 @@ void METER_TEST::test_set_get_device_pointer()
     TEST_ASSERT(meter.get_device_pointer()->get_device_id()==did);
 
     meter.clear();
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     terminal.clear();
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     meter.set_device_id(did);
 
@@ -496,12 +496,12 @@ void METER_TEST::test_set_get_device_pointer()
     TEST_ASSERT(meter.get_device_pointer()->get_device_id()==did);
 
     meter.clear();
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_TRANSFORMER);
     terminal.clear();
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     meter.set_device_id(did);
 
@@ -509,11 +509,11 @@ void METER_TEST::test_set_get_device_pointer()
     TEST_ASSERT(meter.get_device_pointer()->get_device_id()==did);
 
     meter.clear();
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     terminal.clear();
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     meter.set_device_id(did);
 
@@ -521,11 +521,11 @@ void METER_TEST::test_set_get_device_pointer()
     TEST_ASSERT(meter.get_device_pointer()->get_device_id()==did);
 
     meter.clear();
-    did.set_device_type("WT GENERATOR");
+    did.set_device_type(STEPS_WT_GENERATOR);
     terminal.clear();
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     meter.set_device_id(did);
 
@@ -533,12 +533,12 @@ void METER_TEST::test_set_get_device_pointer()
     TEST_ASSERT(meter.get_device_pointer()->get_device_id()==did);
 
     meter.clear();
-    did.set_device_type("HVDC");
+    did.set_device_type(STEPS_HVDC);
     terminal.clear();
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     meter.set_device_id(did);
 
@@ -551,7 +551,7 @@ void METER_TEST::test_clear()
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 
     DEVICE_ID did;
-    did.set_device_type("BUS");
+    did.set_device_type(STEPS_BUS);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
@@ -573,7 +573,7 @@ void METER_TEST::test_is_valid()
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 
     DEVICE_ID did;
-    did.set_device_type("BUS");
+    did.set_device_type(STEPS_BUS);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
@@ -592,7 +592,7 @@ void METER_TEST::test_copy_with_operator_equal()
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 
     DEVICE_ID did;
-    did.set_device_type("BUS");
+    did.set_device_type(STEPS_BUS);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
@@ -606,7 +606,7 @@ void METER_TEST::test_copy_with_operator_equal()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     TEST_ASSERT(newmeter.get_device_id()==did);
-    TEST_ASSERT(newmeter.get_device_type()=="BUS");
+    TEST_ASSERT(newmeter.get_device_type()==STEPS_BUS);
     TEST_ASSERT(newmeter.get_device_pointer()==(DEVICE*) psdb.get_bus(1));
     TEST_ASSERT(newmeter.get_meter_type()=="VOLTAGE IN PU");
 }
@@ -616,7 +616,7 @@ void METER_TEST::test_equal()
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 
     DEVICE_ID did;
-    did.set_device_type("BUS");
+    did.set_device_type(STEPS_BUS);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
@@ -628,9 +628,9 @@ void METER_TEST::test_equal()
 
     TEST_ASSERT(newmeter==meter);
 
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     meter.set_device_id(did);
     meter.set_meter_type("ROTOR ANGLE IN DEG");
@@ -654,7 +654,7 @@ void METER_TEST::test_get_bus_meter_value()
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 
     DEVICE_ID did;
-    did.set_device_type("BUS");
+    did.set_device_type(STEPS_BUS);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
@@ -703,11 +703,11 @@ void METER_TEST::test_get_equivalent_device_meter_value()
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 
     DEVICE_ID did;
-    did.set_device_type("EQUIVALENT DEVICE");
+    did.set_device_type(STEPS_EQUIVALENT_DEVICE);
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     EQUIVALENT_DEVICE* edevice = psdb.get_equivalent_device(did);

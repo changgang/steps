@@ -462,11 +462,11 @@ void POWER_SYSTEM_DATABASE::append_generator(GENERATOR& generator)
 
     string identifier = generator.get_identifier();
     DEVICE_ID device_id;
-    device_id.set_device_type("GENERATOR");
+    device_id.set_device_type(STEPS_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(generator_bus);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier(identifier);
+    device_id.set_device_identifier_index(get_index_of_string(identifier));
 
     if(this->is_generator_exist(device_id))
     {
@@ -514,11 +514,11 @@ void POWER_SYSTEM_DATABASE::append_wt_generator(WT_GENERATOR& wt_generator)
 
     string identifier = wt_generator.get_identifier();
     DEVICE_ID device_id;
-    device_id.set_device_type("WT GENERATOR");
+    device_id.set_device_type(STEPS_WT_GENERATOR);
     TERMINAL terminal;
     terminal.append_bus(wt_generator_bus);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier(identifier);
+    device_id.set_device_identifier_index(get_index_of_string(identifier));
 
     if(this->is_wt_generator_exist(device_id))
     {
@@ -566,11 +566,11 @@ void POWER_SYSTEM_DATABASE::append_pv_unit(PV_UNIT& pv_unit)
 
     string identifier = pv_unit.get_identifier();
     DEVICE_ID device_id;
-    device_id.set_device_type("PV UNIT");
+    device_id.set_device_type(STEPS_PV_UNIT);
     TERMINAL terminal;
     terminal.append_bus(pv_unit_bus);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier(identifier);
+    device_id.set_device_identifier_index(get_index_of_string(identifier));
 
     if(this->is_pv_unit_exist(device_id))
     {
@@ -618,11 +618,11 @@ void POWER_SYSTEM_DATABASE::append_energy_storage(ENERGY_STORAGE& estorage)
 
     string identifier = estorage.get_identifier();
     DEVICE_ID device_id;
-    device_id.set_device_type("ENERGY STORAGE");
+    device_id.set_device_type(STEPS_ENERGY_STORAGE);
     TERMINAL terminal;
     terminal.append_bus(bus);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier(identifier);
+    device_id.set_device_identifier_index(get_index_of_string(identifier));
 
     if(this->is_energy_storage_exist(device_id))
     {
@@ -670,11 +670,11 @@ void POWER_SYSTEM_DATABASE::append_load(LOAD& load)
 
     string identifier = load.get_identifier();
     DEVICE_ID device_id;
-    device_id.set_device_type("LOAD");
+    device_id.set_device_type(STEPS_LOAD);
     TERMINAL terminal;
     terminal.append_bus(load_bus);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier(identifier);
+    device_id.set_device_identifier_index(get_index_of_string(identifier));
 
     if(is_load_exist(device_id))
     {
@@ -730,12 +730,12 @@ void POWER_SYSTEM_DATABASE::append_line(LINE& line)
 
     string identifier = line.get_identifier();
     DEVICE_ID device_id;
-    device_id.set_device_type("LINE");
+    device_id.set_device_type(STEPS_LINE);
     TERMINAL terminal;
     terminal.append_bus(sending_side_bus);
     terminal.append_bus(receiving_side_bus);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier(identifier);
+    device_id.set_device_identifier_index(get_index_of_string(identifier));
 
     if(this->is_line_exist(device_id))
     {
@@ -798,13 +798,13 @@ void POWER_SYSTEM_DATABASE::append_transformer(TRANSFORMER& transformer)
 
     string identifier = transformer.get_identifier();
     DEVICE_ID device_id;
-    device_id.set_device_type("TRANSFORMER");
+    device_id.set_device_type(STEPS_TRANSFORMER);
     TERMINAL terminal;
     terminal.append_bus(primary_winding_bus);
     terminal.append_bus(secondary_winding_bus);
     terminal.append_bus(tertiary_winding_bus);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier(identifier);
+    device_id.set_device_identifier_index(get_index_of_string(identifier));
 
     if(is_transformer_exist(device_id))
     {
@@ -852,11 +852,11 @@ void POWER_SYSTEM_DATABASE::append_fixed_shunt(FIXED_SHUNT& shunt)
 
     string identifier = shunt.get_identifier();
     DEVICE_ID device_id;
-    device_id.set_device_type("FIXED SHUNT");
+    device_id.set_device_type(STEPS_FIXED_SHUNT);
     TERMINAL terminal;
     terminal.append_bus(shunt_bus);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier(identifier);
+    device_id.set_device_identifier_index(get_index_of_string(identifier));
 
     if(this->is_fixed_shunt_exist(device_id))
     {
@@ -912,12 +912,12 @@ void POWER_SYSTEM_DATABASE::append_hvdc(HVDC& hvdc)
 
     string identifier = hvdc.get_identifier();
     DEVICE_ID device_id;
-    device_id.set_device_type("HVDC");
+    device_id.set_device_type(STEPS_HVDC);
     TERMINAL terminal;
     terminal.append_bus(rec_bus);
     terminal.append_bus(inv_bus);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier(identifier);
+    device_id.set_device_identifier_index(get_index_of_string(identifier));
 
     if(this->is_hvdc_exist(device_id))
     {
@@ -965,11 +965,11 @@ void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
 
     string identifier = edevice.get_identifier();
     DEVICE_ID device_id;
-    device_id.set_device_type("EQUIVALENT DEVICE");
+    device_id.set_device_type(STEPS_EQUIVALENT_DEVICE);
     TERMINAL terminal;
     terminal.append_bus(bus);
     device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier(identifier);
+    device_id.set_device_identifier_index(get_index_of_string(identifier));
 
     if(this->is_equivalent_device_exist(device_id))
     {
@@ -1006,9 +1006,10 @@ void POWER_SYSTEM_DATABASE::append_lcc_hvdc(LCC_HVDC& lcc_hvdc)
     }
 
     string name = lcc_hvdc.get_name();
+    add_string_to_str_int_map(name);
     DEVICE_ID device_id;
-    device_id.set_device_type("LCC HVDC");
-    device_id.set_device_name(name);
+    device_id.set_device_type(STEPS_LCC_HVDC);
+    device_id.set_device_name_index(get_index_of_string(name));
 
     if(this->is_lcc_hvdc_exist(device_id))
     {
@@ -1116,24 +1117,25 @@ void POWER_SYSTEM_DATABASE::append_owner(OWNER& owner)
 void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEVICE_ID& did_new)
 {
     ostringstream osstream;
-    string old_device_type=did_old.get_device_type();
-    string new_device_type=did_new.get_device_type();
+    STEPS_DEVICE_TYPE old_device_type=did_old.get_device_type();
+    STEPS_DEVICE_TYPE new_device_type=did_new.get_device_type();
     if(old_device_type!=new_device_type)
     {
         osstream<<"Device ID types are inconsistent with each other when calling "<<__FUNCTION__<<":\n"
-                <<"Old device type is: "<<old_device_type<<". New device type is: "<<new_device_type<<".\n"
+                <<"Old device type is: "<<device_type2string(old_device_type)<<". New device type is: "<<device_type2string(new_device_type)<<".\n"
                 <<"No device id will be updated.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
-    string device_type = old_device_type;
-    if(device_type!="GENERATOR" and device_type!="WT GENERATOR" and device_type!="PV UNIT" and device_type!="ENERGY STORAGE" and
-       device_type!="LOAD" and device_type!="FIXED SHUNT" and device_type!="LINE" and device_type!="TRANSFORMER" and device_type!="HVDC" and
-       device_type!="LCC HVDC")
+    STEPS_DEVICE_TYPE device_type = old_device_type;
+    if(device_type!=STEPS_GENERATOR and device_type!=STEPS_WT_GENERATOR and device_type!=STEPS_PV_UNIT and
+       device_type!=STEPS_ENERGY_STORAGE and device_type!=STEPS_LOAD and device_type!=STEPS_FIXED_SHUNT and
+       device_type!=STEPS_LINE and device_type!=STEPS_TRANSFORMER and device_type!=STEPS_HVDC and
+       device_type!=STEPS_LCC_HVDC)
     {
         osstream<<"Device ID type is not in the following allowed types when calling "<<__FUNCTION__<<":\n"
                 <<"[GENERATOR, WT GENERATOR, PV UNIT, ENERGY STORAGE, LOAD, FIXED SHUNT, LINE, TRANSFORMER, HVDC, LCC HVDC].\n"
-                <<"The input device type is: "<<device_type<<".\n"
+                <<"The input device type is: "<<device_type2string(device_type)<<".\n"
                 <<"No device id will be updated.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
@@ -1145,7 +1147,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
     unsigned int kbus = new_terminal[2];
     string new_id = did_new.get_device_identifier();
 
-    if(device_type=="GENERATOR")
+    if(device_type==STEPS_GENERATOR)
     {
         if(not is_generator_exist(did_old))
         {
@@ -1166,7 +1168,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
         return;
     }
 
-    if(device_type=="WT GENERATOR")
+    if(device_type==STEPS_WT_GENERATOR)
     {
         if(not is_wt_generator_exist(did_old))
         {
@@ -1187,7 +1189,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
         return;
     }
 
-    if(device_type=="PV UNIT")
+    if(device_type==STEPS_PV_UNIT)
     {
         if(not is_pv_unit_exist(did_old))
         {
@@ -1208,7 +1210,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
         return;
     }
 
-    if(device_type=="ENERGY STORAGE")
+    if(device_type==STEPS_ENERGY_STORAGE)
     {
         if(not is_energy_storage_exist(did_old))
         {
@@ -1229,7 +1231,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
         return;
     }
 
-    if(device_type=="LOAD")
+    if(device_type==STEPS_LOAD)
     {
         if(not is_load_exist(did_old))
         {
@@ -1250,7 +1252,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
         return;
     }
 
-    if(device_type=="FIXED SHUNT")
+    if(device_type==STEPS_FIXED_SHUNT)
     {
         if(not is_fixed_shunt_exist(did_old))
         {
@@ -1271,7 +1273,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
         return;
     }
 
-    if(device_type=="LINE")
+    if(device_type==STEPS_LINE)
     {
         if(not is_line_exist(did_old))
         {
@@ -1293,7 +1295,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
         return;
     }
 
-    if(device_type=="TRANSFORMER")
+    if(device_type==STEPS_TRANSFORMER)
     {
         if(not is_transformer_exist(did_old))
         {
@@ -1323,7 +1325,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
         return;
     }
 
-    if(device_type=="HVDC")
+    if(device_type==STEPS_HVDC)
     {
         if(not is_hvdc_exist(did_old))
         {
@@ -1345,7 +1347,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
         return;
     }
 
-    if(device_type=="LCC HVDC")
+    if(device_type==STEPS_LCC_HVDC)
     {
         if(not is_lcc_hvdc_exist(did_old))
         {
@@ -1701,8 +1703,8 @@ DEVICE* POWER_SYSTEM_DATABASE::get_device(const DEVICE_ID& device_id)
     // this function is not tested
     if(device_id.is_valid())
     {
-        string dtype = device_id.get_device_type();
-        if(dtype=="BUS")
+        STEPS_DEVICE_TYPE dtype = device_id.get_device_type();
+        if(dtype==STEPS_BUS)
             return get_bus(device_id);
         else
             return get_nonbus_device(device_id);
@@ -1716,38 +1718,38 @@ NONBUS_DEVICE* POWER_SYSTEM_DATABASE::get_nonbus_device(const DEVICE_ID& device_
     // this function is not tested
     if(device_id.is_valid())
     {
-        string dtype = device_id.get_device_type();
-        if(dtype=="GENERATOR")
+        STEPS_DEVICE_TYPE dtype = device_id.get_device_type();
+        if(dtype==STEPS_GENERATOR)
             return get_generator(device_id);
 
-        if(dtype=="WT GENERATOR")
+        if(dtype==STEPS_WT_GENERATOR)
             return get_wt_generator(device_id);
 
-        if(dtype=="PV UNIT")
+        if(dtype==STEPS_PV_UNIT)
             return get_pv_unit(device_id);
 
-        if(dtype=="ENERGY STORAGE")
+        if(dtype==STEPS_ENERGY_STORAGE)
             return get_energy_storage(device_id);
 
-        if(dtype=="LOAD")
+        if(dtype==STEPS_LOAD)
             return get_load(device_id);
 
-        if(dtype=="FIXED SHUNT")
+        if(dtype==STEPS_FIXED_SHUNT)
             return get_fixed_shunt(device_id);
 
-        if(dtype=="LINE")
+        if(dtype==STEPS_LINE)
             return get_line(device_id);
 
-        if(dtype=="HVDC")
+        if(dtype==STEPS_HVDC)
             return get_hvdc(device_id);
 
-        if(dtype=="TRANSFORMER")
+        if(dtype==STEPS_TRANSFORMER)
             return get_transformer(device_id);
 
-        if(dtype=="EQUIVALENT DEVICE")
+        if(dtype==STEPS_EQUIVALENT_DEVICE)
             return get_equivalent_device(device_id);
 
-        if(dtype=="LCC HVDC")
+        if(dtype==STEPS_LCC_HVDC)
             return get_lcc_hvdc(device_id);
 
         return NULL;
@@ -1769,7 +1771,7 @@ BUS* POWER_SYSTEM_DATABASE::get_bus(const DEVICE_ID & device_id)
 {
     if(device_id.is_valid())
     {
-        if(device_id.get_device_type()=="BUS")
+        if(device_id.get_device_type()==STEPS_BUS)
         {
             TERMINAL terminal = device_id.get_device_terminal();
             unsigned int bus = terminal[0];
@@ -5144,7 +5146,7 @@ void POWER_SYSTEM_DATABASE::clear_generators_connecting_to_bus(const unsigned in
 {
     DEVICE_ID device_id;
     TERMINAL terminal;
-    device_id.set_device_type("GENERATOR");
+    device_id.set_device_type(STEPS_GENERATOR);
     while(true)
     {
         vector<GENERATOR*> generator = get_generators_connecting_to_bus(bus);
@@ -5153,7 +5155,7 @@ void POWER_SYSTEM_DATABASE::clear_generators_connecting_to_bus(const unsigned in
             terminal.clear();
             terminal.append_bus(bus);
             device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier(generator[0]->get_identifier());
+            device_id.set_device_identifier_index(generator[0]->get_identifier_index());
             clear_generator(device_id);
         }
         else
@@ -5188,7 +5190,7 @@ void POWER_SYSTEM_DATABASE::clear_wt_generators_connecting_to_bus(const unsigned
 {
     DEVICE_ID device_id;
     TERMINAL terminal;
-    device_id.set_device_type("WT GENERATOR");
+    device_id.set_device_type(STEPS_WT_GENERATOR);
     while(true)
     {
         vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
@@ -5197,7 +5199,7 @@ void POWER_SYSTEM_DATABASE::clear_wt_generators_connecting_to_bus(const unsigned
             terminal.clear();
             terminal.append_bus(bus);
             device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier(wt_generator[0]->get_identifier());
+            device_id.set_device_identifier_index(wt_generator[0]->get_identifier_index());
             clear_wt_generator(device_id);
         }
         else
@@ -5232,7 +5234,7 @@ void POWER_SYSTEM_DATABASE::clear_pv_units_connecting_to_bus(const unsigned int 
 {
     DEVICE_ID device_id;
     TERMINAL terminal;
-    device_id.set_device_type("PV UNIT");
+    device_id.set_device_type(STEPS_PV_UNIT);
     while(true)
     {
         vector<PV_UNIT*> pv_unit = get_pv_units_connecting_to_bus(bus);
@@ -5241,7 +5243,7 @@ void POWER_SYSTEM_DATABASE::clear_pv_units_connecting_to_bus(const unsigned int 
             terminal.clear();
             terminal.append_bus(bus);
             device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier(pv_unit[0]->get_identifier());
+            device_id.set_device_identifier_index(pv_unit[0]->get_identifier_index());
             clear_pv_unit(device_id);
         }
         else
@@ -5292,7 +5294,7 @@ void POWER_SYSTEM_DATABASE::clear_loads_connecting_to_bus(const unsigned int bus
 {
     DEVICE_ID device_id;
     TERMINAL terminal;
-    device_id.set_device_type("LOAD");
+    device_id.set_device_type(STEPS_LOAD);
     while(true)
     {
         vector<LOAD*> load = get_loads_connecting_to_bus(bus);
@@ -5301,7 +5303,7 @@ void POWER_SYSTEM_DATABASE::clear_loads_connecting_to_bus(const unsigned int bus
             terminal.clear();
             terminal.append_bus(bus);
             device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier(load[0]->get_identifier());
+            device_id.set_device_identifier_index(load[0]->get_identifier_index());
             clear_load(device_id);
         }
         else
@@ -5338,7 +5340,7 @@ void POWER_SYSTEM_DATABASE::clear_lines_connecting_to_bus(const unsigned int bus
 {
     DEVICE_ID device_id;
     TERMINAL terminal;
-    device_id.set_device_type("LINE");
+    device_id.set_device_type(STEPS_LINE);
     while(true)
     {
         vector<LINE*> line = get_lines_connecting_to_bus(bus);
@@ -5348,7 +5350,7 @@ void POWER_SYSTEM_DATABASE::clear_lines_connecting_to_bus(const unsigned int bus
             terminal.append_bus(line[0]->get_sending_side_bus());
             terminal.append_bus(line[0]->get_receiving_side_bus());
             device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier(line[0]->get_identifier());
+            device_id.set_device_identifier_index(line[0]->get_identifier_index());
             clear_line(device_id);
         }
         else
@@ -5383,7 +5385,7 @@ void POWER_SYSTEM_DATABASE::clear_transformers_connecting_to_bus(const unsigned 
 {
     DEVICE_ID device_id;
     TERMINAL terminal;
-    device_id.set_device_type("TRANSFORMER");
+    device_id.set_device_type(STEPS_TRANSFORMER);
     while(true)
     {
         vector<TRANSFORMER*> transformer = get_transformers_connecting_to_bus(bus);
@@ -5395,7 +5397,7 @@ void POWER_SYSTEM_DATABASE::clear_transformers_connecting_to_bus(const unsigned 
             terminal.append_bus(transformer[0]->get_winding_bus(SECONDARY_SIDE));
             terminal.append_bus(transformer[0]->get_winding_bus(TERTIARY_SIDE));
             device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier(transformer[0]->get_identifier());
+            device_id.set_device_identifier_index(transformer[0]->get_identifier_index());
             clear_transformer(device_id);
         }
         else
@@ -5447,7 +5449,7 @@ void POWER_SYSTEM_DATABASE::clear_fixed_shunt(const DEVICE_ID& device_id)
 void POWER_SYSTEM_DATABASE::clear_fixed_shunts_connecting_to_bus(const unsigned int bus)
 {
     DEVICE_ID device_id;
-    device_id.set_device_type("FIXED SHUNT");
+    device_id.set_device_type(STEPS_FIXED_SHUNT);
     TERMINAL terminal;
     terminal.append_bus(bus);
     device_id.set_device_terminal(terminal);
@@ -5456,7 +5458,7 @@ void POWER_SYSTEM_DATABASE::clear_fixed_shunts_connecting_to_bus(const unsigned 
         vector<FIXED_SHUNT*> fixed_shunt = get_fixed_shunts_connecting_to_bus(bus);
         if(fixed_shunt.size()!=0)
         {
-            device_id.set_device_identifier(fixed_shunt[0]->get_identifier());
+            device_id.set_device_identifier_index(fixed_shunt[0]->get_identifier_index());
             clear_fixed_shunt(device_id);
             fixed_shunt.clear();
         }
@@ -5492,7 +5494,7 @@ void POWER_SYSTEM_DATABASE::clear_hvdcs_connecting_to_bus(const unsigned int bus
 {
     DEVICE_ID device_id;
     TERMINAL terminal;
-    device_id.set_device_type("HVDC");
+    device_id.set_device_type(STEPS_HVDC);
     while(true)
     {
         vector<HVDC*> hvdc = get_hvdcs_connecting_to_bus(bus);
@@ -5502,7 +5504,7 @@ void POWER_SYSTEM_DATABASE::clear_hvdcs_connecting_to_bus(const unsigned int bus
             terminal.append_bus(hvdc[0]->get_converter_bus(RECTIFIER));
             terminal.append_bus(hvdc[0]->get_converter_bus(INVERTER));
             device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier(hvdc[0]->get_identifier());
+            device_id.set_device_identifier_index(hvdc[0]->get_identifier_index());
             clear_hvdc(device_id);
         }
         else
@@ -5537,7 +5539,7 @@ void POWER_SYSTEM_DATABASE::clear_equivalent_devices_connecting_to_bus(const uns
 {
     DEVICE_ID device_id;
     TERMINAL terminal;
-    device_id.set_device_type("EQUIVALENT DEVICE");
+    device_id.set_device_type(STEPS_EQUIVALENT_DEVICE);
     while(true)
     {
         vector<EQUIVALENT_DEVICE*> edevice = get_equivalent_devices_connecting_to_bus(bus);
@@ -5546,7 +5548,7 @@ void POWER_SYSTEM_DATABASE::clear_equivalent_devices_connecting_to_bus(const uns
             terminal.clear();
             terminal.append_bus(edevice[0]->get_equivalent_device_bus());
             device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier(edevice[0]->get_identifier());
+            device_id.set_device_identifier_index(edevice[0]->get_identifier_index());
             clear_equivalent_device(device_id);
         }
         else
@@ -5582,7 +5584,7 @@ void POWER_SYSTEM_DATABASE::clear_energy_storages_connecting_to_bus(const unsign
 {
     DEVICE_ID device_id;
     TERMINAL terminal;
-    device_id.set_device_type("ENERGY STORAGE");
+    device_id.set_device_type(STEPS_ENERGY_STORAGE);
     while(true)
     {
         vector<ENERGY_STORAGE*> estorage = get_energy_storages_connecting_to_bus(bus);
@@ -5591,7 +5593,7 @@ void POWER_SYSTEM_DATABASE::clear_energy_storages_connecting_to_bus(const unsign
             terminal.clear();
             terminal.append_bus(estorage[0]->get_energy_storage_bus());
             device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier(estorage[0]->get_identifier());
+            device_id.set_device_identifier_index(estorage[0]->get_identifier_index());
             clear_energy_storage(device_id);
         }
         else
@@ -5625,13 +5627,13 @@ void POWER_SYSTEM_DATABASE::clear_lcc_hvdc(const DEVICE_ID& device_id)
 void POWER_SYSTEM_DATABASE::clear_lcc_hvdcs_connecting_to_bus(const unsigned int bus)
 {
     DEVICE_ID device_id;
-    device_id.set_device_type("LCC HVDC");
+    device_id.set_device_type(STEPS_LCC_HVDC);
     while(true)
     {
         vector<LCC_HVDC*> hvdcs = get_lcc_hvdcs_connecting_to_bus(bus);
         if(hvdcs.size()!=0)
         {
-            device_id.set_device_name(hvdcs[0]->get_name());
+            device_id.set_device_name_index(hvdcs[0]->get_name_index());
             clear_lcc_hvdc(device_id);
         }
         else

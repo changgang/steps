@@ -42,12 +42,12 @@ void WT_GENERATOR::clear()
 DEVICE_ID WT_GENERATOR::get_device_id() const
 {
     DEVICE_ID did;
-    did.set_device_type("WT GENERATOR");
+    did.set_device_type(STEPS_WT_GENERATOR);
 
     TERMINAL terminal;
     terminal.append_bus(get_generator_bus());
     did.set_device_terminal(terminal);
-    did.set_device_identifier(get_identifier());
+    did.set_device_identifier_index(get_identifier_index());
 
     return did;
 }
@@ -207,7 +207,7 @@ void WT_GENERATOR::save() const
 
 void WT_GENERATOR::set_model(MODEL* model)
 {
-    if(model != NULL and model->has_allowed_device_type("WT GENERATOR"))
+    if(model != NULL and model->has_allowed_device_type(STEPS_WT_GENERATOR))
     {
         model->set_device_id(get_device_id());
         if(model->get_model_type()=="WT GENERATOR")

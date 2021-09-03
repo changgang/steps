@@ -248,11 +248,11 @@ void EQUIVALENT_DEVICE_TEST::test_get_device_id()
     DEVICE_ID did = edevice.get_device_id();
 
     DEVICE_ID did2;
-    did2.set_device_type("EQUIVALENT DEVICE");
+    did2.set_device_type(STEPS_EQUIVALENT_DEVICE);
     TERMINAL terminal;
     terminal.append_bus(1);
     did2.set_device_terminal(terminal);
-    did2.set_device_identifier("E1");
+    did2.set_device_identifier_index(get_index_of_string("E1"));
 
     TEST_ASSERT(did==did2);
 

@@ -102,12 +102,12 @@ void CONTINGENCY_SCREENER_TEST::test_set_get_fault_device()
     show_test_information_for_function_of_class(__FUNCTION__,"CONTINGENCY_SCREENER_TEST");
 
     DEVICE_ID did;
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
+    did.set_device_identifier_index(get_index_of_string("#1"));
 
     searcher->set_fault_device(did);
 
@@ -244,12 +244,12 @@ void CONTINGENCY_SCREENER_TEST::test_seach_cct_for_IEEE_9_bus_model_classic()
     searcher->set_dynamic_data_filename("IEEE9_classical.dyr");
 
     DEVICE_ID did;
-    did.set_device_type("LINE");
+    did.set_device_type(STEPS_LINE);
     TERMINAL terminal;
     terminal.append_bus(5);
     terminal.append_bus(7);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     searcher->set_fault_device(did);
 
     searcher->set_fault_side_bus(7);
@@ -257,11 +257,11 @@ void CONTINGENCY_SCREENER_TEST::test_seach_cct_for_IEEE_9_bus_model_classic()
     searcher->set_fault_shunt_in_pu(complex<double>(0.0, -2e8));
     searcher->set_flag_trip_line_after_clearing_fault(false);
 
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
     terminal.clear();
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    did.set_device_identifier("1");
+    did.set_device_identifier_index(get_index_of_string("1"));
     searcher->append_generator_to_monitor(did);
 
     terminal.clear();

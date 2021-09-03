@@ -34,6 +34,7 @@ class SOURCE : public NONBUS_DEVICE
         unsigned int get_source_bus() const;
         BUS* get_bus_pointer() const;
         string get_identifier() const;
+        unsigned int get_identifier_index() const;
         bool get_status() const;
         double get_mbase_in_MVA() const;
         double get_one_over_mbase_in_one_over_MVA() const;

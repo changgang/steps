@@ -108,6 +108,8 @@ void add_string_to_str_int_map(const string& str);
 unsigned int get_index_of_string(const string& str);
 string get_string_of_index(unsigned int index);
 
+string device_type2string(STEPS_DEVICE_TYPE device_type);
+
 void set_openmp_number_of_threads(unsigned int n);
 
 #endif // UTILITY_H

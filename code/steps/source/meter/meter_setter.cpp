@@ -202,10 +202,10 @@ bool METER_SETTER::prepare_line_meter(METER& meter, const DEVICE_ID& device_id, 
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    string device_type = device_id.get_device_type();
-    if(device_type!="LINE")
+    STEPS_DEVICE_TYPE device_type = device_id.get_device_type();
+    if(device_type!=STEPS_LINE)
     {
-        osstream<<"Warning. This device given ("<<device_type<<") is not a line when trying to set up a line meter. "
+        osstream<<"Warning. This device given ("<<device_type2string(device_type)<<") is not a line when trying to set up a line meter. "
           <<"No line meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
@@ -364,10 +364,10 @@ bool METER_SETTER::prepare_transformer_meter(METER& meter, const DEVICE_ID& devi
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    string device_type = device_id.get_device_type();
-    if(device_type!="TRANSFORMER")
+    STEPS_DEVICE_TYPE device_type = device_id.get_device_type();
+    if(device_type!=STEPS_TRANSFORMER)
     {
-        osstream<<"Warning. This device given ("<<device_type<<") is not a transformer when trying to set up a transformer meter. "
+        osstream<<"Warning. This device given ("<<device_type2string(device_type)<<") is not a transformer when trying to set up a transformer meter. "
           <<"No line meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
@@ -482,10 +482,10 @@ bool METER_SETTER::prepare_load_meter(METER& meter, const DEVICE_ID& device_id)
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    string device_type = device_id.get_device_type();
-    if(device_type!="LOAD")
+    STEPS_DEVICE_TYPE device_type = device_id.get_device_type();
+    if(device_type!=STEPS_LOAD)
     {
-        osstream<<"Warning. This device given ("<<device_type<<") is not a load when trying to set up a load meter. "
+        osstream<<"Warning. This device given ("<<device_type2string(device_type)<<") is not a load when trying to set up a load meter. "
           <<"No load meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
@@ -667,10 +667,10 @@ bool METER_SETTER::prepare_generator_meter(METER& meter, const DEVICE_ID& device
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    string device_type = device_id.get_device_type();
-    if(device_type!="GENERATOR")
+    STEPS_DEVICE_TYPE device_type = device_id.get_device_type();
+    if(device_type!=STEPS_GENERATOR)
     {
-        osstream<<"Warning. This device given ("<<device_type<<") is not a generator when trying to set up a generator meter. "
+        osstream<<"Warning. This device given ("<<device_type2string(device_type)<<") is not a generator when trying to set up a generator meter. "
           <<"No generator meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
@@ -1162,10 +1162,10 @@ bool METER_SETTER::prepare_wt_generator_meter(METER& meter, const DEVICE_ID& dev
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    string device_type = device_id.get_device_type();
-    if(device_type!="WT GENERATOR")
+    STEPS_DEVICE_TYPE device_type = device_id.get_device_type();
+    if(device_type!=STEPS_WT_GENERATOR)
     {
-        osstream<<"Warning. This device given ("<<device_type<<") is not a wt generator when trying to set up a wt generator meter. "
+        osstream<<"Warning. This device given ("<<device_type2string(device_type)<<") is not a wt generator when trying to set up a wt generator meter. "
           <<"No wt generator meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
@@ -1606,10 +1606,10 @@ bool METER_SETTER::prepare_pv_unit_meter(METER& meter, const DEVICE_ID& device_i
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    string device_type = device_id.get_device_type();
-    if(device_type!="PV UNIT")
+    STEPS_DEVICE_TYPE device_type = device_id.get_device_type();
+    if(device_type!=STEPS_PV_UNIT)
     {
-        osstream<<"Warning. This device given ("<<device_type<<") is not a PV unit when trying to set up a PV unit meter. "
+        osstream<<"Warning. This device given ("<<device_type2string(device_type)<<") is not a PV unit when trying to set up a PV unit meter. "
           <<"No PV unit meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
@@ -1818,10 +1818,10 @@ bool METER_SETTER::prepare_energy_storage_meter(METER& meter, const DEVICE_ID& d
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    string device_type = device_id.get_device_type();
-    if(device_type!="ENERGY STORAGE")
+    STEPS_DEVICE_TYPE device_type = device_id.get_device_type();
+    if(device_type!=STEPS_ENERGY_STORAGE)
     {
-        osstream<<"Warning. This device given ("<<device_type<<") is not an energy storage when trying to set up an energy storage meter. "
+        osstream<<"Warning. This device given ("<<device_type2string(device_type)<<") is not an energy storage when trying to set up an energy storage meter. "
           <<"No energy storage meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
@@ -1953,10 +1953,10 @@ bool METER_SETTER::prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    string device_type = device_id.get_device_type();
-    if(device_type!="HVDC")
+    STEPS_DEVICE_TYPE device_type = device_id.get_device_type();
+    if(device_type!=STEPS_HVDC)
     {
-        osstream<<"Warning. This device given ("<<device_type<<") is not an hvdc when trying to set up an hvdc meter. "
+        osstream<<"Warning. This device given ("<<device_type2string(device_type)<<") is not an hvdc when trying to set up an hvdc meter. "
           <<"No hvdc meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;
@@ -2228,10 +2228,10 @@ bool METER_SETTER::prepare_equivalent_device_meter(METER& meter, const DEVICE_ID
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    string device_type = device_id.get_device_type();
-    if(device_type!="EQUIVALENT DEVICE")
+    STEPS_DEVICE_TYPE device_type = device_id.get_device_type();
+    if(device_type!=STEPS_EQUIVALENT_DEVICE)
     {
-        osstream<<"Warning. This device given ("<<device_type<<") is not an equivalent device when trying to set up an equivalent device meter. "
+        osstream<<"Warning. This device given ("<<device_type2string(device_type)<<") is not an equivalent device when trying to set up an equivalent device meter. "
           <<"No equivalent device meter will be added.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return successful;

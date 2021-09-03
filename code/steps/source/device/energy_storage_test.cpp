@@ -129,11 +129,11 @@ void ENERGY_STORAGE_TEST::test_get_device_id()
     DEVICE_ID did = energy_storage.get_device_id();
 
     DEVICE_ID did2;
-    did2.set_device_type("ENERGY STORAGE");
+    did2.set_device_type(STEPS_ENERGY_STORAGE);
     TERMINAL terminal;
     terminal.append_bus(1);
     did2.set_device_terminal(terminal);
-    did2.set_device_identifier("1#");
+    did2.set_device_identifier_index(get_index_of_string("1#"));
 
     TEST_ASSERT(did==did2);
 

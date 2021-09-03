@@ -56,6 +56,8 @@ class VSC_HVDC : public NONBUS_DEVICE
 
         string get_identifier() const;
         string get_name() const;
+        unsigned int get_identifier_index() const;
+        unsigned int get_name_index() const;
         bool get_status() const;
 
         double get_line_resistance_in_ohm() const;
@@ -136,8 +138,8 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int converter_bus[2];
         BUS* converter_busptr[2];
 
-        string identifier;
-        string vsc_hvdc_name;
+        unsigned int identifier_index;
+        unsigned int vsc_hvdc_name_index;
         bool status;
         double line_R_in_ohm;
 

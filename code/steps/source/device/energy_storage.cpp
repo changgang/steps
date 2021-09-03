@@ -48,19 +48,19 @@ void ENERGY_STORAGE::clear()
 DEVICE_ID ENERGY_STORAGE::get_device_id() const
 {
     DEVICE_ID did;
-    did.set_device_type("ENERGY STORAGE");
+    did.set_device_type(STEPS_ENERGY_STORAGE);
 
     TERMINAL terminal;
     terminal.append_bus(get_energy_storage_bus());
     did.set_device_terminal(terminal);
-    did.set_device_identifier(get_identifier());
+    did.set_device_identifier_index(get_identifier_index());
 
     return did;
 }
 
 void ENERGY_STORAGE::set_model(MODEL* model)
 {
-    if(model!=NULL and model->has_allowed_device_type("ENERGY STORAGE"))
+    if(model!=NULL and model->has_allowed_device_type(STEPS_ENERGY_STORAGE))
     {
         model->set_device_id(get_device_id());
         if(model->get_model_type()=="ENERGY STORAGE")

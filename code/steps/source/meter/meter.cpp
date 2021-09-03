@@ -187,16 +187,16 @@ vector<string> equivalent_device_meters{"VOLTAGE SOURCE VOLTAGE IN PU",
                                          "ACTIVE POWER NET LOAD IN PU",
                                          "REACTIVE POWER NET LOAD IN PU"};
 
-map<string, vector<string>> SUPPORTED_METERS{ {"BUS",         bus_meters},
-                                                {"LINE",        line_meters},
-                                                {"TRANSFORMER", transformer_meters},
-                                                {"LOAD",        load_meters},
-                                                {"GENERATOR",   generator_meters},
-                                                {"WT GENERATOR",wt_generator_meters},
-                                                {"PV UNIT",     pv_unit_meters},
-                                                {"ENERGY STORAGE", energy_storage_meters},
-                                                {"HVDC", hvdc_meters},
-                                                {"EQUIVALENT DEVICE", equivalent_device_meters}};
+map<STEPS_DEVICE_TYPE, vector<string>> SUPPORTED_METERS{    {STEPS_BUS,         bus_meters},
+                                                            {STEPS_LINE,        line_meters},
+                                                            {STEPS_TRANSFORMER, transformer_meters},
+                                                            {STEPS_LOAD,        load_meters},
+                                                            {STEPS_GENERATOR,   generator_meters},
+                                                            {STEPS_WT_GENERATOR,wt_generator_meters},
+                                                            {STEPS_PV_UNIT,     pv_unit_meters},
+                                                            {STEPS_ENERGY_STORAGE, energy_storage_meters},
+                                                            {STEPS_HVDC, hvdc_meters},
+                                                            {STEPS_EQUIVALENT_DEVICE, equivalent_device_meters}};
 METER::METER(STEPS& toolkit)
 {
     this->toolkit = (&toolkit);
@@ -320,8 +320,8 @@ bool METER::is_internal_variable_name_valid(string& name) const
         name = string2upper(name);
         string meter_type = get_meter_type();
         MODEL* model=NULL;
-        string device_type = get_device_type();
-        if(device_type=="LOAD")
+        STEPS_DEVICE_TYPE device_type = get_device_type();
+        if(device_type==STEPS_LOAD)
         {
             LOAD* ptr = (LOAD*)get_device_pointer();
             if(meter_type=="LOAD MODEL INTERNAL VARIABLE")
@@ -331,7 +331,7 @@ bool METER::is_internal_variable_name_valid(string& name) const
             if(meter_type=="VOLTAGE RELAY MODEL INTERNAL VARIABLE")
                 model = ptr->get_load_voltage_relay_model();
         }
-        if(device_type=="GENERATOR")
+        if(device_type==STEPS_GENERATOR)
         {
             GENERATOR* ptr = (GENERATOR*)get_device_pointer();
             if(meter_type=="SYNC GENERATOR MODEL INTERNAL VARIABLE")
@@ -347,7 +347,7 @@ bool METER::is_internal_variable_name_valid(string& name) const
             if(meter_type=="TURBINE LOAD CONTROLLER MODEL INTERNAL VARIABLE")
                 model = ptr->get_turbine_load_controller_model();
         }
-        if(device_type=="WT GENERATOR")
+        if(device_type==STEPS_WT_GENERATOR)
         {
             WT_GENERATOR* ptr = (WT_GENERATOR*)get_device_pointer();
             if(meter_type=="WT GENERATOR MODEL INTERNAL VARIABLE")
@@ -363,7 +363,7 @@ bool METER::is_internal_variable_name_valid(string& name) const
             if(meter_type=="WIND SPEED MODEL INTERNAL VARIABLE")
                 model = ptr->get_wind_speed_model();
         }
-        if(device_type=="PV UNIT")
+        if(device_type==STEPS_PV_UNIT)
         {
             PV_UNIT* ptr = (PV_UNIT*)get_device_pointer();
             if(meter_type=="PV CONVERTER MODEL INTERNAL VARIABLE")
@@ -375,13 +375,13 @@ bool METER::is_internal_variable_name_valid(string& name) const
             if(meter_type=="PV IRRADIANCE MODEL INTERNAL VARIABLE")
                 model = ptr->get_pv_irradiance_model();
         }
-        if(device_type=="ENERGY STORAGE")
+        if(device_type==STEPS_ENERGY_STORAGE)
         {
             ENERGY_STORAGE* ptr = (ENERGY_STORAGE*)get_device_pointer();
             if(meter_type=="ENERGY STORAGE MODEL INTERNAL VARIABLE")
                 model = ptr->get_energy_storage_model();
         }
-        if(device_type=="HVDC")
+        if(device_type==STEPS_HVDC)
         {
             HVDC* ptr = (HVDC*)get_device_pointer();
             if(meter_type=="HVDC MODEL INTERNAL VARIABLE")
@@ -403,7 +403,7 @@ bool METER::is_internal_variable_name_valid(string& name) const
 
 void METER::set_meter_side_bus(unsigned int meter_side)
 {
-    if(get_device_type()=="BUS")
+    if(get_device_type()==STEPS_BUS)
         meter_side_bus = 0;
     else
     {
@@ -437,7 +437,7 @@ bool METER::is_valid_meter_type(string& meter_type) const
 {
     if(device_pointer!=NULL)
     {
-        string device_type = get_device_type();
+        STEPS_DEVICE_TYPE device_type = get_device_type();
         meter_type = string2upper(meter_type);
 
         return is_valid_meter_type_of_device(meter_type, device_type);
@@ -446,12 +446,11 @@ bool METER::is_valid_meter_type(string& meter_type) const
         return false;
 }
 
-bool METER::is_valid_meter_type_of_device(const string& meter_type, string& device_type) const
+bool METER::is_valid_meter_type_of_device(const string& meter_type, STEPS_DEVICE_TYPE device_type) const
 {
     ostringstream osstream;
 
-    device_type = string2upper(device_type);
-    map<string, vector<string> >::const_iterator it = SUPPORTED_METERS.find(device_type);
+    map<STEPS_DEVICE_TYPE, vector<string> >::const_iterator it = SUPPORTED_METERS.find(device_type);
     if(it!=SUPPORTED_METERS.end())
     {
         vector<string> supported_meters = it->second;
@@ -494,12 +493,12 @@ unsigned int METER::get_meter_side_bus() const
     return meter_side_bus;
 }
 
-string METER::get_device_type() const
+STEPS_DEVICE_TYPE METER::get_device_type() const
 {
     if(device_pointer!=NULL)
         return device_pointer->get_device_id().get_device_type();
     else
-        return "NONE";
+        return STEPS_INVALID_DEVICE;
 }
 
 string METER::get_internal_variable_name() const
@@ -530,8 +529,8 @@ string METER::get_meter_name() const
         //name += " OF "+get_device_id().get_compound_device_name()+" IN PS "+toolkit->get_power_system_database()->get_system_name();
         name += " @ "+get_device_id().get_compound_device_name();
 
-        string device_type = get_device_type();
-        if(device_type=="LINE" or device_type=="TRANSFORMER" )
+        STEPS_DEVICE_TYPE device_type = get_device_type();
+        if(device_type==STEPS_LINE or device_type==STEPS_TRANSFORMER)
             name += " @ SIDE "+num2str(get_meter_side_bus());
 
         name = trim_string(name);
@@ -545,8 +544,8 @@ bool METER::is_valid() const
 {
     if(device_pointer!=NULL and meter_type[0]!='\0')
     {
-        string device_type = get_device_type();
-        if(device_type=="LINE" or device_type=="TRANSFORMER")
+        STEPS_DEVICE_TYPE device_type = get_device_type();
+        if(device_type==STEPS_LINE or device_type==STEPS_TRANSFORMER)
         {
             if(get_meter_side_bus()!=0)
                 return true;
@@ -604,40 +603,53 @@ void METER::set_device_pointer(DEVICE_ID device_id)
     }
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    string device_type = device_id.get_device_type();
+    STEPS_DEVICE_TYPE device_type = device_id.get_device_type();
     DEVICE* deviceptr = NULL;
-    if(device_type=="BUS")
+    switch(device_type)
     {
-        TERMINAL terminal = device_id.get_device_terminal();
-        vector<unsigned int> tbuses = terminal.get_buses();
-        deviceptr = (DEVICE*) psdb.get_bus(tbuses[0]);
+        case STEPS_BUS:
+        {
+            TERMINAL terminal = device_id.get_device_terminal();
+            vector<unsigned int> tbuses = terminal.get_buses();
+            deviceptr = (DEVICE*) psdb.get_bus(tbuses[0]);
+            break;
+        }
+        case STEPS_LINE:
+            deviceptr = (DEVICE*) psdb.get_line(device_id);
+            break;
+
+        case STEPS_TRANSFORMER:
+            deviceptr = (DEVICE*) psdb.get_transformer(device_id);
+            break;
+
+        case STEPS_LOAD:
+            deviceptr = (DEVICE*) psdb.get_load(device_id);
+            break;
+
+        case STEPS_GENERATOR:
+            deviceptr = (DEVICE*) psdb.get_generator(device_id);
+            break;
+
+        case STEPS_WT_GENERATOR:
+            deviceptr = (DEVICE*) psdb.get_wt_generator(device_id);
+            break;
+
+        case STEPS_PV_UNIT:
+            deviceptr = (DEVICE*) psdb.get_pv_unit(device_id);
+            break;
+
+        case STEPS_ENERGY_STORAGE:
+            deviceptr = (DEVICE*) psdb.get_energy_storage(device_id);
+            break;
+
+        case STEPS_HVDC:
+            deviceptr = (DEVICE*) psdb.get_hvdc(device_id);
+            break;
+
+        case STEPS_EQUIVALENT_DEVICE:
+            deviceptr = (DEVICE*) psdb.get_equivalent_device(device_id);
+            break;
     }
-    if(device_type=="LINE")
-        deviceptr = (DEVICE*) psdb.get_line(device_id);
-
-    if(device_type=="TRANSFORMER")
-        deviceptr = (DEVICE*) psdb.get_transformer(device_id);
-
-    if(device_type=="LOAD")
-        deviceptr = (DEVICE*) psdb.get_load(device_id);
-
-    if(device_type=="GENERATOR")
-        deviceptr = (DEVICE*) psdb.get_generator(device_id);
-
-    if(device_type=="WT GENERATOR")
-        deviceptr = (DEVICE*) psdb.get_wt_generator(device_id);
-
-    if(device_type=="PV UNIT")
-        deviceptr = (DEVICE*) psdb.get_pv_unit(device_id);
-
-    if(device_type=="ENERGY STORAGE")
-        deviceptr = (DEVICE*) psdb.get_energy_storage(device_id);
-
-    if(device_type=="HVDC")
-        deviceptr = (DEVICE*) psdb.get_hvdc(device_id);
-
-    if(device_type=="EQUIVALENT DEVICE")
-        deviceptr = (DEVICE*) psdb.get_equivalent_device(device_id);
 
     this->device_pointer = deviceptr;
     if(deviceptr==NULL)
@@ -652,26 +664,30 @@ double METER::get_meter_value() const
 {
     if(get_device_pointer()!=NULL)
     {
-        string device_type = get_device_type();
-        if(device_type=="BUS")
-            return get_meter_value_as_a_bus();
-        if(device_type=="LINE")
-            return get_meter_value_as_a_line();
-        if(device_type=="TRANSFORMER")
-            return get_meter_value_as_a_transformer();
-        if(device_type=="LOAD")
-            return get_meter_value_as_a_load();
-        if(device_type=="GENERATOR")
-            return get_meter_value_as_a_generator();
-        if(device_type=="WT GENERATOR")
-            return get_meter_value_as_a_wt_generator();
-        if(device_type=="PV UNIT")
-            return get_meter_value_as_a_pv_unit();
-        if(device_type=="HVDC")
-            return get_meter_value_as_an_hvdc();
-        if(device_type=="EQUIVALENT DEVICE")
-            return get_meter_value_as_an_equivalent_device();
-
+        STEPS_DEVICE_TYPE device_type = get_device_type();
+        switch(device_type)
+        {
+            case STEPS_BUS:
+                return get_meter_value_as_a_bus();
+            case STEPS_LINE:
+                return get_meter_value_as_a_line();
+            case STEPS_TRANSFORMER:
+                return get_meter_value_as_a_transformer();
+            case STEPS_LOAD:
+                return get_meter_value_as_a_load();
+            case STEPS_GENERATOR:
+                return get_meter_value_as_a_generator();
+            case STEPS_WT_GENERATOR:
+                return get_meter_value_as_a_wt_generator();
+            case STEPS_PV_UNIT:
+                return get_meter_value_as_a_pv_unit();
+            case STEPS_ENERGY_STORAGE:
+                return get_meter_value_as_an_energy_storage();
+            case STEPS_HVDC:
+                return get_meter_value_as_an_hvdc();
+            case STEPS_EQUIVALENT_DEVICE:
+                return get_meter_value_as_an_equivalent_device();
+        }
         return 0.0;
     }
     else

@@ -156,6 +156,11 @@ string SOURCE::get_identifier() const
     return get_string_of_index(source_identifier_index);
 }
 
+unsigned int SOURCE::get_identifier_index() const
+{
+    return source_identifier_index;
+}
+
 bool SOURCE::get_status() const
 {
     return status;

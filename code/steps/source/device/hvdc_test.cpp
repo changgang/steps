@@ -1118,12 +1118,12 @@ void HVDC_TEST::test_get_device_id()
     DEVICE_ID did = hvdc.get_device_id();
 
     DEVICE_ID did2;
-    did2.set_device_type("HVDC");
+    did2.set_device_type(STEPS_HVDC);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
     did2.set_device_terminal(terminal);
-    did2.set_device_identifier("P");
+    did2.set_device_identifier_index(get_index_of_string("P"));
 
     TEST_ASSERT(did==did2);
 

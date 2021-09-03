@@ -52,6 +52,8 @@ class TRANSFORMER : public NONBUS_DEVICE
 
         string get_identifier() const;
         string get_name() const;
+        unsigned int get_identifier_index() const;
+        unsigned int get_name_index() const;
         unsigned int get_non_metered_end_bus() const;
         complex<double> get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu() const;
 

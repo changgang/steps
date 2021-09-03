@@ -4,7 +4,7 @@
 #include "header/STEPS.h"
 WTG_MODEL::WTG_MODEL(STEPS& toolkit) : MODEL(toolkit)
 {
-    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("WT GENERATOR");
+    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_WT_GENERATOR);
 }
 
 WTG_MODEL::~WTG_MODEL()

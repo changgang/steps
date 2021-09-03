@@ -361,6 +361,16 @@ string TRANSFORMER::get_name() const
     return get_string_of_index(name_index);
 }
 
+unsigned int TRANSFORMER::get_identifier_index() const
+{
+    return identifier_index;
+}
+
+unsigned int TRANSFORMER::get_name_index() const
+{
+    return name_index;
+}
+
 unsigned int TRANSFORMER::get_non_metered_end_bus() const
 {
     return non_metered_end_bus;
@@ -1098,7 +1108,7 @@ bool TRANSFORMER::is_three_winding_transformer() const
 DEVICE_ID TRANSFORMER::get_device_id() const
 {
     DEVICE_ID did;
-    did.set_device_type("TRANSFORMER");
+    did.set_device_type(STEPS_TRANSFORMER);
 
     TERMINAL terminal;
     terminal.append_bus(get_winding_bus(PRIMARY_SIDE));
@@ -1107,7 +1117,7 @@ DEVICE_ID TRANSFORMER::get_device_id() const
         terminal.append_bus(get_winding_bus(TERTIARY_SIDE));
 
     did.set_device_terminal(terminal);
-    did.set_device_identifier(get_identifier());
+    did.set_device_identifier_index(get_identifier_index());
 
     return did;
 }

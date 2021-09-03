@@ -192,19 +192,19 @@ DEVICE_ID GENERATOR::get_device_id() const
 {
     DEVICE_ID did;
 
-    did.set_device_type("GENERATOR");
+    did.set_device_type(STEPS_GENERATOR);
 
     TERMINAL terminal;
     terminal.append_bus(get_generator_bus());
     did.set_device_terminal(terminal);
-    did.set_device_identifier(get_identifier());
+    did.set_device_identifier_index(get_identifier_index());
 
     return did;
 }
 
 void GENERATOR::set_model(MODEL* model)
 {
-    if(model!=NULL and model->has_allowed_device_type("GENERATOR"))
+    if(model!=NULL and model->has_allowed_device_type(STEPS_GENERATOR))
     {
         model->set_device_id(get_device_id());
         if(model->get_model_type()=="SYNC GENERATOR")

@@ -97,6 +97,17 @@ string FIXED_SHUNT::get_name() const
     return get_string_of_index(name_index);
 }
 
+unsigned int FIXED_SHUNT::get_identifier_index() const
+{
+    return identifier_index;
+}
+
+unsigned int FIXED_SHUNT::get_name_index() const
+{
+    return name_index;
+}
+
+
 bool FIXED_SHUNT::get_status() const
 {
     return status;
@@ -264,12 +275,12 @@ FIXED_SHUNT& FIXED_SHUNT::operator=(const FIXED_SHUNT& fixed_shunt)
 DEVICE_ID FIXED_SHUNT::get_device_id() const
 {
     DEVICE_ID did;
-    did.set_device_type("FIXED SHUNT");
+    did.set_device_type(STEPS_FIXED_SHUNT);
 
     TERMINAL terminal;
     terminal.append_bus(get_shunt_bus());
     did.set_device_terminal(terminal);
-    did.set_device_identifier(get_identifier());
+    did.set_device_identifier_index(get_identifier_index());
 
     return did;
 }

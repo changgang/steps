@@ -825,11 +825,11 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
                 continue;
 
             DEVICE_ID did;
-            did.set_device_type("LOAD");
+            did.set_device_type(STEPS_LOAD);
             TERMINAL terminal;
             terminal.append_bus(bus_number);
             did.set_device_terminal(terminal);
-            did.set_device_identifier("1");
+            did.set_device_identifier_index(get_index_of_string("1"));
 
             LOAD* load = psdb.get_load(did);
             if(load==NULL)
@@ -1267,12 +1267,12 @@ void BPA_IMEXPORTER::load_line_data()
             double jmvar = get_double_data(jmvar_str, "0.0");
 
             DEVICE_ID did;
-            did.set_device_type("LINE");
+            did.set_device_type(STEPS_LINE);
             TERMINAL terminal;
             terminal.append_bus(ibus);
             terminal.append_bus(jbus);
             did.set_device_terminal(terminal);
-            did.set_device_identifier(identifier);
+            did.set_device_identifier_index(get_index_of_string(identifier));
 
             LINE* line = psdb.get_line(did);
             if(line==NULL)
@@ -1487,12 +1487,12 @@ void BPA_IMEXPORTER::load_transformer_data()
                 continue;
 
             DEVICE_ID did;
-            did.set_device_type("TRANSFORMER");
+            did.set_device_type(STEPS_TRANSFORMER);
             TERMINAL terminal;
             terminal.append_bus(primary_bus);
             terminal.append_bus(secondary_bus);
             did.set_device_terminal(terminal);
-            did.set_device_identifier(identifier);
+            did.set_device_identifier_index(get_index_of_string(identifier));
 
             TRANSFORMER* trans = psdb.get_transformer(did);
             if(trans==NULL)
@@ -1692,7 +1692,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
             unsigned int inverter_grid_side_bus = psdb.bus_name2bus_number(inverter_grid_side_bus_name);
 
             DEVICE_ID did;
-            did.set_device_type("HVDC");
+            did.set_device_type(STEPS_HVDC);
             TERMINAL terminal;
             terminal.append_bus(rectifier_grid_side_bus);
             terminal.append_bus(inverter_grid_side_bus);
@@ -1809,7 +1809,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
 
 
             DEVICE_ID did;
-            did.set_device_type("HVDC");
+            did.set_device_type(STEPS_HVDC);
             TERMINAL terminal;
             terminal.append_bus(rectifier_grid_side_bus);
             terminal.append_bus(inverter_grid_side_bus);
@@ -1932,7 +1932,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
                 unsigned int inverter_grid_side_bus = psdb.bus_name2bus_number(inverter_grid_side_bus_name);
 
                 DEVICE_ID did;
-                did.set_device_type("HVDC");
+                did.set_device_type(STEPS_HVDC);
                 TERMINAL terminal;
                 terminal.append_bus(rectifier_grid_side_bus);
                 terminal.append_bus(inverter_grid_side_bus);
@@ -2035,7 +2035,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
                 unsigned int inverter_grid_side_bus = psdb.bus_name2bus_number(inverter_grid_side_bus_name);
 
                 DEVICE_ID did;
-                did.set_device_type("HVDC");
+                did.set_device_type(STEPS_HVDC);
                 TERMINAL terminal;
                 terminal.append_bus(rectifier_grid_side_bus);
                 terminal.append_bus(inverter_grid_side_bus);

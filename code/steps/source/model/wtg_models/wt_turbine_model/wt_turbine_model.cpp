@@ -15,7 +15,7 @@ WT_TURBINE_MODEL::~WT_TURBINE_MODEL()
 
 void WT_TURBINE_MODEL::common_constructor()
 {
-    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("WT GENERATOR");
+    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_WT_GENERATOR);
 
     set_damping_in_pu(0.0);
 }
