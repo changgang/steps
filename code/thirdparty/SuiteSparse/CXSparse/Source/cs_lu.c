@@ -66,13 +66,17 @@ cxsn *cxs_lu (const cxs *A, const cxss *S, double tol)
         pinv [ipiv] = k ;           /* ipiv is the kth pivot row */
         Li [lnz] = ipiv ;           /* first entry in L(:,k) is L(k,k) = 1 */
         Lx [lnz++] = 1 ;
+        /* change division of pivot to multiplication of 1/pivot to improve performance. 2021/09/12. Changgang Li*/
+        pivot = 1.0 / pivot;
         for (p = top ; p < n ; p++) /* L(k+1:n,k) = x / pivot */
         {
             i = xi [p] ;
             if (pinv [i] < 0)       /* x(i) is an entry in L(:,k) */
             {
                 Li [lnz] = i ;      /* save unpermuted row in L */
-                Lx [lnz++] = x [i] / pivot ;    /* scale pivot column */
+                // the following line is replaced with the next line. See comment before 'pivot = 1.0 / pivot;'. 2021/09/12. Changgang Li
+                //Lx [lnz++] = x [i] / pivot ;    /* scale pivot column */
+                Lx [lnz++] = x [i] * pivot ;    /* scale pivot column */
             }
             x [i] = 0 ;             /* x [0..n-1] = 0 for next k */
         }
