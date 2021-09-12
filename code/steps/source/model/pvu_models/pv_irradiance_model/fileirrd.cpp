@@ -130,7 +130,7 @@ void FILEIRRAD::save()
     ;
 }
 
-string FILEIRRAD::get_standard_psse_string() const
+string FILEIRRAD::get_standard_psse_string(bool export_internal_bus_number) const
 {
     return "";
 }

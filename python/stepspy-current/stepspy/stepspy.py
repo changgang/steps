@@ -3234,7 +3234,7 @@ class STEPS():
         global STEPS_LIB
         STEPS_LIB.api_check_powerflow_data(self.toolkit_index)
         
-    def save_powerflow_data(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True, export_mode=0):
+    def save_powerflow_data(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True, export_internal_bus_number=False, export_mode=0):
         """
         Save powerflow data to file.
         Args:
@@ -3242,24 +3242,25 @@ class STEPS():
             (2) ftype: string, powerflow data format.
             (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
             (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
-            (5) export_mode: integer, export mode (0,1,2,3). 0 for exporting data as import, 1 for exporting data ordered by bus number in ascending order, 2 for exporting data ordered by bus name in ascending order, 3 for exporting buses in the order of generator, load, hvdc buses.
+            (5) export_internal_bus_number: boolean, logic of whether exporting bus number with internal bus number. True for export, False for not export.
+            (6) export_mode: integer, export mode (0,1,2,3). 0 for exporting data as import, 1 for exporting data ordered by bus number in ascending order, 2 for exporting data ordered by bus name in ascending order, 3 for exporting buses in the order of generator, load, hvdc buses.
         Rets: N/A
         Example: N/A
         """
         if export_mode not in (0,1,2,3):
             export_mode = 0;
         if export_mode==0:
-            self.__save_powerflow_data_in_keep_mode(file, ftype, export_zero_line, export_out_of_service_bus)
+            self.__save_powerflow_data_in_keep_mode(file, ftype, export_zero_line, export_out_of_service_bus, export_internal_bus_number)
         elif export_mode==1:
-            self.__save_powerflow_data_in_bus_number_ordered_mode(file, ftype, export_zero_line, export_out_of_service_bus)
+            self.__save_powerflow_data_in_bus_number_ordered_mode(file, ftype, export_zero_line, export_out_of_service_bus, export_internal_bus_number)
         elif export_mode==2:
-            self.__save_powerflow_data_in_bus_name_ordered_mode(file, ftype, export_zero_line, export_out_of_service_bus)
+            self.__save_powerflow_data_in_bus_name_ordered_mode(file, ftype, export_zero_line, export_out_of_service_bus, export_internal_bus_number)
         elif export_mode==3:
-            self.__save_powerflow_data_in_dynamic_optimized_mode(file, ftype, export_zero_line, export_out_of_service_bus)
+            self.__save_powerflow_data_in_dynamic_optimized_mode(file, ftype, export_zero_line, export_out_of_service_bus, export_internal_bus_number)
         else:
             print("parameter export_mode is invalid in save_powerflow_data()")
         
-    def __save_powerflow_data_in_keep_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
+    def __save_powerflow_data_in_keep_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True, export_internal_bus_number=False):
         """
         Save powerflow data to file in keep as original mode
         Args:
@@ -3267,15 +3268,16 @@ class STEPS():
             (2) ftype: string, powerflow data format.
             (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
             (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
+            (5) export_internal_bus_number: boolean, logic of whether exporting bus number with internal bus number. True for export, False for not export.
         Rets: N/A
         Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
-        STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 0, self.toolkit_index)
+        STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, export_internal_bus_number, 0, self.toolkit_index)
         
-    def __save_powerflow_data_in_bus_number_ordered_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
+    def __save_powerflow_data_in_bus_number_ordered_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True, export_internal_bus_number=False):
         """
         Save powerflow data to file in bus number ascending order.
         Args:
@@ -3283,15 +3285,16 @@ class STEPS():
             (2) ftype: string, powerflow data format.
             (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
             (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
+            (5) export_internal_bus_number: boolean, logic of whether exporting bus number with internal bus number. True for export, False for not export.
         Rets: N/A
         Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
-        STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 1, self.toolkit_index)
+        STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, export_internal_bus_number, 1, self.toolkit_index)
         
-    def __save_powerflow_data_in_bus_name_ordered_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
+    def __save_powerflow_data_in_bus_name_ordered_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True, export_internal_bus_number=False):
         """
         Save powerflow data to file in bus name ascending order.
         Args:
@@ -3299,15 +3302,16 @@ class STEPS():
             (2) ftype: string, powerflow data format.
             (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
             (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
+            (5) export_internal_bus_number: boolean, logic of whether exporting bus number with internal bus number. True for export, False for not export.
         Rets: N/A
         Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
-        STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 2, self.toolkit_index)
+        STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, export_internal_bus_number, 2, self.toolkit_index)
         
-    def __save_powerflow_data_in_dynamic_optimized_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
+    def __save_powerflow_data_in_dynamic_optimized_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True, export_internal_bus_number=False):
         """
         Save powerflow data to file in generator, load, hvdc bus order. This method is used for improving dynamic simulation performance.
         Args:
@@ -3315,13 +3319,14 @@ class STEPS():
             (2) ftype: string, powerflow data format.
             (3) export_zero_line: boolean, logic of whether exporting zero impedance lines. True for export, False for not export.
             (4) export_out_of_service_bus: boolean, logic of whether exporting out-of-service buses. True for export, False for not export.
+            (5) export_internal_bus_number: boolean, logic of whether exporting bus number with internal bus number. True for export, False for not export.
         Rets: N/A
         Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
-        STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, 3, self.toolkit_index)
+        STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, export_internal_bus_number, 3, self.toolkit_index)
 
     def load_powerflow_result(self, file, ftype):
         """
@@ -3665,19 +3670,20 @@ class STEPS():
         ftype = self.__get_c_char_p_of_string(ftype)
         STEPS_LIB.api_load_dynamic_data_from_file(file, ftype, self.toolkit_index)
         
-    def save_dynamic_data(self, file, ftype):
+    def save_dynamic_data(self, file, ftype, export_internal_bus_number=False):
         """
         Save dynamic data to file.
         Args:
             (1) file: string, target dynamic data file name.
             (2) ftype: string, dynamic data format.
+            (3) export_internal_bus_number: boolean, logic of whether exporting bus number with internal bus number. True for export, False for not export.
         Rets: N/A
         Example: N/A
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
-        STEPS_LIB.api_save_dynamic_data_to_file(file, ftype, self.toolkit_index)
+        STEPS_LIB.api_save_dynamic_data_to_file(file, ftype, export_internal_bus_number, self.toolkit_index)
 
     def check_dynamic_data(self):
         """

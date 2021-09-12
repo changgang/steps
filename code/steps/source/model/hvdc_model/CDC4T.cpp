@@ -437,7 +437,7 @@ void CDC4T::check()
 void CDC4T::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_psse_string();
+    osstream<<get_standard_psse_string(false);
     STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -447,7 +447,7 @@ void CDC4T::save()
     ;
 }
 
-string CDC4T::get_standard_psse_string() const
+string CDC4T::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
 

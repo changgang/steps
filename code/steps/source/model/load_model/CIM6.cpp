@@ -1047,7 +1047,7 @@ void CIM6::check()
 void CIM6::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_psse_string();
+    osstream<<get_standard_psse_string(false);
     STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -1055,7 +1055,7 @@ void CIM6::save()
 {
     ;
 }
-string CIM6::get_standard_psse_string() const
+string CIM6::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
     LOAD* load = get_load_pointer();
@@ -1065,6 +1065,11 @@ string CIM6::get_standard_psse_string() const
     string model_name = "'CIM6BL'";
     double mbase = get_Mbase_in_MVA();
     if(get_Pmult()!=0.0) mbase = 0.0;
+
+    STEPS& toolkit = get_toolkit();
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    if(export_internal_bus_number==true)
+        bus = network.get_internal_bus_number_of_physical_bus(bus)+1;
 
     osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "

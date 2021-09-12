@@ -921,7 +921,7 @@ void WT3E1::check()
 void WT3E1::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_psse_string();
+    osstream<<get_standard_psse_string(false);
     STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -931,7 +931,7 @@ void WT3E1::save()
     ;
 }
 
-string WT3E1::get_standard_psse_string() const
+string WT3E1::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
     WT_GENERATOR* source = get_wt_generator_pointer();
@@ -980,6 +980,17 @@ string WT3E1::get_standard_psse_string() const
     double wp60 = table.get_reference_speed_with_power_in_pu(0.6);
     double pmin_at_wmin = table.get_power_of_record(0);
     double wp100 = table.get_reference_speed_with_power_in_pu(1.0);
+
+    STEPS& toolkit = get_toolkit();
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    if(export_internal_bus_number==true)
+    {
+        bus = network.get_internal_bus_number_of_physical_bus(bus)+1;
+        if(bus_reg!=0) bus_reg = network.get_internal_bus_number_of_physical_bus(bus_reg)+1;
+        if(trans_from_bus!=0) trans_from_bus = network.get_internal_bus_number_of_physical_bus(trans_from_bus)+1;
+        if(trans_to_bus!=0) trans_to_bus = network.get_internal_bus_number_of_physical_bus(trans_to_bus)+1;
+    }
+
 
     osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "

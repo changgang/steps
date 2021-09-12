@@ -383,7 +383,7 @@ void FILEWIND::save()
     ;
 }
 
-string FILEWIND::get_standard_psse_string() const
+string FILEWIND::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
     WT_GENERATOR* gen = get_wt_generator_pointer();
@@ -393,6 +393,11 @@ string FILEWIND::get_standard_psse_string() const
     string model_name = "'"+get_model_name()+"'";
 
     string file = get_wind_speed_serial_file();
+
+    STEPS& toolkit = get_toolkit();
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    if(export_internal_bus_number==true)
+        bus = network.get_internal_bus_number_of_physical_bus(bus)+1;
 
     osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "

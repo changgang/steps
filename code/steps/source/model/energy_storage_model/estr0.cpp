@@ -621,7 +621,7 @@ void ESTR0::check()
 void ESTR0::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_psse_string();
+    osstream<<get_standard_psse_string(false);
     STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -631,37 +631,42 @@ void ESTR0::save()
     ;
 }
 
-string ESTR0::get_standard_psse_string() const
+string ESTR0::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
     DEVICE_ID did = get_device_id();
     unsigned int bus = did.get_device_terminal().get_buses()[0];
     string identifier = did.get_device_identifier();
 
+    STEPS& toolkit = get_toolkit();
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    if(export_internal_bus_number==true)
+        bus = network.get_internal_bus_number_of_physical_bus(bus)+1;
+
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(8)<<setprecision(6)<<get_Tp1_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_Tp2_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_Tp3_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_Tp4_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_Kpp()<<", "
-      <<setw(8)<<setprecision(6)<<get_Kip()<<", "
-      <<setw(8)<<setprecision(6)<<get_Kdp()<<", "
-      <<setw(8)<<setprecision(6)<<get_Tdp_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_Pmax_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<get_Tr_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_Iacmax_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<get_Kin_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<get_Kout_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<get_E0_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<get_En_in_MWh()<<", "
-      <<setw(8)<<setprecision(6)<<get_Tq1_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_Tq2_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_Tq3_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_Tq4_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_Kq()<<", "
-      <<setw(8)<<setprecision(6)<<get_Dq()<<" /";
+          <<"'"<<get_model_name()<<"', "
+          <<"'"<<identifier<<"', "
+          <<setw(8)<<setprecision(6)<<get_Tp1_in_s()<<", "
+          <<setw(8)<<setprecision(6)<<get_Tp2_in_s()<<", "
+          <<setw(8)<<setprecision(6)<<get_Tp3_in_s()<<", "
+          <<setw(8)<<setprecision(6)<<get_Tp4_in_s()<<", "
+          <<setw(8)<<setprecision(6)<<get_Kpp()<<", "
+          <<setw(8)<<setprecision(6)<<get_Kip()<<", "
+          <<setw(8)<<setprecision(6)<<get_Kdp()<<", "
+          <<setw(8)<<setprecision(6)<<get_Tdp_in_s()<<", "
+          <<setw(8)<<setprecision(6)<<get_Pmax_in_pu()<<", "
+          <<setw(8)<<setprecision(6)<<get_Tr_in_s()<<", "
+          <<setw(8)<<setprecision(6)<<get_Iacmax_in_pu()<<", "
+          <<setw(8)<<setprecision(6)<<get_Kin_in_pu()<<", "
+          <<setw(8)<<setprecision(6)<<get_Kout_in_pu()<<", "
+          <<setw(8)<<setprecision(6)<<get_E0_in_pu()<<", "
+          <<setw(8)<<setprecision(6)<<get_En_in_MWh()<<", "
+          <<setw(8)<<setprecision(6)<<get_Tq1_in_s()<<", "
+          <<setw(8)<<setprecision(6)<<get_Tq2_in_s()<<", "
+          <<setw(8)<<setprecision(6)<<get_Tq3_in_s()<<", "
+          <<setw(8)<<setprecision(6)<<get_Tq4_in_s()<<", "
+          <<setw(8)<<setprecision(6)<<get_Kq()<<", "
+          <<setw(8)<<setprecision(6)<<get_Dq()<<" /";
 
     return osstream.str();
 }

@@ -125,6 +125,8 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
+
+    bool export_internal_bus_number = get_export_internal_bus_number_logic();
     MODEL* model=NULL;
     unsigned int n=0;
     vector<GENERATOR*> gens = psdb.get_all_generators();
@@ -136,32 +138,32 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
         model = gen->get_compensator_model();
         if(model!=NULL)
         {
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         }
         model = gen->get_stabilizer_model();
         if(model!=NULL)
         {
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         }
         model = gen->get_exciter_model();
         if(model!=NULL)
         {
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         }
         model = gen->get_turbine_load_controller_model();
         if(model!=NULL)
         {
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         }
         model = gen->get_turbine_governor_model();
         if(model!=NULL)
         {
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         }
         model = gen->get_sync_generator_model();
         if(model!=NULL)
         {
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         }
     }
     vector<WT_GENERATOR*> wt_gens = psdb.get_all_wt_generators();
@@ -172,25 +174,25 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
         wt_gen = wt_gens[i];
         model = wt_gen->get_wt_generator_model();
         if(model!=NULL)
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = wt_gen->get_wt_aerodynamic_model();
         if(model!=NULL)
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = wt_gen->get_wt_turbine_model();
         if(model!=NULL)
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = wt_gen->get_wt_electrical_model();
         if(model!=NULL)
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = wt_gen->get_wt_pitch_model();
         if(model!=NULL)
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = wt_gen->get_wind_speed_model();
         if(model!=NULL)
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = wt_gen->get_wt_relay_model();
         if(model!=NULL)
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
     }
     vector<PV_UNIT*> pvs = psdb.get_all_pv_units();
     PV_UNIT* pv = NULL;
@@ -200,16 +202,16 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
         pv = pvs[i];
         model = pv->get_pv_converter_model();
         if(model!=NULL)
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = pv->get_pv_panel_model();
         if(model!=NULL)
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = pv->get_pv_electrical_model();
         if(model!=NULL)
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = pv->get_pv_irradiance_model();
         if(model!=NULL)
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
     }
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     HVDC* hvdc = NULL;
@@ -219,10 +221,10 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
         hvdc = hvdcs[i];
         model = hvdc->get_hvdc_model();
         if(model!=NULL)
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = hvdc->get_auxiliary_signal_model();
         if(model!=NULL)
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
     }
     vector<LOAD*> loads = psdb.get_all_loads();
     LOAD* load = NULL;
@@ -232,13 +234,13 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
         load = loads[i];
         model = load->get_load_voltage_relay_model();
         if(model!=NULL)
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = load->get_load_frequency_relay_model();
         if(model!=NULL)
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = load->get_load_model();
         if(model!=NULL)
-            ofs<<model->get_standard_psse_string()<<"\n";
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
     }
     ofs.close();
 }

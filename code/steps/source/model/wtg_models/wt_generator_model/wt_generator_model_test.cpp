@@ -607,7 +607,7 @@ void WT_GENERATOR_MODEL_TEST::test_get_standard_psse_string()
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        //model->get_standard_psse_string();
+        //model->get_standard_psse_string(export_internal_bus_number);
     }
     else
         TEST_ASSERT(false);

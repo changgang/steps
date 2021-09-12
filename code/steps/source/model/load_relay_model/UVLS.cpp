@@ -428,7 +428,7 @@ void UVLS::save()
     ;
 }
 
-string UVLS::get_standard_psse_string() const
+string UVLS::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
     LOAD* load = get_load_pointer();
@@ -436,6 +436,11 @@ string UVLS::get_standard_psse_string() const
     string identifier = "'"+load->get_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"BL'";
+
+    STEPS& toolkit = get_toolkit();
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    if(export_internal_bus_number==true)
+        bus = network.get_internal_bus_number_of_physical_bus(bus)+1;
 
     osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "

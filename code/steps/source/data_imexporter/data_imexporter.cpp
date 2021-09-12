@@ -13,6 +13,7 @@ DATA_IMEXPORTER::DATA_IMEXPORTER(STEPS& toolkit)
     set_base_frequency_in_Hz(50.0);
     set_export_zero_impedance_line_logic(true);
     set_export_zero_impedance_line_logic(true);
+    set_export_internal_bus_number_logic(false);
     set_powerflow_data_save_mode(SAVE_TO_KEEP_ORIGINAL_BUS_ORDER);
 }
 
@@ -56,9 +57,19 @@ void DATA_IMEXPORTER::set_export_out_of_service_bus_logic(bool logic)
     export_out_of_service_bus = logic;
 }
 
+void DATA_IMEXPORTER::set_export_internal_bus_number_logic(bool logic)
+{
+    export_internal_bus_number = logic;
+}
+
 bool DATA_IMEXPORTER::get_export_out_of_service_bus_logic() const
 {
     return export_out_of_service_bus;
+}
+
+bool DATA_IMEXPORTER::get_export_internal_bus_number_logic() const
+{
+    return export_internal_bus_number;
 }
 
 POWERFLOW_DATA_SAVE_MODE DATA_IMEXPORTER::get_powerflow_data_save_mode() const

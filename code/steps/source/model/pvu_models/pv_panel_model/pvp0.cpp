@@ -106,7 +106,7 @@ void PVP0::save()
     ;
 }
 
-string PVP0::get_standard_psse_string() const
+string PVP0::get_standard_psse_string(bool export_internal_bus_number) const
 {
     return "";
 }

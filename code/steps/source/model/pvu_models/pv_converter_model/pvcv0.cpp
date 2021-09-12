@@ -563,7 +563,7 @@ void PVCV0::report()
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
-    osstream<<get_standard_psse_string();
+    osstream<<get_standard_psse_string(false);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -572,7 +572,7 @@ void PVCV0::save()
     ;
 }
 
-string PVCV0::get_standard_psse_string() const
+string PVCV0::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
     DEVICE_ID did = get_device_id();
@@ -581,24 +581,29 @@ string PVCV0::get_standard_psse_string() const
 
     LVPL lvpl = get_LVPL();
 
+    STEPS& toolkit = get_toolkit();
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    if(export_internal_bus_number==true)
+        bus = network.get_internal_bus_number_of_physical_bus(bus)+1;
+
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(4)<<get_number_of_lumped_pv_units()<<", "
-      <<setw(8)<<setprecision(6)<<get_rated_power_per_pv_unit_in_MW()<<", "
-      <<setw(8)<<setprecision(6)<<get_converter_activer_current_command_T_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_LVPL_max_rate_of_active_current_change()<<", "
-      <<setw(8)<<setprecision(6)<<get_LVPL_voltage_sensor_T_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<lvpl.get_low_voltage_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<lvpl.get_high_voltage_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<lvpl.get_gain_at_hig_voltage()<<", "
-      <<setw(8)<<setprecision(6)<<get_converter_reactiver_voltage_command_T_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_HVRC_voltage_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<get_HVRC_current_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<get_KPLL()<<", "
-      <<setw(8)<<setprecision(6)<<get_KIPLL()<<", "
-      <<setw(8)<<setprecision(6)<<get_PLLmax()<<", "
-      <<setw(8)<<setprecision(6)<<get_PLLmin()<<" /";
+          <<"'"<<get_model_name()<<"', "
+          <<"'"<<identifier<<"', "
+          <<setw(4)<<get_number_of_lumped_pv_units()<<", "
+          <<setw(8)<<setprecision(6)<<get_rated_power_per_pv_unit_in_MW()<<", "
+          <<setw(8)<<setprecision(6)<<get_converter_activer_current_command_T_in_s()<<", "
+          <<setw(8)<<setprecision(6)<<get_LVPL_max_rate_of_active_current_change()<<", "
+          <<setw(8)<<setprecision(6)<<get_LVPL_voltage_sensor_T_in_s()<<", "
+          <<setw(8)<<setprecision(6)<<lvpl.get_low_voltage_in_pu()<<", "
+          <<setw(8)<<setprecision(6)<<lvpl.get_high_voltage_in_pu()<<", "
+          <<setw(8)<<setprecision(6)<<lvpl.get_gain_at_hig_voltage()<<", "
+          <<setw(8)<<setprecision(6)<<get_converter_reactiver_voltage_command_T_in_s()<<", "
+          <<setw(8)<<setprecision(6)<<get_HVRC_voltage_in_pu()<<", "
+          <<setw(8)<<setprecision(6)<<get_HVRC_current_in_pu()<<", "
+          <<setw(8)<<setprecision(6)<<get_KPLL()<<", "
+          <<setw(8)<<setprecision(6)<<get_KIPLL()<<", "
+          <<setw(8)<<setprecision(6)<<get_PLLmax()<<", "
+          <<setw(8)<<setprecision(6)<<get_PLLmin()<<" /";
 
     return osstream.str();
 }

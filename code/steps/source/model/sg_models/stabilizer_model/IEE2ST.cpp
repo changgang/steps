@@ -470,7 +470,7 @@ void IEE2ST::check()
 void IEE2ST::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_psse_string();
+    osstream<<get_standard_psse_string(false);
     STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -481,7 +481,7 @@ void IEE2ST::save()
     return;
 }
 
-string IEE2ST::get_standard_psse_string() const
+string IEE2ST::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
 
@@ -522,6 +522,15 @@ string IEE2ST::get_standard_psse_string() const
 
     unsigned int signal1_bus = did1.get_device_terminal().get_buses()[0];
     unsigned int signal2_bus = did2.get_device_terminal().get_buses()[0];
+
+    STEPS& toolkit = get_toolkit();
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    if(export_internal_bus_number==true)
+    {
+        bus = network.get_internal_bus_number_of_physical_bus(bus)+1;
+        if(signal1_bus!=0) signal1_bus = network.get_internal_bus_number_of_physical_bus(signal1_bus)+1;
+        if(signal2_bus!=0) signal2_bus = network.get_internal_bus_number_of_physical_bus(signal2_bus)+1;
+    }
 
     osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "

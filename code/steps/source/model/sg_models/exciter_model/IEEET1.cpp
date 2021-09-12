@@ -383,7 +383,7 @@ void IEEET1::check()
 void IEEET1::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_psse_string();
+    osstream<<get_standard_psse_string(false);
     STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -393,7 +393,7 @@ void IEEET1::save()
     ;
 }
 
-string IEEET1::get_standard_psse_string() const
+string IEEET1::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
@@ -416,6 +416,10 @@ string IEEET1::get_standard_psse_string() const
     double E2 = get_E2_in_pu();
     double S2 = get_SE2_in_pu();
 
+    STEPS& toolkit = get_toolkit();
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    if(export_internal_bus_number==true)
+        bus = network.get_internal_bus_number_of_physical_bus(bus)+1;
 
     osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "

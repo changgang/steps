@@ -486,8 +486,13 @@ string PSSE_IMEXPORTER::export_bus_data(const BUS* bus, const vector<BUS*> buses
         }
     }
 
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    unsigned int bus_number = bus->get_bus_number();
+    if(get_export_internal_bus_number_logic()==true)
+        bus_number = network.get_internal_bus_number_of_physical_bus(bus_number)+1;
+
     osstream<<right
-            <<setw(8)<<bus->get_bus_number()<<", \""
+            <<setw(8)<<bus_number<<", \""
             <<left
             <<setw(20)<<bus->get_bus_name()<<"\", "
             <<right
@@ -549,6 +554,10 @@ string PSSE_IMEXPORTER::export_load_data(const LOAD* load) const
     if(get_export_out_of_service_bus_logic()==false and psdb.get_bus_type(bus)==OUT_OF_SERVICE)
         return "";
 
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    if(get_export_internal_bus_number_logic()==true)
+        bus = network.get_internal_bus_number_of_physical_bus(bus)+1;
+
     osstream<<right
             <<setw(8)<<bus<<", "
             <<setw(6)<<("\""+ickt+"\"")<<", "
@@ -607,6 +616,10 @@ string PSSE_IMEXPORTER::export_fixed_shunt_data(const FIXED_SHUNT* shunt) const
     }
     if(get_export_out_of_service_bus_logic()==false and psdb.get_bus_type(bus)==OUT_OF_SERVICE)
         return "";
+
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    if(get_export_internal_bus_number_logic()==true)
+        bus = network.get_internal_bus_number_of_physical_bus(bus)+1;
 
     osstream<<right
             <<setw(8)<<bus<<", "
@@ -812,6 +825,13 @@ string PSSE_IMEXPORTER::export_source_common_data(const SOURCE* source) const
             bus_to_regulate = psdb.get_equivalent_bus_of_bus(bus_to_regulate);
     }
 
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    if(get_export_internal_bus_number_logic()==true)
+    {
+        bus = network.get_internal_bus_number_of_physical_bus(bus)+1;
+        bus_to_regulate = network.get_internal_bus_number_of_physical_bus(bus_to_regulate)+1;
+    }
+
     osstream<<right
            <<setw(8)<<bus<<", "
            <<setw(6)<<("\""+ickt+"\"")<<", "
@@ -914,6 +934,13 @@ string PSSE_IMEXPORTER::export_line_data(const LINE* line) const
     unsigned int meterend = 1;
     if(line->get_meter_end_bus()==line->get_receiving_side_bus())
         meterend = 2;
+
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    if(get_export_internal_bus_number_logic()==true)
+    {
+        ibus = network.get_internal_bus_number_of_physical_bus(ibus)+1;
+        jbus = network.get_internal_bus_number_of_physical_bus(jbus)+1;
+    }
 
     osstream<<right
             <<setw(8)<<ibus<<", "
@@ -1039,6 +1066,16 @@ string PSSE_IMEXPORTER::export_transformer_data(const TRANSFORMER* trans) const
                 status = 2;
         }
     }
+
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    if(get_export_internal_bus_number_logic()==true)
+    {
+        ibus = network.get_internal_bus_number_of_physical_bus(ibus)+1;
+        jbus = network.get_internal_bus_number_of_physical_bus(jbus)+1;
+        if(kbus!=0)
+            kbus = network.get_internal_bus_number_of_physical_bus(kbus)+1;
+    }
+
     osstream<<right
           <<setw(8)<<ibus<<", "
           <<setw(8)<<jbus<<", "
@@ -1282,6 +1319,13 @@ string PSSE_IMEXPORTER::export_area_data(const AREA* area) const
         bus = psdb.get_equivalent_bus_of_bus(bus);
     }
 
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    if(get_export_internal_bus_number_logic()==true)
+    {
+        if(bus!=0)
+            bus = network.get_internal_bus_number_of_physical_bus(bus)+1;
+    }
+
     osstream<<setw(8)<<area->get_area_number()<<", "
             <<bus<<", "
             <<setprecision(3)<<area->get_expected_power_leaving_area_in_MW()<<", "
@@ -1366,6 +1410,7 @@ string PSSE_IMEXPORTER::export_hvdc_data(const HVDC* hvdc) const
     osstream<<"\""<<(hvdc->get_meter_end()==RECTIFIER?"R":"I")<<"\", ";
     osstream<<"0.0, 20, 1.0"<<endl;
 
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
     for(unsigned int j=0; j!=2; ++j)
     {
         CONVERTER_SIDE converter=RECTIFIER;
@@ -1373,6 +1418,8 @@ string PSSE_IMEXPORTER::export_hvdc_data(const HVDC* hvdc) const
         if(j==0) converter = RECTIFIER;
         if(j==1){converter = INVERTER; bus = ibus;}
 
+        if(get_export_internal_bus_number_logic()==true)
+            bus = network.get_internal_bus_number_of_physical_bus(bus)+1;
 
         osstream<<"        "
                 <<setw(8)<<bus<<", "

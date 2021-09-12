@@ -287,7 +287,7 @@ void AERD0::save()
     ;
 }
 
-string AERD0::get_standard_psse_string() const
+string AERD0::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
     WT_GENERATOR* gen = get_wt_generator_pointer();
@@ -317,6 +317,11 @@ string AERD0::get_standard_psse_string() const
         }
     }
     unsigned int n = get_number_of_pole_pairs();
+
+    STEPS& toolkit = get_toolkit();
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    if(export_internal_bus_number==true)
+        bus = network.get_internal_bus_number_of_physical_bus(bus)+1;
 
     osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "

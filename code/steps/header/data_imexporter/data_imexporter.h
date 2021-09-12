@@ -19,10 +19,12 @@ class DATA_IMEXPORTER
         void set_base_frequency_in_Hz(double fbase);
         void set_export_zero_impedance_line_logic(bool logic);
         void set_export_out_of_service_bus_logic(bool logic);
+        void set_export_internal_bus_number_logic(bool logic);
         void set_powerflow_data_save_mode(POWERFLOW_DATA_SAVE_MODE mode);
         double get_base_frequency_in_Hz() const;
         bool get_export_zero_impedance_line_logic() const;
         bool get_export_out_of_service_bus_logic() const;
+        bool get_export_internal_bus_number_logic() const;
         POWERFLOW_DATA_SAVE_MODE get_powerflow_data_save_mode() const;
 
 
@@ -58,6 +60,7 @@ class DATA_IMEXPORTER
         double base_frequency_in_Hz;
         bool export_zero_impedance_line;
         bool export_out_of_service_bus;
+        bool export_internal_bus_number;
         POWERFLOW_DATA_SAVE_MODE powerflow_data_save_mode;
 
         vector<unsigned int> ordered_buses_to_export;

@@ -528,7 +528,7 @@ void ARXL::check()
 void ARXL::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_psse_string();
+    osstream<<get_standard_psse_string(false);
     STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -536,7 +536,7 @@ void ARXL::save()
 {
     ;
 }
-string ARXL::get_standard_psse_string() const
+string ARXL::get_standard_psse_string(bool export_internal_bus_number) const
 {
     string data;
 
@@ -545,7 +545,17 @@ string ARXL::get_standard_psse_string() const
     DEVICE_ID did = p_meters[0].get_device_id();
     LINE* line = psdb.get_line(did);
 
-    data += "ARXL,"+num2str(line->get_sending_side_bus())+","+num2str(line->get_receiving_side_bus())+","+line->get_identifier()+",";
+    unsigned int send_bus = line->get_sending_side_bus();
+    unsigned int recv_bus = line->get_receiving_side_bus();
+
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    if(export_internal_bus_number==true)
+    {
+        send_bus = network.get_internal_bus_number_of_physical_bus(send_bus)+1;
+        recv_bus = network.get_internal_bus_number_of_physical_bus(recv_bus)+1;
+    }
+
+    data += "ARXL,"+num2str(send_bus)+","+num2str(recv_bus)+","+line->get_identifier()+",";
     data += num2str(p_meters[0].get_meter_side_bus())+"\n";;
 
     unsigned int n = p_meters.size();

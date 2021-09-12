@@ -756,7 +756,7 @@ void GAST2A::check()
 void GAST2A::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_psse_string();
+    osstream<<get_standard_psse_string(false);
     STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -764,7 +764,7 @@ void GAST2A::save()
 {
     ;
 }
-string GAST2A::get_standard_psse_string() const
+string GAST2A::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
 
@@ -773,6 +773,11 @@ string GAST2A::get_standard_psse_string() const
     string identifier = "'"+did.get_device_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
+
+    STEPS& toolkit = get_toolkit();
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    if(export_internal_bus_number==true)
+        bus = network.get_internal_bus_number_of_physical_bus(bus)+1;
 
     osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "
