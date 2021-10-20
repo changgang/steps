@@ -2,7 +2,7 @@
 
 python -m pip install wheel twine
 
-2. change version of stepsy in setup.py
+2. change version of stepsy in setup.py, update README
 
 3. to build stepspy module, use:
 

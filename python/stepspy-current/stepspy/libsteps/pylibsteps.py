@@ -2,9 +2,6 @@ from ctypes import *
 import platform
 import os
 
-libsteps_version = "0.13.0"
-libsteps_date = "2020/09/09"
-
 def get_base_library():
     dirname, filename = os.path.split(os.path.abspath(__file__))
     dirname = dirname.replace('\\','/')
