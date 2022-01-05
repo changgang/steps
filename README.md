@@ -1,10 +1,10 @@
 # Simulation Toolkit for Electrical Power Systems
 - Maintainer: Changgang Li <lichgang@sdu.edu.cn> from School of Electrical Engineering, Shandong University.
 - Trust the following pages or other credible duplications:
-  * STEPS: https://github.com/changgang/steps
+  * STEPS: https://github.com/changgang/steps  and  https://gitee.com/lichgang/steps/
   * stepspy: https://pypi.org/project/stepspy/
   * Documentation: https://github.com/changgang/steps/wiki/
-- Date of Readme: March 24, 2021
+- Date of Readme: Jan 5, 2022
 
 # Reference
 Please cite STEPS with the following paper:  
@@ -19,6 +19,7 @@ Though BPA dat format is supported, it will be supported in the future version i
 You are encouraged to join us for further development.
 
 ## Major versions
+- v1.5.4. Update to improve performance. Released on Oct. 20, 2021.
 - v1.5.2. Add new APIs to get generator related model internal variables. Start to add linearization codes. Released on March. 24, 2021.
 - v1.5.1. Add new option export_full to functions of save_network_Y_matrix and APIs. stepspy is also updated. Start to add sequential parameters to STEPS. Released on Feb. 2, 2021.
 - v1.5.0. Add new function to get basic and user meter value in STEPS kernel and stepspy. Add additional parameter vbase to bus_name2number in case multi buses have the same bus name. Released on Dec. 22, 2020.
