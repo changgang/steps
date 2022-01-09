@@ -987,13 +987,13 @@ string device_type2string(STEPS_DEVICE_TYPE device_type)
         case STEPS_HVDC:
             return "HVDC";
         case STEPS_VSC_HVDC:
-            return "VSC_HVDC";
+            return "VSC HVDC";
         case STEPS_FACTS:
             return "FACTS";
         case STEPS_LCC_HVDC:
             return "LCC HVDC";
-        case STEPS_MULTI_DC:
-            return "MULTI DC";
+        case STEPS_HYBRID_DC:
+            return "HYBRID DC";
         case STEPS_GENERAL_DEVICE:
             return "GENERAL DEVICE";
         case STEPS_INVALID_DEVICE:

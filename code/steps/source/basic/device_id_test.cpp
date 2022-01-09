@@ -24,7 +24,7 @@ DEVICE_ID_TEST::DEVICE_ID_TEST()
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_line);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_transformer);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_hvdc);
-    TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_vschvdc);
+    TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_vsc_hvdc);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_facts);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_multidc);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_lcc_hvdc);
@@ -286,7 +286,7 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_hvdc()
     TEST_ASSERT(terminal.get_bus_count()==2);
 }
 
-void DEVICE_ID_TEST::test_constructor_and_get_device_type_vschvdc()
+void DEVICE_ID_TEST::test_constructor_and_get_device_type_vsc_hvdc()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
@@ -298,11 +298,23 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_vschvdc()
     TEST_ASSERT(device_id.is_identifier_allowed()==true);
 
     TEST_ASSERT(device_id.get_minimum_allowed_terminal_count()==2);
-    TEST_ASSERT(device_id.get_maximum_allowed_terminal_count()==2);
+    TEST_ASSERT(device_id.get_maximum_allowed_terminal_count()==100);
 
     device_id.set_device_terminal(terminal_2_bus);
     TERMINAL terminal = device_id.get_device_terminal();
     TEST_ASSERT(terminal.get_bus_count()==2);
+
+    device_id.set_device_terminal(terminal_4_bus);
+    terminal = device_id.get_device_terminal();
+    TEST_ASSERT(terminal.get_bus_count()==4);
+
+    device_id.set_device_terminal(terminal_100_bus);
+    terminal = device_id.get_device_terminal();
+    TEST_ASSERT(terminal.get_bus_count()==100);
+
+    device_id.set_device_terminal(terminal_101_bus);
+    terminal = device_id.get_device_terminal();
+    TEST_ASSERT(terminal.get_bus_count()==100);
 }
 
 void DEVICE_ID_TEST::test_constructor_and_get_device_type_facts()
@@ -328,8 +340,8 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_multidc()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id.set_device_type(STEPS_MULTI_DC);
-    TEST_ASSERT(device_id.get_device_type()==STEPS_MULTI_DC);
+    device_id.set_device_type(STEPS_HYBRID_DC);
+    TEST_ASSERT(device_id.get_device_type()==STEPS_HYBRID_DC);
 
     TEST_ASSERT(device_id.is_name_allowed()==false);
     TEST_ASSERT(device_id.is_terminal_allowed()==true);
@@ -436,6 +448,12 @@ void DEVICE_ID_TEST::test_get_compound_device_name()
     device_id.set_device_terminal(terminal);
     device_id.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(device_id.get_compound_device_name()=="VSC HVDC #1 LINKING BUS 1 AND 2");
+
+    terminal.append_bus(3);
+    terminal.append_bus(5);
+    device_id.set_device_terminal(terminal);
+    device_id.set_device_identifier_index(get_index_of_string("#1"));
+    TEST_ASSERT(device_id.get_compound_device_name()=="VSC HVDC #1 LINKING BUS 1 2 3 AND 5");
 
     device_id.clear();
     terminal.clear();
@@ -589,7 +607,7 @@ void DEVICE_ID_TEST::test_compare_less()
     newdevice_id.set_device_type(STEPS_GENERATOR);
     newdevice_id.set_device_terminal(terminal_1_bus);
     add_string_to_str_int_map("ac");
-    device_id.set_device_identifier_index(get_index_of_string("ac"));
+    newdevice_id.set_device_identifier_index(get_index_of_string("ac"));
 
     TEST_ASSERT(device_id<newdevice_id);
     newdevice_id.set_device_identifier_index(get_index_of_string("ab"));
@@ -613,10 +631,10 @@ void DEVICE_ID_TEST::test_compare_equal_not_equal()
 
 
     DEVICE_ID newdevice_id;
-    device_id.set_device_type(STEPS_GENERATOR);
+    newdevice_id.set_device_type(STEPS_GENERATOR);
     newdevice_id.set_device_terminal(terminal_1_bus);
     add_string_to_str_int_map("ab");
-    device_id.set_device_identifier_index(get_index_of_string("ab"));
+    newdevice_id.set_device_identifier_index(get_index_of_string("ab"));
 
 
     TEST_ASSERT(device_id==newdevice_id);

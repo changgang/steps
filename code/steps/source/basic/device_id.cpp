@@ -108,7 +108,6 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(STEPS_DEVICE_TYPE dev
 
     if(device_type==STEPS_LINE    ||
        device_type==STEPS_HVDC    ||
-       device_type==STEPS_VSC_HVDC ||
        device_type==STEPS_FACTS)
     {
         enable_allow_terminal();
@@ -133,7 +132,19 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(STEPS_DEVICE_TYPE dev
         return;
     }
 
-    if(device_type==STEPS_MULTI_DC)
+    if(device_type==STEPS_VSC_HVDC)
+    {
+        enable_allow_terminal();
+        enable_allow_identifier();
+
+        this->device_type = device_type;
+        set_minimum_allowed_terminal_count(2);
+        set_maximum_allowed_terminal_count(100);
+
+        return;
+    }
+
+    if(device_type==STEPS_HYBRID_DC)
     {
         enable_allow_terminal();
         enable_allow_identifier();
@@ -173,7 +184,7 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(STEPS_DEVICE_TYPE dev
     osstream<<"Device type '"<<device_type<<"' is not supported when building DEVICE_ID object."<<endl
             <<"Allowed device types are: "<<endl
             <<"GENERATOR, WT GENERATOR, PV UNIT, ENERGY STORAGE, LOAD, FIXED SHUNT, SWITCHED SHUNT"<<endl
-            <<"LINE, TRANSFORMER, HVDC, VSC HVDC, FACTS, LCC HVDC, MULTI DC, EQUIVALENT DEVICE, and GENERAL DEVICE."<<endl
+            <<"LINE, TRANSFORMER, HVDC, VSC HVDC, FACTS, LCC HVDC, HYBRID DC, EQUIVALENT DEVICE, and GENERAL DEVICE."<<endl
             <<"Device type will be set as blank, and \"NONE\" will be returned if get_device_type() is called.";
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     device_type = STEPS_INVALID_DEVICE;
@@ -311,13 +322,27 @@ string DEVICE_ID::get_compound_device_name() const
             return comp_device_name;
         }
 
-        if(device_type==STEPS_LINE or device_type==STEPS_HVDC or device_type==STEPS_VSC_HVDC)
+        if(device_type==STEPS_LINE or device_type==STEPS_HVDC)
         {
             if(ident=="")
                 comp_device_name = device_type_str + " ";
             else
                 comp_device_name = device_type_str + " "+ident+" ";
             comp_device_name += "LINKING BUS "+num2str(buses[0])+" AND "+num2str(buses[1]);
+            return comp_device_name;
+        }
+
+        if(device_type==STEPS_VSC_HVDC)
+        {
+            if(ident=="")
+                comp_device_name = device_type_str + " ";
+            else
+                comp_device_name = device_type_str + " "+ident+" ";
+            comp_device_name += "LINKING BUS ";
+            for(unsigned int i=0; i<bus_count-1; ++i)
+                comp_device_name +=num2str(buses[i])+" ";
+            comp_device_name +="AND "+num2str(buses[bus_count-1]);
+
             return comp_device_name;
         }
 
@@ -387,7 +412,9 @@ string DEVICE_ID::get_compound_device_name() const
 
 bool DEVICE_ID::is_valid() const
 {
-    if(device_type==STEPS_INVALID_DEVICE or (is_name_allowed() and device_name_index != 0) or (is_terminal_allowed() and terminal.get_bus_count()!=0))
+    if((is_name_allowed() and device_name_index != 0) or
+       (is_terminal_allowed() and ((device_type != STEPS_GENERAL_DEVICE and terminal.get_bus_count()!=0) or
+                                   device_type == STEPS_GENERAL_DEVICE )))
         return true;
     else
         return false;
@@ -634,6 +661,23 @@ DEVICE_ID get_hvdc_device_id(unsigned int ibus, unsigned int jbus, const string&
     TERMINAL terminal;
     terminal.append_bus(ibus);
     terminal.append_bus(jbus);
+
+    did.set_device_terminal(terminal);
+
+    did.set_device_identifier_index(get_index_of_string(identifier));
+
+    return did;
+}
+
+DEVICE_ID get_vsc_hvdc_device_id(const vector<unsigned int>& bus, const string& identifier)
+{
+    DEVICE_ID did;
+    did.set_device_type(STEPS_VSC_HVDC);
+
+    TERMINAL terminal;
+    unsigned int nbus = bus.size();
+    for(unsigned int i=0; i!=nbus; ++i)
+        terminal.append_bus(bus[i]);
 
     did.set_device_terminal(terminal);
 

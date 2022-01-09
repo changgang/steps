@@ -45,7 +45,7 @@ class DEVICE_ID_TEST : public Test::Suite
 
         void test_constructor_and_get_device_type_hvdc();
 
-        void test_constructor_and_get_device_type_vschvdc();
+        void test_constructor_and_get_device_type_vsc_hvdc();
 
         void test_constructor_and_get_device_type_facts();
 

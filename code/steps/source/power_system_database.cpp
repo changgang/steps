@@ -195,6 +195,11 @@ unsigned int POWER_SYSTEM_DATABASE::get_hvdc_capacity() const
     return Hvdc.capacity();
 }
 
+unsigned int POWER_SYSTEM_DATABASE::get_vsc_hvdc_capacity() const
+{
+    return vsc_vdc.capacity();
+}
+
 unsigned int POWER_SYSTEM_DATABASE::get_equivalent_device_capacity() const
 {
     return Equivalent_device.capacity();
@@ -268,6 +273,11 @@ void POWER_SYSTEM_DATABASE::set_transformer_capacity(unsigned int n)
 void POWER_SYSTEM_DATABASE::set_hvdc_capacity(unsigned int n)
 {
     Hvdc.reserve(n);
+}
+
+void POWER_SYSTEM_DATABASE::set_vsc_hvdc_capacity(unsigned int n)
+{
+    vsc_hvdc.reserve(n);
 }
 
 void POWER_SYSTEM_DATABASE::set_equivalent_device_capacity(unsigned int n)
@@ -1131,7 +1141,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
     if(device_type!=STEPS_GENERATOR and device_type!=STEPS_WT_GENERATOR and device_type!=STEPS_PV_UNIT and
        device_type!=STEPS_ENERGY_STORAGE and device_type!=STEPS_LOAD and device_type!=STEPS_FIXED_SHUNT and
        device_type!=STEPS_LINE and device_type!=STEPS_TRANSFORMER and device_type!=STEPS_HVDC and
-       device_type!=STEPS_LCC_HVDC)
+       device_type!=STEPS_VSC_HVDC and device_type!=STEPS_LCC_HVDC)
     {
         osstream<<"Device ID type is not in the following allowed types when calling "<<__FUNCTION__<<":\n"
                 <<"[GENERATOR, WT GENERATOR, PV UNIT, ENERGY STORAGE, LOAD, FIXED SHUNT, LINE, TRANSFORMER, HVDC, LCC HVDC].\n"
@@ -1142,6 +1152,12 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
     }
 
     TERMINAL new_terminal = did_new.get_device_terminal();
+    if(device_type==STEPS_VSC_HVDC)
+    {
+        here copy following.
+        return;
+    }
+
     unsigned int ibus = new_terminal[0];
     unsigned int jbus = new_terminal[1];
     unsigned int kbus = new_terminal[2];
@@ -1643,6 +1659,8 @@ void POWER_SYSTEM_DATABASE::change_bus_number(unsigned int original_bus_number, 
             DEVICE_ID new_did = trans->get_device_id();
             transformer_index.set_device_index(new_did, index);
         }
+
+        if there is vsc hvdc on this bus, update vsc hvdc
 
         vector<AREA*> areas = get_all_areas();
         unsigned int narea = areas.size();
@@ -5802,6 +5820,8 @@ void POWER_SYSTEM_DATABASE::trip_bus(unsigned int bus)
                 }
             }
 
+            here Vsc hvdc is affected
+
             vector<EQUIVALENT_DEVICE*> edevices = get_equivalent_devices_connecting_to_bus(bus);
             n=edevices.size();
             for(unsigned int i=0; i!=n; ++i)
@@ -5841,6 +5861,7 @@ void POWER_SYSTEM_DATABASE::check_device_status_for_out_of_service_buses()
             check_line_status_for_out_of_service_bus(bus_number);
             check_transformer_status_for_out_of_service_bus(bus_number);
             check_hvdc_status_for_out_of_service_bus(bus_number);
+            check_vsc_hvdc_status_for_out_of_service_bus(bus_number);
             check_lcc_hvdc_status_for_out_of_service_bus(bus_number);
         }
     }
@@ -5937,6 +5958,20 @@ void POWER_SYSTEM_DATABASE::check_transformer_status_for_out_of_service_bus(unsi
 
 void POWER_SYSTEM_DATABASE::check_hvdc_status_for_out_of_service_bus(unsigned int bus)
 {
+    vector<HVDC*> hvdcs = get_hvdcs_connecting_to_bus(bus);
+    HVDC* hvdc;
+    unsigned int nhvdc = hvdcs.size();
+    for(unsigned int i=0; i!=nhvdc; ++i)
+    {
+        hvdc = hvdcs[i];
+        if(hvdc->get_status()==true)
+            hvdc->set_status(false);
+    }
+}
+
+void POWER_SYSTEM_DATABASE::check_vsc_hvdc_status_for_out_of_service_bus(unsigned int bus)
+{
+    this function to be updated
     vector<HVDC*> hvdcs = get_hvdcs_connecting_to_bus(bus);
     HVDC* hvdc;
     unsigned int nhvdc = hvdcs.size();

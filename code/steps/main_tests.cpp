@@ -43,6 +43,7 @@
 #include "header/device/transformer_test.h"
 #include "header/device/fixed_shunt_test.h"
 #include "header/device/hvdc_test.h"
+#include "header/device/vsc_hvdc_test.h"
 #include "header/device/equivalent_device_test.h"
 #include "header/device/engergy_storage_test.h"
 //#include "header/device/virtual_generator_load_pair_test.h"
@@ -213,8 +214,6 @@ int main(int argc, char* argv[])
         Test::Suite ts;
         #ifdef ENABLE_STEPS_TEST
 
-        ts.add(unique_ptr<Test::Suite>(new DEVICE_ID_TEST));
-
         ts.add(unique_ptr<Test::Suite>(new STR_INT_MAP_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new TERMINAL_TEST));
@@ -250,6 +249,8 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new FIXED_SHUNT_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new HVDC_TEST));
+
+        ts.add(unique_ptr<Test::Suite>(new VSC_HVDC_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new EQUIVALENT_DEVICE_TEST));
 
@@ -348,10 +349,10 @@ int main(int argc, char* argv[])
 
         //ts.add(unique_ptr<Test::Suite>(new CCT_SEARCHER_TEST));
         //ts.add(unique_ptr<Test::Suite>(new POWERFLOW_CASE_GENERATOR_TEST));
-        */
         ts.add(unique_ptr<Test::Suite>(new CONVERTER_TEST));
         ts.add(unique_ptr<Test::Suite>(new LCC_TEST));
         ts.add(unique_ptr<Test::Suite>(new CONVERTER_STATION_TEST));
+        */
 
         #endif // ENABLE_STEPS_TEST
 
