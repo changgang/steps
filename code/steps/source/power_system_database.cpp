@@ -65,6 +65,7 @@ void POWER_SYSTEM_DATABASE::set_database_capacity()
     unsigned int line_capacity = (unsigned int)(round(bus_capacity*3.0));
     unsigned int transformer_capacity = bus_capacity;
     unsigned int hvdc_capacity = (unsigned int)(round(bus_capacity*0.1));
+    unsigned int vsc_hvdc_capacity = (unsigned int)(round(bus_capacity*0.1));
     unsigned int equivalentdevice_capacity = (unsigned int)(round(bus_capacity*0.1));
     unsigned int energy_storage_capacity = (unsigned int)(round(bus_capacity*0.1));
     unsigned int lcc_hvdc_capacity = hvdc_capacity;
@@ -109,6 +110,9 @@ void POWER_SYSTEM_DATABASE::set_database_capacity()
         if(document.HasMember("hvdc") and document["hvdc"].IsInt())
             hvdc_capacity = (unsigned int)(document["hvdc"].GetInt());
 
+        if(document.HasMember("vschvdc") and document["vschvdc"].IsInt())
+        hvdc_capacity = (unsigned int)(document["vschvdc"].GetInt());
+
         if(document.HasMember("equivalentDevice") and document["equivalentDevice"].IsInt())
             equivalentdevice_capacity = (unsigned int)(document["equivalentDevice"].GetInt());
 
@@ -142,6 +146,7 @@ void POWER_SYSTEM_DATABASE::set_database_capacity()
     set_line_capacity(line_capacity);
     set_transformer_capacity(transformer_capacity);
     set_hvdc_capacity(hvdc_capacity);
+    set_vsc_hvdc_capacity(vsc_hvdc_capacity);
     set_equivalent_device_capacity(equivalentdevice_capacity);
     set_energy_storage_capacity(energy_storage_capacity);
     set_lcc_hvdc_capacity(lcc_hvdc_capacity);
@@ -197,7 +202,7 @@ unsigned int POWER_SYSTEM_DATABASE::get_hvdc_capacity() const
 
 unsigned int POWER_SYSTEM_DATABASE::get_vsc_hvdc_capacity() const
 {
-    return vsc_vdc.capacity();
+    return Vsc_hvdc.capacity();
 }
 
 unsigned int POWER_SYSTEM_DATABASE::get_equivalent_device_capacity() const
@@ -277,7 +282,7 @@ void POWER_SYSTEM_DATABASE::set_hvdc_capacity(unsigned int n)
 
 void POWER_SYSTEM_DATABASE::set_vsc_hvdc_capacity(unsigned int n)
 {
-    vsc_hvdc.reserve(n);
+    Vsc_hvdc.reserve(n);
 }
 
 void POWER_SYSTEM_DATABASE::set_equivalent_device_capacity(unsigned int n)
@@ -950,6 +955,52 @@ void POWER_SYSTEM_DATABASE::append_hvdc(HVDC& hvdc)
     hvdc_index.set_device_index(device_id, hvdc_count);
 }
 
+void POWER_SYSTEM_DATABASE::append_vsc_hvdc(VSC_HVDC& vsc_hvdc)
+{
+    vsc_hvdc.set_toolkit(*toolkit);
+
+    ostringstream osstream;
+
+    if(not vsc_hvdc.is_valid())
+    {
+        osstream<<"Warning. Failed to append invalid MULTI VSC HVDC to power system database '"<<get_system_name()<<"'.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    string identifier = vsc_hvdc.get_identifier();
+    DEVICE_ID device_id;
+    device_id.set_device_type(STEPS_VSC_HVDC);
+    TERMINAL terminal;
+    unsigned int n_converter = vsc_hvdc.get_converter_count();
+    for(unsigned int i=0; i!=n_converter; ++i)
+    {
+        unsigned int bus_number=vsc_hvdc.get_converter_bus(i);
+        terminal.append_bus(bus_number);
+
+    }
+    device_id.set_device_terminal(terminal);
+    device_id.set_device_identifier_index(get_index_of_string(identifier));
+
+    if(this->is_vsc_hvdc_exist(device_id))
+    {
+        osstream<<"Warning. "<<vsc_hvdc.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Multi_vsc_hvdc.\n"
+          <<"Duplicate copy is not allowed.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    if(Vsc_hvdc.capacity()== Vsc_hvdc.size())
+    {
+        osstream<<"Warning. Capacity limit ("<<Vsc_hvdc.capacity()<<") reached when appending MULTI VSC HVDC to power system database '"<<get_system_name()<<"'."<<endl
+          <<"Increase capacity by modified steps_config.json.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    unsigned int vsc_hvdc_count = get_vsc_hvdc_count();
+    Vsc_hvdc.push_back(vsc_hvdc);
+    vsc_hvdc_index.set_device_index(device_id, vsc_hvdc_count);
+}
+
 void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
 {
     edevice.set_toolkit(*toolkit);
@@ -1152,16 +1203,37 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
     }
 
     TERMINAL new_terminal = did_new.get_device_terminal();
+    string new_id = did_new.get_device_identifier();
     if(device_type==STEPS_VSC_HVDC)
     {
-        here copy following.
+        if(not is_vsc_hvdc_exist(did_old))
+        {
+            osstream<<"Warning. The old device "<<did_old.get_compound_device_name()<<" does not exist in database. No device id will be updated.";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        if(is_vsc_hvdc_exist(did_new))
+        {
+            osstream<<"Warning. The new device "<<did_new.get_compound_device_name()<<" already exist in database. No device id will be updated.";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        VSC_HVDC* vsc_hvdc = get_vsc_hvdc(did_old);
+        vsc_hvdc_index.swap_device_index(did_old, did_new);
+        unsigned int n_bus = new_terminal.get_bus_count();
+        for(unsigned int i=0; i != n_bus; ++i)
+        {
+            vsc_hvdc->set_converter_bus(i, new_terminal[i]);
+        }
+
+        vsc_hvdc->set_identifier(new_id);
         return;
+
     }
 
     unsigned int ibus = new_terminal[0];
     unsigned int jbus = new_terminal[1];
     unsigned int kbus = new_terminal[2];
-    string new_id = did_new.get_device_identifier();
 
     if(device_type==STEPS_GENERATOR)
     {
@@ -1459,6 +1531,13 @@ bool POWER_SYSTEM_DATABASE::is_hvdc_exist(const DEVICE_ID& device_id) const
     else                       return false;
 }
 
+bool POWER_SYSTEM_DATABASE::is_vsc_hvdc_exist(const DEVICE_ID& device_id) const
+{
+    unsigned int index = get_vsc_hvdc_index(device_id);
+    if(index!=INDEX_NOT_EXIST) return true;
+    else                       return false;
+}
+
 bool POWER_SYSTEM_DATABASE::is_equivalent_device_exist(const DEVICE_ID& device_id) const
 {
     unsigned int index = get_equivalent_device_index(device_id);
@@ -1660,7 +1739,25 @@ void POWER_SYSTEM_DATABASE::change_bus_number(unsigned int original_bus_number, 
             transformer_index.set_device_index(new_did, index);
         }
 
-        if there is vsc hvdc on this bus, update vsc hvdc
+        vector<VSC_HVDC*> vsc_hvdcs = get_vsc_hvdcs_connecting_to_bus(original_bus_number);
+        unsigned int nvsc = vsc_hvdcs.size();
+        for(unsigned int i=0; i!=nvsc; ++i)
+        {
+            VSC_HVDC* vsc_hvdc = vsc_hvdcs[i];
+            DEVICE_ID old_did = vsc_hvdc->get_device_id();
+            unsigned int index = get_vsc_hvdc_index(old_did);
+            vsc_hvdc_index.set_device_index(old_did, INDEX_NOT_EXIST);
+
+            unsigned int n_converter = vsc_hvdc->get_converter_count();
+            for (unsigned int j=0; j!=n_converter; ++j)
+            {
+                if(vsc_hvdc->get_converter_bus(j)==original_bus_number)
+                    vsc_hvdc->set_converter_bus(j, new_bus_number);
+            }
+
+            DEVICE_ID new_did = vsc_hvdc->get_device_id();
+            hvdc_index.set_device_index(new_did, index);
+        }
 
         vector<AREA*> areas = get_all_areas();
         unsigned int narea = areas.size();
@@ -1895,6 +1992,15 @@ HVDC* POWER_SYSTEM_DATABASE::get_hvdc(const DEVICE_ID & device_id)
     unsigned int index = hvdc_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
         return &(Hvdc[index]);
+    else
+        return NULL;
+}
+
+VSC_HVDC* POWER_SYSTEM_DATABASE::get_vsc_hvdc(const DEVICE_ID & device_id)
+{
+    unsigned int index = vsc_hvdc_index.get_index_of_device(device_id);
+    if(index!=INDEX_NOT_EXIST)
+        return &(Vsc_hvdc[index]);
     else
         return NULL;
 }
@@ -2162,6 +2268,22 @@ vector<HVDC*> POWER_SYSTEM_DATABASE::get_hvdcs_connecting_to_bus(const unsigned 
     return device;
 }
 
+vector<VSC_HVDC*> POWER_SYSTEM_DATABASE::get_vsc_hvdcs_connecting_to_bus(const unsigned int bus)
+{
+    vector<VSC_HVDC*> device;
+    device.reserve(8);
+
+    unsigned int n = get_vsc_hvdc_count();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(not Vsc_hvdc[i].is_connected_to_bus(bus))
+            continue;
+        else
+            device.push_back(&(Vsc_hvdc[i]));
+    }
+    return device;
+}
+
 vector<EQUIVALENT_DEVICE*> POWER_SYSTEM_DATABASE::get_equivalent_devices_connecting_to_bus(const unsigned int bus)
 {
     vector<EQUIVALENT_DEVICE*> device;
@@ -2322,6 +2444,18 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_fixed_shunts_device_id_connecting_t
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_hvdcs_device_id_connecting_to_bus(const unsigned int bus)
 {
     vector<HVDC*> devices = get_hvdcs_connecting_to_bus(bus);
+    unsigned int n = devices.size();
+
+    vector<DEVICE_ID> dids;
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(devices[i]->get_device_id());
+
+    return dids;
+}
+
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_vsc_hvdcs_device_id_connecting_to_bus(const unsigned int bus)
+{
+    vector<VSC_HVDC*> devices = get_vsc_hvdcs_connecting_to_bus(bus);
     unsigned int n = devices.size();
 
     vector<DEVICE_ID> dids;
@@ -2598,6 +2732,22 @@ vector<HVDC*> POWER_SYSTEM_DATABASE::get_hvdcs_in_area(const unsigned int area)
     return device;
 }
 
+vector<VSC_HVDC*> POWER_SYSTEM_DATABASE::get_vsc_hvdcs_in_area(const unsigned int area)
+{
+    vector<VSC_HVDC*> device;
+    device.reserve(8);
+
+    unsigned int n = get_vsc_hvdc_count();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(not Vsc_hvdc[i].is_in_area(area))
+            continue;
+        else
+            device.push_back(&(Vsc_hvdc[i]));
+    }
+    return device;
+}
+
 vector<EQUIVALENT_DEVICE*> POWER_SYSTEM_DATABASE::get_equivalent_devices_in_area(const unsigned int area)
 {
     vector<EQUIVALENT_DEVICE*> device;
@@ -2771,6 +2921,18 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_fixed_shunts_device_id_in_area(cons
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_hvdcs_device_id_in_area(const unsigned int area)
 {
     vector<HVDC*> devices = get_hvdcs_in_area(area);
+    unsigned int n = devices.size();
+
+    vector<DEVICE_ID> dids;
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(devices[i]->get_device_id());
+
+    return dids;
+}
+
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_vsc_hvdcs_device_id_in_area(const unsigned int area)
+{
+    vector<VSC_HVDC*> devices = get_vsc_hvdcs_in_area(area);
     unsigned int n = devices.size();
 
     vector<DEVICE_ID> dids;
@@ -3045,6 +3207,22 @@ vector<HVDC*> POWER_SYSTEM_DATABASE::get_hvdcs_in_zone(const unsigned int zone)
     return device;
 }
 
+vector<VSC_HVDC*> POWER_SYSTEM_DATABASE::get_vsc_hvdcs_in_zone(const unsigned int zone)
+{
+    vector<VSC_HVDC*> device;
+    device.reserve(8);
+
+    unsigned int n = get_vsc_hvdc_count();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(not Vsc_hvdc[i].is_in_zone(zone))
+            continue;
+        else
+            device.push_back(&(Vsc_hvdc[i]));
+    }
+    return device;
+}
+
 vector<EQUIVALENT_DEVICE*> POWER_SYSTEM_DATABASE::get_equivalent_devices_in_zone(const unsigned int zone)
 {
     vector<EQUIVALENT_DEVICE*> device;
@@ -3216,6 +3394,18 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_fixed_shunts_device_id_in_zone(cons
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_hvdcs_device_id_in_zone(const unsigned int zone)
 {
     vector<HVDC*> devices = get_hvdcs_in_zone(zone);
+    unsigned int n = devices.size();
+
+    vector<DEVICE_ID> dids;
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(devices[i]->get_device_id());
+
+    return dids;
+}
+
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_vsc_hvdcs_device_id_in_zone(const unsigned int zone)
+{
+    vector<VSC_HVDC*> devices = get_vsc_hvdcs_in_zone(zone);
     unsigned int n = devices.size();
 
     vector<DEVICE_ID> dids;
@@ -3474,6 +3664,16 @@ vector<HVDC*> POWER_SYSTEM_DATABASE::get_all_hvdcs()
     device.reserve(n);
     for(unsigned int i=0; i!=n; ++i)
         device.push_back(&(Hvdc[i]));
+    return device;
+}
+
+vector<VSC_HVDC*> POWER_SYSTEM_DATABASE::get_all_vsc_hvdcs()
+{
+    vector<VSC_HVDC*> device;
+    unsigned int n = get_vsc_hvdc_count();
+    device.reserve(n);
+    for(unsigned int i=0; i!=n; ++i)
+        device.push_back(&(Vsc_hvdc[i]));
     return device;
 }
 
@@ -3993,6 +4193,11 @@ unsigned int POWER_SYSTEM_DATABASE::get_hvdc_index(const DEVICE_ID & device_id) 
     return hvdc_index.get_index_of_device(device_id);
 }
 
+unsigned int POWER_SYSTEM_DATABASE::get_vsc_hvdc_index(const DEVICE_ID & device_id) const
+{
+    return vsc_hvdc_index.get_index_of_device(device_id);
+}
+
 unsigned int POWER_SYSTEM_DATABASE::get_equivalent_device_index(const DEVICE_ID & device_id) const
 {
     return equivalent_device_index.get_index_of_device(device_id);
@@ -4231,6 +4436,13 @@ void POWER_SYSTEM_DATABASE::check_all_hvdcs()
         Hvdc[i].check();
 }
 
+void POWER_SYSTEM_DATABASE::check_all_vsc_hvdcs()
+{
+    unsigned int n = get_vsc_hvdc_count();
+    for(unsigned int i=0; i!=n; ++i)
+        Vsc_hvdc[i].check();
+}
+
 void POWER_SYSTEM_DATABASE::check_all_equivalent_devices()
 {
     unsigned int n = get_equivalent_device_count();
@@ -4466,6 +4678,21 @@ void POWER_SYSTEM_DATABASE::check_hvdc_related_dynamic_data()
         HVDC_MODEL* hvdcmodel = hvdc->get_hvdc_model();
         if(hvdcmodel!=NULL)
             hvdcmodel->check();
+    }
+}
+
+void POWER_SYSTEM_DATABASE::check_vsc_hvdc_related_dynamic_data()
+{
+    vector<VSC_HVDC*> vsc_hvdcs = get_all_vsc_hvdcs();
+    unsigned int n = vsc_hvdcs.size();
+    VSC_HVDC* vsc_hvdc;
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        vsc_hvdc = vsc_hvdcs[i];
+
+        VSC_HVDC_MODEL* vscmodel = vsc_hvdc->get_vsc_hvdc_model();
+        if(vscmodel!=NULL)
+            vscmodel->check();
     }
 }
 
@@ -4796,6 +5023,37 @@ void POWER_SYSTEM_DATABASE::check_missing_hvdc_related_model()
         if(hvdcmodel==NULL)
         {
             osstream<<hvdc->get_compound_device_name()<<" ["<<bus_number2bus_name(hvdc->get_converter_bus(RECTIFIER))<<" -- "<<bus_number2bus_name(hvdc->get_converter_bus(INVERTER))<<"]";
+            model_missing_detected = true;
+        }
+    }
+    if(model_missing_detected==true)
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    else
+        osstream.str("");
+}
+
+void POWER_SYSTEM_DATABASE::check_missing_vsc_hvdc_related_model()
+{
+    ostringstream osstream;
+    vector<VSC_HVDC*> vsc_hvdcs = get_all_vsc_hvdcs();
+    unsigned int n = vsc_hvdcs.size();
+    VSC_HVDC* vsc_hvdc;
+
+    bool model_missing_detected = false;
+    osstream<<"Error. VSC_HVDC model is missing for the following VSC_HVDC links:\n";
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        vsc_hvdc = vsc_hvdcs[i];
+
+        VSC_HVDC_MODEL* vscmodel = vsc_hvdc->get_vsc_hvdc_model();
+        unsigned int n_converter = vsc_hvdc->get_converter_count();
+        if(vscmodel==NULL)
+        {
+            osstream<<vsc_hvdc->get_compound_device_name();
+            for(unsigned int j=0; j!=n_converter; ++j)
+            {
+                osstream<<vsc_hvdc->get_converter_bus(j)<<"-";
+            }
             model_missing_detected = true;
         }
     }
@@ -5536,6 +5794,58 @@ void POWER_SYSTEM_DATABASE::clear_all_hvdcs()
     hvdc_index.clear();
 }
 
+void POWER_SYSTEM_DATABASE::clear_vsc_hvdc(const DEVICE_ID& device_id)
+{
+    if(is_vsc_hvdc_exist(device_id))
+    {
+        unsigned int current_index = get_vsc_hvdc_index(device_id);
+
+        vector<VSC_HVDC>::iterator iter_vsc_hvdc = Vsc_hvdc.begin();
+
+
+        std::advance(iter_vsc_hvdc, current_index);
+        Vsc_hvdc.erase(iter_vsc_hvdc);
+        vsc_hvdc_index.set_device_index(device_id, INDEX_NOT_EXIST);
+
+        vsc_hvdc_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+    }
+}
+
+void POWER_SYSTEM_DATABASE::clear_vsc_hvdcs_connecting_to_bus(const unsigned int bus)
+{
+    DEVICE_ID device_id;
+    TERMINAL terminal;
+    device_id.set_device_type(STEPS_VSC_HVDC);
+    while(true)
+    {
+        vector<VSC_HVDC*> vsc_hvdc = get_vsc_hvdcs_connecting_to_bus(bus);
+        if(vsc_hvdc.size()!=0)
+        {
+            terminal.clear();
+
+            device_id.set_device_terminal(terminal);
+            unsigned int n_converter = vsc_hvdc.size();
+            for(unsigned int i=0; i!=n_converter; ++i)
+            {
+                unsigned int bus_number=vsc_hvdc[0]->get_converter_bus(i);
+                terminal.append_bus(bus_number);
+
+            }
+
+            device_id.set_device_identifier_index(vsc_hvdc[0]->get_identifier_index());
+            clear_vsc_hvdc(device_id);
+        }
+        else
+            break;
+    }
+}
+
+void POWER_SYSTEM_DATABASE::clear_all_vsc_hvdcs()
+{
+    Vsc_hvdc.clear();
+    vsc_hvdc_index.clear();
+}
+
 void POWER_SYSTEM_DATABASE::clear_equivalent_device(const DEVICE_ID& device_id)
 {
     if(is_equivalent_device_exist(device_id))
@@ -5820,7 +6130,16 @@ void POWER_SYSTEM_DATABASE::trip_bus(unsigned int bus)
                 }
             }
 
-            here Vsc hvdc is affected
+            vector<VSC_HVDC*> vscs = get_vsc_hvdcs_connecting_to_bus(bus);
+            n=vscs.size();
+            for(unsigned int i=0; i!=n; ++i)
+            {
+                if(vscs[i]->get_status()==true)
+                {
+                    vscs[i]->set_status(false);
+                    osstream<<vscs[i]->get_compound_device_name()<<endl;
+                }
+            }
 
             vector<EQUIVALENT_DEVICE*> edevices = get_equivalent_devices_connecting_to_bus(bus);
             n=edevices.size();
@@ -5971,15 +6290,14 @@ void POWER_SYSTEM_DATABASE::check_hvdc_status_for_out_of_service_bus(unsigned in
 
 void POWER_SYSTEM_DATABASE::check_vsc_hvdc_status_for_out_of_service_bus(unsigned int bus)
 {
-    this function to be updated
-    vector<HVDC*> hvdcs = get_hvdcs_connecting_to_bus(bus);
-    HVDC* hvdc;
-    unsigned int nhvdc = hvdcs.size();
-    for(unsigned int i=0; i!=nhvdc; ++i)
+    vector<VSC_HVDC*> vsc_hvdcs = get_vsc_hvdcs_connecting_to_bus(bus);
+    VSC_HVDC* vsc_hvdc;
+    unsigned int nvsc = vsc_hvdcs.size();
+    for(unsigned int i=0; i!=nvsc; ++i)
     {
-        hvdc = hvdcs[i];
-        if(hvdc->get_status()==true)
-            hvdc->set_status(false);
+        vsc_hvdc = vsc_hvdcs[i];
+        if(vsc_hvdc->get_status()==true)
+            vsc_hvdc->set_status(false);
     }
 }
 
