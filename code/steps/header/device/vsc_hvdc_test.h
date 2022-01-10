@@ -67,6 +67,8 @@ class VSC_HVDC_TEST : public Test::Suite
         void test_set_get_line_resistance_in_ohm();
         void test_set_get_line_inductance_in_mH();
 
+        void test_is_connected_to_bus(); // to test
+
         void test_build_conductance_matrix();
 
         void test_set_get_vsc_hvdc_model();

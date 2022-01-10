@@ -338,6 +338,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     // Line: 1-2-#1, 1-2-#2, 2-3-#1, 2-3-#2, 1-3-#1, 1-3-#2,
     // Transformer: 1-2-#1, 1-2-#2, 2-3-#1, 2-3-#2, 1-3-#1, 1-3-#2, 1-2-3-#1, 1-2-3-#2
     // Hvdc: 1-2-#1, 1-2-#2, 2-3-#1, 2-3-#2, 1-3-#1, 1-3-#2,
+    // Vsc-Hvdc: 1-2-#1, 1-2-#2, 2-3-#1, 2-3-#2, 1-3-#1, 1-3-#2, 1-2-3-#1, 1-2-3-#2
     // Equivalent device: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
     // Area: 1, 2, 3
     // Zone: 1, 2, 3
@@ -801,6 +802,51 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
         //hvdc.set_name("HVDC F");
         psdb.append_hvdc(hvdc);
     }
+    /*
+    {
+        VSC_HVDC vsc_hvdc(default_toolkit);
+
+        vsc_hvdc.set_converter_count(2);
+        vsc_hvdc.set_dc_bus_count(2);
+        vsc_hvdc.set_dc_line_count(2);
+
+        vsc_hvdc.set_converter_bus(0, 1);
+        vsc_hvdc.set_converter_bus(1, 2);
+        vsc_hvdc.set_identifier("#1");
+        psdb.append_vsc_hvdc(vsc_hvdc);
+
+        vsc_hvdc.set_identifier("#2");
+        psdb.append_vsc_hvdc(vsc_hvdc);
+
+        vsc_hvdc.set_converter_bus(0, 1);
+        vsc_hvdc.set_converter_bus(1, 3);
+        vsc_hvdc.set_identifier("#1");
+        psdb.append_vsc_hvdc(vsc_hvdc);
+
+        vsc_hvdc.set_identifier("#2");
+        psdb.append_vsc_hvdc(vsc_hvdc);
+
+        vsc_hvdc.set_converter_bus(0, 2);
+        vsc_hvdc.set_converter_bus(1, 3);
+        vsc_hvdc.set_identifier("#1");
+        psdb.append_vsc_hvdc(vsc_hvdc);
+
+        vsc_hvdc.set_identifier("#2");
+        psdb.append_vsc_hvdc(vsc_hvdc);
+
+        vsc_hvdc.set_converter_count(3);
+        vsc_hvdc.set_dc_bus_count(3);
+        vsc_hvdc.set_dc_line_count(3);
+
+        vsc_hvdc.set_converter_bus(0, 1);
+        vsc_hvdc.set_converter_bus(1, 2);
+        vsc_hvdc.set_converter_bus(2, 3);
+        vsc_hvdc.set_identifier("#1");
+        psdb.append_vsc_hvdc(vsc_hvdc);
+
+        vsc_hvdc.set_identifier("#2");
+        psdb.append_vsc_hvdc(vsc_hvdc);
+    }*/
 
     {
         EQUIVALENT_DEVICE edevice(default_toolkit);

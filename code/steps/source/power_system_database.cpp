@@ -963,7 +963,7 @@ void POWER_SYSTEM_DATABASE::append_vsc_hvdc(VSC_HVDC& vsc_hvdc)
 
     if(not vsc_hvdc.is_valid())
     {
-        osstream<<"Warning. Failed to append invalid MULTI VSC HVDC to power system database '"<<get_system_name()<<"'.";
+        osstream<<"Warning. Failed to append invalid VSC HVDC to power system database '"<<get_system_name()<<"'.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -976,23 +976,22 @@ void POWER_SYSTEM_DATABASE::append_vsc_hvdc(VSC_HVDC& vsc_hvdc)
     {
         unsigned int bus_number=vsc_hvdc.get_converter_bus(i);
         terminal.append_bus(bus_number);
-
     }
     device_id.set_device_terminal(terminal);
     device_id.set_device_identifier_index(get_index_of_string(identifier));
 
     if(this->is_vsc_hvdc_exist(device_id))
     {
-        osstream<<"Warning. "<<vsc_hvdc.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Multi_vsc_hvdc.\n"
-          <<"Duplicate copy is not allowed.";
+        osstream<<"Warning. "<<vsc_hvdc.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Vsc_hvdc.\n"
+                <<"Duplicate copy is not allowed.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
 
-    if(Vsc_hvdc.capacity()== Vsc_hvdc.size())
+    if(Vsc_hvdc.capacity()==Vsc_hvdc.size())
     {
-        osstream<<"Warning. Capacity limit ("<<Vsc_hvdc.capacity()<<") reached when appending MULTI VSC HVDC to power system database '"<<get_system_name()<<"'."<<endl
-          <<"Increase capacity by modified steps_config.json.";
+        osstream<<"Warning. Capacity limit ("<<Vsc_hvdc.capacity()<<") reached when appending VSC HVDC to power system database '"<<get_system_name()<<"'."<<endl
+                <<"Increase capacity by modified steps_config.json.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -1019,7 +1018,7 @@ void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
     if(not this->is_bus_in_allowed_range(bus))
     {
         osstream<<"Warning. Bus "<<bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<edevice.get_compound_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
-          <<"Equivalent device will not be appended into the database.";
+                <<"Equivalent device will not be appended into the database.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -1035,7 +1034,7 @@ void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
     if(this->is_equivalent_device_exist(device_id))
     {
         osstream<<"Warning. "<<edevice.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Equivalent_device.\n"
-          <<"Duplicate copy is not allowed.";
+                <<"Duplicate copy is not allowed.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -1043,7 +1042,7 @@ void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
     if(Equivalent_device.capacity()==Equivalent_device.size())
     {
         osstream<<"Warning. Capacity limit ("<<Equivalent_device.capacity()<<") reached when appending equivalent device to power system database '"<<get_system_name()<<"'."<<endl
-          <<"Increase capacity by modified steps_config.json.";
+                <<"Increase capacity by modified steps_config.json.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -1075,7 +1074,7 @@ void POWER_SYSTEM_DATABASE::append_lcc_hvdc(LCC_HVDC& lcc_hvdc)
     if(this->is_lcc_hvdc_exist(device_id))
     {
         osstream<<"Warning. "<<lcc_hvdc.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Lcc_hvdc.\n"
-          <<"Duplicate copy is not allowed.";
+                <<"Duplicate copy is not allowed.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -1083,7 +1082,7 @@ void POWER_SYSTEM_DATABASE::append_lcc_hvdc(LCC_HVDC& lcc_hvdc)
     if(Lcc_hvdc.capacity()==Lcc_hvdc.size())
     {
         osstream<<"Warning. Capacity limit ("<<Lcc_hvdc.capacity()<<") reached when appending LCC HVDC to power system database '"<<get_system_name()<<"'."<<endl
-          <<"Increase capacity by modified steps_config.json.";
+                <<"Increase capacity by modified steps_config.json.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -1112,10 +1111,10 @@ void POWER_SYSTEM_DATABASE::append_area(AREA& area)
             osstream<<"Warning. Failed to append invalid area to power system database '"<<get_system_name()<<"'.";
         if(this->is_area_exist(area.get_area_number()))
             osstream<<"Warning. Area "<<area.get_area_number()<<" already exists in power system database '"<<get_system_name()<<"': Area."<<endl
-              <<"Duplicate copy is not allowed.";
+                    <<"Duplicate copy is not allowed.";
         if(Area.capacity()==Area.size())
             osstream<<"Warning. Capacity limit ("<<Area.capacity()<<") reached when appending area to power system database '"<<get_system_name()<<"'."<<endl
-              <<"Increase capacity by modified steps_config.json.";
+                    <<"Increase capacity by modified steps_config.json.";
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -1139,10 +1138,10 @@ void POWER_SYSTEM_DATABASE::append_zone(ZONE& zone)
             osstream<<"Warning. Failed to append invalid zone to power system database '"<<get_system_name()<<"'.";
         if(this->is_zone_exist(zone.get_zone_number()))
             osstream<<"Warning. Zone "<<zone.get_zone_number()<<" already exists in power system database '"<<get_system_name()<<"': Zone."<<endl
-              <<"Duplicate copy is not allowed.";
+                    <<"Duplicate copy is not allowed.";
         if(Zone.capacity()==Zone.size())
             osstream<<"Warning. Capacity limit ("<<Zone.capacity()<<") reached when appending zone to power system database '"<<get_system_name()<<"'."<<endl
-              <<"Increase capacity by modified steps_config.json.";
+                    <<"Increase capacity by modified steps_config.json.";
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -1166,10 +1165,10 @@ void POWER_SYSTEM_DATABASE::append_owner(OWNER& owner)
             osstream<<"Warning. Failed to append invalid owner to power system database '"<<get_system_name()<<"'.";
         if(this->is_owner_exist(owner.get_owner_number()))
             osstream<<"Warning. Owner "<<owner.get_owner_number()<<" already exists in power system database '"<<get_system_name()<<"': Owner."<<endl
-              <<"Duplicate copy is not allowed.";
+                    <<"Duplicate copy is not allowed.";
         if(Owner.capacity()==Owner.size())
             osstream<<"Warning. Capacity limit ("<<Owner.capacity()<<") reached when appending owner to power system database '"<<get_system_name()<<"'."<<endl
-              <<"Increase capacity by modified steps_config.json.";
+                    <<"Increase capacity by modified steps_config.json.";
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -1195,7 +1194,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
        device_type!=STEPS_VSC_HVDC and device_type!=STEPS_LCC_HVDC)
     {
         osstream<<"Device ID type is not in the following allowed types when calling "<<__FUNCTION__<<":\n"
-                <<"[GENERATOR, WT GENERATOR, PV UNIT, ENERGY STORAGE, LOAD, FIXED SHUNT, LINE, TRANSFORMER, HVDC, LCC HVDC].\n"
+                <<"[GENERATOR, WT GENERATOR, PV UNIT, ENERGY STORAGE, LOAD, FIXED SHUNT, LINE, TRANSFORMER, HVDC, VSC HVDC, LCC HVDC].\n"
                 <<"The input device type is: "<<device_type2string(device_type)<<".\n"
                 <<"No device id will be updated.";
         toolkit->show_information_with_leading_time_stamp(osstream);
@@ -1230,7 +1229,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
         return;
 
     }
-
+    // The following handle devices with buses <=3
     unsigned int ibus = new_terminal[0];
     unsigned int jbus = new_terminal[1];
     unsigned int kbus = new_terminal[2];
@@ -1756,7 +1755,7 @@ void POWER_SYSTEM_DATABASE::change_bus_number(unsigned int original_bus_number, 
             }
 
             DEVICE_ID new_did = vsc_hvdc->get_device_id();
-            hvdc_index.set_device_index(new_did, index);
+            vsc_hvdc_index.set_device_index(new_did, index);
         }
 
         vector<AREA*> areas = get_all_areas();
@@ -2093,6 +2092,11 @@ vector<DEVICE*> POWER_SYSTEM_DATABASE::get_all_devices_connecting_to_bus(const u
     n = hvdcs.size();
     for(unsigned int i=0; i!=n; ++i)
         devices.push_back(hvdcs[i]);
+
+    vector<VSC_HVDC*> vsc_hvdcs = get_vsc_hvdcs_connecting_to_bus(bus);
+    n = vsc_hvdcs.size();
+    for(unsigned int i=0; i!=n; ++i)
+        devices.push_back(vsc_hvdcs[i]);
 
     vector<EQUIVALENT_DEVICE*> edevices = get_equivalent_devices_connecting_to_bus(bus);
     n = edevices.size();
@@ -2541,6 +2545,11 @@ vector<DEVICE*> POWER_SYSTEM_DATABASE::get_all_devices_in_area(const unsigned in
     n = hvdcs.size();
     for(unsigned int i=0; i!=n; ++i)
         devices.push_back(hvdcs[i]);
+
+    vector<VSC_HVDC*> vsc_hvdcs = get_vsc_hvdcs_in_area(area);
+    n = vsc_hvdcs.size();
+    for(unsigned int i=0; i!=n; ++i)
+        devices.push_back(vsc_hvdcs[i]);
 
     vector<EQUIVALENT_DEVICE*> edevices = get_equivalent_devices_in_area(area);
     n = edevices.size();
@@ -3018,6 +3027,11 @@ vector<DEVICE*> POWER_SYSTEM_DATABASE::get_all_devices_in_zone(const unsigned in
     for(unsigned int i=0; i!=n; ++i)
         devices.push_back(hvdcs[i]);
 
+    vector<VSC_HVDC*> vsc_hvdcs = get_vsc_hvdcs_in_zone(zone);
+    n = vsc_hvdcs.size();
+    for(unsigned int i=0; i!=n; ++i)
+        devices.push_back(vsc_hvdcs[i]);
+
     vector<EQUIVALENT_DEVICE*> edevices = get_equivalent_devices_in_zone(zone);
     n = edevices.size();
     for(unsigned int i=0; i!=n; ++i)
@@ -3487,11 +3501,15 @@ vector<DEVICE*> POWER_SYSTEM_DATABASE::get_all_devices()
     for(unsigned int i=0; i!=n; ++i)
         devices.push_back(transes[i]);
 
-
     vector<HVDC*> hvdcs = get_all_hvdcs();
     n = hvdcs.size();
     for(unsigned int i=0; i!=n; ++i)
         devices.push_back(hvdcs[i]);
+
+    vector<VSC_HVDC*> vsc_hvdcs = get_all_vsc_hvdcs();
+    n = vsc_hvdcs.size();
+    for(unsigned int i=0; i!=n; ++i)
+        devices.push_back(vsc_hvdcs[i]);
 
     vector<EQUIVALENT_DEVICE*> edevices = get_all_equivalent_devices();
     n = edevices.size();
@@ -5054,11 +5072,12 @@ void POWER_SYSTEM_DATABASE::check_missing_vsc_hvdc_related_model()
         unsigned int n_converter = vsc_hvdc->get_converter_count();
         if(vscmodel==NULL)
         {
-            osstream<<vsc_hvdc->get_compound_device_name();
-            for(unsigned int j=0; j!=n_converter; ++j)
+            osstream<<vsc_hvdc->get_compound_device_name()<<"[";
+            for(unsigned int j=0; j!=n_converter-1; ++j)
             {
-                osstream<<vsc_hvdc->get_converter_bus(j)<<"-";
+                osstream<<bus_number2bus_name(vsc_hvdc->get_converter_bus(j))<<" -- ";
             }
+            osstream<<bus_number2bus_name(vsc_hvdc->get_converter_bus(n_converter-1))<<"]";
             model_missing_detected = true;
         }
     }
@@ -5433,10 +5452,11 @@ void POWER_SYSTEM_DATABASE::clear_generators_connecting_to_bus(const unsigned in
         vector<GENERATOR*> generator = get_generators_connecting_to_bus(bus);
         if(generator.size()!=0)
         {
-            terminal.clear();
+            /*terminal.clear();
             terminal.append_bus(bus);
             device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier_index(generator[0]->get_identifier_index());
+            device_id.set_device_identifier_index(generator[0]->get_identifier_index());*/
+            device_id = generator[0]->get_device_id();
             clear_generator(device_id);
         }
         else
@@ -5477,10 +5497,11 @@ void POWER_SYSTEM_DATABASE::clear_wt_generators_connecting_to_bus(const unsigned
         vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
         if(wt_generator.size()!=0)
         {
-            terminal.clear();
+            /*terminal.clear();
             terminal.append_bus(bus);
             device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier_index(wt_generator[0]->get_identifier_index());
+            device_id.set_device_identifier_index(wt_generator[0]->get_identifier_index());*/
+            device_id = wt_generator[0]->get_device_id();
             clear_wt_generator(device_id);
         }
         else
@@ -5521,10 +5542,11 @@ void POWER_SYSTEM_DATABASE::clear_pv_units_connecting_to_bus(const unsigned int 
         vector<PV_UNIT*> pv_unit = get_pv_units_connecting_to_bus(bus);
         if(pv_unit.size()!=0)
         {
-            terminal.clear();
+            /*terminal.clear();
             terminal.append_bus(bus);
             device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier_index(pv_unit[0]->get_identifier_index());
+            device_id.set_device_identifier_index(pv_unit[0]->get_identifier_index());*/
+            device_id = pv_unit[0]->get_device_id();
             clear_pv_unit(device_id);
         }
         else
@@ -5581,10 +5603,11 @@ void POWER_SYSTEM_DATABASE::clear_loads_connecting_to_bus(const unsigned int bus
         vector<LOAD*> load = get_loads_connecting_to_bus(bus);
         if(load.size()!=0)
         {
-            terminal.clear();
+            /*terminal.clear();
             terminal.append_bus(bus);
             device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier_index(load[0]->get_identifier_index());
+            device_id.set_device_identifier_index(load[0]->get_identifier_index());*/
+            device_id = load[0]->get_device_id();
             clear_load(device_id);
         }
         else
@@ -5627,11 +5650,12 @@ void POWER_SYSTEM_DATABASE::clear_lines_connecting_to_bus(const unsigned int bus
         vector<LINE*> line = get_lines_connecting_to_bus(bus);
         if(line.size()!=0)
         {
-            terminal.clear();
+            /*terminal.clear();
             terminal.append_bus(line[0]->get_sending_side_bus());
             terminal.append_bus(line[0]->get_receiving_side_bus());
             device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier_index(line[0]->get_identifier_index());
+            device_id.set_device_identifier_index(line[0]->get_identifier_index());*/
+            device_id = line[0]->get_device_id();
             clear_line(device_id);
         }
         else
@@ -5673,12 +5697,13 @@ void POWER_SYSTEM_DATABASE::clear_transformers_connecting_to_bus(const unsigned 
 
         if(transformer.size()!=0)
         {
-            terminal.clear();
+            /*terminal.clear();
             terminal.append_bus(transformer[0]->get_winding_bus(PRIMARY_SIDE));
             terminal.append_bus(transformer[0]->get_winding_bus(SECONDARY_SIDE));
             terminal.append_bus(transformer[0]->get_winding_bus(TERTIARY_SIDE));
             device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier_index(transformer[0]->get_identifier_index());
+            device_id.set_device_identifier_index(transformer[0]->get_identifier_index());*/
+            device_id = transformer[0]->get_device_id();
             clear_transformer(device_id);
         }
         else
@@ -5739,7 +5764,8 @@ void POWER_SYSTEM_DATABASE::clear_fixed_shunts_connecting_to_bus(const unsigned 
         vector<FIXED_SHUNT*> fixed_shunt = get_fixed_shunts_connecting_to_bus(bus);
         if(fixed_shunt.size()!=0)
         {
-            device_id.set_device_identifier_index(fixed_shunt[0]->get_identifier_index());
+            /*device_id.set_device_identifier_index(fixed_shunt[0]->get_identifier_index());*/
+            device_id = fixed_shunt[0]->get_device_id();
             clear_fixed_shunt(device_id);
             fixed_shunt.clear();
         }
@@ -5781,11 +5807,12 @@ void POWER_SYSTEM_DATABASE::clear_hvdcs_connecting_to_bus(const unsigned int bus
         vector<HVDC*> hvdc = get_hvdcs_connecting_to_bus(bus);
         if(hvdc.size()!=0)
         {
-            terminal.clear();
+            /*terminal.clear();
             terminal.append_bus(hvdc[0]->get_converter_bus(RECTIFIER));
             terminal.append_bus(hvdc[0]->get_converter_bus(INVERTER));
             device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier_index(hvdc[0]->get_identifier_index());
+            device_id.set_device_identifier_index(hvdc[0]->get_identifier_index());*/
+            device_id = hvdc[0]->get_device_id();
             clear_hvdc(device_id);
         }
         else
@@ -5823,22 +5850,12 @@ void POWER_SYSTEM_DATABASE::clear_vsc_hvdcs_connecting_to_bus(const unsigned int
     device_id.set_device_type(STEPS_VSC_HVDC);
     while(true)
     {
-        vector<VSC_HVDC*> vsc_hvdc = get_vsc_hvdcs_connecting_to_bus(bus);
-        if(vsc_hvdc.size()!=0)
+        vector<VSC_HVDC*> vsc_hvdcs = get_vsc_hvdcs_connecting_to_bus(bus);
+        if(vsc_hvdcs.size()!=0)
         {
-            terminal.clear();
-
-            device_id.set_device_terminal(terminal);
-            unsigned int n_converter = vsc_hvdc.size();
-            for(unsigned int i=0; i!=n_converter; ++i)
-            {
-                unsigned int bus_number=vsc_hvdc[0]->get_converter_bus(i);
-                terminal.append_bus(bus_number);
-
-            }
-
-            device_id.set_device_identifier_index(vsc_hvdc[0]->get_identifier_index());
+            device_id = vsc_hvdcs[0]->get_device_id();
             clear_vsc_hvdc(device_id);
+            vsc_hvdcs.clear();
         }
         else
             break;
@@ -5878,10 +5895,11 @@ void POWER_SYSTEM_DATABASE::clear_equivalent_devices_connecting_to_bus(const uns
         vector<EQUIVALENT_DEVICE*> edevice = get_equivalent_devices_connecting_to_bus(bus);
         if(edevice.size()!=0)
         {
-            terminal.clear();
+            /*terminal.clear();
             terminal.append_bus(edevice[0]->get_equivalent_device_bus());
             device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier_index(edevice[0]->get_identifier_index());
+            device_id.set_device_identifier_index(edevice[0]->get_identifier_index());*/
+            device_id = edevice[0]->get_device_id();
             clear_equivalent_device(device_id);
         }
         else
@@ -5923,10 +5941,11 @@ void POWER_SYSTEM_DATABASE::clear_energy_storages_connecting_to_bus(const unsign
         vector<ENERGY_STORAGE*> estorage = get_energy_storages_connecting_to_bus(bus);
         if(estorage.size()!=0)
         {
-            terminal.clear();
+            /*terminal.clear();
             terminal.append_bus(estorage[0]->get_energy_storage_bus());
             device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier_index(estorage[0]->get_identifier_index());
+            device_id.set_device_identifier_index(estorage[0]->get_identifier_index());*/
+            device_id = estorage[0]->get_device_id();
             clear_energy_storage(device_id);
         }
         else
@@ -5966,7 +5985,8 @@ void POWER_SYSTEM_DATABASE::clear_lcc_hvdcs_connecting_to_bus(const unsigned int
         vector<LCC_HVDC*> hvdcs = get_lcc_hvdcs_connecting_to_bus(bus);
         if(hvdcs.size()!=0)
         {
-            device_id.set_device_name_index(hvdcs[0]->get_name_index());
+            /*device_id.set_device_name_index(hvdcs[0]->get_name_index());*/
+            device_id = hvdcs[0]->get_device_id();
             clear_lcc_hvdc(device_id);
         }
         else
