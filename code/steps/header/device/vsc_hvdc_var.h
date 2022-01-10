@@ -11,7 +11,7 @@ using namespace std;
 
 class BUS;
 
-struct VSC_HVDC_CONVERTER_VAR
+struct VSC_HVDC_CONVERTER_STRUCT
 {
     unsigned int converter_bus;
     BUS* converter_busptr;
@@ -33,7 +33,7 @@ struct VSC_HVDC_CONVERTER_VAR
     double remote_regulation_percent;
 };
 
-struct VSC_HVDC_DC_BUS_VAR
+struct VSC_HVDC_DC_BUS_STRUCT
 {
     unsigned int dc_bus_number;
     unsigned int ac_bus_number;
@@ -46,7 +46,7 @@ struct VSC_HVDC_DC_BUS_VAR
     double dc_load_power_in_MW;
 };
 
-struct VSC_HVDC_DC_LINE_VAR
+struct VSC_HVDC_DC_LINE_STRUCT
 {
     unsigned int sending_side_bus;
     unsigned int receiving_side_bus;

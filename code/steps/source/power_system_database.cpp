@@ -4118,6 +4118,11 @@ unsigned int POWER_SYSTEM_DATABASE::get_hvdc_count() const
     return Hvdc.size();
 }
 
+unsigned int POWER_SYSTEM_DATABASE::get_vsc_hvdc_count() const
+{
+    return Vsc_hvdc.size();
+}
+
 unsigned int POWER_SYSTEM_DATABASE::get_equivalent_device_count() const
 {
     return Equivalent_device.size();

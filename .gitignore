@@ -21,3 +21,4 @@ code/steps/header/device/nhvdc.h
 code/steps/header/device/nhvdc_test.h
 code/steps/source/device/lcc_hvdc_2t.cpp
 
+code/thirdparty/*.layout

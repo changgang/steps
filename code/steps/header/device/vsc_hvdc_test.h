@@ -71,10 +71,15 @@ class VSC_HVDC_TEST : public Test::Suite
 
         void test_set_get_vsc_hvdc_model();
     private:
-        void prepare_2_terminal_vsc_hvdc_buses();
-        void prepare_3_terminal_vsc_hvdc_buses();
-        void prepare_4_terminal_vsc_hvdc_buses();
-        void prepare_5_terminal_vsc_hvdc_buses();
+        void prepare_2_terminal_vsc_hvdc();
+        void prepare_3_terminal_vsc_hvdc();
+        void prepare_4_terminal_vsc_hvdc();
+        void prepare_5_terminal_vsc_hvdc();
+
+        void prepare_2_terminal_vsc_hvdc_converter_ac_buses();
+        void prepare_3_terminal_vsc_hvdc_converter_ac_buses();
+        void prepare_4_terminal_vsc_hvdc_converter_ac_buses();
+        void prepare_5_terminal_vsc_hvdc_converter_ac_buses();
 
         VSC_HVDC vsc;
 };

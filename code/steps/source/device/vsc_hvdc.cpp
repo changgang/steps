@@ -56,8 +56,8 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
 
         else
         {
-            set_converter_dc_operation_mode(i,VSC_DC_POWER_CONTORL);
-            set_converter_nominal_ac_power_command_in_MW(i,vsc.get_converter_nominal_ac_power_command_in_MW(i));
+            set_converter_dc_operation_mode(i,VSC_AC_ACTIVE_POWER_CONTORL);
+            set_converter_nominal_ac_active_power_command_in_MW(i,vsc.get_converter_nominal_ac_active_power_command_in_MW(i));
         }
 
         if(vsc.get_converter_ac_operation_mode(i)==1)
@@ -69,13 +69,13 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
         else
         {
             set_converter_ac_operation_mode(i,VSC_AC_REACTIVE_POWER_CONTROL);
-            set_converter_nominal_ac_power_command_in_Mvar(i,vsc.get_converter_nominal_ac_power_command_in_Mvar(i));
+            set_converter_nominal_ac_reactive_power_command_in_Mvar(i,vsc.get_converter_nominal_ac_power_command_in_Mvar(i));
         }
         set_converter_loss_factor_A_in_kW(i,vsc.get_converter_loss_factor_A_in_kW(i));
         set_converter_loss_factor_B_in_kW_per_amp(i,vsc.get_converter_loss_factor_B_in_kW_per_amp(i));
         set_converter_minimum_loss_in_kW(i,vsc.get_converter_minimum_loss_in_kW(i));
         set_converter_rated_capacity_in_MVA(i,vsc.get_converter_rated_capacity_in_MVA(i));
-        set_converter_current_rating_in_amp(i,vsc.get_converter_current_rating_in_amp(i));
+        set_converter_rated_current_in_A(i,vsc.get_converter_current_rating_in_amp(i));
         set_converter_power_weighting_factor(i,vsc.get_converter_power_weighting_factor(i));
         set_converter_Qmax_in_MVar(i,vsc.get_converter_Qmax_in_MVar(i));
         set_converter_Qmin_in_MVar(i,vsc.get_converter_Qmin_in_MVar(i));
@@ -119,9 +119,6 @@ void VSC_HVDC::clear()
 {
     set_identifier("");
     set_name("");
-    n_converter = 0;
-    n_dc_bus = 0;
-    n_dc_line = 0;
 
     converters.clear();
     dc_buses.clear();
@@ -155,13 +152,11 @@ void VSC_HVDC::set_converter_count(unsigned int n)
 
     if(n<2) n = 2;
 
-    n_converter = n;
+    converters.reserve(n);
 
-    converters.reserve(n_converter);
-
-    VSC_HVDC_CONVERTER_VAR var;
-    for(unsigned int i=0; i<n_converter; ++i)
-        converters.push_back(var);
+    VSC_HVDC_CONVERTER_STRUCT converter;
+    for(unsigned int i=0; i<n; ++i)
+        converters.push_back(converter);
 }
 
 void VSC_HVDC::set_dc_bus_count(unsigned int n)
@@ -170,12 +165,10 @@ void VSC_HVDC::set_dc_bus_count(unsigned int n)
 
     if(n<2) n = 2;
 
-    n_dc_bus = n;
-
-    dc_buses.reserve(n_dc_bus);
-    VSC_HVDC_DC_BUS_VAR var;
-    for(unsigned int i=0; i<n_dc_bus; ++i)
-        dc_buses.push_back(var);
+    dc_buses.reserve(n);
+    VSC_HVDC_DC_BUS_STRUCT dc_bus;
+    for(unsigned int i=0; i<n; ++i)
+        dc_buses.push_back(dc_bus);
 }
 
 void VSC_HVDC::set_dc_line_count(unsigned int n)
@@ -184,12 +177,10 @@ void VSC_HVDC::set_dc_line_count(unsigned int n)
 
     if(n<1) n = 1;
 
-    n_dc_line = n;
-
-    dc_lines.reserve(n_dc_line);
-    VSC_HVDC_DC_LINE_VAR var;
-    for(unsigned int i=0; i<n_dc_line; ++i)
-        dc_lines.push_back(var);
+    dc_lines.reserve(n);
+    VSC_HVDC_DC_LINE_STRUCT dc_line;
+    for(unsigned int i=0; i<n; ++i)
+        dc_lines.push_back(dc_line);
 }
 
 void VSC_HVDC::set_status(const bool status)
@@ -227,20 +218,35 @@ void VSC_HVDC::set_ac_converter_bus_with_dc_voltage_control(const unsigned int b
     }
 }
 
-void VSC_HVDC::set_converter_bus(unsigned int index, const unsigned int bus)
+void VSC_HVDC::set_dc_network_base_voltage_in_kV(const double base_voltage)
+{
+    this->dc_base_voltage_in_kV = base_voltage;
+}
+
+bool VSC_HVDC::converter_index_is_out_of_range_in_function(const unsigned int index, const string& func)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
     if(index>=get_converter_count())
     {
-        osstream<<"VSC_HVDC converter bus index "<<index<<" exceeds converter count"<<get_converter_count()<<endl;
+        osstream<<"VSC_HVDC converter index "<<index<<" exceeds converter count"<<get_converter_count()
+                <<" when calling VSC_HVDC::"<<func<<"()"<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
 
-        return;
+        return true;
     }
+    else
+        return false;
+
+}
+void VSC_HVDC::set_converter_bus(const unsigned int index, const unsigned int bus)
+{
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
 
     if(bus!=0)
     {
+        STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         if(psdb.is_bus_exist(bus))
@@ -249,6 +255,8 @@ void VSC_HVDC::set_converter_bus(unsigned int index, const unsigned int bus)
         }
         else
         {
+            ostringstream osstream;
+            STEPS& toolkit = get_toolkit();
             osstream<<"Bus "<<bus<<" does not exist for setting up "<<"converter_name"<<" side bus of multi_vsc-hvdc link."<<endl
                     <<"0 will be set to indicate invalid vsc-hvdc link.";
             toolkit.show_information_with_leading_time_stamp(osstream);
@@ -257,167 +265,263 @@ void VSC_HVDC::set_converter_bus(unsigned int index, const unsigned int bus)
     }
     else
     {
+        ostringstream osstream;
+        STEPS& toolkit = get_toolkit();
         osstream<<"Warning. Zero bus number (0) is not allowed for setting up "<<"converter_name"<<" bus of vsc-hvdc link."<<endl
                 <<"0 will be set to indicate invalid vsc-hvdc link.";
-        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
         converters[index].converter_bus = bus;
     }
 }
 
-void VSC_HVDC::set_converter_dc_operation_mode(unsigned int index, const VSC_HVDC_DC_CONTROL_MODE mode)
+void VSC_HVDC::set_converter_dc_operation_mode(const unsigned int index, const VSC_HVDC_DC_CONTROL_MODE mode)
 {
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     converters[index].dc_control_mode =  mode;
-
 }
 
-void VSC_HVDC::set_converter_ac_operation_mode(unsigned int index, const VSC_HVDC_AC_CONTROL_MODE mode)
+void VSC_HVDC::set_converter_ac_operation_mode(const unsigned int index, const VSC_HVDC_AC_CONTROL_MODE mode)
 {
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     converters[index].ac_control_mode = mode;
 }
 
-void VSC_HVDC::set_converter_nominal_ac_power_command_in_MW(unsigned int index, double P)
+void VSC_HVDC::set_converter_nominal_ac_active_power_command_in_MW(const unsigned int index, const double P)
 {
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+    return;
     converters[index].nominal_dc_power_in_MW = P;
 }
 
-void VSC_HVDC::set_converter_nominal_dc_voltage_command_in_kV(unsigned int index, double V)
+void VSC_HVDC::set_converter_nominal_dc_voltage_command_in_kV(const unsigned int index, const double V)
 {
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     converters[index].nominal_dc_voltage_in_kV = V;
 }
 
-void VSC_HVDC::set_converter_nominal_ac_voltage_command_in_pu(unsigned int index, double V)
+void VSC_HVDC::set_converter_nominal_ac_voltage_command_in_pu(const unsigned int index, const double V)
 {
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     converters[index].nominal_ac_voltage_in_pu = V;
 }
 
-void VSC_HVDC::set_converter_nominal_ac_power_command_in_Mvar(unsigned int index, double Q)
+void VSC_HVDC::set_converter_nominal_ac_reactive_power_command_in_Mvar(const unsigned int index, const double Q)
 {
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     converters[index].nominal_ac_reactive_power_in_Mvar = Q;
 }
 
-void VSC_HVDC::set_converter_loss_factor_A_in_kW(unsigned int index, double A)
+void VSC_HVDC::set_converter_loss_factor_A_in_kW(const unsigned int index, const double A)
 {
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     converters[index].converter_loss_coefficient_A_in_kW = A;
 }
 
-void VSC_HVDC::set_converter_loss_factor_B_in_kW_per_amp(unsigned int index, double B)
+void VSC_HVDC::set_converter_loss_factor_B_in_kW_per_amp(const unsigned int index, const double B)
 {
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     converters[index].converter_loss_coefficient_B_in_kW_per_amp = B;
 }
 
-void VSC_HVDC::set_converter_minimum_loss_in_kW(unsigned int index, double P)
+void VSC_HVDC::set_converter_minimum_loss_in_kW(const unsigned int index, const double P)
 {
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     converters[index].min_converter_loss_in_kW = P;
 }
 
-void VSC_HVDC::set_converter_rated_capacity_in_MVA(unsigned int index, double S)
+void VSC_HVDC::set_converter_rated_capacity_in_MVA(const unsigned int index, const double S)
 {
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     converters[index].converter_rated_capacity_in_MVA = S;
 }
 
-void VSC_HVDC::set_converter_current_rating_in_amp(unsigned int index, double I)
+void VSC_HVDC::set_converter_rated_current_in_A(const unsigned int index, const double I)
 {
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     converters[index].converter_rated_current_in_amp = I;
 }
 
-void VSC_HVDC::set_converter_power_weighting_factor(unsigned int index, double pwf)
+void VSC_HVDC::set_converter_power_weighting_factor(const unsigned int index, const double pwf)
 {
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     converters[index].power_weighting_factor = pwf;
 }
 
-void VSC_HVDC::set_converter_Qmax_in_MVar(unsigned int index, double Q)
+void VSC_HVDC::set_converter_Qmax_in_MVar(const unsigned int index, const double Q)
 {
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     converters[index].Qmax_MVar = Q;
 }
 
-void VSC_HVDC::set_converter_Qmin_in_MVar(unsigned int index, double Q)
+void VSC_HVDC::set_converter_Qmin_in_MVar(const unsigned int index, const double Q)
 {
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     converters[index].Qmin_MVar = Q;
 }
 
-void VSC_HVDC::set_converter_remote_bus_to_regulate(unsigned int index, unsigned int bus)
+void VSC_HVDC::set_converter_remote_bus_to_regulate(const unsigned int index, const unsigned int bus)
 {
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     converters[index].remote_bus_to_regulate = bus;
 }
 
-void VSC_HVDC::set_converter_remote_regulation_percent(unsigned int index, double rmpct)
+void VSC_HVDC::set_converter_remote_regulation_percent(const unsigned int index, const double rmpct)
 {
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     converters[index].remote_regulation_percent = rmpct;
 }
 
-void VSC_HVDC::set_dc_bus_number(unsigned int index, unsigned int n)
+bool VSC_HVDC::dc_bus_index_is_out_of_range_in_function(const unsigned int index, const string& func)
 {
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    if(index>=get_dc_bus_count())
+    {
+        osstream<<"VSC_HVDC dc bus index "<<index<<" exceeds dc bus count"<<get_dc_bus_count()
+                <<" when calling VSC_HVDC::"<<func<<"()"<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+
+        return true;
+    }
+    else
+        return false;
+
+}
+
+void VSC_HVDC::set_dc_bus_number(const unsigned int index, const unsigned int n)
+{
+    if(dc_bus_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     dc_buses[index].dc_bus_number = n;
 }
 
-void VSC_HVDC::set_dc_bus_area(unsigned int index, unsigned int n)
+void VSC_HVDC::set_dc_bus_area(const unsigned int index, const unsigned int n)
 {
+    if(dc_bus_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     dc_buses[index].dc_bus_area = n;
 }
 
-void VSC_HVDC::set_dc_bus_zone(unsigned int index, unsigned int n)
+void VSC_HVDC::set_dc_bus_zone(const unsigned int index, const unsigned int n)
 {
+    if(dc_bus_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     dc_buses[index].dc_bus_zone = n;
 }
 
-void VSC_HVDC::set_dc_bus_name(unsigned int index, string name)
+void VSC_HVDC::set_dc_bus_name(const unsigned int index, const string name)
 {
-    name = trim_string(name);
-    add_string_to_str_int_map(name);
-    dc_buses[index].dc_bus_name_index = get_index_of_string(name);
+    if(dc_bus_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
+    string tmp_name = name;
+    tmp_name = trim_string(tmp_name);
+    add_string_to_str_int_map(tmp_name);
+    dc_buses[index].dc_bus_name_index = get_index_of_string(tmp_name);
 }
 
-void VSC_HVDC::set_ac_bus_number_of_dc_bus(unsigned int index, const unsigned int bus)
+void VSC_HVDC::set_ac_bus_number_of_dc_bus(const unsigned int index, const unsigned int bus)
 {
+    if(dc_bus_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     dc_buses[index].ac_bus_number = bus;
 }
 
-void VSC_HVDC::set_owner_number(unsigned int index, const unsigned int n)
+void VSC_HVDC::set_owner_number(const unsigned int index, const unsigned int n)
 {
+    if(dc_bus_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     dc_buses[index].owner = n;
 }
 
-void VSC_HVDC::set_ground_resistance_in_ohm(unsigned int index, double R)
+void VSC_HVDC::set_ground_resistance_in_ohm(const unsigned int index, const double R)
 {
+    if(dc_bus_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     dc_buses[index].converter_ground_resistance_in_ohm = R;
 }
 
-void VSC_HVDC::set_dc_bus_generation_power_in_MW(unsigned int index, double P)
+void VSC_HVDC::set_dc_bus_generation_power_in_MW(const unsigned int index, const double P)
 {
+    if(dc_bus_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     dc_buses[index].dc_generation_power_in_MW=P;
 }
 
-void VSC_HVDC::set_dc_bus_load_power_in_MW(unsigned int index, double P)
+void VSC_HVDC::set_dc_bus_load_power_in_MW(const unsigned int index, const double P)
 {
+    if(dc_bus_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     dc_buses[index].dc_load_power_in_MW=P;
 }
 
-void VSC_HVDC::set_dc_line_sending_side_bus(unsigned int index, unsigned int bus)
+bool VSC_HVDC::dc_line_index_is_out_of_range_in_function(const unsigned int index, const string& func)
 {
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    if(index>=get_dc_line_count())
+    {
+        osstream<<"VSC_HVDC dc line index "<<index<<" exceeds dc line count"<<get_dc_line_count()
+                <<" when calling VSC_HVDC::"<<func<<"()"<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+
+        return true;
+    }
+    else
+        return false;
+
+}
+
+void VSC_HVDC::set_dc_line_sending_side_bus(const unsigned int index, const unsigned int bus)
+{
+    if(dc_line_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     dc_lines[index].sending_side_bus = bus;
 }
 
-void VSC_HVDC::set_dc_line_receiving_side_bus(unsigned int index, unsigned int bus)
+void VSC_HVDC::set_dc_line_receiving_side_bus(const unsigned int index, const unsigned int bus)
 {
+    if(dc_line_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     dc_lines[index].receiving_side_bus = bus;
 }
 
-void VSC_HVDC::set_dc_line_identifier(unsigned int index, string line_id)
+void VSC_HVDC::set_dc_line_identifier(const unsigned int index, const string line_id)
 {
-    line_id = trim_string(line_id);
-    add_string_to_str_int_map(line_id);
-    dc_lines[index].identifier_index = get_index_of_string(line_id);
+    if(dc_line_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
+    string tmp_id = line_id;
+    tmp_id = trim_string(tmp_id);
+    add_string_to_str_int_map(tmp_id);
+    dc_lines[index].identifier_index = get_index_of_string(tmp_id);
 }
 
-void VSC_HVDC::set_dc_line_meter_end_bus(unsigned int index, unsigned int meter_bus)
+void VSC_HVDC::set_dc_line_meter_end_bus(const unsigned int index, const unsigned int meter_bus)
 {
+    if(dc_line_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     if(meter_bus<=1) dc_lines[index].meter_end_bus = dc_lines[index].sending_side_bus;
     else             dc_lines[index].meter_end_bus = dc_lines[index].receiving_side_bus;
 }
 
-void VSC_HVDC::set_dc_line_resistance_in_ohm(unsigned int index, const double R)
+void VSC_HVDC::set_dc_line_resistance_in_ohm(const unsigned int index, const double R)
 {
+    if(dc_line_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     if(R>=0.0)
 
         dc_lines[index].line_R_in_ohm = R;
@@ -433,8 +537,10 @@ void VSC_HVDC::set_dc_line_resistance_in_ohm(unsigned int index, const double R)
     }
 }
 
-void VSC_HVDC::set_dc_line_inductance_in_mH(unsigned int index,const double L)
+void VSC_HVDC::set_dc_line_inductance_in_mH(const unsigned int index,const double L)
 {
+    if(dc_line_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
     ostringstream osstream;
     if(L>=0.0)
         dc_lines[index].line_L_in_mH = L;
@@ -472,17 +578,17 @@ unsigned int VSC_HVDC::get_name_index() const
 
 unsigned int VSC_HVDC::get_converter_count() const
 {
-    return n_converter;
-}
-
-unsigned int VSC_HVDC::get_dc_line_count() const
-{
-    return n_dc_line;
+    return converters.size();
 }
 
 unsigned int VSC_HVDC::get_dc_bus_count() const
 {
-    return n_dc_bus;
+    return dc_buses.size();
+}
+
+unsigned int VSC_HVDC::get_dc_line_count() const
+{
+    return dc_lines.size();
 }
 
 bool VSC_HVDC::get_status() const
@@ -538,7 +644,7 @@ VSC_HVDC_AC_CONTROL_MODE VSC_HVDC::get_converter_ac_operation_mode(unsigned int 
     }
 }
 
-double VSC_HVDC::get_converter_nominal_ac_power_command_in_MW(unsigned int index) const
+double VSC_HVDC::get_converter_nominal_ac_active_power_command_in_MW(unsigned int index) const
 {
     if(index<get_converter_count())
         return converters[index].nominal_dc_power_in_MW;
@@ -552,7 +658,7 @@ double VSC_HVDC::get_converter_nominal_ac_power_command_in_MW(unsigned int index
     }
 }
 
-double VSC_HVDC::get_converter_nominal_active_power_command_in_pu(unsigned int index) const
+double VSC_HVDC::get_converter_nominal_ac_active_power_command_in_pu(unsigned int index) const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -569,10 +675,41 @@ double VSC_HVDC::get_converter_nominal_active_power_command_in_pu(unsigned int i
     }
 }
 
+
 double VSC_HVDC::get_converter_nominal_dc_voltage_command_in_kV(unsigned int index) const
 {
     if(index<get_converter_count())
         return converters[index].nominal_dc_voltage_in_kV;
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return 9999.9;
+    }
+}
+
+double VSC_HVDC::get_converter_nominal_dc_voltage_command_in_pu(unsigned int index) const
+{
+    double vbase = get_dc_network_base_voltage_in_kV();
+    if(index<get_converter_count())
+        return converters[index].nominal_dc_voltage_in_kV/vbase;
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return 9999.9;
+    }
+}
+
+double VSC_HVDC::get_converter_nominal_ac_voltage_command_in_kV(unsigned int index) const
+{
+    double vbase = get_dc_network_base_voltage_in_kV();
+    if(index<get_converter_count())
+        return converters[index].nominal_ac_voltage_in_pu/vbase;
     else
     {
         STEPS& toolkit = get_toolkit();
@@ -613,10 +750,11 @@ double VSC_HVDC::get_converter_nominal_ac_power_command_in_Mvar(unsigned int ind
 
 double VSC_HVDC::get_converter_nominal_reactive_power_command_in_pu(unsigned int index) const
 {
-    //STEPS& toolkit = get_toolkit();
-    //POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
     if(index<get_converter_count())
-        return converters[index].nominal_ac_reactive_power_in_Mvar;
+        return converters[index].nominal_ac_reactive_power_in_Mvar/sbase;
     else
     {
         STEPS& toolkit = get_toolkit();
@@ -984,6 +1122,7 @@ bool VSC_HVDC::is_connected_to_bus(unsigned int bus) const
 {
     unsigned int m=0;
     unsigned int n=0;
+    unsigned int n_converter = converters.size();
     for(unsigned int i=0; i!=n_converter; ++i)
     {
         if (get_converter_bus(i)==bus) ++m;
@@ -997,6 +1136,7 @@ bool VSC_HVDC::is_in_area(unsigned int area) const
 {
     unsigned int m=0;
     unsigned int n=0;
+    unsigned int n_converter = converters.size();
     for(unsigned int i=0; i!=n_converter; ++i)
     {
         if (get_dc_bus_area(i)==area) ++m;
@@ -1010,6 +1150,7 @@ bool VSC_HVDC::is_in_zone(unsigned int zone) const
 {
     unsigned int m=0;
     unsigned int n=0;
+    unsigned int n_converter = converters.size();
     for(unsigned int i=0; i!=n_converter; ++i)
     {
         if (get_dc_bus_zone(i)==zone) ++m;
@@ -1023,6 +1164,7 @@ bool VSC_HVDC::is_valid() const
 {
     unsigned int m=0;
     unsigned int n=0;
+    unsigned int n_converter = converters.size();
     for(unsigned int i=0; i!=n_converter; ++i)
     {
         if (get_converter_bus(i)!=0)   ++m;
@@ -1104,7 +1246,6 @@ MODEL* VSC_HVDC::get_model_of_type(string model_type)
     {
         return get_vsc_hvdc_model();
     }
-    cout<<"excution!!!!!!!!!!!!!!"<<endl;
     return NULL;
 }
 
@@ -1338,6 +1479,7 @@ double VSC_HVDC::get_dc_voltage_of_dc_bus_number(unsigned int bus)
 unsigned int VSC_HVDC::get_index_of_dc_bus_number(unsigned int bus)
 {
     unsigned int index = INDEX_NOT_EXIST;
+    unsigned int n_dc_bus = dc_buses.size();
     for(unsigned int i=0; i<n_dc_bus; ++i)
     {
         if(dc_buses[i].dc_bus_number==bus)
@@ -1464,7 +1606,7 @@ void VSC_HVDC::initialize_Udc_vector()
         }
         else
         {
-            Udc[j] = get_dc_base_voltage_in_KV();
+            Udc[j] = get_dc_network_base_voltage_in_kV();
         }
     }
 }
@@ -1538,7 +1680,7 @@ void VSC_HVDC::get_Pdc_command_vector()
                 {
                     if(ac_bus_number == get_converter_bus(j))
                     {
-                        Pdc_command[i] = get_converter_nominal_ac_power_command_in_MW(j); //sbase;
+                        Pdc_command[i] = get_converter_nominal_ac_active_power_command_in_MW(j); //sbase;
                     }
                 }
             }
@@ -1556,7 +1698,7 @@ void VSC_HVDC::get_Pdc_command_vector()
                 {
                     if(ac_bus_number == get_converter_bus(j))
                     {
-                        Pdc_command[i-1] = get_converter_nominal_ac_power_command_in_MW(j); //sbase;
+                        Pdc_command[i-1] = get_converter_nominal_ac_active_power_command_in_MW(j); //sbase;
                     }
                 }
             }
@@ -1901,14 +2043,9 @@ double VSC_HVDC::get_maximum_active_power_mismatch_in_MW()
     return max_P_error_in_MW;
 }
 
-void VSC_HVDC::set_dc_base_voltage_in_KV(double dc_base_voltage)
+double VSC_HVDC::get_dc_network_base_voltage_in_kV() const
 {
-    dc_base_voltage_in_KV=dc_base_voltage;
-}
-
-double VSC_HVDC::get_dc_base_voltage_in_KV()
-{
-    return dc_base_voltage_in_KV;
+    return dc_base_voltage_in_kV;
 }
 
 void VSC_HVDC::set_max_iteration(unsigned int iteration)
@@ -1942,7 +2079,7 @@ vector<double> VSC_HVDC::generate_active_power()
         if(get_converter_dc_operation_mode(i)==1)
             active_power[i]=P_slack_ac_side;
         if(get_converter_dc_operation_mode(i)==2)
-            active_power[i]=get_converter_nominal_ac_power_command_in_MW(i);
+            active_power[i]=get_converter_nominal_ac_active_power_command_in_MW(i);
     }
     //for(unsigned int i=0;i!=ncon;++i)
     return active_power;
@@ -1974,7 +2111,7 @@ vector<double> VSC_HVDC::generate_ac_side_voltage()
 {
     unsigned int ncon=get_converter_count();
     unsigned int nbus=get_dc_bus_count();
-    unsigned int dc_base_voltage=get_dc_base_voltage_in_KV();
+    unsigned int dc_base_voltage=get_dc_network_base_voltage_in_kV();
     if(Us.size()==0)
     {
         Us.reserve(ncon);
