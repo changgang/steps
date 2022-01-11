@@ -3913,6 +3913,16 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_hvdcs_device_id()
     return dids;
 }
 
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_vsc_hvdcs_device_id()
+{
+    vector<DEVICE_ID> dids;
+    unsigned int n=get_vsc_hvdc_count();
+    dids.reserve(n);
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(Vsc_hvdc[i].get_device_id());
+    return dids;
+}
+
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_equivalent_devices_device_id()
 {
     vector<DEVICE_ID> dids;

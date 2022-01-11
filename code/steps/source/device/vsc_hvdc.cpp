@@ -69,7 +69,7 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
         else
         {
             set_converter_ac_operation_mode(i,VSC_AC_REACTIVE_POWER_CONTROL);
-            set_converter_nominal_ac_reactive_power_command_in_Mvar(i,vsc.get_converter_nominal_ac_power_command_in_Mvar(i));
+            set_converter_nominal_ac_reactive_power_command_in_Mvar(i,vsc.get_converter_nominal_ac_reactive_power_command_in_Mvar(i));
         }
         set_converter_loss_factor_A_in_kW(i,vsc.get_converter_loss_factor_A_in_kW(i));
         set_converter_loss_factor_B_in_kW_per_amp(i,vsc.get_converter_loss_factor_B_in_kW_per_amp(i));
@@ -734,7 +734,7 @@ double VSC_HVDC::get_converter_nominal_ac_voltage_command_in_pu(unsigned int ind
     }
 }
 
-double VSC_HVDC::get_converter_nominal_ac_power_command_in_Mvar(unsigned int index) const
+double VSC_HVDC::get_converter_nominal_ac_reactive_power_command_in_Mvar(unsigned int index) const
 {
     if(index<get_converter_count())
         return converters[index].nominal_ac_reactive_power_in_Mvar;
@@ -2101,7 +2101,7 @@ vector<double> VSC_HVDC::generate_reactive_power()
         if(get_converter_ac_operation_mode(i)==1)
             reactive_power[i]=0;
         if(get_converter_ac_operation_mode(i)==2)
-            reactive_power[i]=get_converter_nominal_ac_power_command_in_Mvar(i);
+            reactive_power[i]=get_converter_nominal_ac_reactive_power_command_in_Mvar(i);
     }
     //for(unsigned int i=0;i!=ncon;++i)
     return reactive_power;

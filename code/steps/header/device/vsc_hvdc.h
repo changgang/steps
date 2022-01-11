@@ -102,7 +102,7 @@ class VSC_HVDC : public NONBUS_DEVICE
 
         double get_converter_nominal_ac_voltage_command_in_kV(unsigned int index) const;
         double get_converter_nominal_ac_voltage_command_in_pu(unsigned int index) const;
-        double get_converter_nominal_ac_power_command_in_Mvar(unsigned int index) const;
+        double get_converter_nominal_ac_reactive_power_command_in_Mvar(unsigned int index) const;
         double get_converter_nominal_reactive_power_command_in_pu(unsigned int index) const;
 
         double get_converter_loss_factor_A_in_kW(unsigned int index) const;
