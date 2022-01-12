@@ -414,7 +414,7 @@ bool DEVICE_ID::is_valid() const
 {
     if((is_name_allowed() and device_name_index != 0) or
        (is_terminal_allowed() and ((device_type != STEPS_GENERAL_DEVICE and terminal.get_bus_count()!=0) or
-                                   device_type == STEPS_GENERAL_DEVICE )))
+                                   device_type == STEPS_GENERAL_DEVICE)))
         return true;
     else
         return false;

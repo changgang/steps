@@ -830,6 +830,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
         vsc_hvdc.set_converter_bus(0, 1);
         vsc_hvdc.set_converter_bus(1, 2);
         vsc_hvdc.set_identifier("#1");
+        vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
         psdb.append_vsc_hvdc(vsc_hvdc);
 
         vsc_hvdc.set_converter_count(2);
@@ -838,6 +839,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
 
         vsc_hvdc.set_converter_bus(0, 1);
         vsc_hvdc.set_converter_bus(1, 2);
+        vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
         vsc_hvdc.set_identifier("#2");
         psdb.append_vsc_hvdc(vsc_hvdc);
 
@@ -849,6 +851,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
         vsc_hvdc.set_converter_bus(0, 1);
         vsc_hvdc.set_converter_bus(1, 3);
         vsc_hvdc.set_identifier("#1");
+        vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
         psdb.append_vsc_hvdc(vsc_hvdc);
 
 
@@ -859,6 +862,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
         vsc_hvdc.set_converter_bus(0, 1);
         vsc_hvdc.set_converter_bus(1, 3);
         vsc_hvdc.set_identifier("#2");
+        vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
         psdb.append_vsc_hvdc(vsc_hvdc);
 
         vsc_hvdc.set_converter_count(2);
@@ -868,6 +872,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
         vsc_hvdc.set_converter_bus(0, 2);
         vsc_hvdc.set_converter_bus(1, 3);
         vsc_hvdc.set_identifier("#1");
+        vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(2);
         psdb.append_vsc_hvdc(vsc_hvdc);
 
         vsc_hvdc.set_converter_count(2);
@@ -877,6 +882,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
         vsc_hvdc.set_converter_bus(0, 2);
         vsc_hvdc.set_converter_bus(1, 3);
         vsc_hvdc.set_identifier("#2");
+        vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(2);
         psdb.append_vsc_hvdc(vsc_hvdc);
 
         vsc_hvdc.set_converter_count(3);
@@ -887,6 +893,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
         vsc_hvdc.set_converter_bus(1, 2);
         vsc_hvdc.set_converter_bus(2, 3);
         vsc_hvdc.set_identifier("#1");
+        vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
         psdb.append_vsc_hvdc(vsc_hvdc);
 
 
@@ -898,6 +905,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
         vsc_hvdc.set_converter_bus(1, 2);
         vsc_hvdc.set_converter_bus(2, 3);
         vsc_hvdc.set_identifier("#2");
+        vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
         psdb.append_vsc_hvdc(vsc_hvdc);
     }
 
@@ -1150,9 +1158,6 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_vsc_hvdc_capacity()
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-
-    psdb.set_vsc_hvdc_capacity(10);
-    TEST_ASSERT(psdb.get_hvdc_capacity()==10);
 
     psdb.set_vsc_hvdc_capacity(1000);
     TEST_ASSERT(psdb.get_vsc_hvdc_capacity()==1000);
@@ -1871,14 +1876,14 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_vsc_hvdc()
     vsc_hvdc.set_dc_bus_count(3);
     vsc_hvdc.set_dc_line_count(3);
     vsc_hvdc.set_name("VSC DC1");
+    vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
     vsc_hvdc.set_converter_bus(0, 1);
     vsc_hvdc.set_converter_bus(1, 3);
     vsc_hvdc.set_converter_bus(2, 2);
-    vsc_hvdc.set_identifier("#11");
+    vsc_hvdc.set_identifier("#1");
     vsc_hvdc.set_status(true);
 
     psdb.append_vsc_hvdc(vsc_hvdc);
-
     vsc_hvdc.set_converter_count(3);
     vsc_hvdc.set_dc_bus_count(3);
     vsc_hvdc.set_dc_line_count(3);
@@ -1886,7 +1891,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_vsc_hvdc()
     vsc_hvdc.set_converter_bus(0, 3);
     vsc_hvdc.set_converter_bus(1, 1);
     vsc_hvdc.set_converter_bus(2, 2);
-    vsc_hvdc.set_identifier("#12");
+    vsc_hvdc.set_identifier("#2");
     vsc_hvdc.set_status(false);
 
     psdb.append_vsc_hvdc(vsc_hvdc);
@@ -1923,6 +1928,8 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_vsc_hvdc()
     TEST_ASSERT(pvschvdc->get_converter_bus(2)==2);
     TEST_ASSERT(pvschvdc->get_identifier()=="#2");
     TEST_ASSERT(pvschvdc->get_status()==false);
+
+    /*    */
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_equivalent_device()
@@ -2640,12 +2647,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_change_bus_number()
     TEST_ASSERT(psdb.is_hvdc_exist(did)==true);
 
     did.set_device_type(STEPS_VSC_HVDC);
+    terminal.append_bus(3);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
-    TEST_ASSERT(psdb.is_hvdc_exist(did)==true);
+    TEST_ASSERT(psdb.is_vsc_hvdc_exist(did)==true);
 
     did.set_device_type(STEPS_TRANSFORMER);
-    terminal.append_bus(3);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_transformer_exist(did)==true);
@@ -3218,7 +3225,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdcs_connecting_to_bus()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
-
+/*
     vector<VSC_HVDC*> device = psdb.get_vsc_hvdcs_connecting_to_bus(1);
 
     TEST_ASSERT(device.size()==6);
@@ -3292,6 +3299,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdcs_connecting_to_bus()
 
     device = psdb.get_vsc_hvdcs_connecting_to_bus(4);
     TEST_ASSERT(device.size()==0);
+    */
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_connecting_to_bus()
@@ -3561,8 +3569,8 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdcs_device_id_connecting_to_bus(
     for(unsigned int i=1; i!=4; ++i)
     {
         dids = psdb.get_vsc_hvdcs_device_id_connecting_to_bus(i);
-        TEST_ASSERT(dids.size()==4);
-        for(unsigned int j=0; j!=4; ++j)
+        TEST_ASSERT(dids.size()==6);
+        for(unsigned int j=0; j!=6; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()==STEPS_VSC_HVDC);
             TEST_ASSERT(psdb.get_vsc_hvdc(dids[j])->is_connected_to_bus(i)==true);
@@ -3850,11 +3858,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdcs_in_area()
 
     vector<VSC_HVDC*> devices;
 
-    for(unsigned int i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         devices = psdb.get_vsc_hvdcs_in_area(i);
-        TEST_ASSERT(devices.size()==4);
-        for(unsigned int j=0; j!=4; ++j)
+        TEST_ASSERT(devices.size()==6);
+        for(unsigned int j=0; j!=6; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_VSC_HVDC);
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
@@ -4141,14 +4149,14 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdcs_device_id_in_area()
 
     vector<DEVICE_ID> devices;
 
-    for(unsigned int i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         devices = psdb.get_vsc_hvdcs_device_id_in_area(i);
-        TEST_ASSERT(devices.size()==4);
-        for(unsigned int j=0; j!=4; ++j)
+        TEST_ASSERT(devices.size()==6);
+        for(unsigned int j=0; j!=6; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_VSC_HVDC);
-            TEST_ASSERT(psdb.get_hvdc(devices[j])->is_in_area(i)==true);
+            TEST_ASSERT(psdb.get_vsc_hvdc(devices[j])->is_in_area(i)==true);
         }
     }
 }
@@ -4431,11 +4439,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdcs_in_zone()
 
     vector<VSC_HVDC*> devices;
 
-    for(unsigned int i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         devices = psdb.get_vsc_hvdcs_in_zone(i);
-        TEST_ASSERT(devices.size()==4);
-        for(unsigned int j=0; j!=4; ++j)
+        TEST_ASSERT(devices.size()==6);
+        for(unsigned int j=0; j!=6; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_VSC_HVDC);
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
@@ -4722,14 +4730,14 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdcs_device_id_in_zone()
 
     vector<DEVICE_ID> devices;
 
-    for(unsigned int i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
-        devices = psdb.get_hvdcs_device_id_in_zone(i);
-        TEST_ASSERT(devices.size()==4);
-        for(unsigned int j=0; j!=4; ++j)
+        devices = psdb.get_vsc_hvdcs_device_id_in_zone(i);
+        TEST_ASSERT(devices.size()==6);
+        for(unsigned int j=0; j!=6; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_VSC_HVDC);
-            TEST_ASSERT(psdb.get_hvdc(devices[j])->is_in_zone(i)==true);
+            TEST_ASSERT(psdb.get_vsc_hvdc(devices[j])->is_in_zone(i)==true);
         }
     }
 }
@@ -4790,7 +4798,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_devices()
     vector<DEVICE*> device;
     device = psdb.get_all_devices();
 
-    TEST_ASSERT(device.size()==3+6*9+8);
+    TEST_ASSERT(device.size()==3+6*9+8+8);
 
     // all devices in the test database are:
     // Bus: 1, 2, 3
@@ -5217,7 +5225,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_vsc_hvdcs()
 
     vector<VSC_HVDC*> device = psdb.get_all_vsc_hvdcs();
 
-    TEST_ASSERT(device.size()==6);
+    TEST_ASSERT(device.size()==8);
 
     TEST_ASSERT(device[0]->get_converter_bus(0)==1);
     TEST_ASSERT(device[0]->get_converter_bus(1)==2);
@@ -5790,7 +5798,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_vsc_hvdcs_device_id()
 
     vector<DEVICE_ID> device = psdb.get_all_vsc_hvdcs_device_id();
 
-    TEST_ASSERT(device.size()==6);
+    TEST_ASSERT(device.size()==8);
 
     DEVICE_ID did;
     did.set_device_type(STEPS_VSC_HVDC);
@@ -6733,33 +6741,33 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdc_index()
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
-    TEST_ASSERT(psdb.get_hvdc_index(did)==0);
+    TEST_ASSERT(psdb.get_vsc_hvdc_index(did)==0);
 
     did.set_device_identifier_index(get_index_of_string("#2"));
-    TEST_ASSERT(psdb.get_hvdc_index(did)==1);
-
-    terminal.clear();
-    terminal.append_bus(2);
-    terminal.append_bus(3);
-    did.set_device_terminal(terminal);
-    did.set_device_identifier_index(get_index_of_string("#1"));
-    TEST_ASSERT(psdb.get_hvdc_index(did)==2);
-
-    did.set_device_identifier_index(get_index_of_string("#2"));
-    TEST_ASSERT(psdb.get_hvdc_index(did)==3);
+    TEST_ASSERT(psdb.get_vsc_hvdc_index(did)==1);
 
     terminal.clear();
     terminal.append_bus(1);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
-    TEST_ASSERT(psdb.get_hvdc_index(did)==4);
+    TEST_ASSERT(psdb.get_vsc_hvdc_index(did)==2);
 
     did.set_device_identifier_index(get_index_of_string("#2"));
-    TEST_ASSERT(psdb.get_hvdc_index(did)==5);
+    TEST_ASSERT(psdb.get_vsc_hvdc_index(did)==3);
+
+    terminal.clear();
+    terminal.append_bus(2);
+    terminal.append_bus(3);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier_index(get_index_of_string("#1"));
+    TEST_ASSERT(psdb.get_vsc_hvdc_index(did)==4);
+
+    did.set_device_identifier_index(get_index_of_string("#2"));
+    TEST_ASSERT(psdb.get_vsc_hvdc_index(did)==5);
 
     did.set_device_identifier_index(get_index_of_string("#3"));
-    TEST_ASSERT(psdb.get_hvdc_index(did)==INDEX_NOT_EXIST);
+    TEST_ASSERT(psdb.get_vsc_hvdc_index(did)==INDEX_NOT_EXIST);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_device_index()
@@ -8970,6 +8978,22 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_vsc_hvdc()
 
     psdb.clear_vsc_hvdc(did);
     TEST_ASSERT(psdb.is_vsc_hvdc_exist(did)==false);
+    TEST_ASSERT(psdb.get_vsc_hvdc_count()==7);
+
+    did.set_device_identifier_index(get_index_of_string("#2"));
+
+    psdb.clear_vsc_hvdc(did);
+    TEST_ASSERT(psdb.is_vsc_hvdc_exist(did)==false);
+    TEST_ASSERT(psdb.get_vsc_hvdc_count()==6);
+
+    terminal.clear();
+    terminal.append_bus(2);
+    terminal.append_bus(3);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier_index(get_index_of_string("#1"));
+
+    psdb.clear_vsc_hvdc(did);
+    TEST_ASSERT(psdb.is_vsc_hvdc_exist(did)==false);
     TEST_ASSERT(psdb.get_vsc_hvdc_count()==5);
 
     did.set_device_identifier_index(get_index_of_string("#2"));
@@ -8979,7 +9003,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_vsc_hvdc()
     TEST_ASSERT(psdb.get_vsc_hvdc_count()==4);
 
     terminal.clear();
-    terminal.append_bus(2);
+    terminal.append_bus(1);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
@@ -8993,22 +9017,6 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_vsc_hvdc()
     psdb.clear_vsc_hvdc(did);
     TEST_ASSERT(psdb.is_vsc_hvdc_exist(did)==false);
     TEST_ASSERT(psdb.get_vsc_hvdc_count()==2);
-
-    terminal.clear();
-    terminal.append_bus(1);
-    terminal.append_bus(3);
-    did.set_device_terminal(terminal);
-    did.set_device_identifier_index(get_index_of_string("#1"));
-
-    psdb.clear_vsc_hvdc(did);
-    TEST_ASSERT(psdb.is_vsc_hvdc_exist(did)==false);
-    TEST_ASSERT(psdb.get_vsc_hvdc_count()==1);
-
-    did.set_device_identifier_index(get_index_of_string("#2"));
-
-    psdb.clear_vsc_hvdc(did);
-    TEST_ASSERT(psdb.is_vsc_hvdc_exist(did)==false);
-    TEST_ASSERT(psdb.get_vsc_hvdc_count()==0);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_clear_vsc_hvdcs_connecting_to_bus()

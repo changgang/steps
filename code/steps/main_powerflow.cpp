@@ -11,7 +11,7 @@ int main()
 {
     PSSE_IMEXPORTER importer(default_toolkit);
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
-
+    /*
     POWERFLOW_SOLVER solver(default_toolkit);
     solver.set_max_iteration(30);
     solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -25,6 +25,6 @@ int main()
     solver.save_network_Y_matrix_to_file("IEEE39_network_matrix.csv");
     solver.save_jacobian_matrix_to_file("IEEE39_jacobian_matrix.csv");
     solver.save_bus_powerflow_result_to_file("IEEE39_bus_powerflow_result.csv");
-
+    */
     return 0;
 }

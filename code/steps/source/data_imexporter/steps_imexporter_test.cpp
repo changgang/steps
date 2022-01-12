@@ -29,6 +29,7 @@ STEPS_IMEXPORTER_TEST::STEPS_IMEXPORTER_TEST() : importer(default_toolkit)
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_transformer_data);
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_area_data);
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_hvdc_data);
+    TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_vsc_hvdc_data);
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_zone_data);
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_owner_data);
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_export_powerflow_data_imported_from_psse);
@@ -508,6 +509,20 @@ void STEPS_IMEXPORTER_TEST::test_load_hvdc_data()
 
     for(unsigned int i=0; i!=n; ++i)
         hvdcs[i]->report();
+}
+
+void STEPS_IMEXPORTER_TEST::test_load_vsc_hvdc_data()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"STEPS_IMEXPORTER_TEST");
+
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    vector<VSC_HVDC*> vsc_hvdcs = psdb.get_all_vsc_hvdcs();
+    unsigned int n = vsc_hvdcs.size();
+
+    TEST_ASSERT(n==2);
+
+    for(unsigned int i=0; i!=n; ++i)
+        vsc_hvdcs[i]->report();
 }
 
 void STEPS_IMEXPORTER_TEST::test_load_zone_data()

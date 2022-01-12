@@ -64,6 +64,7 @@ VSC_HVDC_TEST::VSC_HVDC_TEST():vsc(default_toolkit)
     TEST_ADD(VSC_HVDC_TEST::test_set_get_meter_end_bus);
     TEST_ADD(VSC_HVDC_TEST::test_set_get_line_resistance_in_ohm);
     TEST_ADD(VSC_HVDC_TEST::test_set_get_line_inductance_in_mH);
+    TEST_ADD(VSC_HVDC_TEST::test_get_device_id);
 }
 
 void VSC_HVDC_TEST::setup()
@@ -600,6 +601,28 @@ void VSC_HVDC_TEST::test_set_get_line_inductance_in_mH()
 
     vsc.set_dc_line_inductance_in_mH(0,5);
     TEST_ASSERT(fabs(vsc.get_dc_line_inductance_in_mH(0)-5)<FLOAT_EPSILON);
+
+    //vsc.set_dc_line_inductance_in_mH(1,29);
+    //TEST_ASSERT(fabs(vsc.get_dc_line_inductance_in_mH(0)-29)<FLOAT_EPSILON);
+}
+void VSC_HVDC_TEST::test_get_device_id()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"VSC_HVDC_TEST");
+    prepare_2_terminal_vsc_hvdc();
+
+    vsc.set_converter_bus(0,1);
+    vsc.set_converter_bus(1,2);
+    vsc.set_identifier("#1");
+
+    DEVICE_ID did;
+    did.set_device_type(STEPS_VSC_HVDC);
+    TERMINAL terminal;
+    terminal.append_bus(1);
+    terminal.append_bus(2);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier_index(get_index_of_string("#1"));
+
+    TEST_ASSERT(vsc.get_device_id()==did);
 
     //vsc.set_dc_line_inductance_in_mH(1,29);
     //TEST_ASSERT(fabs(vsc.get_dc_line_inductance_in_mH(0)-29)<FLOAT_EPSILON);

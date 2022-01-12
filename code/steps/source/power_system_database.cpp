@@ -326,6 +326,7 @@ void POWER_SYSTEM_DATABASE::clear()
     clear_all_transformers();
     clear_all_fixed_shunts();
     clear_all_hvdcs();
+    clear_all_vsc_hvdcs();
     clear_all_equivalent_devices();
     clear_all_lcc_hvdcs();
     clear_all_areas();
@@ -1751,7 +1752,10 @@ void POWER_SYSTEM_DATABASE::change_bus_number(unsigned int original_bus_number, 
             for (unsigned int j=0; j!=n_converter; ++j)
             {
                 if(vsc_hvdc->get_converter_bus(j)==original_bus_number)
+                {
                     vsc_hvdc->set_converter_bus(j, new_bus_number);
+                    break;
+                }
             }
 
             DEVICE_ID new_did = vsc_hvdc->get_device_id();

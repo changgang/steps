@@ -202,7 +202,7 @@ void VSC_HVDC::set_ac_converter_bus_with_dc_voltage_control(const unsigned int b
         }
         else
         {
-            osstream<<"Bus "<<bus<<" does not exist for setting up "<<"converter_name"<<" side bus of multi_vsc-hvdc link."<<endl
+            osstream<<"Bus "<<bus<<" does not exist for setting up converter AC bus with dc voltage of vsc-hvdc link."<<endl
                     <<"0 will be set to indicate invalid vsc-hvdc link.";
             toolkit.show_information_with_leading_time_stamp(osstream);
             ac_converter_bus_with_dc_voltage_control = 0;
@@ -210,7 +210,7 @@ void VSC_HVDC::set_ac_converter_bus_with_dc_voltage_control(const unsigned int b
     }
     else
     {
-        osstream<<"Warning. Zero bus number (0) is not allowed for setting up "<<"converter_name"<<" bus of vsc-hvdc link."<<endl
+        osstream<<"Warning. Zero bus number (0) is not allowed for setting up converter AC bus with dc voltage of vsc-hvdc link."<<endl
                 <<"0 will be set to indicate invalid vsc-hvdc link.";
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -257,7 +257,7 @@ void VSC_HVDC::set_converter_bus(const unsigned int index, const unsigned int bu
         {
             ostringstream osstream;
             STEPS& toolkit = get_toolkit();
-            osstream<<"Bus "<<bus<<" does not exist for setting up "<<"converter_name"<<" side bus of multi_vsc-hvdc link."<<endl
+            osstream<<"Bus "<<bus<<" does not exist for setting up converter AC side bus of vsc-hvdc link."<<endl
                     <<"0 will be set to indicate invalid vsc-hvdc link.";
             toolkit.show_information_with_leading_time_stamp(osstream);
             converters[index].converter_bus = 0;
@@ -267,7 +267,7 @@ void VSC_HVDC::set_converter_bus(const unsigned int index, const unsigned int bu
     {
         ostringstream osstream;
         STEPS& toolkit = get_toolkit();
-        osstream<<"Warning. Zero bus number (0) is not allowed for setting up "<<"converter_name"<<" bus of vsc-hvdc link."<<endl
+        osstream<<"Warning. Zero bus number (0) is not allowed for setting up converter AC bus of vsc-hvdc link."<<endl
                 <<"0 will be set to indicate invalid vsc-hvdc link.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         converters[index].converter_bus = bus;
@@ -1120,58 +1120,56 @@ double VSC_HVDC::get_dc_line_inductance_in_mH(unsigned int index) const
 
 bool VSC_HVDC::is_connected_to_bus(unsigned int bus) const
 {
-    unsigned int m=0;
-    unsigned int n=0;
     unsigned int n_converter = converters.size();
     for(unsigned int i=0; i!=n_converter; ++i)
     {
-        if (get_converter_bus(i)==bus) ++m;
-        else                           ++n;
+        if (get_converter_bus(i)==bus) return true;
     }
-    if(m>0)                            return true;
-    else                               return false;
+    return false;
 }
 
 bool VSC_HVDC::is_in_area(unsigned int area) const
 {
-    unsigned int m=0;
-    unsigned int n=0;
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     unsigned int n_converter = converters.size();
+    bool in_area = false;
     for(unsigned int i=0; i!=n_converter; ++i)
     {
-        if (get_dc_bus_area(i)==area) ++m;
-        else                          ++n;
+        BUS* busptr = psdb.get_bus(get_converter_bus(i));
+        if(busptr!=NULL)
+            in_area = in_area or busptr->is_in_area(area);
+        if(in_area)
+            break;
     }
-    if(m>0)                            return true;
-    else                               return false;
+    return in_area;
 }
 
 bool VSC_HVDC::is_in_zone(unsigned int zone) const
 {
-    unsigned int m=0;
-    unsigned int n=0;
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     unsigned int n_converter = converters.size();
+    bool in_zone = false;
     for(unsigned int i=0; i!=n_converter; ++i)
     {
-        if (get_dc_bus_zone(i)==zone) ++m;
-        else                          ++n;
+        BUS* busptr = psdb.get_bus(get_converter_bus(i));
+        if(busptr!=NULL)
+            in_zone = in_zone or busptr->is_in_zone(zone);
+        if(in_zone)
+            break;
     }
-    if(m>0)                            return true;
-    else                               return false;
+    return in_zone;
 }
 
 bool VSC_HVDC::is_valid() const
 {
-    unsigned int m=0;
-    unsigned int n=0;
     unsigned int n_converter = converters.size();
     for(unsigned int i=0; i!=n_converter; ++i)
     {
-        if (get_converter_bus(i)!=0)   ++m;
-        else                           ++n;
+        if (get_converter_bus(i)==0) return false;
     }
-    if(m>0)                            return true;
-    else                               return false;
+    return true;
 }
 
 void VSC_HVDC::check()
@@ -1214,9 +1212,10 @@ DEVICE_ID VSC_HVDC::get_device_id() const
     DEVICE_ID did;
     did.set_device_type(STEPS_VSC_HVDC);
     TERMINAL terminal;
-    unsigned int nbus = get_converter_count();
-    for(unsigned int i=0; i<nbus; ++i)
+    unsigned int n_cov = get_converter_count();
+    for(unsigned int i=0; i!=n_cov; ++i)
         terminal.append_bus(get_converter_bus(i));
+    did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_identifier_index());
 
     return did;

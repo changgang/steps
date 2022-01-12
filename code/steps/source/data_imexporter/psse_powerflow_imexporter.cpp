@@ -70,6 +70,7 @@ void PSSE_IMEXPORTER::load_powerflow_data(string file)
             <<psdb.get_transformer_count()<<" transformers\n"
             <<psdb.get_fixed_shunt_count()<<" fixed shunts\n"
             <<psdb.get_hvdc_count()<<" HVDCs\n"
+            <<psdb.get_vsc_hvdc_count()<<" VSC HVDCs\n"
             <<psdb.get_load_count()<<" loads\n"
             <<psdb.get_area_count()<<" areas\n"
             <<psdb.get_zone_count()<<" zones\n"
