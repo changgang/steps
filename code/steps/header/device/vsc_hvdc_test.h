@@ -33,7 +33,7 @@ class VSC_HVDC_TEST : public Test::Suite
         void test_set_get_dc_line_count();
         void test_set_get_set_ac_converter_bus_with_dc_voltage_control();
 
-        void test_set_get_converter_bus();
+        void test_set_get_converter_ac_bus();
         void test_set_get_converter_dc_operation_mode();
         void test_set_get_converter_ac_operation_mode();
         void test_set_get_converter_nominal_dc_power_command_in_MW();
@@ -55,9 +55,9 @@ class VSC_HVDC_TEST : public Test::Suite
         void test_set_get_dc_bus_name();
         void test_set_get_dc_bus_area();
         void test_set_get_dc_bus_zone();
-        void test_set_get_ac_bus_number_of_dc_bus();
-        void test_set_get_owner_number();
-        void test_set_get_ground_resistance_in_ohm();
+        void test_set_get_dc_bus_ac_bus_number();
+        void test_set_get_dc_bus_owner_number();
+        void test_set_get_dc_bus_ground_resistance_in_ohm();
         void test_set_get_dc_bus_generation_power_in_MW();
         void test_set_get_dc_bus_load_power_in_MW();
 
@@ -71,7 +71,9 @@ class VSC_HVDC_TEST : public Test::Suite
         void test_is_connected_to_bus();
         void test_is_valid();
 
+        void test_build_inphno();
         void test_build_conductance_matrix();
+        void test_build_jacobian();
 
         void test_set_get_vsc_hvdc_model();
     private:

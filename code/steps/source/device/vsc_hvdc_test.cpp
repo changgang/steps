@@ -29,8 +29,8 @@ VSC_HVDC_TEST::VSC_HVDC_TEST():vsc(default_toolkit)
     TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_count);
     TEST_ADD(VSC_HVDC_TEST::test_set_get_dc_bus_count);
     TEST_ADD(VSC_HVDC_TEST::test_set_get_dc_line_count);
-    TEST_ADD(VSC_HVDC_TEST::test_set_get_set_ac_converter_bus_with_dc_voltage_control);
-    TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_bus);
+    //TEST_ADD(VSC_HVDC_TEST::test_set_get_set_ac_converter_bus_with_dc_voltage_control);
+    TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_ac_bus);
 
     TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_dc_operation_mode);
     TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_ac_operation_mode);
@@ -53,9 +53,9 @@ VSC_HVDC_TEST::VSC_HVDC_TEST():vsc(default_toolkit)
     TEST_ADD(VSC_HVDC_TEST::test_set_get_dc_bus_name);
     TEST_ADD(VSC_HVDC_TEST::test_set_get_dc_bus_area);
     TEST_ADD(VSC_HVDC_TEST::test_set_get_dc_bus_zone);
-    TEST_ADD(VSC_HVDC_TEST::test_set_get_ac_bus_number_of_dc_bus);
-    TEST_ADD(VSC_HVDC_TEST::test_set_get_owner_number);
-    TEST_ADD(VSC_HVDC_TEST::test_set_get_ground_resistance_in_ohm);
+    TEST_ADD(VSC_HVDC_TEST::test_set_get_dc_bus_ac_bus_number);
+    TEST_ADD(VSC_HVDC_TEST::test_set_get_dc_bus_owner_number);
+    TEST_ADD(VSC_HVDC_TEST::test_set_get_dc_bus_ground_resistance_in_ohm);
     TEST_ADD(VSC_HVDC_TEST::test_set_get_dc_bus_generation_power_in_MW);
     TEST_ADD(VSC_HVDC_TEST::test_set_get_dc_bus_load_power_in_MW);
 
@@ -65,8 +65,10 @@ VSC_HVDC_TEST::VSC_HVDC_TEST():vsc(default_toolkit)
     TEST_ADD(VSC_HVDC_TEST::test_set_get_line_resistance_in_ohm);
     TEST_ADD(VSC_HVDC_TEST::test_set_get_line_inductance_in_mH);
     TEST_ADD(VSC_HVDC_TEST::test_get_device_id);
-    TEST_ADD(VSC_HVDC_TEST::test_build_conductance_matrix);
 
+    TEST_ADD(VSC_HVDC_TEST::test_build_inphno);
+    TEST_ADD(VSC_HVDC_TEST::test_build_conductance_matrix);
+    TEST_ADD(VSC_HVDC_TEST::test_build_jacobian);
 }
 
 void VSC_HVDC_TEST::setup()
@@ -97,6 +99,7 @@ void VSC_HVDC_TEST::tear_down()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.clear();
     vsc.clear();
+    show_test_end_information();
 }
 
 void VSC_HVDC_TEST::test_constructor()
@@ -184,7 +187,7 @@ void VSC_HVDC_TEST::test_set_get_dc_line_count()
 void VSC_HVDC_TEST::test_set_get_set_ac_converter_bus_with_dc_voltage_control()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"VSC_HVDC_TEST");
-
+    /*
     vsc.set_ac_converter_bus_with_dc_voltage_control(1);
     TEST_ASSERT(vsc.get_ac_converter_bus_with_dc_voltage_control()==1);
 
@@ -196,42 +199,43 @@ void VSC_HVDC_TEST::test_set_get_set_ac_converter_bus_with_dc_voltage_control()
 
     vsc.set_ac_converter_bus_with_dc_voltage_control(20);
     TEST_ASSERT(vsc.get_ac_converter_bus_with_dc_voltage_control()==0);
+    */
 }
 
-void VSC_HVDC_TEST::test_set_get_converter_bus()
+void VSC_HVDC_TEST::test_set_get_converter_ac_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"VSC_HVDC_TEST");
 
     vsc.set_converter_count(2);
 
-    vsc.set_converter_bus(0,1);
-    TEST_ASSERT(vsc.get_converter_bus(0)==1);
+    vsc.set_converter_ac_bus(0,1);
+    TEST_ASSERT(vsc.get_converter_ac_bus(0)==1);
 
-    vsc.set_converter_bus(1,2);
-    TEST_ASSERT(vsc.get_converter_bus(1)==2);
+    vsc.set_converter_ac_bus(1,2);
+    TEST_ASSERT(vsc.get_converter_ac_bus(1)==2);
 
-    vsc.set_converter_bus(2,3);
-    TEST_ASSERT(vsc.get_converter_bus(2)==0);
+    vsc.set_converter_ac_bus(2,3);
+    TEST_ASSERT(vsc.get_converter_ac_bus(2)==0);
 
     vsc.set_converter_count(5);
 
-    vsc.set_converter_bus(0,1);
-    TEST_ASSERT(vsc.get_converter_bus(0)==1);
+    vsc.set_converter_ac_bus(0,1);
+    TEST_ASSERT(vsc.get_converter_ac_bus(0)==1);
 
-    vsc.set_converter_bus(1,2);
-    TEST_ASSERT(vsc.get_converter_bus(1)==2);
+    vsc.set_converter_ac_bus(1,2);
+    TEST_ASSERT(vsc.get_converter_ac_bus(1)==2);
 
-    vsc.set_converter_bus(2,3);
-    TEST_ASSERT(vsc.get_converter_bus(2)==3);
+    vsc.set_converter_ac_bus(2,3);
+    TEST_ASSERT(vsc.get_converter_ac_bus(2)==3);
 
-    vsc.set_converter_bus(3,4);
-    TEST_ASSERT(vsc.get_converter_bus(3)==4);
+    vsc.set_converter_ac_bus(3,4);
+    TEST_ASSERT(vsc.get_converter_ac_bus(3)==4);
 
-    vsc.set_converter_bus(4,5);
-    TEST_ASSERT(vsc.get_converter_bus(4)==5);
+    vsc.set_converter_ac_bus(4,5);
+    TEST_ASSERT(vsc.get_converter_ac_bus(4)==5);
 
-    vsc.set_converter_bus(5,6);
-    TEST_ASSERT(vsc.get_converter_bus(5)==0);
+    vsc.set_converter_ac_bus(5,6);
+    TEST_ASSERT(vsc.get_converter_ac_bus(5)==0);
 }
 
 void VSC_HVDC_TEST::test_set_get_converter_dc_operation_mode()
@@ -240,14 +244,20 @@ void VSC_HVDC_TEST::test_set_get_converter_dc_operation_mode()
 
     prepare_2_terminal_vsc_hvdc();
 
+    vsc.set_converter_ac_bus(0,1);
+    vsc.set_converter_ac_bus(1,2);
+
+    TEST_ASSERT(vsc.get_ac_converter_bus_with_dc_voltage_control()==0);
     vsc.set_converter_dc_operation_mode(0,VSC_DC_VOLTAGE_CONTORL);
     TEST_ASSERT(vsc.get_converter_dc_operation_mode(0)==VSC_DC_VOLTAGE_CONTORL);
+    TEST_ASSERT(vsc.get_ac_converter_bus_with_dc_voltage_control()==1);
 
     vsc.set_converter_dc_operation_mode(0,VSC_AC_ACTIVE_POWER_CONTORL);
     TEST_ASSERT(vsc.get_converter_dc_operation_mode(0)==VSC_AC_ACTIVE_POWER_CONTORL);
 
     vsc.set_converter_dc_operation_mode(1,VSC_DC_VOLTAGE_CONTORL);
     TEST_ASSERT(vsc.get_converter_dc_operation_mode(1)==VSC_DC_VOLTAGE_CONTORL);
+    TEST_ASSERT(vsc.get_ac_converter_bus_with_dc_voltage_control()==1);
 
     vsc.set_converter_dc_operation_mode(1,VSC_AC_ACTIVE_POWER_CONTORL);
     TEST_ASSERT(vsc.get_converter_dc_operation_mode(1)==VSC_AC_ACTIVE_POWER_CONTORL);
@@ -490,40 +500,40 @@ void VSC_HVDC_TEST::test_set_get_dc_bus_zone()
     TEST_ASSERT(fabs(vsc.get_dc_bus_zone(1)-2)<FLOAT_EPSILON);
 }
 
-void VSC_HVDC_TEST::test_set_get_ac_bus_number_of_dc_bus()
+void VSC_HVDC_TEST::test_set_get_dc_bus_ac_bus_number()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"VSC_HVDC_TEST");
     prepare_2_terminal_vsc_hvdc();
 
-    vsc.set_ac_bus_number_of_dc_bus(0,212);
-    TEST_ASSERT(fabs(vsc.get_ac_bus_number_of_dc_bus(0)-212)<FLOAT_EPSILON);
+    vsc.set_dc_bus_ac_bus_number(0,212);
+    TEST_ASSERT(fabs(vsc.get_dc_bus_ac_bus_number(0)-212)<FLOAT_EPSILON);
 
-    vsc.set_ac_bus_number_of_dc_bus(1,213);
-    TEST_ASSERT(fabs(vsc.get_ac_bus_number_of_dc_bus(1)-213)<FLOAT_EPSILON);
+    vsc.set_dc_bus_ac_bus_number(1,213);
+    TEST_ASSERT(fabs(vsc.get_dc_bus_ac_bus_number(1)-213)<FLOAT_EPSILON);
 }
 
-void VSC_HVDC_TEST::test_set_get_owner_number()
+void VSC_HVDC_TEST::test_set_get_dc_bus_owner_number()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"VSC_HVDC_TEST");
     prepare_2_terminal_vsc_hvdc();
 
-    vsc.set_owner_number(0,2);
-    TEST_ASSERT(fabs(vsc.get_owner_number(0)-2)<FLOAT_EPSILON);
+    vsc.set_dc_bus_owner_number(0,2);
+    TEST_ASSERT(fabs(vsc.get_dc_bus_owner_number(0)-2)<FLOAT_EPSILON);
 
-    vsc.set_owner_number(1,1);
-    TEST_ASSERT(fabs(vsc.get_owner_number(1)-1)<FLOAT_EPSILON);
+    vsc.set_dc_bus_owner_number(1,1);
+    TEST_ASSERT(fabs(vsc.get_dc_bus_owner_number(1)-1)<FLOAT_EPSILON);
 }
 
-void VSC_HVDC_TEST::test_set_get_ground_resistance_in_ohm()
+void VSC_HVDC_TEST::test_set_get_dc_bus_ground_resistance_in_ohm()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"VSC_HVDC_TEST");
     prepare_2_terminal_vsc_hvdc();
 
-    vsc.set_ground_resistance_in_ohm(0,1.02);
-    TEST_ASSERT(fabs(vsc.get_ground_resistance_in_ohm(0)-1.02)<FLOAT_EPSILON);
+    vsc.set_dc_bus_ground_resistance_in_ohm(0,1.02);
+    TEST_ASSERT(fabs(vsc.get_dc_bus_ground_resistance_in_ohm(0)-1.02)<FLOAT_EPSILON);
 
-    vsc.set_ground_resistance_in_ohm(1,2.02);
-    TEST_ASSERT(fabs(vsc.get_ground_resistance_in_ohm(1)-2.02)<FLOAT_EPSILON);
+    vsc.set_dc_bus_ground_resistance_in_ohm(1,2.02);
+    TEST_ASSERT(fabs(vsc.get_dc_bus_ground_resistance_in_ohm(1)-2.02)<FLOAT_EPSILON);
 }
 
 void VSC_HVDC_TEST::test_set_get_dc_bus_generation_power_in_MW()
@@ -612,8 +622,8 @@ void VSC_HVDC_TEST::test_get_device_id()
     show_test_information_for_function_of_class(__FUNCTION__,"VSC_HVDC_TEST");
     prepare_2_terminal_vsc_hvdc();
 
-    vsc.set_converter_bus(0,1);
-    vsc.set_converter_bus(1,2);
+    vsc.set_converter_ac_bus(0,1);
+    vsc.set_converter_ac_bus(1,2);
     vsc.set_identifier("#1");
 
     DEVICE_ID did;
@@ -632,10 +642,11 @@ void VSC_HVDC_TEST::test_get_device_id()
 
 void VSC_HVDC_TEST::test_is_connected_to_bus()
 {
+    show_test_information_for_function_of_class(__FUNCTION__,"VSC_HVDC_TEST");
     prepare_2_terminal_vsc_hvdc();
 
-    vsc.set_converter_bus(0,1);
-    vsc.set_converter_bus(1,2);
+    vsc.set_converter_ac_bus(0,1);
+    vsc.set_converter_ac_bus(1,2);
     vsc.set_identifier("#1");
 
     TEST_ASSERT(vsc.is_connected_to_bus(1)==true);
@@ -646,25 +657,48 @@ void VSC_HVDC_TEST::test_is_connected_to_bus()
 
 void VSC_HVDC_TEST::test_is_valid()
 {
+    show_test_information_for_function_of_class(__FUNCTION__,"VSC_HVDC_TEST");
     prepare_2_terminal_vsc_hvdc();
 
-    vsc.set_converter_bus(0,1);
-    vsc.set_converter_bus(1,2);
+    vsc.set_converter_ac_bus(0,1);
+    vsc.set_converter_ac_bus(1,2);
     vsc.set_identifier("#1");
     TEST_ASSERT(vsc.is_valid()==true);
 
-    vsc.set_converter_bus(1,6);
+    vsc.set_converter_ac_bus(1,6);
     TEST_ASSERT(vsc.is_valid()==false);
-
 }
 
 
+void VSC_HVDC_TEST::test_build_inphno()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"VSC_HVDC_TEST");
+    prepare_5_terminal_vsc_hvdc_converter_ac_buses();
+    vsc.build_inphno();
+    TEST_ASSERT(true);
+}
+
 void VSC_HVDC_TEST::test_build_conductance_matrix()
 {
-   prepare_5_terminal_vsc_hvdc_converter_ac_buses();
-   vsc.build_dc_network_matrix();
-   vsc.show_dc_network_matrix();
-   vsc.export_dc_network_matrix("test_DC_network.csv");
+    show_test_information_for_function_of_class(__FUNCTION__,"VSC_HVDC_TEST");
+    prepare_5_terminal_vsc_hvdc_converter_ac_buses();
+    vsc.build_dc_network_matrix();
+    TEST_ASSERT(fabs(vsc.get_dc_network_matrix_entry_between_dc_bus(3,3)-1.666)<FLOAT_EPSILON);
+    vsc.show_dc_network_matrix();
+    vsc.export_dc_network_matrix("test_DC_network.csv");
+}
+
+void VSC_HVDC_TEST::test_build_jacobian()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"VSC_HVDC_TEST");
+    prepare_5_terminal_vsc_hvdc_converter_ac_buses();
+    vsc.build_inphno();
+    vsc.initialize_Udc_vector();
+    vsc.initialize_alpha_vector();
+    vsc.initialize_beta_vector();
+    vsc.build_jacobian();
+    vsc.show_jacobian_matrix();
+    TEST_ASSERT(true);
 }
 
 void VSC_HVDC_TEST::test_set_get_vsc_hvdc_model()
@@ -698,20 +732,20 @@ void VSC_HVDC_TEST::prepare_5_terminal_vsc_hvdc()
 
 void VSC_HVDC_TEST::prepare_2_terminal_vsc_hvdc_converter_ac_buses()
 {
-    vsc.set_converter_bus(0,1);
-    vsc.set_converter_bus(1,2);
+    vsc.set_converter_ac_bus(0,1);
+    vsc.set_converter_ac_bus(1,2);
 }
 
 void VSC_HVDC_TEST::prepare_3_terminal_vsc_hvdc_converter_ac_buses()
 {
     prepare_2_terminal_vsc_hvdc_converter_ac_buses();
-    vsc.set_converter_bus(2,3);
+    vsc.set_converter_ac_bus(2,3);
 }
 
 void VSC_HVDC_TEST::prepare_4_terminal_vsc_hvdc_converter_ac_buses()
 {
     prepare_3_terminal_vsc_hvdc_converter_ac_buses();
-    vsc.set_converter_bus(3,4);
+    vsc.set_converter_ac_bus(3,4);
 }
 
 void VSC_HVDC_TEST::prepare_5_terminal_vsc_hvdc_converter_ac_buses()
@@ -759,30 +793,32 @@ void VSC_HVDC_TEST::prepare_5_terminal_vsc_hvdc_converter_ac_buses()
     bus.set_positive_sequence_angle_in_deg(-10.0);
     psdb.append_bus(bus);
 
+    vsc.set_dc_network_base_voltage_in_kV(200.0);
+
     vsc.set_converter_count(5);
     vsc.set_dc_bus_count(7);
     vsc.set_dc_line_count(7);
 
-    vsc.set_converter_bus(0, 105);
-    vsc.set_converter_bus(1, 102);
-    vsc.set_converter_bus(2, 104);
-    vsc.set_converter_bus(3, 101);
-    vsc.set_converter_bus(4, 103);
+    vsc.set_converter_ac_bus(0, 105);
+    vsc.set_converter_ac_bus(1, 102);
+    vsc.set_converter_ac_bus(2, 104);
+    vsc.set_converter_ac_bus(3, 101);
+    vsc.set_converter_ac_bus(4, 103);
 
     vsc.set_dc_bus_number(0, 1);
-    vsc.set_ac_bus_number_of_dc_bus(0, 101);
+    vsc.set_dc_bus_ac_bus_number(0, 101);
     vsc.set_dc_bus_number(1, 2);
-    vsc.set_ac_bus_number_of_dc_bus(1, 102);
+    vsc.set_dc_bus_ac_bus_number(1, 102);
     vsc.set_dc_bus_number(2,3);
-    vsc.set_ac_bus_number_of_dc_bus(2,103);
+    vsc.set_dc_bus_ac_bus_number(2,103);
     vsc.set_dc_bus_number(3,4);
-    vsc.set_ac_bus_number_of_dc_bus(3,104);
+    vsc.set_dc_bus_ac_bus_number(3,104);
     vsc.set_dc_bus_number(4,5);
-    vsc.set_ac_bus_number_of_dc_bus(4,105);
+    vsc.set_dc_bus_ac_bus_number(4,105);
     vsc.set_dc_bus_number(5,6);
-    vsc.set_ac_bus_number_of_dc_bus(5,0);
+    vsc.set_dc_bus_ac_bus_number(5,0);
     vsc.set_dc_bus_number(6,7);
-    vsc.set_ac_bus_number_of_dc_bus(6,0);
+    vsc.set_dc_bus_ac_bus_number(6,0);
 
     vsc.set_dc_line_sending_side_bus(0, 1);
     vsc.set_dc_line_receiving_side_bus(0, 6);

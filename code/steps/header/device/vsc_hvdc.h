@@ -31,10 +31,9 @@ class VSC_HVDC : public NONBUS_DEVICE
         void set_dc_bus_count(unsigned int n);
         void set_dc_line_count(unsigned int n);
         void set_status(const bool status);
-        void set_ac_converter_bus_with_dc_voltage_control(const unsigned int bus);
         void set_dc_network_base_voltage_in_kV(const double base_voltage);
 
-        void set_converter_bus(const unsigned int index, const unsigned int bus);
+        void set_converter_ac_bus(const unsigned int index, const unsigned int bus);
 
         void set_converter_dc_operation_mode(const unsigned int index, const VSC_HVDC_DC_CONTROL_MODE mode);
         void set_converter_ac_operation_mode(const unsigned int index, const VSC_HVDC_AC_CONTROL_MODE mode);
@@ -70,11 +69,11 @@ class VSC_HVDC : public NONBUS_DEVICE
 
         void set_dc_bus_number(const unsigned int index, const unsigned int bus);
         void set_dc_bus_name(const unsigned int index, const string name);
+        void set_dc_bus_ac_bus_number(const unsigned int index, const unsigned int bus);
         void set_dc_bus_area(const unsigned int index, const unsigned int area);
         void set_dc_bus_zone(const unsigned int index, const unsigned int zone);
-        void set_ac_bus_number_of_dc_bus(const unsigned int index, const unsigned int bus);
-        void set_owner_number(const unsigned int index, const unsigned int owner);
-        void set_ground_resistance_in_ohm(const unsigned int index, const double R);
+        void set_dc_bus_owner_number(const unsigned int index, const unsigned int owner);
+        void set_dc_bus_ground_resistance_in_ohm(const unsigned int index, const double R);
         void set_dc_bus_generation_power_in_MW(const unsigned int index, const double P);
         void set_dc_bus_load_power_in_MW(const unsigned int index, const double P);
 
@@ -99,7 +98,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int get_ac_converter_bus_with_dc_voltage_control() const;
         double get_dc_network_base_voltage_in_kV() const;
 
-        unsigned int get_converter_bus(unsigned int index) const;
+        unsigned int get_converter_ac_bus(unsigned int index) const;
         VSC_HVDC_DC_CONTROL_MODE get_converter_dc_operation_mode(unsigned int index) const;
         VSC_HVDC_AC_CONTROL_MODE get_converter_ac_operation_mode(unsigned int index) const;
 
@@ -116,6 +115,8 @@ class VSC_HVDC : public NONBUS_DEVICE
         double get_converter_initial_dc_current_reference_in_kA(const unsigned int index)const;
         double get_converter_initial_current_voltage_droop_coefficient(const unsigned int index)const;
 
+        int get_converter_alpha(unsigned int index);
+        int get_converter_beta(unsigned int index);
 
         double get_converter_nominal_ac_reactive_power_command_in_Mvar(unsigned int index) const;
         double get_converter_nominal_reactive_power_command_in_pu(unsigned int index) const;
@@ -138,12 +139,12 @@ class VSC_HVDC : public NONBUS_DEVICE
         double get_converter_remote_regulation_percent(unsigned int index) const;
 
         unsigned int get_dc_bus_number(unsigned int index) const;
-        unsigned int get_ac_bus_number_of_dc_bus(unsigned int index) const;
         string get_dc_bus_name (unsigned int index) const;
+        unsigned int get_dc_bus_ac_bus_number(unsigned int index) const;
         unsigned int get_dc_bus_area(unsigned int index) const;
         unsigned int get_dc_bus_zone(unsigned int index) const;
-        unsigned int get_owner_number(unsigned int index) const;
-        double get_ground_resistance_in_ohm(unsigned int index) const;
+        unsigned int get_dc_bus_owner_number(unsigned int index) const;
+        double get_dc_bus_ground_resistance_in_ohm(unsigned int index) const;
         double get_dc_bus_generation_power_in_MW(unsigned int index) const;
         double get_dc_bus_load_power_in_MW(unsigned int index) const;
 
@@ -190,6 +191,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         double get_max_iteration();
         unsigned int get_index_of_dc_bus_number(unsigned int bus);
         double get_dc_voltage_of_dc_bus_number(unsigned int bus);
+
         double get_dc_current_reference_of_dc_bus_number(unsigned int bus);
         double get_dc_voltage_reference_of_dc_bus_number(unsigned int bus);
         double get_current_voltage_dropp_coefficient_of_dc_bus_number(unsigned int bus);
@@ -219,12 +221,22 @@ class VSC_HVDC : public NONBUS_DEVICE
         void calculate_dc_active_power_of_slack_bus();
         bool check_slack_limit(double P);
         bool is_dc_network_matrix_set();
+        bool is_jacobian_matrix_set();
 
         void export_dc_network_matrix(string filename);
         void show_dc_network_matrix();
+        void show_jacobian_matrix();
+        double get_dc_network_matrix_entry_between_dc_bus(unsigned int ibus, unsigned int jbus);
+        double get_jacobian_matrix_entry_between_dc_bus(unsigned int ibus, unsigned int jbus);
 
     private:
         void copy_from_const_vsc(const VSC_HVDC& vsc);
+
+        void set_ac_converter_bus_with_dc_voltage_control(const unsigned int bus);
+        unsigned int dc_bus_no2index(unsigned int bus) const;
+        unsigned int dc_bus_index2no(unsigned int index) const;
+        unsigned int get_dc_bus_converter_index_with_dc_bus_index(unsigned int index) const;
+        unsigned int get_dc_bus_converter_index_with_dc_bus_number(unsigned int bus) const;
 
         bool converter_index_is_out_of_range_in_function(const unsigned int index, const string& func);
         bool dc_bus_index_is_out_of_range_in_function(const unsigned int index, const string& func);

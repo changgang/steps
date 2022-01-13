@@ -2005,7 +2005,7 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_basic_data(VSC_HVDC& vsc_hvdc, vector<string
     if(data.size()>0)
     {
         unsigned int bus_vcon=get_integer_data(data.front(),"0");
-        vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(bus_vcon);
+        //vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(bus_vcon);
         data.erase(data.begin());
     }
     if(data.size()>0)
@@ -2030,7 +2030,7 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
         if(data.size()>0)
         {
             int ibus=get_integer_data(data.front(),"0");
-            vsc_hvdc.set_converter_bus(i, ibus);
+            vsc_hvdc.set_converter_ac_bus(i, ibus);
             data.erase(data.begin());
         }
         if(data.size()>0)
@@ -2163,7 +2163,7 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_dc_bus_data(VSC_HVDC& vsc_hvdc, vector<vecto
         if(data.size()>0)
         {
             int ib=get_integer_data(data.front(),"0");
-            vsc_hvdc.set_ac_bus_number_of_dc_bus(i,ib);
+            vsc_hvdc.set_dc_bus_ac_bus_number(i,ib);
             data.erase(data.begin());
         }
         if(data.size()>0)
@@ -2187,13 +2187,13 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_dc_bus_data(VSC_HVDC& vsc_hvdc, vector<vecto
         if(data.size()>0)
         {
             double rgrnd=get_double_data(data.front(),"");
-            vsc_hvdc.set_ground_resistance_in_ohm(i,rgrnd);
+            vsc_hvdc.set_dc_bus_ground_resistance_in_ohm(i,rgrnd);
             data.erase(data.begin());
         }
         if(data.size()>0)
         {
             int owner=get_integer_data(data.front(),"0");
-            vsc_hvdc.set_owner_number(i,owner);
+            vsc_hvdc.set_dc_bus_owner_number(i,owner);
             data.erase(data.begin());
         }
         if(data.size()>0)
@@ -3234,7 +3234,7 @@ string STEPS_IMEXPORTER::export_vsc_hvdc_data() const
         unsigned int ndc_line=vsc_hvdc->get_dc_line_count();
         for(unsigned int i=0;i!=ncon;++i)
         {
-            osstream<<setw(4)<<vsc_hvdc->get_converter_bus(i)<<", "
+            osstream<<setw(4)<<vsc_hvdc->get_converter_ac_bus(i)<<", "
                     <<vsc_hvdc->get_converter_dc_operation_mode(i)<<", "
                     <<vsc_hvdc->get_converter_ac_operation_mode(i)<<", ";
             double dcset;
@@ -3263,14 +3263,14 @@ string STEPS_IMEXPORTER::export_vsc_hvdc_data() const
         for(unsigned int i=0;i!=nbus;++i)
         {
             osstream<<setw(8)<<vsc_hvdc->get_dc_bus_number(i)<<", "
-                    <<setw(8)<<vsc_hvdc->get_ac_bus_number_of_dc_bus(i)<<", "
+                    <<setw(8)<<vsc_hvdc->get_dc_bus_ac_bus_number(i)<<", "
                     <<setw(8)<<vsc_hvdc->get_dc_bus_area(i)<<", "
                     <<setw(8)<<vsc_hvdc->get_dc_bus_zone(i)<<", "
                     <<"\""<<left
                     <<setw(8)<<vsc_hvdc->get_dc_bus_name(i)<<"\""<<", "
                     <<right
-                    <<setw(8)<<setprecision(4)<<vsc_hvdc->get_ground_resistance_in_ohm(i)<<", "
-                    <<setw(8)<<vsc_hvdc->get_owner_number(i)<<", "
+                    <<setw(8)<<setprecision(4)<<vsc_hvdc->get_dc_bus_ground_resistance_in_ohm(i)<<", "
+                    <<setw(8)<<vsc_hvdc->get_dc_bus_owner_number(i)<<", "
                     <<setw(8)<<vsc_hvdc->get_dc_bus_generation_power_in_MW(i)<<", "
                     <<setw(8)<<vsc_hvdc->get_dc_bus_load_power_in_MW(i)<<endl;
         }

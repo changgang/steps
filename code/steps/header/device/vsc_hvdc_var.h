@@ -44,7 +44,8 @@ struct VSC_HVDC_CONVERTER_STRUCT
 struct VSC_HVDC_DC_BUS_STRUCT
 {
     unsigned int dc_bus_number;
-    unsigned int ac_bus_number;
+    //unsigned int ac_bus_number;
+    unsigned int converter_index;
     unsigned int dc_bus_area;
     unsigned int dc_bus_zone;
     unsigned int dc_bus_name_index;

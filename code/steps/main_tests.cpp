@@ -251,7 +251,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new HVDC_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new VSC_HVDC_TEST));
-
+/*
        ts.add(unique_ptr<Test::Suite>(new EQUIVALENT_DEVICE_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new ENERGY_STORAGE_TEST));
@@ -263,7 +263,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new PSSE_IMEXPORTER_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new BPA_IMEXPORTER_TEST));
-
+*/
         //ts.add(unique_ptr<Test::Suite>(new EQUIVALENT_MODEL_IMEXPORTER_TEST));
 
 /*

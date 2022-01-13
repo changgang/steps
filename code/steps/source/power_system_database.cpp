@@ -975,7 +975,7 @@ void POWER_SYSTEM_DATABASE::append_vsc_hvdc(VSC_HVDC& vsc_hvdc)
     unsigned int n_converter = vsc_hvdc.get_converter_count();
     for(unsigned int i=0; i!=n_converter; ++i)
     {
-        unsigned int bus_number=vsc_hvdc.get_converter_bus(i);
+        unsigned int bus_number=vsc_hvdc.get_converter_ac_bus(i);
         terminal.append_bus(bus_number);
     }
     device_id.set_device_terminal(terminal);
@@ -1223,7 +1223,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
         unsigned int n_bus = new_terminal.get_bus_count();
         for(unsigned int i=0; i != n_bus; ++i)
         {
-            vsc_hvdc->set_converter_bus(i, new_terminal[i]);
+            vsc_hvdc->set_converter_ac_bus(i, new_terminal[i]);
         }
 
         vsc_hvdc->set_identifier(new_id);
@@ -1751,9 +1751,9 @@ void POWER_SYSTEM_DATABASE::change_bus_number(unsigned int original_bus_number, 
             unsigned int n_converter = vsc_hvdc->get_converter_count();
             for (unsigned int j=0; j!=n_converter; ++j)
             {
-                if(vsc_hvdc->get_converter_bus(j)==original_bus_number)
+                if(vsc_hvdc->get_converter_ac_bus(j)==original_bus_number)
                 {
-                    vsc_hvdc->set_converter_bus(j, new_bus_number);
+                    vsc_hvdc->set_converter_ac_bus(j, new_bus_number);
                     break;
                 }
             }
@@ -5089,9 +5089,9 @@ void POWER_SYSTEM_DATABASE::check_missing_vsc_hvdc_related_model()
             osstream<<vsc_hvdc->get_compound_device_name()<<"[";
             for(unsigned int j=0; j!=n_converter-1; ++j)
             {
-                osstream<<bus_number2bus_name(vsc_hvdc->get_converter_bus(j))<<" -- ";
+                osstream<<bus_number2bus_name(vsc_hvdc->get_converter_ac_bus(j))<<" -- ";
             }
-            osstream<<bus_number2bus_name(vsc_hvdc->get_converter_bus(n_converter-1))<<"]";
+            osstream<<bus_number2bus_name(vsc_hvdc->get_converter_ac_bus(n_converter-1))<<"]";
             model_missing_detected = true;
         }
     }

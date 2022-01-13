@@ -827,19 +827,19 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
         vsc_hvdc.set_dc_bus_count(2);
         vsc_hvdc.set_dc_line_count(2);
 
-        vsc_hvdc.set_converter_bus(0, 1);
-        vsc_hvdc.set_converter_bus(1, 2);
+        vsc_hvdc.set_converter_ac_bus(0, 1);
+        vsc_hvdc.set_converter_ac_bus(1, 2);
         vsc_hvdc.set_identifier("#1");
-        vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
+        //vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
         psdb.append_vsc_hvdc(vsc_hvdc);
 
         vsc_hvdc.set_converter_count(2);
         vsc_hvdc.set_dc_bus_count(2);
         vsc_hvdc.set_dc_line_count(2);
 
-        vsc_hvdc.set_converter_bus(0, 1);
-        vsc_hvdc.set_converter_bus(1, 2);
-        vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
+        vsc_hvdc.set_converter_ac_bus(0, 1);
+        vsc_hvdc.set_converter_ac_bus(1, 2);
+        //vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
         vsc_hvdc.set_identifier("#2");
         psdb.append_vsc_hvdc(vsc_hvdc);
 
@@ -848,10 +848,10 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
         vsc_hvdc.set_dc_bus_count(2);
         vsc_hvdc.set_dc_line_count(2);
 
-        vsc_hvdc.set_converter_bus(0, 1);
-        vsc_hvdc.set_converter_bus(1, 3);
+        vsc_hvdc.set_converter_ac_bus(0, 1);
+        vsc_hvdc.set_converter_ac_bus(1, 3);
         vsc_hvdc.set_identifier("#1");
-        vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
+        //vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
         psdb.append_vsc_hvdc(vsc_hvdc);
 
 
@@ -859,41 +859,41 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
         vsc_hvdc.set_dc_bus_count(2);
         vsc_hvdc.set_dc_line_count(2);
 
-        vsc_hvdc.set_converter_bus(0, 1);
-        vsc_hvdc.set_converter_bus(1, 3);
+        vsc_hvdc.set_converter_ac_bus(0, 1);
+        vsc_hvdc.set_converter_ac_bus(1, 3);
         vsc_hvdc.set_identifier("#2");
-        vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
+        //vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
         psdb.append_vsc_hvdc(vsc_hvdc);
 
         vsc_hvdc.set_converter_count(2);
         vsc_hvdc.set_dc_bus_count(2);
         vsc_hvdc.set_dc_line_count(2);
 
-        vsc_hvdc.set_converter_bus(0, 2);
-        vsc_hvdc.set_converter_bus(1, 3);
+        vsc_hvdc.set_converter_ac_bus(0, 2);
+        vsc_hvdc.set_converter_ac_bus(1, 3);
         vsc_hvdc.set_identifier("#1");
-        vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(2);
+        //vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(2);
         psdb.append_vsc_hvdc(vsc_hvdc);
 
         vsc_hvdc.set_converter_count(2);
         vsc_hvdc.set_dc_bus_count(2);
         vsc_hvdc.set_dc_line_count(2);
 
-        vsc_hvdc.set_converter_bus(0, 2);
-        vsc_hvdc.set_converter_bus(1, 3);
+        vsc_hvdc.set_converter_ac_bus(0, 2);
+        vsc_hvdc.set_converter_ac_bus(1, 3);
         vsc_hvdc.set_identifier("#2");
-        vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(2);
+        //vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(2);
         psdb.append_vsc_hvdc(vsc_hvdc);
 
         vsc_hvdc.set_converter_count(3);
         vsc_hvdc.set_dc_bus_count(3);
         vsc_hvdc.set_dc_line_count(3);
 
-        vsc_hvdc.set_converter_bus(0, 1);
-        vsc_hvdc.set_converter_bus(1, 2);
-        vsc_hvdc.set_converter_bus(2, 3);
+        vsc_hvdc.set_converter_ac_bus(0, 1);
+        vsc_hvdc.set_converter_ac_bus(1, 2);
+        vsc_hvdc.set_converter_ac_bus(2, 3);
         vsc_hvdc.set_identifier("#1");
-        vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
+        //vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
         psdb.append_vsc_hvdc(vsc_hvdc);
 
 
@@ -901,11 +901,11 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
         vsc_hvdc.set_dc_bus_count(3);
         vsc_hvdc.set_dc_line_count(3);
 
-        vsc_hvdc.set_converter_bus(0, 1);
-        vsc_hvdc.set_converter_bus(1, 2);
-        vsc_hvdc.set_converter_bus(2, 3);
+        vsc_hvdc.set_converter_ac_bus(0, 1);
+        vsc_hvdc.set_converter_ac_bus(1, 2);
+        vsc_hvdc.set_converter_ac_bus(2, 3);
         vsc_hvdc.set_identifier("#2");
-        vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
+        //vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
         psdb.append_vsc_hvdc(vsc_hvdc);
     }
 
@@ -1876,10 +1876,10 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_vsc_hvdc()
     vsc_hvdc.set_dc_bus_count(3);
     vsc_hvdc.set_dc_line_count(3);
     vsc_hvdc.set_name("VSC DC1");
-    vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
-    vsc_hvdc.set_converter_bus(0, 1);
-    vsc_hvdc.set_converter_bus(1, 3);
-    vsc_hvdc.set_converter_bus(2, 2);
+    //vsc_hvdc.set_ac_converter_bus_with_dc_voltage_control(1);
+    vsc_hvdc.set_converter_ac_bus(0, 1);
+    vsc_hvdc.set_converter_ac_bus(1, 3);
+    vsc_hvdc.set_converter_ac_bus(2, 2);
     vsc_hvdc.set_identifier("#1");
     vsc_hvdc.set_status(true);
 
@@ -1888,9 +1888,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_vsc_hvdc()
     vsc_hvdc.set_dc_bus_count(3);
     vsc_hvdc.set_dc_line_count(3);
     vsc_hvdc.set_name("VSC DC2");
-    vsc_hvdc.set_converter_bus(0, 3);
-    vsc_hvdc.set_converter_bus(1, 1);
-    vsc_hvdc.set_converter_bus(2, 2);
+    vsc_hvdc.set_converter_ac_bus(0, 3);
+    vsc_hvdc.set_converter_ac_bus(1, 1);
+    vsc_hvdc.set_converter_ac_bus(2, 2);
     vsc_hvdc.set_identifier("#2");
     vsc_hvdc.set_status(false);
 
@@ -1912,9 +1912,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_vsc_hvdc()
 
     TEST_ASSERT(pvschvdc!=NULL);
     TEST_ASSERT(pvschvdc->get_name()=="#1");
-    TEST_ASSERT(pvschvdc->get_converter_bus(0)==1);
-    TEST_ASSERT(pvschvdc->get_converter_bus(1)==3);
-    TEST_ASSERT(pvschvdc->get_converter_bus(2)==2);
+    TEST_ASSERT(pvschvdc->get_converter_ac_bus(0)==1);
+    TEST_ASSERT(pvschvdc->get_converter_ac_bus(1)==3);
+    TEST_ASSERT(pvschvdc->get_converter_ac_bus(2)==2);
     TEST_ASSERT(pvschvdc->get_identifier()=="#1");
     TEST_ASSERT(pvschvdc->get_status()==true);
 
@@ -1923,9 +1923,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_vsc_hvdc()
 
     TEST_ASSERT(pvschvdc!=NULL);
     TEST_ASSERT(pvschvdc->get_name()=="#2");
-    TEST_ASSERT(pvschvdc->get_converter_bus(0)==3);
-    TEST_ASSERT(pvschvdc->get_converter_bus(1)==1);
-    TEST_ASSERT(pvschvdc->get_converter_bus(2)==2);
+    TEST_ASSERT(pvschvdc->get_converter_ac_bus(0)==3);
+    TEST_ASSERT(pvschvdc->get_converter_ac_bus(1)==1);
+    TEST_ASSERT(pvschvdc->get_converter_ac_bus(2)==2);
     TEST_ASSERT(pvschvdc->get_identifier()=="#2");
     TEST_ASSERT(pvschvdc->get_status()==false);
 
@@ -5227,31 +5227,31 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_vsc_hvdcs()
 
     TEST_ASSERT(device.size()==8);
 
-    TEST_ASSERT(device[0]->get_converter_bus(0)==1);
-    TEST_ASSERT(device[0]->get_converter_bus(1)==2);
+    TEST_ASSERT(device[0]->get_converter_ac_bus(0)==1);
+    TEST_ASSERT(device[0]->get_converter_ac_bus(1)==2);
     TEST_ASSERT(device[0]->get_identifier()=="#1");
-    TEST_ASSERT(device[1]->get_converter_bus(0)==1);
-    TEST_ASSERT(device[1]->get_converter_bus(1)==2);
+    TEST_ASSERT(device[1]->get_converter_ac_bus(0)==1);
+    TEST_ASSERT(device[1]->get_converter_ac_bus(1)==2);
     TEST_ASSERT(device[1]->get_identifier()=="#2");
-    TEST_ASSERT(device[2]->get_converter_bus(0)==1);
-    TEST_ASSERT(device[2]->get_converter_bus(1)==3);
+    TEST_ASSERT(device[2]->get_converter_ac_bus(0)==1);
+    TEST_ASSERT(device[2]->get_converter_ac_bus(1)==3);
     TEST_ASSERT(device[2]->get_identifier()=="#1");
-    TEST_ASSERT(device[3]->get_converter_bus(0)==1);
-    TEST_ASSERT(device[3]->get_converter_bus(1)==3);
+    TEST_ASSERT(device[3]->get_converter_ac_bus(0)==1);
+    TEST_ASSERT(device[3]->get_converter_ac_bus(1)==3);
     TEST_ASSERT(device[3]->get_identifier()=="#2");
-    TEST_ASSERT(device[4]->get_converter_bus(0)==2);
-    TEST_ASSERT(device[4]->get_converter_bus(1)==3);
+    TEST_ASSERT(device[4]->get_converter_ac_bus(0)==2);
+    TEST_ASSERT(device[4]->get_converter_ac_bus(1)==3);
     TEST_ASSERT(device[4]->get_identifier()=="#1");
-    TEST_ASSERT(device[5]->get_converter_bus(0)==2);
-    TEST_ASSERT(device[5]->get_converter_bus(1)==3);
+    TEST_ASSERT(device[5]->get_converter_ac_bus(0)==2);
+    TEST_ASSERT(device[5]->get_converter_ac_bus(1)==3);
     TEST_ASSERT(device[5]->get_identifier()=="#2");
-    TEST_ASSERT(device[6]->get_converter_bus(0)==1);
-    TEST_ASSERT(device[6]->get_converter_bus(1)==2);
-    TEST_ASSERT(device[6]->get_converter_bus(2)==3);
+    TEST_ASSERT(device[6]->get_converter_ac_bus(0)==1);
+    TEST_ASSERT(device[6]->get_converter_ac_bus(1)==2);
+    TEST_ASSERT(device[6]->get_converter_ac_bus(2)==3);
     TEST_ASSERT(device[6]->get_identifier()=="#1");
-    TEST_ASSERT(device[7]->get_converter_bus(0)==1);
-    TEST_ASSERT(device[7]->get_converter_bus(1)==2);
-    TEST_ASSERT(device[7]->get_converter_bus(2)==3);
+    TEST_ASSERT(device[7]->get_converter_ac_bus(0)==1);
+    TEST_ASSERT(device[7]->get_converter_ac_bus(1)==2);
+    TEST_ASSERT(device[7]->get_converter_ac_bus(2)==3);
     TEST_ASSERT(device[7]->get_identifier()=="#2");
 }
 
