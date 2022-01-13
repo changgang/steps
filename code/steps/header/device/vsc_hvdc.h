@@ -41,12 +41,19 @@ class VSC_HVDC : public NONBUS_DEVICE
 
         void set_converter_nominal_ac_active_power_command_in_MW(const unsigned int index, const double P);
         void set_converter_nominal_dc_voltage_command_in_kV(const unsigned int index, const double V);
+        void set_converter_initial_dc_voltage_reference_in_kV(const unsigned int index, const double V);
+        void set_converter_initial_dc_active_power_reference_in_MW(const unsigned int index, const double P);
+        void set_converter_initial_power_voltage_droop_coefficient(const unsigned int index, const double droop);
+        void set_converter_initial_dc_current_reference_in_kA(const unsigned int index, const double I);
+        void set_converter_initial_current_voltage_droop_coefficient(const unsigned int index, const double droop);
+
 
         void set_converter_nominal_ac_voltage_command_in_pu(const unsigned int index, const double V);
         void set_converter_nominal_ac_reactive_power_command_in_Mvar(const unsigned int index, const double Q);
 
         void set_converter_loss_factor_A_in_kW(const unsigned int index, const double A);
         void set_converter_loss_factor_B_in_kW_per_amp(const unsigned int index, const double B);
+        void set_converter_loss_factor_C_in_KW_per_amp_squared(const unsigned int index, const double C);
         void set_converter_minimum_loss_in_kW(const unsigned int index, const double P);
 
         void set_converter_rated_capacity_in_MVA(const unsigned int index, const double S);
@@ -55,6 +62,8 @@ class VSC_HVDC : public NONBUS_DEVICE
         void set_converter_power_weighting_factor(const unsigned int index, const double pwf);
         void set_converter_Qmax_in_MVar(const unsigned int index, const double Q);
         void set_converter_Qmin_in_MVar(const unsigned int index, const double Q);
+        void set_converter_Udmax_in_kV(const unsigned int index, const double Udmax);
+        void set_converter_Udmin_in_kV(const unsigned int index, const double Udmin);
 
         void set_converter_remote_bus_to_regulate(const unsigned int index, const unsigned int bus);
         void set_converter_remote_regulation_percent(const unsigned int index, const double rmpct);
@@ -76,7 +85,6 @@ class VSC_HVDC : public NONBUS_DEVICE
         void set_dc_line_resistance_in_ohm(const unsigned int index, const double R);
         void set_dc_line_inductance_in_mH(const unsigned int index, const double L);
 
-        void set_convergence_flag(bool flag);
 
         virtual void clear();
 
@@ -102,11 +110,19 @@ class VSC_HVDC : public NONBUS_DEVICE
 
         double get_converter_nominal_ac_voltage_command_in_kV(unsigned int index) const;
         double get_converter_nominal_ac_voltage_command_in_pu(unsigned int index) const;
+        double get_converter_initial_dc_voltage_reference_in_kV(const unsigned int index)const;
+        double get_converter_initial_dc_active_power_reference_in_MW(const unsigned int index)const;
+        double get_converter_initial_power_voltage_droop_coefficient(const unsigned int index)const;
+        double get_converter_initial_dc_current_reference_in_kA(const unsigned int index)const;
+        double get_converter_initial_current_voltage_droop_coefficient(const unsigned int index)const;
+
+
         double get_converter_nominal_ac_reactive_power_command_in_Mvar(unsigned int index) const;
         double get_converter_nominal_reactive_power_command_in_pu(unsigned int index) const;
 
         double get_converter_loss_factor_A_in_kW(unsigned int index) const;
         double get_converter_loss_factor_B_in_kW_per_amp(unsigned int index) const;
+        double get_converter_loss_factor_C_in_kW_per_amp_squard(unsigned int index) const;
         double get_converter_minimum_loss_in_kW(unsigned int index) const;
 
         double get_converter_rated_capacity_in_MVA(unsigned int index) const;
@@ -115,6 +131,8 @@ class VSC_HVDC : public NONBUS_DEVICE
         double get_converter_power_weighting_factor(unsigned int index) const;
         double get_converter_Qmax_in_MVar(unsigned int index) const;
         double get_converter_Qmin_in_MVar(unsigned int index) const;
+        double get_converter_Udmax_in_kV(const unsigned int index) const;
+        double get_converter_Udmin_in_kV(const unsigned int index) const;
 
         unsigned int get_converter_remote_bus_to_regulate(unsigned int index) const;
         double get_converter_remote_regulation_percent(unsigned int index) const;
@@ -136,12 +154,6 @@ class VSC_HVDC : public NONBUS_DEVICE
         double get_dc_line_resistance_in_ohm(unsigned int index) const;
         double get_dc_line_inductance_in_mH(unsigned int index) const;
 
-        void set_max_iteration(unsigned int iteration);
-        double get_max_iteration();
-        void set_allowed_max_P_mismatch_in_MW(double max_mismatch);
-        double get_allowed_max_P_mistmach_in_MW();
-
-
         VSC_HVDC& operator=(const VSC_HVDC& vsc);
 
         virtual bool is_connected_to_bus(unsigned int bus) const;
@@ -159,60 +171,58 @@ class VSC_HVDC : public NONBUS_DEVICE
 
         VSC_HVDC_MODEL* get_vsc_hvdc_model() const;
 
-        void build_dc_network_matrix();
-        void export_dc_network_matrix(string filename);
-        void show_dc_network_matrix();
-        void build_jacobian();
-        void show_jacobian();
 
         void solve_steady_state();
-        void initialize_Udc_vector();
-        void initialize_Pdc_loss_vector();
-        void update_Pdc_command_with_converter_capacity_limit();
-
-        double calculate_dc_power_mismatch();
-        double get_allowed_max_active_power_imbalance_in_MW();
-        double get_maximum_active_power_mismatch_in_MW();
-        void set_allowed_max_active_power_in_MW(double P);
-        unsigned int get_iteration_count();
-        void update_dc_bus_voltage();
-        void update_Pdc_loss();
-        double calculate_dc_active_power_of_slack_bus();
-        bool check_slack_limit(double P);
-
-        void build_delta_p_vector();
-        void get_Pdc_command_vector();
-        void calculate_raw_dc_current_into_dc_network();
-        void update_raw_dc_current_into_dc_network();
-        void calculate_raw_dc_power_into_dc_network();
-        void add_Pdc_command_to_delta_p_vector();
-        void add_supply_power_to_delta_p_vector();
-        void add_consumed_power_to_delta_p_vector();
-        void add_raw_dc_power_to_delta_p_vector();
-        void add_Pdc_loss_to_delta_p_vector();
-        void save_dc_bus_powerflow_result_to_file(const string& filename) const;
-
+        void build_dc_network_matrix();
         void build_inphno();
         void build_initial_zero_matrix();
         void add_dc_lines_to_dc_network();
-        double get_dc_voltage_of_dc_bus_number(unsigned int bus);
+        void build_dc_bus_power_mismatch_vector();
+        void build_Pdc_command_vector();
+        void build_jacobian();
+
+        void set_max_iteration(unsigned int iteration);
+        void set_allowed_max_P_mismatch_in_MW(double max_mismatch);
+
+        double get_maximum_active_power_mismatch_in_MW();
+        double get_allowed_max_active_power_imbalance_in_MW();
+        unsigned int get_iteration_count();
+        double get_max_iteration();
         unsigned int get_index_of_dc_bus_number(unsigned int bus);
+        double get_dc_voltage_of_dc_bus_number(unsigned int bus);
+        double get_dc_current_reference_of_dc_bus_number(unsigned int bus);
+        double get_dc_voltage_reference_of_dc_bus_number(unsigned int bus);
+        double get_current_voltage_dropp_coefficient_of_dc_bus_number(unsigned int bus);
+        double get_power_voltage_droop_coefficient_of_dc_bus_number(unsigned int bus);
+        int get_alpha_of_dc_bus_number(unsigned int bus);
+        int get_beta_of_dc_bus_number(unsigned int bus);
+
+        void initialize_Udc_vector();
+        void initialize_P_converter_loss_vector();
+        void initialize_alpha_vector();
+        void initialize_beta_vector();
+        void initialize_Kpi_Kdi_coefficient_vector();
+        void initialize_Udi_Idi_reference_vector();
+
+        void update_dc_bus_voltage();
+        void update_Pdc_loss();
+        void update_raw_dc_current_into_dc_network();
+        void calculate_raw_dc_power_into_dc_network();
+        void add_Pdc_command_to_P_mismatch_vector();
+        void add_generation_power_to_P_mismatch_vector();
+        void add_load_power_to_P_mismatch_vector();
+        void add_raw_dc_power_to_P_mismatch_vector();
+        void add_P_converter_loss_to_P_mismatch_vector();
+
+        void set_convergence_flag(bool flag);
+        void save_dc_bus_powerflow_result_to_file(const string& filename) const;
+        void calculate_dc_active_power_of_slack_bus();
+        bool check_slack_limit(double P);
         bool is_dc_network_matrix_set();
 
-        vector<double> generate_active_power();
-        vector<double> generate_reactive_power();
-        vector<double> generate_ac_side_voltage();
+        void export_dc_network_matrix(string filename);
+        void show_dc_network_matrix();
 
-        double get_converter_ac_bus_current(unsigned int index);
-        double get_converter_ac_bus_power_factor(unsigned int index);
-        double get_converter_dc_bus_current(unsigned int index);
-        double get_converter_dc_voltage(unsigned int index);
-        double get_converter_dc_power(unsigned int index);
-        double get_converter_ac_active_power(unsigned int index);
-        double get_converter_ac_reactive_power(unsigned int index);
-        double get_converter_ac_bus_voltage(unsigned int index);
-        double get_converter_ac_bus_angle(unsigned int index);
-        double get_converter_ac_bus_complex_voltage(unsigned int index);
     private:
         void copy_from_const_vsc(const VSC_HVDC& vsc);
 
@@ -224,6 +234,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int identifier_index;
         bool status;
         unsigned int ac_converter_bus_with_dc_voltage_control;
+        unsigned int dc_base_voltage_in_kV;
 
         vector<VSC_HVDC_CONVERTER_STRUCT> converters;
         vector<VSC_HVDC_DC_BUS_STRUCT>  dc_buses;
@@ -233,32 +244,19 @@ class VSC_HVDC : public NONBUS_DEVICE
         STEPS_SPARSE_MATRIX jacobian;
         INPHNO inphno;
 
-        vector<double> Pdc_command;
-        vector<double> Pdc_loss;
-        vector<double> bus_power;
-        vector<double> delta_Udc;
-        vector<double> Udc;
-        vector<double> bus_current;
-        vector<double> delta_power;
-        vector<double> Qdc_command;
-        vector<double> supply_power;
-        vector<double> consumed_power;
-        vector<double> active_power;
-        vector<double> reactive_power;
-        vector<double> Us;
-        vector<BUS*> internal_bus_pointers;
+        vector<double> active_power, reactive_power;
+        vector<double> Pdc_command, P_converter_loss, P_mismatch, Udc, Udc_mismatch;
+        vector<double> generation_power, load_power;
+        vector<double> bus_power, bus_current;
+        vector<int> alpha, beta, Kdp_droop, Kdi_droop, Ud_reference, Id_reference;
 
-        unsigned int max_iteration;
-        unsigned int iteration_count;
-        double max_P_mismatch_in_MW;
+        unsigned int iteration_count, max_iteration;
         double P_threshold_in_MW;
-        double dc_base_voltage_in_kV;
-
-        double P_slack_ac_side;
+        double max_P_mismatch_in_MW;
         double P_slack_dc_side;
+        double P_slack_ac_side;
         bool converged;
 
         VSC_HVDC_MODEL* vsc_hvdc_model;
-
 };
 #endif // VSC_HVDC_H

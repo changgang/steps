@@ -68,8 +68,8 @@ class VSC_HVDC_TEST : public Test::Suite
         void test_set_get_line_inductance_in_mH();
 
         void test_get_device_id();
-
-        void test_is_connected_to_bus(); // to test
+        void test_is_connected_to_bus();
+        void test_is_valid();
 
         void test_build_conductance_matrix();
 

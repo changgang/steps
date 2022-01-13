@@ -24,7 +24,7 @@ STEPS_IMEXPORTER_TEST::STEPS_IMEXPORTER_TEST() : importer(default_toolkit)
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_load_data);
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_fixed_shunt_data);
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_generator_data);
-    TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_wt_generator_data);
+    //TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_wt_generator_data);
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_line_data);
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_transformer_data);
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_area_data);
@@ -33,8 +33,7 @@ STEPS_IMEXPORTER_TEST::STEPS_IMEXPORTER_TEST() : importer(default_toolkit)
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_zone_data);
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_owner_data);
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_export_powerflow_data_imported_from_psse);
-
-    TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_dynamic_data);
+    //TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_dynamic_data);
 }
 
 void STEPS_IMEXPORTER_TEST::setup()

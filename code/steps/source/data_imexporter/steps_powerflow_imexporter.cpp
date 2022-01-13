@@ -1885,13 +1885,13 @@ void STEPS_IMEXPORTER::add_lcc_hvdc_converter_data(LCC_HVDC& hvdc, CONVERTER_SID
 
 void STEPS_IMEXPORTER::load_vsc_hvdc_data()
 {
-    if(splitted_sraw_data_in_ram.size()<21)
+    if(splitted_sraw_data_in_ram.size()<10)
         return;
-    vector<vector<string> > DATA = splitted_sraw_data_in_ram[10];
+    vector<vector<string> > DATA = splitted_sraw_data_in_ram[9];
     vector<string> data;
     unsigned int ndata=DATA.size();
     vector<vector<string> > vsc_hvdc_data;
-    for(unsigned int i=0;i<ndata;++i)
+    for(unsigned int i=0;i<ndata;)
     {
         vsc_hvdc_data.clear();
         data=DATA[i];
@@ -1916,7 +1916,6 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_with_data(vector<vector<string> > vsc_hvdc_d
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
     VSC_HVDC vsc_hvdc(toolkit);
     unsigned int i = 0;
 
@@ -1974,7 +1973,6 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_basic_data(VSC_HVDC& vsc_hvdc, vector<string
         string name = get_string_data(data.front(), "");
         vsc_hvdc.set_name(name);
         vsc_hvdc.set_identifier(name);
-        cout<<"vsc_hvdc.get_identifier(name): "<<vsc_hvdc.get_identifier()<<endl;
         data.erase(data.begin());
     }
     if(data.size()>0)
