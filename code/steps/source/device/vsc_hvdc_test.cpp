@@ -32,8 +32,8 @@ VSC_HVDC_TEST::VSC_HVDC_TEST():vsc(default_toolkit)
     //TEST_ADD(VSC_HVDC_TEST::test_set_get_set_ac_converter_bus_with_dc_voltage_control);
     TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_ac_bus);
 
-    TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_dc_operation_mode);
-    TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_ac_operation_mode);
+    TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_active_power_operation_mode);
+    TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_reactive_power_operation_mode);
     TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_nominal_dc_power_command_in_MW);
     TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_nominal_dc_voltage_command_in_kV);
     TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_nominal_ac_voltage_command_in_pu);
@@ -244,7 +244,7 @@ void VSC_HVDC_TEST::test_set_get_converter_ac_bus()
     TEST_ASSERT(vsc.get_converter_ac_bus(5)==0);
 }
 
-void VSC_HVDC_TEST::test_set_get_converter_dc_operation_mode()
+void VSC_HVDC_TEST::test_set_get_converter_active_power_operation_mode()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"VSC_HVDC_TEST");
 
@@ -254,38 +254,38 @@ void VSC_HVDC_TEST::test_set_get_converter_dc_operation_mode()
     vsc.set_converter_ac_bus(1,2);
 
     TEST_ASSERT(vsc.get_ac_converter_bus_with_dc_voltage_control()==0);
-    vsc.set_converter_dc_operation_mode(0,VSC_DC_VOLTAGE_CONTORL);
-    TEST_ASSERT(vsc.get_converter_dc_operation_mode(0)==VSC_DC_VOLTAGE_CONTORL);
+    vsc.set_converter_active_power_operation_mode(0,VSC_DC_VOLTAGE_CONTORL);
+    TEST_ASSERT(vsc.get_converter_active_power_operation_mode(0)==VSC_DC_VOLTAGE_CONTORL);
     TEST_ASSERT(vsc.get_ac_converter_bus_with_dc_voltage_control()==1);
 
-    vsc.set_converter_dc_operation_mode(0,VSC_AC_ACTIVE_POWER_CONTORL);
-    TEST_ASSERT(vsc.get_converter_dc_operation_mode(0)==VSC_AC_ACTIVE_POWER_CONTORL);
+    vsc.set_converter_active_power_operation_mode(0,VSC_AC_ACTIVE_POWER_CONTORL);
+    TEST_ASSERT(vsc.get_converter_active_power_operation_mode(0)==VSC_AC_ACTIVE_POWER_CONTORL);
 
-    vsc.set_converter_dc_operation_mode(1,VSC_DC_VOLTAGE_CONTORL);
-    TEST_ASSERT(vsc.get_converter_dc_operation_mode(1)==VSC_DC_VOLTAGE_CONTORL);
+    vsc.set_converter_active_power_operation_mode(1,VSC_DC_VOLTAGE_CONTORL);
+    TEST_ASSERT(vsc.get_converter_active_power_operation_mode(1)==VSC_DC_VOLTAGE_CONTORL);
     TEST_ASSERT(vsc.get_ac_converter_bus_with_dc_voltage_control()==1);
 
-    vsc.set_converter_dc_operation_mode(1,VSC_AC_ACTIVE_POWER_CONTORL);
-    TEST_ASSERT(vsc.get_converter_dc_operation_mode(1)==VSC_AC_ACTIVE_POWER_CONTORL);
+    vsc.set_converter_active_power_operation_mode(1,VSC_AC_ACTIVE_POWER_CONTORL);
+    TEST_ASSERT(vsc.get_converter_active_power_operation_mode(1)==VSC_AC_ACTIVE_POWER_CONTORL);
 }
 
-void VSC_HVDC_TEST::test_set_get_converter_ac_operation_mode()
+void VSC_HVDC_TEST::test_set_get_converter_reactive_power_operation_mode()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"VSC_HVDC_TEST");
 
     prepare_2_terminal_vsc_hvdc();
 
-    vsc.set_converter_ac_operation_mode(0,VSC_AC_VOLTAGE_CONTROL);
-    TEST_ASSERT(vsc.get_converter_ac_operation_mode(0)==VSC_AC_VOLTAGE_CONTROL);
+    vsc.set_converter_reactive_power_operation_mode(0,VSC_AC_VOLTAGE_CONTROL);
+    TEST_ASSERT(vsc.get_converter_reactive_power_operation_mode(0)==VSC_AC_VOLTAGE_CONTROL);
 
-    vsc.set_converter_ac_operation_mode(0,VSC_AC_REACTIVE_POWER_CONTROL);
-    TEST_ASSERT(vsc.get_converter_ac_operation_mode(0)==VSC_AC_REACTIVE_POWER_CONTROL);
+    vsc.set_converter_reactive_power_operation_mode(0,VSC_AC_REACTIVE_POWER_CONTROL);
+    TEST_ASSERT(vsc.get_converter_reactive_power_operation_mode(0)==VSC_AC_REACTIVE_POWER_CONTROL);
 
-    vsc.set_converter_ac_operation_mode(1,VSC_AC_VOLTAGE_CONTROL);
-    TEST_ASSERT(vsc.get_converter_ac_operation_mode(1)==VSC_AC_VOLTAGE_CONTROL);
+    vsc.set_converter_reactive_power_operation_mode(1,VSC_AC_VOLTAGE_CONTROL);
+    TEST_ASSERT(vsc.get_converter_reactive_power_operation_mode(1)==VSC_AC_VOLTAGE_CONTROL);
 
-    vsc.set_converter_ac_operation_mode(1,VSC_AC_REACTIVE_POWER_CONTROL);
-    TEST_ASSERT(vsc.get_converter_ac_operation_mode(1)==VSC_AC_REACTIVE_POWER_CONTROL);
+    vsc.set_converter_reactive_power_operation_mode(1,VSC_AC_REACTIVE_POWER_CONTROL);
+    TEST_ASSERT(vsc.get_converter_reactive_power_operation_mode(1)==VSC_AC_REACTIVE_POWER_CONTROL);
 }
 
 void VSC_HVDC_TEST::test_set_get_converter_nominal_dc_power_command_in_MW()
@@ -954,16 +954,16 @@ void VSC_HVDC_TEST::prepare_5_terminal_vsc_hvdc_converter_ac_buses()
     vsc.set_dc_line_resistance_in_ohm(5, 6);
     vsc.set_dc_line_resistance_in_ohm(6, 6);
 
-    vsc.set_converter_ac_operation_mode(0, VSC_AC_REACTIVE_POWER_CONTROL);
-    vsc.set_converter_dc_operation_mode(0, VSC_DC_VOLTAGE_CONTORL);
-    vsc.set_converter_ac_operation_mode(1, VSC_AC_REACTIVE_POWER_CONTROL);
-    vsc.set_converter_dc_operation_mode(1, VSC_AC_ACTIVE_POWER_CONTORL);
-    vsc.set_converter_ac_operation_mode(2, VSC_AC_REACTIVE_POWER_CONTROL);
-    vsc.set_converter_dc_operation_mode(2, VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL);
-    vsc.set_converter_ac_operation_mode(3, VSC_AC_REACTIVE_POWER_CONTROL);
-    vsc.set_converter_dc_operation_mode(3, VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL);
-    vsc.set_converter_ac_operation_mode(4, VSC_AC_VOLTAGE_CONTROL);
-    vsc.set_converter_dc_operation_mode(4, VSC_AC_ACTIVE_POWER_CONTORL);
+    vsc.set_converter_reactive_power_operation_mode(0, VSC_AC_REACTIVE_POWER_CONTROL);
+    vsc.set_converter_active_power_operation_mode(0, VSC_DC_VOLTAGE_CONTORL);
+    vsc.set_converter_reactive_power_operation_mode(1, VSC_AC_REACTIVE_POWER_CONTROL);
+    vsc.set_converter_active_power_operation_mode(1, VSC_AC_ACTIVE_POWER_CONTORL);
+    vsc.set_converter_reactive_power_operation_mode(2, VSC_AC_REACTIVE_POWER_CONTROL);
+    vsc.set_converter_active_power_operation_mode(2, VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL);
+    vsc.set_converter_reactive_power_operation_mode(3, VSC_AC_REACTIVE_POWER_CONTROL);
+    vsc.set_converter_active_power_operation_mode(3, VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL);
+    vsc.set_converter_reactive_power_operation_mode(4, VSC_AC_VOLTAGE_CONTROL);
+    vsc.set_converter_active_power_operation_mode(4, VSC_AC_ACTIVE_POWER_CONTORL);
 
     vsc.set_converter_nominal_ac_reactive_power_command_in_Mvar(0,50);
     vsc.set_converter_nominal_dc_voltage_command_in_kV(0,215);
@@ -1112,20 +1112,20 @@ void VSC_HVDC_TEST::prepare_7_terminal_vsc_hvdc_converter_ac_buses()
     vsc.set_dc_line_resistance_in_ohm(7, 5);
     vsc.set_dc_line_resistance_in_ohm(8, 3);
 
-    vsc.set_converter_ac_operation_mode(0, VSC_AC_REACTIVE_POWER_CONTROL);
-    vsc.set_converter_dc_operation_mode(0, VSC_DC_VOLTAGE_CONTORL);
-    vsc.set_converter_ac_operation_mode(1, VSC_AC_REACTIVE_POWER_CONTROL);
-    vsc.set_converter_dc_operation_mode(1, VSC_AC_ACTIVE_POWER_CONTORL);
-    vsc.set_converter_ac_operation_mode(2, VSC_AC_REACTIVE_POWER_CONTROL);
-    vsc.set_converter_dc_operation_mode(2, VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL);
-    vsc.set_converter_ac_operation_mode(3, VSC_AC_REACTIVE_POWER_CONTROL);
-    vsc.set_converter_dc_operation_mode(3, VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL);
-    vsc.set_converter_ac_operation_mode(4, VSC_AC_VOLTAGE_CONTROL);
-    vsc.set_converter_dc_operation_mode(4, VSC_AC_ACTIVE_POWER_CONTORL);
-    vsc.set_converter_ac_operation_mode(5, VSC_AC_VOLTAGE_CONTROL);
-    vsc.set_converter_dc_operation_mode(5, VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL);
-    vsc.set_converter_ac_operation_mode(6, VSC_AC_REACTIVE_POWER_CONTROL);
-    vsc.set_converter_dc_operation_mode(6, VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL);
+    vsc.set_converter_reactive_power_operation_mode(0, VSC_AC_REACTIVE_POWER_CONTROL);
+    vsc.set_converter_active_power_operation_mode(0, VSC_DC_VOLTAGE_CONTORL);
+    vsc.set_converter_reactive_power_operation_mode(1, VSC_AC_REACTIVE_POWER_CONTROL);
+    vsc.set_converter_active_power_operation_mode(1, VSC_AC_ACTIVE_POWER_CONTORL);
+    vsc.set_converter_reactive_power_operation_mode(2, VSC_AC_REACTIVE_POWER_CONTROL);
+    vsc.set_converter_active_power_operation_mode(2, VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL);
+    vsc.set_converter_reactive_power_operation_mode(3, VSC_AC_REACTIVE_POWER_CONTROL);
+    vsc.set_converter_active_power_operation_mode(3, VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL);
+    vsc.set_converter_reactive_power_operation_mode(4, VSC_AC_VOLTAGE_CONTROL);
+    vsc.set_converter_active_power_operation_mode(4, VSC_AC_ACTIVE_POWER_CONTORL);
+    vsc.set_converter_reactive_power_operation_mode(5, VSC_AC_VOLTAGE_CONTROL);
+    vsc.set_converter_active_power_operation_mode(5, VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL);
+    vsc.set_converter_reactive_power_operation_mode(6, VSC_AC_REACTIVE_POWER_CONTROL);
+    vsc.set_converter_active_power_operation_mode(6, VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL);
 
 
     vsc.set_converter_nominal_ac_reactive_power_command_in_Mvar(0,50);

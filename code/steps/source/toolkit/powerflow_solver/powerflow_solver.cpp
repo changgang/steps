@@ -247,7 +247,7 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Iteration %u:",iteration_count);
             toolkit->show_information_with_leading_time_stamp(buffer);
 
-            try_to_solve_hvdc_steady_state();
+            try_to_solve_dc_system_steady_state();
             calculate_raw_bus_power_mismatch();
 
             max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
@@ -258,13 +258,13 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
             if(get_var_limit_check_logic()==true)
                 bus_type_changed = check_bus_type_constraints();
             else
-                update_source_power_without_constraints();
+                allocate_bus_power_mismatch_without_checking_bus_type_constraints();
 
             if(bus_type_changed)
             {
                 update_P_and_Q_equation_internal_buses();
 
-                try_to_solve_hvdc_steady_state();
+                try_to_solve_dc_system_steady_state();
                 calculate_raw_bus_power_mismatch();
 
                 max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
@@ -354,12 +354,11 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
 
         while(true)
         {
-
             char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
             snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Iteration %u:",iteration_count);
             toolkit->show_information_with_leading_time_stamp(buffer);
 
-            try_to_solve_hvdc_steady_state();
+            try_to_solve_dc_system_steady_state();
             calculate_raw_bus_power_mismatch();
 
             max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
@@ -369,7 +368,7 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
             if(get_var_limit_check_logic()==true)
                 bus_type_changed = check_bus_type_constraints();
             else
-                update_source_power_without_constraints();
+                allocate_bus_power_mismatch_without_checking_bus_type_constraints();
 
             if(bus_type_changed)
             {
@@ -378,7 +377,7 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
                 BQ = jacobian_builder->get_decoupled_B_jacobian_with_Q_equation_internal_buses(internal_Q_equation_buses);
                 BQ.LU_factorization(1, 1e-13);
 
-                try_to_solve_hvdc_steady_state();
+                try_to_solve_dc_system_steady_state();
                 calculate_raw_bus_power_mismatch();
 
                 max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
@@ -443,7 +442,7 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
             //}
             update_bus_angle(bus_delta_angle);
 
-            try_to_solve_hvdc_steady_state();
+            try_to_solve_dc_system_steady_state();
             calculate_raw_bus_power_mismatch();
 
             max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
@@ -535,11 +534,64 @@ void POWERFLOW_SOLVER::prepare_devices_for_solution()
     lines = psdb.get_all_lines();
     transformers = psdb.get_all_transformers();
     hvdcs = psdb.get_all_hvdcs();
+    vsc_hvdcs = psdb.get_all_vsc_hvdcs();
 
     e_devices = psdb.get_all_equivalent_devices();
 }
 
 void POWERFLOW_SOLVER::initialize_bus_type()
+{
+    initialize_PQ_bus_type();
+    initialize_PV_bus_type();
+    initialize_SLACK_bus_type();
+}
+
+void POWERFLOW_SOLVER::initialize_PQ_bus_type()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+
+    //vector<BUS*> buses = psdb.get_all_buses();
+    unsigned int nbus = buses.size();
+
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit->get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(unsigned int i=0; i<nbus; ++i)
+    {
+        unsigned int bus = buses[i]->get_bus_number();
+        BUS_TYPE btype = buses[i]->get_bus_type();
+        if(btype==PQ_TYPE)
+        {
+            vector<VSC_HVDC*> vscs = psdb.get_vsc_hvdcs_connecting_to_bus(bus);
+            VSC_HVDC* vsc = NULL;
+            unsigned int nvsc = vscs.size();
+            for(unsigned int j=0; j!=nvsc; ++j)
+            {
+                vsc = vscs[j];
+                if(vsc->get_status()==true)
+                {
+                    unsigned int index = vsc->get_converter_index_with_ac_bus(bus);
+                    if(vsc->get_converter_status(index) == true)
+                    {
+                        if(vsc->get_converter_reactive_power_operation_mode(index)==VSC_AC_VOLTAGE_CONTROL)
+                        {
+                            if(vsc->get_converter_active_power_operation_mode(index)!=VSC_AC_VOLTAGE_ANGLE_CONTROL)
+                                buses[i]->set_bus_type(SLACK_TYPE);
+                            else
+                            {
+                                if(buses[i]->get_bus_type()!=SLACK_TYPE)
+                                    buses[i]->set_bus_type(PV_TYPE);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void POWERFLOW_SOLVER::initialize_PV_bus_type()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
@@ -567,10 +619,11 @@ void POWERFLOW_SOLVER::initialize_bus_type()
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nbus; ++i)
     {
+        unsigned int bus = buses[i]->get_bus_number();
         BUS_TYPE btype = buses[i]->get_bus_type();
         if(btype==PV_TYPE)
         {
-            vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(buses[i]->get_bus_number());
+            vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(bus);
             unsigned int nsource = sources.size();
             unsigned int n_inservice = 0;
             for(unsigned int j=0; j!=nsource; ++j)
@@ -578,10 +631,123 @@ void POWERFLOW_SOLVER::initialize_bus_type()
                 if(sources[j]->get_status()==true)
                   ++n_inservice;
             }
-            if(n_inservice!=0)
-                ;
+            vector<VSC_HVDC*> vscs = psdb.get_vsc_hvdcs_connecting_to_bus(bus);
+            VSC_HVDC* vsc = NULL;
+            unsigned int nvsc = vscs.size();
+            for(unsigned int j=0; j!=nvsc; ++j)
+            {
+                vsc = vscs[j];
+                if(vsc->get_status()==true)
+                {
+                    unsigned int index = vsc->get_converter_index_with_ac_bus(bus);
+                    if(vsc->get_converter_status(index) == true)
+                    {
+                        if(vsc->get_converter_reactive_power_operation_mode(index)==VSC_AC_VOLTAGE_CONTROL)
+                        {
+                            if(vsc->get_converter_active_power_operation_mode(index)!=VSC_AC_VOLTAGE_ANGLE_CONTROL)
+                                ++n_inservice;
+                            else
+                            {
+                                buses[i]->set_bus_type(SLACK_TYPE);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if(buses[i]->get_bus_type()==SLACK_TYPE)
+                continue;
             else
+            {
+                if(n_inservice!=0)
+                    ;
+                else
+                    buses[i]->set_bus_type(PQ_TYPE);
+            }
+        }
+    }
+}
+
+void POWERFLOW_SOLVER::initialize_SLACK_bus_type()
+{
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+
+    unsigned int nbus = buses.size();
+
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit->get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(unsigned int i=0; i<nbus; ++i)
+    {
+        unsigned int bus = buses[i]->get_bus_number();
+        BUS_TYPE btype = buses[i]->get_bus_type();
+        if(btype==SLACK_TYPE)
+        {
+            vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(bus);
+            unsigned int nsource = sources.size();
+
+            unsigned int n_inservice_source = 0;
+            for(unsigned int j=0; j!=nsource; ++j)
+            {
+                if(sources[j]->get_status()==true)
+                  ++n_inservice_source;
+            }
+
+            vector<VSC_HVDC*> vscs = psdb.get_vsc_hvdcs_connecting_to_bus(bus);
+            unsigned int nvsc = vscs.size();
+
+            unsigned int n_inservice_vsc = 0;
+            VSC_HVDC* vsc = NULL;
+            for(unsigned int j=0; j!=nvsc; ++j)
+            {
+                vsc = vscs[j];
+                if(vsc->get_status()==true)
+                {
+                    unsigned int index = vsc->get_converter_index_with_ac_bus(bus);
+                    if(vsc->get_converter_status(index) == true)
+                        ++n_inservice_vsc;
+                }
+            }
+            if(n_inservice_source == 0 and n_inservice_vsc == 0)
+            {
+                osstream<<"Warning. Bus "<<bus<<" is a SLACK bus but has neither in-service source nor vsc-hvdc."<<endl
+                        <<"Bus type is changed to PQ type";
+                toolkit->show_information_with_leading_time_stamp(osstream);
                 buses[i]->set_bus_type(PQ_TYPE);
+                continue;
+            }
+            else
+            {
+                if(n_inservice_source == 0 and n_inservice_vsc != 0)
+                {
+                    unsigned int n_inservice_converter_with_SLACK_type = 0;
+                    for(unsigned int j=0; j!=nvsc; ++j)
+                    {
+                        vsc = vscs[j];
+                        if(vsc->get_status()==true)
+                        {
+                            unsigned int index = vsc->get_converter_index_with_ac_bus(bus);
+                            if(vsc->get_converter_status(index) == true)
+                            {
+                                if(vsc->get_converter_reactive_power_operation_mode(index)==VSC_AC_VOLTAGE_CONTROL and
+                                   vsc->get_converter_active_power_operation_mode(index)==VSC_AC_VOLTAGE_ANGLE_CONTROL)
+                                    ++n_inservice_converter_with_SLACK_type;
+                            }
+                        }
+                    }
+                    if(n_inservice_converter_with_SLACK_type == 0)
+                    {
+                        osstream<<"Error. Bus "<<bus<<" is a SLACK bus with in-service vsc-hvdc. However, "
+                                <<"no vsc-hvdc has converter with both VSC_AC_VOLTAGE_CONTROL and VSC_AC_VOLTAGE_ANGLE_CONTROL modes."<<endl
+                                <<"Bus type is changed to PQ type";
+                        toolkit->show_information_with_leading_time_stamp(osstream);
+                        buses[i]->set_bus_type(PQ_TYPE);
+                        continue;
+                    }
+                }
+            }
         }
     }
 }
@@ -602,15 +768,43 @@ void POWERFLOW_SOLVER::initialize_bus_voltage_to_regulate()
             double qmin = sources[i]->get_q_min_in_MVar();
             if(qmax!=qmin)
             {
-                //unsigned int bus = sources[i]->get_bus_to_regulate();
                 double vreg = sources[i]->get_voltage_to_regulate_in_pu();
-                //BUS* busptr = psdb.get_bus(bus);
                 BUS* busptr = sources[i]->get_bus_pointer();
                 busptr->set_voltage_to_regulate_in_pu(vreg);
             }
         }
     }
-    //vector<BUS*> buses = psdb.get_all_buses();
+
+    unsigned int nvsc = vsc_hvdcs.size();
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit->get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(unsigned int i=0; i<nvsc; ++i)
+    {
+        if(vsc_hvdcs[i]->get_status()==true)
+        {
+            unsigned int n_converter  = vsc_hvdcs[i]->get_converter_count();
+            for(unsigned int index=0; index!=n_converter; ++index)
+            {
+                if(vsc_hvdcs[i]->get_converter_status(index)==true)
+                {
+                    if(vsc_hvdcs[i]->get_converter_reactive_power_operation_mode(index)==VSC_AC_VOLTAGE_CONTROL)
+                    {
+                        double qmax = vsc_hvdcs[i]->get_converter_Qmax_in_MVar(index);
+                        double qmin = vsc_hvdcs[i]->get_converter_Qmin_in_MVar(index);
+                        if(qmax!=qmin)
+                        {
+                            double vreg = vsc_hvdcs[i]->get_converter_nominal_ac_voltage_command_in_pu(index);
+                            BUS* busptr = vsc_hvdcs[i]->get_converter_ac_bus_pointer(index);
+                            busptr->set_voltage_to_regulate_in_pu(vreg);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     unsigned int nbus = buses.size();
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
         set_openmp_number_of_threads(toolkit->get_thread_number());
@@ -786,7 +980,7 @@ bool POWERFLOW_SOLVER::is_converged()
     osstream<<"Check maximum active and reactive power mismatch.";
     toolkit->show_information_with_leading_time_stamp(osstream);
 
-    try_to_solve_hvdc_steady_state();
+    try_to_solve_dc_system_steady_state();
     calculate_raw_bus_power_mismatch();
 
     double max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
@@ -799,6 +993,12 @@ bool POWERFLOW_SOLVER::is_converged()
         return false;
 
     return get_convergence_flag();
+}
+
+void POWERFLOW_SOLVER::try_to_solve_dc_system_steady_state()
+{
+    try_to_solve_hvdc_steady_state();
+    try_to_solve_vsc_hvdc_steady_state();
 }
 
 void POWERFLOW_SOLVER::try_to_solve_hvdc_steady_state()
@@ -815,6 +1015,23 @@ void POWERFLOW_SOLVER::try_to_solve_hvdc_steady_state()
         {
             hvdcs[i]->solve_steady_state();
             //hvdcs[i]->show_solved_hvdc_steady_state();
+        }
+    }
+}
+
+void POWERFLOW_SOLVER::try_to_solve_vsc_hvdc_steady_state()
+{
+    unsigned int nvsc = vsc_hvdcs.size();
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit->get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(unsigned int i=0; i<nvsc; ++i)
+    {
+        if(vsc_hvdcs[i]->get_status()==true)
+        {
+            vsc_hvdcs[i]->solve_steady_state();
+            //vsc_hvdcs[i]->show_solved_steady_state();
         }
     }
 }
@@ -881,6 +1098,19 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
             if(std::isnan(bus_power[i].real()) or std::isnan(bus_power[i].imag()))
             {
                 osstream<<"after adding hvdc NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
+                toolkit->show_information_with_leading_time_stamp(osstream);
+            }
+        }
+    }
+
+    add_vsc_hvdc_to_bus_power_mismatch();
+    if(toolkit->is_detailed_log_enabled())
+    {
+        for(unsigned int i=0; i!=nbus; ++i)
+        {
+            if(std::isnan(bus_power[i].real()) or std::isnan(bus_power[i].imag()))
+            {
+                osstream<<"after adding vsc-hvdc NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
                 toolkit->show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -1118,6 +1348,41 @@ void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
     }
 }
 
+void POWERFLOW_SOLVER::add_vsc_hvdc_to_bus_power_mismatch()
+{
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+
+    double one_over_sbase = toolkit->get_one_over_system_base_power_in_one_over_MVA();
+
+    unsigned int nvsc = vsc_hvdcs.size();
+
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit->get_hvdc_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(unsigned int i=0; i<nvsc; ++i)
+    {
+        if(vsc_hvdcs[i]->get_status() == true)
+        {
+            unsigned int n_converter = vsc_hvdcs[i]->get_converter_count();
+            for(unsigned int index=0; index!=n_converter; ++index)
+            {
+                if(vsc_hvdcs[i]->get_converter_status(index)==true)
+                {
+                    unsigned int physical_bus = vsc_hvdcs[i]->get_converter_ac_bus(index);
+                    unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+                    complex<double> S = complex<double>(vsc_hvdcs[i]->get_converter_P_to_AC_bus_in_MW(index), vsc_hvdcs[i]->get_converter_Q_to_AC_bus_in_MVar(index));
+
+                    bus_power[internal_bus] += S*one_over_sbase;
+                }
+            }
+            //ostringstream osstream;
+            //osstream<<hvdcs[i]->get_compound_device_name()<<": Srec = "<<S_rec<<" MVA, Sinv = "<<S_inv<<" MVA."<<endl;
+            //toolkit->show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
 double POWERFLOW_SOLVER::get_maximum_active_power_mismatch_in_MW() const
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -1243,18 +1508,36 @@ void POWERFLOW_SOLVER::check_SLACK_bus_constraint_of_physical_bus(unsigned int p
         double bus_P_mismatch_in_MW = -bus_power[internal_bus].real()*sbase;
         double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*sbase;
 
+        vector<VSC_HVDC*> vsc_hvdcs = psdb.get_vsc_hvdcs_connecting_to_bus(physical_bus);
+        unsigned int n;
+        n = vsc_hvdcs.size();
+        for(unsigned int i=0; i!=n; ++i)
+        {
+            if(vsc_hvdcs[i]->get_status() == true)
+            {
+                unsigned int index = vsc_hvdcs[i]->get_converter_index_with_ac_bus(physical_bus);
+                if(vsc_hvdcs[i]->get_converter_status(index)==true)
+                {
+                    if(vsc_hvdcs[i]->get_converter_active_power_operation_mode(index)!=VSC_AC_VOLTAGE_ANGLE_CONTROL)
+                        bus_P_mismatch_in_MW -= vsc_hvdcs[i]->get_converter_P_to_AC_bus_in_MW(index);
+
+                    if(vsc_hvdcs[i]->get_converter_reactive_power_operation_mode(index)!=VSC_AC_VOLTAGE_CONTROL)
+                        bus_Q_mismatch_in_MVar -= vsc_hvdcs[i]->get_converter_Q_to_AC_bus_in_MVar(index);
+                }
+            }
+        }
+
         double total_p_max_in_MW = psdb.get_regulatable_p_max_at_physical_bus_in_MW(physical_bus);
         double total_p_min_in_MW = psdb.get_regulatable_p_min_at_physical_bus_in_MW(physical_bus);
         double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
         double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
 
         double P_loading_percentage = (bus_P_mismatch_in_MW-total_p_min_in_MW);
-            P_loading_percentage /= (total_p_max_in_MW - total_p_min_in_MW);
+               P_loading_percentage /= (total_p_max_in_MW - total_p_min_in_MW);
         double Q_loading_percentage = (bus_Q_mismatch_in_MVar-total_q_min_in_MVar);
-            Q_loading_percentage /= (total_q_max_in_MVar - total_q_min_in_MVar);
+               Q_loading_percentage /= (total_q_max_in_MVar - total_q_min_in_MVar);
 
         vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
-        unsigned int n;
         n = sources.size();
         for(unsigned int i=0; i!=n; ++i)
         {
@@ -1267,6 +1550,30 @@ void POWERFLOW_SOLVER::check_SLACK_bus_constraint_of_physical_bus(unsigned int p
                 double Q_loading_in_MVar = sources[i]->get_q_max_in_MVar() - sources[i]->get_q_min_in_MVar();
                 Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + sources[i]->get_q_min_in_MVar();
                 sources[i]->set_q_generation_in_MVar(Q_loading_in_MVar);
+            }
+        }
+
+        n = vsc_hvdcs.size();
+        for(unsigned int i=0; i!=n; ++i)
+        {
+            if(vsc_hvdcs[i]->get_status() == true)
+            {
+                unsigned int index = vsc_hvdcs[i]->get_converter_index_with_ac_bus(physical_bus);
+                if(vsc_hvdcs[i]->get_converter_status(index)==true)
+                {
+                    if(vsc_hvdcs[i]->get_converter_active_power_operation_mode(index)==VSC_AC_VOLTAGE_ANGLE_CONTROL)
+                    {
+                        double P_loading_in_MW = vsc_hvdcs[i]->get_converter_Pmax_in_MW(index) - vsc_hvdcs[i]->get_converter_Pmin_in_MW(index);
+                        P_loading_in_MW = P_loading_in_MW*P_loading_percentage + vsc_hvdcs[i]->get_converter_Pmin_in_MW(index);
+                        vsc_hvdcs[i]->set_converter_P_to_AC_bus_in_MW(index, P_loading_in_MW);
+                    }
+                    if(vsc_hvdcs[i]->get_converter_reactive_power_operation_mode(index)==VSC_AC_VOLTAGE_CONTROL)
+                    {
+                        double Q_loading_in_MVar = vsc_hvdcs[i]->get_converter_Qmax_in_MVar(index) - vsc_hvdcs[i]->get_converter_Qmin_in_MVar(index);
+                        Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + vsc_hvdcs[i]->get_converter_Qmin_in_MVar(index);
+                        vsc_hvdcs[i]->set_converter_Q_to_AC_bus_in_MVar(index, Q_loading_in_MVar);
+                    }
+                }
             }
         }
     }
@@ -1289,14 +1596,31 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
 
         double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*psdb.get_system_base_power_in_MVA();
 
+        vector<VSC_HVDC*> vsc_hvdcs = psdb.get_vsc_hvdcs_connecting_to_bus(physical_bus);
+        unsigned int n;
+        n = vsc_hvdcs.size();
+        for(unsigned int i=0; i!=n; ++i)
+        {
+            if(vsc_hvdcs[i]->get_status() == true)
+            {
+                unsigned int index = vsc_hvdcs[i]->get_converter_index_with_ac_bus(physical_bus);
+                if(vsc_hvdcs[i]->get_converter_status(index)==true)
+                {
+                    if(vsc_hvdcs[i]->get_converter_reactive_power_operation_mode(index)!=VSC_AC_VOLTAGE_CONTROL)
+                        bus_Q_mismatch_in_MVar -= vsc_hvdcs[i]->get_converter_Q_to_AC_bus_in_MVar(index);
+                }
+            }
+        }
+
         double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
         double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
 
-        if(total_q_max_in_MVar==total_q_min_in_MVar)
+        if(fabs(total_q_max_in_MVar-total_q_min_in_MVar)<DOUBLE_EPSILON)
         {
             bus->set_bus_type(PV_TO_PQ_TYPE_3);
             bus_type_changed = true;
             set_all_sources_at_physical_bus_to_q_max(physical_bus);
+            set_all_regulating_vsc_hvdcs_at_physical_bus_to_q_max(physical_bus);
 
             if(toolkit->is_detailed_log_enabled())
             {
@@ -1308,8 +1632,6 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
 
             return bus_type_changed;
         }
-
-        unsigned int n;
 
         if(bus_Q_mismatch_in_MVar > total_q_max_in_MVar)
         {
@@ -1325,6 +1647,7 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
             }
 
             set_all_sources_at_physical_bus_to_q_max(physical_bus);
+            set_all_regulating_vsc_hvdcs_at_physical_bus_to_q_max(physical_bus);
             return bus_type_changed;
         }
 
@@ -1342,6 +1665,7 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
             }
 
             set_all_sources_at_physical_bus_to_q_min(physical_bus);
+            set_all_regulating_vsc_hvdcs_at_physical_bus_to_q_min(physical_bus);
             return bus_type_changed;
         }
 
@@ -1359,6 +1683,24 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
                 sources[i]->set_q_generation_in_MVar(Q_loading_in_MVar);
             }
         }
+
+        n = vsc_hvdcs.size();
+        for(unsigned int i=0; i!=n; ++i)
+        {
+            if(vsc_hvdcs[i]->get_status() == true)
+            {
+                unsigned int index = vsc_hvdcs[i]->get_converter_index_with_ac_bus(physical_bus);
+                if(vsc_hvdcs[i]->get_converter_status(index)==true)
+                {
+                    if(vsc_hvdcs[i]->get_converter_reactive_power_operation_mode(index)==VSC_AC_VOLTAGE_CONTROL)
+                    {
+                        double Q_loading_in_MVar = vsc_hvdcs[i]->get_converter_Qmax_in_MVar(index) - vsc_hvdcs[i]->get_converter_Qmin_in_MVar(index);
+                        Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + vsc_hvdcs[i]->get_converter_Qmin_in_MVar(index);
+                        vsc_hvdcs[i]->set_converter_Q_to_AC_bus_in_MVar(index, Q_loading_in_MVar);
+                    }
+                }
+            }
+        }
         return bus_type_changed;
     }
     else
@@ -1367,6 +1709,8 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
 
 bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned int physical_bus)
 {
+    bool bus_type_changed = false;
+
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -1377,11 +1721,9 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
        bus->get_bus_type()!=PV_TO_PQ_TYPE_2 and
        bus->get_bus_type()!=PV_TO_PQ_TYPE_3 and
        bus->get_bus_type()!=PV_TO_PQ_TYPE_4)
-        return false;
+        return bus_type_changed;
 
     ostringstream osstream;
-
-    bool bus_type_changed = false;
 
     double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
     double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
@@ -1402,31 +1744,46 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
             }
 
             set_all_sources_at_physical_bus_to_q_max(physical_bus);
+            set_all_regulating_vsc_hvdcs_at_physical_bus_to_q_max(physical_bus);
         }
         return bus_type_changed;
     }
-
 
 
     double bus_voltage = bus->get_positive_sequence_voltage_in_pu();
 
     double voltage_to_regulated = psdb.get_voltage_to_regulate_of_physical_bus_in_pu(physical_bus);
 
-    double total_q_generation_in_MVar = psdb.get_total_regulating_q_generation_at_physical_bus_in_MVar(physical_bus);
+    double total_regulating_q_generation_in_MVar = psdb.get_total_regulating_q_generation_at_physical_bus_in_MVar(physical_bus);
 
     //unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
     double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*psdb.get_system_base_power_in_MVA();
 
-    //bus_Q_mismatch_in_MVar += total_q_generation_in_MVar;
+    vector<VSC_HVDC*> vsc_hvdcs = psdb.get_vsc_hvdcs_connecting_to_bus(physical_bus);
+    unsigned int n;
+    n = vsc_hvdcs.size();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(vsc_hvdcs[i]->get_status() == true)
+        {
+            unsigned int index = vsc_hvdcs[i]->get_converter_index_with_ac_bus(physical_bus);
+            if(vsc_hvdcs[i]->get_converter_status(index)==true)
+            {
+                if(vsc_hvdcs[i]->get_converter_reactive_power_operation_mode(index)!=VSC_AC_VOLTAGE_CONTROL)
+                    bus_Q_mismatch_in_MVar -= vsc_hvdcs[i]->get_converter_Q_to_AC_bus_in_MVar(index);
+            }
+        }
+    }
+    //bus_Q_mismatch_in_MVar += total_regulating_q_generation_in_MVar;
 
-    //os<<"Bus %u: current V= %fpu, V to regulate: %fpu, current Q= %fMVar", physical_bus, bus_voltage, voltage_to_regulated, total_q_generation_in_MVar);
+    //os<<"Bus %u: current V= %fpu, V to regulate: %fpu, current Q= %fMVar", physical_bus, bus_voltage, voltage_to_regulated, total_regulating_q_generation_in_MVar);
     //show_information_with_leading_time_stamp(osstream);
     //os<<"Qmax= %fMVar, Qmin= %fMVar", total_q_max_in_MVar, total_q_min_in_MVar);
     //show_information_with_leading_time_stamp(osstream);
 
     if(bus_voltage>voltage_to_regulated)
     {
-        if(total_q_generation_in_MVar>total_q_min_in_MVar)
+        if(total_regulating_q_generation_in_MVar>total_q_min_in_MVar)
         {
             switch(bus->get_bus_type())
             {
@@ -1463,7 +1820,7 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
     }
     else // bus_voltage<voltage_to_regulated
     {
-        if(total_q_generation_in_MVar<total_q_max_in_MVar)
+        if(total_regulating_q_generation_in_MVar<total_q_max_in_MVar)
         {
             switch(bus->get_bus_type())
             {
@@ -1500,16 +1857,17 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
     }
     return bus_type_changed;
 
-    //
+    /*
     if(bus_voltage<voltage_to_regulated)
     {
         if(bus_Q_mismatch_in_MVar>total_q_max_in_MVar)
         {
             bus->set_bus_type(PV_TO_PQ_TYPE_3);
             set_all_sources_at_physical_bus_to_q_max(physical_bus);
+            set_all_regulating_vsc_hvdcs_at_physical_bus_to_q_max(physical_bus);
 
             string busname = psdb.bus_number2bus_name(physical_bus);
-            osstream<<"Var of sources at bus "<<physical_bus<<" ["<<busname<<"] are set to max.";
+            osstream<<"Var of sources and/or vsc-hvdcs at bus "<<physical_bus<<" ["<<busname<<"] are set to max.";
             toolkit->show_information_with_leading_time_stamp(osstream);
         }
         else
@@ -1565,8 +1923,9 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
         {
             bus->set_bus_type(PV_TO_PQ_TYPE_3);
             set_all_sources_at_physical_bus_to_q_min(physical_bus);
+            set_all_regulating_vsc_hvdcs_at_physical_bus_to_q_min(physical_bus);
             string busname = psdb.bus_number2bus_name(physical_bus);
-            osstream<<"Var of sources at bus "<<physical_bus<<" ["<<busname<<"] are set to min.";
+            osstream<<"Var of sources and/or vsc-hvdcs at bus "<<physical_bus<<" ["<<busname<<"] are set to min.";
             toolkit->show_information_with_leading_time_stamp(osstream);
         }
         else
@@ -1617,6 +1976,7 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
         }
     }
     return bus_type_changed;
+    */
 }
 
 void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_min(unsigned int physical_bus)
@@ -1626,7 +1986,10 @@ void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_min(unsigned int phy
 
     unsigned int n = sources.size();
     for(unsigned int i=0; i!=n; ++i)
-        sources[i]->set_q_generation_in_MVar(sources[i]->get_q_min_in_MVar());
+    {
+        if(sources[i]->get_status()==true)
+            sources[i]->set_q_generation_in_MVar(sources[i]->get_q_min_in_MVar());
+    }
 }
 void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_max(unsigned int physical_bus)
 {
@@ -1635,11 +1998,48 @@ void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_max(unsigned int phy
 
     unsigned int n = sources.size();
     for(unsigned int i=0; i!=n; ++i)
-        sources[i]->set_q_generation_in_MVar(sources[i]->get_q_max_in_MVar());
+    {
+        if(sources[i]->get_status()==true)
+            sources[i]->set_q_generation_in_MVar(sources[i]->get_q_max_in_MVar());
+    }
+}
+
+void POWERFLOW_SOLVER::set_all_regulating_vsc_hvdcs_at_physical_bus_to_q_min(unsigned int physical_bus)
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<VSC_HVDC*> vsc_hvdcs = psdb.get_vsc_hvdcs_connecting_to_bus(physical_bus);
+
+    unsigned int n = vsc_hvdcs.size();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(vsc_hvdcs[i]->get_status()==true)
+        {
+            unsigned int index = vsc_hvdcs[i]->get_converter_index_with_ac_bus(physical_bus);
+            if(vsc_hvdcs[i]->get_converter_status(index)==true)
+                vsc_hvdcs[i]->set_converter_Q_to_AC_bus_in_MVar(index, vsc_hvdcs[i]->get_converter_Qmin_in_MVar(index));
+        }
+    }
+}
+
+void POWERFLOW_SOLVER::set_all_regulating_vsc_hvdcs_at_physical_bus_to_q_max(unsigned int physical_bus)
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<VSC_HVDC*> vsc_hvdcs = psdb.get_vsc_hvdcs_connecting_to_bus(physical_bus);
+
+    unsigned int n = vsc_hvdcs.size();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(vsc_hvdcs[i]->get_status()==true)
+        {
+            unsigned int index = vsc_hvdcs[i]->get_converter_index_with_ac_bus(physical_bus);
+            if(vsc_hvdcs[i]->get_converter_status(index)==true)
+                vsc_hvdcs[i]->set_converter_Q_to_AC_bus_in_MVar(index, vsc_hvdcs[i]->get_converter_Qmax_in_MVar(index));
+        }
+    }
 }
 
 
-void POWERFLOW_SOLVER::update_source_power_without_constraints()
+void POWERFLOW_SOLVER::allocate_bus_power_mismatch_without_checking_bus_type_constraints()
 {
     unsigned int nbus = buses.size();
 
@@ -1656,11 +2056,11 @@ void POWERFLOW_SOLVER::update_source_power_without_constraints()
         unsigned int physical_bus = buses[i]->get_bus_number();
 
         if(btype==SLACK_TYPE)
-            update_SLACK_bus_source_power_of_physical_bus(physical_bus);
+            allocate_SLACK_bus_power_mismatch_without_checking_bus_type_constraint(physical_bus);
         else
         {
             if(btype == PV_TYPE)
-                update_PV_bus_source_power_of_physical_bus(physical_bus);
+                allocate_PV_bus_power_mismatch_without_checking_bus_type_constraint(physical_bus);
             else
                 continue;
         }
@@ -1668,79 +2068,63 @@ void POWERFLOW_SOLVER::update_source_power_without_constraints()
     return;
 }
 
-void POWERFLOW_SOLVER::update_SLACK_bus_source_power_of_physical_bus(unsigned int physical_bus)
+void POWERFLOW_SOLVER::allocate_SLACK_bus_power_mismatch_without_checking_bus_type_constraint(unsigned int physical_bus)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
-
-    //BUS* bus = psdb.get_bus(physical_bus);
-    unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
-    BUS* bus = internal_bus_pointers[internal_bus];
-
-    if(bus->get_bus_type()==SLACK_TYPE)
-    {
-        //unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
-
-        double sbase = psdb.get_system_base_power_in_MVA();
-        double bus_P_mismatch_in_MW = -bus_power[internal_bus].real()*sbase;
-        double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*sbase;
-
-        double total_p_max_in_MW = psdb.get_regulatable_p_max_at_physical_bus_in_MW(physical_bus);
-        double total_p_min_in_MW = psdb.get_regulatable_p_min_at_physical_bus_in_MW(physical_bus);
-        double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
-        double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
-
-        double P_loading_percentage = (bus_P_mismatch_in_MW-total_p_min_in_MW);
-            P_loading_percentage /= (total_p_max_in_MW - total_p_min_in_MW);
-        double Q_loading_percentage = (bus_Q_mismatch_in_MVar-total_q_min_in_MVar);
-            Q_loading_percentage /= (total_q_max_in_MVar - total_q_min_in_MVar);
-
-        vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
-        unsigned int n;
-        n = sources.size();
-        for(unsigned int i=0; i!=n; ++i)
-        {
-            if(sources[i]->get_status() == true)
-            {
-                double P_loading_in_MW = sources[i]->get_p_max_in_MW() - sources[i]->get_p_min_in_MW();
-                P_loading_in_MW = P_loading_in_MW*P_loading_percentage + sources[i]->get_p_min_in_MW();
-                sources[i]->set_p_generation_in_MW(P_loading_in_MW);
-
-                double Q_loading_in_MVar = sources[i]->get_q_max_in_MVar() - sources[i]->get_q_min_in_MVar();
-                Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + sources[i]->get_q_min_in_MVar();
-                sources[i]->set_q_generation_in_MVar(Q_loading_in_MVar);
-            }
-        }
-    }
+    check_SLACK_bus_constraint_of_physical_bus(physical_bus);
 }
 
-void POWERFLOW_SOLVER::update_PV_bus_source_power_of_physical_bus(unsigned int physical_bus)
+void POWERFLOW_SOLVER::allocate_PV_bus_power_mismatch_without_checking_bus_type_constraint(unsigned int physical_bus)
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    //BUS* bus = psdb.get_bus(physical_bus);
     unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
     BUS* bus = internal_bus_pointers[internal_bus];
 
     if(bus->get_bus_type()==PV_TYPE)
     {
-        //unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
-
         double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*psdb.get_system_base_power_in_MVA();
+
+        unsigned int n;
+        vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
+        n = sources.size();
+        unsigned int n_regulating_source =  0;
+        for(unsigned int i=0; i!=n; ++i)
+        {
+            if(sources[i]->get_status() == true)
+                ++n_regulating_source;
+        }
+
+        vector<VSC_HVDC*> vsc_hvdcs = psdb.get_vsc_hvdcs_connecting_to_bus(physical_bus);
+        n = vsc_hvdcs.size();
+        unsigned int n_regulating_vsc =  0;
+        for(unsigned int i=0; i!=n; ++i)
+        {
+            if(vsc_hvdcs[i]->get_status() == true)
+            {
+                unsigned int index = vsc_hvdcs[i]->get_converter_index_with_ac_bus(physical_bus);
+                if(vsc_hvdcs[i]->get_converter_status(index)==true)
+                {
+                    if(vsc_hvdcs[i]->get_converter_reactive_power_operation_mode(index)!=VSC_AC_VOLTAGE_CONTROL)
+                        bus_Q_mismatch_in_MVar -= vsc_hvdcs[i]->get_converter_Q_to_AC_bus_in_MVar(index);
+                    else
+                        ++n_regulating_vsc;
+                }
+            }
+        }
+
+        unsigned int n_regulating_source_and_vsc = n_regulating_source+n_regulating_vsc;
 
         double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
         double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
-
-        vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
-        unsigned int n = sources.size();
 
         double Q_loading_percentage = (bus_Q_mismatch_in_MVar-total_q_min_in_MVar);
         if(total_q_max_in_MVar != total_q_min_in_MVar)
             Q_loading_percentage /= (total_q_max_in_MVar - total_q_min_in_MVar);
         else
-            Q_loading_percentage = 1/n;
+            Q_loading_percentage = 1/n_regulating_source_and_vsc;
 
+        n = sources.size();
         for(unsigned int i=0; i!=n; ++i)
         {
             if(sources[i]->get_status() == true)
@@ -1751,6 +2135,31 @@ void POWERFLOW_SOLVER::update_PV_bus_source_power_of_physical_bus(unsigned int p
                 else
                     Q_loading_in_MVar = bus_Q_mismatch_in_MVar*Q_loading_percentage;
                 sources[i]->set_q_generation_in_MVar(Q_loading_in_MVar);
+            }
+        }
+
+        n = vsc_hvdcs.size();
+        for(unsigned int i=0; i!=n; ++i)
+        {
+            if(vsc_hvdcs[i]->get_status() == true)
+            {
+                unsigned int index = vsc_hvdcs[i]->get_converter_index_with_ac_bus(physical_bus);
+                if(vsc_hvdcs[i]->get_converter_status(index)==true)
+                {
+                    if(vsc_hvdcs[i]->get_converter_reactive_power_operation_mode(index)==VSC_AC_VOLTAGE_CONTROL)
+                    {
+                        double Q_loading_in_MVar = 0;
+                        if(total_q_max_in_MVar!=total_q_min_in_MVar)
+                        {
+                            Q_loading_in_MVar = vsc_hvdcs[i]->get_converter_Qmax_in_MVar(index) - vsc_hvdcs[i]->get_converter_Qmin_in_MVar(index);
+                            Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + vsc_hvdcs[i]->get_converter_Qmin_in_MVar(index);
+                        }
+                        else
+                            Q_loading_in_MVar = bus_Q_mismatch_in_MVar*Q_loading_percentage;
+
+                        vsc_hvdcs[i]->set_converter_Q_to_AC_bus_in_MVar(index, Q_loading_in_MVar);
+                    }
+                }
             }
         }
     }

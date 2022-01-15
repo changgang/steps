@@ -49,27 +49,27 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
     for(unsigned int i=0;i!=ncon;++i)
     {
         set_converter_ac_bus(i,vsc.get_converter_ac_bus(i));
-        if(vsc.get_converter_dc_operation_mode(i)==1)
+        if(vsc.get_converter_active_power_operation_mode(i)==1)
         {
-            set_converter_dc_operation_mode(i,VSC_DC_VOLTAGE_CONTORL);
+            set_converter_active_power_operation_mode(i,VSC_DC_VOLTAGE_CONTORL);
             set_converter_nominal_dc_voltage_command_in_kV(i,vsc.get_converter_nominal_dc_voltage_command_in_kV(i));
         }
 
         else
         {
-            set_converter_dc_operation_mode(i,VSC_AC_ACTIVE_POWER_CONTORL);
+            set_converter_active_power_operation_mode(i,VSC_AC_ACTIVE_POWER_CONTORL);
             set_converter_nominal_ac_active_power_command_in_MW(i,vsc.get_converter_nominal_ac_active_power_command_in_MW(i));
         }
 
-        if(vsc.get_converter_ac_operation_mode(i)==1)
+        if(vsc.get_converter_reactive_power_operation_mode(i)==1)
         {
-            set_converter_ac_operation_mode(i,VSC_AC_VOLTAGE_CONTROL);
+            set_converter_reactive_power_operation_mode(i,VSC_AC_VOLTAGE_CONTROL);
             set_converter_nominal_ac_voltage_command_in_pu(i,vsc.get_converter_nominal_ac_voltage_command_in_pu(i));
         }
 
         else
         {
-            set_converter_ac_operation_mode(i,VSC_AC_REACTIVE_POWER_CONTROL);
+            set_converter_reactive_power_operation_mode(i,VSC_AC_REACTIVE_POWER_CONTROL);
             set_converter_nominal_ac_reactive_power_command_in_Mvar(i,vsc.get_converter_nominal_ac_reactive_power_command_in_Mvar(i));
         }
         set_converter_loss_factor_A_in_kW(i,vsc.get_converter_loss_factor_A_in_kW(i));
@@ -127,12 +127,15 @@ void VSC_HVDC::clear()
     converters.clear();
     dc_buses.clear();
     dc_lines.clear();
+
     inphno.clear();
     dc_network_matrix.clear();
     jacobian.clear();
     active_power.clear();
     reactive_power.clear();
+
     iteration_count=0;
+    set_convergence_flag(false);
 }
 
 void VSC_HVDC::set_identifier(const string id)
@@ -160,6 +163,39 @@ void VSC_HVDC::set_converter_count(unsigned int n)
     converters.reserve(n);
 
     VSC_HVDC_CONVERTER_STRUCT converter;
+    converter.converter_bus = 0;
+    converter.converter_busptr = NULL;
+    converter.status = true;
+    converter.dc_control_mode = VSC_AC_ACTIVE_POWER_CONTORL;
+    converter.ac_control_mode =  VSC_AC_REACTIVE_POWER_CONTROL;
+    converter.nominal_ac_active_power_in_MW = 0;
+    converter.nominal_dc_voltage_in_kV = 0;
+    converter.initial_dc_voltage_reference_in_kV = 0;
+    converter.initial_dc_active_power_reference_in_MW = 0;
+    converter.droop_coefficient_for_droop_control = 0;
+    converter.initial_dc_current_reference_in_kA = 0;
+    converter.nominal_ac_voltage_in_pu = 1.0;
+    converter.nominal_ac_reactive_power_in_Mvar = 0;
+    converter.converter_loss_coefficient_A_in_kW = 0;
+    converter.converter_loss_coefficient_B_in_kW_per_amp = 0;
+    converter.converter_loss_coefficient_C_in_kW_per_amp_squard = 0;
+    converter.min_converter_loss_in_kW = 0;
+    converter.converter_rated_capacity_in_MVA = 100;
+    converter.converter_rated_current_in_amp = 0;
+    converter.converter_transformer_impedance_in_ohm = 0;
+    converter.converter_commutating_impedance_in_ohm = 0;
+    converter.converter_filter_admittance_in_siemens = 0;
+    converter.Pmax_MW = 100.0;
+    converter.Pmin_MW = -100.0;
+    converter.Qmax_MVar = 100.0;
+    converter.Qmin_MVar = -100.0;
+    converter.Udmax_kV = 9999.0;
+    converter.Udmin_kV = 0;
+    converter.remote_bus_to_regulate = 0;
+    converter.remote_regulation_percent = 0;
+
+    converter.P_to_AC_bus_MW = 0.0;
+    converter.Q_to_AC_bus_MVar = 0.0;
     for(unsigned int i=0; i<n; ++i)
         converters.push_back(converter);
 }
@@ -259,7 +295,7 @@ void VSC_HVDC::set_dc_network_base_voltage_in_kV(const double base_voltage)
     this->dc_base_voltage_in_kV = base_voltage;
 }
 
-bool VSC_HVDC::converter_index_is_out_of_range_in_function(const unsigned int index, const string& func)
+bool VSC_HVDC::converter_index_is_out_of_range_in_function(const unsigned int index, const string& func) const
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
@@ -288,6 +324,7 @@ void VSC_HVDC::set_converter_ac_bus(const unsigned int index, const unsigned int
         if(psdb.is_bus_exist(bus))
         {
             converters[index].converter_bus = bus;
+            converters[index].converter_busptr = psdb.get_bus(bus);
         }
         else
         {
@@ -297,6 +334,7 @@ void VSC_HVDC::set_converter_ac_bus(const unsigned int index, const unsigned int
                     <<"0 will be set to indicate invalid vsc-hvdc link.";
             toolkit.show_information_with_leading_time_stamp(osstream);
             converters[index].converter_bus = 0;
+            converters[index].converter_busptr = NULL;
         }
     }
     else
@@ -306,11 +344,20 @@ void VSC_HVDC::set_converter_ac_bus(const unsigned int index, const unsigned int
         osstream<<"Warning. Zero bus number (0) is not allowed for setting up converter AC bus of vsc-hvdc link."<<endl
                 <<"0 will be set to indicate invalid vsc-hvdc link.";
         toolkit.show_information_with_leading_time_stamp(osstream);
-        converters[index].converter_bus = bus;
+        converters[index].converter_bus = 0;
+        converters[index].converter_busptr = NULL;
     }
 }
 
-void VSC_HVDC::set_converter_dc_operation_mode(const unsigned int index, const VSC_HVDC_DC_CONTROL_MODE mode)
+void VSC_HVDC::set_converter_status(const unsigned int index, bool status)
+{
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
+    else
+        converters[index].status = status;
+}
+
+void VSC_HVDC::set_converter_active_power_operation_mode(const unsigned int index, const VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE mode)
 {
     if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
         return;
@@ -322,7 +369,7 @@ void VSC_HVDC::set_converter_dc_operation_mode(const unsigned int index, const V
     }
 }
 
-void VSC_HVDC::set_converter_ac_operation_mode(const unsigned int index, const VSC_HVDC_AC_CONTROL_MODE mode)
+void VSC_HVDC::set_converter_reactive_power_operation_mode(const unsigned int index, const VSC_HVDC_CONVERTER_REACTIVE_POWER_CONTROL_MODE mode)
 {
     if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
         return;
@@ -359,7 +406,7 @@ void VSC_HVDC::set_converter_initial_power_voltage_droop_coefficient(const unsig
 {
     if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
         return;
-    converters[index].initial_power_voltage_droop_coefficient = droop;
+    converters[index].droop_coefficient_for_droop_control = droop;
 }
 void VSC_HVDC::set_converter_initial_dc_current_reference_in_kA(const unsigned int index, const double I)
 {
@@ -450,6 +497,20 @@ void VSC_HVDC::set_converter_filter_admittance_in_siemens(unsigned int index, co
     converters[index].converter_filter_admittance_in_siemens = y;
 }
 
+void VSC_HVDC::set_converter_Pmax_in_MW(const unsigned int index, const double P)
+{
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
+    converters[index].Pmax_MW = P;
+}
+
+void VSC_HVDC::set_converter_Pmin_in_MW(const unsigned int index, const double P)
+{
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
+    converters[index].Pmin_MW = P;
+}
+
 void VSC_HVDC::set_converter_Qmax_in_MVar(const unsigned int index, const double Q)
 {
     if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
@@ -492,7 +553,7 @@ void VSC_HVDC::set_converter_remote_regulation_percent(const unsigned int index,
     converters[index].remote_regulation_percent = rmpct;
 }
 
-bool VSC_HVDC::dc_bus_index_is_out_of_range_in_function(const unsigned int index, const string& func)
+bool VSC_HVDC::dc_bus_index_is_out_of_range_in_function(const unsigned int index, const string& func) const
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
@@ -584,7 +645,7 @@ void VSC_HVDC::set_dc_bus_load_power_in_MW(const unsigned int index, const doubl
     dc_buses[index].dc_load_power_in_MW=P;
 }
 
-bool VSC_HVDC::dc_line_index_is_out_of_range_in_function(const unsigned int index, const string& func)
+bool VSC_HVDC::dc_line_index_is_out_of_range_in_function(const unsigned int index, const string& func) const
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
@@ -721,6 +782,20 @@ double VSC_HVDC::get_dc_network_base_voltage_in_kV() const
     return dc_base_voltage_in_kV;
 }
 
+VSC_HVDC_CONVERTER_STRUCT* VSC_HVDC::get_converter(unsigned int index)
+{
+    if(index<get_converter_count())
+        return &(converters[index]);
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return NULL;
+    }
+}
+
 unsigned int VSC_HVDC::get_converter_ac_bus(unsigned int index) const
 {
     if(index<get_converter_count())
@@ -729,13 +804,69 @@ unsigned int VSC_HVDC::get_converter_ac_bus(unsigned int index) const
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 0;
     }
 }
 
-VSC_HVDC_DC_CONTROL_MODE VSC_HVDC::get_converter_dc_operation_mode(unsigned int index) const
+BUS* VSC_HVDC::get_converter_ac_bus_pointer(unsigned int index) const
+{
+    if(index<get_converter_count())
+        return converters[index].converter_busptr;
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return NULL;
+    }
+}
+
+unsigned int VSC_HVDC::get_converter_index_with_ac_bus(unsigned int bus) const
+{
+    if(is_connected_to_bus(bus))
+    {
+        unsigned int n = get_converter_count();
+        for(unsigned int index=0; index!=n; ++index)
+        {
+            if(get_converter_ac_bus(index)==bus)
+                return index;
+        }
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. AC bus ("<<bus<<") is not valid converter AC bus for "<<get_compound_device_name()
+                <<" when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return INDEX_NOT_EXIST;
+    }
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. "<<get_compound_device_name()<<" is not connected to AC bus ("<<bus
+                <<" when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return INDEX_NOT_EXIST;
+    }
+}
+
+bool VSC_HVDC::get_converter_status(unsigned int index) const
+{
+    if(index<get_converter_count())
+        return converters[index].status;
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return false;
+    }
+}
+
+VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE VSC_HVDC::get_converter_active_power_operation_mode(unsigned int index) const
 {
     if(index<get_converter_count())
         return converters[index].dc_control_mode;
@@ -743,14 +874,14 @@ VSC_HVDC_DC_CONTROL_MODE VSC_HVDC::get_converter_dc_operation_mode(unsigned int 
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return VSC_INVALID_DC_CONTORL;
     }
 
 }
 
-VSC_HVDC_AC_CONTROL_MODE VSC_HVDC::get_converter_ac_operation_mode(unsigned int index) const
+VSC_HVDC_CONVERTER_REACTIVE_POWER_CONTROL_MODE VSC_HVDC::get_converter_reactive_power_operation_mode(unsigned int index) const
 {
     if(index<get_converter_count())
         return converters[index].ac_control_mode;
@@ -758,7 +889,7 @@ VSC_HVDC_AC_CONTROL_MODE VSC_HVDC::get_converter_ac_operation_mode(unsigned int 
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return VSC_INVALID_AC_CONTORL;
     }
@@ -772,7 +903,7 @@ double VSC_HVDC::get_converter_nominal_ac_active_power_command_in_MW(unsigned in
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -789,7 +920,7 @@ double VSC_HVDC::get_converter_nominal_ac_active_power_command_in_pu(unsigned in
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -804,7 +935,7 @@ double VSC_HVDC::get_converter_nominal_dc_voltage_command_in_kV(unsigned int ind
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -819,7 +950,7 @@ double VSC_HVDC::get_converter_nominal_dc_voltage_command_in_pu(unsigned int ind
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -834,7 +965,7 @@ double VSC_HVDC::get_converter_nominal_ac_voltage_command_in_kV(unsigned int ind
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -848,7 +979,7 @@ double VSC_HVDC::get_converter_nominal_ac_voltage_command_in_pu(unsigned int ind
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -862,7 +993,7 @@ double VSC_HVDC::get_converter_initial_dc_voltage_reference_in_kV(const unsigned
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -876,7 +1007,7 @@ double VSC_HVDC::get_converter_initial_dc_active_power_reference_in_MW(const uns
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -885,12 +1016,12 @@ double VSC_HVDC::get_converter_initial_dc_active_power_reference_in_MW(const uns
 double VSC_HVDC::get_converter_initial_power_voltage_droop_coefficient(const unsigned int index)const
 {
     if(index<get_converter_count())
-        return converters[index].initial_power_voltage_droop_coefficient;
+        return converters[index].droop_coefficient_for_droop_control;
     else
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -904,7 +1035,7 @@ double VSC_HVDC::get_converter_initial_dc_current_reference_in_kA(const unsigned
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -920,7 +1051,7 @@ double VSC_HVDC::get_converter_initial_current_voltage_droop_coefficient(const u
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }*/
@@ -934,7 +1065,7 @@ double VSC_HVDC::get_converter_nominal_ac_reactive_power_command_in_Mvar(unsigne
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -951,7 +1082,7 @@ double VSC_HVDC::get_converter_nominal_reactive_power_command_in_pu(unsigned int
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -965,7 +1096,7 @@ double VSC_HVDC::get_converter_loss_factor_A_in_kW(unsigned int index) const
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -979,7 +1110,7 @@ double VSC_HVDC::get_converter_loss_factor_B_in_kW_per_amp(unsigned int index) c
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -993,7 +1124,7 @@ double VSC_HVDC::get_converter_loss_factor_C_in_kW_per_amp_squard(unsigned int i
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -1007,7 +1138,7 @@ double VSC_HVDC::get_converter_minimum_loss_in_kW(unsigned int index) const
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -1021,7 +1152,7 @@ double VSC_HVDC::get_converter_rated_capacity_in_MVA(unsigned int index) const
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -1035,7 +1166,7 @@ double VSC_HVDC::get_converter_current_rating_in_amp(unsigned int index) const
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -1049,7 +1180,7 @@ complex<double>VSC_HVDC::get_converter_transformer_impedance_in_ohm(unsigned int
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         complex<double> j(0.0,1.0);
         return 9999.9+j*9999.9;
@@ -1064,7 +1195,7 @@ complex<double>VSC_HVDC::get_converter_commutating_impedance_in_ohm(unsigned int
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         complex<double> j(0.0,1.0);
         return 9999.9+j*9999.9;
@@ -1079,12 +1210,41 @@ complex<double>VSC_HVDC::get_converter_filter_admittance_in_siemens(unsigned int
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         complex<double> j(0.0,1.0);
         return 9999.9+j*9999.9;
     }
 }
+
+double VSC_HVDC::get_converter_Pmax_in_MW(const unsigned int index) const
+{
+    if(index<get_converter_count())
+        return converters[index].Pmax_MW;
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return 9999.9;
+    }
+}
+
+double VSC_HVDC::get_converter_Pmin_in_MW(const unsigned int index) const
+{
+    if(index<get_converter_count())
+        return converters[index].Pmin_MW;
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return -9999.9;
+    }
+}
+
 
 double VSC_HVDC::get_converter_Qmax_in_MVar(unsigned int index) const
 {
@@ -1094,7 +1254,7 @@ double VSC_HVDC::get_converter_Qmax_in_MVar(unsigned int index) const
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -1108,9 +1268,9 @@ double VSC_HVDC::get_converter_Qmin_in_MVar(unsigned int index) const
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
-        return 9999.9;
+        return -9999.9;
     }
 }
 
@@ -1122,7 +1282,7 @@ double VSC_HVDC::get_converter_Udmax_in_kV(const unsigned int index) const
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -1135,9 +1295,9 @@ double VSC_HVDC::get_converter_Udmin_in_kV(const unsigned int index) const
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
-        return 9999.9;
+        return 0;
     }
 }
 
@@ -1149,7 +1309,7 @@ unsigned int VSC_HVDC::get_converter_remote_bus_to_regulate(unsigned int index) 
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999;
     }
@@ -1163,7 +1323,7 @@ double VSC_HVDC::get_converter_remote_regulation_percent(unsigned int index) con
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -1488,7 +1648,7 @@ void VSC_HVDC::report() const
     cout<<"get_dc_bus_count():"<<get_dc_bus_count()<<endl;
     cout<<"get_dc_line_count():"<<get_dc_line_count()<<endl;
     cout<<"get_converter_ac_bus(1):"<<get_converter_ac_bus(1)<<endl;
-    cout<<"get_converter_dc_operation_mode(1):"<<get_converter_dc_operation_mode(1)<<endl;
+    cout<<"get_converter_active_power_operation_mode(1):"<<get_converter_active_power_operation_mode(1)<<endl;
     cout<<"get_converter_Qmax_in_MVar(1):"<<get_converter_Qmax_in_MVar(1)<<endl;
     cout<<"get_converter_Qmin_in_MVar(1):"<<get_converter_Qmin_in_MVar(1)<<endl;
     cout<<"get_dc_bus_area(1):"<<get_dc_bus_area(1)<<endl;
@@ -1580,6 +1740,7 @@ void VSC_HVDC::solve_steady_state()
 
     while(true)
     {
+        try to restore initial VDC control bus. reset initial P commands
         cout<<"ieteration_count: "<<iteration_count<<endl;
         build_dc_bus_power_mismatch_vector();
         max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
@@ -1608,6 +1769,8 @@ void VSC_HVDC::solve_steady_state()
         if(jacobian.is_lu_factorization_successful())
         {
             update_dc_bus_voltage();
+            calculate_dc_active_power_of_slack_bus();
+            check_dc_slack_converter_constraint(); should check if VDC bus should be replaced
             ++iteration_count;
         }
         else
@@ -1620,6 +1783,7 @@ void VSC_HVDC::solve_steady_state()
     }
     save_dc_bus_powerflow_result_to_file("Vsc_hvdc_bus_powerflow_result.csv");
     calculate_dc_active_power_of_slack_bus();
+    update_converters_P_and_Q_to_AC_bus();
     unsigned int nbus=get_dc_bus_count();
     P_slack_ac_side=P_slack_dc_side+P_converter_loss[nbus-1];
 
@@ -1656,7 +1820,7 @@ void VSC_HVDC::build_inphno()
         unsigned int converter_index = get_dc_bus_converter_index_with_dc_bus_index(i);
         if(converter_index!=INDEX_NOT_EXIST)
         {
-            VSC_HVDC_DC_CONTROL_MODE mode = get_converter_dc_operation_mode(converter_index);
+            VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE mode = get_converter_active_power_operation_mode(converter_index);
             if(mode == VSC_DC_VOLTAGE_CONTORL)
             {
                 dc_bus_controlling_dc_voltage = get_dc_bus_number(i);
@@ -1762,7 +1926,7 @@ void VSC_HVDC::initialize_P_converter_loss_vector()
             P_converter_loss[i] = 0.0;
         else
         {
-            VSC_HVDC_DC_CONTROL_MODE mode = get_converter_dc_operation_mode(converter_index);
+            VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE mode = get_converter_active_power_operation_mode(converter_index);
             if(mode==VSC_AC_ACTIVE_POWER_CONTORL)
                 P_converter_loss[i] = 0.01*get_converter_nominal_ac_active_power_command_in_MW(converter_index);
             if(mode==VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL)
@@ -1842,8 +2006,8 @@ void VSC_HVDC::initialize_alpha_vector()
     alpha.reserve(n_converter);
     for(unsigned int i=0; i<n_converter; ++i)
     {
-        cout<<"operation_mode:"<<get_converter_dc_operation_mode(i)<<endl;
-        if(get_converter_dc_operation_mode(i) == VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL)
+        cout<<"operation_mode:"<<get_converter_active_power_operation_mode(i)<<endl;
+        if(get_converter_active_power_operation_mode(i) == VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL)
             alpha.push_back(1);
         else
             alpha.push_back(0);
@@ -1861,7 +2025,7 @@ void VSC_HVDC::initialize_beta_vector()
     beta.reserve(n_converter);
     for(unsigned int i=0; i<n_converter; ++i)
     {
-        if(get_converter_dc_operation_mode(i) == VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL)
+        if(get_converter_active_power_operation_mode(i) == VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL)
             beta.push_back(1);
         else
             beta.push_back(0);
@@ -1897,42 +2061,72 @@ void VSC_HVDC::build_Pdc_command_vector()
     Pdc_command.reserve(nbus);
     for(unsigned int i=0;i!=nbus;++i)
         Pdc_command.push_back(0.0);
-    for (unsigned int index=0; index!=nbus; ++index)
+    for(unsigned int index=0; index!=nbus; ++index)
     {
         unsigned int dcbus = get_dc_bus_number(index);
         int i = inphno.get_internal_bus_number_of_physical_bus_number(dcbus);
         unsigned int converter_index = get_dc_bus_converter_index_with_dc_bus_number(dcbus);
-        if(converter_index==INDEX_NOT_EXIST)
-            Pdc_command[i]=0.0;
-        else
+        if(converter_index!=INDEX_NOT_EXIST)
         {
-            VSC_HVDC_DC_CONTROL_MODE mode = get_converter_dc_operation_mode(converter_index);
-            if(mode==VSC_AC_ACTIVE_POWER_CONTORL)
+            VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE mode = get_converter_active_power_operation_mode(converter_index);
+            switch(mode)
             {
-                Pdc_command[i]=get_converter_nominal_ac_active_power_command_in_MW(converter_index);
-            }
-            if(mode==VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL)
-            {
-                double initial_Pdc=get_converter_initial_dc_active_power_reference_in_MW(converter_index);
-                double Udcref=get_converter_initial_dc_voltage_reference_in_kV(converter_index);
-                double kdp=get_converter_initial_power_voltage_droop_coefficient(converter_index);
-                int beta=get_converter_beta(converter_index);
-                double operating_power=beta*(Udc[i]-Udcref)/kdp;
-                Pdc_command[i]=initial_Pdc+operating_power;
-            }
-            if(mode==VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL)
-            {
-                double initial_Pdc=get_converter_initial_dc_current_reference_in_kA(converter_index)*get_converter_initial_dc_voltage_reference_in_kV(converter_index);
-                double Udcref=get_converter_initial_dc_voltage_reference_in_kV(converter_index);
-                double Idcref=get_converter_initial_dc_current_reference_in_kA(converter_index);
-                double kdi=get_converter_initial_current_voltage_droop_coefficient(converter_index);
-                int alpha=get_converter_alpha(converter_index);
-                double operating_power=alpha*Udc[i]*(Idcref-(Udc[i]-Udcref)/kdi);
-                Pdc_command[i]=initial_Pdc-operating_power;
-            }
-            if(mode==VSC_DC_VOLTAGE_CONTORL)
-                Pdc_command[i] = 0.0;
+                case VSC_AC_ACTIVE_POWER_CONTORL:
+                case VSC_AC_VOLTAGE_ANGLE_CONTROL:
+                    double Pac_command = 0;
+                    if(mode==VSC_AC_ACTIVE_POWER_CONTORL)
+                        Pac_command = get_converter_nominal_ac_active_power_command_in_MW(converter_index);
+                    else
+                        Pac_command = get_converter_P_to_AC_bus_in_MW(converter_index);
+                    double Qac_command = get_converter_Q_to_AC_bus_in_MVar(converter_index);
+                    BUS* bus_pointer = get_converter_ac_bus_pointer(converter_index);
+                    double Vac = bus_pointer->get_positive_sequence_voltage_in_kV();
+                    double Vbase_ac = get AC side base voltage
+                    double Vbase_converter = get converter side base voltage
+                    double k = get off-nominal turn ratio
+                    double turn_ratio = k*Vbase_ac/Vbase_converter
+
+                    double Eac = Vac/turn_ratio;
+
+                    if(transformer, filter, commutating inductance are considered)
+                    {
+                        convert transformer Zt, filter Y, commutating ZL in Y form to Pi form
+                        caution: what if one or two of (Zt, Y, ZL) is zero.
+                        direct calculate current into converter
+                    }
+                    else
+                    {
+                        simplified
+                    }
+                    calculate loss
+
+                    Pdc_command[i]=
+                    break;
+                case VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL:
+                    double initial_Pdc=get_converter_initial_dc_active_power_reference_in_MW(converter_index);
+                    double Udcref=get_converter_initial_dc_voltage_reference_in_kV(converter_index);
+                    double kdp=get_converter_initial_power_voltage_droop_coefficient(converter_index);
+                    int beta=get_converter_beta(converter_index);
+                    double operating_power=beta*(Udc[i]-Udcref)/kdp;
+                    Pdc_command[i]=initial_Pdc+operating_power;
+                    break;
+                case VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL:
+                    double initial_Pdc=get_converter_initial_dc_current_reference_in_kA(converter_index)*get_converter_initial_dc_voltage_reference_in_kV(converter_index);
+                    double Udcref=get_converter_initial_dc_voltage_reference_in_kV(converter_index);
+                    double Idcref=get_converter_initial_dc_current_reference_in_kA(converter_index);
+                    double kdi=get_converter_initial_current_voltage_droop_coefficient(converter_index);
+                    int alpha=get_converter_alpha(converter_index);
+                    double operating_power=alpha*Udc[i]*(Idcref-(Udc[i]-Udcref)/kdi);
+                    Pdc_command[i]=initial_Pdc-operating_power;
+                    break;
+                case VSC_DC_VOLTAGE_CONTORL:
+                    Pdc_command[i] = 0.0;
+                    break;
+                default:
+                    break;
         }
+        else
+            Pdc_command[i]=0.0;
     }
 }
 
@@ -2072,6 +2266,34 @@ double VSC_HVDC::get_allowed_max_active_power_imbalance_in_MW()
     return P_threshold_in_MW;
 }
 
+void VSC_HVDC::set_converter_P_to_AC_bus_in_MW(unsigned int index, double P)
+{
+    if(not converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        converters[index].P_to_AC_bus_MW = P;
+}
+
+void VSC_HVDC::set_converter_Q_to_AC_bus_in_MVar(unsigned int index, double Q)
+{
+    if(not converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        converters[index].Q_to_AC_bus_MVar = Q;
+}
+
+double VSC_HVDC::get_converter_P_to_AC_bus_in_MW(unsigned int index) const
+{
+    if(not converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        converters[index].P_to_AC_bus_MW;
+    else
+        return 0.0;
+}
+
+double VSC_HVDC::get_converter_Q_to_AC_bus_in_MVar(unsigned int index) const
+{
+    if(not converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        converters[index].Q_to_AC_bus_MVar;
+    else
+        return 0.0;
+}
+
 void VSC_HVDC::set_convergence_flag(bool flag)
 {
     converged = flag;
@@ -2135,7 +2357,7 @@ void VSC_HVDC::build_jacobian()
             Udi_reference = get_converter_initial_dc_voltage_reference_in_kV(converter_index);
             Kdi = get_converter_initial_current_voltage_droop_coefficient(converter_index);
             Kpi = get_converter_initial_power_voltage_droop_coefficient(converter_index);
-            VSC_HVDC_DC_CONTROL_MODE mode = get_converter_dc_operation_mode(converter_index);
+            VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE mode = get_converter_active_power_operation_mode(converter_index);
             if(mode!=VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL and mode!=VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL)
             {
                 Kdi=1.0;
@@ -2201,6 +2423,74 @@ void VSC_HVDC::build_jacobian()
     jacobian.compress_and_merge_duplicate_entries();
 }
 
+
+void VSC_HVDC::update_converters_P_and_Q_to_AC_bus()
+{
+    unsigned int n = get_converter_count();
+    for(unsigned int index=0; index!=n; ++index)
+        update_converter_P_and_Q_to_AC_bus(index);
+}
+void VSC_HVDC::update_converter_P_and_Q_to_AC_bus(unsigned int index)
+{
+    if(get_converter_status(index)==true)
+    {
+        VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE mode = get_converter_active_power_operation_mode(index);
+        if(mode==VSC_DC_VOLTAGE_CONTORL or
+           mode==VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL or
+           mode==VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL)
+        {
+            Pdc = get_Pdc_command(index);
+
+            double Qac = get_converter_Q_to_AC_bus_in_MVar(index);
+            BUS* bus_pointer = get_converter_ac_bus_pointer(index);
+            double Vac = bus_pointer->get_positive_sequence_voltage_in_kV();
+            double Vbase_ac = get AC side base voltage
+            double Vbase_converter = get converter side base voltage
+            double k = get off-nominal turn ratio
+            double turn_ratio = k*Vbase_ac/Vbase_converter
+
+            double Eac = Vac/turn_ratio;
+
+            convert transformer Zt, filter Y, commutating Z in Y form to Pi form
+
+            guess Pac0 = Pdc;
+            guess Pac1 = Pdc*1.03 or Pdc*0.97. depends on direction of Pdc
+            while(true)
+            {
+                direct calculate current into converter for (Pac0, Qac)
+                calculate loss for Pac0
+                get Pdc0 for Pac0
+                direct calculate current into converter for (Pac1, Qac)
+                calculate loss for Pac1
+                get Pdc1 for Pac1
+
+                interpolate or extrapolate based on linear guess, get Pac2
+                direct calculate current into converter for (Pac2, Qac)
+                calculate loss for Pac2
+                get Pdc2 for Pac2
+
+                if(fabs(Pdc2-Pdc)<tolerance)
+                    converged
+                    break
+
+                find the two best solutions that most close to Pdc from(Pdc0, Pdc1, Pdc2)
+                and get new corresponding (Pac0 and Pac0)
+            }
+
+            Pdc_command[i]=
+
+        }
+    }
+    VSC_HVDC_CONVERTER_STRUCT* converter = get_converter(index);
+    if(converter!=NULL)
+    {
+        if(converter->status==)
+        converter->P_to_AC_bus_MW;
+    }
+
+
+}
+
 void VSC_HVDC::update_dc_bus_voltage()
 {
     int nbus=get_dc_bus_count();
@@ -2228,7 +2518,7 @@ void VSC_HVDC::update_P_converter_loss_vector()
             P_converter_loss[i] = 0.0;
         else
         {
-            VSC_HVDC_DC_CONTROL_MODE mode = get_converter_dc_operation_mode(converter_index);
+            VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE mode = get_converter_active_power_operation_mode(converter_index);
             if(mode==VSC_AC_ACTIVE_POWER_CONTORL)
                 P_converter_loss[i] = 0.01*get_converter_nominal_ac_active_power_command_in_MW(converter_index);
             if(mode==VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL)
@@ -2406,6 +2696,12 @@ bool VSC_HVDC::is_jacobian_matrix_set()
     unsigned int n = jacobian.get_matrix_size();
     if(n>=2) return true;
     else     return false;
+}
+
+
+bool VSC_HVDC::get_convergence_flag() const
+{
+    return converged;
 }
 
 void VSC_HVDC::export_dc_network_matrix(string filename)

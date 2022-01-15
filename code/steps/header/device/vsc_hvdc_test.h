@@ -34,8 +34,8 @@ class VSC_HVDC_TEST : public Test::Suite
         void test_set_get_set_ac_converter_bus_with_dc_voltage_control();
 
         void test_set_get_converter_ac_bus();
-        void test_set_get_converter_dc_operation_mode();
-        void test_set_get_converter_ac_operation_mode();
+        void test_set_get_converter_active_power_operation_mode();
+        void test_set_get_converter_reactive_power_operation_mode();
         void test_set_get_converter_nominal_dc_power_command_in_MW();
         void test_set_get_converter_nominal_dc_voltage_command_in_kV();
         void test_set_get_converter_nominal_ac_voltage_command_in_pu();

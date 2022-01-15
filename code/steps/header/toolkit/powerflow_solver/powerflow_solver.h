@@ -70,6 +70,9 @@ class POWERFLOW_SOLVER
     private:
         void prepare_devices_for_solution();
         void initialize_bus_type();
+        void initialize_PQ_bus_type();
+        void initialize_PV_bus_type();
+        void initialize_SLACK_bus_type();
         void initialize_bus_voltage_to_regulate();
         void initialize_bus_voltage();
 
@@ -86,7 +89,9 @@ class POWERFLOW_SOLVER
 
         void set_bus_power_mismatch_vector_for_solution();
 
+        void try_to_solve_dc_system_steady_state();
         void try_to_solve_hvdc_steady_state();
+        void try_to_solve_vsc_hvdc_steady_state();
         void calculate_raw_bus_power_mismatch();
         void calculate_raw_bus_power_into_network();
         void calculate_raw_bus_current_into_network();
@@ -97,10 +102,12 @@ class POWERFLOW_SOLVER
         bool check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned int physical_bus);
         void set_all_sources_at_physical_bus_to_q_min(unsigned int physical_bus);
         void set_all_sources_at_physical_bus_to_q_max(unsigned int physical_bus);
+        void set_all_regulating_vsc_hvdcs_at_physical_bus_to_q_min(unsigned int physical_bus);
+        void set_all_regulating_vsc_hvdcs_at_physical_bus_to_q_max(unsigned int physical_bus);
 
-        void update_source_power_without_constraints();
-        void update_SLACK_bus_source_power_of_physical_bus(unsigned int physical_bus);
-        void update_PV_bus_source_power_of_physical_bus(unsigned int physical_bus);
+        void allocate_bus_power_mismatch_without_checking_bus_type_constraints();
+        void allocate_SLACK_bus_power_mismatch_without_checking_bus_type_constraint(unsigned int physical_bus);
+        void allocate_PV_bus_power_mismatch_without_checking_bus_type_constraint(unsigned int physical_bus);
 
         void build_bus_power_mismatch_vector_for_coupled_solution();
         void build_bus_P_power_mismatch_vector_for_decoupled_solution();
@@ -113,6 +120,7 @@ class POWERFLOW_SOLVER
         void add_source_to_bus_power_mismatch();
         void add_load_to_bus_power_mismatch();
         void add_hvdc_to_bus_power_mismatch();
+        void add_vsc_hvdc_to_bus_power_mismatch();
         void add_generator_to_bus_power_mismatch();
         void add_wt_generator_to_bus_power_mismatch();
 
@@ -156,6 +164,7 @@ class POWERFLOW_SOLVER
         vector<LINE*> lines;
         vector<TRANSFORMER*> transformers;
         vector<HVDC*> hvdcs;
+        vector<VSC_HVDC*> vsc_hvdcs;
         vector<EQUIVALENT_DEVICE*> e_devices;
 
         vector<BUS*> internal_bus_pointers;

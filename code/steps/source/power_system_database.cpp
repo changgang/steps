@@ -6535,6 +6535,20 @@ double POWER_SYSTEM_DATABASE::get_regulatable_p_max_at_physical_bus_in_MW(unsign
                     continue;
                 total_p_max_in_MW += sources[i]->get_p_max_in_MW();
             }
+
+            vector<VSC_HVDC*> vsc_hvdcs = get_vsc_hvdcs_connecting_to_bus(bus);
+
+            n = vsc_hvdcs.size();
+            for(unsigned int i=0; i!=n; ++i)
+            {
+                if(vsc_hvdcs[i]->get_status() == false)
+                    continue;
+                unsigned int index = vsc_hvdcs[i]->get_converter_index_with_ac_bus(bus);
+                if(vsc_hvdcs[i]->get_converter_status(index)==true and
+                   vsc_hvdcs[i]->get_converter_active_power_operation_mode(index)==VSC_AC_VOLTAGE_ANGLE_CONTROL)
+                    total_p_max_in_MW += vsc_hvdcs[i]->get_converter_Pmax_in_MW(index);
+            }
+
             return total_p_max_in_MW;
         }
         else
@@ -6563,6 +6577,20 @@ double POWER_SYSTEM_DATABASE::get_regulatable_p_min_at_physical_bus_in_MW(unsign
                     continue;
                 total_p_min_in_MW += sources[i]->get_p_min_in_MW();
             }
+
+            vector<VSC_HVDC*> vsc_hvdcs = get_vsc_hvdcs_connecting_to_bus(bus);
+
+            n = vsc_hvdcs.size();
+            for(unsigned int i=0; i!=n; ++i)
+            {
+                if(vsc_hvdcs[i]->get_status() == false)
+                    continue;
+                unsigned int index = vsc_hvdcs[i]->get_converter_index_with_ac_bus(bus);
+                if(vsc_hvdcs[i]->get_converter_status(index)==true and
+                   vsc_hvdcs[i]->get_converter_active_power_operation_mode(index)==VSC_AC_VOLTAGE_ANGLE_CONTROL)
+                    total_p_min_in_MW += vsc_hvdcs[i]->get_converter_Pmin_in_MW(index);
+            }
+
             return total_p_min_in_MW;
         }
         else
@@ -6594,6 +6622,20 @@ double POWER_SYSTEM_DATABASE::get_regulatable_q_max_at_physical_bus_in_MVar(unsi
                     continue;
                 total_q_max_in_MVar += sources[i]->get_q_max_in_MVar();
             }
+
+            vector<VSC_HVDC*> vsc_hvdcs = get_vsc_hvdcs_connecting_to_bus(bus);
+
+            n = vsc_hvdcs.size();
+            for(unsigned int i=0; i!=n; ++i)
+            {
+                if(vsc_hvdcs[i]->get_status() == false)
+                    continue;
+                unsigned int index = vsc_hvdcs[i]->get_converter_index_with_ac_bus(bus);
+                if(vsc_hvdcs[i]->get_converter_status(index)==true and
+                   vsc_hvdcs[i]->get_converter_reactive_power_operation_mode(index)==VSC_AC_VOLTAGE_CONTROL)
+                    total_q_max_in_MVar += vsc_hvdcs[i]->get_converter_Qmax_in_MVar(index);
+            }
+
             return total_q_max_in_MVar;
         }
         else
@@ -6624,6 +6666,19 @@ double POWER_SYSTEM_DATABASE::get_regulatable_q_min_at_physical_bus_in_MVar(unsi
                 if(sources[i]->get_status() == true)
                     total_q_min_in_MVar += sources[i]->get_q_min_in_MVar();
             }
+
+            vector<VSC_HVDC*> vsc_hvdcs = get_vsc_hvdcs_connecting_to_bus(bus);
+
+            n = vsc_hvdcs.size();
+            for(unsigned int i=0; i!=n; ++i)
+            {
+                if(vsc_hvdcs[i]->get_status() == false)
+                    continue;
+                unsigned int index = vsc_hvdcs[i]->get_converter_index_with_ac_bus(bus);
+                if(vsc_hvdcs[i]->get_converter_status(index)==true and
+                   vsc_hvdcs[i]->get_converter_reactive_power_operation_mode(index)==VSC_AC_VOLTAGE_CONTROL)
+                    total_q_min_in_MVar += vsc_hvdcs[i]->get_converter_Qmin_in_MVar(index);
+            }
             return total_q_min_in_MVar;
         }
         else
@@ -6650,6 +6705,19 @@ double POWER_SYSTEM_DATABASE::get_total_regulating_p_generation_at_physical_bus_
             {
                 if(sources[i]->get_status() == true)
                     total_p_in_MW += sources[i]->get_p_generation_in_MW();
+            }
+
+            vector<VSC_HVDC*> vsc_hvdcs = get_vsc_hvdcs_connecting_to_bus(bus);
+
+            n = vsc_hvdcs.size();
+            for(unsigned int i=0; i!=n; ++i)
+            {
+                if(vsc_hvdcs[i]->get_status() == false)
+                    continue;
+                unsigned int index = vsc_hvdcs[i]->get_converter_index_with_ac_bus(bus);
+                if(vsc_hvdcs[i]->get_converter_status(index)==true and
+                   vsc_hvdcs[i]->get_converter_active_power_operation_mode(index)==VSC_AC_VOLTAGE_ANGLE_CONTROL)
+                    total_p_in_MW += vsc_hvdcs[i]->get_converter_P_to_AC_bus_in_MW(index);
             }
             return total_p_in_MW;
         }
@@ -6681,6 +6749,18 @@ double POWER_SYSTEM_DATABASE::get_total_regulating_q_generation_at_physical_bus_
             {
                 if(sources[i]->get_status() == true)
                     total_q_in_MVar += sources[i]->get_q_generation_in_MVar();
+            }
+            vector<VSC_HVDC*> vsc_hvdcs = get_vsc_hvdcs_connecting_to_bus(bus);
+
+            n = vsc_hvdcs.size();
+            for(unsigned int i=0; i!=n; ++i)
+            {
+                if(vsc_hvdcs[i]->get_status() == false)
+                    continue;
+                unsigned int index = vsc_hvdcs[i]->get_converter_index_with_ac_bus(bus);
+                if(vsc_hvdcs[i]->get_converter_status(index)==true and
+                   vsc_hvdcs[i]->get_converter_reactive_power_operation_mode(index)==VSC_AC_VOLTAGE_CONTROL)
+                    total_q_in_MVar += vsc_hvdcs[i]->get_converter_Q_to_AC_bus_in_MVar(index);
             }
             return total_q_in_MVar;
         }
@@ -6720,7 +6800,6 @@ double POWER_SYSTEM_DATABASE::get_total_q_generation_at_physical_bus_in_MVar(uns
     }
     return total_q_in_MVar;
 }
-
 
 complex<double> POWER_SYSTEM_DATABASE::get_total_load_power_in_MVA()
 {

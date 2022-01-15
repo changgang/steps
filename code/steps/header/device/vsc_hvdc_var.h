@@ -15,13 +15,14 @@ struct VSC_HVDC_CONVERTER_STRUCT
 {
     unsigned int converter_bus;
     BUS* converter_busptr;
-    VSC_HVDC_DC_CONTROL_MODE dc_control_mode;
-    VSC_HVDC_AC_CONTROL_MODE ac_control_mode;
+    bool status;
+    VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE dc_control_mode;
+    VSC_HVDC_CONVERTER_REACTIVE_POWER_CONTROL_MODE ac_control_mode;
     double nominal_ac_active_power_in_MW;
     double nominal_dc_voltage_in_kV;
     double initial_dc_voltage_reference_in_kV;
     double initial_dc_active_power_reference_in_MW;
-    double initial_power_voltage_droop_coefficient;
+    double droop_coefficient_for_droop_control;
     double initial_dc_current_reference_in_kA;
     double nominal_ac_voltage_in_pu;
     double nominal_ac_reactive_power_in_Mvar;
@@ -31,21 +32,30 @@ struct VSC_HVDC_CONVERTER_STRUCT
     double min_converter_loss_in_kW;
     double converter_rated_capacity_in_MVA;
     double converter_rated_current_in_amp;
-    complex<double> converter_transformer_impedance_in_ohm;
+    complex<double> converter_transformer_capacity_MVA;
+    complex<double> converter_transformer_AC_side_base_voltage_kV;
+    complex<double> converter_transformer_converter_side_base_voltage_kV;
+    complex<double> converter_transformer_off_nominal_turn_ratio;
+    complex<double> converter_transformer_impedance_in_pu;
     complex<double> converter_commutating_impedance_in_ohm;
     complex<double> converter_filter_admittance_in_siemens;
+    double Pmax_MW;
+    double Pmin_MW;
     double Qmax_MVar;
     double Qmin_MVar;
     double Udmax_kV;
     double Udmin_kV;
     double remote_bus_to_regulate;
     double remote_regulation_percent;
+
+    double P_to_AC_bus_MW;
+    double Q_to_AC_bus_MVar;
+    double Vdc_kV;
 };
 
 struct VSC_HVDC_DC_BUS_STRUCT
 {
     unsigned int dc_bus_number;
-    //unsigned int ac_bus_number;
     unsigned int converter_index;
     unsigned int dc_bus_area;
     unsigned int dc_bus_zone;
