@@ -41,7 +41,7 @@ void STEPS_IMEXPORTER_TEST::setup()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100000);
 
-    importer.load_powerflow_data("../../../bench/sample.raw");
+    importer.load_powerflow_data("../../../bench/sample_vsc_hvdc.raw");
 }
 
 void STEPS_IMEXPORTER_TEST::tear_down()

@@ -23,7 +23,6 @@ struct VSC_HVDC_CONVERTER_STRUCT
     double initial_dc_active_power_reference_in_MW;
     double initial_power_voltage_droop_coefficient;
     double initial_dc_current_reference_in_kA;
-    double initial_power_current_droop_coefficient;
     double nominal_ac_voltage_in_pu;
     double nominal_ac_reactive_power_in_Mvar;
     double converter_loss_coefficient_A_in_kW;
@@ -32,12 +31,14 @@ struct VSC_HVDC_CONVERTER_STRUCT
     double min_converter_loss_in_kW;
     double converter_rated_capacity_in_MVA;
     double converter_rated_current_in_amp;
-    double power_weighting_factor;
+    complex<double> converter_transformer_impedance_in_ohm;
+    complex<double> converter_commutating_impedance_in_ohm;
+    complex<double> converter_filter_admittance_in_siemens;
     double Qmax_MVar;
     double Qmin_MVar;
     double Udmax_kV;
     double Udmin_kV;
-    unsigned int remote_bus_to_regulate;
+    double remote_bus_to_regulate;
     double remote_regulation_percent;
 };
 

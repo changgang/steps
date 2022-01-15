@@ -31,6 +31,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         void set_dc_bus_count(unsigned int n);
         void set_dc_line_count(unsigned int n);
         void set_status(const bool status);
+        void set_reserve_master_converter_ac_bus(unsigned int ac_bus);
         void set_dc_network_base_voltage_in_kV(const double base_voltage);
 
         void set_converter_ac_bus(const unsigned int index, const unsigned int bus);
@@ -46,7 +47,6 @@ class VSC_HVDC : public NONBUS_DEVICE
         void set_converter_initial_dc_current_reference_in_kA(const unsigned int index, const double I);
         void set_converter_initial_current_voltage_droop_coefficient(const unsigned int index, const double droop);
 
-
         void set_converter_nominal_ac_voltage_command_in_pu(const unsigned int index, const double V);
         void set_converter_nominal_ac_reactive_power_command_in_Mvar(const unsigned int index, const double Q);
 
@@ -58,7 +58,9 @@ class VSC_HVDC : public NONBUS_DEVICE
         void set_converter_rated_capacity_in_MVA(const unsigned int index, const double S);
         void set_converter_rated_current_in_A(const unsigned int index, const double I);
 
-        void set_converter_power_weighting_factor(const unsigned int index, const double pwf);
+        void set_converter_transformer_impedance_in_ohm(unsigned int index, const complex<double> z);
+        void set_converter_commutating_impedance_in_ohm(unsigned int index, const complex<double> z);
+        void set_converter_filter_admittance_in_siemens(unsigned int index, const complex<double> y);
         void set_converter_Qmax_in_MVar(const unsigned int index, const double Q);
         void set_converter_Qmin_in_MVar(const unsigned int index, const double Q);
         void set_converter_Udmax_in_kV(const unsigned int index, const double Udmax);
@@ -69,7 +71,7 @@ class VSC_HVDC : public NONBUS_DEVICE
 
         void set_dc_bus_number(const unsigned int index, const unsigned int bus);
         void set_dc_bus_name(const unsigned int index, const string name);
-        void set_dc_bus_ac_bus_number(const unsigned int index, const unsigned int bus);
+        void set_dc_bus_converter_index_with_ac_bus_number(const unsigned int index, const unsigned int bus);
         void set_dc_bus_area(const unsigned int index, const unsigned int area);
         void set_dc_bus_zone(const unsigned int index, const unsigned int zone);
         void set_dc_bus_owner_number(const unsigned int index, const unsigned int owner);
@@ -83,8 +85,6 @@ class VSC_HVDC : public NONBUS_DEVICE
         void set_dc_line_meter_end_bus(const unsigned int index, const unsigned int meter_bus);
         void set_dc_line_resistance_in_ohm(const unsigned int index, const double R);
         void set_dc_line_inductance_in_mH(const unsigned int index, const double L);
-
-
         virtual void clear();
 
         string get_identifier() const;
@@ -129,7 +129,10 @@ class VSC_HVDC : public NONBUS_DEVICE
         double get_converter_rated_capacity_in_MVA(unsigned int index) const;
         double get_converter_current_rating_in_amp(unsigned int index) const;
 
-        double get_converter_power_weighting_factor(unsigned int index) const;
+        complex<double> get_converter_transformer_impedance_in_ohm(unsigned int index) const;
+        complex<double> get_converter_commutating_impedance_in_ohm(unsigned int index) const;
+        complex<double> get_converter_filter_admittance_in_siemens(unsigned int index) const;
+
         double get_converter_Qmax_in_MVar(unsigned int index) const;
         double get_converter_Qmin_in_MVar(unsigned int index) const;
         double get_converter_Udmax_in_kV(const unsigned int index) const;
@@ -140,7 +143,7 @@ class VSC_HVDC : public NONBUS_DEVICE
 
         unsigned int get_dc_bus_number(unsigned int index) const;
         string get_dc_bus_name (unsigned int index) const;
-        unsigned int get_dc_bus_ac_bus_number(unsigned int index) const;
+        unsigned int get_converter_ac_bus_number_with_dc_bus_index(unsigned int index) const;
         unsigned int get_dc_bus_area(unsigned int index) const;
         unsigned int get_dc_bus_zone(unsigned int index) const;
         unsigned int get_dc_bus_owner_number(unsigned int index) const;
@@ -192,10 +195,6 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int get_index_of_dc_bus_number(unsigned int bus);
         double get_dc_voltage_of_dc_bus_number(unsigned int bus);
 
-        double get_dc_current_reference_of_dc_bus_number(unsigned int bus);
-        double get_dc_voltage_reference_of_dc_bus_number(unsigned int bus);
-        double get_current_voltage_dropp_coefficient_of_dc_bus_number(unsigned int bus);
-        double get_power_voltage_droop_coefficient_of_dc_bus_number(unsigned int bus);
         int get_alpha_of_dc_bus_number(unsigned int bus);
         int get_beta_of_dc_bus_number(unsigned int bus);
 
@@ -203,11 +202,9 @@ class VSC_HVDC : public NONBUS_DEVICE
         void initialize_P_converter_loss_vector();
         void initialize_alpha_vector();
         void initialize_beta_vector();
-        void initialize_Kpi_Kdi_coefficient_vector();
-        void initialize_Udi_Idi_reference_vector();
 
         void update_dc_bus_voltage();
-        void update_Pdc_loss();
+        void update_P_converter_loss_vector();
         void update_raw_dc_current_into_dc_network();
         void calculate_raw_dc_power_into_dc_network();
         void add_Pdc_command_to_P_mismatch_vector();
@@ -232,10 +229,11 @@ class VSC_HVDC : public NONBUS_DEVICE
     private:
         void copy_from_const_vsc(const VSC_HVDC& vsc);
 
+        unsigned int get_dc_bus_converter_index_with_dc_bus_index(unsigned int index) const;
         void set_ac_converter_bus_with_dc_voltage_control(const unsigned int bus);
         unsigned int dc_bus_no2index(unsigned int bus) const;
         unsigned int dc_bus_index2no(unsigned int index) const;
-        unsigned int get_dc_bus_converter_index_with_dc_bus_index(unsigned int index) const;
+
         unsigned int get_dc_bus_converter_index_with_dc_bus_number(unsigned int bus) const;
 
         bool converter_index_is_out_of_range_in_function(const unsigned int index, const string& func);
@@ -246,6 +244,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int identifier_index;
         bool status;
         unsigned int ac_converter_bus_with_dc_voltage_control;
+        unsigned int ac_converter_bus_with_reserve_master_control;
         unsigned int dc_base_voltage_in_kV;
 
         vector<VSC_HVDC_CONVERTER_STRUCT> converters;
