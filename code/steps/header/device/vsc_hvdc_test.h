@@ -42,9 +42,10 @@ class VSC_HVDC_TEST : public Test::Suite
         void test_set_get_converter_nominal_ac_power_factor_command();
         void test_set_get_converter_loss_factor_A_in_kW();
         void test_set_get_converter_loss_factor_B_in_kW_per_amp();
+        void test_set_get_converter_transformer_impedance_in_pu();
         void test_set_get_converter_minimum_loss_in_kW();
         void test_set_get_converter_rated_capacity_in_MVA();
-        void test_set_get_converter_current_rating_in_amp();
+        void test_set_get_converter_rated_current_in_A();
         void test_set_get_converter_Qmax_in_MVar();
         void test_set_get_converter_Qmin_in_MVar();
         void test_set_get_converter_remote_bus_to_regulate();
@@ -76,10 +77,9 @@ class VSC_HVDC_TEST : public Test::Suite
         void test_initialize_Udc_vector();
 
         void test_initialize_Pdc_command();
-        void test_initialize_P_converter_loss();
         void test_update_bus_current();
-        void test_get_P_mismatch_vector();
-        void test_solve_dc_network();
+        void test_get_P_mismatch_vector_with_5_terminal_data();
+        void test_solve_dc_network_with_5_terminal_data();
 
         void test_set_get_vsc_hvdc_model();
     private:

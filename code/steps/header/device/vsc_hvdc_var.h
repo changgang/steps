@@ -32,10 +32,10 @@ struct VSC_HVDC_CONVERTER_STRUCT
     double min_converter_loss_in_kW;
     double converter_rated_capacity_in_MVA;
     double converter_rated_current_in_amp;
-    complex<double> converter_transformer_capacity_MVA;
-    complex<double> converter_transformer_AC_side_base_voltage_kV;
-    complex<double> converter_transformer_converter_side_base_voltage_kV;
-    complex<double> converter_transformer_off_nominal_turn_ratio;
+    double converter_transformer_capacity_in_MVA;
+    double converter_transformer_AC_side_base_voltage_in_kV;
+    double converter_transformer_converter_side_base_voltage_in_kV;
+    double converter_transformer_off_nominal_turn_ratio;
     complex<double> converter_transformer_impedance_in_pu;
     complex<double> converter_commutating_impedance_in_ohm;
     complex<double> converter_filter_admittance_in_siemens;
@@ -50,7 +50,7 @@ struct VSC_HVDC_CONVERTER_STRUCT
 
     double P_to_AC_bus_MW;
     double Q_to_AC_bus_MVar;
-    double Vdc_kV;
+    double Pdc_MW;
 };
 
 struct VSC_HVDC_DC_BUS_STRUCT
@@ -64,6 +64,8 @@ struct VSC_HVDC_DC_BUS_STRUCT
     unsigned int owner;
     double dc_generation_power_in_MW;
     double dc_load_power_in_MW;
+
+    double Vdc_kV;
 };
 
 struct VSC_HVDC_DC_LINE_STRUCT

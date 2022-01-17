@@ -213,7 +213,7 @@ int main(int argc, char* argv[])
 	{
         Test::Suite ts;
         #ifdef ENABLE_STEPS_TEST
-
+/*
         ts.add(unique_ptr<Test::Suite>(new STR_INT_MAP_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new TERMINAL_TEST));
@@ -249,9 +249,9 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new FIXED_SHUNT_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new HVDC_TEST));
-
+*/
         ts.add(unique_ptr<Test::Suite>(new VSC_HVDC_TEST));
-       ts.add(unique_ptr<Test::Suite>(new EQUIVALENT_DEVICE_TEST));
+/*       ts.add(unique_ptr<Test::Suite>(new EQUIVALENT_DEVICE_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new ENERGY_STORAGE_TEST));
 
@@ -262,7 +262,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new PSSE_IMEXPORTER_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new BPA_IMEXPORTER_TEST));
-/*
+
 */
         //ts.add(unique_ptr<Test::Suite>(new EQUIVALENT_MODEL_IMEXPORTER_TEST));
 

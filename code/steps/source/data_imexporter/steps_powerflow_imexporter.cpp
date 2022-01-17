@@ -2172,6 +2172,30 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
             vsc_hvdc.set_converter_rated_current_in_A(i,imax);
             data.erase(data.begin());
         }
+        if(data.size()>0)
+        {
+            double S_MVA=get_double_data(data.front(),"0.0");
+            vsc_hvdc.set_converter_transformer_capacity_in_MVA(i,S_MVA);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double ac_voltage=get_double_data(data.front(),"0.0");
+            vsc_hvdc.set_converter_transformer_AC_side_base_voltage_in_kV(i,ac_voltage);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double con_voltage=get_double_data(data.front(),"0.0");
+            vsc_hvdc.set_converter_transformer_converter_side_base_voltage_in_kV(i,con_voltage);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double turn_ration=get_double_data(data.front(),"0.0");
+            vsc_hvdc.set_converter_transformer_off_nominal_turn_ratio(i,turn_ration);
+            data.erase(data.begin());
+        }
         double r=0.0, x=0.0;
         if(data.size()>0)
         {
@@ -2183,7 +2207,7 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
             double x=get_double_data(data.front(),"0.0");
             data.erase(data.begin());
         }
-        vsc_hvdc.set_converter_transformer_impedance_in_ohm(i, complex<double>(r,x));
+        vsc_hvdc.set_converter_transformer_impedance_in_pu(i, complex<double>(r,x));
 
         r=0.0, x=0.0;
         if(data.size()>0)
@@ -3347,7 +3371,7 @@ string STEPS_IMEXPORTER::export_vsc_hvdc_data() const
                     <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_loss_factor_B_in_kW_per_amp(i)<<", "
                     <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_minimum_loss_in_kW(i)<<", "
                     <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_rated_capacity_in_MVA(i)<<", "
-                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_current_rating_in_amp(i)<<", "
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_rated_current_in_A(i)<<", "
 
                     <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_Qmax_in_MVar(i)<<", "
                     <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_Qmin_in_MVar(i)<<", "
