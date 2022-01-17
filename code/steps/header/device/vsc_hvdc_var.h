@@ -17,6 +17,7 @@ struct VSC_HVDC_CONVERTER_STRUCT
     BUS* converter_busptr;
     bool status;
     VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE dc_control_mode;
+    unsigned int dc_voltage_control_priority;
     VSC_HVDC_CONVERTER_REACTIVE_POWER_CONTROL_MODE ac_control_mode;
     double nominal_ac_active_power_in_MW;
     double nominal_dc_voltage_in_kV;
@@ -39,6 +40,8 @@ struct VSC_HVDC_CONVERTER_STRUCT
     complex<double> converter_transformer_impedance_in_pu;
     complex<double> converter_commutating_impedance_in_ohm;
     complex<double> converter_filter_admittance_in_siemens;
+    double P_to_AC_bus_MW;
+    double Q_to_AC_bus_MVar;
     double Pmax_MW;
     double Pmin_MW;
     double Qmax_MVar;
@@ -48,15 +51,14 @@ struct VSC_HVDC_CONVERTER_STRUCT
     double remote_bus_to_regulate;
     double remote_regulation_percent;
 
-    double P_to_AC_bus_MW;
-    double Q_to_AC_bus_MVar;
-    double Pdc_MW;
+    double Pdc_command_MW;
 };
 
 struct VSC_HVDC_DC_BUS_STRUCT
 {
     unsigned int dc_bus_number;
     unsigned int converter_index;
+    double Vdc_kV;
     unsigned int dc_bus_area;
     unsigned int dc_bus_zone;
     unsigned int dc_bus_name_index;
@@ -65,7 +67,6 @@ struct VSC_HVDC_DC_BUS_STRUCT
     double dc_generation_power_in_MW;
     double dc_load_power_in_MW;
 
-    double Vdc_kV;
 };
 
 struct VSC_HVDC_DC_LINE_STRUCT

@@ -38,6 +38,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         void set_converter_status(const unsigned int index, bool status);
 
         void set_converter_active_power_operation_mode(const unsigned int index, const VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE mode);
+        void set_converter_dc_voltage_control_priority(const unsigned int index, const unsigned int p);
         void set_converter_reactive_power_operation_mode(const unsigned int index, const VSC_HVDC_CONVERTER_REACTIVE_POWER_CONTROL_MODE mode);
 
         void set_converter_nominal_ac_active_power_command_in_MW(const unsigned int index, const double P);
@@ -79,6 +80,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         void set_dc_bus_number(const unsigned int index, const unsigned int bus);
         void set_dc_bus_name(const unsigned int index, const string name);
         void set_dc_bus_converter_index_with_ac_bus_number(const unsigned int index, const unsigned int bus);
+        void set_dc_bus_Vdc_in_kV(const unsigned int index, const double Udc);
         void set_dc_bus_area(const unsigned int index, const unsigned int area);
         void set_dc_bus_zone(const unsigned int index, const unsigned int zone);
         void set_dc_bus_owner_number(const unsigned int index, const unsigned int owner);
@@ -112,6 +114,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int get_converter_index_with_ac_bus(unsigned int bus) const;
         bool get_converter_status(unsigned int index) const;
         VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE get_converter_active_power_operation_mode(unsigned int index) const;
+        unsigned int get_converter_dc_voltage_control_priority(const unsigned int index) const;
         VSC_HVDC_CONVERTER_REACTIVE_POWER_CONTROL_MODE get_converter_reactive_power_operation_mode(unsigned int index) const;
 
         double get_converter_nominal_ac_active_power_command_in_MW(unsigned int index) const;
@@ -162,6 +165,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int get_dc_bus_number(unsigned int index) const;
         string get_dc_bus_name (unsigned int index) const;
         unsigned int get_converter_ac_bus_number_with_dc_bus_index(unsigned int index) const;
+        double get_dc_bus_Vdc_in_kV(unsigned int index) const;
         unsigned int get_dc_bus_area(unsigned int index) const;
         unsigned int get_dc_bus_zone(unsigned int index) const;
         unsigned int get_dc_bus_owner_number(unsigned int index) const;
@@ -195,16 +199,30 @@ class VSC_HVDC : public NONBUS_DEVICE
 
 
         void solve_steady_state();
+
+        void initialize_steady_state_solver();
+        void initialize_dc_bus_voltage();
+
+        void optimize_network_ordering();
+        void initialize_physical_internal_bus_pair();
+        void reorder_physical_internal_bus_pair();
+        void set_internal_bus_pointer();
+
+        void update_P_equation_internal_buses();
+
         void build_dc_network_matrix();
-        void build_inphno();
-        void re_build_inphno();
         void build_initial_zero_matrix();
         void add_dc_lines_to_dc_network();
+        void calculate_raw_bus_power_mismatch();
         void build_dc_bus_power_mismatch_vector();
         void re_build_dc_bus_power_mismatch_vector();
-        void build_Pdc_command_vector();
         void re_build_Pdc_command_vector();
         void build_jacobian();
+        double calculate_jacobian_matrix_entry(unsigned int ibus, int row, int column, unsigned int k);
+        void update_current_dc_slack_bus();
+        unsigned int get_dc_slack_bus_number() const;
+
+        unsigned int get_converter_index_of_dc_voltage_control_priority(unsigned int p) const;
 
         void update_converters_P_and_Q_to_AC_bus();
         void update_converter_P_and_Q_to_AC_bus(unsigned int index);
@@ -222,19 +240,18 @@ class VSC_HVDC : public NONBUS_DEVICE
         int get_alpha_of_dc_bus_number(unsigned int bus);
         int get_beta_of_dc_bus_number(unsigned int bus);
 
-        void initialize_Udc_vector();
         void re_initialize_Udc_vector();
         void initialize_alpha_vector();
         void initialize_beta_vector();
         void initialize_active_and_reactive_power_control_mode_vector();
 
         void update_dc_bus_voltage();
-        void update_raw_dc_current_into_dc_network();
+        void calculate_raw_dc_current_into_dc_network();
         void calculate_raw_dc_power_into_dc_network();
-        void add_Pdc_command_to_P_mismatch_vector();
-        void add_generation_power_to_P_mismatch_vector();
-        void add_load_power_to_P_mismatch_vector();
-        void add_raw_dc_power_to_P_mismatch_vector();
+        void add_generation_power_to_raw_bus_power_mismatch();
+        void add_load_power_to_raw_bus_power_mismatch();
+        void add_converter_dc_power_command_to_raw_bus_power_mismatch();
+        double get_converter_dc_power_command_at_dc_bus(unsigned int bus);
 
         void set_converter_P_to_AC_bus_in_MW(unsigned int index, double P);
         void set_converter_Q_to_AC_bus_in_MVar(unsigned int index, double Q);
@@ -248,11 +265,16 @@ class VSC_HVDC : public NONBUS_DEVICE
         double solve_Pdc_with_dc_active_power_voltage_droop_control(unsigned int converter_index) const;
         double solve_Pdc_with_dc_current_voltage_droop_control(unsigned int converter_index) const;
 
+        double solve_converter_Pac_with_Pdc(unsigned int converter_index);
+        double calculate_converter_Pdc_with_Pac(unsigned int converter_index, double Pac, double Qac, double Vac);
+
+        void set_converter_Pdc_command_in_MW(unsigned int converter_index, double P);
+        double get_converter_Pdc_command_in_MW(unsigned int converter_index) const;
+
         void set_convergence_flag(bool flag);
         void save_dc_bus_powerflow_result_to_file(const string& filename) const;
         void calculate_dc_active_power_of_slack_bus();
-        void check_dc_slack_converter_constraint();
-        bool check_dc_bus_control_mode();
+        bool check_dc_slack_converter_constraint();
         bool check_slack_limit(double P);
         bool is_dc_network_matrix_set();
         bool is_jacobian_matrix_set();
@@ -269,8 +291,6 @@ class VSC_HVDC : public NONBUS_DEVICE
     private:
         void copy_from_const_vsc(const VSC_HVDC& vsc);
 
-        void set_dc_bus_Vdc_in_kV(const unsigned int index, const double Udc);
-        double get_dc_bus_Vdc_in_kV(unsigned int index) const;
 
         unsigned int get_dc_bus_converter_index_with_dc_bus_index(unsigned int index) const;
         void set_ac_converter_bus_with_dc_voltage_control(const unsigned int bus);
@@ -301,18 +321,20 @@ class VSC_HVDC : public NONBUS_DEVICE
         STEPS_SPARSE_MATRIX jacobian;
         INPHNO inphno;
 
+        vector<unsigned int> internal_P_equation_buses;
+        vector<VSC_HVDC_DC_BUS_STRUCT*> internal_bus_pointers;;
+
         vector<VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE> current_active_power_control_mode;
         vector<VSC_HVDC_CONVERTER_REACTIVE_POWER_CONTROL_MODE> current_reactive_power_control_mode;
-        vector<double> Pdc_command, P_mismatch, Udc, Udc_mismatch;
-        vector<double> generation_power, load_power;
+        vector<double> P_mismatch, Udc_mismatch;
         vector<double> bus_power, bus_current;
         vector<int> alpha, beta, Kdp_droop, Kdi_droop, Ud_reference, Id_reference;
 
         unsigned int iteration_count, max_iteration;
         double P_threshold_in_MW;
         double max_P_mismatch_in_MW;
-        double P_slack_dc_side;
         double P_slack_ac_side;
+        unsigned int current_dc_slack_bus;
         bool converged;
 
         VSC_HVDC_MODEL* vsc_hvdc_model;

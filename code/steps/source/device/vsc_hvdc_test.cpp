@@ -715,7 +715,6 @@ void VSC_HVDC_TEST::test_build_jacobian()
     show_test_information_for_function_of_class(__FUNCTION__,"VSC_HVDC_TEST");
     prepare_5_terminal_vsc_hvdc_converter_ac_buses();
     vsc.build_inphno();
-    vsc.initialize_Udc_vector();
     vsc.initialize_alpha_vector();
     vsc.initialize_beta_vector();
     vsc.build_jacobian();
@@ -732,7 +731,7 @@ void VSC_HVDC_TEST::test_initialize_Udc_vector()
     show_test_information_for_function_of_class(__FUNCTION__,"VSC_HVDC_TEST");
     prepare_5_terminal_vsc_hvdc_converter_ac_buses();
     vsc.build_inphno();
-    vsc.initialize_Udc_vector();
+    //vsc.initialize_Udc_vector();
 }
 
 void VSC_HVDC_TEST::test_initialize_Pdc_command()
@@ -740,9 +739,9 @@ void VSC_HVDC_TEST::test_initialize_Pdc_command()
     show_test_information_for_function_of_class(__FUNCTION__,"VSC_HVDC_TEST");
     prepare_5_terminal_vsc_hvdc_converter_ac_buses();
     vsc.build_inphno();
-    vsc.initialize_Udc_vector();
+    //vsc.initialize_Udc_vector();
     vsc.build_dc_network_matrix();
-    vsc.build_Pdc_command_vector();
+    //vsc.build_Pdc_command_vector();
 }
 
 void VSC_HVDC_TEST::test_update_bus_current()
@@ -751,8 +750,8 @@ void VSC_HVDC_TEST::test_update_bus_current()
     prepare_5_terminal_vsc_hvdc_converter_ac_buses();
     vsc.build_inphno();
     vsc.build_dc_network_matrix();
-    vsc.initialize_Udc_vector();
-    vsc.update_raw_dc_current_into_dc_network();
+    //vsc.initialize_Udc_vector();
+    //vsc.update_raw_dc_current_into_dc_network();
 }
 
 void VSC_HVDC_TEST::test_get_P_mismatch_vector_with_5_terminal_data()
@@ -761,18 +760,18 @@ void VSC_HVDC_TEST::test_get_P_mismatch_vector_with_5_terminal_data()
     prepare_5_terminal_vsc_hvdc_converter_ac_buses();
     vsc.build_inphno();
     vsc.build_dc_network_matrix();
-    vsc.initialize_Udc_vector();
+    //vsc.initialize_Udc_vector();
     vsc.initialize_alpha_vector();
     vsc.initialize_beta_vector();
 
-    vsc.build_Pdc_command_vector();
-    vsc.update_raw_dc_current_into_dc_network();
+    //vsc.build_Pdc_command_vector();
+    //vsc.update_raw_dc_current_into_dc_network();
     vsc.calculate_raw_dc_power_into_dc_network();
 
-    vsc.add_Pdc_command_to_P_mismatch_vector();
-    vsc.add_generation_power_to_P_mismatch_vector();
-    vsc.add_load_power_to_P_mismatch_vector();
-    vsc.add_raw_dc_power_to_P_mismatch_vector();
+    //vsc.add_Pdc_command_to_P_mismatch_vector();
+    //vsc.add_generation_power_to_P_mismatch_vector();
+    //vsc.add_load_power_to_P_mismatch_vector();
+    //vsc.add_raw_dc_power_to_P_mismatch_vector();
 }
 
 void VSC_HVDC_TEST::test_solve_dc_network_with_5_terminal_data()
