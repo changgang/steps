@@ -256,17 +256,13 @@ void VSC_HVDC_TEST::test_set_get_converter_active_power_operation_mode()
     vsc.set_converter_ac_bus(0,1);
     vsc.set_converter_ac_bus(1,2);
 
-    TEST_ASSERT(vsc.get_ac_converter_bus_with_dc_voltage_control()==0);
-    vsc.set_converter_active_power_operation_mode(0,VSC_DC_VOLTAGE_CONTORL);
     TEST_ASSERT(vsc.get_converter_active_power_operation_mode(0)==VSC_DC_VOLTAGE_CONTORL);
-    TEST_ASSERT(vsc.get_ac_converter_bus_with_dc_voltage_control()==1);
 
     vsc.set_converter_active_power_operation_mode(0,VSC_AC_ACTIVE_POWER_CONTORL);
     TEST_ASSERT(vsc.get_converter_active_power_operation_mode(0)==VSC_AC_ACTIVE_POWER_CONTORL);
 
     vsc.set_converter_active_power_operation_mode(1,VSC_DC_VOLTAGE_CONTORL);
     TEST_ASSERT(vsc.get_converter_active_power_operation_mode(1)==VSC_DC_VOLTAGE_CONTORL);
-    TEST_ASSERT(vsc.get_ac_converter_bus_with_dc_voltage_control()==1);
 
     vsc.set_converter_active_power_operation_mode(1,VSC_AC_ACTIVE_POWER_CONTORL);
     TEST_ASSERT(vsc.get_converter_active_power_operation_mode(1)==VSC_AC_ACTIVE_POWER_CONTORL);
@@ -955,7 +951,6 @@ void VSC_HVDC_TEST::prepare_5_terminal_vsc_hvdc_converter_ac_buses()
     vsc.set_converter_count(5);
     vsc.set_dc_bus_count(7);
     vsc.set_dc_line_count(7);
-    vsc.set_reserve_master_converter_ac_bus(102);
 
     vsc.set_converter_ac_bus(0, 105);
     vsc.set_converter_ac_bus(1, 102);
@@ -1199,7 +1194,6 @@ void VSC_HVDC_TEST::prepare_5_terminal_vsc_hvdc_converter_without_droop_control(
     vsc.set_converter_count(5);
     vsc.set_dc_bus_count(7);
     vsc.set_dc_line_count(7);
-    vsc.set_reserve_master_converter_ac_bus(102);
 
     vsc.set_converter_ac_bus(0, 105);
     vsc.set_converter_ac_bus(1, 102);

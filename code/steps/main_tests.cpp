@@ -257,9 +257,9 @@ int main(int argc, char* argv[])
 
         ts.add(unique_ptr<Test::Suite>(new POWER_SYSTEM_DATABASE_TEST));
 */
-        ts.add(unique_ptr<Test::Suite>(new STEPS_IMEXPORTER_TEST));
+//        ts.add(unique_ptr<Test::Suite>(new STEPS_IMEXPORTER_TEST));
 
-//        ts.add(unique_ptr<Test::Suite>(new PSSE_IMEXPORTER_TEST));
+        ts.add(unique_ptr<Test::Suite>(new PSSE_IMEXPORTER_TEST));
 
 //        ts.add(unique_ptr<Test::Suite>(new BPA_IMEXPORTER_TEST));
 

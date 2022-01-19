@@ -1030,6 +1030,9 @@ void POWERFLOW_SOLVER::try_to_solve_vsc_hvdc_steady_state()
     {
         if(vsc_hvdcs[i]->get_status()==true)
         {
+            //vsc_hvdcs[i]->report();
+            vsc_hvdcs[i]->set_max_iteration(5);
+            vsc_hvdcs[i]->set_allowed_max_P_mismatch_in_MW(0.0001);
             vsc_hvdcs[i]->solve_steady_state();
             //vsc_hvdcs[i]->show_solved_steady_state();
         }

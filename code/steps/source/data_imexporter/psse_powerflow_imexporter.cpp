@@ -1448,7 +1448,125 @@ string PSSE_IMEXPORTER::export_hvdc_data(const HVDC* hvdc) const
 
 string PSSE_IMEXPORTER::export_all_vsc_hvdc_data() const
 {
-    return "";
+    ostringstream osstream;
+    STEPS& toolkit=get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb=toolkit.get_power_system_database();
+
+    vector<VSC_HVDC*> vsc_hvdcs=psdb.get_all_vsc_hvdcs();
+    unsigned int n=vsc_hvdcs.size();
+    for(unsigned int i=0;i!=n;++i)
+    {
+        VSC_HVDC* vsc_hvdc=vsc_hvdcs[i];
+        osstream<<"\""<<left
+                <<setw(8)<<vsc_hvdc->get_name()<<"\""<<", "
+                <<right
+                <<setw(8)<<vsc_hvdc->get_converter_count()<<", "
+                <<setw(8)<<vsc_hvdc->get_dc_bus_count()<<", "
+                <<setw(8)<<vsc_hvdc->get_dc_line_count()<<", ";
+        bool status=vsc_hvdc->get_status();
+        if (status==false)
+            osstream<<0<<", ";
+        else
+            osstream<<1<<", ";
+        osstream<<setw(8)<<vsc_hvdc->get_dc_network_base_voltage_in_kV()<<endl;
+        unsigned int ncon=vsc_hvdc->get_converter_count();
+        unsigned int nbus=vsc_hvdc->get_dc_bus_count();
+        unsigned int ndc_line=vsc_hvdc->get_dc_line_count();
+        for(unsigned int i=0;i!=ncon;++i)
+        {
+            osstream<<setw(4)<<vsc_hvdc->get_converter_ac_bus(i)<<", "
+                    <<setw(4)<<vsc_hvdc->get_converter_active_power_operation_mode(i)<<", "
+                    <<setw(4)<<vsc_hvdc->get_converter_dc_voltage_control_priority(i)<<", "
+                    <<setw(4)<<vsc_hvdc->get_converter_reactive_power_operation_mode(i)<<", ";
+        switch(vsc_hvdc->get_converter_active_power_operation_mode(i))
+        {
+            case VSC_DC_VOLTAGE_CONTORL:
+                osstream<<setw(4)<<vsc_hvdc->get_converter_nominal_dc_voltage_command_in_kV(i)<<", ";
+                break;
+            case VSC_AC_ACTIVE_POWER_CONTORL:
+                osstream<<setw(4)<<vsc_hvdc->get_converter_nominal_ac_active_power_command_in_MW(i)<<", ";
+                break;
+            case VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL:
+                osstream<<setw(4)<<vsc_hvdc->get_converter_initial_dc_active_power_reference_in_MW(i)<<", ";
+                osstream<<setw(4)<<vsc_hvdc->get_converter_initial_dc_voltage_reference_in_kV(i)<<", ";
+                osstream<<setw(4)<<vsc_hvdc->get_converter_initial_droop_coefficient_for_droop_control(i)<<", ";
+                break;
+            case VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL:
+                osstream<<setw(4)<<vsc_hvdc->get_converter_initial_dc_current_reference_in_kA(i)<<", ";
+                osstream<<setw(4)<<vsc_hvdc->get_converter_initial_dc_voltage_reference_in_kV(i)<<", ";
+                osstream<<setw(4)<<vsc_hvdc->get_converter_initial_droop_coefficient_for_droop_control(i)<<", ";
+                break;
+            case VSC_AC_VOLTAGE_ANGLE_CONTROL:
+            default:
+                break;
+        }
+
+        switch(vsc_hvdc->get_converter_reactive_power_operation_mode(i))
+        {
+            case VSC_AC_REACTIVE_POWER_CONTROL:
+                osstream<<setw(4)<<vsc_hvdc->get_converter_nominal_ac_reactive_power_command_in_Mvar(i)<<", ";
+                break;
+            case VSC_AC_VOLTAGE_CONTROL:
+                osstream<<setw(4)<<vsc_hvdc->get_converter_nominal_ac_voltage_command_in_pu(i)<<", ";
+                break;
+            default:
+                break;
+        }
+            osstream<<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_loss_factor_A_in_kW(i)<<", "
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_loss_factor_B_in_kW_per_amp(i)<<", "
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_minimum_loss_in_kW(i)<<", "
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_rated_capacity_in_MVA(i)<<", "
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_rated_current_in_A(i)<<", "
+
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_transformer_capacity_in_MVA(i)<<", "
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_transformer_AC_side_base_voltage_in_kV(i)<<", "
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(i)<<", "
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_transformer_off_nominal_turn_ratio(i)<<", "
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_transformer_impedance_in_pu(i)<<", "
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_commutating_impedance_in_ohm(i)<<", "
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_filter_admittance_in_siemens(i)<<", "
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_Pmax_in_MW(i)<<", "
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_Pmin_in_MW(i)<<", "
+
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_Qmax_in_MVar(i)<<", "
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_Qmin_in_MVar(i)<<", "
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_Udmax_in_kV(i)<<", "
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_Udmin_in_kV(i)<<", "
+                    <<setw(8)<<vsc_hvdc->get_converter_remote_bus_to_regulate(i)<<", "
+                    <<setw(8)<<setprecision(2)<<fixed<<vsc_hvdc->get_converter_remote_regulation_percent(i)<<endl;
+        }
+        for(unsigned int i=0;i!=nbus;++i)
+        {
+            osstream<<setw(8)<<vsc_hvdc->get_dc_bus_number(i)<<", "
+                    <<setw(8)<<vsc_hvdc->get_converter_ac_bus_number_with_dc_bus_index(i)<<", "
+                    <<setw(8)<<vsc_hvdc->get_dc_bus_Vdc_in_kV(i)<<", "
+                    <<setw(8)<<vsc_hvdc->get_dc_bus_area(i)<<", "
+                    <<setw(8)<<vsc_hvdc->get_dc_bus_zone(i)<<", "
+                    <<"\""<<left
+                    <<setw(8)<<vsc_hvdc->get_dc_bus_name(i)<<"\""<<", "
+                    <<right
+                    <<setw(8)<<setprecision(4)<<vsc_hvdc->get_dc_bus_ground_resistance_in_ohm(i)<<", "
+                    <<setw(8)<<vsc_hvdc->get_dc_bus_owner_number(i)<<", "
+                    <<setw(8)<<vsc_hvdc->get_dc_bus_generation_power_in_MW(i)<<", "
+                    <<setw(8)<<vsc_hvdc->get_dc_bus_load_power_in_MW(i)<<endl;
+        }
+        for(unsigned int i=0;i!=ndc_line;++i)
+        {
+            osstream<<setw(8)<<vsc_hvdc->get_dc_line_sending_side_bus(i)<<", "
+                    <<setw(8)<<vsc_hvdc->get_dc_line_receiving_side_bus(i)<<", "
+                    <<"\""
+                    <<left
+                    <<setw(8)<<vsc_hvdc->get_dc_line_identifier(i)
+                    <<"\""<<", "
+                    <<right
+                    <<setw(8)<<vsc_hvdc->get_dc_line_meter_end_bus(i)<<", "
+                    <<setw(8)<<vsc_hvdc->get_dc_line_meter_end_bus(i)<<", "
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_dc_line_resistance_in_ohm(i)<<", "
+                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_dc_line_inductance_in_mH(i)<<endl;
+        }
+
+    }
+    return osstream.str();
 }
 
 string PSSE_IMEXPORTER::export_all_transformer_impedance_correction_table_data() const

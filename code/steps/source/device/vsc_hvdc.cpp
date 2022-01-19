@@ -52,7 +52,7 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
     {
         set_converter_ac_bus(i,vsc.get_converter_ac_bus(i));
         set_converter_active_power_operation_mode(i,vsc.get_converter_active_power_operation_mode(i));
-        switch vsc.get_converter_active_power_operation_mode(i)
+        switch(vsc.get_converter_active_power_operation_mode(i))
         {
             case VSC_DC_VOLTAGE_CONTORL:
                 set_converter_nominal_dc_voltage_command_in_kV(i,vsc.get_converter_nominal_dc_voltage_command_in_kV(i));
@@ -75,7 +75,7 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
                 break;
         }
         set_converter_reactive_power_operation_mode(i,vsc.get_converter_reactive_power_operation_mode(i));
-        switch vsc.get_converter_reactive_power_operation_mode(i)
+        switch(vsc.get_converter_reactive_power_operation_mode(i))
         {
             case VSC_AC_REACTIVE_POWER_CONTROL:
                 set_converter_nominal_ac_reactive_power_command_in_Mvar(i,vsc.get_converter_nominal_ac_reactive_power_command_in_Mvar(i));
@@ -86,16 +86,29 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
             default:
                 break;
         }
-
-
         set_converter_loss_factor_A_in_kW(i,vsc.get_converter_loss_factor_A_in_kW(i));
         set_converter_loss_factor_B_in_kW_per_amp(i,vsc.get_converter_loss_factor_B_in_kW_per_amp(i));
         set_converter_loss_factor_C_in_KW_per_amp_squared(i,vsc.get_converter_loss_factor_C_in_kW_per_amp_squard(i));
         set_converter_minimum_loss_in_kW(i,vsc.get_converter_minimum_loss_in_kW(i));
         set_converter_rated_capacity_in_MVA(i,vsc.get_converter_rated_capacity_in_MVA(i));
         set_converter_rated_current_in_A(i,vsc.get_converter_rated_current_in_A(i));
-        set_converter_Qmax_in_MVar(i,vsc.get_converter_Qmax_in_MVar(i));
-        set_converter_Qmin_in_MVar(i,vsc.get_converter_Qmin_in_MVar(i));
+
+        set_converter_transformer_capacity_in_MVA(i, vsc.get_converter_transformer_capacity_in_MVA(i));
+        set_converter_transformer_AC_side_base_voltage_in_kV(i, vsc.get_converter_transformer_AC_side_base_voltage_in_kV(i));
+        set_converter_transformer_converter_side_base_voltage_in_kV(i, vsc.get_converter_transformer_converter_side_base_voltage_in_kV(i));
+        set_converter_transformer_off_nominal_turn_ratio(i, vsc.get_converter_transformer_off_nominal_turn_ratio(i));
+        set_converter_transformer_impedance_in_pu(i, vsc.get_converter_transformer_impedance_in_pu(i));
+        set_converter_commutating_impedance_in_ohm(i, vsc.get_converter_commutating_impedance_in_ohm(i));
+        set_converter_filter_admittance_in_siemens(i, vsc.get_converter_filter_admittance_in_siemens(i));
+
+        set_converter_P_to_AC_bus_in_MW(i, vsc.get_converter_P_to_AC_bus_in_MW(i));
+        set_converter_Q_to_AC_bus_in_MVar(i, vsc.get_converter_Q_to_AC_bus_in_MVar(i));
+        set_converter_Pmax_in_MW(i, vsc.get_converter_Pmax_in_MW(i));
+        set_converter_Pmin_in_MW(i, vsc.get_converter_Pmin_in_MW(i));
+        set_converter_Qmax_in_MVar(i, vsc.get_converter_Qmax_in_MVar(i));
+        set_converter_Qmin_in_MVar(i, vsc.get_converter_Qmin_in_MVar(i));
+        set_converter_Udmax_in_kV(i, vsc.get_converter_Udmax_in_kV(i));
+        set_converter_Udmin_in_kV(i, vsc.get_converter_Udmin_in_kV(i));
         set_converter_remote_bus_to_regulate(i,vsc.get_converter_remote_bus_to_regulate(i));
         set_converter_remote_regulation_percent(i,vsc.get_converter_remote_regulation_percent(i));
 
@@ -103,9 +116,10 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
 
     for(unsigned int i=0;i!=nbus;++i)
     {
-        set_dc_bus_converter_index_with_ac_bus_number(i,vsc.get_dc_bus_number(i));
+        set_dc_bus_number(i,vsc.get_dc_bus_number(i));
         set_dc_bus_converter_index_with_ac_bus_number(i,vsc.get_converter_ac_bus_number_with_dc_bus_index(i));
         set_dc_bus_area(i,vsc.get_dc_bus_area(i));
+        set_dc_bus_Vdc_in_kV(i,vsc.get_dc_bus_Vdc_in_kV(i));
         set_dc_bus_zone(i,vsc.get_dc_bus_zone(i));
         set_dc_bus_name(i,vsc.get_dc_bus_name(i));
         set_dc_bus_ground_resistance_in_ohm(i,vsc.get_dc_bus_ground_resistance_in_ohm(i));
@@ -137,6 +151,9 @@ void VSC_HVDC::clear()
     set_identifier("");
     set_name("");
     set_status(false);
+    set_converter_count(0);
+    set_dc_bus_count(0);
+    set_dc_line_count(0);
     set_dc_network_base_voltage_in_kV(0);
 
     converters.clear();
@@ -1841,6 +1858,7 @@ void VSC_HVDC::solve_steady_state()
     update_P_equation_internal_buses();
     update_current_dc_slack_bus();
     export_dc_bus_voltage_with_network_ordering();
+    show_inphno_bus_number();
     //while(true)
     for(unsigned int i=0;i!=1;++i)
     {
@@ -2831,12 +2849,16 @@ void VSC_HVDC::update_dc_bus_voltage()
     for(unsigned int index=0; index!=nbus;++index)
     {
         unsigned int dcbus = get_dc_bus_number(index);
+        unsigned int current_dc_slack_bus_internal_number=inphno.get_internal_bus_number_of_physical_bus_number(current_dc_slack_bus);
         if(dcbus!=current_dc_slack_bus)
         {
             double Vdc = get_dc_bus_Vdc_in_kV(index);
             int i = inphno.get_internal_bus_number_of_physical_bus_number(dcbus);
+            if(i<current_dc_slack_bus_internal_number)
+                Vdc += Udc_mismatch[i];
+            else
+                Vdc += Udc_mismatch[i-1];
             cout<<"Udc_mismatch[i-1]:"<<Udc_mismatch[i-1]<<endl;
-            Vdc += Udc_mismatch[i-1];
             set_dc_bus_Vdc_in_kV(index,Vdc);
         }
     }

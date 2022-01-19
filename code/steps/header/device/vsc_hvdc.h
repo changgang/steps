@@ -65,6 +65,8 @@ class VSC_HVDC : public NONBUS_DEVICE
         void set_converter_transformer_impedance_in_pu(unsigned int index, const complex<double> z);
         void set_converter_commutating_impedance_in_ohm(unsigned int index, const complex<double> z);
         void set_converter_filter_admittance_in_siemens(unsigned int index, const complex<double> y);
+        void set_converter_P_to_AC_bus_in_MW(unsigned int index, double P);
+        void set_converter_Q_to_AC_bus_in_MVar(unsigned int index, double Q);
         void set_converter_Pmax_in_MW(const unsigned int index, const double P);
         void set_converter_Pmin_in_MW(const unsigned int index, const double P);
         void set_converter_Qmax_in_MVar(const unsigned int index, const double Q);
@@ -147,6 +149,8 @@ class VSC_HVDC : public NONBUS_DEVICE
         complex<double> get_converter_commutating_impedance_in_ohm(unsigned int index) const;
         complex<double> get_converter_filter_admittance_in_siemens(unsigned int index) const;
 
+        double get_converter_P_to_AC_bus_in_MW(unsigned int index) const;
+        double get_converter_Q_to_AC_bus_in_MVar(unsigned int index) const;
         double get_converter_Pmax_in_MW(const unsigned int index) const;
         double get_converter_Pmin_in_MW(const unsigned int index) const;
         double get_converter_Qmax_in_MVar(unsigned int index) const;
@@ -210,8 +214,6 @@ class VSC_HVDC : public NONBUS_DEVICE
         void add_dc_lines_to_dc_network();
         void calculate_raw_bus_power_mismatch();
         void build_dc_bus_power_mismatch_vector();
-        void re_build_dc_bus_power_mismatch_vector();
-        void re_build_Pdc_command_vector();
         void build_jacobian();
         double calculate_jacobian_matrix_entry(unsigned int k);
         void update_current_dc_slack_bus();
@@ -246,11 +248,6 @@ class VSC_HVDC : public NONBUS_DEVICE
         void add_load_power_to_raw_bus_power_mismatch();
         void add_converter_dc_power_command_to_raw_bus_power_mismatch();
         double get_converter_dc_power_command_at_dc_bus(unsigned int bus);
-
-        void set_converter_P_to_AC_bus_in_MW(unsigned int index, double P);
-        void set_converter_Q_to_AC_bus_in_MVar(unsigned int index, double Q);
-        double get_converter_P_to_AC_bus_in_MW(unsigned int index) const;
-        double get_converter_Q_to_AC_bus_in_MVar(unsigned int index) const;
 
         double solve_Pdc_with_active_power_control_and_reactive_power_control(unsigned int converter_index) const;
         double solve_Pdc_with_active_power_control_and_ac_voltage_control(unsigned int converter_index) const;
