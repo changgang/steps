@@ -31,7 +31,6 @@ class VSC_HVDC : public NONBUS_DEVICE
         void set_dc_bus_count(unsigned int n);
         void set_dc_line_count(unsigned int n);
         void set_status(const bool status);
-        void set_reserve_master_converter_ac_bus(unsigned int ac_bus);
         void set_dc_network_base_voltage_in_kV(const double base_voltage);
 
         void set_converter_ac_bus(const unsigned int index, const unsigned int bus);
@@ -103,8 +102,6 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int get_dc_bus_count() const;
         unsigned int get_dc_line_count() const;
         bool get_status() const;
-        unsigned int get_ac_converter_bus_with_dc_voltage_control() const;
-        unsigned int get_reserve_master_converter_ac_bus() const;
         double get_dc_network_base_voltage_in_kV() const;
 
         VSC_HVDC_CONVERTER_STRUCT* get_converter(unsigned int index);
@@ -272,7 +269,6 @@ class VSC_HVDC : public NONBUS_DEVICE
         void save_dc_bus_powerflow_result_to_file(const string& filename) const;
         void calculate_dc_active_power_of_slack_bus();
         bool check_dc_slack_converter_constraint();
-        bool check_slack_limit(double P);
         bool is_dc_network_matrix_set();
         bool is_jacobian_matrix_set();
 
@@ -291,7 +287,6 @@ class VSC_HVDC : public NONBUS_DEVICE
 
 
         unsigned int get_dc_bus_converter_index_with_dc_bus_index(unsigned int index) const;
-        void set_ac_converter_bus_with_dc_voltage_control(const unsigned int bus);
         unsigned int dc_bus_no2index(unsigned int bus) const;
         unsigned int dc_bus_index2no(unsigned int index) const;
 
@@ -307,8 +302,6 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int vsc_hvdc_name_index;
         unsigned int identifier_index;
         bool status;
-        unsigned int ac_converter_bus_with_dc_voltage_control;
-        unsigned int ac_converter_bus_with_reserve_master_control;
         unsigned int dc_base_voltage_in_kV;
 
         vector<VSC_HVDC_CONVERTER_STRUCT> converters;

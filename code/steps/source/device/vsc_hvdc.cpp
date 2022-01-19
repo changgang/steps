@@ -39,40 +39,55 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
 
     set_name(vsc.get_name());
     set_identifier(vsc.get_identifier());
+    set_status(vsc.get_status());
     set_converter_count(vsc.get_converter_count());
     set_dc_bus_count(vsc.get_dc_bus_count());
     set_dc_line_count(vsc.get_dc_line_count());
-    set_status(vsc.get_status());
-    set_ac_converter_bus_with_dc_voltage_control(vsc.get_ac_converter_bus_with_dc_voltage_control());
+    set_dc_network_base_voltage_in_kV(vsc.get_dc_network_base_voltage_in_kV());
+
     unsigned int ncon=vsc.get_converter_count();
     unsigned int nbus=vsc.get_dc_bus_count();
     unsigned int ndc_line=vsc.get_dc_line_count();
     for(unsigned int i=0;i!=ncon;++i)
     {
         set_converter_ac_bus(i,vsc.get_converter_ac_bus(i));
-        if(vsc.get_converter_active_power_operation_mode(i)==1)
+        set_converter_active_power_operation_mode(i,vsc.get_converter_active_power_operation_mode(i));
+        switch vsc.get_converter_active_power_operation_mode(i)
         {
-            set_converter_active_power_operation_mode(i,VSC_DC_VOLTAGE_CONTORL);
-            set_converter_nominal_dc_voltage_command_in_kV(i,vsc.get_converter_nominal_dc_voltage_command_in_kV(i));
+            case VSC_DC_VOLTAGE_CONTORL:
+                set_converter_nominal_dc_voltage_command_in_kV(i,vsc.get_converter_nominal_dc_voltage_command_in_kV(i));
+                break;
+            case VSC_AC_ACTIVE_POWER_CONTORL:
+                set_converter_nominal_ac_active_power_command_in_MW(i,vsc.get_converter_nominal_ac_active_power_command_in_MW(i));
+                break;
+            case VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL:
+                set_converter_initial_dc_active_power_reference_in_MW(i,vsc.get_converter_initial_dc_active_power_reference_in_MW(i));
+                set_converter_initial_dc_voltage_reference_in_kV(i,vsc.get_converter_initial_dc_voltage_reference_in_kV(i));
+                set_converter_initial_droop_coefficient_for_droop_control(i,vsc.get_converter_initial_droop_coefficient_for_droop_control(i));
+                break;
+            case VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL:
+                set_converter_initial_dc_current_reference_in_kA(i,vsc.get_converter_initial_dc_current_reference_in_kA(i));
+                set_converter_initial_dc_voltage_reference_in_kV(i,vsc.get_converter_initial_dc_voltage_reference_in_kV(i));
+                set_converter_initial_droop_coefficient_for_droop_control(i,vsc.get_converter_initial_droop_coefficient_for_droop_control(i));
+                break;
+            case VSC_AC_VOLTAGE_ANGLE_CONTROL:
+            default:
+                break;
+        }
+        set_converter_reactive_power_operation_mode(i,vsc.get_converter_reactive_power_operation_mode(i));
+        switch vsc.get_converter_reactive_power_operation_mode(i)
+        {
+            case VSC_AC_REACTIVE_POWER_CONTROL:
+                set_converter_nominal_ac_reactive_power_command_in_Mvar(i,vsc.get_converter_nominal_ac_reactive_power_command_in_Mvar(i));
+                break;
+            case VSC_AC_VOLTAGE_CONTROL:
+                set_converter_nominal_ac_voltage_command_in_pu(i,vsc.get_converter_nominal_ac_voltage_command_in_pu(i));
+                break;
+            default:
+                break;
         }
 
-        else
-        {
-            set_converter_active_power_operation_mode(i,VSC_AC_ACTIVE_POWER_CONTORL);
-            set_converter_nominal_ac_active_power_command_in_MW(i,vsc.get_converter_nominal_ac_active_power_command_in_MW(i));
-        }
 
-        if(vsc.get_converter_reactive_power_operation_mode(i)==1)
-        {
-            set_converter_reactive_power_operation_mode(i,VSC_AC_VOLTAGE_CONTROL);
-            set_converter_nominal_ac_voltage_command_in_pu(i,vsc.get_converter_nominal_ac_voltage_command_in_pu(i));
-        }
-
-        else
-        {
-            set_converter_reactive_power_operation_mode(i,VSC_AC_REACTIVE_POWER_CONTROL);
-            set_converter_nominal_ac_reactive_power_command_in_Mvar(i,vsc.get_converter_nominal_ac_reactive_power_command_in_Mvar(i));
-        }
         set_converter_loss_factor_A_in_kW(i,vsc.get_converter_loss_factor_A_in_kW(i));
         set_converter_loss_factor_B_in_kW_per_amp(i,vsc.get_converter_loss_factor_B_in_kW_per_amp(i));
         set_converter_loss_factor_C_in_KW_per_amp_squared(i,vsc.get_converter_loss_factor_C_in_kW_per_amp_squard(i));
@@ -122,7 +137,6 @@ void VSC_HVDC::clear()
     set_identifier("");
     set_name("");
     set_status(false);
-    ac_converter_bus_with_dc_voltage_control = 0;
     set_dc_network_base_voltage_in_kV(0);
 
     converters.clear();
@@ -231,66 +245,6 @@ void VSC_HVDC::set_status(const bool status)
     this->status = status;
 }
 
-void VSC_HVDC::set_reserve_master_converter_ac_bus(unsigned int ac_bus)
-{
-    ostringstream osstream;
-    if(ac_bus!=0)
-    {
-        STEPS& toolkit = get_toolkit();
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-        if(psdb.is_bus_exist(ac_bus))
-        {
-            ac_converter_bus_with_reserve_master_control = ac_bus;
-        }
-        else
-        {
-            osstream<<"Bus "<<ac_bus<<" does not exist for setting up converter AC bus with reserve master of vsc-hvdc link."<<endl
-                    <<"0 will be set to indicate invalid reserve master converter.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-            ac_converter_bus_with_reserve_master_control = 0;
-        }
-    }
-    else
-    {
-        osstream<<"Warning. Zero bus number (0) is set up."<<endl
-                <<"0 will be set to indicate no reserve master converter in this VSC_HVDC project.";
-        STEPS& toolkit = get_toolkit();
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        ac_converter_bus_with_reserve_master_control = ac_bus;
-    }
-}
-
-void VSC_HVDC::set_ac_converter_bus_with_dc_voltage_control(const unsigned int bus)
-{
-    ostringstream osstream;
-    if(bus!=0)
-    {
-        STEPS& toolkit = get_toolkit();
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-        if(psdb.is_bus_exist(bus))
-        {
-            ac_converter_bus_with_dc_voltage_control = bus;
-        }
-        else
-        {
-            osstream<<"Bus "<<bus<<" does not exist for setting up converter AC bus with dc voltage of vsc-hvdc link."<<endl
-                    <<"0 will be set to indicate invalid vsc-hvdc link.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-            ac_converter_bus_with_dc_voltage_control = 0;
-        }
-    }
-    else
-    {
-        osstream<<"Warning. Zero bus number (0) is not allowed for setting up converter AC bus with dc voltage of vsc-hvdc link."<<endl
-                <<"0 will be set to indicate invalid vsc-hvdc link.";
-        STEPS& toolkit = get_toolkit();
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        ac_converter_bus_with_dc_voltage_control = bus;
-    }
-}
-
 void VSC_HVDC::set_dc_network_base_voltage_in_kV(const double base_voltage)
 {
     this->dc_base_voltage_in_kV = base_voltage;
@@ -363,11 +317,6 @@ void VSC_HVDC::set_converter_active_power_operation_mode(const unsigned int inde
     if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
         return;
     converters[index].dc_control_mode =  mode;
-    if(mode == VSC_DC_VOLTAGE_CONTORL and get_ac_converter_bus_with_dc_voltage_control()==0)
-    {
-        unsigned int acbus = get_converter_ac_bus(index);
-        set_ac_converter_bus_with_dc_voltage_control(acbus);
-    }
 }
 
 void VSC_HVDC::set_converter_dc_voltage_control_priority(const unsigned int index, const unsigned int p)
@@ -812,16 +761,6 @@ unsigned int VSC_HVDC::get_dc_line_count() const
 bool VSC_HVDC::get_status() const
 {
     return status;
-}
-
-unsigned int VSC_HVDC::get_ac_converter_bus_with_dc_voltage_control() const
-{
-    return ac_converter_bus_with_dc_voltage_control;
-}
-
-unsigned int VSC_HVDC::get_reserve_master_converter_ac_bus() const
-{
-    return ac_converter_bus_with_reserve_master_control;
 }
 
 double VSC_HVDC::get_dc_network_base_voltage_in_kV() const
@@ -3163,22 +3102,6 @@ void VSC_HVDC::save_dc_bus_powerflow_result_to_file(const string& filename) cons
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
-}
-
-bool VSC_HVDC::check_slack_limit(double P)
-{
-    unsigned int dc_control_bus=get_ac_converter_bus_with_dc_voltage_control();
-    unsigned int ncon=get_converter_count();
-    unsigned int index=0;
-    for(unsigned int i=0;i!=ncon;++i)
-    {
-        if(get_converter_ac_bus(i)==dc_control_bus)
-            index=i;
-    }
-    if(P<get_converter_rated_capacity_in_MVA(index))
-        return true;
-    else
-        return false;
 }
 
 bool VSC_HVDC::is_dc_network_matrix_set()
