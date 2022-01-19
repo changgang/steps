@@ -51,7 +51,8 @@ struct VSC_HVDC_CONVERTER_STRUCT
     double remote_bus_to_regulate;
     double remote_regulation_percent;
 
-    double Pdc_command_MW;
+    double Pdc_command_in_MW;
+    double Pac_command_in_MW;
 };
 
 struct VSC_HVDC_DC_BUS_STRUCT

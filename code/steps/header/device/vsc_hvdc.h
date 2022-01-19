@@ -218,7 +218,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         void re_build_dc_bus_power_mismatch_vector();
         void re_build_Pdc_command_vector();
         void build_jacobian();
-        double calculate_jacobian_matrix_entry(unsigned int ibus, int row, int column, unsigned int k);
+        double calculate_jacobian_matrix_entry(unsigned int k);
         void update_current_dc_slack_bus();
         unsigned int get_dc_slack_bus_number() const;
 
@@ -240,7 +240,6 @@ class VSC_HVDC : public NONBUS_DEVICE
         int get_alpha_of_dc_bus_number(unsigned int bus);
         int get_beta_of_dc_bus_number(unsigned int bus);
 
-        void re_initialize_Udc_vector();
         void initialize_alpha_vector();
         void initialize_beta_vector();
         void initialize_active_and_reactive_power_control_mode_vector();
@@ -266,9 +265,9 @@ class VSC_HVDC : public NONBUS_DEVICE
         double solve_Pdc_with_dc_current_voltage_droop_control(unsigned int converter_index) const;
 
         double solve_converter_Pac_with_Pdc(unsigned int converter_index);
-        double calculate_converter_Pdc_with_Pac(unsigned int converter_index, double Pac, double Qac, double Vac);
+        double calculate_converter_Pdc_with_Pac(unsigned int converter_index, double Pac, double Qac);
 
-        void set_converter_Pdc_command_in_MW(unsigned int converter_index, double P);
+        void set_converter_Pdc_command_in_MW(const unsigned int converter_index, const double P);
         double get_converter_Pdc_command_in_MW(unsigned int converter_index) const;
 
         void set_convergence_flag(bool flag);
@@ -283,6 +282,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         void export_dc_network_matrix(string filename);
         void show_inphno_bus_number();
         void show_dc_network_matrix();
+        void export_dc_bus_voltage_with_network_ordering();
         void show_jacobian_matrix();
         double get_dc_network_matrix_entry_between_dc_bus(unsigned int ibus, unsigned int jbus);
         double get_jacobian_matrix_entry_between_dc_bus(unsigned int ibus, unsigned int jbus);

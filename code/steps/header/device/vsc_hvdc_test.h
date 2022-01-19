@@ -71,14 +71,16 @@ class VSC_HVDC_TEST : public Test::Suite
         void test_is_connected_to_bus();
         void test_is_valid();
 
-        void test_build_inphno();
-        void test_build_conductance_matrix();
-        void test_build_jacobian();
-        void test_initialize_Udc_vector();
-
-        void test_initialize_Pdc_command();
-        void test_update_bus_current();
-        void test_get_P_mismatch_vector_with_5_terminal_data();
+        void test_initialize_steady_state_solver();
+        void test_optimize_network_ordering();
+        void test_build_dc_network_matrix();
+        void test_update_P_equation_internal_buses();
+        void test_update_current_dc_slack_bus();
+        void test_calculate_raw_bus_power_mismatch();
+        void test_build_dc_bus_power_mismatch_vector();
+        void test_build_jacobian_with_5_terminal_data();
+        void test_update_dc_bus_voltage();
+        void test_solve_dc_network_with_5_terminal_without_VP_droop();
         void test_solve_dc_network_with_5_terminal_data();
 
         void test_set_get_vsc_hvdc_model();
@@ -92,6 +94,7 @@ class VSC_HVDC_TEST : public Test::Suite
         void prepare_3_terminal_vsc_hvdc_converter_ac_buses();
         void prepare_4_terminal_vsc_hvdc_converter_ac_buses();
         void prepare_5_terminal_vsc_hvdc_converter_ac_buses();
+        void prepare_5_terminal_vsc_hvdc_converter_without_droop_control();
         void prepare_7_terminal_vsc_hvdc_converter_ac_buses();
 
         VSC_HVDC vsc;
