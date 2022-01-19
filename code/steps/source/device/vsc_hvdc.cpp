@@ -411,7 +411,8 @@ void VSC_HVDC::set_converter_initial_dc_active_power_reference_in_MW(const unsig
         return;
     converters[index].initial_dc_active_power_reference_in_MW = P;
 }
-void VSC_HVDC::set_converter_initial_power_voltage_droop_coefficient(const unsigned int index, const double droop)
+
+void VSC_HVDC::set_converter_initial_droop_coefficient_for_droop_control(const unsigned int index, const double droop)
 {
     if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
         return;
@@ -422,11 +423,6 @@ void VSC_HVDC::set_converter_initial_dc_current_reference_in_kA(const unsigned i
     if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
         return;
     converters[index].initial_dc_current_reference_in_kA = I;
-}
-
-void VSC_HVDC::set_converter_initial_current_voltage_droop_coefficient(const unsigned int index, const double droop)
-{
-    set_converter_initial_power_voltage_droop_coefficient(index, droop);
 }
 
 void VSC_HVDC::set_converter_nominal_ac_voltage_command_in_pu(const unsigned int index, const double V)
@@ -1078,20 +1074,6 @@ double VSC_HVDC::get_converter_initial_dc_active_power_reference_in_MW(const uns
     }
 }
 
-double VSC_HVDC::get_converter_initial_power_voltage_droop_coefficient(const unsigned int index)const
-{
-    if(index<get_converter_count())
-        return converters[index].droop_coefficient_for_droop_control;
-    else
-    {
-        STEPS& toolkit = get_toolkit();
-        ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return 9999.9;
-    }
-}
-
 double VSC_HVDC::get_converter_initial_dc_current_reference_in_kA(const unsigned int index)const
 {
     if(index<get_converter_count())
@@ -1106,12 +1088,10 @@ double VSC_HVDC::get_converter_initial_dc_current_reference_in_kA(const unsigned
     }
 }
 
-double VSC_HVDC::get_converter_initial_current_voltage_droop_coefficient(const unsigned int index)const
+double VSC_HVDC::get_converter_initial_droop_coefficient_for_droop_control(const unsigned int index)const
 {
-    return get_converter_initial_power_voltage_droop_coefficient(index);
-    /*
     if(index<get_converter_count())
-        return converters[index].initial_power_current_droop_coefficient;
+        return converters[index].droop_coefficient_for_droop_control;
     else
     {
         STEPS& toolkit = get_toolkit();
@@ -1119,7 +1099,7 @@ double VSC_HVDC::get_converter_initial_current_voltage_droop_coefficient(const u
         osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
-    }*/
+    }
 }
 
 double VSC_HVDC::get_converter_nominal_ac_reactive_power_command_in_Mvar(unsigned int index) const
@@ -1794,6 +1774,7 @@ void VSC_HVDC::report() const
     cout<<"get_converter_count():"<<get_converter_count()<<endl;
     cout<<"get_dc_bus_count():"<<get_dc_bus_count()<<endl;
     cout<<"get_dc_line_count():"<<get_dc_line_count()<<endl;
+    cout<<"get_project_status():"<<get_status()<<endl;
     unsigned int ncon=get_converter_count();
     unsigned int nbus=get_dc_bus_count();
     unsigned int ndc_line=get_dc_line_count();
@@ -1802,6 +1783,7 @@ void VSC_HVDC::report() const
         cout<<"get_converter_ac_bus("<<i<<"): "<<get_converter_ac_bus(i)<<endl;
         cout<<"get_converter_status("<<i<<"): "<<get_converter_status(i)<<endl;
         cout<<"get_converter_active_power_operation_mode("<<i<<"): "<<get_converter_active_power_operation_mode(i)<<endl;
+        cout<<"get_converter_dc_voltage_control_priority("<<i<<"): "<<get_converter_dc_voltage_control_priority(i)<<endl;
         cout<<"get_converter_reactive_power_operation_mode("<<i<<"): "<<get_converter_reactive_power_operation_mode(i)<<endl;
         cout<<"get_converter_loss_factor_A_in_kW("<<i<<"): "<<get_converter_loss_factor_A_in_kW(i)<<endl;
         cout<<"get_converter_loss_factor_B_in_kW_per_amp("<<i<<"): "<<get_converter_loss_factor_B_in_kW_per_amp(i)<<endl;
@@ -1815,6 +1797,8 @@ void VSC_HVDC::report() const
         cout<<"get_converter_transformer_impedance_in_pu("<<i<<"): "<<get_converter_transformer_impedance_in_pu(i)<<endl;
         cout<<"get_converter_commutating_impedance_in_ohm("<<i<<"): "<<get_converter_commutating_impedance_in_ohm(i)<<endl;
         cout<<"get_converter_filter_admittance_in_siemens("<<i<<"): "<<get_converter_filter_admittance_in_siemens(i)<<endl;
+        cout<<"get_converter_P_to_AC_bus_in_MW("<<i<<"): "<<get_converter_P_to_AC_bus_in_MW(i)<<endl;
+        cout<<"get_converter_Q_to_AC_bus_in_MVar("<<i<<"): "<<get_converter_Q_to_AC_bus_in_MVar(i)<<endl;
         cout<<"get_converter_Pmax_in_MW("<<i<<"): "<<get_converter_Pmax_in_MW(i)<<endl;
         cout<<"get_converter_Pmin_in_MW("<<i<<"): "<<get_converter_Pmin_in_MW(i)<<endl;
         cout<<"get_converter_Qmax_in_MVar("<<i<<"): "<<get_converter_Qmax_in_MVar(i)<<endl;
@@ -1827,6 +1811,7 @@ void VSC_HVDC::report() const
     for(unsigned int i=0;i!=nbus;++i)
     {
         cout<<"get_dc_bus_number("<<i<<"): "<<get_dc_bus_number(i)<<endl;
+        cout<<"get_dc_bus_Vdc_in_kV("<<i<<"): "<<get_dc_bus_Vdc_in_kV(i)<<endl;
         cout<<"get_dc_bus_name("<<i<<"): "<<get_dc_bus_name(i)<<endl;
         cout<<"get_dc_bus_area("<<i<<"): "<<get_dc_bus_area(i)<<endl;
         cout<<"get_dc_bus_zone("<<i<<"): "<<get_dc_bus_zone(i)<<endl;
@@ -1834,7 +1819,6 @@ void VSC_HVDC::report() const
         cout<<"get_dc_bus_ground_resistance_in_ohm("<<i<<"): "<<get_dc_bus_ground_resistance_in_ohm(i)<<endl;
         cout<<"get_dc_bus_generation_power_in_MW("<<i<<"): "<<get_dc_bus_generation_power_in_MW(i)<<endl;
         cout<<"get_dc_bus_load_power_in_MW("<<i<<"): "<<get_dc_bus_load_power_in_MW(i)<<endl;
-        cout<<"get_dc_bus_Vdc_in_kV("<<i<<"): "<<get_dc_bus_Vdc_in_kV(i)<<endl;
     }
     for(unsigned int i=0;i!=ndc_line;++i)
     {
@@ -2578,7 +2562,7 @@ double VSC_HVDC::solve_Pdc_with_dc_active_power_voltage_droop_control(unsigned i
 {
     double initial_Pdc=get_converter_initial_dc_active_power_reference_in_MW(converter_index);
     double Udcref=get_converter_initial_dc_voltage_reference_in_kV(converter_index);
-    double kdp=get_converter_initial_power_voltage_droop_coefficient(converter_index);
+    double kdp=get_converter_initial_droop_coefficient_for_droop_control(converter_index);
     int beta=get_converter_beta(converter_index);
     unsigned int dc_bus_index=get_dc_bus_index_with_converter_index(converter_index);
     double Vdc=get_dc_bus_Vdc_in_kV(dc_bus_index);
@@ -2599,7 +2583,7 @@ double VSC_HVDC::solve_Pdc_with_dc_current_voltage_droop_control(unsigned int co
     double initial_Pdc=get_converter_initial_dc_current_reference_in_kA(converter_index)*get_converter_initial_dc_voltage_reference_in_kV(converter_index);
     double Udcref=get_converter_initial_dc_voltage_reference_in_kV(converter_index);
     double Idcref=get_converter_initial_dc_current_reference_in_kA(converter_index);
-    double kdi=get_converter_initial_current_voltage_droop_coefficient(converter_index);
+    double kdi=get_converter_initial_droop_coefficient_for_droop_control(converter_index);
     int alpha=get_converter_alpha(converter_index);
     unsigned int dc_bus_index=get_dc_bus_index_with_converter_index(converter_index);
     double Vdc=get_dc_bus_Vdc_in_kV(dc_bus_index);
@@ -2803,8 +2787,8 @@ double VSC_HVDC::calculate_jacobian_matrix_entry(unsigned int k)
     {
         Idi_reference = get_converter_initial_dc_current_reference_in_kA(converter_index);
         Udi_reference = get_converter_initial_dc_voltage_reference_in_kV(converter_index);
-        Kdi = get_converter_initial_current_voltage_droop_coefficient(converter_index);
-        Kpi = get_converter_initial_power_voltage_droop_coefficient(converter_index);
+        Kdi = get_converter_initial_droop_coefficient_for_droop_control(converter_index);
+        Kpi = get_converter_initial_droop_coefficient_for_droop_control(converter_index);
         VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE mode = get_converter_active_power_operation_mode(converter_index);
         if(mode!=VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL and mode!=VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL)
         {
@@ -2912,6 +2896,7 @@ void VSC_HVDC::update_dc_bus_voltage()
         {
             double Vdc = get_dc_bus_Vdc_in_kV(index);
             int i = inphno.get_internal_bus_number_of_physical_bus_number(dcbus);
+            cout<<"Udc_mismatch[i-1]:"<<Udc_mismatch[i-1]<<endl;
             Vdc += Udc_mismatch[i-1];
             set_dc_bus_Vdc_in_kV(index,Vdc);
         }
@@ -3060,7 +3045,7 @@ double VSC_HVDC::get_Pdc_command(unsigned int index) const
     {
         double Idref=get_converter_initial_dc_current_reference_in_kA(index);
         double Udref=get_converter_initial_dc_voltage_reference_in_kV(index);
-        double droop=get_converter_initial_current_voltage_droop_coefficient(index);
+        double droop=get_converter_initial_droop_coefficient_for_droop_control(index);
         double Idc=Idref-(dc_bus_voltage-Udref)/droop;
         double Pdc=dc_bus_voltage*Idc;
         return Pdc;
@@ -3077,14 +3062,12 @@ double VSC_HVDC::get_Pdc_command(unsigned int index) const
 
 double VSC_HVDC::solve_converter_Pac_with_Pdc(unsigned int converter_index)
 {
-
     double Pdc_command = get_converter_Pdc_command_in_MW(converter_index);
     double Pdc0=-Pdc_command;
     double Pac_low = Pdc0*0.95;
     double Pac_high = Pdc0*1.05;
     double Qac = get_converter_Q_to_AC_bus_in_MVar(converter_index);
     BUS *bus_pointer = get_converter_ac_bus_pointer(converter_index);
-    complex<double> Vac=bus_pointer->get_positive_sequence_complex_voltage_in_kV();
     double Pdc_low = calculate_converter_Pdc_with_Pac(converter_index, Pac_low, Qac);
     double Pdc_high = calculate_converter_Pdc_with_Pac(converter_index, Pac_high, Qac);
     //while(true)

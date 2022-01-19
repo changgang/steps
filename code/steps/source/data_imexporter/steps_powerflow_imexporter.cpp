@@ -1995,17 +1995,11 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_basic_data(VSC_HVDC& vsc_hvdc, vector<string
     }
     if(data.size()>0)
     {
-        int mode=get_integer_data(data.front(),"0");
-        if(mode==0)
+        int status=get_integer_data(data.front(),"0");
+        if(status==0)
             vsc_hvdc.set_status(false);
         else
             vsc_hvdc.set_status(true);
-        data.erase(data.begin());
-    }
-    if(data.size()>0)
-    {
-        unsigned int reserve_bus=get_integer_data(data.front(),"0");
-        vsc_hvdc.set_reserve_master_converter_ac_bus(reserve_bus);
         data.erase(data.begin());
     }
     if(data.size()>0)
@@ -2035,15 +2029,21 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
         }
         if(data.size()>0)
         {
+            bool status=get_integer_data(data.front(),"0");
+            vsc_hvdc.set_converter_status(i, status);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
             string type=get_string_data(data.front(),"");
             data.erase(data.begin());
-            if(type=="V_control")
+            if(type=="Vdc_control")
                 vsc_hvdc.set_converter_active_power_operation_mode(i, VSC_DC_VOLTAGE_CONTORL);
-            if(type=="P_control")
+            if(type=="Pac_control")
                 vsc_hvdc.set_converter_active_power_operation_mode(i, VSC_AC_ACTIVE_POWER_CONTORL);
-            if(type=="VP_control")
+            if(type=="VPdc_control")
                 vsc_hvdc.set_converter_active_power_operation_mode(i, VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL);
-            if(type=="VI_control")
+            if(type=="VIdc_control")
                 vsc_hvdc.set_converter_active_power_operation_mode(i, VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL);
             else
             {
@@ -2051,13 +2051,23 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
                 osstream<<"The input control mode "<<type<<" not supported, please check DC control mode."<<endl;
             }
         }
+
+        if(data.size()>0)
+        {
+            int control_priority=get_integer_data(data.front(),"0");
+            cout<<"control_priority:"<<control_priority<<endl;
+            vsc_hvdc.set_converter_dc_voltage_control_priority(i, control_priority);
+            cout<<"get_converter_dc_voltage_control_priority:"<<vsc_hvdc.get_converter_dc_voltage_control_priority(i)<<endl;
+            data.erase(data.begin());
+        }
+
         if(data.size()>0)
         {
             string mode=get_string_data(data.front(),"");
             data.erase(data.begin());
-            if(mode=="V_control")
+            if(mode=="Vac_control")
                 vsc_hvdc.set_converter_reactive_power_operation_mode(i,VSC_AC_VOLTAGE_CONTROL);
-            if(mode=="Q_control")
+            if(mode=="Qac_control")
                 vsc_hvdc.set_converter_reactive_power_operation_mode(i,VSC_AC_REACTIVE_POWER_CONTROL);
             else
             {
@@ -2068,31 +2078,22 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
         }
         if(data.size()>0)
         {
-            double P_Uref=get_double_data(data.front(),"0.0");
+            double Pref=get_double_data(data.front(),"0.0");
+            data.erase(data.begin());
+            if(vsc_hvdc.get_converter_active_power_operation_mode(i)==VSC_AC_ACTIVE_POWER_CONTORL)
+                vsc_hvdc.set_converter_nominal_ac_active_power_command_in_MW(i,Pref);
+            if(vsc_hvdc.get_converter_active_power_operation_mode(i)==VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL)
+                vsc_hvdc.set_converter_initial_dc_active_power_reference_in_MW(i,Pref);
+        }
+        if(data.size()>0)
+        {
+            double Uref=get_double_data(data.front(),"0.0");
             data.erase(data.begin());
             if(vsc_hvdc.get_converter_active_power_operation_mode(i)==VSC_DC_VOLTAGE_CONTORL)
-            {
-                vsc_hvdc.set_converter_nominal_dc_voltage_command_in_kV(i,P_Uref);
-            }
-
-            if(vsc_hvdc.get_converter_active_power_operation_mode(i)==VSC_AC_ACTIVE_POWER_CONTORL)
-            {
-                vsc_hvdc.set_converter_nominal_ac_active_power_command_in_MW(i,P_Uref);
-            }
-
-            if(vsc_hvdc.get_converter_active_power_operation_mode(i)==VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL)
-            {
-                vsc_hvdc.set_converter_initial_dc_active_power_reference_in_MW(i,P_Uref);
-            }
-
-            if(vsc_hvdc.get_converter_active_power_operation_mode(i)==VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL)
-                vsc_hvdc.set_converter_initial_dc_voltage_reference_in_kV(i,P_Uref);
-            else
-            {
-                ostringstream osstream;
-                osstream<<"The input dc control mode not supported, please check DC control mode."<<endl;
-
-            }
+                vsc_hvdc.set_converter_nominal_dc_voltage_command_in_kV(i,Uref);
+            if(vsc_hvdc.get_converter_active_power_operation_mode(i)==VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL
+                 or vsc_hvdc.get_converter_active_power_operation_mode(i)==VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL)
+                vsc_hvdc.set_converter_initial_dc_active_power_reference_in_MW(i,Uref);
         }
 
         if(data.size()>0)
@@ -2100,17 +2101,18 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
             double Iref=get_double_data(data.front(),"0.0");
             data.erase(data.begin());
             if(vsc_hvdc.get_converter_active_power_operation_mode(i)==VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL)
-                vsc_hvdc.set_converter_initial_dc_current_reference_in_kA(i,Iref);
+                vsc_hvdc.set_converter_nominal_dc_voltage_command_in_kV(i,Iref);
         }
 
         if(data.size()>0)
         {
             double droop=get_double_data(data.front(),"0.0");
+            cout<<"droop: "<<droop<<endl;
             data.erase(data.begin());
             if(vsc_hvdc.get_converter_active_power_operation_mode(i)==VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL)
-                vsc_hvdc.set_converter_initial_power_voltage_droop_coefficient(i,droop);
+                vsc_hvdc.set_converter_initial_droop_coefficient_for_droop_control(i,droop);
             if(vsc_hvdc.get_converter_active_power_operation_mode(i)==VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL)
-                vsc_hvdc.set_converter_initial_current_voltage_droop_coefficient(i,droop);
+                vsc_hvdc.set_converter_initial_droop_coefficient_for_droop_control(i,droop);
         }
 
         if(data.size()>0)
@@ -2130,10 +2132,9 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
             {
                 ostringstream osstream;
                 osstream<<"The input ac control mode not supported, please check DC control mode."<<endl;
-
             }
-
         }
+
         if(data.size()>0)
         {
             double Aloss=get_double_data(data.front(),"0.0");
@@ -2187,37 +2188,44 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
         if(data.size()>0)
         {
             double con_voltage=get_double_data(data.front(),"0.0");
+            cout<<"con_voltage:  "<<con_voltage<<endl;
             vsc_hvdc.set_converter_transformer_converter_side_base_voltage_in_kV(i,con_voltage);
             data.erase(data.begin());
         }
         if(data.size()>0)
         {
             double turn_ration=get_double_data(data.front(),"0.0");
+            cout<<"turn_ration:  "<<turn_ration<<endl;
             vsc_hvdc.set_converter_transformer_off_nominal_turn_ratio(i,turn_ration);
             data.erase(data.begin());
         }
         double r=0.0, x=0.0;
         if(data.size()>0)
         {
-            double r=get_double_data(data.front(),"0.0");
+            r=get_double_data(data.front(),"0.0");
+            cout<<"r"<<r<<endl;
             data.erase(data.begin());
         }
         if(data.size()>0)
         {
-            double x=get_double_data(data.front(),"0.0");
+            x=get_double_data(data.front(),"0.0");
+            cout<<"x"<<x<<endl;
             data.erase(data.begin());
         }
-        vsc_hvdc.set_converter_transformer_impedance_in_pu(i, complex<double>(r,x));
+        cout<<"r and x: "<<r<<"  "<<x<<endl;
+        complex <double> z(r,x);
+        cout<<"set_converter_transformer_impedance_in_pu: "<<z<<endl;
+        vsc_hvdc.set_converter_transformer_impedance_in_pu(i, complex <double>(r,x));
 
         r=0.0, x=0.0;
         if(data.size()>0)
         {
-            double r=get_double_data(data.front(),"0.0");
+            r=get_double_data(data.front(),"0.0");
             data.erase(data.begin());
         }
         if(data.size()>0)
         {
-            double x=get_double_data(data.front(),"0.0");
+            x=get_double_data(data.front(),"0.0");
             data.erase(data.begin());
         }
         vsc_hvdc.set_converter_commutating_impedance_in_ohm(i, complex<double>(r,x));
@@ -2225,26 +2233,55 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
         r=0.0, x=0.0;
         if(data.size()>0)
         {
-            double r=get_double_data(data.front(),"0.0");
+            r=get_double_data(data.front(),"0.0");
             data.erase(data.begin());
         }
         if(data.size()>0)
         {
-            double x=get_double_data(data.front(),"0.0");
+            x=get_double_data(data.front(),"0.0");
             data.erase(data.begin());
         }
         vsc_hvdc.set_converter_filter_admittance_in_siemens(i, complex<double>(r,x));
-
         if(data.size()>0)
         {
-            double maxq=get_double_data(data.front(),"0.0");
-            vsc_hvdc.set_converter_Qmax_in_MVar(i,maxq);
+            double P=get_double_data(data.front(),"0.0");
+            vsc_hvdc.set_converter_P_to_AC_bus_in_MW(i,P);
             data.erase(data.begin());
         }
         if(data.size()>0)
         {
-            double minq=get_double_data(data.front(),"0.0");
-            vsc_hvdc.set_converter_Qmin_in_MVar(i,minq);
+            double Pmax=get_double_data(data.front(),"0.0");
+            vsc_hvdc.set_converter_Pmax_in_MW(i,Pmax);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double Pmin=get_double_data(data.front(),"0.0");
+            vsc_hvdc.set_converter_Pmin_in_MW(i,Pmin);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double Qmax=get_double_data(data.front(),"0.0");
+            vsc_hvdc.set_converter_Qmin_in_MVar(i,Qmax);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double Qmin=get_double_data(data.front(),"0.0");
+            vsc_hvdc.set_converter_Pmin_in_MW(i,Qmin);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double Udmax=get_double_data(data.front(),"0.0");
+            vsc_hvdc.set_converter_Qmin_in_MVar(i,Udmax);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double Udmin=get_double_data(data.front(),"0.0");
+            vsc_hvdc.set_converter_Qmin_in_MVar(i,Udmin);
             data.erase(data.begin());
         }
         if(data.size()>0)
@@ -2282,6 +2319,12 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_dc_bus_data(VSC_HVDC& vsc_hvdc, vector<vecto
         {
             int ib=get_integer_data(data.front(),"0");
             vsc_hvdc.set_dc_bus_converter_index_with_ac_bus_number(i,ib);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            int Vdc=get_double_data(data.front(),"0");
+            vsc_hvdc.set_dc_bus_area(i,Vdc);
             data.erase(data.begin());
         }
         if(data.size()>0)

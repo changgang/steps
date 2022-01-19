@@ -45,9 +45,8 @@ class VSC_HVDC : public NONBUS_DEVICE
         void set_converter_nominal_dc_voltage_command_in_kV(const unsigned int index, const double V);
         void set_converter_initial_dc_voltage_reference_in_kV(const unsigned int index, const double V);
         void set_converter_initial_dc_active_power_reference_in_MW(const unsigned int index, const double P);
-        void set_converter_initial_power_voltage_droop_coefficient(const unsigned int index, const double droop);
         void set_converter_initial_dc_current_reference_in_kA(const unsigned int index, const double I);
-        void set_converter_initial_current_voltage_droop_coefficient(const unsigned int index, const double droop);
+        void set_converter_initial_droop_coefficient_for_droop_control(const unsigned int index, const double droop);
 
         void set_converter_nominal_ac_voltage_command_in_pu(const unsigned int index, const double V);
         void set_converter_nominal_ac_reactive_power_command_in_Mvar(const unsigned int index, const double Q);
@@ -125,10 +124,9 @@ class VSC_HVDC : public NONBUS_DEVICE
         double get_converter_nominal_ac_voltage_command_in_kV(unsigned int index) const;
         double get_converter_nominal_ac_voltage_command_in_pu(unsigned int index) const;
         double get_converter_initial_dc_voltage_reference_in_kV(const unsigned int index)const;
-        double get_converter_initial_dc_active_power_reference_in_MW(const unsigned int index)const;
-        double get_converter_initial_power_voltage_droop_coefficient(const unsigned int index)const;
         double get_converter_initial_dc_current_reference_in_kA(const unsigned int index)const;
-        double get_converter_initial_current_voltage_droop_coefficient(const unsigned int index)const;
+        double get_converter_initial_dc_active_power_reference_in_MW(const unsigned int index)const;
+        double get_converter_initial_droop_coefficient_for_droop_control(const unsigned int index)const;
 
         int get_converter_alpha(unsigned int index) const;
         int get_converter_beta(unsigned int index) const;
