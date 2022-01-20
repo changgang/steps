@@ -482,7 +482,7 @@
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	<complex>
 
-1583938871 d:\steps\code\steps\header\data_imexporter\psse_imexporter.h
+1642606233 d:\steps\code\steps\header\data_imexporter\psse_imexporter.h
 	"header/data_imexporter/data_imexporter.h"
 	"header/device/source.h"
 	"header/device/transformer.h"
@@ -549,7 +549,7 @@
 1583938871 d:\steps\code\steps\header\meter\meter_setter.h
 	"header/meter/meter.h"
 
-1642063472 source:d:\steps\code\steps\main_powerflow.cpp
+1642650785 source:d:\steps\code\steps\main_powerflow.cpp
 	<istream>
 	<iostream>
 	"header/power_system_database.h"
@@ -558,7 +558,7 @@
 	"header/basic/utility.h"
 	"header/data_imexporter/psse_imexporter.h"
 
-1642587095 source:d:\steps\code\steps\main_tests.cpp
+1642606233 source:d:\steps\code\steps\main_tests.cpp
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -3474,7 +3474,7 @@
 	<iostream>
 	<cstdio>
 
-1642063472 source:d:\steps\code\steps\source\data_imexporter\psse_powerflow_imexporter.cpp
+1642606233 source:d:\steps\code\steps\source\data_imexporter\psse_powerflow_imexporter.cpp
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
@@ -3513,7 +3513,7 @@
 	<iostream>
 	<cstdio>
 
-1642587095 source:d:\steps\code\steps\source\data_imexporter\steps_powerflow_imexporter.cpp
+1642606233 source:d:\steps\code\steps\source\data_imexporter\steps_powerflow_imexporter.cpp
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
 	"header/device/bus.h"
@@ -3799,7 +3799,7 @@
 	<iostream>
 	<cstdio>
 
-1642431466 source:d:\steps\code\steps\source\device\vsc_hvdc.cpp
+1642650752 source:d:\steps\code\steps\source\device\vsc_hvdc.cpp
 	"header/device/vsc_hvdc.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -3811,7 +3811,7 @@
 	<cstdio>
 	<cmath>
 
-1642588563 d:\steps\code\steps\header\device\vsc_hvdc.h
+1642648486 d:\steps\code\steps\header\device\vsc_hvdc.h
 	"header/device/nonbus_device.h"
 	"header/device/vsc_hvdc_var.h"
 	"header/basic/device_id.h"
@@ -3822,9 +3822,8 @@
 	<complex>
 	<string>
 
-1634637238 d:\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_model.h
+1642606233 d:\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_model.h
 	"header/basic/timer.h"
-	"header/model/hvdc_model/vdcol.h"
 	"header/basic/steps_enum.h"
 	"header/model/model.h"
 	"header/block/integral_block.h"
@@ -3841,7 +3840,7 @@
 	"header/block/saturation_block.h"
 	"header/basic/timer.h"
 
-1642587095 source:d:\steps\code\steps\source\device\vsc_hvdc_test.cpp
+1642606233 source:d:\steps\code\steps\source\device\vsc_hvdc_test.cpp
 	<cmath>
 	"cpptest.h"
 	"header/basic/test_macro.h"
@@ -5792,7 +5791,7 @@
 	<cstdio>
 	<cmath>
 
-1642250024 source:d:\steps\code\steps\source\toolkit\powerflow_solver\powerflow_solver.cpp
+1642652987 source:d:\steps\code\steps\source\toolkit\powerflow_solver\powerflow_solver.cpp
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -12151,4 +12150,40 @@
 	"header/block/integral_block.h"
 	"header/block/saturation_block.h"
 	"header/basic/timer.h"
+
+1642606233 source:d:\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc1.cpp
+	"header/model/vsc_hvdc_model/VSC_HVDC1.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	"header/STEPS.h"
+	<cstdio>
+	<istream>
+	<iostream>
+
+1642606233 d:\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc1.h
+	"header/model/vsc_hvdc_model/VSC_HVDC_MODEL.h"
+	"header/model/vsc_hvdc_model/vsc_station.h"
+	"header/block/first_order_block.h"
+	"header/block/differential_block.h"
+	"header/block/integral_block.h"
+	"header/block/saturation_block.h"
+	"header/basic/timer.h"
+
+1642606233 d:\steps\code\steps\header\model\vsc_hvdc_model\vsc_station.h
+	"header/basic/steps_enum.h"
+	"header/block/block.h"
+	"header/block/pi_block.h"
+	<complex>
+	<string>
+
+1642606233 source:d:\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_model.cpp
+	"header/model/vsc_hvdc_model/vsc_hvdc_model.h"
+	"header/steps_namespace.h"
+	"header/basic/utility.h"
+	<cstdio>
+	<istream>
+	<iostream>
+
+1642606233 source:d:\steps\code\steps\source\model\vsc_hvdc_model\vsc_station.cpp
+	"header/model/vsc_hvdc_model/vsc_station.h"
 

@@ -178,6 +178,9 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int get_dc_line_meter_end_bus(unsigned int index) const;
         double get_dc_line_resistance_in_ohm(unsigned int index) const;
         double get_dc_line_inductance_in_mH(unsigned int index) const;
+        double get_dc_line_current_in_kA(unsigned int index, LINE_SIDE side) const;
+        double get_dc_line_power_in_MW(unsigned int index, LINE_SIDE side) const;
+        double get_dc_line_loss_in_MW(unsigned int index) const;
 
         VSC_HVDC& operator=(const VSC_HVDC& vsc);
 
@@ -248,6 +251,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         void add_load_power_to_raw_bus_power_mismatch();
         void add_converter_dc_power_command_to_raw_bus_power_mismatch();
         double get_converter_dc_power_command_at_dc_bus(unsigned int bus);
+        double get_converter_dc_power_command(unsigned int converter_index);
 
         double solve_Pdc_with_active_power_control_and_reactive_power_control(unsigned int converter_index) const;
         double solve_Pdc_with_active_power_control_and_ac_voltage_control(unsigned int converter_index) const;
@@ -290,7 +294,6 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int get_dc_bus_converter_index_with_dc_bus_number(unsigned int bus) const;
         unsigned int get_dc_bus_index_with_converter_index(unsigned int converter_index) const;
 
-        double get_Pdc_command(unsigned int index) const;
 
         bool converter_index_is_out_of_range_in_function(const unsigned int index, const string& func) const;
         bool dc_bus_index_is_out_of_range_in_function(const unsigned int index, const string& func) const;
