@@ -864,10 +864,6 @@ void POWERFLOW_SOLVER::initialize_bus_voltage()
 
     if(get_flat_start_logic()==true)
     {
-        #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-            set_openmp_number_of_threads(toolkit->get_thread_number());
-            #pragma omp parallel for schedule(static)
-        #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
         for(unsigned int i=0; i<nbus; ++i)
         {
             switch(buses[i]->get_bus_type())
@@ -880,8 +876,21 @@ void POWERFLOW_SOLVER::initialize_bus_voltage()
                 default:
                     buses[i]->set_positive_sequence_voltage_in_pu(buses[i]->get_voltage_to_regulate_in_pu());
             }
-
             buses[i]->set_positive_sequence_angle_in_rad(0.0);
+        }
+    }
+    else
+    {
+        for(unsigned int i=0; i<nbus; ++i)
+        {
+            switch(buses[i]->get_bus_type())
+            {
+                case PQ_TYPE:
+                case OUT_OF_SERVICE:
+                    break;
+                default:
+                    buses[i]->set_positive_sequence_voltage_in_pu(buses[i]->get_voltage_to_regulate_in_pu());
+            }
         }
     }
 
