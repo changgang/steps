@@ -1382,7 +1382,6 @@ void VSC_HVDC_TEST::prepare_5_terminal_vsc_hvdc_converter_without_droop_control(
 
 }
 
-
 void VSC_HVDC_TEST::prepare_7_terminal_vsc_hvdc_converter_ac_buses()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();

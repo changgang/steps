@@ -130,6 +130,7 @@
 #include "header/model/hvdc_model/CDC4T_test.h"
 #include "header/model/hvdc_model/CDC6T_test.h"
 
+#include "header/model/vsc_hvdc_model/VSC_HVDC1_test.h"
 
 #include "header/model/wtg_models/wt_generator_model/wt3g1_test.h"
 #include "header/model/wtg_models/wt_generator_model/wt3g0_test.h"
@@ -334,6 +335,8 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new VDCOL_TEST));
         ts.add(unique_ptr<Test::Suite>(new CDC4T_TEST));
         ts.add(unique_ptr<Test::Suite>(new CDC6T_TEST));
+
+        ts.add(unique_ptr<Test::Suite>(new VSC_HVDC1_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new WT3G1_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3G0_TEST));

@@ -546,26 +546,26 @@ void POWERFLOW_SOLVER::initialize_bus_type()
     initialize_SLACK_bus_type();
 
     unsigned int nbus = buses.size();
-    cout<<"BUS Types after initialized by POWERFLOW_SOLVER::"<<__FUNCTION__<<"()"<<endl;
+    //cout<<"BUS Types after initialized by POWERFLOW_SOLVER::"<<__FUNCTION__<<"()"<<endl;
     for(unsigned int i=0; i!=nbus; ++i)
     {
         BUS* bus = buses[i];
         BUS_TYPE type = bus->get_bus_type();
-        cout<<bus->get_bus_number();
+        //cout<<bus->get_bus_number();
         switch(type)
         {
             case PQ_TYPE:
-                cout<<"PQ"<<endl;
+                //cout<<"PQ"<<endl;
                 break;
             case PV_TYPE:
-                cout<<"PV"<<endl;
+                //cout<<"PV"<<endl;
                 break;
             case SLACK_TYPE:
-                cout<<"SLACK"<<endl;
+                //cout<<"SLACK"<<endl;
                 break;
             case OUT_OF_SERVICE:
             default:
-                cout<<"OUT"<<endl;
+                //cout<<"OUT"<<endl;
                 break;
         }
     }
@@ -593,17 +593,17 @@ void POWERFLOW_SOLVER::initialize_PQ_bus_type()
             unsigned int nvsc = vscs.size();
             for(unsigned int j=0; j!=nvsc; ++j)
             {
-                cout<<__FUNCTION__<<": "<<bus<<endl;
+                //cout<<__FUNCTION__<<": "<<bus<<endl;
                 vsc = vscs[j];
                 if(vsc->get_status()==true)
                 {
                     unsigned int index = vsc->get_converter_index_with_ac_bus(bus);
-                    cout<<"converter index: "<<index<<endl;
-                    cout<<"converter status: "<<vsc->get_converter_status(index)<<endl;
+                    //cout<<"converter index: "<<index<<endl;
+                    //cout<<"converter status: "<<vsc->get_converter_status(index)<<endl;
                     if(vsc->get_converter_status(index) == true)
                     {
-                        cout<<"converter Q mode: "<<vsc->get_converter_reactive_power_operation_mode(index)<<endl;
-                        cout<<"converter P mode: "<<vsc->get_converter_active_power_operation_mode(index)<<endl;
+                        //cout<<"converter Q mode: "<<vsc->get_converter_reactive_power_operation_mode(index)<<endl;
+                        //cout<<"converter P mode: "<<vsc->get_converter_active_power_operation_mode(index)<<endl;
                         if(vsc->get_converter_reactive_power_operation_mode(index)==VSC_AC_VOLTAGE_CONTROL)
                         {
                             if(vsc->get_converter_active_power_operation_mode(index)==VSC_AC_VOLTAGE_ANGLE_CONTROL)
@@ -612,9 +612,9 @@ void POWERFLOW_SOLVER::initialize_PQ_bus_type()
                             {
                                 if(buses[i]->get_bus_type()!=SLACK_TYPE)
                                 {
-                                    cout<<"bus type is not slack, change to PV"<<endl;
+                                    //cout<<"bus type is not slack, change to PV"<<endl;
                                     buses[i]->set_bus_type(PV_TYPE);
-                                    cout<<buses[i]->get_bus_type()<<endl;
+                                    //cout<<buses[i]->get_bus_type()<<endl;
                                 }
                             }
                         }
@@ -3006,8 +3006,12 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
                 {
                     unsigned int ac_bus = vsc_hvdcs[i]->get_converter_ac_bus_number_with_dc_bus_index(j);
                     double vac = 0.0;
-                    if(ac_bus!=0) vac = psdb.get_bus_positive_sequence_voltage_in_pu(ac_bus);
-                    unsigned int converter_index = vsc_hvdcs[i]->get_converter_index_with_ac_bus(ac_bus);
+                    unsigned int converter_index = INDEX_NOT_EXIST;
+                    if(ac_bus!=0)
+                    {
+                        vac = psdb.get_bus_positive_sequence_voltage_in_pu(ac_bus);
+                        converter_index = vsc_hvdcs[i]->get_converter_index_with_ac_bus(ac_bus);
+                    }
 
                     snprintf(buffer, 1000, "%u,\"%s\",%u,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
                                 vsc_hvdcs[i]->get_dc_bus_number(j),

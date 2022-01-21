@@ -192,10 +192,10 @@ unsigned int DYNAMIC_MODEL_DATABASE::get_model_size(MODEL* model) const
     if(model_name=="PUFLS") return sizeof(PUFLS);
 
 
-
     if(model_name=="CDC4T") return sizeof(CDC4T);
     if(model_name=="CDC6T") return sizeof(CDC6T);
 
+    if(model_name=="VSC_HVDC1") return sizeof(VSC_HVDC1);
 
     if(model_name=="WT3G0") return sizeof(WT3G0);
     if(model_name=="WT3G1") return sizeof(WT3G1);

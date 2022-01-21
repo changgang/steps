@@ -127,9 +127,6 @@ class VSC_HVDC : public NONBUS_DEVICE
         double get_converter_initial_dc_active_power_reference_in_MW(const unsigned int index)const;
         double get_converter_initial_droop_coefficient_for_droop_control(const unsigned int index)const;
 
-        int get_converter_alpha(unsigned int index) const;
-        int get_converter_beta(unsigned int index) const;
-
         double get_converter_nominal_ac_reactive_power_command_in_Mvar(unsigned int index) const;
         double get_converter_nominal_reactive_power_command_in_pu(unsigned int index) const;
 
@@ -239,6 +236,8 @@ class VSC_HVDC : public NONBUS_DEVICE
 
         int get_alpha_of_dc_bus_number(unsigned int bus);
         int get_beta_of_dc_bus_number(unsigned int bus);
+        int get_converter_alpha(unsigned int index) const;
+        int get_converter_beta(unsigned int index) const;
 
         void initialize_alpha_vector();
         void initialize_beta_vector();

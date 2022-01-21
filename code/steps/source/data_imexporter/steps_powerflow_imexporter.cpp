@@ -1960,7 +1960,6 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_with_data(vector<vector<string> > vsc_hvdc_d
     add_vsc_hvdc_converter_data(vsc_hvdc, vsc_hvdc_converter_data);
     add_vsc_hvdc_dc_bus_data(vsc_hvdc, vsc_hvdc_dc_bus_data);
     add_vsc_hvdc_dc_line_data(vsc_hvdc, vsc_hvdc_dc_line_data);
-
     while(psdb.is_vsc_hvdc_exist(vsc_hvdc.get_device_id()))
         vsc_hvdc.set_identifier(vsc_hvdc.get_identifier()+"#");
     psdb.append_vsc_hvdc(vsc_hvdc);
@@ -2045,6 +2044,8 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
                 vsc_hvdc.set_converter_active_power_operation_mode(i, VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL);
             if(type=="VIdc_control")
                 vsc_hvdc.set_converter_active_power_operation_mode(i, VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL);
+            if(type=="angle_control")
+                vsc_hvdc.set_converter_active_power_operation_mode(i, VSC_AC_VOLTAGE_ANGLE_CONTROL);
             else
             {
                 ostringstream osstream;
@@ -2089,8 +2090,12 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
             if(vsc_hvdc.get_converter_active_power_operation_mode(i)==VSC_DC_VOLTAGE_CONTORL)
                 vsc_hvdc.set_converter_nominal_dc_voltage_command_in_kV(i,Uref);
             if(vsc_hvdc.get_converter_active_power_operation_mode(i)==VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL
-                 or vsc_hvdc.get_converter_active_power_operation_mode(i)==VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL)
-                vsc_hvdc.set_converter_initial_dc_active_power_reference_in_MW(i,Uref);
+                or vsc_hvdc.get_converter_active_power_operation_mode(i)==VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL)
+            {
+                cout<<"Uref:  "<<Uref<<endl;
+                vsc_hvdc.set_converter_initial_dc_voltage_reference_in_kV(i,Uref);
+            }
+
         }
 
         if(data.size()>0)
@@ -2098,7 +2103,7 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
             double Iref=get_double_data(data.front(),"0.0");
             data.erase(data.begin());
             if(vsc_hvdc.get_converter_active_power_operation_mode(i)==VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL)
-                vsc_hvdc.set_converter_nominal_dc_voltage_command_in_kV(i,Iref);
+                vsc_hvdc.set_converter_initial_dc_current_reference_in_kA(i,Iref);
         }
 
         if(data.size()>0)

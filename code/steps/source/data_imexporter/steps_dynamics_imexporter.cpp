@@ -155,6 +155,8 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="CDC4T") { add_CDC4T_model(data); return;}
     if(model_name=="CDC6T") { add_CDC6T_model(data); return;}
 
+    if(model_name=="VSC_HVDC1") { add_VSCHVDC1_model(data); return;}
+
     if(model_name=="WT3G1") { add_WT3G1_model(data); return;}
     if(model_name=="WT3G0") { add_WT3G0_model(data); return;}
     if(model_name=="WT3G2") { add_WT3G2_model(data); return;}
@@ -1564,7 +1566,6 @@ void STEPS_IMEXPORTER::add_CDC4T_model(vector<string>& data)
     }
 }
 
-
 void STEPS_IMEXPORTER::add_CDC6T_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "CDC6T")
@@ -1593,6 +1594,38 @@ void STEPS_IMEXPORTER::add_CDC6T_model(vector<string>& data)
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
+}
+
+void STEPS_IMEXPORTER::add_VSCHVDC1_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "VSC_HVDC1")
+        return;
+
+    if(data.size()<2)
+        return;
+
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
+    DEVICE_ID did = get_hvdc_device_id_from_string_vector(data);
+
+    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(did);
+    /*
+    if(vsc_hvdc != NULL)
+    {
+        VSC_HVDC1 model(toolkit);
+        model.set_device_id(did);
+        bool successful = model.setup_model_with_steps_string_vector(data);
+        if(successful)
+            dmdb.add_model(&model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid VSC_HVDC1 model is built, but will not be set for "<<vsc_hvdc->get_compound_device_name();
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    */
 }
 
 void STEPS_IMEXPORTER::add_WT3G1_model(vector<string>& data)

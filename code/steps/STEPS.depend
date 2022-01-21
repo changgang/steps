@@ -6491,7 +6491,7 @@
 	"header/model/model.h"
 	"header/block/integral_block.h"
 
-1642600856 e:\users\zma\desktop\steps\code\steps\header\device\vsc_hvdc.h
+1642753235 e:\users\zma\desktop\steps\code\steps\header\device\vsc_hvdc.h
 	"header/device/nonbus_device.h"
 	"header/device/vsc_hvdc_var.h"
 	"header/basic/device_id.h"
@@ -6720,7 +6720,7 @@
 1641793061 e:\users\zma\desktop\steps\code\steps\header\meter\meter_setter.h
 	"header/meter/meter.h"
 
-1642603189 source:e:\users\zma\desktop\steps\code\steps\main_powerflow.cpp
+1642774084 source:e:\users\zma\desktop\steps\code\steps\main_powerflow.cpp
 	<istream>
 	<iostream>
 	"header/power_system_database.h"
@@ -6729,7 +6729,7 @@
 	"header/basic/utility.h"
 	"header/data_imexporter/psse_imexporter.h"
 
-1642599049 source:e:\users\zma\desktop\steps\code\steps\main_tests.cpp
+1642679716 source:e:\users\zma\desktop\steps\code\steps\main_tests.cpp
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -6832,6 +6832,7 @@
 	"header/model/hvdc_model/vdcol_test.h"
 	"header/model/hvdc_model/CDC4T_test.h"
 	"header/model/hvdc_model/CDC6T_test.h"
+	"header/model/vsc_hvdc_model/VSC_HVDC1_test.h"
 	"header/model/wtg_models/wt_generator_model/wt3g1_test.h"
 	"header/model/wtg_models/wt_generator_model/wt3g0_test.h"
 	"header/model/wtg_models/wt_aerodynamic_model/aerd0_test.h"
@@ -7245,7 +7246,7 @@
 	"header/data_imexporter/steps_imexporter.h"
 	"header/STEPS.h"
 
-1641865365 e:\users\zma\desktop\steps\code\steps\header\data_imexporter\steps_imexporter.h
+1642679716 e:\users\zma\desktop\steps\code\steps\header\data_imexporter\steps_imexporter.h
 	"header/data_imexporter/data_imexporter.h"
 	"header/device/source.h"
 	"header/device/transformer.h"
@@ -8356,7 +8357,7 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/model/all_supported_models.h"
 
-1641793061 e:\users\zma\desktop\steps\code\steps\header\model\all_supported_models.h
+1642729928 e:\users\zma\desktop\steps\code\steps\header\model\all_supported_models.h
 	"header/model/sg_models/sync_generator_model/sync_generator_models.h"
 	"header/model/sg_models/compensator_model/compensator_models.h"
 	"header/model/sg_models/exciter_model/exciter_models.h"
@@ -8367,6 +8368,7 @@
 	"header/model/load_relay_model/load_voltage_relay_models.h"
 	"header/model/load_relay_model/load_frequency_relay_models.h"
 	"header/model/hvdc_model/hvdc_models.h"
+	"header/model/vsc_hvdc_model/vsc_hvdc_models.h"
 	"header/model/wtg_models/wt_generator_model/wt_generator_models.h"
 	"header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_models.h"
 	"header/model/wtg_models/wt_electrical_model/wt_electrical_models.h"
@@ -9729,7 +9731,7 @@
 	<iostream>
 	<algorithm>
 
-1641793062 source:e:\users\zma\desktop\steps\code\steps\source\data_imexporter\steps_dynamics_imexporter.cpp
+1642732709 source:e:\users\zma\desktop\steps\code\steps\source\data_imexporter\steps_dynamics_imexporter.cpp
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -9751,7 +9753,7 @@
 	<iostream>
 	<cstdio>
 
-1642599552 source:e:\users\zma\desktop\steps\code\steps\source\data_imexporter\steps_powerflow_imexporter.cpp
+1642756676 source:e:\users\zma\desktop\steps\code\steps\source\data_imexporter\steps_powerflow_imexporter.cpp
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
 	"header/device/bus.h"
@@ -10149,7 +10151,7 @@
 	<iostream>
 	<cstdio>
 
-1642602880 source:e:\users\zma\desktop\steps\code\steps\source\device\vsc_hvdc.cpp
+1642776091 source:e:\users\zma\desktop\steps\code\steps\source\device\vsc_hvdc.cpp
 	"header/device/vsc_hvdc.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -10161,7 +10163,7 @@
 	<cstdio>
 	<cmath>
 
-1642593559 source:e:\users\zma\desktop\steps\code\steps\source\device\vsc_hvdc_test.cpp
+1642749813 source:e:\users\zma\desktop\steps\code\steps\source\device\vsc_hvdc_test.cpp
 	<cmath>
 	"cpptest.h"
 	"header/basic/test_macro.h"
@@ -10206,7 +10208,7 @@
 	<iostream>
 	<cstdio>
 
-1641793062 source:e:\users\zma\desktop\steps\code\steps\source\dynamic_model_database.cpp
+1642679716 source:e:\users\zma\desktop\steps\code\steps\source\dynamic_model_database.cpp
 	"header/dynamic_model_database.h"
 	"header/STEPS.h"
 	"header/steps_namespace.h"
@@ -12102,7 +12104,7 @@
 	<cstdio>
 	<cmath>
 
-1642603103 source:e:\users\zma\desktop\steps\code\steps\source\toolkit\powerflow_solver\powerflow_solver.cpp
+1642769781 source:e:\users\zma\desktop\steps\code\steps\source\toolkit\powerflow_solver\powerflow_solver.cpp
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -12133,7 +12135,7 @@
 	<complex>
 	<string>
 
-1642603944 source:e:\users\zma\desktop\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc1.cpp
+1642732515 source:e:\users\zma\desktop\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc1.cpp
 	"header/model/vsc_hvdc_model/VSC_HVDC1.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -12142,7 +12144,7 @@
 	<istream>
 	<iostream>
 
-1641260224 e:\users\zma\desktop\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc1.h
+1642731670 e:\users\zma\desktop\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc1.h
 	"header/model/vsc_hvdc_model/VSC_HVDC_MODEL.h"
 	"header/model/vsc_hvdc_model/vsc_station.h"
 	"header/block/first_order_block.h"
@@ -12150,6 +12152,8 @@
 	"header/block/integral_block.h"
 	"header/block/saturation_block.h"
 	"header/basic/timer.h"
+
+1642604009 ated upstream
 
 1642606233 source:d:\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc1.cpp
 	"header/model/vsc_hvdc_model/VSC_HVDC1.h"
@@ -12177,6 +12181,10 @@
 	<string>
 
 1642606233 source:d:\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_model.cpp
+
+1642604009 source:e:\users\zma\desktop\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_model.cpp
+
+1642606233 shed changes
 	"header/model/vsc_hvdc_model/vsc_hvdc_model.h"
 	"header/steps_namespace.h"
 	"header/basic/utility.h"
@@ -12186,4 +12194,13 @@
 
 1642606233 source:d:\steps\code\steps\source\model\vsc_hvdc_model\vsc_station.cpp
 	"header/model/vsc_hvdc_model/vsc_station.h"
+
+1642606233 del/vsc_hvdc_model/vsc_station.h"
+
+1642679716 e:\users\zma\desktop\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc1_test.h
+
+1641259587 e:\users\zma\desktop\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_models.h
+	"header/model/vsc_hvdc_model/VSC_HVDC1.h"
+
+1642679716 source:e:\users\zma\desktop\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_model_test.cpp
 

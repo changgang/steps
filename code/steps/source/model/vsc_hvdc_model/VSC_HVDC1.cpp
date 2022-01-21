@@ -36,6 +36,107 @@ void VSC_HVDC1::copy_from_const_model(const VSC_HVDC1& model)
 
     clear();
 
+    unsigned int n_vsc = model.get_vsc_stations_count();
+    this->set_vsc_stations_count(n_vsc);
+    for(unsigned int i=0; i!=n_vsc; ++i)
+    {
+        unsigned int converter_bus = model.get_converter_bus(i);
+        unsigned int active_control_mode = model.get_converter_active_control_mode(i);
+        unsigned int reactive_control_mode = model.get_converter_reactive_control_mode(i);
+        this->set_converter_bus(i, converter_bus);
+        this->set_converter_active_control_mode(i, active_control_mode);
+        this->set_converter_reactive_control_mode(i, reactive_control_mode);
+        if(active_control_mode==1)  //1-dc_voltage_control  2-active_power_control
+        {
+            if(reactive_control_mode==1)  //1-ac_voltage_control 2-reactive_power_control
+            {
+                double kp_ud = get_converter_dc_voltage_kpud(i);
+                double Ti_ud = get_converter_dc_voltage_control_T_in_s(i);
+                double max_ud = get_converter_dc_voltage_Umax(i);
+                double min_ud = get_converter_dc_voltage_Umin(i);
+                double kp_uc = get_converter_dc_voltage_kpuc(i);
+                double Ti_uc = get_converter_ac_voltage_control_T_in_s(i);
+                double max_uc = get_converter_ac_voltage_Umax(i);
+                double min_uc = get_converter_dc_voltage_Umin(i);
+                double Ceq = get_dc_voltage_ceq(i);
+                this->set_converter_dc_voltage_kpud(i,kp_ud);
+                this->set_converter_dc_voltage_control_T_in_s(i,Ti_ud);
+                this->set_converter_dc_voltage_Umax(i,max_ud);
+                this->set_converter_dc_voltage_Umin(i,min_ud);
+                this->set_converter_dc_voltage_kpuc(i,kp_uc);
+                this->set_converter_ac_voltage_control_T_in_s(i,Ti_uc);
+                this->set_converter_ac_voltage_Umax(i,max_uc);
+                this->set_converter_dc_voltage_Umin(i,max_uc);
+                this->set_dc_voltage_ceq(i,Ceq);
+            }
+            if(reactive_control_mode==2)
+            {
+                double kp_ud = get_converter_dc_voltage_kpud(i);
+                double Ti_ud = get_converter_dc_voltage_control_T_in_s(i);
+                double max_ud = get_converter_dc_voltage_Umax(i);
+                double min_ud = get_converter_dc_voltage_Umin(i);
+                double kp_Q = get_converter_dc_voltage_kpuc(i);
+                double Ti_Q = get_converter_ac_voltage_control_T_in_s(i);
+                double max_Q = get_converter_ac_voltage_Umax(i);
+                double min_Q = get_converter_dc_voltage_Umin(i);
+                double Ceq = get_dc_voltage_ceq(i);
+                set_converter_dc_voltage_kpud(i,kp_ud);
+                set_converter_dc_voltage_control_T_in_s(i,Ti_ud);
+                set_converter_dc_voltage_Umax(i,max_ud);
+                set_converter_dc_voltage_Umin(i,min_ud);
+                set_converter_dc_voltage_kpuc(i,kp_Q);
+                set_converter_ac_voltage_control_T_in_s(i,Ti_Q);
+                set_converter_ac_voltage_Umax(i,max_Q);
+                set_converter_dc_voltage_Umin(i,min_Q);
+                this->set_dc_voltage_ceq(i,Ceq);
+            }
+        }
+        if(active_control_mode==2)
+        {
+            if(reactive_control_mode==1)
+            {
+                double kp_P = get_converter_active_power_kpp(i);
+                double Ti_P = get_converter_active_power_control_T_in_s(i);
+                double max_P = get_converter_active_power_Pmax_in_pu(i);
+                double min_P = get_converter_active_power_Pmin_in_pu(i);
+                double kp_Q = get_converter_reactive_power_kpq(i);
+                double Ti_Q = get_converter_reactive_power_control_T_in_s(i);
+                double max_Q = get_converter_reactive_power_Qmax_in_pu(i);
+                double min_Q = get_converter_reactive_power_Qmin_in_pu(i);
+                double Ceq = get_dc_voltage_ceq(i);
+                this->set_converter_active_power_kpp(i,kp_P);
+                this->set_converter_active_power_control_T_in_s(i,Ti_P);
+                this->set_converter_active_power_Pmax_in_pu(i,max_P);
+                this->set_converter_active_power_Pmin_in_pu(i,min_P);
+                this->set_converter_reactive_power_kpq(i,kp_Q);
+                this->set_converter_reactive_power_control_T_in_s(i,Ti_Q);
+                this->set_converter_reactive_power_Qmax_in_pu(i,max_Q);
+                this->set_converter_reactive_power_Qmin_in_pu(i,min_Q);
+                this->set_dc_voltage_ceq(i,Ceq);
+            }
+            if(reactive_control_mode==2)
+            {
+                double kp_P = get_converter_dc_voltage_kpud(i);
+                double Ti_P = get_converter_dc_voltage_control_T_in_s(i);
+                double max_P = get_converter_dc_voltage_Umax(i);
+                double min_P = get_converter_dc_voltage_Umin(i);
+                double kp_Q = get_converter_dc_voltage_kpuc(i);
+                double Ti_Q = get_converter_ac_voltage_control_T_in_s(i);
+                double max_Q = get_converter_ac_voltage_Umax(i);
+                double min_Q = get_converter_dc_voltage_Umin(i);
+                double Ceq = get_dc_voltage_ceq(i);
+                set_converter_dc_voltage_kpud(i,kp_P);
+                set_converter_dc_voltage_control_T_in_s(i,Ti_P);
+                set_converter_dc_voltage_Umax(i,max_P);
+                set_converter_dc_voltage_Umin(i,min_P);
+                set_converter_dc_voltage_kpuc(i,kp_Q);
+                set_converter_ac_voltage_control_T_in_s(i,Ti_Q);
+                set_converter_ac_voltage_Umax(i,max_Q);
+                set_converter_dc_voltage_Umin(i,min_Q);
+            }
+        }
+    }
+
 }
 
 VSC_HVDC1::~VSC_HVDC1()
@@ -194,7 +295,7 @@ void VSC_HVDC1::set_dc_voltage_ceq(unsigned int index, double ceq)
     vsc_stations[index].dc_voltage_block.set_T_in_s(ceq);
 }
 
-unsigned int VSC_HVDC1::get_converter_bus(unsigned int index)
+unsigned int VSC_HVDC1::get_converter_bus(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].converter_bus;
@@ -208,7 +309,7 @@ unsigned int VSC_HVDC1::get_converter_bus(unsigned int index)
     }
 }
 
-unsigned int VSC_HVDC1::get_converter_active_control_mode(unsigned int index)
+unsigned int VSC_HVDC1::get_converter_active_control_mode(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].active_power_control_mode;
@@ -222,7 +323,7 @@ unsigned int VSC_HVDC1::get_converter_active_control_mode(unsigned int index)
     }
 }
 
-unsigned int VSC_HVDC1::get_converter_reactive_control_mode(unsigned int index)
+unsigned int VSC_HVDC1::get_converter_reactive_control_mode(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].reactive_power_control_mode;
@@ -236,7 +337,7 @@ unsigned int VSC_HVDC1::get_converter_reactive_control_mode(unsigned int index)
     }
 }
 
-double VSC_HVDC1::get_converter_active_power_control_T_in_s(unsigned int index)
+double VSC_HVDC1::get_converter_active_power_control_T_in_s(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].active_power_control_block.get_Ki();
@@ -250,7 +351,7 @@ double VSC_HVDC1::get_converter_active_power_control_T_in_s(unsigned int index)
     }
 }
 
-double VSC_HVDC1::get_converter_active_power_Pmax_in_pu(unsigned int index)
+double VSC_HVDC1::get_converter_active_power_Pmax_in_pu(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].active_power_control_block.get_upper_limit();
@@ -264,7 +365,7 @@ double VSC_HVDC1::get_converter_active_power_Pmax_in_pu(unsigned int index)
     }
 }
 
-double VSC_HVDC1::get_converter_active_power_Pmin_in_pu(unsigned int index)
+double VSC_HVDC1::get_converter_active_power_Pmin_in_pu(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].active_power_control_block.get_lower_limit();
@@ -278,7 +379,7 @@ double VSC_HVDC1::get_converter_active_power_Pmin_in_pu(unsigned int index)
     }
 }
 
-double VSC_HVDC1::get_converter_active_power_kpp(unsigned int index)
+double VSC_HVDC1::get_converter_active_power_kpp(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].active_power_control_block.get_Kp();
@@ -292,7 +393,7 @@ double VSC_HVDC1::get_converter_active_power_kpp(unsigned int index)
     }
 }
 
-double VSC_HVDC1::get_converter_reactive_power_control_T_in_s(unsigned int index)
+double VSC_HVDC1::get_converter_reactive_power_control_T_in_s(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].reactive_power_control_block.get_Ki();
@@ -306,7 +407,7 @@ double VSC_HVDC1::get_converter_reactive_power_control_T_in_s(unsigned int index
     }
 }
 
-double VSC_HVDC1::get_converter_reactive_power_Qmax_in_pu(unsigned int index)
+double VSC_HVDC1::get_converter_reactive_power_Qmax_in_pu(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].reactive_power_control_block.get_upper_limit();
@@ -320,7 +421,7 @@ double VSC_HVDC1::get_converter_reactive_power_Qmax_in_pu(unsigned int index)
     }
 }
 
-double VSC_HVDC1::get_converter_reactive_power_Qmin_in_pu(unsigned int index)
+double VSC_HVDC1::get_converter_reactive_power_Qmin_in_pu(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].reactive_power_control_block.get_lower_limit();
@@ -334,7 +435,7 @@ double VSC_HVDC1::get_converter_reactive_power_Qmin_in_pu(unsigned int index)
     }
 }
 
-double VSC_HVDC1::get_converter_reactive_power_kpq(unsigned int index)
+double VSC_HVDC1::get_converter_reactive_power_kpq(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].reactive_power_control_block.get_Kp();
@@ -348,7 +449,7 @@ double VSC_HVDC1::get_converter_reactive_power_kpq(unsigned int index)
     }
 }
 
-double VSC_HVDC1::get_converter_dc_voltage_control_T_in_s(unsigned int index)
+double VSC_HVDC1::get_converter_dc_voltage_control_T_in_s(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].ud_voltage_control_block.get_Ki();
@@ -362,7 +463,7 @@ double VSC_HVDC1::get_converter_dc_voltage_control_T_in_s(unsigned int index)
     }
 }
 
-double VSC_HVDC1::get_converter_dc_voltage_Umax(unsigned int index)
+double VSC_HVDC1::get_converter_dc_voltage_Umax(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].ud_voltage_control_block.get_upper_limit();
@@ -376,7 +477,7 @@ double VSC_HVDC1::get_converter_dc_voltage_Umax(unsigned int index)
     }
 }
 
-double VSC_HVDC1::get_converter_dc_voltage_Umin(unsigned int index)
+double VSC_HVDC1::get_converter_dc_voltage_Umin(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].ud_voltage_control_block.get_lower_limit();
@@ -390,7 +491,7 @@ double VSC_HVDC1::get_converter_dc_voltage_Umin(unsigned int index)
     }
 }
 
-double VSC_HVDC1::get_converter_dc_voltage_kpud(unsigned int index)
+double VSC_HVDC1::get_converter_dc_voltage_kpud(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].ud_voltage_control_block.get_Kp();
@@ -404,7 +505,7 @@ double VSC_HVDC1::get_converter_dc_voltage_kpud(unsigned int index)
     }
 }
 
-double VSC_HVDC1::get_converter_ac_voltage_control_T_in_s(unsigned int index)
+double VSC_HVDC1::get_converter_ac_voltage_control_T_in_s(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].ac_voltage_control_block.get_Ki();
@@ -418,7 +519,7 @@ double VSC_HVDC1::get_converter_ac_voltage_control_T_in_s(unsigned int index)
     }
 }
 
-double VSC_HVDC1::get_converter_ac_voltage_Umax(unsigned int index)
+double VSC_HVDC1::get_converter_ac_voltage_Umax(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].ac_voltage_control_block.get_upper_limit();
@@ -432,7 +533,7 @@ double VSC_HVDC1::get_converter_ac_voltage_Umax(unsigned int index)
     }
 }
 
-double VSC_HVDC1::get_converter_ac_voltage_Umin(unsigned int index)
+double VSC_HVDC1::get_converter_ac_voltage_Umin(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].ac_voltage_control_block.get_lower_limit();
@@ -446,7 +547,7 @@ double VSC_HVDC1::get_converter_ac_voltage_Umin(unsigned int index)
     }
 }
 
-double VSC_HVDC1::get_converter_dc_voltage_kpuc(unsigned int index)
+double VSC_HVDC1::get_converter_dc_voltage_kpuc(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].ac_voltage_control_block.get_Kp();
@@ -460,7 +561,7 @@ double VSC_HVDC1::get_converter_dc_voltage_kpuc(unsigned int index)
     }
 }
 
-double VSC_HVDC1::get_dc_voltage_ceq(unsigned int index)
+double VSC_HVDC1::get_dc_voltage_ceq(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].dc_voltage_block.get_T_in_s();
@@ -796,7 +897,7 @@ void VSC_HVDC1::check()
 void VSC_HVDC1::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_psse_string();
+    osstream<<get_standard_psse_string(false);
     STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -806,9 +907,13 @@ void VSC_HVDC1::save()
     ;
 }
 
-string VSC_HVDC1::get_standard_psse_string() const
+string VSC_HVDC1::get_standard_psse_string(bool export_internal_bus_number) const
 {
+    ostringstream osstream;
 
+    osstream<<setw(16)<<"dcname"<<", "
+            <<setw(10)<<"model_name"<<", ";
+    return osstream.str();
 }
 
 

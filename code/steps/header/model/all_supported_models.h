@@ -22,6 +22,8 @@
 
 #include "header/model/hvdc_model/hvdc_models.h"
 
+#include "header/model/vsc_hvdc_model/vsc_hvdc_models.h"
+
 #include "header/model/wtg_models/wt_generator_model/wt_generator_models.h"
 
 #include "header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_models.h"
