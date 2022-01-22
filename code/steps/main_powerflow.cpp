@@ -12,7 +12,7 @@ int main()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100000);
     PSSE_IMEXPORTER importer(default_toolkit);
-    importer.load_powerflow_data("../../../bench/ieee57_with_7_terminal_vsc_without_current_control.raw");
+    importer.load_powerflow_data("../../../bench/ieee57_with_7_terminal_vsc.raw");
 
 
     POWERFLOW_SOLVER solver(default_toolkit);

@@ -18,10 +18,12 @@ class VSC_MODEL_VAR
 
     unsigned int converter_bus;
     BUS* converter_busptr;
-    unsigned int active_power_control_mode;
-    unsigned int reactive_power_control_mode;
+    VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE active_power_control_mode;
+    VSC_HVDC_CONVERTER_REACTIVE_POWER_CONTROL_MODE reactive_power_control_mode;
     PI_BLOCK active_power_control_block;
     PI_BLOCK reactive_power_control_block;
+    //PI_BLOCK active_voltage_control_block;
+    //PI_BLOCK voltage_current_control_block;
     PI_BLOCK ac_voltage_control_block;
     PI_BLOCK ud_voltage_control_block;
     INTEGRAL_BLOCK dc_voltage_block;

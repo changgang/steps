@@ -1610,7 +1610,6 @@ void STEPS_IMEXPORTER::add_VSCHVDC1_model(vector<string>& data)
     DEVICE_ID did = get_hvdc_device_id_from_string_vector(data);
 
     VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(did);
-
     if(vsc_hvdc != NULL)
     {
         //here use 'new' create pointer, directly set up model for VSC-HVDC
@@ -1627,6 +1626,7 @@ void STEPS_IMEXPORTER::add_VSCHVDC1_model(vector<string>& data)
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
+
 }
 
 void STEPS_IMEXPORTER::add_WT3G1_model(vector<string>& data)

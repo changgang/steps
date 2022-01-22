@@ -13,12 +13,12 @@ using namespace std;
 
 VSC_HVDC::VSC_HVDC(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
 {
-    mode = NULL;
+    //mode = NULL;
     clear();
 }
 VSC_HVDC::VSC_HVDC(const VSC_HVDC& vsc) : NONBUS_DEVICE(vsc.get_toolkit())
 {
-    mode = NULL;
+    //mode = NULL;
     clear();
 
     copy_from_const_vsc(vsc);

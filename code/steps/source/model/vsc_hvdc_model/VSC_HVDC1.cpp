@@ -41,8 +41,8 @@ void VSC_HVDC1::copy_from_const_model(const VSC_HVDC1& model)
     for(unsigned int i=0; i!=n_vsc; ++i)
     {
         unsigned int converter_bus = model.get_converter_bus(i);
-        unsigned int active_control_mode = model.get_converter_active_control_mode(i);
-        unsigned int reactive_control_mode = model.get_converter_reactive_control_mode(i);
+        VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE active_control_mode = model.get_converter_active_control_mode(i);
+        VSC_HVDC_CONVERTER_REACTIVE_POWER_CONTROL_MODE reactive_control_mode = model.get_converter_reactive_control_mode(i);
         this->set_converter_bus(i, converter_bus);
         this->set_converter_active_control_mode(i, active_control_mode);
         this->set_converter_reactive_control_mode(i, reactive_control_mode);
@@ -162,7 +162,7 @@ string VSC_HVDC1::get_model_name() const
     return "VSC_HVDC1";
 }
 
-void VSC_HVDC1::set_converter_bus(unsigned int index, unsigned int bus)
+void VSC_HVDC1::set_converter_bus(const unsigned int index, const unsigned int bus)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
@@ -200,97 +200,97 @@ void VSC_HVDC1::set_converter_bus(unsigned int index, unsigned int bus)
     }
 }
 
-void VSC_HVDC1::set_converter_active_control_mode(unsigned int index, unsigned int active_control_mode)
+void VSC_HVDC1::set_converter_active_control_mode(const unsigned int index, VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE active_control_mode)
 {
     vsc_stations[index].active_power_control_mode = active_control_mode;
 }
 
-void VSC_HVDC1::set_converter_reactive_control_mode(unsigned int index, unsigned int reactive_control_mode)
+void VSC_HVDC1::set_converter_reactive_control_mode(const unsigned int index, const VSC_HVDC_CONVERTER_REACTIVE_POWER_CONTROL_MODE reactive_control_mode)
 {
     vsc_stations[index].reactive_power_control_mode = reactive_control_mode;
 }
 
-void VSC_HVDC1::set_converter_active_power_control_T_in_s(unsigned int index, double t)
+void VSC_HVDC1::set_converter_active_power_control_T_in_s(const unsigned int index, const double t)
 {
     vsc_stations[index].active_power_control_block.set_Ki(t);
 }
 
-void VSC_HVDC1::set_converter_active_power_Pmax_in_pu(unsigned int index, double Pmax)
+void VSC_HVDC1::set_converter_active_power_Pmax_in_pu(const unsigned int index, const double Pmax)
 {
     vsc_stations[index].active_power_control_block.set_upper_limit(Pmax);
 }
 
-void VSC_HVDC1::set_converter_active_power_Pmin_in_pu(unsigned int index, double Pmin)
+void VSC_HVDC1::set_converter_active_power_Pmin_in_pu(const unsigned int index, const double Pmin)
 {
     vsc_stations[index].active_power_control_block.set_lower_limit(Pmin);
 }
 
-void VSC_HVDC1::set_converter_active_power_kpp(unsigned int index, double k)
+void VSC_HVDC1::set_converter_active_power_kpp(const unsigned int index, const double k)
 {
     vsc_stations[index].active_power_control_block.set_Kp(k);
 }
 
-void VSC_HVDC1::set_converter_reactive_power_control_T_in_s(unsigned int index, double t)
+void VSC_HVDC1::set_converter_reactive_power_control_T_in_s(const unsigned int index, const double t)
 {
     vsc_stations[index].reactive_power_control_block.set_Ki(t);
 }
 
-void VSC_HVDC1::set_converter_reactive_power_Qmax_in_pu(unsigned int index, double Qmax)
+void VSC_HVDC1::set_converter_reactive_power_Qmax_in_pu(const unsigned int index, const double Qmax)
 {
     vsc_stations[index].reactive_power_control_block.set_upper_limit(Qmax);
 }
 
-void VSC_HVDC1::set_converter_reactive_power_Qmin_in_pu(unsigned int index, double Qmin)
+void VSC_HVDC1::set_converter_reactive_power_Qmin_in_pu(const unsigned int index, const double Qmin)
 {
     vsc_stations[index].reactive_power_control_block.set_lower_limit(Qmin);
 }
 
-void VSC_HVDC1::set_converter_reactive_power_kpq(unsigned int index, double k)
+void VSC_HVDC1::set_converter_reactive_power_kpq(const unsigned int index, const double k)
 {
     vsc_stations[index].reactive_power_control_block.set_Kp(k);
 }
 
-void VSC_HVDC1::set_converter_dc_voltage_control_T_in_s(unsigned int index, double t)
+void VSC_HVDC1::set_converter_dc_voltage_control_T_in_s(const unsigned int index, const double t)
 {
     vsc_stations[index].ud_voltage_control_block.set_Ki(t);
 }
 
-void VSC_HVDC1::set_converter_dc_voltage_Umax(unsigned int index, double Umax)
+void VSC_HVDC1::set_converter_dc_voltage_Umax(const unsigned int index, const double Umax)
 {
     vsc_stations[index].ud_voltage_control_block.set_upper_limit(Umax);
 }
 
-void VSC_HVDC1::set_converter_dc_voltage_Umin(unsigned int index, double Umin)
+void VSC_HVDC1::set_converter_dc_voltage_Umin(const unsigned int index, const double Umin)
 {
     vsc_stations[index].ud_voltage_control_block.set_lower_limit(Umin);
 }
 
-void VSC_HVDC1::set_converter_dc_voltage_kpud(unsigned int index, double k)
+void VSC_HVDC1::set_converter_dc_voltage_kpud(const unsigned int index, const double k)
 {
     vsc_stations[index].ud_voltage_control_block.set_Kp(k);
 }
 
-void VSC_HVDC1::set_converter_ac_voltage_control_T_in_s(unsigned int index, double t)
+void VSC_HVDC1::set_converter_ac_voltage_control_T_in_s(const unsigned int index, const double t)
 {
     vsc_stations[index].ac_voltage_control_block.set_Ki(t);
 }
 
-void VSC_HVDC1::set_converter_ac_voltage_Umax(unsigned int index, double Umax)
+void VSC_HVDC1::set_converter_ac_voltage_Umax(const unsigned int index, const double Umax)
 {
     vsc_stations[index].ac_voltage_control_block.set_upper_limit(Umax);
 }
 
-void VSC_HVDC1::set_converter_ac_voltage_Umin(unsigned int index, double Umin)
+void VSC_HVDC1::set_converter_ac_voltage_Umin(const unsigned int index, const double Umin)
 {
     vsc_stations[index].ac_voltage_control_block.set_lower_limit(Umin);
 }
 
-void VSC_HVDC1::set_converter_dc_voltage_kpuc(unsigned int index, double k)
+void VSC_HVDC1::set_converter_dc_voltage_kpuc(const unsigned int index, const double k)
 {
     vsc_stations[index].ac_voltage_control_block.set_Kp(k);
 }
 
-void VSC_HVDC1::set_dc_voltage_ceq(unsigned int index, double ceq)
+void VSC_HVDC1::set_dc_voltage_ceq(const unsigned int index, const double ceq)
 {
     vsc_stations[index].dc_voltage_block.set_T_in_s(ceq);
 }
@@ -309,7 +309,7 @@ unsigned int VSC_HVDC1::get_converter_bus(unsigned int index) const
     }
 }
 
-unsigned int VSC_HVDC1::get_converter_active_control_mode(unsigned int index) const
+VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE VSC_HVDC1::get_converter_active_control_mode(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].active_power_control_mode;
@@ -319,11 +319,11 @@ unsigned int VSC_HVDC1::get_converter_active_control_mode(unsigned int index) co
         ostringstream osstream;
         osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
-        return 9999;
+        return VSC_INVALID_DC_CONTORL;
     }
 }
 
-unsigned int VSC_HVDC1::get_converter_reactive_control_mode(unsigned int index) const
+VSC_HVDC_CONVERTER_REACTIVE_POWER_CONTROL_MODE VSC_HVDC1::get_converter_reactive_control_mode(unsigned int index) const
 {
     if(index<get_vsc_stations_count())
         return vsc_stations[index].reactive_power_control_mode;
@@ -333,7 +333,7 @@ unsigned int VSC_HVDC1::get_converter_reactive_control_mode(unsigned int index) 
         ostringstream osstream;
         osstream<<"Error. index ("<<index<<") is out of  maximal converter count."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
-        return 9999;
+        return VSC_INVALID_AC_CONTORL;
     }
 }
 
@@ -615,8 +615,18 @@ bool VSC_HVDC1::setup_model_with_steps_string_vector(vector<string>& data)
     for(unsigned int i=0; i<ncon; ++i)
     {
         unsigned int converter_bus = get_integer_data(data[data_index],"0"); data_index++;
-        unsigned int active_control_mode = get_integer_data(data[data_index],"0"); data_index++;
-        unsigned int reactive_control_mode = get_integer_data(data[data_index],"0"); data_index++;
+        VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE active_control_mode = VSC_INVALID_DC_CONTORL;
+        string type=get_string_data(data[data_index],"");
+        if(type=="Vdc_control")
+            active_control_mode = VSC_DC_VOLTAGE_CONTORL;
+        if(type=="Pac_control")
+            active_control_mode = VSC_AC_ACTIVE_POWER_CONTORL;
+        VSC_HVDC_CONVERTER_REACTIVE_POWER_CONTROL_MODE reactive_control_mode = VSC_INVALID_AC_CONTORL;
+        string mode=get_string_data(data[data_index],"");
+        if(mode=="Vac_control")
+            reactive_control_mode = VSC_AC_VOLTAGE_CONTROL;
+        if(mode=="Qac_control")
+            reactive_control_mode = VSC_AC_REACTIVE_POWER_CONTROL;
         set_converter_bus(i, converter_bus);
         set_converter_active_control_mode(i, active_control_mode);
         set_converter_reactive_control_mode(i, reactive_control_mode);

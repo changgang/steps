@@ -21,6 +21,7 @@ class VSC_HVDC_MODEL : public MODEL
         // get input for initialization
 
     public: // specific exciter
+
         virtual string get_model_name() const = 0;
 
         virtual bool setup_model_with_steps_string_vector(vector<string>& data) = 0;
@@ -40,7 +41,7 @@ class VSC_HVDC_MODEL : public MODEL
         virtual void clear() = 0;
         virtual void report() = 0;
         virtual void save() = 0;
-        virtual string get_standard_psse_string() const = 0;
+        virtual string get_standard_psse_string(bool export_internal_bus_number=false) const = 0;
 
         virtual void prepare_model_data_table() = 0;
         virtual double get_model_data_with_name(string par_name) const = 0;
