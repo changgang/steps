@@ -574,6 +574,23 @@ double VSC_HVDC1::get_dc_voltage_ceq(unsigned int index) const
         return 9999.9;
     }
 }
+void VSC_HVDC1::set_vsc_stations_count(unsigned int n)
+{
+    vsc_stations.clear();
+    if(n<2)
+        n = 2;
+    n_converter = n;
+    vsc_stations.reserve(n_converter);
+    VSC_MODEL_VAR var(get_toolkit());
+    for(unsigned int i=0; i<n_converter; ++i)
+        vsc_stations.push_back(var);
+}
+
+unsigned int VSC_HVDC1::get_vsc_stations_count() const
+{
+    return n_converter;
+}
+
 
 bool VSC_HVDC1::setup_model_with_steps_string_vector(vector<string>& data)
 {
@@ -691,23 +708,6 @@ bool VSC_HVDC1::setup_model_with_steps_string_vector(vector<string>& data)
     is_successful = true;
 
     return is_successful;
-}
-
-void VSC_HVDC1::set_vsc_stations_count(unsigned int n)
-{
-    vsc_stations.clear();
-    if(n<2)
-        n = 2;
-    n_converter = n;
-    vsc_stations.reserve(n_converter);
-    VSC_MODEL_VAR var(get_toolkit());
-    for(unsigned int i=0; i<n_converter; ++i)
-        vsc_stations.push_back(var);
-}
-
-unsigned int VSC_HVDC1::get_vsc_stations_count() const
-{
-    return n_converter;
 }
 
 bool VSC_HVDC1::setup_model_with_psse_string(string data)

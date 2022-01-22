@@ -16,10 +16,11 @@ int main()
 
 
     POWERFLOW_SOLVER solver(default_toolkit);
-    solver.set_max_iteration(0);
-    solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
-    solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.00001);
-    solver.set_flat_start_logic(false);
+    solver.set_max_iteration(20);
+    solver.set_non_divergent_solution_logic(false);
+    solver.set_allowed_max_active_power_imbalance_in_MW(0.0001);
+    solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.0001);
+    solver.set_flat_start_logic(true);
     solver.set_transformer_tap_adjustment_logic(true);
 
     //solver.solve_with_fast_decoupled_solution();

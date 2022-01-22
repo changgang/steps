@@ -13,10 +13,12 @@ using namespace std;
 
 VSC_HVDC::VSC_HVDC(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
 {
+    mode = NULL;
     clear();
 }
 VSC_HVDC::VSC_HVDC(const VSC_HVDC& vsc) : NONBUS_DEVICE(vsc.get_toolkit())
 {
+    mode = NULL;
     clear();
 
     copy_from_const_vsc(vsc);
@@ -3136,9 +3138,13 @@ double VSC_HVDC::solve_converter_Pac_with_Pdc(unsigned int converter_index)
             Pdc_high = Pdc_new;
             Pac_high = Pac_new;
         }
-        if(fabs(Pac_high-Pac_low)<0.0001)
-            break;
+        //if(fabs(Pac_high-Pac_low)<get_allowed_max_active_power_imbalance_in_MW())
+        if(fabs(Pdc_high-Pdc0)<get_allowed_max_active_power_imbalance_in_MW())
+           return Pac_high;
+        if(fabs(Pdc_low-Pdc0)<get_allowed_max_active_power_imbalance_in_MW())
+           return Pac_low;
     }
+    cout<<"VSC_HVDC::"<<__FUNCTION__<<" failed to converge."<<endl;
     return 0.5*(Pac_high+Pac_low);
 }
 
@@ -3165,9 +3171,10 @@ double VSC_HVDC::calculate_converter_Pdc_with_Pac(unsigned int converter_index, 
     complex<double> Eac=Vac/turn_ration;
     complex<double> Zt_in_pu=get_converter_transformer_impedance_in_pu(converter_index);
     complex<double> Zt_in_ohm=Zt_in_pu*Vbase_converter*Vbase_converter/get_converter_transformer_capacity_in_MVA(converter_index);
-    complex<double> Vac_f=Eac+(Pac-j*Qac)*Zt_in_ohm/conj(Eac);
-    complex<double> Ic=(Pac-j*Qac)/conj(Eac)+Vac_f*Yf_in_siemens;
-    complex<double> Vac_c=Vac_f+Ic*Zc_in_ohm;
+    complex<double> Ic = (Pac-j*Qac)/(SQRT3*conj(Eac));
+    complex<double> Vac_f=Eac+Ic*Zt_in_ohm*SQRT3;
+                    Ic=Ic+Vac_f/SQRT3*Yf_in_siemens;
+    complex<double> Vac_c=Vac_f+Ic*Zc_in_ohm*SQRT3;
     /*
     cout<<"Yf_in_siemens-> "<<Yf_in_siemens<<endl;
     cout<<"Zc_in_ohm-> "<<Zc_in_ohm<<endl;
@@ -3178,7 +3185,7 @@ double VSC_HVDC::calculate_converter_Pdc_with_Pac(unsigned int converter_index, 
     cout<<"Ic-> "<<Ic<<endl;
     cout<<"Vac_c-> "<<Vac_c<<endl;
     */
-    double Pc_command=(Vac_c*conj(Ic)).real();
+    double Pc_command=(SQRT3*Vac_c*conj(Ic)).real();
     double c_loss=get_converter_loss_factor_C_in_kW_per_amp_squard(converter_index);
     double b_loss=get_converter_loss_factor_B_in_kW_per_amp(converter_index);
     double a_loss=get_converter_loss_factor_A_in_kW(converter_index);
@@ -3188,7 +3195,7 @@ double VSC_HVDC::calculate_converter_Pdc_with_Pac(unsigned int converter_index, 
     cout<<"b_loss-> "<<b_loss<<endl;
     cout<<"a_loss-> "<<a_loss<<endl;
     */
-    double P_converter_loss=(c_loss*Ic_mag*Ic_mag+b_loss*Ic_mag+a_loss)/1000;
+    double P_converter_loss=(c_loss*Ic_mag*Ic_mag+b_loss*Ic_mag+a_loss)*0.001;
     //cout<<"P_converter_loss: "<<P_converter_loss<<endl;
     double Pdc=-Pc_command-P_converter_loss;
     return -Pdc;
