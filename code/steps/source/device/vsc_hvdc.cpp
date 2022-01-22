@@ -109,6 +109,8 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
 
         set_converter_P_to_AC_bus_in_MW(i, vsc.get_converter_P_to_AC_bus_in_MW(i));
         set_converter_Q_to_AC_bus_in_MVar(i, vsc.get_converter_Q_to_AC_bus_in_MVar(i));
+        cout<<"converter_P_to_AC_bus_in_MW: "<<get_converter_P_to_AC_bus_in_MW(i)<<endl;
+        cout<<"converter_Q_to_AC_bus_in_MVar: "<<get_converter_Q_to_AC_bus_in_MVar(i)<<endl;
         set_converter_Pmax_in_MW(i, vsc.get_converter_Pmax_in_MW(i));
         set_converter_Pmin_in_MW(i, vsc.get_converter_Pmin_in_MW(i));
         set_converter_Qmax_in_MVar(i, vsc.get_converter_Qmax_in_MVar(i));
@@ -2066,7 +2068,9 @@ void VSC_HVDC::solve_steady_state()
     calculate_dc_active_power_of_slack_bus();
     unsigned int n_converter=get_converter_count();
     for(unsigned int i=0;i!=n_converter;++i)
+    {
         cout<<"get_converter_Pdc: "<<get_converter_Pdc_command_in_MW(i)<<endl;
+    }
 
     update_converters_P_and_Q_to_AC_bus();
 
@@ -2948,6 +2952,7 @@ void VSC_HVDC::update_converter_P_and_Q_to_AC_bus(unsigned int index)
             Pac=get_converter_nominal_ac_active_power_command_in_MW(index);
         }
         cout<<"P_to_AC_bus_in_MW: "<<Pac<<endl;
+        cout<<"Q_to_AC_bus_in_MW: "<<get_converter_Q_to_AC_bus_in_MVar(index)<<endl;
         VSC_HVDC_CONVERTER_STRUCT* converter = get_converter(index);
         if(converter!=NULL)
         {

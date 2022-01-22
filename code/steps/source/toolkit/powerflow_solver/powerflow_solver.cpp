@@ -555,17 +555,17 @@ void POWERFLOW_SOLVER::initialize_bus_type()
         switch(type)
         {
             case PQ_TYPE:
-                //cout<<"PQ"<<endl;
+                cout<<"PQ"<<endl;
                 break;
             case PV_TYPE:
-                //cout<<"PV"<<endl;
+                cout<<"PV"<<endl;
                 break;
             case SLACK_TYPE:
-                //cout<<"SLACK"<<endl;
+                cout<<"SLACK"<<endl;
                 break;
             case OUT_OF_SERVICE:
             default:
-                //cout<<"OUT"<<endl;
+                cout<<"OUT"<<endl;
                 break;
         }
     }
@@ -1074,7 +1074,7 @@ void POWERFLOW_SOLVER::try_to_solve_vsc_hvdc_steady_state()
         if(vsc_hvdcs[i]->get_status()==true)
         {
             //vsc_hvdcs[i]->report();
-            vsc_hvdcs[i]->set_max_iteration(5);
+            vsc_hvdcs[i]->set_max_iteration(2);
             vsc_hvdcs[i]->set_allowed_max_P_mismatch_in_MW(0.0001);
             vsc_hvdcs[i]->solve_steady_state();
             //vsc_hvdcs[i]->show_solved_steady_state();
@@ -1686,10 +1686,12 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
         //unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
         double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*psdb.get_system_base_power_in_MVA();
+        cout<<"PV bus "<<physical_bus<<" power allocation:  mismatch: "<<bus_Q_mismatch_in_MVar<<endl;
 
         vector<VSC_HVDC*> vsc_hvdcs = psdb.get_vsc_hvdcs_connecting_to_bus(physical_bus);
         unsigned int n;
         n = vsc_hvdcs.size();
+        /*
         for(unsigned int i=0; i!=n; ++i)
         {
             if(vsc_hvdcs[i]->get_status() == true)
@@ -1702,6 +1704,8 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
                 }
             }
         }
+        */
+        cout<<"PV bus "<<physical_bus<<" power allocation after VSC:  mismatch "<<bus_Q_mismatch_in_MVar<<endl;
 
         double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
         double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
@@ -1787,6 +1791,7 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
                     {
                         double Q_loading_in_MVar = vsc_hvdcs[i]->get_converter_Qmax_in_MVar(index) - vsc_hvdcs[i]->get_converter_Qmin_in_MVar(index);
                         Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + vsc_hvdcs[i]->get_converter_Qmin_in_MVar(index);
+                        cout<<"index :"<<index<<", Q_loading_in_Mvar: "<<Q_loading_in_MVar<<endl;
                         vsc_hvdcs[i]->set_converter_Q_to_AC_bus_in_MVar(index, Q_loading_in_MVar);
                     }
                 }

@@ -2092,7 +2092,7 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
             if(vsc_hvdc.get_converter_active_power_operation_mode(i)==VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL
                 or vsc_hvdc.get_converter_active_power_operation_mode(i)==VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL)
             {
-                cout<<"Uref:  "<<Uref<<endl;
+                //cout<<"Uref:  "<<Uref<<endl;
                 vsc_hvdc.set_converter_initial_dc_voltage_reference_in_kV(i,Uref);
             }
 
@@ -2241,12 +2241,14 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
         {
             double P=get_double_data(data.front(),"0.0");
             vsc_hvdc.set_converter_P_to_AC_bus_in_MW(i,P);
+            cout<<"converter_P_to_AC_bus_in_MW: "<<P<<endl;
             data.erase(data.begin());
         }
         if(data.size()>0)
         {
             double Q=get_double_data(data.front(),"0.0");
             vsc_hvdc.set_converter_Q_to_AC_bus_in_MVar(i,Q);
+            cout<<"converter_Q_to_AC_bus_in_MVar: "<<Q<<endl;
             data.erase(data.begin());
         }
         if(data.size()>0)

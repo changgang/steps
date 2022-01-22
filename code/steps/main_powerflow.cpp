@@ -12,11 +12,11 @@ int main()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100000);
     PSSE_IMEXPORTER importer(default_toolkit);
-    importer.load_powerflow_data("../../../bench/ieee57_with_7_terminal_vsc.raw");
+    importer.load_powerflow_data("../../../bench/ieee57_with_7_terminal_vsc_without_current_control.raw");
 
 
     POWERFLOW_SOLVER solver(default_toolkit);
-    solver.set_max_iteration(20);
+    solver.set_max_iteration(0);
     solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
     solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.00001);
     solver.set_flat_start_logic(false);
