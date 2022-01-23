@@ -158,6 +158,15 @@ vector<string> hvdc_meters{ "DC CURRENT IN KA",
                             "RECTIFIER AC REACTIVE POWER IN MVAR","INVERTER AC REACTIVE POWER IN MVAR",
                             "HVDC MODEL INTERNAL VARIABLE"};
 
+vector<string> vsc_hvdc_meters{ "CONVERTER DC CURRENT IN KA",  "CONVERTER AC CURRENT IN KA",
+                                "CONVERTER AC VOLTAGE IN KV",  "CONVERTER AC VOLTAGE IN PU",
+                                "CONVERTER DC POWER IN MW",
+                                "CONVERTER DC VOLTAGE IN MW",
+                                "CONVERTER AC ACTIVE POWER IN MW",    "CONVERTER AC REACTIVE POWER IN MVAR",
+                                "DC BUS VOLTAGE IN KV",
+                                "DC LINE CURRENT IN KA",       "DC LINE POWER IN MW"
+                                "VSC HVDC MODEL INTERNAL VARIABLE"};
+
 vector<string> equivalent_device_meters{"VOLTAGE SOURCE VOLTAGE IN PU",
                                          "VOLTAGE SOURCE VOLTAGE ANGLE IN DEG",
                                          "VOLTAGE SOURCE RESISTANCE IN PU",
@@ -196,6 +205,7 @@ map<STEPS_DEVICE_TYPE, vector<string>> SUPPORTED_METERS{    {STEPS_BUS,         
                                                             {STEPS_PV_UNIT,     pv_unit_meters},
                                                             {STEPS_ENERGY_STORAGE, energy_storage_meters},
                                                             {STEPS_HVDC, hvdc_meters},
+                                                            {STEPS_VSC_HVDC, vsc_hvdc_meters},
                                                             {STEPS_EQUIVALENT_DEVICE, equivalent_device_meters}};
 METER::METER(STEPS& toolkit)
 {
@@ -387,6 +397,12 @@ bool METER::is_internal_variable_name_valid(string& name) const
             if(meter_type=="HVDC MODEL INTERNAL VARIABLE")
                 model = ptr->get_hvdc_model();
         }
+        if(device_type==STEPS_VSC_HVDC)
+        {
+            VSC_HVDC* ptr = (VSC_HVDC*)get_device_pointer();
+            if(meter_type=="VSC HVDC MODEL INTERNAL VARIABLE")
+                model = ptr->get_vsc_hvdc_model();
+        }
         if(model!=NULL)
             return model->is_model_internal_variable_exist(name);
         else
@@ -530,7 +546,9 @@ string METER::get_meter_name() const
         name += " @ "+get_device_id().get_compound_device_name();
 
         STEPS_DEVICE_TYPE device_type = get_device_type();
-        if(device_type==STEPS_LINE or device_type==STEPS_TRANSFORMER)
+        if(device_type==STEPS_LINE or
+           device_type==STEPS_TRANSFORMER or
+           device_type==STEPS_VSC_HVDC)
             name += " @ SIDE "+num2str(get_meter_side_bus());
 
         name = trim_string(name);
@@ -545,7 +563,9 @@ bool METER::is_valid() const
     if(device_pointer!=NULL and meter_type[0]!='\0')
     {
         STEPS_DEVICE_TYPE device_type = get_device_type();
-        if(device_type==STEPS_LINE or device_type==STEPS_TRANSFORMER)
+        if(device_type==STEPS_LINE or
+           device_type==STEPS_TRANSFORMER or
+           device_type==STEPS_VSC_HVDC)
         {
             if(get_meter_side_bus()!=0)
                 return true;
@@ -646,6 +666,10 @@ void METER::set_device_pointer(DEVICE_ID device_id)
             deviceptr = (DEVICE*) psdb.get_hvdc(device_id);
             break;
 
+        case STEPS_VSC_HVDC:
+            deviceptr = (DEVICE*) psdb.get_vsc_hvdc(device_id);
+            break;
+
         case STEPS_EQUIVALENT_DEVICE:
             deviceptr = (DEVICE*) psdb.get_equivalent_device(device_id);
             break;
@@ -685,6 +709,8 @@ double METER::get_meter_value() const
                 return get_meter_value_as_an_energy_storage();
             case STEPS_HVDC:
                 return get_meter_value_as_an_hvdc();
+            case STEPS_VSC_HVDC:
+                return get_meter_value_as_a_vsc_hvdc();
             case STEPS_EQUIVALENT_DEVICE:
                 return get_meter_value_as_an_equivalent_device();
         }
@@ -2080,6 +2106,34 @@ double METER::get_meter_value_as_an_hvdc() const
             }
             else
                 return 0.0;
+        }
+        else
+            return 0.0;
+    }
+    else
+        return 0.0;
+}
+
+double METER::get_meter_value_as_a_vsc_hvdc() const
+{
+    VSC_HVDC* vsc_hvdc = (VSC_HVDC*) get_device_pointer();
+    if(vsc_hvdc != NULL)
+    {
+        if(vsc_hvdc->get_status()==true)
+        {
+            string meter_type = this->meter_type;
+            unsigned int metered_bus = get_meter_side_bus();
+            VSC_HVDC_MODEL* vsc_hvdc_model = vsc_hvdc->get_vsc_hvdc_model();
+            if(vsc_hvdc_model != NULL)
+            {
+                if(meter_type=="CONVERTER AC VOLTAGE IN PU")
+                {
+                    return steps_fast_complex_abs(vsc_hvdc->get_converter_ac_voltage_in_pu_with_ac_bus_number(metered_bus));
+                }
+                if(meter_type=="VSC HVDC MODEL INTERNAL VARIABLE")
+                    return vsc_hvdc_model->get_model_internal_variable_with_name(internal_variable_name);
+            }
+            return 0.0;
         }
         else
             return 0.0;

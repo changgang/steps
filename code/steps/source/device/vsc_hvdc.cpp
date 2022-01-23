@@ -13,12 +13,12 @@ using namespace std;
 
 VSC_HVDC::VSC_HVDC(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
 {
-    //mode = NULL;
+    vsc_hvdc_model = NULL;
     clear();
 }
 VSC_HVDC::VSC_HVDC(const VSC_HVDC& vsc) : NONBUS_DEVICE(vsc.get_toolkit())
 {
-    //mode = NULL;
+    vsc_hvdc_model = NULL;
     clear();
 
     copy_from_const_vsc(vsc);
@@ -28,6 +28,7 @@ VSC_HVDC& VSC_HVDC::operator=(const VSC_HVDC& vsc)
 {
     if(this==&vsc) return *this; // to avoid self assignment
 
+    vsc_hvdc_model = NULL;
     clear();
 
     copy_from_const_vsc(vsc);
@@ -66,17 +67,11 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
                 set_converter_initial_dc_active_power_reference_in_MW(i,vsc.get_converter_initial_dc_active_power_reference_in_MW(i));
                 set_converter_initial_dc_voltage_reference_in_kV(i,vsc.get_converter_initial_dc_voltage_reference_in_kV(i));
                 set_converter_initial_droop_coefficient_for_droop_control(i,vsc.get_converter_initial_droop_coefficient_for_droop_control(i));
-                cout<<"VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL: "<<vsc.get_converter_initial_dc_active_power_reference_in_MW(i)<<endl;
-                cout<<"VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL: "<<vsc.get_converter_initial_dc_voltage_reference_in_kV(i)<<endl;
-                cout<<"VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL: "<<vsc.get_converter_initial_droop_coefficient_for_droop_control(i)<<endl;
                 break;
             case VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL:
                 set_converter_initial_dc_current_reference_in_kA(i,vsc.get_converter_initial_dc_current_reference_in_kA(i));
                 set_converter_initial_dc_voltage_reference_in_kV(i,vsc.get_converter_initial_dc_voltage_reference_in_kV(i));
                 set_converter_initial_droop_coefficient_for_droop_control(i,vsc.get_converter_initial_droop_coefficient_for_droop_control(i));
-                cout<<"VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL: "<<vsc.get_converter_initial_dc_current_reference_in_kA(i)<<endl;
-                cout<<"VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL: "<<vsc.get_converter_initial_dc_voltage_reference_in_kV(i)<<endl;
-                cout<<"VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL: "<<vsc.get_converter_initial_droop_coefficient_for_droop_control(i)<<endl;
                 break;
             case VSC_AC_VOLTAGE_ANGLE_CONTROL:
             default:
@@ -111,8 +106,6 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
 
         set_converter_P_to_AC_bus_in_MW(i, vsc.get_converter_P_to_AC_bus_in_MW(i));
         set_converter_Q_to_AC_bus_in_MVar(i, vsc.get_converter_Q_to_AC_bus_in_MVar(i));
-        cout<<"converter_P_to_AC_bus_in_MW: "<<get_converter_P_to_AC_bus_in_MW(i)<<endl;
-        cout<<"converter_Q_to_AC_bus_in_MVar: "<<get_converter_Q_to_AC_bus_in_MVar(i)<<endl;
         set_converter_Pmax_in_MW(i, vsc.get_converter_Pmax_in_MW(i));
         set_converter_Pmin_in_MW(i, vsc.get_converter_Pmin_in_MW(i));
         set_converter_Qmax_in_MVar(i, vsc.get_converter_Qmax_in_MVar(i));
@@ -146,10 +139,12 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
         set_dc_line_resistance_in_ohm(i,vsc.get_dc_line_resistance_in_ohm(i));
         set_dc_line_inductance_in_mH(i,vsc.get_dc_line_inductance_in_mH(i));
     }
+    set_model(vsc.get_vsc_hvdc_model());
 }
 
 VSC_HVDC::~VSC_HVDC()
 {
+    delete_vsc_hvdc_model();
     clear();
 }
 
@@ -1936,6 +1931,9 @@ void VSC_HVDC::set_model(MODEL* model)
         if(model->get_model_type()=="VSC HVDC")
         {
             set_vsc_hvdc_model((VSC_HVDC_MODEL*) model);
+            model->allocate_model_variables();
+            model->prepare_model_data_table();
+            model->prepare_model_internal_variable_table();
             return;
         }
         ostringstream osstream;
@@ -1958,12 +1956,24 @@ MODEL* VSC_HVDC::get_model_of_type(string model_type)
 void VSC_HVDC::set_vsc_hvdc_model(VSC_HVDC_MODEL* model)
 {
     if(model!=NULL)
+    {
+        delete_vsc_hvdc_model();
         vsc_hvdc_model = model;
+    }
 }
 
 VSC_HVDC_MODEL* VSC_HVDC::get_vsc_hvdc_model() const
 {
     return vsc_hvdc_model;
+}
+
+void VSC_HVDC::delete_vsc_hvdc_model()
+{
+    if(get_vsc_hvdc_model()!=NULL)
+    {
+        delete vsc_hvdc_model;
+        vsc_hvdc_model =  NULL;
+    }
 }
 
 void VSC_HVDC::solve_steady_state()

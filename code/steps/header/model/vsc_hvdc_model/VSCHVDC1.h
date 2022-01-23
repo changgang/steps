@@ -1,5 +1,5 @@
-#ifndef VSC_HVDC1_H_INCLUDED
-#define VSC_HVDC1_H_INCLUDED
+#ifndef VSCHVDC1_H_INCLUDED
+#define VSCHVDC1_H_INCLUDED
 
 #include "header/model/vsc_hvdc_model/VSC_HVDC_MODEL.h"
 #include "header/model/vsc_hvdc_model/vsc_station.h"
@@ -9,13 +9,13 @@
 #include "header/block/saturation_block.h"
 #include "header/basic/timer.h"
 
-class VSC_HVDC1: public VSC_HVDC_MODEL
+class VSCHVDC1: public VSC_HVDC_MODEL
 {
     public:
-        VSC_HVDC1(STEPS& toolkit);
-        VSC_HVDC1(const VSC_HVDC1& model);
-        virtual ~VSC_HVDC1();
-        virtual VSC_HVDC1& operator=(const VSC_HVDC1& model);
+        VSCHVDC1(STEPS& toolkit);
+        VSCHVDC1(const VSCHVDC1& model);
+        virtual ~VSCHVDC1();
+        virtual VSCHVDC1& operator=(const VSCHVDC1& model);
         void set_vsc_stations_count(unsigned int n);
 
     public: // specific exciter
@@ -96,7 +96,7 @@ class VSC_HVDC1: public VSC_HVDC_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
 
     private:
-        void copy_from_const_model(const VSC_HVDC1& model);
+        void copy_from_const_model(const VSCHVDC1& model);
 
     private:
         // vsc converter
@@ -114,4 +114,4 @@ class VSC_HVDC1: public VSC_HVDC_MODEL
         double time_when_inverter_ac_voltage_above_delayed_unbypassing_voltage;*/
 };
 
-#endif // VSC_HVDC1_H_INCLUDED
+#endif // VSCHVDC1_H_INCLUDED

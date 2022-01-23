@@ -327,8 +327,8 @@
 		<Unit filename="header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model.h" />
 		<Unit filename="header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model_test.h" />
 		<Unit filename="header/model/sg_models/turbine_load_controller_model/turbine_load_controller_models.h" />
-		<Unit filename="header/model/vsc_hvdc_model/VSC_HVDC1.h" />
-		<Unit filename="header/model/vsc_hvdc_model/VSC_HVDC1_test.h" />
+		<Unit filename="header/model/vsc_hvdc_model/VSCHVDC1.h" />
+		<Unit filename="header/model/vsc_hvdc_model/VSCHVDC1_test.h" />
 		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_model.h" />
 		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_model_test.h" />
 		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_models.h" />
@@ -715,7 +715,7 @@
 		<Unit filename="source/model/sg_models/turbine_load_controller_model/lcfb1_test.cpp" />
 		<Unit filename="source/model/sg_models/turbine_load_controller_model/turbine_load_controller_model.cpp" />
 		<Unit filename="source/model/sg_models/turbine_load_controller_model/turbine_load_controller_model_test.cpp" />
-		<Unit filename="source/model/vsc_hvdc_model/VSC_HVDC1.cpp" />
+		<Unit filename="source/model/vsc_hvdc_model/VSCHVDC1.cpp" />
 		<Unit filename="source/model/vsc_hvdc_model/vsc_hvdc_model.cpp" />
 		<Unit filename="source/model/vsc_hvdc_model/vsc_hvdc_model_test.cpp" />
 		<Unit filename="source/model/vsc_hvdc_model/vsc_station.cpp" />

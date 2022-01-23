@@ -328,6 +328,7 @@ unsigned int DYNAMICS_SIMULATOR::get_memory_usage_in_bytes()
            loads.capacity()*sizeof(LOAD*)+
            lines.capacity()*sizeof(LINE*)+
            hvdcs.capacity()*sizeof(HVDC*)+
+           vsc_hvdcs.capacity()*sizeof(VSC_HVDC*)+
            e_devices.capacity()*sizeof(EQUIVALENT_DEVICE*)+
 
            internal_bus_pointers.capacity()*sizeof(BUS*)+
@@ -838,6 +839,28 @@ void DYNAMICS_SIMULATOR::prepare_hvdc_related_meters()
         append_meter(meter);
 
         meter = setter.prepare_hvdc_inverter_ac_current_in_kA_meter(hvdc->get_device_id());
+        append_meter(meter);
+    }
+}
+
+void DYNAMICS_SIMULATOR::prepare_vsc_hvdc_related_meters()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+
+    METER_SETTER setter(*toolkit);
+
+    unsigned int n;
+
+    n = psdb.get_vsc_hvdc_count();
+    vector<VSC_HVDC*> vsc_hvdcs = psdb.get_all_vsc_hvdcs();
+    VSC_HVDC* vsc_hvdc;
+    DEVICE_ID did;
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        vsc_hvdc = vsc_hvdcs[i];
+        did = vsc_hvdc->get_device_id();
+
+        METER meter = setter.prepare_hvdc_rectifier_ac_voltage_in_pu_meter(did);
         append_meter(meter);
     }
 }

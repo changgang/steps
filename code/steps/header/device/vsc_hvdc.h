@@ -281,6 +281,9 @@ class VSC_HVDC : public NONBUS_DEVICE
         double get_dc_network_matrix_entry_between_dc_bus(unsigned int ibus, unsigned int jbus);
         double get_jacobian_matrix_entry_between_dc_bus(unsigned int ibus, unsigned int jbus);
 
+        double get_converter_ac_voltage_in_pu_with_ac_bus_number(unsigned int bus);
+        double get_converter_ac_voltage_in_pu(unsigned int index);
+
 
     private:
         void copy_from_const_vsc(const VSC_HVDC& vsc);
@@ -298,6 +301,8 @@ class VSC_HVDC : public NONBUS_DEVICE
         bool dc_bus_index_is_out_of_range_in_function(const unsigned int index, const string& func) const;
         bool dc_line_index_is_out_of_range_in_function(const unsigned int index, const string& func) const;
 
+        void delete_vsc_hvdc_model();
+    private:
         unsigned int vsc_hvdc_name_index;
         unsigned int identifier_index;
         bool status;

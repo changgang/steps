@@ -58,6 +58,7 @@ class METER
         double get_meter_value_as_a_wt_generator() const;
         double get_meter_value_as_a_pv_unit() const;
         double get_meter_value_as_an_hvdc() const;
+        double get_meter_value_as_a_vsc_hvdc() const;
         double get_meter_value_as_an_equivalent_device() const;
         double get_meter_value_as_an_energy_storage() const;
 
@@ -82,6 +83,7 @@ extern vector<string> wt_generator_meters;
 extern vector<string> pv_unit_meters;
 extern vector<string> energy_storage_meters;
 extern vector<string> hvdc_meters;
+extern vector<string> vsc_hvdc_meters;
 extern vector<string> equivalent_device_meters;
 extern map<STEPS_DEVICE_TYPE, vector<string>> SUPPORTED_METERS;
 

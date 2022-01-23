@@ -79,6 +79,7 @@ class DYNAMICS_SIMULATOR
         void prepare_line_related_meters();
         void prepare_transformer_related_meters();
         void prepare_hvdc_related_meters();
+        void prepare_vsc_hvdc_related_meters();
         void prepare_equivalent_device_related_meters();
 
         void prepare_bus_related_meter(unsigned int bus, string meter_type);
