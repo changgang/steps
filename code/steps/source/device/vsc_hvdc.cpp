@@ -106,6 +106,11 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
 
         set_converter_P_to_AC_bus_in_MW(i, vsc.get_converter_P_to_AC_bus_in_MW(i));
         set_converter_Q_to_AC_bus_in_MVar(i, vsc.get_converter_Q_to_AC_bus_in_MVar(i));
+<<<<<<< Updated upstream
+=======
+        //cout<<"converter_P_to_AC_bus_in_MW: "<<get_converter_P_to_AC_bus_in_MW(i)<<endl;
+        //cout<<"converter_Q_to_AC_bus_in_MVar: "<<get_converter_Q_to_AC_bus_in_MVar(i)<<endl;
+>>>>>>> Stashed changes
         set_converter_Pmax_in_MW(i, vsc.get_converter_Pmax_in_MW(i));
         set_converter_Pmin_in_MW(i, vsc.get_converter_Pmin_in_MW(i));
         set_converter_Qmax_in_MVar(i, vsc.get_converter_Qmax_in_MVar(i));
@@ -2079,11 +2084,12 @@ void VSC_HVDC::solve_steady_state()
     save_dc_bus_powerflow_result_to_file("Vsc_hvdc_bus_powerflow_result.csv");
     calculate_dc_active_power_of_slack_bus();
     unsigned int n_converter=get_converter_count();
+    /*
     for(unsigned int i=0;i!=n_converter;++i)
     {
         cout<<"get_converter_Pdc: "<<get_converter_Pdc_command_in_MW(i)<<endl;
     }
-
+    */
     update_converters_P_and_Q_to_AC_bus();
 
 }
@@ -2484,7 +2490,7 @@ double VSC_HVDC::get_converter_dc_power_command(unsigned int converter_index)
             }
         }
         set_converter_Pdc_command_in_MW(converter_index, Pdc_command);
-        cout<<"Pdc_command: "<<Pdc_command<<endl;
+        //cout<<"Pdc_command: "<<Pdc_command<<endl;
         return Pdc_command;
     }
     else
@@ -3060,6 +3066,16 @@ double VSC_HVDC::get_dc_voltage_of_dc_bus_number(unsigned int bus)
     return get_dc_bus_Vdc_in_kV(dc_bus_no2index(bus));
 }
 
+unsigned int VSC_HVDC::get_dc_bus_index_with_ac_bus_number(unsigned int bus)
+{
+    unsigned int n_dc_bus = get_dc_bus_count();
+    unsigned int dc_bus_index=INDEX_NOT_EXIST;
+    for(unsigned int i=0; i!=n_dc_bus; ++i)
+    {
+        ;
+    }
+
+}
 
 int VSC_HVDC::get_converter_alpha(unsigned int index) const
 {
@@ -3370,3 +3386,57 @@ void VSC_HVDC::export_dc_bus_voltage_with_network_ordering()
         cout<<"dc_bus_voltage:"<<Vdc<<endl;
     }
 }
+
+double VSC_HVDC::get_converter_ac_voltage_in_pu_with_ac_bus_number(unsigned int bus)
+{
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    BUS* bus = psdb.get_bus(bus);
+    return bus->get_positive_sequence_voltage_in_pu();
+}
+
+double VSC_HVDC::get_converter_ac_voltage_in_pu_with_converter_index(unsigned int index)
+{
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    unsigned int bus = get_converter_ac_bus(index);
+    BUS* bus = psdb.get_bus(bus);
+    return bus->get_positive_sequence_voltage_in_pu();
+}
+
+double VSC_HVDC::get_converter_ac_voltage_in_kv_with_ac_bus_number(unsigned int bus)
+{
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    BUS* bus = psdb.get_bus(bus);
+    return bus->get_positive_sequence_voltage_in_kV();
+}
+
+double VSC_HVDC::get_converter_ac_current_in_kA_with_ac_bus_number(unsigned int bus)
+{
+    complex<double> j(0.0,1.0);
+    unsigned int converter_index = get_converter_index_with_ac_bus(bus);
+    double Pac = get_converter_P_to_AC_bus_in_MW(converter_index);
+    double Qac = get_converter_Q_to_AC_bus_in_MVar(converter_index);
+    //cout<<"active_and_reactive_power_mode->"<<"active_power_command: "<<Pac_command<<" reactive_power_command: "<<Qac_command<<endl;
+    BUS *bus_pointer = get_converter_ac_bus_pointer(converter_index);
+    complex<double> Vac=bus_pointer->get_positive_sequence_complex_voltage_in_kV();
+    complex<double> Iac=(Pac-j*Qac)/conj(Vac);
+    return Iac;
+}
+
+double VSC_HVDC::get_converter_dc_voltage_in_kV_with_ac_bus_number(unsigned int bus)
+{
+    unsigned int dc_bus_index = get_dc_bus_index_with_ac_bus_number(bus);
+    complex<double> j(0.0,1.0);
+    unsigned int converter_index = get_converter_index_with_ac_bus(bus);
+    double Pac = get_converter_P_to_AC_bus_in_MW(converter_index);
+    double Qac = get_converter_Q_to_AC_bus_in_MVar(converter_index);
+    //cout<<"active_and_reactive_power_mode->"<<"active_power_command: "<<Pac_command<<" reactive_power_command: "<<Qac_command<<endl;
+    BUS *bus_pointer = get_converter_ac_bus_pointer(converter_index);
+    complex<double> Vac=bus_pointer->get_positive_sequence_complex_voltage_in_kV();
+    complex<double> Iac=(Pac-j*Qac)/conj(Vac);
+    return Iac;
+}
+
+
+
+
+

@@ -233,6 +233,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         double get_max_iteration();
         unsigned int get_index_of_dc_bus_number(unsigned int bus);
         double get_dc_voltage_of_dc_bus_number(unsigned int bus);
+        unsigned int get_dc_bus_index_with_ac_bus_number(unsigned int bus);
 
         int get_alpha_of_dc_bus_number(unsigned int bus);
         int get_beta_of_dc_bus_number(unsigned int bus);
@@ -282,7 +283,14 @@ class VSC_HVDC : public NONBUS_DEVICE
         double get_jacobian_matrix_entry_between_dc_bus(unsigned int ibus, unsigned int jbus);
 
         double get_converter_ac_voltage_in_pu_with_ac_bus_number(unsigned int bus);
-        double get_converter_ac_voltage_in_pu(unsigned int index);
+        double get_converter_ac_voltage_in_pu_with_converter_index(unsigned int index);
+        double get_converter_ac_voltage_in_kv_with_ac_bus_number(unsigned int bus);
+        double get_converter_ac_current_in_kA_with_ac_bus_number(unsigned int bus);
+        double get_converter_dc_voltage_in_kV_with_ac_bus_number(unsigned int bus);
+        double get_converter_dc_current_in_kA_with_ac_bus_number(unsigned int bus);
+        double get_converter_dc_power_in_mw_with_ac_bus_number(unsigned int bus);
+        double get_converter_ac_active_power_in_mw_with_ac_bus_number(unsigned int bus);
+        double get_converter_ac_reactive_power_in_mvar_with_ac_bus_number(unsigned int bus);
 
 
     private:
