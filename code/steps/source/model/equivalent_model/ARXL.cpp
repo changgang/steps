@@ -464,7 +464,7 @@ void ARXL::switch_output_to_equivalent_device()
     complex<double> arxl_power, other_power;
 
     string meter_type = p_meters[0].get_meter_type();
-    arxl_bus = p_meters[0].get_meter_side_bus();
+    arxl_bus = p_meters[0].get_meter_side_ac_bus();
     if(arxl_bus==line->get_sending_side_bus())
         arxl_power = line->get_line_complex_power_at_sending_side_in_MVA();
     else
@@ -556,7 +556,7 @@ string ARXL::get_standard_psse_string(bool export_internal_bus_number) const
     }
 
     data += "ARXL,"+num2str(send_bus)+","+num2str(recv_bus)+","+line->get_identifier()+",";
-    data += num2str(p_meters[0].get_meter_side_bus())+"\n";;
+    data += num2str(p_meters[0].get_meter_side_ac_bus())+"\n";;
 
     unsigned int n = p_meters.size();
     for(unsigned int i=0; i!=n; ++i)
@@ -635,7 +635,7 @@ string ARXL::get_line_meter_string(const METER& meter) const
     data += num2str(line->get_receiving_side_bus())+",";
     data += "\""+line->get_identifier()+"\",";
 
-    data += num2str(meter.get_meter_side_bus());
+    data += num2str(meter.get_meter_side_ac_bus());
 
     return data;
 }
@@ -664,7 +664,7 @@ string ARXL::get_transformer_meter_string(const METER& meter) const
     data += num2str(trans->get_winding_bus(SECONDARY_SIDE))+",";
     data += "\""+trans->get_identifier()+"\",";
 
-    data += num2str(meter.get_meter_side_bus());
+    data += num2str(meter.get_meter_side_ac_bus());
 
     return data;
 }

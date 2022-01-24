@@ -224,7 +224,7 @@ bool METER_SETTER::prepare_line_meter(METER& meter, const DEVICE_ID& device_id, 
     LINE* lineptr = psdb.get_line(device_id);
 
     if(lineptr->is_connected_to_bus(side_bus))
-        meter.set_meter_side_bus(side_bus);
+        meter.set_meter_side_ac_bus(side_bus);
     else
     {
         osstream<<"Warning. The side bus "<<side_bus<<" is neither the sending bus nor receiving bus of "<<device_id.get_compound_device_name()<<". "
@@ -387,7 +387,7 @@ bool METER_SETTER::prepare_transformer_meter(METER& meter, const DEVICE_ID& devi
     TRANSFORMER* transptr = psdb.get_transformer(device_id);
 
     if(transptr->is_connected_to_bus(side_bus))
-        meter.set_meter_side_bus(side_bus);
+        meter.set_meter_side_ac_bus(side_bus);
     else
     {
         osstream<<"Warning. The side bus "<<side_bus<<" is not primary, secondary, or tertiary bus of "<<device_id.get_compound_device_name()<<". "
@@ -1977,6 +1977,37 @@ bool METER_SETTER::prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
     return successful;
 }
 
+bool METER_SETTER::prepare_vsc_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
+{
+    bool successful = false;
+
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+
+    STEPS_DEVICE_TYPE device_type = device_id.get_device_type();
+    if(device_type!=STEPS_VSC_HVDC)
+    {
+        osstream<<"Warning. This device given ("<<device_type2string(device_type)<<") is not an vsc hvdc when trying to set up an vsc hvdc meter. "
+          <<"No vsc hvdc meter will be added.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return successful;
+    }
+
+    if(not psdb.is_vsc_hvdc_exist(device_id))
+    {
+        osstream<<"Warning. "<<device_id.get_compound_device_name()<<" does not exist in current power system database. "
+          <<"No vsc hvdc meter will be added.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return successful;
+    }
+
+    meter.set_device_id(device_id);
+
+    successful = true;
+
+    return successful;
+}
+
 METER METER_SETTER::prepare_hvdc_dc_current_in_kA_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
@@ -2215,6 +2246,189 @@ METER METER_SETTER::prepare_hvdc_model_internal_variable_meter(const DEVICE_ID& 
     {
         meter.set_meter_type("HVDC MODEL INTERNAL VARIABLE");
         meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+
+METER METER_SETTER::prepare_vsc_hvdc_converter_dc_current_in_kA_meter(const DEVICE_ID& device_id, unsigned int meter_side)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_vsc_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("CONVERTER DC CURRENT IN KA");
+        meter.set_meter_side_ac_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_vsc_hvdc_converter_ac_current_in_kA_meter(const DEVICE_ID& device_id, unsigned int meter_side)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_vsc_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("CONVERTER AC CURRENT IN KA");
+        meter.set_meter_side_ac_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_vsc_hvdc_converter_ac_voltage_in_kV_meter(const DEVICE_ID& device_id, unsigned int meter_side)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_vsc_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("CONVERTER AC VOLTAGE IN KV");
+        meter.set_meter_side_ac_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_vsc_hvdc_converter_ac_voltage_in_pu_meter(const DEVICE_ID& device_id, unsigned int meter_side)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_vsc_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("CONVERTER AC VOLTAGE IN PU");
+        meter.set_meter_side_ac_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_vsc_hvdc_converter_dc_power_in_MW_meter(const DEVICE_ID& device_id, unsigned int meter_side)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_vsc_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("CONVERTER DC POWER IN MW");
+        meter.set_meter_side_ac_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_vsc_hvdc_converter_dc_voltage_in_kV_meter(const DEVICE_ID& device_id, unsigned int meter_side)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_vsc_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("CONVERTER DC VOLTAGE IN KV");
+        meter.set_meter_side_ac_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_vsc_hvdc_converter_ac_active_power_in_MW_meter(const DEVICE_ID& device_id, unsigned int meter_side)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_vsc_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("CONVERTER AC ACTIVE POWER IN MW");
+        meter.set_meter_side_ac_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_vsc_hvdc_converter_ac_reactive_power_in_MVar_meter(const DEVICE_ID& device_id, unsigned int meter_side)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_vsc_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("CONVERTER AC REACTIVE POWER IN MVAR");
+        meter.set_meter_side_ac_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_vsc_hvdc_dc_bus_voltage_in_kV_meter(const DEVICE_ID& device_id, unsigned int meter_side)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_vsc_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("DC BUS VOLTAGE IN KV");
+        meter.set_meter_side_dc_bus(meter_side);
+    }
+
+    return meter;
+}
+METER METER_SETTER::prepare_vsc_hvdc_dc_line_current_in_kA_meter(const DEVICE_ID& device_id, const DC_DEVICE_ID dc_did, unsigned int meter_side)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_vsc_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("DC LINE CURRENT IN KA");
+        meter.set_meter_dc_line(dc_did);
+        meter.set_meter_side_dc_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_vsc_hvdc_dc_line_power_in_MW_meter(const DEVICE_ID& device_id, const DC_DEVICE_ID dc_did, unsigned int meter_side)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_vsc_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("DC LINE POWER IN MW");
+        meter.set_meter_dc_line(dc_did);
+        meter.set_meter_side_dc_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_vsc_hvdc_model_internal_variable_meter(const DEVICE_ID& device_id, string var_name, unsigned int meter_side)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_vsc_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("VSC HVDC MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(var_name);
+        meter.set_meter_side_ac_bus(meter_side);
     }
 
     return meter;

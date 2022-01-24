@@ -106,11 +106,7 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
 
         set_converter_P_to_AC_bus_in_MW(i, vsc.get_converter_P_to_AC_bus_in_MW(i));
         set_converter_Q_to_AC_bus_in_MVar(i, vsc.get_converter_Q_to_AC_bus_in_MVar(i));
-<<<<<<< Updated upstream
-=======
-        //cout<<"converter_P_to_AC_bus_in_MW: "<<get_converter_P_to_AC_bus_in_MW(i)<<endl;
-        //cout<<"converter_Q_to_AC_bus_in_MVar: "<<get_converter_Q_to_AC_bus_in_MVar(i)<<endl;
->>>>>>> Stashed changes
+
         set_converter_Pmax_in_MW(i, vsc.get_converter_Pmax_in_MW(i));
         set_converter_Pmin_in_MW(i, vsc.get_converter_Pmin_in_MW(i));
         set_converter_Qmax_in_MVar(i, vsc.get_converter_Qmax_in_MVar(i));
@@ -1481,6 +1477,43 @@ unsigned int VSC_HVDC::dc_bus_index2no(unsigned int index) const
     }
 }
 
+
+unsigned int VSC_HVDC::dc_line_device_id2index(DC_DEVICE_ID dc_did) const
+{
+    unsigned int n_dc_line = dc_lines.size();
+    for(unsigned int i=0; i!=n_dc_line; ++i)
+    {
+        TERMINAL terminal;
+        terminal.append_bus(get_dc_line_sending_side_bus(i));
+        terminal.append_bus(get_dc_line_receiving_side_bus(i));
+
+        DC_DEVICE_ID did;
+        did.set_device_type(STEPS_DC_LINE);
+        did.set_device_terminal(terminal);
+        did.set_device_identifier_index(get_index_of_string(get_dc_line_identifier(i)));
+
+        if(did==dc_did) return i;
+    }
+    return INDEX_NOT_EXIST;
+}
+
+DC_DEVICE_ID VSC_HVDC::dc_line_index2device_id(unsigned int index) const
+{
+    DC_DEVICE_ID did;
+    unsigned int n_dc_line = dc_lines.size();
+    if(index<n_dc_line)
+    {
+        TERMINAL terminal;
+        terminal.append_bus(get_dc_line_sending_side_bus(index));
+        terminal.append_bus(get_dc_line_receiving_side_bus(index));
+
+        did.set_device_type(STEPS_DC_LINE);
+        did.set_device_terminal(terminal);
+        did.set_device_identifier_index(get_index_of_string(get_dc_line_identifier(index)));
+    }
+    return did;
+}
+
 unsigned int VSC_HVDC::get_dc_bus_converter_index_with_dc_bus_index(unsigned int index) const
 {
     if(index<get_dc_bus_count())
@@ -1627,6 +1660,12 @@ double VSC_HVDC::get_dc_bus_Vdc_in_kV(unsigned int index) const
     }
 }
 
+double VSC_HVDC::get_dc_bus_Vdc_in_kV_with_dc_bus_number(unsigned int bus) const
+{
+    unsigned int index = dc_bus_no2index(bus);
+    return get_dc_bus_Vdc_in_kV(index);
+}
+
 unsigned int VSC_HVDC::get_dc_line_sending_side_bus(unsigned int index) const
 {
     if(index<get_dc_line_count())
@@ -1667,6 +1706,22 @@ string VSC_HVDC::get_dc_line_identifier(unsigned int index) const
         toolkit.show_information_with_leading_time_stamp(osstream);
         return "";
     }
+}
+
+DC_DEVICE_ID VSC_HVDC::get_dc_line_device_id(unsigned int index) const
+{
+    DC_DEVICE_ID did;
+    did.set_device_type(STEPS_LINE);
+
+    TERMINAL terminal;
+    terminal.append_bus(get_dc_line_sending_side_bus(index));
+    terminal.append_bus(get_dc_line_receiving_side_bus(index));
+
+    did.set_device_terminal(terminal);
+
+    did.set_device_identifier_index(get_index_of_string(get_dc_line_identifier(index)));
+
+    return did;
 }
 
 unsigned int VSC_HVDC::get_dc_line_meter_end_bus(unsigned int index) const
@@ -1711,7 +1766,7 @@ double VSC_HVDC::get_dc_line_inductance_in_mH(unsigned int index) const
     }
 }
 
-double VSC_HVDC::get_dc_line_current_in_kA(unsigned int index, LINE_SIDE side) const
+double VSC_HVDC::get_dc_line_current_in_kA(unsigned int index, unsigned int meter_side) const
 {
     if(index<get_dc_line_count())
     {
@@ -1720,14 +1775,10 @@ double VSC_HVDC::get_dc_line_current_in_kA(unsigned int index, LINE_SIDE side) c
         double R = get_dc_line_resistance_in_ohm(index);
         double Vi = get_dc_bus_Vdc_in_kV(dc_bus_no2index(ibus));
         double Vj = get_dc_bus_Vdc_in_kV(dc_bus_no2index(jbus));
-        switch(side)
-        {
-            case SENDING_SIDE:
-                return (Vi-Vj)/R;
-            case RECEIVING_SIDE:
-            default:
-                return (Vj-Vi)/R;
-        }
+        if(meter_side==ibus)
+            return (Vi-Vj)/R;
+        else
+            return (Vj-Vi)/R;
     }
     else
     {
@@ -1739,24 +1790,12 @@ double VSC_HVDC::get_dc_line_current_in_kA(unsigned int index, LINE_SIDE side) c
     }
 }
 
-double VSC_HVDC::get_dc_line_power_in_MW(unsigned int index, LINE_SIDE side) const
+double VSC_HVDC::get_dc_line_power_in_MW(unsigned int index, unsigned int meter_side) const
 {
     if(index<get_dc_line_count())
     {
-        double I = get_dc_line_current_in_kA(index, side);
-        unsigned int bus = 0;
-        double V = 0.0;
-        switch(side)
-        {
-            case SENDING_SIDE:
-                bus = get_dc_line_sending_side_bus(index);
-                break;
-            case RECEIVING_SIDE:
-            default:
-                bus = get_dc_line_receiving_side_bus(index);
-                break;
-        }
-        V = get_dc_bus_Vdc_in_kV(dc_bus_no2index(bus));
+        double I = get_dc_line_current_in_kA(index, meter_side);
+        double V = get_dc_bus_Vdc_in_kV_with_dc_bus_number(meter_side);
         return V*I;
     }
     else
@@ -1767,6 +1806,19 @@ double VSC_HVDC::get_dc_line_power_in_MW(unsigned int index, LINE_SIDE side) con
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
+}
+
+
+double VSC_HVDC::get_dc_line_current_in_kA(DC_DEVICE_ID dc_did, unsigned int meter_side) const
+{
+    unsigned int index = dc_line_device_id2index(dc_did);
+    return get_dc_line_current_in_kA(index, meter_side);
+}
+
+double VSC_HVDC::get_dc_line_power_in_MW(DC_DEVICE_ID dc_did, unsigned int meter_side) const
+{
+    unsigned int index = dc_line_device_id2index(dc_did);
+    return get_dc_line_power_in_MW(index, meter_side);
 }
 
 double VSC_HVDC::get_dc_line_loss_in_MW(unsigned int index) const
@@ -1793,6 +1845,16 @@ bool VSC_HVDC::is_connected_to_bus(unsigned int bus) const
     for(unsigned int i=0; i!=n_converter; ++i)
     {
         if (get_converter_ac_bus(i)==bus) return true;
+    }
+    return false;
+}
+
+bool VSC_HVDC::is_connected_to_dc_bus(unsigned int bus) const
+{
+    unsigned int n_dc_bus = dc_buses.size();
+    for(unsigned int i=0; i!=n_dc_bus; ++i)
+    {
+        if (get_dc_bus_number(i)==bus) return true;
     }
     return false;
 }
@@ -3390,26 +3452,26 @@ void VSC_HVDC::export_dc_bus_voltage_with_network_ordering()
 double VSC_HVDC::get_converter_ac_voltage_in_pu_with_ac_bus_number(unsigned int bus)
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    BUS* bus = psdb.get_bus(bus);
-    return bus->get_positive_sequence_voltage_in_pu();
+    BUS* busptr = psdb.get_bus(bus);
+    return busptr->get_positive_sequence_voltage_in_pu();
 }
 
 double VSC_HVDC::get_converter_ac_voltage_in_pu_with_converter_index(unsigned int index)
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     unsigned int bus = get_converter_ac_bus(index);
-    BUS* bus = psdb.get_bus(bus);
-    return bus->get_positive_sequence_voltage_in_pu();
+    BUS* busptr = psdb.get_bus(bus);
+    return busptr->get_positive_sequence_voltage_in_pu();
 }
 
-double VSC_HVDC::get_converter_ac_voltage_in_kv_with_ac_bus_number(unsigned int bus)
+double VSC_HVDC::get_converter_ac_voltage_in_kV_with_ac_bus_number(unsigned int bus)
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    BUS* bus = psdb.get_bus(bus);
-    return bus->get_positive_sequence_voltage_in_kV();
+    BUS* busptr = psdb.get_bus(bus);
+    return busptr->get_positive_sequence_voltage_in_kV();
 }
 
-double VSC_HVDC::get_converter_ac_current_in_kA_with_ac_bus_number(unsigned int bus)
+complex<double> VSC_HVDC::get_converter_ac_current_in_kA_with_ac_bus_number(unsigned int bus)
 {
     complex<double> j(0.0,1.0);
     unsigned int converter_index = get_converter_index_with_ac_bus(bus);
@@ -3424,19 +3486,26 @@ double VSC_HVDC::get_converter_ac_current_in_kA_with_ac_bus_number(unsigned int 
 
 double VSC_HVDC::get_converter_dc_voltage_in_kV_with_ac_bus_number(unsigned int bus)
 {
-    unsigned int dc_bus_index = get_dc_bus_index_with_ac_bus_number(bus);
-    complex<double> j(0.0,1.0);
-    unsigned int converter_index = get_converter_index_with_ac_bus(bus);
-    double Pac = get_converter_P_to_AC_bus_in_MW(converter_index);
-    double Qac = get_converter_Q_to_AC_bus_in_MVar(converter_index);
-    //cout<<"active_and_reactive_power_mode->"<<"active_power_command: "<<Pac_command<<" reactive_power_command: "<<Qac_command<<endl;
-    BUS *bus_pointer = get_converter_ac_bus_pointer(converter_index);
-    complex<double> Vac=bus_pointer->get_positive_sequence_complex_voltage_in_kV();
-    complex<double> Iac=(Pac-j*Qac)/conj(Vac);
-    return Iac;
+    return 0.0;
 }
 
 
+double VSC_HVDC::get_converter_dc_current_in_kA_with_ac_bus_number(unsigned int bus)
+{
+    return 0.0;
+}
+double VSC_HVDC::get_converter_dc_power_in_MW_with_ac_bus_number(unsigned int bus)
+{
+    return 0.0;
+}
+double VSC_HVDC::get_converter_ac_active_power_in_MW_with_ac_bus_number(unsigned int bus)
+{
+    return 0.0;
+}
+double VSC_HVDC::get_converter_ac_reactive_power_in_MVar_with_ac_bus_number(unsigned int bus)
+{
+    return 0.0;
+}
 
 
 

@@ -996,6 +996,10 @@ string device_type2string(STEPS_DEVICE_TYPE device_type)
             return "HYBRID DC";
         case STEPS_GENERAL_DEVICE:
             return "GENERAL DEVICE";
+        case STEPS_DC_BUS:
+            return "DC BUS";
+        case STEPS_DC_LINE:
+            return "DC LINE";
         case STEPS_INVALID_DEVICE:
             return "INVALID DEVICE TYPE";
         default:

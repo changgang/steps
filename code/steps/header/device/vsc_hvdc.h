@@ -4,6 +4,7 @@
 #include "header/device/nonbus_device.h"
 #include "header/device/vsc_hvdc_var.h"
 #include "header/basic/device_id.h"
+#include "header/basic/dc_device_id.h"
 #include "header/basic/steps_enum.h"
 #include "header/model/vsc_hvdc_model/vsc_hvdc_model.h"
 #include "header/basic/sparse_matrix_define.h"
@@ -162,6 +163,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         string get_dc_bus_name (unsigned int index) const;
         unsigned int get_converter_ac_bus_number_with_dc_bus_index(unsigned int index) const;
         double get_dc_bus_Vdc_in_kV(unsigned int index) const;
+        double get_dc_bus_Vdc_in_kV_with_dc_bus_number(unsigned int bus) const;
         unsigned int get_dc_bus_area(unsigned int index) const;
         unsigned int get_dc_bus_zone(unsigned int index) const;
         unsigned int get_dc_bus_owner_number(unsigned int index) const;
@@ -172,14 +174,19 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int get_dc_line_sending_side_bus(unsigned int index) const;
         unsigned int get_dc_line_receiving_side_bus(unsigned int index) const;
         string get_dc_line_identifier(unsigned int index) const;
+        DC_DEVICE_ID get_dc_line_device_id(unsigned int index) const;
         unsigned int get_dc_line_meter_end_bus(unsigned int index) const;
         double get_dc_line_resistance_in_ohm(unsigned int index) const;
         double get_dc_line_inductance_in_mH(unsigned int index) const;
-        double get_dc_line_current_in_kA(unsigned int index, LINE_SIDE side) const;
-        double get_dc_line_power_in_MW(unsigned int index, LINE_SIDE side) const;
+        double get_dc_line_current_in_kA(unsigned int index, unsigned int meter_side) const;
+        double get_dc_line_power_in_MW(unsigned int index, unsigned int meter_side) const;
+        double get_dc_line_current_in_kA(DC_DEVICE_ID dc_did, unsigned int meter_side) const;
+        double get_dc_line_power_in_MW(DC_DEVICE_ID dc_did, unsigned int meter_side) const;
         double get_dc_line_loss_in_MW(unsigned int index) const;
 
         VSC_HVDC& operator=(const VSC_HVDC& vsc);
+
+        bool is_connected_to_dc_bus(unsigned int bus) const;
 
         virtual bool is_connected_to_bus(unsigned int bus) const;
         virtual bool is_in_area(unsigned int area) const;
@@ -284,13 +291,13 @@ class VSC_HVDC : public NONBUS_DEVICE
 
         double get_converter_ac_voltage_in_pu_with_ac_bus_number(unsigned int bus);
         double get_converter_ac_voltage_in_pu_with_converter_index(unsigned int index);
-        double get_converter_ac_voltage_in_kv_with_ac_bus_number(unsigned int bus);
-        double get_converter_ac_current_in_kA_with_ac_bus_number(unsigned int bus);
+        double get_converter_ac_voltage_in_kV_with_ac_bus_number(unsigned int bus);
+        complex<double> get_converter_ac_current_in_kA_with_ac_bus_number(unsigned int bus);
         double get_converter_dc_voltage_in_kV_with_ac_bus_number(unsigned int bus);
         double get_converter_dc_current_in_kA_with_ac_bus_number(unsigned int bus);
-        double get_converter_dc_power_in_mw_with_ac_bus_number(unsigned int bus);
-        double get_converter_ac_active_power_in_mw_with_ac_bus_number(unsigned int bus);
-        double get_converter_ac_reactive_power_in_mvar_with_ac_bus_number(unsigned int bus);
+        double get_converter_dc_power_in_MW_with_ac_bus_number(unsigned int bus);
+        double get_converter_ac_active_power_in_MW_with_ac_bus_number(unsigned int bus);
+        double get_converter_ac_reactive_power_in_MVar_with_ac_bus_number(unsigned int bus);
 
 
     private:
@@ -300,6 +307,8 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int get_dc_bus_converter_index_with_dc_bus_index(unsigned int index) const;
         unsigned int dc_bus_no2index(unsigned int bus) const;
         unsigned int dc_bus_index2no(unsigned int index) const;
+        unsigned int dc_line_device_id2index(DC_DEVICE_ID dc_did) const;
+        DC_DEVICE_ID dc_line_index2device_id(unsigned int index) const;
 
         unsigned int get_dc_bus_converter_index_with_dc_bus_number(unsigned int bus) const;
         unsigned int get_dc_bus_index_with_converter_index(unsigned int converter_index) const;

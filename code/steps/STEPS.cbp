@@ -65,6 +65,7 @@
 		<Unit filename="header/basic/constants_test.h" />
 		<Unit filename="header/basic/continuous_buffer.h" />
 		<Unit filename="header/basic/continuous_buffer_test.h" />
+		<Unit filename="header/basic/dc_device_id.h" />
 		<Unit filename="header/basic/device_id.h" />
 		<Unit filename="header/basic/device_id_test.h" />
 		<Unit filename="header/basic/device_index_map.h" />
@@ -464,6 +465,7 @@
 		<Unit filename="source/basic/constants_test.cpp" />
 		<Unit filename="source/basic/continuous_buffer.cpp" />
 		<Unit filename="source/basic/continuous_buffer_test.cpp" />
+		<Unit filename="source/basic/dc_device_id.cpp" />
 		<Unit filename="source/basic/device_id.cpp" />
 		<Unit filename="source/basic/device_id_test.cpp" />
 		<Unit filename="source/basic/device_index_map.cpp" />
@@ -781,6 +783,7 @@
 		<Unit filename="source/toolkit/contingency_screener/contingency_screener.cpp" />
 		<Unit filename="source/toolkit/contingency_screener/contingency_screener_test.cpp" />
 		<Unit filename="source/toolkit/dynamic_simulator/dynamic_simulator.cpp" />
+		<Unit filename="source/toolkit/dynamic_simulator/dynamic_simulator_prepare_meter.cpp" />
 		<Unit filename="source/toolkit/dynamic_simulator/dynamic_simulator_test.cpp" />
 		<Unit filename="source/toolkit/powerflow_case_generator/powerflow_case_generator.cpp" />
 		<Unit filename="source/toolkit/powerflow_case_generator/powerflow_case_generator_test.cpp" />

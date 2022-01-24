@@ -91,6 +91,8 @@ class DYNAMICS_SIMULATOR
         void prepare_line_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name="");
         void prepare_transformer_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name="");
         void prepare_hvdc_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name="");
+        void prepare_vsc_hvdc_related_meter(const DEVICE_ID& did, string meter_type, unsigned int side, string var_name="");
+        void prepare_vsc_hvdc_related_dc_line_meter(const DEVICE_ID& did, string meter_type, const DC_DEVICE_ID dc_did, unsigned int side, string var_name="");
         void prepare_equivalent_device_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
 
         void append_meter(const METER& meter);
@@ -274,6 +276,7 @@ class DYNAMICS_SIMULATOR
         vector<LOAD*> loads;
         vector<LINE*> lines;
         vector<HVDC*> hvdcs;
+        vector<VSC_HVDC*> vsc_hvdcs;
         vector<EQUIVALENT_DEVICE*> e_devices;
 
         vector<BUS*> internal_bus_pointers;

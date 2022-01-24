@@ -164,6 +164,19 @@ class METER_SETTER
         METER prepare_hvdc_inverter_ac_current_in_kA_meter(const DEVICE_ID& device_id);
         METER prepare_hvdc_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
 
+        METER prepare_vsc_hvdc_converter_dc_current_in_kA_meter(const DEVICE_ID& device_id, unsigned int meter_side);
+        METER prepare_vsc_hvdc_converter_ac_current_in_kA_meter(const DEVICE_ID& device_id, unsigned int meter_side);
+        METER prepare_vsc_hvdc_converter_ac_voltage_in_kV_meter(const DEVICE_ID& device_id, unsigned int meter_side);
+        METER prepare_vsc_hvdc_converter_ac_voltage_in_pu_meter(const DEVICE_ID& device_id, unsigned int meter_side);
+        METER prepare_vsc_hvdc_converter_dc_power_in_MW_meter(const DEVICE_ID& device_id, unsigned int meter_side);
+        METER prepare_vsc_hvdc_converter_dc_voltage_in_kV_meter(const DEVICE_ID& device_id, unsigned int meter_side);
+        METER prepare_vsc_hvdc_converter_ac_active_power_in_MW_meter(const DEVICE_ID& device_id, unsigned int meter_side);
+        METER prepare_vsc_hvdc_converter_ac_reactive_power_in_MVar_meter(const DEVICE_ID& device_id, unsigned int meter_side);
+        METER prepare_vsc_hvdc_dc_bus_voltage_in_kV_meter(const DEVICE_ID& device_id, unsigned int meter_side);
+        METER prepare_vsc_hvdc_dc_line_current_in_kA_meter(const DEVICE_ID& device_id, const DC_DEVICE_ID dc_did, unsigned int meter_side);
+        METER prepare_vsc_hvdc_dc_line_power_in_MW_meter(const DEVICE_ID& device_id, const DC_DEVICE_ID dc_did, unsigned int meter_side);
+        METER prepare_vsc_hvdc_model_internal_variable_meter(const DEVICE_ID& device_id, string var_name, unsigned int meter_side);
+
         METER prepare_equivalent_device_voltage_source_voltage_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_equivalent_device_voltage_source_voltage_angle_in_deg_meter(const DEVICE_ID& device_id);
         METER prepare_equivalent_device_voltage_source_resistance_in_pu_meter(const DEVICE_ID& device_id);
@@ -211,6 +224,7 @@ class METER_SETTER
         bool prepare_pv_unit_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_energy_storage_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id);
+        bool prepare_vsc_hvdc_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_equivalent_device_meter(METER& meter, const DEVICE_ID& device_id);
     private:
         STEPS* toolkit;

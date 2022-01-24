@@ -222,7 +222,7 @@ void METER::copy_from_const_meter(const METER& meter)
     string meter_type = this->meter_type;
     if(meter_type.find("INTERNAL VARIABLE") != string::npos)
         set_internal_variable_name(meter.get_internal_variable_name());
-    set_meter_side_bus(meter.get_meter_side_bus());
+    set_meter_side_ac_bus(meter.get_meter_side_ac_bus());
 }
 
 METER::METER(const METER& meter)
@@ -417,20 +417,39 @@ bool METER::is_internal_variable_name_valid(string& name) const
         return false;
 }
 
-void METER::set_meter_side_bus(unsigned int meter_side)
+void METER::set_meter_side_ac_bus(unsigned int meter_side)
 {
     if(get_device_type()==STEPS_BUS)
-        meter_side_bus = 0;
+        meter_side_ac_bus = 0;
     else
     {
         NONBUS_DEVICE* device = get_nonbus_device_pointer();
         if(device->is_connected_to_bus(meter_side))
-            meter_side_bus = meter_side;
+            meter_side_ac_bus = meter_side;
         else
-            meter_side_bus = 0;
+            meter_side_ac_bus = 0;
     }
 }
 
+void METER::set_meter_side_dc_bus(unsigned int meter_side)
+{
+    if(get_device_type()==STEPS_VSC_HVDC)
+    {
+        VSC_HVDC* vsc = (VSC_HVDC*) get_nonbus_device_pointer();
+        if(vsc->is_connected_to_dc_bus(meter_side))
+            meter_side_dc_bus = meter_side;
+        else
+            meter_side_dc_bus = 0;
+    }
+    else
+        meter_side_dc_bus = 0;
+}
+
+void METER::set_meter_dc_line(DC_DEVICE_ID did)
+{
+    if(did.get_device_type()==STEPS_DC_LINE)
+        dc_did = did;
+}
 
 void METER::change_device_id(DEVICE_ID did)
 {
@@ -504,9 +523,19 @@ string METER::get_meter_type() const
     return meter_type;
 }
 
-unsigned int METER::get_meter_side_bus() const
+unsigned int METER::get_meter_side_ac_bus() const
 {
-    return meter_side_bus;
+    return meter_side_ac_bus;
+}
+
+unsigned int METER::get_meter_side_dc_bus() const
+{
+    return meter_side_dc_bus;
+}
+
+DC_DEVICE_ID METER::get_meter_dc_line() const
+{
+    return dc_did;
 }
 
 STEPS_DEVICE_TYPE METER::get_device_type() const
@@ -549,7 +578,7 @@ string METER::get_meter_name() const
         if(device_type==STEPS_LINE or
            device_type==STEPS_TRANSFORMER or
            device_type==STEPS_VSC_HVDC)
-            name += " @ SIDE "+num2str(get_meter_side_bus());
+            name += " @ SIDE "+num2str(get_meter_side_ac_bus());
 
         name = trim_string(name);
         return name;
@@ -567,7 +596,7 @@ bool METER::is_valid() const
            device_type==STEPS_TRANSFORMER or
            device_type==STEPS_VSC_HVDC)
         {
-            if(get_meter_side_bus()!=0)
+            if(get_meter_side_ac_bus()!=0)
                 return true;
             else
                 return false;
@@ -583,7 +612,7 @@ void METER::clear()
 {
     device_pointer = NULL;
     meter_type[0] = '\0';
-    meter_side_bus = 0;
+    meter_side_ac_bus = 0;
     internal_variable_name[0] = '\0';
 }
 
@@ -756,7 +785,7 @@ double METER::get_meter_value_as_a_line() const
         if(line->get_sending_side_breaker_status()==true or line->get_receiving_side_breaker_status()==true)
         {
             string meter_type = this->meter_type;
-            unsigned int metered_bus = get_meter_side_bus();
+            unsigned int metered_bus = get_meter_side_ac_bus();
             if(meter_type=="CURRENT IN KA")
             {
                 if(metered_bus!=line->get_receiving_side_bus())
@@ -874,7 +903,7 @@ double METER::get_meter_value_as_a_transformer() const
     if(trans != NULL)
     {
         string meter_type = this->meter_type;
-        unsigned int metered_bus = get_meter_side_bus();
+        unsigned int metered_bus = get_meter_side_ac_bus();
         if(trans->is_two_winding_transformer())
         {
             if(meter_type=="CURRENT IN KA")
@@ -2122,7 +2151,7 @@ double METER::get_meter_value_as_a_vsc_hvdc() const
         if(vsc_hvdc->get_status()==true)
         {
             string meter_type = this->meter_type;
-            unsigned int metered_bus = get_meter_side_bus();
+            unsigned int metered_bus = get_meter_side_ac_bus();
             VSC_HVDC_MODEL* vsc_hvdc_model = vsc_hvdc->get_vsc_hvdc_model();
             if(vsc_hvdc_model != NULL)
             {
@@ -2132,9 +2161,9 @@ double METER::get_meter_value_as_a_vsc_hvdc() const
                 }
                 if(meter_type=="CONVERTER AC VOLTAGE IN KV")
                 {
-                    return steps_fast_complex_abs(vsc_hvdc->get_converter_ac_voltage_in_kv_with_ac_bus_number(metered_bus));
+                    return steps_fast_complex_abs(vsc_hvdc->get_converter_ac_voltage_in_kV_with_ac_bus_number(metered_bus));
                 }
-                if(meter_type=="CONVERTER AC CURRENT IN KA)
+                if(meter_type=="CONVERTER AC CURRENT IN KA")
                 {
                     return steps_fast_complex_abs(vsc_hvdc->get_converter_ac_current_in_kA_with_ac_bus_number(metered_bus));
                 }
@@ -2148,27 +2177,32 @@ double METER::get_meter_value_as_a_vsc_hvdc() const
                 }
                 if(meter_type=="CONVERTER DC POWER IN MW")
                 {
-                    return vsc_hvdc->get_converter_dc_power_in_mw_with_ac_bus_number(metered_bus);
+                    return vsc_hvdc->get_converter_dc_power_in_MW_with_ac_bus_number(metered_bus);
                 }
                 if(meter_type=="CONVERTER AC ACTIVE POWER IN MW")
                 {
-                    return vsc_hvdc->get_converter_ac_active_power_in_mw_with_ac_bus_number(metered_bus);
+                    return vsc_hvdc->get_converter_ac_active_power_in_MW_with_ac_bus_number(metered_bus);
                 }
                 if(meter_type=="CONVERTER AC REACTIVE POWER IN MVAR")
                 {
-                    return vsc_hvdc->get_converter_ac_reactive_power_in_mvar_with_ac_bus_number(metered_bus);
+                    return vsc_hvdc->get_converter_ac_reactive_power_in_MVar_with_ac_bus_number(metered_bus);
                 }
                 if(meter_type=="DC BUS VOLTAGE IN KV")
                 {
-                    return vsc_hvdc->get_converter_dc_voltage_in_kV_with_ac_bus_number(metered_bus);
+                    unsigned int dcbus = get_meter_side_dc_bus();
+                    return vsc_hvdc->get_dc_bus_Vdc_in_kV_with_dc_bus_number(dcbus);
                 }
                 if(meter_type=="DC LINE CURRENT IN KA")
                 {
-                    return 0;
+                    DC_DEVICE_ID dc_did = get_meter_dc_line();
+                    unsigned int dc_bus = get_meter_side_dc_bus();
+                    return vsc_hvdc->get_dc_line_current_in_kA(dc_did, dc_bus);
                 }
                 if(meter_type=="DC LINE POWER IN MW")
                 {
-                    return 0;
+                    DC_DEVICE_ID dc_did = get_meter_dc_line();
+                    unsigned int dc_bus = get_meter_side_dc_bus();
+                    return vsc_hvdc->get_dc_line_power_in_MW(dc_did, dc_bus);
                 }
                 if(meter_type=="VSC HVDC MODEL INTERNAL VARIABLE")
                     return vsc_hvdc_model->get_model_internal_variable_with_name(internal_variable_name);

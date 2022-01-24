@@ -3,6 +3,7 @@
 
 #include "header/basic/constants.h"
 #include "header/basic/device_id.h"
+#include "header/basic/dc_device_id.h"
 #include "header/device/device.h"
 
 class METER
@@ -17,7 +18,9 @@ class METER
         void set_device_id(const DEVICE_ID& device_id);
         void set_meter_type(string meter_type);
         void set_internal_variable_name(string name);
-        void set_meter_side_bus(unsigned int meter_side);
+        void set_meter_side_ac_bus(unsigned int meter_side);
+        void set_meter_side_dc_bus(unsigned int meter_side);
+        void set_meter_dc_line(DC_DEVICE_ID did);
 
         void change_device_id(DEVICE_ID did);
         void change_meter_type(const string& meter_type);
@@ -27,7 +30,9 @@ class METER
         DEVICE_ID get_device_id() const;
         STEPS_DEVICE_TYPE get_device_type() const;
         string get_meter_type() const;
-        unsigned int get_meter_side_bus() const;
+        unsigned int get_meter_side_ac_bus() const;
+        unsigned int get_meter_side_dc_bus() const;
+        DC_DEVICE_ID get_meter_dc_line() const;
         string get_internal_variable_name() const;
 
         string get_meter_name() const;
@@ -69,7 +74,12 @@ class METER
             NONBUS_DEVICE* nonbus_device_pointer;
         };
         char meter_type[STEPS_METER_TYPE_STRING_SIZE];
-        unsigned int meter_side_bus;
+        union
+        {
+            unsigned int meter_side_ac_bus;
+            unsigned int meter_side_dc_bus;
+        };
+        DC_DEVICE_ID dc_did;
         char internal_variable_name[STEPS_METER_TYPE_STRING_SIZE];
 };
 
