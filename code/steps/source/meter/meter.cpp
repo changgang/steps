@@ -164,7 +164,7 @@ vector<string> vsc_hvdc_meters{ "CONVERTER DC CURRENT IN KA",  "CONVERTER AC CUR
                                 "CONVERTER DC VOLTAGE IN KV",
                                 "CONVERTER AC ACTIVE POWER IN MW",    "CONVERTER AC REACTIVE POWER IN MVAR",
                                 "DC BUS VOLTAGE IN KV",
-                                "DC LINE CURRENT IN KA",       "DC LINE POWER IN MW"
+                                "DC LINE CURRENT IN KA",       "DC LINE POWER IN MW",
                                 "VSC HVDC MODEL INTERNAL VARIABLE"};
 
 vector<string> equivalent_device_meters{"VOLTAGE SOURCE VOLTAGE IN PU",
@@ -222,7 +222,22 @@ void METER::copy_from_const_meter(const METER& meter)
     string meter_type = this->meter_type;
     if(meter_type.find("INTERNAL VARIABLE") != string::npos)
         set_internal_variable_name(meter.get_internal_variable_name());
-    set_meter_side_ac_bus(meter.get_meter_side_ac_bus());
+    if(get_device_type()!=STEPS_VSC_HVDC)
+        set_meter_side_ac_bus(meter.get_meter_side_ac_bus());
+    else
+    {
+        if(get_meter_type().rfind("CONVERTER", 0) == 0)
+            set_meter_side_ac_bus(meter.get_meter_side_ac_bus());
+        else
+        {
+            set_meter_side_dc_bus(meter.get_meter_side_dc_bus());
+            if(get_meter_type().rfind("DC LINE", 0) == 0)
+                set_meter_dc_line(meter.get_meter_dc_line());
+        }
+    }
+    if(meter.get_meter_side_ac_bus()!=get_meter_side_ac_bus())
+        cout<<"error detected. different metered bus. old is "<<meter.get_meter_side_ac_bus()
+            <<" new is "<<get_meter_side_ac_bus()<<". line "<<__LINE__<<endl;
 }
 
 METER::METER(const METER& meter)
@@ -423,11 +438,27 @@ void METER::set_meter_side_ac_bus(unsigned int meter_side)
         meter_side_ac_bus = 0;
     else
     {
-        NONBUS_DEVICE* device = get_nonbus_device_pointer();
-        if(device->is_connected_to_bus(meter_side))
-            meter_side_ac_bus = meter_side;
+        if(get_device_type()!=STEPS_VSC_HVDC)
+        {
+            NONBUS_DEVICE* device = get_nonbus_device_pointer();
+            if(device->is_connected_to_bus(meter_side))
+                meter_side_ac_bus = meter_side;
+            else
+                meter_side_ac_bus = 0;
+        }
         else
-            meter_side_ac_bus = 0;
+        {
+            VSC_HVDC* vsc_hvdc = (VSC_HVDC*) get_nonbus_device_pointer();
+            if(get_meter_type().rfind("CONVERTER", 0) == 0)
+            {
+                if(vsc_hvdc->is_connected_to_bus(meter_side))
+                    meter_side_ac_bus = meter_side;
+                else
+                    meter_side_ac_bus = 0;
+            }
+            else
+                meter_side_ac_bus = 0;
+        }
     }
 }
 
@@ -572,6 +603,11 @@ string METER::get_meter_name() const
             name += " " + get_internal_variable_name();
 
         //name += " OF "+get_device_id().get_compound_device_name()+" IN PS "+toolkit->get_power_system_database()->get_system_name();
+        if(get_device_type()==STEPS_VSC_HVDC)
+        {
+            if(get_meter_type().rfind("DC LINE",0)==0)
+                name += " @ "+get_meter_dc_line().get_compound_device_name();
+        }
         name += " @ "+get_device_id().get_compound_device_name();
 
         STEPS_DEVICE_TYPE device_type = get_device_type();
@@ -604,7 +640,7 @@ bool METER::is_valid() const
             }
             else
             {
-                //cout<<"false"<<endl;
+                cout<<"invalid meter is deteced at line "<<__LINE__<<", "<<get_meter_name()<<endl;
                 return false;
             }
         }
@@ -612,7 +648,10 @@ bool METER::is_valid() const
             return true;
     }
     else
+    {
+        cout<<"invalid meter is deteced at line "<<__LINE__<<", "<<get_meter_name()<<endl;
         return false;
+    }
 }
 
 void METER::clear()

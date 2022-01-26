@@ -410,13 +410,13 @@
 		<Unit filename="main_cct_search_screening.cpp">
 			<Option link="0" />
 		</Unit>
-		<Unit filename="main_dynamics_simulation.cpp">
-			<Option link="0" />
-		</Unit>
+		<Unit filename="main_dynamics_simulation.cpp" />
 		<Unit filename="main_gprof.cpp">
 			<Option link="0" />
 		</Unit>
-		<Unit filename="main_powerflow.cpp" />
+		<Unit filename="main_powerflow.cpp">
+			<Option link="0" />
+		</Unit>
 		<Unit filename="main_tests.cpp">
 			<Option link="0" />
 		</Unit>

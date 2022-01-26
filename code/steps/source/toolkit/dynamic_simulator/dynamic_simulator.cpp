@@ -371,7 +371,7 @@ void DYNAMICS_SIMULATOR::append_meter(const METER& meter)
     else
     {
         ostringstream osstream;
-        osstream<<"Warning. Invalid meter is given. No meter will be set.";
+        osstream<<"Warning. Invalid meter is given. No meter will be set in DYNAMIC_SIMULATOR::"<<__FUNCTION__<<"().";
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }

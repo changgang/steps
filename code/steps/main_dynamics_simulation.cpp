@@ -36,7 +36,6 @@ int main()
 
     powerflow_solver.solve_with_full_Newton_Raphson_solution();
 
-    simulator.prepare_meters();
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
     simulator.set_allowed_max_power_imbalance_in_MVA(0.01);
     simulator.set_max_DAE_iteration(200);
@@ -52,6 +51,9 @@ int main()
     //simulator.set_output_file("test_log/bench_shandong_with_avr_trip_mac_140");
     simulator.set_output_file("../../../bench/test_log/IEEE39_vsc");
 
+    //simulator.prepare_meters();
+    simulator.prepare_vsc_hvdc_related_meters();
+    simulator.show_dynamic_simulator_configuration();
     //simulator.start();
     //simulator.run_to(1.0);
 

@@ -1711,7 +1711,7 @@ string VSC_HVDC::get_dc_line_identifier(unsigned int index) const
 DC_DEVICE_ID VSC_HVDC::get_dc_line_device_id(unsigned int index) const
 {
     DC_DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_DC_LINE);
 
     TERMINAL terminal;
     terminal.append_bus(get_dc_line_sending_side_bus(index));
