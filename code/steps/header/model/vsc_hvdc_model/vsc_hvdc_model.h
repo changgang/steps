@@ -36,7 +36,7 @@ class VSC_HVDC_MODEL : public MODEL
         virtual void check_blocking_logic() = 0;
         virtual void check_bypassing_logic() = 0;
         virtual void check_mode_switching_logic() = 0;
-        virtual void solve_hvdc_model_without_integration() = 0;
+        virtual void solve_vsc_hvdc_model_without_integration() = 0;
         virtual void check() = 0;
         virtual void clear() = 0;
         virtual void report() = 0;

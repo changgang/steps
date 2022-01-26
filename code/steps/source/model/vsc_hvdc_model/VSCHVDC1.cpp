@@ -601,8 +601,6 @@ bool VSCHVDC1::setup_model_with_steps_string_vector(vector<string>& data)
     string model_name = get_string_data(data[0],"");
     if(model_name!=get_model_name())
         return is_successful;
-
-
     // iblcok iunblock for instantaneous block or unblock
     // dblcok dunblock for delayed block or unblock
     // ibupass iunbupass for instantaneous bupass or unbupass
@@ -616,13 +614,13 @@ bool VSCHVDC1::setup_model_with_steps_string_vector(vector<string>& data)
     {
         unsigned int converter_bus = get_integer_data(data[data_index],"0"); data_index++;
         VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE active_control_mode = VSC_INVALID_DC_CONTORL;
-        string type=get_string_data(data[data_index],"");
+        string type=get_string_data(data[data_index],""); data_index++;
         if(type=="Vdc_control")
             active_control_mode = VSC_DC_VOLTAGE_CONTORL;
         if(type=="Pac_control")
             active_control_mode = VSC_AC_ACTIVE_POWER_CONTORL;
         VSC_HVDC_CONVERTER_REACTIVE_POWER_CONTROL_MODE reactive_control_mode = VSC_INVALID_AC_CONTORL;
-        string mode=get_string_data(data[data_index],"");
+        string mode=get_string_data(data[data_index],""); data_index++;
         if(mode=="Vac_control")
             reactive_control_mode = VSC_AC_VOLTAGE_CONTROL;
         if(mode=="Qac_control")
@@ -750,10 +748,10 @@ void VSCHVDC1::initialize()
         unsigned int ncon = get_vsc_stations_count();
         for(unsigned int i=0; i!=ncon; ++i)
         {
-            /*
-            complex<double> Is = vsc_hvdc->get_converter_ac_bus_current(i);
-            double Us = vsc_hvdc->get_converter_ac_bus_voltage(i);
-            double angle = vsc_hvdc->get_converter_ac_bus_angle(i);
+            unsigned int bus_number=vsc_hvdc->get_converter_ac_bus(i);
+            complex<double> Is = vsc_hvdc->get_converter_ac_current_in_kA_with_ac_bus_number(bus_number);
+            complex<double> Us = vsc_hvdc->get_converter_ac_voltage_in_kV_with_ac_bus_number(bus_number);
+            double angle = arg(Us);
 
             double Isd0 = Is.real()*cos(angle)+Is.imag()*sin(angle);
             double Isq0 = -Is.real()*sin(angle)+Is.imag()*cos(angle);
@@ -800,7 +798,8 @@ void VSCHVDC1::initialize()
                     vsc_stations[i].reactive_power_control_block.set_output(Isq0);
                     vsc_stations[i].reactive_power_control_block.initialize();
                 }
-            }*/
+
+            }
 
         }
     }
@@ -813,12 +812,12 @@ void VSCHVDC1::run(DYNAMIC_MODE mode)
     unsigned int ncon = get_vsc_stations_count();
     for(unsigned int i=0; i!=ncon; ++i)
     {
-        /*
-        complex<double> Is = vsc_hvdc->get_converter_ac_bus_current(i);
-        complex<double> Us = vsc_hvdc->get_converter_ac_bus_complex_voltage(i);
+        unsigned int bus_number=vsc_hvdc->get_converter_ac_bus(i);
+        complex<double> Is = vsc_hvdc->get_converter_ac_current_in_kA_with_ac_bus_number(bus_number);
+        complex<double> Us = vsc_hvdc->get_converter_ac_voltage_in_kV_with_ac_bus_number(bus_number);
         complex<double> j(0.0,1.0);
-        double Ps = (Us * (Is.real()-j*Is.imag())).real();
-        double Qs = (Us * (Is.real()-j*Is.imag())).imag();
+        double Ps = (Us * conj(Is)).real();
+        double Qs = (Us * conj(Is)).imag();
         double Isd0 = Is.real();
         double Isq0 = Is.imag();
 
@@ -826,11 +825,14 @@ void VSCHVDC1::run(DYNAMIC_MODE mode)
         {
             if(vsc_stations[i].reactive_power_control_mode == 1)   //1-ac_voltage_control 2-reactive_power_control
             {
-                //double Pd = vsc_hvdc->get_
-                vsc_stations[i].ud_voltage_control_block.set_output(Isd0);
-                vsc_stations[i].ud_voltage_control_block.initialize();
+                double udcref = vsc_hvdc->get_converter_initial_dc_voltage_reference_in_kV(i);
+                unsigned int dc_bus_index = vsc_hvdc->get_dc_bus_index_with_converter_index(i);
+                double udc = vsc_hvdc->get_dc_bus_Vdc_in_kV(dc_bus_index);
+                double p_input = udcref-udc;
+                vsc_stations[i].ud_voltage_control_block.set_input(p_input);
+                vsc_stations[i].ud_voltage_control_block.run(mode);
 
-                double Usref = vsc_hvdc->get_converter_nominal_ac_voltage_command_in_pu(i);
+                double Usref = vsc_hvdc->get_converter_nominal_ac_voltage_command_in_kV(i);
                 double q_input = Usref - Us.real();
                 vsc_stations[i].ac_voltage_control_block.set_input(q_input);
                 vsc_stations[i].ac_voltage_control_block.run(mode);
@@ -838,11 +840,15 @@ void VSCHVDC1::run(DYNAMIC_MODE mode)
             }
             if(vsc_stations[i].reactive_power_control_mode == 2)
             {
-                vsc_stations[i].ud_voltage_control_block.set_output(Isd0);
-                vsc_stations[i].ud_voltage_control_block.initialize();
+                double udcref = vsc_hvdc->get_converter_initial_dc_voltage_reference_in_kV(i);
+                unsigned int dc_bus_index = vsc_hvdc->get_dc_bus_index_with_converter_index(i);
+                double udc = vsc_hvdc->get_dc_bus_Vdc_in_kV(dc_bus_index);
+                double p_input = udcref-udc;
+                vsc_stations[i].ud_voltage_control_block.set_input(p_input);
+                vsc_stations[i].ud_voltage_control_block.run(mode);
 
                 double Qsref = vsc_hvdc->get_converter_nominal_reactive_power_command_in_pu(i);
-                double q_input = Qs-Qsref;
+                double q_input = Qsref-Qs;
                 vsc_stations[i].reactive_power_control_block.set_input(q_input);
                 vsc_stations[i].reactive_power_control_block.run(mode);
             }
@@ -852,34 +858,34 @@ void VSCHVDC1::run(DYNAMIC_MODE mode)
         {
             if(vsc_stations[i].reactive_power_control_mode == 1)
             {
-                double Psref = vsc_hvdc->get_converter_nominal_active_power_command_in_pu(i);
+                double Psref = vsc_hvdc->get_converter_nominal_ac_active_power_command_in_MW(i);
                 double p_input = Ps - Psref;
                 vsc_stations[i].active_power_control_block.set_input(p_input);
                 vsc_stations[i].active_power_control_block.run(mode);
 
-                double Usref = vsc_hvdc->get_converter_nominal_ac_voltage_command_in_pu(i);
+                double Usref = vsc_hvdc->get_converter_nominal_ac_voltage_command_in_kV(i);
                 double q_input = Usref - Us.real();
                 vsc_stations[i].ac_voltage_control_block.set_input(q_input);
                 vsc_stations[i].ac_voltage_control_block.run(mode);
             }
             if(vsc_stations[i].reactive_power_control_mode == 2)
             {
-                double Psref = vsc_hvdc->get_converter_nominal_active_power_command_in_pu(i);
+                double Psref = vsc_hvdc->get_converter_nominal_ac_active_power_command_in_MW(i);
                 double p_input = Ps - Psref;
                 vsc_stations[i].active_power_control_block.set_input(p_input);
                 vsc_stations[i].active_power_control_block.run(mode);
 
-                double Qsref = vsc_hvdc->get_converter_nominal_reactive_power_command_in_pu(i);
+                double Qsref = vsc_hvdc->get_converter_nominal_ac_reactive_power_command_in_Mvar(i);
                 double q_input = Qs-Qsref;
                 vsc_stations[i].reactive_power_control_block.set_input(q_input);
                 vsc_stations[i].reactive_power_control_block.run(mode);
             }
-        }*/
+        }
 
     }
 }
 
-void VSCHVDC1::solve_hvdc_model_without_integration()
+void VSCHVDC1::solve_vsc_hvdc_model_without_integration()
 {
     ;
 }

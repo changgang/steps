@@ -299,6 +299,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         double get_converter_ac_active_power_in_MW_with_ac_bus_number(unsigned int bus);
         double get_converter_ac_reactive_power_in_MVar_with_ac_bus_number(unsigned int bus);
 
+        unsigned int get_dc_bus_index_with_converter_index(unsigned int converter_index) const;
 
     private:
         void copy_from_const_vsc(const VSC_HVDC& vsc);
@@ -311,7 +312,6 @@ class VSC_HVDC : public NONBUS_DEVICE
         DC_DEVICE_ID dc_line_index2device_id(unsigned int index) const;
 
         unsigned int get_dc_bus_converter_index_with_dc_bus_number(unsigned int bus) const;
-        unsigned int get_dc_bus_index_with_converter_index(unsigned int converter_index) const;
 
 
         bool converter_index_is_out_of_range_in_function(const unsigned int index, const string& func) const;

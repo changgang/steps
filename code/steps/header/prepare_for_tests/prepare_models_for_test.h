@@ -14,6 +14,7 @@ void prepare_basic_transformers();
 void prepare_basic_fixed_shunts();
 void prepare_basic_switched_shunts();
 void prepare_basic_hvdcs();
+void prepare_basic_vsc_hvdcs();
 void prepare_basic_equivalent_devices();
 void prepare_basic_energy_strorages();
 

@@ -592,14 +592,21 @@ bool METER::is_valid() const
     if(device_pointer!=NULL and meter_type[0]!='\0')
     {
         STEPS_DEVICE_TYPE device_type = get_device_type();
+        //cout<<"device_type: "<<device_type<<endl;
         if(device_type==STEPS_LINE or
            device_type==STEPS_TRANSFORMER or
            device_type==STEPS_VSC_HVDC)
         {
             if(get_meter_side_ac_bus()!=0)
+            {
+                //cout<<"true"<<endl;
                 return true;
+            }
             else
+            {
+                //cout<<"false"<<endl;
                 return false;
+            }
         }
         else
             return true;

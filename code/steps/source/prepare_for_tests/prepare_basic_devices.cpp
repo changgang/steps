@@ -538,6 +538,28 @@ void prepare_basic_hvdcs()
     dmdb.add_model(&model);
 }
 
+void prepare_basic_vsc_hvdcs()
+{
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+
+    if(psdb.get_bus_count()==0)
+        prepare_basic_buses();
+    VSC_HVDC vsc_hvdc(default_toolkit);
+    vsc_hvdc.set_converter_count(3);
+    vsc_hvdc.set_dc_bus_count(3);
+    vsc_hvdc.set_dc_line_count(3);
+    vsc_hvdc.set_dc_network_base_voltage_in_kV(200.0);
+    vsc_hvdc.set_identifier("#1");
+    psdb.append_vsc_hvdc(vsc_hvdc);
+
+    DEVICE_ID did=vsc_hvdc.get_device_id();
+    VSCHVDC1 model(default_toolkit);
+    model.set_device_id(did);
+    dmdb.add_model(&model);
+
+}
+
 void prepare_basic_equivalent_devices()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();

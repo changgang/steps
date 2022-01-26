@@ -26,6 +26,7 @@ METER_SETTER_TEST::METER_SETTER_TEST() : setter(default_toolkit)
     TEST_ADD(METER_SETTER_TEST::test_prepare_pv_unit_related_meters);
     TEST_ADD(METER_SETTER_TEST::test_prepare_energy_storage_related_meters);
     TEST_ADD(METER_SETTER_TEST::test_prepare_hvdc_related_meters);
+    //TEST_ADD(METER_SETTER_TEST::test_prepare_hvdc_related_meters);
     TEST_ADD(METER_SETTER_TEST::test_prepare_equivalent_device_related_meters);
 }
 
@@ -998,6 +999,76 @@ void METER_SETTER_TEST::test_prepare_hvdc_related_meters()
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="HVDC MODEL INTERNAL VARIABLE");
     TEST_ASSERT(meter.get_internal_variable_name()=="STATE@INVERTER DC VOLTAGE SENSOR");
+}
+
+void METER_SETTER_TEST::test_prepare_vsc_hvdc_related_meters()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"METER_SETTER_TEST");
+
+    prepare_basic_hvdcs();
+
+    METER meter(default_toolkit);
+
+    DEVICE_ID did;
+    TERMINAL terminal;
+
+    did.set_device_type(STEPS_VSC_HVDC);
+    terminal.append_bus(1);
+    terminal.append_bus(2);
+    terminal.append_bus(3);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier_index(get_index_of_string("#1"));
+
+    meter = setter.prepare_vsc_hvdc_converter_dc_current_in_kA_meter(did, 1);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="CONVERTER DC CURRENT IN KA");
+
+    meter = setter.prepare_vsc_hvdc_converter_ac_current_in_kA_meter(did, 1);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="CONVERTER AC CURRENT IN KA");
+
+    meter = setter.prepare_vsc_hvdc_converter_ac_voltage_in_kV_meter(did, 1);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="CONVERTER AC VOLTAGE IN KV");
+
+    meter = setter.prepare_vsc_hvdc_converter_ac_voltage_in_pu_meter(did, 1);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="CONVERTER AC VOLTAGE IN PU");
+
+    meter = setter.prepare_vsc_hvdc_converter_dc_power_in_MW_meter(did, 1);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="CONVERTER DC POWER IN MW");
+
+    meter = setter.prepare_vsc_hvdc_converter_dc_voltage_in_kV_meter(did, 1);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="CONVERTER DC VOLTAGE IN KV");
+
+    meter = setter.prepare_vsc_hvdc_converter_ac_active_power_in_MW_meter(did, 1);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="CONVERTER AC ACTIVE POWER IN MW");
+
+    meter = setter.prepare_vsc_hvdc_converter_ac_reactive_power_in_MVar_meter(did, 1);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="CONVERTER AC REACTIVE POWER IN MVAR");
+
+    meter = setter.prepare_vsc_hvdc_dc_bus_voltage_in_kV_meter(did, 1);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="DC BUS VOLTAGE IN KV");
+
+    /*
+    meter = setter.prepare_vsc_hvdc_dc_line_current_in_kA_meter(did, 1);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="DC LINE CURRENT IN KA");
+
+    meter = setter.prepare_vsc_hvdc_dc_line_power_in_MW_meter(did, 1);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="DC LINE POWER IN MW");
+
+    meter = setter.prepare_vsc_hvdc_model_internal_variable_meter(did, 1);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="VSC HVDC MODEL INTERNAL VARIABLE");
+    */
+
 }
 
 void METER_SETTER_TEST::test_prepare_equivalent_device_related_meters()

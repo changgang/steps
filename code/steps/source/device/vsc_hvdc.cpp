@@ -3486,25 +3486,38 @@ complex<double> VSC_HVDC::get_converter_ac_current_in_kA_with_ac_bus_number(unsi
 
 double VSC_HVDC::get_converter_dc_voltage_in_kV_with_ac_bus_number(unsigned int bus)
 {
-    return 0.0;
+    unsigned int dc_bus_index=get_dc_bus_index_with_ac_bus_number(bus);
+    double dc_bus_voltage=get_dc_bus_Vdc_in_kV(dc_bus_index);
+    return dc_bus_voltage;
 }
 
 
 double VSC_HVDC::get_converter_dc_current_in_kA_with_ac_bus_number(unsigned int bus)
 {
-    return 0.0;
+    unsigned int converter_index=get_converter_index_with_ac_bus(bus);
+    unsigned int dc_bus_index=get_dc_bus_index_with_ac_bus_number(bus);
+    double Pdc = get_converter_Pdc_command_in_MW(converter_index);
+    double dc_bus_voltage = get_dc_bus_Vdc_in_kV(dc_bus_index);
+    double Idc = Pdc/dc_bus_voltage;
+    return Idc;
 }
 double VSC_HVDC::get_converter_dc_power_in_MW_with_ac_bus_number(unsigned int bus)
 {
-    return 0.0;
+    unsigned int converter_index=get_converter_index_with_ac_bus(bus);
+    double Pdc = get_converter_Pdc_command_in_MW(converter_index);
+    return Pdc;
 }
 double VSC_HVDC::get_converter_ac_active_power_in_MW_with_ac_bus_number(unsigned int bus)
 {
-    return 0.0;
+    unsigned int converter_index=get_converter_index_with_ac_bus(bus);
+    double Pac=get_converter_P_to_AC_bus_in_MW(converter_index);
+    return Pac;
 }
 double VSC_HVDC::get_converter_ac_reactive_power_in_MVar_with_ac_bus_number(unsigned int bus)
 {
-    return 0.0;
+    unsigned int converter_index=get_converter_index_with_ac_bus(bus);
+    double Qac=get_converter_Q_to_AC_bus_in_MVar(converter_index);
+    return Qac;
 }
 
 

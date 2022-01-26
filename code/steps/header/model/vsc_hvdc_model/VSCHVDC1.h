@@ -80,7 +80,7 @@ class VSCHVDC1: public VSC_HVDC_MODEL
         virtual void check_blocking_logic();
         virtual void check_bypassing_logic();
         virtual void check_mode_switching_logic();
-        virtual void solve_hvdc_model_without_integration();
+        virtual void solve_vsc_hvdc_model_without_integration();
         virtual void check();
         virtual void report();
         virtual void save();

@@ -6165,7 +6165,7 @@
 
 1641793061 e:\users\zma\desktop\steps\code\steps\header\basic\constants.h
 
-1642255836 e:\users\zma\desktop\steps\code\steps\header\basic\steps_enum.h
+1643039115 e:\users\zma\desktop\steps\code\steps\header\basic\steps_enum.h
 	<iso646.h>
 
 1641793061 e:\users\zma\desktop\steps\code\steps\header\basic\terminal.h
@@ -6314,9 +6314,10 @@
 	"header/basic/constants.h"
 	"header/meter/meter.h"
 
-1641793061 e:\users\zma\desktop\steps\code\steps\header\meter\meter.h
+1643039115 e:\users\zma\desktop\steps\code\steps\header\meter\meter.h
 	"header/basic/constants.h"
 	"header/basic/device_id.h"
+	"header/basic/dc_device_id.h"
 	"header/device/device.h"
 
 1641793061 e:\users\zma\desktop\steps\code\steps\header\model\sg_models\turbine_governor_model\turbine_governor_model.h
@@ -6495,10 +6496,11 @@
 	"header/model/model.h"
 	"header/block/integral_block.h"
 
-1642753235 e:\users\zma\desktop\steps\code\steps\header\device\vsc_hvdc.h
+1643096497 e:\users\zma\desktop\steps\code\steps\header\device\vsc_hvdc.h
 	"header/device/nonbus_device.h"
 	"header/device/vsc_hvdc_var.h"
 	"header/basic/device_id.h"
+	"header/basic/dc_device_id.h"
 	"header/basic/steps_enum.h"
 	"header/model/vsc_hvdc_model/vsc_hvdc_model.h"
 	"header/basic/sparse_matrix_define.h"
@@ -6511,7 +6513,7 @@
 	<complex>
 	<string>
 
-1642853668 e:\users\zma\desktop\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_model.h
+1643095537 e:\users\zma\desktop\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_model.h
 	"header/basic/timer.h"
 	"header/basic/steps_enum.h"
 	"header/model/model.h"
@@ -6629,7 +6631,7 @@
 	"header/basic/sparse_matrix_define.h"
 	<ctime>
 
-1641793062 e:\users\zma\desktop\steps\code\steps\header\toolkit\dynamic_simulator\dynamic_simulator.h
+1643039115 e:\users\zma\desktop\steps\code\steps\header\toolkit\dynamic_simulator\dynamic_simulator.h
 	"header/basic/power_mismatch_struct.h"
 	"header/meter/meter.h"
 	"header/network/network_matrix.h"
@@ -6671,7 +6673,7 @@
 	<vector>
 	<set>
 
-1641793062 e:\users\zma\desktop\steps\code\steps\header\prepare_for_tests\prepare_models_for_test.h
+1643083954 e:\users\zma\desktop\steps\code\steps\header\prepare_for_tests\prepare_models_for_test.h
 	"header/power_system_database.h"
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 
@@ -6694,7 +6696,7 @@
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	<fstream>
 
-1641793062 source:e:\users\zma\desktop\steps\code\steps\main_dynamics_simulation.cpp
+1643161783 source:e:\users\zma\desktop\steps\code\steps\main_dynamics_simulation.cpp
 	<istream>
 	<iostream>
 	"header/power_system_database.h"
@@ -6721,10 +6723,10 @@
 	<cmath>
 	<ctime>
 
-1641793061 e:\users\zma\desktop\steps\code\steps\header\meter\meter_setter.h
+1643039115 e:\users\zma\desktop\steps\code\steps\header\meter\meter_setter.h
 	"header/meter/meter.h"
 
-1642991781 source:e:\users\zma\desktop\steps\code\steps\main_powerflow.cpp
+1642993155 source:e:\users\zma\desktop\steps\code\steps\main_powerflow.cpp
 	<istream>
 	<iostream>
 	"header/power_system_database.h"
@@ -6733,7 +6735,7 @@
 	"header/basic/utility.h"
 	"header/data_imexporter/psse_imexporter.h"
 
-1642679716 source:e:\users\zma\desktop\steps\code\steps\main_tests.cpp
+1642993123 source:e:\users\zma\desktop\steps\code\steps\main_tests.cpp
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -6836,7 +6838,7 @@
 	"header/model/hvdc_model/vdcol_test.h"
 	"header/model/hvdc_model/CDC4T_test.h"
 	"header/model/hvdc_model/CDC6T_test.h"
-	"header/model/vsc_hvdc_model/VSC_HVDC1_test.h"
+	"header/model/vsc_hvdc_model/VSCHVDC1_test.h"
 	"header/model/wtg_models/wt_generator_model/wt3g1_test.h"
 	"header/model/wtg_models/wt_generator_model/wt3g0_test.h"
 	"header/model/wtg_models/wt_aerodynamic_model/aerd0_test.h"
@@ -7250,7 +7252,7 @@
 	"header/data_imexporter/steps_imexporter.h"
 	"header/STEPS.h"
 
-1642679716 e:\users\zma\desktop\steps\code\steps\header\data_imexporter\steps_imexporter.h
+1642993123 e:\users\zma\desktop\steps\code\steps\header\data_imexporter\steps_imexporter.h
 	"header/data_imexporter/data_imexporter.h"
 	"header/device/source.h"
 	"header/device/transformer.h"
@@ -7441,7 +7443,7 @@
 	"header/block/saturation_block.h"
 	"header/STEPS.h"
 
-1641793061 e:\users\zma\desktop\steps\code\steps\header\meter\meter_test.h
+1643083504 e:\users\zma\desktop\steps\code\steps\header\meter\meter_test.h
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -7451,7 +7453,7 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1641793061 e:\users\zma\desktop\steps\code\steps\header\meter\meter_setter_test.h
+1643083622 e:\users\zma\desktop\steps\code\steps\header\meter\meter_setter_test.h
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -9404,7 +9406,7 @@
 	<iostream>
 	<cstdio>
 
-1641793062 source:e:\users\zma\desktop\steps\code\steps\source\basic\utility.cpp
+1643039115 source:e:\users\zma\desktop\steps\code\steps\source\basic\utility.cpp
 	"header/basic/utility.h"
 	"header/basic/constants.h"
 	"header/steps_namespace.h"
@@ -9735,7 +9737,7 @@
 	<iostream>
 	<algorithm>
 
-1642854194 source:e:\users\zma\desktop\steps\code\steps\source\data_imexporter\steps_dynamics_imexporter.cpp
+1642993123 source:e:\users\zma\desktop\steps\code\steps\source\data_imexporter\steps_dynamics_imexporter.cpp
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -10155,7 +10157,7 @@
 	<iostream>
 	<cstdio>
 
-1642851993 source:e:\users\zma\desktop\steps\code\steps\source\device\vsc_hvdc.cpp
+1643092803 source:e:\users\zma\desktop\steps\code\steps\source\device\vsc_hvdc.cpp
 	"header/device/vsc_hvdc.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -10212,7 +10214,7 @@
 	<iostream>
 	<cstdio>
 
-1642854132 source:e:\users\zma\desktop\steps\code\steps\source\dynamic_model_database.cpp
+1642993123 source:e:\users\zma\desktop\steps\code\steps\source\dynamic_model_database.cpp
 	"header/dynamic_model_database.h"
 	"header/STEPS.h"
 	"header/steps_namespace.h"
@@ -10223,7 +10225,7 @@
 	<fstream>
 	<cstring>
 
-1641793062 source:e:\users\zma\desktop\steps\code\steps\source\meter\meter.cpp
+1643039115 source:e:\users\zma\desktop\steps\code\steps\source\meter\meter.cpp
 	"header/meter/meter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -10233,14 +10235,14 @@
 	<iostream>
 	<cstring>
 
-1641793062 source:e:\users\zma\desktop\steps\code\steps\source\meter\meter_setter.cpp
+1643039115 source:e:\users\zma\desktop\steps\code\steps\source\meter\meter_setter.cpp
 	"header/meter/meter_setter.h"
 	"header/basic/terminal.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 	<iostream>
 
-1641793062 source:e:\users\zma\desktop\steps\code\steps\source\meter\meter_setter_test.cpp
+1643090189 source:e:\users\zma\desktop\steps\code\steps\source\meter\meter_setter_test.cpp
 	"header/basic/test_macro.h"
 	"header/meter/meter_setter_test.h"
 	"header/basic/utility.h"
@@ -10253,7 +10255,7 @@
 	<cstdio>
 	<cmath>
 
-1641793062 source:e:\users\zma\desktop\steps\code\steps\source\meter\meter_test.cpp
+1643083559 source:e:\users\zma\desktop\steps\code\steps\source\meter\meter_test.cpp
 	"header/basic/test_macro.h"
 	"header/meter/meter_test.h"
 	"header/basic/utility.h"
@@ -10332,7 +10334,7 @@
 	"header/model/energy_storage_model/estr0.h"
 	"header/STEPS.h"
 
-1641793062 source:e:\users\zma\desktop\steps\code\steps\source\model\equivalent_model\arxl.cpp
+1643039115 source:e:\users\zma\desktop\steps\code\steps\source\model\equivalent_model\arxl.cpp
 	"header/model/equivalent_model/ARXL.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -11938,7 +11940,7 @@
 	"header/steps_namespace.h"
 	"header/basic/utility.h"
 
-1641793063 source:e:\users\zma\desktop\steps\code\steps\source\prepare_for_tests\prepare_basic_devices.cpp
+1643084629 source:e:\users\zma\desktop\steps\code\steps\source\prepare_for_tests\prepare_basic_devices.cpp
 	"header/prepare_for_tests/prepare_models_for_test.h"
 	"header/model/all_supported_models.h"
 	"header/basic/utility.h"
@@ -12049,7 +12051,7 @@
 	"header/toolkit/contingency_screener/contingency_screener.h"
 	"header/STEPS.h"
 
-1641793063 source:e:\users\zma\desktop\steps\code\steps\source\toolkit\dynamic_simulator\dynamic_simulator.cpp
+1643039115 source:e:\users\zma\desktop\steps\code\steps\source\toolkit\dynamic_simulator\dynamic_simulator.cpp
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	"header/basic/constants.h"
 	"header/basic/utility.h"
@@ -12209,8 +12211,8 @@
 
 1642679716 e:\users\zma\desktop\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc1_test.h
 
-1641259587 e:\users\zma\desktop\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_models.h
-	"header/model/vsc_hvdc_model/VSC_HVDC1.h"
+1642993123 e:\users\zma\desktop\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_models.h
+	"header/model/vsc_hvdc_model/VSCHVDC1.h"
 
 1642679716 source:e:\users\zma\desktop\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_model_test.cpp
 
@@ -12268,4 +12270,55 @@
 	<iostream>
 	<cstdio>
 	<algorithm>
+
+1643039115 e:\users\zma\desktop\steps\code\steps\header\basic\dc_device_id.h
+	"header/basic/constants.h"
+	"header/basic/steps_enum.h"
+	<vector>
+	<string>
+	<functional>
+	"terminal.h"
+
+1643094804 e:\users\zma\desktop\steps\code\steps\header\model\vsc_hvdc_model\vschvdc1.h
+	"header/model/vsc_hvdc_model/VSC_HVDC_MODEL.h"
+	"header/model/vsc_hvdc_model/vsc_station.h"
+	"header/block/first_order_block.h"
+	"header/block/differential_block.h"
+	"header/block/integral_block.h"
+	"header/block/saturation_block.h"
+	"header/basic/timer.h"
+
+1642993123 e:\users\zma\desktop\steps\code\steps\header\model\vsc_hvdc_model\vschvdc1_test.h
+
+1643039115 source:e:\users\zma\desktop\steps\code\steps\source\basic\dc_device_id.cpp
+	"header/basic/dc_device_id.h"
+	"header/basic/exception.h"
+	"header/basic/utility.h"
+	<istream>
+	<iostream>
+	<cstdio>
+	<algorithm>
+
+1643161104 source:e:\users\zma\desktop\steps\code\steps\source\model\vsc_hvdc_model\vschvdc1.cpp
+	"header/model/vsc_hvdc_model/VSCHVDC1.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	"header/STEPS.h"
+	<cstdio>
+	<istream>
+	<iostream>
+
+1643039115 source:e:\users\zma\desktop\steps\code\steps\source\toolkit\dynamic_simulator\dynamic_simulator_prepare_meter.cpp
+	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
+	"header/basic/constants.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	"header/meter/meter_setter.h"
+	<cstdio>
+	<cstdlib>
+	<cstring>
+	<istream>
+	<iostream>
+	<ctime>
+	<chrono>
 

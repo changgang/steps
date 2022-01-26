@@ -26,6 +26,7 @@ METER_TEST::METER_TEST() : meter(default_toolkit)
     TEST_ADD(METER_TEST::test_set_get_generator_meter_type);
     TEST_ADD(METER_TEST::test_set_get_load_meter_type);
     TEST_ADD(METER_TEST::test_set_get_hvdc_meter_type);
+    TEST_ADD(METER_TEST::test_set_get_vsc_hvdc_meter_type);
     TEST_ADD(METER_TEST::test_set_get_wt_generator_meter_type);
     TEST_ADD(METER_TEST::test_set_get_equivalent_device_meter_type);
     TEST_ADD(METER_TEST::test_set_get_energy_storage_meter_type);
@@ -354,6 +355,30 @@ void METER_TEST::test_set_get_hvdc_meter_type()
     }
 }
 
+void METER_TEST::test_set_get_vsc_hvdc_meter_type()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
+
+    DEVICE_ID did;
+    TERMINAL terminal;
+    string meter_type;
+
+    did.set_device_type(STEPS_VSC_HVDC);
+    terminal.append_bus(1);
+    terminal.append_bus(2);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier_index(get_index_of_string("#1"));
+
+    meter.set_device_id(did);
+
+    unsigned int n = hvdc_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        meter_type = vsc_hvdc_meters[i];
+        meter.set_meter_type(meter_type);
+        TEST_ASSERT(meter.get_meter_type()==meter_type);
+    }
+}
 
 void METER_TEST::test_set_get_wt_generator_meter_type()
 {
@@ -694,6 +719,11 @@ void METER_TEST::test_get_wt_generator_meter_value()
 }
 
 void METER_TEST::test_get_hvdc_meter_value()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
+}
+
+void METER_TEST::test_get_vsc_hvdc_meter_value()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 }
