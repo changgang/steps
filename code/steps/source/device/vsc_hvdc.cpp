@@ -3520,5 +3520,8 @@ double VSC_HVDC::get_converter_ac_reactive_power_in_MVar_with_ac_bus_number(unsi
     return Qac;
 }
 
-
+complex<double> VSC_HVDC::get_converter_dynamic_current_in_pu_based_on_system_base_power(unsigned int converter_index)
+{
+    ;
+}
 

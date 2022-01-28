@@ -2091,6 +2091,7 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
         }
     }
 }
+
 void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
 {
     ostringstream osstream;
@@ -2148,6 +2149,46 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
                 osstream<<"Current at inverter side of "<<hvdc->get_compound_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
                         <<"Complex power = "<<SQRT3*psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
                 toolkit->show_information_with_leading_time_stamp(osstream);
+            }
+        }
+    }
+}
+
+void DYNAMICS_SIMULATOR::add_vsc_hvdcs_to_bus_current_mismatch()
+{
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+
+    unsigned int nvsc = vsc_hvdcs.size();
+
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit->get_hvdc_thread_number());
+        #pragma omp parallel for schedule(static)
+        //#pragma omp parallel for num_threads(2)
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+    for(unsigned int i=0; i<nvsc; ++i)
+    {
+        complex<double> I;
+        VSC_HVDC* vsc_hvdc = vsc_hvdcs[i];
+        if(vsc_hvdc->get_status()==true)
+        {
+            unsigned int ncon = vsc_hvdc->get_converter_count();
+            for(unsigned int j=0; j!=ncon; ++j)
+            {
+                unsigned int physical_bus = vsc_hvdc->get_converter_ac_bus(j);
+                unsigned int internal_bsu network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+                I_mismatch[internal_bus] += vsc_hvdc->get_converter_dynamic_current_in_pu_based_on_system_base_power(j);
+                if(not detailed_log_enabled)
+                    ;
+                else
+                {
+                    I = vsc_hvdc->get_converter_dynamic_current_in_pu_based_on_system_base_power(j);
+                    I *= (psdb.get_system_base_power_in_MVA()/(SQRT3*psdb.get_bus_base_voltage_in_kV(physical_bus)));
+                    osstream<<"Current at vsc-hvdc ac side of "<<vsc_hvdc->get_compound_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
+                            <<"Complex power = "<<SQRT3*psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
+                    toolkit->show_information_with_leading_time_stamp(osstream);
+                }
             }
         }
     }

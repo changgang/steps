@@ -300,6 +300,8 @@ class VSC_HVDC : public NONBUS_DEVICE
         double get_converter_ac_reactive_power_in_MVar_with_ac_bus_number(unsigned int bus);
 
         unsigned int get_dc_bus_index_with_converter_index(unsigned int converter_index) const;
+        complex<double> get_converter_dynamic_current_in_pu_based_on_system_base_power(unsigned int converter_index);
+
 
     private:
         void copy_from_const_vsc(const VSC_HVDC& vsc);

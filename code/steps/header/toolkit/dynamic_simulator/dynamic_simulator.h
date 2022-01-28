@@ -212,6 +212,7 @@ class DYNAMICS_SIMULATOR
         void add_pv_units_to_bus_current_mismatch();
         void add_loads_to_bus_current_mismatch();
         void add_hvdcs_to_bus_current_mismatch();
+        void add_vsc_hvdcs_to_bus_current_mismatch();
         void add_equivalent_devices_to_bus_current_mismatch();
 
         complex<double> get_bus_complex_voltage_in_pu_with_internal_bus_number(unsigned int internal_bus) const;
