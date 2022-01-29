@@ -13,6 +13,7 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         ~PSSE_IMEXPORTER();
 
         virtual void load_powerflow_data(string file);
+        virtual void load_vsc_powerflow_data(string file);
         virtual void load_powerflow_result(string file);
         virtual void load_dynamic_data(string dy_source);
         virtual void load_sequence_data(string sq_source);
@@ -40,6 +41,7 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         vector<vector<string> > convert_hvdc_data2steps_vector() const;
         vector<vector<string> > convert_area_data2steps_vector() const;
         vector<vector<string> > convert_vsc_hvdc_data2steps_vector() const;
+        vector<vector<string> > convert_vsc_hvdc_raw_data2steps_vector() const;
         vector<vector<string> > convert_transformer_inpedance_correction_table_data2steps_vector() const;
         vector<vector<string> > convert_multi_terminal_hvdc_data2steps_vector() const;
         vector<vector<string> > convert_multi_section_line_data2steps_vector() const;

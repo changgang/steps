@@ -2935,6 +2935,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
             }
         }
         unsigned int nvsc = vsc_hvdcs.size();
+        //cout<<"nvsc: "<<nvsc<<endl;
         if(nvsc>0)
         {
             file<<"% VSC HVDC"<<endl;
@@ -2943,6 +2944,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
                 file<<"% VSC HVDC Project: "<<vsc_hvdcs[i]->get_name()<<endl;
                 file<<"DCBUS,DCBUSNAME,ACBUS,VDC/KV,VAC/KV,P2AC/MW,Q2AC/PW,P2DC/MW,PGEN/MW,PLOAD/MW"<<endl;
                 unsigned int n_dc_bus = vsc_hvdcs[i]->get_dc_bus_count();
+                //cout<<"n_dc_bus :"<<n_dc_bus<<endl;
                 for(unsigned int j=0; j!=n_dc_bus; ++j)
                 {
                     unsigned int ac_bus = vsc_hvdcs[i]->get_converter_ac_bus_number_with_dc_bus_index(j);
@@ -2967,10 +2969,18 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
                                 vsc_hvdcs[i]->get_dc_bus_load_power_in_MW(j));
                     file<<buffer<<endl;
                 }
+
                 file<<"IDCBUS,JDCBUS,IDC/KA,PDC_SENDING/MW,PDC_RECEIVING_MW,PLOSS_MW"<<endl;
                 unsigned int n_dc_line = vsc_hvdcs[i]->get_dc_line_count();
+                cout<<"n_dc_line :"<<n_dc_line<<endl;
                 for(unsigned int j=0; j!=n_dc_line; ++j)
                 {
+                    /*cout<<vsc_hvdcs[i]->get_dc_line_sending_side_bus(j)<<endl;
+                    cout<<vsc_hvdcs[i]->get_dc_line_receiving_side_bus(j)<<endl;
+                    cout<<vsc_hvdcs[i]->get_dc_line_current_in_kA(j,SENDING_SIDE)<<endl;
+                    cout<<vsc_hvdcs[i]->get_dc_line_power_in_MW(j,SENDING_SIDE)<<endl;
+                    cout<<vsc_hvdcs[i]->get_dc_line_power_in_MW(j,RECEIVING_SIDE)<<endl;
+                    cout<<vsc_hvdcs[i]->get_dc_line_loss_in_MW(j)<<endl;*/
                     snprintf(buffer, 1000, "%u,%u,%.6f,%.6f,%.6f,%.6f",
                             vsc_hvdcs[i]->get_dc_line_sending_side_bus(j),
                             vsc_hvdcs[i]->get_dc_line_receiving_side_bus(j),

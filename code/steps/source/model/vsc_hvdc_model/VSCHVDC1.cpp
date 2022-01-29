@@ -574,6 +574,11 @@ double VSCHVDC1::get_dc_voltage_ceq(unsigned int index) const
         return 9999.9;
     }
 }
+
+complex<double> VSCHVDC1::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase()
+{
+    ;
+}
 void VSCHVDC1::set_vsc_stations_count(unsigned int n)
 {
     vsc_stations.clear();
@@ -743,7 +748,7 @@ void VSCHVDC1::initialize()
     if(not is_model_initialized())
     {
 
-        VSC_HVDC* vsc_hvdc = get_multi_vsc_pointer();
+        VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
         setup_block_toolkit_and_parameters();
         unsigned int ncon = get_vsc_stations_count();
         for(unsigned int i=0; i!=ncon; ++i)
@@ -807,7 +812,7 @@ void VSCHVDC1::initialize()
 
 void VSCHVDC1::run(DYNAMIC_MODE mode)
 {
-    VSC_HVDC* vsc_hvdc = get_multi_vsc_pointer();
+    VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
     setup_block_toolkit_and_parameters();
     unsigned int ncon = get_vsc_stations_count();
     for(unsigned int i=0; i!=ncon; ++i)

@@ -26,7 +26,7 @@ METER_SETTER_TEST::METER_SETTER_TEST() : setter(default_toolkit)
     TEST_ADD(METER_SETTER_TEST::test_prepare_pv_unit_related_meters);
     TEST_ADD(METER_SETTER_TEST::test_prepare_energy_storage_related_meters);
     TEST_ADD(METER_SETTER_TEST::test_prepare_hvdc_related_meters);
-    //TEST_ADD(METER_SETTER_TEST::test_prepare_hvdc_related_meters);
+    TEST_ADD(METER_SETTER_TEST::test_prepare_vsc_hvdc_related_meters);
     TEST_ADD(METER_SETTER_TEST::test_prepare_equivalent_device_related_meters);
 }
 

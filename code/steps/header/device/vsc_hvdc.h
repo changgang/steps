@@ -178,8 +178,10 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int get_dc_line_meter_end_bus(unsigned int index) const;
         double get_dc_line_resistance_in_ohm(unsigned int index) const;
         double get_dc_line_inductance_in_mH(unsigned int index) const;
-        double get_dc_line_current_in_kA(unsigned int index, unsigned int meter_side) const;
-        double get_dc_line_power_in_MW(unsigned int index, unsigned int meter_side) const;
+        double get_dc_line_current_in_kA(unsigned int index, LINE_SIDE meter_side) const;
+        double get_dc_line_power_in_MW(unsigned int index, LINE_SIDE meter_side) const;
+        double get_dc_line_current_in_kA(unsigned int index, unsigned int dc_bus) const;
+        double get_dc_line_power_in_MW(unsigned int index, unsigned int dc_bus) const;
         double get_dc_line_current_in_kA(DC_DEVICE_ID dc_did, unsigned int meter_side) const;
         double get_dc_line_power_in_MW(DC_DEVICE_ID dc_did, unsigned int meter_side) const;
         double get_dc_line_loss_in_MW(unsigned int index) const;

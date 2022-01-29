@@ -13,6 +13,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         ~STEPS_IMEXPORTER();
 
         virtual void load_powerflow_data(string file);
+        void load_vsc_hvdc_raw_data(vector<vector<string> > DATA);
         virtual void load_powerflow_result(string file);
         virtual void load_dynamic_data(string dy_source);
         virtual void load_sequence_data(string sq_source);

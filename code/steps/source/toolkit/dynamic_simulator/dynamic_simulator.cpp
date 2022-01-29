@@ -2177,7 +2177,7 @@ void DYNAMICS_SIMULATOR::add_vsc_hvdcs_to_bus_current_mismatch()
             for(unsigned int j=0; j!=ncon; ++j)
             {
                 unsigned int physical_bus = vsc_hvdc->get_converter_ac_bus(j);
-                unsigned int internal_bsu network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+                unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
                 I_mismatch[internal_bus] += vsc_hvdc->get_converter_dynamic_current_in_pu_based_on_system_base_power(j);
                 if(not detailed_log_enabled)
                     ;

@@ -15,10 +15,14 @@ class VSC_HVDC_MODEL : public MODEL
     public:
         VSC_HVDC_MODEL(STEPS& toolkit);
         virtual ~VSC_HVDC_MODEL();
-        VSC_HVDC* get_multi_vsc_pointer() const;
+        VSC_HVDC* get_vsc_hvdc_pointer() const;
     public: // hvdc common
         virtual string get_model_type() const;
         // get input for initialization
+        complex<double> get_converter_ac_current_in_pu(unsigned int converter_index) const;
+        complex<double> get_converter_ac_complex_power_in_MVA(unsigned int converter_index) const;
+        complex<double> get_converter_ac_complex_voltage_in_pu(unsigned int converter_index) const;
+
 
     public: // specific exciter
 

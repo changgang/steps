@@ -1662,7 +1662,9 @@ double VSC_HVDC::get_dc_bus_Vdc_in_kV(unsigned int index) const
 
 double VSC_HVDC::get_dc_bus_Vdc_in_kV_with_dc_bus_number(unsigned int bus) const
 {
+    cout<<"get_dc_bus_Vdc_in_kV_with_dc_bus_number: bus:"<<bus<<endl;
     unsigned int index = dc_bus_no2index(bus);
+    cout<<"get_dc_bus_Vdc_in_kV_with_dc_bus_number: index:"<<index<<endl;
     return get_dc_bus_Vdc_in_kV(index);
 }
 
@@ -1766,6 +1768,56 @@ double VSC_HVDC::get_dc_line_inductance_in_mH(unsigned int index) const
     }
 }
 
+double VSC_HVDC::get_dc_line_current_in_kA(unsigned int index, LINE_SIDE meter_side) const
+{
+    if(index<get_dc_line_count())
+    {
+        unsigned int ibus = get_dc_line_sending_side_bus(index);
+        unsigned int jbus = get_dc_line_receiving_side_bus(index);
+        double R = get_dc_line_resistance_in_ohm(index);
+        double Vi = get_dc_bus_Vdc_in_kV(dc_bus_no2index(ibus));
+        double Vj = get_dc_bus_Vdc_in_kV(dc_bus_no2index(jbus));
+        if(meter_side==SENDING_SIDE)
+            return (Vi-Vj)/R;
+        else
+            return (Vj-Vi)/R;
+    }
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. index ("<<index<<") is out of  maximal dc line count when calling VSC_HVDC::"<<__FUNCTION__<<"()"<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return 0.0;
+    }
+}
+
+double VSC_HVDC::get_dc_line_power_in_MW(unsigned int index, LINE_SIDE meter_side) const
+{
+    cout<<"index: "<<index<<endl;
+    if(index<get_dc_line_count())
+    {
+        double I = get_dc_line_current_in_kA(index, meter_side);
+        cout<<"I: "<<I<<endl;
+        unsigned int dc_bus_number = INDEX_NOT_EXIST;
+        if(meter_side==SENDING_SIDE)
+            dc_bus_number=get_dc_line_sending_side_bus(index);
+        else
+            dc_bus_number=get_dc_line_receiving_side_bus(index);
+        cout<<"dc_bus_number:"<<dc_bus_number<<endl;
+        double V = get_dc_bus_Vdc_in_kV_with_dc_bus_number(dc_bus_number);
+        return V*I;
+    }
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. index ("<<index<<") is out of  maximal dc line count when calling VSC_HVDC::"<<__FUNCTION__<<"()"<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return 0.0;
+    }
+}
+
 double VSC_HVDC::get_dc_line_current_in_kA(unsigned int index, unsigned int meter_side) const
 {
     if(index<get_dc_line_count())
@@ -1794,8 +1846,9 @@ double VSC_HVDC::get_dc_line_power_in_MW(unsigned int index, unsigned int meter_
 {
     if(index<get_dc_line_count())
     {
-        double I = get_dc_line_current_in_kA(index, meter_side);
         double V = get_dc_bus_Vdc_in_kV_with_dc_bus_number(meter_side);
+        double I = get_dc_line_current_in_kA(index, meter_side);
+        cout<<"I: "<<I<<endl;
         return V*I;
     }
     else
@@ -1807,7 +1860,6 @@ double VSC_HVDC::get_dc_line_power_in_MW(unsigned int index, unsigned int meter_
         return 0.0;
     }
 }
-
 
 double VSC_HVDC::get_dc_line_current_in_kA(DC_DEVICE_ID dc_did, unsigned int meter_side) const
 {
@@ -2749,23 +2801,23 @@ double VSC_HVDC::solve_Pdc_with_dc_current_voltage_droop_control(unsigned int co
     double Idcref=get_converter_initial_dc_current_reference_in_kA(converter_index);
     double kdi=get_converter_initial_droop_coefficient_for_droop_control(converter_index);
     int alpha=get_converter_alpha(converter_index);
-
+    /*
     cout<<"converter_index: "<<converter_index<<endl;
     cout<<"initial_Pdc: "<<initial_Pdc<<endl;
     cout<<"Udcref: "<<Udcref<<endl;
     cout<<"Idcref: "<<Idcref<<endl;
     cout<<"kdi: "<<kdi<<endl;
     cout<<"alpha: "<<alpha<<endl;
-
+    */
     unsigned int dc_bus_index=get_dc_bus_index_with_converter_index(converter_index);
     double Vdc=get_dc_bus_Vdc_in_kV(dc_bus_index);
     double operating_power=alpha*Vdc*(Idcref-(Vdc-Udcref)/kdi);
     double Pdc=operating_power;
-
+    /*
     cout<<"dc_bus_index: "<<dc_bus_index<<endl;
     cout<<"Vdc: "<<Vdc<<endl;
     cout<<"operating_power: "<<operating_power<<endl;
-
+    */
     return Pdc;
 }
 
@@ -3522,6 +3574,15 @@ double VSC_HVDC::get_converter_ac_reactive_power_in_MVar_with_ac_bus_number(unsi
 
 complex<double> VSC_HVDC::get_converter_dynamic_current_in_pu_based_on_system_base_power(unsigned int converter_index)
 {
-    ;
+    if(get_status() == true)
+    {
+        VSC_HVDC_MODEL* model = get_vsc_hvdc_model();
+        if(model!=NULL)
+            return model->get_converter_ac_current_in_pu(converter_index);
+        else
+            return 0.0;
+    }
+    else
+        return 0.0;
 }
 

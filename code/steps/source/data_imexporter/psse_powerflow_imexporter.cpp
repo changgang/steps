@@ -33,7 +33,8 @@ void PSSE_IMEXPORTER::load_powerflow_data(string file)
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     load_powerflow_data_into_ram(file);
-
+    unsigned int p=raw_data_in_ram.size();
+    unsigned int q=raw_data_in_ram[0].size();
     if(raw_data_in_ram.size()==0)
     {
         osstream<<"No data in the given PSS/E file: "<<file<<endl
@@ -77,6 +78,60 @@ void PSSE_IMEXPORTER::load_powerflow_data(string file)
             <<psdb.get_owner_count()<<" owners";
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
+
+void PSSE_IMEXPORTER::load_vsc_powerflow_data(string file)
+{
+    ostringstream osstream;
+    osstream<<"Loading vsc powerflow data from vscraw file: "<<file;
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
+    load_powerflow_data_into_ram(file);
+
+    if(raw_data_in_ram.size()==0)
+    {
+        osstream<<"No data in the given vscraw file: "<<file<<endl
+          <<"Please check if the file exist or not.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    STEPS_IMEXPORTER steps_importer(toolkit);
+
+    vector<vector<string> > data = convert_vsc_hvdc_raw_data2steps_vector();
+
+    steps_importer.load_vsc_hvdc_raw_data(data);
+
+    osstream<<"Done loading powerflow vscraw data.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    vector<unsigned int> buses = psdb.get_all_buses_number();
+    size_t n = buses.size();
+    unsigned int max_bus_number = 0;
+    for(size_t i=0; i<n; ++i)
+        if(buses[i]>max_bus_number) max_bus_number = buses[i];
+
+    osstream<<"System maximum bus number is "<<max_bus_number<<" of "<<psdb.bus_number2bus_name(max_bus_number);
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
+    osstream<<"There are totally:\n"
+            <<psdb.get_bus_count()<<" buses\n"
+            <<psdb.get_generator_count()<<" generators\n"
+            <<psdb.get_wt_generator_count()<<" WT generators\n"
+            <<psdb.get_pv_unit_count()<<" PV units\n"
+            <<psdb.get_energy_storage_count()<<" energy storages\n"
+            <<psdb.get_line_count()<<" lines\n"
+            <<psdb.get_transformer_count()<<" transformers\n"
+            <<psdb.get_fixed_shunt_count()<<" fixed shunts\n"
+            <<psdb.get_hvdc_count()<<" HVDCs\n"
+            <<psdb.get_vsc_hvdc_count()<<" VSC HVDCs\n"
+            <<psdb.get_load_count()<<" loads\n"
+            <<psdb.get_area_count()<<" areas\n"
+            <<psdb.get_zone_count()<<" zones\n"
+            <<psdb.get_owner_count()<<" owners";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+}
+
 
 void PSSE_IMEXPORTER::load_powerflow_result(string file)
 {
@@ -290,6 +345,19 @@ vector<vector<string> > PSSE_IMEXPORTER::convert_area_data2steps_vector() const
 vector<vector<string> > PSSE_IMEXPORTER::convert_vsc_hvdc_data2steps_vector() const
 {
     return convert_i_th_type_data2steps_vector(10);
+}
+vector<vector<string> > PSSE_IMEXPORTER::convert_vsc_hvdc_raw_data2steps_vector() const
+{
+    vector<vector<string> > data;
+    unsigned int n = raw_data_in_ram.size();
+    for(unsigned int i=0; i<n; ++i)
+    {
+        vector<string> DATA = raw_data_in_ram[i];
+        unsigned int m = DATA.size();
+        for(unsigned int j=0; j<m; ++j)
+            data.push_back(split_string(DATA[j],","));
+    }
+    return data;
 }
 vector<vector<string> > PSSE_IMEXPORTER::convert_transformer_inpedance_correction_table_data2steps_vector() const
 {

@@ -1912,6 +1912,32 @@ void STEPS_IMEXPORTER::load_vsc_hvdc_data()
     }
 }
 
+void STEPS_IMEXPORTER::load_vsc_hvdc_raw_data(vector<vector<string> > DATA)
+{
+    vector<string> data;
+    unsigned int ndata=DATA.size();
+    vector<vector<string> > vsc_hvdc_data;
+    for(unsigned int i=0;i<ndata;)
+    {
+        vsc_hvdc_data.clear();
+        data=DATA[i];
+        vsc_hvdc_data.push_back(data);
+        ++i;
+        unsigned int ncon=get_integer_data(data[1],"0");
+        unsigned int nbus=get_integer_data(data[2],"0");
+        unsigned int ndc_line=get_integer_data(data[3],"0");
+        unsigned int nlines_to_read= ncon+nbus+ndc_line;
+        for(unsigned int j=0; j<nlines_to_read;++j)
+        {
+            if(i>=ndata) break;
+            data=DATA[i];
+            vsc_hvdc_data.push_back(data);
+            ++i;
+        }
+        add_vsc_hvdc_with_data(vsc_hvdc_data);
+    }
+}
+
 void STEPS_IMEXPORTER::add_vsc_hvdc_with_data(vector<vector<string> > vsc_hvdc_data)
 {
     STEPS& toolkit = get_toolkit();

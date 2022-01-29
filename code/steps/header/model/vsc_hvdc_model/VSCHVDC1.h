@@ -64,6 +64,7 @@ class VSCHVDC1: public VSC_HVDC_MODEL
         double get_converter_dc_voltage_kpuc(unsigned int index)const ;
         double get_dc_voltage_ceq(unsigned int index) const;
 
+        virtual complex<double> get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
 
     public:
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);
