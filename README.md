@@ -4,11 +4,11 @@
   * STEPS: https://github.com/changgang/steps  and  https://gitee.com/lichgang/steps/
   * stepspy: https://pypi.org/project/stepspy/
   * Documentation: https://github.com/changgang/steps/wiki/
-- Date of Readme: Jan 5, 2022
+- Date of Readme: Feb 2, 2022
 
 # Reference
 Please cite STEPS with the following paper:  
-```Changgang Li, Yue Wu, Hengxu Zhang, Hua Ye, Yutian Liu and Yilu Liu, "STEPS: A Portable Numerical Simulation Toolkit for Electrical Power System Dynamic Studies," in IEEE Transactions on Power Systems, doi: 10.1109/TPWRS.2020.3045102.```  
+```Changgang Li, Yue Wu, Hengxu Zhang, Hua Ye, Yutian Liu and Yilu Liu, "STEPS: A Portable Numerical Simulation Toolkit for Electrical Power System Dynamic Studies," in IEEE Transactions on Power Systems, vol. 36, no. 4, pp. 3216-3226, July 2021, doi: 10.1109/TPWRS.2020.3045102.```  
 See: https://ieeexplore.ieee.org/document/9295409
 
 ## Major functions
