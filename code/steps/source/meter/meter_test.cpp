@@ -112,6 +112,15 @@ void METER_TEST::setup()
     estorage.set_identifier("#1");
     estorage.set_status(true);
     psdb.append_energy_storage(estorage);
+
+    VSC_HVDC vsc(default_toolkit);
+    vsc.set_converter_count(2);
+    vsc.set_dc_bus_count(2);
+    vsc.set_dc_line_count(1);
+    vsc.set_converter_ac_bus(0, 1);
+    vsc.set_converter_ac_bus(1, 2);
+    vsc.set_identifier("#1");
+    psdb.append_vsc_hvdc(vsc);
 }
 
 void METER_TEST::tear_down()
@@ -481,6 +490,9 @@ void METER_TEST::test_set_get_meter_internal_variable_name()
     meter.set_meter_type("ROTOR ANGLE IN DEG");
     TEST_ASSERT(meter.get_internal_variable_name()=="");
     meter.set_meter_type("SYNC GENERATOR MODEL INTERNAL VARIABLE");
+    ostringstream osstream;
+    osstream<<"Below you should find a warning with information like: Internal variable name \'ROTOR ANGLE IN DEG\' is not valid. Don't panic.";
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     meter.set_internal_variable_name("ROTOR ANGLE IN DEG");
     TEST_ASSERT(meter.get_internal_variable_name()=="");
     meter.set_internal_variable_name("STATE@ROTOR ANGLE BLOCK");
@@ -608,6 +620,9 @@ void METER_TEST::test_is_valid()
     meter.set_meter_type("VOLTAGE IN PU");
 
     TEST_ASSERT(meter.is_valid()==true);
+    ostringstream osstream;
+    osstream<<"Below you should find a warning with information like: Invalid meter type '' is not supported for setting up meter type. Don't panic.";
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     meter.set_meter_type("");
     TEST_ASSERT(meter.is_valid()==false);
 }

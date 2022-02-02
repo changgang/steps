@@ -996,14 +996,27 @@ string device_type2string(STEPS_DEVICE_TYPE device_type)
             return "HYBRID DC";
         case STEPS_GENERAL_DEVICE:
             return "GENERAL DEVICE";
-        case STEPS_DC_BUS:
-            return "DC BUS";
-        case STEPS_DC_LINE:
-            return "DC LINE";
         case STEPS_INVALID_DEVICE:
             return "INVALID DEVICE TYPE";
         default:
             return "UNNAMED DEVICE TYPE OF NUMBER "+num2str(device_type);
+    }
+}
+
+string dc_device_type2string(STEPS_DC_DEVICE_TYPE device_type)
+{
+    switch(device_type)
+    {
+        case STEPS_DC_BUS:
+            return "DC BUS";
+        case STEPS_DC_LINE:
+            return "DC LINE";
+        case STEPS_GENERAL_DC_DEVICE:
+            return "GENERAL DC DEVICE";
+        case STEPS_INVALID_DC_DEVICE:
+            return "INVALID DC DEVICE TYPE";
+        default:
+            return "UNNAMED DC DEVICE TYPE OF NUMBER "+num2str(device_type);
     }
 }
 

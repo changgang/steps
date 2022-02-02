@@ -8,6 +8,8 @@
 #include <mutex>
 
 extern STR_INT_MAP toolkit_str_int_map;
+extern vector<STEPS_DEVICE_TYPE> STEPS_DEVICE_TYPE_LIST;
+extern vector<STEPS_DC_DEVICE_TYPE> STEPS_DC_DEVICE_TYPE_LIST;
 extern STEPS default_toolkit;
 extern STEPS* toolkits[STEPS_MAX_TOOLKIT_SIZE];
 extern std::mutex mtx;

@@ -65,7 +65,7 @@ void DC_DEVICE_ID::set_maximum_allowed_terminal_count(unsigned int n)
     maximum_terminal_count = n;
 }
 
-void DC_DEVICE_ID::set_device_type(STEPS_DEVICE_TYPE device_type)
+void DC_DEVICE_ID::set_device_type(STEPS_DC_DEVICE_TYPE device_type)
 {
     if(device_type== STEPS_DC_BUS or device_type==STEPS_DC_LINE)
     {
@@ -74,16 +74,8 @@ void DC_DEVICE_ID::set_device_type(STEPS_DEVICE_TYPE device_type)
     }
 }
 
-void DC_DEVICE_ID::set_device_type_and_allowed_terminal_count(STEPS_DEVICE_TYPE device_type)
+void DC_DEVICE_ID::set_device_type_and_allowed_terminal_count(STEPS_DC_DEVICE_TYPE device_type)
 {
-    /*
-    device type code:
-    0: invalid
-    <=1000: terminal + identifier
-    1001~2000: name
-    9999: general
-    */
-
     if(device_type==STEPS_DC_BUS)
     {
         enable_allow_terminal();
@@ -114,7 +106,7 @@ void DC_DEVICE_ID::set_device_type_and_allowed_terminal_count(STEPS_DEVICE_TYPE 
             <<"DC_BUS, DC_LINE."<<endl
             <<"Device type will be set as blank, and \"NONE\" will be returned if get_device_type() is called.";
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
-    device_type = STEPS_INVALID_DEVICE;
+    device_type = STEPS_INVALID_DC_DEVICE;
 }
 
 void DC_DEVICE_ID::set_device_terminal(const TERMINAL& term)
@@ -159,7 +151,7 @@ void DC_DEVICE_ID::set_device_name_index(unsigned int index)
     }
 }
 
-STEPS_DEVICE_TYPE DC_DEVICE_ID::get_device_type() const
+STEPS_DC_DEVICE_TYPE DC_DEVICE_ID::get_device_type() const
 {
     return device_type;
 }
@@ -210,8 +202,8 @@ string DC_DEVICE_ID::get_compound_device_name() const
     string comp_device_name = "INVALID DEVICE (possible of type "+num2str(get_device_type())+")";
     if(is_valid())
     {
-        STEPS_DEVICE_TYPE device_type = get_device_type();
-        string device_type_str = device_type2string(device_type);
+        STEPS_DC_DEVICE_TYPE device_type = get_device_type();
+        string device_type_str = dc_device_type2string(device_type);
         string ident = get_device_identifier();
         string device_name = get_device_name();
         TERMINAL term = get_device_terminal();
@@ -264,7 +256,7 @@ bool DC_DEVICE_ID::is_identifier_allowed() const
 
 void DC_DEVICE_ID::clear()
 {
-    device_type = STEPS_INVALID_DEVICE;
+    device_type = STEPS_INVALID_DC_DEVICE;
     device_identifier_index = 0;
     device_name_index = 0;
     terminal.clear();

@@ -551,10 +551,13 @@ void prepare_basic_vsc_hvdcs()
     vsc_hvdc.set_dc_line_count(3);
     vsc_hvdc.set_dc_network_base_voltage_in_kV(200.0);
     vsc_hvdc.set_identifier("#1");
+    vsc_hvdc.set_converter_ac_bus(0, 1);
+    vsc_hvdc.set_converter_ac_bus(1, 2);
+    vsc_hvdc.set_converter_ac_bus(2, 3);
     psdb.append_vsc_hvdc(vsc_hvdc);
 
     DEVICE_ID did=vsc_hvdc.get_device_id();
-    VSCHVDC1 model(default_toolkit);
+    VSCHVDCP0 model(default_toolkit);
     model.set_device_id(did);
     dmdb.add_model(&model);
 

@@ -219,25 +219,25 @@ void METER::copy_from_const_meter(const METER& meter)
     this->toolkit = &(meter.get_toolkit());
     set_device_id(meter.get_device_id());
     set_meter_type(meter.get_meter_type());
-    string meter_type = this->meter_type;
+    string meter_type = get_meter_type();
     if(meter_type.find("INTERNAL VARIABLE") != string::npos)
         set_internal_variable_name(meter.get_internal_variable_name());
     if(get_device_type()!=STEPS_VSC_HVDC)
-        set_meter_side_ac_bus(meter.get_meter_side_ac_bus());
+        set_meter_side_bus(meter.get_meter_side_bus());
     else
     {
         if(get_meter_type().rfind("CONVERTER", 0) == 0)
-            set_meter_side_ac_bus(meter.get_meter_side_ac_bus());
+            set_meter_side_bus(meter.get_meter_side_bus());
         else
         {
-            set_meter_side_dc_bus(meter.get_meter_side_dc_bus());
+            set_meter_side_bus(meter.get_meter_side_bus());
             if(get_meter_type().rfind("DC LINE", 0) == 0)
-                set_meter_dc_line(meter.get_meter_dc_line());
+                set_sub_dc_device_id(meter.get_sub_dc_device_id());
         }
     }
-    if(meter.get_meter_side_ac_bus()!=get_meter_side_ac_bus())
-        cout<<"error detected. different metered bus. old is "<<meter.get_meter_side_ac_bus()
-            <<" new is "<<get_meter_side_ac_bus()<<". line "<<__LINE__<<endl;
+    if(meter.get_meter_side_bus()!=get_meter_side_bus())
+        cout<<"error detected. different metered bus. old is "<<meter.get_meter_side_bus()
+            <<" new is "<<get_meter_side_bus()<<". line "<<__LINE__<<endl;
 }
 
 METER::METER(const METER& meter)
@@ -291,7 +291,7 @@ void METER::set_meter_type(string meter_type)
         }
         else
         {
-            osstream<<"Warning, Invalid meter type '"<<meter_type<<"' is not supported for setting up meter type of "<<device_pointer->get_compound_device_name()<<".";
+            osstream<<"Warning. Invalid meter type '"<<meter_type<<"' is not supported for setting up meter type of "<<device_pointer->get_compound_device_name()<<".";
             toolkit->show_information_with_leading_time_stamp(osstream);
             change_meter_type("");
         }
@@ -309,7 +309,7 @@ void METER::set_internal_variable_name(string name)
     ostringstream osstream;
     if(device_pointer!=NULL)
     {
-        string meter_type = this->meter_type;
+        string meter_type = get_meter_type();
         if(meter_type.find("INTERNAL VARIABLE") != string::npos)
         {
             if(is_internal_variable_name_valid(name))
@@ -318,14 +318,14 @@ void METER::set_internal_variable_name(string name)
             }
             else
             {
-                osstream<<"Warning, Internal variable name '"<<name<<"' is not valid. No internal variable name will be set.";
+                osstream<<"Warning. Internal variable name '"<<name<<"' is not valid. No internal variable name will be set.";
                 toolkit->show_information_with_leading_time_stamp(osstream);
                 change_meter_internal_variable_name("");
             }
         }
         else
         {
-            osstream<<"Warning, Meter type '"<<meter_type<<"' is not valid Internal Variable Meter. No internal variable name will be set.";
+            osstream<<"Warning. Meter type '"<<meter_type<<"' is not valid Internal Variable Meter. No internal variable name will be set.";
             toolkit->show_information_with_leading_time_stamp(osstream);
             change_meter_internal_variable_name("");
         }
@@ -432,51 +432,37 @@ bool METER::is_internal_variable_name_valid(string& name) const
         return false;
 }
 
-void METER::set_meter_side_ac_bus(unsigned int meter_side)
+void METER::set_meter_side_bus(unsigned int meter_side)
 {
     if(get_device_type()==STEPS_BUS)
-        meter_side_ac_bus = 0;
+        meter_side_bus = 0;
     else
     {
         if(get_device_type()!=STEPS_VSC_HVDC)
         {
-            NONBUS_DEVICE* device = get_nonbus_device_pointer();
+            NONBUS_DEVICE* device = (NONBUS_DEVICE*) get_device_pointer();
             if(device->is_connected_to_bus(meter_side))
-                meter_side_ac_bus = meter_side;
+                meter_side_bus = meter_side;
             else
-                meter_side_ac_bus = 0;
+                meter_side_bus = 0;
         }
         else
         {
-            VSC_HVDC* vsc_hvdc = (VSC_HVDC*) get_nonbus_device_pointer();
+            VSC_HVDC* vsc_hvdc = (VSC_HVDC*) get_device_pointer();
             if(get_meter_type().rfind("CONVERTER", 0) == 0)
             {
-                if(vsc_hvdc->is_connected_to_bus(meter_side))
-                    meter_side_ac_bus = meter_side;
+                if(vsc_hvdc->is_connected_to_bus(meter_side) or vsc_hvdc->is_connected_to_dc_bus(meter_side))
+                    meter_side_bus = meter_side;
                 else
-                    meter_side_ac_bus = 0;
+                    meter_side_bus = 0;
             }
             else
-                meter_side_ac_bus = 0;
+                meter_side_bus = 0;
         }
     }
 }
 
-void METER::set_meter_side_dc_bus(unsigned int meter_side)
-{
-    if(get_device_type()==STEPS_VSC_HVDC)
-    {
-        VSC_HVDC* vsc = (VSC_HVDC*) get_nonbus_device_pointer();
-        if(vsc->is_connected_to_dc_bus(meter_side))
-            meter_side_dc_bus = meter_side;
-        else
-            meter_side_dc_bus = 0;
-    }
-    else
-        meter_side_dc_bus = 0;
-}
-
-void METER::set_meter_dc_line(DC_DEVICE_ID did)
+void METER::set_sub_dc_device_id(DC_DEVICE_ID did)
 {
     if(did.get_device_type()==STEPS_DC_LINE)
         dc_did = did;
@@ -489,14 +475,18 @@ void METER::change_device_id(DEVICE_ID did)
 
 void METER::change_meter_type(const string& meter_type)
 {
-    strncpy(this->meter_type, meter_type.c_str(), STEPS_METER_TYPE_STRING_SIZE-1);
-    this->meter_type[STEPS_METER_TYPE_STRING_SIZE-1] = '\0';
+    add_string_to_str_int_map(meter_type);
+    this->meter_type_string_index = get_index_of_string(meter_type);
+    /*strncpy(this->meter_type, meter_type.c_str(), STEPS_METER_TYPE_STRING_SIZE-1);
+    this->meter_type[STEPS_METER_TYPE_STRING_SIZE-1] = '\0';*/
 }
 
 void METER::change_meter_internal_variable_name(const string& name)
 {
-    strncpy(this->internal_variable_name, name.c_str(), STEPS_METER_TYPE_STRING_SIZE-1);
-    this->internal_variable_name[STEPS_METER_TYPE_STRING_SIZE-1] = '\0';
+    add_string_to_str_int_map(name);
+    this->internal_variable_name_index = get_index_of_string(name);
+    /*strncpy(this->internal_variable_name, name.c_str(), STEPS_METER_TYPE_STRING_SIZE-1);
+    this->internal_variable_name[STEPS_METER_TYPE_STRING_SIZE-1] = '\0';*/
 }
 
 bool METER::is_valid_meter_type(string& meter_type) const
@@ -551,20 +541,19 @@ DEVICE_ID METER::get_device_id() const
 
 string METER::get_meter_type() const
 {
-    return meter_type;
+    if(meter_type_string_index!=INDEX_NOT_EXIST)
+        return get_string_of_index(meter_type_string_index);
+    else
+        return "";
+    //return meter_type;
 }
 
-unsigned int METER::get_meter_side_ac_bus() const
+unsigned int METER::get_meter_side_bus() const
 {
-    return meter_side_ac_bus;
+    return meter_side_bus;
 }
 
-unsigned int METER::get_meter_side_dc_bus() const
-{
-    return meter_side_dc_bus;
-}
-
-DC_DEVICE_ID METER::get_meter_dc_line() const
+DC_DEVICE_ID METER::get_sub_dc_device_id() const
 {
     return dc_did;
 }
@@ -579,17 +568,15 @@ STEPS_DEVICE_TYPE METER::get_device_type() const
 
 string METER::get_internal_variable_name() const
 {
-    return internal_variable_name;
+    if(internal_variable_name_index!=INDEX_NOT_EXIST)
+        return get_string_of_index(internal_variable_name_index);
+    else
+        return "";
 }
 
 DEVICE* METER::get_device_pointer() const
 {
     return device_pointer;
-}
-
-NONBUS_DEVICE* METER::get_nonbus_device_pointer() const
-{
-    return nonbus_device_pointer;
 }
 
 string METER::get_meter_name() const
@@ -606,7 +593,7 @@ string METER::get_meter_name() const
         if(get_device_type()==STEPS_VSC_HVDC)
         {
             if(get_meter_type().rfind("DC LINE",0)==0)
-                name += " @ "+get_meter_dc_line().get_compound_device_name();
+                name += " @ "+get_sub_dc_device_id().get_compound_device_name();
         }
         name += " @ "+get_device_id().get_compound_device_name();
 
@@ -614,7 +601,7 @@ string METER::get_meter_name() const
         if(device_type==STEPS_LINE or
            device_type==STEPS_TRANSFORMER or
            device_type==STEPS_VSC_HVDC)
-            name += " @ SIDE "+num2str(get_meter_side_ac_bus());
+            name += " @ SIDE "+num2str(get_meter_side_bus());
 
         name = trim_string(name);
         return name;
@@ -625,7 +612,7 @@ string METER::get_meter_name() const
 
 bool METER::is_valid() const
 {
-    if(device_pointer!=NULL and meter_type[0]!='\0')
+    if(device_pointer!=NULL and get_meter_type()!="")
     {
         STEPS_DEVICE_TYPE device_type = get_device_type();
         //cout<<"device_type: "<<device_type<<endl;
@@ -633,14 +620,14 @@ bool METER::is_valid() const
            device_type==STEPS_TRANSFORMER or
            device_type==STEPS_VSC_HVDC)
         {
-            if(get_meter_side_ac_bus()!=0)
+            if(get_meter_side_bus()!=0)
             {
                 //cout<<"true"<<endl;
                 return true;
             }
             else
             {
-                cout<<"invalid meter is deteced at line "<<__LINE__<<", "<<get_meter_name()<<endl;
+                //cout<<"invalid meter is detected at METER::line "<<__LINE__<<", "<<get_meter_name()<<endl;
                 return false;
             }
         }
@@ -649,7 +636,7 @@ bool METER::is_valid() const
     }
     else
     {
-        cout<<"invalid meter is deteced at line "<<__LINE__<<", "<<get_meter_name()<<endl;
+        //cout<<"invalid meter is detected at METER::line "<<__LINE__<<", "<<get_meter_name()<<endl;
         return false;
     }
 }
@@ -657,9 +644,10 @@ bool METER::is_valid() const
 void METER::clear()
 {
     device_pointer = NULL;
-    meter_type[0] = '\0';
-    meter_side_ac_bus = 0;
-    internal_variable_name[0] = '\0';
+    dc_did.clear();
+    meter_type_string_index = INDEX_NOT_EXIST;
+    meter_side_bus = 0;
+    internal_variable_name_index = INDEX_NOT_EXIST;
 }
 
 
@@ -748,6 +736,9 @@ void METER::set_device_pointer(DEVICE_ID device_id)
         case STEPS_EQUIVALENT_DEVICE:
             deviceptr = (DEVICE*) psdb.get_equivalent_device(device_id);
             break;
+
+        default:
+            break;
     }
 
     this->device_pointer = deviceptr;
@@ -788,6 +779,8 @@ double METER::get_meter_value() const
                 return get_meter_value_as_a_vsc_hvdc();
             case STEPS_EQUIVALENT_DEVICE:
                 return get_meter_value_as_an_equivalent_device();
+            default:
+                return 0.0;
         }
         return 0.0;
     }
@@ -801,7 +794,7 @@ double METER::get_meter_value_as_a_bus() const
     BUS* bus = (BUS*) get_device_pointer();
     if(bus->get_bus_type()!=OUT_OF_SERVICE)
     {
-        string meter_type = this->meter_type;
+        string meter_type = get_meter_type();
         if(meter_type=="VOLTAGE IN PU")
             return bus->get_positive_sequence_voltage_in_pu();
         if(meter_type=="VOLTAGE IN KV")
@@ -830,8 +823,8 @@ double METER::get_meter_value_as_a_line() const
     {
         if(line->get_sending_side_breaker_status()==true or line->get_receiving_side_breaker_status()==true)
         {
-            string meter_type = this->meter_type;
-            unsigned int metered_bus = get_meter_side_ac_bus();
+            string meter_type = get_meter_type();
+            unsigned int metered_bus = get_meter_side_bus();
             if(meter_type=="CURRENT IN KA")
             {
                 if(metered_bus!=line->get_receiving_side_bus())
@@ -948,8 +941,8 @@ double METER::get_meter_value_as_a_transformer() const
     TRANSFORMER* trans = (TRANSFORMER*) get_device_pointer();
     if(trans != NULL)
     {
-        string meter_type = this->meter_type;
-        unsigned int metered_bus = get_meter_side_ac_bus();
+        string meter_type = get_meter_type();
+        unsigned int metered_bus = get_meter_side_bus();
         if(trans->is_two_winding_transformer())
         {
             if(meter_type=="CURRENT IN KA")
@@ -1114,7 +1107,7 @@ double METER::get_meter_value_as_a_load() const
     {
         if(load->get_status()==true)
         {
-            string meter_type = this->meter_type;
+            string meter_type = get_meter_type();
             if(meter_type=="ACTIVE POWER IN MW")
                 return (load->get_dynamic_load_in_MVA()).real();
 
@@ -1147,7 +1140,7 @@ double METER::get_meter_value_as_a_load() const
                 if(model==NULL)
                     return 0.0;
                 else
-                    return model->get_model_internal_variable_with_name(internal_variable_name);
+                    return model->get_model_internal_variable_with_name(get_internal_variable_name());
             }
             if(meter_type=="FREQUENCY RELAY MODEL INTERNAL VARIABLE")
             {
@@ -1155,7 +1148,7 @@ double METER::get_meter_value_as_a_load() const
                 if(model==NULL)
                     return 0.0;
                 else
-                    return model->get_model_internal_variable_with_name(internal_variable_name);
+                    return model->get_model_internal_variable_with_name(get_internal_variable_name());
             }
             if(meter_type=="VOLTAGE RELAY MODEL INTERNAL VARIABLE")
             {
@@ -1163,7 +1156,7 @@ double METER::get_meter_value_as_a_load() const
                 if(model==NULL)
                     return 0.0;
                 else
-                    return model->get_model_internal_variable_with_name(internal_variable_name);
+                    return model->get_model_internal_variable_with_name(get_internal_variable_name());
             }
             if(meter_type=="TOTAL SCALE IN PU")
             {
@@ -1193,7 +1186,7 @@ double METER::get_meter_value_as_a_generator() const
     {
         if(generator->get_status()==true)
         {
-            string meter_type = this->meter_type;
+            string meter_type = get_meter_type();
             POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
             double fbase = psdb.get_bus_base_frequency_in_Hz(generator->get_generator_bus());
             double sbase = psdb.get_system_base_power_in_MVA();
@@ -1472,7 +1465,7 @@ double METER::get_meter_value_as_a_generator() const
             if(meter_type=="SYNC GENERATOR MODEL INTERNAL VARIABLE")
             {
                 if(gen_model!=NULL)
-                    return gen_model->get_model_internal_variable_with_name(internal_variable_name);
+                    return gen_model->get_model_internal_variable_with_name(get_internal_variable_name());
                 else
                     return 0.0;
             }
@@ -1481,26 +1474,26 @@ double METER::get_meter_value_as_a_generator() const
                 if(comp_model==NULL)
                     return 0.0;
                 else
-                    return comp_model->get_model_internal_variable_with_name(internal_variable_name);
+                    return comp_model->get_model_internal_variable_with_name(get_internal_variable_name());
             }
             if(meter_type=="STABILIZER MODEL INTERNAL VARIABLE")
             {
                 if(stabilizer_model!=NULL)
-                    return stabilizer_model->get_model_internal_variable_with_name(internal_variable_name);
+                    return stabilizer_model->get_model_internal_variable_with_name(get_internal_variable_name());
                 else
                     return 0.0;
             }
             if(meter_type=="EXCITER MODEL INTERNAL VARIABLE")
             {
                 if(exciter_model!=NULL)
-                    return exciter_model->get_model_internal_variable_with_name(internal_variable_name);
+                    return exciter_model->get_model_internal_variable_with_name(get_internal_variable_name());
                 else
                     return 0.0;
             }
             if(meter_type=="TURBINE GOVERNOR MODEL INTERNAL VARIABLE")
             {
                 if(turbine_governor_model!=NULL)
-                    return turbine_governor_model->get_model_internal_variable_with_name(internal_variable_name);
+                    return turbine_governor_model->get_model_internal_variable_with_name(get_internal_variable_name());
                 else
                     return 0.0;
             }
@@ -1509,7 +1502,7 @@ double METER::get_meter_value_as_a_generator() const
                 if(turbine_lfc_model==NULL)
                     return 0.0;
                 else
-                    return turbine_lfc_model->get_model_internal_variable_with_name(internal_variable_name);
+                    return turbine_lfc_model->get_model_internal_variable_with_name(get_internal_variable_name());
             }
 
             return 0.0;
@@ -1530,7 +1523,7 @@ double METER::get_meter_value_as_a_wt_generator() const
     {
         if(generator->get_status()==true)
         {
-            string meter_type = this->meter_type;
+            string meter_type = get_meter_type();
             unsigned int bus = generator->get_generator_bus();
             POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
             double fbase = psdb.get_bus_base_frequency_in_Hz(generator->get_generator_bus());
@@ -1858,42 +1851,42 @@ double METER::get_meter_value_as_a_wt_generator() const
             if(meter_type=="WT GENERATOR MODEL INTERNAL VARIABLE")
             {
                 if(gen_model!=NULL)
-                    return gen_model->get_model_internal_variable_with_name(internal_variable_name);
+                    return gen_model->get_model_internal_variable_with_name(get_internal_variable_name());
                 else
                     return 0.0;
             }
             if(meter_type=="WT AERODYNAMIC MODEL INTERNAL VARIABLE")
             {
                 if(aerd_model!=NULL)
-                    return aerd_model->get_model_internal_variable_with_name(internal_variable_name);
+                    return aerd_model->get_model_internal_variable_with_name(get_internal_variable_name());
                 else
                     return 0.0;
             }
             if(meter_type=="WT TURBINE MODEL INTERNAL VARIABLE")
             {
                 if(turbine_model!=NULL)
-                    return turbine_model->get_model_internal_variable_with_name(internal_variable_name);
+                    return turbine_model->get_model_internal_variable_with_name(get_internal_variable_name());
                 else
                     return 0.0;
             }
             if(meter_type=="WT ELECTRICAL MODEL INTERNAL VARIABLE")
             {
                 if(electrical_model!=NULL)
-                    return electrical_model->get_model_internal_variable_with_name(internal_variable_name);
+                    return electrical_model->get_model_internal_variable_with_name(get_internal_variable_name());
                 else
                     return 0.0;
             }
             if(meter_type=="WT PITCH MODEL INTERNAL VARIABLE")
             {
                 if(pitch_model!=NULL)
-                    return pitch_model->get_model_internal_variable_with_name(internal_variable_name);
+                    return pitch_model->get_model_internal_variable_with_name(get_internal_variable_name());
                 else
                     return 0.0;
             }
             if(meter_type=="WIND SPEED MODEL INTERNAL VARIABLE")
             {
                 if(windspeed_model!=NULL)
-                    return windspeed_model->get_model_internal_variable_with_name(internal_variable_name);
+                    return windspeed_model->get_model_internal_variable_with_name(get_internal_variable_name());
                 else
                     return 0.0;
             }
@@ -1915,7 +1908,7 @@ double METER::get_meter_value_as_a_pv_unit() const
     {
         if(pv_unit->get_status()==true)
         {
-            string meter_type = this->meter_type;
+            string meter_type = get_meter_type();
             unsigned int bus = pv_unit->get_unit_bus();
             POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
             double one_over_sbase = toolkit->get_one_over_system_base_power_in_one_over_MVA();
@@ -2072,28 +2065,28 @@ double METER::get_meter_value_as_a_pv_unit() const
             if(meter_type=="PV CONVERTER MODEL INTERNAL VARIABLE")
             {
                 if(converter_model!=NULL)
-                    return converter_model->get_model_internal_variable_with_name(internal_variable_name);
+                    return converter_model->get_model_internal_variable_with_name(get_internal_variable_name());
                 else
                     return 0.0;
             }
             if(meter_type=="PV PANEL MODEL INTERNAL VARIABLE")
             {
                 if(panel_model!=NULL)
-                    return panel_model->get_model_internal_variable_with_name(internal_variable_name);
+                    return panel_model->get_model_internal_variable_with_name(get_internal_variable_name());
                 else
                     return 0.0;
             }
             if(meter_type=="PV ELECTRICAL MODEL INTERNAL VARIABLE")
             {
                 if(electrical_model!=NULL)
-                    return electrical_model->get_model_internal_variable_with_name(internal_variable_name);
+                    return electrical_model->get_model_internal_variable_with_name(get_internal_variable_name());
                 else
                     return 0.0;
             }
             if(meter_type=="PV IRRADIANCE MODEL INTERNAL VARIABLE")
             {
                 if(irradiance_model!=NULL)
-                    return irradiance_model->get_model_internal_variable_with_name(internal_variable_name);
+                    return irradiance_model->get_model_internal_variable_with_name(get_internal_variable_name());
                 else
                     return 0.0;
             }
@@ -2113,7 +2106,7 @@ double METER::get_meter_value_as_an_hvdc() const
     {
         if(hvdc->get_status()==true)
         {
-            string meter_type = this->meter_type;
+            string meter_type = get_meter_type();
             HVDC_MODEL* hvdc_model = hvdc->get_hvdc_model();
             if(hvdc_model != NULL)
             {
@@ -2175,7 +2168,7 @@ double METER::get_meter_value_as_an_hvdc() const
                     return hvdc_model->get_converter_ac_complex_power_in_MVA(INVERTER).imag();
 
                 if(meter_type=="HVDC MODEL INTERNAL VARIABLE")
-                    return hvdc_model->get_model_internal_variable_with_name(internal_variable_name);
+                    return hvdc_model->get_model_internal_variable_with_name(get_internal_variable_name());
 
                 return 0.0;
             }
@@ -2196,8 +2189,8 @@ double METER::get_meter_value_as_a_vsc_hvdc() const
     {
         if(vsc_hvdc->get_status()==true)
         {
-            string meter_type = this->meter_type;
-            unsigned int metered_bus = get_meter_side_ac_bus();
+            string meter_type = get_meter_type();
+            unsigned int metered_bus = get_meter_side_bus();
             VSC_HVDC_MODEL* vsc_hvdc_model = vsc_hvdc->get_vsc_hvdc_model();
             if(vsc_hvdc_model != NULL)
             {
@@ -2235,23 +2228,23 @@ double METER::get_meter_value_as_a_vsc_hvdc() const
                 }
                 if(meter_type=="DC BUS VOLTAGE IN KV")
                 {
-                    unsigned int dcbus = get_meter_side_dc_bus();
+                    unsigned int dcbus = get_meter_side_bus();
                     return vsc_hvdc->get_dc_bus_Vdc_in_kV_with_dc_bus_number(dcbus);
                 }
                 if(meter_type=="DC LINE CURRENT IN KA")
                 {
-                    DC_DEVICE_ID dc_did = get_meter_dc_line();
-                    unsigned int dc_bus = get_meter_side_dc_bus();
+                    DC_DEVICE_ID dc_did = get_sub_dc_device_id();
+                    unsigned int dc_bus = get_meter_side_bus();
                     return vsc_hvdc->get_dc_line_current_in_kA(dc_did, dc_bus);
                 }
                 if(meter_type=="DC LINE POWER IN MW")
                 {
-                    DC_DEVICE_ID dc_did = get_meter_dc_line();
-                    unsigned int dc_bus = get_meter_side_dc_bus();
+                    DC_DEVICE_ID dc_did = get_sub_dc_device_id();
+                    unsigned int dc_bus = get_meter_side_bus();
                     return vsc_hvdc->get_dc_line_power_in_MW(dc_did, dc_bus);
                 }
                 if(meter_type=="VSC HVDC MODEL INTERNAL VARIABLE")
-                    return vsc_hvdc_model->get_model_internal_variable_with_name(internal_variable_name);
+                    return vsc_hvdc_model->get_model_internal_variable_with_name(get_internal_variable_name());
             }
             return 0.0;
         }
@@ -2267,7 +2260,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) get_device_pointer();
     if(edevice != NULL)
     {
-        string meter_type = this->meter_type;
+        string meter_type = get_meter_type();
         if(meter_type=="VOLTAGE SOURCE VOLTAGE IN PU")
         {
             return steps_fast_complex_abs(edevice->get_equivalent_voltage_source_voltage_in_pu());
@@ -2524,7 +2517,7 @@ double METER::get_meter_value_as_an_energy_storage() const
         ENERGY_STORAGE_MODEL* model = estorage->get_energy_storage_model();
         if(model!=NULL)
         {
-            string meter_type = this->meter_type;
+            string meter_type = get_meter_type();
             if(meter_type=="STATE OF ENERGY IN PU")
                 return model->get_energy_state_in_pu();
 
@@ -2547,7 +2540,7 @@ double METER::get_meter_value_as_an_energy_storage() const
                 return model->get_terminal_current_in_pu_based_on_mbase();
 
             if(meter_type=="ENERGY STORAGE MODEL INTERNAL VARIABLE")
-                return model->get_model_internal_variable_with_name(internal_variable_name);
+                return model->get_model_internal_variable_with_name(get_internal_variable_name());
 
             return 0.0;
         }

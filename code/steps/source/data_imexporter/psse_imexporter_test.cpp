@@ -648,7 +648,11 @@ void PSSE_IMEXPORTER_TEST::test_load_dynamic_data()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.clear();
     importer.load_powerflow_data("../../../bench/ieee9.raw");
-    importer.load_dynamic_data("../../../bench/ieee9.dyr");
+    importer.load_dynamic_data("../../../bench/ieee9_PM.dyr");
+    vector<GENERATOR*> gens = psdb.get_generators_connecting_to_bus(1);
+    GENERATOR* gen = gens[0];
+    TEST_ASSERT(gen!=NULL);
+    TEST_ASSERT(gen->get_model_of_type("GEN")!=NULL);
 }
 
 

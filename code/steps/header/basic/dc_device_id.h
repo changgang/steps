@@ -16,14 +16,14 @@ class DC_DEVICE_ID
         DC_DEVICE_ID();
         DC_DEVICE_ID(const DC_DEVICE_ID& did);
         virtual ~DC_DEVICE_ID();
-        void set_device_type(STEPS_DEVICE_TYPE device_type);
+        void set_device_type(STEPS_DC_DEVICE_TYPE device_type);
         void set_device_terminal(const TERMINAL& terminal);
         /*void set_DC_DEVICE_IDentifier(string DC_DEVICE_IDentifier);
         void set_device_name(string device_name);*/
         void set_device_identifier_index(unsigned int index);
         void set_device_name_index(unsigned int index);
 
-        STEPS_DEVICE_TYPE get_device_type() const;
+        STEPS_DC_DEVICE_TYPE get_device_type() const;
         TERMINAL get_device_terminal() const;
         string get_device_identifier() const;
         string get_device_name() const;
@@ -48,7 +48,7 @@ class DC_DEVICE_ID
         void initialize_minimum_maximum_terminal_count();
         void set_minimum_allowed_terminal_count(unsigned int n);
         void set_maximum_allowed_terminal_count(unsigned int n);
-        void set_device_type_and_allowed_terminal_count(STEPS_DEVICE_TYPE device_type);
+        void set_device_type_and_allowed_terminal_count(STEPS_DC_DEVICE_TYPE device_type);
         bool is_given_terminal_acceptable(const TERMINAL& terminal);
 
     private:
@@ -57,7 +57,7 @@ class DC_DEVICE_ID
         void enable_allow_identifier();
         void disable_allow_identifier();
     private:
-        STEPS_DEVICE_TYPE device_type;
+        STEPS_DC_DEVICE_TYPE device_type;
         unsigned int minimum_terminal_count, maximum_terminal_count;
         bool allow_identifier;
         bool allow_name;

@@ -1164,14 +1164,15 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
 
     osstream<<"Power mismatch of buses.";
     toolkit->show_information_with_leading_time_stamp(osstream);
-    osstream<<"bus     Pmismatch(MW) Qmismatch(MVar)";
+    osstream<<"bus      name           Pmismatch(MW) Qmismatch(MVar)";
     toolkit->show_information_with_leading_time_stamp(osstream);
 
-    unsigned int bus;
+
     double sbase = psdb.get_system_base_power_in_MVA();
     for(unsigned int i=0; i!=nbus; ++i)
     {
-        bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
+        unsigned int bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
+        string bus_name = psdb.bus_number2bus_name(bus);
         BUS_TYPE btype = psdb.get_bus(bus)->get_bus_type();
         double p = bus_power[i].real()*sbase;
         double q = bus_power[i].imag()*sbase;
@@ -1179,8 +1180,21 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
         //    q = 0.0;
         //if(btype==SLACK_TYPE)
         //    p = 0.0;
-        osstream<<setw(6)<<bus<<", "<<setw(8)<<setprecision(6)<<p<<", "<<setw(8)<<setprecision(6)<<q;
-
+        osstream<<left;
+        osstream<<setw(7)<<setfill(' ')<<bus<<"  "<<setw(14)<<bus_name<<" ";
+        osstream<<right;
+        osstream<<setw(12)<<setprecision(6)<<p<<"   "<<setw(13)<<setprecision(6)<<q;
+        switch(btype)
+        {
+            case PV_TYPE:
+                osstream<<"  <--PV";
+                break;
+            case SLACK_TYPE:
+                osstream<<"  <--SLACK";
+                break;
+            default:
+                break;
+        }
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -1590,7 +1604,7 @@ void POWERFLOW_SOLVER::check_SLACK_bus_constraint_of_physical_bus(unsigned int p
         double sbase = psdb.get_system_base_power_in_MVA();
         double bus_P_mismatch_in_MW = -bus_power[internal_bus].real()*sbase;
         double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*sbase;
-        cout<<"slack bus "<<physical_bus<<" power allocation:  mismatch "<<bus_P_mismatch_in_MW<<", "<<bus_Q_mismatch_in_MVar<<endl;
+        //cout<<"slack bus "<<physical_bus<<" power allocation:  mismatch "<<bus_P_mismatch_in_MW<<", "<<bus_Q_mismatch_in_MVar<<endl;
 
         double total_p_max_in_MW = psdb.get_regulatable_p_max_at_physical_bus_in_MW(physical_bus);
         double total_p_min_in_MW = psdb.get_regulatable_p_min_at_physical_bus_in_MW(physical_bus);
@@ -1602,7 +1616,7 @@ void POWERFLOW_SOLVER::check_SLACK_bus_constraint_of_physical_bus(unsigned int p
         double Q_loading_percentage = (bus_Q_mismatch_in_MVar-total_q_min_in_MVar);
                Q_loading_percentage /= (total_q_max_in_MVar - total_q_min_in_MVar);
 
-        cout<<"slack bus "<<physical_bus<<" power allocation after VSC:  mismatch "<<bus_P_mismatch_in_MW<<", "<<bus_Q_mismatch_in_MVar<<endl;
+        //cout<<"slack bus "<<physical_bus<<" power allocation after VSC:  mismatch "<<bus_P_mismatch_in_MW<<", "<<bus_Q_mismatch_in_MVar<<endl;
 
         unsigned int n;
         vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
@@ -1664,7 +1678,7 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
         //unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
         double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*psdb.get_system_base_power_in_MVA();
-        cout<<"PV bus "<<physical_bus<<" power allocation:  mismatch: "<<bus_Q_mismatch_in_MVar<<endl;
+        //cout<<"PV bus "<<physical_bus<<" power allocation:  mismatch: "<<bus_Q_mismatch_in_MVar<<endl;
 
         double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
         double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
@@ -1751,7 +1765,7 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
                 {
                     double Q_loading_in_MVar = vsc_hvdcs[i]->get_converter_Qmax_in_MVar(index) - vsc_hvdcs[i]->get_converter_Qmin_in_MVar(index);
                     Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + vsc_hvdcs[i]->get_converter_Qmin_in_MVar(index);
-                    cout<<"index :"<<index<<", Q_loading_in_Mvar: "<<Q_loading_in_MVar<<endl;
+                    //cout<<"index :"<<index<<", Q_loading_in_Mvar: "<<Q_loading_in_MVar<<endl;
                     vsc_hvdcs[i]->set_converter_Q_to_AC_bus_in_MVar(index, Q_loading_in_MVar);
                 }
             }
@@ -2956,15 +2970,22 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
                         converter_index = vsc_hvdcs[i]->get_converter_index_with_ac_bus(ac_bus);
                     }
 
+                    double p = 0.0;
+                    double q = 0.0;
+                    double pcmd = 0.0;
+                    if(converter_index!=INDEX_NOT_EXIST)
+                    {
+                        p = vsc_hvdcs[i]->get_converter_P_to_AC_bus_in_MW(converter_index);
+                        q = vsc_hvdcs[i]->get_converter_Q_to_AC_bus_in_MVar(converter_index);
+                        pcmd = vsc_hvdcs[i]->get_converter_dc_power_command(converter_index);
+                    }
+
                     snprintf(buffer, 1000, "%u,\"%s\",%u,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
                                 vsc_hvdcs[i]->get_dc_bus_number(j),
                                 (vsc_hvdcs[i]->get_dc_bus_name(j)).c_str(),
                                 ac_bus,
                                 vsc_hvdcs[i]->get_dc_bus_Vdc_in_kV(j),
-                                vac,
-                                vsc_hvdcs[i]->get_converter_P_to_AC_bus_in_MW(converter_index),
-                                vsc_hvdcs[i]->get_converter_Q_to_AC_bus_in_MVar(converter_index),
-                                vsc_hvdcs[i]->get_converter_dc_power_command(converter_index),
+                                vac, p, q, pcmd,
                                 vsc_hvdcs[i]->get_dc_bus_generation_power_in_MW(j),
                                 vsc_hvdcs[i]->get_dc_bus_load_power_in_MW(j));
                     file<<buffer<<endl;
@@ -2972,7 +2993,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
 
                 file<<"IDCBUS,JDCBUS,IDC/KA,PDC_SENDING/MW,PDC_RECEIVING_MW,PLOSS_MW"<<endl;
                 unsigned int n_dc_line = vsc_hvdcs[i]->get_dc_line_count();
-                cout<<"n_dc_line :"<<n_dc_line<<endl;
+                //cout<<"n_dc_line :"<<n_dc_line<<endl;
                 for(unsigned int j=0; j!=n_dc_line; ++j)
                 {
                     /*cout<<vsc_hvdcs[i]->get_dc_line_sending_side_bus(j)<<endl;

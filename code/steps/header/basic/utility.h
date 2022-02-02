@@ -109,6 +109,7 @@ unsigned int get_index_of_string(const string& str);
 string get_string_of_index(unsigned int index);
 
 string device_type2string(STEPS_DEVICE_TYPE device_type);
+string dc_device_type2string(STEPS_DC_DEVICE_TYPE device_type);
 
 void set_openmp_number_of_threads(unsigned int n);
 

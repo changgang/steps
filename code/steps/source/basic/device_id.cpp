@@ -74,14 +74,6 @@ void DEVICE_ID::set_device_type(STEPS_DEVICE_TYPE device_type)
 
 void DEVICE_ID::set_device_type_and_allowed_terminal_count(STEPS_DEVICE_TYPE device_type)
 {
-    /*
-    device type code:
-    0: invalid
-    <=1000: terminal + identifier
-    1001~2000: name
-    9999: general
-    */
-
     if(device_type==STEPS_BUS         ||
        device_type==STEPS_GENERATOR   ||
        device_type==STEPS_WT_GENERATOR ||

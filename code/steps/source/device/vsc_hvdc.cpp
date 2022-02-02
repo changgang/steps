@@ -287,7 +287,7 @@ bool VSC_HVDC::converter_index_is_out_of_range_in_function(const unsigned int in
     STEPS& toolkit = get_toolkit();
     if(index>=get_converter_count())
     {
-        osstream<<"VSC_HVDC converter index "<<index<<" exceeds converter count"<<get_converter_count()
+        osstream<<"VSC_HVDC converter index "<<index<<" exceeds converter count "<<get_converter_count()
                 <<" when calling VSC_HVDC::"<<func<<"()"<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
 
@@ -1662,9 +1662,9 @@ double VSC_HVDC::get_dc_bus_Vdc_in_kV(unsigned int index) const
 
 double VSC_HVDC::get_dc_bus_Vdc_in_kV_with_dc_bus_number(unsigned int bus) const
 {
-    cout<<"get_dc_bus_Vdc_in_kV_with_dc_bus_number: bus:"<<bus<<endl;
+    //cout<<"get_dc_bus_Vdc_in_kV_with_dc_bus_number: bus:"<<bus<<endl;
     unsigned int index = dc_bus_no2index(bus);
-    cout<<"get_dc_bus_Vdc_in_kV_with_dc_bus_number: index:"<<index<<endl;
+    //cout<<"get_dc_bus_Vdc_in_kV_with_dc_bus_number: index:"<<index<<endl;
     return get_dc_bus_Vdc_in_kV(index);
 }
 
@@ -1794,17 +1794,17 @@ double VSC_HVDC::get_dc_line_current_in_kA(unsigned int index, LINE_SIDE meter_s
 
 double VSC_HVDC::get_dc_line_power_in_MW(unsigned int index, LINE_SIDE meter_side) const
 {
-    cout<<"index: "<<index<<endl;
+    //cout<<"index: "<<index<<endl;
     if(index<get_dc_line_count())
     {
         double I = get_dc_line_current_in_kA(index, meter_side);
-        cout<<"I: "<<I<<endl;
+        //cout<<"I: "<<I<<endl;
         unsigned int dc_bus_number = INDEX_NOT_EXIST;
         if(meter_side==SENDING_SIDE)
             dc_bus_number=get_dc_line_sending_side_bus(index);
         else
             dc_bus_number=get_dc_line_receiving_side_bus(index);
-        cout<<"dc_bus_number:"<<dc_bus_number<<endl;
+        //cout<<"dc_bus_number:"<<dc_bus_number<<endl;
         double V = get_dc_bus_Vdc_in_kV_with_dc_bus_number(dc_bus_number);
         return V*I;
     }
@@ -1848,7 +1848,7 @@ double VSC_HVDC::get_dc_line_power_in_MW(unsigned int index, unsigned int meter_
     {
         double V = get_dc_bus_Vdc_in_kV_with_dc_bus_number(meter_side);
         double I = get_dc_line_current_in_kA(index, meter_side);
-        cout<<"I: "<<I<<endl;
+        //cout<<"I: "<<I<<endl;
         return V*I;
     }
     else
@@ -2114,13 +2114,13 @@ void VSC_HVDC::solve_steady_state()
     for(unsigned int i=0;i!=1;++i)
     {
         //try to restore initial VDC control bus. reset initial P commands
-        cout<<"ieteration_count: "<<iteration_count<<endl;
+        //cout<<"ieteration_count: "<<iteration_count<<endl;
         unsigned int inner_iteration_count = 0;
         while(true)
         {
             calculate_raw_bus_power_mismatch();
             max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
-            cout<<"max_P_mismatch_in_MW:"<<max_P_mismatch_in_MW<<endl;
+            //cout<<"max_P_mismatch_in_MW:"<<max_P_mismatch_in_MW<<endl;
             //cout<<"allowed_max_active_power_imbalance_in_MW:"<<get_allowed_max_active_power_imbalance_in_MW()<<endl;
             if(max_P_mismatch_in_MW<get_allowed_max_active_power_imbalance_in_MW())
             {
@@ -3083,8 +3083,8 @@ void VSC_HVDC::update_converter_P_and_Q_to_AC_bus(unsigned int index)
         {
             Pac=get_converter_nominal_ac_active_power_command_in_MW(index);
         }
-        cout<<"P_to_AC_bus_in_MW: "<<Pac<<endl;
-        cout<<"Q_to_AC_bus_in_MW: "<<get_converter_Q_to_AC_bus_in_MVar(index)<<endl;
+        //cout<<"P_to_AC_bus_in_MW: "<<Pac<<endl;
+        //cout<<"Q_to_AC_bus_in_MW: "<<get_converter_Q_to_AC_bus_in_MVar(index)<<endl;
         VSC_HVDC_CONVERTER_STRUCT* converter = get_converter(index);
         if(converter!=NULL)
         {
@@ -3135,7 +3135,7 @@ void VSC_HVDC::calculate_dc_active_power_of_slack_bus()
         P_slack_dc_side+=U_slack*yij*get_dc_bus_Vdc_in_kV(dc_bus_no2index(other_side_bus));
     }
     unsigned int converter_index=get_dc_bus_converter_index_with_dc_bus_index(dc_bus_no2index(current_dc_slack_bus));
-    cout<<"dc_slack_bus_active_power: "<<P_slack_dc_side<<endl;
+    //cout<<"dc_slack_bus_active_power: "<<P_slack_dc_side<<endl;
     set_converter_Pdc_command_in_MW(converter_index, P_slack_dc_side);
 }
 

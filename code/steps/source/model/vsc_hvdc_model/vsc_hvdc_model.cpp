@@ -11,7 +11,6 @@ class VSC_HVDC;
 VSC_HVDC_MODEL::VSC_HVDC_MODEL(STEPS& toolkit) : MODEL(toolkit)
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_VSC_HVDC);
-
 }
 
 
@@ -22,11 +21,6 @@ VSC_HVDC_MODEL::~VSC_HVDC_MODEL()
 VSC_HVDC* VSC_HVDC_MODEL::get_vsc_hvdc_pointer() const
 {
     return (VSC_HVDC*) get_device_pointer();
-}
-
-string VSC_HVDC_MODEL::get_model_type() const
-{
-    return "VSC HVDC";
 }
 
 complex<double> VSC_HVDC_MODEL::get_converter_ac_current_in_pu(unsigned int converter_index) const

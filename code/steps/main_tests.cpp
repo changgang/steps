@@ -130,7 +130,7 @@
 #include "header/model/hvdc_model/CDC4T_test.h"
 #include "header/model/hvdc_model/CDC6T_test.h"
 
-#include "header/model/vsc_hvdc_model/VSCHVDC1_test.h"
+//#include "header/model/vsc_hvdc_model/VSCHVDC1_test.h"
 
 #include "header/model/wtg_models/wt_generator_model/wt3g1_test.h"
 #include "header/model/wtg_models/wt_generator_model/wt3g0_test.h"
@@ -288,10 +288,10 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new SATURATION_BLOCK_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new MODEL_VAR_TABLE_TEST));
-
+*/
         ts.add(unique_ptr<Test::Suite>(new METER_TEST));
         ts.add(unique_ptr<Test::Suite>(new METER_SETTER_TEST));
-
+/*
         ts.add(unique_ptr<Test::Suite>(new MODEL_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new GENCLS_TEST));
