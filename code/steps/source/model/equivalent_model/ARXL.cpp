@@ -606,6 +606,8 @@ string ARXL::get_meter_string(const METER& meter) const
             return get_generator_meter_string(meter);
         case STEPS_LOAD:
             return get_load_meter_string(meter);
+        default:
+            break;
     }
     return "";
 }

@@ -6,7 +6,8 @@
 #include "header/basic/device_id.h"
 #include "header/basic/dc_device_id.h"
 #include "header/basic/steps_enum.h"
-#include "header/model/vsc_hvdc_model/vsc_hvdc_model.h"
+#include "header/model/vsc_hvdc_model/vsc_hvdc_project_model/vsc_hvdc_project_model.h"
+#include "header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_model.h"
 #include "header/basic/sparse_matrix_define.h"
 #include "header/basic/inphno.h"
 
@@ -35,6 +36,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         void set_dc_network_base_voltage_in_kV(const double base_voltage);
 
         void set_converter_ac_bus(const unsigned int index, const unsigned int bus);
+        void set_converter_name(const unsigned int index, string name);
         void set_converter_status(const unsigned int index, bool status);
 
         void set_converter_active_power_operation_mode(const unsigned int index, const VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE mode);
@@ -109,6 +111,8 @@ class VSC_HVDC : public NONBUS_DEVICE
 
         VSC_HVDC_CONVERTER_STRUCT* get_converter(unsigned int index);
         unsigned int get_converter_ac_bus(unsigned int index) const;
+        string get_converter_name(unsigned int index) const;
+        unsigned int get_converter_name_index(unsigned int index) const;
         BUS* get_converter_ac_bus_pointer(unsigned int index) const;
         unsigned int get_converter_index_with_ac_bus(unsigned int bus) const;
         bool get_converter_status(unsigned int index) const;
@@ -199,12 +203,19 @@ class VSC_HVDC : public NONBUS_DEVICE
         virtual void save() const;
         virtual DEVICE_ID get_device_id() const;
         virtual void set_model(MODEL* model);
-        virtual MODEL* get_model_of_type(string model_type);
+        virtual MODEL* get_model_of_type(string model_type, unsigned int index=0);
 
-        void set_vsc_hvdc_model(VSC_HVDC_MODEL* model);
+        void set_vsc_hvdc_project_model(VSC_HVDC_PROJECT_MODEL* model);
+        void set_vsc_hvdc_converter_model(VSC_HVDC_CONVERTER_MODEL* model);
 
-        VSC_HVDC_MODEL* get_vsc_hvdc_model() const;
+        VSC_HVDC_PROJECT_MODEL* get_vsc_hvdc_project_model() const;
+        VSC_HVDC_CONVERTER_MODEL* get_vsc_hvdc_converter_model(unsigned int index) const;
+        vector<VSC_HVDC_CONVERTER_MODEL*> get_vsc_hvdc_converter_models() const;
 
+        complex<double> get_converter_Norton_admittance_as_voltage_source(unsigned int index) const;
+        complex<double> get_converter_Norton_admittance_as_current_source(unsigned int index) const;
+
+        virtual void run(DYNAMIC_MODE mode);
 
         void solve_steady_state();
 
@@ -322,7 +333,9 @@ class VSC_HVDC : public NONBUS_DEVICE
         bool dc_bus_index_is_out_of_range_in_function(const unsigned int index, const string& func) const;
         bool dc_line_index_is_out_of_range_in_function(const unsigned int index, const string& func) const;
 
-        void delete_vsc_hvdc_model();
+        void delete_vsc_hvdc_project_model();
+        void delete_vsc_hvdc_converter_models();
+        void delete_vsc_hvdc_converter_model(unsigned int index);
     private:
         unsigned int vsc_hvdc_name_index;
         unsigned int identifier_index;
@@ -353,6 +366,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int current_dc_slack_bus;
         bool converged;
 
-        VSC_HVDC_MODEL* vsc_hvdc_model;
+        VSC_HVDC_PROJECT_MODEL* vsc_hvdc_project_model;
+        vector<VSC_HVDC_CONVERTER_MODEL*> vsc_hvdc_converter_models;
 };
 #endif // VSC_HVDC_H

@@ -33,7 +33,7 @@ class WT_GENERATOR : public SOURCE
         double get_rated_power_per_wt_generator_in_MW() const;
 
         virtual void set_model(MODEL* model);
-        virtual MODEL* get_model_of_type(string model_type);
+        virtual MODEL* get_model_of_type(string model_type, unsigned int index=0);
 
         void set_wt_generator_model(WT_GENERATOR_MODEL* model);
         void set_wt_aerodynamic_model(WT_AERODYNAMIC_MODEL* model);

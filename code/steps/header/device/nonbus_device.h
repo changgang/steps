@@ -35,7 +35,7 @@ class NONBUS_DEVICE : public DEVICE
         virtual DEVICE_ID get_device_id() const = 0;
 
         virtual void set_model(MODEL* model) = 0;
-        virtual MODEL* get_model_of_type(string model_type) = 0;
+        virtual MODEL* get_model_of_type(string model_type, unsigned int index=0) = 0;
     private:
         OWNERSHIP ownership;
 };

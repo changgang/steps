@@ -78,7 +78,7 @@ class LOAD : public NONBUS_DEVICE
         static double get_one_over_voltage_threshold_of_constant_current_load_in_pu();
 
         virtual void set_model(MODEL* model);
-        virtual MODEL* get_model_of_type(string model_type);
+        virtual MODEL* get_model_of_type(string model_type, unsigned int index=0);
 
         void set_load_model(LOAD_MODEL* model);
         void set_load_frequency_relay_model(LOAD_FREQUENCY_RELAY_MODEL* model);

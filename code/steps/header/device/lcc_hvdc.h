@@ -121,7 +121,7 @@ class LCC_HVDC : public NONBUS_DEVICE
         virtual void save() const;
 
         virtual void set_model(MODEL* model);
-        virtual MODEL* get_model_of_type(string model_type);
+        virtual MODEL* get_model_of_type(string model_type, unsigned int index=0);
 
         virtual void run(DYNAMIC_MODE mode);
 

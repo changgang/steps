@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1634637238 source:d:\steps\code\steps\main_arxl_simulation.cpp
+1643808472 source:d:\steps\code\steps\main_arxl_simulation.cpp
 	<istream>
 	<iostream>
 	"header/power_system_database.h"
@@ -11,7 +11,7 @@
 	"header/prepare_for_tests/prepare_models_for_test.h"
 	"header/data_imexporter/equivalent_model_imexporter.h"
 
-1641720699 d:\steps\code\steps\header\power_system_database.h
+1643813966 d:\steps\code\steps\header\power_system_database.h
 	"header/device/bus.h"
 	"header/device/generator.h"
 	"header/device/wt_generator.h"
@@ -76,7 +76,7 @@
 	"header/basic/steps_enum.h"
 	<vector>
 
-1643777223 d:\steps\code\steps\header\basic\steps_enum.h
+1643811910 d:\steps\code\steps\header\basic\steps_enum.h
 	<iso646.h>
 
 1634637238 d:\steps\code\steps\header\model\model.h
@@ -112,7 +112,7 @@
 1610692137 d:\steps\code\steps\header\block\differential_block.h
 	"header/block/block.h"
 
-1625794452 d:\steps\code\steps\header\device\generator.h
+1643812047 d:\steps\code\steps\header\device\generator.h
 	<string>
 	<complex>
 	"header/device/source.h"
@@ -123,13 +123,13 @@
 	"header/model/sg_models/turbine_governor_model/turbine_governor_model.h"
 	"header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model.h"
 
-1634637238 d:\steps\code\steps\header\device\source.h
+1643812047 d:\steps\code\steps\header\device\source.h
 	<string>
 	<complex>
 	"header/device/nonbus_device.h"
 	"header/basic/steps_enum.h"
 
-1607318983 d:\steps\code\steps\header\device\nonbus_device.h
+1643812047 d:\steps\code\steps\header\device\nonbus_device.h
 	"header/basic/ownership.h"
 	"header/device/device.h"
 	<cstddef>
@@ -168,7 +168,7 @@
 	"header/basic/constants.h"
 	"header/meter/meter.h"
 
-1643780630 d:\steps\code\steps\header\meter\meter.h
+1643812261 d:\steps\code\steps\header\meter\meter.h
 	"header/basic/constants.h"
 	"header/basic/device_id.h"
 	"header/basic/dc_device_id.h"
@@ -183,7 +183,7 @@
 	"header/basic/constants.h"
 	"header/meter/meter.h"
 
-1625794452 d:\steps\code\steps\header\device\wt_generator.h
+1643812047 d:\steps\code\steps\header\device\wt_generator.h
 	<string>
 	<complex>
 	"header/device/source.h"
@@ -230,7 +230,7 @@
 1634637238 d:\steps\code\steps\header\model\wtg_models\wt_relay_model\wt_relay_model.h
 	"header/model/wtg_models/wtg_model.h"
 
-1634637238 d:\steps\code\steps\header\device\pv_unit.h
+1643812047 d:\steps\code\steps\header\device\pv_unit.h
 	<string>
 	<complex>
 	"header/device/source.h"
@@ -259,7 +259,7 @@
 1634637238 d:\steps\code\steps\header\model\pvu_models\pv_irradiance_model\pv_irradiance_model.h
 	"header/model/pvu_models/pvu_model.h"
 
-1607318983 d:\steps\code\steps\header\device\energy_storage.h
+1643812047 d:\steps\code\steps\header\device\energy_storage.h
 	<complex>
 	<string>
 	"header/device/source.h"
@@ -269,7 +269,7 @@
 	"header/model/model.h"
 	<complex>
 
-1634637238 d:\steps\code\steps\header\device\load.h
+1643812047 d:\steps\code\steps\header\device\load.h
 	"header/device/nonbus_device.h"
 	"header/model/load_model/load_model.h"
 	"header/model/load_relay_model/load_voltage_relay_model.h"
@@ -294,7 +294,7 @@
 1634637238 d:\steps\code\steps\header\model\load_relay_model\load_frequency_relay_model.h
 	"header/model/load_relay_model/load_relay_model.h"
 
-1634637238 d:\steps\code\steps\header\device\line.h
+1643812047 d:\steps\code\steps\header\device\line.h
 	"header/device/nonbus_device.h"
 	"header/basic/device_id.h"
 	"header/basic/rating.h"
@@ -304,19 +304,19 @@
 
 1583938871 d:\steps\code\steps\header\basic\rating.h
 
-1634637238 d:\steps\code\steps\header\device\transformer.h
+1643812047 d:\steps\code\steps\header\device\transformer.h
 	"header/device/nonbus_device.h"
 	"header/basic/steps_enum.h"
 	"header/basic/rating.h"
 	<string>
 	<complex>
 
-1634637238 d:\steps\code\steps\header\device\fixed_shunt.h
+1643812047 d:\steps\code\steps\header\device\fixed_shunt.h
 	"header/device/nonbus_device.h"
 	<string>
 	<complex>
 
-1634637238 d:\steps\code\steps\header\device\hvdc.h
+1643812047 d:\steps\code\steps\header\device\hvdc.h
 	"header/device/nonbus_device.h"
 	"header/basic/device_id.h"
 	"header/basic/steps_enum.h"
@@ -350,7 +350,7 @@
 	"header/model/model.h"
 	"header/block/integral_block.h"
 
-1634637238 d:\steps\code\steps\header\device\equivalent_device.h
+1643812047 d:\steps\code\steps\header\device\equivalent_device.h
 	"header/device/nonbus_device.h"
 	"header/model/equivalent_model/equivalent_model.h"
 	<string>
@@ -395,7 +395,7 @@
 	"header/network/jacobian_builder.h"
 	"header/basic/sparse_matrix_define.h"
 
-1625794452 d:\steps\code\steps\header\network\network_matrix.h
+1643817007 d:\steps\code\steps\header\network\network_matrix.h
 	"header/power_system_database.h"
 	"header/basic/sparse_matrix_define.h"
 	"header/basic/inphno.h"
@@ -2347,7 +2347,7 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/bpa_imexporter.h"
 
-1634637238 d:\steps\code\steps\header\apis\steps_api.h
+1643816020 d:\steps\code\steps\header\apis\steps_api.h
 	<cstdlib>
 	"header/basic/constants.h"
 
@@ -2357,13 +2357,13 @@
 	"header/STEPS.h"
 	"header/power_system_database.h"
 
-1598590744 source:d:\steps\code\steps\source\apis\steps_api_common.cpp
+1643814318 source:d:\steps\code\steps\source\apis\steps_api_common.cpp
 	"header/apis/steps_api_common.h"
 	"header/apis/steps_api.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 
-1583938871 d:\steps\code\steps\header\apis\steps_api_common.h
+1643814288 d:\steps\code\steps\header\apis\steps_api_common.h
 	"header/STEPS.h"
 	"header/power_system_database.h"
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
@@ -3560,7 +3560,7 @@
 	<istream>
 	<iostream>
 
-1634637238 source:d:\steps\code\steps\source\device\energy_storage.cpp
+1643812083 source:d:\steps\code\steps\source\device\energy_storage.cpp
 	"header/device/energy_storage.h"
 	"header/basic/utility.h"
 	"header/model/energy_storage_model/energy_storage_models.h"
@@ -3583,7 +3583,7 @@
 	<iostream>
 	<cstdio>
 
-1634637238 source:d:\steps\code\steps\source\device\equivalent_device.cpp
+1643812088 source:d:\steps\code\steps\source\device\equivalent_device.cpp
 	"header/device/nonbus_device.h"
 	"header/basic/utility.h"
 	"header/model/equivalent_model/equivalent_model.h"
@@ -3605,7 +3605,7 @@
 	<cstdio>
 	<cstdlib>
 
-1634637238 source:d:\steps\code\steps\source\device\fixed_shunt.cpp
+1643812093 source:d:\steps\code\steps\source\device\fixed_shunt.cpp
 	"header/device/fixed_shunt.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -3625,7 +3625,7 @@
 	<cstdio>
 	<cstdlib>
 
-1634637238 source:d:\steps\code\steps\source\device\generator.cpp
+1643812101 source:d:\steps\code\steps\source\device\generator.cpp
 	"header/device/generator.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -3657,7 +3657,7 @@
 	<iostream>
 	<cstdio>
 
-1634637238 source:d:\steps\code\steps\source\device\hvdc.cpp
+1643812097 source:d:\steps\code\steps\source\device\hvdc.cpp
 	"header/device/hvdc.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -3683,7 +3683,7 @@
 	<cstdio>
 	<algorithm>
 
-1634637238 source:d:\steps\code\steps\source\device\line.cpp
+1643812169 source:d:\steps\code\steps\source\device\line.cpp
 	"header/device/line.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -3705,7 +3705,7 @@
 	<iostream>
 	<cstdio>
 
-1634637238 source:d:\steps\code\steps\source\device\load.cpp
+1643812105 source:d:\steps\code\steps\source\device\load.cpp
 	"header/device/load.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -3735,7 +3735,7 @@
 	<istream>
 	<iostream>
 
-1634637238 source:d:\steps\code\steps\source\device\pv_unit.cpp
+1643812118 source:d:\steps\code\steps\source\device\pv_unit.cpp
 	"header/device/pv_unit.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -3782,7 +3782,7 @@
 	<iostream>
 	<cstdio>
 
-1634637238 source:d:\steps\code\steps\source\device\transformer.cpp
+1643812114 source:d:\steps\code\steps\source\device\transformer.cpp
 	"header/device/transformer.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -3802,25 +3802,25 @@
 	<iostream>
 	<cstdio>
 
-1643792400 source:d:\steps\code\steps\source\device\vsc_hvdc.cpp
+1643817637 source:d:\steps\code\steps\source\device\vsc_hvdc.cpp
 	"header/device/vsc_hvdc.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
 	"header/STEPS.h"
 	"header/steps_namespace.h"
-	"header/model/hvdc_model/hvdc_models.h"
 	<istream>
 	<iostream>
 	<cstdio>
 	<cmath>
 
-1643774448 d:\steps\code\steps\header\device\vsc_hvdc.h
+1643817559 d:\steps\code\steps\header\device\vsc_hvdc.h
 	"header/device/nonbus_device.h"
 	"header/device/vsc_hvdc_var.h"
 	"header/basic/device_id.h"
 	"header/basic/dc_device_id.h"
 	"header/basic/steps_enum.h"
-	"header/model/vsc_hvdc_model/vsc_hvdc_model.h"
+	"header/model/vsc_hvdc_model/vsc_hvdc_project_model/vsc_hvdc_project_model.h"
+	"header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_model.h"
 	"header/basic/sparse_matrix_define.h"
 	"header/basic/inphno.h"
 	<complex>
@@ -3870,7 +3870,7 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1634637238 source:d:\steps\code\steps\source\device\wt_generator.cpp
+1643812122 source:d:\steps\code\steps\source\device\wt_generator.cpp
 	"header/device/wt_generator.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -3910,7 +3910,7 @@
 	<fstream>
 	<cstring>
 
-1643794616 source:d:\steps\code\steps\source\meter\meter.cpp
+1643813044 source:d:\steps\code\steps\source\meter\meter.cpp
 	"header/meter/meter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -5423,7 +5423,7 @@
 	"header/steps_namespace.h"
 	<cstdio>
 
-1625794452 source:d:\steps\code\steps\source\network\network_matrix.cpp
+1643817854 source:d:\steps\code\steps\source\network\network_matrix.cpp
 	"header/network/network_matrix.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -5444,7 +5444,7 @@
 	<cstdio>
 	<cmath>
 
-1642245228 source:d:\steps\code\steps\source\power_system_database.cpp
+1643814071 source:d:\steps\code\steps\source\power_system_database.cpp
 	"header/power_system_database.h"
 	"header/STEPS.h"
 	"header/steps_namespace.h"
@@ -5606,7 +5606,7 @@
 	<utility>
 	"internal/stack.h"
 
-1642068104 source:d:\steps\code\steps\source\power_system_database_test.cpp
+1643814151 source:d:\steps\code\steps\source\power_system_database_test.cpp
 	"header/basic/test_macro.h"
 	"header/power_system_database_test.h"
 	"header/basic/utility.h"
@@ -5832,7 +5832,7 @@
 	<complex>
 	<string>
 
-1634637238 source:d:\steps\code\steps\source\device\lcc_hvdc.cpp
+1643812110 source:d:\steps\code\steps\source\device\lcc_hvdc.cpp
 	"header/device/lcc_hvdc.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -5842,7 +5842,7 @@
 	<iostream>
 	<cstdio>
 
-1634637238 d:\steps\code\steps\header\device\lcc_hvdc.h
+1643812047 d:\steps\code\steps\header\device\lcc_hvdc.h
 	"header/device/nonbus_device.h"
 	"header/device/lcc_station.h"
 	"header/basic/device_id.h"
@@ -5886,7 +5886,7 @@
 	<complex>
 	<string>
 
-1607318983 d:\steps\code\steps\header\device\vsc.h
+1643812047 d:\steps\code\steps\header\device\vsc.h
 	"header/device/converter.h"
 	"header/basic/device_id.h"
 	"header/basic/steps_enum.h"
@@ -6091,7 +6091,7 @@
 	<iostream>
 	<cstdio>
 
-1642587095 d:\steps\code\steps\header\device\vsc_hvdc_var.h
+1643810281 d:\steps\code\steps\header\device\vsc_hvdc_var.h
 	"header/basic/steps_enum.h"
 	<complex>
 	<string>
@@ -12328,10 +12328,12 @@
 	<ctime>
 	<chrono>
 
-1643801730 source:d:\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_converter_model\vsc_hvdc_converter_model.cpp
+1643817323 source:d:\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_converter_model\vsc_hvdc_converter_model.cpp
 	"header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_model.h"
+	"header/device/vsc_hvdc.h"
+	"header/basic/utility.h"
 
-1643805356 d:\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_converter_model\vsc_hvdc_converter_model.h
+1643817287 d:\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_converter_model\vsc_hvdc_converter_model.h
 	"header/model/vsc_hvdc_model/vsc_hvdc_model.h"
 
 1643800542 d:\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_project_model\vsc_hvdc_project_models.h
@@ -12361,4 +12363,12 @@
 	"header/model/vsc_hvdc_model/vsc_hvdc_project_model/VSCHVDCP0.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
+
+1643815835 source:d:\steps\code\steps\source\apis\steps_api_set_get_vsc_hvdc_related_model_parameters.cpp
+	"header/apis/steps_api.h"
+	"header/apis/steps_api_common.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	"header/data_imexporter/psse_imexporter.h"
+	"header/data_imexporter/bpa_imexporter.h"
 

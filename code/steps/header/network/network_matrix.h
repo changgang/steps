@@ -126,6 +126,9 @@ class NETWORK_MATRIX
         void add_motor_loads_to_dynamic_network();
         void add_motor_load_to_dynamic_network(const LOAD& load);
 
+        void add_vsc_hvdcs_to_dynamic_network();
+        void add_vsc_hvdc_to_dynamic_network(const VSC_HVDC& vsc_hvdc);
+
         void add_lines_to_sequence_network();
         void add_faulted_line_to_sequence_network(const LINE& line);
         void add_generators_to_sequence_network();

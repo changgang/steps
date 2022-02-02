@@ -114,7 +114,7 @@ class HVDC : public NONBUS_DEVICE
         virtual void save() const;
 
         virtual void set_model(MODEL* model);
-        virtual MODEL* get_model_of_type(string model_type);
+        virtual MODEL* get_model_of_type(string model_type, unsigned int index=0);
 
         void set_hvdc_model(HVDC_MODEL* model);
         void set_auxiliary_signal_model(AUXILIARY_SIGNAL_MODEL* model);

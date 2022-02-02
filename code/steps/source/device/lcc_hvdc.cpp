@@ -862,7 +862,7 @@ void LCC_HVDC::set_model(MODEL* model)
     return;
 }
 
-MODEL* LCC_HVDC::get_model_of_type(string model_type)
+MODEL* LCC_HVDC::get_model_of_type(string model_type, unsigned int index)
 {
     return nullptr;
 }

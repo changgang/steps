@@ -2008,6 +2008,17 @@ VSC_HVDC* POWER_SYSTEM_DATABASE::get_vsc_hvdc(const DEVICE_ID & device_id)
         return NULL;
 }
 
+VSC_HVDC* POWER_SYSTEM_DATABASE::get_vsc_hvdc(string name)
+{
+    unsigned int n = Vsc_hvdc.size();
+    for(unsigned int index=0; index!=n; ++index)
+    {
+        if(Vsc_hvdc[index].get_name()==name)
+            return &(Vsc_hvdc[index]);
+    }
+    return NULL;
+}
+
 EQUIVALENT_DEVICE* POWER_SYSTEM_DATABASE::get_equivalent_device(const DEVICE_ID & device_id)
 {
     unsigned int index = equivalent_device_index.get_index_of_device(device_id);
@@ -4727,9 +4738,17 @@ void POWER_SYSTEM_DATABASE::check_vsc_hvdc_related_dynamic_data()
     {
         vsc_hvdc = vsc_hvdcs[i];
 
-        VSC_HVDC_MODEL* vscmodel = vsc_hvdc->get_vsc_hvdc_model();
-        if(vscmodel!=NULL)
-            vscmodel->check();
+        VSC_HVDC_PROJECT_MODEL* vsc_project_model = vsc_hvdc->get_vsc_hvdc_project_model();
+        if(vsc_project_model!=NULL)
+            vsc_project_model->check();
+        vector<VSC_HVDC_CONVERTER_MODEL*> vsc_converter_models = vsc_hvdc->get_vsc_hvdc_converter_models();
+        unsigned int n = vsc_converter_models.size();
+        for(unsigned int i=0; i!=n; ++i)
+        {
+            VSC_HVDC_CONVERTER_MODEL* model = vsc_converter_models[i];
+            if(model!=NULL)
+                model->check();
+        }
     }
 }
 
@@ -5082,7 +5101,7 @@ void POWER_SYSTEM_DATABASE::check_missing_vsc_hvdc_related_model()
     {
         vsc_hvdc = vsc_hvdcs[i];
 
-        VSC_HVDC_MODEL* vscmodel = vsc_hvdc->get_vsc_hvdc_model();
+        VSC_HVDC_PROJECT_MODEL* vscmodel = vsc_hvdc->get_vsc_hvdc_project_model();
         unsigned int n_converter = vsc_hvdc->get_converter_count();
         if(vscmodel==NULL)
         {

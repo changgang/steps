@@ -937,7 +937,7 @@ void TRANSFORMER::set_model(MODEL* model)
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-MODEL* TRANSFORMER::get_model_of_type(string model_type)
+MODEL* TRANSFORMER::get_model_of_type(string model_type, unsigned int index)
 {
     model_type = string2upper(model_type);
     if(model_type=="")

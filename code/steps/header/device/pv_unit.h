@@ -30,7 +30,7 @@ class PV_UNIT : public SOURCE
         double get_rated_power_per_pv_unit_in_MW() const;
 
         virtual void set_model(MODEL* model);
-        virtual MODEL* get_model_of_type(string model_type);
+        virtual MODEL* get_model_of_type(string model_type, unsigned int index=0);
 
         void set_pv_converter_model(PV_CONVERTER_MODEL* model);
         void set_pv_panel_model(PV_PANEL_MODEL* model);

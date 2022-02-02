@@ -191,7 +191,7 @@ void PV_UNIT::set_model(MODEL* model)
     }
 }
 
-MODEL* PV_UNIT::get_model_of_type(string model_type)
+MODEL* PV_UNIT::get_model_of_type(string model_type, unsigned int index)
 {
     model_type = string2upper(model_type);
     if(model_type=="PV CONVERTER")

@@ -75,7 +75,7 @@ void ENERGY_STORAGE::set_model(MODEL* model)
     }
 }
 
-MODEL* ENERGY_STORAGE::get_model_of_type(string model_type)
+MODEL* ENERGY_STORAGE::get_model_of_type(string model_type, unsigned int index)
 {
     model_type = string2upper(model_type);
     if(model_type=="ENERGY STORAGE")

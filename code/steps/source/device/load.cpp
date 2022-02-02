@@ -529,7 +529,7 @@ void LOAD::set_model(MODEL* model)
     }
 }
 
-MODEL* LOAD::get_model_of_type(string model_type)
+MODEL* LOAD::get_model_of_type(string model_type, unsigned int index)
 {
     model_type = string2upper(model_type);
     if(model_type=="LOAD CHARACTERISTICS")

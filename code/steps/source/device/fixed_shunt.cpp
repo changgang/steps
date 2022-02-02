@@ -245,7 +245,7 @@ void FIXED_SHUNT::set_model(MODEL* model)
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-MODEL* FIXED_SHUNT::get_model_of_type(string model_type)
+MODEL* FIXED_SHUNT::get_model_of_type(string model_type, unsigned int index)
 {
     model_type = string2upper(model_type);
     if(model_type=="FIXED SHUNT")

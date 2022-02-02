@@ -3,7 +3,6 @@
 #include "header/basic/constants.h"
 #include "header/STEPS.h"
 #include "header/steps_namespace.h"
-#include "header/model/hvdc_model/hvdc_models.h"
 #include <istream>
 #include <iostream>
 #include <cstdio>
@@ -13,12 +12,14 @@ using namespace std;
 
 VSC_HVDC::VSC_HVDC(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
 {
-    vsc_hvdc_model = NULL;
+    vsc_hvdc_project_model = NULL;
+    vsc_hvdc_converter_models.clear();
     clear();
 }
 VSC_HVDC::VSC_HVDC(const VSC_HVDC& vsc) : NONBUS_DEVICE(vsc.get_toolkit())
 {
-    vsc_hvdc_model = NULL;
+    vsc_hvdc_project_model = NULL;
+    vsc_hvdc_converter_models.clear();
     clear();
 
     copy_from_const_vsc(vsc);
@@ -28,7 +29,8 @@ VSC_HVDC& VSC_HVDC::operator=(const VSC_HVDC& vsc)
 {
     if(this==&vsc) return *this; // to avoid self assignment
 
-    vsc_hvdc_model = NULL;
+    vsc_hvdc_project_model = NULL;
+    vsc_hvdc_converter_models.clear();
     clear();
 
     copy_from_const_vsc(vsc);
@@ -140,12 +142,15 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
         set_dc_line_resistance_in_ohm(i,vsc.get_dc_line_resistance_in_ohm(i));
         set_dc_line_inductance_in_mH(i,vsc.get_dc_line_inductance_in_mH(i));
     }
-    set_model(vsc.get_vsc_hvdc_model());
+    set_model(vsc.get_vsc_hvdc_project_model());
+    for(unsigned int i=0; i!=ncon; ++i)
+        set_model(vsc.get_vsc_hvdc_converter_model(i));
 }
 
 VSC_HVDC::~VSC_HVDC()
 {
-    delete_vsc_hvdc_model();
+    delete_vsc_hvdc_project_model();
+    delete_vsc_hvdc_converter_models();
     clear();
 }
 
@@ -196,9 +201,11 @@ void VSC_HVDC::set_converter_count(unsigned int n)
     if(n<2) n = 2;
 
     converters.reserve(n);
+    vsc_hvdc_converter_models.reserve(n);
 
     VSC_HVDC_CONVERTER_STRUCT converter;
     converter.converter_bus = 0;
+    converter.converter_name_index = INDEX_NOT_EXIST;
     converter.converter_busptr = NULL;
     converter.status = true;
     converter.dc_control_mode = VSC_AC_ACTIVE_POWER_CONTORL;
@@ -232,7 +239,10 @@ void VSC_HVDC::set_converter_count(unsigned int n)
     converter.P_to_AC_bus_MW = 0.0;
     converter.Q_to_AC_bus_MVar = 0.0;
     for(unsigned int i=0; i<n; ++i)
+    {
         converters.push_back(converter);
+        vsc_hvdc_converter_models.push_back(NULL);
+    }
 }
 
 void VSC_HVDC::set_dc_bus_count(unsigned int n)
@@ -332,6 +342,17 @@ void VSC_HVDC::set_converter_ac_bus(const unsigned int index, const unsigned int
         toolkit.show_information_with_leading_time_stamp(osstream);
         converters[index].converter_bus = 0;
         converters[index].converter_busptr = NULL;
+    }
+}
+
+void VSC_HVDC::set_converter_name(const unsigned int index, string name)
+{
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
+    else
+    {
+        add_string_to_str_int_map(name);
+        converters[index].converter_name_index = get_index_of_string(name);
     }
 }
 
@@ -892,6 +913,35 @@ bool VSC_HVDC::get_converter_status(unsigned int index) const
         osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return false;
+    }
+}
+
+string VSC_HVDC::get_converter_name(unsigned int index) const
+{
+    unsigned int name_index = get_converter_name_index(index);
+    if(name_index!=INDEX_NOT_EXIST)
+        return get_string_of_index(name_index);
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return "";
+    }
+}
+
+unsigned int VSC_HVDC::get_converter_name_index(unsigned int index) const
+{
+    if(index<get_converter_count())
+        return converters[index].converter_name_index;
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return INDEX_NOT_EXIST;
     }
 }
 
@@ -2047,9 +2097,17 @@ void VSC_HVDC::set_model(MODEL* model)
     if(model != NULL and model->has_allowed_device_type(STEPS_VSC_HVDC))
     {
         model->set_device_id(get_device_id());
-        if(model->get_model_type()=="VSC HVDC")
+        if(model->get_model_type()=="VSC HVDC PROJECT")
         {
-            set_vsc_hvdc_model((VSC_HVDC_MODEL*) model);
+            set_vsc_hvdc_project_model((VSC_HVDC_PROJECT_MODEL*) model);
+            model->allocate_model_variables();
+            model->prepare_model_data_table();
+            model->prepare_model_internal_variable_table();
+            return;
+        }
+        if(model->get_model_type()=="VSC HVDC CONVERTER")
+        {
+            set_vsc_hvdc_converter_model((VSC_HVDC_CONVERTER_MODEL*) model);
             model->allocate_model_variables();
             model->prepare_model_data_table();
             model->prepare_model_internal_variable_table();
@@ -2062,36 +2120,137 @@ void VSC_HVDC::set_model(MODEL* model)
     }
 }
 
-MODEL* VSC_HVDC::get_model_of_type(string model_type)
+MODEL* VSC_HVDC::get_model_of_type(string model_type, unsigned int index)
 {
     model_type = string2upper(model_type);
-    if(model_type=="VSC HVDC")
+    if(model_type=="VSC HVDC PROJECT")
+        return get_vsc_hvdc_project_model();
+    if(model_type=="VSC HVDC CONVERTER")
     {
-        return get_vsc_hvdc_model();
+        if(not converter_index_is_out_of_range_in_function(index,__FUNCTION__))
+            return get_vsc_hvdc_converter_model(index);
     }
     return NULL;
 }
 
-void VSC_HVDC::set_vsc_hvdc_model(VSC_HVDC_MODEL* model)
+void VSC_HVDC::set_vsc_hvdc_project_model(VSC_HVDC_PROJECT_MODEL* model)
 {
     if(model!=NULL)
     {
-        delete_vsc_hvdc_model();
-        vsc_hvdc_model = model;
+        delete_vsc_hvdc_project_model();
+        vsc_hvdc_project_model = model;
     }
 }
 
-VSC_HVDC_MODEL* VSC_HVDC::get_vsc_hvdc_model() const
+void VSC_HVDC::set_vsc_hvdc_converter_model(VSC_HVDC_CONVERTER_MODEL* model)
 {
-    return vsc_hvdc_model;
+    if(model!=NULL)
+    {
+        unsigned int index = model->get_converter_index();
+        if(index==INDEX_NOT_EXIST)
+        {
+            delete_vsc_hvdc_converter_model(index);
+            vsc_hvdc_converter_models[index] = model;
+        }
+    }
 }
 
-void VSC_HVDC::delete_vsc_hvdc_model()
+VSC_HVDC_PROJECT_MODEL* VSC_HVDC::get_vsc_hvdc_project_model() const
 {
-    if(get_vsc_hvdc_model()!=NULL)
+    return vsc_hvdc_project_model;
+}
+
+vector<VSC_HVDC_CONVERTER_MODEL*> VSC_HVDC::get_vsc_hvdc_converter_models() const
+{
+    return vsc_hvdc_converter_models;
+}
+
+VSC_HVDC_CONVERTER_MODEL* VSC_HVDC::get_vsc_hvdc_converter_model(unsigned int index) const
+{
+    if(not converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return vsc_hvdc_converter_models[index];
+    else
+        return NULL;
+}
+
+void VSC_HVDC::delete_vsc_hvdc_project_model()
+{
+    if(get_vsc_hvdc_project_model()!=NULL)
     {
-        delete vsc_hvdc_model;
-        vsc_hvdc_model =  NULL;
+        delete vsc_hvdc_project_model;
+        vsc_hvdc_project_model =  NULL;
+    }
+}
+
+void VSC_HVDC::delete_vsc_hvdc_converter_models()
+{
+    unsigned int n = get_converter_count();
+    for(unsigned int i=0; i!=n; ++i)
+        delete_vsc_hvdc_converter_model(i);
+}
+
+void VSC_HVDC::delete_vsc_hvdc_converter_model(unsigned int index)
+{
+    if(get_vsc_hvdc_converter_model(index)!=NULL)
+    {
+        delete vsc_hvdc_converter_models[index];
+        vsc_hvdc_converter_models[index] =  NULL;
+    }
+}
+
+
+complex<double> VSC_HVDC::get_converter_Norton_admittance_as_voltage_source(unsigned int index) const
+{
+    return 0.0;
+}
+
+complex<double> VSC_HVDC::get_converter_Norton_admittance_as_current_source(unsigned int index) const
+{
+    return 0.0;
+}
+
+void VSC_HVDC::run(DYNAMIC_MODE mode)
+{
+    ostringstream osstream;
+    if(get_status()==true)
+    {
+        VSC_HVDC_PROJECT_MODEL* project = get_vsc_hvdc_project_model();
+        vector<VSC_HVDC_CONVERTER_MODEL*> converters = get_vsc_hvdc_converter_models();
+        unsigned int n_converter = get_converter_count();
+        unsigned int i;
+        switch(mode)
+        {
+            case INITIALIZE_MODE:
+            {
+                if(project!=NULL)
+                    project->initialize();
+                else
+                    return;
+
+                for(i=0; i!=n_converter; ++i)
+                {
+                    if(converters[i]!=NULL)
+                        converters[i]->initialize();
+                }
+                break;
+            }
+            case INTEGRATE_MODE:
+            case UPDATE_MODE:
+            {
+                project->run(mode);
+
+                for(i=0; i!=n_converter; ++i)
+                {
+                    if(converters[i]!=NULL)
+                        converters[i]->run(mode);
+                }
+                break;
+            }
+            case RELAY_MODE:
+            {
+                break;
+            }
+        }
     }
 }
 
@@ -3576,7 +3735,7 @@ complex<double> VSC_HVDC::get_converter_dynamic_current_in_pu_based_on_system_ba
 {
     if(get_status() == true)
     {
-        VSC_HVDC_MODEL* model = get_vsc_hvdc_model();
+        VSC_HVDC_PROJECT_MODEL* model = get_vsc_hvdc_project_model();
         if(model!=NULL)
             return model->get_converter_ac_current_in_pu(converter_index);
         else
@@ -3585,4 +3744,3 @@ complex<double> VSC_HVDC::get_converter_dynamic_current_in_pu_based_on_system_ba
     else
         return 0.0;
 }
-

@@ -1929,7 +1929,15 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_vsc_hvdc()
     TEST_ASSERT(pvschvdc->get_identifier()=="#2");
     TEST_ASSERT(pvschvdc->get_status()==false);
 
-    /*    */
+    pvschvdc = psdb.get_vsc_hvdc("VSC DC1");
+
+    TEST_ASSERT(pvschvdc!=NULL);
+    TEST_ASSERT(pvschvdc->get_name()=="#1");
+    TEST_ASSERT(pvschvdc->get_converter_ac_bus(0)==1);
+    TEST_ASSERT(pvschvdc->get_converter_ac_bus(1)==3);
+    TEST_ASSERT(pvschvdc->get_converter_ac_bus(2)==2);
+    TEST_ASSERT(pvschvdc->get_identifier()=="#1");
+    TEST_ASSERT(pvschvdc->get_status()==true);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_equivalent_device()

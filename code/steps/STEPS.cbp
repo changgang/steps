@@ -454,6 +454,7 @@
 		<Unit filename="source/apis/steps_api_set_get_pv_unit_related_model_parameters.cpp" />
 		<Unit filename="source/apis/steps_api_set_get_source_parameters.cpp" />
 		<Unit filename="source/apis/steps_api_set_get_transformer_parameters.cpp" />
+		<Unit filename="source/apis/steps_api_set_get_vsc_hvdc_related_model_parameters.cpp" />
 		<Unit filename="source/apis/steps_api_set_get_wt_generator_related_model_parameters.cpp" />
 		<Unit filename="source/apis/steps_api_set_get_zone_parameters.cpp" />
 		<Unit filename="source/apis/steps_api_show_device_data.cpp" />

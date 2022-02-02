@@ -47,6 +47,17 @@ void show_device_not_exist_with_api(DEVICE_ID did, string api_func, unsigned int
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
+void show_vsc_hvdc_not_exist_with_api(string name, string api_func, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "VSC HVDC %s does not exist in database with api %s.\n"
+             "Nothing will be changed.\n"
+             "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
+             name.c_str(), api_func.c_str());
+    toolkit.show_information_with_leading_time_stamp(buffer);
+}
+
 void show_model_type_not_supported_for_device_with_api(string model_type, DEVICE_ID did, string api_func, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

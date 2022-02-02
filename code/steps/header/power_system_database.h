@@ -152,6 +152,7 @@ class POWER_SYSTEM_DATABASE
         FIXED_SHUNT* get_fixed_shunt(const DEVICE_ID & device_id);
         HVDC* get_hvdc(const DEVICE_ID & device_id);
         VSC_HVDC* get_vsc_hvdc(const DEVICE_ID & device_id);
+        VSC_HVDC* get_vsc_hvdc(string name);
         EQUIVALENT_DEVICE* get_equivalent_device(const DEVICE_ID & device_id);
         ENERGY_STORAGE* get_energy_storage(const DEVICE_ID & device_id);
         LCC_HVDC* get_lcc_hvdc(const DEVICE_ID & device_id);

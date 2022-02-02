@@ -10,6 +10,15 @@ class VSC_HVDC_CONVERTER_MODEL: public VSC_HVDC_MODEL
         virtual ~VSC_HVDC_CONVERTER_MODEL();
     public: // model type
         virtual string get_model_type() const;
+
+        void set_converter_name(string name);
+        string get_converter_name() const;
+        unsigned int get_converter_name_index() const;
+        unsigned int get_converter_index() const;
+
+        void set_as_voltage_source();
+        void set_as_current_source();
+        bool is_voltage_source() const;
     public:
         // specific model
         virtual string get_model_name() const = 0;
@@ -39,6 +48,9 @@ class VSC_HVDC_CONVERTER_MODEL: public VSC_HVDC_MODEL
         virtual string get_dynamic_data_in_psse_format() const = 0;
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
+    private:
+        unsigned int converter_index;
+        bool voltage_source_flag;
 };
 
 #endif // VSC_HVDC_CONVERTER_MODEL_H_INCLUDED

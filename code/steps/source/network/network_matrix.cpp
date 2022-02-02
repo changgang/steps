@@ -191,6 +191,7 @@ void NETWORK_MATRIX::build_dynamic_network_Y_matrix()
     add_generators_to_dynamic_network();
     add_wt_generators_to_dynamic_network();
     add_motor_loads_to_dynamic_network();
+    add_vsc_hvdcs_to_dynamic_network();
 
     network_Y1_matrix.compress_and_merge_duplicate_entries();
 }
@@ -2613,7 +2614,7 @@ void NETWORK_MATRIX::add_motor_loads_to_dynamic_network()
         if(model!=NULL)
         {
             if(model->is_voltage_source())
-                add_motor_load_to_dynamic_network(*(loads[i]));
+                add_motor_load_to_dynamic_network(*load);
         }
     }
 }
@@ -2633,6 +2634,50 @@ void NETWORK_MATRIX::add_motor_load_to_dynamic_network(const LOAD& load)
                 unsigned int bus = load.get_load_bus();
                 unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
                 this_Y_matrix_pointer->add_entry(i,i,y);
+            }
+        }
+    }
+}
+
+
+void NETWORK_MATRIX::add_vsc_hvdcs_to_dynamic_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<VSC_HVDC*> vsc_hvdcs = psdb.get_all_vsc_hvdcs();
+
+    unsigned int n= vsc_hvdcs.size();
+
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        VSC_HVDC* vsc_hvdc = vsc_hvdcs[i];
+        add_vsc_hvdc_to_dynamic_network(*vsc_hvdc);
+    }
+}
+
+void NETWORK_MATRIX::add_vsc_hvdc_to_dynamic_network(const VSC_HVDC& vsc_hvdc)
+{
+    if(vsc_hvdc.get_status()==true)
+    {
+        unsigned int n_converter = vsc_hvdc.get_converter_count();
+        for(unsigned int i=0; i!=n_converter; ++i)
+        {
+            if(vsc_hvdc.get_converter_status(i)==true)
+            {
+                VSC_HVDC_CONVERTER_MODEL* model = vsc_hvdc.get_vsc_hvdc_converter_model(i);
+                if(model!=NULL)
+                {
+                    complex<double> y = 0.0;
+                    if(model->is_voltage_source())
+                        y = vsc_hvdc.get_converter_Norton_admittance_as_voltage_source(i);
+                    else
+                        y = vsc_hvdc.get_converter_Norton_admittance_as_current_source(i);
+                    if(y!=0.0)
+                    {
+                        unsigned int bus = vsc_hvdc.get_converter_ac_bus(i);
+                        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+                        this_Y_matrix_pointer->add_entry(i,i,y);
+                    }
+                }
             }
         }
     }

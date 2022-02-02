@@ -99,7 +99,7 @@ class VSC : public CONVERTER
         virtual void report() const;
         virtual void save() const;
         virtual void set_model(const MODEL* model);
-        virtual MODEL* get_model_of_type(string model_type);
+        virtual MODEL* get_model_of_type(string model_type, unsigned int index=0);
         virtual DEVICE_ID get_device_id() const;
     private:
         unsigned int bridge_number;

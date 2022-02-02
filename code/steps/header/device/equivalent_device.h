@@ -77,7 +77,7 @@ class EQUIVALENT_DEVICE : public NONBUS_DEVICE
         ////virtual string get_compound_device_name() const;
 
         virtual void set_model(MODEL* model);
-        virtual MODEL* get_model_of_type(string model_type);
+        virtual MODEL* get_model_of_type(string model_type, unsigned int index=0);
 
         void set_equivalent_model(EQUIVALENT_MODEL* model);
 
