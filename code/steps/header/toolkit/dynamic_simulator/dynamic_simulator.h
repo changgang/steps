@@ -157,7 +157,6 @@ class DYNAMICS_SIMULATOR
         void trip_fixed_shunt(const DEVICE_ID& shunt_id);
         void close_fixed_shunt(const DEVICE_ID& shunt_id);
 
-
         void manual_bypass_hvdc(const DEVICE_ID& hvdc_id);
         void manual_block_hvdc(const DEVICE_ID& hvdc_id);
         void manual_unbypass_hvdc(const DEVICE_ID& hvdc_id);
@@ -204,6 +203,7 @@ class DYNAMICS_SIMULATOR
         void initialize_internal_bus_voltage_vector();
 
         void solve_hvdcs_without_integration();
+        void solve_vsc_hvdcs_without_integration();
 
         void get_bus_current_mismatch();
         void get_bus_currnet_into_network();

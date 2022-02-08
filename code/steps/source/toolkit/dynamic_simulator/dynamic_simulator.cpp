@@ -941,6 +941,8 @@ void DYNAMICS_SIMULATOR::prepare_devices_for_run()
     lines = psdb.get_all_lines();
     hvdcs = psdb.get_all_hvdcs();
 
+    vsc_hvdcs = psdb.get_all_vsc_hvdcs();
+
     e_devices = psdb.get_all_equivalent_devices();
 }
 
@@ -1283,6 +1285,20 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
             hvdc->run(mode);
     }
 
+    n = vsc_hvdcs.size();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        //set_openmp_number_of_threads(toolkit->get_hvdc_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
+        #pragma omp parallel for schedule(static)
+        //#pragma omp parallel for num_threads(2)
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+    for(unsigned int i=0; i<n; ++i)
+    {
+        VSC_HVDC* vsc_hvdc = vsc_hvdcs[i];
+        if(vsc_hvdc->get_status()==true)
+            vsc_hvdc->run(mode);
+    }
+
     /*clock_2 = steady_clock::now();
     tduration = duration_cast<nanoseconds>(clock_2-clock_1);
     osstream<<"at time "<<TIME<<", hvdc models run takes "<<tduration.count()<<" ns.";
@@ -1447,6 +1463,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
     GREATEST_POWER_CURRENT_MISMATCH_STRUCT greatest_mismatch_struct;
 
     solve_hvdcs_without_integration();
+    solve_vsc_hvdcs_without_integration();
     get_bus_current_mismatch();
 
     #ifndef USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
@@ -1494,6 +1511,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
                     {
                         //++network_iter_count;
                         solve_hvdcs_without_integration();
+                        solve_vsc_hvdcs_without_integration();
                         get_bus_current_mismatch();
                         #ifndef USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
                         calculate_bus_power_mismatch_in_MVA();
@@ -1517,6 +1535,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
                 ++network_iter_count;
 
                 solve_hvdcs_without_integration();
+                solve_vsc_hvdcs_without_integration();
                 get_bus_current_mismatch();
                 #ifndef USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
                 calculate_bus_power_mismatch_in_MVA();
@@ -1636,6 +1655,26 @@ void DYNAMICS_SIMULATOR::solve_hvdcs_without_integration()
         HVDC_MODEL* model = hvdcs[i]->get_hvdc_model();
         if(model!=NULL)
             model->solve_hvdc_model_without_integration();
+    }
+}
+
+
+void DYNAMICS_SIMULATOR::solve_vsc_hvdcs_without_integration()
+{
+    unsigned int n = vsc_hvdcs.size();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        //set_openmp_number_of_threads(toolkit->get_hvdc_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
+        #pragma omp parallel for schedule(static)
+        //#pragma omp parallel for num_threads(2)
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+    for(unsigned int i=0; i<n; ++i)
+    {
+        /*
+        HVDC_MODEL* model = vsc_hvdcs[i]->get_hvdc_model();
+        if(model!=NULL)
+            model->solve_hvdc_model_without_integration();
+        */
     }
 }
 
@@ -1780,6 +1819,29 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
             if(std::isnan(I_mismatch[i].real()) or std::isnan(I_mismatch[i].imag()))
             {
                 osstream<<"warning. NAN is detected when getting bus current mismatch after adding hvdcs when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+                for(unsigned int j = 0; j<n; ++j)
+                {
+                    if(std::isnan(I_mismatch[j].real()) or std::isnan(I_mismatch[j].imag()))
+                    {
+                        unsigned int ibus = net.get_physical_bus_number_of_internal_bus(j);
+                        osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[j]<<endl;
+                    }
+                }
+                toolkit->show_information_with_leading_time_stamp(osstream);
+                break;
+            }
+        }
+    }
+    add_vsc_hvdcs_to_bus_current_mismatch();
+    if(not detailed_log_enabled)
+        ;
+    else
+    {
+        for(unsigned int i = 0; i<n; ++i)
+        {
+            if(std::isnan(I_mismatch[i].real()) or std::isnan(I_mismatch[i].imag()))
+            {
+                osstream<<"warning. NAN is detected when getting bus current mismatch after adding vsc hvdcs when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
                 for(unsigned int j = 0; j<n; ++j)
                 {
                     if(std::isnan(I_mismatch[j].real()) or std::isnan(I_mismatch[j].imag()))

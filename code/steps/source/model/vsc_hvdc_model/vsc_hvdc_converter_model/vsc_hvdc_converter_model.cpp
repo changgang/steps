@@ -6,6 +6,7 @@
 VSC_HVDC_CONVERTER_MODEL::VSC_HVDC_CONVERTER_MODEL(STEPS& toolkit):VSC_HVDC_MODEL(toolkit)
 {
     converter_index = INDEX_NOT_EXIST;
+    converter_name_index = INDEX_NOT_EXIST;
     set_as_current_source();
 }
 
@@ -30,6 +31,8 @@ void VSC_HVDC_CONVERTER_MODEL::set_converter_name(string name)
             if(vsc->get_converter_name(i)==name)
             {
                 converter_index = i;
+                add_string_to_str_int_map(name);
+                converter_name_index = get_index_of_string(name);
                 break;
             }
         }
@@ -38,15 +41,12 @@ void VSC_HVDC_CONVERTER_MODEL::set_converter_name(string name)
 
 string VSC_HVDC_CONVERTER_MODEL::get_converter_name() const
 {
-    VSC_HVDC* vsc = get_vsc_hvdc_pointer();
-    if(vsc!=NULL)
-        return vsc->get_converter_name(get_converter_index());
-    else
-        return "";
+    return get_string_of_index(get_converter_name_index());
 }
+
 unsigned int VSC_HVDC_CONVERTER_MODEL::get_converter_name_index() const
 {
-    return get_index_of_string(get_converter_name());
+    return converter_name_index;
 }
 
 unsigned int VSC_HVDC_CONVERTER_MODEL::get_converter_index() const
