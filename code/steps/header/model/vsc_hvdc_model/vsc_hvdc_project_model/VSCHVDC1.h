@@ -39,7 +39,24 @@ class VSCHVDC1: public VSC_HVDC_MODEL
         void set_converter_ac_voltage_control_T_in_s(const unsigned int index, const double t);
         void set_converter_ac_voltage_Umax(const unsigned int index, const double Umax);
         void set_converter_ac_voltage_Umin(const unsigned int index, const double Umin);
-        void set_converter_dc_voltage_kpuc(const unsigned int index, const double k);
+        vSC_HVDC_CONVERTER_REACTIVE_POWER_CONTROL_MODE get_converter_reactive_control_mode(unsigned int index) const;
+        double get_converter_active_power_control_T_in_s(unsigned int index) const;
+        double get_converter_active_power_Pmax_in_pu(unsigned int index) const;
+        double get_converter_active_power_Pmin_in_pu(unsigned int index) const;
+        double get_converter_active_power_kpp(unsigned int index) const;
+        double get_converter_reactive_power_control_T_in_s(unsigned int index) const;
+        double get_converter_reactive_power_Qmax_in_pu(unsigned int index) const;
+        double get_converter_reactive_power_Qmin_in_pu(unsigned int index) const;
+        double get_converter_reactive_power_kpq(unsigned int index) const;
+        double get_converter_dc_voltage_control_T_in_s(unsigned int index) const;
+        double get_converter_dc_voltage_Umax(unsigned int index) const;
+        double get_converter_dc_voltage_Umin(unsigned int index) const;
+        double get_converter_dc_voltage_kpud(unsigned int index) const;
+        double get_converter_ac_voltage_control_T_in_s(unsigned int index) const;
+        double get_converter_ac_voltage_Umax(unsigned int index) const;
+        double get_converter_ac_voltage_Umin(unsigned int index) const;
+        double get_converter_dc_voltage_kpuc(unsigned int index)const ;
+        double get_dc_voltage_ceq(unsigned int index) const;oid set_converter_dc_voltage_kpuc(const unsigned int index, const double k);
         void set_dc_voltage_ceq(const unsigned int index, const double ceq);
 
         unsigned int get_vsc_stations_count() const;
