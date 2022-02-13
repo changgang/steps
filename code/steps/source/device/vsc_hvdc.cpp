@@ -2224,8 +2224,6 @@ void VSC_HVDC::run(DYNAMIC_MODE mode)
             {
                 if(project!=NULL)
                     project->initialize();
-                else
-                    return;
 
                 for(i=0; i!=n_converter; ++i)
                 {

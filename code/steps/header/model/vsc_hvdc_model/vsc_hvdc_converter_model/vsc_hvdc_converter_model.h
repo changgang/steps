@@ -15,16 +15,17 @@ class VSC_HVDC_CONVERTER_MODEL: public VSC_HVDC_MODEL
         string get_converter_name() const;
         unsigned int get_converter_name_index() const;
         unsigned int get_converter_index() const;
+        unsigned int get_converter_bus() const;
 
         void set_as_voltage_source();
         void set_as_current_source();
         bool is_voltage_source() const;
 
-        void set_converter_active_power_dynamic_control_mode(VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE);
-        void set_converter_reactive_power_dynamic_control_mode(VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE);
+        void set_converter_active_control_mode(VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE active_control_mode);
+        void set_converter_reactive_control_mode(VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE reactive_control_mode);
 
-        VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE get_converter_active_power_dynamic_control_mode();
-        VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE get_converter_reactive_power_dynamic_control_mode();
+        VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE get_converter_active_control_mode() const;
+        VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE get_converter_reactive_control_mode() const;
 
     public:
         // specific model
@@ -67,8 +68,8 @@ class VSC_HVDC_CONVERTER_MODEL: public VSC_HVDC_MODEL
         bool voltage_source_flag;
 
         unsigned int control_mode; // change to enum, dynamic version.
-        VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE p_mode;
-        VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE q_mode;
+        VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE active_power_control_mode;
+        VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE reactive_power_control_mode;
 };
 
 #endif // VSC_HVDC_CONVERTER_MODEL_H_INCLUDED

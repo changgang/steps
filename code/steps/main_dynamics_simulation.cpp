@@ -22,7 +22,10 @@ int main()
     //importer.load_powerflow_data("bench_shandong_v2.raw");
     //importer.load_dynamic_data("bench_shandong_v2.dyr");
 
-    importer.load_powerflow_data("../../../bench/IEEE39_with_four_terminal_vsc.raw");
+    importer.load_powerflow_data("../../../bench/IEEE39_with_four_vsc.raw");
+    cout<<"Done loading powerflow file"<<endl;
+    importer.load_vsc_powerflow_data("../../../bench/4_terminal_vsc_hvdc.vscraw");
+
     importer.load_dynamic_data("../../../bench/IEEE39_with_four_terminal_vsc.dyr");
     //importer.load_dynamic_data("bench_shandong_with_avr.dyr");
 
@@ -52,8 +55,8 @@ int main()
     simulator.set_output_file("../../../bench/test_log/IEEE39_vsc");
 
     //simulator.prepare_meters();
-    simulator.prepare_vsc_hvdc_related_meters();
-    simulator.show_dynamic_simulator_configuration();
+    //simulator.prepare_vsc_hvdc_related_meters();
+    //simulator.show_dynamic_simulator_configuration();
     //simulator.start();
     //simulator.run_to(1.0);
 

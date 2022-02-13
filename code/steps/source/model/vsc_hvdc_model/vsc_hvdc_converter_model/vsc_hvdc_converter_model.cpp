@@ -54,6 +54,11 @@ unsigned int VSC_HVDC_CONVERTER_MODEL::get_converter_index() const
     return converter_index;
 }
 
+unsigned int VSC_HVDC_CONVERTER_MODEL::get_converter_bus() const
+{
+    return get_vsc_hvdc_pointer()->get_converter_ac_bus(get_converter_index());
+}
+
 void VSC_HVDC_CONVERTER_MODEL::set_as_voltage_source()
 {
     voltage_source_flag = true;
@@ -67,6 +72,28 @@ void VSC_HVDC_CONVERTER_MODEL::set_as_current_source()
 bool VSC_HVDC_CONVERTER_MODEL::is_voltage_source() const
 {
     return voltage_source_flag;
+}
+
+
+void VSC_HVDC_CONVERTER_MODEL::set_converter_active_control_mode(VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE active_control_mode)
+{
+    active_power_control_mode = active_control_mode;
+}
+
+void VSC_HVDC_CONVERTER_MODEL::set_converter_reactive_control_mode(VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE reactive_control_mode)
+{
+    reactive_power_control_mode = reactive_control_mode;
+}
+
+
+VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE VSC_HVDC_CONVERTER_MODEL::get_converter_active_control_mode() const
+{
+    return active_power_control_mode;
+}
+
+VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE VSC_HVDC_CONVERTER_MODEL::get_converter_reactive_control_mode() const
+{
+    return reactive_power_control_mode;
 }
 
 /*

@@ -1670,6 +1670,7 @@ void STEPS_IMEXPORTER::add_VSCHVDCC0_model(vector<string>& data)
         VSCHVDCC0* model = new VSCHVDCC0(toolkit);
         model->set_device_id(did);
         bool successful = model->setup_model_with_steps_string_vector(data);
+        cout<<"successful:model->setup_model_with_steps_string_vector"<<endl;
         if(successful)
             vsc_hvdc->set_model(model);
         else
