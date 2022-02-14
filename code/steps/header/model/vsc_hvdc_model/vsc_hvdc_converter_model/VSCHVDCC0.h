@@ -89,6 +89,7 @@ class VSCHVDCC0: public VSC_HVDC_CONVERTER_MODEL
         virtual complex<double> get_converter_Norton_current_in_xy_axis_in_pu_based_on_SBASE();
     private:
         void copy_from_const_model(const VSCHVDCC0& model);
+        double solve_Pdc_with_active_power_and_reactive_power(unsigned int converter_index);
     private:
         PID_BLOCK p_block;
         PID_BLOCK q_block;

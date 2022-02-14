@@ -187,7 +187,11 @@ string VSCHVDCP0::get_dynamic_data_in_steps_format() const
 
 void VSCHVDCP0::solve_vsc_hvdc_network()
 {
+
+    /*
     Y matrix should be rebuild(line trip, line fault) in DYNAMIC_SIMULATOR
     get Udc from converters Ceq
     solve steady state network, set VSC_HVDC_CONVERTER_STRUCT::Idc_flowing_to_Ceq_in_kA
+    */
+
 }
