@@ -4218,6 +4218,27 @@ void DYNAMICS_SIMULATOR::change_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id,
     }
 }
 
+
+void DYNAMICS_SIMULATOR::set_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did, unsigned int side_bus, double location, double fault_shunt)
+{
+    // need to update VSC HVDC dynamic Y matrix
+}
+
+void DYNAMICS_SIMULATOR::clear_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did, unsigned int side_bus, double location)
+{
+    // need to update VSC HVDC dynamic Y matrix
+}
+
+void DYNAMICS_SIMULATOR::trip_vsc_hvdc_line(string vsc_name, DC_DEVICE_ID line_did)
+{
+    // need to update VSC HVDC dynamic Y matrix
+}
+
+void DYNAMICS_SIMULATOR::close_vsc_hvdc_line(string vsc_name, DC_DEVICE_ID line_did)
+{
+    // need to update VSC HVDC dynamic Y matrix
+}
+
 void DYNAMICS_SIMULATOR::switch_on_equivalent_device()
 {
     unsigned int n = e_devices.size();
@@ -4227,3 +4248,4 @@ void DYNAMICS_SIMULATOR::switch_on_equivalent_device()
     for(unsigned int i=0; i!=n; ++i)
         e_devices[i]->switch_on();
 }
+

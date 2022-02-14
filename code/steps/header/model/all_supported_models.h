@@ -15,7 +15,7 @@
 
 #include "header/model/hvdc_model/hvdc_models.h"
 
-#include "header/model/vsc_hvdc_model/vsc_hvdc_project_model/vsc_hvdc_project_models.h"
+#include "header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_models.h"
 #include "header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_models.h"
 
 #include "header/model/wtg_models/wt_generator_model/wt_generator_models.h"

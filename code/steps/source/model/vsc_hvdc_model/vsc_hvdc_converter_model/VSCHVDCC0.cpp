@@ -126,9 +126,9 @@ void VSCHVDCC0::set_reactive_power_block_qmin(double qmin)
     q_block.set_lower_limit(qmin);
 }
 
-void VSCHVDCC0::set_dc_voltage_ceq(const double ceq)
+void VSCHVDCC0::set_dc_voltage_block_ceq(const double ceq)
 {
-    Ceq = ceq;
+    udc_block.set_T_in_s(ceq);
 }
 
 
@@ -192,9 +192,9 @@ double VSCHVDCC0::get_reactive_power_block_qmin() const
     return q_block.get_lower_limit();
 }
 
-double VSCHVDCC0::get_dc_voltage_ceq() const
+double VSCHVDCC0::get_dc_voltage_block_ceq() const
 {
-    return Ceq;
+    return udc_block.get_T_in_s();
 }
 
 
@@ -251,6 +251,9 @@ bool VSCHVDCC0::setup_model_with_steps_string_vector(vector<string>& data)
             string converter_name = get_string_data(data[data_index],""); data_index++;
             set_converter_name(converter_name);
 
+            double ceq = get_double_data(data[data_index],"0.0"); data_index++;
+            set_dc_voltage_ceq(ceq);
+
             string mode=get_string_data(data[data_index],""); data_index++;
             VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE active_control_mode = DY_VSC_INVALID_DC_CONTORL;
             if(mode=="Vdc_control")
@@ -294,9 +297,6 @@ bool VSCHVDCC0::setup_model_with_steps_string_vector(vector<string>& data)
             set_reactive_power_block_Td_in_s(q_td);
             set_reactive_power_block_qmax(q_qmax);
             set_reactive_power_block_qmin(q_qmin);
-
-            double ceq = get_double_data(data[data_index],"0.0");
-            set_dc_voltage_ceq(ceq);
 
             is_successful = true;
 
@@ -355,7 +355,8 @@ void VSCHVDCC0::initialize()
         q_block.set_output(Isq0);
         q_block.initialize();
 
-        ceq_block.set_output(0.0);
+        double Udc = vsc_hvdc->get_dc_bus_Vdc_in_kV_with_dc_bus_number(bus_number);// here wrong
+        ceq_block.set_output(Udc); // change to initial Udc
         ceq_block.initialize();
 
         double pref = 0.0;
@@ -408,50 +409,46 @@ void VSCHVDCC0::run(DYNAMIC_MODE mode)
         double Isd0 = Is.real();
         double Isq0 = Is.imag();
 
+        get dc power into Ceq
+        get Pac = Ps + Ploss
+
+        double input = (Pdc-Pdc)/Udc;
+        udc_block.set_input(input);
+        udc_block.run(mode);
+
         VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE active_power_control_mode = get_converter_active_control_mode();
         VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE reactive_power_control_mode = get_converter_reactive_control_mode();
 
-        double p_input = 0.0;
-        double pref = 0.0;
-        double p_current = 0.0;
+        double input = 0.0;
         unsigned int dc_bus_index = vsc_hvdc->get_dc_bus_index_with_converter_index(converter_index);
         switch(active_power_control_mode)
         {
             case DY_VSC_DC_VOLTAGE_CONTORL:
-                pref = get_active_power_block_Udcref();
-                p_current = vsc_hvdc->get_dc_bus_Vdc_in_kV(dc_bus_index);
-                p_input = pref-p_current;
+                input = get_active_power_block_Udcref() - vsc_hvdc->get_dc_bus_Vdc_in_kV(dc_bus_index);
                 break;
             case DY_VSC_AC_ACTIVE_POWER_CONTORL:
-                pref = get_active_power_block_Pref();
-                p_input = pref - Ps;
+                input = get_active_power_block_Pref() - Ps;
                 break;
             default:
                 break;
         }
 
-        p_block.set_input(p_input);
+        p_block.set_input(input);
         p_block.run(mode);
 
-        double q_input = 0.0;
-        double qref = 0.0;
-        double q_current = 0.0;
+        input = 0.0;
         switch(reactive_power_control_mode)
         {
             case DY_VSC_AC_VOLTAGE_CONTROL:
-                qref = get_reactive_power_block_Uacref();
-                q_current = Us.real();
-                q_input = qref-q_current;
+                input = get_reactive_power_block_Uacref() - abs(Us);
                 break;
             case DY_VSC_AC_REACTIVE_POWER_CONTROL:
-                qref = get_reactive_power_block_Qref();
-                q_current = vsc_hvdc->get_converter_Q_to_AC_bus_in_MVar(converter_index);
-                q_input = qref-q_current;
+                input = get_reactive_power_block_Qref() - Qs;
                 break;
             default:
                 break;
         }
-        q_block.set_input(q_input);
+        q_block.set_input(input);
         q_block.run(mode);
 
         if(mode==UPDATE_MODE)

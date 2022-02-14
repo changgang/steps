@@ -2099,7 +2099,7 @@ void VSC_HVDC::set_model(MODEL* model)
         model->set_device_id(get_device_id());
         if(model->get_model_type()=="VSC HVDC PROJECT")
         {
-            set_vsc_hvdc_project_model((VSC_HVDC_PROJECT_MODEL*) model);
+            set_vsc_hvdc_project_model((VSC_HVDC_NETWORK_MODEL*) model);
             model->allocate_model_variables();
             model->prepare_model_data_table();
             model->prepare_model_internal_variable_table();
@@ -2133,7 +2133,7 @@ MODEL* VSC_HVDC::get_model_of_type(string model_type, unsigned int index)
     return NULL;
 }
 
-void VSC_HVDC::set_vsc_hvdc_project_model(VSC_HVDC_PROJECT_MODEL* model)
+void VSC_HVDC::set_vsc_hvdc_project_model(VSC_HVDC_NETWORK_MODEL* model)
 {
     if(model!=NULL)
     {
@@ -2155,7 +2155,7 @@ void VSC_HVDC::set_vsc_hvdc_converter_model(VSC_HVDC_CONVERTER_MODEL* model)
     }
 }
 
-VSC_HVDC_PROJECT_MODEL* VSC_HVDC::get_vsc_hvdc_project_model() const
+VSC_HVDC_NETWORK_MODEL* VSC_HVDC::get_vsc_hvdc_project_model() const
 {
     return vsc_hvdc_project_model;
 }
@@ -2214,7 +2214,7 @@ void VSC_HVDC::run(DYNAMIC_MODE mode)
     ostringstream osstream;
     if(get_status()==true)
     {
-        VSC_HVDC_PROJECT_MODEL* project = get_vsc_hvdc_project_model();
+        VSC_HVDC_NETWORK_MODEL* project = get_vsc_hvdc_project_model();
         vector<VSC_HVDC_CONVERTER_MODEL*> converters = get_vsc_hvdc_converter_models();
         unsigned int n_converter = get_converter_count();
         unsigned int i;
@@ -3733,7 +3733,7 @@ complex<double> VSC_HVDC::get_converter_dynamic_current_in_pu_based_on_system_ba
 {
     if(get_status() == true)
     {
-        VSC_HVDC_PROJECT_MODEL* model = get_vsc_hvdc_project_model();
+        VSC_HVDC_NETWORK_MODEL* model = get_vsc_hvdc_project_model();
         if(model!=NULL)
             return model->get_converter_ac_current_in_pu(converter_index);
         else

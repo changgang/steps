@@ -13,24 +13,7 @@ class VSCHVDCC0: public VSC_HVDC_CONVERTER_MODEL
         virtual VSCHVDCC0& operator=(const VSCHVDCC0& model);
     public:
         virtual string get_model_name() const;
-        /*
-        void set_converter_active_power_control_T_in_s(const double t);
-        void set_converter_active_power_Pmax_in_pu(const double Pmax);
-        void set_converter_active_power_Pmin_in_pu(const double Pmin);
-        void set_converter_active_power_kpp(const double k);
-        void set_converter_reactive_power_control_T_in_s(const double t);
-        void set_converter_reactive_power_Qmax_in_pu(const double Qmax);
-        void set_converter_reactive_power_Qmin_in_pu(const double Qmin);
-        void set_converter_reactive_power_kpq(const double k);
-        void set_converter_dc_voltage_control_T_in_s(const double t);
-        void set_converter_dc_voltage_Umax(const double Umax);
-        void set_converter_dc_voltage_Umin(const double Umin);
-        void set_converter_dc_voltage_kpud(const double k);
-        void set_converter_ac_voltage_control_T_in_s(const double t);
-        void set_converter_ac_voltage_Umax(const double Umax);
-        void set_converter_ac_voltage_Umin(const double Umin);
-        void set_converter_ac_voltage_kpuc(const double k);
-        */
+
         void set_active_power_block_Kp(double kp);
         void set_active_power_block_Ki(double ki);
         void set_active_power_block_Kd(double kd);
@@ -43,25 +26,8 @@ class VSCHVDCC0: public VSC_HVDC_CONVERTER_MODEL
         void set_reactive_power_block_Td_in_s(double td);
         void set_reactive_power_block_qmax(double qmax);
         void set_reactive_power_block_qmin(double qmin);
-        void set_dc_voltage_ceq(const double ceq);
+        void set_dc_voltage_block_ceq(const double ceq);
 
-        /*double get_converter_active_power_control_T_in_s() const;
-        double get_converter_active_power_Pmax_in_pu() const;
-        double get_converter_active_power_Pmin_in_pu() const;
-        double get_converter_active_power_kpp() const;
-        double get_converter_reactive_power_control_T_in_s() const;
-        double get_converter_reactive_power_Qmax_in_pu() const;
-        double get_converter_reactive_power_Qmin_in_pu() const;
-        double get_converter_reactive_power_kpq() const;
-        double get_converter_dc_voltage_control_T_in_s() const;
-        double get_converter_dc_voltage_Umax() const;
-        double get_converter_dc_voltage_Umin() const;
-        double get_converter_dc_voltage_kpud() const;
-        double get_converter_ac_voltage_control_T_in_s() const;
-        double get_converter_ac_voltage_Umax() const;
-        double get_converter_ac_voltage_Umin() const;
-        double get_converter_ac_voltage_kpuc() const ;
-        */
         double get_active_power_block_Kp() const;
         double get_active_power_block_Ki() const;
         double get_active_power_block_Kd() const;
@@ -74,7 +40,7 @@ class VSCHVDCC0: public VSC_HVDC_CONVERTER_MODEL
         double get_reactive_power_block_Td_in_s() const;
         double get_reactive_power_block_qmax() const;
         double get_reactive_power_block_qmin() const;
-        double get_dc_voltage_ceq() const ;
+        double get_dc_voltage_block_ceq() const ;
 
         void set_active_power_block_Pref(double pref);
         void set_active_power_block_Udcref(double udcref);
@@ -130,8 +96,6 @@ class VSCHVDCC0: public VSC_HVDC_CONVERTER_MODEL
 
         /*PID_BLOCK p_udc_block, p_pac_block, p_f_block, ;
         PID_BLOCK q_uac_block, q_qac_block;*/
-        INTEGRAL_BLOCK ceq_block;
-        double Ceq;
-
+        INTEGRAL_BLOCK udc_block;
 };
 #endif // VSCHVDCC0_H_INCLUDED

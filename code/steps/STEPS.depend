@@ -2139,7 +2139,7 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/model/all_supported_models.h"
 
-1643801869 d:\steps\code\steps\header\model\all_supported_models.h
+1644803929 d:\steps\code\steps\header\model\all_supported_models.h
 	"header/model/sg_models/sync_generator_model/sync_generator_models.h"
 	"header/model/sg_models/compensator_model/compensator_models.h"
 	"header/model/sg_models/exciter_model/exciter_models.h"
@@ -2150,7 +2150,7 @@
 	"header/model/load_relay_model/load_voltage_relay_models.h"
 	"header/model/load_relay_model/load_frequency_relay_models.h"
 	"header/model/hvdc_model/hvdc_models.h"
-	"header/model/vsc_hvdc_model/vsc_hvdc_project_model/vsc_hvdc_project_models.h"
+	"header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_models.h"
 	"header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_models.h"
 	"header/model/wtg_models/wt_generator_model/wt_generator_models.h"
 	"header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_models.h"
@@ -3494,7 +3494,7 @@
 	<iostream>
 	<algorithm>
 
-1643807728 source:d:\steps\code\steps\source\data_imexporter\steps_dynamics_imexporter.cpp
+1644743722 source:d:\steps\code\steps\source\data_imexporter\steps_dynamics_imexporter.cpp
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -3802,7 +3802,7 @@
 	<iostream>
 	<cstdio>
 
-1644736504 source:d:\steps\code\steps\source\device\vsc_hvdc.cpp
+1644803815 source:d:\steps\code\steps\source\device\vsc_hvdc.cpp
 	"header/device/vsc_hvdc.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -3813,13 +3813,13 @@
 	<cstdio>
 	<cmath>
 
-1643817559 d:\steps\code\steps\header\device\vsc_hvdc.h
+1644803764 d:\steps\code\steps\header\device\vsc_hvdc.h
 	"header/device/nonbus_device.h"
 	"header/device/vsc_hvdc_var.h"
 	"header/basic/device_id.h"
 	"header/basic/dc_device_id.h"
 	"header/basic/steps_enum.h"
-	"header/model/vsc_hvdc_model/vsc_hvdc_project_model/vsc_hvdc_project_model.h"
+	"header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_model.h"
 	"header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_model.h"
 	"header/basic/sparse_matrix_define.h"
 	"header/basic/inphno.h"
@@ -3910,7 +3910,7 @@
 	<fstream>
 	<cstring>
 
-1643813044 source:d:\steps\code\steps\source\meter\meter.cpp
+1644803812 source:d:\steps\code\steps\source\meter\meter.cpp
 	"header/meter/meter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -5444,7 +5444,7 @@
 	<cstdio>
 	<cmath>
 
-1643814071 source:d:\steps\code\steps\source\power_system_database.cpp
+1644803803 source:d:\steps\code\steps\source\power_system_database.cpp
 	"header/power_system_database.h"
 	"header/STEPS.h"
 	"header/steps_namespace.h"
@@ -5795,7 +5795,7 @@
 	<cstdio>
 	<cmath>
 
-1643793373 source:d:\steps\code\steps\source\toolkit\powerflow_solver\powerflow_solver.cpp
+1644743549 source:d:\steps\code\steps\source\toolkit\powerflow_solver\powerflow_solver.cpp
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -12348,14 +12348,14 @@
 1643801780 d:\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_converter_model\vsc_hvdc_converter_models.h
 	"header/model/vsc_hvdc_model/vsc_hvdc_converter_model/VSCHVDCC0.h"
 
-1644740651 d:\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_converter_model\vschvdcc0.h
+1644803574 d:\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_converter_model\vschvdcc0.h
 	"header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_model.h"
 	"header/block/pid_block.h"
 
 1643800465 source:d:\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_project_model\vsc_hvdc_project_model.cpp
 	"header/model/vsc_hvdc_model/vsc_hvdc_project_model/vsc_hvdc_project_model.h"
 
-1644743335 source:d:\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_converter_model\vschvdcc0.cpp
+1644803574 source:d:\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_converter_model\vschvdcc0.cpp
 	"header/model/vsc_hvdc_model/vsc_hvdc_converter_model/VSCHVDCC0.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -12365,7 +12365,7 @@
 	"header/basic/utility.h"
 	"header/STEPS.h"
 
-1643815835 source:d:\steps\code\steps\source\apis\steps_api_set_get_vsc_hvdc_related_model_parameters.cpp
+1644803809 source:d:\steps\code\steps\source\apis\steps_api_set_get_vsc_hvdc_related_model_parameters.cpp
 	"header/apis/steps_api.h"
 	"header/apis/steps_api_common.h"
 	"header/basic/utility.h"
@@ -12410,6 +12410,23 @@
 
 1643943171 source:e:\users\zma\desktop\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_project_model\vschvdcp0.cpp
 	"header/model/vsc_hvdc_model/vsc_hvdc_project_model/VSCHVDCP0.h"
+	"header/basic/utility.h"
+	"header/STEPS.h"
+
+1644803825 d:\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_network_model\vsc_hvdc_network_model.h
+	"header/model/vsc_hvdc_model/vsc_hvdc_model.h"
+
+1644803673 d:\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_network_model\vsc_hvdc_network_models.h
+	"header/model/vsc_hvdc_model/vsc_hvdc_network_model/VSCHVDCP0.h"
+
+1644803935 d:\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_network_model\vschvdcp0.h
+	"header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_model.h"
+
+1644803695 source:d:\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_network_model\vsc_hvdc_network_model.cpp
+	"header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_model.h"
+
+1644803773 source:d:\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_network_model\vschvdcp0.cpp
+	"header/model/vsc_hvdc_model/vsc_hvdc_network_model/VSCHVDCP0.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
 

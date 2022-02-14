@@ -1,9 +1,9 @@
 #ifndef VSCHVDCP0_H_INCLUDED
 #define VSCHVDCP0_H_INCLUDED
 
-#include "header/model/vsc_hvdc_model/vsc_hvdc_project_model/vsc_hvdc_project_model.h"
+#include "header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_model.h"
 
-class VSCHVDCP0: public VSC_HVDC_PROJECT_MODEL
+class VSCHVDCP0: public VSC_HVDC_NETWORK_MODEL
 {
     public:
         VSCHVDCP0(STEPS& toolkit);
@@ -42,6 +42,8 @@ class VSCHVDCP0: public VSC_HVDC_PROJECT_MODEL
         virtual string get_dynamic_data_in_psse_format() const;
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
+
+        virtual void solve_vsc_hvdc_network();
     private:
         void copy_from_const_model(const VSCHVDCP0& model);
 };

@@ -1,12 +1,12 @@
-#include "header/model/vsc_hvdc_model/vsc_hvdc_project_model/VSCHVDCP0.h"
+#include "header/model/vsc_hvdc_model/vsc_hvdc_network_model/VSCHVDCP0.h"
 #include "header/basic/utility.h"
 #include "header/STEPS.h"
-VSCHVDCP0::VSCHVDCP0(STEPS& toolkit):VSC_HVDC_PROJECT_MODEL(toolkit)
+VSCHVDCP0::VSCHVDCP0(STEPS& toolkit):VSC_HVDC_NETWORK_MODEL(toolkit)
 {
     ;
 }
 
-VSCHVDCP0::VSCHVDCP0(const VSCHVDCP0& model):VSC_HVDC_PROJECT_MODEL(model.get_toolkit())
+VSCHVDCP0::VSCHVDCP0(const VSCHVDCP0& model):VSC_HVDC_NETWORK_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -183,4 +183,11 @@ string VSCHVDCP0::get_dynamic_data_in_bpa_format() const
 string VSCHVDCP0::get_dynamic_data_in_steps_format() const
 {
     return "";
+}
+
+void VSCHVDCP0::solve_vsc_hvdc_network()
+{
+    Y matrix should be rebuild(line trip, line fault) in DYNAMIC_SIMULATOR
+    get Udc from converters Ceq
+    solve steady state network, set VSC_HVDC_CONVERTER_STRUCT::Idc_flowing_to_Ceq_in_kA
 }

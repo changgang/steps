@@ -333,11 +333,11 @@
 		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_models.h" />
 		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_model.h" />
 		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_model_test.h" />
-		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_project_model/VSCHVDC1.h" />
-		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_project_model/VSCHVDC1_test.h" />
-		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_project_model/VSCHVDCP0.h" />
-		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_project_model/vsc_hvdc_project_model.h" />
-		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_project_model/vsc_hvdc_project_models.h" />
+		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_network_model/VSCHVDC1.h" />
+		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_network_model/VSCHVDC1_test.h" />
+		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_network_model/VSCHVDCP0.h" />
+		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_model.h" />
+		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_models.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/filewind.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/filewind_test.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/wind_speed_model.h" />
@@ -726,8 +726,8 @@
 		<Unit filename="source/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_model.cpp" />
 		<Unit filename="source/model/vsc_hvdc_model/vsc_hvdc_model.cpp" />
 		<Unit filename="source/model/vsc_hvdc_model/vsc_hvdc_model_test.cpp" />
-		<Unit filename="source/model/vsc_hvdc_model/vsc_hvdc_project_model/VSCHVDCP0.cpp" />
-		<Unit filename="source/model/vsc_hvdc_model/vsc_hvdc_project_model/vsc_hvdc_project_model.cpp" />
+		<Unit filename="source/model/vsc_hvdc_model/vsc_hvdc_network_model/VSCHVDCP0.cpp" />
+		<Unit filename="source/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_model.cpp" />
 		<Unit filename="source/model/wtg_models/wind_speed_model/filewind.cpp" />
 		<Unit filename="source/model/wtg_models/wind_speed_model/filewind_test.cpp" />
 		<Unit filename="source/model/wtg_models/wind_speed_model/wind_speed_model.cpp" />

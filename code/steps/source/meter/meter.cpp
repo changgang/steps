@@ -165,7 +165,7 @@ vector<string> vsc_hvdc_meters{ "CONVERTER DC CURRENT IN KA",  "CONVERTER AC CUR
                                 "CONVERTER AC ACTIVE POWER IN MW",    "CONVERTER AC REACTIVE POWER IN MVAR",
                                 "DC BUS VOLTAGE IN KV",
                                 "DC LINE CURRENT IN KA",       "DC LINE POWER IN MW",
-                                "VSC HVDC PROJECT MODEL INTERNAL VARIABLE",
+                                "VSC HVDC NETWORK MODEL INTERNAL VARIABLE",
                                 "VSC HVDC CONVERTER MODEL INTERNAL VARIABLE"};
 
 vector<string> equivalent_device_meters{"VOLTAGE SOURCE VOLTAGE IN PU",
@@ -416,7 +416,7 @@ bool METER::is_internal_variable_name_valid(string& name, unsigned int index) co
         if(device_type==STEPS_VSC_HVDC)
         {
             VSC_HVDC* ptr = (VSC_HVDC*)get_device_pointer();
-            if(meter_type=="VSC HVDC PROJECT MODEL INTERNAL VARIABLE")
+            if(meter_type=="VSC HVDC NETWORK MODEL INTERNAL VARIABLE")
                 model = ptr->get_vsc_hvdc_project_model();
             if(meter_type=="VSC HVDC CONVERTER MODEL INTERNAL VARIABLE")
                 model = ptr->get_vsc_hvdc_converter_model(index);
@@ -2194,7 +2194,7 @@ double METER::get_meter_value_as_a_vsc_hvdc() const
         {
             string meter_type = get_meter_type();
             unsigned int metered_bus = get_meter_side_bus();
-            VSC_HVDC_PROJECT_MODEL* vsc_hvdc_project_model = vsc_hvdc->get_vsc_hvdc_project_model();
+            VSC_HVDC_NETWORK_MODEL* vsc_hvdc_project_model = vsc_hvdc->get_vsc_hvdc_project_model();
             vector<VSC_HVDC_CONVERTER_MODEL*> vsc_hvdc_converter_models = vsc_hvdc->get_vsc_hvdc_converter_models();
 
             if(meter_type=="CONVERTER AC VOLTAGE IN PU")
@@ -2246,7 +2246,7 @@ double METER::get_meter_value_as_a_vsc_hvdc() const
                 unsigned int dc_bus = get_meter_side_bus();
                 return vsc_hvdc->get_dc_line_power_in_MW(dc_did, dc_bus);
             }
-            if(meter_type=="VSC HVDC PROJECT MODEL INTERNAL VARIABLE")
+            if(meter_type=="VSC HVDC NETWORK MODEL INTERNAL VARIABLE")
                 return vsc_hvdc_project_model->get_model_internal_variable_with_name(get_internal_variable_name());
             if(meter_type=="VSC HVDC CONVERTER MODEL INTERNAL VARIABLE")
             {

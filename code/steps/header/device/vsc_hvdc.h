@@ -6,7 +6,7 @@
 #include "header/basic/device_id.h"
 #include "header/basic/dc_device_id.h"
 #include "header/basic/steps_enum.h"
-#include "header/model/vsc_hvdc_model/vsc_hvdc_project_model/vsc_hvdc_project_model.h"
+#include "header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_model.h"
 #include "header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_model.h"
 #include "header/basic/sparse_matrix_define.h"
 #include "header/basic/inphno.h"
@@ -205,10 +205,10 @@ class VSC_HVDC : public NONBUS_DEVICE
         virtual void set_model(MODEL* model);
         virtual MODEL* get_model_of_type(string model_type, unsigned int index=0);
 
-        void set_vsc_hvdc_project_model(VSC_HVDC_PROJECT_MODEL* model);
+        void set_vsc_hvdc_project_model(VSC_HVDC_NETWORK_MODEL* model);
         void set_vsc_hvdc_converter_model(VSC_HVDC_CONVERTER_MODEL* model);
 
-        VSC_HVDC_PROJECT_MODEL* get_vsc_hvdc_project_model() const;
+        VSC_HVDC_NETWORK_MODEL* get_vsc_hvdc_project_model() const;
         VSC_HVDC_CONVERTER_MODEL* get_vsc_hvdc_converter_model(unsigned int index) const;
         vector<VSC_HVDC_CONVERTER_MODEL*> get_vsc_hvdc_converter_models() const;
 
@@ -366,7 +366,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int current_dc_slack_bus;
         bool converged;
 
-        VSC_HVDC_PROJECT_MODEL* vsc_hvdc_project_model;
+        VSC_HVDC_NETWORK_MODEL* vsc_hvdc_project_model;
         vector<VSC_HVDC_CONVERTER_MODEL*> vsc_hvdc_converter_models;
 };
 #endif // VSC_HVDC_H

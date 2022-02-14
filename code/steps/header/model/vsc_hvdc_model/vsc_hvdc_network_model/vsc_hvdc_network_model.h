@@ -1,13 +1,13 @@
-#ifndef VSC_HVDC_PROJECT_MODEL_H_INCLUDED
-#define VSC_HVDC_PROJECT_MODEL_H_INCLUDED
+#ifndef VSC_HVDC_NETWORK_MODEL_H_INCLUDED
+#define VSC_HVDC_NETWORK_MODEL_H_INCLUDED
 
 #include "header/model/vsc_hvdc_model/vsc_hvdc_model.h"
 
-class VSC_HVDC_PROJECT_MODEL: public VSC_HVDC_MODEL
+class VSC_HVDC_NETWORK_MODEL: public VSC_HVDC_MODEL
 {
     public:
-        VSC_HVDC_PROJECT_MODEL(STEPS& toolkit);
-        virtual ~VSC_HVDC_PROJECT_MODEL();
+        VSC_HVDC_NETWORK_MODEL(STEPS& toolkit);
+        virtual ~VSC_HVDC_NETWORK_MODEL();
     public: // model type
         virtual string get_model_type() const;
     public:
@@ -39,6 +39,8 @@ class VSC_HVDC_PROJECT_MODEL: public VSC_HVDC_MODEL
         virtual string get_dynamic_data_in_psse_format() const = 0;
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
+    public:
+        virtual void solve_vsc_hvdc_network() = 0;
 };
 
-#endif // VSC_HVDC_PROJECT_MODEL_H_INCLUDED
+#endif // VSC_HVDC_NETWORK_MODEL_H_INCLUDED
