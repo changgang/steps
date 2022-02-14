@@ -77,16 +77,16 @@ class VSCHVDCC0: public VSC_HVDC_CONVERTER_MODEL
         double get_dc_voltage_ceq() const ;
 
         void set_active_power_block_Pref(double pref);
-        void set_active_power_block_Udcsref(double udcref);
+        void set_active_power_block_Udcref(double udcref);
 
         void set_reactive_power_block_Qref(double qref);
-        void set_reactive_power_block_Uacsref(double uacref);
+        void set_reactive_power_block_Uacref(double uacref);
 
         double get_active_power_block_Pref() const;
-        double get_active_power_block_Udcsref() const;
+        double get_active_power_block_Udcref() const;
 
         double get_reactive_power_block_Qref() const;
-        double get_reactive_power_block_Uacsref() const;
+        double get_reactive_power_block_Uacref() const;
 
 
     public:
@@ -126,7 +126,7 @@ class VSCHVDCC0: public VSC_HVDC_CONVERTER_MODEL
     private:
         PID_BLOCK p_block;
         PID_BLOCK q_block;
-        double p_ref, q_ref;
+        double p_ref, q_ref, udc_ref, uac_ref;
 
         /*PID_BLOCK p_udc_block, p_pac_block, p_f_block, ;
         PID_BLOCK q_uac_block, q_qac_block;*/

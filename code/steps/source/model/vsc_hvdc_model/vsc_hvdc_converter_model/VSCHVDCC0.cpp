@@ -204,7 +204,7 @@ void VSCHVDCC0::set_active_power_block_Pref(double pref)
     this->p_ref = pref;
 }
 
-void VSCHVDCC0::set_active_power_block_Udcsref(double udcref)
+void VSCHVDCC0::set_active_power_block_Udcref(double udcref)
 {
     this->p_ref = udcref;
 }
@@ -214,7 +214,7 @@ void VSCHVDCC0::set_reactive_power_block_Qref(double qref)
     this->q_ref = qref;
 }
 
-void VSCHVDCC0::set_reactive_power_block_Uacsref(double uacref)
+void VSCHVDCC0::set_reactive_power_block_Uacref(double uacref)
 {
     this->q_ref = uacref;
 }
@@ -224,7 +224,7 @@ double VSCHVDCC0::get_active_power_block_Pref() const
     return p_ref;
 }
 
-double VSCHVDCC0::get_active_power_block_Udcsref() const
+double VSCHVDCC0::get_active_power_block_Udcref() const
 {
     return get_active_power_block_Pref();
 }
@@ -234,7 +234,7 @@ double VSCHVDCC0::get_reactive_power_block_Qref() const
     return q_ref;
 }
 
-double VSCHVDCC0::get_reactive_power_block_Uacsref() const
+double VSCHVDCC0::get_reactive_power_block_Uacref() const
 {
     return get_reactive_power_block_Qref();
 }
@@ -358,12 +358,35 @@ void VSCHVDCC0::initialize()
         ceq_block.set_output(0.0);
         ceq_block.initialize();
 
-        double ref_value = 0.0;
+        double pref = 0.0;
+        double qref = 0.0;
+        double udcref = 0.0;
+        double uacref = 0.0;
         switch(active_power_control_mode)
         {
             case DY_VSC_DC_VOLTAGE_CONTORL:
-                ref_value = vsc_hvdc->get_dc_bus_Vdc_in_kV(vsc_hvdc->get_dc_bus_index_with_converter_index(get_converter_index()));
-                set_active_power_block_Pref(ref_value);
+                udcref = vsc_hvdc->get_dc_bus_Vdc_in_kV(vsc_hvdc->get_dc_bus_index_with_converter_index(get_converter_index()));
+                set_active_power_block_Pref(udcref);
+                break;
+            case DY_VSC_AC_ACTIVE_POWER_CONTORL:
+                pref = vsc_hvdc->get_converter_P_to_AC_bus_in_MW(get_converter_index());
+                set_active_power_block_Pref(pref);
+                break;
+            default:
+                break;
+        }
+
+        switch(reactive_power_control_mode)
+        {
+            case DY_VSC_AC_VOLTAGE_CONTROL:
+                uacref = vsc_hvdc->get_converter_ac_voltage_in_kV_with_ac_bus_number(get_converter_bus());
+                set_reactive_power_block_Qref(uacref);
+                break;
+            case DY_VSC_AC_REACTIVE_POWER_CONTROL:
+                qref = vsc_hvdc->get_converter_Q_to_AC_bus_in_MVar(get_converter_index());
+                set_reactive_power_block_Qref(qref);
+                break;
+            default:
                 break;
         }
 
@@ -388,20 +411,20 @@ void VSCHVDCC0::run(DYNAMIC_MODE mode)
         VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE active_power_control_mode = get_converter_active_control_mode();
         VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE reactive_power_control_mode = get_converter_reactive_control_mode();
 
-        double input = 0.0;
-        double ref_value = 0.0;
-        double current_value = 0.0;
+        double p_input = 0.0;
+        double pref = 0.0;
+        double p_current = 0.0;
         unsigned int dc_bus_index = vsc_hvdc->get_dc_bus_index_with_converter_index(converter_index);
         switch(active_power_control_mode)
         {
             case DY_VSC_DC_VOLTAGE_CONTORL:
-                ref_value = get_active_power_block_Udcsref();
-                current_value = vsc_hvdc->get_dc_bus_Vdc_in_kV(dc_bus_index);
-                input = ref_value-current_value;
+                pref = get_active_power_block_Udcref();
+                p_current = vsc_hvdc->get_dc_bus_Vdc_in_kV(dc_bus_index);
+                p_input = pref-p_current;
                 break;
             case DY_VSC_AC_ACTIVE_POWER_CONTORL:
-                ref_value = vsc_hvdc->get_converter_P_to_AC_bus_in_MW(converter_index);
-                input = Ps - ref_value;
+                pref = get_active_power_block_Pref();
+                p_input = pref - Ps;
                 break;
             default:
                 break;
@@ -410,22 +433,27 @@ void VSCHVDCC0::run(DYNAMIC_MODE mode)
         p_block.set_input(p_input);
         p_block.run(mode);
 
-
-        if(reactive_power_control_mode == DY_VSC_AC_REACTIVE_POWER_CONTROL)
+        double q_input = 0.0;
+        double qref = 0.0;
+        double q_current = 0.0;
+        switch(reactive_power_control_mode)
         {
-            double Qsref = vsc_hvdc->get_converter_Q_to_AC_bus_in_MVar(converter_index);
-            double q_input = Qsref-Qs;
-            q_block.set_input(q_input);
-            q_block.run(mode);
+            case DY_VSC_AC_VOLTAGE_CONTROL:
+                qref = get_reactive_power_block_Uacref();
+                q_current = Us.real();
+                q_input = qref-q_current;
+                break;
+            case DY_VSC_AC_REACTIVE_POWER_CONTROL:
+                qref = get_reactive_power_block_Qref();
+                q_current = vsc_hvdc->get_converter_Q_to_AC_bus_in_MVar(converter_index);
+                q_input = qref-q_current;
+                break;
+            default:
+                break;
         }
+        q_block.set_input(q_input);
+        q_block.run(mode);
 
-        if(reactive_power_control_mode == DY_VSC_AC_VOLTAGE_CONTROL)
-        {
-            double Usref = vsc_hvdc->get_converter_nominal_ac_voltage_command_in_kV(converter_index);
-            double q_input = Usref - Us.real();
-            q_block.set_input(q_input);
-            q_block.run(mode);
-        }
         if(mode==UPDATE_MODE)
             set_flag_model_updated_as_true();
     }
