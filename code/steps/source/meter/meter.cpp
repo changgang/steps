@@ -417,7 +417,7 @@ bool METER::is_internal_variable_name_valid(string& name, unsigned int index) co
         {
             VSC_HVDC* ptr = (VSC_HVDC*)get_device_pointer();
             if(meter_type=="VSC HVDC NETWORK MODEL INTERNAL VARIABLE")
-                model = ptr->get_vsc_hvdc_project_model();
+                model = ptr->get_vsc_hvdc_network_model();
             if(meter_type=="VSC HVDC CONVERTER MODEL INTERNAL VARIABLE")
                 model = ptr->get_vsc_hvdc_converter_model(index);
         }
@@ -2194,7 +2194,7 @@ double METER::get_meter_value_as_a_vsc_hvdc() const
         {
             string meter_type = get_meter_type();
             unsigned int metered_bus = get_meter_side_bus();
-            VSC_HVDC_NETWORK_MODEL* vsc_hvdc_project_model = vsc_hvdc->get_vsc_hvdc_project_model();
+            VSC_HVDC_NETWORK_MODEL* vsc_hvdc_project_model = vsc_hvdc->get_vsc_hvdc_network_model();
             vector<VSC_HVDC_CONVERTER_MODEL*> vsc_hvdc_converter_models = vsc_hvdc->get_vsc_hvdc_converter_models();
 
             if(meter_type=="CONVERTER AC VOLTAGE IN PU")

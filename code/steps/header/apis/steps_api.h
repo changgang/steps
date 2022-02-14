@@ -9,6 +9,7 @@
 
 #include <cstdlib>
 #include "header/basic/constants.h"
+#include "header/basic/dc_device_id.h"
 
 #ifdef  __cplusplus
 extern "C" {
@@ -441,6 +442,12 @@ EXPORT_STEPS_DLL void api_set_generator_mechanical_power_in_MW(unsigned int bus,
 
 EXPORT_STEPS_DLL double api_get_hvdc_power_order_in_MW(unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_hvdc_power_order_in_MW(unsigned int ibus, unsigned int jbus, char* identifier, double value, unsigned int toolkit_index=INDEX_NOT_EXIST);
+
+
+EXPORT_STEPS_DLL void api_set_vsc_hvdc_dc_line_fault(char* vsc_name, unsigned int ibus, unsigned int jbus, char* identifier, double fault_location, double fault_R, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_clear_vsc_hvdc_dc_line_fault(char* vsc_name, unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_trip_vsc_hvdc_dc_line(char* vsc_name, unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_close_vsc_hvdc_dc_line(char* vsc_name, unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 
 EXPORT_STEPS_DLL void api_check_powerflow_data(unsigned int toolkit_index=INDEX_NOT_EXIST);

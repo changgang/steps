@@ -411,11 +411,11 @@ void VSCHVDCC0::run(DYNAMIC_MODE mode)
         double Isq0 = Is.imag();
 
         double input = 0.0;
-        double Pdc0 = vsc_hvdc->get_converter_Pdc_command_in_MW(converter_index);
-        double Pdc = solve_Pdc_with_active_power_and_reactive_power(converter_index);
+        double Pdc_from_dc_network_to_Ceq = vsc_hvdc->get_converter_Pdc_flowing_to_Ceq_in_MW(converter_index);
+        double Pac_from_ac_network_to_Ceq = solve_Pdc_with_active_power_and_reactive_power(converter_index);
         double Udc = vsc_hvdc->get_dc_bus_Vdc_in_kV(vsc_hvdc->get_dc_bus_index_with_converter_index(converter_index));
 
-        input = (Pdc-Pdc0)/Udc;
+        input = (Pdc_from_dc_network_to_Ceq+Pac_from_ac_network_to_Ceq)/Udc;
         udc_block.set_input(input);
         udc_block.run(mode);
 

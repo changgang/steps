@@ -78,4 +78,6 @@ private:
     clock_t clock_when_LU_factorization_is_performed;
     bool lu_factorization_failed;
 };
+
+vector<double> operator*(SPARSE_MATRIX& A, vector<double>&b);
 #endif // SPARSE_MATRIX_H

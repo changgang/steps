@@ -140,3 +140,37 @@ bool SPARSE_MATRIX::is_lu_factorization_successful() const
 {
     return !lu_factorization_failed;
 }
+
+vector<double> operator*(SPARSE_MATRIX& A, vector<double>&b)
+{
+    unsigned int n = b.size();
+    vector<double> x;
+    for(unsigned int i=0; i!=n; ++i)
+        x.push_back(0.0);
+
+    int m = A.get_matrix_entry_count();
+    int row_max = 0;
+    for(int k=0; k!=m; ++k)
+    {
+        double ak = A.get_real_entry_value(k);
+        int row = A.get_row_number_of_entry_index(k);
+        int col = A.get_column_number_of_entry_index(k);
+        if(row>row_max)
+            row_max = row;
+
+        while(row>=(int)x.size())
+            x.push_back(0.0);
+
+        x[row] += ak*b[col];
+    }
+    int row_count = row_max + 1;
+    if(row_count>=(int)n)
+        return x;
+    else
+    {
+        vector<double> y;
+        for(int i=0; i!=row_count; ++i)
+            y.push_back(x[i]);
+        return y;
+    }
+}

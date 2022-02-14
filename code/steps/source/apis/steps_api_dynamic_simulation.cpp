@@ -1118,6 +1118,39 @@ void api_set_hvdc_power_order_in_MW(unsigned int ibus, unsigned int jbus, char* 
     ds.change_hvdc_power_order_in_MW(did, value);
 }
 
+
+void api_set_vsc_hvdc_dc_line_fault(char* vsc_name, unsigned int ibus, unsigned int jbus, char* identifier, double fault_location, double fault_R, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    DC_DEVICE_ID did = get_dc_line_device_id(ibus, jbus, identifier);
+    ds.set_vsc_hvdc_line_fault(vsc_name, did, ibus, fault_location, fault_R);
+}
+
+void api_clear_vsc_hvdc_dc_line_fault(char* vsc_name, unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    DC_DEVICE_ID did = get_dc_line_device_id(ibus, jbus, identifier);
+    ds.clear_vsc_hvdc_line_fault(vsc_name, did);
+}
+
+void api_trip_vsc_hvdc_dc_line(char* vsc_name, unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    DC_DEVICE_ID did = get_dc_line_device_id(ibus, jbus, identifier);
+    ds.trip_vsc_hvdc_line(vsc_name, did);
+}
+
+void api_close_vsc_hvdc_dc_line(char* vsc_name, unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    DC_DEVICE_ID did = get_dc_line_device_id(ibus, jbus, identifier);
+    ds.close_vsc_hvdc_line(vsc_name, did);
+}
+
 double api_search_cct(char* pf_file, char* dy_file, unsigned int ibus, unsigned int jbus, char* id, unsigned int sidebus, unsigned int trip_line, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

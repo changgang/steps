@@ -56,7 +56,7 @@ struct VSC_HVDC_CONVERTER_STRUCT
     double Pac_command_in_MW;
 
     // dynamic variables
-    double Idc_flowing_to_Ceq_in_kA;
+    double Pdc_flowing_to_Ceq_in_MW;
 };
 
 struct VSC_HVDC_DC_BUS_STRUCT
@@ -79,9 +79,13 @@ struct VSC_HVDC_DC_LINE_STRUCT
     unsigned int sending_side_bus;
     unsigned int receiving_side_bus;
     unsigned int identifier_index;
+    bool status;
     unsigned int meter_end_bus;
     double line_R_in_ohm;
     double line_L_in_mH;
+
+    double fault_location_to_sending_side_bus;
+    double fault_R_in_ohm;
 };
 
 #endif // VSC_HVDC_VAR_H

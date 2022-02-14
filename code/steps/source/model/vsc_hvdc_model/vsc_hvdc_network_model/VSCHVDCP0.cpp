@@ -187,6 +187,7 @@ string VSCHVDCP0::get_dynamic_data_in_steps_format() const
 
 void VSCHVDCP0::solve_vsc_hvdc_network()
 {
+    VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
 
     /*
     Y matrix should be rebuild(line trip, line fault) in DYNAMIC_SIMULATOR

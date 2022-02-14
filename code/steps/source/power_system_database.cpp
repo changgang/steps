@@ -4738,7 +4738,7 @@ void POWER_SYSTEM_DATABASE::check_vsc_hvdc_related_dynamic_data()
     {
         vsc_hvdc = vsc_hvdcs[i];
 
-        VSC_HVDC_NETWORK_MODEL* vsc_project_model = vsc_hvdc->get_vsc_hvdc_project_model();
+        VSC_HVDC_NETWORK_MODEL* vsc_project_model = vsc_hvdc->get_vsc_hvdc_network_model();
         if(vsc_project_model!=NULL)
             vsc_project_model->check();
         vector<VSC_HVDC_CONVERTER_MODEL*> vsc_converter_models = vsc_hvdc->get_vsc_hvdc_converter_models();
@@ -5101,7 +5101,7 @@ void POWER_SYSTEM_DATABASE::check_missing_vsc_hvdc_related_model()
     {
         vsc_hvdc = vsc_hvdcs[i];
 
-        VSC_HVDC_NETWORK_MODEL* vscmodel = vsc_hvdc->get_vsc_hvdc_project_model();
+        VSC_HVDC_NETWORK_MODEL* vscmodel = vsc_hvdc->get_vsc_hvdc_network_model();
         unsigned int n_converter = vsc_hvdc->get_converter_count();
         if(vscmodel==NULL)
         {

@@ -22,7 +22,7 @@ const char* api_get_vsc_hvdc_related_model_name(char* name, char* model_type, un
     string MODEL_TYPE = string2upper(model_type);
     if(MODEL_TYPE=="PROJECT" or MODEL_TYPE=="VSC HVDC PROJECT")
     {
-        VSC_HVDC_NETWORK_MODEL* model = vsc_hvdc->get_vsc_hvdc_project_model();
+        VSC_HVDC_NETWORK_MODEL* model = vsc_hvdc->get_vsc_hvdc_network_model();
         if(model!=NULL)
 			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (model->get_model_name()).c_str());
 		return toolkit.steps_char_buffer;;
@@ -54,7 +54,7 @@ double api_get_vsc_hvdc_related_model_float_parameter(char* name, char* model_ty
     string PARAMETER_NAME = string2upper(parameter_name);
     if(MODEL_TYPE=="PROJECT" or MODEL_TYPE=="VSC HVDC PROJECT")
     {
-        VSC_HVDC_NETWORK_MODEL* model = vsc_hvdc->get_vsc_hvdc_project_model();
+        VSC_HVDC_NETWORK_MODEL* model = vsc_hvdc->get_vsc_hvdc_network_model();
         if(model!=NULL)
             return model->get_model_data_with_name(PARAMETER_NAME);
         else
@@ -88,7 +88,7 @@ void api_set_vsc_hvdc_related_model_float_parameter(char* name, char* model_type
     string PARAMETER_NAME = string2upper(parameter_name);
     if(MODEL_TYPE=="PROJECT" or MODEL_TYPE=="VSC HVDC PROJECT")
     {
-        VSC_HVDC_NETWORK_MODEL* model = vsc_hvdc->get_vsc_hvdc_project_model();
+        VSC_HVDC_NETWORK_MODEL* model = vsc_hvdc->get_vsc_hvdc_network_model();
         if(model!=NULL)
             return model->set_model_data_with_name(PARAMETER_NAME, value);
         else
@@ -120,7 +120,7 @@ unsigned int api_get_vsc_hvdc_related_model_float_parameter_count(char* name, ch
     string MODEL_TYPE = string2upper(model_type);
     if(MODEL_TYPE=="PROJECT" or MODEL_TYPE=="VSC HVDC PROJECT")
     {
-        VSC_HVDC_NETWORK_MODEL* model = vsc_hvdc->get_vsc_hvdc_project_model();
+        VSC_HVDC_NETWORK_MODEL* model = vsc_hvdc->get_vsc_hvdc_network_model();
         if(model!=NULL)
             return model->get_model_float_parameter_count();
         else
@@ -155,7 +155,7 @@ const char* api_get_vsc_hvdc_related_model_float_parameter_name(char* name, char
     string MODEL_TYPE = string2upper(model_type);
     if(MODEL_TYPE=="PROJECT" or MODEL_TYPE=="VSC HVDC PROJECT")
     {
-        VSC_HVDC_NETWORK_MODEL* model = vsc_hvdc->get_vsc_hvdc_project_model();
+        VSC_HVDC_NETWORK_MODEL* model = vsc_hvdc->get_vsc_hvdc_network_model();
         if(model!=NULL)
             par_name = model->get_model_data_name(parameter_index);
         snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", par_name.c_str());

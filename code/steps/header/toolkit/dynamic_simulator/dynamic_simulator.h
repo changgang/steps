@@ -182,7 +182,7 @@ class DYNAMICS_SIMULATOR
         void change_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id, double porder);
 
         void set_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did, unsigned int side_bus, double location, double fault_shunt);
-        void clear_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did, unsigned int side_bus, double location);
+        void clear_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did);
 
         void trip_vsc_hvdc_line(string vsc_name, DC_DEVICE_ID line_did);
         void close_vsc_hvdc_line(string vsc_name, DC_DEVICE_ID line_did);
@@ -208,8 +208,11 @@ class DYNAMICS_SIMULATOR
         bool solve_network();
         void initialize_internal_bus_voltage_vector();
 
+        void build_vsc_hvdc_dynamic_dc_network_matrix();
+
         void solve_hvdcs_without_integration();
-        void solve_vsc_hvdcs_without_integration();
+        void solve_vsc_hvdcs_network_model();
+        void update_vsc_hvdcs_converter_model();
 
         void get_bus_current_mismatch();
         void get_bus_currnet_into_network();

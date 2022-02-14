@@ -813,6 +813,21 @@ void DYNAMICS_SIMULATOR::initialize_internal_bus_voltage_vector()
         internal_bus_complex_voltage_in_pu[internal_bus] = internal_bus_pointers[internal_bus]->get_positive_sequence_complex_voltage_in_pu();
 }
 
+void DYNAMICS_SIMULATOR::build_vsc_hvdc_dynamic_dc_network_matrix()
+{
+    unsigned int nvsc_hvdc = vsc_hvdcs.size();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit->get_bus_thread_number());
+        #pragma omp parallel for schedule(static)
+        //#pragma omp parallel for num_threads(2)
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+    for(unsigned int i=0; i<nvsc_hvdc; ++i)
+    {
+        VSC_HVDC* vsc_hvdc = vsc_hvdcs[i];
+        vsc_hvdc->build_dynamic_dc_network_matrix();
+    }
+}
+
 complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_bus_number(unsigned int internal_bus) const
 {
     return internal_bus_complex_voltage_in_pu[internal_bus];
@@ -993,6 +1008,8 @@ void DYNAMICS_SIMULATOR::run_to(double time)
 
     network_matrix.build_dynamic_network_Y_matrix();
     build_jacobian();
+
+    build_vsc_hvdc_dynamic_dc_network_matrix();
 
     update_with_event();
     if(get_rotor_angle_stability_surveillance_flag()==false)
@@ -1441,6 +1458,8 @@ bool DYNAMICS_SIMULATOR::solve_network()
 {
     auto clock_start = steady_clock::now();
 
+    solve_vsc_hvdcs_network_model();
+
     max_current_mismatch_pu = 0.0;
     max_power_mismatch_MVA = 0.0;
     max_mismatch_bus = 0;
@@ -1463,7 +1482,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
     GREATEST_POWER_CURRENT_MISMATCH_STRUCT greatest_mismatch_struct;
 
     solve_hvdcs_without_integration();
-    solve_vsc_hvdcs_without_integration();
+    update_vsc_hvdcs_converter_model();
     get_bus_current_mismatch();
 
     #ifndef USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
@@ -1511,7 +1530,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
                     {
                         //++network_iter_count;
                         solve_hvdcs_without_integration();
-                        solve_vsc_hvdcs_without_integration();
+                        update_vsc_hvdcs_converter_model();
                         get_bus_current_mismatch();
                         #ifndef USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
                         calculate_bus_power_mismatch_in_MVA();
@@ -1535,7 +1554,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
                 ++network_iter_count;
 
                 solve_hvdcs_without_integration();
-                solve_vsc_hvdcs_without_integration();
+                update_vsc_hvdcs_converter_model();
                 get_bus_current_mismatch();
                 #ifndef USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
                 calculate_bus_power_mismatch_in_MVA();
@@ -1658,8 +1677,7 @@ void DYNAMICS_SIMULATOR::solve_hvdcs_without_integration()
     }
 }
 
-
-void DYNAMICS_SIMULATOR::solve_vsc_hvdcs_without_integration()
+void DYNAMICS_SIMULATOR::solve_vsc_hvdcs_network_model()
 {
     unsigned int n = vsc_hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -1670,11 +1688,31 @@ void DYNAMICS_SIMULATOR::solve_vsc_hvdcs_without_integration()
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
     {
-        /*
-        HVDC_MODEL* model = vsc_hvdcs[i]->get_hvdc_model();
+        VSC_HVDC_NETWORK_MODEL* model = vsc_hvdcs[i]->get_vsc_hvdc_network_model();
         if(model!=NULL)
-            model->solve_hvdc_model_without_integration();
-        */
+            model->solve_vsc_hvdc_network();
+    }
+}
+
+
+void DYNAMICS_SIMULATOR::update_vsc_hvdcs_converter_model()
+{
+    unsigned int n = vsc_hvdcs.size();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        //set_openmp_number_of_threads(toolkit->get_hvdc_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
+        #pragma omp parallel for schedule(static)
+        //#pragma omp parallel for num_threads(2)
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+    for(unsigned int i=0; i<n; ++i)
+    {
+        vector<VSC_HVDC_CONVERTER_MODEL*> models = vsc_hvdcs[i]->get_vsc_hvdc_converter_models();
+        unsigned int m = models.size();
+        for(unsigned int j=0; j!=m ; ++j)
+        {
+            if(models[j]!=NULL)
+                models[j]->run(UPDATE_MODE);
+        }
     }
 }
 
@@ -4221,22 +4259,41 @@ void DYNAMICS_SIMULATOR::change_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id,
 
 void DYNAMICS_SIMULATOR::set_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did, unsigned int side_bus, double location, double fault_shunt)
 {
-    // need to update VSC HVDC dynamic Y matrix
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_name);
+    unsigned int line_index = vsc_hvdc->get_dc_line_index(line_did);
+    if(line_index!=INDEX_NOT_EXIST)
+    {
+        vsc_hvdc->set_dc_line_fault_location(line_index, side_bus, location);
+        vsc_hvdc->set_dc_line_fault_r_in_ohm(line_index, fault_shunt);
+    }
 }
 
-void DYNAMICS_SIMULATOR::clear_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did, unsigned int side_bus, double location)
+void DYNAMICS_SIMULATOR::clear_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did)
 {
-    // need to update VSC HVDC dynamic Y matrix
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_name);
+    unsigned int line_index = vsc_hvdc->get_dc_line_index(line_did);
+    if(line_index!=INDEX_NOT_EXIST)
+        vsc_hvdc->clear_dc_line_fault(line_index);
 }
 
 void DYNAMICS_SIMULATOR::trip_vsc_hvdc_line(string vsc_name, DC_DEVICE_ID line_did)
 {
-    // need to update VSC HVDC dynamic Y matrix
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_name);
+    unsigned int line_index = vsc_hvdc->get_dc_line_index(line_did);
+    if(line_index!=INDEX_NOT_EXIST)
+        vsc_hvdc->set_dc_line_status(line_index, false);
 }
 
 void DYNAMICS_SIMULATOR::close_vsc_hvdc_line(string vsc_name, DC_DEVICE_ID line_did)
 {
-    // need to update VSC HVDC dynamic Y matrix
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_name);
+    unsigned int line_index = vsc_hvdc->get_dc_line_index(line_did);
+    if(line_index!=INDEX_NOT_EXIST)
+        vsc_hvdc->set_dc_line_status(line_index, true);
 }
 
 void DYNAMICS_SIMULATOR::switch_on_equivalent_device()

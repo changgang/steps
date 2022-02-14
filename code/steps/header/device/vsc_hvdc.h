@@ -94,9 +94,14 @@ class VSC_HVDC : public NONBUS_DEVICE
         void set_dc_line_sending_side_bus(const unsigned int index, const unsigned int bus);
         void set_dc_line_receiving_side_bus(const unsigned int index, const unsigned int bus);
         void set_dc_line_identifier(const unsigned int index, const string identifier);
+        void set_dc_line_status(const unsigned int index, bool status);
         void set_dc_line_meter_end_bus(const unsigned int index, const unsigned int meter_bus);
         void set_dc_line_resistance_in_ohm(const unsigned int index, const double R);
         void set_dc_line_inductance_in_mH(const unsigned int index, const double L);
+        void set_dc_line_fault_location(const unsigned int index, const unsigned int bus, double location);
+        void set_dc_line_fault_r_in_ohm(const unsigned int index, const double r_ohm);
+        void clear_dc_line_fault(const unsigned int index);
+
         virtual void clear();
 
         string get_identifier() const;
@@ -115,6 +120,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int get_converter_name_index(unsigned int index) const;
         BUS* get_converter_ac_bus_pointer(unsigned int index) const;
         unsigned int get_converter_index_with_ac_bus(unsigned int bus) const;
+        unsigned int get_converter_index_with_dc_bus(unsigned int bus) const;
         bool get_converter_status(unsigned int index) const;
         VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE get_converter_active_power_operation_mode(unsigned int index) const;
         unsigned int get_converter_dc_voltage_control_priority(const unsigned int index) const;
@@ -178,10 +184,16 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int get_dc_line_sending_side_bus(unsigned int index) const;
         unsigned int get_dc_line_receiving_side_bus(unsigned int index) const;
         string get_dc_line_identifier(unsigned int index) const;
+        bool get_dc_line_status(unsigned int index) const;
         DC_DEVICE_ID get_dc_line_device_id(unsigned int index) const;
         unsigned int get_dc_line_meter_end_bus(unsigned int index) const;
         double get_dc_line_resistance_in_ohm(unsigned int index) const;
         double get_dc_line_inductance_in_mH(unsigned int index) const;
+        double get_dc_line_fault_location(const unsigned int index) const;
+        double get_dc_line_fault_r_in_ohm(const unsigned int index) const;
+
+        unsigned int get_dc_line_index(DC_DEVICE_ID& did) const;
+
         double get_dc_line_current_in_kA(unsigned int index, LINE_SIDE meter_side) const;
         double get_dc_line_power_in_MW(unsigned int index, LINE_SIDE meter_side) const;
         double get_dc_line_current_in_kA(unsigned int index, unsigned int dc_bus) const;
@@ -208,7 +220,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         void set_vsc_hvdc_project_model(VSC_HVDC_NETWORK_MODEL* model);
         void set_vsc_hvdc_converter_model(VSC_HVDC_CONVERTER_MODEL* model);
 
-        VSC_HVDC_NETWORK_MODEL* get_vsc_hvdc_project_model() const;
+        VSC_HVDC_NETWORK_MODEL* get_vsc_hvdc_network_model() const;
         VSC_HVDC_CONVERTER_MODEL* get_vsc_hvdc_converter_model(unsigned int index) const;
         vector<VSC_HVDC_CONVERTER_MODEL*> get_vsc_hvdc_converter_models() const;
 
@@ -232,6 +244,14 @@ class VSC_HVDC : public NONBUS_DEVICE
         void build_dc_network_matrix();
         void build_initial_zero_matrix();
         void add_dc_lines_to_dc_network();
+
+
+        void solve_dynamic_network_with_quasi_steady_state_model();
+        void build_dynamic_dc_network_matrix();
+        void add_dc_lines_with_fault_to_dc_network();
+        void split_dynamic_dc_network_matrix_to_4_sub_matrix();
+        void initialize_converter_and_nonconverter_physical_internal_bus_pair();
+
         void calculate_raw_bus_power_mismatch();
         void build_dc_bus_power_mismatch_vector();
         void build_jacobian();
@@ -286,6 +306,9 @@ class VSC_HVDC : public NONBUS_DEVICE
         void set_converter_Pdc_command_in_MW(const unsigned int converter_index, const double P);
         double get_converter_Pdc_command_in_MW(unsigned int converter_index) const;
 
+        void set_converter_Pdc_flowing_to_Ceq_in_MW(const unsigned int converter_index, const double P);
+        double get_converter_Pdc_flowing_to_Ceq_in_MW(unsigned int converter_index) const;
+
         void set_convergence_flag(bool flag);
         void save_dc_bus_powerflow_result_to_file(const string& filename) const;
         void calculate_dc_active_power_of_slack_bus();
@@ -312,6 +335,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         double get_converter_ac_active_power_in_MW_with_ac_bus_number(unsigned int bus);
         double get_converter_ac_reactive_power_in_MVar_with_ac_bus_number(unsigned int bus);
 
+        unsigned int get_dc_bus_with_converter_index(unsigned int converter_index) const;
         unsigned int get_dc_bus_index_with_converter_index(unsigned int converter_index) const;
         complex<double> get_converter_dynamic_current_in_pu_based_on_system_base_power(unsigned int converter_index);
 
@@ -368,5 +392,8 @@ class VSC_HVDC : public NONBUS_DEVICE
 
         VSC_HVDC_NETWORK_MODEL* vsc_hvdc_project_model;
         vector<VSC_HVDC_CONVERTER_MODEL*> vsc_hvdc_converter_models;
+
+        STEPS_SPARSE_MATRIX dc_network_submatrix_CC, dc_network_submatrix_CN, dc_network_submatrix_NC, dc_network_submatrix_NN;
+        INPHNO inphno_converter_buses, inphno_nonconverter_buses;
 };
 #endif // VSC_HVDC_H
