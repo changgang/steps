@@ -12,6 +12,7 @@ using namespace std;
 int main()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
     DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
 
     psdb.set_allowed_max_bus_number(1000);
@@ -26,10 +27,6 @@ int main()
     cout<<"Done loading powerflow file"<<endl;
     importer.load_vsc_powerflow_data("../../../bench/4_terminal_vsc_hvdc.vscraw");
 
-    importer.load_dynamic_data("../../../bench/IEEE39_with_four_terminal_vsc.dyr");
-    //importer.load_dynamic_data("bench_shandong_with_avr.dyr");
-
-    POWERFLOW_SOLVER powerflow_solver(default_toolkit);
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -38,13 +35,23 @@ int main()
     powerflow_solver.set_transformer_tap_adjustment_logic(true);
 
     powerflow_solver.solve_with_full_Newton_Raphson_solution();
+    powerflow_solver.save_extended_powerflow_result_to_file("ieee39_vsc4_pf.csv");
+
+    importer.load_dynamic_data("../../../bench/IEEE39_with_four_terminal_vsc.dyr");
+    //VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc("Vsc-Project1");
+    //VSC_HVDC_CONVERTER_MODEL* model = vsc_hvdc->get_vsc_hvdc_converter_model(0);
+    //model->report();
 
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
     simulator.set_allowed_max_power_imbalance_in_MVA(0.01);
     simulator.set_max_DAE_iteration(200);
     simulator.set_max_network_iteration(1);
     simulator.set_iteration_accelerator(0.8);
-    //simulator.prepare_hvdc_related_meters();
+
+    simulator.prepare_vsc_hvdc_related_meters();
+    simulator.set_output_file("IEEE39_vsc");
+    simulator.show_dynamic_simulator_configuration();
+
 
     //simulator.set_output_file("test_log/IEEE_39_bus_model_GENROU_SEXS_IEEEG1_load_scale_down_at_bus_3_by_10%");
     //simulator.set_output_file("test_log/IEEE_39_bus_model_GENROU_SEXS_IEEEG1_generation_scale_down_at_bus_38_by_10%");
@@ -52,12 +59,8 @@ int main()
     //simulator.set_output_file("test_log/bench_shandong_with_avr_fault_at_line_82_60");
     //simulator.set_output_file("test_log/bench_shandong_with_avr_fault_at_line_82_80");
     //simulator.set_output_file("test_log/bench_shandong_with_avr_trip_mac_140");
-    simulator.set_output_file("../../../bench/test_log/IEEE39_vsc");
 
-    //simulator.prepare_meters();
-    //simulator.prepare_vsc_hvdc_related_meters();
-    //simulator.show_dynamic_simulator_configuration();
-    //simulator.start();
+    simulator.start();
     //simulator.run_to(1.0);
 
     /*DEVICE_ID did;

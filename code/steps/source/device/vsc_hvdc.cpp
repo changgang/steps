@@ -139,7 +139,7 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
         set_dc_line_receiving_side_bus(i,vsc.get_dc_line_receiving_side_bus(i));
         set_dc_line_sending_side_bus(i,vsc.get_dc_line_sending_side_bus(i));
         set_dc_line_identifier(i,vsc.get_dc_line_identifier(i));
-        set_dc_line_meter_end_bus(i,vsc.get_dc_line_meter_end_bus(i));
+        set_dc_line_meter_end(i,vsc.get_dc_line_meter_end(i));
         set_dc_line_resistance_in_ohm(i,vsc.get_dc_line_resistance_in_ohm(i));
         set_dc_line_inductance_in_mH(i,vsc.get_dc_line_inductance_in_mH(i));
     }
@@ -206,7 +206,6 @@ void VSC_HVDC::set_converter_count(unsigned int n)
 
     VSC_HVDC_CONVERTER_STRUCT converter;
     converter.converter_bus = 0;
-    converter.converter_name = "";
     converter.converter_name_index = INDEX_NOT_EXIST;
     converter.converter_busptr = NULL;
     converter.status = true;
@@ -241,7 +240,7 @@ void VSC_HVDC::set_converter_count(unsigned int n)
     converter.P_to_AC_bus_MW = 0.0;
     converter.Q_to_AC_bus_MVar = 0.0;
 
-    converter.Pdc_flowing_to_Ceq_in_MW = 0.0;
+    converter.Pdc_flowing_out_Ceq_in_MW = 0.0;
     for(unsigned int i=0; i<n; ++i)
     {
         converters.push_back(converter);
@@ -353,16 +352,6 @@ void VSC_HVDC::set_converter_ac_bus(const unsigned int index, const unsigned int
 }
 
 void VSC_HVDC::set_converter_name(const unsigned int index, string name)
-{
-    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
-        return;
-    else
-    {
-        converters[index].converter_name = name;
-    }
-}
-
-void VSC_HVDC::set_converter_name_index(const unsigned int index, string name)
 {
     if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
         return;
@@ -765,11 +754,11 @@ void VSC_HVDC::set_dc_line_status(const unsigned int index, bool status)
     dc_lines[index].status = status;
 }
 
-void VSC_HVDC::set_dc_line_meter_end_bus(const unsigned int index, const unsigned int meter_bus)
+void VSC_HVDC::set_dc_line_meter_end(const unsigned int index, const unsigned int meter_end)
 {
     if(dc_line_index_is_out_of_range_in_function(index, __FUNCTION__))
         return;
-    if(meter_bus<=1) dc_lines[index].meter_end_bus = dc_lines[index].sending_side_bus;
+    if(meter_end<=1) dc_lines[index].meter_end_bus = dc_lines[index].sending_side_bus;
     else             dc_lines[index].meter_end_bus = dc_lines[index].receiving_side_bus;
 }
 
@@ -995,10 +984,21 @@ bool VSC_HVDC::get_converter_status(unsigned int index) const
     }
 }
 
+unsigned int VSC_HVDC::get_converter_index_with_converter_name(string name) const
+{
+    unsigned int n = get_converter_count();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(get_converter_name(i)==name)
+            return i;
+    }
+    return INDEX_NOT_EXIST;
+}
+
 string VSC_HVDC::get_converter_name(unsigned int index) const
 {
     if(index<get_converter_count())
-        return converters[index].converter_name;
+        return get_string_of_index(get_converter_name_index(index));
     else
     {
         STEPS& toolkit = get_toolkit();
@@ -1883,6 +1883,26 @@ DC_DEVICE_ID VSC_HVDC::get_dc_line_device_id(unsigned int index) const
     return did;
 }
 
+unsigned int VSC_HVDC::get_dc_line_meter_end(unsigned int index) const
+{
+    if(index<get_dc_line_count())
+    {
+        unsigned int bus = get_dc_line_meter_end_bus(index);
+        if(bus == get_dc_line_sending_side_bus(index))
+            return 1;
+        else
+            return 2;
+    }
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. index ("<<index<<") is out of  maximal dc line count when calling "<<__FUNCTION__<<"()"<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return 1;
+    }
+}
+
 unsigned int VSC_HVDC::get_dc_line_meter_end_bus(unsigned int index) const
 {
     if(index<get_dc_line_count())
@@ -1893,7 +1913,7 @@ unsigned int VSC_HVDC::get_dc_line_meter_end_bus(unsigned int index) const
         ostringstream osstream;
         osstream<<"Error. index ("<<index<<") is out of  maximal dc line count when calling "<<__FUNCTION__<<"()"<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
-        return 9999;
+        return 0;
     }
 }
 
@@ -1980,15 +2000,10 @@ double VSC_HVDC::get_dc_line_current_in_kA(unsigned int index, LINE_SIDE meter_s
 {
     if(index<get_dc_line_count())
     {
-        unsigned int ibus = get_dc_line_sending_side_bus(index);
-        unsigned int jbus = get_dc_line_receiving_side_bus(index);
-        double R = get_dc_line_resistance_in_ohm(index);
-        double Vi = get_dc_bus_Vdc_in_kV(dc_bus_no2index(ibus));
-        double Vj = get_dc_bus_Vdc_in_kV(dc_bus_no2index(jbus));
-        if(meter_side==SENDING_SIDE)
-            return (Vi-Vj)/R;
-        else
-            return (Vj-Vi)/R;
+        unsigned int metered_bus = get_dc_line_sending_side_bus(index);
+        if(meter_side==RECEIVING_SIDE)
+            metered_bus = get_dc_line_receiving_side_bus(index);
+        return get_dc_line_current_in_kA(index, metered_bus);
     }
     else
     {
@@ -2005,16 +2020,21 @@ double VSC_HVDC::get_dc_line_power_in_MW(unsigned int index, LINE_SIDE meter_sid
     //cout<<"index: "<<index<<endl;
     if(index<get_dc_line_count())
     {
-        double I = get_dc_line_current_in_kA(index, meter_side);
-        //cout<<"I: "<<I<<endl;
-        unsigned int dc_bus_number = INDEX_NOT_EXIST;
-        if(meter_side==SENDING_SIDE)
-            dc_bus_number=get_dc_line_sending_side_bus(index);
+        if(get_dc_line_status(index)==true)
+        {
+            double I = get_dc_line_current_in_kA(index, meter_side);
+            //cout<<"I: "<<I<<endl;
+            unsigned int dc_bus_number = INDEX_NOT_EXIST;
+            if(meter_side==SENDING_SIDE)
+                dc_bus_number=get_dc_line_sending_side_bus(index);
+            else
+                dc_bus_number=get_dc_line_receiving_side_bus(index);
+            //cout<<"dc_bus_number:"<<dc_bus_number<<endl;
+            double V = get_dc_bus_Vdc_in_kV_with_dc_bus_number(dc_bus_number);
+            return V*I;
+        }
         else
-            dc_bus_number=get_dc_line_receiving_side_bus(index);
-        //cout<<"dc_bus_number:"<<dc_bus_number<<endl;
-        double V = get_dc_bus_Vdc_in_kV_with_dc_bus_number(dc_bus_number);
-        return V*I;
+            return 0.0;
     }
     else
     {
@@ -2026,19 +2046,24 @@ double VSC_HVDC::get_dc_line_power_in_MW(unsigned int index, LINE_SIDE meter_sid
     }
 }
 
-double VSC_HVDC::get_dc_line_current_in_kA(unsigned int index, unsigned int meter_side) const
+double VSC_HVDC::get_dc_line_current_in_kA(unsigned int index, unsigned int meter_side_bus) const
 {
     if(index<get_dc_line_count())
     {
-        unsigned int ibus = get_dc_line_sending_side_bus(index);
-        unsigned int jbus = get_dc_line_receiving_side_bus(index);
-        double R = get_dc_line_resistance_in_ohm(index);
-        double Vi = get_dc_bus_Vdc_in_kV(dc_bus_no2index(ibus));
-        double Vj = get_dc_bus_Vdc_in_kV(dc_bus_no2index(jbus));
-        if(meter_side==ibus)
-            return (Vi-Vj)/R;
+        if(get_dc_line_status(index)==true)
+        {
+            unsigned int ibus = get_dc_line_sending_side_bus(index);
+            unsigned int jbus = get_dc_line_receiving_side_bus(index);
+            double R = get_dc_line_resistance_in_ohm(index);
+            double Vi = get_dc_bus_Vdc_in_kV(dc_bus_no2index(ibus));
+            double Vj = get_dc_bus_Vdc_in_kV(dc_bus_no2index(jbus));
+            if(meter_side_bus==ibus)
+                return (Vi-Vj)/R;
+            else
+                return (Vj-Vi)/R;
+        }
         else
-            return (Vj-Vi)/R;
+            return 0.0;
     }
     else
     {
@@ -2054,10 +2079,15 @@ double VSC_HVDC::get_dc_line_power_in_MW(unsigned int index, unsigned int meter_
 {
     if(index<get_dc_line_count())
     {
-        double V = get_dc_bus_Vdc_in_kV_with_dc_bus_number(meter_side);
-        double I = get_dc_line_current_in_kA(index, meter_side);
-        //cout<<"I: "<<I<<endl;
-        return V*I;
+        if(get_dc_line_status(index)==true)
+        {
+            double V = get_dc_bus_Vdc_in_kV_with_dc_bus_number(meter_side);
+            double I = get_dc_line_current_in_kA(index, meter_side);
+            //cout<<"I: "<<I<<endl;
+            return V*I;
+        }
+        else
+            return 0.0;
     }
     else
     {
@@ -2085,9 +2115,14 @@ double VSC_HVDC::get_dc_line_loss_in_MW(unsigned int index) const
 {
     if(index<get_dc_line_count())
     {
-        double Pi = get_dc_line_power_in_MW(index, SENDING_SIDE);
-        double Pj = get_dc_line_power_in_MW(index, RECEIVING_SIDE);
-        return Pi+Pj;
+        if(get_dc_line_status(index)==true)
+        {
+            double Pi = get_dc_line_power_in_MW(index, SENDING_SIDE);
+            double Pj = get_dc_line_power_in_MW(index, RECEIVING_SIDE);
+            return Pi+Pj;
+        }
+        else
+            return 0.0;
     }
     else
     {
@@ -2255,9 +2290,9 @@ void VSC_HVDC::set_model(MODEL* model)
     if(model != NULL and model->has_allowed_device_type(STEPS_VSC_HVDC))
     {
         model->set_device_id(get_device_id());
-        if(model->get_model_type()=="VSC HVDC PROJECT")
+        if(model->get_model_type()=="VSC HVDC NETWORK")
         {
-            set_vsc_hvdc_project_model((VSC_HVDC_NETWORK_MODEL*) model);
+            set_vsc_hvdc_network_model((VSC_HVDC_NETWORK_MODEL*) model);
             model->allocate_model_variables();
             model->prepare_model_data_table();
             model->prepare_model_internal_variable_table();
@@ -2291,7 +2326,7 @@ MODEL* VSC_HVDC::get_model_of_type(string model_type, unsigned int index)
     return NULL;
 }
 
-void VSC_HVDC::set_vsc_hvdc_project_model(VSC_HVDC_NETWORK_MODEL* model)
+void VSC_HVDC::set_vsc_hvdc_network_model(VSC_HVDC_NETWORK_MODEL* model)
 {
     if(model!=NULL)
     {
@@ -2305,7 +2340,7 @@ void VSC_HVDC::set_vsc_hvdc_converter_model(VSC_HVDC_CONVERTER_MODEL* model)
     if(model!=NULL)
     {
         unsigned int index = model->get_converter_index();
-        if(index==INDEX_NOT_EXIST)
+        if(index!=INDEX_NOT_EXIST)
         {
             delete_vsc_hvdc_converter_model(index);
             vsc_hvdc_converter_models[index] = model;
@@ -2426,7 +2461,7 @@ void VSC_HVDC::run(DYNAMIC_MODE mode)
     ostringstream osstream;
     if(get_status()==true)
     {
-        VSC_HVDC_NETWORK_MODEL* project = get_vsc_hvdc_network_model();
+        VSC_HVDC_NETWORK_MODEL* network = get_vsc_hvdc_network_model();
         vector<VSC_HVDC_CONVERTER_MODEL*> converters = get_vsc_hvdc_converter_models();
         unsigned int n_converter = get_converter_count();
         unsigned int i;
@@ -2434,8 +2469,8 @@ void VSC_HVDC::run(DYNAMIC_MODE mode)
         {
             case INITIALIZE_MODE:
             {
-                if(project!=NULL)
-                    project->initialize();
+                if(network!=NULL)
+                    network->initialize();
 
                 for(i=0; i!=n_converter; ++i)
                 {
@@ -2447,7 +2482,7 @@ void VSC_HVDC::run(DYNAMIC_MODE mode)
             case INTEGRATE_MODE:
             case UPDATE_MODE:
             {
-                project->run(mode);
+                network->run(mode);
 
                 for(i=0; i!=n_converter; ++i)
                 {
@@ -2754,16 +2789,19 @@ void VSC_HVDC::add_dc_lines_to_dc_network()
     unsigned int n = get_dc_line_count();
     for(unsigned int i=0; i!=n; ++i)
     {
-        unsigned int ibus = get_dc_line_sending_side_bus(i);
-        unsigned int jbus = get_dc_line_receiving_side_bus(i);
-        double g = 1.0/get_dc_line_resistance_in_ohm(i);
-        unsigned int i_inbus = inphno.get_internal_bus_number_of_physical_bus_number(ibus);
-        unsigned int j_inbus = inphno.get_internal_bus_number_of_physical_bus_number(jbus);
+        if(get_dc_line_status(i)==true)
+        {
+            unsigned int ibus = get_dc_line_sending_side_bus(i);
+            unsigned int jbus = get_dc_line_receiving_side_bus(i);
+            double g = 1.0/get_dc_line_resistance_in_ohm(i);
+            unsigned int i_inbus = inphno.get_internal_bus_number_of_physical_bus_number(ibus);
+            unsigned int j_inbus = inphno.get_internal_bus_number_of_physical_bus_number(jbus);
 
-        dc_network_matrix.add_entry(i_inbus, i_inbus, g);
-        dc_network_matrix.add_entry(j_inbus, j_inbus, g);
-        dc_network_matrix.add_entry(i_inbus, j_inbus, -g);
-        dc_network_matrix.add_entry(j_inbus, i_inbus, -g);
+            dc_network_matrix.add_entry(i_inbus, i_inbus, g);
+            dc_network_matrix.add_entry(j_inbus, j_inbus, g);
+            dc_network_matrix.add_entry(i_inbus, j_inbus, -g);
+            dc_network_matrix.add_entry(j_inbus, i_inbus, -g);
+        }
     }
 }
 
@@ -2857,7 +2895,7 @@ void VSC_HVDC::solve_dynamic_network_with_quasi_steady_state_model()
         unsigned int index = get_converter_index_with_dc_bus(dcbus);
         IC[i] += IC_N[i];
         double Pdc = IC[i]*UC[i];
-        set_converter_Pdc_flowing_to_Ceq_in_MW(index, -Pdc);
+        set_converter_Pdc_flowing_out_Ceq_in_MW(index, Pdc);
     }
 }
 
@@ -2916,27 +2954,45 @@ void VSC_HVDC::add_dc_lines_with_fault_to_dc_network()
     unsigned int n = get_dc_line_count();
     for(unsigned int i=0; i!=n; ++i)
     {
-        unsigned int ibus = get_dc_line_sending_side_bus(i);
-        unsigned int jbus = get_dc_line_receiving_side_bus(i);
-        double g = 1.0/get_dc_line_resistance_in_ohm(i);
-        unsigned int i_inbus = inphno.get_internal_bus_number_of_physical_bus_number(ibus);
-        unsigned int j_inbus = inphno.get_internal_bus_number_of_physical_bus_number(jbus);
-
-        if(get_dc_line_fault_r_in_ohm(i)==INFINITE_THRESHOLD)
+        if(get_dc_line_status(i)==true)
         {
-            dc_network_matrix.add_entry(i_inbus, i_inbus, g);
-            dc_network_matrix.add_entry(j_inbus, j_inbus, g);
-            dc_network_matrix.add_entry(i_inbus, j_inbus, -g);
-            dc_network_matrix.add_entry(j_inbus, i_inbus, -g);
-        }
-        else
-        {
-            double line_r = get_dc_line_resistance_in_ohm(i);
-            double fault_r = get_dc_line_fault_r_in_ohm(i);
-            double location = get_dc_line_fault_location(i);
+            unsigned int ibus = get_dc_line_sending_side_bus(i);
+            unsigned int jbus = get_dc_line_receiving_side_bus(i);
+            double g = 1.0/get_dc_line_resistance_in_ohm(i);
+            unsigned int i_inbus = inphno.get_internal_bus_number_of_physical_bus_number(ibus);
+            unsigned int j_inbus = inphno.get_internal_bus_number_of_physical_bus_number(jbus);
 
-            // Y to Delta conversion
+            if(get_dc_line_fault_r_in_ohm(i)==INFINITE_THRESHOLD)
+            {
+                dc_network_matrix.add_entry(i_inbus, i_inbus, g);
+                dc_network_matrix.add_entry(j_inbus, j_inbus, g);
+                dc_network_matrix.add_entry(i_inbus, j_inbus, -g);
+                dc_network_matrix.add_entry(j_inbus, i_inbus, -g);
+            }
+            else
+            {
+                double line_r = get_dc_line_resistance_in_ohm(i);
+                double fault_r = get_dc_line_fault_r_in_ohm(i);
+                double location = get_dc_line_fault_location(i);
 
+                double r_iside = line_r*location;
+                double r_jside = line_r*(1-location);
+
+                double numerator = r_iside*r_jside+r_iside*fault_r+r_jside*fault_r;
+
+                double Rij = numerator/fault_r;
+                double Rif = numerator/r_jside;
+                double Rjf = numerator/r_iside;
+
+                double gij = 1.0/Rij;
+                double gif = 1.0/Rif;
+                double gjf = 1.0/Rjf;
+
+                dc_network_matrix.add_entry(i_inbus, i_inbus, gij+gif);
+                dc_network_matrix.add_entry(j_inbus, j_inbus, gif+gjf);
+                dc_network_matrix.add_entry(i_inbus, j_inbus, -gij);
+                dc_network_matrix.add_entry(j_inbus, i_inbus, -gij);
+            }
         }
     }
 }
@@ -3430,17 +3486,17 @@ double VSC_HVDC::get_converter_Pdc_command_in_MW(unsigned int converter_index) c
         return 0.0;
 }
 
-void VSC_HVDC::set_converter_Pdc_flowing_to_Ceq_in_MW(const unsigned int converter_index, const double P)
+void VSC_HVDC::set_converter_Pdc_flowing_out_Ceq_in_MW(const unsigned int converter_index, const double P)
 {
     if(converter_index_is_out_of_range_in_function(converter_index, __FUNCTION__))
         return;
-    converters[converter_index].Pdc_flowing_to_Ceq_in_MW = P;
+    converters[converter_index].Pdc_flowing_out_Ceq_in_MW = P;
 }
 
-double VSC_HVDC::get_converter_Pdc_flowing_to_Ceq_in_MW(unsigned int converter_index) const
+double VSC_HVDC::get_converter_Pdc_flowing_out_Ceq_in_MW(unsigned int converter_index) const
 {
     if(not converter_index_is_out_of_range_in_function(converter_index, __FUNCTION__))
-        return converters[converter_index].Pdc_flowing_to_Ceq_in_MW;
+        return converters[converter_index].Pdc_flowing_out_Ceq_in_MW;
     else
         return 0.0;
 }
@@ -4181,13 +4237,13 @@ double VSC_HVDC::get_converter_ac_reactive_power_in_MVar_with_ac_bus_number(unsi
     return Qac;
 }
 
-complex<double> VSC_HVDC::get_converter_dynamic_current_in_pu_based_on_system_base_power(unsigned int converter_index)
+complex<double> VSC_HVDC::get_converter_dynamic_equivalent_current_to_ac_bus_in_pu_on_system_base(unsigned int converter_index)
 {
     if(get_status() == true)
     {
-        VSC_HVDC_NETWORK_MODEL* model = get_vsc_hvdc_network_model();
+        VSC_HVDC_CONVERTER_MODEL* model = get_vsc_hvdc_converter_model(converter_index);
         if(model!=NULL)
-            return model->get_converter_ac_current_in_pu(converter_index);
+            return model->get_converter_Norton_current_in_xy_axis_in_pu_based_on_system_base();
         else
             return 0.0;
     }

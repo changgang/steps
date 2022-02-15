@@ -86,15 +86,16 @@ void PSSE_IMEXPORTER::load_vsc_powerflow_data(string file)
     STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 
-    load_powerflow_data_into_ram(file);
+    load_vsc_hvdc_data_into_ram(file);
 
     if(raw_data_in_ram.size()==0)
     {
         osstream<<"No data in the given vscraw file: "<<file<<endl
-          <<"Please check if the file exist or not.";
+                <<"Please check if the file exist or not.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
+
     STEPS_IMEXPORTER steps_importer(toolkit);
 
     vector<vector<string> > data = convert_vsc_hvdc_raw_data2steps_vector();
@@ -225,6 +226,49 @@ void PSSE_IMEXPORTER::load_powerflow_data_into_ram(string file)
     fclose(fid);
 }
 
+void PSSE_IMEXPORTER::load_vsc_hvdc_data_into_ram(string file)
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+
+    raw_data_in_ram.clear();
+
+    FILE* fid = fopen(file.c_str(),"rt");
+    if(fid == NULL)
+    {
+        osstream<<"PSS/E VSC-HVDC raw file '"<<file<<"' is not accessible. Loading PSS/E raw data is failed.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    const unsigned int buffer_size = 4096;
+    char buffer[buffer_size];
+    string sbuffer;
+
+    vector<string> data_of_one_type;
+    data_of_one_type.clear();
+
+    while(true)
+    {
+        if(fgets(buffer, buffer_size, fid)==NULL)
+        {
+            if(data_of_one_type.size()!=0)
+            {
+                raw_data_in_ram.push_back(data_of_one_type);
+                data_of_one_type.clear();
+            }
+            break;
+        }
+        sbuffer = trim_psse_comment(buffer);
+        sbuffer = trim_string(sbuffer);
+        if(sbuffer.size()!=0)
+            data_of_one_type.push_back(sbuffer);
+        else
+            break;
+    }
+    fclose(fid);
+}
+
 string PSSE_IMEXPORTER::trim_psse_comment(string str)
 {
     if(str.size()==0)
@@ -346,16 +390,16 @@ vector<vector<string> > PSSE_IMEXPORTER::convert_vsc_hvdc_data2steps_vector() co
 {
     return convert_i_th_type_data2steps_vector(10);
 }
+
 vector<vector<string> > PSSE_IMEXPORTER::convert_vsc_hvdc_raw_data2steps_vector() const
 {
     vector<vector<string> > data;
-    unsigned int n = raw_data_in_ram.size();
+    vector<string> raw_data = raw_data_in_ram[0];
+    unsigned int n = raw_data.size();
     for(unsigned int i=0; i<n; ++i)
     {
-        vector<string> DATA = raw_data_in_ram[i];
-        unsigned int m = DATA.size();
-        for(unsigned int j=0; j<m; ++j)
-            data.push_back(split_string(DATA[j],","));
+        string DATA = raw_data[i];
+        data.push_back(split_string(DATA,","));
     }
     return data;
 }

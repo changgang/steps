@@ -27,6 +27,24 @@ class VSC_HVDC_CONVERTER_MODEL: public VSC_HVDC_MODEL
         VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE get_converter_active_control_mode() const;
         VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE get_converter_reactive_control_mode() const;
 
+        BUS* get_converter_ac_bus_pointer() const;
+        double get_converter_ac_bus_base_voltage_in_kV() const;
+        double get_converter_ac_bus_angle_in_deg() const;
+        double get_converter_ac_bus_angle_in_rad() const;
+
+        double get_converter_ac_angle_at_converter_side_in_rad() const;
+        double get_converter_ac_angle_at_converter_side_in_deg() const;
+        double get_converter_ac_angle_at_ac_bus_side_in_rad() const;
+        double get_converter_ac_angle_at_ac_bus_side_in_deg() const;
+
+        double get_converter_capacity_in_MVA() const;
+        double get_converter_base_voltage_in_kV() const;
+        double get_converter_transformer_ac_side_base_voltage_in_kV() const;
+        double get_converter_transformer_capacity_in_MVA() const;
+
+        complex<double> get_converter_current_from_converter_to_ac_bus_in_xy_axis_in_MVA() const;
+        complex<double> get_converter_current_from_converter_to_ac_bus_in_xy_axis_in_pu_based_on_converter_bases() const;
+
     public:
         // specific model
         virtual string get_model_name() const = 0;
@@ -57,11 +75,17 @@ class VSC_HVDC_CONVERTER_MODEL: public VSC_HVDC_MODEL
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
     public:
-        virtual complex<double> get_converter_voltage_in_dq_axis_in_pu() = 0;
-        virtual complex<double> get_converter_voltage_in_xy_axis_in_pu() = 0;
-        virtual complex<double> get_converter_current_in_dq_axis_in_pu() = 0;
-        virtual complex<double> get_converter_current_in_xy_axis_in_pu() = 0;
-        virtual complex<double> get_converter_Norton_current_in_xy_axis_in_pu_based_on_SBASE() = 0;
+        virtual complex<double> get_converter_voltage_in_dq_axis_in_pu_on_converter_base() = 0;
+        virtual complex<double> get_converter_current_in_dq_axis_in_pu_on_converter_base() = 0;
+
+
+        complex<double> get_converter_voltage_in_xy_axis_in_pu_on_converter_base();
+        complex<double> get_converter_current_in_xy_axis_in_pu_on_converter_base();
+        complex<double> get_converter_voltage_in_dq_axis_in_pu_on_system_base();
+        complex<double> get_converter_voltage_in_xy_axis_in_pu_on_system_base();
+        complex<double> get_converter_current_in_dq_axis_in_pu_on_system_base();
+        complex<double> get_converter_current_in_xy_axis_in_pu_on_system_base();
+        complex<double> get_converter_Norton_current_in_xy_axis_in_pu_based_on_system_base();
 
     public:
         void initialize_current_or_voltage_source_equivalent_scale();
@@ -71,6 +95,8 @@ class VSC_HVDC_CONVERTER_MODEL: public VSC_HVDC_MODEL
         unsigned int converter_index;
         unsigned int converter_name_index;
         bool voltage_source_flag;
+
+        BUS* converter_ac_busptr;
 
         unsigned int control_mode; // change to enum, dynamic version.
         VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE active_power_control_mode;

@@ -1861,6 +1861,9 @@ NONBUS_DEVICE* POWER_SYSTEM_DATABASE::get_nonbus_device(const DEVICE_ID& device_
         if(dtype==STEPS_HVDC)
             return get_hvdc(device_id);
 
+        if(dtype==STEPS_VSC_HVDC)
+            return get_vsc_hvdc(device_id);
+
         if(dtype==STEPS_TRANSFORMER)
             return get_transformer(device_id);
 

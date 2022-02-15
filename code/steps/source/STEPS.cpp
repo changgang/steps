@@ -195,8 +195,8 @@ void STEPS::update_device_thread_number()
 
                 if(vsc_hvdc_thread_number!=1)
                 {
-                    //vector<VSC_HVDC*> devices = psdb.get_vsc_hvdcs_connecting_to_bus(bus_number);
-                    //if(devices.size()>1) vsc_hvdc_thread_number = 1;
+                    vector<VSC_HVDC*> devices = psdb.get_vsc_hvdcs_connecting_to_bus(bus_number);
+                    if(devices.size()>1) vsc_hvdc_thread_number = 1;
                 }
 
                 if(equivalent_device_thread_number!=1)

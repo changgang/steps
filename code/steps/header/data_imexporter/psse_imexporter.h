@@ -28,6 +28,7 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         string trim_psse_comment(string str);
 
         void load_powerflow_data_into_ram(string file);
+        void load_vsc_hvdc_data_into_ram(string file);
         vector<vector<vector<string> > > convert_psse_raw_data2steps_vector() const;
 
         vector<vector<string> > convert_i_th_type_data2steps_vector(unsigned int i) const;

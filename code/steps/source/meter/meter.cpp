@@ -460,7 +460,27 @@ void METER::set_meter_side_bus(unsigned int meter_side)
                     meter_side_bus = 0;
             }
             else
-                meter_side_bus = 0;
+            {
+                if(get_meter_type().rfind("DC BUS", 0) == 0)
+                {
+                    if(vsc_hvdc->is_connected_to_dc_bus(meter_side))
+                        meter_side_bus = meter_side;
+                    else
+                        meter_side_bus = 0;
+                }
+                else
+                {
+                    if(get_meter_type().rfind("DC LINE", 0) == 0)
+                    {
+                        if(vsc_hvdc->is_connected_to_dc_bus(meter_side))
+                            meter_side_bus = meter_side;
+                        else
+                            meter_side_bus = 0;
+                    }
+                    else
+                        meter_side_bus = 0;
+                }
+            }
         }
     }
 }

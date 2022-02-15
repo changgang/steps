@@ -1927,7 +1927,7 @@ void STEPS_IMEXPORTER::load_vsc_hvdc_raw_data(vector<vector<string> > DATA)
         unsigned int nbus=get_integer_data(data[2],"0");
         unsigned int ndc_line=get_integer_data(data[3],"0");
         unsigned int nlines_to_read= ncon+nbus+ndc_line;
-        for(unsigned int j=0; j<nlines_to_read;++j)
+        for(unsigned int j=0; j!=nlines_to_read;++j)
         {
             if(i>=ndata) break;
             data=DATA[i];
@@ -1945,8 +1945,7 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_with_data(vector<vector<string> > vsc_hvdc_d
     VSC_HVDC vsc_hvdc(toolkit);
     unsigned int i = 0;
 
-    vector<string> basic_data=vsc_hvdc_data[i];
-    ++i;
+    vector<string> basic_data=vsc_hvdc_data[i];  ++i;
 
     unsigned int ncon=get_integer_data(basic_data[1],"0");
     unsigned int nbus=get_integer_data(basic_data[2],"0");
@@ -1963,23 +1962,20 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_with_data(vector<vector<string> > vsc_hvdc_d
 
     for(unsigned int j=0;j<ncon;++j)
     {
-        data=vsc_hvdc_data[i];
+        data=vsc_hvdc_data[i];  ++i;
         vsc_hvdc_converter_data.push_back(data);
-        ++i;
     }
 
     for(unsigned int j=0;j<nbus;++j)
     {
-        data=vsc_hvdc_data[i];
+        data=vsc_hvdc_data[i]; ++i;
         vsc_hvdc_dc_bus_data.push_back(data);
-        ++i;
     }
 
     for(unsigned int j=0;j<ndc_line;++j)
     {
-        data=vsc_hvdc_data[i];
+        data=vsc_hvdc_data[i]; ++i;
         vsc_hvdc_dc_line_data.push_back(data);
-        ++i;
     }
 
     add_vsc_hvdc_basic_data(vsc_hvdc, basic_data);
@@ -1988,6 +1984,7 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_with_data(vector<vector<string> > vsc_hvdc_d
     add_vsc_hvdc_dc_line_data(vsc_hvdc, vsc_hvdc_dc_line_data);
     while(psdb.is_vsc_hvdc_exist(vsc_hvdc.get_device_id()))
         vsc_hvdc.set_identifier(vsc_hvdc.get_identifier()+"#");
+
     psdb.append_vsc_hvdc(vsc_hvdc);
 }
 
@@ -2126,7 +2123,6 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
                 //cout<<"Uref:  "<<Uref<<endl;
                 vsc_hvdc.set_converter_initial_dc_voltage_reference_in_kV(i,Uref);
             }
-
         }
 
         if(data.size()>0)
@@ -2272,14 +2268,14 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
         {
             double P=get_double_data(data.front(),"0.0");
             vsc_hvdc.set_converter_P_to_AC_bus_in_MW(i,P);
-            cout<<"converter_P_to_AC_bus_in_MW: "<<P<<endl;
+            //cout<<"converter_P_to_AC_bus_in_MW: "<<P<<endl;
             data.erase(data.begin());
         }
         if(data.size()>0)
         {
             double Q=get_double_data(data.front(),"0.0");
             vsc_hvdc.set_converter_Q_to_AC_bus_in_MVar(i,Q);
-            cout<<"converter_Q_to_AC_bus_in_MVar: "<<Q<<endl;
+            //cout<<"converter_Q_to_AC_bus_in_MVar: "<<Q<<endl;
             data.erase(data.begin());
         }
         if(data.size()>0)
@@ -2345,14 +2341,14 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_dc_bus_data(VSC_HVDC& vsc_hvdc, vector<vecto
         data=vsc_hvdc_dc_bus_data[i];
         if(data.size()>0)
         {
-            int idc=get_integer_data(data.front(),"0");
-            vsc_hvdc.set_dc_bus_number(i,idc);
+            int dc_bus =get_integer_data(data.front(),"0");
+            vsc_hvdc.set_dc_bus_number(i,dc_bus);
             data.erase(data.begin());
         }
         if(data.size()>0)
         {
-            int ib=get_integer_data(data.front(),"0");
-            vsc_hvdc.set_dc_bus_converter_index_with_ac_bus_number(i,ib);
+            int ac_bus=get_integer_data(data.front(),"0");
+            vsc_hvdc.set_dc_bus_converter_index_with_ac_bus_number(i,ac_bus);
             data.erase(data.begin());
         }
         if(data.size()>0)
@@ -2375,8 +2371,8 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_dc_bus_data(VSC_HVDC& vsc_hvdc, vector<vecto
         }
         if(data.size()>0)
         {
-            string dcname=get_string_data(data.front(),"");
-            vsc_hvdc.set_dc_bus_name(i,dcname);
+            string dcbus_name=get_string_data(data.front(),"");
+            vsc_hvdc.set_dc_bus_name(i,dcbus_name);
             data.erase(data.begin());
         }
         if(data.size()>0)
@@ -2436,8 +2432,17 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_dc_line_data(VSC_HVDC& vsc_hvdc, vector<vect
         }
         if(data.size()>0)
         {
-            int met=get_integer_data(data.front(),"0");
-            vsc_hvdc.set_dc_line_meter_end_bus(i,met);
+            int istatus=get_integer_data(data.front(),"1");
+            bool status =  true;
+            if(istatus==0)
+                status = false;
+            vsc_hvdc.set_dc_line_status(i,status);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            int meter_end = get_integer_data(data.front(),"0");
+            vsc_hvdc.set_dc_line_meter_end(i,meter_end);
             data.erase(data.begin());
         }
         if(data.size()>0)

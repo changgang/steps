@@ -15,7 +15,6 @@ struct VSC_HVDC_CONVERTER_STRUCT
 {
     unsigned int converter_bus;
     BUS* converter_busptr;
-    string converter_name;
     unsigned int converter_name_index;
     bool status;
     VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE dc_control_mode;
@@ -57,7 +56,7 @@ struct VSC_HVDC_CONVERTER_STRUCT
     double Pac_command_in_MW;
 
     // dynamic variables
-    double Pdc_flowing_to_Ceq_in_MW;
+    double Pdc_flowing_out_Ceq_in_MW;
 };
 
 struct VSC_HVDC_DC_BUS_STRUCT

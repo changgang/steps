@@ -2958,7 +2958,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
             for(unsigned int i=0; i!=nvsc; ++i)
             {
                 file<<"% VSC HVDC Project: "<<vsc_hvdcs[i]->get_name()<<endl;
-                file<<"DCBUS,DCBUSNAME,ACBUS,VDC/KV,VAC/KV,P2AC/MW,Q2AC/PW,P2DC/MW,PGEN/MW,PLOAD/MW"<<endl;
+                file<<"DCBUS,DCBUSNAME,ACBUS,VDC/KV,VAC/PU,P2AC/MW,Q2AC/PW,P2DC/MW,PGEN/MW,PLOAD/MW"<<endl;
                 unsigned int n_dc_bus = vsc_hvdcs[i]->get_dc_bus_count();
                 //cout<<"n_dc_bus :"<<n_dc_bus<<endl;
                 for(unsigned int j=0; j!=n_dc_bus; ++j)
@@ -2993,7 +2993,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
                     file<<buffer<<endl;
                 }
 
-                file<<"IDCBUS,JDCBUS,IDC/KA,PDC_SENDING/MW,PDC_RECEIVING_MW,PLOSS_MW"<<endl;
+                file<<"IDCBUS,JDCBUS,ID,IDC/KA,PDC_SENDING/MW,PDC_RECEIVING_MW,PLOSS_MW"<<endl;
                 unsigned int n_dc_line = vsc_hvdcs[i]->get_dc_line_count();
                 //cout<<"n_dc_line :"<<n_dc_line<<endl;
                 for(unsigned int j=0; j!=n_dc_line; ++j)
@@ -3004,9 +3004,10 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
                     cout<<vsc_hvdcs[i]->get_dc_line_power_in_MW(j,SENDING_SIDE)<<endl;
                     cout<<vsc_hvdcs[i]->get_dc_line_power_in_MW(j,RECEIVING_SIDE)<<endl;
                     cout<<vsc_hvdcs[i]->get_dc_line_loss_in_MW(j)<<endl;*/
-                    snprintf(buffer, 1000, "%u,%u,%.6f,%.6f,%.6f,%.6f",
+                    snprintf(buffer, 1000, "%u,%u,%s,%.6f,%.6f,%.6f,%.6f",
                             vsc_hvdcs[i]->get_dc_line_sending_side_bus(j),
                             vsc_hvdcs[i]->get_dc_line_receiving_side_bus(j),
+                            vsc_hvdcs[i]->get_dc_line_identifier(j).c_str(),
                             vsc_hvdcs[i]->get_dc_line_current_in_kA(j,SENDING_SIDE),
                             vsc_hvdcs[i]->get_dc_line_power_in_MW(j,SENDING_SIDE),
                             vsc_hvdcs[i]->get_dc_line_power_in_MW(j,RECEIVING_SIDE),
@@ -3220,12 +3221,78 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(const string& file
             }
         }
 
+        unsigned int nvsc = vsc_hvdcs.size();
+        //cout<<"nvsc: "<<nvsc<<endl;
+        if(nvsc>0)
+        {
+            file<<"% VSC HVDC"<<endl;
+            for(unsigned int i=0; i!=nvsc; ++i)
+            {
+                file<<"% VSC HVDC Project: "<<vsc_hvdcs[i]->get_name()<<endl;
+                file<<"DCBUS,DCBUSNAME,ACBUS,VDC/KV,VAC/PU,P2AC/MW,Q2AC/PW,P2DC/MW,PGEN/MW,PLOAD/MW"<<endl;
+                unsigned int n_dc_bus = vsc_hvdcs[i]->get_dc_bus_count();
+                //cout<<"n_dc_bus :"<<n_dc_bus<<endl;
+                for(unsigned int j=0; j!=n_dc_bus; ++j)
+                {
+                    unsigned int ac_bus = vsc_hvdcs[i]->get_converter_ac_bus_number_with_dc_bus_index(j);
+                    double vac = 0.0;
+                    unsigned int converter_index = INDEX_NOT_EXIST;
+                    if(ac_bus!=0)
+                    {
+                        vac = psdb.get_bus_positive_sequence_voltage_in_pu(ac_bus);
+                        converter_index = vsc_hvdcs[i]->get_converter_index_with_ac_bus(ac_bus);
+                    }
+
+                    double p = 0.0;
+                    double q = 0.0;
+                    double pcmd = 0.0;
+                    if(converter_index!=INDEX_NOT_EXIST)
+                    {
+                        p = vsc_hvdcs[i]->get_converter_P_to_AC_bus_in_MW(converter_index);
+                        q = vsc_hvdcs[i]->get_converter_Q_to_AC_bus_in_MVar(converter_index);
+                        pcmd = vsc_hvdcs[i]->get_converter_dc_power_command(converter_index);
+                    }
+
+                    snprintf(buffer, 1000, "%u,\"%s\",%u,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
+                                vsc_hvdcs[i]->get_dc_bus_number(j),
+                                (vsc_hvdcs[i]->get_dc_bus_name(j)).c_str(),
+                                ac_bus,
+                                vsc_hvdcs[i]->get_dc_bus_Vdc_in_kV(j),
+                                vac, p, q, pcmd,
+                                vsc_hvdcs[i]->get_dc_bus_generation_power_in_MW(j),
+                                vsc_hvdcs[i]->get_dc_bus_load_power_in_MW(j));
+                    file<<buffer<<endl;
+                }
+
+                file<<"IDCBUS,JDCBUS,ID,IDC/KA,PDC_SENDING/MW,PDC_RECEIVING_MW,PLOSS_MW"<<endl;
+                unsigned int n_dc_line = vsc_hvdcs[i]->get_dc_line_count();
+                //cout<<"n_dc_line :"<<n_dc_line<<endl;
+                for(unsigned int j=0; j!=n_dc_line; ++j)
+                {
+                    /*cout<<vsc_hvdcs[i]->get_dc_line_sending_side_bus(j)<<endl;
+                    cout<<vsc_hvdcs[i]->get_dc_line_receiving_side_bus(j)<<endl;
+                    cout<<vsc_hvdcs[i]->get_dc_line_current_in_kA(j,SENDING_SIDE)<<endl;
+                    cout<<vsc_hvdcs[i]->get_dc_line_power_in_MW(j,SENDING_SIDE)<<endl;
+                    cout<<vsc_hvdcs[i]->get_dc_line_power_in_MW(j,RECEIVING_SIDE)<<endl;
+                    cout<<vsc_hvdcs[i]->get_dc_line_loss_in_MW(j)<<endl;*/
+                    snprintf(buffer, 1000, "%u,%u,%s,%.6f,%.6f,%.6f,%.6f",
+                            vsc_hvdcs[i]->get_dc_line_sending_side_bus(j),
+                            vsc_hvdcs[i]->get_dc_line_receiving_side_bus(j),
+                            vsc_hvdcs[i]->get_dc_line_identifier(j).c_str(),
+                            vsc_hvdcs[i]->get_dc_line_current_in_kA(j,SENDING_SIDE),
+                            vsc_hvdcs[i]->get_dc_line_power_in_MW(j,SENDING_SIDE),
+                            vsc_hvdcs[i]->get_dc_line_power_in_MW(j,RECEIVING_SIDE),
+                            vsc_hvdcs[i]->get_dc_line_loss_in_MW(j));
+                    file<<buffer<<endl;
+                }
+            }
+        }
         file.close();
     }
     else
     {
         osstream<<"File '"<<filename<<"' cannot be opened for saving extended powerflow result to file."<<endl
-          <<"No powerflow result will be exported.";
+                <<"No powerflow result will be exported.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }

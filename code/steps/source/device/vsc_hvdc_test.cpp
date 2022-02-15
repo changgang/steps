@@ -602,8 +602,9 @@ void VSC_HVDC_TEST::test_set_get_meter_end_bus()
     prepare_2_terminal_vsc_hvdc();
 
     vsc.set_dc_line_sending_side_bus(0,3);
-    vsc.set_dc_line_meter_end_bus(0,1);
+    vsc.set_dc_line_meter_end(0,1);
 
+    TEST_ASSERT(vsc.get_dc_line_meter_end(0)==1);
     TEST_ASSERT(vsc.get_dc_line_meter_end_bus(0)==3);
 
     //vsc.set_dc_line_meter_end_bus(1,2);

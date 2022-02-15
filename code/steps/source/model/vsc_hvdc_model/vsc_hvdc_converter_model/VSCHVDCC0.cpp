@@ -1,6 +1,8 @@
 #include "header/model/vsc_hvdc_model/vsc_hvdc_converter_model/VSCHVDCC0.h"
 #include "header/basic/utility.h"
 #include "header/STEPS.h"
+#include <iostream>
+using namespace std;
 VSCHVDCC0::VSCHVDCC0(STEPS& toolkit):VSC_HVDC_CONVERTER_MODEL(toolkit),
                                      p_block(toolkit),
                                      q_block(toolkit),
@@ -14,6 +16,7 @@ VSCHVDCC0::VSCHVDCC0(const VSCHVDCC0& model):VSC_HVDC_CONVERTER_MODEL(model.get_
                                              q_block(model.get_toolkit()),
                                              udc_block(model.get_toolkit())
 {
+    clear();
     copy_from_const_model(model);
 }
 
@@ -53,7 +56,7 @@ void VSCHVDCC0::copy_from_const_model(const VSCHVDCC0& model)
     set_reactive_power_block_qmax(model.get_reactive_power_block_qmax());
     set_reactive_power_block_qmin(model.get_reactive_power_block_qmin());
 
-    set_dc_voltage_block_ceq(model.get_dc_voltage_block_ceq());
+    set_dc_voltage_block_ceq_in_uF(model.get_dc_voltage_block_ceq_in_uF());
 
     p_block.set_toolkit(toolkit);
     q_block.set_toolkit(toolkit);
@@ -83,6 +86,8 @@ void VSCHVDCC0::set_active_power_block_Kd(double kd)
 
 void VSCHVDCC0::set_active_power_block_Td_in_s(double td)
 {
+    if(td==0.0)
+        td = 0.01;
     p_block.set_Td_in_s(td);
 }
 
@@ -113,6 +118,8 @@ void VSCHVDCC0::set_reactive_power_block_Kd(double kd)
 
 void VSCHVDCC0::set_reactive_power_block_Td_in_s(double td)
 {
+    if(td==0.0)
+        td = 0.01;
     q_block.set_Td_in_s(td);
 }
 
@@ -126,7 +133,7 @@ void VSCHVDCC0::set_reactive_power_block_qmin(double qmin)
     q_block.set_lower_limit(qmin);
 }
 
-void VSCHVDCC0::set_dc_voltage_block_ceq(const double ceq)
+void VSCHVDCC0::set_dc_voltage_block_ceq_in_uF(const double ceq)
 {
     udc_block.set_T_in_s(ceq);
 }
@@ -192,7 +199,7 @@ double VSCHVDCC0::get_reactive_power_block_qmin() const
     return q_block.get_lower_limit();
 }
 
-double VSCHVDCC0::get_dc_voltage_block_ceq() const
+double VSCHVDCC0::get_dc_voltage_block_ceq_in_uF() const
 {
     return udc_block.get_T_in_s();
 }
@@ -242,9 +249,9 @@ double VSCHVDCC0::get_reactive_power_block_Uacref() const
 bool VSCHVDCC0::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()>=2)
+    if(data.size()>=18)
     {
-        string model_name = get_string_data(data[1],"");
+        string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
             unsigned int data_index=2;
@@ -252,10 +259,10 @@ bool VSCHVDCC0::setup_model_with_steps_string_vector(vector<string>& data)
             set_converter_name(converter_name);
 
             double ceq = get_double_data(data[data_index],"0.0"); data_index++;
-            set_dc_voltage_block_ceq(ceq);
+            set_dc_voltage_block_ceq_in_uF(ceq);
 
             string mode=get_string_data(data[data_index],""); data_index++;
-            VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE active_control_mode = DY_VSC_INVALID_DC_CONTORL;
+            VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE active_control_mode = DY_VSC_INVALID_ACTIVE_POWER_CONTORL_MODE;
             if(mode=="Vdc_control")
                 active_control_mode = DY_VSC_DC_VOLTAGE_CONTORL;
             if(mode=="Pac_control")
@@ -277,7 +284,7 @@ bool VSCHVDCC0::setup_model_with_steps_string_vector(vector<string>& data)
             set_active_power_block_pmin(p_pmin);
 
             mode=get_string_data(data[data_index],""); data_index++;
-            VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE reactive_control_mode = DY_VSC_INVALID_AC_CONTORL;
+            VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE reactive_control_mode = DY_VSC_INVALID_REACTIVE_POWER_CONTORL_MODE;
             if(mode=="Vac_control")
                 reactive_control_mode = DY_VSC_AC_VOLTAGE_CONTROL;
             if(mode=="Qac_control")
@@ -335,17 +342,21 @@ void VSCHVDCC0::initialize()
     if(not is_model_initialized())
     {
         VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
+        cout<<__FILE__<<", "<<__LINE__<<", vsc_hvdc "<<vsc_hvdc<<endl;
         setup_block_toolkit_and_parameters();
 
-        unsigned int bus_number=get_converter_bus();
         unsigned int converter_index=get_converter_index();
 
-        complex<double> Is = vsc_hvdc->get_converter_ac_current_in_kA_with_ac_bus_number(bus_number);
-        complex<double> Us = vsc_hvdc->get_converter_ac_voltage_in_kV_with_ac_bus_number(bus_number);
-        double angle = arg(Us);
+        complex<double> Ixy = get_converter_current_from_converter_to_ac_bus_in_xy_axis_in_pu_based_on_converter_bases();
+        double angle = get_converter_ac_angle_at_converter_side_in_rad();
 
-        double Isd0 = Is.real()*cos(angle)+Is.imag()*sin(angle);
-        double Isq0 = -Is.real()*sin(angle)+Is.imag()*cos(angle);
+        complex<double> Idq = xy2dq_with_angle_in_rad(Ixy, angle);
+
+        double Isd0 = Ixy.real()*cos(angle)+Ixy.imag()*sin(angle);
+        double Isq0 = -Ixy.real()*sin(angle)+Ixy.imag()*cos(angle);
+
+
+        cout<<__FILE__<<", "<<__LINE__<<", Isd "<<Isd0<<", Isq "<<Isq0<<endl;
 
         VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE active_power_control_mode = get_converter_active_control_mode();
         VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE reactive_power_control_mode = get_converter_reactive_control_mode();
@@ -400,8 +411,8 @@ void VSCHVDCC0::run(DYNAMIC_MODE mode)
     if(is_model_active())
     {
         VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
-        unsigned int bus_number=get_converter_bus();
-        unsigned int converter_index=vsc_hvdc->get_converter_index_with_ac_bus(bus_number);
+        unsigned int bus_number = get_converter_bus();
+        unsigned int converter_index = get_converter_index();
         complex<double> Is = vsc_hvdc->get_converter_ac_current_in_kA_with_ac_bus_number(bus_number);
         complex<double> Us = vsc_hvdc->get_converter_ac_voltage_in_kV_with_ac_bus_number(bus_number);
         complex<double> j(0.0,1.0);
@@ -411,11 +422,11 @@ void VSCHVDCC0::run(DYNAMIC_MODE mode)
         double Isq0 = Is.imag();
 
         double input = 0.0;
-        double Pdc_from_dc_network_to_Ceq = vsc_hvdc->get_converter_Pdc_flowing_to_Ceq_in_MW(converter_index);
+        double Pdc_from_Ceq_to_dc_network = vsc_hvdc->get_converter_Pdc_flowing_out_Ceq_in_MW(converter_index);
         double Pac_from_ac_network_to_Ceq = solve_Pdc_with_active_power_and_reactive_power(converter_index);
         double Udc = vsc_hvdc->get_dc_bus_Vdc_in_kV(vsc_hvdc->get_dc_bus_index_with_converter_index(converter_index));
 
-        input = (Pdc_from_dc_network_to_Ceq+Pac_from_ac_network_to_Ceq)/Udc;
+        input = (-Pdc_from_Ceq_to_dc_network+Pac_from_ac_network_to_Ceq)/Udc;
         udc_block.set_input(input);
         udc_block.run(mode);
 
@@ -466,7 +477,10 @@ void VSCHVDCC0::check()
 
 void VSCHVDCC0::clear()
 {
-
+    set_as_current_source();
+    p_block.set_limiter_type(WINDUP_LIMITER);
+    q_block.set_limiter_type(WINDUP_LIMITER);
+    udc_block.set_limiter_type(WINDUP_LIMITER);
 }
 
 void VSCHVDCC0::report()
@@ -489,10 +503,55 @@ string VSCHVDCC0::get_standard_psse_string(bool export_internal_bus_number) cons
     string vsc_name = "'"+vsc->get_name()+"'";
 
     string model_name = "'"+get_model_name()+"'";
+    string converter_name = "'"+get_converter_name()+"'";
+
+    VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE pmode = get_converter_active_control_mode();
+    string pmode_name = "Unsupported";
+    switch(pmode)
+    {
+        case DY_VSC_AC_ACTIVE_POWER_CONTORL:
+            pmode_name = "'Pac_control'";
+            break;
+        case DY_VSC_DC_VOLTAGE_CONTORL:
+            pmode_name = "'Vdc_control'";
+            break;
+        default:
+            break;
+    }
+
+    VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE qmode = get_converter_reactive_control_mode();
+    string qmode_name = "Unsupported";
+    switch(qmode)
+    {
+        case DY_VSC_AC_REACTIVE_POWER_CONTROL:
+            qmode_name = "'Qac_control'";
+            break;
+        case DY_VSC_AC_VOLTAGE_CONTROL:
+            qmode_name = "'Vac_control'";
+            break;
+        default:
+            break;
+    }
 
 
     osstream<<setw(8)<<vsc_name<<", "
-            <<setw(10)<<model_name<<" /";
+            <<setw(10)<<model_name<<", "
+            <<setw(10)<<converter_name<<", "
+            <<setw(8)<<get_dc_voltage_block_ceq_in_uF()<<", "<<endl
+            <<setw(10)<<pmode_name<<", "
+            <<setw(8)<<setprecision(3)<<get_active_power_block_Kp()<<", "
+            <<setw(8)<<setprecision(3)<<get_active_power_block_Ki()<<", "
+            <<setw(8)<<setprecision(3)<<get_active_power_block_Kd()<<", "
+            <<setw(8)<<setprecision(3)<<get_active_power_block_Td_in_s()<<", "
+            <<setw(8)<<setprecision(3)<<get_active_power_block_pmax()<<", "
+            <<setw(8)<<setprecision(3)<<get_active_power_block_pmin()<<", "<<endl
+            <<setw(10)<<qmode_name<<", "
+            <<setw(8)<<setprecision(3)<<get_reactive_power_block_Kp()<<", "
+            <<setw(8)<<setprecision(3)<<get_reactive_power_block_Ki()<<", "
+            <<setw(8)<<setprecision(3)<<get_reactive_power_block_Kd()<<", "
+            <<setw(8)<<setprecision(3)<<get_reactive_power_block_Td_in_s()<<", "
+            <<setw(8)<<setprecision(3)<<get_reactive_power_block_qmax()<<", "
+            <<setw(8)<<setprecision(3)<<get_reactive_power_block_qmin()<<" /";
     return osstream.str();
 }
 
@@ -561,29 +620,17 @@ string VSCHVDCC0::get_dynamic_data_in_steps_format() const
     return "";
 }
 
-complex<double> VSCHVDCC0::get_converter_voltage_in_dq_axis_in_pu()
+complex<double> VSCHVDCC0::get_converter_voltage_in_dq_axis_in_pu_on_converter_base()
 {
-    ;
+    return 0.0;
 }
 
-complex<double> VSCHVDCC0::get_converter_voltage_in_xy_axis_in_pu()
+complex<double> VSCHVDCC0::get_converter_current_in_dq_axis_in_pu_on_converter_base()
 {
-    ;
-}
+    double Id = p_block.get_output();
+    double Iq = q_block.get_output();
 
-complex<double> VSCHVDCC0::get_converter_current_in_dq_axis_in_pu()
-{
-    ;
-}
-
-complex<double> VSCHVDCC0::get_converter_current_in_xy_axis_in_pu()
-{
-    ;
-}
-
-complex<double> VSCHVDCC0::get_converter_Norton_current_in_xy_axis_in_pu_based_on_SBASE()
-{
-    ;
+    return complex<double>(Id, Iq);
 }
 
 double VSCHVDCC0::solve_Pdc_with_active_power_and_reactive_power(unsigned int converter_index)

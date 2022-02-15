@@ -354,6 +354,23 @@ DEVICE_ID STEPS_IMEXPORTER::get_hvdc_device_id_from_string_vector(vector<string>
 
     return did;
 }
+
+string STEPS_IMEXPORTER::get_vsc_hvdc_name_from_string_vector(vector<string>& data)
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    if(data.size()<2)
+        return "";
+
+    string vsc_hvdc_name;
+
+    unsigned int i=1;
+    vsc_hvdc_name = get_string_data(data[i], "0");
+
+    return vsc_hvdc_name;
+}
+
 DEVICE_ID STEPS_IMEXPORTER::get_vsc_hvdc_device_id_from_string_vector(vector<string>& data)
 {
     DEVICE_ID did;
@@ -365,23 +382,13 @@ DEVICE_ID STEPS_IMEXPORTER::get_vsc_hvdc_device_id_from_string_vector(vector<str
     if(data.size()<2)
         return did;
 
-    string vsc_hvdc_name;
+    string vsc_hvdc_name = get_vsc_hvdc_name_from_string_vector(data);
 
-    unsigned int i=1;
-    vsc_hvdc_name = get_string_data(data[i], "0");
-
-    unsigned int n = psdb.get_vsc_hvdc_count();
-    vector<VSC_HVDC*> vsc_hvdcs = psdb.get_all_vsc_hvdcs();
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        if(vsc_hvdc_name == vsc_hvdcs[i]->get_name())
-        {
-            did = vsc_hvdcs[i]->get_device_id();
-            break;
-        }
-    }
-
-    return did;
+    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_hvdc_name);
+    if(vsc_hvdc!=NULL)
+        return vsc_hvdc->get_device_id();
+    else
+        return did;
 }
 
 DEVICE_ID STEPS_IMEXPORTER::get_transformer_device_id_from_string_vector(vector<string>& data)
@@ -1657,7 +1664,7 @@ void STEPS_IMEXPORTER::add_VSCHVDCC0_model(vector<string>& data)
     if(get_dynamic_model_name(data) != "VSCHVDCC0")
         return;
 
-    if(data.size()<2)
+    if(data.size()<18)
         return;
 
     STEPS& toolkit = get_toolkit();
@@ -1670,7 +1677,6 @@ void STEPS_IMEXPORTER::add_VSCHVDCC0_model(vector<string>& data)
         VSCHVDCC0* model = new VSCHVDCC0(toolkit);
         model->set_device_id(did);
         bool successful = model->setup_model_with_steps_string_vector(data);
-        cout<<"successful:model->setup_model_with_steps_string_vector"<<endl;
         if(successful)
             vsc_hvdc->set_model(model);
         else

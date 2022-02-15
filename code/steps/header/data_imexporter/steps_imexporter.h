@@ -199,6 +199,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         DEVICE_ID get_load_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_line_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_hvdc_device_id_from_string_vector(vector<string>& data);
+        string get_vsc_hvdc_name_from_string_vector(vector<string>& data);
         DEVICE_ID get_vsc_hvdc_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_transformer_device_id_from_string_vector(vector<string>& data);
 

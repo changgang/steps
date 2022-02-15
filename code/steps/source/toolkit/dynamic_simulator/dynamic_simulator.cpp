@@ -2278,12 +2278,12 @@ void DYNAMICS_SIMULATOR::add_vsc_hvdcs_to_bus_current_mismatch()
             {
                 unsigned int physical_bus = vsc_hvdc->get_converter_ac_bus(j);
                 unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
-                I_mismatch[internal_bus] += vsc_hvdc->get_converter_dynamic_current_in_pu_based_on_system_base_power(j);
+                I_mismatch[internal_bus] += vsc_hvdc->get_converter_dynamic_equivalent_current_to_ac_bus_in_pu_on_system_base(j);
                 if(not detailed_log_enabled)
                     ;
                 else
                 {
-                    I = vsc_hvdc->get_converter_dynamic_current_in_pu_based_on_system_base_power(j);
+                    I = vsc_hvdc->get_converter_dynamic_equivalent_current_to_ac_bus_in_pu_on_system_base(j);
                     I *= (psdb.get_system_base_power_in_MVA()/(SQRT3*psdb.get_bus_base_voltage_in_kV(physical_bus)));
                     osstream<<"Current at vsc-hvdc ac side of "<<vsc_hvdc->get_compound_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
                             <<"Complex power = "<<SQRT3*psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
