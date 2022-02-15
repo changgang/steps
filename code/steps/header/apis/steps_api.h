@@ -208,6 +208,15 @@ EXPORT_STEPS_DLL void api_set_hvdc_string_data(unsigned int ibus, unsigned int j
 EXPORT_STEPS_DLL bool api_get_hvdc_boolean_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_hvdc_boolean_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, bool value, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
+EXPORT_STEPS_DLL int api_get_vsc_hvdc_integer_data(char* vsc_name, char* side, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_vsc_hvdc_integer_data(char* vsc_name, char* side, char* parameter_name, int value, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_vsc_hvdc_float_data(char* vsc_name, char* side, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_vsc_hvdc_float_data(char* vsc_name, char* side, char* parameter_name, double value, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL const char* api_get_vsc_hvdc_string_data(char* vsc_name, char* side, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_vsc_hvdc_string_data(char* vsc_name, char* side, char* parameter_name, char* value, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL bool api_get_vsc_hvdc_boolean_data(char* vsc_name, char* side, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_vsc_hvdc_boolean_data(char* vsc_name, char* side, char* parameter_name, bool value, unsigned int toolkit_index=INDEX_NOT_EXIST);
+
 EXPORT_STEPS_DLL int api_get_equivalent_device_integer_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_equivalent_device_integer_data(unsigned int bus, char* identifier, char* parameter_name, int value, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_equivalent_device_float_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
