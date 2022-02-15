@@ -2348,12 +2348,66 @@ void VSC_HVDC::delete_vsc_hvdc_converter_model(unsigned int index)
 
 complex<double> VSC_HVDC::get_converter_Norton_admittance_as_voltage_source(unsigned int index) const
 {
-    return 0.0;
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    double Sbase = toolkit.get_system_base_power_in_MVA();
+
+    unsigned int bus = get_converter_ac_bus(index);
+    double Vbase_bus = psdb.get_bus_base_voltage_in_kV(bus)
+
+    double St = get_converter_transformer_capacity_in_MVA(index);
+    double Ebase_ac = get_converter_transformer_AC_side_base_voltage_in_kV(index);
+    double Ebase_converter = get_converter_transformer_converter_side_base_voltage_in_kV(index);
+    double kt = get_converter_transformer_off_nominal_turn_ratio(index);
+    complex<double> Zt = get_converter_transformer_impedance_in_pu(index);
+    complex<double> Zl = get_converter_commutating_impedance_in_ohm(index);
+    complex<double> Yf = get_converter_filter_admittance_in_siemens(index);
+
+    double Zbase = Ebase_converter*Ebase_converter/St;
+
+    Zl = Zl/Zbase;
+    Yf = Yf*Zbase;
+
+    complex<double> Yeq = (1+Yf*Zl)/(Zt*(1+Yf*Zl)+Zl);
+
+    Yeq = Yeq*(St/(Ebase_ac*Ebase_ac))/(Sbase/(Vbase_bus*Vbase_bus));
+
+    Yeq = Yeq/(kt*kt);
+
+    return Yeq;
 }
 
 complex<double> VSC_HVDC::get_converter_Norton_admittance_as_current_source(unsigned int index) const
 {
-    return 0.0;
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    double Sbase = toolkit.get_system_base_power_in_MVA();
+
+    unsigned int bus = get_converter_ac_bus(index);
+    double Vbase_bus = psdb.get_bus_base_voltage_in_kV(bus)
+
+    double St = get_converter_transformer_capacity_in_MVA(index);
+    double Ebase_ac = get_converter_transformer_AC_side_base_voltage_in_kV(index);
+    double Ebase_converter = get_converter_transformer_converter_side_base_voltage_in_kV(index);
+    double kt = get_converter_transformer_off_nominal_turn_ratio(index);
+    complex<double> Zt = get_converter_transformer_impedance_in_pu(index);
+    complex<double> Zl = get_converter_commutating_impedance_in_ohm(index);
+    complex<double> Yf = get_converter_filter_admittance_in_siemens(index);
+
+    double Zbase = Ebase_converter*Ebase_converter/St;
+
+    Zl = Zl/Zbase;
+    Yf = Yf*Zbase;
+
+    complex<double> Yeq = Yf/(1+Yf*Zt);
+
+    Yeq = Yeq*(St/(Ebase_ac*Ebase_ac))/(Sbase/(Vbase_bus*Vbase_bus));
+
+    Yeq = Yeq/(kt*kt);
+
+    return Yeq;
 }
 
 void VSC_HVDC::run(DYNAMIC_MODE mode)

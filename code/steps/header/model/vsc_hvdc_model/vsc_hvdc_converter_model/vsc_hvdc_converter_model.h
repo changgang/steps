@@ -62,6 +62,11 @@ class VSC_HVDC_CONVERTER_MODEL: public VSC_HVDC_MODEL
         virtual complex<double> get_converter_current_in_dq_axis_in_pu() = 0;
         virtual complex<double> get_converter_current_in_xy_axis_in_pu() = 0;
         virtual complex<double> get_converter_Norton_current_in_xy_axis_in_pu_based_on_SBASE() = 0;
+
+    public:
+        void initialize_current_or_voltage_source_equivalent_scale();
+        complex<double> get_current_source_equivalent_scale() const;
+        complex<double> get_voltage_source_equivalent_admittance() const;
     private:
         unsigned int converter_index;
         unsigned int converter_name_index;
@@ -70,6 +75,8 @@ class VSC_HVDC_CONVERTER_MODEL: public VSC_HVDC_MODEL
         unsigned int control_mode; // change to enum, dynamic version.
         VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE active_power_control_mode;
         VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE reactive_power_control_mode;
+
+        complex<double> current_or_voltage_equivalent_scale;
 };
 
 #endif // VSC_HVDC_CONVERTER_MODEL_H_INCLUDED

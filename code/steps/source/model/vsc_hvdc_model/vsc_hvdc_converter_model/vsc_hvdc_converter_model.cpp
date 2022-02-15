@@ -96,6 +96,27 @@ VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE VSC_HVDC_CONVERTER_MODEL:
     return reactive_power_control_mode;
 }
 
+
+void VSC_HVDC_CONVERTER_MODEL::initialize_current_or_voltage_source_equivalent_scale()
+{
+    is_voltage_source()
+    {
+
+    }
+    current_or_voltage_equivalent_scale = 1.0/(1+Yf*Zt)/kt;
+    current_or_voltage_equivalent_scale = 1.0/(Zt*(1+Zl*Yf)+Zl)/kt;
+
+}
+complex<double> VSC_HVDC_CONVERTER_MODEL::get_current_source_equivalent_scale() const
+{
+    return current_or_voltage_equivalent_scale;
+}
+
+complex<double> VSC_HVDC_CONVERTER_MODEL::get_voltage_source_equivalent_admittance() const
+{
+    return get_current_source_equivalent_scale();
+}
+
 /*
 VSC_MODEL_VAR::VSC_MODEL_VAR(STEPS& toolkit):
                active_power_control_block(toolkit),
