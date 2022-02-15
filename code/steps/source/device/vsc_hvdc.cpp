@@ -56,6 +56,7 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
     for(unsigned int i=0;i!=ncon;++i)
     {
         set_converter_ac_bus(i,vsc.get_converter_ac_bus(i));
+        set_converter_name(i, vsc.get_converter_name(i));
         set_converter_active_power_operation_mode(i,vsc.get_converter_active_power_operation_mode(i));
         switch(vsc.get_converter_active_power_operation_mode(i))
         {
@@ -205,6 +206,7 @@ void VSC_HVDC::set_converter_count(unsigned int n)
 
     VSC_HVDC_CONVERTER_STRUCT converter;
     converter.converter_bus = 0;
+    converter.converter_name = "";
     converter.converter_name_index = INDEX_NOT_EXIST;
     converter.converter_busptr = NULL;
     converter.status = true;
@@ -351,6 +353,16 @@ void VSC_HVDC::set_converter_ac_bus(const unsigned int index, const unsigned int
 }
 
 void VSC_HVDC::set_converter_name(const unsigned int index, string name)
+{
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
+    else
+    {
+        converters[index].converter_name = name;
+    }
+}
+
+void VSC_HVDC::set_converter_name_index(const unsigned int index, string name)
 {
     if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
         return;
@@ -985,9 +997,8 @@ bool VSC_HVDC::get_converter_status(unsigned int index) const
 
 string VSC_HVDC::get_converter_name(unsigned int index) const
 {
-    unsigned int name_index = get_converter_name_index(index);
-    if(name_index!=INDEX_NOT_EXIST)
-        return get_string_of_index(name_index);
+    if(index<get_converter_count())
+        return converters[index].converter_name;
     else
     {
         STEPS& toolkit = get_toolkit();
@@ -1808,7 +1819,7 @@ unsigned int VSC_HVDC::get_dc_line_sending_side_bus(unsigned int index) const
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal dc line count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal dc line count when calling "<<__FUNCTION__<<"()"<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999;
     }
@@ -1822,7 +1833,7 @@ unsigned int VSC_HVDC::get_dc_line_receiving_side_bus(unsigned int index) const
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal dc line count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal dc line count when calling "<<__FUNCTION__<<"()"<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999;
     }
@@ -1836,7 +1847,7 @@ string VSC_HVDC::get_dc_line_identifier(unsigned int index) const
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal dc line count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal dc line count when calling "<<__FUNCTION__<<"()"<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return "";
     }
@@ -1850,7 +1861,7 @@ bool VSC_HVDC::get_dc_line_status(unsigned int index) const
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal dc line count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal dc line count when calling "<<__FUNCTION__<<"()"<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return false;
     }
@@ -1880,7 +1891,7 @@ unsigned int VSC_HVDC::get_dc_line_meter_end_bus(unsigned int index) const
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal dc line count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal dc line count when calling "<<__FUNCTION__<<"()"<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999;
     }
@@ -1894,7 +1905,7 @@ double VSC_HVDC::get_dc_line_resistance_in_ohm(unsigned int index) const
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal dc line count."<<endl;
+        osstream<<"Error. index ("<<index<<") is out of  maximal dc line count when calling "<<__FUNCTION__<<"()"<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
@@ -2354,7 +2365,7 @@ complex<double> VSC_HVDC::get_converter_Norton_admittance_as_voltage_source(unsi
     double Sbase = toolkit.get_system_base_power_in_MVA();
 
     unsigned int bus = get_converter_ac_bus(index);
-    double Vbase_bus = psdb.get_bus_base_voltage_in_kV(bus)
+    double Vbase_bus = psdb.get_bus_base_voltage_in_kV(bus);
 
     double St = get_converter_transformer_capacity_in_MVA(index);
     double Ebase_ac = get_converter_transformer_AC_side_base_voltage_in_kV(index);
@@ -2369,7 +2380,7 @@ complex<double> VSC_HVDC::get_converter_Norton_admittance_as_voltage_source(unsi
     Zl = Zl/Zbase;
     Yf = Yf*Zbase;
 
-    complex<double> Yeq = (1+Yf*Zl)/(Zt*(1+Yf*Zl)+Zl);
+    complex<double> Yeq = (1.0+Yf*Zl)/(Zt*(1.0+Yf*Zl)+Zl);
 
     Yeq = Yeq*(St/(Ebase_ac*Ebase_ac))/(Sbase/(Vbase_bus*Vbase_bus));
 
@@ -2386,7 +2397,7 @@ complex<double> VSC_HVDC::get_converter_Norton_admittance_as_current_source(unsi
     double Sbase = toolkit.get_system_base_power_in_MVA();
 
     unsigned int bus = get_converter_ac_bus(index);
-    double Vbase_bus = psdb.get_bus_base_voltage_in_kV(bus)
+    double Vbase_bus = psdb.get_bus_base_voltage_in_kV(bus);
 
     double St = get_converter_transformer_capacity_in_MVA(index);
     double Ebase_ac = get_converter_transformer_AC_side_base_voltage_in_kV(index);
@@ -2401,7 +2412,7 @@ complex<double> VSC_HVDC::get_converter_Norton_admittance_as_current_source(unsi
     Zl = Zl/Zbase;
     Yf = Yf*Zbase;
 
-    complex<double> Yeq = Yf/(1+Yf*Zt);
+    complex<double> Yeq = Yf/(1.0+Yf*Zt);
 
     Yeq = Yeq*(St/(Ebase_ac*Ebase_ac))/(Sbase/(Vbase_bus*Vbase_bus));
 

@@ -99,12 +99,26 @@ VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE VSC_HVDC_CONVERTER_MODEL:
 
 void VSC_HVDC_CONVERTER_MODEL::initialize_current_or_voltage_source_equivalent_scale()
 {
-    is_voltage_source()
-    {
+    complex<double> Yf = 0.0;
+    complex<double> Zl = 0.0;
+    complex<double> Zt = 0.0;
+    double kt = 0.0;
 
+    VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
+    if(vsc_hvdc!=NULL)
+    {
+        unsigned int converter_index = get_converter_index();
+
+        kt = vsc_hvdc->get_converter_transformer_off_nominal_turn_ratio(converter_index);
+        Zt = vsc_hvdc->get_converter_transformer_impedance_in_pu(converter_index);
+        Zl = vsc_hvdc->get_converter_commutating_impedance_in_ohm(converter_index);
+        Yf = vsc_hvdc->get_converter_filter_admittance_in_siemens(converter_index);
     }
-    current_or_voltage_equivalent_scale = 1.0/(1+Yf*Zt)/kt;
-    current_or_voltage_equivalent_scale = 1.0/(Zt*(1+Zl*Yf)+Zl)/kt;
+    if(is_voltage_source()==true)
+        current_or_voltage_equivalent_scale = 1.0/(Zt*(1.0+Zl*Yf)+Zl)/kt;
+    else
+        current_or_voltage_equivalent_scale = 1.0/(1.0+Yf*Zt)/kt;
+
 
 }
 complex<double> VSC_HVDC_CONVERTER_MODEL::get_current_source_equivalent_scale() const

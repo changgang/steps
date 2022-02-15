@@ -37,6 +37,7 @@ class VSC_HVDC : public NONBUS_DEVICE
 
         void set_converter_ac_bus(const unsigned int index, const unsigned int bus);
         void set_converter_name(const unsigned int index, string name);
+        void set_converter_name_index(const unsigned int index, string name);
         void set_converter_status(const unsigned int index, bool status);
 
         void set_converter_active_power_operation_mode(const unsigned int index, const VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE mode);

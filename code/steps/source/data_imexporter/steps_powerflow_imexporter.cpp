@@ -2054,6 +2054,12 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
         }
         if(data.size()>0)
         {
+            string name = get_string_data(data.front(), "");
+            vsc_hvdc.set_converter_name(i, name);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
             bool status=get_integer_data(data.front(),"0");
             vsc_hvdc.set_converter_status(i, status);
             data.erase(data.begin());
@@ -2084,7 +2090,6 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
             vsc_hvdc.set_converter_dc_voltage_control_priority(i, control_priority);
             data.erase(data.begin());
         }
-
         if(data.size()>0)
         {
             string mode=get_string_data(data.front(),"");
