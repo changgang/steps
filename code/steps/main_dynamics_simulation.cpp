@@ -42,6 +42,7 @@ int main()
     //VSC_HVDC_CONVERTER_MODEL* model = vsc_hvdc->get_vsc_hvdc_converter_model(0);
     //model->report();
 
+    /*
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
     simulator.set_allowed_max_power_imbalance_in_MVA(0.01);
     simulator.set_max_DAE_iteration(200);
@@ -51,7 +52,7 @@ int main()
     simulator.prepare_vsc_hvdc_related_meters();
     simulator.set_output_file("IEEE39_vsc");
     simulator.show_dynamic_simulator_configuration();
-
+    */
 
     //simulator.set_output_file("test_log/IEEE_39_bus_model_GENROU_SEXS_IEEEG1_load_scale_down_at_bus_3_by_10%");
     //simulator.set_output_file("test_log/IEEE_39_bus_model_GENROU_SEXS_IEEEG1_generation_scale_down_at_bus_38_by_10%");
@@ -60,7 +61,7 @@ int main()
     //simulator.set_output_file("test_log/bench_shandong_with_avr_fault_at_line_82_80");
     //simulator.set_output_file("test_log/bench_shandong_with_avr_trip_mac_140");
 
-    simulator.start();
+    //simulator.start();
     //simulator.run_to(1.0);
 
     /*DEVICE_ID did;
