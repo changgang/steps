@@ -192,6 +192,22 @@ double VSC_HVDC_CONVERTER_MODEL::get_converter_initial_ac_angle_at_converter_sid
     return rad2deg(get_converter_initial_ac_angle_at_converter_side_in_rad());
 }
 
+double VSC_HVDC_CONVERTER_MODEL::get_converter_dynamic_P_from_converter_to_AC_bus_in_MW() const
+{
+    complex<double> V_converter = get_converter_voltage_in_xy_axis_in_pu();
+    complex<double> I_converter = get_converter_current_from_converter_to_ac_network_in_dq_axis_in_pu_on_system_base();
+    double S_base = get_toolkit().get_system_base_power_in_MVA();
+    return V_converter*conj(I_converter)*S_base.real();
+}
+
+double VSC_HVDC_CONVERTER_MODEL::get_converter_dynamic_Q_from_converter_to_AC_bus_in_MVar() const
+{
+    complex<double> V_converter = get_converter_voltage_in_xy_axis_in_pu();
+    complex<double> I_converter = get_converter_current_from_converter_to_ac_network_in_dq_axis_in_pu_on_system_base();
+    double S_base = get_toolkit().get_system_base_power_in_MVA();
+    return V_converter*conj(I_converter)*S_base.imag();
+}
+
 double VSC_HVDC_CONVERTER_MODEL::get_converter_dynamic_ac_angle_at_converter_side_in_rad() const
 {
     complex<double> It = get_converter_current_from_converter_to_ac_bus_in_xy_axis_in_kA();
@@ -238,8 +254,8 @@ complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_initial_current_from_con
     VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
     unsigned int converter_index = get_converter_index();
 
-    double P = vsc_hvdc->get_converter_P_to_AC_bus_in_MW(converter_index);
-    double Q = vsc_hvdc->get_converter_Q_to_AC_bus_in_MVar(converter_index);
+    double P = get_converter_initial_P_to_AC_bus_in_MW();
+    double Q = get_converter_initial_Q_to_AC_bus_in_MVar();
     complex<double> S(P, Q);
     complex<double> Vac = vsc_hvdc->get_converter_ac_bus_positive_sequency_complex_voltage_in_kV(converter_index);
     complex<double> It = conj(S/Vac/SQRT3);
@@ -276,7 +292,7 @@ complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_initial_current_from_con
 complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_current_from_converter_to_ac_bus_in_xy_axis_in_kA() const
 {
     cout<<__FILE__<<", "<<__LINE__<<endl;
-    complex<double> I = get_converter_current_from_converter_to_ac_bus_in_xy_axis_in_pu_based_on_converter_bases();
+    complex<double> I = get_converter_current_from_converter_to_ac_bus_in_xy_axis_in_pu_based_on_converter_base();
     cout<<__FILE__<<", "<<__LINE__<<endl;
     double Sbase = get_converter_capacity_in_MVA();
     double Vbase = get_converter_ac_bus_base_voltage_in_kV();
@@ -284,7 +300,7 @@ complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_current_from_converter_t
     return I*Sbase/Vbase/SQRT3;
 }
 
-complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_current_from_converter_to_ac_bus_in_xy_axis_in_pu_based_on_converter_bases() const
+complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_current_from_converter_to_ac_bus_in_xy_axis_in_pu_based_on_converter_base() const
 {
     complex<double> Idq = get_converter_current_from_converter_to_ac_network_in_dq_axis_in_pu_on_converter_base();
     double angle = get_converter_dynamic_ac_angle_at_converter_side_in_rad();
@@ -298,7 +314,7 @@ complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_voltage_in_xy_axis_in_pu
     return dq2xy_with_angle_in_rad(Vdq, angle);
 }
 
-complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_current_in_xy_axis_in_pu_on_converter_base()
+complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_current_from_converter_to_ac_network_in_xy_axis_in_pu_on_converter_base()
 {
     complex<double> Idq = get_converter_current_from_converter_to_ac_network_in_dq_axis_in_pu_on_converter_base();
     double angle = get_converter_dynamic_ac_angle_at_converter_side_in_rad();
@@ -306,7 +322,7 @@ complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_current_in_xy_axis_in_pu
     return dq2xy_with_angle_in_rad(Idq, angle);
 }
 
-complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_current_in_dq_axis_in_pu_on_system_base()
+complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_current_from_converter_to_ac_network_in_dq_axis_in_pu_on_system_base()
 {
     complex<double> Idq = get_converter_current_from_converter_to_ac_network_in_dq_axis_in_pu_on_converter_base();
 
@@ -317,9 +333,9 @@ complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_current_in_dq_axis_in_pu
     return Idq*Sbase_converter/Sbase_system;
 }
 
-complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_current_in_xy_axis_in_pu_on_system_base()
+complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_current_from_converter_to_ac_network_in_xy_axis_in_pu_on_system_base()
 {
-    complex<double> Idq = get_converter_current_in_dq_axis_in_pu_on_system_base();
+    complex<double> Idq = get_converter_current_from_converter_to_ac_network_in_dq_axis_in_pu_on_system_base();
     double angle = get_converter_dynamic_ac_angle_at_converter_side_in_rad();
     cout<<"Ixy on system base of converter "<<get_converter_index()<<": "<<dq2xy_with_angle_in_rad(Idq, angle)<<endl;
     return dq2xy_with_angle_in_rad(Idq, angle);
@@ -337,7 +353,7 @@ complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_Norton_current_in_xy_axi
     }
     else
     {
-        complex<double> Ixy = get_converter_current_in_xy_axis_in_pu_on_system_base();
+        complex<double> Ixy = get_converter_current_from_converter_to_ac_network_in_xy_axis_in_pu_on_system_base();
         return Ixy;
     }
 }
