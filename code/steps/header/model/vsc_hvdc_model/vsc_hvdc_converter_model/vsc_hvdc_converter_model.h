@@ -42,7 +42,7 @@ class VSC_HVDC_CONVERTER_MODEL: public VSC_HVDC_MODEL
         double get_converter_transformer_ac_side_base_voltage_in_kV() const;
         double get_converter_transformer_capacity_in_MVA() const;
 
-        complex<double> get_converter_current_from_converter_to_ac_bus_in_xy_axis_in_MVA() const;
+        complex<double> get_converter_current_from_converter_to_ac_bus_in_xy_axis_in_kA() const;
         complex<double> get_converter_current_from_converter_to_ac_bus_in_xy_axis_in_pu_based_on_converter_bases() const;
 
     public:

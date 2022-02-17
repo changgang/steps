@@ -159,10 +159,11 @@ class VSC_HVDC : public NONBUS_DEVICE
         double get_converter_transformer_off_nominal_turn_ratio(unsigned int index) const;
         complex<double> get_converter_transformer_impedance_in_ohm(unsigned int index) const;
         complex<double> get_converter_transformer_impedance_in_pu(unsigned int index) const;
+        complex<double> get_converter_transformer_impedance_in_pu_on_converter_base(unsigned int index) const;
         complex<double> get_converter_commutating_impedance_in_ohm(unsigned int index) const;
-        complex<double> get_converter_commutating_impedance_in_pu(unsigned int index) const;
+        complex<double> get_converter_commutating_impedance_in_pu_on_converter_base(unsigned int index) const;
         complex<double> get_converter_filter_admittance_in_siemens(unsigned int index) const;
-        complex<double> get_converter_filter_admittance_in_pu(unsigned int index) const;
+        complex<double> get_converter_filter_admittance_in_pu_on_converter_base(unsigned int index) const;
 
         double get_converter_P_to_AC_bus_in_MW(unsigned int index) const;
         double get_converter_Q_to_AC_bus_in_MVar(unsigned int index) const;
@@ -307,6 +308,8 @@ class VSC_HVDC : public NONBUS_DEVICE
         double solve_Pdc_with_voltage_angle_and_voltage_control(unsigned int converter_index) const;
         double solve_Pdc_with_dc_active_power_voltage_droop_control(unsigned int converter_index) const;
         double solve_Pdc_with_dc_current_voltage_droop_control(unsigned int converter_index) const;
+
+        double get_dc_power_from_converter_to_dc_network_with_P_and_Q_to_AC_bus_in_MVA(unsigned int converter_index, double P, double Q) const;
 
         double solve_converter_Pac_with_Pdc(unsigned int converter_index);
         double calculate_converter_Pdc_with_Pac(unsigned int converter_index, double Pac, double Qac);

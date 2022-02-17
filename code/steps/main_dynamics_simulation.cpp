@@ -44,13 +44,13 @@ int main()
 
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
     simulator.set_allowed_max_power_imbalance_in_MVA(0.01);
-    simulator.set_max_DAE_iteration(200);
-    simulator.set_max_network_iteration(1);
+    simulator.set_max_DAE_iteration(10);
+    simulator.set_max_network_iteration(50);
     simulator.set_iteration_accelerator(0.8);
 
     simulator.prepare_vsc_hvdc_related_meters();
     simulator.set_output_file("IEEE39_vsc");
-    simulator.show_dynamic_simulator_configuration();
+    //simulator.show_dynamic_simulator_configuration();
 
 
     //simulator.set_output_file("test_log/IEEE_39_bus_model_GENROU_SEXS_IEEEG1_load_scale_down_at_bus_3_by_10%");

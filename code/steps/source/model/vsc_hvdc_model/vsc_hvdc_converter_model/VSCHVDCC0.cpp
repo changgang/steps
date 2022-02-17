@@ -341,25 +341,20 @@ void VSCHVDCC0::initialize()
 {
     if(not is_model_initialized())
     {
+        initialize_current_or_voltage_source_equivalent_scale();
+
         VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
-        cout<<__FILE__<<", "<<__LINE__<<", vsc_hvdc "<<vsc_hvdc<<endl;
         setup_block_toolkit_and_parameters();
 
         unsigned int converter_index=get_converter_index();
 
         complex<double> Ixy = get_converter_current_from_converter_to_ac_bus_in_xy_axis_in_pu_based_on_converter_bases();
-        cout<<"Ixy: "<<Ixy<<endl;
         double angle = get_converter_ac_angle_at_converter_side_in_rad();
-        cout<<"angle: "<<angle<<endl;
 
         complex<double> Idq = xy2dq_with_angle_in_rad(Ixy, angle);
 
         double Isd0 = Idq.real();
         double Isq0 = Idq.imag();
-        cout<<"Isd0: "<<Isd0<<endl;
-        cout<<"Isq0: "<<Isq0<<endl;
-
-        cout<<__FILE__<<", "<<__LINE__<<", Isd "<<Isd0<<", Isq "<<Isq0<<endl;
 
         VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE active_power_control_mode = get_converter_active_control_mode();
         VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE reactive_power_control_mode = get_converter_reactive_control_mode();
@@ -484,7 +479,7 @@ void VSCHVDCC0::clear()
     set_as_current_source();
     p_block.set_limiter_type(WINDUP_LIMITER);
     q_block.set_limiter_type(WINDUP_LIMITER);
-    udc_block.set_limiter_type(WINDUP_LIMITER);
+    udc_block.set_limiter_type(NO_LIMITER);
 }
 
 void VSCHVDCC0::report()
