@@ -348,14 +348,16 @@ void VSCHVDCC0::initialize()
         unsigned int converter_index=get_converter_index();
 
         complex<double> Ixy = get_converter_current_from_converter_to_ac_bus_in_xy_axis_in_pu_based_on_converter_bases();
+        cout<<"Ixy: "<<Ixy<<endl;
         double angle = get_converter_ac_angle_at_converter_side_in_rad();
+        cout<<"angle: "<<angle<<endl;
 
         complex<double> Idq = xy2dq_with_angle_in_rad(Ixy, angle);
 
         double Isd0 = Idq.real();
         double Isq0 = Idq.imag();
-        //cout<<"Isd0: "<<Isd0<<endl;
-        //cout<<"Isd0: "<<Isd0<<endl;
+        cout<<"Isd0: "<<Isd0<<endl;
+        cout<<"Isq0: "<<Isq0<<endl;
 
         cout<<__FILE__<<", "<<__LINE__<<", Isd "<<Isd0<<", Isq "<<Isq0<<endl;
 

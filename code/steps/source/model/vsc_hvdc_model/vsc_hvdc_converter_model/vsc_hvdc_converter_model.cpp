@@ -143,7 +143,28 @@ double VSC_HVDC_CONVERTER_MODEL::get_converter_ac_bus_angle_in_rad() const
 
 double VSC_HVDC_CONVERTER_MODEL::get_converter_ac_angle_at_converter_side_in_rad() const
 {
-    return 0.0;
+    VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
+    unsigned int converter_index = get_converter_index();
+    complex<double> j(0.0,1.0);
+    double Pac_to_ac_bus = vsc_hvdc->get_converter_P_to_AC_bus_in_MW(converter_index);
+    double Qac_to_ac_bus = vsc_hvdc->get_converter_Q_to_AC_bus_in_MVar(converter_index);
+    BUS *bus_pointer = get_converter_ac_bus_pointer();
+    complex<double> Vac=bus_pointer->get_positive_sequence_complex_voltage_in_kV();
+
+    double Vbase_ac=vsc_hvdc->get_converter_transformer_AC_side_base_voltage_in_kV(converter_index);
+    double Vbase_converter=vsc_hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(converter_index);
+    double k=vsc_hvdc->get_converter_transformer_off_nominal_turn_ratio(converter_index);
+    double turn_ration=k*Vbase_ac/Vbase_converter;
+
+    complex<double> Yf_in_siemens=vsc_hvdc->get_converter_filter_admittance_in_siemens(converter_index);
+    complex<double> Zc_in_ohm=vsc_hvdc->get_converter_commutating_impedance_in_ohm(converter_index);
+    complex<double> Eac=Vac/turn_ration;
+    complex<double> Zt_in_pu=vsc_hvdc->get_converter_transformer_impedance_in_pu(converter_index);
+    complex<double> Zt_in_ohm=Zt_in_pu*Vbase_converter*Vbase_converter/vsc_hvdc->get_converter_transformer_capacity_in_MVA(converter_index);
+    complex<double> Vac_f=Eac+(Pac_to_ac_bus-j*Qac_to_ac_bus)*Zt_in_ohm/conj(Eac);
+    complex<double> Ic=(Pac_to_ac_bus-j*Qac_to_ac_bus)/conj(Eac)+Vac_f*Yf_in_siemens;
+    complex<double> Vac_c=Vac_f+Ic*Zc_in_ohm;
+    return arg(Vac_c);
 }
 
 double VSC_HVDC_CONVERTER_MODEL::get_converter_ac_angle_at_converter_side_in_deg() const
