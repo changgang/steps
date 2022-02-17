@@ -65,9 +65,12 @@ class VSC_HVDC : public NONBUS_DEVICE
         void set_converter_transformer_AC_side_base_voltage_in_kV(const unsigned int index, const double Vac);
         void set_converter_transformer_converter_side_base_voltage_in_kV(const unsigned int index, const double Vac);
         void set_converter_transformer_off_nominal_turn_ratio(const unsigned int index, const double turn_ratio);
-        void set_converter_transformer_impedance_in_pu(unsigned int index, const complex<double> z);
+        void set_converter_transformer_impedance_in_ohm(unsigned int index, const complex<double> z);
+        void set_converter_transformer_impedance_in_pu(unsigned int index, const complex<double> z_in_pu);
         void set_converter_commutating_impedance_in_ohm(unsigned int index, const complex<double> z);
+        void set_converter_commutating_impedance_in_pu(unsigned int index, const complex<double> z_in_pu);
         void set_converter_filter_admittance_in_siemens(unsigned int index, const complex<double> y);
+        void set_converter_filter_admittance_in_pu(unsigned int index, const complex<double> y_in_pu);
         void set_converter_P_to_AC_bus_in_MW(unsigned int index, double P);
         void set_converter_Q_to_AC_bus_in_MVar(unsigned int index, double Q);
         void set_converter_Pmax_in_MW(const unsigned int index, const double P);
@@ -154,9 +157,12 @@ class VSC_HVDC : public NONBUS_DEVICE
         double get_converter_transformer_AC_side_base_voltage_in_kV(unsigned int index) const;
         double get_converter_transformer_converter_side_base_voltage_in_kV(unsigned int index) const;
         double get_converter_transformer_off_nominal_turn_ratio(unsigned int index) const;
+        complex<double> get_converter_transformer_impedance_in_ohm(unsigned int index) const;
         complex<double> get_converter_transformer_impedance_in_pu(unsigned int index) const;
         complex<double> get_converter_commutating_impedance_in_ohm(unsigned int index) const;
+        complex<double> get_converter_commutating_impedance_in_pu(unsigned int index) const;
         complex<double> get_converter_filter_admittance_in_siemens(unsigned int index) const;
+        complex<double> get_converter_filter_admittance_in_pu(unsigned int index) const;
 
         double get_converter_P_to_AC_bus_in_MW(unsigned int index) const;
         double get_converter_Q_to_AC_bus_in_MVar(unsigned int index) const;

@@ -226,8 +226,8 @@ void VSC_HVDC::set_converter_count(unsigned int n)
     converter.converter_rated_capacity_in_MVA = 100;
     converter.converter_rated_current_in_amp = 0;
     converter.converter_transformer_impedance_in_pu = 0;
-    converter.converter_commutating_impedance_in_ohm = 0;
-    converter.converter_filter_admittance_in_siemens = 0;
+    converter.converter_commutating_impedance_in_pu = 0;
+    converter.converter_filter_admittance_in_pu = 0;
     converter.Pmax_MW = 100.0;
     converter.Pmin_MW = -100.0;
     converter.Qmax_MVar = 100.0;
@@ -516,25 +516,55 @@ void VSC_HVDC::set_converter_transformer_off_nominal_turn_ratio(const unsigned i
     converters[index].converter_transformer_off_nominal_turn_ratio = turn_ratio;
 }
 
-void VSC_HVDC::set_converter_transformer_impedance_in_pu(unsigned int index, const complex<double> z)
+void VSC_HVDC::set_converter_transformer_impedance_in_pu(unsigned int index, const complex<double> z_in_pu)
 {
     if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
         return;
-    converters[index].converter_transformer_impedance_in_pu = z;
+    converters[index].converter_transformer_impedance_in_pu = z_in_pu;
+}
+
+void VSC_HVDC::set_converter_transformer_impedance_in_ohm(unsigned int index, const complex<double> z)
+{
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
+    double S_transformer_base = get_converter_transformer_capacity_in_MVA(index);
+    double V_converter_base = get_converter_transformer_converter_side_base_voltage_in_kV(index);
+    complex<double> z_in_pu = z*S_transformer_base/(V_converter_base*V_converter_base);
+    converters[index].converter_transformer_impedance_in_pu = z_in_pu;
 }
 
 void VSC_HVDC::set_converter_commutating_impedance_in_ohm(unsigned int index, const complex<double> z)
 {
     if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
         return;
-    converters[index].converter_commutating_impedance_in_ohm = z;
+    double S_converter_base = get_converter_rated_capacity_in_MVA(index);
+    double V_converter_base = get_converter_transformer_converter_side_base_voltage_in_kV(index);
+    complex<double> z_in_pu = z*S_converter_base/(V_converter_base*V_converter_base);
+    converters[index].converter_commutating_impedance_in_pu = z_in_pu;
+}
+
+void VSC_HVDC::set_converter_commutating_impedance_in_pu(unsigned int index, const complex<double> z_in_pu)
+{
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
+    converters[index].converter_commutating_impedance_in_pu = z_in_pu;
 }
 
 void VSC_HVDC::set_converter_filter_admittance_in_siemens(unsigned int index, const complex<double> y)
 {
     if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
         return;
-    converters[index].converter_filter_admittance_in_siemens = y;
+    double S_converter_base = get_converter_rated_capacity_in_MVA(index);
+    double V_converter_base = get_converter_transformer_converter_side_base_voltage_in_kV(index);
+    complex<double> y_in_pu = y*(V_converter_base*V_converter_base)/S_converter_base;
+    converters[index].converter_filter_admittance_in_pu = y_in_pu;
+}
+
+void VSC_HVDC::set_converter_filter_admittance_in_pu(unsigned int index, const complex<double> y_in_pu)
+{
+    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
+    converters[index].converter_filter_admittance_in_pu = y_in_pu;
 }
 
 void VSC_HVDC::set_converter_P_to_AC_bus_in_MW(unsigned int index, double P)
@@ -1383,6 +1413,27 @@ double VSC_HVDC::get_converter_transformer_off_nominal_turn_ratio(unsigned int i
     }
 }
 
+complex<double>VSC_HVDC::get_converter_transformer_impedance_in_ohm(unsigned int index) const
+{
+    if(index<get_converter_count())
+    {
+        complex<double> z_in_pu = converters[index].converter_transformer_impedance_in_pu;
+        double S_converter_base = get_converter_transformer_capacity_in_MVA(index);
+        double V_converter_base = get_converter_transformer_converter_side_base_voltage_in_kV(index);
+        complex<double> z_in_ohm = z_in_pu*V_converter_base*V_converter_base/S_converter_base;
+        return z_in_ohm;
+    }
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        complex<double> j(0.0,1.0);
+        return 9999.9+j*9999.9;
+    }
+}
+
 complex<double>VSC_HVDC::get_converter_transformer_impedance_in_pu(unsigned int index) const
 {
     if(index<get_converter_count())
@@ -1401,7 +1452,28 @@ complex<double>VSC_HVDC::get_converter_transformer_impedance_in_pu(unsigned int 
 complex<double>VSC_HVDC::get_converter_commutating_impedance_in_ohm(unsigned int index) const
 {
     if(index<get_converter_count())
-        return converters[index].converter_commutating_impedance_in_ohm;
+    {
+        complex<double> z_in_pu = converters[index].converter_commutating_impedance_in_pu;
+        double S_converter_base = get_converter_rated_capacity_in_MVA(index);
+        double V_converter_base = get_converter_transformer_converter_side_base_voltage_in_kV(index);
+        complex<double> z_in_ohm = z_in_pu*V_converter_base*V_converter_base/S_converter_base;
+        return z_in_ohm;
+    }
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        complex<double> j(0.0,1.0);
+        return 9999.9+j*9999.9;
+    }
+}
+
+complex<double>VSC_HVDC::get_converter_commutating_impedance_in_pu(unsigned int index) const
+{
+    if(index<get_converter_count())
+        return converters[index].converter_commutating_impedance_in_pu;
     else
     {
         STEPS& toolkit = get_toolkit();
@@ -1416,7 +1488,28 @@ complex<double>VSC_HVDC::get_converter_commutating_impedance_in_ohm(unsigned int
 complex<double>VSC_HVDC::get_converter_filter_admittance_in_siemens(unsigned int index) const
 {
     if(index<get_converter_count())
-        return converters[index].converter_filter_admittance_in_siemens;
+    {
+        complex<double> y_in_pu = converters[index].converter_filter_admittance_in_pu;
+        double S_converter_base = get_converter_rated_capacity_in_MVA(index);
+        double V_converter_base = get_converter_transformer_converter_side_base_voltage_in_kV(index);
+        complex<double> y_in_ohm = y_in_pu*S_converter_base/(V_converter_base*V_converter_base);
+        return y_in_ohm;
+    }
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        complex<double> j(0.0,1.0);
+        return 9999.9+j*9999.9;
+    }
+}
+
+complex<double>VSC_HVDC::get_converter_filter_admittance_in_pu(unsigned int index) const
+{
+    if(index<get_converter_count())
+        return converters[index].converter_filter_admittance_in_pu;
     else
     {
         STEPS& toolkit = get_toolkit();

@@ -39,8 +39,8 @@ struct VSC_HVDC_CONVERTER_STRUCT
     double converter_transformer_converter_side_base_voltage_in_kV;
     double converter_transformer_off_nominal_turn_ratio;
     complex<double> converter_transformer_impedance_in_pu;
-    complex<double> converter_commutating_impedance_in_ohm;
-    complex<double> converter_filter_admittance_in_siemens;
+    complex<double> converter_commutating_impedance_in_pu;
+    complex<double> converter_filter_admittance_in_pu;
     double P_to_AC_bus_MW;
     double Q_to_AC_bus_MVar;
     double Pmax_MW;

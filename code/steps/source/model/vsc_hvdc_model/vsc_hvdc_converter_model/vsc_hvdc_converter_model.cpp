@@ -188,7 +188,28 @@ double VSC_HVDC_CONVERTER_MODEL::get_converter_transformer_capacity_in_MVA() con
 
 complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_current_from_converter_to_ac_bus_in_xy_axis_in_MVA() const
 {
-    return 0.0;
+    VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
+    unsigned int converter_index = get_converter_index();
+    complex<double> j(0.0,1.0);
+    double Pac_to_ac_bus = vsc_hvdc->get_converter_P_to_AC_bus_in_MW(converter_index);
+    double Qac_to_ac_bus = vsc_hvdc->get_converter_Q_to_AC_bus_in_MVar(converter_index);
+    BUS *bus_pointer = get_converter_ac_bus_pointer();
+    complex<double> Vac=bus_pointer->get_positive_sequence_complex_voltage_in_kV();
+
+    double Vbase_ac=vsc_hvdc->get_converter_transformer_AC_side_base_voltage_in_kV(converter_index);
+    double Vbase_converter=vsc_hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(converter_index);
+    double k=vsc_hvdc->get_converter_transformer_off_nominal_turn_ratio(converter_index);
+    double turn_ration=k*Vbase_ac/Vbase_converter;
+
+    complex<double> Yf_in_siemens=vsc_hvdc->get_converter_filter_admittance_in_siemens(converter_index);
+    complex<double> Zc_in_ohm=vsc_hvdc->get_converter_commutating_impedance_in_ohm(converter_index);
+    complex<double> Eac=Vac/turn_ration;
+    complex<double> Zt_in_pu=vsc_hvdc->get_converter_transformer_impedance_in_pu(converter_index);
+    complex<double> Zt_in_ohm=Zt_in_pu*Vbase_converter*Vbase_converter/vsc_hvdc->get_converter_transformer_capacity_in_MVA(converter_index);
+    complex<double> Vac_f=Eac+(Pac_to_ac_bus-j*Qac_to_ac_bus)*Zt_in_ohm/conj(Eac);
+    complex<double> Ic=(Pac_to_ac_bus-j*Qac_to_ac_bus)/conj(Eac)+Vac_f*Yf_in_siemens;
+
+    return Ic;
 }
 
 complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_current_from_converter_to_ac_bus_in_xy_axis_in_pu_based_on_converter_bases() const
@@ -213,8 +234,11 @@ void VSC_HVDC_CONVERTER_MODEL::initialize_current_or_voltage_source_equivalent_s
 
         kt = vsc_hvdc->get_converter_transformer_off_nominal_turn_ratio(converter_index);
         Zt = vsc_hvdc->get_converter_transformer_impedance_in_pu(converter_index);
-        Zl = vsc_hvdc->get_converter_commutating_impedance_in_ohm(converter_index);
-        Yf = vsc_hvdc->get_converter_filter_admittance_in_siemens(converter_index);
+        Zl = vsc_hvdc->get_converter_commutating_impedance_in_pu(converter_index);
+        Yf = vsc_hvdc->get_converter_filter_admittance_in_pu(converter_index);
+        double S_converter_base = vsc_hvdc->get_converter_rated_capacity_in_MVA(converter_index);
+        double S_transformer_base = vsc_hvdc->get_converter_transformer_capacity_in_MVA(converter_index);
+        Zt = Zt*S_converter_base/S_transformer_base;
     }
     if(is_voltage_source()==true)
         current_or_voltage_equivalent_scale = 1.0/(Zt*(1.0+Zl*Yf)+Zl)/kt;
@@ -302,33 +326,3 @@ complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_Norton_current_in_xy_axi
     }
 }
 
-/*
-VSC_MODEL_VAR::VSC_MODEL_VAR(STEPS& toolkit):
-               active_power_control_block(toolkit),
-               reactive_power_control_block(toolkit),
-               ac_voltage_control_block(toolkit),
-               ud_voltage_control_block(toolkit),
-               dc_voltage_block(toolkit)
-{
-    ;
-
-}
-VSC_MODEL_VAR::~VSC_MODEL_VAR()
-{
-
-}
-
-VSC_MODEL_VAR::VSC_MODEL_VAR(const VSC_MODEL_VAR& var):
-               active_power_control_block(var.active_power_control_block.get_toolkit()),
-               reactive_power_control_block(var.reactive_power_control_block.get_toolkit()),
-               ac_voltage_control_block(var.ac_voltage_control_block.get_toolkit()),
-               ud_voltage_control_block(var.ud_voltage_control_block.get_toolkit()),
-               dc_voltage_block(var.dc_voltage_block.get_toolkit())
-{
-    converter_bus = var.converter_bus;
-    converter_busptr = var.converter_busptr;
-    active_power_control_mode = var.active_power_control_mode;
-    reactive_power_control_mode = var.reactive_power_control_mode;
-
-}
-*/

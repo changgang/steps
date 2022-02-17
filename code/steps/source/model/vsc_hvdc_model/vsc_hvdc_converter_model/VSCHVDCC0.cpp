@@ -352,9 +352,10 @@ void VSCHVDCC0::initialize()
 
         complex<double> Idq = xy2dq_with_angle_in_rad(Ixy, angle);
 
-        double Isd0 = Ixy.real()*cos(angle)+Ixy.imag()*sin(angle);
-        double Isq0 = -Ixy.real()*sin(angle)+Ixy.imag()*cos(angle);
-
+        double Isd0 = Idq.real();
+        double Isq0 = Idq.imag();
+        //cout<<"Isd0: "<<Isd0<<endl;
+        //cout<<"Isd0: "<<Isd0<<endl;
 
         cout<<__FILE__<<", "<<__LINE__<<", Isd "<<Isd0<<", Isq "<<Isq0<<endl;
 
@@ -367,8 +368,9 @@ void VSCHVDCC0::initialize()
         q_block.set_output(Isq0);
         q_block.initialize();
 
-        double Udc = vsc_hvdc->get_dc_bus_Vdc_in_kV(vsc_hvdc->get_dc_bus_index_with_converter_index(converter_index));
-        udc_block.set_output(Udc); // change to initial Udc
+        double Udc_in_kV = vsc_hvdc->get_dc_bus_Vdc_in_kV(vsc_hvdc->get_dc_bus_index_with_converter_index(converter_index));
+        double Udc_in_pu = Udc_in_kV/vsc_hvdc->get_dc_network_base_voltage_in_kV();
+        udc_block.set_output(Udc_in_pu); // change to initial Udc
         udc_block.initialize();
 
         double pref = 0.0;
