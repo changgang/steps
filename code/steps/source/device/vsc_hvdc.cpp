@@ -99,13 +99,7 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
         set_converter_rated_capacity_in_MVA(i,vsc.get_converter_rated_capacity_in_MVA(i));
         set_converter_rated_current_in_A(i,vsc.get_converter_rated_current_in_A(i));
 
-        set_converter_transformer_capacity_in_MVA(i, vsc.get_converter_transformer_capacity_in_MVA(i));
-        set_converter_transformer_AC_side_base_voltage_in_kV(i, vsc.get_converter_transformer_AC_side_base_voltage_in_kV(i));
-        set_converter_transformer_converter_side_base_voltage_in_kV(i, vsc.get_converter_transformer_converter_side_base_voltage_in_kV(i));
-        set_converter_transformer_off_nominal_turn_ratio(i, vsc.get_converter_transformer_off_nominal_turn_ratio(i));
-        set_converter_transformer_impedance_in_pu(i, vsc.get_converter_transformer_impedance_in_pu(i));
         set_converter_commutating_impedance_in_ohm(i, vsc.get_converter_commutating_impedance_in_ohm(i));
-        set_converter_filter_admittance_in_siemens(i, vsc.get_converter_filter_admittance_in_siemens(i));
 
         set_converter_P_to_AC_bus_in_MW(i, vsc.get_converter_P_to_AC_bus_in_MW(i));
         set_converter_Q_to_AC_bus_in_MVar(i, vsc.get_converter_Q_to_AC_bus_in_MVar(i));
@@ -225,9 +219,6 @@ void VSC_HVDC::set_converter_count(unsigned int n)
     converter.min_converter_loss_in_kW = 0;
     converter.converter_rated_capacity_in_MVA = 100;
     converter.converter_rated_current_in_amp = 0;
-    converter.converter_transformer_impedance_in_pu = 0;
-    converter.converter_commutating_impedance_in_pu = 0;
-    converter.converter_filter_admittance_in_pu = 0;
     converter.Pmax_MW = 100.0;
     converter.Pmin_MW = -100.0;
     converter.Qmax_MVar = 100.0;
@@ -488,59 +479,15 @@ void VSC_HVDC::set_converter_rated_current_in_A(const unsigned int index, const 
     converters[index].converter_rated_current_in_amp = I;
 }
 
-void VSC_HVDC::set_converter_transformer_capacity_in_MVA(const unsigned int index, const double S)
-{
-    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
-        return;
-    converters[index].converter_transformer_capacity_in_MVA = S;
-}
-
-void VSC_HVDC::set_converter_transformer_AC_side_base_voltage_in_kV(const unsigned int index, const double Vac)
-{
-    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
-        return;
-    converters[index].converter_transformer_AC_side_base_voltage_in_kV = Vac;
-}
-
-void VSC_HVDC::set_converter_transformer_converter_side_base_voltage_in_kV(const unsigned int index, const double Vac)
-{
-    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
-        return;
-    converters[index].converter_transformer_converter_side_base_voltage_in_kV = Vac;
-}
-
-void VSC_HVDC::set_converter_transformer_off_nominal_turn_ratio(const unsigned int index, const double turn_ratio)
-{
-    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
-        return;
-    converters[index].converter_transformer_off_nominal_turn_ratio = turn_ratio;
-}
-
-void VSC_HVDC::set_converter_transformer_impedance_in_pu(unsigned int index, const complex<double> z_in_pu)
-{
-    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
-        return;
-    converters[index].converter_transformer_impedance_in_pu = z_in_pu;
-}
-
-void VSC_HVDC::set_converter_transformer_impedance_in_ohm(unsigned int index, const complex<double> z)
-{
-    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
-        return;
-    double S_transformer_base = get_converter_transformer_capacity_in_MVA(index);
-    double V_converter_base = get_converter_transformer_converter_side_base_voltage_in_kV(index);
-    complex<double> z_in_pu = z*S_transformer_base/(V_converter_base*V_converter_base);
-    converters[index].converter_transformer_impedance_in_pu = z_in_pu;
-}
-
 void VSC_HVDC::set_converter_commutating_impedance_in_ohm(unsigned int index, const complex<double> z)
 {
     if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
         return;
-    double S_converter_base = get_converter_rated_capacity_in_MVA(index);
-    double V_converter_base = get_converter_transformer_converter_side_base_voltage_in_kV(index);
-    complex<double> z_in_pu = z*S_converter_base/(V_converter_base*V_converter_base);
-    converters[index].converter_commutating_impedance_in_pu = z_in_pu;
+    double Sbase = get_converter_rated_capacity_in_MVA(index);
+    double Vbase = get_converter_ac_bus_base_voltage_in_kV(index);
+    complex<double> z_in_pu = z*Sbase/(Vbase*Vbase);
+
+    set_converter_commutating_impedance_in_pu(index, z_in_pu);
 }
 
 void VSC_HVDC::set_converter_commutating_impedance_in_pu(unsigned int index, const complex<double> z_in_pu)
@@ -548,23 +495,6 @@ void VSC_HVDC::set_converter_commutating_impedance_in_pu(unsigned int index, con
     if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
         return;
     converters[index].converter_commutating_impedance_in_pu = z_in_pu;
-}
-
-void VSC_HVDC::set_converter_filter_admittance_in_siemens(unsigned int index, const complex<double> y)
-{
-    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
-        return;
-    double S_converter_base = get_converter_rated_capacity_in_MVA(index);
-    double V_converter_base = get_converter_transformer_converter_side_base_voltage_in_kV(index);
-    complex<double> y_in_pu = y*(V_converter_base*V_converter_base)/S_converter_base;
-    converters[index].converter_filter_admittance_in_pu = y_in_pu;
-}
-
-void VSC_HVDC::set_converter_filter_admittance_in_pu(unsigned int index, const complex<double> y_in_pu)
-{
-    if(converter_index_is_out_of_range_in_function(index, __FUNCTION__))
-        return;
-    converters[index].converter_filter_admittance_in_pu = y_in_pu;
 }
 
 void VSC_HVDC::set_converter_P_to_AC_bus_in_MW(unsigned int index, double P)
@@ -1353,119 +1283,7 @@ double VSC_HVDC::get_converter_rated_current_in_A(unsigned int index) const
         ostringstream osstream;
         osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
-        return 9999.9;
-    }
-}
-
-double VSC_HVDC::get_converter_transformer_capacity_in_MVA(unsigned int index) const
-{
-    if(index<get_converter_count())
-        return converters[index].converter_transformer_capacity_in_MVA;
-    else
-    {
-        STEPS& toolkit = get_toolkit();
-        ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return 9999.9;
-    }
-}
-
-double VSC_HVDC::get_converter_transformer_AC_side_base_voltage_in_kV(unsigned int index) const
-{
-    if(index<get_converter_count())
-        return converters[index].converter_transformer_AC_side_base_voltage_in_kV;
-    else
-    {
-        STEPS& toolkit = get_toolkit();
-        ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return 9999.9;
-    }
-}
-
-double VSC_HVDC::get_converter_transformer_converter_side_base_voltage_in_kV(unsigned int index) const
-{
-    if(index<get_converter_count())
-        return converters[index].converter_transformer_converter_side_base_voltage_in_kV;
-    else
-    {
-        STEPS& toolkit = get_toolkit();
-        ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return 9999.9;
-    }
-}
-
-double VSC_HVDC::get_converter_transformer_off_nominal_turn_ratio(unsigned int index) const
-{
-    if(index<get_converter_count())
-        return converters[index].converter_transformer_off_nominal_turn_ratio;
-    else
-    {
-        STEPS& toolkit = get_toolkit();
-        ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return 9999.9;
-    }
-}
-
-complex<double>VSC_HVDC::get_converter_transformer_impedance_in_ohm(unsigned int index) const
-{
-    if(index<get_converter_count())
-    {
-        complex<double> z_in_pu = converters[index].converter_transformer_impedance_in_pu;
-        double S_converter_base = get_converter_transformer_capacity_in_MVA(index);
-        double V_converter_base = get_converter_transformer_converter_side_base_voltage_in_kV(index);
-        complex<double> z_in_ohm = z_in_pu*V_converter_base*V_converter_base/S_converter_base;
-        return z_in_ohm;
-    }
-    else
-    {
-        STEPS& toolkit = get_toolkit();
-        ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        complex<double> j(0.0,1.0);
-        return 9999.9+j*9999.9;
-    }
-}
-
-complex<double>VSC_HVDC::get_converter_transformer_impedance_in_pu(unsigned int index) const
-{
-    if(index<get_converter_count())
-        return converters[index].converter_transformer_impedance_in_pu;
-    else
-    {
-        STEPS& toolkit = get_toolkit();
-        ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        complex<double> j(0.0,1.0);
-        return 9999.9+j*9999.9;
-    }
-}
-
-complex<double>VSC_HVDC::get_converter_transformer_impedance_in_pu_on_converter_base(unsigned int index) const
-{
-    if(index<get_converter_count())
-    {
-        complex<double> Zt = get_converter_transformer_impedance_in_pu(index);
-        double Sbase_converter = get_converter_rated_capacity_in_MVA(index);
-        double Sbase_transformer = get_converter_transformer_capacity_in_MVA(index);
-        return Zt/Sbase_transformer*Sbase_converter;
-    }
-    else
-    {
-        STEPS& toolkit = get_toolkit();
-        ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        complex<double> j(0.0,1.0);
-        return 9999.9+j*9999.9;
+        return INFINITE_THRESHOLD;
     }
 }
 
@@ -1473,10 +1291,10 @@ complex<double>VSC_HVDC::get_converter_commutating_impedance_in_ohm(unsigned int
 {
     if(index<get_converter_count())
     {
-        complex<double> z_in_pu = converters[index].converter_commutating_impedance_in_pu;
-        double S_converter_base = get_converter_rated_capacity_in_MVA(index);
-        double V_converter_base = get_converter_transformer_converter_side_base_voltage_in_kV(index);
-        complex<double> z_in_ohm = z_in_pu*V_converter_base*V_converter_base/S_converter_base;
+        complex<double> z_in_pu = get_converter_commutating_impedance_in_pu_on_converter_base(index);
+        double Sbase = get_converter_rated_capacity_in_MVA(index);
+        double Vbase = get_converter_ac_bus_base_voltage_in_kV(index);
+        complex<double> z_in_ohm = z_in_pu*Vbase*Vbase/Sbase;
         return z_in_ohm;
     }
     else
@@ -1485,8 +1303,7 @@ complex<double>VSC_HVDC::get_converter_commutating_impedance_in_ohm(unsigned int
         ostringstream osstream;
         osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
-        complex<double> j(0.0,1.0);
-        return 9999.9+j*9999.9;
+        return INFINITE_THRESHOLD;
     }
 }
 
@@ -1505,31 +1322,16 @@ complex<double>VSC_HVDC::get_converter_commutating_impedance_in_pu_on_converter_
     }
 }
 
-complex<double>VSC_HVDC::get_converter_filter_admittance_in_siemens(unsigned int index) const
+complex<double>VSC_HVDC::get_converter_commutating_impedance_in_pu_on_system_base(unsigned int index) const
 {
     if(index<get_converter_count())
     {
-        complex<double> y_in_pu = converters[index].converter_filter_admittance_in_pu;
-        double S_converter_base = get_converter_rated_capacity_in_MVA(index);
-        double V_converter_base = get_converter_transformer_converter_side_base_voltage_in_kV(index);
-        complex<double> y_in_ohm = y_in_pu*S_converter_base/(V_converter_base*V_converter_base);
-        return y_in_ohm;
-    }
-    else
-    {
-        STEPS& toolkit = get_toolkit();
-        ostringstream osstream;
-        osstream<<"Error. index ("<<index<<") is out of  maximal converter count when calling VSC_HVDC::"<<__FUNCTION__<<"()."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        complex<double> j(0.0,1.0);
-        return 9999.9+j*9999.9;
-    }
-}
+        complex<double> Zc = get_converter_commutating_impedance_in_pu_on_converter_base(index);
+        double Sbase_converter = get_converter_rated_capacity_in_MVA(index);
+        double Sbase_system = get_toolkit().get_system_base_power_in_MVA();
 
-complex<double>VSC_HVDC::get_converter_filter_admittance_in_pu_on_converter_base(unsigned int index) const
-{
-    if(index<get_converter_count())
-        return converters[index].converter_filter_admittance_in_pu;
+        return Zc/Sbase_converter*Sbase_system;
+    }
     else
     {
         STEPS& toolkit = get_toolkit();
@@ -2338,13 +2140,7 @@ void VSC_HVDC::report() const
         cout<<"get_converter_loss_factor_C_in_kW_per_amp_squard("<<i<<"): "<<get_converter_loss_factor_C_in_kW_per_amp_squard(i)<<endl;
         cout<<"get_converter_minimum_loss_in_kW("<<i<<"): "<<get_converter_minimum_loss_in_kW(i)<<endl;
         cout<<"get_converter_rated_current_in_A("<<i<<"): "<<get_converter_rated_current_in_A(i)<<endl;
-        cout<<"get_converter_transformer_capacity_in_MVA("<<i<<"): "<<get_converter_transformer_capacity_in_MVA(i)<<endl;
-        cout<<"get_converter_transformer_AC_side_base_voltage_in_kV("<<i<<"): "<<get_converter_transformer_AC_side_base_voltage_in_kV(i)<<endl;
-        cout<<"get_converter_transformer_converter_side_base_voltage_in_kV("<<i<<"): "<<get_converter_transformer_converter_side_base_voltage_in_kV(i)<<endl;
-        cout<<"get_converter_transformer_off_nominal_turn_ratio("<<i<<"): "<<get_converter_transformer_off_nominal_turn_ratio(i)<<endl;
-        cout<<"get_converter_transformer_impedance_in_pu("<<i<<"): "<<get_converter_transformer_impedance_in_pu(i)<<endl;
         cout<<"get_converter_commutating_impedance_in_ohm("<<i<<"): "<<get_converter_commutating_impedance_in_ohm(i)<<endl;
-        cout<<"get_converter_filter_admittance_in_siemens("<<i<<"): "<<get_converter_filter_admittance_in_siemens(i)<<endl;
         cout<<"get_converter_P_to_AC_bus_in_MW("<<i<<"): "<<get_converter_P_to_AC_bus_in_MW(i)<<endl;
         cout<<"get_converter_Q_to_AC_bus_in_MVar("<<i<<"): "<<get_converter_Q_to_AC_bus_in_MVar(i)<<endl;
         cout<<"get_converter_Pmax_in_MW("<<i<<"): "<<get_converter_Pmax_in_MW(i)<<endl;
@@ -2508,61 +2304,13 @@ void VSC_HVDC::delete_vsc_hvdc_converter_model(unsigned int index)
 complex<double> VSC_HVDC::get_converter_Norton_admittance_as_voltage_source(unsigned int index) const
 {
     STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
     double Sbase = toolkit.get_system_base_power_in_MVA();
-
-    unsigned int bus = get_converter_ac_bus(index);
-    double Vbase_bus = psdb.get_bus_base_voltage_in_kV(bus);
-
-    double Ebase_ac = get_converter_transformer_AC_side_base_voltage_in_kV(index);
-    double kt = get_converter_transformer_off_nominal_turn_ratio(index);
-    double k = Ebase_ac*kt/Vbase_bus;
-
-    complex<double> Zt = get_converter_transformer_impedance_in_pu_on_converter_base(index);
-    complex<double> Zc = get_converter_commutating_impedance_in_pu_on_converter_base(index);
-    complex<double> Yf = get_converter_filter_admittance_in_pu_on_converter_base(index);
-
     double Sbase_converter = get_converter_rated_capacity_in_MVA(index);
-    Zt = Zt/Sbase_converter*Sbase;
-    Zc = Zc/Sbase_converter*Sbase;
-    Yf = Yf*Sbase_converter/Sbase;
 
-    complex<double> Yeq = (1.0+Yf*Zc)/(Zt*(1.0+Yf*Zc)+Zc);
-
-    Yeq = Yeq/(k*k);
-
-    return Yeq;
-}
-
-complex<double> VSC_HVDC::get_converter_Norton_admittance_as_current_source(unsigned int index) const
-{
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    double Sbase = toolkit.get_system_base_power_in_MVA();
-
-    unsigned int bus = get_converter_ac_bus(index);
-    double Vbase_bus = psdb.get_bus_base_voltage_in_kV(bus);
-
-    double Ebase_ac = get_converter_transformer_AC_side_base_voltage_in_kV(index);
-    double kt = get_converter_transformer_off_nominal_turn_ratio(index);
-    double k = Ebase_ac*kt/Vbase_bus;
-
-    complex<double> Zt = get_converter_transformer_impedance_in_pu_on_converter_base(index);
     complex<double> Zc = get_converter_commutating_impedance_in_pu_on_converter_base(index);
-    complex<double> Yf = get_converter_filter_admittance_in_pu_on_converter_base(index);
-
-    double Sbase_converter = get_converter_rated_capacity_in_MVA(index);
-    Zt = Zt/Sbase_converter*Sbase;
     Zc = Zc/Sbase_converter*Sbase;
-    Yf = Yf*Sbase_converter/Sbase;
 
-    complex<double> Yeq = Yf/(1.0+Yf*Zt);
-
-    Yeq = Yeq/(k*k);
-
-    return Yeq;
+    return 1.0/Zc;
 }
 
 void VSC_HVDC::run(DYNAMIC_MODE mode)
@@ -2714,7 +2462,7 @@ void VSC_HVDC::solve_steady_state()
     /*
     for(unsigned int i=0;i!=n_converter;++i)
     {
-        cout<<"get_converter_Pdc: "<<get_converter_Pdc_command_in_MW(i)<<endl;
+        cout<<"get_converter_Pdc: "<<get_converter_Pdc_command_to_dc_network_in_MW(i)<<endl;
     }
     */
     update_converters_P_and_Q_to_AC_bus();
@@ -3362,7 +3110,7 @@ double VSC_HVDC::get_converter_dc_power_command(unsigned int converter_index)
                     Pdc_command = pmin;
             }
         }
-        set_converter_Pdc_command_in_MW(converter_index, Pdc_command);
+        set_converter_Pdc_command_to_dc_network_in_MW(converter_index, Pdc_command);
         //cout<<"converter_index: "<<converter_index<<"  Pdc_command: "<<Pdc_command<<endl;
         return Pdc_command;
     }
@@ -3389,70 +3137,58 @@ void VSC_HVDC::build_dc_bus_power_mismatch_vector()
     }
 }
 
-double VSC_HVDC::get_dc_power_from_converter_to_dc_network_with_P_and_Q_to_AC_bus_in_MVA(unsigned int converter_index, double P, double Q) const
+double VSC_HVDC::get_converter_dc_power_from_converter_to_dc_network_with_P_and_Q_to_AC_bus_in_MVA(unsigned int converter_index, double P, double Q) const
+{
+    return -get_converter_dc_power_from_dc_network_to_converter_with_P_and_Q_to_AC_bus_in_MVA(converter_index, P, Q);
+}
+
+double VSC_HVDC::get_converter_dc_power_from_dc_network_to_converter_with_P_and_Q_to_AC_bus_in_MVA(unsigned int converter_index, double P, double Q) const
 {
     complex<double> S(P, Q);
-    complex<double> j(0.0,1.0);
-    BUS *bus_pointer = get_converter_ac_bus_pointer(converter_index);
-    complex<double> Vac=bus_pointer->get_positive_sequence_complex_voltage_in_kV();
+    complex<double> Vac = get_converter_ac_bus_positive_sequency_complex_voltage_in_kV(converter_index);
+    complex<double> It = conj(S/Vac/SQRT3);
 
-    double Vbase_ac=get_converter_transformer_AC_side_base_voltage_in_kV(converter_index);
-    double Vbase_converter=get_converter_transformer_converter_side_base_voltage_in_kV(converter_index);
-    double k=get_converter_transformer_off_nominal_turn_ratio(converter_index);
-    double turn_ration=k*Vbase_ac/Vbase_converter;
-    complex<double> Eac=Vac/turn_ration;
+    complex<double> Zc_in_ohm = get_converter_commutating_impedance_in_ohm(converter_index);
+    complex<double> Vac_converter = Vac+It*Zc_in_ohm*SQRT3;
 
-    complex<double> Yf_in_siemens=get_converter_filter_admittance_in_siemens(converter_index);
-    complex<double> Zc_in_ohm=get_converter_commutating_impedance_in_ohm(converter_index);
-    complex<double> Zt_in_pu=get_converter_transformer_impedance_in_pu(converter_index);
-    complex<double> Zt_in_ohm=Zt_in_pu*Vbase_converter*Vbase_converter/get_converter_transformer_capacity_in_MVA(converter_index);
+    double P_from_converter_to_ac_system = (SQRT3*Vac_converter*conj(It)).real();
 
-    complex<double> It = conj(S/Eac/SQRT3);
-    complex<double> Vac_f=Eac+It*Zt_in_ohm*SQRT3;
-    complex<double> Ic=It+Vac_f/SQRT3*Yf_in_siemens;
-    complex<double> Vac_c=Vac_f+Ic*Zc_in_ohm*SQRT3;
+    double c_loss = get_converter_loss_factor_C_in_kW_per_amp_squard(converter_index);
+    double b_loss = get_converter_loss_factor_B_in_kW_per_amp(converter_index);
+    double a_loss = get_converter_loss_factor_A_in_kW(converter_index);
+    double Ic_mag = abs(It)*1000;
+    double P_converter_loss = (c_loss*Ic_mag*Ic_mag+b_loss*Ic_mag+a_loss)/1000;
+    double Pdc_from_dc_network_to_converter = P_from_converter_to_ac_system + P_converter_loss;
 
-    double Pc_command=(SQRT3*Vac_c*conj(Ic)).real();
-    double c_loss=get_converter_loss_factor_C_in_kW_per_amp_squard(converter_index);
-    double b_loss=get_converter_loss_factor_B_in_kW_per_amp(converter_index);
-    double a_loss=get_converter_loss_factor_A_in_kW(converter_index);
-    double Ic_mag=abs(Ic)*1000;
-    double P_converter_loss=(c_loss*Ic_mag*Ic_mag+b_loss*Ic_mag+a_loss)/1000;
-    double Pdc_from_dc_network_to_converter=Pc_command+P_converter_loss;
-
-    return -Pdc_from_dc_network_to_converter;
+    return Pdc_from_dc_network_to_converter;
 }
 
 double VSC_HVDC::solve_Pdc_with_active_power_control_and_reactive_power_control(unsigned int converter_index) const
 {
-    complex<double> j(0.0,1.0);
     double Pac_command = get_converter_nominal_ac_active_power_command_in_MW(converter_index);
     double Qac_command = get_converter_nominal_ac_reactive_power_command_in_Mvar(converter_index);
-    return get_dc_power_from_converter_to_dc_network_with_P_and_Q_to_AC_bus_in_MVA(converter_index, Pac_command, Qac_command);
+    return get_converter_dc_power_from_converter_to_dc_network_with_P_and_Q_to_AC_bus_in_MVA(converter_index, Pac_command, Qac_command);
 }
 
 double VSC_HVDC::solve_Pdc_with_active_power_control_and_ac_voltage_control(unsigned int converter_index) const
 {
-    complex<double> j(0.0,1.0);
     double Pac_command = get_converter_nominal_ac_active_power_command_in_MW(converter_index);
     double Qac_command = get_converter_Q_to_AC_bus_in_MVar(converter_index);
-    return get_dc_power_from_converter_to_dc_network_with_P_and_Q_to_AC_bus_in_MVA(converter_index, Pac_command, Qac_command);
+    return get_converter_dc_power_from_converter_to_dc_network_with_P_and_Q_to_AC_bus_in_MVA(converter_index, Pac_command, Qac_command);
 }
 
 double VSC_HVDC::solve_Pdc_with_voltage_angle_and_voltage_control(unsigned int converter_index) const
 {
-    complex<double> j(0.0,1.0);
     double Pac_command = get_converter_P_to_AC_bus_in_MW(converter_index);
     double Qac_command = get_converter_Q_to_AC_bus_in_MVar(converter_index);
-    return get_dc_power_from_converter_to_dc_network_with_P_and_Q_to_AC_bus_in_MVA(converter_index, Pac_command, Qac_command);
+    return get_converter_dc_power_from_converter_to_dc_network_with_P_and_Q_to_AC_bus_in_MVA(converter_index, Pac_command, Qac_command);
 }
 
 double VSC_HVDC::solve_Pdc_with_voltage_angle_and_reactive_power_control(unsigned int converter_index) const
 {
-    complex<double> j(0.0,1.0);
     double Pac_command = get_converter_P_to_AC_bus_in_MW(converter_index);
     double Qac_command = get_converter_nominal_ac_reactive_power_command_in_Mvar(converter_index);
-    return get_dc_power_from_converter_to_dc_network_with_P_and_Q_to_AC_bus_in_MVA(converter_index, Pac_command, Qac_command);
+    return get_converter_dc_power_from_converter_to_dc_network_with_P_and_Q_to_AC_bus_in_MVA(converter_index, Pac_command, Qac_command);
 }
 
 double VSC_HVDC::solve_Pdc_with_dc_active_power_voltage_droop_control(unsigned int converter_index) const
@@ -3502,14 +3238,14 @@ double VSC_HVDC::solve_Pdc_with_dc_current_voltage_droop_control(unsigned int co
     return Pdc;
 }
 
-void VSC_HVDC::set_converter_Pdc_command_in_MW(const unsigned int converter_index, const double P)
+void VSC_HVDC::set_converter_Pdc_command_to_dc_network_in_MW(const unsigned int converter_index, const double P)
 {
     if(converter_index_is_out_of_range_in_function(converter_index, __FUNCTION__))
         return;
     converters[converter_index].Pdc_command_in_MW = P;
 }
 
-double VSC_HVDC::get_converter_Pdc_command_in_MW(unsigned int converter_index) const
+double VSC_HVDC::get_converter_Pdc_command_to_dc_network_in_MW(unsigned int converter_index) const
 {
     if(not converter_index_is_out_of_range_in_function(converter_index, __FUNCTION__))
         return converters[converter_index].Pdc_command_in_MW;
@@ -3758,7 +3494,7 @@ void VSC_HVDC::update_converters_P_and_Q_to_AC_bus()
 {
     unsigned int n = get_converter_count();
     /*for(unsigned int i=0; i!=n; ++i)
-        cout<<"get_converter_Pdc: "<<get_converter_Pdc_command_in_MW(i)<<endl;
+        cout<<"get_converter_Pdc: "<<get_converter_Pdc_command_to_dc_network_in_MW(i)<<endl;
         */
     for(unsigned int index=0; index!=n; ++index)
         update_converter_P_and_Q_to_AC_bus(index);
@@ -3819,20 +3555,21 @@ void VSC_HVDC::calculate_dc_active_power_of_slack_bus()
 {
     double U_slack = get_dc_bus_Vdc_in_kV(dc_bus_no2index(current_dc_slack_bus));
     unsigned int islack = inphno.get_internal_bus_number_of_physical_bus_number(current_dc_slack_bus);
-    double P_slack_dc_side=0.0;
+    double I_slack = 0.0;
     int nsize = dc_network_matrix.get_matrix_size();
-    int k_start=dc_network_matrix.get_starting_index_of_column(islack);
-    int k_end=dc_network_matrix.get_starting_index_of_column(islack+1);
+    int k_start = dc_network_matrix.get_starting_index_of_column(islack);
+    int k_end = dc_network_matrix.get_starting_index_of_column(islack+1);
     for(int k=k_start;k!=k_end;++k)
     {
-        int row=dc_network_matrix.get_row_number_of_entry_index(k);
+        int row = dc_network_matrix.get_row_number_of_entry_index(k);
         double yij = dc_network_matrix.get_real_entry_value(k);
         unsigned int other_side_bus = inphno.get_physical_bus_number_of_internal_bus_number(row);
-        P_slack_dc_side+=U_slack*yij*get_dc_bus_Vdc_in_kV(dc_bus_no2index(other_side_bus));
+        I_slack += yij*get_dc_bus_Vdc_in_kV(dc_bus_no2index(other_side_bus));
     }
+    double P_slack = U_slack*I_slack;
     unsigned int converter_index=get_dc_bus_converter_index_with_dc_bus_index(dc_bus_no2index(current_dc_slack_bus));
     //cout<<"dc_slack_bus_active_power: "<<P_slack_dc_side<<endl;
-    set_converter_Pdc_command_in_MW(converter_index, P_slack_dc_side);
+    set_converter_Pdc_command_to_dc_network_in_MW(converter_index, P_slack);
 }
 
 bool VSC_HVDC::check_dc_slack_converter_constraint()
@@ -3840,7 +3577,7 @@ bool VSC_HVDC::check_dc_slack_converter_constraint()
     unsigned int islack_bus = inphno.get_internal_bus_number_of_physical_bus_number(current_dc_slack_bus);
     double P_slack_dc_side = bus_power[islack_bus];
     unsigned int current_master_converter_index = get_dc_bus_converter_index_with_dc_bus_number(current_dc_slack_bus);
-    set_converter_Pdc_command_in_MW(current_master_converter_index, P_slack_dc_side);
+    set_converter_Pdc_command_to_dc_network_in_MW(current_master_converter_index, P_slack_dc_side);
     unsigned int current_priority = get_converter_dc_voltage_control_priority(current_master_converter_index);
     double P_max=get_converter_Pmax_in_MW(current_master_converter_index);
     double P_min=get_converter_Pmin_in_MW(current_master_converter_index);
@@ -3947,8 +3684,9 @@ unsigned int VSC_HVDC::get_index_of_dc_bus_number(unsigned int bus)
 
 double VSC_HVDC::solve_converter_Pac_with_Pdc(unsigned int converter_index)
 {
-    double Pdc_command = get_converter_Pdc_command_in_MW(converter_index);
-    double Pdc0=-Pdc_command;
+    double Pdc_command = get_converter_Pdc_command_to_dc_network_in_MW(converter_index);
+    double Pdc0 = -Pdc_command;
+    //cout<<__FILE__<<" line "<<__LINE__<<",  Pdc from converter to ac: "<<Pdc0<<endl;
     double Pac_low = Pdc0*0.95;
     double Pac_high = Pdc0*1.05;
     double Qac = get_converter_Q_to_AC_bus_in_MVar(converter_index);
@@ -3959,10 +3697,9 @@ double VSC_HVDC::solve_converter_Pac_with_Pdc(unsigned int converter_index)
     cout<<"Qac: "<<Qac<<endl;
     */
     BUS *bus_pointer = get_converter_ac_bus_pointer(converter_index);
-    double Pdc_low = calculate_converter_Pdc_with_Pac(converter_index, Pac_low, Qac);
-    double Pdc_high = calculate_converter_Pdc_with_Pac(converter_index, Pac_high, Qac);
-    //cout<<"Pdc_low: "<<Pdc_low<<endl;
-    //cout<<"Pdc_high: "<<Pdc_high<<endl;
+    double Pdc_low = get_converter_dc_power_from_dc_network_to_converter_with_P_and_Q_to_AC_bus_in_MVA(converter_index, Pac_low, Qac);
+    double Pdc_high = get_converter_dc_power_from_dc_network_to_converter_with_P_and_Q_to_AC_bus_in_MVA(converter_index, Pac_high, Qac);
+    //cout<<"Pdc_low: "<<Pdc_low<<", Pdc_high: "<<Pdc_high<<endl;
 
     //while(true)
     for(unsigned int i=0; i!=10; ++i)
@@ -3971,7 +3708,7 @@ double VSC_HVDC::solve_converter_Pac_with_Pdc(unsigned int converter_index)
         double slope = (Pdc_high-Pdc_low)/(Pac_high-Pac_low);
         double delta_Pac = (Pdc_high-Pdc0)/slope;
         double Pac_new = Pac_high-delta_Pac;
-        double Pdc_new = calculate_converter_Pdc_with_Pac(converter_index, Pac_new, Qac);
+        double Pdc_new = get_converter_dc_power_from_dc_network_to_converter_with_P_and_Q_to_AC_bus_in_MVA(converter_index, Pac_new, Qac);
         if(fabs(Pdc_low-Pdc0)>fabs(Pdc_high-Pdc0))
         {
             Pdc_low = Pdc_new;
@@ -3982,67 +3719,16 @@ double VSC_HVDC::solve_converter_Pac_with_Pdc(unsigned int converter_index)
             Pdc_high = Pdc_new;
             Pac_high = Pac_new;
         }
+        //cout<<"Pdc_low: "<<Pdc_low<<", Pdc_high: "<<Pdc_high<<endl;
         //if(fabs(Pac_high-Pac_low)<get_allowed_max_active_power_imbalance_in_MW())
         if(fabs(Pdc_high-Pdc0)<get_allowed_max_active_power_imbalance_in_MW())
            return Pac_high;
         if(fabs(Pdc_low-Pdc0)<get_allowed_max_active_power_imbalance_in_MW())
            return Pac_low;
     }
-    cout<<"VSC_HVDC::"<<__FUNCTION__<<" failed to converge."<<endl;
+    //cout<<__FILE__<<" line "<<__LINE__<<",  Pac from converter to ac: "<<0.5*(Pac_high+Pac_low)<<endl;
+    //cout<<"VSC_HVDC::"<<__FUNCTION__<<" failed to converge."<<endl;
     return 0.5*(Pac_high+Pac_low);
-}
-
-double VSC_HVDC::calculate_converter_Pdc_with_Pac(unsigned int converter_index, double Pac, double Qac)
-{
-    complex<double> j(0.0,1.0);
-    //cout<<"active_and_reactive_power_mode->"<<"active_power_command: "<<Pac_command<<" reactive_power_command: "<<Qac_command<<endl;
-    BUS *bus_pointer = get_converter_ac_bus_pointer(converter_index);
-    complex<double> Vac=bus_pointer->get_positive_sequence_complex_voltage_in_kV();
-    //cout<<"get_bus_number: "<<bus_pointer->get_bus_number();
-    //cout<<"Vac-> "<<Vac<<endl;
-    double Vbase_ac=get_converter_transformer_AC_side_base_voltage_in_kV(converter_index);
-    double Vbase_converter=get_converter_transformer_converter_side_base_voltage_in_kV(converter_index);
-    double k=get_converter_transformer_off_nominal_turn_ratio(converter_index);
-    double turn_ration=k*Vbase_ac/Vbase_converter;
-    /*
-    cout<<"Vbase_ac-> "<<Vbase_ac<<endl;
-    cout<<"Vbase_converter-> "<<Vbase_converter<<endl;
-    cout<<"k-> "<<k<<endl;
-    cout<<"turn_ration-> "<<turn_ration<<endl;
-    */
-    complex<double> Yf_in_siemens=get_converter_filter_admittance_in_siemens(converter_index);
-    complex<double> Zc_in_ohm=get_converter_commutating_impedance_in_ohm(converter_index);
-    complex<double> Eac=Vac/turn_ration;
-    complex<double> Zt_in_pu=get_converter_transformer_impedance_in_pu(converter_index);
-    complex<double> Zt_in_ohm=Zt_in_pu*Vbase_converter*Vbase_converter/get_converter_transformer_capacity_in_MVA(converter_index);
-    complex<double> Ic = (Pac-j*Qac)/(SQRT3*conj(Eac));
-    complex<double> Vac_f=Eac+Ic*Zt_in_ohm*SQRT3;
-                    Ic=Ic+Vac_f/SQRT3*Yf_in_siemens;
-    complex<double> Vac_c=Vac_f+Ic*Zc_in_ohm*SQRT3;
-    /*
-    cout<<"Yf_in_siemens-> "<<Yf_in_siemens<<endl;
-    cout<<"Zc_in_ohm-> "<<Zc_in_ohm<<endl;
-    cout<<"Eac-> "<<Eac<<endl;
-    cout<<"Zt_in_pu-> "<<Zt_in_pu<<endl;
-    cout<<"Zt_in_ohm-> "<<Zt_in_ohm<<endl;
-    cout<<"Vac_f-> "<<Vac_f<<endl;
-    cout<<"Ic-> "<<Ic<<endl;
-    cout<<"Vac_c-> "<<Vac_c<<endl;
-    */
-    double Pc_command=(SQRT3*Vac_c*conj(Ic)).real();
-    double c_loss=get_converter_loss_factor_C_in_kW_per_amp_squard(converter_index);
-    double b_loss=get_converter_loss_factor_B_in_kW_per_amp(converter_index);
-    double a_loss=get_converter_loss_factor_A_in_kW(converter_index);
-    double Ic_mag=abs(Ic)*1000;
-    /*
-    cout<<"c_loss-> "<<c_loss<<endl;
-    cout<<"b_loss-> "<<b_loss<<endl;
-    cout<<"a_loss-> "<<a_loss<<endl;
-    */
-    double P_converter_loss=(c_loss*Ic_mag*Ic_mag+b_loss*Ic_mag+a_loss)*0.001;
-    //cout<<"P_converter_loss: "<<P_converter_loss<<endl;
-    double Pdc=-Pc_command-P_converter_loss;
-    return -Pdc;
 }
 
 void VSC_HVDC::save_dc_bus_powerflow_result_to_file(const string& filename) const
@@ -4236,7 +3922,7 @@ complex<double> VSC_HVDC::get_converter_ac_current_in_kA_with_ac_bus_number(unsi
     //cout<<"active_and_reactive_power_mode->"<<"active_power_command: "<<Pac_command<<" reactive_power_command: "<<Qac_command<<endl;
     BUS *bus_pointer = get_converter_ac_bus_pointer(converter_index);
     complex<double> Vac=bus_pointer->get_positive_sequence_complex_voltage_in_kV();
-    complex<double> Iac=(Pac-j*Qac)/conj(Vac);
+    complex<double> Iac=(Pac-j*Qac)/conj(Vac)/SQRT3;
     return Iac;
 }
 
@@ -4252,7 +3938,7 @@ double VSC_HVDC::get_converter_dc_current_in_kA_with_ac_bus_number(unsigned int 
 {
     unsigned int converter_index=get_converter_index_with_ac_bus(bus);
     unsigned int dc_bus_index=get_dc_bus_index_with_ac_bus_number(bus);
-    double Pdc = get_converter_Pdc_command_in_MW(converter_index);
+    double Pdc = get_converter_Pdc_command_to_dc_network_in_MW(converter_index);
     double dc_bus_voltage = get_dc_bus_Vdc_in_kV(dc_bus_index);
     double Idc = Pdc/dc_bus_voltage;
 
@@ -4261,7 +3947,7 @@ double VSC_HVDC::get_converter_dc_current_in_kA_with_ac_bus_number(unsigned int 
 double VSC_HVDC::get_converter_dc_power_in_MW_with_ac_bus_number(unsigned int bus)
 {
     unsigned int converter_index=get_converter_index_with_ac_bus(bus);
-    double Pdc = get_converter_Pdc_command_in_MW(converter_index);
+    double Pdc = get_converter_Pdc_command_to_dc_network_in_MW(converter_index);
     return Pdc;
 }
 double VSC_HVDC::get_converter_ac_active_power_in_MW_with_ac_bus_number(unsigned int bus)
@@ -4289,4 +3975,22 @@ complex<double> VSC_HVDC::get_converter_dynamic_equivalent_current_to_ac_bus_in_
     }
     else
         return 0.0;
+}
+
+double VSC_HVDC::get_converter_ac_bus_base_voltage_in_kV(unsigned int index) const
+{
+    BUS* bus = get_converter_ac_bus_pointer(index);
+    return bus->get_base_voltage_in_kV();
+}
+
+complex<double> VSC_HVDC::get_converter_ac_bus_positive_sequency_complex_voltage_in_pu(unsigned int index) const
+{
+    BUS* bus = get_converter_ac_bus_pointer(index);
+    return bus->get_positive_sequence_complex_voltage_in_pu();
+}
+
+complex<double> VSC_HVDC::get_converter_ac_bus_positive_sequency_complex_voltage_in_kV(unsigned int index) const
+{
+    BUS* bus = get_converter_ac_bus_pointer(index);
+    return bus->get_positive_sequence_complex_voltage_in_kV();
 }

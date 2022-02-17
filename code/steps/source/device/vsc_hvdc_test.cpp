@@ -40,7 +40,6 @@ VSC_HVDC_TEST::VSC_HVDC_TEST():vsc(default_toolkit)
     TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_nominal_ac_power_factor_command);
     TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_loss_factor_A_in_kW);
     TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_loss_factor_B_in_kW_per_amp);
-    TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_transformer_impedance_in_pu)
     TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_minimum_loss_in_kW);
     TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_rated_capacity_in_MVA);
     TEST_ADD(VSC_HVDC_TEST::test_set_get_converter_rated_current_in_A);
@@ -358,21 +357,6 @@ void VSC_HVDC_TEST::test_set_get_converter_loss_factor_B_in_kW_per_amp()
 
     vsc.set_converter_loss_factor_B_in_kW_per_amp(1,11);
     TEST_ASSERT(fabs(vsc.get_converter_loss_factor_B_in_kW_per_amp(1)-11)<FLOAT_EPSILON);
-}
-
-void VSC_HVDC_TEST::test_set_get_converter_transformer_impedance_in_pu()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"VSC_HVDC_TEST");
-    prepare_2_terminal_vsc_hvdc();
-
-    complex<double> Zt(0.1,0.1);
-    vsc.set_converter_transformer_impedance_in_pu(0,Zt);
-    TEST_ASSERT(vsc.get_converter_transformer_impedance_in_pu(0)==Zt);
-    TEST_ASSERT(vsc.get_converter_transformer_impedance_in_pu(0).real()==0.1);
-    TEST_ASSERT(vsc.get_converter_transformer_impedance_in_pu(0).imag()==0.1);
-
-    vsc.set_converter_transformer_impedance_in_pu(1,0.0);
-    TEST_ASSERT(vsc.get_converter_transformer_impedance_in_pu(1)==0.0);
 }
 
 void VSC_HVDC_TEST::test_set_get_converter_minimum_loss_in_kW()
@@ -1044,16 +1028,8 @@ void VSC_HVDC_TEST::prepare_5_terminal_vsc_hvdc_converter_ac_buses()
     vsc.set_converter_minimum_loss_in_kW(0,100);
     vsc.set_converter_rated_capacity_in_MVA(0,200);
     vsc.set_converter_rated_current_in_A(0,100);
-    vsc.set_converter_transformer_capacity_in_MVA(0,200);
-    vsc.set_converter_transformer_AC_side_base_voltage_in_kV(0,220);
-    vsc.set_converter_transformer_converter_side_base_voltage_in_kV(0,200);
-    vsc.set_converter_transformer_off_nominal_turn_ratio(0,1.1);
-    complex<double> Zt(0.001,0.05);
     complex<double> Zc(0.5,5.0);
-    complex<double> Yf(0.0,0.001);
-    vsc.set_converter_transformer_impedance_in_pu(0,Zt);
     vsc.set_converter_commutating_impedance_in_ohm(0,Zc);
-    vsc.set_converter_filter_admittance_in_siemens(0,Yf);
     vsc.set_converter_Pmax_in_MW(0,144);
     vsc.set_converter_Pmin_in_MW(0,-144);
     vsc.set_converter_Qmax_in_MVar(0,150);
@@ -1067,14 +1043,9 @@ void VSC_HVDC_TEST::prepare_5_terminal_vsc_hvdc_converter_ac_buses()
     vsc.set_converter_minimum_loss_in_kW(1,100);
     vsc.set_converter_rated_capacity_in_MVA(1,200);
     vsc.set_converter_rated_current_in_A(1,100);
-    vsc.set_converter_transformer_capacity_in_MVA(1,200);
-    vsc.set_converter_transformer_AC_side_base_voltage_in_kV(1,220);
-    vsc.set_converter_transformer_converter_side_base_voltage_in_kV(1,200);
-    vsc.set_converter_transformer_off_nominal_turn_ratio(1,1.1);
-    vsc.set_converter_transformer_impedance_in_pu(1,Zt);
 
     vsc.set_converter_commutating_impedance_in_ohm(1,Zc);
-    vsc.set_converter_filter_admittance_in_siemens(1,Yf);
+
     vsc.set_converter_Pmax_in_MW(1,1440);
     vsc.set_converter_Pmin_in_MW(1,-1440);
     vsc.set_converter_Qmax_in_MVar(1,150);
@@ -1088,13 +1059,9 @@ void VSC_HVDC_TEST::prepare_5_terminal_vsc_hvdc_converter_ac_buses()
     vsc.set_converter_minimum_loss_in_kW(2,100);
     vsc.set_converter_rated_capacity_in_MVA(2,200);
     vsc.set_converter_rated_current_in_A(2,100);
-    vsc.set_converter_transformer_capacity_in_MVA(2,200);
-    vsc.set_converter_transformer_AC_side_base_voltage_in_kV(2,220);
-    vsc.set_converter_transformer_converter_side_base_voltage_in_kV(2,200);
-    vsc.set_converter_transformer_off_nominal_turn_ratio(2,1.1);
-    vsc.set_converter_transformer_impedance_in_pu(2,Zt);
+
     vsc.set_converter_commutating_impedance_in_ohm(2,Zc);
-    vsc.set_converter_filter_admittance_in_siemens(2,Yf);
+
     vsc.set_converter_Pmax_in_MW(2,1440);
     vsc.set_converter_Pmin_in_MW(2,-1440);
     vsc.set_converter_Qmax_in_MVar(2,150);
@@ -1108,13 +1075,9 @@ void VSC_HVDC_TEST::prepare_5_terminal_vsc_hvdc_converter_ac_buses()
     vsc.set_converter_minimum_loss_in_kW(3,100);
     vsc.set_converter_rated_capacity_in_MVA(3,200);
     vsc.set_converter_rated_current_in_A(3,100);
-    vsc.set_converter_transformer_capacity_in_MVA(3,200);
-    vsc.set_converter_transformer_AC_side_base_voltage_in_kV(3,220);
-    vsc.set_converter_transformer_converter_side_base_voltage_in_kV(3,200);
-    vsc.set_converter_transformer_off_nominal_turn_ratio(3,1.1);
-    vsc.set_converter_transformer_impedance_in_pu(3,Zt);
+
     vsc.set_converter_commutating_impedance_in_ohm(3,Zc);
-    vsc.set_converter_filter_admittance_in_siemens(3,Yf);
+
     vsc.set_converter_Pmax_in_MW(3,1440);
     vsc.set_converter_Pmin_in_MW(3,-1440);
     vsc.set_converter_Qmax_in_MVar(3,150);
@@ -1128,13 +1091,9 @@ void VSC_HVDC_TEST::prepare_5_terminal_vsc_hvdc_converter_ac_buses()
     vsc.set_converter_minimum_loss_in_kW(4,100);
     vsc.set_converter_rated_capacity_in_MVA(4,200);
     vsc.set_converter_rated_current_in_A(4,100);
-    vsc.set_converter_transformer_capacity_in_MVA(4,200);
-    vsc.set_converter_transformer_AC_side_base_voltage_in_kV(4,220);
-    vsc.set_converter_transformer_converter_side_base_voltage_in_kV(4,200);
-    vsc.set_converter_transformer_off_nominal_turn_ratio(4,1.1);
-    vsc.set_converter_transformer_impedance_in_pu(4,Zt);
+
     vsc.set_converter_commutating_impedance_in_ohm(4,Zc);
-    vsc.set_converter_filter_admittance_in_siemens(4,Yf);
+
     vsc.set_converter_Pmax_in_MW(4,1440);
     vsc.set_converter_Pmin_in_MW(4,-1440);
     vsc.set_converter_Qmax_in_MVar(4,150);
@@ -1283,16 +1242,10 @@ void VSC_HVDC_TEST::prepare_5_terminal_vsc_hvdc_converter_without_droop_control(
     vsc.set_converter_minimum_loss_in_kW(0,100);
     vsc.set_converter_rated_capacity_in_MVA(0,200);
     vsc.set_converter_rated_current_in_A(0,100);
-    vsc.set_converter_transformer_capacity_in_MVA(0,200);
-    vsc.set_converter_transformer_AC_side_base_voltage_in_kV(0,220);
-    vsc.set_converter_transformer_converter_side_base_voltage_in_kV(0,200);
-    vsc.set_converter_transformer_off_nominal_turn_ratio(0,1.1);
-    complex<double> Zt(0.001,0.05);
+
     complex<double> Zc(0.5,5.0);
-    complex<double> Yf(0.0,0.001);
-    vsc.set_converter_transformer_impedance_in_pu(0,Zt);
     vsc.set_converter_commutating_impedance_in_ohm(0,Zc);
-    vsc.set_converter_filter_admittance_in_siemens(0,Yf);
+
     vsc.set_converter_Pmax_in_MW(0,144);
     vsc.set_converter_Pmin_in_MW(0,-144);
     vsc.set_converter_Qmax_in_MVar(0,150);
@@ -1306,14 +1259,9 @@ void VSC_HVDC_TEST::prepare_5_terminal_vsc_hvdc_converter_without_droop_control(
     vsc.set_converter_minimum_loss_in_kW(1,100);
     vsc.set_converter_rated_capacity_in_MVA(1,200);
     vsc.set_converter_rated_current_in_A(1,100);
-    vsc.set_converter_transformer_capacity_in_MVA(1,200);
-    vsc.set_converter_transformer_AC_side_base_voltage_in_kV(1,220);
-    vsc.set_converter_transformer_converter_side_base_voltage_in_kV(1,200);
-    vsc.set_converter_transformer_off_nominal_turn_ratio(1,1.1);
-    vsc.set_converter_transformer_impedance_in_pu(1,Zt);
 
     vsc.set_converter_commutating_impedance_in_ohm(1,Zc);
-    vsc.set_converter_filter_admittance_in_siemens(1,Yf);
+
     vsc.set_converter_Pmax_in_MW(1,1440);
     vsc.set_converter_Pmin_in_MW(1,-1440);
     vsc.set_converter_Qmax_in_MVar(1,150);
@@ -1327,13 +1275,9 @@ void VSC_HVDC_TEST::prepare_5_terminal_vsc_hvdc_converter_without_droop_control(
     vsc.set_converter_minimum_loss_in_kW(2,100);
     vsc.set_converter_rated_capacity_in_MVA(2,200);
     vsc.set_converter_rated_current_in_A(2,100);
-    vsc.set_converter_transformer_capacity_in_MVA(2,200);
-    vsc.set_converter_transformer_AC_side_base_voltage_in_kV(2,220);
-    vsc.set_converter_transformer_converter_side_base_voltage_in_kV(2,200);
-    vsc.set_converter_transformer_off_nominal_turn_ratio(2,1.1);
-    vsc.set_converter_transformer_impedance_in_pu(2,Zt);
+
     vsc.set_converter_commutating_impedance_in_ohm(2,Zc);
-    vsc.set_converter_filter_admittance_in_siemens(2,Yf);
+
     vsc.set_converter_Pmax_in_MW(2,1440);
     vsc.set_converter_Pmin_in_MW(2,-1440);
     vsc.set_converter_Qmax_in_MVar(2,150);
@@ -1347,13 +1291,9 @@ void VSC_HVDC_TEST::prepare_5_terminal_vsc_hvdc_converter_without_droop_control(
     vsc.set_converter_minimum_loss_in_kW(3,100);
     vsc.set_converter_rated_capacity_in_MVA(3,200);
     vsc.set_converter_rated_current_in_A(3,100);
-    vsc.set_converter_transformer_capacity_in_MVA(3,200);
-    vsc.set_converter_transformer_AC_side_base_voltage_in_kV(3,220);
-    vsc.set_converter_transformer_converter_side_base_voltage_in_kV(3,200);
-    vsc.set_converter_transformer_off_nominal_turn_ratio(3,1.1);
-    vsc.set_converter_transformer_impedance_in_pu(3,Zt);
+
     vsc.set_converter_commutating_impedance_in_ohm(3,Zc);
-    vsc.set_converter_filter_admittance_in_siemens(3,Yf);
+
     vsc.set_converter_Pmax_in_MW(3,1440);
     vsc.set_converter_Pmin_in_MW(3,-1440);
     vsc.set_converter_Qmax_in_MVar(3,150);
@@ -1367,13 +1307,9 @@ void VSC_HVDC_TEST::prepare_5_terminal_vsc_hvdc_converter_without_droop_control(
     vsc.set_converter_minimum_loss_in_kW(4,100);
     vsc.set_converter_rated_capacity_in_MVA(4,200);
     vsc.set_converter_rated_current_in_A(4,100);
-    vsc.set_converter_transformer_capacity_in_MVA(4,200);
-    vsc.set_converter_transformer_AC_side_base_voltage_in_kV(4,220);
-    vsc.set_converter_transformer_converter_side_base_voltage_in_kV(4,200);
-    vsc.set_converter_transformer_off_nominal_turn_ratio(4,1.1);
-    vsc.set_converter_transformer_impedance_in_pu(4,Zt);
+
     vsc.set_converter_commutating_impedance_in_ohm(4,Zc);
-    vsc.set_converter_filter_admittance_in_siemens(4,Yf);
+
     vsc.set_converter_Pmax_in_MW(4,1440);
     vsc.set_converter_Pmin_in_MW(4,-1440);
     vsc.set_converter_Qmax_in_MVar(4,150);

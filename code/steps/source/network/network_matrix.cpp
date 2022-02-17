@@ -2666,13 +2666,9 @@ void NETWORK_MATRIX::add_vsc_hvdc_to_dynamic_network(const VSC_HVDC& vsc_hvdc)
                 VSC_HVDC_CONVERTER_MODEL* model = vsc_hvdc.get_vsc_hvdc_converter_model(i);
                 if(model!=NULL)
                 {
-                    complex<double> y = 0.0;
                     if(model->is_voltage_source())
-                        y = vsc_hvdc.get_converter_Norton_admittance_as_voltage_source(i);
-                    else
-                        y = vsc_hvdc.get_converter_Norton_admittance_as_current_source(i);
-                    if(y!=0.0)
                     {
+                        complex<double> y = vsc_hvdc.get_converter_Norton_admittance_as_voltage_source(i);
                         unsigned int bus = vsc_hvdc.get_converter_ac_bus(i);
                         unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
                         this_Y_matrix_pointer->add_entry(i,i,y);

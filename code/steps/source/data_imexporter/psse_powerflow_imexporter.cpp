@@ -1630,13 +1630,7 @@ string PSSE_IMEXPORTER::export_all_vsc_hvdc_data() const
                     <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_rated_capacity_in_MVA(i)<<", "
                     <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_rated_current_in_A(i)<<", "
 
-                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_transformer_capacity_in_MVA(i)<<", "
-                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_transformer_AC_side_base_voltage_in_kV(i)<<", "
-                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(i)<<", "
-                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_transformer_off_nominal_turn_ratio(i)<<", "
-                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_transformer_impedance_in_pu(i)<<", "
                     <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_commutating_impedance_in_ohm(i)<<", "
-                    <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_filter_admittance_in_siemens(i)<<", "
                     <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_Pmax_in_MW(i)<<", "
                     <<setw(8)<<setprecision(4)<<fixed<<vsc_hvdc->get_converter_Pmin_in_MW(i)<<", "
 

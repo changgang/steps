@@ -34,13 +34,7 @@ struct VSC_HVDC_CONVERTER_STRUCT
     double min_converter_loss_in_kW;
     double converter_rated_capacity_in_MVA;
     double converter_rated_current_in_amp;
-    double converter_transformer_capacity_in_MVA;
-    double converter_transformer_AC_side_base_voltage_in_kV;
-    double converter_transformer_converter_side_base_voltage_in_kV;
-    double converter_transformer_off_nominal_turn_ratio;
-    complex<double> converter_transformer_impedance_in_pu;
     complex<double> converter_commutating_impedance_in_pu;
-    complex<double> converter_filter_admittance_in_pu;
     double P_to_AC_bus_MW;
     double Q_to_AC_bus_MVar;
     double Pmax_MW;

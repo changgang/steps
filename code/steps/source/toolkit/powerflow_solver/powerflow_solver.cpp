@@ -3250,7 +3250,7 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(const string& file
                     {
                         p = vsc_hvdcs[i]->get_converter_P_to_AC_bus_in_MW(converter_index);
                         q = vsc_hvdcs[i]->get_converter_Q_to_AC_bus_in_MVar(converter_index);
-                        pcmd = vsc_hvdcs[i]->get_converter_dc_power_command(converter_index);
+                        pcmd = vsc_hvdcs[i]->get_converter_Pdc_command_to_dc_network_in_MW(converter_index);
                     }
 
                     snprintf(buffer, 1000, "%u,\"%s\",%u,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",

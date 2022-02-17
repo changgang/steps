@@ -919,7 +919,7 @@ void DYNAMICS_SIMULATOR::start()
         converged = solve_network();
         cout<<"converged is "<<converged<<", network iteration count "<<network_iteration_count<<endl;
         ITER_NET += network_iteration_count;
-        if(converged or iter_count>200)
+        if(converged or iter_count>get_max_DAE_iteration())
             break;
     }
     ITER_DAE = iter_count;
@@ -1460,8 +1460,9 @@ bool DYNAMICS_SIMULATOR::solve_network()
 {
     auto clock_start = steady_clock::now();
 
+    cout<<__FILE__<<", "<<__LINE__<<endl;
     solve_vsc_hvdcs_network_model();
-
+    cout<<__FILE__<<", "<<__LINE__<<endl;
     max_current_mismatch_pu = 0.0;
     max_power_mismatch_MVA = 0.0;
     max_mismatch_bus = 0;
@@ -1483,9 +1484,13 @@ bool DYNAMICS_SIMULATOR::solve_network()
 
     GREATEST_POWER_CURRENT_MISMATCH_STRUCT greatest_mismatch_struct;
 
+    cout<<__FILE__<<", "<<__LINE__<<endl;
     solve_hvdcs_without_integration();
+    cout<<__FILE__<<", "<<__LINE__<<endl;
     update_vsc_hvdcs_converter_model();
+    cout<<__FILE__<<", "<<__LINE__<<endl;
     get_bus_current_mismatch();
+    cout<<__FILE__<<", "<<__LINE__<<endl;
 
     #ifndef USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
     calculate_bus_power_mismatch_in_MVA();
@@ -2283,6 +2288,8 @@ void DYNAMICS_SIMULATOR::add_vsc_hvdcs_to_bus_current_mismatch()
             {
                 unsigned int physical_bus = vsc_hvdc->get_converter_ac_bus(j);
                 unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+
+                cout<<"adding Ixy on system base of converter "<<j<<": "<<vsc_hvdc->get_converter_dynamic_equivalent_current_to_ac_bus_in_pu_on_system_base(j)<<endl;
                 I_mismatch[internal_bus] += vsc_hvdc->get_converter_dynamic_equivalent_current_to_ac_bus_in_pu_on_system_base(j);
                 if(not detailed_log_enabled)
                     ;
@@ -2391,8 +2398,8 @@ GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_current_misma
     for(unsigned int i=0; i<n; ++i)
     {
         double I = steps_fast_complex_abs(I_mismatch[i]);
-        cout<<"dynamic current mismatch @ bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)
-            <<": "<<I<<endl;
+        //cout<<"dynamic current mismatch @ bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)
+        //    <<": "<<I<<endl;
         if(I>Imax)
         {
             Imax = I;

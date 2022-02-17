@@ -44,7 +44,8 @@ int main()
 
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
     simulator.set_allowed_max_power_imbalance_in_MVA(0.01);
-    simulator.set_max_DAE_iteration(10);
+    simulator.set_max_DAE_iteration(2);
+    simulator.set_min_DAE_iteration(2);
     simulator.set_max_network_iteration(50);
     simulator.set_iteration_accelerator(0.8);
 

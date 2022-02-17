@@ -42,7 +42,6 @@ class VSC_HVDC_TEST : public Test::Suite
         void test_set_get_converter_nominal_ac_power_factor_command();
         void test_set_get_converter_loss_factor_A_in_kW();
         void test_set_get_converter_loss_factor_B_in_kW_per_amp();
-        void test_set_get_converter_transformer_impedance_in_pu();
         void test_set_get_converter_minimum_loss_in_kW();
         void test_set_get_converter_rated_capacity_in_MVA();
         void test_set_get_converter_rated_current_in_A();

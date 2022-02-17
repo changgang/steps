@@ -18,9 +18,6 @@ class VSC_HVDC_MODEL : public MODEL
         VSC_HVDC* get_vsc_hvdc_pointer() const;
     public: // vsc-hvdc common
         // get input for initialization
-        complex<double> get_converter_ac_current_in_pu(unsigned int converter_index) const;
-        complex<double> get_converter_ac_complex_power_in_MVA(unsigned int converter_index) const;
-        complex<double> get_converter_ac_complex_voltage_in_pu(unsigned int converter_index) const;
     public: // model type
         virtual string get_model_type() const = 0;
     public: // specific model

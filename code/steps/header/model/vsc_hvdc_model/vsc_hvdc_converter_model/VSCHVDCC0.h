@@ -53,6 +53,9 @@ class VSCHVDCC0: public VSC_HVDC_CONVERTER_MODEL
 
         double get_reactive_power_block_Qref() const;
         double get_reactive_power_block_Uacref() const;
+
+        double get_dynamic_dc_voltage_in_kV() const;
+        double get_dynamic_dc_voltage_in_pu() const;
     public:
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
@@ -80,11 +83,11 @@ class VSCHVDCC0: public VSC_HVDC_CONVERTER_MODEL
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
     public:
-        virtual complex<double> get_converter_voltage_in_dq_axis_in_pu_on_converter_base();
-        virtual complex<double> get_converter_current_in_dq_axis_in_pu_on_converter_base();
+        virtual complex<double> get_converter_voltage_in_dq_axis_in_pu() const ;
+        virtual complex<double> get_converter_current_from_converter_to_ac_network_in_dq_axis_in_pu_on_converter_base() const ;
     private:
         void copy_from_const_model(const VSCHVDCC0& model);
-        double solve_Pdc_with_active_power_and_reactive_power(unsigned int converter_index);
+        double get_converter_dc_power_from_converter_to_dc_network_in_MW();
     private:
         PID_BLOCK p_block;
         PID_BLOCK q_block;
