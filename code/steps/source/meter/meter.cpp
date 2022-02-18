@@ -2214,7 +2214,7 @@ double METER::get_meter_value_as_a_vsc_hvdc() const
         {
             string meter_type = get_meter_type();
             unsigned int metered_bus = get_meter_side_bus();
-            VSC_HVDC_NETWORK_MODEL* vsc_hvdc_project_model = vsc_hvdc->get_vsc_hvdc_network_model();
+            VSC_HVDC_NETWORK_MODEL* vsc_hvdc_network_model = vsc_hvdc->get_vsc_hvdc_network_model();
             vector<VSC_HVDC_CONVERTER_MODEL*> vsc_hvdc_converter_models = vsc_hvdc->get_vsc_hvdc_converter_models();
 
             if(meter_type=="CONVERTER AC VOLTAGE IN PU")
@@ -2267,7 +2267,7 @@ double METER::get_meter_value_as_a_vsc_hvdc() const
                 return vsc_hvdc->get_dc_line_power_in_MW(dc_did, dc_bus);
             }
             if(meter_type=="VSC HVDC NETWORK MODEL INTERNAL VARIABLE")
-                return vsc_hvdc_project_model->get_model_internal_variable_with_name(get_internal_variable_name());
+                return vsc_hvdc_network_model->get_model_internal_variable_with_name(get_internal_variable_name());
             if(meter_type=="VSC HVDC CONVERTER MODEL INTERNAL VARIABLE")
             {
                 unsigned int index = vsc_hvdc->get_converter_index_with_ac_bus(metered_bus);

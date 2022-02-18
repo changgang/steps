@@ -3,6 +3,7 @@
 
 #include "header/basic/device_id.h"
 #include "header/basic/time_series.h"
+#include "header/basic/steps_define.h"
 #include "header/block/block.h"
 #include "header/model/model_var_table.h"
 

@@ -230,6 +230,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         void initialize_physical_internal_bus_pair();
         void reorder_physical_internal_bus_pair();
         void set_internal_bus_pointer();
+        INPHNO get_network_internal_physical_number_inphno() const;
 
         void update_P_equation_internal_buses();
 
@@ -238,11 +239,6 @@ class VSC_HVDC : public NONBUS_DEVICE
         void add_dc_lines_to_dc_network();
 
 
-        void solve_dynamic_network_with_quasi_steady_state_model();
-        void build_dynamic_dc_network_matrix();
-        void add_dc_lines_with_fault_to_dc_network();
-        void split_dynamic_dc_network_matrix_to_4_sub_matrix();
-        void initialize_converter_and_nonconverter_physical_internal_bus_pair();
 
         void calculate_raw_bus_power_mismatch();
         void build_dc_bus_power_mismatch_vector();
@@ -337,10 +333,8 @@ class VSC_HVDC : public NONBUS_DEVICE
         double get_converter_ac_bus_base_voltage_in_kV(unsigned int index) const;
         complex<double> get_converter_ac_bus_positive_sequency_complex_voltage_in_pu(unsigned int index) const;
         complex<double> get_converter_ac_bus_positive_sequency_complex_voltage_in_kV(unsigned int index) const;
-    private:
-        void copy_from_const_vsc(const VSC_HVDC& vsc);
 
-
+    public:
         unsigned int get_dc_bus_converter_index_with_dc_bus_index(unsigned int index) const;
         unsigned int dc_bus_no2index(unsigned int bus) const;
         unsigned int dc_bus_index2no(unsigned int index) const;
@@ -348,13 +342,17 @@ class VSC_HVDC : public NONBUS_DEVICE
         DC_DEVICE_ID dc_line_index2device_id(unsigned int index) const;
 
         unsigned int get_dc_bus_converter_index_with_dc_bus_number(unsigned int bus) const;
+    private:
+        void copy_from_const_vsc(const VSC_HVDC& vsc);
+
+
 
 
         bool converter_index_is_out_of_range_in_function(const unsigned int index, const string& func) const;
         bool dc_bus_index_is_out_of_range_in_function(const unsigned int index, const string& func) const;
         bool dc_line_index_is_out_of_range_in_function(const unsigned int index, const string& func) const;
 
-        void delete_vsc_hvdc_project_model();
+        void delete_vsc_hvdc_network_model();
         void delete_vsc_hvdc_converter_models();
         void delete_vsc_hvdc_converter_model(unsigned int index);
     private:
@@ -387,10 +385,8 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int current_dc_slack_bus;
         bool converged;
 
-        VSC_HVDC_NETWORK_MODEL* vsc_hvdc_project_model;
+        VSC_HVDC_NETWORK_MODEL* vsc_hvdc_network_model;
         vector<VSC_HVDC_CONVERTER_MODEL*> vsc_hvdc_converter_models;
 
-        STEPS_SPARSE_MATRIX dc_network_submatrix_CC, dc_network_submatrix_CN, dc_network_submatrix_NC, dc_network_submatrix_NN;
-        INPHNO inphno_converter_buses, inphno_nonconverter_buses;
 };
 #endif // VSC_HVDC_H

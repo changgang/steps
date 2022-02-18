@@ -2,6 +2,7 @@
 #define STEPS_NAMESPACE_H
 
 #include "header/STEPS.h"
+#include "header/basic/steps_define.h"
 #include "header/basic/constants.h"
 #include "header/basic/string_int_map.h"
 

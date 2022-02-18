@@ -40,7 +40,8 @@ class VSC_HVDC_NETWORK_MODEL: public VSC_HVDC_MODEL
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
     public:
-        virtual void solve_vsc_hvdc_network() = 0;
+        virtual void build_dynamic_dc_network_matrix() = 0;
+        //virtual void solve_vsc_hvdc_network() = 0;
 };
 
 #endif // VSC_HVDC_NETWORK_MODEL_H_INCLUDED

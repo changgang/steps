@@ -23,10 +23,12 @@ using namespace std;
 INPHNO_TEST::INPHNO_TEST()
 {
     TEST_ADD(INPHNO_TEST::test_constructor);
+    TEST_ADD(INPHNO_TEST::test_copy_constructor);
     TEST_ADD(INPHNO_TEST::test_set_get_physical_internal_bus_number_pair);
     TEST_ADD(INPHNO_TEST::test_update_with_new_internal_bus_permutation);
     TEST_ADD(INPHNO_TEST::test_is_table_full);
     TEST_ADD(INPHNO_TEST::test_clear);
+    TEST_ADD(INPHNO_TEST::test_operator_equal);
 }
 
 void INPHNO_TEST::setup()
@@ -44,6 +46,27 @@ void INPHNO_TEST::tear_down()
 void INPHNO_TEST::test_constructor()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"INPHNO_TEST");
+}
+
+void INPHNO_TEST::test_copy_constructor()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"INPHNO_TEST");
+
+    inphno.set_physical_internal_bus_number_pair(1,0);
+    inphno.set_physical_internal_bus_number_pair(2,5);
+    inphno.set_physical_internal_bus_number_pair(3,1);
+    inphno.set_physical_internal_bus_number_pair(4,4);
+    inphno.set_physical_internal_bus_number_pair(5,3);
+    inphno.set_physical_internal_bus_number_pair(6,2);
+
+    INPHNO newinphno = inphno;
+
+    TEST_ASSERT(inphno.get_internal_bus_number_of_physical_bus_number(1)==0);
+    TEST_ASSERT(inphno.get_internal_bus_number_of_physical_bus_number(2)==5);
+    TEST_ASSERT(inphno.get_internal_bus_number_of_physical_bus_number(3)==1);
+    TEST_ASSERT(inphno.get_internal_bus_number_of_physical_bus_number(4)==4);
+    TEST_ASSERT(inphno.get_internal_bus_number_of_physical_bus_number(5)==3);
+    TEST_ASSERT(inphno.get_internal_bus_number_of_physical_bus_number(6)==2);
 }
 
 void INPHNO_TEST::test_set_get_physical_internal_bus_number_pair()
@@ -171,6 +194,29 @@ void INPHNO_TEST::test_clear()
         result = (inphno.get_physical_bus_number_of_internal_bus_number(i-1) == INDEX_NOT_EXIST);
         TEST_ASSERT(result);
     }
+}
+
+
+void INPHNO_TEST::test_operator_equal()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"INPHNO_TEST");
+
+    inphno.set_physical_internal_bus_number_pair(1,0);
+    inphno.set_physical_internal_bus_number_pair(2,5);
+    inphno.set_physical_internal_bus_number_pair(3,1);
+    inphno.set_physical_internal_bus_number_pair(4,4);
+    inphno.set_physical_internal_bus_number_pair(5,3);
+    inphno.set_physical_internal_bus_number_pair(6,2);
+
+    INPHNO newinphno;
+    newinphno = inphno;
+
+    TEST_ASSERT(inphno.get_internal_bus_number_of_physical_bus_number(1)==0);
+    TEST_ASSERT(inphno.get_internal_bus_number_of_physical_bus_number(2)==5);
+    TEST_ASSERT(inphno.get_internal_bus_number_of_physical_bus_number(3)==1);
+    TEST_ASSERT(inphno.get_internal_bus_number_of_physical_bus_number(4)==4);
+    TEST_ASSERT(inphno.get_internal_bus_number_of_physical_bus_number(5)==3);
+    TEST_ASSERT(inphno.get_internal_bus_number_of_physical_bus_number(6)==2);
 }
 
 #endif

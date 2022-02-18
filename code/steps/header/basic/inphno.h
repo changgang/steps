@@ -10,6 +10,8 @@ class INPHNO
     public:
         INPHNO();
         ~INPHNO();
+        INPHNO(const INPHNO& inphno);
+        INPHNO& operator=(const INPHNO& inphno);
 
         //unsigned int get_internal_bus_count() const;
 
@@ -28,6 +30,8 @@ class INPHNO
         void report() const;
 
     private:
+        void copy_from_const_inphno(const INPHNO& inphno);
+
         bool is_new_internal_bus_permutation_correct(const vector<unsigned int>& P);
         vector<unsigned int> physical_to_internal_lookup_table;
         vector<unsigned int> internal_to_physical_lookup_table;

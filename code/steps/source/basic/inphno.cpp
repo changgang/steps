@@ -19,6 +19,33 @@ INPHNO::~INPHNO()
     ;
 }
 
+INPHNO::INPHNO(const INPHNO& inphno)
+{
+    if(this == &inphno)
+        return;
+    clear();
+    copy_from_const_inphno(inphno);
+}
+
+INPHNO& INPHNO::operator=(const INPHNO& inphno)
+{
+    if(this == &inphno)
+        return *this;
+    clear();
+    copy_from_const_inphno(inphno);
+    return *this;
+}
+
+void INPHNO::copy_from_const_inphno(const INPHNO& inphno)
+{
+    unsigned int n = inphno.get_table_size();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        unsigned int phyno =  inphno.get_physical_bus_number_of_internal_bus_number(i);
+        set_physical_internal_bus_number_pair(phyno, i);
+    }
+}
+
 void INPHNO::set_physical_internal_bus_number_pair(unsigned int physical_bus, unsigned int internal_bus)
 {
     if(physical_bus != 0)
@@ -147,7 +174,8 @@ void INPHNO::clear()
 
 unsigned int INPHNO::get_table_size() const
 {
-    return physical_to_internal_lookup_table.size();
+    //return physical_to_internal_lookup_table.size();
+    return internal_to_physical_lookup_table.size();
 }
 
 unsigned int INPHNO::get_internal_bus_number_of_physical_bus_number(unsigned int bus) const

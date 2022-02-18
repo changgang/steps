@@ -211,7 +211,6 @@ class DYNAMICS_SIMULATOR
         void build_vsc_hvdc_dynamic_dc_network_matrix();
 
         void solve_hvdcs_without_integration();
-        void solve_vsc_hvdcs_network_model();
         void update_vsc_hvdcs_converter_model();
 
         void get_bus_current_mismatch();

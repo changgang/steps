@@ -1,5 +1,6 @@
 #include "header/device/vsc_hvdc.h"
 #include "header/basic/utility.h"
+#include "header/basic/steps_define.h"
 #include "header/basic/constants.h"
 #include "header/STEPS.h"
 #include "header/steps_namespace.h"
@@ -12,13 +13,13 @@ using namespace std;
 
 VSC_HVDC::VSC_HVDC(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
 {
-    vsc_hvdc_project_model = NULL;
+    vsc_hvdc_network_model = NULL;
     vsc_hvdc_converter_models.clear();
     clear();
 }
 VSC_HVDC::VSC_HVDC(const VSC_HVDC& vsc) : NONBUS_DEVICE(vsc.get_toolkit())
 {
-    vsc_hvdc_project_model = NULL;
+    vsc_hvdc_network_model = NULL;
     vsc_hvdc_converter_models.clear();
     clear();
 
@@ -29,7 +30,7 @@ VSC_HVDC& VSC_HVDC::operator=(const VSC_HVDC& vsc)
 {
     if(this==&vsc) return *this; // to avoid self assignment
 
-    vsc_hvdc_project_model = NULL;
+    vsc_hvdc_network_model = NULL;
     vsc_hvdc_converter_models.clear();
     clear();
 
@@ -144,7 +145,7 @@ void VSC_HVDC::copy_from_const_vsc(const VSC_HVDC& vsc)
 
 VSC_HVDC::~VSC_HVDC()
 {
-    delete_vsc_hvdc_project_model();
+    delete_vsc_hvdc_network_model();
     delete_vsc_hvdc_converter_models();
     clear();
 }
@@ -2239,8 +2240,8 @@ void VSC_HVDC::set_vsc_hvdc_network_model(VSC_HVDC_NETWORK_MODEL* model)
 {
     if(model!=NULL)
     {
-        delete_vsc_hvdc_project_model();
-        vsc_hvdc_project_model = model;
+        delete_vsc_hvdc_network_model();
+        vsc_hvdc_network_model = model;
     }
 }
 
@@ -2259,7 +2260,7 @@ void VSC_HVDC::set_vsc_hvdc_converter_model(VSC_HVDC_CONVERTER_MODEL* model)
 
 VSC_HVDC_NETWORK_MODEL* VSC_HVDC::get_vsc_hvdc_network_model() const
 {
-    return vsc_hvdc_project_model;
+    return vsc_hvdc_network_model;
 }
 
 vector<VSC_HVDC_CONVERTER_MODEL*> VSC_HVDC::get_vsc_hvdc_converter_models() const
@@ -2275,12 +2276,12 @@ VSC_HVDC_CONVERTER_MODEL* VSC_HVDC::get_vsc_hvdc_converter_model(unsigned int in
         return NULL;
 }
 
-void VSC_HVDC::delete_vsc_hvdc_project_model()
+void VSC_HVDC::delete_vsc_hvdc_network_model()
 {
     if(get_vsc_hvdc_network_model()!=NULL)
     {
-        delete vsc_hvdc_project_model;
-        vsc_hvdc_project_model =  NULL;
+        delete vsc_hvdc_network_model;
+        vsc_hvdc_network_model =  NULL;
     }
 }
 
@@ -2318,6 +2319,7 @@ void VSC_HVDC::run(DYNAMIC_MODE mode)
     ostringstream osstream;
     if(get_status()==true)
     {
+        STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
         VSC_HVDC_NETWORK_MODEL* network = get_vsc_hvdc_network_model();
         vector<VSC_HVDC_CONVERTER_MODEL*> converters = get_vsc_hvdc_converter_models();
         unsigned int n_converter = get_converter_count();
@@ -2326,20 +2328,23 @@ void VSC_HVDC::run(DYNAMIC_MODE mode)
         {
             case INITIALIZE_MODE:
             {
+                STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
                 if(network!=NULL)
                     network->initialize();
-
+                STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
                 for(i=0; i!=n_converter; ++i)
                 {
                     if(converters[i]!=NULL)
                         converters[i]->initialize();
                 }
+                STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
                 break;
             }
             case INTEGRATE_MODE:
             case UPDATE_MODE:
             {
-                network->run(mode);
+                if(network!=NULL)
+                    network->run(mode);
 
                 for(i=0; i!=n_converter; ++i)
                 {
@@ -2576,6 +2581,11 @@ void VSC_HVDC::reorder_physical_internal_bus_pair()
     */
 }
 
+INPHNO VSC_HVDC::get_network_internal_physical_number_inphno() const
+{
+    return inphno;
+}
+
 void VSC_HVDC::update_P_equation_internal_buses()
 {
     STEPS& toolkit = get_toolkit();
@@ -2662,248 +2672,6 @@ void VSC_HVDC::add_dc_lines_to_dc_network()
     }
 }
 
-void VSC_HVDC::solve_dynamic_network_with_quasi_steady_state_model()
-{
-    /*
-    IC =  YCC*UC + YCN*UN
-    PN/UN = YNC*UC + YNN*UN
-
-    solve the second one to get UN, then solve the first one to get IC
-    */
-    unsigned int n = get_converter_count();
-    vector<double> UC;
-    for(unsigned int i=0; i!=n; ++i)
-        UC.push_back(0.0);
-
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        unsigned int dcbus_index = get_dc_bus_index_with_converter_index(i);
-        unsigned int dcbus = get_dc_bus_number(dcbus_index);
-        int index = inphno_converter_buses.get_internal_bus_number_of_physical_bus_number(dcbus);
-        UC[index] = get_dc_bus_Vdc_in_kV(dcbus_index);
-    }
-    vector<double> IN_C = dc_network_submatrix_NC*UC;
-
-    unsigned int m = get_dc_bus_count();
-    unsigned int n_nonconverter_bus = m - n;
-    vector<double> delta_IN;
-    for(unsigned int i=0; i!=n_nonconverter_bus; ++i)
-        delta_IN.push_back(0.0);
-
-    vector<double> UN;
-    double max_UN_error = 0.0;
-    iteration_count = 0;
-    while(true)
-    {
-        for(unsigned int i=0; i!=n_nonconverter_bus; ++i)
-        {
-            unsigned int dcbus = inphno_nonconverter_buses.get_physical_bus_number_of_internal_bus_number(i);
-            unsigned int index = dc_bus_no2index(dcbus);
-            double Pload = get_dc_bus_load_power_in_MW(index);
-            double Pgen = get_dc_bus_generation_power_in_MW(index);
-            double Udc = get_dc_bus_Vdc_in_kV(index);
-            delta_IN[i] = (Pgen-Pload)/Udc;
-            delta_IN[i] -= IN_C[i];
-        }
-        UN = delta_IN/dc_network_submatrix_NN;
-        for(unsigned int i=0; i!=n_nonconverter_bus; ++i)
-        {
-            unsigned int dcbus = inphno_nonconverter_buses.get_physical_bus_number_of_internal_bus_number(i);
-            unsigned int index = dc_bus_no2index(dcbus);
-            set_dc_bus_Vdc_in_kV(index, UN[i]);
-        }
-        for(unsigned int i=0; i!=n_nonconverter_bus; ++i)
-        {
-            unsigned int dcbus = inphno_nonconverter_buses.get_physical_bus_number_of_internal_bus_number(i);
-            unsigned int index = dc_bus_no2index(dcbus);
-            double Pload = get_dc_bus_load_power_in_MW(index);
-            double Pgen = get_dc_bus_generation_power_in_MW(index);
-            delta_IN[i] = (Pgen-Pload)/UN[i];
-            delta_IN[i] -= IN_C[i];
-        }
-        vector<double> IN_N = dc_network_submatrix_NN*UN;
-        double max_P_error = 0.0;
-        for(unsigned int i=0; i!=n_nonconverter_bus; ++i)
-        {
-            delta_IN[i] -= IN_N[i];
-            double P_error = delta_IN[i] * UN[i];
-            if(fabs(P_error)>max_P_error)
-                max_P_error = fabs(P_error);
-        }
-        if(max_P_error<get_allowed_max_active_power_imbalance_in_MW())
-            break;
-        ++iteration_count;
-        if(iteration_count>get_max_iteration())
-        {
-            ostringstream osstream;
-            osstream<<"VSC_HVDC::"<<__FUNCTION__<<"() failed to converge.";
-            STEPS& toolkit = get_toolkit();
-            toolkit.show_information_with_leading_time_stamp(osstream);
-            break;
-        }
-    }
-    vector<double> IC, IC_N;
-    IC = dc_network_submatrix_CC*UC;
-    IC_N = dc_network_submatrix_CN*UN;
-
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        int dcbus = inphno_converter_buses.get_physical_bus_number_of_internal_bus_number(i);
-        unsigned int index = get_converter_index_with_dc_bus(dcbus);
-        IC[i] += IC_N[i];
-        double Pdc = IC[i]*UC[i];
-        set_converter_Pdc_flowing_out_Ceq_in_MW(index, Pdc);
-    }
-}
-
-void VSC_HVDC::build_dynamic_dc_network_matrix()
-{
-    if(inphno_converter_buses.get_table_size()<2)
-        initialize_converter_and_nonconverter_physical_internal_bus_pair();
-
-    dc_network_matrix.clear();
-    build_initial_zero_matrix();
-    add_dc_lines_with_fault_to_dc_network();
-    dc_network_matrix.compress_and_merge_duplicate_entries();
-
-    split_dynamic_dc_network_matrix_to_4_sub_matrix();
-}
-
-
-void VSC_HVDC::initialize_converter_and_nonconverter_physical_internal_bus_pair()
-{
-    unsigned int n_dcbus = get_dc_bus_count();
-
-    if(n_dcbus!=0)
-    {
-        inphno_converter_buses.clear();
-        inphno_nonconverter_buses.clear();
-
-        unsigned int internal_bus_number = 0;
-
-        unsigned int count_converter = INDEX_NOT_EXIST, count_nonconverter = INDEX_NOT_EXIST;
-        for(unsigned int i=0; i!=n_dcbus; ++i)
-        {
-            unsigned int bus_number = inphno.get_physical_bus_number_of_internal_bus_number(i);
-            unsigned int converter_index = get_converter_index_with_dc_bus(bus_number);
-            if(converter_index != INDEX_NOT_EXIST)
-            {
-                if(count_converter==INDEX_NOT_EXIST)
-                    count_converter = 0;
-                else
-                    ++count_converter;
-                inphno_converter_buses.set_physical_internal_bus_number_pair(bus_number, count_converter);
-            }
-            else
-            {
-                if(count_nonconverter==INDEX_NOT_EXIST)
-                    count_nonconverter = 0;
-                else
-                    ++count_nonconverter;
-                inphno_nonconverter_buses.set_physical_internal_bus_number_pair(bus_number, count_nonconverter);
-            }
-        }
-    }
-}
-
-void VSC_HVDC::add_dc_lines_with_fault_to_dc_network()
-{
-    unsigned int n = get_dc_line_count();
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        if(get_dc_line_status(i)==true)
-        {
-            unsigned int ibus = get_dc_line_sending_side_bus(i);
-            unsigned int jbus = get_dc_line_receiving_side_bus(i);
-            double g = 1.0/get_dc_line_resistance_in_ohm(i);
-            unsigned int i_inbus = inphno.get_internal_bus_number_of_physical_bus_number(ibus);
-            unsigned int j_inbus = inphno.get_internal_bus_number_of_physical_bus_number(jbus);
-
-            if(get_dc_line_fault_r_in_ohm(i)==INFINITE_THRESHOLD)
-            {
-                dc_network_matrix.add_entry(i_inbus, i_inbus, g);
-                dc_network_matrix.add_entry(j_inbus, j_inbus, g);
-                dc_network_matrix.add_entry(i_inbus, j_inbus, -g);
-                dc_network_matrix.add_entry(j_inbus, i_inbus, -g);
-            }
-            else
-            {
-                double line_r = get_dc_line_resistance_in_ohm(i);
-                double fault_r = get_dc_line_fault_r_in_ohm(i);
-                double location = get_dc_line_fault_location(i);
-
-                double r_iside = line_r*location;
-                double r_jside = line_r*(1-location);
-
-                double numerator = r_iside*r_jside+r_iside*fault_r+r_jside*fault_r;
-
-                double Rij = numerator/fault_r;
-                double Rif = numerator/r_jside;
-                double Rjf = numerator/r_iside;
-
-                double gij = 1.0/Rij;
-                double gif = 1.0/Rif;
-                double gjf = 1.0/Rjf;
-
-                dc_network_matrix.add_entry(i_inbus, i_inbus, gij+gif);
-                dc_network_matrix.add_entry(j_inbus, j_inbus, gif+gjf);
-                dc_network_matrix.add_entry(i_inbus, j_inbus, -gij);
-                dc_network_matrix.add_entry(j_inbus, i_inbus, -gij);
-            }
-        }
-    }
-}
-
-void VSC_HVDC::split_dynamic_dc_network_matrix_to_4_sub_matrix()
-{
-    int n = dc_network_matrix.get_matrix_entry_count();
-    for(int k=0; k!=n; ++k)
-    {
-        int i = dc_network_matrix.get_row_number_of_entry_index(k);
-        int j = dc_network_matrix.get_column_number_of_entry_index(k);
-
-        unsigned int ibus = inphno.get_physical_bus_number_of_internal_bus_number(i);
-        unsigned int jbus = inphno.get_physical_bus_number_of_internal_bus_number(j);
-
-        bool ibus_is_converter_bus = get_converter_index_with_dc_bus(ibus)!=INDEX_NOT_EXIST ? true : false;
-        bool jbus_is_converter_bus = get_converter_index_with_dc_bus(jbus)!=INDEX_NOT_EXIST ? true : false;
-
-        if(ibus_is_converter_bus and jbus_is_converter_bus)
-        {
-            int row = inphno_converter_buses.get_internal_bus_number_of_physical_bus_number(ibus);
-            int col = inphno_converter_buses.get_internal_bus_number_of_physical_bus_number(jbus);
-            dc_network_submatrix_CC.add_entry(row, col, dc_network_matrix.get_entry_value(k));
-        }
-        else
-        {
-            if(ibus_is_converter_bus and (not jbus_is_converter_bus))
-            {
-                int row = inphno_converter_buses.get_internal_bus_number_of_physical_bus_number(ibus);
-                int col = inphno_nonconverter_buses.get_internal_bus_number_of_physical_bus_number(jbus);
-                dc_network_submatrix_CN.add_entry(row, col, dc_network_matrix.get_entry_value(k));
-            }
-            else
-            {
-                if((not ibus_is_converter_bus) and jbus_is_converter_bus)
-                {
-                    int row = inphno_nonconverter_buses.get_internal_bus_number_of_physical_bus_number(ibus);
-                    int col = inphno_converter_buses.get_internal_bus_number_of_physical_bus_number(jbus);
-                    dc_network_submatrix_NC.add_entry(row, col, dc_network_matrix.get_entry_value(k));
-                }
-                else
-                {
-                    int row = inphno_nonconverter_buses.get_internal_bus_number_of_physical_bus_number(ibus);
-                    int col = inphno_nonconverter_buses.get_internal_bus_number_of_physical_bus_number(jbus);
-                    dc_network_submatrix_NN.add_entry(row, col, dc_network_matrix.get_entry_value(k));
-                }
-            }
-        }
-    }
-    dc_network_submatrix_CC.compress_and_merge_duplicate_entries();
-    dc_network_submatrix_CN.compress_and_merge_duplicate_entries();
-    dc_network_submatrix_NC.compress_and_merge_duplicate_entries();
-    dc_network_submatrix_NN.compress_and_merge_duplicate_entries();
-}
 
 void VSC_HVDC::initialize_alpha_vector()
 {
@@ -2917,10 +2685,6 @@ void VSC_HVDC::initialize_alpha_vector()
         else
             alpha.push_back(0);
     }
-    //for(unsigned int i=0; i!=n_converter;++i)
-    //{
-    //    cout<<"alpha[i]:"<<alpha[i]<<endl;
-    //}
 }
 
 void VSC_HVDC::initialize_beta_vector()
@@ -2935,12 +2699,6 @@ void VSC_HVDC::initialize_beta_vector()
         else
             beta.push_back(0);
     }
-    /*
-    for(unsigned int i=0; i!=n_converter;++i)
-    {
-        cout<<"beta[i]:"<<beta[i]<<endl;
-    }
-    */
 }
 
 void VSC_HVDC::initialize_active_and_reactive_power_control_mode_vector()

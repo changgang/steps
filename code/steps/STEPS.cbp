@@ -88,6 +88,7 @@
 		<Unit filename="header/basic/sparse_matrix_klu.h" />
 		<Unit filename="header/basic/sparse_matrix_test.h" />
 		<Unit filename="header/basic/sparse_matrix_umfpack.h" />
+		<Unit filename="header/basic/steps_define.h" />
 		<Unit filename="header/basic/steps_enum.h" />
 		<Unit filename="header/basic/string_int_map.h" />
 		<Unit filename="header/basic/string_int_map_test.h" />

@@ -825,7 +825,8 @@ void DYNAMICS_SIMULATOR::build_vsc_hvdc_dynamic_dc_network_matrix()
     for(unsigned int i=0; i<nvsc_hvdc; ++i)
     {
         VSC_HVDC* vsc_hvdc = vsc_hvdcs[i];
-        vsc_hvdc->build_dynamic_dc_network_matrix();
+        VSC_HVDC_NETWORK_MODEL* model = vsc_hvdc->get_vsc_hvdc_network_model();
+        model->build_dynamic_dc_network_matrix();
     }
 }
 
@@ -882,9 +883,12 @@ void DYNAMICS_SIMULATOR::start()
 
     optimize_network_ordering();
 
+    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
     prepare_devices_for_run();
+    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
 
     run_all_models(INITIALIZE_MODE);
+    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
     run_bus_frequency_blocks(INITIALIZE_MODE);
 
     network_matrix.build_dynamic_network_Y_matrix();
@@ -913,7 +917,7 @@ void DYNAMICS_SIMULATOR::start()
         //if(detailed_log_enabled)
         //{
             ostringstream osstream;
-            osstream<<"Initialization iteration "<<iter_count<<":";
+            osstream<<"Initialization DAE iteration "<<iter_count<<":";
             toolkit->show_information_with_leading_time_stamp(osstream);
         //}
         converged = solve_network();
@@ -1460,9 +1464,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
 {
     auto clock_start = steady_clock::now();
 
-    cout<<__FILE__<<", "<<__LINE__<<endl;
-    solve_vsc_hvdcs_network_model();
-    cout<<__FILE__<<", "<<__LINE__<<endl;
+    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
     max_current_mismatch_pu = 0.0;
     max_power_mismatch_MVA = 0.0;
     max_mismatch_bus = 0;
@@ -1484,13 +1486,13 @@ bool DYNAMICS_SIMULATOR::solve_network()
 
     GREATEST_POWER_CURRENT_MISMATCH_STRUCT greatest_mismatch_struct;
 
-    cout<<__FILE__<<", "<<__LINE__<<endl;
+
     solve_hvdcs_without_integration();
-    cout<<__FILE__<<", "<<__LINE__<<endl;
+    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
     update_vsc_hvdcs_converter_model();
-    cout<<__FILE__<<", "<<__LINE__<<endl;
+    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
     get_bus_current_mismatch();
-    cout<<__FILE__<<", "<<__LINE__<<endl;
+    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
 
     #ifndef USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
     calculate_bus_power_mismatch_in_MVA();
@@ -1686,24 +1688,6 @@ void DYNAMICS_SIMULATOR::solve_hvdcs_without_integration()
             model->solve_hvdc_model_without_integration();
     }
 }
-
-void DYNAMICS_SIMULATOR::solve_vsc_hvdcs_network_model()
-{
-    unsigned int n = vsc_hvdcs.size();
-    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_hvdc_thread_number());
-        set_openmp_number_of_threads(toolkit->get_thread_number());
-        #pragma omp parallel for schedule(static)
-        //#pragma omp parallel for num_threads(2)
-    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(unsigned int i=0; i<n; ++i)
-    {
-        VSC_HVDC_NETWORK_MODEL* model = vsc_hvdcs[i]->get_vsc_hvdc_network_model();
-        if(model!=NULL)
-            model->solve_vsc_hvdc_network();
-    }
-}
-
 
 void DYNAMICS_SIMULATOR::update_vsc_hvdcs_converter_model()
 {

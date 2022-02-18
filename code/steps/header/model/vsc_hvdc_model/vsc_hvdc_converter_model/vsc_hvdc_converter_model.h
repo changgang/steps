@@ -36,37 +36,52 @@ class VSC_HVDC_CONVERTER_MODEL: public VSC_HVDC_MODEL
         complex<double> get_converter_ac_bus_complex_voltage_in_pu() const;
         complex<double> get_converter_ac_bus_complex_voltage_in_kV() const;
 
+        complex<double> get_converter_initial_S_from_converter_to_AC_bus_in_MVA() const;
         double get_converter_initial_P_to_AC_bus_in_MW() const;
         double get_converter_initial_Q_to_AC_bus_in_MVar() const;
+
+        complex<double> get_converter_dynamic_S_from_converter_to_AC_bus_in_MVA() const;
+        double get_converter_dynamic_P_from_converter_to_AC_bus_in_MW() const;
+        double get_converter_dynamic_Q_from_converter_to_AC_bus_in_MVar() const;
+
+
         double get_converter_initial_ac_angle_at_converter_side_in_rad() const;
         double get_converter_initial_ac_angle_at_converter_side_in_deg() const;
+        double get_converter_initial_ac_angle_at_ac_bus_side_in_rad() const;
+        double get_converter_initial_ac_angle_at_ac_bus_side_in_deg() const;
+
+        double get_converter_dynamic_ac_angle_at_converter_side_in_rad() const;
+        double get_converter_dynamic_ac_angle_at_converter_side_in_deg() const;
+        double get_converter_dynamic_ac_angle_at_ac_bus_side_in_rad() const;
+        double get_converter_dynamic_ac_angle_at_ac_bus_side_in_deg() const;
+
+
+        virtual double get_initial_angle_at_pll_in_rad() const = 0;
+        virtual double get_dynamic_angle_at_pll_in_rad() const = 0;
+        double get_initial_angle_at_pll_in_deg() const;
+        double get_dynamic_angle_at_pll_in_deg() const;
+
+
         complex<double> get_converter_initial_current_from_converter_to_ac_bus_in_xy_axis_in_kA() const;
         complex<double> get_converter_initial_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_system_base() const;
         complex<double> get_converter_initial_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_converter_base() const;
         complex<double> get_converter_initial_current_from_converter_to_ac_bus_in_dq_axis_in_pu_on_converter_base() const;
 
-        double get_converter_dynamic_P_from_converter_to_AC_bus_in_MW() const;
-        double get_converter_dynamic_Q_from_converter_to_AC_bus_in_MVar() const;
-        double get_converter_dynamic_ac_angle_at_converter_side_in_rad() const;
-        double get_converter_dynamic_ac_angle_at_converter_side_in_deg() const;
 
-        double get_converter_ac_angle_at_ac_bus_side_in_rad() const;
-        double get_converter_ac_angle_at_ac_bus_side_in_deg() const;
 
-        complex<double> get_converter_current_from_converter_to_ac_bus_in_xy_axis_in_kA() const;
-        complex<double> get_converter_current_from_converter_to_ac_bus_in_xy_axis_in_pu_based_on_converter_base() const;
+        complex<double> get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_kA() const;
+        complex<double> get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_converter_base() const;
+        complex<double> get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_system_base() const;
+        complex<double> get_converter_dynamic_current_from_converter_to_ac_bus_in_dq_axis_in_pu_on_system_base() const;
 
     public:
         virtual complex<double> get_converter_voltage_in_dq_axis_in_pu() const = 0;
-        virtual complex<double> get_converter_current_from_converter_to_ac_network_in_dq_axis_in_pu_on_converter_base() const = 0;
+        virtual complex<double> get_converter_dynamic_current_from_converter_to_ac_bus_in_dq_axis_in_pu_on_converter_base() const = 0;
 
 
-        complex<double> get_converter_voltage_in_xy_axis_in_pu();
-        complex<double> get_converter_current_from_converter_to_ac_network_in_xy_axis_in_pu_on_converter_base();
-        complex<double> get_converter_current_from_converter_to_ac_network_in_xy_axis_in_pu_on_system_base();
+        complex<double> get_converter_voltage_in_xy_axis_in_pu() const;
 
-        complex<double> get_converter_current_from_converter_to_ac_network_in_dq_axis_in_pu_on_system_base();
-        complex<double> get_converter_Norton_current_in_xy_axis_in_pu_based_on_system_base();
+        complex<double> get_converter_Norton_current_in_xy_axis_in_pu_based_on_system_base() const;
 
     public:
         // specific model
