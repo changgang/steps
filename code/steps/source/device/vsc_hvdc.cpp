@@ -232,7 +232,7 @@ void VSC_HVDC::set_converter_count(unsigned int n)
     converter.P_to_AC_bus_MW = 0.0;
     converter.Q_to_AC_bus_MVar = 0.0;
 
-    converter.Pdc_flowing_out_Ceq_in_MW = 0.0;
+    converter.Pdc_from_Ceq_to_DC_network_in_MW = 0.0;
     for(unsigned int i=0; i<n; ++i)
     {
         converters.push_back(converter);
@@ -2319,7 +2319,6 @@ void VSC_HVDC::run(DYNAMIC_MODE mode)
     ostringstream osstream;
     if(get_status()==true)
     {
-        STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
         VSC_HVDC_NETWORK_MODEL* network = get_vsc_hvdc_network_model();
         vector<VSC_HVDC_CONVERTER_MODEL*> converters = get_vsc_hvdc_converter_models();
         unsigned int n_converter = get_converter_count();
@@ -2328,23 +2327,32 @@ void VSC_HVDC::run(DYNAMIC_MODE mode)
         {
             case INITIALIZE_MODE:
             {
-                STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
                 if(network!=NULL)
                     network->initialize();
-                STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
                 for(i=0; i!=n_converter; ++i)
                 {
                     if(converters[i]!=NULL)
                         converters[i]->initialize();
                 }
-                STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
                 break;
             }
             case INTEGRATE_MODE:
             case UPDATE_MODE:
             {
                 if(network!=NULL)
+                {
+                    cout<<"Before run network model:"<<endl;
+                    for(unsigned i = 0; i!=get_converter_count(); ++i)
+                    {
+                        cout<<"Converter "<<i<<", P2Ceq = "<<get_converter_Pdc_from_Ceq_to_DC_network_in_MW(i)<<endl;
+                    }
                     network->run(mode);
+                    cout<<"After run network model:"<<endl;
+                    for(unsigned i = 0; i!=get_converter_count(); ++i)
+                    {
+                        cout<<"Converter "<<i<<", P2Ceq = "<<get_converter_Pdc_from_Ceq_to_DC_network_in_MW(i)<<endl;
+                    }
+                }
 
                 for(i=0; i!=n_converter; ++i)
                 {
@@ -2471,6 +2479,7 @@ void VSC_HVDC::solve_steady_state()
     }
     */
     update_converters_P_and_Q_to_AC_bus();
+    update_converters_P_to_DC_network();
 
 }
 
@@ -3011,17 +3020,17 @@ double VSC_HVDC::get_converter_Pdc_command_to_dc_network_in_MW(unsigned int conv
         return 0.0;
 }
 
-void VSC_HVDC::set_converter_Pdc_flowing_out_Ceq_in_MW(const unsigned int converter_index, const double P)
+void VSC_HVDC::set_converter_Pdc_from_Ceq_to_DC_network_in_MW(const unsigned int converter_index, const double P)
 {
     if(converter_index_is_out_of_range_in_function(converter_index, __FUNCTION__))
         return;
-    converters[converter_index].Pdc_flowing_out_Ceq_in_MW = P;
+    converters[converter_index].Pdc_from_Ceq_to_DC_network_in_MW = P;
 }
 
-double VSC_HVDC::get_converter_Pdc_flowing_out_Ceq_in_MW(unsigned int converter_index) const
+double VSC_HVDC::get_converter_Pdc_from_Ceq_to_DC_network_in_MW(unsigned int converter_index) const
 {
     if(not converter_index_is_out_of_range_in_function(converter_index, __FUNCTION__))
-        return converters[converter_index].Pdc_flowing_out_Ceq_in_MW;
+        return converters[converter_index].Pdc_from_Ceq_to_DC_network_in_MW;
     else
         return 0.0;
 }
@@ -3281,6 +3290,26 @@ void VSC_HVDC::update_converter_P_and_Q_to_AC_bus(unsigned int index)
             if(converter->status==true)
                 converter->P_to_AC_bus_MW=Pac;
         }
+    }
+}
+
+
+void VSC_HVDC::update_converters_P_to_DC_network()
+{
+    unsigned int n = get_converter_count();
+    /*for(unsigned int i=0; i!=n; ++i)
+        cout<<"get_converter_Pdc: "<<get_converter_Pdc_command_to_dc_network_in_MW(i)<<endl;
+        */
+    for(unsigned int index=0; index!=n; ++index)
+        update_converter_P_to_DC_network(index);
+}
+
+void VSC_HVDC::update_converter_P_to_DC_network(unsigned int index)
+{
+    if(get_converter_status(index)==true)
+    {
+        double Pdc = get_converter_Pdc_command_to_dc_network_in_MW(index);
+        set_converter_Pdc_from_Ceq_to_DC_network_in_MW(index, Pdc);
     }
 }
 

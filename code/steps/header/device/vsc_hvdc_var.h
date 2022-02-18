@@ -50,7 +50,7 @@ struct VSC_HVDC_CONVERTER_STRUCT
     double Pac_command_in_MW;
 
     // dynamic variables
-    double Pdc_flowing_out_Ceq_in_MW;
+    double Pdc_from_Ceq_to_DC_network_in_MW;
 };
 
 struct VSC_HVDC_DC_BUS_STRUCT

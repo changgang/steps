@@ -135,7 +135,7 @@ void VSCHVDCC0::set_reactive_power_block_qmin(double qmin)
 
 void VSCHVDCC0::set_dc_voltage_block_ceq_in_uF(const double ceq)
 {
-    udc_block.set_T_in_s(ceq);
+    udc_block.set_T_in_s(ceq*1e-6);
 }
 
 
@@ -201,7 +201,7 @@ double VSCHVDCC0::get_reactive_power_block_qmin() const
 
 double VSCHVDCC0::get_dc_voltage_block_ceq_in_uF() const
 {
-    return udc_block.get_T_in_s();
+    return udc_block.get_T_in_s()*1e6;
 }
 
 
@@ -248,13 +248,12 @@ double VSCHVDCC0::get_reactive_power_block_Uacref() const
 
 double VSCHVDCC0::get_dynamic_dc_voltage_in_kV() const
 {
-    VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
-    return get_dynamic_dc_voltage_in_pu()*vsc_hvdc->get_dc_network_base_voltage_in_kV();
+    return udc_block.get_output();
 }
 
 double VSCHVDCC0::get_dynamic_dc_voltage_in_pu() const
 {
-    return udc_block.get_output();
+    return get_dynamic_dc_voltage_in_kV()/get_converter_dc_base_voltage_in_kV();
 }
 
 bool VSCHVDCC0::setup_model_with_steps_string_vector(vector<string>& data)
@@ -352,26 +351,24 @@ void VSCHVDCC0::initialize()
 {
     if(not is_model_initialized())
     {
-        STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
         VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
         setup_block_toolkit_and_parameters();
 
         unsigned int converter_index=get_converter_index();
-        STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
         complex<double> Idq = get_converter_initial_current_from_converter_to_ac_bus_in_dq_axis_in_pu_on_converter_base();
-        STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
-        double Isd0 = Idq.real();
-        double Isq0 = Idq.imag();
+        double Id = Idq.real();
+        double Iq = Idq.imag();
         VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE active_power_control_mode = get_converter_active_control_mode();
         VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE reactive_power_control_mode = get_converter_reactive_control_mode();
-        p_block.set_output(Isd0);
+
+        p_block.set_output(Id);
         p_block.initialize();
-        q_block.set_output(Isq0);
+
+        q_block.set_output(Iq);
         q_block.initialize();
-        STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
+
         double Udc_in_kV = vsc_hvdc->get_dc_bus_Vdc_in_kV(vsc_hvdc->get_dc_bus_index_with_converter_index(converter_index));
-        double Udc_in_pu = Udc_in_kV/vsc_hvdc->get_dc_network_base_voltage_in_kV();
-        udc_block.set_output(Udc_in_pu); // change to initial Udc
+        udc_block.set_output(Udc_in_kV);
         udc_block.initialize();
 
         double pref = 0.0;
@@ -382,10 +379,12 @@ void VSCHVDCC0::initialize()
         {
             case DY_VSC_DC_VOLTAGE_CONTORL:
                 udcref = vsc_hvdc->get_dc_bus_Vdc_in_kV(vsc_hvdc->get_dc_bus_index_with_converter_index(get_converter_index()));
+                udcref /= vsc_hvdc->get_dc_network_base_voltage_in_kV();
                 set_active_power_block_Pref(udcref);
                 break;
             case DY_VSC_AC_ACTIVE_POWER_CONTORL:
                 pref = vsc_hvdc->get_converter_P_to_AC_bus_in_MW(get_converter_index());
+                pref /= get_converter_capacity_in_MVA();
                 set_active_power_block_Pref(pref);
                 break;
             default:
@@ -395,11 +394,12 @@ void VSCHVDCC0::initialize()
         switch(reactive_power_control_mode)
         {
             case DY_VSC_AC_VOLTAGE_CONTROL:
-                uacref = vsc_hvdc->get_converter_ac_voltage_in_kV_with_ac_bus_number(get_converter_bus());
+                uacref = get_converter_ac_bus_voltage_in_pu();
                 set_reactive_power_block_Qref(uacref);
                 break;
             case DY_VSC_AC_REACTIVE_POWER_CONTROL:
                 qref = vsc_hvdc->get_converter_Q_to_AC_bus_in_MVar(get_converter_index());
+                qref /= get_converter_capacity_in_MVA();
                 set_reactive_power_block_Qref(qref);
                 break;
             default:
@@ -413,30 +413,27 @@ void VSCHVDCC0::run(DYNAMIC_MODE mode)
 {
     if(is_model_active())
     {
-        STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
         VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
         unsigned int bus_number = get_converter_bus();
         unsigned int converter_index = get_converter_index();
-        STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
-        complex<double> Is = get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_kA();
-        STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
-        complex<double> Us = vsc_hvdc->get_converter_ac_voltage_in_kV_with_ac_bus_number(bus_number);
-        complex<double> S = Us*conj(Is)*SQRT3;
-        cout<<"S of converter "<<get_converter_index()<<": "<<S<<endl;
+        complex<double> Is = get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_converter_base();
+        complex<double> Us = get_converter_ac_bus_complex_voltage_in_pu();
+        complex<double> S = Us*conj(Is);
 
         double Ps = S.real();
         double Qs = S.imag();
-        double Isd0 = Is.real();
-        double Isq0 = Is.imag();
 
         double input = 0.0;
-        double Pdc_from_Ceq_to_dc_network = vsc_hvdc->get_converter_Pdc_flowing_out_Ceq_in_MW(converter_index);
-        double Pac_from_ac_network_to_Ceq = get_converter_dc_power_from_converter_to_dc_network_in_MW();
+        double Pdc_from_Ceq_to_dc_network = vsc_hvdc->get_converter_Pdc_from_Ceq_to_DC_network_in_MW(converter_index);
+        double Pac_from_ac_network_to_Ceq = get_converter_dc_power_from_converter_to_Ceq_in_MW();
         double Udc = get_dynamic_dc_voltage_in_kV();
 
         input = (-Pdc_from_Ceq_to_dc_network+Pac_from_ac_network_to_Ceq)/Udc;
         udc_block.set_input(input);
         udc_block.run(mode);
+
+        vsc_hvdc->set_dc_bus_Vdc_in_kV(vsc_hvdc->get_dc_bus_index_with_converter_index(get_converter_index()),
+                                       get_dynamic_dc_voltage_in_kV());
 
         VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE active_power_control_mode = get_converter_active_control_mode();
         VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE reactive_power_control_mode = get_converter_reactive_control_mode();
@@ -454,7 +451,6 @@ void VSCHVDCC0::run(DYNAMIC_MODE mode)
             default:
                 break;
         }
-        cout<<"Input of P block of converter "<<get_converter_index()<<": "<<input<<endl;
         p_block.set_input(input);
         p_block.run(mode);
 
@@ -470,7 +466,6 @@ void VSCHVDCC0::run(DYNAMIC_MODE mode)
             default:
                 break;
         }
-        cout<<"Input of Q block of converter "<<get_converter_index()<<": "<<input<<endl;
         q_block.set_input(input);
         q_block.run(mode);
 
@@ -644,31 +639,40 @@ complex<double> VSCHVDCC0::get_converter_dynamic_source_current_in_dq_axis_in_pu
 {
     double Id = p_block.get_output();
     double Iq = q_block.get_output();
-
-    cout<<"Idq on converter base of converter "<<get_converter_index()<<": "<<Id<<", "<<Iq<<endl;
-    cout<<"Input of pq blocks "<<p_block.get_input()<<", "<<q_block.get_input()<<endl;
-
     return complex<double>(Id, Iq);
-
 }
 
-double VSCHVDCC0::get_converter_dc_power_from_converter_to_dc_network_in_MW()
+double VSCHVDCC0::get_converter_dc_power_from_converter_to_Ceq_in_MW()
 {
     VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
     unsigned int converter_index = get_converter_index();
-    unsigned int bus_number=get_converter_bus();
-    complex<double> Is = vsc_hvdc->get_converter_ac_current_in_kA_with_ac_bus_number(bus_number);
-    complex<double> Us = vsc_hvdc->get_converter_ac_voltage_in_kV_with_ac_bus_number(bus_number);
-    complex<double> S = Us*conj(Is)/SQRT3;
+
+    complex<double> Is = get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_kA();
+    complex<double> Us = get_converter_ac_bus_complex_voltage_in_kV();
+    complex<double> Zc_in_ohm = vsc_hvdc->get_converter_commutating_impedance_in_ohm(converter_index);
+    complex<double> Es = Us+Is*Zc_in_ohm*SQRT3;
+    complex<double> S = Es*conj(Is)*SQRT3;
+
     double Ps = S.real();
     double Qs = S.imag();
 
-    return vsc_hvdc->get_converter_dc_power_from_converter_to_dc_network_with_P_and_Q_to_AC_bus_in_MVA(converter_index, Ps, Qs);
+    double c_loss = vsc_hvdc->get_converter_loss_factor_C_in_kW_per_amp_squard(converter_index);
+    double b_loss = vsc_hvdc->get_converter_loss_factor_B_in_kW_per_amp(converter_index);
+    double a_loss = vsc_hvdc->get_converter_loss_factor_A_in_kW(converter_index);
+    double Is_mag = abs(Is)*1000;
+    double P_converter_loss = (c_loss*Is_mag*Is_mag+b_loss*Is_mag+a_loss)/1000;
+    double Pdc_from_dc_network_to_converter = Ps + P_converter_loss;
+
+    return -Pdc_from_dc_network_to_converter;
+
+
+
+
+    //return vsc_hvdc->get_converter_dc_power_from_converter_to_dc_network_with_P_and_Q_to_AC_bus_in_MVA(converter_index, Ps, Qs);
 }
 
 double VSCHVDCC0::get_initial_angle_at_pll_in_rad() const
 {
-    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
     return get_converter_initial_ac_angle_at_ac_bus_side_in_rad();
 }
 

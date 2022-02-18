@@ -11,6 +11,8 @@ using namespace std;
 
 int main()
 {
+    default_toolkit.disable_use_steps_fast_math_logic();
+
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
     DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
@@ -42,12 +44,13 @@ int main()
     //VSC_HVDC_CONVERTER_MODEL* model = vsc_hvdc->get_vsc_hvdc_converter_model(0);
     //model->report();
 
-    default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
     simulator.set_allowed_max_power_imbalance_in_MVA(0.01);
-    simulator.set_max_DAE_iteration(2);
-    simulator.set_min_DAE_iteration(2);
+    simulator.set_max_DAE_iteration(3);
+    simulator.set_min_DAE_iteration(3);
     simulator.set_max_network_iteration(50);
     simulator.set_iteration_accelerator(0.8);
+    simulator.set_allowed_max_power_imbalance_in_MVA(0.0001);
 
     simulator.prepare_vsc_hvdc_related_meters();
     simulator.set_output_file("IEEE39_vsc");
@@ -62,7 +65,7 @@ int main()
     //simulator.set_output_file("test_log/bench_shandong_with_avr_trip_mac_140");
 
     simulator.start();
-    //simulator.run_to(1.0);
+    simulator.run_to(0.5);
 
     /*DEVICE_ID did;
     did.set_device_type(STEPS_LOAD);

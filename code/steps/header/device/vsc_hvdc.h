@@ -251,6 +251,8 @@ class VSC_HVDC : public NONBUS_DEVICE
 
         void update_converters_P_and_Q_to_AC_bus();
         void update_converter_P_and_Q_to_AC_bus(unsigned int index);
+        void update_converters_P_to_DC_network();
+        void update_converter_P_to_DC_network(unsigned int index);
 
         void set_max_iteration(unsigned int iteration);
         void set_allowed_max_P_mismatch_in_MW(double max_mismatch);
@@ -296,8 +298,8 @@ class VSC_HVDC : public NONBUS_DEVICE
         void set_converter_Pdc_command_to_dc_network_in_MW(const unsigned int converter_index, const double P);
         double get_converter_Pdc_command_to_dc_network_in_MW(unsigned int converter_index) const;
 
-        void set_converter_Pdc_flowing_out_Ceq_in_MW(const unsigned int converter_index, const double P);
-        double get_converter_Pdc_flowing_out_Ceq_in_MW(unsigned int converter_index) const;
+        void set_converter_Pdc_from_Ceq_to_DC_network_in_MW(const unsigned int converter_index, const double P);
+        double get_converter_Pdc_from_Ceq_to_DC_network_in_MW(unsigned int converter_index) const;
 
         void set_convergence_flag(bool flag);
         void save_dc_bus_powerflow_result_to_file(const string& filename) const;

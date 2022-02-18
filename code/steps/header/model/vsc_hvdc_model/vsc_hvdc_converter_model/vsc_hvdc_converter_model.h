@@ -29,10 +29,12 @@ class VSC_HVDC_CONVERTER_MODEL: public VSC_HVDC_MODEL
 
         BUS* get_converter_ac_bus_pointer() const;
         double get_converter_capacity_in_MVA() const;
-        double get_converter_base_voltage_in_kV() const;
+        double get_converter_dc_base_voltage_in_kV() const;
         double get_converter_ac_bus_base_voltage_in_kV() const;
         double get_converter_ac_bus_angle_in_deg() const;
         double get_converter_ac_bus_angle_in_rad() const;
+        double get_converter_ac_bus_voltage_in_pu() const;
+        double get_converter_ac_bus_voltage_in_kV() const;
         complex<double> get_converter_ac_bus_complex_voltage_in_pu() const;
         complex<double> get_converter_ac_bus_complex_voltage_in_kV() const;
 
@@ -79,7 +81,7 @@ class VSC_HVDC_CONVERTER_MODEL: public VSC_HVDC_MODEL
         virtual complex<double> get_converter_dynamic_current_from_converter_to_ac_bus_in_dq_axis_in_pu_on_converter_base() const = 0;
 
 
-        complex<double> get_converter_voltage_in_xy_axis_in_pu() const;
+        complex<double> get_converter_source_voltage_in_xy_axis_in_pu() const;
 
         complex<double> get_converter_Norton_current_in_xy_axis_in_pu_based_on_system_base() const;
 

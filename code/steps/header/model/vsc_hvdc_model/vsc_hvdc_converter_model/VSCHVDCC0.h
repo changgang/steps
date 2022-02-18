@@ -89,7 +89,7 @@ class VSCHVDCC0: public VSC_HVDC_CONVERTER_MODEL
         virtual double get_dynamic_angle_at_pll_in_rad() const;
     private:
         void copy_from_const_model(const VSCHVDCC0& model);
-        double get_converter_dc_power_from_converter_to_dc_network_in_MW();
+        double get_converter_dc_power_from_converter_to_Ceq_in_MW();
         complex<double> get_converter_dynamic_source_current_in_dq_axis_in_pu_on_converter_base() const ;
     private:
         PID_BLOCK p_block;

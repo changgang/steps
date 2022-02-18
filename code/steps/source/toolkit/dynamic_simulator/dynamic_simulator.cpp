@@ -690,9 +690,7 @@ void DYNAMICS_SIMULATOR::save_meter_values()
     max_power_mismatch_MVA = max_current_mismatch_pu*toolkit->get_power_system_database().get_bus_positive_sequence_voltage_in_pu(max_mismatch_bus)*toolkit->get_system_base_power_in_MVA();
     #endif // USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
 
-    cout<<__FILE__<<", line "<<__LINE__<<endl;
     update_all_meters_value();
-    cout<<__FILE__<<", line "<<__LINE__<<endl;
     unsigned int n = meters.size();
     if(n!=0 and (csv_output_file.is_open() or json_output_file.is_open() or bin_output_file.is_open()))
     {
@@ -883,12 +881,9 @@ void DYNAMICS_SIMULATOR::start()
 
     optimize_network_ordering();
 
-    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
     prepare_devices_for_run();
-    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
 
     run_all_models(INITIALIZE_MODE);
-    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
     run_bus_frequency_blocks(INITIALIZE_MODE);
 
     network_matrix.build_dynamic_network_Y_matrix();
@@ -914,14 +909,13 @@ void DYNAMICS_SIMULATOR::start()
 		//osstream<<"Network iteration "<<iter_count;
 		//toolkit->show_information_with_leading_time_stamp(osstream);
 
-        //if(detailed_log_enabled)
-        //{
+        if(detailed_log_enabled)
+        {
             ostringstream osstream;
             osstream<<"Initialization DAE iteration "<<iter_count<<":";
             toolkit->show_information_with_leading_time_stamp(osstream);
-        //}
+        }
         converged = solve_network();
-        cout<<"converged is "<<converged<<", network iteration count "<<network_iteration_count<<endl;
         ITER_NET += network_iteration_count;
         if(converged or iter_count>get_max_DAE_iteration())
             break;
@@ -1054,6 +1048,8 @@ void DYNAMICS_SIMULATOR::run_a_step()
     ostringstream osstream;
 
     TIME += DELT;
+    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
+    cout<<"running dynamic simulation to "<<TIME<<endl;
     if(detailed_log_enabled)
     {
         osstream<<"Run dynamic simulation at time "<<TIME<<"s.";
@@ -1073,6 +1069,8 @@ void DYNAMICS_SIMULATOR::run_a_step()
     ITER_DAE = 0;
     ITER_NET = 0;
     current_max_network_iteration = get_max_network_iteration();
+    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
+    cout<<"Now go integrate"<<endl;
     while(true)
     {
         ++ITER_DAE;
@@ -1111,6 +1109,8 @@ void DYNAMICS_SIMULATOR::run_a_step()
             break;
         }
     }
+    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
+    cout<<"Now go update"<<endl;
     update();
     run_bus_frequency_blocks(INTEGRATE_MODE);
     run_bus_frequency_blocks(UPDATE_MODE);
@@ -1185,7 +1185,6 @@ void DYNAMICS_SIMULATOR::update()
 
     update_equivalent_devices_buffer();
     run_all_models(UPDATE_MODE);
-
 
     bool network_converged = false;
 
@@ -1464,7 +1463,6 @@ bool DYNAMICS_SIMULATOR::solve_network()
 {
     auto clock_start = steady_clock::now();
 
-    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
     max_current_mismatch_pu = 0.0;
     max_power_mismatch_MVA = 0.0;
     max_mismatch_bus = 0;
@@ -1488,11 +1486,11 @@ bool DYNAMICS_SIMULATOR::solve_network()
 
 
     solve_hvdcs_without_integration();
-    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
+
     update_vsc_hvdcs_converter_model();
-    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
+
     get_bus_current_mismatch();
-    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
+
 
     #ifndef USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
     calculate_bus_power_mismatch_in_MVA();
@@ -2273,7 +2271,6 @@ void DYNAMICS_SIMULATOR::add_vsc_hvdcs_to_bus_current_mismatch()
                 unsigned int physical_bus = vsc_hvdc->get_converter_ac_bus(j);
                 unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-                cout<<"adding Ixy on system base of converter "<<j<<": "<<vsc_hvdc->get_converter_dynamic_equivalent_current_to_ac_bus_in_pu_on_system_base(j)<<endl;
                 I_mismatch[internal_bus] += vsc_hvdc->get_converter_dynamic_equivalent_current_to_ac_bus_in_pu_on_system_base(j);
                 if(not detailed_log_enabled)
                     ;
@@ -2382,8 +2379,11 @@ GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_current_misma
     for(unsigned int i=0; i<n; ++i)
     {
         double I = steps_fast_complex_abs(I_mismatch[i]);
-        //cout<<"dynamic current mismatch @ bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)
-        //    <<": "<<I<<endl;
+        if(I>5e-5)
+        {
+            cout<<"dynamic current mismatch @ bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)
+                <<": "<<I<<endl;
+        }
         if(I>Imax)
         {
             Imax = I;
