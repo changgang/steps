@@ -545,7 +545,7 @@ void POWERFLOW_SOLVER::initialize_bus_type()
     initialize_PV_bus_type();
     initialize_SLACK_bus_type();
 
-    unsigned int nbus = buses.size();
+    //unsigned int nbus = buses.size();
     //cout<<"BUS Types after initialized by POWERFLOW_SOLVER::"<<__FUNCTION__<<"()"<<endl;
     /*
     for(unsigned int i=0; i!=nbus; ++i)

@@ -134,7 +134,7 @@ string VSCHVDCP0::get_standard_psse_string(bool export_internal_bus_number) cons
 void VSCHVDCP0::prepare_model_data_table()
 {
     clear_model_data_table();
-    unsigned int i=0;
+    //unsigned int i=0;
     //add_model_data_name_and_index_pair("TEST", i); i++;
 }
 
@@ -170,7 +170,7 @@ double VSCHVDCP0::get_minimum_nonzero_time_constant_in_s()
 void VSCHVDCP0::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    unsigned int i=0;
+    //unsigned int i=0;
     //add_model_internal_variable_name_and_index_pair("TEST STATE", i); i++;
 }
 

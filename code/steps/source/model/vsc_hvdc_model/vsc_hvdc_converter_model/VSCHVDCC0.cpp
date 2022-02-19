@@ -414,7 +414,6 @@ void VSCHVDCC0::run(DYNAMIC_MODE mode)
     if(is_model_active())
     {
         VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
-        unsigned int bus_number = get_converter_bus();
         unsigned int converter_index = get_converter_index();
         complex<double> Is = get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_converter_base();
         complex<double> Us = get_converter_ac_bus_complex_voltage_in_pu();
@@ -439,7 +438,6 @@ void VSCHVDCC0::run(DYNAMIC_MODE mode)
         VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE reactive_power_control_mode = get_converter_reactive_control_mode();
 
         input = 0.0;
-        unsigned int dc_bus_index = vsc_hvdc->get_dc_bus_index_with_converter_index(converter_index);
         switch(active_power_control_mode)
         {
             case DY_VSC_DC_VOLTAGE_CONTORL:

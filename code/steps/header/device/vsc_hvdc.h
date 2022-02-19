@@ -238,8 +238,6 @@ class VSC_HVDC : public NONBUS_DEVICE
         void build_initial_zero_matrix();
         void add_dc_lines_to_dc_network();
 
-
-
         void calculate_raw_bus_power_mismatch();
         void build_dc_bus_power_mismatch_vector();
         void build_jacobian();
@@ -317,9 +315,8 @@ class VSC_HVDC : public NONBUS_DEVICE
         double get_dc_network_matrix_entry_between_dc_bus(unsigned int ibus, unsigned int jbus);
         double get_jacobian_matrix_entry_between_dc_bus(unsigned int ibus, unsigned int jbus);
 
-        double get_converter_ac_voltage_in_pu_with_ac_bus_number(unsigned int bus);
-        double get_converter_ac_voltage_in_pu_with_converter_index(unsigned int index);
-        double get_converter_ac_voltage_in_kV_with_ac_bus_number(unsigned int bus);
+        complex<double> get_converter_ac_voltage_in_pu_with_ac_bus_number(unsigned int bus);
+        complex<double> get_converter_ac_voltage_in_kV_with_ac_bus_number(unsigned int bus);
         complex<double> get_converter_ac_current_in_kA_with_ac_bus_number(unsigned int bus);
         double get_converter_dc_voltage_in_kV_with_ac_bus_number(unsigned int bus);
         double get_converter_dc_current_in_kA_with_ac_bus_number(unsigned int bus);
@@ -346,9 +343,6 @@ class VSC_HVDC : public NONBUS_DEVICE
         unsigned int get_dc_bus_converter_index_with_dc_bus_number(unsigned int bus) const;
     private:
         void copy_from_const_vsc(const VSC_HVDC& vsc);
-
-
-
 
         bool converter_index_is_out_of_range_in_function(const unsigned int index, const string& func) const;
         bool dc_bus_index_is_out_of_range_in_function(const unsigned int index, const string& func) const;

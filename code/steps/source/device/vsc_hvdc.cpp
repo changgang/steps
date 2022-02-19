@@ -2553,7 +2553,7 @@ void VSC_HVDC::initialize_physical_internal_bus_pair()
 
 void VSC_HVDC::reorder_physical_internal_bus_pair()
 {
-    STEPS& toolkit = get_toolkit();
+    //STEPS& toolkit = get_toolkit();
     vector<unsigned int> permutation = dc_network_matrix.get_reorder_permutation();
     inphno.update_with_new_internal_bus_permutation(permutation);
     ostringstream osstream;
@@ -2980,7 +2980,6 @@ double VSC_HVDC::solve_Pdc_with_dc_active_power_voltage_droop_control(unsigned i
 
 double VSC_HVDC::solve_Pdc_with_dc_current_voltage_droop_control(unsigned int converter_index) const
 {
-    double initial_Pdc=get_converter_initial_dc_current_reference_in_kA(converter_index)*get_converter_initial_dc_voltage_reference_in_kV(converter_index);
     double Udcref=get_converter_initial_dc_voltage_reference_in_kV(converter_index);
     double Idcref=get_converter_initial_dc_current_reference_in_kA(converter_index);
     double kdi=get_converter_initial_droop_coefficient_for_droop_control(converter_index);
@@ -3186,7 +3185,6 @@ double VSC_HVDC::calculate_jacobian_matrix_entry(unsigned int k)
     double alpha, beta;
 
     Udi = get_dc_voltage_of_dc_bus_number(ibus);
-    unsigned int n_bus=get_dc_bus_count();
     unsigned int converter_index = get_dc_bus_converter_index_with_dc_bus_number(ibus);
     if(converter_index!=INDEX_NOT_EXIST)
     {
@@ -3265,16 +3263,17 @@ void VSC_HVDC::update_converters_P_and_Q_to_AC_bus()
         */
     for(unsigned int index=0; index!=n; ++index)
         update_converter_P_and_Q_to_AC_bus(index);
+
 }
 void VSC_HVDC::update_converter_P_and_Q_to_AC_bus(unsigned int index)
 {
     if(get_converter_status(index)==true)
     {
         double Pac=0.0;
-        VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE mode = current_active_power_control_mode[index];
-        if(mode==VSC_DC_VOLTAGE_CONTORL or
-           mode==VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL or
-           mode==VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL)
+        VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE p_mode = current_active_power_control_mode[index];
+        if(p_mode==VSC_DC_VOLTAGE_CONTORL or
+           p_mode==VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL or
+           p_mode==VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL)
         {
             Pac=solve_converter_Pac_with_Pdc(index);
         }
@@ -3290,9 +3289,26 @@ void VSC_HVDC::update_converter_P_and_Q_to_AC_bus(unsigned int index)
             if(converter->status==true)
                 converter->P_to_AC_bus_MW=Pac;
         }
+        double Qac = 0.0;
+        VSC_HVDC_CONVERTER_REACTIVE_POWER_CONTROL_MODE q_mode = current_reactive_power_control_mode[index];
+        if(q_mode == VSC_AC_VOLTAGE_CONTROL)
+        {
+            POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+            unsigned int bus = get_converter_ac_bus(index);
+            BUS* busptr = psdb.get_bus(bus);
+            complex<double> Vac_in_pu = busptr->get_positive_sequence_complex_voltage_in_pu();  //need to finish it
+        }
+        else
+        {
+            Qac = get_converter_nominal_ac_reactive_power_command_in_Mvar(index);
+        }
+        if(converter!=NULL)
+        {
+            if(converter->status==true)
+                converter->Q_to_AC_bus_MVar=Qac;
+        }
     }
 }
-
 
 void VSC_HVDC::update_converters_P_to_DC_network()
 {
@@ -3678,26 +3694,18 @@ void VSC_HVDC::export_dc_bus_voltage_with_network_ordering()
     }
 }
 
-double VSC_HVDC::get_converter_ac_voltage_in_pu_with_ac_bus_number(unsigned int bus)
+complex<double> VSC_HVDC::get_converter_ac_voltage_in_pu_with_ac_bus_number(unsigned int bus)
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* busptr = psdb.get_bus(bus);
-    return busptr->get_positive_sequence_voltage_in_pu();
+    return busptr->get_positive_sequence_complex_voltage_in_pu();
 }
 
-double VSC_HVDC::get_converter_ac_voltage_in_pu_with_converter_index(unsigned int index)
-{
-    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    unsigned int bus = get_converter_ac_bus(index);
-    BUS* busptr = psdb.get_bus(bus);
-    return busptr->get_positive_sequence_voltage_in_pu();
-}
-
-double VSC_HVDC::get_converter_ac_voltage_in_kV_with_ac_bus_number(unsigned int bus)
+complex<double> VSC_HVDC::get_converter_ac_voltage_in_kV_with_ac_bus_number(unsigned int bus)
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* busptr = psdb.get_bus(bus);
-    return busptr->get_positive_sequence_voltage_in_kV();
+    return busptr->get_positive_sequence_complex_voltage_in_kV();
 }
 
 complex<double> VSC_HVDC::get_converter_ac_current_in_kA_with_ac_bus_number(unsigned int bus)
@@ -3731,18 +3739,21 @@ double VSC_HVDC::get_converter_dc_current_in_kA_with_ac_bus_number(unsigned int 
 
     return Idc;
 }
+
 double VSC_HVDC::get_converter_dc_power_in_MW_with_ac_bus_number(unsigned int bus)
 {
     unsigned int converter_index=get_converter_index_with_ac_bus(bus);
     double Pdc = get_converter_Pdc_command_to_dc_network_in_MW(converter_index);
     return Pdc;
 }
+
 double VSC_HVDC::get_converter_ac_active_power_in_MW_with_ac_bus_number(unsigned int bus)
 {
     unsigned int converter_index=get_converter_index_with_ac_bus(bus);
     double Pac=get_converter_P_to_AC_bus_in_MW(converter_index);
     return Pac;
 }
+
 double VSC_HVDC::get_converter_ac_reactive_power_in_MVar_with_ac_bus_number(unsigned int bus)
 {
     unsigned int converter_index=get_converter_index_with_ac_bus(bus);
