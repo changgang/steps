@@ -122,5 +122,5 @@
           "Pac_control"    0.0     20     0.0     0.01     1.1    -1.1
           "Qac_control"    0.0     20     0.0     0.01     0.8    -0.8  /
 "Vsc-Project1  "       "VSCHVDCC0  "       "vsc4  "        1000
-          "Vdc_control"    0.0     40     0.0     0.01     1.1    -1.1
+          "Vdc_control"    10.0     0.0001     0.0     0.01     1.1    -1.1
           "Qac_control"    0.0     20     0.0     0.01     0.8    -0.8  /

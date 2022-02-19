@@ -52,6 +52,16 @@ int main()
     simulator.set_iteration_accelerator(0.8);
     simulator.set_allowed_max_power_imbalance_in_MVA(0.0001);
 
+    simulator.prepare_bus_related_meter(16, "voltage in pu");
+    simulator.prepare_bus_related_meter(21, "voltage in pu");
+    simulator.prepare_bus_related_meter(3, "voltage in pu");
+    simulator.prepare_bus_related_meter(4, "voltage in pu");
+    simulator.prepare_bus_related_meter(14, "voltage in pu");
+    simulator.prepare_bus_related_meter(18, "voltage in pu");
+    simulator.prepare_bus_related_meter(101, "voltage in pu");
+    simulator.prepare_bus_related_meter(102, "voltage in pu");
+    simulator.prepare_bus_related_meter(103, "voltage in pu");
+    simulator.prepare_bus_related_meter(104, "voltage in pu");
     simulator.prepare_vsc_hvdc_related_meters();
     simulator.set_output_file("IEEE39_vsc");
     //simulator.show_dynamic_simulator_configuration();
@@ -65,14 +75,32 @@ int main()
     //simulator.set_output_file("test_log/bench_shandong_with_avr_trip_mac_140");
 
     simulator.start();
-    simulator.run_to(0.5);
+    simulator.run_to(1);
+
+
+    DEVICE_ID did;
+    did.set_device_type(STEPS_LINE);
+    TERMINAL terminal;
+    terminal.append_bus(16);
+    terminal.append_bus(21);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier_index(get_index_of_string("1"));
+    simulator.set_line_fault(did, 16, 0.0, complex<double>(0, -100));
+    simulator.run_to(1.1);
+    simulator.clear_line_fault(did, 16, 0.0);
 
     /*DEVICE_ID did;
     did.set_device_type(STEPS_LOAD);
     TERMINAL terminal;
-    terminal.append_bus(3);
+    terminal.append_bus(4);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
+
+    simulator.scale_load(did, 0.01);*/
+
+    simulator.run_to(3);
+
+    /*
 
     simulator.scale_load(did, -0.1);
     */

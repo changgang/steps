@@ -321,8 +321,8 @@ class VSC_HVDC : public NONBUS_DEVICE
         double get_converter_dc_voltage_in_kV_with_ac_bus_number(unsigned int bus);
         double get_converter_dc_current_in_kA_with_ac_bus_number(unsigned int bus);
         double get_converter_dc_power_in_MW_with_ac_bus_number(unsigned int bus);
-        double get_converter_ac_active_power_in_MW_with_ac_bus_number(unsigned int bus);
-        double get_converter_ac_reactive_power_in_MVar_with_ac_bus_number(unsigned int bus);
+        double get_converter_dynamic_ac_active_power_in_MW_with_ac_bus_number(unsigned int bus);
+        double get_converter_dynamic_ac_reactive_power_in_MVar_with_ac_bus_number(unsigned int bus);
 
         unsigned int get_dc_bus_with_converter_index(unsigned int converter_index) const;
         unsigned int get_dc_bus_index_with_converter_index(unsigned int converter_index) const;

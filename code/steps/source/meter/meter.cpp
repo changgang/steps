@@ -2243,11 +2243,11 @@ double METER::get_meter_value_as_a_vsc_hvdc() const
             }
             if(meter_type=="CONVERTER AC ACTIVE POWER IN MW")
             {
-                return vsc_hvdc->get_converter_ac_active_power_in_MW_with_ac_bus_number(metered_bus);
+                return vsc_hvdc->get_converter_dynamic_ac_active_power_in_MW_with_ac_bus_number(metered_bus);
             }
             if(meter_type=="CONVERTER AC REACTIVE POWER IN MVAR")
             {
-                return vsc_hvdc->get_converter_ac_reactive_power_in_MVar_with_ac_bus_number(metered_bus);
+                return vsc_hvdc->get_converter_dynamic_ac_reactive_power_in_MVar_with_ac_bus_number(metered_bus);
             }
             if(meter_type=="DC BUS VOLTAGE IN KV")
             {

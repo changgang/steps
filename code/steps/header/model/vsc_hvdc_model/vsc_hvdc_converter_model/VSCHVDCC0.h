@@ -3,6 +3,7 @@
 
 #include "header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_model.h"
 #include "header/block/pid_block.h"
+#include "header/block/first_order_block.h"
 
 class VSCHVDCC0: public VSC_HVDC_CONVERTER_MODEL
 {
@@ -94,6 +95,7 @@ class VSCHVDCC0: public VSC_HVDC_CONVERTER_MODEL
     private:
         PID_BLOCK p_block;
         PID_BLOCK q_block;
+        FIRST_ORDER_BLOCK p_sensor, q_sensor;
         double p_ref, q_ref, udc_ref, uac_ref;
 
         /*PID_BLOCK p_udc_block, p_pac_block, p_f_block, ;

@@ -2340,19 +2340,7 @@ void VSC_HVDC::run(DYNAMIC_MODE mode)
             case UPDATE_MODE:
             {
                 if(network!=NULL)
-                {
-                    cout<<"Before run network model:"<<endl;
-                    for(unsigned i = 0; i!=get_converter_count(); ++i)
-                    {
-                        cout<<"Converter "<<i<<", P2Ceq = "<<get_converter_Pdc_from_Ceq_to_DC_network_in_MW(i)<<endl;
-                    }
                     network->run(mode);
-                    cout<<"After run network model:"<<endl;
-                    for(unsigned i = 0; i!=get_converter_count(); ++i)
-                    {
-                        cout<<"Converter "<<i<<", P2Ceq = "<<get_converter_Pdc_from_Ceq_to_DC_network_in_MW(i)<<endl;
-                    }
-                }
 
                 for(i=0; i!=n_converter; ++i)
                 {
@@ -3271,41 +3259,36 @@ void VSC_HVDC::update_converter_P_and_Q_to_AC_bus(unsigned int index)
     {
         double Pac=0.0;
         VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE p_mode = current_active_power_control_mode[index];
-        if(p_mode==VSC_DC_VOLTAGE_CONTORL or
-           p_mode==VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL or
-           p_mode==VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL)
+        switch(p_mode)
         {
-            Pac=solve_converter_Pac_with_Pdc(index);
-        }
-        else
-        {
-            Pac=get_converter_nominal_ac_active_power_command_in_MW(index);
+            case VSC_DC_VOLTAGE_CONTORL:
+            case VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL:
+            case VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL:
+                Pac=solve_converter_Pac_with_Pdc(index);
+                set_converter_P_to_AC_bus_in_MW(index, Pac);
+                break;
+            case VSC_AC_ACTIVE_POWER_CONTORL:
+                Pac=get_converter_nominal_ac_active_power_command_in_MW(index);
+                set_converter_P_to_AC_bus_in_MW(index, Pac);
+                break;
+            case VSC_AC_VOLTAGE_ANGLE_CONTROL: // left to AC powerflow solver to set P to AC
+            default:
+                break;
         }
         //cout<<"P_to_AC_bus_in_MW: "<<Pac<<endl;
         //cout<<"Q_to_AC_bus_in_MW: "<<get_converter_Q_to_AC_bus_in_MVar(index)<<endl;
-        VSC_HVDC_CONVERTER_STRUCT* converter = get_converter(index);
-        if(converter!=NULL)
-        {
-            if(converter->status==true)
-                converter->P_to_AC_bus_MW=Pac;
-        }
+
         double Qac = 0.0;
         VSC_HVDC_CONVERTER_REACTIVE_POWER_CONTROL_MODE q_mode = current_reactive_power_control_mode[index];
-        if(q_mode == VSC_AC_VOLTAGE_CONTROL)
+        switch(q_mode)
         {
-            POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-            unsigned int bus = get_converter_ac_bus(index);
-            BUS* busptr = psdb.get_bus(bus);
-            complex<double> Vac_in_pu = busptr->get_positive_sequence_complex_voltage_in_pu();  //need to finish it
-        }
-        else
-        {
-            Qac = get_converter_nominal_ac_reactive_power_command_in_Mvar(index);
-        }
-        if(converter!=NULL)
-        {
-            if(converter->status==true)
-                converter->Q_to_AC_bus_MVar=Qac;
+            case VSC_AC_REACTIVE_POWER_CONTROL:
+                Qac = get_converter_nominal_ac_reactive_power_command_in_Mvar(index);
+                set_converter_Q_to_AC_bus_in_MVar(index, Qac);
+                break;
+            case VSC_AC_VOLTAGE_CONTROL: // left to AC powerflow solver to set Q to AC
+            default:
+                break;
         }
     }
 }
@@ -3747,18 +3730,24 @@ double VSC_HVDC::get_converter_dc_power_in_MW_with_ac_bus_number(unsigned int bu
     return Pdc;
 }
 
-double VSC_HVDC::get_converter_ac_active_power_in_MW_with_ac_bus_number(unsigned int bus)
+double VSC_HVDC::get_converter_dynamic_ac_active_power_in_MW_with_ac_bus_number(unsigned int bus)
 {
     unsigned int converter_index=get_converter_index_with_ac_bus(bus);
-    double Pac=get_converter_P_to_AC_bus_in_MW(converter_index);
-    return Pac;
+    VSC_HVDC_CONVERTER_MODEL* model = get_vsc_hvdc_converter_model(converter_index);
+    complex<double> Ixy = model->get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_kA();
+    complex<double> Vac = get_converter_ac_voltage_in_kV_with_ac_bus_number(bus);
+    complex<double> S = SQRT3*Vac*conj(Ixy);
+    return S.real();
 }
 
-double VSC_HVDC::get_converter_ac_reactive_power_in_MVar_with_ac_bus_number(unsigned int bus)
+double VSC_HVDC::get_converter_dynamic_ac_reactive_power_in_MVar_with_ac_bus_number(unsigned int bus)
 {
     unsigned int converter_index=get_converter_index_with_ac_bus(bus);
-    double Qac=get_converter_Q_to_AC_bus_in_MVar(converter_index);
-    return Qac;
+    VSC_HVDC_CONVERTER_MODEL* model = get_vsc_hvdc_converter_model(converter_index);
+    complex<double> Ixy = model->get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_kA();
+    complex<double> Vac = get_converter_ac_voltage_in_kV_with_ac_bus_number(bus);
+    complex<double> S = SQRT3*Vac*conj(Ixy);
+    return S.imag();
 }
 
 complex<double> VSC_HVDC::get_converter_dynamic_equivalent_current_to_ac_bus_in_pu_on_system_base(unsigned int converter_index)

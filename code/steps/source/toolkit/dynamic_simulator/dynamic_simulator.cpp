@@ -1048,8 +1048,6 @@ void DYNAMICS_SIMULATOR::run_a_step()
     ostringstream osstream;
 
     TIME += DELT;
-    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
-    cout<<"running dynamic simulation to "<<TIME<<endl;
     if(detailed_log_enabled)
     {
         osstream<<"Run dynamic simulation at time "<<TIME<<"s.";
@@ -1069,8 +1067,6 @@ void DYNAMICS_SIMULATOR::run_a_step()
     ITER_DAE = 0;
     ITER_NET = 0;
     current_max_network_iteration = get_max_network_iteration();
-    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
-    cout<<"Now go integrate"<<endl;
     while(true)
     {
         ++ITER_DAE;
@@ -1109,8 +1105,6 @@ void DYNAMICS_SIMULATOR::run_a_step()
             break;
         }
     }
-    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
-    cout<<"Now go update"<<endl;
     update();
     run_bus_frequency_blocks(INTEGRATE_MODE);
     run_bus_frequency_blocks(UPDATE_MODE);
@@ -1509,10 +1503,8 @@ bool DYNAMICS_SIMULATOR::solve_network()
     }
     else
     {
-        cout<<__FILE__<<", line "<<__LINE__<<": initial max current mismatch "<<max_current_mismatch_pu<<", imax_th = "<<imax_th_pu<<", bus = "<<max_mismatch_bus<<endl;
         while(true)
         {
-            cout<<__FILE__<<", line "<<__LINE__<<": network iter count "<<network_iter_count<<", iter max "<<network_iter_max<<endl;
             if(network_iter_count<network_iter_max)
             {
                 //if(get_automatic_iteration_accelerator_tune_logic()==true)
@@ -1574,7 +1566,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
                 #else
                 double new_imax = get_max_current_mismatch_struct().greatest_current_mismatch_in_pu;
                 max_mismatch_bus = greatest_mismatch_struct.bus_with_greatest_current_mismatch;
-                cout<<__FILE__<<", line "<<__LINE__<<": new max current mismatch "<<new_imax<<", imax_th = "<<imax_th_pu<<", bus = "<<max_mismatch_bus<<endl;
+
                 if(new_imax>max_current_mismatch_pu)
                 #endif // USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
                 {
@@ -2379,11 +2371,13 @@ GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_current_misma
     for(unsigned int i=0; i<n; ++i)
     {
         double I = steps_fast_complex_abs(I_mismatch[i]);
-        if(I>5e-5)
+        /*
+        STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
+        if(I>5e-7)
         {
-            cout<<"dynamic current mismatch @ bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)
+            cout<<"dynamic current mismatch exceeding threshold @ bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)
                 <<": "<<I<<endl;
-        }
+        }*/
         if(I>Imax)
         {
             Imax = I;

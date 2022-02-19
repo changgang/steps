@@ -6,7 +6,9 @@ using namespace std;
 VSCHVDCC0::VSCHVDCC0(STEPS& toolkit):VSC_HVDC_CONVERTER_MODEL(toolkit),
                                      p_block(toolkit),
                                      q_block(toolkit),
-                                     udc_block(toolkit)
+                                     udc_block(toolkit),
+                                     p_sensor(toolkit),
+                                     q_sensor(toolkit)
 {
     clear();
 }
@@ -14,7 +16,9 @@ VSCHVDCC0::VSCHVDCC0(STEPS& toolkit):VSC_HVDC_CONVERTER_MODEL(toolkit),
 VSCHVDCC0::VSCHVDCC0(const VSCHVDCC0& model):VSC_HVDC_CONVERTER_MODEL(model.get_toolkit()),
                                              p_block(model.get_toolkit()),
                                              q_block(model.get_toolkit()),
-                                             udc_block(model.get_toolkit())
+                                             udc_block(model.get_toolkit()),
+                                             p_sensor(model.get_toolkit()),
+                                             q_sensor(model.get_toolkit())
 {
     clear();
     copy_from_const_model(model);
@@ -61,6 +65,8 @@ void VSCHVDCC0::copy_from_const_model(const VSCHVDCC0& model)
     p_block.set_toolkit(toolkit);
     q_block.set_toolkit(toolkit);
     udc_block.set_toolkit(toolkit);
+    p_sensor.set_toolkit(toolkit);
+    q_sensor.set_toolkit(toolkit);
 }
 
 string VSCHVDCC0::get_model_name() const
@@ -344,7 +350,8 @@ bool VSCHVDCC0::setup_model_with_bpa_string(string data)
 
 void VSCHVDCC0::setup_block_toolkit_and_parameters()
 {
-
+    p_sensor.set_T_in_s(0.01);
+    q_sensor.set_T_in_s(0.01);
 }
 
 void VSCHVDCC0::initialize()
@@ -361,6 +368,17 @@ void VSCHVDCC0::initialize()
         VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE active_power_control_mode = get_converter_active_control_mode();
         VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE reactive_power_control_mode = get_converter_reactive_control_mode();
 
+        /*
+        STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
+        cout<<"initializing converter "<<get_converter_index()<<": Idq(pu on converter base) = "<<Idq<<endl
+            <<"        Ixy(pu on converter base) = "<<get_converter_initial_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_converter_base()<<endl
+            <<"        Ixy(pu on system base   ) = "<<get_converter_initial_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_system_base()<<endl
+            <<"        Ixy(kA                  ) = "<<get_converter_initial_current_from_converter_to_ac_bus_in_xy_axis_in_kA()<<endl
+            <<"        S(MVA                   ) = "<<get_converter_initial_S_from_converter_to_AC_bus_in_MVA()<<endl
+            <<"        Vac(pu                  ) = "<<get_converter_ac_bus_complex_voltage_in_pu()<<endl
+            <<"        Vac(pu                  ) = "<<get_converter_ac_bus_voltage_in_pu()<<endl
+            <<"        Vac(pu                  ) = "<<get_converter_ac_bus_angle_in_deg()<<endl;
+        */
         p_block.set_output(Id);
         p_block.initialize();
 
@@ -391,6 +409,9 @@ void VSCHVDCC0::initialize()
                 break;
         }
 
+        p_sensor.set_output(0.0);
+        p_sensor.initialize();
+
         switch(reactive_power_control_mode)
         {
             case DY_VSC_AC_VOLTAGE_CONTROL:
@@ -405,7 +426,8 @@ void VSCHVDCC0::initialize()
             default:
                 break;
         }
-
+        q_sensor.set_output(0.0);
+        q_sensor.initialize();
     }
 }
 
@@ -441,7 +463,7 @@ void VSCHVDCC0::run(DYNAMIC_MODE mode)
         switch(active_power_control_mode)
         {
             case DY_VSC_DC_VOLTAGE_CONTORL:
-                input = get_active_power_block_Udcref() - get_dynamic_dc_voltage_in_pu();
+                input = get_dynamic_dc_voltage_in_pu() - get_active_power_block_Udcref();
                 break;
             case DY_VSC_AC_ACTIVE_POWER_CONTORL:
                 input = get_active_power_block_Pref() - Ps;
@@ -449,6 +471,11 @@ void VSCHVDCC0::run(DYNAMIC_MODE mode)
             default:
                 break;
         }
+
+        p_sensor.set_input(input);
+        p_sensor.run(mode);
+
+        input = p_sensor.get_output();
         p_block.set_input(input);
         p_block.run(mode);
 
@@ -456,14 +483,18 @@ void VSCHVDCC0::run(DYNAMIC_MODE mode)
         switch(reactive_power_control_mode)
         {
             case DY_VSC_AC_VOLTAGE_CONTROL:
-                input = get_reactive_power_block_Uacref() - abs(Us);
+                input = abs(Us) - get_reactive_power_block_Uacref();
                 break;
             case DY_VSC_AC_REACTIVE_POWER_CONTROL:
-                input = get_reactive_power_block_Qref() - Qs;
+                input = Qs - get_reactive_power_block_Qref();
                 break;
             default:
                 break;
         }
+        q_sensor.set_input(input);
+        q_sensor.run(mode);
+
+        input = q_sensor.get_output();
         q_block.set_input(input);
         q_block.run(mode);
 
