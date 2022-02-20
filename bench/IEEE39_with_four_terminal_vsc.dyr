@@ -112,9 +112,12 @@
           0.0000      0.60000       2.0000      -1.8000       2.0000    
           1.0000       0.0000       2.0000       1.0000       0.0000    /
 "Vsc-Project1  "       "VSCHVDCP0  " /     
+/"Vsc-Project1  "       "VSCHVDCC0  "       "vsc1  "        1000
+/          "Pac_control"    0.0     20     0.0     0.01     1.1    -1.1
+/          "Qac_control"    0.0     20     0.0     0.01     0.8    -0.8  /
 "Vsc-Project1  "       "VSCHVDCC0  "       "vsc1  "        1000
-          "Pac_control"    0.0     20     0.0     0.01     1.1    -1.1
-          "Qac_control"    0.0     20     0.0     0.01     0.8    -0.8  /
+          "f_control"     -10.0     0.000001     -6.0     0.1     999.1    -999.1
+          "Vac_control"    0.0     20     0.0     0.01     999.8    -999.8  /
 "Vsc-Project1  "       "VSCHVDCC0  "       "vsc2  "        1000
           "Pac_control"    0.0     20     0.0     0.01     1.1    -1.1
           "Vac_control"    0.0     20     0.0     0.01     1.1    -1.1  /

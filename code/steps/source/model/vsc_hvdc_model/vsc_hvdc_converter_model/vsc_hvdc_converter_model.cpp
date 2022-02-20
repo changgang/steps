@@ -185,6 +185,15 @@ complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_ac_bus_complex_voltage_i
         return 0.0;
 }
 
+double VSC_HVDC_CONVERTER_MODEL::get_converter_ac_bus_frequency_deviation_in_pu() const
+{
+    BUS* bus = get_converter_ac_bus_pointer();
+    if(bus!=NULL)
+        return bus->get_frequency_deviation_in_pu();
+    else
+        return 0.0;
+}
+
 complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_initial_S_from_converter_to_AC_bus_in_MVA() const
 {
     double P = get_converter_initial_P_to_AC_bus_in_MW();

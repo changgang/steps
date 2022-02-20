@@ -283,6 +283,8 @@ bool VSCHVDCC0::setup_model_with_steps_string_vector(vector<string>& data)
                 active_control_mode = DY_VSC_DC_VOLTAGE_CONTORL;
             if(mode=="Pac_control")
                 active_control_mode = DY_VSC_AC_ACTIVE_POWER_CONTORL;
+            if(mode=="f_control")
+                active_control_mode = DY_VSC_FREQUENCY_CONTROL;
 
             set_converter_active_control_mode(active_control_mode);
 
@@ -362,6 +364,9 @@ void VSCHVDCC0::initialize()
         setup_block_toolkit_and_parameters();
 
         unsigned int converter_index=get_converter_index();
+        complex<double> S = get_converter_initial_S_from_converter_to_AC_bus_in_MVA();
+        double P0 = S.real()/get_converter_capacity_in_MVA();
+
         complex<double> Idq = get_converter_initial_current_from_converter_to_ac_bus_in_dq_axis_in_pu_on_converter_base();
         double Id = Idq.real();
         double Iq = Idq.imag();
@@ -379,6 +384,8 @@ void VSCHVDCC0::initialize()
             <<"        Vac(pu                  ) = "<<get_converter_ac_bus_voltage_in_pu()<<endl
             <<"        Vac(pu                  ) = "<<get_converter_ac_bus_angle_in_deg()<<endl;
         */
+        if(active_power_control_mode==DY_VSC_FREQUENCY_CONTROL)
+            Id = 0;
         p_block.set_output(Id);
         p_block.initialize();
 
@@ -393,6 +400,7 @@ void VSCHVDCC0::initialize()
         double qref = 0.0;
         double udcref = 0.0;
         double uacref = 0.0;
+        double fref = 0.0;
         switch(active_power_control_mode)
         {
             case DY_VSC_DC_VOLTAGE_CONTORL:
@@ -404,6 +412,9 @@ void VSCHVDCC0::initialize()
                 pref = vsc_hvdc->get_converter_P_to_AC_bus_in_MW(get_converter_index());
                 pref /= get_converter_capacity_in_MVA();
                 set_active_power_block_Pref(pref);
+                break;
+            case DY_VSC_FREQUENCY_CONTROL:
+                set_active_power_block_Pref(P0);
                 break;
             default:
                 break;
@@ -467,6 +478,9 @@ void VSCHVDCC0::run(DYNAMIC_MODE mode)
                 break;
             case DY_VSC_AC_ACTIVE_POWER_CONTORL:
                 input = get_active_power_block_Pref() - Ps;
+                break;
+            case DY_VSC_FREQUENCY_CONTROL:
+                input = get_converter_ac_bus_frequency_deviation_in_pu();
                 break;
             default:
                 break;
@@ -667,6 +681,12 @@ complex<double> VSCHVDCC0::get_converter_dynamic_current_from_converter_to_ac_bu
 complex<double> VSCHVDCC0::get_converter_dynamic_source_current_in_dq_axis_in_pu_on_converter_base() const
 {
     double Id = p_block.get_output();
+    if(get_converter_active_control_mode()==DY_VSC_FREQUENCY_CONTROL)
+    {
+        double P = Id + get_active_power_block_Pref();
+        Id = P/get_converter_ac_bus_voltage_in_pu();
+    }
+
     double Iq = q_block.get_output();
     return complex<double>(Id, Iq);
 }

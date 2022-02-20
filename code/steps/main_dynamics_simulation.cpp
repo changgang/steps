@@ -59,6 +59,7 @@ int main()
     simulator.prepare_bus_related_meter(14, "voltage in pu");
     simulator.prepare_bus_related_meter(18, "voltage in pu");
     simulator.prepare_bus_related_meter(101, "voltage in pu");
+    simulator.prepare_bus_related_meter(101, "frequency in pu");
     simulator.prepare_bus_related_meter(102, "voltage in pu");
     simulator.prepare_bus_related_meter(103, "voltage in pu");
     simulator.prepare_bus_related_meter(104, "voltage in pu");
@@ -86,19 +87,28 @@ int main()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
     simulator.set_line_fault(did, 16, 0.0, complex<double>(0, -100));
-    simulator.run_to(1.1);
+    simulator.run_to(1.2);
     simulator.clear_line_fault(did, 16, 0.0);
 
     /*DEVICE_ID did;
     did.set_device_type(STEPS_LOAD);
     TERMINAL terminal;
-    terminal.append_bus(4);
+    terminal.append_bus(23);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    simulator.scale_load(did, 0.01);*/
+    simulator.scale_load(did, 1.0);*/
 
-    simulator.run_to(3);
+    /*DEVICE_ID did;
+    did.set_device_type(STEPS_GENERATOR);
+    TERMINAL terminal;
+    terminal.append_bus(39);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier_index(get_index_of_string("1"));
+
+    simulator.trip_generator(did);*/
+
+    simulator.run_to(5);
 
     /*
 

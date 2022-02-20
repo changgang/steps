@@ -37,6 +37,7 @@ class VSC_HVDC_CONVERTER_MODEL: public VSC_HVDC_MODEL
         double get_converter_ac_bus_voltage_in_kV() const;
         complex<double> get_converter_ac_bus_complex_voltage_in_pu() const;
         complex<double> get_converter_ac_bus_complex_voltage_in_kV() const;
+        double get_converter_ac_bus_frequency_deviation_in_pu() const;
 
         complex<double> get_converter_initial_S_from_converter_to_AC_bus_in_MVA() const;
         double get_converter_initial_P_to_AC_bus_in_MW() const;
