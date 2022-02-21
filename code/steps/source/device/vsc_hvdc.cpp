@@ -1679,7 +1679,7 @@ double VSC_HVDC::get_dc_bus_generation_power_in_MW(unsigned int index) const
     if(index<get_dc_bus_count())
     {
         return dc_buses[index].dc_generation_power_in_MW;
-        cout<<"dc_buses[index].dc_generation_power_in_MW:"<<dc_buses[index].dc_generation_power_in_MW<<endl;
+        //cout<<"dc_buses[index].dc_generation_power_in_MW:"<<dc_buses[index].dc_generation_power_in_MW<<endl;
     }
     else
     {
@@ -2457,8 +2457,11 @@ void VSC_HVDC::solve_steady_state()
             break;
         }
     }
+    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
     save_dc_bus_powerflow_result_to_file("Vsc_hvdc_bus_powerflow_result.csv");
+    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
     calculate_dc_active_power_of_slack_bus();
+    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
     unsigned int n_converter=get_converter_count();
     /*
     for(unsigned int i=0;i!=n_converter;++i)
@@ -2466,6 +2469,7 @@ void VSC_HVDC::solve_steady_state()
         cout<<"get_converter_Pdc: "<<get_converter_Pdc_command_to_dc_network_in_MW(i)<<endl;
     }
     */
+    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
     update_converters_P_and_Q_to_AC_bus();
     update_converters_P_to_DC_network();
 
@@ -2505,7 +2509,7 @@ void VSC_HVDC::initialize_dc_bus_voltage()
                 set_dc_bus_Vdc_in_kV(i, get_dc_network_base_voltage_in_kV());
 
         }
-        //cout<<"get_dc_bus_voltage(i)"<<i<<"  "<<get_dc_bus_Vdc_in_kV(i)<<endl;
+        cout<<"get_dc_bus_voltage(i)"<<i<<"  "<<get_dc_bus_Vdc_in_kV(i)<<endl;
     }
 }
 
@@ -2639,6 +2643,7 @@ void VSC_HVDC::build_dc_network_matrix()
     build_initial_zero_matrix();
     add_dc_lines_to_dc_network();
     dc_network_matrix.compress_and_merge_duplicate_entries();
+    show_dc_network_matrix();
 }
 
 void VSC_HVDC::build_initial_zero_matrix()
@@ -2681,6 +2686,7 @@ void VSC_HVDC::initialize_alpha_vector()
             alpha.push_back(1);
         else
             alpha.push_back(0);
+        cout<<"alpha["<<i<<"]:  "<<alpha[i]<<endl;
     }
 }
 
@@ -2695,6 +2701,7 @@ void VSC_HVDC::initialize_beta_vector()
             beta.push_back(1);
         else
             beta.push_back(0);
+        cout<<"beta["<<i<<"]:  "<<beta[i]<<endl;
     }
 }
 
@@ -2731,7 +2738,7 @@ void VSC_HVDC::calculate_raw_bus_power_mismatch()
     for(unsigned int i=0;i!=nbus;++i)
     {
         bus_power[i] = -bus_power[i];
-        //cout<<"bus_power[i]: "<<bus_power[i]<<endl;
+        cout<<"bus_power[i]: "<<bus_power[i]<<endl;
     }
 
     add_generation_power_to_raw_bus_power_mismatch();
@@ -2778,6 +2785,7 @@ void VSC_HVDC::calculate_raw_dc_power_into_dc_network()
         unsigned int bus = inphno.get_physical_bus_number_of_internal_bus_number(i);
         double Udc = get_dc_bus_Vdc_in_kV(dc_bus_no2index(bus));
         bus_power[i] = Udc * bus_current[i];
+        //cout<<"Udc: "<<Udc<<endl;
         //cout<<"bus_power[i]:"<<bus_power[i]<<endl;
     }
 }
@@ -2844,11 +2852,15 @@ double VSC_HVDC::get_converter_dc_power_command(unsigned int converter_index)
                 break;
             case VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL:
                 Pdc_command =  solve_Pdc_with_dc_active_power_voltage_droop_control(converter_index);
+                cout<<"VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL :"<<Pdc_command<<endl;
                 break;
             case VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL:
                 Pdc_command =  solve_Pdc_with_dc_current_voltage_droop_control(converter_index);
+                cout<<"VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL :"<<Pdc_command<<endl;
                 break;
             case VSC_DC_VOLTAGE_CONTORL:
+                Pdc_command = get_converter_Pdc_command_to_dc_network_in_MW(converter_index);
+                break;
             default:
                 Pdc_command =  0.0;
                 break;
@@ -2866,7 +2878,6 @@ double VSC_HVDC::get_converter_dc_power_command(unsigned int converter_index)
             }
         }
         set_converter_Pdc_command_to_dc_network_in_MW(converter_index, Pdc_command);
-        //cout<<"converter_index: "<<converter_index<<"  Pdc_command: "<<Pdc_command<<endl;
         return Pdc_command;
     }
     else
@@ -3329,6 +3340,7 @@ void VSC_HVDC::update_dc_bus_voltage()
                 Vdc += Udc_mismatch[i-1];
             //cout<<"Udc_mismatch[i-1]:"<<Udc_mismatch[i-1]<<endl;
             set_dc_bus_Vdc_in_kV(index,Vdc);
+            //cout<<"Vdc: "<<Vdc<<endl;
         }
     }
     /*
@@ -3354,8 +3366,9 @@ void VSC_HVDC::calculate_dc_active_power_of_slack_bus()
     }
     double P_slack = U_slack*I_slack;
     unsigned int converter_index=get_dc_bus_converter_index_with_dc_bus_index(dc_bus_no2index(current_dc_slack_bus));
-    //cout<<"dc_slack_bus_active_power: "<<P_slack_dc_side<<endl;
+    //cout<<"dc_slack_bus_active_power: "<<P_slack<<endl;
     set_converter_Pdc_command_to_dc_network_in_MW(converter_index, P_slack);
+    //cout<<"check dc slack bus power: "<<get_converter_Pdc_command_to_dc_network_in_MW(converter_index)<<endl;
 }
 
 bool VSC_HVDC::check_dc_slack_converter_constraint()

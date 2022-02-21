@@ -6169,7 +6169,7 @@
 
 1641793061 e:\users\zma\desktop\steps\code\steps\header\basic\constants.h
 
-1644922519 e:\users\zma\desktop\steps\code\steps\header\basic\steps_enum.h
+1645410924 e:\users\zma\desktop\steps\code\steps\header\basic\steps_enum.h
 	<iso646.h>
 
 1641793061 e:\users\zma\desktop\steps\code\steps\header\basic\terminal.h
@@ -6501,7 +6501,7 @@
 	"header/model/model.h"
 	"header/block/integral_block.h"
 
-1645267496 e:\users\zma\desktop\steps\code\steps\header\device\vsc_hvdc.h
+1645337288 e:\users\zma\desktop\steps\code\steps\header\device\vsc_hvdc.h
 	"header/device/nonbus_device.h"
 	"header/device/vsc_hvdc_var.h"
 	"header/basic/device_id.h"
@@ -6703,7 +6703,7 @@
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	<fstream>
 
-1645259105 source:e:\users\zma\desktop\steps\code\steps\main_dynamics_simulation.cpp
+1645410924 source:e:\users\zma\desktop\steps\code\steps\main_dynamics_simulation.cpp
 	<istream>
 	<iostream>
 	"header/power_system_database.h"
@@ -6733,7 +6733,7 @@
 1643039115 e:\users\zma\desktop\steps\code\steps\header\meter\meter_setter.h
 	"header/meter/meter.h"
 
-1643442475 source:e:\users\zma\desktop\steps\code\steps\main_powerflow.cpp
+1645431785 source:e:\users\zma\desktop\steps\code\steps\main_powerflow.cpp
 	<istream>
 	<iostream>
 	"header/power_system_database.h"
@@ -10165,9 +10165,10 @@
 	<iostream>
 	<cstdio>
 
-1645105378 source:e:\users\zma\desktop\steps\code\steps\source\device\vsc_hvdc.cpp
+1645431907 source:e:\users\zma\desktop\steps\code\steps\source\device\vsc_hvdc.cpp
 	"header/device/vsc_hvdc.h"
 	"header/basic/utility.h"
+	"header/basic/steps_define.h"
 	"header/basic/constants.h"
 	"header/STEPS.h"
 	"header/steps_namespace.h"
@@ -10232,7 +10233,7 @@
 	<fstream>
 	<cstring>
 
-1645169103 source:e:\users\zma\desktop\steps\code\steps\source\meter\meter.cpp
+1645337288 source:e:\users\zma\desktop\steps\code\steps\source\meter\meter.cpp
 	"header/meter/meter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -12058,7 +12059,7 @@
 	"header/toolkit/contingency_screener/contingency_screener.h"
 	"header/STEPS.h"
 
-1645259105 source:e:\users\zma\desktop\steps\code\steps\source\toolkit\dynamic_simulator\dynamic_simulator.cpp
+1645337288 source:e:\users\zma\desktop\steps\code\steps\source\toolkit\dynamic_simulator\dynamic_simulator.cpp
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	"header/basic/constants.h"
 	"header/basic/utility.h"
@@ -12117,7 +12118,7 @@
 	<cstdio>
 	<cmath>
 
-1645105378 source:e:\users\zma\desktop\steps\code\steps\source\toolkit\powerflow_solver\powerflow_solver.cpp
+1645267626 source:e:\users\zma\desktop\steps\code\steps\source\toolkit\powerflow_solver\powerflow_solver.cpp
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -12387,7 +12388,7 @@
 1643943171 e:\users\zma\desktop\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_project_model\vsc_hvdc_project_model.h
 	"header/model/vsc_hvdc_model/vsc_hvdc_model.h"
 
-1645259105 e:\users\zma\desktop\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_converter_model\vsc_hvdc_converter_model.h
+1645410924 e:\users\zma\desktop\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_converter_model\vsc_hvdc_converter_model.h
 	"header/model/vsc_hvdc_model/vsc_hvdc_model.h"
 
 1643943171 e:\users\zma\desktop\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_project_model\vsc_hvdc_project_models.h
@@ -12399,9 +12400,10 @@
 1643943171 e:\users\zma\desktop\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_converter_model\vsc_hvdc_converter_models.h
 	"header/model/vsc_hvdc_model/vsc_hvdc_converter_model/VSCHVDCC0.h"
 
-1645259105 e:\users\zma\desktop\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_converter_model\vschvdcc0.h
+1645337288 e:\users\zma\desktop\steps\code\steps\header\model\vsc_hvdc_model\vsc_hvdc_converter_model\vschvdcc0.h
 	"header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_model.h"
 	"header/block/pid_block.h"
+	"header/block/first_order_block.h"
 
 1644886051 source:e:\users\zma\desktop\steps\code\steps\source\apis\steps_api_set_get_vsc_hvdc_related_model_parameters.cpp
 	"header/apis/steps_api.h"
@@ -12411,7 +12413,7 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/bpa_imexporter.h"
 
-1645259105 source:e:\users\zma\desktop\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_converter_model\vsc_hvdc_converter_model.cpp
+1645410924 source:e:\users\zma\desktop\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_converter_model\vsc_hvdc_converter_model.cpp
 	"header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_model.h"
 	"header/device/vsc_hvdc.h"
 	"header/basic/utility.h"
@@ -12460,13 +12462,13 @@
 1644808356 source:e:\users\zma\desktop\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_network_model\vsc_hvdc_network_model.cpp
 	"header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_model.h"
 
-1645259105 source:e:\users\zma\desktop\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_network_model\vschvdcp0.cpp
+1645267658 source:e:\users\zma\desktop\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_network_model\vschvdcp0.cpp
 	"header/model/vsc_hvdc_model/vsc_hvdc_network_model/VSCHVDCP0.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
 	<iostream>
 
-1645259105 source:e:\users\zma\desktop\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_converter_model\vschvdcc0.cpp
+1645410924 source:e:\users\zma\desktop\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_converter_model\vschvdcc0.cpp
 	"header/model/vsc_hvdc_model/vsc_hvdc_converter_model/VSCHVDCC0.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
