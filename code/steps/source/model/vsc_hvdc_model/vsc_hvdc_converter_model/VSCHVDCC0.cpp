@@ -667,18 +667,12 @@ string VSCHVDCC0::get_dynamic_data_in_steps_format() const
     return "";
 }
 
-complex<double> VSCHVDCC0::get_converter_voltage_in_dq_axis_in_pu() const
+complex<double> VSCHVDCC0::get_converter_voltage_in_xy_axis_in_pu_as_voltage_source() const
 {
     return 0.0;
 }
 
-complex<double> VSCHVDCC0::get_converter_dynamic_current_from_converter_to_ac_bus_in_dq_axis_in_pu_on_converter_base() const
-{
-    return get_converter_dynamic_source_current_in_dq_axis_in_pu_on_converter_base();
-}
-
-
-complex<double> VSCHVDCC0::get_converter_dynamic_source_current_in_dq_axis_in_pu_on_converter_base() const
+complex<double> VSCHVDCC0::get_converter_dynamic_current_from_converter_to_ac_bus_in_dq_axis_in_pu_on_converter_base_as_current_source() const
 {
     double Id = p_block.get_output();
     if(get_converter_active_control_mode()==DY_VSC_FREQUENCY_CONTROL)
@@ -713,11 +707,6 @@ double VSCHVDCC0::get_converter_dc_power_from_converter_to_Ceq_in_MW()
     double Pdc_from_dc_network_to_converter = Ps + P_converter_loss;
 
     return -Pdc_from_dc_network_to_converter;
-
-
-
-
-    //return vsc_hvdc->get_converter_dc_power_from_converter_to_dc_network_with_P_and_Q_to_AC_bus_in_MVA(converter_index, Ps, Qs);
 }
 
 double VSCHVDCC0::get_initial_angle_at_pll_in_rad() const

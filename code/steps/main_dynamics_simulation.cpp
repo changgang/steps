@@ -24,15 +24,15 @@ int main()
     //importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1.dyr");
     //importer.load_powerflow_data("bench_shandong_v2.raw");
     //importer.load_dynamic_data("bench_shandong_v2.dyr");
-    /*
+
     importer.load_powerflow_data("../../../bench/IEEE39_with_four_vsc.raw");
     cout<<"Done loading powerflow file"<<endl;
     importer.load_vsc_powerflow_data("../../../bench/4_terminal_vsc_hvdc.vscraw");
-    */
 
-    importer.load_powerflow_data("../../../bench/IEEE39_with_two_system.raw");
+
+    /*importer.load_powerflow_data("../../../bench/IEEE39_with_two_system.raw");
     cout<<"Done loading powerflow file"<<endl;
-    importer.load_vsc_powerflow_data("../../../bench/2_system.vscraw");
+    importer.load_vsc_powerflow_data("../../../bench/2_system.vscraw");*/
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -42,7 +42,7 @@ int main()
 
     powerflow_solver.solve_with_full_Newton_Raphson_solution();
     powerflow_solver.save_extended_powerflow_result_to_file("ieee39_vsc4_pf.csv");
-/*
+
     importer.load_dynamic_data("../../../bench/IEEE39_with_four_terminal_vsc.dyr");
     //VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc("Vsc-Project1");
     //VSC_HVDC_CONVERTER_MODEL* model = vsc_hvdc->get_vsc_hvdc_converter_model(0);
@@ -70,7 +70,7 @@ int main()
     simulator.prepare_vsc_hvdc_related_meters();
     simulator.set_output_file("IEEE39_vsc");
 
-*/
+
     //simulator.show_dynamic_simulator_configuration();
 
 
@@ -81,7 +81,7 @@ int main()
     //simulator.set_output_file("test_log/bench_shandong_with_avr_fault_at_line_82_80");
     //simulator.set_output_file("test_log/bench_shandong_with_avr_trip_mac_140");
 
-    /*
+
     simulator.start();
     simulator.run_to(1);
 
@@ -96,7 +96,7 @@ int main()
     simulator.set_line_fault(did, 16, 0.0, complex<double>(0, -100));
     simulator.run_to(1.2);
     simulator.clear_line_fault(did, 16, 0.0);
-    */
+
     /*DEVICE_ID did;
     did.set_device_type(STEPS_LOAD);
     TERMINAL terminal;
@@ -115,7 +115,7 @@ int main()
 
     simulator.trip_generator(did);*/
 
-    //simulator.run_to(5);
+    simulator.run_to(5);
 
     /*
 

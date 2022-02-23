@@ -217,6 +217,8 @@ class VSC_HVDC : public NONBUS_DEVICE
         VSC_HVDC_CONVERTER_MODEL* get_vsc_hvdc_converter_model(unsigned int index) const;
         vector<VSC_HVDC_CONVERTER_MODEL*> get_vsc_hvdc_converter_models() const;
 
+        bool is_converter_a_dynamic_voltage_source(unsigned int index) const;
+
         complex<double> get_converter_Norton_admittance_as_voltage_source(unsigned int index) const;
 
         virtual void run(DYNAMIC_MODE mode);
@@ -326,7 +328,8 @@ class VSC_HVDC : public NONBUS_DEVICE
 
         unsigned int get_dc_bus_with_converter_index(unsigned int converter_index) const;
         unsigned int get_dc_bus_index_with_converter_index(unsigned int converter_index) const;
-        complex<double> get_converter_dynamic_equivalent_current_to_ac_bus_in_pu_on_system_base(unsigned int converter_index);
+        complex<double> get_converter_dynamic_current_to_ac_bus_in_pu_on_system_base_as_current_source(unsigned int converter_index);
+        complex<double> get_converter_dynamic_Norton_current_to_ac_bus_in_pu_on_system_base_as_voltage_source(unsigned int converter_index);
 
 
         double get_converter_ac_bus_base_voltage_in_kV(unsigned int index) const;
