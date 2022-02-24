@@ -2254,6 +2254,8 @@ void VSC_HVDC::set_vsc_hvdc_converter_model(VSC_HVDC_CONVERTER_MODEL* model)
         {
             delete_vsc_hvdc_converter_model(index);
             vsc_hvdc_converter_models[index] = model;
+
+            vsc_hvdc_converter_models[index]->report();
         }
     }
 }

@@ -438,7 +438,8 @@ bool VSG0::setup_model_with_bpa_string(string data)
 
 void VSG0::setup_block_toolkit_and_parameters()
 {
-    BUS* bus = get_bus_pointer();
+    BUS* bus = get_converter_ac_bus_pointer();
+
     double fn = bus->get_base_frequency_in_Hz();
     double wn = DOUBLE_PI * fn;
 
@@ -455,6 +456,7 @@ void VSG0::initialize()
         unsigned int converter_index=get_converter_index();
 
         double Udc_in_kV = vsc_hvdc->get_dc_bus_Vdc_in_kV(vsc_hvdc->get_dc_bus_index_with_converter_index(converter_index));
+
         udc_block.set_output(Udc_in_kV);
         udc_block.initialize();
 
@@ -523,6 +525,8 @@ void VSG0::run(DYNAMIC_MODE mode)
 {
     if(is_model_active())
     {
+        STEPS& toolkit = get_toolkit();
+        double time = toolkit.get_dynamic_simulation_time_in_s();
         VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
         unsigned int converter_index = get_converter_index();
 
@@ -544,7 +548,6 @@ void VSG0::run(DYNAMIC_MODE mode)
 
         double Imax = 0.001*vsc_hvdc->get_converter_rated_current_in_A(converter_index)*get_converter_dc_base_voltage_in_kV()/get_converter_capacity_in_MVA();
         input = Imag - Imax;
-
         active_current_reducer.set_input(input);
         active_current_reducer.run(mode);
 
