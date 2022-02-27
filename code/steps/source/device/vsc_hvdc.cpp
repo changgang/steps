@@ -2135,6 +2135,39 @@ void VSC_HVDC::report() const
         cout<<"get_converter_status("<<i<<"): "<<get_converter_status(i)<<endl;
         cout<<"get_converter_active_power_operation_mode("<<i<<"): "<<get_converter_active_power_operation_mode(i)<<endl;
         cout<<"get_converter_dc_voltage_control_priority("<<i<<"): "<<get_converter_dc_voltage_control_priority(i)<<endl;
+        switch(get_converter_active_power_operation_mode(i))
+        {
+            case VSC_DC_VOLTAGE_CONTORL:
+                cout<<"get_converter_nominal_dc_voltage_command_in_kV("<<i<<"): "<<get_converter_nominal_dc_voltage_command_in_kV(i)<<endl;
+                break;
+            case VSC_AC_ACTIVE_POWER_CONTORL:
+                cout<<"get_converter_nominal_dc_voltage_command_in_kV("<<i<<"): "<<get_converter_nominal_dc_voltage_command_in_kV(i)<<endl;
+                break;
+            case VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL:
+                cout<<"get_converter_initial_dc_active_power_reference_in_MW("<<i<<"): "<<get_converter_initial_dc_active_power_reference_in_MW(i)<<endl;
+                cout<<"get_converter_initial_dc_voltage_reference_in_kV("<<i<<"): "<<get_converter_initial_dc_voltage_reference_in_kV(i)<<endl;
+                cout<<"get_converter_initial_droop_coefficient_for_droop_control("<<i<<"): "<<get_converter_initial_droop_coefficient_for_droop_control(i)<<endl;
+                break;
+            case VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL:
+                cout<<"get_converter_initial_dc_current_reference_in_kA("<<i<<"): "<<get_converter_initial_dc_current_reference_in_kA(i)<<endl;
+                cout<<"get_converter_initial_dc_voltage_reference_in_kV("<<i<<"): "<<get_converter_initial_dc_voltage_reference_in_kV(i)<<endl;
+                cout<<"get_converter_initial_droop_coefficient_for_droop_control("<<i<<"): "<<get_converter_initial_droop_coefficient_for_droop_control(i)<<endl;
+                break;
+            case VSC_AC_VOLTAGE_ANGLE_CONTROL:
+            default:
+                break;
+        }
+        switch(get_converter_reactive_power_operation_mode(i))
+        {
+            case VSC_AC_REACTIVE_POWER_CONTROL:
+                cout<<"get_converter_nominal_ac_reactive_power_command_in_Mvar("<<i<<"): "<<get_converter_nominal_ac_reactive_power_command_in_Mvar(i)<<endl;
+                break;
+            case VSC_AC_VOLTAGE_CONTROL:
+                cout<<"get_converter_nominal_ac_voltage_command_in_pu("<<i<<"): "<<get_converter_nominal_ac_voltage_command_in_pu(i)<<endl;
+                break;
+            default:
+                break;
+        }
         cout<<"get_converter_reactive_power_operation_mode("<<i<<"): "<<get_converter_reactive_power_operation_mode(i)<<endl;
         cout<<"get_converter_loss_factor_A_in_kW("<<i<<"): "<<get_converter_loss_factor_A_in_kW(i)<<endl;
         cout<<"get_converter_loss_factor_B_in_kW_per_amp("<<i<<"): "<<get_converter_loss_factor_B_in_kW_per_amp(i)<<endl;
@@ -2393,18 +2426,19 @@ void VSC_HVDC::solve_steady_state()
         {
             calculate_raw_bus_power_mismatch();
             max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
+            //STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
             //cout<<"max_P_mismatch_in_MW:"<<max_P_mismatch_in_MW<<endl;
             //cout<<"allowed_max_active_power_imbalance_in_MW:"<<get_allowed_max_active_power_imbalance_in_MW()<<endl;
             if(max_P_mismatch_in_MW<get_allowed_max_active_power_imbalance_in_MW())
             {
                 set_convergence_flag(true);
-                osstream<<"vsc powerflow inner iteration converged within ("<<inner_iteration_count<<") iterations."<<endl;
+                osstream<<"VSC-HVDC "<<get_name()<<" powerflow inner iteration converged within ("<<inner_iteration_count<<") iterations."<<endl;
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 break;
             }
             if(inner_iteration_count>=get_max_iteration())
             {
-                osstream<<"Vsc hvdc inner powerflow failed to converge within ("<<get_max_iteration()<<") iterations."<<endl;
+                osstream<<"VSC-HVDC "<<get_name()<<" inner powerflow failed to converge within ("<<get_max_iteration()<<") iterations."<<endl;
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 break;
             }
@@ -2422,14 +2456,14 @@ void VSC_HVDC::solve_steady_state()
             }
             else
             {
-                osstream<<"Fatal Error. Vsc hvdc inner powerflow solution failed since LU factorization of N-R Jacobian matrix is failed."<<endl;
+                osstream<<"Fatal Error. "<<"VSC-HVDC "<<get_name()<<" inner powerflow solution failed since LU factorization of N-R Jacobian matrix is failed."<<endl;
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 break;
             }
         }
         if(get_convergence_flag()==true)
         {
-            osstream<<"vsc powerflow iteration converged within ("<<get_iteration_count()<<") iterations."<<endl;
+            osstream<<"VSC-HVDC "<<get_name()<<" powerflow iteration converged within ("<<get_iteration_count()<<") iterations."<<endl;
             toolkit.show_information_with_leading_time_stamp(osstream);
             break;
         }
@@ -2442,14 +2476,14 @@ void VSC_HVDC::solve_steady_state()
                 dc_bus_control_mode_changed = check_dc_slack_converter_constraint();  //should check if VDC bus should be replaced
                 if(dc_bus_control_mode_changed)
                 {
-                    cout<<"dc_bus_control_mode_changed!!!!!!!!!!!!!!!!!!!!!!!"<<endl;
+                    cout<<"VSC-HVDC "<<get_name()<<" dc_bus_control_mode_changed!!!!!!!!!!!!!!!!!!!!!!!"<<endl;
                     update_P_equation_internal_buses();
                     ++iter_count_of_dc_bus_control_mode_changed;
                 }
             }
             else
             {
-                osstream<<"Fatal Error. Vsc hvdc outer powerflow solution failed since LU factorization of N-R Jacobian matrix is failed."<<endl;
+                osstream<<"Fatal Error. "<<"VSC-HVDC "<<get_name()<<" outer powerflow solution failed since LU factorization of N-R Jacobian matrix is failed."<<endl;
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 break;
             }
@@ -2457,18 +2491,18 @@ void VSC_HVDC::solve_steady_state()
         ++iteration_count;
         if(get_iteration_count()>=get_max_iteration())
         {
-            osstream<<"Vsc hvdc powerflow failed to converge within ("<<get_max_iteration()<<") iterations."<<endl;
+            osstream<<"VSC-HVDC "<<get_name()<<" powerflow failed to converge within ("<<get_max_iteration()<<") iterations."<<endl;
             toolkit.show_information_with_leading_time_stamp(osstream);
             break;
         }
         if(iter_count_of_dc_bus_control_mode_changed>=get_converter_count())
         {
-            osstream<<"Vsc hvdc powerflow failed to converge within ("<<get_converter_count()<<") dc control mode change."<<endl;
+            osstream<<"VSC-HVDC "<<get_name()<<" powerflow failed to converge within ("<<get_converter_count()<<") dc control mode change."<<endl;
             toolkit.show_information_with_leading_time_stamp(osstream);
             break;
         }
     }
-    save_dc_bus_powerflow_result_to_file("Vsc_hvdc_bus_powerflow_result.csv");
+    //save_dc_bus_powerflow_result_to_file("Vsc_hvdc_bus_powerflow_result.csv");
     calculate_dc_active_power_of_slack_bus();
     unsigned int n_converter=get_converter_count();
     /*
@@ -2650,6 +2684,7 @@ void VSC_HVDC::build_dc_network_matrix()
     build_initial_zero_matrix();
     add_dc_lines_to_dc_network();
     dc_network_matrix.compress_and_merge_duplicate_entries();
+    //show_dc_network_matrix();
 }
 
 void VSC_HVDC::build_initial_zero_matrix()
@@ -2744,6 +2779,7 @@ void VSC_HVDC::calculate_raw_bus_power_mismatch()
         bus_power[i] = -bus_power[i];
         //cout<<"bus_power[i]: "<<bus_power[i]<<endl;
     }
+
 
     add_generation_power_to_raw_bus_power_mismatch();
     add_load_power_to_raw_bus_power_mismatch();
@@ -2852,6 +2888,8 @@ double VSC_HVDC::get_converter_dc_power_command(unsigned int converter_index)
                     Pdc_command =  solve_Pdc_with_voltage_angle_and_reactive_power_control(converter_index);
                 else
                     Pdc_command =  solve_Pdc_with_voltage_angle_and_voltage_control(converter_index);
+                //STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
+                //cout<<"Pdc_command:  "<<Pdc_command<<endl;
                 break;
             case VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL:
                 Pdc_command =  solve_Pdc_with_dc_active_power_voltage_droop_control(converter_index);
@@ -2947,9 +2985,24 @@ double VSC_HVDC::solve_Pdc_with_active_power_control_and_ac_voltage_control(unsi
 
 double VSC_HVDC::solve_Pdc_with_voltage_angle_and_voltage_control(unsigned int converter_index) const
 {
-    double Pac_command = get_converter_P_to_AC_bus_in_MW(converter_index);
-    double Qac_command = get_converter_Q_to_AC_bus_in_MVar(converter_index);
-    return get_converter_dc_power_from_converter_to_dc_network_with_P_and_Q_to_AC_bus_in_MVA(converter_index, Pac_command, Qac_command);
+    double P = get_converter_P_to_AC_bus_in_MW(converter_index);
+    double Q = get_converter_Q_to_AC_bus_in_MVar(converter_index);
+    complex<double> S(P, Q);
+    complex<double> Vac = get_converter_ac_bus_positive_sequency_complex_voltage_in_kV(converter_index);
+    complex<double> It = conj(S/Vac/SQRT3);
+
+    complex<double> Zc_in_ohm = get_converter_commutating_impedance_in_ohm(converter_index);
+    complex<double> Vac_converter = Vac+It*Zc_in_ohm*SQRT3;
+
+    double P_from_converter_to_ac_system = (SQRT3*Vac_converter*conj(It)).real();
+
+    double c_loss = get_converter_loss_factor_C_in_kW_per_amp_squard(converter_index);
+    double b_loss = get_converter_loss_factor_B_in_kW_per_amp(converter_index);
+    double a_loss = get_converter_loss_factor_A_in_kW(converter_index);
+    double Ic_mag = abs(It)*1000;
+    double P_converter_loss = (c_loss*Ic_mag*Ic_mag+b_loss*Ic_mag+a_loss)/1000;
+    double Pdc_from_dc_network_to_converter = P_from_converter_to_ac_system + P_converter_loss;
+    return -Pdc_from_dc_network_to_converter;
 }
 
 double VSC_HVDC::solve_Pdc_with_voltage_angle_and_reactive_power_control(unsigned int converter_index) const
@@ -2969,11 +3022,14 @@ double VSC_HVDC::solve_Pdc_with_dc_active_power_voltage_droop_control(unsigned i
     double Vdc=get_dc_bus_Vdc_in_kV(dc_bus_index);
     double operating_power=beta*(Vdc-Udcref)/kdp;
     /*
-    cout<<"beta: "<<beta<<endl;
+    cout<<"converter_index: "<<converter_index<<endl;
+    cout<<"initial_Pdc: "<<initial_Pdc<<endl;
     cout<<"Udcref: "<<Udcref<<endl;
+    cout<<"kdp: "<<kdp<<endl;
+    cout<<"beta: "<<beta<<endl;
+    cout<<"dc_bus_index: "<<dc_bus_index<<endl;
     cout<<"Vdc: "<<Vdc<<endl;
     cout<<"operating_power: "<<operating_power<<endl;
-    cout<<"initial_Pdc: "<<initial_Pdc<<endl;
     */
     double Pdc=initial_Pdc-operating_power;
     return Pdc;
@@ -2985,19 +3041,17 @@ double VSC_HVDC::solve_Pdc_with_dc_current_voltage_droop_control(unsigned int co
     double Idcref=get_converter_initial_dc_current_reference_in_kA(converter_index);
     double kdi=get_converter_initial_droop_coefficient_for_droop_control(converter_index);
     int alpha=get_converter_alpha(converter_index);
-    /*
-    cout<<"converter_index: "<<converter_index<<endl;
-    cout<<"initial_Pdc: "<<initial_Pdc<<endl;
-    cout<<"Udcref: "<<Udcref<<endl;
-    cout<<"Idcref: "<<Idcref<<endl;
-    cout<<"kdi: "<<kdi<<endl;
-    cout<<"alpha: "<<alpha<<endl;
-    */
+
     unsigned int dc_bus_index=get_dc_bus_index_with_converter_index(converter_index);
     double Vdc=get_dc_bus_Vdc_in_kV(dc_bus_index);
     double operating_power=alpha*Vdc*(Idcref-(Vdc-Udcref)/kdi);
     double Pdc=operating_power;
     /*
+    cout<<"converter_index: "<<converter_index<<endl;
+    cout<<"Udcref: "<<Udcref<<endl;
+    cout<<"Idcref: "<<Idcref<<endl;
+    cout<<"kdi: "<<kdi<<endl;
+    cout<<"alpha: "<<alpha<<endl;
     cout<<"dc_bus_index: "<<dc_bus_index<<endl;
     cout<<"Vdc: "<<Vdc<<endl;
     cout<<"operating_power: "<<operating_power<<endl;
@@ -3268,14 +3322,25 @@ void VSC_HVDC::update_converters_P_and_Q_to_AC_bus()
 }
 void VSC_HVDC::update_converter_P_and_Q_to_AC_bus(unsigned int index)
 {
+    //STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
+    //cout<<"index: "<<index<<endl;
     if(get_converter_status(index)==true)
     {
+        double Pdc = get_converter_Pdc_command_to_dc_network_in_MW(index);
+        //STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
+        //cout<<"P_to_DC_in_MW: "<<Pdc<<endl;
         double Pac=0.0;
         VSC_HVDC_CONVERTER_ACTIVE_POWER_CONTROL_MODE p_mode = current_active_power_control_mode[index];
         switch(p_mode)
         {
             case VSC_DC_VOLTAGE_CONTORL:
+                Pac=solve_converter_Pac_with_Pdc(index);
+                set_converter_P_to_AC_bus_in_MW(index, Pac);
+                break;
             case VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL:
+                Pac=solve_converter_Pac_with_Pdc(index);
+                set_converter_P_to_AC_bus_in_MW(index, Pac);
+                break;
             case VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL:
                 Pac=solve_converter_Pac_with_Pdc(index);
                 set_converter_P_to_AC_bus_in_MW(index, Pac);
@@ -3344,10 +3409,10 @@ void VSC_HVDC::update_dc_bus_voltage()
             set_dc_bus_Vdc_in_kV(index,Vdc);
         }
     }
-    /*
-    for(unsigned int i=0; i!=nbus; ++i)
-        cout<<"DC voltage of DC bus @ index "<<i<<": "<<get_dc_bus_Vdc_in_kV(i)<<endl;
-    */
+
+    //for(unsigned int i=0; i!=nbus; ++i)
+    //    cout<<"DC voltage of DC bus @ index "<<i<<": "<<get_dc_bus_Vdc_in_kV(i)<<endl;
+
 }
 
 void VSC_HVDC::calculate_dc_active_power_of_slack_bus()

@@ -253,7 +253,6 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
             max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
             max_Q_mismatch_in_MW = get_maximum_reactive_power_mismatch_in_MVar();
 
-
             bool bus_type_changed = false;
             if(get_var_limit_check_logic()==true)
                 bus_type_changed = check_bus_type_constraints();
@@ -304,7 +303,6 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
             if(jacobian.is_lu_factorization_successful())
             {
                 update_bus_voltage_and_angle(bus_delta_voltage_angle);
-
                 ++iteration_count;
             }
             else
@@ -545,9 +543,10 @@ void POWERFLOW_SOLVER::initialize_bus_type()
     initialize_PV_bus_type();
     initialize_SLACK_bus_type();
 
-    //unsigned int nbus = buses.size();
-    //cout<<"BUS Types after initialized by POWERFLOW_SOLVER::"<<__FUNCTION__<<"()"<<endl;
     /*
+    unsigned int nbus = buses.size();
+    cout<<"BUS Types after initialized by POWERFLOW_SOLVER::"<<__FUNCTION__<<"()"<<endl;
+
     for(unsigned int i=0; i!=nbus; ++i)
     {
         BUS* bus = buses[i];
@@ -1163,13 +1162,13 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
             }
         }
     }
-
+    /*
     osstream<<"Power mismatch of buses.";
     toolkit->show_information_with_leading_time_stamp(osstream);
     osstream<<"bus      name           Pmismatch(MW) Qmismatch(MVar)";
     toolkit->show_information_with_leading_time_stamp(osstream);
-
-
+    */
+/*
     double sbase = psdb.get_system_base_power_in_MVA();
     for(unsigned int i=0; i!=nbus; ++i)
     {
@@ -1178,10 +1177,10 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
         BUS_TYPE btype = psdb.get_bus(bus)->get_bus_type();
         double p = bus_power[i].real()*sbase;
         double q = bus_power[i].imag()*sbase;
-        //if(btype==PV_TYPE or btype == SLACK_TYPE)
-        //    q = 0.0;
-        //if(btype==SLACK_TYPE)
-        //    p = 0.0;
+        if(btype==PV_TYPE or btype == SLACK_TYPE)
+            q = 0.0;
+        if(btype==SLACK_TYPE)
+            p = 0.0;
         osstream<<left;
         osstream<<setw(7)<<setfill(' ')<<bus<<"  "<<setw(14)<<bus_name<<" ";
         osstream<<right;
@@ -1199,6 +1198,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
         }
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
+*/
 }
 
 void POWERFLOW_SOLVER::calculate_raw_bus_power_into_network()
@@ -1618,8 +1618,6 @@ void POWERFLOW_SOLVER::check_SLACK_bus_constraint_of_physical_bus(unsigned int p
         double Q_loading_percentage = (bus_Q_mismatch_in_MVar-total_q_min_in_MVar);
                Q_loading_percentage /= (total_q_max_in_MVar - total_q_min_in_MVar);
 
-        //cout<<"slack bus "<<physical_bus<<" power allocation after VSC:  mismatch "<<bus_P_mismatch_in_MW<<", "<<bus_Q_mismatch_in_MVar<<endl;
-
         unsigned int n;
         vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
         n = sources.size();
@@ -1648,14 +1646,18 @@ void POWERFLOW_SOLVER::check_SLACK_bus_constraint_of_physical_bus(unsigned int p
                 {
                     if(vsc_hvdcs[i]->get_converter_active_power_operation_mode(index)==VSC_AC_VOLTAGE_ANGLE_CONTROL)
                     {
+                        //STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
                         double P_loading_in_MW = vsc_hvdcs[i]->get_converter_Pmax_in_MW(index) - vsc_hvdcs[i]->get_converter_Pmin_in_MW(index);
                         P_loading_in_MW = P_loading_in_MW*P_loading_percentage + vsc_hvdcs[i]->get_converter_Pmin_in_MW(index);
+                        //cout<<"P_loading_in_MW: "<<P_loading_in_MW<<endl;
                         vsc_hvdcs[i]->set_converter_P_to_AC_bus_in_MW(index, P_loading_in_MW);
                     }
                     if(vsc_hvdcs[i]->get_converter_reactive_power_operation_mode(index)==VSC_AC_VOLTAGE_CONTROL)
                     {
+                        //STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
                         double Q_loading_in_MVar = vsc_hvdcs[i]->get_converter_Qmax_in_MVar(index) - vsc_hvdcs[i]->get_converter_Qmin_in_MVar(index);
                         Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + vsc_hvdcs[i]->get_converter_Qmin_in_MVar(index);
+                        //cout<<"Q_loading_in_MVar: "<<Q_loading_in_MVar<<endl;
                         vsc_hvdcs[i]->set_converter_Q_to_AC_bus_in_MVar(index, Q_loading_in_MVar);
                     }
                 }
