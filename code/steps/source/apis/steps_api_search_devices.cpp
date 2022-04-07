@@ -141,6 +141,15 @@ void api_initialize_device_search(const char* device_type, unsigned int bus, uns
         toolkit.api_search_buffer.hvdc_pointer = 0;
     }
 
+    if(DEVICE_TYPE=="VSC HVDC")
+    {
+        if(bus==0)
+            toolkit.api_search_buffer.vscs = psdb.get_all_vsc_hvdcs();
+        else
+            toolkit.api_search_buffer.vscs = psdb.get_vsc_hvdcs_connecting_to_bus(bus);
+        toolkit.api_search_buffer.vsc_pointer = 0;
+    }
+
     if(DEVICE_TYPE=="EQUIVALENT DEVICE")
     {
         if(bus==0)
@@ -261,6 +270,16 @@ unsigned int api_get_current_device_bus_number(const char* device_type, const ch
             else
                 return toolkit.api_search_buffer.hvdcs[index]->get_converter_bus(INVERTER);
         }
+        else
+            return 0;
+    }
+
+    if(DEVICE_TYPE=="VSC HVDC")
+    {
+        unsigned int index = toolkit.api_search_buffer.vsc_pointer;
+        unsigned int n = toolkit.api_search_buffer.vscs.size();
+        if(index<n)
+            return toolkit.api_search_buffer.vscs[index]->get_converter_count();
         else
             return 0;
     }
@@ -398,6 +417,19 @@ unsigned int api_get_current_device_bus_number(const char* device_type, const ch
             return toolkit.steps_char_buffer;
     }
 
+    if(DEVICE_TYPE=="VSC HVDC")
+    {
+        unsigned int index = toolkit.api_search_buffer.vsc_pointer;
+        unsigned int n = toolkit.api_search_buffer.vscs.size();
+        if(index<n)
+		{
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (toolkit.api_search_buffer.vscs[index]->get_identifier()).c_str());
+			return toolkit.steps_char_buffer;
+		}
+        else
+            return toolkit.steps_char_buffer;
+    }
+
     if(DEVICE_TYPE=="EQUIVALENT DEVICE")
     {
         unsigned int index = toolkit.api_search_buffer.equivalent_device_pointer;
@@ -501,6 +533,15 @@ void api_goto_next_device(const char* device_type, unsigned int toolkit_index)
         unsigned int n = toolkit.api_search_buffer.hvdcs.size();
         if(index<n)
             ++(toolkit.api_search_buffer.hvdc_pointer);
+        return;
+    }
+
+    if(DEVICE_TYPE=="VSC HVDC")
+    {
+        unsigned int index = toolkit.api_search_buffer.vsc_pointer;
+        unsigned int n = toolkit.api_search_buffer.vscs.size();
+        if(index<n)
+            ++(toolkit.api_search_buffer.vsc_pointer);
         return;
     }
 

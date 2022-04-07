@@ -128,10 +128,27 @@ void api_add_hvdc(unsigned int rectifier_bus_number, unsigned int inverter_bus_n
     {
         HVDC newhvdc(toolkit);
         newhvdc.set_converter_bus(RECTIFIER, rectifier_bus_number);
-        newhvdc.set_converter_bus(INVERTER, inverter_bus_number);;
+        newhvdc.set_converter_bus(INVERTER, inverter_bus_number);
         newhvdc.set_identifier(identifier);
         psdb.append_hvdc(newhvdc);
     }
+}
+
+void api_add_vsc_hvdc(char* vsc_name, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    if(not psdb.is_vsc_hvdc_exist(vsc_name))
+    {
+        VSC_HVDC newvsc(toolkit);
+        psdb.append_vsc_hvdc(newvsc);
+    }
+
+    ostringstream osstream;
+    osstream<<"function::"<<__FUNCTION__<<" is not implementated now! ";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
 }
 
 void api_add_transformer(unsigned int primary_side_bus_number, unsigned int secondary_side_bus_number, unsigned int tertiary_side_bus_number, char* identifier, unsigned int toolkit_index)

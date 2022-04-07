@@ -78,6 +78,7 @@ class VSC_HVDC : public NONBUS_DEVICE
         void set_dc_bus_number(const unsigned int index, const unsigned int bus);
         void set_dc_bus_name(const unsigned int index, const string name);
         void set_dc_bus_converter_index_with_ac_bus_number(const unsigned int index, const unsigned int bus);
+        void set_dc_bus_converter_index_with_dc_bus_index(const unsigned int converter_index, const unsigned int index);
         void set_dc_bus_Vdc_in_kV(const unsigned int index, const double Udc);
         void set_dc_bus_area(const unsigned int index, const unsigned int area);
         void set_dc_bus_zone(const unsigned int index, const unsigned int zone);

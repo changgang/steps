@@ -508,6 +508,25 @@ void PSSE_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impeda
     }
 }
 
+void PSSE_IMEXPORTER::export_vsc_powerflow_data(string file)
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    ofstream ofs(file);
+    if(!ofs)
+    {
+        osstream<<"Warning. PSS/E raw file "<<file<<" cannot be opened for exporting powerflow data.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    ofs<<export_all_vsc_hvdc_data();
+
+    ofs.close();
+}
+
 string PSSE_IMEXPORTER::export_case_data() const
 {
     ostringstream osstream;

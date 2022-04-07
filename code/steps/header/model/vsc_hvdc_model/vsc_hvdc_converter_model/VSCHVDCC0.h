@@ -15,6 +15,9 @@ class VSCHVDCC0: public VSC_HVDC_CONVERTER_MODEL
     public:
         virtual string get_model_name() const;
 
+        void set_active_voltage_control_ku(double ku);
+        void set_active_voltage_control_kp(double kp);
+        void set_frequency_control_kf(double kf);
         void set_active_power_block_Kp(double kp);
         void set_active_power_block_Ki(double ki);
         void set_active_power_block_Kd(double kd);
@@ -29,6 +32,9 @@ class VSCHVDCC0: public VSC_HVDC_CONVERTER_MODEL
         void set_reactive_power_block_qmin(double qmin);
         void set_dc_voltage_block_ceq_in_uF(const double ceq);
 
+        double get_active_voltage_control_ku() const;
+        double get_active_voltage_control_kp() const;
+        double get_frequency_control_kf() const;
         double get_active_power_block_Kp() const;
         double get_active_power_block_Ki() const;
         double get_active_power_block_Kd() const;
@@ -97,6 +103,7 @@ class VSCHVDCC0: public VSC_HVDC_CONVERTER_MODEL
         PID_BLOCK q_block;
         FIRST_ORDER_BLOCK p_sensor, q_sensor;
         double p_ref, q_ref, udc_ref, uac_ref;
+        double p_ku, p_kp, p_kf;
 
         /*PID_BLOCK p_udc_block, p_pac_block, p_f_block, ;
         PID_BLOCK q_uac_block, q_qac_block;*/

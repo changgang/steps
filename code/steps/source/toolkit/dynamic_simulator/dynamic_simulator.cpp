@@ -3967,6 +3967,7 @@ void DYNAMICS_SIMULATOR::manual_block_hvdc(const DEVICE_ID& hvdc_id)
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     HVDC* hvdc = psdb.get_hvdc(hvdc_id);
+
     if(hvdc!=NULL)
     {
         HVDC_MODEL* model = hvdc->get_hvdc_model();

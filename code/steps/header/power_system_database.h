@@ -128,6 +128,7 @@ class POWER_SYSTEM_DATABASE
         bool is_fixed_shunt_exist(const DEVICE_ID& device_id) const;
         bool is_hvdc_exist(const DEVICE_ID& device_id) const;
         bool is_vsc_hvdc_exist(const DEVICE_ID& device_id) const;
+        bool is_vsc_hvdc_exist(const string vsc_name) const;
         bool is_equivalent_device_exist(const DEVICE_ID& device_id) const;
         bool is_energy_storage_exist(const DEVICE_ID& device_id) const;
         bool is_lcc_hvdc_exist(const DEVICE_ID& device_id) const;
@@ -326,6 +327,7 @@ class POWER_SYSTEM_DATABASE
         unsigned int get_fixed_shunt_index(const DEVICE_ID & device_id) const;
         unsigned int get_hvdc_index(const DEVICE_ID & device_id) const;
         unsigned int get_vsc_hvdc_index(const DEVICE_ID & device_id) const;
+        unsigned int get_vsc_hvdc_index(const string vsc_name) const;
         unsigned int get_equivalent_device_index(const DEVICE_ID & device_id) const;
         unsigned int get_energy_storage_index(const DEVICE_ID & device_id) const;
         unsigned int get_lcc_hvdc_index(const DEVICE_ID & device_id) const;
@@ -461,6 +463,7 @@ class POWER_SYSTEM_DATABASE
         void clear_all_hvdcs();
 
         void clear_vsc_hvdc(const DEVICE_ID& device_id);
+        void clear_vsc_hvdc(const string vsc_name);
         void clear_vsc_hvdcs_connecting_to_bus(const unsigned int bus);
         void clear_all_vsc_hvdcs();
 

@@ -24,6 +24,8 @@ class DEVICE_INDEX_MAP
         bool empty() const;
 
         unsigned int get_index_of_device(const DEVICE_ID& device_id) const;
+        unsigned int get_index_of_device(const string vsc_name) const;
+
         unsigned int operator[](const DEVICE_ID& device_id) const;
 
         unsigned int get_map_size() const;
@@ -39,6 +41,7 @@ class DEVICE_INDEX_MAP
         void decrease_index_by_1_for_device_with_index_greater_than_umap(unsigned int index);
 
         unsigned int get_index_of_device_map(const DEVICE_ID& device_id) const;
+        unsigned int get_index_of_device_map(const string vsc_name) const;
         unsigned int get_index_of_device_umap(const DEVICE_ID& device_id) const;
 
         map<DEVICE_ID, unsigned int> index_map;

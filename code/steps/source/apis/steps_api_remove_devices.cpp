@@ -75,6 +75,14 @@ void api_remove_hvdc(unsigned int rectifier_bus_number, unsigned int inverter_bu
         psdb.clear_hvdc(did);
 }
 
+void api_remove_vsc_hvdc(char* vsc_name, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    if(psdb.is_vsc_hvdc_exist(vsc_name))
+        psdb.clear_vsc_hvdc(vsc_name);
+}
+
 void api_remove_transformer(unsigned int primary_side_bus_number, unsigned int secondary_side_bus_number, unsigned int tertiary_side_bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

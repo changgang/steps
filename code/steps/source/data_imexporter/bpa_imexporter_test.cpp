@@ -45,7 +45,7 @@ void BPA_IMEXPORTER_TEST::setup()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100000);
 
-    importer.load_powerflow_data("山东电网简化.dat");
+    importer.load_powerflow_data("simplified_shandong_grid.dat");
 }
 
 void BPA_IMEXPORTER_TEST::tear_down()
@@ -514,7 +514,7 @@ void BPA_IMEXPORTER_TEST::test_export_powerflow_data()
     psse_importer.export_powerflow_data("test_log/export_sd_model_with_PSSE_IMEXPORTER.raw");
 
     psdb.clear();
-    importer.load_powerflow_data("../../../云南网500kV简化网络.dat");
+    importer.load_powerflow_data("../../../simplified_yunnan_grid.dat");
     importer.export_powerflow_data("test_log/export_yn_model_with_BPA_IMEXPORTER.dat");
     psse_importer.export_powerflow_data("test_log/export_yn_model_with_PSSE_IMEXPORTER.raw");
 

@@ -1538,6 +1538,13 @@ bool POWER_SYSTEM_DATABASE::is_vsc_hvdc_exist(const DEVICE_ID& device_id) const
     else                       return false;
 }
 
+bool POWER_SYSTEM_DATABASE::is_vsc_hvdc_exist(const string vsc_name) const
+{
+    unsigned int index = get_vsc_hvdc_index(vsc_name);
+    if(index!=INDEX_NOT_EXIST) return true;
+    else                       return false;
+}
+
 bool POWER_SYSTEM_DATABASE::is_equivalent_device_exist(const DEVICE_ID& device_id) const
 {
     unsigned int index = get_equivalent_device_index(device_id);
@@ -4249,6 +4256,11 @@ unsigned int POWER_SYSTEM_DATABASE::get_vsc_hvdc_index(const DEVICE_ID & device_
     return vsc_hvdc_index.get_index_of_device(device_id);
 }
 
+unsigned int POWER_SYSTEM_DATABASE::get_vsc_hvdc_index(const string vsc_name) const
+{
+    return vsc_hvdc_index.get_index_of_device(vsc_name);
+}
+
 unsigned int POWER_SYSTEM_DATABASE::get_equivalent_device_index(const DEVICE_ID & device_id) const
 {
     return equivalent_device_index.get_index_of_device(device_id);
@@ -4414,6 +4426,7 @@ void POWER_SYSTEM_DATABASE::check_all_devices()
     check_all_hvdcs();
     check_all_equivalent_devices();
     check_all_lcc_hvdcs();
+    check_all_vsc_hvdcs();
 }
 
 void POWER_SYSTEM_DATABASE::check_all_buses()
@@ -5870,6 +5883,25 @@ void POWER_SYSTEM_DATABASE::clear_vsc_hvdc(const DEVICE_ID& device_id)
 
         vector<VSC_HVDC>::iterator iter_vsc_hvdc = Vsc_hvdc.begin();
 
+
+        std::advance(iter_vsc_hvdc, current_index);
+        Vsc_hvdc.erase(iter_vsc_hvdc);
+        vsc_hvdc_index.set_device_index(device_id, INDEX_NOT_EXIST);
+
+        vsc_hvdc_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+    }
+}
+
+void POWER_SYSTEM_DATABASE::clear_vsc_hvdc(const string vsc_name)
+{
+    if(is_vsc_hvdc_exist(vsc_name))
+    {
+        unsigned int current_index = get_vsc_hvdc_index(vsc_name);
+
+        VSC_HVDC* vsc_hvdc = get_vsc_hvdc(vsc_name);
+        DEVICE_ID device_id = vsc_hvdc->get_device_id();
+
+        vector<VSC_HVDC>::iterator iter_vsc_hvdc = Vsc_hvdc.begin();
 
         std::advance(iter_vsc_hvdc, current_index);
         Vsc_hvdc.erase(iter_vsc_hvdc);

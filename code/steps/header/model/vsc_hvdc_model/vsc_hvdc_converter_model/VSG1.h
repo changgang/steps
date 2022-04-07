@@ -1,5 +1,5 @@
-#ifndef VSG0_H_INCLUDED
-#define VSG0_H_INCLUDED
+#ifndef VSG1_H_INCLUDED
+#define VSG1_H_INCLUDED
 
 #include "header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_model.h"
 #include "header/block/integral_block.h"
@@ -8,13 +8,13 @@
 #include "header/block/lead_lag_block.h"
 #include "header/block/first_order_block.h"
 
-class VSG0: public VSC_HVDC_CONVERTER_MODEL
+class VSG1: public VSC_HVDC_CONVERTER_MODEL
 {
     public:
-        VSG0(STEPS& toolkit);
-        VSG0(const VSG0& model);
-        virtual ~VSG0();
-        virtual VSG0& operator=(const VSG0& model);
+        VSG1(STEPS& toolkit);
+        VSG1(const VSG1& model);
+        virtual ~VSG1();
+        virtual VSG1& operator=(const VSG1& model);
     public:
         virtual string get_model_name() const;
 
@@ -40,8 +40,9 @@ class VSG0: public VSC_HVDC_CONVERTER_MODEL
         void set_voltage_block_Tv_in_s(double t);
         void set_voltage_block_D_in_pu(double t);
         void set_reactive_current_reducer_T_in_s(double t);
-        void set_dc_voltage_response_block_Kp(double k);
-        void set_dc_voltage_response_block_Ki(double k);
+        void set_dc_voltage_Ku(double k);
+        void set_frequency_Kf(double k);
+
 
         double get_dc_voltage_block_ceq_in_uF() const;
 
@@ -65,9 +66,8 @@ class VSG0: public VSC_HVDC_CONVERTER_MODEL
         double get_voltage_block_Tv_in_s() const;
         double get_voltage_block_D_in_pu() const;
         double get_reactive_current_reducer_T_in_s() const;
-
-        double get_dc_voltage_response_block_Kp() const;
-        double get_dc_voltage_response_block_Ki() const;
+        double get_dc_voltage_Ku() const;
+        double get_frequency_Kf() const;
 
         void set_Pref_in_pu(double pref);
         void set_Qref_in_pu(double qref);
@@ -82,6 +82,7 @@ class VSG0: public VSC_HVDC_CONVERTER_MODEL
 
         double get_dynamic_dc_voltage_in_kV() const;
         double get_dynamic_dc_voltage_in_pu() const;
+
     public:
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
@@ -114,7 +115,7 @@ class VSG0: public VSC_HVDC_CONVERTER_MODEL
         virtual complex<double> get_converter_voltage_in_xy_axis_in_pu_as_voltage_source() const ;
         virtual complex<double> get_converter_dynamic_current_from_converter_to_ac_bus_in_dq_axis_in_pu_on_converter_base_as_current_source() const ;
     private:
-        void copy_from_const_model(const VSG0& model);
+        void copy_from_const_model(const VSG1& model);
         double get_converter_dc_power_from_converter_to_Ceq_in_MW();
     private:
         INTEGRAL_BLOCK udc_block;
@@ -138,5 +139,7 @@ class VSG0: public VSC_HVDC_CONVERTER_MODEL
         double D_voltage;
 
         double q_ref, uac_ref;
+
+        double ku, kf;
 };
-#endif // VSG0_H_INCLUDED
+#endif // VSG1_H_INCLUDED

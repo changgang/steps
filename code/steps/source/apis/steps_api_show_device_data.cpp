@@ -106,6 +106,18 @@ void api_show_device_data(const char* device_type, unsigned int toolkit_index)
         }
     }
 
+    if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="VSC HVDC")
+    {
+        vector<VSC_HVDC*> vschvdcs = psdb.get_all_vsc_hvdcs();
+        unsigned int n = vschvdcs.size();
+
+        for(unsigned int i=0; i!=n; ++i)
+        {
+            VSC_HVDC* vschvdcptr = vschvdcs[i];
+            vschvdcptr->report();
+        }
+    }
+
     if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="EQUIVALENT DEVICE")
     {
         vector<EQUIVALENT_DEVICE*> eds = psdb.get_all_equivalent_devices();

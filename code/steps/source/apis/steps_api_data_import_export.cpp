@@ -24,6 +24,25 @@ void api_load_powerflow_data_from_file(char* file, char* file_type, unsigned int
     }
 }
 
+void api_load_vsc_powerflow_data_from_file(char* file, char* file_type, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    string string_file_type = string2upper(file_type);
+    if(string_file_type=="STEPS" or string_file_type=="PSS/E")
+    {
+        PSSE_IMEXPORTER importer(toolkit);
+        importer.load_vsc_powerflow_data(file);
+    }
+    else
+    {
+        if(string_file_type=="BPA")
+        {
+            BPA_IMEXPORTER importer(toolkit);
+            importer.load_powerflow_data(file);
+        }
+    }
+}
+
 void api_load_powerflow_result_from_file(char* file, char* file_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
@@ -88,6 +107,16 @@ void api_save_powerflow_data_to_file(char* file, char* file_type,
     }
 }
 
+void api_save_vsc_powerflow_data_to_file(char* file, char* file_type, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    string string_file_type = string2upper(file_type);
+    if(string_file_type=="STEPS" or string_file_type=="PSS/E")
+    {
+        PSSE_IMEXPORTER exporter(toolkit);
+        exporter.export_vsc_powerflow_data(file);
+    }
+}
 
 void api_load_dynamic_data_from_file(char* file, char* file_type, unsigned int toolkit_index)
 {

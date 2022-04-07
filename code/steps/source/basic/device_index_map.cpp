@@ -201,6 +201,11 @@ unsigned int DEVICE_INDEX_MAP::get_index_of_device(const DEVICE_ID& device_id) c
     return get_index_of_device_map(device_id);
 }
 
+unsigned int DEVICE_INDEX_MAP::get_index_of_device(const string vsc_name) const
+{
+    return get_index_of_device_map(vsc_name);
+}
+
 unsigned int DEVICE_INDEX_MAP::get_index_of_device_map(const DEVICE_ID& device_id) const
 {
     if(not empty())
@@ -217,6 +222,11 @@ unsigned int DEVICE_INDEX_MAP::get_index_of_device_map(const DEVICE_ID& device_i
     }
     else
         return INDEX_NOT_EXIST;
+}
+
+unsigned int DEVICE_INDEX_MAP::get_index_of_device_map(const string vsc_name) const
+{
+    return 0;
 }
 
 unsigned int DEVICE_INDEX_MAP::get_index_of_device_umap(const DEVICE_ID& device_id) const

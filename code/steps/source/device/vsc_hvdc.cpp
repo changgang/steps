@@ -630,6 +630,13 @@ void VSC_HVDC::set_dc_bus_converter_index_with_ac_bus_number(const unsigned int 
     }
 }
 
+void VSC_HVDC::set_dc_bus_converter_index_with_dc_bus_index(const unsigned int converter_index, const unsigned int index)
+{
+    if(dc_bus_index_is_out_of_range_in_function(index, __FUNCTION__))
+        return;
+    dc_buses[index].converter_index = index;
+}
+
 void VSC_HVDC::set_dc_bus_owner_number(const unsigned int index, const unsigned int n)
 {
     if(dc_bus_index_is_out_of_range_in_function(index, __FUNCTION__))
@@ -2232,6 +2239,7 @@ void VSC_HVDC::set_model(MODEL* model)
 {
     if(model != NULL and model->has_allowed_device_type(STEPS_VSC_HVDC))
     {
+        STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
         model->set_device_id(get_device_id());
         if(model->get_model_type()=="VSC HVDC NETWORK")
         {
@@ -2275,6 +2283,7 @@ void VSC_HVDC::set_vsc_hvdc_network_model(VSC_HVDC_NETWORK_MODEL* model)
     {
         delete_vsc_hvdc_network_model();
         vsc_hvdc_network_model = model;
+        vsc_hvdc_network_model->report();
     }
 }
 
@@ -2287,7 +2296,6 @@ void VSC_HVDC::set_vsc_hvdc_converter_model(VSC_HVDC_CONVERTER_MODEL* model)
         {
             delete_vsc_hvdc_converter_model(index);
             vsc_hvdc_converter_models[index] = model;
-
             vsc_hvdc_converter_models[index]->report();
         }
     }
@@ -3794,7 +3802,7 @@ double VSC_HVDC::get_converter_dc_current_in_kA_with_ac_bus_number(unsigned int 
 {
     unsigned int converter_index=get_converter_index_with_ac_bus(bus);
     unsigned int dc_bus_index=get_dc_bus_index_with_ac_bus_number(bus);
-    double Pdc = get_converter_Pdc_command_to_dc_network_in_MW(converter_index);
+    double Pdc = get_converter_Pdc_from_Ceq_to_DC_network_in_MW(converter_index);
     double dc_bus_voltage = get_dc_bus_Vdc_in_kV(dc_bus_index);
     double Idc = Pdc/dc_bus_voltage;
 
@@ -3804,7 +3812,7 @@ double VSC_HVDC::get_converter_dc_current_in_kA_with_ac_bus_number(unsigned int 
 double VSC_HVDC::get_converter_dc_power_in_MW_with_ac_bus_number(unsigned int bus)
 {
     unsigned int converter_index=get_converter_index_with_ac_bus(bus);
-    double Pdc = get_converter_Pdc_command_to_dc_network_in_MW(converter_index);
+    double Pdc = get_converter_Pdc_from_Ceq_to_DC_network_in_MW(converter_index);
     return Pdc;
 }
 

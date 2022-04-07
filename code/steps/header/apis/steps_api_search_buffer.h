@@ -32,6 +32,8 @@ class STEPS_API_SEARCH_BUFFER
         unsigned int transformer_pointer;
         vector<HVDC*> hvdcs;
         unsigned int hvdc_pointer;
+        vector<VSC_HVDC*> vscs;
+        unsigned int vsc_pointer;
         vector<EQUIVALENT_DEVICE*> equivalent_devices;
         unsigned int equivalent_device_pointer;
         vector<ENERGY_STORAGE*> energy_storages;

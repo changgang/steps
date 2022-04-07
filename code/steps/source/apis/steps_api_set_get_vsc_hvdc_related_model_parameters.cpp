@@ -64,7 +64,10 @@ double api_get_vsc_hvdc_related_model_float_parameter(char* name, char* model_ty
     {
         VSC_HVDC_CONVERTER_MODEL* model = vsc_hvdc->get_vsc_hvdc_converter_model(converter_index);
         if(model!=NULL)
+        {
             return model->get_model_data_with_name(PARAMETER_NAME);
+        }
+
         else
             return 0.0;
     }

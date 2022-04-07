@@ -35,10 +35,12 @@ int main()
    */
 
     //importer.load_powerflow_data("../../../bench/IEEE39_with_four_terminal_vsc.raw");
-    importer.load_powerflow_data("../../../bench/IEEE39_with_two_system.raw");
-    importer.load_vsc_powerflow_data("../../../bench/2_system_vsc_hvdc.vscraw");
+    //importer.load_powerflow_data("../../../bench/IEEE39_with_two_system.raw");
+    //importer.load_vsc_powerflow_data("../../../bench/2_system_vsc_hvdc.vscraw");
     //cout<<"Done loading IEEE39_with_2_system_vsc data"<<endl;
-
+    importer.load_powerflow_data("../../../bench/shandong/bench_shandong.raw");
+    cout<<"Done loading powerflow file"<<endl;
+    importer.load_vsc_powerflow_data("../../../bench/shandong/4_terminal_vsc_hvdc.vscraw");
 
     POWERFLOW_SOLVER& solver = default_toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network = default_toolkit.get_network_matrix();
@@ -75,10 +77,10 @@ int main()
     solver.save_extended_powerflow_result_to_file("IEEE57_with_seven_terminal_vsc_detailed_result.csv");
     */
 
-    solver.save_network_Y_matrix_to_file("IEEE39_with_two_system_vsc_network_matrix.csv");
-    solver.save_jacobian_matrix_to_file("IEEE39_with_two_system_vsc_jacobian_matrix.csv");
-    solver.save_powerflow_result_to_file("IEEE39_with_two_system_vsc_pf.csv");
-    solver.save_extended_powerflow_result_to_file("IEEE39_with_two_system_vsc_extended_pf.csv");
+    solver.save_network_Y_matrix_to_file("shandong_vsc_network_matrix.csv");
+    solver.save_jacobian_matrix_to_file("shandong_vsc_jacobian_matrix.csv");
+    solver.save_powerflow_result_to_file("shandong_vsc_pf.csv");
+    solver.save_extended_powerflow_result_to_file("shandong_vsc_extended_pf.csv");
 
     /*
     vector<DEVICE_ID> dids  = psdb.get_all_devices_device_id_connecting_to_bus(1);

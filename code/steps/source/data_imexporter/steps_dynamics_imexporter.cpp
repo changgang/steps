@@ -158,6 +158,7 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="VSCHVDCP0") { add_VSCHVDCP0_model(data); return;}
     if(model_name=="VSCHVDCC0") { add_VSCHVDCC0_model(data); return;}
     if(model_name=="VSG0") { add_VSG0_model(data); return;}
+    if(model_name=="VSG1") { add_VSG1_model(data); return;}
 
     if(model_name=="WT3G1") { add_WT3G1_model(data); return;}
     if(model_name=="WT3G0") { add_WT3G0_model(data); return;}
@@ -1679,7 +1680,9 @@ void STEPS_IMEXPORTER::add_VSCHVDCC0_model(vector<string>& data)
         model->set_device_id(did);
         bool successful = model->setup_model_with_steps_string_vector(data);
         if(successful)
+        {
             vsc_hvdc->set_model(model);
+        }
         else
         {
             ostringstream osstream;
@@ -1688,7 +1691,6 @@ void STEPS_IMEXPORTER::add_VSCHVDCC0_model(vector<string>& data)
         }
     }
 }
-
 
 void STEPS_IMEXPORTER::add_VSG0_model(vector<string>& data)
 {
@@ -1714,6 +1716,35 @@ void STEPS_IMEXPORTER::add_VSG0_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid VSG0 model is built, but will not be set for "<<vsc_hvdc->get_compound_device_name();
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::add_VSG1_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "VSG1")
+        return;
+
+    if(data.size()<22)
+        return;
+
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    DEVICE_ID did = get_vsc_hvdc_device_id_from_string_vector(data);
+
+    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(did);
+    if(vsc_hvdc != NULL)
+    {
+        VSG1* model = new VSG1(toolkit);
+        model->set_device_id(did);
+        bool successful = model->setup_model_with_steps_string_vector(data);
+        if(successful)
+            vsc_hvdc->set_model(model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid VSG1 model is built, but will not be set for "<<vsc_hvdc->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }

@@ -1242,6 +1242,69 @@ void DYNAMICS_SIMULATOR::prepare_vsc_hvdc_related_meter(const DEVICE_ID& did, st
     }
 }
 
+void DYNAMICS_SIMULATOR::prepare_vsc_hvdc_related_meter(string vsc_name, string meter_type, unsigned int side, string var_name)
+{
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+
+    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_name);
+    DEVICE_ID did = vsc_hvdc->get_device_id();
+
+    if(vsc_hvdc != NULL)
+    {
+        if(psdb.is_vsc_hvdc_exist(did))
+        {
+            METER_SETTER setter(*toolkit);
+
+            METER meter(*toolkit);
+
+            meter_type = string2upper(meter_type);
+            if(meter_type=="CONVERTER DC CURRENT IN KA")
+                meter = setter.prepare_vsc_hvdc_converter_dc_current_in_kA_meter(did, side);
+            if(meter_type=="CONVERTER AC CURRENT IN KA")
+                meter = setter.prepare_vsc_hvdc_converter_ac_current_in_kA_meter(did, side);
+            if(meter_type=="CONVERTER AC VOLTAGE IN KV")
+                meter = setter.prepare_vsc_hvdc_converter_ac_voltage_in_kV_meter(did, side);
+            if(meter_type=="CONVERTER AC VOLTAGE IN PU")
+                meter = setter.prepare_vsc_hvdc_converter_ac_voltage_in_pu_meter(did, side);
+            if(meter_type=="CONVERTER DC POWER IN MW")
+                meter = setter.prepare_vsc_hvdc_converter_dc_power_in_MW_meter(did, side);
+            if(meter_type=="CONVERTER DC VOLTAGE IN KV")
+                meter = setter.prepare_vsc_hvdc_converter_dc_voltage_in_kV_meter(did, side);
+            if(meter_type=="CONVERTER AC ACTIVE POWER IN MW")
+                meter = setter.prepare_vsc_hvdc_converter_ac_active_power_in_MW_meter(did, side);
+            if(meter_type=="CONVERTER AC REACTIVE POWER IN MVAR")
+                meter = setter.prepare_vsc_hvdc_converter_ac_reactive_power_in_MVar_meter(did, side);
+            if(meter_type=="DC BUS VOLTAGE IN KV")
+                meter = setter.prepare_vsc_hvdc_dc_bus_voltage_in_kV_meter(did, side);
+            if(meter_type=="VSC HVDC MODEL INTERNAL VARIABLE")
+            {
+                var_name = string2upper(var_name);
+                meter = setter.prepare_vsc_hvdc_model_internal_variable_meter(did, var_name, side);
+            }
+
+            if(meter.is_valid())
+                append_meter(meter);
+            else
+            {
+                osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
+                toolkit->show_information_with_leading_time_stamp(osstream);
+            }
+        }
+        else
+        {
+            osstream<<"Warning. Meter of "<<did.get_compound_device_name()<<" cannot be set since the given device does not exist in the power system database";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not VSC HVDC when setting up meter with "<<__FUNCTION__;
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+
 void DYNAMICS_SIMULATOR::prepare_vsc_hvdc_related_dc_line_meter(const DEVICE_ID& did, string meter_type, const DC_DEVICE_ID dc_did, unsigned int side, string var_name)
 {
     ostringstream osstream;

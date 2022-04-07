@@ -244,6 +244,8 @@ unsigned int api_get_device_capacity(const char* device_type, unsigned int toolk
         return psdb.get_transformer_capacity();
     if(DEVICE_TYPE=="HVDC")
         return psdb.get_hvdc_capacity();
+    if(DEVICE_TYPE=="VSC HVDC")
+        return psdb.get_vsc_hvdc_capacity();
     if(DEVICE_TYPE=="EQUIVALENT DEVICE")
         return psdb.get_equivalent_device_capacity();
     if(DEVICE_TYPE=="ENERGY STORAGE")
@@ -300,6 +302,8 @@ void api_set_device_capacity(const char* device_type, unsigned int cap, unsigned
         return psdb.set_transformer_capacity(cap);
     if(DEVICE_TYPE=="HVDC")
         return psdb.set_hvdc_capacity(cap);
+    if(DEVICE_TYPE=="VSC HVDC")
+        return psdb.set_vsc_hvdc_capacity(cap);
     if(DEVICE_TYPE=="EQUIVALENT DEVICE")
         return psdb.set_equivalent_device_capacity(cap);
     if(DEVICE_TYPE=="ENERGY STORAGE")
