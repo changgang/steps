@@ -65,7 +65,7 @@ void POWER_SYSTEM_DATABASE::set_database_capacity()
     unsigned int line_capacity = (unsigned int)(round(bus_capacity*3.0));
     unsigned int transformer_capacity = bus_capacity;
     unsigned int hvdc_capacity = (unsigned int)(round(bus_capacity*0.1));
-    unsigned int vsc_hvdc_capacity = (unsigned int)(round(bus_capacity*0.1));
+    unsigned int vsc_hvdc_capacity = (unsigned int)(round(bus_capacity*0.01));
     unsigned int equivalentdevice_capacity = (unsigned int)(round(bus_capacity*0.1));
     unsigned int energy_storage_capacity = (unsigned int)(round(bus_capacity*0.1));
     unsigned int lcc_hvdc_capacity = hvdc_capacity;
@@ -111,7 +111,7 @@ void POWER_SYSTEM_DATABASE::set_database_capacity()
             hvdc_capacity = (unsigned int)(document["hvdc"].GetInt());
 
         if(document.HasMember("vschvdc") and document["vschvdc"].IsInt())
-        hvdc_capacity = (unsigned int)(document["vschvdc"].GetInt());
+            vsc_hvdc_capacity = (unsigned int)(document["vschvdc"].GetInt());
 
         if(document.HasMember("equivalentDevice") and document["equivalentDevice"].IsInt())
             equivalentdevice_capacity = (unsigned int)(document["equivalentDevice"].GetInt());

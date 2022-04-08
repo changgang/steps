@@ -109,6 +109,8 @@ def load_library():
 
     libsteps.api_load_powerflow_data_from_file.restype = None
     libsteps.api_load_powerflow_data_from_file.argtypes = (c_char_p, c_char_p, c_uint)
+    libsteps.api_load_vsc_hvdc_powerflow_data_from_file.restype = None
+    libsteps.api_load_vsc_hvdc_powerflow_data_from_file.argtypes = (c_char_p, c_char_p, c_uint)   
     libsteps.api_load_powerflow_result_from_file.restype = None
     libsteps.api_load_powerflow_result_from_file.argtypes = (c_char_p, c_char_p, c_uint)
     libsteps.api_load_dynamic_data_from_file.restype = None
@@ -116,6 +118,8 @@ def load_library():
 
     libsteps.api_save_powerflow_data_to_file.restype = None
     libsteps.api_save_powerflow_data_to_file.argtypes = (c_char_p, c_char_p, c_bool, c_bool, c_bool, c_uint, c_uint)
+    libsteps.api_save_vsc_hvdc_powerflow_data_to_file.restype = None
+    libsteps.api_save_vsc_hvdc_powerflow_data_to_file.argtypes = (c_char_p, c_char_p, c_bool, c_bool, c_bool, c_uint, c_uint)
     libsteps.api_save_dynamic_data_to_file.restype = None
     libsteps.api_save_dynamic_data_to_file.argtypes = (c_char_p, c_char_p, c_bool, c_uint)
     
@@ -195,6 +199,8 @@ def load_library():
     libsteps.api_is_transformer_exist.argtypes = (c_uint, c_uint, c_uint, c_char_p, c_uint)
     libsteps.api_is_hvdc_exist.restype = c_bool
     libsteps.api_is_hvdc_exist.argtypes = (c_uint, c_uint, c_char_p, c_uint)
+    libsteps.api_is_vsc_hvdc_exist.restype = c_bool
+    libsteps.api_is_vsc_hvdc_exist.argtypes = (c_char_p, c_uint)    
     libsteps.api_is_equivalent_device_exist.restype = c_bool
     libsteps.api_is_equivalent_device_exist.argtypes = (c_uint, c_char_p, c_uint)
 
@@ -274,6 +280,8 @@ def load_library():
     libsteps.api_add_line.argtypes = (c_uint, c_uint, c_char_p, c_uint)
     libsteps.api_add_hvdc.restype = None
     libsteps.api_add_hvdc.argtypes = (c_uint, c_uint, c_char_p, c_uint)
+    libsteps.api_add_vsc_hvdc.restype = None
+    libsteps.api_add_vsc_hvdc.argtypes = (c_char_p, c_uint)   
     libsteps.api_add_transformer.restype = None
     libsteps.api_add_transformer.argtypes = (c_uint, c_uint, c_uint, c_char_p, c_uint)
     libsteps.api_add_equivalent_device.restype = None
@@ -303,6 +311,8 @@ def load_library():
     libsteps.api_remove_line.argtypes = (c_uint, c_uint, c_char_p, c_uint)
     libsteps.api_remove_hvdc.restype = None
     libsteps.api_remove_hvdc.argtypes = (c_uint, c_uint, c_char_p, c_uint)
+    libsteps.api_remove_vsc_hvdc.restype = None
+    libsteps.api_remove_vsc_hvdc.argtypes = (c_char_p, c_uint)  
     libsteps.api_remove_transformer.restype = None
     libsteps.api_remove_transformer.argtypes = (c_uint, c_uint, c_uint, c_char_p, c_uint)
     libsteps.api_remove_equivalent_device.restype = None
@@ -436,6 +446,23 @@ def load_library():
     libsteps.api_set_hvdc_boolean_data.restype = None
     libsteps.api_set_hvdc_boolean_data.argtypes = (c_uint, c_uint, c_char_p, c_char_p, c_char_p, c_bool, c_uint)
 
+    libsteps.api_get_vsc_hvdc_integer_data.restype = (c_int)
+    libsteps.api_get_vsc_hvdc_integer_data.argtypes = (c_char_p, c_char_p, c_char_p, c_uint, c_uint)
+    libsteps.api_get_vsc_hvdc_float_data.restype = (c_double)
+    libsteps.api_get_vsc_hvdc_float_data.argtypes = (c_char_p, c_char_p, c_char_p, c_uint, c_uint)
+    libsteps.api_get_vsc_hvdc_string_data.restype = (c_char_p)
+    libsteps.api_get_vsc_hvdc_string_data.argtypes = (c_char_p, c_char_p, c_char_p, c_uint, c_uint)
+    libsteps.api_get_vsc_hvdc_boolean_data.restype = (c_bool)
+    libsteps.api_get_vsc_hvdc_boolean_data.argtypes = (c_char_p, c_char_p, c_char_p, c_uint, c_uint)
+    libsteps.api_set_vsc_hvdc_integer_data.restype = None
+    libsteps.api_set_vsc_hvdc_integer_data.argtypes = (c_char_p, c_char_p, c_char_p, c_int, c_uint, c_uint)
+    libsteps.api_set_vsc_hvdc_float_data.restype = None
+    libsteps.api_set_vsc_hvdc_float_data.argtypes = (c_char_p, c_char_p, c_char_p, c_double, c_uint, c_uint)
+    libsteps.api_set_vsc_hvdc_string_data.restype = None
+    libsteps.api_set_vsc_hvdc_string_data.argtypes = (c_char_p, c_char_p, c_char_p, c_char_p, c_uint, c_uint)
+    libsteps.api_set_vsc_hvdc_boolean_data.restype = None
+    libsteps.api_set_vsc_hvdc_boolean_data.argtypes = (c_char_p, c_char_p, c_char_p, c_bool, c_uint, c_uint)
+
     libsteps.api_get_area_integer_data.restype = (c_int)
     libsteps.api_get_area_integer_data.argtypes = (c_uint, c_char_p, c_uint)
     libsteps.api_get_area_float_data.restype = (c_double)
@@ -561,7 +588,6 @@ def load_library():
     libsteps.api_get_vsc_hvdc_related_model_float_parameter_name.restype = c_char_p
     libsteps.api_get_vsc_hvdc_related_model_float_parameter_name.argtypes = (c_char_p, c_char_p, c_uint, c_uint, c_uint)
 
-
     libsteps.api_get_powerflow_solver_integer_parameter.restype = (c_uint)
     libsteps.api_get_powerflow_solver_integer_parameter.argtypes = (c_char_p, c_uint)
     libsteps.api_get_powerflow_solver_float_parameter.restype = (c_double)
@@ -665,6 +691,8 @@ def load_library():
     libsteps.api_prepare_transformer_related_meters.argtypes = (c_uint, )
     libsteps.api_prepare_hvdc_related_meters.restype = None
     libsteps.api_prepare_hvdc_related_meters.argtypes = (c_uint, )
+    libsteps.api_prepare_vsc_hvdc_related_meters.restype = None
+    libsteps.api_prepare_vsc_hvdc_related_meters.argtypes = (c_uint, )   
     libsteps.api_prepare_equivalent_device_related_meters.restype = None
     libsteps.api_prepare_equivalent_device_related_meters.argtypes = (c_uint, )
 
@@ -687,6 +715,8 @@ def load_library():
     libsteps.api_prepare_transformer_related_meter.argtypes = (c_uint, c_uint, c_uint, c_char_p, c_char_p, c_char_p, c_char_p, c_uint)
     libsteps.api_prepare_hvdc_related_meter.restype = None
     libsteps.api_prepare_hvdc_related_meter.argtypes = (c_uint, c_uint, c_char_p, c_char_p, c_char_p, c_char_p, c_uint)
+    libsteps.api_prepare_vsc_hvdc_related_meter.restype = None
+    libsteps.api_prepare_vsc_hvdc_related_meter.argtypes = (c_char_p, c_char_p, c_uint,c_char_p, c_uint)    
     libsteps.api_prepare_equivalent_device_related_meter.restype = None
     libsteps.api_prepare_equivalent_device_related_meter.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_uint)
 
@@ -802,6 +832,15 @@ def load_library():
     libsteps.api_get_hvdc_power_order_in_MW.argtypes = (c_uint, c_uint, c_char_p, c_uint)
     libsteps.api_set_hvdc_power_order_in_MW.restype = None
     libsteps.api_set_hvdc_power_order_in_MW.argtypes = (c_uint, c_uint, c_char_p, c_double, c_uint)
+
+    libsteps.api_set_vsc_hvdc_dc_line_fault.restype = None
+    libsteps.api_set_vsc_hvdc_dc_line_fault.argtypes = (c_char_p, c_uint, c_uint, c_char_p, c_double,c_double, c_uint)
+    libsteps.api_clear_vsc_hvdc_dc_line_fault.restype = None
+    libsteps.api_clear_vsc_hvdc_dc_line_fault.argtypes = (c_char_p, c_uint, c_uint, c_char_p, c_uint)
+    libsteps.api_trip_vsc_hvdc_dc_line.restype = None
+    libsteps.api_trip_vsc_hvdc_dc_line.argtypes = (c_char_p, c_uint, c_uint, c_char_p, c_uint)
+    libsteps.api_close_vsc_hvdc_dc_line.restype = None
+    libsteps.api_close_vsc_hvdc_dc_line.argtypes = (c_char_p, c_uint, c_uint, c_char_p, c_uint)
 
     libsteps.api_search_cct.restype = (c_double)
     libsteps.api_search_cct.argtypes = (c_char_p, c_char_p, c_uint, c_uint, c_char_p, c_uint, c_uint, c_uint)

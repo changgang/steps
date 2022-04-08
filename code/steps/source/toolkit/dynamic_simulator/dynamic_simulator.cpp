@@ -4264,7 +4264,7 @@ void DYNAMICS_SIMULATOR::change_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id,
 }
 
 
-void DYNAMICS_SIMULATOR::set_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did, unsigned int side_bus, double location, double fault_shunt)
+void DYNAMICS_SIMULATOR::set_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did, unsigned int side_bus, double location, double fault_r)
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_name);
@@ -4272,7 +4272,7 @@ void DYNAMICS_SIMULATOR::set_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID l
     if(line_index!=INDEX_NOT_EXIST)
     {
         vsc_hvdc->set_dc_line_fault_location(line_index, side_bus, location);
-        vsc_hvdc->set_dc_line_fault_r_in_ohm(line_index, fault_shunt);
+        vsc_hvdc->set_dc_line_fault_r_in_ohm(line_index, fault_r);
     }
 }
 

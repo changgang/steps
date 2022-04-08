@@ -23,9 +23,8 @@ class STEPS():
         self.__encoding = "gb18030"
         if 'STEPS_LIB' not in globals():
             STEPS_LIB = pylibsteps.load_library()
-        self.STEPS_INDEX_NOT_EXIST = STEPS_LIB.api_get_const_INDEX_NOT_EXIST()
         if is_default==True:
-            self.toolkit_index = self.STEPS_INDEX_NOT_EXIST
+            self.toolkit_index = STEPS_LIB.api_get_const_INDEX_NOT_EXIST()
             self.set_toolkit_log_file(log_file)
         else:
             log_file = self.__get_c_char_p_of_string(log_file)
@@ -535,6 +534,17 @@ class STEPS():
         device = self.__get_c_char_p_of_string("HVDC")
         return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
         
+    def get_vsc_hvdc_capacity(self):
+        """
+        Get capacity for storing VSC HVDC projects in database.
+        Args: N/A
+        Rets:
+            (1) Maximum number of VSC HVDC projects that can be stored in the database.
+        """
+        global STEPS_LIB
+        device = self.__get_c_char_p_of_string("VSC HVDC")
+        return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))    
+
     def get_equivalent_device_capacity(self):
         """
         Get capacity for storing equivalent devices in database.
@@ -626,6 +636,7 @@ class STEPS():
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Wt Generator")
         return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
+
     def set_pv_unit_capacity(self, capacity):
         """
         Set capacity for storing PV units in database.
@@ -724,6 +735,19 @@ class STEPS():
         device = self.__get_c_char_p_of_string("HVDC")
         return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
         
+    def set_vsc_hvdc_capacity(self, capacity):
+        """
+        Set capacity for storing VSC HVDC projects in database.
+        Args:
+            (1) capacity: Maximum number of VSC HVDC projects that can be stored in the database.
+        Rets: N/A
+        Tips:
+            This function SHOULD be called before adding devices to the database.
+        """
+        global STEPS_LIB
+        device = self.__get_c_char_p_of_string("VSC HVDC")
+        return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)  
+
     def set_equivalent_device_capacity(self, capacity):
         """
         Set capacity for storing equivalent devices in database.
@@ -911,6 +935,19 @@ class STEPS():
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
         ickt = self.__get_c_char_p_of_string(ickt)
         STEPS_LIB.api_add_hvdc(ibus, jbus, ickt, self.toolkit_index)
+        return
+
+    def add_vsc_hvdc(self, vschvdc):
+        """
+        Add new VSC HVDC project with project name.
+        Args:
+            (1) vschvdc: VSC HVDC project name in format of string.
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        vschvdc = self.__get_c_char_p_of_string(vschvdc)
+        STEPS_LIB.api_add_vsc_hvdc(vschvdc, self.toolkit_index)
         return
 
     def add_transformer(self, transformer):
@@ -1109,6 +1146,19 @@ class STEPS():
         STEPS_LIB.api_remove_hvdc(ibus, jbus, ickt, self.toolkit_index)
         return
 
+    def remove_vsc_hvdc(self, vschvdc):
+        """
+        Remove VSC HVDC project with project name.
+        Args:
+            (1) vschvdc: VSC HVDC projecct name in format of string.
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        vschvdc = self.__get_c_char_p_of_string(vschvdc)
+        STEPS_LIB.api_remove_vsc_hvdc(vschvdc, self.toolkit_index)
+        return
+
     def remove_transformer(self, transformer):
         """
         Remove transformer with device id.
@@ -1231,6 +1281,7 @@ class STEPS():
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("BUS")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
+
     def get_generator_count(self):
         """
         Return number of generators.
@@ -1242,6 +1293,7 @@ class STEPS():
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Generator")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
+
     def get_wt_generator_count(self):
         """
         Return number of wind turbine generators.
@@ -1253,6 +1305,7 @@ class STEPS():
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("WT Generator")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
+
     def get_pv_unit_count(self):
         """
         Return number of PV units.
@@ -1264,6 +1317,7 @@ class STEPS():
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("PV Unit")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
+
     def get_load_count(self):
         """
         Return number of loads.
@@ -1275,6 +1329,7 @@ class STEPS():
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Load")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
+
     def get_fixed_shunt_count(self):
         """
         Return number of fixed shunt.
@@ -1286,6 +1341,7 @@ class STEPS():
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Fixed Shunt")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
+
     def get_line_count(self):
         """
         Return number of transmission lines.
@@ -1297,6 +1353,7 @@ class STEPS():
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Line")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
+
     def get_transformer_count(self):
         """
         Return number of transformers.
@@ -1308,6 +1365,7 @@ class STEPS():
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Transformer")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
+
     def get_hvdc_count(self):
         """
         Return number of HVDC links.
@@ -1319,6 +1377,18 @@ class STEPS():
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("HVDC")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
+
+    def get_vsc_hvdc_count(self):
+        """
+        Return number of VSC HVDC projects.
+        Args: N/A
+        Rets: 
+            (1) Number of VSC HVDC projects.
+        """
+        global STEPS_LIB
+        device = self.__get_c_char_p_of_string("VSC HVDC")
+        return STEPS_LIB.api_get_device_count(device, self.toolkit_index)    
+
     def get_equivalent_device_count(self):
         """
         Return number of equivalent devices.
@@ -1330,6 +1400,7 @@ class STEPS():
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Equivalent Device")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
+
     def get_energy_storage_count(self):
         """
         Return number of energy storages.
@@ -1341,6 +1412,7 @@ class STEPS():
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Energy Storage")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
+
     def get_area_count(self):
         """
         Return number of areas.
@@ -1351,6 +1423,7 @@ class STEPS():
         """
         global STEPS_LIB
         return STEPS_LIB.api_get_area_count(self.toolkit_index)
+
     def get_zone_count(self):
         """
         Return number of zones.
@@ -1361,6 +1434,7 @@ class STEPS():
         """
         global STEPS_LIB
         return STEPS_LIB.api_get_zone_count(self.toolkit_index)
+
     def get_owner_count(self):
         """
         Return number of owners.
@@ -1371,6 +1445,7 @@ class STEPS():
         """
         global STEPS_LIB
         return STEPS_LIB.api_get_owner_count(self.toolkit_index)
+        
     def get_in_service_bus_count(self):
         """
         Return number of in-service buses.
@@ -1382,6 +1457,7 @@ class STEPS():
         global STEPS_LIB
         STEPS_LIB.api_get_in_service_bus_count(self.toolkit_index)
         return
+
     def update_overshadowed_buses(self):
         """
         Update overshowed buses.
@@ -1391,6 +1467,7 @@ class STEPS():
         """
         global STEPS_LIB
         return STEPS_LIB.api_update_overshadowed_buses(self.toolkit_index)
+
     def set_all_buses_un_overshadowed(self):
         """
         Set all buses as un-overshowed.
@@ -1401,6 +1478,7 @@ class STEPS():
         global STEPS_LIB
         STEPS_LIB.api_set_all_buses_un_overshadowed(self.toolkit_index)
         return
+
     def get_overshadowed_bus_count(self):
         """
         Get number of overshowed buses. If there are n buses directly connected by zero impedance line or lines, n-1 buses are overshadowed by one of them. 
@@ -1539,6 +1617,19 @@ class STEPS():
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_is_hvdc_exist(ibus, jbus, ickt, self.toolkit_index)
+
+    def is_vsc_hvdc_exist(self, vschvdc):
+        """
+        Check if given VSC HVDC project exists or not.
+        Args:
+            (1) vschvdc: VSC HVDC project name in format of string.
+        Rets:
+            (1) True if the VSC HVDC project exists, False otherwise.
+        Example: N/A
+        """
+        global STEPS_LIB
+        vschvdc = self.__get_c_char_p_of_string(vschvdc)
+        return STEPS_LIB.api_is_vsc_hvdc_exist(vschvdc, self.toolkit_index)
 
     def is_equivalent_device_exist(self, equivalent_device):
         """
@@ -2066,6 +2157,39 @@ class STEPS():
                     dcs.append(dc) 
             return tuple(dcs)
 
+    def get_all_vsc_hvdcs(self):
+        """
+        Get all VSC HVDC projects in the database.
+        Args: N/A
+        Rets:
+            (1) Tuple of all VSC HVDC projects. Empty tuple if no VSC HVDC projects in the database.
+        """
+        return self.get_vsc_hvdcs_at_bus(0)
+
+    def get_vsc_hvdcs_at_bus(self, bus):
+        """
+        Get all VSC HVDC projects at bus with input bus number.
+        Args:
+            (1) bus: bus number
+        Rets:
+            (1) Tuple of all VSC HVDC projects at given bus. Empty tuple if no VSC HVDC projects at given bus.
+        """
+        global STEPS_LIB
+        device = "VSC HVDC"
+        device = self.__get_c_char_p_of_string(device)
+        blank = self.__get_c_char_p_of_string("")
+        STEPS_LIB.api_initialize_device_search(device, bus, self.toolkit_index)
+        vscs = []
+        while True:
+            nbus = STEPS_LIB.api_get_current_device_bus_number(device, blank, self.toolkit_index)
+            if nbus==0:
+                break
+            id = STEPS_LIB.api_get_current_device_identifier(device, self.toolkit_index)
+            id = self.__get_string_from_c_char_p(id)
+            vscs.append((int(nbus), id))
+            STEPS_LIB.api_goto_next_device(device, self.toolkit_index)
+        return tuple(vscs)
+
     def get_generators_with_constraints(self, area=0, zone=0):
         """
         Get all generators satisfying area and zone constraints.
@@ -2592,6 +2716,40 @@ class STEPS():
             return self.__get_string_from_c_char_p(STEPS_LIB.api_get_hvdc_string_data(ibus, jbus, ickt, side, par_name, self.toolkit_index))
         return None
 
+    def get_vsc_hvdc_data(self, vschvdc, dev_type, par_type, par_name, index):
+        """
+        Get VSC HVDC project data.
+        Args:
+            (1) vschvdc: VSC HVDC project name
+            (2) dev_type: String of device type. Choose one from("PROJECT", "CONVERTER", "DC BUS", "DC LINE")
+            (3) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+            (4) par_name: String of parameter name.
+            (5) index: Int of converter or dc bus or dc line index
+        Rets:
+            (1) Value of parameter.
+        Tips:
+            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+            The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        """
+        global STEPS_LIB
+        par_type = par_type.upper()
+        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
+            return None
+        dev_type = dev_type.upper()
+        par_name = par_name.upper()
+        vschvdc = self.__get_c_char_p_of_string(vschvdc)
+        dev_type = self.__get_c_char_p_of_string(dev_type)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        if par_type in ['I', 'INT', 'INTEGER']:
+            return int(STEPS_LIB.api_get_vsc_hvdc_integer_data(vschvdc, dev_type, par_name, index, self.toolkit_index))
+        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
+            return STEPS_LIB.api_get_vsc_hvdc_float_data(vschvdc, dev_type, par_name, index, self.toolkit_index)
+        if par_type in ['B', 'BOOL', 'BOOLEAN']:
+            return STEPS_LIB.api_get_vsc_hvdc_boolean_data(vschvdc, dev_type, par_name, index, self.toolkit_index)
+        if par_type in ['S', 'STRING']:
+            return self.__get_string_from_c_char_p(STEPS_LIB.api_get_vsc_hvdc_string_data(vschvdc, dev_type, par_name, index, self.toolkit_index))
+        return None
+
     def get_area_data(self, area, par_type, par_name):
         """
         Get area data.
@@ -3104,6 +3262,7 @@ class STEPS():
             value = self.__get_c_char_p_of_string(value)
             return STEPS_LIB.api_set_hvdc_string_data(ibus, jbus, ickt, side, par_name, value, self.toolkit_index)
         return
+
     def set_hvdc_power(self, hvdc, p):
         """
         Set HVDC link power command.
@@ -3118,6 +3277,41 @@ class STEPS():
         self.set_hvdc_data(hvdc, "F", "HVDC", "PDCN_MW", p)
         return
         
+    def set_vsc_hvdc_data(self, vschvdc, dev_type, par_type, par_name, value, index):
+        """
+        Set VSC HVDC project data.
+        Args:
+            (1) vschvdc: VSC HVDC project name
+            (2) dev_type: String of device type. Choose one from("PROJECT", "CONVERTER", "DC BUS", "DC LINE")
+            (3) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+            (4) par_name: String of parameter name.
+            (5) value: Value of parameter.
+            (6) index: Int of converter or dc bus or dc line index
+        Rets: N/A
+        Tips:
+            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+            The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+        """
+        global STEPS_LIB
+        par_type = par_type.upper()
+        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
+            return None
+        dev_type = dev_type.upper()
+        par_name = par_name.upper()
+        vschvdc = self.__get_c_char_p_of_string(vschvdc)
+        dev_type = self.__get_c_char_p_of_string(dev_type)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        if par_type in ['I', 'INT', 'INTEGER']:
+            return int(STEPS_LIB.api_set_vsc_hvdc_integer_data(vschvdc, dev_type, par_name, value, index, self.toolkit_index))
+        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
+            return STEPS_LIB.api_set_vsc_hvdc_float_data(vschvdc, dev_type, par_name, value, index, self.toolkit_index)
+        if par_type in ['B', 'BOOL', 'BOOLEAN']:
+            return STEPS_LIB.api_set_vsc_hvdc_boolean_data(vschvdc, dev_type, par_name, value, index, self.toolkit_index)
+        if par_type in ['S', 'STRING']:
+            value = self.__get_c_char_p_of_string(value)
+            return self.__get_string_from_c_char_p(STEPS_LIB.api_set_vsc_hvdc_string_data(vschvdc, dev_type, par_name, value, index, self.toolkit_index))
+        return None
+
     def set_area_data(self, area, par_type, par_name, value):
         """
         Set area data.
@@ -3225,6 +3419,19 @@ class STEPS():
         ftype = self.__get_c_char_p_of_string(ftype)
         STEPS_LIB.api_load_powerflow_data_from_file(file, ftype, self.toolkit_index)
 
+    def load_vsc_hvdc_powerflow_data(self, file, ftype):
+        """
+        Load VSC HVDC powerflow data from file.
+        Args:
+            (1) file: string, source VSC HVDC powerflow file name.
+            (2) ftype: string, powerflow data format.
+        Rets: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        ftype = self.__get_c_char_p_of_string(ftype)
+        STEPS_LIB.api_load_vsc_hvdc_powerflow_data_from_file(file, ftype, self.toolkit_index)
+
     def check_powerflow_data(self):
         """
         Check powerflow data. If any inappropriate data is set, report will be sent to log file.
@@ -3261,6 +3468,20 @@ class STEPS():
         else:
             print("parameter export_mode is invalid in save_powerflow_data()")
         
+    def save_vsc_hvdc_powerflow_data(self, file, ftype):
+        """
+        Save VSC HVDC powerflow data to file
+        Args:
+            (1) file: string, target powerflow file name.
+            (2) ftype: string, powerflow data format.
+        Rets: N/A
+        """
+
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        ftype = self.__get_c_char_p_of_string(ftype)
+        STEPS_LIB.api_save_vsc_hvdc_powerflow_data_to_file(file, ftype, self.toolkit_index)    
+
     def __save_powerflow_data_in_keep_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True, export_internal_bus_number=False):
         """
         Save powerflow data to file in keep as original mode
@@ -4314,7 +4535,7 @@ class STEPS():
         
     def set_hvdc_related_model_data(self, hvdc, model_type, par_name, value):
         """
-        Set HVDC link related model data.
+        Set HVDC linke related model data.
         Args:
             (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
             (2) model_type: String of model type.
@@ -4358,13 +4579,12 @@ class STEPS():
             parameters.append((par_name, par_value))
         return tuple(parameters)
         
-    def get_vsc_hvdc_related_model_name(self, vsc_hvdc_name, model_type, converter_index=self.STEPS_INDEX_NOT_EXIST):
+    def get_vsc_hvdc_related_model_name(self, vschvdc, model_type):
         """
-        Get VSC HVDC related model name.
+        Get VSC HVDC project related model name.
         Args:
-            (1) vsc_hvdc_name: String of VSC HVDC name.
+            (1) vschvdc: VSC HVDC project name in format of string.
             (2) model_type: String of model type.
-            (3) converter_index: Integer if model_type is "VSC HVDC CONVERTER"
         Rets:
             (1) String of model name.
         Tips:
@@ -4372,21 +4592,20 @@ class STEPS():
         Example: N/A
         """
         global STEPS_LIB
-        vsc_hvdc_name = self.__get_c_char_p_of_string(vsc_hvdc_name)
+        vschvdc = self.__get_c_char_p_of_string(vschvdc)
         model_type = self.__get_c_char_p_of_string(model_type)
-        model_name = self.__get_string_from_c_char_p(STEPS_LIB.api_get_vsc_hvdc_related_model_name(vsc_hvdc_name, model_type, converter_index, self.toolkit_index))
+        model_name = self.__get_string_from_c_char_p(STEPS_LIB.api_get_vsc_hvdc_related_model_name(vschvdc, model_type, self.toolkit_index))
         if model_name=="":
             model_name = None
         return model_name
 
-    def get_vsc_hvdc_related_model_data(self, vsc_hvdc_name, model_type, par_name, converter_index=self.STEPS_INDEX_NOT_EXIST):
+    def get_vsc_hvdc_related_model_data(self, vschvdc, model_type, par_name):
         """
-        Get VSC HVDC related model data.
+        Get VSC HVDC project related model data.
         Args:
-            (1) vsc_hvdc_name: String of VSC HVDC name.
+            (1) vschvdc: VSC HVDC project name in format of string.
             (2) model_type: String of model type.
             (3) par_name: String of parameter name.
-            (4) converter_index: Integer if model_type is "VSC HVDC CONVERTER"
         Rets:
             (1) Value of parameter
         Tips:
@@ -4394,20 +4613,19 @@ class STEPS():
         Example: N/A
         """
         global STEPS_LIB
-        vsc_hvdc_name = self.__get_c_char_p_of_string(vsc_hvdc_name)
+        vschvdc = self.__get_c_char_p_of_string(vschvdc)
         model_type = self.__get_c_char_p_of_string(model_type)
         par_name = self.__get_c_char_p_of_string(par_name)
-        return STEPS_LIB.api_get_vsc_hvdc_related_model_float_parameter(vsc_hvdc_name, model_type, par_name, converter_index, self.toolkit_index)
+        return STEPS_LIB.api_get_vsc_hvdc_related_model_float_parameter(vschvdc, model_type, par_name, self.toolkit_index)
         
-    def set_vsc_hvdc_related_model_data(self, vsc_hvdc_name, model_type, par_name, value, converter_index=self.STEPS_INDEX_NOT_EXIST):
+    def set_vsc_hvdc_related_model_data(self, vschvdc, model_type, par_name, value):
         """
-        Set VSC HVDC related model data.
+        Set VSC HVDC project related model data.
         Args:
-            (1) vsc_hvdc_name: String of VSC HVDC name.
+            (1) vschvdc: VSC HVDC project name in format of string.
             (2) model_type: String of model type.
             (3) par_name: String of parameter name.
             (4) value: Value of parameter.
-            (5) converter_index: Integer if model_type is "VSC HVDC CONVERTER"
         Rets: N/A
         Tips:
             If model type or parameter name is not supported, nothing will be changed.
@@ -4415,18 +4633,17 @@ class STEPS():
         Example: N/A
         """
         global STEPS_LIB
-        vsc_hvdc_name = self.__get_c_char_p_of_string(vsc_hvdc_name)
+        vschvdc = self.__get_c_char_p_of_string(vschvdc)
         model_type = self.__get_c_char_p_of_string(model_type)
         par_name = self.__get_c_char_p_of_string(par_name)
-        return STEPS_LIB.api_set_vsc_hvdc_related_model_float_parameter(vsc_hvdc_name, model_type, par_name, value, converter_index, self.toolkit_index)
+        return STEPS_LIB.api_set_vsc_hvdc_related_model_float_parameter(vschvdc, model_type, par_name, value, self.toolkit_index)
         
-    def get_vsc_hvdc_related_model_parameter_pair(self, vsc_hvdc_name, model_type, converter_index=self.STEPS_INDEX_NOT_EXIST):
+    def get_vsc_hvdc_related_model_parameter_pair(self, vschvdc, model_type):
         """
-        Get VSC HVDC related model parameter pair.
+        Get VSC HVDC project related model parameter pair.
         Args:
-            (1) vsc_hvdc_name: String of VSC HVDC name.
+            (1) vschvdc: VSC HVDC project name in format of string.
             (2) model_type: String of model type.
-            (3) converter_index: Integer if model_type is "VSC HVDC CONVERTER"
         Rets:
             (1) Tuple of parameter name and value pairs. Each parameter name and value pair is in format of (string of parameter name, value of parameter).
         Tips:
@@ -4434,17 +4651,17 @@ class STEPS():
         Example: N/A
         """
         global STEPS_LIB
-        vsc_hvdc_name = self.__get_c_char_p_of_string(vsc_hvdc_name)
+        vschvdc = self.__get_c_char_p_of_string(vschvdc)
         model_type = self.__get_c_char_p_of_string(model_type)
         parameters = []
-        n = STEPS_LIB.api_get_vsc_hvdc_related_model_float_parameter_count(vsc_hvdc_name, model_type, converter_index, self.toolkit_index)
+        n = STEPS_LIB.api_get_vsc_hvdc_related_model_float_parameter_count(vschvdc, model_type, self.toolkit_index)
         for parameter_index in range(n):
-            par_name = STEPS_LIB.api_get_vsc_hvdc_related_model_float_parameter_name(vsc_hvdc_name, model_type, parameter_index, converter_index, self.toolkit_index)
-            par_value = STEPS_LIB.api_get_vsc_hvdc_related_model_float_parameter(vsc_hvdc_name, model_type, par_name, converter_index, self.toolkit_index);
+            par_name = STEPS_LIB.api_get_vsc_hvdc_related_model_float_parameter_name(vschvdc, model_type, parameter_index, self.toolkit_index)
+            par_value = STEPS_LIB.api_get_vsc_hvdc_related_model_float_parameter(vschvdc, model_type, par_name, self.toolkit_index);
             par_name = self.__get_string_from_c_char_p(par_name)
             parameters.append((par_name, par_value))
         return tuple(parameters)
-        
+
     def get_generator_governor_pmax(self, gen):
         """
         Get generator pmax in MW from turbine governor model.
@@ -4732,13 +4949,12 @@ class STEPS():
                 DYNAMIC_SIMULATOR::prepare_line_related_meters()
                 DYNAMIC_SIMULATOR::prepare_transformer_related_meters()
                 DYNAMIC_SIMULATOR::prepare_hvdc_related_meters()
+                DYNAMIC_SIMULATOR::prepare_vsc_hvdc_related_meters()
                 DYNAMIC_SIMULATOR::prepare_equivalent_device_related_meters()                
         Example: N/A
         """
         global STEPS_LIB
         device_type = device_type.upper()
-        if device_type not in ['ALL', 'BUS', 'GENERATOR', 'WT GENERATOR', 'PV UNIT', 'ENERGY STORAGE', 'LOAD', 'LINE', 'TRANSFORMER', 'HVDC', 'EQUIVALENT DEVICE']:
-            return
         if device_type in ['ALL']:
             STEPS_LIB.api_prepare_meters(self.toolkit_index)
             return
@@ -4768,6 +4984,9 @@ class STEPS():
             return
         if device_type in ['HVDC']:
             STEPS_LIB.api_prepare_hvdc_related_meters(self.toolkit_index)
+            return
+        if device_type in ['VSC HVDC']:
+            STEPS_LIB.api_prepare_vsc_hvdc_related_meters(self.toolkit_index)
             return
         if device_type in ['EQUIVALENT DEVICE']:
             STEPS_LIB.api_prepare_equivalent_device_related_meters(self.toolkit_index)
@@ -4964,6 +5183,27 @@ class STEPS():
         side = self.__get_c_char_p_of_string(side)
         var_name = self.__get_c_char_p_of_string(var_name)
         STEPS_LIB.api_prepare_hvdc_related_meter(ibus, jbus, ickt, meter_type, side, var_name, self.toolkit_index)
+        return
+
+    def prepare_vsc_hvdc_meter(self, vschvdc, meter_type, side, var_name=""):
+        """
+        Prepare specific VSC HVDC project meter.
+        Args:
+            (1) vschvdc: VSC HVDC project name in format of string.
+            (2) meter_type: String of meter type.
+            (3) side: index of Converter or DC line.
+            (4) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
+        Rets: N/A
+        Tips:
+            For the supported meter types, see implementation of the following function of STEPS:
+                DYNAMIC_SIMULATOR::prepare_vsc_hvdc_related_meter()
+        Example: N/A
+        """
+        global STEPS_LIB
+        vschvdc = self.__get_c_char_p_of_string(vschvdc)
+        meter_type = self.__get_c_char_p_of_string(meter_type)
+        var_name = self.__get_c_char_p_of_string(var_name)
+        STEPS_LIB.api_prepare_vsc_hvdc_related_meter(vschvdc, meter_type, side, var_name, self.toolkit_index)
         return
 
     def prepare_equivalent_device_meter(self, edevice, meter_type, var_name=""):
@@ -5880,3 +6120,90 @@ class STEPS():
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_set_hvdc_power_order_in_MW(ibus, jbus, ickt, value, self.toolkit_index)
         
+    def set_vsc_hvdc_dc_line_fault(self, vschvdc, line, fault_location, fault_r):
+        """
+        Set VSC HVDC DC line fault.
+        Args:
+            (1) vschvdc: VSC HVDC project name in format of string.
+            (2) line: DC line device id in format of (ibus, jbus, ickt).
+            (3) fault_location: Relative fault location to ibus.
+            (4) fault_r: Fault resistance in Ohm.
+        Rets: N/A
+        Tips:
+            The fault location should be in the range of [0, 1.0], including 0 and 1.0. It represent the relative location of the fault on the line to the ibus.
+            For example, 0.5 means the fault is set at the middle of the line. 0 means the fault is set at exactly ibus. 1.0 means the fault is set at exactly jbus.
+            The absolute value of the fault shunt should not be too great. Otherwise, network solution may fail to converge. Typically, |b|<1e6.
+        Example:
+            vschvdc = "VSC ProjectA"
+            line = (1, 2, "1#")
+            location = 0.2
+            fault_r = 10
+            simulator.set_vsc_hvdc_dc_line_fault(vschvdc, line, location, shunt)
+        """
+        global STEPS_LIB
+        vschvdc = self.__get_c_char_p_of_string(vschvdc)
+        ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        STEPS_LIB.api_set_vsc_hvdc_dc_line_fault(vschvdc, ibus, jbus, ickt, fault_location, fault_r, self.toolkit_index)
+        return
+
+    def clear_vsc_hvdc_dc_line_fault(self, vschvdc, line):
+        """
+        Clear VSC HVDC DC line fault without tripping the line.
+        Args:
+            (1) vschvdc: VSC HVDC project name in format of string.
+            (2) line: DC line device id in format of (ibus, jbus, ickt).
+        Rets: N/A
+        Tips: N/A
+        Example:
+            vschvdc = "VSC ProjectA"
+            line = (1, 2, "1#")
+            location = 0.2
+            fault_r = 10
+            simulator.set_vsc_hvdc_dc_line_fault(vschvdc, line, location, shunt)
+            simulator.clear_vsc_hvdc_dc_line_fault(vschvdc, line)
+        """
+        global STEPS_LIB
+        vschvdc = self.__get_c_char_p_of_string(vschvdc)
+        ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        STEPS_LIB.api_clear_vsc_hvdc_dc_line_fault(vschvdc, ibus, jbus, ickt, self.toolkit_index)
+        return
+
+    def trip_vsc_hvdc_dc_line(self, vschvdc, line):
+        """
+        Trip VSC HVDC DC line. Breakers at the two sides of the line are both tripped.
+        Args:
+            (1) vschvdc: VSC HVDC project name in format of string.
+            (2) line: DC line device id in format of (ibus, jbus, ickt).
+        Rets: N/A
+        Example:
+            vschvdc = "VSC ProjectA"
+            line = (1, 2, "1#")
+            simulator.trip_vsc_hvdc_dc_line(vschvdc, line)
+        """
+        global STEPS_LIB
+        vschvdc = self.__get_c_char_p_of_string(vschvdc)
+        ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        STEPS_LIB.api_trip_vsc_hvdc_dc_line(vschvdc, ibus, jbus, ickt, self.toolkit_index)
+        return
+
+    def close_vsc_hvdc_dc_line(self, vschvdc, line):
+        """
+        Close VSC HVDC DC line. Breakers at the two sides of the line are both closed.
+        Args:
+            (1) vschvdc: VSC HVDC project name in format of string.
+            (2) line: DC line device id in format of (ibus, jbus, ickt).
+        Rets: N/A
+        Example:
+            vschvdc = "VSC ProjectA"
+            line = (1, 2, "1#")
+            simulator.close_vsc_hvdc_dc_line(vschvdc, line)
+        """
+        global STEPS_LIB
+        vschvdc = self.__get_c_char_p_of_string(vschvdc)
+        ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        STEPS_LIB.api_close_vsc_hvdc_dc_line(vschvdc, ibus, jbus, ickt, self.toolkit_index)
+        return

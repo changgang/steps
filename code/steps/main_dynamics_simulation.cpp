@@ -50,7 +50,7 @@ int main()
 
     //importer.load_dynamic_data("../../../bench/shandong_load/5_bus.dyr");
     importer.load_dynamic_data("../../../bench/39_bus/IEEE39.dyr");
-    STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
+
     //vector<GENERATOR*> gens = psdb.get_all_generators();
     //unsigned int n = gens.size();
     //for(unsigned int i=0; i!=n; ++i)

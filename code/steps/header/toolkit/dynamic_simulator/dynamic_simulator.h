@@ -182,7 +182,7 @@ class DYNAMICS_SIMULATOR
         double get_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id);
         void change_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id, double porder);
 
-        void set_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did, unsigned int side_bus, double location, double fault_shunt);
+        void set_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did, unsigned int side_bus, double location, double fault_r);
         void clear_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did);
 
         void trip_vsc_hvdc_line(string vsc_name, DC_DEVICE_ID line_did);

@@ -2239,7 +2239,6 @@ void VSC_HVDC::set_model(MODEL* model)
 {
     if(model != NULL and model->has_allowed_device_type(STEPS_VSC_HVDC))
     {
-        STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
         model->set_device_id(get_device_id());
         if(model->get_model_type()=="VSC HVDC NETWORK")
         {

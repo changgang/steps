@@ -1646,18 +1646,14 @@ void POWERFLOW_SOLVER::check_SLACK_bus_constraint_of_physical_bus(unsigned int p
                 {
                     if(vsc_hvdcs[i]->get_converter_active_power_operation_mode(index)==VSC_AC_VOLTAGE_ANGLE_CONTROL)
                     {
-                        //STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
                         double P_loading_in_MW = vsc_hvdcs[i]->get_converter_Pmax_in_MW(index) - vsc_hvdcs[i]->get_converter_Pmin_in_MW(index);
                         P_loading_in_MW = P_loading_in_MW*P_loading_percentage + vsc_hvdcs[i]->get_converter_Pmin_in_MW(index);
-                        //cout<<"P_loading_in_MW: "<<P_loading_in_MW<<endl;
                         vsc_hvdcs[i]->set_converter_P_to_AC_bus_in_MW(index, P_loading_in_MW);
                     }
                     if(vsc_hvdcs[i]->get_converter_reactive_power_operation_mode(index)==VSC_AC_VOLTAGE_CONTROL)
                     {
-                        //STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
                         double Q_loading_in_MVar = vsc_hvdcs[i]->get_converter_Qmax_in_MVar(index) - vsc_hvdcs[i]->get_converter_Qmin_in_MVar(index);
                         Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + vsc_hvdcs[i]->get_converter_Qmin_in_MVar(index);
-                        //cout<<"Q_loading_in_MVar: "<<Q_loading_in_MVar<<endl;
                         vsc_hvdcs[i]->set_converter_Q_to_AC_bus_in_MVar(index, Q_loading_in_MVar);
                     }
                 }

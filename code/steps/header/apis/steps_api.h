@@ -56,10 +56,10 @@ EXPORT_STEPS_DLL void api_set_owner_capacity(unsigned int cap, unsigned int tool
 
 
 EXPORT_STEPS_DLL void api_load_powerflow_data_from_file(char* file, char* file_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_load_vsc_powerflow_data_from_file(char* file, char* file_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_load_vsc_hvdc_powerflow_data_from_file(char* file, char* file_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_load_powerflow_result_from_file(char* file, char* file_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_zero_impedance_line=true, bool export_out_of_service_bus=true, bool export_internal_bus_number=false, unsigned int powerflow_data_save_mode=0, unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_save_vsc_powerflow_data_to_file(char* file, char* file_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_save_vsc_hvdc_powerflow_data_to_file(char* file, char* file_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_load_dynamic_data_from_file(char* file, char* file_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_dynamic_data_to_file(char* file, char* file_type, bool export_internal_bus_number=false, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
