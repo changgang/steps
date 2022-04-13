@@ -4,7 +4,7 @@
   * STEPS: https://github.com/changgang/steps  and  https://gitee.com/lichgang/steps/
   * stepspy: https://pypi.org/project/stepspy/
   * Documentation: https://github.com/changgang/steps/wiki/
-- Date of Readme: Feb 2, 2022
+- Date of Readme: April 13, 2022
 
 # Reference
 Please cite STEPS with the following paper:  
@@ -19,6 +19,7 @@ Though BPA dat format is supported, it will be supported in the future version i
 You are encouraged to join us for further development.
 
 ## Major versions
+- v1.6.0. Add VSC HVDC for powerflow and dynamic simulation. stepspy also updated. Released on April 13, 2022.
 - v1.5.4. Update to improve performance. Released on Oct. 20, 2021.
 - v1.5.2. Add new APIs to get generator related model internal variables. Start to add linearization codes. Released on March. 24, 2021.
 - v1.5.1. Add new option export_full to functions of save_network_Y_matrix and APIs. stepspy is also updated. Start to add sequential parameters to STEPS. Released on Feb. 2, 2021.
