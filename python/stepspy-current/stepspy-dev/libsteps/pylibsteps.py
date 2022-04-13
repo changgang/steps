@@ -383,18 +383,18 @@ def load_library():
     libsteps.api_set_source_boolean_data.argtypes = (c_uint, c_char_p, c_char_p, c_bool, c_uint)
 
 
-    libsteps.api_get_generator_float_data.restype = (c_double)
-    libsteps.api_get_generator_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
-    libsteps.api_get_wt_generator_float_data.restype = (c_double)
-    libsteps.api_get_wt_generator_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
-    libsteps.api_get_pv_unit_float_data.restype = (c_double)
-    libsteps.api_get_pv_unit_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
-    libsteps.api_set_generator_float_data.restype = None
-    libsteps.api_set_generator_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_double, c_uint)
-    libsteps.api_set_wt_generator_float_data.restype = None
-    libsteps.api_set_wt_generator_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_double, c_uint)
-    libsteps.api_set_pv_unit_float_data.restype = None
-    libsteps.api_set_pv_unit_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_double, c_uint)
+    libsteps.api_get_generator_sequence_float_data.restype = (c_double)
+    libsteps.api_get_generator_sequence_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
+    libsteps.api_get_wt_generator_sequence_float_data.restype = (c_double)
+    libsteps.api_get_wt_generator_sequence_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
+    libsteps.api_get_pv_unit_sequence_float_data.restype = (c_double)
+    libsteps.api_get_pv_unit_sequence_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
+    libsteps.api_set_generator_sequence_float_data.restype = None
+    libsteps.api_set_generator_sequence_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_double, c_uint)
+    libsteps.api_set_wt_generator_sequence_float_data.restype = None
+    libsteps.api_set_wt_generator_sequence_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_double, c_uint)
+    libsteps.api_set_pv_unit_sequence_float_data.restype = None
+    libsteps.api_set_pv_unit_sequence_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_double, c_uint)
     
 
 

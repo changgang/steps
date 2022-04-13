@@ -6,7 +6,7 @@
 #include "header/data_imexporter/bpa_imexporter.h"
 
 
-double api_get_wt_generator_float_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index)
+double api_get_wt_generator_sequence_float_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_wt_generator_device_id(bus, identifier);
@@ -56,7 +56,7 @@ double api_get_wt_generator_float_data(unsigned int bus, char* identifier, char*
 
     show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
 }
-void api_set_wt_generator_float_data(unsigned int bus, char* identifier, char* parameter_name, double value, unsigned int toolkit_index)
+void api_set_wt_generator_sequence_float_data(unsigned int bus, char* identifier, char* parameter_name, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_wt_generator_device_id(bus, identifier);

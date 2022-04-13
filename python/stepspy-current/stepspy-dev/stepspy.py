@@ -2492,7 +2492,7 @@ class STEPS():
         if par_type in ['I', 'INT', 'INTEGER']:
             return None
         if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-            return STEPS_LIB.api_get_generator_float_data(bus, ickt, par_name, self.toolkit_index)
+            return STEPS_LIB.api_get_generator_sequence_float_data(bus, ickt, par_name, self.toolkit_index)
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return None
         if par_type in ['S', 'STRING']:
@@ -2540,7 +2540,7 @@ class STEPS():
         if par_type in ['I', 'INT', 'INTEGER']:
             return None
         if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-            return STEPS_LIB.api_get_wt_generator_float_data(bus, ickt, par_name, self.toolkit_index)
+            return STEPS_LIB.api_get_wt_generator_sequence_float_data(bus, ickt, par_name, self.toolkit_index)
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return None
         if par_type in ['S', 'STRING']:
@@ -2588,7 +2588,7 @@ class STEPS():
         if par_type in ['I', 'INT', 'INTEGER']:
             return None
         if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-            return STEPS_LIB.api_get_pv_unit_float_data(bus, ickt, par_name, self.toolkit_index)
+            return STEPS_LIB.api_get_pv_unit_sequence_float_data(bus, ickt, par_name, self.toolkit_index)
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return None
         if par_type in ['S', 'STRING']:
@@ -3038,7 +3038,7 @@ class STEPS():
         if par_type in ['I', 'INT', 'INTEGER']:
             return 
         if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-            return STEPS_LIB.api_set_generator_float_data(bus, ickt, par_name, value, self.toolkit_index)
+            return STEPS_LIB.api_set_generator_sequence_float_data(bus, ickt, par_name, value, self.toolkit_index)
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return 
         if par_type in ['S', 'STRING']:
@@ -3088,7 +3088,7 @@ class STEPS():
         if par_type in ['I', 'INT', 'INTEGER']:
             return 
         if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-            return STEPS_LIB.api_set_wt_generator_float_data(bus, ickt, par_name, value, self.toolkit_index)
+            return STEPS_LIB.api_set_wt_generator_sequence_float_data(bus, ickt, par_name, value, self.toolkit_index)
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return 
         if par_type in ['S', 'STRING']:
@@ -3138,7 +3138,7 @@ class STEPS():
         if par_type in ['I', 'INT', 'INTEGER']:
             return 
         if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-            return STEPS_LIB.api_set_pv_unit_float_data(bus, ickt, par_name, value, self.toolkit_index)
+            return STEPS_LIB.api_set_pv_unit_sequence_float_data(bus, ickt, par_name, value, self.toolkit_index)
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return 
         if par_type in ['S', 'STRING']:
