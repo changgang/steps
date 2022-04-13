@@ -54,8 +54,19 @@ void NETWORK_MATRIX::clear()
     this_Y_matrix_pointer = NULL;
     this_Z_matrix_pointer = NULL;
     this_jacobian.clear();
+
+    set_generator_reactance_option(SUBTRANSIENT_REACTANCE);
 }
 
+void NETWORK_MATRIX::set_generator_reactance_option(GENERATOR_REACTANCE_OPTION option)
+{
+    gen_X_option = option;
+}
+
+GENERATOR_REACTANCE_OPTION NETWORK_MATRIX::get_generator_reactance_option()
+{
+    return gen_X_option;
+}
 
 void NETWORK_MATRIX::build_initial_zero_matrix(STEPS_COMPLEX_SPARSE_MATRIX& matrix)
 {
@@ -213,7 +224,19 @@ void NETWORK_MATRIX::build_sequence_network_Y_matrix()
 
 void NETWORK_MATRIX::build_positive_sequence_network_Y_matrix()
 {
-    build_dynamic_network_Y_matrix();
+    if(inphno.empty())
+        initialize_physical_internal_bus_pair();
+
+    network_Y1_matrix.clear();
+    set_this_Y_and_Z_matrix_as(network_Y1_matrix);
+
+    add_lines_to_positive_sequence_network();
+    add_transformers_to_positive_sequence_network();
+    add_sources_to_positive_sequence_network();
+    add_loads_to_positive_sequence_network();
+    add_fixed_shunts_to_positive_sequence_network();
+
+    network_Y1_matrix.compress_and_merge_duplicate_entries();
 }
 
 STEPS_COMPLEX_SPARSE_MATRIX& NETWORK_MATRIX::get_positive_sequence_network_Y_matrix()
@@ -226,7 +249,22 @@ STEPS_COMPLEX_SPARSE_MATRIX& NETWORK_MATRIX::get_positive_sequence_network_Y_mat
 
 void NETWORK_MATRIX::build_negative_sequence_network_Y_matrix()
 {
-    ;
+    if(inphno.empty())
+        initialize_physical_internal_bus_pair();
+
+    network_Y2_matrix.clear();
+    set_this_Y_and_Z_matrix_as(network_Y2_matrix);
+
+    //build_initial_zero_matrix(network_Y1_matrix);
+
+    add_lines_to_negative_sequence_network();
+    add_transformers_to_negative_sequence_network();
+    add_sources_to_negative_sequence_network();
+    add_loads_to_negative_sequence_network();
+
+    add_fixed_shunts_to_negative_sequence_network();
+
+    network_Y2_matrix.compress_and_merge_duplicate_entries();
 }
 
 STEPS_COMPLEX_SPARSE_MATRIX& NETWORK_MATRIX::get_negative_sequence_network_Y_matrix()
@@ -239,7 +277,21 @@ STEPS_COMPLEX_SPARSE_MATRIX& NETWORK_MATRIX::get_negative_sequence_network_Y_mat
 
 void NETWORK_MATRIX::build_zero_sequence_network_Y_matrix()
 {
-    ;
+    if(inphno.empty())
+        initialize_physical_internal_bus_pair();
+
+    network_Y0_matrix.clear();
+    set_this_Y_and_Z_matrix_as(network_Y0_matrix);
+
+    //build_initial_zero_matrix(network_Y1_matrix);
+
+    add_lines_to_zero_sequence_network();
+    add_transformers_to_zero_sequence_network();
+    add_loads_to_zero_sequence_network();
+    add_sources_to_zero_sequence_network();
+    add_fixed_shunts_to_zero_sequence_network();
+
+    network_Y0_matrix.compress_and_merge_duplicate_entries();
 }
 
 STEPS_COMPLEX_SPARSE_MATRIX& NETWORK_MATRIX::get_zero_sequence_network_Y_matrix()
@@ -326,6 +378,31 @@ STEPS_COMPLEX_SPARSE_MATRIX& NETWORK_MATRIX::get_zero_sequence_network_Z_matrix(
     if(network_Z0_matrix.get_matrix_size()<2)
         build_zero_sequence_network_Z_matrix();
     return network_Z0_matrix;
+}
+
+
+vector<complex<double> > NETWORK_MATRIX::get_positive_sequence_complex_impedance_of_column_with_physical_bus(unsigned int bus)
+{
+    set_this_Y_and_Z_matrix_as(network_Y1_matrix);
+    int bus_number = get_internal_bus_number_of_physical_bus(bus);
+
+    return get_complex_impedance_of_column_from_this_Y_matrix(bus_number);
+}
+
+vector<complex<double> > NETWORK_MATRIX::get_negative_sequence_complex_impedance_of_column_with_physical_bus(unsigned int bus)
+{
+    set_this_Y_and_Z_matrix_as(network_Y2_matrix);
+    int bus_number = get_internal_bus_number_of_physical_bus(bus);
+
+    return get_complex_impedance_of_column_from_this_Y_matrix(bus_number);
+}
+
+vector<complex<double> > NETWORK_MATRIX::get_zero_sequence_complex_impedance_of_column_with_physical_bus(unsigned int bus)
+{
+    set_this_Y_and_Z_matrix_as(network_Y0_matrix);
+    int bus_number = get_internal_bus_number_of_physical_bus(bus);
+
+    return get_complex_impedance_of_column_from_this_Y_matrix(bus_number);
 }
 
 complex<double> NETWORK_MATRIX::get_positive_sequence_self_admittance_of_physical_bus(unsigned int bus)
@@ -2679,6 +2756,1069 @@ void NETWORK_MATRIX::add_vsc_hvdc_to_dynamic_network(const VSC_HVDC& vsc_hvdc)
     }
 }
 
+void NETWORK_MATRIX::add_lines_to_positive_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<LINE*> lines = psdb.get_all_lines();
+
+    unsigned int n = lines.size();
+
+    for(unsigned int i = 0; i!=n; ++i)
+    {
+        if(not lines[i]->is_faulted())
+           add_line_to_network(*(lines[i]));
+        else
+           add_faulted_line_to_positive_sequence_network(*(lines[i]));
+    }
+}
+
+void NETWORK_MATRIX::add_faulted_line_to_positive_sequence_network(const LINE& line)
+{
+    if(line.get_sending_side_breaker_status()==true or line.get_receiving_side_breaker_status()==true)
+    {
+        if(line.is_faulted())
+        {
+            unsigned int sending_bus = line.get_sending_side_bus();
+            unsigned int receiving_bus = line.get_receiving_side_bus();
+
+            unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(sending_bus);
+            unsigned int j = inphno.get_internal_bus_number_of_physical_bus_number(receiving_bus);
+
+            complex<double> Zline = line.get_line_positive_sequence_z_in_pu();
+            complex<double> Yline = line.get_line_positive_sequence_y_in_pu();
+            complex<double> Yshunt_sending = line.get_shunt_positive_sequence_y_at_sending_side_in_pu();
+            complex<double> Yshunt_receiving = line.get_shunt_positive_sequence_y_at_receiving_side_in_pu();
+
+            double fault_location = line.get_fault_location_of_fault(0);
+
+            complex<double> Zif = Zline*fault_location;
+            complex<double> Zjf = Zline*(1.0-fault_location);
+            complex<double> Yif = Yline*fault_location;
+            complex<double> Yjf = Yline*(1.0-fault_location);
+
+            if(line.get_sending_side_breaker_status()==true and line.get_receiving_side_breaker_status()==true)
+            {
+                this_Y_matrix_pointer->add_entry(i,i, 1.0/Zif+Yif+Yshunt_sending);
+                this_Y_matrix_pointer->add_entry(j,j, 1.0/Zjf+Yjf+Yshunt_receiving);
+                return;
+            }
+
+            if(line.get_sending_side_breaker_status()==true and line.get_receiving_side_breaker_status()==false)
+            {
+                this_Y_matrix_pointer->add_entry(i,i, 1.0/Zif+Yif+Yshunt_sending);
+                return;
+            }
+
+            if(line.get_sending_side_breaker_status()==false and line.get_receiving_side_breaker_status()==true)
+            {
+                this_Y_matrix_pointer->add_entry(j,j, 1.0/Zjf+Yjf+Yshunt_receiving);
+                return;
+            }
+        }
+        else // line is not faulted
+            add_line_to_network(line);
+    }
+}
+
+void NETWORK_MATRIX::add_transformers_to_positive_sequence_network()
+{
+    add_transformers_to_network();
+}
+
+void NETWORK_MATRIX::add_loads_to_positive_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<LOAD*> loads = psdb.get_all_loads();
+
+    unsigned int n= loads.size();
+
+    for(unsigned int i=0; i!=n; ++i)
+        add_load_to_positive_sequence_network(*(loads[i]));
+}
+
+void NETWORK_MATRIX::add_load_to_positive_sequence_network(const LOAD& load)
+{
+    if(load.get_status()==true)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        complex<double> S_base = psdb.get_system_base_power_in_MVA();
+        complex<double> S = load.get_nominal_constant_power_load_in_MVA();
+
+        unsigned int bus = load.get_load_bus();
+
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+
+        double V = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
+
+        complex<double> y = conj(S) / S_base / (V*V);
+
+        this_Y_matrix_pointer->add_entry(i,i,y);
+    }
+}
+
+void NETWORK_MATRIX::add_sources_to_positive_sequence_network()
+{
+    add_generators_to_positive_sequence_network();
+    add_wt_generators_to_positive_sequence_network();
+    add_pv_units_to_positive_sequence_network();
+}
+
+void NETWORK_MATRIX::add_generators_to_positive_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<GENERATOR*> generators = psdb.get_all_generators();
+
+    unsigned int n= generators.size();
+
+    for(unsigned int i=0; i!=n; ++i)
+        add_generator_to_positive_sequence_network(*(generators[i]));
+}
+
+void NETWORK_MATRIX::add_generator_to_positive_sequence_network(const GENERATOR& gen)
+{
+    if(gen.get_status()==true)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        double R = gen.get_positive_sequence_resistance_in_pu();
+
+        GENERATOR_REACTANCE_OPTION gen_X = get_generator_reactance_option();
+        double X;
+        switch(gen_X)
+        {
+            case SUBTRANSIENT_REACTANCE:    X = gen.get_positive_sequence_subtransient_reactance_in_pu();
+            case TRANSIENT_REACTANCE:       X = gen.get_positive_sequence_transient_reactance_in_pu();
+            case SYNCHRONOUS_REACTANCE:     X = gen.get_positive_sequence_syncronous_reactance_in_pu();
+        }
+        double one_over_mbase = gen.get_one_over_mbase_in_one_over_MVA();
+        double sbase = psdb.get_system_base_power_in_MVA();
+
+        complex<double> Z = complex<double>(R, X) * (one_over_mbase*sbase);
+
+        unsigned int bus = gen.get_generator_bus();
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+        this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
+    }
+}
+
+void NETWORK_MATRIX::add_wt_generators_to_positive_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
+
+    unsigned int n= wt_generators.size();
+    for(unsigned int i=0; i!=n; ++i)
+        add_wt_generator_to_positive_sequence_network(*(wt_generators[i]));
+}
+
+void NETWORK_MATRIX::add_wt_generator_to_positive_sequence_network(const WT_GENERATOR& wt_gen)
+{
+    if(wt_gen.get_status()==true)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        double R = wt_gen.get_positive_sequence_resistance_in_pu();
+
+        GENERATOR_REACTANCE_OPTION gen_X = get_generator_reactance_option();
+        double X;
+        switch(gen_X)
+        {
+            case SUBTRANSIENT_REACTANCE:    X = wt_gen.get_positive_sequence_subtransient_reactance_in_pu();
+            case TRANSIENT_REACTANCE:       X = wt_gen.get_positive_sequence_transient_reactance_in_pu();
+            case SYNCHRONOUS_REACTANCE:     X = wt_gen.get_positive_sequence_syncronous_reactance_in_pu();
+        }
+        double one_over_mbase = wt_gen.get_one_over_mbase_in_one_over_MVA();
+        double sbase = psdb.get_system_base_power_in_MVA();
+
+        complex<double> Z = complex<double>(R, X) * (one_over_mbase*sbase);
+
+        unsigned int bus = wt_gen.get_generator_bus();
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+        this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
+    }
+}
+
+void NETWORK_MATRIX::add_pv_units_to_positive_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
+
+    unsigned int n= pv_units.size();
+    for(unsigned int i=0; i!=n; ++i)
+        add_pv_unit_to_positive_sequence_network(*(pv_units[i]));
+}
+
+void NETWORK_MATRIX::add_pv_unit_to_positive_sequence_network(const PV_UNIT& pv_unit)
+{
+    if(pv_unit.get_status()==true)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        double R = pv_unit.get_positive_sequence_resistance_in_pu();
+        double X = pv_unit.get_positive_sequence_reactance_in_pu();
+        double one_over_mbase = pv_unit.get_one_over_mbase_in_one_over_MVA();
+        double sbase = psdb.get_system_base_power_in_MVA();
+
+        complex<double> Z = complex<double>(R, X) * (one_over_mbase*sbase);
+
+        unsigned int bus = pv_unit.get_source_bus();
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+        this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
+    }
+}
+
+void NETWORK_MATRIX::add_fixed_shunts_to_positive_sequence_network()
+{
+    add_fixed_shunts_to_network();
+}
+
+void NETWORK_MATRIX::add_lines_to_negative_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<LINE*> lines = psdb.get_all_lines();
+
+    unsigned int n = lines.size();
+
+    for(unsigned int i = 0; i!=n; ++i)
+    {
+        if(not lines[i]->is_faulted())
+           add_line_to_network(*(lines[i]));
+        else
+           add_faulted_line_to_negative_sequence_network(*(lines[i]));
+    }
+}
+
+void NETWORK_MATRIX::add_faulted_line_to_negative_sequence_network(const LINE& line)
+{
+    if(line.get_sending_side_breaker_status()==true or line.get_receiving_side_breaker_status()==true)
+    {
+        if(line.is_faulted())
+        {
+            unsigned int sending_bus = line.get_sending_side_bus();
+            unsigned int receiving_bus = line.get_receiving_side_bus();
+
+            unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(sending_bus);
+            unsigned int j = inphno.get_internal_bus_number_of_physical_bus_number(receiving_bus);
+
+            complex<double> Zline = line.get_line_positive_sequence_z_in_pu();
+            complex<double> Yline = line.get_line_positive_sequence_y_in_pu();
+            complex<double> Yshunt_sending = line.get_shunt_positive_sequence_y_at_sending_side_in_pu();
+            complex<double> Yshunt_receiving = line.get_shunt_positive_sequence_y_at_receiving_side_in_pu();
+
+            double fault_location = line.get_fault_location_of_fault(0);
+
+            complex<double> Zif = Zline*fault_location;
+            complex<double> Zjf = Zline*(1.0-fault_location);
+            complex<double> Yif = Yline*fault_location;
+            complex<double> Yjf = Yline*(1.0-fault_location);
+
+            if(line.get_sending_side_breaker_status()==true and line.get_receiving_side_breaker_status()==true)
+            {
+                this_Y_matrix_pointer->add_entry(i,i, 1.0/Zif+Yif+Yshunt_sending);
+                this_Y_matrix_pointer->add_entry(j,j, 1.0/Zjf+Yjf+Yshunt_receiving);
+                return;
+            }
+
+            if(line.get_sending_side_breaker_status()==true and line.get_receiving_side_breaker_status()==false)
+            {
+                this_Y_matrix_pointer->add_entry(i,i, 1.0/Zif+Yif+Yshunt_sending);
+                return;
+            }
+
+            if(line.get_sending_side_breaker_status()==false and line.get_receiving_side_breaker_status()==true)
+            {
+                this_Y_matrix_pointer->add_entry(j,j, 1.0/Zjf+Yjf+Yshunt_receiving);
+                return;
+            }
+        }
+        else // line is not faulted
+            add_line_to_network(line);
+    }
+}
+
+void NETWORK_MATRIX::add_transformers_to_negative_sequence_network()
+{
+    add_transformers_to_network();
+}
+
+void NETWORK_MATRIX::add_loads_to_negative_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<LOAD*> loads = psdb.get_all_loads();
+
+    unsigned int n= loads.size();
+
+    for(unsigned int i=0; i!=n; ++i)
+        add_load_to_negative_sequence_network(*(loads[i]));
+}
+
+void NETWORK_MATRIX::add_load_to_negative_sequence_network(const LOAD& load)
+{
+    if(load.get_status()==true)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        complex<double> S_base = psdb.get_system_base_power_in_MVA();
+        complex<double> S = load.get_negative_sequence_load_in_MVA();
+
+        ostringstream osstream;
+
+        unsigned int bus = load.get_load_bus();
+
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+
+        complex<double> y =  S/S_base;
+
+        this_Y_matrix_pointer->add_entry(i,i,y);
+    }
+}
+
+void NETWORK_MATRIX::add_sources_to_negative_sequence_network()
+{
+    add_generators_to_negative_sequence_network();
+    add_wt_generators_to_negative_sequence_network();
+    add_pv_units_to_negative_sequence_network();
+}
+
+void NETWORK_MATRIX::add_generators_to_negative_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<GENERATOR*> generators = psdb.get_all_generators();
+
+    unsigned int n= generators.size();
+
+    for(unsigned int i=0; i!=n; ++i)
+        add_generator_to_negative_sequence_network(*(generators[i]));
+}
+
+void NETWORK_MATRIX::add_generator_to_negative_sequence_network(const GENERATOR& gen)
+{
+    if(gen.get_status()==true)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        double R = gen.get_negative_sequence_resistance_in_pu();
+        double X = gen.get_negative_sequence_reactance_in_pu();
+        double one_over_mbase = gen.get_one_over_mbase_in_one_over_MVA();
+        double sbase = psdb.get_system_base_power_in_MVA();
+
+        complex<double> Z = complex<double>(R, X) * (one_over_mbase*sbase);
+
+        unsigned int bus = gen.get_generator_bus();
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+        this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
+    }
+}
+
+void NETWORK_MATRIX::add_wt_generators_to_negative_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
+
+    unsigned int n= wt_generators.size();
+    for(unsigned int i=0; i!=n; ++i)
+        add_wt_generator_to_negative_sequence_network(*(wt_generators[i]));
+}
+
+void NETWORK_MATRIX::add_wt_generator_to_negative_sequence_network(const WT_GENERATOR& wt_gen)
+{
+    if(wt_gen.get_status()==true)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        double R = wt_gen.get_negative_sequence_resistance_in_pu();
+        double X = wt_gen.get_negative_sequence_reactance_in_pu();
+        double one_over_mbase = wt_gen.get_one_over_mbase_in_one_over_MVA();
+        double sbase = psdb.get_system_base_power_in_MVA();
+
+        complex<double> Z = complex<double>(R, X) * (one_over_mbase*sbase);
+
+        unsigned int bus = wt_gen.get_generator_bus();
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+        this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
+    }
+}
+
+void NETWORK_MATRIX::add_pv_units_to_negative_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
+
+    unsigned int n= pv_units.size();
+    for(unsigned int i=0; i!=n; ++i)
+        add_pv_unit_to_negative_sequence_network(*(pv_units[i]));
+}
+
+void NETWORK_MATRIX::add_pv_unit_to_negative_sequence_network(const PV_UNIT& pv_unit)
+{
+    if(pv_unit.get_status()==true)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        double R = pv_unit.get_negative_sequence_resistance_in_pu();
+        double X = pv_unit.get_negative_sequence_reactance_in_pu();
+        double one_over_mbase = pv_unit.get_one_over_mbase_in_one_over_MVA();
+        double sbase = psdb.get_system_base_power_in_MVA();
+
+        complex<double> Z = complex<double>(R, X) * (one_over_mbase*sbase);
+
+        unsigned int bus = pv_unit.get_source_bus();
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+        this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
+    }
+}
+
+void NETWORK_MATRIX::add_fixed_shunts_to_negative_sequence_network()
+{
+    add_fixed_shunts_to_network();
+}
+
+void NETWORK_MATRIX::add_lines_to_zero_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<LINE*> lines = psdb.get_all_lines();
+
+    unsigned int n = lines.size();
+
+    for(unsigned int i = 0; i!=n; ++i)
+    {
+        if(not lines[i]->is_faulted())
+           add_line_to_zero_sequence_network(*(lines[i]));
+        else
+           add_faulted_line_to_zero_sequence_network(*(lines[i]));
+    }
+}
+
+void NETWORK_MATRIX::add_line_to_zero_sequence_network(const LINE& line)
+{
+    if(line.get_sending_side_breaker_status()==true or line.get_receiving_side_breaker_status()==true)
+    {
+        unsigned int sending_bus = line.get_sending_side_bus();
+        unsigned int receiving_bus = line.get_receiving_side_bus();
+
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(sending_bus);
+        unsigned int j = inphno.get_internal_bus_number_of_physical_bus_number(receiving_bus);
+
+        complex<double> Zline = line.get_line_zero_sequence_z_in_pu();
+        complex<double> Yline = line.get_line_zero_sequence_y_in_pu();
+        complex<double> Yshunt_sending = line.get_shunt_zero_sequence_y_at_sending_side_in_pu();
+        complex<double> Yshunt_receiving = line.get_shunt_zero_sequence_y_at_receiving_side_in_pu();
+
+        if(fabs(Zline) < DOUBLE_EPSILON)
+            return;
+
+        complex<double> Y, Z;
+        if(line.get_sending_side_breaker_status()==true and line.get_receiving_side_breaker_status()==true)
+        {
+            Y = 1.0/Zline;
+
+            this_Y_matrix_pointer->add_entry(i,j, -Y);
+            this_Y_matrix_pointer->add_entry(j,i, -Y);
+            this_Y_matrix_pointer->add_entry(i,i, Y+0.5*Yline+Yshunt_sending);
+            this_Y_matrix_pointer->add_entry(j,j, Y+0.5*Yline+Yshunt_receiving);
+
+            return;
+        }
+
+        if(line.get_sending_side_breaker_status()==true and line.get_receiving_side_breaker_status()==false)
+        {
+            Y = 0.5*Yline+Yshunt_receiving;
+            Z = Zline + 1.0/Y;
+            Y = 1.0/Z + 0.5*Yline+Yshunt_sending;
+            this_Y_matrix_pointer->add_entry(i,i, Y);
+            return;
+        }
+
+        if(line.get_sending_side_breaker_status()==false and line.get_receiving_side_breaker_status()==true)
+        {
+            Y = 0.5*Yline+Yshunt_sending;
+            Z = Zline + 1.0/Y;
+            Y = 1.0/Z + 0.5*Yline+Yshunt_receiving;
+            this_Y_matrix_pointer->add_entry(j,j, Y);
+            return;
+        }
+    }
+}
+
+void NETWORK_MATRIX::add_faulted_line_to_zero_sequence_network(const LINE& line)
+{
+    if(line.get_sending_side_breaker_status()==true or line.get_receiving_side_breaker_status()==true)
+    {
+        if(line.is_faulted())
+        {
+            unsigned int sending_bus = line.get_sending_side_bus();
+            unsigned int receiving_bus = line.get_receiving_side_bus();
+
+            unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(sending_bus);
+            unsigned int j = inphno.get_internal_bus_number_of_physical_bus_number(receiving_bus);
+
+            complex<double> Zline = line.get_line_zero_sequence_z_in_pu();
+            complex<double> Yline = line.get_line_zero_sequence_y_in_pu();
+            complex<double> Yshunt_sending = line.get_shunt_zero_sequence_y_at_sending_side_in_pu();
+            complex<double> Yshunt_receiving = line.get_shunt_zero_sequence_y_at_receiving_side_in_pu();
+
+            double fault_location = line.get_fault_location_of_fault(0);
+
+            complex<double> Zif = Zline*fault_location;
+            complex<double> Zjf = Zline*(1.0-fault_location);
+            complex<double> Yif = Yline*fault_location;
+            complex<double> Yjf = Yline*(1.0-fault_location);
+
+            if(line.get_sending_side_breaker_status()==true and line.get_receiving_side_breaker_status()==true)
+            {
+                this_Y_matrix_pointer->add_entry(i,i, 1.0/Zif+Yif+Yshunt_sending);
+                this_Y_matrix_pointer->add_entry(j,j, 1.0/Zjf+Yjf+Yshunt_receiving);
+                return;
+            }
+
+            if(line.get_sending_side_breaker_status()==true and line.get_receiving_side_breaker_status()==false)
+            {
+                this_Y_matrix_pointer->add_entry(i,i, 1.0/Zif+Yif+Yshunt_sending);
+                return;
+            }
+
+            if(line.get_sending_side_breaker_status()==false and line.get_receiving_side_breaker_status()==true)
+            {
+                this_Y_matrix_pointer->add_entry(j,j, 1.0/Zjf+Yjf+Yshunt_receiving);
+                return;
+            }
+        }
+        else // line is not faulted
+            add_line_to_network(line);
+    }
+}
+
+void NETWORK_MATRIX::add_transformers_to_zero_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
+
+    unsigned int n = transformers.size();
+
+    for(unsigned int i = 0; i!=n; ++i)
+        add_transformer_to_zero_sequence_network(*(transformers[i]));
+}
+
+void NETWORK_MATRIX::add_transformer_to_zero_sequence_network(const TRANSFORMER& trans)
+{
+    if(trans.is_two_winding_transformer())
+        add_two_winding_transformer_to_zero_sequence_network(trans);
+    else
+        add_three_winding_transformer_to_zero_sequence_network(trans);
+}
+
+void NETWORK_MATRIX::add_two_winding_transformer_to_zero_sequence_network(const TRANSFORMER& trans)
+{
+    if(trans.get_winding_breaker_status(PRIMARY_SIDE)==true or trans.get_winding_breaker_status(SECONDARY_SIDE)==true)
+    {
+        unsigned int primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
+        unsigned int secondary_bus = trans.get_winding_bus(SECONDARY_SIDE);
+
+        unsigned int p = inphno.get_internal_bus_number_of_physical_bus_number(primary_bus);
+        unsigned int s = inphno.get_internal_bus_number_of_physical_bus_number(secondary_bus);
+
+        double tap_primary = trans.get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE);
+        double angle_primary = trans.get_winding_angle_shift_in_deg(PRIMARY_SIDE);
+        angle_primary = deg2rad(angle_primary);
+        double tap_secondary = trans.get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE);
+        double angle_secondary = trans.get_winding_angle_shift_in_deg(SECONDARY_SIDE);
+        angle_secondary = deg2rad(angle_secondary);
+
+        complex<double> kp(tap_primary*steps_cos(angle_primary),tap_primary*steps_sin(angle_primary)),
+                        ks(tap_secondary*steps_cos(angle_secondary),tap_secondary*steps_sin(angle_secondary));
+
+        TRANSFORMER_WINDING_CONNECTION_TYPE winding1_connection_type = trans.get_winding_connection_type(PRIMARY_SIDE);
+        TRANSFORMER_WINDING_CONNECTION_TYPE winding2_connection_type = trans.get_winding_connection_type(SECONDARY_SIDE);
+
+        complex<double> Z_12 = trans.get_zero_sequence_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
+        complex<double> Z_g1 = trans.get_winding_zero_sequence_impedance_based_on_system_base_power_in_pu(PRIMARY_SIDE);
+        complex<double> Z_g2 = trans.get_winding_zero_sequence_impedance_based_on_system_base_power_in_pu(SECONDARY_SIDE);
+
+        complex<double> Z_nutrl = trans.get_common_zero_sequence_nutural_grounding_impedance_based_on_system_base_power_in_pu();
+
+        complex<double> Zt, ypp, ysp, yps, yss, k;
+        complex<double> V, I, Yeq, Zeq, I_store;
+
+        ostringstream osstream;
+
+        if(trans.get_winding_breaker_status(PRIMARY_SIDE)==true and trans.get_winding_breaker_status(SECONDARY_SIDE)==true)
+        {
+            if(winding1_connection_type==WYE_N_CONNECTION and winding2_connection_type==WYE_N_CONNECTION)
+            {
+                // voltage at primary bus
+                V = 1.0;
+                V = V/kp;
+                Zeq = Z_12 + 3.0*Z_g1 + 3.0*Z_g2;
+                I = V/Zeq;
+                I_store = I;
+                I /= conj(kp);
+                ypp = I;
+
+                I = -I_store;
+                I /= conj(ks);
+                ysp = I;
+
+                //secondary
+                V = 1.0;
+                V = V/ks;
+                Zeq = Z_12 + 3.0*Z_g1 + 3.0*Z_g2;
+                I = V/Zeq;
+                I_store = I;
+                I /= conj(ks);
+                yss = I;
+
+                I = -I_store;
+                I /= conj(kp);
+                yps = I;
+            }
+            else if(winding1_connection_type==WYE_N_CONNECTION and winding2_connection_type==DELTA_CONNECTION)
+            {
+                V = 1.0;
+                V = V/kp;
+                Zeq = 3.0*Z_g1 + Z_12;
+                I = V/Zeq;
+                I /= conj(kp);
+                ypp = I;
+
+                yss = ysp = yps = 0.0;
+            }
+            else if(winding1_connection_type==DELTA_CONNECTION and winding2_connection_type==WYE_N_CONNECTION)
+            {
+                V = 1.0;
+                V = V/ks;
+                Zeq =  Z_12 + 3.0*Z_g2;
+                I = V/Zeq;
+                I /= conj(ks);
+                yss = I;
+
+                ypp = yps = ysp = 0.0;
+            }
+            else
+                return;
+
+            this_Y_matrix_pointer->add_entry(p,p,ypp);
+            this_Y_matrix_pointer->add_entry(p,s,yps);
+            this_Y_matrix_pointer->add_entry(s,p,ysp);
+            this_Y_matrix_pointer->add_entry(s,s,yss);
+            return;
+        }
+
+        if(trans.get_winding_breaker_status(PRIMARY_SIDE)==true and trans.get_winding_breaker_status(SECONDARY_SIDE)==false)
+        {
+            if(winding1_connection_type==WYE_N_CONNECTION and winding2_connection_type==DELTA_CONNECTION)
+            {
+                V = 1.0;
+                V = V/kp;
+                Zeq = 3.0*Z_g1 + Z_12;
+                I = V/Zeq;
+                I /= conj(kp);
+                ypp = I;
+
+                yss = ysp = yps = 0.0;
+            }
+            else
+                return;
+
+            this_Y_matrix_pointer->add_entry(p,p,ypp);
+            this_Y_matrix_pointer->add_entry(p,s,yps);
+            this_Y_matrix_pointer->add_entry(s,p,ysp);
+            this_Y_matrix_pointer->add_entry(s,s,yss);
+            return;
+        }
+
+        if(trans.get_winding_breaker_status(PRIMARY_SIDE)==false and trans.get_winding_breaker_status(SECONDARY_SIDE)==true)
+        {
+            if(winding1_connection_type==DELTA_CONNECTION and winding2_connection_type==WYE_N_CONNECTION)
+            {
+                V = 1.0;
+                V = V/ks;
+                Zeq = 3.0*Z_g2 + Z_12;
+                I = V/Zeq;
+                I /= conj(ks);
+                yss = I;
+
+                ypp = yps = ysp = 0.0;
+            }
+            else
+                return;
+
+            this_Y_matrix_pointer->add_entry(p,p,ypp);
+            this_Y_matrix_pointer->add_entry(p,s,yps);
+            this_Y_matrix_pointer->add_entry(s,p,ysp);
+            this_Y_matrix_pointer->add_entry(s,s,yss);
+            return;
+        }
+    }
+}
+
+void NETWORK_MATRIX::add_three_winding_transformer_to_zero_sequence_network(const TRANSFORMER& trans)
+{
+    if(trans.get_winding_breaker_status(PRIMARY_SIDE)==true or
+    trans.get_winding_breaker_status(SECONDARY_SIDE)==true or
+    trans.get_winding_breaker_status(TERTIARY_SIDE)==true)
+    {
+        unsigned int primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
+        unsigned int secondary_bus = trans.get_winding_bus(SECONDARY_SIDE);
+        unsigned int tertiary_bus = trans.get_winding_bus(TERTIARY_SIDE);
+
+        unsigned int p = inphno.get_internal_bus_number_of_physical_bus_number(primary_bus);
+        unsigned int s = inphno.get_internal_bus_number_of_physical_bus_number(secondary_bus);
+        unsigned int t = inphno.get_internal_bus_number_of_physical_bus_number(tertiary_bus);
+
+        complex<double> Z_12 = trans.get_zero_sequence_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
+        complex<double> Z_23 = trans.get_zero_sequence_impedance_between_windings_based_on_system_base_power_in_pu(SECONDARY_SIDE, TERTIARY_SIDE);
+        complex<double> Z_31 = trans.get_zero_sequence_impedance_between_windings_based_on_system_base_power_in_pu(TERTIARY_SIDE, PRIMARY_SIDE);
+        complex<double> Z_01, Z_02, Z_03;
+        Z_01 = 0.5*(Z_12 + Z_31 - Z_23);
+        Z_02 = 0.5*(Z_12 + Z_23 - Z_31);
+        Z_03 = 0.5*(Z_23 + Z_31 - Z_12);
+
+        complex<double> Z_g1 = trans.get_winding_zero_sequence_impedance_based_on_system_base_power_in_pu(PRIMARY_SIDE);
+        complex<double> Z_g2 = trans.get_winding_zero_sequence_impedance_based_on_system_base_power_in_pu(SECONDARY_SIDE);
+        complex<double> Z_g3 = trans.get_winding_zero_sequence_impedance_based_on_system_base_power_in_pu(TERTIARY_SIDE);
+
+        TRANSFORMER_WINDING_CONNECTION_TYPE winding_connection_type1 = trans.get_winding_connection_type(PRIMARY_SIDE);
+        TRANSFORMER_WINDING_CONNECTION_TYPE winding_connection_type2 = trans.get_winding_connection_type(SECONDARY_SIDE);
+        TRANSFORMER_WINDING_CONNECTION_TYPE winding_connection_type3 = trans.get_winding_connection_type(TERTIARY_SIDE);
+
+        double tap_primary = trans.get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE);
+        double angle_primary = trans.get_winding_angle_shift_in_deg(PRIMARY_SIDE);
+        angle_primary = deg2rad(angle_primary);
+        double tap_secondary = trans.get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE);
+        double angle_secondary = trans.get_winding_angle_shift_in_deg(SECONDARY_SIDE);
+        angle_secondary = deg2rad(angle_secondary);
+        double tap_tertiary = trans.get_winding_off_nominal_turn_ratio_in_pu(TERTIARY_SIDE);
+        double angle_tertiary = trans.get_winding_angle_shift_in_deg(TERTIARY_SIDE);
+        angle_tertiary = deg2rad(angle_tertiary);
+
+        complex<double> kp(tap_primary*steps_cos(angle_primary),tap_primary*steps_sin(angle_primary)),
+                        ks(tap_secondary*steps_cos(angle_secondary),tap_secondary*steps_sin(angle_secondary)),
+                        kt(tap_tertiary*steps_cos(angle_tertiary),tap_tertiary*steps_sin(angle_tertiary));
+
+        complex<double> ypp,yss,ytt,yps,ypt,ysp,yst,ytp,yts;
+        complex<double> yp, ys, yt;
+        complex<double> Zp, Zs, Zt;
+
+        Zp = (winding_connection_type1==WYE_N_CONNECTION)?(Z_01+3.0*Z_g1):(Z_01);
+        Zs = (winding_connection_type2==WYE_N_CONNECTION)?(Z_02+3.0*Z_g2):(Z_02);
+        Zt = (winding_connection_type3==WYE_N_CONNECTION)?(Z_03+3.0*Z_g3):(Z_03);
+
+        if(winding_connection_type1==WYE_CONNECTION or
+           (winding_connection_type1==WYE_N_CONNECTION and trans.get_winding_breaker_status(PRIMARY_SIDE)==false))
+            yp = 0.0;
+        else
+            yp = 1.0/Zp;
+
+        if(winding_connection_type2==WYE_CONNECTION or
+           (winding_connection_type1==WYE_N_CONNECTION and trans.get_winding_breaker_status(SECONDARY_SIDE)==false))
+            ys = 0.0;
+        else
+            ys = 1.0/Zs;
+
+        if(winding_connection_type3==WYE_CONNECTION or
+           (winding_connection_type3==WYE_N_CONNECTION and trans.get_winding_breaker_status(TERTIARY_SIDE)==false))
+            yt = 0.0;
+        else
+            yt = 1.0/Zt;
+
+        complex<double> V, Yeq, Zeq, I, Vstar;
+
+        // primary
+        if(trans.get_winding_breaker_status(PRIMARY_SIDE)==true and winding_connection_type1==WYE_N_CONNECTION )
+        {
+            if(ys!=0.0 or yt!=0.0)
+            {
+                V = 1.0;
+                V = V/kp;
+                Yeq = ys + yt;
+                Zeq = Zp + 1.0/Yeq;
+                I = V/Zeq;
+                I /= conj(kp);
+                ypp = I;
+
+                Vstar = V*(1.0/Yeq)/Zeq;
+
+                if(winding_connection_type2==WYE_N_CONNECTION and trans.get_winding_breaker_status(SECONDARY_SIDE)==true)
+                {
+                    I = -Vstar/Zs;
+                    I /=conj(ks);
+                    ysp = I;
+                }
+                else
+                    ysp = 0.0;
+
+                if(winding_connection_type3==WYE_N_CONNECTION and trans.get_winding_breaker_status(TERTIARY_SIDE)==true)
+                {
+                    I = -Vstar/Zt;
+                    I /=conj(kt);
+                    ytp = I;
+                }
+                else
+                    ytp = 0.0;
+            }
+            else
+            {
+                ypp = 0.0;
+                ysp = 0.0;
+                ytp = 0.0;
+            }
+            this_Y_matrix_pointer->add_entry(p,p,ypp);
+            this_Y_matrix_pointer->add_entry(s,p,ysp);
+            this_Y_matrix_pointer->add_entry(t,p,ytp);
+        }
+        else
+        {
+            this_Y_matrix_pointer->add_entry(p,p,0.0);
+            this_Y_matrix_pointer->add_entry(s,p,0.0);
+            this_Y_matrix_pointer->add_entry(t,p,0.0);
+        }
+
+        // secondary
+        if(trans.get_winding_breaker_status(SECONDARY_SIDE)==true and winding_connection_type2==WYE_N_CONNECTION )
+        {
+            if(yp!=0.0 or yt!=0.0)
+            {
+                V = 1.0;
+                V = V/ks;
+                Yeq = yp + yt;
+                Zeq = Zs + 1.0/Yeq;
+                I = V/Zeq;
+                I /= conj(ks);
+                yss = I;
+
+                Vstar = V*(1.0/Yeq)/Zeq;
+
+                if(winding_connection_type1==WYE_N_CONNECTION and trans.get_winding_breaker_status(PRIMARY_SIDE)==true)
+                {
+                    I = -Vstar/Zp;
+                    I /=conj(kp);
+                    yps = I;
+                }
+                else
+                    yps = 0.0;
+
+                if(winding_connection_type3==WYE_N_CONNECTION and trans.get_winding_breaker_status(TERTIARY_SIDE)==true)
+                {
+                    I = -Vstar/Zt;
+                    I /=conj(kt);
+                    yts = I;
+                }
+                else
+                    yts = 0.0;
+            }
+            else
+            {
+                yss = 0.0;
+                yps = 0.0;
+                yts = 0.0;
+            }
+            this_Y_matrix_pointer->add_entry(s,s,yss);
+            this_Y_matrix_pointer->add_entry(p,s,yps);
+            this_Y_matrix_pointer->add_entry(t,s,yts);
+        }
+        else
+        {
+            this_Y_matrix_pointer->add_entry(s,s,0.0);
+            this_Y_matrix_pointer->add_entry(p,s,0.0);
+            this_Y_matrix_pointer->add_entry(t,s,0.0);
+        }
+
+        // tertiary
+        if(trans.get_winding_breaker_status(TERTIARY_SIDE)==true and winding_connection_type3==WYE_N_CONNECTION )
+        {
+            if(yp!=0.0 or ys!=0.0)
+            {
+                V = 1.0;
+                V = V/kt;
+                Yeq = yp + ys;
+                Zeq = Zt + 1.0/Yeq;
+                I = V/Zeq;
+                I /= conj(kt);
+                ytt = I;
+
+                Vstar = V*(1.0/Yeq)/Zeq;
+
+                if(winding_connection_type1==WYE_N_CONNECTION and trans.get_winding_breaker_status(PRIMARY_SIDE)==true)
+                {
+                    I = -Vstar/Zp;
+                    I /=conj(kp);
+                    ypt = I;
+                }
+                else
+                    ypt = 0.0;
+
+                if(winding_connection_type2==WYE_N_CONNECTION and trans.get_winding_breaker_status(SECONDARY_SIDE)==true)
+                {
+                    I = -Vstar/Zs;
+                    I /=conj(ks);
+                    yst = I;
+                }
+                else
+                    yst = 0.0;
+            }
+            else
+            {
+                ytt = 0.0;
+                ypt = 0.0;
+                yst = 0.0;
+            }
+            this_Y_matrix_pointer->add_entry(t,t,ytt);
+            this_Y_matrix_pointer->add_entry(p,t,ypt);
+            this_Y_matrix_pointer->add_entry(s,t,yst);
+        }
+        else
+        {
+            this_Y_matrix_pointer->add_entry(t,t,0.0);
+            this_Y_matrix_pointer->add_entry(p,t,0.0);
+            this_Y_matrix_pointer->add_entry(s,t,0.0);
+        }
+    }
+}
+
+void NETWORK_MATRIX::add_loads_to_zero_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<LOAD*> loads = psdb.get_all_loads();
+
+    unsigned int n= loads.size();
+
+    for(unsigned int i=0; i!=n; ++i)
+        add_load_to_zero_sequence_network(*(loads[i]));
+}
+
+void NETWORK_MATRIX::add_load_to_zero_sequence_network(const LOAD& load)
+{
+    if(load.get_status()==true)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        bool grounding_flag = load.get_grounding_flag();
+        if(grounding_flag == false)
+            return;
+
+        complex<double> S_base = psdb.get_system_base_power_in_MVA();
+        complex<double> S = load.get_zero_sequence_load_in_MVA();
+
+        unsigned int bus = load.get_load_bus();
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+
+        complex<double> y =  S/S_base;
+        this_Y_matrix_pointer->add_entry(i,i,y);
+    }
+}
+
+void NETWORK_MATRIX::add_sources_to_zero_sequence_network()
+{
+    add_generators_to_zero_sequence_network();
+    add_wt_generators_to_zero_sequence_network();
+    add_pv_units_to_zero_sequence_network();
+}
+
+void NETWORK_MATRIX::add_generators_to_zero_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<GENERATOR*> generators = psdb.get_all_generators();
+
+    unsigned int n= generators.size();
+    for(unsigned int i=0; i!=n; ++i)
+        add_generator_to_zero_sequence_network(*(generators[i]));
+}
+
+void NETWORK_MATRIX::add_generator_to_zero_sequence_network(const GENERATOR& gen)
+{
+    if(gen.get_status()==true)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        double R = gen.get_zero_sequence_resistance_in_pu();
+        double X = gen.get_zero_sequence_reactance_in_pu();
+        double R_g = gen.get_grounding_resistance_in_pu();
+        double X_g = gen.get_grounding_reactance_in_pu();
+        double one_over_mbase = gen.get_one_over_mbase_in_one_over_MVA();
+        double sbase = psdb.get_system_base_power_in_MVA();
+
+        complex<double> Z = (complex<double>(R, X) + 3.0 * complex<double>(R_g, X_g)) * (one_over_mbase*sbase);
+
+        unsigned int bus = gen.get_generator_bus();
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+        this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
+    }
+}
+
+void NETWORK_MATRIX::add_wt_generators_to_zero_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
+
+    unsigned int n = wt_generators.size();
+    for(unsigned int i=0; i!=n; ++i)
+        add_wt_generator_to_zero_sequence_network(*(wt_generators[i]));
+}
+
+void NETWORK_MATRIX::add_wt_generator_to_zero_sequence_network(const WT_GENERATOR& wt_gen)
+{
+    if(wt_gen.get_status()==true)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        double R = wt_gen.get_zero_sequence_resistance_in_pu();
+        double X = wt_gen.get_zero_sequence_reactance_in_pu();
+        double R_g = wt_gen.get_grounding_resistance_in_pu();
+        double X_g = wt_gen.get_grounding_reactance_in_pu();
+        double one_over_mbase = wt_gen.get_one_over_mbase_in_one_over_MVA();
+        double sbase = psdb.get_system_base_power_in_MVA();
+
+        complex<double> Z = (complex<double>(R, X) + 3.0 * complex<double>(R_g, X_g)) * (one_over_mbase*sbase);
+
+        unsigned int bus = wt_gen.get_generator_bus();
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+        this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
+    }
+}
+
+void NETWORK_MATRIX::add_pv_units_to_zero_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
+
+    unsigned int n = pv_units.size();
+    for(unsigned int i=0; i!=n; ++i)
+        add_pv_unit_to_zero_sequence_network(*(pv_units[i]));
+}
+
+void NETWORK_MATRIX::add_pv_unit_to_zero_sequence_network(const PV_UNIT& pv_unit)
+{
+    if(pv_unit.get_status()==true)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        double R = pv_unit.get_zero_sequence_resistance_in_pu();
+        double X = pv_unit.get_zero_sequence_reactance_in_pu();
+        double R_g = pv_unit.get_grounding_resistance_in_pu();
+        double X_g = pv_unit.get_grounding_reactance_in_pu();
+        double one_over_mbase = pv_unit.get_one_over_mbase_in_one_over_MVA();
+        double sbase = psdb.get_system_base_power_in_MVA();
+
+        complex<double> Z = (complex<double>(R, X) + 3.0 * complex<double>(R_g, X_g)) * (one_over_mbase*sbase);
+
+        unsigned int bus = pv_unit.get_source_bus();
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+        this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
+    }
+}
+
+void NETWORK_MATRIX::add_fixed_shunts_to_zero_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<FIXED_SHUNT*> shunts = psdb.get_all_fixed_shunts();
+
+    unsigned int n = shunts.size();
+    for(unsigned int i = 0; i!=n; ++i)
+        add_fixed_shunt_to_zero_sequence_network(*(shunts[i]));
+}
+
+void NETWORK_MATRIX::add_fixed_shunt_to_zero_sequence_network(const FIXED_SHUNT& shunt)
+{
+    if(shunt.get_status()==true)
+    {
+        unsigned int bus = shunt.get_shunt_bus();
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+
+        complex<double> Yshunt = shunt.get_nominal_zero_sequence_admittance_shunt_in_pu();
+
+        this_Y_matrix_pointer->add_entry(i,i, Yshunt);
+    }
+}
+
 void NETWORK_MATRIX::optimize_network_ordering()
 {
     initialize_physical_internal_bus_pair();
@@ -3053,6 +4193,36 @@ void NETWORK_MATRIX::report_dynamic_network_matrix()
 	report_network_matrix_common();
 }
 
+void NETWORK_MATRIX::report_positive_sequence_Y_matrix()
+{
+    ostringstream osstream;
+    osstream<<"Positive sequence network Y matrix lists begin:";
+    toolkit->show_information_with_leading_time_stamp(osstream);
+
+    set_this_Y_and_Z_matrix_as(network_Y1_matrix);
+    report_network_matrix_common();
+}
+
+void NETWORK_MATRIX::report_negative_sequence_Y_matrix()
+{
+    ostringstream osstream;
+    osstream<<"Negative sequence network Y matrix lists begin:";
+    toolkit->show_information_with_leading_time_stamp(osstream);
+
+    set_this_Y_and_Z_matrix_as(network_Y2_matrix);
+    report_network_matrix_common();
+}
+
+void NETWORK_MATRIX::report_zero_sequence_Y_matrix()
+{
+    ostringstream osstream;
+    osstream<<"Zero sequence network Y matrix lists begin:";
+    toolkit->show_information_with_leading_time_stamp(osstream);
+
+    set_this_Y_and_Z_matrix_as(network_Y0_matrix);
+    report_network_matrix_common();
+}
+
 void NETWORK_MATRIX::report_network_matrix_common() const
 {
     ostringstream osstream;
@@ -3340,6 +4510,63 @@ void NETWORK_MATRIX::save_network_Z_matrix_to_file(const string& filename) const
     {
         osstream<<"File '"<<filename<<"' cannot be opened for saving network Z matrix to file."<<endl
           <<"No network Z matrix will be exported.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void NETWORK_MATRIX::save_positive_sequence_Y_matrix_to_file(const string& filename)
+{
+    ostringstream osstream;
+
+    ofstream file(filename);
+    if(file.is_open())
+    {
+        set_this_Y_and_Z_matrix_as(network_Y1_matrix);
+        save_network_matrix_common(file);
+        file.close();
+    }
+    else
+    {
+        osstream<<"File '"<<filename<<"' cannot be opened for saving positive sequence network matrix to file."<<endl
+          <<"No positive sequence network matrix will be exported.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void NETWORK_MATRIX::save_negative_sequence_Y_matrix_to_file(const string& filename)
+{
+    ostringstream osstream;
+
+    ofstream file(filename);
+    if(file.is_open())
+    {
+        set_this_Y_and_Z_matrix_as(network_Y2_matrix);
+        save_network_matrix_common(file);
+        file.close();
+    }
+    else
+    {
+        osstream<<"File '"<<filename<<"' cannot be opened for saving negative sequence network matrix to file."<<endl
+          <<"No negative sequence network matrix will be exported.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void NETWORK_MATRIX::save_zero_sequence_Y_matrix_to_file(const string& filename)
+{
+    ostringstream osstream;
+
+    ofstream file(filename);
+    if(file.is_open())
+    {
+        set_this_Y_and_Z_matrix_as(network_Y0_matrix);
+        save_network_matrix_common(file);
+        file.close();
+    }
+    else
+    {
+        osstream<<"File '"<<filename<<"' cannot be opened for saving zero sequence network matrix to file."<<endl
+          <<"No zero sequence network matrix will be exported.";
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }

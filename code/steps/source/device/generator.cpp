@@ -157,6 +157,138 @@ double GENERATOR::get_grounding_reactance_in_pu() const
     return Xground;
 }
 
+void GENERATOR::set_generator_reactance_option(GENERATOR_REACTANCE_OPTION option)
+{
+    gen_X_option = option;
+}
+
+GENERATOR_REACTANCE_OPTION GENERATOR::get_generator_reactance_option() const
+{
+    return gen_X_option;
+}
+
+void GENERATOR::update_E()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR_REACTANCE_OPTION option = get_generator_reactance_option();
+
+    complex<double> V = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_source_bus());
+
+    complex<double> sbase = psdb.get_system_base_power_in_MVA();
+    complex<double> s = get_complex_generation_in_MVA();
+    complex<double> I = conj(s/sbase/V);
+
+    double R = get_positive_sequence_resistance_in_pu();
+    double X;
+    switch(option)
+    {
+        case SUBTRANSIENT_REACTANCE:
+            X = get_positive_sequence_subtransient_reactance_in_pu();
+            break;
+        case TRANSIENT_REACTANCE:
+            X = get_positive_sequence_transient_reactance_in_pu();
+            break;
+        case SYNCHRONOUS_REACTANCE:
+            X = get_positive_sequence_syncronous_reactance_in_pu();
+            break;
+    }
+    complex<double> mbase = get_mbase_in_MVA();
+    complex<double> Z = complex<double>(R,X)/mbase*sbase;
+
+    E = V + Z*I;
+}
+
+complex<double> GENERATOR::get_complex_E_in_pu()
+{
+    return E;
+}
+
+complex<double> GENERATOR::get_positive_sequence_complex_current_in_pu()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR_REACTANCE_OPTION option = get_generator_reactance_option();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
+
+    double R = get_positive_sequence_resistance_in_pu();
+    double X;
+    switch(option)
+    {
+        case SUBTRANSIENT_REACTANCE:
+            X = get_positive_sequence_subtransient_reactance_in_pu();
+            break;
+        case TRANSIENT_REACTANCE:
+            X = get_positive_sequence_transient_reactance_in_pu();
+            break;
+        case SYNCHRONOUS_REACTANCE:
+            X = get_positive_sequence_syncronous_reactance_in_pu();
+            break;
+    }
+    complex<double> Z = complex<double>(R, X) * one_over_mbase * sbase;
+    complex<double> E = get_complex_E_in_pu();
+    complex<double> U1 = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_source_bus());
+    complex<double> I = (U1-E)/Z;
+
+    return I;
+}
+
+complex<double> GENERATOR::get_negative_sequence_complex_current_in_pu()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
+
+    double R2 = get_negative_sequence_resistance_in_pu();
+    double X2 = get_negative_sequence_reactance_in_pu();
+    complex<double> Z2 = complex<double>(R2, X2)* one_over_mbase * sbase;
+    complex<double> U2 = psdb.get_bus_negative_sequence_complex_voltage_in_pu(get_source_bus());
+    complex<double> I = U2/Z2;
+
+    return I;
+}
+
+complex<double> GENERATOR::get_zero_sequence_complex_current_in_pu()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
+
+    double R0 = get_zero_sequence_resistance_in_pu();
+    double X0 = get_zero_sequence_reactance_in_pu();
+    complex<double> Z0 = complex<double>(R0, X0) * one_over_mbase * sbase;
+    complex<double> U0 = psdb.get_bus_zero_sequence_complex_voltage_in_pu(get_source_bus());
+    complex<double> I = U0/Z0;
+
+    return I;
+}
+
+complex<double> GENERATOR::get_positive_sequence_complex_current_in_kA()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    return get_positive_sequence_complex_current_in_pu()*sbase/(SQRT3*psdb.get_bus_base_voltage_in_kV(get_source_bus()));
+}
+
+complex<double> GENERATOR::get_negative_sequence_complex_current_in_kA()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    return get_negative_sequence_complex_current_in_pu()*sbase/(SQRT3*psdb.get_bus_base_voltage_in_kV(get_source_bus()));
+}
+
+complex<double> GENERATOR::get_zero_sequence_complex_current_in_kA()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    return get_zero_sequence_complex_current_in_pu()*sbase/(SQRT3*psdb.get_bus_base_voltage_in_kV(get_source_bus()));
+}
 
 void GENERATOR::clear()
 {
@@ -186,6 +318,8 @@ void GENERATOR::clear()
     set_zero_sequence_reactance_in_pu(0.0);
     set_grounding_resistance_in_pu(0.0);
     set_grounding_reactance_in_pu(0.0);
+
+    set_generator_reactance_option(SUBTRANSIENT_REACTANCE);
 }
 
 DEVICE_ID GENERATOR::get_device_id() const
@@ -565,6 +699,7 @@ GENERATOR& GENERATOR::operator=(const GENERATOR& gen)
     set_negative_sequence_reactance_in_pu(gen.get_negative_sequence_reactance_in_pu());
     set_zero_sequence_resistance_in_pu(gen.get_zero_sequence_resistance_in_pu());
     set_zero_sequence_reactance_in_pu(gen.get_zero_sequence_reactance_in_pu());
+    set_generator_reactance_option(gen.get_generator_reactance_option());
     return *this;
 }
 

@@ -2468,6 +2468,37 @@ class STEPS():
         global STEPS_LIB
         return self.__get_source_data(generator, par_type, par_name)
 
+    def get_generator_sequence_data(self, generator, par_type, par_name):
+        """
+        Get generator sequence data.
+        Args:
+            (1) generator: Generator device id in format of (bus, ickt)
+            (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+            (3) par_name: String of parameter name.
+        Rets:
+            (1) Value of parameter.
+        Tips:
+            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+            The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
+        """
+        global STEPS_LIB
+        par_type = par_type.upper()
+        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
+            return None
+        bus, ickt = self.__extract_single_bus_device_id(generator)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        if par_type in ['I', 'INT', 'INTEGER']:
+            return None
+        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
+            return STEPS_LIB.api_get_generator_float_data(bus, ickt, par_name, self.toolkit_index)
+        if par_type in ['B', 'BOOL', 'BOOLEAN']:
+            return None
+        if par_type in ['S', 'STRING']:
+            return None
+        return None
+
     def get_wt_generator_data(self, wt_generator, par_type, par_name):
         """
         Get wind turbine generator data.
@@ -2485,6 +2516,37 @@ class STEPS():
         global STEPS_LIB
         return self.__get_source_data(wt_generator, par_type, par_name)
 
+    def get_wt_generator_sequence_data(self, wt_generator, par_type, par_name):
+        """
+        Get wt_generator sequence data.
+        Args:
+            (1) wt_generator: Generator device id in format of (bus, ickt)
+            (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+            (3) par_name: String of parameter name.
+        Rets:
+            (1) Value of parameter.
+        Tips:
+            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+            The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
+        """
+        global STEPS_LIB
+        par_type = par_type.upper()
+        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
+            return None
+        bus, ickt = self.__extract_single_bus_device_id(wt_generator)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        if par_type in ['I', 'INT', 'INTEGER']:
+            return None
+        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
+            return STEPS_LIB.api_get_wt_generator_float_data(bus, ickt, par_name, self.toolkit_index)
+        if par_type in ['B', 'BOOL', 'BOOLEAN']:
+            return None
+        if par_type in ['S', 'STRING']:
+            return None
+        return None
+
     def get_pv_unit_data(self, pv_unit, par_type, par_name):
         """
         Get PV unit data.
@@ -2501,6 +2563,37 @@ class STEPS():
         """
         global STEPS_LIB
         return self.__get_source_data(pv_unit, par_type, par_name)
+
+    def get_pv_unit_sequence_data(self, pv_unit, par_type, par_name):
+        """
+        Get pv_unit sequence data.
+        Args:
+            (1) pv_unit: pv_unit device id in format of (bus, ickt)
+            (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+            (3) par_name: String of parameter name.
+        Rets:
+            (1) Value of parameter.
+        Tips:
+            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+            The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
+        """
+        global STEPS_LIB
+        par_type = par_type.upper()
+        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
+            return None
+        bus, ickt = self.__extract_single_bus_device_id(pv_unit)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        if par_type in ['I', 'INT', 'INTEGER']:
+            return None
+        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
+            return STEPS_LIB.api_get_pv_unit_float_data(bus, ickt, par_name, self.toolkit_index)
+        if par_type in ['B', 'BOOL', 'BOOLEAN']:
+            return None
+        if par_type in ['S', 'STRING']:
+            return None
+        return None
 
     def get_energy_storage_data(self, energy_storage, par_type, par_name):
         """
@@ -2920,6 +3013,38 @@ class STEPS():
         global STEPS_LIB
         return self.__set_source_data(generator, par_type, par_name, value)
 
+    def set_generator_sequence_data(self, generator, par_type, par_name, value):
+        """
+        Set generator sequence data
+        Args:
+            (1) generator: generator device id in format of (bus, ickt).
+            (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+            (3) par_name: String of parameter name.
+            (4) value: Value of parameter.
+        Rets: N/A
+        Tips:
+            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+            The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+            The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+        Example: N/A
+        """
+        global STEPS_LIB
+        par_type = par_type.upper()
+        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
+            return        
+        bus, ickt = self.__extract_single_bus_device_id(generator)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        if par_type in ['I', 'INT', 'INTEGER']:
+            return 
+        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
+            return STEPS_LIB.api_set_generator_float_data(bus, ickt, par_name, value, self.toolkit_index)
+        if par_type in ['B', 'BOOL', 'BOOLEAN']:
+            return 
+        if par_type in ['S', 'STRING']:
+            return 
+        return
+
     def set_wt_generator_data(self, wt_generator, par_type, par_name, value):
         """
         Set wind turbine generator data.
@@ -2938,6 +3063,38 @@ class STEPS():
         global STEPS_LIB
         return self.__set_source_data(wt_generator, par_type, par_name, value)
 
+    def set_wt_generator_sequence_data(self, wt_generator, par_type, par_name, value):
+        """
+        Set wt_generator sequence data
+        Args:
+            (1) wt_generator: wt_generator device id in format of (bus, ickt).
+            (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+            (3) par_name: String of parameter name.
+            (4) value: Value of parameter.
+        Rets: N/A
+        Tips:
+            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+            The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+            The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+        Example: N/A
+        """
+        global STEPS_LIB
+        par_type = par_type.upper()
+        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
+            return        
+        bus, ickt = self.__extract_single_bus_device_id(wt_generator)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        if par_type in ['I', 'INT', 'INTEGER']:
+            return 
+        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
+            return STEPS_LIB.api_set_wt_generator_float_data(bus, ickt, par_name, value, self.toolkit_index)
+        if par_type in ['B', 'BOOL', 'BOOLEAN']:
+            return 
+        if par_type in ['S', 'STRING']:
+            return 
+        return
+
     def set_pv_unit_data(self, pv_unit, par_type, par_name, value):
         """
         Set PV unit data.
@@ -2955,6 +3112,38 @@ class STEPS():
         """
         global STEPS_LIB
         return self.__set_source_data(pv_unit, par_type, par_name, value)
+
+    def set_pv_unit_sequence_data(self, pv_unit, par_type, par_name, value):
+        """
+        Set pv_unit sequence data
+        Args:
+            (1) pv_unit: pv_unit device id in format of (bus, ickt).
+            (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+            (3) par_name: String of parameter name.
+            (4) value: Value of parameter.
+        Rets: N/A
+        Tips:
+            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+            The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+            The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+        Example: N/A
+        """
+        global STEPS_LIB
+        par_type = par_type.upper()
+        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
+            return        
+        bus, ickt = self.__extract_single_bus_device_id(pv_unit)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        if par_type in ['I', 'INT', 'INTEGER']:
+            return 
+        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
+            return STEPS_LIB.api_set_pv_unit_float_data(bus, ickt, par_name, value, self.toolkit_index)
+        if par_type in ['B', 'BOOL', 'BOOLEAN']:
+            return 
+        if par_type in ['S', 'STRING']:
+            return 
+        return
 
     def set_energy_storage_data(self, energy_storage, par_type, par_name, value):
         """
@@ -3431,6 +3620,20 @@ class STEPS():
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
         STEPS_LIB.api_load_vsc_hvdc_powerflow_data_from_file(file, ftype, self.toolkit_index)
+    
+    def load_sequence_data(self, file, ftype):
+        """
+        Load sequence data from file.
+        Args:
+            (1) file: string, source sequence file name.
+            (2) ftype: string, sequence data format.
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        ftype = self.__get_c_char_p_of_string(ftype)
+        STEPS_LIB.api_load_sequence_data_from_file(file, ftype, self.toolkit_index)
 
     def check_powerflow_data(self):
         """
@@ -3480,7 +3683,20 @@ class STEPS():
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
-        STEPS_LIB.api_save_vsc_hvdc_powerflow_data_to_file(file, ftype, self.toolkit_index)    
+        STEPS_LIB.api_save_vsc_hvdc_powerflow_data_to_file(file, ftype, self.toolkit_index)   
+
+    def save_sequence_data(self, file, ftype):
+        """
+        Save sequence data to file
+        Args:
+            (1) file: string, target sequence file name.
+            (2) ftype: string, sequence data format.
+        Rets: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        ftype = self.__get_c_char_p_of_string(ftype)
+        STEPS_LIB.api_save_sequence_data_to_file(file, ftype, self.toolkit_index)     
 
     def __save_powerflow_data_in_keep_mode(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True, export_internal_bus_number=False):
         """
@@ -3615,6 +3831,58 @@ class STEPS():
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return STEPS_LIB.api_set_powerflow_solver_boolean_parameter(par_name, value, self.toolkit_index)
         return
+
+    def get_short_circuit_solver_parameter(self, par_type, par_name):
+        """
+        Get short circuit solver configuration parameter.
+        Args:
+            (1) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+            (2) par_name: String of parameter name.
+        Rets:
+            (1) Value of parameter.
+        Tips:
+            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+            The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
+        """
+        global STEPS_LIB
+        par_type = par_type.upper()
+        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
+            return None
+        par_name = self.__get_c_char_p_of_string(par_name)
+        if par_type in ['I', 'INT', 'INTEGER']:
+            return int(STEPS_LIB.api_get_short_circuit_solver_integer_parameter(par_name, self.toolkit_index))
+        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
+            return STEPS_LIB.api_get_short_circuit_solver_float_parameter(par_name, self.toolkit_index)
+        if par_type in ['B', 'BOOL', 'BOOLEAN']:
+            return None
+        return None
+
+    def set_short_circuit_solver_parameter(self, par_type, par_name, value):
+        """
+        Set short circuit solver configuration parameter.
+        Args:
+            (1) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+            (2) par_name: String of parameter name.
+            (3) value: Value of parameter.
+        Rets: N/A
+        Tips:
+            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+            The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be changed.
+        Example: N/A
+        """
+        global STEPS_LIB
+        par_type = par_type.upper()
+        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
+            return
+        par_name = self.__get_c_char_p_of_string(par_name)
+        if par_type in ['I', 'INT', 'INTEGER']:
+            return STEPS_LIB.api_set_short_circuit_solver_integer_parameter(par_name, value, self.toolkit_index)
+        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
+            return STEPS_LIB.api_set_short_circuit_solver_float_parameter(par_name, value, self.toolkit_index)
+        if par_type in ['B', 'BOOL', 'BOOLEAN']:
+            return 
+        return
     
     def show_powerflow_solver_configuration(self):
         """
@@ -3638,6 +3906,17 @@ class STEPS():
         global STEPS_LIB
         method = self.__get_c_char_p_of_string(method)
         STEPS_LIB.api_solve_powerflow(method, self.toolkit_index)
+        return
+
+    def solve_short_circuit(self):
+        """
+        Solve short circuit.
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_solve_short_circuit(self.toolkit_index)
         return
 
     def is_powerflow_converged(self):
@@ -3712,7 +3991,7 @@ class STEPS():
         file = self.__get_c_char_p_of_string(file)
         STEPS_LIB.api_save_powerflow_result(file, self.toolkit_index)
         return
-    
+
     def save_extended_powerflow_result(self, file):
         """
         Save extended powerflow result to file.
@@ -3726,6 +4005,73 @@ class STEPS():
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         STEPS_LIB.api_save_extended_powerflow_result(file, self.toolkit_index)
+        return
+
+    def get_short_circuit_result_data(self, par_type, par_name):
+        """
+        Get short circuit  result data.
+        Args:
+            (1) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+            (2) par_name: String of parameter name.
+        Rets:
+            (1) Value of parameter.
+        Tips:
+            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+            The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
+        """
+        global STEPS_LIB
+        par_type = par_type.upper()
+        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
+            return None
+        par_name = self.__get_c_char_p_of_string(par_name)
+        if par_type in ['I', 'INT', 'INTEGER']:
+            return None
+        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
+            return STEPS_LIB.api_get_short_circuit_result_float_data(par_name, self.toolkit_index)
+        if par_type in ['B', 'BOOL', 'BOOLEAN']:
+            return None
+        return None
+
+    def show_short_circuit_result(self):
+        """
+        Show short circuit result in log.
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_show_short_circuit_result(self.toolkit_index)
+        return
+        
+    def save_short_circuit_result(self, file):
+        """
+        Save short circuit result to file.
+        Args:
+            (1) file: String of target file name.
+        Rets: N/A
+        Tips:
+            The result exported by save_short_circuit_result() is briefer than that exported by save_extended_short_circuit_result().
+        Example: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        STEPS_LIB.api_save_short_circuit_result_to_file(file, self.toolkit_index)
+        return
+    
+    def save_extended_short_circuit_result(self, file):
+        """
+        Save extended short circuit result to file.
+        Args:
+            (1) file: String of target file name.
+        Rets: N/A
+        Tips:
+            The result exported by save_extended_short_circuit_result() is more detailed than that exported by save_short_circuit_result().
+        Example: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        STEPS_LIB.api_save_extended_short_circuit_result_to_file(file, self.toolkit_index)
         return
         
     def save_jacobian_matrix(self, file):
@@ -3743,7 +4089,7 @@ class STEPS():
 
     def build_network_Y_matrix(self):
         """
-        Build newwork complex Y matrix for powerflow solution.
+        Build network complex Y matrix for powerflow solution.
         Args: N/A
         Rets: N/A
         Example: N/A
@@ -3752,9 +4098,20 @@ class STEPS():
         STEPS_LIB.api_build_network_Y_matrix(self.toolkit_index)
         return
 
+    def build_sequence_network_Y_matrix(self):
+        """
+        Build sequence network complex Y matrix for powerflow solution.
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_build_sequence_network_Y_matrix(self.toolkit_index)
+        return
+
     def build_decoupled_network_B_matrix(self):
         """
-        Build newwork real B' and B" matrix for decoupled powerflow solution.
+        Build network real B' and B" matrix for decoupled powerflow solution.
         Args: N/A
         Rets: N/A
         Example: N/A
@@ -3765,7 +4122,7 @@ class STEPS():
 
     def build_dc_network_B_matrix(self):
         """
-        Build newwork real B matrix for DC powerflow solution.
+        Build network real B matrix for DC powerflow solution.
         Args: N/A
         Rets: N/A
         Tips:
@@ -3778,7 +4135,7 @@ class STEPS():
 
     def build_dynamic_network_Y_matrix(self):
         """
-        Build newwork complex Y matrix for dynamic simulation.
+        Build network complex Y matrix for dynamic simulation.
         Args: N/A
         Rets: N/A
         Tips:
@@ -3814,6 +4171,48 @@ class STEPS():
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         STEPS_LIB.api_save_network_Y_matrix(file, export_full, self.toolkit_index)
+        return
+
+    def save_positive_sequence_network_Y_matrix(self, file):
+        """
+        Save positive sequence network complex Y matrix to file.
+        Args:
+            (1) file: String of target file name of sparse Y matrix.  
+        Rets: N/A
+        Example:
+            simulator.save_positive_sequence_network_Y_matrix("y.csv") 
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        STEPS_LIB.api_save_positive_sequence_network_Y_matrix(file, self.toolkit_index)
+        return
+
+    def save_negative_sequence_network_Y_matrix(self, file):
+        """
+        Save negative sequence network complex Y matrix to file.
+        Args:
+            (1) file: String of target file name of sparse Y matrix.
+        Rets: N/A
+        Example:
+            simulator.save_negative_sequence_network_Y_matrix("y.csv") 
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        STEPS_LIB.api_save_negative_sequence_network_Y_matrix(file, self.toolkit_index)
+        return
+    
+    def save_zero_sequence_network_Y_matrix(self, file):
+        """
+        Save zero sequence network complex Y matrix to file.
+        Args:
+            (1) file: String of target file name of sparse Y matrix.
+        Rets: N/A
+        Example:
+            simulator.save_zero_sequence_network_Y_matrix("y.csv") 
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        STEPS_LIB.api_save_zero_sequence_network_Y_matrix(file, self.toolkit_index)
         return
         
     def save_decoupled_network_B_matrix(self, file):
@@ -5353,6 +5752,28 @@ class STEPS():
         STEPS_LIB.api_set_bus_fault(bus, fault_type, fault_shunt[0], fault_shunt[1], self.toolkit_index)
         return
 
+    def set_short_circuit_bus_fault(self, bus, fault_type, fault_shunt):
+        """
+        Set bus fault.
+        Args:
+            (1) bus: Bus number.
+            (2) fault_type: String of fault type. THREE PHASES FAULT, SINGLE PHASE GROUNDED FAULT, DOUBLE PHASES FAULT, DOUBLE PHASES GROUNDED FAULT.
+            (3) fault_shunt: tuple of complex per unit fault shunt in the form of (g, b). the shunt is g+jb
+        Rets: N/A
+        Tips:
+            The fault shunt is represented as conductance and susceptance based on system base power and bus base voltage.
+            The susceptance is usually set as NEGATIVE to mimic the voltage drop due to fault.
+            The absolute value of the fault shunt should not be too great. Otherwise, network solution may fail to converge. Typically, |b|<1e6.
+        Example:
+            bus = 1
+            shunt = (0.0, -2e4)
+            simulator.set_bus_fault(bus, "three phase fault", shunt)
+        """
+        global STEPS_LIB
+        fault_type = self.__get_c_char_p_of_string(fault_type)
+        STEPS_LIB.api_short_circuit_set_bus_fault(bus, fault_type, fault_shunt[0], fault_shunt[1], self.toolkit_index)
+        return
+
     def clear_bus_fault(self, bus, fault_type):
         """
         Clear bus fault without tripping bus.
@@ -5412,6 +5833,35 @@ class STEPS():
         ickt = self.__get_c_char_p_of_string(ickt)
         fault_type = self.__get_c_char_p_of_string(fault_type)
         STEPS_LIB.api_set_line_fault(ibus, jbus, ickt, fault_type, fault_location, fault_shunt[0], fault_shunt[1], self.toolkit_index)
+        return
+
+    def set_short_circuit_line_fault(self, line, fault_type, fault_location, fault_shunt):
+        """
+        Set transmission line fault.
+        Args:
+            (1) line: Transmission line device id in format of (ibus, jbus, ickt).
+            (2) fault_type: String of fault type. THREE PHASES FAULT, SINGLE PHASE GROUNDED FAULT, DOUBLE PHASES FAULT, DOUBLE PHASES GROUNDED FAULT.
+            (3) fault_location: Relative fault location to ibus.
+            (4) fault_shunt: tuple of complex per unit fault shunt in the form of (g, b). the shunt is g+jb
+        Rets: N/A
+        Tips:
+            The fault location should be in the range of [0, 1.0], including 0 and 1.0. It represent the relative location of the fault on the line to the ibus.
+            For example, 0.5 means the fault is set at the middle of the line. 0 means the fault is set at exactly ibus. 1.0 means the fault is set at exactly jbus.
+            The fault shunt is represented as conductance and susceptance based on system base power and bus base voltage.
+            The susceptance is usually set as NEGATIVE to mimic the voltage drop due to fault.
+            The absolute value of the fault shunt should not be too great. Otherwise, network solution may fail to converge. Typically, |b|<1e6.
+            Multiple faults are supported on single line at different fault locations.
+        Example:
+            line = (1, 2, "1#")
+            location = 0.2
+            shunt = (0.0, -2e4)
+            simulator.set_line_fault(line, "three phase fault", location, shunt)
+        """
+        global STEPS_LIB
+        ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        fault_type = self.__get_c_char_p_of_string(fault_type)
+        STEPS_LIB.api_short_circuit_set_line_fault(ibus, jbus, ickt, fault_type, fault_location, fault_shunt[0], fault_shunt[1], self.toolkit_index)
         return
 
     def clear_line_fault(self, line, fault_type, fault_location):

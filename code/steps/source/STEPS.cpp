@@ -11,6 +11,7 @@ STEPS::STEPS(const string& name, const string& log_file) : power_system_db(*this
                                                            dynamic_model_db(*this),
                                                            powerflow_solver(*this),
                                                            dynamic_simulator(*this),
+                                                           short_circuit_solver(*this),
                                                            network_matrix(*this)
 {
     disable_use_steps_fast_math_logic();
@@ -306,6 +307,7 @@ void STEPS::clear()
 
     powerflow_solver.clear();
     dynamic_simulator.clear();
+    short_circuit_solver.clear();
 
     network_matrix.clear();
 }
@@ -398,6 +400,11 @@ DYNAMIC_MODEL_DATABASE& STEPS::get_dynamic_model_database()
 POWERFLOW_SOLVER& STEPS::get_powerflow_solver()
 {
     return powerflow_solver;
+}
+
+SHORT_CIRCUIT_SOLVER& STEPS::get_short_circuit_solver()
+{
+    return short_circuit_solver;
 }
 
 DYNAMICS_SIMULATOR& STEPS::get_dynamic_simulator()

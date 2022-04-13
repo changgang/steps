@@ -200,6 +200,32 @@ double api_get_transformer_float_data(unsigned int ibus, unsigned int jbus, unsi
                 return rad2deg(steps_fast_complex_arg(transptr->get_star_bus_complex_voltage_in_pu()));
             if(PARAMETER_NAME=="FRAC1" or PARAMETER_NAME=="FRAC2" or PARAMETER_NAME=="FRAC3" or PARAMETER_NAME=="FRAC4")
                 return get_owner_fraction_of_nonbus_device(transptr, parameter_name);
+
+             if(PARAMETER_NAME == "R0_PS_PU" or PARAMETER_NAME == "LEAKAGE R0 BETWEEN PRI AND SEC BASED ON WINDING NOMINALS IN PU")
+                return transptr->get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE).real();
+            if(PARAMETER_NAME == "X0_PS_PU" or PARAMETER_NAME == "LEAKAGE X0 BETWEEN PRI AND SEC BASED ON WINDING NOMINALS IN PU")
+                return transptr->get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE).imag();
+            if(PARAMETER_NAME == "R0_ST_PU" or PARAMETER_NAME == "LEAKAGE R0 BETWEEN SEC AND TER BASED ON WINDING NOMINALS IN PU")
+                return transptr->get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE).real();
+            if(PARAMETER_NAME == "X0_ST_PU" or PARAMETER_NAME == "LEAKAGE X0 BETWEEN SEC AND TER BASED ON WINDING NOMINALS IN PU")
+                return transptr->get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE).imag();
+            if(PARAMETER_NAME == "R0_TP_PU" or PARAMETER_NAME == "LEAKAGE R0 BETWEEN TER AND PRI BASED ON WINDING NOMINALS IN PU")
+                return transptr->get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(TERTIARY_SIDE, PRIMARY_SIDE).real();
+            if(PARAMETER_NAME == "X0_TP_PU" or PARAMETER_NAME == "LEAKAGE X0 BETWEEN TER AND PRI BASED ON WINDING NOMINALS IN PU")
+                return transptr->get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(TERTIARY_SIDE, PRIMARY_SIDE).imag();
+
+            if(PARAMETER_NAME == "RG1_PU" or PARAMETER_NAME == "ZERO SEQUENCE GROUNDING R ON PRI WINDING IN PU")
+                return transptr->get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(PRIMARY_SIDE).real();
+            if(PARAMETER_NAME == "XG1_PU" or PARAMETER_NAME == "ZERO SEQUENCE GROUNDING X ON PRI WINDING IN PU")
+                return transptr->get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(PRIMARY_SIDE).imag();
+            if(PARAMETER_NAME == "RG2_PU" or PARAMETER_NAME == "ZERO SEQUENCE GROUNDING R ON SEC WINDING IN PU")
+                return transptr->get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(SECONDARY_SIDE).real();
+            if(PARAMETER_NAME == "XG2_PU" or PARAMETER_NAME == "ZERO SEQUENCE GROUNDING X ON SEC WINDING IN PU")
+                return transptr->get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(SECONDARY_SIDE).imag();
+            if(PARAMETER_NAME == "RG3_PU" or PARAMETER_NAME == "ZERO SEQUENCE GROUNDING R ON TER WINDING IN PU")
+                return transptr->get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(TERTIARY_SIDE).real();
+            if(PARAMETER_NAME == "XG3_PU" or PARAMETER_NAME == "ZERO SEQUENCE GROUNDING X ON TER WINDING IN PU")
+                return transptr->get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(TERTIARY_SIDE).imag();
         }
         else
         {
@@ -272,6 +298,15 @@ double api_get_transformer_float_data(unsigned int ibus, unsigned int jbus, unsi
 
             if(PARAMETER_NAME=="I_KA" or PARAMETER_NAME=="CURRENT IN KA")
                 return abs(transptr->get_winding_complex_current_in_kA(winding));
+
+            if(PARAMETER_NAME=="I2_KA" or PARAMETER_NAME=="NEGATIVE CURRENT IN KA")
+                return abs(transptr->get_winding_negative_sequence_complex_current_in_kA(winding));
+            if(PARAMETER_NAME=="I2_PU" or PARAMETER_NAME=="NEGATIVE CURRENT IN PU")
+                return abs(transptr->get_winding_negative_sequence_complex_current_in_pu(winding));
+            if(PARAMETER_NAME=="I0_KA" or PARAMETER_NAME=="ZERO CURRENT IN KA")
+                return abs(transptr->get_winding_zero_sequence_complex_current_in_kA(winding));
+            if(PARAMETER_NAME=="I0_PU" or PARAMETER_NAME=="ZERO CURRENT IN PU")
+                return abs(transptr->get_winding_zero_sequence_complex_current_in_pu(winding));
         }
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return 0.0;
@@ -371,6 +406,69 @@ void api_set_transformer_float_data(unsigned int ibus, unsigned int jbus, unsign
             }
             if(PARAMETER_NAME=="FRAC1" or PARAMETER_NAME=="FRAC2" or PARAMETER_NAME=="FRAC3" or PARAMETER_NAME=="FRAC4")
                 return set_owner_fraction_of_nonbus_device(transptr, PARAMETER_NAME, value);
+
+            if(PARAMETER_NAME == "R0_PS_PU" or PARAMETER_NAME == "LEAKAGE R0 BETWEEN PRI AND SEC BASED ON WINDING NOMINALS IN PU")
+            {
+                double x = transptr->get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE).imag();
+                return transptr->set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, complex<double>(value,x));
+            }
+
+            if(PARAMETER_NAME == "X0_PS_PU" or PARAMETER_NAME == "LEAKAGE X0 BETWEEN PRI AND SEC BASED ON WINDING NOMINALS IN PU")
+            {
+                double r = transptr->get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE).real();
+                return transptr->set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, complex<double>(r, value));
+            }
+            if(PARAMETER_NAME == "R0_ST_PU" or PARAMETER_NAME == "LEAKAGE R0 BETWEEN SEC AND TER BASED ON WINDING NOMINALS IN PU")
+            {
+                double x = transptr->get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE).imag();
+                return transptr->set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE, complex<double>(value,x));
+            }
+            if(PARAMETER_NAME == "X0_ST_PU" or PARAMETER_NAME == "LEAKAGE X0 BETWEEN SEC AND TER BASED ON WINDING NOMINALS IN PU")
+            {
+                double r = transptr->get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE).real();
+                return transptr->set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE, complex<double>(r, value));
+            }
+            if(PARAMETER_NAME == "R0_TP_PU" or PARAMETER_NAME == "LEAKAGE R0 BETWEEN TER AND PRI BASED ON WINDING NOMINALS IN PU")
+            {
+                double x = transptr->get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(TERTIARY_SIDE, PRIMARY_SIDE).imag();
+                return transptr->set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(TERTIARY_SIDE, PRIMARY_SIDE, complex<double>(value,x));
+            }
+            if(PARAMETER_NAME == "X0_TP_PU" or PARAMETER_NAME == "LEAKAGE X0 BETWEEN TER AND PRI BASED ON WINDING NOMINALS IN PU")
+            {
+                double r = transptr->get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(TERTIARY_SIDE, PRIMARY_SIDE).real();
+                return transptr->set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(TERTIARY_SIDE, PRIMARY_SIDE, complex<double>(r, value));
+            }
+
+            if(PARAMETER_NAME == "RG1_PU" or PARAMETER_NAME == "ZERO SEQUENCE GROUNDING R ON PRI WINDING IN PU")
+            {
+                double x = transptr->get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(PRIMARY_SIDE).imag();
+                return transptr->set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(PRIMARY_SIDE,complex<double>(value, x));
+            }
+            if(PARAMETER_NAME == "XG1_PU" or PARAMETER_NAME == "ZERO SEQUENCE GROUNDING X ON PRI WINDING IN PU")
+            {
+                double r = transptr->get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(PRIMARY_SIDE).real();
+                return transptr->set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(PRIMARY_SIDE, complex<double>(r,value));
+            }
+            if(PARAMETER_NAME == "RG2_PU" or PARAMETER_NAME == "ZERO SEQUENCE GROUNDING R ON SEC WINDING IN PU")
+            {
+                double x = transptr->get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(SECONDARY_SIDE).imag();
+                return transptr->set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(SECONDARY_SIDE,complex<double>(value, x));
+            }
+            if(PARAMETER_NAME == "XG2_PU" or PARAMETER_NAME == "ZERO SEQUENCE GROUNDING X ON SEC WINDING IN PU")
+            {
+                double r = transptr->get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(SECONDARY_SIDE).real();
+                return transptr->set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(SECONDARY_SIDE, complex<double>(r,value));
+            }
+            if(PARAMETER_NAME == "RG3_PU" or PARAMETER_NAME == "ZERO SEQUENCE GROUNDING R ON TER WINDING IN PU")
+            {
+                double x = transptr->get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(TERTIARY_SIDE).imag();
+                return transptr->set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(TERTIARY_SIDE,complex<double>(value, x));
+            }
+            if(PARAMETER_NAME == "XG3_PU" or PARAMETER_NAME == "ZERO SEQUENCE GROUNDING X ON TER WINDING IN PU")
+            {
+                double r = transptr->get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(TERTIARY_SIDE).real();
+                return transptr->set_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(TERTIARY_SIDE, complex<double>(r,value));
+            }
         }
         else
         {

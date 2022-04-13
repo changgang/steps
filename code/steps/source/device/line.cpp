@@ -699,6 +699,83 @@ complex<double> LINE::get_line_complex_voltage_at_receiving_side_in_kV() const
     return psdb.get_bus_positive_sequence_complex_voltage_in_kV(get_receiving_side_bus());
 }
 
+complex<double> LINE::get_line_positive_sequence_complex_voltage_at_sending_side_in_pu() const
+{
+    return get_line_complex_voltage_at_sending_side_in_pu();
+}
+
+complex<double> LINE::get_line_positive_sequence_complex_voltage_at_receiving_side_in_pu() const
+{
+    return get_line_complex_voltage_at_receiving_side_in_pu();
+}
+
+complex<double> LINE::get_line_positive_sequence_complex_voltage_at_sending_side_in_kV() const
+{
+    return get_line_complex_voltage_at_sending_side_in_kV();
+}
+
+complex<double> LINE::get_line_positive_sequence_complex_voltage_at_receiving_side_in_kV() const
+{
+    return get_line_complex_voltage_at_receiving_side_in_kV();
+}
+
+complex<double> LINE::get_line_negative_sequence_complex_voltage_at_sending_side_in_pu() const
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    return psdb.get_bus_negative_sequence_complex_voltage_in_pu(get_sending_side_bus());
+}
+
+complex<double> LINE::get_line_negative_sequence_complex_voltage_at_receiving_side_in_pu() const
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    return psdb.get_bus_negative_sequence_complex_voltage_in_pu(get_receiving_side_bus());
+}
+
+complex<double> LINE::get_line_negative_sequence_complex_voltage_at_sending_side_in_kV() const
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    return psdb.get_bus_negative_sequence_complex_voltage_in_kV(get_sending_side_bus());
+}
+
+complex<double> LINE::get_line_negative_sequence_complex_voltage_at_receiving_side_in_kV() const
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    return psdb.get_bus_negative_sequence_complex_voltage_in_kV(get_receiving_side_bus());
+}
+
+complex<double> LINE::get_line_zero_sequence_complex_voltage_at_sending_side_in_pu() const
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    return psdb.get_bus_zero_sequence_complex_voltage_in_pu(get_sending_side_bus());
+}
+
+complex<double> LINE::get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu() const
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    return psdb.get_bus_zero_sequence_complex_voltage_in_pu(get_receiving_side_bus());
+}
+
+complex<double> LINE::get_line_zero_sequence_complex_voltage_at_sending_side_in_kV() const
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    return psdb.get_bus_zero_sequence_complex_voltage_in_kV(get_sending_side_bus());
+}
+
+complex<double> LINE::get_line_zero_sequence_complex_voltage_at_receiving_side_in_kV() const
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    return psdb.get_bus_zero_sequence_complex_voltage_in_kV(get_receiving_side_bus());
+}
+
+
 complex<double> LINE::get_line_complex_current_at_sending_side_in_pu() const
 {
     if(get_sending_side_breaker_status()==true)
@@ -773,6 +850,166 @@ complex<double> LINE::get_line_complex_current_at_receiving_side_in_kA() const
     double Ibase_kA = sbase/(SQRT3*get_line_base_voltage_in_kV());
 
     return Ibase_kA*get_line_complex_current_at_receiving_side_in_pu();
+}
+
+complex<double> LINE::get_line_positive_sequence_complex_current_at_sending_side_in_pu() const
+{
+    return get_line_complex_current_at_sending_side_in_pu();
+}
+
+complex<double> LINE::get_line_positive_sequence_complex_current_at_receiving_side_in_pu() const
+{
+    return get_line_complex_current_at_receiving_side_in_pu();
+}
+
+complex<double> LINE::get_line_positive_sequence_complex_current_at_sending_side_in_kA() const
+{
+    return get_line_complex_current_at_sending_side_in_kA();
+}
+
+complex<double> LINE::get_line_positive_sequence_complex_current_at_receiving_side_in_kA() const
+{
+    return get_line_complex_current_at_receiving_side_in_kA();
+}
+
+complex<double> LINE::get_line_negative_sequence_complex_current_at_sending_side_in_pu() const
+{
+    if(get_sending_side_breaker_status()==true)
+    {
+        complex<double> Z = get_line_positive_sequence_z_in_pu();
+        complex<double> Y = get_line_positive_sequence_y_in_pu();
+        complex<double> Ys = 0.5*Y + get_shunt_positive_sequence_y_at_sending_side_in_pu();
+        complex<double> Yr = 0.5*Y + get_shunt_positive_sequence_y_at_receiving_side_in_pu();
+
+        complex<double> Vs = get_line_negative_sequence_complex_voltage_at_sending_side_in_pu();
+        if(get_receiving_side_breaker_status()==true)
+        {
+            complex<double> Vr = get_line_negative_sequence_complex_voltage_at_receiving_side_in_pu();
+            return (Vs-Vr)/Z+Vs*Ys;
+        }
+        else
+        {
+            complex<double> Yeq = Ys+1.0/(Z+1.0/Yr);
+            return Vs*Yeq;
+        }
+    }
+    else
+        return 0.0;
+}
+
+complex<double> LINE::get_line_negative_sequence_complex_current_at_receiving_side_in_pu() const
+{
+    if(get_receiving_side_breaker_status()==true)
+    {
+        complex<double> Z = get_line_positive_sequence_z_in_pu();
+        complex<double> Y = get_line_positive_sequence_y_in_pu();
+        complex<double> Ys = 0.5*Y + get_shunt_positive_sequence_y_at_sending_side_in_pu();
+        complex<double> Yr = 0.5*Y + get_shunt_positive_sequence_y_at_receiving_side_in_pu();
+
+        complex<double> Vr = get_line_negative_sequence_complex_voltage_at_receiving_side_in_pu();
+        if(get_sending_side_breaker_status()==true)
+        {
+            complex<double> Vs = get_line_negative_sequence_complex_voltage_at_sending_side_in_pu();
+            return (Vr-Vs)/Z+Vr*Yr;
+        }
+        else
+        {
+            complex<double> Yeq = Yr+1.0/(Z+1.0/Ys);
+            return Vr*Yeq;
+        }
+    }
+    else
+        return 0.0;
+}
+
+complex<double> LINE::get_line_negative_sequence_complex_current_at_sending_side_in_kA() const
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    double sbase = psdb.get_system_base_power_in_MVA();
+    double Ibase_kA = sbase/(SQRT3*get_line_base_voltage_in_kV());
+    return Ibase_kA*get_line_negative_sequence_complex_current_at_sending_side_in_pu();
+}
+
+complex<double> LINE::get_line_negative_sequence_complex_current_at_receiving_side_in_kA() const
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    double sbase = psdb.get_system_base_power_in_MVA();
+    double Ibase_kA = sbase/(SQRT3*get_line_base_voltage_in_kV());
+    return Ibase_kA*get_line_negative_sequence_complex_current_at_receiving_side_in_pu();
+}
+
+complex<double> LINE::get_line_zero_sequence_complex_current_at_sending_side_in_pu() const
+{
+    if(get_sending_side_breaker_status()==true)
+    {
+        complex<double> Z = get_line_zero_sequence_z_in_pu();
+        complex<double> Y = get_line_zero_sequence_y_in_pu();
+        complex<double> Ys = 0.5*Y + get_shunt_zero_sequence_y_at_sending_side_in_pu();
+        complex<double> Yr = 0.5*Y + get_shunt_zero_sequence_y_at_receiving_side_in_pu();
+
+        complex<double> Vs = get_line_zero_sequence_complex_voltage_at_sending_side_in_pu();
+        if(get_receiving_side_breaker_status()==true)
+        {
+            complex<double> Vr = get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu();
+            return (Vs-Vr)/Z+Vs*Ys;
+        }
+        else
+        {
+            complex<double> Yeq = Ys+1.0/(Z+1.0/Yr);
+            return Vs*Yeq;
+        }
+    }
+    else
+        return 0.0;
+}
+
+complex<double> LINE::get_line_zero_sequence_complex_current_at_receiving_side_in_pu() const
+{
+    if(get_receiving_side_breaker_status()==true)
+    {
+        complex<double> Z = get_line_zero_sequence_z_in_pu();
+        complex<double> Y = get_line_zero_sequence_y_in_pu();
+        complex<double> Ys = 0.5*Y + get_shunt_zero_sequence_y_at_sending_side_in_pu();
+        complex<double> Yr = 0.5*Y + get_shunt_zero_sequence_y_at_receiving_side_in_pu();
+
+        complex<double> Vr = get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu();
+        if(get_sending_side_breaker_status()==true)
+        {
+            complex<double> Vs = get_line_zero_sequence_complex_voltage_at_sending_side_in_pu();
+            return (Vr-Vs)/Z+Vr*Yr;
+        }
+        else
+        {
+            complex<double> Yeq = Yr+1.0/(Z+1.0/Ys);
+            return Vr*Yeq;
+        }
+    }
+    else
+        return 0.0;
+}
+
+complex<double> LINE::get_line_zero_sequence_complex_current_at_sending_side_in_kA() const
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    double sbase = psdb.get_system_base_power_in_MVA();
+    double Ibase_kA = sbase/(SQRT3*get_line_base_voltage_in_kV());
+    return Ibase_kA*get_line_zero_sequence_complex_current_at_sending_side_in_pu();
+}
+
+complex<double> LINE::get_line_zero_sequence_complex_current_at_receiving_side_in_kA() const
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    double sbase = psdb.get_system_base_power_in_MVA();
+    double Ibase_kA = sbase/(SQRT3*get_line_base_voltage_in_kV());
+    return Ibase_kA*get_line_zero_sequence_complex_current_at_receiving_side_in_pu();
 }
 
 complex<double> LINE::get_line_complex_power_at_sending_side_in_pu() const

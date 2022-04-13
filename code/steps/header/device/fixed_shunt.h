@@ -52,6 +52,13 @@ class FIXED_SHUNT : public NONBUS_DEVICE
         //virtual string get_compound_device_name() const;
 
         complex<double> get_actual_impedance_shunt_in_MVA() const;
+
+        complex<double> get_positive_sequence_complex_current_in_pu();
+        complex<double> get_negative_sequence_complex_current_in_pu();
+        complex<double> get_zero_sequence_complex_current_in_pu();
+        complex<double> get_positive_sequence_complex_current_in_kA();
+        complex<double> get_negative_sequence_complex_current_in_kA();
+        complex<double> get_zero_sequence_complex_current_in_kA();
     private:
         unsigned int bus;
         BUS* busptr;

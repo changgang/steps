@@ -18,6 +18,9 @@ class NETWORK_MATRIX
 
         void clear();
 
+        void set_generator_reactance_option(GENERATOR_REACTANCE_OPTION option);
+        GENERATOR_REACTANCE_OPTION get_generator_reactance_option();
+
         void build_network_Y_matrix();
         void build_decoupled_network_B_matrix();
         void build_dc_network_B_matrix();
@@ -47,6 +50,11 @@ class NETWORK_MATRIX
         STEPS_COMPLEX_SPARSE_MATRIX& get_negative_sequence_network_Z_matrix();
         STEPS_COMPLEX_SPARSE_MATRIX& get_zero_sequence_network_Z_matrix();
 
+        vector<complex<double> > get_positive_sequence_complex_impedance_of_column_with_physical_bus(unsigned int bus);
+        vector<complex<double> > get_negative_sequence_complex_impedance_of_column_with_physical_bus(unsigned int bus);
+        vector<complex<double> > get_zero_sequence_complex_impedance_of_column_with_physical_bus(unsigned int bus);
+
+
         complex<double> get_positive_sequence_self_admittance_of_physical_bus(unsigned int bus);
         complex<double> get_positive_sequence_mutual_admittance_between_physical_bus(unsigned int ibus, unsigned int jbus);
         complex<double> get_positive_sequence_self_impedance_of_physical_bus(unsigned int bus);
@@ -74,6 +82,9 @@ class NETWORK_MATRIX
         void report_decoupled_network_matrix() const;
         void report_dc_network_matrix() const;
         void report_dynamic_network_matrix();
+        void report_positive_sequence_Y_matrix();
+        void report_negative_sequence_Y_matrix();
+        void report_zero_sequence_Y_matrix();
         void report_physical_internal_bus_number_pair() const;
 
         void save_network_Y_matrix_to_file(const string& filename, bool export_full_matrix=true);
@@ -81,6 +92,9 @@ class NETWORK_MATRIX
         void save_dc_network_B_matrix_to_file(const string& filename) const;
         void save_dynamic_network_Y_matrix_to_file(const string& filename);
         void save_network_Z_matrix_to_file(const string& filename) const;
+        void save_positive_sequence_Y_matrix_to_file(const string& filename);
+        void save_negative_sequence_Y_matrix_to_file(const string& filename);
+        void save_zero_sequence_Y_matrix_to_file(const string& filename);
 
         unsigned int get_memory_usage_in_bytes();
     private:
@@ -129,12 +143,59 @@ class NETWORK_MATRIX
         void add_vsc_hvdcs_to_dynamic_network();
         void add_vsc_hvdc_to_dynamic_network(const VSC_HVDC& vsc_hvdc);
 
-        void add_lines_to_sequence_network();
-        void add_faulted_line_to_sequence_network(const LINE& line);
-        void add_generators_to_sequence_network();
-        void add_generator_to_sequence_network(const GENERATOR& gen);
-        void add_wt_generators_to_sequence_network();
-        void add_wt_generator_to_sequence_network(const WT_GENERATOR& gen);
+//        void add_lines_to_sequence_network();
+//        void add_faulted_line_to_sequence_network(const LINE& line);
+//        void add_generators_to_sequence_network();
+//        void add_generator_to_sequence_network(const GENERATOR& gen);
+//        void add_wt_generators_to_sequence_network();
+//        void add_wt_generator_to_sequence_network(const WT_GENERATOR& gen);
+
+        void add_lines_to_positive_sequence_network();
+        void add_faulted_line_to_positive_sequence_network(const LINE& line);
+        void add_transformers_to_positive_sequence_network();
+        void add_loads_to_positive_sequence_network();
+        void add_load_to_positive_sequence_network(const LOAD& load);
+        void add_sources_to_positive_sequence_network();
+        void add_generators_to_positive_sequence_network();
+        void add_generator_to_positive_sequence_network(const GENERATOR& gen);
+        void add_wt_generators_to_positive_sequence_network();
+        void add_wt_generator_to_positive_sequence_network(const WT_GENERATOR& wt_gen);
+        void add_pv_units_to_positive_sequence_network();
+        void add_pv_unit_to_positive_sequence_network(const PV_UNIT& pv_unit);
+        void add_fixed_shunts_to_positive_sequence_network();
+
+        void add_lines_to_negative_sequence_network();
+        void add_faulted_line_to_negative_sequence_network(const LINE& line);
+        void add_transformers_to_negative_sequence_network();
+        void add_loads_to_negative_sequence_network();
+        void add_load_to_negative_sequence_network(const LOAD& load);
+        void add_sources_to_negative_sequence_network();
+        void add_generators_to_negative_sequence_network();
+        void add_generator_to_negative_sequence_network(const GENERATOR& gen);
+        void add_wt_generators_to_negative_sequence_network();
+        void add_wt_generator_to_negative_sequence_network(const WT_GENERATOR& wt_gen);
+        void add_pv_units_to_negative_sequence_network();
+        void add_pv_unit_to_negative_sequence_network(const PV_UNIT& pv_unit);
+        void add_fixed_shunts_to_negative_sequence_network();
+
+        void add_lines_to_zero_sequence_network();
+        void add_line_to_zero_sequence_network(const LINE& line);
+        void add_faulted_line_to_zero_sequence_network(const LINE& line);
+        void add_transformers_to_zero_sequence_network();
+        void add_transformer_to_zero_sequence_network(const TRANSFORMER& trans);
+        void add_two_winding_transformer_to_zero_sequence_network(const TRANSFORMER& trans);
+        void add_three_winding_transformer_to_zero_sequence_network(const TRANSFORMER& trans);
+        void add_loads_to_zero_sequence_network();
+        void add_load_to_zero_sequence_network(const LOAD& load);
+        void add_sources_to_zero_sequence_network();
+        void add_generators_to_zero_sequence_network();
+        void add_generator_to_zero_sequence_network(const GENERATOR& gen);
+        void add_wt_generators_to_zero_sequence_network();
+        void add_wt_generator_to_zero_sequence_network(const WT_GENERATOR& wt_gen);
+        void add_pv_units_to_zero_sequence_network();
+        void add_pv_unit_to_zero_sequence_network(const PV_UNIT& pv_unit);
+        void add_fixed_shunts_to_zero_sequence_network();
+        void add_fixed_shunt_to_zero_sequence_network(const FIXED_SHUNT& shunt);
 
         void set_this_Y_and_Z_matrix_as(STEPS_COMPLEX_SPARSE_MATRIX& matrix);
         void build_this_jacobian_for_getting_impedance_from_this_Y_matrix();
@@ -163,5 +224,7 @@ class NETWORK_MATRIX
         STEPS_COMPLEX_SPARSE_MATRIX* this_Z_matrix_pointer;
         STEPS_SPARSE_MATRIX this_jacobian;
         INPHNO inphno;
+
+        GENERATOR_REACTANCE_OPTION gen_X_option;
 };
 #endif // NETWORK_MATRIX_H

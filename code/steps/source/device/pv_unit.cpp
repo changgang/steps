@@ -30,6 +30,15 @@ void PV_UNIT::clear()
     pv_panel_model = NULL;
     pv_electrical_model = NULL;
     pv_irradiance_model = NULL;
+
+    set_positive_sequence_resistance_in_pu(0.0);
+    set_positive_sequence_reactance_in_pu(0.0);
+    set_negative_sequence_resistance_in_pu(0.0);
+    set_negative_sequence_reactance_in_pu(0.0);
+    set_zero_sequence_resistance_in_pu(0.0);
+    set_zero_sequence_reactance_in_pu(0.0);
+    set_grounding_resistance_in_pu(0.0);
+    set_grounding_reactance_in_pu(0.0);
 }
 
 DEVICE_ID PV_UNIT::get_device_id() const
@@ -277,6 +286,16 @@ PV_UNIT& PV_UNIT::operator=(const PV_UNIT& pvu)
     set_model(pvu.get_pv_panel_model());
     set_model(pvu.get_pv_electrical_model());
     set_model(pvu.get_pv_irradiance_model());
+
+    set_positive_sequence_resistance_in_pu(pvu.get_positive_sequence_resistance_in_pu());
+    set_positive_sequence_reactance_in_pu(pvu.get_positive_sequence_reactance_in_pu());
+    set_negative_sequence_resistance_in_pu(pvu.get_negative_sequence_resistance_in_pu());
+    set_negative_sequence_reactance_in_pu(pvu.get_negative_sequence_reactance_in_pu());
+    set_zero_sequence_resistance_in_pu(pvu.get_zero_sequence_resistance_in_pu());
+    set_zero_sequence_reactance_in_pu(pvu.get_zero_sequence_reactance_in_pu());
+    set_grounding_resistance_in_pu(pvu.get_grounding_resistance_in_pu());
+    set_grounding_reactance_in_pu(pvu.get_grounding_reactance_in_pu());
+
     return *this;
 }
 
@@ -289,6 +308,159 @@ complex<double> PV_UNIT::get_source_dynamic_current_in_pu_based_on_system_base_p
 {
     return 0.0;
 }
+
+void PV_UNIT::set_positive_sequence_resistance_in_pu(double r)
+{
+    R1 = r;
+}
+
+void PV_UNIT::set_positive_sequence_reactance_in_pu(double x)
+{
+    X1  =x;
+}
+
+void PV_UNIT::set_negative_sequence_resistance_in_pu(double r)
+{
+    R2 = r;
+}
+
+void PV_UNIT::set_negative_sequence_reactance_in_pu(double x)
+{
+    X2 = x;
+}
+
+void PV_UNIT::set_zero_sequence_resistance_in_pu(double r)
+{
+    R0 = r;
+}
+
+void PV_UNIT::set_zero_sequence_reactance_in_pu(double x)
+{
+    X0 = x;
+}
+
+void PV_UNIT::set_grounding_resistance_in_pu(double r)
+{
+    Rground = r;
+}
+
+void PV_UNIT::set_grounding_reactance_in_pu(double x)
+{
+    Xground = x;
+}
+
+double PV_UNIT::get_positive_sequence_resistance_in_pu() const
+{
+    return R1;
+}
+
+double PV_UNIT::get_positive_sequence_reactance_in_pu() const
+{
+    return X1;
+}
+
+double PV_UNIT::get_negative_sequence_resistance_in_pu() const
+{
+    return R2;
+}
+
+double PV_UNIT::get_negative_sequence_reactance_in_pu() const
+{
+    return X2;
+}
+
+double PV_UNIT::get_zero_sequence_resistance_in_pu() const
+{
+    return R0;
+}
+
+double PV_UNIT::get_zero_sequence_reactance_in_pu() const
+{
+    return X0;
+}
+
+double PV_UNIT::get_grounding_resistance_in_pu() const
+{
+    return Rground;
+}
+
+double PV_UNIT::get_grounding_reactance_in_pu() const
+{
+    return Xground;
+}
+
+complex<double> PV_UNIT::get_positive_sequence_complex_current_in_pu()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
+
+    double R1 = get_positive_sequence_resistance_in_pu();
+    double X1 = get_positive_sequence_reactance_in_pu();
+    complex<double> Z1 = complex<double>(R1, X1)*one_over_mbase*sbase;
+    complex<double> U1 = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_source_bus());
+    complex<double> I = U1/Z1;
+
+    return I;
+}
+
+complex<double> PV_UNIT::get_negative_sequence_complex_current_in_pu()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
+
+    double R2 = get_negative_sequence_resistance_in_pu();
+    double X2 = get_negative_sequence_reactance_in_pu();
+    complex<double> Z2 = complex<double>(R2, X2)*one_over_mbase*sbase;
+    complex<double> U2 = psdb.get_bus_negative_sequence_complex_voltage_in_pu(get_source_bus());
+    complex<double> I = U2/Z2;
+
+    return I;
+}
+
+complex<double> PV_UNIT::get_zero_sequence_complex_current_in_pu()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
+
+    double R0 = get_zero_sequence_resistance_in_pu();
+    double X0 = get_zero_sequence_reactance_in_pu();
+    complex<double> Z0 = complex<double>(R0, X0)*one_over_mbase*sbase;
+    complex<double> U0 = psdb.get_bus_zero_sequence_complex_voltage_in_pu(get_source_bus());
+    complex<double> I = U0/Z0;
+
+    return I;
+}
+
+complex<double> PV_UNIT::get_positive_sequence_complex_current_in_kA()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    return get_positive_sequence_complex_current_in_pu()*sbase/(SQRT3*psdb.get_bus_base_voltage_in_kV(get_source_bus()));
+}
+
+complex<double> PV_UNIT::get_negative_sequence_complex_current_in_kA()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    return get_negative_sequence_complex_current_in_pu()*sbase/(SQRT3*psdb.get_bus_base_voltage_in_kV(get_source_bus()));
+}
+
+complex<double> PV_UNIT::get_zero_sequence_complex_current_in_kA()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    return get_zero_sequence_complex_current_in_pu()*sbase/(SQRT3*psdb.get_bus_base_voltage_in_kV(get_source_bus()));
+}
+
 
 
 

@@ -122,6 +122,36 @@ double api_get_load_float_data(unsigned int bus, char* identifier, char* paramet
         if(PARAMETER_NAME=="Q_MVAR" or PARAMETER_NAME=="TOTAL ACTUAL REACTIVE POWER IN MVAR")
             return loadptr->get_actual_total_load_in_MVA().imag();
 
+        if(PARAMETER_NAME=="PNEG_MW" or PARAMETER_NAME=="NEGATIVE SEQUENCE ACTIVE POWER IN MW")
+            return loadptr->get_negative_sequence_load_in_MVA().real();
+
+        if(PARAMETER_NAME=="QNEG_MVAR" or PARAMETER_NAME=="NEGATIVE SEQUENCE REACTIVE POWER IN MVAR")
+            return loadptr->get_negative_sequence_load_in_MVA().imag();
+
+        if(PARAMETER_NAME=="PZERO_MW" or PARAMETER_NAME=="ZERO SEQUENCE ACTIVE POWER IN MW")
+            return loadptr->get_zero_sequence_load_in_MVA().real();
+
+        if(PARAMETER_NAME=="QZERO_MVAR" or PARAMETER_NAME=="ZERO SEQUENCE REACTIVE POWER IN MVAR")
+            return loadptr->get_zero_sequence_load_in_MVA().imag();
+
+        if(PARAMETER_NAME=="I1_PU" or PARAMETER_NAME=="POSITIVE SEQUENCE CURRENT IN PU")
+            return abs(loadptr->get_positive_sequence_complex_current_in_pu());
+
+        if(PARAMETER_NAME=="I2_PU" or PARAMETER_NAME=="NEGATIVE SEQUENCE CURRENT IN PU")
+            return abs(loadptr->get_negative_sequence_complex_current_in_pu());
+
+        if(PARAMETER_NAME=="I0_PU" or PARAMETER_NAME=="ZERO SEQUENCE CURRENT IN PU")
+            return abs(loadptr->get_zero_sequence_complex_current_in_pu());
+
+        if(PARAMETER_NAME=="I1_KA" or PARAMETER_NAME=="POSITIVE SEQUENCE CURRENT IN KA")
+            return abs(loadptr->get_positive_sequence_complex_current_in_kA());
+
+        if(PARAMETER_NAME=="I2_KA" or PARAMETER_NAME=="NEGATIVE SEQUENCE CURRENT IN KA")
+            return abs(loadptr->get_negative_sequence_complex_current_in_kA());
+
+        if(PARAMETER_NAME=="I0_KA" or PARAMETER_NAME=="ZERO SEQUENCE CURRENT IN KA")
+            return abs(loadptr->get_zero_sequence_complex_current_in_kA());
+
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return 0.0;
     }
@@ -178,6 +208,27 @@ void api_set_load_float_data(unsigned int bus, char* identifier, char* parameter
         {
             double p = loadptr->get_nominal_constant_impedance_load_in_MVA().real();
             return loadptr->set_nominal_constant_impedance_load_in_MVA(complex<double>(p, value));
+        }
+
+        if(PARAMETER_NAME=="PNEG_MW" or PARAMETER_NAME=="NEGATIVE SEQUENCE ACTIVE POWER IN MW")
+        {
+            double q = loadptr->get_negative_sequence_load_in_MVA().imag();
+            return loadptr->set_negative_sequence_load_in_MVA(complex<double>(value, q));
+        }
+        if(PARAMETER_NAME=="QNEG_MVAR" or PARAMETER_NAME=="NEGATIVE SEQUENCE REACTIVE POWER IN MVAR")
+        {
+            double p = loadptr->get_negative_sequence_load_in_MVA().real();
+            return loadptr->set_negative_sequence_load_in_MVA(complex<double>(p, value));
+        }
+        if(PARAMETER_NAME=="PZERO_MW" or PARAMETER_NAME=="ZERO SEQUENCE ACTIVE POWER IN MW")
+        {
+            double q = loadptr->get_zero_sequence_load_in_MVA().imag();
+            return loadptr->set_zero_sequence_load_in_MVA(complex<double>(value, q));
+        }
+        if(PARAMETER_NAME=="QZERO_MVAR" or PARAMETER_NAME=="ZERO SEQUENCE ACTIVE POWER IN MVAR")
+        {
+            double p = loadptr->get_zero_sequence_load_in_MVA().real();
+            return loadptr->set_zero_sequence_load_in_MVA(complex<double>(p, value));
         }
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
@@ -243,6 +294,9 @@ bool api_get_load_boolean_data(unsigned int bus, char* identifier, char* paramet
         if(PARAMETER_NAME=="STATUS")
             return loadptr->get_status();
 
+        if(PARAMETER_NAME=="GROUNDING FLAG")
+            return loadptr->get_grounding_flag();
+
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return false;
     }
@@ -267,6 +321,9 @@ void api_set_load_boolean_data(unsigned int bus, char* identifier, char* paramet
 
         if(PARAMETER_NAME=="STATUS")
             return loadptr->set_status(value);
+
+        if(PARAMETER_NAME=="GROUNDING FLAG")
+            return loadptr->set_grounding_flag(value);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
     }

@@ -63,6 +63,10 @@ EXPORT_STEPS_DLL void api_save_vsc_hvdc_powerflow_data_to_file(char* file, char*
 EXPORT_STEPS_DLL void api_load_dynamic_data_from_file(char* file, char* file_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_dynamic_data_to_file(char* file, char* file_type, bool export_internal_bus_number=false, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
+EXPORT_STEPS_DLL void api_load_sequence_data_from_file(char* file, char* file_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_save_sequence_data_to_file(char* file, char* file_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
+
+
 EXPORT_STEPS_DLL void api_add_bus(unsigned int bus_number, char* bus_name, double base_voltage_in_kV, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_add_generator(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_add_wt_generator(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
@@ -167,6 +171,14 @@ EXPORT_STEPS_DLL const char* api_get_source_string_data(unsigned int bus, char* 
 EXPORT_STEPS_DLL void api_set_source_string_data(unsigned int bus, char* identifier, char* parameter_name, char* value, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL bool api_get_source_boolean_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_source_boolean_data(unsigned int bus, char* identifier, char* parameter_name, bool value, unsigned int toolkit_index=INDEX_NOT_EXIST);
+
+EXPORT_STEPS_DLL double api_get_generator_float_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_generator_float_data(unsigned int bus, char* identifier, char* parameter_name, double value, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_wt_generator_float_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_wt_generator_float_data(unsigned int bus, char* identifier, char* parameter_name, double value, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_pv_unit_float_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_pv_unit_float_data(unsigned int bus, char* identifier, char* parameter_name, double value, unsigned int toolkit_index=INDEX_NOT_EXIST);
+
 
 EXPORT_STEPS_DLL int api_get_load_integer_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_load_integer_data(unsigned int bus, char* identifier, char* parameter_name, int value, unsigned int toolkit_index=INDEX_NOT_EXIST);
@@ -346,11 +358,30 @@ EXPORT_STEPS_DLL void api_build_decoupled_network_B_matrix(unsigned int toolkit_
 EXPORT_STEPS_DLL void api_build_dc_network_B_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_build_dynamic_network_Y_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_build_network_Z_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_build_sequence_network_Y_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
+
 EXPORT_STEPS_DLL void api_save_network_Y_matrix(char* file, bool export_full=false, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_decoupled_network_B_matrix(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_dc_network_B_matrix(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_dynamic_network_Y_matrix(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_network_Z_matrix(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_save_positive_sequence_network_Y_matrix(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_save_negative_sequence_network_Y_matrix(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_save_zero_sequence_network_Y_matrix(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
+
+
+EXPORT_STEPS_DLL void api_set_short_circuit_solver_integer_parameter(char* parameter_name, int value, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL unsigned int api_get_short_circuit_solver_integer_parameter(char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_short_circuit_solver_float_parameter(char* parameter_name, double value, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_short_circuit_solver_float_parameter(char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_short_circuit_set_bus_fault(unsigned int bus, char* fault_type, double fault_G, double fault_B, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_short_circuit_set_line_fault(unsigned int ibus, unsigned int jbus, char* identifier, char* fault_type, double fault_location, double fault_G, double fault_B, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_solve_short_circuit(unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_short_circuit_result_float_data(char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_show_short_circuit_result(unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_save_short_circuit_result_to_file(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_save_extended_short_circuit_result_to_file(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
+
 
 
 EXPORT_STEPS_DLL unsigned int api_get_dynamic_simulator_integer_parameter(char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);

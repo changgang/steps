@@ -50,6 +50,31 @@ class PV_UNIT : public SOURCE
 
         virtual complex<double> get_complex_internal_voltage_in_pu_in_xy_axis() const;
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power();
+
+        void set_positive_sequence_resistance_in_pu(double r);
+        void set_positive_sequence_reactance_in_pu(double x);
+        void set_negative_sequence_resistance_in_pu(double r);
+        void set_negative_sequence_reactance_in_pu(double x);
+        void set_zero_sequence_resistance_in_pu(double r);
+        void set_zero_sequence_reactance_in_pu(double x);
+        void set_grounding_resistance_in_pu(double r);
+        void set_grounding_reactance_in_pu(double x);
+
+        double get_positive_sequence_resistance_in_pu() const;
+        double get_positive_sequence_reactance_in_pu() const;
+        double get_negative_sequence_resistance_in_pu() const;
+        double get_negative_sequence_reactance_in_pu() const;
+        double get_zero_sequence_resistance_in_pu() const;
+        double get_zero_sequence_reactance_in_pu() const;
+        double get_grounding_resistance_in_pu() const;
+        double get_grounding_reactance_in_pu() const;
+
+        complex<double> get_positive_sequence_complex_current_in_pu();
+        complex<double> get_negative_sequence_complex_current_in_pu();
+        complex<double> get_zero_sequence_complex_current_in_pu();
+        complex<double> get_positive_sequence_complex_current_in_kA();
+        complex<double> get_negative_sequence_complex_current_in_kA();
+        complex<double> get_zero_sequence_complex_current_in_kA();
     private:
         unsigned int number_of_lumped_pv_units;
         double rated_power_per_pv_unit_in_MW;
@@ -58,5 +83,7 @@ class PV_UNIT : public SOURCE
         PV_PANEL_MODEL* pv_panel_model;
         PV_ELECTRICAL_MODEL* pv_electrical_model;
         PV_IRRADIANCE_MODEL* pv_irradiance_model;
+
+        double R1, X1, R2, X2, R0, X0, Rground, Xground;
 };
 #endif // PV_UNIT_H

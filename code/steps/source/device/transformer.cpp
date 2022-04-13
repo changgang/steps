@@ -566,6 +566,88 @@ complex<double> TRANSFORMER::get_zero_sequence_impedance_between_windings_based_
     return 0.0;
 }
 
+
+complex<double> TRANSFORMER::get_winding_zero_sequence_impedance_based_on_system_base_power_in_pu(TRANSFORMER_WINDING_SIDE winding) const
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    if(winding == PRIMARY_SIDE || winding == SECONDARY_SIDE || winding == TERTIARY_SIDE)
+    {
+        double Sbase = 100.0;
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        Sbase = psdb.get_system_base_power_in_MVA();
+
+        double Sbase_winding = 0.0;
+        if(is_two_winding_transformer())
+            Sbase_winding = get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE);
+        else
+        {
+            if(winding == PRIMARY_SIDE)
+                Sbase_winding = get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE);
+            if(winding == SECONDARY_SIDE)
+                Sbase_winding = get_winding_nominal_capacity_in_MVA(SECONDARY_SIDE, TERTIARY_SIDE);
+            if(winding == TERTIARY_SIDE)
+                Sbase_winding = get_winding_nominal_capacity_in_MVA(TERTIARY_SIDE, PRIMARY_SIDE);
+        }
+
+        complex<double> Z = get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(winding);
+
+        return Z*Sbase/Sbase_winding;
+    }
+    else
+    {
+        osstream<<"Warning. The winding is not existed to get winding leakage impedance based on system base. Zero will be returned.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return 0.0;
+    }
+}
+
+complex<double> TRANSFORMER::get_common_zero_sequence_nutural_grounding_impedance_based_on_system_base_power_in_pu() const
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    double winding_base = get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE);
+
+    return z0_common_nutral_ground_in_pu/winding_base*sbase;
+}
+
+complex<double> TRANSFORMER::get_zero_sequence_impedance_between_windings_based_on_system_base_power_in_pu(TRANSFORMER_WINDING_SIDE winding1, TRANSFORMER_WINDING_SIDE winding2) const
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    if(winding1!=winding2)
+    {
+        if(winding1>winding2)
+        {
+            TRANSFORMER_WINDING_SIDE temp_winding;
+            temp_winding = winding1;
+            winding1 = winding2;
+            winding2 = temp_winding;
+        }
+        double Sbase = 100.0;
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        Sbase = psdb.get_system_base_power_in_MVA();
+
+        double Sbase_winding;
+        if(is_two_winding_transformer())
+            Sbase_winding = get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE);
+        else
+            Sbase_winding = get_winding_nominal_capacity_in_MVA(winding1, winding2);
+
+        complex<double> Z = get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(winding1, winding2);
+
+        return Z*Sbase/Sbase_winding;
+    }
+    else
+    {
+        osstream<<"Warning. The same windings ("<<get_winding_name(winding1)<<") are not allowed to get winding leakage impedance based on system base. Zero will be returned.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return 0.0;
+    }
+}
+
 bool TRANSFORMER::is_valid() const
 {
     if(get_winding_bus(PRIMARY_SIDE)!=0 and get_winding_bus(SECONDARY_SIDE)!=0)
@@ -1282,6 +1364,21 @@ complex<double> TRANSFORMER::get_star_bus_complex_voltage_in_kV_based_on_winding
     return get_winding_nominal_voltage_in_kV(side)*get_star_bus_complex_voltage_in_pu();
 }
 
+complex<double> TRANSFORMER::get_star_bus_positive_sequence_complex_voltage_in_kV_based_on_winding_nominal_voltage(TRANSFORMER_WINDING_SIDE side) const
+{
+    return get_star_bus_complex_voltage_in_kV_based_on_winding_nominal_voltage(side);
+}
+
+complex<double> TRANSFORMER::get_star_bus_negative_sequence_complex_voltage_in_kV_based_on_winding_nominal_voltage(TRANSFORMER_WINDING_SIDE side) const
+{
+    return get_winding_nominal_voltage_in_kV(side)*get_star_bus_negative_sequence_complex_voltage_in_pu();
+}
+
+complex<double> TRANSFORMER::get_star_bus_zero_sequence_complex_voltage_in_kV_based_on_winding_nominal_voltage(TRANSFORMER_WINDING_SIDE side) const
+{
+    return get_winding_nominal_voltage_in_kV(side)*get_star_bus_zero_sequence_complex_voltage_in_pu();
+}
+
 complex<double> TRANSFORMER::get_primary_winding_star_bus_complex_voltage_in_kV() const
 {
     return get_winding_nominal_voltage_in_kV(PRIMARY_SIDE)*get_star_bus_complex_voltage_in_pu();
@@ -1298,6 +1395,343 @@ complex<double> TRANSFORMER::get_tertiary_winding_star_bus_complex_voltage_in_kV
         return get_winding_nominal_voltage_in_kV(TERTIARY_SIDE)*get_star_bus_complex_voltage_in_pu();
     else
         return 0.0;
+}
+
+complex<double> TRANSFORMER::get_star_bus_positive_sequence_complex_voltage_in_pu() const
+{
+    return get_star_bus_complex_voltage_in_pu();
+}
+
+complex<double> TRANSFORMER::get_star_bus_negative_sequence_complex_voltage_in_pu() const
+{
+    if(is_two_winding_transformer())
+        return get_two_winding_trans_star_bus_negative_sequence_complex_voltage_in_pu();
+    else
+        return get_three_winding_trans_star_bus_negative_sequence_complex_voltage_in_pu();
+}
+
+complex<double> TRANSFORMER::get_two_winding_trans_star_bus_negative_sequence_complex_voltage_in_pu() const
+{
+    if(is_two_winding_transformer())
+    {
+        if(get_winding_breaker_status(PRIMARY_SIDE)==true or get_winding_breaker_status(SECONDARY_SIDE)==true)
+        {
+            ostringstream osstream;
+            STEPS& toolkit = get_toolkit();
+            POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+            complex<double> Zps_original = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
+
+            complex<double> Zp, Zs;
+            Zp = 0.5*Zps_original;
+            Zs = Zp;
+
+            complex<double> Y = get_magnetizing_admittance_based_on_winding_norminal_voltage_and_system_base_power_in_pu();
+
+            complex<double> V_primary = psdb.get_bus_negative_sequence_complex_voltage_in_pu(get_winding_bus(PRIMARY_SIDE));
+            complex<double> V_secondary = psdb.get_bus_negative_sequence_complex_voltage_in_pu(get_winding_bus(SECONDARY_SIDE));
+
+            double tap_primary = get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE);
+            double angle_primary = get_winding_angle_shift_in_deg(PRIMARY_SIDE);
+            angle_primary = deg2rad(angle_primary);
+            double tap_secondary = get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE);
+            double angle_secondary = get_winding_angle_shift_in_deg(SECONDARY_SIDE);
+            angle_secondary = deg2rad(angle_secondary);
+
+            complex<double> k_primary(tap_primary*steps_cos(angle_primary),tap_primary*steps_sin(angle_primary));
+            complex<double> k_secondary(tap_secondary*steps_cos(angle_secondary),tap_secondary*steps_sin(angle_secondary));
+
+            complex<double> Vp = V_primary/k_primary, Vs = V_secondary/k_secondary;
+
+            complex<double> Yeq, Vstar, Istar;
+            if(get_winding_breaker_status(PRIMARY_SIDE)==true and get_winding_breaker_status(SECONDARY_SIDE)==true)
+            {
+                Yeq = Y + 1.0/Zp + 1.0/Zs;
+                Istar = Vp/Zp + Vs/Zs;
+            }
+            if(get_winding_breaker_status(PRIMARY_SIDE)==true and get_winding_breaker_status(SECONDARY_SIDE)==false)
+            {
+                Yeq = Y + 1.0/Zp;
+                Istar = Vp/Zp;
+            }
+            if(get_winding_breaker_status(PRIMARY_SIDE)==false and get_winding_breaker_status(SECONDARY_SIDE)==true)
+            {
+                Yeq = Y + 1.0/Zs;
+                Istar = Vs/Zs;
+            }
+            Vstar = Istar/Yeq;
+            return Vstar;
+        }
+        else
+            return 0.0;
+    }
+    else
+        return get_three_winding_trans_star_bus_negative_sequence_complex_voltage_in_pu();
+}
+
+complex<double> TRANSFORMER::get_three_winding_trans_star_bus_negative_sequence_complex_voltage_in_pu() const
+{
+    if(is_three_winding_transformer())
+    {
+        if(get_winding_breaker_status(PRIMARY_SIDE)==true or
+           get_winding_breaker_status(SECONDARY_SIDE)==true or
+           get_winding_breaker_status(TERTIARY_SIDE)==true)
+        {
+            ostringstream osstream;
+            STEPS& toolkit = get_toolkit();
+            POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+            complex<double> Zps_original = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
+            complex<double> Zst_original = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(SECONDARY_SIDE, TERTIARY_SIDE);
+            complex<double> Zpt_original = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, TERTIARY_SIDE);
+
+            complex<double> Zp, Zs, Zt;
+            Zp = 0.5*(Zps_original+Zpt_original-Zst_original);
+            Zs = 0.5*(Zps_original+Zst_original-Zpt_original);
+            Zt = 0.5*(Zpt_original+Zst_original-Zps_original);
+
+            complex<double> Y = get_magnetizing_admittance_based_on_winding_norminal_voltage_and_system_base_power_in_pu();
+
+            complex<double> V_primary = psdb.get_bus_negative_sequence_complex_voltage_in_pu(get_winding_bus(PRIMARY_SIDE));
+            complex<double> V_secondary = psdb.get_bus_negative_sequence_complex_voltage_in_pu(get_winding_bus(SECONDARY_SIDE));
+            complex<double> V_tertiary = psdb.get_bus_negative_sequence_complex_voltage_in_pu(get_winding_bus(TERTIARY_SIDE));
+
+            double tap_primary = get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE);
+            double angle_primary = get_winding_angle_shift_in_deg(PRIMARY_SIDE);
+            angle_primary = deg2rad(angle_primary);
+            double tap_secondary = get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE);
+            double angle_secondary = get_winding_angle_shift_in_deg(SECONDARY_SIDE);
+            angle_secondary = deg2rad(angle_secondary);
+            double tap_tertiary = get_winding_off_nominal_turn_ratio_in_pu(TERTIARY_SIDE);
+            double angle_tertiary = get_winding_angle_shift_in_deg(TERTIARY_SIDE);
+            angle_tertiary = deg2rad(angle_tertiary);
+
+            complex<double> k_primary(tap_primary*steps_cos(angle_primary),tap_primary*steps_sin(angle_primary));
+            complex<double> k_secondary(tap_secondary*steps_cos(angle_secondary),tap_secondary*steps_sin(angle_secondary));
+            complex<double> k_tertiary(tap_tertiary*steps_cos(angle_tertiary),tap_tertiary*steps_sin(angle_tertiary));
+
+            complex<double> Vp = V_primary/k_primary, Vs = V_secondary/k_secondary, Vt = V_tertiary/k_tertiary;
+
+            complex<double> Yeq, Vstar, Istar;
+            if(get_winding_breaker_status(PRIMARY_SIDE)==true and
+               get_winding_breaker_status(SECONDARY_SIDE)==true and
+               get_winding_breaker_status(TERTIARY_SIDE)==true)
+            {
+                Yeq = Y + 1.0/Zp + 1.0/Zs + 1.0/Zt;
+                Istar = Vp/Zp + Vs/Zs + Vt/Zt;
+            }
+            if(get_winding_breaker_status(PRIMARY_SIDE)==true and
+               get_winding_breaker_status(SECONDARY_SIDE)==true and
+               get_winding_breaker_status(TERTIARY_SIDE)==false)
+            {
+                Yeq = Y + 1.0/Zp + 1.0/Zs;
+                Istar = Vp/Zp + Vs/Zs;
+            }
+            if(get_winding_breaker_status(PRIMARY_SIDE)==true and
+               get_winding_breaker_status(SECONDARY_SIDE)==false and
+               get_winding_breaker_status(TERTIARY_SIDE)==true)
+            {
+                Yeq = Y + 1.0/Zp + 1.0/Zt;
+                Istar = Vp/Zp + Vt/Zt;
+            }
+            if(get_winding_breaker_status(PRIMARY_SIDE)==true and
+               get_winding_breaker_status(SECONDARY_SIDE)==false and
+               get_winding_breaker_status(TERTIARY_SIDE)==false)
+            {
+                Yeq = Y + 1.0/Zp;
+                Istar = Vp/Zp;
+            }
+            if(get_winding_breaker_status(PRIMARY_SIDE)==false and
+               get_winding_breaker_status(SECONDARY_SIDE)==true and
+               get_winding_breaker_status(TERTIARY_SIDE)==true)
+            {
+                Yeq = Y + 1.0/Zs + 1.0/Zt;
+                Istar = Vs/Zs + Vt/Zt;
+            }
+            if(get_winding_breaker_status(PRIMARY_SIDE)==false and
+               get_winding_breaker_status(SECONDARY_SIDE)==true and
+               get_winding_breaker_status(TERTIARY_SIDE)==false)
+            {
+                Yeq = Y + 1.0/Zs;
+                Istar = Vs/Zs;
+            }
+            if(get_winding_breaker_status(PRIMARY_SIDE)==false and
+               get_winding_breaker_status(SECONDARY_SIDE)==false and
+               get_winding_breaker_status(TERTIARY_SIDE)==true)
+            {
+                Yeq = Y + 1.0/Zt;
+                Istar = Vt/Zt;
+            }
+            Vstar = Istar/Yeq;
+            return Vstar;
+        }
+        else
+            return 0.0;
+    }
+    else
+        return get_two_winding_trans_star_bus_negative_sequence_complex_voltage_in_pu();
+}
+
+complex<double> TRANSFORMER::get_star_bus_zero_sequence_complex_voltage_in_pu() const
+{
+    if(is_two_winding_transformer())
+        return get_two_winding_trans_star_bus_zero_sequence_complex_voltage_in_pu();
+    else
+        return get_three_winding_trans_star_bus_zero_sequence_complex_voltage_in_pu();
+}
+
+complex<double> TRANSFORMER::get_two_winding_trans_star_bus_zero_sequence_complex_voltage_in_pu() const
+{
+    if(is_two_winding_transformer())
+    {
+        if(get_winding_breaker_status(PRIMARY_SIDE)==true or get_winding_breaker_status(SECONDARY_SIDE)==true)
+        {
+            ostringstream osstream;
+            STEPS& toolkit = get_toolkit();
+            POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+            complex<double> Z12 = get_zero_sequence_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
+            complex<double> Zg1 = get_winding_zero_sequence_impedance_based_on_system_base_power_in_pu(PRIMARY_SIDE);
+            complex<double> Zg2 = get_winding_zero_sequence_impedance_based_on_system_base_power_in_pu(SECONDARY_SIDE);
+
+            complex<double> Zp, Zs;
+
+            TRANSFORMER_WINDING_CONNECTION_TYPE winding_connection_type1 = get_winding_connection_type(PRIMARY_SIDE);
+            TRANSFORMER_WINDING_CONNECTION_TYPE winding_connection_type2 = get_winding_connection_type(SECONDARY_SIDE);
+            if(winding_connection_type1==WYE_N_CONNECTION and winding_connection_type2== WYE_N_CONNECTION)
+            {
+                Zp = 0.5*(Z12 + 3.0*Zg1 + 3.0*Zg2);
+                Zs = Zp;
+            }
+            else
+                return 0.0;
+
+            complex<double> V_primary = psdb.get_bus_zero_sequence_complex_voltage_in_pu(get_winding_bus(PRIMARY_SIDE));
+            complex<double> V_secondary = psdb.get_bus_zero_sequence_complex_voltage_in_pu(get_winding_bus(SECONDARY_SIDE));
+
+            double tap_primary = get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE);
+            double angle_primary = get_winding_angle_shift_in_deg(PRIMARY_SIDE);
+            angle_primary = deg2rad(angle_primary);
+            double tap_secondary = get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE);
+            double angle_secondary = get_winding_angle_shift_in_deg(SECONDARY_SIDE);
+            angle_secondary = deg2rad(angle_secondary);
+
+            complex<double> k_primary(tap_primary*steps_cos(angle_primary),tap_primary*steps_sin(angle_primary));
+            complex<double> k_secondary(tap_secondary*steps_cos(angle_secondary),tap_secondary*steps_sin(angle_secondary));
+
+            complex<double> Vp = V_primary/k_primary, Vs = V_secondary/k_secondary;
+
+            complex<double> Yeq, Vstar, Istar;
+            if(get_winding_breaker_status(PRIMARY_SIDE)==true and get_winding_breaker_status(SECONDARY_SIDE)==true)
+            {
+                Yeq = 1.0/Zp + 1.0/Zs;
+                Istar = Vp/Zp + Vs/Zs;
+            }
+            if(get_winding_breaker_status(PRIMARY_SIDE)==true and get_winding_breaker_status(SECONDARY_SIDE)==false)
+            {
+                Yeq = 1.0/Zp;
+                Istar = Vp/Zp;
+            }
+            if(get_winding_breaker_status(PRIMARY_SIDE)==false and get_winding_breaker_status(SECONDARY_SIDE)==true)
+            {
+                Yeq = 1.0/Zs;
+                Istar = Vs/Zs;
+            }
+            Vstar = Istar/Yeq;
+            return Vstar;
+        }
+        else
+            return 0.0;
+    }
+    else
+        return get_three_winding_trans_star_bus_zero_sequence_complex_voltage_in_pu();
+}
+
+complex<double> TRANSFORMER::get_three_winding_trans_star_bus_zero_sequence_complex_voltage_in_pu() const
+{
+    if(is_three_winding_transformer())
+    {
+        if(get_winding_breaker_status(PRIMARY_SIDE)==true or
+           get_winding_breaker_status(SECONDARY_SIDE)==true or
+           get_winding_breaker_status(TERTIARY_SIDE)==true)
+        {
+            ostringstream osstream;
+            STEPS& toolkit = get_toolkit();
+            POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+            complex<double> Z_12 = get_zero_sequence_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
+            complex<double> Z_23 = get_zero_sequence_impedance_between_windings_based_on_system_base_power_in_pu(SECONDARY_SIDE, TERTIARY_SIDE);
+            complex<double> Z_31 = get_zero_sequence_impedance_between_windings_based_on_system_base_power_in_pu(TERTIARY_SIDE, PRIMARY_SIDE);
+            complex<double> Z_01, Z_02, Z_03;
+            Z_01 = 0.5*(Z_12 + Z_31 - Z_23);
+            Z_02 = 0.5*(Z_12 + Z_23 - Z_31);
+            Z_03 = 0.5*(Z_23 + Z_31 - Z_12);
+
+            complex<double> Z_g1 = get_winding_zero_sequence_impedance_based_on_system_base_power_in_pu(PRIMARY_SIDE);
+            complex<double> Z_g2 = get_winding_zero_sequence_impedance_based_on_system_base_power_in_pu(SECONDARY_SIDE);
+            complex<double> Z_g3 = get_winding_zero_sequence_impedance_based_on_system_base_power_in_pu(TERTIARY_SIDE);
+
+            TRANSFORMER_WINDING_CONNECTION_TYPE winding1_connection_type = get_winding_connection_type(PRIMARY_SIDE);
+            TRANSFORMER_WINDING_CONNECTION_TYPE winding2_connection_type = get_winding_connection_type(SECONDARY_SIDE);
+            TRANSFORMER_WINDING_CONNECTION_TYPE winding3_connection_type = get_winding_connection_type(SECONDARY_SIDE);
+
+            complex<double> Zp, Zs, Zt;
+
+            Zp = Z_01 + 3.0*Z_g1;
+            Zs = Z_02 + 3.0*Z_g2;
+            Zt = Z_03 + 3.0*Z_g3;
+
+            complex<double> V_primary = psdb.get_bus_zero_sequence_complex_voltage_in_pu(get_winding_bus(PRIMARY_SIDE));
+            complex<double> V_secondary = psdb.get_bus_zero_sequence_complex_voltage_in_pu(get_winding_bus(SECONDARY_SIDE));
+            complex<double> V_tertiary = psdb.get_bus_zero_sequence_complex_voltage_in_pu(get_winding_bus(TERTIARY_SIDE));
+
+            double tap_primary = get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE);
+            double angle_primary = get_winding_angle_shift_in_deg(PRIMARY_SIDE);
+            angle_primary = deg2rad(angle_primary);
+            double tap_secondary = get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE);
+            double angle_secondary = get_winding_angle_shift_in_deg(SECONDARY_SIDE);
+            angle_secondary = deg2rad(angle_secondary);
+            double tap_tertiary = get_winding_off_nominal_turn_ratio_in_pu(TERTIARY_SIDE);
+            double angle_tertiary = get_winding_angle_shift_in_deg(TERTIARY_SIDE);
+            angle_tertiary = deg2rad(angle_tertiary);
+
+            complex<double> k_primary(tap_primary*steps_cos(angle_primary),tap_primary*steps_sin(angle_primary));
+            complex<double> k_secondary(tap_secondary*steps_cos(angle_secondary),tap_secondary*steps_sin(angle_secondary));
+            complex<double> k_tertiary(tap_tertiary*steps_cos(angle_tertiary),tap_tertiary*steps_sin(angle_tertiary));
+
+            complex<double> Vp = V_primary/k_primary, Vs = V_secondary/k_secondary, Vt = V_tertiary/k_tertiary;
+
+            complex<double> Yeq, Vstar, Istar;
+
+            Istar = 0.0;
+            if(get_winding_breaker_status(PRIMARY_SIDE)==true and winding1_connection_type==WYE_N_CONNECTION)
+                Istar += Vp/Zp;
+            if(get_winding_breaker_status(SECONDARY_SIDE)==true and winding2_connection_type==WYE_N_CONNECTION)
+                Istar += Vs/Zs;
+            if(get_winding_breaker_status(TERTIARY_SIDE)==true and winding3_connection_type==WYE_N_CONNECTION)
+                Istar += Vt/Zt;
+
+            Yeq = 0.0;
+            if(winding1_connection_type==DELTA_CONNECTION or
+               (winding1_connection_type==WYE_N_CONNECTION and get_winding_breaker_status(PRIMARY_SIDE)))
+                Yeq += 1.0/Zp;
+            if(winding2_connection_type==DELTA_CONNECTION or
+               (winding2_connection_type==WYE_N_CONNECTION and get_winding_breaker_status(SECONDARY_SIDE)))
+                Yeq += 1.0/Zs;
+            if(winding2_connection_type==DELTA_CONNECTION or
+               (winding2_connection_type==WYE_N_CONNECTION and get_winding_breaker_status(SECONDARY_SIDE)))
+                Yeq += 1.0/Zp;
+            if(Yeq==0.0)
+                return 0.0;
+
+            Vstar = Istar/Yeq;
+            return Vstar;
+        }
+        else
+            return 0.0;
+    }
+    else
+        return get_two_winding_trans_star_bus_complex_voltage_in_pu();
 }
 
 complex<double> TRANSFORMER::get_winding_complex_current_in_pu(TRANSFORMER_WINDING_SIDE side) const
@@ -1580,6 +2014,520 @@ complex<double> TRANSFORMER::get_tertiary_winding_complex_current_in_kA() const
         double Ibase = psdb.get_system_base_power_in_MVA()/(SQRT3*Vbase);
 
         return get_tertiary_winding_complex_current_in_pu()*Ibase;
+    }
+    else
+        return 0.0;
+}
+
+complex<double> TRANSFORMER::get_winding_positive_sequence_complex_current_in_pu(TRANSFORMER_WINDING_SIDE side) const
+{
+    return get_winding_complex_current_in_pu(side);
+}
+
+complex<double> TRANSFORMER::get_winding_positive_sequence_complex_current_in_kA(TRANSFORMER_WINDING_SIDE side) const
+{
+    return get_winding_complex_current_in_kA(side);
+}
+
+complex<double> TRANSFORMER::get_two_winding_trans_primary_winding_positive_sequence_complex_current_in_pu() const
+{
+    return get_two_winding_trans_primary_winding_complex_current_in_pu();
+}
+
+complex<double> TRANSFORMER::get_two_winding_trans_secondary_winding_positive_sequence_complex_current_in_pu() const
+{
+    return get_two_winding_trans_secondary_winding_complex_current_in_pu();
+}
+
+complex<double> TRANSFORMER::get_three_winding_trans_primary_winding_positive_sequence_complex_current_in_pu() const
+{
+    return get_three_winding_trans_primary_winding_complex_current_in_pu();
+}
+
+complex<double> TRANSFORMER::get_three_winding_trans_secondary_winding_positive_sequence_complex_current_in_pu() const
+{
+    return get_three_winding_trans_secondary_winding_complex_current_in_pu();
+}
+
+complex<double> TRANSFORMER::get_three_winding_trans_tertiary_winding_positive_sequence_complex_current_in_pu() const
+{
+    return get_three_winding_trans_tertiary_winding_complex_current_in_pu();
+}
+
+complex<double> TRANSFORMER::get_winding_negative_sequence_complex_current_in_pu(TRANSFORMER_WINDING_SIDE side) const
+{
+    if(is_two_winding_transformer())
+    {
+        switch(side)
+        {
+            case PRIMARY_SIDE:
+                return get_two_winding_trans_primary_winding_negative_sequence_complex_current_in_pu();
+            case SECONDARY_SIDE:
+                return get_two_winding_trans_secondary_winding_negative_sequence_complex_current_in_pu();
+            default:
+                return 0.0;
+        }
+    }
+    else
+    {
+        switch(side)
+        {
+            case PRIMARY_SIDE:
+                return get_three_winding_trans_primary_winding_negative_sequence_complex_current_in_pu();
+            case SECONDARY_SIDE:
+                return get_three_winding_trans_secondary_winding_negative_sequence_complex_current_in_pu();
+            default:
+                return get_three_winding_trans_tertiary_winding_negative_sequence_complex_current_in_pu();
+        }
+    }
+}
+
+complex<double> TRANSFORMER::get_two_winding_trans_primary_winding_negative_sequence_complex_current_in_pu() const
+{
+    if(get_winding_breaker_status(PRIMARY_SIDE)==true)
+    {
+        ostringstream osstream;
+        STEPS& toolkit = get_toolkit();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        complex<double> Z = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
+
+        Z *= 0.5;
+
+        double tap_primary = get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE);
+        double angle_primary = get_winding_angle_shift_in_deg(PRIMARY_SIDE);
+        angle_primary = deg2rad(angle_primary);
+
+        complex<double> k_primary(tap_primary*steps_cos(angle_primary),tap_primary*steps_sin(angle_primary));
+
+        complex<double> V_primary = psdb.get_bus_negative_sequence_complex_voltage_in_pu(get_winding_bus(PRIMARY_SIDE));
+
+        complex<double> Vp = V_primary/k_primary;
+
+        complex<double> Vstar = get_two_winding_trans_star_bus_negative_sequence_complex_voltage_in_pu();
+
+        complex<double> I = (Vp-Vstar)/Z;
+
+        return I/conj(k_primary);
+    }
+    else
+        return 0.0;
+}
+
+complex<double> TRANSFORMER::get_two_winding_trans_secondary_winding_negative_sequence_complex_current_in_pu() const
+{
+    if(get_winding_breaker_status(SECONDARY_SIDE)==true)
+    {
+        ostringstream osstream;
+        STEPS& toolkit = get_toolkit();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        complex<double> Z = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
+
+        Z *= 0.5;
+
+        double tap_secondary = get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE);
+        double angle_secondary = get_winding_angle_shift_in_deg(SECONDARY_SIDE);
+        angle_secondary = deg2rad(angle_secondary);
+
+        complex<double> k_secondary(tap_secondary*steps_cos(angle_secondary),tap_secondary*steps_sin(angle_secondary));
+
+        complex<double> V_secondary = psdb.get_bus_negative_sequence_complex_voltage_in_pu(get_winding_bus(SECONDARY_SIDE));
+
+        complex<double> Vs = V_secondary/k_secondary;
+
+        complex<double> Vstar = get_two_winding_trans_star_bus_negative_sequence_complex_voltage_in_pu();
+
+        complex<double> I = (Vs-Vstar)/Z;
+
+        return I/conj(k_secondary);
+    }
+    else
+        return 0.0;
+}
+
+complex<double> TRANSFORMER::get_three_winding_trans_primary_winding_negative_sequence_complex_current_in_pu() const
+{
+    if(get_winding_breaker_status(PRIMARY_SIDE)==true)
+    {
+        ostringstream osstream;
+        STEPS& toolkit = get_toolkit();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        complex<double> Zps_original = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
+        complex<double> Zst_original = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(SECONDARY_SIDE, TERTIARY_SIDE);
+        complex<double> Zpt_original = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, TERTIARY_SIDE);
+
+        complex<double> Zp = 0.5*(Zps_original+Zpt_original-Zst_original);
+
+        complex<double> V_primary = psdb.get_bus_negative_sequence_complex_voltage_in_pu(get_winding_bus(PRIMARY_SIDE));
+
+        double tap_primary = get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE);
+        double angle_primary = get_winding_angle_shift_in_deg(PRIMARY_SIDE);
+        angle_primary = deg2rad(angle_primary);
+
+        complex<double> k_primary(tap_primary*steps_cos(angle_primary),tap_primary*steps_sin(angle_primary));
+
+        complex<double> Vp = V_primary/k_primary;
+
+        complex<double> Vstar = get_three_winding_trans_star_bus_negative_sequence_complex_voltage_in_pu();
+
+        complex<double> I = (Vp-Vstar)/Zp;
+
+        return I/conj(k_primary);
+    }
+    else
+        return 0.0;
+}
+
+complex<double> TRANSFORMER::get_three_winding_trans_secondary_winding_negative_sequence_complex_current_in_pu() const
+{
+    if(get_winding_breaker_status(SECONDARY_SIDE)==true)
+    {
+        ostringstream osstream;
+        STEPS& toolkit = get_toolkit();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        complex<double> Zps_original = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
+        complex<double> Zst_original = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(SECONDARY_SIDE, TERTIARY_SIDE);
+        complex<double> Zpt_original = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, TERTIARY_SIDE);
+
+        complex<double> Zs = 0.5*(Zps_original+Zst_original-Zpt_original);
+
+        complex<double> V_secondary = psdb.get_bus_negative_sequence_complex_voltage_in_pu(get_winding_bus(SECONDARY_SIDE));
+
+        double tap_secondary = get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE);
+        double angle_secondary = get_winding_angle_shift_in_deg(SECONDARY_SIDE);
+        angle_secondary = deg2rad(angle_secondary);
+
+        complex<double> k_secondary(tap_secondary*steps_cos(angle_secondary),tap_secondary*steps_sin(angle_secondary));
+
+        complex<double> Vs = V_secondary/k_secondary;
+
+        complex<double> Vstar = get_three_winding_trans_star_bus_negative_sequence_complex_voltage_in_pu();
+
+        complex<double> I = (Vs-Vstar)/Zs;
+
+        return I/conj(k_secondary);
+    }
+    else
+        return 0.0;
+}
+
+complex<double> TRANSFORMER::get_three_winding_trans_tertiary_winding_negative_sequence_complex_current_in_pu() const
+{
+    if(get_winding_breaker_status(TERTIARY_SIDE)==true)
+    {
+        ostringstream osstream;
+        STEPS& toolkit = get_toolkit();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        complex<double> Zps_original = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
+        complex<double> Zst_original = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(SECONDARY_SIDE, TERTIARY_SIDE);
+        complex<double> Zpt_original = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, TERTIARY_SIDE);
+
+        complex<double> Zt = 0.5*(Zpt_original+Zst_original-Zps_original);
+
+        complex<double> V_tertiary = psdb.get_bus_negative_sequence_complex_voltage_in_pu(get_winding_bus(TERTIARY_SIDE));
+
+        double tap_tertiary = get_winding_off_nominal_turn_ratio_in_pu(TERTIARY_SIDE);
+        double angle_tertiary = get_winding_angle_shift_in_deg(TERTIARY_SIDE);
+        angle_tertiary = deg2rad(angle_tertiary);
+
+        complex<double> k_tertiary(tap_tertiary*steps_cos(angle_tertiary),tap_tertiary*steps_sin(angle_tertiary));
+
+        complex<double> Vt = V_tertiary/k_tertiary;
+
+        complex<double> Vstar = get_three_winding_trans_star_bus_negative_sequence_complex_voltage_in_pu();
+
+        complex<double> I = (Vt-Vstar)/Zt;
+
+        return I/conj(k_tertiary);
+    }
+    else
+        return 0.0;
+}
+
+complex<double> TRANSFORMER::get_winding_negative_sequence_complex_current_in_kA(TRANSFORMER_WINDING_SIDE side) const
+{
+    if(get_winding_breaker_status(side)==true)
+    {
+        STEPS& toolkit = get_toolkit();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        double Vbase = psdb.get_bus_base_voltage_in_kV(get_winding_bus(side));
+        double Ibase = psdb.get_system_base_power_in_MVA()/(SQRT3*Vbase);
+
+        return get_winding_negative_sequence_complex_current_in_pu(side)*Ibase;
+    }
+    else
+        return 0.0;
+}
+
+complex<double> TRANSFORMER::get_winding_zero_sequence_complex_current_in_pu(TRANSFORMER_WINDING_SIDE side) const
+{
+    if(is_two_winding_transformer())
+    {
+        switch(side)
+        {
+            case PRIMARY_SIDE:
+                return get_two_winding_trans_primary_winding_zero_sequence_complex_current_in_pu();
+            case SECONDARY_SIDE:
+                return get_two_winding_trans_secondary_winding_zero_sequence_complex_current_in_pu();
+            default:
+                return 0.0;
+        }
+    }
+    else
+    {
+        switch(side)
+        {
+            case PRIMARY_SIDE:
+                return get_three_winding_trans_primary_winding_zero_sequence_complex_current_in_pu();
+            case SECONDARY_SIDE:
+                return get_three_winding_trans_secondary_winding_zero_sequence_complex_current_in_pu();
+            default:
+                return get_three_winding_trans_tertiary_winding_zero_sequence_complex_current_in_pu();
+        }
+    }
+}
+
+complex<double> TRANSFORMER::get_winding_zero_sequence_complex_current_in_kA(TRANSFORMER_WINDING_SIDE side) const
+{
+    if(get_winding_breaker_status(side)==true)
+    {
+        STEPS& toolkit = get_toolkit();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        double Vbase = psdb.get_bus_base_voltage_in_kV(get_winding_bus(side));
+        double Ibase = psdb.get_system_base_power_in_MVA()/(SQRT3*Vbase);
+
+        return get_winding_zero_sequence_complex_current_in_pu(side)*Ibase;
+    }
+    else
+        return 0.0;
+}
+
+complex<double> TRANSFORMER::get_two_winding_trans_primary_winding_zero_sequence_complex_current_in_pu() const
+{
+    if(get_winding_breaker_status(PRIMARY_SIDE)==true)
+    {
+        ostringstream osstream;
+        STEPS& toolkit = get_toolkit();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        complex<double> Z12 = get_zero_sequence_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
+        complex<double> Zg1 = get_winding_zero_sequence_impedance_based_on_system_base_power_in_pu(PRIMARY_SIDE);
+        complex<double> Zg2 = get_winding_zero_sequence_impedance_based_on_system_base_power_in_pu(SECONDARY_SIDE);
+        //unsigned int connection_code = get_connection_code();
+        complex<double> Zp;
+
+        TRANSFORMER_WINDING_CONNECTION_TYPE winding1_connection_type = get_winding_connection_type(PRIMARY_SIDE);
+        TRANSFORMER_WINDING_CONNECTION_TYPE winding2_connection_type = get_winding_connection_type(SECONDARY_SIDE);
+
+        if(winding1_connection_type==WYE_N_CONNECTION and winding2_connection_type==WYE_N_CONNECTION)
+            Zp = 0.5*(Z12 + 3.0*Zg1 + 3.0*Zg2);
+        else if(winding1_connection_type==WYE_N_CONNECTION and winding2_connection_type==DELTA_CONNECTION)
+            Zp = Z12 + 3.0*Zg1;
+        else
+            return 0.0;
+
+        double tap_primary = get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE);
+        double angle_primary = get_winding_angle_shift_in_deg(PRIMARY_SIDE);
+        angle_primary = deg2rad(angle_primary);
+
+        complex<double> k_primary(tap_primary*steps_cos(angle_primary),tap_primary*steps_sin(angle_primary));
+
+        complex<double> V_primary = psdb.get_bus_zero_sequence_complex_voltage_in_pu(get_winding_bus(PRIMARY_SIDE));
+
+        complex<double> Vp = V_primary/k_primary;
+
+        complex<double> Vstar = get_two_winding_trans_star_bus_zero_sequence_complex_voltage_in_pu();
+
+        complex<double> I = (Vp-Vstar)/Zp;
+
+        return I/conj(k_primary);
+    }
+    else
+        return 0.0;
+}
+
+complex<double> TRANSFORMER::get_two_winding_trans_secondary_winding_zero_sequence_complex_current_in_pu() const
+{
+    if(get_winding_breaker_status(SECONDARY_SIDE)==true)
+    {
+        ostringstream osstream;
+        STEPS& toolkit = get_toolkit();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        complex<double> Z12 = get_zero_sequence_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
+        complex<double> Zg1 = get_winding_zero_sequence_impedance_based_on_system_base_power_in_pu(PRIMARY_SIDE);
+        complex<double> Zg2 = get_winding_zero_sequence_impedance_based_on_system_base_power_in_pu(SECONDARY_SIDE);
+       // unsigned int connection_code = get_connection_code();
+        complex<double> Zs;
+
+        TRANSFORMER_WINDING_CONNECTION_TYPE winding1_connection_type = get_winding_connection_type(PRIMARY_SIDE);
+        TRANSFORMER_WINDING_CONNECTION_TYPE winding2_connection_type = get_winding_connection_type(SECONDARY_SIDE);
+
+        if(winding1_connection_type==WYE_N_CONNECTION and winding2_connection_type==WYE_N_CONNECTION)
+            Zs = 0.5*(Z12 + 3.0*Zg1 + 3.0*Zg2);
+        else if(winding1_connection_type==DELTA_CONNECTION and winding2_connection_type==WYE_N_CONNECTION)
+            Zs = Z12 + 3.0*Zg2;
+        else
+            return 0.0;
+
+
+        double tap_secondary = get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE);
+        double angle_secondary = get_winding_angle_shift_in_deg(SECONDARY_SIDE);
+        angle_secondary = deg2rad(angle_secondary);
+
+        complex<double> k_secondary(tap_secondary*steps_cos(angle_secondary),tap_secondary*steps_sin(angle_secondary));
+
+        complex<double> V_secondary = psdb.get_bus_zero_sequence_complex_voltage_in_pu(get_winding_bus(SECONDARY_SIDE));
+
+        complex<double> Vs = V_secondary/k_secondary;
+
+        complex<double> Vstar = get_two_winding_trans_star_bus_zero_sequence_complex_voltage_in_pu();
+
+        complex<double> I = (Vs-Vstar)/Zs;
+
+        return I/conj(k_secondary);
+    }
+    else
+        return 0.0;
+}
+
+complex<double> TRANSFORMER::get_three_winding_trans_primary_winding_zero_sequence_complex_current_in_pu() const
+{
+    if(get_winding_breaker_status(PRIMARY_SIDE)==true)
+    {
+        ostringstream osstream;
+        STEPS& toolkit = get_toolkit();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        TRANSFORMER_WINDING_CONNECTION_TYPE winding1_connection_type = get_winding_connection_type(PRIMARY_SIDE);
+        TRANSFORMER_WINDING_CONNECTION_TYPE winding2_connection_type = get_winding_connection_type(SECONDARY_SIDE);
+        TRANSFORMER_WINDING_CONNECTION_TYPE winding3_connection_type = get_winding_connection_type(TERTIARY_SIDE);
+
+        if(winding1_connection_type != WYE_N_CONNECTION)
+            return 0.0;
+        if((winding2_connection_type==WYE_CONNECTION or
+           (winding2_connection_type==WYE_N_CONNECTION and get_winding_breaker_status(SECONDARY_SIDE)==false))
+            and
+            (winding3_connection_type==WYE_CONNECTION or
+            (winding3_connection_type==WYE_N_CONNECTION and get_winding_breaker_status(TERTIARY_SIDE)==false)))
+            return 0.0;
+
+        complex<double> Z_01 = get_zero_sequence_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
+        complex<double> Z_g1 = get_winding_zero_sequence_impedance_based_on_system_base_power_in_pu(PRIMARY_SIDE);
+        complex<double> Zp = Z_01+3.0*Z_g1;
+
+        complex<double> V_primary = psdb.get_bus_zero_sequence_complex_voltage_in_pu(get_winding_bus(PRIMARY_SIDE));
+
+        double tap_primary = get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE);
+        double angle_primary = get_winding_angle_shift_in_deg(PRIMARY_SIDE);
+        angle_primary = deg2rad(angle_primary);
+
+        complex<double> k_primary(tap_primary*steps_cos(angle_primary),tap_primary*steps_sin(angle_primary));
+
+        complex<double> Vp = V_primary/k_primary;
+
+        complex<double> Vstar = get_three_winding_trans_star_bus_zero_sequence_complex_voltage_in_pu();
+
+        complex<double> I = (Vp-Vstar)/Zp;
+
+        return I/conj(k_primary);
+    }
+    else
+        return 0.0;
+}
+
+complex<double> TRANSFORMER::get_three_winding_trans_secondary_winding_zero_sequence_complex_current_in_pu() const
+{
+    if(get_winding_breaker_status(SECONDARY_SIDE)==true)
+    {
+        ostringstream osstream;
+        STEPS& toolkit = get_toolkit();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+
+        TRANSFORMER_WINDING_CONNECTION_TYPE winding1_connection_type = get_winding_connection_type(PRIMARY_SIDE);
+        TRANSFORMER_WINDING_CONNECTION_TYPE winding2_connection_type = get_winding_connection_type(SECONDARY_SIDE);
+        TRANSFORMER_WINDING_CONNECTION_TYPE winding3_connection_type = get_winding_connection_type(TERTIARY_SIDE);
+
+        if(winding2_connection_type != WYE_N_CONNECTION)
+            return 0.0;
+        if((winding1_connection_type==WYE_CONNECTION or
+           (winding1_connection_type==WYE_N_CONNECTION and get_winding_breaker_status(PRIMARY_SIDE)==false))
+            and
+            (winding3_connection_type==WYE_CONNECTION or
+            (winding3_connection_type==WYE_N_CONNECTION and get_winding_breaker_status(TERTIARY_SIDE)==false)))
+            return 0.0;
+
+        complex<double> Z_02 = get_zero_sequence_impedance_between_windings_based_on_system_base_power_in_pu(SECONDARY_SIDE, TERTIARY_SIDE);
+        complex<double> Z_g2 = get_winding_zero_sequence_impedance_based_on_system_base_power_in_pu(SECONDARY_SIDE);
+        complex<double> Zs = Z_02 + 3.0*Z_g2;
+
+        complex<double> V_secondary = psdb.get_bus_zero_sequence_complex_voltage_in_pu(get_winding_bus(SECONDARY_SIDE));
+
+        double tap_secondary = get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE);
+        double angle_secondary = get_winding_angle_shift_in_deg(SECONDARY_SIDE);
+        angle_secondary = deg2rad(angle_secondary);
+
+        complex<double> k_secondary(tap_secondary*steps_cos(angle_secondary),tap_secondary*steps_sin(angle_secondary));
+
+        complex<double> Vs = V_secondary/k_secondary;
+
+        complex<double> Vstar = get_three_winding_trans_star_bus_zero_sequence_complex_voltage_in_pu();
+
+        complex<double> I = (Vs-Vstar)/Zs;
+
+        return I/conj(k_secondary);
+    }
+    else
+        return 0.0;
+}
+
+complex<double> TRANSFORMER::get_three_winding_trans_tertiary_winding_zero_sequence_complex_current_in_pu() const
+{
+    if(get_winding_breaker_status(TERTIARY_SIDE)==true)
+    {
+        ostringstream osstream;
+        STEPS& toolkit = get_toolkit();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        TRANSFORMER_WINDING_CONNECTION_TYPE winding1_connection_type = get_winding_connection_type(PRIMARY_SIDE);
+        TRANSFORMER_WINDING_CONNECTION_TYPE winding2_connection_type = get_winding_connection_type(SECONDARY_SIDE);
+        TRANSFORMER_WINDING_CONNECTION_TYPE winding3_connection_type = get_winding_connection_type(TERTIARY_SIDE);
+
+        if(winding3_connection_type != WYE_N_CONNECTION)
+            return 0.0;
+        if((winding1_connection_type==WYE_CONNECTION or
+           (winding1_connection_type==WYE_N_CONNECTION and get_winding_breaker_status(PRIMARY_SIDE)==false))
+            and
+           (winding2_connection_type==WYE_CONNECTION or
+           (winding2_connection_type==WYE_N_CONNECTION and get_winding_breaker_status(SECONDARY_SIDE)==false)))
+            return 0.0;
+
+        complex<double> Z_03 = get_zero_sequence_impedance_between_windings_based_on_system_base_power_in_pu(TERTIARY_SIDE, PRIMARY_SIDE);
+        complex<double> Z_g3 = get_winding_zero_sequence_impedance_based_on_system_base_power_in_pu(TERTIARY_SIDE);
+        complex<double> Zt = Z_03 + 3.0*Z_g3;
+
+        complex<double> V_tertiary = psdb.get_bus_zero_sequence_complex_voltage_in_pu(get_winding_bus(TERTIARY_SIDE));
+
+        double tap_tertiary = get_winding_off_nominal_turn_ratio_in_pu(TERTIARY_SIDE);
+        double angle_tertiary = get_winding_angle_shift_in_deg(TERTIARY_SIDE);
+        angle_tertiary = deg2rad(angle_tertiary);
+
+        complex<double> k_tertiary(tap_tertiary*steps_cos(angle_tertiary),tap_tertiary*steps_sin(angle_tertiary));
+
+        complex<double> Vt = V_tertiary/k_tertiary;
+
+        complex<double> Vstar = get_three_winding_trans_star_bus_zero_sequence_complex_voltage_in_pu();
+
+        complex<double> I = (Vt-Vstar)/Zt;
+
+        return I/conj(k_tertiary);
     }
     else
         return 0.0;

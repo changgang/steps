@@ -160,3 +160,33 @@ void api_save_dynamic_data_to_file(char* file, char* file_type,
     }
 }
 
+void api_load_sequence_data_from_file(char* file, char* file_type, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    string string_file_type = string2upper(file_type);
+    if(string_file_type=="PSSE" or string_file_type=="PSS/E")
+    {
+        PSSE_IMEXPORTER exporter(toolkit);
+        exporter.load_sequence_data(file);
+    }
+    else
+    {
+        ;
+    }
+}
+void api_save_sequence_data_to_file(char* file, char* file_type, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    string string_file_type = string2upper(file_type);
+    if(string_file_type=="PSSE" or string_file_type=="PSS/E")
+    {
+        PSSE_IMEXPORTER exporter(toolkit);
+        exporter.export_sequence_data(file);
+    }
+    else
+    {
+        ;
+    }
+}
+
+

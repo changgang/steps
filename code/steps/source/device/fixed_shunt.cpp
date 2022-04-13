@@ -314,5 +314,65 @@ complex<double> FIXED_SHUNT::get_actual_impedance_shunt_in_MVA() const
         return 0.0;
 }
 
+complex<double> FIXED_SHUNT::get_positive_sequence_complex_current_in_pu()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    complex<double> y = get_nominal_admittance_shunt_in_pu();
+    complex<double> v = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_shunt_bus());
+    complex<double> I = y*v;
+
+    return I;
+}
+
+complex<double> FIXED_SHUNT::get_negative_sequence_complex_current_in_pu()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    complex<double> y = get_nominal_admittance_shunt_in_pu();
+    complex<double> v = psdb.get_bus_negative_sequence_complex_voltage_in_pu(get_shunt_bus());
+    complex<double> I = y*v;
+
+    return I;
+}
+
+complex<double> FIXED_SHUNT::get_zero_sequence_complex_current_in_pu()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    complex<double> y = get_nominal_zero_sequence_admittance_shunt_in_pu();
+    complex<double> v = psdb.get_bus_zero_sequence_complex_voltage_in_pu(get_shunt_bus());
+    complex<double> I = y*v;
+
+    return I;
+}
+
+complex<double> FIXED_SHUNT::get_positive_sequence_complex_current_in_kA()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    return get_positive_sequence_complex_current_in_pu()*sbase/(SQRT3*psdb.get_bus_base_voltage_in_kV(get_shunt_bus()));
+}
+
+complex<double> FIXED_SHUNT::get_negative_sequence_complex_current_in_kA()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    return get_negative_sequence_complex_current_in_pu()*sbase/(SQRT3*psdb.get_bus_base_voltage_in_kV(get_shunt_bus()));
+}
+
+complex<double> FIXED_SHUNT::get_zero_sequence_complex_current_in_kA()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    return get_zero_sequence_complex_current_in_pu()*sbase/(SQRT3*psdb.get_bus_base_voltage_in_kV(get_shunt_bus()));
+}
+
 
 

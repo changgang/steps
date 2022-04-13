@@ -30,6 +30,7 @@ class LOAD : public NONBUS_DEVICE
         void set_load_manually_scale_factor_in_pu(double scale);
         void set_negative_sequence_load_in_MVA(const complex<double>& s);
         void set_zero_sequence_load_in_MVA(const complex<double>& s);
+        void set_grounding_flag(const bool flag);
 
         unsigned int get_load_bus() const;
         BUS* get_bus_pointer() const;
@@ -46,6 +47,7 @@ class LOAD : public NONBUS_DEVICE
         bool get_flag_interruptable() const;
         complex<double> get_negative_sequence_load_in_MVA() const;
         complex<double> get_zero_sequence_load_in_MVA() const;
+        bool get_grounding_flag() const;
 
         virtual bool is_valid() const;
         virtual void check();
@@ -96,6 +98,13 @@ class LOAD : public NONBUS_DEVICE
         double get_load_relay_shed_scale_factor_in_pu() const;
         complex<double> get_dynamics_load_current_in_pu_based_on_system_base_power();
         complex<double> get_dynamics_load_norton_current_in_pu_based_on_system_base_power();
+
+        complex<double> get_positive_sequence_complex_current_in_pu();
+        complex<double> get_negative_sequence_complex_current_in_pu();
+        complex<double> get_zero_sequence_complex_current_in_pu();
+        complex<double> get_positive_sequence_complex_current_in_kA();
+        complex<double> get_negative_sequence_complex_current_in_kA();
+        complex<double> get_zero_sequence_complex_current_in_kA();
     private:
         unsigned int bus;
         BUS* busptr;
@@ -120,5 +129,7 @@ class LOAD : public NONBUS_DEVICE
         LOAD_FREQUENCY_RELAY_MODEL* load_frequency_relay_model;
 
         complex<double> s_negative_sequence_in_MVA, s_zero_sequence_in_MVA;
+
+        bool grounding_flag;
 };
 #endif // LOAD_H

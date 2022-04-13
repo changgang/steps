@@ -19,7 +19,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         virtual void load_sequence_data(string sq_source);
         void load_powerflow_data_from_steps_vector(vector<vector<vector<string> > >& data);
         void load_dynamic_data_from_steps_vector(vector<vector<string> >& data);
-        void load_sequence_data_from_steps_vector(vector<vector<string> >& data);
+        void load_sequence_data_from_steps_vector(vector<vector<vector<string> > >& data);
 
         void load_dynamic_data_from_psse_string(vector<string>& data);
 
@@ -120,6 +120,22 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void load_transformer_powerflow_result(const vector<string>& data);
         void load_hvdc_powerflow_result(const vector<string>& data);
 
+        void load_all_seq_data_to_devices();
+        void load_change_code_data();
+        void load_source_seq_data();
+        void load_generator_seq_data(vector<string>& data);
+        void load_wt_generator_seq_data(vector<string>& data);
+        void load_pv_unit_seq_data(vector<string>& data);
+        void load_load_seq_data();
+        void load_zero_seq_non_transformer_branch_data();
+        void load_zero_seq_mutual_impedance_data();
+        void load_zero_seq_transformer_data();
+        void load_two_winding_transformer_zero_seq_data(TRANSFORMER& trans, vector<string> data);
+        void load_three_winding_transformer_zero_seq_data(TRANSFORMER& trans, vector<string> data);
+        void load_zero_seq_swithed_shunt_data();
+        void load_zero_seq_fixed_shunt_data();
+        void load_induction_machine_seq_data();
+
         void load_dynamic_data_into_ram(string file);
 
         void load_all_models();
@@ -215,6 +231,8 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
 
         unsigned int data_version;
         vector< vector< vector<string> > > splitted_sraw_data_in_ram;
+        vector< vector< vector<string> > > splitted_sseq_data_in_ram;
+
         // [
         //   [ [a,b,c,d],[info, info]],
         //   [ [a,b,c,d], [e,f,g,h],...], // for devices in one line, each [a,b,c,d] is a record

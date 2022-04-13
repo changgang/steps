@@ -97,10 +97,38 @@ class LINE : public NONBUS_DEVICE
         complex<double> get_line_complex_voltage_at_receiving_side_in_pu() const;
         complex<double> get_line_complex_voltage_at_sending_side_in_kV() const;
         complex<double> get_line_complex_voltage_at_receiving_side_in_kV() const;
+
+        complex<double> get_line_positive_sequence_complex_voltage_at_sending_side_in_pu() const;
+        complex<double> get_line_positive_sequence_complex_voltage_at_receiving_side_in_pu() const;
+        complex<double> get_line_positive_sequence_complex_voltage_at_sending_side_in_kV() const;
+        complex<double> get_line_positive_sequence_complex_voltage_at_receiving_side_in_kV() const;
+        complex<double> get_line_negative_sequence_complex_voltage_at_sending_side_in_pu() const;
+        complex<double> get_line_negative_sequence_complex_voltage_at_receiving_side_in_pu() const;
+        complex<double> get_line_negative_sequence_complex_voltage_at_sending_side_in_kV() const;
+        complex<double> get_line_negative_sequence_complex_voltage_at_receiving_side_in_kV() const;
+        complex<double> get_line_zero_sequence_complex_voltage_at_sending_side_in_pu() const;
+        complex<double> get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu() const;
+        complex<double> get_line_zero_sequence_complex_voltage_at_sending_side_in_kV() const;
+        complex<double> get_line_zero_sequence_complex_voltage_at_receiving_side_in_kV() const;
+
+
         complex<double> get_line_complex_current_at_sending_side_in_pu() const;
         complex<double> get_line_complex_current_at_receiving_side_in_pu() const;
         complex<double> get_line_complex_current_at_sending_side_in_kA() const;
         complex<double> get_line_complex_current_at_receiving_side_in_kA() const;
+
+        complex<double> get_line_positive_sequence_complex_current_at_sending_side_in_pu() const;
+        complex<double> get_line_positive_sequence_complex_current_at_receiving_side_in_pu() const;
+        complex<double> get_line_positive_sequence_complex_current_at_sending_side_in_kA() const;
+        complex<double> get_line_positive_sequence_complex_current_at_receiving_side_in_kA() const;
+        complex<double> get_line_negative_sequence_complex_current_at_sending_side_in_pu() const;
+        complex<double> get_line_negative_sequence_complex_current_at_receiving_side_in_pu() const;
+        complex<double> get_line_negative_sequence_complex_current_at_sending_side_in_kA() const;
+        complex<double> get_line_negative_sequence_complex_current_at_receiving_side_in_kA() const;
+        complex<double> get_line_zero_sequence_complex_current_at_sending_side_in_pu() const;
+        complex<double> get_line_zero_sequence_complex_current_at_receiving_side_in_pu() const;
+        complex<double> get_line_zero_sequence_complex_current_at_sending_side_in_kA() const;
+        complex<double> get_line_zero_sequence_complex_current_at_receiving_side_in_kA() const;
 
         complex<double> get_line_complex_power_at_sending_side_in_pu() const;
         complex<double> get_line_complex_power_at_receiving_side_in_pu() const;

@@ -6509,6 +6509,106 @@ complex<double> POWER_SYSTEM_DATABASE::get_bus_positive_sequence_complex_voltage
         return 0.0;
 }
 
+double POWER_SYSTEM_DATABASE::get_bus_negative_sequence_voltage_in_pu(unsigned int bus)
+{
+    BUS* busptr = get_bus(bus);
+    if(busptr!=NULL)
+        return busptr->get_negative_sequence_voltage_in_pu();
+    else
+        return 0.0;
+}
+
+double POWER_SYSTEM_DATABASE::get_bus_negative_sequence_voltage_in_kV(unsigned int bus)
+{
+    BUS* busptr = get_bus(bus);
+    if(busptr!=NULL)
+        return busptr->get_negative_sequence_voltage_in_kV();
+    else
+        return 0.0;
+}
+
+double POWER_SYSTEM_DATABASE::get_bus_negative_sequence_angle_in_deg(unsigned int bus)
+{
+    return rad2deg(get_bus_negative_sequence_angle_in_rad(bus));
+}
+
+double POWER_SYSTEM_DATABASE::get_bus_negative_sequence_angle_in_rad(unsigned int bus)
+{
+    BUS* busptr = get_bus(bus);
+    if(busptr!=NULL)
+        return busptr->get_negative_sequence_angle_in_rad();
+    else
+        return 0.0;
+}
+
+complex<double> POWER_SYSTEM_DATABASE::get_bus_negative_sequence_complex_voltage_in_pu(unsigned int bus)
+{
+    BUS* busptr = get_bus(bus);
+    if(busptr!=NULL)
+        return busptr->get_negative_sequence_complex_voltage_in_pu();
+    else
+        return 0.0;
+}
+
+complex<double> POWER_SYSTEM_DATABASE::get_bus_negative_sequence_complex_voltage_in_kV(unsigned int bus)
+{
+    BUS* busptr = get_bus(bus);
+    if(busptr!=NULL)
+        return busptr->get_negative_sequence_complex_voltage_in_kV();
+    else
+        return 0.0;
+}
+
+double POWER_SYSTEM_DATABASE::get_bus_zero_sequence_voltage_in_pu(unsigned int bus)
+{
+    BUS* busptr = get_bus(bus);
+    if(busptr!=NULL)
+        return busptr->get_zero_sequence_voltage_in_pu();
+    else
+        return 0.0;
+}
+
+double POWER_SYSTEM_DATABASE::get_bus_zero_sequence_voltage_in_kV(unsigned int bus)
+{
+    BUS* busptr = get_bus(bus);
+    if(busptr!=NULL)
+        return busptr->get_zero_sequence_voltage_in_kV();
+    else
+        return 0.0;
+}
+
+double POWER_SYSTEM_DATABASE::get_bus_zero_sequence_angle_in_deg(unsigned int bus)
+{
+    return rad2deg(get_bus_zero_sequence_angle_in_rad(bus));
+}
+
+double POWER_SYSTEM_DATABASE::get_bus_zero_sequence_angle_in_rad(unsigned int bus)
+{
+    BUS* busptr = get_bus(bus);
+    if(busptr!=NULL)
+        return busptr->get_zero_sequence_angle_in_rad();
+    else
+        return 0.0;
+}
+
+complex<double> POWER_SYSTEM_DATABASE::get_bus_zero_sequence_complex_voltage_in_pu(unsigned int bus)
+{
+    BUS* busptr = get_bus(bus);
+    if(busptr!=NULL)
+        return busptr->get_zero_sequence_complex_voltage_in_pu();
+    else
+        return 0.0;
+}
+
+complex<double> POWER_SYSTEM_DATABASE::get_bus_zero_sequence_complex_voltage_in_kV(unsigned int bus)
+{
+    BUS* busptr = get_bus(bus);
+    if(busptr!=NULL)
+        return busptr->get_zero_sequence_complex_voltage_in_kV();
+    else
+        return 0.0;
+}
+
 double POWER_SYSTEM_DATABASE::get_bus_frequency_deviation_in_pu(unsigned int bus)
 {
     BUS* busptr = get_bus(bus);

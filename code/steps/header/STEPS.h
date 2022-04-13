@@ -5,6 +5,7 @@
 #include "header/dynamic_model_database.h"
 #include "header/toolkit/powerflow_solver/powerflow_solver.h"
 #include "header/toolkit/dynamic_simulator/dynamic_simulator.h"
+#include "header/toolkit/short_circuit_solver/short_circuit_solver.h"
 #include "header/network/network_matrix.h"
 #include "header/basic/constants.h"
 #include "header/apis/steps_api_search_buffer.h"
@@ -70,6 +71,7 @@ class STEPS
         POWER_SYSTEM_DATABASE& get_power_system_database();
         DYNAMIC_MODEL_DATABASE& get_dynamic_model_database();
         POWERFLOW_SOLVER& get_powerflow_solver();
+        SHORT_CIRCUIT_SOLVER& get_short_circuit_solver();
         DYNAMICS_SIMULATOR& get_dynamic_simulator();
         NETWORK_MATRIX& get_network_matrix();
 
@@ -92,6 +94,7 @@ class STEPS
 
         POWERFLOW_SOLVER powerflow_solver;
         DYNAMICS_SIMULATOR dynamic_simulator;
+        SHORT_CIRCUIT_SOLVER short_circuit_solver;
 
         NETWORK_MATRIX network_matrix;
 

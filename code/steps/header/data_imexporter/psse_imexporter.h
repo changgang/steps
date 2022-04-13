@@ -99,6 +99,42 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         //string export_switched_shunt_data() const;
 
 
+        void load_sequence_data_into_ram(string file);
+        vector<vector<vector<string> > >  convert_psse_seq_data2steps_vector() const;
+
+        vector<vector<string> > convert_i_th_type_seq_data2steps_vector(unsigned int i) const;
+        vector<vector<string> >  convert_change_code_data2steps_vector() const;
+        vector<vector<string> >  convert_source_seq_data2steps_vector() const;
+        vector<vector<string> >  convert_load_seq_data2steps_vector() const;
+        vector<vector<string> >  convert_zero_seq_non_transformer_branch_data2steps_vector() const;
+        vector<vector<string> >  convert_zero_seq_mutual_impedance_data2steps_vector() const;
+        vector<vector<string> >  convert_zero_seq_transformer_data2steps_vector() const;
+        vector<vector<string> >  convert_zero_seq_switched_shunt_data2steps_vector() const;
+        vector<vector<string> >  convert_zero_seq_fixed_shunt_data2steps_vector() const;
+        vector<vector<string> >  convert_induction_machine_seq_data2steps_vector() const;
+
+        string export_change_code_data() const;
+        string export_all_source_sequence_data() const;
+        string export_all_generator_sequence_data() const;
+        string export_generator_sequence_data(const GENERATOR* generator) const;
+        string export_all_wt_generator_sequence_data() const;
+        string export_wt_generator_sequence_data(const WT_GENERATOR* wt_generator) const;
+        string export_all_pv_unit_sequence_data() const;
+        string export_pv_unit_sequence_data(const PV_UNIT* pv_unit) const;
+        string export_all_load_sequence_data() const;
+        string export_load_sequence_data(const LOAD* load) const;
+        string export_all_line_zero_sequence_data() const;
+        string export_line_zero_sequence_data(const LINE* line) const;
+        string export_all_zero_sequence_mutual_impedance_data() const;
+        string export_all_transformer_zero_sequence_data() const;
+        string export_two_winding_transformer_zero_sequence_data(const TRANSFORMER* transformer) const;
+        string export_three_winding_transformer_zero_sequence_data(const TRANSFORMER* transformer) const;
+        string export_all_switched_shunt_zero_sequence_data() const;
+        string export_all_fixed_shunt_zero_sequence_data() const;
+        string export_fixed_shunt_zero_sequence_data(const FIXED_SHUNT* fixed_shunt) const;
+        string export_all_induction_machine_sequence_data() const;
+
+
         void load_dynamic_data_into_ram(string file);
 
         void load_all_models();
@@ -106,6 +142,7 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         unsigned int data_version;
         vector< vector<string> > raw_data_in_ram;
         vector<string> dyr_data_in_ram;
+        vector< vector<string> > seq_data_in_ram;
 };
 
 #endif // POWERFLOW_ASSEMBLER_H

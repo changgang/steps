@@ -113,6 +113,8 @@ def load_library():
     libsteps.api_load_vsc_hvdc_powerflow_data_from_file.argtypes = (c_char_p, c_char_p, c_uint)   
     libsteps.api_load_powerflow_result_from_file.restype = None
     libsteps.api_load_powerflow_result_from_file.argtypes = (c_char_p, c_char_p, c_uint)
+    libsteps.api_load_sequence_data_from_file.restype = None
+    libsteps.api_load_sequence_data_from_file.argtypes = (c_char_p, c_char_p, c_uint)
     libsteps.api_load_dynamic_data_from_file.restype = None
     libsteps.api_load_dynamic_data_from_file.argtypes = (c_char_p, c_char_p, c_uint)
 
@@ -122,7 +124,9 @@ def load_library():
     libsteps.api_save_vsc_hvdc_powerflow_data_to_file.argtypes = (c_char_p, c_char_p, c_bool, c_bool, c_bool, c_uint, c_uint)
     libsteps.api_save_dynamic_data_to_file.restype = None
     libsteps.api_save_dynamic_data_to_file.argtypes = (c_char_p, c_char_p, c_bool, c_uint)
-    
+    libsteps.api_save_sequence_data_to_file.restype = None
+    libsteps.api_save_sequence_data_to_file.argtypes = (c_char_p, c_char_p, c_uint)
+
     libsteps.api_check_powerflow_data.restype = None
     libsteps.api_check_powerflow_data.argtypes = (c_uint, )
     
@@ -378,6 +382,22 @@ def load_library():
     libsteps.api_set_source_boolean_data.restype = None
     libsteps.api_set_source_boolean_data.argtypes = (c_uint, c_char_p, c_char_p, c_bool, c_uint)
 
+
+    libsteps.api_get_generator_float_data.restype = (c_double)
+    libsteps.api_get_generator_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
+    libsteps.api_get_wt_generator_float_data.restype = (c_double)
+    libsteps.api_get_wt_generator_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
+    libsteps.api_get_pv_unit_float_data.restype = (c_double)
+    libsteps.api_get_pv_unit_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
+    libsteps.api_set_generator_float_data.restype = None
+    libsteps.api_set_generator_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_double, c_uint)
+    libsteps.api_set_wt_generator_float_data.restype = None
+    libsteps.api_set_wt_generator_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_double, c_uint)
+    libsteps.api_set_pv_unit_float_data.restype = None
+    libsteps.api_set_pv_unit_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_double, c_uint)
+    
+
+
     libsteps.api_get_fixed_shunt_integer_data.restype = (c_int)
     libsteps.api_get_fixed_shunt_integer_data.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
     libsteps.api_get_fixed_shunt_float_data.restype = (c_double)
@@ -601,6 +621,16 @@ def load_library():
     libsteps.api_set_powerflow_solver_boolean_parameter.restype = None
     libsteps.api_set_powerflow_solver_boolean_parameter.argtypes = (c_char_p, c_bool, c_uint)
     
+    libsteps.api_get_short_circuit_solver_integer_parameter.restype = (c_uint)
+    libsteps.api_get_short_circuit_solver_integer_parameter.argtypes = (c_char_p, c_uint)
+    libsteps.api_get_short_circuit_solver_float_parameter.restype = (c_double)
+    libsteps.api_get_short_circuit_solver_float_parameter.argtypes = (c_char_p, c_uint)
+    libsteps.api_set_short_circuit_solver_integer_parameter.restype = None
+    libsteps.api_set_short_circuit_solver_integer_parameter.argtypes = (c_char_p, c_int, c_uint)
+    libsteps.api_set_short_circuit_solver_float_parameter.restype = None
+    libsteps.api_set_short_circuit_solver_float_parameter.argtypes = (c_char_p, c_double, c_uint)
+    
+
     libsteps.api_show_powerflow_solver_configuration.restype = None
     libsteps.api_show_powerflow_solver_configuration.argtypes = (c_uint, )
 
@@ -616,6 +646,18 @@ def load_library():
     libsteps.api_save_extended_powerflow_result.argtypes = (c_char_p, c_uint)
     libsteps.api_save_jacobian_matrix.restype = None
     libsteps.api_save_jacobian_matrix.argtypes = (c_char_p, c_uint)
+
+    libsteps.api_solve_short_circuit.restype = None
+    libsteps.api_solve_short_circuit.argtypes = (c_uint, )
+    libsteps.api_get_short_circuit_result_float_data.restype = (c_double)
+    libsteps.api_get_short_circuit_result_float_data.argtypes = (c_char_p, c_uint)
+    libsteps.api_show_short_circuit_result.restype = None
+    libsteps.api_show_short_circuit_result.argtypes = (c_uint, )
+    libsteps.api_save_short_circuit_result_to_file.restype = None
+    libsteps.api_save_short_circuit_result_to_file.argtypes = (c_char_p, c_uint)
+    libsteps.api_save_extended_short_circuit_result_to_file.restype = None
+    libsteps.api_save_extended_short_circuit_result_to_file.argtypes = (c_char_p, c_uint)
+
 
     libsteps.api_build_network_Y_matrix.restype = None
     libsteps.api_build_network_Y_matrix.argtypes = (c_uint, )
@@ -637,6 +679,16 @@ def load_library():
     libsteps.api_save_dynamic_network_Y_matrix.argtypes = (c_char_p, c_uint)
     libsteps.api_save_network_Z_matrix.restype = None
     libsteps.api_save_network_Z_matrix.argtypes = (c_char_p, c_uint)
+
+    libsteps.api_build_sequence_network_Y_matrix.restype = None
+    libsteps.api_build_sequence_network_Y_matrix.argtypes = (c_uint, )
+    libsteps.api_save_positive_sequence_network_Y_matrix.restype = None
+    libsteps.api_save_positive_sequence_network_Y_matrix.argtypes = (c_char_p, c_uint)
+    libsteps.api_save_negative_sequence_network_Y_matrix.restype = None
+    libsteps.api_save_negative_sequence_network_Y_matrix.argtypes = (c_char_p, c_uint)
+    libsteps.api_save_zero_sequence_network_Y_matrix.restype = None
+    libsteps.api_save_zero_sequence_network_Y_matrix.argtypes = (c_char_p, c_uint)
+
 
     libsteps.api_get_dynamic_simulator_integer_parameter.restype = (c_uint)
     libsteps.api_get_dynamic_simulator_integer_parameter.argtypes = (c_char_p, c_uint)
@@ -743,6 +795,9 @@ def load_library():
     libsteps.api_trip_bus.restype = None
     libsteps.api_trip_bus.argtypes = (c_uint, c_uint)
 
+    libsteps.api_short_circuit_set_bus_fault.restype = None
+    libsteps.api_short_circuit_set_bus_fault.argtypes = (c_uint, c_char_p, c_double, c_double, c_uint)
+
     libsteps.api_set_line_fault.restype = None
     libsteps.api_set_line_fault.argtypes = (c_uint, c_uint, c_char_p, c_char_p, c_double, c_double, c_double, c_uint)
     libsteps.api_clear_line_fault.restype = None
@@ -755,6 +810,9 @@ def load_library():
     libsteps.api_close_line.argtypes = (c_uint, c_uint, c_char_p, c_uint)
     libsteps.api_close_line_breaker.restype = None
     libsteps.api_close_line_breaker.argtypes = (c_uint, c_uint, c_char_p, c_uint)
+
+    libsteps.api_short_circuit_set_line_fault.restype = None
+    libsteps.api_short_circuit_set_line_fault.argtypes = (c_uint, c_uint, c_char_p, c_char_p, c_double, c_double, c_double, c_uint)
 
     libsteps.api_trip_transformer.restype = None
     libsteps.api_trip_transformer.argtypes = (c_uint, c_uint, c_uint, c_char_p, c_uint)

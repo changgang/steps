@@ -157,6 +157,16 @@ double api_get_line_float_data(unsigned int ibus, unsigned int jbus, char* ident
         if(PARAMETER_NAME=="IRECV_KA")
             return abs(lineptr->get_line_complex_current_at_receiving_side_in_kA());
 
+        if(PARAMETER_NAME=="I2SEND_KA")
+            return abs(lineptr->get_line_negative_sequence_complex_current_at_sending_side_in_kA());
+        if(PARAMETER_NAME=="I2RECV_KA")
+            return abs(lineptr->get_line_negative_sequence_complex_current_at_receiving_side_in_kA());
+
+        if(PARAMETER_NAME=="I0SEND_KA")
+            return abs(lineptr->get_line_zero_sequence_complex_current_at_sending_side_in_kA());
+        if(PARAMETER_NAME=="I0RECV_KA")
+            return abs(lineptr->get_line_zero_sequence_complex_current_at_receiving_side_in_kA());
+
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return 0.0;
     }

@@ -161,6 +161,30 @@ double api_get_bus_float_data(unsigned int bus, char* parameter_name, unsigned i
         if(PARAMETER_NAME=="FBASE_HZ" or PARAMETER_NAME=="BASE FREQUENCY IN HZ")
             return busptr->get_base_frequency_in_Hz();
 
+        if(PARAMETER_NAME=="V2_PU" or PARAMETER_NAME=="NEGATIVE VOLTAGE IN PU")
+            return busptr->get_negative_sequence_voltage_in_pu();
+
+        if(PARAMETER_NAME=="V2_KV" or PARAMETER_NAME=="NEGATIVE VOLTAGE IN KV")
+            return busptr->get_negative_sequence_voltage_in_kV();
+
+        if(PARAMETER_NAME=="NEGATIVE_ANGLE_RAD" or PARAMETER_NAME=="NEGATIVE ANGLE IN RAD")
+            return busptr->get_negative_sequence_angle_in_rad();
+
+        if(PARAMETER_NAME=="NEGATIVE_ANGLE_DEG" or PARAMETER_NAME=="NEGATIVE ANGLE IN DEG")
+            return busptr->get_negative_sequence_angle_in_deg();
+
+        if(PARAMETER_NAME=="V0_PU" or PARAMETER_NAME=="ZERO VOLTAGE IN PU")
+            return busptr->get_zero_sequence_voltage_in_pu();
+
+        if(PARAMETER_NAME=="V0_KV" or PARAMETER_NAME=="ZERO VOLTAGE IN KV")
+            return busptr->get_zero_sequence_voltage_in_kV();
+
+        if(PARAMETER_NAME=="ZERO_ANGLE_RAD" or PARAMETER_NAME=="ZERO ANGLE IN RAD")
+            return busptr->get_zero_sequence_angle_in_rad();
+
+        if(PARAMETER_NAME=="ZERO_ANGLE_DEG" or PARAMETER_NAME=="ZERO ANGLE IN DEG")
+            return busptr->get_zero_sequence_angle_in_deg();
+
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return 0.0;
     }
@@ -211,6 +235,30 @@ void api_set_bus_float_data(unsigned int bus, char* parameter_name, double value
 
         if(PARAMETER_NAME=="FBASE_HZ" or PARAMETER_NAME=="BASE FREQUENCY IN HZ")
             return busptr->set_base_frequency_in_Hz(value);
+
+        if(PARAMETER_NAME=="V2_PU" or PARAMETER_NAME=="NEGATIVE VOLTAGE IN PU")
+            return busptr->set_negative_sequence_voltage_in_pu(value);
+
+        if(PARAMETER_NAME=="V2_KV" or PARAMETER_NAME=="NEGATIVE VOLTAGE IN KV")
+            return busptr->set_negative_sequence_voltage_in_kV(value);
+
+        if(PARAMETER_NAME=="NEGATIVE_ANGLE_RAD" or PARAMETER_NAME=="NEGATIVE ANGLE IN RAD")
+            return busptr->set_negative_sequence_angle_in_rad(value);
+
+        if(PARAMETER_NAME=="NEGATIVE_ANGLE_DEG" or PARAMETER_NAME=="NEGATIVE ANGLE IN DEG")
+            return busptr->set_negative_sequence_angle_in_deg(value);
+
+        if(PARAMETER_NAME=="V0_PU" or PARAMETER_NAME=="ZERO VOLTAGE IN PU")
+            return busptr->set_zero_sequence_voltage_in_pu(value);
+
+        if(PARAMETER_NAME=="V0_KV" or PARAMETER_NAME=="ZERO VOLTAGE IN KV")
+            return busptr->set_zero_sequence_voltage_in_kV(value);
+
+        if(PARAMETER_NAME=="ZERO_ANGLE_RAD" or PARAMETER_NAME=="ZERO ANGLE IN RAD")
+            return busptr->set_zero_sequence_angle_in_rad(value);
+
+        if(PARAMETER_NAME=="ZERO_ANGLE_DEG" or PARAMETER_NAME=="ZERO ANGLE IN DEG")
+            return busptr->set_zero_sequence_angle_in_deg(value);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
     }

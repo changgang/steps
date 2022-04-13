@@ -74,6 +74,24 @@ double api_get_fixed_shunt_float_data(unsigned int bus, char* identifier, char* 
         if(PARAMETER_NAME=="B_PU" or PARAMETER_NAME=="NOMINAL SUSCEPTANCE SHUNT IN PU")
             return shuntptr->get_nominal_admittance_shunt_in_pu().imag();
 
+        if(PARAMETER_NAME=="G0_PU" or PARAMETER_NAME=="ZERO SEQUENCE CONDUCTANCE SHUNT IN PU")
+            return shuntptr->get_nominal_zero_sequence_admittance_shunt_in_pu().real();
+        if(PARAMETER_NAME=="B0_PU" or PARAMETER_NAME=="ZERO SEQUENCE SUSCEPTANCE SHUNT IN PU")
+            return shuntptr->get_nominal_zero_sequence_admittance_shunt_in_pu().imag();
+
+        if(PARAMETER_NAME=="I1_PU" or PARAMETER_NAME=="POSITIVE SEQUENCE CURRENT IN PU")
+            return abs(shuntptr->get_positive_sequence_complex_current_in_pu());
+        if(PARAMETER_NAME=="I2_PU" or PARAMETER_NAME=="NEGATIVE SEQUENCE CURRENT IN PU")
+            return abs(shuntptr->get_positive_sequence_complex_current_in_pu());
+        if(PARAMETER_NAME=="I0_PU" or PARAMETER_NAME=="ZERo SEQUENCE CURRENT IN PU")
+            return abs(shuntptr->get_positive_sequence_complex_current_in_pu());
+        if(PARAMETER_NAME=="I1_KA" or PARAMETER_NAME=="POSITIVE SEQUENCE CURRENT IN KA")
+            return abs(shuntptr->get_positive_sequence_complex_current_in_kA());
+        if(PARAMETER_NAME=="I2_KA" or PARAMETER_NAME=="NEGATIVE SEQUENCE CURRENT IN KA")
+            return abs(shuntptr->get_positive_sequence_complex_current_in_kA());
+        if(PARAMETER_NAME=="I0_KA" or PARAMETER_NAME=="ZERO SEQUENCE CURRENT IN KA")
+            return abs(shuntptr->get_positive_sequence_complex_current_in_kA());
+
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return 0.0;
     }
@@ -162,6 +180,18 @@ void api_set_fixed_shunt_float_data(unsigned int bus, char* identifier, char* pa
         {
             complex<double> S = shuntptr->get_nominal_positive_sequence_impedance_shunt_in_MVA();
             return shuntptr->set_nominal_positive_sequence_impedance_shunt_in_MVA(complex<double>(S.real(), -value*sbase));
+        }
+
+        if(PARAMETER_NAME=="G0_PU" or PARAMETER_NAME=="ZERO SEQUENCE CONDUCTANCE SHUNT IN PU")
+        {
+            complex<double> S = shuntptr->get_nominal_zero_sequence_impedance_shunt_in_MVA();
+            return shuntptr->set_nominal_zero_sequence_impedance_shunt_in_MVA(complex<double>(value*sbase, S.imag()));
+        }
+
+        if(PARAMETER_NAME=="B0_PU" or PARAMETER_NAME=="ZERO SEQUENCE SUSCEPTANCE SHUNT IN PU")
+        {
+            complex<double> S = shuntptr->get_nominal_zero_sequence_impedance_shunt_in_MVA();
+            return shuntptr->set_nominal_zero_sequence_impedance_shunt_in_MVA(complex<double>(S.real(), -value*sbase));
         }
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);

@@ -44,6 +44,18 @@ class GENERATOR : public SOURCE
         double get_zero_sequence_reactance_in_pu() const;
         double get_grounding_resistance_in_pu() const;
         double get_grounding_reactance_in_pu() const;
+
+        void set_generator_reactance_option(GENERATOR_REACTANCE_OPTION option);
+        GENERATOR_REACTANCE_OPTION get_generator_reactance_option() const;
+        void update_E();
+        complex<double> get_complex_E_in_pu();
+        complex<double> get_positive_sequence_complex_current_in_pu();
+        complex<double> get_negative_sequence_complex_current_in_pu();
+        complex<double> get_zero_sequence_complex_current_in_pu();
+        complex<double> get_positive_sequence_complex_current_in_kA();
+        complex<double> get_negative_sequence_complex_current_in_kA();
+        complex<double> get_zero_sequence_complex_current_in_kA();
+
         virtual void clear();
 
         virtual DEVICE_ID get_device_id() const;
@@ -92,5 +104,8 @@ class GENERATOR : public SOURCE
         double R1, X1_sync, X1_transient, X1_subtransient;
         double R2, X2, R0, X0;
         double Rground, Xground;
+
+        complex<double> E;
+        GENERATOR_REACTANCE_OPTION gen_X_option;
 };
 #endif // GENERATOR_H

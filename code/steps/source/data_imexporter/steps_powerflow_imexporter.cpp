@@ -96,12 +96,6 @@ void STEPS_IMEXPORTER::load_powerflow_result(string file)
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-void STEPS_IMEXPORTER::load_sequence_data(string sq_source)
-{
-    sq_source = string2upper(sq_source);
-}
-
-
 void STEPS_IMEXPORTER::load_powerflow_data_from_steps_vector(vector<vector<vector<string> > >& data)
 {
     splitted_sraw_data_in_ram = data;

@@ -117,6 +117,11 @@ void LOAD::set_zero_sequence_load_in_MVA(const complex<double>& s)
     s_zero_sequence_in_MVA = s;
 }
 
+void LOAD::set_grounding_flag(const bool flag)
+{
+    grounding_flag = flag;
+}
+
 unsigned int LOAD::get_load_bus() const
 {
     return bus;
@@ -187,6 +192,11 @@ complex<double> LOAD::get_zero_sequence_load_in_MVA() const
     return s_zero_sequence_in_MVA;
 }
 
+bool LOAD::get_grounding_flag() const
+{
+    return grounding_flag;
+}
+
 bool LOAD::is_valid() const
 {
     if(get_load_bus()!=0)
@@ -221,6 +231,8 @@ void LOAD::clear()
 
     s_negative_sequence_in_MVA = 0.0;
     s_zero_sequence_in_MVA = 0.0;
+
+    set_grounding_flag(false);
 }
 
 bool LOAD::is_connected_to_bus(unsigned int target_bus) const
@@ -279,6 +291,7 @@ LOAD& LOAD::operator=(const LOAD& load)
 
     set_negative_sequence_load_in_MVA(load.get_negative_sequence_load_in_MVA());
     set_zero_sequence_load_in_MVA(load.get_zero_sequence_load_in_MVA());
+    set_grounding_flag(load.get_grounding_flag());
 
     return *this;
 }
@@ -723,3 +736,76 @@ complex<double> LOAD::get_dynamics_load_norton_current_in_pu_based_on_system_bas
     else
         return 0.0;
 }
+
+complex<double> LOAD::get_positive_sequence_complex_current_in_pu()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+
+    BUS* bus = get_bus_pointer();
+    complex<double> U1 = bus->get_positive_sequence_complex_voltage_in_pu();
+
+    complex<double> S1 = get_nominal_constant_power_load_in_MVA();
+    complex<double> Y1 = conj(S1)/ sbase;
+    complex<double> I1 = Y1 * U1;
+
+    return I1;
+}
+
+complex<double> LOAD::get_negative_sequence_complex_current_in_pu()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+
+    BUS* bus = get_bus_pointer();
+    complex<double> U2 = bus->get_negative_sequence_complex_voltage_in_pu();
+
+    complex<double> S2 = get_negative_sequence_load_in_MVA();
+    complex<double> Y2 = S2 / sbase;
+    complex<double> I2 = Y2 * U2;
+
+    return I2;
+}
+
+complex<double> LOAD::get_zero_sequence_complex_current_in_pu()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+
+    BUS* bus = get_bus_pointer();
+    complex<double> U0 = bus->get_zero_sequence_complex_voltage_in_pu();
+
+    complex<double> S0 = get_zero_sequence_load_in_MVA();
+    complex<double> Y0 = S0 / sbase;
+    complex<double> I0 = Y0 * U0;
+
+    return I0;
+}
+
+complex<double> LOAD::get_positive_sequence_complex_current_in_kA()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    return get_positive_sequence_complex_current_in_pu()*sbase/(SQRT3*psdb.get_bus_base_voltage_in_kV(get_load_bus()));
+}
+
+complex<double> LOAD::get_negative_sequence_complex_current_in_kA()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    return get_negative_sequence_complex_current_in_pu()*sbase/(SQRT3*psdb.get_bus_base_voltage_in_kV(get_load_bus()));
+}
+
+complex<double> LOAD::get_zero_sequence_complex_current_in_kA()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    return get_zero_sequence_complex_current_in_pu()*sbase/(SQRT3*psdb.get_bus_base_voltage_in_kV(get_load_bus()));
+}
+

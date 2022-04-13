@@ -19,6 +19,7 @@ PSSE_IMEXPORTER::PSSE_IMEXPORTER(STEPS& toolkit) : DATA_IMEXPORTER(toolkit)
 {
     raw_data_in_ram.clear();
     dyr_data_in_ram.clear();
+    seq_data_in_ram.clear();
 }
 
 PSSE_IMEXPORTER::~PSSE_IMEXPORTER()
@@ -138,12 +139,6 @@ void PSSE_IMEXPORTER::load_powerflow_result(string file)
 {
     return;
 }
-
-void PSSE_IMEXPORTER::load_sequence_data(string sq_source)
-{
-    sq_source = string2upper(sq_source);
-}
-
 
 void PSSE_IMEXPORTER::load_powerflow_data_into_ram(string file)
 {
@@ -1789,9 +1784,3 @@ string PSSE_IMEXPORTER::export_all_switched_shunt_data() const
 }
 
 
-void PSSE_IMEXPORTER::export_sequence_data(string file)
-{
-    ofstream fid(file);
-    fid.close();
-    return;
-}

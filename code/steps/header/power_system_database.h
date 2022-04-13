@@ -503,6 +503,20 @@ class POWER_SYSTEM_DATABASE
         double get_bus_positive_sequence_angle_in_rad(unsigned int bus);
         complex<double> get_bus_positive_sequence_complex_voltage_in_pu(unsigned int bus);
         complex<double> get_bus_positive_sequence_complex_voltage_in_kV(unsigned int bus);
+
+        double get_bus_negative_sequence_voltage_in_pu(unsigned int bus);
+        double get_bus_negative_sequence_voltage_in_kV(unsigned int bus);
+        double get_bus_negative_sequence_angle_in_deg(unsigned int bus);
+        double get_bus_negative_sequence_angle_in_rad(unsigned int bus);
+        complex<double> get_bus_negative_sequence_complex_voltage_in_pu(unsigned int bus);
+        complex<double> get_bus_negative_sequence_complex_voltage_in_kV(unsigned int bus);
+        double get_bus_zero_sequence_voltage_in_pu(unsigned int bus);
+        double get_bus_zero_sequence_voltage_in_kV(unsigned int bus);
+        double get_bus_zero_sequence_angle_in_deg(unsigned int bus);
+        double get_bus_zero_sequence_angle_in_rad(unsigned int bus);
+        complex<double> get_bus_zero_sequence_complex_voltage_in_pu(unsigned int bus);
+        complex<double> get_bus_zero_sequence_complex_voltage_in_kV(unsigned int bus);
+
         double get_bus_frequency_deviation_in_pu(unsigned int bus);
         double get_bus_frequency_deviation_in_Hz(unsigned int bus);
         double get_bus_frequency_in_Hz(unsigned int bus);

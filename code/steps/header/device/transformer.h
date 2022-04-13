@@ -84,6 +84,10 @@ class TRANSFORMER : public NONBUS_DEVICE
         complex<double> get_common_zero_sequence_nutural_grounding_impedance_based_on_winding_nominals_in_pu() const;
         complex<double> get_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(TRANSFORMER_WINDING_SIDE winding1, TRANSFORMER_WINDING_SIDE winding2) const;
 
+        complex<double> get_winding_zero_sequence_impedance_based_on_system_base_power_in_pu(TRANSFORMER_WINDING_SIDE winding) const;
+        complex<double> get_common_zero_sequence_nutural_grounding_impedance_based_on_system_base_power_in_pu() const;
+        complex<double> get_zero_sequence_impedance_between_windings_based_on_system_base_power_in_pu(TRANSFORMER_WINDING_SIDE winding1, TRANSFORMER_WINDING_SIDE winding2) const;
+
 
         virtual bool is_valid() const;
         virtual void check();
@@ -111,9 +115,22 @@ class TRANSFORMER : public NONBUS_DEVICE
         complex<double> get_star_bus_complex_voltage_in_pu() const;
         complex<double> get_star_bus_complex_voltage_in_kV_based_on_winding_nominal_voltage(TRANSFORMER_WINDING_SIDE side) const;
 
-        complex<double> get_winding_complex_current_in_pu(TRANSFORMER_WINDING_SIDE side) const;
+        complex<double> get_star_bus_positive_sequence_complex_voltage_in_pu() const;
+        complex<double> get_star_bus_negative_sequence_complex_voltage_in_pu() const;
+        complex<double> get_star_bus_zero_sequence_complex_voltage_in_pu() const;
+        complex<double> get_star_bus_positive_sequence_complex_voltage_in_kV_based_on_winding_nominal_voltage(TRANSFORMER_WINDING_SIDE side) const;
+        complex<double> get_star_bus_negative_sequence_complex_voltage_in_kV_based_on_winding_nominal_voltage(TRANSFORMER_WINDING_SIDE side) const;
+        complex<double> get_star_bus_zero_sequence_complex_voltage_in_kV_based_on_winding_nominal_voltage(TRANSFORMER_WINDING_SIDE side) const;
 
+        complex<double> get_winding_complex_current_in_pu(TRANSFORMER_WINDING_SIDE side) const;
         complex<double> get_winding_complex_current_in_kA(TRANSFORMER_WINDING_SIDE side) const;
+
+        complex<double> get_winding_positive_sequence_complex_current_in_pu(TRANSFORMER_WINDING_SIDE side) const;
+        complex<double> get_winding_negative_sequence_complex_current_in_pu(TRANSFORMER_WINDING_SIDE side) const;
+        complex<double> get_winding_zero_sequence_complex_current_in_pu(TRANSFORMER_WINDING_SIDE side) const;
+        complex<double> get_winding_positive_sequence_complex_current_in_kA(TRANSFORMER_WINDING_SIDE side) const;
+        complex<double> get_winding_negative_sequence_complex_current_in_kA(TRANSFORMER_WINDING_SIDE side) const;
+        complex<double> get_winding_zero_sequence_complex_current_in_kA(TRANSFORMER_WINDING_SIDE side) const;
 
         complex<double> get_winding_complex_power_in_pu(TRANSFORMER_WINDING_SIDE side) const;
 
@@ -123,6 +140,11 @@ class TRANSFORMER : public NONBUS_DEVICE
 
         complex<double> get_two_winding_trans_star_bus_complex_voltage_in_pu() const;
         complex<double> get_three_winding_trans_star_bus_complex_voltage_in_pu() const;
+
+        complex<double> get_two_winding_trans_star_bus_negative_sequence_complex_voltage_in_pu() const;
+        complex<double> get_three_winding_trans_star_bus_negative_sequence_complex_voltage_in_pu() const;
+        complex<double> get_two_winding_trans_star_bus_zero_sequence_complex_voltage_in_pu() const;
+        complex<double> get_three_winding_trans_star_bus_zero_sequence_complex_voltage_in_pu() const;
 
         double get_primary_winding_off_nominal_turn_ratio_in_pu() const;
         double get_secondary_winding_off_nominal_turn_ratio_in_pu() const;
@@ -153,6 +175,24 @@ class TRANSFORMER : public NONBUS_DEVICE
         complex<double> get_three_winding_trans_primary_winding_complex_current_in_pu() const;
         complex<double> get_three_winding_trans_secondary_winding_complex_current_in_pu() const;
         complex<double> get_three_winding_trans_tertiary_winding_complex_current_in_pu() const;
+
+        complex<double> get_two_winding_trans_primary_winding_positive_sequence_complex_current_in_pu() const;
+        complex<double> get_two_winding_trans_secondary_winding_positive_sequence_complex_current_in_pu() const;
+        complex<double> get_three_winding_trans_primary_winding_positive_sequence_complex_current_in_pu() const;
+        complex<double> get_three_winding_trans_secondary_winding_positive_sequence_complex_current_in_pu() const;
+        complex<double> get_three_winding_trans_tertiary_winding_positive_sequence_complex_current_in_pu() const;
+
+        complex<double> get_two_winding_trans_primary_winding_negative_sequence_complex_current_in_pu() const;
+        complex<double> get_two_winding_trans_secondary_winding_negative_sequence_complex_current_in_pu() const;
+        complex<double> get_three_winding_trans_primary_winding_negative_sequence_complex_current_in_pu() const;
+        complex<double> get_three_winding_trans_secondary_winding_negative_sequence_complex_current_in_pu() const;
+        complex<double> get_three_winding_trans_tertiary_winding_negative_sequence_complex_current_in_pu() const;
+
+        complex<double> get_two_winding_trans_primary_winding_zero_sequence_complex_current_in_pu() const;
+        complex<double> get_two_winding_trans_secondary_winding_zero_sequence_complex_current_in_pu() const;
+        complex<double> get_three_winding_trans_primary_winding_zero_sequence_complex_current_in_pu() const;
+        complex<double> get_three_winding_trans_secondary_winding_zero_sequence_complex_current_in_pu() const;
+        complex<double> get_three_winding_trans_tertiary_winding_zero_sequence_complex_current_in_pu() const;
 
         unsigned int winding_bus[3];
         //BUS* winding_busptr[3];

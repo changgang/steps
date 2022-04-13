@@ -59,6 +59,38 @@ class WT_GENERATOR : public SOURCE
 
         virtual complex<double> get_complex_internal_voltage_in_pu_in_xy_axis() const;
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power();
+
+        void set_positive_sequence_resistance_in_pu(double r);
+        void set_positive_sequence_syncronous_reactance_in_pu(double x);
+        void set_positive_sequence_transient_reactance_in_pu(double x);
+        void set_positive_sequence_subtransient_reactance_in_pu(double x);
+        void set_negative_sequence_resistance_in_pu(double r);
+        void set_negative_sequence_reactance_in_pu(double x);
+        void set_zero_sequence_resistance_in_pu(double r);
+        void set_zero_sequence_reactance_in_pu(double x);
+        void set_grounding_resistance_in_pu(double r);
+        void set_grounding_reactance_in_pu(double x);
+        double get_positive_sequence_resistance_in_pu() const;
+        double get_positive_sequence_syncronous_reactance_in_pu() const;
+        double get_positive_sequence_transient_reactance_in_pu() const;
+        double get_positive_sequence_subtransient_reactance_in_pu() const;
+        double get_negative_sequence_resistance_in_pu() const;
+        double get_negative_sequence_reactance_in_pu() const;
+        double get_zero_sequence_resistance_in_pu() const;
+        double get_zero_sequence_reactance_in_pu() const;
+        double get_grounding_resistance_in_pu() const;
+        double get_grounding_reactance_in_pu() const;
+
+        void set_generator_reactance_option(GENERATOR_REACTANCE_OPTION option);
+        GENERATOR_REACTANCE_OPTION get_generator_reactance_option() const;
+        void update_E();
+        complex<double> get_complex_E_in_pu();
+        complex<double> get_positive_sequence_complex_current_in_pu();
+        complex<double> get_negative_sequence_complex_current_in_pu();
+        complex<double> get_zero_sequence_complex_current_in_pu();
+        complex<double> get_positive_sequence_complex_current_in_kA();
+        complex<double> get_negative_sequence_complex_current_in_kA();
+        complex<double> get_zero_sequence_complex_current_in_kA();
     private:
 
         unsigned int number_of_lumped_wt_generators;
@@ -71,5 +103,11 @@ class WT_GENERATOR : public SOURCE
         WT_PITCH_MODEL* wt_pitch_model;
         WIND_SPEED_MODEL* wind_speed_model;
         WT_RELAY_MODEL* wt_relay_model;
+
+        double R1, X1_sync, X1_transient, X1_subtransient;
+        double R2, X2, R0, X0;
+        double Rground, Xground;
+        complex<double> E;
+        GENERATOR_REACTANCE_OPTION gen_X_option;
 };
 #endif // WT_GENERATOR_H
