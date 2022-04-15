@@ -2885,9 +2885,9 @@ void NETWORK_MATRIX::add_generator_to_positive_sequence_network(const GENERATOR&
         double X;
         switch(gen_X)
         {
-            case SUBTRANSIENT_REACTANCE:    X = gen.get_positive_sequence_subtransient_reactance_in_pu();
-            case TRANSIENT_REACTANCE:       X = gen.get_positive_sequence_transient_reactance_in_pu();
-            case SYNCHRONOUS_REACTANCE:     X = gen.get_positive_sequence_syncronous_reactance_in_pu();
+            case SUBTRANSIENT_REACTANCE:    X = gen.get_positive_sequence_subtransient_reactance_in_pu();break;
+            case TRANSIENT_REACTANCE:       X = gen.get_positive_sequence_transient_reactance_in_pu();break;
+            case SYNCHRONOUS_REACTANCE:     X = gen.get_positive_sequence_syncronous_reactance_in_pu();break;
         }
         double one_over_mbase = gen.get_one_over_mbase_in_one_over_MVA();
         double sbase = psdb.get_system_base_power_in_MVA();
