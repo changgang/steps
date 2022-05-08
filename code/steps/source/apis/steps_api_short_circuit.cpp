@@ -147,6 +147,49 @@ EXPORT_STEPS_DLL double api_get_short_circuit_solver_float_parameter(char* param
     return 0.0;
 }
 
+EXPORT_STEPS_DLL void api_set_short_circuit_solver_boolean_parameter(char* parameter_name, bool value, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+
+    string PARAMETER_NAME = string2upper(parameter_name);
+
+    if(PARAMETER_NAME=="CONSIDER LOAD LOGIC")
+    {
+        solver.set_consider_load_logic(value);
+        return;
+    }
+    if(PARAMETER_NAME=="CONSIDER MOTOR LOAD LOGIC")
+    {
+        solver.set_consider_motor_load_logic(value);
+        return;
+    }
+
+
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for short circuit solver with api %s.\n",
+             PARAMETER_NAME.c_str(), __FUNCTION__);
+    toolkit.show_information_with_leading_time_stamp(buffer);
+    return;
+}
+EXPORT_STEPS_DLL bool api_get_short_circuit_solver_boolean_parameter(char* parameter_name, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+
+    string PARAMETER_NAME = string2upper(parameter_name);
+    if(PARAMETER_NAME=="CONSIDER LOAD LOGIC")
+        return solver.get_consider_load_logic();
+    if(PARAMETER_NAME=="CONSIDER MOTOR LOAD LOGIC")
+        return solver.get_consider_motor_load_logic();
+
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for short circuit solver with api %s.\n"
+             "0.0 will be returned.", PARAMETER_NAME.c_str(), __FUNCTION__);
+    toolkit.show_information_with_leading_time_stamp(buffer);
+    return 0.0;
+}
+
 void api_short_circuit_set_bus_fault(unsigned int bus, char* fault_type, double fault_G, double fault_B, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

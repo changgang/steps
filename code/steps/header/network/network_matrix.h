@@ -20,6 +20,10 @@ class NETWORK_MATRIX
 
         void set_generator_reactance_option(GENERATOR_REACTANCE_OPTION option);
         GENERATOR_REACTANCE_OPTION get_generator_reactance_option();
+        void set_consider_load_logic(bool logic);
+        bool get_consider_load_logic();
+        void set_consider_motor_load_logic(bool logic);
+        bool get_consider_motor_load_logic();
 
         void build_network_Y_matrix();
         void build_decoupled_network_B_matrix();
@@ -226,5 +230,7 @@ class NETWORK_MATRIX
         INPHNO inphno;
 
         GENERATOR_REACTANCE_OPTION gen_X_option;
+        bool consider_load;
+        bool consider_motor_load;
 };
 #endif // NETWORK_MATRIX_H

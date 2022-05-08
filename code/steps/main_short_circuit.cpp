@@ -33,6 +33,8 @@ int main()
     sc_solver.set_generator_reactance_option(SUBTRANSIENT_REACTANCE);
     sc_solver.set_units_of_currents_and_voltages(PU);
     sc_solver.set_coordinates_of_currents_and_voltages(RECTANGULAR);
+    sc_solver.set_consider_load_logic(true);
+    sc_solver.set_consider_motor_load_logic(true);
 
     sc_solver.set_bus_fault(3, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
 

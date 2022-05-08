@@ -26,6 +26,10 @@ class SHORT_CIRCUIT_SOLVER
         UNITS_OPTION get_units_of_currents_and_voltages();
         void set_coordinates_of_currents_and_voltages(COORDINATES_OPTION option);
         COORDINATES_OPTION get_coordinates_of_currents_and_voltages();
+        void set_consider_load_logic(bool logic);
+        bool get_consider_load_logic();
+        void set_consider_motor_load_logic(bool logic);
+        bool get_consider_motor_load_logic();
 
         void set_bus_fault(unsigned int bus, FAULT_TYPE type, const complex<double>& fault_shunt);
         void set_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location, FAULT_TYPE fault_type, const complex<double>& fault_shunt);
@@ -76,6 +80,7 @@ class SHORT_CIRCUIT_SOLVER
         void store_bus_initial_voltage_before_short_circuit();
         complex<double> get_bus_initial_voltage_before_short_circuit(unsigned int bus);
         void update_all_generator_E();
+        void update_all_motor_load_data();
 
         void calculate_and_store_equivalent_impedance_between_bus_and_fault_place();
 

@@ -127,6 +127,8 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void load_wt_generator_seq_data(vector<string>& data);
         void load_pv_unit_seq_data(vector<string>& data);
         void load_load_seq_data();
+        void load_static_load_seq_data(LOAD& load, vector<string>& data);
+        void load_motor_load_seq_data(LOAD& load, vector<string>& data);
         void load_zero_seq_non_transformer_branch_data();
         void load_zero_seq_mutual_impedance_data();
         void load_zero_seq_transformer_data();

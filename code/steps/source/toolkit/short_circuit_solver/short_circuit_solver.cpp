@@ -62,6 +62,7 @@ void SHORT_CIRCUIT_SOLVER::initialize_short_circuit_solver()
 
     store_bus_initial_voltage_before_short_circuit();
     update_all_generator_E();
+    update_all_motor_load_data();
 
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Done initializing short circuit solver.");
     toolkit->show_information_with_leading_time_stamp(buffer);
@@ -118,6 +119,16 @@ void SHORT_CIRCUIT_SOLVER::update_all_generator_E()
         wt_gens[i]->update_E();
 }
 
+void SHORT_CIRCUIT_SOLVER::update_all_motor_load_data()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+
+    vector<LOAD*> loads = psdb.get_all_loads();
+    unsigned int n = loads.size();
+    for(unsigned int i=0; i<n; i++)
+        loads[i]->update_motor_load_data();
+}
+
 void SHORT_CIRCUIT_SOLVER::set_generator_reactance_option(GENERATOR_REACTANCE_OPTION gen_X_option)
 {
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -157,6 +168,27 @@ void SHORT_CIRCUIT_SOLVER::set_coordinates_of_currents_and_voltages(COORDINATES_
 COORDINATES_OPTION SHORT_CIRCUIT_SOLVER::get_coordinates_of_currents_and_voltages()
 {
     return coordindates_of_currents_and_volatges;
+}
+
+void SHORT_CIRCUIT_SOLVER::set_consider_load_logic(bool logic)
+{
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+    network_matrix.set_consider_load_logic(logic);
+}
+bool SHORT_CIRCUIT_SOLVER::get_consider_load_logic()
+{
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+    return network_matrix.get_consider_load_logic();
+}
+void SHORT_CIRCUIT_SOLVER::set_consider_motor_load_logic(bool logic)
+{
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+    network_matrix.set_consider_motor_load_logic(logic);
+}
+bool SHORT_CIRCUIT_SOLVER::get_consider_motor_load_logic()
+{
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+    return network_matrix.get_consider_motor_load_logic();
 }
 
 void SHORT_CIRCUIT_SOLVER::set_bus_fault(unsigned int bus, FAULT_TYPE type, const complex<double>& fault_shunt)
@@ -1340,13 +1372,13 @@ void SHORT_CIRCUIT_SOLVER::show_short_circuit_with_line_fault()
     if(unit == PU)
     {
         I1 = get_positive_sequence_fault_current_in_pu();
-        I2 = get_positive_sequence_fault_current_in_pu();
+        I2 = get_negative_sequence_fault_current_in_pu();
         I0 = get_zero_sequence_fault_current_in_pu();
     }
     else if(unit == PHYSICAL)
     {
         I1 = get_positive_sequence_fault_current_in_kA();
-        I2 = get_positive_sequence_fault_current_in_kA();
+        I2 = get_negative_sequence_fault_current_in_kA();
         I0 = get_zero_sequence_fault_current_in_kA();
     }
     osstream<< "Fault current:"<<endl;

@@ -68,6 +68,23 @@ GENERATOR_REACTANCE_OPTION NETWORK_MATRIX::get_generator_reactance_option()
     return gen_X_option;
 }
 
+void NETWORK_MATRIX::set_consider_load_logic(bool logic)
+{
+    consider_load = logic;
+}
+bool NETWORK_MATRIX::get_consider_load_logic()
+{
+    return consider_load;
+}
+void NETWORK_MATRIX::set_consider_motor_load_logic(bool logic)
+{
+    consider_motor_load = logic;
+}
+bool NETWORK_MATRIX::get_consider_motor_load_logic()
+{
+    return consider_motor_load;
+}
+
 void NETWORK_MATRIX::build_initial_zero_matrix(STEPS_COMPLEX_SPARSE_MATRIX& matrix)
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -233,7 +250,8 @@ void NETWORK_MATRIX::build_positive_sequence_network_Y_matrix()
     add_lines_to_positive_sequence_network();
     add_transformers_to_positive_sequence_network();
     add_sources_to_positive_sequence_network();
-    add_loads_to_positive_sequence_network();
+    if(get_consider_load_logic())
+        add_loads_to_positive_sequence_network();
     add_fixed_shunts_to_positive_sequence_network();
 
     network_Y1_matrix.compress_and_merge_duplicate_entries();
@@ -260,8 +278,8 @@ void NETWORK_MATRIX::build_negative_sequence_network_Y_matrix()
     add_lines_to_negative_sequence_network();
     add_transformers_to_negative_sequence_network();
     add_sources_to_negative_sequence_network();
-    add_loads_to_negative_sequence_network();
-
+    if(get_consider_load_logic())
+        add_loads_to_negative_sequence_network();
     add_fixed_shunts_to_negative_sequence_network();
 
     network_Y2_matrix.compress_and_merge_duplicate_entries();
@@ -287,7 +305,8 @@ void NETWORK_MATRIX::build_zero_sequence_network_Y_matrix()
 
     add_lines_to_zero_sequence_network();
     add_transformers_to_zero_sequence_network();
-    add_loads_to_zero_sequence_network();
+    if(get_consider_load_logic())
+        add_loads_to_zero_sequence_network();
     add_sources_to_zero_sequence_network();
     add_fixed_shunts_to_zero_sequence_network();
 
@@ -2841,18 +2860,38 @@ void NETWORK_MATRIX::add_load_to_positive_sequence_network(const LOAD& load)
     if(load.get_status()==true)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        complex<double> S_base = psdb.get_system_base_power_in_MVA();
-        complex<double> S = load.get_nominal_constant_power_load_in_MVA();
-
+        double S_base = psdb.get_system_base_power_in_MVA();
         unsigned int bus = load.get_load_bus();
-
         unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
-
         double V = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
 
-        complex<double> y = conj(S) / S_base / (V*V);
+        if(get_consider_motor_load_logic())
+        {
+            complex<double> S_static_load = load.get_static_load_power_in_MVA();
+            complex<double> y_static = conj(S_static_load) / S_base / (V*V);
 
-        this_Y_matrix_pointer->add_entry(i,i,y);
+            this_Y_matrix_pointer->add_entry(i,i,y_static);
+
+            if(load.has_motor_load())
+            {
+                double mbase = load.get_motor_mbase_in_MVA();
+                double rated_voltage = load.get_motor_rated_voltage_in_kV();
+                double bus_rated_voltage = psdb.get_bus_base_voltage_in_kV(bus);
+                double Zmb = rated_voltage*rated_voltage/mbase;
+                double Zbb = bus_rated_voltage*bus_rated_voltage/S_base;
+
+                complex<double> Z = load.get_motor_positive_sequence_impedance_in_pu();
+
+                this_Y_matrix_pointer->add_entry(i,i,1.0/(Z*Zmb/Zbb));
+            }
+        }
+        else    // 全部转换成恒阻抗
+        {
+            complex<double> s_load = load.get_actual_total_load_in_MVA();
+            complex<double> y = conj(s_load)/S_base/(V*V);
+
+            this_Y_matrix_pointer->add_entry(i,i,y);
+        }
     }
 }
 
@@ -2921,9 +2960,9 @@ void NETWORK_MATRIX::add_wt_generator_to_positive_sequence_network(const WT_GENE
         double X;
         switch(gen_X)
         {
-            case SUBTRANSIENT_REACTANCE:    X = wt_gen.get_positive_sequence_subtransient_reactance_in_pu();
-            case TRANSIENT_REACTANCE:       X = wt_gen.get_positive_sequence_transient_reactance_in_pu();
-            case SYNCHRONOUS_REACTANCE:     X = wt_gen.get_positive_sequence_syncronous_reactance_in_pu();
+            case SUBTRANSIENT_REACTANCE:    X = wt_gen.get_positive_sequence_subtransient_reactance_in_pu();break;
+            case TRANSIENT_REACTANCE:       X = wt_gen.get_positive_sequence_transient_reactance_in_pu();break;
+            case SYNCHRONOUS_REACTANCE:     X = wt_gen.get_positive_sequence_syncronous_reactance_in_pu();break;
         }
         double one_over_mbase = wt_gen.get_one_over_mbase_in_one_over_MVA();
         double sbase = psdb.get_system_base_power_in_MVA();
@@ -3054,18 +3093,26 @@ void NETWORK_MATRIX::add_load_to_negative_sequence_network(const LOAD& load)
     if(load.get_status()==true)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        complex<double> S_base = psdb.get_system_base_power_in_MVA();
+        double S_base = psdb.get_system_base_power_in_MVA();
+        unsigned int bus = load.get_load_bus();
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
         complex<double> S = load.get_negative_sequence_load_in_MVA();
 
-        ostringstream osstream;
-
-        unsigned int bus = load.get_load_bus();
-
-        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
-
         complex<double> y =  S/S_base;
-
         this_Y_matrix_pointer->add_entry(i,i,y);
+
+        if(load.has_motor_load() and get_consider_motor_load_logic())
+        {
+            double mbase = load.get_motor_mbase_in_MVA();
+            double rated_voltage = load.get_motor_rated_voltage_in_kV();
+            double bus_rated_voltage = psdb.get_bus_base_voltage_in_kV(bus);
+            double Zmb = rated_voltage*rated_voltage/mbase;
+            double Zbb = bus_rated_voltage*bus_rated_voltage/S_base;
+
+            complex<double> Z = load.get_motor_negative_sequence_impedance_in_pu();
+
+            this_Y_matrix_pointer->add_entry(i,i,1.0/(Z*Zmb/Zbb));
+        }
     }
 }
 
@@ -3688,7 +3735,7 @@ void NETWORK_MATRIX::add_load_to_zero_sequence_network(const LOAD& load)
         if(grounding_flag == false)
             return;
 
-        complex<double> S_base = psdb.get_system_base_power_in_MVA();
+        double S_base = psdb.get_system_base_power_in_MVA();
         complex<double> S = load.get_zero_sequence_load_in_MVA();
 
         unsigned int bus = load.get_load_bus();
@@ -3696,6 +3743,20 @@ void NETWORK_MATRIX::add_load_to_zero_sequence_network(const LOAD& load)
 
         complex<double> y =  S/S_base;
         this_Y_matrix_pointer->add_entry(i,i,y);
+
+        if(load.has_motor_load() and get_consider_motor_load_logic())
+        {
+            double mbase = load.get_motor_mbase_in_MVA();
+            double rated_voltage = load.get_motor_rated_voltage_in_kV();
+            double bus_rated_voltage = psdb.get_bus_base_voltage_in_kV(bus);
+            double Zmb = rated_voltage*rated_voltage/mbase;
+            double Zbb = bus_rated_voltage*bus_rated_voltage/S_base;
+
+            complex<double> z = load.get_motor_zero_sequence_impedance_in_pu();
+            if(fabs(z)<DOUBLE_EPSILON)
+                return;
+            this_Y_matrix_pointer->add_entry(i,i,1.0/(z*Zmb/Zbb));
+        }
     }
 }
 

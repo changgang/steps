@@ -3855,7 +3855,7 @@ class STEPS():
         if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
             return STEPS_LIB.api_get_short_circuit_solver_float_parameter(par_name, self.toolkit_index)
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
-            return None
+            return STEPS_LIB.api_get_short_circuit_solver_boolean_parameter(par_name, self.toolkit_index)
         return None
 
     def set_short_circuit_solver_parameter(self, par_type, par_name, value):
@@ -3881,7 +3881,7 @@ class STEPS():
         if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
             return STEPS_LIB.api_set_short_circuit_solver_float_parameter(par_name, value, self.toolkit_index)
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
-            return 
+            return STEPS_LIB.api_set_short_circuit_solver_boolean_parameter(par_name, value, self.toolkit_index)
         return
     
     def show_powerflow_solver_configuration(self):

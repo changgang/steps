@@ -123,4 +123,8 @@ string dc_device_type2string(STEPS_DC_DEVICE_TYPE device_type);
 
 void set_openmp_number_of_threads(unsigned int n);
 
+float* roots_quadratic_equation(float a, float b, float c); //
+float* roots_cubic_equation(float a, float b, float c, float d);
+float* roots_quartic_equation(float a, float b, float c, float d, float e);
+
 #endif // UTILITY_H

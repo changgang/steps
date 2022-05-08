@@ -105,6 +105,47 @@ class LOAD : public NONBUS_DEVICE
         complex<double> get_positive_sequence_complex_current_in_kA();
         complex<double> get_negative_sequence_complex_current_in_kA();
         complex<double> get_zero_sequence_complex_current_in_kA();
+
+
+        void set_ratio_of_motor_active_power(double r);
+        void set_motor_rated_voltage_in_kV(double v);
+        void set_mbase_code(MBASE_CODE c);
+        void set_mbase_in_MVA(double m);
+        void set_motor_Ra_in_pu(double r);
+        void set_motor_Xa_in_pu(double x);
+        void set_motor_Xm_in_pu(double x);
+        void set_motor_R1_in_pu(double r);
+        void set_motor_X1_in_pu(double x);
+        void set_motor_R2_in_pu(double r);
+        void set_motor_X2_in_pu(double x);
+        void set_motor_internal_voltage_in_pu(complex<double> v);
+        void set_motor_positive_sequence_impedance_in_pu(complex<double> z);
+        void set_motor_negative_sequence_impedance_in_pu(complex<double> z);
+        void set_motor_zero_sequence_impedance_in_pu(complex<double> z);
+        void set_motor_power_in_MVA(complex<double> s);
+
+        double get_ratio_of_motor_active_power() const;
+        double get_motor_rated_voltage_in_kV() const;
+        MBASE_CODE get_motor_mbase_code() const;
+        double get_motor_mbase_in_MVA() const;
+        double get_motor_Ra_in_pu() const;
+        double get_motor_Xa_in_pu() const;
+        double get_motor_Xm_in_pu() const;
+        double get_motor_R1_in_pu() const;
+        double get_motor_X1_in_pu() const;
+        double get_motor_R2_in_pu() const;
+        double get_motor_X2_in_pu() const;
+        complex<double> get_motor_internal_voltage_in_pu() const;
+        complex<double> get_motor_equivalent_injection_current_in_pu() const;
+        complex<double> get_motor_positive_sequence_impedance_in_pu() const;
+        complex<double> get_motor_negative_sequence_impedance_in_pu() const;
+        complex<double> get_motor_zero_sequence_impedance_in_pu() const;
+        complex<double> get_motor_power_in_MVA() const;
+        complex<double> get_static_load_power_in_MVA() const;
+
+        bool has_motor_load() const;
+
+        void update_motor_load_data();
     private:
         unsigned int bus;
         BUS* busptr;
@@ -131,5 +172,16 @@ class LOAD : public NONBUS_DEVICE
         complex<double> s_negative_sequence_in_MVA, s_zero_sequence_in_MVA;
 
         bool grounding_flag;
+
+        double ratio_of_motor_P;
+        double motor_rated_voltge;
+        MBASE_CODE mbase_code;
+        double mbase;
+        double motor_Ra, motor_Xa, motor_Xm, motor_R1, motor_X1, motor_R2, motor_X2;
+
+        complex<double> motor_power_in_MVA;
+        complex<double> motor_internal_voltage;
+        complex<double> motor_Z1, motor_Z2, motor_Z0;
+
 };
 #endif // LOAD_H

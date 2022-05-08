@@ -525,9 +525,9 @@ void STEPS_IMEXPORTER::load_load_seq_data()
     unsigned int n = 0;
     unsigned int bus;
     string ID;
-    double P_neg = 0.0, Q_neg = 0.0;
-    unsigned int ground_flag = 0;
-    double P_zero = 0.0, Q_zero = 0.0;
+//    double P_neg = 0.0, Q_neg = 0.0;
+//    unsigned int ground_flag = 0;
+//    double P_zero = 0.0, Q_zero = 0.0;
 
     for(unsigned int i=0; i!=ndata; ++i)
     {
@@ -554,42 +554,201 @@ void STEPS_IMEXPORTER::load_load_seq_data()
             continue;
         }
 
+        load_static_load_seq_data(*loadptr, data);
         if(data.size()>0)
-        {
-            P_neg = get_double_data(data[n], "0.0");
-            data.erase(data.begin());
-        }
-        if(data.size()>0)
-        {
-            Q_neg = get_double_data(data[n], "0.0");
-            data.erase(data.begin());
-        }
-        if(P_neg<DOUBLE_EPSILON)
-            P_neg = loadptr->get_nominal_constant_power_load_in_MVA().real();
-        if(Q_neg<DOUBLE_EPSILON)
-            Q_neg = loadptr->get_nominal_constant_power_load_in_MVA().imag();
-        loadptr->set_negative_sequence_load_in_MVA(complex<double>(P_neg, Q_neg));
-
-        if(data.size()>0)
-        {
-            ground_flag = get_integer_data(data[n], "0");
-            data.erase(data.begin());
-        }
-        loadptr->set_grounding_flag(ground_flag);
-
-        if(data.size()>0)
-        {
-            P_zero = get_double_data(data[n], "0.0");
-            data.erase(data.begin());
-        }
-        if(data.size()>0)
-        {
-            Q_zero = get_double_data(data[n], "0.0");
-            data.erase(data.begin());
-        }
-        loadptr->set_zero_sequence_load_in_MVA(complex<double>(P_zero, Q_zero));
+            load_motor_load_seq_data(*loadptr, data);
+        else
+            loadptr->set_ratio_of_motor_active_power(0.0);
+//        if(data.size()>0)
+//        {
+//            P_neg = get_double_data(data[n], "0.0");
+//            data.erase(data.begin());
+//        }
+//        if(data.size()>0)
+//        {
+//            Q_neg = get_double_data(data[n], "0.0");
+//            data.erase(data.begin());
+//        }
+//        if(P_neg<DOUBLE_EPSILON)
+//            P_neg = loadptr->get_nominal_constant_power_load_in_MVA().real();
+//        if(Q_neg<DOUBLE_EPSILON)
+//            Q_neg = loadptr->get_nominal_constant_power_load_in_MVA().imag();
+//        loadptr->set_negative_sequence_load_in_MVA(complex<double>(P_neg, Q_neg));
+//
+//        if(data.size()>0)
+//        {
+//            ground_flag = get_integer_data(data[n], "0");
+//            data.erase(data.begin());
+//        }
+//        loadptr->set_grounding_flag(ground_flag);
+//
+//        if(data.size()>0)
+//        {
+//            P_zero = get_double_data(data[n], "0.0");
+//            data.erase(data.begin());
+//        }
+//        if(data.size()>0)
+//        {
+//            Q_zero = get_double_data(data[n], "0.0");
+//            data.erase(data.begin());
+//        }
+//        loadptr->set_zero_sequence_load_in_MVA(complex<double>(P_zero, Q_zero));
     }
 }
+
+void STEPS_IMEXPORTER::load_static_load_seq_data(LOAD& load, vector<string>& data)
+{
+    unsigned int n=0;
+    double P_neg=0.0, Q_neg=0.0, P_zero=0.0, Q_zero=0.0;
+    unsigned int ground_flag;
+    if(data.size()>0)
+    {
+        P_neg = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    if(data.size()>0)
+    {
+        Q_neg = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    if(P_neg<DOUBLE_EPSILON)
+        P_neg = load.get_nominal_constant_power_load_in_MVA().real();
+    if(Q_neg<DOUBLE_EPSILON)
+        Q_neg = load.get_nominal_constant_power_load_in_MVA().imag();
+    load.set_negative_sequence_load_in_MVA(complex<double>(P_neg, Q_neg));
+
+    if(data.size()>0)
+    {
+        ground_flag = get_integer_data(data[n], "0");
+        data.erase(data.begin());
+    }
+    load.set_grounding_flag(ground_flag);
+
+    if(data.size()>0)
+    {
+        P_zero = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    if(data.size()>0)
+    {
+        Q_zero = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    load.set_zero_sequence_load_in_MVA(complex<double>(P_zero, Q_zero));
+}
+
+void STEPS_IMEXPORTER::load_motor_load_seq_data(LOAD& load, vector<string>& data)
+{
+    double ratio_of_motor_active_power = 0.0;
+    unsigned int mbase_code = 0;
+    double mbase = 0.0;
+    double rated_voltage = 0.0;
+    double Ra=0.0, Xa=0.0, Xm=0.0, R1=0.0, X1=0.0, R2=0.0, X2=0.0;
+    double R_zero_seq=0.0, X_zero_seq=0.0;
+
+    unsigned int n=0;
+
+    if(data.size()>0)
+    {
+        ratio_of_motor_active_power = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    load.set_ratio_of_motor_active_power(ratio_of_motor_active_power);
+
+    if(data.size()>0)
+    {
+        mbase_code = get_integer_data(data[n], "0");
+        data.erase(data.begin());
+    }
+    switch(mbase_code)
+    {
+        case 0:
+            load.set_mbase_code(DEFAULT_RATIO_OF_ACTUAL_MACHINE_POWER);break;
+        case 1:
+            load.set_mbase_code(MACHINE_BASE_POWER);break;
+        case 2:
+            load.set_mbase_code(CUSTOM_RATIO_OF_ACTUAL_MACHINE_POWER);break;
+        default:
+            load.set_mbase_code(DEFAULT_RATIO_OF_ACTUAL_MACHINE_POWER);
+    }
+
+    if(data.size()>0)
+    {
+        mbase = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    load.set_mbase_in_MVA(mbase);
+
+    if(data.size()>0)
+    {
+        rated_voltage = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    load.set_motor_rated_voltage_in_kV(rated_voltage);
+
+    if(data.size()>0)
+    {
+        Ra = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    load.set_motor_Ra_in_pu(Ra);
+
+    if(data.size()>0)
+    {
+        Xa = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    load.set_motor_Xa_in_pu(Xa);
+
+    if(data.size()>0)
+    {
+        Xm = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    load.set_motor_Xm_in_pu(Xm);
+
+    if(data.size()>0)
+    {
+        R1 = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    load.set_motor_R1_in_pu(R1);
+
+    if(data.size()>0)
+    {
+        X1 = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    load.set_motor_X1_in_pu(X1);
+
+    if(data.size()>0)
+    {
+        R2 = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    load.set_motor_R2_in_pu(R2);
+
+    if(data.size()>0)
+    {
+        X2 = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    load.set_motor_X2_in_pu(X2);
+
+    if(data.size()>0)
+    {
+        R_zero_seq = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    if(data.size()>0)
+    {
+        X_zero_seq = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    load.set_motor_zero_sequence_impedance_in_pu(complex<double>(R_zero_seq, X_zero_seq));
+}
+
+
 void STEPS_IMEXPORTER::load_zero_seq_non_transformer_branch_data()
 {
     ostringstream osstream;

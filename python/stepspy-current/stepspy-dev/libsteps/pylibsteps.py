@@ -625,10 +625,14 @@ def load_library():
     libsteps.api_get_short_circuit_solver_integer_parameter.argtypes = (c_char_p, c_uint)
     libsteps.api_get_short_circuit_solver_float_parameter.restype = (c_double)
     libsteps.api_get_short_circuit_solver_float_parameter.argtypes = (c_char_p, c_uint)
+    libsteps.api_get_short_circuit_solver_boolean_parameter.restype = (c_bool)
+    libsteps.api_get_short_circuit_solver_boolean_parameter.argtypes = (c_char_p, c_uint)
     libsteps.api_set_short_circuit_solver_integer_parameter.restype = None
     libsteps.api_set_short_circuit_solver_integer_parameter.argtypes = (c_char_p, c_int, c_uint)
     libsteps.api_set_short_circuit_solver_float_parameter.restype = None
     libsteps.api_set_short_circuit_solver_float_parameter.argtypes = (c_char_p, c_double, c_uint)
+    libsteps.api_set_short_circuit_solver_boolean_parameter.restype = None
+    libsteps.api_set_short_circuit_solver_boolean_parameter.argtypes = (c_char_p, c_bool, c_uint)
     
 
     libsteps.api_show_powerflow_solver_configuration.restype = None
