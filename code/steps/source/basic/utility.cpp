@@ -1230,3 +1230,90 @@ float* roots_quartic_equation(float a, float b, float c, float d, float e) {
     }
     return roots;
 }
+
+vector<complex<double> > get_column_of_inverse_matrix(STEPS_COMPLEX_SPARSE_MATRIX &matrix, unsigned int col)
+{
+    STEPS_SPARSE_MATRIX jacobian_matrix;
+    STEPS_COMPLEX_SPARSE_MATRIX* matrix_pointer = (&matrix);
+    int n = matrix_pointer->get_matrix_size();
+    for(int i=0; i<n; i++)
+    {
+        for(int j=0; j<n; j++)
+        {
+            complex<double> y = matrix_pointer->get_entry_value(i,j);
+            double g = y.real(), b=y.imag();
+
+            if(g!=0.0)
+            {
+                jacobian_matrix.add_entry(i,j,g);
+                jacobian_matrix.add_entry(i+n,j+n,g);
+            }
+            if(b!=0.0)
+            {
+                jacobian_matrix.add_entry(i,j+n, -b);
+                jacobian_matrix.add_entry(i+n,j, b);
+            }
+        }
+    }
+    jacobian_matrix.compress_and_merge_duplicate_entries();
+    jacobian_matrix.LU_factorization(1, 1e-13);
+
+    int n2 = n+n;
+    vector<double> I;
+    I.reserve(n2);
+    for(int i=0; i<n2; i++)
+        I.push_back(0.0);
+    I[col]=1.0;
+    vector<double> Zreal = I/jacobian_matrix;
+    vector<complex<double> > Z;
+    Z.reserve(n);
+    for(int i=0; i<n; i++)
+        Z.push_back(complex<double>(Zreal[i], Zreal[i+n]));
+    return Z;
+}
+
+vector<vector<complex<double> > > get_all_columns_of_inverse_matrix(STEPS_COMPLEX_SPARSE_MATRIX &matrix)
+{
+    STEPS_SPARSE_MATRIX jacobian_matrix;
+    STEPS_COMPLEX_SPARSE_MATRIX* matrix_pointer = (&matrix);
+    int n = matrix_pointer->get_matrix_size();
+    for(int i=0; i<n; i++)
+    {
+        for(int j=0; j<n; j++)
+        {
+            complex<double> y = matrix_pointer->get_entry_value(i,j);
+            double g = y.real(), b=y.imag();
+
+            if(g!=0.0)
+            {
+                jacobian_matrix.add_entry(i,j,g);
+                jacobian_matrix.add_entry(i+n,j+n,g);
+            }
+            if(b!=0.0)
+            {
+                jacobian_matrix.add_entry(i,j+n, -b);
+                jacobian_matrix.add_entry(i+n,j, b);
+            }
+        }
+    }
+    jacobian_matrix.compress_and_merge_duplicate_entries();
+    jacobian_matrix.LU_factorization(1, 1e-13);
+
+    int n2 = n+n;
+    vector<vector<complex<double> > > Z;
+    for(unsigned int j=0; j<n; j++)
+    {
+        vector<double> I;
+        I.reserve(n2);
+        for(int i=0; i<n2; i++)
+            I.push_back(0.0);
+        I[j]=1.0;
+        vector<double> Zreal = I/jacobian_matrix;
+        vector<complex<double> > Zcol;
+        Zcol.reserve(n);
+        for(int i=0; i<n; i++)
+            Zcol.push_back(complex<double>(Zreal[i], Zreal[i+n]));
+        Z.push_back(Zcol);
+    }
+    return Z;
+}

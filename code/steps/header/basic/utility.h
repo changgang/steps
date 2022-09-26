@@ -127,4 +127,7 @@ float* roots_quadratic_equation(float a, float b, float c); //
 float* roots_cubic_equation(float a, float b, float c, float d);
 float* roots_quartic_equation(float a, float b, float c, float d, float e);
 
+vector<complex<double> > get_column_of_inverse_matrix(STEPS_COMPLEX_SPARSE_MATRIX &matrix, unsigned int col);
+vector<vector<complex<double> > > get_all_columns_of_inverse_matrix(STEPS_COMPLEX_SPARSE_MATRIX &matrix);
+
 #endif // UTILITY_H

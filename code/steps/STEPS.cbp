@@ -159,6 +159,7 @@
 		<Unit filename="header/device/line_test.h" />
 		<Unit filename="header/device/load.h" />
 		<Unit filename="header/device/load_test.h" />
+		<Unit filename="header/device/mutual_data.h" />
 		<Unit filename="header/device/nonbus_device.h" />
 		<Unit filename="header/device/pv_unit.h" />
 		<Unit filename="header/device/pv_unit_test.h" />
@@ -579,6 +580,7 @@
 		<Unit filename="source/device/line_test.cpp" />
 		<Unit filename="source/device/load.cpp" />
 		<Unit filename="source/device/load_test.cpp" />
+		<Unit filename="source/device/mutual_data.cpp" />
 		<Unit filename="source/device/nonbus_device.cpp" />
 		<Unit filename="source/device/pv_unit.cpp" />
 		<Unit filename="source/device/pv_unit_test.cpp" />

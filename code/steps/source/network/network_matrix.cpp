@@ -85,6 +85,16 @@ bool NETWORK_MATRIX::get_consider_motor_load_logic()
     return consider_motor_load;
 }
 
+void NETWORK_MATRIX::set_option_of_dc_lines(DC_LINES_OPTION option)
+{
+    option_of_all_ordinary_dc_lines = option;
+}
+
+DC_LINES_OPTION NETWORK_MATRIX::get_option_of_dc_lines()
+{
+    return option_of_all_ordinary_dc_lines;
+}
+
 void NETWORK_MATRIX::build_initial_zero_matrix(STEPS_COMPLEX_SPARSE_MATRIX& matrix)
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -253,6 +263,8 @@ void NETWORK_MATRIX::build_positive_sequence_network_Y_matrix()
     if(get_consider_load_logic())
         add_loads_to_positive_sequence_network();
     add_fixed_shunts_to_positive_sequence_network();
+    if(get_option_of_dc_lines()==CONVERT_TO_CONSTANT_ADMITTANCE_LOAD)
+        add_HVDCs_to_positive_sequence_network();
 
     network_Y1_matrix.compress_and_merge_duplicate_entries();
 }
@@ -302,7 +314,6 @@ void NETWORK_MATRIX::build_zero_sequence_network_Y_matrix()
     set_this_Y_and_Z_matrix_as(network_Y0_matrix);
 
     //build_initial_zero_matrix(network_Y1_matrix);
-
     add_lines_to_zero_sequence_network();
     add_transformers_to_zero_sequence_network();
     if(get_consider_load_logic())
@@ -2812,8 +2823,8 @@ void NETWORK_MATRIX::add_faulted_line_to_positive_sequence_network(const LINE& l
 
             complex<double> Zif = Zline*fault_location;
             complex<double> Zjf = Zline*(1.0-fault_location);
-            complex<double> Yif = Yline*fault_location;
-            complex<double> Yjf = Yline*(1.0-fault_location);
+            complex<double> Yif = Yline*0.5;
+            complex<double> Yjf = Yline*0.5;
 
             if(line.get_sending_side_breaker_status()==true and line.get_receiving_side_breaker_status()==true)
             {
@@ -3008,6 +3019,48 @@ void NETWORK_MATRIX::add_fixed_shunts_to_positive_sequence_network()
     add_fixed_shunts_to_network();
 }
 
+void NETWORK_MATRIX::add_HVDCs_to_positive_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
+
+    unsigned int n = hvdcs.size();
+    for(unsigned int i=0; i!=n; i++)
+        add_HVDC_to_positive_sequence_network(*(hvdcs[i]));
+}
+
+void NETWORK_MATRIX::add_HVDC_to_positive_sequence_network(const HVDC& hvdc)
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    if(hvdc.get_status()==true)
+    {
+        double P_rectifier = hvdc.get_converter_ac_active_power_in_MW(RECTIFIER);
+        double P_inverter = hvdc.get_converter_ac_active_power_in_MW(INVERTER);
+        double Q_rectifier = hvdc.get_converter_ac_reactive_power_in_MVar(RECTIFIER);
+        double Q_inverter = hvdc.get_converter_ac_reactive_power_in_MVar(INVERTER);
+        complex<double> S_rectifier = complex<double>(P_rectifier, Q_rectifier);
+        complex<double> S_inverter = complex<double>(-P_inverter, Q_inverter);
+
+        unsigned int rectifier_bus = hvdc.get_converter_bus(RECTIFIER);
+        unsigned int inverter_bus = hvdc.get_converter_bus(INVERTER);
+        unsigned int r = inphno.get_internal_bus_number_of_physical_bus_number(rectifier_bus);
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(inverter_bus);
+
+        double Vr = psdb.get_bus_positive_sequence_voltage_in_pu(rectifier_bus);
+        double Vi = psdb.get_bus_positive_sequence_voltage_in_pu(inverter_bus);
+
+
+        complex<double> y1 = conj(S_rectifier)/sbase/(Vr*Vr);
+        this_Y_matrix_pointer->add_entry(r,r, y1);
+
+        complex<double> y2 = conj(S_inverter)/sbase/(Vi*Vi);
+        this_Y_matrix_pointer->add_entry(i,i, y2);
+
+
+    }
+}
+
 void NETWORK_MATRIX::add_lines_to_negative_sequence_network()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -3045,8 +3098,8 @@ void NETWORK_MATRIX::add_faulted_line_to_negative_sequence_network(const LINE& l
 
             complex<double> Zif = Zline*fault_location;
             complex<double> Zjf = Zline*(1.0-fault_location);
-            complex<double> Yif = Yline*fault_location;
-            complex<double> Yjf = Yline*(1.0-fault_location);
+            complex<double> Yif = Yline*0.5;
+            complex<double> Yjf = Yline*0.5;
 
             if(line.get_sending_side_breaker_status()==true and line.get_receiving_side_breaker_status()==true)
             {
@@ -3215,6 +3268,8 @@ void NETWORK_MATRIX::add_fixed_shunts_to_negative_sequence_network()
 
 void NETWORK_MATRIX::add_lines_to_zero_sequence_network()
 {
+    preprocess_mutual_data();
+
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<LINE*> lines = psdb.get_all_lines();
 
@@ -3223,9 +3278,106 @@ void NETWORK_MATRIX::add_lines_to_zero_sequence_network()
     for(unsigned int i = 0; i!=n; ++i)
     {
         if(not lines[i]->is_faulted())
-           add_line_to_zero_sequence_network(*(lines[i]));
+        {
+            if(lines[i]->is_mutual())
+                add_mutual_line_to_zero_sequence_network(*(lines[i]));
+            else
+                add_line_to_zero_sequence_network(*(lines[i]));
+        }
         else
-           add_faulted_line_to_zero_sequence_network(*(lines[i]));
+        {
+            if(lines[i]->is_mutual())
+                add_mutual_line_to_zero_sequence_network(*(lines[i]));
+            else
+                add_faulted_line_to_zero_sequence_network(*(lines[i]));
+        }
+    }
+}
+
+void NETWORK_MATRIX::preprocess_mutual_data()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<MUTUAL_DATA*> mutuals = psdb.get_all_mutual_data();
+    unsigned int n = mutuals.size();
+    if(n==0)
+        return;
+
+    vector<LINE*> lineptrs;
+    STEPS_COMPLEX_SPARSE_MATRIX mutual_matrix;
+
+    for(unsigned int i=0; i<n; i++)
+    {
+        complex<double> Zm = mutuals[i]->get_mutual_impedance();
+
+        LINE* lineptr = mutuals[i]->get_first_line_pointer();
+        unsigned int first_line_index = 0;
+
+        bool flag = false;
+        for(unsigned int j=0; j<lineptrs.size(); j++)
+        {
+            if(lineptr==lineptrs[j])
+            {
+                first_line_index = j;
+                flag = true;
+                break;
+            }
+        }
+        if(not flag)
+        {
+            unsigned int nn = lineptrs.size();
+            first_line_index = nn;
+            mutual_matrix.add_entry(nn, nn, lineptr->get_line_zero_sequence_z_in_pu());
+            lineptrs.push_back(lineptr);
+        }
+
+        flag = false;
+        lineptr = mutuals[i]->get_second_line_pointer();
+        for(unsigned int j=0; j<lineptrs.size(); j++)
+        {
+            if(lineptr==lineptrs[j])
+            {
+                mutual_matrix.add_entry(first_line_index, j, Zm);
+                mutual_matrix.add_entry(j, first_line_index, Zm);
+                flag = true;
+                break;
+            }
+        }
+        if(not flag)
+        {
+            unsigned int nn = lineptrs.size();
+            mutual_matrix.add_entry(nn, nn, lineptr->get_line_zero_sequence_z_in_pu());
+            mutual_matrix.add_entry(first_line_index, nn, Zm);
+            mutual_matrix.add_entry(nn, first_line_index, Zm);
+            lineptrs.push_back(lineptr);
+        }
+    }
+    mutual_matrix.compress_and_merge_duplicate_entries();
+
+    vector<vector<complex<double> > > Y = get_all_columns_of_inverse_matrix(mutual_matrix);
+    for(unsigned int i=0; i<Y.size(); i++)
+    {
+        vector<complex<double> > Ycol = Y[i];
+        vector<complex<double> > Y1;
+        vector<LINE*> lineptrs_Y;
+
+        Y1.push_back(Ycol[i]);
+        lineptrs_Y.push_back(lineptrs[i]);
+
+        for(unsigned int j=0; j<Ycol.size(); j++)
+        {
+            if(abs(Ycol[j])<FLOAT_EPSILON)
+                continue;
+            else
+            {
+                if(i!=j)
+                {
+                    Y1.push_back(Ycol[j]);
+                    lineptrs_Y.push_back(lineptrs[j]);
+                }
+            }
+        }
+        lineptrs[i]->set_mutual_admittances(Y1);
+        lineptrs[i]->set_line_pointers_corresponding_to_mutual_admittances(lineptrs_Y);
     }
 }
 
@@ -3301,8 +3453,8 @@ void NETWORK_MATRIX::add_faulted_line_to_zero_sequence_network(const LINE& line)
 
             complex<double> Zif = Zline*fault_location;
             complex<double> Zjf = Zline*(1.0-fault_location);
-            complex<double> Yif = Yline*fault_location;
-            complex<double> Yjf = Yline*(1.0-fault_location);
+            complex<double> Yif = Yline*0.5;
+            complex<double> Yjf = Yline*0.5;
 
             if(line.get_sending_side_breaker_status()==true and line.get_receiving_side_breaker_status()==true)
             {
@@ -3324,6 +3476,60 @@ void NETWORK_MATRIX::add_faulted_line_to_zero_sequence_network(const LINE& line)
             }
         }
         else // line is not faulted
+            add_line_to_network(line);
+    }
+}
+
+void NETWORK_MATRIX::add_mutual_line_to_zero_sequence_network(const LINE& line)
+{
+    if(line.get_sending_side_breaker_status()==true or line.get_receiving_side_breaker_status()==true)
+    {
+        if(line.is_mutual())
+        {
+            unsigned int sending_bus = line.get_sending_side_bus();
+            unsigned int receiving_bus = line.get_receiving_side_bus();
+
+            unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(sending_bus);
+            unsigned int j = inphno.get_internal_bus_number_of_physical_bus_number(receiving_bus);
+
+            complex<double> Yline = line.get_line_zero_sequence_y_in_pu();
+            complex<double> Yshunt_sending = line.get_shunt_zero_sequence_y_at_sending_side_in_pu();
+            complex<double> Yshunt_receiving = line.get_shunt_zero_sequence_y_at_receiving_side_in_pu();
+
+            vector<complex<double> > Ymutual = line.get_mutual_admittances();
+            vector<LINE*> pointers = line.get_line_pointers_corresponding_to_mutual_admittances();
+
+            if(line.get_sending_side_breaker_status()==true and line.get_receiving_side_breaker_status()==true)
+            {
+                this_Y_matrix_pointer->add_entry(i,i, 0.5*Yline+Yshunt_sending);
+                this_Y_matrix_pointer->add_entry(j,j, 0.5*Yline+Yshunt_receiving);
+
+                for(unsigned int k=0; k<Ymutual.size(); k++)
+                {
+                    complex<double> Y = Ymutual[k];
+                    LINE* lineptr = pointers[k];
+                    unsigned int p = inphno.get_internal_bus_number_of_physical_bus_number(lineptr->get_sending_side_bus());
+                    unsigned int q = inphno.get_internal_bus_number_of_physical_bus_number(lineptr->get_receiving_side_bus());
+
+                    this_Y_matrix_pointer->add_entry(i,p, Y);
+                    this_Y_matrix_pointer->add_entry(i,q, -Y);
+                    this_Y_matrix_pointer->add_entry(j,p, -Y);
+                    this_Y_matrix_pointer->add_entry(j,q, Y);
+                }
+                return;
+            }
+
+            if(line.get_sending_side_breaker_status()==true and line.get_receiving_side_breaker_status()==false)
+            {
+                return;
+            }
+
+            if(line.get_sending_side_breaker_status()==false and line.get_receiving_side_breaker_status()==true)
+            {
+                return;
+            }
+        }
+        else // line is not mutual
             add_line_to_network(line);
     }
 }
@@ -3560,11 +3766,10 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_zero_sequence_network(cons
             yt = 0.0;
         else
             yt = 1.0/Zt;
-
         complex<double> V, Yeq, Zeq, I, Vstar;
 
         // primary
-        if(trans.get_winding_breaker_status(PRIMARY_SIDE)==true and winding_connection_type1==WYE_N_CONNECTION )
+        if((trans.get_winding_breaker_status(PRIMARY_SIDE)==true) and (winding_connection_type1==WYE_N_CONNECTION ))
         {
             if(ys!=0.0 or yt!=0.0)
             {

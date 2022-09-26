@@ -30,6 +30,8 @@ class SHORT_CIRCUIT_SOLVER
         bool get_consider_load_logic();
         void set_consider_motor_load_logic(bool logic);
         bool get_consider_motor_load_logic();
+        void set_option_of_DC_lines(DC_LINES_OPTION option);
+        DC_LINES_OPTION get_option_of_DC_lines();
 
         void set_bus_fault(unsigned int bus, FAULT_TYPE type, const complex<double>& fault_shunt);
         void set_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location, FAULT_TYPE fault_type, const complex<double>& fault_shunt);
@@ -81,6 +83,7 @@ class SHORT_CIRCUIT_SOLVER
         complex<double> get_bus_initial_voltage_before_short_circuit(unsigned int bus);
         void update_all_generator_E();
         void update_all_motor_load_data();
+        void update_voltage_when_dc_lines_blocked();
 
         void calculate_and_store_equivalent_impedance_between_bus_and_fault_place();
 
@@ -141,6 +144,8 @@ class SHORT_CIRCUIT_SOLVER
         vector<complex<double> > Z1_between_internal_bus_to_fault_place, Z2_between_internal_bus_to_fault_place, Z0_between_internal_bus_to_fault_place;
 
         FAULT fault;
+        vector<complex<double> > Yif_mutual, Yfj_mutual;
+        vector<LINE*> lineptrs_of_mutual_with_line_fault;
 };
 
 #endif // SHORT_CIRCUIT_SOLVER_H

@@ -1174,6 +1174,11 @@ void POWER_SYSTEM_DATABASE::append_owner(OWNER& owner)
     }
 }
 
+void POWER_SYSTEM_DATABASE::append_mutual_data(MUTUAL_DATA& mutual_data)
+{
+    mutual_data.set_toolkit(*toolkit);
+    Mutual_data.push_back(mutual_data);
+}
 
 void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEVICE_ID& did_new)
 {
@@ -2357,6 +2362,21 @@ vector<LCC_HVDC*> POWER_SYSTEM_DATABASE::get_lcc_hvdcs_connecting_to_bus(const u
             continue;
         else
             device.push_back(&(Lcc_hvdc[i]));
+    }
+    return device;
+}
+
+vector<MUTUAL_DATA*> POWER_SYSTEM_DATABASE::get_mutual_data_with_line(const unsigned int ibus, const unsigned int jbus, string identifier)
+{
+    vector<MUTUAL_DATA*> device;
+    device.reserve(4);
+    unsigned int n = get_mutual_data_count();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(Mutual_data[i].is_related_to_line(ibus, jbus, identifier))
+            device.push_back(&(Mutual_data[i]));
+        else
+            continue;
     }
     return device;
 }
@@ -3783,6 +3803,17 @@ vector<OWNER*> POWER_SYSTEM_DATABASE::get_all_owners()
     return owners;
 }
 
+vector<MUTUAL_DATA*> POWER_SYSTEM_DATABASE::get_all_mutual_data()
+{
+    vector <MUTUAL_DATA*> mutuals;
+    mutuals.reserve(get_mutual_data_count());
+
+    unsigned int n = get_mutual_data_count();
+    for(unsigned int i=0; i!=n; ++i)
+        mutuals.push_back(&(Mutual_data[i]));
+    return mutuals;
+}
+
 
 
 vector<unsigned int> POWER_SYSTEM_DATABASE::get_all_buses_number()
@@ -4204,6 +4235,11 @@ unsigned int POWER_SYSTEM_DATABASE::get_zone_count() const
 unsigned int POWER_SYSTEM_DATABASE::get_owner_count() const
 {
     return Owner.size();
+}
+
+unsigned int POWER_SYSTEM_DATABASE::get_mutual_data_count() const
+{
+    return Mutual_data.size();
 }
 
 unsigned int POWER_SYSTEM_DATABASE::get_bus_index(unsigned int bus) const

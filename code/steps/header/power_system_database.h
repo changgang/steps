@@ -15,6 +15,7 @@
 #include "header/device/equivalent_device.h"
 #include "header/device/source.h"
 #include "header/device/lcc_hvdc.h"
+#include "header/device/mutual_data.h"
 #include "header/basic/area.h"
 #include "header/basic/zone.h"
 #include "header/basic/owner.h"
@@ -113,6 +114,7 @@ class POWER_SYSTEM_DATABASE
         void append_area(AREA& area);
         void append_zone(ZONE& zone);
         void append_owner(OWNER& owner);
+        void append_mutual_data(MUTUAL_DATA& mutual_data);
 
         void update_device_id(const DEVICE_ID& did_old, const DEVICE_ID& did_new);
 
@@ -175,6 +177,7 @@ class POWER_SYSTEM_DATABASE
         vector<EQUIVALENT_DEVICE*> get_equivalent_devices_connecting_to_bus(const unsigned int bus);
         vector<ENERGY_STORAGE*> get_energy_storages_connecting_to_bus(const unsigned int bus);
         vector<LCC_HVDC*> get_lcc_hvdcs_connecting_to_bus(const unsigned int bus);
+        vector<MUTUAL_DATA*> get_mutual_data_with_line(const unsigned int ibus, const unsigned int jbus, string identifier);
 
         vector<DEVICE_ID> get_all_devices_device_id_connecting_to_bus(const unsigned int bus);
         vector<DEVICE_ID> get_generators_device_id_connecting_to_bus(const unsigned int bus);
@@ -275,6 +278,7 @@ class POWER_SYSTEM_DATABASE
         vector<AREA*> get_all_areas();
         vector<ZONE*> get_all_zones();
         vector<OWNER*> get_all_owners();
+        vector<MUTUAL_DATA*> get_all_mutual_data();
 
         vector<unsigned int> get_all_buses_number();
         vector<unsigned int> get_buses_number_with_constraints(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, unsigned int area, unsigned int zone, unsigned int owner);
@@ -316,6 +320,7 @@ class POWER_SYSTEM_DATABASE
         unsigned int get_area_count() const;
         unsigned int get_zone_count() const;
         unsigned int get_owner_count() const;
+        unsigned int get_mutual_data_count() const;
 
         unsigned int get_bus_index(unsigned int bus) const;
         unsigned int get_generator_index(const DEVICE_ID & device_id) const;
@@ -576,6 +581,7 @@ class POWER_SYSTEM_DATABASE
         vector<AREA> Area;
         vector<ZONE> Zone;
         vector<OWNER> Owner;
+        vector<MUTUAL_DATA> Mutual_data;
 
         double zero_impedance_threshold;
 

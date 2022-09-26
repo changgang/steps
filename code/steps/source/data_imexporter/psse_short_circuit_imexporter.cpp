@@ -418,6 +418,11 @@ string PSSE_IMEXPORTER::export_all_zero_sequence_mutual_impedance_data() const
     return "";
 }
 
+string PSSE_IMEXPORTER::export_zero_sequence_mutual_impedance_data(const MUTUAL_DATA* mutual) const
+{
+
+}
+
 string PSSE_IMEXPORTER::export_all_transformer_zero_sequence_data() const
 {
     ostringstream osstream;

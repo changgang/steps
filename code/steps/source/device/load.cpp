@@ -994,6 +994,8 @@ bool LOAD::has_motor_load() const
 
 void LOAD::update_motor_load_data()
 {
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
     if(has_motor_load())
     {
         double power_ratio = get_ratio_of_motor_active_power();
@@ -1049,7 +1051,8 @@ void LOAD::update_motor_load_data()
             double delta = Bpp*Bpp - 4.0*App*Cpp;
             if(delta<0.0)
             {
-                cout<<"Wrong"<<endl;
+                osstream<<"Wrong"<<endl;
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 return;
             }
 
@@ -1059,7 +1062,8 @@ void LOAD::update_motor_load_data()
                 R = (-Bpp - sqrt(delta))/(2.0*App);
                 if(R1/R>0.2 or R1<0.0)
                 {
-                    cout<<"No appropriate root"<<endl;
+                    osstream<<"No appropriate root"<<endl;
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     return;
                 }
             }
@@ -1069,9 +1073,6 @@ void LOAD::update_motor_load_data()
             double motor_q = Q*mbase;
 
             set_motor_power_in_MVA(complex<double>(motor_p, motor_q));
-
-            cout<<"single cage: "<<"s="<<s<<" Q="<<motor_q<<endl;
-            cout<<"Static load "<<get_static_load_power_in_MVA()<<endl;
 
             // equivalent impedance
             complex<double> Z = complex<double>(Ra,Xa+Xm*X1/(Xm+X1));
@@ -1120,7 +1121,8 @@ void LOAD::update_motor_load_data()
 
             if(R == 0.0)
             {
-                cout<<"double cage has no root"<<endl;
+                osstream<<"Double cage has no root"<<endl;
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 return;
             }
             double s = R1/R;
@@ -1128,9 +1130,6 @@ void LOAD::update_motor_load_data()
             Q = -V*V*(k*R*(a*R*R+b*R+c)-(g*R*R+h)*(d*R*R+e*R+f))/((a*R*R+b*R+c)*(a*R*R+b*R+c)+(d*R*R+e*R+f)*(d*R*R+e*R*f));
             double motor_q = Q*mbase;
             set_motor_power_in_MVA(complex<double>(motor_p, motor_q));
-
-            cout<<"double cage: "<<"s="<<s<<" Q="<<motor_q<<endl;
-            cout<<"Static load:"<<get_static_load_power_in_MVA()<<endl;
 
             // equivalent impedance
             complex<double> Z = complex<double>(Ra,Xa+Xm*X1*X2/(X1+X2)/(Xm+X1*X2/(X1+X2)));

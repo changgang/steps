@@ -62,7 +62,8 @@ void SHORT_CIRCUIT_SOLVER::initialize_short_circuit_solver()
 
     store_bus_initial_voltage_before_short_circuit();
     update_all_generator_E();
-    update_all_motor_load_data();
+    if(get_consider_motor_load_logic())
+        update_all_motor_load_data();
 
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Done initializing short circuit solver.");
     toolkit->show_information_with_leading_time_stamp(buffer);
@@ -129,6 +130,86 @@ void SHORT_CIRCUIT_SOLVER::update_all_motor_load_data()
         loads[i]->update_motor_load_data();
 }
 
+void SHORT_CIRCUIT_SOLVER::update_voltage_when_dc_lines_blocked()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    NETWORK_MATRIX& network_matrix = toolkit->get_network_matrix();
+    GENERATOR_REACTANCE_OPTION gen_X_option = get_generator_reactance_option();
+
+    double sbase = psdb.get_system_base_power_in_MVA();
+    unsigned int bus_count = psdb.get_bus_count();
+
+    vector<complex<double> > I;
+    I.reserve(bus_count);
+    for(unsigned int i=0; i<bus_count; i++)
+        I.push_back(0.0);
+
+    vector<GENERATOR*> gens = psdb.get_all_generators();
+    unsigned int n = gens.size();
+    for(unsigned int i=0; i<n; i++)
+    {
+        GENERATOR* gen = gens[i];
+        unsigned int busn = gen->get_generator_bus();
+        complex<double> E = gen->get_complex_E_in_pu();
+        double R = gen->get_positive_sequence_resistance_in_pu();
+        double X = 0.0;
+        switch(gen_X_option)
+        {
+            case SUBTRANSIENT_REACTANCE:    X = gen->get_positive_sequence_subtransient_reactance_in_pu();break;
+            case TRANSIENT_REACTANCE:       X = gen->get_positive_sequence_transient_reactance_in_pu();break;
+            case SYNCHRONOUS_REACTANCE:     X = gen->get_positive_sequence_syncronous_reactance_in_pu();break;
+            default:                        X = gen->get_positive_sequence_subtransient_reactance_in_pu();break;
+        }
+        double one_over_mbase = gen->get_one_over_mbase_in_one_over_MVA();
+        complex<double> Z = complex<double>(R,X)*sbase*one_over_mbase;
+        I[busn-1] = I[busn-1] + E/Z;
+    }
+
+    vector<WT_GENERATOR*> wt_gens = psdb.get_all_wt_generators();
+    n = wt_gens.size();
+    for(unsigned int i=0; i<n; i++)
+    {
+        WT_GENERATOR* wt_gen = wt_gens[i];
+        unsigned int busn = wt_gen->get_generator_bus();
+        complex<double> E = wt_gen->get_complex_E_in_pu();
+        double R = wt_gen->get_positive_sequence_resistance_in_pu();
+        double X = 0.0;
+        switch(gen_X_option)
+        {
+            case SUBTRANSIENT_REACTANCE:    X = wt_gen->get_positive_sequence_subtransient_reactance_in_pu();break;
+            case TRANSIENT_REACTANCE:       X = wt_gen->get_positive_sequence_transient_reactance_in_pu();break;
+            case SYNCHRONOUS_REACTANCE:     X = wt_gen->get_positive_sequence_syncronous_reactance_in_pu();break;
+            default:                        X = wt_gen->get_positive_sequence_subtransient_reactance_in_pu();break;
+        }
+        double one_over_mbase = wt_gen->get_one_over_mbase_in_one_over_MVA();
+        complex<double> Z = complex<double>(R,X)*sbase*one_over_mbase;
+        I[busn-1] = I[busn-1] + E/Z;
+    }
+
+
+    vector<BUS*> buses = psdb.get_all_buses();
+    n = buses.size();
+    for(unsigned int i=0; i<n; i++)
+    {
+        BUS* bus = buses[i];
+        unsigned int busn = bus->get_bus_number();
+
+        vector<complex<double> > Zcol = network_matrix.get_positive_sequence_complex_impedance_of_column_with_physical_bus(busn);
+
+        complex<double> V = 0.0;
+        for(unsigned int j=0; j<n; j++)
+        {
+            unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(j+1);
+            V = V + Zcol[internal_bus]*I[j];
+        }
+        bus->set_positive_sequence_voltage_in_pu(abs(V));
+        bus->set_positive_sequence_angle_in_rad(arg(V));
+    }
+
+    bus_initial_voltage_before_short_circuit.clear();
+    store_bus_initial_voltage_before_short_circuit();
+}
+
 void SHORT_CIRCUIT_SOLVER::set_generator_reactance_option(GENERATOR_REACTANCE_OPTION gen_X_option)
 {
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -190,6 +271,19 @@ bool SHORT_CIRCUIT_SOLVER::get_consider_motor_load_logic()
     NETWORK_MATRIX& network_matrix = get_network_matrix();
     return network_matrix.get_consider_motor_load_logic();
 }
+
+void SHORT_CIRCUIT_SOLVER::set_option_of_DC_lines(DC_LINES_OPTION option)
+{
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+    network_matrix.set_option_of_dc_lines(option);
+}
+
+DC_LINES_OPTION SHORT_CIRCUIT_SOLVER::get_option_of_DC_lines()
+{
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+    return network_matrix.get_option_of_dc_lines();
+}
+
 
 void SHORT_CIRCUIT_SOLVER::set_bus_fault(unsigned int bus, FAULT_TYPE type, const complex<double>& fault_shunt)
 {
@@ -398,7 +492,10 @@ unsigned int SHORT_CIRCUIT_SOLVER::get_physical_bus_number_of_internal_bus(unsig
 
 void SHORT_CIRCUIT_SOLVER::calculate_and_store_equivalent_impedance_between_bus_and_fault_place()
 {
+
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
+
     if(is_bus_fault())
     {
         unsigned int bus = faulted_bus_pointer->get_bus_number();
@@ -470,24 +567,186 @@ void SHORT_CIRCUIT_SOLVER::calculate_and_store_equivalent_impedance_between_bus_
         }
 
         // zero
-        Zij = faulted_line_pointer->get_line_zero_sequence_z_in_pu();
-        Zif = Zij*fault_locaton;
-        Zjf = Zij*(1.0-fault_locaton);
-        Ii = 1.0/Zif;
-        Ij = 1.0/Zjf;
-
-        Vi = Z0i[internal_ibus]*Ii + Z0j[internal_ibus]*Ij;
-        Vj = Z0i[internal_jbus]*Ii + Z0j[internal_jbus]*Ij;
-        I = (1.0-Vi)/Zif + (1.0-Vj)/Zjf;
-        Z0 = 1.0/I;     // equivalent self impedance
-
-        n = Z0i.size();
-        for(unsigned int k=0; k<n; k++)
+        if(not faulted_line_pointer->is_mutual())
         {
-            V = Z0i[k]*Ij + Z0j[k]*Ij;
-            Z0_between_internal_bus_to_fault_place.push_back(V/I);
-        }
 
+            Zij = faulted_line_pointer->get_line_zero_sequence_z_in_pu();
+            Zif = Zij*fault_locaton;
+            Zjf = Zij*(1.0-fault_locaton);
+            Ii = 1.0/Zif;
+            Ij = 1.0/Zjf;
+
+            Vi = Z0i[internal_ibus]*Ii + Z0j[internal_ibus]*Ij;
+            Vj = Z0i[internal_jbus]*Ii + Z0j[internal_jbus]*Ij;
+            I = (1.0-Vi)/Zif + (1.0-Vj)/Zjf;
+            Z0 = 1.0/I;     // equivalent self impedance
+
+            n = Z0i.size();
+            for(unsigned int k=0; k<n; k++)
+            {
+                V = Z0i[k]*Ij + Z0j[k]*Ij;
+                Z0_between_internal_bus_to_fault_place.push_back(V/I);
+            }
+        }
+        else // faulted location at mutual line
+        {
+            complex<double> zij = faulted_line_pointer->get_line_zero_sequence_z_in_pu();
+
+            vector<MUTUAL_DATA*> mutuals = psdb.get_mutual_data_with_line(ibus, jbus, faulted_line_pointer->get_identifier());
+            vector<LINE*> mutual_lineptrs;
+            vector<double> starting_locations, ending_locations;
+            vector<complex<double> > zm_if, zm_fj;
+
+            for(unsigned int i=0; i<mutuals.size(); i++)
+            {
+                mutual_lineptrs.push_back(mutuals[i]->get_mutual_line(faulted_line_pointer));
+                complex<double> zm = mutuals[i]->get_mutual_impedance();
+                double sl = mutuals[i]->get_starting_location_of_line(faulted_line_pointer);
+                double el = mutuals[i]->get_ending_location_of_line(faulted_line_pointer);
+
+                complex<double> zmif=0.0, zmfj=0.0;
+                if(fault_locaton<=sl)
+                    zmif = 0.0;
+                else if((fault_locaton>sl) and (fault_locaton<=el))
+                    zmif = (fault_locaton-sl)/(el-sl)*zm;
+                else
+                    zmif = zm;
+                zmfj = zm - zmif;
+
+                starting_locations.push_back(sl);
+                ending_locations.push_back(el);
+                zm_if.push_back(zmif);
+                zm_fj.push_back(zmfj);
+            }
+
+            vector<complex<double> > Ymutual = faulted_line_pointer->get_mutual_admittances();
+            vector<LINE*> lineptrs_Ymutual = faulted_line_pointer->get_line_pointers_corresponding_to_mutual_admittances();
+
+            n = Z0i.size();
+            for(unsigned int s=0; s<n; s++)
+            {
+                complex<double> Z;
+
+                complex<double> Iij = 0.0;
+                for(unsigned int k=0; k<lineptrs_Ymutual.size(); k++)
+                {
+                    complex<double> Ytemp = Ymutual[k];
+                    LINE* lineptr = lineptrs_Ymutual[k];
+                    unsigned int pbus = lineptr->get_sending_side_bus();
+                    unsigned int qbus = lineptr->get_receiving_side_bus();
+                    vector<complex<double> > Z0p = network_matrix.get_zero_sequence_complex_impedance_of_column_with_physical_bus(pbus);
+                    vector<complex<double> > Z0q = network_matrix.get_zero_sequence_complex_impedance_of_column_with_physical_bus(qbus);
+                    Iij = Iij + Ytemp*(Z0p[s]-Z0q[s]);
+                 }
+                 Z = Z0i[s] - fault_locaton*zij*Iij;
+
+                // complex<double> Ipq = 0.0;
+                 for(unsigned int k=0; k<mutual_lineptrs.size(); k++)
+                 {
+                    complex<double> Ipq = 0.0;
+                    LINE* lineptr = mutual_lineptrs[k];
+                    vector<complex<double> > Ymutual_pq = lineptr->get_mutual_admittances();
+                    vector<LINE*> lineptrs_Ymutual_pq = lineptr->get_line_pointers_corresponding_to_mutual_admittances();
+
+                    for(unsigned int t=0; t<lineptrs_Ymutual_pq.size(); t++)
+                    {
+                        complex<double> Ytemp = Ymutual_pq[t];
+                        LINE* linep = lineptrs_Ymutual_pq[t];
+                        unsigned int pbus = linep->get_sending_side_bus();
+                        unsigned int qbus = linep->get_receiving_side_bus();
+                        vector<complex<double> > Z0p = network_matrix.get_zero_sequence_complex_impedance_of_column_with_physical_bus(pbus);
+                        vector<complex<double> > Z0q = network_matrix.get_zero_sequence_complex_impedance_of_column_with_physical_bus(qbus);
+                        Ipq = Ipq + Ytemp*(Z0p[s]-Z0q[s]);
+                    }
+                    Z = Z - zm_if[k]*Ipq;
+                 }
+                 Z0_between_internal_bus_to_fault_place.push_back(Z);
+            }
+
+            STEPS_COMPLEX_SPARSE_MATRIX matrix;
+            matrix.add_entry(0,0, fault_locaton*zij);
+            matrix.add_entry(1,1, (1.0-fault_locaton)*zij);
+            for(unsigned int k=1; k<lineptrs_Ymutual.size(); k++)
+            {
+                LINE* lineptr = lineptrs_Ymutual[k];
+
+                complex<double> zpq = lineptr->get_line_zero_sequence_z_in_pu();
+                matrix.add_entry(k+1, k+1, zpq);
+            }
+            for(unsigned int k=1; k<lineptrs_Ymutual.size(); k++)
+            {
+                LINE* lineptr = lineptrs_Ymutual[k];
+                vector<MUTUAL_DATA*> pq_mutuals = psdb.get_mutual_data_with_line(lineptr->get_sending_side_bus(),lineptr->get_receiving_side_bus(),lineptr->get_identifier());
+
+                for(unsigned int t=0; t<pq_mutuals.size(); t++)
+                {
+                    LINE* linep = pq_mutuals[t]->get_mutual_line(lineptr);
+                    if(linep == faulted_line_pointer)
+                    {
+                        complex<double> zm = pq_mutuals[t]->get_mutual_impedance();
+                        double sl = pq_mutuals[t]->get_starting_location_of_line(faulted_line_pointer);
+                        double el = pq_mutuals[t]->get_ending_location_of_line(faulted_line_pointer);
+
+                        complex<double> zmif, zmfj;
+                        if(fault_locaton<=sl)
+                            zmif = 0.0;
+                        else if((fault_locaton>sl) and (fault_locaton<=el))
+                            zmif = (fault_locaton-sl)/(el-sl)*zm;
+                        else
+                            zmif = zm;
+                        zmfj = zm-zmif;
+
+                        matrix.add_entry(0, k+1, zmif);
+                        matrix.add_entry(k+1, 0, zmif);
+                        matrix.add_entry(1, k+1, zmfj);
+                        matrix.add_entry(k+1, 1, zmfj);
+                    }
+                    else
+                    {
+                        unsigned int index=0;
+                        for(unsigned int tt=k; tt<lineptrs_Ymutual.size(); tt++)
+                        {
+                            if(linep==lineptrs_Ymutual[tt])
+                            {
+                                index=tt;
+                                break;
+                            }
+                        }
+                        if(index!=0)
+                        {
+                            complex<double> zzm = pq_mutuals[t]->get_mutual_impedance();
+
+                            matrix.add_entry(index+1, k+1, zzm);
+                            matrix.add_entry(k+1, index+1, zzm);
+                        }
+                    }
+                }
+            }
+            matrix.compress_and_merge_duplicate_entries();
+
+            vector<complex<double> > Ymutual_if = get_column_of_inverse_matrix(matrix, 0);
+            vector<complex<double> > Ymutual_fj = get_column_of_inverse_matrix(matrix, 1);
+            Yif_mutual = Ymutual_if;
+            Yfj_mutual = Ymutual_fj;
+            for(unsigned int k=1; k<lineptrs_Ymutual.size(); k++)
+                lineptrs_of_mutual_with_line_fault.push_back(lineptrs_Ymutual[k]);
+
+            complex<double> Zif = get_zero_sequence_equivalent_mutual_impedance_in_pu_between_bus_to_fault_place(ibus);
+            complex<double> Zjf = get_zero_sequence_equivalent_mutual_impedance_in_pu_between_bus_to_fault_place(jbus);
+
+            complex<double> temp = 1.0 - (Ymutual_fj[0]-Ymutual_if[0])*Zif + (Ymutual_fj[1]-Ymutual_if[1])*Zjf;
+            for(unsigned int k=1; k<lineptrs_Ymutual.size(); k++)
+            {
+                LINE* lineptr = lineptrs_Ymutual[k];
+                unsigned int pbus = lineptr->get_sending_side_bus();
+                unsigned int qbus = lineptr->get_receiving_side_bus();
+                complex<double> Zpf = get_zero_sequence_equivalent_mutual_impedance_in_pu_between_bus_to_fault_place(pbus);
+                complex<double> Zqf = get_zero_sequence_equivalent_mutual_impedance_in_pu_between_bus_to_fault_place(qbus);
+
+                temp = temp-(Ymutual_fj[k+1]-Ymutual_if[k+1])*(Zpf-Zqf);
+            }
+            Z0 = temp/(-(Ymutual_fj[0]-Ymutual_if[0])+(Ymutual_fj[1]-Ymutual_if[1]));
+        }
     }
 }
 
@@ -513,6 +772,8 @@ void SHORT_CIRCUIT_SOLVER::solve()
     if(is_fault())
     {
         build_sequence_network();
+        if(get_option_of_DC_lines()==BLOCK_AND_IGNORE)
+            update_voltage_when_dc_lines_blocked();
         calculate_and_store_equivalent_impedance_between_bus_and_fault_place();
         Zf = 1.0/fault.get_fault_shunt_in_pu();
         complex<double> Uf;
@@ -520,9 +781,7 @@ void SHORT_CIRCUIT_SOLVER::solve()
             Uf = get_bus_initial_voltage_before_short_circuit(faulted_bus_pointer->get_bus_number());
         else if(is_line_fault())
             Uf = get_voltage_of_faulted_line_point_before_short_circuit();
-
         solve_fault_current(fault.get_fault_type(), Uf);
-
         update_bus_sequence_voltage();
     }
     else
@@ -714,9 +973,29 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_line_fault()
     complex<double> U1i = ibusptr->get_positive_sequence_complex_voltage_in_pu();
     complex<double> U2i = ibusptr->get_negative_sequence_complex_voltage_in_pu();
     complex<double> U0i = ibusptr->get_zero_sequence_complex_voltage_in_pu();
+    complex<double> U1j = jbusptr->get_positive_sequence_complex_voltage_in_pu();
+    complex<double> U2j = jbusptr->get_negative_sequence_complex_voltage_in_pu();
+    complex<double> U0j = jbusptr->get_zero_sequence_complex_voltage_in_pu();
+
     complex<double> I1if = (U1i - U1f)/Z1if;
     complex<double> I2if = (U2i - U2f)/Z1if;
-    complex<double> I0if = (U0i - U0f)/Z0if;
+    complex<double> I0if = 0.0;
+    if(not faulted_line_pointer->is_mutual())
+    {
+        I0if = (U0i - U0f)/Z0if;
+    }
+    else
+    {
+        I0if = Yif_mutual[0]*(U0i-U0f) + Yif_mutual[1]*(U0f-U0j);
+        for(unsigned int i=0; i<lineptrs_of_mutual_with_line_fault.size(); i++)
+        {
+            LINE* lineptr = lineptrs_of_mutual_with_line_fault[i];
+            complex<double> Vs = lineptr->get_line_zero_sequence_complex_voltage_at_sending_side_in_pu();
+            complex<double> Vr = lineptr->get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu();
+            I0if = I0if + Yif_mutual[i+2]*(Vs-Vr);
+        }
+    }
+
     if(units == PHYSICAL)
     {
         I1if = I1if*Ibase;
@@ -726,12 +1005,24 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_line_fault()
     toolkit->show_information_with_leading_time_stamp(get_formatted_information1(ibus,id, I1if, I2if, I0if));
     toolkit->show_information_with_leading_time_stamp(get_formatted_information2(ibusptr->get_bus_name(), Vbase,I1if, I2if, I0if));
 
-    complex<double> U1j = jbusptr->get_positive_sequence_complex_voltage_in_pu();
-    complex<double> U2j = jbusptr->get_negative_sequence_complex_voltage_in_pu();
-    complex<double> U0j = jbusptr->get_zero_sequence_complex_voltage_in_pu();
     complex<double> I1jf = (U1j - U1f)/Z1jf;
     complex<double> I2jf = (U2j - U2f)/Z1jf;
-    complex<double> I0jf = (U0j - U0f)/Z0jf;
+    complex<double> I0jf = 0.0;
+    if(not faulted_line_pointer->is_mutual())
+    {
+        I0jf = (U0j - U0f)/Z0jf;
+    }
+    else
+    {
+        I0jf = -Yfj_mutual[0]*(U0i-U0f) - Yfj_mutual[1]*(U0f-U0j);
+        for(unsigned int i=0; i<lineptrs_of_mutual_with_line_fault.size(); i++)
+        {
+            LINE* lineptr = lineptrs_of_mutual_with_line_fault[i];
+            complex<double> Vs = lineptr->get_line_zero_sequence_complex_voltage_at_sending_side_in_pu();
+            complex<double> Vr = lineptr->get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu();
+            I0jf = I0jf - Yfj_mutual[i+2]*(Vs-Vr);
+        }
+    }
     if(units == PHYSICAL)
     {
         I1jf = I1jf*Ibase;

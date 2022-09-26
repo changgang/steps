@@ -126,6 +126,7 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         string export_all_line_zero_sequence_data() const;
         string export_line_zero_sequence_data(const LINE* line) const;
         string export_all_zero_sequence_mutual_impedance_data() const;
+        string export_zero_sequence_mutual_impedance_data(const MUTUAL_DATA* mutual) const;
         string export_all_transformer_zero_sequence_data() const;
         string export_two_winding_transformer_zero_sequence_data(const TRANSFORMER* transformer) const;
         string export_three_winding_transformer_zero_sequence_data(const TRANSFORMER* transformer) const;

@@ -24,6 +24,8 @@ class NETWORK_MATRIX
         bool get_consider_load_logic();
         void set_consider_motor_load_logic(bool logic);
         bool get_consider_motor_load_logic();
+        void set_option_of_dc_lines(DC_LINES_OPTION option);
+        DC_LINES_OPTION get_option_of_dc_lines();
 
         void build_network_Y_matrix();
         void build_decoupled_network_B_matrix();
@@ -167,6 +169,8 @@ class NETWORK_MATRIX
         void add_pv_units_to_positive_sequence_network();
         void add_pv_unit_to_positive_sequence_network(const PV_UNIT& pv_unit);
         void add_fixed_shunts_to_positive_sequence_network();
+        void add_HVDCs_to_positive_sequence_network();
+        void add_HVDC_to_positive_sequence_network(const HVDC& hvdc);
 
         void add_lines_to_negative_sequence_network();
         void add_faulted_line_to_negative_sequence_network(const LINE& line);
@@ -183,8 +187,10 @@ class NETWORK_MATRIX
         void add_fixed_shunts_to_negative_sequence_network();
 
         void add_lines_to_zero_sequence_network();
+        void preprocess_mutual_data();
         void add_line_to_zero_sequence_network(const LINE& line);
         void add_faulted_line_to_zero_sequence_network(const LINE& line);
+        void add_mutual_line_to_zero_sequence_network(const LINE& line);
         void add_transformers_to_zero_sequence_network();
         void add_transformer_to_zero_sequence_network(const TRANSFORMER& trans);
         void add_two_winding_transformer_to_zero_sequence_network(const TRANSFORMER& trans);
@@ -232,5 +238,6 @@ class NETWORK_MATRIX
         GENERATOR_REACTANCE_OPTION gen_X_option;
         bool consider_load;
         bool consider_motor_load;
+        DC_LINES_OPTION option_of_all_ordinary_dc_lines;
 };
 #endif // NETWORK_MATRIX_H

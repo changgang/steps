@@ -39,6 +39,10 @@ class LINE : public NONBUS_DEVICE
         void set_meter_end_bus(unsigned int meter_bus);
         void set_length(double length);
 
+        void set_mutual_admittances(vector<complex<double>> Y);
+        void set_line_pointers_corresponding_to_mutual_admittances(vector<LINE*> lineptrs);
+        void set_is_mutual_logic(bool b);
+
         unsigned int get_sending_side_bus() const;
         unsigned int get_receiving_side_bus() const;
         BUS* get_sending_side_bus_pointer() const;
@@ -73,6 +77,7 @@ class LINE : public NONBUS_DEVICE
         void clear_fault_at_location(unsigned int to_bus, double location);
         unsigned int get_fault_count() const;
         bool is_faulted() const;
+        bool is_mutual() const;
 
         virtual bool is_valid() const;
         virtual void check();
@@ -92,6 +97,9 @@ class LINE : public NONBUS_DEVICE
         //virtual string get_compound_device_name() const;
 
         double get_line_base_voltage_in_kV() const;
+
+        vector<complex<double>> get_mutual_admittances() const;
+        vector<LINE*> get_line_pointers_corresponding_to_mutual_admittances() const;
 
         complex<double> get_line_complex_voltage_at_sending_side_in_pu() const;
         complex<double> get_line_complex_voltage_at_receiving_side_in_pu() const;
@@ -154,6 +162,10 @@ class LINE : public NONBUS_DEVICE
         double length;
 
         map<double,FAULT> faults;
+
+        vector<complex<double> > Ymutual;
+        vector<LINE*> lineptrs_of_Ymutual;
+        bool is_mutual_line;
 };
 
 #endif // LINE_H

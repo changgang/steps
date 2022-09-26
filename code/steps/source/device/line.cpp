@@ -155,6 +155,21 @@ void LINE::set_length(double line_length)
     if(line_length>=0.0) this->length = line_length;
 }
 
+void LINE::set_mutual_admittances(vector<complex<double>> Y)
+{
+    Ymutual.assign(Y.begin(), Y.end());
+}
+
+void LINE::set_line_pointers_corresponding_to_mutual_admittances(vector<LINE*> lineptrs)
+{
+    lineptrs_of_Ymutual.assign(lineptrs.begin(),lineptrs.end());
+}
+
+void LINE::set_is_mutual_logic(bool b)
+{
+    is_mutual_line = b;
+}
+
 unsigned int LINE::get_sending_side_bus() const
 {
     return sending_side_bus;
@@ -420,6 +435,11 @@ bool LINE::is_faulted() const
         return false;
 }
 
+bool LINE::is_mutual() const
+{
+    return is_mutual_line;
+}
+
 bool LINE::is_valid() const
 {
     if(get_sending_side_bus()!=0 and get_receiving_side_bus()!=0)
@@ -528,6 +548,7 @@ void LINE::clear()
     set_meter_end_bus(0);
     set_length(0.0);
     clear_all_faults();
+    set_is_mutual_logic(false);
 }
 
 bool LINE::is_connected_to_bus(unsigned int bus) const
@@ -668,6 +689,16 @@ double LINE::get_line_base_voltage_in_kV() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     return psdb.get_bus_base_voltage_in_kV(get_sending_side_bus());
+}
+
+vector<complex<double>> LINE::get_mutual_admittances() const
+{
+    return Ymutual;
+}
+
+vector<LINE*> LINE::get_line_pointers_corresponding_to_mutual_admittances() const
+{
+    return lineptrs_of_Ymutual;
 }
 
 
@@ -946,21 +977,44 @@ complex<double> LINE::get_line_zero_sequence_complex_current_at_sending_side_in_
 {
     if(get_sending_side_breaker_status()==true)
     {
-        complex<double> Z = get_line_zero_sequence_z_in_pu();
-        complex<double> Y = get_line_zero_sequence_y_in_pu();
-        complex<double> Ys = 0.5*Y + get_shunt_zero_sequence_y_at_sending_side_in_pu();
-        complex<double> Yr = 0.5*Y + get_shunt_zero_sequence_y_at_receiving_side_in_pu();
-
-        complex<double> Vs = get_line_zero_sequence_complex_voltage_at_sending_side_in_pu();
-        if(get_receiving_side_breaker_status()==true)
+        if(not is_mutual())
         {
-            complex<double> Vr = get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu();
-            return (Vs-Vr)/Z+Vs*Ys;
+            complex<double> Z = get_line_zero_sequence_z_in_pu();
+            complex<double> Y = get_line_zero_sequence_y_in_pu();
+            complex<double> Ys = 0.5*Y + get_shunt_zero_sequence_y_at_sending_side_in_pu();
+            complex<double> Yr = 0.5*Y + get_shunt_zero_sequence_y_at_receiving_side_in_pu();
+
+            complex<double> Vs = get_line_zero_sequence_complex_voltage_at_sending_side_in_pu();
+            if(get_receiving_side_breaker_status()==true)
+            {
+                complex<double> Vr = get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu();
+                return (Vs-Vr)/Z+Vs*Ys;
+            }
+            else
+            {
+                complex<double> Yeq = Ys+1.0/(Z+1.0/Yr);
+                return Vs*Yeq;
+            }
         }
         else
         {
-            complex<double> Yeq = Ys+1.0/(Z+1.0/Yr);
-            return Vs*Yeq;
+            vector<complex<double> > Y_mutual = get_mutual_admittances();
+            vector<LINE*> lineptrs_of_Y_mutual = get_line_pointers_corresponding_to_mutual_admittances();
+            complex<double> Y = get_line_zero_sequence_y_in_pu();
+            complex<double> Ys = 0.5*Y + get_shunt_zero_sequence_y_at_sending_side_in_pu();
+            complex<double> Yr = 0.5*Y + get_shunt_zero_sequence_y_at_receiving_side_in_pu();
+            complex<double> Vs = get_line_zero_sequence_complex_voltage_at_sending_side_in_pu();
+
+            complex<double> I = 0.0;
+            for(unsigned int i=0; i<Y_mutual.size(); i++)
+            {
+                LINE* lineptr = lineptrs_of_Y_mutual[i];
+                complex<double> V_s = lineptr->get_line_zero_sequence_complex_voltage_at_sending_side_in_pu();
+                complex<double> V_r = lineptr->get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu();
+                I = I + Y_mutual[i]*(V_s-V_r);
+            }
+            I = I + Vs*Ys;
+            return I;
         }
     }
     else
@@ -971,21 +1025,44 @@ complex<double> LINE::get_line_zero_sequence_complex_current_at_receiving_side_i
 {
     if(get_receiving_side_breaker_status()==true)
     {
-        complex<double> Z = get_line_zero_sequence_z_in_pu();
-        complex<double> Y = get_line_zero_sequence_y_in_pu();
-        complex<double> Ys = 0.5*Y + get_shunt_zero_sequence_y_at_sending_side_in_pu();
-        complex<double> Yr = 0.5*Y + get_shunt_zero_sequence_y_at_receiving_side_in_pu();
-
-        complex<double> Vr = get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu();
-        if(get_sending_side_breaker_status()==true)
+        if(not is_mutual())
         {
-            complex<double> Vs = get_line_zero_sequence_complex_voltage_at_sending_side_in_pu();
-            return (Vr-Vs)/Z+Vr*Yr;
+            complex<double> Z = get_line_zero_sequence_z_in_pu();
+            complex<double> Y = get_line_zero_sequence_y_in_pu();
+            complex<double> Ys = 0.5*Y + get_shunt_zero_sequence_y_at_sending_side_in_pu();
+            complex<double> Yr = 0.5*Y + get_shunt_zero_sequence_y_at_receiving_side_in_pu();
+
+            complex<double> Vr = get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu();
+            if(get_sending_side_breaker_status()==true)
+            {
+                complex<double> Vs = get_line_zero_sequence_complex_voltage_at_sending_side_in_pu();
+                return (Vr-Vs)/Z+Vr*Yr;
+            }
+            else
+            {
+                complex<double> Yeq = Yr+1.0/(Z+1.0/Ys);
+                return Vr*Yeq;
+            }
         }
         else
         {
-            complex<double> Yeq = Yr+1.0/(Z+1.0/Ys);
-            return Vr*Yeq;
+            vector<complex<double> > Y_mutual = get_mutual_admittances();
+            vector<LINE*> lineptrs_of_Y_mutual = get_line_pointers_corresponding_to_mutual_admittances();
+            complex<double> Y = get_line_zero_sequence_y_in_pu();
+            complex<double> Ys = 0.5*Y + get_shunt_zero_sequence_y_at_sending_side_in_pu();
+            complex<double> Yr = 0.5*Y + get_shunt_zero_sequence_y_at_receiving_side_in_pu();
+            complex<double> Vr = get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu();
+
+            complex<double> I = 0.0;
+            for(unsigned int i=0; i<Y_mutual.size(); i++)
+            {
+                LINE* lineptr = lineptrs_of_Y_mutual[i];
+                complex<double> V_s = lineptr->get_line_zero_sequence_complex_voltage_at_sending_side_in_pu();
+                complex<double> V_r = lineptr->get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu();
+                I = I + Y_mutual[i]*(V_r-V_s);
+            }
+            I = I + Vr*Yr;
+            return I;
         }
     }
     else

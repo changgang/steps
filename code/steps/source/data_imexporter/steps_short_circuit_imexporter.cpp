@@ -857,9 +857,175 @@ void STEPS_IMEXPORTER::load_zero_seq_non_transformer_branch_data()
         }
     }
 }
+
 void STEPS_IMEXPORTER::load_zero_seq_mutual_impedance_data()
 {
-    ;
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    if(splitted_sseq_data_in_ram.size()<5)
+        return;
+    vector<vector<string> >DATA = splitted_sseq_data_in_ram[4];
+    vector<string> data;
+
+    unsigned int ndata = DATA.size();
+
+    unsigned int n = 0;
+    unsigned int bus_i=0, bus_j=0, bus_p=0, bus_q=0;
+    string ICKT1="1", ICKT2="1";
+    double Rm, Xm;
+    double starting_location_of_line_ij=0.0, ending_location_of_line_ij=1.0;
+    double starting_location_of_line_pq=0.0, ending_location_of_line_pq=1.0;
+
+    for(unsigned int i=0; i!=ndata; ++i)
+    {
+        data = DATA[i];
+
+        if(data.size()>0)
+        {
+            bus_i = get_integer_data(data[n], "0");
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            bus_j = get_integer_data(data[n], "0");
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            ICKT1 = get_string_data(data[n], "1");
+            data.erase(data.begin());
+        }
+        DEVICE_ID did1 = get_line_device_id(bus_i, bus_j, ICKT1);
+        LINE* lineptr_ij = psdb.get_line(did1);
+
+        if(lineptr_ij == NULL)
+        {
+            osstream<<"Line ["<<lineptr_ij->get_compound_device_name()<<"]"<<" is not exist."<<endl
+                    <<"Please check mutual impedance data in seq file.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            continue;
+        }
+
+        if(data.size()>0)
+        {
+            bus_p = get_integer_data(data[n], "0");
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            bus_q = get_integer_data(data[n], "0");
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            ICKT2 = get_string_data(data[n], "1");
+            data.erase(data.begin());
+        }
+        DEVICE_ID did2 = get_line_device_id(bus_p, bus_q, ICKT2);
+        LINE* lineptr_pq = psdb.get_line(did2);
+
+        if(lineptr_pq == NULL)
+        {
+            osstream<<"Line ["<<lineptr_pq->get_compound_device_name()<<"]"<<" is not exist."<<endl
+                    <<"Please check mutual impedance data in seq file.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            continue;
+        }
+
+        if(data.size()>0)
+        {
+            Rm = get_double_data(data[n], "0.0");
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            Xm = get_double_data(data[n], "0.0");
+            data.erase(data.begin());
+        }
+        if(abs(complex<double>(Rm,Xm)-0.0)<FLOAT_EPSILON)
+        {
+            osstream<<"Zero sequence mutual impedance can not be zero. Please check mutual impedance in seq file.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            continue;
+        }
+
+        if(data.size()>0)
+        {
+            starting_location_of_line_ij = get_double_data(data[n], "0.0");
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            ending_location_of_line_ij = get_double_data(data[n], "0.0");
+            data.erase(data.begin());
+        }
+        if(starting_location_of_line_ij > ending_location_of_line_ij)
+        {
+            osstream<<"Starting location of mutual coupling must be less than ending."<<endl
+                    <<" Please check mutual impedance in seq file.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            continue;
+        }
+
+        if(data.size()>0)
+        {
+            starting_location_of_line_pq = get_double_data(data[n], "0.0");
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            ending_location_of_line_pq = get_double_data(data[n], "0.0");
+            data.erase(data.begin());
+        }
+        if(starting_location_of_line_pq > ending_location_of_line_pq)
+        {
+            osstream<<"Starting location of mutual coupling must be less than ending."<<endl
+                    <<" Please check mutual impedance data in seq file.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            continue;
+        }
+
+        MUTUAL_DATA mutual_data(toolkit);
+        mutual_data.set_first_line_pointer(lineptr_ij);
+        mutual_data.set_second_line_pointer(lineptr_pq);
+
+        if((lineptr_ij->get_sending_side_bus()==bus_i and lineptr_pq->get_sending_side_bus()==bus_p) or
+           (lineptr_ij->get_sending_side_bus()==bus_j and lineptr_pq->get_sending_side_bus()==bus_q))
+        {
+            mutual_data.set_mutual_impedance(complex<double>(Rm,Xm));
+        }
+        else
+        {
+            mutual_data.set_mutual_impedance(-complex<double>(Rm,Xm));
+        }
+
+        if(lineptr_ij->get_sending_side_bus()==bus_i)
+        {
+            mutual_data.set_starting_location_of_first_line(starting_location_of_line_ij);
+            mutual_data.set_ending_location_of_first_line(ending_location_of_line_ij);
+        }
+        else
+        {
+            mutual_data.set_starting_location_of_first_line(1.0-ending_location_of_line_ij);
+            mutual_data.set_ending_location_of_first_line(1.0-starting_location_of_line_ij);
+        }
+
+        if(lineptr_pq->get_sending_side_bus()==bus_p)
+        {
+            mutual_data.set_starting_location_of_second_line(starting_location_of_line_pq);
+            mutual_data.set_ending_location_of_second_line(ending_location_of_line_pq);
+        }
+        else
+        {
+            mutual_data.set_starting_location_of_second_line(1.0-ending_location_of_line_pq);
+            mutual_data.set_ending_location_of_second_line(1.0-starting_location_of_line_pq);
+        }
+        psdb.append_mutual_data(mutual_data);
+        lineptr_ij->set_is_mutual_logic(true);
+        lineptr_pq->set_is_mutual_logic(true);
+    }
 }
 
 void STEPS_IMEXPORTER::load_zero_seq_transformer_data()
@@ -1106,21 +1272,21 @@ void STEPS_IMEXPORTER::load_three_winding_transformer_zero_seq_data(TRANSFORMER 
 
     switch(primary_cc)
     {
-        case 1: trans.set_winding_connection_type(PRIMARY_SIDE, WYE_CONNECTION);
-        case 2: trans.set_winding_connection_type(PRIMARY_SIDE, DELTA_CONNECTION);
-        case 3: trans.set_winding_connection_type(PRIMARY_SIDE, WYE_N_CONNECTION);
+        case 1: trans.set_winding_connection_type(PRIMARY_SIDE, WYE_CONNECTION);break;
+        case 2: trans.set_winding_connection_type(PRIMARY_SIDE, DELTA_CONNECTION);break;
+        case 3: trans.set_winding_connection_type(PRIMARY_SIDE, WYE_N_CONNECTION);break;
     }
     switch(secondary_cc)
     {
-        case 1: trans.set_winding_connection_type(SECONDARY_SIDE, WYE_CONNECTION);
-        case 2: trans.set_winding_connection_type(SECONDARY_SIDE, DELTA_CONNECTION);
-        case 3: trans.set_winding_connection_type(SECONDARY_SIDE, WYE_N_CONNECTION);
+        case 1: trans.set_winding_connection_type(SECONDARY_SIDE, WYE_CONNECTION);break;
+        case 2: trans.set_winding_connection_type(SECONDARY_SIDE, DELTA_CONNECTION);break;
+        case 3: trans.set_winding_connection_type(SECONDARY_SIDE, WYE_N_CONNECTION);break;
     }
     switch(tertiary_cc)
     {
-        case 1: trans.set_winding_connection_type(TERTIARY_SIDE, WYE_CONNECTION);
-        case 2: trans.set_winding_connection_type(TERTIARY_SIDE, DELTA_CONNECTION);
-        case 3: trans.set_winding_connection_type(TERTIARY_SIDE, WYE_N_CONNECTION);
+        case 1: trans.set_winding_connection_type(TERTIARY_SIDE, WYE_CONNECTION);break;
+        case 2: trans.set_winding_connection_type(TERTIARY_SIDE, DELTA_CONNECTION);break;
+        case 3: trans.set_winding_connection_type(TERTIARY_SIDE, WYE_N_CONNECTION);break;
     }
 
 
