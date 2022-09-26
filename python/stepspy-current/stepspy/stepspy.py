@@ -603,11 +603,11 @@ class STEPS():
         Tips:
             This function SHOULD be called before adding devices to the database.
         Example:
-            nbus_max = simulator.get_bus_capacity()
+            simulator.set_bus_capacity(capacity)
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("BUS")
-        return STEPS_LIB.api_set_device_capacity("BUS", capacity, self.toolkit_index)
+        return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
         
     def set_generator_capacity(self, capacity):
         """
@@ -617,7 +617,8 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
-        Example: N/A
+        Example: 
+            simulator.set_generator_capacity(capacity)
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Generator")
@@ -631,7 +632,8 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
-        Example: N/A
+        Example: 
+            simulator.set_wt_generator_capacity(capacity)
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Wt Generator")
@@ -645,7 +647,8 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
-        Example: N/A
+        Example: 
+            simulator.set_pv_unit_capacity(capacity)
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("PV Unit")
@@ -659,7 +662,8 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
-        Example: N/A
+        Example: 
+            simulator.set_energy_storage_capacity(capacity)
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Energy Storage")
@@ -673,7 +677,8 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
-        Example: N/A
+        Example: 
+            simulator.set_load_capacity(capacity)
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Load")
@@ -687,7 +692,8 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
-        Example: N/A
+        Example: 
+            simulator.set_fixed_shunt_capacity(capacity)
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Fixed Shunt")
@@ -701,7 +707,8 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
-        Example: N/A
+        Example: 
+            simulator.set_line_capacity(capacity)
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Line")
@@ -715,7 +722,8 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
-        Example: N/A
+        Example: 
+            simulator.set_transformer_capacity(capacity)
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Transformer")
@@ -729,7 +737,8 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
-        Example: N/A
+        Example: 
+            simulator.set_hvdc_capacity(capacity)
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("HVDC")
@@ -743,6 +752,8 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
+        Example: 
+            simulator.set_vsc_hvdc_capacity(capacity)
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("VSC HVDC")
@@ -756,7 +767,8 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
-        Example: N/A
+        Example: 
+            simulator.set_equivalent_device_capacity(capacity)
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Equivalent Device")
@@ -770,7 +782,8 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
-        Example: N/A
+        Example: 
+            simulator.set_area_capacity(capacity)
         """
         global STEPS_LIB
         return STEPS_LIB.api_set_area_capacity(capacity, self.toolkit_index)
@@ -783,7 +796,8 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
-        Example: N/A
+        Example: 
+            simulator.set_zone_capacity(capacity)
         """
         global STEPS_LIB
         return STEPS_LIB.api_set_zone_capacity(capacity, self.toolkit_index)
@@ -796,7 +810,8 @@ class STEPS():
         Rets: N/A
         Tips:
             This function SHOULD be called before adding devices to the database.
-        Example: N/A
+        Example: 
+            simulator.set_owner_capacity(capacity)
         """
         global STEPS_LIB
         return STEPS_LIB.api_set_owner_capacity(capacity, self.toolkit_index)
@@ -819,7 +834,8 @@ class STEPS():
             (1) cap: integer, database capacity, in bytes.
         Rets:
             (1) N/A
-        Example: N/A
+        Example: 
+            simulator.set_dynamic_model_database_capacity(cap)
         """
         global STEPS_LIB
         STEPS_LIB.api_set_toolkit_dynamic_model_database_capacity(cap, self.toolkit_index)
