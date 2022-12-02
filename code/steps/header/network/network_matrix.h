@@ -166,11 +166,16 @@ class NETWORK_MATRIX
         void add_generator_to_positive_sequence_network(const GENERATOR& gen);
         void add_wt_generators_to_positive_sequence_network();
         void add_wt_generator_to_positive_sequence_network(const WT_GENERATOR& wt_gen);
+        void add_const_speed_wtg_to_positve_sequence_network(const WT_GENERATOR& wt_gen);
+        void add_doubly_fed_wtg_to_positive_sequence_network(const WT_GENERATOR& wt_gen);
+        void add_direct_driven_wtg_to_positive_sequence_network(const WT_GENERATOR& wt_gen);
         void add_pv_units_to_positive_sequence_network();
         void add_pv_unit_to_positive_sequence_network(const PV_UNIT& pv_unit);
         void add_fixed_shunts_to_positive_sequence_network();
-        void add_HVDCs_to_positive_sequence_network();
-        void add_HVDC_to_positive_sequence_network(const HVDC& hvdc);
+        void add_hvdcs_to_positive_sequence_network();
+        void add_hvdc_to_positive_sequence_network(const HVDC& hvdc);
+        void add_vsc_hvdcs_to_positive_sequence_network();
+        void add_vsc_hvdc_to_positive_sequence_network(const VSC_HVDC& vsc_hvdc);
 
         void add_lines_to_negative_sequence_network();
         void add_faulted_line_to_negative_sequence_network(const LINE& line);

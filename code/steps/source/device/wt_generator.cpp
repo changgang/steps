@@ -49,6 +49,7 @@ void WT_GENERATOR::clear()
     set_grounding_resistance_in_pu(0.0);
     set_grounding_reactance_in_pu(0.0);
     set_generator_reactance_option(SUBTRANSIENT_REACTANCE);
+    set_sequence_parameter_import_flag(false);
 }
 
 DEVICE_ID WT_GENERATOR::get_device_id() const
@@ -670,4 +671,367 @@ complex<double> WT_GENERATOR::get_zero_sequence_complex_current_in_kA()
     return get_zero_sequence_complex_current_in_pu()*sbase/(SQRT3*psdb.get_bus_base_voltage_in_kV(get_source_bus()));
 }
 
+void WT_GENERATOR::set_wt_generator_type(WT_GENERATOR_TYPE type)
+{
+    wtg_type = type;
+}
+
+WT_GENERATOR_TYPE WT_GENERATOR::get_wt_generator_type() const
+{
+    return wtg_type;
+}
+
+void WT_GENERATOR::set_sequence_parameter_import_flag(bool flag)
+{
+    sequence_parameter_import_flag = flag;
+}
+bool WT_GENERATOR::get_sequence_parameter_import_flag() const
+{
+    return sequence_parameter_import_flag;
+}
+
+
+
+
+
+
+
+
+
+void WT_GENERATOR::set_motor_rated_voltage_in_kV(double v)
+{
+    motor_rated_voltge = v;
+}
+
+void WT_GENERATOR::set_mbase_in_MVA(double m)
+{
+    mbase = m;
+}
+
+void WT_GENERATOR::set_motor_Ra_in_pu(double r)
+{
+    motor_Ra = r;
+}
+
+void WT_GENERATOR::set_motor_Xa_in_pu(double x)
+{
+    motor_Xa = x;
+}
+
+void WT_GENERATOR::set_motor_Xm_in_pu(double x)
+{
+    motor_Xm = x;
+}
+
+void WT_GENERATOR::set_motor_R1_in_pu(double r)
+{
+    motor_R1 = r;
+}
+
+void WT_GENERATOR::set_motor_X1_in_pu(double x)
+{
+    motor_X1 = x;
+}
+
+void WT_GENERATOR::set_motor_R2_in_pu(double r)
+{
+    motor_R2 = r;
+}
+
+void WT_GENERATOR::set_motor_X2_in_pu(double x)
+{
+    motor_X2 = x;
+}
+
+void WT_GENERATOR::set_motor_internal_voltage_in_pu(complex<double> v)
+{
+    motor_internal_voltage = v;
+}
+
+void WT_GENERATOR::set_motor_positive_sequence_impedance_in_pu(complex<double> z)
+{
+    motor_Z1 = z;
+}
+
+void WT_GENERATOR::set_motor_negative_sequence_impedance_in_pu(complex<double> z)
+{
+    motor_Z2 = z;
+}
+
+void WT_GENERATOR::set_motor_zero_sequence_impedance_in_pu(complex<double> z)
+{
+    motor_Z0 = z;
+}
+
+void WT_GENERATOR::set_motor_power_in_MVA(complex<double> s)
+{
+    motor_power_in_MVA = s;
+}
+
+
+double WT_GENERATOR::get_motor_rated_voltage_in_kV() const
+{
+    return motor_rated_voltge;
+}
+
+double WT_GENERATOR::get_motor_mbase_in_MVA() const
+{
+    return mbase;
+}
+
+double WT_GENERATOR::get_motor_Ra_in_pu() const
+{
+    return motor_Ra;
+}
+
+double WT_GENERATOR::get_motor_Xa_in_pu() const
+{
+    return motor_Xa;
+}
+
+double WT_GENERATOR::get_motor_Xm_in_pu() const
+{
+    return motor_Xm;
+}
+
+double WT_GENERATOR::get_motor_R1_in_pu() const
+{
+    return motor_R1;
+}
+
+double WT_GENERATOR::get_motor_X1_in_pu() const
+{
+    return motor_X1;
+}
+
+double WT_GENERATOR::get_motor_R2_in_pu() const
+{
+    return motor_R2;
+}
+
+double WT_GENERATOR::get_motor_X2_in_pu() const
+{
+    return motor_X2;
+}
+
+complex<double> WT_GENERATOR::get_motor_internal_voltage_in_pu() const
+{
+    return motor_internal_voltage;
+}
+
+complex<double> WT_GENERATOR::get_motor_equivalent_injection_current_in_pu() const
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+
+    unsigned int bus = get_generator_bus();
+    double mbase = get_motor_mbase_in_MVA();
+    double ratedV = get_motor_rated_voltage_in_kV();
+    double bus_ratedV = psdb.get_bus_base_voltage_in_kV(bus);
+    double Zmb = ratedV*ratedV/mbase;
+    double Zbb = bus_ratedV*bus_ratedV/sbase;
+
+    complex<double> Z = get_motor_positive_sequence_impedance_in_pu();
+
+    return get_motor_internal_voltage_in_pu()/(Z*Zmb/Zbb);
+}
+
+complex<double> WT_GENERATOR::get_motor_positive_sequence_impedance_in_pu() const
+{
+    return motor_Z1;
+}
+
+complex<double> WT_GENERATOR::get_motor_negative_sequence_impedance_in_pu() const
+{
+    return motor_Z2;
+}
+
+complex<double> WT_GENERATOR::get_motor_zero_sequence_impedance_in_pu() const
+{
+    return motor_Z0;
+}
+
+complex<double> WT_GENERATOR::get_motor_power_in_MVA() const
+{
+    return motor_power_in_MVA;
+}
+
+complex<double> WT_GENERATOR::get_static_power_in_MVA() const
+{
+    return get_complex_generation_in_MVA() - get_motor_power_in_MVA();
+}
+
+
+void WT_GENERATOR::update_motor_data()
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+
+    if(get_sequence_parameter_import_flag()==false)
+        return;
+
+    double motor_p = get_p_generation_in_MW();
+    mbase = get_motor_mbase_in_MVA();
+    double rated_voltage = get_motor_rated_voltage_in_kV();
+    double Ra = get_motor_Ra_in_pu();
+    double Xa = get_motor_Xa_in_pu();
+    double Xm = get_motor_Xm_in_pu();
+    double R1 = get_motor_R1_in_pu();
+    double X1 = get_motor_X1_in_pu();
+    double R2 = get_motor_R2_in_pu();
+    double X2 = get_motor_X2_in_pu();
+
+    BUS* busptr = get_bus_pointer();
+    double V = busptr->get_positive_sequence_voltage_in_kV()/rated_voltage;
+    complex<double> complex_V = busptr->get_positive_sequence_complex_voltage_in_kV()/rated_voltage;
+    double P = motor_p/mbase/(V*V);
+
+    // single cage
+    if((R2==0.0 and X2==0.0) or (R2==999.0 and X2==999.0))
+    {
+        double Xrm = X1 + Xm;
+        double Xsm = Xa + Xm;
+        double Xp = Xa*X1 + Xm*Xa + Xm*X1;
+        double R = 0.0;
+
+        double Ap = Ra*Ra + Xsm*Xsm;
+        double Bp = 2.0*Ra*Xm*Xm;
+        double Cp = Xp*Xp + Ra*Ra*Xrm*Xrm;
+
+
+        double App = Ap*P - Ra;
+        double Bpp = Bp*P - Xm*Xm;
+        double Cpp = Cp*P - Ra*Xrm*Xrm;
+
+        double delta = Bpp*Bpp - 4.0*App*Cpp;
+        if(delta<0.0)
+        {
+            osstream<<"Can not get slip of wt induction machine."<<endl;
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+
+        R = (-Bpp + sqrt(delta))/(2.0*App);
+        if(R1/R>0.2 or R1/R<0.0)
+        {
+            R = (-Bpp - sqrt(delta))/(2.0*App);
+            if(R1/R>0.2 or R1<0.0)
+            {
+                osstream<<"No appropriate root with wt induction machine"<<endl;
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                return;
+            }
+        }
+        double s = R1/R;
+
+        double Q = V*V*(Xsm*R*R+Xp*Xrm)/(Ap*R*R+Bp*R+Cp);
+        double motor_q = Q*mbase;
+
+        set_motor_power_in_MVA(complex<double>(motor_p, motor_q));
+
+        // equivalent impedance
+        complex<double> Z = complex<double>(Ra,Xa+Xm*X1/(Xm+X1));
+        set_motor_positive_sequence_impedance_in_pu(Z);
+        set_motor_negative_sequence_impedance_in_pu(Z);
+
+        // internal voltage
+//        complex<double> motor_power = get_motor_power_in_MVA();
+//        complex<double> I = motor_power/mbase/complex_V;
+//        complex<double> E = complex_V - I*Z;
+//        set_motor_internal_voltage_in_pu(E);
+        double ratedV = get_motor_rated_voltage_in_kV();
+        double bus_ratedV = busptr->get_base_voltage_in_kV();
+        double Zmb = ratedV*ratedV/mbase;
+        double Zbb = bus_ratedV*bus_ratedV/sbase;
+
+        complex<double> V1 = busptr->get_positive_sequence_complex_voltage_in_pu();
+
+        complex<double> Z_on_mbase = get_motor_positive_sequence_impedance_in_pu();
+        complex<double> Z1 = Z_on_mbase*Zmb/Zbb;
+
+
+        complex<double> motor_power = get_motor_power_in_MVA();
+        complex<double> I = conj(motor_power/sbase/V1);
+
+        complex<double> E = V1 - I*Z1;
+        set_motor_internal_voltage_in_pu(E);
+    }
+    else    //double cage
+    {
+        double M = R2/R1;
+        double a,b,c,d,e,f,g,h,k;
+        double Y4, Y3, Y2, Y1, Y0;
+        double R=0.0,Q;
+
+        a = M*Ra;
+        b = -Xa*(Xm+Xm*M+X2+X1*M)-Xm*X1*M-Xm*X2;
+        c = -(Xm*X1+Xm*X2+X1*X2)*Ra;
+        d = Xa*M+Xm*M;
+        e = Ra*(Xm+Xm*M+X2+X1*M);
+        f = -Xa*(Xm*X1+Xm*X2+X1*X2)-Xm*X1*X2;
+        g = M;
+        h = -(Xm*X1+Xm*X2+X1*X2);
+        k = Xm+Xm*M+X2+X1*M;
+
+        Y4 = g*a-P*a*a-P*d*d;
+        Y3 = g*b+k*d-2*P*a*b-2*P*d*e;
+        Y2 = g*c+h*a+k*e-P*b*b-2*P*a*c-P*e*e-2*P*d*f;
+        Y1 = h*b+k*f-2*P*b*c-2*P*e*f;
+        Y0 = h*c-P*c*c-P*f*f;
+
+        float* Rp = roots_quartic_equation(Y4,Y3,Y2,Y1,Y0);
+
+        for (unsigned int t=1; t<(Rp[0]+1); t++)
+        {
+            if(R1/Rp[t]<0.2 and R1/Rp[t]>0.0)
+            {
+                R = Rp[t];
+                break;
+            }
+        }
+
+        if(R == 0.0)
+        {
+            osstream<<"Double cage has no root of wt generator."<<endl;
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        double s = R1/R;
+
+        Q = -V*V*(k*R*(a*R*R+b*R+c)-(g*R*R+h)*(d*R*R+e*R+f))/((a*R*R+b*R+c)*(a*R*R+b*R+c)+(d*R*R+e*R+f)*(d*R*R+e*R*f));
+        double motor_q = Q*mbase;
+        set_motor_power_in_MVA(complex<double>(motor_p, motor_q));
+
+        // equivalent impedance
+        complex<double> Z = complex<double>(Ra,Xa+Xm*X1*X2/(X1+X2)/(Xm+X1*X2/(X1+X2)));
+        set_motor_positive_sequence_impedance_in_pu(Z);
+        set_motor_negative_sequence_impedance_in_pu(Z);
+
+        // internal voltage
+//        complex<double> motor_power = get_motor_power_in_MVA();
+//        complex<double> I = motor_power/mbase/complex_V;
+//        complex<double> E = complex_V - I*Z;
+//        set_motor_internal_voltage_in_pu(E);
+        double ratedV = get_motor_rated_voltage_in_kV();
+        double bus_ratedV = busptr->get_base_voltage_in_kV();
+        double Zmb = ratedV*ratedV/mbase;
+        double Zbb = bus_ratedV*bus_ratedV/sbase;
+
+        complex<double> V1 = busptr->get_positive_sequence_complex_voltage_in_pu();
+
+        complex<double> Z_on_mbase = get_motor_positive_sequence_impedance_in_pu();
+        complex<double> Z1 = Z_on_mbase*Zmb/Zbb;
+
+
+        complex<double> motor_power = get_motor_power_in_MVA();
+        complex<double> I = conj(motor_power/sbase/V1);
+
+        complex<double> E = V1 - I*Z1;
+        set_motor_internal_voltage_in_pu(E);
+    }
+
+}
 

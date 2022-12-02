@@ -146,6 +146,9 @@ class LINE : public NONBUS_DEVICE
         complex<double> get_line_complex_apparent_impedance_at_receiving_side_in_pu() const;
         complex<double> get_line_complex_apparent_impedance_at_sending_side_in_ohm() const;
         complex<double> get_line_complex_apparent_impedance_at_receiving_side_in_ohm() const;
+
+        void set_sequence_parameter_import_flag(bool flag);
+        bool get_sequence_parameter_import_flag() const;
     private:
         //map<double,FAULT>::iterator get_iterator_of_fault_at_location_to_sending_side(double location);
         unsigned int sending_side_bus, receiving_side_bus;
@@ -166,6 +169,7 @@ class LINE : public NONBUS_DEVICE
         vector<complex<double> > Ymutual;
         vector<LINE*> lineptrs_of_Ymutual;
         bool is_mutual_line;
+        bool sequence_parameter_import_flag;
 };
 
 #endif // LINE_H

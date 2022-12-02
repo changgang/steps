@@ -43,6 +43,7 @@ void ENERGY_STORAGE::clear()
 {
     SOURCE::clear();
     energy_storage_model = NULL;
+    sequence_parameter_import_flag = false;
 }
 
 DEVICE_ID ENERGY_STORAGE::get_device_id() const
@@ -179,4 +180,11 @@ complex<double> ENERGY_STORAGE::get_source_dynamic_current_in_pu_based_on_system
     return 0.0;
 }
 
-
+void ENERGY_STORAGE::set_sequence_parameter_import_flag(bool flag)
+{
+    sequence_parameter_import_flag = flag;
+}
+bool ENERGY_STORAGE::get_sequence_parameter_import_flag() const
+{
+    return sequence_parameter_import_flag;
+}

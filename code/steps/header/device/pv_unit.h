@@ -75,6 +75,9 @@ class PV_UNIT : public SOURCE
         complex<double> get_positive_sequence_complex_current_in_kA();
         complex<double> get_negative_sequence_complex_current_in_kA();
         complex<double> get_zero_sequence_complex_current_in_kA();
+
+        void set_sequence_parameter_import_flag(bool flag);
+        bool get_sequence_parameter_import_flag() const;
     private:
         unsigned int number_of_lumped_pv_units;
         double rated_power_per_pv_unit_in_MW;
@@ -85,5 +88,6 @@ class PV_UNIT : public SOURCE
         PV_IRRADIANCE_MODEL* pv_irradiance_model;
 
         double R1, X1, R2, X2, R0, X0, Rground, Xground;
+        bool sequence_parameter_import_flag;
 };
 #endif // PV_UNIT_H

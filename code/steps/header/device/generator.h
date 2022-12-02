@@ -90,6 +90,9 @@ class GENERATOR : public SOURCE
 
         virtual complex<double> get_complex_internal_voltage_in_pu_in_xy_axis() const;
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power();
+
+        void set_sequence_parameter_import_flag(bool flag);
+        bool get_sequence_parameter_import_flag() const;
     private:
         SYNC_GENERATOR_MODEL* sync_generator_model;
         COMPENSATOR_MODEL* compensator_model;
@@ -107,5 +110,7 @@ class GENERATOR : public SOURCE
 
         complex<double> E;
         GENERATOR_REACTANCE_OPTION gen_X_option;
+
+        bool sequence_parameter_import_flag;
 };
 #endif // GENERATOR_H

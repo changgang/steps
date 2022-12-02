@@ -39,6 +39,8 @@ void PV_UNIT::clear()
     set_zero_sequence_reactance_in_pu(0.0);
     set_grounding_resistance_in_pu(0.0);
     set_grounding_reactance_in_pu(0.0);
+
+    set_sequence_parameter_import_flag(false);
 }
 
 DEVICE_ID PV_UNIT::get_device_id() const
@@ -461,6 +463,12 @@ complex<double> PV_UNIT::get_zero_sequence_complex_current_in_kA()
     return get_zero_sequence_complex_current_in_pu()*sbase/(SQRT3*psdb.get_bus_base_voltage_in_kV(get_source_bus()));
 }
 
-
-
+void PV_UNIT::set_sequence_parameter_import_flag(bool flag)
+{
+    sequence_parameter_import_flag = flag;
+}
+bool PV_UNIT::get_sequence_parameter_import_flag() const
+{
+    return sequence_parameter_import_flag;
+}
 

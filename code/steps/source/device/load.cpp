@@ -233,6 +233,7 @@ void LOAD::clear()
     s_zero_sequence_in_MVA = 0.0;
 
     set_grounding_flag(false);
+    set_sequence_parameter_import_flag(false);
 }
 
 bool LOAD::is_connected_to_bus(unsigned int target_bus) const
@@ -956,7 +957,20 @@ complex<double> LOAD::get_motor_internal_voltage_in_pu() const
 
 complex<double> LOAD::get_motor_equivalent_injection_current_in_pu() const
 {
-    return get_motor_internal_voltage_in_pu()/get_motor_positive_sequence_impedance_in_pu();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+
+    unsigned int bus = get_load_bus();
+    double mbase = get_motor_mbase_in_MVA();
+    double ratedV = get_motor_rated_voltage_in_kV();
+    double bus_ratedV = psdb.get_bus_base_voltage_in_kV(bus);
+    double Zmb = ratedV*ratedV/mbase;
+    double Zbb = bus_ratedV*bus_ratedV/sbase;
+
+    complex<double> Z = get_motor_positive_sequence_impedance_in_pu();
+
+    return get_motor_internal_voltage_in_pu()/(Z*Zmb/Zbb);
 }
 
 complex<double> LOAD::get_motor_positive_sequence_impedance_in_pu() const
@@ -996,6 +1010,9 @@ void LOAD::update_motor_load_data()
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+
     if(has_motor_load())
     {
         double power_ratio = get_ratio_of_motor_active_power();
@@ -1080,10 +1097,31 @@ void LOAD::update_motor_load_data()
             set_motor_negative_sequence_impedance_in_pu(Z);
 
             // internal voltage
+//            complex<double> motor_power = get_motor_power_in_MVA();
+//            complex<double> I = motor_power/mbase/complex_V;
+//            complex<double> E = complex_V - I*Z;
+//            set_motor_internal_voltage_in_pu(E);
+
+
+            double ratedV = get_motor_rated_voltage_in_kV();
+            double bus_ratedV = busptr->get_base_voltage_in_kV();
+            double Zmb = ratedV*ratedV/mbase;
+            double Zbb = bus_ratedV*bus_ratedV/sbase;
+
+            complex<double> V1 = busptr->get_positive_sequence_complex_voltage_in_pu();
+
+            complex<double> Z_on_mbase = get_motor_positive_sequence_impedance_in_pu();
+            complex<double> Z1 = Z_on_mbase*Zmb/Zbb;
+
+
             complex<double> motor_power = get_motor_power_in_MVA();
-            complex<double> I = motor_power/mbase/complex_V;
-            complex<double> E = complex_V - I*Z;
+            complex<double> I = conj(motor_power/sbase/V1);
+
+            complex<double> E = V1 - I*Z1;
             set_motor_internal_voltage_in_pu(E);
+
+
+            // set_motor_internal_voltage_in_pu(complex_V);
         }
         else    //double cage
         {
@@ -1137,11 +1175,32 @@ void LOAD::update_motor_load_data()
             set_motor_negative_sequence_impedance_in_pu(Z);
 
             // internal voltage
+            double ratedV = get_motor_rated_voltage_in_kV();
+            double bus_ratedV = busptr->get_base_voltage_in_kV();
+            double Zmb = ratedV*ratedV/mbase;
+            double Zbb = bus_ratedV*bus_ratedV/sbase;
+
+            complex<double> V1 = busptr->get_positive_sequence_complex_voltage_in_pu();
+
+            complex<double> Z_on_mbase = get_motor_positive_sequence_impedance_in_pu();
+            complex<double> Z1 = Z_on_mbase*Zmb/Zbb;
+
+
             complex<double> motor_power = get_motor_power_in_MVA();
-            complex<double> I = motor_power/mbase/complex_V;
-            complex<double> E = complex_V - I*Z;
+            complex<double> I = conj(motor_power/sbase/V1);
+
+            complex<double> E = V1 - I*Z1;
             set_motor_internal_voltage_in_pu(E);
+
         }
     }
 }
 
+void LOAD::set_sequence_parameter_import_flag(bool flag)
+{
+    sequence_parameter_import_flag = flag;
+}
+bool LOAD::get_sequence_parameter_import_flag() const
+{
+    return sequence_parameter_import_flag;
+}

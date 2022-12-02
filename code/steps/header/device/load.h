@@ -146,6 +146,9 @@ class LOAD : public NONBUS_DEVICE
         bool has_motor_load() const;
 
         void update_motor_load_data();
+
+        void set_sequence_parameter_import_flag(bool flag);
+        bool get_sequence_parameter_import_flag() const;
     private:
         unsigned int bus;
         BUS* busptr;
@@ -183,5 +186,6 @@ class LOAD : public NONBUS_DEVICE
         complex<double> motor_internal_voltage;
         complex<double> motor_Z1, motor_Z2, motor_Z0;
 
+        bool sequence_parameter_import_flag;
 };
 #endif // LOAD_H

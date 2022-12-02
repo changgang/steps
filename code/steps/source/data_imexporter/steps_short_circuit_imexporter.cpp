@@ -40,6 +40,7 @@ void STEPS_IMEXPORTER::load_all_seq_data_to_devices()
     load_zero_seq_swithed_shunt_data();
     load_zero_seq_fixed_shunt_data();
     load_induction_machine_seq_data();
+    load_vsc_hvdc_seq_data();
 }
 
 void STEPS_IMEXPORTER::load_change_code_data()
@@ -69,6 +70,8 @@ void STEPS_IMEXPORTER::load_change_code_data()
 
 void STEPS_IMEXPORTER::load_source_seq_data()
 {
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     ostringstream osstream;
 
     if(splitted_sseq_data_in_ram.size()<2)
@@ -76,15 +79,17 @@ void STEPS_IMEXPORTER::load_source_seq_data()
     vector<vector<string> >DATA = splitted_sseq_data_in_ram[1];
     vector<string> data;
 
+    unsigned int bus;
+    string ID;
+
     unsigned int ndata = DATA.size();
 
-    unsigned int SOURCE_TYPE_INDEX = 13;
+    unsigned int SOURCE_TYPE_INDEX = 2;
     for(unsigned int i=0; i!=ndata; ++i)
     {
         data = DATA[i];
 
         unsigned int n = data.size();
-
         SOURCE_TYPE source_type = SYNC_GENERATOR_SOURCE;
         if(n>SOURCE_TYPE_INDEX)
         {
@@ -108,26 +113,128 @@ void STEPS_IMEXPORTER::load_source_seq_data()
                     break;
             }
         }
+
+        n = 0;
+        if(data.size()>0)
+        {
+            bus = get_integer_data(data[n], "0");
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            ID = get_string_data(data[n], "1");
+            data.erase(data.begin());
+        }
+
+
         switch(source_type)
         {
             case SYNC_GENERATOR_SOURCE:
             {
-                load_generator_seq_data(data);
+                DEVICE_ID did = get_generator_device_id(bus, ID);
+                GENERATOR* generator = psdb.get_generator(did);
+                if(generator == NULL)
+                {
+                    osstream<<"Generator "<<ID<<" is not existed on bus "<<bus<<"."<<endl
+                            <<"Please check seq file.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    continue;
+                }
+
+                if(data.size()==12)
+                {
+                    load_generator_seq_data(*generator, data);
+                    generator->set_sequence_parameter_import_flag(true);
+                }
+                else
+                {
+                    osstream<<"Number of data in seq file for generator [bus:"<<bus<<" ID:"<<ID
+                            <<"] is more or less than sequence parameters of generator."<<endl
+                            <<"Please check seq file. The piece of data will be ignored.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    continue;
+                }
                 break;
             }
             case WT_GENERATOR_SOURCE:
             {
-                load_wt_generator_seq_data(data);
+                DEVICE_ID did = get_wt_generator_device_id(bus, ID);
+                WT_GENERATOR* wt_generator = psdb.get_wt_generator(did);
+                if(wt_generator == NULL)
+                {
+                    osstream<<"WT generator "<<ID<<" is not existed on bus "<<bus<<"."<<endl
+                            <<"Please check seq file.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    continue;
+                }
+
+                if(data.size()==13 or false or false)   // change "false' to number of constant speed wtg and doubly fed wtg ...
+                {
+                    load_wt_generator_seq_data(*wt_generator, data);
+                    wt_generator->set_sequence_parameter_import_flag(true);
+                }
+                else
+                {
+                    osstream<<"Number of data in seq file for wt generator [bus:"<<bus<<" ID:"<<ID
+                            <<"] is more or less than sequence parameters of wt generator."<<endl
+                            <<"Please check seq file. The piece of data will be ignored.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    continue;
+                }
                 break;
             }
             case PV_UNIT_SOURCE:
             {
-                load_pv_unit_seq_data(data);
+                DEVICE_ID did = get_pv_unit_device_id(bus, ID);
+                PV_UNIT* pv_unit = psdb.get_pv_unit(did);
+                if(pv_unit == NULL)
+                {
+                    osstream<<"PV unit "<<ID<<" is not existed on bus "<<bus<<"."<<endl
+                            <<"Please check seq file.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    continue;
+                }
+
+                if(data.size()==0 or true)
+                {
+                    load_pv_unit_seq_data(*pv_unit, data);
+                    pv_unit->set_sequence_parameter_import_flag(true);
+                }
+                else
+                {
+                    osstream<<"Number of data in seq file for pv unit [bus:"<<bus<<" ID:"<<ID
+                            <<"] is more or less than sequence parameters of wt generator."<<endl
+                            <<"Please check seq file. The piece of data will be ignored.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    continue;
+                }
                 break;
             }
             case ENERGY_STORAGE_SOURCE:
             {
-                load_energy_storage_data(data);
+                DEVICE_ID did = get_energy_storage_device_id(bus, ID);
+                ENERGY_STORAGE* estorage = psdb.get_energy_storage(did);
+                if(estorage == NULL)
+                {
+                    osstream<<"Energy storage "<<ID<<" is not existed on bus "<<bus<<"."<<endl
+                            <<"Please check seq file.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    continue;
+                }
+
+                if(data.size()==0 or true)
+                {
+                    load_energy_storage_seq_data(*estorage, data);
+                    estorage->set_sequence_parameter_import_flag(true);
+                }
+                else
+                {
+                    osstream<<"Number of data in seq file for energy storage [bus:"<<bus<<" ID:"<<ID
+                            <<"] is more or less than sequence parameters of energy storage."<<endl
+                            <<"Please check seq file. The piece of data will be ignored.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    continue;
+                }
                 break;
             }
             default:
@@ -141,14 +248,13 @@ void STEPS_IMEXPORTER::load_source_seq_data()
         }
     }
 }
-void STEPS_IMEXPORTER::load_generator_seq_data(vector<string>& data)
+
+void STEPS_IMEXPORTER::load_generator_seq_data(GENERATOR& generator, vector<string>& data)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    unsigned int bus;
-    string ID;
     double R_pos = 0.0, X_pos_subtransient = 0.0, X_pos_transient = 0.0, X_pos_sync = 0.0;
     double R_neg = 0.0, X_neg = 0.0;
     double R_zero = 0.0, X_zero = 0.0;
@@ -158,22 +264,8 @@ void STEPS_IMEXPORTER::load_generator_seq_data(vector<string>& data)
 
     if(data.size()>0)
     {
-        bus = get_integer_data(data[n], "0");
+        // source type
         data.erase(data.begin());
-    }
-    if(data.size()>0)
-    {
-        ID = get_string_data(data[n], "1");
-        data.erase(data.begin());
-    }
-    DEVICE_ID did = get_generator_device_id(bus, ID);
-    GENERATOR* generator = psdb.get_generator(did);
-    if(generator ==  NULL)
-    {
-        osstream<<"Generator "<<ID<<" is not exist on bus "<<bus<<"."<<endl
-                <<"Please check seq file.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return;
     }
 
     if(data.size()>0)
@@ -182,8 +274,8 @@ void STEPS_IMEXPORTER::load_generator_seq_data(vector<string>& data)
         data.erase(data.begin());
     }
     if(R_pos == 0.0)
-        R_pos = generator->get_source_impedance_in_pu().real();
-    generator->set_positive_sequence_resistance_in_pu(R_pos);
+        R_pos = generator.get_source_impedance_in_pu().real();
+    generator.set_positive_sequence_resistance_in_pu(R_pos);
 
     if(data.size()>0)
     {
@@ -191,50 +283,50 @@ void STEPS_IMEXPORTER::load_generator_seq_data(vector<string>& data)
         data.erase(data.begin());
     }
     if(X_pos_subtransient == 0.0)
-        X_pos_subtransient = generator->get_source_impedance_in_pu().imag();
-    generator->set_positive_sequence_subtransient_reactance_in_pu(X_pos_subtransient);
+        X_pos_subtransient = generator.get_source_impedance_in_pu().imag();
+    generator.set_positive_sequence_subtransient_reactance_in_pu(X_pos_subtransient);
 
     if(data.size()>0)
     {
         X_pos_transient = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    generator->set_positive_sequence_transient_reactance_in_pu(X_pos_transient);
+    generator.set_positive_sequence_transient_reactance_in_pu(X_pos_transient);
 
     if(data.size()>0)
     {
         X_pos_sync = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    generator->set_positive_sequence_syncronous_reactance_in_pu(X_pos_sync);
+    generator.set_positive_sequence_syncronous_reactance_in_pu(X_pos_sync);
 
     if(data.size()>0)
     {
         R_neg = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    generator->set_negative_sequence_resistance_in_pu(R_neg);
+    generator.set_negative_sequence_resistance_in_pu(R_neg);
 
     if(data.size()>0)
     {
         X_neg = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    generator->set_negative_sequence_reactance_in_pu(X_neg);
+    generator.set_negative_sequence_reactance_in_pu(X_neg);
 
     if(data.size()>0)
     {
         R_zero = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    generator->set_zero_sequence_resistance_in_pu(R_zero);
+    generator.set_zero_sequence_resistance_in_pu(R_zero);
 
     if(data.size()>0)
     {
         X_zero = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    generator->set_zero_sequence_reactance_in_pu(X_zero);
+    generator.set_zero_sequence_reactance_in_pu(X_zero);
 
     if(data.size()>0)
     {
@@ -254,51 +346,58 @@ void STEPS_IMEXPORTER::load_generator_seq_data(vector<string>& data)
 
     if(unit_of_grounding_Z == 1)
     {
-        generator->set_grounding_resistance_in_pu(R_ground);
-        generator->set_grounding_reactance_in_pu(X_ground);
+        generator.set_grounding_resistance_in_pu(R_ground);
+        generator.set_grounding_reactance_in_pu(X_ground);
     }
     else if(unit_of_grounding_Z == 2)
     {
-        double mbase = generator->get_mbase_in_MVA();
-        double U = psdb.get_bus_base_voltage_in_kV(generator->get_generator_bus());
+        double mbase = generator.get_mbase_in_MVA();
+        double U = psdb.get_bus_base_voltage_in_kV(generator.get_generator_bus());
         double Zbase = U*U/mbase;
-        generator->set_grounding_resistance_in_pu(R_ground/Zbase);
-        generator->set_grounding_reactance_in_pu(X_ground/Zbase);
+        generator.set_grounding_resistance_in_pu(R_ground/Zbase);
+        generator.set_grounding_reactance_in_pu(X_ground/Zbase);
     }
 }
-void STEPS_IMEXPORTER::load_wt_generator_seq_data(vector<string>& data)
+void STEPS_IMEXPORTER::load_wt_generator_seq_data(WT_GENERATOR& wt_generator, vector<string>& data)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    unsigned int bus;
-    string ID;
     double R_pos = 0.0, X_pos_subtransient = 0.0, X_pos_transient = 0.0, X_pos_sync = 0.0;
     double R_neg = 0.0, X_neg = 0.0;
     double R_zero = 0.0, X_zero = 0.0;
     unsigned int unit_of_grounding_Z;
     double R_ground = 0.0, X_ground = 0.0;
+    unsigned int type;
     unsigned int n = 0;
 
     if(data.size()>0)
     {
-        bus = get_integer_data(data[n], "0");
+        // source type
         data.erase(data.begin());
     }
+
     if(data.size()>0)
     {
-        ID = get_string_data(data[n], "1");
+        type = get_integer_data(data[n], "0");
         data.erase(data.begin());
     }
-    DEVICE_ID did = get_wt_generator_device_id(bus, ID);
-    WT_GENERATOR* wt_generator = psdb.get_wt_generator(did);
-    if(wt_generator == NULL)
+
+    switch(type)
     {
-        osstream<<"WT generator "<<ID<<" is not exist on bus "<<bus<<"."<<endl
-                <<"Please check seq file.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return;
+        case 1:
+            load_constant_speed_wtg_seq_data(wt_generator, data);
+            return;
+            break;
+        case 2:
+            load_doubly_fed_wtg_seq_data(wt_generator, data);
+            break;
+        case 3:
+            load_direct_driven_wtg_seq_data(wt_generator, data);
+            break;
+        default: load_direct_driven_wtg_seq_data(wt_generator, data);
+        data.erase(data.begin());
     }
 
     if(data.size()>0)
@@ -307,8 +406,8 @@ void STEPS_IMEXPORTER::load_wt_generator_seq_data(vector<string>& data)
         data.erase(data.begin());
     }
     if(R_pos == 0.0)
-        R_pos = wt_generator->get_source_impedance_in_pu().real();
-    wt_generator->set_positive_sequence_resistance_in_pu(R_pos);
+        R_pos = wt_generator.get_source_impedance_in_pu().real();
+    wt_generator.set_positive_sequence_resistance_in_pu(R_pos);
 
     if(data.size()>0)
     {
@@ -316,50 +415,50 @@ void STEPS_IMEXPORTER::load_wt_generator_seq_data(vector<string>& data)
         data.erase(data.begin());
     }
     if(X_pos_subtransient == 0.0)
-        X_pos_subtransient = wt_generator->get_source_impedance_in_pu().imag();
-    wt_generator->set_positive_sequence_subtransient_reactance_in_pu(X_pos_subtransient);
+        X_pos_subtransient = wt_generator.get_source_impedance_in_pu().imag();
+    wt_generator.set_positive_sequence_subtransient_reactance_in_pu(X_pos_subtransient);
 
     if(data.size()>0)
     {
         X_pos_transient = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    wt_generator->set_positive_sequence_transient_reactance_in_pu(X_pos_transient);
+    wt_generator.set_positive_sequence_transient_reactance_in_pu(X_pos_transient);
 
     if(data.size()>0)
     {
         X_pos_sync = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    wt_generator->set_positive_sequence_syncronous_reactance_in_pu(X_pos_sync);
+    wt_generator.set_positive_sequence_syncronous_reactance_in_pu(X_pos_sync);
 
     if(data.size()>0)
     {
         R_neg = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    wt_generator->set_negative_sequence_resistance_in_pu(R_neg);
+    wt_generator.set_negative_sequence_resistance_in_pu(R_neg);
 
     if(data.size()>0)
     {
         X_neg = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    wt_generator->set_negative_sequence_reactance_in_pu(X_neg);
+    wt_generator.set_negative_sequence_reactance_in_pu(X_neg);
 
     if(data.size()>0)
     {
         R_zero = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    wt_generator->set_zero_sequence_resistance_in_pu(R_zero);
+    wt_generator.set_zero_sequence_resistance_in_pu(R_zero);
 
     if(data.size()>0)
     {
         X_zero = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    wt_generator->set_zero_sequence_reactance_in_pu(X_zero);
+    wt_generator.set_zero_sequence_reactance_in_pu(X_zero);
 
     if(data.size()>0)
     {
@@ -379,52 +478,121 @@ void STEPS_IMEXPORTER::load_wt_generator_seq_data(vector<string>& data)
 
     if(unit_of_grounding_Z == 1)
     {
-        wt_generator->set_grounding_resistance_in_pu(R_ground);
-        wt_generator->set_grounding_reactance_in_pu(X_ground);
+        wt_generator.set_grounding_resistance_in_pu(R_ground);
+        wt_generator.set_grounding_reactance_in_pu(X_ground);
     }
     else if(unit_of_grounding_Z == 2)
     {
-        double mbase = wt_generator->get_mbase_in_MVA();
-        double U = psdb.get_bus_base_voltage_in_kV(wt_generator->get_source_bus());
+        double mbase = wt_generator.get_mbase_in_MVA();
+        double U = psdb.get_bus_base_voltage_in_kV(wt_generator.get_source_bus());
         double Zbase = U*U/mbase;
-        wt_generator->set_grounding_resistance_in_pu(R_ground/Zbase);
-        wt_generator->set_grounding_reactance_in_pu(X_ground/Zbase);
+        wt_generator.set_grounding_resistance_in_pu(R_ground/Zbase);
+        wt_generator.set_grounding_reactance_in_pu(X_ground/Zbase);
     }
 }
 
-void STEPS_IMEXPORTER::load_pv_unit_seq_data(vector<string>& data)
+void STEPS_IMEXPORTER::load_constant_speed_wtg_seq_data(WT_GENERATOR& wt_gen, vector<string>& data)
+{
+    wt_gen.set_wt_generator_type(CONSTANT_SPEED_WT_GENERATOR);
+
+    double ratedVoltage, mbase, Ra, Xa, Xm, R1, X1, R2, X2, R0, X0;
+
+    unsigned int n = 0;
+    if(data.size()>0)
+    {
+        ratedVoltage = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_gen.set_motor_rated_voltage_in_kV(ratedVoltage);
+    if(data.size()>0)
+    {
+        mbase = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_gen.set_mbase_in_MVA(mbase);
+    if(data.size()>0)
+    {
+        Ra = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_gen.set_motor_Ra_in_pu(Ra);
+    if(data.size()>0)
+    {
+        Xa = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_gen.set_motor_Xa_in_pu(Xa);
+    if(data.size()>0)
+    {
+        Xm = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_gen.set_motor_Xm_in_pu(Xm);
+    if(data.size()>0)
+    {
+        R1 = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_gen.set_motor_R1_in_pu(R1);
+    if(data.size()>0)
+    {
+        X1 = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_gen.set_motor_X1_in_pu(X1);
+    if(data.size()>0)
+    {
+        R2 = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_gen.set_motor_R2_in_pu(R2);
+    if(data.size()>0)
+    {
+        X2 = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_gen.set_motor_X2_in_pu(X2);
+    if(data.size()>0)
+    {
+        R0 = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    if(data.size()>0)
+    {
+        X0 = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_gen.set_motor_zero_sequence_impedance_in_pu(complex<double>(R0,X0));
+}
+
+void STEPS_IMEXPORTER::load_doubly_fed_wtg_seq_data(WT_GENERATOR& wt_gen, vector<string>& data)
+{
+    wt_gen.set_wt_generator_type(DOUBLY_FED_WT_GENERATOR);
+    wt_gen.set_sequence_parameter_import_flag(true);
+}
+
+void STEPS_IMEXPORTER::load_direct_driven_wtg_seq_data(WT_GENERATOR& wt_gen, vector<string>& data)
+{
+    wt_gen.set_wt_generator_type(DIRECT_DRIVEN_WT_GENERATOR);
+}
+
+void STEPS_IMEXPORTER::load_pv_unit_seq_data(PV_UNIT& pv_unit, vector<string>& data)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    unsigned int bus;
-    string ID;
     double R_pos = 0.0, X_pos = 0.0;
     double R_neg = 0.0, X_neg = 0.0;
     double R_zero = 0.0, X_zero = 0.0;
-     unsigned int unit_of_grounding_Z;
-     double R_ground = 0.0, X_ground = 0.0;
+    unsigned int unit_of_grounding_Z;
+    double R_ground = 0.0, X_ground = 0.0;
     unsigned int n = 0;
 
     if(data.size()>0)
     {
-        bus = get_integer_data(data[n], "0");
+        // source type
         data.erase(data.begin());
-    }
-    if(data.size()>0)
-    {
-        ID = get_string_data(data[n], "1");
-        data.erase(data.begin());
-    }
-    DEVICE_ID did = get_pv_unit_device_id(bus, ID);
-    PV_UNIT* pv_unit = psdb.get_pv_unit(did);
-    if(pv_unit == NULL)
-    {
-        osstream<<"PV_UNIT "<<ID<<" is not exist on bus "<<bus<<"."<<endl
-                <<"Please check seq file.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return;
     }
 
     if(data.size()>0)
@@ -433,8 +601,8 @@ void STEPS_IMEXPORTER::load_pv_unit_seq_data(vector<string>& data)
         data.erase(data.begin());
     }
     if(R_pos == 0.0)
-        R_pos = pv_unit->get_source_impedance_in_pu().real();
-    pv_unit->set_positive_sequence_resistance_in_pu(R_pos);
+        R_pos = pv_unit.get_source_impedance_in_pu().real();
+    pv_unit.set_positive_sequence_resistance_in_pu(R_pos);
 
     if(data.size()>0)
     {
@@ -442,8 +610,8 @@ void STEPS_IMEXPORTER::load_pv_unit_seq_data(vector<string>& data)
         data.erase(data.begin());
     }
     if(X_pos == 0.0)
-        X_pos = pv_unit->get_source_impedance_in_pu().imag();
-    pv_unit->set_positive_sequence_reactance_in_pu(X_pos);
+        X_pos = pv_unit.get_source_impedance_in_pu().imag();
+    pv_unit.set_positive_sequence_reactance_in_pu(X_pos);
 
     if(data.size()>0)
         data.erase(data.begin());
@@ -455,28 +623,28 @@ void STEPS_IMEXPORTER::load_pv_unit_seq_data(vector<string>& data)
         R_neg = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    pv_unit->set_negative_sequence_resistance_in_pu(R_neg);
+    pv_unit.set_negative_sequence_resistance_in_pu(R_neg);
 
     if(data.size()>0)
     {
         X_neg = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    pv_unit->set_negative_sequence_reactance_in_pu(X_neg);
+    pv_unit.set_negative_sequence_reactance_in_pu(X_neg);
 
     if(data.size()>0)
     {
         R_zero = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    pv_unit->set_zero_sequence_resistance_in_pu(R_zero);
+    pv_unit.set_zero_sequence_resistance_in_pu(R_zero);
 
     if(data.size()>0)
     {
         X_zero = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    pv_unit->set_zero_sequence_reactance_in_pu(X_zero);
+    pv_unit.set_zero_sequence_reactance_in_pu(X_zero);
 
     if(data.size()>0)
     {
@@ -496,16 +664,31 @@ void STEPS_IMEXPORTER::load_pv_unit_seq_data(vector<string>& data)
 
     if(unit_of_grounding_Z == 1)
     {
-        pv_unit->set_grounding_resistance_in_pu(R_ground);
-        pv_unit->set_grounding_reactance_in_pu(X_ground);
+        pv_unit.set_grounding_resistance_in_pu(R_ground);
+        pv_unit.set_grounding_reactance_in_pu(X_ground);
     }
     else if(unit_of_grounding_Z == 2)
     {
-        double mbase = pv_unit->get_mbase_in_MVA();
-        double U = psdb.get_bus_base_voltage_in_kV(pv_unit->get_source_bus());
+        double mbase = pv_unit.get_mbase_in_MVA();
+        double U = psdb.get_bus_base_voltage_in_kV(pv_unit.get_source_bus());
         double Zbase = U*U/mbase;
-        pv_unit->set_grounding_resistance_in_pu(R_ground/Zbase);
-        pv_unit->set_grounding_reactance_in_pu(X_ground/Zbase);
+        pv_unit.set_grounding_resistance_in_pu(R_ground/Zbase);
+        pv_unit.set_grounding_reactance_in_pu(X_ground/Zbase);
+    }
+}
+
+void STEPS_IMEXPORTER::load_energy_storage_seq_data(ENERGY_STORAGE& estorage, vector<string>& data)
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    unsigned int n = 0;
+
+    if(data.size()>0)
+    {
+        // source type
+        data.erase(data.begin());
     }
 }
 
@@ -525,9 +708,6 @@ void STEPS_IMEXPORTER::load_load_seq_data()
     unsigned int n = 0;
     unsigned int bus;
     string ID;
-//    double P_neg = 0.0, Q_neg = 0.0;
-//    unsigned int ground_flag = 0;
-//    double P_zero = 0.0, Q_zero = 0.0;
 
     for(unsigned int i=0; i!=ndata; ++i)
     {
@@ -548,51 +728,30 @@ void STEPS_IMEXPORTER::load_load_seq_data()
 
         if(loadptr == NULL)
         {
-            osstream<<"Load "<<ID<<" is not exist on bus "<<bus<<"."<<endl
+            osstream<<"Load "<<ID<<" is not existed on bus "<<bus<<"."<<endl
                     <<"Please check seq file.";
             toolkit.show_information_with_leading_time_stamp(osstream);
             continue;
         }
 
-        load_static_load_seq_data(*loadptr, data);
-        if(data.size()>0)
-            load_motor_load_seq_data(*loadptr, data);
+        if(data.size()==5 or data.size()==18)
+        {
+            load_static_load_seq_data(*loadptr, data);
+
+            if(data.size()>0)
+                load_motor_load_seq_data(*loadptr, data);
+            else
+                loadptr->set_ratio_of_motor_active_power(0.0);
+
+            loadptr->set_sequence_parameter_import_flag(true);
+        }
         else
-            loadptr->set_ratio_of_motor_active_power(0.0);
-//        if(data.size()>0)
-//        {
-//            P_neg = get_double_data(data[n], "0.0");
-//            data.erase(data.begin());
-//        }
-//        if(data.size()>0)
-//        {
-//            Q_neg = get_double_data(data[n], "0.0");
-//            data.erase(data.begin());
-//        }
-//        if(P_neg<DOUBLE_EPSILON)
-//            P_neg = loadptr->get_nominal_constant_power_load_in_MVA().real();
-//        if(Q_neg<DOUBLE_EPSILON)
-//            Q_neg = loadptr->get_nominal_constant_power_load_in_MVA().imag();
-//        loadptr->set_negative_sequence_load_in_MVA(complex<double>(P_neg, Q_neg));
-//
-//        if(data.size()>0)
-//        {
-//            ground_flag = get_integer_data(data[n], "0");
-//            data.erase(data.begin());
-//        }
-//        loadptr->set_grounding_flag(ground_flag);
-//
-//        if(data.size()>0)
-//        {
-//            P_zero = get_double_data(data[n], "0.0");
-//            data.erase(data.begin());
-//        }
-//        if(data.size()>0)
-//        {
-//            Q_zero = get_double_data(data[n], "0.0");
-//            data.erase(data.begin());
-//        }
-//        loadptr->set_zero_sequence_load_in_MVA(complex<double>(P_zero, Q_zero));
+        {
+            osstream<<"Number of data in seq file for load [bus:"<<bus<<" ID:"<<ID
+                    <<"] is more or less than sequence parameters of load."<<endl
+                    <<"Please check seq file. The piece of data will be ignored.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
     }
 }
 
@@ -796,8 +955,21 @@ void STEPS_IMEXPORTER::load_zero_seq_non_transformer_branch_data()
 
         if(lineptr == NULL)
         {
-            osstream<<"Line ["<<lineptr->get_compound_device_name()<<"]"<<" is not exist."<<endl
+            osstream<<"Line ["<<lineptr->get_compound_device_name()<<"]"<<" is not existed."<<endl
                     <<"Please check seq file.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            continue;
+        }
+
+        if(data.size()==7)
+        {
+            lineptr->set_sequence_parameter_import_flag(true);
+        }
+        else
+        {
+            osstream<<"Number of data in seq file for line ["<<bus_i<<" "<<bus_j<<" ID:"<<ID
+                    <<"] is more or less than sequence parameters of line."<<endl
+                    <<"Please check seq file. The piece of data will be ignored.";
             toolkit.show_information_with_leading_time_stamp(osstream);
             continue;
         }
@@ -882,6 +1054,14 @@ void STEPS_IMEXPORTER::load_zero_seq_mutual_impedance_data()
     {
         data = DATA[i];
 
+        if(data.size()!=12)
+        {
+            osstream<<"Number of data in file for mutual lines is more or less."<<endl
+                    <<"Please check seq file. The piece of data will be ignored.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            continue;
+        }
+
         if(data.size()>0)
         {
             bus_i = get_integer_data(data[n], "0");
@@ -902,7 +1082,7 @@ void STEPS_IMEXPORTER::load_zero_seq_mutual_impedance_data()
 
         if(lineptr_ij == NULL)
         {
-            osstream<<"Line ["<<lineptr_ij->get_compound_device_name()<<"]"<<" is not exist."<<endl
+            osstream<<"Line ["<<lineptr_ij->get_compound_device_name()<<"]"<<" is not existed."<<endl
                     <<"Please check mutual impedance data in seq file.";
             toolkit.show_information_with_leading_time_stamp(osstream);
             continue;
@@ -928,7 +1108,7 @@ void STEPS_IMEXPORTER::load_zero_seq_mutual_impedance_data()
 
         if(lineptr_pq == NULL)
         {
-            osstream<<"Line ["<<lineptr_pq->get_compound_device_name()<<"]"<<" is not exist."<<endl
+            osstream<<"Line ["<<lineptr_pq->get_compound_device_name()<<"]"<<" is not existed."<<endl
                     <<"Please check mutual impedance data in seq file.";
             toolkit.show_information_with_leading_time_stamp(osstream);
             continue;
@@ -1074,11 +1254,26 @@ void STEPS_IMEXPORTER::load_zero_seq_transformer_data()
 
         if(transptr == NULL)
         {
-            osstream<<"Transformer ["<<transptr->get_compound_device_name()<<"]"<<" is not exist."<<endl
+            osstream<<"Transformer ["<<transptr->get_compound_device_name()<<"]"<<" is not existed."<<endl
                     <<"Please check seq file.";
             toolkit.show_information_with_leading_time_stamp(osstream);
             continue;
         }
+
+
+        if(data.size()==13 or data.size()==17)
+        {
+            transptr->set_sequence_parameter_import_flag(true);
+        }
+        else
+        {
+            osstream<<"Number of data in seq file for transformer ["<<bus_i<<" "<<bus_j<<" "<<bus_k<<" ID:"<<ID
+                    <<"] is more or less than sequence parameters of transformer."<<endl
+                    <<"Please check seq file. The piece of data will be ignored.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            continue;
+        }
+
 
         if(transptr->is_two_winding_transformer())
             load_two_winding_transformer_zero_seq_data(*transptr, data);
@@ -1460,8 +1655,22 @@ void STEPS_IMEXPORTER::load_zero_seq_fixed_shunt_data()
 
         if(shuntptr == NULL)
         {
-            osstream<<"Fixed shunt ["<<"ID:"<<ID<<"]"<<" is not exist on bus "<<"bus"<<"."<<endl
+            osstream<<"Fixed shunt ["<<"ID:"<<ID<<"]"<<" is not existed on bus "<<"bus"<<"."<<endl
                     <<"Please check seq file.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            continue;
+        }
+
+
+        if(data.size()==2)
+        {
+            shuntptr->set_sequence_parameter_import_flag(true);
+        }
+        else
+        {
+            osstream<<"Number of data in seq file for fixed shunt [bus:"<<bus<<" ID:"<<ID
+                    <<"] is more or less than sequence parameters of fixed shunt."<<endl
+                    <<"Please check seq file. The piece of data will be ignored.";
             toolkit.show_information_with_leading_time_stamp(osstream);
             continue;
         }
@@ -1482,4 +1691,85 @@ void STEPS_IMEXPORTER::load_zero_seq_fixed_shunt_data()
 void STEPS_IMEXPORTER::load_induction_machine_seq_data()
 {
     ;
+}
+
+void STEPS_IMEXPORTER::load_vsc_hvdc_seq_data()
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    if(splitted_sseq_data_in_ram.size()<10)
+        return;
+    vector<vector<string> >DATA = splitted_sseq_data_in_ram[9];
+    vector<string> data;
+
+    unsigned int ndata = DATA.size();
+
+    string ID = "1";
+    unsigned int n = 0;
+
+    for(unsigned int i=0; i!=ndata; ++i)
+    {
+        if(data.size()>0)
+        {
+            ID = get_string_data(data[n], "1");
+            data.erase(data.begin());
+        }
+        VSC_HVDC* vsc_hvdc_ptr = psdb.get_vsc_hvdc(ID);
+        if(vsc_hvdc_ptr == NULL)
+        {
+            osstream<<"Vsc hvdc ["<<"ID:"<<ID<<"]"<<" is not existed."<<endl
+                    <<"Please check seq file.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            continue;
+        }
+
+
+        unsigned int ncon = vsc_hvdc_ptr->get_converter_count();
+
+        if(data.size()==2*ncon)
+        {
+            vsc_hvdc_ptr->set_sequence_parameter_import_flag(true);
+        }
+        else
+        {
+            osstream<<"Number of sequence data does not match converter number in vsc hvdc ["<<"ID:"<<ID<<"]."<<endl
+                    <<"Please check seq file.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            continue;
+        }
+
+        for(unsigned int j=0; j<ncon; ++j)
+        {
+            unsigned int bus;
+            string control_mode;
+            if(data.size()>0)
+            {
+                bus = get_integer_data(data[n], "0");
+                data.erase(data.begin());
+            }
+            unsigned int index = vsc_hvdc_ptr->get_converter_index_with_ac_bus(bus);
+
+            if(index == INDEX_NOT_EXIST)
+            {
+                osstream<<"Bus ["<<bus<<"]"<<" is not existed on VSC-HVDC[ID: "<<ID<<"]."<<endl
+                        <<"Please check seq file.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                continue;
+            }
+
+            if(data.size()>0)
+            {
+                control_mode = get_string_data(data[n], "1");
+                data.erase(data.begin());
+            }
+            if(control_mode == "I")
+                vsc_hvdc_ptr->set_converter_control_mode(index, CURRENT_VECTOR_CONTROL);
+            else if(control_mode == "E")
+                vsc_hvdc_ptr->set_converter_control_mode(index, VIRTUAL_SYNCHRONOUS_GENERATOR_CONTROL);
+            else
+                vsc_hvdc_ptr->set_converter_control_mode(index, CURRENT_VECTOR_CONTROL);
+        }
+    }
 }

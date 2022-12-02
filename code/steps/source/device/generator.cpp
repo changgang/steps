@@ -320,6 +320,7 @@ void GENERATOR::clear()
     set_grounding_reactance_in_pu(0.0);
 
     set_generator_reactance_option(SUBTRANSIENT_REACTANCE);
+    set_sequence_parameter_import_flag(false);
 }
 
 DEVICE_ID GENERATOR::get_device_id() const
@@ -732,4 +733,12 @@ complex<double> GENERATOR::get_source_dynamic_current_in_pu_based_on_system_base
         return 0.0;
 }
 
+void GENERATOR::set_sequence_parameter_import_flag(bool flag)
+{
+    sequence_parameter_import_flag = flag;
+}
 
+bool GENERATOR::get_sequence_parameter_import_flag() const
+{
+    return sequence_parameter_import_flag;
+}

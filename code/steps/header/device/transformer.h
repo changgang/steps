@@ -135,6 +135,9 @@ class TRANSFORMER : public NONBUS_DEVICE
         complex<double> get_winding_complex_power_in_pu(TRANSFORMER_WINDING_SIDE side) const;
 
         complex<double> get_winding_complex_power_in_MVA(TRANSFORMER_WINDING_SIDE side) const;
+
+        void set_sequence_parameter_import_flag(bool flag);
+        bool get_sequence_parameter_import_flag() const;
     private:
         string get_winding_name(TRANSFORMER_WINDING_SIDE winding) const;
 
@@ -230,5 +233,7 @@ class TRANSFORMER : public NONBUS_DEVICE
         complex<double> z0_winding_ground_in_pu[3], z0_common_nutral_ground_in_pu;
         complex<double> z0_primary2secondary_in_pu, z0_secondary2tertiary_in_pu,
                         z0_primary2tertiary_in_pu;
+
+        bool sequence_parameter_import_flag;
 };
 #endif // TRANSFORMER_H

@@ -26,6 +26,10 @@ class SHORT_CIRCUIT_SOLVER
         UNITS_OPTION get_units_of_currents_and_voltages();
         void set_coordinates_of_currents_and_voltages(COORDINATES_OPTION option);
         COORDINATES_OPTION get_coordinates_of_currents_and_voltages();
+        void set_import_device_parameter_from_dynamic_model_flag(bool flag);
+        bool get_import_device_parameter_from_dynamic_model_flag();
+
+
         void set_consider_load_logic(bool logic);
         bool get_consider_load_logic();
         void set_consider_motor_load_logic(bool logic);
@@ -79,11 +83,42 @@ class SHORT_CIRCUIT_SOLVER
         void save_zero_sequence_Y_matrix_to_file(const string& filename);
     private:
 
+        void check_device_sequence_data();
+        void check_line_sequence_data();
+        void check_load_sequence_data();
+        void check_generator_sequence_data();
+        void check_wt_generator_sequence_data();
+        void check_pv_unit_sequence_data();
+        void check_energy_storage_sequence_data();
+        void check_transformer_sequence_data();
+        void check_fixed_shunt_sequence_data();
+        void check_vsc_hvdc_sequence_data();
+
+        void import_generator_sequence_parameter_from_dynamic_parameter(GENERATOR& gen);
+        void import_wt_generator_sequence_parameter_from_dynamic_parameter(WT_GENERATOR& wt_gen);
+        void import_load_sequence_parameter_from_dynamic_parameter(LOAD& load);
+        void import_vsc_hvdc_parameter_from_dynamic_parameter(VSC_HVDC& vsc_hvdc);
+
         void store_bus_initial_voltage_before_short_circuit();
         complex<double> get_bus_initial_voltage_before_short_circuit(unsigned int bus);
         void update_all_generator_E();
         void update_all_motor_load_data();
-        void update_voltage_when_dc_lines_blocked();
+        void updata_all_wt_generator_motor_data();
+        void update_voltage_with_dc_lines_and_vsc_hvdcs();
+
+        void update_node_voltages_with_devices_equivalent_to_souce();
+        void add_generators_to_injection_current_vector();
+        void add_wt_generators_to_injection_current_vector();
+        void add_constant_speed_wt_generator_to_vector(WT_GENERATOR& wt_gen);
+        void add_direct_driven_wt_generator_to_vector(WT_GENERATOR& wt_gen);
+        void add_double_fed_wt_generator_to_vector(WT_GENERATOR& wt_gen);
+        void add_pv_units_to_injection_current_vector();
+        void add_energy_storages_to_injection_current_vector();
+        void add_motor_load_to_injection_vector();
+        void add_hvdcs_to_injection_current_vector();
+        void add_vsc_hvdcs_to_injection_current_vector();
+        void update_voltages_with_current_vector();
+
 
         void calculate_and_store_equivalent_impedance_between_bus_and_fault_place();
 
@@ -146,6 +181,10 @@ class SHORT_CIRCUIT_SOLVER
         FAULT fault;
         vector<complex<double> > Yif_mutual, Yfj_mutual;
         vector<LINE*> lineptrs_of_mutual_with_line_fault;
+
+        vector<complex<double> > injection_current_vector_with_internal_order;
+
+        bool import_device_parameter_from_dynamic_model_flag;
 };
 
 #endif // SHORT_CIRCUIT_SOLVER_H

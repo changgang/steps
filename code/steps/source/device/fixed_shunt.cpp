@@ -189,6 +189,8 @@ void FIXED_SHUNT::clear()
     set_status(false);
     set_nominal_positive_sequence_impedance_shunt_in_MVA(0.0);
     set_nominal_zero_sequence_impedance_shunt_in_MVA(0.0);
+
+    sequence_parameter_import_flag = false;
 }
 
 bool FIXED_SHUNT::is_connected_to_bus(unsigned int target_bus) const
@@ -374,5 +376,12 @@ complex<double> FIXED_SHUNT::get_zero_sequence_complex_current_in_kA()
     return get_zero_sequence_complex_current_in_pu()*sbase/(SQRT3*psdb.get_bus_base_voltage_in_kV(get_shunt_bus()));
 }
 
-
+void FIXED_SHUNT::set_sequence_parameter_import_flag(bool flag)
+{
+    sequence_parameter_import_flag = flag;
+}
+bool FIXED_SHUNT::get_sequence_parameter_import_flag() const
+{
+    return sequence_parameter_import_flag;
+}
 

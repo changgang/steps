@@ -264,7 +264,7 @@ void NETWORK_MATRIX::build_positive_sequence_network_Y_matrix()
         add_loads_to_positive_sequence_network();
     add_fixed_shunts_to_positive_sequence_network();
     if(get_option_of_dc_lines()==CONVERT_TO_CONSTANT_ADMITTANCE_LOAD)
-        add_HVDCs_to_positive_sequence_network();
+        add_hvdcs_to_positive_sequence_network();
 
     network_Y1_matrix.compress_and_merge_duplicate_entries();
 }
@@ -2804,6 +2804,9 @@ void NETWORK_MATRIX::add_lines_to_positive_sequence_network()
 
 void NETWORK_MATRIX::add_faulted_line_to_positive_sequence_network(const LINE& line)
 {
+    if(line.get_sequence_parameter_import_flag()==false)
+        return;
+
     if(line.get_sending_side_breaker_status()==true or line.get_receiving_side_breaker_status()==true)
     {
         if(line.is_faulted())
@@ -2868,6 +2871,9 @@ void NETWORK_MATRIX::add_loads_to_positive_sequence_network()
 
 void NETWORK_MATRIX::add_load_to_positive_sequence_network(const LOAD& load)
 {
+    if(load.get_sequence_parameter_import_flag()==false)
+        return;
+
     if(load.get_status()==true)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -2926,6 +2932,9 @@ void NETWORK_MATRIX::add_generators_to_positive_sequence_network()
 
 void NETWORK_MATRIX::add_generator_to_positive_sequence_network(const GENERATOR& gen)
 {
+    if(gen.get_sequence_parameter_import_flag()==false)
+        return;
+
     if(gen.get_status()==true)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -2962,19 +2971,77 @@ void NETWORK_MATRIX::add_wt_generators_to_positive_sequence_network()
 
 void NETWORK_MATRIX::add_wt_generator_to_positive_sequence_network(const WT_GENERATOR& wt_gen)
 {
+//    if(wt_gen.get_status()==true)
+//    {
+//        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+//        double R = wt_gen.get_positive_sequence_resistance_in_pu();
+//
+//        GENERATOR_REACTANCE_OPTION gen_X = get_generator_reactance_option();
+//        double X;
+//        switch(gen_X)
+//        {
+//            case SUBTRANSIENT_REACTANCE:    X = wt_gen.get_positive_sequence_subtransient_reactance_in_pu();break;
+//            case TRANSIENT_REACTANCE:       X = wt_gen.get_positive_sequence_transient_reactance_in_pu();break;
+//            case SYNCHRONOUS_REACTANCE:     X = wt_gen.get_positive_sequence_syncronous_reactance_in_pu();break;
+//        }
+//        double one_over_mbase = wt_gen.get_one_over_mbase_in_one_over_MVA();
+//        double sbase = psdb.get_system_base_power_in_MVA();
+//
+//        complex<double> Z = complex<double>(R, X) * (one_over_mbase*sbase);
+//
+//        unsigned int bus = wt_gen.get_generator_bus();
+//        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+//        this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
+//    }
+
+    if(wt_gen.get_sequence_parameter_import_flag()==false)
+        return;
+
+    if(wt_gen.get_status()==true)
+    {
+        WT_GENERATOR_TYPE type = wt_gen.get_wt_generator_type();
+        switch(type)
+        {
+            case CONSTANT_SPEED_WT_GENERATOR: add_const_speed_wtg_to_positve_sequence_network(wt_gen);break;
+            case DOUBLY_FED_WT_GENERATOR:     add_doubly_fed_wtg_to_positive_sequence_network(wt_gen);break;
+            case DIRECT_DRIVEN_WT_GENERATOR:  add_direct_driven_wtg_to_positive_sequence_network(wt_gen);break;
+            default: break;
+        }
+    }
+}
+
+void NETWORK_MATRIX::add_const_speed_wtg_to_positve_sequence_network(const WT_GENERATOR& wt_gen)
+{
+    //as induction machine
+    if(wt_gen.get_status()==true)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        double sbase = psdb.get_system_base_power_in_MVA();
+        unsigned int bus = wt_gen.get_generator_bus();
+        double mbase = wt_gen.get_motor_mbase_in_MVA();
+
+        complex<double> Z1 = wt_gen.get_motor_positive_sequence_impedance_in_pu();
+        complex<double> z = Z1/mbase*sbase;
+
+        BUS* busptr = psdb.get_bus(bus);
+        double v = busptr->get_positive_sequence_voltage_in_pu();
+        complex<double> static_power = wt_gen.get_static_power_in_MVA();
+
+        complex<double> y = 1.0/z + conj(static_power/sbase)/(v*v);
+
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+        this_Y_matrix_pointer->add_entry(i,i,y);
+    }
+}
+void NETWORK_MATRIX::add_doubly_fed_wtg_to_positive_sequence_network(const WT_GENERATOR& wt_gen)
+{
+    //as voltage source
     if(wt_gen.get_status()==true)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         double R = wt_gen.get_positive_sequence_resistance_in_pu();
 
-        GENERATOR_REACTANCE_OPTION gen_X = get_generator_reactance_option();
-        double X;
-        switch(gen_X)
-        {
-            case SUBTRANSIENT_REACTANCE:    X = wt_gen.get_positive_sequence_subtransient_reactance_in_pu();break;
-            case TRANSIENT_REACTANCE:       X = wt_gen.get_positive_sequence_transient_reactance_in_pu();break;
-            case SYNCHRONOUS_REACTANCE:     X = wt_gen.get_positive_sequence_syncronous_reactance_in_pu();break;
-        }
+        double X = wt_gen.get_positive_sequence_subtransient_reactance_in_pu();
         double one_over_mbase = wt_gen.get_one_over_mbase_in_one_over_MVA();
         double sbase = psdb.get_system_base_power_in_MVA();
 
@@ -2984,6 +3051,10 @@ void NETWORK_MATRIX::add_wt_generator_to_positive_sequence_network(const WT_GENE
         unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
         this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
     }
+}
+void NETWORK_MATRIX::add_direct_driven_wtg_to_positive_sequence_network(const WT_GENERATOR& wt_gen)
+{
+    // as current source, so ignore its impedance
 }
 
 void NETWORK_MATRIX::add_pv_units_to_positive_sequence_network()
@@ -2998,6 +3069,9 @@ void NETWORK_MATRIX::add_pv_units_to_positive_sequence_network()
 
 void NETWORK_MATRIX::add_pv_unit_to_positive_sequence_network(const PV_UNIT& pv_unit)
 {
+    if(pv_unit.get_sequence_parameter_import_flag()==false)
+        return;
+
     if(pv_unit.get_status()==true)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -3019,17 +3093,17 @@ void NETWORK_MATRIX::add_fixed_shunts_to_positive_sequence_network()
     add_fixed_shunts_to_network();
 }
 
-void NETWORK_MATRIX::add_HVDCs_to_positive_sequence_network()
+void NETWORK_MATRIX::add_hvdcs_to_positive_sequence_network()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
 
     unsigned int n = hvdcs.size();
     for(unsigned int i=0; i!=n; i++)
-        add_HVDC_to_positive_sequence_network(*(hvdcs[i]));
+        add_hvdc_to_positive_sequence_network(*(hvdcs[i]));
 }
 
-void NETWORK_MATRIX::add_HVDC_to_positive_sequence_network(const HVDC& hvdc)
+void NETWORK_MATRIX::add_hvdc_to_positive_sequence_network(const HVDC& hvdc)
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
@@ -3056,8 +3130,37 @@ void NETWORK_MATRIX::add_HVDC_to_positive_sequence_network(const HVDC& hvdc)
 
         complex<double> y2 = conj(S_inverter)/sbase/(Vi*Vi);
         this_Y_matrix_pointer->add_entry(i,i, y2);
+    }
+}
 
+void NETWORK_MATRIX::add_vsc_hvdcs_to_positive_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<VSC_HVDC*> vsc_hvdcs = psdb.get_all_vsc_hvdcs();
 
+    unsigned int n = vsc_hvdcs.size();
+    for(unsigned int i=0; i!=n; i++)
+        add_vsc_hvdc_to_positive_sequence_network(*(vsc_hvdcs[i]));
+}
+
+void NETWORK_MATRIX::add_vsc_hvdc_to_positive_sequence_network(const VSC_HVDC& vsc_hvdc)
+{
+    if(vsc_hvdc.get_sequence_parameter_import_flag()==false)
+        return;
+
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    if(vsc_hvdc.get_status()==true)
+    {
+        unsigned int n = vsc_hvdc.get_converter_count();
+        for(unsigned int i=0; i<n; i++)
+        {
+            complex<double> Zc = vsc_hvdc.get_converter_commutating_impedance_in_pu_on_system_base(i);
+
+            unsigned int ibus = vsc_hvdc.get_converter_ac_bus(i);
+            unsigned int internal_ibus = inphno.get_internal_bus_number_of_physical_bus_number(ibus);
+
+            this_Y_matrix_pointer->add_entry(internal_ibus,internal_ibus, 1.0/Zc);
+        }
     }
 }
 
@@ -3079,6 +3182,8 @@ void NETWORK_MATRIX::add_lines_to_negative_sequence_network()
 
 void NETWORK_MATRIX::add_faulted_line_to_negative_sequence_network(const LINE& line)
 {
+    if(line.get_sequence_parameter_import_flag()==false)
+        return;
     if(line.get_sending_side_breaker_status()==true or line.get_receiving_side_breaker_status()==true)
     {
         if(line.is_faulted())
@@ -3143,6 +3248,9 @@ void NETWORK_MATRIX::add_loads_to_negative_sequence_network()
 
 void NETWORK_MATRIX::add_load_to_negative_sequence_network(const LOAD& load)
 {
+    if(load.get_sequence_parameter_import_flag()==false)
+        return;
+
     if(load.get_status()==true)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -3189,6 +3297,9 @@ void NETWORK_MATRIX::add_generators_to_negative_sequence_network()
 
 void NETWORK_MATRIX::add_generator_to_negative_sequence_network(const GENERATOR& gen)
 {
+    if(gen.get_sequence_parameter_import_flag()==false)
+        return;
+
     if(gen.get_status()==true)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -3217,6 +3328,9 @@ void NETWORK_MATRIX::add_wt_generators_to_negative_sequence_network()
 
 void NETWORK_MATRIX::add_wt_generator_to_negative_sequence_network(const WT_GENERATOR& wt_gen)
 {
+    if(wt_gen.get_sequence_parameter_import_flag()==false)
+        return;
+
     if(wt_gen.get_status()==true)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -3245,6 +3359,9 @@ void NETWORK_MATRIX::add_pv_units_to_negative_sequence_network()
 
 void NETWORK_MATRIX::add_pv_unit_to_negative_sequence_network(const PV_UNIT& pv_unit)
 {
+    if(pv_unit.get_sequence_parameter_import_flag()==false)
+        return;
+
     if(pv_unit.get_status()==true)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -3383,6 +3500,9 @@ void NETWORK_MATRIX::preprocess_mutual_data()
 
 void NETWORK_MATRIX::add_line_to_zero_sequence_network(const LINE& line)
 {
+    if(line.get_sequence_parameter_import_flag()==false)
+        return;
+
     if(line.get_sending_side_breaker_status()==true or line.get_receiving_side_breaker_status()==true)
     {
         unsigned int sending_bus = line.get_sending_side_bus();
@@ -3434,6 +3554,9 @@ void NETWORK_MATRIX::add_line_to_zero_sequence_network(const LINE& line)
 
 void NETWORK_MATRIX::add_faulted_line_to_zero_sequence_network(const LINE& line)
 {
+    if(line.get_sequence_parameter_import_flag()==false)
+        return;
+
     if(line.get_sending_side_breaker_status()==true or line.get_receiving_side_breaker_status()==true)
     {
         if(line.is_faulted())
@@ -3482,6 +3605,9 @@ void NETWORK_MATRIX::add_faulted_line_to_zero_sequence_network(const LINE& line)
 
 void NETWORK_MATRIX::add_mutual_line_to_zero_sequence_network(const LINE& line)
 {
+    if(line.get_sequence_parameter_import_flag()==false)
+        return;
+
     if(line.get_sending_side_breaker_status()==true or line.get_receiving_side_breaker_status()==true)
     {
         if(line.is_mutual())
@@ -3547,6 +3673,9 @@ void NETWORK_MATRIX::add_transformers_to_zero_sequence_network()
 
 void NETWORK_MATRIX::add_transformer_to_zero_sequence_network(const TRANSFORMER& trans)
 {
+    if(trans.get_sequence_parameter_import_flag()==false)
+        return;
+
     if(trans.is_two_winding_transformer())
         add_two_winding_transformer_to_zero_sequence_network(trans);
     else
@@ -3933,6 +4062,9 @@ void NETWORK_MATRIX::add_loads_to_zero_sequence_network()
 
 void NETWORK_MATRIX::add_load_to_zero_sequence_network(const LOAD& load)
 {
+    if(load.get_sequence_parameter_import_flag()==false)
+        return;
+
     if(load.get_status()==true)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -3984,6 +4116,9 @@ void NETWORK_MATRIX::add_generators_to_zero_sequence_network()
 
 void NETWORK_MATRIX::add_generator_to_zero_sequence_network(const GENERATOR& gen)
 {
+    if(gen.get_sequence_parameter_import_flag()==false)
+        return;
+
     if(gen.get_status()==true)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -4014,6 +4149,9 @@ void NETWORK_MATRIX::add_wt_generators_to_zero_sequence_network()
 
 void NETWORK_MATRIX::add_wt_generator_to_zero_sequence_network(const WT_GENERATOR& wt_gen)
 {
+    if(wt_gen.get_sequence_parameter_import_flag()==false)
+        return;
+
     if(wt_gen.get_status()==true)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -4044,6 +4182,9 @@ void NETWORK_MATRIX::add_pv_units_to_zero_sequence_network()
 
 void NETWORK_MATRIX::add_pv_unit_to_zero_sequence_network(const PV_UNIT& pv_unit)
 {
+    if(pv_unit.get_sequence_parameter_import_flag()==false)
+        return;
+
     if(pv_unit.get_status()==true)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -4074,6 +4215,9 @@ void NETWORK_MATRIX::add_fixed_shunts_to_zero_sequence_network()
 
 void NETWORK_MATRIX::add_fixed_shunt_to_zero_sequence_network(const FIXED_SHUNT& shunt)
 {
+    if(shunt.get_sequence_parameter_import_flag()==false)
+        return;
+
     if(shunt.get_status()==true)
     {
         unsigned int bus = shunt.get_shunt_bus();

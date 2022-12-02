@@ -38,10 +38,15 @@ class ENERGY_STORAGE : public SOURCE
         virtual void save() const;
 
         virtual ENERGY_STORAGE& operator=(const ENERGY_STORAGE& estorage);
+
+        void set_sequence_parameter_import_flag(bool flag);
+        bool get_sequence_parameter_import_flag() const;
     private:
         ENERGY_STORAGE_MODEL* energy_storage_model;
     private:
         virtual complex<double> get_complex_internal_voltage_in_pu_in_xy_axis() const;
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power();
+
+        bool sequence_parameter_import_flag;
 };
 #endif // ENERGY_STORAGE_H

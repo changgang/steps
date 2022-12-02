@@ -878,6 +878,8 @@ void TRANSFORMER::clear()
     set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(TERTIARY_SIDE, PRIMARY_SIDE, 0.0);
 
     set_common_zero_sequence_nutural_grounding_impedance_based_on_winding_nominals_in_pu(0.0);
+
+    set_sequence_parameter_import_flag(false);
 }
 
 bool TRANSFORMER::is_connected_to_bus(unsigned int bus) const
@@ -2743,4 +2745,11 @@ complex<double> TRANSFORMER::get_magnetizing_admittance_based_on_winding_normina
     return Y/(Vbase*Vbase)*(Vnom*Vnom);
 }
 
-
+void TRANSFORMER::set_sequence_parameter_import_flag(bool flag)
+{
+    sequence_parameter_import_flag = flag;
+}
+bool TRANSFORMER::get_sequence_parameter_import_flag() const
+{
+    return sequence_parameter_import_flag;
+}

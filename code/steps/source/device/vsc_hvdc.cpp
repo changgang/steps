@@ -172,6 +172,8 @@ void VSC_HVDC::clear()
 
     iteration_count=0;
     set_convergence_flag(false);
+
+    set_sequence_parameter_import_flag(false);
 }
 
 void VSC_HVDC::set_identifier(const string id)
@@ -198,6 +200,7 @@ void VSC_HVDC::set_converter_count(unsigned int n)
 
     converters.reserve(n);
     vsc_hvdc_converter_models.reserve(n);
+    vsc_hvdc_converter_control_modes.reserve(n);
 
     VSC_HVDC_CONVERTER_STRUCT converter;
     converter.converter_bus = 0;
@@ -237,6 +240,7 @@ void VSC_HVDC::set_converter_count(unsigned int n)
     {
         converters.push_back(converter);
         vsc_hvdc_converter_models.push_back(NULL);
+        vsc_hvdc_converter_control_modes.push_back(CURRENT_VECTOR_CONTROL);
     }
 }
 
@@ -3883,4 +3887,37 @@ complex<double> VSC_HVDC::get_converter_ac_bus_positive_sequency_complex_voltage
 {
     BUS* bus = get_converter_ac_bus_pointer(index);
     return bus->get_positive_sequence_complex_voltage_in_kV();
+}
+
+void VSC_HVDC::set_converter_control_mode(const unsigned int index, const VSC_HVDC_CONVERTER_CONTROL_MODE mode)
+{
+    vsc_hvdc_converter_control_modes[index] = mode;
+}
+
+VSC_HVDC_CONVERTER_CONTROL_MODE VSC_HVDC::get_converter_control_mode(unsigned int index) const
+{
+    return vsc_hvdc_converter_control_modes[index];
+}
+
+complex<double> VSC_HVDC::get_converter_internal_voltage_with_virtual_synchronous_generator_control(unsigned int index) const
+{
+    complex<double> V = get_converter_ac_bus_positive_sequency_complex_voltage_in_pu(index);
+    double P = get_converter_P_to_AC_bus_in_MW(index);
+    double Q = get_converter_Q_to_AC_bus_in_MVar(index);
+    STEPS& toolkit = get_toolkit();
+    complex<double> sbase = toolkit.get_system_base_power_in_MVA();
+    complex<double> S = complex<double>(P,Q)/sbase;
+    complex<double> z = get_converter_commutating_impedance_in_pu_on_system_base(index);
+
+    complex<double> I = conj(S/V);
+    return V+I*z;
+}
+
+void VSC_HVDC::set_sequence_parameter_import_flag(bool flag)
+{
+    sequence_parameter_import_flag = flag;
+}
+bool VSC_HVDC::get_sequence_parameter_import_flag() const
+{
+    return sequence_parameter_import_flag;
 }

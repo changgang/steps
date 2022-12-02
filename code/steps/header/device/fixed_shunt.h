@@ -59,6 +59,9 @@ class FIXED_SHUNT : public NONBUS_DEVICE
         complex<double> get_positive_sequence_complex_current_in_kA();
         complex<double> get_negative_sequence_complex_current_in_kA();
         complex<double> get_zero_sequence_complex_current_in_kA();
+
+        void set_sequence_parameter_import_flag(bool flag);
+        bool get_sequence_parameter_import_flag() const;
     private:
         unsigned int bus;
         BUS* busptr;
@@ -67,5 +70,7 @@ class FIXED_SHUNT : public NONBUS_DEVICE
         bool status;
         complex<double> nominal_positive_sequence_impedance_shunt_in_MVA;
         complex<double> nominal_zero_squence_impedance_shunt_in_MVA;
+
+        bool sequence_parameter_import_flag;
 };
 #endif // FIXED_SHUNT_H

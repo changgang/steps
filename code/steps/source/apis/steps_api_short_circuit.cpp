@@ -87,6 +87,19 @@ void api_set_short_circuit_solver_integer_parameter(char* parameter_name, int va
             return;
         }
     }
+    else if(PARAMETER_NAME=="OPTION OF DC LINES")
+    {
+        if(value==0)
+        {
+            solver.set_option_of_DC_lines(BLOCK_AND_IGNORE);
+            return;
+        }
+        if(value==1)
+        {
+            solver.set_option_of_DC_lines(CONVERT_TO_CONSTANT_ADMITTANCE_LOAD);
+            return;
+        }
+    }
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for short circuit solver with api %s.\n",
              PARAMETER_NAME.c_str(), __FUNCTION__);
@@ -112,6 +125,9 @@ unsigned int api_get_short_circuit_solver_integer_parameter(char* parameter_name
     if(PARAMETER_NAME=="FAULT TYPE")
         return solver.get_fault_type();
 
+    if(PARAMETER_NAME=="OPTION OF DC LINES")
+        return solver.get_option_of_DC_lines();
+
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for short circuit solver with api %s.\n"
              "0 will be returned.", PARAMETER_NAME.c_str(), __FUNCTION__);
@@ -119,7 +135,7 @@ unsigned int api_get_short_circuit_solver_integer_parameter(char* parameter_name
     return 0;
 }
 
-EXPORT_STEPS_DLL void api_set_short_circuit_solver_float_parameter(char* parameter_name, double value, unsigned int toolkit_index)
+void api_set_short_circuit_solver_float_parameter(char* parameter_name, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
@@ -133,7 +149,7 @@ EXPORT_STEPS_DLL void api_set_short_circuit_solver_float_parameter(char* paramet
     return;
 }
 
-EXPORT_STEPS_DLL double api_get_short_circuit_solver_float_parameter(char* parameter_name, unsigned int toolkit_index)
+double api_get_short_circuit_solver_float_parameter(char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
@@ -147,7 +163,7 @@ EXPORT_STEPS_DLL double api_get_short_circuit_solver_float_parameter(char* param
     return 0.0;
 }
 
-EXPORT_STEPS_DLL void api_set_short_circuit_solver_boolean_parameter(char* parameter_name, bool value, unsigned int toolkit_index)
+void api_set_short_circuit_solver_boolean_parameter(char* parameter_name, bool value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
@@ -164,6 +180,11 @@ EXPORT_STEPS_DLL void api_set_short_circuit_solver_boolean_parameter(char* param
         solver.set_consider_motor_load_logic(value);
         return;
     }
+    if(PARAMETER_NAME=="IMPORT DEVICE PARAMETER FROM DYNAMIC MODEL FLAG")
+    {
+        solver.set_import_device_parameter_from_dynamic_model_flag(value);
+        return;
+    }
 
 
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
@@ -172,7 +193,7 @@ EXPORT_STEPS_DLL void api_set_short_circuit_solver_boolean_parameter(char* param
     toolkit.show_information_with_leading_time_stamp(buffer);
     return;
 }
-EXPORT_STEPS_DLL bool api_get_short_circuit_solver_boolean_parameter(char* parameter_name, unsigned int toolkit_index)
+bool api_get_short_circuit_solver_boolean_parameter(char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
@@ -182,6 +203,8 @@ EXPORT_STEPS_DLL bool api_get_short_circuit_solver_boolean_parameter(char* param
         return solver.get_consider_load_logic();
     if(PARAMETER_NAME=="CONSIDER MOTOR LOAD LOGIC")
         return solver.get_consider_motor_load_logic();
+    if(PARAMETER_NAME=="IMPORT DEVICE PARAMETER FROM DYNAMIC MODEL FLAG")
+        return solver.get_import_device_parameter_from_dynamic_model_flag();
 
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for short circuit solver with api %s.\n"
@@ -273,7 +296,7 @@ void api_solve_short_circuit(unsigned int toolkit_index)
     solver.solve();
 }
 
-EXPORT_STEPS_DLL double api_get_short_circuit_result_float_data(char* parameter_name, unsigned int toolkit_index)
+double api_get_short_circuit_result_float_data(char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();

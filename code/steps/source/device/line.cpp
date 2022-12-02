@@ -549,6 +549,8 @@ void LINE::clear()
     set_length(0.0);
     clear_all_faults();
     set_is_mutual_logic(false);
+
+    set_sequence_parameter_import_flag(false);
 }
 
 bool LINE::is_connected_to_bus(unsigned int bus) const
@@ -1165,4 +1167,11 @@ complex<double> LINE::get_line_complex_apparent_impedance_at_receiving_side_in_o
         return INFINITE_THRESHOLD;
 }
 
-
+void LINE::set_sequence_parameter_import_flag(bool flag)
+{
+    sequence_parameter_import_flag = flag;
+}
+bool LINE::get_sequence_parameter_import_flag() const
+{
+    return sequence_parameter_import_flag;
+}

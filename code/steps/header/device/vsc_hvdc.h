@@ -338,6 +338,14 @@ class VSC_HVDC : public NONBUS_DEVICE
         complex<double> get_converter_ac_bus_positive_sequency_complex_voltage_in_kV(unsigned int index) const;
 
     public:
+        void set_converter_control_mode(const unsigned int index, const VSC_HVDC_CONVERTER_CONTROL_MODE mode);
+        VSC_HVDC_CONVERTER_CONTROL_MODE get_converter_control_mode(unsigned int index) const;
+        complex<double> get_converter_internal_voltage_with_virtual_synchronous_generator_control(unsigned int index) const;
+
+        void set_sequence_parameter_import_flag(bool flag);
+        bool get_sequence_parameter_import_flag() const;
+
+    public:
         unsigned int get_dc_bus_converter_index_with_dc_bus_index(unsigned int index) const;
         unsigned int dc_bus_no2index(unsigned int bus) const;
         unsigned int dc_bus_index2no(unsigned int index) const;
@@ -387,6 +395,11 @@ class VSC_HVDC : public NONBUS_DEVICE
 
         VSC_HVDC_NETWORK_MODEL* vsc_hvdc_network_model;
         vector<VSC_HVDC_CONVERTER_MODEL*> vsc_hvdc_converter_models;
+
+        //variables of sequence
+        vector<VSC_HVDC_CONVERTER_CONTROL_MODE> vsc_hvdc_converter_control_modes;
+
+        bool sequence_parameter_import_flag;
 
 };
 #endif // VSC_HVDC_H

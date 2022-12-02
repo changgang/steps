@@ -91,6 +91,47 @@ class WT_GENERATOR : public SOURCE
         complex<double> get_positive_sequence_complex_current_in_kA();
         complex<double> get_negative_sequence_complex_current_in_kA();
         complex<double> get_zero_sequence_complex_current_in_kA();
+
+        void set_wt_generator_type(WT_GENERATOR_TYPE type);
+        WT_GENERATOR_TYPE get_wt_generator_type() const;
+
+        void set_sequence_parameter_import_flag(bool flag);
+        bool get_sequence_parameter_import_flag() const;
+
+
+        void set_motor_rated_voltage_in_kV(double v);
+        void set_mbase_in_MVA(double m);
+        void set_motor_Ra_in_pu(double r);
+        void set_motor_Xa_in_pu(double x);
+        void set_motor_Xm_in_pu(double x);
+        void set_motor_R1_in_pu(double r);
+        void set_motor_X1_in_pu(double x);
+        void set_motor_R2_in_pu(double r);
+        void set_motor_X2_in_pu(double x);
+        void set_motor_internal_voltage_in_pu(complex<double> v);
+        void set_motor_positive_sequence_impedance_in_pu(complex<double> z);
+        void set_motor_negative_sequence_impedance_in_pu(complex<double> z);
+        void set_motor_zero_sequence_impedance_in_pu(complex<double> z);
+        void set_motor_power_in_MVA(complex<double> s);
+
+        double get_motor_rated_voltage_in_kV() const;
+        double get_motor_mbase_in_MVA() const;
+        double get_motor_Ra_in_pu() const;
+        double get_motor_Xa_in_pu() const;
+        double get_motor_Xm_in_pu() const;
+        double get_motor_R1_in_pu() const;
+        double get_motor_X1_in_pu() const;
+        double get_motor_R2_in_pu() const;
+        double get_motor_X2_in_pu() const;
+        complex<double> get_motor_internal_voltage_in_pu() const;
+        complex<double> get_motor_equivalent_injection_current_in_pu() const;
+        complex<double> get_motor_positive_sequence_impedance_in_pu() const;
+        complex<double> get_motor_negative_sequence_impedance_in_pu() const;
+        complex<double> get_motor_zero_sequence_impedance_in_pu() const;
+        complex<double> get_motor_power_in_MVA() const;
+        complex<double> get_static_power_in_MVA() const;
+        void update_motor_data();
+
     private:
 
         unsigned int number_of_lumped_wt_generators;
@@ -109,5 +150,16 @@ class WT_GENERATOR : public SOURCE
         double Rground, Xground;
         complex<double> E;
         GENERATOR_REACTANCE_OPTION gen_X_option;
+        WT_GENERATOR_TYPE wtg_type;
+
+        bool sequence_parameter_import_flag;
+
+
+        double motor_rated_voltge;
+        double mbase;
+        double motor_Ra, motor_Xa, motor_Xm, motor_R1, motor_X1, motor_R2, motor_X2;
+        complex<double> motor_power_in_MVA;
+        complex<double> motor_internal_voltage;
+        complex<double> motor_Z1, motor_Z2, motor_Z0;
 };
 #endif // WT_GENERATOR_H
