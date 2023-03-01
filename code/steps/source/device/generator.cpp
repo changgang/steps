@@ -167,7 +167,7 @@ GENERATOR_REACTANCE_OPTION GENERATOR::get_generator_reactance_option() const
     return gen_X_option;
 }
 
-void GENERATOR::update_E()
+void GENERATOR::update_internal_voltage_for_short_circuit_solver()
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -196,12 +196,12 @@ void GENERATOR::update_E()
     complex<double> mbase = get_mbase_in_MVA();
     complex<double> Z = complex<double>(R,X)/mbase*sbase;
 
-    E = V + Z*I;
+    internal_voltage_for_short_circuit = V + Z*I;
 }
 
-complex<double> GENERATOR::get_complex_E_in_pu()
+complex<double> GENERATOR::get_complex_internal_voltage_for_short_circuit_solver_in_pu()
 {
-    return E;
+    return internal_voltage_for_short_circuit;
 }
 
 complex<double> GENERATOR::get_positive_sequence_complex_current_in_pu()
@@ -227,7 +227,7 @@ complex<double> GENERATOR::get_positive_sequence_complex_current_in_pu()
             break;
     }
     complex<double> Z = complex<double>(R, X) * one_over_mbase * sbase;
-    complex<double> E = get_complex_E_in_pu();
+    complex<double> E = get_complex_internal_voltage_for_short_circuit_solver_in_pu();
     complex<double> U1 = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_source_bus());
     complex<double> I = (U1-E)/Z;
 

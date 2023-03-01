@@ -5,6 +5,7 @@
 #include "header/network/network_matrix.h"
 #include "header/toolkit/powerflow_solver/powerflow_solver.h"
 #include "header/toolkit/dynamic_simulator/dynamic_simulator.h"
+#include "header/basic/complex3.h"
 #include <complex>
 
 string num2str(int number);
@@ -94,6 +95,9 @@ complex<double> get_ab2dq_rotation_with_angle_in_deg(double angle);
 complex<double> get_ab2dq_rotation_with_angle_in_rad(double angle);
 complex<double> get_dq2ab_rotation_with_angle_in_deg(double angle);
 complex<double> get_dq2ab_rotation_with_angle_in_rad(double angle);
+
+COMPLEX3 steps_abc2seq(const COMPLEX3& Vabc);
+COMPLEX3 steps_seq2abc(const COMPLEX3& V012);
 
 bool is_file_exist(const string& file);
 

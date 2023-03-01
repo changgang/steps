@@ -29,8 +29,19 @@ void PSSE_IMEXPORTER::load_sequence_data(string sq_source)
     vector<vector<vector<string> > > data = convert_psse_seq_data2steps_vector();
 
     steps_importer.load_sequence_data_from_steps_vector(data);
-    osstream<<"Done loading sequence data.";
+    osstream<<"Done loading sequence data from sequence file.";
     toolkit.show_information_with_leading_time_stamp(osstream);
+
+    if(get_supplement_sequence_model_from_dynamic_model_logic()==true)
+    {
+        osstream<<"Check and supplement sequence model from dynamic model if sequence model is missing.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+
+        check_and_supplement_sequence_model_from_dynamic_model();
+
+        osstream<<"Done check and supplement sequence model from dynamic model.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
 }
 
 void PSSE_IMEXPORTER::load_sequence_data_into_ram(string file)

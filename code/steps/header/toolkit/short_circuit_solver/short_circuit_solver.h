@@ -1,6 +1,7 @@
 #ifndef SHORT_CIRCUIT_SOLVER_H
 #define SHORT_CIRCUIT_SOLVER_H
 
+#include "header/basic/complex3.h"
 #include "header/network/network_matrix.h"
 #include "header/network/jacobian_builder.h"
 #include "header/basic/sparse_matrix_define.h"
@@ -44,7 +45,7 @@ class SHORT_CIRCUIT_SOLVER
         bool is_fault();
         FAULT_TYPE get_fault_type();
 
-        void solve();
+
         void build_sequence_network();
 
         complex<double> get_positive_sequence_thevenin_impedance_at_fault_in_pu();
@@ -71,6 +72,9 @@ class SHORT_CIRCUIT_SOLVER
         complex<double> get_negative_sequence_short_circuit_capacity_in_pu();
         complex<double> get_zero_sequence_short_circuit_capacity_in_pu();
 
+        void solve();
+        complex<double> get_initial_voltage_of_fault_location_before_short_circuit();
+
         void show_short_circuit_result();
         void save_short_circuit_result_to_file(const string& filename);
         void save_extended_short_circuit_result_to_file(const string& filename);
@@ -82,36 +86,22 @@ class SHORT_CIRCUIT_SOLVER
         void save_negative_sequence_Y_matrix_to_file(const string& filename);
         void save_zero_sequence_Y_matrix_to_file(const string& filename);
     private:
-
-        void check_device_sequence_data();
-        void check_line_sequence_data();
-        void check_load_sequence_data();
-        void check_generator_sequence_data();
-        void check_wt_generator_sequence_data();
-        void check_pv_unit_sequence_data();
-        void check_energy_storage_sequence_data();
-        void check_transformer_sequence_data();
-        void check_fixed_shunt_sequence_data();
-        void check_vsc_hvdc_sequence_data();
-
-        void import_generator_sequence_parameter_from_dynamic_parameter(GENERATOR& gen);
-        void import_wt_generator_sequence_parameter_from_dynamic_parameter(WT_GENERATOR& wt_gen);
-        void import_load_sequence_parameter_from_dynamic_parameter(LOAD& load);
-        void import_vsc_hvdc_parameter_from_dynamic_parameter(VSC_HVDC& vsc_hvdc);
-
         void store_bus_initial_voltage_before_short_circuit();
-        complex<double> get_bus_initial_voltage_before_short_circuit(unsigned int bus);
-        void update_all_generator_E();
+
+        complex<double> get_initial_voltage_of_bus_before_short_circuit(unsigned int bus);
+        complex<double> get_initial_voltage_of_faulted_line_point_before_short_circuit();
+
+        void update_internal_voltage_of_all_generators_and_wt_generators();
         void update_all_motor_load_data();
         void updata_all_wt_generator_motor_data();
         void update_voltage_with_dc_lines_and_vsc_hvdcs();
 
-        void update_node_voltages_with_devices_equivalent_to_souce();
+        void update_node_voltages_with_devices_equivalent_to_source();
         void add_generators_to_injection_current_vector();
         void add_wt_generators_to_injection_current_vector();
         void add_constant_speed_wt_generator_to_vector(WT_GENERATOR& wt_gen);
         void add_direct_driven_wt_generator_to_vector(WT_GENERATOR& wt_gen);
-        void add_double_fed_wt_generator_to_vector(WT_GENERATOR& wt_gen);
+        void add_doubly_fed_wt_generator_to_vector(WT_GENERATOR& wt_gen);
         void add_pv_units_to_injection_current_vector();
         void add_energy_storages_to_injection_current_vector();
         void add_motor_load_to_injection_vector();
@@ -122,7 +112,7 @@ class SHORT_CIRCUIT_SOLVER
 
         void calculate_and_store_equivalent_impedance_between_bus_and_fault_place();
 
-        void solve_fault_current(FAULT_TYPE fault_type, complex<double> Uf);
+        void solve_fault_current(complex<double> Uf);
 
         unsigned int get_internal_bus_number_of_physical_bus(unsigned int bus);
         unsigned int get_physical_bus_number_of_internal_bus(unsigned int bus);
@@ -148,13 +138,11 @@ class SHORT_CIRCUIT_SOLVER
         complex<double> get_negative_sequence_voltage_at_line_fault_location_in_kV();
         complex<double> get_zero_sequence_voltage_at_line_fault_location_in_kV();
 
-        complex<double> get_voltage_of_faulted_line_point_before_short_circuit();
-
         string get_fault_information();
         void show_current_table_header();
         void show_voltage_table_header();
 
-        complex<double>* convert_sequence_data_to_phase_data(complex<double> pos, complex<double> neg, complex<double> zero);
+        COMPLEX3 convert_sequence_data_to_phase_data(complex<double> pos, complex<double> neg, complex<double> zero);
 
         string get_formatted_information1(unsigned int bus,string ID,complex<double> F1, complex<double>F2, complex<double> F0, bool to_file=false);
         string get_formatted_information1(string str, complex<double> F1, complex<double> F2, complex<double> F0, bool to_file=false);
@@ -172,7 +160,7 @@ class SHORT_CIRCUIT_SOLVER
         vector<complex<double>> bus_initial_voltage_before_short_circuit;
 
         complex<double> If1, If2, If0;
-        complex<double> Z1, Z2, Z0, Zf;
+        complex<double> Z1, Z2, Z0;
 
         // equivalent impedance between bus and fault place
         // order by internal bus

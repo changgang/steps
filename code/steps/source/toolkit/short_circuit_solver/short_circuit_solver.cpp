@@ -50,531 +50,6 @@ NETWORK_MATRIX& SHORT_CIRCUIT_SOLVER::get_network_matrix()
     return toolkit->get_network_matrix();
 }
 
-void SHORT_CIRCUIT_SOLVER::check_device_sequence_data()
-{
-    STEPS& toolkit = get_toolkit();
-    ostringstream osstream;
-    osstream<<"Checking all device sequence data."<<endl;
-    toolkit.show_information_with_leading_time_stamp(osstream);
-
-    check_line_sequence_data();
-    check_load_sequence_data();
-    check_generator_sequence_data();
-    check_wt_generator_sequence_data();
-    check_pv_unit_sequence_data();
-    check_energy_storage_sequence_data();
-    check_transformer_sequence_data();
-    check_fixed_shunt_sequence_data();
-    check_vsc_hvdc_sequence_data();
-
-    osstream<<"Checking done."<<endl;
-    toolkit.show_information_with_leading_time_stamp(osstream);
-}
-
-void SHORT_CIRCUIT_SOLVER::check_line_sequence_data()
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    vector<LINE*> lines = psdb.get_all_lines();
-    vector<LINE*> lines_with_no_seq_data;
-    unsigned int n = lines.size();
-    if(n==0)
-        return;
-
-    for(unsigned int i=0; i<n; i++)
-        if(lines[i]->get_sequence_parameter_import_flag()==false)
-            lines_with_no_seq_data.push_back(lines[i]);
-
-    if(lines_with_no_seq_data.size()==0)
-    {
-        osstream<<"All line sequence model have been imported from seq file."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-    else
-    {
-        osstream<<"Line";
-        for(unsigned int i=0; i<lines_with_no_seq_data.size(); i++)
-            osstream<<" ["<<lines_with_no_seq_data[i]->get_sending_side_bus()<<" "<<lines_with_no_seq_data[i]->get_receiving_side_bus()
-                    <<" id:"<<lines_with_no_seq_data[i]->get_identifier()<<"]";
-        osstream<<" are not imported from seq file."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-}
-void SHORT_CIRCUIT_SOLVER::check_load_sequence_data()
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    vector<LOAD*> loads = psdb.get_all_loads();
-    vector<LOAD*> loads_with_no_seq_data;
-
-    unsigned int n = loads.size();
-    if(n==0)
-        return;
-    for(unsigned int i=0; i<n; i++)
-        if(loads[i]->get_sequence_parameter_import_flag()==false)
-            loads_with_no_seq_data.push_back(loads[i]);
-
-    if(loads_with_no_seq_data.size()==0)
-    {
-        osstream<<"All load sequence model have been imported from seq file."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-    else
-    {
-        for(unsigned int i=0; i<loads_with_no_seq_data.size(); i++)
-        {
-            osstream<<"Load [bus:"<<loads_with_no_seq_data[i]->get_load_bus()<<" id:"<<loads_with_no_seq_data[i]->get_identifier()<<"]"
-                    <<" is not imported from seq file."<<endl;
-            toolkit.show_information_with_leading_time_stamp(osstream);
-
-            if(get_import_device_parameter_from_dynamic_model_flag())
-                import_load_sequence_parameter_from_dynamic_parameter(*loads_with_no_seq_data[i]);
-            else
-            {
-                osstream<<"+ The device will be ignored during calculation."<<endl;
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-        }
-    }
-}
-void SHORT_CIRCUIT_SOLVER::check_generator_sequence_data()
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    vector<GENERATOR*> generators = psdb.get_all_generators();
-    vector<GENERATOR*> generators_with_no_seq_data;
-
-    unsigned int n = generators.size();
-    if(n==0)
-        return;
-    for(unsigned int i=0; i<n; i++)
-        if(generators[i]->get_sequence_parameter_import_flag()==false)
-            generators_with_no_seq_data.push_back(generators[i]);
-
-    if(generators_with_no_seq_data.size()==0)
-    {
-        osstream<<"All generator sequence model have been imported from seq file."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-    else
-    {
-        for(unsigned int i=0; i<generators_with_no_seq_data.size(); i++)
-        {
-            osstream<<"Generator [bus:"<<generators_with_no_seq_data[i]->get_generator_bus()<<" id:"<<generators_with_no_seq_data[i]->get_identifier()<<"]"
-                    <<" is not imported from seq file."<<endl;
-            toolkit.show_information_with_leading_time_stamp(osstream);
-
-            if(get_import_device_parameter_from_dynamic_model_flag())
-                import_generator_sequence_parameter_from_dynamic_parameter(*generators_with_no_seq_data[i]);
-            else
-            {
-                osstream<<"+ The device will be ignored during calculation."<<endl;
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-        }
-    }
-}
-void SHORT_CIRCUIT_SOLVER::check_wt_generator_sequence_data()
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
-    vector<WT_GENERATOR*> wt_generators_with_no_seq_data;
-
-    unsigned int n = wt_generators.size();
-    if(n==0)
-        return;
-    for(unsigned int i=0; i<n; i++)
-        if(wt_generators[i]->get_sequence_parameter_import_flag()==false)
-            wt_generators_with_no_seq_data.push_back(wt_generators[i]);
-
-    if(wt_generators_with_no_seq_data.size()==0)
-    {
-        osstream<<"All wt generator sequence model have been imported from seq file."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-    else
-    {
-        for(unsigned int i=0; i<wt_generators_with_no_seq_data.size(); i++)
-        {
-            osstream<<"WT generator [bus:"<<wt_generators_with_no_seq_data[i]->get_source_bus()<<" id:"<<wt_generators_with_no_seq_data[i]->get_identifier()<<"]"
-                    <<" is not imported from seq file."<<endl;
-            toolkit.show_information_with_leading_time_stamp(osstream);
-
-            if(get_import_device_parameter_from_dynamic_model_flag())
-                import_wt_generator_sequence_parameter_from_dynamic_parameter(*wt_generators_with_no_seq_data[i]);
-            else
-            {
-                osstream<<"+ The device will be ignored during calculation."<<endl;
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-        }
-    }
-}
-void SHORT_CIRCUIT_SOLVER::check_pv_unit_sequence_data()
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
-    vector<PV_UNIT*> pv_units_with_no_seq_data;
-
-    unsigned int n = pv_units.size();
-    if(n==0)
-        return;
-    for(unsigned int i=0; i<n; i++)
-        if(pv_units[i]->get_sequence_parameter_import_flag()==false)
-            pv_units_with_no_seq_data.push_back(pv_units[i]);
-
-    if(pv_units_with_no_seq_data.size()==0)
-    {
-        osstream<<"All pv unit sequence model have been imported from seq file."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-    else
-    {
-        for(unsigned int i=0; i<pv_units_with_no_seq_data.size(); i++)
-        {
-            osstream<<"Pv unit [bus:"<<pv_units_with_no_seq_data[i]->get_source_bus()<<" id:"<<pv_units_with_no_seq_data[i]->get_identifier()<<"]"
-                    <<" is not imported from seq file."<<endl;
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-    }
-}
-void SHORT_CIRCUIT_SOLVER::check_energy_storage_sequence_data()
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    vector<ENERGY_STORAGE*> estorages = psdb.get_all_energy_storages();
-    vector<ENERGY_STORAGE*> estorages_with_no_seq_data;
-
-    unsigned int n = estorages.size();
-    if(n==0)
-        return;
-    for(unsigned int i=0; i<n; i++)
-        if(estorages[i]->get_sequence_parameter_import_flag()==false)
-            estorages_with_no_seq_data.push_back(estorages[i]);
-
-    if(estorages_with_no_seq_data.size()==0)
-    {
-        osstream<<"All energy storage sequence model have been imported from seq file."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-    else
-    {
-        osstream<<"Energy storage";
-        for(unsigned int i=0; i<estorages_with_no_seq_data.size(); i++)
-        {
-            osstream<<"Energy storage [bus:"<<estorages_with_no_seq_data[i]->get_source_bus()<<" id:"<<estorages_with_no_seq_data[i]->get_identifier()<<"]"
-                    <<" is not imported from seq file."<<endl;
-            toolkit.show_information_with_leading_time_stamp(osstream);
-
-
-        }
-    }
-}
-void SHORT_CIRCUIT_SOLVER::check_transformer_sequence_data()
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
-    vector<TRANSFORMER*> transformers_with_no_seq_data;
-
-    unsigned int n = transformers.size();
-    if(n==0)
-        return;
-    for(unsigned int i=0; i<n; i++)
-        if(transformers[i]->get_sequence_parameter_import_flag()==false)
-            transformers_with_no_seq_data.push_back(transformers[i]);
-
-    if(transformers_with_no_seq_data.size()==0)
-    {
-        osstream<<"All transformer sequence model have been imported from seq file."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-    else
-    {
-        for(unsigned int i=0; i<transformers_with_no_seq_data.size(); i++)
-        {
-            osstream<<"Transformer ["<<transformers_with_no_seq_data[i]->get_winding_bus(PRIMARY_SIDE)<<" "
-                          <<transformers_with_no_seq_data[i]->get_winding_bus(SECONDARY_SIDE)<<" "
-                          <<transformers_with_no_seq_data[i]->get_winding_bus(TERTIARY_SIDE)
-                          <<" id:"<<transformers_with_no_seq_data[i]->get_identifier()<<"] is not imported from seq file."<<endl;
-            toolkit.show_information_with_leading_time_stamp(osstream);
-
-            osstream<<"+ The device will be ignored in zero sequence network during calculation."<<endl;
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-    }
-}
-void SHORT_CIRCUIT_SOLVER::check_fixed_shunt_sequence_data()
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    vector<FIXED_SHUNT*> shunts = psdb.get_all_fixed_shunts();
-    vector<FIXED_SHUNT*> shunts_with_no_seq_data;
-
-    unsigned int n = shunts.size();
-    if(n==0)
-        return;
-    for(unsigned int i=0; i<n; i++)
-        if(shunts[i]->get_sequence_parameter_import_flag()==false)
-            shunts_with_no_seq_data.push_back(shunts[i]);
-
-    if(shunts_with_no_seq_data.size()==0)
-    {
-        osstream<<"All fixed shunt sequence model have been imported from seq file."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-    else
-    {
-        for(unsigned int i=0; i<shunts_with_no_seq_data.size(); i++)
-        {
-            osstream<<"Fixed shunt [bus:"<<shunts_with_no_seq_data[i]->get_shunt_bus()<<" id:"<<shunts_with_no_seq_data[i]->get_identifier()<<"]"
-                    <<" is not imported from seq file."<<endl;
-            toolkit.show_information_with_leading_time_stamp(osstream);
-
-            osstream<<"+ The device will be ignored in zero sequence network during calculation."<<endl;
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-    }
-}
-void SHORT_CIRCUIT_SOLVER::check_vsc_hvdc_sequence_data()
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    vector<VSC_HVDC*> vsc_hvdcs = psdb.get_all_vsc_hvdcs();
-    vector<VSC_HVDC*> vsc_hvdcs_with_no_seq_data;
-
-    unsigned int n = vsc_hvdcs.size();
-    if(n==0)
-        return;
-    for(unsigned int i=0; i<n; i++)
-        if(vsc_hvdcs[i]->get_sequence_parameter_import_flag()==false)
-            vsc_hvdcs_with_no_seq_data.push_back(vsc_hvdcs[i]);
-
-    if(vsc_hvdcs_with_no_seq_data.size()==0)
-    {
-        osstream<<"All vsc hvdc sequence model have been imported from seq file."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-    else
-    {
-        for(unsigned int i=0; i<vsc_hvdcs_with_no_seq_data.size(); i++)
-        {
-            osstream<<"Vsc hvdc [id:"<<vsc_hvdcs_with_no_seq_data[i]->get_identifier()<<"] is not imported from seq file."<<endl;
-            toolkit.show_information_with_leading_time_stamp(osstream);
-
-            if(get_import_device_parameter_from_dynamic_model_flag())
-                import_vsc_hvdc_parameter_from_dynamic_parameter(*vsc_hvdcs_with_no_seq_data[i]);
-            else
-            {
-                osstream<<"+ The device will be ignored during calculation."<<endl;
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-        }
-    }
-}
-
-void SHORT_CIRCUIT_SOLVER::import_generator_sequence_parameter_from_dynamic_parameter(GENERATOR& gen)
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-
-    osstream<<"+ Import sequence parameter from dynamic model."<<endl;
-    toolkit.show_information_with_leading_time_stamp(osstream);
-
-    SYNC_GENERATOR_MODEL* sync_model = gen.get_sync_generator_model();
-    if(sync_model!=NULL)
-    {
-        string model_name = sync_model->get_model_name();
-        if(model_name=="GENCLS")
-        {
-            GENCLS* gencls_model = (GENCLS*) sync_model;
-            osstream<<"+ Cannot import parameters from GENCLS model. The device will be ignored during calculation."<<endl;
-        }
-        else if(model_name=="GENROU")
-        {
-            GENROU* genrou_model = (GENROU*) sync_model;
-            osstream<<"+ Import parameters from GENROU model."<<endl;
-
-            double Xpp = genrou_model->get_Xdpp();
-            gen.set_positive_sequence_subtransient_reactance_in_pu(Xpp);
-
-            gen.set_sequence_parameter_import_flag(true);
-        }
-        else if(model_name=="GENSAL")
-        {
-            GENSAL* gensal_model = (GENSAL*) sync_model;
-            osstream<<"+ Import parameters from GENSAL model."<<endl;
-
-            double Xpp = gensal_model->get_Xdpp();
-            gen.set_positive_sequence_subtransient_reactance_in_pu(Xpp);
-
-            gen.set_sequence_parameter_import_flag(true);
-        }
-        else
-        {
-            osstream<<"+ Cannot import parameters from "<<model_name<<" model. The device will be ignored during calculation."<<endl;
-        }
-    }
-    else
-    {
-        osstream<<"+ Dynamic model is not existed. The device will be ignored during calculation."<<endl;
-    }
-    toolkit.show_information_with_leading_time_stamp(osstream);
-}
-void SHORT_CIRCUIT_SOLVER::import_wt_generator_sequence_parameter_from_dynamic_parameter(WT_GENERATOR& wt_gen)
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-
-    osstream<<"+ Import sequence parameter from dynamic model."<<endl;
-    toolkit.show_information_with_leading_time_stamp(osstream);
-
-    WT_GENERATOR_MODEL* wtg_model = wt_gen.get_wt_generator_model();
-    if(wtg_model!=NULL)
-    {
-        string model_name = wtg_model->get_model_name();
-        if(model_name=="LVPL")
-        {
-            LVPL* lvpl_model = (LVPL*) wtg_model;
-            osstream<<"+ Cannot import parameters from "<<model_name<<" model. The device will be ignored during calculation."<<endl;
-        }
-        else if(model_name=="WT3G0")
-        {
-            WT3G0* wt3g0_model = (WT3G0*) wtg_model;
-            // osstream<<"+ Import parameters from WT3G0 model."<<endl;
-            osstream<<"+ Cannot import parameters from "<<model_name<<" model. The device will be ignored during calculation."<<endl;
-        }
-        else if(model_name=="WT3G1")
-        {
-            WT3G1* wt3g1_model = (WT3G1*) wtg_model;
-            // osstream<<"+ Import parameters from WT3G1 model."<<endl;
-            osstream<<"+ Cannot import parameters from "<<model_name<<" model. The device will be ignored during calculation."<<endl;
-        }
-        else if(model_name=="WT3G2")
-        {
-            WT3G2* wt3g2_model = (WT3G2*) wtg_model;
-            // osstream<<"+ Import parameters from WT3G2 model."<<endl;
-            osstream<<"+ Cannot import parameters from "<<model_name<<" model. The device will be ignored during calculation."<<endl;
-        }
-        else
-        {
-            osstream<<"+ Cannot import parameters from "<<model_name<<" model. The device will be ignored during calculation."<<endl;
-        }
-    }
-    else
-    {
-        osstream<<"+ Dynamic model is not existed. The device will be ignored during calculation."<<endl;
-    }
-    toolkit.show_information_with_leading_time_stamp(osstream);
-}
-void SHORT_CIRCUIT_SOLVER::import_load_sequence_parameter_from_dynamic_parameter(LOAD& load)
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-
-    osstream<<"+ Import sequence parameter from dynamic model."<<endl;
-    toolkit.show_information_with_leading_time_stamp(osstream);
-
-    LOAD_MODEL* load_model = load.get_load_model();
-    if(load_model!=NULL)
-    {
-        string model_name = load_model->get_model_name();
-        if(model_name=="CIM6")
-        {
-            CIM6* cim6_model = (CIM6*) load_model;
-            osstream<<"+ Import parameters from CIM6 model."<<endl;
-
-            double Ra = cim6_model->get_Ra_in_pu();
-            double Xa = cim6_model->get_Xa_in_pu();
-            double Xm = cim6_model->get_Xm_in_pu();
-            double R1 = cim6_model->get_R1_in_pu();
-            double X1 = cim6_model->get_X1_in_pu();
-            double R2 = cim6_model->get_R2_in_pu();
-            double X2 = cim6_model->get_X2_in_pu();
-            double mbase = cim6_model->get_Mbase_in_MVA();
-            double Pmult = cim6_model->get_Pmult();
-
-            double total_load_active_power = load.get_actual_total_load_in_MVA().real();
-            if(mbase==0.0)
-                mbase = Pmult * total_load_active_power;
-
-            BUS* busptr = load.get_bus_pointer();
-            double baseV = busptr->get_base_voltage_in_kV();
-
-            load.set_ratio_of_motor_active_power(mbase/total_load_active_power);
-            load.set_motor_rated_voltage_in_kV(baseV);
-            load.set_mbase_code(MACHINE_BASE_POWER);
-            load.set_mbase_in_MVA(mbase);
-            load.set_motor_Ra_in_pu(Ra);
-            load.set_motor_Xa_in_pu(Xa);
-            load.set_motor_Xm_in_pu(Xm);
-            load.set_motor_R1_in_pu(R1);
-            load.set_motor_X1_in_pu(X1);
-            load.set_motor_R2_in_pu(R2);
-            load.set_motor_X2_in_pu(X2);
-
-            load.set_sequence_parameter_import_flag(true);
-        }
-        else if(model_name=="IEEL")
-        {
-            IEEL* ieel_model = (IEEL*) load_model;
-            // osstream<<"+ Import parameters from IEEL model."<<endl;
-            osstream<<"+ Cannot import parameters from "<<model_name<<" model. The device will be ignored during calculation."<<endl;
-        }
-        else
-        {
-            osstream<<"+ Cannot import parameters from "<<model_name<<" model. The device will be ignored during calculation."<<endl;
-        }
-    }
-    else
-    {
-        osstream<<"+ Dynamic model is not existed. The device will be ignored during calculation."<<endl;
-    }
-    toolkit.show_information_with_leading_time_stamp(osstream);
-}
-void SHORT_CIRCUIT_SOLVER::import_vsc_hvdc_parameter_from_dynamic_parameter(VSC_HVDC& vsc_hvdc)
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-
-    osstream<<"+ Import sequence parameter from dynamic model."<<endl;
-    toolkit.show_information_with_leading_time_stamp(osstream);
-
-    vector<VSC_HVDC_CONVERTER_MODEL*> models = vsc_hvdc.get_vsc_hvdc_converter_models();
-    if(models.size()==0)
-    {
-        osstream<<"+ Dynamic model is not existed, the device will be ignored during calculation."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-    else
-    {
-        unsigned int ncon = vsc_hvdc.get_converter_count();
-        for(unsigned int i=0; i<ncon; i++)
-        {
-            if(vsc_hvdc.is_converter_a_dynamic_voltage_source(i))
-                vsc_hvdc.set_converter_control_mode(i, VIRTUAL_SYNCHRONOUS_GENERATOR_CONTROL);
-            else
-                vsc_hvdc.set_converter_control_mode(i, CURRENT_VECTOR_CONTROL);
-        }
-        osstream<<"+ Import done."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-
-        vsc_hvdc.set_sequence_parameter_import_flag(true);
-    }
-}
-
 
 void SHORT_CIRCUIT_SOLVER::initialize_short_circuit_solver()
 {
@@ -588,10 +63,8 @@ void SHORT_CIRCUIT_SOLVER::initialize_short_circuit_solver()
 
     show_short_circuit_solver_configuration();
 
-    check_device_sequence_data();
+    //store_bus_initial_voltage_before_short_circuit();
 
-    store_bus_initial_voltage_before_short_circuit();
-    update_all_generator_E();
     if(get_consider_motor_load_logic())
         update_all_motor_load_data();
 
@@ -632,26 +105,26 @@ void SHORT_CIRCUIT_SOLVER::store_bus_initial_voltage_before_short_circuit()
         bus_initial_voltage_before_short_circuit.push_back(V);
     }
 }
-complex<double> SHORT_CIRCUIT_SOLVER::get_bus_initial_voltage_before_short_circuit(unsigned int bus)
+complex<double> SHORT_CIRCUIT_SOLVER::get_initial_voltage_of_bus_before_short_circuit(unsigned int bus)
 {
     if(bus > bus_initial_voltage_before_short_circuit.size())
         return 0.0;
     return bus_initial_voltage_before_short_circuit[bus - 1];
 }
 
-void SHORT_CIRCUIT_SOLVER::update_all_generator_E()
+void SHORT_CIRCUIT_SOLVER::update_internal_voltage_of_all_generators_and_wt_generators()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     vector<GENERATOR*> gens = psdb.get_all_generators();
     unsigned int n = gens.size();
     for(unsigned int i=0; i<n; i++)
-        gens[i]->update_E();
+        gens[i]->update_internal_voltage_for_short_circuit_solver();
 
     vector<WT_GENERATOR*> wt_gens = psdb.get_all_wt_generators();
     n = wt_gens.size();
     for(unsigned int i=0; i<n; i++)
-        wt_gens[i]->update_E();
+        wt_gens[i]->update_internal_voltage_for_short_circuit_solver();
 }
 
 void SHORT_CIRCUIT_SOLVER::update_all_motor_load_data()
@@ -702,7 +175,7 @@ void SHORT_CIRCUIT_SOLVER::update_voltage_with_dc_lines_and_vsc_hvdcs()
     {
         GENERATOR* gen = gens[i];
         unsigned int busn = gen->get_generator_bus();
-        complex<double> E = gen->get_complex_E_in_pu();
+        complex<double> E = gen->get_complex_internal_voltage_for_short_circuit_solver_in_pu();
         double R = gen->get_positive_sequence_resistance_in_pu();
         double X = 0.0;
         switch(gen_X_option)
@@ -723,7 +196,7 @@ void SHORT_CIRCUIT_SOLVER::update_voltage_with_dc_lines_and_vsc_hvdcs()
     {
         WT_GENERATOR* wt_gen = wt_gens[i];
         unsigned int busn = wt_gen->get_generator_bus();
-        complex<double> E = wt_gen->get_complex_E_in_pu();
+        complex<double> E = wt_gen->get_complex_internal_voltage_for_short_circuit_solver_in_pu();
         double R = wt_gen->get_positive_sequence_resistance_in_pu();
         double X = 0.0;
         switch(gen_X_option)
@@ -783,7 +256,7 @@ void SHORT_CIRCUIT_SOLVER::update_voltage_with_dc_lines_and_vsc_hvdcs()
     store_bus_initial_voltage_before_short_circuit();
 }
 
-void SHORT_CIRCUIT_SOLVER::update_node_voltages_with_devices_equivalent_to_souce()
+void SHORT_CIRCUIT_SOLVER::update_node_voltages_with_devices_equivalent_to_source()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
@@ -820,7 +293,7 @@ void SHORT_CIRCUIT_SOLVER::add_generators_to_injection_current_vector()
             continue;
 
         unsigned int busn = gen->get_generator_bus();
-        complex<double> E = gen->get_complex_E_in_pu();
+        complex<double> E = gen->get_complex_internal_voltage_for_short_circuit_solver_in_pu();
         double R = gen->get_positive_sequence_resistance_in_pu();
         double X = 0.0;
         switch(gen_X_option)
@@ -881,7 +354,7 @@ void SHORT_CIRCUIT_SOLVER::add_wt_generators_to_injection_current_vector()
             case CONSTANT_SPEED_WT_GENERATOR:
                 add_constant_speed_wt_generator_to_vector(*wt_gens[i]);break;
             case DOUBLY_FED_WT_GENERATOR:
-                add_double_fed_wt_generator_to_vector(*wt_gens[i]);break;
+                add_doubly_fed_wt_generator_to_vector(*wt_gens[i]);break;
             case DIRECT_DRIVEN_WT_GENERATOR:
                 add_direct_driven_wt_generator_to_vector(*wt_gens[i]);break;
         }
@@ -921,14 +394,14 @@ void SHORT_CIRCUIT_SOLVER::add_direct_driven_wt_generator_to_vector(WT_GENERATOR
         injection_current_vector_with_internal_order[b] += Iinjection;
     }
 }
-void SHORT_CIRCUIT_SOLVER::add_double_fed_wt_generator_to_vector(WT_GENERATOR& wt_gen)
+void SHORT_CIRCUIT_SOLVER::add_doubly_fed_wt_generator_to_vector(WT_GENERATOR& wt_gen)
 {
     if(wt_gen.get_status())
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         double sbase = psdb.get_system_base_power_in_MVA();
 
-        complex<double> E = wt_gen.get_complex_E_in_pu();
+        complex<double> E = wt_gen.get_complex_internal_voltage_for_short_circuit_solver_in_pu();
         double r = wt_gen.get_positive_sequence_resistance_in_pu();
         double x = wt_gen.get_positive_sequence_subtransient_reactance_in_pu();
 
@@ -1023,6 +496,7 @@ void SHORT_CIRCUIT_SOLVER::add_hvdcs_to_injection_current_vector()
 {
     ;
 }
+
 void SHORT_CIRCUIT_SOLVER::add_vsc_hvdcs_to_injection_current_vector()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -1177,8 +651,6 @@ void SHORT_CIRCUIT_SOLVER::set_bus_fault(unsigned int bus, FAULT_TYPE type, cons
         return;
     }
 
-    initialize_short_circuit_solver();
-
     BUS* busptr = psdb.get_bus(bus);
     if(busptr!=NULL)
     {
@@ -1228,8 +700,6 @@ void SHORT_CIRCUIT_SOLVER::set_line_fault(const DEVICE_ID& line_id, unsigned int
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
-
-    initialize_short_circuit_solver();
 
     if(line_id.get_device_type()==STEPS_LINE)
     {
@@ -1651,19 +1121,20 @@ void SHORT_CIRCUIT_SOLVER::solve()
     ostringstream osstream;
     if(is_fault())
     {
+        initialize_short_circuit_solver();
+
         build_sequence_network();
+        calculate_and_store_equivalent_impedance_between_bus_and_fault_place();
+
+        update_internal_voltage_of_all_generators_and_wt_generators();
 
         // update_voltage_with_dc_lines_and_vsc_hvdcs();
-        update_node_voltages_with_devices_equivalent_to_souce();
+        update_node_voltages_with_devices_equivalent_to_source();
 
-        calculate_and_store_equivalent_impedance_between_bus_and_fault_place();
-        Zf = 1.0/fault.get_fault_shunt_in_pu();
-        complex<double> Uf;
-        if(is_bus_fault())
-            Uf = get_bus_initial_voltage_before_short_circuit(faulted_bus_pointer->get_bus_number());
-        else if(is_line_fault())
-            Uf = get_voltage_of_faulted_line_point_before_short_circuit();
-        solve_fault_current(fault.get_fault_type(), Uf);
+        complex<double> Uf = get_initial_voltage_of_fault_location_before_short_circuit();
+
+        solve_fault_current(Uf);
+
         update_bus_sequence_voltage();
     }
     else
@@ -1671,6 +1142,16 @@ void SHORT_CIRCUIT_SOLVER::solve()
         osstream<<"No fault has been set."<<endl;
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
+}
+
+complex<double> SHORT_CIRCUIT_SOLVER::get_initial_voltage_of_fault_location_before_short_circuit()
+{
+    complex<double> Uf;
+    if(is_bus_fault())
+        Uf = get_initial_voltage_of_bus_before_short_circuit(faulted_bus_pointer->get_bus_number());
+    else if(is_line_fault())
+        Uf = get_initial_voltage_of_faulted_line_point_before_short_circuit();
+    return Uf;
 }
 
 void SHORT_CIRCUIT_SOLVER::update_bus_sequence_voltage()
@@ -1687,7 +1168,7 @@ void SHORT_CIRCUIT_SOLVER::update_bus_sequence_voltage()
         complex<double> Z2 = get_negative_sequence_equivalent_mutual_impedance_in_pu_between_bus_to_fault_place(busnum);
         complex<double> Z0 = get_zero_sequence_equivalent_mutual_impedance_in_pu_between_bus_to_fault_place(busnum);
 
-        complex<double> U1 = get_bus_initial_voltage_before_short_circuit(busnum);
+        complex<double> U1 = get_initial_voltage_of_bus_before_short_circuit(busnum);
         complex<double> U2 = 0.0;
         complex<double> U0 = 0.0;
 
@@ -1705,8 +1186,11 @@ void SHORT_CIRCUIT_SOLVER::update_bus_sequence_voltage()
 }
 
 
-void SHORT_CIRCUIT_SOLVER::solve_fault_current(FAULT_TYPE fault_type, complex<double> Uf)
+void SHORT_CIRCUIT_SOLVER::solve_fault_current(complex<double> Uf)
 {
+    FAULT_TYPE fault_type = fault.get_fault_type();
+    complex<double> Zf = 1.0/fault.get_fault_shunt_in_pu();
+
     if(fault_type == SINGLE_PHASE_GROUNDED_FAULT)
     {
         If1 = Uf / (Z1 + Z2 + Z0 + 3.0*Zf);
@@ -1776,14 +1260,14 @@ complex<double> SHORT_CIRCUIT_SOLVER::get_zero_sequence_fault_current_in_kA()
 
 
 
-complex<double> SHORT_CIRCUIT_SOLVER::get_voltage_of_faulted_line_point_before_short_circuit()
+complex<double> SHORT_CIRCUIT_SOLVER::get_initial_voltage_of_faulted_line_point_before_short_circuit()
 {
     double fault_location = faulted_line_pointer->get_fault_location_of_fault(0);
     unsigned int ibus = faulted_line_pointer->get_sending_side_bus();
     unsigned int jbus = faulted_line_pointer->get_receiving_side_bus();
 
-    complex<double> Ui = get_bus_initial_voltage_before_short_circuit(ibus);
-    complex<double> Uj = get_bus_initial_voltage_before_short_circuit(jbus);
+    complex<double> Ui = get_initial_voltage_of_bus_before_short_circuit(ibus);
+    complex<double> Uj = get_initial_voltage_of_bus_before_short_circuit(jbus);
 
     complex<double> Zline = faulted_line_pointer->get_line_zero_sequence_z_in_pu();
     complex<double> Yline = faulted_line_pointer->get_line_zero_sequence_y_in_pu();
@@ -1973,15 +1457,11 @@ complex<double> SHORT_CIRCUIT_SOLVER::get_zero_sequence_voltage_of_fault_point_i
         return 0.0;
 }
 
-complex<double>* SHORT_CIRCUIT_SOLVER::convert_sequence_data_to_phase_data(complex<double> F1, complex<double> F2, complex<double> F0)
+COMPLEX3 SHORT_CIRCUIT_SOLVER::convert_sequence_data_to_phase_data(complex<double> F1, complex<double> F2, complex<double> F0)
 {
-    complex<double> Fa, Fb, Fc;
-    complex<double> *F_abc = new complex<double>[3];
-    F_abc[0] = F1 + F2 + F0;
-    F_abc[1] = complex<double>(-0.5, -SQRT3/2)*F1 + complex<double>(-0.5,  SQRT3/2)*F2 + F0;
-    F_abc[2] = complex<double>(-0.5,  SQRT3/2)*F1 + complex<double>(-0.5, -SQRT3/2)*F2 + F0;
-
-    return F_abc;
+    COMPLEX3 F012(F0, F1, F2);
+    COMPLEX3 Fabc = steps_seq2abc(F012);
+    return Fabc;
 }
 
 
@@ -2037,7 +1517,7 @@ string SHORT_CIRCUIT_SOLVER::get_formatted_information2(string busname,double Vb
 string SHORT_CIRCUIT_SOLVER::get_formatted_information2(string str, complex<double> F1, complex<double> F2, complex<double> F0, bool to_file)
 {
     string s = (to_file)?",":"";
-    complex<double> *Fabc = convert_sequence_data_to_phase_data(F1, F2, F0);
+    COMPLEX3 Fabc = convert_sequence_data_to_phase_data(F1, F2, F0);
     COORDINATES_OPTION coordinate = get_coordinates_of_currents_and_voltages();
     ostringstream osstream;
 
@@ -2573,7 +2053,7 @@ void SHORT_CIRCUIT_SOLVER::show_short_circuit_with_line_fault()
 
 complex<double> SHORT_CIRCUIT_SOLVER::get_positive_sequence_voltage_at_line_fault_location_in_pu()
 {
-    complex<double> Uf = get_voltage_of_faulted_line_point_before_short_circuit();
+    complex<double> Uf = get_initial_voltage_of_faulted_line_point_before_short_circuit();
     complex<double> Z1 = get_positive_sequence_thevenin_impedance_at_fault_in_pu();
     complex<double> U1 = Uf - Z1 * If1;
 

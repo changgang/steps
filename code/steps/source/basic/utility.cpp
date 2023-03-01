@@ -837,6 +837,25 @@ complex<double> get_dq2ab_rotation_with_angle_in_rad(double angle)
     return complex<double> (steps_cos(angle), steps_sin(angle));
 }
 
+COMPLEX3 steps_abc2seq(const COMPLEX3& Vabc)
+{
+    COMPLEX3 Vseq;
+    return Vseq;
+}
+COMPLEX3 steps_seq2abc(const COMPLEX3& V012)
+{
+    COMPLEX3 Vabc;
+    complex<double> F0 = Vabc[0];
+    complex<double> F1 = Vabc[1];
+    complex<double> F2 = Vabc[2];
+
+    Vabc.set_complex_value_0(F1 + F2 + F0);
+    Vabc.set_complex_value_1(complex<double>(-0.5, -SQRT3/2)*F1 + complex<double>(-0.5,  SQRT3/2)*F2 + F0);
+    Vabc.set_complex_value_2(complex<double>(-0.5,  SQRT3/2)*F1 + complex<double>(-0.5, -SQRT3/2)*F2 + F0);
+
+    return Vabc;
+}
+
 bool is_file_exist(const string& file)
 {
     // check if the file exist
