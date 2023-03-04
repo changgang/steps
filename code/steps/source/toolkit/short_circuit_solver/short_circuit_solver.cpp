@@ -60,10 +60,8 @@ void SHORT_CIRCUIT_SOLVER::initialize_short_circuit_solver()
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     psdb.update_in_service_bus_count();
 
-
     show_short_circuit_solver_configuration();
 
-    //store_bus_initial_voltage_before_short_circuit();
 
     if(get_consider_motor_load_logic())
         update_all_motor_load_data();
@@ -87,8 +85,7 @@ void SHORT_CIRCUIT_SOLVER::show_short_circuit_solver_configuration()
             <<"Generator reactance option: "<<gen_X<<"\n"
             <<"Consider load logic: "<<(get_consider_load_logic()?"True":"False")<<"\n"
             <<"Consider motor load logic: "<<(get_consider_motor_load_logic()?"True":"False")<<"\n"
-            <<"DC lines option: "<<(get_option_of_DC_lines()==BLOCK_AND_IGNORE?"Block and ignore":"Convert to constant admittance load")<<"\n"
-            <<"Import sequence parameters from dynamic model:"<<(get_import_device_parameter_from_dynamic_model_flag()?"True":"False");
+            <<"DC lines option: "<<(get_option_of_DC_lines()==BLOCK_AND_IGNORE?"Block and ignore":"Convert to constant admittance load")<<"\n";
     toolkit->show_information_with_leading_time_stamp(osstream);
 }
 
@@ -148,112 +145,6 @@ void SHORT_CIRCUIT_SOLVER::updata_all_wt_generator_motor_data()
         if(wt_gens[i]->get_wt_generator_type()==CONSTANT_SPEED_WT_GENERATOR)
             wt_gens[i]->update_motor_data();
     }
-}
-
-void SHORT_CIRCUIT_SOLVER::update_voltage_with_dc_lines_and_vsc_hvdcs()
-{
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    NETWORK_MATRIX& network_matrix = toolkit->get_network_matrix();
-
-    DC_LINES_OPTION option = get_option_of_DC_lines();
-//    if(option == CONVERT_TO_CONSTANT_ADMITTANCE_LOAD)
-//        return;
-
-    GENERATOR_REACTANCE_OPTION gen_X_option = get_generator_reactance_option();
-
-    double sbase = psdb.get_system_base_power_in_MVA();
-    unsigned int bus_count = psdb.get_bus_count();
-
-    vector<complex<double> > I;
-    I.reserve(bus_count);
-    for(unsigned int i=0; i<bus_count; i++)
-        I.push_back(0.0);
-
-    vector<GENERATOR*> gens = psdb.get_all_generators();
-    unsigned int n = gens.size();
-    for(unsigned int i=0; i<n; i++)
-    {
-        GENERATOR* gen = gens[i];
-        unsigned int busn = gen->get_generator_bus();
-        complex<double> E = gen->get_complex_internal_voltage_for_short_circuit_solver_in_pu();
-        double R = gen->get_positive_sequence_resistance_in_pu();
-        double X = 0.0;
-        switch(gen_X_option)
-        {
-            case SUBTRANSIENT_REACTANCE:    X = gen->get_positive_sequence_subtransient_reactance_in_pu();break;
-            case TRANSIENT_REACTANCE:       X = gen->get_positive_sequence_transient_reactance_in_pu();break;
-            case SYNCHRONOUS_REACTANCE:     X = gen->get_positive_sequence_syncronous_reactance_in_pu();break;
-            default:                        X = gen->get_positive_sequence_subtransient_reactance_in_pu();break;
-        }
-        double one_over_mbase = gen->get_one_over_mbase_in_one_over_MVA();
-        complex<double> Z = complex<double>(R,X)*sbase*one_over_mbase;
-        I[busn-1] = I[busn-1] + E/Z;
-    }
-
-    vector<WT_GENERATOR*> wt_gens = psdb.get_all_wt_generators();
-    n = wt_gens.size();
-    for(unsigned int i=0; i<n; i++)
-    {
-        WT_GENERATOR* wt_gen = wt_gens[i];
-        unsigned int busn = wt_gen->get_generator_bus();
-        complex<double> E = wt_gen->get_complex_internal_voltage_for_short_circuit_solver_in_pu();
-        double R = wt_gen->get_positive_sequence_resistance_in_pu();
-        double X = 0.0;
-        switch(gen_X_option)
-        {
-            case SUBTRANSIENT_REACTANCE:    X = wt_gen->get_positive_sequence_subtransient_reactance_in_pu();break;
-            case TRANSIENT_REACTANCE:       X = wt_gen->get_positive_sequence_transient_reactance_in_pu();break;
-            case SYNCHRONOUS_REACTANCE:     X = wt_gen->get_positive_sequence_syncronous_reactance_in_pu();break;
-            default:                        X = wt_gen->get_positive_sequence_subtransient_reactance_in_pu();break;
-        }
-        double one_over_mbase = wt_gen->get_one_over_mbase_in_one_over_MVA();
-        complex<double> Z = complex<double>(R,X)*sbase*one_over_mbase;
-        I[busn-1] = I[busn-1] + E/Z;
-    }
-
-    vector<VSC_HVDC*> vsc_hvdcs = psdb.get_all_vsc_hvdcs();
-    n = vsc_hvdcs.size();
-    for(unsigned int i=0; i<n; i++)
-    {
-        VSC_HVDC* vsc_hvdc = vsc_hvdcs[i];
-        unsigned int nn = vsc_hvdc->get_converter_count();
-
-        for(unsigned int j=0; j<nn; j++)
-        {
-            unsigned int busn = vsc_hvdc->get_converter_ac_bus(j);
-            VSC_HVDC_CONVERTER_MODEL* model = vsc_hvdc->get_vsc_hvdc_converter_model(j);
-
-            complex<double> Iinjection = 0.0;
-            if(vsc_hvdc->get_converter_control_mode(j) == CURRENT_VECTOR_CONTROL)
-                Iinjection = 0.0;
-            else if(vsc_hvdc->get_converter_control_mode(j)==VIRTUAL_SYNCHRONOUS_GENERATOR_CONTROL)
-                Iinjection = vsc_hvdc->get_converter_internal_voltage_with_virtual_synchronous_generator_control(j);
-            I[busn-1] = I[busn-1] + Iinjection;
-        }
-    }
-
-
-    vector<BUS*> buses = psdb.get_all_buses();
-    n = buses.size();
-    for(unsigned int i=0; i<n; i++)
-    {
-        BUS* bus = buses[i];
-        unsigned int busn = bus->get_bus_number();
-
-        vector<complex<double> > Zcol = network_matrix.get_positive_sequence_complex_impedance_of_column_with_physical_bus(busn);
-
-        complex<double> V = 0.0;
-        for(unsigned int j=0; j<n; j++)
-        {
-            unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(j+1);
-            V = V + Zcol[internal_bus]*I[j];
-        }
-        bus->set_positive_sequence_voltage_in_pu(abs(V));
-        bus->set_positive_sequence_angle_in_rad(arg(V));
-    }
-
-    bus_initial_voltage_before_short_circuit.clear();
-    store_bus_initial_voltage_before_short_circuit();
 }
 
 void SHORT_CIRCUIT_SOLVER::update_node_voltages_with_devices_equivalent_to_source()
@@ -593,16 +484,6 @@ void SHORT_CIRCUIT_SOLVER::set_coordinates_of_currents_and_voltages(COORDINATES_
 COORDINATES_OPTION SHORT_CIRCUIT_SOLVER::get_coordinates_of_currents_and_voltages()
 {
     return coordindates_of_currents_and_volatges;
-}
-
-void SHORT_CIRCUIT_SOLVER::set_import_device_parameter_from_dynamic_model_flag(bool flag)
-{
-    import_device_parameter_from_dynamic_model_flag = flag;
-}
-
-bool SHORT_CIRCUIT_SOLVER::get_import_device_parameter_from_dynamic_model_flag()
-{
-    return import_device_parameter_from_dynamic_model_flag;
 }
 
 void SHORT_CIRCUIT_SOLVER::set_consider_load_logic(bool logic)
@@ -1128,7 +1009,6 @@ void SHORT_CIRCUIT_SOLVER::solve()
 
         update_internal_voltage_of_all_generators_and_wt_generators();
 
-        // update_voltage_with_dc_lines_and_vsc_hvdcs();
         update_node_voltages_with_devices_equivalent_to_source();
 
         complex<double> Uf = get_initial_voltage_of_fault_location_before_short_circuit();
@@ -1368,8 +1248,8 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_line_fault()
         I2if = I2if*Ibase;
         I0if = I0if*Ibase;
     }
-    toolkit->show_information_with_leading_time_stamp(get_formatted_information1(ibus,id, I1if, I2if, I0if));
-    toolkit->show_information_with_leading_time_stamp(get_formatted_information2(ibusptr->get_bus_name(), Vbase,I1if, I2if, I0if));
+    toolkit->show_information_with_leading_time_stamp(get_formatted_sequence_data(ibus,id, I1if, I2if, I0if));
+    toolkit->show_information_with_leading_time_stamp(get_formatted_phase_data(ibusptr->get_bus_name(), Vbase,I1if, I2if, I0if));
 
     complex<double> I1jf = (U1j - U1f)/Z1jf;
     complex<double> I2jf = (U2j - U2f)/Z1jf;
@@ -1395,8 +1275,8 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_line_fault()
         I2jf = I2jf*Ibase;
         I0jf = I0jf*Ibase;
     }
-    toolkit->show_information_with_leading_time_stamp(get_formatted_information1(jbus,id, I1jf, I2jf, I0jf));
-    toolkit->show_information_with_leading_time_stamp(get_formatted_information2(ibusptr->get_bus_name(),Vbase,I1jf, I2jf, I0jf));
+    toolkit->show_information_with_leading_time_stamp(get_formatted_sequence_data(jbus,id, I1jf, I2jf, I0jf));
+    toolkit->show_information_with_leading_time_stamp(get_formatted_phase_data(ibusptr->get_bus_name(),Vbase,I1jf, I2jf, I0jf));
 }
 
 complex<double> SHORT_CIRCUIT_SOLVER::get_positive_sequence_voltage_of_fault_point_in_pu()
@@ -1465,17 +1345,17 @@ COMPLEX3 SHORT_CIRCUIT_SOLVER::convert_sequence_data_to_phase_data(complex<doubl
 }
 
 
-string SHORT_CIRCUIT_SOLVER::get_formatted_information1(unsigned int bus,string ID,complex<double> F1, complex<double>F2, complex<double> F0, bool to_file)
+string SHORT_CIRCUIT_SOLVER::get_formatted_sequence_data(unsigned int bus,string ID,complex<double> F1, complex<double>F2, complex<double> F0, bool to_file)
 {
     ostringstream osstream;
     string msg = (ID=="")?"":"CKT ";
     string s = (to_file)?",":"";
     osstream<< left << setw(12) << bus << s << setw(4) << msg << setw(4) << ID;
 
-    return get_formatted_information1(osstream.str(), F1, F2, F0, to_file);
+    return get_formatted_sequence_data(osstream.str(), F1, F2, F0, to_file);
 }
 
-string SHORT_CIRCUIT_SOLVER::get_formatted_information1(string str, complex<double> F1, complex<double> F2, complex<double> F0, bool to_file)
+string SHORT_CIRCUIT_SOLVER::get_formatted_sequence_data(string str, complex<double> F1, complex<double> F2, complex<double> F0, bool to_file)
 {
     COORDINATES_OPTION coordinate = get_coordinates_of_currents_and_voltages();
     string s = (to_file)?",":"";
@@ -1504,17 +1384,17 @@ string SHORT_CIRCUIT_SOLVER::get_formatted_information1(string str, complex<doub
     return osstream.str();
 }
 
-string SHORT_CIRCUIT_SOLVER::get_formatted_information2(string busname,double Vbase, complex<double> F1, complex<double>F2, complex<double> F0, bool to_file)
+string SHORT_CIRCUIT_SOLVER::get_formatted_phase_data(string busname,double Vbase, complex<double> F1, complex<double>F2, complex<double> F0, bool to_file)
 {
     ostringstream osstream;
     string s = (to_file)?",":"";
     osstream<< resetiosflags(ios::fixed)
             << left << setw(12) << busname << s
             << setprecision(5) << showpoint << setw(8) << Vbase;
-    return get_formatted_information2(osstream.str(), F1, F2, F0, to_file);
+    return get_formatted_phase_data(osstream.str(), F1, F2, F0, to_file);
 }
 
-string SHORT_CIRCUIT_SOLVER::get_formatted_information2(string str, complex<double> F1, complex<double> F2, complex<double> F0, bool to_file)
+string SHORT_CIRCUIT_SOLVER::get_formatted_phase_data(string str, complex<double> F1, complex<double> F2, complex<double> F0, bool to_file)
 {
     string s = (to_file)?",":"";
     COMPLEX3 Fabc = convert_sequence_data_to_phase_data(F1, F2, F0);
@@ -1664,8 +1544,8 @@ void SHORT_CIRCUIT_SOLVER::show_short_circuit_with_bus_fault()
         V0 = faulted_bus_pointer->get_zero_sequence_complex_voltage_in_kV()/SQRT3;
     }
     show_voltage_table_header();
-    toolkit->show_information_with_leading_time_stamp(get_formatted_information1(busnum, "", V1, V2, V0));
-    toolkit->show_information_with_leading_time_stamp(get_formatted_information2(busname, Vbase , V1, V2, V0));
+    toolkit->show_information_with_leading_time_stamp(get_formatted_sequence_data(busnum, "", V1, V2, V0));
+    toolkit->show_information_with_leading_time_stamp(get_formatted_phase_data(busname, Vbase , V1, V2, V0));
 
     show_current_table_header();
     show_contributions_of_fault_current_with_bus_fault();
@@ -1685,8 +1565,8 @@ void SHORT_CIRCUIT_SOLVER::show_short_circuit_with_bus_fault()
     }
     osstream<< "Fault current at bus " << faulted_bus_pointer->get_bus_number() << ":" <<endl;
     toolkit->show_information_with_leading_time_stamp(osstream);
-    toolkit->show_information_with_leading_time_stamp(get_formatted_information1(busnum, "", I1, I2, I0));
-    toolkit->show_information_with_leading_time_stamp(get_formatted_information2(busname, Vbase, I1, I2, I0));
+    toolkit->show_information_with_leading_time_stamp(get_formatted_sequence_data(busnum, "", I1, I2, I0));
+    toolkit->show_information_with_leading_time_stamp(get_formatted_phase_data(busname, Vbase, I1, I2, I0));
 
     osstream<< "Short circuit capacity:  (P.U.) (MVA)" <<endl
             << right << fixed
@@ -1753,8 +1633,8 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_bus_fault()
         BUS* busptr = psdb.get_bus(current_from_bus);
         string busname = busptr->get_bus_name();
 
-        toolkit->show_information_with_leading_time_stamp(get_formatted_information1(current_from_bus, line.get_identifier(), I1, I2, I0));
-        toolkit->show_information_with_leading_time_stamp(get_formatted_information2(busname, busptr->get_base_voltage_in_kV(), I1, I2, I0));
+        toolkit->show_information_with_leading_time_stamp(get_formatted_sequence_data(current_from_bus, line.get_identifier(), I1, I2, I0));
+        toolkit->show_information_with_leading_time_stamp(get_formatted_phase_data(busname, busptr->get_base_voltage_in_kV(), I1, I2, I0));
     }
 
     vector<TRANSFORMER*> transformers = psdb.get_transformers_connecting_to_bus(fault_bus);
@@ -1803,8 +1683,8 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_bus_fault()
             BUS* busptr = psdb.get_bus(current_from_bus);
             string busname = busptr->get_bus_name();
 
-            toolkit->show_information_with_leading_time_stamp(get_formatted_information1(current_from_bus,trans.get_identifier(), I1, I2, I0));
-            toolkit->show_information_with_leading_time_stamp(get_formatted_information2(busname, busptr->get_base_voltage_in_kV(), I1, I2, I0));
+            toolkit->show_information_with_leading_time_stamp(get_formatted_sequence_data(current_from_bus,trans.get_identifier(), I1, I2, I0));
+            toolkit->show_information_with_leading_time_stamp(get_formatted_phase_data(busname, busptr->get_base_voltage_in_kV(), I1, I2, I0));
         }
         else
         {
@@ -1859,8 +1739,8 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_bus_fault()
             }
             ostringstream osstream;
             osstream<< left << setw(12) << msg <<"CKT "<< setw(4)<< trans.get_identifier();
-            toolkit->show_information_with_leading_time_stamp(get_formatted_information1(osstream.str(), I1, I2, I0));
-            toolkit->show_information_with_leading_time_stamp(get_formatted_information2("+", I1, I2, I0));
+            toolkit->show_information_with_leading_time_stamp(get_formatted_sequence_data(osstream.str(), I1, I2, I0));
+            toolkit->show_information_with_leading_time_stamp(get_formatted_phase_data("+", I1, I2, I0));
         }
     }
 
@@ -1883,8 +1763,8 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_bus_fault()
         }
         ostringstream osstream;
         osstream<< left <<setw(12) << "Generator" << " ID " << setw(4) << gens[i]->get_identifier();
-        toolkit->show_information_with_leading_time_stamp(get_formatted_information1(osstream.str(), I1, I2, I0));
-        toolkit->show_information_with_leading_time_stamp(get_formatted_information2("+", I1, I2, I0));
+        toolkit->show_information_with_leading_time_stamp(get_formatted_sequence_data(osstream.str(), I1, I2, I0));
+        toolkit->show_information_with_leading_time_stamp(get_formatted_phase_data("+", I1, I2, I0));
     }
 
     vector<WT_GENERATOR*> wt_gens = psdb.get_wt_generators_connecting_to_bus(fault_bus);
@@ -1906,8 +1786,8 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_bus_fault()
         }
         ostringstream osstream;
         osstream<< left <<setw(12) << "WT generator" << " ID " << setw(4) << wt_gens[i]->get_identifier();
-        toolkit->show_information_with_leading_time_stamp(get_formatted_information1(osstream.str(), I1, I2, I0));
-        toolkit->show_information_with_leading_time_stamp(get_formatted_information2("+", I1, I2, I0));
+        toolkit->show_information_with_leading_time_stamp(get_formatted_sequence_data(osstream.str(), I1, I2, I0));
+        toolkit->show_information_with_leading_time_stamp(get_formatted_phase_data("+", I1, I2, I0));
     }
 
     vector<LOAD*> loads = psdb.get_loads_connecting_to_bus(fault_bus);
@@ -1929,8 +1809,8 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_bus_fault()
         }
         ostringstream osstream;
         osstream<< left <<setw(12) << "Load" << " ID " << setw(4) << loads[i]->get_identifier();
-        toolkit->show_information_with_leading_time_stamp(get_formatted_information1(osstream.str(), I1, I2, I0));
-        toolkit->show_information_with_leading_time_stamp(get_formatted_information2("+", I1, I2, I0));
+        toolkit->show_information_with_leading_time_stamp(get_formatted_sequence_data(osstream.str(), I1, I2, I0));
+        toolkit->show_information_with_leading_time_stamp(get_formatted_phase_data("+", I1, I2, I0));
     }
 
     vector<FIXED_SHUNT*> shunts = psdb.get_fixed_shunts_connecting_to_bus(fault_bus);
@@ -1952,8 +1832,8 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_bus_fault()
         }
         ostringstream osstream;
         osstream<< left <<setw(12) << "Shunt" << " ID " << setw(4) << shunts[i]->get_identifier();
-        toolkit->show_information_with_leading_time_stamp(get_formatted_information1(osstream.str(), I1, I2, I0));
-        toolkit->show_information_with_leading_time_stamp(get_formatted_information2("+", I1, I2, I0));
+        toolkit->show_information_with_leading_time_stamp(get_formatted_sequence_data(osstream.str(), I1, I2, I0));
+        toolkit->show_information_with_leading_time_stamp(get_formatted_phase_data("+", I1, I2, I0));
     }
 
     vector<PV_UNIT*> pv_units = psdb.get_pv_units_connecting_to_bus(fault_bus);
@@ -1975,8 +1855,8 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_bus_fault()
         }
         ostringstream osstream;
         osstream<< left <<setw(12) << "PV_unit" << " ID " << setw(4) << pv_units[i]->get_identifier();
-        toolkit->show_information_with_leading_time_stamp(get_formatted_information1(osstream.str(), I1, I2, I0));
-        toolkit->show_information_with_leading_time_stamp(get_formatted_information2("+", I1, I2, I0));
+        toolkit->show_information_with_leading_time_stamp(get_formatted_sequence_data(osstream.str(), I1, I2, I0));
+        toolkit->show_information_with_leading_time_stamp(get_formatted_phase_data("+", I1, I2, I0));
     }
 }
 
@@ -2015,8 +1895,8 @@ void SHORT_CIRCUIT_SOLVER::show_short_circuit_with_line_fault()
         V0 = get_zero_sequence_voltage_at_line_fault_location_in_kV();
     }
     show_voltage_table_header();
-    toolkit->show_information_with_leading_time_stamp(get_formatted_information1(busnum, "", V1, V2, V0));
-    toolkit->show_information_with_leading_time_stamp(get_formatted_information2(busname, Vbase , V1, V2, V0));
+    toolkit->show_information_with_leading_time_stamp(get_formatted_sequence_data(busnum, "", V1, V2, V0));
+    toolkit->show_information_with_leading_time_stamp(get_formatted_phase_data(busname, Vbase , V1, V2, V0));
 
     show_current_table_header();
     show_contributions_of_fault_current_with_line_fault();
@@ -2036,8 +1916,8 @@ void SHORT_CIRCUIT_SOLVER::show_short_circuit_with_line_fault()
     }
     osstream<< "Fault current:"<<endl;
     toolkit->show_information_with_leading_time_stamp(osstream);
-    toolkit->show_information_with_leading_time_stamp(get_formatted_information1(busnum, "", I1, I2, I0));
-    toolkit->show_information_with_leading_time_stamp(get_formatted_information2(busname, Vbase, I1, I2, I0));
+    toolkit->show_information_with_leading_time_stamp(get_formatted_sequence_data(busnum, "", I1, I2, I0));
+    toolkit->show_information_with_leading_time_stamp(get_formatted_phase_data(busname, Vbase, I1, I2, I0));
 
     osstream<< "Short circuit capacity:  (P.U.) (MVA)" <<endl
             << right << fixed
@@ -2168,8 +2048,8 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
             V2 = faulted_bus_pointer->get_negative_sequence_complex_voltage_in_kV()/SQRT3;
             V0 = faulted_bus_pointer->get_zero_sequence_complex_voltage_in_kV()/SQRT3;
         }
-        file << get_formatted_information1(fault_bus, "", V1, V2, V0, true);
-        file << get_formatted_information2(busname, Vbase , V1, V2, V0, true);
+        file << get_formatted_sequence_data(fault_bus, "", V1, V2, V0, true);
+        file << get_formatted_phase_data(busname, Vbase , V1, V2, V0, true);
 
         if(coordinate==RECTANGULAR)
         {
@@ -2224,8 +2104,8 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
             BUS* busptr = psdb.get_bus(current_from_bus);
             string busname = busptr->get_bus_name();
 
-            file<< get_formatted_information1(current_from_bus,line.get_identifier(), I1, I2, I0, true);
-            file<< get_formatted_information2(busname, busptr->get_base_voltage_in_kV(), I1, I2, I0, true);
+            file<< get_formatted_sequence_data(current_from_bus,line.get_identifier(), I1, I2, I0, true);
+            file<< get_formatted_phase_data(busname, busptr->get_base_voltage_in_kV(), I1, I2, I0, true);
         }
 
         vector<TRANSFORMER*> transformers = psdb.get_transformers_connecting_to_bus(fault_bus);
@@ -2272,8 +2152,8 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
 
                 BUS* busptr = psdb.get_bus(current_from_bus);
 
-                file<< get_formatted_information1(current_from_bus,trans.get_identifier(), I1, I2, I0, true);
-                file<< get_formatted_information2(busptr->get_bus_name(), busptr->get_base_voltage_in_kV(), I1, I2, I0, true);
+                file<< get_formatted_sequence_data(current_from_bus,trans.get_identifier(), I1, I2, I0, true);
+                file<< get_formatted_phase_data(busptr->get_bus_name(), busptr->get_base_voltage_in_kV(), I1, I2, I0, true);
             }
             else
             {
@@ -2328,8 +2208,8 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
                 }
                 ostringstream osstream;
                 osstream<< msg <<",";
-                file<< get_formatted_information1(osstream.str(), I1, I2, I0, true);
-                file<< get_formatted_information2(",", I1, I2, I0, true);
+                file<< get_formatted_sequence_data(osstream.str(), I1, I2, I0, true);
+                file<< get_formatted_phase_data(",", I1, I2, I0, true);
             }
         }
 
@@ -2352,8 +2232,8 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
             }
             ostringstream osstream;
             osstream<< "Generator,ID "<< gens[i]->get_identifier();
-            file<< get_formatted_information1(osstream.str(), I1, I2, I0, true);
-            file<< get_formatted_information2(",", I1, I2, I0, true);
+            file<< get_formatted_sequence_data(osstream.str(), I1, I2, I0, true);
+            file<< get_formatted_phase_data(",", I1, I2, I0, true);
         }
 
         vector<WT_GENERATOR*> wt_gens = psdb.get_wt_generators_connecting_to_bus(fault_bus);
@@ -2375,8 +2255,8 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
             }
             ostringstream osstream;
             osstream<< "WT generator,ID "<< wt_gens[i]->get_identifier();
-            file<< get_formatted_information1(osstream.str(), I1, I2, I0, true);
-            file<< get_formatted_information2(",", I1, I2, I0, true);
+            file<< get_formatted_sequence_data(osstream.str(), I1, I2, I0, true);
+            file<< get_formatted_phase_data(",", I1, I2, I0, true);
         }
 
         vector<LOAD*> loads = psdb.get_loads_connecting_to_bus(fault_bus);
@@ -2398,8 +2278,8 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
             }
             ostringstream osstream;
             osstream<< "Load,ID "<< loads[i]->get_identifier();
-            file<< get_formatted_information1(osstream.str(), I1, I2, I0, true);
-            file<< get_formatted_information2(",", I1, I2, I0, true);
+            file<< get_formatted_sequence_data(osstream.str(), I1, I2, I0, true);
+            file<< get_formatted_phase_data(",", I1, I2, I0, true);
         }
 
         vector<FIXED_SHUNT*> shunts = psdb.get_fixed_shunts_connecting_to_bus(fault_bus);
@@ -2421,8 +2301,8 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
             }
             ostringstream osstream;
             osstream<< "Shunt,ID "<< shunts[i]->get_identifier();
-            file<< get_formatted_information1(osstream.str(), I1, I2, I0, true);
-            file<< get_formatted_information2(",", I1, I2, I0, true);
+            file<< get_formatted_sequence_data(osstream.str(), I1, I2, I0, true);
+            file<< get_formatted_phase_data(",", I1, I2, I0, true);
         }
 
         vector<PV_UNIT*> pv_units = psdb.get_pv_units_connecting_to_bus(fault_bus);
@@ -2444,8 +2324,8 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
             }
             ostringstream osstream;
             osstream<< "PV_unit,ID "<< pv_units[i]->get_identifier();
-            file<< get_formatted_information1(osstream.str(), I1, I2, I0, true);
-            file<< get_formatted_information2(",", I1, I2, I0, true);
+            file<< get_formatted_sequence_data(osstream.str(), I1, I2, I0, true);
+            file<< get_formatted_phase_data(",", I1, I2, I0, true);
         }
 
         complex<double> I1, I2, I0;
@@ -2462,8 +2342,8 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
             I0 = get_zero_sequence_fault_current_in_kA();
         }
         file<<"%Total fault current"<<endl;
-        file<< get_formatted_information1(fault_bus, "", I1, I2, I0, true);
-        file<< get_formatted_information2(busname, Vbase, I1, I2, I0, true);
+        file<< get_formatted_sequence_data(fault_bus, "", I1, I2, I0, true);
+        file<< get_formatted_phase_data(busname, Vbase, I1, I2, I0, true);
 
         complex<double> S = get_positive_sequence_short_circuit_capacity_in_pu();
         file<< "%Positive sequence equivalent fault admittance:,"
@@ -2544,8 +2424,8 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_line_fault(con
             V0 = get_zero_sequence_voltage_at_line_fault_location_in_kV();
         }
 
-        file << get_formatted_information1(busnum, "", V1, V2, V0, true);
-        file << get_formatted_information2(busname, Vbase , V1, V2, V0, true);
+        file << get_formatted_sequence_data(busnum, "", V1, V2, V0, true);
+        file << get_formatted_phase_data(busname, Vbase , V1, V2, V0, true);
 
         if(coordinate==RECTANGULAR)
         {
@@ -2601,11 +2481,11 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_line_fault(con
             I0jf = I0jf*Ibase;
         }
 
-        file<< get_formatted_information1(ibus, id, I1if, I2if, I0if, true);
-        file<< get_formatted_information2(ibusptr->get_bus_name(),ibusptr->get_base_voltage_in_kV(), I1if, I2if, I0if, true);
+        file<< get_formatted_sequence_data(ibus, id, I1if, I2if, I0if, true);
+        file<< get_formatted_phase_data(ibusptr->get_bus_name(),ibusptr->get_base_voltage_in_kV(), I1if, I2if, I0if, true);
 
-        file<< get_formatted_information1(jbus, id, I1jf, I2jf, I0jf, true);
-        file<< get_formatted_information2(jbusptr->get_bus_name(),jbusptr->get_base_voltage_in_kV(), I1jf, I2jf, I0jf, true);
+        file<< get_formatted_sequence_data(jbus, id, I1jf, I2jf, I0jf, true);
+        file<< get_formatted_phase_data(jbusptr->get_bus_name(),jbusptr->get_base_voltage_in_kV(), I1jf, I2jf, I0jf, true);
 
         complex<double> I1, I2, I0;
         if(units==PU)
@@ -2621,8 +2501,8 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_line_fault(con
             I0 = get_zero_sequence_fault_current_in_kA();
         }
         file<<"%Total fault current"<<endl;
-        file<< get_formatted_information1(busnum, "", I1, I2, I0, true);
-        file<< get_formatted_information2(busname, Vbase, I1, I2, I0, true);
+        file<< get_formatted_sequence_data(busnum, "", I1, I2, I0, true);
+        file<< get_formatted_phase_data(busname, Vbase, I1, I2, I0, true);
 
         file<< "%Positive sequence equivalent fault admittance: "
             << fixed << setprecision(4) << get_positive_sequence_equivalent_fault_admittance()<<"PU"<<endl;
@@ -2701,8 +2581,8 @@ void SHORT_CIRCUIT_SOLVER::save_extended_short_circuit_result_to_file(const stri
                 V0 = bus.get_zero_sequence_complex_voltage_in_kV()/SQRT3;
             }
 
-            file<< get_formatted_information1(bus.get_bus_number(),"", V1, V2, V0, true);
-            file<< get_formatted_information2(bus.get_bus_name(), bus.get_base_voltage_in_kV(), V1, V2, V0, true);
+            file<< get_formatted_sequence_data(bus.get_bus_number(),"", V1, V2, V0, true);
+            file<< get_formatted_phase_data(bus.get_bus_name(), bus.get_base_voltage_in_kV(), V1, V2, V0, true);
 
             if(coordinate==RECTANGULAR)
             {
@@ -2814,8 +2694,8 @@ void SHORT_CIRCUIT_SOLVER::save_extended_short_circuit_result_to_file(const stri
                     BUS* busptr = psdb.get_bus(to_bus);
                     to_bus_name = busptr->get_bus_name();
                 }
-                file<< get_formatted_information1(to_bus, line.get_identifier(), I1, I2, I0, true);
-                file<< get_formatted_information2(to_bus_name, line.get_line_base_voltage_in_kV(), I1, I2, I0, true);
+                file<< get_formatted_sequence_data(to_bus, line.get_identifier(), I1, I2, I0, true);
+                file<< get_formatted_phase_data(to_bus_name, line.get_line_base_voltage_in_kV(), I1, I2, I0, true);
             }
 
             vector<TRANSFORMER*> transformers = psdb.get_transformers_connecting_to_bus(busnum);
@@ -2862,8 +2742,8 @@ void SHORT_CIRCUIT_SOLVER::save_extended_short_circuit_result_to_file(const stri
 
                     BUS* busptr = psdb.get_bus(to_bus);
 
-                    file<< get_formatted_information1(to_bus, trans.get_identifier(), I1, I2, I0, true);
-                    file<< get_formatted_information2(busptr->get_bus_name(), busptr->get_base_voltage_in_kV(), I1, I2, I0, true);
+                    file<< get_formatted_sequence_data(to_bus, trans.get_identifier(), I1, I2, I0, true);
+                    file<< get_formatted_phase_data(busptr->get_bus_name(), busptr->get_base_voltage_in_kV(), I1, I2, I0, true);
                 }
                 else
                 {
@@ -2918,8 +2798,8 @@ void SHORT_CIRCUIT_SOLVER::save_extended_short_circuit_result_to_file(const stri
                     }
 
                     snprintf(buffer, 1000, "%s,CKT %s",msg.c_str(), trans.get_identifier().c_str());
-                    file<< get_formatted_information1(buffer, I1, I2, I0, true);
-                    file<< get_formatted_information2(",", I1, I2,I0, true);
+                    file<< get_formatted_sequence_data(buffer, I1, I2, I0, true);
+                    file<< get_formatted_phase_data(",", I1, I2,I0, true);
                 }
             }
 
@@ -2942,8 +2822,8 @@ void SHORT_CIRCUIT_SOLVER::save_extended_short_circuit_result_to_file(const stri
                 }
 
                 snprintf(buffer, 1000, "Generator,ID %s", gens[i]->get_identifier().c_str());
-                file<< get_formatted_information1(buffer, I1,I2, I0, true);
-                file<< get_formatted_information2(",", I1, I2, I0, true);
+                file<< get_formatted_sequence_data(buffer, I1,I2, I0, true);
+                file<< get_formatted_phase_data(",", I1, I2, I0, true);
 
             }
 
@@ -2966,8 +2846,8 @@ void SHORT_CIRCUIT_SOLVER::save_extended_short_circuit_result_to_file(const stri
                 }
 
                 snprintf(buffer, 1000, "WT generator,ID %s", wt_gens[i]->get_identifier().c_str());
-                file<< get_formatted_information1(buffer, I1,I2, I0, true);
-                file<< get_formatted_information2(",", I1, I2, I0, true);
+                file<< get_formatted_sequence_data(buffer, I1,I2, I0, true);
+                file<< get_formatted_phase_data(",", I1, I2, I0, true);
             }
 
             vector<LOAD*> loads = psdb.get_loads_connecting_to_bus(busnum);
@@ -2989,8 +2869,8 @@ void SHORT_CIRCUIT_SOLVER::save_extended_short_circuit_result_to_file(const stri
                 }
 
                 snprintf(buffer, 1000, "Load,ID %s", loads[i]->get_identifier().c_str());
-                file<< get_formatted_information1(buffer, I1,I2, I0, true);
-                file<< get_formatted_information2(",", I1, I2, I0, true);
+                file<< get_formatted_sequence_data(buffer, I1,I2, I0, true);
+                file<< get_formatted_phase_data(",", I1, I2, I0, true);
             }
 
             vector<FIXED_SHUNT*> shunts = psdb.get_fixed_shunts_connecting_to_bus(busnum);
@@ -3011,8 +2891,8 @@ void SHORT_CIRCUIT_SOLVER::save_extended_short_circuit_result_to_file(const stri
                     I0 = shunts[i]->get_zero_sequence_complex_current_in_kA();
                 }
                 snprintf(buffer, 1000, "Shunt,ID %s", shunts[i]->get_identifier().c_str());
-                file<< get_formatted_information1(osstream.str(), I1, I2, I0, true);
-                file<< get_formatted_information2(",", I1, I2, I0, true);
+                file<< get_formatted_sequence_data(osstream.str(), I1, I2, I0, true);
+                file<< get_formatted_phase_data(",", I1, I2, I0, true);
             }
 
             vector<PV_UNIT*> pv_units = psdb.get_pv_units_connecting_to_bus(busnum);
@@ -3033,8 +2913,8 @@ void SHORT_CIRCUIT_SOLVER::save_extended_short_circuit_result_to_file(const stri
                     I0 = pv_units[i]->get_zero_sequence_complex_current_in_kA();
                 }
                 snprintf(buffer, 1000, "PV_unit,ID %s", pv_units[i]->get_identifier().c_str());
-                file<< get_formatted_information1(osstream.str(), I1, I2, I0, true);
-                file<< get_formatted_information2(",", I1, I2, I0, true);
+                file<< get_formatted_sequence_data(osstream.str(), I1, I2, I0, true);
+                file<< get_formatted_phase_data(",", I1, I2, I0, true);
             }
 
             file<<endl;

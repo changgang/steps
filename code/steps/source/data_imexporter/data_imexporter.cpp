@@ -427,11 +427,6 @@ void DATA_IMEXPORTER::append_buses_to_ordered_buses(const vector<unsigned int>& 
 
 void DATA_IMEXPORTER::check_and_supplement_sequence_model_from_dynamic_model()
 {
-    STEPS& toolkit = get_toolkit();
-    ostringstream osstream;
-    osstream<<"Checking all device sequence data."<<endl;
-    toolkit.show_information_with_leading_time_stamp(osstream);
-
     check_line_sequence_data();
     check_transformer_sequence_data();
     check_fixed_shunt_sequence_data();
@@ -442,9 +437,6 @@ void DATA_IMEXPORTER::check_and_supplement_sequence_model_from_dynamic_model()
     check_and_supplement_pv_unit_sequence_data();
     check_and_supplement_energy_storage_sequence_data();
     check_and_supplement_vsc_hvdc_sequence_data();
-
-    osstream<<"Checking done."<<endl;
-    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void DATA_IMEXPORTER::check_line_sequence_data()
@@ -465,17 +457,22 @@ void DATA_IMEXPORTER::check_line_sequence_data()
 
     if(lines_with_no_seq_data.size()==0)
     {
-        osstream<<"All line sequence model have been imported from seq file."<<endl;
+        osstream<<"All lines' zero sequence model have been imported from seq file."<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
     else
     {
-        osstream<<"Line";
+        osstream;
         for(unsigned int i=0; i<lines_with_no_seq_data.size(); i++)
-            osstream<<" ["<<lines_with_no_seq_data[i]->get_sending_side_bus()<<" "<<lines_with_no_seq_data[i]->get_receiving_side_bus()
+        {
+            osstream<<"Line"<<" ["<<lines_with_no_seq_data[i]->get_sending_side_bus()<<" "<<lines_with_no_seq_data[i]->get_receiving_side_bus()
                     <<" id:"<<lines_with_no_seq_data[i]->get_identifier()<<"]";
-        osstream<<" are not imported from seq file."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
+            osstream<<" is not imported from seq file."<<endl;
+            toolkit.show_information_with_leading_time_stamp(osstream);
+
+            osstream<<"+ The device will be ignored in zero sequence network during short circuit calculation."<<endl;
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
     }
 }
 void DATA_IMEXPORTER::check_transformer_sequence_data()
@@ -785,8 +782,6 @@ void DATA_IMEXPORTER::supplement_load_sequence_model_from_dynamic_model(LOAD& lo
         }
         else if(model_name=="IEEL")
         {
-            IEEL* ieel_model = (IEEL*) load_model;
-            // osstream<<"+ Import parameters from IEEL model."<<endl;
             osstream<<"+ Cannot import sequence parameters from "<<model_name<<" model. The device will be ignored during short circuit calculation."<<endl;
         }
         else
@@ -862,20 +857,14 @@ void DATA_IMEXPORTER::supplement_wt_generator_sequence_model_from_dynamic_model(
         string model_name = wtg_model->get_model_name();
         if(model_name=="WT3G0")
         {
-            WT3G0* wt3g0_model = (WT3G0*) wtg_model;
-            // osstream<<"+ Import parameters from WT3G0 model."<<endl;
             osstream<<"+ Cannot import sequence parameters from "<<model_name<<" model. The device will be ignored during short circuit calculation."<<endl;
         }
         else if(model_name=="WT3G1")
         {
-            WT3G1* wt3g1_model = (WT3G1*) wtg_model;
-            // osstream<<"+ Import parameters from WT3G1 model."<<endl;
             osstream<<"+ Cannot import sequence parameters from "<<model_name<<" model. The device will be ignored during short circuit calculation."<<endl;
         }
         else if(model_name=="WT3G2")
         {
-            WT3G2* wt3g2_model = (WT3G2*) wtg_model;
-            // osstream<<"+ Import parameters from WT3G2 model."<<endl;
             osstream<<"+ Cannot import sequence parameters from "<<model_name<<" model. The device will be ignored during short circuit calculation."<<endl;
         }
         else
@@ -913,9 +902,6 @@ void DATA_IMEXPORTER::supplement_vsc_hvdc_sequence_model_from_dynamic_model(VSC_
             else
                 vsc_hvdc.set_converter_control_mode(i, CURRENT_VECTOR_CONTROL);
         }
-        osstream<<"+ Import done."<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-
         vsc_hvdc.set_sequence_parameter_import_flag(true);
     }
 }

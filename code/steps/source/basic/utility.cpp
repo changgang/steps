@@ -845,9 +845,9 @@ COMPLEX3 steps_abc2seq(const COMPLEX3& Vabc)
 COMPLEX3 steps_seq2abc(const COMPLEX3& V012)
 {
     COMPLEX3 Vabc;
-    complex<double> F0 = Vabc[0];
-    complex<double> F1 = Vabc[1];
-    complex<double> F2 = Vabc[2];
+    complex<double> F0 = V012[0];
+    complex<double> F1 = V012[1];
+    complex<double> F2 = V012[2];
 
     Vabc.set_complex_value_0(F1 + F2 + F0);
     Vabc.set_complex_value_1(complex<double>(-0.5, -SQRT3/2)*F1 + complex<double>(-0.5,  SQRT3/2)*F2 + F0);

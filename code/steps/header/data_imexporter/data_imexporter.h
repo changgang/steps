@@ -29,7 +29,6 @@ class DATA_IMEXPORTER
         POWERFLOW_DATA_SAVE_MODE get_powerflow_data_save_mode() const;
         bool get_supplement_sequence_model_from_dynamic_model_logic() const;
 
-
         void export_shadowed_bus_pair(string file) const;
 
         virtual void load_powerflow_data(string pf_source) = 0;

@@ -180,12 +180,6 @@ void api_set_short_circuit_solver_boolean_parameter(char* parameter_name, bool v
         solver.set_consider_motor_load_logic(value);
         return;
     }
-    if(PARAMETER_NAME=="IMPORT DEVICE PARAMETER FROM DYNAMIC MODEL FLAG")
-    {
-        solver.set_import_device_parameter_from_dynamic_model_flag(value);
-        return;
-    }
-
 
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for short circuit solver with api %s.\n",
@@ -203,8 +197,6 @@ bool api_get_short_circuit_solver_boolean_parameter(char* parameter_name, unsign
         return solver.get_consider_load_logic();
     if(PARAMETER_NAME=="CONSIDER MOTOR LOAD LOGIC")
         return solver.get_consider_motor_load_logic();
-    if(PARAMETER_NAME=="IMPORT DEVICE PARAMETER FROM DYNAMIC MODEL FLAG")
-        return solver.get_import_device_parameter_from_dynamic_model_flag();
 
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for short circuit solver with api %s.\n"

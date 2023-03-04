@@ -12,6 +12,8 @@ using namespace std;
 int main()
 {
     PSSE_IMEXPORTER importer(default_toolkit);
+    importer.set_supplement_sequence_model_from_dynamic_model_logic(false);
+
     importer.load_powerflow_data("../../../bench/IEEE9.raw");
     importer.load_sequence_data("../../../bench/IEEE9.seq");
  //   importer.load_dynamic_data("../../../bench/IEEE9_detail.dyr");
@@ -44,10 +46,9 @@ int main()
     sc_solver.set_consider_motor_load_logic(true);
 //    sc_solver.set_option_of_DC_lines(CONVERT_TO_CONSTANT_ADMITTANCE_LOAD);
     sc_solver.set_option_of_DC_lines(BLOCK_AND_IGNORE);
-    sc_solver.set_import_device_parameter_from_dynamic_model_flag(true);    // if device seq data is not imported and dynamic model exists
 
 
-   sc_solver.set_bus_fault(8, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
+   sc_solver.set_bus_fault(6, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
 
 //    DEVICE_ID did = get_line_device_id(1, 2, "1");
 //    sc_solver.set_line_fault(did, 1, 0.3, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));

@@ -27,9 +27,6 @@ class SHORT_CIRCUIT_SOLVER
         UNITS_OPTION get_units_of_currents_and_voltages();
         void set_coordinates_of_currents_and_voltages(COORDINATES_OPTION option);
         COORDINATES_OPTION get_coordinates_of_currents_and_voltages();
-        void set_import_device_parameter_from_dynamic_model_flag(bool flag);
-        bool get_import_device_parameter_from_dynamic_model_flag();
-
 
         void set_consider_load_logic(bool logic);
         bool get_consider_load_logic();
@@ -44,7 +41,6 @@ class SHORT_CIRCUIT_SOLVER
         bool is_line_fault();
         bool is_fault();
         FAULT_TYPE get_fault_type();
-
 
         void build_sequence_network();
 
@@ -94,7 +90,6 @@ class SHORT_CIRCUIT_SOLVER
         void update_internal_voltage_of_all_generators_and_wt_generators();
         void update_all_motor_load_data();
         void updata_all_wt_generator_motor_data();
-        void update_voltage_with_dc_lines_and_vsc_hvdcs();
 
         void update_node_voltages_with_devices_equivalent_to_source();
         void add_generators_to_injection_current_vector();
@@ -144,10 +139,10 @@ class SHORT_CIRCUIT_SOLVER
 
         COMPLEX3 convert_sequence_data_to_phase_data(complex<double> pos, complex<double> neg, complex<double> zero);
 
-        string get_formatted_information1(unsigned int bus,string ID,complex<double> F1, complex<double>F2, complex<double> F0, bool to_file=false);
-        string get_formatted_information1(string str, complex<double> F1, complex<double> F2, complex<double> F0, bool to_file=false);
-        string get_formatted_information2(string busname,double Vbase, complex<double> F1, complex<double>F2, complex<double> F0, bool to_file=false);
-        string get_formatted_information2(string str, complex<double> F1, complex<double> F2, complex<double> F0, bool to_file=false);
+        string get_formatted_sequence_data(unsigned int bus,string ID,complex<double> F1, complex<double>F2, complex<double> F0, bool to_file=false);
+        string get_formatted_sequence_data(string str, complex<double> F1, complex<double> F2, complex<double> F0, bool to_file=false);
+        string get_formatted_phase_data(string busname,double Vbase, complex<double> F1, complex<double>F2, complex<double> F0, bool to_file=false);
+        string get_formatted_phase_data(string str, complex<double> F1, complex<double> F2, complex<double> F0, bool to_file=false);
 
         STEPS* toolkit;
 
@@ -162,8 +157,6 @@ class SHORT_CIRCUIT_SOLVER
         complex<double> If1, If2, If0;
         complex<double> Z1, Z2, Z0;
 
-        // equivalent impedance between bus and fault place
-        // order by internal bus
         vector<complex<double> > Z1_between_internal_bus_to_fault_place, Z2_between_internal_bus_to_fault_place, Z0_between_internal_bus_to_fault_place;
 
         FAULT fault;
@@ -171,8 +164,6 @@ class SHORT_CIRCUIT_SOLVER
         vector<LINE*> lineptrs_of_mutual_with_line_fault;
 
         vector<complex<double> > injection_current_vector_with_internal_order;
-
-        bool import_device_parameter_from_dynamic_model_flag;
 };
 
 #endif // SHORT_CIRCUIT_SOLVER_H
