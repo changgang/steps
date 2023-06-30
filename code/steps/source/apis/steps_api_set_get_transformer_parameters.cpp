@@ -307,6 +307,22 @@ double api_get_transformer_float_data(unsigned int ibus, unsigned int jbus, unsi
                 return abs(transptr->get_winding_zero_sequence_complex_current_in_kA(winding));
             if(PARAMETER_NAME=="I0_PU" or PARAMETER_NAME=="ZERO CURRENT IN PU")
                 return abs(transptr->get_winding_zero_sequence_complex_current_in_pu(winding));
+
+            if(PARAMETER_NAME=="I1_ANGLE_RAD" or PARAMETER_NAME=="POSITIVE ANGLE IN RAD" or PARAMETER_NAME=="ANGLE_RAD" or PARAMETER_NAME=="ANGLE IN RAD")
+                return arg(steps_fast_complex_abs(transptr->get_winding_complex_current_in_pu(winding)));
+            if(PARAMETER_NAME=="I1_ANGLE_DEG" or PARAMETER_NAME=="POSITIVE ANGLE IN DEG" or PARAMETER_NAME=="ANGLE_DEG" or PARAMETER_NAME=="ANGLE IN DEG")
+                return rad2deg(arg(steps_fast_complex_abs(transptr->get_winding_complex_current_in_pu(winding))));
+
+            if(PARAMETER_NAME=="I2_ANGLE_RAD" or PARAMETER_NAME=="NEGATIVE ANGLE IN RAD")
+                return arg(steps_fast_complex_abs(transptr->get_winding_negative_sequence_complex_current_in_pu(winding)));
+            if(PARAMETER_NAME=="I2_ANGLE_DEG" or PARAMETER_NAME=="NEGATIVE ANGLE IN DEG")
+                return rad2deg(arg(steps_fast_complex_abs(transptr->get_winding_negative_sequence_complex_current_in_pu(winding))));
+
+            if(PARAMETER_NAME=="I0_ANGLE_RAD" or PARAMETER_NAME=="ZERO ANGLE IN RAD")
+                return arg(steps_fast_complex_abs(transptr->get_winding_zero_sequence_complex_current_in_pu(winding)));
+            if(PARAMETER_NAME=="I0_ANGLE_DEG" or PARAMETER_NAME=="ZERO ANGLE IN DEG")
+                return rad2deg(arg(steps_fast_complex_abs(transptr->get_winding_zero_sequence_complex_current_in_pu(winding))));
+
         }
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return 0.0;

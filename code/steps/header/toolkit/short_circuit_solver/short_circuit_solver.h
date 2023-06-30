@@ -37,6 +37,7 @@ class SHORT_CIRCUIT_SOLVER
 
         void set_bus_fault(unsigned int bus, FAULT_TYPE type, const complex<double>& fault_shunt);
         void set_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location, FAULT_TYPE fault_type, const complex<double>& fault_shunt);
+        void clear_fault();
         bool is_bus_fault();
         bool is_line_fault();
         bool is_fault();
@@ -83,6 +84,7 @@ class SHORT_CIRCUIT_SOLVER
         void save_zero_sequence_Y_matrix_to_file(const string& filename);
     private:
         void store_bus_initial_voltage_before_short_circuit();
+        void restore_bus_initial_voltage();
 
         complex<double> get_initial_voltage_of_bus_before_short_circuit(unsigned int bus);
         complex<double> get_initial_voltage_of_faulted_line_point_before_short_circuit();

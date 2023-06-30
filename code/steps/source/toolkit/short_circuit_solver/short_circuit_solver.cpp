@@ -102,6 +102,26 @@ void SHORT_CIRCUIT_SOLVER::store_bus_initial_voltage_before_short_circuit()
         bus_initial_voltage_before_short_circuit.push_back(V);
     }
 }
+
+void SHORT_CIRCUIT_SOLVER::restore_bus_initial_voltage()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<BUS*> buses = psdb.get_all_buses();
+    unsigned int n = buses.size();
+    for(unsigned int i=0; i<n; i++)
+    {
+        BUS* busptr = buses[i];
+        unsigned int bus = busptr->get_bus_number();
+        complex<double> V = get_initial_voltage_of_bus_before_short_circuit(bus);
+        busptr->set_positive_sequence_voltage_in_pu(abs(V));
+        busptr->set_positive_sequence_angle_in_rad(arg(V));
+        busptr->set_negative_sequence_voltage_in_pu(0.0);
+        busptr->set_negative_sequence_angle_in_rad(0.0);
+        busptr->set_zero_sequence_voltage_in_pu(0.0);
+        busptr->set_zero_sequence_angle_in_rad(0.0);
+    }
+}
+
 complex<double> SHORT_CIRCUIT_SOLVER::get_initial_voltage_of_bus_before_short_circuit(unsigned int bus)
 {
     if(bus > bus_initial_voltage_before_short_circuit.size())
@@ -647,6 +667,28 @@ void SHORT_CIRCUIT_SOLVER::set_line_fault(const DEVICE_ID& line_id, unsigned int
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
+
+void SHORT_CIRCUIT_SOLVER::clear_fault()
+{
+    if(is_bus_fault())
+        faulted_bus_pointer->clear_fault();
+    else
+        faulted_line_pointer->clear_all_faults();
+    faulted_bus_pointer = NULL;
+    faulted_line_pointer = NULL;
+    fault.clear();
+    If1 = 0.0;
+    If2 = 0.0;
+    If0 = 0.0;
+    Z1 = 0.0;
+    Z2 = 0.0;
+    Z0 = 0.0;
+    Z1_between_internal_bus_to_fault_place.clear();
+    Z2_between_internal_bus_to_fault_place.clear();
+    Z0_between_internal_bus_to_fault_place.clear();
+    restore_bus_initial_voltage();
+}
+
 
 string SHORT_CIRCUIT_SOLVER::get_fault_information()
 {
@@ -2026,13 +2068,13 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
 
         if(coordinate==RECTANGULAR)
         {
-            file<<"SEQUENCE,"<<V_unit<<right<<",RE(V0)"<<",IM(V0),RE(V+),IM(V+),RE(V-),IM(V-),RE(3V0),IM(3V0)"<<endl;
+            file<<"SEQUENCE,"<<V_unit<<right<<",RE(V0),IM(V0),RE(V+),IM(V+),RE(V-),IM(V-),RE(3V0),IM(3V0)"<<endl;
             file<<"PHASE,\t,RE(VA),IM(VA),RE(VB),IM(VB),RE(VC),IM(VC)"<<endl;
         }
         else if(coordinate==POLAR)
         {
             file<<"SEQUENCE,"<<V_unit<<",/V0/,AN(V0),/V+/,AN(V+),/V-/,AN(V-),/3V0/,AN(3V0)"<<endl;
-            file<<"PHASE,\t,RE(VA),IM(VA),RE(VB),IM(VB),RE(VC),IM(VC)"<<endl;
+            file<<"PHASE,\t,/VA/,AN(VA),/VB/,AN(VB),/VC/,AN(VC)"<<endl;
         }
 
         complex<double> V1, V2, V0;
@@ -2053,13 +2095,13 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
 
         if(coordinate==RECTANGULAR)
         {
-            file<<"SEQUENCE,"<<I_unit<<",RE(I0)"<<",IM(I0),RE(I+),IM(I+),RE(I-),IM(I-),RE(3I0),IM(3I0)"<<endl;
+            file<<"SEQUENCE,"<<I_unit<<",RE(I0),IM(I0),RE(I+),IM(I+),RE(I-),IM(I-),RE(3I0),IM(3I0)"<<endl;
             file<<"PHASE,\t,RE(IA),IM(IA),RE(IB),IM(IB),RE(IC),IM(IC)"<<endl;
         }
         else if(coordinate==POLAR)
         {
             file<<"SEQUENCE,"<<I_unit<<",/I0/,AN(I0),/I+/,AN(I+),/I-/,AN(I-),/3I0/,AN(3I0)"<<endl;
-            file<<"PHASE,\t,RE(IA),IM(IA),RE(IB),IM(IB),RE(IC),IM(IC)"<<endl;
+            file<<"PHASE,\t,/IA/,AN(IA),/IB/,AN(IB),/IC/,AN(IC)"<<endl;
         }
 
         vector<LINE*> lines = psdb.get_lines_connecting_to_bus(fault_bus);
@@ -2407,7 +2449,7 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_line_fault(con
         else if(coordinate==POLAR)
         {
             file<<"SEQUENCE,"<<V_unit<<",/V0/,AN(V0),/V+/,AN(V+),/V-/,AN(V-),/3V0/,AN(3V0)"<<endl;
-            file<<"PHASE,\t,RE(VA),IM(VA),RE(VB),IM(VB),RE(VC),IM(VC)"<<endl;
+            file<<"PHASE,\t,/VA/,AN(VA),/VB/,AN(VB),/VC/,AN(VC)"<<endl;
         }
 
         complex<double> V1, V2, V0;
@@ -2435,7 +2477,7 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_line_fault(con
         else if(coordinate==POLAR)
         {
             file<<"SEQUENCE,"<<I_unit<<",/I0/,AN(I0),/I+/,AN(I+),/I-/,AN(I-),/3I0/,AN(3I0)"<<endl;
-            file<<"PHASE,\t,RE(IA),IM(IA),RE(IB),IM(IB),RE(IC),IM(IC)"<<endl;
+            file<<"PHASE,\t,/VA/,AN(VA),/VB/,AN(VB),/VC/,AN(VC)"<<endl;
         }
 
 
@@ -2563,7 +2605,7 @@ void SHORT_CIRCUIT_SOLVER::save_extended_short_circuit_result_to_file(const stri
             else if(coordinate==POLAR)
             {
                 file<<"SEQUENCE,"<<V_unit<<",/V0/,AN(V0),/V+/,AN(V+),/V-/,AN(V-),/3V0/,AN(3V0)"<<endl;
-                file<<"PHASE,\t,RE(VA),IM(VA),RE(VB),IM(VB),RE(VC),IM(VC)"<<endl;
+                file<<"PHASE,\t,/VA/,AN(VA),/VB/,AN(VB),/VC/,AN(VC)"<<endl;
             }
 
             BUS& bus = *(buses[i]);
@@ -2592,7 +2634,7 @@ void SHORT_CIRCUIT_SOLVER::save_extended_short_circuit_result_to_file(const stri
             else if(coordinate==POLAR)
             {
                 file<<"SEQUENCE,"<<I_unit<<",/I0/,AN(I0),/I+/,AN(I+),/V-/,AN(I-),/3I0/,AN(3I0)"<<endl;
-                file<<"PHASE,\t,RE(IA),IM(IA),RE(IB),IM(IB),RE(IC),IM(IC)"<<endl;
+                file<<"PHASE,\t,/IA/,AN(IA),/IB/,AN(IB),/IC/,AN(IC)"<<endl;
             }
             unsigned int busnum = bus.get_bus_number();
             vector<LINE*> lines = psdb.get_lines_connecting_to_bus(busnum);

@@ -54,6 +54,19 @@ double api_get_generator_sequence_float_data(unsigned int bus, char* identifier,
     if(PARAMETER_NAME=="I0_KA" or "ZERO SEQUENCE CURRENT IN KA")
         return abs(generator->get_zero_sequence_complex_current_in_kA());
 
+    if(PARAMETER_NAME=="ANGLE_RAD" or PARAMETER_NAME=="ANGLE IN RAD" or PARAMETER_NAME=="POSITIVE ANGLE IN RAD")
+        return arg(generator->get_positive_sequence_complex_current_in_pu());
+    if(PARAMETER_NAME=="ANGLE_DEG" or PARAMETER_NAME=="ANGLE IN DEG" or PARAMETER_NAME=="POSITIVE ANGLE IN DEG")
+        return rad2deg(arg(generator->get_positive_sequence_complex_current_in_pu()));
+    if(PARAMETER_NAME=="NEGATIVE_ANGLE_RAD" or PARAMETER_NAME=="NEGATIVE ANGLE IN RAD")
+        return arg(generator->get_negative_sequence_complex_current_in_pu());
+    if(PARAMETER_NAME=="NEGATIVE_ANGLE_DEG" or PARAMETER_NAME=="NEGATIVE ANGLE IN DEG")
+        return rad2deg(arg(generator->get_negative_sequence_complex_current_in_pu()));
+    if(PARAMETER_NAME=="ZERO_ANGLE_RAD" or PARAMETER_NAME=="ZERO ANGLE IN RAD")
+        return arg(generator->get_zero_sequence_complex_current_in_pu());
+    if(PARAMETER_NAME=="ZERO_ANGLE_DEG" or PARAMETER_NAME=="ZERO ANGLE IN DEG")
+        return rad2deg(arg(generator->get_zero_sequence_complex_current_in_pu()));
+
     show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
 
 }

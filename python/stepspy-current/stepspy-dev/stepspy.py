@@ -5806,6 +5806,20 @@ class STEPS():
         STEPS_LIB.api_trip_bus(bus, self.toolkit_index)
         return
 
+    def clear_short_circuit_fault(self):	
+        """	
+        	
+        Args:	
+            (1) bus: Bus number.	
+        Rets: N/A	
+        Example:	
+            bus = 1	
+            simulator.trip_bus(bus)	
+        """	
+        global STEPS_LIB	
+        STEPS_LIB.api_short_circuit_clear_fault(self.toolkit_index)	
+        return
+
     def set_line_fault(self, line, fault_type, fault_location, fault_shunt):
         """
         Set transmission line fault.

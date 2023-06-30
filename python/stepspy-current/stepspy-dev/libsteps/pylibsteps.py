@@ -802,6 +802,9 @@ def load_library():
     libsteps.api_short_circuit_set_bus_fault.restype = None
     libsteps.api_short_circuit_set_bus_fault.argtypes = (c_uint, c_char_p, c_double, c_double, c_uint)
 
+    libsteps.api_short_circuit_clear_fault.restype = None	
+    libsteps.api_short_circuit_clear_fault.argtype = (c_uint)
+
     libsteps.api_set_line_fault.restype = None
     libsteps.api_set_line_fault.argtypes = (c_uint, c_uint, c_char_p, c_char_p, c_double, c_double, c_double, c_uint)
     libsteps.api_clear_line_fault.restype = None

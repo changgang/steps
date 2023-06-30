@@ -281,6 +281,13 @@ void api_short_circuit_set_line_fault(unsigned int ibus, unsigned int jbus, char
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
+void api_short_circuit_clear_fault(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    solver.clear_fault();
+}
+
 void api_solve_short_circuit(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

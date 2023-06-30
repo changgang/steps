@@ -378,6 +378,7 @@ EXPORT_STEPS_DLL void api_set_short_circuit_solver_boolean_parameter(char* param
 EXPORT_STEPS_DLL bool api_get_short_circuit_solver_boolean_parameter(char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_short_circuit_set_bus_fault(unsigned int bus, char* fault_type, double fault_G, double fault_B, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_short_circuit_set_line_fault(unsigned int ibus, unsigned int jbus, char* identifier, char* fault_type, double fault_location, double fault_G, double fault_B, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_short_circuit_clear_fault(unsigned int toolkit_index);
 EXPORT_STEPS_DLL void api_solve_short_circuit(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_short_circuit_result_float_data(char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_show_short_circuit_result(unsigned int toolkit_index=INDEX_NOT_EXIST);

@@ -14,12 +14,12 @@ int main()
     PSSE_IMEXPORTER importer(default_toolkit);
     importer.set_supplement_sequence_model_from_dynamic_model_logic(false);
 
-    importer.load_powerflow_data("../../../bench/IEEE9.raw");
-    importer.load_sequence_data("../../../bench/IEEE9.seq");
+//    importer.load_powerflow_data("../../../bench/IEEE9.raw");
+//    importer.load_sequence_data("../../../bench/IEEE9.seq");
  //   importer.load_dynamic_data("../../../bench/IEEE9_detail.dyr");
 
-//    importer.load_powerflow_data("../../../bench/IEEE39.raw");
-//    importer.load_sequence_data("../../../bench/IEEE39.seq");
+    importer.load_powerflow_data("../../../bench/IEEE39.raw");
+    importer.load_sequence_data("../../../bench/IEEE39.seq");
 
 //    importer.load_powerflow_data("../../../bench/example_grid.raw");
 //    importer.load_sequence_data("../../../bench/example_grid.seq");
@@ -48,11 +48,21 @@ int main()
     sc_solver.set_option_of_DC_lines(BLOCK_AND_IGNORE);
 
 
-   sc_solver.set_bus_fault(6, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
-
 //    DEVICE_ID did = get_line_device_id(1, 2, "1");
 //    sc_solver.set_line_fault(did, 1, 0.3, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
 
+
+    sc_solver.set_bus_fault(6, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
+    sc_solver.solve();
+    sc_solver.show_short_circuit_result();
+
+    sc_solver.clear_fault();
+    sc_solver.set_bus_fault(7, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
+    sc_solver.solve();
+    sc_solver.show_short_circuit_result();
+
+    sc_solver.clear_fault();
+    sc_solver.set_bus_fault(8, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
     sc_solver.solve();
     sc_solver.show_short_circuit_result();
 

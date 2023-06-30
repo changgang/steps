@@ -152,9 +152,9 @@ double api_get_line_float_data(unsigned int ibus, unsigned int jbus, char* ident
         if(PARAMETER_NAME=="QRECV_MVAR")
             return lineptr->get_line_complex_power_at_receiving_side_in_MVA().imag();
 
-        if(PARAMETER_NAME=="ISEND_KA")
+        if(PARAMETER_NAME=="ISEND_KA" or PARAMETER_NAME=="I1SEND_KA")
             return abs(lineptr->get_line_complex_current_at_sending_side_in_kA());
-        if(PARAMETER_NAME=="IRECV_KA")
+        if(PARAMETER_NAME=="IRECV_KA" or PARAMETER_NAME=="I1RECV_KA")
             return abs(lineptr->get_line_complex_current_at_receiving_side_in_kA());
 
         if(PARAMETER_NAME=="I2SEND_KA")
@@ -166,6 +166,48 @@ double api_get_line_float_data(unsigned int ibus, unsigned int jbus, char* ident
             return abs(lineptr->get_line_zero_sequence_complex_current_at_sending_side_in_kA());
         if(PARAMETER_NAME=="I0RECV_KA")
             return abs(lineptr->get_line_zero_sequence_complex_current_at_receiving_side_in_kA());
+
+        if(PARAMETER_NAME=="ISEND_PU" or PARAMETER_NAME=="I1SEND_PU")
+            return abs(lineptr->get_line_complex_current_at_sending_side_in_pu());
+        if(PARAMETER_NAME=="IRECV_PU" or PARAMETER_NAME=="I1RECV_PU")
+            return abs(lineptr->get_line_complex_current_at_receiving_side_in_pu());
+
+        if(PARAMETER_NAME=="I2SEND_PU")
+            return abs(lineptr->get_line_negative_sequence_complex_current_at_sending_side_in_pu());
+        if(PARAMETER_NAME=="I2RECV_PU")
+            return abs(lineptr->get_line_negative_sequence_complex_current_at_receiving_side_in_pu());
+
+        if(PARAMETER_NAME=="I0SEND_PU")
+            return abs(lineptr->get_line_zero_sequence_complex_current_at_sending_side_in_pu());
+        if(PARAMETER_NAME=="I0RECV_PU")
+            return abs(lineptr->get_line_zero_sequence_complex_current_at_receiving_side_in_pu());
+
+        if(PARAMETER_NAME=="ISEND_ANGLE_IN_RAD" or PARAMETER_NAME=="I1SEND_ANGLE_IN_RAD")
+            return arg(lineptr->get_line_complex_current_at_sending_side_in_pu());
+        if(PARAMETER_NAME=="IRECV_ANGLE_IN_RAD" or PARAMETER_NAME=="I1RECV_ANGLE_IN_RAD")
+            return arg(lineptr->get_line_complex_current_at_receiving_side_in_pu());
+        if(PARAMETER_NAME=="ISEND_ANGLE_IN_DEG" or PARAMETER_NAME=="I1SEND_ANGLE_IN_DEG")
+            return rad2deg(arg(lineptr->get_line_complex_current_at_sending_side_in_pu()));
+        if(PARAMETER_NAME=="IRECV_ANGLE_IN_DEG" or PARAMETER_NAME=="I1RECV_ANGLE_IN_DEG")
+            return rad2deg(arg(lineptr->get_line_complex_current_at_receiving_side_in_pu()));
+
+        if(PARAMETER_NAME=="I2SEND_ANGLE_IN_RAD")
+            return arg(lineptr->get_line_negative_sequence_complex_current_at_sending_side_in_pu());
+        if(PARAMETER_NAME=="I2RECV_ANGLE_IN_RAD")
+            return arg(lineptr->get_line_negative_sequence_complex_current_at_receiving_side_in_pu());
+        if(PARAMETER_NAME=="I2SEND_ANGLE_IN_DEG")
+            return rad2deg(arg(lineptr->get_line_negative_sequence_complex_current_at_sending_side_in_pu()));
+        if(PARAMETER_NAME=="I2RECV_ANGLE_IN_DEG")
+            return rad2deg(arg(lineptr->get_line_negative_sequence_complex_current_at_receiving_side_in_pu()));
+
+        if(PARAMETER_NAME=="I0SEND_ANGLE_IN_RAD")
+            return arg(lineptr->get_line_zero_sequence_complex_current_at_sending_side_in_pu());
+        if(PARAMETER_NAME=="I0RECV_ANGLE_IN_RAD")
+            return arg(lineptr->get_line_zero_sequence_complex_current_at_receiving_side_in_pu());
+        if(PARAMETER_NAME=="I0SEND_ANGLE_IN_DEG")
+            return rad2deg(arg(lineptr->get_line_zero_sequence_complex_current_at_sending_side_in_pu()));
+        if(PARAMETER_NAME=="I0RECV_ANGLE_IN_DEG")
+            return rad2deg(arg(lineptr->get_line_zero_sequence_complex_current_at_receiving_side_in_pu()));
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return 0.0;
