@@ -27,6 +27,10 @@ class SHORT_CIRCUIT_SOLVER
         UNITS_OPTION get_units_of_currents_and_voltages();
         void set_coordinates_of_currents_and_voltages(COORDINATES_OPTION option);
         COORDINATES_OPTION get_coordinates_of_currents_and_voltages();
+        void set_max_iteration_cout_for_iterative_method(unsigned int n);
+        unsigned int get_max_iteration_count_for_iterative_method();
+        void set_voltage_threshold_for_iterative_method(double threshold);
+        double get_voltage_threshold_for_iterative_method();
 
         void set_consider_load_logic(bool logic);
         bool get_consider_load_logic();
@@ -70,6 +74,8 @@ class SHORT_CIRCUIT_SOLVER
         complex<double> get_zero_sequence_short_circuit_capacity_in_pu();
 
         void solve();
+        void solve_with_iteration();
+
         complex<double> get_initial_voltage_of_fault_location_before_short_circuit();
 
         void show_short_circuit_result();
@@ -90,6 +96,8 @@ class SHORT_CIRCUIT_SOLVER
         complex<double> get_initial_voltage_of_faulted_line_point_before_short_circuit();
 
         void update_internal_voltage_of_all_generators_and_wt_generators();
+        void update_internal_voltage_of_all_generators();
+        void update_internal_voltage_of_all_wt_generators();
         void update_all_motor_load_data();
         void updata_all_wt_generator_motor_data();
 
@@ -105,6 +113,8 @@ class SHORT_CIRCUIT_SOLVER
         void add_hvdcs_to_injection_current_vector();
         void add_vsc_hvdcs_to_injection_current_vector();
         void update_voltages_with_current_vector();
+        void add_wt_generators_to_injection_current_vector_for_iterative_method();
+        void add_pv_units_to_injection_current_vector_for_iterative_method();
 
 
         void calculate_and_store_equivalent_impedance_between_bus_and_fault_place();
@@ -166,6 +176,9 @@ class SHORT_CIRCUIT_SOLVER
         vector<LINE*> lineptrs_of_mutual_with_line_fault;
 
         vector<complex<double> > injection_current_vector_with_internal_order;
+
+        unsigned int max_iteration_count;
+        double voltage_threshold_in_pu_for_iterative_method;
 };
 
 #endif // SHORT_CIRCUIT_SOLVER_H

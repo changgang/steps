@@ -128,7 +128,10 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void load_constant_speed_wtg_seq_data(WT_GENERATOR& wt_gen, vector<string>& data);
         void load_doubly_fed_wtg_seq_data(WT_GENERATOR& wt_gen, vector<string>& data);
         void load_direct_driven_wtg_seq_data(WT_GENERATOR& wt_gen, vector<string>& data);
+        void load_wt_generator_LVRT_data_for_iterative_method(WT_GENERATOR& wt_generator, vector<string>& data);
         void load_pv_unit_seq_data(PV_UNIT& pv_unit, vector<string>& data);
+        void load_pv_unit_seq_data_for_non_iterative_method(PV_UNIT& pv_unit, vector<string>& data);
+        void load_pv_unit_LVRT_data_for_iterative_method(PV_UNIT& pv_unit, vector<string>& data);
         void load_energy_storage_seq_data(ENERGY_STORAGE& estorage, vector<string>& data);
         void load_load_seq_data();
         void load_static_load_seq_data(LOAD& load, vector<string>& data);

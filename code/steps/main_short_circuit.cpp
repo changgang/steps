@@ -52,27 +52,35 @@ int main()
 //    sc_solver.set_line_fault(did, 1, 0.3, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
 
 
-    sc_solver.set_bus_fault(6, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
-    sc_solver.solve();
-    sc_solver.show_short_circuit_result();
-
-    sc_solver.clear_fault();
-    sc_solver.set_bus_fault(7, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
-    sc_solver.solve();
-    sc_solver.show_short_circuit_result();
-
-    sc_solver.clear_fault();
-    sc_solver.set_bus_fault(8, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
-    sc_solver.solve();
-    sc_solver.show_short_circuit_result();
+//    sc_solver.set_bus_fault(6, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
+//    sc_solver.solve();
+//    sc_solver.show_short_circuit_result();
+//
+//    sc_solver.clear_fault();
+//    sc_solver.set_bus_fault(7, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
+//    sc_solver.solve();
+//    sc_solver.show_short_circuit_result();
+//
+//    sc_solver.clear_fault();
+//    sc_solver.set_bus_fault(8, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
+//    sc_solver.solve();
+//    sc_solver.show_short_circuit_result();
 
 //    importer.export_sequence_data("IEEE9.seq");
 //
-    sc_solver.save_positive_sequence_Y_matrix_to_file("positive_sequence_Y.csv");
-    sc_solver.save_negative_sequence_Y_matrix_to_file("negative_sequence_Y.csv");
-    sc_solver.save_zero_sequence_Y_matrix_to_file("zero_sequence_Y.csv");
+//    sc_solver.save_positive_sequence_Y_matrix_to_file("positive_sequence_Y.csv");
+//    sc_solver.save_negative_sequence_Y_matrix_to_file("negative_sequence_Y.csv");
+//    sc_solver.save_zero_sequence_Y_matrix_to_file("zero_sequence_Y.csv");
 //    sc_solver.save_short_circuit_result_to_file("short_circuit_result.csv");
 //    sc_solver.save_extended_short_circuit_result_to_file("extended_short_circuit_result.csv");
+
+
+    sc_solver.set_max_iteration_cout_for_iterative_method(10);
+    sc_solver.set_voltage_threshold_for_iterative_method(0.001);
+
+    sc_solver.set_bus_fault(6, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
+    sc_solver.solve_with_iteration();
+    sc_solver.show_short_circuit_result();
 
     return 0;
 }

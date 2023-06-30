@@ -168,7 +168,7 @@ void STEPS_IMEXPORTER::load_source_seq_data()
                     continue;
                 }
 
-                if(data.size()==13 or false or false)   // change "false' to number of constant speed wtg and doubly fed wtg ...
+                if(data.size()==13 or data.size()==6 or false)   // change "false' to number of constant speed wtg and doubly fed wtg ...
                 {
                     load_wt_generator_seq_data(*wt_generator, data);
                     wt_generator->set_sequence_parameter_import_flag(true);
@@ -195,7 +195,7 @@ void STEPS_IMEXPORTER::load_source_seq_data()
                     continue;
                 }
 
-                if(data.size()==0 or true)
+                if(data.size()==11 or data.size()==6)
                 {
                     load_pv_unit_seq_data(*pv_unit, data);
                     pv_unit->set_sequence_parameter_import_flag(true);
@@ -388,7 +388,6 @@ void STEPS_IMEXPORTER::load_wt_generator_seq_data(WT_GENERATOR& wt_generator, ve
     {
         case 1:
             load_constant_speed_wtg_seq_data(wt_generator, data);
-            return;
             break;
         case 2:
             load_doubly_fed_wtg_seq_data(wt_generator, data);
@@ -396,103 +395,36 @@ void STEPS_IMEXPORTER::load_wt_generator_seq_data(WT_GENERATOR& wt_generator, ve
         case 3:
             load_direct_driven_wtg_seq_data(wt_generator, data);
             break;
+        case 4:
+            wt_generator.set_wt_generator_type(CONSTANT_SPEED_WT_GENERATOR);
+            load_wt_generator_LVRT_data_for_iterative_method(wt_generator, data);
+            break;
+        case 5:
+            wt_generator.set_wt_generator_type(DOUBLY_FED_WT_GENERATOR);
+            load_wt_generator_LVRT_data_for_iterative_method(wt_generator, data);
+            break;
+        case 6:
+            wt_generator.set_wt_generator_type(DIRECT_DRIVEN_WT_GENERATOR);
+            load_wt_generator_LVRT_data_for_iterative_method(wt_generator, data);
+            break;
         default: load_direct_driven_wtg_seq_data(wt_generator, data);
         data.erase(data.begin());
-    }
-
-    if(data.size()>0)
-    {
-        R_pos = get_double_data(data[n], "0.0");
-        data.erase(data.begin());
-    }
-    if(R_pos == 0.0)
-        R_pos = wt_generator.get_source_impedance_in_pu().real();
-    wt_generator.set_positive_sequence_resistance_in_pu(R_pos);
-
-    if(data.size()>0)
-    {
-        X_pos_subtransient = get_double_data(data[n], "0.0");
-        data.erase(data.begin());
-    }
-    if(X_pos_subtransient == 0.0)
-        X_pos_subtransient = wt_generator.get_source_impedance_in_pu().imag();
-    wt_generator.set_positive_sequence_subtransient_reactance_in_pu(X_pos_subtransient);
-
-    if(data.size()>0)
-    {
-        X_pos_transient = get_double_data(data[n], "0.0");
-        data.erase(data.begin());
-    }
-    wt_generator.set_positive_sequence_transient_reactance_in_pu(X_pos_transient);
-
-    if(data.size()>0)
-    {
-        X_pos_sync = get_double_data(data[n], "0.0");
-        data.erase(data.begin());
-    }
-    wt_generator.set_positive_sequence_syncronous_reactance_in_pu(X_pos_sync);
-
-    if(data.size()>0)
-    {
-        R_neg = get_double_data(data[n], "0.0");
-        data.erase(data.begin());
-    }
-    wt_generator.set_negative_sequence_resistance_in_pu(R_neg);
-
-    if(data.size()>0)
-    {
-        X_neg = get_double_data(data[n], "0.0");
-        data.erase(data.begin());
-    }
-    wt_generator.set_negative_sequence_reactance_in_pu(X_neg);
-
-    if(data.size()>0)
-    {
-        R_zero = get_double_data(data[n], "0.0");
-        data.erase(data.begin());
-    }
-    wt_generator.set_zero_sequence_resistance_in_pu(R_zero);
-
-    if(data.size()>0)
-    {
-        X_zero = get_double_data(data[n], "0.0");
-        data.erase(data.begin());
-    }
-    wt_generator.set_zero_sequence_reactance_in_pu(X_zero);
-
-    if(data.size()>0)
-    {
-        unit_of_grounding_Z = get_integer_data(data[n], "0");
-        data.erase(data.begin());
-    }
-    if(data.size()>0)
-    {
-        R_ground = get_double_data(data[n], "0.0");
-        data.erase(data.begin());
-    }
-    if(data.size()>0)
-    {
-        X_ground = get_double_data(data[n], "0.0");
-        data.erase(data.begin());
-    }
-
-    if(unit_of_grounding_Z == 1)
-    {
-        wt_generator.set_grounding_resistance_in_pu(R_ground);
-        wt_generator.set_grounding_reactance_in_pu(X_ground);
-    }
-    else if(unit_of_grounding_Z == 2)
-    {
-        double mbase = wt_generator.get_mbase_in_MVA();
-        double U = psdb.get_bus_base_voltage_in_kV(wt_generator.get_source_bus());
-        double Zbase = U*U/mbase;
-        wt_generator.set_grounding_resistance_in_pu(R_ground/Zbase);
-        wt_generator.set_grounding_reactance_in_pu(X_ground/Zbase);
     }
 }
 
 void STEPS_IMEXPORTER::load_constant_speed_wtg_seq_data(WT_GENERATOR& wt_gen, vector<string>& data)
 {
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    double R_pos = 0.0, X_pos_subtransient = 0.0, X_pos_transient = 0.0, X_pos_sync = 0.0;
+    double R_neg = 0.0, X_neg = 0.0;
+    double R_zero = 0.0, X_zero = 0.0;
+    unsigned int unit_of_grounding_Z;
+    double R_ground = 0.0, X_ground = 0.0;
+    unsigned int type;
+
     wt_gen.set_wt_generator_type(CONSTANT_SPEED_WT_GENERATOR);
 
     double ratedVoltage, mbase, Ra, Xa, Xm, R1, X1, R2, X2, R0, X0;
@@ -567,8 +499,109 @@ void STEPS_IMEXPORTER::load_constant_speed_wtg_seq_data(WT_GENERATOR& wt_gen, ve
 
 void STEPS_IMEXPORTER::load_doubly_fed_wtg_seq_data(WT_GENERATOR& wt_gen, vector<string>& data)
 {
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    double R_pos = 0.0, X_pos_subtransient = 0.0, X_pos_transient = 0.0, X_pos_sync = 0.0;
+    double R_neg = 0.0, X_neg = 0.0;
+    double R_zero = 0.0, X_zero = 0.0;
+    unsigned int unit_of_grounding_Z;
+    double R_ground = 0.0, X_ground = 0.0;
+    unsigned int type;
+    unsigned int n = 0;
+
     wt_gen.set_wt_generator_type(DOUBLY_FED_WT_GENERATOR);
-    wt_gen.set_sequence_parameter_import_flag(true);
+
+    if(data.size()>0)
+    {
+        R_pos = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    if(R_pos == 0.0)
+        R_pos = wt_gen.get_source_impedance_in_pu().real();
+    wt_gen.set_positive_sequence_resistance_in_pu(R_pos);
+
+    if(data.size()>0)
+    {
+        X_pos_subtransient = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    if(X_pos_subtransient == 0.0)
+        X_pos_subtransient = wt_gen.get_source_impedance_in_pu().imag();
+    wt_gen.set_positive_sequence_subtransient_reactance_in_pu(X_pos_subtransient);
+
+    if(data.size()>0)
+    {
+        X_pos_transient = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_gen.set_positive_sequence_transient_reactance_in_pu(X_pos_transient);
+
+    if(data.size()>0)
+    {
+        X_pos_sync = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_gen.set_positive_sequence_syncronous_reactance_in_pu(X_pos_sync);
+
+    if(data.size()>0)
+    {
+        R_neg = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_gen.set_negative_sequence_resistance_in_pu(R_neg);
+
+    if(data.size()>0)
+    {
+        X_neg = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_gen.set_negative_sequence_reactance_in_pu(X_neg);
+
+    if(data.size()>0)
+    {
+        R_zero = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_gen.set_zero_sequence_resistance_in_pu(R_zero);
+
+    if(data.size()>0)
+    {
+        X_zero = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_gen.set_zero_sequence_reactance_in_pu(X_zero);
+
+    if(data.size()>0)
+    {
+        unit_of_grounding_Z = get_integer_data(data[n], "0");
+        data.erase(data.begin());
+    }
+    if(data.size()>0)
+    {
+        R_ground = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    if(data.size()>0)
+    {
+        X_ground = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+
+    if(unit_of_grounding_Z == 1)
+    {
+        wt_gen.set_grounding_resistance_in_pu(R_ground);
+        wt_gen.set_grounding_reactance_in_pu(X_ground);
+    }
+    else if(unit_of_grounding_Z == 2)
+    {
+        double mbase = wt_gen.get_mbase_in_MVA();
+        double U = psdb.get_bus_base_voltage_in_kV(wt_gen.get_source_bus());
+        double Zbase = U*U/mbase;
+        wt_gen.set_grounding_resistance_in_pu(R_ground/Zbase);
+        wt_gen.set_grounding_reactance_in_pu(X_ground/Zbase);
+    }
 }
 
 void STEPS_IMEXPORTER::load_direct_driven_wtg_seq_data(WT_GENERATOR& wt_gen, vector<string>& data)
@@ -582,11 +615,6 @@ void STEPS_IMEXPORTER::load_pv_unit_seq_data(PV_UNIT& pv_unit, vector<string>& d
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    double R_pos = 0.0, X_pos = 0.0;
-    double R_neg = 0.0, X_neg = 0.0;
-    double R_zero = 0.0, X_zero = 0.0;
-    unsigned int unit_of_grounding_Z;
-    double R_ground = 0.0, X_ground = 0.0;
     unsigned int n = 0;
 
     if(data.size()>0)
@@ -594,6 +622,38 @@ void STEPS_IMEXPORTER::load_pv_unit_seq_data(PV_UNIT& pv_unit, vector<string>& d
         // source type
         data.erase(data.begin());
     }
+
+    unsigned int type_of_pv;
+    if(data.size()>0)
+    {
+        type_of_pv = get_integer_data(data[n], "0");
+        data.erase(data.begin());
+    }
+
+    switch(type_of_pv)
+    {
+        case 1:
+            load_pv_unit_seq_data_for_non_iterative_method(pv_unit, data);
+            break;
+        case 2:
+            load_pv_unit_LVRT_data_for_iterative_method(pv_unit, data);
+            break;
+        default:break;
+    }
+}
+
+void STEPS_IMEXPORTER::load_pv_unit_seq_data_for_non_iterative_method(PV_UNIT& pv_unit, vector<string>& data)
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    double R_pos = 0.0, X_pos = 0.0;
+    double R_neg = 0.0, X_neg = 0.0;
+    double R_zero = 0.0, X_zero = 0.0;
+    unsigned int unit_of_grounding_Z;
+    double R_ground = 0.0, X_ground = 0.0;
+    unsigned int n = 0;
 
     if(data.size()>0)
     {
@@ -675,6 +735,81 @@ void STEPS_IMEXPORTER::load_pv_unit_seq_data(PV_UNIT& pv_unit, vector<string>& d
         pv_unit.set_grounding_resistance_in_pu(R_ground/Zbase);
         pv_unit.set_grounding_reactance_in_pu(X_ground/Zbase);
     }
+}
+
+void STEPS_IMEXPORTER::load_pv_unit_LVRT_data_for_iterative_method(PV_UNIT& pv_unit, vector<string>& data)
+{
+    double Kq =0.0;
+    double max_voltage_of_LVRT_in_pu = 0.0;
+    double min_voltage_of_LVRT_in_pu = 0.0;
+    double max_short_circuit_current_of_inverter_in_pu = 0.0;
+
+    unsigned int n=0;
+    if(data.size()>0)
+    {
+        Kq = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    pv_unit.set_support_coefficient_of_reactive_current_during_LVRT(Kq);
+
+    if(data.size()>0)
+    {
+        max_voltage_of_LVRT_in_pu = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    pv_unit.set_max_voltage_of_LVRT_strategy_in_pu(max_voltage_of_LVRT_in_pu);
+
+    if(data.size()>0)
+    {
+        min_voltage_of_LVRT_in_pu = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    pv_unit.set_min_voltage_of_LVRT_strategy_in_pu(min_voltage_of_LVRT_in_pu);
+
+    if(data.size()>0)
+    {
+        max_short_circuit_current_of_inverter_in_pu = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    pv_unit.set_max_short_circuit_current_of_inverter_in_pu(max_short_circuit_current_of_inverter_in_pu);
+}
+
+
+void STEPS_IMEXPORTER::load_wt_generator_LVRT_data_for_iterative_method(WT_GENERATOR& wt_generator, vector<string>& data)
+{
+    double Kq =0.0;
+    double max_voltage_of_LVRT_in_pu = 0.0;
+    double min_voltage_of_LVRT_in_pu = 0.0;
+    double max_short_circuit_current_of_inverter_in_pu = 0.0;
+
+    unsigned int n=0;
+    if(data.size()>0)
+    {
+        Kq = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_generator.set_support_coefficient_of_reactive_current_during_LVRT(Kq);
+
+    if(data.size()>0)
+    {
+        max_voltage_of_LVRT_in_pu = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_generator.set_max_voltage_of_LVRT_strategy_in_pu(max_voltage_of_LVRT_in_pu);
+
+    if(data.size()>0)
+    {
+        min_voltage_of_LVRT_in_pu = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_generator.set_min_voltage_of_LVRT_strategy_in_pu(min_voltage_of_LVRT_in_pu);
+
+    if(data.size()>0)
+    {
+        max_short_circuit_current_of_inverter_in_pu = get_double_data(data[n], "0.0");
+        data.erase(data.begin());
+    }
+    wt_generator.set_max_short_circuit_current_of_inverter_in_pu(max_short_circuit_current_of_inverter_in_pu);
 }
 
 void STEPS_IMEXPORTER::load_energy_storage_seq_data(ENERGY_STORAGE& estorage, vector<string>& data)

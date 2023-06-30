@@ -131,15 +131,26 @@ complex<double> SHORT_CIRCUIT_SOLVER::get_initial_voltage_of_bus_before_short_ci
 
 void SHORT_CIRCUIT_SOLVER::update_internal_voltage_of_all_generators_and_wt_generators()
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    update_internal_voltage_of_all_generators();
+    update_internal_voltage_of_all_wt_generators();
+}
 
+void SHORT_CIRCUIT_SOLVER::update_internal_voltage_of_all_generators()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<GENERATOR*> gens = psdb.get_all_generators();
+
     unsigned int n = gens.size();
     for(unsigned int i=0; i<n; i++)
         gens[i]->update_internal_voltage_for_short_circuit_solver();
+}
 
+void SHORT_CIRCUIT_SOLVER::update_internal_voltage_of_all_wt_generators()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<WT_GENERATOR*> wt_gens = psdb.get_all_wt_generators();
-    n = wt_gens.size();
+
+    unsigned int n = wt_gens.size();
     for(unsigned int i=0; i<n; i++)
         wt_gens[i]->update_internal_voltage_for_short_circuit_solver();
 }
@@ -272,6 +283,28 @@ void SHORT_CIRCUIT_SOLVER::add_wt_generators_to_injection_current_vector()
     }
 
 }
+
+void SHORT_CIRCUIT_SOLVER::add_wt_generators_to_injection_current_vector_for_iterative_method()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+
+    vector<WT_GENERATOR*> wt_gens = psdb.get_all_wt_generators();
+    unsigned int n = wt_gens.size();
+    for(unsigned int i=0; i<n; i++)
+    {
+        WT_GENERATOR* wt_gen = wt_gens[i];
+        if(wt_gen->get_status())
+        {
+            complex<double> Iinjection = wt_gen->get_complex_current_in_pu_during_LVRT();
+
+            unsigned int bus = wt_gen->get_generator_bus();
+            unsigned int b =  get_internal_bus_number_of_physical_bus(bus);
+
+            injection_current_vector_with_internal_order[b] += Iinjection;
+        }
+    }
+}
+
 void SHORT_CIRCUIT_SOLVER::add_constant_speed_wt_generator_to_vector(WT_GENERATOR& wt_gen)
 {
     // as induction machine
@@ -326,7 +359,7 @@ void SHORT_CIRCUIT_SOLVER::add_doubly_fed_wt_generator_to_vector(WT_GENERATOR& w
     }
 }
 
-void SHORT_CIRCUIT_SOLVER::add_pv_units_to_injection_current_vector()
+	void SHORT_CIRCUIT_SOLVER::add_pv_units_to_injection_current_vector()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
@@ -337,21 +370,46 @@ void SHORT_CIRCUIT_SOLVER::add_pv_units_to_injection_current_vector()
     {
         PV_UNIT* pv_unit = pv_units[i];
 
-        if(pv_unit->get_sequence_parameter_import_flag()==false)
-            continue;
+        if(pv_unit->get_status())
+        {
+            if(pv_unit->get_sequence_parameter_import_flag()==false)
+                continue;
 
-        unsigned int busn = pv_unit->get_source_bus();
-        complex<double> s = pv_unit->get_complex_generation_in_MVA();
+            unsigned int busn = pv_unit->get_source_bus();
+            complex<double> s = pv_unit->get_complex_generation_in_MVA();
 
-        BUS* busptr = pv_unit->get_bus_pointer();
-        complex<double> V = busptr->get_positive_sequence_complex_voltage_in_pu();
+            BUS* busptr = pv_unit->get_bus_pointer();
+            complex<double> V = busptr->get_positive_sequence_complex_voltage_in_pu();
 
-        complex<double> Iinjection = conj(s/sbase/V);
+            complex<double> Iinjection = conj(s/sbase/V);
 
-        unsigned int b = get_internal_bus_number_of_physical_bus(busn);
-        injection_current_vector_with_internal_order[b] += Iinjection;
+            unsigned int b = get_internal_bus_number_of_physical_bus(busn);
+            injection_current_vector_with_internal_order[b] += Iinjection;
+        }
     }
 }
+
+void SHORT_CIRCUIT_SOLVER::add_pv_units_to_injection_current_vector_for_iterative_method()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
+    unsigned int n = pv_units.size();
+    for(unsigned int i=0; i<n; i++)
+    {
+        PV_UNIT* pv_unit = pv_units[i];
+        if(pv_unit->get_status())
+        {
+            if(pv_unit->get_sequence_parameter_import_flag()==false)
+                continue;
+            unsigned int busn = pv_unit->get_source_bus();
+            complex<double> Iinjection = pv_unit->get_complex_current_in_pu_during_LVRT();
+            unsigned int b = get_internal_bus_number_of_physical_bus(busn);
+            injection_current_vector_with_internal_order[b] += Iinjection;
+        }
+    }
+}
+
 void SHORT_CIRCUIT_SOLVER::add_energy_storages_to_injection_current_vector()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -504,6 +562,26 @@ void SHORT_CIRCUIT_SOLVER::set_coordinates_of_currents_and_voltages(COORDINATES_
 COORDINATES_OPTION SHORT_CIRCUIT_SOLVER::get_coordinates_of_currents_and_voltages()
 {
     return coordindates_of_currents_and_volatges;
+}
+
+void SHORT_CIRCUIT_SOLVER::set_max_iteration_cout_for_iterative_method(unsigned int n)
+{
+    max_iteration_count = n;
+}
+
+unsigned int SHORT_CIRCUIT_SOLVER::get_max_iteration_count_for_iterative_method()
+{
+    return max_iteration_count;
+}
+
+void SHORT_CIRCUIT_SOLVER::set_voltage_threshold_for_iterative_method(double threshold)
+{
+    voltage_threshold_in_pu_for_iterative_method = threshold;
+}
+
+double SHORT_CIRCUIT_SOLVER::get_voltage_threshold_for_iterative_method()
+{
+    return voltage_threshold_in_pu_for_iterative_method;
 }
 
 void SHORT_CIRCUIT_SOLVER::set_consider_load_logic(bool logic)
@@ -1062,6 +1140,92 @@ void SHORT_CIRCUIT_SOLVER::solve()
     else
     {
         osstream<<"No fault has been set."<<endl;
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void SHORT_CIRCUIT_SOLVER::solve_with_iteration()
+{
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    unsigned int bus_count = psdb.get_bus_count();
+
+    initialize_short_circuit_solver();
+    build_sequence_network();
+
+    calculate_and_store_equivalent_impedance_between_bus_and_fault_place();
+    update_internal_voltage_of_all_generators();
+
+    unsigned int max_iteration = get_max_iteration_count_for_iterative_method();
+    double voltage_threshold_in_pu = get_voltage_threshold_for_iterative_method();
+
+    unsigned int iteration_count = 0;
+    bool converged_flag = false;
+    vector<complex<double> > voltages_of_last_iteration;
+    voltages_of_last_iteration.reserve(bus_count);
+
+    for(unsigned int i=0; i<bus_count; i++)
+    {
+        unsigned int bus = i+1;
+        complex<double> V = psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
+        voltages_of_last_iteration.push_back(V);
+    }
+
+    while(iteration_count < max_iteration)
+    {
+        iteration_count++;
+
+        injection_current_vector_with_internal_order.clear();
+        injection_current_vector_with_internal_order.reserve(bus_count);
+
+        for(unsigned int i=0; i<bus_count; i++)
+            injection_current_vector_with_internal_order.push_back(0.0);
+
+        add_generators_to_injection_current_vector();
+        add_wt_generators_to_injection_current_vector_for_iterative_method();
+        add_pv_units_to_injection_current_vector_for_iterative_method();
+        add_energy_storages_to_injection_current_vector();
+        add_motor_load_to_injection_vector();
+        add_hvdcs_to_injection_current_vector();
+        add_vsc_hvdcs_to_injection_current_vector();
+
+        update_voltages_with_current_vector();
+
+        complex<double> Uf = get_initial_voltage_of_fault_location_before_short_circuit();
+        solve_fault_current(Uf);
+
+        injection_current_vector_with_internal_order.reserve(bus_count);
+        for(unsigned int i=0; i<bus_count; i++)
+            injection_current_vector_with_internal_order.push_back(0.0);
+
+        update_bus_sequence_voltage();
+
+        double max_error = 0.0;
+        for(unsigned int i=0; i<bus_count; i++)
+        {
+            complex<double> V_this_iteration = psdb.get_bus_positive_sequence_complex_voltage_in_pu(i+1);
+            complex<double> V_last_iteration = voltages_of_last_iteration[i];
+            if(abs(V_this_iteration-V_last_iteration)>max_error)
+                max_error = abs(V_this_iteration-V_last_iteration);
+
+            voltages_of_last_iteration[i] = V_this_iteration;
+        }
+
+        if(max_error<voltage_threshold_in_pu)
+        {
+            converged_flag = true;
+            break;
+        }
+    }
+
+    if(converged_flag==false)
+    {
+        osstream<<"Iterative calculation of short-circuit current did not converge within "<<max_iteration<<" times."<<endl;
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+    else
+    {
+        osstream<<"Iterative calculation of short-circuit current converged within "<<iteration_count<<" times."<<endl;
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }

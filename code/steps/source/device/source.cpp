@@ -140,6 +140,25 @@ void SOURCE::set_source_impedance_in_pu(const complex<double>& z_pu)
     source_Z_pu = z_pu;
 }
 
+void SOURCE::set_support_coefficient_of_reactive_current_during_LVRT(double K)
+{
+    support_coefficient_of_reactive_current_during_LVRT = K;
+}
+
+void SOURCE::set_max_voltage_of_LVRT_strategy_in_pu(double v)
+{
+    max_voltage_of_LVRT_strategy_in_pu = v;
+}
+
+void SOURCE::set_min_voltage_of_LVRT_strategy_in_pu(double v)
+{
+    min_voltage_of_LVRT_strategy_in_pu = v;
+}
+
+void SOURCE::set_max_short_circuit_current_of_inverter_in_pu(double I)
+{
+    max_short_circuit_current_of_inverter_in_pu = I;
+}
 
 unsigned int SOURCE::get_source_bus() const
 {
@@ -229,6 +248,26 @@ complex<double> SOURCE::get_source_impedance_in_pu() const
     return source_Z_pu;
 }
 
+double SOURCE::get_support_coefficient_of_reactive_current_during_LVRT() const
+{
+    return support_coefficient_of_reactive_current_during_LVRT;
+}
+
+double SOURCE::get_max_voltage_of_LVRT_strategy_in_pu() const
+{
+    return max_voltage_of_LVRT_strategy_in_pu;
+}
+
+double SOURCE::get_min_voltage_of_LVRT_strategy_in_pu() const
+{
+    return min_voltage_of_LVRT_strategy_in_pu;
+}
+
+double SOURCE::get_max_short_circuit_current_of_inverter_in_pu() const
+{
+    return max_short_circuit_current_of_inverter_in_pu;
+}
+
 bool SOURCE::is_valid() const
 {
     if(get_source_bus()!=0)
@@ -279,6 +318,11 @@ void SOURCE::clear()
     set_voltage_to_regulate_in_pu(1.0);
     set_bus_to_regulate(0);
     set_source_impedance_in_pu(0.0);
+
+    set_support_coefficient_of_reactive_current_during_LVRT(0.0);
+    set_max_voltage_of_LVRT_strategy_in_pu(0.0);
+    set_min_voltage_of_LVRT_strategy_in_pu(0.0);
+    set_max_short_circuit_current_of_inverter_in_pu(0.0);
 }
 
 bool SOURCE::is_connected_to_bus(unsigned int bus) const
@@ -313,3 +357,55 @@ bool SOURCE::is_in_zone(unsigned int zone) const
         return false;
 }
 
+complex<double> SOURCE::get_complex_current_in_pu_during_LVRT()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    BUS* busptr = psdb.get_bus(get_source_bus());
+    double sbase = psdb.get_system_base_power_in_MVA();
+
+    double K = get_support_coefficient_of_reactive_current_during_LVRT();
+    double Vmax = get_max_voltage_of_LVRT_strategy_in_pu();
+    double Vmin = get_min_voltage_of_LVRT_strategy_in_pu();
+    double Imax = get_max_short_circuit_current_of_inverter_in_pu();
+
+    double V = busptr->get_positive_sequence_voltage_in_pu();
+    double deg_V = busptr->get_positive_sequence_angle_in_deg();
+    double P = get_p_generation_in_MW()/sbase;
+    double Q = get_q_generation_in_MVar()/sbase;
+    double mbase = get_mbase_in_MVA();
+    double In = mbase/sbase;
+
+    double Id = 0.0;
+    double Iq = 0.0;
+    if(V>=Vmax)
+    {
+        Id = P/V;
+        Iq = Q/V;
+    }
+    else if((V<Vmax)&&(V>Vmin))
+    {
+        Id = P/V;
+        Iq = Q/V + K*(Vmax-V)*In;
+
+        if((sqrt(Id*Id+Iq*Iq)>Imax*In)&&(Iq<Imax*In))
+        {
+            Id = sqrt(Imax*Imax-Iq*Iq);
+        }
+        else if(Iq>Imax*In)
+        {
+            Id = 0.0;
+            Iq = Imax*In;
+        }
+    }
+    else if(V<Vmin)
+    {
+        Id = 0.0;
+        Iq = 0.0;
+    }
+
+    double I = sqrt(Id*Id+Iq*Iq);
+    double theta = atan(Id/Iq)*180/PI + deg_V;
+
+    return complex<double> (I*cos(theta*PI/180), I*sin(theta*PI/1800));
+}
