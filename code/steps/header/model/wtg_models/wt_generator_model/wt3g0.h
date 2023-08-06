@@ -103,7 +103,7 @@ class WT3G0 : public WT_GENERATOR_MODEL
         FIRST_ORDER_BLOCK reactive_voltage_commander;
         double HVRCR_voltage, HVRCR_current;
 
-        double KPLL;
+        double KPLL, KIPLL;
         INTEGRAL_BLOCK PLL_frequency_integrator, PLL_angle_integrator;
 };
 

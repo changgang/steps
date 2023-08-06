@@ -101,7 +101,8 @@ void WT3G2::set_KPLL(double K)
 
 void WT3G2::set_KIPLL(double K)
 {
-    PLL_frequency_integrator.set_T_in_s(1.0/K);
+    KIPLL = K;
+    if(K!=0) PLL_frequency_integrator.set_T_in_s(1.0/K);
 }
 
 void WT3G2::set_PLLmax(double pmax)
@@ -152,7 +153,7 @@ double WT3G2::get_KPLL() const
 
 double WT3G2::get_KIPLL() const
 {
-    return 1.0/PLL_frequency_integrator.get_T_in_s();
+    return KIPLL;
 }
 
 double WT3G2::get_PLLmax() const
@@ -320,15 +321,6 @@ void WT3G2::initialize()
         double fbase = get_bus_base_frequency_in_Hz();
         double wbase = DOUBLE_PI*fbase;
 
-        double kipll = get_KIPLL();
-        if(kipll!=0.0)
-        {
-            PLL_frequency_integrator.set_T_in_s(1.0/kipll);
-            double pllmax = get_PLLmax();
-            PLL_frequency_integrator.set_upper_limit(pllmax);
-            PLL_frequency_integrator.set_lower_limit(-pllmax);
-        }
-
         PLL_angle_integrator.set_T_in_s(1.0/wbase);
 
         double mbase = get_mbase_in_MVA();
@@ -365,6 +357,7 @@ void WT3G2::initialize()
         set_initial_reactive_voltage_command_in_pu(EQ);
         set_initial_reactive_current_command_in_pu_based_on_mbase(IQ);
 
+        double kipll = get_KIPLL();
         if(kipll!=0.0)
         {
             PLL_frequency_integrator.set_output(0.0);
@@ -444,11 +437,14 @@ void WT3G2::run(DYNAMIC_MODE mode)
         double Vy = -Vr*steps_sin(angle)+Vi*steps_cos(angle);
 
         input = Vy*kpll/wbase;
-        PLL_frequency_integrator.set_input(input);
-        PLL_frequency_integrator.run(mode);
+        if(kipll!=0)
+        {
+            PLL_frequency_integrator.set_input(input);
+            PLL_frequency_integrator.run(mode);
 
-        double output = PLL_frequency_integrator.get_output();
-        input += output;
+            double output = PLL_frequency_integrator.get_output();
+            input += output;
+        }
 
         double pllmax = get_PLLmax();
         if(input>=-pllmax and input<=pllmax)
