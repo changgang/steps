@@ -23,9 +23,12 @@ class CONTINUOUS_BUFFER : public BASE
         void append_data(double time, double value);
 
         unsigned int get_index_of_buffer_head() const;
+        unsigned int get_index_of_buffer_tail() const;
 
         double get_buffer_time_at_head() const;
         double get_buffer_value_at_head() const;
+        double get_buffer_time_at_tail() const;
+        double get_buffer_value_at_tail() const;
         double get_buffer_time_at_delay_index(unsigned int index) const;
         double get_buffer_value_at_delay_index(unsigned int index) const;
         double get_buffer_value_at_time(double time) const;
@@ -38,7 +41,7 @@ class CONTINUOUS_BUFFER : public BASE
 
         unsigned int buffer_size;
 
-        unsigned int index_of_buffer_head;
+        unsigned int index_of_buffer_head, index_of_buffer_tail;
 
         double buffer[STEPS_MAX_CONTINUOUS_BUFFER_SIZE][2];
 

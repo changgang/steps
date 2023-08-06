@@ -547,7 +547,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_list_Cp_and_mechanical_power_data_of_differ
         double r = model->get_turbine_blade_radius_in_m();
         double vwind = model->get_nominal_wind_speed_in_mps();
         double pitch = 0.0;
-        double pmax = model->get_total_wind_power_per_wt_generator_in_MW(vwind);
+        double pmax = model->get_total_wind_power_per_wt_generator_in_MW_considering_gear_efficiency(vwind);
         osstream<<"Power curve when pitch = 0.0 deg, and wind speed = "<<vwind<<" m/s, blade radius = "<<r<<" m";
         default_toolkit.show_information_with_leading_time_stamp(osstream);
         osstream<<"Speed(rad/s)\tLambda\tCP\tPmech(MW)";

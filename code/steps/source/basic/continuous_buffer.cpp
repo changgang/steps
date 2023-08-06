@@ -119,6 +119,7 @@ void CONTINUOUS_BUFFER::initialize_buffer(double initial_time, double value)
     double delt = toolkit.get_dynamic_simulation_time_step_in_s();
 
     index_of_buffer_head = 0;
+    index_of_buffer_tail = buffer_size-1;
     for(unsigned int i=0; i<buffer_size; ++i)
     {
         buffer[i][0] = initial_time-i*delt;
@@ -145,13 +146,15 @@ void CONTINUOUS_BUFFER::append_data(double time, double value)
                 return;
             else
             {
-                if(index_of_buffer_head>0)
-                    --index_of_buffer_head;
-                else
-                    index_of_buffer_head = buffer_size-1;
+                buffer[index_of_buffer_tail][0] = time;
+                buffer[index_of_buffer_tail][1] = value;
 
-                buffer[index_of_buffer_head][0] = time;
-                buffer[index_of_buffer_head][1] = value;
+                index_of_buffer_head = index_of_buffer_tail;
+
+                if(index_of_buffer_head>0)
+                    index_of_buffer_tail = index_of_buffer_head-1;
+                else
+                    index_of_buffer_tail = buffer_size-1;
             }
         }
     }
@@ -160,6 +163,11 @@ void CONTINUOUS_BUFFER::append_data(double time, double value)
 unsigned int CONTINUOUS_BUFFER::get_index_of_buffer_head() const
 {
     return index_of_buffer_head;
+}
+
+unsigned int CONTINUOUS_BUFFER::get_index_of_buffer_tail() const
+{
+    return index_of_buffer_tail;
 }
 
 unsigned int CONTINUOUS_BUFFER::get_storage_index_of_delay_index(unsigned int index) const
@@ -180,6 +188,15 @@ double CONTINUOUS_BUFFER::get_buffer_value_at_head() const
     return buffer[index_of_buffer_head][1];
 }
 
+double CONTINUOUS_BUFFER::get_buffer_time_at_tail() const
+{
+    return buffer[index_of_buffer_tail][0];
+}
+
+double CONTINUOUS_BUFFER::get_buffer_value_at_tail() const
+{
+    return buffer[index_of_buffer_tail][1];
+}
 
 double CONTINUOUS_BUFFER::get_buffer_time_at_delay_index(unsigned int index) const
 {
@@ -204,12 +221,6 @@ double CONTINUOUS_BUFFER::get_buffer_value_at_time(double time) const
 
 unsigned int CONTINUOUS_BUFFER::get_delay_index_of_time(double time) const
 {
-    unsigned int index_of_buffer_tail;
-    if(index_of_buffer_head==0)
-        index_of_buffer_tail = buffer_size-1;
-    else
-        index_of_buffer_tail = index_of_buffer_head-1;
-
     double time_at_head = get_buffer_time_at_head();
     double time_at_tail = buffer[index_of_buffer_tail][0];
 

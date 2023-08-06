@@ -66,20 +66,20 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         double get_initial_pitch_angle_in_deg() const;
         double get_initial_turbine_speed_in_rad_per_s() const;
         double get_initial_turbine_speed_in_pu();
-        double get_total_wind_power_per_wt_generator_in_MW(double vwind) const;
+        double get_total_wind_power_per_wt_generator_in_MW_considering_gear_efficiency(double vwind) const;
 
 
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
-        double get_maximum_available_mechanical_power_per_wt_generator_in_MW(double vwind);
+        double get_maximum_available_mechanical_power_per_wt_generator_in_MW_considering_gear_efficiency(double vwind);
         double get_turbine_mechanical_power_per_wt_generator_in_MW();
         double get_turbine_mechanical_power_in_MW();
         double get_turbine_reference_speed_in_rad_per_s();
         double get_turbine_reference_speed_in_pu();
 
-        double get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(double speed_rad_per_s) const;
+        double get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s_considering_gear_efficiency(double speed_rad_per_s) const;
         double get_Cpmax(double pitch_deg);
         double get_lambda_at_Cpmax(double pitch_deg);
     public:

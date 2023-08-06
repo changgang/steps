@@ -685,11 +685,9 @@ void GAST2A::run(DYNAMIC_MODE mode)
 
     output = (output<=output2)?output:output2;
 
-    input = output*(1.0+speed)*get_gas_K3();
+    double new_value_of_gas_fuel_control = output*(1.0+speed)*get_gas_K3();;
 
-    gas_fuel_control.append_data(time, input);
-
-    output = gas_fuel_control.get_buffer_value_at_head();
+    output = gas_fuel_control.get_buffer_value_at_tail();
 
     input = output + get_gas_K6() - get_gas_Kf()*gas_fuel_system.get_output();
 
@@ -699,13 +697,13 @@ void GAST2A::run(DYNAMIC_MODE mode)
     gas_fuel_system.set_input(gas_valve_positioner.get_output());
     gas_fuel_system.run(mode);
 
-    gas_combustor.append_data(time, gas_fuel_system.get_output());
+    double new_value_of_gas_combustor = gas_fuel_system.get_output();
 
-    double wf = gas_combustor.get_buffer_value_at_head();
+    double wf = gas_combustor.get_buffer_value_at_tail();
 
-    gas_turbine_exhaust.append_data(time, wf);
+    double new_value_of_gas_turbine_exhaust = wf;
 
-    double wf1 = gas_turbine_exhaust.get_buffer_time_at_head();
+    double wf1 = gas_turbine_exhaust.get_buffer_time_at_tail();
     double f1 = get_gas_TR_in_deg()-get_gas_af1()*(1.0-wf1)-get_gas_bf1()*speed;
 
     gas_radiation_shield.set_input(f1);
@@ -723,7 +721,13 @@ void GAST2A::run(DYNAMIC_MODE mode)
     gas_turbine_dynamic.run(mode);
 
     if(mode==UPDATE_MODE)
+    {
+        gas_fuel_control.append_data(time, new_value_of_gas_fuel_control);
+        gas_combustor.append_data(time, new_value_of_gas_combustor);
+        gas_turbine_exhaust.append_data(time, new_value_of_gas_turbine_exhaust);
+
         set_flag_model_updated_as_true();
+    }
 }
 
 double GAST2A::get_mechanical_power_in_pu_based_on_mbase() const

@@ -276,13 +276,14 @@ double WT_AERODYNAMIC_MODEL::get_turbine_frequency_in_Hz()
     return radps2hz(get_turbine_speed_in_rad_per_s());
 }
 
-double WT_AERODYNAMIC_MODEL::get_total_wind_power_per_wt_generator_in_MW(double vwind) const
+double WT_AERODYNAMIC_MODEL::get_total_wind_power_per_wt_generator_in_MW_considering_gear_efficiency(double vwind) const
 {
     double rou = get_air_density_in_kgpm3();
     double r = get_turbine_blade_radius_in_m();
     double r2 = r*r;
     double v3 = vwind*vwind*vwind;
-    return 1e-6*HALF_PI*rou*r2*v3;
+    double eta = get_gear_efficiency();
+    return 1e-6*HALF_PI*rou*r2*v3*eta;// Here, the total power that can be extracted from wind is scaled with gear efficiency
 }
 
 
@@ -313,9 +314,9 @@ void WT_AERODYNAMIC_MODEL::initialize()
     initialize_wind_turbine_blade_radius_and_gear_ratio();
     //current_turbine_speed_reference_without_limit_in_rad_per_s = get_turbine_reference_speed_in_rad_per_s_without_speed_limit();
 
-    double pmax = get_maximum_available_mechanical_power_per_wt_generator_in_MW(get_wind_speed_in_mps());
+    double pmax = get_maximum_available_mechanical_power_per_wt_generator_in_MW_considering_gear_efficiency(get_wind_speed_in_mps());
     double cp_max = get_cpmax_at_zero_pitch();
-    double pmech = gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators()/get_gear_efficiency();
+    double pmech = gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators();
     if(pmax<pmech)
     {
         osstream<<"Initialization error. Wind speed "<<get_wind_speed_in_mps()<<" m/s is not enough to generate power for "<<get_compound_device_name()
@@ -354,7 +355,7 @@ void WT_AERODYNAMIC_MODEL::initialize()
         osstream<<"With pitch = "<<pitch<<" deg and initial w = "<<w0<<" rad/s, the near OPs are: "<<endl;
         for(double w = w0-0.2; w<w0+0.21; w+=0.1)
         {
-            double pmax = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
+            double pmax = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s_considering_gear_efficiency(w);
             osstream<<pitch<<"deg, "<<w<<"rad/s, "<<pmax*get_number_of_lumped_wt_generators()<<"MW"<<endl;
         }
         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -484,7 +485,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed()
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 
-    double pmax = get_maximum_available_mechanical_power_per_wt_generator_in_MW(get_wind_speed_in_mps());
+    double pmax = get_maximum_available_mechanical_power_per_wt_generator_in_MW_considering_gear_efficiency(get_wind_speed_in_mps());
 
     WT_GENERATOR* genptr = get_wt_generator_pointer();
     WT_GENERATOR_MODEL* wtgenmodel = genptr->get_wt_generator_model();
@@ -619,7 +620,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
 
     double vwind = get_wind_speed_in_mps();
 
-    double pmax = get_total_wind_power_per_wt_generator_in_MW(vwind);
+    double pmax = get_total_wind_power_per_wt_generator_in_MW_considering_gear_efficiency(vwind);
 
     double one_over_wn = 1.0/get_nominal_turbine_speed_in_rad_per_s();
 
@@ -777,14 +778,13 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
         double w = get_initial_turbine_speed_in_rad_per_s();
         double dspeed = (w-wn)/wn;
         double pdamp = D*dspeed*(mbase/wn)*w/n;
-        double eta = get_gear_efficiency();
-        double pmech = (pelec+pdamp)/eta;
+        double pmech = (pelec+pdamp);
 
         double pitch_low = 0.0, pitch_high = 0.0;
         double pitch_step = 2.0;
 
         set_initial_pitch_angle_in_deg(pitch_low);
-        double pwind = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
+        double pwind = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s_considering_gear_efficiency(w);
 
         unsigned int iter_count = 0, iter_max = 100;
         while(true)
@@ -792,7 +792,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
             pitch_high = pitch_low + pitch_step;
 
             set_initial_pitch_angle_in_deg(pitch_high);
-            pwind = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
+            pwind = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s_considering_gear_efficiency(w);
 
             if(pwind>pelec)
                 pitch_low = pitch_high;
@@ -810,9 +810,9 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
         }
 
         set_initial_pitch_angle_in_deg(pitch_low);
-        double pwind_low = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
+        double pwind_low = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s_considering_gear_efficiency(w);
         set_initial_pitch_angle_in_deg(pitch_high);
-        double pwind_high = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
+        double pwind_high = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s_considering_gear_efficiency(w);
 
         osstream<<"Desired pmech = "<<pmech<<" MW (per wind turbine)"<<endl
                 <<"Initial pitch angle: low pitch = "<<pitch_low<<" deg, pmech = "<<pwind_low<<" MW"<<endl
@@ -823,7 +823,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
         {
             double pitch_new = 0.5*(pitch_low+pitch_high);
             set_initial_pitch_angle_in_deg(pitch_new);
-            double pnew = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
+            double pnew = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s_considering_gear_efficiency(w);
             osstream<<"Iteration "<<iter_count<<": pitch = "<<pitch_new<<" deg, pmech = "<<pnew<<" MW"<<endl;
 
             if(fabs(pnew-pmech)>DOUBLE_EPSILON)
@@ -882,19 +882,18 @@ void WT_AERODYNAMIC_MODEL::run(DYNAMIC_MODE mode)
     //show_information_with_leading_time_stamp(osstream);
 }
 
-double WT_AERODYNAMIC_MODEL::get_maximum_available_mechanical_power_per_wt_generator_in_MW(double vwind)
+double WT_AERODYNAMIC_MODEL::get_maximum_available_mechanical_power_per_wt_generator_in_MW_considering_gear_efficiency(double vwind)
 {
     double cpmax = get_cpmax_at_zero_pitch();
-    double pmax = get_total_wind_power_per_wt_generator_in_MW(vwind);
+    double pmax = get_total_wind_power_per_wt_generator_in_MW_considering_gear_efficiency(vwind);
     return pmax*cpmax;
 }
 
 double WT_AERODYNAMIC_MODEL::get_turbine_mechanical_power_per_wt_generator_in_MW()
 {
     double w = get_turbine_speed_in_rad_per_s();
-    double pmech = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
-    double eta = get_gear_efficiency();
-    return pmech*eta;
+    double pmech = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s_considering_gear_efficiency(w);
+    return pmech;
 }
 
 double WT_AERODYNAMIC_MODEL::get_turbine_mechanical_power_in_MW()
@@ -1096,14 +1095,13 @@ void WT_AERODYNAMIC_MODEL::update_current_turbine_speed_reference_without_limit(
     double cpmax = get_Cpmax(pitch);
 
     double vwind = get_wind_speed_in_mps();
-    double pmax = cpmax*get_total_wind_power_per_wt_generator_in_MW(vwind);
+    double pmax = cpmax*get_total_wind_power_per_wt_generator_in_MW_considering_gear_efficiency(vwind);
     if(pmax>=pmech)
     {
         // pmax>pmech
 
         double damping = get_damping_in_pu();
         double one_over_wn = 1.0/get_nominal_turbine_speed_in_rad_per_s();
-        double one_over_eta = 1.0/get_gear_efficiency();
 
         double mbase = get_mbase_in_MVA();
         double one_over_n = 1.0/get_number_of_lumped_wt_generators();
@@ -1120,9 +1118,9 @@ void WT_AERODYNAMIC_MODEL::update_current_turbine_speed_reference_without_limit(
             while(true)
             {
                 w_low = w_high - w_step;
-                p_low = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w_low);
+                p_low = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s_considering_gear_efficiency(w_low);
                 double tmech = pelec/w_low + damping*(w_low*one_over_wn-1.0)*(mbase*one_over_wn)*one_over_n;
-                pmech = tmech*w_low*one_over_eta;
+                pmech = tmech*w_low;
                 if(p_low>=pmech)
                     w_high = w_low;
                 else
@@ -1149,9 +1147,9 @@ void WT_AERODYNAMIC_MODEL::update_current_turbine_speed_reference_without_limit(
             while(true)
             {
                 w_high = w_low + w_step;
-                p_high = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w_high);
+                p_high = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s_considering_gear_efficiency(w_high);
                 double tmech = pelec/w_high + damping*(w_high*one_over_wn-1.0)*(mbase*one_over_wn)*one_over_n;
-                pmech = tmech*w_high*one_over_eta;
+                pmech = tmech*w_high;
                 if(p_high>=pmech)
                     w_low = w_high;
                 else
@@ -1171,20 +1169,20 @@ void WT_AERODYNAMIC_MODEL::update_current_turbine_speed_reference_without_limit(
             }
         }
 
-        //double plow = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wlow);
-        //double phigh = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(whigh);
+        //double plow = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s_considering_gear_efficiency(wlow);
+        //double phigh = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s_considering_gear_efficiency(whigh);
 
         double w = 0.0;
         iter_count = 0;
         while(true)
         {
             double w_new = 0.5*(w_low+w_high);
-            double p_new = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w_new);
+            double p_new = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s_considering_gear_efficiency(w_new);
             //cout<<"when w = "<<w_new<<" rad/s ("<<w_new/wn<<" pu), extracted mechanical power = "<<pnew<<"MW"<<endl;
             double tmech =  pelec/w_new + damping*(w_new*one_over_wn-1.0)*(mbase*one_over_wn)*one_over_n;
             //cout<<"telec = "<<telec<<", tdamp = "<<tdamp<<", tmech = "<<tmech<<endl;
             //cout<<"pelec = "<<telec*w_new<<", pdamp = "<<tdamp*w_new<<", pmech = "<<tmech*w_new<<endl;
-            pmech = tmech*w_new*one_over_eta;
+            pmech = tmech*w_new;
             if(fabs(p_new-pmech)>DOUBLE_EPSILON)
             {
                 if(get_turbine_speed_mode()==WT_UNDERSPEED_MODE)
@@ -1261,7 +1259,7 @@ double WT_AERODYNAMIC_MODEL::get_current_turbine_speed_reference_without_limit_i
     return current_turbine_speed_reference_without_limit_in_rad_per_s;
 }
 
-double WT_AERODYNAMIC_MODEL::get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(double speed_rad_per_s) const
+double WT_AERODYNAMIC_MODEL::get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s_considering_gear_efficiency(double speed_rad_per_s) const
 {
     double w = speed_rad_per_s;
     double r = get_turbine_blade_radius_in_m();
@@ -1270,7 +1268,7 @@ double WT_AERODYNAMIC_MODEL::get_extracted_power_from_wind_per_wt_generator_in_M
     double beta = get_pitch_angle_in_deg();
     double cp = get_Cp(lambda, beta);
 
-    double pmax = get_total_wind_power_per_wt_generator_in_MW(v);
+    double pmax = get_total_wind_power_per_wt_generator_in_MW_considering_gear_efficiency(v);
 
     return pmax*cp;
 }

@@ -1688,7 +1688,7 @@ double METER::get_meter_value_as_a_wt_generator() const
                 if(aerd_model != NULL)
                 {
                     double vwind = aerd_model->get_wind_speed_in_mps();
-                    double pmax = aerd_model->get_maximum_available_mechanical_power_per_wt_generator_in_MW(vwind);
+                    double pmax = aerd_model->get_maximum_available_mechanical_power_per_wt_generator_in_MW_considering_gear_efficiency(vwind);
                     unsigned int n = generator->get_number_of_lumped_wt_generators();
                     return pmax*n*one_over_mbase;
                 }
@@ -1700,7 +1700,7 @@ double METER::get_meter_value_as_a_wt_generator() const
                 if(aerd_model != NULL)
                 {
                     double vwind = aerd_model->get_wind_speed_in_mps();
-                    double pmax = aerd_model->get_maximum_available_mechanical_power_per_wt_generator_in_MW(vwind);
+                    double pmax = aerd_model->get_maximum_available_mechanical_power_per_wt_generator_in_MW_considering_gear_efficiency(vwind);
                     unsigned int n = generator->get_number_of_lumped_wt_generators();
                     return pmax*n*one_over_sbase;
                 }
@@ -1712,7 +1712,7 @@ double METER::get_meter_value_as_a_wt_generator() const
                 if(aerd_model != NULL)
                 {
                     double vwind = aerd_model->get_wind_speed_in_mps();
-                    double pmax = aerd_model->get_maximum_available_mechanical_power_per_wt_generator_in_MW(vwind);
+                    double pmax = aerd_model->get_maximum_available_mechanical_power_per_wt_generator_in_MW_considering_gear_efficiency(vwind);
                     unsigned int n = generator->get_number_of_lumped_wt_generators();
                     return pmax*n;
                 }
