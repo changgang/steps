@@ -686,7 +686,6 @@ void WT3E0::initialize()
 
                 double vterm = get_terminal_bus_voltage_in_pu();
                 double iterm = get_wt_generator_terminal_current_in_pu();
-                double freq = get_terminal_bus_frequency_deviation_in_pu();
                 //double mbase = get_mbase_in_MVA();
                 complex<double> selec = get_wt_generator_terminal_generation_in_pu_based_on_mbase();
                 double pelec = selec.real();
@@ -731,8 +730,6 @@ void WT3E0::initialize()
 
                 frequency_integral_controller.set_output(0.0);
                 frequency_integral_controller.initialize();
-
-                set_frequency_reference_in_pu(freq);
 
                 double speedref = get_wt_generator_speed_referance_in_pu();
                 //set_speed_reference_bias_in_pu(speedref-speed);
@@ -902,17 +899,17 @@ void WT3E0::run(DYNAMIC_MODE mode)
     //show_information_with_leading_time_stamp(osstream);
     //osstream<<"torque_PI_regulator input = "<<input<<", output = "<<torque_PI_regulator.get_output()<<endl;
 
-    virtual_inertia_emulator.set_input(-freq);
+    virtual_inertia_emulator.set_input(freq);
     virtual_inertia_emulator.run(mode);
     //osstream<<"virtual_inertia_emulator input = "<<-freq<<", output = "<<virtual_inertia_emulator.get_output()<<endl;
 
-    frequency_droop_controller.set_input(-freq);
+    frequency_droop_controller.set_input(freq);
     frequency_droop_controller.run(mode);
     //osstream<<"frequency_droop_controller input = "<<-freq<<", output = "<<frequency_droop_controller.get_output()<<endl;
 
     double fupper = get_frequency_deviation_upper_deadband_in_pu();
     double flower = get_frequency_deviation_lower_deadband_in_pu();
-    double f_int =  freq;
+    double f_int =  0;
     if(freq>=flower and freq<=fupper)
         ;
     else
@@ -922,7 +919,7 @@ void WT3E0::run(DYNAMIC_MODE mode)
         else
             f_int = freq - flower;
     }
-    frequency_integral_controller.set_input(-f_int);
+    frequency_integral_controller.set_input(f_int);
     frequency_integral_controller.run(mode);
 
     //osstream<<"speed = "<<speed<<endl;
@@ -947,10 +944,10 @@ void WT3E0::run(DYNAMIC_MODE mode)
     if(is_frequency_regulation_enabled())
     {
         input = torque_PI_regulator.get_output()*speed
-                +virtual_inertia_emulator.get_output()
-                +frequency_droop_controller.get_output()
-                +frequency_integral_controller.get_output()
-                -power_order_integrator.get_output();
+                -power_order_integrator.get_output()
+                -(virtual_inertia_emulator.get_output()
+                  +frequency_droop_controller.get_output()
+                  +frequency_integral_controller.get_output());
     }
     else
     {
