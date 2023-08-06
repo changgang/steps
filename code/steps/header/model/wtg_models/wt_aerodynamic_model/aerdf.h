@@ -47,6 +47,7 @@ class AERDF : public WT_AERODYNAMIC_MODEL
         void load_pitch_angles();
         void load_tip_speed_ratios();
         void load_Cp_matrix();
+        void save_data_to_Cp_file() const;
         bool is_Cp_point_exist(double pitch, double lambda);
         // Cp function parameters
         string *cp_file_name;

@@ -105,11 +105,13 @@ void AERDF::load_pitch_angles()
     data = string2csv(data);
     datavec = split_string(data,",");
 
+    datavec.erase(datavec.begin()); // skip the first data, which should be "CP"
+
     unsigned int n = datavec.size();
     if(n<2)
         return;
 
-    for(unsigned int i=1; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         double pitch = get_double_data(datavec.front(),"0.0");
         datavec.erase(datavec.begin());
@@ -130,7 +132,7 @@ void AERDF::load_tip_speed_ratios()
     string data;
     vector<string> datavec;
     getline(fid, data); // skip the head line
-    getline(fid, data); // get the first valid line of pitch angles
+    getline(fid, data); // get the first valid line of pitch angles, which has already been saved in variable "pitch_angles"
 
     while(true)
     {
@@ -165,7 +167,7 @@ void AERDF::load_Cp_matrix()
     string data;
     vector<string> datavec;
     getline(fid, data); // skip the head line
-    getline(fid, data); // get the first valid line of pitch angles
+    getline(fid, data); // get the first valid line of pitch angles, which has already been saved in variable "pitch_angles"
 
     unsigned int N_pitch = pitch_angles->size();
     vector<double> cp_line;
@@ -177,11 +179,12 @@ void AERDF::load_Cp_matrix()
         data = trim_string(data);
         data = string2csv(data);
         datavec = split_string(data,",");
+        datavec.erase(datavec.begin()); // remove first column (lambda) which has already been stored in variable tip_speed_ratio
 
         unsigned int n = datavec.size();
-        if(n<N_pitch+1)
+        if(n<N_pitch)
         {
-            osstream<<"Warning. Different length of tip speed ratio line is detected in wind turbine Cp data file '"<<(*cp_file_name)<<"' of "<<get_model_name()<<" of "<<get_compound_device_name()<<":"<<endl
+            osstream<<"Warning. Less data than number of pitches is detected in wind turbine Cp data file '"<<(*cp_file_name)<<"' of "<<get_model_name()<<" of "<<get_compound_device_name()<<":"<<endl
                     <<data<<endl
                     <<"No more data will be loaded from Cp data file '"<<(*cp_file_name)<<"'.";
             toolkit.show_information_with_leading_time_stamp(osstream);
@@ -189,7 +192,7 @@ void AERDF::load_Cp_matrix()
         }
 
         cp_line.clear();
-        for(unsigned int i=1; i<N_pitch+1; ++i)
+        for(unsigned int i=0; i<N_pitch; ++i)
         {
             double cp = get_double_data(datavec.front(),"0.0");
             datavec.erase(datavec.begin());
@@ -410,7 +413,43 @@ string AERDF::get_standard_psse_string(bool export_internal_bus_number) const
             <<setw(6)<<setprecision(4)<<get_air_density_in_kgpm3()<<", '"
             <<setw(6)<<setprecision(4)<<get_Cp_file()<<"' /";
 
+    save_data_to_Cp_file();
+
     return osstream.str();
+}
+
+void AERDF::save_data_to_Cp_file() const
+{
+    STEPS& toolkit = get_toolkit();
+    Cp_Matrix->clear();
+
+    ofstream fid((*cp_file_name));
+
+    unsigned int Npitch = (*pitch_angles).size();
+
+    // export header
+    fid<<"#lambda";
+    for(unsigned int i=0; i<Npitch; ++i)
+        fid<<", pitch"<<i+1;
+    fid<<endl;
+
+    // export pitches
+    fid<<"CP";
+    for(unsigned int i=0; i<Npitch; ++i)
+        fid<<", "<<(*pitch_angles)[i];
+    fid<<endl;
+
+    // export Cp
+    unsigned int Nlambda = (*tip_speed_ratios).size();
+    for(unsigned int i=0; i<Nlambda; ++i)
+    {
+        fid<<(*tip_speed_ratios)[i];
+        for(unsigned int j=0; j<Npitch; ++j)
+            fid<<", "<<(*Cp_Matrix)[i][j];
+        fid<<endl;
+    }
+
+    fid.close();
 }
 
 void AERDF::prepare_model_data_table()
