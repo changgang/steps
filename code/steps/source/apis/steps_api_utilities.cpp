@@ -170,6 +170,10 @@ bool api_get_toolkit_bool_data(char* parameter_name, unsigned int toolkit_index)
     {
         return toolkit.get_use_steps_fast_math_logic();
     }
+    if(PARAMETER_NAME=="CORRECT THREE WINDING TRANSFORMER IMPEDANCE LOGIC")
+    {
+        return toolkit.get_correct_three_winding_transformer_impedance_logic();
+    }
 
     show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
     return false;
@@ -200,6 +204,13 @@ void api_set_toolkit_bool_data(char* parameter_name, bool value, unsigned int to
             return toolkit.enable_use_steps_fast_math_logic();
         else
             return toolkit.disable_use_steps_fast_math_logic();
+    }
+    if(PARAMETER_NAME=="CORRECT THREE WINDING TRANSFORMER IMPEDANCE LOGIC")
+    {
+        if(value==true)
+            return toolkit.enable_correct_three_winding_transformer_impedance_logic();
+        else
+            return toolkit.disable_correct_three_winding_transformer_impedance_logic();
     }
 
     show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);

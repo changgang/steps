@@ -27,6 +27,8 @@ STEPS::STEPS(const string& name, const string& log_file) : power_system_db(*this
 
     optimize_network_enabled = true;
 
+    correct_three_winding_transformer_impedance = false;
+
     clock_when_system_started=clock();
 
     toolkit_name = name;
@@ -85,6 +87,21 @@ void STEPS::disable_use_steps_fast_math_logic()
 bool STEPS::get_use_steps_fast_math_logic()
 {
     return use_steps_fast_math;
+}
+
+void STEPS::enable_correct_three_winding_transformer_impedance_logic()
+{
+    correct_three_winding_transformer_impedance = true;
+}
+
+void STEPS::disable_correct_three_winding_transformer_impedance_logic()
+{
+    correct_three_winding_transformer_impedance = false;
+}
+
+bool STEPS::get_correct_three_winding_transformer_impedance_logic()
+{
+    return correct_three_winding_transformer_impedance;
 }
 
 void STEPS::set_thread_number(unsigned int n)

@@ -25,6 +25,9 @@ class STEPS
         void enable_use_steps_fast_math_logic();
         void disable_use_steps_fast_math_logic();
         bool get_use_steps_fast_math_logic();
+        void enable_correct_three_winding_transformer_impedance_logic();
+        void disable_correct_three_winding_transformer_impedance_logic();
+        bool get_correct_three_winding_transformer_impedance_logic();
 
         void set_thread_number(unsigned int n);
         unsigned int get_thread_number() const;
@@ -104,6 +107,7 @@ class STEPS
         ofstream log_file;
         bool detailed_log_enabled;
         bool optimize_network_enabled;
+        bool correct_three_winding_transformer_impedance;
         char current_alphabeta;
 
         unsigned int thread_number;

@@ -951,6 +951,34 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_network(const TRANSFORMER&
                         Zs = 0.5*(Zps+Zst-Zpt),
                         Zt = 0.5*(Zpt+Zst-Zps);
 
+        if(toolkit->get_correct_three_winding_transformer_impedance_logic()==true)
+        {
+            if(abs(Zp)<0.001)
+            {
+                ostringstream osstream;
+                osstream<<"Primary side leakage impedance of "<<trans.get_compound_device_name()<<"is almost ZERO."<<endl
+                        <<"Automatically corrected to (0+j0.001)";
+                toolkit->show_information_with_leading_time_stamp(osstream);
+                Zp = complex<double>(0.0, 0.001);
+            }
+            if(abs(Zs)<0.001)
+            {
+                ostringstream osstream;
+                osstream<<"Secondary side leakage impedance of "<<trans.get_compound_device_name()<<"is almost ZERO."<<endl
+                        <<"Automatically corrected to (0+j0.001)";
+                toolkit->show_information_with_leading_time_stamp(osstream);
+                Zs = complex<double>(0.0, 0.001);
+            }
+            if(abs(Zt)<0.001)
+            {
+                ostringstream osstream;
+                osstream<<"Tertiary side leakage impedance of "<<trans.get_compound_device_name()<<"is almost ZERO."<<endl
+                        <<"Automatically corrected to (0+j0.001)";
+                toolkit->show_information_with_leading_time_stamp(osstream);
+                Zt = complex<double>(0.0, 0.001);
+            }
+        }
+
         double tap_primary = trans.get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE);
         double angle_primary = trans.get_winding_angle_shift_in_deg(PRIMARY_SIDE);
         angle_primary = deg2rad(angle_primary);
@@ -1477,6 +1505,34 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_decoupled_network(const TR
         complex<double> Zp = 0.5*(Zps+Zpt-Zst),
                         Zs = 0.5*(Zps+Zst-Zpt),
                         Zt = 0.5*(Zpt+Zst-Zps);
+
+        if(toolkit->get_correct_three_winding_transformer_impedance_logic()==true)
+        {
+            if(abs(Zp)<0.001)
+            {
+                ostringstream osstream;
+                osstream<<"Primary side leakage impedance of "<<trans.get_compound_device_name()<<"is almost ZERO."<<endl
+                        <<"Automatically corrected to (0+j0.001)";
+                toolkit->show_information_with_leading_time_stamp(osstream);
+                Zp = complex<double>(0.0, 0.001);
+            }
+            if(abs(Zs)<0.001)
+            {
+                ostringstream osstream;
+                osstream<<"Secondary side leakage impedance of "<<trans.get_compound_device_name()<<"is almost ZERO."<<endl
+                        <<"Automatically corrected to (0+j0.001)";
+                toolkit->show_information_with_leading_time_stamp(osstream);
+                Zs = complex<double>(0.0, 0.001);
+            }
+            if(abs(Zt)<0.001)
+            {
+                ostringstream osstream;
+                osstream<<"Tertiary side leakage impedance of "<<trans.get_compound_device_name()<<"is almost ZERO."<<endl
+                        <<"Automatically corrected to (0+j0.001)";
+                toolkit->show_information_with_leading_time_stamp(osstream);
+                Zt = complex<double>(0.0, 0.001);
+            }
+        }
 
         double tap_primary = trans.get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE);
         double angle_primary = trans.get_winding_angle_shift_in_deg(PRIMARY_SIDE);
@@ -2303,6 +2359,33 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_dc_network(const TRANSFORM
         double Xp = Zp.imag();
         double Xs = Zs.imag();
         double Xt = Zt.imag();
+        if(toolkit->get_correct_three_winding_transformer_impedance_logic()==true)
+        {
+            if(fabs(Xp)<0.001)
+            {
+                ostringstream osstream;
+                osstream<<"Primary side leakage impedance of "<<trans.get_compound_device_name()<<"is almost ZERO."<<endl
+                        <<"Automatically corrected to (0+j0.001)";
+                toolkit->show_information_with_leading_time_stamp(osstream);
+                Xp = 0.001;
+            }
+            if(fabs(Xs)<0.001)
+            {
+                ostringstream osstream;
+                osstream<<"Secondary side leakage impedance of "<<trans.get_compound_device_name()<<"is almost ZERO."<<endl
+                        <<"Automatically corrected to (0+j0.001)";
+                toolkit->show_information_with_leading_time_stamp(osstream);
+                Xs = 0.001;
+            }
+            if(fabs(Xt)<0.001)
+            {
+                ostringstream osstream;
+                osstream<<"Tertiary side leakage impedance of "<<trans.get_compound_device_name()<<"is almost ZERO."<<endl
+                        <<"Automatically corrected to (0+j0.001)";
+                toolkit->show_information_with_leading_time_stamp(osstream);
+                Xt = 0.001;
+            }
+        }
 
         if(trans.get_winding_breaker_status(PRIMARY_SIDE)==true and
            trans.get_winding_breaker_status(SECONDARY_SIDE)==true and
