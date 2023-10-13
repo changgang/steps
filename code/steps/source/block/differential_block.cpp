@@ -65,19 +65,60 @@ void DIFFERENTIAL_BLOCK::initialize()
             break;
     }
 }
-void DIFFERENTIAL_BLOCK::initialize_normal_time_step_mode()
+
+void DIFFERENTIAL_BLOCK::determine_block_integration_time_step_mode()
+{
+    STEPS& toolkit = get_toolkit();
+    double global_h = toolkit.get_dynamic_simulation_time_step_in_s();
+    BLOCK_INTEGRATION_TIME_STEP_MODE mode = NORMAL_INTEGRATION_TIME_STEP_MODE;
+
+    bool is_automatic_large_step_logic_enabled = get_automatic_large_time_step_logic();
+    if(is_automatic_large_step_logic_enabled)
+    {
+        double t = get_T_in_s();
+        if(global_h<6.91*t) // magic number is NOT allowed. must be removed.
+        {
+            if(global_h>t/4)
+                mode = SMALL_INTEGRATION_TIME_STEP_MODE;
+        }
+        else
+            mode = LARGE_INTEGRATION_TIME_STEP_MODE;
+    }
+    set_integration_time_step_mode(mode);
+}
+
+void DIFFERENTIAL_BLOCK::determine_block_integration_time_step()
+{
+    STEPS& toolkit = get_toolkit();
+    h = toolkit.get_dynamic_simulation_time_step_in_s();
+
+    BLOCK_INTEGRATION_TIME_STEP_MODE mode = get_integration_time_step_mode();
+    if(mode == SMALL_INTEGRATION_TIME_STEP_MODE)
+    {
+        double t = get_T_in_s();
+        count_of_time_slice_when_in_small_integration_time_step_mode = ceil(4.0*h/t);
+        h = h/count_of_time_slice_when_in_small_integration_time_step_mode;
+    }
+}
+
+void DIFFERENTIAL_BLOCK::determine_block_temp_variables()
 {
     double k = get_K();
     if(k!=0.0)
     {
-        STEPS& toolkit = get_toolkit();
-        double h = toolkit.get_dynamic_simulation_time_step_in_s();
         double t = get_T_in_s();
 
         one_over_t = 1.0/t;
         k_over_t = k*one_over_t;
         t_over_h = t/h;
+    }
+}
 
+void DIFFERENTIAL_BLOCK::initialize_normal_time_step_mode()
+{
+    double k = get_K();
+    if(k!=0.0)
+    {
         double x = get_input();
 
         double y = 0.0;
@@ -100,6 +141,18 @@ void DIFFERENTIAL_BLOCK::initialize_normal_time_step_mode()
         set_output(0.0);
     }
 }
+
+void DIFFERENTIAL_BLOCK::initialize_small_time_step_mode()
+{
+    initialize_normal_time_step_mode();
+    copy_current_input_to_old_input_in_last_time_step();
+}
+
+void DIFFERENTIAL_BLOCK::initialize_large_time_step_mode()
+{
+    initialize_normal_time_step_mode();
+}
+
 void DIFFERENTIAL_BLOCK::run(DYNAMIC_MODE mode)
 {
     if(get_K()!=0.0)
@@ -112,6 +165,23 @@ void DIFFERENTIAL_BLOCK::run(DYNAMIC_MODE mode)
 }
 
 void DIFFERENTIAL_BLOCK::integrate()
+{
+    switch(get_integration_time_step_mode())
+    {
+        case NORMAL_INTEGRATION_TIME_STEP_MODE:
+            integrate_normal_time_step_mode();
+            break;
+        case SMALL_INTEGRATION_TIME_STEP_MODE:
+            integrate_small_time_step_mode();
+            break;
+        case LARGE_INTEGRATION_TIME_STEP_MODE:
+        default:
+            integrate_large_time_step_mode();
+            break;
+    }
+}
+
+void DIFFERENTIAL_BLOCK::integrate_normal_time_step_mode()
 {
     //double k = get_K();
     //double t = get_T_in_s();
@@ -138,7 +208,32 @@ void DIFFERENTIAL_BLOCK::integrate()
 
 }
 
+void DIFFERENTIAL_BLOCK::integrate_small_time_step_mode()
+{
+}
+
+void DIFFERENTIAL_BLOCK::integrate_large_time_step_mode()
+{
+}
+
 void DIFFERENTIAL_BLOCK::update()
+{
+    switch(get_integration_time_step_mode())
+    {
+        case NORMAL_INTEGRATION_TIME_STEP_MODE:
+            update_normal_time_step_mode();
+            break;
+        case SMALL_INTEGRATION_TIME_STEP_MODE:
+            update_small_time_step_mode();
+            break;
+        case LARGE_INTEGRATION_TIME_STEP_MODE:
+        default:
+            update_large_time_step_mode();
+            break;
+    }
+}
+
+void DIFFERENTIAL_BLOCK::update_normal_time_step_mode()
 {
     //double k = get_K();
     //double t = get_T_in_s();
@@ -156,6 +251,16 @@ void DIFFERENTIAL_BLOCK::update()
 
     set_store(z);
     set_output(y);
+}
+
+void DIFFERENTIAL_BLOCK::update_small_time_step_mode()
+{
+    update_normal_time_step_mode();
+    copy_current_input_to_old_input_in_last_time_step();
+}
+
+void DIFFERENTIAL_BLOCK::update_large_time_step_mode()
+{
 }
 
 void DIFFERENTIAL_BLOCK::check()
