@@ -2,10 +2,13 @@
 #include "header/steps_namespace.h"
 #include "header/basic/utility.h"
 
+bool BLOCK::automatic_large_step_logic = false;
+
 BLOCK::BLOCK(STEPS& toolkit)
 {
     set_toolkit(toolkit);
     set_limiter_type(NO_LIMITER);
+    disable_automatic_large_step_logic();
     state = 0.0;
     store  = 0.0;
     upper_limit = 0.0;
@@ -110,6 +113,21 @@ double BLOCK::get_input() const
 double BLOCK::get_output() const
 {
     return output;
+}
+
+void BLOCK::enable_automatic_large_step_logic()
+{
+    automatic_large_step_logic = true;
+}
+
+void BLOCK::disable_automatic_large_step_logic()
+{
+    automatic_large_step_logic = false;
+}
+
+bool BLOCK::get_automatic_large_step_logic()
+{
+    return automatic_large_step_logic;
 }
 
 void BLOCK::check_limiter() const

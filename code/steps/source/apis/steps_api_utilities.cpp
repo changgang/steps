@@ -174,6 +174,10 @@ bool api_get_toolkit_bool_data(char* parameter_name, unsigned int toolkit_index)
     {
         return toolkit.get_correct_three_winding_transformer_impedance_logic();
     }
+    if(PARAMETER_NAME=="BLOCK AUTOMATIC LARGE STEP LOGIC")
+    {
+        return toolkit.get_dynamic_blocks_automatic_large_step_logic();
+    }
 
     show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
     return false;
@@ -211,6 +215,13 @@ void api_set_toolkit_bool_data(char* parameter_name, bool value, unsigned int to
             return toolkit.enable_correct_three_winding_transformer_impedance_logic();
         else
             return toolkit.disable_correct_three_winding_transformer_impedance_logic();
+    }
+    if(PARAMETER_NAME=="BLOCK AUTOMATIC LARGE STEP LOGIC")
+    {
+        if(value==true)
+            return toolkit.enable_dynamic_blocks_automatic_large_step_logic();
+        else
+            return toolkit.disable_dynamic_blocks_automatic_large_step_logic();
     }
 
     show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);

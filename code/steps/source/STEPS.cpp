@@ -104,6 +104,22 @@ bool STEPS::get_correct_three_winding_transformer_impedance_logic()
     return correct_three_winding_transformer_impedance;
 }
 
+
+void STEPS::enable_dynamic_blocks_automatic_large_step_logic()
+{
+    BLOCK::enable_automatic_large_step_logic();
+}
+
+void STEPS::disable_dynamic_blocks_automatic_large_step_logic()
+{
+    BLOCK::disable_automatic_large_step_logic();
+}
+
+bool STEPS::get_dynamic_blocks_automatic_large_step_logic()
+{
+    return BLOCK::get_automatic_large_step_logic();
+}
+
 void STEPS::set_thread_number(unsigned int n)
 {
     thread_number = n;

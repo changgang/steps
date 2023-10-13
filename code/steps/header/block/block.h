@@ -36,6 +36,10 @@ class BLOCK
         double get_state() const;
         double get_store() const;
 
+        static void enable_automatic_large_step_logic();
+        static void disable_automatic_large_step_logic();
+        static bool get_automatic_large_step_logic();
+
         void check_limiter() const;
     public:
         void set_state_WITH_CAUTION(double value);
@@ -49,5 +53,7 @@ class BLOCK
         LIMITER_TYPE limiter_type;
         double upper_limit, lower_limit;
         double input, output;
+
+        static bool automatic_large_step_logic;
 };
 #endif // BLOCK_H
