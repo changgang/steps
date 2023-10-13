@@ -176,7 +176,7 @@ bool api_get_toolkit_bool_data(char* parameter_name, unsigned int toolkit_index)
     }
     if(PARAMETER_NAME=="BLOCK AUTOMATIC LARGE STEP LOGIC")
     {
-        return toolkit.get_dynamic_blocks_automatic_large_step_logic();
+        return toolkit.get_dynamic_blocks_automatic_large_time_step_logic();
     }
 
     show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
@@ -219,9 +219,9 @@ void api_set_toolkit_bool_data(char* parameter_name, bool value, unsigned int to
     if(PARAMETER_NAME=="BLOCK AUTOMATIC LARGE STEP LOGIC")
     {
         if(value==true)
-            return toolkit.enable_dynamic_blocks_automatic_large_step_logic();
+            return toolkit.enable_dynamic_blocks_automatic_large_time_step_logic();
         else
-            return toolkit.disable_dynamic_blocks_automatic_large_step_logic();
+            return toolkit.disable_dynamic_blocks_automatic_large_time_step_logic();
     }
 
     show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);

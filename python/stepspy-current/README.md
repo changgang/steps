@@ -22,6 +22,7 @@ stepspy is a Python module of Simulation Toolkit for Electrical Power Systems (S
 STEPS is a simulation toolkit for powerflow and dynamic simulation of large-scale power systems. It provides detailed models of bus, line, transformer, HVDC, generator, wind turbine generator, load, and fixed shunt. For more information about STEPS, see (https://github.com/changgang/steps).
 
 ## Release Note
+- 1.6.2. Oct. 13, 2023. Add option to select libSTEPS version when calling STEPS().
 - 1.6.1. Sep. 26, 2022. Fix bug in set_bus_capacity.
 - 1.6.0. April 13, 2022. Add VSC HVDC model APIs. Use STEPS>=1.6.0.
 - 1.5.3.1. Oct. 20, 2021. Add new parameter to export dynamic model with internal bus number. Use STEPS>=1.5.4.

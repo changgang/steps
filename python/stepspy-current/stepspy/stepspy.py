@@ -7,22 +7,32 @@ global STEPS_LIB
 class STEPS():
     """
     Common usage to build a simulator with STEPS:
-        1) simulator = STEPS(is_default=True, log_file="") # use default simulator, disable log file and show information to stdout.
-        2) simulator = STEPS(is_default=True, log_file="case.log") # use default simulator, save log to case.log file.
-        3) simulator = STEPS(is_default=False, log_file="") # create new simulator, disable log file and show information to stdout.
-        4) simulator = STEPS(is_default=False, log_file="case.log") # create new simulator, save log to case.log file.
+        1) simulator = STEPS(is_default=True, log_file="", libsteps_file="") # use default simulator, disable log file and show information to stdout, use default libsteps file, a.k.a., libSTEPS.
+        2) simulator = STEPS(is_default=True, log_file="case.log") # use default simulator, save log to case.log file, use default libsteps file, a.k.a., libSTEPS.
+        3) simulator = STEPS(is_default=False, log_file="") # create new simulator, disable log file and show information to stdout, use default libsteps file, a.k.a., libSTEPS.
+        4) simulator = STEPS(is_default=False, log_file="case.log") # create new simulator, save log to case.log file, use default libsteps file, a.k.a., libSTEPS.
         5) simulator = STEPS(is_default=False, log_file="blackhole") # create new simulator, disable log file and stdout.
+        6) simulator = STEPS(is_default=True, log_file="", libsteps_file="libSTEPSv0.5") # use default simulator, disable log file and show information to stdout, use default libsteps file, a.k.a., libSTEPSv0.5. ATTENTION: libsteps_file is only VALID when STEPS() is called for the very first time.
     """
         
-    def __init__(self, is_default=False, log_file=""):
+    def __init__(self, is_default=False, log_file="", libsteps_file=""):
         """
         STEPS initialization.
         Example: N/A
         """
         global STEPS_LIB
         self.__encoding = "gb18030"
-        if 'STEPS_LIB' not in globals():
-            STEPS_LIB = pylibsteps.load_library()
+        if 'STEPS_LIB' not in globals() or STEPS_LIB is None:
+            if libsteps_file == "":
+                libsteps_file = "libSTEPS"
+            STEPS_LIB = pylibsteps.load_library(libsteps_file)
+        elif libsteps_file != "":
+            info = "Attention. Option libsteps_file is set while STEPS() is called.\n"
+            info += "This is a special case indicating that STEPS_LIB is already set in previous calling of STEPS().\n"
+            info += "AVOID calling STEPS() with libsteps_file option more than ONCE.\n"
+            info += "No duplicate STEPS_LIB will be loaded."            
+            print(info)
+
         if is_default==True:
             self.toolkit_index = STEPS_LIB.api_get_const_INDEX_NOT_EXIST()
             self.set_toolkit_log_file(log_file)

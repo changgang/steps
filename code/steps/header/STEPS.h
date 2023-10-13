@@ -30,9 +30,9 @@ class STEPS
         void disable_correct_three_winding_transformer_impedance_logic();
         bool get_correct_three_winding_transformer_impedance_logic();
 
-        void enable_dynamic_blocks_automatic_large_step_logic();
-        void disable_dynamic_blocks_automatic_large_step_logic();
-        bool get_dynamic_blocks_automatic_large_step_logic();
+        void enable_dynamic_blocks_automatic_large_time_step_logic();
+        void disable_dynamic_blocks_automatic_large_time_step_logic();
+        bool get_dynamic_blocks_automatic_large_time_step_logic();
 
         void set_thread_number(unsigned int n);
         unsigned int get_thread_number() const;

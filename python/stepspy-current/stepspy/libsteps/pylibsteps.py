@@ -2,13 +2,13 @@ from ctypes import *
 import platform
 import os
 
-def get_base_library():
+def get_base_library(libsteps_file):
     dirname, filename = os.path.split(os.path.abspath(__file__))
     dirname = dirname.replace('\\','/')
     if not dirname.endswith('/'):
         dirname = dirname + '/'
     
-    libsteps_name = 'libSTEPS'
+    libsteps_name = libsteps_file
     libsteps_extension = '.so'
     if platform.system()=="Linux" or platform.system()=="Unix":
         libsteps_extension = '.so'
@@ -16,6 +16,8 @@ def get_base_library():
         libsteps_extension = '.dll'
         
     library = dirname+libsteps_name+libsteps_extension
+    if libsteps_file != "libSTEPS":
+        print("Attention. You are trying to load a base library other than default libSTEPS: ", library)
     if not os.path.exists(library):
         info = "Warning. Library "+library+" does not exist. No applications with stepspy will be enabled.\n"
         info += "Please go to https://github.com/changgang/steps to download the proper version or build it from scratch.\n"
@@ -26,8 +28,8 @@ def get_base_library():
 
     return library
     
-def load_library():
-    library = get_base_library()
+def load_library(libsteps_file):
+    library = get_base_library(libsteps_file)
     if library is not None:
         libsteps = cdll.LoadLibrary(library)
     else:

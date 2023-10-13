@@ -46,86 +46,158 @@ double FIRST_ORDER_BLOCK::get_T_in_s() const
 
 void FIRST_ORDER_BLOCK::initialize()
 {
+    determine_block_integration_time_step_mode();
+    determine_block_integration_time_step();
+    determine_block_temp_variables();
+
+    switch(get_integration_time_step_mode())
+    {
+        case NORMAL_INTEGRATION_TIME_STEP_MODE:
+            initialize_normal_time_step_mode();
+            break;
+        case SMALL_INTEGRATION_TIME_STEP_MODE:
+            initialize_small_time_step_mode();
+            break;
+        case LARGE_INTEGRATION_TIME_STEP_MODE:
+        default:
+            initialize_large_time_step_mode();
+            break;
+    }
+}
+
+void FIRST_ORDER_BLOCK::determine_block_integration_time_step_mode()
+{
+    STEPS& toolkit = get_toolkit();
+    double global_h = toolkit.get_dynamic_simulation_time_step_in_s();
+    BLOCK_INTEGRATION_TIME_STEP_MODE mode = NORMAL_INTEGRATION_TIME_STEP_MODE;
+
+    bool is_automatic_large_step_logic_enabled = get_automatic_large_time_step_logic();
+    if(is_automatic_large_step_logic_enabled)
+    {
+        double t = get_T_in_s();
+        if(global_h<6.91*t) // magic number is NOT allowed. must be removed.
+        {
+            if(global_h>t/4)
+                mode = SMALL_INTEGRATION_TIME_STEP_MODE;
+        }
+        else
+            mode = LARGE_INTEGRATION_TIME_STEP_MODE;
+    }
+    set_integration_time_step_mode(mode);
+}
+
+void FIRST_ORDER_BLOCK::determine_block_integration_time_step()
+{
     STEPS& toolkit = get_toolkit();
     h = toolkit.get_dynamic_simulation_time_step_in_s();
 
+    BLOCK_INTEGRATION_TIME_STEP_MODE mode = get_integration_time_step_mode();
+    if(mode == SMALL_INTEGRATION_TIME_STEP_MODE)
+    {
+        double t = get_T_in_s();
+        count_of_time_slice_when_in_small_integration_time_step_mode = ceil(4.0*h/t);
+        h = h/count_of_time_slice_when_in_small_integration_time_step_mode;
+    }
+}
+
+void FIRST_ORDER_BLOCK::determine_block_temp_variables()
+{
     double k = get_K();
-    double t = get_T_in_s();
     if(k!=0.0)
         one_over_k = 1.0/k;
+
+    double t = get_T_in_s();
     if(t!=0.0)
     {
-        ostringstream osstream;
-
         one_over_t = 1.0/t;
         one_over_h = 1.0/h;
         t_over_h = t*one_over_h;
         h_plus_2t = h+2.0*t;
         one_over_h_plus_2t = 1.0/h_plus_2t;
         h_minus_2t = h-2.0*t;
+    }
+}
 
-        double y = get_output();
-        double s, z, x;
-        if(k!=0.0)
-        {
-            s = y;
-            //z = y-(1.0-2.0*t/h)*s;
-            //z = s-(1.0-2.0*t/h)*s;
-            //z =2.0*t/h*s;
-            z = 2.0*t_over_h*s;
+void FIRST_ORDER_BLOCK::initialize_normal_time_step_mode()
+{
+    double t = get_T_in_s();
+    if(t!=0.0)
+        initialize_small_time_step_mode();
+    else
+        initialize_large_time_step_mode();
+}
 
-            //x = y/k;
-            x = y*one_over_k;
-        }
-        else
-        {
-            y=0.0;
-            set_output(0.0);
-            s = y;
-            //z = y-(1.0-2.0*t/h)*s;
-            //z = s-(1.0-2.0*t/h)*s;
-            //z =2.0*t/h*s;
-            z = 2.0*t_over_h*s;
-            x = 0.0;
-        }
+void FIRST_ORDER_BLOCK::initialize_small_time_step_mode()
+{
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
 
-        set_state(s);
-        set_store(z);
-        set_input(x);
+    double k = get_K();
 
-        if(get_limiter_type() != NO_LIMITER)
-        {
-            double vmax = get_upper_limit();
-            double vmin = get_lower_limit();
-            if(s>vmax)
-            {
-                osstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-            else
-            {
-                if(s<vmin)
-                {
-                    osstream<<"Initialization Error. State ("<<s<<") exceeds lower limit bound ("<<vmin<<").";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-            }
-        }
+    double y = get_output();
+    double s, z, x;
+    if(k!=0.0)
+    {
+        s = y;
+        //z = y-(1.0-2.0*t/h)*s;
+        //z = s-(1.0-2.0*t/h)*s;
+        //z =2.0*t/h*s;
+        z = 2.0*t_over_h*s;
+
+        //x = y/k;
+        x = y*one_over_k;
     }
     else
     {
-        set_state(0.0);
-        set_store(0.0);
-        if(k!=0.0)
+        y=0.0;
+        set_output(0.0);
+        s = y;
+        //z = y-(1.0-2.0*t/h)*s;
+        //z = s-(1.0-2.0*t/h)*s;
+        //z =2.0*t/h*s;
+        z = 2.0*t_over_h*s;
+        x = 0.0;
+    }
+
+    set_state(s);
+    set_store(z);
+    set_input(x);
+
+    if(get_limiter_type() != NO_LIMITER)
+    {
+        double vmax = get_upper_limit();
+        double vmin = get_lower_limit();
+        if(s>vmax)
         {
-            //set_input(get_output()/get_K());
-            set_input(get_output()*one_over_k);
+            osstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
         else
         {
-            set_output(0.0);
-            set_input(0.0);
+            if(s<vmin)
+            {
+                osstream<<"Initialization Error. State ("<<s<<") exceeds lower limit bound ("<<vmin<<").";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
         }
+    }
+    copy_current_input_to_old_input_in_last_time_step();
+}
+
+void FIRST_ORDER_BLOCK::initialize_large_time_step_mode()
+{
+    double k = get_K();
+    set_state(0.0);
+    set_store(0.0);
+    if(k!=0.0)
+    {
+        //set_input(get_output()/get_K());
+        set_input(get_output()*one_over_k);
+    }
+    else
+    {
+        set_output(0.0);
+        set_input(0.0);
     }
 }
 
@@ -138,6 +210,23 @@ void FIRST_ORDER_BLOCK::run(DYNAMIC_MODE mode)
 }
 
 void FIRST_ORDER_BLOCK::integrate()
+{
+    switch(get_integration_time_step_mode())
+    {
+        case NORMAL_INTEGRATION_TIME_STEP_MODE:
+            integrate_normal_time_step_mode();
+            break;
+        case SMALL_INTEGRATION_TIME_STEP_MODE:
+            integrate_small_time_step_mode();
+            break;
+        case LARGE_INTEGRATION_TIME_STEP_MODE:
+        default:
+            integrate_large_time_step_mode();
+            break;
+    }
+}
+
+void FIRST_ORDER_BLOCK::integrate_normal_time_step_mode()
 {
     double k = get_K();
     if(k!=0.0)
@@ -196,16 +285,104 @@ void FIRST_ORDER_BLOCK::integrate()
                 }
             }
             set_state(s);
+            set_output(y);
         }
         else
         {
-            y = k*x;
+            integrate_large_time_step_mode();
         }
+    }
+}
+
+void FIRST_ORDER_BLOCK::integrate_small_time_step_mode()
+{
+    double k = get_K();
+    if(k!=0.0)
+    {
+        double x = get_input();
+        double x0 = get_old_input_in_last_time_step();
+        double xi = x0;
+        double deltaX = (x-x0)/count_of_time_slice_when_in_small_integration_time_step_mode;
+
+        double s=0, z, y=0;
+
+        z = get_store();
+        LIMITER_TYPE limiter_type = get_limiter_type();
+        double vmax = get_upper_limit();
+        double vmin = get_lower_limit();
+        for(unsigned int i=0; i<count_of_time_slice_when_in_small_integration_time_step_mode; ++i)
+        {
+            xi += deltaX;
+            //s = (z+k*x)/(1.0+2.0*t/h);
+            //s = h*(z+k*x)/(h+2.0*t);
+            s = h*(z+k*xi)*one_over_h_plus_2t;
+            y = s;
+
+            if(limiter_type != NO_LIMITER)
+            {
+                if(limiter_type == WINDUP_LIMITER)
+                {
+                    if(y>vmax)
+                        y = vmax;
+                    else
+                    {
+                        if(y<vmin)
+                            y = vmin;
+                    }
+                }
+                else
+                {
+                    if(s>vmax)
+                    {
+                        s = vmax;
+                        y = vmax;
+                    }
+                    else
+                    {
+                        if(s<vmin)
+                        {
+                            s = vmin;
+                            y = vmin;
+                        }
+                    }
+                }
+            }
+            z = k*xi-h_minus_2t*s*one_over_h;
+        }
+        set_state(s);
+        set_output(y);
+    }
+}
+
+void FIRST_ORDER_BLOCK::integrate_large_time_step_mode()
+{
+    double k = get_K();
+    if(k!=0.0)
+    {
+        double x = get_input();
+        double y = k*x;
         set_output(y);
     }
 }
 
 void FIRST_ORDER_BLOCK::update()
+{
+    switch(get_integration_time_step_mode())
+    {
+        case NORMAL_INTEGRATION_TIME_STEP_MODE:
+            update_normal_time_step_mode();
+            break;
+        case SMALL_INTEGRATION_TIME_STEP_MODE:
+            update_small_time_step_mode();
+            break;
+        case LARGE_INTEGRATION_TIME_STEP_MODE:
+        default:
+            update_large_time_step_mode();
+            break;
+    }
+}
+
+void FIRST_ORDER_BLOCK::update_normal_time_step_mode()
 {
     double k = get_K();
     if(k!=0.0)
@@ -259,11 +436,30 @@ void FIRST_ORDER_BLOCK::update()
             //z = k*x-(h-2.0*t)*s/h;
             z = k*x-h_minus_2t*s*one_over_h;
             set_store(z);
+            set_output(y);
         }
         else
         {
-            y = k*x;
+            update_large_time_step_mode();
         }
+    }
+}
+
+void FIRST_ORDER_BLOCK::update_small_time_step_mode()
+{
+    update_normal_time_step_mode();
+    copy_current_input_to_old_input_in_last_time_step();
+}
+
+void FIRST_ORDER_BLOCK::update_large_time_step_mode()
+{
+    double k = get_K();
+    if(k!=0.0)
+    {
+        double x = get_input();
+
+        double y = k*x;
+
         set_output(y);
     }
 }

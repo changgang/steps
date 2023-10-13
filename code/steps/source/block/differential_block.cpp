@@ -47,6 +47,26 @@ double DIFFERENTIAL_BLOCK::get_T_in_s() const
 
 void DIFFERENTIAL_BLOCK::initialize()
 {
+    determine_block_integration_time_step_mode();
+    determine_block_integration_time_step();
+    determine_block_temp_variables();
+
+    switch(get_integration_time_step_mode())
+    {
+        case NORMAL_INTEGRATION_TIME_STEP_MODE:
+            initialize_normal_time_step_mode();
+            break;
+        case SMALL_INTEGRATION_TIME_STEP_MODE:
+            initialize_small_time_step_mode();
+            break;
+        case LARGE_INTEGRATION_TIME_STEP_MODE:
+        default:
+            initialize_large_time_step_mode();
+            break;
+    }
+}
+void DIFFERENTIAL_BLOCK::initialize_normal_time_step_mode()
+{
     double k = get_K();
     if(k!=0.0)
     {

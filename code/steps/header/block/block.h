@@ -33,12 +33,18 @@ class BLOCK
         double get_upper_limit() const;
         double get_lower_limit() const;
 
+        void set_integration_time_step_mode(BLOCK_INTEGRATION_TIME_STEP_MODE mode);
+        BLOCK_INTEGRATION_TIME_STEP_MODE get_integration_time_step_mode();
+
+        void copy_current_input_to_old_input_in_last_time_step();
+        double get_old_input_in_last_time_step() const;
+
         double get_state() const;
         double get_store() const;
 
-        static void enable_automatic_large_step_logic();
-        static void disable_automatic_large_step_logic();
-        static bool get_automatic_large_step_logic();
+        static void enable_automatic_large_time_step_logic();
+        static void disable_automatic_large_time_step_logic();
+        static bool get_automatic_large_time_step_logic();
 
         void check_limiter() const;
     public:
@@ -54,6 +60,9 @@ class BLOCK
         double upper_limit, lower_limit;
         double input, output;
 
-        static bool automatic_large_step_logic;
+        static bool automatic_large_time_step_logic;
+
+        BLOCK_INTEGRATION_TIME_STEP_MODE integration_time_step_mode;
+        double old_input_of_last_main_step;
 };
 #endif // BLOCK_H

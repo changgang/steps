@@ -2,13 +2,14 @@
 #include "header/steps_namespace.h"
 #include "header/basic/utility.h"
 
-bool BLOCK::automatic_large_step_logic = false;
+bool BLOCK::automatic_large_time_step_logic = false;
 
 BLOCK::BLOCK(STEPS& toolkit)
 {
     set_toolkit(toolkit);
     set_limiter_type(NO_LIMITER);
-    disable_automatic_large_step_logic();
+    disable_automatic_large_time_step_logic();
+    set_integration_time_step_mode(NORMAL_INTEGRATION_TIME_STEP_MODE);
     state = 0.0;
     store  = 0.0;
     upper_limit = 0.0;
@@ -115,19 +116,39 @@ double BLOCK::get_output() const
     return output;
 }
 
-void BLOCK::enable_automatic_large_step_logic()
+void BLOCK::enable_automatic_large_time_step_logic()
 {
-    automatic_large_step_logic = true;
+    automatic_large_time_step_logic = true;
 }
 
-void BLOCK::disable_automatic_large_step_logic()
+void BLOCK::disable_automatic_large_time_step_logic()
 {
-    automatic_large_step_logic = false;
+    automatic_large_time_step_logic = false;
 }
 
-bool BLOCK::get_automatic_large_step_logic()
+bool BLOCK::get_automatic_large_time_step_logic()
 {
-    return automatic_large_step_logic;
+    return automatic_large_time_step_logic;
+}
+
+void BLOCK::set_integration_time_step_mode(BLOCK_INTEGRATION_TIME_STEP_MODE mode)
+{
+    integration_time_step_mode = mode;
+}
+
+BLOCK_INTEGRATION_TIME_STEP_MODE BLOCK::get_integration_time_step_mode()
+{
+    return integration_time_step_mode;
+}
+
+void BLOCK::copy_current_input_to_old_input_in_last_time_step()
+{
+    old_input_of_last_main_step = input;
+}
+
+double BLOCK::get_old_input_in_last_time_step() const
+{
+    return old_input_of_last_main_step;
 }
 
 void BLOCK::check_limiter() const
