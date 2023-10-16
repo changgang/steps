@@ -3,6 +3,7 @@
 
 #include "header/block/block.h"
 #include "header/block/first_order_block.h"
+#include "header/basic/continuous_buffer.h"
 
 class LEAD_LAG_BLOCK : public BLOCK
 {
@@ -23,12 +24,30 @@ class LEAD_LAG_BLOCK : public BLOCK
         void run(DYNAMIC_MODE mode);
         virtual void check();
     private:
+        void determine_block_integration_time_step_mode();
+        void determine_block_integration_time_step();
+        void determine_block_temp_variables();
+
+        void initialize_normal_time_step_mode();
+        void initialize_small_time_step_mode();
+        void initialize_large_time_step_mode();
+
         void integrate();
+        void integrate_normal_time_step_mode();
+        void integrate_small_time_step_mode();
+        void integrate_large_time_step_mode();
+
         void update();
+        void update_normal_time_step_mode();
+        void update_small_time_step_mode();
+        void update_large_time_step_mode();
+
         double K, T1, T2;
         FIRST_ORDER_BLOCK first_order_block;
-
-        double h_over_2t1, h_over_2t2, t1_over_t2, t2_over_t1, one_over_t1, one_over_t2, one_over_1_plus_h_over_2t2;
+        double h;
+        double h_over_2t1, h_over_2t2, t1_over_t2, t2_over_t1, one_over_t1, one_over_t2, one_over_1_plus_h_over_2t2, h_over_t2;
+        unsigned int count_of_time_slice_when_in_small_integration_time_step_mode;
+        CONTINUOUS_BUFFER history_output_for_large_time_step_integration_of_differential_block;
 };
 
 #endif // LEAD_LAG_BLOCK_H

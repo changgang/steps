@@ -2,6 +2,7 @@
 #define DIFFERENTIAL_BLOCK_H
 
 #include "header/block/block.h"
+#include "header/basic/continuous_buffer.h"
 
 class DIFFERENTIAL_BLOCK : public BLOCK
 {
@@ -42,7 +43,8 @@ class DIFFERENTIAL_BLOCK : public BLOCK
         double K, T;
 
         double h;
-        double k_over_t, t_over_h, one_over_t;
+        double k_over_t, t_over_h, one_over_t, h_over_t;
+        CONTINUOUS_BUFFER history_output_for_large_time_step_integration;
         unsigned int count_of_time_slice_when_in_small_integration_time_step_mode;
 };
 #endif // DIFFERENTIAL_BLOCK_H

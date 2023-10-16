@@ -73,11 +73,11 @@
 	<vector>
 	<string>
 
-1697183669 d:\steps\code\steps\header\block\block.h
+1697192105 d:\steps\code\steps\header\block\block.h
 	"header/basic/steps_enum.h"
 	<vector>
 
-1697183099 d:\steps\code\steps\header\basic\steps_enum.h
+1697192105 d:\steps\code\steps\header\basic\steps_enum.h
 	<iso646.h>
 
 1664187911 d:\steps\code\steps\header\model\model.h
@@ -111,8 +111,9 @@
 1664187911 d:\steps\code\steps\header\model\bus_frequency_model\bus_frequency_model.h
 	"header/block/differential_block.h"
 
-1610692137 d:\steps\code\steps\header\block\differential_block.h
+1697425695 d:\steps\code\steps\header\block\differential_block.h
 	"header/block/block.h"
+	"header/basic/continuous_buffer.h"
 
 1677643900 d:\steps\code\steps\header\device\generator.h
 	<string>
@@ -378,7 +379,7 @@
 	"header/basic/string_int_map.h"
 	<mutex>
 
-1697190050 d:\steps\code\steps\header\steps.h
+1697192105 d:\steps\code\steps\header\steps.h
 	"header/power_system_database.h"
 	"header/dynamic_model_database.h"
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
@@ -1142,7 +1143,7 @@
 	"header/block/first_order_block.h"
 	"header/STEPS.h"
 
-1697184881 d:\steps\code\steps\header\block\first_order_block.h
+1697192105 d:\steps\code\steps\header\block\first_order_block.h
 	"header/block/block.h"
 	"header/block/proportional_block.h"
 
@@ -1155,9 +1156,10 @@
 	"header/block/lead_lag_block.h"
 	"header/STEPS.h"
 
-1583938871 d:\steps\code\steps\header\block\lead_lag_block.h
+1697430187 d:\steps\code\steps\header\block\lead_lag_block.h
 	"header/block/block.h"
 	"header/block/first_order_block.h"
+	"header/basic/continuous_buffer.h"
 
 1583938871 d:\steps\code\steps\header\block\pid_block_test.h
 	<istream>
@@ -2614,7 +2616,7 @@
 	<iostream>
 	<cstdio>
 
-1697179957 source:d:\steps\code\steps\source\apis\steps_api_utilities.cpp
+1697192105 source:d:\steps\code\steps\source\apis\steps_api_utilities.cpp
 	"header/apis/steps_api.h"
 	"header/apis/steps_api_common.h"
 	"header/basic/utility.h"
@@ -3213,12 +3215,12 @@
 	<cstdio>
 	"header/steps_namespace.h"
 
-1697183675 source:d:\steps\code\steps\source\block\block.cpp
+1697192105 source:d:\steps\code\steps\source\block\block.cpp
 	"header/block/block.h"
 	"header/steps_namespace.h"
 	"header/basic/utility.h"
 
-1583938871 source:d:\steps\code\steps\source\block\differential_block.cpp
+1697430187 source:d:\steps\code\steps\source\block\differential_block.cpp
 	"header/block/differential_block.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -3235,7 +3237,7 @@
 	<cstring>
 	<cstdio>
 
-1697187569 source:d:\steps\code\steps\source\block\first_order_block.cpp
+1697424888 source:d:\steps\code\steps\source\block\first_order_block.cpp
 	"header/block/first_order_block.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -3269,7 +3271,7 @@
 	<cstring>
 	<cstdio>
 
-1583938871 source:d:\steps\code\steps\source\block\lead_lag_block.cpp
+1697430476 source:d:\steps\code\steps\source\block\lead_lag_block.cpp
 	"header/block/lead_lag_block.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -5663,7 +5665,7 @@
 	"header/steps_namespace.h"
 	"header/basic/utility.h"
 
-1697179768 source:d:\steps\code\steps\source\steps.cpp
+1697192105 source:d:\steps\code\steps\source\steps.cpp
 	"header/STEPS.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"

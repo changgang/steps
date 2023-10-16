@@ -304,7 +304,7 @@ void FIRST_ORDER_BLOCK::integrate_small_time_step_mode()
         double xi = x0;
         double deltaX = (x-x0)/count_of_time_slice_when_in_small_integration_time_step_mode;
 
-        double s=0, z, y=0;
+        double s=0, z=0, y=0;
 
         z = get_store();
         LIMITER_TYPE limiter_type = get_limiter_type();

@@ -76,7 +76,7 @@ void DIFFERENTIAL_BLOCK::determine_block_integration_time_step_mode()
     if(is_automatic_large_step_logic_enabled)
     {
         double t = get_T_in_s();
-        if(global_h<6.91*t) // magic number is NOT allowed. must be removed.
+        if(global_h<7.6*t) // magic number is NOT allowed. must be removed.
         {
             if(global_h>t/4)
                 mode = SMALL_INTEGRATION_TIME_STEP_MODE;
@@ -107,10 +107,10 @@ void DIFFERENTIAL_BLOCK::determine_block_temp_variables()
     if(k!=0.0)
     {
         double t = get_T_in_s();
-
         one_over_t = 1.0/t;
         k_over_t = k*one_over_t;
         t_over_h = t/h;
+        h_over_t = h/t;
     }
 }
 
@@ -151,6 +151,12 @@ void DIFFERENTIAL_BLOCK::initialize_small_time_step_mode()
 void DIFFERENTIAL_BLOCK::initialize_large_time_step_mode()
 {
     initialize_normal_time_step_mode();
+
+    STEPS& toolkit = get_toolkit();
+    double tnow = toolkit.get_dynamic_simulation_time_in_s();
+    history_output_for_large_time_step_integration.set_toolkit(toolkit);
+    history_output_for_large_time_step_integration.set_buffer_size(5);
+    history_output_for_large_time_step_integration.initialize_buffer(tnow, 0.0);
 }
 
 void DIFFERENTIAL_BLOCK::run(DYNAMIC_MODE mode)
@@ -183,9 +189,6 @@ void DIFFERENTIAL_BLOCK::integrate()
 
 void DIFFERENTIAL_BLOCK::integrate_normal_time_step_mode()
 {
-    //double k = get_K();
-    //double t = get_T_in_s();
-
     double x = get_input();
 
     double s, z, y;
@@ -210,10 +213,42 @@ void DIFFERENTIAL_BLOCK::integrate_normal_time_step_mode()
 
 void DIFFERENTIAL_BLOCK::integrate_small_time_step_mode()
 {
+    double x = get_input();
+    double x0 = get_old_input_in_last_time_step();
+    double xi = x0;
+    double deltaX = (x-x0)/count_of_time_slice_when_in_small_integration_time_step_mode;
+    double s=0, z=0, y=0;
+    z=get_store();
+    for(unsigned int i=0; i<count_of_time_slice_when_in_small_integration_time_step_mode; ++i)
+    {
+        xi += deltaX;
+        s = (z+k_over_t*xi)/(1.0+2.0*t_over_h);
+        y = k_over_t*xi - s;
+        z = k_over_t*xi-(1.0-2.0*t_over_h)*s;
+    }
+    set_state(s);
+    set_output(y);
 }
 
 void DIFFERENTIAL_BLOCK::integrate_large_time_step_mode()
 {
+    double x = get_input();
+    double x0 = get_old_input_in_last_time_step();
+    double s=0, z=0, y=0;
+    z = get_store();
+    if(x!=x0)
+    {
+        STEPS& toolkit = get_toolkit();
+        double tnow = toolkit.get_dynamic_simulation_time_in_s();
+        double initial_s_guessed = (z+k_over_t*x)/(1.0+2.0*4);//s = (z+k_over_t*x)/(1.0+2.0*t/(t/4));
+        double initial_y_guessed = k_over_t*x-initial_s_guessed;
+        history_output_for_large_time_step_integration.append_data(tnow, initial_y_guessed);
+        for(unsigned int i=0; i<5; ++i)
+            y += history_output_for_large_time_step_integration.get_buffer_value_at_delay_index(i)*exp(-(i+1)*h_over_t);
+        s = k_over_t*x - y;
+    }
+    set_state(s);
+    set_output(y);
 }
 
 void DIFFERENTIAL_BLOCK::update()
@@ -235,9 +270,6 @@ void DIFFERENTIAL_BLOCK::update()
 
 void DIFFERENTIAL_BLOCK::update_normal_time_step_mode()
 {
-    //double k = get_K();
-    //double t = get_T_in_s();
-
     double x = get_input();
 
     double s, z, y;
@@ -261,6 +293,17 @@ void DIFFERENTIAL_BLOCK::update_small_time_step_mode()
 
 void DIFFERENTIAL_BLOCK::update_large_time_step_mode()
 {
+    double x = get_input();
+    double x0 = get_old_input_in_last_time_step();
+    double s, z=0, y=0;
+    if(x!=x0)
+    {
+        s = get_state();
+        y = k_over_t*x-s;
+        z = k_over_t*x-(1.0-2.0*t_over_h)*s;
+    }
+    set_store(z);
+    set_output(y);
 }
 
 void DIFFERENTIAL_BLOCK::check()
