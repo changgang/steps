@@ -285,26 +285,25 @@ INTEGRAL_BLOCK* SYNC_GENERATOR_MODEL::get_rotor_angle_block()
     return &rotor_angle_block;
 }
 
-INTEGRAL_BLOCK* SYNC_GENERATOR_MODEL::get_d_axis_transient_block()
+FIRST_ORDER_BLOCK* SYNC_GENERATOR_MODEL::get_d_axis_transient_block()
 {
     return &transient_block_d_axis;
 }
 
-INTEGRAL_BLOCK* SYNC_GENERATOR_MODEL::get_d_axis_subtransient_block()
+FIRST_ORDER_BLOCK* SYNC_GENERATOR_MODEL::get_d_axis_subtransient_block()
 {
     return &subtransient_block_d_axis;
 }
 
-INTEGRAL_BLOCK* SYNC_GENERATOR_MODEL::get_q_axis_transient_block()
+FIRST_ORDER_BLOCK* SYNC_GENERATOR_MODEL::get_q_axis_transient_block()
 {
     return &transient_block_q_axis;
 }
 
-INTEGRAL_BLOCK* SYNC_GENERATOR_MODEL::get_q_axis_subtransient_block()
+FIRST_ORDER_BLOCK* SYNC_GENERATOR_MODEL::get_q_axis_subtransient_block()
 {
     return &subtransient_block_q_axis;
 }
-
 
 bool SYNC_GENERATOR_MODEL::is_saturation_considered() const
 {

@@ -3,7 +3,6 @@
 
 #include "header/block/block.h"
 #include "header/block/first_order_block.h"
-#include "header/basic/continuous_buffer.h"
 
 class LEAD_LAG_BLOCK : public BLOCK
 {
@@ -45,9 +44,8 @@ class LEAD_LAG_BLOCK : public BLOCK
         double K, T1, T2;
         FIRST_ORDER_BLOCK first_order_block;
         double h;
-        double h_over_2t1, h_over_2t2, t1_over_t2, t2_over_t1, one_over_t1, one_over_t2, one_over_1_plus_h_over_2t2, h_over_t2;
+        double h_over_2t1, h_over_2t2, t1_over_t2, t2_over_t1, one_over_t1, one_over_t2, one_over_1_plus_h_over_2t2;
         unsigned int count_of_time_slice_when_in_small_integration_time_step_mode;
-        CONTINUOUS_BUFFER history_output_for_large_time_step_integration_of_differential_block;
 };
 
 #endif // LEAD_LAG_BLOCK_H

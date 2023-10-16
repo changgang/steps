@@ -3,6 +3,7 @@
 
 #include "header/model/sg_models/sg_model.h"
 #include "header/block/integral_block.h"
+#include "header/block/first_order_block.h"
 #include "header/block/saturation_block.h"
 
 
@@ -67,10 +68,10 @@ class SYNC_GENERATOR_MODEL : public SG_MODEL
 
         INTEGRAL_BLOCK* get_rotor_speed_block();
         INTEGRAL_BLOCK* get_rotor_angle_block();
-        INTEGRAL_BLOCK* get_d_axis_transient_block();
-        INTEGRAL_BLOCK* get_d_axis_subtransient_block();
-        INTEGRAL_BLOCK* get_q_axis_transient_block();
-        INTEGRAL_BLOCK* get_q_axis_subtransient_block();
+        FIRST_ORDER_BLOCK* get_d_axis_transient_block();
+        FIRST_ORDER_BLOCK* get_d_axis_subtransient_block();
+        FIRST_ORDER_BLOCK* get_q_axis_transient_block();
+        FIRST_ORDER_BLOCK* get_q_axis_subtransient_block();
 
         bool is_saturation_considered() const;
         double get_saturation_with_flux(double flux);
@@ -161,8 +162,8 @@ class SYNC_GENERATOR_MODEL : public SG_MODEL
         //unsigned int generator_index;
         double Rs, Xd, Xq, Xdp, Xqp, Xdpp, Xqpp, Xl;
         double D;
-        INTEGRAL_BLOCK transient_block_d_axis, subtransient_block_d_axis;
-        INTEGRAL_BLOCK transient_block_q_axis, subtransient_block_q_axis;
+        FIRST_ORDER_BLOCK transient_block_d_axis, subtransient_block_d_axis;
+        FIRST_ORDER_BLOCK transient_block_q_axis, subtransient_block_q_axis;
         INTEGRAL_BLOCK rotor_angle_block, rotor_speed_block;
         SATURATION_BLOCK saturation_block;
         SATURATION_TYPE saturation_type;

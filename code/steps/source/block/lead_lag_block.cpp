@@ -117,7 +117,6 @@ void LEAD_LAG_BLOCK::determine_block_integration_time_step()
 
 void LEAD_LAG_BLOCK::determine_block_temp_variables()
 {
-    double k = get_K();
     double t1 = get_T1_in_s();
     double t2 = get_T2_in_s();
     if(t1!=0.0)
@@ -134,7 +133,6 @@ void LEAD_LAG_BLOCK::determine_block_temp_variables()
             h_over_2t2 = 0.5*h*one_over_t2;
             one_over_1_plus_h_over_2t2 = 1.0/(1.0+h_over_2t2);
             t1_over_t2 = t1*one_over_t2;
-            h_over_t2 = h*one_over_t2;
         }
     }
 }
@@ -142,7 +140,6 @@ void LEAD_LAG_BLOCK::determine_block_temp_variables()
 void LEAD_LAG_BLOCK::initialize_normal_time_step_mode()
 {
     double t1 = get_T1_in_s();
-    double t2 = get_T2_in_s();
     if(t1!=0.0)
     {
         double k = get_K();
@@ -186,12 +183,6 @@ void LEAD_LAG_BLOCK::initialize_small_time_step_mode()
 void LEAD_LAG_BLOCK::initialize_large_time_step_mode()
 {
     initialize_normal_time_step_mode();
-
-    STEPS& toolkit = get_toolkit();
-    double tnow = toolkit.get_dynamic_simulation_time_in_s();
-    history_output_for_large_time_step_integration_of_differential_block.set_toolkit(toolkit);
-    history_output_for_large_time_step_integration_of_differential_block.set_buffer_size(5);
-    history_output_for_large_time_step_integration_of_differential_block.initialize_buffer(tnow, 0.0);
 }
 
 void LEAD_LAG_BLOCK::run(DYNAMIC_MODE mode)
@@ -281,7 +272,7 @@ void LEAD_LAG_BLOCK::integrate_small_time_step_mode()
     for(unsigned int i=0; i<count_of_time_slice_when_in_small_integration_time_step_mode; ++i)
     {
         xi += deltaX;
-        s = (z+h_over_2t2*k*xi)/(1.0+h_over_2t2);
+        s = (z+h_over_2t2*k*xi)*one_over_1_plus_h_over_2t2;
         y = t1_over_t2*(k*xi+(t2_over_t1-1.0)*s);
         z = s+h_over_2t1*(y-s);
     }
@@ -293,29 +284,10 @@ void LEAD_LAG_BLOCK::integrate_large_time_step_mode()
 {
     double k = get_K();
     double x = get_input();
-    double x0 = get_old_input_in_last_time_step();
-    double s_D_block=0, z, y=0;
-    if(x!=x0)
-    {
-        double t1 = get_T1_in_s();
+    double y = k*x;
+    double s = y;
 
-
-        STEPS& toolkit = get_toolkit();
-        double tnow = toolkit.get_dynamic_simulation_time_in_s();
-        z = get_store();
-        double initial_s_guessed_D_block = (z+k*t1_over_t2*x)/(1.0+2.0*4);//double s = (z+(k*t1)/t2*x)/(1.0+2.0*t2/(t2/4));
-        double initial_y_guessed_D_block = k*t1_over_t2*x-initial_s_guessed_D_block;
-        history_output_for_large_time_step_integration_of_differential_block.append_data(tnow, initial_y_guessed_D_block);
-        double y_D_block = 0;
-        for(unsigned int i=0; i<5; ++i)
-            y_D_block += history_output_for_large_time_step_integration_of_differential_block.get_buffer_value_at_delay_index(i)*exp(-(i+1)*h_over_t2);
-        s_D_block = k*t1_over_t2*x - y_D_block;
-        y = k*x+y_D_block;
-    }
-    else
-        y = k*x;
-
-    set_state(s_D_block);
+    set_state(s);
     set_output(y);
 }
 
@@ -368,23 +340,7 @@ void LEAD_LAG_BLOCK::update_small_time_step_mode()
 
 void LEAD_LAG_BLOCK::update_large_time_step_mode()
 {
-    double k = get_K();
-    double x = get_input();
-
-    double x0 = get_old_input_in_last_time_step();
-    double s, z=0, y=0;
-    if(x!=x0)
-    {
-        double s_D_block = get_state();
-        double y_D_block = k*t1_over_t2*x-s_D_block;
-        //z = k*t1_over_t2*x-(1.0-2.0*t2_over_h)*s_D_block;
-        y = y_D_block + k*x;
-    }
-    else
-        y = k*x;
-    set_store(z);
-    set_output(y);
-    copy_current_input_to_old_input_in_last_time_step();
+    update_normal_time_step_mode();
 }
 
 void LEAD_LAG_BLOCK::check()

@@ -171,10 +171,10 @@ void GENROU::initialize()
 
     double rotor_angle = get_rotor_angle_in_rad();
 
-    INTEGRAL_BLOCK* transient_block_d_axis = get_d_axis_transient_block();
-    INTEGRAL_BLOCK* subtransient_block_d_axis = get_d_axis_subtransient_block();
-    INTEGRAL_BLOCK* transient_block_q_axis = get_q_axis_transient_block();
-    INTEGRAL_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
+    FIRST_ORDER_BLOCK* transient_block_d_axis = get_d_axis_transient_block();
+    FIRST_ORDER_BLOCK* subtransient_block_d_axis = get_d_axis_subtransient_block();
+    FIRST_ORDER_BLOCK* transient_block_q_axis = get_q_axis_transient_block();
+    FIRST_ORDER_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
 
 
     GENERATOR* generator = get_generator_pointer();
@@ -355,10 +355,10 @@ void GENROU::run(DYNAMIC_MODE mode)
 {
     INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
     INTEGRAL_BLOCK* rotor_angle_block = get_rotor_angle_block();
-    INTEGRAL_BLOCK* transient_block_d_axis = get_d_axis_transient_block();
-    INTEGRAL_BLOCK* subtransient_block_d_axis = get_d_axis_subtransient_block();
-    INTEGRAL_BLOCK* transient_block_q_axis = get_q_axis_transient_block();
-    INTEGRAL_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
+    FIRST_ORDER_BLOCK* transient_block_d_axis = get_d_axis_transient_block();
+    FIRST_ORDER_BLOCK* subtransient_block_d_axis = get_d_axis_subtransient_block();
+    FIRST_ORDER_BLOCK* transient_block_q_axis = get_q_axis_transient_block();
+    FIRST_ORDER_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
 
     double fbase = get_bus_base_frequency_in_Hz();
 
@@ -384,23 +384,23 @@ void GENROU::run(DYNAMIC_MODE mode)
     double input;
     // d-axis
     input = transient_block_d_axis->get_output()-subtransient_block_d_axis->get_output()-Idq.real()*(xdp-xl);
-    input = get_excitation_voltage_in_pu()-transient_block_d_axis->get_output()-(xd-xdp)*(Idq.real()+input*(xdp-xpp)*one_over_xdp_minus_xl*one_over_xdp_minus_xl)-
+    input = get_excitation_voltage_in_pu()-(xd-xdp)*(Idq.real()+input*(xdp-xpp)*one_over_xdp_minus_xl*one_over_xdp_minus_xl)-
             Flux_dq.real()*saturation;
     transient_block_d_axis->set_input(input);
     transient_block_d_axis->run(mode);
 
-    input = transient_block_d_axis->get_output()-subtransient_block_d_axis->get_output()-Idq.real()*(xdp-xl);
+    input = transient_block_d_axis->get_output()-Idq.real()*(xdp-xl);
     subtransient_block_d_axis->set_input(input);
     subtransient_block_d_axis->run(mode);
 
     // q-axis
     input = transient_block_q_axis->get_output()-subtransient_block_q_axis->get_output()+Idq.imag()*(xqp-xl);
-    input = -transient_block_q_axis->get_output()+(xq-xqp)*(Idq.imag()-input*(xqp-xpp)*one_over_xqp_minus_xl*one_over_xqp_minus_xl)+
+    input = (xq-xqp)*(Idq.imag()-input*(xqp-xpp)*one_over_xqp_minus_xl*one_over_xqp_minus_xl)+
             Flux_dq.imag()*(xq-xl)/(xd-xl)*saturation;
     transient_block_q_axis->set_input(input);
     transient_block_q_axis->run(mode);
 
-    input = transient_block_q_axis->get_output()-subtransient_block_q_axis->get_output()+Idq.imag()*(xqp-xl);
+    input = transient_block_q_axis->get_output()+Idq.imag()*(xqp-xl);
     subtransient_block_q_axis->set_input(input);
     subtransient_block_q_axis->run(mode);
 
@@ -745,10 +745,10 @@ double GENROU::get_model_internal_variable_with_name(string var_name)
 {
     INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
     INTEGRAL_BLOCK* rotor_angle_block = get_rotor_angle_block();
-    INTEGRAL_BLOCK* transient_block_d_axis = get_d_axis_transient_block();
-    INTEGRAL_BLOCK* transient_block_q_axis = get_q_axis_transient_block();
-    INTEGRAL_BLOCK* subtransient_block_d_axis = get_d_axis_subtransient_block();
-    INTEGRAL_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
+    FIRST_ORDER_BLOCK* transient_block_d_axis = get_d_axis_transient_block();
+    FIRST_ORDER_BLOCK* transient_block_q_axis = get_q_axis_transient_block();
+    FIRST_ORDER_BLOCK* subtransient_block_d_axis = get_d_axis_subtransient_block();
+    FIRST_ORDER_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
 
     var_name = string2upper(var_name);
     if(var_name == "STATE@ROTOR ANGLE BLOCK") return rotor_angle_block->get_state();
@@ -759,10 +759,10 @@ double GENROU::get_model_internal_variable_with_name(string var_name)
     if(var_name == "STATE@Q-AXIS SUBTRANSIENT BLOCK") return subtransient_block_q_axis->get_state();
     if(var_name == "SATURATION")
     {
-        INTEGRAL_BLOCK* transient_block_d_axis = get_d_axis_transient_block();
-        INTEGRAL_BLOCK* subtransient_block_d_axis = get_d_axis_subtransient_block();
-        INTEGRAL_BLOCK* transient_block_q_axis = get_q_axis_transient_block();
-        INTEGRAL_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
+        FIRST_ORDER_BLOCK* transient_block_d_axis = get_d_axis_transient_block();
+        FIRST_ORDER_BLOCK* subtransient_block_d_axis = get_d_axis_subtransient_block();
+        FIRST_ORDER_BLOCK* transient_block_q_axis = get_q_axis_transient_block();
+        FIRST_ORDER_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
 
         double xdp = get_Xdp();
         double xpp = get_Xpp();
@@ -851,10 +851,10 @@ double GENROU::get_terminal_reactive_power_in_MVar()
 double GENROU::get_field_current_in_pu_based_on_mbase()
 {
     INTEGRAL_BLOCK* rotor_angle_block = get_rotor_angle_block();
-    INTEGRAL_BLOCK* transient_block_d_axis = get_d_axis_transient_block();
-    INTEGRAL_BLOCK* subtransient_block_d_axis = get_d_axis_subtransient_block();
-    INTEGRAL_BLOCK* transient_block_q_axis = get_q_axis_transient_block();
-    INTEGRAL_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
+    FIRST_ORDER_BLOCK* transient_block_d_axis = get_d_axis_transient_block();
+    FIRST_ORDER_BLOCK* subtransient_block_d_axis = get_d_axis_subtransient_block();
+    FIRST_ORDER_BLOCK* transient_block_q_axis = get_q_axis_transient_block();
+    FIRST_ORDER_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
 
     double angle = rotor_angle_block->get_output();
 
@@ -915,10 +915,10 @@ double GENROU::get_rotor_speed_in_pu()
 
 complex<double> GENROU::get_internal_voltage_in_pu_in_dq_axis()
 {
-    INTEGRAL_BLOCK* transient_block_d_axis = get_d_axis_transient_block();
-    INTEGRAL_BLOCK* subtransient_block_d_axis = get_d_axis_subtransient_block();
-    INTEGRAL_BLOCK* transient_block_q_axis = get_q_axis_transient_block();
-    INTEGRAL_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
+    FIRST_ORDER_BLOCK* transient_block_d_axis = get_d_axis_transient_block();
+    FIRST_ORDER_BLOCK* subtransient_block_d_axis = get_d_axis_subtransient_block();
+    FIRST_ORDER_BLOCK* transient_block_q_axis = get_q_axis_transient_block();
+    FIRST_ORDER_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
 
     double flux_d = transient_block_d_axis->get_output()*(get_Xpp()-get_Xl())+subtransient_block_d_axis->get_output()*(get_Xdp()-get_Xpp());
     flux_d /= (get_Xdp()-get_Xl());
