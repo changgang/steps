@@ -1,24 +1,29 @@
 # Simulation Toolkit for Electrical Power Systems
 - Maintainer: Changgang Li <lichgang@sdu.edu.cn> from School of Electrical Engineering, Shandong University.
-- Trust the following pages or other credible duplications:
-  * STEPS: https://github.com/changgang/steps  and  https://gitee.com/lichgang/steps/
+- Trust the following repositories or other credible duplications:
+  * STEPS: https://gitee.com/lichgang/steps/ and https://github.com/changgang/steps
   * stepspy: https://pypi.org/project/stepspy/
   * Documentation: https://github.com/changgang/steps/wiki/
-- Date of Readme: April 13, 2022
+- Reminder of major repository:
+  * The github repository may lag behind the gitee repository due to some GIT PUSH issues. So, use gitee repository first.
+  * The 'dev' branch is constantly updating while the 'main' branch is updated when major functions are added. Use 'main' branch for stable applications, and try 'dev' branch for new features.
+- Date of Readme: Oct. 16, 2023
 
 # Reference
-Please cite STEPS with the following paper:  
-```Changgang Li, Yue Wu, Hengxu Zhang, Hua Ye, Yutian Liu and Yilu Liu, "STEPS: A Portable Numerical Simulation Toolkit for Electrical Power System Dynamic Studies," in IEEE Transactions on Power Systems, vol. 36, no. 4, pp. 3216-3226, July 2021, doi: 10.1109/TPWRS.2020.3045102.```  
-See: https://ieeexplore.ieee.org/document/9295409
+Please cite STEPS with the following papers:  
+```[1] Changgang Li, Yue Wu, Hengxu Zhang, Hua Ye, Yutian Liu and Yilu Liu. "STEPS: A Portable Numerical Simulation Toolkit for Electrical Power System Dynamic Studies," in IEEE Transactions on Power Systems, vol. 36, no. 4, pp. 3216-3226, July 2021, doi: 10.1109/TPWRS.2020.3045102.```  
+```[2] Changgang Li, Yun Hang, Yutian Liu, Vladimir Terzija. "Uneven Internal Time-Step Adjustment for Fast Power System Dynamic Simulations based on Trapezoidal Integration of Elementary Transfer Function Blocks," in International Journal of Electrical Power & Energy Systems, vol. 155, Part A, 109509, January 2024, doi: 10.1016/j.ijepes.2023.109509```
+See: https://ieeexplore.ieee.org/document/9295409, https://www.sciencedirect.com/science/article/pii/S0142061523005665
 
 ## Major functions
 Simulation Toolkit for Electrical Power Systems (STEPS) is an open source power system simulator designed for balanced large-scale AC-DC hybrid power system analysis.  
-Currently, it supports powerflow solution and dynamic simulation. In the future, short circuit analysis and eigenvalue analysis will be supported with no timetable.  
-The data format of STEPS is improved based on PSS/E raw and dyr data format. 
+Currently, it supports powerflow solution, short circuit analysis, and dynamic simulation. In the future, eigenvalue analysis will be supported with no timetable.  
+The data format of STEPS is improved based on PSS/E raw, seq, and dyr data format. 
 Though BPA dat format is supported, it will be supported in the future version in stepspy and BPA data importer will be removed.[Sep. 13, 2020]
 You are encouraged to join us for further development.
 
 ## Major versions
+- v2.0.0. Major version. (1) Short circuit functions added. Short circuit analysis with direct solution is supported. APIs are added to stepspy. Short circuit analysis with iterative solution is implemented in C++, and APIs will be added in later version.  (2) Two toolkit functions added: Correct Three Winding Transformer Impedance Logic and Blockwise Automatic Large Step Logic. If the 'Correct' logic is enabled, zero impedance winding of 3-winding transformer can be automatically fixed to avoid NaN error. If the 'Blockwise' logic is enabled, dynamic simulation time step can be increased for fast simulation (See Reference Paper [2]). The 'Blockwise' logic is implemented with changes of dynamic blocks of first order, differential, and lead-lag. (3) Option 'libsteps_file' is added to stepspy when creating STEPS() object when dynamic library with name different from 'libSTEPS' is used. (4) Some wind turbine model bugs are fixed. (5) stepspy module is also upgraded to v2.0.0.
 - v1.6.0. Add VSC HVDC for powerflow and dynamic simulation. stepspy also updated. Released on April 13, 2022.
 - v1.5.4. Update to improve performance. Released on Oct. 20, 2021.
 - v1.5.2. Add new APIs to get generator related model internal variables. Start to add linearization codes. Released on March. 24, 2021.
