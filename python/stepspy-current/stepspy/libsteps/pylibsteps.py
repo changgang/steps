@@ -627,6 +627,8 @@ def load_library(libsteps_file):
     libsteps.api_solve_powerflow.argtypes = (c_char_p, c_uint)
     libsteps.api_is_powerflow_converged.restype = (c_bool)
     libsteps.api_is_powerflow_converged.argtypes = (c_uint, )
+    libsteps.api_is_nan_detected_in_powerflow_solution.restype = (c_bool)
+    libsteps.api_is_nan_detected_in_powerflow_solution.argtypes = (c_uint, )
     libsteps.api_show_powerflow_result.restype = None
     libsteps.api_show_powerflow_result.argtypes = (c_uint, )
     libsteps.api_save_powerflow_result.restype = None

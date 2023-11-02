@@ -54,6 +54,7 @@ class POWERFLOW_SOLVER
 
         bool get_convergence_flag() const;
         bool is_converged();
+        bool is_nan_detected();
 
         double get_maximum_active_power_mismatch_in_MW() const;
         double get_maximum_reactive_power_mismatch_in_MVar() const;
@@ -149,6 +150,7 @@ class POWERFLOW_SOLVER
         bool export_jacobian_matrix_step_by_step;
 
         bool converged;
+        bool nan_is_detected;
 
         vector< complex<double> > bus_current, bus_power;
 

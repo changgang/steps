@@ -348,6 +348,7 @@ EXPORT_STEPS_DLL void api_show_powerflow_solver_configuration(unsigned int toolk
 
 EXPORT_STEPS_DLL void api_solve_powerflow(char* method, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL bool api_is_powerflow_converged(unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL bool api_is_nan_detected_in_powerflow_solution(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_show_powerflow_result(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_powerflow_result(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_extended_powerflow_result(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);

@@ -3891,6 +3891,36 @@ class STEPS():
         """
         global STEPS_LIB
         return STEPS_LIB.api_is_powerflow_converged(self.toolkit_index)
+
+    def is_nan_detected_in_powerflow_soulution(self):
+        """
+        Check if NAN is detected in powerflow solution.
+        Args: N/A
+        Rets:
+            (1) Boolean value. True for NAN detected, False for not detected.
+        Example: N/A
+        """
+        global STEPS_LIB
+        return STEPS_LIB.api_is_nan_detected_in_powerflow_solution(self.toolkit_index)
+
+    def get_powerflow_convergence_status(self):
+        """
+        Get powerflow convergence status string
+        Args: N/A
+        Rets:
+            (1)String value. "CONVERGED" for converged, "DIVERGED" for not converged, "NANFAILED" for NAN detected.
+        Example: N/A
+        """
+        global STEPS_LIB
+        flag_converged = self.is_powerflow_converged()
+        flag_nan_detected = self.is_nan_detected_in_powerflow_soulution()
+        if flag_converged:
+            return "CONVERGED"
+        elif not flag_nan_detected:
+            return "DIVERGED"
+        else:
+            return "NANFAILED"
+
     
     def get_powerflow_loss(self):
         """

@@ -33,6 +33,8 @@ double deg2rad(double angle);
 double radps2hz(double w);
 double hz2radps(double f);
 
+bool is_nan(double& x);
+
 double steps_sin(double angle_in_rad);
 double steps_fast_sin(double angle_in_rad);
 

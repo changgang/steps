@@ -170,6 +170,11 @@ double hz2radps(double f)
     return DOUBLE_PI*f;
 }
 
+bool is_nan(double& x)
+{
+    return x!=x;
+}
+
 double round_angle_in_rad_to_PI(double angle)
 {
     double abs_angle = fabs(angle);
@@ -1320,7 +1325,7 @@ vector<vector<complex<double> > > get_all_columns_of_inverse_matrix(STEPS_COMPLE
 
     int n2 = n+n;
     vector<vector<complex<double> > > Z;
-    for(unsigned int j=0; j<n; j++)
+    for(int j=0; j<n; j++)
     {
         vector<double> I;
         I.reserve(n2);

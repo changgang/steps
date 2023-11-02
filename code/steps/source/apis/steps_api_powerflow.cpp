@@ -228,6 +228,13 @@ bool api_is_powerflow_converged(unsigned int toolkit_index)
     return solver.is_converged();
 }
 
+bool api_is_nan_detected_in_powerflow_solution(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
+    return solver.is_nan_detected();
+}
+
 void api_show_powerflow_result(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

@@ -23,7 +23,6 @@
 					<Add option="-malign-double" />
 					<Add option="-minline-all-stringops" />
 					<Add option="-fopenmp" />
-					<Add option="-ffast-math" />
 					<Add directory="../../code" />
 					<Add directory="../steps" />
 					<Add directory="../thirdparty/SuiteSparse/UMFPACK/Include" />
