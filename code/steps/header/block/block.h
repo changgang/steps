@@ -3,6 +3,7 @@
 
 #include "header/basic/steps_enum.h"
 #include <vector>
+#include <cctype>
 
 using namespace std;
 
@@ -47,6 +48,9 @@ class BLOCK
         static bool get_automatic_large_time_step_logic();
 
         void check_limiter() const;
+
+        void set_state_index(unsigned int index);
+        unsigned int get_state_index() const;
     public:
         void set_state_WITH_CAUTION(double value);
     protected:
@@ -64,5 +68,7 @@ class BLOCK
 
         BLOCK_INTEGRATION_TIME_STEP_MODE integration_time_step_mode;
         double old_input_of_last_main_step;
+
+        unsigned int state_index;
 };
 #endif // BLOCK_H

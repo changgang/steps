@@ -21,6 +21,17 @@ class LEAD_LAG_BLOCK : public BLOCK
 
         void initialize();
         void run(DYNAMIC_MODE mode);
+
+        double get_linearized_system_variable(char var) const;
+        double get_linearized_system_A() const;
+        double get_linearized_system_B() const;
+        double get_linearized_system_C() const;
+        double get_linearized_system_D() const;
+        double get_linearized_system_E() const;
+        double get_linearized_system_F() const;
+        double get_linearized_system_G() const;
+        double get_linearized_system_H() const;
+
         virtual void check();
     private:
         void determine_block_integration_time_step_mode();

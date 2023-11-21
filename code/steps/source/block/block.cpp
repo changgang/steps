@@ -16,6 +16,8 @@ BLOCK::BLOCK(STEPS& toolkit)
     lower_limit = 0.0;
     input = 0.0;
     output = 0.0;
+
+    state_index = INDEX_NOT_EXIST;
 }
 
 BLOCK::~BLOCK()
@@ -163,4 +165,14 @@ void BLOCK::check_limiter() const
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
+}
+
+void BLOCK::set_state_index(unsigned int index)
+{
+    state_index = index;
+}
+
+unsigned int BLOCK::get_state_index() const
+{
+    return state_index;
 }

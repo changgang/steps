@@ -15,8 +15,8 @@ class PROPORTIONAL_BLOCK : public BLOCK
 
         void initialize();
         void run(DYNAMIC_MODE mode);
-        virtual void check();
 
+        virtual void check();
     private:
         void integrate();
         void update();

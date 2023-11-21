@@ -464,6 +464,72 @@ void FIRST_ORDER_BLOCK::update_large_time_step_mode()
     }
 }
 
+double FIRST_ORDER_BLOCK::get_linearized_system_variable(char var) const
+{
+    var = toupper(var);
+    switch(var)
+    {
+        case 'A':
+            return get_linearized_system_A();
+        case 'B':
+            return get_linearized_system_B();
+        case 'C':
+            return get_linearized_system_C();
+        case 'D':
+            return get_linearized_system_D();
+        case 'E':
+            return get_linearized_system_E();
+        case 'F':
+            return get_linearized_system_F();
+        case 'G':
+            return get_linearized_system_G();
+        case 'H':
+            return get_linearized_system_H();
+        default:
+            return 0.0;
+    }
+}
+
+double FIRST_ORDER_BLOCK::get_linearized_system_A() const
+{
+    return 0.0;
+}
+
+double FIRST_ORDER_BLOCK::get_linearized_system_B() const
+{
+    return 0.0;
+}
+
+double FIRST_ORDER_BLOCK::get_linearized_system_C() const
+{
+    return 0.0;
+}
+
+double FIRST_ORDER_BLOCK::get_linearized_system_D() const
+{
+    return 0.0;
+}
+
+double FIRST_ORDER_BLOCK::get_linearized_system_E() const
+{
+    return 0.0;
+}
+
+double FIRST_ORDER_BLOCK::get_linearized_system_F() const
+{
+    return 0.0;
+}
+
+double FIRST_ORDER_BLOCK::get_linearized_system_G() const
+{
+    return 0.0;
+}
+
+double FIRST_ORDER_BLOCK::get_linearized_system_H() const
+{
+    return 0.0;
+}
+
 void FIRST_ORDER_BLOCK::check()
 {
     check_limiter();
