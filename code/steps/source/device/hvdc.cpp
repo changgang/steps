@@ -1745,7 +1745,6 @@ bool HVDC::solve_converter_transformer_tap_and_desired_firing_angle(CONVERTER_SI
 
 void HVDC::solve_best_converter_transformer_tap_with_min_angle(CONVERTER_SIDE converter, double Vdc, double Idc)
 {
-    return;
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
