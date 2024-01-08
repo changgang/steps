@@ -414,3 +414,160 @@ void SEXS::linearize()
     set_linearized_matrix("AVR-COMP", matrix);
     // do linearization
 }
+
+STEPS_SPARSE_MATRIX SEXS::get_linearized_system_A() const
+{
+    /*
+    model: input V, state X, output W
+    block: input U, state X, output Y
+    objective:
+        dX/dt = A*X+B*V
+            W = C*X+D*V
+    derived from the following
+        dX/dt = Ab*X+Bb*U
+            Y = Cb*X+Db*U
+            U = E*Y+F*V
+            W = G*Y+H*V
+    */
+    //unsigned int U_index[2] = [0, 1, 3];
+    // block 0
+    double u_phase_tuner = phase_tuner.get_input();
+    double s_phase_tuner = phase_tuner.get_state();
+    double y_phase_tuner = phase_tuner.get_output();
+    STEPS_SPARSE_MATRIX A_phase_tuner = phase_tuner.get_linearized_system_A();
+    STEPS_SPARSE_MATRIX B_phase_tuner = phase_tuner.get_linearized_system_B();
+    STEPS_SPARSE_MATRIX C_phase_tuner = phase_tuner.get_linearized_system_C();
+    STEPS_SPARSE_MATRIX D_phase_tuner = phase_tuner.get_linearized_system_D();
+    unsigned int u_index = 0, s_index = 0, y_index = 0;
+
+    // block 1
+    double u_exciter = exciter.get_input();
+    double s_exciter = exciter.get_state();
+    double y_exciter = exciter.get_output();
+    STEPS_SPARSE_MATRIX A_exciter = exciter.get_linearized_system_A();
+    STEPS_SPARSE_MATRIX B_exciter = exciter.get_linearized_system_B();
+    STEPS_SPARSE_MATRIX C_exciter = exciter.get_linearized_system_C();
+    STEPS_SPARSE_MATRIX D_exciter = exciter.get_linearized_system_D();
+
+    // define the order of X, U, Y, V, W
+    // Define E F G H U = E*Y+F*V
+
+    STEPS_SPARSE_MATRIX E, F, G, H;
+    E.add_entry(0,0, 1);
+    F.add_entry(0,0, 1);
+    G.add_entry(0,0, 1);
+    H.add_entry(0,0, 1);
+
+    /*
+    here go many codes to manipulate matrix
+    */
+
+    STEPS_SPARSE_MATRIX A;
+
+    return A;
+}
+STEPS_SPARSE_MATRIX SEXS::get_linearized_system_B() const
+{
+    STEPS_SPARSE_MATRIX B;
+
+    return B;
+}
+
+STEPS_SPARSE_MATRIX SEXS::get_linearized_system_C() const
+{
+    STEPS_SPARSE_MATRIX C;
+
+    return C;
+}
+
+STEPS_SPARSE_MATRIX SEXS::get_linearized_system_D() const
+{
+    STEPS_SPARSE_MATRIX D;
+
+    return D;
+}
+
+void SEXS::get_linearized_system_ABCD(STEPS_SPARSE_MATRIX* A,
+                                STEPS_SPARSE_MATRIX* B,
+                                STEPS_SPARSE_MATRIX* C,
+                                STEPS_SPARSE_MATRIX* D) const
+{
+    /*
+    model: input V, state X, output W
+    block: input U, state X, output Y
+    objective:
+        dX/dt = A*X+B*V
+            W = C*X+D*V
+    derived from the following
+        dX/dt = Ab*X+Bb*U
+            Y = Cb*X+Db*U
+            U = E*Y+F*V
+            W = G*Y+H*V
+    */
+    //unsigned int U_index[2] = [0, 1, 3];
+    // block 0
+    double u_phase_tuner = phase_tuner.get_input();
+    double s_phase_tuner = phase_tuner.get_state();
+    double y_phase_tuner = phase_tuner.get_output();
+    STEPS_SPARSE_MATRIX A_phase_tuner = phase_tuner.get_linearized_system_A();
+    STEPS_SPARSE_MATRIX B_phase_tuner = phase_tuner.get_linearized_system_B();
+    STEPS_SPARSE_MATRIX C_phase_tuner = phase_tuner.get_linearized_system_C();
+    STEPS_SPARSE_MATRIX D_phase_tuner = phase_tuner.get_linearized_system_D();
+    unsigned int u_index = 0, s_index = 0, y_index = 0;
+
+    // block 1
+    double u_exciter = exciter.get_input();
+    double s_exciter = exciter.get_state();
+    double y_exciter = exciter.get_output();
+    STEPS_SPARSE_MATRIX A_exciter = exciter.get_linearized_system_A();
+    STEPS_SPARSE_MATRIX B_exciter = exciter.get_linearized_system_B();
+    STEPS_SPARSE_MATRIX C_exciter = exciter.get_linearized_system_C();
+    STEPS_SPARSE_MATRIX D_exciter = exciter.get_linearized_system_D();
+
+    // define the order of X, U, Y, V, W
+    // Define E F G H U = E*Y+F*V
+
+    vector<STEPS_SPARSE_MATRIX*> matrix;
+    matrix.push_back(&A_phase_tuner);
+    matrix.push_back(&A_exciter);
+    STEPS_SPARSE_MATRIX Atemp = concatenate_matrix_diagnally(matrix);
+    *A = Atemp;
+    matrix.clear();
+
+    matrix.push_back(&B_phase_tuner);
+    matrix.push_back(&B_exciter);
+    STEPS_SPARSE_MATRIX Btemp = concatenate_matrix_diagnally(matrix);
+    *B = Btemp;
+    matrix.clear();
+
+    matrix.push_back(&C_phase_tuner);
+    matrix.push_back(&C_exciter);
+    STEPS_SPARSE_MATRIX Ctemp = concatenate_matrix_diagnally(matrix);
+    *C = Ctemp;
+    matrix.clear();
+
+    matrix.push_back(&D_phase_tuner);
+    matrix.push_back(&D_exciter);
+    STEPS_SPARSE_MATRIX Dtemp = concatenate_matrix_diagnally(matrix);
+    *D = Dtemp;
+    matrix.clear();
+
+
+    STEPS_SPARSE_MATRIX E, F, G, H;
+    E.add_entry(0,0, 1);
+    F.add_entry(0,0, 1);
+    G.add_entry(0,0, 1);
+    H.add_entry(0,0, 1);
+
+    /*
+    here go many codes to manipulate matrix
+    */
+
+    /*
+    *A = ;
+    *B = ;
+    *C = ;
+    *D = ;
+    */
+}
+

@@ -33,6 +33,7 @@ class SECOND_ORDER_BLOCK_TEST : public Test::Suite
         void test_initialize_integrate_update_once();
         void test_step_response_when_d_is_zero();
         void test_step_response_when_d_is_nonzero();
+        void test_linearized_ABCD();
     private:
         SECOND_ORDER_BLOCK block;
 };

@@ -464,7 +464,7 @@ void FIRST_ORDER_BLOCK::update_large_time_step_mode()
     }
 }
 
-double FIRST_ORDER_BLOCK::get_linearized_system_variable(char var) const
+STEPS_SPARSE_MATRIX FIRST_ORDER_BLOCK::get_linearized_system_variable(char var) const
 {
     var = toupper(var);
     switch(var)
@@ -477,57 +477,68 @@ double FIRST_ORDER_BLOCK::get_linearized_system_variable(char var) const
             return get_linearized_system_C();
         case 'D':
             return get_linearized_system_D();
-        case 'E':
-            return get_linearized_system_E();
-        case 'F':
-            return get_linearized_system_F();
-        case 'G':
-            return get_linearized_system_G();
-        case 'H':
-            return get_linearized_system_H();
         default:
-            return 0.0;
+            STEPS_SPARSE_MATRIX matrix;
+            return matrix;
     }
 }
 
-double FIRST_ORDER_BLOCK::get_linearized_system_A() const
+STEPS_SPARSE_MATRIX FIRST_ORDER_BLOCK::get_linearized_system_A() const
 {
-    return 0.0;
+    /*
+    x: state; u: input; y: output
+    dx/dt = A*x + B*u
+    y     = C*x + D*u
+    */
+    STEPS_SPARSE_MATRIX matrix;
+    if(get_T_in_s()!=0.0)
+    {
+        double a = 0;
+        /*
+        here define a
+        */
+        matrix.add_entry(0,0, a);
+    }
+    return matrix;
 }
 
-double FIRST_ORDER_BLOCK::get_linearized_system_B() const
+STEPS_SPARSE_MATRIX FIRST_ORDER_BLOCK::get_linearized_system_B() const
 {
-    return 0.0;
+    STEPS_SPARSE_MATRIX matrix;
+
+    double b = 0;
+    /*
+    here define b
+    */
+    matrix.add_entry(0,0, b);
+
+    return matrix;
 }
 
-double FIRST_ORDER_BLOCK::get_linearized_system_C() const
+STEPS_SPARSE_MATRIX FIRST_ORDER_BLOCK::get_linearized_system_C() const
 {
-    return 0.0;
+    STEPS_SPARSE_MATRIX matrix;
+
+    double c = 0;
+    /*
+    here define c
+    */
+    matrix.add_entry(0,0, c);
+
+    return matrix;
 }
 
-double FIRST_ORDER_BLOCK::get_linearized_system_D() const
+STEPS_SPARSE_MATRIX FIRST_ORDER_BLOCK::get_linearized_system_D() const
 {
-    return 0.0;
-}
+    STEPS_SPARSE_MATRIX matrix;
 
-double FIRST_ORDER_BLOCK::get_linearized_system_E() const
-{
-    return 0.0;
-}
+    double d = 0;
+    /*
+    here define d
+    */
+    matrix.add_entry(0,0, d);
 
-double FIRST_ORDER_BLOCK::get_linearized_system_F() const
-{
-    return 0.0;
-}
-
-double FIRST_ORDER_BLOCK::get_linearized_system_G() const
-{
-    return 0.0;
-}
-
-double FIRST_ORDER_BLOCK::get_linearized_system_H() const
-{
-    return 0.0;
+    return matrix;
 }
 
 void FIRST_ORDER_BLOCK::check()

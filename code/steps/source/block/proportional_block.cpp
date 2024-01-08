@@ -109,6 +109,55 @@ void PROPORTIONAL_BLOCK::update()
     ;
 }
 
+STEPS_SPARSE_MATRIX PROPORTIONAL_BLOCK::get_linearized_system_variable(char var) const
+{
+    var = toupper(var);
+    switch(var)
+    {
+        case 'A':
+            return get_linearized_system_A();
+        case 'B':
+            return get_linearized_system_B();
+        case 'C':
+            return get_linearized_system_C();
+        case 'D':
+            return get_linearized_system_D();
+        default:
+            STEPS_SPARSE_MATRIX matrix;
+            return matrix;
+    }
+}
+
+STEPS_SPARSE_MATRIX PROPORTIONAL_BLOCK::get_linearized_system_A() const
+{
+    /*
+    x: state; u: input; y: output
+    dx/dt = A*x + B*u
+    y     = C*x + D*u
+    */
+    STEPS_SPARSE_MATRIX matrix;
+    return matrix;
+}
+
+STEPS_SPARSE_MATRIX PROPORTIONAL_BLOCK::get_linearized_system_B() const
+{
+    STEPS_SPARSE_MATRIX matrix;
+    return matrix;
+}
+
+STEPS_SPARSE_MATRIX PROPORTIONAL_BLOCK::get_linearized_system_C() const
+{
+    STEPS_SPARSE_MATRIX matrix;
+    return matrix;
+}
+
+STEPS_SPARSE_MATRIX PROPORTIONAL_BLOCK::get_linearized_system_D() const
+{
+    STEPS_SPARSE_MATRIX matrix;
+    matrix.add_entry(0,0, get_K());
+    return matrix;
+}
+
 void PROPORTIONAL_BLOCK::check()
 {
     check_limiter();

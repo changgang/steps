@@ -2,6 +2,7 @@
 #define BLOCK_H
 
 #include "header/basic/steps_enum.h"
+#include "header/basic/sparse_matrix_define.h"
 #include <vector>
 #include <cctype>
 

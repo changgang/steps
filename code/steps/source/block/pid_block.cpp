@@ -208,7 +208,8 @@ void PID_BLOCK::update()
     d_block.run(UPDATE_MODE);
 }
 
-double PID_BLOCK::get_linearized_system_variable(char var) const
+
+STEPS_SPARSE_MATRIX PID_BLOCK::get_linearized_system_variable(char var) const
 {
     var = toupper(var);
     switch(var)
@@ -221,57 +222,82 @@ double PID_BLOCK::get_linearized_system_variable(char var) const
             return get_linearized_system_C();
         case 'D':
             return get_linearized_system_D();
-        case 'E':
-            return get_linearized_system_E();
-        case 'F':
-            return get_linearized_system_F();
-        case 'G':
-            return get_linearized_system_G();
-        case 'H':
-            return get_linearized_system_H();
         default:
-            return 0.0;
+            STEPS_SPARSE_MATRIX matrix;
+            return matrix;
     }
 }
 
-double PID_BLOCK::get_linearized_system_A() const
+STEPS_SPARSE_MATRIX PID_BLOCK::get_linearized_system_A() const
 {
-    return 0.0;
+    /*
+    x: state; u: input; y: output
+    dx/dt = A*x + B*u
+    y     = C*x + D*u
+    */
+    STEPS_SPARSE_MATRIX matrix;
+
+    double a00=0, a01=0, a10=0, a11=0;
+    /*
+    here define a00, a01, a10, a11
+    */
+    double istate = i_block.get_state();
+    double dstate = d_block.get_state();
+
+    matrix.add_entry(0,0, a00);
+    matrix.add_entry(0,1, a01);
+    matrix.add_entry(1,0, a10);
+    matrix.add_entry(1,1, a11);
+
+    return matrix;
 }
 
-double PID_BLOCK::get_linearized_system_B() const
+STEPS_SPARSE_MATRIX PID_BLOCK::get_linearized_system_B() const
 {
-    return 0.0;
+    STEPS_SPARSE_MATRIX matrix;
+
+    double a00=0, a01=0, a10=0, a11=0;
+    /*
+    here define a00, a01, a10, a11
+    */
+    matrix.add_entry(0,0, a00);
+    matrix.add_entry(0,1, a01);
+    matrix.add_entry(1,0, a10);
+    matrix.add_entry(1,1, a11);
+
+    return matrix;
 }
 
-double PID_BLOCK::get_linearized_system_C() const
+STEPS_SPARSE_MATRIX PID_BLOCK::get_linearized_system_C() const
 {
-    return 0.0;
+    STEPS_SPARSE_MATRIX matrix;
+
+    double a00=0, a01=0, a10=0, a11=0;
+    /*
+    here define a00, a01, a10, a11
+    */
+    matrix.add_entry(0,0, a00);
+    matrix.add_entry(0,1, a01);
+    matrix.add_entry(1,0, a10);
+    matrix.add_entry(1,1, a11);
+
+    return matrix;
 }
 
-double PID_BLOCK::get_linearized_system_D() const
+STEPS_SPARSE_MATRIX PID_BLOCK::get_linearized_system_D() const
 {
-    return 0.0;
-}
+    STEPS_SPARSE_MATRIX matrix;
 
-double PID_BLOCK::get_linearized_system_E() const
-{
-    return 0.0;
-}
+    double a00=0, a01=0, a10=0, a11=0;
+    /*
+    here define a00, a01, a10, a11
+    */
+    matrix.add_entry(0,0, a00);
+    matrix.add_entry(0,1, a01);
+    matrix.add_entry(1,0, a10);
+    matrix.add_entry(1,1, a11);
 
-double PID_BLOCK::get_linearized_system_F() const
-{
-    return 0.0;
-}
-
-double PID_BLOCK::get_linearized_system_G() const
-{
-    return 0.0;
-}
-
-double PID_BLOCK::get_linearized_system_H() const
-{
-    return 0.0;
+    return matrix;
 }
 
 void PID_BLOCK::check()

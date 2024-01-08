@@ -46,3 +46,22 @@ double SG_MODEL::get_terminal_voltage_in_pu() const
     BUS* bus = get_bus_pointer();
     return bus->get_positive_sequence_voltage_in_pu();
 }
+
+STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_system_variable(char var) const
+{
+    var = toupper(var);
+    switch(var)
+    {
+        case 'A':
+            return get_linearized_system_A();
+        case 'B':
+            return get_linearized_system_B();
+        case 'C':
+            return get_linearized_system_C();
+        case 'D':
+            return get_linearized_system_D();
+        default:
+            STEPS_SPARSE_MATRIX matrix;
+            return matrix;
+    }
+}

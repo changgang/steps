@@ -315,12 +315,22 @@ void SPARSE_MATRIX_CSPARSE::transpose()
     update_clock_when_matrix_is_changed();
 }
 
-int SPARSE_MATRIX_CSPARSE::get_matrix_size() const
+int SPARSE_MATRIX_CSPARSE::get_matrix_row_count()  const
+{
+    return matrix_real->m;
+}
+
+int SPARSE_MATRIX_CSPARSE::get_matrix_column_count()  const
 {
     return matrix_real->n;
 
     if(matrix_real!=NULL) return matrix_real->n;
     else                  return 0;
+}
+
+int SPARSE_MATRIX_CSPARSE::get_matrix_size() const
+{
+    return get_matrix_column_count();
 }
 
 int SPARSE_MATRIX_CSPARSE::get_matrix_entry_count() const
@@ -839,4 +849,51 @@ unsigned int SPARSE_MATRIX_CSPARSE::get_memory_usage_in_bytes()
     n += matrix_real->n*sizeof(double)+
          bb_size*sizeof(double);
     return n;
+}
+
+
+SPARSE_MATRIX_CSPARSE inv(SPARSE_MATRIX_CSPARSE&A)
+{
+    // B = inv(A)
+    unsigned int n = A.get_matrix_column_count();
+
+    vector<double> b;
+    for(unsigned int i=0; i<n; ++i)
+        b.push_back(0.0);
+
+    SPARSE_MATRIX_CSPARSE B;
+    for(unsigned int i=0; i<n; ++i)
+    {
+        for(unsigned int j=0; j<n; ++j)
+            b[j] = 0.0;
+        b[i] = 1.0;
+        b/A;
+        for(unsigned int j=0; j<n; ++j)
+            B.add_entry(j, i, b[j]);
+    }
+    B.compress_and_merge_duplicate_entries();
+    return B;
+}
+
+SPARSE_MATRIX_CSPARSE concatenate_matrix_diagnally(vector<SPARSE_MATRIX_CSPARSE*> matrix)
+{
+    SPARSE_MATRIX_CSPARSE MATRIX;
+    unsigned int m=0, n = 0;
+    unsigned int N = matrix.size();
+    for(unsigned int i = 0; i<N; ++i)
+    {
+        SPARSE_MATRIX_CSPARSE* imatrix = matrix[i];
+        unsigned int nz = imatrix->get_matrix_entry_count();
+        for (unsigned int j=0; j<nz; ++j)
+        {
+            double value = imatrix->get_real_entry_value(j);
+            unsigned int mi = imatrix->get_row_number_of_entry_index(j);
+            unsigned int ni = imatrix->get_column_number_of_entry_index(j);
+            MATRIX.add_entry(m+mi, n+ni, value);
+        }
+        m += imatrix->get_matrix_row_count();
+        n += imatrix->get_matrix_column_count();
+    }
+    MATRIX.compress_and_merge_duplicate_entries();
+    return MATRIX;
 }

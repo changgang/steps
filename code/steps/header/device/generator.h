@@ -93,6 +93,11 @@ class GENERATOR : public SOURCE
 
         void set_sequence_parameter_import_flag(bool flag);
         bool get_sequence_parameter_import_flag() const;
+
+        void get_linearized_system_ABCD(STEPS_SPARSE_MATRIX* A,
+                                        STEPS_SPARSE_MATRIX* B,
+                                        STEPS_SPARSE_MATRIX* C,
+                                        STEPS_SPARSE_MATRIX* D) const;
     private:
         SYNC_GENERATOR_MODEL* sync_generator_model;
         COMPENSATOR_MODEL* compensator_model;

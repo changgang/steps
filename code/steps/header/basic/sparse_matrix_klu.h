@@ -25,6 +25,8 @@ public:
 
     virtual void transpose();
 
+    virtual int get_matrix_row_count()  const;
+    virtual int get_matrix_column_count()  const;
     virtual int get_matrix_size()  const;
     virtual int get_matrix_entry_count()  const;
     virtual int get_starting_index_of_column(int col)  const;

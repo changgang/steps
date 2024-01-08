@@ -337,9 +337,19 @@ void SPARSE_MATRIX_KLU::transpose()
     update_clock_when_matrix_is_changed();
 }
 
-int SPARSE_MATRIX_KLU::get_matrix_size() const
+int SPARSE_MATRIX_KLU::get_matrix_row_count()  const
+{
+    return n_row;
+}
+
+int SPARSE_MATRIX_KLU::get_matrix_column_count()  const
 {
     return n_column;
+}
+
+int SPARSE_MATRIX_KLU::get_matrix_size() const
+{
+    return get_matrix_column_count();
 }
 
 int SPARSE_MATRIX_KLU::get_matrix_entry_count() const

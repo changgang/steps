@@ -31,6 +31,7 @@ class PID_BLOCK_TEST : public Test::Suite
         void test_set_get_Kd();
         void test_set_get_Td();
         void test_step_response_without_limiter();
+        void test_linearized_ABCD();
     private:
         PID_BLOCK block;
 };

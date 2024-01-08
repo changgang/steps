@@ -107,4 +107,36 @@ void SECOND_ORDER_BLOCK_TEST::test_step_response_when_d_is_nonzero()
 
 }
 
+void SECOND_ORDER_BLOCK_TEST::test_linearized_ABCD()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"SECOND_ORDER_BLOCK_TEST");
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
+    double h = default_toolkit.get_dynamic_simulation_time_step_in_s();
+
+    double a = 2.0, b = 5.0, c = 1.0, d=1.5, e=0.3;
+    block.set_a(a);
+    block.set_b(b);
+    block.set_c(c);
+    block.set_d(d);
+    block.set_e(e);
+
+    double y = 1.0;
+    block.set_output(y);
+    block.initialize();
+    double s = block.get_state();
+    double u = block.get_input();
+
+    TEST_ASSERT(fabs(s-1.2)<FLOAT_EPSILON);
+
+    STEPS_SPARSE_MATRIX A = block.get_linearized_system_A();
+    STEPS_SPARSE_MATRIX B = block.get_linearized_system_B();
+    STEPS_SPARSE_MATRIX C = block.get_linearized_system_C();
+    STEPS_SPARSE_MATRIX D = block.get_linearized_system_D();
+
+    TEST_ASSERT(fabs(A.get_entry_value(0,0)-(a*u-s))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(B.get_entry_value(0,0)-(a*u-s))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(C.get_entry_value(0,0)-(a*u-s))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(D.get_entry_value(0,0)-(a*u-s))<FLOAT_EPSILON);
+}
+
 #endif

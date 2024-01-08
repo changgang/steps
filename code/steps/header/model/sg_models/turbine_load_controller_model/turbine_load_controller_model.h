@@ -60,6 +60,15 @@ class TURBINE_LOAD_CONTROLLER_MODEL : public SG_MODEL
         virtual string get_dynamic_data_in_psse_format() const = 0;
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
+
+        virtual STEPS_SPARSE_MATRIX get_linearized_system_A() const = 0;
+        virtual STEPS_SPARSE_MATRIX get_linearized_system_B() const = 0;
+        virtual STEPS_SPARSE_MATRIX get_linearized_system_C() const = 0;
+        virtual STEPS_SPARSE_MATRIX get_linearized_system_D() const = 0;
+        virtual void get_linearized_system_ABCD(STEPS_SPARSE_MATRIX* A,
+                                                STEPS_SPARSE_MATRIX* B,
+                                                STEPS_SPARSE_MATRIX* C,
+                                                STEPS_SPARSE_MATRIX* D) const = 0;
     private:
         STEPS_SPARSE_MATRIX* tlc_matrix;
         STEPS_SPARSE_MATRIX* tlc_gov_matrix;

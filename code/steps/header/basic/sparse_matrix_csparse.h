@@ -29,6 +29,8 @@ public:
 
     virtual void transpose();
 
+    virtual int get_matrix_row_count()  const;
+    virtual int get_matrix_column_count()  const;
     virtual int get_matrix_size()  const;
     virtual int get_matrix_entry_count()  const;
     virtual int get_starting_index_of_column(int col)  const;
@@ -82,4 +84,6 @@ SPARSE_MATRIX_CSPARSE* operator+(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE&
 SPARSE_MATRIX_CSPARSE* operator-(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE& B);
 SPARSE_MATRIX_CSPARSE* operator*(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE& B);
 SPARSE_MATRIX_CSPARSE* operator/(double b, SPARSE_MATRIX_CSPARSE& A);
+SPARSE_MATRIX_CSPARSE inv(SPARSE_MATRIX_CSPARSE&A);
+SPARSE_MATRIX_CSPARSE concatenate_matrix_diagnally(vector<SPARSE_MATRIX_CSPARSE*> matrix);
 #endif // SPARSE_MATRIX_CSPARSE_H

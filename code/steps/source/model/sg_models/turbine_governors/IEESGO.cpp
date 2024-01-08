@@ -556,3 +556,35 @@ void IEESGO::linearize()
     set_linearized_matrix("GOV-TLC", matrix);
     // do linearization
 }
+
+STEPS_SPARSE_MATRIX IEESGO::get_linearized_system_A() const
+{
+    STEPS_SPARSE_MATRIX A;
+
+    return A;
+}
+STEPS_SPARSE_MATRIX IEESGO::get_linearized_system_B() const
+{
+    STEPS_SPARSE_MATRIX B;
+
+    return B;
+}
+
+STEPS_SPARSE_MATRIX IEESGO::get_linearized_system_C() const
+{
+    STEPS_SPARSE_MATRIX C;
+
+    return C;
+}
+
+STEPS_SPARSE_MATRIX IEESGO::get_linearized_system_D() const
+{
+    STEPS_SPARSE_MATRIX D;
+
+    return D;
+}
+
+void IEESGO::get_linearized_system_ABCD(STEPS_SPARSE_MATRIX* A, STEPS_SPARSE_MATRIX* B, STEPS_SPARSE_MATRIX* C, STEPS_SPARSE_MATRIX* D) const
+{
+    return;
+}

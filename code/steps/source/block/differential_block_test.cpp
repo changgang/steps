@@ -98,4 +98,35 @@ void DIFFERENTIAL_BLOCK_TEST::test_step_response_without_limiter()
     }
 }
 
+
+void DIFFERENTIAL_BLOCK_TEST::test_linearized_ABCD()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"DIFFERENTIAL_BLOCK_TEST");
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
+    double h = default_toolkit.get_dynamic_simulation_time_step_in_s();
+
+    double K = 2.0;
+    double T = 5.0;
+    block.set_K(K);
+    block.set_T_in_s(T);
+
+    double u = 1.0;
+    block.set_input(u);
+    block.initialize();
+    double s = block.get_state();
+    double y = block.get_output();
+
+    TEST_ASSERT(fabs(s-1.2)<FLOAT_EPSILON);
+
+    STEPS_SPARSE_MATRIX A = block.get_linearized_system_A();
+    STEPS_SPARSE_MATRIX B = block.get_linearized_system_B();
+    STEPS_SPARSE_MATRIX C = block.get_linearized_system_C();
+    STEPS_SPARSE_MATRIX D = block.get_linearized_system_D();
+
+    TEST_ASSERT(fabs(A.get_entry_value(0,0)-(K/T*u-s))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(B.get_entry_value(0,0)-(K/T*u-s))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(C.get_entry_value(0,0)-(K/T*u-s))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(D.get_entry_value(0,0)-(K/T*u-s))<FLOAT_EPSILON);
+}
+
 #endif
