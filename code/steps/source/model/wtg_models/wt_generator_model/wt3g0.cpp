@@ -10,8 +10,7 @@ WT3G0::WT3G0(STEPS& toolkit) : WT_GENERATOR_MODEL(toolkit),
                                active_current_commander(toolkit),
                                LVPL_voltage_sensor(toolkit),
                                reactive_voltage_commander(toolkit),
-                               PLL_frequency_integrator(toolkit),
-                               PLL_angle_integrator(toolkit)
+                               Pll(toolkit)
 {
     clear();
 }
@@ -31,9 +30,7 @@ void WT3G0::clear()
     reactive_voltage_commander.set_limiter_type(NO_LIMITER);
     reactive_voltage_commander.set_K(1.0);
 
-    PLL_frequency_integrator.set_limiter_type(NON_WINDUP_LIMITER);
-
-    PLL_angle_integrator.set_limiter_type(NO_LIMITER);
+    Pll.clear();
 
     LVPL_voltage_sensor.set_limiter_type(NO_LIMITER);
     LVPL_voltage_sensor.set_K(1.0);
@@ -46,8 +43,7 @@ void WT3G0::copy_from_const_model(const WT3G0& model)
     active_current_commander.set_toolkit(toolkit);
     LVPL_voltage_sensor.set_toolkit(toolkit);
     reactive_voltage_commander.set_toolkit(toolkit);
-    PLL_frequency_integrator.set_toolkit(toolkit);
-    PLL_angle_integrator.set_toolkit(toolkit);
+    Pll.set_toolkit(toolkit);
 
     clear();
     set_converter_activer_current_command_T_in_s(model.get_converter_activer_current_command_T_in_s());
@@ -69,8 +65,7 @@ WT3G0::WT3G0(const WT3G0& model):WT_GENERATOR_MODEL(model.get_toolkit()),
                                  active_current_commander(model.get_toolkit()),
                                  LVPL_voltage_sensor(model.get_toolkit()),
                                  reactive_voltage_commander(model.get_toolkit()),
-                                 PLL_frequency_integrator(model.get_toolkit()),
-                                 PLL_angle_integrator(model.get_toolkit())
+                                 Pll(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -97,23 +92,22 @@ void WT3G0::set_converter_reactiver_voltage_command_T_in_s(double t)
 
 void WT3G0::set_KPLL(double K)
 {
-    KPLL = K;
+    Pll.set_Kp(K);
 }
 
 void WT3G0::set_KIPLL(double K)
 {
-    KIPLL = K;
-    if(K!=0) PLL_frequency_integrator.set_T_in_s(1.0/K);
+    Pll.set_Ki(K);
 }
 
 void WT3G0::set_PLLmax(double pmax)
 {
-    PLL_frequency_integrator.set_upper_limit(pmax);
+    Pll.set_Pllmax(pmax);
 }
 
 void WT3G0::set_PLLmin(double pmin)
 {
-    PLL_frequency_integrator.set_lower_limit(pmin);
+    Pll.set_Pllmin(pmin);
 }
 
 void WT3G0::set_LVPL(const LVPL& lvpl)
@@ -153,22 +147,22 @@ double WT3G0::get_converter_reactiver_voltage_command_T_in_s() const
 
 double WT3G0::get_KPLL() const
 {
-    return KPLL;
+    return Pll.get_Kp();
 }
 
 double WT3G0::get_KIPLL() const
 {
-    return KIPLL;
+    return Pll.get_Ki();
 }
 
 double WT3G0::get_PLLmax() const
 {
-    return PLL_frequency_integrator.get_upper_limit();
+    return Pll.get_Pllmax();
 }
 
 double WT3G0::get_PLLmin() const
 {
-    return PLL_frequency_integrator.get_lower_limit();
+    return Pll.get_Pllmin();
 }
 
 LVPL WT3G0::get_LVPL() const
@@ -315,10 +309,6 @@ void WT3G0::initialize()
         setup_block_toolkit_and_parameters();
 
         unsigned int n_lumped = get_number_of_lumped_wt_generators();
-        double fbase = get_bus_base_frequency_in_Hz();
-        double wbase = DOUBLE_PI*fbase;
-
-        PLL_angle_integrator.set_T_in_s(1.0/wbase);
 
         double mbase = get_mbase_in_MVA();
         mbase /= n_lumped;
@@ -354,15 +344,7 @@ void WT3G0::initialize()
         set_initial_reactive_voltage_command_in_pu(EQ);
         set_initial_reactive_current_command_in_pu_based_on_mbase(IQ);
 
-        double kipll = get_KIPLL();
-        if(kipll!=0.0)
-        {
-            PLL_frequency_integrator.set_output(0.0);
-            PLL_frequency_integrator.initialize();
-        }
-
-        PLL_angle_integrator.set_output(angle_in_rad);
-        PLL_angle_integrator.initialize();
+        Pll.initialize();
 
         LVPL_voltage_sensor.set_output(V);
         LVPL_voltage_sensor.initialize();
@@ -378,8 +360,8 @@ void WT3G0::initialize()
                     <<"(4) States of blocks"<<endl
                     <<"    active_current_commander block state: "<<active_current_commander.get_state()<<endl
                     <<"    reactive_voltage_commander block state: "<<reactive_voltage_commander.get_state()<<endl
-                    <<"    PLL_frequency_integrator block state: "<<PLL_frequency_integrator.get_state()<<endl
-                    <<"    PLL_angle_integrator block state: "<<PLL_angle_integrator.get_state()<<endl
+                    <<"    PLL_frequency_integrator block state: "<<Pll.get_frquency_deviation_block_state()<<endl
+                    <<"    PLL_angle_integrator block state: "<<Pll.get_angle_block_state()<<endl
                     <<"    LVPL_voltage_sensor block state: "<<LVPL_voltage_sensor.get_state()<<endl
                     <<"(5) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
                     <<"(6) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
@@ -391,13 +373,7 @@ void WT3G0::initialize()
 
 void WT3G0::run(DYNAMIC_MODE mode)
 {
-    double fbase = get_bus_base_frequency_in_Hz();
-    double wbase = DOUBLE_PI*fbase;
-
-    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
     double V = get_terminal_voltage_in_pu();
-    double angle_in_rad = get_terminal_voltage_angle_in_rad();
-    double angle_in_deg = rad2deg(angle_in_rad);
 
     LVPL_voltage_sensor.set_input(V);
     LVPL_voltage_sensor.run(mode);
@@ -423,45 +399,7 @@ void WT3G0::run(DYNAMIC_MODE mode)
     reactive_voltage_commander.set_input(EQ);
     reactive_voltage_commander.run(mode);
 
-    double kpll = get_KPLL();
-    double kipll = get_KIPLL();
-    if(kpll!=0.0 or kipll!=0.0)
-    {
-        double Vr = Vxy.real();
-        double Vi = Vxy.imag();
-
-        double angle = get_pll_angle_in_rad();
-        double Vy = -Vr*steps_sin(angle)+Vi*steps_cos(angle);
-
-        input = Vy*kpll/wbase;
-        if(kipll!=0)
-        {
-            PLL_frequency_integrator.set_input(input);
-            PLL_frequency_integrator.run(mode);
-
-            double output = PLL_frequency_integrator.get_output();
-            input += output;
-        }
-
-        double pllmax = get_PLLmax();
-        double pllmin = get_PLLmin();
-        if(input>=pllmin and input<=pllmax)
-            ;
-        else
-        {
-            if(input>pllmax)
-                input = pllmax;
-            else
-                input = pllmin;
-        }
-
-        PLL_angle_integrator.set_input(input);
-        PLL_angle_integrator.run(mode);
-    }
-    else
-    {
-        set_pll_angle_in_deg(angle_in_deg);
-    }
+    Pll.run(mode);
 
     if(mode==UPDATE_MODE)
         set_flag_model_updated_as_true();
@@ -741,9 +679,9 @@ double WT3G0::get_model_internal_variable_with_name(string var_name)
     if(var_name == "STATE@REACTIVE VOLTAGE COMMAND BLOCK")
         return reactive_voltage_commander.get_state();
     if(var_name == "STATE@PLL FREQUENCY BLOCK")
-        return PLL_frequency_integrator.get_state();
+        return Pll.get_frquency_deviation_block_state();
     if(var_name == "STATE@PLL ANGLE BLOCK")
-        return PLL_angle_integrator.get_state();
+        return Pll.get_angle_block_state();
     if(var_name == "STATE@LVPL VOLTAGE SENSOR")
         return LVPL_voltage_sensor.get_state();
 
@@ -801,12 +739,7 @@ double WT3G0::get_active_power_generation_including_stator_loss_in_MW()
 
 double WT3G0::get_pll_angle_in_rad()
 {
-    double kpll = get_KPLL();
-    double kipll = get_KIPLL();
-    if(kpll!=0.0 or kipll!=0.0)
-        return PLL_angle_integrator.get_output();
-    else
-        return get_terminal_voltage_angle_in_rad();
+    return Pll.get_pll_angle_in_rad();
 }
 
 double WT3G0::get_pll_angle_in_deg()
@@ -816,48 +749,22 @@ double WT3G0::get_pll_angle_in_deg()
 
 double WT3G0::get_pll_frequency_deviation_in_pu()
 {
-    double fbase = get_bus_base_frequency_in_Hz();
-    double wbase = DOUBLE_PI*fbase;
-
-    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-
-    double kpll = get_KPLL();
-    double kipll = get_KIPLL();
-    if(kpll!=0.0 or kipll!=0.0)
-    {
-        double Vr = Vxy.real();
-        double Vi = Vxy.imag();
-
-        double angle = get_pll_angle_in_rad();
-        double Vy = -Vr*steps_sin(angle)+Vi*steps_cos(angle);
-
-        double input = Vy*kpll/wbase;
-
-        double output = PLL_frequency_integrator.get_output();
-
-        return input+output;
-    }
-    else
-        return 0.0;
+    return Pll.get_pll_frequency_deviation_in_pu();
 }
 
 double WT3G0::get_pll_frequency_deviation_in_Hz()
 {
-    double fbase = get_bus_base_frequency_in_Hz();
-
-    return fbase*get_pll_frequency_deviation_in_pu();
+    return Pll.get_pll_frequency_deviation_in_Hz();
 }
 
 double WT3G0::get_pll_frequency_in_pu()
 {
-    return 1.0+get_pll_frequency_deviation_in_pu();
+    return Pll.get_pll_frequency_in_pu();
 }
 
 double WT3G0::get_pll_frequency_in_Hz()
 {
-    double fbase = get_bus_base_frequency_in_Hz();
-
-    return fbase*get_pll_frequency_in_pu();
+    return Pll.get_pll_frequency_in_Hz();
 }
 
 complex<double> WT3G0::get_internal_voltage_in_pu_in_xy_axis()
@@ -874,15 +781,6 @@ complex<double> WT3G0::get_internal_voltage_in_pu_in_xy_axis()
 
     return Ixy*Z;
 }
-
-
-
-void WT3G0::set_pll_angle_in_deg(double angle)
-{
-    PLL_angle_integrator.set_output(deg2rad(angle));
-    PLL_angle_integrator.initialize();// the initialize function is used to update STORE
-}
-
 
 string WT3G0::get_dynamic_data_in_psse_format() const
 {

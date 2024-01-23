@@ -16,7 +16,6 @@ WT3G0_TEST::WT3G0_TEST() : WT_GENERATOR_MODEL_TEST()
 {
     TEST_ADD(WT3G0_TEST::test_get_model_name);
     TEST_ADD(WT3G0_TEST::test_set_get_parameters);
-    TEST_ADD(WT3G0_TEST::test_set_get_pll_angle);
 }
 
 void WT3G0_TEST::setup()
@@ -138,18 +137,6 @@ void WT3G0_TEST::test_initialize_and_get_initialized_inputs()
     osstream<<"PLL angle = "<<model->get_pll_angle_in_deg()<<" deg, PLL frequency = "<<model->get_pll_frequency_in_Hz()<<endl;
     osstream<<"Terminal P = "<<model->get_terminal_active_power_in_MW()<<" MW, Q = "<<model->get_terminal_reactive_power_in_MVar()<<" MVar"<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
-}
-
-
-void WT3G0_TEST::test_set_get_pll_angle()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"WT3G0_TEST");
-
-    WT3G0* model = (WT3G0*) get_test_wt_generator_model();
-
-    model->initialize();
-    model->set_pll_angle_in_deg(10.0);
-    TEST_ASSERT(fabs(model->get_pll_angle_in_deg()-10.0)<FLOAT_EPSILON);
 }
 
 #endif

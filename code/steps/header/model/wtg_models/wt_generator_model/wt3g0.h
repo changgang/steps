@@ -3,6 +3,7 @@
 
 #include "header/model/wtg_models/wt_generator_model/wt_generator_model.h"
 #include "header/model/wtg_models/wt_generator_model/lvpl.h"
+#include "header/model/bus_model/pll_model/pll0.h"
 #include "header/block/integral_block.h"
 #include "header/block/first_order_block.h"
 
@@ -89,9 +90,6 @@ class WT3G0 : public WT_GENERATOR_MODEL
         virtual string get_dynamic_data_in_psse_format() const;
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
-    public:
-        // the following function are used to model WT3G0 as ideal voltage source
-        void set_pll_angle_in_deg(double angle);
     private:
         void copy_from_const_model(const WT3G0& model);
 
@@ -103,8 +101,7 @@ class WT3G0 : public WT_GENERATOR_MODEL
         FIRST_ORDER_BLOCK reactive_voltage_commander;
         double HVRCR_voltage, HVRCR_current;
 
-        double KPLL, KIPLL;
-        INTEGRAL_BLOCK PLL_frequency_integrator, PLL_angle_integrator;
+        PLL0 Pll;
 };
 
 #endif // GENERATOR_MODEL_H

@@ -29,7 +29,6 @@ class WT3G0_TEST : public WT_GENERATOR_MODEL_TEST
         virtual void test_get_model_name();
         virtual void test_set_get_parameters();
         virtual void test_initialize_and_get_initialized_inputs();
-        void test_set_get_pll_angle();
     private:
 };
 

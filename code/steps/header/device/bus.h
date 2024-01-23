@@ -8,7 +8,7 @@
 #include "header/basic/steps_enum.h"
 #include "header/basic/fault.h"
 
-#include "header/model/bus_frequency_model/bus_frequency_model.h"
+#include "header/model/bus_model/bus_frequency_model/bus_frequency_model.h"
 
 #include <string>
 #include <complex>

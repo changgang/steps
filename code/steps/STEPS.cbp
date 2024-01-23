@@ -181,7 +181,9 @@
 		<Unit filename="header/model/auxiliary_signal_model/auxiliary_signal_model.h" />
 		<Unit filename="header/model/auxiliary_signal_model/auxiliary_signal_model_test.h" />
 		<Unit filename="header/model/auxiliary_signal_model/auxiliary_signal_models.h" />
-		<Unit filename="header/model/bus_frequency_model/bus_frequency_model.h" />
+		<Unit filename="header/model/bus_model/bus_frequency_model/bus_frequency_model.h" />
+		<Unit filename="header/model/bus_model/pll_model/pll0.h" />
+		<Unit filename="header/model/bus_model/pll_model/pll_model.h" />
 		<Unit filename="header/model/energy_storage_model/energy_storage_model.h" />
 		<Unit filename="header/model/energy_storage_model/energy_storage_model_test.h" />
 		<Unit filename="header/model/energy_storage_model/energy_storage_models.h" />
@@ -597,7 +599,9 @@
 		<Unit filename="source/meter/meter_setter.cpp" />
 		<Unit filename="source/meter/meter_setter_test.cpp" />
 		<Unit filename="source/meter/meter_test.cpp" />
-		<Unit filename="source/model/bus_frequency_model/bus_frequency_model.cpp" />
+		<Unit filename="source/model/bus_model/bus_frequency_model/bus_frequency_model.cpp" />
+		<Unit filename="source/model/bus_model/pll_model/pll0.cpp" />
+		<Unit filename="source/model/bus_model/pll_model/pll_model.cpp" />
 		<Unit filename="source/model/energy_storage_model/energy_storage_model.cpp" />
 		<Unit filename="source/model/energy_storage_model/energy_storage_model_test.cpp" />
 		<Unit filename="source/model/energy_storage_model/estr0.cpp" />

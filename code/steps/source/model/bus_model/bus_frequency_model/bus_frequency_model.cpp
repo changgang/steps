@@ -1,4 +1,4 @@
-#include "header/model/bus_frequency_model/bus_frequency_model.h"
+#include "header/model/bus_model/bus_frequency_model/bus_frequency_model.h"
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
 #include "header/basic/utility.h"
