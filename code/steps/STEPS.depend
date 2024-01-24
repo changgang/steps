@@ -67,7 +67,7 @@
 	<functional>
 	"terminal.h"
 
-1664187911 d:\steps\code\steps\header\basic\constants.h
+1706061373 d:\steps\code\steps\header\basic\constants.h
 
 1664187911 d:\steps\code\steps\header\basic\terminal.h
 	<vector>
@@ -4256,7 +4256,7 @@
 	<cstdio>
 	<cmath>
 
-1700647330 source:d:\steps\code\steps\source\model\model.cpp
+1706064347 source:d:\steps\code\steps\source\model\model.cpp
 	"header/model/model.h"
 	<cstdio>
 	"header/basic/utility.h"
@@ -5224,7 +5224,7 @@
 	"header/basic/constants.h"
 	<cmath>
 
-1706019282 source:d:\steps\code\steps\source\model\wtg_models\wt_generator_model\wt3g0.cpp
+1706065923 source:d:\steps\code\steps\source\model\wtg_models\wt_generator_model\wt3g0.cpp
 	"header/model/wtg_models/wt_generator_model/wt3g0.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -56586,4 +56586,37 @@
 	"header/basic/utility.h"
 	<istream>
 	<iostream>
+
+1706070726 source:d:\steps\code\steps\source\model\vsg_model\vsg0.cpp
+	"header/model/vsg_model/vsg0.h"
+	"header/basic/utility.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+
+1706070726 d:\steps\code\steps\header\model\vsg_model\vsg0.h
+	"header/model/vsg_model/vsg_model.h"
+	"header/block/integral_block.h"
+	<complex>
+
+1706070254 d:\steps\code\steps\header\model\vsg_model\vsg_model.h
+	"header/model/model.h"
+	"header/device/bus.h"
+	<complex>
+
+1706070274 source:d:\steps\code\steps\source\model\vsg_model\vsg_model.cpp
+	"header/model/vsg_model/vsg_model.h"
+	"header/basic/utility.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+
+1706071014 source:d:\steps\code\steps\source\model\vsg_model\vsgcontrol0.cpp
+	"header/model/vsg_model/vsgcontrol0.h"
+	"header/basic/utility.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+
+1706071022 d:\steps\code\steps\header\model\vsg_model\vsgcontrol0.h
+	"header/model/vsg_model/vsg_model.h"
+	"header/block/integral_block.h"
+	<complex>
 

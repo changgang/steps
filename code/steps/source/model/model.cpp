@@ -304,16 +304,10 @@ void MODEL::set_device_id(DEVICE_ID did)
         switch(device_type)
         {
             case STEPS_GENERATOR:
-                bus_pointer = ((GENERATOR*) device_pointer)->get_bus_pointer();
-                return;
             case STEPS_WT_GENERATOR:
-                bus_pointer = ((WT_GENERATOR*) device_pointer)->get_bus_pointer();
-                return;
             case STEPS_PV_UNIT:
-                bus_pointer = ((PV_UNIT*) device_pointer)->get_bus_pointer();
-                return;
             case STEPS_ENERGY_STORAGE:
-                bus_pointer = ((ENERGY_STORAGE*) device_pointer)->get_bus_pointer();
+                bus_pointer = ((SOURCE*) device_pointer)->get_bus_pointer();
                 return;
             case STEPS_LOAD:
                 bus_pointer = ((LOAD*) device_pointer)->get_bus_pointer();

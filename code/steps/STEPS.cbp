@@ -343,6 +343,8 @@
 		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_network_model/VSCHVDCP0.h" />
 		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_model.h" />
 		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_models.h" />
+		<Unit filename="header/model/vsg_model/vsg_model.h" />
+		<Unit filename="header/model/vsg_model/vsgcontrol0.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/filewind.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/filewind_test.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/wind_speed_model.h" />
@@ -749,6 +751,8 @@
 		<Unit filename="source/model/vsc_hvdc_model/vsc_hvdc_model_test.cpp" />
 		<Unit filename="source/model/vsc_hvdc_model/vsc_hvdc_network_model/VSCHVDCP0.cpp" />
 		<Unit filename="source/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_model.cpp" />
+		<Unit filename="source/model/vsg_model/vsg_model.cpp" />
+		<Unit filename="source/model/vsg_model/vsgcontrol0.cpp" />
 		<Unit filename="source/model/wtg_models/wind_speed_model/filewind.cpp" />
 		<Unit filename="source/model/wtg_models/wind_speed_model/filewind_test.cpp" />
 		<Unit filename="source/model/wtg_models/wind_speed_model/wind_speed_model.cpp" />
