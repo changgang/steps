@@ -21,21 +21,6 @@ class VSG_MODEL : public MODEL
         virtual ~VSG_MODEL();
         virtual string get_model_type() const;
 
-        SOURCE* get_source_pointer() const;
-        WT_GENERATOR* get_wt_generator_pointer() const;
-        PV_UNIT* get_pv_unit_pointer() const;
-        ENERGY_STORAGE* get_enerage_storage_pointer() const;
-
-        double get_mbase_in_MVA() const;
-        double get_one_over_mbase_in_one_over_MVA() const;
-
-        complex<double> get_terminal_complex_power_in_pu_based_on_mbase() const;
-        double get_terminal_voltage_in_pu() const;
-        complex<double> get_terminal_complex_voltage_in_pu() const;
-        double get_terminal_voltage_angle_in_rad() const;
-        double get_bus_base_frequency_in_Hz() const;
-        double get_bus_base_angle_speed_in_radps() const;
-        complex<double> get_source_impedance_in_pu_based_on_mbase() const;
 
         void set_Pref_in_pu_based_on_mbase(double P);
         void set_Qref_in_pu_based_on_mbase(double Q);
@@ -68,17 +53,6 @@ class VSG_MODEL : public MODEL
         virtual void save() = 0;
         virtual string get_standard_psse_string(bool export_internal_bus_number=false) const = 0;
 
-        virtual void prepare_model_data_table() = 0;
-        virtual double get_model_data_with_name(string par_name) const = 0;
-        virtual void set_model_data_with_name(string par_name, double value) = 0;
-        virtual double get_minimum_nonzero_time_constant_in_s() = 0;
-
-        virtual void prepare_model_internal_variable_table() = 0;
-        virtual double get_model_internal_variable_with_name(string var_name)= 0;
-
-        virtual string get_dynamic_data_in_psse_format() const = 0;
-        virtual string get_dynamic_data_in_bpa_format() const = 0;
-        virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
         double Pref, Qref, Vref;
 };

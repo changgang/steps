@@ -345,9 +345,11 @@
 		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_model.h" />
 		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_models.h" />
 		<Unit filename="header/model/vsg_model/vsg_model.h" />
+		<Unit filename="header/model/vsg_model/vsg_model2.h" />
 		<Unit filename="header/model/vsg_model/vsg_model_test.h" />
 		<Unit filename="header/model/vsg_model/vsgcontrol0.h" />
-		<Unit filename="header/model/vsg_model/vsgcontrol0_test.h" />
+		<Unit filename="header/model/vsg_model/vsgcontrol2.h" />
+		<Unit filename="header/model/vsg_model/vsgcontrol2_test.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/filewind.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/filewind_test.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/wind_speed_model.h" />
@@ -374,6 +376,7 @@
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt3g1_test.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt3g2.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt3g2_test.h" />
+		<Unit filename="header/model/wtg_models/wt_generator_model/wt3gx.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt_generator_model.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt_generator_model_test.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt_generator_models.h" />
@@ -754,16 +757,18 @@
 		<Unit filename="source/model/vsc_hvdc_model/vsc_hvdc_model_test.cpp" />
 		<Unit filename="source/model/vsc_hvdc_model/vsc_hvdc_network_model/VSCHVDCP0.cpp" />
 		<Unit filename="source/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_model.cpp" />
-		<Unit filename="source/model/vsg_model/vsg_model.cpp" />
-		<Unit filename="source/model/vsg_model/vsg_model_test.cpp">
+		<Unit filename="source/model/vsg_model/vsg_model.cpp">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
-		<Unit filename="source/model/vsg_model/vsgcontrol0.cpp" />
-		<Unit filename="source/model/vsg_model/vsgcontrol0_test.cpp">
+		<Unit filename="source/model/vsg_model/vsg_model2.cpp" />
+		<Unit filename="source/model/vsg_model/vsg_model_test.cpp" />
+		<Unit filename="source/model/vsg_model/vsgcontrol0.cpp">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
+		<Unit filename="source/model/vsg_model/vsgcontrol2.cpp" />
+		<Unit filename="source/model/vsg_model/vsgcontrol2_test.cpp" />
 		<Unit filename="source/model/wtg_models/wind_speed_model/filewind.cpp" />
 		<Unit filename="source/model/wtg_models/wind_speed_model/filewind_test.cpp" />
 		<Unit filename="source/model/wtg_models/wind_speed_model/wind_speed_model.cpp" />
@@ -787,6 +792,7 @@
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt3g1_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt3g2.cpp" />
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt3g2_test.cpp" />
+		<Unit filename="source/model/wtg_models/wt_generator_model/wt3gx.cpp" />
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt_generator_model.cpp" />
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt_generator_model_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_pitch_model/wt3p0.cpp" />

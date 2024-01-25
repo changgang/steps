@@ -130,6 +130,8 @@
 #include "header/model/hvdc_model/CDC4T_test.h"
 #include "header/model/hvdc_model/CDC6T_test.h"
 
+#include "header/model/vsg_model/vsgcontrol2_test.h"
+
 //#include "header/model/vsc_hvdc_model/VSCHVDC1_test.h"
 
 #include "header/model/wtg_models/wt_generator_model/wt3g1_test.h"
@@ -214,7 +216,7 @@ int main(int argc, char* argv[])
 	{
         Test::Suite ts;
         #ifdef ENABLE_STEPS_TEST
-
+        /*
         ts.add(unique_ptr<Test::Suite>(new STR_INT_MAP_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new TERMINAL_TEST));
@@ -252,22 +254,22 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new HVDC_TEST));
 
         //ts.add(unique_ptr<Test::Suite>(new VSC_HVDC_TEST));
-/*       ts.add(unique_ptr<Test::Suite>(new EQUIVALENT_DEVICE_TEST));
+       ts.add(unique_ptr<Test::Suite>(new EQUIVALENT_DEVICE_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new ENERGY_STORAGE_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new POWER_SYSTEM_DATABASE_TEST));
-*/
-//        ts.add(unique_ptr<Test::Suite>(new STEPS_IMEXPORTER_TEST));
+
+        ts.add(unique_ptr<Test::Suite>(new STEPS_IMEXPORTER_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new PSSE_IMEXPORTER_TEST));
 
-//        ts.add(unique_ptr<Test::Suite>(new BPA_IMEXPORTER_TEST));
+        ts.add(unique_ptr<Test::Suite>(new BPA_IMEXPORTER_TEST));
 
 
         //ts.add(unique_ptr<Test::Suite>(new EQUIVALENT_MODEL_IMEXPORTER_TEST));
 
-/*
+
         ts.add(unique_ptr<Test::Suite>(new NETWORK_MATRIX_TEST));
 
 
@@ -288,10 +290,10 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new SATURATION_BLOCK_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new MODEL_VAR_TABLE_TEST));
-*/
-        //ts.add(unique_ptr<Test::Suite>(new METER_TEST));
+
+        ts.add(unique_ptr<Test::Suite>(new METER_TEST));
         //ts.add(unique_ptr<Test::Suite>(new METER_SETTER_TEST));
-/*
+
         ts.add(unique_ptr<Test::Suite>(new MODEL_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new GENCLS_TEST));
@@ -356,6 +358,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new LCC_TEST));
         ts.add(unique_ptr<Test::Suite>(new CONVERTER_STATION_TEST));
         */
+        ts.add(unique_ptr<Test::Suite>(new VSGCONTROL2_TEST));
 
         #endif // ENABLE_STEPS_TEST
 

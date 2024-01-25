@@ -163,6 +163,7 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="WT3G1") { add_WT3G1_model(data); return;}
     if(model_name=="WT3G0") { add_WT3G0_model(data); return;}
     if(model_name=="WT3G2") { add_WT3G2_model(data); return;}
+    if(model_name=="WT3GX") { add_WT3GX_model(data); return;}
     if(model_name=="AERD0") { add_AERD0_model(data); return;}
     if(model_name=="WT3T0") { add_WT3T0_model(data); return;}
     if(model_name=="WT3E0") { add_WT3E0_model(data); return;}
@@ -1837,6 +1838,36 @@ void STEPS_IMEXPORTER::add_WT3G2_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid WT3G2 model is built, but will not be set for "<<gen->get_compound_device_name();
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::add_WT3GX_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "WT3GX")
+        return;
+
+    if(data.size()<3)
+        return;
+
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
+    DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
+
+    WT_GENERATOR* gen = psdb.get_wt_generator(did);
+    if(gen != NULL)
+    {
+        WT3GX model(toolkit);
+        model.set_device_id(did);
+        bool successful = model.setup_model_with_steps_string_vector(data);
+        if(successful)
+            dmdb.add_model(&model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid WT3GX model is built, but will not be set for "<<gen->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }

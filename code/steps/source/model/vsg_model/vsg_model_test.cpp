@@ -14,213 +14,344 @@ using namespace std;
 
 VSG_MODEL_TEST::VSG_MODEL_TEST()
 {
-    TEST_ADD(test_get_mbase_in_MVA);
-    TEST_ADD(test_get_one_over_mbase_in_one_over_MVA);
+    TEST_ADD(VSG_MODEL_TEST::test_set_get_Pref_in_pu_based_on_mbase);
+    TEST_ADD(VSG_MODEL_TEST::test_set_get_Qref_in_pu_based_on_mbase);
+    TEST_ADD(VSG_MODEL_TEST::test_set_get_Vref_in_pu);
+    TEST_ADD(VSG_MODEL_TEST::test_set_get_P_in_pu_based_on_mbase);
+    TEST_ADD(VSG_MODEL_TEST::test_set_get_Q_in_pu_based_on_mbase);
+    TEST_ADD(VSG_MODEL_TEST::test_set_get_V_in_pu);
+    TEST_ADD(VSG_MODEL_TEST::test_set_get_initial_virtual_angle_in_rad);
+    TEST_ADD(VSG_MODEL_TEST::test_set_get_initial_virtual_voltage_in_pu);
 
-    TEST_ADD(test_get_terminal_complex_power_in_pu_based_on_mbase);
-    TEST_ADD(test_get_terminal_voltage_in_pu);
-    TEST_ADD(test_get_terminal_complex_voltage_in_pu);
-    test_get_terminal_voltage_angle_in_rad);
-    TEST_ADD(test_get_bus_base_frequency_in_Hz);
-    TEST_ADD(test_get_bus_base_angle_speed_in_radps);
-    TEST_ADD(test_get_source_impedance_in_pu_based_on_mbase);
-
-    TEST_ADD(test_set_get_Pref_in_pu_based_on_mbase);
-    TEST_ADD(test_set_get_Qref_in_pu_based_on_mbase);
-    TEST_ADD(test_set_get_Vref_in_pu);
-
-    TEST_ADD(test_get_virtual_speed_in_pu);
-
-    TEST_ADD(test_active_power_step_response_of_vsg_model);
-    TEST_ADD(test_reactive_power_step_response_of_vsg_model);
-    TEST_ADD(test_voltage_step_response_of_vsg_model);
+    TEST_ADD(VSG_MODEL_TEST::test_active_power_step_response_of_vsg_model);
+    TEST_ADD(VSG_MODEL_TEST::test_reactive_power_step_response_of_vsg_model);
+    TEST_ADD(VSG_MODEL_TEST::test_voltage_step_response_of_vsg_model);
 }
 
 void VSG_MODEL_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database);
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100);
     psdb.set_system_base_power_in_MVA(100.0);
 
     BUS bus(default_toolkit);
     bus.set_bus_number(1);
-    bus.set_bus_type(PV_TYPE);
-    bus.set_base_voltage_in_kV(0.69);
-    bus.set_positive_sequence_voltage_in_pu(1.0);
-    bus.set_positive_sequence_angle_in_deg(30.0);
+    bus.set_bus_type(PQ_TYPE);
+    bus.set_base_voltage_in_kV(100.0);
+    bus.set_base_frequency_in_Hz(50.0);
 
     psdb.append_bus(bus);
-
-    WT_GENERATOR wt_generator(default_toolkit);
-    wt_generator.set_generator_bus(1);
-    wt_generator.set_identifier("#1");
-    wt_generator.set_status(true);
-    wt_generator.set_mbase_in_MVA(30.0);
-    wt_generator.set_source_impedance_in_pu(complex<double>(0.0, 0.1));
-    wt_generator.set_p_generation_in_MW(70.0);
-    wt_generator.set_q_generation_in_MVar(30.0);
-    wt_generator.set_number_of_lumped_wt_generators(50);
-    wt_generator.set_rated_power_per_wt_generator_in_MW(2.0);
-
-    psdb.append_wt_generator(wt_generator);
-
-
-    WT_GENERATOR* wt_gen = get_test_wt_generator();
-
-    wtg_model = new WT3G0;
-    wtg_model->set_toolkit(default_toolkit);
-    wtg_model->set_device_id(wt_gen->get_device_id());
-
-    wt_gen->set_number_of_lumped_wt_generators(50);
-    wt_gen->set_rated_power_per_wt_generator_in_MW(2.0);
-    wtg_model->set_converter_activer_current_command_T_in_s(0.2);
-    wtg_model->set_converter_reactiver_voltage_command_T_in_s(0.2);
-    wtg_model->set_KPLL(20.0);
-    wtg_model->set_KIPLL(10.0);
-    wtg_model->set_PLLmax(0.1);
-    wtg_model->set_PLLmin(-0.1);
-    LVPL lvpl;
-    lvpl.set_low_voltage_in_pu(0.5);
-    lvpl.set_high_voltage_in_pu(0.8);
-    lvpl.set_gain_at_high_voltage(20.0);
-    wtg_model->set_LVPL(lvpl);
-    wtg_model->set_HVRC_voltage_in_pu(0.8);
-    wtg_model->set_HVRC_current_in_pu(20.0);
-    wtg_model->set_LVPL_max_rate_of_active_current_change(0.2);
-    wtg_model->set_LVPL_voltage_sensor_T_in_s(0.1);
-
-    wt_gen->set_wt_generator_model(wtg_model);
 }
 
 void VSG_MODEL_TEST::tear_down()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.clear();
-
-    delete wtg_model;
 }
 
-WT_GENERATOR* VSG_MODEL_TEST::get_test_wt_generator()
-{
-    DEVICE_ID did;
-    did.set_device_type(STEPS_WT_GENERATOR);
-    TERMINAL terminal;
-    terminal.append_bus(1);
-    did.set_device_terminal(terminal);
-    did.set_device_identifier_index(get_index_of_string("#1"));
-
-    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    return psdb.get_wt_generator(did);
-}
-
-VSG_MODEL* VSG_MODEL_TEST::get_test_model()
+VSG_MODEL2* VSG_MODEL_TEST::get_test_model()
 {
     return model;
 }
 
-void VSG_MODEL_TEST::set_test_model(VSG_MODEL* model)
+void VSG_MODEL_TEST::set_test_model(VSG_MODEL2* model)
 {
     this->model = model;
 }
 
-void VSG_MODEL_TEST::test_get_mbase_in_MVA()
-{
-    WT_GENERATOR* genptr = get_test_wt_generator();
-    genptr->set_mbase_in_MVA(23.4);
-
-    TEST_ASSERT(fabs(model->get_mbase_in_MVA()-23.4)<FLOAT_EPSILON);
-}
-
-void VSG_MODEL_TEST::test_get_one_over_mbase_in_one_over_MVA()
-{
-    WT_GENERATOR* genptr = get_test_wt_generator();
-    genptr->set_mbase_in_MVA(23.4);
-
-    TEST_ASSERT(fabs(model->get_one_over_mbase_in_one_over_MVA()-1.0/23.4)<FLOAT_EPSILON);
-}
-
-
-void VSG_MODEL_TEST::test_get_terminal_complex_power_in_pu_based_on_mbase()
-{
-    WT_GENERATOR* genptr = get_test_wt_generator();
-    genptr->set_mbase_in_MVA(23.4);
-    genptr->set_p_generation_in_MW()
-
-    TEST_ASSERT(fabs(model->get_terminal_complex_power_in_pu_based_on_mbase()-23.4)<FLOAT_EPSILON);
-}
-
-void VSG_MODEL_TEST::test_get_terminal_voltage_in_pu()
-{
-    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    BUS* bus = psdb.get_bus(1);
-    bus->set_positive_sequence_voltage_in_pu(1.05);
-
-    TEST_ASSERT(fabs(model->get_terminal_voltage_in_pu()-1.05)<FLOAT_EPSILON);
-}
-
-void VSG_MODEL_TEST::test_get_terminal_complex_voltage_in_pu()
-{
-
-}
-void VSG_MODEL_TEST::test_get_terminal_voltage_angle_in_rad()
-{
-
-}
-void VSG_MODEL_TEST::test_get_bus_base_frequency_in_Hz()
-{
-
-}
-void VSG_MODEL_TEST::test_get_bus_base_angle_speed_in_radps()
-{
-
-}
-void VSG_MODEL_TEST::test_get_source_impedance_in_pu_based_on_mbase()
-{
-
-}
-
 void VSG_MODEL_TEST::test_set_get_Pref_in_pu_based_on_mbase()
 {
-
+    model->set_Pref_in_pu_based_on_mbase(100.0);
+    TEST_ASSERT(fabs(model->get_Pref_in_pu_based_on_mbase()-100.0)<FLOAT_EPSILON);
+    model->set_Pref_in_pu_based_on_mbase(200.0);
+    TEST_ASSERT(fabs(model->get_Pref_in_pu_based_on_mbase()-200.0)<FLOAT_EPSILON);
 }
+
 void VSG_MODEL_TEST::test_set_get_Qref_in_pu_based_on_mbase()
 {
-
+    model->set_Qref_in_pu_based_on_mbase(100.0);
+    TEST_ASSERT(fabs(model->get_Qref_in_pu_based_on_mbase()-100.0)<FLOAT_EPSILON);
+    model->set_Qref_in_pu_based_on_mbase(200.0);
+    TEST_ASSERT(fabs(model->get_Qref_in_pu_based_on_mbase()-200.0)<FLOAT_EPSILON);
 }
+
 void VSG_MODEL_TEST::test_set_get_Vref_in_pu()
 {
 
 }
 
-void VSG_MODEL_TEST::test_get_virtual_speed_in_pu()
+void VSG_MODEL_TEST::test_set_get_P_in_pu_based_on_mbase()
+{
+
+}
+void VSG_MODEL_TEST::test_set_get_Q_in_pu_based_on_mbase()
+{
+
+}
+void VSG_MODEL_TEST::test_set_get_V_in_pu()
+{
+
+}
+void VSG_MODEL_TEST::test_set_get_initial_virtual_voltage_in_pu()
+{
+
+}
+void VSG_MODEL_TEST::test_set_get_initial_virtual_angle_in_rad()
 {
 
 }
 
 void VSG_MODEL_TEST::test_active_power_step_response_of_vsg_model()
 {
+    ostringstream osstream;
+    if(model!=NULL)
+    {
+        show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
+        default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+
+        osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
+
+        double delt = 0.001;
+        default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
+
+        double time = -delt*2.0;
+
+        model->set_Pref_in_pu_based_on_mbase(1.0);
+        model->set_Qref_in_pu_based_on_mbase(0.5);
+        model->set_Vref_in_pu(1.05);
+        model->set_P_in_pu_based_on_mbase(1.0);
+        model->set_Q_in_pu_based_on_mbase(0.5);
+        model->set_V_in_pu(1.05);
+
+        model->set_initial_virtual_voltage_in_pu(1.0);
+        model->set_initial_virtual_angle_in_rad(0.2);
+
+        model->initialize();
+
+        export_meter_title();
+        export_meter_values(time);
+
+        while(true)
+        {
+            time += delt;
+            if(time>1.0+FLOAT_EPSILON)
+            {
+                time -=delt;
+                break;
+            }
+            run_a_step();
+            export_meter_values(time);
+        }
+
+        double p0 = model->get_P_in_pu_based_on_mbase();
+        model->set_P_in_pu_based_on_mbase(p0*0.99);
+        model->run(UPDATE_MODE);
+
+        export_meter_values(time);
+
+        while(true)
+        {
+            time += delt;
+
+            if(time>6.0+FLOAT_EPSILON)
+            {
+                time -=delt;
+                break;
+            }
+
+            run_a_step();
+            export_meter_values(time);
+        }
+        default_toolkit.close_log_file();
+    }
+    else
+        TEST_ASSERT(false);
 }
+
 void VSG_MODEL_TEST::test_reactive_power_step_response_of_vsg_model()
 {
+    ostringstream osstream;
+    if(model!=NULL)
+    {
+        show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
+
+        default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+
+        osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
+
+        double delt = 0.001;
+        default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
+
+        double time = -delt*2.0;
+
+        model->set_Pref_in_pu_based_on_mbase(1.0);
+        model->set_Qref_in_pu_based_on_mbase(0.5);
+        model->set_Vref_in_pu(1.05);
+        model->set_P_in_pu_based_on_mbase(1.0);
+        model->set_Q_in_pu_based_on_mbase(0.5);
+        model->set_V_in_pu(1.05);
+
+        model->set_initial_virtual_voltage_in_pu(1.0);
+        model->set_initial_virtual_angle_in_rad(0.2);
+
+        model->initialize();
+
+        export_meter_title();
+        export_meter_values(time);
+
+        while(true)
+        {
+            time += delt;
+            if(time>1.0+FLOAT_EPSILON)
+            {
+                time -=delt;
+                break;
+            }
+            run_a_step();
+            export_meter_values(time);
+        }
+
+        double q0 = model->get_Q_in_pu_based_on_mbase();
+        model->set_Q_in_pu_based_on_mbase(q0*0.99);
+        model->run(UPDATE_MODE);
+
+        export_meter_values(time);
+
+        while(true)
+        {
+            time += delt;
+
+            if(time>6.0+FLOAT_EPSILON)
+            {
+                time -=delt;
+                break;
+            }
+
+            run_a_step();
+            export_meter_values(time);
+        }
+        default_toolkit.close_log_file();
+    }
+    else
+        TEST_ASSERT(false);
 
 }
 void VSG_MODEL_TEST::test_voltage_step_response_of_vsg_model()
 {
+    ostringstream osstream;
+    if(model!=NULL)
+    {
+        show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
+        default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+
+        osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
+
+        double delt = 0.001;
+        default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
+
+        double time = -delt*2.0;
+
+        model->set_Pref_in_pu_based_on_mbase(1.0);
+        model->set_Qref_in_pu_based_on_mbase(0.5);
+        model->set_Vref_in_pu(1.05);
+        model->set_P_in_pu_based_on_mbase(1.0);
+        model->set_Q_in_pu_based_on_mbase(0.5);
+        model->set_V_in_pu(1.05);
+
+        model->set_initial_virtual_voltage_in_pu(1.0);
+        model->set_initial_virtual_angle_in_rad(0.2);
+
+        model->initialize();
+
+        export_meter_title();
+        export_meter_values(time);
+
+        while(true)
+        {
+            time += delt;
+            if(time>1.0+FLOAT_EPSILON)
+            {
+                time -=delt;
+                break;
+            }
+            run_a_step();
+            export_meter_values(time);
+        }
+
+        double V0 = model->get_V_in_pu();
+        model->set_V_in_pu(V0*0.99);
+        model->run(UPDATE_MODE);
+
+        export_meter_values(time);
+
+        while(true)
+        {
+            time += delt;
+
+            if(time>6.0+FLOAT_EPSILON)
+            {
+                time -=delt;
+                break;
+            }
+
+            run_a_step();
+            export_meter_values(time);
+        }
+        default_toolkit.close_log_file();
+    }
+    else
+        TEST_ASSERT(false);
 }
 
 void VSG_MODEL_TEST::run_a_step()
 {
-
+    double angle = model->get_virtual_angle_in_rad();
+    double V = model->get_virtual_voltage_in_pu();
+    while(true)
+    {
+        model->run(INTEGRATE_MODE);
+        if(fabs(angle-model->get_virtual_angle_in_rad())>FLOAT_EPSILON or
+           fabs(V-model->get_virtual_voltage_in_pu())>FLOAT_EPSILON)
+        {
+            angle = model->get_virtual_angle_in_rad();
+            V = model->get_virtual_voltage_in_pu();
+        }
+        else
+            break;
+    }
+    model->run(UPDATE_MODE);
 }
+
 void VSG_MODEL_TEST::export_meter_title()
 {
+    ostringstream osstream;
+    osstream<<"TIME\tP\tQ\tV\tANGLE\tE";
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
 }
 void VSG_MODEL_TEST::export_meter_values(double time)
 {
+    ostringstream osstream;
 
+    double P = model->get_P_in_pu_based_on_mbase();
+    double Q = model->get_Q_in_pu_based_on_mbase();
+    double V = model->get_V_in_pu();
+    double angle = model->get_virtual_angle_in_rad();
+    double E = model->get_virtual_voltage_in_pu();
+
+    osstream<<setw(6)<<setprecision(3)<<fixed<<time<<"\t"
+      <<setw(10)<<setprecision(6)<<fixed<<P<<"\t"
+      <<setw(10)<<setprecision(6)<<fixed<<Q<<"\t"
+      <<setw(10)<<setprecision(6)<<fixed<<V<<"\t"
+      <<setw(10)<<setprecision(6)<<fixed<<angle<<"\t"
+      <<setw(10)<<setprecision(6)<<fixed<<E;
+
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 #endif

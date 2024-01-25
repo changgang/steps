@@ -14,8 +14,7 @@
 
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
-#include "header/model/vsg_model/vsg_model.h"
-#include "header/model/wtg_models/wt_generator_model/wt3g0.h"
+#include "header/model/vsg_model/vsg_model2.h"
 using namespace std;
 
 class VSG_MODEL_TEST : public Test::Suite
@@ -23,27 +22,18 @@ class VSG_MODEL_TEST : public Test::Suite
     public:
         VSG_MODEL_TEST();
 
-        WT_GENERATOR* get_test_wt_generator();
-        VSG_MODEL* get_test_model();
-        void set_test_model(VSG_MODEL* model);
-
-
-        void test_get_mbase_in_MVA();
-        void test_get_one_over_mbase_in_one_over_MVA();
-
-        void test_get_terminal_complex_power_in_pu_based_on_mbase();
-        void test_get_terminal_voltage_in_pu();
-        void test_get_terminal_complex_voltage_in_pu();
-        void test_get_terminal_voltage_angle_in_rad();
-        void test_get_bus_base_frequency_in_Hz();
-        void test_get_bus_base_angle_speed_in_radps();
-        void test_get_source_impedance_in_pu_based_on_mbase();
+        VSG_MODEL2* get_test_model();
+        void set_test_model(VSG_MODEL2* model);
 
         void test_set_get_Pref_in_pu_based_on_mbase();
         void test_set_get_Qref_in_pu_based_on_mbase();
         void test_set_get_Vref_in_pu();
 
-        void test_get_virtual_speed_in_pu();
+        void test_set_get_P_in_pu_based_on_mbase();
+        void test_set_get_Q_in_pu_based_on_mbase();
+        void test_set_get_V_in_pu();
+        void test_set_get_initial_virtual_voltage_in_pu();
+        void test_set_get_initial_virtual_angle_in_rad();
 
         void test_active_power_step_response_of_vsg_model();
         void test_reactive_power_step_response_of_vsg_model();
@@ -53,11 +43,10 @@ class VSG_MODEL_TEST : public Test::Suite
         void export_meter_title();
         void export_meter_values(double time);
     protected:
-        virtual setup();
-        virtual tear_down();
+        virtual void setup();
+        virtual void tear_down();
     private:
-        VSG_MODEL* model;
-        WT3G0* wtg_model;
+        VSG_MODEL2* model;
 };
 
 #endif//VSG_MODEL_TEST_H

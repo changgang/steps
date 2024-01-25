@@ -1882,7 +1882,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_vsc_hvdc()
     vsc_hvdc.set_converter_ac_bus(2, 2);
     vsc_hvdc.set_identifier("#1");
     vsc_hvdc.set_status(true);
-
+    cout<<__LINE__<<" @ "<<__FUNCTION__<<endl;
     psdb.append_vsc_hvdc(vsc_hvdc);
     vsc_hvdc.set_converter_count(3);
     vsc_hvdc.set_dc_bus_count(3);
@@ -1895,7 +1895,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_vsc_hvdc()
     vsc_hvdc.set_status(false);
 
     psdb.append_vsc_hvdc(vsc_hvdc);
-
+    cout<<__LINE__<<" @ "<<__FUNCTION__<<endl;
     TEST_ASSERT(psdb.get_vsc_hvdc_count()==2);
 
     VSC_HVDC* pvschvdc;
@@ -1909,7 +1909,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_vsc_hvdc()
     did.set_device_identifier_index(get_index_of_string("#1"));
 
     pvschvdc = psdb.get_vsc_hvdc(did);
-
+    cout<<__LINE__<<" @ "<<__FUNCTION__<<endl;
     TEST_ASSERT(pvschvdc!=NULL);
     TEST_ASSERT(pvschvdc->get_name()=="#1");
     TEST_ASSERT(pvschvdc->get_converter_ac_bus(0)==1);
@@ -1930,7 +1930,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_vsc_hvdc()
     TEST_ASSERT(pvschvdc->get_status()==false);
 
     pvschvdc = psdb.get_vsc_hvdc("VSC DC1");
-
+    cout<<__LINE__<<" @ "<<__FUNCTION__<<endl;
     TEST_ASSERT(pvschvdc!=NULL);
     TEST_ASSERT(pvschvdc->get_name()=="#1");
     TEST_ASSERT(pvschvdc->get_converter_ac_bus(0)==1);

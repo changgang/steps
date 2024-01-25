@@ -567,7 +567,7 @@
 	"header/basic/utility.h"
 	"header/data_imexporter/psse_imexporter.h"
 
-1706157211 source:d:\steps\code\steps\main_tests.cpp
+1706186518 source:d:\steps\code\steps\main_tests.cpp
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -670,6 +670,7 @@
 	"header/model/hvdc_model/vdcol_test.h"
 	"header/model/hvdc_model/CDC4T_test.h"
 	"header/model/hvdc_model/CDC6T_test.h"
+	"header/model/vsg_model/vsgcontrol2_test.h"
 	"header/model/wtg_models/wt_generator_model/wt3g1_test.h"
 	"header/model/wtg_models/wt_generator_model/wt3g0_test.h"
 	"header/model/wtg_models/wt_aerodynamic_model/aerd0_test.h"
@@ -5620,7 +5621,7 @@
 	<utility>
 	"internal/stack.h"
 
-1664187911 source:d:\steps\code\steps\source\power_system_database_test.cpp
+1706180726 source:d:\steps\code\steps\source\power_system_database_test.cpp
 	"header/basic/test_macro.h"
 	"header/power_system_database_test.h"
 	"header/basic/utility.h"
@@ -56598,7 +56599,7 @@
 	"header/block/integral_block.h"
 	<complex>
 
-1706070254 d:\steps\code\steps\header\model\vsg_model\vsg_model.h
+1706182634 d:\steps\code\steps\header\model\vsg_model\vsg_model.h
 	"header/model/model.h"
 	"header/device/bus.h"
 	<complex>
@@ -56619,4 +56620,68 @@
 	"header/model/vsg_model/vsg_model.h"
 	"header/block/integral_block.h"
 	<complex>
+
+1706187999 source:d:\steps\code\steps\source\model\vsg_model\vsgcontrol2_test.cpp
+	"header/basic/test_macro.h"
+	"header/model/vsg_model/vsgcontrol2_test.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<cstdlib>
+	<cstring>
+	<istream>
+	<iostream>
+	<cstdio>
+	<cmath>
+
+1706186415 d:\steps\code\steps\header\model\vsg_model\vsgcontrol2_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"header/model/vsg_model/vsg_model_test.h"
+	"header/model/vsg_model/vsgcontrol2.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+
+1706185366 d:\steps\code\steps\header\model\vsg_model\vsg_model_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"cpptest.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+	"header/model/vsg_model/vsg_model2.h"
+
+1706187830 d:\steps\code\steps\header\model\vsg_model\vsg_model2.h
+	"header/STEPS.h"
+
+1706185850 d:\steps\code\steps\header\model\vsg_model\vsgcontrol2.h
+	"header/model/vsg_model/vsg_model2.h"
+	"header/block/integral_block.h"
+
+1706188110 source:d:\steps\code\steps\source\model\vsg_model\vsg_model_test.cpp
+	"header/basic/test_macro.h"
+	"header/model/vsg_model/vsg_model_test.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<cstdlib>
+	<cstring>
+	<istream>
+	<iostream>
+	<cstdio>
+	<cmath>
+
+1706187859 source:d:\steps\code\steps\source\model\vsg_model\vsgcontrol2.cpp
+	"header/model/vsg_model/vsgcontrol2.h"
+	"header/basic/utility.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+
+1706188481 source:d:\steps\code\steps\source\model\vsg_model\vsg_model2.cpp
+	"header/model/vsg_model/vsg_model2.h"
+	"header/basic/utility.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+	<iostream>
 
