@@ -90,26 +90,6 @@ void WT3G0::set_converter_reactiver_voltage_command_T_in_s(double t)
     reactive_voltage_commander.set_T_in_s(t);
 }
 
-void WT3G0::set_KPLL(double K)
-{
-    Pll.set_Kp(K);
-}
-
-void WT3G0::set_KIPLL(double K)
-{
-    Pll.set_Ki(K);
-}
-
-void WT3G0::set_PLLmax(double pmax)
-{
-    Pll.set_Pllmax(pmax);
-}
-
-void WT3G0::set_PLLmin(double pmin)
-{
-    Pll.set_Pllmin(pmin);
-}
-
 void WT3G0::set_LVPL(const LVPL& lvpl)
 {
     this->lvpl = lvpl;
@@ -135,6 +115,26 @@ void WT3G0::set_LVPL_voltage_sensor_T_in_s(double t)
     LVPL_voltage_sensor.set_T_in_s(t);
 }
 
+void WT3G0::set_KPLL(double K)
+{
+    Pll.set_Kp(K);
+}
+
+void WT3G0::set_KIPLL(double K)
+{
+    Pll.set_Ki(K);
+}
+
+void WT3G0::set_PLLmax(double pmax)
+{
+    Pll.set_Pllmax(pmax);
+}
+
+void WT3G0::set_PLLmin(double pmin)
+{
+    Pll.set_Pllmin(pmin);
+}
+
 double WT3G0::get_converter_activer_current_command_T_in_s() const
 {
     return active_current_commander.get_T_in_s();
@@ -143,26 +143,6 @@ double WT3G0::get_converter_activer_current_command_T_in_s() const
 double WT3G0::get_converter_reactiver_voltage_command_T_in_s() const
 {
     return reactive_voltage_commander.get_T_in_s();
-}
-
-double WT3G0::get_KPLL() const
-{
-    return Pll.get_Kp();
-}
-
-double WT3G0::get_KIPLL() const
-{
-    return Pll.get_Ki();
-}
-
-double WT3G0::get_PLLmax() const
-{
-    return Pll.get_Pllmax();
-}
-
-double WT3G0::get_PLLmin() const
-{
-    return Pll.get_Pllmin();
 }
 
 LVPL WT3G0::get_LVPL() const
@@ -190,6 +170,25 @@ double WT3G0::get_LVPL_voltage_sensor_T_in_s() const
     return LVPL_voltage_sensor.get_T_in_s();
 }
 
+double WT3G0::get_KPLL() const
+{
+    return Pll.get_Kp();
+}
+
+double WT3G0::get_KIPLL() const
+{
+    return Pll.get_Ki();
+}
+
+double WT3G0::get_PLLmax() const
+{
+    return Pll.get_Pllmax();
+}
+
+double WT3G0::get_PLLmin() const
+{
+    return Pll.get_Pllmin();
+}
 
 string WT3G0::get_model_name() const
 {

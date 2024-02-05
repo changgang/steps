@@ -357,11 +357,6 @@ void WTRLY0::initialize()
 
             for(unsigned int i=0; i<STEPS_MAX_RELAY_COUNT; ++i)
             {
-                vwind_relay_timer[i].set_attached_device(get_wt_generator_pointer());
-                speed_relay_timer[i].set_attached_device(get_wt_generator_pointer());
-                freq_relay_timer[i].set_attached_device(get_wt_generator_pointer());
-                volt_relay_timer[i].set_attached_device(get_wt_generator_pointer());
-
                 vwind_relay_timer[i].reset();
                 speed_relay_timer[i].reset();
                 freq_relay_timer[i].reset();

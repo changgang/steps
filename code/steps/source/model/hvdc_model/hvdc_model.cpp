@@ -241,14 +241,6 @@ void HVDC_MODEL::set_cos_firing_angle_max_min()
     cos_firing_angle_min[INVERTER] = steps_cos(deg2rad(firing_angle_min[INVERTER]));
 }
 
-void HVDC_MODEL::set_attached_device_of_common_meters()
-{
-    HVDC* hvdc = get_hvdc_pointer();
-    block_timer.set_attached_device(hvdc);
-    bypass_timer.set_attached_device(hvdc);
-    mode_switch_timer.set_attached_device(hvdc);
-}
-
 double HVDC_MODEL::get_rectifier_dc_current_command_in_kA(double Vdci_measured, double Idc_measured)
 {
     if(not is_blocked())

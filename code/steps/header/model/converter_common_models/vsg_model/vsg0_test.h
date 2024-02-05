@@ -1,5 +1,5 @@
-#ifndef WT3G0_TEST_H
-#define WT3G0_TEST_H
+#ifndef VSG0_TEST_H
+#define VSG0_TEST_H
 
 #include <istream>
 #include <cstdlib>
@@ -10,26 +10,28 @@
 	#pragma warning (disable: 4290)
 #endif
 
-#include "header/model/wtg_models/wt_generator_model/wt_generator_model_test.h"
+#include "header/model/converter_common_models/vsg_model/vsg_model_test.h"
 
-#include "header/model/wtg_models/wt_generator_model/wt3g0.h"
-
+#include "header/model/converter_common_models/vsg_model/vsg0.h"
+#include "header/power_system_database.h"
 #include "header/STEPS.h"
 
 using namespace std;
 
-class WT3G0_TEST : public WT_GENERATOR_MODEL_TEST
+class VSG0_TEST : public VSG_MODEL_TEST
 {
     public:
-        WT3G0_TEST();
+        VSG0_TEST();
     protected:
         virtual void setup();
         virtual void tear_down();
     protected:
+        VSG0* get_model();
+
         virtual void test_get_model_name();
         virtual void test_set_get_parameters();
-        virtual void test_initialize_and_get_initialized_inputs();
     private:
+
 };
 
-#endif//WT3G0_TEST_H
+#endif//VSG0_TEST_H

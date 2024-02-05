@@ -236,12 +236,6 @@ void UVLS::initialize()
     //double volt = psdb.get_bus_positive_sequence_voltage_in_pu(load->get_load_bus());
     double volt = get_bus_positive_sequence_voltage_in_pu();
 
-    for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
-    {
-        stage_timer[i].set_attached_device(load);
-        breaker_timer[i].set_attached_device(load);
-    }
-
     voltage_sensor.set_output(volt);
     voltage_sensor.initialize();
 

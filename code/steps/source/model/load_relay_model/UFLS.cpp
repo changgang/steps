@@ -236,12 +236,6 @@ void UFLS::initialize()
 
     double fbase = get_bus_base_frequency_in_Hz();
 
-    for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
-    {
-        stage_timer[i].set_attached_device(load);
-        breaker_timer[i].set_attached_device(load);
-    }
-
     frequency_sensor.set_output(fbase);
     frequency_sensor.initialize();
 

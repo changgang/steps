@@ -1,7 +1,7 @@
 #ifndef VSG0_H
 #define VSG0_H
 
-#include "header/model/vsg_model/vsg_model.h"
+#include "header/model/converter_common_models/vsg_model/vsg_model.h"
 #include "header/block/integral_block.h"
 #include <complex>
 

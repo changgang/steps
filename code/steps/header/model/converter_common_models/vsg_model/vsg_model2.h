@@ -13,9 +13,6 @@ class VSG_MODEL2
         void set_toolkit(STEPS& toolkit);
         STEPS& get_toolkit() const;
 
-        void set_bus(unsigned int bus);
-        BUS* get_bus_pointer() const;
-
         void set_Pref_in_pu_based_on_mbase(double P);
         void set_Qref_in_pu_based_on_mbase(double Q);
         void set_Vref_in_pu(double V);

@@ -247,6 +247,13 @@ unsigned int CONTINUOUS_BUFFER::get_delay_index_of_time(double time) const
     }
     return index;
 }
+
+void CONTINUOUS_BUFFER::update_buffer_value_at_delay_index(unsigned int index, double value)
+{
+    index = get_storage_index_of_delay_index(index);
+    buffer[index][1] = value;
+}
+
 void CONTINUOUS_BUFFER::show_buffer() const
 {
     ostringstream osstream;
@@ -258,4 +265,61 @@ void CONTINUOUS_BUFFER::show_buffer() const
     }
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
+}
+
+bool operator<(CONTINUOUS_BUFFER&A, CONTINUOUS_BUFFER& B)
+{
+    unsigned int nA = A.get_buffer_size();
+    unsigned int nB = B.get_buffer_size();
+    if(nA==nB)
+    {
+        for(unsigned int index = nA; index!=0; --index)
+        {
+            double xA = A.get_buffer_value_at_delay_index(index-1);
+            double xB = B.get_buffer_value_at_delay_index(index-1);
+            if(xA<xB-FLOAT_EPSILON)
+                return true;
+        }
+        return false;
+    }
+    else
+        return false;
+}
+
+bool operator>(CONTINUOUS_BUFFER&A, CONTINUOUS_BUFFER& B)
+{
+    unsigned int nA = A.get_buffer_size();
+    unsigned int nB = B.get_buffer_size();
+    if(nA==nB)
+    {
+        for(unsigned int index = nA; index!=0; --index)
+        {
+            double xA = A.get_buffer_value_at_delay_index(index-1);
+            double xB = B.get_buffer_value_at_delay_index(index-1);
+            if(xA>xB+FLOAT_EPSILON)
+                return true;
+        }
+        return false;
+    }
+    else
+        return false;
+}
+
+bool operator==(CONTINUOUS_BUFFER&A, CONTINUOUS_BUFFER& B)
+{
+    unsigned int nA = A.get_buffer_size();
+    unsigned int nB = B.get_buffer_size();
+    if(nA==nB)
+    {
+        for(unsigned int index = nA; index!=0; --index)
+        {
+            double xA = A.get_buffer_value_at_delay_index(index-1);
+            double xB = B.get_buffer_value_at_delay_index(index-1);
+            if(abs(xA-xB)>FLOAT_EPSILON)
+                return false;
+        }
+        return true;
+    }
+    else
+        return false;
 }

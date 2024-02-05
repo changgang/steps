@@ -47,6 +47,9 @@ const unsigned int STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT = 5;
 const unsigned int STEPS_MAX_DC_NETWORK_BUS_SIZE = 20;
 const unsigned int STEPS_MAX_DC_NETWORK_LINE_SIZE = 10;
 
+
+const double STEPS_MAX_VRT_VOLTAGE_BUFFER_LENGTH_IN_S = 3; //voltage ride through buffer length
+
 const int STEPS_MAGIC1 = 621877636;
 const int STEPS_MAGIC2 = 40966531;
 const int STEPS_MAGIC3 = 20389910;

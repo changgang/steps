@@ -1,7 +1,7 @@
 #ifndef PLL0_H
 #define PLL0_H
 
-#include "header/model/bus_model/pll_model/pll_model.h"
+#include "header/model/converter_common_models/pll_model/pll_model.h"
 #include "header/block/integral_block.h"
 
 class PLL0 : public PLL_MODEL

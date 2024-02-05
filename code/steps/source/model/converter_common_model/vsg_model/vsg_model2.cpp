@@ -1,4 +1,4 @@
-#include "header/model/vsg_model/vsg_model2.h"
+#include "header/model/converter_common_models/vsg_model/vsg_model2.h"
 #include "header/basic/utility.h"
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
@@ -22,17 +22,6 @@ void VSG_MODEL2::set_toolkit(STEPS& toolkit)
 STEPS& VSG_MODEL2::get_toolkit() const
 {
     return *toolkit;
-}
-
-void VSG_MODEL2::set_bus(unsigned int bus)
-{
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    this->busptr = psdb.get_bus(bus);
-}
-
-BUS* VSG_MODEL2::get_bus_pointer() const
-{
-    return busptr;
 }
 
 void VSG_MODEL2::set_Pref_in_pu_based_on_mbase(double P)

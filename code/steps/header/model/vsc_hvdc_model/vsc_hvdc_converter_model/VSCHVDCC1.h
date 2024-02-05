@@ -1,5 +1,5 @@
-#ifndef VSG0_H_INCLUDED
-#define VSG0_H_INCLUDED
+#ifndef VSCHVDCC1_H_INCLUDED
+#define VSCHVDCC1_H_INCLUDED
 
 #include "header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_model.h"
 #include "header/block/integral_block.h"
@@ -8,13 +8,13 @@
 #include "header/block/lead_lag_block.h"
 #include "header/block/first_order_block.h"
 
-class VSG0: public VSC_HVDC_CONVERTER_MODEL
+class VSCHVDCC1: public VSC_HVDC_CONVERTER_MODEL
 {
     public:
-        VSG0(STEPS& toolkit);
-        VSG0(const VSG0& model);
-        virtual ~VSG0();
-        virtual VSG0& operator=(const VSG0& model);
+        VSCHVDCC1(STEPS& toolkit);
+        VSCHVDCC1(const VSCHVDCC1& model);
+        virtual ~VSCHVDCC1();
+        virtual VSCHVDCC1& operator=(const VSCHVDCC1& model);
     public:
         virtual string get_model_name() const;
 
@@ -114,7 +114,7 @@ class VSG0: public VSC_HVDC_CONVERTER_MODEL
         virtual complex<double> get_converter_voltage_in_xy_axis_in_pu_as_voltage_source() const ;
         virtual complex<double> get_converter_dynamic_current_from_converter_to_ac_bus_in_dq_axis_in_pu_on_converter_base_as_current_source() const ;
     private:
-        void copy_from_const_model(const VSG0& model);
+        void copy_from_const_model(const VSCHVDCC1& model);
         double get_converter_dc_power_from_converter_to_Ceq_in_MW();
     private:
         INTEGRAL_BLOCK udc_block;
@@ -139,4 +139,4 @@ class VSG0: public VSC_HVDC_CONVERTER_MODEL
 
         double q_ref, uac_ref;
 };
-#endif // VSG0_H_INCLUDED
+#endif // VSCHVDCC1_H_INCLUDED

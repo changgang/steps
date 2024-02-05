@@ -244,8 +244,6 @@ void CDC4T::initialize()
 
         setup_block_toolkit_and_parameters();
 
-        set_attached_device_of_common_meters();
-
         double Vdci = hvdc->get_converter_dc_voltage_in_kV(INVERTER);
         inverter_dc_voltage_sensor.set_output(Vdci);
         inverter_dc_voltage_sensor.initialize();

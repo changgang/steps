@@ -3,7 +3,7 @@
 
 #include "header/model/wtg_models/wt_generator_model/wt_generator_model.h"
 #include "header/model/wtg_models/wt_generator_model/lvpl.h"
-#include "header/model/bus_model/pll_model/pll0.h"
+#include "header/model/converter_common_models/pll_model/pll0.h"
 #include "header/block/integral_block.h"
 #include "header/block/first_order_block.h"
 
@@ -17,27 +17,27 @@ class WT3G0 : public WT_GENERATOR_MODEL
 
         void set_converter_activer_current_command_T_in_s(double t);
         void set_converter_reactiver_voltage_command_T_in_s(double t);
-        void set_KPLL(double K);
-        void set_KIPLL(double K);
-        void set_PLLmax(double pmax);
-        void set_PLLmin(double pmin);
         void set_LVPL(const LVPL& lvpl);
         void set_HVRC_voltage_in_pu(double v);
         void set_HVRC_current_in_pu(double i);
         void set_LVPL_max_rate_of_active_current_change(double rate);
         void set_LVPL_voltage_sensor_T_in_s(double t);
+        void set_KPLL(double K);
+        void set_KIPLL(double K);
+        void set_PLLmax(double pmax);
+        void set_PLLmin(double pmin);
 
         double get_converter_activer_current_command_T_in_s() const;
         double get_converter_reactiver_voltage_command_T_in_s() const;
-        double get_KPLL() const;
-        double get_KIPLL() const;
-        double get_PLLmax() const;
-        double get_PLLmin() const;
         LVPL get_LVPL() const;
         double get_HVRC_voltage_in_pu() const;
         double get_HVRC_current_in_pu() const;
         double get_LVPL_max_rate_of_active_current_change() const;
         double get_LVPL_voltage_sensor_T_in_s() const;
+        double get_KPLL() const;
+        double get_KIPLL() const;
+        double get_PLLmax() const;
+        double get_PLLmin() const;
 
 
         virtual string get_model_name() const;

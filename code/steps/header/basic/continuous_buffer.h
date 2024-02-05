@@ -34,6 +34,8 @@ class CONTINUOUS_BUFFER : public BASE
         double get_buffer_value_at_time(double time) const;
         unsigned int get_delay_index_of_time(double time) const;
 
+        void update_buffer_value_at_delay_index(unsigned int index, double value);
+
         void show_buffer() const;
     private:
         void copy_from_constant_buffer(const CONTINUOUS_BUFFER& buffer);
@@ -49,4 +51,8 @@ class CONTINUOUS_BUFFER : public BASE
         virtual void check();
 };
 
+
+bool operator<(CONTINUOUS_BUFFER&A, CONTINUOUS_BUFFER& B);
+bool operator>(CONTINUOUS_BUFFER&A, CONTINUOUS_BUFFER& B);
+bool operator==(CONTINUOUS_BUFFER&A, CONTINUOUS_BUFFER& B);
 #endif // CONTINUOUS_BUFFER_H

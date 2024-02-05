@@ -26,29 +26,11 @@ TIMER_TEST::TIMER_TEST()
 void TIMER_TEST::setup()
 {
     timer.set_toolkit(default_toolkit);
-
-    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    psdb.set_allowed_max_bus_number(1000);
-
-    BUS bus(default_toolkit);
-
-    bus.set_bus_number(1);
-    bus.set_bus_name("bus");
-    bus.set_base_voltage_in_kV(100.0);
-    bus.set_bus_type(PQ_TYPE);
-
-    psdb.append_bus(bus);
-
-    BUS* busptr = psdb.get_bus(1);
-    timer.set_attached_device(busptr);
 }
 
 void TIMER_TEST::tear_down()
 {
     timer.clear();
-
-    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    psdb.clear();
 
     show_test_end_information();
 }

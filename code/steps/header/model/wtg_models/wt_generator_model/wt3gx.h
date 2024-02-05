@@ -3,7 +3,7 @@
 
 #include "header/model/wtg_models/wt_generator_model/wt_generator_model.h"
 #include "header/model/wtg_models/wt_generator_model/lvpl.h"
-#include "header/model/vsg_model/vsgcontrol2.h"
+#include "header/model/converter_common_models/vsg_model/vsg0.h"
 #include "header/block/integral_block.h"
 #include "header/block/first_order_block.h"
 
@@ -17,27 +17,27 @@ class WT3GX : public WT_GENERATOR_MODEL
 
         void set_converter_activer_current_command_T_in_s(double t);
         void set_converter_reactiver_voltage_command_T_in_s(double t);
-        void set_Tj_in_s(double T);
-        void set_D(double D);
-        void set_Ku(double Ku);
-        void set_Te_in_s(double T);
         void set_LVPL(const LVPL& lvpl);
         void set_HVRC_voltage_in_pu(double v);
         void set_HVRC_current_in_pu(double i);
         void set_LVPL_max_rate_of_active_current_change(double rate);
         void set_LVPL_voltage_sensor_T_in_s(double t);
+        void set_Tj_in_s(double T);
+        void set_D(double D);
+        void set_Ku(double Ku);
+        void set_Te_in_s(double T);
 
         double get_converter_activer_current_command_T_in_s() const;
         double get_converter_reactiver_voltage_command_T_in_s() const;
-        double get_Tj_in_s() const;
-        double get_D() const;
-        double get_Ku() const;
-        double get_Te_in_s() const;
         LVPL get_LVPL() const;
         double get_HVRC_voltage_in_pu() const;
         double get_HVRC_current_in_pu() const;
         double get_LVPL_max_rate_of_active_current_change() const;
         double get_LVPL_voltage_sensor_T_in_s() const;
+        double get_Tj_in_s() const;
+        double get_D() const;
+        double get_Ku() const;
+        double get_Te_in_s() const;
 
 
         virtual string get_model_name() const;
@@ -101,7 +101,7 @@ class WT3GX : public WT_GENERATOR_MODEL
         FIRST_ORDER_BLOCK reactive_voltage_commander;
         double HVRCR_voltage, HVRCR_current;
 
-        VSGCONTROL2 vsg;
+        VSG0 vsg;
 };
 
 #endif // GENERATOR_MODEL_H

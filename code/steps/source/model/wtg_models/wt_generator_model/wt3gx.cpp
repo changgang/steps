@@ -90,26 +90,6 @@ void WT3GX::set_converter_reactiver_voltage_command_T_in_s(double t)
     reactive_voltage_commander.set_T_in_s(t);
 }
 
-void WT3GX::set_Tj_in_s(double T)
-{
-    vsg.set_Tj_in_s(T);
-}
-
-void WT3GX::set_D(double D)
-{
-    vsg.set_D(D);
-}
-
-void WT3GX::set_Ku(double Ku)
-{
-    vsg.set_Ku(Ku);
-}
-
-void WT3GX::set_Te_in_s(double T)
-{
-    vsg.set_Te_in_s(T);
-}
-
 void WT3GX::set_LVPL(const LVPL& lvpl)
 {
     this->lvpl = lvpl;
@@ -135,6 +115,26 @@ void WT3GX::set_LVPL_voltage_sensor_T_in_s(double t)
     LVPL_voltage_sensor.set_T_in_s(t);
 }
 
+void WT3GX::set_Tj_in_s(double T)
+{
+    vsg.set_Tj_in_s(T);
+}
+
+void WT3GX::set_D(double D)
+{
+    vsg.set_D(D);
+}
+
+void WT3GX::set_Ku(double Ku)
+{
+    vsg.set_Ku(Ku);
+}
+
+void WT3GX::set_Te_in_s(double T)
+{
+    vsg.set_Te_in_s(T);
+}
+
 double WT3GX::get_converter_activer_current_command_T_in_s() const
 {
     return active_current_commander.get_T_in_s();
@@ -143,26 +143,6 @@ double WT3GX::get_converter_activer_current_command_T_in_s() const
 double WT3GX::get_converter_reactiver_voltage_command_T_in_s() const
 {
     return reactive_voltage_commander.get_T_in_s();
-}
-
-double WT3GX::get_Tj_in_s() const
-{
-    return vsg.get_Tj_in_s();
-}
-
-double WT3GX::get_D() const
-{
-    return vsg.get_D();
-}
-
-double WT3GX::get_Ku() const
-{
-    return vsg.get_Ku();
-}
-
-double WT3GX::get_Te_in_s() const
-{
-    return vsg.get_Te_in_s();
 }
 
 LVPL WT3GX::get_LVPL() const
@@ -190,6 +170,25 @@ double WT3GX::get_LVPL_voltage_sensor_T_in_s() const
     return LVPL_voltage_sensor.get_T_in_s();
 }
 
+double WT3GX::get_Tj_in_s() const
+{
+    return vsg.get_Tj_in_s();
+}
+
+double WT3GX::get_D() const
+{
+    return vsg.get_D();
+}
+
+double WT3GX::get_Ku() const
+{
+    return vsg.get_Ku();
+}
+
+double WT3GX::get_Te_in_s() const
+{
+    return vsg.get_Te_in_s();
+}
 
 string WT3GX::get_model_name() const
 {
@@ -297,8 +296,6 @@ bool WT3GX::setup_model_with_bpa_string(string data)
 
 void WT3GX::setup_block_toolkit_and_parameters()
 {
-    WT_GENERATOR* wt_generator = get_wt_generator_pointer();
-    vsg.set_bus(wt_generator->get_generator_bus());
 }
 
 void WT3GX::initialize()
@@ -374,8 +371,8 @@ void WT3GX::initialize()
                     <<"(4) States of blocks"<<endl
                     <<"    active_current_commander block state: "<<active_current_commander.get_state()<<endl
                     <<"    reactive_voltage_commander block state: "<<reactive_voltage_commander.get_state()<<endl
-                    <<"    PLL_frequency_integrator block state: "<<Pll.get_frquency_deviation_block_state()<<endl
-                    <<"    PLL_angle_integrator block state: "<<Pll.get_angle_block_state()<<endl
+                    <<"    PLL_frequency_integrator block state: "<<0<<endl
+                    <<"    PLL_angle_integrator block state: "<<0<<endl
                     <<"    LVPL_voltage_sensor block state: "<<LVPL_voltage_sensor.get_state()<<endl
                     <<"(5) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
                     <<"(6) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
@@ -551,10 +548,10 @@ string WT3GX::get_standard_psse_string(bool export_internal_bus_number) const
             <<setw(8)<<setprecision(6)<<get_converter_reactiver_voltage_command_T_in_s()<<", "
             <<setw(8)<<setprecision(6)<<get_HVRC_voltage_in_pu()<<", "
             <<setw(8)<<setprecision(6)<<get_HVRC_current_in_pu()<<", "
-            <<setw(8)<<setprecision(6)<<get_KPLL()<<", "
-            <<setw(8)<<setprecision(6)<<get_KIPLL()<<", "
-            <<setw(8)<<setprecision(6)<<get_PLLmax()<<", "
-            <<setw(8)<<setprecision(6)<<get_PLLmin()<<" /";
+            <<setw(8)<<setprecision(6)<<get_Tj_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_D()<<", "
+            <<setw(8)<<setprecision(6)<<get_Ku()<<", "
+            <<setw(8)<<setprecision(6)<<get_Te_in_s()<<" /";
 
     return osstream.str();
 }
@@ -607,14 +604,14 @@ double WT3GX::get_model_data_with_name(string par_name) const
         return get_HVRC_voltage_in_pu();
     if(par_name=="C HVRC")
         return get_HVRC_current_in_pu();
-    if(par_name=="KPLL")
-        return get_KPLL();
-    if(par_name=="KIPLL")
-        return get_KIPLL();
-    if(par_name=="PLLMAX")
-        return get_PLLmax();
-    if(par_name=="PLLMIN")
-        return get_PLLmin();
+    if(par_name=="TJ")
+        return get_Tj_in_s();
+    if(par_name=="D")
+        return get_D();
+    if(par_name=="KU")
+        return get_Ku();
+    if(par_name=="TE")
+        return get_Te_in_s();
 
     return 0.0;
 }
@@ -650,15 +647,14 @@ void WT3GX::set_model_data_with_name(string par_name, double value)
         return set_HVRC_voltage_in_pu(value);
     if(par_name=="C HVRC")
         return set_HVRC_current_in_pu(value);
-    if(par_name=="KPLL")
-        return set_KPLL(value);
-    if(par_name=="KIPLL")
-        return set_KIPLL(value);
-    if(par_name=="PLLMAX")
-        return set_PLLmax(value);
-    if(par_name=="PLLMIN")
-        return set_PLLmin(value);
-
+    if(par_name=="TJ")
+        return set_Tj_in_s(value);
+    if(par_name=="D")
+        return set_D(value);
+    if(par_name=="KU")
+        return set_Ku(value);
+    if(par_name=="TE")
+        return set_Te_in_s(value);
     return;
 }
 
@@ -695,10 +691,12 @@ double WT3GX::get_model_internal_variable_with_name(string var_name)
         return active_current_commander.get_state();
     if(var_name == "STATE@REACTIVE VOLTAGE COMMAND BLOCK")
         return reactive_voltage_commander.get_state();
-    if(var_name == "STATE@PLL FREQUENCY BLOCK")
-        return Pll.get_frquency_deviation_block_state();
-    if(var_name == "STATE@PLL ANGLE BLOCK")
-        return Pll.get_angle_block_state();
+    if(var_name == "STATE@VIRTUAL FREQUENCY BLOCK")
+        return vsg.get_virtual_frequency_deviation_block_state();
+    if(var_name == "STATE@VIRTUAL ANGLE BLOCK")
+        return vsg.get_virtual_angle_block_state();
+    if(var_name == "STATE@VIRTUAL VOLTAGE BLOCK")
+        return vsg.get_virtual_voltage_block_state();
     if(var_name == "STATE@LVPL VOLTAGE SENSOR")
         return LVPL_voltage_sensor.get_state();
 
@@ -756,32 +754,62 @@ double WT3GX::get_active_power_generation_including_stator_loss_in_MW()
 
 double WT3GX::get_pll_angle_in_rad()
 {
-    return Pll.get_pll_angle_in_rad();
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    osstream<<"WARNING. "<<get_model_name()<<"::"<<__FUNCTION__<<"() is called without implementation. ZERO is returned with no meaning.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
+    return 0;
 }
 
 double WT3GX::get_pll_angle_in_deg()
 {
-    return rad2deg(get_pll_angle_in_rad());
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    osstream<<"WARNING. "<<get_model_name()<<"::"<<__FUNCTION__<<"() is called without implementation. ZERO is returned with no meaning.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
+    return 0;
 }
 
 double WT3GX::get_pll_frequency_deviation_in_pu()
 {
-    return Pll.get_pll_frequency_deviation_in_pu();
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    osstream<<"WARNING. "<<get_model_name()<<"::"<<__FUNCTION__<<"() is called without implementation. ZERO is returned with no meaning.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
+    return 0;
 }
 
 double WT3GX::get_pll_frequency_deviation_in_Hz()
 {
-    return Pll.get_pll_frequency_deviation_in_Hz();
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    osstream<<"WARNING. "<<get_model_name()<<"::"<<__FUNCTION__<<"() is called without implementation. ZERO is returned with no meaning.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
+    return 0;
 }
 
 double WT3GX::get_pll_frequency_in_pu()
 {
-    return Pll.get_pll_frequency_in_pu();
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    osstream<<"WARNING. "<<get_model_name()<<"::"<<__FUNCTION__<<"() is called without implementation. ZERO is returned with no meaning.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
+    return 0;
 }
 
 double WT3GX::get_pll_frequency_in_Hz()
 {
-    return Pll.get_pll_frequency_in_Hz();
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    osstream<<"WARNING. "<<get_model_name()<<"::"<<__FUNCTION__<<"() is called without implementation. ZERO is returned with no meaning.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
+    return 0;
 }
 
 complex<double> WT3GX::get_internal_voltage_in_pu_in_xy_axis()

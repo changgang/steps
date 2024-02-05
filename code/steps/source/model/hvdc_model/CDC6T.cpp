@@ -404,15 +404,6 @@ void CDC6T::initialize()
 
         setup_block_toolkit_and_parameters();
 
-        rec_ac_blocking_timer.set_attached_device(hvdc);
-        inv_ac_blocking_signal_transmitting_timer.set_attached_device(hvdc);
-        rec_ac_unblocking_timer.set_attached_device(hvdc);
-        inv_ac_unblocking_timer.set_attached_device(hvdc);
-        inv_ac_unblocking_signal_transmitting_timer.set_attached_device(hvdc);
-        inv_ac_bypassing_timer.set_attached_device(hvdc);
-        inv_ac_unbypassing_timer.set_attached_device(hvdc);
-        set_attached_device_of_common_meters();
-
         double Vdcr = hvdc->get_converter_dc_voltage_in_kV(RECTIFIER);
         rectifier_dc_voltage_sensor.set_output(Vdcr);
         rectifier_dc_voltage_sensor.initialize();

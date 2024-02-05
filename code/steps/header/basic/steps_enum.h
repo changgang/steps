@@ -349,4 +349,20 @@ enum DC_LINES_OPTION
     CONVERT_TO_CONSTANT_ADMITTANCE_LOAD = 1
 };
 
+enum COL_PQ_PRIORITY // Current Order Limiter
+{
+    P_FIRST = 0,
+    Q_FIRST = 1
+};
+
+enum VRT_STATUS // voltage ride through status
+{
+    VRT_NORMAL_MODE = 0,
+    LVRT_DRURING_MODE = 1,
+    LVRT_RECOVER_MODE = 2,
+    HVRT_DRURING_MODE = 3,
+    HVRT_RECOVER_MODE = 4,
+    VRT_TRIP_MODE = 5
+};
+
 #endif // STEPS_ENUM_H

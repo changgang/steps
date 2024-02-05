@@ -319,10 +319,6 @@ void PUFLS::initialize()
 
     double fbase = get_bus_base_frequency_in_Hz();
 
-    additional_stage_timer.set_attached_device(load);
-    for(unsigned int stage=0; stage!=STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
-        discrete_stage_timer[stage].set_attached_device(load);
-
     double t_delay = get_time_delay_in_s();
     double delt = toolkit.get_dynamic_simulation_time_step_in_s();
 

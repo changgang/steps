@@ -25,19 +25,8 @@ TIMER::~TIMER()
 
 void TIMER::clear()
 {
-    set_attached_device(NULL);
     set_timer_interval_in_s(INFINITE_THRESHOLD);
     reset();
-}
-
-void TIMER::set_attached_device(DEVICE* device)
-{
-    device_ptr = device;
-}
-
-DEVICE* TIMER::get_attached_device() const
-{
-    return device_ptr;
 }
 
 void TIMER::set_timer_interval_in_s(double t)
@@ -49,12 +38,8 @@ void TIMER::set_timer_interval_in_s(double t)
 
 void TIMER::start()
 {
-    DEVICE* device = get_attached_device();
-    if(device!=NULL)
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        time_when_timer_is_started_in_s = toolkit.get_dynamic_simulation_time_in_s();
-    }
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    time_when_timer_is_started_in_s = toolkit.get_dynamic_simulation_time_in_s();
 }
 
 void TIMER::reset()

@@ -9,6 +9,8 @@ using namespace std;
 
 MODEL::MODEL(STEPS& toolkit)
 {
+    model_development_status = false;
+
     set_toolkit(toolkit);
 
     device_pointer = NULL;
@@ -50,6 +52,16 @@ MODEL::~MODEL()
         delete allowed_device_types;*/
 
     destroy_manually_allocated_storage();
+}
+
+void MODEL::set_model_as_under_development()
+{
+    model_development_status = true;
+}
+
+bool MODEL::is_model_under_development()
+{
+    return model_development_status;
 }
 
 void MODEL::allocate_model_variables()

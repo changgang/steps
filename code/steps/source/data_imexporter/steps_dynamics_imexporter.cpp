@@ -157,8 +157,8 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
 
     if(model_name=="VSCHVDCP0") { add_VSCHVDCP0_model(data); return;}
     if(model_name=="VSCHVDCC0") { add_VSCHVDCC0_model(data); return;}
-    if(model_name=="VSG0") { add_VSG0_model(data); return;}
-    if(model_name=="VSG1") { add_VSG1_model(data); return;}
+    if(model_name=="VSCHVDCC1") { add_VSCHVDCC1_model(data); return;}
+    if(model_name=="VSCHVDCC2") { add_VSCHVDCC2_model(data); return;}
 
     if(model_name=="WT3G1") { add_WT3G1_model(data); return;}
     if(model_name=="WT3G0") { add_WT3G0_model(data); return;}
@@ -1693,9 +1693,9 @@ void STEPS_IMEXPORTER::add_VSCHVDCC0_model(vector<string>& data)
     }
 }
 
-void STEPS_IMEXPORTER::add_VSG0_model(vector<string>& data)
+void STEPS_IMEXPORTER::add_VSCHVDCC1_model(vector<string>& data)
 {
-    if(get_dynamic_model_name(data) != "VSG0")
+    if(get_dynamic_model_name(data) != "VSCHVDCC1")
         return;
 
     if(data.size()<22)
@@ -1708,7 +1708,7 @@ void STEPS_IMEXPORTER::add_VSG0_model(vector<string>& data)
     VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(did);
     if(vsc_hvdc != NULL)
     {
-        VSG0* model = new VSG0(toolkit);
+        VSCHVDCC1* model = new VSCHVDCC1(toolkit);
         model->set_device_id(did);
         bool successful = model->setup_model_with_steps_string_vector(data);
         if(successful)
@@ -1716,15 +1716,15 @@ void STEPS_IMEXPORTER::add_VSG0_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid VSG0 model is built, but will not be set for "<<vsc_hvdc->get_compound_device_name();
+            osstream<<"Warning. Invalid VSCHVDCC1 model is built, but will not be set for "<<vsc_hvdc->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
 
-void STEPS_IMEXPORTER::add_VSG1_model(vector<string>& data)
+void STEPS_IMEXPORTER::add_VSCHVDCC2_model(vector<string>& data)
 {
-    if(get_dynamic_model_name(data) != "VSG1")
+    if(get_dynamic_model_name(data) != "VSCHVDCC2")
         return;
 
     if(data.size()<22)
@@ -1737,7 +1737,7 @@ void STEPS_IMEXPORTER::add_VSG1_model(vector<string>& data)
     VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(did);
     if(vsc_hvdc != NULL)
     {
-        VSG1* model = new VSG1(toolkit);
+        VSCHVDCC2* model = new VSCHVDCC2(toolkit);
         model->set_device_id(did);
         bool successful = model->setup_model_with_steps_string_vector(data);
         if(successful)
@@ -1745,7 +1745,7 @@ void STEPS_IMEXPORTER::add_VSG1_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid VSG1 model is built, but will not be set for "<<vsc_hvdc->get_compound_device_name();
+            osstream<<"Warning. Invalid VSCHVDCC2 model is built, but will not be set for "<<vsc_hvdc->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }

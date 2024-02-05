@@ -63,8 +63,6 @@ class HVDC_MODEL : public MODEL
 
         void set_cos_firing_angle_max_min();
 
-        void set_attached_device_of_common_meters();
-
         double get_inverter_dc_voltage_command_in_kV();
         double get_rectifier_dc_current_command_in_kA(double Vdci_measured, double Idc_measured);
 

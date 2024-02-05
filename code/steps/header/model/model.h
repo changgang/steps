@@ -18,6 +18,9 @@ class MODEL
         void set_toolkit(STEPS& toolkit);
         virtual ~MODEL();
 
+        void set_model_as_under_development();
+        bool is_model_under_development();
+
         virtual void destroy_manually_allocated_storage();
 
         void set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_DEVICE_TYPE device_type);
@@ -101,6 +104,7 @@ class MODEL
 
         void allocate_model_variables();
     private:
+        bool model_development_status;
         STEPS* toolkit;
         STEPS_DEVICE_TYPE allowed_device_types[STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT];
         NONBUS_DEVICE* device_pointer;

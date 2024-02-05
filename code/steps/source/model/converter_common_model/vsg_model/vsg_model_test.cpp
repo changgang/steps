@@ -1,5 +1,5 @@
 #include "header/basic/test_macro.h"
-#include "header/model/vsg_model/vsg_model_test.h"
+#include "header/model/converter_common_models/vsg_model/vsg_model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 #include <cstdlib>

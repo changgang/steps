@@ -1,9 +1,9 @@
-#include "header/model/vsc_hvdc_model/vsc_hvdc_converter_model/VSG1.h"
+#include "header/model/vsc_hvdc_model/vsc_hvdc_converter_model/VSCHVDCC2.h"
 #include "header/basic/utility.h"
 #include "header/STEPS.h"
 #include <iostream>
 using namespace std;
-VSG1::VSG1(STEPS& toolkit):VSC_HVDC_CONVERTER_MODEL(toolkit),
+VSCHVDCC2::VSCHVDCC2(STEPS& toolkit):VSC_HVDC_CONVERTER_MODEL(toolkit),
                                     udc_block(toolkit),
                                     p_sensor(toolkit), f_sensor(toolkit),
                                     omega_block(toolkit), angle_block(toolkit),
@@ -18,7 +18,7 @@ VSG1::VSG1(STEPS& toolkit):VSC_HVDC_CONVERTER_MODEL(toolkit),
     clear();
 }
 
-VSG1::VSG1(const VSG1& model):VSC_HVDC_CONVERTER_MODEL(model.get_toolkit()),
+VSCHVDCC2::VSCHVDCC2(const VSCHVDCC2& model):VSC_HVDC_CONVERTER_MODEL(model.get_toolkit()),
                                     udc_block(model.get_toolkit()),
                                     p_sensor(model.get_toolkit()), f_sensor(model.get_toolkit()),
                                     omega_block(model.get_toolkit()), angle_block(model.get_toolkit()),
@@ -34,19 +34,19 @@ VSG1::VSG1(const VSG1& model):VSC_HVDC_CONVERTER_MODEL(model.get_toolkit()),
     copy_from_const_model(model);
 }
 
-VSG1::~VSG1()
+VSCHVDCC2::~VSCHVDCC2()
 {
     ;
 }
 
-VSG1& VSG1::operator=(const VSG1& model)
+VSCHVDCC2& VSCHVDCC2::operator=(const VSCHVDCC2& model)
 {
     if(this != &model)
         copy_from_const_model(model);
     return *this;
 }
 
-void VSG1::copy_from_const_model(const VSG1& model)
+void VSCHVDCC2::copy_from_const_model(const VSCHVDCC2& model)
 {
     STEPS& toolkit = model.get_toolkit();
     set_toolkit(toolkit);
@@ -99,272 +99,272 @@ void VSG1::copy_from_const_model(const VSG1& model)
     reactive_current_reducer.set_toolkit(toolkit);
 }
 
-string VSG1::get_model_name() const
+string VSCHVDCC2::get_model_name() const
 {
-    return "VSG1";
+    return "VSCHVDCC2";
 }
 
-void VSG1::set_dc_voltage_block_ceq_in_uF(const double ceq)
+void VSCHVDCC2::set_dc_voltage_block_ceq_in_uF(const double ceq)
 {
     udc_block.set_T_in_s(ceq*1e-6);
 }
 
-void VSG1::set_active_power_sensor_T_in_s(double t)
+void VSCHVDCC2::set_active_power_sensor_T_in_s(double t)
 {
     p_sensor.set_T_in_s(t);
 }
 
-void VSG1::set_reactive_power_sensor_T_in_s(double t)
+void VSCHVDCC2::set_reactive_power_sensor_T_in_s(double t)
 {
     q_sensor.set_T_in_s(t);
 }
 
-void VSG1::set_frequency_sensor_T_in_s(double t)
+void VSCHVDCC2::set_frequency_sensor_T_in_s(double t)
 {
     f_sensor.set_T_in_s(t);
 }
 
-void VSG1::set_ac_voltage_sensor_T_in_s(double t)
+void VSCHVDCC2::set_ac_voltage_sensor_T_in_s(double t)
 {
     uac_sensor.set_T_in_s(t);
 }
 
-void VSG1::set_frequency_tuner_T1_in_s(double t)
+void VSCHVDCC2::set_frequency_tuner_T1_in_s(double t)
 {
     frequency_tuner.set_T1_in_s(t);
 }
 
-void VSG1::set_frequency_tuner_T2_in_s(double t)
+void VSCHVDCC2::set_frequency_tuner_T2_in_s(double t)
 {
     frequency_tuner.set_T2_in_s(t);
 }
 
-void VSG1::set_frequency_responser_Kp(double k)
+void VSCHVDCC2::set_frequency_responser_Kp(double k)
 {
     frequency_response_block.set_Kp(k);
 }
 
-void VSG1::set_frequency_responser_Ki(double k)
+void VSCHVDCC2::set_frequency_responser_Ki(double k)
 {
     frequency_response_block.set_Ki(k);
 }
 
-void VSG1::set_omega_block_Tj_in_s(double t)
+void VSCHVDCC2::set_omega_block_Tj_in_s(double t)
 {
     omega_block.set_T_in_s(t);
 }
 
-void VSG1::set_omega_block_D_in_pu(double d)
+void VSCHVDCC2::set_omega_block_D_in_pu(double d)
 {
     D_omega = d;
 }
 
-void VSG1::set_active_current_reducer_T_in_s(double t)
+void VSCHVDCC2::set_active_current_reducer_T_in_s(double t)
 {
     active_current_reducer.set_T_in_s(t);
 }
 
-void VSG1::set_voltage_tuner_T1_in_s(double t)
+void VSCHVDCC2::set_voltage_tuner_T1_in_s(double t)
 {
     voltage_tuner.set_T1_in_s(t);
 }
 
-void VSG1::set_voltage_tuner_T2_in_s(double t)
+void VSCHVDCC2::set_voltage_tuner_T2_in_s(double t)
 {
     voltage_tuner.set_T2_in_s(t);
 }
 
-void VSG1::set_voltage_responser_Kp(double k)
+void VSCHVDCC2::set_voltage_responser_Kp(double k)
 {
     voltage_response_block.set_Kp(k);
 }
 
-void VSG1::set_voltage_responser_Ki(double k)
+void VSCHVDCC2::set_voltage_responser_Ki(double k)
 {
     voltage_response_block.set_Ki(k);
 }
 
-void VSG1::set_voltage_block_Tv_in_s(double t)
+void VSCHVDCC2::set_voltage_block_Tv_in_s(double t)
 {
     voltage_block.set_T_in_s(t);
 }
 
-void VSG1::set_voltage_block_D_in_pu(double d)
+void VSCHVDCC2::set_voltage_block_D_in_pu(double d)
 {
     D_voltage = d;
 }
 
-void VSG1::set_reactive_current_reducer_T_in_s(double t)
+void VSCHVDCC2::set_reactive_current_reducer_T_in_s(double t)
 {
     reactive_current_reducer.set_T_in_s(t);
 }
 
-void VSG1::set_dc_voltage_Ku(double k)
+void VSCHVDCC2::set_dc_voltage_Ku(double k)
 {
     ku = k;
 }
 
-void VSG1::set_frequency_Kf(double k)
+void VSCHVDCC2::set_frequency_Kf(double k)
 {
     kf = k;
 }
 
-double VSG1::get_dc_voltage_block_ceq_in_uF() const
+double VSCHVDCC2::get_dc_voltage_block_ceq_in_uF() const
 {
     return udc_block.get_T_in_s()*1e6;
 }
 
-double VSG1::get_active_power_sensor_T_in_s() const
+double VSCHVDCC2::get_active_power_sensor_T_in_s() const
 {
     return p_sensor.get_T_in_s();
 }
 
-double VSG1::get_reactive_power_sensor_T_in_s() const
+double VSCHVDCC2::get_reactive_power_sensor_T_in_s() const
 {
     return q_sensor.get_T_in_s();
 }
 
-double VSG1::get_frequency_sensor_T_in_s() const
+double VSCHVDCC2::get_frequency_sensor_T_in_s() const
 {
     return f_sensor.get_T_in_s();
 }
 
-double VSG1::get_ac_voltage_sensor_T_in_s() const
+double VSCHVDCC2::get_ac_voltage_sensor_T_in_s() const
 {
     return uac_sensor.get_T_in_s();
 }
 
-double VSG1::get_frequency_tuner_T1_in_s() const
+double VSCHVDCC2::get_frequency_tuner_T1_in_s() const
 {
     return frequency_tuner.get_T1_in_s();
 }
 
-double VSG1::get_frequency_tuner_T2_in_s() const
+double VSCHVDCC2::get_frequency_tuner_T2_in_s() const
 {
     return frequency_tuner.get_T2_in_s();
 }
 
-double VSG1::get_frequency_responser_Kp() const
+double VSCHVDCC2::get_frequency_responser_Kp() const
 {
     return frequency_response_block.get_Kp();
 }
 
-double VSG1::get_frequency_responser_Ki() const
+double VSCHVDCC2::get_frequency_responser_Ki() const
 {
     return frequency_response_block.get_Ki();
 }
 
-double VSG1::get_omega_block_Tj_in_s() const
+double VSCHVDCC2::get_omega_block_Tj_in_s() const
 {
     return omega_block.get_T_in_s();
 }
 
-double VSG1::get_omega_block_D_in_pu() const
+double VSCHVDCC2::get_omega_block_D_in_pu() const
 {
     return D_omega;
 }
 
-double VSG1::get_active_current_reducer_T_in_s() const
+double VSCHVDCC2::get_active_current_reducer_T_in_s() const
 {
     return active_current_reducer.get_T_in_s();
 }
 
-double VSG1::get_voltage_tuner_T1_in_s() const
+double VSCHVDCC2::get_voltage_tuner_T1_in_s() const
 {
     return voltage_tuner.get_T1_in_s();
 }
 
-double VSG1::get_voltage_tuner_T2_in_s() const
+double VSCHVDCC2::get_voltage_tuner_T2_in_s() const
 {
     return voltage_tuner.get_T2_in_s();
 }
 
-double VSG1::get_voltage_responser_Kp() const
+double VSCHVDCC2::get_voltage_responser_Kp() const
 {
     return voltage_response_block.get_Kp();
 }
 
-double VSG1::get_voltage_responser_Ki() const
+double VSCHVDCC2::get_voltage_responser_Ki() const
 {
     return voltage_response_block.get_Ki();
 }
 
-double VSG1::get_voltage_block_Tv_in_s() const
+double VSCHVDCC2::get_voltage_block_Tv_in_s() const
 {
     return voltage_block.get_T_in_s();
 }
 
-double VSG1::get_voltage_block_D_in_pu() const
+double VSCHVDCC2::get_voltage_block_D_in_pu() const
 {
     return D_voltage;
 }
 
-double VSG1::get_reactive_current_reducer_T_in_s() const
+double VSCHVDCC2::get_reactive_current_reducer_T_in_s() const
 {
     return reactive_current_reducer.get_T_in_s();
 }
 
-double VSG1::get_dc_voltage_Ku() const
+double VSCHVDCC2::get_dc_voltage_Ku() const
 {
     return ku;
 }
 
-double VSG1::get_frequency_Kf() const
+double VSCHVDCC2::get_frequency_Kf() const
 {
     return kf;
 }
 
-void VSG1::set_Pref_in_pu(double pref)
+void VSCHVDCC2::set_Pref_in_pu(double pref)
 {
     p_ref = pref;
 }
 
-void VSG1::set_Qref_in_pu(double qref)
+void VSCHVDCC2::set_Qref_in_pu(double qref)
 {
     q_ref = qref;
 }
 
-void VSG1::set_Uacref_in_pu(double uacref)
+void VSCHVDCC2::set_Uacref_in_pu(double uacref)
 {
     uac_ref = uacref;
 }
 
-double VSG1::get_Pref_in_pu() const
+double VSCHVDCC2::get_Pref_in_pu() const
 {
     return p_ref;
 }
 
-double VSG1::get_Qref_in_pu() const
+double VSCHVDCC2::get_Qref_in_pu() const
 {
     return q_ref;
 }
 
-double VSG1::get_Uacref_in_pu() const
+double VSCHVDCC2::get_Uacref_in_pu() const
 {
     return uac_ref;
 }
 
-double VSG1::get_Porder_in_pu() const
+double VSCHVDCC2::get_Porder_in_pu() const
 {
     return get_Pref_in_pu() - frequency_response_block.get_output(); //- active_current_reducer.get_output();
 }
 
-double VSG1::get_Qorder_in_pu() const
+double VSCHVDCC2::get_Qorder_in_pu() const
 {
     return get_Qref_in_pu() + voltage_response_block.get_output(); //- reactive_current_reducer.get_output();
 }
 
-double VSG1::get_dynamic_dc_voltage_in_kV() const
+double VSCHVDCC2::get_dynamic_dc_voltage_in_kV() const
 {
     return udc_block.get_output();
 }
 
-double VSG1::get_dynamic_dc_voltage_in_pu() const
+double VSCHVDCC2::get_dynamic_dc_voltage_in_pu() const
 {
     return get_dynamic_dc_voltage_in_kV()/get_converter_dc_base_voltage_in_kV();
 }
 
-bool VSG1::setup_model_with_steps_string_vector(vector<string>& data)
+bool VSCHVDCC2::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
     if(data.size()>=22)
@@ -450,13 +450,13 @@ bool VSG1::setup_model_with_steps_string_vector(vector<string>& data)
         return is_successful;
 }
 
-bool VSG1::setup_model_with_psse_string(string data)
+bool VSCHVDCC2::setup_model_with_psse_string(string data)
 {
     vector<string> record = psse_dyr_string2steps_string_vector(data);
     return setup_model_with_steps_string_vector(record);
 }
 
-bool VSG1::setup_model_with_bpa_string(string data)
+bool VSCHVDCC2::setup_model_with_bpa_string(string data)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
@@ -466,7 +466,7 @@ bool VSG1::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void VSG1::setup_block_toolkit_and_parameters()
+void VSCHVDCC2::setup_block_toolkit_and_parameters()
 {
     BUS* bus = get_converter_ac_bus_pointer();
 
@@ -479,7 +479,7 @@ void VSG1::setup_block_toolkit_and_parameters()
     //dc_voltage_response_block.set_Ki(0);
 }
 
-void VSG1::initialize()
+void VSCHVDCC2::initialize()
 {
     if(not is_model_initialized())
     {
@@ -559,7 +559,7 @@ void VSG1::initialize()
     }
 }
 
-void VSG1::run(DYNAMIC_MODE mode)
+void VSCHVDCC2::run(DYNAMIC_MODE mode)
 {
     if(is_model_active())
     {
@@ -653,12 +653,12 @@ void VSG1::run(DYNAMIC_MODE mode)
     }
 }
 
-void VSG1::check()
+void VSCHVDCC2::check()
 {
 
 }
 
-void VSG1::clear()
+void VSCHVDCC2::clear()
 {
     set_as_voltage_source();
 
@@ -676,7 +676,7 @@ void VSG1::clear()
     reactive_current_reducer.set_lower_limit(0.0);
 }
 
-void VSG1::report()
+void VSCHVDCC2::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string(false);
@@ -684,12 +684,12 @@ void VSG1::report()
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-void VSG1::save()
+void VSCHVDCC2::save()
 {
 
 }
 
-string VSG1::get_standard_psse_string(bool export_internal_bus_number) const
+string VSCHVDCC2::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
     VSC_HVDC* vsc = get_vsc_hvdc_pointer();
@@ -728,14 +728,14 @@ string VSG1::get_standard_psse_string(bool export_internal_bus_number) const
     return osstream.str();
 }
 
-void VSG1::prepare_model_data_table()
+void VSCHVDCC2::prepare_model_data_table()
 {
     clear_model_data_table();
     unsigned int i=0;
     add_model_data_name_and_index_pair("TEST", i); i++;
 }
 
-double VSG1::get_model_data_with_name(string par_name) const
+double VSCHVDCC2::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
     if(is_model_data_exist(par_name))
@@ -747,7 +747,7 @@ double VSG1::get_model_data_with_name(string par_name) const
     return 0.0;
 }
 
-void VSG1::set_model_data_with_name(string par_name, double value)
+void VSCHVDCC2::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
 
@@ -759,51 +759,51 @@ void VSG1::set_model_data_with_name(string par_name, double value)
     toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
 }
 
-double VSG1::get_minimum_nonzero_time_constant_in_s()
+double VSCHVDCC2::get_minimum_nonzero_time_constant_in_s()
 {
     return 0.0;
 }
 
-void VSG1::prepare_model_internal_variable_table()
+void VSCHVDCC2::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
     add_model_internal_variable_name_and_index_pair("TEST STATE", i); i++;
 }
 
-double VSG1::get_model_internal_variable_with_name(string var_name)
+double VSCHVDCC2::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "TEST STATE") return 0.0;
     return 0.0;
 }
 
-string VSG1::get_dynamic_data_in_psse_format() const
+string VSCHVDCC2::get_dynamic_data_in_psse_format() const
 {
     return "";
 }
 
-string VSG1::get_dynamic_data_in_bpa_format() const
+string VSCHVDCC2::get_dynamic_data_in_bpa_format() const
 {
     return "";
 }
 
-string VSG1::get_dynamic_data_in_steps_format() const
+string VSCHVDCC2::get_dynamic_data_in_steps_format() const
 {
     return "";
 }
 
-double VSG1::get_initial_angle_at_pll_in_rad() const
+double VSCHVDCC2::get_initial_angle_at_pll_in_rad() const
 {
     return 0.0;
 }
 
-double VSG1::get_dynamic_angle_at_pll_in_rad() const
+double VSCHVDCC2::get_dynamic_angle_at_pll_in_rad() const
 {
     return 0.0;
 }
 
-complex<double> VSG1::get_converter_voltage_in_xy_axis_in_pu_as_voltage_source() const
+complex<double> VSCHVDCC2::get_converter_voltage_in_xy_axis_in_pu_as_voltage_source() const
 {
     double E = voltage_block.get_output();
     double angle = angle_block.get_output();
@@ -811,12 +811,12 @@ complex<double> VSG1::get_converter_voltage_in_xy_axis_in_pu_as_voltage_source()
     return E * complex<double>(steps_cos(angle), steps_sin(angle));
 }
 
-complex<double> VSG1::get_converter_dynamic_current_from_converter_to_ac_bus_in_dq_axis_in_pu_on_converter_base_as_current_source() const
+complex<double> VSCHVDCC2::get_converter_dynamic_current_from_converter_to_ac_bus_in_dq_axis_in_pu_on_converter_base_as_current_source() const
 {
     return 0.0;
 }
 
-double VSG1::get_converter_dc_power_from_converter_to_Ceq_in_MW()
+double VSCHVDCC2::get_converter_dc_power_from_converter_to_Ceq_in_MW()
 {
     VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
     unsigned int converter_index = get_converter_index();
