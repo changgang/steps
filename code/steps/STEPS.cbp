@@ -184,14 +184,13 @@
 		<Unit filename="header/model/auxiliary_signal_model/auxiliary_signal_model_test.h" />
 		<Unit filename="header/model/auxiliary_signal_model/auxiliary_signal_models.h" />
 		<Unit filename="header/model/bus_model/bus_frequency_model/bus_frequency_model.h" />
-		<Unit filename="header/model/bus_model/pll_model/pll0.h" />
-		<Unit filename="header/model/bus_model/pll_model/pll_model.h" />
 		<Unit filename="header/model/converter_common_models/current_order_limiter_model/convcol.h" />
 		<Unit filename="header/model/converter_common_models/pll_model/pll0.h" />
 		<Unit filename="header/model/converter_common_models/pll_model/pll_model.h" />
 		<Unit filename="header/model/converter_common_models/vrt_model/hvrt.h" />
 		<Unit filename="header/model/converter_common_models/vrt_model/lvrt.h" />
-		<Unit filename="header/model/converter_common_models/vrt_model/vrt_model.h" />
+		<Unit filename="header/model/converter_common_models/vrt_model/vrt_control_model.h" />
+		<Unit filename="header/model/converter_common_models/vrt_model/vrt_relay_model.h" />
 		<Unit filename="header/model/converter_common_models/vsg_model/vsg0.h" />
 		<Unit filename="header/model/converter_common_models/vsg_model/vsg0_test.h" />
 		<Unit filename="header/model/converter_common_models/vsg_model/vsg_model2.h" />
@@ -371,6 +370,7 @@
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt3e1.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt3e1_test.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt3ev.h" />
+		<Unit filename="header/model/wtg_models/wt_electrical_model/wt3evrt.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt_electrical_model.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt_electrical_model_test.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt_electrical_models.h" />
@@ -621,7 +621,8 @@
 		<Unit filename="source/model/converter_common_model/pll_model/pll_model.cpp" />
 		<Unit filename="source/model/converter_common_model/vrt_model/hvrt.cpp" />
 		<Unit filename="source/model/converter_common_model/vrt_model/lvrt.cpp" />
-		<Unit filename="source/model/converter_common_model/vrt_model/vrt_model.cpp" />
+		<Unit filename="source/model/converter_common_model/vrt_model/vrt_control_model.cpp" />
+		<Unit filename="source/model/converter_common_model/vrt_model/vrt_relay_model.cpp" />
 		<Unit filename="source/model/converter_common_model/vsg_model/vsg0.cpp" />
 		<Unit filename="source/model/converter_common_model/vsg_model/vsg_model2.cpp" />
 		<Unit filename="source/model/energy_storage_model/energy_storage_model.cpp" />
@@ -786,6 +787,7 @@
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt3e1.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt3e1_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt3ev.cpp" />
+		<Unit filename="source/model/wtg_models/wt_electrical_model/wt3evrt.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt_electrical_model.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt_electrical_model_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_generator_model/lvpl.cpp" />

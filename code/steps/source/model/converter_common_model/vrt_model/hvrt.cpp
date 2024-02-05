@@ -7,7 +7,7 @@
 
 using namespace std;
 
-HVRT::HVRT(STEPS& toolkit) : VRT_MODEL(toolkit)
+HVRT::HVRT(STEPS& toolkit) : VRT_RELAY_MODEL(toolkit)
 {
     clear();
 }
@@ -17,7 +17,7 @@ HVRT::~HVRT()
     ;
 }
 
-HVRT::HVRT(const HVRT& model) : VRT_MODEL(model.get_toolkit())
+HVRT::HVRT(const HVRT& model) : VRT_RELAY_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -39,7 +39,7 @@ void HVRT::clear()
 void HVRT::copy_from_const_model(const HVRT& model)
 {
     clear();
-    VRT_MODEL::copy_from_const_model(model);
+    VRT_RELAY_MODEL::copy_from_const_model(model);
 }
 
 void HVRT::initialize_vrt()

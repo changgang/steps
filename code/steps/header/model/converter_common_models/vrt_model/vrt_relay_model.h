@@ -1,5 +1,5 @@
-#ifndef VRT_MODEL_H
-#define VRT_MODEL_H
+#ifndef VRT_RELAY_MODEL_H
+#define VRT_RELAY_MODEL_H
 
 #include "header/STEPS.h"
 #include "header/basic/constants.h"
@@ -7,11 +7,11 @@
 
 class BUS;
 
-class VRT_MODEL
+class VRT_RELAY_MODEL
 {
     public:
-        VRT_MODEL(STEPS& toolkit);
-        ~VRT_MODEL();
+        VRT_RELAY_MODEL(STEPS& toolkit);
+        ~VRT_RELAY_MODEL();
         void set_toolkit(STEPS& toolkit);
         STEPS& get_toolkit() const;
 
@@ -40,19 +40,19 @@ class VRT_MODEL
         double get_vrt_activation_time() const;
         VRT_STATUS get_vrt_status() const;
     public:
-        void  copy_from_const_model(const VRT_MODEL& model);
+        void  copy_from_const_model(const VRT_RELAY_MODEL& model);
         virtual void check_vrt_status() = 0;
     private:
         STEPS* toolkit;
         BUS* bus_ptr;
         NONBUS_DEVICE* device;
 
-        TIMER vrt_trip_timer;
         MULTI_POINT_LINE vrt_line;
+        TIMER vrt_trip_timer;
         double vrt_trip_scale;
 
         double t0_vrt_activated;
         VRT_STATUS status;
 };
 
-#endif // VRT_MODEL_H
+#endif // VRT_RELAY_MODEL_H

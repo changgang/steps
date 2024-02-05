@@ -1,10 +1,10 @@
 #ifndef LVRT_H
 #define LVRT_H
 
-#include "header/model/converter_common_models/vrt_model/vrt_model.h"
+#include "header/model/converter_common_models/vrt_model/vrt_relay_model.h"
 #include "header/block/integral_block.h"
 
-class LVRT : public VRT_MODEL
+class LVRT : public VRT_RELAY_MODEL
 {
     public:
         LVRT(STEPS& toolkit);
