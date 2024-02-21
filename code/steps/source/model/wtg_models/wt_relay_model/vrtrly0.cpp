@@ -215,7 +215,7 @@ void VRTRLY0::setup_block_toolkit_and_parameters()
     vth_lvrt = lvrt_line.get_max_y();
     vth_hvrt = hvrt_line.get_min_y();
     t0_vrt_activated = INFINITE_THRESHOLD;
-    vrt_status = VRT_NORMAL_MODE;
+    vrt_status = VRT_NORMAL_STATUS;
 }
 
 void VRTRLY0::initialize()
@@ -248,15 +248,15 @@ void VRTRLY0::check_lvrt_relay()
         double tnow = toolkit.get_dynamic_simulation_time_in_s();
         BUS* bus = wtgen->get_bus_pointer();
         double v = bus->get_positive_sequence_voltage_in_pu();
-        if(vrt_status == VRT_NORMAL_MODE)
+        if(vrt_status == VRT_NORMAL_STATUS)
         {
             if(v<vth_lvrt)
             {
                 t0_vrt_activated = tnow;
-                vrt_status = LVRT_DRURING_MODE;
+                vrt_status = VRT_DURING_STATUS;
             }
         }
-        if(vrt_status==LVRT_DRURING_MODE)
+        if(vrt_status==VRT_DURING_STATUS)
         {
             double vtrip_th = lvrt_line.interpolate_y_at_x(tnow-t0_vrt_activated);
             if(not lvrt_trip_timer.is_started())
@@ -275,7 +275,7 @@ void VRTRLY0::check_lvrt_relay()
                         osstream<<"LVRT mode of "<<get_compound_device_name()<<" is exited at "<<toolkit.get_dynamic_simulation_time_in_s()
                                 <<"s due to voltage recovered: "<<v<<" > "<<vth_lvrt<<endl;
                         toolkit.show_information_with_leading_time_stamp(osstream);
-                        vrt_status = VRT_NORMAL_MODE;
+                        vrt_status = VRT_NORMAL_STATUS;
                     }
                 }
             }
@@ -287,7 +287,7 @@ void VRTRLY0::check_lvrt_relay()
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     sim.trip_wt_generator(did, wtgen->get_number_of_lumped_wt_generators()*get_lvrt_trip_scale());
                     sim.enable_relay_action_flag();
-                    vrt_status = VRT_NORMAL_MODE;
+                    vrt_status = VRT_NORMAL_STATUS;
                 }
 
             }
@@ -308,15 +308,15 @@ void VRTRLY0::check_hvrt_relay()
         double tnow = toolkit.get_dynamic_simulation_time_in_s();
         BUS* bus = wtgen->get_bus_pointer();
         double v = bus->get_positive_sequence_voltage_in_pu();
-        if(vrt_status == VRT_NORMAL_MODE)
+        if(vrt_status == VRT_NORMAL_STATUS)
         {
             if(v>vth_hvrt)
             {
                 t0_vrt_activated = tnow;
-                vrt_status = HVRT_DRURING_MODE;
+                vrt_status = VRT_DURING_STATUS;
             }
         }
-        if(vrt_status==HVRT_DRURING_MODE)
+        if(vrt_status==VRT_DURING_STATUS)
         {
             double vtrip_th = hvrt_line.interpolate_y_at_x(tnow-t0_vrt_activated);
             if(not hvrt_trip_timer.is_started())
@@ -335,7 +335,7 @@ void VRTRLY0::check_hvrt_relay()
                         osstream<<"HVRT mode of "<<get_compound_device_name()<<" is exited at "<<toolkit.get_dynamic_simulation_time_in_s()
                                 <<"s due to voltage recovered: "<<v<<" < "<<vth_hvrt<<endl;
                         toolkit.show_information_with_leading_time_stamp(osstream);
-                        vrt_status = VRT_NORMAL_MODE;
+                        vrt_status = VRT_NORMAL_STATUS;
                     }
                 }
             }
@@ -347,7 +347,7 @@ void VRTRLY0::check_hvrt_relay()
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     sim.trip_wt_generator(did, wtgen->get_number_of_lumped_wt_generators()*get_hvrt_trip_scale());
                     sim.enable_relay_action_flag();
-                    vrt_status = VRT_NORMAL_MODE;
+                    vrt_status = VRT_NORMAL_STATUS;
                 }
             }
         }

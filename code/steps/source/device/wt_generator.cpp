@@ -108,6 +108,7 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
         WT_TURBINE_MODEL* turbine = get_wt_turbine_model();
         WT_ELECTRICAL_MODEL* elec = get_wt_electrical_model();
         WT_PITCH_MODEL* pitch = get_wt_pitch_model();
+        WT_VOLTAGE_RIDE_THROUGH_MODEL* vrt = get_wt_voltage_ride_through_model();
         WT_RELAY_MODEL* relay = get_wt_relay_model();
 
         switch(mode)
@@ -154,6 +155,9 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
                 if(pitch!=NULL)
                     pitch->initialize();
 
+                if(vrt!=NULL)
+                    vrt->initialize();
+
                 if(relay!=NULL)
                     relay->initialize();
 
@@ -164,6 +168,9 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
             {
                 if(relay!=NULL and relay->is_model_active())
                     relay->run(mode);
+
+                if(vrt!=NULL and vrt->is_model_active())
+                    vrt->run(mode);
 
                 if(pitch!=NULL and pitch->is_model_active())
                     pitch->run(mode);
@@ -259,6 +266,12 @@ void WT_GENERATOR::set_model(MODEL* model)
             return;
         }
 
+        if(model->get_model_type()=="WT VRT")
+        {
+            set_wt_voltage_ride_through_model((WT_VOLTAGE_RIDE_THROUGH_MODEL*) model);
+            return;
+        }
+
         if(model->get_model_type()=="WT RELAY")
         {
             set_wt_relay_model((WT_RELAY_MODEL*) model);
@@ -288,6 +301,8 @@ MODEL* WT_GENERATOR::get_model_of_type(string model_type, unsigned int index)
         return get_wt_pitch_model();
     if(model_type=="WIND SPEED")
         return get_wind_speed_model();
+    if(model_type=="WT VRT")
+        return get_wt_voltage_ride_through_model();
     if(model_type=="WT RELAY")
         return get_wt_relay_model();
     return NULL;
@@ -329,6 +344,12 @@ void WT_GENERATOR::set_wind_speed_model(WIND_SPEED_MODEL* model)
         wind_speed_model = model;
 }
 
+void WT_GENERATOR::set_wt_voltage_ride_through_model(WT_VOLTAGE_RIDE_THROUGH_MODEL* model)
+{
+    if(model!=NULL)
+        wt_vrt_model = model;
+}
+
 void WT_GENERATOR::set_wt_relay_model(WT_RELAY_MODEL* model)
 {
     if(model!=NULL)
@@ -366,6 +387,11 @@ WIND_SPEED_MODEL* WT_GENERATOR::get_wind_speed_model() const
     return wind_speed_model;
 }
 
+WT_VOLTAGE_RIDE_THROUGH_MODEL* WT_GENERATOR::get_wt_voltage_ride_through_model() const
+{
+    return wt_vrt_model;
+}
+
 WT_RELAY_MODEL* WT_GENERATOR::get_wt_relay_model() const
 {
     return wt_relay_model;
@@ -401,6 +427,7 @@ WT_GENERATOR& WT_GENERATOR::operator=(const WT_GENERATOR& gen)
     set_model(gen.get_wt_turbine_model());
     set_model(gen.get_wt_pitch_model());
     set_model(gen.get_wind_speed_model());
+    set_model(gen.get_wt_voltage_ride_through_model());
     set_model(gen.get_wt_relay_model());
 
     set_positive_sequence_resistance_in_pu(gen.get_positive_sequence_resistance_in_pu());

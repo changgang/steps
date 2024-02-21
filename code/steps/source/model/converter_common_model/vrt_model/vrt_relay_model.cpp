@@ -118,7 +118,7 @@ double VRT_RELAY_MODEL::get_vrt_trip_scale() const
 void VRT_RELAY_MODEL::set_vrt_status(VRT_STATUS status)
 {
     this->status = status;
-    if(status==LVRT_DRURING_MODE or status==HVRT_DRURING_MODE)
+    if(status==LVRT_DURING_MODE or status==HVRT_DURING_MODE)
     {
         STEPS& toolkit = get_toolkit();
         t0_vrt_activated = toolkit.get_dynamic_simulation_time_in_s();
@@ -127,7 +127,7 @@ void VRT_RELAY_MODEL::set_vrt_status(VRT_STATUS status)
         t0_vrt_activated = INFINITE_THRESHOLD;
 }
 
-double VRT_RELAY_MODEL::get_vrt_activation_time() const
+double VRT_RELAY_MODEL::get_time_when_vrt_enter_during_status() const
 {
     return t0_vrt_activated;
 }

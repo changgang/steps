@@ -2,7 +2,7 @@
 #define WT3G0_H
 
 #include "header/model/wtg_models/wt_generator_model/wt_generator_model.h"
-#include "header/model/wtg_models/wt_generator_model/lvpl.h"
+#include "header/model/converter_common_models/lvpl_model/lvpl.h"
 #include "header/model/converter_common_models/pll_model/pll0.h"
 #include "header/block/integral_block.h"
 #include "header/block/first_order_block.h"

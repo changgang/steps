@@ -24,6 +24,7 @@
 #include "header/model/wtg_models/wt_turbine_model/wt_turbine_models.h"
 #include "header/model/wtg_models/wt_pitch_model/wt_pitch_models.h"
 #include "header/model/wtg_models/wind_speed_model/wind_speed_models.h"
+#include "header/model/wtg_models/wt_voltage_ride_through_model/wt_voltage_ride_through_models.h"
 #include "header/model/wtg_models/wt_relay_model/wt_relay_models.h"
 
 #include "header/model/pvu_models/pv_converter_model/pv_converter_models.h"

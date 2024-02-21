@@ -2,7 +2,7 @@
 #define PVGU1_H
 
 #include "header/model/pvu_models/pv_converter_model/pv_converter_model.h"
-#include "header/model/wtg_models/wt_generator_model/lvpl.h"
+#include "header/model/converter_common_models/lvpl_model/lvpl.h"
 #include "header/block/integral_block.h"
 #include "header/block/first_order_block.h"
 

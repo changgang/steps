@@ -1,4 +1,4 @@
-#include "header/model/wtg_models/wt_generator_model/lvpl.h"
+#include "header/model/converter_common_models/lvpl_model/lvpl.h"
 #include "header/basic/constants.h"
 #include <cmath>
 

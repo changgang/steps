@@ -10,6 +10,7 @@
 #include "header/model/wtg_models/wt_turbine_model/wt_turbine_model.h"
 #include "header/model/wtg_models/wt_pitch_model/wt_pitch_model.h"
 #include "header/model/wtg_models/wind_speed_model/wind_speed_model.h"
+#include "header/model/wtg_models/wt_voltage_ride_through_model/wt_voltage_ride_through_model.h"
 #include "header/model/wtg_models/wt_relay_model/wt_relay_model.h"
 
 using namespace std;
@@ -41,6 +42,7 @@ class WT_GENERATOR : public SOURCE
         void set_wt_electrical_model(WT_ELECTRICAL_MODEL* model);
         void set_wt_pitch_model(WT_PITCH_MODEL* model);
         void set_wind_speed_model(WIND_SPEED_MODEL* model);
+        void set_wt_voltage_ride_through_model(WT_VOLTAGE_RIDE_THROUGH_MODEL* model);
         void set_wt_relay_model(WT_RELAY_MODEL* model);
 
         WT_GENERATOR_MODEL* get_wt_generator_model() const;
@@ -49,6 +51,7 @@ class WT_GENERATOR : public SOURCE
         WT_ELECTRICAL_MODEL* get_wt_electrical_model() const;
         WT_PITCH_MODEL* get_wt_pitch_model() const;
         WIND_SPEED_MODEL* get_wind_speed_model() const;
+        WT_VOLTAGE_RIDE_THROUGH_MODEL* get_wt_voltage_ride_through_model() const;
         WT_RELAY_MODEL* get_wt_relay_model() const;
 
         virtual void run(DYNAMIC_MODE mode);
@@ -143,6 +146,7 @@ class WT_GENERATOR : public SOURCE
         WT_TURBINE_MODEL* wt_turbine_model;
         WT_PITCH_MODEL* wt_pitch_model;
         WIND_SPEED_MODEL* wind_speed_model;
+        WT_VOLTAGE_RIDE_THROUGH_MODEL* wt_vrt_model;
         WT_RELAY_MODEL* wt_relay_model;
 
         double R1, X1_sync, X1_transient, X1_subtransient;

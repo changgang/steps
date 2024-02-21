@@ -215,6 +215,7 @@ unsigned int DYNAMIC_MODEL_DATABASE::get_model_size(MODEL* model) const
     if(model_name=="FILEWIND") return sizeof(FILEWIND);
 
     if(model_name=="WTRLY0") return sizeof(WTRLY0);
+    if(model_name=="WTVRT3") return sizeof(WTVRT3);
 
 
     if(model_name=="PVCV0") return sizeof(PVCV0);

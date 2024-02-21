@@ -131,6 +131,7 @@
 #include "header/model/hvdc_model/CDC6T_test.h"
 
 #include "header/model/converter_common_models/vsg_model/vsg0_test.h"
+#include "header/model/converter_common_models/vrt_model/lvrt_control_test.h"
 
 //#include "header/model/vsc_hvdc_model/VSCHVDC1_test.h"
 
@@ -359,6 +360,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new CONVERTER_STATION_TEST));
         */
         //ts.add(unique_ptr<Test::Suite>(new VSG0_TEST));
+        ts.add(unique_ptr<Test::Suite>(new LVRT_CONTROL_TEST));
 
         #endif // ENABLE_STEPS_TEST
 

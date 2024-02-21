@@ -37,7 +37,7 @@ class VRT_RELAY_MODEL
         double get_vrt_trip_scale() const;
 
         void set_vrt_status(VRT_STATUS status);
-        double get_vrt_activation_time() const;
+        double get_time_when_vrt_enter_during_status() const;
         VRT_STATUS get_vrt_status() const;
     public:
         void  copy_from_const_model(const VRT_RELAY_MODEL& model);

@@ -185,10 +185,14 @@
 		<Unit filename="header/model/auxiliary_signal_model/auxiliary_signal_models.h" />
 		<Unit filename="header/model/bus_model/bus_frequency_model/bus_frequency_model.h" />
 		<Unit filename="header/model/converter_common_models/current_order_limiter_model/convcol.h" />
+		<Unit filename="header/model/converter_common_models/lvpl_model/lvpl.h" />
 		<Unit filename="header/model/converter_common_models/pll_model/pll0.h" />
 		<Unit filename="header/model/converter_common_models/pll_model/pll_model.h" />
-		<Unit filename="header/model/converter_common_models/vrt_model/hvrt.h" />
-		<Unit filename="header/model/converter_common_models/vrt_model/lvrt.h" />
+		<Unit filename="header/model/converter_common_models/vrt_model/hvrt_control.h" />
+		<Unit filename="header/model/converter_common_models/vrt_model/hvrt_relay.h" />
+		<Unit filename="header/model/converter_common_models/vrt_model/lvrt_control.h" />
+		<Unit filename="header/model/converter_common_models/vrt_model/lvrt_control_test.h" />
+		<Unit filename="header/model/converter_common_models/vrt_model/lvrt_relay.h" />
 		<Unit filename="header/model/converter_common_models/vrt_model/vrt_control_model.h" />
 		<Unit filename="header/model/converter_common_models/vrt_model/vrt_relay_model.h" />
 		<Unit filename="header/model/converter_common_models/vsg_model/vsg0.h" />
@@ -374,7 +378,6 @@
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt_electrical_model.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt_electrical_model_test.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt_electrical_models.h" />
-		<Unit filename="header/model/wtg_models/wt_generator_model/lvpl.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt3g0.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt3g0_test.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt3g1.h" />
@@ -406,6 +409,9 @@
 		<Unit filename="header/model/wtg_models/wt_turbine_model/wt_turbine_model.h" />
 		<Unit filename="header/model/wtg_models/wt_turbine_model/wt_turbine_model_test.h" />
 		<Unit filename="header/model/wtg_models/wt_turbine_model/wt_turbine_models.h" />
+		<Unit filename="header/model/wtg_models/wt_voltage_ride_through_model/wt_voltage_ride_through_model.h" />
+		<Unit filename="header/model/wtg_models/wt_voltage_ride_through_model/wt_voltage_ride_through_models.h" />
+		<Unit filename="header/model/wtg_models/wt_voltage_ride_through_model/wtvrt3.h" />
 		<Unit filename="header/model/wtg_models/wtg_model.h" />
 		<Unit filename="header/model/wtg_models/wtg_model_test.h" />
 		<Unit filename="header/network/jacobian_builder.h" />
@@ -617,12 +623,25 @@
 		<Unit filename="source/meter/meter_test.cpp" />
 		<Unit filename="source/model/bus_model/bus_frequency_model/bus_frequency_model.cpp" />
 		<Unit filename="source/model/converter_common_model/current_order_limiter_model/convcol.cpp" />
+		<Unit filename="source/model/converter_common_model/lvpl_model/lvpl.cpp" />
 		<Unit filename="source/model/converter_common_model/pll_model/pll0.cpp" />
 		<Unit filename="source/model/converter_common_model/pll_model/pll_model.cpp" />
-		<Unit filename="source/model/converter_common_model/vrt_model/hvrt.cpp" />
-		<Unit filename="source/model/converter_common_model/vrt_model/lvrt.cpp" />
+		<Unit filename="source/model/converter_common_model/vrt_model/hvrt_control.cpp" />
+		<Unit filename="source/model/converter_common_model/vrt_model/hvrt_relay.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="source/model/converter_common_model/vrt_model/lvrt_control.cpp" />
+		<Unit filename="source/model/converter_common_model/vrt_model/lvrt_control_test.cpp" />
+		<Unit filename="source/model/converter_common_model/vrt_model/lvrt_relay.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="source/model/converter_common_model/vrt_model/vrt_control_model.cpp" />
-		<Unit filename="source/model/converter_common_model/vrt_model/vrt_relay_model.cpp" />
+		<Unit filename="source/model/converter_common_model/vrt_model/vrt_relay_model.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="source/model/converter_common_model/vsg_model/vsg0.cpp" />
 		<Unit filename="source/model/converter_common_model/vsg_model/vsg_model2.cpp" />
 		<Unit filename="source/model/energy_storage_model/energy_storage_model.cpp" />
@@ -790,7 +809,6 @@
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt3evrt.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt_electrical_model.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt_electrical_model_test.cpp" />
-		<Unit filename="source/model/wtg_models/wt_generator_model/lvpl.cpp" />
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt3g0.cpp" />
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt3g0_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt3g1.cpp" />
@@ -804,8 +822,14 @@
 		<Unit filename="source/model/wtg_models/wt_pitch_model/wt3p0_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_pitch_model/wt_pitch_model.cpp" />
 		<Unit filename="source/model/wtg_models/wt_pitch_model/wt_pitch_model_test.cpp" />
-		<Unit filename="source/model/wtg_models/wt_relay_model/vrtrly0.cpp" />
-		<Unit filename="source/model/wtg_models/wt_relay_model/vrtrly1.cpp" />
+		<Unit filename="source/model/wtg_models/wt_relay_model/vrtrly0.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="source/model/wtg_models/wt_relay_model/vrtrly1.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="source/model/wtg_models/wt_relay_model/wt_relay_model.cpp" />
 		<Unit filename="source/model/wtg_models/wt_relay_model/wt_relay_model_test.cpp">
 			<Option compile="0" />
@@ -820,6 +844,11 @@
 		<Unit filename="source/model/wtg_models/wt_turbine_model/wt3t0_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_turbine_model/wt_turbine_model.cpp" />
 		<Unit filename="source/model/wtg_models/wt_turbine_model/wt_turbine_model_test.cpp" />
+		<Unit filename="source/model/wtg_models/wt_voltage_ride_through_model/wt_voltage_ride_through_model.cpp" />
+		<Unit filename="source/model/wtg_models/wt_voltage_ride_through_model/wtvrt3.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="source/model/wtg_models/wtg_model.cpp" />
 		<Unit filename="source/model/wtg_models/wtg_model_test.cpp" />
 		<Unit filename="source/network/jacobian_builder.cpp" />

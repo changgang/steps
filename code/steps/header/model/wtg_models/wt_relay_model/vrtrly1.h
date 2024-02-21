@@ -2,8 +2,8 @@
 #define VRTRLY1_H
 
 #include "header/model/wtg_models/wt_relay_model/wt_relay_model.h"
-#include "header/model/converter_common_models/vrt_model/lvrt.h"
-#include "header/model/converter_common_models/vrt_model/hvrt.h"
+#include "header/model/converter_common_models/vrt_model/lvrt_relay.h"
+#include "header/model/converter_common_models/vrt_model/hvrt_relay.h"
 #include "header/basic/timer.h"
 #include "header/basic/constants.h"
 #include "header/basic/multi_point_line.h"
@@ -67,8 +67,8 @@ class VRTRLY1 : public WT_RELAY_MODEL
         void check_lvrt_relay();
         void check_hvrt_relay();
 
-        LVRT lvrt;
-        HVRT hvrt;
+        LVRT_RELAY lvrt;
+        HVRT_RELAY hvrt;
 };
 
 #endif // VRTRLY1_H
