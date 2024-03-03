@@ -37,6 +37,7 @@ void WT_GENERATOR::clear()
     wt_pitch_model = NULL;
     wind_speed_model = NULL;
     wt_relay_model = NULL;
+    wt_vrt_model = NULL;
 
     set_positive_sequence_resistance_in_pu(0.0);
     set_positive_sequence_syncronous_reactance_in_pu(0.0);
