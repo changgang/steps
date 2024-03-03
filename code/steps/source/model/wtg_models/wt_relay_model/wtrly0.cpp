@@ -445,7 +445,7 @@ void WTRLY0::check_wind_speed_relay()
 
                         osstream<<"Wind speed relay timer of "<<get_compound_device_name()<<" is timed out at "<<toolkit.get_dynamic_simulation_time_in_s()<<" s"<<endl;
                         toolkit.show_information_with_leading_time_stamp(osstream);
-                        sim.trip_wt_generator(did, INFINITE_THRESHOLD);
+                        sim.trip_wt_generator(did);
                         sim.enable_relay_action_flag();
                     }
                 }
@@ -521,7 +521,7 @@ void WTRLY0::check_rotor_speed_relay()
 
                         osstream<<"Rotor speed relay timer of "<<get_compound_device_name()<<" is timed out at "<<toolkit.get_dynamic_simulation_time_in_s()<<" s"<<endl;
                         toolkit.show_information_with_leading_time_stamp(osstream);
-                        sim.trip_wt_generator(did, INFINITE_THRESHOLD);
+                        sim.trip_wt_generator(did);
                         sim.enable_relay_action_flag();
                     }
                 }
@@ -597,7 +597,7 @@ void WTRLY0::check_bus_frequency_relay()
 
                         osstream<<"Bus frequency relay timer of "<<get_compound_device_name()<<" is timed out at "<<toolkit.get_dynamic_simulation_time_in_s()<<" s"<<endl;
                         toolkit.show_information_with_leading_time_stamp(osstream);
-                        sim.trip_wt_generator(did, INFINITE_THRESHOLD);
+                        sim.trip_wt_generator(did);
                         sim.enable_relay_action_flag();
                     }
                 }
@@ -674,7 +674,7 @@ void WTRLY0::check_bus_voltage_relay()
                         {
                             osstream<<"Bus voltage relay timer of "<<get_compound_device_name()<<" is timed out at "<<toolkit.get_dynamic_simulation_time_in_s()<<" s"<<endl;
                             toolkit.show_information_with_leading_time_stamp(osstream);
-                            sim.trip_wt_generator(did, INFINITE_THRESHOLD);
+                            sim.trip_wt_generator(did);
                             sim.enable_relay_action_flag();
                         }
                     }

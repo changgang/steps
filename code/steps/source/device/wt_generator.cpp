@@ -76,7 +76,7 @@ unsigned int WT_GENERATOR::get_generator_bus() const
     return get_source_bus();
 }
 
-void WT_GENERATOR::set_number_of_lumped_wt_generators(unsigned int n)
+void WT_GENERATOR::set_number_of_lumped_wt_generators(double n)
 {
     if(n==0)
         n = 1;
@@ -88,7 +88,7 @@ void WT_GENERATOR::set_rated_power_per_wt_generator_in_MW(double P)
     rated_power_per_wt_generator_in_MW = P;
 }
 
-unsigned int WT_GENERATOR::get_number_of_lumped_wt_generators() const
+double WT_GENERATOR::get_number_of_lumped_wt_generators() const
 {
     return number_of_lumped_wt_generators;
 }
@@ -913,7 +913,6 @@ void WT_GENERATOR::update_motor_data()
 
     BUS* busptr = get_bus_pointer();
     double V = busptr->get_positive_sequence_voltage_in_kV()/rated_voltage;
-    complex<double> complex_V = busptr->get_positive_sequence_complex_voltage_in_kV()/rated_voltage;
     double P = motor_p/mbase/(V*V);
 
     // single cage
@@ -952,7 +951,7 @@ void WT_GENERATOR::update_motor_data()
                 return;
             }
         }
-        double s = R1/R;
+        //double s = R1/R;
 
         double Q = V*V*(Xsm*R*R+Xp*Xrm)/(Ap*R*R+Bp*R+Cp);
         double motor_q = Q*mbase;
@@ -965,6 +964,7 @@ void WT_GENERATOR::update_motor_data()
         set_motor_negative_sequence_impedance_in_pu(Z);
 
         // internal voltage
+//        complex<double> complex_V = busptr->get_positive_sequence_complex_voltage_in_kV()/rated_voltage;
 //        complex<double> motor_power = get_motor_power_in_MVA();
 //        complex<double> I = motor_power/mbase/complex_V;
 //        complex<double> E = complex_V - I*Z;
@@ -1026,7 +1026,7 @@ void WT_GENERATOR::update_motor_data()
             toolkit.show_information_with_leading_time_stamp(osstream);
             return;
         }
-        double s = R1/R;
+        //double s = R1/R;
 
         Q = -V*V*(k*R*(a*R*R+b*R+c)-(g*R*R+h)*(d*R*R+e*R+f))/((a*R*R+b*R+c)*(a*R*R+b*R+c)+(d*R*R+e*R+f)*(d*R*R+e*R*f));
         double motor_q = Q*mbase;

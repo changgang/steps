@@ -27,10 +27,10 @@ class WT_GENERATOR : public SOURCE
         void set_generator_bus(unsigned int bus);
         unsigned int get_generator_bus() const;
 
-        void set_number_of_lumped_wt_generators(unsigned int n);
+        void set_number_of_lumped_wt_generators(double n);
         void set_rated_power_per_wt_generator_in_MW(double P);
 
-        unsigned int get_number_of_lumped_wt_generators() const;
+        double get_number_of_lumped_wt_generators() const;
         double get_rated_power_per_wt_generator_in_MW() const;
 
         virtual void set_model(MODEL* model);

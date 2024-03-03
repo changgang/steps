@@ -2,18 +2,18 @@
 #include "header/basic/utility.h"
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
-VSG0::VSG0(STEPS& toolkit) : VSG_MODEL2(toolkit),
-                                           virtual_frequency_deviation_block(toolkit),
-                                           virtual_angle_block(toolkit),
-                                           virtual_voltage_block(toolkit)
+VSG0::VSG0(STEPS& toolkit) : VSG_MODEL(toolkit),
+                             virtual_frequency_deviation_block(toolkit),
+                             virtual_angle_block(toolkit),
+                             virtual_voltage_block(toolkit)
 {
     clear();
 }
 
-VSG0::VSG0(const VSG0& model) : VSG_MODEL2(model.get_toolkit()),
-                                                     virtual_frequency_deviation_block(model.get_toolkit()),
-                                                     virtual_angle_block(model.get_toolkit()),
-                                                     virtual_voltage_block(model.get_toolkit())
+VSG0::VSG0(const VSG0& model) : VSG_MODEL(model.get_toolkit()),
+                                virtual_frequency_deviation_block(model.get_toolkit()),
+                                virtual_angle_block(model.get_toolkit()),
+                                virtual_voltage_block(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -58,7 +58,7 @@ void VSG0::set_Tj_in_s(double Tj)
     {
         ostringstream osstream;
         osstream<<"Warning. Tj ("<<Tj<<") is not allowed since it is too small when setting Tj in "
-                <<get_model_name()<<" model";
+                <<get_model_name()<<" model of "<<get_compound_device_name();
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
@@ -168,7 +168,7 @@ void VSG0::run(DYNAMIC_MODE mode)
 
 double VSG0::get_virtual_frequency_deviation_in_Hz() const
 {
-    return virtual_frequency_deviation_block.get_output();
+    return virtual_frequency_deviation_block.get_output() * get_base_frequency_in_Hz();
 }
 
 double VSG0::get_virtual_angle_in_rad() const

@@ -833,7 +833,7 @@ def load_library(libsteps_file):
     libsteps.api_shed_generator.argtypes = (c_uint, c_char_p, c_double, c_uint)
 
     libsteps.api_trip_wt_generator.restype = None
-    libsteps.api_trip_wt_generator.argtypes = (c_uint, c_char_p, c_uint, c_uint)
+    libsteps.api_trip_wt_generator.argtypes = (c_uint, c_char_p, c_uint)
     libsteps.api_shed_wt_generator.restype = None
     libsteps.api_shed_wt_generator.argtypes = (c_uint, c_char_p, c_double, c_uint)
 

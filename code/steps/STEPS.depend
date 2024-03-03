@@ -188,7 +188,7 @@
 	"header/basic/constants.h"
 	"header/meter/meter.h"
 
-1708526640 d:\steps\code\steps\header\device\wt_generator.h
+1709443457 d:\steps\code\steps\header\device\wt_generator.h
 	<string>
 	<complex>
 	"header/device/source.h"
@@ -201,12 +201,12 @@
 	"header/model/wtg_models/wt_voltage_ride_through_model/wt_voltage_ride_through_model.h"
 	"header/model/wtg_models/wt_relay_model/wt_relay_model.h"
 
-1634637238 d:\steps\code\steps\header\model\wtg_models\wt_generator_model\wt_generator_model.h
+1709445308 d:\steps\code\steps\header\model\wtg_models\wt_generator_model\wt_generator_model.h
 	"header/model/wtg_models/wtg_model.h"
 	"header/block/integral_block.h"
 	"header/block/saturation_block.h"
 
-1664187911 d:\steps\code\steps\header\model\wtg_models\wtg_model.h
+1709443435 d:\steps\code\steps\header\model\wtg_models\wtg_model.h
 	"header/model/model.h"
 	"header/device/bus.h"
 	<complex>
@@ -469,7 +469,7 @@
 	"header/basic/sparse_matrix_define.h"
 	<ctime>
 
-1664187911 d:\steps\code\steps\header\toolkit\dynamic_simulator\dynamic_simulator.h
+1709439631 d:\steps\code\steps\header\toolkit\dynamic_simulator\dynamic_simulator.h
 	"header/basic/power_mismatch_struct.h"
 	"header/meter/meter.h"
 	"header/network/network_matrix.h"
@@ -2361,7 +2361,7 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/bpa_imexporter.h"
 
-1698919510 d:\steps\code\steps\header\apis\steps_api.h
+1709441688 d:\steps\code\steps\header\apis\steps_api.h
 	<cstdlib>
 	"header/basic/constants.h"
 	"header/basic/dc_device_id.h"
@@ -2392,7 +2392,7 @@
 	"header/data_imexporter/bpa_imexporter.h"
 	"header/data_imexporter/steps_imexporter.h"
 
-1664187911 source:d:\steps\code\steps\source\apis\steps_api_dynamic_simulation.cpp
+1709441697 source:d:\steps\code\steps\source\apis\steps_api_dynamic_simulation.cpp
 	"header/apis/steps_api.h"
 	"header/basic/utility.h"
 	"header/toolkit/cct_searcher/cct_searcher.h"
@@ -3512,7 +3512,7 @@
 	<iostream>
 	<algorithm>
 
-1708526893 source:d:\steps\code\steps\source\data_imexporter\steps_dynamics_imexporter.cpp
+1709447981 source:d:\steps\code\steps\source\data_imexporter\steps_dynamics_imexporter.cpp
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -3889,7 +3889,7 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1708526570 source:d:\steps\code\steps\source\device\wt_generator.cpp
+1709443461 source:d:\steps\code\steps\source\device\wt_generator.cpp
 	"header/device/wt_generator.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -5298,7 +5298,7 @@
 	"header/model/wtg_models/wt_generator_model/wt3g2.h"
 	"header/STEPS.h"
 
-1634637238 source:d:\steps\code\steps\source\model\wtg_models\wt_generator_model\wt_generator_model.cpp
+1709445620 source:d:\steps\code\steps\source\model\wtg_models\wt_generator_model\wt_generator_model.cpp
 	"header/model/wtg_models/wt_generator_model/wt_generator_model.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -5365,7 +5365,7 @@
 	"header/STEPS.h"
 	<cstdio>
 
-1707115471 source:d:\steps\code\steps\source\model\wtg_models\wt_relay_model\wtrly0.cpp
+1709446649 source:d:\steps\code\steps\source\model\wtg_models\wt_relay_model\wtrly0.cpp
 	"header/model/wtg_models/wt_relay_model/wtrly0.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -5407,7 +5407,7 @@
 	<cstdio>
 	<cmath>
 
-1664187911 source:d:\steps\code\steps\source\model\wtg_models\wtg_model.cpp
+1709443461 source:d:\steps\code\steps\source\model\wtg_models\wtg_model.cpp
 	"header/model/wtg_models/wtg_model.h"
 	"header/basic/utility.h"
 	"header/power_system_database.h"
@@ -5755,7 +5755,7 @@
 	"header/toolkit/contingency_screener/contingency_screener.h"
 	"header/STEPS.h"
 
-1664187911 source:d:\steps\code\steps\source\toolkit\dynamic_simulator\dynamic_simulator.cpp
+1709439607 source:d:\steps\code\steps\source\toolkit\dynamic_simulator\dynamic_simulator.cpp
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	"header/basic/constants.h"
 	"header/basic/utility.h"
@@ -56689,10 +56689,10 @@
 	"header/STEPS.h"
 	<iostream>
 
-1708511451 d:\steps\code\steps\header\model\wtg_models\wt_generator_model\wt3gx.h
+1709435899 d:\steps\code\steps\header\model\wtg_models\wt_generator_model\wt3gx.h
 	"header/model/wtg_models/wt_generator_model/wt_generator_model.h"
-	"header/model/converter_common_models/lvpl_model/lvpl.h"
 	"header/model/converter_common_models/vsg_model/vsg0.h"
+	"header/model/converter_common_models/current_order_limiter_model/convcol.h"
 	"header/block/integral_block.h"
 	"header/block/first_order_block.h"
 
@@ -56720,7 +56720,7 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1706780385 d:\steps\code\steps\header\model\converter_common_models\vsg_model\vsg_model_test.h
+1709446007 d:\steps\code\steps\header\model\converter_common_models\vsg_model\vsg_model_test.h
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -56728,7 +56728,7 @@
 	"cpptest.h"
 	"header/power_system_database.h"
 	"header/STEPS.h"
-	"header/model/converter_common_models/vsg_model/vsg_model2.h"
+	"header/model/converter_common_models/vsg_model/vsg_model.h"
 
 1706780361 source:d:\steps\code\steps\source\model\converter_common_model\pll_model\pll0.cpp
 	"header/model/converter_common_models/pll_model/pll0.h"
@@ -56770,7 +56770,7 @@
 	<cstdio>
 	<cmath>
 
-1707115640 source:d:\steps\code\steps\source\model\wtg_models\wt_generator_model\wt3gx.cpp
+1709445050 source:d:\steps\code\steps\source\model\wtg_models\wt_generator_model\wt3gx.cpp
 	"header/model/wtg_models/wt_generator_model/wt3gx.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -56902,11 +56902,11 @@
 	"header/STEPS.h"
 	<iostream>
 
-1707116263 d:\steps\code\steps\header\model\converter_common_models\vsg_model\vsg0.h
-	"header/model/converter_common_models/vsg_model/vsg_model2.h"
+1709434387 d:\steps\code\steps\header\model\converter_common_models\vsg_model\vsg0.h
+	"header/model/converter_common_models/vsg_model/vsg_model.h"
 	"header/block/integral_block.h"
 
-1707116263 source:d:\steps\code\steps\source\model\converter_common_model\vsg_model\vsg0.cpp
+1709434414 source:d:\steps\code\steps\source\model\converter_common_model\vsg_model\vsg0.cpp
 	"header/model/converter_common_models/vsg_model/vsg0.h"
 	"header/basic/utility.h"
 	"header/power_system_database.h"
@@ -56929,7 +56929,7 @@
 	<istream>
 	<iostream>
 
-1707119891 d:\steps\code\steps\header\model\converter_common_models\vrt_model\vrt_relay_model.h
+1708568782 d:\steps\code\steps\header\model\converter_common_models\vrt_model\vrt_relay_model.h
 	"header/STEPS.h"
 	"header/basic/constants.h"
 	"header/basic/multi_point_line.h"
@@ -56949,19 +56949,19 @@
 	"header/block/pi_block.h"
 	"header/block/integral_block.h"
 
-1708522759 source:d:\steps\code\steps\source\model\converter_common_model\vrt_model\vrt_control_model.cpp
+1708837218 source:d:\steps\code\steps\source\model\converter_common_model\vrt_model\vrt_control_model.cpp
 	"header/model/converter_common_models/vrt_model/vrt_control_model.h"
 	"header/power_system_database.h"
 	"header/basic/utility.h"
 	<istream>
 	<iostream>
 
-1708522741 d:\steps\code\steps\header\model\converter_common_models\vrt_model\vrt_control_model.h
+1709447048 d:\steps\code\steps\header\model\converter_common_models\vrt_model\vrt_control_model.h
 	"header/STEPS.h"
 	"header/basic/constants.h"
 	"header/basic/timer.h"
 
-1708493848 d:\steps\code\steps\header\model\converter_common_models\vrt_model\lvrt_relay.h
+1708568782 d:\steps\code\steps\header\model\converter_common_models\vrt_model\lvrt_relay.h
 	"header/model/converter_common_models/vrt_model/vrt_relay_model.h"
 	"header/block/integral_block.h"
 
@@ -56977,7 +56977,7 @@
 	<istream>
 	<iostream>
 
-1708522775 source:d:\steps\code\steps\source\model\converter_common_model\vrt_model\lvrt_control.cpp
+1708930052 source:d:\steps\code\steps\source\model\converter_common_model\vrt_model\lvrt_control.cpp
 	"header/model/converter_common_models/vrt_model/lvrt_control.h"
 	"header/power_system_database.h"
 	"header/STEPS.h"
@@ -56986,7 +56986,7 @@
 	<iostream>
 	<cmath>
 
-1708522773 d:\steps\code\steps\header\model\converter_common_models\vrt_model\lvrt_control.h
+1708671056 d:\steps\code\steps\header\model\converter_common_models\vrt_model\lvrt_control.h
 	"header/model/converter_common_models/vrt_model/vrt_control_model.h"
 	"header/model/converter_common_models/lvpl_model/lvpl.h"
 
@@ -56994,7 +56994,7 @@
 	"header/block/integral_block.h"
 	"header/block/saturation_block.h"
 
-1708493938 source:d:\steps\code\steps\source\model\converter_common_model\vrt_model\lvrt_relay.cpp
+1708568782 source:d:\steps\code\steps\source\model\converter_common_model\vrt_model\lvrt_relay.cpp
 	"header/model/converter_common_models/vrt_model/lvrt_relay.h"
 	"header/power_system_database.h"
 	"header/STEPS.h"
@@ -57002,7 +57002,7 @@
 	<istream>
 	<iostream>
 
-1708517310 d:\steps\code\steps\header\model\converter_common_models\vrt_model\lvrt_control_test.h
+1709447113 d:\steps\code\steps\header\model\converter_common_models\vrt_model\lvrt_control_test.h
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -57017,7 +57017,7 @@
 	"header/basic/constants.h"
 	<cmath>
 
-1708522850 source:d:\steps\code\steps\source\model\converter_common_model\vrt_model\lvrt_control_test.cpp
+1709447098 source:d:\steps\code\steps\source\model\converter_common_model\vrt_model\lvrt_control_test.cpp
 	"header/basic/test_macro.h"
 	"header/model/converter_common_models/vrt_model/lvrt_control_test.h"
 	"header/basic/utility.h"
@@ -57029,18 +57029,18 @@
 	<cstdio>
 	<cmath>
 
-1708523050 source:d:\steps\code\steps\source\model\wtg_models\wt_voltage_ride_through_model\wt_voltage_ride_through_model.cpp
+1709446415 source:d:\steps\code\steps\source\model\wtg_models\wt_voltage_ride_through_model\wt_voltage_ride_through_model.cpp
 	"header/model/wtg_models/wt_voltage_ride_through_model/wt_voltage_ride_through_model.h"
 	"header/basic/utility.h"
 	"header/device/wt_generator.h"
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1708511758 d:\steps\code\steps\header\model\wtg_models\wt_voltage_ride_through_model\wt_voltage_ride_through_model.h
+1709446405 d:\steps\code\steps\header\model\wtg_models\wt_voltage_ride_through_model\wt_voltage_ride_through_model.h
 	"header/model/wtg_models/wtg_model.h"
 	<complex>
 
-1708523762 source:d:\steps\code\steps\source\model\converter_common_model\vrt_model\hvrt_control.cpp
+1708930310 source:d:\steps\code\steps\source\model\converter_common_model\vrt_model\hvrt_control.cpp
 	"header/model/converter_common_models/vrt_model/hvrt_control.h"
 	"header/power_system_database.h"
 	"header/STEPS.h"
@@ -57049,15 +57049,34 @@
 	<iostream>
 	<cmath>
 
-1708523708 d:\steps\code\steps\header\model\converter_common_models\vrt_model\hvrt_control.h
+1708665552 d:\steps\code\steps\header\model\converter_common_models\vrt_model\hvrt_control.h
 	"header/model/converter_common_models/vrt_model/vrt_control_model.h"
 	"header/model/converter_common_models/lvpl_model/lvpl.h"
 
 1708526780 d:\steps\code\steps\header\model\wtg_models\wt_voltage_ride_through_model\wt_voltage_ride_through_models.h
 	"header/model/wtg_models/wt_voltage_ride_through_model/wtvrt3.h"
 
-1708526612 d:\steps\code\steps\header\model\wtg_models\wt_voltage_ride_through_model\wtvrt3.h
+1709446160 d:\steps\code\steps\header\model\wtg_models\wt_voltage_ride_through_model\wtvrt3.h
 	"header/model/wtg_models/wt_voltage_ride_through_model/wt_voltage_ride_through_model.h"
 	"header/model/converter_common_models/vrt_model/lvrt_control.h"
 	"header/model/converter_common_models/vrt_model/hvrt_control.h"
+
+1709434316 d:\steps\code\steps\header\model\converter_common_models\vsg_model\vsg_model.h
+	"header/STEPS.h"
+
+1709434376 source:d:\steps\code\steps\source\model\converter_common_model\vsg_model\vsg_model.cpp
+	"header/model/converter_common_models/vsg_model/vsg_model.h"
+	"header/basic/utility.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+	<iostream>
+
+1709446142 source:d:\steps\code\steps\source\model\wtg_models\wt_voltage_ride_through_model\wtvrt3.cpp
+	"header/model/wtg_models/wt_voltage_ride_through_model/wtvrt3.h"
+	"header/device/wt_generator.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<iostream>
 

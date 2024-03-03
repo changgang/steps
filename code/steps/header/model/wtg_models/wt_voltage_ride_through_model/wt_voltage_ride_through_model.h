@@ -37,11 +37,15 @@ class WT_VOLTAGE_RIDE_THROUGH_MODEL : public WTG_MODEL
 
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
+
+        virtual VRT_STATUS get_lvrt_status() const = 0;
+        virtual VRT_STATUS get_hvrt_status() const = 0;
+
         virtual double get_active_current_command_in_pu_based_on_mbase() = 0;
-        virtual double get_active_power_command_in_pu_based_on_mbase() const = 0;
+        virtual double get_active_power_command_in_pu_based_on_mbase() = 0;
         virtual double get_reactive_current_command_in_pu_based_on_mbase() = 0;
         virtual double get_reactive_power_command_in_pu_based_on_mbase() = 0;
-        virtual double get_reactive_voltage_command_in_pu() const = 0;
+        virtual double get_reactive_voltage_command_in_pu() = 0;
         virtual void check() = 0;
         virtual void clear() = 0;
         virtual void report() = 0;

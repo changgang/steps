@@ -36,8 +36,7 @@ WTVRT3& WTVRT3::operator=(const WTVRT3& model)
 
 void WTVRT3::clear()
 {
-    set_model_float_parameter_count(35);
-
+    set_model_float_parameter_count(58);
 }
 
 void WTVRT3::copy_from_const_model(const WTVRT3& model)
@@ -46,6 +45,72 @@ void WTVRT3::copy_from_const_model(const WTVRT3& model)
     set_toolkit(toolkit);
 
     clear();
+    set_vrt_voltage_threshold('L',model.get_vrt_voltage_threshold('L'));
+
+    set_P_vrt_during_mode('L', model.get_P_vrt_during_mode('L'));
+    set_Q_vrt_during_mode('L', model.get_Q_vrt_during_mode('L'));
+    set_P_vrt_prepare2recover_mode('L', model.get_P_vrt_prepare2recover_mode('L'));
+    set_Q_vrt_prepare2recover_mode('L', model.get_Q_vrt_prepare2recover_mode('L'));
+    set_P_vrt_recover_mode('L', model.get_P_vrt_recover_mode('L'));
+    set_Q_vrt_recover_mode('L', model.get_Q_vrt_recover_mode('L'));
+
+    set_kP_vrt_during('L', model.get_kP_vrt_during('L'));
+    set_P_set_vrt_during_in_pu('L', model.get_P_set_vrt_during_in_pu('L'));
+    set_k1_Ip_vrt_during('L', model.get_k1_Ip_vrt_during('L'));
+    set_k2_Ip_vrt_during('L', model.get_k2_Ip_vrt_during('L'));
+    set_Ip_set_vrt_during_in_pu('L', model.get_Ip_set_vrt_during_in_pu('L'));
+    set_LVPL_low_voltage_in_pu(model.get_LVPL_low_voltage_in_pu());
+    set_LVPL_high_voltage_in_pu(model.get_LVPL_high_voltage_in_pu());
+    set_LVPL_gain_at_high_voltage(model.get_LVPL_gain_at_high_voltage());
+
+    set_k_Ip_prepare2recover('L', model.get_k_Ip_prepare2recover('L'));
+    set_Ip_set_prepare2recover('L', model.get_Ip_set_prepare2recover('L'));
+
+    set_P_recover_slope_in_pu_per_s('L', model.get_P_recover_slope_in_pu_per_s('L'));
+    set_P_recover_inertia_in_s('L', model.get_P_recover_inertia_in_s('L'));
+
+    set_kQ_vrt_during('L', model.get_kQ_vrt_during('L'));
+    set_Q_set_vrt_during_in_pu('L', model.get_Q_set_vrt_during_in_pu('L'));
+    set_k1_Iq_vrt_during('L', model.get_k1_Iq_vrt_during('L'));
+    set_k2_Iq_vrt_during('L', model.get_k2_Iq_vrt_during('L'));
+    set_Iq_set_vrt_during_in_pu('L', model.get_Iq_set_vrt_during_in_pu('L'));
+
+    set_k_Iq_prepare2recover('L', model.get_k_Iq_prepare2recover('L'));
+    set_Iq_set_prepare2recover('L', model.get_Iq_set_prepare2recover('L'));
+
+    set_Q_recover_slope_in_pu_per_s('L', model.get_Q_recover_slope_in_pu_per_s('L'));
+    set_Q_recover_inertia_in_s('L', model.get_Q_recover_inertia_in_s('L'));
+
+    set_P_vrt_during_mode('H', model.get_P_vrt_during_mode('H'));
+    set_Q_vrt_during_mode('H', model.get_Q_vrt_during_mode('H'));
+    set_P_vrt_prepare2recover_mode('H', model.get_P_vrt_prepare2recover_mode('H'));
+    set_Q_vrt_prepare2recover_mode('H', model.get_Q_vrt_prepare2recover_mode('H'));
+    set_P_vrt_recover_mode('H', model.get_P_vrt_recover_mode('H'));
+    set_Q_vrt_recover_mode('H', model.get_Q_vrt_recover_mode('H'));
+
+    set_kP_vrt_during('H', model.get_kP_vrt_during('H'));
+    set_P_set_vrt_during_in_pu('H', model.get_P_set_vrt_during_in_pu('H'));
+    set_k1_Ip_vrt_during('H', model.get_k1_Ip_vrt_during('H'));
+    set_k2_Ip_vrt_during('H', model.get_k2_Ip_vrt_during('H'));
+    set_Ip_set_vrt_during_in_pu('H', model.get_Ip_set_vrt_during_in_pu('H'));
+
+    set_k_Ip_prepare2recover('H', model.get_k_Ip_prepare2recover('H'));
+    set_Ip_set_prepare2recover('H', model.get_Ip_set_prepare2recover('H'));
+
+    set_P_recover_slope_in_pu_per_s('H', model.get_P_recover_slope_in_pu_per_s('H'));
+    set_P_recover_inertia_in_s('H', model.get_P_recover_inertia_in_s('H'));
+
+    set_kQ_vrt_during('H', model.get_kQ_vrt_during('H'));
+    set_Q_set_vrt_during_in_pu('H', model.get_Q_set_vrt_during_in_pu('H'));
+    set_k1_Iq_vrt_during('H', model.get_k1_Iq_vrt_during('H'));
+    set_k2_Iq_vrt_during('H', model.get_k2_Iq_vrt_during('H'));
+    set_Iq_set_vrt_during_in_pu('H', model.get_Iq_set_vrt_during_in_pu('H'));
+
+    set_k_Iq_prepare2recover('H', model.get_k_Iq_prepare2recover('H'));
+    set_Iq_set_prepare2recover('H', model.get_Iq_set_prepare2recover('H'));
+
+    set_Q_recover_slope_in_pu_per_s('H', model.get_Q_recover_slope_in_pu_per_s('H'));
+    set_Q_recover_inertia_in_s('H', model.get_Q_recover_inertia_in_s('H'));
 
 }
 
@@ -56,474 +121,762 @@ string WTVRT3::get_model_name() const
 
 void WTVRT3::set_vrt_voltage_threshold(char HL_flag, double v)
 {
-    if(HL_flag=='L') return lvrt.set_vrt_voltage_threshold();
-    else             return hvrt.set_vrt_voltage_threshold();
+    if(HL_flag=='L') return lvrt.set_vrt_voltage_threshold(v);
+    else             return hvrt.set_vrt_voltage_threshold(v);
 }
 
 void WTVRT3::set_vrt_prepare2recover_delay_time_in_s(char HL_flag, double t)
 {
-    if(HL_flag=='L') return lvrt.set_vrt_prepare2recover_delay_time_in_s();
-    else             return hvrt.set_vrt_prepare2recover_delay_time_in_s();
+    if(HL_flag=='L') return lvrt.set_vrt_prepare2recover_delay_time_in_s(t);
+    else             return hvrt.set_vrt_prepare2recover_delay_time_in_s(t);
 }
 
 
 void WTVRT3::set_P_vrt_during_mode(char HL_flag, VRT_DURING_CONTROL_MODE m)
 {
-    if(HL_flag=='L') return lvrt.set_P_vrt_during_mode();
-    else             return hvrt.set_P_vrt_during_mode();
+    if(HL_flag=='L') return lvrt.set_P_vrt_during_mode(m);
+    else             return hvrt.set_P_vrt_during_mode(m);
 }
 
-void WTVRT3::set_kP(char HL_flag, double k)
+void WTVRT3::set_kP_vrt_during(char HL_flag, double k)
 {
-    if(HL_flag=='L') return lvrt.set_kP();
-    else             return hvrt.set_kP();
+    if(HL_flag=='L') return lvrt.set_kP_vrt_during(k);
+    else             return hvrt.set_kP_vrt_during(k);
 }
 
-void WTVRT3::set_P_set_in_pu(char HL_flag, double p)
+void WTVRT3::set_P_set_vrt_during_in_pu(char HL_flag, double p)
 {
-    if(HL_flag=='L') return lvrt.set_P_set_in_pu();
-    else             return hvrt.set_P_set_in_pu();
+    if(HL_flag=='L') return lvrt.set_P_set_vrt_during_in_pu(p);
+    else             return hvrt.set_P_set_vrt_during_in_pu(p);
 }
 
-void WTVRT3::set_k1_Ip(char HL_flag, double k)
+void WTVRT3::set_k1_Ip_vrt_during(char HL_flag, double k)
 {
-    if(HL_flag=='L') return lvrt.set_k1_Ip();
-    else             return hvrt.set_k1_Ip();
+    if(HL_flag=='L') return lvrt.set_k1_Ip_vrt_during(k);
+    else             return hvrt.set_k1_Ip_vrt_during(k);
 }
 
-void WTVRT3::set_k2_Ip(char HL_flag, double k)
+void WTVRT3::set_k2_Ip_vrt_during(char HL_flag, double k)
 {
-    if(HL_flag=='L') return lvrt.set_k2_Ip();
-    else             return hvrt.set_k2_Ip();
+    if(HL_flag=='L') return lvrt.set_k2_Ip_vrt_during(k);
+    else             return hvrt.set_k2_Ip_vrt_during(k);
 }
 
-void WTVRT3::set_Ip_set_in_pu(char HL_flag, double I)
+void WTVRT3::set_Ip_set_vrt_during_in_pu(char HL_flag, double I)
 {
-    if(HL_flag=='L') return lvrt.set_Ip_set_in_pu();
-    else             return hvrt.set_Ip_set_in_pu();
+    if(HL_flag=='L') return lvrt.set_Ip_set_vrt_during_in_pu(I);
+    else             return hvrt.set_Ip_set_vrt_during_in_pu(I);
 }
 
 void WTVRT3::set_LVPL_low_voltage_in_pu(double v)
 {
-    lvrt.set_LVPL_low_voltage_in_pu();
+    lvrt.set_LVPL_low_voltage_in_pu(v);
 }
 
 void WTVRT3::set_LVPL_high_voltage_in_pu(double v)
 {
-    lvrt.set_LVPL_high_voltage_in_pu();
+    lvrt.set_LVPL_high_voltage_in_pu(v);
 }
 
 void WTVRT3::set_LVPL_gain_at_high_voltage(double g)
 {
-    lvrt.set_LVPL_gain_at_high_voltage();
+    lvrt.set_LVPL_gain_at_high_voltage(g);
 }
 
 
 void WTVRT3::set_P_vrt_prepare2recover_mode(char HL_flag, VRT_PREPARE2RECOVER_CONTROL_MODE m)
 {
-    if(HL_flag=='L') return lvrt.set_P_vrt_prepare2recover_mode();
-    else             return hvrt.set_P_vrt_prepare2recover_mode();
+    if(HL_flag=='L') return lvrt.set_P_vrt_prepare2recover_mode(m);
+    else             return hvrt.set_P_vrt_prepare2recover_mode(m);
 }
 
 void WTVRT3::set_k_Ip_prepare2recover(char HL_flag, double k)
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.set_k_Ip_prepare2recover(k);
+    else             return hvrt.set_k_Ip_prepare2recover(k);
 }
 
 void WTVRT3::set_Ip_set_prepare2recover(char HL_flag, double I)
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.set_Ip_set_prepare2recover(I);
+    else             return hvrt.set_Ip_set_prepare2recover(I);
 }
 
 
 void WTVRT3::set_P_vrt_recover_mode(char HL_flag, VRT_RECOVER_CONTROL_MODE m)
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.set_P_vrt_recover_mode(m);
+    else             return hvrt.set_P_vrt_recover_mode(m);
 }
 
 void WTVRT3::set_P_recover_slope_in_pu_per_s(char HL_flag, double s)
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.set_P_recover_slope_in_pu_per_s(s);
+    else             return hvrt.set_P_recover_slope_in_pu_per_s(s);
 }
 
 void WTVRT3::set_P_recover_inertia_in_s(char HL_flag, double T)
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.set_P_recover_inertia_in_s(T);
+    else             return hvrt.set_P_recover_inertia_in_s(T);
 }
 
 
 void WTVRT3::set_Q_vrt_during_mode(char HL_flag, VRT_DURING_CONTROL_MODE m)
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.set_Q_vrt_during_mode(m);
+    else             return hvrt.set_Q_vrt_during_mode(m);
 }
 
-void WTVRT3::set_kQ(char HL_flag, double k)
+void WTVRT3::set_kQ_vrt_during(char HL_flag, double k)
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.set_kQ_vrt_during(k);
+    else             return hvrt.set_kQ_vrt_during(k);
 }
 
-void WTVRT3::set_Q_set_in_pu(char HL_flag, double q)
+void WTVRT3::set_Q_set_vrt_during_in_pu(char HL_flag, double q)
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.set_Q_set_vrt_during_in_pu(q);
+    else             return hvrt.set_Q_set_vrt_during_in_pu(q);
 }
 
-void WTVRT3::set_k1_Iq(char HL_flag, double k)
+void WTVRT3::set_k1_Iq_vrt_during(char HL_flag, double k)
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.set_k1_Iq_vrt_during(k);
+    else             return hvrt.set_k1_Iq_vrt_during(k);
 }
 
-void WTVRT3::set_k2_Iq(char HL_flag, double k)
+void WTVRT3::set_k2_Iq_vrt_during(char HL_flag, double k)
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.set_k2_Iq_vrt_during(k);
+    else             return hvrt.set_k2_Iq_vrt_during(k);
 }
 
-void WTVRT3::set_Iq_set_in_pu(char HL_flag, double I)
+void WTVRT3::set_Iq_set_vrt_during_in_pu(char HL_flag, double I)
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.set_Iq_set_vrt_during_in_pu(I);
+    else             return hvrt.set_Iq_set_vrt_during_in_pu(I);
 }
-
 
 void WTVRT3::set_Q_vrt_prepare2recover_mode(char HL_flag, VRT_PREPARE2RECOVER_CONTROL_MODE m)
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.set_Q_vrt_prepare2recover_mode(m);
+    else             return hvrt.set_Q_vrt_prepare2recover_mode(m);
 }
 
 void WTVRT3::set_k_Iq_prepare2recover(char HL_flag, double k)
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.set_k_Iq_prepare2recover(k);
+    else             return hvrt.set_k_Iq_prepare2recover(k);
 }
 
 void WTVRT3::set_Iq_set_prepare2recover(char HL_flag, double I)
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.set_Iq_set_prepare2recover(I);
+    else             return hvrt.set_Iq_set_prepare2recover(I);
 }
 
 
 void WTVRT3::set_Q_vrt_recover_mode(char HL_flag, VRT_RECOVER_CONTROL_MODE m)
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.set_Q_vrt_recover_mode(m);
+    else             return hvrt.set_Q_vrt_recover_mode(m);
 }
 
 void WTVRT3::set_Q_recover_slope_in_pu_per_s(char HL_flag, double s)
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.set_Q_recover_slope_in_pu_per_s(s);
+    else             return hvrt.set_Q_recover_slope_in_pu_per_s(s);
 }
 
 void WTVRT3::set_Q_recover_inertia_in_s(char HL_flag, double T)
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.set_Q_recover_inertia_in_s(T);
+    else             return hvrt.set_Q_recover_inertia_in_s(T);
 }
 
 
 double WTVRT3::get_vrt_voltage_threshold(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_vrt_voltage_threshold();
+    else             return hvrt.get_vrt_voltage_threshold();
 }
 
 double WTVRT3::get_vrt_prepare2recover_delay_time_in_s(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_vrt_prepare2recover_delay_time_in_s();
+    else             return hvrt.get_vrt_prepare2recover_delay_time_in_s();
 }
 
 
 VRT_DURING_CONTROL_MODE WTVRT3::get_P_vrt_during_mode(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_P_vrt_during_mode();
+    else             return hvrt.get_P_vrt_during_mode();
 }
 
-double WTVRT3::get_kP(char HL_flag) const
+double WTVRT3::get_kP_vrt_during(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_kP_vrt_during();
+    else             return hvrt.get_kP_vrt_during();
 }
 
-double WTVRT3::get_P_set_in_pu(char HL_flag) const
+double WTVRT3::get_P_set_vrt_during_in_pu(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_P_set_vrt_during_in_pu();
+    else             return hvrt.get_P_set_vrt_during_in_pu();
 }
 
-double WTVRT3::get_k1_Ip(char HL_flag) const
+double WTVRT3::get_k1_Ip_vrt_during(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_k1_Ip_vrt_during();
+    else             return hvrt.get_k1_Ip_vrt_during();
 }
 
-double WTVRT3::get_k2_Ip(char HL_flag) const
+double WTVRT3::get_k2_Ip_vrt_during(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_k2_Ip_vrt_during();
+    else             return hvrt.get_k2_Ip_vrt_during();
 }
 
-double WTVRT3::get_Ip_set_in_pu(char HL_flag) const
+double WTVRT3::get_Ip_set_vrt_during_in_pu(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_Ip_set_vrt_during_in_pu();
+    else             return hvrt.get_Ip_set_vrt_during_in_pu();
 }
 
 double WTVRT3::get_LVPL_low_voltage_in_pu() const
 {
-    return lvrt.();
+    return lvrt.get_LVPL_low_voltage_in_pu();
 }
 
 double WTVRT3::get_LVPL_high_voltage_in_pu() const
 {
-    return lvrt.();
+    return lvrt.get_LVPL_high_voltage_in_pu();
 }
 
 double WTVRT3::get_LVPL_gain_at_high_voltage() const
 {
-    return lvrt.();
+    return lvrt.get_LVPL_gain_at_high_voltage();
 }
 
 
 VRT_PREPARE2RECOVER_CONTROL_MODE WTVRT3::get_P_vrt_prepare2recover_mode(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_P_vrt_prepare2recover_mode();
+    else             return hvrt.get_P_vrt_prepare2recover_mode();
 }
 
 double WTVRT3::get_k_Ip_prepare2recover(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_k_Ip_prepare2recover();
+    else             return hvrt.get_k_Ip_prepare2recover();
 }
 
 double WTVRT3::get_Ip_set_prepare2recover(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_Ip_set_prepare2recover();
+    else             return hvrt.get_Ip_set_prepare2recover();
 }
 
 
 VRT_RECOVER_CONTROL_MODE WTVRT3::get_P_vrt_recover_mode(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_P_vrt_recover_mode();
+    else             return hvrt.get_P_vrt_recover_mode();
 }
 
 double WTVRT3::get_P_recover_slope_in_pu_per_s(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_P_recover_slope_in_pu_per_s();
+    else             return hvrt.get_P_recover_slope_in_pu_per_s();
 }
 
 double WTVRT3::get_P_recover_inertia_in_s(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_P_recover_inertia_in_s();
+    else             return hvrt.get_P_recover_inertia_in_s();
 }
 
 
 VRT_DURING_CONTROL_MODE WTVRT3::get_Q_vrt_during_mode(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_Q_vrt_during_mode();
+    else             return hvrt.get_Q_vrt_during_mode();
 }
 
-double WTVRT3::get_kQ(char HL_flag) const
+double WTVRT3::get_kQ_vrt_during(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_kQ_vrt_during();
+    else             return hvrt.get_kQ_vrt_during();
 }
 
-double WTVRT3::get_Q_set_in_pu(char HL_flag) const
+double WTVRT3::get_Q_set_vrt_during_in_pu(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_Q_set_vrt_during_in_pu();
+    else             return hvrt.get_Q_set_vrt_during_in_pu();
 }
 
-double WTVRT3::get_k1_Iq(char HL_flag) const
+double WTVRT3::get_k1_Iq_vrt_during(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_k1_Iq_vrt_during();
+    else             return hvrt.get_k1_Iq_vrt_during();
 }
 
-double WTVRT3::get_k2_Iq(char HL_flag) const
+double WTVRT3::get_k2_Iq_vrt_during(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_k2_Iq_vrt_during();
+    else             return hvrt.get_k2_Iq_vrt_during();
 }
 
-double WTVRT3::get_Iq_set_in_pu(char HL_flag) const
+double WTVRT3::get_Iq_set_vrt_during_in_pu(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_Iq_set_vrt_during_in_pu();
+    else             return hvrt.get_Iq_set_vrt_during_in_pu();
 }
 
 
 VRT_PREPARE2RECOVER_CONTROL_MODE WTVRT3::get_Q_vrt_prepare2recover_mode(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_Q_vrt_prepare2recover_mode();
+    else             return hvrt.get_Q_vrt_prepare2recover_mode();
 }
 
 double WTVRT3::get_k_Iq_prepare2recover(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_k_Iq_prepare2recover();
+    else             return hvrt.get_k_Iq_prepare2recover();
 }
 
 double WTVRT3::get_Iq_set_prepare2recover(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_Iq_set_prepare2recover();
+    else             return hvrt.get_Iq_set_prepare2recover();
 }
 
 
 VRT_RECOVER_CONTROL_MODE WTVRT3::get_Q_vrt_recover_mode(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_Q_vrt_recover_mode();
+    else             return hvrt.get_Q_vrt_recover_mode();
 }
 
 double WTVRT3::get_Q_recover_slope_in_pu_per_s(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_Q_recover_slope_in_pu_per_s();
+    else             return hvrt.get_Q_recover_slope_in_pu_per_s();
 }
 
 double WTVRT3::get_Q_recover_inertia_in_s(char HL_flag) const
 {
-    if(HL_flag=='L') return lvrt.();
-    else             return hvrt.();
+    if(HL_flag=='L') return lvrt.get_Q_recover_inertia_in_s();
+    else             return hvrt.get_Q_recover_inertia_in_s();
 }
 
 bool WTVRT3::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()>=38)
+    if(data.size()>=58)
     {
         string model_name = get_string_data(data[0],"");
-        if(model_name==get_model_name())
+        if(model_name == get_model_name())
         {
-            unsigned int bus, voltage_flag;
-            int var_control_flag;
-            double tfv, kpv, kiv, xc, tfp, kpp, kip, pmax, pmin, qmax, qmin,
-                   ipmax, trv, rpmax, rpmin, tspeed, kqi, vmax, vmin,
-                   kqv, eqmax, eqmin, tv, tp, fn,
-                   kvi, tvi, kdroop, tdroop, fupper, flower, kint;
+            //lvrt
+            double lvrt_voltage_threshold;
+            double lvrt_prepare2recover_delay_time;
+            unsigned int P_lvrt_during_mode, Q_lvrt_during_mode;
+            unsigned int P_lvrt_prepare2recover_mode, Q_lvrt_prepare2recover_mode;
+            unsigned int P_lvrt_recover_mode, Q_lvrt_recover_mode;
+
+            double kP_lvrt_during, P_set_lvrt_during; // P power control
+            double k1_Ip_lvrt_during, k2_Ip_lvrt_during, Ip_set_lvrt_during; // P current control
+            double LVPL_low_vlotage, LVPL_high_voltage, LVPL_gain_at_high_voltage; //LVPL control
+
+            double kQ_lvrt_during, Q_set_lvrt_during; // Q power control
+            double k1_Iq_lvrt_during, k2_Iq_lvrt_during, Iq_set_lvrt_during; // Q current control
+
+            double k_Ip_lvrt_prepare2recover, Ip_set_lvrt_prepare2recover;  // prepare to recover
+            double k_Iq_lvrt_prepare2recover, Iq_set_lvrt_prepare2recover;
+
+            double kP_lvrt_recover, TP_lvrt_recover; // recover
+            double kQ_lvrt_recover, TQ_lvrt_recover;
+
+
+            //hvrt
+            double hvrt_voltage_threshold;
+            double hvrt_prepare2recover_delay_time;
+
+            unsigned int P_hvrt_during_mode, Q_hvrt_during_mode;
+            unsigned int P_hvrt_prepare2recover_mode, Q_hvrt_prepare2recover_mode;
+            unsigned int P_hvrt_recover_mode, Q_hvrt_recover_mode;
+
+            double kP_hvrt_during, P_set_hvrt_during; // P power control
+            double k1_Ip_hvrt_during, k2_Ip_hvrt_during, Ip_set_hvrt_during; // P current control
+
+            double kQ_hvrt_during, Q_set_hvrt_during; // Q power control
+            double k1_Iq_hvrt_during, k2_Iq_hvrt_during, Iq_set_hvrt_during; // Q current control
+
+            double k_Ip_hvrt_prepare2recover, Ip_set_hvrt_prepare2recover;  // prepare to recover
+            double k_Iq_hvrt_prepare2recover, Iq_set_hvrt_prepare2recover;
+
+            double kP_hvrt_recover, TP_hvrt_recover; // recover
+            double kQ_hvrt_recover, TQ_hvrt_recover;
 
             unsigned int i=3;
-            bus = get_integer_data(data[i],"0"); i++;
-            var_control_flag = get_integer_data(data[i],"0"); i++;
-            voltage_flag = (unsigned int)(get_integer_data(data[i],"0")); i++;
-            xc = get_double_data(data[i],"0.0"); i++;
-            trv = get_double_data(data[i],"0.0"); i++;
-            fn = get_double_data(data[i],"0.0"); i++;
-            kpv = get_double_data(data[i],"0.0"); i++;
-            tv = get_double_data(data[i],"0.0"); i++;
-            kiv = get_double_data(data[i],"0.0"); i++;
-            qmin = get_double_data(data[i],"0.0"); i++;
-            qmax = get_double_data(data[i],"0.0"); i++;
-            tfv = get_double_data(data[i],"0.0"); i++;
-            tp = get_double_data(data[i],"0.0"); i++;
-            kqi = get_double_data(data[i],"0.0"); i++;
-            vmin = get_double_data(data[i],"0.0"); i++;
-            vmax = get_double_data(data[i],"0.0"); i++;
-            kqv = get_double_data(data[i],"0.0"); i++;
-            eqmin = get_double_data(data[i],"0.0"); i++;
-            eqmax = get_double_data(data[i],"0.0"); i++;
-            tspeed = get_double_data(data[i],"0.0"); i++;
-            kpp = get_double_data(data[i],"0.0"); i++;
-            kip = get_double_data(data[i],"0.0"); i++;
-            kvi = get_double_data(data[i],"0.0"); i++;
-            tvi = get_double_data(data[i],"0.0"); i++;
-            kdroop = get_double_data(data[i],"0.0"); i++;
-            tdroop = get_double_data(data[i],"0.0"); i++;
-            flower = get_double_data(data[i],"0.0"); i++;
-            fupper = get_double_data(data[i],"0.0"); i++;
-            kint = get_double_data(data[i],"0.0"); i++;
-            rpmin = get_double_data(data[i],"0.0"); i++;
-            rpmax = get_double_data(data[i],"0.0"); i++;
-            tfp = get_double_data(data[i],"0.0"); i++;
-            pmin = get_double_data(data[i],"0.0"); i++;
-            pmax = get_double_data(data[i],"0.0"); i++;
-            ipmax = get_double_data(data[i],"0.0");
+            //lvrt
+            lvrt_voltage_threshold = get_double_data(data[i],"0.0"); i++;
+            lvrt_prepare2recover_delay_time = get_double_data(data[i],"0.0"); i++;
+            P_lvrt_during_mode = get_integer_data(data[i],"0"); i++;
+            Q_lvrt_during_mode = get_integer_data(data[i],"0"); i++;
+            P_lvrt_prepare2recover_mode = get_integer_data(data[i],"0"); i++;
+            Q_lvrt_prepare2recover_mode = get_integer_data(data[i],"0"); i++;
+            P_lvrt_recover_mode = get_integer_data(data[i],"0"); i++;
+            Q_lvrt_recover_mode = get_integer_data(data[i],"0"); i++;
 
-            set_bus_to_regulate(bus);
-            PE_VAR_CONTROL_MODE mode;
-            switch(var_control_flag)
+            kP_lvrt_during = get_double_data(data[i],"0.0"); i++;
+            P_set_lvrt_during = get_double_data(data[i],"0.0"); i++;
+            k1_Ip_lvrt_during = get_double_data(data[i],"0.0"); i++;
+            k2_Ip_lvrt_during = get_double_data(data[i],"0.0"); i++;
+            Ip_set_lvrt_during = get_double_data(data[i],"0.0"); i++;
+            LVPL_low_vlotage = get_double_data(data[i],"0.0"); i++;
+            LVPL_high_voltage = get_double_data(data[i],"0.0"); i++;
+            LVPL_gain_at_high_voltage = get_double_data(data[i],"0.0"); i++;
+            kQ_lvrt_during = get_double_data(data[i],"0.0"); i++;
+            Q_set_lvrt_during = get_double_data(data[i],"0.0"); i++;
+            k1_Iq_lvrt_during = get_double_data(data[i],"0.0"); i++;
+            k2_Iq_lvrt_during = get_double_data(data[i],"0.0"); i++;
+            Iq_set_lvrt_during = get_double_data(data[i],"0.0"); i++;
+            k_Ip_lvrt_prepare2recover = get_double_data(data[i],"0.0"); i++;
+            Ip_set_lvrt_prepare2recover = get_double_data(data[i],"0.0"); i++;
+            k_Iq_lvrt_prepare2recover = get_double_data(data[i],"0.0"); i++;
+            Iq_set_lvrt_prepare2recover = get_double_data(data[i],"0.0"); i++;
+            kP_lvrt_recover = get_double_data(data[i],"0.0"); i++;
+            TP_lvrt_recover = get_double_data(data[i],"0.0"); i++;
+            kQ_lvrt_recover = get_double_data(data[i],"0.0"); i++;
+            TQ_lvrt_recover = get_double_data(data[i],"0.0"); i++;
+
+            //hvrt
+            hvrt_voltage_threshold = get_double_data(data[i],"0.0"); i++;
+            hvrt_prepare2recover_delay_time = get_double_data(data[i],"0.0"); i++;
+            P_hvrt_during_mode = get_integer_data(data[i],"0"); i++;
+            Q_hvrt_during_mode = get_integer_data(data[i],"0"); i++;
+            P_hvrt_prepare2recover_mode = get_integer_data(data[i],"0"); i++;
+            Q_hvrt_prepare2recover_mode = get_integer_data(data[i],"0"); i++;
+            P_hvrt_recover_mode = get_integer_data(data[i],"0"); i++;
+            Q_hvrt_recover_mode = get_integer_data(data[i],"0"); i++;
+
+            kP_hvrt_during = get_double_data(data[i],"0.0"); i++;
+            P_set_hvrt_during = get_double_data(data[i],"0.0"); i++;
+            k1_Ip_hvrt_during = get_double_data(data[i],"0.0"); i++;
+            k2_Ip_hvrt_during = get_double_data(data[i],"0.0"); i++;
+            Ip_set_hvrt_during = get_double_data(data[i],"0.0"); i++;
+            kQ_hvrt_during = get_double_data(data[i],"0.0"); i++;
+            Q_set_hvrt_during = get_double_data(data[i],"0.0"); i++;
+            k1_Iq_hvrt_during = get_double_data(data[i],"0.0"); i++;
+            k2_Iq_hvrt_during = get_double_data(data[i],"0.0"); i++;
+            Iq_set_hvrt_during = get_double_data(data[i],"0.0"); i++;
+            k_Ip_hvrt_prepare2recover = get_double_data(data[i],"0.0"); i++;
+            Ip_set_hvrt_prepare2recover = get_double_data(data[i],"0.0"); i++;
+            k_Iq_hvrt_prepare2recover = get_double_data(data[i],"0.0"); i++;
+            Iq_set_hvrt_prepare2recover = get_double_data(data[i],"0.0"); i++;
+            kP_hvrt_recover = get_double_data(data[i],"0.0"); i++;
+            TP_hvrt_recover = get_double_data(data[i],"0.0"); i++;
+            kQ_hvrt_recover = get_double_data(data[i],"0.0"); i++;
+            TQ_hvrt_recover = get_double_data(data[i],"0.0"); i++;
+
+
+            //set lvrt
+            set_vrt_voltage_threshold('L', lvrt_voltage_threshold);
+            set_vrt_prepare2recover_delay_time_in_s('L', lvrt_prepare2recover_delay_time);
+
+            VRT_DURING_CONTROL_MODE vrt_during_mode;
+            switch(P_lvrt_during_mode)
             {
                 case 0:
                 {
-                    mode = CONSTANT_VAR_MODE;
+                    vrt_during_mode = VRT_DURING_POWER_CONTROL_MODE;
                     break;
                 }
                 case 1:
                 {
-                    mode = CONSTANT_VOLTAGE_MODE;
+                    vrt_during_mode = VRT_DURING_V_DEPEND_CURRENT_CONTROL_MODE;
                     break;
                 }
-                case -1:
+                case 2:
                 {
-                    mode = CONSTANT_POWER_FACTOR_MODE;
+                    vrt_during_mode = VRT_DURING_CONSTANT_CURRENT_CONTROL_MODE;
                     break;
                 }
                 default:
                 {
-                    mode = CONSTANT_VAR_MODE;
+                    vrt_during_mode = VRT_DURING_LVPL_CURRENT_CONTROL_MODE;
                     break;
                 }
             }
+            set_P_vrt_during_mode('L', vrt_during_mode);
 
-            set_var_control_mode(mode);
-            set_Xcomp_in_pu(xc);
-            set_TRV_in_s(trv);
-            set_Fn(fn);
-            set_KPV(kpv);
-            set_TV_in_s(tv);
-            set_KIV(kiv);
-            set_Qmin_in_pu(qmin);
-            set_Qmax_in_pu(qmax);
-            set_TFV_in_s(tfv);
-            set_TP_in_s(tp);
-            set_KQI(kqi);
-            set_Vmin_in_pu(vmin);
-            set_Vmax_in_pu(vmax);
+            switch(Q_lvrt_during_mode)
+            {
+                case 0:
+                {
+                    vrt_during_mode = VRT_DURING_POWER_CONTROL_MODE;
+                    break;
+                }
+                case 1:
+                {
+                    vrt_during_mode = VRT_DURING_V_DEPEND_CURRENT_CONTROL_MODE;
+                    break;
+                }
+                case 2:
+                {
+                    vrt_during_mode = VRT_DURING_CONSTANT_CURRENT_CONTROL_MODE;
+                    break;
+                }
+                default:
+                {
+                    vrt_during_mode = VRT_DURING_LVPL_CURRENT_CONTROL_MODE;
+                    break;
+                }
+            }
+            set_Q_vrt_during_mode('L', vrt_during_mode);
 
-            if(voltage_flag>2)
-                voltage_flag = 2;
-            set_voltage_flag(voltage_flag);
-            set_KQV(kqv);
-            set_EQmin_in_pu(eqmin);
-            set_EQmax_in_pu(eqmax);
-            set_Tspeed_in_s(tspeed);
-            set_KPP(kpp);
-            set_KIP(kip);
-            set_Kvi(kvi);
-            set_Tvi_in_s(tvi);
-            set_Kdroop(kdroop);
-            set_Tdroop_in_s(tdroop);
-            set_frequency_deviation_lower_deadband_in_pu(flower);
-            set_frequency_deviation_upper_deadband_in_pu(fupper);
-            set_Kfint(kint);
-            set_rPmin_in_pu(rpmin);
-            set_rPmax_in_pu(rpmax);
-            set_TFP_in_s(tfp);
-            set_Pmin_in_pu(pmin);
-            set_Pmax_in_pu(pmax);
-            set_IPmax_in_pu(ipmax);
+            VRT_PREPARE2RECOVER_CONTROL_MODE vrt_prepare2recover_mode;
+            switch(P_lvrt_prepare2recover_mode)
+            {
+                case 0:
+                {
+                    vrt_prepare2recover_mode = VRT_PREPARE2RECOVER_INITIAL_CURRENT_CONTROL_MODE;
+                    break;
+                }
+                case 1:
+                {
+                    vrt_prepare2recover_mode = VRT_PREPARE2RECOVER_FAULTED_CURRENT_CONTROL_MODE;
+                    break;
+                }
+                default:
+                {
+                    vrt_prepare2recover_mode = VRT_PREPARE2RECOVER_FAULTED_POWER_CONTROL_MODE;
+                    break;
+                }
+            }
+            set_P_vrt_prepare2recover_mode('L',vrt_prepare2recover_mode);
+
+            switch(Q_lvrt_prepare2recover_mode)
+            {
+                case 0:
+                {
+                    vrt_prepare2recover_mode = VRT_PREPARE2RECOVER_INITIAL_CURRENT_CONTROL_MODE;
+                    break;
+                }
+                case 1:
+                {
+                    vrt_prepare2recover_mode = VRT_PREPARE2RECOVER_FAULTED_CURRENT_CONTROL_MODE;
+                    break;
+                }
+                default:
+                {
+                    vrt_prepare2recover_mode = VRT_PREPARE2RECOVER_FAULTED_POWER_CONTROL_MODE;
+                    break;
+                }
+            }
+            set_Q_vrt_prepare2recover_mode('L',vrt_prepare2recover_mode);
+
+            VRT_RECOVER_CONTROL_MODE vrt_recover_mode;
+            switch(P_lvrt_recover_mode)
+            {
+                case 0:
+                {
+                    vrt_recover_mode = VRT_RECOVER_LINEAR_CONTROL_MODE;
+                    break;
+                }
+                default:
+                {
+                    vrt_recover_mode = VRT_RECOVER_EXPOENTIAL_CONTROL_MODE;
+                    break;
+                }
+            }
+            set_P_vrt_recover_mode('L', vrt_recover_mode);
+
+            switch(Q_lvrt_recover_mode)
+            {
+                case 0:
+                {
+                    vrt_recover_mode = VRT_RECOVER_LINEAR_CONTROL_MODE;
+                    break;
+                }
+                default:
+                {
+                    vrt_recover_mode = VRT_RECOVER_EXPOENTIAL_CONTROL_MODE;
+                    break;
+                }
+            }
+            set_Q_vrt_recover_mode('L', vrt_recover_mode);
+
+            set_kP_vrt_during('L', kP_lvrt_during);
+            set_P_set_vrt_during_in_pu('L',P_set_lvrt_during);
+            set_k1_Ip_vrt_during('L',k1_Ip_lvrt_during);
+            set_k2_Ip_vrt_during('L',k2_Ip_lvrt_during);
+            set_Ip_set_vrt_during_in_pu('L',Ip_set_lvrt_during);
+            set_LVPL_low_voltage_in_pu(LVPL_low_vlotage);
+            set_LVPL_high_voltage_in_pu(LVPL_high_voltage);
+            set_LVPL_gain_at_high_voltage(LVPL_gain_at_high_voltage);
+
+            set_kQ_vrt_during('L',kQ_lvrt_during);
+            set_Q_set_vrt_during_in_pu('L',Q_set_lvrt_during);
+            set_k1_Iq_vrt_during('L',k1_Iq_lvrt_during);
+            set_k2_Iq_vrt_during('L',k2_Iq_lvrt_during);
+            set_Iq_set_vrt_during_in_pu('L',Iq_set_lvrt_during);
+
+            set_k_Ip_prepare2recover('L',k_Ip_lvrt_prepare2recover);
+            set_Ip_set_prepare2recover('L',Ip_set_lvrt_prepare2recover);
+            set_k_Iq_prepare2recover('L',k_Iq_lvrt_prepare2recover);
+            set_Iq_set_prepare2recover('L',Iq_set_lvrt_prepare2recover);
+            set_P_recover_slope_in_pu_per_s('L',kP_lvrt_recover);
+            set_P_recover_inertia_in_s('L',TP_lvrt_recover);
+            set_Q_recover_slope_in_pu_per_s('L',kQ_lvrt_recover);
+            set_Q_recover_inertia_in_s('L',TQ_lvrt_recover);
+
+            //set hvrt
+
+            set_vrt_voltage_threshold('H', hvrt_voltage_threshold);
+            set_vrt_prepare2recover_delay_time_in_s('H', hvrt_prepare2recover_delay_time);
+
+            switch(P_hvrt_during_mode)
+            {
+                case 0:
+                {
+                    vrt_during_mode = VRT_DURING_POWER_CONTROL_MODE;
+                    break;
+                }
+                case 1:
+                {
+                    vrt_during_mode = VRT_DURING_V_DEPEND_CURRENT_CONTROL_MODE;
+                    break;
+                }
+                default:
+                {
+                    vrt_during_mode = VRT_DURING_CONSTANT_CURRENT_CONTROL_MODE;
+                    break;
+                }
+            }
+            set_P_vrt_during_mode('H', vrt_during_mode);
+
+            switch(Q_hvrt_during_mode)
+            {
+                case 0:
+                {
+                    vrt_during_mode = VRT_DURING_POWER_CONTROL_MODE;
+                    break;
+                }
+                case 1:
+                {
+                    vrt_during_mode = VRT_DURING_V_DEPEND_CURRENT_CONTROL_MODE;
+                    break;
+                }
+                case 2:
+                {
+                    vrt_during_mode = VRT_DURING_CONSTANT_CURRENT_CONTROL_MODE;
+                    break;
+                }
+                default:
+                {
+                    vrt_during_mode = VRT_DURING_LVPL_CURRENT_CONTROL_MODE;
+                    break;
+                }
+            }
+            set_Q_vrt_during_mode('H', vrt_during_mode);
+
+            switch(P_hvrt_prepare2recover_mode)
+            {
+                case 0:
+                {
+                    vrt_prepare2recover_mode = VRT_PREPARE2RECOVER_INITIAL_CURRENT_CONTROL_MODE;
+                    break;
+                }
+                case 1:
+                {
+                    vrt_prepare2recover_mode = VRT_PREPARE2RECOVER_FAULTED_CURRENT_CONTROL_MODE;
+                    break;
+                }
+                default:
+                {
+                    vrt_prepare2recover_mode = VRT_PREPARE2RECOVER_FAULTED_POWER_CONTROL_MODE;
+                    break;
+                }
+            }
+            set_P_vrt_prepare2recover_mode('H', vrt_prepare2recover_mode);
+
+            switch(Q_hvrt_prepare2recover_mode)
+            {
+                case 0:
+                {
+                    vrt_prepare2recover_mode = VRT_PREPARE2RECOVER_INITIAL_CURRENT_CONTROL_MODE;
+                    break;
+                }
+                case 1:
+                {
+                    vrt_prepare2recover_mode = VRT_PREPARE2RECOVER_FAULTED_CURRENT_CONTROL_MODE;
+                    break;
+                }
+                default:
+                {
+                    vrt_prepare2recover_mode = VRT_PREPARE2RECOVER_FAULTED_POWER_CONTROL_MODE;
+                    break;
+                }
+            }
+            set_Q_vrt_prepare2recover_mode('H', vrt_prepare2recover_mode);
+
+
+            switch(P_hvrt_recover_mode)
+            {
+                case 0:
+                {
+                    vrt_recover_mode = VRT_RECOVER_LINEAR_CONTROL_MODE;
+                    break;
+                }
+                default:
+                {
+                    vrt_recover_mode = VRT_RECOVER_EXPOENTIAL_CONTROL_MODE;
+                    break;
+                }
+            }
+            set_P_vrt_recover_mode('H', vrt_recover_mode);
+
+            switch(Q_hvrt_recover_mode)
+            {
+                case 0:
+                {
+                    vrt_recover_mode = VRT_RECOVER_LINEAR_CONTROL_MODE;
+                    break;
+                }
+                default:
+                {
+                    vrt_recover_mode = VRT_RECOVER_EXPOENTIAL_CONTROL_MODE;
+                    break;
+                }
+            }
+            set_Q_vrt_recover_mode('H', vrt_recover_mode);
+
+            set_kP_vrt_during('H',kP_hvrt_during);
+            set_P_set_vrt_during_in_pu('H',P_set_hvrt_during);
+            set_k1_Ip_vrt_during('H',k1_Ip_hvrt_during);
+            set_k2_Ip_vrt_during('H',k2_Ip_hvrt_during);
+            set_Ip_set_vrt_during_in_pu('H',Ip_set_hvrt_during);
+
+            set_kQ_vrt_during('H',kQ_hvrt_during);
+            set_Q_set_vrt_during_in_pu('H',Q_set_hvrt_during);
+            set_k1_Iq_vrt_during('H',k1_Iq_hvrt_during);
+            set_k2_Iq_vrt_during('H',k2_Iq_hvrt_during);
+            set_Iq_set_vrt_during_in_pu('H',Iq_set_hvrt_during);
+
+            set_k_Ip_prepare2recover('H',k_Ip_hvrt_prepare2recover);
+            set_Ip_set_prepare2recover('H',Ip_set_hvrt_prepare2recover);
+            set_k_Iq_prepare2recover('H',k_Iq_hvrt_prepare2recover);
+            set_Iq_set_prepare2recover('H',Iq_set_hvrt_prepare2recover);
+            set_P_recover_slope_in_pu_per_s('H',kP_hvrt_recover);
+            set_P_recover_inertia_in_s('H',TP_hvrt_recover);
+            set_Q_recover_slope_in_pu_per_s('H',kQ_hvrt_recover);
+            set_Q_recover_inertia_in_s('H',TQ_hvrt_recover);
 
             is_successful = true;
 
@@ -583,10 +936,10 @@ void WTVRT3::initialize()
         Iq0 = wtelecmodel->get_reactive_current_command_in_pu_based_on_mbase();
 
         lvrt.set_vrt_status(VRT_NORMAL_STATUS);
-        lvrt.update_PQI0_in_vrt_normal_status(P0, Q0, Ip0, Iq0);
+        lvrt.update_PQI0_in_vrt_during_status(P0, Q0, Ip0, Iq0);
 
         hvrt.set_vrt_status(VRT_NORMAL_STATUS);
-        hvrt.update_PQI0_in_vrt_normal_status(P0, Q0, Ip0, Iq0);
+        hvrt.update_PQI0_in_vrt_during_status(P0, Q0, Ip0, Iq0);
 
         set_flag_model_initialized_as_true();
         if(toolkit.is_detailed_log_enabled())
@@ -605,101 +958,120 @@ void WTVRT3::run(DYNAMIC_MODE mode)
 {
     if(mode == UPDATE_MODE)
     {
-        lvrt.check_vrt_status();
-        hvrt.check_vrt_status();
+        if(hvrt.get_vrt_status() == VRT_NORMAL_STATUS)
+            lvrt.check_vrt_status();
+        if(lvrt.get_vrt_status() == VRT_NORMAL_STATUS)
+            hvrt.check_vrt_status();
+
 
         WT_GENERATOR* wt_generator = get_wt_generator_pointer();
         WT_ELECTRICAL_MODEL* wtelecmodel = wt_generator->get_wt_electrical_model();
 
         double P0, Q0, Ip0, Iq0;
 
-        switch(lvrt.get_vrt_status()
+        switch(lvrt.get_vrt_status())
         {
             case VRT_NORMAL_STATUS:
+            {
                 P0 = wtelecmodel->get_active_power_command_in_pu_based_on_mbase();
                 Q0 = wtelecmodel->get_reactive_power_command_in_pu_based_on_mbase();
                 Ip0 = wtelecmodel->get_active_current_command_in_pu_based_on_mbase();
                 Iq0 = wtelecmodel->get_reactive_current_command_in_pu_based_on_mbase();
-                lvrt.update_PQI0_in_vrt_normal_status(P0, Q0, Ip0, Iq0);
-                break;
-            case VRT_DURING_STATUS:
-                P0 = get_active_power_command_in_pu_based_on_mbase();
-                Q0 = get_reactive_power_command_in_pu_based_on_mbase();
-                Ip0 = get_active_current_command_in_pu_based_on_mbase();
-                Iq0 = get_reactive_current_command_in_pu_based_on_mbase();
                 lvrt.update_PQI0_in_vrt_during_status(P0, Q0, Ip0, Iq0);
                 break;
-            case VRT_PREPARE2RECOVER_STATUS:
+            }
+            case VRT_DURING_STATUS:
+            {
                 P0 = get_active_power_command_in_pu_based_on_mbase();
                 Q0 = get_reactive_power_command_in_pu_based_on_mbase();
                 Ip0 = get_active_current_command_in_pu_based_on_mbase();
                 Iq0 = get_reactive_current_command_in_pu_based_on_mbase();
                 lvrt.update_PQI0_in_vrt_prepare2recover_status(P0, Q0, Ip0, Iq0);
                 break;
-            case VRT_RECOVER_STATUS:
-            default:
+            }
+            case VRT_PREPARE2RECOVER_STATUS:
+            {
                 P0 = get_active_power_command_in_pu_based_on_mbase();
                 Q0 = get_reactive_power_command_in_pu_based_on_mbase();
                 Ip0 = get_active_current_command_in_pu_based_on_mbase();
                 Iq0 = get_reactive_current_command_in_pu_based_on_mbase();
                 lvrt.update_PQI0_in_vrt_recover_status(P0, Q0, Ip0, Iq0);
                 break;
+            }
+            case VRT_RECOVER_STATUS:
+            default:
+                break;
         }
-        switch(hvrt.get_vrt_status()
+        switch(hvrt.get_vrt_status())
         {
             case VRT_NORMAL_STATUS:
+            {
                 P0 = wtelecmodel->get_active_power_command_in_pu_based_on_mbase();
                 Q0 = wtelecmodel->get_reactive_power_command_in_pu_based_on_mbase();
                 Ip0 = wtelecmodel->get_active_current_command_in_pu_based_on_mbase();
                 Iq0 = wtelecmodel->get_reactive_current_command_in_pu_based_on_mbase();
-                hvrt.update_PQI0_in_vrt_normal_status(P0, Q0, Ip0, Iq0);
-                break;
-            case VRT_DURING_STATUS:
-                P0 = get_active_power_command_in_pu_based_on_mbase();
-                Q0 = get_reactive_power_command_in_pu_based_on_mbase();
-                Ip0 = get_active_current_command_in_pu_based_on_mbase();
-                Iq0 = get_reactive_current_command_in_pu_based_on_mbase();
                 hvrt.update_PQI0_in_vrt_during_status(P0, Q0, Ip0, Iq0);
                 break;
-            case VRT_PREPARE2RECOVER_STATUS:
+            }
+            case VRT_DURING_STATUS:
+            {
                 P0 = get_active_power_command_in_pu_based_on_mbase();
                 Q0 = get_reactive_power_command_in_pu_based_on_mbase();
                 Ip0 = get_active_current_command_in_pu_based_on_mbase();
                 Iq0 = get_reactive_current_command_in_pu_based_on_mbase();
                 hvrt.update_PQI0_in_vrt_prepare2recover_status(P0, Q0, Ip0, Iq0);
                 break;
-            case VRT_RECOVER_STATUS:
-            default:
+            }
+            case VRT_PREPARE2RECOVER_STATUS:
+            {
                 P0 = get_active_power_command_in_pu_based_on_mbase();
                 Q0 = get_reactive_power_command_in_pu_based_on_mbase();
                 Ip0 = get_active_current_command_in_pu_based_on_mbase();
                 Iq0 = get_reactive_current_command_in_pu_based_on_mbase();
                 hvrt.update_PQI0_in_vrt_recover_status(P0, Q0, Ip0, Iq0);
                 break;
+            }
+            case VRT_RECOVER_STATUS:
+            default:
+                break;
         }
         set_flag_model_updated_as_true();
     }
 }
 
+VRT_STATUS WTVRT3::get_lvrt_status() const
+{
+    return lvrt.get_vrt_status();
+}
+
+VRT_STATUS WTVRT3::get_hvrt_status() const
+{
+    return hvrt.get_vrt_status();
+}
 
 double WTVRT3::get_active_current_command_in_pu_based_on_mbase()
 {
     double vterm = get_terminal_bus_voltage_in_pu();
     if(vterm==0.0)
         return 0.0;
-
-    double pcmd = get_active_power_command_in_pu_based_on_mbase();
-    return pcmd/vterm;
-}
-
-double WTVRT3::get_active_power_command_in_pu_based_on_mbase() const
-{
+    if(lvrt.get_vrt_status()!=VRT_NORMAL_STATUS)
+        return lvrt.get_vrt_Ip_command();
+    if(hvrt.get_vrt_status()!=VRT_NORMAL_STATUS)
+        return hvrt.get_vrt_Ip_command();
     if(lvrt.get_vrt_status()==VRT_NORMAL_STATUS and hvrt.get_vrt_status()==VRT_NORMAL_STATUS)
         return 0.0;
+    return 0.0;
+}
+
+double WTVRT3::get_active_power_command_in_pu_based_on_mbase()
+{
     if(lvrt.get_vrt_status()!=VRT_NORMAL_STATUS)
         return lvrt.get_vrt_P_command();
     if(hvrt.get_vrt_status()!=VRT_NORMAL_STATUS)
         return hvrt.get_vrt_P_command();
+    if(lvrt.get_vrt_status()==VRT_NORMAL_STATUS and hvrt.get_vrt_status()==VRT_NORMAL_STATUS)
+        return 0.0;
+    return 0.0;
 }
 
 double WTVRT3::get_reactive_current_command_in_pu_based_on_mbase()
@@ -707,24 +1079,34 @@ double WTVRT3::get_reactive_current_command_in_pu_based_on_mbase()
     double vterm = get_terminal_bus_voltage_in_pu();
     if(vterm==0.0)
         return 0.0;
-
-    double qcmd = get_reactive_power_command_in_pu_based_on_mbase();
-    return qcmd/vterm;
+    if(lvrt.get_vrt_status()!=VRT_NORMAL_STATUS)
+        return lvrt.get_vrt_Iq_command();
+    if(hvrt.get_vrt_status()!=VRT_NORMAL_STATUS)
+        return hvrt.get_vrt_Iq_command();
+    if(lvrt.get_vrt_status()==VRT_NORMAL_STATUS and hvrt.get_vrt_status()==VRT_NORMAL_STATUS)
+        return 0.0;
+    return 0.0;
 }
 
 double WTVRT3::get_reactive_power_command_in_pu_based_on_mbase()
 {
-    if(lvrt.get_vrt_status()==VRT_NORMAL_STATUS and hvrt.get_vrt_status()==VRT_NORMAL_STATUS)
-        return 0.0;
     if(lvrt.get_vrt_status()!=VRT_NORMAL_STATUS)
         return lvrt.get_vrt_Q_command();
     if(hvrt.get_vrt_status()!=VRT_NORMAL_STATUS)
         return hvrt.get_vrt_Q_command();
+    if(lvrt.get_vrt_status()==VRT_NORMAL_STATUS and hvrt.get_vrt_status()==VRT_NORMAL_STATUS)
+        return 0.0;
+    return 0.0;
 }
 
-double WTVRT3::get_reactive_voltage_command_in_pu() const
+double WTVRT3::get_reactive_voltage_command_in_pu()
 {
-    return 0.0;
+    WT_GENERATOR* gen = get_wt_generator_pointer();
+    double xeq = gen->get_source_impedance_in_pu().imag();
+
+    double Iqcmd = get_reactive_current_command_in_pu_based_on_mbase();
+
+    return Iqcmd*(-xeq);
 }
 
 void WTVRT3::check()
@@ -754,93 +1136,358 @@ string WTVRT3::get_standard_psse_string(bool export_internal_bus_number) const
 
     string model_name = "'"+get_model_name()+"'";
 
-    unsigned int bus_reg = get_bus_to_regulate();
-    PE_VAR_CONTROL_MODE mode = get_var_control_mode();
-    int var_mode = (mode==CONSTANT_VAR_MODE)? 0: (mode==CONSTANT_POWER_FACTOR_MODE? -1 : 1);
-    unsigned int voltage_flag = get_voltage_flag();
-    double xc = get_Xcomp_in_pu();
-    double trv = get_TRV_in_s();
-    double fn = get_Fn();
-    double kpv = get_KPV();
-    double tv = get_TV_in_s();
-    double kiv = get_KIV();
-    double qmax = get_Qmax_in_pu();
-    double qmin = get_Qmin_in_pu();
-    double tfv = get_TFV_in_s();
-    double tp = get_TP_in_s();
-    double kqi = get_KQI();
-    double vmin = get_Vmin_in_pu();
-    double vmax = get_Vmax_in_pu();
-    double kqv = get_KQV();
-    double eqmin = get_EQmin_in_pu();
-    double eqmax = get_EQmax_in_pu();
-    double tspeed = get_Tspeed_in_s();
-    double kpp = get_KPP();
-    double kip = get_KIP();
-    double kvi = get_Kvi();
-    double tvi = get_Tvi_in_s();
-    double kdroop = get_Kdroop();
-    double tdroop = get_Tdroop_in_s();
-    double flower = get_frequency_deviation_lower_deadband_in_pu();
-    double fupper = get_frequency_deviation_upper_deadband_in_pu();
-    double kint = get_Kfint();
-    double rpmin = get_rPmin_in_pu();
-    double rpmax = get_rPmax_in_pu();
-    double tfp = get_TFP_in_s();
-    double pmin = get_Pmin_in_pu();
-    double pmax = get_Pmax_in_pu();
-    double ipmax = get_IPmax_in_pu();
+    double lvrt_voltage_threshold = get_vrt_voltage_threshold('L');
+    double lvrt_prepare2recover_delay_time = get_vrt_prepare2recover_delay_time_in_s('L');
+    unsigned int P_lvrt_during_mode, Q_lvrt_during_mode;
+    switch(get_P_vrt_during_mode('L'))
+    {
+        case VRT_DURING_POWER_CONTROL_MODE:
+        {
+            P_lvrt_during_mode = 0;
+            break;
+        }
+        case VRT_DURING_V_DEPEND_CURRENT_CONTROL_MODE:
+        {
+            P_lvrt_during_mode = 1;
+            break;
+        }
+        case VRT_DURING_CONSTANT_CURRENT_CONTROL_MODE:
+        {
+            P_lvrt_during_mode = 2;
+            break;
+        }
+        default:
+        {
+            P_lvrt_during_mode = 3;
+            break;
+        }
+    }
+
+    switch(get_Q_vrt_during_mode('L'))
+    {
+        case VRT_DURING_POWER_CONTROL_MODE:
+        {
+            Q_lvrt_during_mode = 0;
+            break;
+        }
+        case VRT_DURING_V_DEPEND_CURRENT_CONTROL_MODE:
+        {
+            Q_lvrt_during_mode = 1;
+            break;
+        }
+        case VRT_DURING_CONSTANT_CURRENT_CONTROL_MODE:
+        {
+            Q_lvrt_during_mode = 2;
+            break;
+        }
+        default:
+        {
+            Q_lvrt_during_mode = 3;
+            break;
+        }
+    }
+
+    unsigned int P_lvrt_prepare2recover_mode, Q_lvrt_prepare2recover_mode;
+    switch(get_P_vrt_prepare2recover_mode('L'))
+    {
+        case VRT_PREPARE2RECOVER_INITIAL_CURRENT_CONTROL_MODE:
+        {
+            P_lvrt_prepare2recover_mode = 0;
+            break;
+        }
+        case VRT_PREPARE2RECOVER_FAULTED_CURRENT_CONTROL_MODE:
+        {
+            P_lvrt_prepare2recover_mode = 1;
+            break;
+        }
+        default:
+        {
+            P_lvrt_prepare2recover_mode = 2;
+            break;
+        }
+    }
+
+    switch(get_Q_vrt_prepare2recover_mode('L'))
+    {
+        case VRT_PREPARE2RECOVER_INITIAL_CURRENT_CONTROL_MODE:
+        {
+            Q_lvrt_prepare2recover_mode = 0;
+            break;
+        }
+        case VRT_PREPARE2RECOVER_FAULTED_CURRENT_CONTROL_MODE:
+        {
+            Q_lvrt_prepare2recover_mode = 1;
+            break;
+        }
+        default:
+        {
+            Q_lvrt_prepare2recover_mode = 2;
+            break;
+        }
+    }
+    unsigned int P_lvrt_recover_mode, Q_lvrt_recover_mode;
+
+    switch(get_P_vrt_recover_mode('L'))
+    {
+        case VRT_RECOVER_LINEAR_CONTROL_MODE:
+        {
+            P_lvrt_recover_mode = 0;
+            break;
+        }
+        default:
+        {
+            P_lvrt_recover_mode = 1;
+            break;
+        }
+    }
+
+    switch(get_Q_vrt_recover_mode('L'))
+    {
+        case VRT_RECOVER_LINEAR_CONTROL_MODE:
+        {
+            Q_lvrt_recover_mode = 0;
+            break;
+        }
+        default:
+        {
+            Q_lvrt_recover_mode = 1;
+            break;
+        }
+    }
+
+    double kP_lvrt_during = get_kP_vrt_during('L');
+    double P_set_lvrt_during = get_P_set_vrt_during_in_pu('L');
+    double k1_Ip_lvrt_during = get_k1_Ip_vrt_during('L');
+    double k2_Ip_lvrt_during = get_k2_Ip_vrt_during('L');
+    double Ip_set_lvrt_during = get_Ip_set_vrt_during_in_pu('L');
+    double LVPL_low_voltage = get_LVPL_low_voltage_in_pu();
+    double LVPL_high_voltage = get_LVPL_high_voltage_in_pu();
+    double LVPL_gain_at_high_voltage = get_LVPL_gain_at_high_voltage();
+
+    double kQ_lvrt_during = get_kQ_vrt_during('L');
+    double Q_set_lvrt_during = get_Q_set_vrt_during_in_pu('L');
+    double k1_Iq_lvrt_during = get_k1_Iq_vrt_during('L');
+    double k2_Iq_lvrt_during = get_k2_Iq_vrt_during('L');
+    double Iq_set_lvrt_during = get_Iq_set_vrt_during_in_pu('L');
+
+    double k_Ip_lvrt_prepare2recover = get_k_Ip_prepare2recover('L');
+    double Ip_set_lvrt_prepare2recover = get_Ip_set_prepare2recover('L');
+    double k_Iq_lvrt_prepare2recover = get_k_Iq_prepare2recover('L');
+    double Iq_set_lvrt_prepare2recover = get_Iq_set_prepare2recover('L');
+    double kP_lvrt_recover = get_P_recover_slope_in_pu_per_s('L');
+    double TP_lvrt_recover = get_P_recover_inertia_in_s('L');
+    double kQ_lvrt_recover= get_Q_recover_slope_in_pu_per_s('L');
+    double TQ_lvrt_recover = get_Q_recover_inertia_in_s('L');
+
+    //hvrt
+    double hvrt_voltage_threshold = get_vrt_voltage_threshold('H');
+    double hvrt_prepare2recover_delay_time = get_vrt_prepare2recover_delay_time_in_s('H');
+    unsigned int P_hvrt_during_mode, Q_hvrt_during_mode;
+    switch(get_P_vrt_during_mode('H'))
+    {
+        case VRT_DURING_POWER_CONTROL_MODE:
+        {
+            P_hvrt_during_mode = 0;
+            break;
+        }
+        case VRT_DURING_V_DEPEND_CURRENT_CONTROL_MODE:
+        {
+            P_hvrt_during_mode = 1;
+            break;
+        }
+        default:
+        {
+            P_hvrt_during_mode = 2;
+            break;
+        }
+    }
+
+    switch(get_Q_vrt_during_mode('H'))
+    {
+        case VRT_DURING_POWER_CONTROL_MODE:
+        {
+            Q_hvrt_during_mode = 0;
+            break;
+        }
+        case VRT_DURING_V_DEPEND_CURRENT_CONTROL_MODE:
+        {
+            Q_hvrt_during_mode = 1;
+            break;
+        }
+        case VRT_DURING_CONSTANT_CURRENT_CONTROL_MODE:
+        {
+            Q_hvrt_during_mode = 2;
+            break;
+        }
+        default:
+        {
+            Q_hvrt_during_mode = 3;
+            break;
+        }
+    }
+
+    unsigned int P_hvrt_prepare2recover_mode, Q_hvrt_prepare2recover_mode;
+    switch(get_P_vrt_prepare2recover_mode('H'))
+    {
+        case VRT_PREPARE2RECOVER_INITIAL_CURRENT_CONTROL_MODE:
+        {
+            P_hvrt_prepare2recover_mode = 0;
+            break;
+        }
+        case VRT_PREPARE2RECOVER_FAULTED_CURRENT_CONTROL_MODE:
+        {
+            P_hvrt_prepare2recover_mode = 1;
+            break;
+        }
+        default:
+        {
+            P_hvrt_prepare2recover_mode = 2;
+            break;
+        }
+    }
+
+    switch(get_Q_vrt_prepare2recover_mode('H'))
+    {
+        case VRT_PREPARE2RECOVER_INITIAL_CURRENT_CONTROL_MODE:
+        {
+            Q_hvrt_prepare2recover_mode = 0;
+            break;
+        }
+        case VRT_PREPARE2RECOVER_FAULTED_CURRENT_CONTROL_MODE:
+        {
+            Q_hvrt_prepare2recover_mode = 1;
+            break;
+        }
+        default:
+        {
+            Q_hvrt_prepare2recover_mode = 2;
+            break;
+        }
+    }
+    unsigned int P_hvrt_recover_mode, Q_hvrt_recover_mode;
+
+    switch(get_P_vrt_recover_mode('H'))
+    {
+        case VRT_RECOVER_LINEAR_CONTROL_MODE:
+        {
+            P_hvrt_recover_mode = 0;
+            break;
+        }
+        default:
+        {
+            P_hvrt_recover_mode = 1;
+            break;
+        }
+    }
+
+    switch(get_Q_vrt_recover_mode('H'))
+    {
+        case VRT_RECOVER_LINEAR_CONTROL_MODE:
+        {
+            Q_hvrt_recover_mode = 0;
+            break;
+        }
+        default:
+        {
+            Q_hvrt_recover_mode = 1;
+            break;
+        }
+    }
+
+    double kP_hvrt_during = get_kP_vrt_during('H');
+    double P_set_hvrt_during = get_P_set_vrt_during_in_pu('H');
+    double k1_Ip_hvrt_during = get_k1_Ip_vrt_during('H');
+    double k2_Ip_hvrt_during = get_k2_Ip_vrt_during('H');
+    double Ip_set_hvrt_during = get_Ip_set_vrt_during_in_pu('H');
+
+    double kQ_hvrt_during = get_kQ_vrt_during('H');
+    double Q_set_hvrt_during = get_Q_set_vrt_during_in_pu('H');
+    double k1_Iq_hvrt_during = get_k1_Iq_vrt_during('H');
+    double k2_Iq_hvrt_during = get_k2_Iq_vrt_during('H');
+    double Iq_set_hvrt_during = get_Iq_set_vrt_during_in_pu('H');
+
+    double k_Ip_hvrt_prepare2recover = get_k_Ip_prepare2recover('H');
+    double Ip_set_hvrt_prepare2recover = get_Ip_set_prepare2recover('H');
+    double k_Iq_hvrt_prepare2recover = get_k_Iq_prepare2recover('H');
+    double Iq_set_hvrt_prepare2recover = get_Iq_set_prepare2recover('H');
+    double kP_hvrt_recover = get_P_recover_slope_in_pu_per_s('H');
+    double TP_hvrt_recover = get_P_recover_inertia_in_s('H');
+    double kQ_hvrt_recover= get_Q_recover_slope_in_pu_per_s('H');
+    double TQ_hvrt_recover = get_Q_recover_inertia_in_s('H');
+
 
     STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network = toolkit.get_network_matrix();
     if(export_internal_bus_number==true)
     {
         bus = network.get_internal_bus_number_of_physical_bus(bus)+1;
-        if(bus_reg!=0) bus_reg = network.get_internal_bus_number_of_physical_bus(bus_reg)+1;
     }
 
     osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "
             <<setw(6)<<identifier<<", "
-            <<setw(8)<<bus_reg<<", "
-            <<setw(8)<<var_mode<<", "
-            <<setw(8)<<voltage_flag<<", "
-            <<setw(8)<<setprecision(6)<<xc<<", "
-            <<setw(8)<<setprecision(6)<<trv<<", "
-            <<setw(8)<<setprecision(6)<<fn<<", "
-            <<setw(8)<<setprecision(6)<<kpv<<", \n"
+            <<setw(8)<<setprecision(6)<<lvrt_voltage_threshold<<", "
+            <<setw(8)<<setprecision(6)<<lvrt_prepare2recover_delay_time<<", "
+            <<setw(8)<<P_lvrt_during_mode<<", "
+            <<setw(8)<<Q_lvrt_during_mode<<", "
+            <<setw(8)<<P_lvrt_prepare2recover_mode<<", "
+            <<setw(8)<<Q_lvrt_prepare2recover_mode<<", "
+            <<setw(8)<<P_lvrt_recover_mode<<", "
+            <<setw(8)<<Q_lvrt_recover_mode<<", \n"
             <<setw(10)<<""
-            <<setw(8)<<setprecision(6)<<tv<<", "
-            <<setw(8)<<setprecision(6)<<kiv<<", "
-            <<setw(8)<<setprecision(6)<<qmin<<", "
-            <<setw(8)<<setprecision(6)<<qmax<<", "
-            <<setw(8)<<setprecision(6)<<tfv<<", "
-            <<setw(8)<<setprecision(6)<<tp<<", "
-            <<setw(8)<<setprecision(6)<<kqi<<", "
-            <<setw(8)<<setprecision(6)<<vmin<<", "
-            <<setw(8)<<setprecision(6)<<vmax<<", \n"
+            <<setw(8)<<setprecision(6)<<kP_lvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<P_set_lvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<k1_Ip_lvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<k2_Ip_lvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<Ip_set_lvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<LVPL_low_voltage<<", "
+            <<setw(8)<<setprecision(6)<<LVPL_high_voltage<<", "
+            <<setw(8)<<setprecision(6)<<LVPL_gain_at_high_voltage<<", \n"
             <<setw(10)<<""
-            <<setw(8)<<setprecision(6)<<kqv<<", "
-            <<setw(8)<<setprecision(6)<<eqmin<<", "
-            <<setw(8)<<setprecision(6)<<eqmax<<", "
-            <<setw(8)<<setprecision(6)<<tspeed<<", "
-            <<setw(8)<<setprecision(6)<<kpp<<", "
-            <<setw(8)<<setprecision(6)<<kip<<", "
-            <<setw(8)<<setprecision(6)<<kvi<<", "
-            <<setw(8)<<setprecision(6)<<tvi<<", "
-            <<setw(8)<<setprecision(6)<<kdroop<<", \n"
+            <<setw(8)<<setprecision(6)<<kQ_lvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<Q_set_lvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<k1_Iq_lvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<k2_Iq_lvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<Iq_set_lvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<k_Ip_lvrt_prepare2recover<<", "
+            <<setw(8)<<setprecision(6)<<Ip_set_lvrt_prepare2recover<<", "
+            <<setw(8)<<setprecision(6)<<k_Iq_lvrt_prepare2recover<<", "
+            <<setw(8)<<setprecision(6)<<Iq_set_lvrt_prepare2recover<<", \n"
             <<setw(10)<<""
-            <<setw(8)<<setprecision(6)<<tdroop<<", "
-            <<setw(8)<<setprecision(6)<<flower<<", "
-            <<setw(8)<<setprecision(6)<<fupper<<", "
-            <<setw(8)<<setprecision(6)<<kint<<", "
-            <<setw(8)<<setprecision(6)<<rpmin<<", "
-            <<setw(8)<<setprecision(6)<<rpmax<<", "
-            <<setw(8)<<setprecision(6)<<tfp<<", "
-            <<setw(8)<<setprecision(6)<<pmin<<", "
-            <<setw(8)<<setprecision(6)<<pmax<<", \n"
+            <<setw(8)<<setprecision(6)<<kP_lvrt_recover<<", "
+            <<setw(8)<<setprecision(6)<<TP_lvrt_recover<<", "
+            <<setw(8)<<setprecision(6)<<kQ_lvrt_recover<<", "
+            <<setw(8)<<setprecision(6)<<TQ_lvrt_recover<<", \n"
             <<setw(10)<<""
-            <<setw(8)<<setprecision(6)<<ipmax<<" / ";
+            <<setw(8)<<setprecision(6)<<hvrt_voltage_threshold<<", "
+            <<setw(8)<<setprecision(6)<<hvrt_prepare2recover_delay_time<<", "
+            <<setw(8)<<P_hvrt_during_mode<<", "
+            <<setw(8)<<Q_hvrt_during_mode<<", "
+            <<setw(8)<<P_hvrt_prepare2recover_mode<<", "
+            <<setw(8)<<Q_hvrt_prepare2recover_mode<<", "
+            <<setw(8)<<P_hvrt_recover_mode<<", "
+            <<setw(8)<<Q_hvrt_recover_mode<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<kP_hvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<P_set_hvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<k1_Ip_hvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<k2_Ip_hvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<Ip_set_hvrt_during<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<kQ_hvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<Q_set_hvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<k1_Iq_hvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<k2_Iq_hvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<Iq_set_hvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<k_Ip_hvrt_prepare2recover<<", "
+            <<setw(8)<<setprecision(6)<<Ip_set_hvrt_prepare2recover<<", "
+            <<setw(8)<<setprecision(6)<<k_Iq_hvrt_prepare2recover<<", "
+            <<setw(8)<<setprecision(6)<<Iq_set_hvrt_prepare2recover<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<kP_hvrt_recover<<", "
+            <<setw(8)<<setprecision(6)<<TP_hvrt_recover<<", "
+            <<setw(8)<<setprecision(6)<<kQ_hvrt_recover<<", "
+            <<setw(8)<<setprecision(6)<<TQ_hvrt_recover<<" /";
 
     return osstream.str();
 }
@@ -849,82 +1496,126 @@ void WTVRT3::prepare_model_data_table()
 {
     clear_model_data_table();
     unsigned int i=0;
-    add_model_data_name_and_index_pair("BUS TO REGULATE", i); i++;
-    add_model_data_name_and_index_pair("VAR CONTROL FLAG", i); i++;
-    add_model_data_name_and_index_pair("VOLTAGE FLAG", i); i++;
-    add_model_data_name_and_index_pair("XCOMP IN PU", i); i++;
-    add_model_data_name_and_index_pair("T VOLTAGE SENSOR IN S", i); i++;
-    add_model_data_name_and_index_pair("FN", i); i++;
-    add_model_data_name_and_index_pair("KP VOLTAGE ERROR", i); i++;
-    add_model_data_name_and_index_pair("TP VOLTAGE ERROR", i); i++;
-    add_model_data_name_and_index_pair("KI VOLTAGE ERROR", i); i++;
-    add_model_data_name_and_index_pair("QMIN IN PU", i); i++;
-    add_model_data_name_and_index_pair("QMAX IN PU", i); i++;
-    add_model_data_name_and_index_pair("T REACTIVE POWER FILTER IN S", i); i++;
-    add_model_data_name_and_index_pair("T ACTIVE POWER SENSOR IN S", i); i++;
-    add_model_data_name_and_index_pair("KI REACTIVE POWER ERROR", i); i++;
-    add_model_data_name_and_index_pair("VMIN IN PU", i); i++;
-    add_model_data_name_and_index_pair("VMAX IN PU", i); i++;
-    add_model_data_name_and_index_pair("KI VOLTAGE COMMAND", i); i++;
-    add_model_data_name_and_index_pair("EQMIN IN PU", i); i++;
-    add_model_data_name_and_index_pair("EQMAX IN PU", i); i++;
-    add_model_data_name_and_index_pair("T SPEED SENSOR IN S", i); i++;
-    add_model_data_name_and_index_pair("KP SPEED", i); i++;
-    add_model_data_name_and_index_pair("KI SPEED", i); i++;
-    add_model_data_name_and_index_pair("K VIRTUAL INERTIA", i); i++;
-    add_model_data_name_and_index_pair("T VIRTUAL INERTIA IN S", i); i++;
-    add_model_data_name_and_index_pair("K FREQUENCY DROOP", i); i++;
-    add_model_data_name_and_index_pair("T FREQUENCY DROOP IN S", i); i++;
-    add_model_data_name_and_index_pair("F LOWER IN PU", i); i++;
-    add_model_data_name_and_index_pair("F UPPER IN PU", i); i++;
-    add_model_data_name_and_index_pair("K SECONDARY FREQUENCY REGULATION", i); i++;
-    add_model_data_name_and_index_pair("P RATE MIN IN PU/S", i); i++;
-    add_model_data_name_and_index_pair("P RATE MAX IN PU/S", i); i++;
-    add_model_data_name_and_index_pair("T ACTIVE POWER COMMAND IN S", i); i++;
-    add_model_data_name_and_index_pair("PMIN IN PU", i); i++;
-    add_model_data_name_and_index_pair("PMAX IN PU", i); i++;
-    add_model_data_name_and_index_pair("ACTIVE CURRENT MAX IN PU", i); i++;
+    //lvrt
+    add_model_data_name_and_index_pair("LVRT VOLTAGE THRESHOLD", i); i++;
+    add_model_data_name_and_index_pair("LVRT PREPARE2RECOVER DELAY TIME", i); i++;
+    add_model_data_name_and_index_pair("P LVRT DURING MODE", i); i++;
+    add_model_data_name_and_index_pair("Q LVRT DURING MODE", i); i++;
+    add_model_data_name_and_index_pair("P LVRT PREPARE2RECOVER MODE", i); i++;
+    add_model_data_name_and_index_pair("Q LVRT PREPARE2RECOVER MODE", i); i++;
+    add_model_data_name_and_index_pair("P LVRT RECOVER MODE", i); i++;
+    add_model_data_name_and_index_pair("Q LVRT RECOVER MODE", i); i++;
+    add_model_data_name_and_index_pair("KP LVRT DURING", i); i++;
+    add_model_data_name_and_index_pair("P SET LVRT DURING IN PU", i); i++;
+    add_model_data_name_and_index_pair("K1 IP LVRT DURING", i); i++;
+    add_model_data_name_and_index_pair("K2 IP LVRT DURING", i); i++;
+    add_model_data_name_and_index_pair("IP SET LVRT DURING IN PU", i); i++;
+    add_model_data_name_and_index_pair("LVPL LOW VOLTAGE", i); i++;
+    add_model_data_name_and_index_pair("LVPL HIGH VOLTAGE", i); i++;
+    add_model_data_name_and_index_pair("LVPL GAIN AT HIGH VOLTAGE", i); i++;
+    add_model_data_name_and_index_pair("KQ LVRT DURING", i); i++;
+    add_model_data_name_and_index_pair("Q SET LVRT DURING IN PU", i); i++;
+    add_model_data_name_and_index_pair("K1 IQ LVRT DURING", i); i++;
+    add_model_data_name_and_index_pair("K2 IQ LVRT DURING", i); i++;
+    add_model_data_name_and_index_pair("IQ SET LVRT DURING", i); i++;
+    add_model_data_name_and_index_pair("K IP LVRT PREPARE2RECOVER", i); i++;
+    add_model_data_name_and_index_pair("IP SET LVRT PREPARE2RECOVER IN PU", i); i++;
+    add_model_data_name_and_index_pair("K IQ LVRT PREPARE2RECOVER", i); i++;
+    add_model_data_name_and_index_pair("IQ SET LVRT PREPARE2RECOVER IN PU", i); i++;
+    add_model_data_name_and_index_pair("KP LVRT RECOVER IN PU PER S", i); i++;
+    add_model_data_name_and_index_pair("TP LVRT RECOVER IN S", i); i++;
+    add_model_data_name_and_index_pair("KQ LVRT RECOVER IN PU PER S", i); i++;
+    add_model_data_name_and_index_pair("TQ LVRT RECOVER IN S", i); i++;
+    //hvrt
+    add_model_data_name_and_index_pair("HVRT VOLTAGE THRESHOLD", i); i++;
+    add_model_data_name_and_index_pair("HVRT PREPARE2RECOVER DELAY TIME", i); i++;
+    add_model_data_name_and_index_pair("P HVRT DURING MODE", i); i++;
+    add_model_data_name_and_index_pair("Q HVRT DURING MODE", i); i++;
+    add_model_data_name_and_index_pair("P HVRT PREPARE2RECOVER MODE", i); i++;
+    add_model_data_name_and_index_pair("Q HVRT PREPARE2RECOVER MODE", i); i++;
+    add_model_data_name_and_index_pair("P HVRT RECOVER MODE", i); i++;
+    add_model_data_name_and_index_pair("Q HVRT RECOVER MODE", i); i++;
+    add_model_data_name_and_index_pair("KP HVRT DURING", i); i++;
+    add_model_data_name_and_index_pair("P SET HVRT DURING IN PU", i); i++;
+    add_model_data_name_and_index_pair("K1 IP HVRT DURING", i); i++;
+    add_model_data_name_and_index_pair("K2 IP HVRT DURING", i); i++;
+    add_model_data_name_and_index_pair("IP SET HVRT DURING IN PU", i); i++;
+    add_model_data_name_and_index_pair("KQ HVRT DURING", i); i++;
+    add_model_data_name_and_index_pair("Q SET HVRT DURING IN PU", i); i++;
+    add_model_data_name_and_index_pair("K1 IQ HVRT DURING", i); i++;
+    add_model_data_name_and_index_pair("K2 IQ HVRT DURING", i); i++;
+    add_model_data_name_and_index_pair("IQ SET HVRT DURING", i); i++;
+    add_model_data_name_and_index_pair("K IP HVRT PREPARE2RECOVER", i); i++;
+    add_model_data_name_and_index_pair("IP SET HVRT PREPARE2RECOVER IN PU", i); i++;
+    add_model_data_name_and_index_pair("K IQ HVRT PREPARE2RECOVER", i); i++;
+    add_model_data_name_and_index_pair("IQ SET HVRT PREPARE2RECOVER IN PU", i); i++;
+    add_model_data_name_and_index_pair("KP HVRT RECOVER IN PU PER S", i); i++;
+    add_model_data_name_and_index_pair("TP HVRT RECOVER IN S", i); i++;
+    add_model_data_name_and_index_pair("KQ HVRT RECOVER IN PU PER S", i); i++;
+    add_model_data_name_and_index_pair("TQ LVRT RECOVER IN S", i); i++;
 }
 
 double WTVRT3::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
+    //lvrt
+    if(par_name == "LVRT VOLTAGE THRESHOLD") return get_vrt_voltage_threshold('L');
+    if(par_name == "LVRT PREPARE2RECOVER DELAY TIME") return get_vrt_prepare2recover_delay_time_in_s('L');
+    if(par_name == "P LVRT DURING MODE") return get_P_vrt_during_mode('L');
+    if(par_name == "Q LVRT DURING MODE") return get_Q_vrt_during_mode('L');
+    if(par_name == "P LVRT PREPARE2RECOVER MODE") return get_P_vrt_prepare2recover_mode('L');
+    if(par_name == "Q LVRT PREPARE2RECOVER MODE") return get_Q_vrt_prepare2recover_mode('L');
+    if(par_name == "P LVRT RECOVER MODE") return get_P_vrt_recover_mode('L');
+    if(par_name == "Q LVRT RECOVER MODE") return get_Q_vrt_recover_mode('L');
+    if(par_name == "KP LVRT DURING") return  get_kP_vrt_during('L');
+    if(par_name == "P SET LVRT DURING IN PU") return get_P_set_vrt_during_in_pu('L');
+    if(par_name == "K1 IP LVRT DURING") return get_k1_Ip_vrt_during('L');
+    if(par_name == "K2 IP LVRT DURING") return get_k2_Ip_vrt_during('L');
+    if(par_name == "IP SET LVRT DURING IN PU") return get_Ip_set_vrt_during_in_pu('L');
+    if(par_name == "LVPL LOW VOLTAGE") return get_LVPL_low_voltage_in_pu();
+    if(par_name == "LVPL HIGH VOLTAGE") return get_LVPL_high_voltage_in_pu();
+    if(par_name == "LVPL GAIN AT HIGH VOLTAGE") return get_LVPL_gain_at_high_voltage();
+    if(par_name == "KQ LVRT DURING") return get_kQ_vrt_during('L');
+    if(par_name == "Q SET LVRT DURING IN PU") return get_Q_set_vrt_during_in_pu('L');
+    if(par_name == "K1 IQ LVRT DURING") return get_k1_Iq_vrt_during('L');
+    if(par_name == "K2 IQ LVRT DURING") return get_k2_Iq_vrt_during('L');
+    if(par_name == "IQ SET LVRT DURING") return get_Iq_set_vrt_during_in_pu('L');
+    if(par_name == "K IP LVRT PREPARE2RECOVER") return get_k_Ip_prepare2recover('L');
+    if(par_name == "IP SET LVRT PREPARE2RECOVER IN PU") return get_Ip_set_prepare2recover('L');
+    if(par_name == "K IQ LVRT PREPARE2RECOVER") return get_k_Iq_prepare2recover('L');
+    if(par_name == "IQ SET LVRT PREPARE2RECOVER IN PU") return get_Iq_set_prepare2recover('L');
+    if(par_name == "KP LVRT RECOVER IN PU PER S") return get_P_recover_slope_in_pu_per_s('L');
+    if(par_name == "TP LVRT RECOVER IN S") return get_P_recover_inertia_in_s('L');
+    if(par_name == "KQ LVRT RECOVER IN PU PER S") return get_Q_recover_slope_in_pu_per_s('L');
+    if(par_name == "TQ LVRT RECOVER IN S") return get_Q_recover_inertia_in_s('L');
 
-    if(par_name == "BUS TO REGULATE")  return get_bus_to_regulate();
-    if(par_name == "VAR CONTROL FLAG") return get_var_control_mode();
-    if(par_name == "VOLTAGE FLAG")     return get_voltage_flag();
-    if(par_name == "XCOMP IN PU")           return get_Xcomp_in_pu();
-    if(par_name == "T VOLTAGE SENSOR IN S") return get_TRV_in_s();
-    if(par_name == "FN")                    return get_Fn();
-    if(par_name == "KP VOLTAGE ERROR")      return get_KPV();
-    if(par_name == "TP VOLTAGE ERROR")      return get_TV_in_s();
-    if(par_name == "KI VOLTAGE ERROR")      return get_KIV();
-    if(par_name == "QMIN IN PU")            return get_Qmin_in_pu();
-    if(par_name == "QMAX IN PU")            return get_Qmax_in_pu();
-    if(par_name == "T REACTIVE POWER FILTER IN S")  return get_TFV_in_s();
-    if(par_name == "T ACTIVE POWER SENSOR IN S")    return get_TP_in_s();
-    if(par_name == "KI REACTIVE POWER ERROR")       return get_KQI();
-    if(par_name == "VMIN IN PU")                    return get_Vmin_in_pu();
-    if(par_name == "VMAX IN PU")                    return get_Vmax_in_pu();
-    if(par_name == "KI VOLTAGE COMMAND")            return get_KQV();
-    if(par_name == "EQMIN IN PU")                   return get_EQmin_in_pu();
-    if(par_name == "EQMAX IN PU")                   return get_EQmax_in_pu();
-    if(par_name == "T SPEED SENSOR IN S")           return get_Tspeed_in_s();
-    if(par_name == "KP SPEED")                      return get_KPP();
-    if(par_name == "KI SPEED")                      return get_KIP();
-    if(par_name == "K VIRTUAL INERTIA")             return get_Kvi();
-    if(par_name == "T VIRTUAL INERTIA IN S")        return get_Tvi_in_s();
-    if(par_name == "K FREQUENCY DROOP")             return get_Kdroop();
-    if(par_name == "T FREQUENCY DROOP IN S")        return get_Tdroop_in_s();
-    if(par_name == "F LOWER IN PU")                 return get_frequency_deviation_lower_deadband_in_pu();
-    if(par_name == "F UPPER IN PU")                 return get_frequency_deviation_upper_deadband_in_pu();
-    if(par_name == "K SECONDARY FREQUENCY REGULATION") return get_Kfint();
-    if(par_name == "P RATE MIN IN PU/S")               return get_rPmin_in_pu();
-    if(par_name == "P RATE MAX IN PU/S")               return get_rPmax_in_pu();
-    if(par_name == "T ACTIVE POWER COMMAND IN S")      return get_TFP_in_s();
-    if(par_name == "PMIN IN PU")                       return get_Pmin_in_pu();
-    if(par_name == "PMAX IN PU")                       return get_Pmax_in_pu();
-    if(par_name == "ACTIVE CURRENT MAX IN PU")         return get_IPmax_in_pu();
+    //hvrt
+    if(par_name == "HVRT VOLTAGE THRESHOLD") return get_vrt_voltage_threshold('H');
+    if(par_name == "HVRT PREPARE2RECOVER DELAY TIME") return get_vrt_prepare2recover_delay_time_in_s('H');
+    if(par_name == "P HVRT DURING MODE") return get_P_vrt_during_mode('H');
+    if(par_name == "Q HVRT DURING MODE") return get_Q_vrt_during_mode('H');
+    if(par_name == "P HVRT PREPARE2RECOVER MODE") return get_P_vrt_prepare2recover_mode('H');
+    if(par_name == "Q HVRT PREPARE2RECOVER MODE") return get_Q_vrt_prepare2recover_mode('H');
+    if(par_name == "P HVRT RECOVER MODE") return get_P_vrt_recover_mode('H');
+    if(par_name == "Q HVRT RECOVER MODE") return get_Q_vrt_recover_mode('H');
+    if(par_name == "KP HVRT DURING") return get_kP_vrt_during('H');
+    if(par_name == "P SET HVRT DURING IN PU") return get_P_set_vrt_during_in_pu('H');
+    if(par_name == "K1 IP HVRT DURING") return get_k1_Ip_vrt_during('H');
+    if(par_name == "K2 IP HVRT DURING") return get_k2_Ip_vrt_during('H');
+    if(par_name == "IP SET HVRT DURING IN PU") return get_Ip_set_vrt_during_in_pu('H');
+    if(par_name == "KQ HVRT DURING") return get_kQ_vrt_during('H');
+    if(par_name == "Q SET HVRT DURING IN PU") return get_Q_set_vrt_during_in_pu('H');
+    if(par_name == "K1 IQ HVRT DURING") return get_k1_Iq_vrt_during('H');
+    if(par_name == "K2 IQ HVRT DURING") return get_k2_Iq_vrt_during('H');
+    if(par_name == "IQ SET HVRT DURING") return get_Iq_set_vrt_during_in_pu('H');
+    if(par_name == "K IP HVRT PREPARE2RECOVER") return get_k_Ip_prepare2recover('H');
+    if(par_name == "IP SET HVRT PREPARE2RECOVER IN PU") return get_Ip_set_prepare2recover('H');
+    if(par_name == "K IQ HVRT PREPARE2RECOVER") return get_k_Iq_prepare2recover('H');
+    if(par_name == "IQ SET HVRT PREPARE2RECOVER IN PU") return get_Iq_set_prepare2recover('H');
+    if(par_name == "KP HVRT RECOVER IN PU PER S") return get_P_recover_slope_in_pu_per_s('H');
+    if(par_name == "TP HVRT RECOVER IN S") return get_P_recover_inertia_in_s('H');
+    if(par_name == "KQ HVRT RECOVER IN PU PER S") return get_Q_recover_slope_in_pu_per_s('H');
+    if(par_name == "TQ LVRT RECOVER IN S") return get_Q_recover_inertia_in_s('H');
 
     STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
@@ -934,68 +1625,255 @@ double WTVRT3::get_model_data_with_name(string par_name) const
 void WTVRT3::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-
-    if(par_name == "BUS TO REGULATE") return set_bus_to_regulate((unsigned int)(value));
-
-    if(par_name == "VAR CONTROL FLAG")
+    //lvrt
+    if(par_name == "LVRT VOLTAGE THRESHOLD") return set_vrt_voltage_threshold('L', value);
+    if(par_name == "LVRT PREPARE2RECOVER DELAY TIME") return set_vrt_prepare2recover_delay_time_in_s('L', value);
+    if(par_name == "P LVRT DURING MODE")
     {
-        int ivalue = int(value);
-        PE_VAR_CONTROL_MODE mode = CONSTANT_VAR_MODE;
-        switch(ivalue)
+        VRT_DURING_CONTROL_MODE p_lvrt_during_mode;
+        switch(int(value))
         {
             case 0:
-                mode = CONSTANT_VAR_MODE;
+                p_lvrt_during_mode = VRT_DURING_POWER_CONTROL_MODE;
                 break;
             case 1:
-                mode = CONSTANT_VOLTAGE_MODE;
+                p_lvrt_during_mode = VRT_DURING_V_DEPEND_CURRENT_CONTROL_MODE;
                 break;
-            case -1:
-                mode = CONSTANT_POWER_FACTOR_MODE;
+            case 2:
+                p_lvrt_during_mode = VRT_DURING_CONSTANT_CURRENT_CONTROL_MODE;
                 break;
             default:
-                mode = CONSTANT_VAR_MODE;
+                p_lvrt_during_mode = VRT_DURING_LVPL_CURRENT_CONTROL_MODE;
                 break;
         }
-        return set_var_control_mode(mode);
+        return set_P_vrt_during_mode('L', p_lvrt_during_mode);
+    }
+    if(par_name == "Q LVRT DURING MODE")
+    {
+        VRT_DURING_CONTROL_MODE q_lvrt_during_mode;
+        switch(int(value))
+        {
+            case 0:
+                q_lvrt_during_mode = VRT_DURING_POWER_CONTROL_MODE;
+                break;
+            case 1:
+                q_lvrt_during_mode = VRT_DURING_V_DEPEND_CURRENT_CONTROL_MODE;
+                break;
+            default:
+                q_lvrt_during_mode = VRT_DURING_CONSTANT_CURRENT_CONTROL_MODE;
+                break;
+        }
+        return set_Q_vrt_during_mode('L', q_lvrt_during_mode);
+    }
+    if(par_name == "P LVRT PREPARE2RECOVER MODE")
+    {
+        VRT_PREPARE2RECOVER_CONTROL_MODE p_lvrt_prepare2recover_mode;
+        switch(int(value))
+        {
+            case 0:
+                p_lvrt_prepare2recover_mode = VRT_PREPARE2RECOVER_INITIAL_CURRENT_CONTROL_MODE;
+                break;
+            case 1:
+                p_lvrt_prepare2recover_mode = VRT_PREPARE2RECOVER_FAULTED_CURRENT_CONTROL_MODE;
+                break;
+            default:
+                p_lvrt_prepare2recover_mode = VRT_PREPARE2RECOVER_FAULTED_POWER_CONTROL_MODE;
+                break;
+        }
+        return set_P_vrt_prepare2recover_mode('L', p_lvrt_prepare2recover_mode);
     }
 
-    if(par_name == "VOLTAGE FLAG")
+    if(par_name == "Q LVRT PREPARE2RECOVER MODE")
     {
-        unsigned int flag = (unsigned int)(value);
-        return set_voltage_flag(flag);
+        VRT_PREPARE2RECOVER_CONTROL_MODE q_lvrt_prepare2recover_mode;
+        switch(int(value))
+        {
+            case 0:
+                q_lvrt_prepare2recover_mode = VRT_PREPARE2RECOVER_INITIAL_CURRENT_CONTROL_MODE;
+                break;
+            case 1:
+                q_lvrt_prepare2recover_mode = VRT_PREPARE2RECOVER_FAULTED_CURRENT_CONTROL_MODE;
+                break;
+            default:
+                q_lvrt_prepare2recover_mode = VRT_PREPARE2RECOVER_FAULTED_POWER_CONTROL_MODE;
+                break;
+        }
+        return set_Q_vrt_prepare2recover_mode('L', q_lvrt_prepare2recover_mode);
     }
-    if(par_name == "XCOMP IN PU")           return set_Xcomp_in_pu(value);
-    if(par_name == "T VOLTAGE SENSOR IN S") return set_TRV_in_s(value);
-    if(par_name == "FN")                    return set_Fn(value);
-    if(par_name == "KP VOLTAGE ERROR")      return set_KPV(value);
-    if(par_name == "TP VOLTAGE ERROR")      return set_TV_in_s(value);
-    if(par_name == "KI VOLTAGE ERROR")      return set_KIV(value);
-    if(par_name == "QMIN IN PU")            return set_Qmin_in_pu(value);
-    if(par_name == "QMAX IN PU")            return set_Qmax_in_pu(value);
-    if(par_name == "T REACTIVE POWER FILTER IN S")  return set_TFV_in_s(value);
-    if(par_name == "T ACTIVE POWER SENSOR IN S")    return set_TP_in_s(value);
-    if(par_name == "KI REACTIVE POWER ERROR")       return set_KQI(value);
-    if(par_name == "VMIN IN PU")                    return set_Vmin_in_pu(value);
-    if(par_name == "VMAX IN PU")                    return set_Vmax_in_pu(value);
-    if(par_name == "KI VOLTAGE COMMAND")            return set_KQV(value);
-    if(par_name == "EQMIN IN PU")                   return set_EQmin_in_pu(value);
-    if(par_name == "EQMAX IN PU")                   return set_EQmax_in_pu(value);
-    if(par_name == "T SPEED SENSOR IN S")           return set_Tspeed_in_s(value);
-    if(par_name == "KP SPEED")                      return set_KPP(value);
-    if(par_name == "KI SPEED")                      return set_KIP(value);
-    if(par_name == "K VIRTUAL INERTIA")             return set_Kvi(value);
-    if(par_name == "T VIRTUAL INERTIA IN S")        return set_Tvi_in_s(value);
-    if(par_name == "K FREQUENCY DROOP")             return set_Kdroop(value);
-    if(par_name == "T FREQUENCY DROOP IN S")        return set_Tdroop_in_s(value);
-    if(par_name == "F LOWER IN PU")                 return set_frequency_deviation_lower_deadband_in_pu(value);
-    if(par_name == "F UPPER IN PU")                 return set_frequency_deviation_upper_deadband_in_pu(value);
-    if(par_name == "K SECONDARY FREQUENCY REGULATION") return set_Kfint(value);
-    if(par_name == "P RATE MIN IN PU/S")               return set_rPmin_in_pu(value);
-    if(par_name == "P RATE MAX IN PU/S")               return set_rPmax_in_pu(value);
-    if(par_name == "T ACTIVE POWER COMMAND IN S")      return set_TFP_in_s(value);
-    if(par_name == "PMIN IN PU")                       return set_Pmin_in_pu(value);
-    if(par_name == "PMAX IN PU")                       return set_Pmax_in_pu(value);
-    if(par_name == "ACTIVE CURRENT MAX IN PU")         return set_IPmax_in_pu(value);
+    if(par_name == "P LVRT RECOVER MODE")
+    {
+        VRT_RECOVER_CONTROL_MODE p_lvrt_recover_mode;
+        switch(int(value))
+        {
+            case 0:
+                p_lvrt_recover_mode = VRT_RECOVER_LINEAR_CONTROL_MODE;
+                break;
+            default:
+                p_lvrt_recover_mode = VRT_RECOVER_EXPOENTIAL_CONTROL_MODE;
+                break;
+        }
+        return set_P_vrt_recover_mode('L', p_lvrt_recover_mode);
+    }
+    if(par_name == "Q LVRT RECOVER MODE")
+    {
+        VRT_RECOVER_CONTROL_MODE q_lvrt_recover_mode;
+        switch(int(value))
+        {
+            case 0:
+                q_lvrt_recover_mode = VRT_RECOVER_LINEAR_CONTROL_MODE;
+                break;
+            default:
+                q_lvrt_recover_mode = VRT_RECOVER_EXPOENTIAL_CONTROL_MODE;
+                break;
+        }
+        return set_Q_vrt_recover_mode('L', q_lvrt_recover_mode);
+    }
+
+    if(par_name == "KP LVRT DURING") return  set_kP_vrt_during('L', value);
+    if(par_name == "P SET LVRT DURING IN PU") return set_P_set_vrt_during_in_pu('L', value);
+    if(par_name == "K1 IP LVRT DURING") return set_k1_Ip_vrt_during('L', value);
+    if(par_name == "K2 IP LVRT DURING") return set_k2_Ip_vrt_during('L', value);
+    if(par_name == "IP SET LVRT DURING IN PU") return set_Ip_set_vrt_during_in_pu('L', value);
+    if(par_name == "LVPL LOW VOLTAGE") return set_LVPL_low_voltage_in_pu(value);
+    if(par_name == "LVPL HIGH VOLTAGE") return set_LVPL_high_voltage_in_pu(value);
+    if(par_name == "LVPL GAIN AT HIGH VOLTAGE") return set_LVPL_gain_at_high_voltage(value);
+    if(par_name == "KQ LVRT DURING") return set_kQ_vrt_during('L', value);
+    if(par_name == "Q SET LVRT DURING IN PU") return set_Q_set_vrt_during_in_pu('L', value);
+    if(par_name == "K1 IQ LVRT DURING") return set_k1_Iq_vrt_during('L', value);
+    if(par_name == "K2 IQ LVRT DURING") return set_k2_Iq_vrt_during('L', value);
+    if(par_name == "IQ SET LVRT DURING") return set_Iq_set_vrt_during_in_pu('L', value);
+    if(par_name == "K IP LVRT PREPARE2RECOVER") return set_k_Ip_prepare2recover('L', value);
+    if(par_name == "IP SET LVRT PREPARE2RECOVER IN PU") return set_Ip_set_prepare2recover('L', value);
+    if(par_name == "K IQ LVRT PREPARE2RECOVER") return set_k_Iq_prepare2recover('L', value);
+    if(par_name == "IQ SET LVRT PREPARE2RECOVER IN PU") return set_Iq_set_prepare2recover('L', value);
+    if(par_name == "KP LVRT RECOVER IN PU PER S") return set_P_recover_slope_in_pu_per_s('L', value);
+    if(par_name == "TP LVRT RECOVER IN S") return set_P_recover_inertia_in_s('L', value);
+    if(par_name == "KQ LVRT RECOVER IN PU PER S") return set_Q_recover_slope_in_pu_per_s('L', value);
+    if(par_name == "TQ LVRT RECOVER IN S") return set_Q_recover_inertia_in_s('L', value);
+
+    //hvrt
+    if(par_name == "HVRT VOLTAGE THRESHOLD") return set_vrt_voltage_threshold('H', value);
+    if(par_name == "HVRT PREPARE2RECOVER DELAY TIME") return set_vrt_prepare2recover_delay_time_in_s('H', value);
+
+    if(par_name == "P HVRT DURING MODE")
+    {
+        VRT_DURING_CONTROL_MODE p_hvrt_during_mode;
+        switch(int(value))
+        {
+            case 0:
+                p_hvrt_during_mode = VRT_DURING_POWER_CONTROL_MODE;
+                break;
+            case 1:
+                p_hvrt_during_mode = VRT_DURING_V_DEPEND_CURRENT_CONTROL_MODE;
+                break;
+            case 2:
+                p_hvrt_during_mode = VRT_DURING_CONSTANT_CURRENT_CONTROL_MODE;
+                break;
+            default:
+                p_hvrt_during_mode = VRT_DURING_LVPL_CURRENT_CONTROL_MODE;
+                break;
+        }
+        return set_P_vrt_during_mode('H', p_hvrt_during_mode);
+    }
+    if(par_name == "Q HVRT DURING MODE")
+    {
+        VRT_DURING_CONTROL_MODE q_hvrt_during_mode;
+        switch(int(value))
+        {
+            case 0:
+                q_hvrt_during_mode = VRT_DURING_POWER_CONTROL_MODE;
+                break;
+            case 1:
+                q_hvrt_during_mode = VRT_DURING_V_DEPEND_CURRENT_CONTROL_MODE;
+                break;
+            default:
+                q_hvrt_during_mode = VRT_DURING_CONSTANT_CURRENT_CONTROL_MODE;
+                break;
+        }
+        return set_Q_vrt_during_mode('H', q_hvrt_during_mode);
+    }
+    if(par_name == "P HVRT PREPARE2RECOVER MODE")
+    {
+        VRT_PREPARE2RECOVER_CONTROL_MODE p_hvrt_prepare2recover_mode;
+        switch(int(value))
+        {
+            case 0:
+                p_hvrt_prepare2recover_mode = VRT_PREPARE2RECOVER_INITIAL_CURRENT_CONTROL_MODE;
+                break;
+            case 1:
+                p_hvrt_prepare2recover_mode = VRT_PREPARE2RECOVER_FAULTED_CURRENT_CONTROL_MODE;
+                break;
+            default:
+                p_hvrt_prepare2recover_mode = VRT_PREPARE2RECOVER_FAULTED_POWER_CONTROL_MODE;
+                break;
+        }
+        return set_P_vrt_prepare2recover_mode('H', p_hvrt_prepare2recover_mode);
+    }
+
+    if(par_name == "Q HVRT PREPARE2RECOVER MODE")
+    {
+        VRT_PREPARE2RECOVER_CONTROL_MODE q_hvrt_prepare2recover_mode;
+        switch(int(value))
+        {
+            case 0:
+                q_hvrt_prepare2recover_mode = VRT_PREPARE2RECOVER_INITIAL_CURRENT_CONTROL_MODE;
+                break;
+            case 1:
+                q_hvrt_prepare2recover_mode = VRT_PREPARE2RECOVER_FAULTED_CURRENT_CONTROL_MODE;
+                break;
+            default:
+                q_hvrt_prepare2recover_mode = VRT_PREPARE2RECOVER_FAULTED_POWER_CONTROL_MODE;
+                break;
+        }
+        return set_Q_vrt_prepare2recover_mode('H', q_hvrt_prepare2recover_mode);
+    }
+    if(par_name == "P HVRT RECOVER MODE")
+    {
+        VRT_RECOVER_CONTROL_MODE p_hvrt_recover_mode;
+        switch(int(value))
+        {
+            case 0:
+                p_hvrt_recover_mode = VRT_RECOVER_LINEAR_CONTROL_MODE;
+                break;
+            default:
+                p_hvrt_recover_mode = VRT_RECOVER_EXPOENTIAL_CONTROL_MODE;
+                break;
+        }
+        return set_P_vrt_recover_mode('H', p_hvrt_recover_mode);
+    }
+    if(par_name == "Q HVRT RECOVER MODE")
+    {
+        VRT_RECOVER_CONTROL_MODE q_hvrt_recover_mode;
+        switch(int(value))
+        {
+            case 0:
+                q_hvrt_recover_mode = VRT_RECOVER_LINEAR_CONTROL_MODE;
+                break;
+            default:
+                q_hvrt_recover_mode = VRT_RECOVER_EXPOENTIAL_CONTROL_MODE;
+                break;
+        }
+        return set_Q_vrt_recover_mode('H', q_hvrt_recover_mode);
+    }
+
+    if(par_name == "KP HVRT DURING") return set_kP_vrt_during('H', value);
+    if(par_name == "P SET HVRT DURING IN PU") return set_P_set_vrt_during_in_pu('H', value);
+    if(par_name == "K1 IP HVRT DURING") return set_k1_Ip_vrt_during('H', value);
+    if(par_name == "K2 IP HVRT DURING") return set_k2_Ip_vrt_during('H', value);
+    if(par_name == "IP SET HVRT DURING IN PU") return set_Ip_set_vrt_during_in_pu('H', value);
+    if(par_name == "KQ HVRT DURING") return set_kQ_vrt_during('H', value);
+    if(par_name == "Q SET HVRT DURING IN PU") return set_Q_set_vrt_during_in_pu('H', value);
+    if(par_name == "K1 IQ HVRT DURING") return set_k1_Iq_vrt_during('H', value);
+    if(par_name == "K2 IQ HVRT DURING") return set_k2_Iq_vrt_during('H', value);
+    if(par_name == "IQ SET HVRT DURING") return set_Iq_set_vrt_during_in_pu('H', value);
+    if(par_name == "K IP HVRT PREPARE2RECOVER") return set_k_Ip_prepare2recover('H', value);
+    if(par_name == "IP SET HVRT PREPARE2RECOVER IN PU") return set_Ip_set_prepare2recover('H', value);
+    if(par_name == "K IQ HVRT PREPARE2RECOVER") return set_k_Iq_prepare2recover('H', value);
+    if(par_name == "IQ SET HVRT PREPARE2RECOVER IN PU") return set_Iq_set_prepare2recover('H', value);
+    if(par_name == "KP HVRT RECOVER IN PU PER S") return set_P_recover_slope_in_pu_per_s('H', value);
+    if(par_name == "TP HVRT RECOVER IN S") return set_P_recover_inertia_in_s('H', value);
+    if(par_name == "KQ HVRT RECOVER IN PU PER S") return set_Q_recover_slope_in_pu_per_s('H', value);
+    if(par_name == "TQ LVRT RECOVER IN S") return set_Q_recover_inertia_in_s('H', value);
 
     STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
@@ -1011,28 +1889,54 @@ void WTVRT3::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
-    add_model_internal_variable_name_and_index_pair("STATE@SPEED REFERENCE SENSOR", i); i++;
-    add_model_internal_variable_name_and_index_pair("STATE@TORQUE REGULATOR", i); i++;
-    add_model_internal_variable_name_and_index_pair("STATE@VIRTUAL INERTIA CONTROL", i); i++;
-    add_model_internal_variable_name_and_index_pair("STATE@PRIMARY FREQUENCY CONTROL", i); i++;
-    add_model_internal_variable_name_and_index_pair("STATE@SECONDARY FREQUENCY CONTROL", i); i++;
-    add_model_internal_variable_name_and_index_pair("VIRTUAL INERTIA CONTROL COMMAND", i); i++;
-    add_model_internal_variable_name_and_index_pair("PRIMARY FREQUENCY CONTROL COMMAND", i); i++;
-    add_model_internal_variable_name_and_index_pair("SECONDARY FREQUENCY CONTROL COMMAND", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@LVRT STATUS", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@HVRT STATUS", i); i++;
+    add_model_internal_variable_name_and_index_pair("OUTPUT@VRT ACTIVE POWER COMMAND IN PU", i); i++;
+    add_model_internal_variable_name_and_index_pair("OUTPUT@VRT REACTIVE POWER COMMAND IN PU", i); i++;
+    add_model_internal_variable_name_and_index_pair("OUTPUT@VRT ACTIVE CURRENT COMMAND IN PU", i); i++;
+    add_model_internal_variable_name_and_index_pair("OUTPUT@VRT REACTIVE CURRENT COMMAND IN PU", i); i++;
+    add_model_internal_variable_name_and_index_pair("OUTPUT@VRT REACTIVE VOLTAGE COMMAND IN PU", i); i++;
 }
 
 double WTVRT3::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
 
-    if(var_name == "STATE@SPEED REFERENCE SENSOR") return wind_turbine_speed_reference_sensor.get_state();
-	if(var_name == "STATE@TORQUE REGULATOR") return torque_PI_regulator.get_state();
-	if(var_name == "STATE@VIRTUAL INERTIA CONTROL") return virtual_inertia_emulator.get_state();
-	if(var_name == "STATE@PRIMARY FREQUENCY CONTROL") return frequency_droop_controller.get_state();
-	if(var_name == "STATE@SECONDARY FREQUENCY CONTROL") return frequency_integral_controller.get_state();
-	if(var_name == "VIRTUAL INERTIA CONTROL COMMAND") return virtual_inertia_emulator.get_output();
-	if(var_name == "PRIMARY FREQUENCY CONTROL COMMAND") return frequency_droop_controller.get_output();
-	if(var_name == "SECONDARY FREQUENCY CONTROL COMMAND") return frequency_integral_controller.get_output();
+    if(var_name == "STATE@LVRT STATUS")
+    {
+        VRT_STATUS lvrt_status = lvrt.get_vrt_status();
+        switch(lvrt_status)
+        {
+            case VRT_NORMAL_STATUS:
+                return double(0);
+            case VRT_DURING_STATUS:
+                return double(1);
+            case VRT_PREPARE2RECOVER_STATUS:
+                return double(2);
+            default:
+                return double(3);
+        }
+    }
+	if(var_name == "STATE@HVRT STATUS")
+    {
+        VRT_STATUS hvrt_status = hvrt.get_vrt_status();
+        switch(hvrt_status)
+        {
+            case VRT_NORMAL_STATUS:
+                return double(0);
+            case VRT_DURING_STATUS:
+                return double(1);
+            case VRT_PREPARE2RECOVER_STATUS:
+                return double(2);
+            default:
+                return double(3);
+        }
+    }
+	if(var_name == "OUTPUT@VRT ACTIVE POWER COMMAND IN PU") return get_active_power_command_in_pu_based_on_mbase();
+	if(var_name == "OUTPUT@VRT REACTIVE POWER COMMAND IN PU") return get_reactive_power_command_in_pu_based_on_mbase();
+	if(var_name == "OUTPUT@VRT ACTIVE CURRENT COMMAND IN PU") return get_active_current_command_in_pu_based_on_mbase();
+	if(var_name == "OUTPUT@VRT REACTIVE CURRENT COMMAND IN PU") return get_reactive_current_command_in_pu_based_on_mbase();
+	if(var_name == "OUTPUT@VRT REACTIVE VOLTAGE COMMAND IN PU") return get_reactive_voltage_command_in_pu();
     return 0.0;
 }
 

@@ -30,6 +30,10 @@ class LVRT_CONTROL_TEST : public Test::Suite
         virtual void test_set_get_vrt_voltage_threshold();
         virtual void test_set_vrt_prepare2recover_delay_time_in_s();
         virtual void test_set_get_vrt_status();
+        virtual void test_set_get_current_Ip_command();
+        virtual void test_set_get_current_Iq_command();
+        virtual void test_set_get_current_P_command();
+        virtual void test_set_get_current_Q_command();
 
         virtual void test_set_get_time_when_vrt_enter_during_status();
         virtual void test_set_get_time_when_vrt_enter_prepare2recover_status();
@@ -49,14 +53,36 @@ class LVRT_CONTROL_TEST : public Test::Suite
 
 
         virtual void test_set_get_PQ_vrt_during_mode();
-        virtual void test_set_get_kP();
-        virtual void test_set_get_P_set_in_pu();
-        virtual void test_set_get_k1_Ip();
-        virtual void test_set_get_k2_Ip();
-        virtual void test_set_get_Ip_set_in_pu();
+        virtual void test_set_get_kP_vrt_during();
+        virtual void test_set_get_P_set_vrt_during_in_pu();
+        virtual void test_set_get_k1_Ip_vrt_during();
+        virtual void test_set_get_k2_Ip_vrt_during();
+        virtual void test_set_get_Ip_set_vrt_during_in_pu();
         virtual void test_set_get_LVPL_low_voltage_in_pu();
         virtual void test_set_get_LVPL_high_voltage_in_pu();
         virtual void test_set_get_LVPL_gain_at_high_voltage();
+        virtual void test_set_get_kQ_vrt_during();
+        virtual void test_set_get_Q_set_vrt_during_in_pu();
+        virtual void test_set_get_k1_Iq_vrt_during();
+        virtual void test_set_get_k2_Iq_vrt_during();
+        virtual void test_set_get_Iq_set_vrt_during_in_pu();
+
+
+        virtual void test_set_get_PQ_vrt_prepare2recover_mode();
+        virtual void test_set_get_k_Ip_prepare2recover();
+        virtual void test_set_get_Ip_set_prepare2recover();
+        virtual void test_set_get_k_Iq_prepare2recover();
+        virtual void test_set_get_Iq_set_prepare2recover();
+
+
+        virtual void test_set_get_PQ_vrt_recover_mode();
+        virtual void test_set_get_Q_recover_slope_in_pu_per_s();
+        virtual void test_set_get_Q_recover_inertia_in_s();
+        virtual void test_set_get_P_recover_slope_in_pu_per_s();
+        virtual void test_set_get_P_recover_inertia_in_s();
+
+
+
         virtual void test_check_vrt_status_basic();
         virtual void test_check_vrt_status_comprehensive();
 

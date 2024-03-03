@@ -16,11 +16,11 @@ class LVRT_CONTROL : public VRT_CONTROL_MODEL
 
     public:
         void set_P_vrt_during_mode(VRT_DURING_CONTROL_MODE m);
-        void set_kP(double k);
-        void set_P_set_in_pu(double p);
-        void set_k1_Ip(double k);
-        void set_k2_Ip(double k);
-        void set_Ip_set_in_pu(double I);
+        void set_kP_vrt_during(double k);
+        void set_P_set_vrt_during_in_pu(double p);
+        void set_k1_Ip_vrt_during(double k);
+        void set_k2_Ip_vrt_during(double k);
+        void set_Ip_set_vrt_during_in_pu(double I);
         void set_LVPL_low_voltage_in_pu(double v);
         void set_LVPL_high_voltage_in_pu(double v);
         void set_LVPL_gain_at_high_voltage(double g);
@@ -34,11 +34,11 @@ class LVRT_CONTROL : public VRT_CONTROL_MODEL
         void set_P_recover_inertia_in_s(double T);
 
         void set_Q_vrt_during_mode(VRT_DURING_CONTROL_MODE m);
-        void set_kQ(double k);
-        void set_Q_set_in_pu(double q);
-        void set_k1_Iq(double k);
-        void set_k2_Iq(double k);
-        void set_Iq_set_in_pu(double I);
+        void set_kQ_vrt_during(double k);
+        void set_Q_set_vrt_during_in_pu(double q);
+        void set_k1_Iq_vrt_during(double k);
+        void set_k2_Iq_vrt_during(double k);
+        void set_Iq_set_vrt_during_in_pu(double I);
 
         void set_Q_vrt_prepare2recover_mode(VRT_PREPARE2RECOVER_CONTROL_MODE m);
         void set_k_Iq_prepare2recover(double k);
@@ -49,11 +49,11 @@ class LVRT_CONTROL : public VRT_CONTROL_MODEL
         void set_Q_recover_inertia_in_s(double T);
 
         VRT_DURING_CONTROL_MODE get_P_vrt_during_mode() const;
-        double get_kP() const;
-        double get_P_set_in_pu() const;
-        double get_k1_Ip() const;
-        double get_k2_Ip() const;
-        double get_Ip_set_in_pu() const;
+        double get_kP_vrt_during() const;
+        double get_P_set_vrt_during_in_pu() const;
+        double get_k1_Ip_vrt_during() const;
+        double get_k2_Ip_vrt_during() const;
+        double get_Ip_set_vrt_during_in_pu() const;
         double get_LVPL_low_voltage_in_pu() const;
         double get_LVPL_high_voltage_in_pu() const;
         double get_LVPL_gain_at_high_voltage() const;
@@ -67,11 +67,11 @@ class LVRT_CONTROL : public VRT_CONTROL_MODEL
         double get_P_recover_inertia_in_s() const;
 
         VRT_DURING_CONTROL_MODE get_Q_vrt_during_mode() const;
-        double get_kQ() const;
-        double get_Q_set_in_pu() const;
-        double get_k1_Iq() const;
-        double get_k2_Iq() const;
-        double get_Iq_set_in_pu() const;
+        double get_kQ_vrt_during() const;
+        double get_Q_set_vrt_during_in_pu() const;
+        double get_k1_Iq_vrt_during() const;
+        double get_k2_Iq_vrt_during() const;
+        double get_Iq_set_vrt_during_in_pu() const;
 
         VRT_PREPARE2RECOVER_CONTROL_MODE get_Q_vrt_prepare2recover_mode() const;
         double get_k_Iq_prepare2recover() const;

@@ -82,15 +82,15 @@ class VRT_CONTROL_MODEL
         double get_Q0_vrt_prepare2recover_activated_in_pu_based_on_mbase() const;
         double get_Q0_vrt_recover_activated_in_pu_based_on_mbase() const;
 
-        void update_PQI0_in_vrt_normal_status(double P0, double Q0, double Ip0, double Iq0);
+        void update_PQI0_in_vrt_during_status(double P0, double Q0, double Ip0, double Iq0);
         void update_PQI0_in_vrt_prepare2recover_status(double P0, double Q0, double Ip0, double Iq0);
         void update_PQI0_in_vrt_recover_status(double P0, double Q0, double Ip0, double Iq0);
     public:
         void  copy_from_const_model(const VRT_CONTROL_MODEL& model);
     public:
         virtual void check_vrt_status() = 0;
-        virtual double get_vrt_P_command()  = 0;
-        virtual double get_vrt_Q_command()  = 0;
+        virtual double get_vrt_P_command() = 0;
+        virtual double get_vrt_Q_command() = 0;
 
         double get_vrt_Ip_command();
         double get_vrt_Iq_command();

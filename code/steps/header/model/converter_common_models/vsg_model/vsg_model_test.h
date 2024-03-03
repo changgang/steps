@@ -14,7 +14,7 @@
 
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
-#include "header/model/converter_common_models/vsg_model/vsg_model2.h"
+#include "header/model/converter_common_models/vsg_model/vsg_model.h"
 using namespace std;
 
 class VSG_MODEL_TEST : public Test::Suite
@@ -22,8 +22,8 @@ class VSG_MODEL_TEST : public Test::Suite
     public:
         VSG_MODEL_TEST();
 
-        VSG_MODEL2* get_test_model();
-        void set_test_model(VSG_MODEL2* model);
+        VSG_MODEL* get_test_model();
+        void set_test_model(VSG_MODEL* model);
 
         void test_set_get_Pref_in_pu_based_on_mbase();
         void test_set_get_Qref_in_pu_based_on_mbase();
@@ -46,7 +46,7 @@ class VSG_MODEL_TEST : public Test::Suite
         virtual void setup();
         virtual void tear_down();
     private:
-        VSG_MODEL2* model;
+        VSG_MODEL* model;
 };
 
 #endif//VSG_MODEL_TEST_H

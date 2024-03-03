@@ -3595,7 +3595,7 @@ void DYNAMICS_SIMULATOR::shed_generator(const DEVICE_ID& gen_id,double percent)
 }
 
 
-void DYNAMICS_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id, unsigned int n)
+void DYNAMICS_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id)
 {
     ostringstream osstream;
 
@@ -3609,34 +3609,13 @@ void DYNAMICS_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id, unsigned int
 
             if(generator->get_status()==true)
             {
-                if(n!=0)
-                {
-                    unsigned int N = generator->get_number_of_lumped_wt_generators();
-                    if(n<N)
-                    {
-                        generator->set_number_of_lumped_wt_generators(N-n);
-                        double mbase = generator->get_mbase_in_MVA();
-                        generator->set_mbase_in_MVA(mbase/N*(N-n));
+                generator->set_status(false);
 
-                        osstream<<n<<" individual generators of "<<generator->get_compound_device_name()<<" are tripped at time "<<TIME<<" s.";
-                        toolkit->show_information_with_leading_time_stamp(osstream);
-                    }
-                    else
-                    {
-                        generator->set_status(false);
+                //network_matrix.build_dynamic_network_Y_matrix();
+                //build_jacobian();
 
-                        osstream<<"All individual generators of "<<generator->get_compound_device_name()<<" are tripped at time "<<TIME<<" s.";
-                        toolkit->show_information_with_leading_time_stamp(osstream);
-                    }
-
-                    //network_matrix.build_dynamic_network_Y_matrix();
-                    //build_jacobian();
-                }
-                else
-                {
-                    osstream<<n<<" = 0, and no individual generators of "<<generator->get_compound_device_name()<<" will be tripped at time "<<TIME<<" s.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
-                }
+                osstream<<generator->get_compound_device_name()<<" is tripped at time "<<TIME<<" s.";
+                toolkit->show_information_with_leading_time_stamp(osstream);
             }
         }
         else
@@ -3673,8 +3652,7 @@ void DYNAMICS_SIMULATOR::shed_wt_generator(const DEVICE_ID& gen_id,double percen
                     osstream<<generator->get_compound_device_name()<<" is shed by "<<100.0<<"% at time "<<TIME<<" s."<<endl
                             <<"WT generator is to be tripped.";
                     toolkit->show_information_with_leading_time_stamp(osstream);
-                    unsigned int N = generator->get_number_of_lumped_wt_generators();
-                    trip_wt_generator(gen_id, N);
+                    trip_wt_generator(gen_id);
                 }
                 else
                 {

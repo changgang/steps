@@ -6193,24 +6193,22 @@ class STEPS():
         STEPS_LIB.api_shed_generator(ibus, ickt, percent, self.toolkit_index)
         return
         
-    def trip_wt_generator(self, generator, n):
+    def trip_wt_generator(self, generator, n=None):
         """
-        Trip wind turbine generator.
+        Trip wind turbine generator by setting status as False.
         Args:
-            (1) generator: Wind turbine generator device id in format of (bus, ickt).
-            (2) n: Number of lumped wind turbine generators to trip.
+            generator: Wind turbine generator device id in format of (bus, ickt).
         Rets: N/A
-        Tips:
-            The number of lunmped wind turbine generators should be less than the available lumped wind turbine generators.
+        Tips: 
+            If partial wind turbine generators need to be shed, use shed_wt_generator(generator, percent) instead.
         Example:
             gen = (1, "#1")
-            n = 2
-            simulator.trip_wt_generator(gen, n)
+            simulator.trip_wt_generator(gen)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
-        STEPS_LIB.api_trip_wt_generator(ibus, ickt, n, self.toolkit_index)
+        STEPS_LIB.api_trip_wt_generator(ibus, ickt, self.toolkit_index)
         return
 
     def shed_wt_generator(self, generator, percent):

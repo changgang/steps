@@ -20,6 +20,11 @@ LVRT_CONTROL_TEST::LVRT_CONTROL_TEST()
     TEST_ADD(LVRT_CONTROL_TEST::test_set_get_vrt_voltage_threshold);
     TEST_ADD(LVRT_CONTROL_TEST::test_set_vrt_prepare2recover_delay_time_in_s);
     TEST_ADD(LVRT_CONTROL_TEST::test_set_get_vrt_status);
+
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_current_Ip_command);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_current_Iq_command);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_current_P_command);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_current_Q_command);
     TEST_ADD(LVRT_CONTROL_TEST::test_set_get_time_when_vrt_enter_during_status);
     TEST_ADD(LVRT_CONTROL_TEST::test_set_get_time_when_vrt_enter_prepare2recover_status);
     TEST_ADD(LVRT_CONTROL_TEST::test_set_get_time_when_vrt_enter_recover_status);
@@ -37,14 +42,36 @@ LVRT_CONTROL_TEST::LVRT_CONTROL_TEST()
     TEST_ADD(LVRT_CONTROL_TEST::test_set_get_Q0_vrt_recover_activated_in_pu_based_on_mbase);
 
     TEST_ADD(LVRT_CONTROL_TEST::test_set_get_PQ_vrt_during_mode);
-    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_kP);
-    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_P_set_in_pu);
-    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_k1_Ip);
-    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_k2_Ip);
-    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_Ip_set_in_pu);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_kP_vrt_during);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_P_set_vrt_during_in_pu);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_k1_Ip_vrt_during);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_k2_Ip_vrt_during);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_Ip_set_vrt_during_in_pu);
     TEST_ADD(LVRT_CONTROL_TEST::test_set_get_LVPL_low_voltage_in_pu);
     TEST_ADD(LVRT_CONTROL_TEST::test_set_get_LVPL_high_voltage_in_pu);
     TEST_ADD(LVRT_CONTROL_TEST::test_set_get_LVPL_gain_at_high_voltage);
+
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_kQ_vrt_during);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_Q_set_vrt_during_in_pu);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_k1_Iq_vrt_during);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_k2_Iq_vrt_during);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_Iq_set_vrt_during_in_pu);
+
+
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_PQ_vrt_prepare2recover_mode);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_k_Ip_prepare2recover);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_Ip_set_prepare2recover);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_k_Iq_prepare2recover);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_Iq_set_prepare2recover);
+
+
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_PQ_vrt_recover_mode);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_Q_recover_slope_in_pu_per_s);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_Q_recover_inertia_in_s);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_P_recover_slope_in_pu_per_s);
+    TEST_ADD(LVRT_CONTROL_TEST::test_set_get_P_recover_inertia_in_s);
+
+
     TEST_ADD(LVRT_CONTROL_TEST::test_check_vrt_status_basic);
     TEST_ADD(LVRT_CONTROL_TEST::test_check_vrt_status_comprehensive);
 }
@@ -149,6 +176,38 @@ void LVRT_CONTROL_TEST::test_set_get_vrt_status()
     TEST_ASSERT(lvrt->get_vrt_status()==VRT_NORMAL_STATUS);
     lvrt->set_vrt_status(VRT_DURING_STATUS);
     TEST_ASSERT(lvrt->get_vrt_status()==VRT_DURING_STATUS);
+}
+
+void LVRT_CONTROL_TEST::test_set_get_current_Ip_command()
+{
+    lvrt->set_current_Ip_command(0.5);
+    TEST_ASSERT(fabs(lvrt->get_current_Ip_command()-0.5)<FLOAT_EPSILON);
+    lvrt->set_current_Ip_command(0.0);
+    TEST_ASSERT(fabs(lvrt->get_current_Ip_command()-0.0)<FLOAT_EPSILON);
+}
+
+void LVRT_CONTROL_TEST::test_set_get_current_Iq_command()
+{
+    lvrt->set_current_Iq_command(0.5);
+    TEST_ASSERT(fabs(lvrt->get_current_Iq_command()-0.5)<FLOAT_EPSILON);
+    lvrt->set_current_Iq_command(0.0);
+    TEST_ASSERT(fabs(lvrt->get_current_Iq_command()-0.0)<FLOAT_EPSILON);
+}
+
+void LVRT_CONTROL_TEST::test_set_get_current_P_command()
+{
+    lvrt->set_current_P_command(0.5);
+    TEST_ASSERT(fabs(lvrt->get_current_P_command()-0.5)<FLOAT_EPSILON);
+    lvrt->set_current_P_command(0.0);
+    TEST_ASSERT(fabs(lvrt->get_current_P_command()-0.0)<FLOAT_EPSILON);
+}
+
+void LVRT_CONTROL_TEST::test_set_get_current_Q_command()
+{
+    lvrt->set_current_Q_command(0.5);
+    TEST_ASSERT(fabs(lvrt->get_current_Q_command()-0.5)<FLOAT_EPSILON);
+    lvrt->set_current_Q_command(0.0);
+    TEST_ASSERT(fabs(lvrt->get_current_Q_command()-0.0)<FLOAT_EPSILON);
 }
 
 void LVRT_CONTROL_TEST::test_set_get_time_when_vrt_enter_during_status()
@@ -288,41 +347,47 @@ void LVRT_CONTROL_TEST::test_set_get_PQ_vrt_during_mode()
     lvrt->set_Q_vrt_during_mode(VRT_DURING_CONSTANT_CURRENT_CONTROL_MODE);
     TEST_ASSERT(lvrt->get_Q_vrt_during_mode()== VRT_DURING_CONSTANT_CURRENT_CONTROL_MODE);
 }
-void LVRT_CONTROL_TEST::test_set_get_kP()
+
+void LVRT_CONTROL_TEST::test_set_get_kP_vrt_during()
 {
-    lvrt->set_kP(1.0);
-    TEST_ASSERT(fabs(lvrt->get_kP()-1.0)<DOUBLE_EPSILON);
-    lvrt->set_kP(0.9);
-    TEST_ASSERT(fabs(lvrt->get_kP()-0.9)<DOUBLE_EPSILON);
+    lvrt->set_kP_vrt_during(1.0);
+    TEST_ASSERT(fabs(lvrt->get_kP_vrt_during()-1.0)<DOUBLE_EPSILON);
+    lvrt->set_kP_vrt_during(0.9);
+    TEST_ASSERT(fabs(lvrt->get_kP_vrt_during()-0.9)<DOUBLE_EPSILON);
 }
-void LVRT_CONTROL_TEST::test_set_get_P_set_in_pu()
+
+void LVRT_CONTROL_TEST::test_set_get_P_set_vrt_during_in_pu()
 {
-    lvrt->set_P_set_in_pu(1.0);
-    TEST_ASSERT(fabs(lvrt->get_P_set_in_pu()-1.0)<DOUBLE_EPSILON);
-    lvrt->set_P_set_in_pu(0.9);
-    TEST_ASSERT(fabs(lvrt->get_P_set_in_pu()-0.9)<DOUBLE_EPSILON);
+    lvrt->set_P_set_vrt_during_in_pu(1.0);
+    TEST_ASSERT(fabs(lvrt->get_P_set_vrt_during_in_pu()-1.0)<DOUBLE_EPSILON);
+    lvrt->set_P_set_vrt_during_in_pu(0.9);
+    TEST_ASSERT(fabs(lvrt->get_P_set_vrt_during_in_pu()-0.9)<DOUBLE_EPSILON);
 }
-void LVRT_CONTROL_TEST::test_set_get_k1_Ip()
+
+void LVRT_CONTROL_TEST::test_set_get_k1_Ip_vrt_during()
 {
-    lvrt->set_k1_Ip(1.0);
-    TEST_ASSERT(fabs(lvrt->get_k1_Ip()-1.0)<DOUBLE_EPSILON);
-    lvrt->set_k1_Ip(0.9);
-    TEST_ASSERT(fabs(lvrt->get_k1_Ip()-0.9)<DOUBLE_EPSILON);
+    lvrt->set_k1_Ip_vrt_during(1.0);
+    TEST_ASSERT(fabs(lvrt->get_k1_Ip_vrt_during()-1.0)<DOUBLE_EPSILON);
+    lvrt->set_k1_Ip_vrt_during(0.9);
+    TEST_ASSERT(fabs(lvrt->get_k1_Ip_vrt_during()-0.9)<DOUBLE_EPSILON);
 }
-void LVRT_CONTROL_TEST::test_set_get_k2_Ip()
+
+void LVRT_CONTROL_TEST::test_set_get_k2_Ip_vrt_during()
 {
-    lvrt->set_k2_Ip(1.0);
-    TEST_ASSERT(fabs(lvrt->get_k2_Ip()-1.0)<DOUBLE_EPSILON);
-    lvrt->set_k2_Ip(0.9);
-    TEST_ASSERT(fabs(lvrt->get_k2_Ip()-0.9)<DOUBLE_EPSILON);
+    lvrt->set_k2_Ip_vrt_during(1.0);
+    TEST_ASSERT(fabs(lvrt->get_k2_Ip_vrt_during()-1.0)<DOUBLE_EPSILON);
+    lvrt->set_k2_Ip_vrt_during(0.9);
+    TEST_ASSERT(fabs(lvrt->get_k2_Ip_vrt_during()-0.9)<DOUBLE_EPSILON);
 }
-void LVRT_CONTROL_TEST::test_set_get_Ip_set_in_pu()
+
+void LVRT_CONTROL_TEST::test_set_get_Ip_set_vrt_during_in_pu()
 {
-    lvrt->set_Ip_set_in_pu(1.0);
-    TEST_ASSERT(fabs(lvrt->get_Ip_set_in_pu()-1.0)<DOUBLE_EPSILON);
-    lvrt->set_Ip_set_in_pu(0.9);
-    TEST_ASSERT(fabs(lvrt->get_Ip_set_in_pu()-0.9)<DOUBLE_EPSILON);
+    lvrt->set_Ip_set_vrt_during_in_pu(1.0);
+    TEST_ASSERT(fabs(lvrt->get_Ip_set_vrt_during_in_pu()-1.0)<DOUBLE_EPSILON);
+    lvrt->set_Ip_set_vrt_during_in_pu(0.9);
+    TEST_ASSERT(fabs(lvrt->get_Ip_set_vrt_during_in_pu()-0.9)<DOUBLE_EPSILON);
 }
+
 void LVRT_CONTROL_TEST::test_set_get_LVPL_low_voltage_in_pu()
 {
     lvrt->set_LVPL_low_voltage_in_pu(1.0);
@@ -330,6 +395,7 @@ void LVRT_CONTROL_TEST::test_set_get_LVPL_low_voltage_in_pu()
     lvrt->set_LVPL_low_voltage_in_pu(0.9);
     TEST_ASSERT(fabs(lvrt->get_LVPL_low_voltage_in_pu()-0.9)<DOUBLE_EPSILON);
 }
+
 void LVRT_CONTROL_TEST::test_set_get_LVPL_high_voltage_in_pu()
 {
     lvrt->set_LVPL_high_voltage_in_pu(1.0);
@@ -337,6 +403,7 @@ void LVRT_CONTROL_TEST::test_set_get_LVPL_high_voltage_in_pu()
     lvrt->set_LVPL_high_voltage_in_pu(0.9);
     TEST_ASSERT(fabs(lvrt->get_LVPL_high_voltage_in_pu()-0.9)<DOUBLE_EPSILON);
 }
+
 void LVRT_CONTROL_TEST::test_set_get_LVPL_gain_at_high_voltage()
 {
     lvrt->set_LVPL_gain_at_high_voltage(1.0);
@@ -344,10 +411,140 @@ void LVRT_CONTROL_TEST::test_set_get_LVPL_gain_at_high_voltage()
     lvrt->set_LVPL_gain_at_high_voltage(0.9);
     TEST_ASSERT(fabs(lvrt->get_LVPL_gain_at_high_voltage()-0.9)<DOUBLE_EPSILON);
 }
+
+void LVRT_CONTROL_TEST::test_set_get_kQ_vrt_during()
+{
+    lvrt->set_kQ_vrt_during(1.0);
+    TEST_ASSERT(fabs(lvrt->get_kQ_vrt_during()-1.0)<DOUBLE_EPSILON);
+    lvrt->set_kQ_vrt_during(0.9);
+    TEST_ASSERT(fabs(lvrt->get_kQ_vrt_during()-0.9)<DOUBLE_EPSILON);
+}
+
+void LVRT_CONTROL_TEST::test_set_get_Q_set_vrt_during_in_pu()
+{
+    lvrt->set_Q_set_vrt_during_in_pu(1.0);
+    TEST_ASSERT(fabs(lvrt->get_Q_set_vrt_during_in_pu()-1.0)<DOUBLE_EPSILON);
+    lvrt->set_Q_set_vrt_during_in_pu(0.9);
+    TEST_ASSERT(fabs(lvrt->get_Q_set_vrt_during_in_pu()-0.9)<DOUBLE_EPSILON);
+}
+
+void LVRT_CONTROL_TEST::test_set_get_k1_Iq_vrt_during()
+{
+    lvrt->set_k1_Iq_vrt_during(1.0);
+    TEST_ASSERT(fabs(lvrt->get_k1_Iq_vrt_during()-1.0)<DOUBLE_EPSILON);
+    lvrt->set_k1_Iq_vrt_during(0.9);
+    TEST_ASSERT(fabs(lvrt->get_k1_Iq_vrt_during()-0.9)<DOUBLE_EPSILON);
+}
+
+void LVRT_CONTROL_TEST::test_set_get_k2_Iq_vrt_during()
+{
+    lvrt->set_k2_Iq_vrt_during(1.0);
+    TEST_ASSERT(fabs(lvrt->get_k2_Iq_vrt_during()-1.0)<DOUBLE_EPSILON);
+    lvrt->set_k2_Iq_vrt_during(0.9);
+    TEST_ASSERT(fabs(lvrt->get_k2_Iq_vrt_during()-0.9)<DOUBLE_EPSILON);
+}
+
+void LVRT_CONTROL_TEST::test_set_get_Iq_set_vrt_during_in_pu()
+{
+    lvrt->set_Iq_set_vrt_during_in_pu(1.0);
+    TEST_ASSERT(fabs(lvrt->get_Iq_set_vrt_during_in_pu()-1.0)<DOUBLE_EPSILON);
+    lvrt->set_Iq_set_vrt_during_in_pu(0.9);
+    TEST_ASSERT(fabs(lvrt->get_Iq_set_vrt_during_in_pu()-0.9)<DOUBLE_EPSILON);
+}
+
+void LVRT_CONTROL_TEST::test_set_get_PQ_vrt_prepare2recover_mode()
+{
+    lvrt->set_P_vrt_prepare2recover_mode(VRT_PREPARE2RECOVER_FAULTED_CURRENT_CONTROL_MODE);
+    TEST_ASSERT(lvrt->get_P_vrt_prepare2recover_mode()==VRT_PREPARE2RECOVER_FAULTED_CURRENT_CONTROL_MODE);
+    lvrt->set_P_vrt_prepare2recover_mode(VRT_PREPARE2RECOVER_FAULTED_POWER_CONTROL_MODE);
+    TEST_ASSERT(lvrt->get_P_vrt_prepare2recover_mode()==VRT_PREPARE2RECOVER_FAULTED_POWER_CONTROL_MODE);
+
+    lvrt->set_Q_vrt_prepare2recover_mode(VRT_PREPARE2RECOVER_FAULTED_CURRENT_CONTROL_MODE);
+    TEST_ASSERT(lvrt->get_Q_vrt_prepare2recover_mode()==VRT_PREPARE2RECOVER_FAULTED_CURRENT_CONTROL_MODE);
+    lvrt->set_Q_vrt_prepare2recover_mode(VRT_PREPARE2RECOVER_FAULTED_POWER_CONTROL_MODE);
+    TEST_ASSERT(lvrt->get_Q_vrt_prepare2recover_mode()==VRT_PREPARE2RECOVER_FAULTED_POWER_CONTROL_MODE);
+}
+
+void LVRT_CONTROL_TEST::test_set_get_k_Ip_prepare2recover()
+{
+    lvrt->set_k_Ip_prepare2recover(1.0);
+    TEST_ASSERT(fabs(lvrt->get_k_Ip_prepare2recover()-1.0)<DOUBLE_EPSILON);
+    lvrt->set_k_Ip_prepare2recover(0.9);
+    TEST_ASSERT(fabs(lvrt->get_k_Ip_prepare2recover()-0.9)<DOUBLE_EPSILON);
+}
+
+void LVRT_CONTROL_TEST::test_set_get_Ip_set_prepare2recover()
+{
+    lvrt->set_Ip_set_prepare2recover(1.0);
+    TEST_ASSERT(fabs(lvrt->get_Ip_set_prepare2recover()-1.0)<DOUBLE_EPSILON);
+    lvrt->set_Ip_set_prepare2recover(0.9);
+    TEST_ASSERT(fabs(lvrt->get_Ip_set_prepare2recover()-0.9)<DOUBLE_EPSILON);
+}
+
+void LVRT_CONTROL_TEST::test_set_get_k_Iq_prepare2recover()
+{
+    lvrt->set_k_Iq_prepare2recover(1.0);
+    TEST_ASSERT(fabs(lvrt->get_k_Iq_prepare2recover()-1.0)<DOUBLE_EPSILON);
+    lvrt->set_k_Iq_prepare2recover(0.9);
+    TEST_ASSERT(fabs(lvrt->get_k_Iq_prepare2recover()-0.9)<DOUBLE_EPSILON);
+}
+
+void LVRT_CONTROL_TEST::test_set_get_Iq_set_prepare2recover()
+{
+    lvrt->set_Iq_set_prepare2recover(1.0);
+    TEST_ASSERT(fabs(lvrt->get_Iq_set_prepare2recover()-1.0)<DOUBLE_EPSILON);
+    lvrt->set_Iq_set_prepare2recover(0.9);
+    TEST_ASSERT(fabs(lvrt->get_Iq_set_prepare2recover()-0.9)<DOUBLE_EPSILON);
+}
+
+void LVRT_CONTROL_TEST::test_set_get_PQ_vrt_recover_mode()
+{
+    lvrt->set_P_vrt_recover_mode(VRT_RECOVER_LINEAR_CONTROL_MODE);
+    TEST_ASSERT(lvrt->get_P_vrt_recover_mode()==VRT_RECOVER_LINEAR_CONTROL_MODE);
+    lvrt->set_P_vrt_recover_mode(VRT_RECOVER_EXPOENTIAL_CONTROL_MODE);
+    TEST_ASSERT(lvrt->get_P_vrt_recover_mode()==VRT_RECOVER_EXPOENTIAL_CONTROL_MODE);
+
+    lvrt->set_Q_vrt_recover_mode(VRT_RECOVER_LINEAR_CONTROL_MODE);
+    TEST_ASSERT(lvrt->get_Q_vrt_recover_mode()==VRT_RECOVER_LINEAR_CONTROL_MODE);
+    lvrt->set_Q_vrt_recover_mode(VRT_RECOVER_EXPOENTIAL_CONTROL_MODE);
+    TEST_ASSERT(lvrt->get_Q_vrt_recover_mode()==VRT_RECOVER_EXPOENTIAL_CONTROL_MODE);
+}
+
+void LVRT_CONTROL_TEST::test_set_get_Q_recover_slope_in_pu_per_s()
+{
+    lvrt->set_Q_recover_slope_in_pu_per_s(1.0);
+    TEST_ASSERT(fabs(lvrt->get_Q_recover_slope_in_pu_per_s()-1.0)<DOUBLE_EPSILON);
+    lvrt->set_Q_recover_slope_in_pu_per_s(0.9);
+    TEST_ASSERT(fabs(lvrt->get_Q_recover_slope_in_pu_per_s()-0.9)<DOUBLE_EPSILON);
+}
+
+void LVRT_CONTROL_TEST::test_set_get_Q_recover_inertia_in_s()
+{
+    lvrt->set_Q_recover_inertia_in_s(1.0);
+    TEST_ASSERT(fabs(lvrt->get_Q_recover_inertia_in_s()-1.0)<DOUBLE_EPSILON);
+    lvrt->set_Q_recover_inertia_in_s(0.9);
+    TEST_ASSERT(fabs(lvrt->get_Q_recover_inertia_in_s()-0.9)<DOUBLE_EPSILON);
+}
+
+void LVRT_CONTROL_TEST::test_set_get_P_recover_slope_in_pu_per_s()
+{
+    lvrt->set_P_recover_slope_in_pu_per_s(1.0);
+    TEST_ASSERT(fabs(lvrt->get_P_recover_slope_in_pu_per_s()-1.0)<DOUBLE_EPSILON);
+    lvrt->set_P_recover_slope_in_pu_per_s(0.9);
+    TEST_ASSERT(fabs(lvrt->get_P_recover_slope_in_pu_per_s()-0.9)<DOUBLE_EPSILON);
+}
+
+void LVRT_CONTROL_TEST::test_set_get_P_recover_inertia_in_s()
+{
+    lvrt->set_P_recover_inertia_in_s(1.0);
+    TEST_ASSERT(fabs(lvrt->get_P_recover_inertia_in_s()-1.0)<DOUBLE_EPSILON);
+    lvrt->set_P_recover_inertia_in_s(0.9);
+    TEST_ASSERT(fabs(lvrt->get_P_recover_inertia_in_s()-0.9)<DOUBLE_EPSILON);
+}
+
 void LVRT_CONTROL_TEST::test_check_vrt_status_basic()
 {
     default_toolkit.set_dynamic_simulation_time_in_s(0.0);
-    default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 
     BUS* bus = lvrt->get_bus_pointer();
     bus->set_positive_sequence_voltage_in_pu(1.0);
@@ -393,7 +590,7 @@ void LVRT_CONTROL_TEST::test_check_vrt_status_basic()
     bus->set_positive_sequence_voltage_in_pu(1.0);
 
     lvrt->set_vrt_voltage_threshold(0.9);
-    lvrt->set_vrt_prepare2recover_delay_time_in_s(0.);
+    lvrt->set_vrt_prepare2recover_delay_time_in_s(0.0);
 
     TEST_ASSERT(lvrt->get_vrt_status()==VRT_NORMAL_STATUS);
 
@@ -471,11 +668,11 @@ void LVRT_CONTROL_TEST::test_check_vrt_status_comprehensive()
     lvrt->set_vrt_prepare2recover_delay_time_in_s(0.2);
 
     lvrt->set_P_vrt_during_mode(VRT_DURING_POWER_CONTROL_MODE);
-    lvrt->set_kP(0.3);
-    lvrt->set_P_set_in_pu(0.1);
-    lvrt->set_k1_Ip(0);
-    lvrt->set_k2_Ip(0);
-    lvrt->set_Ip_set_in_pu(0);
+    lvrt->set_kP_vrt_during(0.3);
+    lvrt->set_P_set_vrt_during_in_pu(0.1);
+    lvrt->set_k1_Ip_vrt_during(0);
+    lvrt->set_k2_Ip_vrt_during(0);
+    lvrt->set_Ip_set_vrt_during_in_pu(0);
     lvrt->set_LVPL_low_voltage_in_pu(0);
     lvrt->set_LVPL_high_voltage_in_pu(0);
     lvrt->set_LVPL_gain_at_high_voltage(0);
@@ -489,11 +686,11 @@ void LVRT_CONTROL_TEST::test_check_vrt_status_comprehensive()
     lvrt->set_P_recover_inertia_in_s(0);
 
     lvrt->set_Q_vrt_during_mode(VRT_DURING_V_DEPEND_CURRENT_CONTROL_MODE);
-    lvrt->set_kQ(0);
-    lvrt->set_Q_set_in_pu(0);
-    lvrt->set_k1_Iq(0.1);
-    lvrt->set_k2_Iq(0.2);
-    lvrt->set_Iq_set_in_pu(0.3);
+    lvrt->set_kQ_vrt_during(0);
+    lvrt->set_Q_set_vrt_during_in_pu(0);
+    lvrt->set_k1_Iq_vrt_during(0.1);
+    lvrt->set_k2_Iq_vrt_during(0.2);
+    lvrt->set_Iq_set_vrt_during_in_pu(0.3);
 
     lvrt->set_Q_vrt_prepare2recover_mode(VRT_PREPARE2RECOVER_FAULTED_CURRENT_CONTROL_MODE);
     lvrt->set_k_Iq_prepare2recover(0.2);
@@ -508,7 +705,7 @@ void LVRT_CONTROL_TEST::test_check_vrt_status_comprehensive()
 
     BUS* bus = lvrt->get_bus_pointer();
     bus->set_positive_sequence_voltage_in_pu(1.0);
-    lvrt->update_PQI0_in_vrt_normal_status(1.0, 1.1, 0.5, 0.6);
+    lvrt->update_PQI0_in_vrt_during_status(1.0, 1.1, 0.5, 0.6);
     lvrt->check_vrt_status();
     TEST_ASSERT(lvrt->get_vrt_status()==VRT_NORMAL_STATUS);
 

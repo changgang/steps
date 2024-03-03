@@ -19,11 +19,11 @@ class WTVRT3: public WT_VOLTAGE_RIDE_THROUGH_MODEL
         void set_vrt_prepare2recover_delay_time_in_s(char HL_flag, double t);
 
         void set_P_vrt_during_mode(char HL_flag, VRT_DURING_CONTROL_MODE m);
-        void set_kP(char HL_flag, double k);
-        void set_P_set_in_pu(char HL_flag, double p);
-        void set_k1_Ip(char HL_flag, double k);
-        void set_k2_Ip(char HL_flag, double k);
-        void set_Ip_set_in_pu(char HL_flag, double I);
+        void set_kP_vrt_during(char HL_flag, double k);
+        void set_P_set_vrt_during_in_pu(char HL_flag, double p);
+        void set_k1_Ip_vrt_during(char HL_flag, double k);
+        void set_k2_Ip_vrt_during(char HL_flag, double k);
+        void set_Ip_set_vrt_during_in_pu(char HL_flag, double I);
         void set_LVPL_low_voltage_in_pu(double v);
         void set_LVPL_high_voltage_in_pu(double v);
         void set_LVPL_gain_at_high_voltage(double g);
@@ -37,11 +37,11 @@ class WTVRT3: public WT_VOLTAGE_RIDE_THROUGH_MODEL
         void set_P_recover_inertia_in_s(char HL_flag, double T);
 
         void set_Q_vrt_during_mode(char HL_flag, VRT_DURING_CONTROL_MODE m);
-        void set_kQ(char HL_flag, double k);
-        void set_Q_set_in_pu(char HL_flag, double q);
-        void set_k1_Iq(char HL_flag, double k);
-        void set_k2_Iq(char HL_flag, double k);
-        void set_Iq_set_in_pu(char HL_flag, double I);
+        void set_kQ_vrt_during(char HL_flag, double k);
+        void set_Q_set_vrt_during_in_pu(char HL_flag, double q);
+        void set_k1_Iq_vrt_during(char HL_flag, double k);
+        void set_k2_Iq_vrt_during(char HL_flag, double k);
+        void set_Iq_set_vrt_during_in_pu(char HL_flag, double I);
 
         void set_Q_vrt_prepare2recover_mode(char HL_flag, VRT_PREPARE2RECOVER_CONTROL_MODE m);
         void set_k_Iq_prepare2recover(char HL_flag, double k);
@@ -55,11 +55,11 @@ class WTVRT3: public WT_VOLTAGE_RIDE_THROUGH_MODEL
         double get_vrt_prepare2recover_delay_time_in_s(char HL_flag) const;
 
         VRT_DURING_CONTROL_MODE get_P_vrt_during_mode(char HL_flag) const;
-        double get_kP(char HL_flag) const;
-        double get_P_set_in_pu(char HL_flag) const;
-        double get_k1_Ip(char HL_flag) const;
-        double get_k2_Ip(char HL_flag) const;
-        double get_Ip_set_in_pu(char HL_flag) const;
+        double get_kP_vrt_during(char HL_flag) const;
+        double get_P_set_vrt_during_in_pu(char HL_flag) const;
+        double get_k1_Ip_vrt_during(char HL_flag) const;
+        double get_k2_Ip_vrt_during(char HL_flag) const;
+        double get_Ip_set_vrt_during_in_pu(char HL_flag) const;
         double get_LVPL_low_voltage_in_pu() const;
         double get_LVPL_high_voltage_in_pu() const;
         double get_LVPL_gain_at_high_voltage() const;
@@ -73,11 +73,11 @@ class WTVRT3: public WT_VOLTAGE_RIDE_THROUGH_MODEL
         double get_P_recover_inertia_in_s(char HL_flag) const;
 
         VRT_DURING_CONTROL_MODE get_Q_vrt_during_mode(char HL_flag) const;
-        double get_kQ(char HL_flag) const;
-        double get_Q_set_in_pu(char HL_flag) const;
-        double get_k1_Iq(char HL_flag) const;
-        double get_k2_Iq(char HL_flag) const;
-        double get_Iq_set_in_pu(char HL_flag) const;
+        double get_kQ_vrt_during(char HL_flag) const;
+        double get_Q_set_vrt_during_in_pu(char HL_flag) const;
+        double get_k1_Iq_vrt_during(char HL_flag) const;
+        double get_k2_Iq_vrt_during(char HL_flag) const;
+        double get_Iq_set_vrt_during_in_pu(char HL_flag) const;
 
         VRT_PREPARE2RECOVER_CONTROL_MODE get_Q_vrt_prepare2recover_mode(char HL_flag) const;
         double get_k_Iq_prepare2recover(char HL_flag) const;
@@ -99,11 +99,14 @@ class WTVRT3: public WT_VOLTAGE_RIDE_THROUGH_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
+        virtual VRT_STATUS get_lvrt_status() const;
+        virtual VRT_STATUS get_hvrt_status() const;
+
         virtual double get_active_current_command_in_pu_based_on_mbase();
-        virtual double get_active_power_command_in_pu_based_on_mbase() const;
+        virtual double get_active_power_command_in_pu_based_on_mbase();
         virtual double get_reactive_current_command_in_pu_based_on_mbase();
         virtual double get_reactive_power_command_in_pu_based_on_mbase();
-        virtual double get_reactive_voltage_command_in_pu() const;
+        virtual double get_reactive_voltage_command_in_pu();
 
 
         virtual void check();
@@ -127,4 +130,4 @@ class WTVRT3: public WT_VOLTAGE_RIDE_THROUGH_MODEL
         HVRT_CONTROL hvrt;
 };
 
-#endif // EXCITER_MODEL_H
+#endif // WTVRT3_H

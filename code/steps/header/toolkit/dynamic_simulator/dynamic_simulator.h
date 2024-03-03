@@ -147,7 +147,7 @@ class DYNAMICS_SIMULATOR
         void trip_generator(const DEVICE_ID& gen_id);
         void shed_generator(const DEVICE_ID& gen_id, double percent);
 
-        void trip_wt_generator(const DEVICE_ID& gen_id, unsigned int n);
+        void trip_wt_generator(const DEVICE_ID& gen_id);
         void shed_wt_generator(const DEVICE_ID& gen_id, double percent);
 
         void trip_load(const DEVICE_ID& load_id);

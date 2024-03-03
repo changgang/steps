@@ -11,11 +11,18 @@ VRT_CONTROL_MODEL::VRT_CONTROL_MODEL(STEPS& toolkit)
     set_toolkit(toolkit);
     bus_ptr = NULL;
     set_vrt_status(VRT_NORMAL_STATUS);
+    set_vrt_voltage_threshold(0.0);
 }
 
 VRT_CONTROL_MODEL::~VRT_CONTROL_MODEL()
 {
     ;
+}
+
+void VRT_CONTROL_MODEL::copy_from_const_model(const VRT_CONTROL_MODEL& model)
+{
+    set_vrt_status(model.get_vrt_status());
+    set_vrt_voltage_threshold(model.get_vrt_voltage_threshold());
 }
 
 void VRT_CONTROL_MODEL::set_toolkit(STEPS& toolkit)
@@ -113,12 +120,6 @@ void VRT_CONTROL_MODEL::set_vrt_status(VRT_STATUS status)
 VRT_STATUS VRT_CONTROL_MODEL::get_vrt_status() const
 {
     return status;
-}
-
-void VRT_CONTROL_MODEL::copy_from_const_model(const VRT_CONTROL_MODEL& model)
-{
-    set_vrt_status(model.get_vrt_status());
-    set_vrt_voltage_threshold(model.get_vrt_voltage_threshold());
 }
 
 void VRT_CONTROL_MODEL::set_current_Ip_command(double Ip)
@@ -313,7 +314,7 @@ double VRT_CONTROL_MODEL::get_Q0_vrt_recover_activated_in_pu_based_on_mbase() co
 }
 
 
-void VRT_CONTROL_MODEL::update_PQI0_in_vrt_normal_status(double P0, double Q0, double Ip0, double Iq0)
+void VRT_CONTROL_MODEL::update_PQI0_in_vrt_during_status(double P0, double Q0, double Ip0, double Iq0)
 {
     set_P0_vrt_activated_in_pu_based_on_mbase(P0);
     set_Q0_vrt_activated_in_pu_based_on_mbase(Q0);
@@ -343,5 +344,5 @@ double VRT_CONTROL_MODEL::get_vrt_Ip_command()
 }
 double VRT_CONTROL_MODEL::get_vrt_Iq_command()
 {
-    return get_vrt_Q_command()/get_bus_voltage();
+    return -get_vrt_Q_command()/get_bus_voltage();
 }

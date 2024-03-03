@@ -459,7 +459,7 @@ EXPORT_STEPS_DLL void api_close_transformer_breaker(unsigned int ibus, unsigned 
 EXPORT_STEPS_DLL void api_trip_generator(unsigned int bus, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_shed_generator(unsigned int bus, char* identifier, double percent, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
-EXPORT_STEPS_DLL void api_trip_wt_generator(unsigned int bus, char* identifier, unsigned int n, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_trip_wt_generator(unsigned int bus, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_shed_wt_generator(unsigned int bus, char* identifier, double percent, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void api_trip_load(unsigned int bus, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);

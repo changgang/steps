@@ -1,10 +1,10 @@
 #ifndef VSG0_H
 #define VSG0_H
 
-#include "header/model/converter_common_models/vsg_model/vsg_model2.h"
+#include "header/model/converter_common_models/vsg_model/vsg_model.h"
 #include "header/block/integral_block.h"
 
-class VSG0 : public VSG_MODEL2
+class VSG0 : public VSG_MODEL
 {
     public:
         VSG0(STEPS& toolkit);

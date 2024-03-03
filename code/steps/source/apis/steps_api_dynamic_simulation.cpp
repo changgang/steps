@@ -794,7 +794,7 @@ void api_shed_generator(unsigned int bus, char* identifier, double percent, unsi
     ds.shed_generator(did, percent);
 }
 
-void api_trip_wt_generator(unsigned int bus, char* identifier, unsigned int n, unsigned int toolkit_index)
+void api_trip_wt_generator(unsigned int bus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -811,7 +811,7 @@ void api_trip_wt_generator(unsigned int bus, char* identifier, unsigned int n, u
         return;
     }
 
-    ds.trip_wt_generator(did, n);
+    ds.trip_wt_generator(did);
 }
 
 void api_shed_wt_generator(unsigned int bus, char* identifier, double percent, unsigned int toolkit_index)
