@@ -275,9 +275,6 @@ void LCFB1::initialize()
 
 void LCFB1::run(DYNAMIC_MODE mode)
 {
-    if(not is_model_active())
-        return;
-
     double pelec = get_terminal_active_power_in_pu_based_on_mbase_from_generator_model();
     Pelec_sensor.set_input(pelec);
     Pelec_sensor.run(mode);

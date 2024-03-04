@@ -601,86 +601,83 @@ void VSCHVDCC0::initialize()
 
 void VSCHVDCC0::run(DYNAMIC_MODE mode)
 {
-    if(is_model_active())
+    VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
+    unsigned int converter_index = get_converter_index();
+    complex<double> Is = get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_converter_base();
+    complex<double> Us = get_converter_ac_bus_complex_voltage_in_pu();
+    complex<double> S = Us*conj(Is);
+
+    double Ps = S.real();
+    double Qs = S.imag();
+
+    double input = 0.0;
+    double Pdc_from_Ceq_to_dc_network = vsc_hvdc->get_converter_Pdc_from_Ceq_to_DC_network_in_MW(converter_index);
+    double Pac_from_ac_network_to_Ceq = get_converter_dc_power_from_converter_to_Ceq_in_MW();
+    double Udc = get_dynamic_dc_voltage_in_kV();
+
+    input = (-Pdc_from_Ceq_to_dc_network+Pac_from_ac_network_to_Ceq)/Udc;
+    udc_block.set_input(input);
+    udc_block.run(mode);
+
+    vsc_hvdc->set_dc_bus_Vdc_in_kV(vsc_hvdc->get_dc_bus_index_with_converter_index(get_converter_index()),
+                                   get_dynamic_dc_voltage_in_kV());
+
+    VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE active_power_control_mode = get_converter_active_control_mode();
+    VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE reactive_power_control_mode = get_converter_reactive_control_mode();
+
+    input = 0.0;
+    switch(active_power_control_mode)
     {
-        VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
-        unsigned int converter_index = get_converter_index();
-        complex<double> Is = get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_converter_base();
-        complex<double> Us = get_converter_ac_bus_complex_voltage_in_pu();
-        complex<double> S = Us*conj(Is);
-
-        double Ps = S.real();
-        double Qs = S.imag();
-
-        double input = 0.0;
-        double Pdc_from_Ceq_to_dc_network = vsc_hvdc->get_converter_Pdc_from_Ceq_to_DC_network_in_MW(converter_index);
-        double Pac_from_ac_network_to_Ceq = get_converter_dc_power_from_converter_to_Ceq_in_MW();
-        double Udc = get_dynamic_dc_voltage_in_kV();
-
-        input = (-Pdc_from_Ceq_to_dc_network+Pac_from_ac_network_to_Ceq)/Udc;
-        udc_block.set_input(input);
-        udc_block.run(mode);
-
-        vsc_hvdc->set_dc_bus_Vdc_in_kV(vsc_hvdc->get_dc_bus_index_with_converter_index(get_converter_index()),
-                                       get_dynamic_dc_voltage_in_kV());
-
-        VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE active_power_control_mode = get_converter_active_control_mode();
-        VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE reactive_power_control_mode = get_converter_reactive_control_mode();
-
-        input = 0.0;
-        switch(active_power_control_mode)
-        {
-            case DY_VSC_DC_VOLTAGE_CONTORL:
-                input = get_dynamic_dc_voltage_in_pu() - get_active_power_block_Udcref();
-                break;
-            case DY_VSC_AC_ACTIVE_POWER_CONTORL:
-                input = get_active_power_block_Pref() - Ps;
-                break;
-            case DY_VSC_FREQUENCY_CONTROL:
-                input = get_converter_ac_bus_frequency_deviation_in_pu();
-                break;
-            case DY_VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL:
-                input = get_active_voltage_control_ku()*(get_dynamic_dc_voltage_in_pu() - get_active_power_block_Udcref())+ get_active_voltage_control_kp()*(get_active_power_block_Pref() - Ps);
-            case DY_VSC_DC_VOLTAGE_FREQUENCY_CONTROL:
-                //if(get_active_voltage_control_ku()*(get_dynamic_dc_voltage_in_pu()>get_active_power_block_Udcref())- get_frequency_control_kf()*get_converter_ac_bus_frequency_deviation_in_pu())：
-                //    input = get_active_voltage_control_ku()*(get_dynamic_dc_voltage_in_pu() - get_active_power_block_Udcref());
-                //else:
-                //    input = get_frequency_control_kf()*get_converter_ac_bus_frequency_deviation_in_pu();
-                input = get_active_voltage_control_ku()*(get_dynamic_dc_voltage_in_pu() - get_active_power_block_Udcref()) + get_frequency_control_kf()*get_converter_ac_bus_frequency_deviation_in_pu();
-                //input = - get_frequency_control_kf()*get_converter_ac_bus_frequency_deviation_in_pu();
-            default:
-                break;
-        }
-
-        p_sensor.set_input(input);
-        p_sensor.run(mode);
-
-        input = p_sensor.get_output();
-        p_block.set_input(input);
-        p_block.run(mode);
-
-        input = 0.0;
-        switch(reactive_power_control_mode)
-        {
-            case DY_VSC_AC_VOLTAGE_CONTROL:
-                input = abs(Us) - get_reactive_power_block_Uacref();
-                break;
-            case DY_VSC_AC_REACTIVE_POWER_CONTROL:
-                input = Qs - get_reactive_power_block_Qref();
-                break;
-            default:
-                break;
-        }
-        q_sensor.set_input(input);
-        q_sensor.run(mode);
-
-        input = q_sensor.get_output();
-        q_block.set_input(input);
-        q_block.run(mode);
-
-        if(mode==UPDATE_MODE)
-            set_flag_model_updated_as_true();
+        case DY_VSC_DC_VOLTAGE_CONTORL:
+            input = get_dynamic_dc_voltage_in_pu() - get_active_power_block_Udcref();
+            break;
+        case DY_VSC_AC_ACTIVE_POWER_CONTORL:
+            input = get_active_power_block_Pref() - Ps;
+            break;
+        case DY_VSC_FREQUENCY_CONTROL:
+            input = get_converter_ac_bus_frequency_deviation_in_pu();
+            break;
+        case DY_VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL:
+            input = get_active_voltage_control_ku()*(get_dynamic_dc_voltage_in_pu() - get_active_power_block_Udcref())+ get_active_voltage_control_kp()*(get_active_power_block_Pref() - Ps);
+        case DY_VSC_DC_VOLTAGE_FREQUENCY_CONTROL:
+            //if(get_active_voltage_control_ku()*(get_dynamic_dc_voltage_in_pu()>get_active_power_block_Udcref())- get_frequency_control_kf()*get_converter_ac_bus_frequency_deviation_in_pu())：
+            //    input = get_active_voltage_control_ku()*(get_dynamic_dc_voltage_in_pu() - get_active_power_block_Udcref());
+            //else:
+            //    input = get_frequency_control_kf()*get_converter_ac_bus_frequency_deviation_in_pu();
+            input = get_active_voltage_control_ku()*(get_dynamic_dc_voltage_in_pu() - get_active_power_block_Udcref()) + get_frequency_control_kf()*get_converter_ac_bus_frequency_deviation_in_pu();
+            //input = - get_frequency_control_kf()*get_converter_ac_bus_frequency_deviation_in_pu();
+        default:
+            break;
     }
+
+    p_sensor.set_input(input);
+    p_sensor.run(mode);
+
+    input = p_sensor.get_output();
+    p_block.set_input(input);
+    p_block.run(mode);
+
+    input = 0.0;
+    switch(reactive_power_control_mode)
+    {
+        case DY_VSC_AC_VOLTAGE_CONTROL:
+            input = abs(Us) - get_reactive_power_block_Uacref();
+            break;
+        case DY_VSC_AC_REACTIVE_POWER_CONTROL:
+            input = Qs - get_reactive_power_block_Qref();
+            break;
+        default:
+            break;
+    }
+    q_sensor.set_input(input);
+    q_sensor.run(mode);
+
+    input = q_sensor.get_output();
+    q_block.set_input(input);
+    q_block.run(mode);
+
+    if(mode==UPDATE_MODE)
+        set_flag_model_updated_as_true();
 }
 
 void VSCHVDCC0::check()

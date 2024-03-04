@@ -328,36 +328,33 @@ void PSASPS1::initialize()
 
 void PSASPS1::run(DYNAMIC_MODE mode)
 {
-    if(is_model_active())
+    double speed_deviation_pu = get_signal_value_of_slot(0);
+    double Pe_pu = get_signal_value_of_slot(1);
+    double Vterminal_pu = get_signal_value_of_slot(2);
+
+    double input = Kq1*(speed_deviation_pu-speed_deviation_ref_pu)-Kq2*(Pe_pu-Pe_ref_pu)-Kq3*(Vterminal_pu-Vterminal_ref_pu);
+    if(K==0)
     {
-        double speed_deviation_pu = get_signal_value_of_slot(0);
-        double Pe_pu = get_signal_value_of_slot(1);
-        double Vterminal_pu = get_signal_value_of_slot(2);
-
-        double input = Kq1*(speed_deviation_pu-speed_deviation_ref_pu)-Kq2*(Pe_pu-Pe_ref_pu)-Kq3*(Vterminal_pu-Vterminal_ref_pu);
-        if(K==0)
-        {
-            dedc_block.set_input(input);
-            dedc_block.run(mode);
-            input = dedc_block.get_output();
-        }
-        else
-        {
-            phase_tuner_1.set_input(input);
-            phase_tuner_1.run(mode);
-            input = phase_tuner_1.get_output();
-        }
-
-        phase_tuner_2.set_input(input);
-        phase_tuner_2.run(mode);
-        input = phase_tuner_2.get_output();
-
-        phase_tuner_3.set_input(input);
-        phase_tuner_3.run(mode);
-
-        if(mode==UPDATE_MODE)
-            set_flag_model_updated_as_true();
+        dedc_block.set_input(input);
+        dedc_block.run(mode);
+        input = dedc_block.get_output();
     }
+    else
+    {
+        phase_tuner_1.set_input(input);
+        phase_tuner_1.run(mode);
+        input = phase_tuner_1.get_output();
+    }
+
+    phase_tuner_2.set_input(input);
+    phase_tuner_2.run(mode);
+    input = phase_tuner_2.get_output();
+
+    phase_tuner_3.set_input(input);
+    phase_tuner_3.run(mode);
+
+    if(mode==UPDATE_MODE)
+        set_flag_model_updated_as_true();
 }
 
 double PSASPS1::get_stabilizing_signal_in_pu()

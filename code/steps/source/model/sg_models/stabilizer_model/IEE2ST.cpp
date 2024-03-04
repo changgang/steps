@@ -398,45 +398,42 @@ void IEE2ST::initialize()
 
 void IEE2ST::run(DYNAMIC_MODE mode)
 {
-    if(is_model_active())
+    double slot_value = get_signal_value_of_slot(0);
+    sensor_1.set_input(slot_value);
+    sensor_1.run(mode);
+
+    slot_value = get_signal_value_of_slot(1);
+    sensor_2.set_input(slot_value);
+    sensor_2.run(mode);
+
+    double input = sensor_1.get_output()+sensor_2.get_output();
+    double T3 = get_T3_in_s();
+    if(T3>0.0)
     {
-        double slot_value = get_signal_value_of_slot(0);
-        sensor_1.set_input(slot_value);
-        sensor_1.run(mode);
-
-        slot_value = get_signal_value_of_slot(1);
-        sensor_2.set_input(slot_value);
-        sensor_2.run(mode);
-
-        double input = sensor_1.get_output()+sensor_2.get_output();
-        double T3 = get_T3_in_s();
-        if(T3>0.0)
-        {
-            filter.set_input(input);
-            filter.run(mode);
-            input = filter.get_output();
-        }
-        else
-        {
-            alternative_filter.set_input(input);
-            alternative_filter.run(mode);
-            input = alternative_filter.get_output();
-        }
-
-        phase_tuner_1.set_input(input);
-        phase_tuner_1.run(mode);
-
-        input = phase_tuner_1.get_output();
-        phase_tuner_2.set_input(input);
-        phase_tuner_2.run(mode);
-
-        input = phase_tuner_2.get_output();
-        phase_tuner_3.set_input(input);
-        phase_tuner_3.run(mode);
-
-        if(mode==UPDATE_MODE)
-            set_flag_model_updated_as_true();
+        filter.set_input(input);
+        filter.run(mode);
+        input = filter.get_output();
     }
+    else
+    {
+        alternative_filter.set_input(input);
+        alternative_filter.run(mode);
+        input = alternative_filter.get_output();
+    }
+
+    phase_tuner_1.set_input(input);
+    phase_tuner_1.run(mode);
+
+    input = phase_tuner_1.get_output();
+    phase_tuner_2.set_input(input);
+    phase_tuner_2.run(mode);
+
+    input = phase_tuner_2.get_output();
+    phase_tuner_3.set_input(input);
+    phase_tuner_3.run(mode);
+
+    if(mode==UPDATE_MODE)
+        set_flag_model_updated_as_true();
 }
 
 double IEE2ST::get_stabilizing_signal_in_pu()

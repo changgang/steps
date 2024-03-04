@@ -112,7 +112,7 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
                 STEPS& toolkit = get_toolkit();
                 WT_AERODYNAMIC_MODEL* aero = get_wt_aerodynamic_model();
                 WIND_SPEED_MODEL* wind = get_wind_speed_model();
-                if(gen!=NULL)
+                if(gen!=NULL and gen->is_model_active())
                     gen->initialize();
                 else
                 {
@@ -121,10 +121,10 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
                     return;
                 }
 
-                if(wind!=NULL)
+                if(wind!=NULL and wind->is_model_active())
                     wind->initialize();
 
-                if(aero!=NULL)
+                if(aero!=NULL and aero->is_model_active())
                     aero->initialize();
                 else
                 {
@@ -133,7 +133,7 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
                     return;
                 }
 
-                if(turbine!=NULL)
+                if(turbine!=NULL and turbine->is_model_active())
                     turbine->initialize();
                 else
                 {
@@ -142,17 +142,16 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
                     return;
                 }
 
-
-                if(elec!=NULL)
+                if(elec!=NULL and elec->is_model_active())
                     elec->initialize();
 
-                if(pitch!=NULL)
+                if(pitch!=NULL and pitch->is_model_active())
                     pitch->initialize();
 
-                if(vrt!=NULL)
+                if(vrt!=NULL and vrt->is_model_active())
                     vrt->initialize();
 
-                if(relay!=NULL)
+                if(relay!=NULL and relay->is_model_active())
                     relay->initialize();
 
                 break;
@@ -160,11 +159,23 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
             case INTEGRATE_MODE:
             case UPDATE_MODE:
             {
-                if(relay!=NULL and relay->is_model_active())
-                    relay->run(mode);
-
                 if(vrt!=NULL and vrt->is_model_active())
+                {
                     vrt->run(mode);
+
+                    if(elec!=NULL and elec->is_model_active())
+                    {
+                        if(elec->is_model_bypassed()
+                            and (not vrt->is_in_vrt_status()))
+                            elec->unbypass_model();
+                        else
+                        {
+                            if(not elec->is_model_bypassed()
+                                and (vrt->is_in_vrt_status()))
+                                elec->bypass_model();
+                        }
+                    }
+                }
 
                 if(pitch!=NULL and pitch->is_model_active())
                     pitch->run(mode);
@@ -175,7 +186,7 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
                 if(turbine!=NULL and turbine->is_model_active())
                     turbine->run(mode);
 
-                if(elec!=NULL and elec->is_model_active())
+                if(elec!=NULL and elec->is_model_active() and (not elec->is_model_bypassed()))
                     elec->run(mode);
 
                 if(turbine!=NULL and turbine->is_model_active())
@@ -190,9 +201,12 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
             }
             case RELAY_MODE:
             {
-                if(relay!=NULL)
+                if(relay!=NULL and relay->is_model_active())
                     relay->run(mode);
+                break;
             }
+            default:
+                break;
         }
     }
 }

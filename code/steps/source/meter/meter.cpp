@@ -1558,6 +1558,7 @@ double METER::get_meter_value_as_a_wt_generator() const
             WT_AERODYNAMIC_MODEL* aerd_model = generator->get_wt_aerodynamic_model();
             WT_TURBINE_MODEL* turbine_model = generator->get_wt_turbine_model();
             WT_ELECTRICAL_MODEL* electrical_model = generator->get_wt_electrical_model();
+            WT_VRT_MODEL* vrt_model = generator->get_wt_vrt_model();
             WT_PITCH_MODEL* pitch_model = generator->get_wt_pitch_model();
             WIND_SPEED_MODEL* windspeed_model = generator->get_wind_speed_model();
 
@@ -1817,38 +1818,23 @@ double METER::get_meter_value_as_a_wt_generator() const
             }
             if(meter_type=="ACTIVE CURRENT COMMAND IN PU")
             {
-                if(electrical_model != NULL)
-                    return electrical_model->get_active_current_command_in_pu_based_on_mbase();
-                else
-                    return gen_model->get_active_current_command_in_pu_based_on_mbase();
+                return gen_model->get_active_current_command_in_pu_based_on_mbase();
             }
             if(meter_type=="REACTIVE CURRENT COMMAND IN PU")
             {
-                if(electrical_model != NULL)
-                    return electrical_model->get_reactive_current_command_in_pu_based_on_mbase();
-                else
-                    return gen_model->get_reactive_current_command_in_pu_based_on_mbase();
+                return gen_model->get_reactive_current_command_in_pu_based_on_mbase();
             }
             if(meter_type=="ACTIVE POWER COMMAND IN PU")
             {
-                if(electrical_model != NULL)
-                    return electrical_model->get_active_power_command_in_pu_based_on_mbase();
-                else
-                    return 0.0;
+                return gen_model->get_active_power_command_in_pu_based_on_mbase();
             }
             if(meter_type=="REACTIVE POWER COMMAND IN PU")
             {
-                if(electrical_model != NULL)
-                    return electrical_model->get_reactive_power_command_in_pu_based_on_mbase();
-                else
-                    return 0.0;
+                return gen_model->get_reactive_power_command_in_pu_based_on_mbase();
             }
             if(meter_type=="REACTIVE VOLTAGE COMMAND IN PU")
             {
-                if(electrical_model != NULL)
-                    return electrical_model->get_reactive_voltage_command_in_pu();
-                else
-                    return 0.0;
+                return gen_model->get_reactive_voltage_command_in_pu();
             }
             if(meter_type=="PITCH ANGLE IN DEG")
             {

@@ -23,6 +23,10 @@ class WT_ELECTRICAL_MODEL : public WTG_MODEL
     public:
         WT_ELECTRICAL_MODEL(STEPS& toolkit);
         virtual ~WT_ELECTRICAL_MODEL();
+
+        void unbypass_model();
+        void bypass_model();
+        bool is_model_bypassed() const;
     public: // pe elctricla control common
         virtual string get_model_type() const;
         // get input
@@ -102,6 +106,8 @@ class WT_ELECTRICAL_MODEL : public WTG_MODEL
         double power_factor_reference_in_pu;
         PE_VAR_CONTROL_MODE pe_var_control_mode;
         WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE power_speed_table;
+
+        bool flag_model_bypassed;
 };
 
 #endif // WT_ELECTRICAL_MODEL_H

@@ -68,3 +68,8 @@ double WT_VRT_MODEL::get_wt_generator_terminal_current_in_pu() const
 	double x = I.real(), y = I.imag();
 	return steps_sqrt(x*x+y*y);
 }
+
+bool WT_VRT_MODEL::is_in_vrt_status() const
+{
+    return get_lvrt_status()!=VRT_NORMAL_STATUS or get_hvrt_status()!=VRT_NORMAL_STATUS;
+}

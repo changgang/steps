@@ -458,48 +458,45 @@ void PSASPS6::initialize()
 
 void PSASPS6::run(DYNAMIC_MODE mode)
 {
-    if(is_model_active())
-    {
-        double value_slot_1 = get_signal_value_of_slot(0);
-        speed_sensor.set_input(value_slot_1-speed_deviation_ref_pu);
-        speed_sensor.run(mode);
+    double value_slot_1 = get_signal_value_of_slot(0);
+    speed_sensor.set_input(value_slot_1-speed_deviation_ref_pu);
+    speed_sensor.run(mode);
 
-        double input = speed_sensor.get_output();
-        speed_dedc_block_1.set_input(input);
-        speed_dedc_block_1.run(mode);
+    double input = speed_sensor.get_output();
+    speed_dedc_block_1.set_input(input);
+    speed_dedc_block_1.run(mode);
 
-        input = speed_dedc_block_1.get_output();
-        speed_dedc_block_2.set_input(input);
-        speed_dedc_block_2.run(mode);
+    input = speed_dedc_block_1.get_output();
+    speed_dedc_block_2.set_input(input);
+    speed_dedc_block_2.run(mode);
 
-        double value_slot_2 = get_signal_value_of_slot(1);
-        pelec_sensor.set_input(value_slot_2-Pe_ref_pu);
-        pelec_sensor.run(mode);
+    double value_slot_2 = get_signal_value_of_slot(1);
+    pelec_sensor.set_input(value_slot_2-Pe_ref_pu);
+    pelec_sensor.run(mode);
 
-        input = pelec_sensor.get_output();
-        pelec_dedc_block_1.set_input(input);
-        pelec_dedc_block_1.run(mode);
+    input = pelec_sensor.get_output();
+    pelec_dedc_block_1.set_input(input);
+    pelec_dedc_block_1.run(mode);
 
-        input = pelec_dedc_block_1.get_output();
-        pelec_dedc_block_2.set_input(input);
-        pelec_dedc_block_2.run(mode);
+    input = pelec_dedc_block_1.get_output();
+    pelec_dedc_block_2.set_input(input);
+    pelec_dedc_block_2.run(mode);
 
-        input = speed_dedc_block_2.get_output()+(Ks-1)*pelec_dedc_block_2.get_output();
+    input = speed_dedc_block_2.get_output()+(Ks-1)*pelec_dedc_block_2.get_output();
 
-        phase_tuner_1.set_input(input);
-        phase_tuner_1.run(mode);
+    phase_tuner_1.set_input(input);
+    phase_tuner_1.run(mode);
 
-        input = phase_tuner_1.get_output();
-        phase_tuner_2.set_input(input);
-        phase_tuner_2.run(mode);
+    input = phase_tuner_1.get_output();
+    phase_tuner_2.set_input(input);
+    phase_tuner_2.run(mode);
 
-        input = phase_tuner_2.get_output();
-        phase_tuner_3.set_input(input);
-        phase_tuner_3.run(mode);
+    input = phase_tuner_2.get_output();
+    phase_tuner_3.set_input(input);
+    phase_tuner_3.run(mode);
 
-        if(mode==UPDATE_MODE)
-            set_flag_model_updated_as_true();
-    }
+    if(mode==UPDATE_MODE)
+        set_flag_model_updated_as_true();
 }
 
 double PSASPS6::get_stabilizing_signal_in_pu()

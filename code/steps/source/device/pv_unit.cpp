@@ -105,7 +105,7 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
         {
             case INITIALIZE_MODE:
             {
-                if(conv!=NULL)
+                if(conv!=NULL and conv->is_model_active())
                     conv->initialize();
                 else
                 {
@@ -114,19 +114,29 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
                     return;
                 }
 
-                if(irrd!=NULL)
+                if(irrd!=NULL and irrd->is_model_active())
                     irrd->initialize();
 
-                if(panel!=NULL)
+                if(panel!=NULL and panel->is_model_active())
                     panel->initialize();
 
-                if(elec!=NULL)
+                if(elec!=NULL and elec->is_model_active())
                     elec->initialize();
+
+                if(vrt!=NULL and vrt->is_model_active())
+                    vrt->initialize();
+
+                if(relay!=NULL and relay->is_model_active())
+                    relay->initialize();
 
                 break;
             }
-            default:
+            case INTEGRATE_MODE:
+            case UPDATE_MODE:
             {
+                if(vrt!=NULL and vrt->is_model_active())
+                    vrt->run(mode);
+
                 if(irrd!=NULL and irrd->is_model_active())
                     irrd->run(mode);
 
@@ -140,6 +150,14 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
                     conv->run(mode);
                 break;
             }
+            case RELAY_MODE:
+            {
+                if(relay!=NULL and relay->is_model_active())
+                    relay->run(mode);
+                break;
+            }
+            default:
+                break;
         }
     }
 }

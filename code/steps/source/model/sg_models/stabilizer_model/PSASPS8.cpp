@@ -292,30 +292,27 @@ void PSASPS8::initialize()
 
 void PSASPS8::run(DYNAMIC_MODE mode)
 {
-    if(is_model_active())
-    {
-        double V = get_signal_value_of_slot(0);
+    double V = get_signal_value_of_slot(0);
 
-        double input = V_ref_pu - V;
-        sensor.set_input(input);
-        sensor.run(mode);
+    double input = V_ref_pu - V;
+    sensor.set_input(input);
+    sensor.run(mode);
 
-        input = sensor.get_output();
+    input = sensor.get_output();
 
-        phase_tuner_1.set_input(input);
-        phase_tuner_1.run(mode);
-        input = phase_tuner_1.get_output();
+    phase_tuner_1.set_input(input);
+    phase_tuner_1.run(mode);
+    input = phase_tuner_1.get_output();
 
-        phase_tuner_2.set_input(input);
-        phase_tuner_2.run(mode);
-        input = phase_tuner_2.get_output();
+    phase_tuner_2.set_input(input);
+    phase_tuner_2.run(mode);
+    input = phase_tuner_2.get_output();
 
-        phase_tuner_3.set_input(input);
-        phase_tuner_3.run(mode);
+    phase_tuner_3.set_input(input);
+    phase_tuner_3.run(mode);
 
-        if(mode==UPDATE_MODE)
-            set_flag_model_updated_as_true();
-    }
+    if(mode==UPDATE_MODE)
+        set_flag_model_updated_as_true();
 }
 
 double PSASPS8::get_stabilizing_signal_in_pu()

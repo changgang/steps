@@ -302,13 +302,8 @@ void PSASPS5::initialize()
 
 void PSASPS5::run(DYNAMIC_MODE mode)
 {
-    if(is_model_active())
-    {
-        return;
-
-        if(mode==UPDATE_MODE)
-            set_flag_model_updated_as_true();
-    }
+    if(mode==UPDATE_MODE)
+        set_flag_model_updated_as_true();
 }
 
 double PSASPS5::get_stabilizing_signal_in_pu()

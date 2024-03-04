@@ -458,7 +458,7 @@ void EQUIVALENT_DEVICE::run(DYNAMIC_MODE mode)
         case INITIALIZE_MODE:
         {
             EQUIVALENT_MODEL* model = get_equivalent_model();
-            if(model!=NULL)
+            if(model!=NULL and model->is_model_active())
                 model->initialize();
             else
                 return;
@@ -466,6 +466,7 @@ void EQUIVALENT_DEVICE::run(DYNAMIC_MODE mode)
             break;
         }
         case INTEGRATE_MODE:
+        case UPDATE_MODE:
         {
             EQUIVALENT_MODEL* model = get_equivalent_model();
             if(model!=NULL and model->is_model_active())
@@ -479,22 +480,6 @@ void EQUIVALENT_DEVICE::run(DYNAMIC_MODE mode)
                 set_equivalent_nominal_constant_current_load_in_MVA(model->get_equivalent_nominal_constant_current_load_in_MVA());
                 set_equivalent_nominal_constant_impedance_load_in_MVA(model->get_equivalent_nominal_constant_impedance_load_in_MVA());
             }
-        }
-        case UPDATE_MODE:
-        {
-            EQUIVALENT_MODEL* model = get_equivalent_model();
-            if(model!=NULL)
-            {
-                model->run(mode);
-
-                set_equivalent_voltage_source_voltage_in_pu(model->get_equivalent_voltage_source_voltage_in_pu());
-                set_equivalent_voltage_source_impedance_in_pu(model->get_equivalent_voltage_source_impedance_in_pu());
-
-                set_equivalent_nominal_constant_power_load_in_MVA(model->get_equivalent_nominal_constant_power_load_in_MVA());
-                set_equivalent_nominal_constant_current_load_in_MVA(model->get_equivalent_nominal_constant_current_load_in_MVA());
-                set_equivalent_nominal_constant_impedance_load_in_MVA(model->get_equivalent_nominal_constant_impedance_load_in_MVA());
-            }
-            break;
         }
         default:
             break;

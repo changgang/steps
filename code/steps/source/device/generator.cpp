@@ -567,17 +567,17 @@ void GENERATOR::run(DYNAMIC_MODE mode)
         {
             case INITIALIZE_MODE:
             {
-                if(gen!=NULL)
+                if(gen!=NULL and gen->is_model_active())
                     gen->initialize();
                 else
                     return;
 
                 STEPS& toolkit = gen->get_toolkit();
                 POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-                if(comp!=NULL)
+                if(comp!=NULL and comp->is_model_active())
                     comp->initialize();
 
-                if(pss!=NULL)
+                if(pss!=NULL and pss->is_model_active())
                 {
                     if(gen->get_model_name()=="GENCLS")
                     {
@@ -592,7 +592,7 @@ void GENERATOR::run(DYNAMIC_MODE mode)
                     }
                 }
 
-                if(exciter!=NULL)
+                if(exciter!=NULL and exciter->is_model_active())
                 {
                     if(gen->get_model_name()=="GENCLS")
                     {
@@ -605,10 +605,10 @@ void GENERATOR::run(DYNAMIC_MODE mode)
                         exciter->initialize();
                 }
 
-                if(tg!=NULL)
+                if(tg!=NULL and tg->is_model_active())
                     tg->initialize();
 
-                if(tlc!=NULL)
+                if(tlc!=NULL and tlc->is_model_active())
                     tlc->initialize();
 
                 break;
@@ -636,6 +636,7 @@ void GENERATOR::run(DYNAMIC_MODE mode)
                 break;
             }
             case RELAY_MODE:
+            default:
             {
                 break;
             }

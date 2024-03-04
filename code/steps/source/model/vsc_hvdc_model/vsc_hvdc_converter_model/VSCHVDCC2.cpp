@@ -561,96 +561,93 @@ void VSCHVDCC2::initialize()
 
 void VSCHVDCC2::run(DYNAMIC_MODE mode)
 {
-    if(is_model_active())
-    {
-        STEPS& toolkit = get_toolkit();
-        double time = toolkit.get_dynamic_simulation_time_in_s();
-        VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
-        unsigned int converter_index = get_converter_index();
+    STEPS& toolkit = get_toolkit();
+    double time = toolkit.get_dynamic_simulation_time_in_s();
+    VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();
+    unsigned int converter_index = get_converter_index();
 
-        double Pdc_from_Ceq_to_dc_network = vsc_hvdc->get_converter_Pdc_from_Ceq_to_DC_network_in_MW(converter_index);
-        double Pac_from_ac_network_to_Ceq = get_converter_dc_power_from_converter_to_Ceq_in_MW();
-        double Udc = get_dynamic_dc_voltage_in_kV();
+    double Pdc_from_Ceq_to_dc_network = vsc_hvdc->get_converter_Pdc_from_Ceq_to_DC_network_in_MW(converter_index);
+    double Pac_from_ac_network_to_Ceq = get_converter_dc_power_from_converter_to_Ceq_in_MW();
+    double Udc = get_dynamic_dc_voltage_in_kV();
 
-        double input;
-        input = (-Pdc_from_Ceq_to_dc_network+Pac_from_ac_network_to_Ceq)/Udc;
-        udc_block.set_input(input);
-        udc_block.run(mode);
+    double input;
+    input = (-Pdc_from_Ceq_to_dc_network+Pac_from_ac_network_to_Ceq)/Udc;
+    udc_block.set_input(input);
+    udc_block.run(mode);
 
-        vsc_hvdc->set_dc_bus_Vdc_in_kV(vsc_hvdc->get_dc_bus_index_with_converter_index(get_converter_index()),
-                                       get_dynamic_dc_voltage_in_kV());
+    vsc_hvdc->set_dc_bus_Vdc_in_kV(vsc_hvdc->get_dc_bus_index_with_converter_index(get_converter_index()),
+                                   get_dynamic_dc_voltage_in_kV());
 
-        complex<double> Is = get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_converter_base();
+    complex<double> Is = get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_converter_base();
 
-        double Imag = abs(Is);
+    double Imag = abs(Is);
 
-        double Imax = 0.001*vsc_hvdc->get_converter_rated_current_in_A(converter_index)*get_converter_dc_base_voltage_in_kV()/get_converter_capacity_in_MVA();
-        input = Imag - Imax;
-        active_current_reducer.set_input(input);
-        active_current_reducer.run(mode);
+    double Imax = 0.001*vsc_hvdc->get_converter_rated_current_in_A(converter_index)*get_converter_dc_base_voltage_in_kV()/get_converter_capacity_in_MVA();
+    input = Imag - Imax;
+    active_current_reducer.set_input(input);
+    active_current_reducer.run(mode);
 
-        reactive_current_reducer.set_input(input);
-        reactive_current_reducer.run(mode);
+    reactive_current_reducer.set_input(input);
+    reactive_current_reducer.run(mode);
 
-        complex<double> Us = get_converter_ac_bus_complex_voltage_in_pu();
-        complex<double> S = Us*conj(Is);
+    complex<double> Us = get_converter_ac_bus_complex_voltage_in_pu();
+    complex<double> S = Us*conj(Is);
 
-        double Ps = S.real();
-        double Qs = S.imag();
+    double Ps = S.real();
+    double Qs = S.imag();
 
-        p_sensor.set_input(Ps);
-        p_sensor.run(mode);
+    p_sensor.set_input(Ps);
+    p_sensor.run(mode);
 
-        q_sensor.set_input(Qs);
-        q_sensor.run(mode);
+    q_sensor.set_input(Qs);
+    q_sensor.run(mode);
 
-        double f = get_converter_ac_bus_frequency_deviation_in_pu();
-        //cout<<"get_dc_voltage_Ku: "<<get_dc_voltage_Ku()<<"  get_frequency_Kf:  "<<get_frequency_Kf()<<endl;
-        f = get_dc_voltage_Ku()*(Udc-vdc_ref)/get_converter_dc_base_voltage_in_kV()+get_frequency_Kf()*f;
+    double f = get_converter_ac_bus_frequency_deviation_in_pu();
+    //cout<<"get_dc_voltage_Ku: "<<get_dc_voltage_Ku()<<"  get_frequency_Kf:  "<<get_frequency_Kf()<<endl;
+    f = get_dc_voltage_Ku()*(Udc-vdc_ref)/get_converter_dc_base_voltage_in_kV()+get_frequency_Kf()*f;
 
-        f_sensor.set_input(f);
-        f_sensor.run(mode);
+    f_sensor.set_input(f);
+    f_sensor.run(mode);
 
-        double u = get_converter_ac_bus_voltage_in_pu();
-        uac_sensor.set_input(u);
-        uac_sensor.run(mode);
+    double u = get_converter_ac_bus_voltage_in_pu();
+    uac_sensor.set_input(u);
+    uac_sensor.run(mode);
 
-        input = f_sensor.get_output();
-        frequency_tuner.set_input(input);
-        frequency_tuner.run(mode);
+    input = f_sensor.get_output();
+    frequency_tuner.set_input(input);
+    frequency_tuner.run(mode);
 
-        input = frequency_tuner.get_output();
-        frequency_response_block.set_input(input);
-        frequency_response_block.run(mode);
+    input = frequency_tuner.get_output();
+    frequency_response_block.set_input(input);
+    frequency_response_block.run(mode);
 
-        double Porder = get_Porder_in_pu();
-        double Pe = p_sensor.get_output();
-        input = Porder - Pe - get_omega_block_D_in_pu()*omega_block.get_output();
-        omega_block.set_input(input);
-        omega_block.run(mode);
+    double Porder = get_Porder_in_pu();
+    double Pe = p_sensor.get_output();
+    input = Porder - Pe - get_omega_block_D_in_pu()*omega_block.get_output();
+    omega_block.set_input(input);
+    omega_block.run(mode);
 
-        input = omega_block.get_output();
+    input = omega_block.get_output();
 
-        angle_block.set_input(input);
-        angle_block.run(mode);
+    angle_block.set_input(input);
+    angle_block.run(mode);
 
-        input = get_Uacref_in_pu() - uac_sensor.get_output();
-        voltage_tuner.set_input(input);
-        voltage_tuner.run(mode);
+    input = get_Uacref_in_pu() - uac_sensor.get_output();
+    voltage_tuner.set_input(input);
+    voltage_tuner.run(mode);
 
-        input = voltage_tuner.get_output();
-        voltage_response_block.set_input(input);
-        voltage_response_block.run(mode);
+    input = voltage_tuner.get_output();
+    voltage_response_block.set_input(input);
+    voltage_response_block.run(mode);
 
-        double Qorder = get_Qorder_in_pu();
-        double Qe = q_sensor.get_output();
-        input = Qorder - Qe - get_voltage_block_D_in_pu()*voltage_block.get_output();
-        voltage_block.set_input(input);
-        voltage_block.run(mode);
+    double Qorder = get_Qorder_in_pu();
+    double Qe = q_sensor.get_output();
+    input = Qorder - Qe - get_voltage_block_D_in_pu()*voltage_block.get_output();
+    voltage_block.set_input(input);
+    voltage_block.run(mode);
 
-        if(mode==UPDATE_MODE)
-            set_flag_model_updated_as_true();
-    }
+    if(mode==UPDATE_MODE)
+        set_flag_model_updated_as_true();
 }
 
 void VSCHVDCC2::check()

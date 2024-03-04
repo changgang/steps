@@ -105,7 +105,7 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
             case INITIALIZE_MODE:
             {
                 ENERGY_STORAGE_MODEL* estorage = get_energy_storage_model();
-                if(estorage!=NULL)
+                if(estorage!=NULL and estorage->is_model_active())
                     estorage->initialize();
                 else
                     return;

@@ -26,6 +26,8 @@ class WT_VRT_MODEL : public WTG_MODEL
         complex<double> get_wt_generator_terminal_generation_in_pu_based_on_mbase() const;
         complex<double> get_wt_generator_terminal_complex_current_in_pu() const;
         double get_wt_generator_terminal_current_in_pu() const;
+
+        bool is_in_vrt_status() const;
     public: // specific exciter
         virtual string get_model_name() const = 0;
 

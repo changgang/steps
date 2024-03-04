@@ -6,12 +6,27 @@
 
 WT_ELECTRICAL_MODEL::WT_ELECTRICAL_MODEL(STEPS& toolkit) : WTG_MODEL(toolkit)
 {
-    ;
+    unbypass_model();
 }
 
 WT_ELECTRICAL_MODEL::~WT_ELECTRICAL_MODEL()
 {
     ;
+}
+
+void WT_ELECTRICAL_MODEL::unbypass_model()
+{
+    flag_model_bypassed = false;
+}
+
+void WT_ELECTRICAL_MODEL::bypass_model()
+{
+    flag_model_bypassed = true;
+}
+
+bool WT_ELECTRICAL_MODEL::is_model_bypassed() const
+{
+    return flag_model_bypassed;
 }
 
 string WT_ELECTRICAL_MODEL::get_model_type() const

@@ -86,12 +86,9 @@ void VSCHVDCP0::initialize()
 
 void VSCHVDCP0::run(DYNAMIC_MODE mode)
 {
-    if(is_model_active())
-    {
-        solve_dynamic_network_with_quasi_steady_state_model();
-        if(mode==UPDATE_MODE)
-            set_flag_model_updated_as_true();
-    }
+    solve_dynamic_network_with_quasi_steady_state_model();
+    if(mode==UPDATE_MODE)
+        set_flag_model_updated_as_true();
 }
 
 void VSCHVDCP0::check()

@@ -15,6 +15,9 @@ WT_GENERATOR_MODEL::WT_GENERATOR_MODEL(STEPS& toolkit) : WTG_MODEL(toolkit)
     set_current_source_flag(true);
     set_initial_active_current_command_in_pu_based_on_mbase(0.0);
     set_initial_reactive_current_command_in_pu_based_on_mbase(0.0);
+    set_initial_active_power_command_in_pu_based_on_mbase(0.0);
+    set_initial_reactive_power_command_in_pu_based_on_mbase(0.0);
+    set_initial_reactive_voltage_command_in_pu(0.0);
 }
 
 WT_GENERATOR_MODEL::~WT_GENERATOR_MODEL()
@@ -103,20 +106,15 @@ double WT_GENERATOR_MODEL::get_active_current_command_in_pu_based_on_mbase()
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     WT_ELECTRICAL_MODEL* elec_model = wt_generator->get_wt_electrical_model();
     WT_VRT_MODEL* vrt_model = wt_generator->get_wt_vrt_model();
-    if(elec_model!=NULL and elec_model->is_model_initialized())
+    if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
+        return elec_model->get_active_current_command_in_pu_based_on_mbase();
+    else
     {
         if(vrt_model!=NULL and vrt_model->is_model_initialized())
-        {
-            if(vrt_model->get_lvrt_status()==VRT_NORMAL_STATUS and vrt_model->get_hvrt_status()==VRT_NORMAL_STATUS)
-                return elec_model->get_active_current_command_in_pu_based_on_mbase();
-            else
-                return vrt_model->get_active_current_command_in_pu_based_on_mbase();
-        }
+            return vrt_model->get_active_current_command_in_pu_based_on_mbase();
         else
-            return elec_model->get_active_current_command_in_pu_based_on_mbase();
+            return get_initial_active_current_command_in_pu_based_on_mbase();
     }
-    else
-        return get_initial_active_current_command_in_pu_based_on_mbase();
 }
 
 double WT_GENERATOR_MODEL::get_reactive_current_command_in_pu_based_on_mbase()
@@ -124,20 +122,15 @@ double WT_GENERATOR_MODEL::get_reactive_current_command_in_pu_based_on_mbase()
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     WT_ELECTRICAL_MODEL* elec_model = wt_generator->get_wt_electrical_model();
     WT_VRT_MODEL* vrt_model = wt_generator->get_wt_vrt_model();
-    if(elec_model!=NULL and elec_model->is_model_initialized())
+    if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
+        return elec_model->get_reactive_current_command_in_pu_based_on_mbase();
+    else
     {
         if(vrt_model!=NULL and vrt_model->is_model_initialized())
-        {
-            if(vrt_model->get_lvrt_status()==VRT_NORMAL_STATUS and vrt_model->get_hvrt_status()==VRT_NORMAL_STATUS)
-                return elec_model->get_reactive_current_command_in_pu_based_on_mbase();
-            else
-                return vrt_model->get_reactive_current_command_in_pu_based_on_mbase();
-        }
+            return vrt_model->get_reactive_current_command_in_pu_based_on_mbase();
         else
-            return elec_model->get_reactive_current_command_in_pu_based_on_mbase();
+            return get_initial_reactive_current_command_in_pu_based_on_mbase();
     }
-    else
-        return get_initial_reactive_current_command_in_pu_based_on_mbase();
 }
 
 double WT_GENERATOR_MODEL::get_reactive_voltage_command_in_pu()
@@ -145,20 +138,15 @@ double WT_GENERATOR_MODEL::get_reactive_voltage_command_in_pu()
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     WT_ELECTRICAL_MODEL* elec_model = wt_generator->get_wt_electrical_model();
     WT_VRT_MODEL* vrt_model = wt_generator->get_wt_vrt_model();
-    if(elec_model!=NULL and elec_model->is_model_initialized())
+    if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
+        return elec_model->get_reactive_voltage_command_in_pu();
+    else
     {
         if(vrt_model!=NULL and vrt_model->is_model_initialized())
-        {
-            if(vrt_model->get_lvrt_status()==VRT_NORMAL_STATUS and vrt_model->get_hvrt_status()==VRT_NORMAL_STATUS)
-                return elec_model->get_reactive_voltage_command_in_pu();
-            else
-                return vrt_model->get_reactive_voltage_command_in_pu();
-        }
+            return vrt_model->get_reactive_voltage_command_in_pu();
         else
-            return elec_model->get_reactive_voltage_command_in_pu();
+            return get_initial_reactive_voltage_command_in_pu();
     }
-    else
-        return get_initial_reactive_voltage_command_in_pu();
 }
 
 double WT_GENERATOR_MODEL::get_active_power_command_in_pu_based_on_mbase()
@@ -166,20 +154,15 @@ double WT_GENERATOR_MODEL::get_active_power_command_in_pu_based_on_mbase()
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     WT_ELECTRICAL_MODEL* elec_model = wt_generator->get_wt_electrical_model();
     WT_VRT_MODEL* vrt_model = wt_generator->get_wt_vrt_model();
-    if(elec_model!=NULL and elec_model->is_model_initialized())
+    if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
+        return elec_model->get_active_power_command_in_pu_based_on_mbase();
+    else
     {
         if(vrt_model!=NULL and vrt_model->is_model_initialized())
-        {
-            if(vrt_model->get_lvrt_status()==VRT_NORMAL_STATUS and vrt_model->get_hvrt_status()==VRT_NORMAL_STATUS)
-                return elec_model->get_active_power_command_in_pu_based_on_mbase();
-            else
-                return vrt_model->get_active_power_command_in_pu_based_on_mbase();
-        }
+            return vrt_model->get_active_power_command_in_pu_based_on_mbase();
         else
-            return elec_model->get_active_power_command_in_pu_based_on_mbase();
+            return get_initial_active_power_command_in_pu_based_on_mbase();
     }
-    else
-        return get_initial_active_power_command_in_pu_based_on_mbase();
 }
 
 double WT_GENERATOR_MODEL::get_reactive_power_command_in_pu_based_on_mbase()
@@ -187,18 +170,13 @@ double WT_GENERATOR_MODEL::get_reactive_power_command_in_pu_based_on_mbase()
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     WT_ELECTRICAL_MODEL* elec_model = wt_generator->get_wt_electrical_model();
     WT_VRT_MODEL* vrt_model = wt_generator->get_wt_vrt_model();
-    if(elec_model!=NULL and elec_model->is_model_initialized())
+    if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
+        return elec_model->get_reactive_power_command_in_pu_based_on_mbase();
+    else
     {
         if(vrt_model!=NULL and vrt_model->is_model_initialized())
-        {
-            if(vrt_model->get_lvrt_status()==VRT_NORMAL_STATUS and vrt_model->get_hvrt_status()==VRT_NORMAL_STATUS)
-                return elec_model->get_reactive_power_command_in_pu_based_on_mbase();
-            else
-                return vrt_model->get_reactive_power_command_in_pu_based_on_mbase();
-        }
+            return vrt_model->get_reactive_power_command_in_pu_based_on_mbase();
         else
-            return elec_model->get_reactive_power_command_in_pu_based_on_mbase();
+            return get_initial_reactive_power_command_in_pu_based_on_mbase();
     }
-    else
-        return get_initial_reactive_power_command_in_pu_based_on_mbase();
 }

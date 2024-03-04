@@ -602,14 +602,14 @@ void LOAD::run(DYNAMIC_MODE mode)
             {
                 set_load_manually_scale_factor_in_pu(0.0);
 
-                if(load != NULL)
+                if(load != NULL and load->is_model_active())
                 {
                     load->initialize();
 
-                    if(uvls!=NULL)
+                    if(uvls!=NULL and uvls->is_model_active())
                         uvls->initialize();
 
-                    if(ufls!=NULL)
+                    if(ufls!=NULL and ufls->is_model_active())
                         ufls->initialize();
                 }
                 break;
@@ -634,7 +634,10 @@ void LOAD::run(DYNAMIC_MODE mode)
 
                 if(ufls!=NULL and ufls->is_model_active())
                     ufls->run(mode);
+                break;
             }
+            default:
+                break;
         }
     }
 }

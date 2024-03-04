@@ -390,45 +390,42 @@ void PSASPS2::initialize()
 
 void PSASPS2::run(DYNAMIC_MODE mode)
 {
-    if(is_model_active())
-    {
-        double speed_deviation_pu = get_signal_value_of_slot(0);
-        double Pe_pu = get_signal_value_of_slot(1);
-        double Pmech_pu = get_signal_value_of_slot(2);
+    double speed_deviation_pu = get_signal_value_of_slot(0);
+    double Pe_pu = get_signal_value_of_slot(1);
+    double Pmech_pu = get_signal_value_of_slot(2);
 
-        sensor_w.set_input(speed_deviation_pu);
-        sensor_w.run(mode);
+    sensor_w.set_input(speed_deviation_pu);
+    sensor_w.run(mode);
 
-        sensor_p.set_input(Pe_pu);
-        sensor_p.run(mode);
+    sensor_p.set_input(Pe_pu);
+    sensor_p.run(mode);
 
-        sensor_t.set_input(Pmech_pu);
-        sensor_t.run(mode);
+    sensor_t.set_input(Pmech_pu);
+    sensor_t.run(mode);
 
-        double input = Kw*(sensor_w.get_output()-speed_deviation_ref_pu)-Kp*(sensor_p.get_output()-Pe_ref_pu)-Kt*(Pmech_ref_pu-sensor_t.get_output());
+    double input = Kw*(sensor_w.get_output()-speed_deviation_ref_pu)-Kp*(sensor_p.get_output()-Pe_ref_pu)-Kt*(Pmech_ref_pu-sensor_t.get_output());
 
-        dedc_block_1.set_input(input);
-        dedc_block_1.run(mode);
-        input = dedc_block_1.get_output();
+    dedc_block_1.set_input(input);
+    dedc_block_1.run(mode);
+    input = dedc_block_1.get_output();
 
-        dedc_block_2.set_input(input);
-        dedc_block_2.run(mode);
-        input = dedc_block_2.get_output();
+    dedc_block_2.set_input(input);
+    dedc_block_2.run(mode);
+    input = dedc_block_2.get_output();
 
-        phase_tuner_1.set_input(input);
-        phase_tuner_1.run(mode);
-        input = phase_tuner_1.get_output();
+    phase_tuner_1.set_input(input);
+    phase_tuner_1.run(mode);
+    input = phase_tuner_1.get_output();
 
-        phase_tuner_2.set_input(input);
-        phase_tuner_2.run(mode);
-        input = phase_tuner_2.get_output();
+    phase_tuner_2.set_input(input);
+    phase_tuner_2.run(mode);
+    input = phase_tuner_2.get_output();
 
-        phase_tuner_3.set_input(input);
-        phase_tuner_3.run(mode);
+    phase_tuner_3.set_input(input);
+    phase_tuner_3.run(mode);
 
-        if(mode==UPDATE_MODE)
-            set_flag_model_updated_as_true();
-    }
+    if(mode==UPDATE_MODE)
+        set_flag_model_updated_as_true();
 }
 
 double PSASPS2::get_stabilizing_signal_in_pu()

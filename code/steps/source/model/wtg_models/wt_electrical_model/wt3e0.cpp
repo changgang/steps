@@ -76,6 +76,8 @@ void WT3E0::clear()
 
 void WT3E0::copy_from_const_model(const WT3E0& model)
 {
+    if(model.is_model_bypassed()) bypass_model();
+
     STEPS& toolkit = model.get_toolkit();
     set_toolkit(toolkit);
     voltage_sensor.set_toolkit(toolkit);
