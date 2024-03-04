@@ -1,31 +1,31 @@
-#ifndef WT_VOLTAGE_RIDE_THROUGH_MODEL_H
-#define WT_VOLTAGE_RIDE_THROUGH_MODEL_H
+#ifndef PV_VRT_MODEL_H
+#define PV_VRT_MODEL_H
 
-#include "header/model/wtg_models/wtg_model.h"
+#include "header/model/pvu_models/pvu_model.h"
 #include <complex>
-class WT_VOLTAGE_RIDE_THROUGH_MODEL : public WTG_MODEL
+class PV_VRT_MODEL : public PVU_MODEL
 {
     /*
-    Wind voltage ride through control model
+    PV voltage ride through control model
     General inputs:
-        vterm: wt generator terminal or remote AC voltage
+        vterm: PV terminal or remote AC voltage
     General output:
         ipcmd: active current command in pu
         iqcmd: reactive current command in pu
     */
     public:
-        WT_VOLTAGE_RIDE_THROUGH_MODEL(STEPS& toolkit);
-        virtual ~WT_VOLTAGE_RIDE_THROUGH_MODEL();
+        PV_VRT_MODEL(STEPS& toolkit);
+        virtual ~PV_VRT_MODEL();
     public: // pe elctricla control common
         virtual string get_model_type() const;
         // get input
         complex<double> get_terminal_bus_complex_voltage_in_pu() const;
         double get_terminal_bus_voltage_in_pu() const;
 
-        complex<double> get_wt_generator_terminal_generation_in_MVA() const;
-        complex<double> get_wt_generator_terminal_generation_in_pu_based_on_mbase() const;
-        complex<double> get_wt_generator_terminal_complex_current_in_pu() const;
-        double get_wt_generator_terminal_current_in_pu() const;
+        complex<double> get_pv_unit_terminal_generation_in_MVA() const;
+        complex<double> get_pv_unit_terminal_generation_in_pu_based_on_mbase() const;
+        complex<double> get_pv_unit_terminal_complex_current_in_pu() const;
+        double get_pv_unit_terminal_current_in_pu() const;
     public: // specific exciter
         virtual string get_model_name() const = 0;
 
@@ -66,4 +66,4 @@ class WT_VOLTAGE_RIDE_THROUGH_MODEL : public WTG_MODEL
     private:
 };
 
-#endif // WT_VOLTAGE_RIDE_THROUGH_MODEL_H
+#endif // PV_VRT_MODEL_H

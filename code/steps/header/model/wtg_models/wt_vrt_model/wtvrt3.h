@@ -1,11 +1,11 @@
 #ifndef WTVRT3_H
 #define WTVRT3_H
 
-#include "header/model/wtg_models/wt_voltage_ride_through_model/wt_voltage_ride_through_model.h"
+#include "header/model/wtg_models/wt_vrt_model/wt_vrt_model.h"
 #include "header/model/converter_common_models/vrt_model/lvrt_control.h"
 #include "header/model/converter_common_models/vrt_model/hvrt_control.h"
 
-class WTVRT3: public WT_VOLTAGE_RIDE_THROUGH_MODEL
+class WTVRT3: public WT_VRT_MODEL
 {
     public:
         WTVRT3(STEPS& toolkit);

@@ -8,6 +8,8 @@
 #include "header/model/pvu_models/pv_panel_model/pv_panel_model.h"
 #include "header/model/pvu_models/pv_electrical_model/pv_electrical_model.h"
 #include "header/model/pvu_models/pv_irradiance_model/pv_irradiance_model.h"
+#include "header/model/pvu_models/pv_vrt_model/pv_vrt_model.h"
+#include "header/model/pvu_models/pv_relay_model/pv_relay_model.h"
 
 using namespace std;
 
@@ -36,11 +38,15 @@ class PV_UNIT : public SOURCE
         void set_pv_panel_model(PV_PANEL_MODEL* model);
         void set_pv_electrical_model(PV_ELECTRICAL_MODEL* model);
         void set_pv_irradiance_model(PV_IRRADIANCE_MODEL* model);
+        void set_pv_vrt_model(PV_VRT_MODEL* model);
+        void set_pv_relay_model(PV_RELAY_MODEL* model);
 
         PV_CONVERTER_MODEL* get_pv_converter_model() const;
         PV_PANEL_MODEL* get_pv_panel_model() const;
         PV_ELECTRICAL_MODEL* get_pv_electrical_model() const;
         PV_IRRADIANCE_MODEL* get_pv_irradiance_model() const;
+        PV_VRT_MODEL* get_pv_vrt_model() const;
+        PV_RELAY_MODEL* get_pv_relay_model() const;
 
         virtual void run(DYNAMIC_MODE mode);
         virtual void report() const;
@@ -86,6 +92,8 @@ class PV_UNIT : public SOURCE
         PV_PANEL_MODEL* pv_panel_model;
         PV_ELECTRICAL_MODEL* pv_electrical_model;
         PV_IRRADIANCE_MODEL* pv_irradiance_model;
+        PV_VRT_MODEL* pv_vrt_model;
+        PV_RELAY_MODEL* pv_relay_model;
 
         double R1, X1, R2, X2, R0, X0, Rground, Xground;
         bool sequence_parameter_import_flag;

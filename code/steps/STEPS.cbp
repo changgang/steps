@@ -260,6 +260,11 @@
 		<Unit filename="header/model/pvu_models/pv_panel_model/pv_panel_models.h" />
 		<Unit filename="header/model/pvu_models/pv_panel_model/pvp0.h" />
 		<Unit filename="header/model/pvu_models/pv_panel_model/pvp0_test.h" />
+		<Unit filename="header/model/pvu_models/pv_relay_model/pv_relay_model.h" />
+		<Unit filename="header/model/pvu_models/pv_relay_model/pv_relay_model_test.h" />
+		<Unit filename="header/model/pvu_models/pv_relay_model/pv_relay_models.h" />
+		<Unit filename="header/model/pvu_models/pv_vrt_model/pv_vrt_model.h" />
+		<Unit filename="header/model/pvu_models/pv_vrt_model/pv_vrt_models.h" />
 		<Unit filename="header/model/pvu_models/pvu_model.h" />
 		<Unit filename="header/model/pvu_models/pvu_model_test.h" />
 		<Unit filename="header/model/sg_models/compensator_model/COMP.h" />
@@ -311,6 +316,7 @@
 		<Unit filename="header/model/sg_models/stabilizer_model/stabilizer_model.h" />
 		<Unit filename="header/model/sg_models/stabilizer_model/stabilizer_model_test.h" />
 		<Unit filename="header/model/sg_models/stabilizer_model/stabilizer_models.h" />
+		<Unit filename="header/model/sg_models/supported_sg_models.h" />
 		<Unit filename="header/model/sg_models/sync_generator_model/gencls.h" />
 		<Unit filename="header/model/sg_models/sync_generator_model/gencls_test.h" />
 		<Unit filename="header/model/sg_models/sync_generator_model/genrou.h" />
@@ -356,6 +362,7 @@
 		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_network_model/VSCHVDCP0.h" />
 		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_model.h" />
 		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_models.h" />
+		<Unit filename="header/model/wtg_models/supported_wtg_models.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/filewind.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/filewind_test.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/wind_speed_model.h" />
@@ -408,9 +415,9 @@
 		<Unit filename="header/model/wtg_models/wt_turbine_model/wt_turbine_model.h" />
 		<Unit filename="header/model/wtg_models/wt_turbine_model/wt_turbine_model_test.h" />
 		<Unit filename="header/model/wtg_models/wt_turbine_model/wt_turbine_models.h" />
-		<Unit filename="header/model/wtg_models/wt_voltage_ride_through_model/wt_voltage_ride_through_model.h" />
-		<Unit filename="header/model/wtg_models/wt_voltage_ride_through_model/wt_voltage_ride_through_models.h" />
-		<Unit filename="header/model/wtg_models/wt_voltage_ride_through_model/wtvrt3.h" />
+		<Unit filename="header/model/wtg_models/wt_vrt_model/wt_vrt_model.h" />
+		<Unit filename="header/model/wtg_models/wt_vrt_model/wt_vrt_models.h" />
+		<Unit filename="header/model/wtg_models/wt_vrt_model/wtvrt3.h" />
 		<Unit filename="header/model/wtg_models/wtg_model.h" />
 		<Unit filename="header/model/wtg_models/wtg_model_test.h" />
 		<Unit filename="header/network/jacobian_builder.h" />
@@ -695,6 +702,8 @@
 		<Unit filename="source/model/pvu_models/pv_panel_model/pv_panel_model_test.cpp" />
 		<Unit filename="source/model/pvu_models/pv_panel_model/pvp0.cpp" />
 		<Unit filename="source/model/pvu_models/pv_panel_model/pvp0_test.cpp" />
+		<Unit filename="source/model/pvu_models/pv_relay_model/pv_relay_model.cpp" />
+		<Unit filename="source/model/pvu_models/pv_vrt_model/pv_vrt_model.cpp" />
 		<Unit filename="source/model/pvu_models/pvu_model.cpp" />
 		<Unit filename="source/model/pvu_models/pvu_model_test.cpp" />
 		<Unit filename="source/model/sg_models/compensator_model/COMP.cpp" />
@@ -843,8 +852,8 @@
 		<Unit filename="source/model/wtg_models/wt_turbine_model/wt3t0_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_turbine_model/wt_turbine_model.cpp" />
 		<Unit filename="source/model/wtg_models/wt_turbine_model/wt_turbine_model_test.cpp" />
-		<Unit filename="source/model/wtg_models/wt_voltage_ride_through_model/wt_voltage_ride_through_model.cpp" />
-		<Unit filename="source/model/wtg_models/wt_voltage_ride_through_model/wtvrt3.cpp" />
+		<Unit filename="source/model/wtg_models/wt_vrt_model/wt_vrt_model.cpp" />
+		<Unit filename="source/model/wtg_models/wt_vrt_model/wtvrt3.cpp" />
 		<Unit filename="source/model/wtg_models/wtg_model.cpp" />
 		<Unit filename="source/model/wtg_models/wtg_model_test.cpp" />
 		<Unit filename="source/network/jacobian_builder.cpp" />

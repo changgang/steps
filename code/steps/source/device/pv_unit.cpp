@@ -1,10 +1,6 @@
 #include "header/device/pv_unit.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
-#include "header/model/pvu_models/pv_converter_model/pv_converter_models.h"
-#include "header/model/pvu_models/pv_panel_model/pv_panel_models.h"
-#include "header/model/pvu_models/pv_electrical_model/pv_electrical_models.h"
-#include "header/model/pvu_models/pv_irradiance_model/pv_irradiance_models.h"
 
 #include <istream>
 #include <iostream>
@@ -30,6 +26,8 @@ void PV_UNIT::clear()
     pv_panel_model = NULL;
     pv_electrical_model = NULL;
     pv_irradiance_model = NULL;
+    pv_vrt_model = NULL;
+    pv_relay_model = NULL;
 
     set_positive_sequence_resistance_in_pu(0.0);
     set_positive_sequence_reactance_in_pu(0.0);
@@ -100,6 +98,8 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
         PV_ELECTRICAL_MODEL* elec = get_pv_electrical_model();
         PV_PANEL_MODEL* panel = get_pv_panel_model();
         PV_IRRADIANCE_MODEL* irrd = get_pv_irradiance_model();
+        PV_VRT_MODEL* vrt = get_pv_vrt_model();
+        PV_RELAY_MODEL* relay = get_pv_relay_model();
 
         switch(mode)
         {
@@ -195,6 +195,18 @@ void PV_UNIT::set_model(MODEL* model)
             return;
         }
 
+        if(model->get_model_type()=="PV VRT")
+        {
+            set_pv_vrt_model((PV_VRT_MODEL*) model);
+            return;
+        }
+
+        if(model->get_model_type()=="PV RELAY")
+        {
+            set_pv_relay_model((PV_RELAY_MODEL*) model);
+            return;
+        }
+
         ostringstream osstream;
         osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up pv unit-related model.";
         STEPS& toolkit = get_toolkit();
@@ -213,6 +225,10 @@ MODEL* PV_UNIT::get_model_of_type(string model_type, unsigned int index)
         return get_pv_electrical_model();
     if(model_type=="PV IRRADIANCE")
         return get_pv_irradiance_model();
+    if(model_type=="PV VRT")
+        return get_pv_vrt_model();
+    if(model_type=="PV RELAY")
+        return get_pv_relay_model();
     return NULL;
 }
 
@@ -240,6 +256,18 @@ void PV_UNIT::set_pv_irradiance_model(PV_IRRADIANCE_MODEL* model)
         pv_irradiance_model = model;
 }
 
+void PV_UNIT::set_pv_vrt_model(PV_VRT_MODEL* model)
+{
+    if(model!=NULL)
+        pv_vrt_model = model;
+}
+
+void PV_UNIT::set_pv_relay_model(PV_RELAY_MODEL* model)
+{
+    if(model!=NULL)
+        pv_relay_model = model;
+}
+
 PV_CONVERTER_MODEL* PV_UNIT::get_pv_converter_model() const
 {
     return pv_converter_model;
@@ -258,6 +286,16 @@ PV_ELECTRICAL_MODEL* PV_UNIT::get_pv_electrical_model() const
 PV_IRRADIANCE_MODEL* PV_UNIT::get_pv_irradiance_model() const
 {
     return pv_irradiance_model;
+}
+
+PV_VRT_MODEL* PV_UNIT::get_pv_vrt_model() const
+{
+    return pv_vrt_model;
+}
+
+PV_RELAY_MODEL* PV_UNIT::get_pv_relay_model() const
+{
+    return pv_relay_model;
 }
 
 PV_UNIT& PV_UNIT::operator=(const PV_UNIT& pvu)
@@ -288,6 +326,8 @@ PV_UNIT& PV_UNIT::operator=(const PV_UNIT& pvu)
     set_model(pvu.get_pv_panel_model());
     set_model(pvu.get_pv_electrical_model());
     set_model(pvu.get_pv_irradiance_model());
+    set_model(pvu.get_pv_vrt_model());
+    set_model(pvu.get_pv_relay_model());
 
     set_positive_sequence_resistance_in_pu(pvu.get_positive_sequence_resistance_in_pu());
     set_positive_sequence_reactance_in_pu(pvu.get_positive_sequence_reactance_in_pu());

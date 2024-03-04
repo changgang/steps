@@ -1,4 +1,4 @@
-#include "header/model/wtg_models/wt_voltage_ride_through_model/wtvrt3.h"
+#include "header/model/wtg_models/wt_vrt_model/wtvrt3.h"
 #include "header/device/wt_generator.h"
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
@@ -8,13 +8,13 @@
 
 using namespace std;
 
-WTVRT3::WTVRT3(STEPS& toolkit) : WT_VOLTAGE_RIDE_THROUGH_MODEL(toolkit),
+WTVRT3::WTVRT3(STEPS& toolkit) : WT_VRT_MODEL(toolkit),
                                  lvrt(toolkit), hvrt(toolkit)
 {
     clear();
 }
 
-WTVRT3::WTVRT3(const WTVRT3& model) : WT_VOLTAGE_RIDE_THROUGH_MODEL(model.get_toolkit()),
+WTVRT3::WTVRT3(const WTVRT3& model) : WT_VRT_MODEL(model.get_toolkit()),
                                       lvrt(model.get_toolkit()), hvrt(model.get_toolkit())
 {
     copy_from_const_model(model);

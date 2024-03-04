@@ -188,7 +188,7 @@
 	"header/basic/constants.h"
 	"header/meter/meter.h"
 
-1709443457 d:\steps\code\steps\header\device\wt_generator.h
+1709511959 d:\steps\code\steps\header\device\wt_generator.h
 	<string>
 	<complex>
 	"header/device/source.h"
@@ -198,7 +198,7 @@
 	"header/model/wtg_models/wt_turbine_model/wt_turbine_model.h"
 	"header/model/wtg_models/wt_pitch_model/wt_pitch_model.h"
 	"header/model/wtg_models/wind_speed_model/wind_speed_model.h"
-	"header/model/wtg_models/wt_voltage_ride_through_model/wt_voltage_ride_through_model.h"
+	"header/model/wtg_models/wt_vrt_model/wt_vrt_model.h"
 	"header/model/wtg_models/wt_relay_model/wt_relay_model.h"
 
 1709445308 d:\steps\code\steps\header\model\wtg_models\wt_generator_model\wt_generator_model.h
@@ -236,7 +236,7 @@
 1634637238 d:\steps\code\steps\header\model\wtg_models\wt_relay_model\wt_relay_model.h
 	"header/model/wtg_models/wtg_model.h"
 
-1697457172 d:\steps\code\steps\header\device\pv_unit.h
+1709519047 d:\steps\code\steps\header\device\pv_unit.h
 	<string>
 	<complex>
 	"header/device/source.h"
@@ -244,6 +244,8 @@
 	"header/model/pvu_models/pv_panel_model/pv_panel_model.h"
 	"header/model/pvu_models/pv_electrical_model/pv_electrical_model.h"
 	"header/model/pvu_models/pv_irradiance_model/pv_irradiance_model.h"
+	"header/model/pvu_models/pv_vrt_model/pv_vrt_model.h"
+	"header/model/pvu_models/pv_relay_model/pv_relay_model.h"
 
 1634637238 d:\steps\code\steps\header\model\pvu_models\pv_converter_model\pv_converter_model.h
 	"header/model/pvu_models/pvu_model.h"
@@ -2151,27 +2153,15 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/model/all_supported_models.h"
 
-1708527175 d:\steps\code\steps\header\model\all_supported_models.h
-	"header/model/sg_models/sync_generator_model/sync_generator_models.h"
-	"header/model/sg_models/compensator_model/compensator_models.h"
-	"header/model/sg_models/exciter_model/exciter_models.h"
-	"header/model/sg_models/stabilizer_model/stabilizer_models.h"
-	"header/model/sg_models/turbine_governor_model/turbine_governor_models.h"
-	"header/model/sg_models/turbine_load_controller_model/turbine_load_controller_models.h"
+1709519722 d:\steps\code\steps\header\model\all_supported_models.h
+	"header/model/sg_models/supported_sg_models.h"
 	"header/model/load_model/load_models.h"
 	"header/model/load_relay_model/load_voltage_relay_models.h"
 	"header/model/load_relay_model/load_frequency_relay_models.h"
 	"header/model/hvdc_model/hvdc_models.h"
 	"header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_models.h"
 	"header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_models.h"
-	"header/model/wtg_models/wt_generator_model/wt_generator_models.h"
-	"header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_models.h"
-	"header/model/wtg_models/wt_electrical_model/wt_electrical_models.h"
-	"header/model/wtg_models/wt_turbine_model/wt_turbine_models.h"
-	"header/model/wtg_models/wt_pitch_model/wt_pitch_models.h"
-	"header/model/wtg_models/wind_speed_model/wind_speed_models.h"
-	"header/model/wtg_models/wt_voltage_ride_through_model/wt_voltage_ride_through_models.h"
-	"header/model/wtg_models/wt_relay_model/wt_relay_models.h"
+	"header/model/wtg_models/supported_wtg_models.h"
 	"header/model/pvu_models/pv_converter_model/pv_converter_models.h"
 	"header/model/pvu_models/pv_panel_model/pv_panel_models.h"
 	"header/model/pvu_models/pv_electrical_model/pv_electrical_models.h"
@@ -3753,14 +3743,10 @@
 	<istream>
 	<iostream>
 
-1697457172 source:d:\steps\code\steps\source\device\pv_unit.cpp
+1709519251 source:d:\steps\code\steps\source\device\pv_unit.cpp
 	"header/device/pv_unit.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
-	"header/model/pvu_models/pv_converter_model/pv_converter_models.h"
-	"header/model/pvu_models/pv_panel_model/pv_panel_models.h"
-	"header/model/pvu_models/pv_electrical_model/pv_electrical_models.h"
-	"header/model/pvu_models/pv_irradiance_model/pv_irradiance_models.h"
 	<istream>
 	<iostream>
 
@@ -3889,18 +3875,11 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1709443461 source:d:\steps\code\steps\source\device\wt_generator.cpp
+1709519283 source:d:\steps\code\steps\source\device\wt_generator.cpp
 	"header/device/wt_generator.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 	"header/STEPS.h"
-	"header/model/wtg_models/wt_generator_model/wt_generator_models.h"
-	"header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_models.h"
-	"header/model/wtg_models/wt_electrical_model/wt_electrical_models.h"
-	"header/model/wtg_models/wt_turbine_model/wt_turbine_models.h"
-	"header/model/wtg_models/wt_pitch_model/wt_pitch_models.h"
-	"header/model/wtg_models/wind_speed_model/wind_speed_models.h"
-	"header/model/wtg_models/wt_relay_model/wt_relay_models.h"
 	<istream>
 	<iostream>
 
@@ -5298,7 +5277,7 @@
 	"header/model/wtg_models/wt_generator_model/wt3g2.h"
 	"header/STEPS.h"
 
-1709445620 source:d:\steps\code\steps\source\model\wtg_models\wt_generator_model\wt_generator_model.cpp
+1709511959 source:d:\steps\code\steps\source\model\wtg_models\wt_generator_model\wt_generator_model.cpp
 	"header/model/wtg_models/wt_generator_model/wt_generator_model.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -57079,4 +57058,70 @@
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 	<iostream>
+
+1709512813 source:d:\steps\code\steps\source\model\pvu_models\pv_relay_model\pv_relay_model.cpp
+	"header/model/pvu_models/pv_relay_model/pv_relay_model.h"
+	"header/basic/utility.h"
+	"header/STEPS.h"
+	<cstdio>
+
+1709512796 d:\steps\code\steps\header\model\pvu_models\pv_relay_model\pv_relay_model.h
+	"header/model/pvu_models/pvu_model.h"
+
+1709511959 d:\steps\code\steps\header\model\wtg_models\wt_vrt_model\wt_vrt_model.h
+	"header/model/wtg_models/wtg_model.h"
+	<complex>
+
+1709511959 d:\steps\code\steps\header\model\wtg_models\wt_vrt_model\wt_vrt_models.h
+	"header/model/wtg_models/wt_vrt_model/wtvrt3.h"
+
+1709511959 d:\steps\code\steps\header\model\wtg_models\wt_vrt_model\wtvrt3.h
+	"header/model/wtg_models/wt_vrt_model/wt_vrt_model.h"
+	"header/model/converter_common_models/vrt_model/lvrt_control.h"
+	"header/model/converter_common_models/vrt_model/hvrt_control.h"
+
+1709512773 source:d:\steps\code\steps\source\model\pvu_models\pv_vrt_model\pv_vrt_model.cpp
+	"header/model/pvu_models/pv_vrt_model/pv_vrt_model.h"
+	"header/basic/utility.h"
+	"header/device/pv_unit.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+
+1709512769 d:\steps\code\steps\header\model\pvu_models\pv_vrt_model\pv_vrt_model.h
+	"header/model/pvu_models/pvu_model.h"
+	<complex>
+
+1709511959 source:d:\steps\code\steps\source\model\wtg_models\wt_vrt_model\wt_vrt_model.cpp
+	"header/model/wtg_models/wt_vrt_model/wt_vrt_model.h"
+	"header/basic/utility.h"
+	"header/device/wt_generator.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+
+1709511959 source:d:\steps\code\steps\source\model\wtg_models\wt_vrt_model\wtvrt3.cpp
+	"header/model/wtg_models/wt_vrt_model/wtvrt3.h"
+	"header/device/wt_generator.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<iostream>
+
+1709519594 d:\steps\code\steps\header\model\wtg_models\supported_wtg_models.h
+	"header/model/wtg_models/wt_generator_model/wt_generator_models.h"
+	"header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_models.h"
+	"header/model/wtg_models/wt_electrical_model/wt_electrical_models.h"
+	"header/model/wtg_models/wt_turbine_model/wt_turbine_models.h"
+	"header/model/wtg_models/wt_pitch_model/wt_pitch_models.h"
+	"header/model/wtg_models/wind_speed_model/wind_speed_models.h"
+	"header/model/wtg_models/wt_vrt_model/wt_vrt_models.h"
+	"header/model/wtg_models/wt_relay_model/wt_relay_models.h"
+
+1709519699 d:\steps\code\steps\header\model\sg_models\supported_sg_models.h
+	"header/model/sg_models/sync_generator_model/sync_generator_models.h"
+	"header/model/sg_models/compensator_model/compensator_models.h"
+	"header/model/sg_models/exciter_model/exciter_models.h"
+	"header/model/sg_models/stabilizer_model/stabilizer_models.h"
+	"header/model/sg_models/turbine_governor_model/turbine_governor_models.h"
+	"header/model/sg_models/turbine_load_controller_model/turbine_load_controller_models.h"
 
