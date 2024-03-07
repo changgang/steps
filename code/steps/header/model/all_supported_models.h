@@ -5,8 +5,8 @@
 #include "header/model/sg_models/supported_sg_models.h"
 
 #include "header/model/load_model/load_models.h"
-#include "header/model/load_relay_model/load_voltage_relay_models.h"
-#include "header/model/load_relay_model/load_frequency_relay_models.h"
+
+#include "header/model/load_relay_model/load_relay_models.h"
 
 #include "header/model/hvdc_model/hvdc_models.h"
 

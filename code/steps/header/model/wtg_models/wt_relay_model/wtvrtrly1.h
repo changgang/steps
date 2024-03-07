@@ -1,5 +1,5 @@
-#ifndef VRTRLY1_H
-#define VRTRLY1_H
+#ifndef WTVRTRLY1_H
+#define WTVRTRLY1_H
 
 #include "header/model/wtg_models/wt_relay_model/wt_relay_model.h"
 #include "header/model/converter_common_models/vrt_model/lvrt_relay.h"
@@ -8,22 +8,20 @@
 #include "header/basic/constants.h"
 #include "header/basic/multi_point_line.h"
 
-class VRTRLY1 : public WT_RELAY_MODEL
+class WTVRTRLY1 : public WT_RELAY_MODEL
 {
     public:
-        VRTRLY1(STEPS& toolkit);
-        VRTRLY1(const VRTRLY1& model);
-        virtual ~VRTRLY1();
-        virtual VRTRLY1& operator=(const VRTRLY1& model);
+        WTVRTRLY1(STEPS& toolkit);
+        WTVRTRLY1(const WTVRTRLY1& model);
+        virtual ~WTVRTRLY1();
+        virtual WTVRTRLY1& operator=(const WTVRTRLY1& model);
     public: // specific model level
         virtual string get_model_name() const;
 
         void set_vrt_trip_time_delay_in_s(double t);
-        void set_lvrt_point_number(unsigned int n);
-        void set_lvrt_time_volt_threshold_pair(unsigned int index, double t, double v);
+        void add_lvrt_time_volt_threshold_pair(double t, double v);
         void set_lvrt_trip_scale(double scale);
-        void set_hvrt_point_number(unsigned int n);
-        void set_hvrt_time_volt_threshold_pair(unsigned int index, double t, double v);
+        void add_hvrt_time_volt_threshold_pair(double t, double v);
         void set_hvrt_trip_scale(double scale);
 
         double get_vrt_trip_time_delay_in_s() const;
@@ -62,13 +60,9 @@ class VRTRLY1 : public WT_RELAY_MODEL
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
     private:
-        void copy_from_const_model(const VRTRLY1& model);
-
-        void check_lvrt_relay();
-        void check_hvrt_relay();
-
+        void copy_from_const_model(const WTVRTRLY1& model);
         LVRT_RELAY lvrt;
         HVRT_RELAY hvrt;
 };
 
-#endif // VRTRLY1_H
+#endif // WTVRTRLY1_H

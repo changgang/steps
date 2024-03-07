@@ -9,9 +9,8 @@ using namespace std;
 VRT_RELAY_MODEL::VRT_RELAY_MODEL(STEPS& toolkit)
 {
     set_toolkit(toolkit);
-    bus_ptr = NULL;
-    set_vrt_status(VRT_NORMAL_MODE);
     vrt_trip_timer.set_toolkit(toolkit);
+    clear();
 }
 
 VRT_RELAY_MODEL::~VRT_RELAY_MODEL()
@@ -19,10 +18,25 @@ VRT_RELAY_MODEL::~VRT_RELAY_MODEL()
     ;
 }
 
+void VRT_RELAY_MODEL::copy_from_const_model(const VRT_RELAY_MODEL& model)
+{
+    clear();
+    MULTI_POINT_LINE m = model.get_vrt_line();
+    vrt_line = m;
+    set_vrt_trip_scale(model.get_vrt_trip_scale());
+}
+
+void VRT_RELAY_MODEL::clear()
+{
+    bus_ptr = NULL;
+    device = NULL;
+    vrt_line.clear();
+    vrt_trip_timer.clear();
+}
+
 void VRT_RELAY_MODEL::set_toolkit(STEPS& toolkit)
 {
     this->toolkit = (&toolkit);
-    vrt_trip_timer.set_toolkit(toolkit);
 }
 
 STEPS& VRT_RELAY_MODEL::get_toolkit() const
@@ -45,6 +59,16 @@ NONBUS_DEVICE* VRT_RELAY_MODEL::get_device_pointer() const
     return device;
 }
 
+DEVICE_ID VRT_RELAY_MODEL::get_device_id() const
+{
+    return device->get_device_id();
+}
+
+string VRT_RELAY_MODEL::get_compound_device_name() const
+{
+    return get_device_id().get_compound_device_name();
+}
+
 BUS* VRT_RELAY_MODEL::get_bus_pointer() const
 {
     return bus_ptr;
@@ -65,14 +89,9 @@ void VRT_RELAY_MODEL::set_vrt_trip_time_delay_in_s(double t)
     vrt_trip_timer.set_timer_interval_in_s(t);
 }
 
-void VRT_RELAY_MODEL::set_vrt_point_number(unsigned int n)
+void VRT_RELAY_MODEL::add_vrt_time_volt_threshold_pair(double t, double v)
 {
-    vrt_line.set_point_number(n);
-}
-
-void VRT_RELAY_MODEL::set_vrt_time_volt_threshold_pair(unsigned int index, double t, double v)
-{
-    vrt_line.set_point(index, t, v);
+    vrt_line.add_x_and_y_pair(t, v);
 }
 
 void VRT_RELAY_MODEL::set_vrt_trip_scale(double scale)
@@ -80,7 +99,7 @@ void VRT_RELAY_MODEL::set_vrt_trip_scale(double scale)
     vrt_trip_scale = scale;
 }
 
-MULTI_POINT_LINE& VRT_RELAY_MODEL::get_vrt_line()
+MULTI_POINT_LINE VRT_RELAY_MODEL::get_vrt_line() const
 {
     return vrt_line;
 }
@@ -97,17 +116,17 @@ double VRT_RELAY_MODEL::get_vrt_trip_time_delay_in_s() const
 
 unsigned int VRT_RELAY_MODEL::get_vrt_point_number() const
 {
-    return vrt_line.get_point_number();
+    return vrt_line.get_valid_point_size();
 }
 
 double VRT_RELAY_MODEL::get_vrt_time_threshold(unsigned int index) const
 {
-    return vrt_line.get_point_x(index);
+    return vrt_line.get_point_x_with_index(index);
 }
 
 double VRT_RELAY_MODEL::get_vrt_volt_threshold(unsigned int index) const
 {
-    return vrt_line.get_point_y(index);
+    return vrt_line.get_point_y_with_index(index);
 }
 
 double VRT_RELAY_MODEL::get_vrt_trip_scale() const
@@ -115,37 +134,22 @@ double VRT_RELAY_MODEL::get_vrt_trip_scale() const
     return vrt_trip_scale;
 }
 
-void VRT_RELAY_MODEL::set_vrt_status(VRT_STATUS status)
-{
-    this->status = status;
-    if(status==LVRT_DURING_MODE or status==HVRT_DURING_MODE)
-    {
-        STEPS& toolkit = get_toolkit();
-        t0_vrt_activated = toolkit.get_dynamic_simulation_time_in_s();
-    }
-    else
-        t0_vrt_activated = INFINITE_THRESHOLD;
-}
-
 double VRT_RELAY_MODEL::get_time_when_vrt_enter_during_status() const
 {
     return t0_vrt_activated;
 }
 
-VRT_STATUS VRT_RELAY_MODEL::get_vrt_status() const
+void VRT_RELAY_MODEL::set_time_when_vrt_enter_during_status(double t)
 {
-    return status;
+    t0_vrt_activated = t;
 }
-void VRT_RELAY_MODEL::copy_from_const_model(const VRT_RELAY_MODEL& model)
-{
-    set_vrt_status(model.get_vrt_status());
 
-    unsigned int n = model.get_vrt_point_number();
-    set_vrt_point_number(n);
-    for(unsigned int i=0; i<n; ++i)
-    {
-        double t = model.get_vrt_time_threshold(i);
-        double v = model.get_vrt_volt_threshold(i);
-        set_vrt_time_volt_threshold_pair(i, t, v);
-    }
+void VRT_RELAY_MODEL::set_point_time_with_index(unsigned int index, double value)
+{
+    vrt_line.set_point_x_with_index(index, value);
+}
+
+void VRT_RELAY_MODEL::set_point_voltage_with_index(unsigned int index, double value)
+{
+    vrt_line.set_point_y_with_index(index, value);
 }

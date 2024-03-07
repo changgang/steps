@@ -1,41 +1,35 @@
 #ifndef MULTI_POINT_LINE_H
 #define MULTI_POINT_LINE_H
 
-#include <string>
+#include "header/basic/constants.h"
 #include <vector>
-using namespace std;
 
+using namespace std;
 class MULTI_POINT_LINE
 {
     public:
         MULTI_POINT_LINE();
-        MULTI_POINT_LINE(const MULTI_POINT_LINE& line);
-        virtual MULTI_POINT_LINE& operator=(const MULTI_POINT_LINE& line);
         virtual ~MULTI_POINT_LINE();
-
-        void set_point_number(unsigned int n);
-        void set_point(unsigned int index, double x, double y);
-
-        unsigned int get_point_number() const;
-        double get_point_x(unsigned int index) const;
-        double get_point_y(unsigned int index) const;
-
-        double get_max_x() const;
-        double get_min_x() const;
+        MULTI_POINT_LINE(const MULTI_POINT_LINE& m);
+        virtual MULTI_POINT_LINE& operator=(const MULTI_POINT_LINE& m);
+    public:
+        void clear();
+        void add_x_and_y_pair(double x, double y);
+        double get_y_at_x(double x);
+        const vector<vector<double>> get_line() const;
+        double get_point_x_with_index(unsigned int i) const;
+        double get_point_y_with_index(unsigned int i) const;
+        void set_point_y_with_index(unsigned int i, double value);
+        void set_point_x_with_index(unsigned int i, double value);
+        unsigned int get_valid_point_size() const;
         double get_max_y() const;
         double get_min_y() const;
-        double interpolate_y_at_x(double x) const;
-
-        void sort_in_ascending_order();
-
-        void clear();
     private:
-        void copy_from_const(const MULTI_POINT_LINE& line);
-        unsigned int get_greatest_point_index_with_x_less_than(double x) const;
-        unsigned int get_least_point_index_with_x_greater_than(double x) const;
-        vector<double> x;
-        vector<double> y;
+        void copy_from_const_line(const MULTI_POINT_LINE& m);
+        void reorder_points();
+        bool is_point_exist(double x, double y) const;
+        unsigned int get_the_last_point_with_x_less_than_or_equal_to(double x);
+        double line[STEPS_MAX_MULTI_POINT_LINE_SIZE][2];
 };
-
 
 #endif // MULTI_POINT_LINE_H

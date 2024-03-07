@@ -29,6 +29,7 @@ const double INFINITE_THRESHOLD = 1e9;
 
 const unsigned int STEPS_MAX_TOOLKIT_SIZE = 1000;
 const unsigned int STEPS_MAX_TEMP_CHAR_BUFFER_SIZE = 500;
+const unsigned int STEPS_MAX_MULTI_POINT_LINE_SIZE = 24;
 const unsigned int STEPS_MODEL_FEEDBACK_LOOP_INTEGRATION_COUNT = 2;
 const unsigned int STEPS_MAX_LOAD_RELAY_STAGE = 50;
 const unsigned int STEPS_MAX_RELAY_COUNT = 5;

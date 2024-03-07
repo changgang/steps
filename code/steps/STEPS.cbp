@@ -233,6 +233,7 @@
 		<Unit filename="header/model/load_relay_model/load_frequency_relay_models.h" />
 		<Unit filename="header/model/load_relay_model/load_relay_model.h" />
 		<Unit filename="header/model/load_relay_model/load_relay_model_test.h" />
+		<Unit filename="header/model/load_relay_model/load_relay_models.h" />
 		<Unit filename="header/model/load_relay_model/load_voltage_relay_model.h" />
 		<Unit filename="header/model/load_relay_model/load_voltage_relay_model_test.h" />
 		<Unit filename="header/model/load_relay_model/load_voltage_relay_models.h" />
@@ -399,13 +400,12 @@
 		<Unit filename="header/model/wtg_models/wt_pitch_model/wt_pitch_model.h" />
 		<Unit filename="header/model/wtg_models/wt_pitch_model/wt_pitch_model_test.h" />
 		<Unit filename="header/model/wtg_models/wt_pitch_model/wt_pitch_models.h" />
-		<Unit filename="header/model/wtg_models/wt_relay_model/vrtrly0.h" />
-		<Unit filename="header/model/wtg_models/wt_relay_model/vrtrly1.h" />
 		<Unit filename="header/model/wtg_models/wt_relay_model/wt_relay_model.h" />
 		<Unit filename="header/model/wtg_models/wt_relay_model/wt_relay_model_test.h" />
 		<Unit filename="header/model/wtg_models/wt_relay_model/wt_relay_models.h" />
 		<Unit filename="header/model/wtg_models/wt_relay_model/wtrly0.h" />
 		<Unit filename="header/model/wtg_models/wt_relay_model/wtrly0_test.h" />
+		<Unit filename="header/model/wtg_models/wt_relay_model/wtvrtrly1.h" />
 		<Unit filename="header/model/wtg_models/wt_turbine_model/wt3t0.h" />
 		<Unit filename="header/model/wtg_models/wt_turbine_model/wt3t0_test.h" />
 		<Unit filename="header/model/wtg_models/wt_turbine_model/wt3t1.h" />
@@ -631,21 +631,12 @@
 		<Unit filename="source/model/converter_common_model/pll_model/pll0.cpp" />
 		<Unit filename="source/model/converter_common_model/pll_model/pll_model.cpp" />
 		<Unit filename="source/model/converter_common_model/vrt_model/hvrt_control.cpp" />
-		<Unit filename="source/model/converter_common_model/vrt_model/hvrt_relay.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
+		<Unit filename="source/model/converter_common_model/vrt_model/hvrt_relay.cpp" />
 		<Unit filename="source/model/converter_common_model/vrt_model/lvrt_control.cpp" />
 		<Unit filename="source/model/converter_common_model/vrt_model/lvrt_control_test.cpp" />
-		<Unit filename="source/model/converter_common_model/vrt_model/lvrt_relay.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
+		<Unit filename="source/model/converter_common_model/vrt_model/lvrt_relay.cpp" />
 		<Unit filename="source/model/converter_common_model/vrt_model/vrt_control_model.cpp" />
-		<Unit filename="source/model/converter_common_model/vrt_model/vrt_relay_model.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
+		<Unit filename="source/model/converter_common_model/vrt_model/vrt_relay_model.cpp" />
 		<Unit filename="source/model/converter_common_model/vsg_model/vsg0.cpp" />
 		<Unit filename="source/model/converter_common_model/vsg_model/vsg_model.cpp" />
 		<Unit filename="source/model/energy_storage_model/energy_storage_model.cpp" />
@@ -826,14 +817,6 @@
 		<Unit filename="source/model/wtg_models/wt_pitch_model/wt3p0_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_pitch_model/wt_pitch_model.cpp" />
 		<Unit filename="source/model/wtg_models/wt_pitch_model/wt_pitch_model_test.cpp" />
-		<Unit filename="source/model/wtg_models/wt_relay_model/vrtrly0.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
-		<Unit filename="source/model/wtg_models/wt_relay_model/vrtrly1.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
 		<Unit filename="source/model/wtg_models/wt_relay_model/wt_relay_model.cpp" />
 		<Unit filename="source/model/wtg_models/wt_relay_model/wt_relay_model_test.cpp">
 			<Option compile="0" />
@@ -844,6 +827,7 @@
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
+		<Unit filename="source/model/wtg_models/wt_relay_model/wtvrtrly1.cpp" />
 		<Unit filename="source/model/wtg_models/wt_turbine_model/wt3t0.cpp" />
 		<Unit filename="source/model/wtg_models/wt_turbine_model/wt3t0_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_turbine_model/wt_turbine_model.cpp" />

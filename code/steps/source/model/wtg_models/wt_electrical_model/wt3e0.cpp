@@ -1071,8 +1071,6 @@ double WT3E0::get_active_power_command_in_pu_based_on_mbase() const
 
 double WT3E0::get_reactive_current_command_in_pu_based_on_mbase()
 {
-    return 0.0;
-
     WT_GENERATOR* gen = get_wt_generator_pointer();
     double xeq = gen->get_source_impedance_in_pu().imag();
 

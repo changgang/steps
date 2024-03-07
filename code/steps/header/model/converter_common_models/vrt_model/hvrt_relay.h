@@ -2,7 +2,6 @@
 #define HVRT_RELAY_H
 
 #include "header/model/converter_common_models/vrt_model/vrt_relay_model.h"
-#include "header/block/integral_block.h"
 
 class HVRT_RELAY : public VRT_RELAY_MODEL
 {
@@ -14,9 +13,10 @@ class HVRT_RELAY : public VRT_RELAY_MODEL
         void clear();
         void copy_from_const_model(const HVRT_RELAY& model);
     public:
-        void initialize_vrt();
-    public:
-        virtual void check_vrt_status();
+        void set_hvrt_voltage_threshold(double v);
+        double get_hvrt_voltage_threshold() const;
+        virtual void initialize_vrt_relay();
+        virtual void check_vrt_relay();
     private:
         double vth_hvrt;
 };

@@ -171,6 +171,7 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="WT3P0") { add_WT3P0_model(data); return;}
     if(model_name=="FILEWIND") { add_FILEWIND_model(data); return;}
     if(model_name=="WTRLY0") { add_WTRLY0_model(data); return;}
+    if(model_name=="WTVRTRLY1") { add_WTVRTRLY1_model(data); return;}
     if(model_name=="WTVRT3") { add_WTVRT3_model(data); return;}
 
     if(model_name=="PVGU1") { add_PVGU1_model(data); return;}
@@ -2079,6 +2080,36 @@ void STEPS_IMEXPORTER::add_WTRLY0_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid WTRLY0 model is built, but will not be set for "<<gen->get_compound_device_name();
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::add_WTVRTRLY1_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "WTVRTRLY1")
+        return;
+
+    if(data.size()<3)
+        return;
+
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
+    DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
+
+    WT_GENERATOR* gen = psdb.get_wt_generator(did);
+    if(gen != NULL)
+    {
+        WTVRTRLY1 model(toolkit);
+        model.set_device_id(did);
+        bool successful = model.setup_model_with_steps_string_vector(data);
+        if(successful)
+            dmdb.add_model(&model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid WTVRTRLY1 model is built, but will not be set for "<<gen->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
