@@ -39,8 +39,8 @@ void MULTI_POINT_LINE::clear()
 {
     for(unsigned int i=0; i<STEPS_MAX_MULTI_POINT_LINE_SIZE; ++i)
     {
-        line[i][0] = 0.0;
-        line[i][1] = 0.0;
+        line[i][0] = INFINITE_THRESHOLD;
+        line[i][1] = INFINITE_THRESHOLD;
     }
 }
 
@@ -77,7 +77,7 @@ unsigned int MULTI_POINT_LINE::get_valid_point_size() const
     unsigned int valid_point_count = STEPS_MAX_MULTI_POINT_LINE_SIZE;
     for(unsigned int i=0; i<STEPS_MAX_MULTI_POINT_LINE_SIZE; ++i)
     {
-        if(line[i][0]==0.0)
+        if(fabs(line[i][0]-INFINITE_THRESHOLD)<DOUBLE_EPSILON and fabs(line[i][1]-INFINITE_THRESHOLD)<DOUBLE_EPSILON)
         {
             valid_point_count = i;
             break;
@@ -159,8 +159,10 @@ void MULTI_POINT_LINE::reorder_points()
 double MULTI_POINT_LINE::get_y_at_x(double x)
 {
     unsigned int n = get_valid_point_size();
-    if(n<2)
+    if(n<1)
         return 0.0;
+    if(n==1)
+        return get_point_y_with_index(0);
 
     unsigned int i_less = get_the_last_point_with_x_less_than_or_equal_to(x);
     if(i_less==INDEX_NOT_EXIST)
