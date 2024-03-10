@@ -453,9 +453,7 @@ void SPARSE_MATRIX_TEST::test_matrix_add()
     // [0  2  4]  + j [0  5  9]
     // [1  0  1]      [0  0  2]
 
-    STEPS_SPARSE_MATRIX* tempmatrix = matrix+matrix;
-    STEPS_SPARSE_MATRIX newmatrix = (*tempmatrix);
-    delete tempmatrix;
+    STEPS_SPARSE_MATRIX newmatrix = matrix+matrix;
 
     TEST_ASSERT(newmatrix.get_matrix_size()==3);
 
@@ -481,9 +479,7 @@ void SPARSE_MATRIX_TEST::test_matrix_minus()
     // [0  2  4]  + j [0  5  9]
     // [1  0  1]      [0  0  2]
 
-    STEPS_SPARSE_MATRIX* tempmatrix = matrix-matrix;
-    STEPS_SPARSE_MATRIX newmatrix = (*tempmatrix);
-    delete tempmatrix;
+    STEPS_SPARSE_MATRIX newmatrix = matrix-matrix;
 
     TEST_ASSERT(newmatrix.get_matrix_size()==3);
 
@@ -509,9 +505,7 @@ void SPARSE_MATRIX_TEST::test_matrix_multiply()
     // [0  2  4]  + j [0  5  9]
     // [1  0  1]      [0  0  2]
 
-    STEPS_SPARSE_MATRIX* tempmatrix = matrix*matrix;
-    STEPS_SPARSE_MATRIX newmatrix = (*tempmatrix);
-    delete tempmatrix;
+    STEPS_SPARSE_MATRIX newmatrix = matrix*matrix;
 
     TEST_ASSERT(newmatrix.get_matrix_size()==3);
 
@@ -537,9 +531,7 @@ void SPARSE_MATRIX_TEST::test_matrix_inverse()
     // [0  2  4]  + j [0  5  9]
     // [1  0  1]      [0  0  2]
 
-    STEPS_SPARSE_MATRIX* tempmatrix = 1/matrix;
-    STEPS_SPARSE_MATRIX newmatrix = (*tempmatrix);
-    delete tempmatrix;
+    STEPS_SPARSE_MATRIX newmatrix = 1/matrix;
 
     TEST_ASSERT(newmatrix.get_matrix_size()==3);
 
