@@ -744,35 +744,7 @@ bool GENERATOR::get_sequence_parameter_import_flag() const
     return sequence_parameter_import_flag;
 }
 
-void GENERATOR::get_linearized_system_ABCD(STEPS_SPARSE_MATRIX* A,
-                                           STEPS_SPARSE_MATRIX* B,
-                                           STEPS_SPARSE_MATRIX* C,
-                                           STEPS_SPARSE_MATRIX* D) const
+void GENERATOR::build_linearized_matrix_ABCD()
 {
-    STEPS_SPARSE_MATRIX Agen, Bgen, Cgen, Dgen;
-    sync_generator_model->get_linearized_system_ABCD(&Agen, &Bgen, &Cgen, &Dgen);
-
-    STEPS_SPARSE_MATRIX Acomp, Bcomp, Ccomp, Dcomp;
-    compensator_model->get_linearized_system_ABCD(&Acomp, &Bcomp, &Ccomp, &Dcomp);
-
-    STEPS_SPARSE_MATRIX Aex, Bex, Cex, Dex;
-    exciter_model->get_linearized_system_ABCD(&Aex, &Bex, &Cex, &Dex);
-
-    STEPS_SPARSE_MATRIX Apss, Bpss, Cpss, Dpss;
-    stabilizer_model->get_linearized_system_ABCD(&Apss, &Bpss, &Cpss, &Dpss);
-
-    STEPS_SPARSE_MATRIX Agov, Bgov, Cgov, Dgov;
-    turbine_governor_model->get_linearized_system_ABCD(&Agov, &Bgov, &Cgov, &Dgov);
-
-    STEPS_SPARSE_MATRIX Atlc, Btlc, Ctlc, Dtlc;
-    turbine_load_controller_model->get_linearized_system_ABCD(&Atlc, &Btlc, &Ctlc, &Dtlc);
-
-
-    STEPS_SPARSE_MATRIX E, F, G, H;
-    // E = []
-    // F = []
-    // G = []
-    // H = []
-
-    // then build A B C D
+    ;
 }

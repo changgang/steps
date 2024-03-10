@@ -5,11 +5,34 @@
 SG_MODEL::SG_MODEL(STEPS& toolkit) : MODEL(toolkit)
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_GENERATOR);
+    Aptr = NULL;
+    Bptr = NULL;
+    Cptr = NULL;
+    Dptr = NULL;
 }
 
 SG_MODEL::~SG_MODEL()
 {
-    ;
+    if(Aptr != NULL)
+    {
+        delete Aptr;
+        Aptr = NULL;
+    }
+    if(Bptr != NULL)
+    {
+        delete Bptr;
+        Bptr = NULL;
+    }
+    if(Cptr != NULL)
+    {
+        delete Cptr;
+        Cptr = NULL;
+    }
+    if(Dptr != NULL)
+    {
+        delete Dptr;
+        Dptr = NULL;
+    }
 }
 
 GENERATOR* SG_MODEL::get_generator_pointer() const
@@ -47,6 +70,18 @@ double SG_MODEL::get_terminal_voltage_in_pu() const
     return bus->get_positive_sequence_voltage_in_pu();
 }
 
+void SG_MODEL::initialize_ABCD_matrix_for_linearization()
+{
+    if(Aptr == NULL)
+        Aptr = new STEPS_SPARSE_MATRIX;
+    if(Bptr == NULL)
+        Bptr = new STEPS_SPARSE_MATRIX;
+    if(Cptr == NULL)
+        Cptr = new STEPS_SPARSE_MATRIX;
+    if(Dptr == NULL)
+        Dptr = new STEPS_SPARSE_MATRIX;
+}
+
 STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_system_variable(char var) const
 {
     var = toupper(var);
@@ -65,3 +100,64 @@ STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_system_variable(char var) const
             return matrix;
     }
 }
+
+STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_system_A() const
+{
+    if(Aptr!=NULL) return *Aptr;
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. No pointer to A matrix exists in SG_MODEL. Cannot return linearized A matrix.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+
+        STEPS_SPARSE_MATRIX temp;
+        return temp;
+    }
+}
+
+STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_system_B() const
+{
+    if(Bptr!=NULL) return *Bptr;
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. No pointer to B matrix exists in SG_MODEL. Cannot return linearized B matrix.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+
+        STEPS_SPARSE_MATRIX temp;
+        return temp;
+    }
+}
+
+STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_system_C() const
+{
+    if(Cptr!=NULL) return *Cptr;
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. No pointer to C matrix exists in SG_MODEL. Cannot return linearized C matrix.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+
+        STEPS_SPARSE_MATRIX temp;
+        return temp;
+    }
+}
+
+STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_system_D() const
+{
+    if(Dptr!=NULL) return *Dptr;
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. No pointer to D matrix exists in SG_MODEL. Cannot return linearized D matrix.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+
+        STEPS_SPARSE_MATRIX temp;
+        return temp;
+    }
+}
+

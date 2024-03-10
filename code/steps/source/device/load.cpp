@@ -1207,3 +1207,8 @@ bool LOAD::get_sequence_parameter_import_flag() const
 {
     return sequence_parameter_import_flag;
 }
+
+void LOAD::build_linearized_matrix_ABCD()
+{
+    return;
+}

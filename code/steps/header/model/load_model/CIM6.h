@@ -104,6 +104,8 @@ class CIM6 : public LOAD_MODEL
         virtual string get_dynamic_data_in_psse_format() const;
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
+
+        virtual void build_linearized_matrix_ABCD();
     private:
         void copy_from_const_model(const CIM6& model);
         void setup_model_dynamic_parameters();

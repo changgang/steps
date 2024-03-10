@@ -897,3 +897,24 @@ SPARSE_MATRIX_CSPARSE concatenate_matrix_diagnally(vector<SPARSE_MATRIX_CSPARSE*
     MATRIX.compress_and_merge_duplicate_entries();
     return MATRIX;
 }
+
+SPARSE_MATRIX_CSPARSE build_identity_matrix(SPARSE_MATRIX_CSPARSE&A)
+{
+    // B = I,I.column_count = A.matrix_column_count
+    unsigned int n = A.get_matrix_column_count();
+
+    vector<double> b;
+    for(unsigned int i=0; i<n; ++i)
+        b.push_back(0.0);
+
+    SPARSE_MATRIX_CSPARSE B;
+    for(unsigned int i=0; i<n; ++i)
+    {
+        for(unsigned int j=0; j<n; ++j)
+            b[j] = 0.0;
+        b[i] = 1.0;
+        for(unsigned int j=0; j<n; ++j)
+            B.add_entry(i, j, b[j]);
+    }
+    return B;
+}

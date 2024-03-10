@@ -149,6 +149,8 @@ class LOAD : public NONBUS_DEVICE
 
         void set_sequence_parameter_import_flag(bool flag);
         bool get_sequence_parameter_import_flag() const;
+
+        void build_linearized_matrix_ABCD();
     private:
         unsigned int bus;
         BUS* busptr;

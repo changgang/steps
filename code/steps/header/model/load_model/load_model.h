@@ -32,6 +32,13 @@ class LOAD_MODEL : public MODEL
         void set_subsystem_type(SUBSYSTEM_TYPE subtype);
         SUBSYSTEM_TYPE get_subsystem_type() const;
         string get_detailed_model_name() const;
+
+        void initialize_ABCD_matrix_for_linearization();
+        STEPS_SPARSE_MATRIX get_linearized_system_variable(char var) const;
+        virtual STEPS_SPARSE_MATRIX get_linearized_system_A() const;
+        virtual STEPS_SPARSE_MATRIX get_linearized_system_B() const;
+        virtual STEPS_SPARSE_MATRIX get_linearized_system_C() const;
+        virtual STEPS_SPARSE_MATRIX get_linearized_system_D() const;
     public: // specific model level
         virtual string get_model_name() const = 0;
         virtual bool setup_model_with_steps_string_vector(vector<string>& data) = 0;
@@ -66,11 +73,15 @@ class LOAD_MODEL : public MODEL
         virtual string get_dynamic_data_in_psse_format() const = 0;
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
+
+        virtual void build_linearized_matrix_ABCD() = 0;
     private:
         SUBSYSTEM_TYPE subsystem_type;
         bool voltage_source_flag;
         double voltage_pu, frequency_deviation_pu;
         complex<double> complex_voltage_pu;
+
+        STEPS_SPARSE_MATRIX *Aptr, *Bptr, *Cptr, *Dptr;
 
 };
 #endif // LOAD_MODEL_H

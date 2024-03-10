@@ -20,6 +20,13 @@ class SG_MODEL : public MODEL
         double get_bus_base_frequency_in_Hz() const;
         complex<double> get_terminal_complex_voltage_in_pu() const;
         double get_terminal_voltage_in_pu() const;
+
+        void initialize_ABCD_matrix_for_linearization();
+        STEPS_SPARSE_MATRIX get_linearized_system_variable(char var) const;
+        STEPS_SPARSE_MATRIX get_linearized_system_A() const;
+        STEPS_SPARSE_MATRIX get_linearized_system_B() const;
+        STEPS_SPARSE_MATRIX get_linearized_system_C() const;
+        STEPS_SPARSE_MATRIX get_linearized_system_D() const;
     public: // specific model level
         virtual string get_model_type() const = 0;
         virtual string get_model_name() const = 0;
@@ -55,16 +62,9 @@ class SG_MODEL : public MODEL
         virtual STEPS_SPARSE_MATRIX* get_linearized_matrix(string matrix_type) = 0;
         virtual void set_linearized_matrix(string matrix_type, STEPS_SPARSE_MATRIX* matrix) = 0;
 
-        STEPS_SPARSE_MATRIX get_linearized_system_variable(char var) const;
-        virtual STEPS_SPARSE_MATRIX get_linearized_system_A() const = 0;
-        virtual STEPS_SPARSE_MATRIX get_linearized_system_B() const = 0;
-        virtual STEPS_SPARSE_MATRIX get_linearized_system_C() const = 0;
-        virtual STEPS_SPARSE_MATRIX get_linearized_system_D() const = 0;
-        virtual void get_linearized_system_ABCD(STEPS_SPARSE_MATRIX* A,
-                                                STEPS_SPARSE_MATRIX* B,
-                                                STEPS_SPARSE_MATRIX* C,
-                                                STEPS_SPARSE_MATRIX* D) const = 0;
+        virtual void build_linearized_matrix_ABCD() = 0;
     private:
+        STEPS_SPARSE_MATRIX *Aptr, *Bptr, *Cptr, *Dptr;
 
 };
 #endif // SG_MODEL_H

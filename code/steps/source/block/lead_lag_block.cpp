@@ -371,10 +371,8 @@ STEPS_SPARSE_MATRIX LEAD_LAG_BLOCK::get_linearized_system_A() const
     */
     STEPS_SPARSE_MATRIX matrix;
 
-    double a = 0;
-    /*
-    here define a
-    */
+    double a = -1/get_T2_in_s();
+
     matrix.add_entry(0,0, a);
 
     return matrix;
@@ -384,10 +382,8 @@ STEPS_SPARSE_MATRIX LEAD_LAG_BLOCK::get_linearized_system_B() const
 {
     STEPS_SPARSE_MATRIX matrix;
 
-    double b = 0;
-    /*
-    here define b
-    */
+    double b = get_K()/get_T2_in_s();
+
     matrix.add_entry(0,0, b);
 
     return matrix;
@@ -397,10 +393,8 @@ STEPS_SPARSE_MATRIX LEAD_LAG_BLOCK::get_linearized_system_C() const
 {
     STEPS_SPARSE_MATRIX matrix;
 
-    double c = 0;
-    /*
-    here define c
-    */
+    double c = 1-get_T1_in_s()/get_T2_in_s();
+
     matrix.add_entry(0,0, c);
 
     return matrix;
@@ -410,10 +404,8 @@ STEPS_SPARSE_MATRIX LEAD_LAG_BLOCK::get_linearized_system_D() const
 {
     STEPS_SPARSE_MATRIX matrix;
 
-    double d = 0;
-    /*
-    here define d
-    */
+    double d = get_K()*get_T1_in_s()/get_T2_in_s();
+
     matrix.add_entry(0,0, d);
 
     return matrix;

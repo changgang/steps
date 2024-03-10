@@ -1342,3 +1342,8 @@ string CIM6::get_dynamic_data_in_steps_format() const
 {
     return get_dynamic_data_in_psse_format();
 }
+
+void CIM6::build_linearized_matrix_ABCD()
+{
+    return;
+}

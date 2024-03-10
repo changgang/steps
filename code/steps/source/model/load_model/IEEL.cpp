@@ -660,3 +660,8 @@ string IEEL::get_dynamic_data_in_steps_format() const
 {
     return get_dynamic_data_in_psse_format();
 }
+
+void IEEL::build_linearized_matrix_ABCD()
+{
+    return;
+}

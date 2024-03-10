@@ -237,12 +237,7 @@ STEPS_SPARSE_MATRIX PID_BLOCK::get_linearized_system_A() const
     */
     STEPS_SPARSE_MATRIX matrix;
 
-    double a00=0, a01=0, a10=0, a11=0;
-    /*
-    here define a00, a01, a10, a11
-    */
-    double istate = i_block.get_state();
-    double dstate = d_block.get_state();
+    double a00=0.0, a01=0.0, a10=0.0, a11=-1/get_Td_in_s();
 
     matrix.add_entry(0,0, a00);
     matrix.add_entry(0,1, a01);
@@ -256,14 +251,10 @@ STEPS_SPARSE_MATRIX PID_BLOCK::get_linearized_system_B() const
 {
     STEPS_SPARSE_MATRIX matrix;
 
-    double a00=0, a01=0, a10=0, a11=0;
-    /*
-    here define a00, a01, a10, a11
-    */
-    matrix.add_entry(0,0, a00);
-    matrix.add_entry(0,1, a01);
-    matrix.add_entry(1,0, a10);
-    matrix.add_entry(1,1, a11);
+    double b00=get_Ki(), b10=get_Kd()/(get_Td_in_s()*get_Td_in_s());
+
+    matrix.add_entry(0,0, b00);
+    matrix.add_entry(1,0, b10);
 
     return matrix;
 }
@@ -272,14 +263,10 @@ STEPS_SPARSE_MATRIX PID_BLOCK::get_linearized_system_C() const
 {
     STEPS_SPARSE_MATRIX matrix;
 
-    double a00=0, a01=0, a10=0, a11=0;
-    /*
-    here define a00, a01, a10, a11
-    */
-    matrix.add_entry(0,0, a00);
-    matrix.add_entry(0,1, a01);
-    matrix.add_entry(1,0, a10);
-    matrix.add_entry(1,1, a11);
+    double c00=1.0, c01=-1.0;
+
+    matrix.add_entry(0,0, c00);
+    matrix.add_entry(0,1, c01);
 
     return matrix;
 }
@@ -288,14 +275,9 @@ STEPS_SPARSE_MATRIX PID_BLOCK::get_linearized_system_D() const
 {
     STEPS_SPARSE_MATRIX matrix;
 
-    double a00=0, a01=0, a10=0, a11=0;
-    /*
-    here define a00, a01, a10, a11
-    */
-    matrix.add_entry(0,0, a00);
-    matrix.add_entry(0,1, a01);
-    matrix.add_entry(1,0, a10);
-    matrix.add_entry(1,1, a11);
+    double d00=get_Kp()+get_Kd()/get_Td_in_s();
+
+    matrix.add_entry(0,0, d00);
 
     return matrix;
 }

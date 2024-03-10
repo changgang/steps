@@ -80,14 +80,7 @@ class IEE2ST : public STABILIZER_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
 
         virtual void linearize();
-        virtual STEPS_SPARSE_MATRIX get_linearized_system_A() const;
-        virtual STEPS_SPARSE_MATRIX get_linearized_system_B() const;
-        virtual STEPS_SPARSE_MATRIX get_linearized_system_C() const;
-        virtual STEPS_SPARSE_MATRIX get_linearized_system_D() const;
-        virtual void get_linearized_system_ABCD(STEPS_SPARSE_MATRIX* A,
-                                                STEPS_SPARSE_MATRIX* B,
-                                                STEPS_SPARSE_MATRIX* C,
-                                                STEPS_SPARSE_MATRIX* D) const;
+        virtual void build_linearized_matrix_ABCD();
     private:
         void copy_from_const_model(const IEE2ST& model);
 

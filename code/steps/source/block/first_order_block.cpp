@@ -493,10 +493,8 @@ STEPS_SPARSE_MATRIX FIRST_ORDER_BLOCK::get_linearized_system_A() const
     STEPS_SPARSE_MATRIX matrix;
     if(get_T_in_s()!=0.0)
     {
-        double a = 0;
-        /*
-        here define a
-        */
+        double a = -1/get_T_in_s();
+
         matrix.add_entry(0,0, a);
     }
     return matrix;
@@ -505,39 +503,36 @@ STEPS_SPARSE_MATRIX FIRST_ORDER_BLOCK::get_linearized_system_A() const
 STEPS_SPARSE_MATRIX FIRST_ORDER_BLOCK::get_linearized_system_B() const
 {
     STEPS_SPARSE_MATRIX matrix;
+    if(get_T_in_s()!=0.0)
+    {
+        double b = get_K()/get_T_in_s();
 
-    double b = 0;
-    /*
-    here define b
-    */
-    matrix.add_entry(0,0, b);
-
+        matrix.add_entry(0,0, b);
+    }
     return matrix;
 }
 
 STEPS_SPARSE_MATRIX FIRST_ORDER_BLOCK::get_linearized_system_C() const
 {
     STEPS_SPARSE_MATRIX matrix;
+    if(get_T_in_s()!=0.0)
+    {
+        double c = 1.0;
 
-    double c = 0;
-    /*
-    here define c
-    */
-    matrix.add_entry(0,0, c);
-
+        matrix.add_entry(0,0, c);
+    }
     return matrix;
 }
 
 STEPS_SPARSE_MATRIX FIRST_ORDER_BLOCK::get_linearized_system_D() const
 {
     STEPS_SPARSE_MATRIX matrix;
+    if(get_T_in_s()!=0.0)
+    {
+        double d = 0.0;
 
-    double d = 0;
-    /*
-    here define d
-    */
-    matrix.add_entry(0,0, d);
-
+        matrix.add_entry(0,0, d);
+    }
     return matrix;
 }
 

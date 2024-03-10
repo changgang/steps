@@ -199,10 +199,8 @@ STEPS_SPARSE_MATRIX SECOND_ORDER_BLOCK::get_linearized_system_A() const
     */
     STEPS_SPARSE_MATRIX matrix;
 
-    double a00=0, a01=0, a10=0, a11=0;
-    /*
-    here define a00, a01, a10, a11
-    */
+    double a00=0.0, a01=1.0, a10=-get_c()/get_a(), a11=-get_b()/get_a();
+
     matrix.add_entry(0,0, a00);
     matrix.add_entry(0,1, a01);
     matrix.add_entry(1,0, a10);
@@ -215,14 +213,10 @@ STEPS_SPARSE_MATRIX SECOND_ORDER_BLOCK::get_linearized_system_B() const
 {
     STEPS_SPARSE_MATRIX matrix;
 
-    double a00=0, a01=0, a10=0, a11=0;
-    /*
-    here define a00, a01, a10, a11
-    */
-    matrix.add_entry(0,0, a00);
-    matrix.add_entry(0,1, a01);
-    matrix.add_entry(1,0, a10);
-    matrix.add_entry(1,1, a11);
+    double b00=0.0, b10=1/get_a();
+
+    matrix.add_entry(0,0, b00);
+    matrix.add_entry(1,0, b10);
 
     return matrix;
 }
@@ -231,14 +225,10 @@ STEPS_SPARSE_MATRIX SECOND_ORDER_BLOCK::get_linearized_system_C() const
 {
     STEPS_SPARSE_MATRIX matrix;
 
-    double a00=0, a01=0, a10=0, a11=0;
-    /*
-    here define a00, a01, a10, a11
-    */
-    matrix.add_entry(0,0, a00);
-    matrix.add_entry(0,1, a01);
-    matrix.add_entry(1,0, a10);
-    matrix.add_entry(1,1, a11);
+    double c00=get_e(), c01=get_d();
+
+    matrix.add_entry(0,0, c00);
+    matrix.add_entry(0,1, c01);
 
     return matrix;
 }
@@ -247,14 +237,9 @@ STEPS_SPARSE_MATRIX SECOND_ORDER_BLOCK::get_linearized_system_D() const
 {
     STEPS_SPARSE_MATRIX matrix;
 
-    double a00=0, a01=0, a10=0, a11=0;
-    /*
-    here define a00, a01, a10, a11
-    */
-    matrix.add_entry(0,0, a00);
-    matrix.add_entry(0,1, a01);
-    matrix.add_entry(1,0, a10);
-    matrix.add_entry(1,1, a11);
+    double d00=0.0;
+
+    matrix.add_entry(0,0, d00);
 
     return matrix;
 }

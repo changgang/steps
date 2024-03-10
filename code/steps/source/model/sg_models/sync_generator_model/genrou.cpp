@@ -978,34 +978,7 @@ void GENROU::linearize()
     // do linearization
 }
 
-STEPS_SPARSE_MATRIX GENROU::get_linearized_system_A() const
-{
-    STEPS_SPARSE_MATRIX A;
-
-    return A;
-}
-STEPS_SPARSE_MATRIX GENROU::get_linearized_system_B() const
-{
-    STEPS_SPARSE_MATRIX B;
-
-    return B;
-}
-
-STEPS_SPARSE_MATRIX GENROU::get_linearized_system_C() const
-{
-    STEPS_SPARSE_MATRIX C;
-
-    return C;
-}
-
-STEPS_SPARSE_MATRIX GENROU::get_linearized_system_D() const
-{
-    STEPS_SPARSE_MATRIX D;
-
-    return D;
-}
-
-void GENROU::get_linearized_system_ABCD(STEPS_SPARSE_MATRIX* A, STEPS_SPARSE_MATRIX* B, STEPS_SPARSE_MATRIX* C, STEPS_SPARSE_MATRIX* D) const
+void GENROU::build_linearized_matrix_ABCD()
 {
     return;
 }
