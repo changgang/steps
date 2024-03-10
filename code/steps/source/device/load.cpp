@@ -17,10 +17,34 @@ double LOAD::one_over_voltage_threshold_of_constant_current_load_in_pu = 2.0;
 LOAD::LOAD(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
 {
     clear();
+    Aptr = NULL;
+    Bptr = NULL;
+    Cptr = NULL;
+    Dptr = NULL;
 }
 
 LOAD::~LOAD()
 {
+    if(Aptr != NULL)
+    {
+        delete Aptr;
+        Aptr = NULL;
+    }
+    if(Bptr != NULL)
+    {
+        delete Bptr;
+        Bptr = NULL;
+    }
+    if(Cptr != NULL)
+    {
+        delete Cptr;
+        Cptr = NULL;
+    }
+    if(Dptr != NULL)
+    {
+        delete Dptr;
+        Dptr = NULL;
+    }
 }
 
 void LOAD::set_load_bus(unsigned int load_bus)
@@ -1208,7 +1232,148 @@ bool LOAD::get_sequence_parameter_import_flag() const
     return sequence_parameter_import_flag;
 }
 
+void LOAD::initialize_ABCD_matrix_for_linearization()
+{
+    if(Aptr == NULL)
+        Aptr = new STEPS_SPARSE_MATRIX;
+    if(Bptr == NULL)
+        Bptr = new STEPS_SPARSE_MATRIX;
+    if(Cptr == NULL)
+        Cptr = new STEPS_SPARSE_MATRIX;
+    if(Dptr == NULL)
+        Dptr = new STEPS_SPARSE_MATRIX;
+}
+
 void LOAD::build_linearized_matrix_ABCD()
 {
-    return;
+    initialize_ABCD_matrix_for_linearization();
+
+    STEPS_SPARSE_MATRIX A, B, C, D;
+    if(load_model != NULL)
+    {
+        load_model->build_linearized_matrix_ABCD();
+        A = load_model->get_linearized_matrix_A();
+        B = load_model->get_linearized_matrix_B();
+        C = load_model->get_linearized_matrix_C();
+        D = load_model->get_linearized_matrix_D();
+    }
+
+    STEPS_SPARSE_MATRIX E, F, G, H;
+
+
+    vector<STEPS_SPARSE_MATRIX*> matrix;
+
+    matrix.push_back(&A);
+    matrix.push_back(&B);
+    matrix.push_back(&C);
+    matrix.push_back(&D);
+    matrix.push_back(&E);
+    matrix.push_back(&F);
+    matrix.push_back(&G);
+    matrix.push_back(&H);
+
+    build_linearized_matrix_ABCD_with_basic_ABCD_and_EFGH(matrix);
+}
+
+void LOAD::build_linearized_matrix_ABCD_with_basic_ABCD_and_EFGH(vector<STEPS_SPARSE_MATRIX*> matrix)
+{
+
+}
+
+STEPS_SPARSE_MATRIX LOAD::get_linearized_matrix_variable(char var) const
+{
+    var = toupper(var);
+    switch(var)
+    {
+        case 'A':
+            return get_linearized_matrix_A();
+        case 'B':
+            return get_linearized_matrix_B();
+        case 'C':
+            return get_linearized_matrix_C();
+        case 'D':
+            return get_linearized_matrix_D();
+        default:
+            STEPS_SPARSE_MATRIX matrix;
+            return matrix;
+    }
+}
+STEPS_SPARSE_MATRIX LOAD::get_linearized_matrix_A() const
+{
+    if(Aptr!=NULL) return *Aptr;
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. No pointer to A matrix exists in LOAD. Cannot return linearized A matrix.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+
+        STEPS_SPARSE_MATRIX temp;
+        return temp;
+    }
+}
+
+STEPS_SPARSE_MATRIX LOAD::get_linearized_matrix_B() const
+{
+    if(Bptr!=NULL) return *Bptr;
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. No pointer to B matrix exists in LOAD. Cannot return linearized B matrix.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+
+        STEPS_SPARSE_MATRIX temp;
+        return temp;
+    }
+}
+
+STEPS_SPARSE_MATRIX LOAD::get_linearized_matrix_C() const
+{
+    if(Cptr!=NULL) return *Cptr;
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. No pointer to C matrix exists in LOAD. Cannot return linearized C matrix.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+
+        STEPS_SPARSE_MATRIX temp;
+        return temp;
+    }
+}
+
+STEPS_SPARSE_MATRIX LOAD::get_linearized_matrix_D() const
+{
+    if(Dptr!=NULL) return *Dptr;
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. No pointer to D matrix exists in LOAD. Cannot return linearized D matrix.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+
+        STEPS_SPARSE_MATRIX temp;
+        return temp;
+    }
+}
+
+STEPS_SPARSE_MATRIX* LOAD::get_linearized_matrix_pointer_A()
+{
+    return Aptr;
+}
+
+STEPS_SPARSE_MATRIX* LOAD::get_linearized_matrix_pointer_B()
+{
+    return Bptr;
+}
+
+STEPS_SPARSE_MATRIX* LOAD::get_linearized_matrix_pointer_C()
+{
+    return Cptr;
+}
+
+STEPS_SPARSE_MATRIX* LOAD::get_linearized_matrix_pointer_D()
+{
+    return Dptr;
 }

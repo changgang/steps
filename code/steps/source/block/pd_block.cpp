@@ -127,26 +127,26 @@ void PD_BLOCK::update()
 }
 
 
-STEPS_SPARSE_MATRIX PD_BLOCK::get_linearized_system_variable(char var) const
+STEPS_SPARSE_MATRIX PD_BLOCK::get_linearized_matrix_variable(char var) const
 {
     var = toupper(var);
     switch(var)
     {
         case 'A':
-            return get_linearized_system_A();
+            return get_linearized_matrix_A();
         case 'B':
-            return get_linearized_system_B();
+            return get_linearized_matrix_B();
         case 'C':
-            return get_linearized_system_C();
+            return get_linearized_matrix_C();
         case 'D':
-            return get_linearized_system_D();
+            return get_linearized_matrix_D();
         default:
             STEPS_SPARSE_MATRIX matrix;
             return matrix;
     }
 }
 
-STEPS_SPARSE_MATRIX PD_BLOCK::get_linearized_system_A() const
+STEPS_SPARSE_MATRIX PD_BLOCK::get_linearized_matrix_A() const
 {
     /*
     x: state; u: input; y: output
@@ -162,7 +162,7 @@ STEPS_SPARSE_MATRIX PD_BLOCK::get_linearized_system_A() const
     return matrix;
 }
 
-STEPS_SPARSE_MATRIX PD_BLOCK::get_linearized_system_B() const
+STEPS_SPARSE_MATRIX PD_BLOCK::get_linearized_matrix_B() const
 {
     STEPS_SPARSE_MATRIX matrix;
 
@@ -173,7 +173,7 @@ STEPS_SPARSE_MATRIX PD_BLOCK::get_linearized_system_B() const
     return matrix;
 }
 
-STEPS_SPARSE_MATRIX PD_BLOCK::get_linearized_system_C() const
+STEPS_SPARSE_MATRIX PD_BLOCK::get_linearized_matrix_C() const
 {
     STEPS_SPARSE_MATRIX matrix;
 
@@ -184,7 +184,7 @@ STEPS_SPARSE_MATRIX PD_BLOCK::get_linearized_system_C() const
     return matrix;
 }
 
-STEPS_SPARSE_MATRIX PD_BLOCK::get_linearized_system_D() const
+STEPS_SPARSE_MATRIX PD_BLOCK::get_linearized_matrix_D() const
 {
     STEPS_SPARSE_MATRIX matrix;
 

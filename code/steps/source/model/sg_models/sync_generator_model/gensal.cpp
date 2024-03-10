@@ -419,7 +419,6 @@ void GENSAL::check()
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
-    double xd = get_Xd();
     double xq = get_Xq();
     double xdp = get_Xdp();
     double xpp = get_Xpp();
@@ -844,6 +843,202 @@ void GENSAL::linearize()
 }
 
 void GENSAL::build_linearized_matrix_ABCD()
-{
-    return;
+{/*
+    model: input V, state X, output W
+    block: input U, state X, output Y
+    objective:
+        dX/dt = A*X+B*V
+            W = C*X+D*V
+    derived from the following
+        dX/dt = Ab*X+Bb*U
+            Y = Cb*X+Db*U
+            U = E*Y+F*V
+            W = G*Y+H*V
+    */
+    initialize_ABCD_matrix_for_linearization();
+
+    INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
+    INTEGRAL_BLOCK* rotor_angle_block = get_rotor_angle_block();
+    FIRST_ORDER_BLOCK* transient_block_d_axis = get_d_axis_transient_block();
+    FIRST_ORDER_BLOCK* subtransient_block_d_axis = get_d_axis_subtransient_block();
+    FIRST_ORDER_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
+
+    // block 0
+    STEPS_SPARSE_MATRIX A_transient_block_d_axis = transient_block_d_axis->get_linearized_matrix_A();
+    STEPS_SPARSE_MATRIX B_transient_block_d_axis = transient_block_d_axis->get_linearized_matrix_B();
+    STEPS_SPARSE_MATRIX C_transient_block_d_axis = transient_block_d_axis->get_linearized_matrix_C();
+    STEPS_SPARSE_MATRIX D_transient_block_d_axis = transient_block_d_axis->get_linearized_matrix_D();
+
+    // block 1
+    STEPS_SPARSE_MATRIX A_subtransient_block_d_axis = subtransient_block_d_axis->get_linearized_matrix_A();
+    STEPS_SPARSE_MATRIX B_subtransient_block_d_axis = subtransient_block_d_axis->get_linearized_matrix_B();
+    STEPS_SPARSE_MATRIX C_subtransient_block_d_axis = subtransient_block_d_axis->get_linearized_matrix_C();
+    STEPS_SPARSE_MATRIX D_subtransient_block_d_axis = subtransient_block_d_axis->get_linearized_matrix_D();
+
+    // block 2
+    STEPS_SPARSE_MATRIX A_subtransient_block_q_axis = subtransient_block_q_axis->get_linearized_matrix_A();
+    STEPS_SPARSE_MATRIX B_subtransient_block_q_axis = subtransient_block_q_axis->get_linearized_matrix_B();
+    STEPS_SPARSE_MATRIX C_subtransient_block_q_axis = subtransient_block_q_axis->get_linearized_matrix_C();
+    STEPS_SPARSE_MATRIX D_subtransient_block_q_axis = subtransient_block_q_axis->get_linearized_matrix_D();
+
+    // block 3
+    STEPS_SPARSE_MATRIX A_rotor_speed_block = rotor_speed_block->get_linearized_matrix_A();
+    STEPS_SPARSE_MATRIX B_rotor_speed_block = rotor_speed_block->get_linearized_matrix_B();
+    STEPS_SPARSE_MATRIX C_rotor_speed_block = rotor_speed_block->get_linearized_matrix_C();
+    STEPS_SPARSE_MATRIX D_rotor_speed_block = rotor_speed_block->get_linearized_matrix_D();
+    A_rotor_speed_block.report_brief();
+    B_rotor_speed_block.report_brief();
+    C_rotor_speed_block.report_brief();
+    D_rotor_speed_block.report_brief();
+
+    // block 4
+    STEPS_SPARSE_MATRIX A_rotor_angle_block = rotor_angle_block->get_linearized_matrix_A();
+    STEPS_SPARSE_MATRIX B_rotor_angle_block = rotor_angle_block->get_linearized_matrix_B();
+    STEPS_SPARSE_MATRIX C_rotor_angle_block = rotor_angle_block->get_linearized_matrix_C();
+    STEPS_SPARSE_MATRIX D_rotor_angle_block = rotor_angle_block->get_linearized_matrix_D();
+
+    // define the order of X, U, Y, V, W
+    // Define E F G H U = E*Y+F*V
+
+    vector<STEPS_SPARSE_MATRIX*> matrix;
+    matrix.push_back(&A_transient_block_d_axis);
+    matrix.push_back(&A_subtransient_block_d_axis);
+    matrix.push_back(&A_subtransient_block_q_axis);
+    matrix.push_back(&A_rotor_speed_block);
+    matrix.push_back(&A_rotor_angle_block);
+    STEPS_SPARSE_MATRIX A = concatenate_matrix_diagnally(matrix);
+    matrix.clear();
+
+    matrix.push_back(&B_transient_block_d_axis);
+    matrix.push_back(&B_subtransient_block_d_axis);
+    matrix.push_back(&B_subtransient_block_q_axis);
+    matrix.push_back(&B_rotor_speed_block);
+    matrix.push_back(&B_rotor_angle_block);
+    STEPS_SPARSE_MATRIX B = concatenate_matrix_diagnally(matrix);
+    matrix.clear();
+
+    matrix.push_back(&C_transient_block_d_axis);
+    matrix.push_back(&C_subtransient_block_d_axis);
+    matrix.push_back(&C_subtransient_block_q_axis);
+    matrix.push_back(&C_rotor_speed_block);
+    matrix.push_back(&C_rotor_angle_block);
+    STEPS_SPARSE_MATRIX C = concatenate_matrix_diagnally(matrix);
+    matrix.clear();
+
+    matrix.push_back(&D_transient_block_d_axis);
+    matrix.push_back(&D_subtransient_block_d_axis);
+    matrix.push_back(&D_subtransient_block_q_axis);
+    matrix.push_back(&D_rotor_speed_block);
+    matrix.push_back(&D_rotor_angle_block);
+    STEPS_SPARSE_MATRIX D = concatenate_matrix_diagnally(matrix);
+    matrix.clear();
+
+
+    STEPS_SPARSE_MATRIX E, F, G, H;
+    E.add_entry(0,0, -((get_Xd()-get_Xdp())*(get_Xdp()-get_Xdpp()))/((get_Xdp()-get_Xl())*(get_Xdp()-get_Xl())));
+    E.add_entry(0,1, ((get_Xd()-get_Xdp())*(get_Xdp()-get_Xdpp()))/((get_Xdp()-get_Xl())*(get_Xdp()-get_Xl())));
+    E.add_entry(0,2, 0);
+    E.add_entry(0,3, 0);
+    E.add_entry(0,4, 0);
+    E.add_entry(1,0, 1);
+    E.add_entry(1,1, 0);
+    E.add_entry(1,2, 0);
+    E.add_entry(1,3, 0);
+    E.add_entry(1,4, 0);
+    E.add_entry(2,0, 0);
+    E.add_entry(2,1, 0);
+    E.add_entry(2,2, 0);
+    E.add_entry(2,3, 0);
+    E.add_entry(2,4, 0);
+    E.add_entry(3,0, 0);
+    E.add_entry(3,1, 0);
+    E.add_entry(3,2, 0);
+    E.add_entry(3,3, -get_D());
+    E.add_entry(3,4, 0);
+    E.add_entry(4,0, 0);
+    E.add_entry(4,1, 0);
+    E.add_entry(4,2, 0);
+    E.add_entry(4,3, DOUBLE_PI*get_bus_base_frequency_in_Hz());
+    E.add_entry(4,4, 0);
+    F.add_entry(0,0, 1);
+    F.add_entry(0,1, -((get_Xd()-get_Xdp())*(get_Xdpp()-get_Xl()))/(get_Xdp()-get_Xl()));
+    F.add_entry(0,2, 0);
+    F.add_entry(0,3, 0);
+    F.add_entry(0,4, 0);
+    F.add_entry(1,0, 0);
+    F.add_entry(1,1, -(get_Xdp()-get_Xl()));
+    F.add_entry(1,2, 0);
+    F.add_entry(1,3, 0);
+    F.add_entry(1,4, 0);
+    F.add_entry(2,0, 0);
+    F.add_entry(2,1, 0);
+    F.add_entry(2,2, get_Xq()-get_Xqpp());
+    F.add_entry(2,3, 0);
+    F.add_entry(2,4, 0);
+    F.add_entry(3,0, 0);
+    F.add_entry(3,1, 0);
+    F.add_entry(3,2, 0);
+    F.add_entry(3,3, 1);
+    F.add_entry(3,4, -1);
+    F.add_entry(4,0, 0);
+    F.add_entry(4,1, 0);
+    F.add_entry(4,2, 0);
+    F.add_entry(4,3, 0);
+    F.add_entry(4,4, 0);
+    G.add_entry(0,0, (get_Xdpp()-get_Xl())/(get_Xdp()-get_Xl()));
+    G.add_entry(0,1, (get_Xdp()-get_Xdpp())/(get_Xdp()-get_Xl()));
+    G.add_entry(0,2, 0);
+    G.add_entry(0,3, 0);
+    G.add_entry(0,4, 0);
+    G.add_entry(1,0, 0);
+    G.add_entry(1,1, 0);
+    G.add_entry(1,2, -1);
+    G.add_entry(1,3, 0);
+    G.add_entry(1,4, 0);
+    G.add_entry(2,0, 0);
+    G.add_entry(2,1, 0);
+    G.add_entry(2,2, 0);
+    G.add_entry(2,3, 0);
+    G.add_entry(2,4, 1);
+    G.add_entry(3,0, 0);
+    G.add_entry(3,1, 0);
+    G.add_entry(3,2, 0);
+    G.add_entry(3,3, 1);
+    G.add_entry(3,4, 0);
+    H.add_entry(0,0, 0);
+    H.add_entry(0,1, 0);
+    H.add_entry(0,2, 0);
+    H.add_entry(0,3, 0);
+    H.add_entry(0,4, 0);
+    H.add_entry(1,0, 0);
+    H.add_entry(1,1, 0);
+    H.add_entry(1,2, 0);
+    H.add_entry(1,3, 0);
+    H.add_entry(1,4, 0);
+    H.add_entry(2,0, 0);
+    H.add_entry(2,1, 0);
+    H.add_entry(2,2, 0);
+    H.add_entry(2,3, 0);
+    H.add_entry(2,4, 0);
+    H.add_entry(3,0, 0);
+    H.add_entry(3,1, 0);
+    H.add_entry(3,2, 0);
+    H.add_entry(3,3, 0);
+    H.add_entry(3,4, 0);
+
+    matrix.push_back(&A);
+    matrix.push_back(&B);
+    matrix.push_back(&C);
+    matrix.push_back(&D);
+    matrix.push_back(&E);
+    matrix.push_back(&F);
+    matrix.push_back(&G);
+    matrix.push_back(&H);
+
+    build_linearized_matrix_ABCD_with_basic_ABCD_and_EFGH(matrix);
+
+    get_linearized_matrix_pointer_A()->report_brief();
+    get_linearized_matrix_pointer_B()->report_brief();
+    get_linearized_matrix_pointer_C()->report_brief();
+    get_linearized_matrix_pointer_D()->report_brief();
 }

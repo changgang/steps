@@ -757,5 +757,162 @@ void IEE2ST::linearize()
 
 void IEE2ST::build_linearized_matrix_ABCD()
 {
-    return;
+    /*
+    model: input V, state X, output W
+    block: input U, state X, output Y
+    objective:
+        dX/dt = A*X+B*V
+            W = C*X+D*V
+    derived from the following
+        dX/dt = Ab*X+Bb*U
+            Y = Cb*X+Db*U
+            U = E*Y+F*V
+            W = G*Y+H*V
+    */
+    initialize_ABCD_matrix_for_linearization();
+
+    // block 0
+    STEPS_SPARSE_MATRIX A_sensor_1 = sensor_1.get_linearized_matrix_A();
+    STEPS_SPARSE_MATRIX B_sensor_1 = sensor_1.get_linearized_matrix_B();
+    STEPS_SPARSE_MATRIX C_sensor_1 = sensor_1.get_linearized_matrix_C();
+    STEPS_SPARSE_MATRIX D_sensor_1 = sensor_1.get_linearized_matrix_D();
+
+    // block 1
+    STEPS_SPARSE_MATRIX A_sensor_2 = sensor_2.get_linearized_matrix_A();
+    STEPS_SPARSE_MATRIX B_sensor_2 = sensor_2.get_linearized_matrix_B();
+    STEPS_SPARSE_MATRIX C_sensor_2 = sensor_2.get_linearized_matrix_C();
+    STEPS_SPARSE_MATRIX D_sensor_2 = sensor_2.get_linearized_matrix_D();
+
+    // block 2
+    STEPS_SPARSE_MATRIX A_filter = filter.get_linearized_matrix_A();
+    STEPS_SPARSE_MATRIX B_filter = filter.get_linearized_matrix_B();
+    STEPS_SPARSE_MATRIX C_filter = filter.get_linearized_matrix_C();
+    STEPS_SPARSE_MATRIX D_filter = filter.get_linearized_matrix_D();
+
+    // block 3
+    STEPS_SPARSE_MATRIX A_phase_tuner_1 = phase_tuner_1.get_linearized_matrix_A();
+    STEPS_SPARSE_MATRIX B_phase_tuner_1 = phase_tuner_1.get_linearized_matrix_B();
+    STEPS_SPARSE_MATRIX C_phase_tuner_1 = phase_tuner_1.get_linearized_matrix_C();
+    STEPS_SPARSE_MATRIX D_phase_tuner_1 = phase_tuner_1.get_linearized_matrix_D();
+
+    // block 4
+    STEPS_SPARSE_MATRIX A_phase_tuner_2 = phase_tuner_2.get_linearized_matrix_A();
+    STEPS_SPARSE_MATRIX B_phase_tuner_2 = phase_tuner_2.get_linearized_matrix_B();
+    STEPS_SPARSE_MATRIX C_phase_tuner_2 = phase_tuner_2.get_linearized_matrix_C();
+    STEPS_SPARSE_MATRIX D_phase_tuner_2 = phase_tuner_2.get_linearized_matrix_D();
+
+    // block 5
+    STEPS_SPARSE_MATRIX A_phase_tuner_3 = phase_tuner_3.get_linearized_matrix_A();
+    STEPS_SPARSE_MATRIX B_phase_tuner_3 = phase_tuner_3.get_linearized_matrix_B();
+    STEPS_SPARSE_MATRIX C_phase_tuner_3 = phase_tuner_3.get_linearized_matrix_C();
+    STEPS_SPARSE_MATRIX D_phase_tuner_3 = phase_tuner_3.get_linearized_matrix_D();
+
+    // define the order of X, U, Y, V, W
+    // Define E F G H U = E*Y+F*V
+
+    vector<STEPS_SPARSE_MATRIX*> matrix;
+    matrix.push_back(&A_sensor_1);
+    matrix.push_back(&A_sensor_2);
+    matrix.push_back(&A_filter);
+    matrix.push_back(&A_phase_tuner_1);
+    matrix.push_back(&A_phase_tuner_2);
+    matrix.push_back(&A_phase_tuner_3);
+    STEPS_SPARSE_MATRIX A = concatenate_matrix_diagnally(matrix);
+    matrix.clear();
+
+    matrix.push_back(&B_sensor_1);
+    matrix.push_back(&B_sensor_2);
+    matrix.push_back(&B_filter);
+    matrix.push_back(&B_phase_tuner_1);
+    matrix.push_back(&B_phase_tuner_2);
+    matrix.push_back(&B_phase_tuner_3);
+    STEPS_SPARSE_MATRIX B = concatenate_matrix_diagnally(matrix);
+    matrix.clear();
+
+    matrix.push_back(&C_sensor_1);
+    matrix.push_back(&C_sensor_2);
+    matrix.push_back(&C_filter);
+    matrix.push_back(&C_phase_tuner_1);
+    matrix.push_back(&C_phase_tuner_2);
+    matrix.push_back(&C_phase_tuner_3);
+    STEPS_SPARSE_MATRIX C = concatenate_matrix_diagnally(matrix);
+    matrix.clear();
+
+    matrix.push_back(&D_sensor_1);
+    matrix.push_back(&D_sensor_2);
+    matrix.push_back(&D_filter);
+    matrix.push_back(&D_phase_tuner_1);
+    matrix.push_back(&D_phase_tuner_2);
+    matrix.push_back(&D_phase_tuner_3);
+    STEPS_SPARSE_MATRIX D = concatenate_matrix_diagnally(matrix);
+    matrix.clear();
+
+    STEPS_SPARSE_MATRIX E, F, G, H;
+    E.add_entry(0,0, 0);
+    E.add_entry(0,1, 0);
+    E.add_entry(0,2, 0);
+    E.add_entry(0,3, 0);
+    E.add_entry(0,4, 0);
+    E.add_entry(0,5, 0);
+    E.add_entry(1,0, 0);
+    E.add_entry(1,1, 0);
+    E.add_entry(1,2, 0);
+    E.add_entry(1,3, 0);
+    E.add_entry(1,4, 0);
+    E.add_entry(1,5, 0);
+    E.add_entry(2,0, 1);
+    E.add_entry(2,1, 1);
+    E.add_entry(2,2, 0);
+    E.add_entry(2,3, 0);
+    E.add_entry(2,4, 0);
+    E.add_entry(2,5, 0);
+    E.add_entry(3,0, 0);
+    E.add_entry(3,1, 0);
+    E.add_entry(3,2, 1);
+    E.add_entry(3,3, 0);
+    E.add_entry(3,4, 0);
+    E.add_entry(3,5, 0);
+    E.add_entry(4,0, 0);
+    E.add_entry(4,1, 0);
+    E.add_entry(4,2, 0);
+    E.add_entry(4,3, 1);
+    E.add_entry(4,4, 0);
+    E.add_entry(4,5, 0);
+    E.add_entry(5,0, 0);
+    E.add_entry(5,1, 0);
+    E.add_entry(5,2, 0);
+    E.add_entry(5,3, 0);
+    E.add_entry(5,4, 1);
+    E.add_entry(5,5, 0);
+    F.add_entry(0,0, 1);
+    F.add_entry(0,1, 0);
+    F.add_entry(1,0, 0);
+    F.add_entry(1,1, 1);
+    F.add_entry(2,0, 0);
+    F.add_entry(2,1, 0);
+    F.add_entry(3,0, 0);
+    F.add_entry(3,1, 0);
+    F.add_entry(4,0, 0);
+    F.add_entry(4,1, 0);
+    F.add_entry(5,0, 0);
+    F.add_entry(5,1, 0);
+    G.add_entry(0,0, 0);
+    G.add_entry(0,1, 0);
+    G.add_entry(0,2, 0);
+    G.add_entry(0,3, 0);
+    G.add_entry(0,4, 0);
+    G.add_entry(0,5, 1);
+    H.add_entry(0,0, 0);
+    H.add_entry(0,1, 0);
+
+    matrix.push_back(&A);
+    matrix.push_back(&B);
+    matrix.push_back(&C);
+    matrix.push_back(&D);
+    matrix.push_back(&E);
+    matrix.push_back(&F);
+    matrix.push_back(&G);
+    matrix.push_back(&H);
+
+    build_linearized_matrix_ABCD_with_basic_ABCD_and_EFGH(matrix);
 }

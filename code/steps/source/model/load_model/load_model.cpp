@@ -165,26 +165,26 @@ void LOAD_MODEL::initialize_ABCD_matrix_for_linearization()
         Dptr = new STEPS_SPARSE_MATRIX;
 }
 
-STEPS_SPARSE_MATRIX LOAD_MODEL::get_linearized_system_variable(char var) const
+STEPS_SPARSE_MATRIX LOAD_MODEL::get_linearized_matrix_variable(char var) const
 {
     var = toupper(var);
     switch(var)
     {
         case 'A':
-            return get_linearized_system_A();
+            return get_linearized_matrix_A();
         case 'B':
-            return get_linearized_system_B();
+            return get_linearized_matrix_B();
         case 'C':
-            return get_linearized_system_C();
+            return get_linearized_matrix_C();
         case 'D':
-            return get_linearized_system_D();
+            return get_linearized_matrix_D();
         default:
             STEPS_SPARSE_MATRIX matrix;
             return matrix;
     }
 }
 
-STEPS_SPARSE_MATRIX LOAD_MODEL::get_linearized_system_A() const
+STEPS_SPARSE_MATRIX LOAD_MODEL::get_linearized_matrix_A() const
 {
     if(Aptr!=NULL) return *Aptr;
     else
@@ -199,7 +199,7 @@ STEPS_SPARSE_MATRIX LOAD_MODEL::get_linearized_system_A() const
     }
 }
 
-STEPS_SPARSE_MATRIX LOAD_MODEL::get_linearized_system_B() const
+STEPS_SPARSE_MATRIX LOAD_MODEL::get_linearized_matrix_B() const
 {
     if(Bptr!=NULL) return *Bptr;
     else
@@ -214,7 +214,7 @@ STEPS_SPARSE_MATRIX LOAD_MODEL::get_linearized_system_B() const
     }
 }
 
-STEPS_SPARSE_MATRIX LOAD_MODEL::get_linearized_system_C() const
+STEPS_SPARSE_MATRIX LOAD_MODEL::get_linearized_matrix_C() const
 {
     if(Cptr!=NULL) return *Cptr;
     else
@@ -229,7 +229,7 @@ STEPS_SPARSE_MATRIX LOAD_MODEL::get_linearized_system_C() const
     }
 }
 
-STEPS_SPARSE_MATRIX LOAD_MODEL::get_linearized_system_D() const
+STEPS_SPARSE_MATRIX LOAD_MODEL::get_linearized_matrix_D() const
 {
     if(Dptr!=NULL) return *Dptr;
     else

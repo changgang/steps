@@ -34,11 +34,11 @@ class LOAD_MODEL : public MODEL
         string get_detailed_model_name() const;
 
         void initialize_ABCD_matrix_for_linearization();
-        STEPS_SPARSE_MATRIX get_linearized_system_variable(char var) const;
-        virtual STEPS_SPARSE_MATRIX get_linearized_system_A() const;
-        virtual STEPS_SPARSE_MATRIX get_linearized_system_B() const;
-        virtual STEPS_SPARSE_MATRIX get_linearized_system_C() const;
-        virtual STEPS_SPARSE_MATRIX get_linearized_system_D() const;
+        STEPS_SPARSE_MATRIX get_linearized_matrix_variable(char var) const;
+        virtual STEPS_SPARSE_MATRIX get_linearized_matrix_A() const;
+        virtual STEPS_SPARSE_MATRIX get_linearized_matrix_B() const;
+        virtual STEPS_SPARSE_MATRIX get_linearized_matrix_C() const;
+        virtual STEPS_SPARSE_MATRIX get_linearized_matrix_D() const;
     public: // specific model level
         virtual string get_model_name() const = 0;
         virtual bool setup_model_with_steps_string_vector(vector<string>& data) = 0;

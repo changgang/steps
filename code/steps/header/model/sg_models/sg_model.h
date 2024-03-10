@@ -22,11 +22,16 @@ class SG_MODEL : public MODEL
         double get_terminal_voltage_in_pu() const;
 
         void initialize_ABCD_matrix_for_linearization();
-        STEPS_SPARSE_MATRIX get_linearized_system_variable(char var) const;
-        STEPS_SPARSE_MATRIX get_linearized_system_A() const;
-        STEPS_SPARSE_MATRIX get_linearized_system_B() const;
-        STEPS_SPARSE_MATRIX get_linearized_system_C() const;
-        STEPS_SPARSE_MATRIX get_linearized_system_D() const;
+        void build_linearized_matrix_ABCD_with_basic_ABCD_and_EFGH(vector<STEPS_SPARSE_MATRIX*> matrix);
+        STEPS_SPARSE_MATRIX get_linearized_matrix_variable(char var) const;
+        STEPS_SPARSE_MATRIX get_linearized_matrix_A() const;
+        STEPS_SPARSE_MATRIX get_linearized_matrix_B() const;
+        STEPS_SPARSE_MATRIX get_linearized_matrix_C() const;
+        STEPS_SPARSE_MATRIX get_linearized_matrix_D() const;
+        STEPS_SPARSE_MATRIX* get_linearized_matrix_pointer_A();
+        STEPS_SPARSE_MATRIX* get_linearized_matrix_pointer_B();
+        STEPS_SPARSE_MATRIX* get_linearized_matrix_pointer_C();
+        STEPS_SPARSE_MATRIX* get_linearized_matrix_pointer_D();
     public: // specific model level
         virtual string get_model_type() const = 0;
         virtual string get_model_name() const = 0;

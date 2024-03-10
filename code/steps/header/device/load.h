@@ -150,7 +150,18 @@ class LOAD : public NONBUS_DEVICE
         void set_sequence_parameter_import_flag(bool flag);
         bool get_sequence_parameter_import_flag() const;
 
+        void initialize_ABCD_matrix_for_linearization();
         void build_linearized_matrix_ABCD();
+        void build_linearized_matrix_ABCD_with_basic_ABCD_and_EFGH(vector<STEPS_SPARSE_MATRIX*> matrix);
+        STEPS_SPARSE_MATRIX get_linearized_matrix_variable(char var) const;
+        STEPS_SPARSE_MATRIX get_linearized_matrix_A() const;
+        STEPS_SPARSE_MATRIX get_linearized_matrix_B() const;
+        STEPS_SPARSE_MATRIX get_linearized_matrix_C() const;
+        STEPS_SPARSE_MATRIX get_linearized_matrix_D() const;
+        STEPS_SPARSE_MATRIX* get_linearized_matrix_pointer_A();
+        STEPS_SPARSE_MATRIX* get_linearized_matrix_pointer_B();
+        STEPS_SPARSE_MATRIX* get_linearized_matrix_pointer_C();
+        STEPS_SPARSE_MATRIX* get_linearized_matrix_pointer_D();
     private:
         unsigned int bus;
         BUS* busptr;
@@ -189,5 +200,7 @@ class LOAD : public NONBUS_DEVICE
         complex<double> motor_Z1, motor_Z2, motor_Z0;
 
         bool sequence_parameter_import_flag;
+
+        STEPS_SPARSE_MATRIX *Aptr, *Bptr, *Cptr, *Dptr;
 };
 #endif // LOAD_H

@@ -880,7 +880,9 @@ SPARSE_MATRIX_CSPARSE concatenate_matrix_diagnally(vector<SPARSE_MATRIX_CSPARSE*
     {
         SPARSE_MATRIX_CSPARSE* imatrix = matrix[i];
         unsigned int nz = imatrix->get_matrix_entry_count();
-        for (unsigned int j=0; j<nz; ++j)
+        if(nz == 0) continue;
+
+        for(unsigned int j=0; j<nz; ++j)
         {
             double value = imatrix->get_real_entry_value(j);
             unsigned int mi = imatrix->get_row_number_of_entry_index(j);

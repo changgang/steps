@@ -17,10 +17,34 @@ using namespace std;
 GENERATOR::GENERATOR(STEPS& toolkit) : SOURCE(toolkit)
 {
     clear();
+    Aptr = NULL;
+    Bptr = NULL;
+    Cptr = NULL;
+    Dptr = NULL;
 }
 
 GENERATOR::~GENERATOR()
 {
+    if(Aptr != NULL)
+    {
+        delete Aptr;
+        Aptr = NULL;
+    }
+    if(Bptr != NULL)
+    {
+        delete Bptr;
+        Bptr = NULL;
+    }
+    if(Cptr != NULL)
+    {
+        delete Cptr;
+        Cptr = NULL;
+    }
+    if(Dptr != NULL)
+    {
+        delete Dptr;
+        Dptr = NULL;
+    }
 }
 
 void GENERATOR::set_generator_bus(unsigned int bus)
@@ -744,7 +768,240 @@ bool GENERATOR::get_sequence_parameter_import_flag() const
     return sequence_parameter_import_flag;
 }
 
+void GENERATOR::initialize_ABCD_matrix_for_linearization()
+{
+    if(Aptr == NULL)
+        Aptr = new STEPS_SPARSE_MATRIX;
+    if(Bptr == NULL)
+        Bptr = new STEPS_SPARSE_MATRIX;
+    if(Cptr == NULL)
+        Cptr = new STEPS_SPARSE_MATRIX;
+    if(Dptr == NULL)
+        Dptr = new STEPS_SPARSE_MATRIX;
+}
+
 void GENERATOR::build_linearized_matrix_ABCD()
 {
-    ;
+    initialize_ABCD_matrix_for_linearization();
+
+    STEPS_SPARSE_MATRIX Agen, Bgen, Cgen, Dgen;
+    if(sync_generator_model != NULL)
+    {
+        sync_generator_model->build_linearized_matrix_ABCD();
+        Agen = sync_generator_model->get_linearized_matrix_A();
+        Bgen = sync_generator_model->get_linearized_matrix_B();
+        Cgen = sync_generator_model->get_linearized_matrix_C();
+        Dgen = sync_generator_model->get_linearized_matrix_D();
+    }
+
+    STEPS_SPARSE_MATRIX Aex, Bex, Cex, Dex;
+    if(exciter_model != NULL)
+    {
+        exciter_model->build_linearized_matrix_ABCD();
+        Aex = exciter_model->get_linearized_matrix_A();
+        Bex = exciter_model->get_linearized_matrix_B();
+        Cex = exciter_model->get_linearized_matrix_C();
+        Dex = exciter_model->get_linearized_matrix_D();
+    }
+
+    STEPS_SPARSE_MATRIX Apss, Bpss, Cpss, Dpss;
+    if(stabilizer_model != NULL)
+    {
+        stabilizer_model->build_linearized_matrix_ABCD();
+        Apss = stabilizer_model->get_linearized_matrix_A();
+        Bpss = stabilizer_model->get_linearized_matrix_B();
+        Cpss = stabilizer_model->get_linearized_matrix_C();
+        Dpss = stabilizer_model->get_linearized_matrix_D();
+    }
+
+    STEPS_SPARSE_MATRIX Agov, Bgov, Cgov, Dgov;
+    if(turbine_governor_model != NULL)
+    {
+        turbine_governor_model->build_linearized_matrix_ABCD();
+        Agov = turbine_governor_model->get_linearized_matrix_A();
+        Bgov = turbine_governor_model->get_linearized_matrix_B();
+        Cgov = turbine_governor_model->get_linearized_matrix_C();
+        Dgov = turbine_governor_model->get_linearized_matrix_D();
+    }
+
+    STEPS_SPARSE_MATRIX Acomp, Bcomp, Ccomp, Dcomp;
+    if(compensator_model != NULL)
+    {
+        compensator_model->build_linearized_matrix_ABCD();
+        Acomp = compensator_model->get_linearized_matrix_A();
+        Bcomp = compensator_model->get_linearized_matrix_B();
+        Ccomp = compensator_model->get_linearized_matrix_C();
+        Dcomp = compensator_model->get_linearized_matrix_D();
+    }
+
+    STEPS_SPARSE_MATRIX Atlc, Btlc, Ctlc, Dtlc;
+    if(turbine_load_controller_model != NULL)
+    {
+        turbine_load_controller_model->build_linearized_matrix_ABCD();
+        Atlc = turbine_load_controller_model->get_linearized_matrix_A();
+        Btlc = turbine_load_controller_model->get_linearized_matrix_B();
+        Ctlc = turbine_load_controller_model->get_linearized_matrix_C();
+        Dtlc = turbine_load_controller_model->get_linearized_matrix_D();
+    }
+
+    vector<STEPS_SPARSE_MATRIX*> matrix;
+    matrix.push_back(&Agen);
+    matrix.push_back(&Aex);
+    matrix.push_back(&Apss);
+    matrix.push_back(&Agov);
+    matrix.push_back(&Acomp);
+    matrix.push_back(&Atlc);
+    STEPS_SPARSE_MATRIX A = concatenate_matrix_diagnally(matrix);
+    matrix.clear();
+
+    matrix.push_back(&Bgen);
+    matrix.push_back(&Bex);
+    matrix.push_back(&Bpss);
+    matrix.push_back(&Bgov);
+    matrix.push_back(&Bcomp);
+    matrix.push_back(&Btlc);
+    STEPS_SPARSE_MATRIX B = concatenate_matrix_diagnally(matrix);
+    matrix.clear();
+
+    matrix.push_back(&Cgen);
+    matrix.push_back(&Cex);
+    matrix.push_back(&Cpss);
+    matrix.push_back(&Cgov);
+    matrix.push_back(&Ccomp);
+    matrix.push_back(&Ctlc);
+    STEPS_SPARSE_MATRIX C = concatenate_matrix_diagnally(matrix);
+    matrix.clear();
+
+    matrix.push_back(&Dgen);
+    matrix.push_back(&Dex);
+    matrix.push_back(&Dpss);
+    matrix.push_back(&Dgov);
+    matrix.push_back(&Dcomp);
+    matrix.push_back(&Dtlc);
+    STEPS_SPARSE_MATRIX D = concatenate_matrix_diagnally(matrix);
+    matrix.clear();
+
+
+    STEPS_SPARSE_MATRIX E, F, G, H;
+
+
+
+    matrix.push_back(&A);
+    matrix.push_back(&B);
+    matrix.push_back(&C);
+    matrix.push_back(&D);
+    matrix.push_back(&E);
+    matrix.push_back(&F);
+    matrix.push_back(&G);
+    matrix.push_back(&H);
+
+    build_linearized_matrix_ABCD_with_basic_ABCD_and_EFGH(matrix);
+
+    Aptr->report_brief();
+    Bptr->report_brief();
+    Cptr->report_brief();
+    Dptr->report_brief();
+}
+
+void GENERATOR::build_linearized_matrix_ABCD_with_basic_ABCD_and_EFGH(vector<STEPS_SPARSE_MATRIX*> matrix)
+{
+
+}
+
+STEPS_SPARSE_MATRIX GENERATOR::get_linearized_matrix_variable(char var) const
+{
+    var = toupper(var);
+    switch(var)
+    {
+        case 'A':
+            return get_linearized_matrix_A();
+        case 'B':
+            return get_linearized_matrix_B();
+        case 'C':
+            return get_linearized_matrix_C();
+        case 'D':
+            return get_linearized_matrix_D();
+        default:
+            STEPS_SPARSE_MATRIX matrix;
+            return matrix;
+    }
+}
+STEPS_SPARSE_MATRIX GENERATOR::get_linearized_matrix_A() const
+{
+    if(Aptr!=NULL) return *Aptr;
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. No pointer to A matrix exists in GENERATOR. Cannot return linearized A matrix.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+
+        STEPS_SPARSE_MATRIX temp;
+        return temp;
+    }
+}
+
+STEPS_SPARSE_MATRIX GENERATOR::get_linearized_matrix_B() const
+{
+    if(Bptr!=NULL) return *Bptr;
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. No pointer to B matrix exists in GENERATOR. Cannot return linearized B matrix.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+
+        STEPS_SPARSE_MATRIX temp;
+        return temp;
+    }
+}
+
+STEPS_SPARSE_MATRIX GENERATOR::get_linearized_matrix_C() const
+{
+    if(Cptr!=NULL) return *Cptr;
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. No pointer to C matrix exists in GENERATOR. Cannot return linearized C matrix.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+
+        STEPS_SPARSE_MATRIX temp;
+        return temp;
+    }
+}
+
+STEPS_SPARSE_MATRIX GENERATOR::get_linearized_matrix_D() const
+{
+    if(Dptr!=NULL) return *Dptr;
+    else
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"Error. No pointer to D matrix exists in GENERATOR. Cannot return linearized D matrix.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+
+        STEPS_SPARSE_MATRIX temp;
+        return temp;
+    }
+}
+
+STEPS_SPARSE_MATRIX* GENERATOR::get_linearized_matrix_pointer_A()
+{
+    return Aptr;
+}
+
+STEPS_SPARSE_MATRIX* GENERATOR::get_linearized_matrix_pointer_B()
+{
+    return Bptr;
+}
+
+STEPS_SPARSE_MATRIX* GENERATOR::get_linearized_matrix_pointer_C()
+{
+    return Cptr;
+}
+
+STEPS_SPARSE_MATRIX* GENERATOR::get_linearized_matrix_pointer_D()
+{
+    return Dptr;
 }

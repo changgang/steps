@@ -128,10 +128,10 @@ void SECOND_ORDER_BLOCK_TEST::test_linearized_ABCD()
 
     TEST_ASSERT(fabs(s-1.2)<FLOAT_EPSILON);
 
-    STEPS_SPARSE_MATRIX A = block.get_linearized_system_A();
-    STEPS_SPARSE_MATRIX B = block.get_linearized_system_B();
-    STEPS_SPARSE_MATRIX C = block.get_linearized_system_C();
-    STEPS_SPARSE_MATRIX D = block.get_linearized_system_D();
+    STEPS_SPARSE_MATRIX A = block.get_linearized_matrix_A();
+    STEPS_SPARSE_MATRIX B = block.get_linearized_matrix_B();
+    STEPS_SPARSE_MATRIX C = block.get_linearized_matrix_C();
+    STEPS_SPARSE_MATRIX D = block.get_linearized_matrix_D();
 
     TEST_ASSERT(fabs(A.get_entry_value(0,0)-(a*u-s))<FLOAT_EPSILON);
     TEST_ASSERT(fabs(B.get_entry_value(0,0)-(a*u-s))<FLOAT_EPSILON);

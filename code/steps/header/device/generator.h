@@ -94,7 +94,18 @@ class GENERATOR : public SOURCE
         void set_sequence_parameter_import_flag(bool flag);
         bool get_sequence_parameter_import_flag() const;
 
+        void initialize_ABCD_matrix_for_linearization();
         void build_linearized_matrix_ABCD();
+        void build_linearized_matrix_ABCD_with_basic_ABCD_and_EFGH(vector<STEPS_SPARSE_MATRIX*> matrix);
+        STEPS_SPARSE_MATRIX get_linearized_matrix_variable(char var) const;
+        STEPS_SPARSE_MATRIX get_linearized_matrix_A() const;
+        STEPS_SPARSE_MATRIX get_linearized_matrix_B() const;
+        STEPS_SPARSE_MATRIX get_linearized_matrix_C() const;
+        STEPS_SPARSE_MATRIX get_linearized_matrix_D() const;
+        STEPS_SPARSE_MATRIX* get_linearized_matrix_pointer_A();
+        STEPS_SPARSE_MATRIX* get_linearized_matrix_pointer_B();
+        STEPS_SPARSE_MATRIX* get_linearized_matrix_pointer_C();
+        STEPS_SPARSE_MATRIX* get_linearized_matrix_pointer_D();
     private:
         SYNC_GENERATOR_MODEL* sync_generator_model;
         COMPENSATOR_MODEL* compensator_model;
@@ -114,5 +125,7 @@ class GENERATOR : public SOURCE
         GENERATOR_REACTANCE_OPTION gen_X_option;
 
         bool sequence_parameter_import_flag;
+
+        STEPS_SPARSE_MATRIX *Aptr, *Bptr, *Cptr, *Dptr;
 };
 #endif // GENERATOR_H

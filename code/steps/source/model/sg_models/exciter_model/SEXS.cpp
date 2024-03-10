@@ -430,5 +430,69 @@ void SEXS::build_linearized_matrix_ABCD()
             W = G*Y+H*V
     */
     initialize_ABCD_matrix_for_linearization();
+
+    // block 0
+    STEPS_SPARSE_MATRIX A_phase_tuner = phase_tuner.get_linearized_matrix_A();
+    STEPS_SPARSE_MATRIX B_phase_tuner = phase_tuner.get_linearized_matrix_B();
+    STEPS_SPARSE_MATRIX C_phase_tuner = phase_tuner.get_linearized_matrix_C();
+    STEPS_SPARSE_MATRIX D_phase_tuner = phase_tuner.get_linearized_matrix_D();
+
+    // block 1
+    STEPS_SPARSE_MATRIX A_exciter = exciter.get_linearized_matrix_A();
+    STEPS_SPARSE_MATRIX B_exciter = exciter.get_linearized_matrix_B();
+    STEPS_SPARSE_MATRIX C_exciter = exciter.get_linearized_matrix_C();
+    STEPS_SPARSE_MATRIX D_exciter = exciter.get_linearized_matrix_D();
+
+    // define the order of X, U, Y, V, W
+    // Define E F G H U = E*Y+F*V
+
+    vector<STEPS_SPARSE_MATRIX*> matrix;
+    matrix.push_back(&A_phase_tuner);
+    matrix.push_back(&A_exciter);
+    STEPS_SPARSE_MATRIX A = concatenate_matrix_diagnally(matrix);
+    matrix.clear();
+
+    matrix.push_back(&B_phase_tuner);
+    matrix.push_back(&B_exciter);
+    STEPS_SPARSE_MATRIX B = concatenate_matrix_diagnally(matrix);
+    matrix.clear();
+
+    matrix.push_back(&C_phase_tuner);
+    matrix.push_back(&C_exciter);
+    STEPS_SPARSE_MATRIX C = concatenate_matrix_diagnally(matrix);
+    matrix.clear();
+
+    matrix.push_back(&D_phase_tuner);
+    matrix.push_back(&D_exciter);
+    STEPS_SPARSE_MATRIX D = concatenate_matrix_diagnally(matrix);
+    matrix.clear();
+
+
+    STEPS_SPARSE_MATRIX E, F, G, H;
+    E.add_entry(0,0, 0);
+    E.add_entry(0,1, 0);
+    E.add_entry(1,0, 1);
+    E.add_entry(1,1, 0);
+    F.add_entry(0,0, -1);
+    F.add_entry(0,1, 1);
+    F.add_entry(1,0, 0);
+    F.add_entry(1,1, 0);
+    G.add_entry(0,0, 0);
+    G.add_entry(0,1, 1);
+    H.add_entry(0,0, 0);
+    H.add_entry(0,1, 0);
+
+
+    matrix.push_back(&A);
+    matrix.push_back(&B);
+    matrix.push_back(&C);
+    matrix.push_back(&D);
+    matrix.push_back(&E);
+    matrix.push_back(&F);
+    matrix.push_back(&G);
+    matrix.push_back(&H);
+
+    build_linearized_matrix_ABCD_with_basic_ABCD_and_EFGH(matrix);
+
 }
 

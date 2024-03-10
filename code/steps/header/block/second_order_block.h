@@ -27,11 +27,11 @@ class SECOND_ORDER_BLOCK : public BLOCK
         void initialize();
         void run(DYNAMIC_MODE mode);
 
-        STEPS_SPARSE_MATRIX get_linearized_system_variable(char var) const;
-        STEPS_SPARSE_MATRIX get_linearized_system_A() const;
-        STEPS_SPARSE_MATRIX get_linearized_system_B() const;
-        STEPS_SPARSE_MATRIX get_linearized_system_C() const;
-        STEPS_SPARSE_MATRIX get_linearized_system_D() const;
+        STEPS_SPARSE_MATRIX get_linearized_matrix_variable(char var) const;
+        STEPS_SPARSE_MATRIX get_linearized_matrix_A() const;
+        STEPS_SPARSE_MATRIX get_linearized_matrix_B() const;
+        STEPS_SPARSE_MATRIX get_linearized_matrix_C() const;
+        STEPS_SPARSE_MATRIX get_linearized_matrix_D() const;
 
         virtual void check();
     private:

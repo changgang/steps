@@ -82,26 +82,73 @@ void SG_MODEL::initialize_ABCD_matrix_for_linearization()
         Dptr = new STEPS_SPARSE_MATRIX;
 }
 
-STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_system_variable(char var) const
+void SG_MODEL::build_linearized_matrix_ABCD_with_basic_ABCD_and_EFGH(vector<STEPS_SPARSE_MATRIX*> matrix)
+{
+    if(matrix.size()!=8)
+    {
+        ostringstream osstream;
+        osstream<<"ERROR. Vector matrix in SG_MODEL::"<<__FUNCTION__<<"() has "<<matrix.size()<<"individual matrix which is NOT 8";
+        STEPS& toolkit = get_toolkit();
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    STEPS_SPARSE_MATRIX& Abasic = *(matrix[0]);
+    STEPS_SPARSE_MATRIX& Bbasic = *(matrix[1]);
+    STEPS_SPARSE_MATRIX& Cbasic = *(matrix[2]);
+    STEPS_SPARSE_MATRIX& Dbasic = *(matrix[3]);
+    STEPS_SPARSE_MATRIX& E = *(matrix[4]);
+    STEPS_SPARSE_MATRIX& F = *(matrix[5]);
+    STEPS_SPARSE_MATRIX& G = *(matrix[6]);
+    STEPS_SPARSE_MATRIX& H = *(matrix[7]);
+
+    STEPS_SPARSE_MATRIX ED = E*Dbasic;
+    STEPS_SPARSE_MATRIX DE = Dbasic*E;
+    STEPS_SPARSE_MATRIX I1 = build_identity_matrix(ED);
+    STEPS_SPARSE_MATRIX I2 = build_identity_matrix(DE);
+
+    STEPS_SPARSE_MATRIX DIFF1 = I1-ED;
+    STEPS_SPARSE_MATRIX DIFF2 = I2-DE;
+    STEPS_SPARSE_MATRIX INV1 = inv(DIFF1);
+    STEPS_SPARSE_MATRIX INV2 = inv(DIFF2);
+
+    STEPS_SPARSE_MATRIX B_INV1 = Bbasic*INV1;
+    STEPS_SPARSE_MATRIX B_INV1_E = B_INV1*E;
+    STEPS_SPARSE_MATRIX B_INV1_F = B_INV1*F;
+    STEPS_SPARSE_MATRIX B_INV1_E_C = B_INV1_E*Cbasic;
+    STEPS_SPARSE_MATRIX G_INV2 = G*INV2;
+    STEPS_SPARSE_MATRIX G_INV2_C = G_INV2*Cbasic;
+    STEPS_SPARSE_MATRIX G_INV2_D = G_INV2*Dbasic;
+    STEPS_SPARSE_MATRIX G_INV2_D_F = G_INV2_D*F;
+
+    STEPS_SPARSE_MATRIX Atemp = Abasic+B_INV1_E_C;
+    STEPS_SPARSE_MATRIX Dtemp = G_INV2_D_F+H;
+
+    *Aptr = Atemp;
+    *Bptr = B_INV1_F;
+    *Cptr = G_INV2_C;
+    *Dptr = Dtemp;
+}
+
+STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_matrix_variable(char var) const
 {
     var = toupper(var);
     switch(var)
     {
         case 'A':
-            return get_linearized_system_A();
+            return get_linearized_matrix_A();
         case 'B':
-            return get_linearized_system_B();
+            return get_linearized_matrix_B();
         case 'C':
-            return get_linearized_system_C();
+            return get_linearized_matrix_C();
         case 'D':
-            return get_linearized_system_D();
+            return get_linearized_matrix_D();
         default:
             STEPS_SPARSE_MATRIX matrix;
             return matrix;
     }
 }
 
-STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_system_A() const
+STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_matrix_A() const
 {
     if(Aptr!=NULL) return *Aptr;
     else
@@ -116,7 +163,7 @@ STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_system_A() const
     }
 }
 
-STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_system_B() const
+STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_matrix_B() const
 {
     if(Bptr!=NULL) return *Bptr;
     else
@@ -131,7 +178,7 @@ STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_system_B() const
     }
 }
 
-STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_system_C() const
+STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_matrix_C() const
 {
     if(Cptr!=NULL) return *Cptr;
     else
@@ -146,7 +193,7 @@ STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_system_C() const
     }
 }
 
-STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_system_D() const
+STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_matrix_D() const
 {
     if(Dptr!=NULL) return *Dptr;
     else
@@ -159,5 +206,25 @@ STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_system_D() const
         STEPS_SPARSE_MATRIX temp;
         return temp;
     }
+}
+
+STEPS_SPARSE_MATRIX* SG_MODEL::get_linearized_matrix_pointer_A()
+{
+    return Aptr;
+}
+
+STEPS_SPARSE_MATRIX* SG_MODEL::get_linearized_matrix_pointer_B()
+{
+    return Bptr;
+}
+
+STEPS_SPARSE_MATRIX* SG_MODEL::get_linearized_matrix_pointer_C()
+{
+    return Cptr;
+}
+
+STEPS_SPARSE_MATRIX* SG_MODEL::get_linearized_matrix_pointer_D()
+{
+    return Dptr;
 }
 
