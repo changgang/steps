@@ -86,7 +86,7 @@
 	"header/basic/sparse_matrix_csparse.h"
 	"header/basic/complex_sparse_matrix_csparse.h"
 
-1710076670 d:\steps\code\steps\header\basic\sparse_matrix_csparse.h
+1710130550 d:\steps\code\steps\header\basic\sparse_matrix_csparse.h
 	"cs.h"
 	<vector>
 	<ctime>
@@ -709,7 +709,7 @@
 	"header/basic/utility.h"
 	"header/data_imexporter/psse_imexporter.h"
 
-1708511336 source:d:\steps\code\steps\main_tests.cpp
+1710119997 source:d:\steps\code\steps\main_tests.cpp
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -960,7 +960,7 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1625794610 d:\steps\code\steps\header\basic\sparse_matrix_test.h
+1710137344 d:\steps\code\steps\header\basic\sparse_matrix_test.h
 	<istream>
 	<iostream>
 	"cpptest.h"
@@ -3211,7 +3211,7 @@
 	<iostream>
 	<fstream>
 
-1710079984 source:d:\steps\code\steps\source\basic\sparse_matrix_csparse.cpp
+1710130955 source:d:\steps\code\steps\source\basic\sparse_matrix_csparse.cpp
 	"header/basic/sparse_matrix_csparse.h"
 	"header/basic/constants.h"
 	"header/basic/utility.h"
@@ -3478,7 +3478,7 @@
 
 1574318720 d:\steps\code\thirdparty\suitesparse\umfpack\include\umfpack_global.h
 
-1710076869 source:d:\steps\code\steps\source\basic\sparse_matrix_test.cpp
+1710137449 source:d:\steps\code\steps\source\basic\sparse_matrix_test.cpp
 	"header/basic/test_macro.h"
 	"header/basic/sparse_matrix_test.h"
 	"header/basic/utility.h"
@@ -6549,4 +6549,15 @@
 	"header/basic/utility.h"
 	"header/STEPS.h"
 	<iostream>
+
+1710082082 source:d:\steps\code\steps\main_small_signal_analysis.cpp
+	<istream>
+	<iostream>
+	"header/power_system_database.h"
+	"header/steps_namespace.h"
+	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
+	"header/toolkit/powerflow_solver/powerflow_solver.h"
+	"header/basic/utility.h"
+	"header/data_imexporter/psse_imexporter.h"
+	"header/prepare_for_tests/prepare_models_for_test.h"
 

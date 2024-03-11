@@ -57,7 +57,13 @@ class SPARSE_MATRIX_TEST : public Test::Suite
         void test_matrix_add();
         void test_matrix_minus();
         void test_matrix_multiply();
+        void test_matrix_divide();
         void test_matrix_inverse();
+        void test_concatenate_matrix_diagnally();
+        void test_build_identity_matrix();
+        void test_expand_matrix_to_new_size();
+        void test_shrink_matrix_to_new_size();
+        void test_change_matrix_to_new_size();
 
         void test_save_matrix_to_file();
     private:

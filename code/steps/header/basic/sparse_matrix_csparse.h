@@ -26,6 +26,7 @@ public:
     virtual bool matrix_in_triplet_form()  const;
 
     virtual void compress_and_merge_duplicate_entries();
+    void compress_and_merge_cs_matrix(cs* matrix);
 
     virtual void transpose();
 
@@ -86,5 +87,9 @@ SPARSE_MATRIX_CSPARSE operator*(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE& 
 SPARSE_MATRIX_CSPARSE operator/(double b, SPARSE_MATRIX_CSPARSE& A);
 SPARSE_MATRIX_CSPARSE inv(SPARSE_MATRIX_CSPARSE&A);
 SPARSE_MATRIX_CSPARSE concatenate_matrix_diagnally(vector<SPARSE_MATRIX_CSPARSE*> matrix);
-SPARSE_MATRIX_CSPARSE build_identity_matrix(SPARSE_MATRIX_CSPARSE&A);
+SPARSE_MATRIX_CSPARSE build_identity_matrix(const SPARSE_MATRIX_CSPARSE&A);
+SPARSE_MATRIX_CSPARSE build_identity_matrix(unsigned int n);
+SPARSE_MATRIX_CSPARSE change_matrix_to_new_size(const SPARSE_MATRIX_CSPARSE&A, unsigned int mrow, unsigned int ncol);
+SPARSE_MATRIX_CSPARSE expand_matrix_to_new_size(const SPARSE_MATRIX_CSPARSE&A, unsigned int mrow, unsigned int ncol);
+SPARSE_MATRIX_CSPARSE shrink_matrix_to_new_size(const SPARSE_MATRIX_CSPARSE&A, unsigned int mrow, unsigned int ncol);
 #endif // SPARSE_MATRIX_CSPARSE_H

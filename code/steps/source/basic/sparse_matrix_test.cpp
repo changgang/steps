@@ -38,7 +38,14 @@ SPARSE_MATRIX_TEST::SPARSE_MATRIX_TEST()
     TEST_ADD(SPARSE_MATRIX_TEST::test_matrix_add);
     TEST_ADD(SPARSE_MATRIX_TEST::test_matrix_minus);
     TEST_ADD(SPARSE_MATRIX_TEST::test_matrix_multiply);
+    TEST_ADD(SPARSE_MATRIX_TEST::test_matrix_divide);
     TEST_ADD(SPARSE_MATRIX_TEST::test_matrix_inverse);
+    TEST_ADD(SPARSE_MATRIX_TEST::test_concatenate_matrix_diagnally);
+    TEST_ADD(SPARSE_MATRIX_TEST::test_build_identity_matrix);
+    TEST_ADD(SPARSE_MATRIX_TEST::test_expand_matrix_to_new_size);
+    TEST_ADD(SPARSE_MATRIX_TEST::test_shrink_matrix_to_new_size);
+    TEST_ADD(SPARSE_MATRIX_TEST::test_change_matrix_to_new_size);
+
 
     TEST_ADD(SPARSE_MATRIX_TEST::test_save_matrix_to_file);
 }
@@ -509,15 +516,41 @@ void SPARSE_MATRIX_TEST::test_matrix_multiply()
 
     TEST_ASSERT(newmatrix.get_matrix_size()==3);
 
-    TEST_ASSERT(newmatrix.get_real_entry_value(0,0)==1);
-    TEST_ASSERT(newmatrix.get_real_entry_value(0,1)==0);
-    TEST_ASSERT(newmatrix.get_real_entry_value(0,2)==0);
-    TEST_ASSERT(newmatrix.get_real_entry_value(1,0)==4);
-    TEST_ASSERT(newmatrix.get_real_entry_value(1,1)==4);
-    TEST_ASSERT(newmatrix.get_real_entry_value(1,2)==12);
-    TEST_ASSERT(newmatrix.get_real_entry_value(2,0)==2);
-    TEST_ASSERT(newmatrix.get_real_entry_value(2,1)==0);
-    TEST_ASSERT(newmatrix.get_real_entry_value(2,2)==1);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,0)-1)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,1)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,2)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,0)-4)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,1)-4)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,2)-12)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,0)-2)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,1)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,2)-1)<=FLOAT_EPSILON);
+}
+
+void SPARSE_MATRIX_TEST::test_matrix_divide()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"SPARSE_MATRIX_TEST");
+
+    prepare_basic_matrix();
+
+    // matrix is
+    // [1  0  0]      [0  0  0]
+    // [0  2  4]  + j [0  5  9]
+    // [1  0  1]      [0  0  2]
+
+    STEPS_SPARSE_MATRIX newmatrix = 3/matrix;
+
+    TEST_ASSERT(newmatrix.get_matrix_size()==3);
+
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,0)-3)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,1)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,2)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,0)-6)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,1)-1.5)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,2)-(-6))<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,0)-(-3))<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,1)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,2)-3)<=FLOAT_EPSILON);
 }
 
 void SPARSE_MATRIX_TEST::test_matrix_inverse()
@@ -531,7 +564,7 @@ void SPARSE_MATRIX_TEST::test_matrix_inverse()
     // [0  2  4]  + j [0  5  9]
     // [1  0  1]      [0  0  2]
 
-    STEPS_SPARSE_MATRIX newmatrix = 1/matrix;
+    STEPS_SPARSE_MATRIX newmatrix = inv(matrix);
 
     TEST_ASSERT(newmatrix.get_matrix_size()==3);
 
@@ -544,6 +577,209 @@ void SPARSE_MATRIX_TEST::test_matrix_inverse()
     TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,0)-(-1))<=FLOAT_EPSILON);
     TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,1)-0)<=FLOAT_EPSILON);
     TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,2)-1)<=FLOAT_EPSILON);
+}
+
+void SPARSE_MATRIX_TEST::test_concatenate_matrix_diagnally()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"SPARSE_MATRIX_TEST");
+
+    prepare_basic_matrix();
+
+    // matrix is
+    // [1  0  0]      [0  0  0]
+    // [0  2  4]  + j [0  5  9]
+    // [1  0  1]      [0  0  2]
+
+    vector<STEPS_SPARSE_MATRIX*> matrixz;
+    matrixz.push_back(&matrix);
+    matrixz.push_back(&matrix);
+    matrixz.push_back(&matrix);
+
+    STEPS_SPARSE_MATRIX newmatrix = concatenate_matrix_diagnally(matrixz);
+
+    TEST_ASSERT(newmatrix.get_matrix_size()==9);
+
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,0)-1)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,1)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,2)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,3)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,4)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,5)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,6)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,7)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,8)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,0)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,1)-2)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,2)-4)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,3)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,4)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,5)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,6)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,7)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,8)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,0)-1)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,1)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,2)-1)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,3)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,4)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,5)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,6)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,7)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,8)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(3,3)-1)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(3,4)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(3,5)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(4,3)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(4,4)-2)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(4,5)-4)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(5,3)-1)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(5,4)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(5,5)-1)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(6,6)-1)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(6,7)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(6,8)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(7,6)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(7,7)-2)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(7,8)-4)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(8,6)-1)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(8,7)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(8,8)-1)<=FLOAT_EPSILON);
+}
+
+void SPARSE_MATRIX_TEST::test_build_identity_matrix()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"SPARSE_MATRIX_TEST");
+
+    prepare_basic_matrix();
+
+    // matrix is
+    // [1  0  0]      [0  0  0]
+    // [0  2  4]  + j [0  5  9]
+    // [1  0  1]      [0  0  2]
+
+    STEPS_SPARSE_MATRIX newmatrix = build_identity_matrix(matrix);
+
+    TEST_ASSERT(newmatrix.get_matrix_size()==3);
+
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,0)-1)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,1)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,2)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,0)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,1)-1)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,2)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,0)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,1)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,2)-1)<=FLOAT_EPSILON);
+
+    STEPS_SPARSE_MATRIX newmatrix2 = build_identity_matrix(3);
+
+    TEST_ASSERT(newmatrix2.get_matrix_size()==3);
+
+    TEST_ASSERT(fabs(newmatrix2.get_real_entry_value(0,0)-1)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix2.get_real_entry_value(0,1)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix2.get_real_entry_value(0,2)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix2.get_real_entry_value(1,0)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix2.get_real_entry_value(1,1)-1)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix2.get_real_entry_value(1,2)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix2.get_real_entry_value(2,0)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix2.get_real_entry_value(2,1)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix2.get_real_entry_value(2,2)-1)<=FLOAT_EPSILON);
+}
+
+void SPARSE_MATRIX_TEST::test_expand_matrix_to_new_size()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"SPARSE_MATRIX_TEST");
+
+    prepare_basic_matrix();
+
+    // matrix is
+    // [1  0  0]      [0  0  0]
+    // [0  2  4]  + j [0  5  9]
+    // [1  0  1]      [0  0  2]
+
+    STEPS_SPARSE_MATRIX newmatrix = expand_matrix_to_new_size(matrix,3,5);
+
+    TEST_ASSERT(newmatrix.get_matrix_size()==5);
+    TEST_ASSERT(newmatrix.get_matrix_row_count()==3);
+    TEST_ASSERT(newmatrix.get_matrix_column_count()==5);
+
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,0)-1)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,1)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,2)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,0)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,1)-2)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,2)-4)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,0)-1)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,1)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(2,2)-1)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(3,3)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(4,4)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(4,3)-0)<=FLOAT_EPSILON);
+
+    STEPS_SPARSE_MATRIX B = matrix*newmatrix;
+    newmatrix.change_entry_value(2,4,2);
+    B = matrix*newmatrix;
+
+    TEST_ASSERT(B.get_matrix_row_count()==3);
+    TEST_ASSERT(B.get_matrix_column_count()==5);
+}
+
+void SPARSE_MATRIX_TEST::test_shrink_matrix_to_new_size()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"SPARSE_MATRIX_TEST");
+
+    prepare_basic_matrix();
+
+    // matrix is
+    // [1  0  0]      [0  0  0]
+    // [0  2  4]  + j [0  5  9]
+    // [1  0  1]      [0  0  2]
+
+    STEPS_SPARSE_MATRIX newmatrix = shrink_matrix_to_new_size(matrix,2,3);
+
+    TEST_ASSERT(newmatrix.get_matrix_size()==3);
+    TEST_ASSERT(newmatrix.get_matrix_row_count()==2);
+    TEST_ASSERT(newmatrix.get_matrix_column_count()==3);
+
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,0)-1)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,1)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,2)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,0)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,1)-2)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,2)-4)<=FLOAT_EPSILON);
+}
+
+void SPARSE_MATRIX_TEST::test_change_matrix_to_new_size()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"SPARSE_MATRIX_TEST");
+
+    prepare_basic_matrix();
+
+    // matrix is
+    // [1  0  0]      [0  0  0]
+    // [0  2  4]  + j [0  5  9]
+    // [1  0  1]      [0  0  2]
+
+    STEPS_SPARSE_MATRIX newmatrix = change_matrix_to_new_size(matrix,2,4);
+
+    TEST_ASSERT(newmatrix.get_matrix_size()==4);
+    TEST_ASSERT(newmatrix.get_matrix_row_count()==2);
+    TEST_ASSERT(newmatrix.get_matrix_column_count()==4);
+
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,0)-1)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,1)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,2)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(0,3)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,0)-0)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,1)-2)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,2)-4)<=FLOAT_EPSILON);
+    TEST_ASSERT(fabs(newmatrix.get_real_entry_value(1,3)-0)<=FLOAT_EPSILON);
+
+    STEPS_SPARSE_MATRIX B = change_matrix_to_new_size(matrix,4,2);
+
+    TEST_ASSERT(B.get_matrix_size()==2);
+    TEST_ASSERT(B.get_matrix_row_count()==4);
+    TEST_ASSERT(B.get_matrix_column_count()==2);
 }
 
 void SPARSE_MATRIX_TEST::test_save_matrix_to_file()

@@ -231,41 +231,10 @@ void SPARSE_MATRIX_CSPARSE::compress_and_merge_duplicate_entries()
     // compress the sparse matrix
     if(matrix_in_triplet_form())
     {
-        cs *mat; // temp mat
-        csi *tempi; // temp index
-        double *tempd; // temp value
-
         // real part
-        // compress the matrix
-        mat = cs_compress(matrix_real);
-        // swap
-        matrix_real->nzmax = mat->nzmax;
-        matrix_real->m = mat->m;
-        matrix_real->n = mat->n;
-        matrix_real->nz = mat->nz;
-        tempi = matrix_real->p; matrix_real->p = mat->p; mat->p = tempi;
-        tempi = matrix_real->i; matrix_real->i = mat->i; mat->i = tempi;
-        tempd = matrix_real->x; matrix_real->x = mat->x; mat->x = tempd;
-        // free temp mat
-        cs_spfree(mat);
-
-        cs_dupl(matrix_real); // merge duplicate entries
-
+        compress_and_merge_cs_matrix(matrix_real);
         //  imaginary part
-        // compress the matrix
-        mat = cs_compress(matrix_imag);
-        // swap
-        matrix_imag->nzmax = mat->nzmax;
-        matrix_imag->m = mat->m;
-        matrix_imag->n = mat->n;
-        matrix_imag->nz = mat->nz;
-        tempi = matrix_imag->p; matrix_imag->p = mat->p; mat->p = tempi;
-        tempi = matrix_imag->i; matrix_imag->i = mat->i; mat->i = tempi;
-        tempd = matrix_imag->x; matrix_imag->x = mat->x; mat->x = tempd;
-        // free temp mat
-        cs_spfree(mat);
-
-        cs_dupl(matrix_imag); // merge duplicate entries
+        compress_and_merge_cs_matrix(matrix_imag);
 
         // at last, transpose twice
         transpose();
@@ -273,6 +242,28 @@ void SPARSE_MATRIX_CSPARSE::compress_and_merge_duplicate_entries()
 
         update_clock_when_matrix_is_changed();
     }
+}
+
+void SPARSE_MATRIX_CSPARSE::compress_and_merge_cs_matrix(cs* matrix)
+{
+    cs *mat; // temp mat
+    csi *tempi; // temp index
+    double *tempd; // temp value
+
+    // compress the matrix
+    mat = cs_compress(matrix);
+    // swap
+    matrix->nzmax = mat->nzmax;
+    matrix->m = mat->m;
+    matrix->n = mat->n;
+    matrix->nz = mat->nz;
+    tempi = matrix->p; matrix->p = mat->p; mat->p = tempi;
+    tempi = matrix->i; matrix->i = mat->i; mat->i = tempi;
+    tempd = matrix->x; matrix->x = mat->x; mat->x = tempd;
+    // free temp mat
+    cs_spfree(mat);
+
+    cs_dupl(matrix); // merge duplicate entries
 }
 
 void SPARSE_MATRIX_CSPARSE::transpose()
@@ -748,11 +739,13 @@ cs* SPARSE_MATRIX_CSPARSE::get_cs_imag_matrix()
 void SPARSE_MATRIX_CSPARSE::set_cs_real_matrix(cs* matrix)
 {
     matrix_real = matrix;
+    update_clock_when_matrix_is_changed();
 }
 
 void SPARSE_MATRIX_CSPARSE::set_cs_imag_matrix(cs* matrix)
 {
     matrix_imag = matrix;
+    update_clock_when_matrix_is_changed();
 }
 
 vector<double>& operator/(vector<double>&b, SPARSE_MATRIX_CSPARSE& A)
@@ -770,6 +763,7 @@ SPARSE_MATRIX_CSPARSE operator+(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE& 
     SPARSE_MATRIX_CSPARSE C;
     C.clear();
     C.set_cs_real_matrix(c);
+    C.compress_and_merge_duplicate_entries();
     return C;
 }
 
@@ -783,6 +777,7 @@ SPARSE_MATRIX_CSPARSE operator-(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE& 
     SPARSE_MATRIX_CSPARSE C;
     C.clear();
     C.set_cs_real_matrix(c);
+    C.compress_and_merge_duplicate_entries();
     return C;
 }
 
@@ -796,6 +791,8 @@ SPARSE_MATRIX_CSPARSE operator*(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE& 
     SPARSE_MATRIX_CSPARSE C;
     C.clear();
     C.set_cs_real_matrix(c);
+    C.convert_to_triplet_form();
+    C.compress_and_merge_duplicate_entries();
     return C;
 }
 
@@ -871,7 +868,7 @@ SPARSE_MATRIX_CSPARSE inv(SPARSE_MATRIX_CSPARSE&A)
     return B;
 }
 
-SPARSE_MATRIX_CSPARSE concatenate_matrix_diagnally(vector<SPARSE_MATRIX_CSPARSE*> matrix)
+SPARSE_MATRIX_CSPARSE concatenate_matrix_diagnally(const vector<SPARSE_MATRIX_CSPARSE*> matrix)
 {
     SPARSE_MATRIX_CSPARSE MATRIX;
     unsigned int m=0, n = 0;
@@ -896,11 +893,15 @@ SPARSE_MATRIX_CSPARSE concatenate_matrix_diagnally(vector<SPARSE_MATRIX_CSPARSE*
     return MATRIX;
 }
 
-SPARSE_MATRIX_CSPARSE build_identity_matrix(SPARSE_MATRIX_CSPARSE&A)
+SPARSE_MATRIX_CSPARSE build_identity_matrix(const SPARSE_MATRIX_CSPARSE&A)
 {
     // B = I,I.column_count = A.matrix_column_count
     unsigned int n = A.get_matrix_column_count();
+    return build_identity_matrix(n);
+}
 
+SPARSE_MATRIX_CSPARSE build_identity_matrix(unsigned int n)
+{
     vector<double> b;
     for(unsigned int i=0; i<n; ++i)
         b.push_back(0.0);
@@ -914,5 +915,80 @@ SPARSE_MATRIX_CSPARSE build_identity_matrix(SPARSE_MATRIX_CSPARSE&A)
         for(unsigned int j=0; j<n; ++j)
             B.add_entry(i, j, b[j]);
     }
+    B.compress_and_merge_duplicate_entries();
     return B;
+}
+
+SPARSE_MATRIX_CSPARSE change_matrix_to_new_size(const SPARSE_MATRIX_CSPARSE&A, unsigned int mrow, unsigned int ncol)
+{
+    unsigned int m = A.get_matrix_row_count();
+    unsigned int n = A.get_matrix_column_count();
+    if(mrow==m and ncol==n)
+        return A;
+    else
+    {
+        if(mrow>=m and ncol>=n)
+            return expand_matrix_to_new_size(A, mrow, ncol);
+        else
+        {
+            if(mrow<=m and ncol<=n)
+                return shrink_matrix_to_new_size(A, mrow, ncol);
+            else
+            {
+                if(mrow<=m and ncol>=n)
+                {
+                    SPARSE_MATRIX_CSPARSE B = shrink_matrix_to_new_size(A, mrow, n);
+                    return expand_matrix_to_new_size(B, mrow, ncol);
+                }
+                else
+                {
+                    SPARSE_MATRIX_CSPARSE B = shrink_matrix_to_new_size(A, m, ncol);
+                    return expand_matrix_to_new_size(B, mrow, ncol);
+                }
+            }
+        }
+    }
+}
+
+SPARSE_MATRIX_CSPARSE expand_matrix_to_new_size(const SPARSE_MATRIX_CSPARSE&A, unsigned int mrow, unsigned int ncol)
+{
+    unsigned int m = A.get_matrix_row_count();
+    unsigned int n = A.get_matrix_column_count();
+    if(mrow<m or ncol<n)
+        return A;
+    else
+    {
+        SPARSE_MATRIX_CSPARSE B = A;
+        B.convert_to_triplet_form();
+        B.add_entry(mrow-1, ncol-1, complex<double>(0,0));
+        B.compress_and_merge_duplicate_entries();
+        return B;
+    }
+}
+
+SPARSE_MATRIX_CSPARSE shrink_matrix_to_new_size(const SPARSE_MATRIX_CSPARSE&A, unsigned int mrow, unsigned int ncol)
+{
+    unsigned int m = A.get_matrix_row_count();
+    unsigned int n = A.get_matrix_column_count();
+    if(mrow>m or ncol>n)
+        return A;
+    else
+    {
+        SPARSE_MATRIX_CSPARSE B;
+        unsigned int nz = A.get_matrix_entry_count();
+        for(unsigned int k=0; k<nz; ++k)
+        {
+            unsigned int i = A.get_row_number_of_entry_index(k);
+            unsigned int j = A.get_column_number_of_entry_index(k);
+            if(i>=mrow or j>=ncol)
+                continue;
+            else
+            {
+                complex<double> x = A.get_entry_value(k);
+                B.add_entry(i,j,x);
+            }
+        }
+        B.compress_and_merge_duplicate_entries();
+        return B;
+    }
 }

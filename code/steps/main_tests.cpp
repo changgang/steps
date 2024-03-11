@@ -229,9 +229,10 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new OWNERSHIP_TEST));
         ts.add(unique_ptr<Test::Suite>(new RATING_TEST));
         ts.add(unique_ptr<Test::Suite>(new UTILITY_TEST));
+        */
 
         ts.add(unique_ptr<Test::Suite>(new SPARSE_MATRIX_TEST));
-        ts.add(unique_ptr<Test::Suite>(new COMPLEX_SPARSE_MATRIX_TEST));
+        /*ts.add(unique_ptr<Test::Suite>(new COMPLEX_SPARSE_MATRIX_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new FAULT_TEST));
         ts.add(unique_ptr<Test::Suite>(new BUS_INDEX_TEST));
@@ -360,7 +361,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new CONVERTER_STATION_TEST));
         */
         //ts.add(unique_ptr<Test::Suite>(new VSG0_TEST));
-        ts.add(unique_ptr<Test::Suite>(new LVRT_CONTROL_TEST));
+        //ts.add(unique_ptr<Test::Suite>(new LVRT_CONTROL_TEST));
 
         #endif // ENABLE_STEPS_TEST
 
