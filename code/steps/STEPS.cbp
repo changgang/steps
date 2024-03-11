@@ -185,9 +185,17 @@
 		<Unit filename="header/model/auxiliary_signal_model/auxiliary_signal_models.h" />
 		<Unit filename="header/model/bus_model/bus_frequency_model/bus_frequency_model.h" />
 		<Unit filename="header/model/converter_common_models/current_order_limiter_model/convcol.h" />
+		<Unit filename="header/model/converter_common_models/elec_model/convelec0.h" />
+		<Unit filename="header/model/converter_common_models/elec_model/converter_elec_model.h" />
 		<Unit filename="header/model/converter_common_models/lvpl_model/lvpl.h" />
 		<Unit filename="header/model/converter_common_models/pll_model/pll0.h" />
 		<Unit filename="header/model/converter_common_models/pll_model/pll_model.h" />
+		<Unit filename="header/model/converter_common_models/source_converter_model/gfrmc_model/gfrmc_model.h" />
+		<Unit filename="header/model/converter_common_models/source_converter_model/gfrmc_model/vsg_model/vsg0.h" />
+		<Unit filename="header/model/converter_common_models/source_converter_model/gfrmc_model/vsg_model/vsg0_test.h" />
+		<Unit filename="header/model/converter_common_models/source_converter_model/gfrmc_model/vsg_model/vsg_model.h" />
+		<Unit filename="header/model/converter_common_models/source_converter_model/gfrmc_model/vsg_model/vsg_model_test.h" />
+		<Unit filename="header/model/converter_common_models/source_converter_model/source_converter_model.h" />
 		<Unit filename="header/model/converter_common_models/vrt_model/hvrt_control.h" />
 		<Unit filename="header/model/converter_common_models/vrt_model/hvrt_relay.h" />
 		<Unit filename="header/model/converter_common_models/vrt_model/lvrt_control.h" />
@@ -195,9 +203,6 @@
 		<Unit filename="header/model/converter_common_models/vrt_model/lvrt_relay.h" />
 		<Unit filename="header/model/converter_common_models/vrt_model/vrt_control_model.h" />
 		<Unit filename="header/model/converter_common_models/vrt_model/vrt_relay_model.h" />
-		<Unit filename="header/model/converter_common_models/vsg_model/vsg0.h" />
-		<Unit filename="header/model/converter_common_models/vsg_model/vsg0_test.h" />
-		<Unit filename="header/model/converter_common_models/vsg_model/vsg_model.h" />
 		<Unit filename="header/model/energy_storage_model/energy_storage_model.h" />
 		<Unit filename="header/model/energy_storage_model/energy_storage_model_test.h" />
 		<Unit filename="header/model/energy_storage_model/energy_storage_models.h" />
@@ -637,6 +642,14 @@
 		<Unit filename="source/model/converter_common_model/lvpl_model/lvpl.cpp" />
 		<Unit filename="source/model/converter_common_model/pll_model/pll0.cpp" />
 		<Unit filename="source/model/converter_common_model/pll_model/pll_model.cpp" />
+		<Unit filename="source/model/converter_common_model/source_converter_model/gfrmc_model/frmc_model.cpp" />
+		<Unit filename="source/model/converter_common_model/source_converter_model/gfrmc_model/vsg_model/vsg0.cpp" />
+		<Unit filename="source/model/converter_common_model/source_converter_model/gfrmc_model/vsg_model/vsg_model.cpp" />
+		<Unit filename="source/model/converter_common_model/source_converter_model/gfrmc_model/vsg_model/vsg_model_test.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="source/model/converter_common_model/source_converter_model/source_converter_model.cpp" />
 		<Unit filename="source/model/converter_common_model/vrt_model/hvrt_control.cpp" />
 		<Unit filename="source/model/converter_common_model/vrt_model/hvrt_relay.cpp" />
 		<Unit filename="source/model/converter_common_model/vrt_model/lvrt_control.cpp" />
@@ -644,8 +657,6 @@
 		<Unit filename="source/model/converter_common_model/vrt_model/lvrt_relay.cpp" />
 		<Unit filename="source/model/converter_common_model/vrt_model/vrt_control_model.cpp" />
 		<Unit filename="source/model/converter_common_model/vrt_model/vrt_relay_model.cpp" />
-		<Unit filename="source/model/converter_common_model/vsg_model/vsg0.cpp" />
-		<Unit filename="source/model/converter_common_model/vsg_model/vsg_model.cpp" />
 		<Unit filename="source/model/energy_storage_model/energy_storage_model.cpp" />
 		<Unit filename="source/model/energy_storage_model/energy_storage_model_test.cpp" />
 		<Unit filename="source/model/energy_storage_model/estr0.cpp" />

@@ -2,7 +2,7 @@
 #define WT3GX_H
 
 #include "header/model/wtg_models/wt_generator_model/wt_generator_model.h"
-#include "header/model/converter_common_models/vsg_model/vsg0.h"
+#include "header/model/converter_common_models/converter/gfrmc_model/vsg_model/vsg0.h"
 #include "header/model/converter_common_models/current_order_limiter_model/convcol.h"
 #include "header/block/integral_block.h"
 #include "header/block/first_order_block.h"

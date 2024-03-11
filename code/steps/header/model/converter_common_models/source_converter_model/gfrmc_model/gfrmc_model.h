@@ -1,23 +1,16 @@
-#ifndef VSG_MODEL_H
-#define VSG_MODEL_H
+#ifndef GFRMC_MODEL_H
+#define GFRMC_MODEL_H
 
+#include "header/model/converter_common_models/source_converter_model/source_converter_model.h"
 #include "header/STEPS.h"
 
 class BUS;
 
-class VSG_MODEL
+class GFRMC_MODEL: public SOURCE_CONVERTER_MODEL
 {
     public:
-        VSG_MODEL(STEPS& toolkit);
-        ~VSG_MODEL();
-        void set_toolkit(STEPS& toolkit);
-        STEPS& get_toolkit() const;
-
-        void set_bus_pointer(BUS* busptr);
-        void set_device_pointer(NONBUS_DEVICE* device);
-        NONBUS_DEVICE* get_device_pointer() const;
-        DEVICE_ID get_device_id() const;
-        string get_compound_device_name() const;
+        GFRMC_MODEL(STEPS& toolkit);
+        ~GFRMC_MODEL();
 
         void set_Pref_in_pu_based_on_mbase(double P);
         void set_Qref_in_pu_based_on_mbase(double Q);
@@ -57,12 +50,9 @@ class VSG_MODEL
         virtual double get_virtual_voltage_in_pu() const = 0;
         virtual string get_standard_psse_string() const = 0;
     private:
-        STEPS* toolkit;
-        BUS* busptr;
-        NONBUS_DEVICE* device;
         double P, Pref, Q, Qref, V, Vref;
         double angle0, V0;
         double fbase_Hz, wbase_radps;
 };
 
-#endif // VSG_MODEL_H
+#endif // GFRMC_MODEL_H
