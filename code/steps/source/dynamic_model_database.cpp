@@ -221,6 +221,10 @@ unsigned int DYNAMIC_MODEL_DATABASE::get_model_size(MODEL* model) const
 
     if(model_name=="PVCV0") return sizeof(PVCV0);
     if(model_name=="PVGU1") return sizeof(PVGU1);
+    if(model_name=="PVCVX") return sizeof(PVCVX);
+    if(model_name=="PVEX") return sizeof(PVEX);
+    if(model_name=="FILEIRRAD") return sizeof(FILEIRRAD);
+    if(model_name=="PVPNLX") return sizeof(PVPNLX);
 
 
     if(model_name=="ARXL") return sizeof(ARXL);

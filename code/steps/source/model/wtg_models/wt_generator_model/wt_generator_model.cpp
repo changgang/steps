@@ -10,8 +10,6 @@ using namespace std;
 
 WT_GENERATOR_MODEL::WT_GENERATOR_MODEL(STEPS& toolkit) : WTG_MODEL(toolkit)
 {
-    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_WT_GENERATOR);
-
     set_current_source_flag(true);
     set_initial_active_current_command_in_pu_based_on_mbase(0.0);
     set_initial_reactive_current_command_in_pu_based_on_mbase(0.0);

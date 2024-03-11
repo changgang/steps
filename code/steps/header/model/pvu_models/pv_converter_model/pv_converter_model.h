@@ -37,10 +37,18 @@ class PV_CONVERTER_MODEL : public PVU_MODEL
 
         void set_initial_reactive_voltage_command_in_pu(double eq_command);
         double get_initial_reactive_voltage_command_in_pu() const;
+
+        void set_initial_active_power_command_in_pu_based_on_mbase(double P_command);
+        double get_initial_active_power_command_in_pu_based_on_mbase() const;
+
+        void set_initial_reactive_power_command_in_pu_based_on_mbase(double Q_command);
+        double get_initial_reactive_power_command_in_pu_based_on_mbase() const;
         // get inputs for dynamics run
         double get_active_current_command_in_pu_based_on_mbase();
         double get_reactive_current_command_in_pu_based_on_mbase();
         double get_reactive_voltage_command_in_pu() const;
+        double get_active_power_command_in_pu_based_on_mbase();
+        double get_reactive_power_command_in_pu_based_on_mbase();
     public: // specific sync generator model
         virtual string get_model_name() const = 0;
 
@@ -95,7 +103,7 @@ class PV_CONVERTER_MODEL : public PVU_MODEL
 
     private:
         bool current_source_flag;
-        double IP_command0, IQ_command0, EQ_command0;
+        double IP_command0, IQ_command0, EQ_command0, P_command0, Q_command0;
 };
 
 #endif // PV_CONVERTER_MODEL_H

@@ -18,8 +18,6 @@ SYNC_GENERATOR_MODEL::SYNC_GENERATOR_MODEL(STEPS& toolkit) : SG_MODEL(toolkit),
 
 void SYNC_GENERATOR_MODEL::common_constructor()
 {
-    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_GENERATOR);
-
     set_Rs(0.0);
     set_Xd(0.0);
     set_Xq(0.0);

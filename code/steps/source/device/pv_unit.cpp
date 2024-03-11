@@ -65,7 +65,7 @@ unsigned int PV_UNIT::get_unit_bus() const
     return get_source_bus();
 }
 
-void PV_UNIT::set_number_of_lumped_pv_units(unsigned int n)
+void PV_UNIT::set_number_of_lumped_pv_units(double n)
 {
     if(n==0)
         n = 1;
@@ -77,7 +77,7 @@ void PV_UNIT::set_rated_power_per_pv_unit_in_MW(double P)
     rated_power_per_pv_unit_in_MW = P;
 }
 
-unsigned int PV_UNIT::get_number_of_lumped_pv_units() const
+double PV_UNIT::get_number_of_lumped_pv_units() const
 {
     return number_of_lumped_pv_units;
 }
@@ -114,11 +114,11 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
                     return;
                 }
 
-                if(irrd!=NULL and irrd->is_model_active())
-                    irrd->initialize();
-
                 if(panel!=NULL and panel->is_model_active())
                     panel->initialize();
+
+                if(irrd!=NULL and irrd->is_model_active())
+                    irrd->initialize();
 
                 if(elec!=NULL and elec->is_model_active())
                     elec->initialize();
@@ -135,16 +135,31 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
             case UPDATE_MODE:
             {
                 if(vrt!=NULL and vrt->is_model_active())
+                {
                     vrt->run(mode);
+
+                    if(elec!=NULL and elec->is_model_active())
+                    {
+                        if(elec->is_model_bypassed()
+                            and (not vrt->is_in_vrt_status()))
+                            elec->unbypass_model();
+                        else
+                        {
+                            if(not elec->is_model_bypassed()
+                                and (vrt->is_in_vrt_status()))
+                                elec->bypass_model();
+                        }
+                    }
+                }
 
                 if(irrd!=NULL and irrd->is_model_active())
                     irrd->run(mode);
 
-                if(elec!=NULL and elec->is_model_active())
-                    elec->run(mode);
-
                 if(panel!=NULL and panel->is_model_active())
                     panel->run(mode);
+
+                if(elec!=NULL and elec->is_model_active() and (not elec->is_model_bypassed()))
+                    elec->run(mode);
 
                 if(conv!=NULL and conv->is_model_active())
                     conv->run(mode);
@@ -525,6 +540,7 @@ void PV_UNIT::set_sequence_parameter_import_flag(bool flag)
 {
     sequence_parameter_import_flag = flag;
 }
+
 bool PV_UNIT::get_sequence_parameter_import_flag() const
 {
     return sequence_parameter_import_flag;

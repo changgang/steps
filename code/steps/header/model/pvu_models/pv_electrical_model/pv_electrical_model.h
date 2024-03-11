@@ -22,6 +22,10 @@ class PV_ELECTRICAL_MODEL : public PVU_MODEL
     public:
         PV_ELECTRICAL_MODEL(STEPS& toolkit);
         virtual ~PV_ELECTRICAL_MODEL();
+
+        void unbypass_model();
+        void bypass_model();
+        bool is_model_bypassed() const;
     public: // pe elctricla control common
         virtual string get_model_type() const;
         // get input
@@ -34,6 +38,8 @@ class PV_ELECTRICAL_MODEL : public PVU_MODEL
 
         double get_terminal_bus_frequency_in_pu() const;
         double get_terminal_bus_frequency_deviation_in_pu() const;
+
+        double get_active_power_reference_in_pu_from_panel_model() const;
         // reference
         void set_bus_to_regulate(unsigned int bus);
         unsigned int get_bus_to_regulate()  const;
@@ -66,7 +72,6 @@ class PV_ELECTRICAL_MODEL : public PVU_MODEL
         virtual double get_active_power_command_in_pu_based_on_mbase() const = 0;
         virtual double get_reactive_current_command_in_pu_based_on_mbase() = 0;
         virtual double get_reactive_power_command_in_pu_based_on_mbase() = 0;
-        virtual double get_reactive_voltage_command_in_pu_based_on_mbase() const = 0;
         virtual double get_reactive_voltage_command_in_pu() const = 0;
         virtual void check() = 0;
         virtual void clear() = 0;
@@ -93,6 +98,8 @@ class PV_ELECTRICAL_MODEL : public PVU_MODEL
         double reactive_power_reference_in_pu;
         double power_factor_reference_in_pu;
         PE_VAR_CONTROL_MODE pe_var_control_mode;
+
+        bool flag_model_bypassed;
 };
 
 #endif // PV_ELECTRICAL_MODEL_H

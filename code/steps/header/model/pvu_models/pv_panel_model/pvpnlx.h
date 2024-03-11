@@ -1,19 +1,31 @@
-#ifndef FILEIRRAD_H
-#define FILEIRRAD_H
+#ifndef PVPNLX_H
+#define PVPNLX_H
 
-#include "header/model/pvu_models/pv_irradiance_model/pv_irradiance_model.h"
-class FILEIRRAD : public PV_IRRADIANCE_MODEL
+#include "header/model/pvu_models/pv_panel_model/pv_panel_model.h"
+#include <cstdlib>
+
+class PVPNLX : public PV_PANEL_MODEL
 {
     public:
-        FILEIRRAD(STEPS& toolkit);
-        FILEIRRAD(const FILEIRRAD& model);
-        virtual ~FILEIRRAD();
-        virtual FILEIRRAD& operator=(const FILEIRRAD& model);
+        PVPNLX(STEPS& toolkit);
+        PVPNLX(const PVPNLX& model);
+        virtual ~PVPNLX();
+        virtual PVPNLX& operator=(const PVPNLX& model);
+    public:
+        void set_Pmsta_in_pu_based_on_mbase(double P);
+        void set_b(double b);
+        void set_Krp(double Krp);
 
-        // inputs
-        void set_solar_irradiance_serial_file(string file);
-        string get_solar_irradiance_serial_file() const;
-    public: // specific model level
+        double get_Pmsta_in_pu_based_on_mbase() const;
+        double get_b() const;
+        double get_Krp() const;
+
+        double get_Pmmp_in_pu(double S);
+        double get_Pref_in_pu(double S);
+        void initialize_S0();
+
+        virtual double get_Pref_in_pu_base_on_mbase();
+
         virtual string get_model_name() const;
 
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);
@@ -27,8 +39,6 @@ class FILEIRRAD : public PV_IRRADIANCE_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
-        virtual double get_solar_irradiance_in_pu();
-        virtual double get_solar_irradiance_direction_in_deg();
 
         virtual void check();
         virtual void clear();
@@ -45,7 +55,10 @@ class FILEIRRAD : public PV_IRRADIANCE_MODEL
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
     private:
-        void copy_from_const_model(const FILEIRRAD& model);
+        void copy_from_const_model(const PVPNLX& model);
+
+        double Pmsta, b, Krp;
+
 };
 
-#endif // FILEIRRAD_H
+#endif // PVPNLX_H

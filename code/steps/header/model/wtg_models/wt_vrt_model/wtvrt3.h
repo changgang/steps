@@ -99,6 +99,8 @@ class WTVRT3: public WT_VRT_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
+
+        virtual bool is_in_vrt_status() const;
         virtual VRT_STATUS get_lvrt_status() const;
         virtual VRT_STATUS get_hvrt_status() const;
 

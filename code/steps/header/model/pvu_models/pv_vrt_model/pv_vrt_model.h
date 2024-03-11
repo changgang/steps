@@ -38,6 +38,7 @@ class PV_VRT_MODEL : public PVU_MODEL
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
 
+        virtual bool is_in_vrt_status() const = 0;
         virtual VRT_STATUS get_lvrt_status() const = 0;
         virtual VRT_STATUS get_hvrt_status() const = 0;
 

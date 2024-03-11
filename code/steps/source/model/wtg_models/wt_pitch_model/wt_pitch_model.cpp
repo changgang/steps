@@ -16,7 +16,6 @@ WT_PITCH_MODEL::~WT_PITCH_MODEL()
 
 void WT_PITCH_MODEL::common_constructor()
 {
-    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_WT_GENERATOR);
     set_frequency_upper_deadband_in_pu(1.0);
     set_frequency_lower_deadband_in_pu(1.0);
     set_hold_wtg_speed_flag(false);

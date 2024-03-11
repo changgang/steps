@@ -351,6 +351,10 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new FILEWIND_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new PVGU1_TEST));
+        ts.add(unique_ptr<Test::Suite>(new PVCVX_TEST));
+        ts.add(unique_ptr<Test::Suite>(new PVEX_TEST));
+        ts.add(unique_ptr<Test::Suite>(new FILEIRRAD_TEST));
+        ts.add(unique_ptr<Test::Suite>(new PVPNLX_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));
 

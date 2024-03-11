@@ -223,6 +223,10 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_WTVRT3_model(vector<string>& data);
 
         void add_PVGU1_model(vector<string>& data);
+        void add_PVCVX_model(vector<string>& data);
+        void add_PVEX_model(vector<string>& data);
+        void add_FILEIRRAD_model(vector<string>& data);
+        void add_PVPNLX_model(vector<string>& data);
 
         DEVICE_ID get_generator_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_wt_generator_device_id_from_string_vector(vector<string>& data);

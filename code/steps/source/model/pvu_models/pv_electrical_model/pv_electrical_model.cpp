@@ -6,11 +6,27 @@
 
 PV_ELECTRICAL_MODEL::PV_ELECTRICAL_MODEL(STEPS& toolkit) : PVU_MODEL(toolkit)
 {
+    unbypass_model();
 }
 
 PV_ELECTRICAL_MODEL::~PV_ELECTRICAL_MODEL()
 {
     ;
+}
+
+void PV_ELECTRICAL_MODEL::unbypass_model()
+{
+    flag_model_bypassed = false;
+}
+
+void PV_ELECTRICAL_MODEL::bypass_model()
+{
+    flag_model_bypassed = true;
+}
+
+bool PV_ELECTRICAL_MODEL::is_model_bypassed() const
+{
+    return flag_model_bypassed;
 }
 
 string PV_ELECTRICAL_MODEL::get_model_type() const
@@ -78,6 +94,21 @@ double PV_ELECTRICAL_MODEL::get_pv_unit_terminal_current_in_pu() const
 	double x = I.real(), y = I.imag();
 	return steps_sqrt(x*x+y*y);
 }
+
+double PV_ELECTRICAL_MODEL::get_active_power_reference_in_pu_from_panel_model() const
+{
+    PV_UNIT* pv_unit = get_pv_unit_pointer();
+    PV_PANEL_MODEL* panelmodel = pv_unit->get_pv_panel_model();
+    if(panelmodel!=NULL)
+    {
+        if(not panelmodel->is_model_initialized())
+            panelmodel->initialize();
+
+        return panelmodel->get_Pref_in_pu_base_on_mbase();
+    }
+    else
+        return 0.0;
+}
 // reference
 
 void PV_ELECTRICAL_MODEL::set_bus_to_regulate(unsigned int bus)
@@ -106,6 +137,7 @@ void PV_ELECTRICAL_MODEL::set_voltage_reference_in_pu_with_bus_to_regulate()
         bus = source->get_source_bus();
 
     return set_voltage_reference_in_pu(psdb.get_bus_positive_sequence_voltage_in_pu(bus));
+
 }
 
 double PV_ELECTRICAL_MODEL::get_voltage_reference_in_pu() const

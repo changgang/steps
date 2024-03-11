@@ -15,10 +15,7 @@
 
 #include "header/model/wtg_models/supported_wtg_models.h"
 
-#include "header/model/pvu_models/pv_converter_model/pv_converter_models.h"
-#include "header/model/pvu_models/pv_panel_model/pv_panel_models.h"
-#include "header/model/pvu_models/pv_electrical_model/pv_electrical_models.h"
-#include "header/model/pvu_models/pv_irradiance_model/pv_irradiance_models.h"
+#include "header/model/pvu_models/supported_pvu_models.h"
 
 #include "header/model/energy_storage_model/energy_storage_models.h"
 

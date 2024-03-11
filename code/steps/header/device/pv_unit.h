@@ -25,10 +25,10 @@ class PV_UNIT : public SOURCE
         void set_unit_bus(unsigned int bus);
         unsigned int get_unit_bus() const;
 
-        void set_number_of_lumped_pv_units(unsigned int n);
+        void set_number_of_lumped_pv_units(double n);
         void set_rated_power_per_pv_unit_in_MW(double P);
 
-        unsigned int get_number_of_lumped_pv_units() const;
+        double get_number_of_lumped_pv_units() const;
         double get_rated_power_per_pv_unit_in_MW() const;
 
         virtual void set_model(MODEL* model);
@@ -85,7 +85,7 @@ class PV_UNIT : public SOURCE
         void set_sequence_parameter_import_flag(bool flag);
         bool get_sequence_parameter_import_flag() const;
     private:
-        unsigned int number_of_lumped_pv_units;
+        double number_of_lumped_pv_units;
         double rated_power_per_pv_unit_in_MW;
 
         PV_CONVERTER_MODEL* pv_converter_model;

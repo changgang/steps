@@ -35,7 +35,7 @@ void FILEWIND::clear_wind_speed_serial_file()
 
 void FILEWIND::clear_wind_data()
 {
-    for(unsigned int i=0; i<STEPS_MAX_WIND_RECORD_SIZE; ++i)
+    for(unsigned int i=0; i<STEPS_MAX_WIND_SPEED_RECORD_SIZE; ++i)
     {
         wind_data[i][0]=INFINITE_THRESHOLD; // time
         wind_data[i][1]=0.0; // wind speed
@@ -111,10 +111,10 @@ void FILEWIND::load_wind_speed_from_file()
             if(datavec.size()<2)
                 break;
 
-            if(n==STEPS_MAX_WIND_RECORD_SIZE)
+            if(n==STEPS_MAX_WIND_SPEED_RECORD_SIZE)
             {
-                osstream<<"Warning. Wind data in file '"<<wind_speed_file<<"' has more records than preset size ("<<STEPS_MAX_WIND_RECORD_SIZE<<".\n"
-                        <<"Only the first "<<STEPS_MAX_WIND_RECORD_SIZE<<" records will be loaded, and other records are discarded.";
+                osstream<<"Warning. Wind data in file '"<<wind_speed_file<<"' has more records than preset size ("<<STEPS_MAX_WIND_SPEED_RECORD_SIZE<<".\n"
+                        <<"Only the first "<<STEPS_MAX_WIND_SPEED_RECORD_SIZE<<" records will be loaded, and other records are discarded.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 break;
             }
@@ -221,7 +221,7 @@ void FILEWIND::initialize()
 unsigned int FILEWIND::get_wind_record_count() const
 {
     unsigned int n = 0;
-    for(unsigned int i=0; i<STEPS_MAX_WIND_RECORD_SIZE; ++i)
+    for(unsigned int i=0; i<STEPS_MAX_WIND_SPEED_RECORD_SIZE; ++i)
     {
         if(wind_data[i][0]==INFINITE_THRESHOLD)
         {

@@ -16,7 +16,6 @@ WT_RELAY_MODEL::~WT_RELAY_MODEL()
 
 void WT_RELAY_MODEL::common_constructor()
 {
-    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_WT_GENERATOR);
 }
 
 string WT_RELAY_MODEL::get_model_type() const

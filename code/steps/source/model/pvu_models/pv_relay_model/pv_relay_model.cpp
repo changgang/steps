@@ -16,7 +16,6 @@ PV_RELAY_MODEL::~PV_RELAY_MODEL()
 
 void PV_RELAY_MODEL::common_constructor()
 {
-    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_PV_UNIT);
 }
 
 string PV_RELAY_MODEL::get_model_type() const

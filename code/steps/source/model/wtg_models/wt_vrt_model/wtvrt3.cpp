@@ -1039,6 +1039,11 @@ void WTVRT3::run(DYNAMIC_MODE mode)
     }
 }
 
+bool WTVRT3::is_in_vrt_status() const
+{
+    return get_lvrt_status()!=VRT_NORMAL_STATUS or get_hvrt_status()!=VRT_NORMAL_STATUS;
+}
+
 VRT_STATUS WTVRT3::get_lvrt_status() const
 {
     return lvrt.get_vrt_status();

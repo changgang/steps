@@ -10,7 +10,7 @@ class PV_IRRADIANCE_MODEL : public PVU_MODEL
         virtual ~PV_IRRADIANCE_MODEL();
 
         virtual string get_model_type() const;
-        double get_nominal_irradiance_in_Wpm2() const;
+        double get_initial_irradiance_in_Wpm2() const;
     public: // specific model level
         virtual string get_model_name() const = 0;
 

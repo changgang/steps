@@ -1,26 +1,19 @@
-#ifndef FILEWIND_H
-#define FILEWIND_H
+#ifndef FILEIRRAD_H
+#define FILEIRRAD_H
 
-#include "header/model/wtg_models/wind_speed_model/wind_speed_model.h"
-class FILEWIND : public WIND_SPEED_MODEL
+#include "header/model/pvu_models/pv_irradiance_model/pv_irradiance_model.h"
+class FILEIRRAD : public PV_IRRADIANCE_MODEL
 {
-    /*
-    wind speed model:
-    inputs:
-        file: csv file storing wind speed data
-    output:
-        vwind: wind speed in mps
-    */
     public:
-        FILEWIND(STEPS& toolkit);
-        FILEWIND(const FILEWIND& model);
-        virtual ~FILEWIND();
-        virtual FILEWIND& operator=(const FILEWIND& model);
+        FILEIRRAD(STEPS& toolkit);
+        FILEIRRAD(const FILEIRRAD& model);
+        virtual ~FILEIRRAD();
+        virtual FILEIRRAD& operator=(const FILEIRRAD& model);
 
         // inputs
-        void set_wind_speed_serial_file(string file);
-        string get_wind_speed_serial_file() const;
-        void load_wind_speed_from_file();
+        void set_solar_irradiance_serial_file(string file);
+        string get_solar_irradiance_serial_file() const;
+        void load_solar_irradiance_from_file();
     public: // specific model level
         virtual string get_model_name() const;
 
@@ -35,8 +28,8 @@ class FILEWIND : public WIND_SPEED_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
-        virtual double get_wind_speed_in_pu();
-        virtual double get_wind_direction_in_deg();
+        virtual double get_solar_irradiance_in_pu();
+        virtual double get_solar_irradiance_direction_in_deg();
 
         virtual void check();
         virtual void clear();
@@ -53,18 +46,18 @@ class FILEWIND : public WIND_SPEED_MODEL
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
     private:
-        void clear_wind_speed_serial_file();
-        void clear_wind_data();
-        void copy_from_const_model(const FILEWIND& model);
-        void search_wind_data_at_simulation_time();
+        void clear_solar_irradiance_serial_file();
+        void clear_solar_irradiance_data();
+        void copy_from_const_model(const FILEIRRAD& model);
+        void search_solar_irradiance_data_at_simulation_time();
         void set_previous_position(unsigned int pos);
         unsigned int get_previous_position() const;
-        unsigned int get_wind_record_count() const;
+        unsigned int get_solar_irradiance_record_count() const;
 
-        char wind_speed_file[STEPS_LONG_STRING_SIZE];
-        double wind_data[STEPS_MAX_WIND_SPEED_RECORD_SIZE][3];
-        double current_time, current_wind_speed, current_wind_direction;
+        char solar_irradiance_file[STEPS_LONG_STRING_SIZE];
+        double solar_irradiance_data[STEPS_MAX_SOLAR_IRRADIANCE_RECORD_SIZE][3];
+        double current_time, current_solar_irradiance, current_solar_irradiance_direction;
         unsigned int previous_position;
 };
 
-#endif // FILEWIND_H
+#endif // FILEIRRAD_H

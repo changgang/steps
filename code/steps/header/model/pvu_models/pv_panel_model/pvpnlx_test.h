@@ -1,5 +1,5 @@
-#ifndef PVP0_TEST_H
-#define PVP0_TEST_H
+#ifndef PVPNLX_TEST_H
+#define PVPNLX_TEST_H
 
 #include <istream>
 #include <cstdlib>
@@ -12,15 +12,15 @@
 
 #include "header/model/pvu_models/pv_panel_model/pv_panel_model_test.h"
 
-#include "header/model/pvu_models/pv_panel_model/pvp0.h"
+#include "header/model/pvu_models/pv_panel_model/pvpnlx.h"
 #include "header/STEPS.h"
 
 using namespace std;
 
-class PVP0_TEST : public PV_PANEL_MODEL_TEST
+class PVPNLX_TEST : public PV_PANEL_MODEL_TEST
 {
     public:
-        PVP0_TEST();
+        PVPNLX_TEST();
     protected:
         virtual void setup();
         virtual void tear_down();
@@ -31,4 +31,4 @@ class PVP0_TEST : public PV_PANEL_MODEL_TEST
 
 };
 
-#endif//PVP0_TEST_H
+#endif//PVPNLX_TEST_H

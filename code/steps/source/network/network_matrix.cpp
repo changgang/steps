@@ -226,9 +226,14 @@ void NETWORK_MATRIX::build_dynamic_network_Y_matrix()
     add_lines_to_dynamic_network();
     add_transformers_to_network();
     add_fixed_shunts_to_network();
+
     add_generators_to_dynamic_network();
     add_wt_generators_to_dynamic_network();
+    add_pv_units_to_dynamic_network();
+    add_energy_storages_to_dynamic_network();
+
     add_motor_loads_to_dynamic_network();
+
     add_vsc_hvdcs_to_dynamic_network();
 
     network_Y1_matrix.compress_and_merge_duplicate_entries();
@@ -2789,6 +2794,68 @@ void NETWORK_MATRIX::add_wt_generator_to_dynamic_network(WT_GENERATOR& gen)
     }
 }
 
+void NETWORK_MATRIX::add_pv_units_to_dynamic_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
+
+    unsigned int n= pv_units.size();
+
+    for(unsigned int i=0; i!=n; ++i)
+        add_pv_unit_to_dynamic_network(*(pv_units[i]));
+}
+
+void NETWORK_MATRIX::add_pv_unit_to_dynamic_network(PV_UNIT& pv_unit)
+{
+    if(pv_unit.get_status()==true)
+    {
+        PV_CONVERTER_MODEL* pvconmodel = pv_unit.get_pv_converter_model();
+        if(pvconmodel!=NULL)
+        {
+            if(pvconmodel->is_voltage_source())
+            {
+                POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+                complex<double> Z = pv_unit.get_source_impedance_in_pu();
+                double one_over_mbase = pv_unit.get_one_over_mbase_in_one_over_MVA();
+                double sbase = psdb.get_system_base_power_in_MVA();
+                Z *= (one_over_mbase*sbase);
+
+                unsigned int bus = pv_unit.get_unit_bus();
+                unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+                this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
+            }
+            //else // is current source
+            //    return;
+        }
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Error. No PV_CONVERTER_MODEL is provided for "<<pv_unit.get_compound_device_name()<<endl
+                    <<"Its source impedance will not be added to network matrix.";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+    }
+}
+
+void NETWORK_MATRIX::add_energy_storages_to_dynamic_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<ENERGY_STORAGE*> eses = psdb.get_all_energy_storages();
+
+    unsigned int n= eses.size();
+
+    for(unsigned int i=0; i!=n; ++i)
+        add_energy_storage_to_dynamic_network(*(eses[i]));
+}
+
+void NETWORK_MATRIX::add_energy_storage_to_dynamic_network(ENERGY_STORAGE& es)
+{
+    if(es.get_status()==true)
+    {
+        return;
+    }
+}
 
 void NETWORK_MATRIX::add_motor_loads_to_dynamic_network()
 {
@@ -3000,6 +3067,7 @@ void NETWORK_MATRIX::add_sources_to_positive_sequence_network()
     add_generators_to_positive_sequence_network();
     add_wt_generators_to_positive_sequence_network();
     add_pv_units_to_positive_sequence_network();
+    add_energy_storages_to_positive_sequence_network();
 }
 
 void NETWORK_MATRIX::add_generators_to_positive_sequence_network()
@@ -3169,6 +3237,21 @@ void NETWORK_MATRIX::add_pv_unit_to_positive_sequence_network(const PV_UNIT& pv_
         unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
         this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
     }
+}
+
+void NETWORK_MATRIX::add_energy_storages_to_positive_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<ENERGY_STORAGE*> eses = psdb.get_all_energy_storages();
+
+    unsigned int n= eses.size();
+    for(unsigned int i=0; i!=n; ++i)
+        add_energy_storage_to_positive_sequence_network(*(eses[i]));
+}
+
+void NETWORK_MATRIX::add_energy_storage_to_positive_sequence_network(const ENERGY_STORAGE& es)
+{
+    return;
 }
 
 void NETWORK_MATRIX::add_fixed_shunts_to_positive_sequence_network()
@@ -3365,6 +3448,7 @@ void NETWORK_MATRIX::add_sources_to_negative_sequence_network()
     add_generators_to_negative_sequence_network();
     add_wt_generators_to_negative_sequence_network();
     add_pv_units_to_negative_sequence_network();
+    add_energy_storages_to_negative_sequence_network();
 }
 
 void NETWORK_MATRIX::add_generators_to_negative_sequence_network()
@@ -3459,6 +3543,21 @@ void NETWORK_MATRIX::add_pv_unit_to_negative_sequence_network(const PV_UNIT& pv_
         unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
         this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
     }
+}
+
+void NETWORK_MATRIX::add_energy_storages_to_negative_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<ENERGY_STORAGE*> eses = psdb.get_all_energy_storages();
+
+    unsigned int n= eses.size();
+    for(unsigned int i=0; i!=n; ++i)
+        add_energy_storage_to_negative_sequence_network(*(eses[i]));
+}
+
+void NETWORK_MATRIX::add_energy_storage_to_negative_sequence_network(const ENERGY_STORAGE& es)
+{
+    return;
 }
 
 void NETWORK_MATRIX::add_fixed_shunts_to_negative_sequence_network()
@@ -4185,6 +4284,7 @@ void NETWORK_MATRIX::add_sources_to_zero_sequence_network()
     add_generators_to_zero_sequence_network();
     add_wt_generators_to_zero_sequence_network();
     add_pv_units_to_zero_sequence_network();
+    add_energy_storages_to_zero_sequence_network();
 }
 
 void NETWORK_MATRIX::add_generators_to_zero_sequence_network()
@@ -4284,6 +4384,21 @@ void NETWORK_MATRIX::add_pv_unit_to_zero_sequence_network(const PV_UNIT& pv_unit
         unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
         this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
     }
+}
+
+void NETWORK_MATRIX::add_energy_storages_to_zero_sequence_network()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<ENERGY_STORAGE*> eses = psdb.get_all_energy_storages();
+
+    unsigned int n = eses.size();
+    for(unsigned int i=0; i!=n; ++i)
+        add_energy_storage_to_zero_sequence_network(*(eses[i]));
+}
+
+void NETWORK_MATRIX::add_energy_storage_to_zero_sequence_network(const ENERGY_STORAGE& es)
+{
+    return;
 }
 
 void NETWORK_MATRIX::add_fixed_shunts_to_zero_sequence_network()

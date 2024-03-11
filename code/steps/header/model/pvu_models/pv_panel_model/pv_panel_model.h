@@ -4,14 +4,6 @@
 #include "header/model/pvu_models/pvu_model.h"
 #include <cstdlib>
 
-enum PV_MODE
-{
-    PV_UNDERSPEED_MODE = -1,
-    PV_MPPT_MODE = 0,
-    PV_OVERSPEED_MODE = 1
-};
-
-
 class PV_PANEL_MODEL : public PVU_MODEL
 {
     /*  aero dynamic model for WTG
@@ -28,6 +20,17 @@ class PV_PANEL_MODEL : public PVU_MODEL
         void copy_from_const_model(const PV_PANEL_MODEL& model);
     public:
         virtual string get_model_type() const;
+
+        void set_S0_in_Wpm2(double S);
+        void set_Sref_in_Wpm2(double S);
+
+        double get_S0_in_Wpm2() const;
+        double get_Sref_in_Wpm2() const;
+
+        double get_solar_irradiance_in_Wpm2();
+        double get_pv_unit_terminal_active_power_generation_in_pu_based_on_mbase() const;
+
+        virtual double get_Pref_in_pu_base_on_mbase() = 0;
     public:
         virtual string get_model_name() const = 0;
 
@@ -39,9 +42,6 @@ class PV_PANEL_MODEL : public PVU_MODEL
 
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
-
-        virtual double get_Cp(double lambda, double pitch_deg) const = 0;
-        virtual double get_derivative_of_Cp_over_lambda(double lambda, double pitch_deg) const = 0;
 
         virtual void check() = 0;
         virtual void clear() = 0;
@@ -61,6 +61,8 @@ class PV_PANEL_MODEL : public PVU_MODEL
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
+
+        double S0_Wpm2, Sref_Wpm2;
 };
 
 #endif // PV_PANEL_MODEL_H

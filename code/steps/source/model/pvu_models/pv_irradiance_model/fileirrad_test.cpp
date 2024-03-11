@@ -1,5 +1,5 @@
 #include "header/basic/test_macro.h"
-#include "header/model/pvu_models/pv_irradiance_model/fileirrd_test.h"
+#include "header/model/pvu_models/pv_irradiance_model/fileirrad_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 #include <cstdlib>
