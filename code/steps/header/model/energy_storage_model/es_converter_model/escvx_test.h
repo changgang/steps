@@ -1,5 +1,5 @@
-#ifndef ESTR0_TEST_H
-#define ESTR0_TEST_H
+#ifndef PVCV0_TEST_H
+#define PVCV0_TEST_H
 
 #include <istream>
 #include <cstdlib>
@@ -10,27 +10,26 @@
 	#pragma warning (disable: 4290)
 #endif
 
-#include "header/model/energy_storage_model/energy_storage_model_test.h"
+#include "header/model/pvu_models/pv_converter_model/pv_converter_model_test.h"
 
-#include "header/model/energy_storage_model/estr0.h"
+#include "header/model/pvu_models/pv_converter_model/pvcv0.h"
 #include "header/STEPS.h"
 
 using namespace std;
 
-class ESTR0_TEST : public ENERGY_STORAGE_MODEL_TEST
+class PVCV0_TEST : public PV_CONVERTER_MODEL_TEST
 {
     public:
-        ESTR0_TEST();
+        PVCV0_TEST();
     protected:
         virtual void setup();
         virtual void tear_down();
     protected:
         virtual void test_get_model_name();
         virtual void test_set_get_parameters();
-
-        void test_initialize_and_get_initialized_inputs();
+        virtual void test_initialize_and_get_initialized_inputs();
+        void test_set_get_pll_angle();
     private:
-
 };
 
-#endif//ESTR0_TEST_H
+#endif//PVCV0_TEST_H

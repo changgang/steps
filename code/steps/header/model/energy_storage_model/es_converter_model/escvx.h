@@ -1,33 +1,43 @@
-#ifndef WT3GX_H
-#define WT3GX_H
+#ifndef ESCVX_H
+#define ESCVX_H
 
-#include "header/model/wtg_models/wt_generator_model/wt_generator_model.h"
-#include "header/model/converter_common_models/source_converter_model/gfrmc_model/vsg_model/vsg0.h"
-#include "header/model/converter_common_models/current_order_limiter_model/convcol.h"
+#include "header/model/pvu_models/pv_converter_model/pv_converter_model.h"
+#include "header/model/converter_common_models/lvpl_model/lvpl.h"
 #include "header/block/integral_block.h"
 #include "header/block/first_order_block.h"
 
-class WT3GX : public WT_GENERATOR_MODEL
+class ESCVX : public PV_CONVERTER_MODEL
 {
     public:
-        WT3GX(STEPS& toolkit);
-        WT3GX(const WT3GX& model);
-        virtual ~WT3GX();
-        virtual WT3GX& operator=(const WT3GX&);
+        ESCVX(STEPS& toolkit);
+        ESCVX(const ESCVX& model);
+        virtual ~ESCVX();
+        virtual ESCVX& operator=(const ESCVX&);
 
-        void set_Tj_in_s(double T);
-        void set_D(double D);
-        void set_Ku(double Ku);
-        void set_Te_in_s(double T);
-        void set_pq_priority_flag(COL_PQ_PRIORITY flag);
-        void set_Imax(double Imax);
+        void set_converter_activer_current_command_T_in_s(double t);
+        void set_converter_reactiver_voltage_command_T_in_s(double t);
+        void set_KPLL(double K);
+        void set_KIPLL(double K);
+        void set_PLLmax(double pmax);
+        void set_PLLmin(double pmax);
+        void set_LVPL(const LVPL& lvpl);
+        void set_HVRC_voltage_in_pu(double v);
+        void set_HVRC_current_in_pu(double i);
+        void set_LVPL_max_rate_of_active_current_change(double rate);
+        void set_LVPL_voltage_sensor_T_in_s(double t);
 
-        double get_Tj_in_s() const;
-        double get_D() const;
-        double get_Ku() const;
-        double get_Te_in_s() const;
-        COL_PQ_PRIORITY get_pq_priority_flag() const;
-        double get_Imax() const;
+        double get_converter_activer_current_command_T_in_s() const;
+        double get_converter_reactiver_voltage_command_T_in_s() const;
+        double get_KPLL() const;
+        double get_KIPLL() const;
+        double get_PLLmax() const;
+        double get_PLLmin() const;
+        LVPL get_LVPL() const;
+        double get_HVRC_voltage_in_pu() const;
+        double get_HVRC_current_in_pu() const;
+        double get_LVPL_max_rate_of_active_current_change() const;
+        double get_LVPL_voltage_sensor_T_in_s() const;
+
 
         virtual string get_model_name() const;
 
@@ -79,16 +89,23 @@ class WT3GX : public WT_GENERATOR_MODEL
         virtual string get_dynamic_data_in_psse_format() const;
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
+    public:
+        // the following function are used to model ESCVX as ideal voltage source
+        void set_pll_angle_in_deg(double angle);
     private:
-        void copy_from_const_model(const WT3GX& model);
+        void copy_from_const_model(const ESCVX& model);
 
-        double get_virtual_voltage_in_pu();
-        double get_virtual_angle_in_rad();
-        complex<double> get_virtual_voltage_in_pu_in_xy_axis();
-        complex<double> get_limited_PQ_current_order();
+        INTEGRAL_BLOCK active_current_commander;
+        FIRST_ORDER_BLOCK LVPL_voltage_sensor;
+        LVPL lvpl;
 
-        VSG0 vsg;
-        CONVCOL0 convcol;
+        FIRST_ORDER_BLOCK reactive_voltage_commander;
+
+        INTEGRAL_BLOCK PLL_frequency_integrator, PLL_angle_integrator;
+
+        double LVPL_active_power_change_rate;
+        double HVRCR_voltage, HVRCR_current;
+        double KPLL;
 };
 
-#endif // WT3GX_H
+#endif // GENERATOR_MODEL_H

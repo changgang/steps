@@ -319,24 +319,24 @@ void prepare_basic_energy_strorages()
 
     DEVICE_ID did = estorage.get_device_id();
 
-    ESTR0 model(default_toolkit);
+    /*ESTR0 model(default_toolkit);
     model.set_device_id(did);
 
-    dmdb.add_model(&model);
+    dmdb.add_model(&model);*/
 
     estorage.set_energy_storage_bus(2);
     estorage.set_identifier("#2");
     psdb.append_energy_storage(estorage);
     did = estorage.get_device_id();
-    model.set_device_id(did);
-    dmdb.add_model(&model);
+    //model.set_device_id(did);
+    //dmdb.add_model(&model);
 
     estorage.set_energy_storage_bus(3);
     estorage.set_identifier("#3");
     psdb.append_energy_storage(estorage);
     did = estorage.get_device_id();
-    model.set_device_id(did);
-    dmdb.add_model(&model);
+    //model.set_device_id(did);
+    //dmdb.add_model(&model);
 }
 
 void prepare_basic_loads()

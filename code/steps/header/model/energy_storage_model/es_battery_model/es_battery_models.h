@@ -1,0 +1,4 @@
+#ifndef ES_BATTERY_MODELS_H
+#define ES_BATTERY_MODELS_H
+
+#endif // ES_BATTERY_MODELS_H

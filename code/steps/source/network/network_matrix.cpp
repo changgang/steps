@@ -2853,7 +2853,32 @@ void NETWORK_MATRIX::add_energy_storage_to_dynamic_network(ENERGY_STORAGE& es)
 {
     if(es.get_status()==true)
     {
-        return;
+        ES_CONVERTER_MODEL* esconmodel = es.get_es_converter_model();
+        if(esconmodel!=NULL)
+        {
+            if(esconmodel->is_voltage_source())
+            {
+                POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+                complex<double> Z = es.get_source_impedance_in_pu();
+                double one_over_mbase = es.get_one_over_mbase_in_one_over_MVA();
+                double sbase = psdb.get_system_base_power_in_MVA();
+                Z *= (one_over_mbase*sbase);
+
+                unsigned int bus = es.get_energy_storage_bus();
+                unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+                this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
+            }
+            //else // is current source
+            //    return;
+        }
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Error. No ES_CONVERTER_MODEL is provided for "<<es.get_compound_device_name()<<endl
+                    <<"Its source impedance will not be added to network matrix.";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+            return;
+        }
     }
 }
 

@@ -344,11 +344,15 @@
 1709512796 d:\steps\code\steps\header\model\pvu_models\pv_relay_model\pv_relay_model.h
 	"header/model/pvu_models/pvu_model.h"
 
-1697457172 d:\steps\code\steps\header\device\energy_storage.h
+1710161028 d:\steps\code\steps\header\device\energy_storage.h
 	<complex>
 	<string>
 	"header/device/source.h"
-	"header/model/energy_storage_model/energy_storage_model.h"
+	"header/model/energy_storage_model/es_converter_model/es_converter_model.h"
+	"header/model/energy_storage_model/es_electrical_model/es_electrical_model.h"
+	"header/model/energy_storage_model/es_battery_model/es_battery_model.h"
+	"header/model/energy_storage_model/es_vrt_model/es_vrt_model.h"
+	"header/model/energy_storage_model/es_relay_model/es_relay_model.h"
 
 1634637238 d:\steps\code\steps\header\model\energy_storage_model\energy_storage_model.h
 	"header/model/model.h"
@@ -709,7 +713,7 @@
 	"header/basic/utility.h"
 	"header/data_imexporter/psse_imexporter.h"
 
-1710156628 source:d:\steps\code\steps\main_tests.cpp
+1710161453 source:d:\steps\code\steps\main_tests.cpp
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -812,7 +816,7 @@
 	"header/model/hvdc_model/vdcol_test.h"
 	"header/model/hvdc_model/CDC4T_test.h"
 	"header/model/hvdc_model/CDC6T_test.h"
-	"header/model/converter_common_models/vsg_model/vsg0_test.h"
+	"header/model/converter_common_models/source_converter_model/gfrmc_model/vsg_model/vsg0_test.h"
 	"header/model/converter_common_models/vrt_model/lvrt_control_test.h"
 	"header/model/wtg_models/wt_generator_model/wt3g1_test.h"
 	"header/model/wtg_models/wt_generator_model/wt3g0_test.h"
@@ -2385,7 +2389,7 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/model/all_supported_models.h"
 
-1710155764 d:\steps\code\steps\header\model\all_supported_models.h
+1710160820 d:\steps\code\steps\header\model\all_supported_models.h
 	"header/model/sg_models/supported_sg_models.h"
 	"header/model/load_model/load_models.h"
 	"header/model/load_relay_model/load_relay_models.h"
@@ -2394,7 +2398,7 @@
 	"header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_models.h"
 	"header/model/wtg_models/supported_wtg_models.h"
 	"header/model/pvu_models/supported_pvu_models.h"
-	"header/model/energy_storage_model/energy_storage_models.h"
+	"header/model/energy_storage_model/supported_es_models.h"
 	"header/model/equivalent_model/ARXL.h"
 
 1709519699 d:\steps\code\steps\header\model\sg_models\supported_sg_models.h
@@ -2548,9 +2552,9 @@
 	"header/block/integral_block.h"
 	"header/block/first_order_block.h"
 
-1710159320 d:\steps\code\steps\header\model\wtg_models\wt_generator_model\wt3gx.h
+1710161436 d:\steps\code\steps\header\model\wtg_models\wt_generator_model\wt3gx.h
 	"header/model/wtg_models/wt_generator_model/wt_generator_model.h"
-	"header/model/converter_common_models/converter/gfrmc_model/vsg_model/vsg0.h"
+	"header/model/converter_common_models/source_converter_model/gfrmc_model/vsg_model/vsg0.h"
 	"header/model/converter_common_models/current_order_limiter_model/convcol.h"
 	"header/block/integral_block.h"
 	"header/block/first_order_block.h"
@@ -4034,15 +4038,14 @@
 	<istream>
 	<iostream>
 
-1709520849 source:d:\steps\code\steps\source\device\energy_storage.cpp
+1710161353 source:d:\steps\code\steps\source\device\energy_storage.cpp
 	"header/device/energy_storage.h"
 	"header/basic/utility.h"
-	"header/model/energy_storage_model/energy_storage_models.h"
 	"header/STEPS.h"
 	<istream>
 	<iostream>
 
-1634637238 source:d:\steps\code\steps\source\device\energy_storage_test.cpp
+1710161643 source:d:\steps\code\steps\source\device\energy_storage_test.cpp
 	<cmath>
 	"cpptest.h"
 	"header/basic/test_macro.h"
@@ -4050,7 +4053,6 @@
 	"header/basic/constants.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
-	"header/model/energy_storage_model/estr0.h"
 	<cstdlib>
 	<cstring>
 	<istream>
@@ -4397,7 +4399,7 @@
 	<iostream>
 	<cstdio>
 
-1710156628 source:d:\steps\code\steps\source\dynamic_model_database.cpp
+1710162214 source:d:\steps\code\steps\source\dynamic_model_database.cpp
 	"header/dynamic_model_database.h"
 	"header/STEPS.h"
 	"header/steps_namespace.h"
@@ -4408,7 +4410,7 @@
 	<fstream>
 	<cstring>
 
-1709523992 source:d:\steps\code\steps\source\meter\meter.cpp
+1710162202 source:d:\steps\code\steps\source\meter\meter.cpp
 	"header/meter/meter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -6063,7 +6065,7 @@
 	"header/steps_namespace.h"
 	<cstdio>
 
-1710153146 source:d:\steps\code\steps\source\network\network_matrix.cpp
+1710163432 source:d:\steps\code\steps\source\network\network_matrix.cpp
 	"header/network/network_matrix.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -6084,7 +6086,7 @@
 	<cstdio>
 	<cmath>
 
-1697457172 source:d:\steps\code\steps\source\power_system_database.cpp
+1710162912 source:d:\steps\code\steps\source\power_system_database.cpp
 	"header/power_system_database.h"
 	"header/STEPS.h"
 	"header/steps_namespace.h"
@@ -6265,7 +6267,7 @@
 	"header/steps_namespace.h"
 	"header/basic/utility.h"
 
-1649855541 source:d:\steps\code\steps\source\prepare_for_tests\prepare_basic_devices.cpp
+1710162885 source:d:\steps\code\steps\source\prepare_for_tests\prepare_basic_devices.cpp
 	"header/prepare_for_tests/prepare_models_for_test.h"
 	"header/model/all_supported_models.h"
 	"header/basic/utility.h"
@@ -6690,8 +6692,8 @@
 1710159010 d:\steps\code\steps\header\model\converter_common_models\converter\source_converter_model.h
 	"header/STEPS.h"
 
-1710159247 source:d:\steps\code\steps\source\model\converter_common_model\source_converter_model\gfrmc_model\vsg_model\vsg0.cpp
-	"header/model/converter_common_models/converter/gfrmc_model/vsg_model/vsg0.h"
+1710159905 source:d:\steps\code\steps\source\model\converter_common_model\source_converter_model\gfrmc_model\vsg_model\vsg0.cpp
+	"header/model/converter_common_models/source_converter_model/gfrmc_model/vsg_model/vsg0.h"
 	"header/basic/utility.h"
 	"header/power_system_database.h"
 	"header/STEPS.h"
@@ -6704,8 +6706,8 @@
 	"header/model/converter_common_models/converter/gfrmc_model/gfrmc_model.h"
 	"header/STEPS.h"
 
-1710159228 source:d:\steps\code\steps\source\model\converter_common_model\source_converter_model\gfrmc_model\vsg_model\vsg_model.cpp
-	"header/model/converter_common_models/converter/gfrmc_model/vsg_model/vsg_model.h"
+1710159902 source:d:\steps\code\steps\source\model\converter_common_model\source_converter_model\gfrmc_model\vsg_model\vsg_model.cpp
+	"header/model/converter_common_models/source_converter_model/gfrmc_model/vsg_model/vsg_model.h"
 	"header/basic/utility.h"
 	"header/power_system_database.h"
 	"header/STEPS.h"
@@ -6743,5 +6745,202 @@
 
 1710159911 d:\steps\code\steps\header\model\converter_common_models\source_converter_model\gfrmc_model\gfrmc_model.h
 	"header/model/converter_common_models/source_converter_model/source_converter_model.h"
+	"header/STEPS.h"
+
+1710160517 d:\steps\code\steps\header\model\energy_storage_model\supported_es_models.h
+	"header/model/energy_storage_model/es_battery_model/es_battery_models.h"
+	"header/model/energy_storage_model/es_converter_model/es_converter_models.h"
+	"header/model/energy_storage_model/es_electrical_model/es_electrical_models.h"
+	"header/model/energy_storage_model/es_vrt_model/es_vrt_models.h"
+	"header/model/energy_storage_model/es_relay_model/es_relay_models.h"
+
+1710160849 d:\steps\code\steps\header\model\energy_storage_model\es_battery_model\es_battery_models.h
+
+1710160879 d:\steps\code\steps\header\model\energy_storage_model\es_converter_model\es_converter_models.h
+
+1710141325 d:\steps\code\steps\header\model\energy_storage_model\es_electrical_model\es_electrical_models.h
+
+1710160891 d:\steps\code\steps\header\model\energy_storage_model\es_vrt_model\es_vrt_models.h
+
+1710160901 d:\steps\code\steps\header\model\energy_storage_model\es_relay_model\es_relay_models.h
+
+1710159915 d:\steps\code\steps\header\model\converter_common_models\source_converter_model\gfrmc_model\vsg_model\vsg0.h
+	"header/model/converter_common_models/source_converter_model/gfrmc_model/vsg_model/vsg_model.h"
+	"header/block/integral_block.h"
+
+1710159918 d:\steps\code\steps\header\model\converter_common_models\source_converter_model\gfrmc_model\vsg_model\vsg_model.h
+	"header/model/converter_common_models/source_converter_model/gfrmc_model/gfrmc_model.h"
+	"header/STEPS.h"
+
+1710080048 d:\steps\code\steps\header\model\energy_storage_model\es_converter_model\es_converter_model.h
+	"header/model/energy_storage_model/es_model.h"
+	"header/block/integral_block.h"
+	"header/block/saturation_block.h"
+
+1710162576 d:\steps\code\steps\header\model\energy_storage_model\es_model.h
+	"header/model/model.h"
+	<complex>
+
+1710081535 d:\steps\code\steps\header\model\energy_storage_model\es_electrical_model\es_electrical_model.h
+	"header/model/energy_storage_model/es_model.h"
+	<complex>
+
+1710078589 d:\steps\code\steps\header\model\energy_storage_model\es_battery_model\es_battery_model.h
+	"header/model/energy_storage_model/es_model.h"
+	<cstdlib>
+
+1710154281 d:\steps\code\steps\header\model\energy_storage_model\es_vrt_model\es_vrt_model.h
+	"header/model/energy_storage_model/es_model.h"
+	<complex>
+
+1710080918 d:\steps\code\steps\header\model\energy_storage_model\es_relay_model\es_relay_model.h
+	"header/model/energy_storage_model/es_model.h"
+
+1710161501 d:\steps\code\steps\header\model\converter_common_models\source_converter_model\gfrmc_model\vsg_model\vsg0_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"header/model/converter_common_models/source_converter_model/gfrmc_model/vsg_model/vsg_model_test.h"
+	"header/model/converter_common_models/source_converter_model/gfrmc_model/vsg_model/vsg0.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+
+1710161519 d:\steps\code\steps\header\model\converter_common_models\source_converter_model\gfrmc_model\vsg_model\vsg_model_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"cpptest.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+	"header/model/converter_common_models/source_converter_model/gfrmc_model/vsg_model/vsg_model.h"
+
+1710150666 source:d:\steps\code\steps\source\model\energy_storage_model\es_battery_model\es_battery_model.cpp
+	"header/model/energy_storage_model/es_battery_model/es_battery_model.h"
+	"header/basic/utility.h"
+	"header/STEPS.h"
+	<istream>
+	<iostream>
+
+1709817457 source:d:\steps\code\steps\source\model\energy_storage_model\es_battery_model\es_battery_model_test.cpp
+	"header/basic/test_macro.h"
+	"header/model/pvu_models/pv_panel_model/pv_panel_model_test.h"
+	"header/basic/utility.h"
+	<cstdlib>
+	<cstring>
+	<istream>
+	<iostream>
+	<cstdio>
+	<cmath>
+
+1710079928 source:d:\steps\code\steps\source\model\energy_storage_model\es_converter_model\es_converter_model.cpp
+	"header/model/energy_storage_model/es_converter_model/es_converter_model.h"
+	"header/basic/utility.h"
+	"header/basic/constants.h"
+	"header/steps_namespace.h"
+	<cstdio>
+	<istream>
+	<iostream>
+
+1709817457 source:d:\steps\code\steps\source\model\energy_storage_model\es_converter_model\es_converter_model_test.cpp
+	"header/basic/test_macro.h"
+	"header/model/pvu_models/pv_converter_model/pv_converter_model_test.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<cstdlib>
+	<cstring>
+	<istream>
+	<iostream>
+	<cstdio>
+	<cmath>
+
+1709817457 source:d:\steps\code\steps\source\model\energy_storage_model\es_converter_model\escvx.cpp
+	"header/model/pvu_models/pv_converter_model/pvcv0.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<cstdio>
+	<istream>
+	<iostream>
+
+1709817457 source:d:\steps\code\steps\source\model\energy_storage_model\es_converter_model\escvx_test.cpp
+	"header/basic/test_macro.h"
+	"header/model/pvu_models/pv_converter_model/pvcv0_test.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<cstdlib>
+	<cstring>
+	<istream>
+	<iostream>
+	<cstdio>
+	<cmath>
+
+1710162327 source:d:\steps\code\steps\source\model\energy_storage_model\es_battery_model\esbx.cpp
+	"header/model/energy_storage_model/es_battery_model/esbx.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<istream>
+	<iostream>
+
+1710162284 d:\steps\code\steps\header\model\energy_storage_model\es_battery_model\esbx.h
+	"header/model/energy_storage_model/es_battery_model/es_battery_model.h"
+	<cstdlib>
+
+1709817457 source:d:\steps\code\steps\source\model\energy_storage_model\es_converter_model\escvy.cpp
+	"header/model/pvu_models/pv_converter_model/pvgu1.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<cstdio>
+	<istream>
+	<iostream>
+
+1709817457 source:d:\steps\code\steps\source\model\energy_storage_model\es_converter_model\escvy_test.cpp
+	"header/basic/test_macro.h"
+	"header/model/pvu_models/pv_converter_model/pvgu1_test.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<cstdlib>
+	<cstring>
+	<istream>
+	<iostream>
+	<cstdio>
+	<cmath>
+
+1710081549 source:d:\steps\code\steps\source\model\energy_storage_model\es_electrical_model\es_electrical_model.cpp
+	"header/model/energy_storage_model/es_electrical_model/es_electrical_model.h"
+	"header/basic/utility.h"
+	"header/device/energy_storage.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+
+1709817457 source:d:\steps\code\steps\source\model\energy_storage_model\es_model_test.cpp
+	"header/basic/test_macro.h"
+	"header/model/pvu_models/pvu_model_test.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<cstdlib>
+	<cstring>
+	<istream>
+	<iostream>
+	<cstdio>
+	<cmath>
+
+1710140242 source:d:\steps\code\steps\source\model\energy_storage_model\es_relay_model\es_relay_model.cpp
+	"header/model/energy_storage_model/es_relay_model/es_relay_model.h"
+	"header/basic/utility.h"
+	"header/STEPS.h"
+	<cstdio>
+
+1710081331 source:d:\steps\code\steps\source\model\energy_storage_model\es_vrt_model\es_vrt_model.cpp
+	"header/model/energy_storage_model/es_vrt_model/es_vrt_model.h"
+	"header/basic/utility.h"
+	"header/device/energy_storage.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+
+1710162576 source:d:\steps\code\steps\source\model\energy_storage_model\es_model.cpp
+	"header/model/energy_storage_model/es_model.h"
+	"header/basic/utility.h"
+	"header/power_system_database.h"
 	"header/STEPS.h"
 

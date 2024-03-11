@@ -17,7 +17,7 @@
 
 #include "header/model/pvu_models/supported_pvu_models.h"
 
-#include "header/model/energy_storage_model/energy_storage_models.h"
+#include "header/model/energy_storage_model/supported_es_models.h"
 
 #include "header/model/equivalent_model/ARXL.h"
 

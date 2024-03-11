@@ -178,7 +178,7 @@ unsigned int DYNAMIC_MODEL_DATABASE::get_model_size(MODEL* model) const
     if(model_name=="LCFB1") return sizeof(LCFB1);
 
 
-    if(model_name=="ESTR0") return sizeof(ESTR0);
+    //if(model_name=="ESTR0") return sizeof(ESTR0);
 
 
     if(model_name=="IEEL") return sizeof(IEEL);

@@ -14,7 +14,7 @@
 
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
-#include "header/model/converter_common_models/converter/gfrmc_model/vsg_model/vsg_model.h"
+#include "header/model/converter_common_models/source_converter_model/gfrmc_model/vsg_model/vsg_model.h"
 using namespace std;
 
 class VSG_MODEL_TEST : public Test::Suite

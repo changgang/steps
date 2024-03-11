@@ -203,11 +203,29 @@
 		<Unit filename="header/model/converter_common_models/vrt_model/lvrt_relay.h" />
 		<Unit filename="header/model/converter_common_models/vrt_model/vrt_control_model.h" />
 		<Unit filename="header/model/converter_common_models/vrt_model/vrt_relay_model.h" />
-		<Unit filename="header/model/energy_storage_model/energy_storage_model.h" />
-		<Unit filename="header/model/energy_storage_model/energy_storage_model_test.h" />
-		<Unit filename="header/model/energy_storage_model/energy_storage_models.h" />
-		<Unit filename="header/model/energy_storage_model/estr0.h" />
-		<Unit filename="header/model/energy_storage_model/estr0_test.h" />
+		<Unit filename="header/model/energy_storage_model/es_battery_model/es_battery_model.h" />
+		<Unit filename="header/model/energy_storage_model/es_battery_model/es_battery_model_test.h" />
+		<Unit filename="header/model/energy_storage_model/es_battery_model/es_battery_models.h" />
+		<Unit filename="header/model/energy_storage_model/es_battery_model/esbx.h" />
+		<Unit filename="header/model/energy_storage_model/es_battery_model/esbx_test.h" />
+		<Unit filename="header/model/energy_storage_model/es_converter_model/es_converter_model.h" />
+		<Unit filename="header/model/energy_storage_model/es_converter_model/es_converter_model_test.h" />
+		<Unit filename="header/model/energy_storage_model/es_converter_model/es_converter_models.h" />
+		<Unit filename="header/model/energy_storage_model/es_converter_model/escvx.h" />
+		<Unit filename="header/model/energy_storage_model/es_converter_model/escvx_test.h" />
+		<Unit filename="header/model/energy_storage_model/es_converter_model/escvy.h" />
+		<Unit filename="header/model/energy_storage_model/es_converter_model/escvy_test.h" />
+		<Unit filename="header/model/energy_storage_model/es_electrical_model/es_electrical_model.h" />
+		<Unit filename="header/model/energy_storage_model/es_electrical_model/es_electrical_model_test.h" />
+		<Unit filename="header/model/energy_storage_model/es_electrical_model/es_electrical_models.h" />
+		<Unit filename="header/model/energy_storage_model/es_model.h" />
+		<Unit filename="header/model/energy_storage_model/es_model_test.h" />
+		<Unit filename="header/model/energy_storage_model/es_relay_model/es_relay_model.h" />
+		<Unit filename="header/model/energy_storage_model/es_relay_model/es_relay_model_test.h" />
+		<Unit filename="header/model/energy_storage_model/es_relay_model/es_relay_models.h" />
+		<Unit filename="header/model/energy_storage_model/es_vrt_model/es_vrt_model.h" />
+		<Unit filename="header/model/energy_storage_model/es_vrt_model/es_vrt_models.h" />
+		<Unit filename="header/model/energy_storage_model/supported_es_models.h" />
 		<Unit filename="header/model/equivalent_model/ARXL.h" />
 		<Unit filename="header/model/equivalent_model/equivalent_model.h" />
 		<Unit filename="header/model/equivalent_model/equivalent_models.h" />
@@ -657,10 +675,49 @@
 		<Unit filename="source/model/converter_common_model/vrt_model/lvrt_relay.cpp" />
 		<Unit filename="source/model/converter_common_model/vrt_model/vrt_control_model.cpp" />
 		<Unit filename="source/model/converter_common_model/vrt_model/vrt_relay_model.cpp" />
-		<Unit filename="source/model/energy_storage_model/energy_storage_model.cpp" />
-		<Unit filename="source/model/energy_storage_model/energy_storage_model_test.cpp" />
-		<Unit filename="source/model/energy_storage_model/estr0.cpp" />
-		<Unit filename="source/model/energy_storage_model/estr0_test.cpp" />
+		<Unit filename="source/model/energy_storage_model/es_battery_model/es_battery_model.cpp" />
+		<Unit filename="source/model/energy_storage_model/es_battery_model/es_battery_model_test.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="source/model/energy_storage_model/es_battery_model/esbx.cpp" />
+		<Unit filename="source/model/energy_storage_model/es_battery_model/esbx_test.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="source/model/energy_storage_model/es_converter_model/es_converter_model.cpp" />
+		<Unit filename="source/model/energy_storage_model/es_converter_model/es_converter_model_test.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="source/model/energy_storage_model/es_converter_model/escvx.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="source/model/energy_storage_model/es_converter_model/escvx_test.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="source/model/energy_storage_model/es_converter_model/escvy.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="source/model/energy_storage_model/es_converter_model/escvy_test.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="source/model/energy_storage_model/es_electrical_model/es_electrical_model.cpp" />
+		<Unit filename="source/model/energy_storage_model/es_electrical_model/es_electrical_model_test.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="source/model/energy_storage_model/es_model.cpp" />
+		<Unit filename="source/model/energy_storage_model/es_model_test.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="source/model/energy_storage_model/es_relay_model/es_relay_model.cpp" />
+		<Unit filename="source/model/energy_storage_model/es_vrt_model/es_vrt_model.cpp" />
 		<Unit filename="source/model/equivalent_model/ARXL.cpp" />
 		<Unit filename="source/model/equivalent_model/equivalent_model.cpp" />
 		<Unit filename="source/model/hvdc_model/CDC4T.cpp" />

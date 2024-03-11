@@ -130,7 +130,7 @@
 #include "header/model/hvdc_model/CDC4T_test.h"
 #include "header/model/hvdc_model/CDC6T_test.h"
 
-#include "header/model/converter_common_models/vsg_model/vsg0_test.h"
+#include "header/model/converter_common_models/source_converter_model/gfrmc_model/vsg_model/vsg0_test.h"
 #include "header/model/converter_common_models/vrt_model/lvrt_control_test.h"
 
 //#include "header/model/vsc_hvdc_model/VSCHVDC1_test.h"

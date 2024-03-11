@@ -1,7 +1,6 @@
 #include "header/device/energy_storage.h"
 #include "header/basic/utility.h"
 
-#include "header/model/energy_storage_model/energy_storage_models.h"
 #include "header/STEPS.h"
 
 #include <istream>
@@ -42,7 +41,13 @@ complex<double> ENERGY_STORAGE::get_energy_storage_impedance_in_pu() const
 void ENERGY_STORAGE::clear()
 {
     SOURCE::clear();
-    energy_storage_model = NULL;
+
+    es_converter_model = NULL;
+    es_electrical_model = NULL;
+    es_vrt_model = NULL;
+    es_relay_model = NULL;
+    es_battery_model = NULL;
+
     sequence_parameter_import_flag = false;
 }
 
@@ -64,60 +69,192 @@ void ENERGY_STORAGE::set_model(MODEL* model)
     if(model!=NULL and model->has_allowed_device_type(STEPS_ENERGY_STORAGE))
     {
         model->set_device_id(get_device_id());
-        if(model->get_model_type()=="ENERGY STORAGE")
-            set_energy_storage_model((ENERGY_STORAGE_MODEL*) model);
-        else
+        if(model->get_model_type()=="ES CONVERTER")
         {
-            ostringstream osstream;
-            osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up energy storage-related model.";
-            STEPS& toolkit = get_toolkit();
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            set_es_converter_model((ES_CONVERTER_MODEL*) model);
+            return;
         }
+
+        if(model->get_model_type()=="ES BATTERY")
+        {
+            set_es_battery_model((ES_BATTERY_MODEL*) model);
+            return;
+        }
+
+        if(model->get_model_type()=="ES ELECTRICAL")
+        {
+            set_es_electrical_model((ES_ELECTRICAL_MODEL*) model);
+            return;
+        }
+
+        if(model->get_model_type()=="ES VRT")
+        {
+            set_es_vrt_model((ES_VRT_MODEL*) model);
+            return;
+        }
+
+        if(model->get_model_type()=="ES RELAY")
+        {
+            set_es_relay_model((ES_RELAY_MODEL*) model);
+            return;
+        }
+
+        ostringstream osstream;
+        osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up energy storage-related model.";
+        STEPS& toolkit = get_toolkit();
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 MODEL* ENERGY_STORAGE::get_model_of_type(string model_type, unsigned int index)
 {
     model_type = string2upper(model_type);
-    if(model_type=="ENERGY STORAGE")
-        return get_energy_storage_model();
-    else
-        return NULL;
+    if(model_type=="ES CONVERTER")
+        return get_es_converter_model();
+    if(model_type=="ES BATTERY")
+        return get_es_battery_model();
+    if(model_type=="ES ELECTRICAL")
+        return get_es_electrical_model();
+    if(model_type=="ES VRT")
+        return get_es_vrt_model();
+    if(model_type=="ES RELAY")
+        return get_es_relay_model();
+    return NULL;
 }
 
-void ENERGY_STORAGE::set_energy_storage_model(ENERGY_STORAGE_MODEL* model)
+void ENERGY_STORAGE::set_es_converter_model(ES_CONVERTER_MODEL* model)
 {
     if(model!=NULL)
-        energy_storage_model = model;
+        es_converter_model = model;
 }
 
-ENERGY_STORAGE_MODEL* ENERGY_STORAGE::get_energy_storage_model() const
+void ENERGY_STORAGE::set_es_battery_model(ES_BATTERY_MODEL* model)
 {
-    return energy_storage_model;
+    if(model!=NULL)
+        es_battery_model = model;
+}
+
+void ENERGY_STORAGE::set_es_electrical_model(ES_ELECTRICAL_MODEL* model)
+{
+    if(model!=NULL)
+        es_electrical_model = model;
+}
+
+void ENERGY_STORAGE::set_es_vrt_model(ES_VRT_MODEL* model)
+{
+    if(model!=NULL)
+        es_vrt_model = model;
+}
+
+void ENERGY_STORAGE::set_es_relay_model(ES_RELAY_MODEL* model)
+{
+    if(model!=NULL)
+        es_relay_model = model;
+}
+
+ES_CONVERTER_MODEL* ENERGY_STORAGE::get_es_converter_model() const
+{
+    return es_converter_model;
+}
+
+ES_BATTERY_MODEL* ENERGY_STORAGE::get_es_battery_model() const
+{
+    return es_battery_model;
+}
+
+ES_ELECTRICAL_MODEL* ENERGY_STORAGE::get_es_electrical_model() const
+{
+    return es_electrical_model;
+}
+
+ES_VRT_MODEL* ENERGY_STORAGE::get_es_vrt_model() const
+{
+    return es_vrt_model;
+}
+
+ES_RELAY_MODEL* ENERGY_STORAGE::get_es_relay_model() const
+{
+    return es_relay_model;
 }
 
 void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
 {
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+
     if(get_status()==true)
     {
+        ES_CONVERTER_MODEL* conv = get_es_converter_model();
+        ES_ELECTRICAL_MODEL* elec = get_es_electrical_model();
+        ES_BATTERY_MODEL* battery = get_es_battery_model();
+        ES_VRT_MODEL* vrt = get_es_vrt_model();
+        ES_RELAY_MODEL* relay = get_es_relay_model();
+
         switch(mode)
         {
             case INITIALIZE_MODE:
             {
-                ENERGY_STORAGE_MODEL* estorage = get_energy_storage_model();
-                if(estorage!=NULL and estorage->is_model_active())
-                    estorage->initialize();
+                if(conv!=NULL and conv->is_model_active())
+                    conv->initialize();
                 else
+                {
+                    osstream<<"Error. No ES CONVERTER model is provided for "<<get_compound_device_name()<<" for dynamic initialization.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     return;
+                }
+
+                if(elec!=NULL and elec->is_model_active())
+                    elec->initialize();
+
+                if(battery!=NULL and battery->is_model_active())
+                    battery->initialize();
+
+                if(vrt!=NULL and vrt->is_model_active())
+                    vrt->initialize();
+
+                if(relay!=NULL and relay->is_model_active())
+                    relay->initialize();
+
+                break;
+            }
+            case INTEGRATE_MODE:
+            case UPDATE_MODE:
+            {
+                if(vrt!=NULL and vrt->is_model_active())
+                {
+                    vrt->run(mode);
+                    if(elec!=NULL and elec->is_model_active())
+                    {
+                        if(elec->is_model_bypassed()
+                            and (not vrt->is_in_vrt_status()))
+                            elec->unbypass_model();
+                        else
+                        {
+                            if(not elec->is_model_bypassed()
+                                and (vrt->is_in_vrt_status()))
+                                elec->bypass_model();
+                        }
+                    }
+                }
+
+                if(battery!=NULL and battery->is_model_active())
+                    battery->run(mode);
+
+                if(elec!=NULL and elec->is_model_active() and (not elec->is_model_bypassed()))
+                    elec->run(mode);
+
+                if(conv!=NULL and conv->is_model_active())
+                    conv->run(mode);
+                break;
+            }
+            case RELAY_MODE:
+            {
+                if(relay!=NULL and relay->is_model_active())
+                    relay->run(mode);
                 break;
             }
             default:
-            {
-                ENERGY_STORAGE_MODEL* estorage = get_energy_storage_model();
-                if(estorage!=NULL and estorage->is_model_active())
-                    estorage->run(mode);
                 break;
-            }
         }
     }
 }
@@ -163,7 +300,11 @@ ENERGY_STORAGE& ENERGY_STORAGE::operator=(const ENERGY_STORAGE& estorage)
     set_bus_to_regulate(estorage.get_bus_to_regulate());
     set_voltage_to_regulate_in_pu(estorage.get_voltage_to_regulate_in_pu());
 
-    set_model(estorage.get_energy_storage_model());
+    set_model(estorage.get_es_converter_model());
+    set_model(estorage.get_es_electrical_model());
+    set_model(estorage.get_es_vrt_model());
+    set_model(estorage.get_es_relay_model());
+    set_model(estorage.get_es_vrt_model());
     return *this;
 }
 

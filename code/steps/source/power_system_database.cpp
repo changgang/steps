@@ -4717,9 +4717,9 @@ void POWER_SYSTEM_DATABASE::check_energy_storage_related_dynamic_data()
     {
         estorage = estorages[i];
 
-        ENERGY_STORAGE_MODEL* esmodel = estorage->get_energy_storage_model();
-        if(esmodel!=NULL)
-            esmodel->check();
+        ES_CONVERTER_MODEL* conv = estorage->get_es_converter_model();
+        if(conv!=NULL)
+            conv->check();
     }
 }
 
@@ -5067,8 +5067,8 @@ void POWER_SYSTEM_DATABASE::check_missing_energy_storage_related_model()
     {
         estorage = estorages[i];
 
-        ENERGY_STORAGE_MODEL* esmodel = estorage->get_energy_storage_model();
-        if(esmodel==NULL)
+        ES_CONVERTER_MODEL* conv = estorage->get_es_converter_model();
+        if(conv==NULL)
         {
             osstream<<estorage->get_compound_device_name()<<" ["<<bus_number2bus_name(estorage->get_energy_storage_bus())<<"]";
             model_missing_detected = true;
