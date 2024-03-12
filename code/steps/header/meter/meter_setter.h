@@ -143,26 +143,26 @@ class METER_SETTER
         METER prepare_pv_electrical_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
         METER prepare_pv_irradiance_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
 
-        METER prepare_hvdc_dc_current_in_kA_meter(const DEVICE_ID& device_id);
-        METER prepare_hvdc_rectifier_dc_current_in_kA_meter(const DEVICE_ID& device_id);
-        METER prepare_hvdc_inverter_dc_current_in_kA_meter(const DEVICE_ID& device_id);
-        METER prepare_hvdc_rectifier_dc_voltage_in_kV_meter(const DEVICE_ID& device_id);
-        METER prepare_hvdc_rectifier_ac_voltage_in_pu_meter(const DEVICE_ID& device_id);
-        METER prepare_hvdc_rectifier_alpha_in_deg_meter(const DEVICE_ID& device_id);
-        METER prepare_hvdc_rectifier_mu_in_deg_meter(const DEVICE_ID& device_id);
-        METER prepare_hvdc_rectifier_dc_power_in_MW_meter(const DEVICE_ID& device_id);
-        METER prepare_hvdc_rectifier_ac_active_power_in_MW_meter(const DEVICE_ID& device_id);
-        METER prepare_hvdc_rectifier_ac_reactive_power_in_MVar_meter(const DEVICE_ID& device_id);
-        METER prepare_hvdc_rectifier_ac_current_in_kA_meter(const DEVICE_ID& device_id);
-        METER prepare_hvdc_inverter_dc_voltage_in_kV_meter(const DEVICE_ID& device_id);
-        METER prepare_hvdc_inverter_ac_voltage_in_pu_meter(const DEVICE_ID& device_id);
-        METER prepare_hvdc_inverter_gamma_in_deg_meter(const DEVICE_ID& device_id);
-        METER prepare_hvdc_inverter_mu_in_deg_meter(const DEVICE_ID& device_id);
-        METER prepare_hvdc_inverter_dc_power_in_MW_meter(const DEVICE_ID& device_id);
-        METER prepare_hvdc_inverter_ac_active_power_in_MW_meter(const DEVICE_ID& device_id);
-        METER prepare_hvdc_inverter_ac_reactive_power_in_MVar_meter(const DEVICE_ID& device_id);
-        METER prepare_hvdc_inverter_ac_current_in_kA_meter(const DEVICE_ID& device_id);
-        METER prepare_hvdc_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_2t_lcc_hvdc_dc_current_in_kA_meter(const DEVICE_ID& device_id);
+        METER prepare_2t_lcc_hvdc_rectifier_dc_current_in_kA_meter(const DEVICE_ID& device_id);
+        METER prepare_2t_lcc_hvdc_inverter_dc_current_in_kA_meter(const DEVICE_ID& device_id);
+        METER prepare_2t_lcc_hvdc_rectifier_dc_voltage_in_kV_meter(const DEVICE_ID& device_id);
+        METER prepare_2t_lcc_hvdc_rectifier_ac_voltage_in_pu_meter(const DEVICE_ID& device_id);
+        METER prepare_2t_lcc_hvdc_rectifier_alpha_in_deg_meter(const DEVICE_ID& device_id);
+        METER prepare_2t_lcc_hvdc_rectifier_mu_in_deg_meter(const DEVICE_ID& device_id);
+        METER prepare_2t_lcc_hvdc_rectifier_dc_power_in_MW_meter(const DEVICE_ID& device_id);
+        METER prepare_2t_lcc_hvdc_rectifier_ac_active_power_in_MW_meter(const DEVICE_ID& device_id);
+        METER prepare_2t_lcc_hvdc_rectifier_ac_reactive_power_in_MVar_meter(const DEVICE_ID& device_id);
+        METER prepare_2t_lcc_hvdc_rectifier_ac_current_in_kA_meter(const DEVICE_ID& device_id);
+        METER prepare_2t_lcc_hvdc_inverter_dc_voltage_in_kV_meter(const DEVICE_ID& device_id);
+        METER prepare_2t_lcc_hvdc_inverter_ac_voltage_in_pu_meter(const DEVICE_ID& device_id);
+        METER prepare_2t_lcc_hvdc_inverter_gamma_in_deg_meter(const DEVICE_ID& device_id);
+        METER prepare_2t_lcc_hvdc_inverter_mu_in_deg_meter(const DEVICE_ID& device_id);
+        METER prepare_2t_lcc_hvdc_inverter_dc_power_in_MW_meter(const DEVICE_ID& device_id);
+        METER prepare_2t_lcc_hvdc_inverter_ac_active_power_in_MW_meter(const DEVICE_ID& device_id);
+        METER prepare_2t_lcc_hvdc_inverter_ac_reactive_power_in_MVar_meter(const DEVICE_ID& device_id);
+        METER prepare_2t_lcc_hvdc_inverter_ac_current_in_kA_meter(const DEVICE_ID& device_id);
+        METER prepare_2t_lcc_hvdc_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
 
         METER prepare_vsc_hvdc_converter_dc_current_in_kA_meter(const DEVICE_ID& device_id, unsigned int meter_side);
         METER prepare_vsc_hvdc_converter_ac_current_in_kA_meter(const DEVICE_ID& device_id, unsigned int meter_side);
@@ -223,7 +223,7 @@ class METER_SETTER
         bool prepare_wt_generator_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_pv_unit_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_energy_storage_meter(METER& meter, const DEVICE_ID& device_id);
-        bool prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id);
+        bool prepare_2t_lcc_hvdc_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_vsc_hvdc_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_equivalent_device_meter(METER& meter, const DEVICE_ID& device_id);
     private:

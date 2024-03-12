@@ -4,7 +4,7 @@
 #include "header/device/nonbus_device.h"
 #include "header/basic/device_id.h"
 #include "header/basic/steps_enum.h"
-#include "header/model/hvdc_model/hvdc_model.h"
+#include "header/model/lcc_hvdc2t_model/lcc_hvdc2t_model.h"
 #include "header/model/auxiliary_signal_model/auxiliary_signal_model.h"
 
 #include <complex>
@@ -116,10 +116,10 @@ class LCC_HVDC2T : public NONBUS_DEVICE
         virtual void set_model(MODEL* model);
         virtual MODEL* get_model_of_type(string model_type, unsigned int index=0);
 
-        void set_hvdc_model(HVDC_MODEL* model);
+        void set_2t_lcc_hvdc_model(LCC_HVDC2T_MODEL* model);
         void set_auxiliary_signal_model(AUXILIARY_SIGNAL_MODEL* model);
 
-        HVDC_MODEL* get_hvdc_model() const;
+        LCC_HVDC2T_MODEL* get_2t_lcc_hvdc_model() const;
         AUXILIARY_SIGNAL_MODEL* get_auxiliary_signal_model() const;
 
         virtual void run(DYNAMIC_MODE mode);
@@ -210,7 +210,7 @@ class LCC_HVDC2T : public NONBUS_DEVICE
         double cos_max_firing_angle[2], cos_min_firing_angle[2];
         double cos_converter_firing_angle[2];
     private:
-        HVDC_MODEL* hvdc_model;
+        LCC_HVDC2T_MODEL* hvdc_model;
         AUXILIARY_SIGNAL_MODEL* auxiliary_signal_model;
 
         bool converter_firing_angle_fixed[2];

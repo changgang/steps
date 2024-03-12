@@ -1,5 +1,5 @@
-#ifndef HVDC_MODEL_TEST_H
-#define HVDC_MODEL_TEST_H
+#ifndef LCC_HVDC2T_MODEL_TEST_H
+#define LCC_HVDC2T_MODEL_TEST_H
 
 #include <istream>
 #include <cstdlib>
@@ -16,16 +16,16 @@
 #include "header/STEPS.h"
 using namespace std;
 
-class HVDC_MODEL_TEST : public Test::Suite
+class LCC_HVDC2T_MODEL_TEST : public Test::Suite
 {
     public:
-        HVDC_MODEL_TEST();
+        LCC_HVDC2T_MODEL_TEST();
     protected:
         virtual void setup();
         virtual void tear_down();
     protected:
-        LCC_HVDC2T* get_test_hvdc();
-        HVDC_MODEL* get_test_hvdc_model();
+        LCC_HVDC2T* get_test_2t_lcc_hvdc();
+        LCC_HVDC2T_MODEL* get_test_2t_lcc_hvdc_model();
         void test_initialize();
         void test_rectifier_voltage_ramp_response();
         void test_inverter_voltage_ramp_response();
@@ -43,4 +43,4 @@ class HVDC_MODEL_TEST : public Test::Suite
         void export_meter_values(double time);
 };
 
-#endif//HVDC_MODEL_TEST_H
+#endif//LCC_HVDC2T_MODEL_TEST_H

@@ -4,7 +4,7 @@
 #include "header/data_imexporter/data_imexporter.h"
 #include "header/device/source.h"
 #include "header/device/transformer.h"
-#include "header/device/hvdc.h"
+#include "header/device/lcc_hvdc2t.h"
 #include <vector>
 
 class BPA_IMEXPORTER : public DATA_IMEXPORTER

@@ -12,7 +12,7 @@
 
 #include "cpptest.h"
 
-#include "header/device/hvdc.h"
+#include "header/device/lcc_hvdc2t.h"
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
 using namespace std;
@@ -68,7 +68,7 @@ class LCC_HVDC2T_TEST : public Test::Suite
 
         void test_get_device_id();
 
-        void test_solve_hvdc();
+        void test_solve_lcc_hvdc2t();
         void test_set_get_dc_current();
         void test_set_get_converter_dc_current();
         void test_set_get_converter_dc_voltage();
@@ -79,10 +79,10 @@ class LCC_HVDC2T_TEST : public Test::Suite
         void test_get_converter_ac_power_factor();
         void test_get_converter_commutating_overlap_angle();
 
-        void test_set_get_hvdc_model();
+        void test_set_get_2t_lcc_hvdc_model();
 
     private:
-        void prepare_hvdc_buses();
+        void prepare_lcc_hvdc2t_buses();
         LCC_HVDC2T hvdc;
 };
 

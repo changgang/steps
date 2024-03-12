@@ -178,8 +178,8 @@ class NETWORK_MATRIX
         void add_energy_storages_to_positive_sequence_network();
         void add_energy_storage_to_positive_sequence_network(const ENERGY_STORAGE& es);
         void add_fixed_shunts_to_positive_sequence_network();
-        void add_hvdcs_to_positive_sequence_network();
-        void add_hvdc_to_positive_sequence_network(const LCC_HVDC2T& hvdc);
+        void add_2t_lcc_hvdcs_to_positive_sequence_network();
+        void add_2t_lcc_hvdc_to_positive_sequence_network(const LCC_HVDC2T& hvdc);
         void add_vsc_hvdcs_to_positive_sequence_network();
         void add_vsc_hvdc_to_positive_sequence_network(const VSC_HVDC& vsc_hvdc);
 

@@ -23,7 +23,7 @@ DEVICE_ID_TEST::DEVICE_ID_TEST()
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_equivalent_device);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_line);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_transformer);
-    TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_hvdc);
+    TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_lcc_hvdc2t);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_vsc_hvdc);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_facts);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_multidc);
@@ -267,7 +267,7 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_transformer()
     TEST_ASSERT(terminal.get_bus_count()==3);
 }
 
-void DEVICE_ID_TEST::test_constructor_and_get_device_type_hvdc()
+void DEVICE_ID_TEST::test_constructor_and_get_device_type_lcc_hvdc2t()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 

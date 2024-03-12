@@ -1690,11 +1690,11 @@ void STEPS_IMEXPORTER::add_2t_lcc_hvdc_with_data(vector<vector<string> > hvdc_da
 
     LCC_HVDC2T hvdc(toolkit);
 
-    vector<string> data_hvdc = hvdc_data[0];
+    vector<string> data_lcc_hvdc2t = hvdc_data[0];
     vector<string> data_rec = hvdc_data[1];
     vector<string> data_inv = hvdc_data[2];
 
-    add_2t_lcc_hvdc_basic_data(hvdc, data_hvdc);
+    add_2t_lcc_hvdc_basic_data(hvdc, data_lcc_hvdc2t);
     add_2t_lcc_hvdc_converter_data(hvdc, RECTIFIER, data_rec);
     add_2t_lcc_hvdc_converter_data(hvdc, INVERTER, data_inv);
 
@@ -3954,7 +3954,7 @@ void STEPS_IMEXPORTER::load_2t_lcc_hvdc_powerflow_result(const vector<string>& d
         double itap = str2double(contents[itap_index]);
         double alpha = str2double(contents[alpha_index]);
         double gamma = str2double(contents[gamma_index]);
-        DEVICE_ID did = get_hvdc_device_id(rbus_number,ibus_number,identifier);
+        DEVICE_ID did = get_2t_lcc_hvdc_device_id(rbus_number,ibus_number,identifier);
         LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(did);
         if(hvdc!=NULL)
         {

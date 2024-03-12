@@ -9,7 +9,7 @@
 #include "header/basic/constants.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
-#include "header/model/hvdc_model/hvdc_models.h"
+#include "header/model/lcc_hvdc2t_model/lcc_hvdc2t_models.h"
 
 #include <cstdlib>
 #include <cstring>

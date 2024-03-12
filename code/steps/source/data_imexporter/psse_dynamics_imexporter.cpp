@@ -219,7 +219,7 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
     for(unsigned int i=0; i!=n; ++i)
     {
         hvdc = hvdcs[i];
-        model = hvdc->get_hvdc_model();
+        model = hvdc->get_2t_lcc_hvdc_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = hvdc->get_auxiliary_signal_model();

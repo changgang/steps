@@ -10,7 +10,7 @@
 #include "header/device/line.h"
 #include "header/device/transformer.h"
 #include "header/device/fixed_shunt.h"
-#include "header/device/hvdc.h"
+#include "header/device/lcc_hvdc2t.h"
 #include "header/device/vsc_hvdc.h"
 #include "header/device/equivalent_device.h"
 #include "header/device/source.h"

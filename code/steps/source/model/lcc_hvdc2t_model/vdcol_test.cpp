@@ -1,5 +1,5 @@
 #include "header/basic/test_macro.h"
-#include "header/model/hvdc_model/vdcol_test.h"
+#include "header/model/lcc_hvdc2t_model/vdcol_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 

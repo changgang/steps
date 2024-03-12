@@ -12,7 +12,7 @@
 
 #include "cpptest.h"
 #include "header/power_system_database.h"
-#include "header/model/hvdc_model/vdcol.h"
+#include "header/model/lcc_hvdc2t_model/vdcol.h"
 #include "header/STEPS.h"
 
 using namespace std;

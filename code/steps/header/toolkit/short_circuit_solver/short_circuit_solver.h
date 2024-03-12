@@ -110,7 +110,7 @@ class SHORT_CIRCUIT_SOLVER
         void add_pv_units_to_injection_current_vector();
         void add_energy_storages_to_injection_current_vector();
         void add_motor_load_to_injection_vector();
-        void add_hvdcs_to_injection_current_vector();
+        void add_2t_lcc_hvdcs_to_injection_current_vector();
         void add_vsc_hvdcs_to_injection_current_vector();
         void update_voltages_with_current_vector();
         void add_wt_generators_to_injection_current_vector_for_iterative_method();

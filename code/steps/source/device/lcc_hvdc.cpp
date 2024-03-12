@@ -2,7 +2,7 @@
 #include "header/basic/utility.h"
 #include "header/basic/constants.h"
 #include "header/STEPS.h"
-#include "header/model/hvdc_model/hvdc_models.h"
+#include "header/model/lcc_hvdc2t_model/lcc_hvdc2t_models.h"
 #include <istream>
 #include <iostream>
 #include <cstdio>

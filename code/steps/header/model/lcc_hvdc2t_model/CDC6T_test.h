@@ -1,5 +1,5 @@
-#ifndef CDC4T_TEST_H
-#define CDC4T_TEST_H
+#ifndef CDC6T_TEST_H
+#define CDC6T_TEST_H
 
 #include <istream>
 #include <cstdlib>
@@ -12,15 +12,15 @@
 
 #include "cpptest.h"
 
-#include "header/model/hvdc_model/CDC4T.h"
-#include "header/model/hvdc_model/hvdc_model_test.h"
+#include "header/model/lcc_hvdc2t_model/CDC6T.h"
+#include "header/model/lcc_hvdc2t_model/lcc_hvdc2t_model_test.h"
 #include "header/STEPS.h"
 using namespace std;
 
-class CDC4T_TEST : public HVDC_MODEL_TEST
+class CDC6T_TEST : public LCC_HVDC2T_MODEL_TEST
 {
     public:
-        CDC4T_TEST();
+        CDC6T_TEST();
     protected:
         virtual void setup();
         virtual void tear_down();
@@ -32,4 +32,4 @@ class CDC4T_TEST : public HVDC_MODEL_TEST
 
 };
 
-#endif//CDC4T_TEST_H
+#endif//CDC6T_TEST_H

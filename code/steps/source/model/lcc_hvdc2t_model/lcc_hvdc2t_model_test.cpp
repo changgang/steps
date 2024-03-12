@@ -1,25 +1,25 @@
 #include "header/basic/test_macro.h"
-#include "header/model/hvdc_model/hvdc_model_test.h"
+#include "header/model/lcc_hvdc2t_model/lcc_hvdc2t_model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
-#include "header/model/hvdc_model/CDC4T.h"
+#include "header/model/lcc_hvdc2t_model/CDC4T.h"
 
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
-HVDC_MODEL_TEST::HVDC_MODEL_TEST()
+LCC_HVDC2T_MODEL_TEST::LCC_HVDC2T_MODEL_TEST()
 {
-    TEST_ADD(HVDC_MODEL_TEST::test_initialize);
-    TEST_ADD(HVDC_MODEL_TEST::test_rectifier_voltage_ramp_response);
-    TEST_ADD(HVDC_MODEL_TEST::test_inverter_voltage_ramp_response);
-    TEST_ADD(HVDC_MODEL_TEST::test_manual_block_and_unblock);
-    TEST_ADD(HVDC_MODEL_TEST::test_manual_bypass_and_unbypass);
-    TEST_ADD(HVDC_MODEL_TEST::test_get_standard_psse_string);
+    TEST_ADD(LCC_HVDC2T_MODEL_TEST::test_initialize);
+    TEST_ADD(LCC_HVDC2T_MODEL_TEST::test_rectifier_voltage_ramp_response);
+    TEST_ADD(LCC_HVDC2T_MODEL_TEST::test_inverter_voltage_ramp_response);
+    TEST_ADD(LCC_HVDC2T_MODEL_TEST::test_manual_block_and_unblock);
+    TEST_ADD(LCC_HVDC2T_MODEL_TEST::test_manual_bypass_and_unbypass);
+    TEST_ADD(LCC_HVDC2T_MODEL_TEST::test_get_standard_psse_string);
 }
 
 
 
-void HVDC_MODEL_TEST::setup()
+void LCC_HVDC2T_MODEL_TEST::setup()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100);
@@ -81,12 +81,12 @@ void HVDC_MODEL_TEST::setup()
 
     psdb.append_2t_lcc_hvdc(hvdc);
 
-    LCC_HVDC2T* hvdcptr = get_test_hvdc();
+    LCC_HVDC2T* hvdcptr = get_test_2t_lcc_hvdc();
     hvdcptr->solve_steady_state();
     hvdcptr->show_solved_steady_state();
 }
 
-void HVDC_MODEL_TEST::tear_down()
+void LCC_HVDC2T_MODEL_TEST::tear_down()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.clear();
@@ -94,7 +94,7 @@ void HVDC_MODEL_TEST::tear_down()
     show_test_end_information();
 }
 
-LCC_HVDC2T* HVDC_MODEL_TEST::get_test_hvdc()
+LCC_HVDC2T* LCC_HVDC2T_MODEL_TEST::get_test_2t_lcc_hvdc()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
@@ -109,29 +109,29 @@ LCC_HVDC2T* HVDC_MODEL_TEST::get_test_hvdc()
     return psdb.get_2t_lcc_hvdc(did);
 }
 
-HVDC_MODEL* HVDC_MODEL_TEST::get_test_hvdc_model()
+LCC_HVDC2T_MODEL* LCC_HVDC2T_MODEL_TEST::get_test_2t_lcc_hvdc_model()
 {
-    LCC_HVDC2T* hvdc = get_test_hvdc();
+    LCC_HVDC2T* hvdc = get_test_2t_lcc_hvdc();
     if(hvdc==NULL)
         return NULL;
     else
-        return hvdc->get_hvdc_model();
+        return hvdc->get_2t_lcc_hvdc_model();
 }
 
-void HVDC_MODEL_TEST::export_meter_titles()
+void LCC_HVDC2T_MODEL_TEST::export_meter_titles()
 {
     ostringstream osstream;
     osstream<<"TIME\tVOLT_REC\tVOLT_INV\tP_REC\tQ_REC\tALPHA\tMU_REC\tP_INV\tQ_INV\tGAMMA\tMU_INV\tVDCR\tVDCI\tIDCR\tIDCR"<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-void HVDC_MODEL_TEST::export_meter_values(double time)
+void LCC_HVDC2T_MODEL_TEST::export_meter_values(double time)
 {
     ostringstream osstream;
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    LCC_HVDC2T* hvdc = get_test_hvdc();
-    HVDC_MODEL* model = hvdc->get_hvdc_model();
+    LCC_HVDC2T* hvdc = get_test_2t_lcc_hvdc();
+    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
 
     double volt_rec, volt_inv;
     double p_rec, q_rec, alpha, mu_rec, p_inv, q_inv, gamma, mu_inv;
@@ -177,13 +177,13 @@ void HVDC_MODEL_TEST::export_meter_values(double time)
 }
 
 
-void HVDC_MODEL_TEST::test_initialize()
+void LCC_HVDC2T_MODEL_TEST::test_initialize()
 {
 
     ostringstream osstream;
 
-    LCC_HVDC2T* hvdcptr = get_test_hvdc();
-    HVDC_MODEL* model = get_test_hvdc_model();
+    LCC_HVDC2T* hvdcptr = get_test_2t_lcc_hvdc();
+    LCC_HVDC2T_MODEL* model = get_test_2t_lcc_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
     default_toolkit.open_log_file("test_log/test_initialize_"+model->get_model_name()+".txt");
@@ -202,13 +202,13 @@ void HVDC_MODEL_TEST::test_initialize()
     default_toolkit.close_log_file();
 }
 
-void HVDC_MODEL_TEST::test_rectifier_voltage_ramp_response()
+void LCC_HVDC2T_MODEL_TEST::test_rectifier_voltage_ramp_response()
 {
     ostringstream osstream;
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    LCC_HVDC2T* hvdcptr = get_test_hvdc();
-    HVDC_MODEL* model = get_test_hvdc_model();
+    LCC_HVDC2T* hvdcptr = get_test_2t_lcc_hvdc();
+    LCC_HVDC2T_MODEL* model = get_test_2t_lcc_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
     default_toolkit.open_log_file("test_log/test_rectifier_voltage_ramp_response_"+model->get_model_name()+".txt");
@@ -369,13 +369,13 @@ void HVDC_MODEL_TEST::test_rectifier_voltage_ramp_response()
 }
 
 
-void HVDC_MODEL_TEST::test_inverter_voltage_ramp_response()
+void LCC_HVDC2T_MODEL_TEST::test_inverter_voltage_ramp_response()
 {
     ostringstream osstream;
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    LCC_HVDC2T* hvdcptr = get_test_hvdc();
-    HVDC_MODEL* model = get_test_hvdc_model();
+    LCC_HVDC2T* hvdcptr = get_test_2t_lcc_hvdc();
+    LCC_HVDC2T_MODEL* model = get_test_2t_lcc_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
     default_toolkit.open_log_file("test_log/test_inverter_voltage_ramp_response_"+model->get_model_name()+".txt");
@@ -535,12 +535,12 @@ void HVDC_MODEL_TEST::test_inverter_voltage_ramp_response()
 }
 
 
-void HVDC_MODEL_TEST::test_manual_block_and_unblock()
+void LCC_HVDC2T_MODEL_TEST::test_manual_block_and_unblock()
 {
     ostringstream osstream;
 
-    LCC_HVDC2T* hvdcptr = get_test_hvdc();
-    HVDC_MODEL* model = get_test_hvdc_model();
+    LCC_HVDC2T* hvdcptr = get_test_2t_lcc_hvdc();
+    LCC_HVDC2T_MODEL* model = get_test_2t_lcc_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
     default_toolkit.open_log_file("test_log/test_manual_block_and_unblock_"+model->get_model_name()+".txt");
@@ -587,7 +587,7 @@ void HVDC_MODEL_TEST::test_manual_block_and_unblock()
     }
 
     //cout<<"now go blocking LCC_HVDC2T manually"<<endl;
-    model->manual_block_hvdc();
+    model->manual_block_2t_lcc_hvdc();
     //cout<<"now successfully blocked LCC_HVDC2T manually"<<endl;
     model->run(UPDATE_MODE);
     export_meter_values(TIME);
@@ -617,7 +617,7 @@ void HVDC_MODEL_TEST::test_manual_block_and_unblock()
 
         export_meter_values(TIME);
     }
-    model->manual_unblock_hvdc();
+    model->manual_unblock_2t_lcc_hvdc();
     model->run(UPDATE_MODE);
     export_meter_values(TIME);
 
@@ -650,12 +650,12 @@ void HVDC_MODEL_TEST::test_manual_block_and_unblock()
     default_toolkit.close_log_file();
 }
 
-void HVDC_MODEL_TEST::test_manual_bypass_and_unbypass()
+void LCC_HVDC2T_MODEL_TEST::test_manual_bypass_and_unbypass()
 {
     ostringstream osstream;
 
-    LCC_HVDC2T* hvdcptr = get_test_hvdc();
-    HVDC_MODEL* model = get_test_hvdc_model();
+    LCC_HVDC2T* hvdcptr = get_test_2t_lcc_hvdc();
+    LCC_HVDC2T_MODEL* model = get_test_2t_lcc_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
     default_toolkit.open_log_file("test_log/test_manual_bypass_and_unbypass_"+model->get_model_name()+".txt");
@@ -701,7 +701,7 @@ void HVDC_MODEL_TEST::test_manual_bypass_and_unbypass()
         export_meter_values(TIME);
     }
 
-    model->manual_bypass_hvdc();
+    model->manual_bypass_2t_lcc_hvdc();
     model->run(UPDATE_MODE);
     export_meter_values(TIME);
 
@@ -730,7 +730,7 @@ void HVDC_MODEL_TEST::test_manual_bypass_and_unbypass()
 
         export_meter_values(TIME);
     }
-    model->manual_unbypass_hvdc();
+    model->manual_unbypass_2t_lcc_hvdc();
     model->run(UPDATE_MODE);
     export_meter_values(TIME);
 
@@ -763,11 +763,11 @@ void HVDC_MODEL_TEST::test_manual_bypass_and_unbypass()
     default_toolkit.close_log_file();
 }
 
-void HVDC_MODEL_TEST::test_get_standard_psse_string()
+void LCC_HVDC2T_MODEL_TEST::test_get_standard_psse_string()
 {
     ostringstream osstream;
 
-    HVDC_MODEL* model = get_test_hvdc_model();
+    LCC_HVDC2T_MODEL* model = get_test_2t_lcc_hvdc_model();
 
     default_toolkit.open_log_file("test_log/test_get_standard_psse_string_"+model->get_model_name()+".txt");
 
@@ -777,9 +777,9 @@ void HVDC_MODEL_TEST::test_get_standard_psse_string()
     default_toolkit.close_log_file();
 }
 
-void HVDC_MODEL_TEST::test_get_auxiliary_signal()
+void LCC_HVDC2T_MODEL_TEST::test_get_auxiliary_signal()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_MODEL_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_MODEL_TEST");
 }
 
 #endif

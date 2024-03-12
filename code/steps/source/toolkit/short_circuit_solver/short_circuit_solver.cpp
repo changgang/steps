@@ -193,7 +193,7 @@ void SHORT_CIRCUIT_SOLVER::update_node_voltages_with_devices_equivalent_to_sourc
     add_pv_units_to_injection_current_vector();
     add_energy_storages_to_injection_current_vector();
     add_motor_load_to_injection_vector();
-    add_hvdcs_to_injection_current_vector();
+    add_2t_lcc_hvdcs_to_injection_current_vector();
     add_vsc_hvdcs_to_injection_current_vector();
 
     update_voltages_with_current_vector();
@@ -461,7 +461,7 @@ void SHORT_CIRCUIT_SOLVER::add_motor_load_to_injection_vector()
     }
 }
 
-void SHORT_CIRCUIT_SOLVER::add_hvdcs_to_injection_current_vector()
+void SHORT_CIRCUIT_SOLVER::add_2t_lcc_hvdcs_to_injection_current_vector()
 {
     ;
 }
@@ -1186,7 +1186,7 @@ void SHORT_CIRCUIT_SOLVER::solve_with_iteration()
         add_pv_units_to_injection_current_vector_for_iterative_method();
         add_energy_storages_to_injection_current_vector();
         add_motor_load_to_injection_vector();
-        add_hvdcs_to_injection_current_vector();
+        add_2t_lcc_hvdcs_to_injection_current_vector();
         add_vsc_hvdcs_to_injection_current_vector();
 
         update_voltages_with_current_vector();

@@ -122,7 +122,7 @@ void api_add_hvdc(unsigned int rectifier_bus_number, unsigned int inverter_bus_n
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    DEVICE_ID did = get_hvdc_device_id(rectifier_bus_number, inverter_bus_number, identifier);
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id(rectifier_bus_number, inverter_bus_number, identifier);
 
     if(not psdb.is_2t_lcc_hvdc_exist(did))
     {

@@ -1,13 +1,13 @@
 #ifndef CDC4T_H
 #define CDC4T_H
 
-#include "header/model/hvdc_model/hvdc_model.h"
+#include "header/model/lcc_hvdc2t_model/lcc_hvdc2t_model.h"
 #include "header/block/first_order_block.h"
 #include "header/block/differential_block.h"
 #include "header/block/integral_block.h"
 #include "header/block/saturation_block.h"
 
-class CDC4T: public HVDC_MODEL
+class CDC4T: public LCC_HVDC2T_MODEL
 {
     public:
         CDC4T(STEPS& toolkit);
@@ -47,7 +47,7 @@ class CDC4T: public HVDC_MODEL
         virtual void check_blocking_logic();
         virtual void check_bypassing_logic();
         virtual void check_mode_switching_logic();
-        virtual void solve_hvdc_model_without_integration();
+        virtual void solve_2t_lcc_hvdc_model_without_integration();
         virtual void check();
         virtual void clear();
         virtual void report();

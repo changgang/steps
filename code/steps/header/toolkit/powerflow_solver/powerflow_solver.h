@@ -120,7 +120,7 @@ class POWERFLOW_SOLVER
 
         void add_source_to_bus_power_mismatch();
         void add_load_to_bus_power_mismatch();
-        void add_hvdc_to_bus_power_mismatch();
+        void add_2t_lcc_hvdc_to_bus_power_mismatch();
         void add_vsc_hvdc_to_bus_power_mismatch();
         void add_generator_to_bus_power_mismatch();
         void add_wt_generator_to_bus_power_mismatch();

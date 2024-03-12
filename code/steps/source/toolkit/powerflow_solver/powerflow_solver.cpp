@@ -1173,7 +1173,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
         }
     }
 
-    add_hvdc_to_bus_power_mismatch();
+    add_2t_lcc_hvdc_to_bus_power_mismatch();
     if(toolkit->is_detailed_log_enabled())
     {
         for(unsigned int i=0; i!=nbus; ++i)
@@ -1405,7 +1405,7 @@ void POWERFLOW_SOLVER::add_load_to_bus_power_mismatch()
     }
 }
 
-void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
+void POWERFLOW_SOLVER::add_2t_lcc_hvdc_to_bus_power_mismatch()
 {
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 

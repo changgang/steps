@@ -345,7 +345,7 @@ void api_prepare_hvdc_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    ds.prepare_hvdc_related_meters();
+    ds.prepare_2t_lcc_hvdc_related_meters();
 }
 
 void api_prepare_vsc_hvdc_related_meters(unsigned int toolkit_index)
@@ -429,8 +429,8 @@ void api_prepare_hvdc_related_meter(unsigned int ibus, unsigned int jbus, char* 
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    DEVICE_ID did = get_hvdc_device_id(ibus, jbus, id);
-    ds.prepare_hvdc_related_meter(did, meter_type, side, var_name);
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, id);
+    ds.prepare_2t_lcc_hvdc_related_meter(did, meter_type, side, var_name);
 }
 
 void api_prepare_vsc_hvdc_related_meter(char* vsc_name, char* meter_type, unsigned int side, char* var_name, unsigned int toolkit_index)
@@ -948,7 +948,7 @@ void api_manually_bypass_hvdc(unsigned int ibus, unsigned int jbus, char* identi
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
 
     if(not psdb.is_2t_lcc_hvdc_exist(did))
     {
@@ -959,7 +959,7 @@ void api_manually_bypass_hvdc(unsigned int ibus, unsigned int jbus, char* identi
         return;
     }
 
-    ds.manual_bypass_hvdc(did);
+    ds.manual_bypass_2t_lcc_hvdc(did);
 }
 
 void api_manually_unbypass_hvdc(unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index)
@@ -968,7 +968,7 @@ void api_manually_unbypass_hvdc(unsigned int ibus, unsigned int jbus, char* iden
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
 
     if(not psdb.is_2t_lcc_hvdc_exist(did))
     {
@@ -979,7 +979,7 @@ void api_manually_unbypass_hvdc(unsigned int ibus, unsigned int jbus, char* iden
         return;
     }
 
-    ds.manual_unbypass_hvdc(did);
+    ds.manual_unbypass_2t_lcc_hvdc(did);
 }
 
 void api_manually_block_hvdc(unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index)
@@ -988,7 +988,7 @@ void api_manually_block_hvdc(unsigned int ibus, unsigned int jbus, char* identif
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
 
     if(not psdb.is_2t_lcc_hvdc_exist(did))
     {
@@ -998,7 +998,7 @@ void api_manually_block_hvdc(unsigned int ibus, unsigned int jbus, char* identif
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
-    ds.manual_block_hvdc(did);
+    ds.manual_block_2t_lcc_hvdc(did);
 }
 
 void api_manually_unblock_hvdc(unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index)
@@ -1007,7 +1007,7 @@ void api_manually_unblock_hvdc(unsigned int ibus, unsigned int jbus, char* ident
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
 
     if(not psdb.is_2t_lcc_hvdc_exist(did))
     {
@@ -1017,7 +1017,7 @@ void api_manually_unblock_hvdc(unsigned int ibus, unsigned int jbus, char* ident
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
     }
-    ds.manual_unblock_hvdc(did);
+    ds.manual_unblock_2t_lcc_hvdc(did);
 }
 
 double api_get_generator_voltage_reference_in_pu(unsigned int bus, char* identifier, unsigned int toolkit_index)
@@ -1120,16 +1120,16 @@ double api_get_hvdc_power_order_in_MW(unsigned int ibus, unsigned int jbus, char
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
-    return ds.get_hvdc_power_order_in_MW(did);
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
+    return ds.get_2t_lcc_hvdc_power_order_in_MW(did);
 }
 
 void api_set_hvdc_power_order_in_MW(unsigned int ibus, unsigned int jbus, char* identifier, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
-    ds.change_hvdc_power_order_in_MW(did, value);
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
+    ds.change_2t_lcc_hvdc_power_order_in_MW(did, value);
 }
 
 

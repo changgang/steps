@@ -8,7 +8,7 @@
 
 #include "header/model/load_relay_model/load_relay_models.h"
 
-#include "header/model/hvdc_model/hvdc_models.h"
+#include "header/model/lcc_hvdc2t_model/lcc_hvdc2t_models.h"
 
 #include "header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_models.h"
 #include "header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_models.h"

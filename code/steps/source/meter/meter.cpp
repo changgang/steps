@@ -436,7 +436,7 @@ bool METER::is_internal_variable_name_valid(string& name, unsigned int index) co
         {
             LCC_HVDC2T* ptr = (LCC_HVDC2T*)get_device_pointer();
             if(meter_type=="2T LCC HVDC MODEL INTERNAL VARIABLE")
-                model = ptr->get_hvdc_model();
+                model = ptr->get_2t_lcc_hvdc_model();
         }
         if(device_type==STEPS_VSC_HVDC)
         {
@@ -822,7 +822,7 @@ double METER::get_meter_value() const
             case STEPS_ENERGY_STORAGE:
                 return get_meter_value_as_an_energy_storage();
             case STEPS_LCC_HVDC2T:
-                return get_meter_value_as_an_hvdc();
+                return get_meter_value_as_a_2t_lcc_hvdc();
             case STEPS_VSC_HVDC:
                 return get_meter_value_as_a_vsc_hvdc();
             case STEPS_EQUIVALENT_DEVICE:
@@ -2164,7 +2164,7 @@ double METER::get_meter_value_as_a_pv_unit() const
         return 0.0;
 }
 
-double METER::get_meter_value_as_an_hvdc() const
+double METER::get_meter_value_as_a_2t_lcc_hvdc() const
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) get_device_pointer();
     if(hvdc != NULL)
@@ -2172,7 +2172,7 @@ double METER::get_meter_value_as_an_hvdc() const
         if(hvdc->get_status()==true)
         {
             string meter_type = get_meter_type();
-            HVDC_MODEL* hvdc_model = hvdc->get_hvdc_model();
+            LCC_HVDC2T_MODEL* hvdc_model = hvdc->get_2t_lcc_hvdc_model();
             if(hvdc_model != NULL)
             {
                 if(meter_type=="DC CURRENT IN KA")

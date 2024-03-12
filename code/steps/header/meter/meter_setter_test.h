@@ -35,7 +35,7 @@ class METER_SETTER_TEST : public Test::Suite
         void test_prepare_wt_generator_related_meters();
         void test_prepare_pv_unit_related_meters();
         void test_prepare_energy_storage_related_meters();
-        void test_prepare_hvdc_related_meters();
+        void test_prepare_2t_lcc_hvdc_related_meters();
         void test_prepare_vsc_hvdc_related_meters();
         void test_prepare_equivalent_device_related_meters();
     private:

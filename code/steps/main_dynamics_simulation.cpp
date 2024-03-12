@@ -173,8 +173,8 @@ int main()
     */
 
     /*DEVICE_ID did;
-    did = get_hvdc_device_id(57,201,"ZaQingDi");
-    simulator.manual_block_hvdc(did);*/
+    did = get_2t_lcc_hvdc_device_id(57,201,"ZaQingDi");
+    simulator.manual_block_2t_lcc_hvdc(did);*/
     //simulator.run_to(5);
 
 

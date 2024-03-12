@@ -5,7 +5,7 @@
 #include "header/device/lcc_station.h"
 #include "header/basic/device_id.h"
 #include "header/basic/steps_enum.h"
-#include "header/model/hvdc_model/hvdc_model.h"
+#include "header/model/lcc_hvdc2t_model/lcc_hvdc2t_model.h"
 #include "header/model/auxiliary_signal_model/auxiliary_signal_model.h"
 
 #include <complex>

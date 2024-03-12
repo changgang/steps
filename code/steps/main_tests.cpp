@@ -42,7 +42,7 @@
 #include "header/device/line_test.h"
 #include "header/device/transformer_test.h"
 #include "header/device/fixed_shunt_test.h"
-#include "header/device/hvdc_test.h"
+#include "header/device/lcc_hvdc2t_test.h"
 #include "header/device/vsc_hvdc_test.h"
 #include "header/device/equivalent_device_test.h"
 #include "header/device/engergy_storage_test.h"
@@ -126,9 +126,9 @@
 #include "header/model/load_relay_model/UFLS_test.h"
 #include "header/model/load_relay_model/PUFLS_test.h"
 
-#include "header/model/hvdc_model/vdcol_test.h"
-#include "header/model/hvdc_model/CDC4T_test.h"
-#include "header/model/hvdc_model/CDC6T_test.h"
+#include "header/model/lcc_hvdc2t_model/vdcol_test.h"
+#include "header/model/lcc_hvdc2t_model/CDC4T_test.h"
+#include "header/model/lcc_hvdc2t_model/CDC6T_test.h"
 
 #include "header/model/converter_common_models/source_converter_model/gfrmc_model/vsg_model/vsg0_test.h"
 #include "header/model/converter_common_models/vrt_model/lvrt_control_test.h"

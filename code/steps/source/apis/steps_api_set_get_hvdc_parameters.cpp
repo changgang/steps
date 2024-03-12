@@ -8,7 +8,7 @@
 int api_get_hvdc_integer_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -63,7 +63,7 @@ int api_get_hvdc_integer_data(unsigned int ibus, unsigned int jbus, char* identi
 void api_set_hvdc_integer_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, int value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -118,7 +118,7 @@ void api_set_hvdc_integer_data(unsigned int ibus, unsigned int jbus, char* ident
 double api_get_hvdc_float_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -279,7 +279,7 @@ double api_get_hvdc_float_data(unsigned int ibus, unsigned int jbus, char* ident
 void api_set_hvdc_float_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -417,7 +417,7 @@ void api_set_hvdc_float_data(unsigned int ibus, unsigned int jbus, char* identif
 const char* api_get_hvdc_string_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -461,7 +461,7 @@ const char* api_get_hvdc_string_data(unsigned int ibus, unsigned int jbus, char*
 void api_set_hvdc_string_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, char* value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -494,7 +494,7 @@ void api_set_hvdc_string_data(unsigned int ibus, unsigned int jbus, char* identi
 bool api_get_hvdc_boolean_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -526,7 +526,7 @@ bool api_get_hvdc_boolean_data(unsigned int ibus, unsigned int jbus, char* ident
 void api_set_hvdc_boolean_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, bool value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 

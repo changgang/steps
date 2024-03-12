@@ -1,4 +1,4 @@
-#include "header/model/hvdc_model/vdcol.h"
+#include "header/model/lcc_hvdc2t_model/vdcol.h"
 #include "header/basic/utility.h"
 #include "header/STEPS.h"
 #include <cstdio>

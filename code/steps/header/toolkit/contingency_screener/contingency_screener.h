@@ -19,7 +19,7 @@ class CONTINGENCY_SCREENER
         void scan_N_k_line_fault(unsigned int k);
         void scan_N_k_line_trip(unsigned int k);
         void scan_N_k_generator_trip(unsigned int k);
-        void scan_N_k_hvdc_block(unsigned int k);
+        void scan_N_k_lcc_hvdc2t_block(unsigned int k);
 
 
         void scan_line_fault(FAULT fault, double flocation, double clearing_time, bool trip_after_clear);

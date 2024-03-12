@@ -4775,7 +4775,7 @@ void POWER_SYSTEM_DATABASE::check_2t_lcc_hvdc_related_dynamic_data()
     {
         hvdc = hvdcs[i];
 
-        HVDC_MODEL* hvdcmodel = hvdc->get_hvdc_model();
+        LCC_HVDC2T_MODEL* hvdcmodel = hvdc->get_2t_lcc_hvdc_model();
         if(hvdcmodel!=NULL)
             hvdcmodel->check();
     }
@@ -5127,7 +5127,7 @@ void POWER_SYSTEM_DATABASE::check_missing_2t_lcc_hvdc_related_model()
     {
         hvdc = hvdcs[i];
 
-        HVDC_MODEL* hvdcmodel = hvdc->get_hvdc_model();
+        LCC_HVDC2T_MODEL* hvdcmodel = hvdc->get_2t_lcc_hvdc_model();
         if(hvdcmodel==NULL)
         {
             osstream<<hvdc->get_compound_device_name()<<" ["<<bus_number2bus_name(hvdc->get_converter_bus(RECTIFIER))<<" -- "<<bus_number2bus_name(hvdc->get_converter_bus(INVERTER))<<"]";

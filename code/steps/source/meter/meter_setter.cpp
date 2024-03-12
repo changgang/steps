@@ -1946,7 +1946,7 @@ METER METER_SETTER::prepare_energy_storage_model_internal_variable_meter(const D
 
 
 
-bool METER_SETTER::prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
+bool METER_SETTER::prepare_2t_lcc_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
 {
     bool successful = false;
 
@@ -2008,11 +2008,11 @@ bool METER_SETTER::prepare_vsc_hvdc_meter(METER& meter, const DEVICE_ID& device_
     return successful;
 }
 
-METER METER_SETTER::prepare_hvdc_dc_current_in_kA_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_2t_lcc_hvdc_dc_current_in_kA_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
         meter.set_meter_type("DC CURRENT IN KA");
@@ -2020,11 +2020,11 @@ METER METER_SETTER::prepare_hvdc_dc_current_in_kA_meter(const DEVICE_ID& device_
     return meter;
 }
 
-METER METER_SETTER::prepare_hvdc_rectifier_dc_current_in_kA_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_2t_lcc_hvdc_rectifier_dc_current_in_kA_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
         meter.set_meter_type("RECTIFIER DC CURRENT IN KA");
@@ -2032,11 +2032,11 @@ METER METER_SETTER::prepare_hvdc_rectifier_dc_current_in_kA_meter(const DEVICE_I
     return meter;
 }
 
-METER METER_SETTER::prepare_hvdc_inverter_dc_current_in_kA_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_2t_lcc_hvdc_inverter_dc_current_in_kA_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
         meter.set_meter_type("INVERTER DC CURRENT IN KA");
@@ -2044,11 +2044,11 @@ METER METER_SETTER::prepare_hvdc_inverter_dc_current_in_kA_meter(const DEVICE_ID
     return meter;
 }
 
-METER METER_SETTER::prepare_hvdc_rectifier_dc_voltage_in_kV_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_2t_lcc_hvdc_rectifier_dc_voltage_in_kV_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
         meter.set_meter_type("RECTIFIER DC VOLTAGE IN KV");
@@ -2056,11 +2056,11 @@ METER METER_SETTER::prepare_hvdc_rectifier_dc_voltage_in_kV_meter(const DEVICE_I
     return meter;
 }
 
-METER METER_SETTER::prepare_hvdc_rectifier_ac_voltage_in_pu_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_2t_lcc_hvdc_rectifier_ac_voltage_in_pu_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
         meter.set_meter_type("RECTIFIER AC VOLTAGE IN PU");
@@ -2068,11 +2068,11 @@ METER METER_SETTER::prepare_hvdc_rectifier_ac_voltage_in_pu_meter(const DEVICE_I
     return meter;
 }
 
-METER METER_SETTER::prepare_hvdc_rectifier_alpha_in_deg_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_2t_lcc_hvdc_rectifier_alpha_in_deg_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
         meter.set_meter_type("RECTIFIER ALPHA IN DEG");
@@ -2080,11 +2080,11 @@ METER METER_SETTER::prepare_hvdc_rectifier_alpha_in_deg_meter(const DEVICE_ID& d
     return meter;
 }
 
-METER METER_SETTER::prepare_hvdc_rectifier_mu_in_deg_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_2t_lcc_hvdc_rectifier_mu_in_deg_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
         meter.set_meter_type("RECTIFIER MU IN DEG");
@@ -2092,11 +2092,11 @@ METER METER_SETTER::prepare_hvdc_rectifier_mu_in_deg_meter(const DEVICE_ID& devi
     return meter;
 }
 
-METER METER_SETTER::prepare_hvdc_rectifier_dc_power_in_MW_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_2t_lcc_hvdc_rectifier_dc_power_in_MW_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
         meter.set_meter_type("RECTIFIER DC POWER IN MW");
@@ -2104,11 +2104,11 @@ METER METER_SETTER::prepare_hvdc_rectifier_dc_power_in_MW_meter(const DEVICE_ID&
     return meter;
 }
 
-METER METER_SETTER::prepare_hvdc_rectifier_ac_active_power_in_MW_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_2t_lcc_hvdc_rectifier_ac_active_power_in_MW_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
         meter.set_meter_type("RECTIFIER AC ACTIVE POWER IN MW");
@@ -2116,11 +2116,11 @@ METER METER_SETTER::prepare_hvdc_rectifier_ac_active_power_in_MW_meter(const DEV
     return meter;
 }
 
-METER METER_SETTER::prepare_hvdc_rectifier_ac_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_2t_lcc_hvdc_rectifier_ac_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
         meter.set_meter_type("RECTIFIER AC REACTIVE POWER IN MVAR");
@@ -2128,11 +2128,11 @@ METER METER_SETTER::prepare_hvdc_rectifier_ac_reactive_power_in_MVar_meter(const
     return meter;
 }
 
-METER METER_SETTER::prepare_hvdc_rectifier_ac_current_in_kA_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_2t_lcc_hvdc_rectifier_ac_current_in_kA_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
         meter.set_meter_type("RECTIFIER AC CURRENT IN KA");
@@ -2140,11 +2140,11 @@ METER METER_SETTER::prepare_hvdc_rectifier_ac_current_in_kA_meter(const DEVICE_I
     return meter;
 }
 
-METER METER_SETTER::prepare_hvdc_inverter_dc_voltage_in_kV_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_2t_lcc_hvdc_inverter_dc_voltage_in_kV_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
         meter.set_meter_type("INVERTER DC VOLTAGE IN KV");
@@ -2152,11 +2152,11 @@ METER METER_SETTER::prepare_hvdc_inverter_dc_voltage_in_kV_meter(const DEVICE_ID
     return meter;
 }
 
-METER METER_SETTER::prepare_hvdc_inverter_ac_voltage_in_pu_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_2t_lcc_hvdc_inverter_ac_voltage_in_pu_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
         meter.set_meter_type("INVERTER AC VOLTAGE IN PU");
@@ -2164,11 +2164,11 @@ METER METER_SETTER::prepare_hvdc_inverter_ac_voltage_in_pu_meter(const DEVICE_ID
     return meter;
 }
 
-METER METER_SETTER::prepare_hvdc_inverter_gamma_in_deg_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_2t_lcc_hvdc_inverter_gamma_in_deg_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
         meter.set_meter_type("INVERTER GAMMA IN DEG");
@@ -2176,11 +2176,11 @@ METER METER_SETTER::prepare_hvdc_inverter_gamma_in_deg_meter(const DEVICE_ID& de
     return meter;
 }
 
-METER METER_SETTER::prepare_hvdc_inverter_mu_in_deg_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_2t_lcc_hvdc_inverter_mu_in_deg_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
         meter.set_meter_type("INVERTER MU IN DEG");
@@ -2188,11 +2188,11 @@ METER METER_SETTER::prepare_hvdc_inverter_mu_in_deg_meter(const DEVICE_ID& devic
     return meter;
 }
 
-METER METER_SETTER::prepare_hvdc_inverter_dc_power_in_MW_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_2t_lcc_hvdc_inverter_dc_power_in_MW_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
         meter.set_meter_type("INVERTER DC POWER IN MW");
@@ -2200,11 +2200,11 @@ METER METER_SETTER::prepare_hvdc_inverter_dc_power_in_MW_meter(const DEVICE_ID& 
     return meter;
 }
 
-METER METER_SETTER::prepare_hvdc_inverter_ac_active_power_in_MW_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_2t_lcc_hvdc_inverter_ac_active_power_in_MW_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
         meter.set_meter_type("INVERTER AC ACTIVE POWER IN MW");
@@ -2212,11 +2212,11 @@ METER METER_SETTER::prepare_hvdc_inverter_ac_active_power_in_MW_meter(const DEVI
     return meter;
 }
 
-METER METER_SETTER::prepare_hvdc_inverter_ac_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_2t_lcc_hvdc_inverter_ac_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
         meter.set_meter_type("INVERTER AC REACTIVE POWER IN MVAR");
@@ -2224,11 +2224,11 @@ METER METER_SETTER::prepare_hvdc_inverter_ac_reactive_power_in_MVar_meter(const 
     return meter;
 }
 
-METER METER_SETTER::prepare_hvdc_inverter_ac_current_in_kA_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_2t_lcc_hvdc_inverter_ac_current_in_kA_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
         meter.set_meter_type("INVERTER AC CURRENT IN KA");
@@ -2236,11 +2236,11 @@ METER METER_SETTER::prepare_hvdc_inverter_ac_current_in_kA_meter(const DEVICE_ID
     return meter;
 }
 
-METER METER_SETTER::prepare_hvdc_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+METER METER_SETTER::prepare_2t_lcc_hvdc_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_hvdc_meter(meter, device_id);
+    bool successful = prepare_2t_lcc_hvdc_meter(meter, device_id);
 
     if(successful)
     {
