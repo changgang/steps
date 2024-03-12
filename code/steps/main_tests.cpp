@@ -39,7 +39,7 @@
 #include "header/device/wt_generator_test.h"
 #include "header/device/pv_unit_test.h"
 #include "header/device/load_test.h"
-#include "header/device/line_test.h"
+#include "header/device/ac_line_test.h"
 #include "header/device/transformer_test.h"
 #include "header/device/fixed_shunt_test.h"
 #include "header/device/lcc_hvdc2t_test.h"
@@ -249,7 +249,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new WT_GENERATOR_TEST));
         ts.add(unique_ptr<Test::Suite>(new PV_UNIT_TEST));
         ts.add(unique_ptr<Test::Suite>(new LOAD_TEST));
-        ts.add(unique_ptr<Test::Suite>(new LINE_TEST));
+        ts.add(unique_ptr<Test::Suite>(new AC_LINE_TEST));
         ts.add(unique_ptr<Test::Suite>(new TRANSFORMER_TEST));
         ts.add(unique_ptr<Test::Suite>(new FIXED_SHUNT_TEST));
 

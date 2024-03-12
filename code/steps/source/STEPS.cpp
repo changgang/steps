@@ -210,7 +210,7 @@ void STEPS::update_device_thread_number()
 
                 if(line_thread_number!=1)
                 {
-                    vector<LINE*> devices = psdb.get_lines_connecting_to_bus(bus_number);
+                    vector<AC_LINE*> devices = psdb.get_ac_lines_connecting_to_bus(bus_number);
                     if(devices.size()>1) line_thread_number = 1;
                 }
 
@@ -278,7 +278,7 @@ unsigned int STEPS::get_fixed_shunt_thread_number() const
     return fixed_shunt_thread_number;
 }
 
-unsigned int STEPS::get_line_thread_number() const
+unsigned int STEPS::get_ac_line_thread_number() const
 {
     return line_thread_number;
 }

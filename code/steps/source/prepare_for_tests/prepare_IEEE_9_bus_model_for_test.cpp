@@ -16,7 +16,7 @@ void prepare_IEEE_9_bus_model()
     prepare_IEEE_9_bus_model_buses();
     prepare_IEEE_9_bus_model_generators();
     prepare_IEEE_9_bus_model_loads();
-    prepare_IEEE_9_bus_model_lines();
+    prepare_IEEE_9_bus_model_ac_lines();
     prepare_IEEE_9_bus_model_transformers();
     prepare_IEEE_9_bus_model_areas();
     prepare_IEEE_9_bus_model_zones();
@@ -240,10 +240,10 @@ void prepare_IEEE_9_bus_model_loads()
 
     psdb.append_load(load);
 }
-void prepare_IEEE_9_bus_model_lines()
+void prepare_IEEE_9_bus_model_ac_lines()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    LINE line(default_toolkit);
+    AC_LINE line(default_toolkit);
 
     complex<double> z(0.0), y(0.0);
 
@@ -261,7 +261,7 @@ void prepare_IEEE_9_bus_model_lines()
     ownership.append_owner_and_its_fraction(1,1.0);
     line.set_ownership(ownership);
 
-    psdb.append_line(line);
+    psdb.append_ac_line(line);
 
     line.set_sending_side_bus(4);
     line.set_receiving_side_bus(6);
@@ -274,7 +274,7 @@ void prepare_IEEE_9_bus_model_lines()
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    psdb.append_line(line);
+    psdb.append_ac_line(line);
 
     line.set_sending_side_bus(5);
     line.set_receiving_side_bus(7);
@@ -287,7 +287,7 @@ void prepare_IEEE_9_bus_model_lines()
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    psdb.append_line(line);
+    psdb.append_ac_line(line);
 
     line.set_sending_side_bus(6);
     line.set_receiving_side_bus(9);
@@ -300,7 +300,7 @@ void prepare_IEEE_9_bus_model_lines()
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    psdb.append_line(line);
+    psdb.append_ac_line(line);
 
     line.set_sending_side_bus(7);
     line.set_receiving_side_bus(8);
@@ -313,7 +313,7 @@ void prepare_IEEE_9_bus_model_lines()
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    psdb.append_line(line);
+    psdb.append_ac_line(line);
 
     line.set_sending_side_bus(8);
     line.set_receiving_side_bus(9);
@@ -326,7 +326,7 @@ void prepare_IEEE_9_bus_model_lines()
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    psdb.append_line(line);
+    psdb.append_ac_line(line);
 }
 
 void prepare_IEEE_9_bus_model_transformers()

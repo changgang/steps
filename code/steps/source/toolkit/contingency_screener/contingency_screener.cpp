@@ -24,7 +24,7 @@ CONTINGENCY_SCREENER::CONTINGENCY_SCREENER()
     set_fault_time_in_s(0.0); // default value
     set_minimum_clearing_time_in_s(0.1); // default value
     set_maximum_clearing_time_in_s(1.5); // default value
-    set_flag_trip_line_after_clearing_fault(false);
+    set_flag_trip_ac_line_after_clearing_fault(false);
     set_simulation_time_span_in_s(5.0); // default value
     set_angle_difference_threshold_in_deg(170.0); // default value
 
@@ -95,9 +95,9 @@ void CONTINGENCY_SCREENER::set_maximum_clearing_time_in_s(double time)
     maximum_clearing_time = time;
 }
 
-void CONTINGENCY_SCREENER::set_flag_trip_line_after_clearing_fault(bool flag)
+void CONTINGENCY_SCREENER::set_flag_trip_ac_line_after_clearing_fault(bool flag)
 {
-    flag_trip_line_after_clearing_fault = flag;
+    flag_trip_ac_line_after_clearing_fault = flag;
 }
 
 void CONTINGENCY_SCREENER::set_simulation_time_span_in_s(double time)
@@ -178,9 +178,9 @@ double CONTINGENCY_SCREENER::get_maximum_clearing_time_in_s() const
     return maximum_clearing_time;
 }
 
-bool CONTINGENCY_SCREENER::get_flag_trip_line_after_clearing_fault() const
+bool CONTINGENCY_SCREENER::get_flag_trip_ac_line_after_clearing_fault() const
 {
-    return flag_trip_line_after_clearing_fault;
+    return flag_trip_ac_line_after_clearing_fault;
 }
 
 double CONTINGENCY_SCREENER::get_simulation_time_span_in_s() const
@@ -461,7 +461,7 @@ void CONTINGENCY_SCREENER::apply_fault(DYNAMICS_SIMULATOR& simulator)
     unsigned int bus = get_fault_side_bus();
     double location = get_fault_location_to_fault_side_bus_in_pu();
     complex<double> shunt = get_fault_shunt_in_pu();
-    simulator.set_line_fault(did, bus, location, shunt);
+    simulator.set_ac_line_fault(did, bus, location, shunt);
 }
 
 void CONTINGENCY_SCREENER::clear_fault(DYNAMICS_SIMULATOR& simulator)
@@ -469,11 +469,11 @@ void CONTINGENCY_SCREENER::clear_fault(DYNAMICS_SIMULATOR& simulator)
     DEVICE_ID did = get_fault_device();
     unsigned int bus = get_fault_side_bus();
     double location = get_fault_location_to_fault_side_bus_in_pu();
-    simulator.clear_line_fault(did, bus, location);
+    simulator.clear_ac_line_fault(did, bus, location);
 
-    double flag_trip = get_flag_trip_line_after_clearing_fault();
+    double flag_trip = get_flag_trip_ac_line_after_clearing_fault();
     if(flag_trip)
-        simulator.trip_line(did);
+        simulator.trip_ac_line(did);
 }
 
 bool CONTINGENCY_SCREENER::check_if_system_is_stable(DYNAMICS_SIMULATOR& simulator) const

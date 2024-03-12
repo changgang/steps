@@ -338,7 +338,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_full_Ne
     TEST_ASSERT(psdb.get_bus_count()==39);
     TEST_ASSERT(psdb.get_generator_count()==10);
     TEST_ASSERT(psdb.get_load_count()==19);
-    TEST_ASSERT(psdb.get_line_count()==34);
+    TEST_ASSERT(psdb.get_ac_line_count()==34);
     TEST_ASSERT(psdb.get_transformer_count()==12);
 
     powerflow_solver.set_max_iteration(20);
@@ -373,7 +373,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_full_Ne
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    LINE* line = psdb.get_line(did);
+    AC_LINE* line = psdb.get_ac_line(did);
 
     line->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.0000001));
     line->set_line_positive_sequence_y_in_pu(0.0);
@@ -384,7 +384,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_full_Ne
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    line = psdb.get_line(did);
+    line = psdb.get_ac_line(did);
 
     line->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.0000001));
     line->set_line_positive_sequence_y_in_pu(0.0);
@@ -551,7 +551,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_fast_de
     TEST_ASSERT(psdb.get_bus_count()==39);
     TEST_ASSERT(psdb.get_generator_count()==10);
     TEST_ASSERT(psdb.get_load_count()==19);
-    TEST_ASSERT(psdb.get_line_count()==34);
+    TEST_ASSERT(psdb.get_ac_line_count()==34);
     TEST_ASSERT(psdb.get_transformer_count()==12);
 
     powerflow_solver.set_max_iteration(20);
@@ -591,7 +591,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_fast_de
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    LINE* line = psdb.get_line(did);
+    AC_LINE* line = psdb.get_ac_line(did);
 
     line->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.0000001));
     line->set_line_positive_sequence_y_in_pu(0.0);
@@ -602,7 +602,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_fast_de
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    line = psdb.get_line(did);
+    line = psdb.get_ac_line(did);
     line->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.0000001));
     line->set_line_positive_sequence_y_in_pu(0.0);
 

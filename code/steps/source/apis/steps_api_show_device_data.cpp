@@ -72,12 +72,12 @@ void api_show_device_data(const char* device_type, unsigned int toolkit_index)
 
     if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="AC LINE")
     {
-        vector<LINE*> lines = psdb.get_all_lines();
+        vector<AC_LINE*> lines = psdb.get_all_ac_lines();
         unsigned int n = lines.size();
 
         for(unsigned int i=0; i!=n; ++i)
         {
-            LINE* lineptr = lines[i];
+            AC_LINE* lineptr = lines[i];
             lineptr->report();
         }
     }

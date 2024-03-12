@@ -6,7 +6,7 @@
 #include "header/device/fixed_shunt.h"
 #include "header/device/generator.h"
 #include "header/device/wt_generator.h"
-#include "header/device/line.h"
+#include "header/device/ac_line.h"
 #include "header/device/transformer.h"
 #include "header/steps_namespace.h"
 #include <cstdio>
@@ -68,7 +68,7 @@ void PSSE_IMEXPORTER::load_powerflow_data(string file)
             <<psdb.get_wt_generator_count()<<" WT generators\n"
             <<psdb.get_pv_unit_count()<<" PV units\n"
             <<psdb.get_energy_storage_count()<<" energy storages\n"
-            <<psdb.get_line_count()<<" lines\n"
+            <<psdb.get_ac_line_count()<<" lines\n"
             <<psdb.get_transformer_count()<<" transformers\n"
             <<psdb.get_fixed_shunt_count()<<" fixed shunts\n"
             <<psdb.get_2t_lcc_hvdc_count()<<" 2T LCC HVDCs\n"
@@ -122,7 +122,7 @@ void PSSE_IMEXPORTER::load_vsc_powerflow_data(string file)
             <<psdb.get_wt_generator_count()<<" WT generators\n"
             <<psdb.get_pv_unit_count()<<" PV units\n"
             <<psdb.get_energy_storage_count()<<" energy storages\n"
-            <<psdb.get_line_count()<<" lines\n"
+            <<psdb.get_ac_line_count()<<" lines\n"
             <<psdb.get_transformer_count()<<" transformers\n"
             <<psdb.get_fixed_shunt_count()<<" fixed shunts\n"
             <<psdb.get_2t_lcc_hvdc_count()<<" 2T LCC HVDCs\n"
@@ -285,7 +285,7 @@ vector<vector<vector<string> > >  PSSE_IMEXPORTER::convert_psse_raw_data2steps_v
     data.push_back(convert_load_data2steps_vector());
     data.push_back(convert_fixed_shunt_data2steps_vector());
     data.push_back(convert_source_data2steps_vector());
-    data.push_back(convert_line_data2steps_vector());
+    data.push_back(convert_ac_line_data2steps_vector());
     data.push_back(convert_transformer_data2steps_vector());
     data.push_back(convert_2t_lcc_hvdc_data2steps_vector());
     data.push_back(convert_area_data2steps_vector());
@@ -365,7 +365,7 @@ vector<vector<string> > PSSE_IMEXPORTER::convert_source_data2steps_vector() cons
      return source_lines;
 }
 
-vector<vector<string> > PSSE_IMEXPORTER::convert_line_data2steps_vector() const
+vector<vector<string> > PSSE_IMEXPORTER::convert_ac_line_data2steps_vector() const
 {
     return convert_i_th_type_data2steps_vector(6);
 }
@@ -464,7 +464,7 @@ void PSSE_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impeda
     ofs<<"0 / END OF FIXED SHUNT DATA, BEGIN GENERATOR DATA"<<endl;
     ofs<<export_all_source_data();
     ofs<<"0 / END OF GENERATOR DATA, BEGIN TRANSMISSION LINE DATA"<<endl;
-    ofs<<export_all_line_data();
+    ofs<<export_all_ac_line_data();
     ofs<<"0 / END OF TRANSMISSION LINE DATA, BEGIN TRANSFORMER DATA"<<endl;
     ofs<<export_all_transformer_data();
     ofs<<"0 / END OF TRANSFORMER DATA, BEGIN AREA DATA"<<endl;
@@ -1014,28 +1014,28 @@ string PSSE_IMEXPORTER::export_source_var_control_data(const SOURCE* source) con
     return osstream.str();
 }
 
-string PSSE_IMEXPORTER::export_all_line_data() const
+string PSSE_IMEXPORTER::export_all_ac_line_data() const
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    //vector<LINE*> lines = psdb.get_all_lines();
+    //vector<AC_LINE*> lines = psdb.get_all_ac_lines();
     //unsigned int n = lines.size();
 
-    vector<DEVICE_ID> dids = psdb.get_all_lines_device_id();
+    vector<DEVICE_ID> dids = psdb.get_all_ac_lines_device_id();
     sort(dids.begin(), dids.end());
-    vector<LINE*> lines;
+    vector<AC_LINE*> lines;
     unsigned int n = dids.size();
     for(unsigned int i=0; i!=n; ++i)
-        lines.push_back(psdb.get_line(dids[i]));
+        lines.push_back(psdb.get_ac_line(dids[i]));
 
     for(unsigned int i=0; i!=n; ++i)
-        osstream<<export_line_data(lines[i]);
+        osstream<<export_ac_line_data(lines[i]);
     return osstream.str();
 }
 
-string PSSE_IMEXPORTER::export_line_data(const LINE* line) const
+string PSSE_IMEXPORTER::export_ac_line_data(const AC_LINE* line) const
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();

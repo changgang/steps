@@ -552,7 +552,7 @@ void POWERFLOW_SOLVER::prepare_devices_for_solution()
 
     loads = psdb.get_all_loads();
 
-    lines = psdb.get_all_lines();
+    lines = psdb.get_all_ac_lines();
     transformers = psdb.get_all_transformers();
     hvdcs = psdb.get_all_2t_lcc_hvdcs();
     vsc_hvdcs = psdb.get_all_vsc_hvdcs();
@@ -2939,7 +2939,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
             }
         }
 
-        //vector<LINE*> lines = psdb.get_all_lines();
+        //vector<AC_LINE*> lines = psdb.get_all_ac_lines();
         unsigned int nline = lines.size();
         if(nline>0)
         {
@@ -3195,7 +3195,7 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(const string& file
             }
         }
 
-        //vector<LINE*> lines = psdb.get_all_lines();
+        //vector<AC_LINE*> lines = psdb.get_all_ac_lines();
         unsigned int nline = lines.size();
         if(nline>0)
         {
@@ -3425,7 +3425,7 @@ unsigned int POWERFLOW_SOLVER::get_memory_usage_in_bytes()
            pv_units.capacity()*sizeof(PV_UNIT*)+
            e_storages.capacity()*sizeof(ENERGY_STORAGE*)+
            loads.capacity()*sizeof(LOAD*)+
-           lines.capacity()*sizeof(LINE*)+
+           lines.capacity()*sizeof(AC_LINE*)+
            transformers.capacity()*sizeof(TRANSFORMER*)+
            hvdcs.capacity()*sizeof(LCC_HVDC2T*)+
            e_devices.capacity()*sizeof(EQUIVALENT_DEVICE*)+

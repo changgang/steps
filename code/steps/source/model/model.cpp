@@ -329,8 +329,8 @@ void MODEL::set_device_id(DEVICE_ID did)
         }
         /*if(device_type==STEPS_AC_LINE)
         {
-            sending_bus_pointer = ((LINE*) device_pointer)->get_sending_side_bus_pointer();
-            receiving_bus_pointer = ((LINE*) device_pointer)->get_receiving_side_bus_pointer();
+            sending_bus_pointer = ((AC_LINE*) device_pointer)->get_sending_side_bus_pointer();
+            receiving_bus_pointer = ((AC_LINE*) device_pointer)->get_receiving_side_bus_pointer();
             return;
         }
         if(device_type==STEPS_LCC_HVDC2T)

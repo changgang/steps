@@ -25,7 +25,7 @@ BPA_IMEXPORTER_TEST::BPA_IMEXPORTER_TEST() : importer(default_toolkit)
     TEST_ADD(BPA_IMEXPORTER_TEST::test_load_owner_data);
     TEST_ADD(BPA_IMEXPORTER_TEST::test_load_bus_data);
     TEST_ADD(BPA_IMEXPORTER_TEST::test_load_area_data);
-    TEST_ADD(BPA_IMEXPORTER_TEST::test_load_line_data);
+    TEST_ADD(BPA_IMEXPORTER_TEST::test_load_ac_line_data);
     TEST_ADD(BPA_IMEXPORTER_TEST::test_load_generator_data);
     TEST_ADD(BPA_IMEXPORTER_TEST::test_load_load_and_fixed_shunt_data);
     TEST_ADD(BPA_IMEXPORTER_TEST::test_load_transformer_data);
@@ -341,14 +341,14 @@ void BPA_IMEXPORTER_TEST::test_load_wt_generator_data()
     TEST_ASSERT(fabs(wt_generator->get_q_min_in_MVar()-(-1.475))<FLOAT_EPSILON);
 }
 
-void BPA_IMEXPORTER_TEST::test_load_line_data()
+void BPA_IMEXPORTER_TEST::test_load_ac_line_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
     ostringstream osstream;
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    vector<LINE*> lines = psdb.get_all_lines();
+    vector<AC_LINE*> lines = psdb.get_all_ac_lines();
 
     osstream<<"Line count: "<<lines.size()<<endl;
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
@@ -369,7 +369,7 @@ void BPA_IMEXPORTER_TEST::test_load_line_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    LINE* line = psdb.get_line(did);
+    AC_LINE* line = psdb.get_ac_line(did);
     TEST_ASSERT(line->get_sending_side_bus()==151);
     TEST_ASSERT(line->get_receiving_side_bus()==152);
     TEST_ASSERT(line->get_identifier()=="1");
@@ -386,7 +386,7 @@ void BPA_IMEXPORTER_TEST::test_load_line_data()
     terminal.append_bus(214);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    line = psdb.get_line(did);
+    line = psdb.get_ac_line(did);
     TEST_ASSERT(line->get_sending_side_bus()==213);
     TEST_ASSERT(line->get_receiving_side_bus()==214);
     TEST_ASSERT(line->get_identifier()=="1");
@@ -403,7 +403,7 @@ void BPA_IMEXPORTER_TEST::test_load_line_data()
     terminal.append_bus(3009);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    line = psdb.get_line(did);
+    line = psdb.get_ac_line(did);
     TEST_ASSERT(line->get_sending_side_bus()==3008);
     TEST_ASSERT(line->get_receiving_side_bus()==3009);
     TEST_ASSERT(line->get_identifier()=="1");

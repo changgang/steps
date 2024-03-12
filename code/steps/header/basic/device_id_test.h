@@ -39,7 +39,7 @@ class DEVICE_ID_TEST : public Test::Suite
 
         void test_constructor_and_get_device_type_equivalent_device();
 
-        void test_constructor_and_get_device_type_line();
+        void test_constructor_and_get_device_type_ac_line();
 
         void test_constructor_and_get_device_type_transformer();
 

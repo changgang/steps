@@ -70,7 +70,7 @@ void ARXL::set_output_line(DEVICE_ID did, unsigned int meter_side)
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LINE* line = psdb.get_line(did);
+    AC_LINE* line = psdb.get_ac_line(did);
     if(line==NULL)
     {
         osstream<<"Warning. "<<did.get_compound_device_name()<<" is not found in power system database when setting up ARXL model.";
@@ -91,10 +91,10 @@ void ARXL::set_output_line(DEVICE_ID did, unsigned int meter_side)
 
     METER meter(get_toolkit());
 
-    meter = setter.prepare_line_active_power_in_MW_meter(did, meter_side);
+    meter = setter.prepare_ac_line_active_power_in_MW_meter(did, meter_side);
     add_P_input_item(meter, 0, 0.0);
 
-    meter = setter.prepare_line_reactive_power_in_MVar_meter(did, meter_side);
+    meter = setter.prepare_ac_line_reactive_power_in_MVar_meter(did, meter_side);
     add_Q_input_item(meter, 0, 0.0);
 }
 
@@ -458,7 +458,7 @@ void ARXL::switch_output_to_equivalent_device()
 
     DEVICE_ID did = p_meters[0].get_device_id();
 
-    LINE* line = psdb.get_line(did);
+    AC_LINE* line = psdb.get_ac_line(did);
     unsigned int arxl_bus;
     //unsigned int other_bus;
     complex<double> arxl_power, other_power;
@@ -543,7 +543,7 @@ string ARXL::get_standard_psse_string(bool export_internal_bus_number) const
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = p_meters[0].get_device_id();
-    LINE* line = psdb.get_line(did);
+    AC_LINE* line = psdb.get_ac_line(did);
 
     unsigned int send_bus = line->get_sending_side_bus();
     unsigned int recv_bus = line->get_receiving_side_bus();
@@ -632,7 +632,7 @@ string ARXL::get_line_meter_string(const METER& meter) const
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = meter.get_device_id();
-    LINE* line = psdb.get_line(did);
+    AC_LINE* line = psdb.get_ac_line(did);
     data += num2str(line->get_sending_side_bus())+",";
     data += num2str(line->get_receiving_side_bus())+",";
     data += "\""+line->get_identifier()+"\",";

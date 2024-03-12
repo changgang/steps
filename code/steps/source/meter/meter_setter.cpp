@@ -193,7 +193,7 @@ METER METER_SETTER::prepare_bus_ROCOF_in_Hz_per_s_meter(unsigned int bus)
     return meter;
 }
 
-bool METER_SETTER::prepare_line_meter(METER& meter, const DEVICE_ID& device_id, unsigned int side_bus)
+bool METER_SETTER::prepare_ac_line_meter(METER& meter, const DEVICE_ID& device_id, unsigned int side_bus)
 {
     meter.clear();
 
@@ -211,7 +211,7 @@ bool METER_SETTER::prepare_line_meter(METER& meter, const DEVICE_ID& device_id, 
         return successful;
     }
 
-    if(not psdb.is_line_exist(device_id))
+    if(not psdb.is_ac_line_exist(device_id))
     {
         osstream<<"Warning. "<<device_id.get_compound_device_name()<<" does not exist in current power system database. "
           <<"No line meter will be added.";
@@ -221,7 +221,7 @@ bool METER_SETTER::prepare_line_meter(METER& meter, const DEVICE_ID& device_id, 
 
     meter.set_device_id(device_id);
 
-    LINE* lineptr = psdb.get_line(device_id);
+    AC_LINE* lineptr = psdb.get_ac_line(device_id);
 
     if(lineptr->is_connected_to_bus(side_bus))
         meter.set_meter_side_bus(side_bus);
@@ -238,22 +238,22 @@ bool METER_SETTER::prepare_line_meter(METER& meter, const DEVICE_ID& device_id, 
 }
 
 
-METER METER_SETTER::prepare_line_current_in_kA_meter(const DEVICE_ID& device_id, unsigned int side_bus)
+METER METER_SETTER::prepare_ac_line_current_in_kA_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_line_meter(meter, device_id, side_bus);
+    bool successful = prepare_ac_line_meter(meter, device_id, side_bus);
 
     if(successful)
         meter.set_meter_type("CURRENT IN KA");
     return meter;
 }
 
-METER METER_SETTER::prepare_line_active_power_in_MW_meter(const DEVICE_ID& device_id, unsigned int side_bus)
+METER METER_SETTER::prepare_ac_line_active_power_in_MW_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_line_meter(meter, device_id, side_bus);
+    bool successful = prepare_ac_line_meter(meter, device_id, side_bus);
 
     if(successful)
         meter.set_meter_type("ACTIVE POWER IN MW");
@@ -261,11 +261,11 @@ METER METER_SETTER::prepare_line_active_power_in_MW_meter(const DEVICE_ID& devic
     return meter;
 }
 
-METER METER_SETTER::prepare_line_reactive_power_in_MVar_meter(const DEVICE_ID& device_id, unsigned int side_bus)
+METER METER_SETTER::prepare_ac_line_reactive_power_in_MVar_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_line_meter(meter, device_id, side_bus);
+    bool successful = prepare_ac_line_meter(meter, device_id, side_bus);
 
     if(successful)
         meter.set_meter_type("REACTIVE POWER IN MVAR");
@@ -273,11 +273,11 @@ METER METER_SETTER::prepare_line_reactive_power_in_MVar_meter(const DEVICE_ID& d
     return meter;
 }
 
-METER METER_SETTER::prepare_line_apparent_impedance_in_Ohm_meter(const DEVICE_ID& device_id, unsigned int side_bus)
+METER METER_SETTER::prepare_ac_line_apparent_impedance_in_Ohm_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_line_meter(meter, device_id, side_bus);
+    bool successful = prepare_ac_line_meter(meter, device_id, side_bus);
 
     if(successful)
         meter.set_meter_type("APPARENT IMPEDANCE IN OHM");
@@ -285,11 +285,11 @@ METER METER_SETTER::prepare_line_apparent_impedance_in_Ohm_meter(const DEVICE_ID
     return meter;
 }
 
-METER METER_SETTER::prepare_line_apparent_impedance_angle_in_deg_meter(const DEVICE_ID& device_id, unsigned int side_bus)
+METER METER_SETTER::prepare_ac_line_apparent_impedance_angle_in_deg_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_line_meter(meter, device_id, side_bus);
+    bool successful = prepare_ac_line_meter(meter, device_id, side_bus);
 
     if(successful)
         meter.set_meter_type("APPARENT IMPEDANCE ANGLE IN DEG");
@@ -297,22 +297,22 @@ METER METER_SETTER::prepare_line_apparent_impedance_angle_in_deg_meter(const DEV
     return meter;
 }
 
-METER METER_SETTER::prepare_line_current_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus)
+METER METER_SETTER::prepare_ac_line_current_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_line_meter(meter, device_id, side_bus);
+    bool successful = prepare_ac_line_meter(meter, device_id, side_bus);
 
     if(successful)
         meter.set_meter_type("CURRENT IN PU");
     return meter;
 }
 
-METER METER_SETTER::prepare_line_active_power_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus)
+METER METER_SETTER::prepare_ac_line_active_power_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_line_meter(meter, device_id, side_bus);
+    bool successful = prepare_ac_line_meter(meter, device_id, side_bus);
 
     if(successful)
         meter.set_meter_type("ACTIVE POWER IN PU");
@@ -320,11 +320,11 @@ METER METER_SETTER::prepare_line_active_power_in_pu_meter(const DEVICE_ID& devic
     return meter;
 }
 
-METER METER_SETTER::prepare_line_reactive_power_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus)
+METER METER_SETTER::prepare_ac_line_reactive_power_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_line_meter(meter, device_id, side_bus);
+    bool successful = prepare_ac_line_meter(meter, device_id, side_bus);
 
     if(successful)
         meter.set_meter_type("REACTIVE POWER IN PU");
@@ -332,11 +332,11 @@ METER METER_SETTER::prepare_line_reactive_power_in_pu_meter(const DEVICE_ID& dev
     return meter;
 }
 
-METER METER_SETTER::prepare_line_apparent_impedance_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus)
+METER METER_SETTER::prepare_ac_line_apparent_impedance_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_line_meter(meter, device_id, side_bus);
+    bool successful = prepare_ac_line_meter(meter, device_id, side_bus);
 
     if(successful)
         meter.set_meter_type("APPARENT IMPEDANCE IN PU");
@@ -344,11 +344,11 @@ METER METER_SETTER::prepare_line_apparent_impedance_in_pu_meter(const DEVICE_ID&
     return meter;
 }
 
-METER METER_SETTER::prepare_line_apparent_impedance_angle_in_rad_meter(const DEVICE_ID& device_id, unsigned int side_bus)
+METER METER_SETTER::prepare_ac_line_apparent_impedance_angle_in_rad_meter(const DEVICE_ID& device_id, unsigned int side_bus)
 {
     METER meter(get_toolkit());
 
-    bool successful = prepare_line_meter(meter, device_id, side_bus);
+    bool successful = prepare_ac_line_meter(meter, device_id, side_bus);
 
     if(successful)
         meter.set_meter_type("APPARENT IMPEDANCE ANGLE IN RAD");

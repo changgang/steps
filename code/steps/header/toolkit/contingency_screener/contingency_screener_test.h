@@ -36,7 +36,7 @@ class CONTINGENCY_SCREENER_TEST : public Test::Suite
         void test_set_get_fault_time();
         void test_set_get_minimum_clearint_time();
         void test_set_get_maximum_clearint_time();
-        void test_set_get_flag_trip_line_after_clearing_fault();
+        void test_set_get_flag_trip_ac_line_after_clearing_fault();
         void test_set_get_simulation_time_span();
         void test_set_get_angle_difference_threshold();
         void test_set_get_simulator_max_iteration();

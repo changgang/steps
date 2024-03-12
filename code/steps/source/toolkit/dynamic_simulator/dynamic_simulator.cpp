@@ -326,7 +326,7 @@ unsigned int DYNAMICS_SIMULATOR::get_memory_usage_in_bytes()
            pv_units.capacity()*sizeof(PV_UNIT*)+
            e_storages.capacity()*sizeof(ENERGY_STORAGE*)+
            loads.capacity()*sizeof(LOAD*)+
-           lines.capacity()*sizeof(LINE*)+
+           lines.capacity()*sizeof(AC_LINE*)+
            hvdcs.capacity()*sizeof(LCC_HVDC2T*)+
            vsc_hvdcs.capacity()*sizeof(VSC_HVDC*)+
            e_devices.capacity()*sizeof(EQUIVALENT_DEVICE*)+
@@ -953,7 +953,7 @@ void DYNAMICS_SIMULATOR::prepare_devices_for_run()
 
     loads = psdb.get_all_loads();
 
-    lines = psdb.get_all_lines();
+    lines = psdb.get_all_ac_lines();
     hvdcs = psdb.get_all_2t_lcc_hvdcs();
 
     vsc_hvdcs = psdb.get_all_vsc_hvdcs();
@@ -2625,12 +2625,12 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_cleared(unsigned int b
 }
 
 
-void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_set(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault)
+void DYNAMICS_SIMULATOR::guess_bus_voltage_with_ac_line_fault_set(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault)
 {
     if(location >=0.0 and location <= 1.0)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        LINE* line = psdb.get_line(did);
+        AC_LINE* line = psdb.get_ac_line(did);
         if(line!=NULL and line->is_connected_to_bus(side_bus))
         {
             if(location<=0.5)
@@ -2660,18 +2660,18 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_set(const DEVICE_ID& 
 
                 side_bus = (ibus==side_bus? ibus:jbus);
 
-                guess_bus_voltage_with_line_fault_set(did, side_bus, location, fault);
+                guess_bus_voltage_with_ac_line_fault_set(did, side_bus, location, fault);
             }
         }
     }
 }
 
-void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_cleared(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault)
+void DYNAMICS_SIMULATOR::guess_bus_voltage_with_ac_line_fault_cleared(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault)
 {
     if(location >= 0.0 and location <= 1.0)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        LINE* line = psdb.get_line(did);
+        AC_LINE* line = psdb.get_ac_line(did);
         if(line!=NULL and line->is_connected_to_bus(side_bus))
         {
             if(location<=0.5)
@@ -2701,7 +2701,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_cleared(const DEVICE_
 
                 side_bus = (ibus==side_bus? ibus:jbus);
 
-                guess_bus_voltage_with_line_fault_cleared(did, side_bus, location, fault);
+                guess_bus_voltage_with_ac_line_fault_cleared(did, side_bus, location, fault);
             }
         }
     }
@@ -2930,14 +2930,14 @@ void DYNAMICS_SIMULATOR::trip_buses(const vector<unsigned int>& buses)
         trip_bus(buses[i]);
 }
 
-void DYNAMICS_SIMULATOR::set_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location, const complex<double>& fault_shunt)
+void DYNAMICS_SIMULATOR::set_ac_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location, const complex<double>& fault_shunt)
 {
     ostringstream osstream;
 
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        LINE* lineptr = psdb.get_line(line_id);
+        AC_LINE* lineptr = psdb.get_ac_line(line_id);
         if(lineptr!=NULL)
         {
             string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());
@@ -2964,7 +2964,7 @@ void DYNAMICS_SIMULATOR::set_line_fault(const DEVICE_ID& line_id, unsigned int s
 
 
                         lineptr->set_fault(side_bus,location, fault);
-                        guess_bus_voltage_with_line_fault_set(line_id, side_bus, location, fault);
+                        guess_bus_voltage_with_ac_line_fault_set(line_id, side_bus, location, fault);
 
                         //network_matrix.build_dynamic_network_Y_matrix();
                         //build_jacobian();
@@ -3005,14 +3005,14 @@ void DYNAMICS_SIMULATOR::set_line_fault(const DEVICE_ID& line_id, unsigned int s
     }
 }
 
-void DYNAMICS_SIMULATOR::clear_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location)
+void DYNAMICS_SIMULATOR::clear_ac_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location)
 {
     ostringstream osstream;
 
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        LINE* lineptr = psdb.get_line(line_id);
+        AC_LINE* lineptr = psdb.get_ac_line(line_id);
         if(lineptr!=NULL)
         {
             string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());
@@ -3033,7 +3033,7 @@ void DYNAMICS_SIMULATOR::clear_line_fault(const DEVICE_ID& line_id, unsigned int
 
                     FAULT fault = lineptr->get_fault_at_location(side_bus, location);
                     lineptr->clear_fault_at_location(side_bus, location);
-                    guess_bus_voltage_with_line_fault_cleared(line_id, side_bus, location, fault);
+                    guess_bus_voltage_with_ac_line_fault_cleared(line_id, side_bus, location, fault);
 
                     //network_matrix.build_dynamic_network_Y_matrix();
                     //build_jacobian();
@@ -3068,14 +3068,14 @@ void DYNAMICS_SIMULATOR::clear_line_fault(const DEVICE_ID& line_id, unsigned int
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_line(const DEVICE_ID& line_id)
+void DYNAMICS_SIMULATOR::trip_ac_line(const DEVICE_ID& line_id)
 {
     ostringstream osstream;
 
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        LINE* lineptr = psdb.get_line(line_id);
+        AC_LINE* lineptr = psdb.get_ac_line(line_id);
         if(lineptr!=NULL)
         {
             string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());
@@ -3086,10 +3086,10 @@ void DYNAMICS_SIMULATOR::trip_line(const DEVICE_ID& line_id)
                 toolkit->show_information_with_leading_time_stamp(osstream);
 
                 if(lineptr->get_sending_side_breaker_status()==true)
-                    trip_line_breaker(line_id, lineptr->get_sending_side_bus());
+                    trip_ac_line_breaker(line_id, lineptr->get_sending_side_bus());
 
                 if(lineptr->get_receiving_side_breaker_status()==true)
-                    trip_line_breaker(line_id, lineptr->get_receiving_side_bus());
+                    trip_ac_line_breaker(line_id, lineptr->get_receiving_side_bus());
             }
             else
             {
@@ -3113,14 +3113,14 @@ void DYNAMICS_SIMULATOR::trip_line(const DEVICE_ID& line_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_line_breaker(const DEVICE_ID& line_id, unsigned int side_bus)
+void DYNAMICS_SIMULATOR::trip_ac_line_breaker(const DEVICE_ID& line_id, unsigned int side_bus)
 {
     ostringstream osstream;
 
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        LINE* lineptr = psdb.get_line(line_id);
+        AC_LINE* lineptr = psdb.get_ac_line(line_id);
         if(lineptr!=NULL)
         {
             string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());
@@ -3168,14 +3168,14 @@ void DYNAMICS_SIMULATOR::trip_line_breaker(const DEVICE_ID& line_id, unsigned in
     }
 }
 
-void DYNAMICS_SIMULATOR::close_line(const DEVICE_ID& line_id)
+void DYNAMICS_SIMULATOR::close_ac_line(const DEVICE_ID& line_id)
 {
     ostringstream osstream;
 
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        LINE* lineptr = psdb.get_line(line_id);
+        AC_LINE* lineptr = psdb.get_ac_line(line_id);
         if(lineptr!=NULL)
         {
             string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());
@@ -3186,10 +3186,10 @@ void DYNAMICS_SIMULATOR::close_line(const DEVICE_ID& line_id)
                 toolkit->show_information_with_leading_time_stamp(osstream);
 
                 if(lineptr->get_sending_side_breaker_status()==false)
-                    close_line_breaker(line_id, lineptr->get_sending_side_bus());
+                    close_ac_line_breaker(line_id, lineptr->get_sending_side_bus());
 
                 if(lineptr->get_receiving_side_breaker_status()==false)
-                    close_line_breaker(line_id, lineptr->get_receiving_side_bus());
+                    close_ac_line_breaker(line_id, lineptr->get_receiving_side_bus());
             }
         }
         else
@@ -3207,14 +3207,14 @@ void DYNAMICS_SIMULATOR::close_line(const DEVICE_ID& line_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::close_line_breaker(const DEVICE_ID& line_id, unsigned int side_bus)
+void DYNAMICS_SIMULATOR::close_ac_line_breaker(const DEVICE_ID& line_id, unsigned int side_bus)
 {
     ostringstream osstream;
 
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        LINE* lineptr = psdb.get_line(line_id);
+        AC_LINE* lineptr = psdb.get_ac_line(line_id);
         if(lineptr!=NULL)
         {
             string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());

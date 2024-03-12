@@ -1085,8 +1085,8 @@ void STEPS_IMEXPORTER::load_zero_seq_non_transformer_branch_data()
             ID = get_string_data(data[n], "1");
             data.erase(data.begin());
         }
-        DEVICE_ID did = get_line_device_id(bus_i, bus_j, ID);
-        LINE* lineptr = psdb.get_line(did);
+        DEVICE_ID did = get_ac_line_device_id(bus_i, bus_j, ID);
+        AC_LINE* lineptr = psdb.get_ac_line(did);
 
         if(lineptr == NULL)
         {
@@ -1212,8 +1212,8 @@ void STEPS_IMEXPORTER::load_zero_seq_mutual_impedance_data()
             ICKT1 = get_string_data(data[n], "1");
             data.erase(data.begin());
         }
-        DEVICE_ID did1 = get_line_device_id(bus_i, bus_j, ICKT1);
-        LINE* lineptr_ij = psdb.get_line(did1);
+        DEVICE_ID did1 = get_ac_line_device_id(bus_i, bus_j, ICKT1);
+        AC_LINE* lineptr_ij = psdb.get_ac_line(did1);
 
         if(lineptr_ij == NULL)
         {
@@ -1238,8 +1238,8 @@ void STEPS_IMEXPORTER::load_zero_seq_mutual_impedance_data()
             ICKT2 = get_string_data(data[n], "1");
             data.erase(data.begin());
         }
-        DEVICE_ID did2 = get_line_device_id(bus_p, bus_q, ICKT2);
-        LINE* lineptr_pq = psdb.get_line(did2);
+        DEVICE_ID did2 = get_ac_line_device_id(bus_p, bus_q, ICKT2);
+        AC_LINE* lineptr_pq = psdb.get_ac_line(did2);
 
         if(lineptr_pq == NULL)
         {
@@ -1303,8 +1303,8 @@ void STEPS_IMEXPORTER::load_zero_seq_mutual_impedance_data()
         }
 
         MUTUAL_DATA mutual_data(toolkit);
-        mutual_data.set_first_line_pointer(lineptr_ij);
-        mutual_data.set_second_line_pointer(lineptr_pq);
+        mutual_data.set_first_ac_line_pointer(lineptr_ij);
+        mutual_data.set_second_ac_line_pointer(lineptr_pq);
 
         if((lineptr_ij->get_sending_side_bus()==bus_i and lineptr_pq->get_sending_side_bus()==bus_p) or
            (lineptr_ij->get_sending_side_bus()==bus_j and lineptr_pq->get_sending_side_bus()==bus_q))
@@ -1318,24 +1318,24 @@ void STEPS_IMEXPORTER::load_zero_seq_mutual_impedance_data()
 
         if(lineptr_ij->get_sending_side_bus()==bus_i)
         {
-            mutual_data.set_starting_location_of_first_line(starting_location_of_line_ij);
-            mutual_data.set_ending_location_of_first_line(ending_location_of_line_ij);
+            mutual_data.set_starting_location_of_first_ac_line(starting_location_of_line_ij);
+            mutual_data.set_ending_location_of_first_ac_line(ending_location_of_line_ij);
         }
         else
         {
-            mutual_data.set_starting_location_of_first_line(1.0-ending_location_of_line_ij);
-            mutual_data.set_ending_location_of_first_line(1.0-starting_location_of_line_ij);
+            mutual_data.set_starting_location_of_first_ac_line(1.0-ending_location_of_line_ij);
+            mutual_data.set_ending_location_of_first_ac_line(1.0-starting_location_of_line_ij);
         }
 
         if(lineptr_pq->get_sending_side_bus()==bus_p)
         {
-            mutual_data.set_starting_location_of_second_line(starting_location_of_line_pq);
-            mutual_data.set_ending_location_of_second_line(ending_location_of_line_pq);
+            mutual_data.set_starting_location_of_second_ac_line(starting_location_of_line_pq);
+            mutual_data.set_ending_location_of_second_ac_line(ending_location_of_line_pq);
         }
         else
         {
-            mutual_data.set_starting_location_of_second_line(1.0-ending_location_of_line_pq);
-            mutual_data.set_ending_location_of_second_line(1.0-starting_location_of_line_pq);
+            mutual_data.set_starting_location_of_second_ac_line(1.0-ending_location_of_line_pq);
+            mutual_data.set_ending_location_of_second_ac_line(1.0-starting_location_of_line_pq);
         }
         psdb.append_mutual_data(mutual_data);
         lineptr_ij->set_is_mutual_logic(true);

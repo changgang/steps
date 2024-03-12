@@ -1,4 +1,4 @@
-#include "header/device/line.h"
+#include "header/device/ac_line.h"
 #include "header/basic/utility.h"
 #include "header/basic/constants.h"
 #include "header/steps_namespace.h"
@@ -6,17 +6,17 @@
 #include <iostream>
 
 using namespace std;
-LINE::LINE(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
+AC_LINE::AC_LINE(STEPS& toolkit) : NONBUS_DEVICE(toolkit)
 {
     clear();
 }
 
-LINE::~LINE()
+AC_LINE::~AC_LINE()
 {
     ;
 }
 
-void LINE::set_sending_side_bus(unsigned int bus)
+void AC_LINE::set_sending_side_bus(unsigned int bus)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
@@ -45,7 +45,7 @@ void LINE::set_sending_side_bus(unsigned int bus)
     }
 }
 
-void LINE::set_receiving_side_bus(unsigned int bus)
+void AC_LINE::set_receiving_side_bus(unsigned int bus)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
@@ -75,207 +75,207 @@ void LINE::set_receiving_side_bus(unsigned int bus)
     }
 }
 
-void LINE::set_identifier(string line_id)
+void AC_LINE::set_identifier(string line_id)
 {
     line_id = trim_string(line_id);
     add_string_to_str_int_map(line_id);
     this->identifier_index = get_index_of_string(line_id);
 }
 
-void LINE::set_name(string name)
+void AC_LINE::set_name(string name)
 {
     name = trim_string(name);
     add_string_to_str_int_map(name);
     this->name_index = get_index_of_string(name);
 }
 
-void LINE::set_sending_side_breaker_status(bool status)
+void AC_LINE::set_sending_side_breaker_status(bool status)
 {
     this->sending_side_breaker_status = status;
 }
 
-void LINE::set_receiving_side_breaker_status(bool status)
+void AC_LINE::set_receiving_side_breaker_status(bool status)
 {
     this->receiving_side_breaker_status = status;
 }
 
-void LINE::set_line_positive_sequence_z_in_pu(const complex<double>& z)
+void AC_LINE::set_line_positive_sequence_z_in_pu(const complex<double>& z)
 {
     line_z_12 = z;
 }
 
-void LINE::set_line_positive_sequence_y_in_pu(const complex<double>& y)
+void AC_LINE::set_line_positive_sequence_y_in_pu(const complex<double>& y)
 {
     line_y_12 = y;
 }
 
-void LINE::set_shunt_positive_sequence_y_at_sending_side_in_pu(const complex<double>& y)
+void AC_LINE::set_shunt_positive_sequence_y_at_sending_side_in_pu(const complex<double>& y)
 {
     shunt_y_12_sending_side = y;
 }
 
-void LINE::set_shunt_positive_sequence_y_at_receiving_side_in_pu(const complex<double>& y)
+void AC_LINE::set_shunt_positive_sequence_y_at_receiving_side_in_pu(const complex<double>& y)
 {
     shunt_y_12_receiving_side = y;
 }
 
-void LINE::set_line_zero_sequence_z_in_pu(const complex<double>& z)
+void AC_LINE::set_line_zero_sequence_z_in_pu(const complex<double>& z)
 {
     line_z_0 = z;
 }
 
-void LINE::set_line_zero_sequence_y_in_pu(const complex<double>& y)
+void AC_LINE::set_line_zero_sequence_y_in_pu(const complex<double>& y)
 {
     line_y_0 = y;
 }
 
-void LINE::set_shunt_zero_sequence_y_at_sending_side_in_pu(const complex<double>& y)
+void AC_LINE::set_shunt_zero_sequence_y_at_sending_side_in_pu(const complex<double>& y)
 {
     shunt_y_0_sending_side = y;
 }
 
-void LINE::set_shunt_zero_sequence_y_at_receiving_side_in_pu(const complex<double>& y)
+void AC_LINE::set_shunt_zero_sequence_y_at_receiving_side_in_pu(const complex<double>& y)
 {
     shunt_y_0_receiving_side = y;
 }
 
-void LINE::set_rating(RATING line_rating)
+void AC_LINE::set_rating(RATING line_rating)
 {
     this->rating = line_rating;
 }
 
-void LINE::set_meter_end_bus(unsigned int meter_bus)
+void AC_LINE::set_meter_end_bus(unsigned int meter_bus)
 {
     if(meter_bus == get_receiving_side_bus()) meter_end_bus = get_receiving_side_bus();
     else                                      meter_end_bus = get_sending_side_bus();
 }
 
-void LINE::set_length(double line_length)
+void AC_LINE::set_length(double line_length)
 {
     if(line_length>=0.0) this->length = line_length;
 }
 
-void LINE::set_mutual_admittances(vector<complex<double>> Y)
+void AC_LINE::set_mutual_admittances(vector<complex<double>> Y)
 {
     Ymutual.assign(Y.begin(), Y.end());
 }
 
-void LINE::set_line_pointers_corresponding_to_mutual_admittances(vector<LINE*> lineptrs)
+void AC_LINE::set_line_pointers_corresponding_to_mutual_admittances(vector<AC_LINE*> lineptrs)
 {
     lineptrs_of_Ymutual.assign(lineptrs.begin(),lineptrs.end());
 }
 
-void LINE::set_is_mutual_logic(bool b)
+void AC_LINE::set_is_mutual_logic(bool b)
 {
     is_mutual_line = b;
 }
 
-unsigned int LINE::get_sending_side_bus() const
+unsigned int AC_LINE::get_sending_side_bus() const
 {
     return sending_side_bus;
 }
 
-unsigned int LINE::get_receiving_side_bus() const
+unsigned int AC_LINE::get_receiving_side_bus() const
 {
     return receiving_side_bus;
 }
 
-BUS* LINE::get_sending_side_bus_pointer() const
+BUS* AC_LINE::get_sending_side_bus_pointer() const
 {
     return sending_side_busptr;
 }
 
-BUS* LINE::get_receiving_side_bus_pointer() const
+BUS* AC_LINE::get_receiving_side_bus_pointer() const
 {
     return receiving_side_busptr;
 }
 
-string LINE::get_identifier() const
+string AC_LINE::get_identifier() const
 {
     return get_string_of_index(identifier_index);
 }
 
-string LINE::get_name() const
+string AC_LINE::get_name() const
 {
     return get_string_of_index(name_index);
 }
 
-unsigned int LINE::get_identifier_index() const
+unsigned int AC_LINE::get_identifier_index() const
 {
     return identifier_index;
 }
 
-unsigned int LINE::get_name_index() const
+unsigned int AC_LINE::get_name_index() const
 {
     return name_index;
 }
 
-bool LINE::get_sending_side_breaker_status() const
+bool AC_LINE::get_sending_side_breaker_status() const
 {
     return sending_side_breaker_status;
 }
 
-bool LINE::get_receiving_side_breaker_status() const
+bool AC_LINE::get_receiving_side_breaker_status() const
 {
     return receiving_side_breaker_status;
 }
 
-complex<double> LINE::get_line_positive_sequence_z_in_pu() const
+complex<double> AC_LINE::get_line_positive_sequence_z_in_pu() const
 {
     return line_z_12;
 }
 
-complex<double> LINE::get_line_zero_sequence_z_in_pu() const
+complex<double> AC_LINE::get_line_zero_sequence_z_in_pu() const
 {
     return line_z_0;
 }
 
-complex<double> LINE::get_line_positive_sequence_y_in_pu() const
+complex<double> AC_LINE::get_line_positive_sequence_y_in_pu() const
 {
     return line_y_12;
 }
 
-complex<double> LINE::get_line_zero_sequence_y_in_pu() const
+complex<double> AC_LINE::get_line_zero_sequence_y_in_pu() const
 {
     return line_y_0;
 }
 
-complex<double> LINE::get_shunt_positive_sequence_y_at_sending_side_in_pu() const
+complex<double> AC_LINE::get_shunt_positive_sequence_y_at_sending_side_in_pu() const
 {
     return shunt_y_12_sending_side;
 }
 
-complex<double> LINE::get_shunt_zero_sequence_y_at_sending_side_in_pu() const
+complex<double> AC_LINE::get_shunt_zero_sequence_y_at_sending_side_in_pu() const
 {
     return shunt_y_0_sending_side;
 }
 
-complex<double> LINE::get_shunt_positive_sequence_y_at_receiving_side_in_pu() const
+complex<double> AC_LINE::get_shunt_positive_sequence_y_at_receiving_side_in_pu() const
 {
     return shunt_y_12_receiving_side;
 }
 
-complex<double> LINE::get_shunt_zero_sequence_y_at_receiving_side_in_pu() const
+complex<double> AC_LINE::get_shunt_zero_sequence_y_at_receiving_side_in_pu() const
 {
     return shunt_y_0_receiving_side;
 }
 
-RATING LINE::get_rating() const
+RATING AC_LINE::get_rating() const
 {
     return rating;
 }
 
-unsigned int LINE::get_meter_end_bus() const
+unsigned int AC_LINE::get_meter_end_bus() const
 {
     return meter_end_bus;
 }
 
-double LINE::get_length() const
+double AC_LINE::get_length() const
 {
     return length;
 }
 
-bool LINE::is_zero_impedance_line() const
+bool AC_LINE::is_zero_impedance_line() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -288,7 +288,7 @@ bool LINE::is_zero_impedance_line() const
         return false;
 }
 
-void LINE::set_fault(unsigned int to_bus, double location, const FAULT& fault)
+void AC_LINE::set_fault(unsigned int to_bus, double location, const FAULT& fault)
 {
     if(is_connected_to_bus(to_bus))
     {
@@ -339,7 +339,7 @@ void LINE::set_fault(unsigned int to_bus, double location, const FAULT& fault)
     }
 }
 
-double LINE::get_fault_location_of_fault(unsigned int index) const
+double AC_LINE::get_fault_location_of_fault(unsigned int index) const
 {
     if(index<get_fault_count())
     {
@@ -360,7 +360,7 @@ double LINE::get_fault_location_of_fault(unsigned int index) const
     }
 }
 
-FAULT LINE::get_fault_at_location(unsigned int to_bus, double location) const
+FAULT AC_LINE::get_fault_at_location(unsigned int to_bus, double location) const
 {
     FAULT nofault;
     if(is_connected_to_bus(to_bus) and (location>=0.0 and location<=1.0))
@@ -383,12 +383,12 @@ FAULT LINE::get_fault_at_location(unsigned int to_bus, double location) const
         return nofault;
 }
 
-void LINE::clear_all_faults()
+void AC_LINE::clear_all_faults()
 {
     faults.clear();
 }
 
-void LINE::clear_fault_at_location(unsigned int to_bus, double location)
+void AC_LINE::clear_fault_at_location(unsigned int to_bus, double location)
 {
     if(is_connected_to_bus(to_bus) and (location>=0.0 and location<=1.0))
     {
@@ -422,12 +422,12 @@ void LINE::clear_fault_at_location(unsigned int to_bus, double location)
     }
 }
 
-unsigned int LINE::get_fault_count() const
+unsigned int AC_LINE::get_fault_count() const
 {
     return faults.size();
 }
 
-bool LINE::is_faulted() const
+bool AC_LINE::is_faulted() const
 {
     if(get_fault_count()>0)
         return true;
@@ -435,12 +435,12 @@ bool LINE::is_faulted() const
         return false;
 }
 
-bool LINE::is_mutual() const
+bool AC_LINE::is_mutual() const
 {
     return is_mutual_line;
 }
 
-bool LINE::is_valid() const
+bool AC_LINE::is_valid() const
 {
     if(get_sending_side_bus()!=0 and get_receiving_side_bus()!=0)
         return true;
@@ -448,7 +448,7 @@ bool LINE::is_valid() const
         return false;
 }
 
-void LINE::check()
+void AC_LINE::check()
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
@@ -522,7 +522,7 @@ void LINE::check()
         toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-void LINE::clear()
+void AC_LINE::clear()
 {
     sending_side_bus = 0;
     receiving_side_bus = 0;
@@ -553,13 +553,13 @@ void LINE::clear()
     set_sequence_parameter_import_flag(false);
 }
 
-bool LINE::is_connected_to_bus(unsigned int bus) const
+bool AC_LINE::is_connected_to_bus(unsigned int bus) const
 {
     if(get_sending_side_bus()==bus or get_receiving_side_bus()==bus) return true;
     else                                                             return false;
 }
 
-bool LINE::is_in_area(unsigned int area) const
+bool AC_LINE::is_in_area(unsigned int area) const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -578,7 +578,7 @@ bool LINE::is_in_area(unsigned int area) const
         return false;
 }
 
-bool LINE::is_in_zone(unsigned int zone) const
+bool AC_LINE::is_in_zone(unsigned int zone) const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -597,7 +597,7 @@ bool LINE::is_in_zone(unsigned int zone) const
         return false;
 }
 
-void LINE::report() const
+void AC_LINE::report() const
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -609,28 +609,28 @@ void LINE::report() const
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-void LINE::save() const
+void AC_LINE::save() const
 {
     ;
 }
 
-void LINE::set_model(MODEL* model)
+void AC_LINE::set_model(MODEL* model)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
-    osstream<<"LINE::"<<__FUNCTION__<<"() has not been implemented yet. Input model name is:"<<(model==NULL?"":model->get_model_name());
+    osstream<<"AC_LINE::"<<__FUNCTION__<<"() has not been implemented yet. Input model name is:"<<(model==NULL?"":model->get_model_name());
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-MODEL* LINE::get_model_of_type(string model_type, unsigned int index)
+MODEL* AC_LINE::get_model_of_type(string model_type, unsigned int index)
 {
     model_type = string2upper(model_type);
-    if(model_type=="LINE RELAY")
+    if(model_type=="AC_LINE RELAY")
         return NULL;
     return NULL;
 }
 
-LINE& LINE::operator=(const LINE& line)
+AC_LINE& AC_LINE::operator=(const AC_LINE& line)
 {
     if(this==(&line)) return (*this);
 
@@ -671,7 +671,7 @@ LINE& LINE::operator=(const LINE& line)
 }
 
 
-DEVICE_ID LINE::get_device_id() const
+DEVICE_ID AC_LINE::get_device_id() const
 {
     DEVICE_ID did;
     did.set_device_type(STEPS_AC_LINE);
@@ -685,7 +685,7 @@ DEVICE_ID LINE::get_device_id() const
     return did;
 }
 
-double LINE::get_line_base_voltage_in_kV() const
+double AC_LINE::get_line_base_voltage_in_kV() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -693,115 +693,115 @@ double LINE::get_line_base_voltage_in_kV() const
     return psdb.get_bus_base_voltage_in_kV(get_sending_side_bus());
 }
 
-vector<complex<double>> LINE::get_mutual_admittances() const
+vector<complex<double>> AC_LINE::get_mutual_admittances() const
 {
     return Ymutual;
 }
 
-vector<LINE*> LINE::get_line_pointers_corresponding_to_mutual_admittances() const
+vector<AC_LINE*> AC_LINE::get_line_pointers_corresponding_to_mutual_admittances() const
 {
     return lineptrs_of_Ymutual;
 }
 
 
-complex<double> LINE::get_line_complex_voltage_at_sending_side_in_pu() const
+complex<double> AC_LINE::get_line_complex_voltage_at_sending_side_in_pu() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_sending_side_bus());
 }
 
-complex<double> LINE::get_line_complex_voltage_at_receiving_side_in_pu() const
+complex<double> AC_LINE::get_line_complex_voltage_at_receiving_side_in_pu() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_receiving_side_bus());
 }
 
-complex<double> LINE::get_line_complex_voltage_at_sending_side_in_kV() const
+complex<double> AC_LINE::get_line_complex_voltage_at_sending_side_in_kV() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_bus_positive_sequence_complex_voltage_in_kV(get_sending_side_bus());
 }
 
-complex<double> LINE::get_line_complex_voltage_at_receiving_side_in_kV() const
+complex<double> AC_LINE::get_line_complex_voltage_at_receiving_side_in_kV() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_bus_positive_sequence_complex_voltage_in_kV(get_receiving_side_bus());
 }
 
-complex<double> LINE::get_line_positive_sequence_complex_voltage_at_sending_side_in_pu() const
+complex<double> AC_LINE::get_line_positive_sequence_complex_voltage_at_sending_side_in_pu() const
 {
     return get_line_complex_voltage_at_sending_side_in_pu();
 }
 
-complex<double> LINE::get_line_positive_sequence_complex_voltage_at_receiving_side_in_pu() const
+complex<double> AC_LINE::get_line_positive_sequence_complex_voltage_at_receiving_side_in_pu() const
 {
     return get_line_complex_voltage_at_receiving_side_in_pu();
 }
 
-complex<double> LINE::get_line_positive_sequence_complex_voltage_at_sending_side_in_kV() const
+complex<double> AC_LINE::get_line_positive_sequence_complex_voltage_at_sending_side_in_kV() const
 {
     return get_line_complex_voltage_at_sending_side_in_kV();
 }
 
-complex<double> LINE::get_line_positive_sequence_complex_voltage_at_receiving_side_in_kV() const
+complex<double> AC_LINE::get_line_positive_sequence_complex_voltage_at_receiving_side_in_kV() const
 {
     return get_line_complex_voltage_at_receiving_side_in_kV();
 }
 
-complex<double> LINE::get_line_negative_sequence_complex_voltage_at_sending_side_in_pu() const
+complex<double> AC_LINE::get_line_negative_sequence_complex_voltage_at_sending_side_in_pu() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_bus_negative_sequence_complex_voltage_in_pu(get_sending_side_bus());
 }
 
-complex<double> LINE::get_line_negative_sequence_complex_voltage_at_receiving_side_in_pu() const
+complex<double> AC_LINE::get_line_negative_sequence_complex_voltage_at_receiving_side_in_pu() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_bus_negative_sequence_complex_voltage_in_pu(get_receiving_side_bus());
 }
 
-complex<double> LINE::get_line_negative_sequence_complex_voltage_at_sending_side_in_kV() const
+complex<double> AC_LINE::get_line_negative_sequence_complex_voltage_at_sending_side_in_kV() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_bus_negative_sequence_complex_voltage_in_kV(get_sending_side_bus());
 }
 
-complex<double> LINE::get_line_negative_sequence_complex_voltage_at_receiving_side_in_kV() const
+complex<double> AC_LINE::get_line_negative_sequence_complex_voltage_at_receiving_side_in_kV() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_bus_negative_sequence_complex_voltage_in_kV(get_receiving_side_bus());
 }
 
-complex<double> LINE::get_line_zero_sequence_complex_voltage_at_sending_side_in_pu() const
+complex<double> AC_LINE::get_line_zero_sequence_complex_voltage_at_sending_side_in_pu() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_bus_zero_sequence_complex_voltage_in_pu(get_sending_side_bus());
 }
 
-complex<double> LINE::get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu() const
+complex<double> AC_LINE::get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_bus_zero_sequence_complex_voltage_in_pu(get_receiving_side_bus());
 }
 
-complex<double> LINE::get_line_zero_sequence_complex_voltage_at_sending_side_in_kV() const
+complex<double> AC_LINE::get_line_zero_sequence_complex_voltage_at_sending_side_in_kV() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_bus_zero_sequence_complex_voltage_in_kV(get_sending_side_bus());
 }
 
-complex<double> LINE::get_line_zero_sequence_complex_voltage_at_receiving_side_in_kV() const
+complex<double> AC_LINE::get_line_zero_sequence_complex_voltage_at_receiving_side_in_kV() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -809,7 +809,7 @@ complex<double> LINE::get_line_zero_sequence_complex_voltage_at_receiving_side_i
 }
 
 
-complex<double> LINE::get_line_complex_current_at_sending_side_in_pu() const
+complex<double> AC_LINE::get_line_complex_current_at_sending_side_in_pu() const
 {
     if(get_sending_side_breaker_status()==true)
     {
@@ -835,7 +835,7 @@ complex<double> LINE::get_line_complex_current_at_sending_side_in_pu() const
         return 0.0;
 }
 
-complex<double> LINE::get_line_complex_current_at_receiving_side_in_pu() const
+complex<double> AC_LINE::get_line_complex_current_at_receiving_side_in_pu() const
 {
     if(get_receiving_side_breaker_status()==true)
     {
@@ -861,7 +861,7 @@ complex<double> LINE::get_line_complex_current_at_receiving_side_in_pu() const
         return 0.0;
 }
 
-complex<double> LINE::get_line_complex_current_at_sending_side_in_kA() const
+complex<double> AC_LINE::get_line_complex_current_at_sending_side_in_kA() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -873,7 +873,7 @@ complex<double> LINE::get_line_complex_current_at_sending_side_in_kA() const
     return Ibase_kA*get_line_complex_current_at_sending_side_in_pu();
 }
 
-complex<double> LINE::get_line_complex_current_at_receiving_side_in_kA() const
+complex<double> AC_LINE::get_line_complex_current_at_receiving_side_in_kA() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -885,27 +885,27 @@ complex<double> LINE::get_line_complex_current_at_receiving_side_in_kA() const
     return Ibase_kA*get_line_complex_current_at_receiving_side_in_pu();
 }
 
-complex<double> LINE::get_line_positive_sequence_complex_current_at_sending_side_in_pu() const
+complex<double> AC_LINE::get_line_positive_sequence_complex_current_at_sending_side_in_pu() const
 {
     return get_line_complex_current_at_sending_side_in_pu();
 }
 
-complex<double> LINE::get_line_positive_sequence_complex_current_at_receiving_side_in_pu() const
+complex<double> AC_LINE::get_line_positive_sequence_complex_current_at_receiving_side_in_pu() const
 {
     return get_line_complex_current_at_receiving_side_in_pu();
 }
 
-complex<double> LINE::get_line_positive_sequence_complex_current_at_sending_side_in_kA() const
+complex<double> AC_LINE::get_line_positive_sequence_complex_current_at_sending_side_in_kA() const
 {
     return get_line_complex_current_at_sending_side_in_kA();
 }
 
-complex<double> LINE::get_line_positive_sequence_complex_current_at_receiving_side_in_kA() const
+complex<double> AC_LINE::get_line_positive_sequence_complex_current_at_receiving_side_in_kA() const
 {
     return get_line_complex_current_at_receiving_side_in_kA();
 }
 
-complex<double> LINE::get_line_negative_sequence_complex_current_at_sending_side_in_pu() const
+complex<double> AC_LINE::get_line_negative_sequence_complex_current_at_sending_side_in_pu() const
 {
     if(get_sending_side_breaker_status()==true)
     {
@@ -930,7 +930,7 @@ complex<double> LINE::get_line_negative_sequence_complex_current_at_sending_side
         return 0.0;
 }
 
-complex<double> LINE::get_line_negative_sequence_complex_current_at_receiving_side_in_pu() const
+complex<double> AC_LINE::get_line_negative_sequence_complex_current_at_receiving_side_in_pu() const
 {
     if(get_receiving_side_breaker_status()==true)
     {
@@ -955,7 +955,7 @@ complex<double> LINE::get_line_negative_sequence_complex_current_at_receiving_si
         return 0.0;
 }
 
-complex<double> LINE::get_line_negative_sequence_complex_current_at_sending_side_in_kA() const
+complex<double> AC_LINE::get_line_negative_sequence_complex_current_at_sending_side_in_kA() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -965,7 +965,7 @@ complex<double> LINE::get_line_negative_sequence_complex_current_at_sending_side
     return Ibase_kA*get_line_negative_sequence_complex_current_at_sending_side_in_pu();
 }
 
-complex<double> LINE::get_line_negative_sequence_complex_current_at_receiving_side_in_kA() const
+complex<double> AC_LINE::get_line_negative_sequence_complex_current_at_receiving_side_in_kA() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -975,7 +975,7 @@ complex<double> LINE::get_line_negative_sequence_complex_current_at_receiving_si
     return Ibase_kA*get_line_negative_sequence_complex_current_at_receiving_side_in_pu();
 }
 
-complex<double> LINE::get_line_zero_sequence_complex_current_at_sending_side_in_pu() const
+complex<double> AC_LINE::get_line_zero_sequence_complex_current_at_sending_side_in_pu() const
 {
     if(get_sending_side_breaker_status()==true)
     {
@@ -1001,7 +1001,7 @@ complex<double> LINE::get_line_zero_sequence_complex_current_at_sending_side_in_
         else
         {
             vector<complex<double> > Y_mutual = get_mutual_admittances();
-            vector<LINE*> lineptrs_of_Y_mutual = get_line_pointers_corresponding_to_mutual_admittances();
+            vector<AC_LINE*> lineptrs_of_Y_mutual = get_line_pointers_corresponding_to_mutual_admittances();
             complex<double> Y = get_line_zero_sequence_y_in_pu();
             complex<double> Ys = 0.5*Y + get_shunt_zero_sequence_y_at_sending_side_in_pu();
             complex<double> Yr = 0.5*Y + get_shunt_zero_sequence_y_at_receiving_side_in_pu();
@@ -1010,7 +1010,7 @@ complex<double> LINE::get_line_zero_sequence_complex_current_at_sending_side_in_
             complex<double> I = 0.0;
             for(unsigned int i=0; i<Y_mutual.size(); i++)
             {
-                LINE* lineptr = lineptrs_of_Y_mutual[i];
+                AC_LINE* lineptr = lineptrs_of_Y_mutual[i];
                 complex<double> V_s = lineptr->get_line_zero_sequence_complex_voltage_at_sending_side_in_pu();
                 complex<double> V_r = lineptr->get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu();
                 I = I + Y_mutual[i]*(V_s-V_r);
@@ -1023,7 +1023,7 @@ complex<double> LINE::get_line_zero_sequence_complex_current_at_sending_side_in_
         return 0.0;
 }
 
-complex<double> LINE::get_line_zero_sequence_complex_current_at_receiving_side_in_pu() const
+complex<double> AC_LINE::get_line_zero_sequence_complex_current_at_receiving_side_in_pu() const
 {
     if(get_receiving_side_breaker_status()==true)
     {
@@ -1049,7 +1049,7 @@ complex<double> LINE::get_line_zero_sequence_complex_current_at_receiving_side_i
         else
         {
             vector<complex<double> > Y_mutual = get_mutual_admittances();
-            vector<LINE*> lineptrs_of_Y_mutual = get_line_pointers_corresponding_to_mutual_admittances();
+            vector<AC_LINE*> lineptrs_of_Y_mutual = get_line_pointers_corresponding_to_mutual_admittances();
             complex<double> Y = get_line_zero_sequence_y_in_pu();
             complex<double> Ys = 0.5*Y + get_shunt_zero_sequence_y_at_sending_side_in_pu();
             complex<double> Yr = 0.5*Y + get_shunt_zero_sequence_y_at_receiving_side_in_pu();
@@ -1058,7 +1058,7 @@ complex<double> LINE::get_line_zero_sequence_complex_current_at_receiving_side_i
             complex<double> I = 0.0;
             for(unsigned int i=0; i<Y_mutual.size(); i++)
             {
-                LINE* lineptr = lineptrs_of_Y_mutual[i];
+                AC_LINE* lineptr = lineptrs_of_Y_mutual[i];
                 complex<double> V_s = lineptr->get_line_zero_sequence_complex_voltage_at_sending_side_in_pu();
                 complex<double> V_r = lineptr->get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu();
                 I = I + Y_mutual[i]*(V_r-V_s);
@@ -1071,7 +1071,7 @@ complex<double> LINE::get_line_zero_sequence_complex_current_at_receiving_side_i
         return 0.0;
 }
 
-complex<double> LINE::get_line_zero_sequence_complex_current_at_sending_side_in_kA() const
+complex<double> AC_LINE::get_line_zero_sequence_complex_current_at_sending_side_in_kA() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -1081,7 +1081,7 @@ complex<double> LINE::get_line_zero_sequence_complex_current_at_sending_side_in_
     return Ibase_kA*get_line_zero_sequence_complex_current_at_sending_side_in_pu();
 }
 
-complex<double> LINE::get_line_zero_sequence_complex_current_at_receiving_side_in_kA() const
+complex<double> AC_LINE::get_line_zero_sequence_complex_current_at_receiving_side_in_kA() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -1091,17 +1091,17 @@ complex<double> LINE::get_line_zero_sequence_complex_current_at_receiving_side_i
     return Ibase_kA*get_line_zero_sequence_complex_current_at_receiving_side_in_pu();
 }
 
-complex<double> LINE::get_line_complex_power_at_sending_side_in_pu() const
+complex<double> AC_LINE::get_line_complex_power_at_sending_side_in_pu() const
 {
     return get_line_complex_voltage_at_sending_side_in_pu()*conj(get_line_complex_current_at_sending_side_in_pu());
 }
 
-complex<double> LINE::get_line_complex_power_at_receiving_side_in_pu() const
+complex<double> AC_LINE::get_line_complex_power_at_receiving_side_in_pu() const
 {
     return get_line_complex_voltage_at_receiving_side_in_pu()*conj(get_line_complex_current_at_receiving_side_in_pu());
 }
 
-complex<double> LINE::get_line_complex_power_at_sending_side_in_MVA() const
+complex<double> AC_LINE::get_line_complex_power_at_sending_side_in_MVA() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -1111,7 +1111,7 @@ complex<double> LINE::get_line_complex_power_at_sending_side_in_MVA() const
     return sbase*get_line_complex_power_at_sending_side_in_pu();
 }
 
-complex<double> LINE::get_line_complex_power_at_receiving_side_in_MVA() const
+complex<double> AC_LINE::get_line_complex_power_at_receiving_side_in_MVA() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -1121,7 +1121,7 @@ complex<double> LINE::get_line_complex_power_at_receiving_side_in_MVA() const
     return sbase*get_line_complex_power_at_receiving_side_in_pu();
 }
 
-complex<double> LINE::get_line_complex_apparent_impedance_at_sending_side_in_pu() const
+complex<double> AC_LINE::get_line_complex_apparent_impedance_at_sending_side_in_pu() const
 {
     if(get_sending_side_breaker_status()==true)
         return get_line_complex_voltage_at_sending_side_in_pu()/get_line_complex_current_at_sending_side_in_pu();
@@ -1129,7 +1129,7 @@ complex<double> LINE::get_line_complex_apparent_impedance_at_sending_side_in_pu(
         return INFINITE_THRESHOLD;
 }
 
-complex<double> LINE::get_line_complex_apparent_impedance_at_receiving_side_in_pu() const
+complex<double> AC_LINE::get_line_complex_apparent_impedance_at_receiving_side_in_pu() const
 {
     if(get_receiving_side_breaker_status()==true)
         return get_line_complex_voltage_at_receiving_side_in_pu()/get_line_complex_current_at_receiving_side_in_pu();
@@ -1137,7 +1137,7 @@ complex<double> LINE::get_line_complex_apparent_impedance_at_receiving_side_in_p
         return INFINITE_THRESHOLD;
 }
 
-complex<double> LINE::get_line_complex_apparent_impedance_at_sending_side_in_ohm() const
+complex<double> AC_LINE::get_line_complex_apparent_impedance_at_sending_side_in_ohm() const
 {
     STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
@@ -1152,7 +1152,7 @@ complex<double> LINE::get_line_complex_apparent_impedance_at_sending_side_in_ohm
         return INDEX_NOT_EXIST;
 }
 
-complex<double> LINE::get_line_complex_apparent_impedance_at_receiving_side_in_ohm() const
+complex<double> AC_LINE::get_line_complex_apparent_impedance_at_receiving_side_in_ohm() const
 {
     STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
@@ -1167,11 +1167,11 @@ complex<double> LINE::get_line_complex_apparent_impedance_at_receiving_side_in_o
         return INFINITE_THRESHOLD;
 }
 
-void LINE::set_sequence_parameter_import_flag(bool flag)
+void AC_LINE::set_sequence_parameter_import_flag(bool flag)
 {
     sequence_parameter_import_flag = flag;
 }
-bool LINE::get_sequence_parameter_import_flag() const
+bool AC_LINE::get_sequence_parameter_import_flag() const
 {
     return sequence_parameter_import_flag;
 }

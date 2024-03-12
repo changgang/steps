@@ -18,8 +18,8 @@ STEPS_API_SEARCH_BUFFER::STEPS_API_SEARCH_BUFFER()
     load_pointer = 0;
     fixed_shunts.clear();
     fixed_shunt_pointer = 0;
-    lines.clear();
-    line_pointer = 0;
+    ac_lines.clear();
+    ac_line_pointer = 0;
     transformers.clear();
     transformer_pointer = 0;
     hvdcs.clear();

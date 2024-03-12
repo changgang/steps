@@ -28,7 +28,7 @@ class METER_SETTER_TEST : public Test::Suite
     private:
         void test_constructor();
         void test_prepare_bus_related_meters();
-        void test_prepare_line_related_meters();
+        void test_prepare_ac_line_related_meters();
         void test_prepare_transformer_related_meters();
         void test_prepare_load_related_meters();
         void test_prepare_generator_related_meters();

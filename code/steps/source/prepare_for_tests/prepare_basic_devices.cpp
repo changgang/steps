@@ -421,29 +421,29 @@ void prepare_basic_loads()
     dmdb.add_model(&volt_model);
 }
 
-void prepare_basic_lines()
+void prepare_basic_ac_lines()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
-    LINE line(default_toolkit);
+    AC_LINE line(default_toolkit);
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
     line.set_identifier("1#");
-    psdb.append_line(line);
+    psdb.append_ac_line(line);
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
     line.set_identifier("2#");
-    psdb.append_line(line);
+    psdb.append_ac_line(line);
 
     line.set_sending_side_bus(2);
     line.set_receiving_side_bus(3);
     line.set_identifier("1#");
-    psdb.append_line(line);
+    psdb.append_ac_line(line);
 }
 void prepare_basic_transformers()
 {

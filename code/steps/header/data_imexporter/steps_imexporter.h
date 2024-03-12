@@ -50,7 +50,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void load_energy_storage_data(vector<string>& data);
         void load_source_common_data(vector<string>& data, SOURCE* source);
         void load_source_var_control_data(vector<string>& data, SOURCE* source);
-        void load_line_data();
+        void load_ac_line_data();
         void load_transformer_data();
         void add_transformer_with_data(vector<vector<string> > trans_data);
         void add_transformer_basic_data(TRANSFORMER& trans, vector<string> data);
@@ -92,7 +92,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         string export_energy_storage_data() const;
         string export_source_common_data(SOURCE* source) const;
         string export_source_var_control_data(SOURCE* source) const;
-        string export_line_data() const;
+        string export_ac_line_data() const;
         string export_transformer_data() const;
         string export_area_data() const;
         string export_2t_lcc_hvdc_data() const;
@@ -232,7 +232,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         DEVICE_ID get_wt_generator_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_pv_unit_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_load_device_id_from_string_vector(vector<string>& data);
-        DEVICE_ID get_line_device_id_from_string_vector(vector<string>& data);
+        DEVICE_ID get_ac_line_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_2t_lcc_hvdc_device_id_from_string_vector(vector<string>& data);
         string get_vsc_hvdc_name_from_string_vector(vector<string>& data);
         DEVICE_ID get_vsc_hvdc_device_id_from_string_vector(vector<string>& data);
@@ -244,7 +244,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void load_stabilizer_dynamic_data();
         void load_turbine_governor_dynamic_data();
         void load_load_dynamic_data();
-        void load_line_dynamic_data();
+        void load_ac_line_dynamic_data();
 
         unsigned int data_version;
         vector< vector< vector<string> > > splitted_sraw_data_in_ram;

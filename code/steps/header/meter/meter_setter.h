@@ -25,16 +25,16 @@ class METER_SETTER
         METER prepare_bus_ROCOF_in_pu_per_s_meter(unsigned int bus);
         METER prepare_bus_ROCOF_in_Hz_per_s_meter(unsigned int bus);
 
-        METER prepare_line_current_in_kA_meter(const DEVICE_ID& device_id, unsigned int side_bus);
-        METER prepare_line_active_power_in_MW_meter(const DEVICE_ID& device_id, unsigned int side_bus);
-        METER prepare_line_reactive_power_in_MVar_meter(const DEVICE_ID& device_id, unsigned int side_bus);
-        METER prepare_line_apparent_impedance_in_Ohm_meter(const DEVICE_ID& device_id, unsigned int side_bus);
-        METER prepare_line_apparent_impedance_angle_in_deg_meter(const DEVICE_ID& device_id, unsigned int side_bus);
-        METER prepare_line_current_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus);
-        METER prepare_line_active_power_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus);
-        METER prepare_line_reactive_power_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus);
-        METER prepare_line_apparent_impedance_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus);
-        METER prepare_line_apparent_impedance_angle_in_rad_meter(const DEVICE_ID& device_id, unsigned int side_bus);
+        METER prepare_ac_line_current_in_kA_meter(const DEVICE_ID& device_id, unsigned int side_bus);
+        METER prepare_ac_line_active_power_in_MW_meter(const DEVICE_ID& device_id, unsigned int side_bus);
+        METER prepare_ac_line_reactive_power_in_MVar_meter(const DEVICE_ID& device_id, unsigned int side_bus);
+        METER prepare_ac_line_apparent_impedance_in_Ohm_meter(const DEVICE_ID& device_id, unsigned int side_bus);
+        METER prepare_ac_line_apparent_impedance_angle_in_deg_meter(const DEVICE_ID& device_id, unsigned int side_bus);
+        METER prepare_ac_line_current_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus);
+        METER prepare_ac_line_active_power_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus);
+        METER prepare_ac_line_reactive_power_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus);
+        METER prepare_ac_line_apparent_impedance_in_pu_meter(const DEVICE_ID& device_id, unsigned int side_bus);
+        METER prepare_ac_line_apparent_impedance_angle_in_rad_meter(const DEVICE_ID& device_id, unsigned int side_bus);
 
         METER prepare_transformer_current_in_kA_meter(const DEVICE_ID& device_id, unsigned int side_bus);
         METER prepare_transformer_active_power_in_MW_meter(const DEVICE_ID& device_id, unsigned int side_bus);
@@ -216,7 +216,7 @@ class METER_SETTER
         METER prepare_energy_storage_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
     private:
         bool prepare_bus_meter(METER& meter, const unsigned int bus);
-        bool prepare_line_meter(METER& meter, const DEVICE_ID& device_id, unsigned int side_bus);
+        bool prepare_ac_line_meter(METER& meter, const DEVICE_ID& device_id, unsigned int side_bus);
         bool prepare_transformer_meter(METER& meter, const DEVICE_ID& device_id, unsigned int side_bus);
         bool prepare_load_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_generator_meter(METER& meter, const DEVICE_ID& device_id);

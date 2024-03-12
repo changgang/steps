@@ -331,7 +331,7 @@ void api_prepare_line_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    ds.prepare_line_related_meters();
+    ds.prepare_ac_line_related_meters();
 }
 
 void api_prepare_transformer_related_meters(unsigned int toolkit_index)
@@ -413,8 +413,8 @@ void api_prepare_line_related_meter(unsigned int ibus, unsigned int jbus, char* 
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    DEVICE_ID did = get_line_device_id(ibus, jbus, id);
-    ds.prepare_line_related_meter(did, meter_type, side, var_name);
+    DEVICE_ID did = get_ac_line_device_id(ibus, jbus, id);
+    ds.prepare_ac_line_related_meter(did, meter_type, side, var_name);
 }
 
 void api_prepare_transformer_related_meter(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* id, char* meter_type, char* side, char* var_name, unsigned int toolkit_index)
@@ -542,9 +542,9 @@ void api_set_line_fault(unsigned int ibus, unsigned int jbus, char* identifier, 
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
 
-    if(not psdb.is_line_exist(did))
+    if(not psdb.is_ac_line_exist(did))
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
@@ -556,7 +556,7 @@ void api_set_line_fault(unsigned int ibus, unsigned int jbus, char* identifier, 
     string string_fault_type = string2upper(fault_type);
     if(string_fault_type=="THREE PHASE FAULT")
     {
-        ds.set_line_fault(did, ibus, fault_location, complex<double>(fault_G, fault_B));
+        ds.set_ac_line_fault(did, ibus, fault_location, complex<double>(fault_G, fault_B));
         return;
     }
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
@@ -571,9 +571,9 @@ void api_clear_line_fault(unsigned int ibus, unsigned int jbus, char* identifier
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
 
-    if(not psdb.is_line_exist(did))
+    if(not psdb.is_ac_line_exist(did))
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
@@ -585,7 +585,7 @@ void api_clear_line_fault(unsigned int ibus, unsigned int jbus, char* identifier
     string string_fault_type = string2upper(fault_type);
     if(string_fault_type=="THREE PHASE FAULT")
     {
-        ds.clear_line_fault(did, ibus, fault_location);
+        ds.clear_ac_line_fault(did, ibus, fault_location);
         return;
     }
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
@@ -600,9 +600,9 @@ void api_trip_line(unsigned int ibus, unsigned int jbus, char* identifier, unsig
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
 
-    if(not psdb.is_line_exist(did))
+    if(not psdb.is_ac_line_exist(did))
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
@@ -611,7 +611,7 @@ void api_trip_line(unsigned int ibus, unsigned int jbus, char* identifier, unsig
         return;
     }
 
-    ds.trip_line(did);
+    ds.trip_ac_line(did);
 }
 
 void api_trip_line_breaker(unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index)
@@ -620,9 +620,9 @@ void api_trip_line_breaker(unsigned int ibus, unsigned int jbus, char* identifie
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
 
-    if(not psdb.is_line_exist(did))
+    if(not psdb.is_ac_line_exist(did))
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
@@ -631,7 +631,7 @@ void api_trip_line_breaker(unsigned int ibus, unsigned int jbus, char* identifie
         return;
     }
 
-    ds.trip_line_breaker(did, ibus);
+    ds.trip_ac_line_breaker(did, ibus);
 }
 
 void api_close_line(unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index)
@@ -640,9 +640,9 @@ void api_close_line(unsigned int ibus, unsigned int jbus, char* identifier, unsi
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
 
-    if(not psdb.is_line_exist(did))
+    if(not psdb.is_ac_line_exist(did))
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
@@ -651,7 +651,7 @@ void api_close_line(unsigned int ibus, unsigned int jbus, char* identifier, unsi
         return;
     }
 
-    ds.close_line(did);
+    ds.close_ac_line(did);
 }
 
 void api_close_line_breaker(unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index)
@@ -660,9 +660,9 @@ void api_close_line_breaker(unsigned int ibus, unsigned int jbus, char* identifi
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
 
-    if(not psdb.is_line_exist(did))
+    if(not psdb.is_ac_line_exist(did))
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
@@ -671,7 +671,7 @@ void api_close_line_breaker(unsigned int ibus, unsigned int jbus, char* identifi
         return;
     }
 
-    ds.close_line_breaker(did, ibus);
+    ds.close_ac_line_breaker(did, ibus);
 }
 
 void api_trip_transformer(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* identifier, unsigned int toolkit_index)
@@ -1191,9 +1191,9 @@ double api_search_cct(char* pf_file, char* dy_file, unsigned int ibus, unsigned 
     searcher.set_fault_location_to_fault_side_bus_in_pu(0.0);
     searcher.set_fault_shunt_in_pu(complex<double>(0.0, -2e8));
     if(trip_line==0)
-        searcher.set_flag_trip_line_after_clearing_fault(false);
+        searcher.set_flag_trip_ac_line_after_clearing_fault(false);
     else
-        searcher.set_flag_trip_line_after_clearing_fault(true);
+        searcher.set_flag_trip_ac_line_after_clearing_fault(true);
 
 
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];

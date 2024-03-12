@@ -427,7 +427,7 @@ void DATA_IMEXPORTER::append_buses_to_ordered_buses(const vector<unsigned int>& 
 
 void DATA_IMEXPORTER::check_and_supplement_sequence_model_from_dynamic_model()
 {
-    check_line_sequence_data();
+    check_ac_line_sequence_data();
     check_transformer_sequence_data();
     check_fixed_shunt_sequence_data();
 
@@ -439,14 +439,14 @@ void DATA_IMEXPORTER::check_and_supplement_sequence_model_from_dynamic_model()
     check_and_supplement_vsc_hvdc_sequence_data();
 }
 
-void DATA_IMEXPORTER::check_line_sequence_data()
+void DATA_IMEXPORTER::check_ac_line_sequence_data()
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector<LINE*> lines = psdb.get_all_lines();
-    vector<LINE*> lines_with_no_seq_data;
+    vector<AC_LINE*> lines = psdb.get_all_ac_lines();
+    vector<AC_LINE*> lines_with_no_seq_data;
     unsigned int n = lines.size();
     if(n==0)
         return;

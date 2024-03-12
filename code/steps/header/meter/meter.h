@@ -53,7 +53,7 @@ class METER
         bool is_internal_variable_name_valid(string& name, unsigned int index=0) const;
 
         double get_meter_value_as_a_bus() const;
-        double get_meter_value_as_a_line() const;
+        double get_meter_value_as_an_ac_line() const;
         double get_meter_value_as_a_transformer() const;
         double get_meter_value_as_a_load() const;
         double get_meter_value_as_a_generator() const;

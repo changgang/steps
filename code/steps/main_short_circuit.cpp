@@ -48,8 +48,8 @@ int main()
     sc_solver.set_option_of_DC_lines(BLOCK_AND_IGNORE);
 
 
-//    DEVICE_ID did = get_line_device_id(1, 2, "1");
-//    sc_solver.set_line_fault(did, 1, 0.3, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
+//    DEVICE_ID did = get_ac_line_device_id(1, 2, "1");
+//    sc_solver.set_ac_line_fault(did, 1, 0.3, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
 
 
 //    sc_solver.set_bus_fault(6, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));

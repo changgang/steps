@@ -32,7 +32,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_set_get_pv_unit_capacity();
         void test_set_get_load_capacity();
         void test_set_get_fixed_shunt_capacity();
-        void test_set_get_line_capacity();
+        void test_set_get_ac_line_capacity();
         void test_set_get_transformer_capacity();
         void test_set_get_2t_lcc_hvdc_capacity();
         void test_set_get_vsc_hvdc_capacity();
@@ -53,7 +53,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_append_and_get_wt_generator();
         void test_append_and_get_pv_unit();
         void test_append_and_get_load();
-        void test_append_and_get_line();
+        void test_append_and_get_ac_line();
         void test_append_and_get_transformer();
         void test_append_and_get_fixed_shunt();
         void test_append_and_get_2t_lcc_hvdc();
@@ -69,7 +69,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_is_wt_generator_exist();
         void test_is_pv_unit_exist();
         void test_is_load_exist();
-        void test_is_line_exist();
+        void test_is_ac_line_exist();
         void test_is_transformer_exist();
         void test_is_fixed_shunt_exist();
         void test_is_2t_lcc_hvdc_exist();
@@ -87,7 +87,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_get_wt_generator();
         void test_get_pv_unit();
         void test_get_load();
-        void test_get_line();
+        void test_get_ac_line();
         void test_get_transformer();
         void test_get_fixed_shunt();
         void test_get_2t_lcc_hvdc();
@@ -104,7 +104,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_get_pv_units_connecting_to_bus();
         void test_get_sources_connecting_to_bus();
         void test_get_loads_connecting_to_bus();
-        void test_get_lines_connecting_to_bus();
+        void test_get_ac_lines_connecting_to_bus();
         void test_get_transformers_connecting_to_bus();
         void test_get_fixed_shunts_connecting_to_bus();
         void test_get_2t_lcc_hvdcs_connecting_to_bus();
@@ -117,7 +117,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_get_pv_units_device_id_connecting_to_bus();
         void test_get_sources_device_id_connecting_to_bus();
         void test_get_loads_device_id_connecting_to_bus();
-        void test_get_lines_device_id_connecting_to_bus();
+        void test_get_ac_lines_device_id_connecting_to_bus();
         void test_get_transformers_device_id_connecting_to_bus();
         void test_get_fixed_shunts_device_id_connecting_to_bus();
         void test_get_2t_lcc_hvdcs_device_id_connecting_to_bus();
@@ -131,7 +131,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_get_pv_units_in_area();
         void test_get_sources_in_area();
         void test_get_loads_in_area();
-        void test_get_lines_in_area();
+        void test_get_ac_lines_in_area();
         void test_get_transformers_in_area();
         void test_get_fixed_shunts_in_area();
         void test_get_2t_lcc_hvdcs_in_area();
@@ -145,7 +145,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_get_pv_units_device_id_in_area();
         void test_get_sources_device_id_in_area();
         void test_get_loads_device_id_in_area();
-        void test_get_lines_device_id_in_area();
+        void test_get_ac_lines_device_id_in_area();
         void test_get_transformers_device_id_in_area();
         void test_get_fixed_shunts_device_id_in_area();
         void test_get_2t_lcc_hvdcs_device_id_in_area();
@@ -159,7 +159,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_get_pv_units_in_zone();
         void test_get_sources_in_zone();
         void test_get_loads_in_zone();
-        void test_get_lines_in_zone();
+        void test_get_ac_lines_in_zone();
         void test_get_transformers_in_zone();
         void test_get_fixed_shunts_in_zone();
         void test_get_2t_lcc_hvdcs_in_zone();
@@ -173,7 +173,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_get_pv_units_device_id_in_zone();
         void test_get_sources_device_id_in_zone();
         void test_get_loads_device_id_in_zone();
-        void test_get_lines_device_id_in_zone();
+        void test_get_ac_lines_device_id_in_zone();
         void test_get_transformers_device_id_in_zone();
         void test_get_fixed_shunts_device_id_in_zone();
         void test_get_2t_lcc_hvdcs_device_id_in_zone();
@@ -190,7 +190,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_get_all_pv_units();
         void test_get_all_sources();
         void test_get_all_loads();
-        void test_get_all_lines();
+        void test_get_all_ac_lines();
         void test_get_all_transformers();
         void test_get_all_fixed_shunts();
         void test_get_all_2t_lcc_hvdcs();
@@ -209,7 +209,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_get_all_pv_units_device_id();
         void test_get_all_sources_device_id();
         void test_get_all_loads_device_id();
-        void test_get_all_lines_device_id();
+        void test_get_all_ac_lines_device_id();
         void test_get_all_transformers_device_id();
         void test_get_all_fixed_shunts_device_id();
         void test_get_all_2t_lcc_hvdcs_device_id();
@@ -228,7 +228,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_get_pv_unit_count();
         void test_get_source_count();
         void test_get_load_count();
-        void test_get_line_count();
+        void test_get_ac_line_count();
         void test_get_transformer_count();
         void test_get_fixed_shunt_count();
         void test_get_2t_lcc_hvdc_count();
@@ -244,7 +244,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_get_wt_generator_index();
         void test_get_pv_unit_index();
         void test_get_load_index();
-        void test_get_line_index();
+        void test_get_ac_line_index();
         void test_get_transformer_index();
         void test_get_fixed_shunt_index();
         void test_get_2t_lcc_hvdc_index();
@@ -311,9 +311,9 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_clear_load();
         void test_clear_loads_connecting_to_bus();
         void test_clear_all_loads();
-        void test_clear_line();
-        void test_clear_lines_connecting_to_bus();
-        void test_clear_all_lines();
+        void test_clear_ac_line();
+        void test_clear_ac_lines_connecting_to_bus();
+        void test_clear_all_ac_lines();
         void test_clear_transformer();
         void test_clear_transformers_connecting_to_bus();
         void test_clear_all_transformers();

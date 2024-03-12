@@ -7,7 +7,7 @@ void prepare_Arthur_R_Bergen_3_bus_model()
     prepare_Arthur_R_Bergen_3_bus_model_buses();
     prepare_Arthur_R_Bergen_3_bus_model_generators();
     prepare_Arthur_R_Bergen_3_bus_model_loads();
-    prepare_Arthur_R_Bergen_3_bus_model_lines();
+    prepare_Arthur_R_Bergen_3_bus_model_ac_lines();
     prepare_Arthur_R_Bergen_3_bus_model_transformers();
     prepare_Arthur_R_Bergen_3_bus_model_areas();
     prepare_Arthur_R_Bergen_3_bus_model_zones();
@@ -110,11 +110,11 @@ void prepare_Arthur_R_Bergen_3_bus_model_loads()
     psdb.append_load(load);
 }
 
-void prepare_Arthur_R_Bergen_3_bus_model_lines()
+void prepare_Arthur_R_Bergen_3_bus_model_ac_lines()
 {
     STEPS& toolkit = get_default_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    LINE line(default_toolkit);
+    AC_LINE line(default_toolkit);
 
     complex<double> z(0.0), y(0.0);
 
@@ -129,15 +129,15 @@ void prepare_Arthur_R_Bergen_3_bus_model_lines()
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    psdb.append_line(line);
+    psdb.append_ac_line(line);
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(3);
-    psdb.append_line(line);
+    psdb.append_ac_line(line);
 
     line.set_sending_side_bus(2);
     line.set_receiving_side_bus(3);
-    psdb.append_line(line);
+    psdb.append_ac_line(line);
 }
 
 void prepare_Arthur_R_Bergen_3_bus_model_transformers()

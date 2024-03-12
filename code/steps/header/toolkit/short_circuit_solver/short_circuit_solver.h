@@ -40,10 +40,10 @@ class SHORT_CIRCUIT_SOLVER
         DC_LINES_OPTION get_option_of_DC_lines();
 
         void set_bus_fault(unsigned int bus, FAULT_TYPE type, const complex<double>& fault_shunt);
-        void set_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location, FAULT_TYPE fault_type, const complex<double>& fault_shunt);
+        void set_ac_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location, FAULT_TYPE fault_type, const complex<double>& fault_shunt);
         void clear_fault();
         bool is_bus_fault();
-        bool is_line_fault();
+        bool is_ac_line_fault();
         bool is_fault();
         FAULT_TYPE get_fault_type();
 
@@ -93,7 +93,7 @@ class SHORT_CIRCUIT_SOLVER
         void restore_bus_initial_voltage();
 
         complex<double> get_initial_voltage_of_bus_before_short_circuit(unsigned int bus);
-        complex<double> get_initial_voltage_of_faulted_line_point_before_short_circuit();
+        complex<double> get_initial_voltage_of_faulted_ac_line_point_before_short_circuit();
 
         void update_internal_voltage_of_all_generators_and_wt_generators();
         void update_internal_voltage_of_all_generators();
@@ -132,18 +132,18 @@ class SHORT_CIRCUIT_SOLVER
 
         void show_short_circuit_with_bus_fault();
         void show_contributions_of_fault_current_with_bus_fault();
-        void show_short_circuit_with_line_fault();
-        void show_contributions_of_fault_current_with_line_fault();
+        void show_short_circuit_with_ac_line_fault();
+        void show_contributions_of_fault_current_with_ac_line_fault();
         void save_short_circuit_result_to_file_with_bus_fault(const string& filename);
-        void save_short_circuit_result_to_file_with_line_fault(const string& filename);
+        void save_short_circuit_result_to_file_with_ac_line_fault(const string& filename);
 
 
-        complex<double> get_positive_sequence_voltage_at_line_fault_location_in_pu();
-        complex<double> get_negative_sequence_voltage_at_line_fault_location_in_pu();
-        complex<double> get_zero_sequence_voltage_at_line_fault_location_in_pu();
-        complex<double> get_positive_sequence_voltage_at_line_fault_location_in_kV();
-        complex<double> get_negative_sequence_voltage_at_line_fault_location_in_kV();
-        complex<double> get_zero_sequence_voltage_at_line_fault_location_in_kV();
+        complex<double> get_positive_sequence_voltage_at_ac_line_fault_location_in_pu();
+        complex<double> get_negative_sequence_voltage_at_ac_line_fault_location_in_pu();
+        complex<double> get_zero_sequence_voltage_at_ac_line_fault_location_in_pu();
+        complex<double> get_positive_sequence_voltage_at_ac_line_fault_location_in_kV();
+        complex<double> get_negative_sequence_voltage_at_ac_line_fault_location_in_kV();
+        complex<double> get_zero_sequence_voltage_at_ac_line_fault_location_in_kV();
 
         string get_fault_information();
         void show_current_table_header();
@@ -162,7 +162,7 @@ class SHORT_CIRCUIT_SOLVER
         COORDINATES_OPTION coordindates_of_currents_and_volatges;
 
         BUS* faulted_bus_pointer;
-        LINE* faulted_line_pointer;
+        AC_LINE* faulted_ac_line_pointer;
 
         vector<complex<double>> bus_initial_voltage_before_short_circuit;
 
@@ -173,7 +173,7 @@ class SHORT_CIRCUIT_SOLVER
 
         FAULT fault;
         vector<complex<double> > Yif_mutual, Yfj_mutual;
-        vector<LINE*> lineptrs_of_mutual_with_line_fault;
+        vector<AC_LINE*> lineptrs_of_mutual_with_line_fault;
 
         vector<complex<double> > injection_current_vector_with_internal_order;
 

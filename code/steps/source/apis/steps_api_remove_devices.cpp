@@ -61,9 +61,9 @@ void api_remove_line(unsigned int sending_side_bus_number, unsigned int receivin
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    DEVICE_ID did = get_line_device_id(sending_side_bus_number, receiving_side_bus_number, identifier);
-    if(psdb.is_line_exist(did))
-        psdb.clear_line(did);
+    DEVICE_ID did = get_ac_line_device_id(sending_side_bus_number, receiving_side_bus_number, identifier);
+    if(psdb.is_ac_line_exist(did))
+        psdb.clear_ac_line(did);
 }
 
 void api_remove_hvdc(unsigned int rectifier_bus_number, unsigned int inverter_bus_number, char* identifier, unsigned int toolkit_index)

@@ -26,8 +26,8 @@ class STEPS_API_SEARCH_BUFFER
         unsigned int load_pointer;
         vector<FIXED_SHUNT*> fixed_shunts;
         unsigned int fixed_shunt_pointer;
-        vector<LINE*> lines;
-        unsigned int line_pointer;
+        vector<AC_LINE*> ac_lines;
+        unsigned int ac_line_pointer;
         vector<TRANSFORMER*> transformers;
         unsigned int transformer_pointer;
         vector<LCC_HVDC2T*> hvdcs;

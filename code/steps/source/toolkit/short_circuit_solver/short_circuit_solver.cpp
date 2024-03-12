@@ -32,7 +32,7 @@ void SHORT_CIRCUIT_SOLVER::clear()
     set_coordinates_of_currents_and_voltages(RECTANGULAR);
 
     faulted_bus_pointer = NULL;
-    faulted_line_pointer = NULL;
+    faulted_ac_line_pointer = NULL;
 
     If1 = 0.0;
     If2 = 0.0;
@@ -623,7 +623,7 @@ void SHORT_CIRCUIT_SOLVER::set_bus_fault(unsigned int bus, FAULT_TYPE type, cons
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    if(is_line_fault() || is_bus_fault())
+    if(is_ac_line_fault() || is_bus_fault())
     {
         osstream<<"Fault has been set. The calculation of mulitiple faults is not supported."<<endl;
         toolkit->show_information_with_leading_time_stamp(osstream);
@@ -668,12 +668,12 @@ void SHORT_CIRCUIT_SOLVER::set_bus_fault(unsigned int bus, FAULT_TYPE type, cons
     }
 }
 
-void SHORT_CIRCUIT_SOLVER::set_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location, FAULT_TYPE fault_type, const complex<double>& fault_shunt)
+void SHORT_CIRCUIT_SOLVER::set_ac_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location, FAULT_TYPE fault_type, const complex<double>& fault_shunt)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    if(is_line_fault() || is_bus_fault())
+    if(is_ac_line_fault() || is_bus_fault())
     {
         osstream<<"Fault has been set. The calculation of mulitiple faults is not supported."<<endl;
         toolkit->show_information_with_leading_time_stamp(osstream);
@@ -682,7 +682,7 @@ void SHORT_CIRCUIT_SOLVER::set_line_fault(const DEVICE_ID& line_id, unsigned int
 
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
-        LINE* lineptr = psdb.get_line(line_id);
+        AC_LINE* lineptr = psdb.get_ac_line(line_id);
         if(lineptr!=NULL)
         {
             string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());
@@ -708,7 +708,7 @@ void SHORT_CIRCUIT_SOLVER::set_line_fault(const DEVICE_ID& line_id, unsigned int
                         toolkit->show_information_with_leading_time_stamp(osstream);
 
                         lineptr->set_fault(side_bus,location, fault);
-                        faulted_line_pointer = lineptr;
+                        faulted_ac_line_pointer = lineptr;
                     }
                     else
                     {
@@ -751,9 +751,9 @@ void SHORT_CIRCUIT_SOLVER::clear_fault()
     if(is_bus_fault())
         faulted_bus_pointer->clear_fault();
     else
-        faulted_line_pointer->clear_all_faults();
+        faulted_ac_line_pointer->clear_all_faults();
     faulted_bus_pointer = NULL;
-    faulted_line_pointer = NULL;
+    faulted_ac_line_pointer = NULL;
     fault.clear();
     If1 = 0.0;
     If2 = 0.0;
@@ -782,14 +782,14 @@ string SHORT_CIRCUIT_SOLVER::get_fault_information()
         snprintf(infor, 200, "%s at bus %u [%s].\nFault shunt is (%.f %.f) pu.",
                 fault_type.c_str(), busnum, busname.c_str(), fault_shunt.real(), fault_shunt.imag());
     }
-    else if(is_line_fault())
+    else if(is_ac_line_fault())
     {
-        unsigned int ibus = faulted_line_pointer->get_sending_side_bus();
-        double fault_location = faulted_line_pointer->get_fault_location_of_fault(0);
-        FAULT fault = faulted_line_pointer->get_fault_at_location(ibus, fault_location);
+        unsigned int ibus = faulted_ac_line_pointer->get_sending_side_bus();
+        double fault_location = faulted_ac_line_pointer->get_fault_location_of_fault(0);
+        FAULT fault = faulted_ac_line_pointer->get_fault_at_location(ibus, fault_location);
         string fault_type = fault.get_fault_type_string();
         complex<double> fault_shunt = fault.get_fault_shunt_in_pu();
-        string linename = faulted_line_pointer->get_compound_device_name();
+        string linename = faulted_ac_line_pointer->get_compound_device_name();
         snprintf(infor, 200, "%s at line [%s].\nFault shunt is (%.f %.f) pu at location %.2f to %u.",
                 fault_type.c_str(), linename.c_str(), fault_shunt.real(), fault_shunt.imag(), fault_location, ibus);
     }
@@ -803,16 +803,16 @@ bool SHORT_CIRCUIT_SOLVER::is_bus_fault()
     else
         return false;
 }
-bool SHORT_CIRCUIT_SOLVER::is_line_fault()
+bool SHORT_CIRCUIT_SOLVER::is_ac_line_fault()
 {
-    if(faulted_line_pointer!=NULL)
+    if(faulted_ac_line_pointer!=NULL)
         return true;
     else
         return false;
 }
 bool SHORT_CIRCUIT_SOLVER::is_fault()
 {
-    if(is_bus_fault()==false and is_line_fault()==false)
+    if(is_bus_fault()==false and is_ac_line_fault()==false)
         return false;
     else
         return true;
@@ -859,12 +859,12 @@ void SHORT_CIRCUIT_SOLVER::calculate_and_store_equivalent_impedance_between_bus_
         Z2 = Z2_between_internal_bus_to_fault_place[internal_bus];
         Z0 = Z0_between_internal_bus_to_fault_place[internal_bus];
     }
-    else if(is_line_fault())
+    else if(is_ac_line_fault())
     {
-        double fault_locaton = faulted_line_pointer->get_fault_location_of_fault(0);
+        double fault_locaton = faulted_ac_line_pointer->get_fault_location_of_fault(0);
 
-        unsigned int ibus = faulted_line_pointer->get_sending_side_bus();
-        unsigned int jbus = faulted_line_pointer->get_receiving_side_bus();
+        unsigned int ibus = faulted_ac_line_pointer->get_sending_side_bus();
+        unsigned int jbus = faulted_ac_line_pointer->get_receiving_side_bus();
         unsigned int internal_ibus = get_internal_bus_number_of_physical_bus(ibus);
         unsigned int internal_jbus = get_internal_bus_number_of_physical_bus(jbus);
 
@@ -879,7 +879,7 @@ void SHORT_CIRCUIT_SOLVER::calculate_and_store_equivalent_impedance_between_bus_
         complex<double> I, Ii, Ij, Zij, Zif, Zjf, Vi, Vj, V;
 
         // positive
-        Zij = faulted_line_pointer->get_line_positive_sequence_z_in_pu();
+        Zij = faulted_ac_line_pointer->get_line_positive_sequence_z_in_pu();
         Zif = Zij*fault_locaton;
         Zjf = Zij*(1.0-fault_locaton);
         Ii = 1.0/Zif;
@@ -899,7 +899,7 @@ void SHORT_CIRCUIT_SOLVER::calculate_and_store_equivalent_impedance_between_bus_
 
 
         // negative
-        Zij = faulted_line_pointer->get_line_positive_sequence_z_in_pu();
+        Zij = faulted_ac_line_pointer->get_line_positive_sequence_z_in_pu();
         Zif = Zij*fault_locaton;
         Zjf = Zij*(1.0-fault_locaton);
         Ii = 1.0/Zif;
@@ -918,10 +918,10 @@ void SHORT_CIRCUIT_SOLVER::calculate_and_store_equivalent_impedance_between_bus_
         }
 
         // zero
-        if(not faulted_line_pointer->is_mutual())
+        if(not faulted_ac_line_pointer->is_mutual())
         {
 
-            Zij = faulted_line_pointer->get_line_zero_sequence_z_in_pu();
+            Zij = faulted_ac_line_pointer->get_line_zero_sequence_z_in_pu();
             Zif = Zij*fault_locaton;
             Zjf = Zij*(1.0-fault_locaton);
             Ii = 1.0/Zif;
@@ -941,19 +941,19 @@ void SHORT_CIRCUIT_SOLVER::calculate_and_store_equivalent_impedance_between_bus_
         }
         else // faulted location at mutual line
         {
-            complex<double> zij = faulted_line_pointer->get_line_zero_sequence_z_in_pu();
+            complex<double> zij = faulted_ac_line_pointer->get_line_zero_sequence_z_in_pu();
 
-            vector<MUTUAL_DATA*> mutuals = psdb.get_mutual_data_with_line(ibus, jbus, faulted_line_pointer->get_identifier());
-            vector<LINE*> mutual_lineptrs;
+            vector<MUTUAL_DATA*> mutuals = psdb.get_mutual_data_with_line(ibus, jbus, faulted_ac_line_pointer->get_identifier());
+            vector<AC_LINE*> mutual_lineptrs;
             vector<double> starting_locations, ending_locations;
             vector<complex<double> > zm_if, zm_fj;
 
             for(unsigned int i=0; i<mutuals.size(); i++)
             {
-                mutual_lineptrs.push_back(mutuals[i]->get_mutual_line(faulted_line_pointer));
+                mutual_lineptrs.push_back(mutuals[i]->get_mutual_ac_line(faulted_ac_line_pointer));
                 complex<double> zm = mutuals[i]->get_mutual_impedance();
-                double sl = mutuals[i]->get_starting_location_of_line(faulted_line_pointer);
-                double el = mutuals[i]->get_ending_location_of_line(faulted_line_pointer);
+                double sl = mutuals[i]->get_starting_location_of_ac_line(faulted_ac_line_pointer);
+                double el = mutuals[i]->get_ending_location_of_ac_line(faulted_ac_line_pointer);
 
                 complex<double> zmif=0.0, zmfj=0.0;
                 if(fault_locaton<=sl)
@@ -970,8 +970,8 @@ void SHORT_CIRCUIT_SOLVER::calculate_and_store_equivalent_impedance_between_bus_
                 zm_fj.push_back(zmfj);
             }
 
-            vector<complex<double> > Ymutual = faulted_line_pointer->get_mutual_admittances();
-            vector<LINE*> lineptrs_Ymutual = faulted_line_pointer->get_line_pointers_corresponding_to_mutual_admittances();
+            vector<complex<double> > Ymutual = faulted_ac_line_pointer->get_mutual_admittances();
+            vector<AC_LINE*> lineptrs_Ymutual = faulted_ac_line_pointer->get_line_pointers_corresponding_to_mutual_admittances();
 
             n = Z0i.size();
             for(unsigned int s=0; s<n; s++)
@@ -982,7 +982,7 @@ void SHORT_CIRCUIT_SOLVER::calculate_and_store_equivalent_impedance_between_bus_
                 for(unsigned int k=0; k<lineptrs_Ymutual.size(); k++)
                 {
                     complex<double> Ytemp = Ymutual[k];
-                    LINE* lineptr = lineptrs_Ymutual[k];
+                    AC_LINE* lineptr = lineptrs_Ymutual[k];
                     unsigned int pbus = lineptr->get_sending_side_bus();
                     unsigned int qbus = lineptr->get_receiving_side_bus();
                     vector<complex<double> > Z0p = network_matrix.get_zero_sequence_complex_impedance_of_column_with_physical_bus(pbus);
@@ -995,14 +995,14 @@ void SHORT_CIRCUIT_SOLVER::calculate_and_store_equivalent_impedance_between_bus_
                  for(unsigned int k=0; k<mutual_lineptrs.size(); k++)
                  {
                     complex<double> Ipq = 0.0;
-                    LINE* lineptr = mutual_lineptrs[k];
+                    AC_LINE* lineptr = mutual_lineptrs[k];
                     vector<complex<double> > Ymutual_pq = lineptr->get_mutual_admittances();
-                    vector<LINE*> lineptrs_Ymutual_pq = lineptr->get_line_pointers_corresponding_to_mutual_admittances();
+                    vector<AC_LINE*> lineptrs_Ymutual_pq = lineptr->get_line_pointers_corresponding_to_mutual_admittances();
 
                     for(unsigned int t=0; t<lineptrs_Ymutual_pq.size(); t++)
                     {
                         complex<double> Ytemp = Ymutual_pq[t];
-                        LINE* linep = lineptrs_Ymutual_pq[t];
+                        AC_LINE* linep = lineptrs_Ymutual_pq[t];
                         unsigned int pbus = linep->get_sending_side_bus();
                         unsigned int qbus = linep->get_receiving_side_bus();
                         vector<complex<double> > Z0p = network_matrix.get_zero_sequence_complex_impedance_of_column_with_physical_bus(pbus);
@@ -1019,24 +1019,24 @@ void SHORT_CIRCUIT_SOLVER::calculate_and_store_equivalent_impedance_between_bus_
             matrix.add_entry(1,1, (1.0-fault_locaton)*zij);
             for(unsigned int k=1; k<lineptrs_Ymutual.size(); k++)
             {
-                LINE* lineptr = lineptrs_Ymutual[k];
+                AC_LINE* lineptr = lineptrs_Ymutual[k];
 
                 complex<double> zpq = lineptr->get_line_zero_sequence_z_in_pu();
                 matrix.add_entry(k+1, k+1, zpq);
             }
             for(unsigned int k=1; k<lineptrs_Ymutual.size(); k++)
             {
-                LINE* lineptr = lineptrs_Ymutual[k];
+                AC_LINE* lineptr = lineptrs_Ymutual[k];
                 vector<MUTUAL_DATA*> pq_mutuals = psdb.get_mutual_data_with_line(lineptr->get_sending_side_bus(),lineptr->get_receiving_side_bus(),lineptr->get_identifier());
 
                 for(unsigned int t=0; t<pq_mutuals.size(); t++)
                 {
-                    LINE* linep = pq_mutuals[t]->get_mutual_line(lineptr);
-                    if(linep == faulted_line_pointer)
+                    AC_LINE* linep = pq_mutuals[t]->get_mutual_ac_line(lineptr);
+                    if(linep == faulted_ac_line_pointer)
                     {
                         complex<double> zm = pq_mutuals[t]->get_mutual_impedance();
-                        double sl = pq_mutuals[t]->get_starting_location_of_line(faulted_line_pointer);
-                        double el = pq_mutuals[t]->get_ending_location_of_line(faulted_line_pointer);
+                        double sl = pq_mutuals[t]->get_starting_location_of_ac_line(faulted_ac_line_pointer);
+                        double el = pq_mutuals[t]->get_ending_location_of_ac_line(faulted_ac_line_pointer);
 
                         complex<double> zmif, zmfj;
                         if(fault_locaton<=sl)
@@ -1088,7 +1088,7 @@ void SHORT_CIRCUIT_SOLVER::calculate_and_store_equivalent_impedance_between_bus_
             complex<double> temp = 1.0 - (Ymutual_fj[0]-Ymutual_if[0])*Zif + (Ymutual_fj[1]-Ymutual_if[1])*Zjf;
             for(unsigned int k=1; k<lineptrs_Ymutual.size(); k++)
             {
-                LINE* lineptr = lineptrs_Ymutual[k];
+                AC_LINE* lineptr = lineptrs_Ymutual[k];
                 unsigned int pbus = lineptr->get_sending_side_bus();
                 unsigned int qbus = lineptr->get_receiving_side_bus();
                 complex<double> Zpf = get_zero_sequence_equivalent_mutual_impedance_in_pu_between_bus_to_fault_place(pbus);
@@ -1235,8 +1235,8 @@ complex<double> SHORT_CIRCUIT_SOLVER::get_initial_voltage_of_fault_location_befo
     complex<double> Uf;
     if(is_bus_fault())
         Uf = get_initial_voltage_of_bus_before_short_circuit(faulted_bus_pointer->get_bus_number());
-    else if(is_line_fault())
-        Uf = get_initial_voltage_of_faulted_line_point_before_short_circuit();
+    else if(is_ac_line_fault())
+        Uf = get_initial_voltage_of_faulted_ac_line_point_before_short_circuit();
     return Uf;
 }
 
@@ -1322,7 +1322,7 @@ complex<double> SHORT_CIRCUIT_SOLVER::get_positive_sequence_fault_current_in_kA(
     if(is_bus_fault())
         return If1*sbase/(SQRT3*faulted_bus_pointer->get_base_voltage_in_kV());
     else
-        return If1*sbase/(SQRT3*faulted_line_pointer->get_line_base_voltage_in_kV());
+        return If1*sbase/(SQRT3*faulted_ac_line_pointer->get_line_base_voltage_in_kV());
 }
 complex<double> SHORT_CIRCUIT_SOLVER::get_negative_sequence_fault_current_in_kA()
 {
@@ -1331,7 +1331,7 @@ complex<double> SHORT_CIRCUIT_SOLVER::get_negative_sequence_fault_current_in_kA(
     if(is_bus_fault())
         return If2*sbase/(SQRT3*faulted_bus_pointer->get_base_voltage_in_kV());
     else
-        return If2*sbase/(SQRT3*faulted_line_pointer->get_line_base_voltage_in_kV());
+        return If2*sbase/(SQRT3*faulted_ac_line_pointer->get_line_base_voltage_in_kV());
 }
 complex<double> SHORT_CIRCUIT_SOLVER::get_zero_sequence_fault_current_in_kA()
 {
@@ -1340,23 +1340,23 @@ complex<double> SHORT_CIRCUIT_SOLVER::get_zero_sequence_fault_current_in_kA()
     if(is_bus_fault())
         return If0*sbase/(SQRT3*faulted_bus_pointer->get_base_voltage_in_kV());
     else
-        return If0*sbase/(SQRT3*faulted_line_pointer->get_line_base_voltage_in_kV());
+        return If0*sbase/(SQRT3*faulted_ac_line_pointer->get_line_base_voltage_in_kV());
 }
 
 
 
 
-complex<double> SHORT_CIRCUIT_SOLVER::get_initial_voltage_of_faulted_line_point_before_short_circuit()
+complex<double> SHORT_CIRCUIT_SOLVER::get_initial_voltage_of_faulted_ac_line_point_before_short_circuit()
 {
-    double fault_location = faulted_line_pointer->get_fault_location_of_fault(0);
-    unsigned int ibus = faulted_line_pointer->get_sending_side_bus();
-    unsigned int jbus = faulted_line_pointer->get_receiving_side_bus();
+    double fault_location = faulted_ac_line_pointer->get_fault_location_of_fault(0);
+    unsigned int ibus = faulted_ac_line_pointer->get_sending_side_bus();
+    unsigned int jbus = faulted_ac_line_pointer->get_receiving_side_bus();
 
     complex<double> Ui = get_initial_voltage_of_bus_before_short_circuit(ibus);
     complex<double> Uj = get_initial_voltage_of_bus_before_short_circuit(jbus);
 
-    complex<double> Zline = faulted_line_pointer->get_line_zero_sequence_z_in_pu();
-    complex<double> Yline = faulted_line_pointer->get_line_zero_sequence_y_in_pu();
+    complex<double> Zline = faulted_ac_line_pointer->get_line_zero_sequence_z_in_pu();
+    complex<double> Yline = faulted_ac_line_pointer->get_line_zero_sequence_y_in_pu();
 
     complex<double> Zif = Zline*fault_location;
     complex<double> Zjf = Zline*(1.0-fault_location);
@@ -1393,28 +1393,28 @@ complex<double> SHORT_CIRCUIT_SOLVER::get_zero_sequence_short_circuit_capacity_i
     return If0*Uf0;
 }
 
-void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_line_fault()
+void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_ac_line_fault()
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
 
     UNITS_OPTION units = get_units_of_currents_and_voltages();
-    double Ibase = (units==PU)?1.0:sbase/(SQRT3*faulted_line_pointer->get_line_base_voltage_in_kV());
-    string id = faulted_line_pointer->get_identifier();
-    double Vbase = faulted_line_pointer->get_line_base_voltage_in_kV();
+    double Ibase = (units==PU)?1.0:sbase/(SQRT3*faulted_ac_line_pointer->get_line_base_voltage_in_kV());
+    string id = faulted_ac_line_pointer->get_identifier();
+    double Vbase = faulted_ac_line_pointer->get_line_base_voltage_in_kV();
 
-    unsigned int ibus = faulted_line_pointer->get_sending_side_bus();
-    unsigned int jbus = faulted_line_pointer->get_receiving_side_bus();
-    BUS* ibusptr = faulted_line_pointer->get_sending_side_bus_pointer();
-    BUS* jbusptr = faulted_line_pointer->get_receiving_side_bus_pointer();
+    unsigned int ibus = faulted_ac_line_pointer->get_sending_side_bus();
+    unsigned int jbus = faulted_ac_line_pointer->get_receiving_side_bus();
+    BUS* ibusptr = faulted_ac_line_pointer->get_sending_side_bus_pointer();
+    BUS* jbusptr = faulted_ac_line_pointer->get_receiving_side_bus_pointer();
 
-    double fault_location = faulted_line_pointer->get_fault_location_of_fault(0);
-    complex<double> Z1ij = faulted_line_pointer->get_line_positive_sequence_z_in_pu();
+    double fault_location = faulted_ac_line_pointer->get_fault_location_of_fault(0);
+    complex<double> Z1ij = faulted_ac_line_pointer->get_line_positive_sequence_z_in_pu();
     complex<double> Z1if = Z1ij*fault_location;
     complex<double> Z1jf = Z1ij*(1.0-fault_location);
 
-    complex<double> Z0ij = faulted_line_pointer->get_line_zero_sequence_z_in_pu();
+    complex<double> Z0ij = faulted_ac_line_pointer->get_line_zero_sequence_z_in_pu();
     complex<double> Z0if = Z0ij*fault_location;
     complex<double> Z0jf = Z0ij*(1.0-fault_location);
 
@@ -1432,7 +1432,7 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_line_fault()
     complex<double> I1if = (U1i - U1f)/Z1if;
     complex<double> I2if = (U2i - U2f)/Z1if;
     complex<double> I0if = 0.0;
-    if(not faulted_line_pointer->is_mutual())
+    if(not faulted_ac_line_pointer->is_mutual())
     {
         I0if = (U0i - U0f)/Z0if;
     }
@@ -1441,7 +1441,7 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_line_fault()
         I0if = Yif_mutual[0]*(U0i-U0f) + Yif_mutual[1]*(U0f-U0j);
         for(unsigned int i=0; i<lineptrs_of_mutual_with_line_fault.size(); i++)
         {
-            LINE* lineptr = lineptrs_of_mutual_with_line_fault[i];
+            AC_LINE* lineptr = lineptrs_of_mutual_with_line_fault[i];
             complex<double> Vs = lineptr->get_line_zero_sequence_complex_voltage_at_sending_side_in_pu();
             complex<double> Vr = lineptr->get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu();
             I0if = I0if + Yif_mutual[i+2]*(Vs-Vr);
@@ -1460,7 +1460,7 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_line_fault()
     complex<double> I1jf = (U1j - U1f)/Z1jf;
     complex<double> I2jf = (U2j - U2f)/Z1jf;
     complex<double> I0jf = 0.0;
-    if(not faulted_line_pointer->is_mutual())
+    if(not faulted_ac_line_pointer->is_mutual())
     {
         I0jf = (U0j - U0f)/Z0jf;
     }
@@ -1469,7 +1469,7 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_line_fault()
         I0jf = -Yfj_mutual[0]*(U0i-U0f) - Yfj_mutual[1]*(U0f-U0j);
         for(unsigned int i=0; i<lineptrs_of_mutual_with_line_fault.size(); i++)
         {
-            LINE* lineptr = lineptrs_of_mutual_with_line_fault[i];
+            AC_LINE* lineptr = lineptrs_of_mutual_with_line_fault[i];
             complex<double> Vs = lineptr->get_line_zero_sequence_complex_voltage_at_sending_side_in_pu();
             complex<double> Vr = lineptr->get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu();
             I0jf = I0jf - Yfj_mutual[i+2]*(Vs-Vr);
@@ -1489,8 +1489,8 @@ complex<double> SHORT_CIRCUIT_SOLVER::get_positive_sequence_voltage_of_fault_poi
 {
     if(is_bus_fault())
         return faulted_bus_pointer->get_positive_sequence_complex_voltage_in_pu();
-    else if(is_line_fault())
-        return get_positive_sequence_voltage_at_line_fault_location_in_pu();
+    else if(is_ac_line_fault())
+        return get_positive_sequence_voltage_at_ac_line_fault_location_in_pu();
     else
         return 0.0;
 }
@@ -1499,8 +1499,8 @@ complex<double> SHORT_CIRCUIT_SOLVER::get_negative_sequence_voltage_of_fault_poi
 {
     if(is_bus_fault())
         return faulted_bus_pointer->get_negative_sequence_complex_voltage_in_pu();
-    else if(is_line_fault())
-        return get_negative_sequence_voltage_at_line_fault_location_in_pu();
+    else if(is_ac_line_fault())
+        return get_negative_sequence_voltage_at_ac_line_fault_location_in_pu();
     else
         return 0.0;
 }
@@ -1509,8 +1509,8 @@ complex<double> SHORT_CIRCUIT_SOLVER::get_zero_sequence_voltage_of_fault_point_i
 {
     if(is_bus_fault())
         return faulted_bus_pointer->get_zero_sequence_complex_voltage_in_pu();
-    else if(is_line_fault())
-        return get_zero_sequence_voltage_at_line_fault_location_in_pu();
+    else if(is_ac_line_fault())
+        return get_zero_sequence_voltage_at_ac_line_fault_location_in_pu();
     else
         return 0.0;
 }
@@ -1519,8 +1519,8 @@ complex<double> SHORT_CIRCUIT_SOLVER::get_positive_sequence_voltage_of_fault_poi
 {
     if(is_bus_fault())
         return faulted_bus_pointer->get_positive_sequence_complex_voltage_in_kV()/SQRT3;
-    else if(is_line_fault())
-        return get_positive_sequence_voltage_at_line_fault_location_in_kV();
+    else if(is_ac_line_fault())
+        return get_positive_sequence_voltage_at_ac_line_fault_location_in_kV();
     else
         return 0.0;
 }
@@ -1528,8 +1528,8 @@ complex<double> SHORT_CIRCUIT_SOLVER::get_negative_sequence_voltage_of_fault_poi
 {
     if(is_bus_fault())
         return faulted_bus_pointer->get_negative_sequence_complex_voltage_in_kV()/SQRT3;
-    else if(is_line_fault())
-        return get_negative_sequence_voltage_at_line_fault_location_in_kV();
+    else if(is_ac_line_fault())
+        return get_negative_sequence_voltage_at_ac_line_fault_location_in_kV();
     else
         return 0.0;
 }
@@ -1537,8 +1537,8 @@ complex<double> SHORT_CIRCUIT_SOLVER::get_zero_sequence_voltage_of_fault_point_i
 {
     if(is_bus_fault())
         return faulted_bus_pointer->get_zero_sequence_complex_voltage_in_kV()/SQRT3;
-    else if(is_line_fault())
-        return get_zero_sequence_voltage_at_line_fault_location_in_kV();
+    else if(is_ac_line_fault())
+        return get_zero_sequence_voltage_at_ac_line_fault_location_in_kV();
     else
         return 0.0;
 }
@@ -1709,8 +1709,8 @@ void SHORT_CIRCUIT_SOLVER::show_short_circuit_result()
 {
     if(is_bus_fault())
         show_short_circuit_with_bus_fault();
-    else if(is_line_fault())
-        show_short_circuit_with_line_fault();
+    else if(is_ac_line_fault())
+        show_short_circuit_with_ac_line_fault();
 }
 
 void SHORT_CIRCUIT_SOLVER::show_short_circuit_with_bus_fault()
@@ -1792,14 +1792,14 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_bus_fault()
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     unsigned int fault_bus = faulted_bus_pointer->get_bus_number();
-    vector<LINE*> lines = psdb.get_lines_connecting_to_bus(fault_bus);
+    vector<AC_LINE*> lines = psdb.get_ac_lines_connecting_to_bus(fault_bus);
 
     UNITS_OPTION units = get_units_of_currents_and_voltages();
 
     unsigned int n = lines.size();
     for(unsigned int i=0; i<n; i++)
     {
-        LINE& line = *lines[i];
+        AC_LINE& line = *lines[i];
 
         complex<double> I1, I2, I0;
         unsigned int current_from_bus ;
@@ -2066,7 +2066,7 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_bus_fault()
     }
 }
 
-void SHORT_CIRCUIT_SOLVER::show_short_circuit_with_line_fault()
+void SHORT_CIRCUIT_SOLVER::show_short_circuit_with_ac_line_fault()
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -2074,7 +2074,7 @@ void SHORT_CIRCUIT_SOLVER::show_short_circuit_with_line_fault()
     UNITS_OPTION unit = get_units_of_currents_and_voltages();
     unsigned int busnum = 99999;
     string busname = "DUMMY BUS";
-    double Vbase = faulted_line_pointer->get_line_base_voltage_in_kV();
+    double Vbase = faulted_ac_line_pointer->get_line_base_voltage_in_kV();
 
     osstream<<"Sequence equivalent impedance (P.U.):"<<endl;
     toolkit->show_information_with_leading_time_stamp(osstream);
@@ -2090,22 +2090,22 @@ void SHORT_CIRCUIT_SOLVER::show_short_circuit_with_line_fault()
     complex<double> V1,V2,V0;
     if(unit == PU)
     {
-        V1 = get_positive_sequence_voltage_at_line_fault_location_in_pu();
-        V2 = get_negative_sequence_voltage_at_line_fault_location_in_pu();
-        V0 = get_zero_sequence_voltage_at_line_fault_location_in_pu();
+        V1 = get_positive_sequence_voltage_at_ac_line_fault_location_in_pu();
+        V2 = get_negative_sequence_voltage_at_ac_line_fault_location_in_pu();
+        V0 = get_zero_sequence_voltage_at_ac_line_fault_location_in_pu();
     }
     else if(unit == PHYSICAL)
     {
-        V1 = get_positive_sequence_voltage_at_line_fault_location_in_kV();
-        V2 = get_negative_sequence_voltage_at_line_fault_location_in_kV();
-        V0 = get_zero_sequence_voltage_at_line_fault_location_in_kV();
+        V1 = get_positive_sequence_voltage_at_ac_line_fault_location_in_kV();
+        V2 = get_negative_sequence_voltage_at_ac_line_fault_location_in_kV();
+        V0 = get_zero_sequence_voltage_at_ac_line_fault_location_in_kV();
     }
     show_voltage_table_header();
     toolkit->show_information_with_leading_time_stamp(get_formatted_sequence_data(busnum, "", V1, V2, V0));
     toolkit->show_information_with_leading_time_stamp(get_formatted_phase_data(busname, Vbase , V1, V2, V0));
 
     show_current_table_header();
-    show_contributions_of_fault_current_with_line_fault();
+    show_contributions_of_fault_current_with_ac_line_fault();
 
     complex<double> I1, I2, I0;
     if(unit == PU)
@@ -2137,39 +2137,39 @@ void SHORT_CIRCUIT_SOLVER::show_short_circuit_with_line_fault()
     toolkit->show_information_with_leading_time_stamp(osstream);
 }
 
-complex<double> SHORT_CIRCUIT_SOLVER::get_positive_sequence_voltage_at_line_fault_location_in_pu()
+complex<double> SHORT_CIRCUIT_SOLVER::get_positive_sequence_voltage_at_ac_line_fault_location_in_pu()
 {
-    complex<double> Uf = get_initial_voltage_of_faulted_line_point_before_short_circuit();
+    complex<double> Uf = get_initial_voltage_of_faulted_ac_line_point_before_short_circuit();
     complex<double> Z1 = get_positive_sequence_thevenin_impedance_at_fault_in_pu();
     complex<double> U1 = Uf - Z1 * If1;
 
     return U1;
 }
-complex<double> SHORT_CIRCUIT_SOLVER::get_positive_sequence_voltage_at_line_fault_location_in_kV()
+complex<double> SHORT_CIRCUIT_SOLVER::get_positive_sequence_voltage_at_ac_line_fault_location_in_kV()
 {
-    return get_positive_sequence_voltage_at_line_fault_location_in_pu()*faulted_line_pointer->get_line_base_voltage_in_kV()/SQRT3;
+    return get_positive_sequence_voltage_at_ac_line_fault_location_in_pu()*faulted_ac_line_pointer->get_line_base_voltage_in_kV()/SQRT3;
 }
-complex<double> SHORT_CIRCUIT_SOLVER::get_negative_sequence_voltage_at_line_fault_location_in_pu()
+complex<double> SHORT_CIRCUIT_SOLVER::get_negative_sequence_voltage_at_ac_line_fault_location_in_pu()
 {
     complex<double> Z2 = get_negative_sequence_thevenin_impedance_at_fault_in_pu();
     complex<double> U2 = - Z2 * If2;
 
     return U2;
 }
-complex<double> SHORT_CIRCUIT_SOLVER::get_negative_sequence_voltage_at_line_fault_location_in_kV()
+complex<double> SHORT_CIRCUIT_SOLVER::get_negative_sequence_voltage_at_ac_line_fault_location_in_kV()
 {
-    return get_negative_sequence_voltage_at_line_fault_location_in_pu()*faulted_line_pointer->get_line_base_voltage_in_kV()/SQRT3;
+    return get_negative_sequence_voltage_at_ac_line_fault_location_in_pu()*faulted_ac_line_pointer->get_line_base_voltage_in_kV()/SQRT3;
 }
-complex<double> SHORT_CIRCUIT_SOLVER::get_zero_sequence_voltage_at_line_fault_location_in_pu()
+complex<double> SHORT_CIRCUIT_SOLVER::get_zero_sequence_voltage_at_ac_line_fault_location_in_pu()
 {
     complex<double> Z0 = get_zero_sequence_thevenin_impedance_at_fault_in_pu();
     complex<double> U0 =  - Z0 * If0;
 
     return U0;
 }
-complex<double> SHORT_CIRCUIT_SOLVER::get_zero_sequence_voltage_at_line_fault_location_in_kV()
+complex<double> SHORT_CIRCUIT_SOLVER::get_zero_sequence_voltage_at_ac_line_fault_location_in_kV()
 {
-    return get_zero_sequence_voltage_at_line_fault_location_in_pu()*faulted_line_pointer->get_line_base_voltage_in_kV()/SQRT3;
+    return get_zero_sequence_voltage_at_ac_line_fault_location_in_pu()*faulted_ac_line_pointer->get_line_base_voltage_in_kV()/SQRT3;
 }
 
 complex<double> SHORT_CIRCUIT_SOLVER::get_positive_sequence_thevenin_impedance_at_fault_in_pu()
@@ -2189,8 +2189,8 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file(const string& filen
 {
     if(is_bus_fault())
         save_short_circuit_result_to_file_with_bus_fault(filename);
-    else if(is_line_fault())
-        save_short_circuit_result_to_file_with_line_fault(filename);
+    else if(is_ac_line_fault())
+        save_short_circuit_result_to_file_with_ac_line_fault(filename);
 }
 
 void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(const string& filename)
@@ -2268,11 +2268,11 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
             file<<"PHASE,\t,/IA/,AN(IA),/IB/,AN(IB),/IC/,AN(IC)"<<endl;
         }
 
-        vector<LINE*> lines = psdb.get_lines_connecting_to_bus(fault_bus);
+        vector<AC_LINE*> lines = psdb.get_ac_lines_connecting_to_bus(fault_bus);
         unsigned int n = lines.size();
         for(unsigned int i=0; i<n; i++)
         {
-            LINE& line = *lines[i];
+            AC_LINE& line = *lines[i];
             complex<double> I1, I2, I0;
             unsigned int current_from_bus ;
             if(line.get_sending_side_bus() == fault_bus)
@@ -2565,7 +2565,7 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
         return;
     }
 }
-void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_line_fault(const string& filename)
+void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_ac_line_fault(const string& filename)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -2592,8 +2592,8 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_line_fault(con
         string V_unit = (units==PU)?"(P.U.)":"(kV)";
         unsigned int busnum = 99999;
         string busname = "DUMMY BUS";
-        string id = faulted_line_pointer->get_identifier();
-        double Vbase = faulted_line_pointer->get_line_base_voltage_in_kV();
+        string id = faulted_ac_line_pointer->get_identifier();
+        double Vbase = faulted_ac_line_pointer->get_line_base_voltage_in_kV();
         double Ibase = sbase/(SQRT3*Vbase);
 
         file<<get_fault_information()<<endl;
@@ -2619,15 +2619,15 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_line_fault(con
         complex<double> V1, V2, V0;
         if(units == PU)
         {
-            V1 = get_positive_sequence_voltage_at_line_fault_location_in_pu();
-            V2 = get_negative_sequence_voltage_at_line_fault_location_in_pu();
-            V0 = get_zero_sequence_voltage_at_line_fault_location_in_pu();
+            V1 = get_positive_sequence_voltage_at_ac_line_fault_location_in_pu();
+            V2 = get_negative_sequence_voltage_at_ac_line_fault_location_in_pu();
+            V0 = get_zero_sequence_voltage_at_ac_line_fault_location_in_pu();
         }
         else if(units == PHYSICAL)
         {
-            V1 = get_positive_sequence_voltage_at_line_fault_location_in_kV();
-            V2 = get_negative_sequence_voltage_at_line_fault_location_in_kV();
-            V0 = get_zero_sequence_voltage_at_line_fault_location_in_kV();
+            V1 = get_positive_sequence_voltage_at_ac_line_fault_location_in_kV();
+            V2 = get_negative_sequence_voltage_at_ac_line_fault_location_in_kV();
+            V0 = get_zero_sequence_voltage_at_ac_line_fault_location_in_kV();
         }
 
         file << get_formatted_sequence_data(busnum, "", V1, V2, V0, true);
@@ -2645,17 +2645,17 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_line_fault(con
         }
 
 
-        unsigned int ibus = faulted_line_pointer->get_sending_side_bus();
-        unsigned int jbus = faulted_line_pointer->get_receiving_side_bus();
-        BUS* ibusptr = faulted_line_pointer->get_sending_side_bus_pointer();
-        BUS* jbusptr = faulted_line_pointer->get_receiving_side_bus_pointer();
+        unsigned int ibus = faulted_ac_line_pointer->get_sending_side_bus();
+        unsigned int jbus = faulted_ac_line_pointer->get_receiving_side_bus();
+        BUS* ibusptr = faulted_ac_line_pointer->get_sending_side_bus_pointer();
+        BUS* jbusptr = faulted_ac_line_pointer->get_receiving_side_bus_pointer();
 
-        double fault_location = faulted_line_pointer->get_fault_location_of_fault(0);
-        complex<double> Z1ij = faulted_line_pointer->get_line_positive_sequence_z_in_pu();
+        double fault_location = faulted_ac_line_pointer->get_fault_location_of_fault(0);
+        complex<double> Z1ij = faulted_ac_line_pointer->get_line_positive_sequence_z_in_pu();
         complex<double> Z1if = Z1ij*fault_location;
         complex<double> Z1jf = Z1ij*(1.0-fault_location);
 
-        complex<double> Z0ij = faulted_line_pointer->get_line_zero_sequence_z_in_pu();
+        complex<double> Z0ij = faulted_ac_line_pointer->get_line_zero_sequence_z_in_pu();
         complex<double> Z0if = Z0ij*fault_location;
         complex<double> Z0jf = Z0ij*(1.0-fault_location);
 
@@ -2730,7 +2730,7 @@ void SHORT_CIRCUIT_SOLVER::save_extended_short_circuit_result_to_file(const stri
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    if((!is_bus_fault()) && (!is_line_fault()))
+    if((!is_bus_fault()) && (!is_ac_line_fault()))
         return;
 
     UNITS_OPTION units = get_units_of_currents_and_voltages();
@@ -2801,11 +2801,11 @@ void SHORT_CIRCUIT_SOLVER::save_extended_short_circuit_result_to_file(const stri
                 file<<"PHASE,\t,/IA/,AN(IA),/IB/,AN(IB),/IC/,AN(IC)"<<endl;
             }
             unsigned int busnum = bus.get_bus_number();
-            vector<LINE*> lines = psdb.get_lines_connecting_to_bus(busnum);
+            vector<AC_LINE*> lines = psdb.get_ac_lines_connecting_to_bus(busnum);
             unsigned int n = lines.size();
             for(unsigned int i=0; i<n; i++)
             {
-                LINE& line = *lines[i];
+                AC_LINE& line = *lines[i];
 
                 complex<double> I1, I2, I0;
                 unsigned int to_bus ;

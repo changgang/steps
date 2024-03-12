@@ -19,7 +19,7 @@ int main()
     PSSE_IMEXPORTER importer(default_toolkit); // create an imexporter
 
     importer.load_powerflow_data("IEEE9_classical.raw"); // load powerflow
-    vector<DEVICE_ID> lines = psdb.get_all_lines_device_id(); // the powerflow data is only used for get line device id
+    vector<DEVICE_ID> lines = psdb.get_all_ac_lines_device_id(); // the powerflow data is only used for get line device id
     unsigned int n_lines = lines.size();
 
     vector<DEVICE_ID> fault_lines;// the three vectors are used to store searching result
@@ -58,7 +58,7 @@ int main()
         searcher.set_fault_side_bus(fault_side_buses[i]);
         searcher.set_fault_location_to_fault_side_bus_in_pu(0.0);
         searcher.set_fault_shunt_in_pu(complex<double>(0.0, -2e8));
-        searcher.set_flag_trip_line_after_clearing_fault(true);
+        searcher.set_flag_trip_ac_line_after_clearing_fault(true);
 
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Now go searching CCT for fault at side %u of %s.",
                  searcher.get_fault_side_bus(),(did.get_compound_device_name()).c_str());

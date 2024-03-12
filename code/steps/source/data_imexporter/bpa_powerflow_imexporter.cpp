@@ -5,7 +5,7 @@
 #include "header/device/fixed_shunt.h"
 #include "header/device/generator.h"
 #include "header/device/wt_generator.h"
-#include "header/device/line.h"
+#include "header/device/ac_line.h"
 #include "header/device/transformer.h"
 #include "header/steps_namespace.h"
 #include <cstdio>
@@ -109,7 +109,7 @@ void BPA_IMEXPORTER::load_powerflow_data(string file)
     load_bus_data();
     load_generator_data();
     load_load_and_fixed_shunt_data();
-    load_line_data();
+    load_ac_line_data();
     load_transformer_data();
     load_2t_lcc_hvdc_data();
     /*
@@ -1001,7 +1001,7 @@ void BPA_IMEXPORTER::load_source_common_data()
     ;
 
 }
-void BPA_IMEXPORTER::load_line_data()
+void BPA_IMEXPORTER::load_ac_line_data()
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -1057,7 +1057,7 @@ void BPA_IMEXPORTER::load_line_data()
             length_str = format_bpa_data_to_readable_data(length_str, "F4.1");
             double length = get_double_data(length_str,"0.0");
 
-            LINE line(toolkit);
+            AC_LINE line(toolkit);
 
             line.set_sending_side_bus(ibus);
             line.set_receiving_side_bus(jbus);
@@ -1116,9 +1116,9 @@ void BPA_IMEXPORTER::load_line_data()
                     }
                 }
             }
-            while(psdb.is_line_exist(line.get_device_id()))
+            while(psdb.is_ac_line_exist(line.get_device_id()))
                 line.set_identifier(line.get_identifier()+"#");
-            psdb.append_line(line);
+            psdb.append_ac_line(line);
         }
     }
 
@@ -1174,7 +1174,7 @@ void BPA_IMEXPORTER::load_line_data()
             double base_voltage = psdb.get_bus_base_voltage_in_kV(ibus);
             rate = SQRT3*rate*base_voltage;
 
-            LINE line(toolkit);
+            AC_LINE line(toolkit);
 
             line.set_sending_side_bus(ibus);
             line.set_receiving_side_bus(jbus);
@@ -1232,7 +1232,7 @@ void BPA_IMEXPORTER::load_line_data()
                     }
                 }
             }
-            psdb.append_line(line);
+            psdb.append_ac_line(line);
         }
     }
 
@@ -1274,7 +1274,7 @@ void BPA_IMEXPORTER::load_line_data()
             did.set_device_terminal(terminal);
             did.set_device_identifier_index(get_index_of_string(identifier));
 
-            LINE* line = psdb.get_line(did);
+            AC_LINE* line = psdb.get_ac_line(did);
             if(line==NULL)
                 continue;
 
@@ -2083,7 +2083,7 @@ void BPA_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedan
     ofs<<export_bus_data();
 
     ofs<<". Here goes transmission line data"<<endl;
-    ofs<<export_line_data();
+    ofs<<export_ac_line_data();
 
     ofs<<". Here goes transformer data"<<endl;
     ofs<<export_transformer_data();
@@ -2533,20 +2533,20 @@ string BPA_IMEXPORTER::export_bus_data() const
 }
 
 
-string BPA_IMEXPORTER::export_line_data() const
+string BPA_IMEXPORTER::export_ac_line_data() const
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector<LINE*> lines = psdb.get_all_lines();
+    vector<AC_LINE*> lines = psdb.get_all_ac_lines();
     unsigned int n = lines.size();
 
     double sbase_MVA = psdb.get_system_base_power_in_MVA();
 
     for(unsigned int i=0; i<n; ++i)
     {
-        LINE* line = lines[i];
+        AC_LINE* line = lines[i];
 
         unsigned int sending_side_bus_number = line->get_sending_side_bus();
         unsigned int receiving_side_bus_number = line->get_receiving_side_bus();

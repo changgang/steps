@@ -1,7 +1,7 @@
 #ifndef JACOBIAN_BUILDER_H
 #define JACOBIAN_BUILDER_H
 
-#include "header/device/line.h"
+#include "header/device/ac_line.h"
 #include "header/device/transformer.h"
 #include "header/device/fixed_shunt.h"
 

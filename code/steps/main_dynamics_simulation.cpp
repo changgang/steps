@@ -139,9 +139,9 @@ int main()
     terminal.append_bus(21);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    simulator.set_line_fault(did, 16, 0.0, complex<double>(0, -100));
+    simulator.set_ac_line_fault(did, 16, 0.0, complex<double>(0, -100));
     simulator.run_to(1.1);
-    simulator.clear_line_fault(did, 16, 0.0);
+    simulator.clear_ac_line_fault(did, 16, 0.0);
     */
 
     DEVICE_ID did;
@@ -200,11 +200,11 @@ int main()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    simulator.set_line_fault(did, 82, 0.0, complex<double>(0.0, -1e4));
+    simulator.set_ac_line_fault(did, 82, 0.0, complex<double>(0.0, -1e4));
 
     simulator.run_to(1.35);
 
-    simulator.clear_line_fault(did, 82, 0.0);*/
+    simulator.clear_ac_line_fault(did, 82, 0.0);*/
 /*
     DEVICE_ID did;
     did.set_device_type(STEPS_GENERATOR);

@@ -31,7 +31,7 @@ class DEVICE_INDEX_MAP_TEST : public Test::Suite
         void test_set_get_load_index();
         void test_set_get_fixed_shunt_index();
         void test_set_get_switched_shunt_index();
-        void test_set_get_line_index();
+        void test_set_get_ac_line_index();
         void test_set_get_transformer_index();
         void test_set_get_energy_storage_index();
 

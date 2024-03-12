@@ -28,7 +28,7 @@ void DYNAMICS_SIMULATOR::prepare_meters()
     prepare_pv_unit_related_meters();
     prepare_energy_storage_related_meters();
     prepare_load_related_meters();
-    prepare_line_related_meters();
+    prepare_ac_line_related_meters();
     prepare_transformer_related_meters();
     prepare_2t_lcc_hvdc_related_meters();
     prepare_vsc_hvdc_related_meters();
@@ -349,7 +349,7 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meters()
 
 }
 
-void DYNAMICS_SIMULATOR::prepare_line_related_meters()
+void DYNAMICS_SIMULATOR::prepare_ac_line_related_meters()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
@@ -357,23 +357,23 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meters()
 
     unsigned int n;
 
-    n = psdb.get_line_count();
-    vector<LINE*> lines = psdb.get_all_lines();
-    LINE* line;
+    n = psdb.get_ac_line_count();
+    vector<AC_LINE*> lines = psdb.get_all_ac_lines();
+    AC_LINE* line;
     for(unsigned int i=0; i!=n; ++i)
     {
         line = lines[i];
-        METER meter = setter.prepare_line_active_power_in_MW_meter(line->get_device_id(),line->get_sending_side_bus());
+        METER meter = setter.prepare_ac_line_active_power_in_MW_meter(line->get_device_id(),line->get_sending_side_bus());
         append_meter(meter);
-        meter = setter.prepare_line_reactive_power_in_MVar_meter(line->get_device_id(),line->get_sending_side_bus());
+        meter = setter.prepare_ac_line_reactive_power_in_MVar_meter(line->get_device_id(),line->get_sending_side_bus());
         append_meter(meter);
-        meter = setter.prepare_line_current_in_kA_meter(line->get_device_id(),line->get_sending_side_bus());
+        meter = setter.prepare_ac_line_current_in_kA_meter(line->get_device_id(),line->get_sending_side_bus());
         append_meter(meter);
-        meter = setter.prepare_line_active_power_in_MW_meter(line->get_device_id(),line->get_receiving_side_bus());
+        meter = setter.prepare_ac_line_active_power_in_MW_meter(line->get_device_id(),line->get_receiving_side_bus());
         append_meter(meter);
-        meter = setter.prepare_line_reactive_power_in_MVar_meter(line->get_device_id(),line->get_receiving_side_bus());
+        meter = setter.prepare_ac_line_reactive_power_in_MVar_meter(line->get_device_id(),line->get_receiving_side_bus());
         append_meter(meter);
-        meter = setter.prepare_line_current_in_kA_meter(line->get_device_id(),line->get_receiving_side_bus());
+        meter = setter.prepare_ac_line_current_in_kA_meter(line->get_device_id(),line->get_receiving_side_bus());
         append_meter(meter);
     }
 }
@@ -991,14 +991,14 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meter(const DEVICE_ID& did, string
     }
 }
 
-void DYNAMICS_SIMULATOR::prepare_line_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
+void DYNAMICS_SIMULATOR::prepare_ac_line_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     if(did.get_device_type()==STEPS_AC_LINE)
     {
-        if(psdb.is_line_exist(did))
+        if(psdb.is_ac_line_exist(did))
         {
             METER_SETTER setter(*toolkit);
 
@@ -1007,7 +1007,7 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meter(const DEVICE_ID& did, string
             meter_type = string2upper(meter_type);
             side = string2upper(side);
 
-            LINE* line = psdb.get_line(did);
+            AC_LINE* line = psdb.get_ac_line(did);
             unsigned int bus = 0;
             if(side=="SENDING" or side=="S")
                 bus = line->get_sending_side_bus();
@@ -1017,11 +1017,11 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meter(const DEVICE_ID& did, string
                 return;
 
             if(meter_type=="ACTIVE POWER IN MW")
-                meter = setter.prepare_line_active_power_in_MW_meter(did, bus);
+                meter = setter.prepare_ac_line_active_power_in_MW_meter(did, bus);
             if(meter_type=="REACTIVE POWER IN MVAR")
-                meter = setter.prepare_line_reactive_power_in_MVar_meter(did, bus);
+                meter = setter.prepare_ac_line_reactive_power_in_MVar_meter(did, bus);
             if(meter_type=="CURRENT IN KA")
-                meter = setter.prepare_line_current_in_kA_meter(did, bus);
+                meter = setter.prepare_ac_line_current_in_kA_meter(did, bus);
 
             if(meter.is_valid())
                 append_meter(meter);

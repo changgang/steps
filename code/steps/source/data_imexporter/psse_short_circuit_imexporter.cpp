@@ -205,7 +205,7 @@ void PSSE_IMEXPORTER::export_sequence_data(string file)
     ofs<<"0 / END OF MACHINE IMPEDANCE DATA, BEGIN LOAD DATA"<<endl;
     ofs<<export_all_load_sequence_data();
     ofs<<"0 / END OF LOAD DATA, BEGIN ZERO SEQ. NON-TRANSFORMER BRANCH DATA"<<endl;
-    ofs<<export_all_line_zero_sequence_data();
+    ofs<<export_all_ac_line_zero_sequence_data();
     ofs<<"0 / END OF ZERO SEQ. NON-TRANSFORMER BRANCH DATA, BEGIN ZERO SEQ. MUTUAL DATA"<<endl;
     ofs<<export_all_zero_sequence_mutual_impedance_data();
     ofs<<"0 / END OF ZERO SEQ. MUTUAL DATA, BEGIN ZERO SEQ. TRANSFORMER DATA"<<endl;
@@ -391,21 +391,21 @@ string PSSE_IMEXPORTER::export_load_sequence_data(const LOAD* load) const
     return osstream.str();
 }
 
-string PSSE_IMEXPORTER::export_all_line_zero_sequence_data() const
+string PSSE_IMEXPORTER::export_all_ac_line_zero_sequence_data() const
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector<LINE*> lines = psdb.get_all_lines();
+    vector<AC_LINE*> lines = psdb.get_all_ac_lines();
     unsigned int n = lines.size();
     for(unsigned int i=0; i!=n; ++i)
-        osstream<<export_line_zero_sequence_data(lines[i]);
+        osstream<<export_ac_line_zero_sequence_data(lines[i]);
 
     return osstream.str();
 }
 
-string PSSE_IMEXPORTER::export_line_zero_sequence_data(const LINE* line) const
+string PSSE_IMEXPORTER::export_ac_line_zero_sequence_data(const AC_LINE* line) const
 {
     ostringstream osstream;
     osstream<<right

@@ -16,18 +16,18 @@ class CONTINGENCY_SCREENER
         unsigned int get_power_system_database_maximum_bus_number() const;
 
 
-        void scan_N_k_line_fault(unsigned int k);
-        void scan_N_k_line_trip(unsigned int k);
+        void scan_N_k_ac_ine_fault(unsigned int k);
+        void scan_N_k_ac_ine_trip(unsigned int k);
         void scan_N_k_generator_trip(unsigned int k);
         void scan_N_k_lcc_hvdc2t_block(unsigned int k);
 
 
-        void scan_line_fault(FAULT fault, double flocation, double clearing_time, bool trip_after_clear);
-        void scan_N_k_line_trip(vector<DEVICE_ID> lines);
+        void scan_ac_line_fault(FAULT fault, double flocation, double clearing_time, bool trip_after_clear);
+        void scan_N_k_ac_ine_trip(vector<DEVICE_ID> lines);
         void scan_N_1_generator_trip();
         void scan_N_2_generator_trip();
-        void scan_N_1_hvdc_bypass(double recover_time);
-        void scan_N_1_hvdc_block(double unblock_time);
+        void scan_N_1_2t_lcc_hvdc_bypass(double recover_time);
+        void scan_N_1_2t_lcc_hvdc_block(double unblock_time);
 
 
         void set_powerflow_data_filename(string filename);
@@ -37,7 +37,7 @@ class CONTINGENCY_SCREENER
         void set_fault_side_bus(unsigned int bus);
         void set_fault_location_to_fault_side_bus_in_pu(double location);
         void set_fault_shunt_in_pu(complex<double> shunt);
-        void set_flag_trip_line_after_clearing_fault(bool flag);
+        void set_flag_trip_ac_line_after_clearing_fault(bool flag);
 
         void set_simulator_max_iteration(unsigned int iteration);
         void set_simulator_allowed_max_power_imbalance_in_MVA(double tol);
@@ -50,7 +50,7 @@ class CONTINGENCY_SCREENER
         unsigned int get_fault_side_bus() const;
         double get_fault_location_to_fault_side_bus_in_pu() const;
         complex<double> get_fault_shunt_in_pu() const;
-        bool get_flag_trip_line_after_clearing_fault() const;
+        bool get_flag_trip_ac_line_after_clearing_fault() const;
 
         unsigned int get_simulator_max_iteration() const;
         double get_simulator_allowed_max_power_imbalance_in_MVA() const;
@@ -92,7 +92,7 @@ class CONTINGENCY_SCREENER
         complex<double> fault_shunt_in_pu;
         double fault_time_in_s;
         double minimum_clearing_time, maximum_clearing_time;
-        bool flag_trip_line_after_clearing_fault;
+        bool flag_trip_ac_line_after_clearing_fault;
         double simulation_time_span_in_s;
         double angle_difference_threshold_in_deg;
 

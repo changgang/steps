@@ -21,7 +21,7 @@ METER_TEST::METER_TEST() : meter(default_toolkit)
     TEST_ADD(METER_TEST::test_constructor);
     TEST_ADD(METER_TEST::test_set_get_device_id_and_type);
     TEST_ADD(METER_TEST::test_set_get_bus_meter_type);
-    TEST_ADD(METER_TEST::test_set_get_line_meter_type);
+    TEST_ADD(METER_TEST::test_set_get_ac_line_meter_type);
     TEST_ADD(METER_TEST::test_set_get_transformer_meter_type);
     TEST_ADD(METER_TEST::test_set_get_generator_meter_type);
     TEST_ADD(METER_TEST::test_set_get_load_meter_type);
@@ -60,11 +60,11 @@ void METER_TEST::setup()
     bus.set_base_voltage_in_kV(110.0);
     psdb.append_bus(bus);
 
-    LINE line(default_toolkit);
+    AC_LINE line(default_toolkit);
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
     line.set_identifier("#1");
-    psdb.append_line(line);
+    psdb.append_ac_line(line);
 
     TRANSFORMER transformer(default_toolkit);
     transformer.set_winding_bus(PRIMARY_SIDE, 1);
@@ -229,7 +229,7 @@ void METER_TEST::test_set_get_bus_meter_type()
     }
 }
 
-void METER_TEST::test_set_get_line_meter_type()
+void METER_TEST::test_set_get_ac_line_meter_type()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 
@@ -709,7 +709,7 @@ void METER_TEST::test_get_bus_meter_value()
     TEST_ASSERT(fabs(meter.get_meter_value()-1.05)<FLOAT_EPSILON);
 }
 
-void METER_TEST::test_get_line_meter_value()
+void METER_TEST::test_get_ac_line_meter_value()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 }

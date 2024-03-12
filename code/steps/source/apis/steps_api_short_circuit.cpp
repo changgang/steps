@@ -242,9 +242,9 @@ void api_short_circuit_set_line_fault(unsigned int ibus, unsigned int jbus, char
     SHORT_CIRCUIT_SOLVER& sc_solver = toolkit.get_short_circuit_solver();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
 
-    if(not psdb.is_line_exist(did))
+    if(not psdb.is_ac_line_exist(did))
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for short circuit with api %s.",
@@ -256,22 +256,22 @@ void api_short_circuit_set_line_fault(unsigned int ibus, unsigned int jbus, char
     string string_fault_type = string2upper(fault_type);
     if(string_fault_type=="THREE PHASES FAULT")
     {
-        sc_solver.set_line_fault(did, ibus, fault_location, THREE_PHASES_FAULT, complex<double>(fault_G, fault_B));
+        sc_solver.set_ac_line_fault(did, ibus, fault_location, THREE_PHASES_FAULT, complex<double>(fault_G, fault_B));
         return;
     }
     if(string_fault_type=="SINGLE PHASE GROUNDED FAULT")
     {
-        sc_solver.set_line_fault(did, ibus, fault_location, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(fault_G, fault_B));
+        sc_solver.set_ac_line_fault(did, ibus, fault_location, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(fault_G, fault_B));
         return;
     }
     if(string_fault_type=="DOUBLE PHASES FAULT")
     {
-        sc_solver.set_line_fault(did, ibus, fault_location, DOUBLE_PHASES_FAULT, complex<double>(fault_G, fault_B));
+        sc_solver.set_ac_line_fault(did, ibus, fault_location, DOUBLE_PHASES_FAULT, complex<double>(fault_G, fault_B));
         return;
     }
     if(string_fault_type=="DOUBLE PHASES GROUNDED FAULT")
     {
-        sc_solver.set_line_fault(did, ibus, fault_location, DOUBLE_PHASES_GROUNDED_FAULT, complex<double>(fault_G, fault_B));
+        sc_solver.set_ac_line_fault(did, ibus, fault_location, DOUBLE_PHASES_GROUNDED_FAULT, complex<double>(fault_G, fault_B));
         return;
     }
 

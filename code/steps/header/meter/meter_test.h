@@ -28,7 +28,7 @@ class METER_TEST : public Test::Suite
         void test_constructor();
         void test_set_get_device_id_and_type();
         void test_set_get_bus_meter_type();
-        void test_set_get_line_meter_type();
+        void test_set_get_ac_line_meter_type();
         void test_set_get_transformer_meter_type();
         void test_set_get_generator_meter_type();
         void test_set_get_load_meter_type();
@@ -44,7 +44,7 @@ class METER_TEST : public Test::Suite
         void test_copy_with_operator_equal();
         void test_equal();
         void test_get_bus_meter_value();
-        void test_get_line_meter_value();
+        void test_get_ac_line_meter_value();
         void test_get_transformer_meter_value();
         void test_get_load_meter_value();
         void test_get_generator_meter_value();

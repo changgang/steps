@@ -185,22 +185,22 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
         coefficient = get_double_data(data_line[8],"0.0");
 
         if(data_line[2].find("ACTIVE_POWER_MW")!=string::npos)
-            meter = setter.prepare_line_active_power_in_MW_meter(did, side_bus);
+            meter = setter.prepare_ac_line_active_power_in_MW_meter(did, side_bus);
         else
             if(data_line[2].find("ACTIVE_POWER_PU")!=string::npos)
-                meter = setter.prepare_line_active_power_in_pu_meter(did, side_bus);
+                meter = setter.prepare_ac_line_active_power_in_pu_meter(did, side_bus);
             else
                 if(data_line[2].find("REACTIVE_POWER_MVAR")!=string::npos)
-                    meter = setter.prepare_line_reactive_power_in_MVar_meter(did, side_bus);
+                    meter = setter.prepare_ac_line_reactive_power_in_MVar_meter(did, side_bus);
                 else
                     if(data_line[2].find("REACTIVE_POWER_PU")!=string::npos)
-                        meter = setter.prepare_line_reactive_power_in_pu_meter(did, side_bus);
+                        meter = setter.prepare_ac_line_reactive_power_in_pu_meter(did, side_bus);
                     else
                         if(data_line[2].find("CURRENT_KA")!=string::npos)
-                            meter = setter.prepare_line_current_in_kA_meter(did, side_bus);
+                            meter = setter.prepare_ac_line_current_in_kA_meter(did, side_bus);
                         else
                             if(data_line[2].find("CURRENT_PU")!=string::npos)
-                                meter = setter.prepare_line_current_in_pu_meter(did, side_bus);
+                                meter = setter.prepare_ac_line_current_in_pu_meter(did, side_bus);
         return meter;
     }
 

@@ -65,12 +65,12 @@ int main()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    simulator.set_line_fault(did, 60, 0.0, complex<double>(0.0, -1e6));
+    simulator.set_ac_line_fault(did, 60, 0.0, complex<double>(0.0, -1e6));
 
     simulator.run_to(1.1);
 
-    simulator.clear_line_fault(did, 60, 0.0);
-    simulator.trip_line(did);
+    simulator.clear_ac_line_fault(did, 60, 0.0);
+    simulator.trip_ac_line(did);
 
     simulator.run_to(5.0);
     default_toolkit.close_log_file();

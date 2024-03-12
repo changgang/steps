@@ -76,7 +76,7 @@ DEVICE_ID get_pv_unit_device_id(unsigned int bus, const string& identifier);
 DEVICE_ID get_energy_storage_device_id(unsigned int bus, const string& identifier);
 DEVICE_ID get_load_device_id(unsigned int bus, const string& identifier);
 DEVICE_ID get_fixed_shunt_device_id(unsigned int bus, const string& identifier);
-DEVICE_ID get_line_device_id(unsigned int ibus, unsigned int jbus, const string& identifier);
+DEVICE_ID get_ac_line_device_id(unsigned int ibus, unsigned int jbus, const string& identifier);
 DEVICE_ID get_2t_lcc_hvdc_device_id(unsigned int ibus, unsigned int jbus, const string& identifier);
 DEVICE_ID get_vsc_hvdc_device_id(const vector<unsigned int>& bus, const string& identifier);
 DEVICE_ID get_transformer_device_id(unsigned int ibus, unsigned int jbus, unsigned int kbus, const string& identifier);

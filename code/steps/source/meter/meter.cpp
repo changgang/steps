@@ -746,7 +746,7 @@ void METER::set_device_pointer(DEVICE_ID device_id)
             break;
         }
         case STEPS_AC_LINE:
-            deviceptr = (DEVICE*) psdb.get_line(device_id);
+            deviceptr = (DEVICE*) psdb.get_ac_line(device_id);
             break;
 
         case STEPS_TRANSFORMER:
@@ -808,7 +808,7 @@ double METER::get_meter_value() const
             case STEPS_BUS:
                 return get_meter_value_as_a_bus();
             case STEPS_AC_LINE:
-                return get_meter_value_as_a_line();
+                return get_meter_value_as_an_ac_line();
             case STEPS_TRANSFORMER:
                 return get_meter_value_as_a_transformer();
             case STEPS_LOAD:
@@ -864,9 +864,9 @@ double METER::get_meter_value_as_a_bus() const
         return 0.0;
 }
 
-double METER::get_meter_value_as_a_line() const
+double METER::get_meter_value_as_an_ac_line() const
 {
-    LINE* line = (LINE*) get_device_pointer();
+    AC_LINE* line = (AC_LINE*) get_device_pointer();
     if(line != NULL)
     {
         if(line->get_sending_side_breaker_status()==true or line->get_receiving_side_breaker_status()==true)

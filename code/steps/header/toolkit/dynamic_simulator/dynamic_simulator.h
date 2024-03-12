@@ -76,7 +76,7 @@ class DYNAMICS_SIMULATOR
         void prepare_pv_unit_related_meters();
         void prepare_energy_storage_related_meters();
         void prepare_load_related_meters();
-        void prepare_line_related_meters();
+        void prepare_ac_line_related_meters();
         void prepare_transformer_related_meters();
         void prepare_2t_lcc_hvdc_related_meters();
         void prepare_vsc_hvdc_related_meters();
@@ -88,7 +88,7 @@ class DYNAMICS_SIMULATOR
         void prepare_pv_unit_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
         void prepare_energy_storage_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
         void prepare_load_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
-        void prepare_line_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name="");
+        void prepare_ac_line_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name="");
         void prepare_transformer_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name="");
         void prepare_2t_lcc_hvdc_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name="");
         void prepare_vsc_hvdc_related_meter(const DEVICE_ID& did, string meter_type, unsigned int side, string var_name="");
@@ -132,12 +132,12 @@ class DYNAMICS_SIMULATOR
         void trip_bus(unsigned int bus);
         void trip_buses(const vector<unsigned int>& buses);
 
-        void set_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location, const complex<double>& fault_shunt);
-        void clear_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location);
-        void trip_line(const DEVICE_ID& line_id);
-        void trip_line_breaker(const DEVICE_ID& line_id, unsigned int side_bus);
-        void close_line(const DEVICE_ID& line_id);
-        void close_line_breaker(const DEVICE_ID& line_id, unsigned int side_bus);
+        void set_ac_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location, const complex<double>& fault_shunt);
+        void clear_ac_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location);
+        void trip_ac_line(const DEVICE_ID& line_id);
+        void trip_ac_line_breaker(const DEVICE_ID& line_id, unsigned int side_bus);
+        void close_ac_line(const DEVICE_ID& line_id);
+        void close_ac_line_breaker(const DEVICE_ID& line_id, unsigned int side_bus);
 
         void trip_transformer(const DEVICE_ID& trans_id);
         void trip_transformer_breaker(const DEVICE_ID& trans_id, unsigned int side_bus);
@@ -253,8 +253,8 @@ class DYNAMICS_SIMULATOR
         void guess_bus_voltage_with_bus_fault_set(unsigned int bus, const FAULT& fault);
         void guess_bus_voltage_with_bus_fault_cleared(unsigned int bus, const FAULT& fault);
 
-        void guess_bus_voltage_with_line_fault_set(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault);
-        void guess_bus_voltage_with_line_fault_cleared(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault);
+        void guess_bus_voltage_with_ac_line_fault_set(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault);
+        void guess_bus_voltage_with_ac_line_fault_cleared(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault);
 
         void update_generators_in_islands();
         bool is_system_angular_stable() const;
@@ -284,7 +284,7 @@ class DYNAMICS_SIMULATOR
         vector<PV_UNIT*> pv_units;
         vector<ENERGY_STORAGE*> e_storages;
         vector<LOAD*> loads;
-        vector<LINE*> lines;
+        vector<AC_LINE*> lines;
         vector<LCC_HVDC2T*> hvdcs;
         vector<VSC_HVDC*> vsc_hvdcs;
         vector<EQUIVALENT_DEVICE*> e_devices;

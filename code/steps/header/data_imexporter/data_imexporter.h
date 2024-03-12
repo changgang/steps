@@ -58,7 +58,7 @@ class DATA_IMEXPORTER
         vector<unsigned int> get_all_fixed_shunt_buses();
         void append_buses_to_ordered_buses(const vector<unsigned int>& buses, set<unsigned int>& existing_buses);
 
-        void check_line_sequence_data();
+        void check_ac_line_sequence_data();
         void check_transformer_sequence_data();
         void check_fixed_shunt_sequence_data();
 

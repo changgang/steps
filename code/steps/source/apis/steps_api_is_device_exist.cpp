@@ -54,8 +54,8 @@ bool api_is_line_exist(unsigned int ibus, unsigned int jbus, char* ickt, unsigne
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    DEVICE_ID did = get_line_device_id(ibus, jbus, ickt);
-    return psdb.is_line_exist(did);
+    DEVICE_ID did = get_ac_line_device_id(ibus, jbus, ickt);
+    return psdb.is_ac_line_exist(did);
 }
 
 bool api_is_transformer_exist(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* ickt, unsigned int toolkit_index)

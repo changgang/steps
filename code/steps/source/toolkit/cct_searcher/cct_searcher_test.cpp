@@ -31,7 +31,7 @@ CCT_SEARCHER_TEST::CCT_SEARCHER_TEST()
     TEST_ADD(CCT_SEARCHER_TEST::test_set_get_fault_time);
     TEST_ADD(CCT_SEARCHER_TEST::test_set_get_minimum_clearint_time);
     TEST_ADD(CCT_SEARCHER_TEST::test_set_get_maximum_clearint_time);
-    TEST_ADD(CCT_SEARCHER_TEST::test_set_get_flag_trip_line_after_clearing_fault);
+    TEST_ADD(CCT_SEARCHER_TEST::test_set_get_flag_trip_ac_line_after_clearing_fault);
     TEST_ADD(CCT_SEARCHER_TEST::test_set_get_simulation_time_span);
     TEST_ADD(CCT_SEARCHER_TEST::test_set_get_angle_difference_threshold);
     TEST_ADD(CCT_SEARCHER_TEST::test_set_get_simulator_max_iteration);
@@ -70,7 +70,7 @@ void CCT_SEARCHER_TEST::test_constructor()
     TEST_ASSERT(fabs(searcher->get_fault_time_in_s()-0.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(searcher->get_minimum_clearing_time_in_s()-0.1)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(searcher->get_maximum_clearing_time_in_s()-1.5)<FLOAT_EPSILON);
-    TEST_ASSERT(searcher->get_flag_trip_line_after_clearing_fault()==false);
+    TEST_ASSERT(searcher->get_flag_trip_ac_line_after_clearing_fault()==false);
     TEST_ASSERT(fabs(searcher->get_simulation_time_span_in_s()-5.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(searcher->get_angle_difference_threshold_in_deg()-170.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(searcher->get_simulator_allowed_max_power_imbalance_in_MVA()-0.0001)<FLOAT_EPSILON);
@@ -189,17 +189,17 @@ void CCT_SEARCHER_TEST::test_set_get_maximum_clearint_time()
     TEST_ASSERT(abs(searcher->get_maximum_clearing_time_in_s()-1.0)<FLOAT_EPSILON);
 }
 
-void CCT_SEARCHER_TEST::test_set_get_flag_trip_line_after_clearing_fault()
+void CCT_SEARCHER_TEST::test_set_get_flag_trip_ac_line_after_clearing_fault()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CCT_SEARCHER_TEST");
 
-    searcher->set_flag_trip_line_after_clearing_fault(false);
+    searcher->set_flag_trip_ac_line_after_clearing_fault(false);
 
-    TEST_ASSERT(searcher->get_flag_trip_line_after_clearing_fault()==false);
+    TEST_ASSERT(searcher->get_flag_trip_ac_line_after_clearing_fault()==false);
 
-    searcher->set_flag_trip_line_after_clearing_fault(true);
+    searcher->set_flag_trip_ac_line_after_clearing_fault(true);
 
-    TEST_ASSERT(searcher->get_flag_trip_line_after_clearing_fault()==true);
+    TEST_ASSERT(searcher->get_flag_trip_ac_line_after_clearing_fault()==true);
 }
 
 void CCT_SEARCHER_TEST::test_set_get_simulation_time_span()
@@ -276,7 +276,7 @@ void CCT_SEARCHER_TEST::test_seach_cct_for_IEEE_9_bus_model_classic()
     searcher->set_fault_side_bus(7);
     searcher->set_fault_location_to_fault_side_bus_in_pu(0.0);
     searcher->set_fault_shunt_in_pu(complex<double>(0.0, -2e8));
-    searcher->set_flag_trip_line_after_clearing_fault(false);
+    searcher->set_flag_trip_ac_line_after_clearing_fault(false);
 
     double cct = searcher->search_cct();
 

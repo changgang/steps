@@ -38,7 +38,7 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         vector<vector<string> > convert_load_data2steps_vector() const;
         vector<vector<string> > convert_fixed_shunt_data2steps_vector() const;
         vector<vector<string> > convert_source_data2steps_vector() const;
-        vector<vector<string> > convert_line_data2steps_vector() const;
+        vector<vector<string> > convert_ac_line_data2steps_vector() const;
         vector<vector<string> > convert_transformer_data2steps_vector() const;
         vector<vector<string> > convert_2t_lcc_hvdc_data2steps_vector() const;
         vector<vector<string> > convert_area_data2steps_vector() const;
@@ -71,8 +71,8 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         string export_energy_storage_data(const ENERGY_STORAGE* estorage) const;
         string export_source_common_data(const SOURCE* source) const;
         string export_source_var_control_data(const SOURCE* source) const;
-        string export_all_line_data() const;
-        string export_line_data(const LINE* line) const;
+        string export_all_ac_line_data() const;
+        string export_ac_line_data(const AC_LINE* line) const;
         string export_all_transformer_data() const;
         string export_transformer_data(const TRANSFORMER* transformer) const;
         string export_all_area_data() const;
@@ -123,8 +123,8 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         string export_pv_unit_sequence_data(const PV_UNIT* pv_unit) const;
         string export_all_load_sequence_data() const;
         string export_load_sequence_data(const LOAD* load) const;
-        string export_all_line_zero_sequence_data() const;
-        string export_line_zero_sequence_data(const LINE* line) const;
+        string export_all_ac_line_zero_sequence_data() const;
+        string export_ac_line_zero_sequence_data(const AC_LINE* line) const;
         string export_all_zero_sequence_mutual_impedance_data() const;
         string export_zero_sequence_mutual_impedance_data(const MUTUAL_DATA* mutual) const;
         string export_all_transformer_zero_sequence_data() const;

@@ -133,6 +133,8 @@
 		<Unit filename="header/data_imexporter/psse_imexporter_test.h" />
 		<Unit filename="header/data_imexporter/steps_imexporter.h" />
 		<Unit filename="header/data_imexporter/steps_imexporter_test.h" />
+		<Unit filename="header/device/ac_line.h" />
+		<Unit filename="header/device/ac_line_test.h" />
 		<Unit filename="header/device/bus.h" />
 		<Unit filename="header/device/bus_test.h" />
 		<Unit filename="header/device/converter.h" />
@@ -155,8 +157,6 @@
 		<Unit filename="header/device/lcc_station.h" />
 		<Unit filename="header/device/lcc_station_test.h" />
 		<Unit filename="header/device/lcc_test.h" />
-		<Unit filename="header/device/line.h" />
-		<Unit filename="header/device/line_test.h" />
 		<Unit filename="header/device/load.h" />
 		<Unit filename="header/device/load_test.h" />
 		<Unit filename="header/device/mutual_data.h" />
@@ -611,6 +611,8 @@
 		<Unit filename="source/data_imexporter/steps_imexporter_test.cpp" />
 		<Unit filename="source/data_imexporter/steps_powerflow_imexporter.cpp" />
 		<Unit filename="source/data_imexporter/steps_short_circuit_imexporter.cpp" />
+		<Unit filename="source/device/ac_line.cpp" />
+		<Unit filename="source/device/ac_line_test.cpp" />
 		<Unit filename="source/device/bus.cpp" />
 		<Unit filename="source/device/bus_test.cpp" />
 		<Unit filename="source/device/converter.cpp" />
@@ -633,8 +635,6 @@
 		<Unit filename="source/device/lcc_station.cpp" />
 		<Unit filename="source/device/lcc_station_test.cpp" />
 		<Unit filename="source/device/lcc_test.cpp" />
-		<Unit filename="source/device/line.cpp" />
-		<Unit filename="source/device/line_test.cpp" />
 		<Unit filename="source/device/load.cpp" />
 		<Unit filename="source/device/load_test.cpp" />
 		<Unit filename="source/device/mutual_data.cpp" />

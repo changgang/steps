@@ -5,7 +5,7 @@
 #include "cpptest.h"
 #include "header/basic/test_macro.h"
 
-#include "header/device/line_test.h"
+#include "header/device/ac_line_test.h"
 #include "header/basic/constants.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -18,41 +18,41 @@
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
 
-LINE_TEST::LINE_TEST() : line(default_toolkit)
+AC_LINE_TEST::AC_LINE_TEST() : line(default_toolkit)
 {
-    TEST_ADD(LINE_TEST::test_constructor);
-    TEST_ADD(LINE_TEST::test_set_get_sending_receiving_side_bus);
-    TEST_ADD(LINE_TEST::test_set_get_identifier);
-    TEST_ADD(LINE_TEST::test_set_get_name);
-    TEST_ADD(LINE_TEST::test_set_get_breaker_status);
-    TEST_ADD(LINE_TEST::test_set_get_line_z120);
-    TEST_ADD(LINE_TEST::test_set_get_line_y120);
-    TEST_ADD(LINE_TEST::test_set_get_shunt_y120_at_sending_side);
-    TEST_ADD(LINE_TEST::test_set_get_shunt_y120_at_receiving_side);
-    TEST_ADD(LINE_TEST::test_set_get_rating);
-    TEST_ADD(LINE_TEST::test_set_get_meter_end_bus);
-    TEST_ADD(LINE_TEST::test_set_get_length);
-    TEST_ADD(LINE_TEST::test_set_get_ownership);
-    TEST_ADD(LINE_TEST::test_is_zero_impedance_line);
-    TEST_ADD(LINE_TEST::test_set_get_fault);
-    TEST_ADD(LINE_TEST::test_clear_fault);
-    TEST_ADD(LINE_TEST::test_get_fault_count);
-    TEST_ADD(LINE_TEST::test_is_faulted);
-    TEST_ADD(LINE_TEST::test_is_valid);
-    TEST_ADD(LINE_TEST::test_clear);
-    TEST_ADD(LINE_TEST::test_copy_with_operator_equal);
-    TEST_ADD(LINE_TEST::test_is_connected_to_bus);
-    TEST_ADD(LINE_TEST::test_get_device_id);
+    TEST_ADD(AC_LINE_TEST::test_constructor);
+    TEST_ADD(AC_LINE_TEST::test_set_get_sending_receiving_side_bus);
+    TEST_ADD(AC_LINE_TEST::test_set_get_identifier);
+    TEST_ADD(AC_LINE_TEST::test_set_get_name);
+    TEST_ADD(AC_LINE_TEST::test_set_get_breaker_status);
+    TEST_ADD(AC_LINE_TEST::test_set_get_line_z120);
+    TEST_ADD(AC_LINE_TEST::test_set_get_line_y120);
+    TEST_ADD(AC_LINE_TEST::test_set_get_shunt_y120_at_sending_side);
+    TEST_ADD(AC_LINE_TEST::test_set_get_shunt_y120_at_receiving_side);
+    TEST_ADD(AC_LINE_TEST::test_set_get_rating);
+    TEST_ADD(AC_LINE_TEST::test_set_get_meter_end_bus);
+    TEST_ADD(AC_LINE_TEST::test_set_get_length);
+    TEST_ADD(AC_LINE_TEST::test_set_get_ownership);
+    TEST_ADD(AC_LINE_TEST::test_is_zero_impedance_line);
+    TEST_ADD(AC_LINE_TEST::test_set_get_fault);
+    TEST_ADD(AC_LINE_TEST::test_clear_fault);
+    TEST_ADD(AC_LINE_TEST::test_get_fault_count);
+    TEST_ADD(AC_LINE_TEST::test_is_faulted);
+    TEST_ADD(AC_LINE_TEST::test_is_valid);
+    TEST_ADD(AC_LINE_TEST::test_clear);
+    TEST_ADD(AC_LINE_TEST::test_copy_with_operator_equal);
+    TEST_ADD(AC_LINE_TEST::test_is_connected_to_bus);
+    TEST_ADD(AC_LINE_TEST::test_get_device_id);
 
-    TEST_ADD(LINE_TEST::test_get_line_base_voltage);
-    TEST_ADD(LINE_TEST::test_get_line_voltage_at_two_sides);
-    TEST_ADD(LINE_TEST::test_get_line_current_at_two_sides);
-    TEST_ADD(LINE_TEST::test_get_line_power_at_two_sides);
-    TEST_ADD(LINE_TEST::test_get_line_apparent_impedance_at_two_sides);
+    TEST_ADD(AC_LINE_TEST::test_get_line_base_voltage);
+    TEST_ADD(AC_LINE_TEST::test_get_line_voltage_at_two_sides);
+    TEST_ADD(AC_LINE_TEST::test_get_line_current_at_two_sides);
+    TEST_ADD(AC_LINE_TEST::test_get_line_power_at_two_sides);
+    TEST_ADD(AC_LINE_TEST::test_get_line_apparent_impedance_at_two_sides);
 
 }
 
-void LINE_TEST::setup()
+void AC_LINE_TEST::setup()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_system_base_power_in_MVA(100.0);
@@ -74,7 +74,7 @@ void LINE_TEST::setup()
     psdb.append_bus(bus);
 }
 
-void LINE_TEST::tear_down()
+void AC_LINE_TEST::tear_down()
 {
     line.clear();
 
@@ -84,9 +84,9 @@ void LINE_TEST::tear_down()
     show_test_end_information();
 }
 
-void LINE_TEST::test_constructor()
+void AC_LINE_TEST::test_constructor()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     TEST_ASSERT(line.get_sending_side_bus()==0);
     TEST_ASSERT(line.get_receiving_side_bus()==0);
@@ -114,9 +114,9 @@ void LINE_TEST::test_constructor()
     TEST_ASSERT(line.get_fault_count()==0);
 }
 
-void LINE_TEST::test_set_get_sending_receiving_side_bus()
+void AC_LINE_TEST::test_set_get_sending_receiving_side_bus()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_sending_side_bus(1);
     TEST_ASSERT(line.get_sending_side_bus()==1);
@@ -132,25 +132,25 @@ void LINE_TEST::test_set_get_sending_receiving_side_bus()
     TEST_ASSERT(line.get_receiving_side_bus()==0);
 }
 
-void LINE_TEST::test_set_get_identifier()
+void AC_LINE_TEST::test_set_get_identifier()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_identifier("1#");
     TEST_ASSERT(line.get_identifier()=="1#");
 }
 
-void LINE_TEST::test_set_get_name()
+void AC_LINE_TEST::test_set_get_name()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_name("line-1#");
     TEST_ASSERT(line.get_name()=="line-1#");
 }
 
-void LINE_TEST::test_set_get_breaker_status()
+void AC_LINE_TEST::test_set_get_breaker_status()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_sending_side_breaker_status(true);
     TEST_ASSERT(line.get_sending_side_breaker_status()==true);
@@ -162,9 +162,9 @@ void LINE_TEST::test_set_get_breaker_status()
     TEST_ASSERT(line.get_receiving_side_breaker_status()==false);
 }
 
-void LINE_TEST::test_set_get_line_z120()
+void AC_LINE_TEST::test_set_get_line_z120()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     complex<double> z;
     z=complex<double>(0.01, 0.05);
@@ -176,9 +176,9 @@ void LINE_TEST::test_set_get_line_z120()
     TEST_ASSERT(abs(line.get_line_zero_sequence_z_in_pu()-z)<FLOAT_EPSILON);
 }
 
-void LINE_TEST::test_set_get_line_y120()
+void AC_LINE_TEST::test_set_get_line_y120()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     complex<double> y;
     y=complex<double>(0.00001, 0.024);
@@ -190,9 +190,9 @@ void LINE_TEST::test_set_get_line_y120()
     TEST_ASSERT(abs(line.get_line_zero_sequence_y_in_pu()-y)<FLOAT_EPSILON);
 }
 
-void LINE_TEST::test_set_get_shunt_y120_at_sending_side()
+void AC_LINE_TEST::test_set_get_shunt_y120_at_sending_side()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     complex<double> y;
     y=complex<double>(0.00001, 0.024);
@@ -204,9 +204,9 @@ void LINE_TEST::test_set_get_shunt_y120_at_sending_side()
     TEST_ASSERT(abs(line.get_shunt_zero_sequence_y_at_sending_side_in_pu()-y)<FLOAT_EPSILON);
 }
 
-void LINE_TEST::test_set_get_shunt_y120_at_receiving_side()
+void AC_LINE_TEST::test_set_get_shunt_y120_at_receiving_side()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     complex<double> y;
     y=complex<double>(0.00001, 0.024);
@@ -217,9 +217,9 @@ void LINE_TEST::test_set_get_shunt_y120_at_receiving_side()
     TEST_ASSERT(abs(line.get_shunt_zero_sequence_y_at_receiving_side_in_pu()-y)<FLOAT_EPSILON);
 }
 
-void LINE_TEST::test_set_get_rating()
+void AC_LINE_TEST::test_set_get_rating()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     RATING rating, rating_out;
     rating.set_rating_A_MVA(50.0);
@@ -233,9 +233,9 @@ void LINE_TEST::test_set_get_rating()
     TEST_ASSERT(rating_out.get_rating_C_MVA()==90.0);
 }
 
-void LINE_TEST::test_set_get_meter_end_bus()
+void AC_LINE_TEST::test_set_get_meter_end_bus()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
@@ -253,9 +253,9 @@ void LINE_TEST::test_set_get_meter_end_bus()
     TEST_ASSERT(line.get_meter_end_bus()==line.get_receiving_side_bus());
 }
 
-void LINE_TEST::test_set_get_length()
+void AC_LINE_TEST::test_set_get_length()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_length(123.0);
     TEST_ASSERT(line.get_length()==123.0);
@@ -264,9 +264,9 @@ void LINE_TEST::test_set_get_length()
     TEST_ASSERT(line.get_length()==123.0);
 }
 
-void LINE_TEST::test_set_get_ownership()
+void AC_LINE_TEST::test_set_get_ownership()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     OWNERSHIP os0, os1;
     os0.append_owner_and_its_fraction(1, 0.5);
@@ -284,9 +284,9 @@ void LINE_TEST::test_set_get_ownership()
     TEST_ASSERT(fabs(os1.get_fraction_of_owner_of_index(2)-0.2)<FLOAT_EPSILON);
 }
 
-void LINE_TEST::test_is_zero_impedance_line()
+void AC_LINE_TEST::test_is_zero_impedance_line()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
@@ -313,9 +313,9 @@ void LINE_TEST::test_is_zero_impedance_line()
     TEST_ASSERT(line.is_zero_impedance_line()==true);
 }
 
-void LINE_TEST::test_set_get_fault()
+void AC_LINE_TEST::test_set_get_fault()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
@@ -379,9 +379,9 @@ void LINE_TEST::test_set_get_fault()
     }
 }
 
-void LINE_TEST::test_clear_fault()
+void AC_LINE_TEST::test_clear_fault()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
@@ -420,9 +420,9 @@ void LINE_TEST::test_clear_fault()
     line.clear_all_faults();
     TEST_ASSERT(line.is_faulted()==false);
 }
-void LINE_TEST::test_get_fault_count()
+void AC_LINE_TEST::test_get_fault_count()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
@@ -448,9 +448,9 @@ void LINE_TEST::test_get_fault_count()
         TEST_ASSERT(line.get_fault_count()==i+1);
     }
 }
-void LINE_TEST::test_is_faulted()
+void AC_LINE_TEST::test_is_faulted()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
@@ -477,9 +477,9 @@ void LINE_TEST::test_is_faulted()
     }
 }
 
-void LINE_TEST::test_is_valid()
+void AC_LINE_TEST::test_is_valid()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     TEST_ASSERT(line.is_valid()==false);
 
@@ -489,9 +489,9 @@ void LINE_TEST::test_is_valid()
     TEST_ASSERT(line.is_valid()==true);
 }
 
-void LINE_TEST::test_clear()
+void AC_LINE_TEST::test_clear()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
@@ -502,9 +502,9 @@ void LINE_TEST::test_clear()
     test_constructor();
 }
 
-void LINE_TEST::test_copy_with_operator_equal()
+void AC_LINE_TEST::test_copy_with_operator_equal()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_sending_side_bus(2);
     line.set_receiving_side_bus(1);
@@ -522,7 +522,7 @@ void LINE_TEST::test_copy_with_operator_equal()
     fault.set_fault_shunt_in_pu(complex<double>(0.0,-2e10));
     line.set_fault(1,0.2,fault);
 
-    LINE newline = line;
+    AC_LINE newline = line;
     TEST_ASSERT(newline.get_sending_side_bus()==2);
     TEST_ASSERT(newline.get_receiving_side_bus()==1);
     TEST_ASSERT(newline.get_identifier()=="1#");
@@ -543,9 +543,9 @@ void LINE_TEST::test_copy_with_operator_equal()
 
 }
 
-void LINE_TEST::test_get_device_id()
+void AC_LINE_TEST::test_get_device_id()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
@@ -571,9 +571,9 @@ void LINE_TEST::test_get_device_id()
     TEST_ASSERT(did!=did2);
 }
 
-void LINE_TEST::test_is_connected_to_bus()
+void AC_LINE_TEST::test_is_connected_to_bus()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
@@ -582,9 +582,9 @@ void LINE_TEST::test_is_connected_to_bus()
     TEST_ASSERT(line.is_connected_to_bus(3)==false);
 }
 
-void LINE_TEST::test_get_line_base_voltage()
+void AC_LINE_TEST::test_get_line_base_voltage()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
@@ -592,9 +592,9 @@ void LINE_TEST::test_get_line_base_voltage()
     TEST_ASSERT(line.get_line_base_voltage_in_kV()==110.0);
 }
 
-void LINE_TEST::test_get_line_voltage_at_two_sides()
+void AC_LINE_TEST::test_get_line_voltage_at_two_sides()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
@@ -607,9 +607,9 @@ void LINE_TEST::test_get_line_voltage_at_two_sides()
     TEST_ASSERT(abs(line.get_line_complex_voltage_at_receiving_side_in_kV()-Vr*110.0)<FLOAT_EPSILON);
 }
 
-void LINE_TEST::test_get_line_current_at_two_sides()
+void AC_LINE_TEST::test_get_line_current_at_two_sides()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
@@ -674,9 +674,9 @@ void LINE_TEST::test_get_line_current_at_two_sides()
     TEST_ASSERT(abs(line.get_line_complex_current_at_receiving_side_in_kA()-Ir*Ibase)<FLOAT_EPSILON);
 }
 
-void LINE_TEST::test_get_line_power_at_two_sides()
+void AC_LINE_TEST::test_get_line_power_at_two_sides()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
@@ -746,9 +746,9 @@ void LINE_TEST::test_get_line_power_at_two_sides()
 
 }
 
-void LINE_TEST::test_get_line_apparent_impedance_at_two_sides()
+void AC_LINE_TEST::test_get_line_apparent_impedance_at_two_sides()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"AC_LINE_TEST");
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);

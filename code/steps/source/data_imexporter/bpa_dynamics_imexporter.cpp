@@ -506,7 +506,7 @@ DEVICE_ID BPA_IMEXPORTER::get_load_device_id_from_string(string data)
     return did;
 }
 
-DEVICE_ID BPA_IMEXPORTER::get_line_device_id_from_string(string data)
+DEVICE_ID BPA_IMEXPORTER::get_ac_line_device_id_from_string(string data)
 {
     DEVICE_ID did;
     did.set_device_type(STEPS_AC_LINE);

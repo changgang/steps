@@ -106,11 +106,11 @@ class NETWORK_MATRIX
     private:
         void build_initial_zero_matrix(STEPS_COMPLEX_SPARSE_MATRIX& matrix);
         void build_initial_zero_matrix(STEPS_SPARSE_MATRIX& matrix);
-        void add_lines_to_network();
+        void add_ac_lines_to_network();
         void add_transformers_to_network();
         void add_fixed_shunts_to_network();
 
-        void add_line_to_network(const LINE& line);
+        void add_ac_line_to_network(const AC_LINE& line);
         void add_transformer_to_network(const TRANSFORMER& trans);
 
         void add_two_winding_transformer_to_network(const TRANSFORMER& trans);
@@ -118,27 +118,27 @@ class NETWORK_MATRIX
         void add_two_winding_transformer_to_network_v2(const TRANSFORMER& trans);
         void add_fixed_shunt_to_network(const FIXED_SHUNT& shunt);
 
-        void add_lines_to_decoupled_network();
+        void add_ac_lines_to_decoupled_network();
         void add_transformers_to_decoupled_network();
         void add_fixed_shunts_to_decoupled_network();
 
-        void add_line_to_decoupled_network(const LINE& line);
+        void add_ac_line_to_decoupled_network(const AC_LINE& line);
         void add_transformer_to_decoupled_network(const TRANSFORMER& trans);
         void add_three_winding_transformer_to_decoupled_network(const TRANSFORMER& trans);
         void add_two_winding_transformer_to_decoupled_network_v2(const TRANSFORMER& trans);
         void add_fixed_shunt_to_decoupled_network(const FIXED_SHUNT& shunt);
 
-        void add_lines_to_dc_network();
+        void add_ac_lines_to_dc_network();
         void add_transformers_to_dc_network();
 
-        void add_line_to_dc_network(const LINE& line);
+        void add_ac_line_to_dc_network(const AC_LINE& line);
         void add_transformer_to_dc_network(const TRANSFORMER& trans);
         void add_three_winding_transformer_to_dc_network(const TRANSFORMER& trans);
         void add_two_winding_transformer_to_dc_network(const TRANSFORMER& trans);
 
         void add_bus_fault_to_dynamic_network();
-        void add_lines_to_dynamic_network();
-        void add_faulted_line_to_dynamic_network(const LINE& line);
+        void add_ac_lines_to_dynamic_network();
+        void add_faulted_ac_line_to_dynamic_network(const AC_LINE& line);
         void add_generators_to_dynamic_network();
         void add_generator_to_dynamic_network(const GENERATOR& gen);
         void add_wt_generators_to_dynamic_network();
@@ -153,15 +153,15 @@ class NETWORK_MATRIX
         void add_vsc_hvdcs_to_dynamic_network();
         void add_vsc_hvdc_to_dynamic_network(const VSC_HVDC& vsc_hvdc);
 
-//        void add_lines_to_sequence_network();
-//        void add_faulted_line_to_sequence_network(const LINE& line);
+//        void add_ac_lines_to_sequence_network();
+//        void add_faulted_ac_line_to_sequence_network(const AC_LINE& line);
 //        void add_generators_to_sequence_network();
 //        void add_generator_to_sequence_network(const GENERATOR& gen);
 //        void add_wt_generators_to_sequence_network();
 //        void add_wt_generator_to_sequence_network(const WT_GENERATOR& gen);
 
-        void add_lines_to_positive_sequence_network();
-        void add_faulted_line_to_positive_sequence_network(const LINE& line);
+        void add_ac_lines_to_positive_sequence_network();
+        void add_faulted_ac_line_to_positive_sequence_network(const AC_LINE& line);
         void add_transformers_to_positive_sequence_network();
         void add_loads_to_positive_sequence_network();
         void add_load_to_positive_sequence_network(const LOAD& load);
@@ -183,8 +183,8 @@ class NETWORK_MATRIX
         void add_vsc_hvdcs_to_positive_sequence_network();
         void add_vsc_hvdc_to_positive_sequence_network(const VSC_HVDC& vsc_hvdc);
 
-        void add_lines_to_negative_sequence_network();
-        void add_faulted_line_to_negative_sequence_network(const LINE& line);
+        void add_ac_lines_to_negative_sequence_network();
+        void add_faulted_ac_line_to_negative_sequence_network(const AC_LINE& line);
         void add_transformers_to_negative_sequence_network();
         void add_loads_to_negative_sequence_network();
         void add_load_to_negative_sequence_network(const LOAD& load);
@@ -199,11 +199,11 @@ class NETWORK_MATRIX
         void add_energy_storage_to_negative_sequence_network(const ENERGY_STORAGE& es);
         void add_fixed_shunts_to_negative_sequence_network();
 
-        void add_lines_to_zero_sequence_network();
+        void add_ac_lines_to_zero_sequence_network();
         void preprocess_mutual_data();
-        void add_line_to_zero_sequence_network(const LINE& line);
-        void add_faulted_line_to_zero_sequence_network(const LINE& line);
-        void add_mutual_line_to_zero_sequence_network(const LINE& line);
+        void add_ac_line_to_zero_sequence_network(const AC_LINE& line);
+        void add_faulted_ac_line_to_zero_sequence_network(const AC_LINE& line);
+        void add_mutual_ac_line_to_zero_sequence_network(const AC_LINE& line);
         void add_transformers_to_zero_sequence_network();
         void add_transformer_to_zero_sequence_network(const TRANSFORMER& trans);
         void add_two_winding_transformer_to_zero_sequence_network(const TRANSFORMER& trans);

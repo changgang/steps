@@ -61,7 +61,7 @@ class BPA_IMEXPORTER : public DATA_IMEXPORTER
         void set_area_swing_bus();
         void load_load_and_fixed_shunt_data();
         void load_generator_data();
-        void load_line_data();
+        void load_ac_line_data();
         void load_fixed_shunt_data();
         void load_source_data();
         void load_wt_generator_data();
@@ -71,7 +71,7 @@ class BPA_IMEXPORTER : public DATA_IMEXPORTER
 
         string export_case_data() const;
         string export_bus_data() const;
-        string export_line_data() const;
+        string export_ac_line_data() const;
         string export_transformer_data() const;
         string export_two_winding_transformer(const TRANSFORMER* trans) const;
         string export_three_winding_transformer(const TRANSFORMER* trans) const;
@@ -89,7 +89,7 @@ class BPA_IMEXPORTER : public DATA_IMEXPORTER
 
         DEVICE_ID get_generator_device_id_from_string(string data);
         DEVICE_ID get_load_device_id_from_string(string data);
-        DEVICE_ID get_line_device_id_from_string(string data);
+        DEVICE_ID get_ac_line_device_id_from_string(string data);
         DEVICE_ID get_2t_lcc_hvdc_device_id_from_string(string data);
         DEVICE_ID get_transformer_device_id_from_string(string data);
 
@@ -99,7 +99,7 @@ class BPA_IMEXPORTER : public DATA_IMEXPORTER
         void load_stabilizer_dynamic_data();
         void load_turbine_governor_dynamic_data();
         void load_load_dynamic_data();
-        void load_line_dynamic_data();
+        void load_ac_line_dynamic_data();
 
         unsigned int data_version;
         vector<string> dat_data_in_ram;

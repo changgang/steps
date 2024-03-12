@@ -8,11 +8,11 @@
 int api_get_line_integer_data(unsigned int ibus, unsigned int jbus, char* identifier, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LINE* lineptr = psdb.get_line(did);
+    AC_LINE* lineptr = psdb.get_ac_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -42,11 +42,11 @@ int api_get_line_integer_data(unsigned int ibus, unsigned int jbus, char* identi
 void api_set_line_integer_data(unsigned int ibus, unsigned int jbus, char* identifier, char* parameter_name, int value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LINE* lineptr = psdb.get_line(did);
+    AC_LINE* lineptr = psdb.get_ac_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -71,11 +71,11 @@ void api_set_line_integer_data(unsigned int ibus, unsigned int jbus, char* ident
 double api_get_line_float_data(unsigned int ibus, unsigned int jbus, char* identifier, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LINE* lineptr = psdb.get_line(did);
+    AC_LINE* lineptr = psdb.get_ac_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -222,11 +222,11 @@ double api_get_line_float_data(unsigned int ibus, unsigned int jbus, char* ident
 void api_set_line_float_data(unsigned int ibus, unsigned int jbus, char* identifier, char* parameter_name, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LINE* lineptr = psdb.get_line(did);
+    AC_LINE* lineptr = psdb.get_ac_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -362,13 +362,13 @@ void api_set_line_float_data(unsigned int ibus, unsigned int jbus, char* identif
 const char* api_get_line_string_data(unsigned int ibus, unsigned int jbus, char* identifier, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
-    LINE* lineptr = psdb.get_line(did);
+    AC_LINE* lineptr = psdb.get_ac_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -396,11 +396,11 @@ const char* api_get_line_string_data(unsigned int ibus, unsigned int jbus, char*
 void api_set_line_string_data(unsigned int ibus, unsigned int jbus, char* identifier, char* parameter_name, char* value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LINE* lineptr = psdb.get_line(did);
+    AC_LINE* lineptr = psdb.get_ac_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -418,11 +418,11 @@ void api_set_line_string_data(unsigned int ibus, unsigned int jbus, char* identi
 bool api_get_line_boolean_data(unsigned int ibus, unsigned int jbus, char* identifier, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LINE* lineptr = psdb.get_line(did);
+    AC_LINE* lineptr = psdb.get_ac_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -446,11 +446,11 @@ bool api_get_line_boolean_data(unsigned int ibus, unsigned int jbus, char* ident
 void api_set_line_boolean_data(unsigned int ibus, unsigned int jbus, char* identifier, char* parameter_name, bool value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LINE* lineptr = psdb.get_line(did);
+    AC_LINE* lineptr = psdb.get_ac_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);

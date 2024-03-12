@@ -22,7 +22,7 @@ class CCT_SEARCHER
         void set_fault_side_bus(unsigned int bus);
         void set_fault_location_to_fault_side_bus_in_pu(double location);
         void set_fault_shunt_in_pu(complex<double> shunt);
-        void set_flag_trip_line_after_clearing_fault(bool flag);
+        void set_flag_trip_ac_line_after_clearing_fault(bool flag);
 
         void set_simulator_max_iteration(unsigned int iteration);
         void set_simulator_allowed_max_power_imbalance_in_MVA(double tol);
@@ -38,7 +38,7 @@ class CCT_SEARCHER
         unsigned int get_fault_side_bus() const;
         double get_fault_location_to_fault_side_bus_in_pu() const;
         complex<double> get_fault_shunt_in_pu() const;
-        bool get_flag_trip_line_after_clearing_fault() const;
+        bool get_flag_trip_ac_line_after_clearing_fault() const;
 
         unsigned int get_simulator_max_iteration() const;
         double get_simulator_allowed_max_power_imbalance_in_MVA() const;
@@ -83,7 +83,7 @@ class CCT_SEARCHER
         complex<double> fault_shunt_in_pu;
         double fault_time_in_s;
         double minimum_clearing_time, maximum_clearing_time;
-        bool flag_trip_line_after_clearing_fault;
+        bool flag_trip_ac_line_after_clearing_fault;
         double simulation_time_span_in_s;
         double angle_difference_threshold_in_deg;
 

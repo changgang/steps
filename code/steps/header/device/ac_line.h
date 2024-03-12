@@ -1,5 +1,5 @@
-#ifndef LINE_H
-#define LINE_H
+#ifndef AC_LINE_H
+#define AC_LINE_H
 
 #include "header/device/nonbus_device.h"
 #include "header/basic/device_id.h"
@@ -12,11 +12,11 @@
 using namespace std;
 
 class BUS;
-class LINE : public NONBUS_DEVICE
+class AC_LINE : public NONBUS_DEVICE
 {
     public:
-        LINE(STEPS& toolkit);
-        virtual ~LINE();
+        AC_LINE(STEPS& toolkit);
+        virtual ~AC_LINE();
 
         void set_sending_side_bus(unsigned int bus);
         void set_receiving_side_bus(unsigned int bus);
@@ -40,7 +40,7 @@ class LINE : public NONBUS_DEVICE
         void set_length(double length);
 
         void set_mutual_admittances(vector<complex<double>> Y);
-        void set_line_pointers_corresponding_to_mutual_admittances(vector<LINE*> lineptrs);
+        void set_line_pointers_corresponding_to_mutual_admittances(vector<AC_LINE*> lineptrs);
         void set_is_mutual_logic(bool b);
 
         unsigned int get_sending_side_bus() const;
@@ -91,7 +91,7 @@ class LINE : public NONBUS_DEVICE
         virtual void set_model(MODEL* model);
         virtual MODEL* get_model_of_type(string model_type, unsigned int index=0);
 
-        virtual LINE& operator=(const LINE& line);
+        virtual AC_LINE& operator=(const AC_LINE& line);
 
         virtual DEVICE_ID get_device_id() const;
         //virtual string get_compound_device_name() const;
@@ -99,7 +99,7 @@ class LINE : public NONBUS_DEVICE
         double get_line_base_voltage_in_kV() const;
 
         vector<complex<double>> get_mutual_admittances() const;
-        vector<LINE*> get_line_pointers_corresponding_to_mutual_admittances() const;
+        vector<AC_LINE*> get_line_pointers_corresponding_to_mutual_admittances() const;
 
         complex<double> get_line_complex_voltage_at_sending_side_in_pu() const;
         complex<double> get_line_complex_voltage_at_receiving_side_in_pu() const;
@@ -167,9 +167,9 @@ class LINE : public NONBUS_DEVICE
         map<double,FAULT> faults;
 
         vector<complex<double> > Ymutual;
-        vector<LINE*> lineptrs_of_Ymutual;
+        vector<AC_LINE*> lineptrs_of_Ymutual;
         bool is_mutual_line;
         bool sequence_parameter_import_flag;
 };
 
-#endif // LINE_H
+#endif // AC_LINE_H

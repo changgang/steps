@@ -45,7 +45,7 @@ class STEPS
         unsigned int get_energy_storage_thread_number() const;
         unsigned int get_load_thread_number() const;
         unsigned int get_fixed_shunt_thread_number() const;
-        unsigned int get_line_thread_number() const;
+        unsigned int get_ac_line_thread_number() const;
         unsigned int get_transformer_thread_number() const;
         unsigned int get_lcc_hvdc2t_thread_number() const;
         unsigned int get_vsc_hvdc_thread_number() const;

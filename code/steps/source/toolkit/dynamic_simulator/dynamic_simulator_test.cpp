@@ -490,11 +490,11 @@ void DYNAMICS_SIMULATOR_TEST::test_run_single_machine_model()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    simulator.set_line_fault(did, 3, 0.0, complex<double>(0.0, -2e5));
+    simulator.set_ac_line_fault(did, 3, 0.0, complex<double>(0.0, -2e5));
 
     simulator.run_to(1.05);
 
-    simulator.clear_line_fault(did, 3, 0.0);
+    simulator.clear_ac_line_fault(did, 3, 0.0);
 
     simulator.run_to(5.0);
 
@@ -545,12 +545,12 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_classical_model()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    simulator.set_line_fault(did, 7, 0.0, complex<double>(0.0, -2e5));
+    simulator.set_ac_line_fault(did, 7, 0.0, complex<double>(0.0, -2e5));
 
     simulator.run_to(0.08333);
 
-    simulator.clear_line_fault(did, 7, 0.0);
-    simulator.trip_line(did);
+    simulator.clear_ac_line_fault(did, 7, 0.0);
+    simulator.trip_ac_line(did);
 
     simulator.run_to(5.0);
 
@@ -659,12 +659,12 @@ void DYNAMICS_SIMULATOR_TEST::test_run_SD_133_bus_model()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    simulator.set_line_fault(did, 60, 0.0, complex<double>(0.0, -1e6));
+    simulator.set_ac_line_fault(did, 60, 0.0, complex<double>(0.0, -1e6));
 
     simulator.run_to(1.1);
 
-    simulator.clear_line_fault(did, 60, 0.0);
-    simulator.trip_line(did);
+    simulator.clear_ac_line_fault(did, 60, 0.0);
+    simulator.trip_ac_line(did);
 
     simulator.run_to(5.0);
 
@@ -775,12 +775,12 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    simulator.set_line_fault(did, 60, 0.0, complex<double>(0.0, -1e6));
+    simulator.set_ac_line_fault(did, 60, 0.0, complex<double>(0.0, -1e6));
 
     simulator.run_to(1.1);
 
-    simulator.clear_line_fault(did, 60, 0.0);
-    simulator.trip_line(did);
+    simulator.clear_ac_line_fault(did, 60, 0.0);
+    simulator.trip_ac_line(did);
 
     simulator.run_to(5.0);
 
@@ -886,10 +886,10 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     gendid_1.set_device_terminal(terminal);
     gendid_1.set_device_identifier_index(get_index_of_string("1"));
 
-    /*simulator.set_line_fault(did, 7, 0.0, complex<double>(0.0, -2e5));
+    /*simulator.set_ac_line_fault(did, 7, 0.0, complex<double>(0.0, -2e5));
     simulator.run_to(1.1);
-    simulator.clear_line_fault(did, 7, 0.0);
-    simulator.trip_line(did);*/
+    simulator.clear_ac_line_fault(did, 7, 0.0);
+    simulator.trip_ac_line(did);*/
     simulator.shed_generator(gendid_1, 0.2);
 
     simulator.run_to(10.0);
@@ -1004,10 +1004,10 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
     gendid_1.set_device_terminal(terminal);
     gendid_1.set_device_identifier_index(get_index_of_string("1"));
 
-    /*simulator.set_line_fault(did, 7, 0.0, complex<double>(0.0, -2e5));
+    /*simulator.set_ac_line_fault(did, 7, 0.0, complex<double>(0.0, -2e5));
     simulator.run_to(1.1);
-    simulator.clear_line_fault(did, 7, 0.0);
-    simulator.trip_line(did);*/
+    simulator.clear_ac_line_fault(did, 7, 0.0);
+    simulator.trip_ac_line(did);*/
     simulator.shed_generator(gendid_1, 0.2);
 
     simulator.run_to(20.0);

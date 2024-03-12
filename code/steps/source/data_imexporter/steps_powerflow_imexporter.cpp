@@ -5,7 +5,7 @@
 #include "header/device/fixed_shunt.h"
 #include "header/device/generator.h"
 #include "header/device/wt_generator.h"
-#include "header/device/line.h"
+#include "header/device/ac_line.h"
 #include "header/device/transformer.h"
 #include "header/steps_namespace.h"
 #include <cstdio>
@@ -52,7 +52,7 @@ void STEPS_IMEXPORTER::load_all_devices()
     load_load_data();
     load_fixed_shunt_data();
     load_source_data();
-    load_line_data();
+    load_ac_line_data();
     load_transformer_data();
     load_area_data();
     load_2t_lcc_hvdc_data();
@@ -811,7 +811,7 @@ void STEPS_IMEXPORTER::load_source_var_control_data(vector<string>& data, SOURCE
     }
 }
 
-void STEPS_IMEXPORTER::load_line_data()
+void STEPS_IMEXPORTER::load_ac_line_data()
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -830,7 +830,7 @@ void STEPS_IMEXPORTER::load_line_data()
     for(unsigned int i=0; i!=ndata; ++i)
     {
         data = DATA[i];
-        LINE line(toolkit);
+        AC_LINE line(toolkit);
 
         if(data.size()>0)
         {
@@ -961,7 +961,7 @@ void STEPS_IMEXPORTER::load_line_data()
         os.normalize();
         line.set_ownership(os);
 
-        psdb.append_line(line);
+        psdb.append_ac_line(line);
     }
 }
 void STEPS_IMEXPORTER::load_transformer_data()
@@ -2518,7 +2518,7 @@ void STEPS_IMEXPORTER::export_powerflow_data(string file, bool export_zero_imped
     ofs<<"0 / END OF FIXED SHUNT DATA, BEGIN GENERATOR DATA"<<endl;
     ofs<<export_source_data();
     ofs<<"0 / END OF GENERATOR DATA, BEGIN TRANSMISSION LINE DATA"<<endl;
-    ofs<<export_line_data();
+    ofs<<export_ac_line_data();
     ofs<<"0 / END OF TRANSMISSION LINE DATA, BEGIN TRANSFORMER DATA"<<endl;
     ofs<<export_transformer_data();
     ofs<<"0 / END OF TRANSFORMER DATA, BEGIN AREA DATA"<<endl;
@@ -2869,17 +2869,17 @@ string STEPS_IMEXPORTER::export_source_var_control_data(SOURCE* source) const
     return osstream.str();
 }
 
-string STEPS_IMEXPORTER::export_line_data() const
+string STEPS_IMEXPORTER::export_ac_line_data() const
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector<LINE*> lines = psdb.get_all_lines();
+    vector<AC_LINE*> lines = psdb.get_all_ac_lines();
     unsigned int n = lines.size();
     for(unsigned int i=0; i!=n; ++i)
     {
-        LINE* line = lines[i];
+        AC_LINE* line = lines[i];
 
         unsigned int ibus = line->get_sending_side_bus();
         unsigned int jbus = line->get_receiving_side_bus();

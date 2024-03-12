@@ -21,7 +21,7 @@ DEVICE_ID_TEST::DEVICE_ID_TEST()
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_fixedshunt);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_switchedshunt);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_equivalent_device);
-    TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_line);
+    TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_ac_line);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_transformer);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_lcc_hvdc2t);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_vsc_hvdc);
@@ -225,7 +225,7 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_equivalent_device()
     TEST_ASSERT(terminal.get_bus_count()==1);
 }
 
-void DEVICE_ID_TEST::test_constructor_and_get_device_type_line()
+void DEVICE_ID_TEST::test_constructor_and_get_device_type_ac_line()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
@@ -429,7 +429,7 @@ void DEVICE_ID_TEST::test_get_compound_device_name()
     device_id.set_device_terminal(terminal);
     add_string_to_str_int_map("#1");
     device_id.set_device_identifier_index(get_index_of_string("#1"));
-    TEST_ASSERT(device_id.get_compound_device_name()=="LINE #1 LINKING BUS 1 AND 2");
+    TEST_ASSERT(device_id.get_compound_device_name()=="AC LINE #1 LINKING BUS 1 AND 2");
 
     device_id.clear();
     terminal.clear();

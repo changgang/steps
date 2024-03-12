@@ -163,7 +163,7 @@ class POWERFLOW_SOLVER
         vector<PV_UNIT*> pv_units;
         vector<ENERGY_STORAGE*> e_storages;
         vector<LOAD*> loads;
-        vector<LINE*> lines;
+        vector<AC_LINE*> lines;
         vector<TRANSFORMER*> transformers;
         vector<LCC_HVDC2T*> hvdcs;
         vector<VSC_HVDC*> vsc_hvdcs;

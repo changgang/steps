@@ -261,7 +261,7 @@ unsigned int api_get_device_capacity(const char* device_type, unsigned int toolk
     if(DEVICE_TYPE=="FIXED SHUNT")
         return psdb.get_fixed_shunt_capacity();
     if(DEVICE_TYPE=="AC LINE")
-        return psdb.get_line_capacity();
+        return psdb.get_ac_line_capacity();
     if(DEVICE_TYPE=="TRANSFORMER")
         return psdb.get_transformer_capacity();
     if(DEVICE_TYPE=="2T LCC HVDC")
@@ -319,7 +319,7 @@ void api_set_device_capacity(const char* device_type, unsigned int cap, unsigned
     if(DEVICE_TYPE=="FIXED SHUNT")
         return psdb.set_fixed_shunt_capacity(cap);
     if(DEVICE_TYPE=="AC LINE")
-        return psdb.set_line_capacity(cap);
+        return psdb.set_ac_line_capacity(cap);
     if(DEVICE_TYPE=="TRANSFORMER")
         return psdb.set_transformer_capacity(cap);
     if(DEVICE_TYPE=="2T LCC HVDC")

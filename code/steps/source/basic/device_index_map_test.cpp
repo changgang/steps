@@ -25,7 +25,7 @@ DEVICE_INDEX_MAP_TEST::DEVICE_INDEX_MAP_TEST()
     TEST_ADD(DEVICE_INDEX_MAP_TEST::test_set_get_load_index);
     TEST_ADD(DEVICE_INDEX_MAP_TEST::test_set_get_fixed_shunt_index);
     TEST_ADD(DEVICE_INDEX_MAP_TEST::test_set_get_switched_shunt_index);
-    TEST_ADD(DEVICE_INDEX_MAP_TEST::test_set_get_line_index);
+    TEST_ADD(DEVICE_INDEX_MAP_TEST::test_set_get_ac_line_index);
     TEST_ADD(DEVICE_INDEX_MAP_TEST::test_set_get_transformer_index);
     TEST_ADD(DEVICE_INDEX_MAP_TEST::test_set_get_energy_storage_index);
     TEST_ADD(DEVICE_INDEX_MAP_TEST::test_empty);
@@ -333,7 +333,7 @@ void DEVICE_INDEX_MAP_TEST::test_set_get_switched_shunt_index()
 }
 
 
-void DEVICE_INDEX_MAP_TEST::test_set_get_line_index()
+void DEVICE_INDEX_MAP_TEST::test_set_get_ac_line_index()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_INDEX_MAP_TEST");
 

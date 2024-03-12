@@ -117,10 +117,10 @@ void api_initialize_device_search(const char* device_type, unsigned int bus, uns
     if(DEVICE_TYPE=="AC LINE")
     {
         if(bus==0)
-            toolkit.api_search_buffer.lines = psdb.get_all_lines();
+            toolkit.api_search_buffer.ac_lines = psdb.get_all_ac_lines();
         else
-            toolkit.api_search_buffer.lines = psdb.get_lines_connecting_to_bus(bus);
-        toolkit.api_search_buffer.line_pointer = 0;
+            toolkit.api_search_buffer.ac_lines = psdb.get_ac_lines_connecting_to_bus(bus);
+        toolkit.api_search_buffer.ac_line_pointer = 0;
     }
 
     if(DEVICE_TYPE=="TRANSFORMER")
@@ -226,14 +226,14 @@ unsigned int api_get_current_device_bus_number(const char* device_type, const ch
 
     if(DEVICE_TYPE=="AC LINE")
     {
-        unsigned int index = toolkit.api_search_buffer.line_pointer;
-        unsigned int n = toolkit.api_search_buffer.lines.size();
+        unsigned int index = toolkit.api_search_buffer.ac_line_pointer;
+        unsigned int n = toolkit.api_search_buffer.ac_lines.size();
         if(index<n)
         {
             if(SIDE=="SENDING" or SIDE=="SEND")
-                return toolkit.api_search_buffer.lines[index]->get_sending_side_bus();
+                return toolkit.api_search_buffer.ac_lines[index]->get_sending_side_bus();
             else
-                return toolkit.api_search_buffer.lines[index]->get_receiving_side_bus();
+                return toolkit.api_search_buffer.ac_lines[index]->get_receiving_side_bus();
         }
         else
             return 0;
@@ -380,11 +380,11 @@ unsigned int api_get_current_device_bus_number(const char* device_type, const ch
 
     if(DEVICE_TYPE=="AC LINE")
     {
-        unsigned int index = toolkit.api_search_buffer.line_pointer;
-        unsigned int n = toolkit.api_search_buffer.lines.size();
+        unsigned int index = toolkit.api_search_buffer.ac_line_pointer;
+        unsigned int n = toolkit.api_search_buffer.ac_lines.size();
         if(index<n)
 		{
-			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (toolkit.api_search_buffer.lines[index]->get_identifier()).c_str());
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (toolkit.api_search_buffer.ac_lines[index]->get_identifier()).c_str());
 			return toolkit.steps_char_buffer;
 		}
         else
@@ -511,10 +511,10 @@ void api_goto_next_device(const char* device_type, unsigned int toolkit_index)
 
     if(DEVICE_TYPE=="AC LINE")
     {
-        unsigned int index = toolkit.api_search_buffer.line_pointer;
-        unsigned int n = toolkit.api_search_buffer.lines.size();
+        unsigned int index = toolkit.api_search_buffer.ac_line_pointer;
+        unsigned int n = toolkit.api_search_buffer.ac_lines.size();
         if(index<n)
-            ++(toolkit.api_search_buffer.line_pointer);
+            ++(toolkit.api_search_buffer.ac_line_pointer);
         return;
     }
 

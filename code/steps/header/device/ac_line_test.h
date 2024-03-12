@@ -1,5 +1,5 @@
-#ifndef LINE_TEST_H
-#define LINE_TEST_H
+#ifndef AC_LINE_TEST_H
+#define AC_LINE_TEST_H
 
 #include <istream>
 #include <cstdlib>
@@ -12,15 +12,15 @@
 
 #include "cpptest.h"
 
-#include "header/device/line.h"
+#include "header/device/ac_line.h"
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
 using namespace std;
 
-class LINE_TEST : public Test::Suite
+class AC_LINE_TEST : public Test::Suite
 {
     public:
-        LINE_TEST();
+        AC_LINE_TEST();
     protected:
         virtual void setup();
         virtual void tear_down();
@@ -56,7 +56,7 @@ class LINE_TEST : public Test::Suite
         void test_get_line_power_at_two_sides();
         void test_get_line_apparent_impedance_at_two_sides();
     private:
-        LINE line;
+        AC_LINE line;
 };
 
-#endif //LINE_TEST_H
+#endif //AC_LINE_TEST_H

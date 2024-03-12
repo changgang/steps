@@ -176,7 +176,7 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(STEPS_DEVICE_TYPE dev
     osstream<<"Device type '"<<device_type<<"' is not supported when building DEVICE_ID object."<<endl
             <<"Allowed device types are: "<<endl
             <<"GENERATOR, WT GENERATOR, PV UNIT, ENERGY STORAGE, LOAD, FIXED SHUNT, SWITCHED SHUNT"<<endl
-            <<"LINE, TRANSFORMER, 2T LCC HVDC, VSC HVDC, FACTS, LCC HVDC, HYBRID DC, EQUIVALENT DEVICE, and GENERAL DEVICE."<<endl
+            <<"AC LINE, TRANSFORMER, 2T LCC HVDC, VSC HVDC, FACTS, LCC HVDC, HYBRID DC, EQUIVALENT DEVICE, and GENERAL DEVICE."<<endl
             <<"Device type will be set as blank, and \"NONE\" will be returned if get_device_type() is called.";
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     device_type = STEPS_INVALID_DEVICE;
@@ -629,7 +629,7 @@ DEVICE_ID get_fixed_shunt_device_id(unsigned int bus, const string& identifier)
     return did;
 }
 
-DEVICE_ID get_line_device_id(unsigned int ibus, unsigned int jbus, const string& identifier)
+DEVICE_ID get_ac_line_device_id(unsigned int ibus, unsigned int jbus, const string& identifier)
 {
     DEVICE_ID did;
     did.set_device_type(STEPS_AC_LINE);

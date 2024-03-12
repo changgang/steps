@@ -105,15 +105,15 @@ void api_add_line(unsigned int sending_side_bus_number, unsigned int receiving_s
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    DEVICE_ID did = get_line_device_id(sending_side_bus_number, receiving_side_bus_number, identifier);
+    DEVICE_ID did = get_ac_line_device_id(sending_side_bus_number, receiving_side_bus_number, identifier);
 
-    if(not psdb.is_line_exist(did))
+    if(not psdb.is_ac_line_exist(did))
     {
-        LINE newline(toolkit);
+        AC_LINE newline(toolkit);
         newline.set_sending_side_bus(sending_side_bus_number);
         newline.set_receiving_side_bus(receiving_side_bus_number);
         newline.set_identifier(identifier);
-        psdb.append_line(newline);
+        psdb.append_ac_line(newline);
     }
 }
 

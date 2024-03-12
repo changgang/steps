@@ -169,8 +169,8 @@ void NETWORK_MATRIX_TEST::test_check_network_connectivity()
 
     device_id.set_device_terminal(terminal);
 
-    LINE* line;
-    line = psdb.get_line(device_id);
+    AC_LINE* line;
+    line = psdb.get_ac_line(device_id);
     line->set_sending_side_breaker_status(false);
     line->set_receiving_side_breaker_status(false);
 
@@ -180,7 +180,7 @@ void NETWORK_MATRIX_TEST::test_check_network_connectivity()
 
     device_id.set_device_terminal(terminal);
 
-    line = psdb.get_line(device_id);
+    line = psdb.get_ac_line(device_id);
     line->set_sending_side_breaker_status(false);
     line->set_receiving_side_breaker_status(false);
 
@@ -195,7 +195,7 @@ void NETWORK_MATRIX_TEST::test_check_network_connectivity()
 
     device_id.set_device_terminal(terminal);
 
-    line = psdb.get_line(device_id);
+    line = psdb.get_ac_line(device_id);
     line->set_sending_side_breaker_status(false);
     line->set_receiving_side_breaker_status(false);
 
@@ -228,7 +228,7 @@ void NETWORK_MATRIX_TEST::test_get_islands()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    LINE* line = psdb.get_line(did);
+    AC_LINE* line = psdb.get_ac_line(did);
     line->set_sending_side_breaker_status(false);
     line->set_receiving_side_breaker_status(false);
 
@@ -248,7 +248,7 @@ void NETWORK_MATRIX_TEST::test_get_islands()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    line = psdb.get_line(did);
+    line = psdb.get_ac_line(did);
     line->set_sending_side_breaker_status(false);
     line->set_receiving_side_breaker_status(false);
 
@@ -268,7 +268,7 @@ void NETWORK_MATRIX_TEST::test_get_islands()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    line = psdb.get_line(did);
+    line = psdb.get_ac_line(did);
     line->set_sending_side_breaker_status(false);
     line->set_receiving_side_breaker_status(false);
 

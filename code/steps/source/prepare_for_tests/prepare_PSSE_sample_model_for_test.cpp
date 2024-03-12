@@ -7,7 +7,7 @@ void prepare_psse_sample_model()
     prepare_psse_sample_model_buses();
     prepare_psse_sample_model_generators();
     prepare_psse_sample_model_loads();
-    prepare_psse_sample_model_lines();
+    prepare_psse_sample_model_ac_lines();
     prepare_psse_sample_model_transformers();
     prepare_psse_sample_model_fixed_shunts();
     prepare_psse_sample_model_switched_shunts();
@@ -135,11 +135,11 @@ void prepare_psse_sample_model_loads()
     psdb.append_load(load);
 }
 
-void prepare_psse_sample_model_lines()
+void prepare_psse_sample_model_ac_lines()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    LINE line(default_toolkit);
-    psdb.append_line(line);
+    AC_LINE line(default_toolkit);
+    psdb.append_ac_line(line);
 }
 
 void prepare_psse_sample_model_transformers()

@@ -18,7 +18,7 @@ METER_SETTER_TEST::METER_SETTER_TEST() : setter(default_toolkit)
 {
     TEST_ADD(METER_SETTER_TEST::test_constructor);
     TEST_ADD(METER_SETTER_TEST::test_prepare_bus_related_meters);
-    TEST_ADD(METER_SETTER_TEST::test_prepare_line_related_meters);
+    TEST_ADD(METER_SETTER_TEST::test_prepare_ac_line_related_meters);
     TEST_ADD(METER_SETTER_TEST::test_prepare_transformer_related_meters);
     TEST_ADD(METER_SETTER_TEST::test_prepare_load_related_meters);
     TEST_ADD(METER_SETTER_TEST::test_prepare_generator_related_meters);
@@ -111,11 +111,11 @@ void METER_SETTER_TEST::test_prepare_bus_related_meters()
     TEST_ASSERT(meter.get_meter_type()=="ROCOF IN HZ/S");
 }
 
-void METER_SETTER_TEST::test_prepare_line_related_meters()
+void METER_SETTER_TEST::test_prepare_ac_line_related_meters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_SETTER_TEST");
 
-    prepare_basic_lines();
+    prepare_basic_ac_lines();
 
     METER meter(default_toolkit);
 
@@ -128,102 +128,102 @@ void METER_SETTER_TEST::test_prepare_line_related_meters()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1#"));
 
-    meter = setter.prepare_line_current_in_kA_meter(did,1);
+    meter = setter.prepare_ac_line_current_in_kA_meter(did,1);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="CURRENT IN KA");
     TEST_ASSERT(meter.get_meter_side_bus()==1);
 
-    meter = setter.prepare_line_current_in_kA_meter(did,2);
+    meter = setter.prepare_ac_line_current_in_kA_meter(did,2);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="CURRENT IN KA");
     TEST_ASSERT(meter.get_meter_side_bus()==2);
 
-    meter = setter.prepare_line_active_power_in_MW_meter(did,1);
+    meter = setter.prepare_ac_line_active_power_in_MW_meter(did,1);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="ACTIVE POWER IN MW");
     TEST_ASSERT(meter.get_meter_side_bus()==1);
 
-    meter = setter.prepare_line_active_power_in_MW_meter(did,2);
+    meter = setter.prepare_ac_line_active_power_in_MW_meter(did,2);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="ACTIVE POWER IN MW");
     TEST_ASSERT(meter.get_meter_side_bus()==2);
 
-    meter = setter.prepare_line_reactive_power_in_MVar_meter(did,1);
+    meter = setter.prepare_ac_line_reactive_power_in_MVar_meter(did,1);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="REACTIVE POWER IN MVAR");
     TEST_ASSERT(meter.get_meter_side_bus()==1);
 
-    meter = setter.prepare_line_reactive_power_in_MVar_meter(did,2);
+    meter = setter.prepare_ac_line_reactive_power_in_MVar_meter(did,2);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="REACTIVE POWER IN MVAR");
     TEST_ASSERT(meter.get_meter_side_bus()==2);
 
-    meter = setter.prepare_line_apparent_impedance_in_Ohm_meter(did,1);
+    meter = setter.prepare_ac_line_apparent_impedance_in_Ohm_meter(did,1);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="APPARENT IMPEDANCE IN OHM");
     TEST_ASSERT(meter.get_meter_side_bus()==1);
 
-    meter = setter.prepare_line_apparent_impedance_in_Ohm_meter(did,2);
+    meter = setter.prepare_ac_line_apparent_impedance_in_Ohm_meter(did,2);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="APPARENT IMPEDANCE IN OHM");
     TEST_ASSERT(meter.get_meter_side_bus()==2);
 
-    meter = setter.prepare_line_apparent_impedance_angle_in_deg_meter(did,1);
+    meter = setter.prepare_ac_line_apparent_impedance_angle_in_deg_meter(did,1);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="APPARENT IMPEDANCE ANGLE IN DEG");
     TEST_ASSERT(meter.get_meter_side_bus()==1);
 
-    meter = setter.prepare_line_apparent_impedance_angle_in_deg_meter(did,2);
+    meter = setter.prepare_ac_line_apparent_impedance_angle_in_deg_meter(did,2);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="APPARENT IMPEDANCE ANGLE IN DEG");
     TEST_ASSERT(meter.get_meter_side_bus()==2);
 
-    meter = setter.prepare_line_current_in_pu_meter(did,1);
+    meter = setter.prepare_ac_line_current_in_pu_meter(did,1);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="CURRENT IN PU");
     TEST_ASSERT(meter.get_meter_side_bus()==1);
 
-    meter = setter.prepare_line_current_in_pu_meter(did,2);
+    meter = setter.prepare_ac_line_current_in_pu_meter(did,2);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="CURRENT IN PU");
     TEST_ASSERT(meter.get_meter_side_bus()==2);
 
-    meter = setter.prepare_line_active_power_in_pu_meter(did,1);
+    meter = setter.prepare_ac_line_active_power_in_pu_meter(did,1);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="ACTIVE POWER IN PU");
     TEST_ASSERT(meter.get_meter_side_bus()==1);
 
-    meter = setter.prepare_line_active_power_in_pu_meter(did,2);
+    meter = setter.prepare_ac_line_active_power_in_pu_meter(did,2);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="ACTIVE POWER IN PU");
     TEST_ASSERT(meter.get_meter_side_bus()==2);
 
-    meter = setter.prepare_line_reactive_power_in_pu_meter(did,1);
+    meter = setter.prepare_ac_line_reactive_power_in_pu_meter(did,1);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="REACTIVE POWER IN PU");
     TEST_ASSERT(meter.get_meter_side_bus()==1);
 
-    meter = setter.prepare_line_reactive_power_in_pu_meter(did,2);
+    meter = setter.prepare_ac_line_reactive_power_in_pu_meter(did,2);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="REACTIVE POWER IN PU");
     TEST_ASSERT(meter.get_meter_side_bus()==2);
 
-    meter = setter.prepare_line_apparent_impedance_in_pu_meter(did,1);
+    meter = setter.prepare_ac_line_apparent_impedance_in_pu_meter(did,1);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="APPARENT IMPEDANCE IN PU");
     TEST_ASSERT(meter.get_meter_side_bus()==1);
 
-    meter = setter.prepare_line_apparent_impedance_in_pu_meter(did,2);
+    meter = setter.prepare_ac_line_apparent_impedance_in_pu_meter(did,2);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="APPARENT IMPEDANCE IN PU");
     TEST_ASSERT(meter.get_meter_side_bus()==2);
 
-    meter = setter.prepare_line_apparent_impedance_angle_in_rad_meter(did,1);
+    meter = setter.prepare_ac_line_apparent_impedance_angle_in_rad_meter(did,1);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="APPARENT IMPEDANCE ANGLE IN RAD");
     TEST_ASSERT(meter.get_meter_side_bus()==1);
 
-    meter = setter.prepare_line_apparent_impedance_angle_in_rad_meter(did,2);
+    meter = setter.prepare_ac_line_apparent_impedance_angle_in_rad_meter(did,2);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="APPARENT IMPEDANCE ANGLE IN RAD");
     TEST_ASSERT(meter.get_meter_side_bus()==2);
