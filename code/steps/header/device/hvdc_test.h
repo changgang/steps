@@ -1,5 +1,5 @@
-#ifndef HVDC_TEST_H
-#define HVDC_TEST_H
+#ifndef LCC_HVDC2T_TEST_H
+#define LCC_HVDC2T_TEST_H
 
 #include <istream>
 #include <cstdlib>
@@ -17,10 +17,10 @@
 #include "header/STEPS.h"
 using namespace std;
 
-class HVDC_TEST : public Test::Suite
+class LCC_HVDC2T_TEST : public Test::Suite
 {
     public:
-        HVDC_TEST();
+        LCC_HVDC2T_TEST();
     protected:
         virtual void setup();
         virtual void tear_down();
@@ -83,7 +83,7 @@ class HVDC_TEST : public Test::Suite
 
     private:
         void prepare_hvdc_buses();
-        HVDC hvdc;
+        LCC_HVDC2T hvdc;
 };
 
-#endif //HVDC_TEST_H
+#endif //LCC_HVDC2T_TEST_H

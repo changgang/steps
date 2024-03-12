@@ -253,7 +253,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new TRANSFORMER_TEST));
         ts.add(unique_ptr<Test::Suite>(new FIXED_SHUNT_TEST));
 
-        ts.add(unique_ptr<Test::Suite>(new HVDC_TEST));
+        ts.add(unique_ptr<Test::Suite>(new LCC_HVDC2T_TEST));
 
         //ts.add(unique_ptr<Test::Suite>(new VSC_HVDC_TEST));
        ts.add(unique_ptr<Test::Suite>(new EQUIVALENT_DEVICE_TEST));

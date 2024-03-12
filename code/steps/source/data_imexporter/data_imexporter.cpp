@@ -269,7 +269,7 @@ void DATA_IMEXPORTER::setup_ordered_buses_with_mode_SAVE_TO_ORDER_BUS_WITH_DYNAM
     buses = get_all_load_buses();
     append_buses_to_ordered_buses(buses, existing_buses);
 
-    buses = get_all_hvdc_buses();
+    buses = get_all_2t_lcc_hvdc_buses();
     append_buses_to_ordered_buses(buses, existing_buses);
 
     buses = get_all_fixed_shunt_buses();
@@ -369,19 +369,19 @@ vector<unsigned int> DATA_IMEXPORTER::get_all_load_buses()
     return buses;
 }
 
-vector<unsigned int> DATA_IMEXPORTER::get_all_hvdc_buses()
+vector<unsigned int> DATA_IMEXPORTER::get_all_2t_lcc_hvdc_buses()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     vector<unsigned int> buses;
-    vector<HVDC*> devices = psdb.get_all_hvdcs();
+    vector<LCC_HVDC2T*> devices = psdb.get_all_2t_lcc_hvdcs();
     unsigned int n = devices.size();
     buses.reserve(n);
     buses.clear();
 
     for(unsigned int i=0; i<n; ++i)
     {
-        HVDC* dvc = devices[i];
+        LCC_HVDC2T* dvc = devices[i];
         buses.push_back(dvc->get_converter_bus(RECTIFIER));
         buses.push_back(dvc->get_converter_bus(INVERTER));
     }

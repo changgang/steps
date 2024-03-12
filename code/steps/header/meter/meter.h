@@ -81,7 +81,7 @@ extern vector<string> load_meters;
 extern vector<string> wt_generator_meters;
 extern vector<string> pv_unit_meters;
 extern vector<string> energy_storage_meters;
-extern vector<string> hvdc_meters;
+extern vector<string> lcc_hvdc2t_meters;
 extern vector<string> vsc_hvdc_meters;
 extern vector<string> equivalent_device_meters;
 extern map<STEPS_DEVICE_TYPE, vector<string>> SUPPORTED_METERS;

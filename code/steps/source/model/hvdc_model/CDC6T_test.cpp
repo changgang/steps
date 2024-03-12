@@ -16,7 +16,7 @@ void CDC6T_TEST::setup()
 {
     HVDC_MODEL_TEST::setup();
 
-    HVDC* hvdcptr = get_test_hvdc();
+    LCC_HVDC2T* hvdcptr = get_test_hvdc();
 
     CDC6T model(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
@@ -79,7 +79,7 @@ void CDC6T_TEST::test_get_model_type()
 
     HVDC_MODEL* model = get_test_hvdc_model();
 
-    TEST_ASSERT(model->get_model_type()=="HVDC");
+    TEST_ASSERT(model->get_model_type()=="2T LCC HVDC");
 }
 
 void CDC6T_TEST::test_get_model_name()

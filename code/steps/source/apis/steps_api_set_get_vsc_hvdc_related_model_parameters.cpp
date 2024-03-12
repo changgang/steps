@@ -20,14 +20,14 @@ const char* api_get_vsc_hvdc_related_model_name(char* name, char* model_type, un
     DEVICE_ID did = vsc_hvdc->get_device_id();
 
     string MODEL_TYPE = string2upper(model_type);
-    if(MODEL_TYPE=="PROJECT" or MODEL_TYPE=="VSC HVDC PROJECT")
+    if(MODEL_TYPE=="PROJECT" or MODEL_TYPE=="VSC LCC_HVDC2T PROJECT")
     {
         VSC_HVDC_NETWORK_MODEL* model = vsc_hvdc->get_vsc_hvdc_network_model();
         if(model!=NULL)
 			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (model->get_model_name()).c_str());
 		return toolkit.steps_char_buffer;;
     }
-    if(MODEL_TYPE=="CONVERTER" or MODEL_TYPE=="VSC HVDC CONVERTER")
+    if(MODEL_TYPE=="CONVERTER" or MODEL_TYPE=="VSC LCC_HVDC2T CONVERTER")
     {
         VSC_HVDC_CONVERTER_MODEL* model = vsc_hvdc->get_vsc_hvdc_converter_model(converter_index);
         if(model!=NULL)
@@ -52,7 +52,7 @@ double api_get_vsc_hvdc_related_model_float_parameter(char* name, char* model_ty
 
     string MODEL_TYPE = string2upper(model_type);
     string PARAMETER_NAME = string2upper(parameter_name);
-    if(MODEL_TYPE=="PROJECT" or MODEL_TYPE=="VSC HVDC PROJECT")
+    if(MODEL_TYPE=="PROJECT" or MODEL_TYPE=="VSC LCC_HVDC2T PROJECT")
     {
         VSC_HVDC_NETWORK_MODEL* model = vsc_hvdc->get_vsc_hvdc_network_model();
         if(model!=NULL)
@@ -60,7 +60,7 @@ double api_get_vsc_hvdc_related_model_float_parameter(char* name, char* model_ty
         else
             return 0.0;
     }
-    if(MODEL_TYPE=="CONVERTER" or MODEL_TYPE=="VSC HVDC CONVERTER")
+    if(MODEL_TYPE=="CONVERTER" or MODEL_TYPE=="VSC LCC_HVDC2T CONVERTER")
     {
         VSC_HVDC_CONVERTER_MODEL* model = vsc_hvdc->get_vsc_hvdc_converter_model(converter_index);
         if(model!=NULL)
@@ -89,7 +89,7 @@ void api_set_vsc_hvdc_related_model_float_parameter(char* name, char* model_type
 
     string MODEL_TYPE = string2upper(model_type);
     string PARAMETER_NAME = string2upper(parameter_name);
-    if(MODEL_TYPE=="PROJECT" or MODEL_TYPE=="VSC HVDC PROJECT")
+    if(MODEL_TYPE=="PROJECT" or MODEL_TYPE=="VSC LCC_HVDC2T PROJECT")
     {
         VSC_HVDC_NETWORK_MODEL* model = vsc_hvdc->get_vsc_hvdc_network_model();
         if(model!=NULL)
@@ -97,7 +97,7 @@ void api_set_vsc_hvdc_related_model_float_parameter(char* name, char* model_type
         else
             return;
     }
-    if(MODEL_TYPE=="CONVERTER" or MODEL_TYPE=="VSC HVDC CONVERTER")
+    if(MODEL_TYPE=="CONVERTER" or MODEL_TYPE=="VSC LCC_HVDC2T CONVERTER")
     {
         VSC_HVDC_CONVERTER_MODEL* model = vsc_hvdc->get_vsc_hvdc_converter_model(converter_index);
         if(model!=NULL)
@@ -121,7 +121,7 @@ unsigned int api_get_vsc_hvdc_related_model_float_parameter_count(char* name, ch
     DEVICE_ID did = vsc_hvdc->get_device_id();
 
     string MODEL_TYPE = string2upper(model_type);
-    if(MODEL_TYPE=="PROJECT" or MODEL_TYPE=="VSC HVDC PROJECT")
+    if(MODEL_TYPE=="PROJECT" or MODEL_TYPE=="VSC LCC_HVDC2T PROJECT")
     {
         VSC_HVDC_NETWORK_MODEL* model = vsc_hvdc->get_vsc_hvdc_network_model();
         if(model!=NULL)
@@ -129,7 +129,7 @@ unsigned int api_get_vsc_hvdc_related_model_float_parameter_count(char* name, ch
         else
             return 0;
     }
-    if(MODEL_TYPE=="CONVERTER" or MODEL_TYPE=="VSC HVDC CONVERTER")
+    if(MODEL_TYPE=="CONVERTER" or MODEL_TYPE=="VSC LCC_HVDC2T CONVERTER")
     {
         VSC_HVDC_CONVERTER_MODEL* model = vsc_hvdc->get_vsc_hvdc_converter_model(converter_index);
         if(model!=NULL)
@@ -156,7 +156,7 @@ const char* api_get_vsc_hvdc_related_model_float_parameter_name(char* name, char
     DEVICE_ID did = vsc_hvdc->get_device_id();
 
     string MODEL_TYPE = string2upper(model_type);
-    if(MODEL_TYPE=="PROJECT" or MODEL_TYPE=="VSC HVDC PROJECT")
+    if(MODEL_TYPE=="PROJECT" or MODEL_TYPE=="VSC LCC_HVDC2T PROJECT")
     {
         VSC_HVDC_NETWORK_MODEL* model = vsc_hvdc->get_vsc_hvdc_network_model();
         if(model!=NULL)
@@ -164,7 +164,7 @@ const char* api_get_vsc_hvdc_related_model_float_parameter_name(char* name, char
         snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", par_name.c_str());
         return toolkit.steps_char_buffer;
     }
-    if(MODEL_TYPE=="CONVERTER" or MODEL_TYPE=="VSC HVDC CONVERTER")
+    if(MODEL_TYPE=="CONVERTER" or MODEL_TYPE=="VSC LCC_HVDC2T CONVERTER")
     {
         VSC_HVDC_CONVERTER_MODEL* model = vsc_hvdc->get_vsc_hvdc_converter_model(converter_index);
         if(model!=NULL)

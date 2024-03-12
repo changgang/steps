@@ -3287,14 +3287,14 @@ void NETWORK_MATRIX::add_fixed_shunts_to_positive_sequence_network()
 void NETWORK_MATRIX::add_hvdcs_to_positive_sequence_network()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
 
     unsigned int n = hvdcs.size();
     for(unsigned int i=0; i!=n; i++)
         add_hvdc_to_positive_sequence_network(*(hvdcs[i]));
 }
 
-void NETWORK_MATRIX::add_hvdc_to_positive_sequence_network(const HVDC& hvdc)
+void NETWORK_MATRIX::add_hvdc_to_positive_sequence_network(const LCC_HVDC2T& hvdc)
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();

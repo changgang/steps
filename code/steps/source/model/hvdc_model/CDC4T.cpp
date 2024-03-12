@@ -240,7 +240,7 @@ void CDC4T::initialize()
 {
     if(not is_model_initialized())
     {
-        HVDC* hvdc = get_hvdc_pointer();
+        LCC_HVDC2T* hvdc = get_hvdc_pointer();
 
         setup_block_toolkit_and_parameters();
 
@@ -258,7 +258,7 @@ void CDC4T::initialize()
 
 void CDC4T::run(DYNAMIC_MODE mode)
 {
-    HVDC* hvdc = get_hvdc_pointer();
+    LCC_HVDC2T* hvdc = get_hvdc_pointer();
 
     //solve_hvdc_model_without_integration();
 
@@ -385,7 +385,7 @@ void CDC4T::check_mode_switching_logic()
 {
     if(not is_blocked() and not is_bypassed())
     {
-        HVDC* hvdc = get_hvdc_pointer();
+        LCC_HVDC2T* hvdc = get_hvdc_pointer();
         STEPS& toolkit = get_toolkit();
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
@@ -449,7 +449,7 @@ string CDC4T::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
 
-    HVDC* hvdc = get_hvdc_pointer();
+    LCC_HVDC2T* hvdc = get_hvdc_pointer();
     //unsigned int rbus = hvdc->get_converter_bus(RECTIFIER);
     //unsigned int ibus = hvdc->get_converter_bus(INVERTER);
     string dcname = "'"+hvdc->get_name()+"'";

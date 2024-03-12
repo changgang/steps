@@ -285,7 +285,7 @@ class DYNAMICS_SIMULATOR
         vector<ENERGY_STORAGE*> e_storages;
         vector<LOAD*> loads;
         vector<LINE*> lines;
-        vector<HVDC*> hvdcs;
+        vector<LCC_HVDC2T*> hvdcs;
         vector<VSC_HVDC*> vsc_hvdcs;
         vector<EQUIVALENT_DEVICE*> e_devices;
 

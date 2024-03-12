@@ -130,7 +130,7 @@ void STEPS::set_thread_number(unsigned int n)
     fixed_shunt_thread_number = 1;
     line_thread_number = 1;
     transformer_thread_number = 1;
-    hvdc_thread_number = 1;
+    lcc_hvdc2t_thread_number = 1;
     vsc_hvdc_thread_number = 1;;
     equivalent_device_thread_number = 1;
 
@@ -156,7 +156,7 @@ void STEPS::update_device_thread_number()
         fixed_shunt_thread_number = thread_number;
         line_thread_number = thread_number;
         transformer_thread_number = thread_number;
-        hvdc_thread_number = thread_number;
+        lcc_hvdc2t_thread_number = thread_number;
         vsc_hvdc_thread_number = thread_number;;
         equivalent_device_thread_number = thread_number;
 
@@ -220,10 +220,10 @@ void STEPS::update_device_thread_number()
                     if(devices.size()>1) transformer_thread_number = 1;
                 }
 
-                if(hvdc_thread_number!=1)
+                if(lcc_hvdc2t_thread_number!=1)
                 {
-                    vector<HVDC*> devices = psdb.get_hvdcs_connecting_to_bus(bus_number);
-                    if(devices.size()>1) hvdc_thread_number = 1;
+                    vector<LCC_HVDC2T*> devices = psdb.get_2t_lcc_hvdcs_connecting_to_bus(bus_number);
+                    if(devices.size()>1) lcc_hvdc2t_thread_number = 1;
                 }
 
                 if(vsc_hvdc_thread_number!=1)
@@ -288,9 +288,9 @@ unsigned int STEPS::get_transformer_thread_number() const
     return transformer_thread_number;
 }
 
-unsigned int STEPS::get_hvdc_thread_number() const
+unsigned int STEPS::get_lcc_hvdc2t_thread_number() const
 {
-    return hvdc_thread_number;
+    return lcc_hvdc2t_thread_number;
 }
 
 unsigned int STEPS::get_vsc_hvdc_thread_number() const

@@ -29,7 +29,7 @@ BPA_IMEXPORTER_TEST::BPA_IMEXPORTER_TEST() : importer(default_toolkit)
     TEST_ADD(BPA_IMEXPORTER_TEST::test_load_generator_data);
     TEST_ADD(BPA_IMEXPORTER_TEST::test_load_load_and_fixed_shunt_data);
     TEST_ADD(BPA_IMEXPORTER_TEST::test_load_transformer_data);
-    TEST_ADD(BPA_IMEXPORTER_TEST::test_load_hvdc_data);
+    TEST_ADD(BPA_IMEXPORTER_TEST::test_load_2t_lcc_hvdc_data);
     TEST_ADD(BPA_IMEXPORTER_TEST::test_convert_data_into_bpa_format);
     TEST_ADD(BPA_IMEXPORTER_TEST::test_export_powerflow_data);
     /*TEST_ADD(BPA_IMEXPORTER_TEST::test_load_case_data);
@@ -361,7 +361,7 @@ void BPA_IMEXPORTER_TEST::test_load_line_data()
     TEST_ASSERT(n==30);
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     terminal.append_bus(151);
     terminal.append_bus(152);
@@ -432,14 +432,14 @@ void BPA_IMEXPORTER_TEST::test_load_transformer_data()
         trans[i]->report();
 }
 
-void BPA_IMEXPORTER_TEST::test_load_hvdc_data()
+void BPA_IMEXPORTER_TEST::test_load_2t_lcc_hvdc_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
     ostringstream osstream;
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
     unsigned int n = hvdcs.size();
 
     //TEST_ASSERT(n==2);

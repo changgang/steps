@@ -47,7 +47,7 @@ class STEPS
         unsigned int get_fixed_shunt_thread_number() const;
         unsigned int get_line_thread_number() const;
         unsigned int get_transformer_thread_number() const;
-        unsigned int get_hvdc_thread_number() const;
+        unsigned int get_lcc_hvdc2t_thread_number() const;
         unsigned int get_vsc_hvdc_thread_number() const;
         unsigned int get_equivalent_device_thread_number() const;
 
@@ -120,7 +120,7 @@ class STEPS
                      pv_unit_thread_number, energy_storage_thread_number,
                      load_thread_number, fixed_shunt_thread_number,
                      line_thread_number, transformer_thread_number,
-                     hvdc_thread_number, vsc_hvdc_thread_number,
+                     lcc_hvdc2t_thread_number, vsc_hvdc_thread_number,
                      equivalent_device_thread_number;
         unsigned int dynamic_model_db_size;
 };

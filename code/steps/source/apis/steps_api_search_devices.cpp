@@ -114,7 +114,7 @@ void api_initialize_device_search(const char* device_type, unsigned int bus, uns
         toolkit.api_search_buffer.fixed_shunt_pointer = 0;
     }
 
-    if(DEVICE_TYPE=="LINE")
+    if(DEVICE_TYPE=="AC LINE")
     {
         if(bus==0)
             toolkit.api_search_buffer.lines = psdb.get_all_lines();
@@ -132,12 +132,12 @@ void api_initialize_device_search(const char* device_type, unsigned int bus, uns
         toolkit.api_search_buffer.transformer_pointer = 0;
     }
 
-    if(DEVICE_TYPE=="HVDC")
+    if(DEVICE_TYPE=="2T LCC HVDC")
     {
         if(bus==0)
-            toolkit.api_search_buffer.hvdcs = psdb.get_all_hvdcs();
+            toolkit.api_search_buffer.hvdcs = psdb.get_all_2t_lcc_hvdcs();
         else
-            toolkit.api_search_buffer.hvdcs = psdb.get_hvdcs_connecting_to_bus(bus);
+            toolkit.api_search_buffer.hvdcs = psdb.get_2t_lcc_hvdcs_connecting_to_bus(bus);
         toolkit.api_search_buffer.hvdc_pointer = 0;
     }
 
@@ -224,7 +224,7 @@ unsigned int api_get_current_device_bus_number(const char* device_type, const ch
             return 0;
     }
 
-    if(DEVICE_TYPE=="LINE")
+    if(DEVICE_TYPE=="AC LINE")
     {
         unsigned int index = toolkit.api_search_buffer.line_pointer;
         unsigned int n = toolkit.api_search_buffer.lines.size();
@@ -259,7 +259,7 @@ unsigned int api_get_current_device_bus_number(const char* device_type, const ch
             return 0;
     }
 
-    if(DEVICE_TYPE=="HVDC")
+    if(DEVICE_TYPE=="2T LCC HVDC")
     {
         unsigned int index = toolkit.api_search_buffer.hvdc_pointer;
         unsigned int n = toolkit.api_search_buffer.hvdcs.size();
@@ -378,7 +378,7 @@ unsigned int api_get_current_device_bus_number(const char* device_type, const ch
             return toolkit.steps_char_buffer;
     }
 
-    if(DEVICE_TYPE=="LINE")
+    if(DEVICE_TYPE=="AC LINE")
     {
         unsigned int index = toolkit.api_search_buffer.line_pointer;
         unsigned int n = toolkit.api_search_buffer.lines.size();
@@ -404,7 +404,7 @@ unsigned int api_get_current_device_bus_number(const char* device_type, const ch
             return toolkit.steps_char_buffer;
     }
 
-    if(DEVICE_TYPE=="HVDC")
+    if(DEVICE_TYPE=="2T LCC HVDC")
     {
         unsigned int index = toolkit.api_search_buffer.hvdc_pointer;
         unsigned int n = toolkit.api_search_buffer.hvdcs.size();
@@ -509,7 +509,7 @@ void api_goto_next_device(const char* device_type, unsigned int toolkit_index)
         return;
     }
 
-    if(DEVICE_TYPE=="LINE")
+    if(DEVICE_TYPE=="AC LINE")
     {
         unsigned int index = toolkit.api_search_buffer.line_pointer;
         unsigned int n = toolkit.api_search_buffer.lines.size();
@@ -527,7 +527,7 @@ void api_goto_next_device(const char* device_type, unsigned int toolkit_index)
         return;
     }
 
-    if(DEVICE_TYPE=="HVDC")
+    if(DEVICE_TYPE=="2T LCC HVDC")
     {
         unsigned int index = toolkit.api_search_buffer.hvdc_pointer;
         unsigned int n = toolkit.api_search_buffer.hvdcs.size();

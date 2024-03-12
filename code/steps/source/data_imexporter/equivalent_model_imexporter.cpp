@@ -171,7 +171,7 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
     if(data_line[1]=="LINE")
     {
         DEVICE_ID did;
-        did.set_device_type(STEPS_LINE);
+        did.set_device_type(STEPS_AC_LINE);
         TERMINAL terminal;
         terminal.clear();
         terminal.append_bus(get_integer_data(data_line[3],"0"));
@@ -346,7 +346,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
     ARXL model(*toolkit);
     model.set_device_id(did);
 
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     terminal.clear();
     terminal.append_bus(ibus);
     terminal.append_bus(jbus);

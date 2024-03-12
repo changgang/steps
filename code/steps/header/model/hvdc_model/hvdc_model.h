@@ -8,7 +8,7 @@
 #include "header/block/integral_block.h"
 #include <complex>
 
-class HVDC;
+class LCC_HVDC2T;
 class BUS;
 
 class HVDC_MODEL : public MODEL
@@ -16,7 +16,7 @@ class HVDC_MODEL : public MODEL
     public:
         HVDC_MODEL(STEPS& toolkit);
         virtual ~HVDC_MODEL();
-        HVDC* get_hvdc_pointer() const;
+        LCC_HVDC2T* get_hvdc_pointer() const;
     public: // hvdc common
         virtual string get_model_type() const;
         // get input for initialization

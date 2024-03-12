@@ -37,7 +37,7 @@ class BPA_IMEXPORTER_TEST : public Test::Suite
         void test_load_wt_generator_data();
         void test_load_line_data();
         void test_load_transformer_data();
-        void test_load_hvdc_data();
+        void test_load_2t_lcc_hvdc_data();
 
         void test_convert_data_into_bpa_format();
 

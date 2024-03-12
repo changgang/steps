@@ -123,4 +123,4 @@ class VSC : public CONVERTER
         bool angle_fixed;
         bool transformer_tap_fixed;
 };
-#endif // HVDC_H
+#endif // VSC_H

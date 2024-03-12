@@ -340,7 +340,7 @@ void DEVICE_INDEX_MAP_TEST::test_set_get_line_index()
     DEVICE_ID device_id;
     TERMINAL terminal;
 
-    device_id.set_device_type(STEPS_LINE);
+    device_id.set_device_type(STEPS_AC_LINE);
 
     terminal = prepare_terminal(1,2);
     device_id.set_device_terminal(terminal);

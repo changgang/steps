@@ -44,7 +44,7 @@ void HVDC_MODEL_TEST::setup()
 
     psdb.append_bus(bus);
 
-    HVDC hvdc(default_toolkit);
+    LCC_HVDC2T hvdc(default_toolkit);
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
     hvdc.set_identifier("DC");
@@ -79,11 +79,11 @@ void HVDC_MODEL_TEST::setup()
     hvdc.set_converter_transformer_min_tap_in_pu(INVERTER, 0.7);
     hvdc.set_converter_transformer_number_of_taps(INVERTER, 25);
 
-    psdb.append_hvdc(hvdc);
+    psdb.append_2t_lcc_hvdc(hvdc);
 
-    HVDC* hvdcptr = get_test_hvdc();
+    LCC_HVDC2T* hvdcptr = get_test_hvdc();
     hvdcptr->solve_steady_state();
-    hvdcptr->show_solved_hvdc_steady_state();
+    hvdcptr->show_solved_steady_state();
 }
 
 void HVDC_MODEL_TEST::tear_down()
@@ -94,24 +94,24 @@ void HVDC_MODEL_TEST::tear_down()
     show_test_end_information();
 }
 
-HVDC* HVDC_MODEL_TEST::get_test_hvdc()
+LCC_HVDC2T* HVDC_MODEL_TEST::get_test_hvdc()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_HVDC);
+    did.set_device_type(STEPS_LCC_HVDC2T);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("DC"));
 
-    return psdb.get_hvdc(did);
+    return psdb.get_2t_lcc_hvdc(did);
 }
 
 HVDC_MODEL* HVDC_MODEL_TEST::get_test_hvdc_model()
 {
-    HVDC* hvdc = get_test_hvdc();
+    LCC_HVDC2T* hvdc = get_test_hvdc();
     if(hvdc==NULL)
         return NULL;
     else
@@ -130,7 +130,7 @@ void HVDC_MODEL_TEST::export_meter_values(double time)
     ostringstream osstream;
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    HVDC* hvdc = get_test_hvdc();
+    LCC_HVDC2T* hvdc = get_test_hvdc();
     HVDC_MODEL* model = hvdc->get_hvdc_model();
 
     double volt_rec, volt_inv;
@@ -182,7 +182,7 @@ void HVDC_MODEL_TEST::test_initialize()
 
     ostringstream osstream;
 
-    HVDC* hvdcptr = get_test_hvdc();
+    LCC_HVDC2T* hvdcptr = get_test_hvdc();
     HVDC_MODEL* model = get_test_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
@@ -197,7 +197,7 @@ void HVDC_MODEL_TEST::test_initialize()
     model->initialize();
     osstream<<"hvdc info when initialized:"<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
-    hvdcptr->show_solved_hvdc_steady_state();
+    hvdcptr->show_solved_steady_state();
 
     default_toolkit.close_log_file();
 }
@@ -207,7 +207,7 @@ void HVDC_MODEL_TEST::test_rectifier_voltage_ramp_response()
     ostringstream osstream;
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    HVDC* hvdcptr = get_test_hvdc();
+    LCC_HVDC2T* hvdcptr = get_test_hvdc();
     HVDC_MODEL* model = get_test_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
@@ -222,7 +222,7 @@ void HVDC_MODEL_TEST::test_rectifier_voltage_ramp_response()
     model->initialize();
     osstream<<"hvdc info when initialized:"<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
-    hvdcptr->show_solved_hvdc_steady_state();
+    hvdcptr->show_solved_steady_state();
 
     double TIME = -delt*2.0;
     double vdcr;
@@ -374,7 +374,7 @@ void HVDC_MODEL_TEST::test_inverter_voltage_ramp_response()
     ostringstream osstream;
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    HVDC* hvdcptr = get_test_hvdc();
+    LCC_HVDC2T* hvdcptr = get_test_hvdc();
     HVDC_MODEL* model = get_test_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
@@ -389,7 +389,7 @@ void HVDC_MODEL_TEST::test_inverter_voltage_ramp_response()
     model->initialize();
     osstream<<"hvdc info when initialized:"<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
-    hvdcptr->show_solved_hvdc_steady_state();
+    hvdcptr->show_solved_steady_state();
 
     double TIME = -delt*2.0;
     double vdcr;
@@ -539,7 +539,7 @@ void HVDC_MODEL_TEST::test_manual_block_and_unblock()
 {
     ostringstream osstream;
 
-    HVDC* hvdcptr = get_test_hvdc();
+    LCC_HVDC2T* hvdcptr = get_test_hvdc();
     HVDC_MODEL* model = get_test_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
@@ -554,7 +554,7 @@ void HVDC_MODEL_TEST::test_manual_block_and_unblock()
     model->initialize();
     osstream<<"hvdc info when initialized:"<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
-    hvdcptr->show_solved_hvdc_steady_state();
+    hvdcptr->show_solved_steady_state();
 
     double TIME = -delt*2.0;
     double vdcr;
@@ -586,9 +586,9 @@ void HVDC_MODEL_TEST::test_manual_block_and_unblock()
         export_meter_values(TIME);
     }
 
-    //cout<<"now go blocking HVDC manually"<<endl;
+    //cout<<"now go blocking LCC_HVDC2T manually"<<endl;
     model->manual_block_hvdc();
-    //cout<<"now successfully blocked HVDC manually"<<endl;
+    //cout<<"now successfully blocked LCC_HVDC2T manually"<<endl;
     model->run(UPDATE_MODE);
     export_meter_values(TIME);
 
@@ -654,7 +654,7 @@ void HVDC_MODEL_TEST::test_manual_bypass_and_unbypass()
 {
     ostringstream osstream;
 
-    HVDC* hvdcptr = get_test_hvdc();
+    LCC_HVDC2T* hvdcptr = get_test_hvdc();
     HVDC_MODEL* model = get_test_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
@@ -669,7 +669,7 @@ void HVDC_MODEL_TEST::test_manual_bypass_and_unbypass()
     model->initialize();
     osstream<<"hvdc info when initialized:"<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
-    hvdcptr->show_solved_hvdc_steady_state();
+    hvdcptr->show_solved_steady_state();
 
     double TIME = -delt*2.0;
     double vdcr;

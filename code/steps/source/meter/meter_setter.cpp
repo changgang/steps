@@ -203,7 +203,7 @@ bool METER_SETTER::prepare_line_meter(METER& meter, const DEVICE_ID& device_id, 
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     STEPS_DEVICE_TYPE device_type = device_id.get_device_type();
-    if(device_type!=STEPS_LINE)
+    if(device_type!=STEPS_AC_LINE)
     {
         osstream<<"Warning. This device given ("<<device_type2string(device_type)<<") is not a line when trying to set up a line meter. "
           <<"No line meter will be added.";
@@ -1954,7 +1954,7 @@ bool METER_SETTER::prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     STEPS_DEVICE_TYPE device_type = device_id.get_device_type();
-    if(device_type!=STEPS_HVDC)
+    if(device_type!=STEPS_LCC_HVDC2T)
     {
         osstream<<"Warning. This device given ("<<device_type2string(device_type)<<") is not an hvdc when trying to set up an hvdc meter. "
           <<"No hvdc meter will be added.";
@@ -1962,7 +1962,7 @@ bool METER_SETTER::prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
         return successful;
     }
 
-    if(not psdb.is_hvdc_exist(device_id))
+    if(not psdb.is_2t_lcc_hvdc_exist(device_id))
     {
         osstream<<"Warning. "<<device_id.get_compound_device_name()<<" does not exist in current power system database. "
           <<"No hvdc meter will be added.";
@@ -2244,7 +2244,7 @@ METER METER_SETTER::prepare_hvdc_model_internal_variable_meter(const DEVICE_ID& 
 
     if(successful)
     {
-        meter.set_meter_type("HVDC MODEL INTERNAL VARIABLE");
+        meter.set_meter_type("2T LCC HVDC MODEL INTERNAL VARIABLE");
         meter.set_internal_variable_name(name);
     }
 
@@ -2426,7 +2426,7 @@ METER METER_SETTER::prepare_vsc_hvdc_model_internal_variable_meter(const DEVICE_
 
     if(successful)
     {
-        meter.set_meter_type("VSC HVDC MODEL INTERNAL VARIABLE");
+        meter.set_meter_type("VSC LCC_HVDC2T MODEL INTERNAL VARIABLE");
         meter.set_internal_variable_name(var_name);
         meter.set_meter_side_bus(meter_side);
     }

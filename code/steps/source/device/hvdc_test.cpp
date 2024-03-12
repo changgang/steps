@@ -21,64 +21,64 @@
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
 
-HVDC_TEST::HVDC_TEST() : hvdc(default_toolkit)
+LCC_HVDC2T_TEST::LCC_HVDC2T_TEST() : hvdc(default_toolkit)
 {
-    TEST_ADD(HVDC_TEST::test_constructor);
-    TEST_ADD(HVDC_TEST::test_set_get_converter_bus);
-    TEST_ADD(HVDC_TEST::test_set_get_converter_valve_side_bus_name);
-    TEST_ADD(HVDC_TEST::test_set_get_identifier);
-    TEST_ADD(HVDC_TEST::test_set_get_name);
-    TEST_ADD(HVDC_TEST::test_set_get_status);
-    TEST_ADD(HVDC_TEST::test_is_blocked);
-    TEST_ADD(HVDC_TEST::test_set_get_line_resistance);
-    TEST_ADD(HVDC_TEST::test_set_get_line_inductance);
-    TEST_ADD(HVDC_TEST::test_set_get_line_capacitance);
-    TEST_ADD(HVDC_TEST::test_set_get_line_smoothing_inductance);
-    TEST_ADD(HVDC_TEST::test_set_get_line_smoothing_resistance);
-    TEST_ADD(HVDC_TEST::test_set_get_side_to_hold_power);
-    TEST_ADD(HVDC_TEST::test_set_get_nominal_dc_current);
-    TEST_ADD(HVDC_TEST::test_set_get_nominal_dc_voltage);
-    TEST_ADD(HVDC_TEST::test_set_get_compensating_resistance_to_hold_voltage);
-    TEST_ADD(HVDC_TEST::test_set_get_dc_voltage_threshold_for_mode_switching);
-    TEST_ADD(HVDC_TEST::test_set_get_dc_current_power_margin);
-    TEST_ADD(HVDC_TEST::test_set_get_meter_end);
-    TEST_ADD(HVDC_TEST::test_set_get_converter_operation_mode);
-    TEST_ADD(HVDC_TEST::test_set_get_converter_number_of_bridge);
-    TEST_ADD(HVDC_TEST::test_set_get_converter_voltage_drop_per_bridge);
-    TEST_ADD(HVDC_TEST::test_set_get_converter_firing_angle_and_limit);
-    TEST_ADD(HVDC_TEST::test_set_get_converter_transformer_base_voltage);
-    TEST_ADD(HVDC_TEST::test_set_get_converter_transformer_impedance);
-    TEST_ADD(HVDC_TEST::test_set_get_converter_transformer_admittance);
-    TEST_ADD(HVDC_TEST::test_set_get_converter_transformer_tap_and_limit);
-    TEST_ADD(HVDC_TEST::test_set_get_converter_transformer_number_of_taps);
+    TEST_ADD(LCC_HVDC2T_TEST::test_constructor);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_converter_bus);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_converter_valve_side_bus_name);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_identifier);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_name);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_status);
+    TEST_ADD(LCC_HVDC2T_TEST::test_is_blocked);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_line_resistance);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_line_inductance);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_line_capacitance);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_line_smoothing_inductance);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_line_smoothing_resistance);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_side_to_hold_power);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_nominal_dc_current);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_nominal_dc_voltage);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_compensating_resistance_to_hold_voltage);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_dc_voltage_threshold_for_mode_switching);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_dc_current_power_margin);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_meter_end);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_converter_operation_mode);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_converter_number_of_bridge);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_converter_voltage_drop_per_bridge);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_converter_firing_angle_and_limit);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_converter_transformer_base_voltage);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_converter_transformer_impedance);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_converter_transformer_admittance);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_converter_transformer_tap_and_limit);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_converter_transformer_number_of_taps);
 
-    TEST_ADD(HVDC_TEST::test_get_rectifier_dc_power_command);
-    TEST_ADD(HVDC_TEST::test_get_rectifier_dc_current_command);
-    TEST_ADD(HVDC_TEST::test_get_inverter_dc_voltage_command);
+    TEST_ADD(LCC_HVDC2T_TEST::test_get_rectifier_dc_power_command);
+    TEST_ADD(LCC_HVDC2T_TEST::test_get_rectifier_dc_current_command);
+    TEST_ADD(LCC_HVDC2T_TEST::test_get_inverter_dc_voltage_command);
 
-    TEST_ADD(HVDC_TEST::test_reverse_converters);
+    TEST_ADD(LCC_HVDC2T_TEST::test_reverse_converters);
 
-    TEST_ADD(HVDC_TEST::test_is_valid);
-    TEST_ADD(HVDC_TEST::test_clear);
-    TEST_ADD(HVDC_TEST::test_is_connected_to_bus);
-    TEST_ADD(HVDC_TEST::test_copy_with_operator_equal);
-    TEST_ADD(HVDC_TEST::test_get_device_id);
+    TEST_ADD(LCC_HVDC2T_TEST::test_is_valid);
+    TEST_ADD(LCC_HVDC2T_TEST::test_clear);
+    TEST_ADD(LCC_HVDC2T_TEST::test_is_connected_to_bus);
+    TEST_ADD(LCC_HVDC2T_TEST::test_copy_with_operator_equal);
+    TEST_ADD(LCC_HVDC2T_TEST::test_get_device_id);
 
-    TEST_ADD(HVDC_TEST::test_solve_hvdc);
-    TEST_ADD(HVDC_TEST::test_set_get_dc_current);
-    TEST_ADD(HVDC_TEST::test_set_get_converter_dc_current);
-    TEST_ADD(HVDC_TEST::test_set_get_converter_dc_voltage);
-    TEST_ADD(HVDC_TEST::test_get_converter_dc_power);
-    TEST_ADD(HVDC_TEST::test_get_converter_ac_active_power);
-    TEST_ADD(HVDC_TEST::test_get_converter_ac_reactive_power);
-    TEST_ADD(HVDC_TEST::test_get_converter_ac_apparent_power);
-    TEST_ADD(HVDC_TEST::test_get_converter_ac_power_factor);
-    TEST_ADD(HVDC_TEST::test_get_converter_commutating_overlap_angle);
+    TEST_ADD(LCC_HVDC2T_TEST::test_solve_hvdc);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_dc_current);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_converter_dc_current);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_converter_dc_voltage);
+    TEST_ADD(LCC_HVDC2T_TEST::test_get_converter_dc_power);
+    TEST_ADD(LCC_HVDC2T_TEST::test_get_converter_ac_active_power);
+    TEST_ADD(LCC_HVDC2T_TEST::test_get_converter_ac_reactive_power);
+    TEST_ADD(LCC_HVDC2T_TEST::test_get_converter_ac_apparent_power);
+    TEST_ADD(LCC_HVDC2T_TEST::test_get_converter_ac_power_factor);
+    TEST_ADD(LCC_HVDC2T_TEST::test_get_converter_commutating_overlap_angle);
 
-    TEST_ADD(HVDC_TEST::test_set_get_hvdc_model);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_hvdc_model);
 }
 
-void HVDC_TEST::setup()
+void LCC_HVDC2T_TEST::setup()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_system_base_power_in_MVA(100.0);
@@ -95,7 +95,7 @@ void HVDC_TEST::setup()
     psdb.append_bus(bus);
 }
 
-void HVDC_TEST::tear_down()
+void LCC_HVDC2T_TEST::tear_down()
 {
     hvdc.clear();
 
@@ -105,15 +105,15 @@ void HVDC_TEST::tear_down()
     show_test_end_information();
 }
 
-void HVDC_TEST::prepare_hvdc_buses()
+void LCC_HVDC2T_TEST::prepare_hvdc_buses()
 {
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
 }
 
-void HVDC_TEST::test_constructor()
+void LCC_HVDC2T_TEST::test_constructor()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     TEST_ASSERT(hvdc.get_converter_bus(RECTIFIER)==0);
     TEST_ASSERT(hvdc.get_converter_bus(INVERTER)==0);
@@ -128,9 +128,9 @@ void HVDC_TEST::test_constructor()
     TEST_ASSERT(hvdc.get_nominal_dc_current_in_kA()==0.0);
 }
 
-void HVDC_TEST::test_set_get_converter_bus()
+void LCC_HVDC2T_TEST::test_set_get_converter_bus()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
@@ -139,9 +139,9 @@ void HVDC_TEST::test_set_get_converter_bus()
     TEST_ASSERT(hvdc.get_converter_bus(INVERTER)==2);
 }
 
-void HVDC_TEST::test_set_get_converter_valve_side_bus_name()
+void LCC_HVDC2T_TEST::test_set_get_converter_valve_side_bus_name()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     hvdc.set_converter_valve_side_bus_name(RECTIFIER, "bus1");
     hvdc.set_converter_valve_side_bus_name(INVERTER, "bus2");
@@ -150,9 +150,9 @@ void HVDC_TEST::test_set_get_converter_valve_side_bus_name()
     TEST_ASSERT(hvdc.get_converter_valve_side_bus_name(INVERTER)=="bus2");
 }
 
-void HVDC_TEST::test_set_get_identifier()
+void LCC_HVDC2T_TEST::test_set_get_identifier()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -160,9 +160,9 @@ void HVDC_TEST::test_set_get_identifier()
     TEST_ASSERT(hvdc.get_identifier()=="P");
 }
 
-void HVDC_TEST::test_set_get_name()
+void LCC_HVDC2T_TEST::test_set_get_name()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -170,9 +170,9 @@ void HVDC_TEST::test_set_get_name()
     TEST_ASSERT(hvdc.get_name()=="DC LINK a");
 }
 
-void HVDC_TEST::test_set_get_status()
+void LCC_HVDC2T_TEST::test_set_get_status()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -182,9 +182,9 @@ void HVDC_TEST::test_set_get_status()
     TEST_ASSERT(hvdc.get_status()==true);
 }
 
-void HVDC_TEST::test_is_blocked()
+void LCC_HVDC2T_TEST::test_is_blocked()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -195,9 +195,9 @@ void HVDC_TEST::test_is_blocked()
 
 }
 
-void HVDC_TEST::test_set_get_line_resistance()
+void LCC_HVDC2T_TEST::test_set_get_line_resistance()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -209,9 +209,9 @@ void HVDC_TEST::test_set_get_line_resistance()
     TEST_ASSERT(hvdc.get_line_resistance_in_ohm()==0.0);
 }
 
-void HVDC_TEST::test_set_get_line_inductance()
+void LCC_HVDC2T_TEST::test_set_get_line_inductance()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -223,9 +223,9 @@ void HVDC_TEST::test_set_get_line_inductance()
     TEST_ASSERT(hvdc.get_line_inductance_in_mH()==0.0);
 }
 
-void HVDC_TEST::test_set_get_line_capacitance()
+void LCC_HVDC2T_TEST::test_set_get_line_capacitance()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -237,9 +237,9 @@ void HVDC_TEST::test_set_get_line_capacitance()
     TEST_ASSERT(hvdc.get_line_capacitance_in_uF()==0.0);
 }
 
-void HVDC_TEST::test_set_get_line_smoothing_inductance()
+void LCC_HVDC2T_TEST::test_set_get_line_smoothing_inductance()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -251,9 +251,9 @@ void HVDC_TEST::test_set_get_line_smoothing_inductance()
     TEST_ASSERT(hvdc.get_line_smooting_inductance_in_mH(RECTIFIER)==0.0);
 }
 
-void HVDC_TEST::test_set_get_line_smoothing_resistance()
+void LCC_HVDC2T_TEST::test_set_get_line_smoothing_resistance()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -265,9 +265,9 @@ void HVDC_TEST::test_set_get_line_smoothing_resistance()
     TEST_ASSERT(hvdc.get_line_smooting_resistance_in_ohm(RECTIFIER)==0.0);
 }
 
-void HVDC_TEST::test_set_get_nominal_dc_power()
+void LCC_HVDC2T_TEST::test_set_get_nominal_dc_power()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -279,9 +279,9 @@ void HVDC_TEST::test_set_get_nominal_dc_power()
     TEST_ASSERT(hvdc.get_nominal_dc_power_in_MW()==0.0);
 }
 
-void HVDC_TEST::test_set_get_side_to_hold_power()
+void LCC_HVDC2T_TEST::test_set_get_side_to_hold_power()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -291,9 +291,9 @@ void HVDC_TEST::test_set_get_side_to_hold_power()
     TEST_ASSERT(hvdc.get_side_to_hold_dc_power()==INVERTER);
 }
 
-void HVDC_TEST::test_set_get_nominal_dc_current()
+void LCC_HVDC2T_TEST::test_set_get_nominal_dc_current()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -305,9 +305,9 @@ void HVDC_TEST::test_set_get_nominal_dc_current()
     TEST_ASSERT(hvdc.get_nominal_dc_current_in_kA()==0.0);
 }
 
-void HVDC_TEST::test_set_get_nominal_dc_voltage()
+void LCC_HVDC2T_TEST::test_set_get_nominal_dc_voltage()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -319,9 +319,9 @@ void HVDC_TEST::test_set_get_nominal_dc_voltage()
     TEST_ASSERT(hvdc.get_nominal_dc_voltage_in_kV()==0.0);
 }
 
-void HVDC_TEST::test_set_get_compensating_resistance_to_hold_voltage()
+void LCC_HVDC2T_TEST::test_set_get_compensating_resistance_to_hold_voltage()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -333,9 +333,9 @@ void HVDC_TEST::test_set_get_compensating_resistance_to_hold_voltage()
     TEST_ASSERT(hvdc.get_compensating_resistance_to_hold_dc_voltage_in_ohm()==0.0);
 }
 
-void HVDC_TEST::test_set_get_dc_voltage_threshold_for_mode_switching()
+void LCC_HVDC2T_TEST::test_set_get_dc_voltage_threshold_for_mode_switching()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -347,9 +347,9 @@ void HVDC_TEST::test_set_get_dc_voltage_threshold_for_mode_switching()
     TEST_ASSERT(hvdc.get_threshold_dc_voltage_for_constant_power_and_constant_current_mode_in_kV()==0.0);
 }
 
-void HVDC_TEST::test_set_get_dc_current_power_margin()
+void LCC_HVDC2T_TEST::test_set_get_dc_current_power_margin()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -361,9 +361,9 @@ void HVDC_TEST::test_set_get_dc_current_power_margin()
     TEST_ASSERT(hvdc.get_current_power_margin()==0.15);
 }
 
-void HVDC_TEST::test_set_get_meter_end()
+void LCC_HVDC2T_TEST::test_set_get_meter_end()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -374,9 +374,9 @@ void HVDC_TEST::test_set_get_meter_end()
     TEST_ASSERT(hvdc.get_meter_end()==INVERTER);
 }
 
-void HVDC_TEST::test_set_get_converter_operation_mode()
+void LCC_HVDC2T_TEST::test_set_get_converter_operation_mode()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -391,9 +391,9 @@ void HVDC_TEST::test_set_get_converter_operation_mode()
     TEST_ASSERT(hvdc.get_converter_operation_mode(INVERTER)==INVERTER_CONSTANT_GAMMA);
 }
 
-void HVDC_TEST::test_set_get_converter_number_of_bridge()
+void LCC_HVDC2T_TEST::test_set_get_converter_number_of_bridge()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -412,9 +412,9 @@ void HVDC_TEST::test_set_get_converter_number_of_bridge()
     TEST_ASSERT(hvdc.get_converter_number_of_bridge(INVERTER)==1);
 }
 
-void HVDC_TEST::test_set_get_converter_voltage_drop_per_bridge()
+void LCC_HVDC2T_TEST::test_set_get_converter_voltage_drop_per_bridge()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -433,9 +433,9 @@ void HVDC_TEST::test_set_get_converter_voltage_drop_per_bridge()
     TEST_ASSERT(hvdc.get_converter_voltage_drop_per_bridge_in_kV(INVERTER)==0.0);
 }
 
-void HVDC_TEST::test_set_get_converter_firing_angle_and_limit()
+void LCC_HVDC2T_TEST::test_set_get_converter_firing_angle_and_limit()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -482,9 +482,9 @@ void HVDC_TEST::test_set_get_converter_firing_angle_and_limit()
     TEST_ASSERT(hvdc.get_converter_min_alpha_or_gamma_in_deg(INVERTER)==0.0);
 }
 
-void HVDC_TEST::test_set_get_converter_transformer_base_voltage()
+void LCC_HVDC2T_TEST::test_set_get_converter_transformer_base_voltage()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -521,9 +521,9 @@ void HVDC_TEST::test_set_get_converter_transformer_base_voltage()
     TEST_ASSERT(hvdc.get_converter_transformer_converter_side_base_voltage_in_kV(INVERTER)==0.0);
 }
 
-void HVDC_TEST::test_set_get_converter_transformer_impedance()
+void LCC_HVDC2T_TEST::test_set_get_converter_transformer_impedance()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -539,9 +539,9 @@ void HVDC_TEST::test_set_get_converter_transformer_impedance()
     TEST_ASSERT(hvdc.get_converter_transformer_impedance_in_ohm(INVERTER)==0.0);
 }
 
-void HVDC_TEST::test_set_get_converter_transformer_admittance()
+void LCC_HVDC2T_TEST::test_set_get_converter_transformer_admittance()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -557,9 +557,9 @@ void HVDC_TEST::test_set_get_converter_transformer_admittance()
     TEST_ASSERT(hvdc.get_converter_transformer_admittance_in_siemens(INVERTER)==0.0);
 }
 
-void HVDC_TEST::test_set_get_converter_transformer_tap_and_limit()
+void LCC_HVDC2T_TEST::test_set_get_converter_transformer_tap_and_limit()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -606,9 +606,9 @@ void HVDC_TEST::test_set_get_converter_transformer_tap_and_limit()
     TEST_ASSERT(hvdc.get_converter_transformer_min_tap_in_pu(INVERTER)==1.0);
 }
 
-void HVDC_TEST::test_set_get_converter_transformer_number_of_taps()
+void LCC_HVDC2T_TEST::test_set_get_converter_transformer_number_of_taps()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -624,9 +624,9 @@ void HVDC_TEST::test_set_get_converter_transformer_number_of_taps()
 }
 
 
-void HVDC_TEST::test_get_rectifier_dc_power_command()
+void LCC_HVDC2T_TEST::test_get_rectifier_dc_power_command()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -733,9 +733,9 @@ void HVDC_TEST::test_get_rectifier_dc_power_command()
     TEST_ASSERT(fabs(hvdc.get_rectifier_nominal_dc_power_command_in_MW()-1020.0)<FLOAT_EPSILON);
 }
 
-void HVDC_TEST::test_get_rectifier_dc_current_command()
+void LCC_HVDC2T_TEST::test_get_rectifier_dc_current_command()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -835,9 +835,9 @@ void HVDC_TEST::test_get_rectifier_dc_current_command()
     TEST_ASSERT(fabs(hvdc.get_rectifier_nominal_dc_current_command_in_kA()-2.0)<FLOAT_EPSILON);
 }
 
-void HVDC_TEST::test_get_inverter_dc_voltage_command()
+void LCC_HVDC2T_TEST::test_get_inverter_dc_voltage_command()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     prepare_hvdc_buses();
 
@@ -940,9 +940,9 @@ void HVDC_TEST::test_get_inverter_dc_voltage_command()
     TEST_ASSERT(fabs(hvdc.get_inverter_nominal_dc_voltage_command_in_kV()-490.0)<FLOAT_EPSILON);
 }
 
-void HVDC_TEST::test_reverse_converters()
+void LCC_HVDC2T_TEST::test_reverse_converters()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
@@ -1057,9 +1057,9 @@ void HVDC_TEST::test_reverse_converters()
 }
 
 
-void HVDC_TEST::test_is_valid()
+void LCC_HVDC2T_TEST::test_is_valid()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     TEST_ASSERT(hvdc.is_valid()==false);
     hvdc.set_converter_bus(RECTIFIER, 1);
@@ -1068,9 +1068,9 @@ void HVDC_TEST::test_is_valid()
     TEST_ASSERT(hvdc.is_valid()==true);
 }
 
-void HVDC_TEST::test_clear()
+void LCC_HVDC2T_TEST::test_clear()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
@@ -1080,9 +1080,9 @@ void HVDC_TEST::test_clear()
     test_constructor();
 }
 
-void HVDC_TEST::test_is_connected_to_bus()
+void LCC_HVDC2T_TEST::test_is_connected_to_bus()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
@@ -1092,24 +1092,24 @@ void HVDC_TEST::test_is_connected_to_bus()
     TEST_ASSERT(hvdc.is_connected_to_bus(3)==false);
 }
 
-void HVDC_TEST::test_copy_with_operator_equal()
+void LCC_HVDC2T_TEST::test_copy_with_operator_equal()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
     hvdc.set_status(true);
 
-    HVDC newhvdc = hvdc;
+    LCC_HVDC2T newhvdc = hvdc;
 
     TEST_ASSERT(newhvdc.get_converter_bus(RECTIFIER)==1);
     TEST_ASSERT(newhvdc.get_converter_bus(INVERTER)==2);
     TEST_ASSERT(newhvdc.get_status()==true);
 }
 
-void HVDC_TEST::test_get_device_id()
+void LCC_HVDC2T_TEST::test_get_device_id()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
@@ -1118,7 +1118,7 @@ void HVDC_TEST::test_get_device_id()
     DEVICE_ID did = hvdc.get_device_id();
 
     DEVICE_ID did2;
-    did2.set_device_type(STEPS_HVDC);
+    did2.set_device_type(STEPS_LCC_HVDC2T);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
@@ -1135,9 +1135,9 @@ void HVDC_TEST::test_get_device_id()
     TEST_ASSERT(did!=did2);
 }
 
-void HVDC_TEST::test_solve_hvdc()
+void LCC_HVDC2T_TEST::test_solve_hvdc()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     ostringstream osstream;
 
@@ -1182,14 +1182,14 @@ void HVDC_TEST::test_solve_hvdc()
     osstream<<"Test 1: solve with 1.0 AC voltage at both sides";
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     hvdc.solve_steady_state();
-    hvdc.show_solved_hvdc_steady_state();
+    hvdc.show_solved_steady_state();
 
     osstream<<"Test 2: solve with 0.8 AC voltage at rectifier side";
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     BUS* busptr = psdb.get_bus(hvdc.get_converter_bus(RECTIFIER));
     busptr->set_positive_sequence_voltage_in_pu(0.8);
     hvdc.solve_steady_state();
-    hvdc.show_solved_hvdc_steady_state();
+    hvdc.show_solved_steady_state();
 
     osstream<<"Test 3: solve with 0.8 AC voltage at inverter side";
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
@@ -1198,7 +1198,7 @@ void HVDC_TEST::test_solve_hvdc()
     busptr = psdb.get_bus(hvdc.get_converter_bus(INVERTER));
     busptr->set_positive_sequence_voltage_in_pu(0.8);
     hvdc.solve_steady_state();
-    hvdc.show_solved_hvdc_steady_state();
+    hvdc.show_solved_steady_state();
 
     osstream<<"Test 4: solve with 0.8 AC voltage at both sides";
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
@@ -1207,15 +1207,15 @@ void HVDC_TEST::test_solve_hvdc()
     busptr = psdb.get_bus(hvdc.get_converter_bus(INVERTER));
     busptr->set_positive_sequence_voltage_in_pu(0.8);
     hvdc.solve_steady_state();
-    hvdc.show_solved_hvdc_steady_state();
+    hvdc.show_solved_steady_state();
 
     //hvdc.set_();
     //TEST_ASSERT(hvdc.get_()==);
 }
 
-void HVDC_TEST::test_set_get_dc_current()
+void LCC_HVDC2T_TEST::test_set_get_dc_current()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     hvdc.set_line_dc_current_in_kA(5.0);
     TEST_ASSERT(hvdc.get_line_dc_current_in_kA()==5.0);
@@ -1225,9 +1225,9 @@ void HVDC_TEST::test_set_get_dc_current()
     TEST_ASSERT(hvdc.get_line_dc_current_in_kA()==0.0);
 }
 
-void HVDC_TEST::test_set_get_converter_dc_current()
+void LCC_HVDC2T_TEST::test_set_get_converter_dc_current()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     hvdc.set_line_dc_current_in_kA(5.0);
     TEST_ASSERT(hvdc.get_line_dc_current_in_kA()==5.0);
@@ -1243,9 +1243,9 @@ void HVDC_TEST::test_set_get_converter_dc_current()
     TEST_ASSERT(hvdc.get_converter_dc_current_in_kA(INVERTER)==7.0);
 }
 
-void HVDC_TEST::test_set_get_converter_dc_voltage()
+void LCC_HVDC2T_TEST::test_set_get_converter_dc_voltage()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     hvdc.set_converter_dc_voltage_in_kV(RECTIFIER, 800.0);
     TEST_ASSERT(hvdc.get_converter_dc_voltage_in_kV(RECTIFIER)==800.0);
@@ -1263,58 +1263,58 @@ void HVDC_TEST::test_set_get_converter_dc_voltage()
 }
 
 
-void HVDC_TEST::test_get_converter_dc_power()
+void LCC_HVDC2T_TEST::test_get_converter_dc_power()
 {
     ostringstream osstream;
-    osstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
+    osstream<<"HAVENOT Run testing of LCC_HVDC2T_TEST::"<<__FUNCTION__;
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
 }
 
-void HVDC_TEST::test_get_converter_ac_active_power()
+void LCC_HVDC2T_TEST::test_get_converter_ac_active_power()
 {
     ostringstream osstream;
-    osstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
+    osstream<<"HAVENOT Run testing of LCC_HVDC2T_TEST::"<<__FUNCTION__;
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
 }
 
-void HVDC_TEST::test_get_converter_ac_reactive_power()
+void LCC_HVDC2T_TEST::test_get_converter_ac_reactive_power()
 {
     ostringstream osstream;
-    osstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
+    osstream<<"HAVENOT Run testing of LCC_HVDC2T_TEST::"<<__FUNCTION__;
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
 }
 
-void HVDC_TEST::test_get_converter_ac_apparent_power()
+void LCC_HVDC2T_TEST::test_get_converter_ac_apparent_power()
 {
     ostringstream osstream;
-    osstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
+    osstream<<"HAVENOT Run testing of LCC_HVDC2T_TEST::"<<__FUNCTION__;
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
 }
 
-void HVDC_TEST::test_get_converter_ac_power_factor()
+void LCC_HVDC2T_TEST::test_get_converter_ac_power_factor()
 {
     ostringstream osstream;
-    osstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
+    osstream<<"HAVENOT Run testing of LCC_HVDC2T_TEST::"<<__FUNCTION__;
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
 }
 
-void HVDC_TEST::test_get_converter_commutating_overlap_angle()
+void LCC_HVDC2T_TEST::test_get_converter_commutating_overlap_angle()
 {
     ostringstream osstream;
-    osstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
+    osstream<<"HAVENOT Run testing of LCC_HVDC2T_TEST::"<<__FUNCTION__;
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
 }
 
 
-void HVDC_TEST::test_set_get_hvdc_model()
+void LCC_HVDC2T_TEST::test_set_get_hvdc_model()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
@@ -1323,11 +1323,11 @@ void HVDC_TEST::test_set_get_hvdc_model()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
 
-    psdb.append_hvdc(hvdc);
+    psdb.append_2t_lcc_hvdc(hvdc);
 
     DEVICE_ID did = hvdc.get_device_id();
 
-    HVDC* hvdcptr = psdb.get_hvdc(did);
+    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
     TEST_ASSERT(hvdcptr!=NULL);
     TEST_ASSERT(hvdcptr->get_hvdc_model()==NULL);
 

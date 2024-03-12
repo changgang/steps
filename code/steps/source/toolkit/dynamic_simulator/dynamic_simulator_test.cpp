@@ -483,7 +483,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_single_machine_model()
     simulator.run_to(1.0);
 
     DEVICE_ID  did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     terminal.append_bus(3);
     terminal.append_bus(4);
@@ -538,7 +538,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_classical_model()
     simulator.run_to(0.0);
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     terminal.append_bus(5);
     terminal.append_bus(7);
@@ -627,7 +627,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_SD_133_bus_model()
     importer.load_powerflow_data("../../../bench/SD133_model.raw");
     importer.load_dynamic_data("../../../bench/SD133_model.dyr");
 
-    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
     unsigned int n = hvdcs.size();
     for(unsigned int i=0; i!=n; ++i)
         hvdcs[i]->turn_rectifier_constant_power_mode_into_constant_current_mode();
@@ -652,7 +652,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_SD_133_bus_model()
     simulator.run_to(1.0);
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     terminal.append_bus(60);
     terminal.append_bus(62);
@@ -740,7 +740,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
     importer.load_powerflow_data("../../../bench/bench_shandong_change.raw");
     importer.load_dynamic_data("../../../bench/bench_shandong_change_with_gov.dyr");
 
-    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
     unsigned int n = hvdcs.size();
     for(unsigned int i=0; i!=n; ++i)
         hvdcs[i]->turn_rectifier_constant_power_mode_into_constant_current_mode();
@@ -768,7 +768,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
     simulator.run_to(1.0);
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     terminal.append_bus(60);
     terminal.append_bus(62);
@@ -871,7 +871,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     simulator.run_to(1.0);
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     terminal.append_bus(5);
     terminal.append_bus(7);
@@ -989,7 +989,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
     simulator.run_to(1.0);
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     terminal.append_bus(5);
     terminal.append_bus(7);

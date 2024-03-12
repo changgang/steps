@@ -12,7 +12,7 @@ int api_get_hvdc_integer_data(unsigned int ibus, unsigned int jbus, char* identi
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    HVDC* hvdcptr = psdb.get_hvdc(did);
+    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
     if(hvdcptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -67,7 +67,7 @@ void api_set_hvdc_integer_data(unsigned int ibus, unsigned int jbus, char* ident
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    HVDC* hvdcptr = psdb.get_hvdc(did);
+    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
     if(hvdcptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -122,7 +122,7 @@ double api_get_hvdc_float_data(unsigned int ibus, unsigned int jbus, char* ident
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    HVDC* hvdcptr = psdb.get_hvdc(did);
+    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
     if(hvdcptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -283,7 +283,7 @@ void api_set_hvdc_float_data(unsigned int ibus, unsigned int jbus, char* identif
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    HVDC* hvdcptr = psdb.get_hvdc(did);
+    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
     if(hvdcptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -423,7 +423,7 @@ const char* api_get_hvdc_string_data(unsigned int ibus, unsigned int jbus, char*
 
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
-    HVDC* hvdcptr = psdb.get_hvdc(did);
+    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
     if(hvdcptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -465,7 +465,7 @@ void api_set_hvdc_string_data(unsigned int ibus, unsigned int jbus, char* identi
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    HVDC* hvdcptr = psdb.get_hvdc(did);
+    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
     if(hvdcptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -498,7 +498,7 @@ bool api_get_hvdc_boolean_data(unsigned int ibus, unsigned int jbus, char* ident
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    HVDC* hvdcptr = psdb.get_hvdc(did);
+    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
     if(hvdcptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -530,7 +530,7 @@ void api_set_hvdc_boolean_data(unsigned int ibus, unsigned int jbus, char* ident
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    HVDC* hvdcptr = psdb.get_hvdc(did);
+    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
     if(hvdcptr!=NULL)
     {
         string SIDE = string2upper(side);

@@ -57,10 +57,10 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_transformer_winding_data(TRANSFORMER&trans, TRANSFORMER_WINDING_SIDE winding, vector<string> data, TRANSFORMER_WINDING_TAP_CODE winding_code);
         void add_transformer_impedance_admittance_data(TRANSFORMER& trans, vector<string> data, TRANSFORMER_IMPEDANCE_CODE impedance_code, TRANSFORMER_ADMITTANCE_CODE magnetizing_code);
         void load_area_data();
-        void load_hvdc_data();
-        void add_hvdc_with_data(vector<vector<string> > hvdc_data);
-        void add_hvdc_basic_data(HVDC& hvdc, vector<string> data);
-        void add_hvdc_converter_data(HVDC& hvdc, CONVERTER_SIDE converter, vector<string> data);
+        void load_2t_lcc_hvdc_data();
+        void add_2t_lcc_hvdc_with_data(vector<vector<string> > hvdc_data);
+        void add_2t_lcc_hvdc_basic_data(LCC_HVDC2T& hvdc, vector<string> data);
+        void add_2t_lcc_hvdc_converter_data(LCC_HVDC2T& hvdc, CONVERTER_SIDE converter, vector<string> data);
         void load_lcc_hvdc_data();
         void add_lcc_hvdc_with_data(vector<vector<string> > hvdc_data);
         void add_lcc_hvdc_basic_data(LCC_HVDC& hvdc, vector<string> data);
@@ -95,7 +95,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         string export_line_data() const;
         string export_transformer_data() const;
         string export_area_data() const;
-        string export_hvdc_data() const;
+        string export_2t_lcc_hvdc_data() const;
         string export_lcc_hvdc_data() const;
         string export_vsc_hvdc_data() const;
         string export_transformer_impedance_correction_table_data() const;
@@ -118,7 +118,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void load_pv_unit_powerflow_result(const vector<string>& data);
         void load_energy_storage_powerflow_result(const vector<string>& data);
         void load_transformer_powerflow_result(const vector<string>& data);
-        void load_hvdc_powerflow_result(const vector<string>& data);
+        void load_2t_lcc_hvdc_powerflow_result(const vector<string>& data);
 
         void load_all_seq_data_to_devices();
         void load_change_code_data();
@@ -233,7 +233,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         DEVICE_ID get_pv_unit_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_load_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_line_device_id_from_string_vector(vector<string>& data);
-        DEVICE_ID get_hvdc_device_id_from_string_vector(vector<string>& data);
+        DEVICE_ID get_2t_lcc_hvdc_device_id_from_string_vector(vector<string>& data);
         string get_vsc_hvdc_name_from_string_vector(vector<string>& data);
         DEVICE_ID get_vsc_hvdc_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_transformer_device_id_from_string_vector(vector<string>& data);

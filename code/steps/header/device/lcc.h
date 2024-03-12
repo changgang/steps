@@ -71,4 +71,4 @@ class LCC : public CONVERTER
     private:
         bool angle_fixed;
 };
-#endif // HVDC_H
+#endif // LCC_H

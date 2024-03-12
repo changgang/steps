@@ -122,7 +122,7 @@ void CCT_SEARCHER_TEST::test_set_get_fault_device()
     show_test_information_for_function_of_class(__FUNCTION__,"CCT_SEARCHER_TEST");
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
@@ -265,7 +265,7 @@ void CCT_SEARCHER_TEST::test_seach_cct_for_IEEE_9_bus_model_classic()
     searcher->set_dynamic_data_filename("IEEE9_classical.dyr");
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     terminal.append_bus(5);
     terminal.append_bus(7);

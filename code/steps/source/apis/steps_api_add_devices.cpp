@@ -124,13 +124,13 @@ void api_add_hvdc(unsigned int rectifier_bus_number, unsigned int inverter_bus_n
 
     DEVICE_ID did = get_hvdc_device_id(rectifier_bus_number, inverter_bus_number, identifier);
 
-    if(not psdb.is_hvdc_exist(did))
+    if(not psdb.is_2t_lcc_hvdc_exist(did))
     {
-        HVDC newhvdc(toolkit);
+        LCC_HVDC2T newhvdc(toolkit);
         newhvdc.set_converter_bus(RECTIFIER, rectifier_bus_number);
         newhvdc.set_converter_bus(INVERTER, inverter_bus_number);
         newhvdc.set_identifier(identifier);
-        psdb.append_hvdc(newhvdc);
+        psdb.append_2t_lcc_hvdc(newhvdc);
     }
 }
 

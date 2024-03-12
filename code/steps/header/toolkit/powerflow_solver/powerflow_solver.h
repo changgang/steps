@@ -91,7 +91,7 @@ class POWERFLOW_SOLVER
         void set_bus_power_mismatch_vector_for_solution();
 
         void try_to_solve_dc_system_steady_state();
-        void try_to_solve_hvdc_steady_state();
+        void try_to_solve_2t_lcc_hvdc_steady_state();
         void try_to_solve_vsc_hvdc_steady_state();
         void calculate_raw_bus_power_mismatch();
         void calculate_raw_bus_power_into_network();
@@ -165,7 +165,7 @@ class POWERFLOW_SOLVER
         vector<LOAD*> loads;
         vector<LINE*> lines;
         vector<TRANSFORMER*> transformers;
-        vector<HVDC*> hvdcs;
+        vector<LCC_HVDC2T*> hvdcs;
         vector<VSC_HVDC*> vsc_hvdcs;
         vector<EQUIVALENT_DEVICE*> e_devices;
 

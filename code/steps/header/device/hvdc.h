@@ -1,5 +1,5 @@
-#ifndef HVDC_H
-#define HVDC_H
+#ifndef LCC_HVDC2T_H
+#define LCC_HVDC2T_H
 
 #include "header/device/nonbus_device.h"
 #include "header/basic/device_id.h"
@@ -14,13 +14,13 @@
 using namespace std;
 
 class BUS;
-class HVDC_MODEL;
+class LCC_HVDC2T_MODEL;
 
-class HVDC : public NONBUS_DEVICE
+class LCC_HVDC2T : public NONBUS_DEVICE
 {
     public:
-        HVDC(STEPS& toolkit);
-        virtual ~HVDC();
+        LCC_HVDC2T(STEPS& toolkit);
+        virtual ~LCC_HVDC2T();
 
         void set_converter_bus(CONVERTER_SIDE converter, const unsigned int bus);
         void set_converter_valve_side_bus_name(CONVERTER_SIDE converter, string name);
@@ -124,13 +124,13 @@ class HVDC : public NONBUS_DEVICE
 
         virtual void run(DYNAMIC_MODE mode);
 
-        virtual HVDC& operator=(const HVDC& hvdc);
+        virtual LCC_HVDC2T& operator=(const LCC_HVDC2T& hvdc);
 
         virtual DEVICE_ID get_device_id() const;
         //virtual string get_compound_device_name() const;
 
         void solve_steady_state();
-        void show_solved_hvdc_steady_state() const;
+        void show_solved_steady_state() const;
 
 
         void set_converter_alpha_or_gamma_in_deg(CONVERTER_SIDE converter, double angle, double cos_angle=0.0);
@@ -216,4 +216,4 @@ class HVDC : public NONBUS_DEVICE
         bool converter_firing_angle_fixed[2];
         bool temp_converter_firing_angle_fixed[2];
 };
-#endif // HVDC_H
+#endif // LCC_HVDC2T_H

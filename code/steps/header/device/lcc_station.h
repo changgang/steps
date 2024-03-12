@@ -46,4 +46,4 @@ class LCC_STATION : public CONVERTER_STATION
         LCC* converters;
         unsigned int nconverters;
 };
-#endif // HVDC_H
+#endif // LCC_STATION_H

@@ -509,7 +509,7 @@ DEVICE_ID BPA_IMEXPORTER::get_load_device_id_from_string(string data)
 DEVICE_ID BPA_IMEXPORTER::get_line_device_id_from_string(string data)
 {
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
 
     vector<string> swidata = split_string(data,",");
     if(swidata.size()<4)
@@ -531,10 +531,10 @@ DEVICE_ID BPA_IMEXPORTER::get_line_device_id_from_string(string data)
 
     return did;
 }
-DEVICE_ID BPA_IMEXPORTER::get_hvdc_device_id_from_string(string data)
+DEVICE_ID BPA_IMEXPORTER::get_2t_lcc_hvdc_device_id_from_string(string data)
 {
     DEVICE_ID did;
-    did.set_device_type(STEPS_HVDC);
+    did.set_device_type(STEPS_LCC_HVDC2T);
 
     vector<string> swidata = split_string(data,",");
     if(swidata.size()<4)

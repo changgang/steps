@@ -260,12 +260,12 @@ unsigned int api_get_device_capacity(const char* device_type, unsigned int toolk
         return psdb.get_load_capacity();
     if(DEVICE_TYPE=="FIXED SHUNT")
         return psdb.get_fixed_shunt_capacity();
-    if(DEVICE_TYPE=="LINE")
+    if(DEVICE_TYPE=="AC LINE")
         return psdb.get_line_capacity();
     if(DEVICE_TYPE=="TRANSFORMER")
         return psdb.get_transformer_capacity();
-    if(DEVICE_TYPE=="HVDC")
-        return psdb.get_hvdc_capacity();
+    if(DEVICE_TYPE=="2T LCC HVDC")
+        return psdb.get_2t_lcc_hvdc_capacity();
     if(DEVICE_TYPE=="VSC HVDC")
         return psdb.get_vsc_hvdc_capacity();
     if(DEVICE_TYPE=="EQUIVALENT DEVICE")
@@ -318,12 +318,12 @@ void api_set_device_capacity(const char* device_type, unsigned int cap, unsigned
         return psdb.set_load_capacity(cap);
     if(DEVICE_TYPE=="FIXED SHUNT")
         return psdb.set_fixed_shunt_capacity(cap);
-    if(DEVICE_TYPE=="LINE")
+    if(DEVICE_TYPE=="AC LINE")
         return psdb.set_line_capacity(cap);
     if(DEVICE_TYPE=="TRANSFORMER")
         return psdb.set_transformer_capacity(cap);
-    if(DEVICE_TYPE=="HVDC")
-        return psdb.set_hvdc_capacity(cap);
+    if(DEVICE_TYPE=="2T LCC HVDC")
+        return psdb.set_2t_lcc_hvdc_capacity(cap);
     if(DEVICE_TYPE=="VSC HVDC")
         return psdb.set_vsc_hvdc_capacity(cap);
     if(DEVICE_TYPE=="EQUIVALENT DEVICE")

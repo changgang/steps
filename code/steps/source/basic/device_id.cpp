@@ -98,8 +98,8 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(STEPS_DEVICE_TYPE dev
         return;
     }
 
-    if(device_type==STEPS_LINE    ||
-       device_type==STEPS_HVDC    ||
+    if(device_type==STEPS_AC_LINE    ||
+       device_type==STEPS_LCC_HVDC2T    ||
        device_type==STEPS_FACTS)
     {
         enable_allow_terminal();
@@ -176,7 +176,7 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(STEPS_DEVICE_TYPE dev
     osstream<<"Device type '"<<device_type<<"' is not supported when building DEVICE_ID object."<<endl
             <<"Allowed device types are: "<<endl
             <<"GENERATOR, WT GENERATOR, PV UNIT, ENERGY STORAGE, LOAD, FIXED SHUNT, SWITCHED SHUNT"<<endl
-            <<"LINE, TRANSFORMER, HVDC, VSC HVDC, FACTS, LCC HVDC, HYBRID DC, EQUIVALENT DEVICE, and GENERAL DEVICE."<<endl
+            <<"LINE, TRANSFORMER, 2T LCC HVDC, VSC HVDC, FACTS, LCC HVDC, HYBRID DC, EQUIVALENT DEVICE, and GENERAL DEVICE."<<endl
             <<"Device type will be set as blank, and \"NONE\" will be returned if get_device_type() is called.";
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     device_type = STEPS_INVALID_DEVICE;
@@ -314,7 +314,7 @@ string DEVICE_ID::get_compound_device_name() const
             return comp_device_name;
         }
 
-        if(device_type==STEPS_LINE or device_type==STEPS_HVDC)
+        if(device_type==STEPS_AC_LINE or device_type==STEPS_LCC_HVDC2T)
         {
             if(ident=="")
                 comp_device_name = device_type_str + " ";
@@ -632,7 +632,7 @@ DEVICE_ID get_fixed_shunt_device_id(unsigned int bus, const string& identifier)
 DEVICE_ID get_line_device_id(unsigned int ibus, unsigned int jbus, const string& identifier)
 {
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
 
     TERMINAL terminal;
     terminal.append_bus(ibus);
@@ -648,7 +648,7 @@ DEVICE_ID get_line_device_id(unsigned int ibus, unsigned int jbus, const string&
 DEVICE_ID get_hvdc_device_id(unsigned int ibus, unsigned int jbus, const string& identifier)
 {
     DEVICE_ID did;
-    did.set_device_type(STEPS_HVDC);
+    did.set_device_type(STEPS_LCC_HVDC2T);
 
     TERMINAL terminal;
     terminal.append_bus(ibus);

@@ -425,9 +425,9 @@ void DYNAMICS_SIMULATOR::prepare_hvdc_related_meters()
 
     unsigned int n;
 
-    n = psdb.get_hvdc_count();
-    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
-    HVDC* hvdc;
+    n = psdb.get_2t_lcc_hvdc_count();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
+    LCC_HVDC2T* hvdc;
     for(unsigned int i=0; i!=n; ++i)
     {
         hvdc = hvdcs[i];
@@ -996,7 +996,7 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meter(const DEVICE_ID& did, string
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    if(did.get_device_type()==STEPS_LINE)
+    if(did.get_device_type()==STEPS_AC_LINE)
     {
         if(psdb.is_line_exist(did))
         {
@@ -1107,9 +1107,9 @@ void DYNAMICS_SIMULATOR::prepare_hvdc_related_meter(const DEVICE_ID& did, string
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    if(did.get_device_type()==STEPS_HVDC)
+    if(did.get_device_type()==STEPS_LCC_HVDC2T)
     {
-        if(psdb.is_hvdc_exist(did))
+        if(psdb.is_2t_lcc_hvdc_exist(did))
         {
             METER_SETTER setter(*toolkit);
 
@@ -1177,7 +1177,7 @@ void DYNAMICS_SIMULATOR::prepare_hvdc_related_meter(const DEVICE_ID& did, string
     }
     else
     {
-        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not HVDC when setting up meter with "<<__FUNCTION__;
+        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not LCC_HVDC2T when setting up meter with "<<__FUNCTION__;
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -1215,7 +1215,7 @@ void DYNAMICS_SIMULATOR::prepare_vsc_hvdc_related_meter(const DEVICE_ID& did, st
                 meter = setter.prepare_vsc_hvdc_converter_ac_reactive_power_in_MVar_meter(did, side);
             if(meter_type=="DC BUS VOLTAGE IN KV")
                 meter = setter.prepare_vsc_hvdc_dc_bus_voltage_in_kV_meter(did, side);
-            if(meter_type=="VSC HVDC MODEL INTERNAL VARIABLE")
+            if(meter_type=="VSC LCC_HVDC2T MODEL INTERNAL VARIABLE")
             {
                 var_name = string2upper(var_name);
                 meter = setter.prepare_vsc_hvdc_model_internal_variable_meter(did, var_name, side);
@@ -1237,7 +1237,7 @@ void DYNAMICS_SIMULATOR::prepare_vsc_hvdc_related_meter(const DEVICE_ID& did, st
     }
     else
     {
-        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not VSC HVDC when setting up meter with "<<__FUNCTION__;
+        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not VSC LCC_HVDC2T when setting up meter with "<<__FUNCTION__;
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -1277,7 +1277,7 @@ void DYNAMICS_SIMULATOR::prepare_vsc_hvdc_related_meter(string vsc_name, string 
                 meter = setter.prepare_vsc_hvdc_converter_ac_reactive_power_in_MVar_meter(did, side);
             if(meter_type=="DC BUS VOLTAGE IN KV")
                 meter = setter.prepare_vsc_hvdc_dc_bus_voltage_in_kV_meter(did, side);
-            if(meter_type=="VSC HVDC MODEL INTERNAL VARIABLE")
+            if(meter_type=="VSC LCC_HVDC2T MODEL INTERNAL VARIABLE")
             {
                 var_name = string2upper(var_name);
                 meter = setter.prepare_vsc_hvdc_model_internal_variable_meter(did, var_name, side);
@@ -1299,7 +1299,7 @@ void DYNAMICS_SIMULATOR::prepare_vsc_hvdc_related_meter(string vsc_name, string 
     }
     else
     {
-        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not VSC HVDC when setting up meter with "<<__FUNCTION__;
+        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not VSC LCC_HVDC2T when setting up meter with "<<__FUNCTION__;
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -1341,7 +1341,7 @@ void DYNAMICS_SIMULATOR::prepare_vsc_hvdc_related_dc_line_meter(const DEVICE_ID&
     }
     else
     {
-        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not VSC HVDC when setting up meter with "<<__FUNCTION__;
+        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not VSC LCC_HVDC2T when setting up meter with "<<__FUNCTION__;
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }

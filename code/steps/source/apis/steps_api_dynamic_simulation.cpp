@@ -950,7 +950,7 @@ void api_manually_bypass_hvdc(unsigned int ibus, unsigned int jbus, char* identi
 
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
 
-    if(not psdb.is_hvdc_exist(did))
+    if(not psdb.is_2t_lcc_hvdc_exist(did))
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
@@ -970,7 +970,7 @@ void api_manually_unbypass_hvdc(unsigned int ibus, unsigned int jbus, char* iden
 
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
 
-    if(not psdb.is_hvdc_exist(did))
+    if(not psdb.is_2t_lcc_hvdc_exist(did))
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
@@ -990,7 +990,7 @@ void api_manually_block_hvdc(unsigned int ibus, unsigned int jbus, char* identif
 
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
 
-    if(not psdb.is_hvdc_exist(did))
+    if(not psdb.is_2t_lcc_hvdc_exist(did))
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
@@ -1009,7 +1009,7 @@ void api_manually_unblock_hvdc(unsigned int ibus, unsigned int jbus, char* ident
 
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
 
-    if(not psdb.is_hvdc_exist(did))
+    if(not psdb.is_2t_lcc_hvdc_exist(did))
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
@@ -1182,7 +1182,7 @@ double api_search_cct(char* pf_file, char* dy_file, unsigned int ibus, unsigned 
     TERMINAL terminal;
     terminal.append_bus(ibus);
     terminal.append_bus(jbus);
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string(id));
 

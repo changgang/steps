@@ -16,7 +16,7 @@ void CDC4T_TEST::setup()
 {
     HVDC_MODEL_TEST::setup();
 
-    HVDC* hvdcptr = get_test_hvdc();
+    LCC_HVDC2T* hvdcptr = get_test_hvdc();
 
     CDC4T model(default_toolkit);
     model.set_device_id(hvdcptr->get_device_id());
@@ -61,7 +61,7 @@ void CDC4T_TEST::test_get_model_type()
 
     HVDC_MODEL* model = get_test_hvdc_model();
 
-    TEST_ASSERT(model->get_model_type()=="HVDC");
+    TEST_ASSERT(model->get_model_type()=="2T LCC HVDC");
 }
 
 void CDC4T_TEST::test_get_model_name()

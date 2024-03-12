@@ -40,7 +40,7 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         vector<vector<string> > convert_source_data2steps_vector() const;
         vector<vector<string> > convert_line_data2steps_vector() const;
         vector<vector<string> > convert_transformer_data2steps_vector() const;
-        vector<vector<string> > convert_hvdc_data2steps_vector() const;
+        vector<vector<string> > convert_2t_lcc_hvdc_data2steps_vector() const;
         vector<vector<string> > convert_area_data2steps_vector() const;
         vector<vector<string> > convert_vsc_hvdc_data2steps_vector() const;
         vector<vector<string> > convert_vsc_hvdc_raw_data2steps_vector() const;
@@ -77,8 +77,8 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         string export_transformer_data(const TRANSFORMER* transformer) const;
         string export_all_area_data() const;
         string export_area_data(const AREA* area) const;
-        string export_all_hvdc_data() const;
-        string export_hvdc_data(const HVDC* hvdc) const;
+        string export_all_2t_lcc_hvdc_data() const;
+        string export_2t_lcc_hvdc_data(const LCC_HVDC2T* hvdc) const;
         string export_all_vsc_hvdc_data() const;
         //string export_vsc_hvdc_data() const;
         string export_all_transformer_impedance_correction_table_data() const;

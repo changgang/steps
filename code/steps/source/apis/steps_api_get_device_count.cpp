@@ -23,12 +23,12 @@ unsigned int api_get_device_count(const char* device_type, unsigned int toolkit_
         return psdb.get_load_count();
     if(DEVICE_TYPE=="FIXED SHUNT")
         return psdb.get_fixed_shunt_count();
-    if(DEVICE_TYPE=="LINE")
+    if(DEVICE_TYPE=="AC LINE")
         return psdb.get_line_count();
     if(DEVICE_TYPE=="TRANSFORMER")
         return psdb.get_transformer_count();
-    if(DEVICE_TYPE=="HVDC")
-        return psdb.get_hvdc_count();
+    if(DEVICE_TYPE=="2T LCC HVDC")
+        return psdb.get_2t_lcc_hvdc_count();
     if(DEVICE_TYPE=="VSC HVDC")
         return psdb.get_vsc_hvdc_count();
     if(DEVICE_TYPE=="EQUIVALENT DEVICE")

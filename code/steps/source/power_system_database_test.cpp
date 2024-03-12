@@ -26,7 +26,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_fixed_shunt_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_line_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_transformer_capacity);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_hvdc_capacity);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_2t_lcc_hvdc_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_vsc_hvdc_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_equivalent_device_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_energy_storage_capacity);
@@ -49,7 +49,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_line);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_transformer);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_fixed_shunt);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_hvdc);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_2t_lcc_hvdc);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_vsc_hvdc);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_equivalent_device);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_energy_storage);
@@ -64,7 +64,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_line_exist);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_transformer_exist);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_fixed_shunt_exist);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_hvdc_exist);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_2t_lcc_hvdc_exist);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_vsc_hvdc_exist);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_equivalent_device_exist);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_energy_storage_exist);
@@ -82,7 +82,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_lines_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_transformers_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_connecting_to_bus);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_connecting_to_bus);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_2t_lcc_hvdcs_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdcs_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_connecting_to_bus);
@@ -95,7 +95,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_transformers_device_id_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_connecting_to_bus);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_connecting_to_bus);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_2t_lcc_hvdcs_device_id_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdcs_device_id_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_connecting_to_bus);
@@ -109,7 +109,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_lines_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_transformers_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_in_area);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_in_area);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_2t_lcc_hvdcs_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdcs_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_in_area);
@@ -123,7 +123,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_transformers_device_id_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_in_area);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_in_area);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_2t_lcc_hvdcs_device_id_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdcs_device_id_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_in_area);
@@ -137,7 +137,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_lines_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_transformers_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_in_zone);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_in_zone);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_2t_lcc_hvdcs_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdcs_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_in_zone);
@@ -151,7 +151,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_transformers_device_id_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_in_zone);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_in_zone);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_2t_lcc_hvdcs_device_id_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdcs_device_id_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_in_zone);
@@ -168,7 +168,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_lines);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_transformers);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_fixed_shunts);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_hvdcs);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_2t_lcc_hvdcs);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_vsc_hvdcs);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_equivalent_devices);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_energy_storages);
@@ -187,7 +187,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_lines_device_id);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_transformers_device_id);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_fixed_shunts_device_id);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_hvdcs_device_id);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_2t_lcc_hvdcs_device_id);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_vsc_hvdcs_device_id);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_equivalent_devices_device_id);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_energy_storages_device_id);
@@ -206,7 +206,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_line_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_transformer_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunt_count);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_hvdc_count);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_2t_lcc_hvdc_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdc_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_device_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_energy_storage_count);
@@ -222,7 +222,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_line_index);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_transformer_index);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunt_index);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_hvdc_index);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_2t_lcc_hvdc_index);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdc_index);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_device_index);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_energy_storage_index);
@@ -292,9 +292,9 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_fixed_shunt);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_fixed_shunts_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_all_fixed_shunts);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_hvdc);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_hvdcs_connecting_to_bus);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_all_hvdcs);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_2t_lcc_hvdc);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_2t_lcc_hvdcs_connecting_to_bus);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_all_2t_lcc_hvdcs);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_vsc_hvdc);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_vsc_hvdcs_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_all_vsc_hvdcs);
@@ -786,38 +786,38 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     }
 
     {
-        HVDC hvdc(default_toolkit);
+        LCC_HVDC2T hvdc(default_toolkit);
         // Hvdc: 1-2-#1, 1-2-#2, 2-3-#1, 2-3-#2, 1-3-#1, 1-3-#2,
 
         hvdc.set_converter_bus(RECTIFIER, 1);
         hvdc.set_converter_bus(INVERTER, 2);
         hvdc.set_identifier("#1");
-        //hvdc.set_name("HVDC A");
-        psdb.append_hvdc(hvdc);
+        //hvdc.set_name("2T LCC HVDC A");
+        psdb.append_2t_lcc_hvdc(hvdc);
 
         hvdc.set_identifier("#2");
-        //hvdc.set_name("HVDC B");
-        psdb.append_hvdc(hvdc);
+        //hvdc.set_name("2T LCC HVDC B");
+        psdb.append_2t_lcc_hvdc(hvdc);
 
         hvdc.set_converter_bus(RECTIFIER, 2);
         hvdc.set_converter_bus(INVERTER, 3);
         hvdc.set_identifier("#1");
-        //hvdc.set_name("HVDC C");
-        psdb.append_hvdc(hvdc);
+        //hvdc.set_name("2T LCC HVDC C");
+        psdb.append_2t_lcc_hvdc(hvdc);
 
         hvdc.set_identifier("#2");
-        //hvdc.set_name("HVDC D");
-        psdb.append_hvdc(hvdc);
+        //hvdc.set_name("2T LCC HVDC D");
+        psdb.append_2t_lcc_hvdc(hvdc);
 
         hvdc.set_converter_bus(RECTIFIER, 1);
         hvdc.set_converter_bus(INVERTER, 3);
         hvdc.set_identifier("#1");
-        //hvdc.set_name("HVDC E");
-        psdb.append_hvdc(hvdc);
+        //hvdc.set_name("2T LCC HVDC E");
+        psdb.append_2t_lcc_hvdc(hvdc);
 
         hvdc.set_identifier("#2");
-        //hvdc.set_name("HVDC F");
-        psdb.append_hvdc(hvdc);
+        //hvdc.set_name("2T LCC HVDC F");
+        psdb.append_2t_lcc_hvdc(hvdc);
     }
 
     {
@@ -1137,20 +1137,20 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_transformer_capacity()
     TEST_ASSERT(psdb.get_transformer_capacity()==60000);
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_set_get_hvdc_capacity()
+void POWER_SYSTEM_DATABASE_TEST::test_set_get_2t_lcc_hvdc_capacity()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
-    psdb.set_hvdc_capacity(10000);
-    TEST_ASSERT(psdb.get_hvdc_capacity()==10000);
+    psdb.set_2t_lcc_hvdc_capacity(10000);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_capacity()==10000);
 
-    psdb.set_hvdc_capacity(1000);
-    TEST_ASSERT(psdb.get_hvdc_capacity()==10000);
+    psdb.set_2t_lcc_hvdc_capacity(1000);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_capacity()==10000);
 
-    psdb.set_hvdc_capacity(20000);
-    TEST_ASSERT(psdb.get_hvdc_capacity()==20000);
+    psdb.set_2t_lcc_hvdc_capacity(20000);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_capacity()==20000);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_set_get_vsc_hvdc_capacity()
@@ -1621,7 +1621,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_line()
 
     LINE* pline;
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
@@ -1783,7 +1783,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_fixed_shunt()
     TEST_ASSERT(pshunt->get_status()==false);
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_hvdc()
+void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_2t_lcc_hvdc()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -1800,7 +1800,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_hvdc()
     bus.set_base_voltage_in_kV(525.0);
     psdb.append_bus(bus);
 
-    HVDC hvdc(default_toolkit);
+    LCC_HVDC2T hvdc(default_toolkit);
 
     hvdc.set_name("DC1");
     hvdc.set_converter_bus(RECTIFIER, 1);
@@ -1808,7 +1808,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_hvdc()
     hvdc.set_identifier("#1");
     hvdc.set_status(true);
 
-    psdb.append_hvdc(hvdc);
+    psdb.append_2t_lcc_hvdc(hvdc);
 
     hvdc.set_name("DC2");
     hvdc.set_converter_bus(RECTIFIER, 1);
@@ -1816,20 +1816,20 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_hvdc()
     hvdc.set_identifier("#2");
     hvdc.set_status(false);
 
-    psdb.append_hvdc(hvdc);
+    psdb.append_2t_lcc_hvdc(hvdc);
 
-    TEST_ASSERT(psdb.get_hvdc_count()==2);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_count()==2);
 
-    HVDC* phvdc;
+    LCC_HVDC2T* phvdc;
     DEVICE_ID did;
-    did.set_device_type(STEPS_HVDC);
+    did.set_device_type(STEPS_LCC_HVDC2T);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    phvdc = psdb.get_hvdc(did);
+    phvdc = psdb.get_2t_lcc_hvdc(did);
 
     TEST_ASSERT(phvdc!=NULL);
     TEST_ASSERT(phvdc->get_name()=="#1");
@@ -1839,7 +1839,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_hvdc()
     TEST_ASSERT(phvdc->get_status()==true);
 
     did.set_device_identifier_index(get_index_of_string("#2"));
-    phvdc = psdb.get_hvdc(did);
+    phvdc = psdb.get_2t_lcc_hvdc(did);
 
     TEST_ASSERT(phvdc!=NULL);
     TEST_ASSERT(phvdc->get_name()=="#2");
@@ -2312,7 +2312,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_line_exist()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
@@ -2428,7 +2428,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_fixed_shunt_exist()
     }
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_is_hvdc_exist()
+void POWER_SYSTEM_DATABASE_TEST::test_is_2t_lcc_hvdc_exist()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -2437,7 +2437,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_hvdc_exist()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_HVDC);
+    did.set_device_type(STEPS_LCC_HVDC2T);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
@@ -2460,13 +2460,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_hvdc_exist()
         did.set_device_terminal(terminal);
         did.set_device_identifier_index(get_index_of_string("#1"));
 
-        TEST_ASSERT(psdb.is_hvdc_exist(did)==true);
+        TEST_ASSERT(psdb.is_2t_lcc_hvdc_exist(did)==true);
 
         did.set_device_identifier_index(get_index_of_string("#2"));
-        TEST_ASSERT(psdb.is_hvdc_exist(did)==true);
+        TEST_ASSERT(psdb.is_2t_lcc_hvdc_exist(did)==true);
 
         did.set_device_identifier_index(get_index_of_string("#3"));
-        TEST_ASSERT(psdb.is_hvdc_exist(did)==false);
+        TEST_ASSERT(psdb.is_2t_lcc_hvdc_exist(did)==false);
     }
 }
 
@@ -2643,16 +2643,16 @@ void POWER_SYSTEM_DATABASE_TEST::test_change_bus_number()
     did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_fixed_shunt_exist(did)==true);
 
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_line_exist(did)==true);
 
-    did.set_device_type(STEPS_HVDC);
+    did.set_device_type(STEPS_LCC_HVDC2T);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
-    TEST_ASSERT(psdb.is_hvdc_exist(did)==true);
+    TEST_ASSERT(psdb.is_2t_lcc_hvdc_exist(did)==true);
 
     did.set_device_type(STEPS_VSC_HVDC);
     terminal.append_bus(3);
@@ -2689,16 +2689,16 @@ void POWER_SYSTEM_DATABASE_TEST::test_change_bus_number()
     did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_fixed_shunt_exist(did)==false);
 
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_line_exist(did)==false);
 
-    did.set_device_type(STEPS_HVDC);
+    did.set_device_type(STEPS_LCC_HVDC2T);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
-    TEST_ASSERT(psdb.is_hvdc_exist(did)==false);
+    TEST_ASSERT(psdb.is_2t_lcc_hvdc_exist(did)==false);
 
     did.set_device_type(STEPS_TRANSFORMER);
     terminal.append_bus(3);
@@ -2723,16 +2723,16 @@ void POWER_SYSTEM_DATABASE_TEST::test_change_bus_number()
     did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_fixed_shunt_exist(did)==true);
 
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_line_exist(did)==true);
 
-    did.set_device_type(STEPS_HVDC);
+    did.set_device_type(STEPS_LCC_HVDC2T);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
-    TEST_ASSERT(psdb.is_hvdc_exist(did)==true);
+    TEST_ASSERT(psdb.is_2t_lcc_hvdc_exist(did)==true);
 
     did.set_device_type(STEPS_VSC_HVDC);
     did.set_device_terminal(terminal);
@@ -2769,16 +2769,16 @@ void POWER_SYSTEM_DATABASE_TEST::test_change_bus_number()
     did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_fixed_shunt_exist(did)==false);
 
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     terminal.append_bus(4);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_line_exist(did)==false);
 
-    did.set_device_type(STEPS_HVDC);
+    did.set_device_type(STEPS_LCC_HVDC2T);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
-    TEST_ASSERT(psdb.is_hvdc_exist(did)==false);
+    TEST_ASSERT(psdb.is_2t_lcc_hvdc_exist(did)==false);
 
     did.set_device_type(STEPS_VSC_HVDC);
     did.set_device_terminal(terminal);
@@ -2808,16 +2808,16 @@ void POWER_SYSTEM_DATABASE_TEST::test_change_bus_number()
     did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_fixed_shunt_exist(did)==true);
 
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     terminal.append_bus(4);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(psdb.is_line_exist(did)==true);
 
-    did.set_device_type(STEPS_HVDC);
+    did.set_device_type(STEPS_LCC_HVDC2T);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
-    TEST_ASSERT(psdb.is_hvdc_exist(did)==true);
+    TEST_ASSERT(psdb.is_2t_lcc_hvdc_exist(did)==true);
 
     did.set_device_type(STEPS_VSC_HVDC);
     did.set_device_terminal(terminal);
@@ -3163,7 +3163,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_connecting_to_bus()
     TEST_ASSERT(device.size()==0);
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_connecting_to_bus()
+void POWER_SYSTEM_DATABASE_TEST::test_get_2t_lcc_hvdcs_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -3171,7 +3171,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_connecting_to_bus()
 
     prepare_database_for_test();
 
-    vector<HVDC*> device = psdb.get_hvdcs_connecting_to_bus(1);
+    vector<LCC_HVDC2T*> device = psdb.get_2t_lcc_hvdcs_connecting_to_bus(1);
 
     TEST_ASSERT(device.size()==4);
 
@@ -3188,7 +3188,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_connecting_to_bus()
     TEST_ASSERT(device[3]->get_converter_bus(INVERTER)==3);
     TEST_ASSERT(device[3]->get_identifier()=="#2");
 
-    device = psdb.get_hvdcs_connecting_to_bus(2);
+    device = psdb.get_2t_lcc_hvdcs_connecting_to_bus(2);
 
     TEST_ASSERT(device.size()==4);
 
@@ -3205,7 +3205,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_connecting_to_bus()
     TEST_ASSERT(device[3]->get_converter_bus(INVERTER)==3);
     TEST_ASSERT(device[3]->get_identifier()=="#2");
 
-    device = psdb.get_hvdcs_connecting_to_bus(3);
+    device = psdb.get_2t_lcc_hvdcs_connecting_to_bus(3);
 
     TEST_ASSERT(device.size()==4);
 
@@ -3222,7 +3222,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_connecting_to_bus()
     TEST_ASSERT(device[3]->get_converter_bus(INVERTER)==3);
     TEST_ASSERT(device[3]->get_identifier()=="#2");
 
-    device = psdb.get_hvdcs_connecting_to_bus(4);
+    device = psdb.get_2t_lcc_hvdcs_connecting_to_bus(4);
     TEST_ASSERT(device.size()==0);
 }
 
@@ -3492,7 +3492,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_connecting_to_bus()
         TEST_ASSERT(dids.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(dids[j].get_device_type()==STEPS_LINE);
+            TEST_ASSERT(dids[j].get_device_type()==STEPS_AC_LINE);
             TEST_ASSERT(psdb.get_line(dids[j])->is_connected_to_bus(i)==true);
         }
     }
@@ -3542,7 +3542,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_connecting_to_b
     }
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_connecting_to_bus()
+void POWER_SYSTEM_DATABASE_TEST::test_get_2t_lcc_hvdcs_device_id_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -3554,12 +3554,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_connecting_to_bus()
 
     for(unsigned int i=1; i!=4; ++i)
     {
-        dids = psdb.get_hvdcs_device_id_connecting_to_bus(i);
+        dids = psdb.get_2t_lcc_hvdcs_device_id_connecting_to_bus(i);
         TEST_ASSERT(dids.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(dids[j].get_device_type()==STEPS_HVDC);
-            TEST_ASSERT(psdb.get_hvdc(dids[j])->is_connected_to_bus(i)==true);
+            TEST_ASSERT(dids[j].get_device_type()==STEPS_LCC_HVDC2T);
+            TEST_ASSERT(psdb.get_2t_lcc_hvdc(dids[j])->is_connected_to_bus(i)==true);
         }
     }
 }
@@ -3784,7 +3784,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_in_area()
         TEST_ASSERT(devices.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_LINE);
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_AC_LINE);
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
         }
     }
@@ -3834,7 +3834,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_in_area()
     }
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_in_area()
+void POWER_SYSTEM_DATABASE_TEST::test_get_2t_lcc_hvdcs_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -3842,15 +3842,15 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_in_area()
 
     prepare_database_for_test();
 
-    vector<HVDC*> devices;
+    vector<LCC_HVDC2T*> devices;
 
     for(unsigned int i=1; i!=3; ++i)
     {
-        devices = psdb.get_hvdcs_in_area(i);
+        devices = psdb.get_2t_lcc_hvdcs_in_area(i);
         TEST_ASSERT(devices.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_HVDC);
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_LCC_HVDC2T);
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
         }
     }
@@ -4075,7 +4075,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_in_area()
         TEST_ASSERT(devices.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()==STEPS_LINE);
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_AC_LINE);
             TEST_ASSERT(psdb.get_line(devices[j])->is_in_area(i)==true);
         }
     }
@@ -4125,7 +4125,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_in_area()
     }
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_in_area()
+void POWER_SYSTEM_DATABASE_TEST::test_get_2t_lcc_hvdcs_device_id_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -4137,12 +4137,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_in_area()
 
     for(unsigned int i=1; i!=3; ++i)
     {
-        devices = psdb.get_hvdcs_device_id_in_area(i);
+        devices = psdb.get_2t_lcc_hvdcs_device_id_in_area(i);
         TEST_ASSERT(devices.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()==STEPS_HVDC);
-            TEST_ASSERT(psdb.get_hvdc(devices[j])->is_in_area(i)==true);
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_LCC_HVDC2T);
+            TEST_ASSERT(psdb.get_2t_lcc_hvdc(devices[j])->is_in_area(i)==true);
         }
     }
 }
@@ -4365,7 +4365,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_in_zone()
         TEST_ASSERT(devices.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_LINE);
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_AC_LINE);
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
         }
     }
@@ -4415,7 +4415,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_in_zone()
     }
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_in_zone()
+void POWER_SYSTEM_DATABASE_TEST::test_get_2t_lcc_hvdcs_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -4423,15 +4423,15 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_in_zone()
 
     prepare_database_for_test();
 
-    vector<HVDC*> devices;
+    vector<LCC_HVDC2T*> devices;
 
     for(unsigned int i=1; i!=3; ++i)
     {
-        devices = psdb.get_hvdcs_in_zone(i);
+        devices = psdb.get_2t_lcc_hvdcs_in_zone(i);
         TEST_ASSERT(devices.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_HVDC);
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()==STEPS_LCC_HVDC2T);
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
         }
     }
@@ -4656,7 +4656,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_in_zone()
         TEST_ASSERT(devices.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()==STEPS_LINE);
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_AC_LINE);
             TEST_ASSERT(psdb.get_line(devices[j])->is_in_zone(i)==true);
         }
     }
@@ -4706,7 +4706,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_in_zone()
     }
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_in_zone()
+void POWER_SYSTEM_DATABASE_TEST::test_get_2t_lcc_hvdcs_device_id_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -4718,12 +4718,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_in_zone()
 
     for(unsigned int i=1; i!=3; ++i)
     {
-        devices = psdb.get_hvdcs_device_id_in_zone(i);
+        devices = psdb.get_2t_lcc_hvdcs_device_id_in_zone(i);
         TEST_ASSERT(devices.size()==4);
         for(unsigned int j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()==STEPS_HVDC);
-            TEST_ASSERT(psdb.get_hvdc(devices[j])->is_in_zone(i)==true);
+            TEST_ASSERT(devices[j].get_device_type()==STEPS_LCC_HVDC2T);
+            TEST_ASSERT(psdb.get_2t_lcc_hvdc(devices[j])->is_in_zone(i)==true);
         }
     }
 }
@@ -5191,7 +5191,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_fixed_shunts()
     TEST_ASSERT(device[5]->get_identifier()=="#2");
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_all_hvdcs()
+void POWER_SYSTEM_DATABASE_TEST::test_get_all_2t_lcc_hvdcs()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -5199,7 +5199,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_hvdcs()
 
     prepare_database_for_test();
 
-    vector<HVDC*> device = psdb.get_all_hvdcs();
+    vector<LCC_HVDC2T*> device = psdb.get_all_2t_lcc_hvdcs();
 
     TEST_ASSERT(device.size()==6);
 
@@ -5641,7 +5641,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_lines_device_id()
     TEST_ASSERT(device.size()==6);
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
@@ -5753,7 +5753,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_fixed_shunts_device_id()
     }
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_all_hvdcs_device_id()
+void POWER_SYSTEM_DATABASE_TEST::test_get_all_2t_lcc_hvdcs_device_id()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -5761,12 +5761,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_hvdcs_device_id()
 
     prepare_database_for_test();
 
-    vector<DEVICE_ID> device = psdb.get_all_hvdcs_device_id();
+    vector<DEVICE_ID> device = psdb.get_all_2t_lcc_hvdcs_device_id();
 
     TEST_ASSERT(device.size()==6);
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_HVDC);
+    did.set_device_type(STEPS_LCC_HVDC2T);
     TERMINAL terminal;
     for(unsigned int i=1; i!=4; ++i)
     {
@@ -6066,7 +6066,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_overshadowed_bus_count()
         psdb.append_line(line);
     }
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
     TERMINAL terminal;
@@ -6293,7 +6293,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunt_count()
     TEST_ASSERT(psdb.get_fixed_shunt_count()==6);
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_hvdc_count()
+void POWER_SYSTEM_DATABASE_TEST::test_get_2t_lcc_hvdc_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -6301,7 +6301,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdc_count()
 
     prepare_database_for_test();
 
-    TEST_ASSERT(psdb.get_hvdc_count()==6);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_count()==6);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdc_count()
@@ -6562,7 +6562,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_line_index()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
@@ -6690,7 +6690,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunt_index()
     TEST_ASSERT(psdb.get_fixed_shunt_index(did)==INDEX_NOT_EXIST);
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_hvdc_index()
+void POWER_SYSTEM_DATABASE_TEST::test_get_2t_lcc_hvdc_index()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -6699,39 +6699,39 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdc_index()
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_HVDC);
+    did.set_device_type(STEPS_LCC_HVDC2T);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
-    TEST_ASSERT(psdb.get_hvdc_index(did)==0);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_index(did)==0);
 
     did.set_device_identifier_index(get_index_of_string("#2"));
-    TEST_ASSERT(psdb.get_hvdc_index(did)==1);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_index(did)==1);
 
     terminal.clear();
     terminal.append_bus(2);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
-    TEST_ASSERT(psdb.get_hvdc_index(did)==2);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_index(did)==2);
 
     did.set_device_identifier_index(get_index_of_string("#2"));
-    TEST_ASSERT(psdb.get_hvdc_index(did)==3);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_index(did)==3);
 
     terminal.clear();
     terminal.append_bus(1);
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
-    TEST_ASSERT(psdb.get_hvdc_index(did)==4);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_index(did)==4);
 
     did.set_device_identifier_index(get_index_of_string("#2"));
-    TEST_ASSERT(psdb.get_hvdc_index(did)==5);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_index(did)==5);
 
     did.set_device_identifier_index(get_index_of_string("#3"));
-    TEST_ASSERT(psdb.get_hvdc_index(did)==INDEX_NOT_EXIST);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_index(did)==INDEX_NOT_EXIST);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdc_index()
@@ -7954,9 +7954,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_bus()
     TEST_ASSERT(psdb.get_fixed_shunts_connecting_to_bus(1).size()==2);
     TEST_ASSERT(psdb.get_fixed_shunts_connecting_to_bus(2).size()==2);
     TEST_ASSERT(psdb.get_fixed_shunts_connecting_to_bus(3).size()==2);
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(1).size()==4);
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(2).size()==4);
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(3).size()==4);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(1).size()==4);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(2).size()==4);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(3).size()==4);
     TEST_ASSERT(psdb.get_equivalent_devices_connecting_to_bus(1).size()==2);
     TEST_ASSERT(psdb.get_equivalent_devices_connecting_to_bus(2).size()==2);
     TEST_ASSERT(psdb.get_equivalent_devices_connecting_to_bus(3).size()==2);
@@ -7988,9 +7988,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_bus()
     TEST_ASSERT(psdb.get_fixed_shunts_connecting_to_bus(1).size()==0);
     TEST_ASSERT(psdb.get_fixed_shunts_connecting_to_bus(2).size()==2);
     TEST_ASSERT(psdb.get_fixed_shunts_connecting_to_bus(3).size()==2);
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(1).size()==0);
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(2).size()==2);
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(3).size()==2);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(2).size()==2);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(3).size()==2);
     TEST_ASSERT(psdb.get_equivalent_devices_connecting_to_bus(1).size()==0);
     TEST_ASSERT(psdb.get_equivalent_devices_connecting_to_bus(2).size()==2);
     TEST_ASSERT(psdb.get_equivalent_devices_connecting_to_bus(3).size()==2);
@@ -8022,9 +8022,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_bus()
     TEST_ASSERT(psdb.get_fixed_shunts_connecting_to_bus(1).size()==0);
     TEST_ASSERT(psdb.get_fixed_shunts_connecting_to_bus(2).size()==2);
     TEST_ASSERT(psdb.get_fixed_shunts_connecting_to_bus(3).size()==0);
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(1).size()==0);
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(2).size()==0);
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(3).size()==0);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(2).size()==0);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(3).size()==0);
     TEST_ASSERT(psdb.get_equivalent_devices_connecting_to_bus(1).size()==0);
     TEST_ASSERT(psdb.get_equivalent_devices_connecting_to_bus(2).size()==2);
     TEST_ASSERT(psdb.get_equivalent_devices_connecting_to_bus(3).size()==0);
@@ -8055,9 +8055,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_bus()
     TEST_ASSERT(psdb.get_fixed_shunts_connecting_to_bus(1).size()==0);
     TEST_ASSERT(psdb.get_fixed_shunts_connecting_to_bus(2).size()==0);
     TEST_ASSERT(psdb.get_fixed_shunts_connecting_to_bus(3).size()==0);
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(1).size()==0);
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(2).size()==0);
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(3).size()==0);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(2).size()==0);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(3).size()==0);
     TEST_ASSERT(psdb.get_equivalent_devices_connecting_to_bus(1).size()==0);
     TEST_ASSERT(psdb.get_equivalent_devices_connecting_to_bus(2).size()==0);
     TEST_ASSERT(psdb.get_equivalent_devices_connecting_to_bus(3).size()==0);
@@ -8081,7 +8081,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear()
     TEST_ASSERT(psdb.get_line_count()==0);
     TEST_ASSERT(psdb.get_transformer_count()==0);
     TEST_ASSERT(psdb.get_fixed_shunt_count()==0);
-    TEST_ASSERT(psdb.get_hvdc_count()==0);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_count()==0);
     TEST_ASSERT(psdb.get_equivalent_device_count()==0);
     TEST_ASSERT(psdb.get_area_count()==0);
     TEST_ASSERT(psdb.get_zone_count()==0);
@@ -8107,7 +8107,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_buses()
     TEST_ASSERT(psdb.get_line_count()==0);
     TEST_ASSERT(psdb.get_transformer_count()==0);
     TEST_ASSERT(psdb.get_fixed_shunt_count()==0);
-    TEST_ASSERT(psdb.get_hvdc_count()==0);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_count()==0);
     TEST_ASSERT(psdb.get_equivalent_device_count()==0);
     TEST_ASSERT(psdb.get_area_count()==0);
     TEST_ASSERT(psdb.get_zone_count()==0);
@@ -8562,7 +8562,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_line()
     TEST_ASSERT(psdb.get_line_count()==6);
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
@@ -8865,7 +8865,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_fixed_shunts()
     TEST_ASSERT(psdb.get_fixed_shunt_count()==0);
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_clear_hvdc()
+void POWER_SYSTEM_DATABASE_TEST::test_clear_2t_lcc_hvdc()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -8873,25 +8873,25 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_hvdc()
 
     prepare_database_for_test();
 
-    vector<HVDC*> hvdcs;
+    vector<LCC_HVDC2T*> hvdcs;
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_HVDC);
+    did.set_device_type(STEPS_LCC_HVDC2T);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    psdb.clear_hvdc(did);
-    TEST_ASSERT(psdb.is_hvdc_exist(did)==false);
-    TEST_ASSERT(psdb.get_hvdc_count()==5);
+    psdb.clear_2t_lcc_hvdc(did);
+    TEST_ASSERT(psdb.is_2t_lcc_hvdc_exist(did)==false);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_count()==5);
 
     did.set_device_identifier_index(get_index_of_string("#2"));
 
-    psdb.clear_hvdc(did);
-    TEST_ASSERT(psdb.is_hvdc_exist(did)==false);
-    TEST_ASSERT(psdb.get_hvdc_count()==4);
+    psdb.clear_2t_lcc_hvdc(did);
+    TEST_ASSERT(psdb.is_2t_lcc_hvdc_exist(did)==false);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_count()==4);
 
     terminal.clear();
     terminal.append_bus(2);
@@ -8899,15 +8899,15 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_hvdc()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    psdb.clear_hvdc(did);
-    TEST_ASSERT(psdb.is_hvdc_exist(did)==false);
-    TEST_ASSERT(psdb.get_hvdc_count()==3);
+    psdb.clear_2t_lcc_hvdc(did);
+    TEST_ASSERT(psdb.is_2t_lcc_hvdc_exist(did)==false);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_count()==3);
 
     did.set_device_identifier_index(get_index_of_string("#2"));
 
-    psdb.clear_hvdc(did);
-    TEST_ASSERT(psdb.is_hvdc_exist(did)==false);
-    TEST_ASSERT(psdb.get_hvdc_count()==2);
+    psdb.clear_2t_lcc_hvdc(did);
+    TEST_ASSERT(psdb.is_2t_lcc_hvdc_exist(did)==false);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_count()==2);
 
     terminal.clear();
     terminal.append_bus(1);
@@ -8915,18 +8915,18 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_hvdc()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    psdb.clear_hvdc(did);
-    TEST_ASSERT(psdb.is_hvdc_exist(did)==false);
-    TEST_ASSERT(psdb.get_hvdc_count()==1);
+    psdb.clear_2t_lcc_hvdc(did);
+    TEST_ASSERT(psdb.is_2t_lcc_hvdc_exist(did)==false);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_count()==1);
 
     did.set_device_identifier_index(get_index_of_string("#2"));
 
-    psdb.clear_hvdc(did);
-    TEST_ASSERT(psdb.is_hvdc_exist(did)==false);
-    TEST_ASSERT(psdb.get_hvdc_count()==0);
+    psdb.clear_2t_lcc_hvdc(did);
+    TEST_ASSERT(psdb.is_2t_lcc_hvdc_exist(did)==false);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_count()==0);
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_clear_hvdcs_connecting_to_bus()
+void POWER_SYSTEM_DATABASE_TEST::test_clear_2t_lcc_hvdcs_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -8934,26 +8934,26 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_hvdcs_connecting_to_bus()
 
     prepare_database_for_test();
 
-    psdb.clear_hvdcs_connecting_to_bus(1);
+    psdb.clear_2t_lcc_hvdcs_connecting_to_bus(1);
 
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(1).size()==0);
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(2).size()==2);
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(3).size()==2);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(2).size()==2);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(3).size()==2);
 
-    psdb.clear_hvdcs_connecting_to_bus(2);
+    psdb.clear_2t_lcc_hvdcs_connecting_to_bus(2);
 
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(1).size()==0);
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(2).size()==0);
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(3).size()==0);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(2).size()==0);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(3).size()==0);
 
-    psdb.clear_hvdcs_connecting_to_bus(3);
+    psdb.clear_2t_lcc_hvdcs_connecting_to_bus(3);
 
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(1).size()==0);
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(2).size()==0);
-    TEST_ASSERT(psdb.get_hvdcs_connecting_to_bus(3).size()==0);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(2).size()==0);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdcs_connecting_to_bus(3).size()==0);
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_clear_all_hvdcs()
+void POWER_SYSTEM_DATABASE_TEST::test_clear_all_2t_lcc_hvdcs()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -8961,9 +8961,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_hvdcs()
 
     prepare_database_for_test();
 
-    psdb.clear_all_hvdcs();
+    psdb.clear_all_2t_lcc_hvdcs();
 
-    TEST_ASSERT(psdb.get_hvdc_count()==0);
+    TEST_ASSERT(psdb.get_2t_lcc_hvdc_count()==0);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_clear_vsc_hvdc()

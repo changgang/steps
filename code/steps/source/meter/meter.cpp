@@ -155,17 +155,17 @@ vector<string> energy_storage_meters{"TERMINAL CURRENT IN PU", "TERMINAL CURRENT
                                      "ES VRT MODEL INTERNAL VARIABLE",
                                      "ES RELAY MODEL INTERNAL VARIABLE"};
 
-vector<string> hvdc_meters{ "DC CURRENT IN KA",
-                            "RECTIFIER DC CURRENT IN KA",   "INVERTER DC CURRENT IN KA",
-                            "RECTIFIER AC CURRENT IN KA",   "INVERTER AC CURRENT IN KA",
-                            "RECTIFIER ALPHA IN DEG",       "INVERTER GAMMA IN DEG",
-                            "RECTIFIER MU IN DEG",          "INVERTER MU IN DEG",
-                            "RECTIFIER DC VOLTAGE IN KV",   "INVERTER DC VOLTAGE IN KV",
-                            "RECTIFIER AC VOLTAGE IN PU",   "INVERTER AC VOLTAGE IN PU",
-                            "RECTIFIER DC POWER IN MW",     "INVERTER DC POWER IN MW",
-                            "RECTIFIER AC ACTIVE POWER IN MW","INVERTER AC ACTIVE POWER IN MW",
-                            "RECTIFIER AC REACTIVE POWER IN MVAR","INVERTER AC REACTIVE POWER IN MVAR",
-                            "HVDC MODEL INTERNAL VARIABLE"};
+vector<string> lcc_hvdc2t_meters{ "DC CURRENT IN KA",
+                                  "RECTIFIER DC CURRENT IN KA",   "INVERTER DC CURRENT IN KA",
+                                  "RECTIFIER AC CURRENT IN KA",   "INVERTER AC CURRENT IN KA",
+                                  "RECTIFIER ALPHA IN DEG",       "INVERTER GAMMA IN DEG",
+                                  "RECTIFIER MU IN DEG",          "INVERTER MU IN DEG",
+                                  "RECTIFIER DC VOLTAGE IN KV",   "INVERTER DC VOLTAGE IN KV",
+                                  "RECTIFIER AC VOLTAGE IN PU",   "INVERTER AC VOLTAGE IN PU",
+                                  "RECTIFIER DC POWER IN MW",     "INVERTER DC POWER IN MW",
+                                  "RECTIFIER AC ACTIVE POWER IN MW","INVERTER AC ACTIVE POWER IN MW",
+                                  "RECTIFIER AC REACTIVE POWER IN MVAR","INVERTER AC REACTIVE POWER IN MVAR",
+                                  "2T LCC HVDC MODEL INTERNAL VARIABLE"};
 
 vector<string> vsc_hvdc_meters{ "CONVERTER DC CURRENT IN KA",  "CONVERTER AC CURRENT IN KA",
                                 "CONVERTER AC VOLTAGE IN KV",  "CONVERTER AC VOLTAGE IN PU",
@@ -174,8 +174,8 @@ vector<string> vsc_hvdc_meters{ "CONVERTER DC CURRENT IN KA",  "CONVERTER AC CUR
                                 "CONVERTER AC ACTIVE POWER IN MW",    "CONVERTER AC REACTIVE POWER IN MVAR",
                                 "DC BUS VOLTAGE IN KV",
                                 "DC LINE CURRENT IN KA",       "DC LINE POWER IN MW",
-                                "VSC HVDC NETWORK MODEL INTERNAL VARIABLE",
-                                "VSC HVDC CONVERTER MODEL INTERNAL VARIABLE"};
+                                "VSC LCC_HVDC2T NETWORK MODEL INTERNAL VARIABLE",
+                                "VSC LCC_HVDC2T CONVERTER MODEL INTERNAL VARIABLE"};
 
 vector<string> equivalent_device_meters{"VOLTAGE SOURCE VOLTAGE IN PU",
                                          "VOLTAGE SOURCE VOLTAGE ANGLE IN DEG",
@@ -207,14 +207,14 @@ vector<string> equivalent_device_meters{"VOLTAGE SOURCE VOLTAGE IN PU",
                                          "REACTIVE POWER NET LOAD IN PU"};
 
 map<STEPS_DEVICE_TYPE, vector<string>> SUPPORTED_METERS{    {STEPS_BUS,         bus_meters},
-                                                            {STEPS_LINE,        line_meters},
+                                                            {STEPS_AC_LINE,        line_meters},
                                                             {STEPS_TRANSFORMER, transformer_meters},
                                                             {STEPS_LOAD,        load_meters},
                                                             {STEPS_GENERATOR,   generator_meters},
                                                             {STEPS_WT_GENERATOR,wt_generator_meters},
                                                             {STEPS_PV_UNIT,     pv_unit_meters},
                                                             {STEPS_ENERGY_STORAGE, energy_storage_meters},
-                                                            {STEPS_HVDC, hvdc_meters},
+                                                            {STEPS_LCC_HVDC2T, lcc_hvdc2t_meters},
                                                             {STEPS_VSC_HVDC, vsc_hvdc_meters},
                                                             {STEPS_EQUIVALENT_DEVICE, equivalent_device_meters}};
 METER::METER(STEPS& toolkit)
@@ -432,18 +432,18 @@ bool METER::is_internal_variable_name_valid(string& name, unsigned int index) co
             if(meter_type=="ES RELAY MODEL INTERNAL VARIABLE")
                 model = ptr->get_es_relay_model();
         }
-        if(device_type==STEPS_HVDC)
+        if(device_type==STEPS_LCC_HVDC2T)
         {
-            HVDC* ptr = (HVDC*)get_device_pointer();
-            if(meter_type=="HVDC MODEL INTERNAL VARIABLE")
+            LCC_HVDC2T* ptr = (LCC_HVDC2T*)get_device_pointer();
+            if(meter_type=="2T LCC HVDC MODEL INTERNAL VARIABLE")
                 model = ptr->get_hvdc_model();
         }
         if(device_type==STEPS_VSC_HVDC)
         {
             VSC_HVDC* ptr = (VSC_HVDC*)get_device_pointer();
-            if(meter_type=="VSC HVDC NETWORK MODEL INTERNAL VARIABLE")
+            if(meter_type=="VSC LCC_HVDC2T NETWORK MODEL INTERNAL VARIABLE")
                 model = ptr->get_vsc_hvdc_network_model();
-            if(meter_type=="VSC HVDC CONVERTER MODEL INTERNAL VARIABLE")
+            if(meter_type=="VSC LCC_HVDC2T CONVERTER MODEL INTERNAL VARIABLE")
                 model = ptr->get_vsc_hvdc_converter_model(index);
         }
         if(model!=NULL)
@@ -646,7 +646,7 @@ string METER::get_meter_name() const
         name += " @ "+get_device_id().get_compound_device_name();
 
         STEPS_DEVICE_TYPE device_type = get_device_type();
-        if(device_type==STEPS_LINE or
+        if(device_type==STEPS_AC_LINE or
            device_type==STEPS_TRANSFORMER or
            device_type==STEPS_VSC_HVDC)
             name += " @ SIDE "+num2str(get_meter_side_bus());
@@ -664,7 +664,7 @@ bool METER::is_valid() const
     {
         STEPS_DEVICE_TYPE device_type = get_device_type();
         //cout<<"device_type: "<<device_type<<endl;
-        if(device_type==STEPS_LINE or
+        if(device_type==STEPS_AC_LINE or
            device_type==STEPS_TRANSFORMER or
            device_type==STEPS_VSC_HVDC)
         {
@@ -745,7 +745,7 @@ void METER::set_device_pointer(DEVICE_ID device_id)
             deviceptr = (DEVICE*) psdb.get_bus(tbuses[0]);
             break;
         }
-        case STEPS_LINE:
+        case STEPS_AC_LINE:
             deviceptr = (DEVICE*) psdb.get_line(device_id);
             break;
 
@@ -773,8 +773,8 @@ void METER::set_device_pointer(DEVICE_ID device_id)
             deviceptr = (DEVICE*) psdb.get_energy_storage(device_id);
             break;
 
-        case STEPS_HVDC:
-            deviceptr = (DEVICE*) psdb.get_hvdc(device_id);
+        case STEPS_LCC_HVDC2T:
+            deviceptr = (DEVICE*) psdb.get_2t_lcc_hvdc(device_id);
             break;
 
         case STEPS_VSC_HVDC:
@@ -807,7 +807,7 @@ double METER::get_meter_value() const
         {
             case STEPS_BUS:
                 return get_meter_value_as_a_bus();
-            case STEPS_LINE:
+            case STEPS_AC_LINE:
                 return get_meter_value_as_a_line();
             case STEPS_TRANSFORMER:
                 return get_meter_value_as_a_transformer();
@@ -821,7 +821,7 @@ double METER::get_meter_value() const
                 return get_meter_value_as_a_pv_unit();
             case STEPS_ENERGY_STORAGE:
                 return get_meter_value_as_an_energy_storage();
-            case STEPS_HVDC:
+            case STEPS_LCC_HVDC2T:
                 return get_meter_value_as_an_hvdc();
             case STEPS_VSC_HVDC:
                 return get_meter_value_as_a_vsc_hvdc();
@@ -2166,7 +2166,7 @@ double METER::get_meter_value_as_a_pv_unit() const
 
 double METER::get_meter_value_as_an_hvdc() const
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    LCC_HVDC2T* hvdc = (LCC_HVDC2T*) get_device_pointer();
     if(hvdc != NULL)
     {
         if(hvdc->get_status()==true)
@@ -2232,7 +2232,7 @@ double METER::get_meter_value_as_an_hvdc() const
                 if(meter_type=="INVERTER AC REACTIVE POWER IN MVAR")
                     return hvdc_model->get_converter_ac_complex_power_in_MVA(INVERTER).imag();
 
-                if(meter_type=="HVDC MODEL INTERNAL VARIABLE")
+                if(meter_type=="2T LCC HVDC MODEL INTERNAL VARIABLE")
                     return hvdc_model->get_model_internal_variable_with_name(get_internal_variable_name());
 
                 return 0.0;
@@ -2308,9 +2308,9 @@ double METER::get_meter_value_as_a_vsc_hvdc() const
                 unsigned int dc_bus = get_meter_side_bus();
                 return vsc_hvdc->get_dc_line_power_in_MW(dc_did, dc_bus);
             }
-            if(meter_type=="VSC HVDC NETWORK MODEL INTERNAL VARIABLE")
+            if(meter_type=="VSC LCC_HVDC2T NETWORK MODEL INTERNAL VARIABLE")
                 return vsc_hvdc_network_model->get_model_internal_variable_with_name(get_internal_variable_name());
-            if(meter_type=="VSC HVDC CONVERTER MODEL INTERNAL VARIABLE")
+            if(meter_type=="VSC LCC_HVDC2T CONVERTER MODEL INTERNAL VARIABLE")
             {
                 unsigned int index = vsc_hvdc->get_converter_index_with_ac_bus(metered_bus);
                 return vsc_hvdc_converter_models[index]->get_model_internal_variable_with_name(get_internal_variable_name());

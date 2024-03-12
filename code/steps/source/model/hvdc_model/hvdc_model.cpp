@@ -6,11 +6,11 @@
 #include <iostream>
 
 using namespace std;
-class HVDC;
+class LCC_HVDC2T;
 
 HVDC_MODEL::HVDC_MODEL(STEPS& toolkit) : MODEL(toolkit)
 {
-    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_HVDC);
+    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_LCC_HVDC2T);
     set_converter_dynamic_max_alpha_or_gamma_in_deg(RECTIFIER, 90.0);
     set_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER, 0.0);
     set_converter_dynamic_max_alpha_or_gamma_in_deg(INVERTER, 90.0);
@@ -53,33 +53,33 @@ HVDC_MODEL::~HVDC_MODEL()
 {
 }
 
-HVDC* HVDC_MODEL::get_hvdc_pointer() const
+LCC_HVDC2T* HVDC_MODEL::get_hvdc_pointer() const
 {
-    return (HVDC*) get_device_pointer();
+    return (LCC_HVDC2T*) get_device_pointer();
 }
 
 string HVDC_MODEL::get_model_type() const
 {
-    return "HVDC";
+    return "2T LCC HVDC";
 }
 
 double HVDC_MODEL::get_initial_alpha_in_deg() const
 {
     ostringstream osstream;
-    HVDC* hvdc = get_hvdc_pointer();
+    LCC_HVDC2T* hvdc = get_hvdc_pointer();
     return hvdc->get_converter_alpha_or_gamma_in_deg(RECTIFIER);
 }
 
 double HVDC_MODEL::get_initial_gamma_in_deg() const
 {
     ostringstream osstream;
-    HVDC* hvdc = get_hvdc_pointer();
+    LCC_HVDC2T* hvdc = get_hvdc_pointer();
     return hvdc->get_converter_alpha_or_gamma_in_deg(INVERTER);
 }
 
 double HVDC_MODEL::get_auxiliary_signal_in_MW() const
 {
-    HVDC* hvdc = get_hvdc_pointer();
+    LCC_HVDC2T* hvdc = get_hvdc_pointer();
 
     AUXILIARY_SIGNAL_MODEL* auxiliary_signal_model = hvdc->get_auxiliary_signal_model();
     if(auxiliary_signal_model == NULL)
@@ -248,7 +248,7 @@ double HVDC_MODEL::get_rectifier_dc_current_command_in_kA(double Vdci_measured, 
         STEPS& toolkit = get_toolkit();
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
-        HVDC* hvdc = get_hvdc_pointer();
+        LCC_HVDC2T* hvdc = get_hvdc_pointer();
         //double Vset = hvdc->get_inverter_nominal_dc_voltage_command_in_kV();
         double Iset = hvdc->get_rectifier_nominal_dc_current_command_in_kA();
         double Pset = hvdc->get_rectifier_nominal_dc_power_command_in_MW();
@@ -312,7 +312,7 @@ double HVDC_MODEL::get_rectifier_dc_current_command_in_kA(double Vdci_measured, 
 
 double HVDC_MODEL::get_inverter_dc_voltage_command_in_kV()
 {
-    HVDC* hvdc = get_hvdc_pointer();
+    LCC_HVDC2T* hvdc = get_hvdc_pointer();
 
     //double Rcomp = hvdc->get_compensating_resistance_to_hold_dc_voltage_in_ohm();
     double Vset = hvdc->get_inverter_nominal_dc_voltage_command_in_kV();
@@ -385,7 +385,7 @@ void HVDC_MODEL::block_hvdc()
             mode_switch_timer.reset();
         }
 
-        HVDC* hvdc = get_hvdc_pointer();
+        LCC_HVDC2T* hvdc = get_hvdc_pointer();
         hvdc->set_status(false); // block hvdc
         //time_when_blocked = TIME; // set blocked time
         dc_current_recovered_after_unblocking = false; // set unblocking as false
@@ -411,7 +411,7 @@ void HVDC_MODEL::unblock_hvdc()
         STEPS& toolkit = get_toolkit();
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
-        HVDC* hvdc = get_hvdc_pointer();
+        LCC_HVDC2T* hvdc = get_hvdc_pointer();
         hvdc->set_status(true);
         //time_when_blocked = INFINITE_THRESHOLD;
         block_timer.reset();
@@ -468,7 +468,7 @@ bool HVDC_MODEL::is_manual_blocked() const
 
 bool HVDC_MODEL::is_blocked() const
 {
-    HVDC* hvdc = get_hvdc_pointer();
+    LCC_HVDC2T* hvdc = get_hvdc_pointer();
     return not hvdc->get_status();
 }
 
@@ -571,7 +571,7 @@ void HVDC_MODEL::append_bypass_record(double time)
     if(n==STEPS_MAX_HVDC_BYPASS_RECORD_SIZE)
     {
         ostringstream osstream;
-        osstream<<"Warning. HVDC bypass record table of "<<get_compound_device_name()<<" is full. No more HVDC bypass event will be recorded.\n"
+        osstream<<"Warning. LCC_HVDC2T bypass record table of "<<get_compound_device_name()<<" is full. No more LCC_HVDC2T bypass event will be recorded.\n"
                 <<"Please consider decrease the maximum count of bypass before blocked or increase STEPS_MAX_HVDC_BYPASS_RECORD_SIZE in header/basic/constants.h";
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -691,7 +691,7 @@ bool HVDC_MODEL::is_bypass_timer_timed_out() const
 
 void HVDC_MODEL::switch_hvdc_mode()
 {
-    HVDC* hvdc = get_hvdc_pointer();
+    LCC_HVDC2T* hvdc = get_hvdc_pointer();
 
     if(hvdc->get_converter_operation_mode(RECTIFIER)!=RECTIFIER_CONSTANT_POWER)
         return;
@@ -712,7 +712,7 @@ void HVDC_MODEL::switch_hvdc_mode()
 
 void HVDC_MODEL::switch_hvdc_mode_back()
 {
-    HVDC* hvdc = get_hvdc_pointer();
+    LCC_HVDC2T* hvdc = get_hvdc_pointer();
 
     if(hvdc->get_converter_operation_mode(RECTIFIER)!=RECTIFIER_CONSTANT_POWER)
         return;
@@ -753,7 +753,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
     if(not is_blocked())
     {
         ostringstream osstream;
-        HVDC* hvdc = get_hvdc_pointer();
+        LCC_HVDC2T* hvdc = get_hvdc_pointer();
         STEPS& toolkit = get_toolkit();
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
@@ -998,14 +998,14 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
             solve_hvdc_as_bypassed(Iset_kA_for_bypass);
         }
     }
-    //hvdc->show_solved_hvdc_steady_state();
+    //hvdc->show_solved_steady_state();
 }
 
 void HVDC_MODEL::solve_hvdc_as_bypassed(double Iset_kA)
 {
     if(not is_blocked() and is_bypassed())
     {
-        HVDC* hvdc = get_hvdc_pointer();
+        LCC_HVDC2T* hvdc = get_hvdc_pointer();
         double alpha_min_in_rad = deg2rad(get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER));
         double alpha_max_in_rad = deg2rad(get_converter_dynamic_max_alpha_or_gamma_in_deg(RECTIFIER));
         /*double gamma_min_in_rad = deg2rad(get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER));
@@ -1098,7 +1098,7 @@ void HVDC_MODEL::solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset
 {
     if(not is_blocked())
     {
-        HVDC* hvdc = get_hvdc_pointer();
+        LCC_HVDC2T* hvdc = get_hvdc_pointer();
         double alpha_min_in_rad = deg2rad(get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER));
         double alpha_max_in_rad = deg2rad(get_converter_dynamic_max_alpha_or_gamma_in_deg(RECTIFIER));
         double gamma_min_in_rad = deg2rad(get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER));
@@ -1234,7 +1234,7 @@ double HVDC_MODEL::get_converter_dc_voltage_in_kV(CONVERTER_SIDE converter) cons
 {
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {
-        HVDC* hvdc = get_hvdc_pointer();
+        LCC_HVDC2T* hvdc = get_hvdc_pointer();
         return hvdc->get_converter_dc_voltage_in_kV(converter);
     }
     else
@@ -1245,7 +1245,7 @@ double HVDC_MODEL::get_converter_dc_current_in_kA(CONVERTER_SIDE converter) cons
 {
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {
-        HVDC* hvdc = get_hvdc_pointer();
+        LCC_HVDC2T* hvdc = get_hvdc_pointer();
         return hvdc->get_line_dc_current_in_kA();
     }
     else
@@ -1262,7 +1262,7 @@ double HVDC_MODEL::get_converter_dc_power_in_MW(CONVERTER_SIDE converter) const
 
 double HVDC_MODEL::get_converter_alpha_or_gamma_in_deg(CONVERTER_SIDE converter) const
 {
-    HVDC* hvdc = get_hvdc_pointer();
+    LCC_HVDC2T* hvdc = get_hvdc_pointer();
     if(not is_blocked())
     {
         if(not is_bypassed() or converter==RECTIFIER)
@@ -1279,7 +1279,7 @@ double HVDC_MODEL::get_converter_commutation_overlap_angle_in_deg(CONVERTER_SIDE
 {
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {
-        HVDC* hvdc = get_hvdc_pointer();
+        LCC_HVDC2T* hvdc = get_hvdc_pointer();
         double angle = deg2rad(get_converter_alpha_or_gamma_in_deg(converter));
         double idc = get_converter_dc_current_in_kA(converter);
         double xc = hvdc->get_converter_transformer_impedance_in_ohm(converter).imag();
@@ -1303,7 +1303,7 @@ complex<double> HVDC_MODEL::get_converter_ac_complex_power_in_MVA(CONVERTER_SIDE
 {
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {
-        HVDC* hvdc = get_hvdc_pointer();
+        LCC_HVDC2T* hvdc = get_hvdc_pointer();
         double N = hvdc->get_converter_number_of_bridge(converter);
         double Rc = hvdc->get_converter_transformer_impedance_in_ohm(converter).real();
         double Idc = get_converter_dc_current_in_kA(converter);
@@ -1372,7 +1372,7 @@ complex<double> HVDC_MODEL::get_converter_ac_current_in_kA(CONVERTER_SIDE conver
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {
         complex<double> I = get_converter_ac_current_in_pu(converter);
-        HVDC* hvdc = get_hvdc_pointer();
+        LCC_HVDC2T* hvdc = get_hvdc_pointer();
         BUS* bus = hvdc->get_bus_pointer(converter);
         double vbase = bus->get_base_voltage_in_kV();
         STEPS& toolkit = get_toolkit();
@@ -1388,21 +1388,21 @@ complex<double> HVDC_MODEL::get_converter_ac_current_in_kA(CONVERTER_SIDE conver
 
 double HVDC_MODEL::get_converter_ac_voltage_in_pu(CONVERTER_SIDE converter) const
 {
-    HVDC* hvdc = get_hvdc_pointer();
+    LCC_HVDC2T* hvdc = get_hvdc_pointer();
     BUS* bus = hvdc->get_bus_pointer(converter);
     return bus->get_positive_sequence_voltage_in_pu();
 }
 
 double HVDC_MODEL::get_converter_ac_voltage_in_kV(CONVERTER_SIDE converter) const
 {
-    HVDC* hvdc = get_hvdc_pointer();
+    LCC_HVDC2T* hvdc = get_hvdc_pointer();
     BUS* bus = hvdc->get_bus_pointer(converter);
     return bus->get_positive_sequence_voltage_in_kV();
 }
 
 complex<double> HVDC_MODEL::get_converter_ac_complex_voltage_in_pu(CONVERTER_SIDE converter) const
 {
-    HVDC* hvdc = get_hvdc_pointer();
+    LCC_HVDC2T* hvdc = get_hvdc_pointer();
     BUS* bus = hvdc->get_bus_pointer(converter);
     return bus->get_positive_sequence_complex_voltage_in_pu();
 }

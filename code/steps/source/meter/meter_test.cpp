@@ -94,11 +94,11 @@ void METER_TEST::setup()
     wt_generator.set_identifier("#1");
     psdb.append_wt_generator(wt_generator);
 
-    HVDC hvdc(default_toolkit);
+    LCC_HVDC2T hvdc(default_toolkit);
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
     hvdc.set_identifier("#1");
-    psdb.append_hvdc(hvdc);
+    psdb.append_2t_lcc_hvdc(hvdc);
 
     EQUIVALENT_DEVICE edevice(default_toolkit);
     edevice.set_equivalent_device_bus(1);
@@ -162,14 +162,14 @@ void METER_TEST::test_set_get_device_id_and_type()
     meter.set_device_id(did);
     TEST_ASSERT(meter.get_device_type()==STEPS_LOAD);
 
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     terminal.clear();
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
     meter.set_device_id(did);
-    TEST_ASSERT(meter.get_device_type()==STEPS_LINE);
+    TEST_ASSERT(meter.get_device_type()==STEPS_AC_LINE);
 
     did.set_device_type(STEPS_TRANSFORMER);
     terminal.clear();
@@ -196,14 +196,14 @@ void METER_TEST::test_set_get_device_id_and_type()
     meter.set_device_id(did);
     TEST_ASSERT(meter.get_device_type()==STEPS_WT_GENERATOR);
 
-    did.set_device_type(STEPS_HVDC);
+    did.set_device_type(STEPS_LCC_HVDC2T);
     terminal.clear();
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
     meter.set_device_id(did);
-    TEST_ASSERT(meter.get_device_type()==STEPS_HVDC);
+    TEST_ASSERT(meter.get_device_type()==STEPS_LCC_HVDC2T);
 }
 
 void METER_TEST::test_set_get_bus_meter_type()
@@ -237,7 +237,7 @@ void METER_TEST::test_set_get_line_meter_type()
     TERMINAL terminal;
     string meter_type;
 
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
@@ -347,7 +347,7 @@ void METER_TEST::test_set_get_hvdc_meter_type()
     TERMINAL terminal;
     string meter_type;
 
-    did.set_device_type(STEPS_HVDC);
+    did.set_device_type(STEPS_LCC_HVDC2T);
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
@@ -355,10 +355,10 @@ void METER_TEST::test_set_get_hvdc_meter_type()
 
     meter.set_device_id(did);
 
-    unsigned int n = hvdc_meters.size();
+    unsigned int n = lcc_hvdc2t_meters.size();
     for(unsigned int i=0; i!=n; ++i)
     {
-        meter_type = hvdc_meters[i];
+        meter_type = lcc_hvdc2t_meters[i];
         meter.set_meter_type(meter_type);
         TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
@@ -380,7 +380,7 @@ void METER_TEST::test_set_get_vsc_hvdc_meter_type()
 
     meter.set_device_id(did);
 
-    unsigned int n = hvdc_meters.size();
+    unsigned int n = vsc_hvdc_meters.size();
     for(unsigned int i=0; i!=n; ++i)
     {
         meter_type = vsc_hvdc_meters[i];
@@ -519,7 +519,7 @@ void METER_TEST::test_set_get_device_pointer()
     TEST_ASSERT(meter.get_device_pointer()->get_device_id()==did);
 
     meter.clear();
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     terminal.clear();
     terminal.append_bus(1);
     terminal.append_bus(2);
@@ -570,7 +570,7 @@ void METER_TEST::test_set_get_device_pointer()
     TEST_ASSERT(meter.get_device_pointer()->get_device_id()==did);
 
     meter.clear();
-    did.set_device_type(STEPS_HVDC);
+    did.set_device_type(STEPS_LCC_HVDC2T);
     terminal.clear();
     terminal.append_bus(1);
     terminal.append_bus(2);

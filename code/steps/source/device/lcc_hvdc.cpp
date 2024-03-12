@@ -769,7 +769,7 @@ void LCC_HVDC::solve_steady_state()
     }
 }
 
-void LCC_HVDC::show_solved_hvdc_steady_state() const
+void LCC_HVDC::show_solved_steady_state() const
 {
     STEPS& toolkit = get_toolkit();
     double sbase = toolkit.get_system_base_power_in_MVA();

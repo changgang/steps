@@ -16,9 +16,9 @@ enum STEPS_DEVICE_TYPE
     STEPS_SWITCHED_SHUNT = 7,
     STEPS_EQUIVALENT_DEVICE = 10,
     // devices connecting to multi buses
-    STEPS_LINE = 11,
+    STEPS_AC_LINE = 11,
     STEPS_TRANSFORMER = 12,
-    STEPS_HVDC = 13,
+    STEPS_LCC_HVDC2T = 13,
     STEPS_VSC_HVDC = 14,
     STEPS_FACTS = 15,
     STEPS_LCC_HVDC = 16,

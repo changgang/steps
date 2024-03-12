@@ -17,7 +17,7 @@ int api_get_vsc_hvdc_integer_data(char* vsc_name, char* device_type, char* param
     {
         string DEVICE_TYPE = string2upper(device_type);
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(DEVICE_TYPE == "PROJECT" or DEVICE_TYPE == "VSC HVDC PROJECT")
+        if(DEVICE_TYPE == "PROJECT" or DEVICE_TYPE == "VSC LCC_HVDC2T PROJECT")
         {
             if(PARAMETER_NAME == "VSC NUMBER" or PARAMETER_NAME == "CONVERTER COUNT")
                 return vsc_hvdc->get_converter_count();
@@ -124,7 +124,7 @@ void api_set_vsc_hvdc_integer_data(char* vsc_name, char* device_type, char* para
     {
         string DEVICE_TYPE = string2upper(device_type);
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(DEVICE_TYPE == "PROJECT" or DEVICE_TYPE == "VSC HVDC PROJECT")
+        if(DEVICE_TYPE == "PROJECT" or DEVICE_TYPE == "VSC LCC_HVDC2T PROJECT")
         {
             if(PARAMETER_NAME == "VSC NUMBER" or PARAMETER_NAME == "CONVERTER COUNT")
                 return vsc_hvdc->set_converter_count(value);
@@ -257,7 +257,7 @@ double api_get_vsc_hvdc_float_data(char* vsc_name, char* device_type, char* para
     {
         string DEVICE_TYPE = string2upper(device_type);
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(DEVICE_TYPE == "PROJECT" or DEVICE_TYPE == "VSC HVDC PROJECT")
+        if(DEVICE_TYPE == "PROJECT" or DEVICE_TYPE == "VSC LCC_HVDC2T PROJECT")
         {
             if(PARAMETER_NAME == "VDCBASE_KV" or PARAMETER_NAME == "DC BASE VOLTAGE IN KV")
                 return vsc_hvdc->get_dc_network_base_voltage_in_kV();
@@ -447,7 +447,7 @@ void api_set_vsc_hvdc_float_data(char* vsc_name, char* device_type, char* parame
     {
         string DEVICE_TYPE = string2upper(device_type);
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(DEVICE_TYPE == "PROJECT" or DEVICE_TYPE == "VSC HVDC PROJECT")
+        if(DEVICE_TYPE == "PROJECT" or DEVICE_TYPE == "VSC LCC_HVDC2T PROJECT")
         {
             if(PARAMETER_NAME == "VDCBASE_KV" or PARAMETER_NAME == "DC BASE VOLTAGE IN KV")
                 return vsc_hvdc->set_dc_network_base_voltage_in_kV(value);
@@ -644,7 +644,7 @@ const char* api_get_vsc_hvdc_string_data(char* vsc_name, char* device_type, char
     {
         string DEVICE_TYPE = string2upper(device_type);
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(DEVICE_TYPE == "PROJECT" or DEVICE_TYPE == "VSC HVDC PROJECT")
+        if(DEVICE_TYPE == "PROJECT" or DEVICE_TYPE == "VSC LCC_HVDC2T PROJECT")
         {
             if(PARAMETER_NAME == "NAME" or PARAMETER_NAME == "PROJECT NAME")
             {
@@ -703,7 +703,7 @@ void api_set_vsc_hvdc_string_data(char* vsc_name, char* device_type, char* param
     {
         string DEVICE_TYPE = string2upper(device_type);
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(DEVICE_TYPE == "PROJECT" or DEVICE_TYPE == "VSC HVDC PROJECT")
+        if(DEVICE_TYPE == "PROJECT" or DEVICE_TYPE == "VSC LCC_HVDC2T PROJECT")
         {
             if(PARAMETER_NAME == "NAME" or PARAMETER_NAME == "PROJECT NAME")
                 return vsc_hvdc->set_name(value);
@@ -746,7 +746,7 @@ bool api_get_vsc_hvdc_boolean_data(char* vsc_name, char* device_type, char* para
     {
         string DEVICE_TYPE = string2upper(device_type);
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(DEVICE_TYPE == "PROJECT" or DEVICE_TYPE == "VSC HVDC PROJECT")
+        if(DEVICE_TYPE == "PROJECT" or DEVICE_TYPE == "VSC LCC_HVDC2T PROJECT")
         {
             if(PARAMETER_NAME == "STATUS")
                 return vsc_hvdc->get_status();
@@ -783,7 +783,7 @@ void api_set_vsc_hvdc_boolean_data(char* vsc_name, char* device_type, char* para
     {
         string DEVICE_TYPE = string2upper(device_type);
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(DEVICE_TYPE == "PROJECT" or DEVICE_TYPE == "VSC HVDC PROJECT")
+        if(DEVICE_TYPE == "PROJECT" or DEVICE_TYPE == "VSC LCC_HVDC2T PROJECT")
         {
             if(PARAMETER_NAME == "STATUS")
                 return vsc_hvdc->set_status(value);

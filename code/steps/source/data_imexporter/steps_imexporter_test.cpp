@@ -28,7 +28,7 @@ STEPS_IMEXPORTER_TEST::STEPS_IMEXPORTER_TEST() : importer(default_toolkit)
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_line_data);
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_transformer_data);
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_area_data);
-    TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_hvdc_data);
+    TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_2t_lcc_hvdc_data);
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_vsc_hvdc_data);
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_zone_data);
     TEST_ADD(STEPS_IMEXPORTER_TEST::test_load_owner_data);
@@ -337,7 +337,7 @@ void STEPS_IMEXPORTER_TEST::test_load_line_data()
     TEST_ASSERT(n==30);
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     terminal.append_bus(151);
     terminal.append_bus(152);
@@ -496,12 +496,12 @@ void STEPS_IMEXPORTER_TEST::test_load_area_data()
         areas[i]->report();
 }
 
-void STEPS_IMEXPORTER_TEST::test_load_hvdc_data()
+void STEPS_IMEXPORTER_TEST::test_load_2t_lcc_hvdc_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"STEPS_IMEXPORTER_TEST");
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
     unsigned int n = hvdcs.size();
 
     TEST_ASSERT(n==2);

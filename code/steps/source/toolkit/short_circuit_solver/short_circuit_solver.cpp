@@ -680,7 +680,7 @@ void SHORT_CIRCUIT_SOLVER::set_line_fault(const DEVICE_ID& line_id, unsigned int
         return;
     }
 
-    if(line_id.get_device_type()==STEPS_LINE)
+    if(line_id.get_device_type()==STEPS_AC_LINE)
     {
         LINE* lineptr = psdb.get_line(line_id);
         if(lineptr!=NULL)

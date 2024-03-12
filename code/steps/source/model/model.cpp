@@ -96,8 +96,8 @@ void MODEL::destroy_manually_allocated_storage()
 void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_DEVICE_TYPE device_type)
 {
     if(device_type==STEPS_BUS or device_type==STEPS_GENERATOR or device_type==STEPS_WT_GENERATOR or
-       device_type==STEPS_PV_UNIT or device_type==STEPS_LOAD or device_type==STEPS_LINE or
-       device_type==STEPS_TRANSFORMER or device_type==STEPS_HVDC or device_type==STEPS_VSC_HVDC or
+       device_type==STEPS_PV_UNIT or device_type==STEPS_LOAD or device_type==STEPS_AC_LINE or
+       device_type==STEPS_TRANSFORMER or device_type==STEPS_LCC_HVDC2T or device_type==STEPS_VSC_HVDC or
        device_type==STEPS_FIXED_SHUNT or
        device_type==STEPS_SWITCHED_SHUNT or device_type==STEPS_EQUIVALENT_DEVICE or device_type==STEPS_ENERGY_STORAGE)
     {
@@ -327,19 +327,19 @@ void MODEL::set_device_id(DEVICE_ID did)
             default:
                 break;
         }
-        /*if(device_type=="LINE")
+        /*if(device_type==STEPS_AC_LINE)
         {
             sending_bus_pointer = ((LINE*) device_pointer)->get_sending_side_bus_pointer();
             receiving_bus_pointer = ((LINE*) device_pointer)->get_receiving_side_bus_pointer();
             return;
         }
-        if(device_type=="HVDC")
+        if(device_type==STEPS_LCC_HVDC2T)
         {
-            rectifier_bus_pointer = ((HVDC*) device_pointer)->get_bus_pointer(RECTIFIER);
-            inverter_bus_pointer = ((HVDC*) device_pointer)->get_bus_pointer(INVERTER);
+            rectifier_bus_pointer = ((LCC_HVDC2T*) device_pointer)->get_bus_pointer(RECTIFIER);
+            inverter_bus_pointer = ((LCC_HVDC2T*) device_pointer)->get_bus_pointer(INVERTER);
             return;
         }
-        if(device_type=="TRANSFORMER")
+        if(device_type==STEPS_TRANSFORMER)
         {
             primary_winding_bus_pointer = ((TRANSFORMER*) device_pointer)->get_winding_bus_pointer(PRIMARY_SIDE);
             secondary_winding_bus_pointer = ((TRANSFORMER*) device_pointer)->get_winding_bus_pointer(SECONDARY_SIDE);

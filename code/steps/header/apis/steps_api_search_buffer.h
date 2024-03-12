@@ -30,7 +30,7 @@ class STEPS_API_SEARCH_BUFFER
         unsigned int line_pointer;
         vector<TRANSFORMER*> transformers;
         unsigned int transformer_pointer;
-        vector<HVDC*> hvdcs;
+        vector<LCC_HVDC2T*> hvdcs;
         unsigned int hvdc_pointer;
         vector<VSC_HVDC*> vscs;
         unsigned int vsc_pointer;

@@ -31,7 +31,7 @@ int main()
     importer.load_powerflow_data("../../../bench/bench_shandong_change.raw");
     importer.load_dynamic_data("../../../bench/bench_shandong_change_with_gov.dyr");
 
-    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
     unsigned int n = hvdcs.size();
     for(unsigned int i=0; i!=n; ++i)
         hvdcs[i]->turn_rectifier_constant_power_mode_into_constant_current_mode();
@@ -58,7 +58,7 @@ int main()
     simulator.run_to(1.0);
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     terminal.append_bus(60);
     terminal.append_bus(62);

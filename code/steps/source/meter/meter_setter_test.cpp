@@ -122,7 +122,7 @@ void METER_SETTER_TEST::test_prepare_line_related_meters()
     DEVICE_ID did;
     TERMINAL terminal;
 
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
@@ -914,14 +914,14 @@ void METER_SETTER_TEST::test_prepare_hvdc_related_meters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_SETTER_TEST");
 
-    prepare_basic_hvdcs();
+    prepare_basic_2t_lcc_hvdcs();
 
     METER meter(default_toolkit);
 
     DEVICE_ID did;
     TERMINAL terminal;
 
-    did.set_device_type(STEPS_HVDC);
+    did.set_device_type(STEPS_LCC_HVDC2T);
     terminal.append_bus(1);
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
@@ -997,7 +997,7 @@ void METER_SETTER_TEST::test_prepare_hvdc_related_meters()
 
     meter = setter.prepare_hvdc_model_internal_variable_meter(did, "STATE@INVERTER DC VOLTAGE SENSOR");
     TEST_ASSERT(meter.get_device_id()==did);
-    TEST_ASSERT(meter.get_meter_type()=="HVDC MODEL INTERNAL VARIABLE");
+    TEST_ASSERT(meter.get_meter_type()=="2T LCC HVDC MODEL INTERNAL VARIABLE");
     TEST_ASSERT(meter.get_internal_variable_name()=="STATE@INVERTER DC VOLTAGE SENSOR");
 }
 
@@ -1071,7 +1071,7 @@ void METER_SETTER_TEST::test_prepare_vsc_hvdc_related_meters()
 
     meter = setter.prepare_vsc_hvdc_model_internal_variable_meter(did, 1);
     TEST_ASSERT(meter.get_device_id()==did);
-    TEST_ASSERT(meter.get_meter_type()=="VSC HVDC MODEL INTERNAL VARIABLE");
+    TEST_ASSERT(meter.get_meter_type()=="VSC LCC_HVDC2T MODEL INTERNAL VARIABLE");
     */
 
 }

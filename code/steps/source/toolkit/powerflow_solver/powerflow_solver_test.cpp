@@ -366,7 +366,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_full_Ne
     check_ISO_New_England_39_bus_model_powerflow_result();
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
@@ -584,7 +584,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_fast_de
     default_toolkit.close_log_file();
 
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);
@@ -1196,10 +1196,10 @@ void POWERFLOW_SOLVER_TEST::test_solve_Shandong_benchmark_100_bus_model_with_HVD
 
     importer.load_powerflow_data("../../../bench/bench_shandong.raw");
 
-    osstream<<"Solve with constant power HVDC links";
+    osstream<<"Solve with constant power LCC_HVDC2T links";
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
-    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
     unsigned int n = hvdcs.size();
     for(unsigned int i=0; i!=n; ++i)
     {
@@ -1218,7 +1218,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_Shandong_benchmark_100_bus_model_with_HVD
     powerflow_solver.solve_with_full_Newton_Raphson_solution();
     TEST_ASSERT(powerflow_solver.is_converged());
 
-    osstream<<"Solve with constant current HVDC links";
+    osstream<<"Solve with constant current LCC_HVDC2T links";
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     for(unsigned int i=0; i!=n; ++i)

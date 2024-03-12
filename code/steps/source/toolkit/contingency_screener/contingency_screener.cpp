@@ -60,7 +60,7 @@ void CONTINGENCY_SCREENER::set_dynamic_data_filename(string filename)
 
 void CONTINGENCY_SCREENER::set_fault_device(DEVICE_ID did)
 {
-    if(did.is_valid() and did.get_device_type()==STEPS_LINE)
+    if(did.is_valid() and did.get_device_type()==STEPS_AC_LINE)
         fault_device = did;
 }
 

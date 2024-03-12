@@ -313,7 +313,7 @@ DEVICE_ID STEPS_IMEXPORTER::get_load_device_id_from_string_vector(vector<string>
 DEVICE_ID STEPS_IMEXPORTER::get_line_device_id_from_string_vector(vector<string>& data)
 {
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
 
     if(data.size()<4)
         return did;
@@ -334,10 +334,10 @@ DEVICE_ID STEPS_IMEXPORTER::get_line_device_id_from_string_vector(vector<string>
 
     return did;
 }
-DEVICE_ID STEPS_IMEXPORTER::get_hvdc_device_id_from_string_vector(vector<string>& data)
+DEVICE_ID STEPS_IMEXPORTER::get_2t_lcc_hvdc_device_id_from_string_vector(vector<string>& data)
 {
     DEVICE_ID did;
-    did.set_device_type(STEPS_HVDC);
+    did.set_device_type(STEPS_LCC_HVDC2T);
 
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -350,8 +350,8 @@ DEVICE_ID STEPS_IMEXPORTER::get_hvdc_device_id_from_string_vector(vector<string>
     unsigned int i=1;
     hvdc_name = get_string_data(data[i], "0");
 
-    unsigned int n = psdb.get_hvdc_count();
-    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
+    unsigned int n = psdb.get_2t_lcc_hvdc_count();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
     for(unsigned int i=0; i!=n; ++i)
     {
         if(hvdc_name == hvdcs[i]->get_name())
@@ -1590,9 +1590,9 @@ void STEPS_IMEXPORTER::add_CDC4T_model(vector<string>& data)
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
-    DEVICE_ID did = get_hvdc_device_id_from_string_vector(data);
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id_from_string_vector(data);
 
-    HVDC* hvdc = psdb.get_hvdc(did);
+    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(did);
     if(hvdc != NULL)
     {
         CDC4T model(toolkit);
@@ -1620,9 +1620,9 @@ void STEPS_IMEXPORTER::add_CDC6T_model(vector<string>& data)
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
-    DEVICE_ID did = get_hvdc_device_id_from_string_vector(data);
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id_from_string_vector(data);
 
-    HVDC* hvdc = psdb.get_hvdc(did);
+    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(did);
     if(hvdc != NULL)
     {
         CDC6T model(toolkit);

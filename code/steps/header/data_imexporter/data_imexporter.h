@@ -54,7 +54,7 @@ class DATA_IMEXPORTER
         vector<unsigned int> get_all_pv_unit_buses();
         vector<unsigned int> get_all_energy_storage_buses();
         vector<unsigned int> get_all_load_buses();
-        vector<unsigned int> get_all_hvdc_buses();
+        vector<unsigned int> get_all_2t_lcc_hvdc_buses();
         vector<unsigned int> get_all_fixed_shunt_buses();
         void append_buses_to_ordered_buses(const vector<unsigned int>& buses, set<unsigned int>& existing_buses);
 

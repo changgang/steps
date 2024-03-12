@@ -161,7 +161,7 @@ void NETWORK_MATRIX_TEST::test_check_network_connectivity()
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     DEVICE_ID device_id;
-    device_id.set_device_type(STEPS_LINE);
+    device_id.set_device_type(STEPS_AC_LINE);
     device_id.set_device_identifier_index(get_index_of_string("1"));
     TERMINAL terminal;
     terminal.append_bus(4);
@@ -221,7 +221,7 @@ void NETWORK_MATRIX_TEST::test_get_islands()
     DEVICE_ID did;
     TERMINAL terminal;
 
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     terminal.clear();
     terminal.append_bus(4);
     terminal.append_bus(5);
@@ -241,7 +241,7 @@ void NETWORK_MATRIX_TEST::test_get_islands()
     n = islands_physical.size();
     TEST_ASSERT(n==1);
 
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     terminal.clear();
     terminal.append_bus(4);
     terminal.append_bus(6);
@@ -261,7 +261,7 @@ void NETWORK_MATRIX_TEST::test_get_islands()
     n = islands_physical.size();
     TEST_ASSERT(n==2);
 
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     terminal.clear();
     terminal.append_bus(7);
     terminal.append_bus(8);

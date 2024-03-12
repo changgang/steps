@@ -71,7 +71,7 @@ bool api_is_hvdc_exist(unsigned int ibus, unsigned int jbus, char* ickt, unsigne
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, ickt);
-    return psdb.is_hvdc_exist(did);
+    return psdb.is_2t_lcc_hvdc_exist(did);
 }
 
 bool api_is_vsc_hvdc_exist(char* vsc_name, unsigned int toolkit_index)

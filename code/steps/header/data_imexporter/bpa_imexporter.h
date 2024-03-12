@@ -67,7 +67,7 @@ class BPA_IMEXPORTER : public DATA_IMEXPORTER
         void load_wt_generator_data();
         void load_source_common_data();
         void load_transformer_data();
-        void load_hvdc_data();
+        void load_2t_lcc_hvdc_data();
 
         string export_case_data() const;
         string export_bus_data() const;
@@ -75,7 +75,7 @@ class BPA_IMEXPORTER : public DATA_IMEXPORTER
         string export_transformer_data() const;
         string export_two_winding_transformer(const TRANSFORMER* trans) const;
         string export_three_winding_transformer(const TRANSFORMER* trans) const;
-        string export_hvdc_data() const;
+        string export_2t_lcc_hvdc_data() const;
         string export_vsc_hvdc_data() const;
         string export_multi_terminal_hvdc_data() const;
         string export_switched_shunt_data() const;
@@ -90,7 +90,7 @@ class BPA_IMEXPORTER : public DATA_IMEXPORTER
         DEVICE_ID get_generator_device_id_from_string(string data);
         DEVICE_ID get_load_device_id_from_string(string data);
         DEVICE_ID get_line_device_id_from_string(string data);
-        DEVICE_ID get_hvdc_device_id_from_string(string data);
+        DEVICE_ID get_2t_lcc_hvdc_device_id_from_string(string data);
         DEVICE_ID get_transformer_device_id_from_string(string data);
 
 

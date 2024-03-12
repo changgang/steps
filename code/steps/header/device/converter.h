@@ -105,4 +105,4 @@ class CONVERTER
         double transformer_tap_step_in_pu;
         bool transformer_tap_fixed;
 };
-#endif // HVDC_H
+#endif // CONVERTER_H

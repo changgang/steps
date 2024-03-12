@@ -133,7 +133,7 @@ int main()
     */
     /*
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     terminal.append_bus(16);
     terminal.append_bus(21);
@@ -193,7 +193,7 @@ int main()
 
 /*
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     terminal.append_bus(82);
     terminal.append_bus(80);

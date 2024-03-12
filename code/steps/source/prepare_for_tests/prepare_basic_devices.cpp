@@ -500,7 +500,7 @@ void prepare_basic_fixed_shunts()
     psdb.append_fixed_shunt(shunt);
 }
 
-void prepare_basic_hvdcs()
+void prepare_basic_2t_lcc_hvdcs()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
@@ -508,11 +508,11 @@ void prepare_basic_hvdcs()
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
-    HVDC hvdc(default_toolkit);
+    LCC_HVDC2T hvdc(default_toolkit);
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
     hvdc.set_identifier("P");
-    psdb.append_hvdc(hvdc);
+    psdb.append_2t_lcc_hvdc(hvdc);
 
     DEVICE_ID did = hvdc.get_device_id();
 
@@ -524,7 +524,7 @@ void prepare_basic_hvdcs()
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
     hvdc.set_identifier("N");
-    psdb.append_hvdc(hvdc);
+    psdb.append_2t_lcc_hvdc(hvdc);
     did = hvdc.get_device_id();
     model.set_device_id(did);
     dmdb.add_model(&model);
@@ -532,7 +532,7 @@ void prepare_basic_hvdcs()
     hvdc.set_converter_bus(RECTIFIER, 2);
     hvdc.set_converter_bus(INVERTER, 3);
     hvdc.set_identifier("P");
-    psdb.append_hvdc(hvdc);
+    psdb.append_2t_lcc_hvdc(hvdc);
     did = hvdc.get_device_id();
     model.set_device_id(did);
     dmdb.add_model(&model);

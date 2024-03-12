@@ -554,7 +554,7 @@ void POWERFLOW_SOLVER::prepare_devices_for_solution()
 
     lines = psdb.get_all_lines();
     transformers = psdb.get_all_transformers();
-    hvdcs = psdb.get_all_hvdcs();
+    hvdcs = psdb.get_all_2t_lcc_hvdcs();
     vsc_hvdcs = psdb.get_all_vsc_hvdcs();
 
     e_devices = psdb.get_all_equivalent_devices();
@@ -1077,13 +1077,13 @@ bool POWERFLOW_SOLVER::is_nan_detected()
 }
 void POWERFLOW_SOLVER::try_to_solve_dc_system_steady_state()
 {
-    try_to_solve_hvdc_steady_state();
+    try_to_solve_2t_lcc_hvdc_steady_state();
     try_to_solve_vsc_hvdc_steady_state();
 }
 
-void POWERFLOW_SOLVER::try_to_solve_hvdc_steady_state()
+void POWERFLOW_SOLVER::try_to_solve_2t_lcc_hvdc_steady_state()
 {
-    //vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
+    //vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
     unsigned int nhvdc = hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
         set_openmp_number_of_threads(toolkit->get_thread_number());
@@ -1094,7 +1094,7 @@ void POWERFLOW_SOLVER::try_to_solve_hvdc_steady_state()
         if(hvdcs[i]->get_status()==true)
         {
             hvdcs[i]->solve_steady_state();
-            //hvdcs[i]->show_solved_hvdc_steady_state();
+            //hvdcs[i]->show_solved_steady_state();
         }
     }
 }
@@ -1414,7 +1414,7 @@ void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
     unsigned int nhvdc = hvdcs.size();
 
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit->get_hvdc_thread_number());
+        set_openmp_number_of_threads(toolkit->get_lcc_hvdc2t_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nhvdc; ++i)
@@ -1428,7 +1428,7 @@ void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
             unsigned int internal_bus_inv = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus_inv);
 
             //hvdcs[i]->solve_steady_state();
-            //hvdcs[i]->show_solved_hvdc_steady_state();
+            //hvdcs[i]->show_solved_steady_state();
 
             complex<double> S_rec = complex<double>(hvdcs[i]->get_converter_ac_active_power_in_MW(RECTIFIER), hvdcs[i]->get_converter_ac_reactive_power_in_MVar(RECTIFIER));
             complex<double> S_inv = complex<double>(hvdcs[i]->get_converter_ac_active_power_in_MW(INVERTER), -hvdcs[i]->get_converter_ac_reactive_power_in_MVar(INVERTER));
@@ -1452,7 +1452,7 @@ void POWERFLOW_SOLVER::add_vsc_hvdc_to_bus_power_mismatch()
     unsigned int nvsc = vsc_hvdcs.size();
 
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-        set_openmp_number_of_threads(toolkit->get_hvdc_thread_number());
+        set_openmp_number_of_threads(toolkit->get_vsc_hvdc_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
     for(unsigned int i=0; i<nvsc; ++i)
@@ -2429,7 +2429,7 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
         double Qerror0 = get_maximum_reactive_power_mismatch_in_MVar();
         for(unsigned int i=0; i<10; ++i)
         {
-            try_to_solve_hvdc_steady_state();
+            try_to_solve_2t_lcc_hvdc_steady_state();
             calculate_raw_bus_power_mismatch();
             double Perror = get_maximum_active_power_mismatch_in_MW();
             double Qerror = get_maximum_reactive_power_mismatch_in_MVar();
@@ -2546,7 +2546,7 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
     {
         for(unsigned int i=0; i<10; ++i)
         {
-            try_to_solve_hvdc_steady_state();
+            try_to_solve_2t_lcc_hvdc_steady_state();
             calculate_raw_bus_power_mismatch();
             double Qerror = get_maximum_reactive_power_mismatch_in_MVar();
             if(Qerror>Qerror0 and Qerror>get_allowed_max_reactive_power_imbalance_in_MVar())
@@ -2644,7 +2644,7 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
     {
         for(unsigned int i=0; i<10; ++i)
         {
-            try_to_solve_hvdc_steady_state();
+            try_to_solve_2t_lcc_hvdc_steady_state();
             calculate_raw_bus_power_mismatch();
             double Perror = get_maximum_active_power_mismatch_in_MW();
             if(Perror>Perror0 and Perror>get_allowed_max_active_power_imbalance_in_MW())
@@ -2980,7 +2980,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
             }
         }
 
-        //vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
+        //vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
         unsigned int nhvdc = hvdcs.size();
         if(nhvdc>0)
         {
@@ -3013,7 +3013,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
             file<<"% VSC HVDC"<<endl;
             for(unsigned int i=0; i!=nvsc; ++i)
             {
-                file<<"% VSC HVDC Project: "<<vsc_hvdcs[i]->get_name()<<endl;
+                file<<"% VSC LCC_HVDC2T Project: "<<vsc_hvdcs[i]->get_name()<<endl;
                 file<<"DCBUS,DCBUSNAME,ACBUS,VDC/KV,VAC/PU,P2AC/MW,Q2AC/PW,P2DC/MW,PGEN/MW,PLOAD/MW"<<endl;
                 unsigned int n_dc_bus = vsc_hvdcs[i]->get_dc_bus_count();
                 //cout<<"n_dc_bus :"<<n_dc_bus<<endl;
@@ -3246,7 +3246,7 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(const string& file
             }
         }
 
-        //vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
+        //vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
         unsigned int nhvdc = hvdcs.size();
         if(nhvdc>0)
         {
@@ -3284,7 +3284,7 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(const string& file
             file<<"% VSC HVDC"<<endl;
             for(unsigned int i=0; i!=nvsc; ++i)
             {
-                file<<"% VSC HVDC Project: "<<vsc_hvdcs[i]->get_name()<<endl;
+                file<<"% VSC LCC_HVDC2T Project: "<<vsc_hvdcs[i]->get_name()<<endl;
                 file<<"DCBUS,DCBUSNAME,ACBUS,VDC/KV,VAC/PU,P2AC/MW,Q2AC/PW,P2DC/MW,PGEN/MW,PLOAD/MW"<<endl;
                 unsigned int n_dc_bus = vsc_hvdcs[i]->get_dc_bus_count();
                 //cout<<"n_dc_bus :"<<n_dc_bus<<endl;
@@ -3427,7 +3427,7 @@ unsigned int POWERFLOW_SOLVER::get_memory_usage_in_bytes()
            loads.capacity()*sizeof(LOAD*)+
            lines.capacity()*sizeof(LINE*)+
            transformers.capacity()*sizeof(TRANSFORMER*)+
-           hvdcs.capacity()*sizeof(HVDC*)+
+           hvdcs.capacity()*sizeof(LCC_HVDC2T*)+
            e_devices.capacity()*sizeof(EQUIVALENT_DEVICE*)+
 
 

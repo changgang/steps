@@ -2244,7 +2244,7 @@ void VSC_HVDC::set_model(MODEL* model)
     if(model != NULL and model->has_allowed_device_type(STEPS_VSC_HVDC))
     {
         model->set_device_id(get_device_id());
-        if(model->get_model_type()=="VSC HVDC NETWORK")
+        if(model->get_model_type()=="VSC LCC_HVDC2T NETWORK")
         {
             set_vsc_hvdc_network_model((VSC_HVDC_NETWORK_MODEL*) model);
             model->allocate_model_variables();
@@ -2252,7 +2252,7 @@ void VSC_HVDC::set_model(MODEL* model)
             model->prepare_model_internal_variable_table();
             return;
         }
-        if(model->get_model_type()=="VSC HVDC CONVERTER")
+        if(model->get_model_type()=="VSC LCC_HVDC2T CONVERTER")
         {
             set_vsc_hvdc_converter_model((VSC_HVDC_CONVERTER_MODEL*) model);
             model->allocate_model_variables();
@@ -2261,7 +2261,7 @@ void VSC_HVDC::set_model(MODEL* model)
             return;
         }
         ostringstream osstream;
-        osstream<<"Waring. VSC HVDC model is not given to set dynamic model for "<<get_compound_device_name();
+        osstream<<"Waring. VSC LCC_HVDC2T model is not given to set dynamic model for "<<get_compound_device_name();
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
@@ -2270,9 +2270,9 @@ void VSC_HVDC::set_model(MODEL* model)
 MODEL* VSC_HVDC::get_model_of_type(string model_type, unsigned int index)
 {
     model_type = string2upper(model_type);
-    if(model_type=="VSC HVDC PROJECT")
+    if(model_type=="VSC LCC_HVDC2T PROJECT")
         return get_vsc_hvdc_network_model();
-    if(model_type=="VSC HVDC CONVERTER")
+    if(model_type=="VSC LCC_HVDC2T CONVERTER")
     {
         if(not converter_index_is_out_of_range_in_function(index,__FUNCTION__))
             return get_vsc_hvdc_converter_model(index);

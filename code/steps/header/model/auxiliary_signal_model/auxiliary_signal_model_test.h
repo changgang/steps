@@ -23,7 +23,7 @@ class AUXILIARY_SIGNAL_MODEL_TEST : public Test::Suite
         virtual void setup();
         virtual void tear_down();
     protected:
-        HVDC* get_hvdc();
+        LCC_HVDC2T* get_2t_lcc_hvdc();
         void apply_voltage_drop_of_10_percent();
         void run_step_response_of_exciter_model(AUXILIARY_SIGNAL_MODEL* model);
 
@@ -36,7 +36,7 @@ class AUXILIARY_SIGNAL_MODEL_TEST : public Test::Suite
         virtual void test_step_response() = 0;
         virtual void test_get_standard_psse_string() = 0;
     private:
-        HVDC* hvdcptr;
+        LCC_HVDC2T* hvdcptr;
 };
 
 #endif//AUXILIARY_SIGNAL_MODEL_TEST_H

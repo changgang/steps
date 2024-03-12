@@ -554,7 +554,7 @@ void LINE_TEST::test_get_device_id()
     DEVICE_ID did = line.get_device_id();
 
     DEVICE_ID did2;
-    did2.set_device_type(STEPS_LINE);
+    did2.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
     terminal.append_bus(1);
     terminal.append_bus(2);

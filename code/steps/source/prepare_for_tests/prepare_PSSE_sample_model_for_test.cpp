@@ -11,7 +11,7 @@ void prepare_psse_sample_model()
     prepare_psse_sample_model_transformers();
     prepare_psse_sample_model_fixed_shunts();
     prepare_psse_sample_model_switched_shunts();
-    prepare_psse_sample_model_hvdcs();
+    prepare_psse_sample_model_2t_lcc_hvdcs();
     prepare_psse_sample_model_areas();
     prepare_psse_sample_model_zones();
     prepare_psse_sample_model_owners();
@@ -164,11 +164,11 @@ void prepare_psse_sample_model_switched_shunts()
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-void prepare_psse_sample_model_hvdcs()
+void prepare_psse_sample_model_2t_lcc_hvdcs()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    HVDC hvdc(default_toolkit);
-    psdb.append_hvdc(hvdc);
+    LCC_HVDC2T hvdc(default_toolkit);
+    psdb.append_2t_lcc_hvdc(hvdc);
 }
 
 void prepare_psse_sample_model_areas()

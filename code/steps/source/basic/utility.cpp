@@ -1050,12 +1050,12 @@ string device_type2string(STEPS_DEVICE_TYPE device_type)
             return "SWITCHED SHUNT";
         case STEPS_EQUIVALENT_DEVICE:
             return "EQUIVALENT DEVICE";
-        case STEPS_LINE:
-            return "LINE";
+        case STEPS_AC_LINE:
+            return "AC LINE";
         case STEPS_TRANSFORMER:
             return "TRANSFORMER";
-        case STEPS_HVDC:
-            return "HVDC";
+        case STEPS_LCC_HVDC2T:
+            return "2T LCC HVDC";
         case STEPS_VSC_HVDC:
             return "VSC HVDC";
         case STEPS_FACTS:

@@ -327,7 +327,7 @@ unsigned int DYNAMICS_SIMULATOR::get_memory_usage_in_bytes()
            e_storages.capacity()*sizeof(ENERGY_STORAGE*)+
            loads.capacity()*sizeof(LOAD*)+
            lines.capacity()*sizeof(LINE*)+
-           hvdcs.capacity()*sizeof(HVDC*)+
+           hvdcs.capacity()*sizeof(LCC_HVDC2T*)+
            vsc_hvdcs.capacity()*sizeof(VSC_HVDC*)+
            e_devices.capacity()*sizeof(EQUIVALENT_DEVICE*)+
 
@@ -954,7 +954,7 @@ void DYNAMICS_SIMULATOR::prepare_devices_for_run()
     loads = psdb.get_all_loads();
 
     lines = psdb.get_all_lines();
-    hvdcs = psdb.get_all_hvdcs();
+    hvdcs = psdb.get_all_2t_lcc_hvdcs();
 
     vsc_hvdcs = psdb.get_all_vsc_hvdcs();
 
@@ -1289,21 +1289,21 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 
     n = hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_hvdc_thread_number());
+        //set_openmp_number_of_threads(toolkit->get_lcc_hvdc2t_thread_number());
         set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
     {
-        HVDC* hvdc = hvdcs[i];
+        LCC_HVDC2T* hvdc = hvdcs[i];
         if(hvdc->get_status()==true)
             hvdc->run(mode);
     }
 
     n = vsc_hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_hvdc_thread_number());
+        //set_openmp_number_of_threads(toolkit->get_lcc_hvdc2t_thread_number());
         set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
@@ -1666,7 +1666,7 @@ void DYNAMICS_SIMULATOR::solve_hvdcs_without_integration()
 {
     unsigned int n = hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_hvdc_thread_number());
+        //set_openmp_number_of_threads(toolkit->get_lcc_hvdc2t_thread_number());
         set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
@@ -1683,7 +1683,7 @@ void DYNAMICS_SIMULATOR::update_vsc_hvdcs_converter_model()
 {
     unsigned int n = vsc_hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_hvdc_thread_number());
+        //set_openmp_number_of_threads(toolkit->get_lcc_hvdc2t_thread_number());
         set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
@@ -2185,14 +2185,14 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
     unsigned int nhvdc = hvdcs.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_hvdc_thread_number());
+        set_openmp_number_of_threads(toolkit->get_lcc_hvdc2t_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<nhvdc; ++i)
     {
         complex<double> I;
-        HVDC* hvdc = hvdcs[i];
+        LCC_HVDC2T* hvdc = hvdcs[i];
         if(hvdc->get_status()==true)
         {
             unsigned int physical_bus = hvdcs[i]->get_converter_bus(RECTIFIER);
@@ -2247,7 +2247,7 @@ void DYNAMICS_SIMULATOR::add_vsc_hvdcs_to_bus_current_mismatch()
     unsigned int nvsc = vsc_hvdcs.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_hvdc_thread_number());
+        set_openmp_number_of_threads(toolkit->get_lcc_hvdc2t_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2934,7 +2934,7 @@ void DYNAMICS_SIMULATOR::set_line_fault(const DEVICE_ID& line_id, unsigned int s
 {
     ostringstream osstream;
 
-    if(line_id.get_device_type()==STEPS_LINE)
+    if(line_id.get_device_type()==STEPS_AC_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         LINE* lineptr = psdb.get_line(line_id);
@@ -3009,7 +3009,7 @@ void DYNAMICS_SIMULATOR::clear_line_fault(const DEVICE_ID& line_id, unsigned int
 {
     ostringstream osstream;
 
-    if(line_id.get_device_type()==STEPS_LINE)
+    if(line_id.get_device_type()==STEPS_AC_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         LINE* lineptr = psdb.get_line(line_id);
@@ -3072,7 +3072,7 @@ void DYNAMICS_SIMULATOR::trip_line(const DEVICE_ID& line_id)
 {
     ostringstream osstream;
 
-    if(line_id.get_device_type()==STEPS_LINE)
+    if(line_id.get_device_type()==STEPS_AC_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         LINE* lineptr = psdb.get_line(line_id);
@@ -3117,7 +3117,7 @@ void DYNAMICS_SIMULATOR::trip_line_breaker(const DEVICE_ID& line_id, unsigned in
 {
     ostringstream osstream;
 
-    if(line_id.get_device_type()==STEPS_LINE)
+    if(line_id.get_device_type()==STEPS_AC_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         LINE* lineptr = psdb.get_line(line_id);
@@ -3172,7 +3172,7 @@ void DYNAMICS_SIMULATOR::close_line(const DEVICE_ID& line_id)
 {
     ostringstream osstream;
 
-    if(line_id.get_device_type()==STEPS_LINE)
+    if(line_id.get_device_type()==STEPS_AC_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         LINE* lineptr = psdb.get_line(line_id);
@@ -3211,7 +3211,7 @@ void DYNAMICS_SIMULATOR::close_line_breaker(const DEVICE_ID& line_id, unsigned i
 {
     ostringstream osstream;
 
-    if(line_id.get_device_type()==STEPS_LINE)
+    if(line_id.get_device_type()==STEPS_AC_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         LINE* lineptr = psdb.get_line(line_id);
@@ -3918,7 +3918,7 @@ void DYNAMICS_SIMULATOR::manual_bypass_hvdc(const DEVICE_ID& hvdc_id)
     ostringstream osstream;
 
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    HVDC* hvdc = psdb.get_hvdc(hvdc_id);
+    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(hvdc_id);
     if(hvdc!=NULL)
     {
         HVDC_MODEL* model = hvdc->get_hvdc_model();
@@ -3931,7 +3931,7 @@ void DYNAMICS_SIMULATOR::manual_unbypass_hvdc(const DEVICE_ID& hvdc_id)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    HVDC* hvdc = psdb.get_hvdc(hvdc_id);
+    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(hvdc_id);
     if(hvdc!=NULL)
     {
         HVDC_MODEL* model = hvdc->get_hvdc_model();
@@ -3944,7 +3944,7 @@ void DYNAMICS_SIMULATOR::manual_block_hvdc(const DEVICE_ID& hvdc_id)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    HVDC* hvdc = psdb.get_hvdc(hvdc_id);
+    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(hvdc_id);
 
     if(hvdc!=NULL)
     {
@@ -3958,7 +3958,7 @@ void DYNAMICS_SIMULATOR::manual_unblock_hvdc(const DEVICE_ID& hvdc_id)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    HVDC* hvdc = psdb.get_hvdc(hvdc_id);
+    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(hvdc_id);
     if(hvdc!=NULL)
     {
         HVDC_MODEL* model = hvdc->get_hvdc_model();
@@ -4218,7 +4218,7 @@ void DYNAMICS_SIMULATOR::change_generator_mechanical_power_in_MW(const DEVICE_ID
 double DYNAMICS_SIMULATOR::get_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id)
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    HVDC* hvdc = psdb.get_hvdc(hvdc_id);
+    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(hvdc_id);
     if(hvdc != NULL)
         return hvdc->get_nominal_dc_power_in_MW();
     else
@@ -4228,7 +4228,7 @@ double DYNAMICS_SIMULATOR::get_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id)
 void DYNAMICS_SIMULATOR::change_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id, double porder)
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    HVDC* hvdc = psdb.get_hvdc(hvdc_id);
+    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(hvdc_id);
     if(hvdc != NULL)
     {
         hvdc->set_nominal_dc_power_in_MW(porder);

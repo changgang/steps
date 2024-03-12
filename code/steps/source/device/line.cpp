@@ -674,7 +674,7 @@ LINE& LINE::operator=(const LINE& line)
 DEVICE_ID LINE::get_device_id() const
 {
     DEVICE_ID did;
-    did.set_device_type(STEPS_LINE);
+    did.set_device_type(STEPS_AC_LINE);
 
     TERMINAL terminal;
     terminal.append_bus(get_sending_side_bus());

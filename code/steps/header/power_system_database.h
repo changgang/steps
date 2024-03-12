@@ -55,7 +55,7 @@ class POWER_SYSTEM_DATABASE
         unsigned int get_fixed_shunt_capacity() const;
         unsigned int get_line_capacity() const;
         unsigned int get_transformer_capacity() const;
-        unsigned int get_hvdc_capacity() const;
+        unsigned int get_2t_lcc_hvdc_capacity() const;
         unsigned int get_vsc_hvdc_capacity() const;
         unsigned int get_equivalent_device_capacity() const;
         unsigned int get_energy_storage_capacity() const;
@@ -72,7 +72,7 @@ class POWER_SYSTEM_DATABASE
         void set_fixed_shunt_capacity(unsigned int n);
         void set_line_capacity(unsigned int n);
         void set_transformer_capacity(unsigned int n);
-        void set_hvdc_capacity(unsigned int n);
+        void set_2t_lcc_hvdc_capacity(unsigned int n);
         void set_vsc_hvdc_capacity(unsigned int n);
         void set_equivalent_device_capacity(unsigned int n);
         void set_energy_storage_capacity(unsigned int n);
@@ -107,7 +107,7 @@ class POWER_SYSTEM_DATABASE
         void append_line(LINE& line);
         void append_transformer(TRANSFORMER& transformer);
         void append_fixed_shunt(FIXED_SHUNT& shunt);
-        void append_hvdc(HVDC& hvdc);
+        void append_2t_lcc_hvdc(LCC_HVDC2T& hvdc);
         void append_vsc_hvdc(VSC_HVDC& vsc_hvdc);
         void append_equivalent_device(EQUIVALENT_DEVICE& edevice);
         void append_lcc_hvdc(LCC_HVDC& hvdc);
@@ -128,7 +128,7 @@ class POWER_SYSTEM_DATABASE
         bool is_line_exist(const DEVICE_ID& device_id) const;
         bool is_transformer_exist(const DEVICE_ID& device_id) const;
         bool is_fixed_shunt_exist(const DEVICE_ID& device_id) const;
-        bool is_hvdc_exist(const DEVICE_ID& device_id) const;
+        bool is_2t_lcc_hvdc_exist(const DEVICE_ID& device_id) const;
         bool is_vsc_hvdc_exist(const DEVICE_ID& device_id) const;
         bool is_vsc_hvdc_exist(const string vsc_name) const;
         bool is_equivalent_device_exist(const DEVICE_ID& device_id) const;
@@ -153,7 +153,7 @@ class POWER_SYSTEM_DATABASE
         LINE* get_line(const DEVICE_ID & device_id);
         TRANSFORMER* get_transformer(const DEVICE_ID & device_id);
         FIXED_SHUNT* get_fixed_shunt(const DEVICE_ID & device_id);
-        HVDC* get_hvdc(const DEVICE_ID & device_id);
+        LCC_HVDC2T* get_2t_lcc_hvdc(const DEVICE_ID & device_id);
         VSC_HVDC* get_vsc_hvdc(const DEVICE_ID & device_id);
         VSC_HVDC* get_vsc_hvdc(string name);
         EQUIVALENT_DEVICE* get_equivalent_device(const DEVICE_ID & device_id);
@@ -172,7 +172,7 @@ class POWER_SYSTEM_DATABASE
         vector<LINE*> get_lines_connecting_to_bus(const unsigned int bus);
         vector<TRANSFORMER*> get_transformers_connecting_to_bus(const unsigned int bus);
         vector<FIXED_SHUNT*> get_fixed_shunts_connecting_to_bus(const unsigned int bus);
-        vector<HVDC*> get_hvdcs_connecting_to_bus(const unsigned int bus);
+        vector<LCC_HVDC2T*> get_2t_lcc_hvdcs_connecting_to_bus(const unsigned int bus);
         vector<VSC_HVDC*> get_vsc_hvdcs_connecting_to_bus(const unsigned int bus);
         vector<EQUIVALENT_DEVICE*> get_equivalent_devices_connecting_to_bus(const unsigned int bus);
         vector<ENERGY_STORAGE*> get_energy_storages_connecting_to_bus(const unsigned int bus);
@@ -188,7 +188,7 @@ class POWER_SYSTEM_DATABASE
         vector<DEVICE_ID> get_lines_device_id_connecting_to_bus(const unsigned int bus);
         vector<DEVICE_ID> get_transformers_device_id_connecting_to_bus(const unsigned int bus);
         vector<DEVICE_ID> get_fixed_shunts_device_id_connecting_to_bus(const unsigned int bus);
-        vector<DEVICE_ID> get_hvdcs_device_id_connecting_to_bus(const unsigned int bus);
+        vector<DEVICE_ID> get_2t_lcc_hvdcs_device_id_connecting_to_bus(const unsigned int bus);
         vector<DEVICE_ID> get_vsc_hvdcs_device_id_connecting_to_bus(const unsigned int bus);
         vector<DEVICE_ID> get_equivalent_devices_device_id_connecting_to_bus(const unsigned int bus);
         vector<DEVICE_ID> get_energy_storages_device_id_connecting_to_bus(const unsigned int bus);
@@ -204,7 +204,7 @@ class POWER_SYSTEM_DATABASE
         vector<LINE*> get_lines_in_area(const unsigned int area);
         vector<TRANSFORMER*> get_transformers_in_area(const unsigned int area);
         vector<FIXED_SHUNT*> get_fixed_shunts_in_area(const unsigned int area);
-        vector<HVDC*> get_hvdcs_in_area(const unsigned int area);
+        vector<LCC_HVDC2T*> get_2t_lcc_hvdcs_in_area(const unsigned int area);
         vector<VSC_HVDC*> get_vsc_hvdcs_in_area(const unsigned int area);
         vector<EQUIVALENT_DEVICE*> get_equivalent_devices_in_area(const unsigned int area);
         vector<ENERGY_STORAGE*> get_energy_storages_in_area(const unsigned int area);
@@ -220,7 +220,7 @@ class POWER_SYSTEM_DATABASE
         vector<DEVICE_ID> get_lines_device_id_in_area(const unsigned int area);
         vector<DEVICE_ID> get_transformers_device_id_in_area(const unsigned int area);
         vector<DEVICE_ID> get_fixed_shunts_device_id_in_area(const unsigned int area);
-        vector<DEVICE_ID> get_hvdcs_device_id_in_area(const unsigned int area);
+        vector<DEVICE_ID> get_2t_lcc_hvdcs_device_id_in_area(const unsigned int area);
         vector<DEVICE_ID> get_vsc_hvdcs_device_id_in_area(const unsigned int area);
         vector<DEVICE_ID> get_equivalent_devices_device_id_in_area(const unsigned int area);
         vector<DEVICE_ID> get_energy_storages_device_id_in_area(const unsigned int area);
@@ -236,7 +236,7 @@ class POWER_SYSTEM_DATABASE
         vector<LINE*> get_lines_in_zone(const unsigned int zone);
         vector<TRANSFORMER*> get_transformers_in_zone(const unsigned int zone);
         vector<FIXED_SHUNT*> get_fixed_shunts_in_zone(const unsigned int zone);
-        vector<HVDC*> get_hvdcs_in_zone(const unsigned int zone);
+        vector<LCC_HVDC2T*> get_2t_lcc_hvdcs_in_zone(const unsigned int zone);
         vector<VSC_HVDC*> get_vsc_hvdcs_in_zone(const unsigned int zone);
         vector<EQUIVALENT_DEVICE*> get_equivalent_devices_in_zone(const unsigned int zone);
         vector<ENERGY_STORAGE*> get_energy_storages_in_zone(const unsigned int zone);
@@ -252,7 +252,7 @@ class POWER_SYSTEM_DATABASE
         vector<DEVICE_ID> get_lines_device_id_in_zone(const unsigned int zone);
         vector<DEVICE_ID> get_transformers_device_id_in_zone(const unsigned int zone);
         vector<DEVICE_ID> get_fixed_shunts_device_id_in_zone(const unsigned int zone);
-        vector<DEVICE_ID> get_hvdcs_device_id_in_zone(const unsigned int zone);
+        vector<DEVICE_ID> get_2t_lcc_hvdcs_device_id_in_zone(const unsigned int zone);
         vector<DEVICE_ID> get_vsc_hvdcs_device_id_in_zone(const unsigned int zone);
         vector<DEVICE_ID> get_equivalent_devices_device_id_in_zone(const unsigned int zone);
         vector<DEVICE_ID> get_energy_storages_device_id_in_zone(const unsigned int zone);
@@ -270,7 +270,7 @@ class POWER_SYSTEM_DATABASE
         vector<LINE*> get_all_lines();
         vector<TRANSFORMER*> get_all_transformers();
         vector<FIXED_SHUNT*> get_all_fixed_shunts();
-        vector<HVDC*> get_all_hvdcs();
+        vector<LCC_HVDC2T*> get_all_2t_lcc_hvdcs();
         vector<VSC_HVDC*> get_all_vsc_hvdcs();
         vector<EQUIVALENT_DEVICE*> get_all_equivalent_devices();
         vector<ENERGY_STORAGE*> get_all_energy_storages();
@@ -291,7 +291,7 @@ class POWER_SYSTEM_DATABASE
         vector<DEVICE_ID> get_all_lines_device_id();
         vector<DEVICE_ID> get_all_transformers_device_id();
         vector<DEVICE_ID> get_all_fixed_shunts_device_id();
-        vector<DEVICE_ID> get_all_hvdcs_device_id();
+        vector<DEVICE_ID> get_all_2t_lcc_hvdcs_device_id();
         vector<DEVICE_ID> get_all_vsc_hvdcs_device_id();
         vector<DEVICE_ID> get_all_equivalent_devices_device_id();
         vector<DEVICE_ID> get_all_energy_storages_device_id();
@@ -311,7 +311,7 @@ class POWER_SYSTEM_DATABASE
         unsigned int get_line_count() const;
         unsigned int get_transformer_count() const;
         unsigned int get_fixed_shunt_count() const;
-        unsigned int get_hvdc_count() const;
+        unsigned int get_2t_lcc_hvdc_count() const;
         unsigned int get_vsc_hvdc_count() const;
         unsigned int get_switched_shunt_count() const;
         unsigned int get_equivalent_device_count() const;
@@ -330,7 +330,7 @@ class POWER_SYSTEM_DATABASE
         unsigned int get_line_index(const DEVICE_ID & device_id) const;
         unsigned int get_transformer_index(const DEVICE_ID & device_id) const;
         unsigned int get_fixed_shunt_index(const DEVICE_ID & device_id) const;
-        unsigned int get_hvdc_index(const DEVICE_ID & device_id) const;
+        unsigned int get_2t_lcc_hvdc_index(const DEVICE_ID & device_id) const;
         unsigned int get_vsc_hvdc_index(const DEVICE_ID & device_id) const;
         unsigned int get_vsc_hvdc_index(const string vsc_name) const;
         unsigned int get_equivalent_device_index(const DEVICE_ID & device_id) const;
@@ -359,7 +359,7 @@ class POWER_SYSTEM_DATABASE
         void check_all_fixed_shunts();
         void check_all_lines();
         void check_all_transformers();
-        void check_all_hvdcs();
+        void check_all_2t_lcc_hvdcs();
         void check_all_vsc_hvdcs();
         void check_all_equivalent_devices();
         void check_all_energy_storages();
@@ -375,7 +375,7 @@ class POWER_SYSTEM_DATABASE
         void check_energy_storage_related_dynamic_data();
         void check_load_related_dynamic_data();
         void check_line_related_dynamic_data();
-        void check_hvdc_related_dynamic_data();
+        void check_2t_lcc_hvdc_related_dynamic_data();
         void check_vsc_hvdc_related_dynamic_data();
         void check_equivalent_device_related_dynamic_data();
         void check_lcc_hvdc_related_dynamic_data();
@@ -387,7 +387,7 @@ class POWER_SYSTEM_DATABASE
         void check_missing_energy_storage_related_model();
         void check_missing_load_related_model();
         void check_missing_line_related_model();
-        void check_missing_hvdc_related_model();
+        void check_missing_2t_lcc_hvdc_related_model();
         void check_missing_vsc_hvdc_related_model();
         void check_missing_equivalent_device_related_model();
         void check_missing_lcc_hvdc_related_model();
@@ -463,9 +463,9 @@ class POWER_SYSTEM_DATABASE
         void clear_fixed_shunts_connecting_to_bus(const unsigned int bus);
         void clear_all_fixed_shunts();
 
-        void clear_hvdc(const DEVICE_ID& device_id);
-        void clear_hvdcs_connecting_to_bus(const unsigned int bus);
-        void clear_all_hvdcs();
+        void clear_2t_lcc_hvdc(const DEVICE_ID& device_id);
+        void clear_2t_lcc_hvdcs_connecting_to_bus(const unsigned int bus);
+        void clear_all_2t_lcc_hvdcs();
 
         void clear_vsc_hvdc(const DEVICE_ID& device_id);
         void clear_vsc_hvdc(const string vsc_name);
@@ -554,7 +554,7 @@ class POWER_SYSTEM_DATABASE
         void check_fixed_shunt_status_for_out_of_service_bus(unsigned int bus);
         void check_line_status_for_out_of_service_bus(unsigned int bus);
         void check_transformer_status_for_out_of_service_bus(unsigned int bus);
-        void check_hvdc_status_for_out_of_service_bus(unsigned int bus);
+        void check_2t_lcc_hvdc_status_for_out_of_service_bus(unsigned int bus);
         void check_vsc_hvdc_status_for_out_of_service_bus(unsigned int bus);
         void check_lcc_hvdc_status_for_out_of_service_bus(unsigned int bus);
 
@@ -573,7 +573,7 @@ class POWER_SYSTEM_DATABASE
         vector<LINE> Line;
         vector<TRANSFORMER> Transformer;
         vector<FIXED_SHUNT> Fixed_shunt;
-        vector<HVDC> Hvdc;
+        vector<LCC_HVDC2T> Lcc_hvdc2t;
         vector<VSC_HVDC> Vsc_hvdc;
         vector<EQUIVALENT_DEVICE> Equivalent_device;
         vector<ENERGY_STORAGE> Energy_storage;

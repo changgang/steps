@@ -37,4 +37,4 @@ class CONVERTER_STATION
         string name;
         CONVERTER_SIDE side;
 };
-#endif // HVDC_H
+#endif // CONVERTER_STATION_H

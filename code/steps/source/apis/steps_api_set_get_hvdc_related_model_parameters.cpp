@@ -11,7 +11,7 @@ const char* api_get_hvdc_related_model_name(unsigned int ibus, unsigned int jbus
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    HVDC* hvdc = psdb.get_hvdc(did);
+    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(did);
     if(hvdc==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -19,7 +19,7 @@ const char* api_get_hvdc_related_model_name(unsigned int ibus, unsigned int jbus
     }
 
     string MODEL_TYPE = string2upper(model_type);
-    if(MODEL_TYPE=="HVDC")
+    if(MODEL_TYPE=="2T LCC HVDC")
     {
         HVDC_MODEL* model = hvdc->get_hvdc_model();
         if(model!=NULL)
@@ -35,7 +35,7 @@ double api_get_hvdc_related_model_float_parameter(unsigned int ibus, unsigned in
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    HVDC* hvdc = psdb.get_hvdc(did);
+    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(did);
     if(hvdc==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -43,7 +43,7 @@ double api_get_hvdc_related_model_float_parameter(unsigned int ibus, unsigned in
     }
     string MODEL_TYPE = string2upper(model_type);
     string PARAMETER_NAME = string2upper(parameter_name);
-    if(MODEL_TYPE=="HVDC")
+    if(MODEL_TYPE=="2T LCC HVDC")
     {
         HVDC_MODEL* model = hvdc->get_hvdc_model();
         if(model!=NULL)
@@ -60,7 +60,7 @@ void api_set_hvdc_related_model_float_parameter(unsigned int ibus, unsigned int 
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    HVDC* hvdc = psdb.get_hvdc(did);
+    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(did);
     if(hvdc==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -68,7 +68,7 @@ void api_set_hvdc_related_model_float_parameter(unsigned int ibus, unsigned int 
     }
     string MODEL_TYPE = string2upper(model_type);
     string PARAMETER_NAME = string2upper(parameter_name);
-    if(MODEL_TYPE=="HVDC")
+    if(MODEL_TYPE=="2T LCC HVDC")
     {
         HVDC_MODEL* model = hvdc->get_hvdc_model();
         if(model!=NULL)
@@ -84,14 +84,14 @@ unsigned int api_get_hvdc_related_model_float_parameter_count(unsigned int ibus,
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    HVDC* hvdc = psdb.get_hvdc(did);
+    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(did);
     if(hvdc==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
         return 0;
     }
     string MODEL_TYPE = string2upper(model_type);
-    if(MODEL_TYPE=="HVDC")
+    if(MODEL_TYPE=="2T LCC HVDC")
     {
         HVDC_MODEL* model = hvdc->get_hvdc_model();
         if(model!=NULL)
@@ -108,7 +108,7 @@ const char* api_get_hvdc_related_model_float_parameter_name(unsigned int ibus, u
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    HVDC* hvdc = psdb.get_hvdc(did);
+    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(did);
     string name = "";
     if(hvdc==NULL)
     {
@@ -117,7 +117,7 @@ const char* api_get_hvdc_related_model_float_parameter_name(unsigned int ibus, u
         return toolkit.steps_char_buffer;
     }
     string MODEL_TYPE = string2upper(model_type);
-    if(MODEL_TYPE=="HVDC")
+    if(MODEL_TYPE=="2T LCC HVDC")
     {
         HVDC_MODEL* model = hvdc->get_hvdc_model();
         if(model!=NULL)

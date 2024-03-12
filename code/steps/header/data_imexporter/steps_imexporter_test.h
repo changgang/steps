@@ -33,7 +33,7 @@ class STEPS_IMEXPORTER_TEST : public Test::Suite
         void test_load_line_data();
         void test_load_transformer_data();
         void test_load_area_data();
-        void test_load_hvdc_data();
+        void test_load_2t_lcc_hvdc_data();
         void test_load_vsc_hvdc_data();
         void test_load_zone_data();
         void test_load_owner_data();

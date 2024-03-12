@@ -61,7 +61,7 @@ void ARXL::set_output_line(DEVICE_ID did, unsigned int meter_side)
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
 
-    if(did.get_device_type()!=STEPS_LINE)
+    if(did.get_device_type()!=STEPS_AC_LINE)
     {
         osstream<<"Warning. The output device (of type "<<did.get_device_type()<<") is not a LINE when setting up output line for ARXL model.";
         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -596,7 +596,7 @@ string ARXL::get_meter_string(const METER& meter) const
     STEPS_DEVICE_TYPE device_type = meter.get_device_id().get_device_type();
     switch(device_type)
     {
-        case STEPS_LINE:
+        case STEPS_AC_LINE:
             return get_line_meter_string(meter);
         case STEPS_TRANSFORMER:
             return get_transformer_meter_string(meter);
