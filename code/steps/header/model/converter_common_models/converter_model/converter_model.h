@@ -1,15 +1,15 @@
-#ifndef SOURCE_CONVERTER_MODEL_H
-#define SOURCE_CONVERTER_MODEL_H
+#ifndef CONVERTER_MODEL_H
+#define CONVERTER_MODEL_H
 
 #include "header/STEPS.h"
 
 class BUS;
 
-class SOURCE_CONVERTER_MODEL
+class CONVERTER_MODEL
 {
     public:
-        SOURCE_CONVERTER_MODEL(STEPS& toolkit);
-        ~SOURCE_CONVERTER_MODEL();
+        CONVERTER_MODEL(STEPS& toolkit);
+        ~CONVERTER_MODEL();
         void set_toolkit(STEPS& toolkit);
         STEPS& get_toolkit() const;
 
@@ -35,4 +35,4 @@ class SOURCE_CONVERTER_MODEL
         NONBUS_DEVICE* device;
 };
 
-#endif // SOURCE_CONVERTER_MODEL_H
+#endif // CONVERTER_MODEL_H

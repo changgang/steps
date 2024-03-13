@@ -1,12 +1,12 @@
 #ifndef VSG_MODEL_H
 #define VSG_MODEL_H
 
-#include "header/model/converter_common_models/source_converter_model/gfrmc_model/gfrmc_model.h"
+#include "header/model/converter_common_models/converter_model/vs_converter_model/vs_converter_model.h"
 #include "header/STEPS.h"
 
 class BUS;
 
-class VSG_MODEL: public GFRMC_MODEL
+class VSG_MODEL: public VS_CONVERTER_MODEL
 {
     public:
         VSG_MODEL(STEPS& toolkit);

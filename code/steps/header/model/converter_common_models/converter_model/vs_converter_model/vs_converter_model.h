@@ -1,16 +1,16 @@
-#ifndef GFRMC_MODEL_H
-#define GFRMC_MODEL_H
+#ifndef VS_CONVERTER_MODEL_H
+#define VS_CONVERTER_MODEL_H
 
-#include "header/model/converter_common_models/source_converter_model/source_converter_model.h"
+#include "header/model/converter_common_models/converter_model/converter_model.h"
 #include "header/STEPS.h"
 
 class BUS;
 
-class GFRMC_MODEL: public SOURCE_CONVERTER_MODEL
+class VS_CONVERTER_MODEL: public CONVERTER_MODEL
 {
     public:
-        GFRMC_MODEL(STEPS& toolkit);
-        ~GFRMC_MODEL();
+        VS_CONVERTER_MODEL(STEPS& toolkit);
+        ~VS_CONVERTER_MODEL();
 
         void set_Pref_in_pu_based_on_mbase(double P);
         void set_Qref_in_pu_based_on_mbase(double Q);
@@ -55,4 +55,4 @@ class GFRMC_MODEL: public SOURCE_CONVERTER_MODEL
         double fbase_Hz, wbase_radps;
 };
 
-#endif // GFRMC_MODEL_H
+#endif // VS_CONVERTER_MODEL_H

@@ -713,7 +713,7 @@
 	"header/basic/utility.h"
 	"header/data_imexporter/psse_imexporter.h"
 
-1710221558 source:d:\steps\code\steps\main_tests.cpp
+1710323857 source:d:\steps\code\steps\main_tests.cpp
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -746,7 +746,7 @@
 	"header/device/wt_generator_test.h"
 	"header/device/pv_unit_test.h"
 	"header/device/load_test.h"
-	"header/device/line_test.h"
+	"header/device/ac_line_test.h"
 	"header/device/transformer_test.h"
 	"header/device/fixed_shunt_test.h"
 	"header/device/lcc_hvdc2t_test.h"
@@ -816,7 +816,7 @@
 	"header/model/lcc_hvdc2t_model/vdcol_test.h"
 	"header/model/lcc_hvdc2t_model/CDC4T_test.h"
 	"header/model/lcc_hvdc2t_model/CDC6T_test.h"
-	"header/model/converter_common_models/source_converter_model/gfrmc_model/vsg_model/vsg0_test.h"
+	"header/model/converter_common_models/converter_model/vs_converter_model/vsg_model/vsg0_test.h"
 	"header/model/converter_common_models/vrt_model/lvrt_control_test.h"
 	"header/model/wtg_models/wt_generator_model/wt3g1_test.h"
 	"header/model/wtg_models/wt_generator_model/wt3g0_test.h"
@@ -2552,9 +2552,9 @@
 	"header/block/integral_block.h"
 	"header/block/first_order_block.h"
 
-1710161436 d:\steps\code\steps\header\model\wtg_models\wt_generator_model\wt3gx.h
+1710323857 d:\steps\code\steps\header\model\wtg_models\wt_generator_model\wt3gx.h
 	"header/model/wtg_models/wt_generator_model/wt_generator_model.h"
-	"header/model/converter_common_models/source_converter_model/gfrmc_model/vsg_model/vsg0.h"
+	"header/model/converter_common_models/converter_model/vs_converter_model/vsg_model/vsg0.h"
 	"header/model/converter_common_models/current_order_limiter_model/convcol.h"
 	"header/block/integral_block.h"
 	"header/block/first_order_block.h"
@@ -3814,7 +3814,7 @@
 	<iostream>
 	<cstdio>
 
-1710225259 source:d:\steps\code\steps\source\data_imexporter\bpa_powerflow_imexporter.cpp
+1710227843 source:d:\steps\code\steps\source\data_imexporter\bpa_powerflow_imexporter.cpp
 	"header/data_imexporter/bpa_imexporter.h"
 	"header/basic/utility.h"
 	"header/device/bus.h"
@@ -3822,7 +3822,7 @@
 	"header/device/fixed_shunt.h"
 	"header/device/generator.h"
 	"header/device/wt_generator.h"
-	"header/device/line.h"
+	"header/device/ac_line.h"
 	"header/device/transformer.h"
 	"header/steps_namespace.h"
 	<cstdio>
@@ -3890,7 +3890,7 @@
 	<iostream>
 	<cstdio>
 
-1710225259 source:d:\steps\code\steps\source\data_imexporter\psse_powerflow_imexporter.cpp
+1710227843 source:d:\steps\code\steps\source\data_imexporter\psse_powerflow_imexporter.cpp
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
@@ -3899,7 +3899,7 @@
 	"header/device/fixed_shunt.h"
 	"header/device/generator.h"
 	"header/device/wt_generator.h"
-	"header/device/line.h"
+	"header/device/ac_line.h"
 	"header/device/transformer.h"
 	"header/steps_namespace.h"
 	<cstdio>
@@ -3939,7 +3939,7 @@
 	<iostream>
 	<cstdio>
 
-1710225258 source:d:\steps\code\steps\source\data_imexporter\steps_powerflow_imexporter.cpp
+1710227843 source:d:\steps\code\steps\source\data_imexporter\steps_powerflow_imexporter.cpp
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
 	"header/device/bus.h"
@@ -3947,7 +3947,7 @@
 	"header/device/fixed_shunt.h"
 	"header/device/generator.h"
 	"header/device/wt_generator.h"
-	"header/device/line.h"
+	"header/device/ac_line.h"
 	"header/device/transformer.h"
 	"header/steps_namespace.h"
 	<cstdio>
@@ -7126,4 +7126,98 @@
 	"header/basic/fault.h"
 	<complex>
 	<string>
+
+1710227843 d:\steps\code\steps\header\device\ac_line_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"cpptest.h"
+	"header/device/ac_line.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+
+1710227843 source:d:\steps\code\steps\source\device\ac_line.cpp
+	"header/device/ac_line.h"
+	"header/basic/utility.h"
+	"header/basic/constants.h"
+	"header/steps_namespace.h"
+	<istream>
+	<iostream>
+
+1710227843 source:d:\steps\code\steps\source\device\ac_line_test.cpp
+	<cmath>
+	"cpptest.h"
+	"header/basic/test_macro.h"
+	"header/device/ac_line_test.h"
+	"header/basic/constants.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<cstdlib>
+	<cstring>
+	<istream>
+	<iostream>
+	<cstdio>
+
+1710323857 d:\steps\code\steps\header\model\converter_common_models\converter_model\vs_converter_model\vsg_model\vsg0.h
+	"header/model/converter_common_models/converter_model/vs_converter_model/vsg_model/vsg_model.h"
+	"header/block/integral_block.h"
+
+1710323621 d:\steps\code\steps\header\model\converter_common_models\converter_model\vs_converter_model\vsg_model\vsg_model.h
+	"header/model/converter_common_models/converter_model/vs_converter_model/vs_converter_model.h"
+	"header/STEPS.h"
+
+1710323621 d:\steps\code\steps\header\model\converter_common_models\converter_model\vs_converter_model\vs_converter_model.h
+	"header/model/converter_common_models/converter_model/converter_model.h"
+	"header/STEPS.h"
+
+1710323503 d:\steps\code\steps\header\model\converter_common_models\converter_model\converter_model.h
+	"header/STEPS.h"
+
+1710323503 source:d:\steps\code\steps\source\model\converter_common_model\converter_model\converter_model.cpp
+	"header/model/converter_common_models/converter_model/converter_model.h"
+	"header/basic/utility.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+	<iostream>
+
+1710323621 source:d:\steps\code\steps\source\model\converter_common_model\converter_model\vs_converter_model\vs_converter_model.cpp
+	"header/model/converter_common_models/converter_model/vs_converter_model/vs_converter_model.h"
+	"header/basic/utility.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+	<iostream>
+
+1710323857 d:\steps\code\steps\header\model\converter_common_models\converter_model\vs_converter_model\vsg_model\vsg0_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"header/model/converter_common_models/converter_model/vs_converter_model/vsg_model/vsg_model_test.h"
+	"header/model/converter_common_models/converter_model/vs_converter_model/vsg_model/vsg0.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+
+1710323857 d:\steps\code\steps\header\model\converter_common_models\converter_model\vs_converter_model\vsg_model\vsg_model_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"cpptest.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+	"header/model/converter_common_models/converter_model/vs_converter_model/vsg_model/vsg_model.h"
+
+1710323857 source:d:\steps\code\steps\source\model\converter_common_model\converter_model\vs_converter_model\vsg_model\vsg0.cpp
+	"header/model/converter_common_models/converter_model/vs_converter_model/vsg_model/vsg0.h"
+	"header/basic/utility.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+
+1710323857 source:d:\steps\code\steps\source\model\converter_common_model\converter_model\vs_converter_model\vsg_model\vsg_model.cpp
+	"header/model/converter_common_models/converter_model/vs_converter_model/vsg_model/vsg_model.h"
+	"header/basic/utility.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+	<iostream>
 

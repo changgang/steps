@@ -1,4 +1,4 @@
-#include "header/model/converter_common_models/source_converter_model/gfrmc_model/vsg_model/vsg0.h"
+#include "header/model/converter_common_models/converter_model/vs_converter_model/vsg_model/vsg0.h"
 #include "header/basic/utility.h"
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
