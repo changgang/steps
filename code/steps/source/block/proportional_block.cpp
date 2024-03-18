@@ -136,18 +136,21 @@ STEPS_SPARSE_MATRIX PROPORTIONAL_BLOCK::get_linearized_matrix_A() const
     y     = C*x + D*u
     */
     STEPS_SPARSE_MATRIX matrix;
+    matrix.compress_and_merge_duplicate_entries();
     return matrix;
 }
 
 STEPS_SPARSE_MATRIX PROPORTIONAL_BLOCK::get_linearized_matrix_B() const
 {
     STEPS_SPARSE_MATRIX matrix;
+    matrix.compress_and_merge_duplicate_entries();
     return matrix;
 }
 
 STEPS_SPARSE_MATRIX PROPORTIONAL_BLOCK::get_linearized_matrix_C() const
 {
     STEPS_SPARSE_MATRIX matrix;
+    matrix.compress_and_merge_duplicate_entries();
     return matrix;
 }
 
@@ -155,6 +158,7 @@ STEPS_SPARSE_MATRIX PROPORTIONAL_BLOCK::get_linearized_matrix_D() const
 {
     STEPS_SPARSE_MATRIX matrix;
     matrix.add_entry(0,0, get_K());
+    matrix.compress_and_merge_duplicate_entries();
     return matrix;
 }
 

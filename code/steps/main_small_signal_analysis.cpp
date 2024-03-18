@@ -36,7 +36,7 @@ int main()
     powerflow_solver.save_jacobian_matrix_to_file("9_bus_jacobian.csv");
     powerflow_solver.save_extended_powerflow_result_to_file("9_bus.csv");
 
-    importer.load_dynamic_data("../../../bench/IEEE9.dyr");
+    importer.load_dynamic_data("IEEE9_ssa.dyr");
 
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
     simulator.set_allowed_max_power_imbalance_in_MVA(0.01);

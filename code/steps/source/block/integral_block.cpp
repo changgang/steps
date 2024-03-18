@@ -243,6 +243,7 @@ STEPS_SPARSE_MATRIX INTEGRAL_BLOCK::get_linearized_matrix_A() const
     double a = 0.0;
 
     matrix.add_entry(0,0, a);
+    matrix.compress_and_merge_duplicate_entries();
 
     return matrix;
 }
@@ -254,6 +255,7 @@ STEPS_SPARSE_MATRIX INTEGRAL_BLOCK::get_linearized_matrix_B() const
     double b = 1/get_T_in_s();
 
     matrix.add_entry(0,0, b);
+    matrix.compress_and_merge_duplicate_entries();
 
     return matrix;
 }
@@ -265,6 +267,7 @@ STEPS_SPARSE_MATRIX INTEGRAL_BLOCK::get_linearized_matrix_C() const
     double c = 1.0;
 
     matrix.add_entry(0,0, c);
+    matrix.compress_and_merge_duplicate_entries();
 
     return matrix;
 }
@@ -276,6 +279,7 @@ STEPS_SPARSE_MATRIX INTEGRAL_BLOCK::get_linearized_matrix_D() const
     double d = 0.0;
 
     matrix.add_entry(0,0, d);
+    matrix.compress_and_merge_duplicate_entries();
 
     return matrix;
 }

@@ -374,6 +374,7 @@ STEPS_SPARSE_MATRIX LEAD_LAG_BLOCK::get_linearized_matrix_A() const
     double a = -1/get_T2_in_s();
 
     matrix.add_entry(0,0, a);
+    matrix.compress_and_merge_duplicate_entries();
 
     return matrix;
 }
@@ -385,6 +386,7 @@ STEPS_SPARSE_MATRIX LEAD_LAG_BLOCK::get_linearized_matrix_B() const
     double b = get_K()/get_T2_in_s();
 
     matrix.add_entry(0,0, b);
+    matrix.compress_and_merge_duplicate_entries();
 
     return matrix;
 }
@@ -396,6 +398,7 @@ STEPS_SPARSE_MATRIX LEAD_LAG_BLOCK::get_linearized_matrix_C() const
     double c = 1-get_T1_in_s()/get_T2_in_s();
 
     matrix.add_entry(0,0, c);
+    matrix.compress_and_merge_duplicate_entries();
 
     return matrix;
 }
@@ -407,6 +410,7 @@ STEPS_SPARSE_MATRIX LEAD_LAG_BLOCK::get_linearized_matrix_D() const
     double d = get_K()*get_T1_in_s()/get_T2_in_s();
 
     matrix.add_entry(0,0, d);
+    matrix.compress_and_merge_duplicate_entries();
 
     return matrix;
 }

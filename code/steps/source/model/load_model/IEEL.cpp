@@ -663,5 +663,28 @@ string IEEL::get_dynamic_data_in_steps_format() const
 
 void IEEL::build_linearized_matrix_ABCD()
 {
-    return;
+    initialize_ABCD_matrix_for_linearization();
+    STEPS_SPARSE_MATRIX A;
+    STEPS_SPARSE_MATRIX B;
+    STEPS_SPARSE_MATRIX C;
+    STEPS_SPARSE_MATRIX D;
+
+    complex<double> V = get_bus_positive_sequence_complex_voltage_in_pu();
+    double Ux = V.real();
+    double Uy = V.imag();
+    double U = sqrt(Ux*Ux+Uy*Uy);
+    complex<double> PQ0 = get_initial_load_power_in_MVA();
+    double P0 = PQ0.real();
+    double Q0 = PQ0.imag();
+    double ap1 = get_P_alpha_1();
+    double ap2 = get_P_alpha_2();
+    double ap3 = get_P_alpha_3();
+    double aq1 = get_Q_alpha_1();
+    double aq2 = get_Q_alpha_2();
+    double aq3 = get_Q_alpha_3();
+
+    D.add_entry(0,0, (P0*Ux*Ux*(ap2+2*ap3)+Q0*Ux*Uy*(aq2+2*aq3))/(U*U*U*U)-P0/(U*U));
+    D.add_entry(0,1, (Q0*Uy*Uy*(aq2+2*aq3)+P0*Ux*Uy*(ap2+2*ap3))/(U*U*U*U)-Q0/(U*U));
+    D.add_entry(1,0, (Q0*Ux*Ux*(aq2+2*aq3)-P0*Ux*Uy*(ap2+2*ap3))/(U*U*U*U)-Q0/(U*U));
+    D.add_entry(1,1, (P0*Uy*Uy*(ap2+2*ap3)-Q0*Ux*Uy*(aq2+2*aq3))/(U*U*U*U)-P0/(U*U));
 }

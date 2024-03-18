@@ -497,6 +497,7 @@ STEPS_SPARSE_MATRIX FIRST_ORDER_BLOCK::get_linearized_matrix_A() const
 
         matrix.add_entry(0,0, a);
     }
+    matrix.compress_and_merge_duplicate_entries();
     return matrix;
 }
 
@@ -509,6 +510,7 @@ STEPS_SPARSE_MATRIX FIRST_ORDER_BLOCK::get_linearized_matrix_B() const
 
         matrix.add_entry(0,0, b);
     }
+    matrix.compress_and_merge_duplicate_entries();
     return matrix;
 }
 
@@ -521,6 +523,7 @@ STEPS_SPARSE_MATRIX FIRST_ORDER_BLOCK::get_linearized_matrix_C() const
 
         matrix.add_entry(0,0, c);
     }
+    matrix.compress_and_merge_duplicate_entries();
     return matrix;
 }
 
@@ -533,6 +536,7 @@ STEPS_SPARSE_MATRIX FIRST_ORDER_BLOCK::get_linearized_matrix_D() const
 
         matrix.add_entry(0,0, d);
     }
+    matrix.compress_and_merge_duplicate_entries();
     return matrix;
 }
 

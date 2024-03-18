@@ -243,6 +243,7 @@ STEPS_SPARSE_MATRIX PID_BLOCK::get_linearized_matrix_A() const
     matrix.add_entry(0,1, a01);
     matrix.add_entry(1,0, a10);
     matrix.add_entry(1,1, a11);
+    matrix.compress_and_merge_duplicate_entries();
 
     return matrix;
 }
@@ -255,6 +256,7 @@ STEPS_SPARSE_MATRIX PID_BLOCK::get_linearized_matrix_B() const
 
     matrix.add_entry(0,0, b00);
     matrix.add_entry(1,0, b10);
+    matrix.compress_and_merge_duplicate_entries();
 
     return matrix;
 }
@@ -267,6 +269,7 @@ STEPS_SPARSE_MATRIX PID_BLOCK::get_linearized_matrix_C() const
 
     matrix.add_entry(0,0, c00);
     matrix.add_entry(0,1, c01);
+    matrix.compress_and_merge_duplicate_entries();
 
     return matrix;
 }
@@ -278,6 +281,7 @@ STEPS_SPARSE_MATRIX PID_BLOCK::get_linearized_matrix_D() const
     double d00=get_Kp()+get_Kd()/get_Td_in_s();
 
     matrix.add_entry(0,0, d00);
+    matrix.compress_and_merge_duplicate_entries();
 
     return matrix;
 }

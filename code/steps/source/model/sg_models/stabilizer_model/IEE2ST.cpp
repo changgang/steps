@@ -905,6 +905,11 @@ void IEE2ST::build_linearized_matrix_ABCD()
     H.add_entry(0,0, 0);
     H.add_entry(0,1, 0);
 
+    E.compress_and_merge_duplicate_entries();
+    F.compress_and_merge_duplicate_entries();
+    G.compress_and_merge_duplicate_entries();
+    H.compress_and_merge_duplicate_entries();
+
     matrix.push_back(&A);
     matrix.push_back(&B);
     matrix.push_back(&C);

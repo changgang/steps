@@ -886,10 +886,10 @@ void GENSAL::build_linearized_matrix_ABCD()
     STEPS_SPARSE_MATRIX B_rotor_speed_block = rotor_speed_block->get_linearized_matrix_B();
     STEPS_SPARSE_MATRIX C_rotor_speed_block = rotor_speed_block->get_linearized_matrix_C();
     STEPS_SPARSE_MATRIX D_rotor_speed_block = rotor_speed_block->get_linearized_matrix_D();
-    A_rotor_speed_block.report_brief();
+    /*A_rotor_speed_block.report_brief();
     B_rotor_speed_block.report_brief();
     C_rotor_speed_block.report_brief();
-    D_rotor_speed_block.report_brief();
+    D_rotor_speed_block.report_brief();*/
 
     // block 4
     STEPS_SPARSE_MATRIX A_rotor_angle_block = rotor_angle_block->get_linearized_matrix_A();
@@ -1025,6 +1025,10 @@ void GENSAL::build_linearized_matrix_ABCD()
     H.add_entry(3,2, 0);
     H.add_entry(3,3, 0);
     H.add_entry(3,4, 0);
+    E.compress_and_merge_duplicate_entries();
+    F.compress_and_merge_duplicate_entries();
+    G.compress_and_merge_duplicate_entries();
+    H.compress_and_merge_duplicate_entries();
 
     matrix.push_back(&A);
     matrix.push_back(&B);
@@ -1036,9 +1040,4 @@ void GENSAL::build_linearized_matrix_ABCD()
     matrix.push_back(&H);
 
     build_linearized_matrix_ABCD_with_basic_ABCD_and_EFGH(matrix);
-
-    get_linearized_matrix_pointer_A()->report_brief();
-    get_linearized_matrix_pointer_B()->report_brief();
-    get_linearized_matrix_pointer_C()->report_brief();
-    get_linearized_matrix_pointer_D()->report_brief();
 }

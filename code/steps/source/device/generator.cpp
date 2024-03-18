@@ -793,6 +793,10 @@ void GENERATOR::build_linearized_matrix_ABCD()
         Cgen = sync_generator_model->get_linearized_matrix_C();
         Dgen = sync_generator_model->get_linearized_matrix_D();
     }
+    Agen.compress_and_merge_duplicate_entries();
+    Bgen.compress_and_merge_duplicate_entries();
+    Cgen.compress_and_merge_duplicate_entries();
+    Dgen.compress_and_merge_duplicate_entries();
 
     STEPS_SPARSE_MATRIX Aex, Bex, Cex, Dex;
     if(exciter_model != NULL)
@@ -843,7 +847,6 @@ void GENERATOR::build_linearized_matrix_ABCD()
         Ctlc = turbine_load_controller_model->get_linearized_matrix_C();
         Dtlc = turbine_load_controller_model->get_linearized_matrix_D();
     }
-
     vector<STEPS_SPARSE_MATRIX*> matrix;
     matrix.push_back(&Agen);
     matrix.push_back(&Aex);
@@ -881,10 +884,207 @@ void GENERATOR::build_linearized_matrix_ABCD()
     STEPS_SPARSE_MATRIX D = concatenate_matrix_diagnally(matrix);
     matrix.clear();
 
+    SYNC_GENERATOR_MODEL* gen = get_sync_generator_model();
+    double rotor_angle = gen->get_rotor_angle_in_rad();
+    complex<double> Zsource = get_source_impedance_in_pu();
+    complex<double> Vxy = gen->get_terminal_complex_voltage_in_pu();
+    complex<double> Ixy = gen->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+    complex<double> Uxy = Vxy+Ixy*Zsource;
+
+    double mbase = get_mbase_in_MVA();
+    STEPS& toolkit = get_toolkit();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
+    Zsource = Zsource*(mbase*one_over_sbase);
+    Ixy = Ixy*(mbase*one_over_sbase);
+    Uxy = Uxy*(mbase*one_over_sbase);
+
+    complex<double> Idq = xy2dq_with_angle_in_rad(Ixy, rotor_angle);
+    complex<double> Udq = xy2dq_with_angle_in_rad(Uxy, rotor_angle);
+    double R = Zsource.real();
+    double X = Zsource.imag();
+    double Z = sqrt(R*R+X*X);
+    double Id = Idq.real();
+    double Iq = Idq.imag();
+    double Ud = Udq.real();
+    double Uq = Udq.imag();
+    double U = sqrt(Ud*Ud+Uq*Uq);
+
+    STEPS_SPARSE_MATRIX K, L, M, N, Mp, Np, T;
+
+    K.add_entry(0,0, 0);
+    K.add_entry(0,1, 0);
+    K.add_entry(0,2, 0);
+    K.add_entry(0,3, 0);
+    K.add_entry(0,4, 1);
+    K.add_entry(0,5, 0);
+    K.add_entry(0,6, 0);
+    K.add_entry(1,0, 0);
+    K.add_entry(1,1, 0);
+    K.add_entry(1,2, 0);
+    K.add_entry(1,3, 0);
+    K.add_entry(1,4, 0);
+    K.add_entry(1,5, 0);
+    K.add_entry(1,6, 0);
+    K.add_entry(2,0, 0);
+    K.add_entry(2,1, 0);
+    K.add_entry(2,2, 0);
+    K.add_entry(2,3, 0);
+    K.add_entry(2,4, 0);
+    K.add_entry(2,5, 0);
+    K.add_entry(2,6, 0);
+    K.add_entry(3,0, 0);
+    K.add_entry(3,1, 0);
+    K.add_entry(3,2, 0);
+    K.add_entry(3,3, 0);
+    K.add_entry(3,4, 0);
+    K.add_entry(3,5, 0);
+    K.add_entry(3,6, 1);
+    K.add_entry(4,0, 0);
+    K.add_entry(4,1, 0);
+    K.add_entry(4,2, 0);
+    K.add_entry(4,3, 0);
+    K.add_entry(4,4, 0);
+    K.add_entry(4,5, 0);
+    K.add_entry(4,6, 0);
+    K.add_entry(5,0, 0);
+    K.add_entry(5,1, 0);
+    K.add_entry(5,2, 0);
+    K.add_entry(5,3, 0);
+    K.add_entry(5,4, 0);
+    K.add_entry(5,5, 0);
+    K.add_entry(5,6, 0);
+    K.add_entry(6,0, 0);
+    K.add_entry(6,1, 0);
+    K.add_entry(6,2, 0);
+    K.add_entry(6,3, 0);
+    K.add_entry(6,4, 0);
+    K.add_entry(6,5, 1);
+    K.add_entry(6,6, 0);
+    K.add_entry(7,0, 0);
+    K.add_entry(7,1, 0);
+    K.add_entry(7,2, 0);
+    K.add_entry(7,3, 1);
+    K.add_entry(7,4, 0);
+    K.add_entry(7,5, 0);
+    K.add_entry(7,6, 0);
+    K.add_entry(8,0, 0);
+    K.add_entry(8,1, 0);
+    K.add_entry(8,2, 0);
+    K.add_entry(8,3, 0);
+    K.add_entry(8,4, 0);
+    K.add_entry(8,5, 0);
+    K.add_entry(8,6, 0);
+    K.add_entry(9,0, 0);
+    K.add_entry(9,1, 0);
+    K.add_entry(9,2, 0);
+    K.add_entry(9,3, 1);
+    K.add_entry(9,4, 0);
+    K.add_entry(9,5, 0);
+    K.add_entry(9,6, 0);
+
+    L.add_entry(0,0, 0);
+    L.add_entry(0,1, 0);
+    L.add_entry(0,2, 0);
+    L.add_entry(0,3, 0);
+    L.add_entry(1,0, 0);
+    L.add_entry(1,1, 0);
+    L.add_entry(1,2, 1);
+    L.add_entry(1,3, 0);
+    L.add_entry(2,0, 0);
+    L.add_entry(2,1, 0);
+    L.add_entry(2,2, 0);
+    L.add_entry(2,3, 1);
+    L.add_entry(3,0, 0);
+    L.add_entry(3,1, 0);
+    L.add_entry(3,2, 0);
+    L.add_entry(3,3, 0);
+    L.add_entry(4,0, Id);
+    L.add_entry(4,1, Iq);
+    L.add_entry(4,2, Ud);
+    L.add_entry(4,3, Uq);
+    L.add_entry(5,0, Ud/U);
+    L.add_entry(5,1, Uq/U);
+    L.add_entry(5,2, 0);
+    L.add_entry(5,3, 0);
+    L.add_entry(6,0, 0);
+    L.add_entry(6,1, 0);
+    L.add_entry(6,2, 0);
+    L.add_entry(6,3, 0);
+    L.add_entry(7,0, 0);
+    L.add_entry(7,1, 0);
+    L.add_entry(7,2, 0);
+    L.add_entry(7,3, 0);
+    L.add_entry(8,0, Ud/U);
+    L.add_entry(8,1, Uq/U);
+    L.add_entry(8,2, 0);
+    L.add_entry(8,3, 0);
+    L.add_entry(9,0, 0);
+    L.add_entry(9,1, 0);
+    L.add_entry(9,2, 0);
+    L.add_entry(9,3, 0);
+
+    M.add_entry(0,0, 0);
+    M.add_entry(0,1, 0);
+    M.add_entry(0,2, Uq);
+    M.add_entry(1,0, 0);
+    M.add_entry(1,1, 0);
+    M.add_entry(1,2, -Ud);
+    M.add_entry(2,0, X/(Z*Z));
+    M.add_entry(2,1, -R/(Z*Z));
+    M.add_entry(2,2, (X*Ud-R*Uq)/(Z*Z));
+    M.add_entry(3,0, R/(Z*Z));
+    M.add_entry(3,1, X/(Z*Z));
+    M.add_entry(3,2, (R*Ud+X*Uq)/(Z*Z));
+
+    N.add_entry(0,0, sin(rotor_angle));
+    N.add_entry(0,1, -cos(rotor_angle));
+    N.add_entry(1,0, cos(rotor_angle));
+    N.add_entry(1,1, sin(rotor_angle));
+    N.add_entry(2,0, (-R*sin(rotor_angle)-X*cos(rotor_angle))/(Z*Z));
+    N.add_entry(2,1, (R*cos(rotor_angle)-X*sin(rotor_angle))/(Z*Z));
+    N.add_entry(3,0, (-R*cos(rotor_angle)+X*sin(rotor_angle))/(Z*Z));
+    N.add_entry(3,1, (-R*sin(rotor_angle)-X*cos(rotor_angle))/(Z*Z));
+
+    Mp.add_entry(0,0, X/(Z*Z));
+    Mp.add_entry(0,1, -R/(Z*Z));
+    Mp.add_entry(0,2, (X*Ud-R*Uq)/(Z*Z)-Iq);
+    Mp.add_entry(1,0, R/(Z*Z));
+    Mp.add_entry(1,1, X/(Z*Z));
+    Mp.add_entry(1,2, (R*Ud+X*Uq)/(Z*Z)+Id);
+
+    Np.add_entry(0,0, -R/(Z*Z));
+    Np.add_entry(0,1, -X/(Z*Z));
+    Np.add_entry(1,0, X/(Z*Z));
+    Np.add_entry(1,1, -R/(Z*Z));
+
+    T.add_entry(0,0, sin(rotor_angle));
+    T.add_entry(0,1, -cos(rotor_angle));
+    T.add_entry(1,0, cos(rotor_angle));
+    T.add_entry(1,1, sin(rotor_angle));
+
+
+    K.compress_and_merge_duplicate_entries();
+    L.compress_and_merge_duplicate_entries();
+    M.compress_and_merge_duplicate_entries();
+    N.compress_and_merge_duplicate_entries();
+    Mp.compress_and_merge_duplicate_entries();
+    Np.compress_and_merge_duplicate_entries();
+    T.compress_and_merge_duplicate_entries();
+
+    STEPS_SPARSE_MATRIX INVT = inv(T);
+    STEPS_SPARSE_MATRIX EXPAND1 = expand_matrix_to_new_size(L*M,K.get_matrix_row_count(),K.get_matrix_column_count());
+    STEPS_SPARSE_MATRIX EXPAND2 = expand_matrix_to_new_size(INVT*Mp,2,K.get_matrix_column_count());
 
     STEPS_SPARSE_MATRIX E, F, G, H;
+    E = K+EXPAND1;
+    F = L*N;
+    G = EXPAND2;
+    H = Np;
 
-
+    E.compress_and_merge_duplicate_entries();
+    F.compress_and_merge_duplicate_entries();
+    G.compress_and_merge_duplicate_entries();
+    H.compress_and_merge_duplicate_entries();
 
     matrix.push_back(&A);
     matrix.push_back(&B);
@@ -905,8 +1105,51 @@ void GENERATOR::build_linearized_matrix_ABCD()
 
 void GENERATOR::build_linearized_matrix_ABCD_with_basic_ABCD_and_EFGH(vector<STEPS_SPARSE_MATRIX*> matrix)
 {
+    if(matrix.size()!=8)
+    {
+        ostringstream osstream;
+        osstream<<"ERROR. Vector matrix in SG_MODEL::"<<__FUNCTION__<<"() has "<<matrix.size()<<"individual matrix which is NOT 8";
+        STEPS& toolkit = get_toolkit();
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    STEPS_SPARSE_MATRIX& Abasic = *(matrix[0]);
+    STEPS_SPARSE_MATRIX& Bbasic = *(matrix[1]);
+    STEPS_SPARSE_MATRIX& Cbasic = *(matrix[2]);
+    STEPS_SPARSE_MATRIX& Dbasic = *(matrix[3]);
+    STEPS_SPARSE_MATRIX& E = *(matrix[4]);
+    STEPS_SPARSE_MATRIX& F = *(matrix[5]);
+    STEPS_SPARSE_MATRIX& G = *(matrix[6]);
+    STEPS_SPARSE_MATRIX& H = *(matrix[7]);
 
+    STEPS_SPARSE_MATRIX ED = E*Dbasic;
+    STEPS_SPARSE_MATRIX DE = Dbasic*E;
+    STEPS_SPARSE_MATRIX I1 = build_identity_matrix(ED);
+    STEPS_SPARSE_MATRIX I2 = build_identity_matrix(DE);
+
+    STEPS_SPARSE_MATRIX DIFF1 = I1-ED;
+    STEPS_SPARSE_MATRIX DIFF2 = I2-DE;
+    STEPS_SPARSE_MATRIX INV1 = inv(DIFF1);
+    STEPS_SPARSE_MATRIX INV2 = inv(DIFF2);
+
+    STEPS_SPARSE_MATRIX B_INV1 = Bbasic*INV1;
+    STEPS_SPARSE_MATRIX B_INV1_E = B_INV1*E;
+    STEPS_SPARSE_MATRIX B_INV1_F = B_INV1*F;
+    STEPS_SPARSE_MATRIX B_INV1_E_C = B_INV1_E*Cbasic;
+    STEPS_SPARSE_MATRIX G_INV2 = G*INV2;
+    STEPS_SPARSE_MATRIX G_INV2_C = G_INV2*Cbasic;
+    STEPS_SPARSE_MATRIX G_INV2_D = G_INV2*Dbasic;
+    STEPS_SPARSE_MATRIX G_INV2_D_F = G_INV2_D*F;
+
+    STEPS_SPARSE_MATRIX Atemp = Abasic+B_INV1_E_C;
+    STEPS_SPARSE_MATRIX Dtemp = G_INV2_D_F+H;
+
+    *Aptr = Atemp;
+    *Bptr = B_INV1_F;
+    *Cptr = G_INV2_C;
+    *Dptr = Dtemp;
 }
+
 
 STEPS_SPARSE_MATRIX GENERATOR::get_linearized_matrix_variable(char var) const
 {
