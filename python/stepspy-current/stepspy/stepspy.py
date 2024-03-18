@@ -515,7 +515,7 @@ class STEPS():
             nline_max = simulator.get_line_capacity()
         """
         global STEPS_LIB
-        device = self.__get_c_char_p_of_string("Line")
+        device = self.__get_c_char_p_of_string("AC Line")
         return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
         
     def get_transformer_capacity(self):
@@ -541,7 +541,7 @@ class STEPS():
             nhvdc_max = simulator.get_hvdc_capacity()
         """
         global STEPS_LIB
-        device = self.__get_c_char_p_of_string("HVDC")
+        device = self.__get_c_char_p_of_string("2T LCC HVDC")
         return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
         
     def get_vsc_hvdc_capacity(self):
@@ -721,7 +721,7 @@ class STEPS():
             simulator.set_line_capacity(capacity)
         """
         global STEPS_LIB
-        device = self.__get_c_char_p_of_string("Line")
+        device = self.__get_c_char_p_of_string("AC Line")
         return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
         
     def set_transformer_capacity(self, capacity):
@@ -751,7 +751,7 @@ class STEPS():
             simulator.set_hvdc_capacity(capacity)
         """
         global STEPS_LIB
-        device = self.__get_c_char_p_of_string("HVDC")
+        device = self.__get_c_char_p_of_string("2T LCC HVDC")
         return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
         
     def set_vsc_hvdc_capacity(self, capacity):
@@ -1377,7 +1377,7 @@ class STEPS():
         Example: N/A
         """
         global STEPS_LIB
-        device = self.__get_c_char_p_of_string("Line")
+        device = self.__get_c_char_p_of_string("AC Line")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
 
     def get_transformer_count(self):
@@ -1401,7 +1401,7 @@ class STEPS():
         Example: N/A
         """
         global STEPS_LIB
-        device = self.__get_c_char_p_of_string("HVDC")
+        device = self.__get_c_char_p_of_string("2T LCC HVDC")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
 
     def get_vsc_hvdc_count(self):
@@ -2021,7 +2021,7 @@ class STEPS():
         Example: N/A
         """
         global STEPS_LIB
-        device = "LINE"
+        device = "AC Line"
         device = self.__get_c_char_p_of_string(device)
         send_side = self.__get_c_char_p_of_string("SEND")
         recv_side = self.__get_c_char_p_of_string("RECEIVE")
@@ -2144,7 +2144,7 @@ class STEPS():
         Example: N/A
         """
         global STEPS_LIB
-        device = "HVDC"
+        device = "2T LCC HVDC"
         device = self.__get_c_char_p_of_string(device)
         rec_side = self.__get_c_char_p_of_string("RECTIFIER")
         inv_side = self.__get_c_char_p_of_string("INVERTER")
@@ -5454,8 +5454,8 @@ class STEPS():
             (1) device_type: String of device type.
         Rets: N/A
         Tips:
-            The device type should be one of {"ALL", "BUS", "GENERATOR", "WT GENERATOR", "PV UNIT", "ENERGY STORAGE", "LOAD", "LINE", "TRANSFORMER", "HVDC", "EQUIVALENT DEVICE"}.
-            If "ALL" is set, all general meters of {"BUS", "GENERATOR", "WT GENERATOR", "PV UNIT", "ENERGY STORAGE", "LOAD", "LINE", "TRANSFORMER", "HVDC", "EQUIVALENT DEVICE"} are set.
+            The device type should be one of {"ALL", "BUS", "GENERATOR", "WT GENERATOR", "PV UNIT", "ENERGY STORAGE", "LOAD", "AC Line", "TRANSFORMER", "2T LCC HVDC", "EQUIVALENT DEVICE"}.
+            If "ALL" is set, all general meters of {"BUS", "GENERATOR", "WT GENERATOR", "PV UNIT", "ENERGY STORAGE", "LOAD", "AC Line", "TRANSFORMER", "2T LCC HVDC", "EQUIVALENT DEVICE"} are set.
             For the supported general meters, see implementation of the following functions of STEPS:
                 DYNAMIC_SIMULATOR::prepare_bus_related_meters()
                 DYNAMIC_SIMULATOR::prepare_generator_related_meters()
@@ -5472,40 +5472,40 @@ class STEPS():
         """
         global STEPS_LIB
         device_type = device_type.upper()
-        if device_type in ['ALL']:
+        if device_type in ["ALL"]:
             STEPS_LIB.api_prepare_meters(self.toolkit_index)
             return
-        if device_type in ['BUS']:
+        if device_type in ["BUS"]:
             STEPS_LIB.api_prepare_bus_related_meters(self.toolkit_index)
             return
-        if device_type in ['GENERATOR']:
+        if device_type in ["GENERATOR"]:
             STEPS_LIB.api_prepare_generator_related_meters(self.toolkit_index)
             return
-        if device_type in ['WT GENERATOR']:
+        if device_type in ["WT GENERATOR"]:
             STEPS_LIB.api_prepare_wt_generator_related_meters(self.toolkit_index)
             return
-        if device_type in ['PV UNIT']:
+        if device_type in ["PV UNIT"]:
             STEPS_LIB.api_prepare_pv_unit_related_meters(self.toolkit_index)
             return
-        if device_type in ['ENERGY STORAGE']:
+        if device_type in ["ENERGY STORAGE"]:
             STEPS_LIB.api_prepare_energy_storage_related_meters(self.toolkit_index)
             return
-        if device_type in ['LOAD']:
+        if device_type in ["LOAD"]:
             STEPS_LIB.api_prepare_load_related_meters(self.toolkit_index)
             return
-        if device_type in ['LINE']:
+        if device_type in ["AC LINE"]:
             STEPS_LIB.api_prepare_line_related_meters(self.toolkit_index)
             return
-        if device_type in ['TRANSFORMER']:
+        if device_type in ["TRANSFORMER"]:
             STEPS_LIB.api_prepare_transformer_related_meters(self.toolkit_index)
             return
-        if device_type in ['HVDC']:
+        if device_type in ["2T LCC HVDC"]:
             STEPS_LIB.api_prepare_hvdc_related_meters(self.toolkit_index)
             return
-        if device_type in ['VSC HVDC']:
+        if device_type in ["VSC HVDC"]:
             STEPS_LIB.api_prepare_vsc_hvdc_related_meters(self.toolkit_index)
             return
-        if device_type in ['EQUIVALENT DEVICE']:
+        if device_type in ["EQUIVALENT DEVICE"]:
             STEPS_LIB.api_prepare_equivalent_device_related_meters(self.toolkit_index)
             return
         return

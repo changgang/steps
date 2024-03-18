@@ -4675,9 +4675,33 @@ void POWER_SYSTEM_DATABASE::check_wt_generator_related_dynamic_data()
         if(pitchmodel!=NULL)
             pitchmodel->check();
 
+        WT_VRT_MODEL * vrtmodel = generator->get_wt_vrt_model();
+        if(vrtmodel!=NULL)
+            vrtmodel->check();
+
+        WT_RELAY_MODEL* relaymodel = generator->get_wt_relay_model();
+        if(relaymodel!=NULL)
+            relaymodel->check();
+
         WIND_SPEED_MODEL* windmodel = generator->get_wind_speed_model();
         if(windmodel!=NULL)
             windmodel->check();
+
+
+        if(toolkit->is_detailed_log_enabled())
+        {
+            ostringstream osstream;
+            osstream<<"Model entry address of "<<generator->get_compound_device_name()<<":\n"
+                    <<"WT Generator: "<<genmodel<<"\n"
+                    <<"Electrical:   "<<elecmodel<<"\n"
+                    <<"Aero dyanmic: "<<aerdmodel<<"\n"
+                    <<"Turbine:      "<<turbmodel<<"\n"
+                    <<"Pitch:        "<<pitchmodel<<"\n"
+                    <<"VRT:          "<<vrtmodel<<"\n"
+                    <<"Relay:        "<<relaymodel<<"\n"
+                    <<"Wind:         "<<windmodel;
+            toolkit->show_information_with_leading_time_stamp(osstream);
+        }
     }
 }
 

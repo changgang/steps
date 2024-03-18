@@ -689,7 +689,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
                     ++iter;
                     if(iter>iter_max)
                     {
-                        osstream<<"Warning. Failed to initialize pitch angle and turbine speed within "<<iter_max<<" iterations when turbine speed mode is WT_MPPT_MODE."<<endl
+                        osstream<<"Warning. Failed to initialize pitch angle and turbine speed for "<<gen->get_compound_device_name()<<" within "<<iter_max<<" iterations when turbine speed mode is WT_MPPT_MODE."<<endl
                                 <<"Initial pitch angle is set as "<<pitch<<" deg, and initial turbine speed is set as "<<w_mppt<<" rad/s";
                         toolkit.show_information_with_leading_time_stamp(osstream);
                         set_initial_pitch_angle_in_deg(pitch);

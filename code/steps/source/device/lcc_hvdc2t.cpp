@@ -1065,7 +1065,7 @@ void LCC_HVDC2T::set_model(MODEL* model)
     if(model != NULL and model->has_allowed_device_type(STEPS_LCC_HVDC2T))
     {
         model->set_device_id(get_device_id());
-        if(model->get_model_type()=="LCC_HVDC2T")
+        if(model->get_model_type()=="2T LCC HVDC")
         {
             set_2t_lcc_hvdc_model((LCC_HVDC2T_MODEL*) model);
             return;
@@ -1085,7 +1085,7 @@ void LCC_HVDC2T::set_model(MODEL* model)
 MODEL* LCC_HVDC2T::get_model_of_type(string model_type, unsigned int index)
 {
     model_type = string2upper(model_type);
-    if(model_type=="LCC_HVDC2T")
+    if(model_type=="2T LCC HVDC")
         return get_2t_lcc_hvdc_model();
     if(model_type=="AUXILIARY SIGNAL")
         return get_auxiliary_signal_model();
