@@ -2021,8 +2021,7 @@ class STEPS():
         Example: N/A
         """
         global STEPS_LIB
-        device = "AC Line"
-        device = self.__get_c_char_p_of_string(device)
+        device = self.__get_c_char_p_of_string("AC Line")
         send_side = self.__get_c_char_p_of_string("SEND")
         recv_side = self.__get_c_char_p_of_string("RECEIVE")
         STEPS_LIB.api_initialize_device_search(device, bus, self.toolkit_index)
@@ -5493,7 +5492,7 @@ class STEPS():
         if device_type in ["LOAD"]:
             STEPS_LIB.api_prepare_load_related_meters(self.toolkit_index)
             return
-        if device_type in ["AC LINE"]:
+        if device_type in ["AC LINE","LINE"]:
             STEPS_LIB.api_prepare_line_related_meters(self.toolkit_index)
             return
         if device_type in ["TRANSFORMER"]:

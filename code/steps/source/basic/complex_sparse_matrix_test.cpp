@@ -171,10 +171,7 @@ void COMPLEX_SPARSE_MATRIX_TEST::test_transpose()
 
     prepare_basic_matrix();
 
-    matrix.report_brief();
     matrix.transpose();
-
-    matrix.report_brief();
 
     TEST_ASSERT(matrix.get_entry_value(0,0)==complex<double>(1.0, 0.0));
     TEST_ASSERT(matrix.get_entry_value(1,0)==complex<double>(0.0, 0.0));

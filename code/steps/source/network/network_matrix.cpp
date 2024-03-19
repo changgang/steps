@@ -378,7 +378,6 @@ void NETWORK_MATRIX::build_sequence_network_Z_matrix()
 void NETWORK_MATRIX::build_positive_sequence_network_Z_matrix()
 {
     set_this_Y_and_Z_matrix_as(network_Y1_matrix);
-    network_Y1_matrix.report_brief();
     build_network_Z_matrix_from_this_Y_matrix();
 }
 

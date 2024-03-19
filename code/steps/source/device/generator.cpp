@@ -807,6 +807,10 @@ void GENERATOR::build_linearized_matrix_ABCD()
         Cex = exciter_model->get_linearized_matrix_C();
         Dex = exciter_model->get_linearized_matrix_D();
     }
+    Aex.compress_and_merge_duplicate_entries();
+    Bex.compress_and_merge_duplicate_entries();
+    Cex.compress_and_merge_duplicate_entries();
+    Dex.compress_and_merge_duplicate_entries();
 
     STEPS_SPARSE_MATRIX Apss, Bpss, Cpss, Dpss;
     if(stabilizer_model != NULL)
@@ -817,6 +821,10 @@ void GENERATOR::build_linearized_matrix_ABCD()
         Cpss = stabilizer_model->get_linearized_matrix_C();
         Dpss = stabilizer_model->get_linearized_matrix_D();
     }
+    Apss.compress_and_merge_duplicate_entries();
+    Bpss.compress_and_merge_duplicate_entries();
+    Cpss.compress_and_merge_duplicate_entries();
+    Dpss.compress_and_merge_duplicate_entries();
 
     STEPS_SPARSE_MATRIX Agov, Bgov, Cgov, Dgov;
     if(turbine_governor_model != NULL)
@@ -827,6 +835,10 @@ void GENERATOR::build_linearized_matrix_ABCD()
         Cgov = turbine_governor_model->get_linearized_matrix_C();
         Dgov = turbine_governor_model->get_linearized_matrix_D();
     }
+    Agov.compress_and_merge_duplicate_entries();
+    Bgov.compress_and_merge_duplicate_entries();
+    Cgov.compress_and_merge_duplicate_entries();
+    Dgov.compress_and_merge_duplicate_entries();
 
     STEPS_SPARSE_MATRIX Acomp, Bcomp, Ccomp, Dcomp;
     if(compensator_model != NULL)
@@ -837,6 +849,10 @@ void GENERATOR::build_linearized_matrix_ABCD()
         Ccomp = compensator_model->get_linearized_matrix_C();
         Dcomp = compensator_model->get_linearized_matrix_D();
     }
+    Acomp.compress_and_merge_duplicate_entries();
+    Bcomp.compress_and_merge_duplicate_entries();
+    Ccomp.compress_and_merge_duplicate_entries();
+    Dcomp.compress_and_merge_duplicate_entries();
 
     STEPS_SPARSE_MATRIX Atlc, Btlc, Ctlc, Dtlc;
     if(turbine_load_controller_model != NULL)
@@ -847,6 +863,11 @@ void GENERATOR::build_linearized_matrix_ABCD()
         Ctlc = turbine_load_controller_model->get_linearized_matrix_C();
         Dtlc = turbine_load_controller_model->get_linearized_matrix_D();
     }
+    Atlc.compress_and_merge_duplicate_entries();
+    Btlc.compress_and_merge_duplicate_entries();
+    Ctlc.compress_and_merge_duplicate_entries();
+    Dtlc.compress_and_merge_duplicate_entries();
+
     vector<STEPS_SPARSE_MATRIX*> matrix;
     matrix.push_back(&Agen);
     matrix.push_back(&Aex);
@@ -1097,9 +1118,24 @@ void GENERATOR::build_linearized_matrix_ABCD()
 
     build_linearized_matrix_ABCD_with_basic_ABCD_and_EFGH(matrix);
 
+    ostringstream osstream;
+    osstream<<"Linearized matrix ABCD of "<<get_compound_device_name()<<" are listed as follows.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
+    osstream<<"A = ";
+    toolkit.show_information_with_leading_time_stamp(osstream);
     Aptr->report_brief();
+
+    osstream<<"B = ";
+    toolkit.show_information_with_leading_time_stamp(osstream);
     Bptr->report_brief();
+
+    osstream<<"C = ";
+    toolkit.show_information_with_leading_time_stamp(osstream);
     Cptr->report_brief();
+
+    osstream<<"D = ";
+    toolkit.show_information_with_leading_time_stamp(osstream);
     Dptr->report_brief();
 }
 

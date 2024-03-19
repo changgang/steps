@@ -77,6 +77,8 @@ private:
     double *LU_workspace;
     double* bb;
     unsigned int bb_size;
+
+    bool add_entry_callled;
 };
 
 

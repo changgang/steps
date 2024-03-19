@@ -537,6 +537,7 @@ STEPS_SPARSE_MATRIX FIRST_ORDER_BLOCK::get_linearized_matrix_D() const
         matrix.add_entry(0,0, d);
     }
     matrix.compress_and_merge_duplicate_entries();
+
     return matrix;
 }
 

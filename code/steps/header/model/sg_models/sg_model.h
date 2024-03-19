@@ -23,6 +23,7 @@ class SG_MODEL : public MODEL
 
         void initialize_ABCD_matrix_for_linearization();
         void build_linearized_matrix_ABCD_with_basic_ABCD_and_EFGH(vector<STEPS_SPARSE_MATRIX*> matrix);
+        void show_linearized_matrix_ABCD();
         STEPS_SPARSE_MATRIX get_linearized_matrix_variable(char var) const;
         STEPS_SPARSE_MATRIX get_linearized_matrix_A() const;
         STEPS_SPARSE_MATRIX get_linearized_matrix_B() const;

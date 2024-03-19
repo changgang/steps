@@ -1,6 +1,7 @@
 #include "header/basic/sparse_matrix_csparse.h"
 #include "header/basic/constants.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 #include <string>
 #include <istream>
 #include <ostream>
@@ -22,6 +23,7 @@ SPARSE_MATRIX_CSPARSE::SPARSE_MATRIX_CSPARSE():SPARSE_MATRIX()
     LU_workspace = NULL;
     bb = NULL;
     bb_size = 0;
+    add_entry_callled = false;
 
     clear();
 }
@@ -35,6 +37,7 @@ SPARSE_MATRIX_CSPARSE::SPARSE_MATRIX_CSPARSE(const SPARSE_MATRIX_CSPARSE& matrix
     LU_workspace = NULL;
     bb = NULL;
     bb_size = 0;
+    add_entry_callled = false;
 
     clear();
 
@@ -138,6 +141,7 @@ void SPARSE_MATRIX_CSPARSE::clear()
     LU_workspace = NULL;
     bb = NULL;
     bb_size = 0;
+    add_entry_callled = false;
 
     matrix_real = cs_spalloc(1,1,1,1,1); // arguments: row = 1, column = 1, max_entry = 1, allocate_memory = 1, triplet_form = 1
     matrix_imag = cs_spalloc(1,1,1,1,1);
@@ -177,6 +181,7 @@ void SPARSE_MATRIX_CSPARSE::add_entry(int row, int col, const complex<double>& v
             compress_and_merge_duplicate_entries();
         }
     }
+    add_entry_callled = true;
 }
 
 void SPARSE_MATRIX_CSPARSE::convert_to_triplet_form()
@@ -326,7 +331,7 @@ int SPARSE_MATRIX_CSPARSE::get_matrix_size() const
 
 int SPARSE_MATRIX_CSPARSE::get_matrix_entry_count() const
 {
-    return matrix_real->nzmax;
+    return add_entry_callled ? matrix_real->nzmax : 0;
 }
 
 int SPARSE_MATRIX_CSPARSE::get_starting_index_of_column(int col) const
@@ -738,7 +743,20 @@ cs* SPARSE_MATRIX_CSPARSE::get_cs_imag_matrix()
 
 void SPARSE_MATRIX_CSPARSE::set_cs_real_matrix(cs* matrix)
 {
-    matrix_real = matrix;
+    clear();
+    int i=0, j=0, k=0;
+    int n = matrix->n;
+    double x = 0;
+    for(j=0;j!=n;++j)
+    {
+        for(k=matrix->p[j];k<matrix->p[j+1];++k)
+        {
+            i=matrix->i[k];
+            x=matrix->x[k];
+            add_entry(i,j,x);
+        }
+    }
+    compress_and_merge_duplicate_entries();
     update_clock_when_matrix_is_changed();
 }
 
@@ -755,12 +773,14 @@ vector<double>& operator/(vector<double>&b, SPARSE_MATRIX_CSPARSE& A)
 
 SPARSE_MATRIX_CSPARSE operator+(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE& B)
 {
+    if(A.matrix_in_triplet_form()) A.compress_and_merge_duplicate_entries();
+    if(B.matrix_in_triplet_form()) B.compress_and_merge_duplicate_entries();
     cs* a = A.get_cs_real_matrix();
     cs* b = B.get_cs_real_matrix();
 
     cs* c = cs_add(a,b,1.0, 1.0);
 
-    SPARSE_MATRIX_CSPARSE C;
+    static SPARSE_MATRIX_CSPARSE C;
     C.clear();
     C.set_cs_real_matrix(c);
     C.compress_and_merge_duplicate_entries();
@@ -769,12 +789,15 @@ SPARSE_MATRIX_CSPARSE operator+(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE& 
 
 SPARSE_MATRIX_CSPARSE operator-(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE& B)
 {
+    if(A.matrix_in_triplet_form()) A.compress_and_merge_duplicate_entries();
+    if(B.matrix_in_triplet_form()) B.compress_and_merge_duplicate_entries();
+
     cs* a = A.get_cs_real_matrix();
     cs* b = B.get_cs_real_matrix();
 
     cs* c = cs_add(a,b,1.0, -1.0);
 
-    SPARSE_MATRIX_CSPARSE C;
+    static SPARSE_MATRIX_CSPARSE C;
     C.clear();
     C.set_cs_real_matrix(c);
     C.compress_and_merge_duplicate_entries();
@@ -783,22 +806,37 @@ SPARSE_MATRIX_CSPARSE operator-(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE& 
 
 SPARSE_MATRIX_CSPARSE operator*(SPARSE_MATRIX_CSPARSE&A, SPARSE_MATRIX_CSPARSE& B)
 {
+    if(A.matrix_in_triplet_form()) A.compress_and_merge_duplicate_entries();
+    if(B.matrix_in_triplet_form()) B.compress_and_merge_duplicate_entries();
+
+    if(A.get_matrix_column_count() != B.get_matrix_row_count())
+    {
+        cout<<"Error. Matrix A and B have incompatible size. A is ("<<A.get_matrix_row_count()
+            <<"x"<<A.get_matrix_column_count()<<") and B is ("<<B.get_matrix_row_count()<<"x"<<B.get_matrix_column_count()<<")"<<endl;
+    }
     cs* a = A.get_cs_real_matrix();
     cs* b = B.get_cs_real_matrix();
 
     cs* c = cs_multiply(a,b);
+    /*
+    cout<<"MATRIX * is called with a = "<<a->m<<"x"<<a->n<<", "
+        <<"b = "<<b->m<<"x"<<b->n<<", "
+        <<"c = a*b = "<<c->m<<"x"<<c->n<<endl;
+    */
 
-    SPARSE_MATRIX_CSPARSE C;
+    static SPARSE_MATRIX_CSPARSE C;
     C.clear();
     C.set_cs_real_matrix(c);
-    C.convert_to_triplet_form();
     C.compress_and_merge_duplicate_entries();
     return C;
 }
 
 SPARSE_MATRIX_CSPARSE operator/(double b, SPARSE_MATRIX_CSPARSE& A)
 {
-    SPARSE_MATRIX_CSPARSE B;
+    if(A.matrix_in_triplet_form()) A.compress_and_merge_duplicate_entries();
+
+    static SPARSE_MATRIX_CSPARSE B;
+    B.clear();
     int n = A.get_matrix_size();
 
     double temp = INFINITE_THRESHOLD;
@@ -847,14 +885,16 @@ unsigned int SPARSE_MATRIX_CSPARSE::get_memory_usage_in_bytes()
 
 SPARSE_MATRIX_CSPARSE inv(SPARSE_MATRIX_CSPARSE&A)
 {
-    // B = inv(A)
+    if(A.matrix_in_triplet_form()) A.compress_and_merge_duplicate_entries();
+
     unsigned int n = A.get_matrix_column_count();
 
     vector<double> b;
     for(unsigned int i=0; i<n; ++i)
         b.push_back(0.0);
 
-    SPARSE_MATRIX_CSPARSE B;
+    static SPARSE_MATRIX_CSPARSE B;
+    B.clear();
     for(unsigned int i=0; i<n; ++i)
     {
         for(unsigned int j=0; j<n; ++j)
@@ -870,12 +910,20 @@ SPARSE_MATRIX_CSPARSE inv(SPARSE_MATRIX_CSPARSE&A)
 
 SPARSE_MATRIX_CSPARSE concatenate_matrix_diagnally(const vector<SPARSE_MATRIX_CSPARSE*> matrix)
 {
-    SPARSE_MATRIX_CSPARSE MATRIX;
+    static SPARSE_MATRIX_CSPARSE MATRIX;
+    MATRIX.clear();
     unsigned int m=0, n = 0;
     unsigned int N = matrix.size();
     for(unsigned int i = 0; i<N; ++i)
     {
         SPARSE_MATRIX_CSPARSE* imatrix = matrix[i];
+        if(imatrix->matrix_in_triplet_form())
+        {
+            ostringstream osstream;
+            osstream<<"Warning. The "<<i<<"-th matrix is in triplet form. It cannot be concatenated into a single matrix.";
+            default_toolkit.show_information_with_leading_time_stamp(osstream);
+            break;
+        }
         unsigned int nz = imatrix->get_matrix_entry_count();
         if(nz == 0) continue;
 
@@ -906,7 +954,8 @@ SPARSE_MATRIX_CSPARSE build_identity_matrix(unsigned int n)
     for(unsigned int i=0; i<n; ++i)
         b.push_back(0.0);
 
-    SPARSE_MATRIX_CSPARSE B;
+    static SPARSE_MATRIX_CSPARSE B;
+    B.clear();
     for(unsigned int i=0; i<n; ++i)
     {
         for(unsigned int j=0; j<n; ++j)
@@ -958,7 +1007,10 @@ SPARSE_MATRIX_CSPARSE expand_matrix_to_new_size(const SPARSE_MATRIX_CSPARSE&A, u
         return A;
     else
     {
-        SPARSE_MATRIX_CSPARSE B = A;
+        static SPARSE_MATRIX_CSPARSE B;
+        B.clear();
+        B = A;
+
         B.convert_to_triplet_form();
         B.add_entry(mrow-1, ncol-1, complex<double>(0,0));
         B.compress_and_merge_duplicate_entries();
@@ -974,7 +1026,8 @@ SPARSE_MATRIX_CSPARSE shrink_matrix_to_new_size(const SPARSE_MATRIX_CSPARSE&A, u
         return A;
     else
     {
-        SPARSE_MATRIX_CSPARSE B;
+        static SPARSE_MATRIX_CSPARSE B;
+        B.clear();
         unsigned int nz = A.get_matrix_entry_count();
         for(unsigned int k=0; k<nz; ++k)
         {

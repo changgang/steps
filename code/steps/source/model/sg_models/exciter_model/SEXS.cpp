@@ -429,6 +429,7 @@ void SEXS::build_linearized_matrix_ABCD()
             U = E*Y+F*V
             W = G*Y+H*V
     */
+
     initialize_ABCD_matrix_for_linearization();
 
     // block 0

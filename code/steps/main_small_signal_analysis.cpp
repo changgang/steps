@@ -12,6 +12,8 @@ using namespace std;
 int main()
 {
     default_toolkit.disable_use_steps_fast_math_logic();
+    default_toolkit.open_log_file("ssa-ieee9.log");
+    //default_toolkit.enable_detailed_log();
 
     ostringstream osstream;
 
@@ -23,7 +25,6 @@ int main()
     PSSE_IMEXPORTER importer(default_toolkit);
 
     importer.load_powerflow_data("../../../bench/IEEE9.raw");
-    cout<<"Done loading powerflow file"<<endl;
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -37,6 +38,7 @@ int main()
     powerflow_solver.save_extended_powerflow_result_to_file("9_bus.csv");
 
     importer.load_dynamic_data("IEEE9_ssa.dyr");
+    psdb.check_dynamic_data();
 
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
     simulator.set_allowed_max_power_imbalance_in_MVA(0.01);
@@ -48,18 +50,14 @@ int main()
 
     simulator.start(); // initialize all devices
 
-    cout<<"Done initialization"<<endl;
-
     vector<GENERATOR*> gens = psdb.get_all_generators();
     unsigned int n = gens.size();
     for(unsigned int i = 0; i<n; ++i)
     {
         GENERATOR* gen = gens[i];
-        osstream<<"Show ABCD of "<<gen->get_compound_device_name();
-        default_toolkit.show_information_with_leading_time_stamp(osstream);
-
         gen->build_linearized_matrix_ABCD();
     }
 
+    default_toolkit.close_log_file();
     return 0;
 }

@@ -855,6 +855,7 @@ void GENSAL::build_linearized_matrix_ABCD()
             U = E*Y+F*V
             W = G*Y+H*V
     */
+
     initialize_ABCD_matrix_for_linearization();
 
     INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
@@ -906,7 +907,8 @@ void GENSAL::build_linearized_matrix_ABCD()
     matrix.push_back(&A_subtransient_block_q_axis);
     matrix.push_back(&A_rotor_speed_block);
     matrix.push_back(&A_rotor_angle_block);
-    STEPS_SPARSE_MATRIX A = concatenate_matrix_diagnally(matrix);
+    STEPS_SPARSE_MATRIX A;
+    A = concatenate_matrix_diagnally(matrix);
     matrix.clear();
 
     matrix.push_back(&B_transient_block_d_axis);
@@ -914,7 +916,8 @@ void GENSAL::build_linearized_matrix_ABCD()
     matrix.push_back(&B_subtransient_block_q_axis);
     matrix.push_back(&B_rotor_speed_block);
     matrix.push_back(&B_rotor_angle_block);
-    STEPS_SPARSE_MATRIX B = concatenate_matrix_diagnally(matrix);
+    STEPS_SPARSE_MATRIX B;
+    B = concatenate_matrix_diagnally(matrix);
     matrix.clear();
 
     matrix.push_back(&C_transient_block_d_axis);
@@ -922,7 +925,8 @@ void GENSAL::build_linearized_matrix_ABCD()
     matrix.push_back(&C_subtransient_block_q_axis);
     matrix.push_back(&C_rotor_speed_block);
     matrix.push_back(&C_rotor_angle_block);
-    STEPS_SPARSE_MATRIX C = concatenate_matrix_diagnally(matrix);
+    STEPS_SPARSE_MATRIX C;
+    C = concatenate_matrix_diagnally(matrix);
     matrix.clear();
 
     matrix.push_back(&D_transient_block_d_axis);
@@ -930,7 +934,8 @@ void GENSAL::build_linearized_matrix_ABCD()
     matrix.push_back(&D_subtransient_block_q_axis);
     matrix.push_back(&D_rotor_speed_block);
     matrix.push_back(&D_rotor_angle_block);
-    STEPS_SPARSE_MATRIX D = concatenate_matrix_diagnally(matrix);
+    STEPS_SPARSE_MATRIX D;
+    D = concatenate_matrix_diagnally(matrix);
     matrix.clear();
 
 

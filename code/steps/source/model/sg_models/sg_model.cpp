@@ -2,6 +2,8 @@
 #include "header/basic/utility.h"
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
+#include <iostream>
+using namespace std;
 SG_MODEL::SG_MODEL(STEPS& toolkit) : MODEL(toolkit)
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_GENERATOR);
@@ -127,8 +129,34 @@ void SG_MODEL::build_linearized_matrix_ABCD_with_basic_ABCD_and_EFGH(vector<STEP
     *Bptr = B_INV1_F;
     *Cptr = G_INV2_C;
     *Dptr = Dtemp;
+
+    show_linearized_matrix_ABCD();
 }
 
+void SG_MODEL::show_linearized_matrix_ABCD()
+{
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+
+    osstream<<"Linearized matrix ABCD of "<<get_model_name()<<" model of "<<get_compound_device_name()<<" are listed as follows.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
+    osstream<<"A = ";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+    Aptr->report_brief();
+
+    osstream<<"B = ";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+    Bptr->report_brief();
+
+    osstream<<"C = ";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+    Cptr->report_brief();
+
+    osstream<<"D = ";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+    Dptr->report_brief();
+}
 STEPS_SPARSE_MATRIX SG_MODEL::get_linearized_matrix_variable(char var) const
 {
     var = toupper(var);
