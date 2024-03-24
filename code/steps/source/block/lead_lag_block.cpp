@@ -83,7 +83,7 @@ void LEAD_LAG_BLOCK::determine_block_integration_time_step_mode()
     double global_h = toolkit.get_dynamic_simulation_time_step_in_s();
     BLOCK_INTEGRATION_TIME_STEP_MODE mode = NORMAL_INTEGRATION_TIME_STEP_MODE;
 
-    bool is_automatic_large_step_logic_enabled = get_automatic_large_time_step_logic();
+    bool is_automatic_large_step_logic_enabled = is_automatic_large_time_step_logic_enabled();
     if(is_automatic_large_step_logic_enabled)
     {
         double t2 = get_T2_in_s();
@@ -190,10 +190,12 @@ void LEAD_LAG_BLOCK::run(DYNAMIC_MODE mode)
     double t1 = get_T1_in_s();
     if(t1!=0.0)
     {
-        if(mode==INTEGRATE_MODE)
+        if(mode==DYNAMIC_INTEGRATE_MODE)
             integrate();
-        if(mode==UPDATE_MODE)
+        if(mode==DYNAMIC_UPDATE_MODE)
             update();
+        if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
+            update_simulation_time_step();
     }
     else
     {
@@ -341,6 +343,22 @@ void LEAD_LAG_BLOCK::update_small_time_step_mode()
 void LEAD_LAG_BLOCK::update_large_time_step_mode()
 {
     update_normal_time_step_mode();
+}
+
+void LEAD_LAG_BLOCK::update_simulation_time_step()
+{
+    determine_block_integration_time_step_mode();
+    determine_block_integration_time_step();
+    determine_block_temp_variables();
+
+    double k = get_K();
+    double x = get_input();
+    double y = get_output();
+    double s = (y/t1_over_t2 - k*x)/(t2_over_t1-1.0);
+    set_state(s);
+    double z = s+h_over_2t1*(y-s);
+    set_store(z);
+    copy_current_input_to_old_input_in_last_time_step();
 }
 
 STEPS_SPARSE_MATRIX LEAD_LAG_BLOCK::get_linearized_matrix_variable(char var) const

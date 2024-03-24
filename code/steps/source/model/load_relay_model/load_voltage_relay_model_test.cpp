@@ -126,8 +126,8 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::run_model(string outputfile)
             default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
             break;
         }
-        model->run(INTEGRATE_MODE);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_INTEGRATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values();
     }
@@ -147,8 +147,8 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::run_model(string outputfile)
         volt -= (rate*delt);
         busptr->set_positive_sequence_voltage_in_pu(volt);
 
-        model->run(INTEGRATE_MODE);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_INTEGRATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values();
     }
@@ -164,8 +164,8 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::run_model(string outputfile)
         volt += (rate*delt);
         busptr->set_positive_sequence_voltage_in_pu(volt);
 
-        model->run(INTEGRATE_MODE);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_INTEGRATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values();
     }
@@ -180,8 +180,8 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::run_model(string outputfile)
         volt -= (rate*delt);
         busptr->set_positive_sequence_voltage_in_pu(volt);
 
-        model->run(INTEGRATE_MODE);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_INTEGRATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values();
     }
@@ -194,8 +194,8 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::run_model(string outputfile)
             default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
             break;
         }
-        model->run(INTEGRATE_MODE);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_INTEGRATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values();
     }
@@ -213,8 +213,8 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::run_model(string outputfile)
             busptr->set_positive_sequence_voltage_in_pu(volt);
             break;
         }
-        model->run(INTEGRATE_MODE);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_INTEGRATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values();
     }

@@ -836,7 +836,7 @@ void PVEX::run(DYNAMIC_MODE mode)
     frequency_integral_controller.run(mode);
 
     //osstream<<"speed = "<<speed<<endl;
-/*    if(mode==UPDATE_MODE and is_frequency_regulation_enabled())
+/*    if(mode==DYNAMIC_UPDATE_MODE and is_frequency_regulation_enabled())
     {
         WT_AERODYNAMIC_MODEL* aerd = wt_generator->get_wt_aerodynamic_model();
         double wmin = aerd->get_min_steady_state_turbine_speed_in_pu();
@@ -955,7 +955,7 @@ void PVEX::run(DYNAMIC_MODE mode)
     }
     //show_information_with_leading_time_stamp(osstream);
 
-    if(mode == UPDATE_MODE)
+    if(mode == DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 

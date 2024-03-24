@@ -985,7 +985,7 @@ void CIM6::run(DYNAMIC_MODE mode)
     speed_block.set_input(-Pelec/speed - Tload);
     speed_block.run(mode);
 
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 

@@ -332,7 +332,7 @@ void PVGU1::run(DYNAMIC_MODE mode)
     reactive_voltage_commander.set_input(EQ);
     reactive_voltage_commander.run(mode);
 
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 

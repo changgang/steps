@@ -7,7 +7,7 @@
 - Reminder of major repository:
   * The github repository may lag behind the gitee repository due to some GIT PUSH issues. So, use gitee repository first.
   * The 'dev' branch is constantly updating while the 'main' branch is updated when major functions are added. Use 'main' branch for stable applications, and try 'dev' branch for new features.
-- Date of Readme: Nov. 2, 2023
+- Date of Readme: March 24, 2024
 
 # Reference
 Please cite STEPS with the following papers:  
@@ -23,6 +23,7 @@ Though BPA dat format is supported, it will be supported in the future version i
 You are encouraged to join us for further development.
 
 ## Major versions
+- v2.2.0. Add function to change dynamic simulation time step manually. stepspy is also updated however not pushed to pypi due to token issue. please use python/stepspy-current/stepspy.
 - v2.1.0. Add function to check if NAN is detected in powerflow solver. stepspy is also updated. Compile option '-ffast-math' is disabled. 
 - v2.0.0. Major version. (1) Short circuit functions added. Short circuit analysis with direct solution is supported. APIs are added to stepspy. Short circuit analysis with iterative solution is implemented in C++, and APIs will be added in later version.  (2) Two toolkit functions added: Correct Three Winding Transformer Impedance Logic and Blockwise Automatic Large Step Logic. If the 'Correct' logic is enabled, zero impedance winding of 3-winding transformer can be automatically fixed to avoid NaN error. If the 'Blockwise' logic is enabled, dynamic simulation time step can be increased for fast simulation (See Reference Paper [2]). The 'Blockwise' logic is implemented with changes of dynamic blocks of first order, differential, and lead-lag. (3) Option 'libsteps_file' is added to stepspy when creating STEPS() object when dynamic library with name different from 'libSTEPS' is used. (4) Some wind turbine model bugs are fixed. (5) stepspy module is also upgraded to v2.0.0.
 - v1.6.0. Add VSC HVDC for powerflow and dynamic simulation. stepspy also updated. Released on April 13, 2022.

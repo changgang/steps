@@ -798,6 +798,9 @@ def load_library(libsteps_file):
     libsteps.api_get_basic_meter_value.restype = c_double
     libsteps.api_get_basic_meter_value.argtypes = (c_char_p, c_uint)
 
+    libsteps.api_change_dynamic_simulation_time_step.restype = None
+    libsteps.api_change_dynamic_simulation_time_step.argtypes = (c_double, c_uint)
+
     libsteps.api_set_bus_fault.restype = None
     libsteps.api_set_bus_fault.argtypes = (c_uint, c_char_p, c_double, c_double, c_uint)
     libsteps.api_clear_bus_fault.restype = None

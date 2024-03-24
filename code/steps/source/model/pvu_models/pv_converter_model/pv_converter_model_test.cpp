@@ -143,13 +143,13 @@ void PV_CONVERTER_MODEL_TEST::run_a_step()
     double pelec = model->get_terminal_active_power_in_MW();
     while(true)
     {
-        model->run(INTEGRATE_MODE);
+        model->run(DYNAMIC_INTEGRATE_MODE);
         if(fabs(pelec-model->get_terminal_active_power_in_MW())>1e-6)
             pelec = model->get_terminal_active_power_in_MW();
         else
             break;
     }
-    model->run(UPDATE_MODE);
+    model->run(DYNAMIC_UPDATE_MODE);
 }
 
 void PV_CONVERTER_MODEL_TEST::export_meter_title()
@@ -225,7 +225,7 @@ void PV_CONVERTER_MODEL_TEST::test_active_current_step_response_of_pv_converter_
 
         double ipcmd = model->get_initial_active_current_command_in_pu_based_on_mbase();
         model->set_initial_active_current_command_in_pu_based_on_mbase(ipcmd*0.99);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(time);
 
@@ -285,7 +285,7 @@ void PV_CONVERTER_MODEL_TEST::test_reactive_current_step_response_of_pv_converte
 
         double iqcmd = model->get_initial_reactive_current_command_in_pu_based_on_mbase();
         model->set_initial_reactive_current_command_in_pu_based_on_mbase(iqcmd*0.99);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(time);
 
@@ -348,7 +348,7 @@ void PV_CONVERTER_MODEL_TEST::test_bus_magnitude_step_response_of_pv_converter_m
         double vterm = bus->get_positive_sequence_voltage_in_pu();
         bus->set_positive_sequence_voltage_in_pu(vterm*0.99);
 
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(time);
 
@@ -411,7 +411,7 @@ void PV_CONVERTER_MODEL_TEST::test_bus_angle_step_response_of_pv_converter_model
         double angle = bus->get_positive_sequence_angle_in_deg();
         bus->set_positive_sequence_angle_in_deg(angle+10.0);
 
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(time);
 
@@ -472,7 +472,7 @@ void PV_CONVERTER_MODEL_TEST::test_variable_step_simulation_with_active_current_
 
         double ipcmd = model->get_initial_active_current_command_in_pu_based_on_mbase();
         model->set_initial_active_current_command_in_pu_based_on_mbase(ipcmd*0.9);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(time);
 
@@ -492,7 +492,7 @@ void PV_CONVERTER_MODEL_TEST::test_variable_step_simulation_with_active_current_
 
         delt *= 2.0;
         default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(time);
 
@@ -512,7 +512,7 @@ void PV_CONVERTER_MODEL_TEST::test_variable_step_simulation_with_active_current_
 
         delt *= 2.0;
         default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(time);
 

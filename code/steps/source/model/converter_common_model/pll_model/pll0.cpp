@@ -120,7 +120,7 @@ void PLL0::initialize()
 
 void PLL0::run(DYNAMIC_MODE mode)
 {
-    if(mode==INTEGRATE_MODE or mode==UPDATE_MODE)
+    if(mode==DYNAMIC_INTEGRATE_MODE or mode==DYNAMIC_UPDATE_MODE)
     {
         double kp = get_Kp();
         double ki = get_Ki();
@@ -162,7 +162,7 @@ void PLL0::run(DYNAMIC_MODE mode)
     }
     else
     {
-        if(mode==INITIALIZE_MODE)
+        if(mode==DYNAMIC_INITIALIZE_MODE)
             initialize();
     }
 }

@@ -349,7 +349,7 @@ void GENSAL::run(DYNAMIC_MODE mode)
     rotor_angle_block->set_input(speed);
     rotor_angle_block->run(mode);
 
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 

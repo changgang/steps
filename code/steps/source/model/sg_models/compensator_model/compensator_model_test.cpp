@@ -109,8 +109,8 @@ void COMPENSATOR_MODEL_TEST::update_models()
 {
     COMPENSATOR_MODEL* model = get_test_compensator_model();
     SYNC_GENERATOR_MODEL* genmodel = get_test_sync_generator_model();
-    genmodel->run(UPDATE_MODE);
-    model->run(UPDATE_MODE);
+    genmodel->run(DYNAMIC_UPDATE_MODE);
+    model->run(DYNAMIC_UPDATE_MODE);
 }
 
 void COMPENSATOR_MODEL_TEST::run_to_time(double tend)
@@ -131,15 +131,15 @@ void COMPENSATOR_MODEL_TEST::run_to_time(double tend)
         ecomp = model->get_compensated_voltage_in_pu();
         while(true)
         {
-            genmodel->run(INTEGRATE_MODE);
-            model->run(INTEGRATE_MODE);
+            genmodel->run(DYNAMIC_INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(ecomp-model->get_compensated_voltage_in_pu())>1e-6)
                 ecomp = model->get_compensated_voltage_in_pu();
             else
                 break;
         }
-        genmodel->run(UPDATE_MODE);
-        model->run(UPDATE_MODE);
+        genmodel->run(DYNAMIC_UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values();
     }

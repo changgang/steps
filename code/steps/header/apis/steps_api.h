@@ -440,6 +440,8 @@ EXPORT_STEPS_DLL bool api_get_system_angular_stable_flag(unsigned int toolkit_in
 EXPORT_STEPS_DLL double api_get_basic_meter_value(const char* meter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_user_meter_value(int index, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
+EXPORT_STEPS_DLL void api_change_dynamic_simulation_time_step(double delt, unsigned int toolkit_index=INDEX_NOT_EXIST);
+
 EXPORT_STEPS_DLL void api_set_bus_fault(unsigned int bus, char* fault_type, double fault_G, double fault_B, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_clear_bus_fault(unsigned int bus, char* fault_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_trip_bus(unsigned int bus, unsigned int toolkit_index=INDEX_NOT_EXIST);

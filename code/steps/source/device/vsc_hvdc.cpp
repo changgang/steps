@@ -2380,7 +2380,7 @@ void VSC_HVDC::run(DYNAMIC_MODE mode)
         unsigned int i;
         switch(mode)
         {
-            case INITIALIZE_MODE:
+            case DYNAMIC_INITIALIZE_MODE:
             {
                 if(network!=NULL)
                     network->initialize();
@@ -2391,8 +2391,9 @@ void VSC_HVDC::run(DYNAMIC_MODE mode)
                 }
                 break;
             }
-            case INTEGRATE_MODE:
-            case UPDATE_MODE:
+            case DYNAMIC_INTEGRATE_MODE:
+            case DYNAMIC_UPDATE_MODE:
+            case DYNAMIC_UPDATE_TIME_STEP_MODE:
             {
                 if(network!=NULL)
                     network->run(mode);
@@ -2404,7 +2405,7 @@ void VSC_HVDC::run(DYNAMIC_MODE mode)
                 }
                 break;
             }
-            case RELAY_MODE:
+            case DYNAMIC_RELAY_MODE:
             {
                 break;
             }

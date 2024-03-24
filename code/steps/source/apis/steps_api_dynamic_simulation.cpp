@@ -87,6 +87,10 @@ double api_get_dynamic_simulator_float_parameter(char* parameter_name, unsigned 
         return ds.get_iteration_accelerator();
     if(PARAMETER_NAME=="ANGLE STABILITY THRESHOLD IN DEG")
         return ds.get_rotor_angle_stability_threshold_in_deg();
+    if(PARAMETER_NAME=="DELT THRESHOLD FOR LEADING PART OF BUS FREQ MODEL IN S")
+        return ds.get_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s();
+    if(PARAMETER_NAME=="K FOR LEADING PART OF BUS FREQ MODEL")
+        return ds.get_k_for_leading_part_of_bus_frequency_model();
 
 
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
@@ -115,6 +119,16 @@ void api_set_dynamic_simulator_float_parameter(char* parameter_name, double valu
     if(PARAMETER_NAME=="ANGLE STABILITY THRESHOLD IN DEG")
     {
         ds.set_rotor_angle_stability_threshold_in_deg(value);
+        return;
+    }
+    if(PARAMETER_NAME=="DELT THRESHOLD FOR LEADING PART OF BUS FREQ MODEL IN S")
+    {
+        ds.set_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s(value);
+        return;
+    }
+    if(PARAMETER_NAME=="K FOR LEADING PART OF BUS FREQ MODEL")
+    {
+        ds.set_k_for_leading_part_of_bus_frequency_model(value);
         return;
     }
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
@@ -495,6 +509,14 @@ double api_get_user_meter_value(int index, unsigned int toolkit_index)
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     return ds.get_user_meter_value(index);
+}
+
+void api_change_dynamic_simulation_time_step(double delt, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    return ds.change_dynamic_simulator_time_step_in_s(delt);
+
 }
 
 void api_set_bus_fault(unsigned int bus, char* fault_type, double fault_G, double fault_B, unsigned int toolkit_index)

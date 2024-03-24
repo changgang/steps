@@ -244,13 +244,13 @@ void LCC_HVDC2T_MODEL_TEST::test_rectifier_voltage_ramp_response()
         vdcr = model->get_converter_dc_voltage_in_kV(converter);
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(vdcr-model->get_converter_dc_voltage_in_kV(RECTIFIER))>1e-6)
                 vdcr = model->get_converter_dc_voltage_in_kV(RECTIFIER);
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
@@ -276,13 +276,13 @@ void LCC_HVDC2T_MODEL_TEST::test_rectifier_voltage_ramp_response()
         vdcr = model->get_converter_dc_voltage_in_kV(converter);
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(vdcr-model->get_converter_dc_voltage_in_kV(RECTIFIER))>1e-6)
                 vdcr = model->get_converter_dc_voltage_in_kV(RECTIFIER);
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
@@ -301,13 +301,13 @@ void LCC_HVDC2T_MODEL_TEST::test_rectifier_voltage_ramp_response()
         vdcr = model->get_converter_dc_voltage_in_kV(converter);
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(vdcr-model->get_converter_dc_voltage_in_kV(RECTIFIER))>1e-6)
                 vdcr = model->get_converter_dc_voltage_in_kV(RECTIFIER);
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
@@ -329,13 +329,13 @@ void LCC_HVDC2T_MODEL_TEST::test_rectifier_voltage_ramp_response()
         vdcr = model->get_converter_dc_voltage_in_kV(converter);
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(vdcr-model->get_converter_dc_voltage_in_kV(RECTIFIER))>1e-6)
                 vdcr = model->get_converter_dc_voltage_in_kV(RECTIFIER);
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
@@ -354,13 +354,13 @@ void LCC_HVDC2T_MODEL_TEST::test_rectifier_voltage_ramp_response()
         vdcr = model->get_converter_dc_voltage_in_kV(converter);
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(vdcr-model->get_converter_dc_voltage_in_kV(RECTIFIER))>1e-6)
                 vdcr = model->get_converter_dc_voltage_in_kV(RECTIFIER);
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
@@ -410,13 +410,13 @@ void LCC_HVDC2T_MODEL_TEST::test_inverter_voltage_ramp_response()
         vdcr = model->get_converter_dc_voltage_in_kV(converter);
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(vdcr-model->get_converter_dc_voltage_in_kV(RECTIFIER))>1e-6)
                 vdcr = model->get_converter_dc_voltage_in_kV(RECTIFIER);
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
@@ -442,13 +442,13 @@ void LCC_HVDC2T_MODEL_TEST::test_inverter_voltage_ramp_response()
         vdcr = model->get_converter_dc_voltage_in_kV(converter);
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(vdcr-model->get_converter_dc_voltage_in_kV(RECTIFIER))>1e-6)
                 vdcr = model->get_converter_dc_voltage_in_kV(RECTIFIER);
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
@@ -467,13 +467,13 @@ void LCC_HVDC2T_MODEL_TEST::test_inverter_voltage_ramp_response()
         vdcr = model->get_converter_dc_voltage_in_kV(converter);
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(vdcr-model->get_converter_dc_voltage_in_kV(RECTIFIER))>1e-6)
                 vdcr = model->get_converter_dc_voltage_in_kV(RECTIFIER);
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
@@ -495,13 +495,13 @@ void LCC_HVDC2T_MODEL_TEST::test_inverter_voltage_ramp_response()
         vdcr = model->get_converter_dc_voltage_in_kV(converter);
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(vdcr-model->get_converter_dc_voltage_in_kV(RECTIFIER))>1e-6)
                 vdcr = model->get_converter_dc_voltage_in_kV(RECTIFIER);
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
@@ -520,13 +520,13 @@ void LCC_HVDC2T_MODEL_TEST::test_inverter_voltage_ramp_response()
         vdcr = model->get_converter_dc_voltage_in_kV(converter);
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(vdcr-model->get_converter_dc_voltage_in_kV(RECTIFIER))>1e-6)
                 vdcr = model->get_converter_dc_voltage_in_kV(RECTIFIER);
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
@@ -575,13 +575,13 @@ void LCC_HVDC2T_MODEL_TEST::test_manual_block_and_unblock()
         vdcr = model->get_converter_dc_voltage_in_kV(converter);
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(vdcr-model->get_converter_dc_voltage_in_kV(RECTIFIER))>1e-6)
                 vdcr = model->get_converter_dc_voltage_in_kV(RECTIFIER);
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
@@ -589,7 +589,7 @@ void LCC_HVDC2T_MODEL_TEST::test_manual_block_and_unblock()
     //cout<<"now go blocking LCC_HVDC2T manually"<<endl;
     model->manual_block_2t_lcc_hvdc();
     //cout<<"now successfully blocked LCC_HVDC2T manually"<<endl;
-    model->run(UPDATE_MODE);
+    model->run(DYNAMIC_UPDATE_MODE);
     export_meter_values(TIME);
 
 
@@ -607,18 +607,18 @@ void LCC_HVDC2T_MODEL_TEST::test_manual_block_and_unblock()
         vdcr = model->get_converter_dc_voltage_in_kV(converter);
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(vdcr-model->get_converter_dc_voltage_in_kV(RECTIFIER))>1e-6)
                 vdcr = model->get_converter_dc_voltage_in_kV(RECTIFIER);
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
     model->manual_unblock_2t_lcc_hvdc();
-    model->run(UPDATE_MODE);
+    model->run(DYNAMIC_UPDATE_MODE);
     export_meter_values(TIME);
 
 
@@ -636,13 +636,13 @@ void LCC_HVDC2T_MODEL_TEST::test_manual_block_and_unblock()
         vdcr = model->get_converter_dc_voltage_in_kV(converter);
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(vdcr-model->get_converter_dc_voltage_in_kV(RECTIFIER))>1e-6)
                 vdcr = model->get_converter_dc_voltage_in_kV(RECTIFIER);
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
@@ -690,19 +690,19 @@ void LCC_HVDC2T_MODEL_TEST::test_manual_bypass_and_unbypass()
         vdcr = model->get_converter_dc_voltage_in_kV(converter);
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(vdcr-model->get_converter_dc_voltage_in_kV(RECTIFIER))>1e-6)
                 vdcr = model->get_converter_dc_voltage_in_kV(RECTIFIER);
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
 
     model->manual_bypass_2t_lcc_hvdc();
-    model->run(UPDATE_MODE);
+    model->run(DYNAMIC_UPDATE_MODE);
     export_meter_values(TIME);
 
 
@@ -720,18 +720,18 @@ void LCC_HVDC2T_MODEL_TEST::test_manual_bypass_and_unbypass()
         vdcr = model->get_converter_dc_voltage_in_kV(converter);
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(vdcr-model->get_converter_dc_voltage_in_kV(RECTIFIER))>1e-6)
                 vdcr = model->get_converter_dc_voltage_in_kV(RECTIFIER);
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
     model->manual_unbypass_2t_lcc_hvdc();
-    model->run(UPDATE_MODE);
+    model->run(DYNAMIC_UPDATE_MODE);
     export_meter_values(TIME);
 
 
@@ -749,13 +749,13 @@ void LCC_HVDC2T_MODEL_TEST::test_manual_bypass_and_unbypass()
         vdcr = model->get_converter_dc_voltage_in_kV(converter);
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(vdcr-model->get_converter_dc_voltage_in_kV(RECTIFIER))>1e-6)
                 vdcr = model->get_converter_dc_voltage_in_kV(RECTIFIER);
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }

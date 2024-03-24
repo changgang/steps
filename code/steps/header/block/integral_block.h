@@ -26,6 +26,8 @@ class INTEGRAL_BLOCK : public BLOCK
     private:
         void integrate();
         void update();
+        void update_simulation_time_step();
+
         double T;
 
         double one_over_t, h_over_t;

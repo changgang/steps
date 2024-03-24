@@ -310,7 +310,7 @@ void LCFB1::run(DYNAMIC_MODE mode)
     error_integrator.set_input(error);
     error_integrator.run(mode);
 
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 

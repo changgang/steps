@@ -47,6 +47,8 @@ class FIRST_ORDER_BLOCK : public BLOCK
         void update_small_time_step_mode();
         void update_large_time_step_mode();
 
+        void update_simulation_time_step();
+
         double K, T;
 
         double h;

@@ -141,20 +141,22 @@ void SECOND_ORDER_BLOCK::initialize()
 
 void SECOND_ORDER_BLOCK::run(DYNAMIC_MODE mode)
 {
-    if(mode==INTEGRATE_MODE)
+    if(mode==DYNAMIC_INTEGRATE_MODE)
         integrate();
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
         update();
+    if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
+        update_simulation_time_step();
 }
 
 void SECOND_ORDER_BLOCK::integrate()
 {
     double input = get_input();
     block1.set_input(input);
-    block1.run(INTEGRATE_MODE);
+    block1.run(DYNAMIC_INTEGRATE_MODE);
     input = block1.get_output();
     block2.set_input(input);
-    block2.run(INTEGRATE_MODE);
+    block2.run(DYNAMIC_INTEGRATE_MODE);
     set_output(block1.get_output()+block2.get_output());
 }
 
@@ -162,11 +164,24 @@ void SECOND_ORDER_BLOCK::update()
 {
     double input = get_input();
     block1.set_input(input);
-    block1.run(UPDATE_MODE);
+    block1.run(DYNAMIC_UPDATE_MODE);
 
     input = block1.get_output();
     block2.set_input(input);
-    block2.run(UPDATE_MODE);
+    block2.run(DYNAMIC_UPDATE_MODE);
+
+    set_output(block1.get_output()+block2.get_output());
+}
+
+void SECOND_ORDER_BLOCK::update_simulation_time_step()
+{
+    double x = get_input();
+    block1.set_input(x);
+    block1.run(DYNAMIC_UPDATE_TIME_STEP_MODE);
+
+    x = block1.get_output();
+    block2.set_input(x);
+    block2.run(DYNAMIC_UPDATE_TIME_STEP_MODE);
 
     set_output(block1.get_output()+block2.get_output());
 }

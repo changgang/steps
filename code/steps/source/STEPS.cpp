@@ -116,7 +116,7 @@ void STEPS::disable_dynamic_blocks_automatic_large_time_step_logic()
 
 bool STEPS::get_dynamic_blocks_automatic_large_time_step_logic()
 {
-    return BLOCK::get_automatic_large_time_step_logic();
+    return BLOCK::is_automatic_large_time_step_logic_enabled();
 }
 
 void STEPS::set_thread_number(unsigned int n)

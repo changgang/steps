@@ -107,19 +107,19 @@ void TURBINE_GOVERNOR_MODEL_TEST::run_step_response_of_turbine_govnernor_model()
         pmech =  model->get_mechanical_power_in_pu_based_on_mbase();
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(pmech-model->get_mechanical_power_in_pu_based_on_mbase())>1e-6)
                 pmech = model->get_mechanical_power_in_pu_based_on_mbase();
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
 
     apply_speed_drop_of_1_percent();
-    model->run(UPDATE_MODE);
+    model->run(DYNAMIC_UPDATE_MODE);
     pmech = model->get_mechanical_power_in_pu_based_on_mbase();
 
     export_meter_values(TIME);
@@ -136,13 +136,13 @@ void TURBINE_GOVERNOR_MODEL_TEST::run_step_response_of_turbine_govnernor_model()
         pmech =  model->get_mechanical_power_in_pu_based_on_mbase();
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(pmech-model->get_mechanical_power_in_pu_based_on_mbase())>1e-6)
                 pmech = model->get_mechanical_power_in_pu_based_on_mbase();
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }

@@ -72,7 +72,7 @@ void DIFFERENTIAL_BLOCK::determine_block_integration_time_step_mode()
     double global_h = toolkit.get_dynamic_simulation_time_step_in_s();
     BLOCK_INTEGRATION_TIME_STEP_MODE mode = NORMAL_INTEGRATION_TIME_STEP_MODE;
 
-    bool is_automatic_large_step_logic_enabled = get_automatic_large_time_step_logic();
+    bool is_automatic_large_step_logic_enabled = is_automatic_large_time_step_logic_enabled();
     if(is_automatic_large_step_logic_enabled)
     {
         double t = get_T_in_s();
@@ -156,10 +156,12 @@ void DIFFERENTIAL_BLOCK::run(DYNAMIC_MODE mode)
 {
     if(get_K()!=0.0)
     {
-        if(mode==INTEGRATE_MODE)
+        if(mode==DYNAMIC_INTEGRATE_MODE)
             integrate();
-        if(mode==UPDATE_MODE)
+        if(mode==DYNAMIC_UPDATE_MODE)
             update();
+        if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
+            update_simulation_time_step();
     }
 }
 
@@ -275,6 +277,22 @@ void DIFFERENTIAL_BLOCK::update_small_time_step_mode()
 void DIFFERENTIAL_BLOCK::update_large_time_step_mode()
 {
     update_normal_time_step_mode();
+}
+
+void DIFFERENTIAL_BLOCK::update_simulation_time_step()
+{
+    determine_block_integration_time_step_mode();
+    determine_block_integration_time_step();
+    determine_block_temp_variables();
+
+    double x = get_input();
+    double y = get_output();
+    double s = k_over_t*x-y;
+    set_state(s);
+    double z = k_over_t*x-(1.0-2.0*t_over_h)*s;
+    set_store(z);
+
+    copy_current_input_to_old_input_in_last_time_step();
 }
 
 STEPS_SPARSE_MATRIX DIFFERENTIAL_BLOCK::get_linearized_matrix_variable(char var) const

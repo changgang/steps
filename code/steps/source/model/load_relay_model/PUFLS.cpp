@@ -356,7 +356,7 @@ void PUFLS::run(DYNAMIC_MODE mode)
 
     append_new_minimum_frequency();
 
-    if(mode==UPDATE_MODE or mode==INTEGRATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE or mode==DYNAMIC_INTEGRATE_MODE)
     {
 
         unsigned int N = get_number_of_discrete_stage_to_meet_total_continuous_shed_scale();
@@ -392,9 +392,9 @@ void PUFLS::run(DYNAMIC_MODE mode)
             }
         }
     }
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
         update_continuous_shed_command();
-    if(mode==RELAY_MODE)
+    if(mode==DYNAMIC_RELAY_MODE)
         try_to_shed_additional_stage();
 }
 

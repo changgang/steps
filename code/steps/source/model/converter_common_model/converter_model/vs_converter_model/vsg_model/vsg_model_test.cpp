@@ -147,7 +147,7 @@ void VSG_MODEL_TEST::test_active_power_step_response_of_vsg_model()
 
         double p0 = model->get_P_in_pu_based_on_mbase();
         model->set_P_in_pu_based_on_mbase(p0*0.99);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(time);
 
@@ -216,7 +216,7 @@ void VSG_MODEL_TEST::test_reactive_power_step_response_of_vsg_model()
 
         double q0 = model->get_Q_in_pu_based_on_mbase();
         model->set_Q_in_pu_based_on_mbase(q0*0.99);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(time);
 
@@ -285,7 +285,7 @@ void VSG_MODEL_TEST::test_voltage_step_response_of_vsg_model()
 
         double V0 = model->get_V_in_pu();
         model->set_V_in_pu(V0*0.99);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(time);
 
@@ -314,7 +314,7 @@ void VSG_MODEL_TEST::run_a_step()
     double V = model->get_virtual_voltage_in_pu();
     while(true)
     {
-        model->run(INTEGRATE_MODE);
+        model->run(DYNAMIC_INTEGRATE_MODE);
         if(fabs(angle-model->get_virtual_angle_in_rad())>FLOAT_EPSILON or
            fabs(V-model->get_virtual_voltage_in_pu())>FLOAT_EPSILON)
         {
@@ -324,7 +324,7 @@ void VSG_MODEL_TEST::run_a_step()
         else
             break;
     }
-    model->run(UPDATE_MODE);
+    model->run(DYNAMIC_UPDATE_MODE);
 }
 
 void VSG_MODEL_TEST::export_meter_title()

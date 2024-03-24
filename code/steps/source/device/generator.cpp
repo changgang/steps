@@ -589,7 +589,7 @@ void GENERATOR::run(DYNAMIC_MODE mode)
         SYNC_GENERATOR_MODEL* gen = get_sync_generator_model();
         switch(mode)
         {
-            case INITIALIZE_MODE:
+            case DYNAMIC_INITIALIZE_MODE:
             {
                 if(gen!=NULL and gen->is_model_active())
                     gen->initialize();
@@ -637,8 +637,9 @@ void GENERATOR::run(DYNAMIC_MODE mode)
 
                 break;
             }
-            case INTEGRATE_MODE:
-            case UPDATE_MODE:
+            case DYNAMIC_INTEGRATE_MODE:
+            case DYNAMIC_UPDATE_MODE:
+            case DYNAMIC_UPDATE_TIME_STEP_MODE:
             {
                 if(comp!=NULL and comp->is_model_active())
                     comp->run(mode);
@@ -659,7 +660,7 @@ void GENERATOR::run(DYNAMIC_MODE mode)
                     gen->run(mode);
                 break;
             }
-            case RELAY_MODE:
+            case DYNAMIC_RELAY_MODE:
             default:
             {
                 break;

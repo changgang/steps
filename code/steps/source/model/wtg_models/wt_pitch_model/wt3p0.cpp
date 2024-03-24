@@ -414,7 +414,7 @@ void WT3P0::run(DYNAMIC_MODE mode)
     pitch_integrator.set_input(rate);
     pitch_integrator.run(mode);
 
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 

@@ -1204,7 +1204,7 @@ void URCSCT::run(DYNAMIC_MODE mode)
     delayer4.set_input(input);
     delayer4.run(mode);
 
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
     {
         gas_fuel_control.append_data(time, new_value_of_gas_fuel_control);
         gas_combustor.append_data(time, new_value_of_gas_combustor);

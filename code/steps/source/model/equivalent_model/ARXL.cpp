@@ -312,7 +312,7 @@ void ARXL::initialize()
 void ARXL::run(DYNAMIC_MODE mode)
 {
 
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
     {
         update_meters_buffer();
         set_flag_model_updated_as_true();

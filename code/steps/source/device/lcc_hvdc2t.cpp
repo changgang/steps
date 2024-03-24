@@ -1122,7 +1122,7 @@ void LCC_HVDC2T::run(DYNAMIC_MODE mode)
     {
         switch(mode)
         {
-            case INITIALIZE_MODE:
+            case DYNAMIC_INITIALIZE_MODE:
             {
                 if(toolkit.is_detailed_log_enabled())
                 {

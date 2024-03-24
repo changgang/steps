@@ -222,7 +222,7 @@ void TGOV1::run(DYNAMIC_MODE mode)
     turbine.set_input(input);
     turbine.run(mode);
 
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 double TGOV1::get_mechanical_power_in_pu_based_on_mbase() const

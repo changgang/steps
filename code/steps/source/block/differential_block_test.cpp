@@ -86,13 +86,13 @@ void DIFFERENTIAL_BLOCK_TEST::test_step_response_without_limiter()
 
     input = input+1.0;
     block.set_input(input);
-    block.run(UPDATE_MODE);
+    block.run(DYNAMIC_UPDATE_MODE);
     y = 1.0*K/T;
     TEST_ASSERT(fabs(block.get_output()-y)<FLOAT_EPSILON);
     for(t=h; t<=10.0000001; t +=h)
     {
-        block.run(INTEGRATE_MODE);
-        block.run(UPDATE_MODE);
+        block.run(DYNAMIC_INTEGRATE_MODE);
+        block.run(DYNAMIC_UPDATE_MODE);
         y =1.0*K/T*exp(-t/T);
         TEST_ASSERT(fabs(block.get_output()-y)<1e-8);
     }

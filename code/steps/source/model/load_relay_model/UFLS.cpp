@@ -259,7 +259,7 @@ void UFLS::run(DYNAMIC_MODE mode)
     frequency_sensor.set_input(freq);
     frequency_sensor.run(mode);
 
-    if(mode==RELAY_MODE)
+    if(mode==DYNAMIC_RELAY_MODE)
     {
         double f = frequency_sensor.get_output();
 

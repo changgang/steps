@@ -270,7 +270,7 @@ void CDC4T::run(DYNAMIC_MODE mode)
     dc_current_sensor.set_input(Idc);
     dc_current_sensor.run(mode);
 
-    if(mode == UPDATE_MODE)
+    if(mode == DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 

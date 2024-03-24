@@ -622,7 +622,7 @@ void LOAD::run(DYNAMIC_MODE mode)
         LOAD_MODEL* load = get_load_model();
         switch(mode)
         {
-            case INITIALIZE_MODE:
+            case DYNAMIC_INITIALIZE_MODE:
             {
                 set_load_manually_scale_factor_in_pu(0.0);
 
@@ -638,8 +638,9 @@ void LOAD::run(DYNAMIC_MODE mode)
                 }
                 break;
             }
-            case INTEGRATE_MODE:
-            case UPDATE_MODE:
+            case DYNAMIC_INTEGRATE_MODE:
+            case DYNAMIC_UPDATE_MODE:
+            case DYNAMIC_UPDATE_TIME_STEP_MODE:
             {
                 if(uvls!=NULL and uvls->is_model_active())
                     uvls->run(mode);
@@ -651,7 +652,7 @@ void LOAD::run(DYNAMIC_MODE mode)
                     load->run(mode);
                 break;
             }
-            case RELAY_MODE:
+            case DYNAMIC_RELAY_MODE:
             {
                 if(uvls!=NULL and uvls->is_model_active())
                     uvls->run(mode);

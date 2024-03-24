@@ -363,7 +363,7 @@ void IEEL::initialize_to_start()
 void IEEL::run(DYNAMIC_MODE mode)
 {
     synchronize_bus_voltage_and_frequency();
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 

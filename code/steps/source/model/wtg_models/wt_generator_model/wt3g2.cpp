@@ -465,7 +465,7 @@ void WT3G2::run(DYNAMIC_MODE mode)
         set_pll_angle_in_deg(angle_in_deg);
     }
 
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 

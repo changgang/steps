@@ -720,7 +720,7 @@ void GAST2A::run(DYNAMIC_MODE mode)
     gas_turbine_dynamic.set_input(wf);
     gas_turbine_dynamic.run(mode);
 
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
     {
         gas_fuel_control.append_data(time, new_value_of_gas_fuel_control);
         gas_combustor.append_data(time, new_value_of_gas_combustor);

@@ -227,13 +227,13 @@ void LOAD_MODEL_TEST::test_run_voltage_ramp_response()
         P =  model->get_load_power_in_MVA().real();
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(P-model->get_load_power_in_MVA().real())>1e-6)
                 P =  model->get_load_power_in_MVA().real();
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
         export_meter_values(TIME);
     }
 
@@ -252,13 +252,13 @@ void LOAD_MODEL_TEST::test_run_voltage_ramp_response()
         P =  model->get_load_power_in_MVA().real();
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(P - model->get_load_power_in_MVA().real())>1e-6)
                 P =  model->get_load_power_in_MVA().real();
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
@@ -275,13 +275,13 @@ void LOAD_MODEL_TEST::test_run_voltage_ramp_response()
         P =  model->get_load_power_in_MVA().real();
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(P - model->get_load_power_in_MVA().real())>1e-6)
                 P =  model->get_load_power_in_MVA().real();
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
@@ -318,13 +318,13 @@ void LOAD_MODEL_TEST::test_run_frequency_ramp_response()
         P =  model->get_load_power_in_MVA().real();
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(P-model->get_load_power_in_MVA().real())>1e-6)
                 P =  model->get_load_power_in_MVA().real();
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
         export_meter_values(TIME);
     }
 
@@ -345,13 +345,13 @@ void LOAD_MODEL_TEST::test_run_frequency_ramp_response()
         P =  model->get_load_power_in_MVA().real();
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(P - model->get_load_power_in_MVA().real())>1e-6)
                 P =  model->get_load_power_in_MVA().real();
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
@@ -368,13 +368,13 @@ void LOAD_MODEL_TEST::test_run_frequency_ramp_response()
         P =  model->get_load_power_in_MVA().real();
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(P - model->get_load_power_in_MVA().real())>1e-6)
                 P =  model->get_load_power_in_MVA().real();
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }

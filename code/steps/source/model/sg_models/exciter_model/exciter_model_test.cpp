@@ -193,19 +193,19 @@ void EXCITER_MODEL_TEST::run_step_response_of_exciter_model()
         efd =  model->get_excitation_voltage_in_pu();
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(efd-model->get_excitation_voltage_in_pu())>1e-6)
                 efd = model->get_excitation_voltage_in_pu();
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }
 
     apply_voltage_drop_of_10_percent();
-    model->run(UPDATE_MODE);
+    model->run(DYNAMIC_UPDATE_MODE);
     export_meter_values(TIME);
 
     while(true)
@@ -220,13 +220,13 @@ void EXCITER_MODEL_TEST::run_step_response_of_exciter_model()
         efd =  model->get_excitation_voltage_in_pu();
         while(true)
         {
-            model->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(efd-model->get_excitation_voltage_in_pu())>1e-6)
                 efd = model->get_excitation_voltage_in_pu();
             else
                 break;
         }
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
     }

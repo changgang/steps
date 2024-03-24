@@ -46,7 +46,7 @@ class BLOCK
 
         static void enable_automatic_large_time_step_logic();
         static void disable_automatic_large_time_step_logic();
-        static bool get_automatic_large_time_step_logic();
+        static bool is_automatic_large_time_step_logic_enabled();
 
         void check_limiter() const;
 

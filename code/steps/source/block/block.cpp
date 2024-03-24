@@ -128,7 +128,7 @@ void BLOCK::disable_automatic_large_time_step_logic()
     automatic_large_time_step_logic = false;
 }
 
-bool BLOCK::get_automatic_large_time_step_logic()
+bool BLOCK::is_automatic_large_time_step_logic_enabled()
 {
     return automatic_large_time_step_logic;
 }

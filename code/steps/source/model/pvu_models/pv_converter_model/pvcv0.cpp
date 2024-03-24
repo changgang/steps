@@ -458,7 +458,7 @@ void PVCV0::run(DYNAMIC_MODE mode)
     }
     IP = get_active_current_command_in_pu_based_on_mbase();
 
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 

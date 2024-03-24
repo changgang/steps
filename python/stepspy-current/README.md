@@ -19,9 +19,10 @@ stepspy is a Python module of Simulation Toolkit for Electrical Power Systems (S
 
 stepspy is a Python module of Simulation Toolkit for Electrical Power Systems (STEPS). It provides wrapper of APIs of STEPS in a dynamic library.
 
-STEPS is a simulation toolkit for powerflow, short circuit and dynamic simulation of large-scale power systems. It provides detailed models of bus, line, transformer, HVDC, VSC-HVDC, generator, wind turbine generator, photovoltaic unit, load, and fixed shunt. For more information about STEPS, see (https://gitee.com/lichgang/steps/ or https://github.com/changgang/steps).
+STEPS is a simulation toolkit for powerflow, short circuit and dynamic simulation of large-scale power systems. It provides detailed models of bus, ac line, transformer, 2 terminal LCC HVDC, VSC-HVDC, generator, wind turbine generator, photovoltaic unit, load, and fixed shunt. For more information about STEPS, see (https://gitee.com/lichgang/steps/ or https://github.com/changgang/steps).
 
 ## Release Note
+- 2.2.0. March 24, 2024. Add API change_dynamic_simulation_time_step() for manually changing dynamic simulation time step.
 - 2.1.0. Nov. 2, 2023. Add API to check if NAN is detected in powerflow solution: is_nan_detected_in_powerflow_soulution, and get_powerflow_convergence_status
 - 2.0.0. Oct. 16, 2023. Major version. Add short circuit analysis functions.
 - 1.6.2. Oct. 13, 2023. Add option to select libSTEPS version when calling STEPS().

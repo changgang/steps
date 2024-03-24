@@ -211,7 +211,7 @@ void WTVRTRLY1::initialize()
 
 void WTVRTRLY1::run(DYNAMIC_MODE mode)
 {
-    if(mode==RELAY_MODE)
+    if(mode==DYNAMIC_RELAY_MODE)
     {
         lvrt.check_vrt_relay();
         hvrt.check_vrt_relay();

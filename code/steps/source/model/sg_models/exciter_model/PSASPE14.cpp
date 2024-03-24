@@ -424,7 +424,7 @@ void PSASPE14::run(DYNAMIC_MODE mode)
     rectifier.set_input(current_pi.get_output());
     rectifier.run(mode);
 
-    if(mode == UPDATE_MODE)
+    if(mode == DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 

@@ -368,7 +368,7 @@ void WTRLY0::initialize()
 
 void WTRLY0::run(DYNAMIC_MODE mode)
 {
-    if(mode==RELAY_MODE)
+    if(mode==DYNAMIC_RELAY_MODE)
     {
         check_wind_speed_relay();
         check_rotor_speed_relay();

@@ -384,7 +384,7 @@ void IEEEG3::run(DYNAMIC_MODE mode)
     water_hammer.set_input(valve);
     water_hammer.run(mode);
 
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 

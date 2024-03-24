@@ -68,6 +68,8 @@ void DYNAMICS_SIMULATOR::clear()
     set_rotor_angle_stability_threshold_in_deg(360.0);
     generators_in_islands.clear();
     flag_rotor_angle_stable = true;
+    set_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s(0.1);
+    set_k_for_leading_part_of_bus_frequency_model(3.0);
 }
 
 void DYNAMICS_SIMULATOR::set_dynamic_simulation_time_step_in_s(double delt)
@@ -219,6 +221,16 @@ void DYNAMICS_SIMULATOR::set_rotor_angle_stability_threshold_in_deg(double angle
     this->rotor_angle_stability_threshold_in_deg = angle_th;
 }
 
+void DYNAMICS_SIMULATOR::set_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s(double delt)
+{
+    time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled = delt;
+}
+
+void DYNAMICS_SIMULATOR::set_k_for_leading_part_of_bus_frequency_model(double k)
+{
+    k_for_leading_part_of_bus_frequency_model = k;
+}
+
 /*void DYNAMICS_SIMULATOR::set_current_simulation_time_in_s(double time)
 {
     TIME = time;
@@ -289,6 +301,16 @@ double DYNAMICS_SIMULATOR::get_rotor_angle_stability_threshold_in_deg() const
     return this->rotor_angle_stability_threshold_in_deg;
 }
 
+double DYNAMICS_SIMULATOR::get_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s() const
+{
+    return time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled;
+}
+
+double DYNAMICS_SIMULATOR::get_k_for_leading_part_of_bus_frequency_model() const
+{
+    return k_for_leading_part_of_bus_frequency_model;
+}
+
 void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
 {
     ostringstream osstream;
@@ -305,6 +327,8 @@ void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
             <<"Network solution accelerator: "<<get_iteration_accelerator()<<"\n"
             <<"Rotor angle stability surveillance: "<<(get_rotor_angle_stability_surveillance_flag()?"Enabled":"Disabled")<<"\n"
             <<"Rotor angle stability threshold: "<<get_rotor_angle_stability_threshold_in_deg()<<" deg\n"
+            <<"Time step threshold when leading part of bus frequency model is enabled: "<<get_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s()<<" s\n"
+            <<"K for leading part of bus frequency model: "<<get_k_for_leading_part_of_bus_frequency_model()<<"\n"
             <<"CSV export: "<<(is_csv_file_export_enabled()?"Enabled":"Disabled")<<"\n"
             <<"BIN export: "<<(is_bin_file_export_enabled()?"Enabled":"Disabled")<<"\n"
             <<"JSON export: "<<(is_json_file_export_enabled()?"Enabled":"Disabled")<<"\n"
@@ -883,8 +907,8 @@ void DYNAMICS_SIMULATOR::start()
 
     prepare_devices_for_run();
 
-    run_all_models(INITIALIZE_MODE);
-    run_bus_frequency_blocks(INITIALIZE_MODE);
+    run_all_models(DYNAMIC_INITIALIZE_MODE);
+    run_bus_frequency_blocks(DYNAMIC_INITIALIZE_MODE);
 
     network_matrix.build_dynamic_network_Y_matrix();
     build_jacobian();
@@ -1011,7 +1035,7 @@ void DYNAMICS_SIMULATOR::run_to(double time)
 
     build_vsc_hvdc_dynamic_dc_network_matrix();
 
-    update_with_event();
+    update_with_event(FAULT_OR_OPERATION_EVENT);
     if(get_rotor_angle_stability_surveillance_flag()==false)
     {
         while(TIME<=time-DOUBLE_EPSILON)
@@ -1080,7 +1104,7 @@ void DYNAMICS_SIMULATOR::run_a_step()
         {
             integrate();
             bool network_converged = solve_network();
-            run_bus_frequency_blocks(INTEGRATE_MODE);
+            run_bus_frequency_blocks(DYNAMIC_INTEGRATE_MODE);
 
             ITER_NET += network_iteration_count;
 
@@ -1106,9 +1130,9 @@ void DYNAMICS_SIMULATOR::run_a_step()
         }
     }
     update();
-    run_bus_frequency_blocks(INTEGRATE_MODE);
-    run_bus_frequency_blocks(UPDATE_MODE);
-    update_relay_models();
+    run_bus_frequency_blocks(DYNAMIC_INTEGRATE_MODE);
+    run_bus_frequency_blocks(DYNAMIC_UPDATE_MODE);
+    check_relay_events();
 
     auto tduration = duration_cast<microseconds>(system_clock::now()-clock_start);
     time_elapse_in_a_step = tduration.count()*0.001;
@@ -1118,7 +1142,7 @@ void DYNAMICS_SIMULATOR::run_a_step()
     save_meter_values();
 }
 
-void DYNAMICS_SIMULATOR::update_with_event()
+void DYNAMICS_SIMULATOR::update_with_event(DYNAMIC_EVENT_TYPE event_type)
 {
     auto clock_start = system_clock::now();
     microseconds_elapse_of_differential_equations_in_a_step = 0;
@@ -1155,8 +1179,17 @@ void DYNAMICS_SIMULATOR::update_with_event()
         else
             break;
     }
-    update();
-    update_bus_frequency_blocks_when_applying_event();
+    switch(event_type)
+    {
+        case FAULT_OR_OPERATION_EVENT:
+            update();
+            break;
+        case TIME_STEP_CHANGE_EVENT:
+        default:
+            update_when_time_step_is_change();
+            break;
+    }
+    update_bus_frequency_blocks_when_applying_event(event_type);
 
     auto tduration = duration_cast<microseconds>(system_clock::now()-clock_start);
     time_elapse_in_a_step = tduration.count()*0.001;
@@ -1169,49 +1202,66 @@ void DYNAMICS_SIMULATOR::update_with_event()
 void DYNAMICS_SIMULATOR::integrate()
 {
     //clock_t start = clock();
-    run_all_models(INTEGRATE_MODE);
+    run_all_models(DYNAMIC_INTEGRATE_MODE);
     //cout<<"    elapsed time for integration: "<<double(clock()-start)/CLOCKS_PER_SEC*1000.0<<" ms"<<endl;
 }
 
 void DYNAMICS_SIMULATOR::update()
 {
-    ostringstream osstream;
+    update_with_specific_mode(DYNAMIC_UPDATE_MODE);
+}
 
-    update_equivalent_devices_buffer();
-    run_all_models(UPDATE_MODE);
+void DYNAMICS_SIMULATOR::update_when_time_step_is_change()
+{
+    update_with_specific_mode(DYNAMIC_UPDATE_TIME_STEP_MODE);
+}
 
-    bool network_converged = false;
-
-    current_max_network_iteration = get_max_network_iteration();
-
-    unsigned int max_update_iter = get_max_update_iteration();
-    unsigned int iter = 0;
-    while(iter<max_update_iter)
+void DYNAMICS_SIMULATOR::update_with_specific_mode(DYNAMIC_MODE mode)
+{
+    if(mode==DYNAMIC_UPDATE_MODE or mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
     {
-        network_converged = solve_network();
-        ITER_NET += network_iteration_count;
+        ostringstream osstream;
 
-        if(network_converged)
-            break;
-        else
-            ++iter;
-    }
+        update_equivalent_devices_buffer();
+        run_all_models(mode);
 
-    if(not network_converged and current_max_network_iteration>1)
-    {
-        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve network in %u iterations when updating at time %f s.",
-                 current_max_network_iteration, TIME);
-        toolkit->show_information_with_leading_time_stamp(buffer);
+        bool network_converged = false;
+
+        current_max_network_iteration = get_max_network_iteration();
+
+        unsigned int max_update_iter = get_max_update_iteration();
+        unsigned int iter = 0;
+        while(iter<max_update_iter)
+        {
+            network_converged = solve_network();
+            ITER_NET += network_iteration_count;
+
+            if(network_converged)
+                break;
+            else
+                ++iter;
+        }
+
+        if(not network_converged and current_max_network_iteration>1)
+        {
+            char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+            if(mode==DYNAMIC_UPDATE_MODE)
+                snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve network in %u iterations when updating at time %f s in DYNAMIC_UPDATE_MODE.",
+                         current_max_network_iteration, TIME);
+            else
+                snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve network in %u iterations when updating at time %f s in DYNAMIC_UPDATE_TIME_STEP_MODE.",
+                         current_max_network_iteration, TIME);
+            toolkit->show_information_with_leading_time_stamp(buffer);
+        }
     }
 }
 
-void DYNAMICS_SIMULATOR::update_relay_models()
+void DYNAMICS_SIMULATOR::check_relay_events()
 {
     disable_relay_action_flag();
-    run_all_models(RELAY_MODE);
+    run_all_models(DYNAMIC_RELAY_MODE);
 
-    if(get_relay_actiion_flag()==true)
+    if(is_relay_action_detected()==true)
         update();
 }
 
@@ -1377,7 +1427,7 @@ void DYNAMICS_SIMULATOR::run_bus_frequency_blocks(DYNAMIC_MODE mode)
     microseconds_elapse_of_differential_equations_in_a_step += tdurationx.count();
 }
 
-void DYNAMICS_SIMULATOR::update_bus_frequency_blocks_when_applying_event()
+void DYNAMICS_SIMULATOR::update_bus_frequency_blocks_when_applying_event(DYNAMIC_EVENT_TYPE type)
 {
     unsigned int n = in_service_buses.size();
 
@@ -1389,7 +1439,7 @@ void DYNAMICS_SIMULATOR::update_bus_frequency_blocks_when_applying_event()
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
     {
-        (in_service_buses[i]->get_bus_frequency_model())->update_for_applying_event();
+        (in_service_buses[i]->get_bus_frequency_model())->update_for_applying_event(type);
         /*BUS* bus = in_service_buses[i];
         BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
         model->update_for_applying_event();*/
@@ -1406,7 +1456,7 @@ void DYNAMICS_SIMULATOR::disable_relay_action_flag()
     relay_action_flag = false;
 }
 
-bool DYNAMICS_SIMULATOR::get_relay_actiion_flag() const
+bool DYNAMICS_SIMULATOR::is_relay_action_detected() const
 {
     return relay_action_flag;
 }
@@ -1695,7 +1745,7 @@ void DYNAMICS_SIMULATOR::update_vsc_hvdcs_converter_model()
         for(unsigned int j=0; j!=m ; ++j)
         {
             if(models[j]!=NULL)
-                models[j]->run(UPDATE_MODE);
+                models[j]->run(DYNAMIC_UPDATE_MODE);
         }
     }
 }
@@ -2541,9 +2591,15 @@ void DYNAMICS_SIMULATOR::build_jacobian()
 }
 
 
-void DYNAMICS_SIMULATOR::change_dynamic_simulator_time_step(double newDELT)
+void DYNAMICS_SIMULATOR::change_dynamic_simulator_time_step_in_s(double delt)
 {
-    set_dynamic_simulation_time_step_in_s(newDELT);
+    ostringstream osstream;
+    osstream<<"System dynamic simulation time step is changed from "<<DELT<<" s to "<<delt<<" s.";
+    toolkit->show_information_with_leading_time_stamp(osstream);
+
+    set_dynamic_simulation_time_step_in_s(delt);
+
+    update_with_event(TIME_STEP_CHANGE_EVENT);
 }
 
 

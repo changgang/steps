@@ -641,7 +641,7 @@ void PSASPS4::run(DYNAMIC_MODE mode)
     phase_tuner_3.set_input(input);
     phase_tuner_3.run(mode);
 
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 

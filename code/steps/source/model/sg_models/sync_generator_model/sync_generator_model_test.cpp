@@ -174,13 +174,13 @@ void SYNC_GENERATOR_MODEL_TEST::run_a_step()
     double speed = model->get_rotor_speed_deviation_in_pu();
     while(true)
     {
-        model->run(INTEGRATE_MODE);
+        model->run(DYNAMIC_INTEGRATE_MODE);
         if(fabs(speed-model->get_rotor_speed_deviation_in_pu())>1e-6)
             speed = model->get_rotor_speed_deviation_in_pu();
         else
             break;
     }
-    model->run(UPDATE_MODE);
+    model->run(DYNAMIC_UPDATE_MODE);
 }
 
 
@@ -258,7 +258,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_pmech_step_response_of_sync_generator_model
 
         double pmech = model->get_initial_mechanical_power_in_pu_based_on_mbase();
         model->set_initial_mechanical_power_in_pu_based_on_mbase(pmech*0.99);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
 
@@ -319,7 +319,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_efd_step_response_of_sync_generator_model()
 
         double efd = model->get_initial_excitation_voltage_in_pu();
         model->set_initial_excitation_voltage_in_pu(efd*0.99);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
 
@@ -383,7 +383,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_bus_step_response_of_sync_generator_model()
         double vterm = bus->get_positive_sequence_voltage_in_pu();
         bus->set_positive_sequence_voltage_in_pu(vterm*0.99);
 
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
 
@@ -445,7 +445,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_pmech_step_re
 
         double pmech = model->get_initial_mechanical_power_in_pu_based_on_mbase();
         model->set_initial_mechanical_power_in_pu_based_on_mbase(pmech*0.9);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
 
@@ -465,7 +465,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_pmech_step_re
 
         delt *= 2.0;
         default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
 
@@ -485,7 +485,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_pmech_step_re
 
         delt *= 2.0;
         default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values(TIME);
 

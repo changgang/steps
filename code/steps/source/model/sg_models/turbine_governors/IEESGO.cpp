@@ -333,7 +333,7 @@ void IEESGO::run(DYNAMIC_MODE mode)
     low_pressure_turbine.set_input(input);
     low_pressure_turbine.run(mode);
 
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 double IEESGO::get_mechanical_power_in_pu_based_on_mbase() const

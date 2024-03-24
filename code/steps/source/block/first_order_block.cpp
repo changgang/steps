@@ -71,7 +71,7 @@ void FIRST_ORDER_BLOCK::determine_block_integration_time_step_mode()
     double global_h = toolkit.get_dynamic_simulation_time_step_in_s();
     BLOCK_INTEGRATION_TIME_STEP_MODE mode = NORMAL_INTEGRATION_TIME_STEP_MODE;
 
-    bool is_automatic_large_step_logic_enabled = get_automatic_large_time_step_logic();
+    bool is_automatic_large_step_logic_enabled = is_automatic_large_time_step_logic_enabled();
     if(is_automatic_large_step_logic_enabled)
     {
         double t = get_T_in_s();
@@ -203,10 +203,12 @@ void FIRST_ORDER_BLOCK::initialize_large_time_step_mode()
 
 void FIRST_ORDER_BLOCK::run(DYNAMIC_MODE mode)
 {
-    if(mode==INTEGRATE_MODE)
+    if(mode==DYNAMIC_INTEGRATE_MODE)
         integrate();
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
         update();
+    if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
+        update_simulation_time_step();
 }
 
 void FIRST_ORDER_BLOCK::integrate()
@@ -461,6 +463,42 @@ void FIRST_ORDER_BLOCK::update_large_time_step_mode()
         double y = k*x;
 
         set_output(y);
+    }
+}
+
+void FIRST_ORDER_BLOCK::update_simulation_time_step()
+{
+    double k = get_K();
+    if(k!=0.0)
+    {
+        BLOCK_INTEGRATION_TIME_STEP_MODE mode_old = get_integration_time_step_mode();
+
+        determine_block_integration_time_step_mode();
+        determine_block_integration_time_step();
+        determine_block_temp_variables();
+
+        BLOCK_INTEGRATION_TIME_STEP_MODE mode_new = get_integration_time_step_mode();
+
+        double x = get_input();
+        double s, z;
+        if(mode_new!= LARGE_INTEGRATION_TIME_STEP_MODE)
+        {
+            if(mode_old!=LARGE_INTEGRATION_TIME_STEP_MODE)
+            {
+                //Small-->Small; Small-->Normal; Normal-->Small; Normal-->Normal
+                s = get_state();
+                z = k*x-h_minus_2t*s*one_over_h;
+            }
+            else//Large-->Small; Large-->Normal
+            {
+                double guess_s = get_output();
+                s = guess_s;
+                set_state(s);
+                z = k*x-h_minus_2t*guess_s*one_over_h;
+            }
+            set_store(z);
+            copy_current_input_to_old_input_in_last_time_step();
+        }
     }
 }
 

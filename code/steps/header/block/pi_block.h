@@ -34,6 +34,9 @@ class PI_BLOCK : public BLOCK
     private:
         void integrate();
         void update();
+
+        void update_simulation_time_step();
+
         PID_BLOCK pid_block;
 };
 #endif // PI_BLOCK_H

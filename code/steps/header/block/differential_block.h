@@ -26,7 +26,6 @@ class DIFFERENTIAL_BLOCK : public BLOCK
         STEPS_SPARSE_MATRIX get_linearized_matrix_D() const;
 
         virtual void check();
-
     private:
         void determine_block_integration_time_step_mode();
         void determine_block_integration_time_step();
@@ -45,6 +44,8 @@ class DIFFERENTIAL_BLOCK : public BLOCK
         void update_normal_time_step_mode();
         void update_small_time_step_mode();
         void update_large_time_step_mode();
+
+        void update_simulation_time_step();
 
         double K, T;
 

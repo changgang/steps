@@ -324,8 +324,8 @@ void WT_ELECTRICAL_MODEL_TEST::run_to_time(double tend)
         unsigned int iter_count = 0;
         while(true)
         {
-            model->run(INTEGRATE_MODE);
-            wtgenmodel->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
+            wtgenmodel->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(ip-model->get_active_current_command_in_pu_based_on_mbase())<1e-6 and
                 fabs(iq-model->get_reactive_current_command_in_pu_based_on_mbase())<1e-6)
                 break;
@@ -336,8 +336,8 @@ void WT_ELECTRICAL_MODEL_TEST::run_to_time(double tend)
         }
         //osstream<<"Integration at time "<<default_toolkit.get_dynamic_simulation_time_in_s()<<", takes "<<iter_count<<" iterations.";
         //show_information_with_leading_time_stamp(osstream);
-        model->run(UPDATE_MODE);
-        wtgenmodel->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
+        wtgenmodel->run(DYNAMIC_UPDATE_MODE);
         export_meter_values();
    }
 }

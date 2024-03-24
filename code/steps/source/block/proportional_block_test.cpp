@@ -64,13 +64,13 @@ void PROPORTIONAL_BLOCK_TEST::test_initialize_integrate_update_once()
     TEST_ASSERT(block.get_store()==0.0);
 
     block.set_input(6.0);
-    block.run(UPDATE_MODE);
+    block.run(DYNAMIC_UPDATE_MODE);
     TEST_ASSERT(fabs(block.get_output()-12.0)<FLOAT_EPSILON);
 
-    block.run(INTEGRATE_MODE);
+    block.run(DYNAMIC_INTEGRATE_MODE);
     TEST_ASSERT(fabs(block.get_output()-12.0)<FLOAT_EPSILON);
 
-    block.run(UPDATE_MODE);
+    block.run(DYNAMIC_UPDATE_MODE);
     TEST_ASSERT(fabs(block.get_output()-12.0)<FLOAT_EPSILON);
 }
 void PROPORTIONAL_BLOCK_TEST::test_step_response_without_limiter()
@@ -88,13 +88,13 @@ void PROPORTIONAL_BLOCK_TEST::test_step_response_without_limiter()
     block.initialize();
 
     block.set_input(6);
-    block.run(UPDATE_MODE);
+    block.run(DYNAMIC_UPDATE_MODE);
     TEST_ASSERT(fabs(block.get_output()-12.0)<FLOAT_EPSILON);
 
     for(t=h; t<=10.00001; t+=h)
     {
-        block.run(INTEGRATE_MODE);
-        block.run(UPDATE_MODE);
+        block.run(DYNAMIC_INTEGRATE_MODE);
+        block.run(DYNAMIC_UPDATE_MODE);
         TEST_ASSERT(fabs(block.get_output()-12.0)<FLOAT_EPSILON);
     }
 }
@@ -117,42 +117,42 @@ void PROPORTIONAL_BLOCK_TEST::test_step_response_with_limiter()
 
     for(t=h; t<=0.000001; t+=h)
     {
-        block.run(INTEGRATE_MODE);
-        block.run(UPDATE_MODE);
+        block.run(DYNAMIC_INTEGRATE_MODE);
+        block.run(DYNAMIC_UPDATE_MODE);
         TEST_ASSERT(fabs(block.get_output()-10.0)<FLOAT_EPSILON);
     }
     t -= h;
 
     block.set_input(5.5);
-    block.run(UPDATE_MODE);
+    block.run(DYNAMIC_UPDATE_MODE);
 
     for(t+=h; t<=10.000001; t+=h)
     {
-        block.run(INTEGRATE_MODE);
-        block.run(UPDATE_MODE);
+        block.run(DYNAMIC_INTEGRATE_MODE);
+        block.run(DYNAMIC_UPDATE_MODE);
         TEST_ASSERT(fabs(block.get_output()-11.0)<FLOAT_EPSILON);
     }
     t -= h;
 
     block.set_input(7.5);
-    block.run(UPDATE_MODE);
+    block.run(DYNAMIC_UPDATE_MODE);
 
     for(t+=h; t<=20.000001; t+=h)
     {
-        block.run(INTEGRATE_MODE);
-        block.run(UPDATE_MODE);
+        block.run(DYNAMIC_INTEGRATE_MODE);
+        block.run(DYNAMIC_UPDATE_MODE);
         TEST_ASSERT(fabs(block.get_output()-12.0)<FLOAT_EPSILON);
     }
 
     t -= h;
 
     block.set_input(3);
-    block.run(UPDATE_MODE);
+    block.run(DYNAMIC_UPDATE_MODE);
 
     for(t+=h; t<=30.000001; t+=h)
     {
-        block.run(INTEGRATE_MODE);
-        block.run(UPDATE_MODE);
+        block.run(DYNAMIC_INTEGRATE_MODE);
+        block.run(DYNAMIC_UPDATE_MODE);
         TEST_ASSERT(fabs(block.get_output()-8.0)<FLOAT_EPSILON);
     }
 }

@@ -37,6 +37,8 @@ class SECOND_ORDER_BLOCK : public BLOCK
     private:
         void integrate();
         void update();
+        void update_simulation_time_step();
+
         double a, b, c, d, e;
         FIRST_ORDER_BLOCK block1, block2;
 

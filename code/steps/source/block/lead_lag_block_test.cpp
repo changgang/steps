@@ -109,11 +109,11 @@ void LEAD_LAG_BLOCK_TEST::test_step_response_without_limiter()
 
     input = input+1.0;
     block.set_input(input);
-    block.run(UPDATE_MODE);
+    block.run(DYNAMIC_UPDATE_MODE);
     for(t=h; t<=10.0000001; t +=h)
     {
-        block.run(INTEGRATE_MODE);
-        block.run(UPDATE_MODE);
+        block.run(DYNAMIC_INTEGRATE_MODE);
+        block.run(DYNAMIC_UPDATE_MODE);
         y =10.0+ K*T1/T2 + K*(1.0-T1/T2)*(1.0-exp(-t/T2));
         TEST_ASSERT(fabs(block.get_output()-y)<1e-8);
     }
@@ -142,11 +142,11 @@ void LEAD_LAG_BLOCK_TEST::test_step_response_without_limiter_when_T1_is_zero()
 
     double input = block.get_input();
     block.set_input(input+1.0);
-    block.run(UPDATE_MODE);
+    block.run(DYNAMIC_UPDATE_MODE);
     for(t=h; t<=10.0000001; t +=h)
     {
-        block.run(INTEGRATE_MODE);
-        block.run(UPDATE_MODE);
+        block.run(DYNAMIC_INTEGRATE_MODE);
+        block.run(DYNAMIC_UPDATE_MODE);
         y = 10.0+K*(1.0-exp(-t/T2));
         TEST_ASSERT(fabs(block.get_output()-y)<1e-8);
     }
@@ -174,11 +174,11 @@ void LEAD_LAG_BLOCK_TEST::test_step_response_without_limiter_when_T1_and_T2_are_
 
     double input = block.get_input();
     block.set_input(input+1.0);
-    block.run(UPDATE_MODE);
+    block.run(DYNAMIC_UPDATE_MODE);
     for(t=h; t<=10.0000001; t +=h)
     {
-        block.run(INTEGRATE_MODE);
-        block.run(UPDATE_MODE);
+        block.run(DYNAMIC_INTEGRATE_MODE);
+        block.run(DYNAMIC_UPDATE_MODE);
         y = 10.0+K*1.0;
         TEST_ASSERT(fabs(block.get_output()-y)<1e-8);
     }

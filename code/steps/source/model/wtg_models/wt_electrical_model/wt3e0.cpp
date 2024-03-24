@@ -874,6 +874,7 @@ void WT3E0::initialize()
 
 void WT3E0::run(DYNAMIC_MODE mode)
 {
+    STEPS& toolkit = get_toolkit();
     double vterm = get_terminal_bus_voltage_in_pu();
     double iterm = get_wt_generator_terminal_current_in_pu();
     double freq = get_terminal_bus_frequency_deviation_in_pu();
@@ -925,7 +926,7 @@ void WT3E0::run(DYNAMIC_MODE mode)
     frequency_integral_controller.run(mode);
 
     //osstream<<"speed = "<<speed<<endl;
-/*    if(mode==UPDATE_MODE and is_frequency_regulation_enabled())
+/*    if(mode==DYNAMIC_UPDATE_MODE and is_frequency_regulation_enabled())
     {
         WT_AERODYNAMIC_MODEL* aerd = wt_generator->get_wt_aerodynamic_model();
         double wmin = aerd->get_min_steady_state_turbine_speed_in_pu();
@@ -1045,8 +1046,31 @@ void WT3E0::run(DYNAMIC_MODE mode)
     }
     //show_information_with_leading_time_stamp(osstream);
 
-    if(mode == UPDATE_MODE)
+    if(mode == DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
+
+    if(toolkit.is_detailed_log_enabled())
+    {
+        ostringstream osstream;
+        osstream<<"At time "<<toolkit.get_dynamic_simulation_time_in_s()<<"s, "
+                <<get_model_name()<<" model of "<<get_compound_device_name()<<" states are:"<<endl
+                <<"(1) voltage sensor state: "<<voltage_sensor.get_state()<<endl
+                <<"(2) voltage reference: "<< get_voltage_reference_in_pu()<<endl
+                <<"(3) voltage regulator integrator state: "<<voltage_regulator_integrator.get_state()<<endl
+                <<"(4) voltage regulator first order block state: "<<voltage_regulator_first_order_block.get_state()<<endl
+                <<"(5) voltage regulator filter state: "<<voltage_regulator_filter.get_state()<<endl
+                <<"(6) active power sensor state: "<<active_power_sensor.get_state()<<endl
+                <<"(7) reactive power error integrator state: "<<Q_error_integrator.get_state()<<endl
+                <<"(8) voltage error integrator state: "<<V_error_integrator.get_state()<<endl
+                <<"(9) reference speed sensor state: "<<wind_turbine_speed_reference_sensor.get_state()<<endl
+                <<"(10) torque PI regulator state: "<<torque_PI_regulator.get_state()<<endl
+                <<"(11) virtual inertia regulator state: "<<virtual_inertia_emulator.get_state()<<endl
+                <<"(12) frequency droop regulator state: "<<frequency_droop_controller.get_state()<<endl
+                <<"(13) reactive voltage command: "<<get_reactive_voltage_command_in_pu()<<endl
+                <<"(14) active current command: "<<get_active_current_command_in_pu_based_on_mbase()<<endl
+                <<"(15) reactive current command: "<<get_reactive_current_command_in_pu_based_on_mbase();
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
 }
 
 

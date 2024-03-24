@@ -67,16 +67,16 @@ void INTEGRAL_BLOCK_TEST::test_initialize_integrate_update_once()
     TEST_ASSERT(block.get_store()==10.0);
 
     block.set_input(0.2);
-    block.run(UPDATE_MODE);
+    block.run(DYNAMIC_UPDATE_MODE);
     TEST_ASSERT(fabs(block.get_output()-10.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(block.get_state()-10.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(block.get_store()-(10.0+0.5*h/0.5*0.2))<FLOAT_EPSILON);
-    block.run(INTEGRATE_MODE);
+    block.run(DYNAMIC_INTEGRATE_MODE);
 
     TEST_ASSERT(fabs(block.get_output()-(10.0+h*0.2/0.5))<FLOAT_EPSILON);
     TEST_ASSERT(fabs(block.get_state()-(10.0+h*0.2/0.5))<FLOAT_EPSILON);
 
-    block.run(UPDATE_MODE);
+    block.run(DYNAMIC_UPDATE_MODE);
 
     TEST_ASSERT(fabs(block.get_output()-(10.0+0.2/0.5*h))<FLOAT_EPSILON);
     TEST_ASSERT(fabs(block.get_state()-(10.0+h*0.2/0.5))<FLOAT_EPSILON);
@@ -97,19 +97,19 @@ void INTEGRAL_BLOCK_TEST::test_step_response_without_limiter()
 
     for(; t<=0.0000001; t +=h)
     {
-        block.run(INTEGRATE_MODE);
-        block.run(UPDATE_MODE);
+        block.run(DYNAMIC_INTEGRATE_MODE);
+        block.run(DYNAMIC_UPDATE_MODE);
         TEST_ASSERT(fabs(block.get_output()-10.0)<FLOAT_EPSILON);
         TEST_ASSERT(fabs(block.get_state()-10.0)<FLOAT_EPSILON);
     }
     t -=h;
     block.set_input(0.2);
-    block.run(UPDATE_MODE);
+    block.run(DYNAMIC_UPDATE_MODE);
 
     for(t+=h; t<=10.0; t+=h)
     {
-        block.run(INTEGRATE_MODE);
-        block.run(UPDATE_MODE);
+        block.run(DYNAMIC_INTEGRATE_MODE);
+        block.run(DYNAMIC_UPDATE_MODE);
         TEST_ASSERT(fabs(block.get_output()-(10.0+t*0.2/0.5))<FLOAT_EPSILON);
         TEST_ASSERT(fabs(block.get_state()-(10.0+t*0.2/0.5))<FLOAT_EPSILON);
     }
@@ -133,19 +133,19 @@ void INTEGRAL_BLOCK_TEST::test_step_response_with_limiter()
     block.initialize();
     for(; t<=0.000001; t +=h)
     {
-        block.run(INTEGRATE_MODE);
-        block.run(UPDATE_MODE);
+        block.run(DYNAMIC_INTEGRATE_MODE);
+        block.run(DYNAMIC_UPDATE_MODE);
         TEST_ASSERT(fabs(block.get_output()-10.0)<FLOAT_EPSILON);
         TEST_ASSERT(fabs(block.get_state()-10.0)<FLOAT_EPSILON);
     }
     t -=h;
     block.set_input(0.2);
-    block.run(UPDATE_MODE);
+    block.run(DYNAMIC_UPDATE_MODE);
 
     for(t+=h; t<=10.0+0.0001; t+=h)
     {
-        block.run(INTEGRATE_MODE);
-        block.run(UPDATE_MODE);
+        block.run(DYNAMIC_INTEGRATE_MODE);
+        block.run(DYNAMIC_UPDATE_MODE);
         if(t<=5.0000001)
         {
             TEST_ASSERT(fabs(block.get_output()-(10.0+t*0.2/0.5))<FLOAT_EPSILON);
@@ -159,12 +159,12 @@ void INTEGRAL_BLOCK_TEST::test_step_response_with_limiter()
     }
     t -=h;
     block.set_input(-1.0);
-    block.run(UPDATE_MODE);
+    block.run(DYNAMIC_UPDATE_MODE);
 
     for(t+=h; t<=15.000001; t+=h)
     {
-        block.run(INTEGRATE_MODE);
-        block.run(UPDATE_MODE);
+        block.run(DYNAMIC_INTEGRATE_MODE);
+        block.run(DYNAMIC_UPDATE_MODE);
         if(t<=12.0000001)
         {
             TEST_ASSERT(fabs(block.get_output()-(12.0-(t-10.0)*1.0/0.5))<FLOAT_EPSILON);

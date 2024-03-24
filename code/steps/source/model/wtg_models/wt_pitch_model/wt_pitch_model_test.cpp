@@ -371,10 +371,10 @@ void WT_PITCH_MODEL_TEST::update_models()
     WT_AERODYNAMIC_MODEL* aerd = get_test_wt_aerodynamic_model();
     WT_TURBINE_MODEL* turbine = get_test_wt_turbine_model();
     WT_PITCH_MODEL* model = get_test_wt_pitch_model();
-    model->run(UPDATE_MODE);
-    turbine->run(UPDATE_MODE);
-    aerd->run(UPDATE_MODE);
-    genmodel->run(UPDATE_MODE);
+    model->run(DYNAMIC_UPDATE_MODE);
+    turbine->run(DYNAMIC_UPDATE_MODE);
+    aerd->run(DYNAMIC_UPDATE_MODE);
+    genmodel->run(DYNAMIC_UPDATE_MODE);
 
     export_meter_values();
 }
@@ -400,19 +400,19 @@ void WT_PITCH_MODEL_TEST::run_to_time(double tend)
         double pitch=0.0;
         while(true)
         {
-            model->run(INTEGRATE_MODE);
-            turbine->run(INTEGRATE_MODE);
-            aerd->run(INTEGRATE_MODE);
-            genmodel->run(INTEGRATE_MODE);
+            model->run(DYNAMIC_INTEGRATE_MODE);
+            turbine->run(DYNAMIC_INTEGRATE_MODE);
+            aerd->run(DYNAMIC_INTEGRATE_MODE);
+            genmodel->run(DYNAMIC_INTEGRATE_MODE);
             if(fabs(pitch-model->get_pitch_angle_in_deg())<1e-6)
                 break;
 
             pitch = model->get_pitch_angle_in_deg();
         }
-        model->run(UPDATE_MODE);
-        turbine->run(UPDATE_MODE);
-        aerd->run(UPDATE_MODE);
-        genmodel->run(UPDATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
+        turbine->run(DYNAMIC_UPDATE_MODE);
+        aerd->run(DYNAMIC_UPDATE_MODE);
+        genmodel->run(DYNAMIC_UPDATE_MODE);
         export_meter_values();
    }
 }

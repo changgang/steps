@@ -624,7 +624,7 @@ void IEEEG1SB::run(DYNAMIC_MODE mode)
     drum.set_input(fuel_delayer2.get_output()-delayer1.get_output());
     drum.run(mode);
 
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 

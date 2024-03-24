@@ -81,10 +81,12 @@ void INTEGRAL_BLOCK::run(DYNAMIC_MODE mode)
     double t = get_T_in_s();
     if(fabs(t)>DOUBLE_EPSILON and fabs(t-INFINITE_THRESHOLD)>DOUBLE_EPSILON)
     {
-        if(mode==INTEGRATE_MODE)
+        if(mode==DYNAMIC_INTEGRATE_MODE)
             integrate();
-        if(mode==UPDATE_MODE)
+        if(mode==DYNAMIC_UPDATE_MODE)
             update();
+        if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
+            update_simulation_time_step();
     }
 }
 
@@ -209,6 +211,23 @@ void INTEGRAL_BLOCK::update()
         z = s+0.5*h_over_t*x;
         set_store(z);
         set_output(y);
+    }
+}
+
+void INTEGRAL_BLOCK::update_simulation_time_step()
+{
+    double t = get_T_in_s();
+    if(fabs(t)>DOUBLE_EPSILON and fabs(t-INFINITE_THRESHOLD)>DOUBLE_EPSILON)
+    {
+        STEPS& toolkit = get_toolkit();
+        double h = toolkit.get_dynamic_simulation_time_step_in_s();
+        h_over_t = h*one_over_t;
+
+        double x = get_input();
+        double s = get_state();
+        double z = s+0.5*h_over_t*x;
+
+        set_store(z);
     }
 }
 

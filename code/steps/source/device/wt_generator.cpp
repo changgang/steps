@@ -107,7 +107,7 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
 
         switch(mode)
         {
-            case INITIALIZE_MODE:
+            case DYNAMIC_INITIALIZE_MODE:
             {
                 STEPS& toolkit = get_toolkit();
                 WT_AERODYNAMIC_MODEL* aero = get_wt_aerodynamic_model();
@@ -156,8 +156,9 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
 
                 break;
             }
-            case INTEGRATE_MODE:
-            case UPDATE_MODE:
+            case DYNAMIC_INTEGRATE_MODE:
+            case DYNAMIC_UPDATE_MODE:
+            case DYNAMIC_UPDATE_TIME_STEP_MODE:
             {
                 if(vrt!=NULL and vrt->is_model_active())
                 {
@@ -199,7 +200,7 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
                     gen->run(mode);
                 break;
             }
-            case RELAY_MODE:
+            case DYNAMIC_RELAY_MODE:
             {
                 if(relay!=NULL and relay->is_model_active())
                     relay->run(mode);

@@ -48,6 +48,8 @@ class LEAD_LAG_BLOCK : public BLOCK
         void update_small_time_step_mode();
         void update_large_time_step_mode();
 
+        void update_simulation_time_step();
+
         double K, T1, T2;
         FIRST_ORDER_BLOCK first_order_block;
         double h;

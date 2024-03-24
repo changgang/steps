@@ -105,7 +105,7 @@ void PD_BLOCK_TEST::test_step_response_without_limiter()
 
     input = 1.0;
     block.set_input(input);
-    block.run(UPDATE_MODE);
+    block.run(DYNAMIC_UPDATE_MODE);
 
     double y;
     y=Kp;
@@ -113,8 +113,8 @@ void PD_BLOCK_TEST::test_step_response_without_limiter()
     TEST_ASSERT(fabs(block.get_output()-y)<FLOAT_EPSILON);
     for(t=h; t<=10.0000001; t +=h)
     {
-        block.run(INTEGRATE_MODE);
-        block.run(UPDATE_MODE);
+        block.run(DYNAMIC_INTEGRATE_MODE);
+        block.run(DYNAMIC_UPDATE_MODE);
         y = Kp;
         y += Kd/Td*exp(-t/Td);
         TEST_ASSERT(fabs(block.get_output()-y)<1e-8);

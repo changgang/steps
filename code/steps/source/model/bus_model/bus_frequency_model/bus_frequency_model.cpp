@@ -55,23 +55,46 @@ void BUS_FREQUENCY_MODEL::initialize()
     frequency_block.set_input(bus_ptr->get_positive_sequence_angle_in_rad());
 
     frequency_block.initialize();
+
+    frequency_block_output_old = frequency_block.get_output();
+    is_model_updated = true;
 }
 
 void BUS_FREQUENCY_MODEL::run(DYNAMIC_MODE mode)
 {
-    if(mode==INTEGRATE_MODE or mode==UPDATE_MODE)
+    if(mode==DYNAMIC_INTEGRATE_MODE or mode==DYNAMIC_UPDATE_MODE)
     {
+        if(mode==DYNAMIC_INTEGRATE_MODE and is_model_updated==true)
+        {
+            // this is the very first time for bus frequency block to be integrated for the next time step.
+            //need to store the previous frequency output temporarily for calculating the frequency when simulation time step is very large.
+            frequency_block_output_old = frequency_block.get_output();
+            is_model_updated = false;
+        }
+        if(mode==DYNAMIC_UPDATE_MODE)
+            is_model_updated = true;
+
         frequency_block.set_input(bus_ptr->get_positive_sequence_angle_in_rad());
         frequency_block.run(mode);
     }
     else
     {
-        if(mode==INITIALIZE_MODE)
-            initialize();
+        if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
+        {
+            double DELT= toolkit->get_dynamic_simulation_time_step_in_s();
+            frequency_block.set_T_in_s(DELT*4.0);
+            frequency_block.set_input(bus_ptr->get_positive_sequence_angle_in_rad());
+            frequency_block.run(mode);
+        }
+        else
+        {
+            if(mode==DYNAMIC_INITIALIZE_MODE)
+                initialize();
+        }
     }
 }
 
-void BUS_FREQUENCY_MODEL::update_for_applying_event()
+void BUS_FREQUENCY_MODEL::update_for_applying_event(DYNAMIC_EVENT_TYPE type)
 {
     double temp = frequency_block.get_output();
 
@@ -80,9 +103,23 @@ void BUS_FREQUENCY_MODEL::update_for_applying_event()
     double K = frequency_block.get_K();
     double T = frequency_block.get_T_in_s();
 
-    frequency_block.set_state_WITH_CAUTION(K/T*input-temp);
-    frequency_block.run(UPDATE_MODE);
-
+    switch(type)
+    {
+        case FAULT_OR_OPERATION_EVENT:
+        {
+            frequency_block.set_state_WITH_CAUTION(K/T*input-temp);
+            frequency_block.run(DYNAMIC_UPDATE_MODE);
+            break;
+        }
+        case TIME_STEP_CHANGE_EVENT:
+        {
+            double new_DELT= toolkit->get_dynamic_simulation_time_step_in_s();
+            frequency_block.set_T_in_s(new_DELT*4.0);
+            T = frequency_block.get_T_in_s();
+            frequency_block.set_state_WITH_CAUTION(K/T*input-temp);
+            frequency_block.run(DYNAMIC_UPDATE_TIME_STEP_MODE);
+        }
+    }
     //cout<<"before updating bus frequency model of bus "<<bus_ptr->get_bus_number()<<": output = "<<temp<<endl;
     //cout<<"after updating bus frequency model of bus "<<bus_ptr->get_bus_number()<<": input="<<rad2deg(input)<<", output = "<<frequency_block.get_output()<<endl;
 }
@@ -99,7 +136,18 @@ double BUS_FREQUENCY_MODEL::get_frequency_deviation_in_pu() const
 
 double BUS_FREQUENCY_MODEL::get_frequency_deviation_in_Hz() const
 {
-    return frequency_block.get_output();
+    double DELT= toolkit->get_dynamic_simulation_time_step_in_s();
+    DYNAMICS_SIMULATOR& ds = toolkit->get_dynamic_simulator();
+    double h_th = ds.get_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s();
+    if(DELT<h_th)
+        return frequency_block.get_output();
+    else
+    {
+        // assuming an additional (1+s*k*DELT) block is added following the frequency_block
+        double k = ds.get_k_for_leading_part_of_bus_frequency_model();
+        double f = frequency_block.get_output();
+        return f + (f-frequency_block_output_old)*k;
+    }
 }
 
 double BUS_FREQUENCY_MODEL::get_frequency_in_pu() const

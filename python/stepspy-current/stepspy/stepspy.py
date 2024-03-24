@@ -4279,7 +4279,7 @@ class STEPS():
         Example:
             bus = 1
             shunt = (0.0, -2e4)
-            simulator.set_bus_fault(bus, "three phase fault", shunt)
+            simulator.set_short_circuit_bus_fault(bus, "three phase fault", shunt)
         """
         global STEPS_LIB
         fault_type = self.__get_c_char_p_of_string(fault_type)
@@ -5847,6 +5847,20 @@ class STEPS():
         global STEPS_LIB
         return STEPS_LIB.api_get_basic_meter_value(meter_name, self.toolkit_index)
         
+    def change_dynamic_simulation_time_step(self, delt):
+        """
+        Change dynamic simulation time step.
+        Args:
+            (1) delt: new time step in seconds.
+        Rets: N/A
+        Tips: N/A
+        Example:
+            simulator.change_dynamic_simulation_time_step(0.01)
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_change_dynamic_simulation_time_step(delt, self.toolkit_index)
+        return
+
     def set_bus_fault(self, bus, fault_type, fault_shunt):
         """
         Set bus fault.

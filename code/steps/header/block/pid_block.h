@@ -41,9 +41,12 @@ class PID_BLOCK : public BLOCK
         STEPS_SPARSE_MATRIX get_linearized_matrix_D() const;
 
         virtual void check();
+
+        void update_simulation_time_step();
     private:
         void integrate();
         void update();
+
         PROPORTIONAL_BLOCK p_block;
         INTEGRAL_BLOCK i_block;
         DIFFERENTIAL_BLOCK d_block;

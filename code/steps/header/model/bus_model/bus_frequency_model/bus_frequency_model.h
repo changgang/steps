@@ -19,7 +19,7 @@ class BUS_FREQUENCY_MODEL
 
         void initialize();
         void run(DYNAMIC_MODE mode);
-        void update_for_applying_event();
+        void update_for_applying_event(DYNAMIC_EVENT_TYPE type);
     public:
         void set_frequency_deviation_in_pu(double f);
         double get_frequency_deviation_in_pu() const;
@@ -31,6 +31,8 @@ class BUS_FREQUENCY_MODEL
         DIFFERENTIAL_BLOCK frequency_block;
         BUS* bus_ptr;
         double fbase_Hz, tbase_s;
+        double frequency_block_output_old;
+        bool is_model_updated;
 };
 
 #endif // BUS_FREQUENCY_MODEL_H

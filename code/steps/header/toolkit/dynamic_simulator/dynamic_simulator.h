@@ -47,6 +47,8 @@ class DYNAMICS_SIMULATOR
         void set_automatic_iteration_accelerator_tune_logic(bool logic);
         void set_rotor_angle_stability_surveillance_flag(bool flag);
         void set_rotor_angle_stability_threshold_in_deg(double angle_th);
+        void set_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s(double delt);
+        void set_k_for_leading_part_of_bus_frequency_model(double k);
 
         unsigned int get_max_DAE_iteration() const;
         unsigned int get_min_DAE_iteration() const;
@@ -60,6 +62,8 @@ class DYNAMICS_SIMULATOR
         bool get_automatic_iteration_accelerator_tune_logic() const;
         bool get_rotor_angle_stability_surveillance_flag() const;
         double get_rotor_angle_stability_threshold_in_deg() const;
+        double get_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s() const;
+        double get_k_for_leading_part_of_bus_frequency_model() const;
 
         void show_dynamic_simulator_configuration() const;
 
@@ -112,10 +116,10 @@ class DYNAMICS_SIMULATOR
         void stop();
         void run_to(double time);
         void run_a_step();
-        void update_with_event();
+        void update_with_event(DYNAMIC_EVENT_TYPE event_type);
         void run_all_models(DYNAMIC_MODE mode);
         void run_bus_frequency_blocks(DYNAMIC_MODE mode);
-        void update_bus_frequency_blocks_when_applying_event();
+        void update_bus_frequency_blocks_when_applying_event(DYNAMIC_EVENT_TYPE type);
         void update_equivalent_devices_buffer();
         void update_equivalent_devices_output();
         bool get_system_angular_stable_flag() const;
@@ -123,9 +127,9 @@ class DYNAMICS_SIMULATOR
         void enable_relay_action_flag();
     private:
         void disable_relay_action_flag();
-        bool get_relay_actiion_flag() const;
+        bool is_relay_action_detected() const;
     public: // events
-        void change_dynamic_simulator_time_step(double newDELT);
+        void change_dynamic_simulator_time_step_in_s(double delt);
 
         void set_bus_fault(unsigned int bus, const complex<double>& fault_shunt);
         void clear_bus_fault(unsigned int bus);
@@ -198,7 +202,9 @@ class DYNAMICS_SIMULATOR
 
         void integrate();
         void update();
-        void update_relay_models();
+        void update_when_time_step_is_change();
+        void update_with_specific_mode(DYNAMIC_MODE mode);
+        void check_relay_events();
         double get_system_max_angle_difference_in_deg();
 
         void open_meter_output_files();
@@ -274,6 +280,8 @@ class DYNAMICS_SIMULATOR
         double alpha;
         bool non_divergent_solution_enabled;
         bool automatic_iteration_accelerator_tune_enabled;
+        double time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled;
+        double k_for_leading_part_of_bus_frequency_model;
 
         double max_current_mismatch_pu, max_power_mismatch_MVA;
         unsigned int max_mismatch_bus;

@@ -956,7 +956,7 @@ void WTVRT3::initialize()
 
 void WTVRT3::run(DYNAMIC_MODE mode)
 {
-    if(mode == UPDATE_MODE)
+    if(mode == DYNAMIC_UPDATE_MODE)
     {
         if(hvrt.get_vrt_status() == VRT_NORMAL_STATUS)
             lvrt.check_vrt_status();

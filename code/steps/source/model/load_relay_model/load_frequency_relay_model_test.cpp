@@ -53,7 +53,7 @@ void LOAD_FREQUENCY_RELAY_MODEL_TEST::test_get_bus_frequency()
 
     BUS_FREQUENCY_MODEL* bus_model = busptr->get_bus_frequency_model();
 
-    bus_model->run(INITIALIZE_MODE);
+    bus_model->run(DYNAMIC_INITIALIZE_MODE);
 
     bus_model->set_frequency_deviation_in_pu(0.0);
     TEST_ASSERT(fabs(model->get_bus_frequency_in_Hz()-50.0*(1.0-0.0))<FLOAT_EPSILON);
@@ -136,8 +136,8 @@ void LOAD_FREQUENCY_RELAY_MODEL_TEST::run_model(string outputfile)
             default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
             break;
         }
-        model->run(INTEGRATE_MODE);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_INTEGRATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values();
     }
@@ -157,8 +157,8 @@ void LOAD_FREQUENCY_RELAY_MODEL_TEST::run_model(string outputfile)
         freq -= (rate*delt);
         freq_model->set_frequency_deviation_in_pu(freq/fbase-1.0);
 
-        model->run(INTEGRATE_MODE);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_INTEGRATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values();
     }
@@ -174,8 +174,8 @@ void LOAD_FREQUENCY_RELAY_MODEL_TEST::run_model(string outputfile)
         freq += (rate*delt);
         freq_model->set_frequency_deviation_in_pu(freq/fbase-1.0);
 
-        model->run(INTEGRATE_MODE);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_INTEGRATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values();
     }
@@ -190,8 +190,8 @@ void LOAD_FREQUENCY_RELAY_MODEL_TEST::run_model(string outputfile)
         freq -= (rate*delt);
         freq_model->set_frequency_deviation_in_pu(freq/fbase-1.0);
 
-        model->run(INTEGRATE_MODE);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_INTEGRATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values();
     }
@@ -204,8 +204,8 @@ void LOAD_FREQUENCY_RELAY_MODEL_TEST::run_model(string outputfile)
             default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
             break;
         }
-        model->run(INTEGRATE_MODE);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_INTEGRATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values();
     }
@@ -223,8 +223,8 @@ void LOAD_FREQUENCY_RELAY_MODEL_TEST::run_model(string outputfile)
             freq_model->set_frequency_deviation_in_pu(freq/fbase-1.0);
             break;
         }
-        model->run(INTEGRATE_MODE);
-        model->run(UPDATE_MODE);
+        model->run(DYNAMIC_INTEGRATE_MODE);
+        model->run(DYNAMIC_UPDATE_MODE);
 
         export_meter_values();
     }

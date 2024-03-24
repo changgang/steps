@@ -646,7 +646,7 @@ void VSCHVDCC2::run(DYNAMIC_MODE mode)
     voltage_block.set_input(input);
     voltage_block.run(mode);
 
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 

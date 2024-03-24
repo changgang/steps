@@ -36,6 +36,9 @@ class PD_BLOCK : public BLOCK
     private:
         void integrate();
         void update();
+
+        void update_simulation_time_step();
+
         PROPORTIONAL_BLOCK p_block;
         DIFFERENTIAL_BLOCK d_block;
 };

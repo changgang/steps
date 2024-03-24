@@ -259,7 +259,7 @@ void UVLS::run(DYNAMIC_MODE mode)
     voltage_sensor.set_input(volt);
     voltage_sensor.run(mode);
 
-    if(mode==RELAY_MODE)
+    if(mode==DYNAMIC_RELAY_MODE)
     {
         double v = voltage_sensor.get_output();
 

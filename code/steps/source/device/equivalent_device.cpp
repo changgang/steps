@@ -455,7 +455,7 @@ void EQUIVALENT_DEVICE::run(DYNAMIC_MODE mode)
 {
     switch(mode)
     {
-        case INITIALIZE_MODE:
+        case DYNAMIC_INITIALIZE_MODE:
         {
             EQUIVALENT_MODEL* model = get_equivalent_model();
             if(model!=NULL and model->is_model_active())
@@ -465,8 +465,9 @@ void EQUIVALENT_DEVICE::run(DYNAMIC_MODE mode)
 
             break;
         }
-        case INTEGRATE_MODE:
-        case UPDATE_MODE:
+        case DYNAMIC_INTEGRATE_MODE:
+        case DYNAMIC_UPDATE_MODE:
+            case DYNAMIC_UPDATE_TIME_STEP_MODE:
         {
             EQUIVALENT_MODEL* model = get_equivalent_model();
             if(model!=NULL and model->is_model_active())

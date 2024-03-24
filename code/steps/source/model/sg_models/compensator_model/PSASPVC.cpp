@@ -124,7 +124,7 @@ void PSASPVC::initialize()
 
 void PSASPVC::run(DYNAMIC_MODE mode)
 {
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 

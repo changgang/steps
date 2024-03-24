@@ -760,7 +760,7 @@ void CSEET2::run(DYNAMIC_MODE mode)
 
     //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
 
-    if(mode == UPDATE_MODE)
+    if(mode == DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 

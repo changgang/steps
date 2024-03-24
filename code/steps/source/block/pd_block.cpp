@@ -91,10 +91,12 @@ void PD_BLOCK::run(DYNAMIC_MODE mode)
     p_block.set_input(x);
     d_block.set_input(x);
 
-    if(mode==INTEGRATE_MODE)
+    if(mode==DYNAMIC_INTEGRATE_MODE)
         integrate();
-    if(mode==UPDATE_MODE)
+    if(mode==DYNAMIC_UPDATE_MODE)
         update();
+    if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
+        update_simulation_time_step();
 
     double y = p_block.get_output() + d_block.get_output();
     if(get_limiter_type() == NO_LIMITER)
@@ -116,16 +118,20 @@ void PD_BLOCK::run(DYNAMIC_MODE mode)
 
 void PD_BLOCK::integrate()
 {
-    p_block.run(INTEGRATE_MODE);
-    d_block.run(INTEGRATE_MODE);
+    p_block.run(DYNAMIC_INTEGRATE_MODE);
+    d_block.run(DYNAMIC_INTEGRATE_MODE);
 }
 
 void PD_BLOCK::update()
 {
-    p_block.run(UPDATE_MODE);
-    d_block.run(UPDATE_MODE);
+    p_block.run(DYNAMIC_UPDATE_MODE);
+    d_block.run(DYNAMIC_UPDATE_MODE);
 }
 
+void PD_BLOCK::update_simulation_time_step()
+{
+    d_block.run(DYNAMIC_UPDATE_TIME_STEP_MODE);
+}
 
 STEPS_SPARSE_MATRIX PD_BLOCK::get_linearized_matrix_variable(char var) const
 {
