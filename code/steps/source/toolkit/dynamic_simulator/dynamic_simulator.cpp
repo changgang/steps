@@ -33,6 +33,8 @@ DYNAMICS_SIMULATOR::~DYNAMICS_SIMULATOR()
 {
     stop();
     toolkit = NULL;
+
+    clear();
 }
 
 STEPS& DYNAMICS_SIMULATOR::get_toolkit() const
@@ -70,6 +72,44 @@ void DYNAMICS_SIMULATOR::clear()
     flag_rotor_angle_stable = true;
     set_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s(0.1);
     set_k_for_leading_part_of_bus_frequency_model(3.0);
+
+    set_change_time_step_adaptively_logic(false);
+    buses4change_detection.clear();
+    generators4change_detection.clear();
+    set_system_change_detection_time_range_in_s(1.0);
+
+    unsigned int n = buffer4buses_voltage_change_detection.size();
+    if(n>0)
+    {
+        for(unsigned int i=0; i<n; ++i)
+        delete buffer4buses_voltage_change_detection[i];
+    }
+    n = buffer4generators_rotor_speed_change_detection.size();
+    if(n>0)
+    {
+        for(unsigned int i=0; i<n; ++i)
+        delete buffer4generators_rotor_speed_change_detection[i];
+    }
+}
+
+void DYNAMICS_SIMULATOR::set_max_dynamic_simulation_time_step_in_s(double delt)
+{
+    DELT_MAX = delt;
+}
+
+double DYNAMICS_SIMULATOR::get_max_dynamic_simulation_time_step_in_s() const
+{
+    return DELT_MAX;
+}
+
+void DYNAMICS_SIMULATOR::set_min_dynamic_simulation_time_step_in_s(double delt)
+{
+    DELT_MIN = delt;
+}
+
+double DYNAMICS_SIMULATOR::get_min_dynamic_simulation_time_step_in_s() const
+{
+    return DELT_MIN;
 }
 
 void DYNAMICS_SIMULATOR::set_dynamic_simulation_time_step_in_s(double delt)
@@ -231,6 +271,16 @@ void DYNAMICS_SIMULATOR::set_k_for_leading_part_of_bus_frequency_model(double k)
     k_for_leading_part_of_bus_frequency_model = k;
 }
 
+void DYNAMICS_SIMULATOR::set_change_time_step_adaptively_logic(bool logic)
+{
+    change_time_step_adaptively_flag = logic;
+}
+
+void DYNAMICS_SIMULATOR::set_system_change_detection_time_range_in_s(double t)
+{
+    system_change_detection_time_range = t;
+}
+
 /*void DYNAMICS_SIMULATOR::set_current_simulation_time_in_s(double time)
 {
     TIME = time;
@@ -311,6 +361,56 @@ double DYNAMICS_SIMULATOR::get_k_for_leading_part_of_bus_frequency_model() const
     return k_for_leading_part_of_bus_frequency_model;
 }
 
+bool DYNAMICS_SIMULATOR::get_change_time_step_adaptively_logic() const
+{
+    return change_time_step_adaptively_flag;
+}
+
+double DYNAMICS_SIMULATOR::get_system_change_detection_time_range_in_s() const
+{
+    return system_change_detection_time_range;
+}
+
+void DYNAMICS_SIMULATOR::add_bus_for_system_change_detection(unsigned int bus)
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    if(psdb.is_bus_exist(bus))
+    {
+        bool is_bus_monitored = false;
+        unsigned int n = buses4change_detection.size();
+        for(unsigned int i=0; i<n; ++i)
+        {
+            if(buses4change_detection[i]->get_bus_number()==bus)
+            {
+                is_bus_monitored = true;
+                break;
+            }
+        }
+        if(not is_bus_monitored)
+            buses4change_detection.push_back(psdb.get_bus(bus));
+    }
+}
+
+void DYNAMICS_SIMULATOR::add_generator_for_system_change_detection(DEVICE_ID did)
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    if(did.get_device_type()==STEPS_GENERATOR and psdb.is_generator_exist(did))
+    {
+        bool is_gen_monitored = false;
+        unsigned int n = generators4change_detection.size();
+        for(unsigned int i=0; i<n; ++i)
+        {
+            if(generators4change_detection[i]->get_device_id()==did)
+            {
+                is_gen_monitored = true;
+                break;
+            }
+        }
+        if(not is_gen_monitored)
+            generators4change_detection.push_back(psdb.get_generator(did));
+    }
+}
+
 void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
 {
     ostringstream osstream;
@@ -329,6 +429,8 @@ void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
             <<"Rotor angle stability threshold: "<<get_rotor_angle_stability_threshold_in_deg()<<" deg\n"
             <<"Time step threshold when leading part of bus frequency model is enabled: "<<get_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s()<<" s\n"
             <<"K for leading part of bus frequency model: "<<get_k_for_leading_part_of_bus_frequency_model()<<"\n"
+            <<"Automatically change dynamic simulation time step logic: "<<(get_change_time_step_adaptively_logic()?"Enabled":"Disabled")<<"\n"
+            <<"Time range for checking system change: "<<get_system_change_detection_time_range_in_s()<<"s\n"
             <<"CSV export: "<<(is_csv_file_export_enabled()?"Enabled":"Disabled")<<"\n"
             <<"BIN export: "<<(is_bin_file_export_enabled()?"Enabled":"Disabled")<<"\n"
             <<"JSON export: "<<(is_json_file_export_enabled()?"Enabled":"Disabled")<<"\n"
@@ -340,6 +442,21 @@ void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
         osstream<<"("<<setw(4)<<i+1<<") "<<meters[i].get_meter_name()<<"\n";
 
     toolkit->show_information_with_leading_time_stamp(osstream);
+
+    if(get_change_time_step_adaptively_logic()==true)
+    {
+        osstream<<"Monitored devices for automatically change dynamic simulation time step:\n";
+        n = buses4change_detection.size();
+        osstream<<"Monitored bus count: "<<n<<"\n";
+        for(unsigned int i=0; i!=n; ++i)
+            osstream<<"("<<setw(4)<<i+1<<") "<<buses4change_detection[i]->get_bus_number()<<", "<<buses4change_detection[i]->get_bus_name()<<"\n";
+        n = generators4change_detection.size();
+        osstream<<"Monitored generator count: "<<n<<"\n";
+        for(unsigned int i=0; i!=n; ++i)
+            osstream<<"("<<setw(4)<<i+1<<") "<<generators4change_detection[i]->get_compound_device_name()<<"\n";
+
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
 }
 
 unsigned int DYNAMICS_SIMULATOR::get_memory_usage_in_bytes()
@@ -907,6 +1024,8 @@ void DYNAMICS_SIMULATOR::start()
 
     prepare_devices_for_run();
 
+    prepare_buffers_for_system_change_detection();
+
     run_all_models(DYNAMIC_INITIALIZE_MODE);
     run_bus_frequency_blocks(DYNAMIC_INITIALIZE_MODE);
 
@@ -963,6 +1082,7 @@ void DYNAMICS_SIMULATOR::start()
 
     save_meter_information();
     save_meter_values();
+    initialize_buffers_for_system_change_detection();
 }
 
 void DYNAMICS_SIMULATOR::prepare_devices_for_run()
@@ -1036,6 +1156,7 @@ void DYNAMICS_SIMULATOR::run_to(double time)
     build_vsc_hvdc_dynamic_dc_network_matrix();
 
     update_with_event(FAULT_OR_OPERATION_EVENT);
+
     if(get_rotor_angle_stability_surveillance_flag()==false)
     {
         while(TIME<=time-DOUBLE_EPSILON)
@@ -1070,6 +1191,9 @@ void DYNAMICS_SIMULATOR::run_a_step()
     microseconds_elapse_of_differential_equations_in_a_step = 0;
     microseconds_elapse_of_network_solution_in_a_step = 0;
     ostringstream osstream;
+
+    if(get_change_time_step_adaptively_logic()==true and is_system_changing_suddenly())
+        change_dynamic_simulator_time_step_to_minimum();
 
     TIME += DELT;
     if(detailed_log_enabled)
@@ -1140,6 +1264,10 @@ void DYNAMICS_SIMULATOR::run_a_step()
     time_elapse_of_network_solution_in_a_step = 0.001*microseconds_elapse_of_network_solution_in_a_step;
 
     save_meter_values();
+    update_buffers_for_system_change_detection();
+
+    if(get_change_time_step_adaptively_logic()==true and is_system_in_quasi_steady_state())
+        increase_dynamic_simulator_time_step_by(0.001);
 }
 
 void DYNAMICS_SIMULATOR::update_with_event(DYNAMIC_EVENT_TYPE event_type)
@@ -1197,6 +1325,7 @@ void DYNAMICS_SIMULATOR::update_with_event(DYNAMIC_EVENT_TYPE event_type)
     time_elapse_of_network_solution_in_a_step = 0.001*microseconds_elapse_of_network_solution_in_a_step;
 
     save_meter_values();
+    update_buffers_for_system_change_detection();
 }
 
 void DYNAMICS_SIMULATOR::integrate()
@@ -4345,5 +4474,167 @@ void DYNAMICS_SIMULATOR::switch_on_equivalent_device()
     toolkit->show_information_with_leading_time_stamp(osstream);
     for(unsigned int i=0; i!=n; ++i)
         e_devices[i]->switch_on();
+}
+
+
+void DYNAMICS_SIMULATOR::prepare_buffers_for_system_change_detection()
+{
+    unsigned int n = 0;
+
+    buffer4buses_voltage_change_detection.clear();
+    buffer4generators_rotor_speed_change_detection.clear();
+
+    n = buses4change_detection.size();
+    for(unsigned int i=0; i<n; ++i)
+    {
+        CONTINUOUS_BUFFER* buffer = new CONTINUOUS_BUFFER;
+        buffer->set_toolkit(*toolkit);
+        buffer->set_buffer_size((unsigned int)(get_system_change_detection_time_range_in_s()*1000));
+        buffer4buses_voltage_change_detection.push_back(buffer);
+    }
+
+    n = generators4change_detection.size();
+    for(unsigned int i=0; i<n; ++i)
+    {
+        CONTINUOUS_BUFFER* buffer = new CONTINUOUS_BUFFER;
+        buffer->set_toolkit(*toolkit);
+        buffer->set_buffer_size((unsigned int)(get_system_change_detection_time_range_in_s()*1000));
+        buffer4generators_rotor_speed_change_detection.push_back(buffer);
+    }
+}
+
+void DYNAMICS_SIMULATOR::initialize_buffers_for_system_change_detection()
+{
+    unsigned int n = 0;
+
+    n = buses4change_detection.size();
+    for(unsigned int i=0; i<n; ++i)
+    {
+        BUS* bus = buses4change_detection[i];
+        CONTINUOUS_BUFFER* buffer = buffer4buses_voltage_change_detection[i];
+        buffer->initialize_buffer(toolkit->get_dynamic_simulation_time_in_s(),
+                                  bus->get_positive_sequence_voltage_in_pu());
+    }
+
+    n = generators4change_detection.size();
+    for(unsigned int i=0; i<n; ++i)
+    {
+        GENERATOR* gen = generators4change_detection[i];
+        CONTINUOUS_BUFFER* buffer = buffer4generators_rotor_speed_change_detection[i];
+        buffer->initialize_buffer(toolkit->get_dynamic_simulation_time_in_s(),
+                                  gen->get_sync_generator_model()->get_rotor_speed_deviation_in_pu());
+    }
+}
+
+void DYNAMICS_SIMULATOR::update_buffers_for_system_change_detection()
+{
+    unsigned int n = 0;
+
+    n = buses4change_detection.size();
+    for(unsigned int i=0; i<n; ++i)
+    {
+        BUS* bus = buses4change_detection[i];
+        CONTINUOUS_BUFFER* buffer = buffer4buses_voltage_change_detection[i];
+        buffer->append_data(toolkit->get_dynamic_simulation_time_in_s(),
+                            bus->get_positive_sequence_voltage_in_pu());
+    }
+
+    n = generators4change_detection.size();
+    for(unsigned int i=0; i<n; ++i)
+    {
+        GENERATOR* gen = generators4change_detection[i];
+        CONTINUOUS_BUFFER* buffer = buffer4generators_rotor_speed_change_detection[i];
+        buffer->append_data(toolkit->get_dynamic_simulation_time_in_s(),
+                            gen->get_sync_generator_model()->get_rotor_speed_deviation_in_pu());
+    }
+}
+
+void DYNAMICS_SIMULATOR::change_dynamic_simulator_time_step_to_minimum()
+{
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+    osstream<<"At time "<<get_dynamic_simulation_time_in_s()<<"s, system simulation time is reduced to minimum: "<<get_min_dynamic_simulation_time_step_in_s()<<"s";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+    change_dynamic_simulator_time_step_in_s(get_min_dynamic_simulation_time_step_in_s());
+}
+
+bool DYNAMICS_SIMULATOR::is_system_changing_suddenly() const
+{
+    return is_buses_voltage_changing_suddenly();
+}
+
+bool DYNAMICS_SIMULATOR::is_buses_voltage_changing_suddenly() const
+{
+    bool voltage_changing_flag = false;
+    unsigned int n = buses4change_detection.size();
+    for(unsigned int i=0; i<n; ++i)
+    {
+        CONTINUOUS_BUFFER* buffer = buffer4buses_voltage_change_detection[i];
+        double change = buffer->get_buffer_latest_change();
+        if(change>0.001)
+        {
+            voltage_changing_flag = true;
+            break;
+        }
+    }
+    return voltage_changing_flag;
+}
+
+void DYNAMICS_SIMULATOR::increase_dynamic_simulator_time_step_by(double delt)
+{
+    double current_delt = get_dynamic_simulation_time_step_in_s();
+    double max_delt = get_max_dynamic_simulation_time_step_in_s();
+    if(current_delt<max_delt)
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+        osstream<<"At time "<<get_dynamic_simulation_time_in_s()<<"s, system simulation time is automatically increased by "<<delt<<"s";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+
+        current_delt += delt;
+        change_dynamic_simulator_time_step_in_s(current_delt);
+    }
+}
+
+bool DYNAMICS_SIMULATOR::is_system_in_quasi_steady_state() const
+{
+    return is_buses_voltage_not_changing_in_detection_time_range() and
+           is_generators_rotor_speed_not_changing_in_detection_time_range();
+}
+
+bool DYNAMICS_SIMULATOR::is_buses_voltage_not_changing_in_detection_time_range() const
+{
+    bool voltage_changing_flag = false;
+    unsigned int n = buses4change_detection.size();
+    double t = get_system_change_detection_time_range_in_s();
+    for(unsigned int i=0; i<n; ++i)
+    {
+        CONTINUOUS_BUFFER* buffer = buffer4generators_rotor_speed_change_detection[i];
+        double range = buffer->get_buffer_range_in_latest_seconds(t);
+        if(range>0.0001)
+        {
+            voltage_changing_flag = true;
+            break;
+        }
+    }
+    return not voltage_changing_flag;
+}
+
+bool DYNAMICS_SIMULATOR::is_generators_rotor_speed_not_changing_in_detection_time_range() const
+{
+    bool rotor_speed_changing_flag = false;
+    unsigned int n = generators4change_detection.size();
+    double t = get_system_change_detection_time_range_in_s();
+    for(unsigned int i=0; i<n; ++i)
+    {
+        CONTINUOUS_BUFFER* buffer = buffer4generators_rotor_speed_change_detection[i];
+        double range = buffer->get_buffer_range_in_latest_seconds(t);
+        if(range>0.001)
+        {
+            rotor_speed_changing_flag = true;
+            break;
+        }
+    }
+    return not rotor_speed_changing_flag;
 }
 

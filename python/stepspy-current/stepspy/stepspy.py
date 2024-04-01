@@ -5384,6 +5384,55 @@ class STEPS():
         file = self.__get_c_char_p_of_string(file)
         return STEPS_LIB.api_set_dynamic_simulator_output_file(file, self.toolkit_index)
         
+    def get_max_dynamic_simulation_time_step(self):
+        """
+        Get maximum dynamic simulation time step.
+        Args: N/A
+        Rets:
+            (1) Value of maximum dynamic simulation time step in seconds for automatic time step changing.
+        Example: N/A
+        """
+        global STEPS_LIB
+        return STEPS_LIB.api_get_max_dynamic_simulation_time_step(self.toolkit_index)
+        
+    def set_max_dynamic_simulation_time_step(self, step):
+        """
+        Set maximum dynamic simulation time step.
+        Args:
+            (1) step: Maximum dynamic simulation time step in seconds for automatic time step changing.
+        Rets: N/A
+        Tips:
+            The time step CAN be greater than 1/2 of the least time constant of all dynamic models. It is general practice to set time step to 0.1s.
+        Example: N/A
+        """
+        global STEPS_LIB
+        return STEPS_LIB.api_set_max_dynamic_simulation_time_step(step, self.toolkit_index)
+        
+    def get_min_dynamic_simulation_time_step(self):
+        """
+        Get minimum dynamic simulation time step.
+        Args: N/A
+        Rets:
+            (1) Value of minimum dynamic simulation time step in seconds for automatic time step changing.
+        Example: N/A
+        """
+        global STEPS_LIB
+        return STEPS_LIB.api_get_min_dynamic_simulation_time_step(self.toolkit_index)
+        
+    def set_min_dynamic_simulation_time_step(self, step):
+        """
+        Set minimum dynamic simulation time step.
+        Args:
+            (1) step: Minimum dynamic simulation time step in seconds for automatic time step changing.
+        Rets: N/A
+        Tips:
+            The time step MUST be less than 1/2 of the least time constant of all dynamic models. It is general practice to set time step to 0.1s.
+            Run check_least_dynamic_time_constants() to report the least time constants.
+        Example: N/A
+        """
+        global STEPS_LIB
+        return STEPS_LIB.api_set_min_dynamic_simulation_time_step(step, self.toolkit_index)
+        
     def get_dynamic_simulation_time_step(self):
         """
         Get dynamic simulation time step.
@@ -5860,6 +5909,38 @@ class STEPS():
         global STEPS_LIB
         STEPS_LIB.api_change_dynamic_simulation_time_step(delt, self.toolkit_index)
         return
+    
+        
+    def add_bus_for_system_change_detection(self, bus):
+        """
+        Add bus for detecting system change during dynamic simulation.
+        Args:
+            (1) bus: bus for system change detection
+        Rets: N/A
+        Tips: N/A
+        Example:
+            simulator.add_bus_for_system_change_detection(1)
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_add_bus_for_system_change_detection(bus, self.toolkit_index)
+        return
+        
+    def add_generator_for_system_change_detection(self, generator):
+        """
+        Add generator for detecting system change during dynamic simulation.
+        Args:
+            (1) generator: generator for system change detection in format (ibus, ickt)
+        Rets: N/A
+        Tips: N/A
+        Example:
+            simulator.add_generator_for_system_change_detection((1, "#1"))
+        """
+        global STEPS_LIB
+        ibus, ickt = self.__extract_single_bus_device_id(generator)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        STEPS_LIB.api_add_generator_for_system_change_detection(ibus, ickt, self.toolkit_index)
+        return
+    
 
     def set_bus_fault(self, bus, fault_type, fault_shunt):
         """

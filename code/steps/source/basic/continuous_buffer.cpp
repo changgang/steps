@@ -248,6 +248,170 @@ unsigned int CONTINUOUS_BUFFER::get_delay_index_of_time(double time) const
     return index;
 }
 
+double CONTINUOUS_BUFFER::get_buffer_max_value() const
+{
+    if(buffer_size!=1)
+    {
+        double max_value = get_buffer_value_at_delay_index(0);
+        for(unsigned int i=1; i<buffer_size; ++i)
+        {
+            double value = get_buffer_value_at_delay_index(i);
+            if(value>max_value)
+                max_value = value;
+        }
+        return max_value;
+    }
+    else
+        return get_buffer_value_at_head();
+}
+
+double CONTINUOUS_BUFFER::get_buffer_min_value() const
+{
+    if(buffer_size!=1)
+    {
+        double min_value = get_buffer_value_at_delay_index(0);
+        for(unsigned int i=1; i<buffer_size; ++i)
+        {
+            double value = get_buffer_value_at_delay_index(i);
+            if(value<min_value)
+                min_value = value;
+        }
+        return min_value;
+    }
+    else
+        return get_buffer_value_at_head();
+}
+
+double CONTINUOUS_BUFFER::get_buffer_range() const
+{
+    if(buffer_size!=1)
+    {
+        double max_value = get_buffer_max_value();
+        double min_value = get_buffer_min_value();
+        return max_value - min_value;
+    }
+    else
+        return 0;
+}
+
+double CONTINUOUS_BUFFER::get_buffer_max_change() const
+{
+    if(buffer_size!=1)
+    {
+        double max_change = 0;
+        double current_value = get_buffer_value_at_delay_index(0);
+        for(unsigned int i=1; i<buffer_size-1; ++i)
+        {
+            double next_value = get_buffer_value_at_delay_index(i);
+            double change = fabs(current_value-next_value);
+            if(change>max_change)
+                max_change = change;
+        }
+        return max_change;
+    }
+    else
+        return 0;
+}
+
+double CONTINUOUS_BUFFER::get_buffer_max_value_in_latest_seconds(double t) const
+{
+    if(buffer_size!=1)
+    {
+        double thead = get_buffer_time_at_delay_index(0);
+        double max_value = get_buffer_value_at_delay_index(0);
+        for(unsigned int i=1; i<buffer_size; ++i)
+        {
+            double time = get_buffer_time_at_delay_index(i);
+            if(thead-time<t)
+            {
+                double value = get_buffer_value_at_delay_index(i);
+                if(value>max_value)
+                    max_value = value;
+            }
+            else
+                break;
+        }
+        return max_value;
+    }
+    else
+        return get_buffer_value_at_head();
+}
+
+double CONTINUOUS_BUFFER::get_buffer_min_value_in_latest_seconds(double t) const
+{
+    if(buffer_size!=1)
+    {
+        double thead = get_buffer_time_at_delay_index(0);
+        double min_value = get_buffer_value_at_delay_index(0);
+        for(unsigned int i=1; i<buffer_size; ++i)
+        {
+            double time = get_buffer_time_at_delay_index(i);
+            if(thead-time<t)
+            {
+                double value = get_buffer_value_at_delay_index(i);
+                if(value<min_value)
+                    min_value = value;
+            }
+            else
+                break;
+        }
+        return min_value;
+    }
+    else
+        return get_buffer_value_at_head();
+}
+
+double CONTINUOUS_BUFFER::get_buffer_range_in_latest_seconds(double t) const
+{
+    if(buffer_size!=1)
+    {
+        double max_value = get_buffer_max_value_in_latest_seconds(t);
+        double min_value = get_buffer_min_value_in_latest_seconds(t);
+        return max_value - min_value;
+    }
+    else
+        return 0;
+}
+
+double CONTINUOUS_BUFFER::get_buffer_max_change_in_latest_seconds(double t) const
+{
+    if(buffer_size!=1)
+    {
+        double thead = get_buffer_time_at_delay_index(0);
+        double max_change = 0;
+        double current_value = get_buffer_value_at_delay_index(0);
+        for(unsigned int i=1; i<buffer_size-1; ++i)
+        {
+            double time = get_buffer_time_at_delay_index(i);
+            if(thead-time<t)
+            {
+                double next_value = get_buffer_value_at_delay_index(i);
+                double change = fabs(current_value-next_value);
+                if(change>max_change)
+                    max_change = change;
+            }
+            else
+                break;
+        }
+        return max_change;
+    }
+    else
+        return 0;
+}
+
+
+double CONTINUOUS_BUFFER::get_buffer_latest_change() const
+{
+    if(buffer_size!=1)
+    {
+        double now_value = get_buffer_value_at_delay_index(0);
+        double hist_value = get_buffer_value_at_delay_index(1);
+        return fabs(now_value-hist_value);
+    }
+    else
+        return 0.0;
+}
+
 void CONTINUOUS_BUFFER::update_buffer_value_at_delay_index(unsigned int index, double value)
 {
     index = get_storage_index_of_delay_index(index);

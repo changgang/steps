@@ -190,6 +190,8 @@ bool api_get_dynamic_simulator_boolean_parameter(char* parameter_name, unsigned 
         return ds.get_non_divergent_solution_logic();
     if(PARAMETER_NAME=="AUTOMATIC ACCELERATOR TUNE LOGIC")
         return ds.get_automatic_iteration_accelerator_tune_logic();
+    if(PARAMETER_NAME=="AUTOMATICALLY CHANGE TIME STEP LOGIC")
+        return ds.get_change_time_step_adaptively_logic();
     if(PARAMETER_NAME=="BIN EXPORT LOGIC")
         return ds.is_bin_file_export_enabled();
     if(PARAMETER_NAME=="CSV EXPORT LOGIC")
@@ -222,6 +224,11 @@ void api_set_dynamic_simulator_boolean_parameter(char* parameter_name, bool valu
     if(PARAMETER_NAME=="AUTOMATIC ACCELERATOR TUNE LOGIC")
     {
         ds.set_automatic_iteration_accelerator_tune_logic(value);
+        return;
+    }
+    if(PARAMETER_NAME=="AUTOMATICALLY CHANGE TIME STEP LOGIC")
+    {
+        ds.set_change_time_step_adaptively_logic(value);
         return;
     }
     if(PARAMETER_NAME=="BIN EXPORT LOGIC")
@@ -258,6 +265,30 @@ const char* api_get_dynamic_simulator_output_file(unsigned int toolkit_index)
 
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", ds.get_output_file().c_str());
 	return toolkit.steps_char_buffer;
+}
+
+void api_set_max_dynamic_simulation_time_step(double value, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    toolkit.set_max_dynamic_simulation_time_step_in_s(value);
+}
+
+double api_get_max_dynamic_simulation_time_step(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    return toolkit.get_max_dynamic_simulation_time_step_in_s();
+}
+
+void api_set_min_dynamic_simulation_time_step(double value, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    toolkit.set_min_dynamic_simulation_time_step_in_s(value);
+}
+
+double api_get_min_dynamic_simulation_time_step(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    return toolkit.get_min_dynamic_simulation_time_step_in_s();
 }
 
 void api_set_dynamic_simulation_time_step(double value, unsigned int toolkit_index)
@@ -516,8 +547,23 @@ void api_change_dynamic_simulation_time_step(double delt, unsigned int toolkit_i
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     return ds.change_dynamic_simulator_time_step_in_s(delt);
-
 }
+
+void api_add_bus_for_system_change_detection(unsigned int bus, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    return ds.add_bus_for_system_change_detection(bus);
+}
+
+void api_add_generator_for_system_change_detection(unsigned int bus, char* identifier, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    DEVICE_ID did = get_generator_device_id(bus, identifier);
+    return ds.add_generator_for_system_change_detection(did);
+}
+
 
 void api_set_bus_fault(unsigned int bus, char* fault_type, double fault_G, double fault_B, unsigned int toolkit_index)
 {

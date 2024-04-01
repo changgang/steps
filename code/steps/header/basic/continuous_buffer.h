@@ -34,6 +34,18 @@ class CONTINUOUS_BUFFER : public BASE
         double get_buffer_value_at_time(double time) const;
         unsigned int get_delay_index_of_time(double time) const;
 
+        double get_buffer_max_value() const;
+        double get_buffer_min_value() const;
+        double get_buffer_range() const;
+        double get_buffer_max_change() const;
+
+        double get_buffer_max_value_in_latest_seconds(double t) const;
+        double get_buffer_min_value_in_latest_seconds(double t) const;
+        double get_buffer_range_in_latest_seconds(double t) const;
+        double get_buffer_max_change_in_latest_seconds(double t) const;
+
+        double get_buffer_latest_change() const;
+
         void update_buffer_value_at_delay_index(unsigned int index, double value);
 
         void show_buffer() const;

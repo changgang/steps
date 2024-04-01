@@ -721,6 +721,14 @@ def load_library(libsteps_file):
     libsteps.api_set_dynamic_simulator_output_file.restype = None
     libsteps.api_set_dynamic_simulator_output_file.argtypes = (c_char_p, c_uint)
 
+    libsteps.api_get_max_dynamic_simulation_time_step.restype = (c_double)
+    libsteps.api_get_max_dynamic_simulation_time_step.argtypes = (c_uint, )
+    libsteps.api_set_max_dynamic_simulation_time_step.restype = None
+    libsteps.api_set_max_dynamic_simulation_time_step.argtypes = (c_double, c_uint)
+    libsteps.api_get_min_dynamic_simulation_time_step.restype = (c_double)
+    libsteps.api_get_min_dynamic_simulation_time_step.argtypes = (c_uint, )
+    libsteps.api_set_min_dynamic_simulation_time_step.restype = None
+    libsteps.api_set_min_dynamic_simulation_time_step.argtypes = (c_double, c_uint)
     libsteps.api_get_dynamic_simulation_time_step.restype = (c_double)
     libsteps.api_get_dynamic_simulation_time_step.argtypes = (c_uint, )
     libsteps.api_set_dynamic_simulation_time_step.restype = None
@@ -800,6 +808,12 @@ def load_library(libsteps_file):
 
     libsteps.api_change_dynamic_simulation_time_step.restype = None
     libsteps.api_change_dynamic_simulation_time_step.argtypes = (c_double, c_uint)
+
+    libsteps.api_add_bus_for_system_change_detection.restype = None
+    libsteps.api_add_bus_for_system_change_detection.argtypes = (c_uint, c_uint)
+
+    libsteps.api_add_generator_for_system_change_detection.restype = None
+    libsteps.api_add_generator_for_system_change_detection.argtypes = (c_uint, c_char_p, c_uint)
 
     libsteps.api_set_bus_fault.restype = None
     libsteps.api_set_bus_fault.argtypes = (c_uint, c_char_p, c_double, c_double, c_uint)

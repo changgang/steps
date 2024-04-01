@@ -459,6 +459,26 @@ double STEPS::get_one_over_system_base_power_in_one_over_MVA() const
     return power_system_db.get_one_over_system_base_power_in_one_over_MVA();
 }
 
+void STEPS::set_max_dynamic_simulation_time_step_in_s(double delt)
+{
+    dynamic_simulator.set_max_dynamic_simulation_time_step_in_s(delt);
+}
+
+double STEPS::get_max_dynamic_simulation_time_step_in_s()
+{
+    return dynamic_simulator.get_max_dynamic_simulation_time_step_in_s();;
+}
+
+void STEPS::set_min_dynamic_simulation_time_step_in_s(double delt)
+{
+    dynamic_simulator.set_min_dynamic_simulation_time_step_in_s(delt);
+}
+
+double STEPS::get_min_dynamic_simulation_time_step_in_s()
+{
+    return dynamic_simulator.get_min_dynamic_simulation_time_step_in_s();;
+}
+
 void STEPS::set_dynamic_simulation_time_step_in_s(double delt)
 {
     dynamic_simulator.set_dynamic_simulation_time_step_in_s(delt);

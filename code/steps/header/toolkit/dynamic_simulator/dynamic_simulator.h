@@ -2,6 +2,7 @@
 #define DYNAMICS_SIMULATOR_H
 
 #include "header/basic/power_mismatch_struct.h"
+#include "header/basic/continuous_buffer.h"
 #include "header/meter/meter.h"
 #include "header/network/network_matrix.h"
 #include "header/basic/sparse_matrix_define.h"
@@ -18,6 +19,10 @@ class DYNAMICS_SIMULATOR
 
         void clear();
 
+        void set_max_dynamic_simulation_time_step_in_s(double delt);
+        double get_max_dynamic_simulation_time_step_in_s() const;
+        void set_min_dynamic_simulation_time_step_in_s(double delt);
+        double get_min_dynamic_simulation_time_step_in_s() const;
         void set_dynamic_simulation_time_step_in_s(double delt);
         double get_dynamic_simulation_time_step_in_s() const;
         void set_dynamic_simulation_time_in_s(double time);
@@ -49,6 +54,8 @@ class DYNAMICS_SIMULATOR
         void set_rotor_angle_stability_threshold_in_deg(double angle_th);
         void set_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s(double delt);
         void set_k_for_leading_part_of_bus_frequency_model(double k);
+        void set_change_time_step_adaptively_logic(bool logic);
+        void set_system_change_detection_time_range_in_s(double t);
 
         unsigned int get_max_DAE_iteration() const;
         unsigned int get_min_DAE_iteration() const;
@@ -64,6 +71,11 @@ class DYNAMICS_SIMULATOR
         double get_rotor_angle_stability_threshold_in_deg() const;
         double get_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s() const;
         double get_k_for_leading_part_of_bus_frequency_model() const;
+        bool get_change_time_step_adaptively_logic() const;
+        double get_system_change_detection_time_range_in_s() const;
+
+        void add_bus_for_system_change_detection(unsigned int bus);
+        void add_generator_for_system_change_detection(DEVICE_ID did);
 
         void show_dynamic_simulator_configuration() const;
 
@@ -265,8 +277,22 @@ class DYNAMICS_SIMULATOR
         void update_generators_in_islands();
         bool is_system_angular_stable() const;
 
+        void prepare_buffers_for_system_change_detection();
+        void initialize_buffers_for_system_change_detection();
+        void update_buffers_for_system_change_detection();
+
+        void change_dynamic_simulator_time_step_to_minimum();
+        bool is_system_changing_suddenly() const;
+        bool is_buses_voltage_changing_suddenly() const;
+
+        void increase_dynamic_simulator_time_step_by(double delt);
+        bool is_system_in_quasi_steady_state() const;
+        bool is_buses_voltage_not_changing_in_detection_time_range() const;
+        bool is_generators_rotor_speed_not_changing_in_detection_time_range() const;
+
         STEPS* toolkit;
 
+        double DELT_MAX, DELT_MIN;
         double DELT;
         double TIME;
 
@@ -327,6 +353,16 @@ class DYNAMICS_SIMULATOR
         bool detailed_log_enabled;
 
         bool network_matrix_update_required;
+
+        bool change_time_step_adaptively_flag;
+
+        vector<BUS*> buses4change_detection;
+        vector<GENERATOR*> generators4change_detection;
+
+        double system_change_detection_time_range;
+        vector<CONTINUOUS_BUFFER*> buffer4buses_voltage_change_detection;
+        vector<CONTINUOUS_BUFFER*> buffer4generators_rotor_speed_change_detection;
+
 };
 
 #endif // DYNAMICS_SIMULATOR_H

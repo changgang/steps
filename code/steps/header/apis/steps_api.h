@@ -399,6 +399,10 @@ EXPORT_STEPS_DLL void api_set_dynamic_simulator_boolean_parameter(char* paramete
 EXPORT_STEPS_DLL void api_set_dynamic_simulator_output_file(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL const char* api_get_dynamic_simulator_output_file(unsigned int toolkit_index=INDEX_NOT_EXIST);
 
+EXPORT_STEPS_DLL void api_set_max_dynamic_simulation_time_step(double value, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_max_dynamic_simulation_time_step(unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_min_dynamic_simulation_time_step(double value, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_min_dynamic_simulation_time_step(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_dynamic_simulation_time_step(double value, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_dynamic_simulation_time_step(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_dynamic_simulation_time(unsigned int toolkit_index=INDEX_NOT_EXIST);
@@ -441,6 +445,9 @@ EXPORT_STEPS_DLL double api_get_basic_meter_value(const char* meter_name, unsign
 EXPORT_STEPS_DLL double api_get_user_meter_value(int index, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void api_change_dynamic_simulation_time_step(double delt, unsigned int toolkit_index=INDEX_NOT_EXIST);
+
+EXPORT_STEPS_DLL void api_add_bus_for_system_change_detection(unsigned int bus, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_add_generator_for_system_change_detection(unsigned int bus, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void api_set_bus_fault(unsigned int bus, char* fault_type, double fault_G, double fault_B, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_clear_bus_fault(unsigned int bus, char* fault_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
