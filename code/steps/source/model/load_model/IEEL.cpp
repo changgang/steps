@@ -13,6 +13,7 @@ IEEL::~IEEL()
 
 void IEEL::clear()
 {
+    set_load_model_type(STATIC_LOAD_MODEL);
     set_voltage_source_flag(false);
 
     set_model_float_parameter_count(14);
@@ -673,7 +674,9 @@ void IEEL::build_linearized_matrix_ABCD()
     double Ux = V.real();
     double Uy = V.imag();
     double U = sqrt(Ux*Ux+Uy*Uy);
-    complex<double> PQ0 = get_initial_load_power_in_MVA();
+    STEPS& toolkit = get_toolkit();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
+    complex<double> PQ0 = get_initial_load_power_in_MVA()*one_over_sbase;
     double P0 = PQ0.real();
     double Q0 = PQ0.imag();
     double ap1 = get_P_alpha_1();
@@ -682,9 +685,28 @@ void IEEL::build_linearized_matrix_ABCD()
     double aq1 = get_Q_alpha_1();
     double aq2 = get_Q_alpha_2();
     double aq3 = get_Q_alpha_3();
+    double np1 = get_P_n_power_1();
+    double np2 = get_P_n_power_2();
+    double np3 = get_P_n_power_3();
+    double nq1 = get_Q_n_power_1();
+    double nq2 = get_Q_n_power_2();
+    double nq3 = get_Q_n_power_3();
 
+    /* codes are wrong. need further check
     D.add_entry(0,0, (P0*Ux*Ux*(ap2+2*ap3)+Q0*Ux*Uy*(aq2+2*aq3))/(U*U*U*U)-P0/(U*U));
     D.add_entry(0,1, (Q0*Uy*Uy*(aq2+2*aq3)+P0*Ux*Uy*(ap2+2*ap3))/(U*U*U*U)-Q0/(U*U));
     D.add_entry(1,0, (Q0*Ux*Ux*(aq2+2*aq3)-P0*Ux*Uy*(ap2+2*ap3))/(U*U*U*U)-Q0/(U*U));
     D.add_entry(1,1, (P0*Uy*Uy*(ap2+2*ap3)-Q0*Ux*Uy*(aq2+2*aq3))/(U*U*U*U)-P0/(U*U));
+    */
+    A.compress_and_merge_duplicate_entries();
+    B.compress_and_merge_duplicate_entries();
+    C.compress_and_merge_duplicate_entries();
+    D.compress_and_merge_duplicate_entries();
+
+    vector<STEPS_SPARSE_MATRIX*> matrix;
+    matrix.push_back(&A);
+    matrix.push_back(&B);
+    matrix.push_back(&C);
+    matrix.push_back(&D);
+    build_linearized_matrix_ABCD_with_basic_ABCD(matrix);
 }

@@ -458,6 +458,7 @@
 		<Unit filename="header/toolkit/contingency_screener/contingency_screener_test.h" />
 		<Unit filename="header/toolkit/dynamic_simulator/dynamic_simulator.h" />
 		<Unit filename="header/toolkit/dynamic_simulator/dynamic_simulator_test.h" />
+		<Unit filename="header/toolkit/eign_calculator/eign_calculator.h" />
 		<Unit filename="header/toolkit/powerflow_case_generator/powerflow_case_generator.h" />
 		<Unit filename="header/toolkit/powerflow_case_generator/powerflow_case_generator_test.h" />
 		<Unit filename="header/toolkit/powerflow_solver/powerflow_solver.h" />
@@ -931,6 +932,7 @@
 		<Unit filename="source/toolkit/dynamic_simulator/dynamic_simulator.cpp" />
 		<Unit filename="source/toolkit/dynamic_simulator/dynamic_simulator_prepare_meter.cpp" />
 		<Unit filename="source/toolkit/dynamic_simulator/dynamic_simulator_test.cpp" />
+		<Unit filename="source/toolkit/eign_calculator/eign_calculator.cpp" />
 		<Unit filename="source/toolkit/powerflow_case_generator/powerflow_case_generator.cpp" />
 		<Unit filename="source/toolkit/powerflow_case_generator/powerflow_case_generator_test.cpp" />
 		<Unit filename="source/toolkit/powerflow_solver/powerflow_solver.cpp" />

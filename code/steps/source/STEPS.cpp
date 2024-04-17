@@ -12,6 +12,7 @@ STEPS::STEPS(const string& name, const string& log_file) : power_system_db(*this
                                                            powerflow_solver(*this),
                                                            dynamic_simulator(*this),
                                                            short_circuit_solver(*this),
+                                                           eign_calculator(*this),
                                                            network_matrix(*this)
 {
     disable_use_steps_fast_math_logic();
@@ -442,6 +443,11 @@ SHORT_CIRCUIT_SOLVER& STEPS::get_short_circuit_solver()
 DYNAMICS_SIMULATOR& STEPS::get_dynamic_simulator()
 {
     return dynamic_simulator;
+}
+
+EIGN_CALCULATOR& STEPS::get_eign_calculator()
+{
+    return eign_calculator;
 }
 
 NETWORK_MATRIX& STEPS::get_network_matrix()

@@ -15,7 +15,9 @@ class LOAD_MODEL : public MODEL
         virtual ~LOAD_MODEL();
         LOAD* get_load_pointer() const;
 
+        void set_load_model_type(LOAD_MODEL_TYPE type);
         void set_voltage_source_flag(bool flag);
+        LOAD_MODEL_TYPE get_load_model_type() const;
         bool get_voltage_source_flag() const;
         bool is_voltage_source() const;
 
@@ -34,11 +36,16 @@ class LOAD_MODEL : public MODEL
         string get_detailed_model_name() const;
 
         void initialize_ABCD_matrix_for_linearization();
+        void build_linearized_matrix_ABCD_with_basic_ABCD(vector<STEPS_SPARSE_MATRIX*> matrix);
         STEPS_SPARSE_MATRIX get_linearized_matrix_variable(char var) const;
         virtual STEPS_SPARSE_MATRIX get_linearized_matrix_A() const;
         virtual STEPS_SPARSE_MATRIX get_linearized_matrix_B() const;
         virtual STEPS_SPARSE_MATRIX get_linearized_matrix_C() const;
         virtual STEPS_SPARSE_MATRIX get_linearized_matrix_D() const;
+        STEPS_SPARSE_MATRIX* get_linearized_matrix_pointer_A();
+        STEPS_SPARSE_MATRIX* get_linearized_matrix_pointer_B();
+        STEPS_SPARSE_MATRIX* get_linearized_matrix_pointer_C();
+        STEPS_SPARSE_MATRIX* get_linearized_matrix_pointer_D();
     public: // specific model level
         virtual string get_model_name() const = 0;
         virtual bool setup_model_with_steps_string_vector(vector<string>& data) = 0;
@@ -76,6 +83,8 @@ class LOAD_MODEL : public MODEL
 
         virtual void build_linearized_matrix_ABCD() = 0;
     private:
+        LOAD_MODEL_TYPE model_type;
+
         SUBSYSTEM_TYPE subsystem_type;
         bool voltage_source_flag;
         double voltage_pu, frequency_deviation_pu;

@@ -85,6 +85,7 @@ CIM6::~CIM6()
 
 void CIM6::clear()
 {
+    set_load_model_type(DYNAMIC_LOAD_MODEL);
     set_voltage_source_flag(true);
 
     set_model_float_parameter_count(23);

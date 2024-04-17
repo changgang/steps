@@ -909,16 +909,14 @@ void GENERATOR::build_linearized_matrix_ABCD()
     SYNC_GENERATOR_MODEL* gen = get_sync_generator_model();
     double rotor_angle = gen->get_rotor_angle_in_rad();
     complex<double> Zsource = get_source_impedance_in_pu();
-    complex<double> Vxy = gen->get_terminal_complex_voltage_in_pu();
+    complex<double> Uxy = gen->get_terminal_complex_voltage_in_pu();
     complex<double> Ixy = gen->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
-    complex<double> Uxy = Vxy+Ixy*Zsource;
 
     double mbase = get_mbase_in_MVA();
     STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
-    Zsource = Zsource*(mbase*one_over_sbase);
+    Zsource = Zsource/(mbase*one_over_sbase);
     Ixy = Ixy*(mbase*one_over_sbase);
-    Uxy = Uxy*(mbase*one_over_sbase);
 
     complex<double> Idq = xy2dq_with_angle_in_rad(Ixy, rotor_angle);
     complex<double> Udq = xy2dq_with_angle_in_rad(Uxy, rotor_angle);
@@ -1083,7 +1081,6 @@ void GENERATOR::build_linearized_matrix_ABCD()
     T.add_entry(0,1, -cos(rotor_angle));
     T.add_entry(1,0, cos(rotor_angle));
     T.add_entry(1,1, sin(rotor_angle));
-
 
     K.compress_and_merge_duplicate_entries();
     L.compress_and_merge_duplicate_entries();

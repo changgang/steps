@@ -1258,27 +1258,15 @@ void LOAD::build_linearized_matrix_ABCD()
         C = load_model->get_linearized_matrix_C();
         D = load_model->get_linearized_matrix_D();
     }
+    A.compress_and_merge_duplicate_entries();
+    B.compress_and_merge_duplicate_entries();
+    C.compress_and_merge_duplicate_entries();
+    D.compress_and_merge_duplicate_entries();
 
-    STEPS_SPARSE_MATRIX E, F, G, H;
-
-
-    vector<STEPS_SPARSE_MATRIX*> matrix;
-
-    matrix.push_back(&A);
-    matrix.push_back(&B);
-    matrix.push_back(&C);
-    matrix.push_back(&D);
-    matrix.push_back(&E);
-    matrix.push_back(&F);
-    matrix.push_back(&G);
-    matrix.push_back(&H);
-
-    build_linearized_matrix_ABCD_with_basic_ABCD_and_EFGH(matrix);
-}
-
-void LOAD::build_linearized_matrix_ABCD_with_basic_ABCD_and_EFGH(vector<STEPS_SPARSE_MATRIX*> matrix)
-{
-
+    *Aptr = A;
+    *Bptr = B;
+    *Cptr = C;
+    *Dptr = D;
 }
 
 STEPS_SPARSE_MATRIX LOAD::get_linearized_matrix_variable(char var) const

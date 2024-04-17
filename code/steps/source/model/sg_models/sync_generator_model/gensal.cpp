@@ -938,10 +938,15 @@ void GENSAL::build_linearized_matrix_ABCD()
     D = concatenate_matrix_diagnally(matrix);
     matrix.clear();
 
+    double Xd = get_Xd();
+    double Xq = get_Xq();
+    double Xdp = get_Xdp();
+    double Xpp = get_Xpp();
+    double Xl = get_Xl();
 
     STEPS_SPARSE_MATRIX E, F, G, H;
-    E.add_entry(0,0, -((get_Xd()-get_Xdp())*(get_Xdp()-get_Xdpp()))/((get_Xdp()-get_Xl())*(get_Xdp()-get_Xl())));
-    E.add_entry(0,1, ((get_Xd()-get_Xdp())*(get_Xdp()-get_Xdpp()))/((get_Xdp()-get_Xl())*(get_Xdp()-get_Xl())));
+    E.add_entry(0,0, -((Xd-Xdp)*(Xdp-Xpp))/((Xdp-Xl)*(Xdp-Xl)));
+    E.add_entry(0,1, ((Xd-Xdp)*(Xdp-Xpp))/((Xdp-Xl)*(Xdp-Xl)));
     E.add_entry(0,2, 0);
     E.add_entry(0,3, 0);
     E.add_entry(0,4, 0);
@@ -966,18 +971,18 @@ void GENSAL::build_linearized_matrix_ABCD()
     E.add_entry(4,3, DOUBLE_PI*get_bus_base_frequency_in_Hz());
     E.add_entry(4,4, 0);
     F.add_entry(0,0, 1);
-    F.add_entry(0,1, -((get_Xd()-get_Xdp())*(get_Xdpp()-get_Xl()))/(get_Xdp()-get_Xl()));
+    F.add_entry(0,1, -((Xd-Xdp)*(Xpp-Xl))/(Xdp-Xl));
     F.add_entry(0,2, 0);
     F.add_entry(0,3, 0);
     F.add_entry(0,4, 0);
     F.add_entry(1,0, 0);
-    F.add_entry(1,1, -(get_Xdp()-get_Xl()));
+    F.add_entry(1,1, -(Xdp-Xl));
     F.add_entry(1,2, 0);
     F.add_entry(1,3, 0);
     F.add_entry(1,4, 0);
     F.add_entry(2,0, 0);
     F.add_entry(2,1, 0);
-    F.add_entry(2,2, get_Xq()-get_Xqpp());
+    F.add_entry(2,2, Xq-Xpp);
     F.add_entry(2,3, 0);
     F.add_entry(2,4, 0);
     F.add_entry(3,0, 0);
@@ -990,8 +995,8 @@ void GENSAL::build_linearized_matrix_ABCD()
     F.add_entry(4,2, 0);
     F.add_entry(4,3, 0);
     F.add_entry(4,4, 0);
-    G.add_entry(0,0, (get_Xdpp()-get_Xl())/(get_Xdp()-get_Xl()));
-    G.add_entry(0,1, (get_Xdp()-get_Xdpp())/(get_Xdp()-get_Xl()));
+    G.add_entry(0,0, (Xpp-Xl)/(Xdp-Xl));
+    G.add_entry(0,1, (Xdp-Xpp)/(Xdp-Xl));
     G.add_entry(0,2, 0);
     G.add_entry(0,3, 0);
     G.add_entry(0,4, 0);

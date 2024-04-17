@@ -7,6 +7,7 @@
 LOAD_MODEL::LOAD_MODEL(STEPS& toolkit) : MODEL(toolkit)
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_LOAD);
+    model_type = DYNAMIC_LOAD_MODEL;
     Aptr = NULL;
     Bptr = NULL;
     Cptr = NULL;
@@ -42,10 +43,19 @@ LOAD* LOAD_MODEL::get_load_pointer() const
     return (LOAD*) get_device_pointer();
 }
 
+void LOAD_MODEL::set_load_model_type(LOAD_MODEL_TYPE type)
+{
+    model_type = type;
+}
 
 void LOAD_MODEL::set_voltage_source_flag(bool flag)
 {
     voltage_source_flag = flag;
+}
+
+LOAD_MODEL_TYPE LOAD_MODEL::get_load_model_type() const
+{
+    return model_type;
 }
 
 bool LOAD_MODEL::get_voltage_source_flag() const
@@ -165,6 +175,27 @@ void LOAD_MODEL::initialize_ABCD_matrix_for_linearization()
         Dptr = new STEPS_SPARSE_MATRIX;
 }
 
+void LOAD_MODEL::build_linearized_matrix_ABCD_with_basic_ABCD(vector<STEPS_SPARSE_MATRIX*> matrix)
+{
+    if(matrix.size()!=4)
+    {
+        ostringstream osstream;
+        osstream<<"ERROR. Vector matrix in LOAD_MODEL::"<<__FUNCTION__<<"() has "<<matrix.size()<<"individual matrix which is NOT 4";
+        STEPS& toolkit = get_toolkit();
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    STEPS_SPARSE_MATRIX& Abasic = *(matrix[0]);
+    STEPS_SPARSE_MATRIX& Bbasic = *(matrix[1]);
+    STEPS_SPARSE_MATRIX& Cbasic = *(matrix[2]);
+    STEPS_SPARSE_MATRIX& Dbasic = *(matrix[3]);
+
+    *Aptr = Abasic;
+    *Bptr = Bbasic;
+    *Cptr = Cbasic;
+    *Dptr = Dbasic;
+}
+
 STEPS_SPARSE_MATRIX LOAD_MODEL::get_linearized_matrix_variable(char var) const
 {
     var = toupper(var);
@@ -242,4 +273,24 @@ STEPS_SPARSE_MATRIX LOAD_MODEL::get_linearized_matrix_D() const
         STEPS_SPARSE_MATRIX temp;
         return temp;
     }
+}
+
+STEPS_SPARSE_MATRIX* LOAD_MODEL::get_linearized_matrix_pointer_A()
+{
+    return Aptr;
+}
+
+STEPS_SPARSE_MATRIX* LOAD_MODEL::get_linearized_matrix_pointer_B()
+{
+    return Bptr;
+}
+
+STEPS_SPARSE_MATRIX* LOAD_MODEL::get_linearized_matrix_pointer_C()
+{
+    return Cptr;
+}
+
+STEPS_SPARSE_MATRIX* LOAD_MODEL::get_linearized_matrix_pointer_D()
+{
+    return Dptr;
 }
