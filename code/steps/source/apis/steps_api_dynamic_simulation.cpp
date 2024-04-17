@@ -81,6 +81,12 @@ double api_get_dynamic_simulator_float_parameter(char* parameter_name, unsigned 
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
 
     string PARAMETER_NAME = string2upper(parameter_name);
+    if(PARAMETER_NAME=="DELT" or PARAMETER_NAME=="DELT IN S")
+        return api_get_dynamic_simulation_time_step(toolkit_index);
+    if(PARAMETER_NAME=="MAX DELT" or PARAMETER_NAME=="MAX DELT IN S")
+        return api_get_max_dynamic_simulation_time_step(toolkit_index);
+    if(PARAMETER_NAME=="MIN DELT" or PARAMETER_NAME=="MIN DELT IN S")
+        return api_get_min_dynamic_simulation_time_step(toolkit_index);
     if(PARAMETER_NAME=="MAX POWER IMBALANCE IN MVA")
         return ds.get_allowed_max_power_imbalance_in_MVA();
     if(PARAMETER_NAME=="ITERATION ACCELERATOR")
@@ -106,6 +112,21 @@ void api_set_dynamic_simulator_float_parameter(char* parameter_name, double valu
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
 
     string PARAMETER_NAME = string2upper(parameter_name);
+    if(PARAMETER_NAME=="DELT" or PARAMETER_NAME=="DELT IN S")
+    {
+        api_set_dynamic_simulation_time_step(value, toolkit_index);
+        return;
+    }
+    if(PARAMETER_NAME=="MAX DELT" or PARAMETER_NAME=="MAX DELT IN S")
+    {
+        api_set_max_dynamic_simulation_time_step(value, toolkit_index);
+        return;
+    }
+    if(PARAMETER_NAME=="MIN DELT" or PARAMETER_NAME=="MIN DELT IN S")
+    {
+        api_set_min_dynamic_simulation_time_step(value, toolkit_index);
+        return;
+    }
     if(PARAMETER_NAME=="MAX POWER IMBALANCE IN MVA")
     {
         ds.set_allowed_max_power_imbalance_in_MVA(value);
