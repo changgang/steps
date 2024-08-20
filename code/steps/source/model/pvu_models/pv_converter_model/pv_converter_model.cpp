@@ -11,11 +11,6 @@ using namespace std;
 PV_CONVERTER_MODEL::PV_CONVERTER_MODEL(STEPS& toolkit) : PVU_MODEL(toolkit)
 {
     set_current_source_flag(true);
-    set_initial_active_current_command_in_pu_based_on_mbase(0.0);
-    set_initial_reactive_current_command_in_pu_based_on_mbase(0.0);
-    set_initial_active_power_command_in_pu_based_on_mbase(0.0);
-    set_initial_reactive_power_command_in_pu_based_on_mbase(0.0);
-    set_initial_reactive_voltage_command_in_pu(0.0);
 }
 
 PV_CONVERTER_MODEL::~PV_CONVERTER_MODEL()
@@ -47,56 +42,6 @@ bool PV_CONVERTER_MODEL::is_current_source() const
 bool PV_CONVERTER_MODEL::is_voltage_source() const
 {
     return not is_current_source();
-}
-
-void PV_CONVERTER_MODEL::set_initial_active_current_command_in_pu_based_on_mbase(double ip_command)
-{
-    IP_command0 = ip_command;
-}
-
-double PV_CONVERTER_MODEL::get_initial_active_current_command_in_pu_based_on_mbase() const
-{
-    return IP_command0;
-}
-
-void PV_CONVERTER_MODEL::set_initial_reactive_current_command_in_pu_based_on_mbase(double iq_command)
-{
-    IQ_command0 = iq_command;
-}
-
-double PV_CONVERTER_MODEL::get_initial_reactive_current_command_in_pu_based_on_mbase() const
-{
-    return IQ_command0;
-}
-
-void PV_CONVERTER_MODEL::set_initial_reactive_voltage_command_in_pu(double eq_command)
-{
-    EQ_command0 = eq_command;
-}
-
-double PV_CONVERTER_MODEL::get_initial_reactive_voltage_command_in_pu() const
-{
-    return EQ_command0;
-}
-
-void PV_CONVERTER_MODEL::set_initial_active_power_command_in_pu_based_on_mbase(double P_command)
-{
-    P_command0 = P_command;
-}
-
-double PV_CONVERTER_MODEL::get_initial_active_power_command_in_pu_based_on_mbase() const
-{
-    return P_command0;
-}
-
-void PV_CONVERTER_MODEL::set_initial_reactive_power_command_in_pu_based_on_mbase(double Q_command)
-{
-    Q_command0 = Q_command;
-}
-
-double PV_CONVERTER_MODEL::get_initial_reactive_power_command_in_pu_based_on_mbase() const
-{
-    return Q_command0;
 }
 
 double PV_CONVERTER_MODEL::get_active_current_command_in_pu_based_on_mbase()
@@ -131,8 +76,7 @@ double PV_CONVERTER_MODEL::get_reactive_current_command_in_pu_based_on_mbase()
     }
 }
 
-
-double PV_CONVERTER_MODEL::get_reactive_voltage_command_in_pu() const
+double PV_CONVERTER_MODEL::get_reactive_voltage_command_in_pu()
 {
     PV_UNIT* pv_unit = get_pv_unit_pointer();
     PV_ELECTRICAL_MODEL* elec_model = pv_unit->get_pv_electrical_model();
@@ -180,3 +124,72 @@ double PV_CONVERTER_MODEL::get_reactive_power_command_in_pu_based_on_mbase()
     }
 }
 
+complex<double> PV_CONVERTER_MODEL::get_terminal_complex_power_in_pu_based_on_mbase()
+{
+    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
+    complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+    complex<double> S = Vxy*conj(Ixy);
+    return S;
+}
+
+complex<double> PV_CONVERTER_MODEL::get_terminal_complex_power_in_MVA()
+{
+    return get_terminal_complex_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
+}
+
+double PV_CONVERTER_MODEL::get_terminal_active_power_in_MW()
+{
+    return get_terminal_complex_power_in_MVA().real();
+}
+
+double PV_CONVERTER_MODEL::get_terminal_reactive_power_in_MVar()
+{
+    return get_terminal_complex_power_in_MVA().imag();
+}
+
+double PV_CONVERTER_MODEL::get_terminal_active_power_in_pu_based_on_mbase()
+{
+    return get_terminal_complex_power_in_pu_based_on_mbase().real();
+}
+
+double PV_CONVERTER_MODEL::get_terminal_reactive_power_in_pu_based_on_mbase()
+{
+    return get_terminal_complex_power_in_pu_based_on_mbase().imag();
+}
+
+complex<double> PV_CONVERTER_MODEL::get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase()
+{
+    STEPS& toolkit = get_toolkit();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
+    double mbase = get_mbase_in_MVA();
+    complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+    return Ixy*(mbase*one_over_sbase);
+}
+
+double PV_CONVERTER_MODEL::get_terminal_current_in_pu_based_on_sbase()
+{
+    STEPS& toolkit = get_toolkit();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
+    double mbase = get_mbase_in_MVA();
+    double I = get_terminal_current_in_pu_based_on_mbase();
+    return I*(mbase*one_over_sbase);
+}
+
+double PV_CONVERTER_MODEL::get_terminal_current_in_pu_based_on_mbase()
+{
+    return steps_fast_complex_abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase());
+}
+
+double PV_CONVERTER_MODEL::get_active_power_generation_including_stator_loss_in_MW()
+{
+    return get_active_power_generation_including_stator_loss_in_pu_based_on_mbase()*get_mbase_in_MVA();
+}
+
+complex<double> PV_CONVERTER_MODEL::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase()
+{
+    STEPS& toolkit = get_toolkit();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
+    double mbase = get_mbase_in_MVA();
+    complex<double> I = get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_mbase();
+    return I*(mbase*one_over_sbase);
+}

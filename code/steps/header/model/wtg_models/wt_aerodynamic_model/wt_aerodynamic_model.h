@@ -57,7 +57,7 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         double get_min_steady_state_turbine_speed_in_pu() const;
 
         double get_wind_speed_in_mps() const;
-        double get_pitch_angle_in_deg() const;
+        virtual double get_pitch_angle_in_deg() const;
         double get_turbine_speed_in_rad_per_s();
         double get_turbine_frequency_in_Hz();
 
@@ -65,7 +65,7 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         void set_initial_turbine_speed_in_rad_per_s(double w);
         double get_initial_pitch_angle_in_deg() const;
         double get_initial_turbine_speed_in_rad_per_s() const;
-        double get_initial_turbine_speed_in_pu();
+        virtual double get_initial_turbine_speed_in_pu();
         double get_total_wind_power_per_wt_generator_in_MW_considering_gear_efficiency(double vwind) const;
 
 
@@ -73,15 +73,17 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
-        double get_maximum_available_mechanical_power_per_wt_generator_in_MW_considering_gear_efficiency(double vwind);
+        virtual double get_maximum_available_mechanical_power_per_wt_generator_in_MW_considering_gear_efficiency(double vwind);
         double get_turbine_mechanical_power_per_wt_generator_in_MW();
-        double get_turbine_mechanical_power_in_MW();
+        virtual double get_turbine_mechanical_power_in_MW();
         double get_turbine_reference_speed_in_rad_per_s();
-        double get_turbine_reference_speed_in_pu();
+        virtual double get_turbine_reference_speed_in_pu();
 
         double get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s_considering_gear_efficiency(double speed_rad_per_s) const;
         double get_Cpmax(double pitch_deg);
         double get_lambda_at_Cpmax(double pitch_deg);
+
+        double get_active_power_generation_including_stator_loss_and_braking_resisitor_power_in_MW();
     public:
         virtual string get_model_name() const = 0;
 
@@ -131,6 +133,7 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         double get_current_lambda_at_cpmax() const;
         double get_current_pelec_including_loss_per_turbine_in_MW() const;
         double get_current_turbine_speed_reference_without_limit_in_rad_per_s() const;
+
         // turbine nominals
         double nominal_wind_speed_in_mps;
         double turbine_blade_radius_in_m;

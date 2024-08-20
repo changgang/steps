@@ -4687,6 +4687,10 @@ void POWER_SYSTEM_DATABASE::check_wt_generator_related_dynamic_data()
         if(windmodel!=NULL)
             windmodel->check();
 
+        WT_DBR_MODEL* dbrmodel = generator->get_wt_dbr_model();
+        if(dbrmodel!=NULL)
+            dbrmodel->check();
+
 
         if(toolkit->is_detailed_log_enabled())
         {
@@ -4699,6 +4703,7 @@ void POWER_SYSTEM_DATABASE::check_wt_generator_related_dynamic_data()
                     <<"Pitch:        "<<pitchmodel<<"\n"
                     <<"VRT:          "<<vrtmodel<<"\n"
                     <<"Relay:        "<<relaymodel<<"\n"
+                    <<"Dbr:          "<<dbrmodel<<"\n"
                     <<"Wind:         "<<windmodel;
             toolkit->show_information_with_leading_time_stamp(osstream);
         }
@@ -4729,6 +4734,31 @@ void POWER_SYSTEM_DATABASE::check_pv_unit_related_dynamic_data()
         PV_IRRADIANCE_MODEL* irradmodel = pv->get_pv_irradiance_model();
         if(irradmodel!=NULL)
             irradmodel->check();
+
+        PV_TEMPERATURE_MODEL* tempmodel = pv->get_pv_temperature_model();
+        if(tempmodel!=NULL)
+            tempmodel->check();
+
+        PV_VRT_MODEL* vrtmodel = pv->get_pv_vrt_model();
+        if(vrtmodel!=NULL)
+            vrtmodel->check();
+
+        PV_RELAY_MODEL* relay = pv->get_pv_relay_model();
+        if(relay!=NULL)
+            relay->check();
+
+        if(toolkit->is_detailed_log_enabled())
+        {
+            ostringstream osstream;
+            osstream<<"Model entry address of "<<pv->get_compound_device_name()<<":\n"
+                    <<"Pv converter: "<<convmodel<<"\n"
+                    <<"Electrical:   "<<elecmodel<<"\n"
+                    <<"Temperature:  "<<tempmodel<<"\n"
+                    <<"Irradiance:   "<<irradmodel<<"\n"
+                    <<"VRT:          "<<vrtmodel<<"\n"
+                    <<"Relay:        "<<relay;
+            toolkit->show_information_with_leading_time_stamp(osstream);
+        }
     }
 }
 
@@ -4744,6 +4774,34 @@ void POWER_SYSTEM_DATABASE::check_energy_storage_related_dynamic_data()
         ES_CONVERTER_MODEL* conv = estorage->get_es_converter_model();
         if(conv!=NULL)
             conv->check();
+
+        ES_ELECTRICAL_MODEL* elec = estorage->get_es_electrical_model();
+        if(elec!=NULL)
+            elec->check();
+
+        ES_BATTERY_MODEL* esb = estorage->get_es_battery_model();
+        if(esb!=NULL)
+            esb->check();
+
+        ES_VRT_MODEL* vrt = estorage->get_es_vrt_model();
+        if(vrt!=NULL)
+            vrt->check();
+
+        ES_RELAY_MODEL* relay = estorage->get_es_relay_model();
+        if(relay!=NULL)
+            relay->check();
+
+        if(toolkit->is_detailed_log_enabled())
+        {
+            ostringstream osstream;
+            osstream<<"Model entry address of "<<estorage->get_compound_device_name()<<":\n"
+                    <<"Es converter: "<<conv<<"\n"
+                    <<"Electrical:   "<<elec<<"\n"
+                    <<"Battery:      "<<esb<<"\n"
+                    <<"VRT:          "<<vrt<<"\n"
+                    <<"Relay:        "<<relay;
+            toolkit->show_information_with_leading_time_stamp(osstream);
+        }
     }
 }
 

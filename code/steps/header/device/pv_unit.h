@@ -8,6 +8,7 @@
 #include "header/model/pvu_models/pv_panel_model/pv_panel_model.h"
 #include "header/model/pvu_models/pv_electrical_model/pv_electrical_model.h"
 #include "header/model/pvu_models/pv_irradiance_model/pv_irradiance_model.h"
+#include "header/model/pvu_models/pv_temperature_model/pv_temperature_model.h"
 #include "header/model/pvu_models/pv_vrt_model/pv_vrt_model.h"
 #include "header/model/pvu_models/pv_relay_model/pv_relay_model.h"
 
@@ -40,11 +41,13 @@ class PV_UNIT : public SOURCE
         void set_pv_irradiance_model(PV_IRRADIANCE_MODEL* model);
         void set_pv_vrt_model(PV_VRT_MODEL* model);
         void set_pv_relay_model(PV_RELAY_MODEL* model);
+        void set_pv_temperature_model(PV_TEMPERATURE_MODEL* model);
 
         PV_CONVERTER_MODEL* get_pv_converter_model() const;
         PV_PANEL_MODEL* get_pv_panel_model() const;
         PV_ELECTRICAL_MODEL* get_pv_electrical_model() const;
         PV_IRRADIANCE_MODEL* get_pv_irradiance_model() const;
+        PV_TEMPERATURE_MODEL* get_pv_temperature_model() const;
         PV_VRT_MODEL* get_pv_vrt_model() const;
         PV_RELAY_MODEL* get_pv_relay_model() const;
 
@@ -92,6 +95,7 @@ class PV_UNIT : public SOURCE
         PV_PANEL_MODEL* pv_panel_model;
         PV_ELECTRICAL_MODEL* pv_electrical_model;
         PV_IRRADIANCE_MODEL* pv_irradiance_model;
+        PV_TEMPERATURE_MODEL* pv_temperature_model;
         PV_VRT_MODEL* pv_vrt_model;
         PV_RELAY_MODEL* pv_relay_model;
 

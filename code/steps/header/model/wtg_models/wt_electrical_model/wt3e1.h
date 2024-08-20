@@ -2,9 +2,10 @@
 #define WT3E1_H
 
 #include "header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
+#include "header/basic/multi_point_line.h"
+#include "header/model/converter_common_model/elec_model/convelec1.h"
 #include "header/block/first_order_block.h"
 #include "header/block/pi_block.h"
-#include "header/block/integral_block.h"
 
 class WT3E1: public WT_ELECTRICAL_MODEL
 {
@@ -16,6 +17,9 @@ class WT3E1: public WT_ELECTRICAL_MODEL
     public: // specific exciter
         virtual string get_model_name() const;
 
+
+        void set_bus_to_regulate(unsigned int bus);
+        void set_var_control_mode(PE_VAR_CONTROL_MODE mode);
         void set_transformer_from_bus(unsigned int bus);
         void set_transformer_to_bus(unsigned int bus);
         void set_transformer_id(string id);
@@ -46,6 +50,9 @@ class WT3E1: public WT_ELECTRICAL_MODEL
         void set_Pmin_in_pu(double p);
         void set_IPmax_in_pu(double I);
 
+
+        unsigned int get_bus_to_regulate()  const;
+        PE_VAR_CONTROL_MODE get_var_control_mode() const;
         unsigned int get_transformer_from_bus() const;
         unsigned int get_transformer_to_bus() const;
         string get_transformer_id() const;
@@ -75,6 +82,12 @@ class WT3E1: public WT_ELECTRICAL_MODEL
         double get_Pmax_in_pu() const;
         double get_Pmin_in_pu() const;
         double get_IPmax_in_pu() const;
+
+
+        void add_wind_turbine_power_and_speed_pair_in_pu(double power, double speed);
+        double get_wind_turbine_reference_speed_with_power_in_pu(double power);
+
+
     public:
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
@@ -112,23 +125,13 @@ class WT3E1: public WT_ELECTRICAL_MODEL
         unsigned int transformer_from_bus, transformer_to_bus;
         string transformer_id;
 
-        double Xcomp;
-        FIRST_ORDER_BLOCK voltage_sensor;
-        double Fn;
-        FIRST_ORDER_BLOCK voltage_regulator_first_order_block;
-        INTEGRAL_BLOCK voltage_regulator_integrator;
-        FIRST_ORDER_BLOCK voltage_regulator_filter;
-        FIRST_ORDER_BLOCK active_power_sensor;
-        INTEGRAL_BLOCK Q_error_integrator;
-        unsigned int Voltage_Flag;
-        INTEGRAL_BLOCK V_error_integrator;
-        double EQmax, EQmin;
 
         FIRST_ORDER_BLOCK wind_turbine_speed_reference_sensor;
         PI_BLOCK torque_PI_regulator;
-        double max_torque_rate, min_torque_rate;
-        INTEGRAL_BLOCK power_order_integrator;
-        double IPmax;
+
+        MULTI_POINT_LINE power_speed_table;
+        CONVELEC1 conelec1;
+
 };
 
-#endif // EXCITER_MODEL_H
+#endif // WT3E1_H

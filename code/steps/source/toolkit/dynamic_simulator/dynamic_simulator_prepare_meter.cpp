@@ -147,7 +147,31 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
     for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
+        METER meter = setter.prepare_wt_generator_terminal_current_in_pu_on_mbase_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        METER meter = setter.prepare_wt_generator_terminal_current_in_pu_on_sbase_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
         METER meter = setter.prepare_wt_generator_terminal_current_in_kA_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        METER meter = setter.prepare_wt_generator_terminal_active_power_in_pu_on_mbase_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        METER meter = setter.prepare_wt_generator_terminal_active_power_in_pu_on_mbase_meter(generator->get_device_id());
         append_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
@@ -159,13 +183,67 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
     for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
+        METER meter = setter.prepare_wt_generator_terminal_reactive_power_in_pu_on_mbase_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        METER meter = setter.prepare_wt_generator_terminal_reactive_power_in_pu_on_mbase_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
         METER meter = setter.prepare_wt_generator_terminal_reactive_power_in_MVar_meter(generator->get_device_id());
         append_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
+        METER meter = setter.prepare_wt_generator_terminal_apparent_power_in_pu_on_mbase_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        METER meter = setter.prepare_wt_generator_terminal_apparent_power_in_pu_on_sbase_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        METER meter = setter.prepare_wt_generator_terminal_apparent_power_in_MVA_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        METER meter = setter.prepare_wt_generator_mechanical_power_in_pu_on_mbase_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        METER meter = setter.prepare_wt_generator_mechanical_power_in_pu_on_sbase_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
         METER meter = setter.prepare_wt_generator_mechanical_power_in_MW_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        METER meter = setter.prepare_wt_generator_max_available_mechanical_power_in_pu_on_mbase_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        METER meter = setter.prepare_wt_generator_max_available_mechanical_power_in_pu_on_sbase_meter(generator->get_device_id());
         append_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
@@ -183,7 +261,43 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
     for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
+        METER meter = setter.prepare_wt_generator_speed_reference_in_rad_per_s_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        METER meter = setter.prepare_wt_generator_turbine_speed_deviation_in_pu_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        METER meter = setter.prepare_wt_generator_turbine_speed_deviation_in_Hz_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
         METER meter = setter.prepare_wt_generator_turbine_speed_in_pu_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        METER meter = setter.prepare_wt_generator_turbine_speed_in_Hz_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        METER meter = setter.prepare_wt_generator_rotor_speed_deviation_in_pu_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        METER meter = setter.prepare_wt_generator_rotor_speed_deviation_in_Hz_meter(generator->get_device_id());
         append_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
@@ -195,7 +309,25 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
     for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
+        METER meter = setter.prepare_wt_generator_rotor_speed_in_Hz_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
         METER meter = setter.prepare_wt_generator_rotor_angle_in_deg_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        METER meter = setter.prepare_wt_generator_rotor_angle_in_rad_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        METER meter = setter.prepare_wt_generator_braking_resistor_power_in_pu_on_mbase_meter(generator->get_device_id());
         append_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
@@ -248,7 +380,6 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
     }
 }
 
-
 void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meters()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -269,13 +400,67 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meters()
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_terminal_current_in_pu_on_mbase_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_terminal_current_in_pu_on_sbase_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_terminal_active_power_in_pu_on_mbase_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_terminal_active_power_in_pu_on_sbase_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_terminal_active_power_in_MW_meter(pv_unit->get_device_id());
         append_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_mbase_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_sbase_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_terminal_reactive_power_in_MVar_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_terminal_apparent_power_in_pu_on_mbase_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_terminal_apparent_power_in_pu_on_sbase_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_terminal_apparent_power_in_MVA_meter(pv_unit->get_device_id());
         append_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
@@ -311,14 +496,154 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meters()
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_solar_irradiance_in_pu_meter(pv_unit->get_device_id());
+        METER meter = setter.prepare_pv_unit_solar_irradiance_in_pu_on_s0_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_solar_irradiance_in_pu_on_sref_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_solar_irradiance_in_Wpm2_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_temperature_in_c_deg_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_MW_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_mbase_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_sbase_meter(pv_unit->get_device_id());
         append_meter(meter);
     }
 }
 
 void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meters()
 {
-    return;
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+
+    METER_SETTER setter(*toolkit);
+
+    unsigned int n;
+
+    n = psdb.get_energy_storage_count();
+    vector<ENERGY_STORAGE*> energy_storages = psdb.get_all_energy_storages();
+    ENERGY_STORAGE* energy_storage;
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        energy_storage = energy_storages[i];
+        METER meter = setter.prepare_es_terminal_current_in_kA_meter(energy_storage->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        energy_storage = energy_storages[i];
+        METER meter = setter.prepare_es_terminal_current_in_pu_on_mbase_meter(energy_storage->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        energy_storage = energy_storages[i];
+        METER meter = setter.prepare_es_terminal_current_in_pu_on_sbase_meter(energy_storage->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        energy_storage = energy_storages[i];
+        METER meter = setter.prepare_es_terminal_active_power_in_MW_meter(energy_storage->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        energy_storage = energy_storages[i];
+        METER meter = setter.prepare_es_terminal_reactive_power_in_MVar_meter(energy_storage->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        energy_storage = energy_storages[i];
+        METER meter = setter.prepare_es_terminal_apparent_power_in_pu_on_mbase_meter(energy_storage->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        energy_storage = energy_storages[i];
+        METER meter = setter.prepare_es_terminal_apparent_power_in_pu_on_sbase_meter(energy_storage->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        energy_storage = energy_storages[i];
+        METER meter = setter.prepare_es_terminal_apparent_power_in_MVA_meter(energy_storage->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        energy_storage = energy_storages[i];
+        METER meter = setter.prepare_es_active_current_command_in_pu_meter(energy_storage->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        energy_storage = energy_storages[i];
+        METER meter = setter.prepare_es_reactive_current_command_in_pu_meter(energy_storage->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        energy_storage = energy_storages[i];
+        METER meter = setter.prepare_es_active_power_command_in_pu_meter(energy_storage->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        energy_storage = energy_storages[i];
+        METER meter = setter.prepare_es_reactive_power_command_in_pu_meter(energy_storage->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        energy_storage = energy_storages[i];
+        METER meter = setter.prepare_es_reactive_voltage_command_in_pu_meter(energy_storage->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        energy_storage = energy_storages[i];
+        METER meter = setter.prepare_es_battery_power_in_pu_on_mbase_meter(energy_storage->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        energy_storage = energy_storages[i];
+        METER meter = setter.prepare_es_battery_power_in_MW_meter(energy_storage->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        energy_storage = energy_storages[i];
+        METER meter = setter.prepare_es_state_of_charge_in_pu_meter(energy_storage->get_device_id());
+        append_meter(meter);
+    }
 }
 
 void DYNAMICS_SIMULATOR::prepare_load_related_meters()
@@ -724,28 +1049,66 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(const DEVICE_ID& did
 
             meter_type = string2upper(meter_type);
 
+            if(meter_type=="TERMINAL CURRENT IN PU ON MBASE")
+                meter = setter.prepare_wt_generator_terminal_current_in_pu_on_mbase_meter(did);
+            if(meter_type=="TERMINAL CURRENT IN PU ON SBASE")
+                meter = setter.prepare_wt_generator_terminal_current_in_pu_on_sbase_meter(did);
             if(meter_type=="TERMINAL CURRENT IN KA")
                 meter = setter.prepare_wt_generator_terminal_current_in_kA_meter(did);
+            if(meter_type=="TERMINAL ACTIVE POWER IN PU ON MBASE")
+                meter = setter.prepare_wt_generator_terminal_active_power_in_pu_on_mbase_meter(did);
+            if(meter_type=="TERMINAL ACTIVE POWER IN PU ON SBASE")
+                meter = setter.prepare_wt_generator_terminal_active_power_in_pu_on_sbase_meter(did);
             if(meter_type=="TERMINAL ACTIVE POWER IN MW")
                 meter = setter.prepare_wt_generator_terminal_active_power_in_MW_meter(did);
+            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON MBASE")
+                meter = setter.prepare_wt_generator_terminal_reactive_power_in_pu_on_mbase_meter(did);
+            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON SBASE")
+                meter = setter.prepare_wt_generator_terminal_reactive_power_in_pu_on_sbase_meter(did);
             if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
                 meter = setter.prepare_wt_generator_terminal_reactive_power_in_MVar_meter(did);
+            if(meter_type=="TERMINAL APPARENT POWER IN PU ON MBASE")
+                meter = setter.prepare_wt_generator_terminal_apparent_power_in_pu_on_mbase_meter(did);
+            if(meter_type=="TERMINAL APPARENT POWER IN PU ON SBASE")
+                meter = setter.prepare_wt_generator_terminal_apparent_power_in_pu_on_sbase_meter(did);
+            if(meter_type=="TERMINAL APPARENT POWER IN MVA")
+                meter = setter.prepare_wt_generator_terminal_apparent_power_in_MVA_meter(did);
             if(meter_type=="MECHANICAL POWER IN MW")
                 meter = setter.prepare_wt_generator_mechanical_power_in_MW_meter(did);
+            if(meter_type=="MECHANICAL POWER IN PU ON MBASE")
+                meter = setter.prepare_wt_generator_max_available_mechanical_power_in_pu_on_mbase_meter(did);
+            if(meter_type=="MECHANICAL POWER IN PU ON SBASE")
+                meter = setter.prepare_wt_generator_max_available_mechanical_power_in_pu_on_sbase_meter(did);
+            if(meter_type=="MAX AVAILABLE MECHANICAL POWER IN PU ON MBASE")
+                meter = setter.prepare_wt_generator_max_available_mechanical_power_in_pu_on_mbase_meter(did);
+            if(meter_type=="MAX AVAILABLE MECHANICAL POWER IN PU ON SBASE")
+                meter = setter.prepare_wt_generator_max_available_mechanical_power_in_pu_on_sbase_meter(did);
             if(meter_type=="MAX AVAILABLE MECHANICAL POWER IN MW")
                 meter = setter.prepare_wt_generator_max_available_mechanical_power_in_MW_meter(did);
             if(meter_type=="SPEED REFERENCE IN PU")
                 meter = setter.prepare_wt_generator_speed_reference_in_pu_meter(did);
-            if(meter_type=="TURBINE SPEED IN PU")
-                meter = setter.prepare_wt_generator_turbine_speed_in_pu_meter(did);
-            if(meter_type=="ROTOR SPEED IN PU")
-                meter = setter.prepare_wt_generator_rotor_speed_in_pu_meter(did);
+            if(meter_type=="SPEED REFERENCE IN RAD/S")
+                meter = setter.prepare_wt_generator_speed_reference_in_rad_per_s_meter(did);
             if(meter_type=="TURBINE SPEED DEVIATION IN PU")
                 meter = setter.prepare_wt_generator_turbine_speed_deviation_in_pu_meter(did);
+            if(meter_type=="TURBINE SPEED DEVIATION IN HZ")
+                meter = setter.prepare_wt_generator_turbine_speed_deviation_in_Hz_meter(did);
+            if(meter_type=="TURBINE SPEED IN PU")
+                meter = setter.prepare_wt_generator_turbine_speed_in_pu_meter(did);
+            if(meter_type=="TURBINE SPEED IN HZ")
+                meter = setter.prepare_wt_generator_turbine_speed_in_Hz_meter(did);
             if(meter_type=="ROTOR SPEED DEVIATION IN PU")
                 meter = setter.prepare_wt_generator_rotor_speed_deviation_in_pu_meter(did);
+            if(meter_type=="ROTOR SPEED DEVIATION IN HZ")
+                meter = setter.prepare_wt_generator_rotor_speed_deviation_in_Hz_meter(did);
+            if(meter_type=="ROTOR SPEED IN PU")
+                meter = setter.prepare_wt_generator_rotor_speed_in_pu_meter(did);
+            if(meter_type=="ROTOR SPEED IN HZ")
+                meter = setter.prepare_wt_generator_rotor_speed_in_Hz_meter(did);
             if(meter_type=="ROTOR ANGLE IN DEG")
                 meter = setter.prepare_wt_generator_rotor_angle_in_deg_meter(did);
+            if(meter_type=="ROTOR ANGLE IN RAD")
+                meter = setter.prepare_wt_generator_rotor_angle_in_rad_meter(did);
             if(meter_type=="ACTIVE CURRENT COMMAND IN PU")
                 meter = setter.prepare_wt_generator_active_current_command_in_pu_meter(did);
             if(meter_type=="REACTIVE CURRENT COMMAND IN PU")
@@ -762,6 +1125,8 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(const DEVICE_ID& did
                 meter = setter.prepare_wt_generator_wind_speed_in_pu_meter(did);
             if(meter_type=="WIND SPEED IN MPS")
                 meter = setter.prepare_wt_generator_wind_speed_in_mps_meter(did);
+            if(meter_type=="BRAKING RESISTOR POWER IN PU ON MBASE")
+                meter = setter.prepare_wt_generator_braking_resistor_power_in_pu_on_mbase_meter(did);
             if(meter_type=="WT GENERATOR MODEL INTERNAL VARIABLE")
                 meter = setter.prepare_wt_generator_model_internal_variable_meter(did, var_name);
             if(meter_type=="WT AERODYNAMIC MODEL INTERNAL VARIABLE")
@@ -774,6 +1139,12 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(const DEVICE_ID& did
                 meter = setter.prepare_wt_pitch_model_internal_variable_meter(did, var_name);
             if(meter_type=="WIND SPEED MODEL INTERNAL VARIABLE")
                 meter = setter.prepare_wind_speed_model_internal_variable_meter(did, var_name);
+            if(meter_type=="WT VRT MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_wt_vrt_model_internal_variable_meter(did, var_name);
+            if(meter_type=="WT RELAY MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_wt_relay_model_internal_variable_meter(did, var_name);
+            if(meter_type=="WT DBR MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_wt_dbr_model_internal_variable_meter(did, var_name);
 
             if(meter.is_valid())
                 append_meter(meter);
@@ -813,10 +1184,22 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meter(const DEVICE_ID& did, str
 
             if(meter_type=="TERMINAL CURRENT IN KA")
                 meter = setter.prepare_pv_unit_terminal_current_in_kA_meter(did);
+            if(meter_type=="TERMINAL CURRENT IN PU ON MBASE")
+                meter = setter.prepare_pv_unit_terminal_current_in_pu_on_mbase_meter(did);
+            if(meter_type=="TERMINAL CURRENT IN PU ON SBASE")
+                meter = setter.prepare_pv_unit_terminal_current_in_pu_on_sbase_meter(did);
             if(meter_type=="TERMINAL ACTIVE POWER IN MW")
                 meter = setter.prepare_pv_unit_terminal_active_power_in_MW_meter(did);
+            if(meter_type=="TERMINAL ACTIVE POWER IN PU ON MBASE")
+                meter = setter.prepare_pv_unit_terminal_active_power_in_pu_on_mbase_meter(did);
+            if(meter_type=="TERMINAL ACTIVE POWER IN PU ON SBASE")
+                meter = setter.prepare_pv_unit_terminal_active_power_in_pu_on_sbase_meter(did);
             if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
                 meter = setter.prepare_pv_unit_terminal_reactive_power_in_MVar_meter(did);
+            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON MBASE")
+                meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_mbase_meter(did);
+            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON SBASE")
+                meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_sbase_meter(did);
             if(meter_type=="ACTIVE CURRENT COMMAND IN PU")
                 meter = setter.prepare_pv_unit_active_current_command_in_pu_meter(did);
             if(meter_type=="REACTIVE CURRENT COMMAND IN PU")
@@ -827,8 +1210,20 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meter(const DEVICE_ID& did, str
                 meter = setter.prepare_pv_unit_reactive_power_command_in_pu_meter(did);
             if(meter_type=="REACTIVE VOLTAGE COMMAND IN PU")
                 meter = setter.prepare_pv_unit_reactive_voltage_command_in_pu_meter(did);
-            if(meter_type=="SOLAR IRRADIANCE IN PU")
-                meter = setter.prepare_pv_unit_solar_irradiance_in_pu_meter(did);
+            if(meter_type=="SOLAR IRRADIANCE IN PU ON S0")
+                meter = setter.prepare_pv_unit_solar_irradiance_in_pu_on_s0_meter(did);
+            if(meter_type=="SOLAR IRRADIANCE IN PU ON SREF")
+                meter = setter.prepare_pv_unit_solar_irradiance_in_pu_on_sref_meter(did);
+            if(meter_type=="SOLAR IRRADIANCE IN W/M2")
+                meter = setter.prepare_pv_unit_solar_irradiance_in_Wpm2_meter(did);
+            if(meter_type=="TEMPERATURE IN C DEG")
+                meter = setter.prepare_pv_unit_temperature_in_c_deg_meter(did);
+            if(meter_type=="MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN MW")
+                meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_MW_meter(did);
+            if(meter_type=="MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN PU ON MBASE")
+                meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_mbase_meter(did);
+            if(meter_type=="MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN PU ON SBASE")
+                meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_sbase_meter(did);
             if(meter_type=="PV CONVERTER MODEL INTERNAL VARIABLE")
                 meter = setter.prepare_pv_converter_model_internal_variable_meter(did, var_name);
             if(meter_type=="PV PANEL MODEL INTERNAL VARIABLE")
@@ -837,6 +1232,12 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meter(const DEVICE_ID& did, str
                 meter = setter.prepare_pv_electrical_model_internal_variable_meter(did, var_name);
             if(meter_type=="PV IRRADIANCE MODEL INTERNAL VARIABLE")
                 meter = setter.prepare_pv_irradiance_model_internal_variable_meter(did, var_name);
+            if(meter_type=="PV VRT MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_pv_vrt_model_internal_variable_meter(did, var_name);
+            if(meter_type=="PV RELAY MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_pv_relay_model_internal_variable_meter(did, var_name);
+            if(meter_type=="PV TEMPERATURE MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_pv_temperature_model_internal_variable_meter(did, var_name);
 
             if(meter.is_valid())
                 append_meter(meter);
@@ -866,7 +1267,7 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(const DEVICE_ID& d
 
     if(did.get_device_type()==STEPS_ENERGY_STORAGE)
     {
-        if(psdb.is_pv_unit_exist(did))
+        if(psdb.is_energy_storage_exist(did))
         {
             METER_SETTER setter(*toolkit);
 
@@ -875,51 +1276,57 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(const DEVICE_ID& d
             meter_type = string2upper(meter_type);
 
             if(meter_type=="TERMINAL CURRENT IN KA")
-                meter = setter.prepare_wt_generator_terminal_current_in_kA_meter(did);
+                meter = setter.prepare_es_terminal_current_in_kA_meter(did);
+            if(meter_type=="TERMINAL CURRENT IN PU ON SBASE")
+                meter = setter.prepare_es_terminal_current_in_pu_on_sbase_meter(did);
+            if(meter_type=="TERMINAL CURRENT IN PU ON MBASE")
+                meter = setter.prepare_es_terminal_current_in_pu_on_mbase_meter(did);
+            if(meter_type=="TERMINAL ACTIVE POWER IN PU ON MBASE")
+                meter = setter.prepare_es_terminal_active_power_in_pu_on_mbase_meter(did);
+            if(meter_type=="TERMINAL ACTIVE POWER IN PU ON SBASE")
+                meter = setter.prepare_es_terminal_active_power_in_pu_on_sbase_meter(did);
             if(meter_type=="TERMINAL ACTIVE POWER IN MW")
-                meter = setter.prepare_wt_generator_terminal_active_power_in_MW_meter(did);
+                meter = setter.prepare_es_terminal_active_power_in_MW_meter(did);
+            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON MBASE")
+                meter = setter.prepare_es_terminal_reactive_power_in_pu_on_mbase_meter(did);
+            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON SBASE")
+                meter = setter.prepare_es_terminal_reactive_power_in_pu_on_sbase_meter(did);
             if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
-                meter = setter.prepare_wt_generator_terminal_reactive_power_in_MVar_meter(did);
-            if(meter_type=="MECHANICAL POWER IN MW")
-                meter = setter.prepare_wt_generator_mechanical_power_in_MW_meter(did);
-            if(meter_type=="MAX AVAILABLE MECHANICAL POWER IN MW")
-                meter = setter.prepare_wt_generator_max_available_mechanical_power_in_MW_meter(did);
-            if(meter_type=="SPEED REFERENCE IN PU")
-                meter = setter.prepare_wt_generator_speed_reference_in_pu_meter(did);
-            if(meter_type=="TURBINE SPEED IN PU")
-                meter = setter.prepare_wt_generator_turbine_speed_in_pu_meter(did);
-            if(meter_type=="ROTOR SPEED IN PU")
-                meter = setter.prepare_wt_generator_rotor_speed_in_pu_meter(did);
-            if(meter_type=="ROTOR ANGLE IN DEG")
-                meter = setter.prepare_wt_generator_rotor_angle_in_deg_meter(did);
+                meter = setter.prepare_es_terminal_reactive_power_in_MVar_meter(did);
+            if(meter_type=="TERMINAL APPARENT POWER IN PU ON MBASE")
+                meter = setter.prepare_es_terminal_apparent_power_in_pu_on_mbase_meter(did);
+            if(meter_type=="TERMINAL APPARENT POWER IN PU ON SBASE")
+                meter = setter.prepare_es_terminal_apparent_power_in_pu_on_sbase_meter(did);
+            if(meter_type=="TERMINAL APPARENT POWER IN MVA")
+                meter = setter.prepare_es_terminal_apparent_power_in_MVA_meter(did);
             if(meter_type=="ACTIVE CURRENT COMMAND IN PU")
-                meter = setter.prepare_wt_generator_active_current_command_in_pu_meter(did);
+                meter = setter.prepare_es_active_current_command_in_pu_meter(did);
             if(meter_type=="REACTIVE CURRENT COMMAND IN PU")
-                meter = setter.prepare_wt_generator_reactive_current_command_in_pu_meter(did);
+                meter = setter.prepare_es_reactive_current_command_in_pu_meter(did);
             if(meter_type=="ACTIVE POWER COMMAND IN PU")
-                meter = setter.prepare_wt_generator_active_power_command_in_pu_meter(did);
+                meter = setter.prepare_es_active_power_command_in_pu_meter(did);
             if(meter_type=="REACTIVE POWER COMMAND IN PU")
-                meter = setter.prepare_wt_generator_reactive_power_command_in_pu_meter(did);
+                meter = setter.prepare_es_reactive_power_command_in_pu_meter(did);
             if(meter_type=="REACTIVE VOLTAGE COMMAND IN PU")
-                meter = setter.prepare_wt_generator_reactive_voltage_command_in_pu_meter(did);
-            if(meter_type=="PITCH ANGLE IN DEG")
-                meter = setter.prepare_wt_generator_pitch_angle_in_deg_meter(did);
-            if(meter_type=="WIND SPEED IN PU")
-                meter = setter.prepare_wt_generator_wind_speed_in_pu_meter(did);
-            if(meter_type=="WIND SPEED IN MPS")
-                meter = setter.prepare_wt_generator_wind_speed_in_mps_meter(did);
-            if(meter_type=="WT GENERATOR MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_wt_generator_model_internal_variable_meter(did, var_name);
-            if(meter_type=="WT AERODYNAMIC MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_wt_aerodynamic_model_internal_variable_meter(did, var_name);
-            if(meter_type=="WT TURBINE MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_wt_turbine_model_internal_variable_meter(did, var_name);
-            if(meter_type=="WT ELECTRICAL MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_wt_electrical_model_internal_variable_meter(did, var_name);
-            if(meter_type=="WT PITCH MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_wt_pitch_model_internal_variable_meter(did, var_name);
-            if(meter_type=="WIND SPEED MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_wind_speed_model_internal_variable_meter(did, var_name);
+                meter = setter.prepare_es_reactive_voltage_command_in_pu_meter(did);
+            if(meter_type=="BATTERY POWER IN PU ON MBASE")
+                meter = setter.prepare_es_battery_power_in_pu_on_mbase_meter(did);
+            if(meter_type=="BATTERY POWER IN PU ON SBASE")
+                meter = setter.prepare_es_battery_power_in_pu_on_sbase_meter(did);
+            if(meter_type=="BATTERY POWER IN MW")
+                meter = setter.prepare_es_battery_power_in_MW_meter(did);
+            if(meter_type=="STATE OF CHARGE IN PU")
+                meter = setter.prepare_es_state_of_charge_in_pu_meter(did);
+            if(meter_type=="ES CONVERTOR MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_es_converter_model_internal_variable_meter(did, var_name);
+            if(meter_type=="ES ELECTRICAL MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_es_electrical_model_internal_variable_meter(did, var_name);
+            if(meter_type=="ES BATTERY MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_es_battery_model_internal_variable_meter(did, var_name);
+            if(meter_type=="ES VRT MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_es_vrt_model_internal_variable_meter(did, var_name);
+            if(meter_type=="ES RELAY MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_es_relay_model_internal_variable_meter(did, var_name);
 
             if(meter.is_valid())
                 append_meter(meter);

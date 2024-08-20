@@ -21,16 +21,27 @@ class PV_PANEL_MODEL : public PVU_MODEL
     public:
         virtual string get_model_type() const;
 
+        void set_current_Pref_in_pu_on_mbase(double value);
+        double get_current_Pref_in_pu_on_mbase() const;
+
         void set_S0_in_Wpm2(double S);
         void set_Sref_in_Wpm2(double S);
+        void set_Tref_in_C_deg(double T);
 
         double get_S0_in_Wpm2() const;
         double get_Sref_in_Wpm2() const;
+        double get_Tref_in_C_deg() const;
+        double get_temperature_in_C_deg() const;
 
         double get_solar_irradiance_in_Wpm2();
+        double get_solar_irradiance_in_pu_based_on_Sref();
+        double get_solar_irradiance_in_pu_based_on_S0();
         double get_pv_unit_terminal_active_power_generation_in_pu_based_on_mbase() const;
+        double get_active_power_generation_including_stator_loss_in_MW() const;
 
         virtual double get_Pref_in_pu_base_on_mbase() = 0;
+        virtual double get_maximum_available_power_extracted_power_from_irradiance_in_pu_on_mbase() = 0;
+        double get_maximum_available_power_extracted_power_from_irradiance_in_MW();
     public:
         virtual string get_model_name() const = 0;
 
@@ -62,7 +73,8 @@ class PV_PANEL_MODEL : public PVU_MODEL
         virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
 
-        double S0_Wpm2, Sref_Wpm2;
+        double S0_Wpm2, Sref_Wpm2, Tref_in_C_deg;
+        double current_Pref_in_pu;
 };
 
 #endif // PV_PANEL_MODEL_H

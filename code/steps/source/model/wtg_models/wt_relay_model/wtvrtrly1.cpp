@@ -253,31 +253,47 @@ string WTVRTRLY1::get_standard_psse_string(bool export_internal_bus_number) cons
     osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "
             <<setw(6)<<identifier<<", "
-            <<setw(6)<<get_vrt_trip_time_delay_in_s()<<", \n"
-            <<setw(10)<<"";
+            <<setw(8)<<setprecision(4)<<get_vrt_trip_time_delay_in_s()<<", ";
 
     unsigned int n=get_lvrt_point_number();
 
     osstream<<setw(8)<<n<<", ";
 
+    unsigned int number = 5;
     for(unsigned int i=0; i<n; ++i)
     {
-        osstream<<setw(8)<<setprecision(6)<<get_lvrt_time_threshold(i)<<", ";
-        osstream<<setw(8)<<setprecision(6)<<get_lvrt_volt_threshold(i)<<", ";
+        osstream<<setw(8)<<setprecision(4)<<get_lvrt_time_threshold(i)<<", ";
+        number++;
+        if(number == 10 or (number-10)%9 == 0)
+            osstream<<"\n"<<setw(10)<<"";
+        osstream<<setw(8)<<setprecision(4)<<get_lvrt_volt_threshold(i)<<", ";
+        number++;
+        if(number == 10 or (number-10)%9 == 0)
+            osstream<<"\n"<<setw(10)<<"";
     }
-    osstream<<setw(8)<<setprecision(6)<<get_lvrt_trip_scale()<<", \n";
+    osstream<<setw(8)<<setprecision(4)<<get_lvrt_trip_scale()<<", \n";
     osstream<<setw(10)<<"";
 
     n=get_hvrt_point_number();
 
     osstream<<setw(8)<<n<<", ";
+    number++;
+    if(number == 10 or (number-10)%9 == 0)
+        osstream<<"\n"<<setw(10)<<"";
 
     for(unsigned int i=0; i<n; ++i)
     {
-        osstream<<setw(8)<<setprecision(6)<<get_hvrt_time_threshold(i)<<", ";
-        osstream<<setw(8)<<setprecision(6)<<get_hvrt_volt_threshold(i)<<", ";
+        osstream<<setw(8)<<setprecision(4)<<get_hvrt_time_threshold(i)<<", ";
+        number++;
+        if(number == 10 or (number-10)%9 == 0)
+            osstream<<"\n"<<setw(10)<<"";
+        osstream<<setw(8)<<setprecision(4)<<get_hvrt_volt_threshold(i)<<", ";
+        number++;
+        if(number == 10 or (number-10)%9 == 0)
+            osstream<<"\n"<<setw(10)<<"";
     }
-    osstream<<setw(8)<<setprecision(6)<<get_hvrt_trip_scale()<<" /";
+    osstream<<setw(8)<<setprecision(4)<<get_hvrt_trip_scale()<<" /";
+
     return osstream.str();
 }
 

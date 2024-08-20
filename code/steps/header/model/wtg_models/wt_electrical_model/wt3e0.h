@@ -2,9 +2,9 @@
 #define WT3E0_H
 
 #include "header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
+#include "header/model/converter_common_model/elec_model/convelec0.h"
 #include "header/block/first_order_block.h"
 #include "header/block/pi_block.h"
-#include "header/block/integral_block.h"
 
 class WT3E0: public WT_ELECTRICAL_MODEL
 {
@@ -13,8 +13,13 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         WT3E0(const WT3E0& model);
         virtual ~WT3E0();
         virtual WT3E0& operator=(const WT3E0& model);
-    public: // specific exciter
+    public:
         virtual string get_model_name() const;
+
+        void set_var_control_mode(PE_VAR_CONTROL_MODE mode);
+        PE_VAR_CONTROL_MODE get_var_control_mode() const;
+        void set_bus_to_regulate(unsigned int bus);
+        unsigned int get_bus_to_regulate() const;
 
         void set_Xcomp_in_pu(double Xc);
         void set_TRV_in_s(double T);
@@ -88,8 +93,6 @@ class WT3E0: public WT_ELECTRICAL_MODEL
 
         bool is_frequency_regulation_enabled() const;
 
-        void set_speed_reference_bias_in_pu(double bias);
-        double get_speed_reference_bias_in_pu() const;
     public:
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
@@ -128,32 +131,9 @@ class WT3E0: public WT_ELECTRICAL_MODEL
 
         void trip_frequency_regulation();
 
-        double Xcomp;
-        FIRST_ORDER_BLOCK voltage_sensor;
-        double Fn;
-        FIRST_ORDER_BLOCK voltage_regulator_first_order_block;
-        INTEGRAL_BLOCK voltage_regulator_integrator;
-        FIRST_ORDER_BLOCK voltage_regulator_filter;
-        FIRST_ORDER_BLOCK active_power_sensor;
-        INTEGRAL_BLOCK Q_error_integrator;
-        unsigned int Voltage_Flag;
-        INTEGRAL_BLOCK V_error_integrator;
-        double EQmax, EQmin;
-
         FIRST_ORDER_BLOCK wind_turbine_speed_reference_sensor;
         PI_BLOCK torque_PI_regulator;
-        DIFFERENTIAL_BLOCK virtual_inertia_emulator;
-        FIRST_ORDER_BLOCK frequency_droop_controller;
-
-        double f_upper_pu, f_lower_pu;
-        INTEGRAL_BLOCK frequency_integral_controller;
-        double max_torque_rate, min_torque_rate;
-        INTEGRAL_BLOCK power_order_integrator;
-        double IPmax;
-
-        bool frequency_regulation_enabled;
-
-        double speedref_bias;
+        CONVELEC0 conelec0;
 };
 
-#endif // EXCITER_MODEL_H
+#endif // WT3E0_H

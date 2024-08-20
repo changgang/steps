@@ -2,8 +2,8 @@
 #define WTVRT3_H
 
 #include "header/model/wtg_models/wt_vrt_model/wt_vrt_model.h"
-#include "header/model/converter_common_models/vrt_model/lvrt_control.h"
-#include "header/model/converter_common_models/vrt_model/hvrt_control.h"
+#include "header/model/converter_common_model/vrt_model/lvrt_control.h"
+#include "header/model/converter_common_model/vrt_model/hvrt_control.h"
 
 class WTVRT3: public WT_VRT_MODEL
 {

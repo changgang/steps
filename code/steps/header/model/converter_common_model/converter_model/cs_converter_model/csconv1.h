@@ -1,0 +1,56 @@
+#ifndef CSCONV1_H
+#define CSCONV1_H
+
+#include "header/model/converter_common_model/converter_model/cs_converter_model/cs_converter_model.h"
+#include "header/model/converter_common_model/lvpl_model/lvpl.h"
+#include "header/block/integral_block.h"
+#include "header/block/first_order_block.h"
+#include "header/model/converter_common_model/pll_model/pll0.h"
+
+class CSCONV1 : public CS_CONVERTER_MODEL
+{
+    public:
+        CSCONV1(STEPS& toolkit);
+        virtual ~CSCONV1();
+        CSCONV1(const CSCONV1& model);
+        virtual CSCONV1& operator=(const CSCONV1& model);
+        void clear();
+        void copy_from_const_model(const CSCONV1& model);
+    public:
+
+        void set_Xeq_in_pu(double xeq);
+        void set_KPLL(double K);
+        void set_KIPLL(double K);
+        void set_PLLmax(double pmax);
+
+        double get_Xeq_in_pu() const;
+        double get_KPLL() const;
+        double get_KIPLL() const;
+        double get_PLLmax() const;
+
+        double get_active_current_commander_state() const;
+        double get_reactive_voltage_commander_state() const;
+        double get_PLL_frequency_integrator_state() const;
+        double get_PLL_angle_integrator_state() const;
+
+    public:
+        virtual void setup_block_toolkit_and_parameters();
+        virtual void initialize();
+        virtual void run(DYNAMIC_MODE mode);
+
+        virtual complex<double> get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_mbase();
+        virtual complex<double> get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+        virtual complex<double> get_internal_voltage_in_pu_in_xy_axis();
+        virtual double get_active_power_generation_including_stator_loss_in_pu_based_on_mbase();
+        virtual double get_pll_angle_in_rad();
+        virtual double get_pll_frequency_deviation_in_pu();
+
+    private:
+
+        FIRST_ORDER_BLOCK active_current_commander;
+        FIRST_ORDER_BLOCK reactive_voltage_commander;
+        PLL0 pll0;
+
+};
+
+#endif // CSCONV1_H

@@ -22,8 +22,7 @@ class PV_IRRADIANCE_MODEL : public PVU_MODEL
 
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
-        double get_solar_irradiance_in_Wpm2();
-        virtual double get_solar_irradiance_in_pu() = 0;
+        virtual double get_solar_irradiance_in_pu_based_on_S0() = 0;
         virtual double get_solar_irradiance_direction_in_deg() = 0;
 
         virtual void check() = 0;

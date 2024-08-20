@@ -1221,6 +1221,30 @@ METER METER_SETTER::prepare_wt_generator_terminal_current_in_kA_meter(const DEVI
     return meter;
 }
 
+METER METER_SETTER::prepare_wt_generator_terminal_active_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL ACTIVE POWER IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_terminal_active_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL ACTIVE POWER IN PU ON SBASE");
+
+    return meter;
+}
+
 METER METER_SETTER::prepare_wt_generator_terminal_active_power_in_MW_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
@@ -1229,6 +1253,30 @@ METER METER_SETTER::prepare_wt_generator_terminal_active_power_in_MW_meter(const
 
     if(successful)
         meter.set_meter_type("TERMINAL ACTIVE POWER IN MW");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_terminal_reactive_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL REACTIVE POWER IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_terminal_reactive_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL REACTIVE POWER IN PU ON SBASE");
 
     return meter;
 }
@@ -1245,6 +1293,66 @@ METER METER_SETTER::prepare_wt_generator_terminal_reactive_power_in_MVar_meter(c
     return meter;
 }
 
+METER METER_SETTER::prepare_wt_generator_terminal_apparent_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL APPARENT POWER IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_terminal_apparent_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL APPARENT POWER IN PU ON SBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_terminal_apparent_power_in_MVA_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL APPARENT POWER IN MVA");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_mechanical_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("MECHANICAL POWER IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_mechanical_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("MECHANICAL POWER IN PU ON SBASE");
+
+    return meter;
+}
+
 METER METER_SETTER::prepare_wt_generator_mechanical_power_in_MW_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
@@ -1253,6 +1361,30 @@ METER METER_SETTER::prepare_wt_generator_mechanical_power_in_MW_meter(const DEVI
 
     if(successful)
         meter.set_meter_type("MECHANICAL POWER IN MW");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_max_available_mechanical_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("MAX AVAILABLE MECHANICAL POWER IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_max_available_mechanical_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("MAX AVAILABLE MECHANICAL POWER IN PU ON SBASE");
 
     return meter;
 }
@@ -1409,6 +1541,18 @@ METER METER_SETTER::prepare_wt_generator_rotor_angle_in_rad_meter(const DEVICE_I
 
     if(successful)
         meter.set_meter_type("ROTOR ANGLE IN RAD");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_braking_resistor_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("BRAKING RESISTOR POWER IN PU ON MBASE");
 
     return meter;
 }
@@ -1599,6 +1743,51 @@ METER METER_SETTER::prepare_wind_speed_model_internal_variable_meter(const DEVIC
     return meter;
 }
 
+METER METER_SETTER::prepare_wt_vrt_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("WT VRT MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_relay_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("WT RELAY MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_dbr_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("WT DBR MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
 bool METER_SETTER::prepare_pv_unit_meter(METER& meter, const DEVICE_ID& device_id)
 {
     bool successful = false;
@@ -1630,14 +1819,27 @@ bool METER_SETTER::prepare_pv_unit_meter(METER& meter, const DEVICE_ID& device_i
     return successful;
 }
 
-METER METER_SETTER::prepare_pv_unit_terminal_current_in_pu_meter(const DEVICE_ID& device_id)
+
+METER METER_SETTER::prepare_pv_unit_terminal_current_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("TERMINAL CURRENT IN PU");
+        meter.set_meter_type("TERMINAL CURRENT IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_terminal_current_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL CURRENT IN PU ON SBASE");
 
     return meter;
 }
@@ -1666,6 +1868,54 @@ METER METER_SETTER::prepare_pv_unit_terminal_active_power_in_MW_meter(const DEVI
     return meter;
 }
 
+METER METER_SETTER::prepare_pv_unit_terminal_active_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL ACTIVE POWER IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_terminal_active_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL ACTIVE POWER IN PU ON SBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_terminal_reactive_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL REACTIVE POWER IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_terminal_reactive_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL REACTIVE POWER IN PU ON SBASE");
+
+    return meter;
+}
+
 METER METER_SETTER::prepare_pv_unit_terminal_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
@@ -1674,6 +1924,42 @@ METER METER_SETTER::prepare_pv_unit_terminal_reactive_power_in_MVar_meter(const 
 
     if(successful)
         meter.set_meter_type("TERMINAL REACTIVE POWER IN MVAR");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_terminal_apparent_power_in_MVA_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL APPARENT POWER IN MVA");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_terminal_apparent_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL APPARENT POWER IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_terminal_apparent_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL APPARENT POWER IN PU ON SBASE");
 
     return meter;
 }
@@ -1738,14 +2024,86 @@ METER METER_SETTER::prepare_pv_unit_reactive_voltage_command_in_pu_meter(const D
     return meter;
 }
 
-METER METER_SETTER::prepare_pv_unit_solar_irradiance_in_pu_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_pv_unit_solar_irradiance_in_pu_on_s0_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("SOLAR IRRADIANCE IN PU");
+        meter.set_meter_type("SOLAR IRRADIANCE IN PU ON S0");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_solar_irradiance_in_pu_on_sref_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("SOLAR IRRADIANCE IN PU ON SREF");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_temperature_in_c_deg_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TEMPERATURE IN C DEG");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_maximum_available_power_from_irradiance_in_MW_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN MW");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN PU ON SBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_solar_irradiance_in_Wpm2_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("SOLAR IRRADIANCE IN W/M2");
 
     return meter;
 }
@@ -1810,6 +2168,50 @@ METER METER_SETTER::prepare_pv_irradiance_model_internal_variable_meter(const DE
     return meter;
 }
 
+METER METER_SETTER::prepare_pv_vrt_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("PV VRT MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_relay_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("PV RELAY MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_temperature_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("PV TEMPERATURE MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
 
 bool METER_SETTER::prepare_energy_storage_meter(METER& meter, const DEVICE_ID& device_id)
 {
@@ -1842,70 +2244,31 @@ bool METER_SETTER::prepare_energy_storage_meter(METER& meter, const DEVICE_ID& d
     return successful;
 }
 
-
-METER METER_SETTER::prepare_energy_storage_state_of_energy_in_pu_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_es_terminal_current_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("STATE OF ENERGY IN PU");
+        meter.set_meter_type("TERMINAL CURRENT IN PU ON MBASE");
 
     return meter;
 }
 
-
-METER METER_SETTER::prepare_energy_storage_active_power_in_MW_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_es_terminal_current_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("ACTIVE POWER IN MW");
+        meter.set_meter_type("TERMINAL CURRENT IN PU ON SBASE");
 
     return meter;
 }
 
-METER METER_SETTER::prepare_energy_storage_active_power_in_pu_meter(const DEVICE_ID& device_id)
-{
-    METER meter(get_toolkit());
-
-    bool successful = prepare_energy_storage_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("ACTIVE POWER IN PU");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_energy_storage_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
-{
-    METER meter(get_toolkit());
-
-    bool successful = prepare_energy_storage_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("REACTIVE POWER IN MVAR");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_energy_storage_reactive_power_in_pu_meter(const DEVICE_ID& device_id)
-{
-    METER meter(get_toolkit());
-
-    bool successful = prepare_energy_storage_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("REACTIVE POWER IN PU");
-
-    return meter;
-}
-
-
-METER METER_SETTER::prepare_energy_storage_terminal_current_in_kA_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_es_terminal_current_in_kA_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
@@ -1917,19 +2280,223 @@ METER METER_SETTER::prepare_energy_storage_terminal_current_in_kA_meter(const DE
     return meter;
 }
 
-METER METER_SETTER::prepare_energy_storage_terminal_current_in_pu_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_es_terminal_active_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("TERMINAL CURRENT IN PU");
+        meter.set_meter_type("TERMINAL ACTIVE POWER IN PU ON MBASE");
 
     return meter;
 }
 
-METER METER_SETTER::prepare_energy_storage_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+METER METER_SETTER::prepare_es_terminal_active_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL ACTIVE POWER IN PU ON SBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_terminal_active_power_in_MW_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL ACTIVE POWER IN MW");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_terminal_reactive_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL REACTIVE POWER IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_terminal_reactive_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL REACTIVE POWER IN PU ON SBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_terminal_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL REACTIVE POWER IN MVAR");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_terminal_apparent_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL APPARENT POWER IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_terminal_apparent_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL APPARENT POWER IN PU ON SBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_terminal_apparent_power_in_MVA_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL APPARENT POWER IN MVA");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_active_current_command_in_pu_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ACTIVE CURRENT COMMAND IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_reactive_current_command_in_pu_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("REACTIVE CURRENT COMMAND IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_active_power_command_in_pu_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ACTIVE POWER COMMAND IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_reactive_power_command_in_pu_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("REACTIVE POWER COMMAND IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_reactive_voltage_command_in_pu_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("REACTIVE VOLTAGE COMMAND IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_state_of_charge_in_pu_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("STATE OF CHARGE IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_battery_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("BATTERY POWER IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_battery_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("BATTERY POWER IN PU ON SBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_battery_power_in_MW_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("BATTERY POWER IN MW");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_converter_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
     METER meter(get_toolkit());
 
@@ -1937,14 +2504,72 @@ METER METER_SETTER::prepare_energy_storage_model_internal_variable_meter(const D
 
     if(successful)
     {
-        meter.set_meter_type("ENERGY STORAGE MODEL INTERNAL VARIABLE");
+        meter.set_meter_type("ES CONVERTER MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+     }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_electrical_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("ES ELECTRICAL MODEL INTERNAL VARIABLE");
         meter.set_internal_variable_name(name);
     }
 
     return meter;
 }
 
+METER METER_SETTER::prepare_es_battery_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    METER meter(get_toolkit());
 
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("ES BATTERY MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_relay_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("ES RELAY MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_vrt_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("ES VRT MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
 
 bool METER_SETTER::prepare_2t_lcc_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
 {

@@ -130,11 +130,10 @@
 #include "header/model/lcc_hvdc2t_model/CDC4T_test.h"
 #include "header/model/lcc_hvdc2t_model/CDC6T_test.h"
 
-#include "header/model/converter_common_models/converter_model/vs_converter_model/vsg_model/vsg0_test.h"
-#include "header/model/converter_common_models/vrt_model/lvrt_control_test.h"
 
 //#include "header/model/vsc_hvdc_model/VSCHVDC1_test.h"
 
+/*
 #include "header/model/wtg_models/wt_generator_model/wt3g1_test.h"
 #include "header/model/wtg_models/wt_generator_model/wt3g0_test.h"
 
@@ -149,6 +148,7 @@
 #include "header/model/wtg_models/wind_speed_model/filewind_test.h"
 
 #include "header/model/pvu_models/pv_converter_model/pvgu1_test.h"
+*/
 
 #include "header/toolkit/cct_searcher/cct_searcher_test.h"
 

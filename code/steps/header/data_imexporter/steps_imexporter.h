@@ -213,24 +213,41 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_WT3G2_model(vector<string>& data);
         void add_WT3GX_model(vector<string>& data);
         void add_AERD0_model(vector<string>& data);
+        void add_AERDL_model(vector<string>& data);
         void add_WT3T0_model(vector<string>& data);
+        void add_WT3T1_model(vector<string>& data);
         void add_WT3E0_model(vector<string>& data);
         void add_WT3E1_model(vector<string>& data);
+        void add_WT3E2_model(vector<string>& data);
+        void add_WT3E3_model(vector<string>& data);
         void add_WT3P0_model(vector<string>& data);
         void add_FILEWIND_model(vector<string>& data);
         void add_WTRLY0_model(vector<string>& data);
         void add_WTVRTRLY1_model(vector<string>& data);
         void add_WTVRT3_model(vector<string>& data);
+        void add_WTDBR1_model(vector<string>& data);
 
-        void add_PVGU1_model(vector<string>& data);
+        void add_PVCV2_model(vector<string>& data);
         void add_PVCVX_model(vector<string>& data);
         void add_PVEX_model(vector<string>& data);
         void add_FILEIRRAD_model(vector<string>& data);
         void add_PVPNLX_model(vector<string>& data);
+        void add_PVPNLY_model(vector<string>& data);
+        void add_PVVRT3_model(vector<string>& data);
+        void add_PVVRTRLY1_model(vector<string>& data);
+        void add_FTEMP_model(vector<string>& data);
+
+        void add_ESBX_model(vector<string>& data);
+        void add_ESCVX_model(vector<string>& data);
+        void add_ESCV2_model(vector<string>& data);
+        void add_ESE0_model(vector<string>& data);
+        void add_ESVRT3_model(vector<string>& data);
+        void add_ESVRTRLY1_model(vector<string>& data);
 
         DEVICE_ID get_generator_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_wt_generator_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_pv_unit_device_id_from_string_vector(vector<string>& data);
+        DEVICE_ID get_energy_storage_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_load_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_ac_line_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_2t_lcc_hvdc_device_id_from_string_vector(vector<string>& data);

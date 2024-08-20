@@ -202,12 +202,15 @@ unsigned int DYNAMIC_MODEL_DATABASE::get_model_size(MODEL* model) const
     if(model_name=="WT3GX") return sizeof(WT3GX);
 
     if(model_name=="AERD0") return sizeof(AERD0);
+    if(model_name=="AERDL") return sizeof(AERDL);
 
     if(model_name=="WT3T0") return sizeof(WT3T0);
     if(model_name=="WT3T1") return sizeof(WT3T1);
 
     if(model_name=="WT3E0") return sizeof(WT3E0);
     if(model_name=="WT3E1") return sizeof(WT3E1);
+    if(model_name=="WT3E2") return sizeof(WT3E2);
+    if(model_name=="WT3E3") return sizeof(WT3E3);
 
     if(model_name=="WT3P0") return sizeof(WT3P0);
     if(model_name=="WT3P1") return sizeof(WT3P1);
@@ -218,14 +221,24 @@ unsigned int DYNAMIC_MODEL_DATABASE::get_model_size(MODEL* model) const
     if(model_name=="WTVRTRLY1") return sizeof(WTVRTRLY1);
     if(model_name=="WTVRT3") return sizeof(WTVRT3);
 
+    if(model_name=="WTDBR1") return sizeof(WTDBR1);
 
-    if(model_name=="PVCV0") return sizeof(PVCV0);
-    if(model_name=="PVGU1") return sizeof(PVGU1);
     if(model_name=="PVCVX") return sizeof(PVCVX);
+    if(model_name=="PVCV2") return sizeof(PVCV2);
     if(model_name=="PVEX") return sizeof(PVEX);
     if(model_name=="FILEIRRAD") return sizeof(FILEIRRAD);
     if(model_name=="PVPNLX") return sizeof(PVPNLX);
+    if(model_name=="PVPNLY") return sizeof(PVPNLY);
+    if(model_name=="PVVRT3") return sizeof(PVVRT3);
+    if(model_name=="PVVRTRLY1") return sizeof(PVVRTRLY1);
+    if(model_name=="FTEMP") return sizeof(FTEMP);
 
+    if(model_name=="ESBX") return sizeof(ESBX);
+    if(model_name=="ESCVX") return sizeof(ESCVX);
+    if(model_name=="ESCV2") return sizeof(ESCV2);
+    if(model_name=="ESE0") return sizeof(ESE0);
+    if(model_name=="ESVRT3") return sizeof(ESVRT3);
+    if(model_name=="ESVRTRLY1") return sizeof(ESVRTRLY1);
 
     if(model_name=="ARXL") return sizeof(ARXL);
 

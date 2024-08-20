@@ -101,7 +101,11 @@ void FILEIRRAD::load_solar_irradiance_from_file()
         unsigned int n = 0;
         while(true)
         {
-            getline(fid, data);
+            if(getline(fid, data))
+                ;
+            else
+                break;
+
             if(data.size()<3)
                 break;
             data = trim_string(data);
@@ -205,7 +209,7 @@ void FILEIRRAD::initialize()
 	if (get_solar_irradiance_record_count() == 0)
     {
         current_solar_irradiance = 1.0;
-		current_solar_irradiance = 0.0;
+		current_solar_irradiance_direction = 0.0;
     }
 	else
     {
@@ -240,7 +244,7 @@ void FILEIRRAD::run(DYNAMIC_MODE mode)
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-double FILEIRRAD::get_solar_irradiance_in_pu()
+double FILEIRRAD::get_solar_irradiance_in_pu_based_on_S0()
 {
     if(get_solar_irradiance_record_count()==0)
         return 1.0;
@@ -440,14 +444,14 @@ void FILEIRRAD::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
-    add_model_internal_variable_name_and_index_pair("SOLAR IRRADIANCE IN WPM2", i); i++;
+    add_model_internal_variable_name_and_index_pair("A", i); i++;
 }
 
 double FILEIRRAD::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
-    if(var_name=="SOLAR IRRADIANCE IN WPM2")
-        return get_solar_irradiance_in_Wpm2();
+    if(var_name=="A")
+        return 0.0;
     return 0.0;
 }
 

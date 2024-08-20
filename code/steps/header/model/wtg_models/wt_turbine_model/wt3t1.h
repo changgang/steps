@@ -8,28 +8,21 @@ class WT3T1 : public WT_TURBINE_MODEL
 {
     public:
         WT3T1(STEPS& toolkit);
-        WT3T1(const WT3T1&model);
+        WT3T1(const WT3T1& model);
         virtual ~WT3T1();
         virtual WT3T1& operator=(const WT3T1& model);
     public: // specific model level
         virtual string get_model_name() const;
 
-        void set_Htotal_in_s(double H);
-        void set_Damp_in_pu(double D);
-        void set_Kaero(double K);
-        void set_Theta2_in_deg(double theta);
-        void set_Htfrac_in_pu(double frac);
-        void set_Freq1_in_Hz(double f);
+        void set_Hturbine_in_s(double H);
+        void set_Hgenerator_in_s(double H);
+        void set_Kshaft_in_pu(double f);
         void set_Dshaft_in_pu(double D);
 
-        double get_Htotal_in_s() const;
-        double get_Damp_in_pu() const;
-        double get_Kaero() const;
-        double get_Theta2_in_deg() const;
-        double get_Htfrac_in_pu() const;
-        double get_Freq1_in_Hz() const;
+        double get_Hturbine_in_s() const;
+        double get_Hgenerator_in_s() const;
+        double get_Kshaft_in_pu() const;
         double get_Dshaft_in_pu() const;
-
     public:
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
@@ -38,13 +31,14 @@ class WT3T1 : public WT_TURBINE_MODEL
         virtual void prepare_model_data_table();
         virtual void prepare_model_internal_variable_table();
 
+        virtual void setup_block_toolkit_and_parameters();
+
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
-        virtual double get_wind_turbine_mechanical_power_in_pu_based_on_mbase() const;
-        virtual double get_wind_turbine_generator_speed_reference_in_pu() const;
-        virtual double get_wind_turbine_generator_speed_in_pu() const;
-        virtual double get_wind_turbine_generator_rotor_angle_in_deg() const;
-        virtual double get_wind_turbine_generator_rotor_angle_in_rad() const;
+        virtual double get_turbine_speed_in_pu() const;
+        virtual double get_generator_speed_in_pu() const;
+        virtual double get_rotor_angle_in_deg() const;
+        virtual double get_rotor_angle_in_rad() const;
         virtual void check();
         virtual void clear();
         virtual void report();
@@ -62,17 +56,11 @@ class WT3T1 : public WT_TURBINE_MODEL
     private:
         void copy_from_const_model(const WT3T1& model);
 
-        INTEGRAL_BLOCK shaft_twist;
-        INTEGRAL_BLOCK turbine_inertia;
-        INTEGRAL_BLOCK generator_inertia;
-        INTEGRAL_BLOCK generator_rotor_angle;
+        INTEGRAL_BLOCK shaft_twist_block;
+        INTEGRAL_BLOCK turbine_inertia_block;
+        INTEGRAL_BLOCK generator_inertia_block;
+        INTEGRAL_BLOCK generator_rotor_angle_block;
 
-        double Htotal;
-        double Damp;
-        double Kaero;
-        double Theta2;
-        double Htfrac;
-        double Freq1;
         double Dshaft;
 };
 

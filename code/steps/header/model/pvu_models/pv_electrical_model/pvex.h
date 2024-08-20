@@ -2,9 +2,7 @@
 #define PVEX_H
 
 #include "header/model/pvu_models/pv_electrical_model/pv_electrical_model.h"
-#include "header/block/first_order_block.h"
-#include "header/block/pi_block.h"
-#include "header/block/integral_block.h"
+#include "header/model/converter_common_model/elec_model/convelec0.h"
 
 class PVEX: public PV_ELECTRICAL_MODEL
 {
@@ -13,8 +11,13 @@ class PVEX: public PV_ELECTRICAL_MODEL
         PVEX(const PVEX& model);
         virtual ~PVEX();
         virtual PVEX& operator=(const PVEX& model);
-    public: // specific exciter
+    public:
         virtual string get_model_name() const;
+
+        void set_var_control_mode(PE_VAR_CONTROL_MODE mode);
+        PE_VAR_CONTROL_MODE get_var_control_mode() const;
+        void set_bus_to_regulate(unsigned int bus);
+        unsigned int get_bus_to_regulate() const;
 
         void set_Xcomp_in_pu(double Xc);
         void set_TRV_in_s(double T);
@@ -33,7 +36,6 @@ class PVEX: public PV_ELECTRICAL_MODEL
         void set_KQV(double K);
         void set_EQmax_in_pu(double I);
         void set_EQmin_in_pu(double I);
-
 
         void set_Kvi(double K);
         void set_Tvi_in_s(double T);
@@ -121,29 +123,7 @@ class PVEX: public PV_ELECTRICAL_MODEL
 
         void trip_frequency_regulation();
 
-        double Xcomp;
-        FIRST_ORDER_BLOCK voltage_sensor;
-        double Fn;
-        FIRST_ORDER_BLOCK voltage_regulator_first_order_block;
-        INTEGRAL_BLOCK voltage_regulator_integrator;
-        FIRST_ORDER_BLOCK voltage_regulator_filter;
-        FIRST_ORDER_BLOCK active_power_sensor;
-        INTEGRAL_BLOCK Q_error_integrator;
-        unsigned int Voltage_Flag;
-        INTEGRAL_BLOCK V_error_integrator;
-        double EQmax, EQmin;
-
-        DIFFERENTIAL_BLOCK virtual_inertia_emulator;
-        FIRST_ORDER_BLOCK frequency_droop_controller;
-
-        double f_upper_pu, f_lower_pu;
-        INTEGRAL_BLOCK frequency_integral_controller;
-        double max_torque_rate, min_torque_rate;
-        INTEGRAL_BLOCK power_order_integrator;
-        double IPmax;
-
-        bool frequency_regulation_enabled;
-
+        CONVELEC0 conelec0;
 };
 
-#endif // PVEX_H
+#endif // EXCITER_MODEL_H

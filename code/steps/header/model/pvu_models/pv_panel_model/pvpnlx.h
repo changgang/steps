@@ -21,10 +21,10 @@ class PVPNLX : public PV_PANEL_MODEL
         double get_Krp() const;
 
         double get_Pmmp_in_pu(double S);
-        double get_Pref_in_pu(double S);
-        void initialize_S0();
 
         virtual double get_Pref_in_pu_base_on_mbase();
+
+        virtual double get_maximum_available_power_extracted_power_from_irradiance_in_pu_on_mbase();
 
         virtual string get_model_name() const;
 

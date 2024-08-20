@@ -7,8 +7,7 @@
 using namespace std;
 
 WT3GX::WT3GX(STEPS& toolkit) : WT_GENERATOR_MODEL(toolkit),
-                               vsg(toolkit),
-                               convcol(toolkit)
+                               vsg(toolkit)
 {
     clear();
 }
@@ -24,6 +23,7 @@ void WT3GX::clear()
     set_current_source_flag(false);
 
     vsg.clear();
+    vsg.set_model_name(get_model_name());
 }
 
 void WT3GX::copy_from_const_model(const WT3GX& model)
@@ -32,7 +32,6 @@ void WT3GX::copy_from_const_model(const WT3GX& model)
     set_toolkit(toolkit);
 
     vsg.set_toolkit(toolkit);
-    convcol.set_toolkit(toolkit);
 
     clear();
 
@@ -46,8 +45,7 @@ void WT3GX::copy_from_const_model(const WT3GX& model)
 }
 
 WT3GX::WT3GX(const WT3GX& model):WT_GENERATOR_MODEL(model.get_toolkit()),
-                                 vsg(model.get_toolkit()),
-                                 convcol(model.get_toolkit())
+                                 vsg(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -84,12 +82,12 @@ void WT3GX::set_Te_in_s(double T)
 
 void WT3GX::set_pq_priority_flag(COL_PQ_PRIORITY flag)
 {
-    convcol.set_PQ_priority_flag(flag);
+    vsg.set_pq_priority_flag(flag);
 }
 
 void WT3GX::set_Imax(double Imax)
 {
-    convcol.set_Imax(Imax);
+    vsg.set_Imax(Imax);
 }
 
 double WT3GX::get_Tj_in_s() const
@@ -114,50 +112,12 @@ double WT3GX::get_Te_in_s() const
 
 COL_PQ_PRIORITY WT3GX::get_pq_priority_flag() const
 {
-    return convcol.get_PQ_priority_flag();
+    return vsg.get_pq_priority_flag();
 }
 
 double WT3GX::get_Imax() const
 {
-    return convcol.get_Imax();
-}
-
-double WT3GX::get_virtual_voltage_in_pu()
-{
-    return vsg.get_virtual_voltage_in_pu();
-}
-
-double WT3GX::get_virtual_angle_in_rad()
-{
-    return vsg.get_virtual_angle_in_rad();
-}
-
-complex<double> WT3GX::get_virtual_voltage_in_pu_in_xy_axis()
-{
-    double E = get_virtual_voltage_in_pu();
-    double theta = get_virtual_angle_in_rad();
-    double Ex = E * steps_cos(theta);
-    double Ey = E * steps_sin(theta);
-    complex<double> Exy(Ex, Ey);
-    return Exy;
-}
-
-complex<double> WT3GX::get_limited_PQ_current_order()
-{
-    complex<double> Exy = get_virtual_voltage_in_pu_in_xy_axis();
-    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-    complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
-    complex<double> Ixy_guess = (Exy - Vxy) / Zsource;
-
-    double Ix_guess = Ixy_guess.real();
-    double Iy_guess = Ixy_guess.imag();
-
-    double angle_in_rad = get_terminal_voltage_angle_in_rad();
-    double sine = steps_sin(angle_in_rad), cosine = steps_cos(angle_in_rad);
-    double Ip_guess = Ix_guess*cosine + Iy_guess*sine;
-    double Iq_guess =-Ix_guess*sine + Iy_guess*cosine;
-    complex<double> I_guess (Ip_guess,Iq_guess);
-    return convcol.get_limited_PQ_current_order(I_guess);
+    return vsg.get_Imax();
 }
 
 string WT3GX::get_model_name() const
@@ -227,13 +187,13 @@ bool WT3GX::setup_model_with_steps_string_vector(vector<string>& data)
             set_Te_in_s(te);
             switch(pqflag)
             {
-            case 1:
-                set_pq_priority_flag(Q_FIRST);
-                break;
-            case 0:
-            default:
-                set_pq_priority_flag(P_FIRST);
-                break;
+                case 1:
+                    set_pq_priority_flag(Q_FIRST);
+                    break;
+                case 0:
+                default:
+                    set_pq_priority_flag(P_FIRST);
+                    break;
             }
             set_Imax(imax);
 
@@ -286,51 +246,13 @@ void WT3GX::initialize()
         double prate = get_rated_power_per_wt_generator_in_MW();
         P /= prate;
         Q /= prate;
-        complex<double> S(P, Q);
 
         complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
-        double Xeq = Zsource.imag();
 
-        complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-        complex<double> Ixy = conj(S/Vxy);
-        double Ix = Ixy.real();
-        double Iy = Ixy.imag();
-
-        double angle_in_rad = get_terminal_voltage_angle_in_rad();
-        double sine = steps_sin(angle_in_rad), cosine = steps_cos(angle_in_rad);
-
-        double Ip = Ix*cosine + Iy*sine;
-        double Iq =-Ix*sine + Iy*cosine;
-
-
-        double Eqcmd = Iq*(-Xeq);
-
-        vsg.set_Pref_in_pu_based_on_mbase(P);
-        vsg.set_P_in_pu_based_on_mbase(P);
-
-        vsg.set_Qref_in_pu_based_on_mbase(Q);
-        vsg.set_Q_in_pu_based_on_mbase(Q);
-
-        vsg.set_Vref_in_pu(Eqcmd);
-        vsg.set_V_in_pu(Eqcmd);
-
-        complex<double> Esource = Vxy + Ixy * Zsource;
-        double Emag = steps_fast_complex_abs(Esource);
-        double Earg = steps_fast_complex_arg(Esource);
-
-        vsg.set_initial_virtual_voltage_in_pu(Emag);
-        vsg.set_initial_virtual_angle_in_rad(Earg);
-
+        vsg.set_initial_P_generation_in_pu(P);
+        vsg.set_initial_Q_generation_in_pu(Q);
+        vsg.set_source_impedance_in_pu_based_on_mbase(Zsource);
         vsg.initialize();
-
-        //set internal value
-        set_initial_active_power_command_in_pu_based_on_mbase(P);
-        set_initial_reactive_power_command_in_pu_based_on_mbase(Q);
-
-        set_initial_active_current_command_in_pu_based_on_mbase(Ip);
-        set_initial_reactive_current_command_in_pu_based_on_mbase(Iq);
-
-        set_initial_reactive_voltage_command_in_pu(Eqcmd);
 
         set_flag_model_initialized_as_true();
 
@@ -355,76 +277,63 @@ void WT3GX::initialize()
 
 void WT3GX::run(DYNAMIC_MODE mode)
 {
-    complex<double> S = get_terminal_complex_power_in_pu_based_on_mbase();
-    double P = S.real(), Q = S.imag();
+    double Pref = get_active_power_command_in_pu_based_on_mbase();
+    double Qref = get_reactive_power_command_in_pu_based_on_mbase();
+    double Vref = get_reactive_voltage_command_in_pu();
 
-    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-    complex<double> Ixy = conj(S/Vxy);
-    double Ix = Ixy.real(), Iy = Ixy.imag();
-
-    complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
-    double Xeq = Zsource.imag();
-
-    double angle_in_rad = get_terminal_voltage_angle_in_rad();
-    double sine = steps_sin(angle_in_rad), cosine = steps_cos(angle_in_rad);
-    double Iq = -Ix*sine + Iy*cosine;
-    double Eq = Iq*(-Xeq);
-
-    vsg.set_Pref_in_pu_based_on_mbase(get_active_power_command_in_pu_based_on_mbase());
-    vsg.set_P_in_pu_based_on_mbase(P);
-
-    vsg.set_Qref_in_pu_based_on_mbase(get_reactive_power_command_in_pu_based_on_mbase());
-    vsg.set_Q_in_pu_based_on_mbase(Q);
-
-    vsg.set_Vref_in_pu(get_reactive_voltage_command_in_pu());
-    vsg.set_V_in_pu(Eq);
-
+    vsg.set_Pref_in_pu_based_on_mbase(Pref);
+    vsg.set_Qref_in_pu_based_on_mbase(Qref);
+    vsg.set_Vref_in_pu(Vref);
     vsg.run(mode);
 
     if(mode==DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 
-complex<double> WT3GX::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase()
-{
-    STEPS& toolkit = get_toolkit();
-    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
-    double mbase = get_mbase_in_MVA();
-    complex<double> Exy = get_internal_voltage_in_pu_in_xy_axis();
-    complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
-    complex<double> Ixy = Exy / Zsource;
-    return Ixy*(mbase*one_over_sbase);
-}
-
 complex<double> WT3GX::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase()
 {
-    complex<double> Exy = get_internal_voltage_in_pu_in_xy_axis();
-    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-    complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
-    complex<double> Ixy = (Exy - Vxy) / Zsource;
-    return Ixy;
+    return vsg.get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
 }
 
-complex<double> WT3GX::get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase()
+double WT3GX::get_active_power_generation_including_stator_loss_in_pu_based_on_mbase()
 {
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
-    double mbase = get_mbase_in_MVA();
-    complex<double> Ixy_term = get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase() * mbase * one_over_sbase;
-    return Ixy_term;
+    return vsg.get_active_power_generation_including_stator_loss_in_pu_based_on_mbase();
 }
 
-double WT3GX::get_terminal_current_in_pu_based_on_mbase()
+complex<double> WT3GX::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_mbase()
 {
-    return steps_fast_complex_abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase());
+    return vsg.get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_mbase();
 }
 
-double WT3GX::get_terminal_current_in_pu_based_on_sbase()
+complex<double> WT3GX::get_internal_voltage_in_pu_in_xy_axis()
 {
-    return steps_fast_complex_abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase());
+    return vsg.get_internal_voltage_in_pu_in_xy_axis();
 }
 
+double WT3GX::get_initial_active_current_command_in_pu_based_on_mbase() const
+{
+    return vsg.get_initial_active_current_command_in_pu_based_on_mbase();
+}
+
+double WT3GX::get_initial_reactive_current_command_in_pu_based_on_mbase() const
+{
+    return vsg.get_initial_reactive_current_command_in_pu_based_on_mbase();
+}
+
+double WT3GX::get_initial_reactive_voltage_command_in_pu() const
+{
+    return vsg.get_initial_reactive_voltage_command_in_pu();
+}
+
+double WT3GX::get_initial_active_power_command_in_pu_based_on_mbase() const
+{
+    return vsg.get_initial_active_power_command_in_pu_based_on_mbase();
+}
+
+double WT3GX::get_initial_reactive_power_command_in_pu_based_on_mbase() const
+{
+    return vsg.get_initial_reactive_power_command_in_pu_based_on_mbase();
+}
 
 void WT3GX::check()
 {
@@ -558,6 +467,13 @@ void WT3GX::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
+    add_model_internal_variable_name_and_index_pair("VIRTUAL VOLTAGE IN PU", i); i++;
+    add_model_internal_variable_name_and_index_pair("VIRTUAL FREQUENCY IN PU", i); i++;
+    add_model_internal_variable_name_and_index_pair("VIRTUAL FREQUENCY IN HZ", i); i++;
+    add_model_internal_variable_name_and_index_pair("VIRTUAL FREQUENCY DEVIATION IN PU", i); i++;
+    add_model_internal_variable_name_and_index_pair("VIRTUAL FREQUENCY DEVIATION IN HZ", i); i++;
+    add_model_internal_variable_name_and_index_pair("VIRTUAL ANGLE IN DEG", i); i++;
+    add_model_internal_variable_name_and_index_pair("VIRTUAL ANGLE IN RAD", i); i++;
     add_model_internal_variable_name_and_index_pair("STATE@VIRTUAL FREQUENCY BLOCK", i); i++;
     add_model_internal_variable_name_and_index_pair("STATE@VIRTUAL ANGLE BLOCK", i); i++;
     add_model_internal_variable_name_and_index_pair("STATE@VIRTUAL VOLTAGE BLOCK", i); i++;
@@ -566,6 +482,20 @@ void WT3GX::prepare_model_internal_variable_table()
 double WT3GX::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
+    if(var_name == "VIRTUAL VOLTAGE IN PU")
+        return vsg.get_virtual_voltage_in_pu();
+    if(var_name == "VIRTUAL FREQUENCY IN PU")
+        return vsg.get_virtual_frequency_in_pu();
+    if(var_name == "VIRTUAL FREQUENCY IN HZ")
+        return vsg.get_virtual_frequency_in_Hz();
+    if(var_name == "VIRTUAL FREQUENCY DEVIATION IN PU")
+        return vsg.get_virtual_frequency_deviation_in_pu();
+    if(var_name == "VIRTUAL FREQUENCY DEVIATION IN HZ")
+        return vsg.get_virtual_frequency_deviation_in_Hz();
+    if(var_name == "VIRTUAL ANGLE IN DEG")
+        return vsg.get_virtual_angle_in_deg();
+    if(var_name == "VIRTUAL ANGLE IN RAD")
+        return vsg.get_virtual_angle_in_rad();
     if(var_name == "STATE@VIRTUAL FREQUENCY BLOCK")
         return vsg.get_virtual_frequency_deviation_block_state();
     if(var_name == "STATE@VIRTUAL ANGLE BLOCK")
@@ -573,131 +503,6 @@ double WT3GX::get_model_internal_variable_with_name(string var_name)
     if(var_name == "STATE@VIRTUAL VOLTAGE BLOCK")
         return vsg.get_virtual_voltage_block_state();
     return 0.0;
-}
-
-complex<double> WT3GX::get_terminal_complex_power_in_pu_based_on_mbase()
-{
-    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-    complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
-
-    complex<double> S = Vxy*conj(Ixy);
-    return S;
-}
-
-complex<double> WT3GX::get_terminal_complex_power_in_MVA()
-{
-    return get_terminal_complex_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
-}
-
-double WT3GX::get_terminal_active_power_in_pu_based_on_mbase()
-{
-    return get_terminal_complex_power_in_pu_based_on_mbase().real();
-}
-
-double WT3GX::get_terminal_active_power_in_MW()
-{
-    return get_terminal_complex_power_in_MVA().real();
-}
-
-double WT3GX::get_terminal_reactive_power_in_pu_based_on_mbase()
-{
-    return get_terminal_complex_power_in_pu_based_on_mbase().imag();
-}
-
-double WT3GX::get_terminal_reactive_power_in_MVar()
-{
-    return get_terminal_complex_power_in_MVA().imag();
-}
-
-double WT3GX::get_active_power_generation_including_stator_loss_in_pu_based_on_mbase()
-{
-    return get_active_power_generation_including_stator_loss_in_MW()/get_mbase_in_MVA();
-}
-
-double WT3GX::get_active_power_generation_including_stator_loss_in_MW()
-{
-    double pterm = get_terminal_active_power_in_MW();
-    double rsource = get_source_impedance_in_pu_based_on_mbase().real();
-    double iterm = steps_fast_complex_abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase());
-    double mbase = get_mbase_in_MVA();
-
-    return pterm+rsource*iterm*iterm*mbase;
-}
-
-double WT3GX::get_pll_angle_in_rad()
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    osstream<<"WARNING. "<<get_model_name()<<"::"<<__FUNCTION__<<"() is called without implementation. ZERO is returned with no meaning.";
-    toolkit.show_information_with_leading_time_stamp(osstream);
-
-    return 0;
-}
-
-double WT3GX::get_pll_angle_in_deg()
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    osstream<<"WARNING. "<<get_model_name()<<"::"<<__FUNCTION__<<"() is called without implementation. ZERO is returned with no meaning.";
-    toolkit.show_information_with_leading_time_stamp(osstream);
-
-    return 0;
-}
-
-double WT3GX::get_pll_frequency_deviation_in_pu()
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    osstream<<"WARNING. "<<get_model_name()<<"::"<<__FUNCTION__<<"() is called without implementation. ZERO is returned with no meaning.";
-    toolkit.show_information_with_leading_time_stamp(osstream);
-
-    return 0;
-}
-
-double WT3GX::get_pll_frequency_deviation_in_Hz()
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    osstream<<"WARNING. "<<get_model_name()<<"::"<<__FUNCTION__<<"() is called without implementation. ZERO is returned with no meaning.";
-    toolkit.show_information_with_leading_time_stamp(osstream);
-
-    return 0;
-}
-
-double WT3GX::get_pll_frequency_in_pu()
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    osstream<<"WARNING. "<<get_model_name()<<"::"<<__FUNCTION__<<"() is called without implementation. ZERO is returned with no meaning.";
-    toolkit.show_information_with_leading_time_stamp(osstream);
-
-    return 0;
-}
-
-double WT3GX::get_pll_frequency_in_Hz()
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    osstream<<"WARNING. "<<get_model_name()<<"::"<<__FUNCTION__<<"() is called without implementation. ZERO is returned with no meaning.";
-    toolkit.show_information_with_leading_time_stamp(osstream);
-
-    return 0;
-}
-
-complex<double> WT3GX::get_internal_voltage_in_pu_in_xy_axis()
-{
-    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-    double angle_in_rad = get_terminal_voltage_angle_in_rad();
-    complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
-    complex<double> I = get_limited_PQ_current_order();
-    double Ip = I.real();
-    double Iq = I.imag();
-    double sine = steps_sin(angle_in_rad), cosine = steps_cos(angle_in_rad);
-    double Ix = Ip*cosine - Iq*sine;
-    double Iy = Ip*sine + Iq*cosine;
-    complex<double> Ixy(Ix,Iy);
-    complex<double> Exy = Vxy + Ixy * Zsource;
-    return Exy;
 }
 
 string WT3GX::get_dynamic_data_in_psse_format() const

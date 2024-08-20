@@ -1,4 +1,4 @@
-#include "header/model/converter_common_models/pll_model/pll_model.h"
+#include "header/model/converter_common_model/pll_model/pll_model.h"
 #include "header/power_system_database.h"
 #include "header/basic/utility.h"
 #include <istream>
@@ -42,9 +42,9 @@ unsigned int PLL_MODEL::get_bus() const
     return bus_ptr->get_bus_number();
 }
 
-double PLL_MODEL::get_pll_frequency_deviation_in_pu() const
+double PLL_MODEL::get_pll_frequency_deviation_in_Hz() const
 {
-    return get_pll_frequency_deviation_in_Hz()*tbase_s;
+    return get_pll_frequency_deviation_in_pu()*get_base_frequency_in_Hz();
 }
 
 double PLL_MODEL::get_pll_frequency_in_pu() const
@@ -54,7 +54,7 @@ double PLL_MODEL::get_pll_frequency_in_pu() const
 
 double PLL_MODEL::get_pll_frequency_in_Hz() const
 {
-    return fbase_Hz+get_pll_frequency_deviation_in_Hz();
+    return get_pll_frequency_in_pu()*get_base_frequency_in_Hz();
 }
 
 double PLL_MODEL::get_pll_angle_in_deg() const
@@ -62,16 +62,9 @@ double PLL_MODEL::get_pll_angle_in_deg() const
     return rad2deg(get_pll_angle_in_rad());
 }
 
-void PLL_MODEL::initialize_base_frequency_and_base_period()
-{
-    BUS* bus = get_bus_pointer();
-    fbase_Hz = bus->get_base_frequency_in_Hz();
-    tbase_s = 1.0/fbase_Hz;
-}
-
 double PLL_MODEL::get_base_frequency_in_Hz() const
 {
-    return fbase_Hz;
+    return  get_bus_pointer()->get_base_frequency_in_Hz();
 }
 
 double PLL_MODEL::get_base_angle_speed_in_radps() const
@@ -81,7 +74,7 @@ double PLL_MODEL::get_base_angle_speed_in_radps() const
 
 double PLL_MODEL::get_base_period_in_s() const
 {
-    return tbase_s;
+    return 1.0/get_base_frequency_in_Hz();
 }
 
 complex<double> PLL_MODEL::get_terminal_complex_voltage_in_pu() const

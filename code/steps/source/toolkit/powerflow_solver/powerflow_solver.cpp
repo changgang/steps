@@ -2922,6 +2922,20 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
             }
         }
 
+        unsigned int nes = e_storages.size();
+        if(nes>0)
+        {
+            file<<"% Energy storage"<<endl;
+            file<<"BUS,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
+            for(unsigned int i=0; i!=nes; ++i)
+            {
+                snprintf(buffer, 1000, "%u,\"%s\",%.6f,%.6f,%.6f",
+                         e_storages[i]->get_energy_storage_bus(),(e_storages[i]->get_identifier()).c_str(),
+                         e_storages[i]->get_p_generation_in_MW(), e_storages[i]->get_q_generation_in_MVar(),
+                         (e_storages[i]->get_bus_pointer())->get_positive_sequence_voltage_in_pu());
+                file<<buffer<<endl;
+            }
+        }
         //vector<LOAD*> loads = psdb.get_all_loads();
         unsigned int nload = loads.size();
         if(nload>0)

@@ -2,9 +2,7 @@
 #define WT3G1_H
 
 #include "header/model/wtg_models/wt_generator_model/wt_generator_model.h"
-#include "header/model/converter_common_models/lvpl_model/lvpl.h"
-#include "header/block/integral_block.h"
-#include "header/block/first_order_block.h"
+#include "header/model/converter_common_model/converter_model/cs_converter_model/csconv1.h"
 
 class WT3G1 : public WT_GENERATOR_MODEL
 {
@@ -38,11 +36,7 @@ class WT3G1 : public WT_GENERATOR_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
-        virtual complex<double> get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
-        virtual complex<double> get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
-        virtual complex<double> get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
-        virtual double get_terminal_current_in_pu_based_on_mbase();
-        virtual double get_terminal_current_in_pu_based_on_sbase();
+
 
         virtual void check();
         virtual void clear();
@@ -55,38 +49,33 @@ class WT3G1 : public WT_GENERATOR_MODEL
         virtual double get_minimum_nonzero_time_constant_in_s();
         virtual double get_model_internal_variable_with_name(string var_name);
 
-        virtual complex<double> get_terminal_complex_power_in_pu_based_on_mbase();
-        virtual complex<double> get_terminal_complex_power_in_MVA();
-        virtual double get_terminal_active_power_in_pu_based_on_mbase();
-        virtual double get_terminal_active_power_in_MW();
-        virtual double get_terminal_reactive_power_in_pu_based_on_mbase();
-        virtual double get_terminal_reactive_power_in_MVar();
+        virtual double get_initial_active_current_command_in_pu_based_on_mbase() const;
+        virtual double get_initial_reactive_current_command_in_pu_based_on_mbase() const;
+        virtual double get_initial_reactive_voltage_command_in_pu() const;
+        virtual double get_initial_active_power_command_in_pu_based_on_mbase() const;
+        virtual double get_initial_reactive_power_command_in_pu_based_on_mbase() const;
+        virtual complex<double> get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
         virtual double get_active_power_generation_including_stator_loss_in_pu_based_on_mbase();
-        virtual double get_active_power_generation_including_stator_loss_in_MW();
-
-        virtual double get_pll_angle_in_rad();
-        virtual double get_pll_angle_in_deg();
-        virtual double get_pll_frequency_deviation_in_pu();
-        virtual double get_pll_frequency_deviation_in_Hz();
-        virtual double get_pll_frequency_in_pu();
-        virtual double get_pll_frequency_in_Hz();
+        virtual complex<double> get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_mbase();
         virtual complex<double> get_internal_voltage_in_pu_in_xy_axis();
+
+
+        double get_pll_angle_in_rad();
+        double get_pll_angle_in_deg();
+        double get_pll_frequency_deviation_in_pu();
+        double get_pll_frequency_deviation_in_Hz();
+        double get_pll_frequency_in_pu();
+        double get_pll_frequency_in_Hz();
+
 
         virtual string get_dynamic_data_in_psse_format() const;
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
-    public:
-        // the following function are used to model WT3G1 as ideal voltage source
-        void set_pll_angle_in_deg(double angle);
+
     private:
         void copy_from_const_model(const WT3G1& model);
 
-        double Xeq;
-        FIRST_ORDER_BLOCK active_current_commander;
-        FIRST_ORDER_BLOCK reactive_voltage_commander;
-
-        double KPLL;
-        INTEGRAL_BLOCK PLL_frequency_integrator, PLL_angle_integrator;
+        CSCONV1 csconv1;
 };
 
 #endif // GENERATOR_MODEL_H

@@ -31,6 +31,7 @@ void WT_GENERATOR::clear()
     wind_speed_model = NULL;
     wt_relay_model = NULL;
     wt_vrt_model = NULL;
+    wt_dbr_model = NULL;
 
     set_positive_sequence_resistance_in_pu(0.0);
     set_positive_sequence_syncronous_reactance_in_pu(0.0);
@@ -104,6 +105,7 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
         WT_PITCH_MODEL* pitch = get_wt_pitch_model();
         WT_VRT_MODEL* vrt = get_wt_vrt_model();
         WT_RELAY_MODEL* relay = get_wt_relay_model();
+        WT_DBR_MODEL* dbr = get_wt_dbr_model();
 
         switch(mode)
         {
@@ -144,6 +146,9 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
 
                 if(elec!=NULL and elec->is_model_active())
                     elec->initialize();
+
+                if(dbr!=NULL and dbr->is_model_active())
+                    dbr->initialize();
 
                 if(pitch!=NULL and pitch->is_model_active())
                     pitch->initialize();
@@ -198,6 +203,9 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
 
                 if(gen!=NULL and gen->is_model_active())
                     gen->run(mode);
+
+                if(dbr!=NULL and dbr->is_model_active())
+                    dbr->run(mode);
                 break;
             }
             case DYNAMIC_RELAY_MODE:
@@ -287,6 +295,12 @@ void WT_GENERATOR::set_model(MODEL* model)
             return;
         }
 
+        if(model->get_model_type()=="WT DBR")
+        {
+            set_wt_dbr_model((WT_DBR_MODEL*) model);
+            return;
+        }
+
         ostringstream osstream;
         osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up wind-turbine generator-related model.";
 
@@ -314,6 +328,8 @@ MODEL* WT_GENERATOR::get_model_of_type(string model_type, unsigned int index)
         return get_wt_vrt_model();
     if(model_type=="WT RELAY")
         return get_wt_relay_model();
+    if(model_type=="WT DBR")
+        return get_wt_dbr_model();
     return NULL;
 }
 
@@ -365,6 +381,11 @@ void WT_GENERATOR::set_wt_relay_model(WT_RELAY_MODEL* model)
         wt_relay_model = model;
 }
 
+void WT_GENERATOR::set_wt_dbr_model(WT_DBR_MODEL* model)
+{
+    if(model!=NULL)
+        wt_dbr_model = model;
+}
 
 WT_GENERATOR_MODEL* WT_GENERATOR::get_wt_generator_model() const
 {
@@ -406,6 +427,11 @@ WT_RELAY_MODEL* WT_GENERATOR::get_wt_relay_model() const
     return wt_relay_model;
 }
 
+WT_DBR_MODEL* WT_GENERATOR::get_wt_dbr_model() const
+{
+    return wt_dbr_model;
+}
+
 WT_GENERATOR& WT_GENERATOR::operator=(const WT_GENERATOR& gen)
 {
     if(this==(&gen)) return *this;
@@ -438,6 +464,7 @@ WT_GENERATOR& WT_GENERATOR::operator=(const WT_GENERATOR& gen)
     set_model(gen.get_wind_speed_model());
     set_model(gen.get_wt_vrt_model());
     set_model(gen.get_wt_relay_model());
+    set_model(gen.get_wt_dbr_model());
 
     set_positive_sequence_resistance_in_pu(gen.get_positive_sequence_resistance_in_pu());
     set_positive_sequence_syncronous_reactance_in_pu(gen.get_positive_sequence_syncronous_reactance_in_pu());

@@ -85,43 +85,19 @@ double PVPNLX::get_Pmmp_in_pu(double S)
     return (S / Sref * (1 + b / exp(1) * (S - Sref))) * Pmsta;
 }
 
-double PVPNLX::get_Pref_in_pu(double S)
-{
-    double Pmmp = get_Pmmp_in_pu(S);
-    return Pmmp * (1 - Krp);
-}
-
-void PVPNLX::initialize_S0()
-{
-    double Sref = get_Sref_in_Wpm2();
-    double b_battery = get_b();
-    if(Sref-exp(1)/b_battery>0)
-    {
-        ostringstream osstream;
-        STEPS& toolkit = get_toolkit();
-        osstream<<"Initialization error. Pmmp (maximum available power from irradiance) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()
-          <<" may less than Zero as S (irradiance) changed. Please reduce Sref or b_battery.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-    PV_UNIT* pv_unit = get_pv_unit_pointer();
-    PV_CONVERTER_MODEL* pv_converter_model = pv_unit->get_pv_converter_model();
-    if(not pv_converter_model->is_model_initialized())
-        pv_converter_model->initialize();
-
-    double Pcmd = pv_converter_model->get_initial_active_current_command_in_pu_based_on_mbase() * get_terminal_voltage_in_pu();
-    double Pmmax = Pcmd/(1-get_Krp());
-    double Pmsta = get_Pmsta_in_pu_based_on_mbase();
-    double a = b_battery*Pmsta/(Sref*exp(1));
-    double b = Pmsta/Sref-b_battery*Pmsta/exp(1);
-    double c = -Pmmax;
-    double S0 = 0.5*(-b + steps_sqrt(b*b-4*a*c))/a;
-    set_S0_in_Wpm2(S0);
-}
-
 double PVPNLX::get_Pref_in_pu_base_on_mbase()
 {
     double S = get_solar_irradiance_in_Wpm2();
-    return get_Pref_in_pu(S);
+    double pmmp = get_Pmmp_in_pu(S);
+    double pref = pmmp*(1.0-get_Krp());
+    set_current_Pref_in_pu_on_mbase(pref);
+    return get_current_Pref_in_pu_on_mbase();
+}
+
+double PVPNLX::get_maximum_available_power_extracted_power_from_irradiance_in_pu_on_mbase()
+{
+    double S = get_solar_irradiance_in_Wpm2();
+    return get_Pmmp_in_pu(S);
 }
 
 string PVPNLX::get_model_name() const
@@ -187,15 +163,38 @@ void PVPNLX::initialize()
     if(not is_model_initialized())
     {
         setup_block_toolkit_and_parameters();
-        initialize_S0();
+
+        double Sref = get_Sref_in_Wpm2();
+        double b_battery = get_b();
+        if(Sref-exp(1)/b_battery>0)
+        {
+            ostringstream osstream;
+            STEPS& toolkit = get_toolkit();
+            osstream<<"Initialization error. Pmmp (maximum available power from irradiance) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()
+              <<" may less than Zero as S (irradiance) changed. Please reduce Sref or b_battery.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+        PV_UNIT* pv_unit = get_pv_unit_pointer();
+        PV_CONVERTER_MODEL* pv_converter_model = pv_unit->get_pv_converter_model();
+        if(not pv_converter_model->is_model_initialized())
+            pv_converter_model->initialize();
+
+        double Pcmd = pv_converter_model->get_initial_active_power_command_in_pu_based_on_mbase();
+        double Pmmax = Pcmd/(1-get_Krp());
+        double Pmsta = get_Pmsta_in_pu_based_on_mbase();
+        double a = b_battery*Pmsta/(Sref*exp(1));
+        double b = Pmsta/Sref-b_battery*Pmsta/exp(1);
+        double c = -Pmmax;
+        double S0 = 0.5*(-b + steps_sqrt(b*b-4*a*c))/a;
+        set_S0_in_Wpm2(S0);
 
         set_flag_model_initialized_as_true();
 
         if(toolkit.is_detailed_log_enabled())
         {
             osstream<<get_model_name()<<" model of "<<get_compound_device_name()<<" is initialized."<<endl
-                    <<"(1) S0 in Wpm2 = "<<get_S0_in_Wpm2()<<"Wpm2"<<endl
-                    <<"(2) Pref in pu = "<<get_Pref_in_pu_base_on_mbase();
+                    <<"(1) Initial solar irradiance in Wpm2 = "<<get_S0_in_Wpm2()<<"Wpm2."<<endl
+                    <<"(2) Pref in pu = "<<get_Pref_in_pu_base_on_mbase()<<" .";
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -203,12 +202,7 @@ void PVPNLX::initialize()
 
 void PVPNLX::run(DYNAMIC_MODE mode)
 {
-    /*
-    STEPS& toolkit = get_toolkit();
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not necessary to call. Input mode is provided: "<<mode;
-    toolkit.show_information_with_leading_time_stamp(osstream);
-    */
+    ;
 }
 
 
@@ -256,8 +250,8 @@ void PVPNLX::prepare_model_data_table()
 {
     clear_model_data_table();
     unsigned int i=0;
-    add_model_data_name_and_index_pair("SREF", i); i++;
-    add_model_data_name_and_index_pair("PMSTA", i); i++;
+    add_model_data_name_and_index_pair("SREF IN WPM2", i); i++;
+    add_model_data_name_and_index_pair("PMSTA IN PU", i); i++;
     add_model_data_name_and_index_pair("B", i); i++;
     add_model_data_name_and_index_pair("KRP", i); i++;
 }
@@ -265,9 +259,9 @@ void PVPNLX::prepare_model_data_table()
 double PVPNLX::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="SREF")
+    if(par_name=="SREF IN WPM2")
         return get_Sref_in_Wpm2();
-    if(par_name=="PMSTA")
+    if(par_name=="PMSTA IN PU")
         return get_Pmsta_in_pu_based_on_mbase();
     if(par_name=="B")
         return get_b();
@@ -280,9 +274,9 @@ double PVPNLX::get_model_data_with_name(string par_name) const
 void PVPNLX::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="SREF")
+    if(par_name=="SREF IN WPM2")
         return set_Sref_in_Wpm2(value);
-    if(par_name=="PMSTA")
+    if(par_name=="PMSTA IN PU")
         return set_Pmsta_in_pu_based_on_mbase(value);
     if(par_name=="B")
         return set_b(value);
@@ -301,14 +295,20 @@ void PVPNLX::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
-    add_model_internal_variable_name_and_index_pair("S0", i); i++;
+    add_model_internal_variable_name_and_index_pair("INITIAL SOLAR IRRADIANCE IN WPM2", i); i++;
+    add_model_internal_variable_name_and_index_pair("INITIAL SOLAR IRRADIANCE IN PU ON SREF", i); i++;
+    add_model_internal_variable_name_and_index_pair("INITIAL SOLAR IRRADIANCE IN PU ON S0", i); i++;
 }
 
 double PVPNLX::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
-    if(var_name == "S0")
+    if(var_name == "INITIAL SOLAR IRRADIANCE IN WPM2")
         return get_S0_in_Wpm2();
+    if(var_name == "INITIAL SOLAR IRRADIANCE IN PU ON SREF")
+        return get_S0_in_Wpm2()/get_Sref_in_Wpm2();
+    if(var_name == "INITIAL SOLAR IRRADIANCE IN PU ON S0")
+        return 1.0;
 
     return 0.0;
 }

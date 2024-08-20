@@ -921,19 +921,30 @@ void WTVRT3::initialize()
     {
         WT_GENERATOR* wt_generator = get_wt_generator_pointer();
         WT_ELECTRICAL_MODEL* wtelecmodel = wt_generator->get_wt_electrical_model();
-
-        if(not wtelecmodel->is_model_initialized())
-            wtelecmodel->initialize();
+        WT_GENERATOR_MODEL* wt_gen_model = wt_generator->get_wt_generator_model();
 
         setup_block_toolkit_and_parameters();
 
         STEPS& toolkit = get_toolkit();
 
         double P0, Q0, Ip0, Iq0;
-        P0 = wtelecmodel->get_active_power_command_in_pu_based_on_mbase();
-        Q0 = wtelecmodel->get_reactive_power_command_in_pu_based_on_mbase();
-        Ip0 = wtelecmodel->get_active_current_command_in_pu_based_on_mbase();
-        Iq0 = wtelecmodel->get_reactive_current_command_in_pu_based_on_mbase();
+        if(wtelecmodel!=NULL)
+        {
+            if(not wtelecmodel->is_model_initialized())
+                wtelecmodel->initialize();
+
+            P0 = wtelecmodel->get_active_power_command_in_pu_based_on_mbase();
+            Q0 = wtelecmodel->get_reactive_power_command_in_pu_based_on_mbase();
+            Ip0 = wtelecmodel->get_active_current_command_in_pu_based_on_mbase();
+            Iq0 = wtelecmodel->get_reactive_current_command_in_pu_based_on_mbase();
+        }
+        else
+        {
+            P0 = wt_gen_model->get_initial_active_power_command_in_pu_based_on_mbase();
+            Q0 = wt_gen_model->get_initial_reactive_power_command_in_pu_based_on_mbase();
+            Ip0 = wt_gen_model->get_initial_active_current_command_in_pu_based_on_mbase();
+            Iq0 = wt_gen_model->get_initial_reactive_current_command_in_pu_based_on_mbase();
+        }
 
         lvrt.set_vrt_status(VRT_NORMAL_STATUS);
         lvrt.update_PQI0_in_vrt_during_status(P0, Q0, Ip0, Iq0);
@@ -965,6 +976,7 @@ void WTVRT3::run(DYNAMIC_MODE mode)
 
 
         WT_GENERATOR* wt_generator = get_wt_generator_pointer();
+        WT_GENERATOR_MODEL* wt_gen_model = wt_generator->get_wt_generator_model();
         WT_ELECTRICAL_MODEL* wtelecmodel = wt_generator->get_wt_electrical_model();
 
         double P0, Q0, Ip0, Iq0;
@@ -973,10 +985,20 @@ void WTVRT3::run(DYNAMIC_MODE mode)
         {
             case VRT_NORMAL_STATUS:
             {
-                P0 = wtelecmodel->get_active_power_command_in_pu_based_on_mbase();
-                Q0 = wtelecmodel->get_reactive_power_command_in_pu_based_on_mbase();
-                Ip0 = wtelecmodel->get_active_current_command_in_pu_based_on_mbase();
-                Iq0 = wtelecmodel->get_reactive_current_command_in_pu_based_on_mbase();
+                if(wtelecmodel!=NULL)
+                {
+                    P0 = wtelecmodel->get_active_power_command_in_pu_based_on_mbase();
+                    Q0 = wtelecmodel->get_reactive_power_command_in_pu_based_on_mbase();
+                    Ip0 = wtelecmodel->get_active_current_command_in_pu_based_on_mbase();
+                    Iq0 = wtelecmodel->get_reactive_current_command_in_pu_based_on_mbase();
+                }
+                else
+                {
+                    P0 = wt_gen_model->get_initial_active_power_command_in_pu_based_on_mbase();
+                    Q0 = wt_gen_model->get_initial_reactive_power_command_in_pu_based_on_mbase();
+                    Ip0 = wt_gen_model->get_initial_active_current_command_in_pu_based_on_mbase();
+                    Iq0 = wt_gen_model->get_initial_reactive_current_command_in_pu_based_on_mbase();
+                }
                 lvrt.update_PQI0_in_vrt_during_status(P0, Q0, Ip0, Iq0);
                 break;
             }
@@ -1006,10 +1028,20 @@ void WTVRT3::run(DYNAMIC_MODE mode)
         {
             case VRT_NORMAL_STATUS:
             {
-                P0 = wtelecmodel->get_active_power_command_in_pu_based_on_mbase();
-                Q0 = wtelecmodel->get_reactive_power_command_in_pu_based_on_mbase();
-                Ip0 = wtelecmodel->get_active_current_command_in_pu_based_on_mbase();
-                Iq0 = wtelecmodel->get_reactive_current_command_in_pu_based_on_mbase();
+                if(wtelecmodel!=NULL)
+                {
+                    P0 = wtelecmodel->get_active_power_command_in_pu_based_on_mbase();
+                    Q0 = wtelecmodel->get_reactive_power_command_in_pu_based_on_mbase();
+                    Ip0 = wtelecmodel->get_active_current_command_in_pu_based_on_mbase();
+                    Iq0 = wtelecmodel->get_reactive_current_command_in_pu_based_on_mbase();
+                }
+                else
+                {
+                    P0 = wt_gen_model->get_initial_active_power_command_in_pu_based_on_mbase();
+                    Q0 = wt_gen_model->get_initial_reactive_power_command_in_pu_based_on_mbase();
+                    Ip0 = wt_gen_model->get_initial_active_current_command_in_pu_based_on_mbase();
+                    Iq0 = wt_gen_model->get_initial_reactive_current_command_in_pu_based_on_mbase();
+                }
                 hvrt.update_PQI0_in_vrt_during_status(P0, Q0, Ip0, Iq0);
                 break;
             }
@@ -1437,9 +1469,9 @@ string WTVRT3::get_standard_psse_string(bool export_internal_bus_number) const
             <<setw(8)<<Q_lvrt_during_mode<<", "
             <<setw(8)<<P_lvrt_prepare2recover_mode<<", "
             <<setw(8)<<Q_lvrt_prepare2recover_mode<<", "
-            <<setw(8)<<P_lvrt_recover_mode<<", "
-            <<setw(8)<<Q_lvrt_recover_mode<<", \n"
+            <<setw(8)<<P_lvrt_recover_mode<<", \n"
             <<setw(10)<<""
+            <<setw(8)<<Q_lvrt_recover_mode<<", "
             <<setw(8)<<setprecision(6)<<kP_lvrt_during<<", "
             <<setw(8)<<setprecision(6)<<P_set_lvrt_during<<", "
             <<setw(8)<<setprecision(6)<<k1_Ip_lvrt_during<<", "
@@ -1462,24 +1494,23 @@ string WTVRT3::get_standard_psse_string(bool export_internal_bus_number) const
             <<setw(8)<<setprecision(6)<<kP_lvrt_recover<<", "
             <<setw(8)<<setprecision(6)<<TP_lvrt_recover<<", "
             <<setw(8)<<setprecision(6)<<kQ_lvrt_recover<<", "
-            <<setw(8)<<setprecision(6)<<TQ_lvrt_recover<<", \n"
-            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<TQ_lvrt_recover<<", "
             <<setw(8)<<setprecision(6)<<hvrt_voltage_threshold<<", "
             <<setw(8)<<setprecision(6)<<hvrt_prepare2recover_delay_time<<", "
             <<setw(8)<<P_hvrt_during_mode<<", "
             <<setw(8)<<Q_hvrt_during_mode<<", "
-            <<setw(8)<<P_hvrt_prepare2recover_mode<<", "
+            <<setw(8)<<P_hvrt_prepare2recover_mode<<", \n"
+            <<setw(10)<<""
             <<setw(8)<<Q_hvrt_prepare2recover_mode<<", "
             <<setw(8)<<P_hvrt_recover_mode<<", "
-            <<setw(8)<<Q_hvrt_recover_mode<<", \n"
-            <<setw(10)<<""
+            <<setw(8)<<Q_hvrt_recover_mode<<", "
             <<setw(8)<<setprecision(6)<<kP_hvrt_during<<", "
             <<setw(8)<<setprecision(6)<<P_set_hvrt_during<<", "
             <<setw(8)<<setprecision(6)<<k1_Ip_hvrt_during<<", "
             <<setw(8)<<setprecision(6)<<k2_Ip_hvrt_during<<", "
-            <<setw(8)<<setprecision(6)<<Ip_set_hvrt_during<<", \n"
+            <<setw(8)<<setprecision(6)<<Ip_set_hvrt_during<<", "
+            <<setw(8)<<setprecision(6)<<kQ_hvrt_during<<", \n"
             <<setw(10)<<""
-            <<setw(8)<<setprecision(6)<<kQ_hvrt_during<<", "
             <<setw(8)<<setprecision(6)<<Q_set_hvrt_during<<", "
             <<setw(8)<<setprecision(6)<<k1_Iq_hvrt_during<<", "
             <<setw(8)<<setprecision(6)<<k2_Iq_hvrt_during<<", "
@@ -1487,9 +1518,9 @@ string WTVRT3::get_standard_psse_string(bool export_internal_bus_number) const
             <<setw(8)<<setprecision(6)<<k_Ip_hvrt_prepare2recover<<", "
             <<setw(8)<<setprecision(6)<<Ip_set_hvrt_prepare2recover<<", "
             <<setw(8)<<setprecision(6)<<k_Iq_hvrt_prepare2recover<<", "
-            <<setw(8)<<setprecision(6)<<Iq_set_hvrt_prepare2recover<<", \n"
+            <<setw(8)<<setprecision(6)<<Iq_set_hvrt_prepare2recover<<", "
+            <<setw(8)<<setprecision(6)<<kP_hvrt_recover<<", \n"
             <<setw(10)<<""
-            <<setw(8)<<setprecision(6)<<kP_hvrt_recover<<", "
             <<setw(8)<<setprecision(6)<<TP_hvrt_recover<<", "
             <<setw(8)<<setprecision(6)<<kQ_hvrt_recover<<", "
             <<setw(8)<<setprecision(6)<<TQ_hvrt_recover<<" /";

@@ -1076,7 +1076,7 @@ void LCC_HVDC2T::set_model(MODEL* model)
             return;
         }
         ostringstream osstream;
-        osstream<<"Waring. Neither AUXILIARY SIGNAL model nor LCC_LCC_HVDC2T2T model is given to set dynamic model for "<<get_compound_device_name();
+        osstream<<"Warning. Neither AUXILIARY SIGNAL model nor LCC_HVDC2T model is given to set dynamic model for "<<get_compound_device_name();
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
     }

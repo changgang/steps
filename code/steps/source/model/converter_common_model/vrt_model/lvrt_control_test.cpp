@@ -1,5 +1,5 @@
 #include "header/basic/test_macro.h"
-#include "header/model/converter_common_models/vrt_model/lvrt_control_test.h"
+#include "header/model/converter_common_model/vrt_model/lvrt_control_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 #include <cstdlib>

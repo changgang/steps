@@ -1,4 +1,4 @@
-#include "header/model/converter_common_models/vrt_model/vrt_control_model.h"
+#include "header/model/converter_common_model/vrt_model/vrt_control_model.h"
 #include "header/power_system_database.h"
 #include "header/basic/utility.h"
 #include <istream>
@@ -342,7 +342,9 @@ double VRT_CONTROL_MODEL::get_vrt_Ip_command()
 {
     return get_vrt_P_command()/get_bus_voltage();
 }
+
 double VRT_CONTROL_MODEL::get_vrt_Iq_command()
 {
+    //Iq command should be negtive if terminal reactive power is bigger than zero
     return -get_vrt_Q_command()/get_bus_voltage();
 }

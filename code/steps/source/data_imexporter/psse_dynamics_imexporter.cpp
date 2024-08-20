@@ -190,6 +190,12 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
         model = wt_gen->get_wind_speed_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
+        model = wt_gen->get_wt_vrt_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
+        model = wt_gen->get_wt_dbr_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = wt_gen->get_wt_relay_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
@@ -210,6 +216,37 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
         if(model!=NULL)
             ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = pv->get_pv_irradiance_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
+        model = pv->get_pv_temperature_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
+        model = pv->get_pv_vrt_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
+        model = pv->get_pv_relay_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
+    }
+    vector<ENERGY_STORAGE*> ess = psdb.get_all_energy_storages();
+    ENERGY_STORAGE* es = NULL;
+    n = ess.size();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        es = ess[i];
+        model = es->get_es_converter_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
+        model = es->get_es_electrical_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
+        model = es->get_es_battery_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
+        model = es->get_es_relay_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
+        model = es->get_es_vrt_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
     }

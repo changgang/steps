@@ -45,6 +45,27 @@ const char* api_get_pv_unit_related_model_name(unsigned int bus, char* identifie
 			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (model->get_model_name()).c_str());
 		return toolkit.steps_char_buffer;
     }
+    if(MODEL_TYPE=="PVTEMP" or MODEL_TYPE=="PV TEMPERATURE")
+    {
+        PV_TEMPERATURE_MODEL* model = pv_unit->get_pv_temperature_model();
+        if(model!=NULL)
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (model->get_model_name()).c_str());
+		return toolkit.steps_char_buffer;
+    }
+    if(MODEL_TYPE=="PVVRT" or MODEL_TYPE=="PV VOLTAGE RIDE THROUGH")
+    {
+        PV_VRT_MODEL* model = pv_unit->get_pv_vrt_model();
+        if(model!=NULL)
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (model->get_model_name()).c_str());
+		return toolkit.steps_char_buffer;
+    }
+    if(MODEL_TYPE=="PVRLY" or MODEL_TYPE=="PV RELAY")
+    {
+        PV_RELAY_MODEL* model = pv_unit->get_pv_relay_model();
+        if(model!=NULL)
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (model->get_model_name()).c_str());
+		return toolkit.steps_char_buffer;
+    }
     show_model_type_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
 	return toolkit.steps_char_buffer;
 }
@@ -91,6 +112,30 @@ double api_get_pv_unit_related_model_float_parameter(unsigned int bus, char* ide
     if(MODEL_TYPE=="PVIRRD" or MODEL_TYPE=="PV IRRADIANCE")
     {
         PV_IRRADIANCE_MODEL* model = pv_unit->get_pv_irradiance_model();
+        if(model!=NULL)
+            return model->get_model_data_with_name(PARAMETER_NAME);
+        else
+            return 0.0;
+    }
+    if(MODEL_TYPE=="PVTEMP" or MODEL_TYPE=="PV TEMPERATURE")
+    {
+        PV_TEMPERATURE_MODEL* model = pv_unit->get_pv_temperature_model();
+        if(model!=NULL)
+            return model->get_model_data_with_name(PARAMETER_NAME);
+        else
+            return 0.0;
+    }
+    if(MODEL_TYPE=="PVVRT" or MODEL_TYPE=="PV VOLTAGE RIDE THROUGH")
+    {
+        PV_VRT_MODEL* model = pv_unit->get_pv_vrt_model();
+        if(model!=NULL)
+            return model->get_model_data_with_name(PARAMETER_NAME);
+        else
+            return 0.0;
+    }
+    if(MODEL_TYPE=="PVRLY" or MODEL_TYPE=="PV RELAY")
+    {
+        PV_RELAY_MODEL* model = pv_unit->get_pv_relay_model();
         if(model!=NULL)
             return model->get_model_data_with_name(PARAMETER_NAME);
         else
@@ -146,6 +191,30 @@ void api_set_pv_unit_related_model_float_parameter(unsigned int bus, char* ident
         else
             return;
     }
+    if(MODEL_TYPE=="PVTEMP" or MODEL_TYPE=="PV TEMPERATURE")
+    {
+        PV_TEMPERATURE_MODEL* model = pv_unit->get_pv_temperature_model();
+        if(model!=NULL)
+            return model->set_model_data_with_name(PARAMETER_NAME, value);
+        else
+            return;
+    }
+    if(MODEL_TYPE=="PVVRT" or MODEL_TYPE=="PV VOLTAGE RIDE THROUGH")
+    {
+        PV_VRT_MODEL* model = pv_unit->get_pv_vrt_model();
+        if(model!=NULL)
+            return model->set_model_data_with_name(PARAMETER_NAME, value);
+        else
+            return;
+    }
+    if(MODEL_TYPE=="PVRLY" or MODEL_TYPE=="PV RELAY")
+    {
+        PV_RELAY_MODEL* model = pv_unit->get_pv_relay_model();
+        if(model!=NULL)
+            return model->set_model_data_with_name(PARAMETER_NAME, value);
+        else
+            return;
+    }
     show_model_type_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
 }
 
@@ -189,6 +258,30 @@ unsigned int api_get_pv_unit_related_model_float_parameter_count(unsigned int bu
     if(MODEL_TYPE=="PVIRRD" or MODEL_TYPE=="PV IRRADIANCE")
     {
         PV_IRRADIANCE_MODEL* model = pv_unit->get_pv_irradiance_model();
+        if(model!=NULL)
+            return model->get_model_float_parameter_count();
+        else
+            return 0;
+    }
+    if(MODEL_TYPE=="PVTEMP" or MODEL_TYPE=="PV TEMPERATURE")
+    {
+        PV_TEMPERATURE_MODEL* model = pv_unit->get_pv_temperature_model();
+        if(model!=NULL)
+            return model->get_model_float_parameter_count();
+        else
+            return 0;
+    }
+    if(MODEL_TYPE=="PVVRT" or MODEL_TYPE=="PV VOLTAGE RIDE THROUGH")
+    {
+        PV_VRT_MODEL* model = pv_unit->get_pv_vrt_model();
+        if(model!=NULL)
+            return model->get_model_float_parameter_count();
+        else
+            return 0;
+    }
+    if(MODEL_TYPE=="PVRLY" or MODEL_TYPE=="PV RELAY")
+    {
+        PV_RELAY_MODEL* model = pv_unit->get_pv_relay_model();
         if(model!=NULL)
             return model->get_model_float_parameter_count();
         else
@@ -240,6 +333,30 @@ const char* api_get_pv_unit_related_model_float_parameter_name(unsigned int bus,
     if(MODEL_TYPE=="PVIRRD" or MODEL_TYPE=="PV IRRADIANCE")
     {
         PV_IRRADIANCE_MODEL* model = pv_unit->get_pv_irradiance_model();
+        if(model!=NULL)
+            name = model->get_model_data_name(parameter_index);
+        snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+    if(MODEL_TYPE=="PVTEMP" or MODEL_TYPE=="PV TEMPERATURE")
+    {
+        PV_TEMPERATURE_MODEL* model = pv_unit->get_pv_temperature_model();
+        if(model!=NULL)
+            name = model->get_model_data_name(parameter_index);
+        snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+    if(MODEL_TYPE=="PVVRT" or MODEL_TYPE=="PV VOLTAGE RIDE THROUGH")
+    {
+        PV_VRT_MODEL* model = pv_unit->get_pv_vrt_model();
+        if(model!=NULL)
+            name = model->get_model_data_name(parameter_index);
+        snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+    if(MODEL_TYPE=="PVRLY" or MODEL_TYPE=="PV RELAY")
+    {
+        PV_RELAY_MODEL* model = pv_unit->get_pv_relay_model();
         if(model!=NULL)
             name = model->get_model_data_name(parameter_index);
         snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());

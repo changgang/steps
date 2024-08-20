@@ -28,7 +28,7 @@ class FILEIRRAD : public PV_IRRADIANCE_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
-        virtual double get_solar_irradiance_in_pu();
+        virtual double get_solar_irradiance_in_pu_based_on_S0();
         virtual double get_solar_irradiance_direction_in_deg();
 
         virtual void check();

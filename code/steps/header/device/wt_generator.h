@@ -12,6 +12,7 @@
 #include "header/model/wtg_models/wind_speed_model/wind_speed_model.h"
 #include "header/model/wtg_models/wt_vrt_model/wt_vrt_model.h"
 #include "header/model/wtg_models/wt_relay_model/wt_relay_model.h"
+#include "header/model/wtg_models/wt_dbr_model/wt_dbr_model.h"
 
 using namespace std;
 
@@ -44,6 +45,7 @@ class WT_GENERATOR : public SOURCE
         void set_wind_speed_model(WIND_SPEED_MODEL* model);
         void set_wt_vrt_model(WT_VRT_MODEL* model);
         void set_wt_relay_model(WT_RELAY_MODEL* model);
+        void set_wt_dbr_model(WT_DBR_MODEL* model);
 
         WT_GENERATOR_MODEL* get_wt_generator_model() const;
         WT_AERODYNAMIC_MODEL* get_wt_aerodynamic_model() const;
@@ -53,6 +55,7 @@ class WT_GENERATOR : public SOURCE
         WIND_SPEED_MODEL* get_wind_speed_model() const;
         WT_VRT_MODEL* get_wt_vrt_model() const;
         WT_RELAY_MODEL* get_wt_relay_model() const;
+        WT_DBR_MODEL* get_wt_dbr_model() const;
 
         virtual void run(DYNAMIC_MODE mode);
         virtual void report() const;
@@ -148,6 +151,7 @@ class WT_GENERATOR : public SOURCE
         WIND_SPEED_MODEL* wind_speed_model;
         WT_VRT_MODEL* wt_vrt_model;
         WT_RELAY_MODEL* wt_relay_model;
+        WT_DBR_MODEL* wt_dbr_model;
 
         double R1, X1_sync, X1_transient, X1_subtransient;
         double R2, X2, R0, X0;

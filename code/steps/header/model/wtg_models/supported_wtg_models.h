@@ -9,5 +9,6 @@
 #include "header/model/wtg_models/wind_speed_model/wind_speed_models.h"
 #include "header/model/wtg_models/wt_vrt_model/wt_vrt_models.h"
 #include "header/model/wtg_models/wt_relay_model/wt_relay_models.h"
+#include "header/model/wtg_models/wt_dbr_model/wt_dbr_models.h"
 
 #endif // SUPPORTED_WTG_MODELS_H

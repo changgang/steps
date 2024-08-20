@@ -1,4 +1,4 @@
-#include "header/model/converter_common_models/vrt_model/lvrt_relay.h"
+#include "header/model/converter_common_model/vrt_model/lvrt_relay.h"
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
 #include "header/basic/utility.h"
@@ -112,7 +112,17 @@ void LVRT_RELAY::check_vrt_relay()
                     break;
                 }
                 case STEPS_PV_UNIT:
+                {
+                    sim.shed_pv_unit(did, get_vrt_trip_scale());
+                    sim.enable_relay_action_flag();
+                    break;
+                }
                 case STEPS_ENERGY_STORAGE:
+                {
+                    sim.shed_energy_storage(did, get_vrt_trip_scale());
+                    sim.enable_relay_action_flag();
+                    break;
+                }
                 default:
                 {
                     break;

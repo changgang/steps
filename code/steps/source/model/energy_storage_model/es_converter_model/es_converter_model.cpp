@@ -10,14 +10,11 @@ using namespace std;
 
 ES_CONVERTER_MODEL::ES_CONVERTER_MODEL(STEPS& toolkit) : ES_MODEL(toolkit)
 {
-    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_ENERGY_STORAGE);
-
     set_current_source_flag(true);
-    set_initial_active_current_command_in_pu_based_on_mbase(0.0);
-    set_initial_reactive_current_command_in_pu_based_on_mbase(0.0);
-    set_initial_active_power_command_in_pu_based_on_mbase(0.0);
-    set_initial_reactive_power_command_in_pu_based_on_mbase(0.0);
-    set_initial_reactive_voltage_command_in_pu(0.0);
+    set_max_active_current_command_in_pu_based_on_mbase(INFINITE_THRESHOLD);
+    set_max_active_power_command_in_pu_based_on_mbase(INFINITE_THRESHOLD);
+    set_min_active_current_command_in_pu_based_on_mbase(-INFINITE_THRESHOLD);
+    set_min_active_power_command_in_pu_based_on_mbase(-INFINITE_THRESHOLD);
 }
 
 ES_CONVERTER_MODEL::~ES_CONVERTER_MODEL()
@@ -51,70 +48,61 @@ bool ES_CONVERTER_MODEL::is_voltage_source() const
     return not is_current_source();
 }
 
-void ES_CONVERTER_MODEL::set_initial_active_current_command_in_pu_based_on_mbase(double ip_command)
-{
-    IP_command0 = ip_command;
-}
-
-double ES_CONVERTER_MODEL::get_initial_active_current_command_in_pu_based_on_mbase() const
-{
-    return IP_command0;
-}
-
-void ES_CONVERTER_MODEL::set_initial_reactive_current_command_in_pu_based_on_mbase(double iq_command)
-{
-    IQ_command0 = iq_command;
-}
-
-double ES_CONVERTER_MODEL::get_initial_reactive_current_command_in_pu_based_on_mbase() const
-{
-    return IQ_command0;
-}
-
-void ES_CONVERTER_MODEL::set_initial_reactive_voltage_command_in_pu(double eq_command)
-{
-    EQ_command0 = eq_command;
-}
-
-double ES_CONVERTER_MODEL::get_initial_reactive_voltage_command_in_pu() const
-{
-    return EQ_command0;
-}
-
-void ES_CONVERTER_MODEL::set_initial_active_power_command_in_pu_based_on_mbase(double P_command)
-{
-    P_command0 = P_command;
-}
-
-double ES_CONVERTER_MODEL::get_initial_active_power_command_in_pu_based_on_mbase() const
-{
-    return P_command0;
-}
-
-void ES_CONVERTER_MODEL::set_initial_reactive_power_command_in_pu_based_on_mbase(double Q_command)
-{
-    Q_command0 = Q_command;
-}
-
-double ES_CONVERTER_MODEL::get_initial_reactive_power_command_in_pu_based_on_mbase() const
-{
-    return Q_command0;
-}
-
 double ES_CONVERTER_MODEL::get_active_current_command_in_pu_based_on_mbase()
 {
     ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
     ES_ELECTRICAL_MODEL* elec_model = energy_storage->get_es_electrical_model();
     ES_VRT_MODEL* vrt_model = energy_storage->get_es_vrt_model();
+    ES_BATTERY_MODEL* battery_model = energy_storage->get_es_battery_model();
+    double Ipcmd = 0.0;
     if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
-        return elec_model->get_active_current_command_in_pu_based_on_mbase();
+        Ipcmd = elec_model->get_active_current_command_in_pu_based_on_mbase();
     else
     {
         if(vrt_model!=NULL and vrt_model->is_model_initialized())
-            return vrt_model->get_active_current_command_in_pu_based_on_mbase();
+            Ipcmd = vrt_model->get_active_current_command_in_pu_based_on_mbase();
         else
-            return get_initial_active_current_command_in_pu_based_on_mbase();
+            Ipcmd = get_initial_active_current_command_in_pu_based_on_mbase();
     }
+
+    if(battery_model!=NULL and battery_model->is_model_initialized())
+    {
+        double SOC = battery_model->get_state_of_charge_in_pu();
+        double SOC_max = battery_model->get_max_SOC_in_pu();
+        double SOC_min = battery_model->get_min_SOC_in_pu();
+
+        if(SOC>SOC_min and SOC<SOC_max)
+        {
+            set_max_active_current_command_in_pu_based_on_mbase(INFINITE_THRESHOLD);
+            set_min_active_current_command_in_pu_based_on_mbase(-INFINITE_THRESHOLD);
+        }
+        else
+        {
+            if(SOC>=SOC_max)
+            {
+                set_min_active_current_command_in_pu_based_on_mbase(0.0);
+                set_max_active_current_command_in_pu_based_on_mbase(INFINITE_THRESHOLD);
+            }
+            else
+            {
+                set_max_active_current_command_in_pu_based_on_mbase(0.0);
+                set_min_active_current_command_in_pu_based_on_mbase(-INFINITE_THRESHOLD);
+            }
+        }
+
+        double Ipcmd_max = get_max_active_current_command_in_pu_based_on_mbase();
+        double Ipcmd_min = get_min_active_current_command_in_pu_based_on_mbase();
+        if(Ipcmd>=Ipcmd_min and Ipcmd<=Ipcmd_max)
+            ;
+        else
+        {
+            if(Ipcmd>Ipcmd_max)
+                Ipcmd = Ipcmd_max;
+            else
+                Ipcmd = Ipcmd_min;
+        }
+    }
+    return Ipcmd;
 }
 
 double ES_CONVERTER_MODEL::get_reactive_current_command_in_pu_based_on_mbase()
@@ -154,15 +142,58 @@ double ES_CONVERTER_MODEL::get_active_power_command_in_pu_based_on_mbase()
     ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
     ES_ELECTRICAL_MODEL* elec_model = energy_storage->get_es_electrical_model();
     ES_VRT_MODEL* vrt_model = energy_storage->get_es_vrt_model();
+    ES_BATTERY_MODEL* battery_model = energy_storage->get_es_battery_model();
+    double Pcmd = 0.0;
     if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
-        return elec_model->get_active_power_command_in_pu_based_on_mbase();
+        Pcmd = elec_model->get_active_power_command_in_pu_based_on_mbase();
     else
     {
         if(vrt_model!=NULL and vrt_model->is_model_initialized())
-            return vrt_model->get_active_power_command_in_pu_based_on_mbase();
+            Pcmd = vrt_model->get_active_power_command_in_pu_based_on_mbase();
         else
-            return get_initial_active_power_command_in_pu_based_on_mbase();
+            Pcmd = get_initial_active_power_command_in_pu_based_on_mbase();
     }
+
+    if(battery_model!=NULL and battery_model->is_model_initialized())
+    {
+        double SOC = battery_model->get_state_of_charge_in_pu();
+        double SOC_max = battery_model->get_max_SOC_in_pu();
+        double SOC_min = battery_model->get_min_SOC_in_pu();
+
+        if(SOC>SOC_min and SOC<SOC_max)
+        {
+            set_max_active_power_command_in_pu_based_on_mbase(INFINITE_THRESHOLD);
+            set_min_active_power_command_in_pu_based_on_mbase(-INFINITE_THRESHOLD);
+        }
+        else
+        {
+            if(SOC>=SOC_max)
+            {
+                set_min_active_power_command_in_pu_based_on_mbase(0.0);
+                set_max_active_power_command_in_pu_based_on_mbase(INFINITE_THRESHOLD);
+            }
+            else
+            {
+                set_max_active_power_command_in_pu_based_on_mbase(0.0);
+                set_min_active_power_command_in_pu_based_on_mbase(-INFINITE_THRESHOLD);
+            }
+        }
+
+        double Pcmd_max = get_max_active_power_command_in_pu_based_on_mbase();
+        double Pcmd_min = get_min_active_power_command_in_pu_based_on_mbase();
+        if(Pcmd>=Pcmd_min and Pcmd<=Pcmd_max)
+            ;
+        else
+        {
+            if(Pcmd>Pcmd_max)
+                Pcmd = Pcmd_max;
+            else
+                Pcmd = Pcmd_min;
+        }
+    }
+
+    return Pcmd;
+
 }
 
 double ES_CONVERTER_MODEL::get_reactive_power_command_in_pu_based_on_mbase()
@@ -179,4 +210,114 @@ double ES_CONVERTER_MODEL::get_reactive_power_command_in_pu_based_on_mbase()
         else
             return get_initial_reactive_power_command_in_pu_based_on_mbase();
     }
+}
+
+void ES_CONVERTER_MODEL::set_max_active_current_command_in_pu_based_on_mbase(double Ipcmd)
+{
+    this->max_active_current_command_in_pu_based_on_mbase = Ipcmd;
+}
+
+void ES_CONVERTER_MODEL::set_min_active_current_command_in_pu_based_on_mbase(double Ipcmd)
+{
+    this->min_active_current_command_in_pu_based_on_mbase = Ipcmd;
+}
+
+void ES_CONVERTER_MODEL::set_max_active_power_command_in_pu_based_on_mbase(double Pcmd)
+{
+    this->max_active_power_command_in_pu_based_on_mbase = Pcmd;
+}
+
+void ES_CONVERTER_MODEL::set_min_active_power_command_in_pu_based_on_mbase(double Pcmd)
+{
+    this->min_active_power_command_in_pu_based_on_mbase = Pcmd;
+}
+
+double ES_CONVERTER_MODEL::get_max_active_current_command_in_pu_based_on_mbase() const
+{
+    return this->max_active_current_command_in_pu_based_on_mbase;
+}
+
+double ES_CONVERTER_MODEL::get_min_active_current_command_in_pu_based_on_mbase() const
+{
+    return this->min_active_current_command_in_pu_based_on_mbase;
+}
+
+double ES_CONVERTER_MODEL::get_max_active_power_command_in_pu_based_on_mbase() const
+{
+    return this->max_active_power_command_in_pu_based_on_mbase;
+}
+
+double ES_CONVERTER_MODEL::get_min_active_power_command_in_pu_based_on_mbase() const
+{
+    return this->min_active_power_command_in_pu_based_on_mbase;
+}
+
+complex<double> ES_CONVERTER_MODEL::get_terminal_complex_power_in_pu_based_on_mbase()
+{
+    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
+    complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+    complex<double> S = Vxy*conj(Ixy);
+    return S;
+}
+
+complex<double> ES_CONVERTER_MODEL::get_terminal_complex_power_in_MVA()
+{
+    return get_terminal_complex_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
+}
+
+double ES_CONVERTER_MODEL::get_terminal_active_power_in_MW()
+{
+    return get_terminal_complex_power_in_MVA().real();
+}
+
+double ES_CONVERTER_MODEL::get_terminal_reactive_power_in_MVar()
+{
+    return get_terminal_complex_power_in_MVA().imag();
+}
+
+double ES_CONVERTER_MODEL::get_terminal_active_power_in_pu_based_on_mbase()
+{
+    return get_terminal_complex_power_in_pu_based_on_mbase().real();
+}
+
+double ES_CONVERTER_MODEL::get_terminal_reactive_power_in_pu_based_on_mbase()
+{
+    return get_terminal_complex_power_in_pu_based_on_mbase().imag();
+}
+
+complex<double> ES_CONVERTER_MODEL::get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase()
+{
+    STEPS& toolkit = get_toolkit();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
+    double mbase = get_mbase_in_MVA();
+    complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+    return Ixy*(mbase*one_over_sbase);
+}
+
+double ES_CONVERTER_MODEL::get_terminal_current_in_pu_based_on_sbase()
+{
+    STEPS& toolkit = get_toolkit();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
+    double mbase = get_mbase_in_MVA();
+    double I = get_terminal_current_in_pu_based_on_mbase();
+    return I*(mbase*one_over_sbase);
+}
+
+double ES_CONVERTER_MODEL::get_terminal_current_in_pu_based_on_mbase()
+{
+    return steps_fast_complex_abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase());
+}
+
+double ES_CONVERTER_MODEL::get_active_power_generation_including_stator_loss_in_MW()
+{
+    return get_active_power_generation_including_stator_loss_in_pu_based_on_mbase()*get_mbase_in_MVA();
+}
+
+complex<double> ES_CONVERTER_MODEL::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase()
+{
+    STEPS& toolkit = get_toolkit();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
+    double mbase = get_mbase_in_MVA();
+    complex<double> I = get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_mbase();
+    return I*(mbase*one_over_sbase);
 }

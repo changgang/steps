@@ -316,7 +316,7 @@ void WT_AERODYNAMIC_MODEL::initialize()
 
     double pmax = get_maximum_available_mechanical_power_per_wt_generator_in_MW_considering_gear_efficiency(get_wind_speed_in_mps());
     double cp_max = get_cpmax_at_zero_pitch();
-    double pmech = gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators();
+    double pmech = get_active_power_generation_including_stator_loss_and_braking_resisitor_power_in_MW()/gen->get_number_of_lumped_wt_generators();
     if(pmax<pmech)
     {
         osstream<<"Initialization error. Wind speed "<<get_wind_speed_in_mps()<<" m/s is not enough to generate power for "<<get_compound_device_name()
@@ -489,7 +489,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed()
 
     WT_GENERATOR* genptr = get_wt_generator_pointer();
     WT_GENERATOR_MODEL* wtgenmodel = genptr->get_wt_generator_model();
-    double pelec = wtgenmodel->get_terminal_active_power_in_MW()/get_number_of_lumped_wt_generators();
+    double pelec = wtgenmodel->get_active_power_generation_including_stator_loss_in_MW()/get_number_of_lumped_wt_generators();
     if(toolkit.is_detailed_log_enabled())
     {
         osstream<<"Maximum available power per WT generator is "<<pmax<<" MW, and set generation is "<<pelec<<" MW"<<endl
@@ -600,23 +600,12 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 
-    WT_GENERATOR* gen = get_wt_generator_pointer();
     double D = get_damping_in_pu();
     double mbase = get_mbase_in_MVA();
-    complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
 
-    complex<double> selec = gen->get_complex_generation_in_MVA();
-    complex<double> vterm = get_terminal_complex_voltage_in_pu();
-
-    selec /= mbase;
-    double iterm = steps_fast_complex_abs(selec)/ steps_fast_complex_abs(vterm);
-    selec += (iterm*iterm*zsource);
-
-    selec *= mbase;
-
-    double pelec = selec.real();
     double one_over_n = 1.0/get_number_of_lumped_wt_generators();
-    pelec *= one_over_n;
+
+    double pelec = get_active_power_generation_including_stator_loss_and_braking_resisitor_power_in_MW()*one_over_n;
 
     double vwind = get_wind_speed_in_mps();
 
@@ -689,7 +678,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
                     ++iter;
                     if(iter>iter_max)
                     {
-                        osstream<<"Warning. Failed to initialize pitch angle and turbine speed for "<<gen->get_compound_device_name()<<" within "<<iter_max<<" iterations when turbine speed mode is WT_MPPT_MODE."<<endl
+                        osstream<<"Warning. Failed to initialize pitch angle and turbine speed within "<<iter_max<<" iterations when turbine speed mode is WT_MPPT_MODE."<<endl
                                 <<"Initial pitch angle is set as "<<pitch<<" deg, and initial turbine speed is set as "<<w_mppt<<" rad/s";
                         toolkit.show_information_with_leading_time_stamp(osstream);
                         set_initial_pitch_angle_in_deg(pitch);
@@ -752,23 +741,12 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
 
-    WT_GENERATOR* gen = get_wt_generator_pointer();
     double D = get_damping_in_pu();
     double mbase = get_mbase_in_MVA();
-    complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
 
-    complex<double> selec = gen->get_complex_generation_in_MVA();
-    complex<double> vterm = get_terminal_complex_voltage_in_pu();
-
-    selec /= mbase;
-    double iterm = steps_fast_complex_abs(selec)/ steps_fast_complex_abs(vterm);
-    selec += (iterm*iterm*zsource);
-
-    selec *= mbase;
-
-    double pelec = selec.real();
     unsigned int n = get_number_of_lumped_wt_generators();
-    pelec /= n;
+
+    double pelec = get_active_power_generation_including_stator_loss_and_braking_resisitor_power_in_MW()/n;
 
     double pn = get_rated_power_per_wt_generator_in_MW();
 
@@ -929,21 +907,7 @@ double WT_AERODYNAMIC_MODEL::get_turbine_reference_speed_in_pu()
 
 double WT_AERODYNAMIC_MODEL::get_turbine_reference_speed_in_rad_per_s_without_speed_limit()
 {
-    ostringstream osstream;
-
-    WT_GENERATOR* gen = get_wt_generator_pointer();
-    WT_GENERATOR_MODEL* wtgenmodel = gen->get_wt_generator_model();
-
-    complex<double> selec = wtgenmodel->get_terminal_complex_power_in_MVA();
-    double iterm = wtgenmodel->get_terminal_current_in_pu_based_on_mbase();
-    complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
-    double mbase = get_mbase_in_MVA();
-    selec += (iterm*iterm*zsource)*mbase;
-
-    unsigned int n = get_number_of_lumped_wt_generators();
-    selec /= n;
-
-    double pelec = selec.real();
+    double pelec = get_active_power_generation_including_stator_loss_and_braking_resisitor_power_in_MW()/get_number_of_lumped_wt_generators();
 
     double pitch = get_pitch_angle_in_deg();
     if(fabs(get_current_pelec_including_loss_per_turbine_in_MW()-pelec)<DOUBLE_EPSILON and
@@ -1023,7 +987,7 @@ void WT_AERODYNAMIC_MODEL::update_current_lambda_at_cpmax_with_current_pitch_ang
         {
             if(der==0.0)
                 lambda_high -= lambda_step;
-            else
+            else//´óÓÚ0
                 lambda_high += lambda_step;
         }
         else
@@ -1257,6 +1221,29 @@ double WT_AERODYNAMIC_MODEL::get_current_pelec_including_loss_per_turbine_in_MW(
 double WT_AERODYNAMIC_MODEL::get_current_turbine_speed_reference_without_limit_in_rad_per_s() const
 {
     return current_turbine_speed_reference_without_limit_in_rad_per_s;
+}
+
+double WT_AERODYNAMIC_MODEL::get_active_power_generation_including_stator_loss_and_braking_resisitor_power_in_MW()
+{
+    WT_GENERATOR* gen = get_wt_generator_pointer();
+    WT_GENERATOR_MODEL* wtgenmodel = gen->get_wt_generator_model();
+    WT_DBR_MODEL* wt_dbr_model = gen->get_wt_dbr_model();
+    double pelec = 0.0;
+    if(wtgenmodel!=NULL)
+    {
+        if(not wtgenmodel->is_model_initialized())
+            wtgenmodel->initialize();
+        pelec =  wtgenmodel->get_active_power_generation_including_stator_loss_in_MW();
+        if(wt_dbr_model!=NULL)
+        {
+            if(not wt_dbr_model->is_model_initialized())
+                wt_dbr_model->initialize();
+
+            pelec += wt_dbr_model->get_braking_resistor_power_in_MW();
+        }
+    }
+
+    return pelec;
 }
 
 double WT_AERODYNAMIC_MODEL::get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s_considering_gear_efficiency(double speed_rad_per_s) const

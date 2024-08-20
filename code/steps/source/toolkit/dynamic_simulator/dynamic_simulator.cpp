@@ -3878,6 +3878,190 @@ void DYNAMICS_SIMULATOR::shed_wt_generator(const DEVICE_ID& gen_id,double percen
     }
 }
 
+void DYNAMICS_SIMULATOR::trip_pv_unit(const DEVICE_ID& gen_id)
+{
+    ostringstream osstream;
+
+    if(gen_id.get_device_type()==STEPS_PV_UNIT)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        PV_UNIT* pv_unit = psdb.get_pv_unit(gen_id);
+        if(pv_unit!=NULL)
+        {
+            string busname = psdb.bus_number2bus_name(pv_unit->get_unit_bus());
+
+            if(pv_unit->get_status()==true)
+            {
+                pv_unit->set_status(false);
+
+                //network_matrix.build_dynamic_network_Y_matrix();
+                //build_jacobian();
+
+                osstream<<pv_unit->get_compound_device_name()<<" is tripped at time "<<TIME<<" s.";
+                toolkit->show_information_with_leading_time_stamp(osstream);
+            }
+        }
+        else
+        {
+            osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist in power system database."<<endl
+                    <<"No pv unit will be tripped at time "<<TIME<<" s.";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<"The given device is not a PV UNIT (it is a "<<gen_id.get_device_type()<<") for tripping pv unit."<<endl
+                <<"No pv unit will be tripped at time "<<TIME<<" s."<<endl;
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void DYNAMICS_SIMULATOR::shed_pv_unit(const DEVICE_ID& gen_id,double percent)
+{
+    ostringstream osstream;
+
+    if(gen_id.get_device_type()==STEPS_PV_UNIT)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        PV_UNIT* pv_unit = psdb.get_pv_unit(gen_id);
+        if(pv_unit!=NULL)
+        {
+            string busname = psdb.bus_number2bus_name(pv_unit->get_unit_bus());
+
+            if(fabs(percent)>DOUBLE_EPSILON)
+            {
+                if(percent==1.0)
+                {
+                    osstream<<pv_unit->get_compound_device_name()<<" is shed by "<<100.0<<"% at time "<<TIME<<" s."<<endl
+                            <<"PV unit is to be tripped.";
+                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    trip_pv_unit(gen_id);
+                }
+                else
+                {
+                    double mbase = pv_unit->get_mbase_in_MVA();
+                    osstream<<pv_unit->get_compound_device_name()<<" is shed by "<<percent*100.0<<"% at time "<<TIME<<" s."<<endl
+                            <<"MBASE is changed from "<<mbase<<" MVA to ";
+
+                    pv_unit->set_mbase_in_MVA(mbase*(1.0-percent));
+                    osstream<<pv_unit->get_mbase_in_MVA()<<" MVA.";
+                    toolkit->show_information_with_leading_time_stamp(osstream);
+                }
+            }
+            else
+            {
+                osstream<<"PV unit shed percent is 0.0 for "<<pv_unit->get_compound_device_name()<<endl
+                        <<"No PV unit will be shed at time "<<TIME<<" s."<<endl;
+                toolkit->show_information_with_leading_time_stamp(osstream);
+            }
+        }
+        else
+        {
+            osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist in power system database."<<endl
+                    <<"No PV unit will be shed at time "<<TIME<<" s.";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<"The given device is not a PV UNIT (it is a "<<gen_id.get_device_type()<<") for shedding PV unit."<<endl
+                <<"No PV unit will be shed at time "<<TIME<<" s."<<endl;
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void DYNAMICS_SIMULATOR::trip_energy_storage(const DEVICE_ID& gen_id)
+{
+    ostringstream osstream;
+
+    if(gen_id.get_device_type()==STEPS_ENERGY_STORAGE)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        ENERGY_STORAGE* energy_storage = psdb.get_energy_storage(gen_id);
+        if(energy_storage!=NULL)
+        {
+            string busname = psdb.bus_number2bus_name(energy_storage->get_energy_storage_bus());
+
+            if(energy_storage->get_status()==true)
+            {
+                energy_storage->set_status(false);
+
+                //network_matrix.build_dynamic_network_Y_matrix();
+                //build_jacobian();
+
+                osstream<<energy_storage->get_compound_device_name()<<" is tripped at time "<<TIME<<" s.";
+                toolkit->show_information_with_leading_time_stamp(osstream);
+            }
+        }
+        else
+        {
+            osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist in power system database."<<endl
+                    <<"No energy storage will be tripped at time "<<TIME<<" s.";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<"The given device is not a ENERGY STORAGE (it is a "<<gen_id.get_device_type()<<") for tripping energy storage."<<endl
+                <<"No energy storage will be tripped at time "<<TIME<<" s."<<endl;
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void DYNAMICS_SIMULATOR::shed_energy_storage(const DEVICE_ID& gen_id,double percent)
+{
+    ostringstream osstream;
+
+    if(gen_id.get_device_type()==STEPS_ENERGY_STORAGE)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        ENERGY_STORAGE* energy_storage = psdb.get_energy_storage(gen_id);
+        if(energy_storage!=NULL)
+        {
+            string busname = psdb.bus_number2bus_name(energy_storage->get_energy_storage_bus());
+
+            if(fabs(percent)>DOUBLE_EPSILON)
+            {
+                if(percent==1.0)
+                {
+                    osstream<<energy_storage->get_compound_device_name()<<" is shed by "<<100.0<<"% at time "<<TIME<<" s."<<endl
+                            <<"Energy storage is to be tripped.";
+                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    trip_energy_storage(gen_id);
+                }
+                else
+                {
+                    double mbase = energy_storage->get_mbase_in_MVA();
+                    osstream<<energy_storage->get_compound_device_name()<<" is shed by "<<percent*100.0<<"% at time "<<TIME<<" s."<<endl
+                            <<"MBASE is changed from "<<mbase<<" MVA to ";
+
+                    energy_storage->set_mbase_in_MVA(mbase*(1.0-percent));
+                    osstream<<energy_storage->get_mbase_in_MVA()<<" MVA.";
+                    toolkit->show_information_with_leading_time_stamp(osstream);
+                }
+            }
+            else
+            {
+                osstream<<"Energy storage shed percent is 0.0 for "<<energy_storage->get_compound_device_name()<<endl
+                        <<"No energy storage will be shed at time "<<TIME<<" s."<<endl;
+                toolkit->show_information_with_leading_time_stamp(osstream);
+            }
+        }
+        else
+        {
+            osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist in power system database."<<endl
+                    <<"No energy storage will be shed at time "<<TIME<<" s.";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<"The given device is not a ENERGY STORAGE (it is a "<<gen_id.get_device_type()<<") for shedding energy storage."<<endl
+                <<"No energy storage will be shed at time "<<TIME<<" s."<<endl;
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+}
+
 void DYNAMICS_SIMULATOR::trip_load(const DEVICE_ID& load_id)
 {
     ostringstream osstream;

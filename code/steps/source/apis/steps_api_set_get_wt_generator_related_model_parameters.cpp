@@ -59,6 +59,27 @@ const char* api_get_wt_generator_related_model_name(unsigned int bus, char* iden
 			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (model->get_model_name()).c_str());
 		return toolkit.steps_char_buffer;
     }
+    if(MODEL_TYPE=="WTVRT" or MODEL_TYPE=="WT VOLTAGE RIDE THROUGH")
+    {
+        WT_VRT_MODEL* model = generator->get_wt_vrt_model();
+        if(model!=NULL)
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (model->get_model_name()).c_str());
+		return toolkit.steps_char_buffer;
+    }
+    if(MODEL_TYPE=="WTRLY" or MODEL_TYPE=="WT RELAY")
+    {
+        WT_RELAY_MODEL* model = generator->get_wt_relay_model();
+        if(model!=NULL)
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (model->get_model_name()).c_str());
+		return toolkit.steps_char_buffer;
+    }
+    if(MODEL_TYPE=="WTDBR" or MODEL_TYPE=="WT DBR")
+    {
+        WT_DBR_MODEL* model = generator->get_wt_dbr_model();
+        if(model!=NULL)
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (model->get_model_name()).c_str());
+		return toolkit.steps_char_buffer;
+    }
     show_model_type_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
 	return toolkit.steps_char_buffer;
 }
@@ -121,6 +142,30 @@ double api_get_wt_generator_related_model_float_parameter(unsigned int bus, char
     if(MODEL_TYPE=="WINDSPD" or MODEL_TYPE=="WIND SPEED")
     {
         WIND_SPEED_MODEL* model = generator->get_wind_speed_model();
+        if(model!=NULL)
+            return model->get_model_data_with_name(PARAMETER_NAME);
+        else
+            return 0.0;
+    }
+    if(MODEL_TYPE=="WTVRT" or MODEL_TYPE=="WT VOLTAGE RIDE THROUGH")
+    {
+        WT_VRT_MODEL* model = generator->get_wt_vrt_model();
+        if(model!=NULL)
+            return model->get_model_data_with_name(PARAMETER_NAME);
+        else
+            return 0.0;
+    }
+    if(MODEL_TYPE=="WTRLY" or MODEL_TYPE=="WT RELAY")
+    {
+        WT_RELAY_MODEL* model = generator->get_wt_relay_model();
+        if(model!=NULL)
+            return model->get_model_data_with_name(PARAMETER_NAME);
+        else
+            return 0.0;
+    }
+    if(MODEL_TYPE=="WTDBR" or MODEL_TYPE=="WT DBR")
+    {
+        WT_DBR_MODEL* model = generator->get_wt_dbr_model();
         if(model!=NULL)
             return model->get_model_data_with_name(PARAMETER_NAME);
         else
@@ -192,6 +237,30 @@ void api_set_wt_generator_related_model_float_parameter(unsigned int bus, char* 
         else
             return;
     }
+    if(MODEL_TYPE=="WTVRT" or MODEL_TYPE=="WT VOLTAGE RIDE THROUGH")
+    {
+        WT_VRT_MODEL* model = generator->get_wt_vrt_model();
+        if(model!=NULL)
+            return model->set_model_data_with_name(PARAMETER_NAME, value);
+        else
+            return;
+    }
+    if(MODEL_TYPE=="WTRLY" or MODEL_TYPE=="WT RELAY")
+    {
+        WT_RELAY_MODEL* model = generator->get_wt_relay_model();
+        if(model!=NULL)
+            return model->set_model_data_with_name(PARAMETER_NAME, value);
+        else
+            return;
+    }
+    if(MODEL_TYPE=="WTDBR" or MODEL_TYPE=="WT DBR")
+    {
+        WT_DBR_MODEL* model = generator->get_wt_dbr_model();
+        if(model!=NULL)
+            return model->set_model_data_with_name(PARAMETER_NAME, value);
+        else
+            return;
+    }
     show_model_type_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
 }
 
@@ -251,6 +320,30 @@ unsigned int api_get_wt_generator_related_model_float_parameter_count(unsigned i
     if(MODEL_TYPE=="WINDSPD" or MODEL_TYPE=="WIND SPEED")
     {
         WIND_SPEED_MODEL* model = generator->get_wind_speed_model();
+        if(model!=NULL)
+            return model->get_model_float_parameter_count();
+        else
+            return 0;
+    }
+    if(MODEL_TYPE=="WTVRT" or MODEL_TYPE=="WT VOLTAGE RIDE THROUGH")
+    {
+        WT_VRT_MODEL* model = generator->get_wt_vrt_model();
+        if(model!=NULL)
+            return model->get_model_float_parameter_count();
+        else
+            return 0;
+    }
+    if(MODEL_TYPE=="WTRLY" or MODEL_TYPE=="WT RELAY")
+    {
+        WT_RELAY_MODEL* model = generator->get_wt_relay_model();
+        if(model!=NULL)
+            return model->get_model_float_parameter_count();
+        else
+            return 0;
+    }
+    if(MODEL_TYPE=="WTDBR" or MODEL_TYPE=="WT DBR")
+    {
+        WT_DBR_MODEL* model = generator->get_wt_dbr_model();
         if(model!=NULL)
             return model->get_model_float_parameter_count();
         else
@@ -317,6 +410,30 @@ const char* api_get_wt_generator_related_model_float_parameter_name(unsigned int
     if(MODEL_TYPE=="WINDSPD" or MODEL_TYPE=="WIND SPEED")
     {
         WIND_SPEED_MODEL* model = generator->get_wind_speed_model();
+        if(model!=NULL)
+            name = model->get_model_data_name(parameter_index);
+        snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+    if(MODEL_TYPE=="WTVRT" or MODEL_TYPE=="WT VOLTAGE RIDE THROUGH")
+    {
+        WT_VRT_MODEL* model = generator->get_wt_vrt_model();
+        if(model!=NULL)
+            name = model->get_model_data_name(parameter_index);
+        snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+    if(MODEL_TYPE=="WTRLY" or MODEL_TYPE=="WT RELAY")
+    {
+        WT_RELAY_MODEL* model = generator->get_wt_relay_model();
+        if(model!=NULL)
+            name = model->get_model_data_name(parameter_index);
+        snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+    if(MODEL_TYPE=="WTDBR" or MODEL_TYPE=="WT DBR")
+    {
+        WT_DBR_MODEL* model = generator->get_wt_dbr_model();
         if(model!=NULL)
             name = model->get_model_data_name(parameter_index);
         snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());

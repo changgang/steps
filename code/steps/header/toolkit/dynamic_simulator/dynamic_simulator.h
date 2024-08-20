@@ -166,6 +166,12 @@ class DYNAMICS_SIMULATOR
         void trip_wt_generator(const DEVICE_ID& gen_id);
         void shed_wt_generator(const DEVICE_ID& gen_id, double percent);
 
+        void trip_pv_unit(const DEVICE_ID& gen_id);
+        void shed_pv_unit(const DEVICE_ID& gen_id, double percent);
+
+        void trip_energy_storage(const DEVICE_ID& gen_id);
+        void shed_energy_storage(const DEVICE_ID& gen_id, double percent);
+
         void trip_load(const DEVICE_ID& load_id);
         void close_load(const DEVICE_ID& load_id);
         void scale_load(const DEVICE_ID& load_id, double percent);
@@ -237,6 +243,7 @@ class DYNAMICS_SIMULATOR
         void add_generators_to_bus_current_mismatch();
         void add_wt_generators_to_bus_current_mismatch();
         void add_pv_units_to_bus_current_mismatch();
+        void add_energy_storage_to_bus_current_mismatch();
         void add_loads_to_bus_current_mismatch();
         void add_2t_lcc_hvdcs_to_bus_current_mismatch();
         void add_vsc_hvdcs_to_bus_current_mismatch();

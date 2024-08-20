@@ -1,4 +1,4 @@
-#include "header/model/converter_common_models/vrt_model/vrt_relay_model.h"
+#include "header/model/converter_common_model/vrt_model/vrt_relay_model.h"
 #include "header/power_system_database.h"
 #include "header/basic/utility.h"
 #include <istream>

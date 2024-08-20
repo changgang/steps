@@ -26,10 +26,3 @@ double PV_IRRADIANCE_MODEL::get_initial_irradiance_in_Wpm2() const
     else
         return 0.0;
 }
-
-double PV_IRRADIANCE_MODEL::get_solar_irradiance_in_Wpm2()
-{
-    double irrd0 = get_initial_irradiance_in_Wpm2();
-    double irrd = get_solar_irradiance_in_pu();
-    return irrd*irrd0;
-}

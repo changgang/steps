@@ -1,4 +1,4 @@
-#include "header/model/converter_common_models/vrt_model/hvrt_control.h"
+#include "header/model/converter_common_model/vrt_model/hvrt_control.h"
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
 #include "header/basic/utility.h"
@@ -375,7 +375,7 @@ void HVRT_CONTROL::check_when_vrt_in_normal_status()
 
         ostringstream osstream;
         osstream<<"LVRT status of "<<get_compound_device_name()<<" is changed from "
-                <<" VRT_NORMAL_STATUS to VRT_DURING_STATUS at time "<<time<<" s since V is "<<v<<"(>"<<vth<<")";;
+                <<" VRT_NORMAL_STATUS to VRT_DURING_STATUS at time "<<time<<" s since V is "<<v<<"(>"<<vth<<").";;
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -397,7 +397,7 @@ void HVRT_CONTROL::check_when_vrt_in_during_status()
             start_vrt_prepare2recover_timer();
 
             osstream<<"LVRT status of "<<get_compound_device_name()<<" is changed from "
-                    <<" VRT_DURING_STATUS to VRT_PREPARE2RECOVER_STATUS at time "<<time<<" s since V is "<<v<<"(<"<<vth<<")";
+                    <<" VRT_DURING_STATUS to VRT_PREPARE2RECOVER_STATUS at time "<<time<<" s since V is "<<v<<"(<"<<vth<<").";
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
         else
@@ -438,7 +438,7 @@ void HVRT_CONTROL::check_when_vrt_in_prepare2recover_status()
         reset_vrt_prepare2recover_timer();
 
         osstream<<"LVRT status of "<<get_compound_device_name()<<" is changed from "
-                <<" VRT_PREPARE2RECOVER_STATUS to VRT_DURING_STATUS at time "<<time<<" s since V is "<<v<<"(>"<<vth<<")";
+                <<" VRT_PREPARE2RECOVER_STATUS to VRT_DURING_STATUS at time "<<time<<" s since V is "<<v<<"(>"<<vth<<").";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
     else
@@ -475,7 +475,7 @@ void HVRT_CONTROL::check_when_vrt_in_recover_status()
         set_time_when_vrt_enter_recover_status(INFINITE_THRESHOLD);
 
         osstream<<"LVRT status of "<<get_compound_device_name()<<" is changed from "
-                <<" VRT_RECOVER_STATUS to VRT_DURING_STATUS at time "<<time<<" s since V is "<<v<<"(>"<<vth<<")";
+                <<" VRT_RECOVER_STATUS to VRT_DURING_STATUS at time "<<time<<" s since V is "<<v<<"(>"<<vth<<").";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
     else

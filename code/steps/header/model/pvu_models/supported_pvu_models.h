@@ -7,5 +7,6 @@
 #include "header/model/pvu_models/pv_irradiance_model/pv_irradiance_models.h"
 #include "header/model/pvu_models/pv_vrt_model/pv_vrt_models.h"
 #include "header/model/pvu_models/pv_relay_model/pv_relay_models.h"
+#include "header/model/pvu_models/pv_temperature_model/pv_temperature_models.h"
 
 #endif // SUPPORTED_PVU_MODELS_H

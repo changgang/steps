@@ -7,11 +7,7 @@
 using namespace std;
 
 WT3G2::WT3G2(STEPS& toolkit) : WT_GENERATOR_MODEL(toolkit),
-                               active_current_commander(toolkit),
-                               LVPL_voltage_sensor(toolkit),
-                               reactive_voltage_commander(toolkit),
-                               PLL_frequency_integrator(toolkit),
-                               PLL_angle_integrator(toolkit)
+                               csconv2(toolkit)
 {
     clear();
 }
@@ -26,34 +22,20 @@ void WT3G2::clear()
 
     set_current_source_flag(true);
 
-    active_current_commander.set_limiter_type(NO_LIMITER);
-
-    reactive_voltage_commander.set_limiter_type(NO_LIMITER);
-    reactive_voltage_commander.set_K(1.0);
-
-    PLL_frequency_integrator.set_limiter_type(NON_WINDUP_LIMITER);
-
-    PLL_angle_integrator.set_limiter_type(NO_LIMITER);
-
-    LVPL_voltage_sensor.set_limiter_type(NO_LIMITER);
-    LVPL_voltage_sensor.set_K(1.0);
+    csconv2.clear();
+    csconv2.set_model_name(get_model_name());
 }
 
 void WT3G2::copy_from_const_model(const WT3G2& model)
 {
     STEPS& toolkit = model.get_toolkit();
     set_toolkit(toolkit);
-    active_current_commander.set_toolkit(toolkit);
-    LVPL_voltage_sensor.set_toolkit(toolkit);
-    reactive_voltage_commander.set_toolkit(toolkit);
-    PLL_frequency_integrator.set_toolkit(toolkit);
-    PLL_angle_integrator.set_toolkit(toolkit);
+    csconv2.set_toolkit(toolkit);
 
     clear();
     set_converter_activer_current_command_T_in_s(model.get_converter_activer_current_command_T_in_s());
     set_LVPL_max_rate_of_active_current_change(model.get_LVPL_max_rate_of_active_current_change());
     set_LVPL_voltage_sensor_T_in_s(model.get_LVPL_voltage_sensor_T_in_s());
-    set_LVPL(model.get_LVPL());
 
     set_converter_reactiver_voltage_command_T_in_s(model.get_converter_reactiver_voltage_command_T_in_s());
     set_HVRC_voltage_in_pu(model.get_HVRC_voltage_in_pu());
@@ -65,11 +47,7 @@ void WT3G2::copy_from_const_model(const WT3G2& model)
 }
 
 WT3G2::WT3G2(const WT3G2& model):WT_GENERATOR_MODEL(model.get_toolkit()),
-                                 active_current_commander(model.get_toolkit()),
-                                 LVPL_voltage_sensor(model.get_toolkit()),
-                                 reactive_voltage_commander(model.get_toolkit()),
-                                 PLL_frequency_integrator(model.get_toolkit()),
-                                 PLL_angle_integrator(model.get_toolkit())
+                                csconv2(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -86,106 +64,124 @@ WT3G2& WT3G2::operator=(const WT3G2& model)
 
 void WT3G2::set_converter_activer_current_command_T_in_s(double t)
 {
-    active_current_commander.set_T_in_s(t);
+    csconv2.set_converter_activer_current_command_T_in_s(t);
 }
 
 void WT3G2::set_converter_reactiver_voltage_command_T_in_s(double t)
 {
-    reactive_voltage_commander.set_T_in_s(t);
+    csconv2.set_converter_reactiver_voltage_command_T_in_s(t);
 }
 
 void WT3G2::set_KPLL(double K)
 {
-    KPLL = K;
+    csconv2.set_KPLL(K);
 }
 
 void WT3G2::set_KIPLL(double K)
 {
-    KIPLL = K;
-    if(K!=0) PLL_frequency_integrator.set_T_in_s(1.0/K);
+    csconv2.set_KIPLL(K);
 }
 
 void WT3G2::set_PLLmax(double pmax)
 {
-    PLL_frequency_integrator.set_upper_limit(pmax);
-    PLL_frequency_integrator.set_lower_limit(-pmax);
-}
-
-void WT3G2::set_LVPL(const LVPL& lvpl)
-{
-    this->lvpl = lvpl;
+    csconv2.set_PLLmax(pmax);
+    csconv2.set_PLLmin(-pmax);
 }
 
 void WT3G2::set_HVRC_voltage_in_pu(double v)
 {
-    HVRCR_voltage = v;
+    csconv2.set_HVRC_voltage_in_pu(v);
 }
 
 void WT3G2::set_HVRC_current_in_pu(double i)
 {
-    HVRCR_current = i;
+    csconv2.set_HVRC_current_in_pu(i);
 }
 
 void WT3G2::set_LVPL_max_rate_of_active_current_change(double rate)
 {
-    LVPL_active_power_change_rate = rate;
+    csconv2.set_LVPL_max_rate_of_active_current_change(rate);
 }
 
 void WT3G2::set_LVPL_voltage_sensor_T_in_s(double t)
 {
-    LVPL_voltage_sensor.set_T_in_s(t);
+    csconv2.set_LVPL_voltage_sensor_T_in_s(t);
+}
+
+void WT3G2::set_LVPL_low_voltage_in_pu(double v)
+{
+    csconv2.set_LVPL_low_voltage_in_pu(v);
+}
+
+void WT3G2::set_LVPL_high_voltage_in_pu(double v)
+{
+    csconv2.set_LVPL_high_voltage_in_pu(v);
+}
+
+void WT3G2::set_LVPL_gain_at_high_voltage(double k)
+{
+    csconv2.set_LVPL_gain_at_high_voltage(k);
 }
 
 double WT3G2::get_converter_activer_current_command_T_in_s() const
 {
-    return active_current_commander.get_T_in_s();
+    return csconv2.get_converter_activer_current_command_T_in_s();
 }
 
 double WT3G2::get_converter_reactiver_voltage_command_T_in_s() const
 {
-    return reactive_voltage_commander.get_T_in_s();
+    return csconv2.get_converter_reactiver_voltage_command_T_in_s();
 }
 
 double WT3G2::get_KPLL() const
 {
-    return KPLL;
+    return csconv2.get_KPLL();
 }
 
 double WT3G2::get_KIPLL() const
 {
-    return KIPLL;
+    return csconv2.get_KIPLL();
 }
 
 double WT3G2::get_PLLmax() const
 {
-    return PLL_frequency_integrator.get_upper_limit();
-}
-
-LVPL WT3G2::get_LVPL() const
-{
-    return lvpl;
+    return csconv2.get_PLLmax();
 }
 
 double WT3G2::get_HVRC_voltage_in_pu() const
 {
-    return HVRCR_voltage;
+    return csconv2.get_HVRC_voltage_in_pu();
 }
 
 double WT3G2::get_HVRC_current_in_pu() const
 {
-    return HVRCR_current;
+    return csconv2.get_HVRC_current_in_pu();
 }
 
 double WT3G2::get_LVPL_max_rate_of_active_current_change() const
 {
-    return LVPL_active_power_change_rate;
+    return csconv2.get_LVPL_max_rate_of_active_current_change();
 }
 
 double WT3G2::get_LVPL_voltage_sensor_T_in_s() const
 {
-    return LVPL_voltage_sensor.get_T_in_s();
+    return csconv2.get_LVPL_voltage_sensor_T_in_s();
 }
 
+double WT3G2::get_LVPL_low_voltage_in_pu() const
+{
+    return csconv2.get_LVPL_low_voltage_in_pu();
+}
+
+double WT3G2::get_LVPL_high_voltage_in_pu() const
+{
+    return csconv2.get_LVPL_high_voltage_in_pu();
+}
+
+double WT3G2::get_LVPL_gain_at_high_voltage() const
+{
+    return csconv2.get_LVPL_gain_at_high_voltage();
+}
 
 string WT3G2::get_model_name() const
 {
@@ -252,11 +248,9 @@ bool WT3G2::setup_model_with_steps_string_vector(vector<string>& data)
                 set_converter_activer_current_command_T_in_s(t_IPcmd);
                 set_LVPL_max_rate_of_active_current_change(lvpl_rate);
                 set_LVPL_voltage_sensor_T_in_s(t_lvpl);
-                LVPL lvpl;
-                lvpl.set_low_voltage_in_pu(lvpl_v1);
-                lvpl.set_high_voltage_in_pu(lvpl_v2);
-                lvpl.set_gain_at_high_voltage(lvpl_g);
-                set_LVPL(lvpl);
+                set_LVPL_low_voltage_in_pu(lvpl_v1);
+                set_LVPL_high_voltage_in_pu(lvpl_v2);
+                set_LVPL_gain_at_high_voltage(lvpl_g);
 
                 set_converter_reactiver_voltage_command_T_in_s(t_EQcmd);
                 set_HVRC_voltage_in_pu(hvrc_v);
@@ -306,6 +300,8 @@ bool WT3G2::setup_model_with_bpa_string(string data)
 
 void WT3G2::setup_block_toolkit_and_parameters()
 {
+    csconv2.set_bus_pointer(get_bus_pointer());
+    csconv2.set_device_pointer(get_device_pointer());
 }
 
 void WT3G2::initialize()
@@ -314,61 +310,21 @@ void WT3G2::initialize()
     ostringstream osstream;
     if(not is_model_initialized())
     {
+
         WT_GENERATOR* wt_generator = get_wt_generator_pointer();
         setup_block_toolkit_and_parameters();
-
         unsigned int n_lumped = get_number_of_lumped_wt_generators();
-        double fbase = get_bus_base_frequency_in_Hz();
-        double wbase = DOUBLE_PI*fbase;
-
-        PLL_angle_integrator.set_T_in_s(1.0/wbase);
-
         double mbase = get_mbase_in_MVA();
         mbase /= n_lumped;
-
-        complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
-        double xeq = Zsource.imag();
-
         double P = wt_generator->get_p_generation_in_MW()/n_lumped;
         double Q = wt_generator->get_q_generation_in_MVar()/n_lumped;
-        complex<double> S(P/mbase,Q/mbase);
-
-
-        complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-        double V = get_terminal_voltage_in_pu();
-        double angle_in_rad = get_terminal_voltage_angle_in_rad();
-        // ignore voltage angle
-        complex<double> Ixy = conj(S/Vxy);
-        double Ix = Ixy.real();
-        double Iy = Ixy.imag();
-
-        double sine = steps_sin(angle_in_rad), cosine = steps_cos(angle_in_rad);
-        double IP = Ix*cosine + Iy*sine;
-        double IQ =-Ix*sine + Iy*cosine;
-
-        double EQ = IQ*(-xeq);
-
-        active_current_commander.set_output(IP);
-        active_current_commander.initialize();
-        set_initial_active_current_command_in_pu_based_on_mbase(IP);
-
-        reactive_voltage_commander.set_output(EQ);
-        reactive_voltage_commander.initialize();
-        set_initial_reactive_voltage_command_in_pu(EQ);
-        set_initial_reactive_current_command_in_pu_based_on_mbase(IQ);
-
-        double kipll = get_KIPLL();
-        if(kipll!=0.0)
-        {
-            PLL_frequency_integrator.set_output(0.0);
-            PLL_frequency_integrator.initialize();
-        }
-
-        PLL_angle_integrator.set_output(angle_in_rad);
-        PLL_angle_integrator.initialize();
-
-        LVPL_voltage_sensor.set_output(V);
-        LVPL_voltage_sensor.initialize();
+        P /= mbase;
+        Q /= mbase;
+        complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
+        csconv2.set_initial_P_generation_in_pu(P);
+        csconv2.set_initial_Q_generation_in_pu(Q);
+        csconv2.set_source_impedance_in_pu_based_on_mbase(Zsource);
+        csconv2.initialize();
 
         set_flag_model_initialized_as_true();
 
@@ -379,11 +335,11 @@ void WT3G2::initialize()
                     <<"(2) Initial reactive current command = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
                     <<"(3) Initial reactive voltage command = "<<get_initial_reactive_voltage_command_in_pu()<<endl
                     <<"(4) States of blocks"<<endl
-                    <<"    active_current_commander block state: "<<active_current_commander.get_state()<<endl
-                    <<"    reactive_voltage_commander block state: "<<reactive_voltage_commander.get_state()<<endl
-                    <<"    PLL_frequency_integrator block state: "<<PLL_frequency_integrator.get_state()<<endl
-                    <<"    PLL_angle_integrator block state: "<<PLL_angle_integrator.get_state()<<endl
-                    <<"    LVPL_voltage_sensor block state: "<<LVPL_voltage_sensor.get_state()<<endl
+                    <<"    active_current_commander block state: "<<csconv2.get_active_current_commander_state()<<endl
+                    <<"    reactive_voltage_commander block state: "<<csconv2.get_reactive_voltage_commander_state()<<endl
+                    <<"    PLL_frequency_integrator block state: "<<csconv2.get_PLL_frequency_integrator_state()<<endl
+                    <<"    PLL_angle_integrator block state: "<<csconv2.get_PLL_angle_integrator_state()<<endl
+                    <<"    LVPL_voltage_sensor block state: "<<csconv2.get_LVPL_voltage_sensor_state()<<endl
                     <<"(5) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
                     <<"(6) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
                     <<"(7) terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu";
@@ -394,159 +350,59 @@ void WT3G2::initialize()
 
 void WT3G2::run(DYNAMIC_MODE mode)
 {
-    double fbase = get_bus_base_frequency_in_Hz();
-    double wbase = DOUBLE_PI*fbase;
-
-    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-    double V = get_terminal_voltage_in_pu();
-    double angle_in_rad = get_terminal_voltage_angle_in_rad();
-    double angle_in_deg = rad2deg(angle_in_rad);
-
-    LVPL_voltage_sensor.set_input(V);
-    LVPL_voltage_sensor.run(mode);
-
-    double lvpl_order = lvpl.get_LVPL_order(LVPL_voltage_sensor.get_output());
-
-    double IP = get_active_current_command_in_pu_based_on_mbase();
-
-    double input = active_current_commander.get_output();
-    if(input>lvpl_order)
-        input = lvpl_order;
-
-    input = IP - input;
-    double lvpl_rate_max = get_LVPL_max_rate_of_active_current_change();
-    if(input>lvpl_rate_max)
-        input = lvpl_rate_max;
-
-    active_current_commander.set_input(input);
-    active_current_commander.run(mode);
-
-    double EQ = get_reactive_voltage_command_in_pu();
-
-    reactive_voltage_commander.set_input(EQ);
-    reactive_voltage_commander.run(mode);
-
-    double kpll = get_KPLL();
-    double kipll = get_KIPLL();
-    if(kpll!=0.0 or kipll!=0.0)
-    {
-        double Vr = Vxy.real();
-        double Vi = Vxy.imag();
-
-        double angle = get_pll_angle_in_rad();
-        double Vy = -Vr*steps_sin(angle)+Vi*steps_cos(angle);
-
-        input = Vy*kpll/wbase;
-        if(kipll!=0)
-        {
-            PLL_frequency_integrator.set_input(input);
-            PLL_frequency_integrator.run(mode);
-
-            double output = PLL_frequency_integrator.get_output();
-            input += output;
-        }
-
-        double pllmax = get_PLLmax();
-        if(input>=-pllmax and input<=pllmax)
-            ;
-        else
-        {
-            if(input>pllmax)
-                input = pllmax;
-            else
-                input = -pllmax;
-        }
-
-        PLL_angle_integrator.set_input(input);
-        PLL_angle_integrator.run(mode);
-    }
-    else
-    {
-        set_pll_angle_in_deg(angle_in_deg);
-    }
-
+    double Ipcmd = get_active_current_command_in_pu_based_on_mbase();
+    double Eqcmd = get_reactive_voltage_command_in_pu();
+    csconv2.set_Ipcmd_in_pu_based_on_mbase(Ipcmd);
+    csconv2.set_Eqcmd_in_pu(Eqcmd);
+    csconv2.run(mode);
     if(mode==DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 
-complex<double> WT3G2::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase()
-{
-    STEPS& toolkit = get_toolkit();
-    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
-    double mbase = get_mbase_in_MVA();
-
-    double V = get_terminal_voltage_in_pu();
-
-    complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
-    double Xeq = Zsource.imag();
-
-    // low voltage active current logic
-    double V_LVACR_high = V;
-    double V_LVACR_low = 0.4;
-    if(V<=V_LVACR_low)
-        V_LVACR_low = V;
-    if(V<=0.8)
-        V_LVACR_high = 0.8;
-
-    double Ip = active_current_commander.get_output();
-
-    double lvpl_order = lvpl.get_LVPL_order(LVPL_voltage_sensor.get_output());
-    if(Ip>lvpl_order)
-        Ip =lvpl_order;
-    Ip = Ip*(V-V_LVACR_low)/(V_LVACR_high-V_LVACR_low);
-
-    // high voltage reactive current logic
-    /*double v_hvrc = get_HVRC_voltage_in_pu();
-    double overvoltage_correction_factor = 0.0;
-    if(V>=v_hvrc)
-        overvoltage_correction_factor=0.7*(V-v_hvrc);
-
-
-    double Iq = -reactive_voltage_commander.get_output()/Xeq + overvoltage_correction_factor/V;*/
-    double Iq = -reactive_voltage_commander.get_output()/Xeq;
-    double hvrc_i = get_HVRC_current_in_pu();
-    if(Iq<-hvrc_i)
-        Iq = -hvrc_i;
-
-    double pll_angle = get_pll_angle_in_rad();
-
-    double sine = steps_sin(pll_angle), cosine = steps_cos(pll_angle);
-    double Ix = Ip*cosine - Iq*sine;
-    double Iy = Ip*sine + Iq*cosine;
-
-    complex<double> Ixy(Ix, Iy);
-    //cout<<"Norton Ixy based on mbase = "<<Ixy<<endl;
-
-    return Ixy*(mbase*one_over_sbase);
-}
-
 complex<double> WT3G2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase()
 {
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double sbase = psdb.get_system_base_power_in_MVA();
-    double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
-    complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
-    return Ixy*(sbase*one_over_mbase);
+    return csconv2.get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
 }
 
-complex<double> WT3G2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase()
+double WT3G2::get_active_power_generation_including_stator_loss_in_pu_based_on_mbase()
 {
-    complex<double> Ixy_norton = get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
-    complex<double> Ixy_term = Ixy_norton;
-    return Ixy_term;
+    return csconv2.get_active_power_generation_including_stator_loss_in_pu_based_on_mbase();
 }
 
-double WT3G2::get_terminal_current_in_pu_based_on_mbase()
+complex<double> WT3G2::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_mbase()
 {
-    return steps_fast_complex_abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase());
+    return csconv2.get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_mbase();
 }
 
-double WT3G2::get_terminal_current_in_pu_based_on_sbase()
+complex<double> WT3G2::get_internal_voltage_in_pu_in_xy_axis()
 {
-    return steps_fast_complex_abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase());
+    return csconv2.get_internal_voltage_in_pu_in_xy_axis();
 }
 
+double WT3G2::get_initial_active_current_command_in_pu_based_on_mbase() const
+{
+    return csconv2.get_initial_active_current_command_in_pu_based_on_mbase();
+}
+
+double WT3G2::get_initial_reactive_current_command_in_pu_based_on_mbase() const
+{
+    return csconv2.get_initial_reactive_current_command_in_pu_based_on_mbase();
+}
+
+double WT3G2::get_initial_reactive_voltage_command_in_pu() const
+{
+    return csconv2.get_initial_reactive_voltage_command_in_pu();
+}
+
+double WT3G2::get_initial_active_power_command_in_pu_based_on_mbase() const
+{
+    return csconv2.get_initial_active_power_command_in_pu_based_on_mbase();
+}
+
+double WT3G2::get_initial_reactive_power_command_in_pu_based_on_mbase() const
+{
+    return csconv2.get_initial_reactive_power_command_in_pu_based_on_mbase();
+}
 
 void WT3G2::check()
 {
@@ -575,7 +431,6 @@ string WT3G2::get_standard_psse_string(bool export_internal_bus_number) const
 
     string model_name = "'"+get_model_name()+"'";
 
-    LVPL lvpl = get_LVPL();
 
     STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network = toolkit.get_network_matrix();
@@ -593,9 +448,9 @@ string WT3G2::get_standard_psse_string(bool export_internal_bus_number) const
             <<setw(8)<<setprecision(6)<<get_PLLmax()<<", "
             <<setw(8)<<setprecision(6)<<get_rated_power_per_wt_generator_in_MW()<<", \n"
             <<setw(10)<<""
-            <<setw(8)<<setprecision(6)<<lvpl.get_low_voltage_in_pu()<<", "
-            <<setw(8)<<setprecision(6)<<lvpl.get_high_voltage_in_pu()<<", "
-            <<setw(8)<<setprecision(6)<<lvpl.get_gain_at_hig_voltage()<<", "
+            <<setw(8)<<setprecision(6)<<get_LVPL_low_voltage_in_pu()<<", "
+            <<setw(8)<<setprecision(6)<<get_LVPL_high_voltage_in_pu()<<", "
+            <<setw(8)<<setprecision(6)<<get_LVPL_gain_at_high_voltage()<<", "
             <<setw(8)<<setprecision(6)<<get_HVRC_voltage_in_pu()<<", "
             <<setw(8)<<setprecision(6)<<get_HVRC_current_in_pu()<<", "
             <<setw(8)<<setprecision(6)<<get_LVPL_max_rate_of_active_current_change()<<", "
@@ -608,7 +463,6 @@ void WT3G2::prepare_model_data_table()
 {
     clear_model_data_table();
     unsigned int i=0;
-    LVPL lvpl = get_LVPL();
     add_model_data_name_and_index_pair("N", i); i++;
     add_model_data_name_and_index_pair("TV", i); i++;
     add_model_data_name_and_index_pair("TI", i); i++;
@@ -630,7 +484,6 @@ double WT3G2::get_model_data_with_name(string par_name) const
     par_name = string2upper(par_name);
     if(par_name=="N")
         return get_number_of_lumped_wt_generators();
-    LVPL lvpl = get_LVPL();
     if(par_name=="TV")
         return get_converter_reactiver_voltage_command_T_in_s();
     if(par_name=="TI")
@@ -644,11 +497,11 @@ double WT3G2::get_model_data_with_name(string par_name) const
     if(par_name=="PN")
         return get_rated_power_per_wt_generator_in_MW();
     if(par_name=="VL LVPL")
-        return lvpl.get_low_voltage_in_pu();
+        return get_LVPL_low_voltage_in_pu();
     if(par_name=="VH LVPL")
-        return lvpl.get_high_voltage_in_pu();
+        return get_LVPL_high_voltage_in_pu();
     if(par_name=="G LVPL")
-        return lvpl.get_gain_at_hig_voltage();
+        return get_LVPL_gain_at_high_voltage();
     if(par_name=="V HVRC")
         return get_HVRC_voltage_in_pu();
     if(par_name=="C HVRC")
@@ -685,11 +538,11 @@ void WT3G2::set_model_data_with_name(string par_name, double value)
         return gen->set_rated_power_per_wt_generator_in_MW(value);
     }
     if(par_name=="VL LVPL")
-        return;
+        return set_LVPL_low_voltage_in_pu(value);
     if(par_name=="VH LVPL")
-        return;
+        return set_LVPL_high_voltage_in_pu(value);
     if(par_name=="G LVPL")
-        return;
+        return set_LVPL_gain_at_high_voltage(value);
     if(par_name=="V HVRC")
         return set_HVRC_voltage_in_pu(value);
     if(par_name=="C HVRC")
@@ -719,6 +572,7 @@ void WT3G2::prepare_model_internal_variable_table()
     clear_model_internal_variable_table();
     unsigned int i=0;
     add_model_internal_variable_name_and_index_pair("PLL ANGLE IN DEG", i); i++;
+    add_model_internal_variable_name_and_index_pair("PLL ANGLE IN RAD", i); i++;
     add_model_internal_variable_name_and_index_pair("STATE@ACTIVE CURRENT COMMAND BLOCK", i); i++;
     add_model_internal_variable_name_and_index_pair("STATE@REACTIVE VOLTAGE COMMAND BLOCK", i); i++;
     add_model_internal_variable_name_and_index_pair("STATE@PLL FREQUENCY BLOCK", i); i++;
@@ -731,153 +585,51 @@ double WT3G2::get_model_internal_variable_with_name(string var_name)
     var_name = string2upper(var_name);
     if(var_name == "PLL ANGLE IN DEG")
         return get_pll_angle_in_deg();
+    if(var_name == "PLL ANGLE IN RAD")
+        return get_pll_angle_in_rad();
     if(var_name == "STATE@ACTIVE CURRENT COMMAND BLOCK")
-        return active_current_commander.get_state();
+        return csconv2.get_active_current_commander_state();
     if(var_name == "STATE@REACTIVE VOLTAGE COMMAND BLOCK")
-        return reactive_voltage_commander.get_state();
+        return csconv2.get_reactive_voltage_commander_state();
     if(var_name == "STATE@PLL FREQUENCY BLOCK")
-        return PLL_frequency_integrator.get_state();
+        return csconv2.get_PLL_frequency_integrator_state();
     if(var_name == "STATE@PLL ANGLE BLOCK")
-        return PLL_angle_integrator.get_state();
+        return csconv2.get_PLL_angle_integrator_state();
     if(var_name == "STATE@LVPL VOLTAGE SENSOR")
-        return LVPL_voltage_sensor.get_state();
+        return csconv2.get_PLL_angle_integrator_state();
 
     return 0.0;
 }
 
-complex<double> WT3G2::get_terminal_complex_power_in_pu_based_on_mbase()
-{
-    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-    complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
-
-    complex<double> S = Vxy*conj(Ixy);
-    return S;
-}
-
-complex<double> WT3G2::get_terminal_complex_power_in_MVA()
-{
-    return get_terminal_complex_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
-}
-
-double WT3G2::get_terminal_active_power_in_pu_based_on_mbase()
-{
-    return get_terminal_complex_power_in_pu_based_on_mbase().real();
-}
-
-double WT3G2::get_terminal_active_power_in_MW()
-{
-    return get_terminal_complex_power_in_MVA().real();
-}
-
-double WT3G2::get_terminal_reactive_power_in_pu_based_on_mbase()
-{
-    return get_terminal_complex_power_in_pu_based_on_mbase().imag();
-}
-
-double WT3G2::get_terminal_reactive_power_in_MVar()
-{
-    return get_terminal_complex_power_in_MVA().imag();
-}
-
-double WT3G2::get_active_power_generation_including_stator_loss_in_pu_based_on_mbase()
-{
-    return get_active_power_generation_including_stator_loss_in_MW()/get_mbase_in_MVA();
-}
-
-double WT3G2::get_active_power_generation_including_stator_loss_in_MW()
-{
-    double pterm = get_terminal_active_power_in_MW();
-    double rsource = get_source_impedance_in_pu_based_on_mbase().real();
-    double iterm = steps_fast_complex_abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase());
-    double mbase = get_mbase_in_MVA();
-
-    return pterm+rsource*iterm*iterm*mbase;
-}
-
 double WT3G2::get_pll_angle_in_rad()
 {
-    double kpll = get_KPLL();
-    double kipll = get_KIPLL();
-    if(kpll!=0.0 or kipll!=0.0)
-        return PLL_angle_integrator.get_output();
-    else
-        return get_terminal_voltage_angle_in_rad();
+    return csconv2.get_pll_angle_in_rad();
 }
 
 double WT3G2::get_pll_angle_in_deg()
 {
-    return rad2deg(get_pll_angle_in_rad());
-}
-
-double WT3G2::get_pll_frequency_deviation_in_pu()
-{
-    double fbase = get_bus_base_frequency_in_Hz();
-    double wbase = DOUBLE_PI*fbase;
-
-    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-
-    double kpll = get_KPLL();
-    double kipll = get_KIPLL();
-    if(kpll!=0.0 or kipll!=0.0)
-    {
-        double Vr = Vxy.real();
-        double Vi = Vxy.imag();
-
-        double angle = get_pll_angle_in_rad();
-        double Vy = -Vr*steps_sin(angle)+Vi*steps_cos(angle);
-
-        double input = Vy*kpll/wbase;
-
-        double output = PLL_frequency_integrator.get_output();
-
-        return input+output;
-    }
-    else
-        return 0.0;
+    return csconv2.get_pll_angle_in_deg();
 }
 
 double WT3G2::get_pll_frequency_deviation_in_Hz()
 {
-    double fbase = get_bus_base_frequency_in_Hz();
+    return csconv2.get_pll_frequency_deviation_in_Hz();
+}
 
-    return fbase*get_pll_frequency_deviation_in_pu();
+double WT3G2::get_pll_frequency_deviation_in_pu()
+{
+    return csconv2.get_pll_frequency_deviation_in_pu();
 }
 
 double WT3G2::get_pll_frequency_in_pu()
 {
-    return 1.0+get_pll_frequency_deviation_in_pu();
+    return csconv2.get_pll_frequency_in_pu();
 }
 
 double WT3G2::get_pll_frequency_in_Hz()
 {
-    double fbase = get_bus_base_frequency_in_Hz();
-
-    return fbase*get_pll_frequency_in_pu();
+    return csconv2.get_pll_frequency_in_Hz();
 }
-
-complex<double> WT3G2::get_internal_voltage_in_pu_in_xy_axis()
-{
-    complex<double> Ixy = get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
-    complex<double> Z = get_source_impedance_in_pu_based_on_mbase();
-
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double sbase = psdb.get_system_base_power_in_MVA();
-    double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
-
-    Z *= (one_over_mbase*sbase);
-
-    return Ixy*Z;
-}
-
-
-
-void WT3G2::set_pll_angle_in_deg(double angle)
-{
-    PLL_angle_integrator.set_output(deg2rad(angle));
-    PLL_angle_integrator.initialize();// the initialize function is used to update STORE
-}
-
 
 string WT3G2::get_dynamic_data_in_psse_format() const
 {

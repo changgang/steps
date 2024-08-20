@@ -102,7 +102,10 @@ void FILEWIND::load_wind_speed_from_file()
         unsigned int n = 0;
         while(true)
         {
-            getline(fid, data);
+            if(getline(fid, data))
+                ;
+            else
+                break;
             if(data.size()<3)
                 break;
             data = trim_string(data);

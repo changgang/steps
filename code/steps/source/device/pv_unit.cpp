@@ -28,6 +28,7 @@ void PV_UNIT::clear()
     pv_irradiance_model = NULL;
     pv_vrt_model = NULL;
     pv_relay_model = NULL;
+    pv_temperature_model = NULL;
 
     set_positive_sequence_resistance_in_pu(0.0);
     set_positive_sequence_reactance_in_pu(0.0);
@@ -100,6 +101,7 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
         PV_IRRADIANCE_MODEL* irrd = get_pv_irradiance_model();
         PV_VRT_MODEL* vrt = get_pv_vrt_model();
         PV_RELAY_MODEL* relay = get_pv_relay_model();
+        PV_TEMPERATURE_MODEL* temp = get_pv_temperature_model();
 
         switch(mode)
         {
@@ -114,8 +116,17 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
                     return;
                 }
 
+                if(temp!=NULL and temp->is_model_active())
+                    temp->initialize();
+
                 if(panel!=NULL and panel->is_model_active())
                     panel->initialize();
+                else
+                {
+                    osstream<<"Error. No PV PANEL model is provided for "<<get_compound_device_name()<<" for dynamic initialization.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    return;
+                }
 
                 if(irrd!=NULL and irrd->is_model_active())
                     irrd->initialize();
@@ -153,8 +164,7 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
                     }
                 }
 
-                if(irrd!=NULL and irrd->is_model_active())
-                    irrd->run(mode);
+                //temp and irrd model not necessary run
 
                 if(panel!=NULL and panel->is_model_active())
                     panel->run(mode);
@@ -229,6 +239,12 @@ void PV_UNIT::set_model(MODEL* model)
             return;
         }
 
+        if(model->get_model_type()=="PV TEMPERATURE")
+        {
+            set_pv_temperature_model((PV_TEMPERATURE_MODEL*) model);
+            return;
+        }
+
         if(model->get_model_type()=="PV VRT")
         {
             set_pv_vrt_model((PV_VRT_MODEL*) model);
@@ -259,6 +275,8 @@ MODEL* PV_UNIT::get_model_of_type(string model_type, unsigned int index)
         return get_pv_electrical_model();
     if(model_type=="PV IRRADIANCE")
         return get_pv_irradiance_model();
+    if(model_type=="PV TEMPERATURE")
+        return get_pv_temperature_model();
     if(model_type=="PV VRT")
         return get_pv_vrt_model();
     if(model_type=="PV RELAY")
@@ -288,6 +306,12 @@ void PV_UNIT::set_pv_irradiance_model(PV_IRRADIANCE_MODEL* model)
 {
     if(model!=NULL)
         pv_irradiance_model = model;
+}
+
+void PV_UNIT::set_pv_temperature_model(PV_TEMPERATURE_MODEL* model)
+{
+    if(model!=NULL)
+        pv_temperature_model = model;
 }
 
 void PV_UNIT::set_pv_vrt_model(PV_VRT_MODEL* model)
@@ -320,6 +344,11 @@ PV_ELECTRICAL_MODEL* PV_UNIT::get_pv_electrical_model() const
 PV_IRRADIANCE_MODEL* PV_UNIT::get_pv_irradiance_model() const
 {
     return pv_irradiance_model;
+}
+
+PV_TEMPERATURE_MODEL* PV_UNIT::get_pv_temperature_model() const
+{
+    return pv_temperature_model;
 }
 
 PV_VRT_MODEL* PV_UNIT::get_pv_vrt_model() const
@@ -362,6 +391,7 @@ PV_UNIT& PV_UNIT::operator=(const PV_UNIT& pvu)
     set_model(pvu.get_pv_irradiance_model());
     set_model(pvu.get_pv_vrt_model());
     set_model(pvu.get_pv_relay_model());
+    set_model(pvu.get_pv_temperature_model());
 
     set_positive_sequence_resistance_in_pu(pvu.get_positive_sequence_resistance_in_pu());
     set_positive_sequence_reactance_in_pu(pvu.get_positive_sequence_reactance_in_pu());

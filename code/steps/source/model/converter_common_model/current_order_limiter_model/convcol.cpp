@@ -1,4 +1,4 @@
-#include "header/model/converter_common_models/current_order_limiter_model/convcol.h"
+#include "header/model/converter_common_model/current_order_limiter_model/convcol.h"
 #include "header/basic/utility.h"
 CONVCOL0::CONVCOL0(STEPS& toolkit)
 {
@@ -19,6 +19,31 @@ void CONVCOL0::set_toolkit(STEPS& toolkit)
 STEPS& CONVCOL0::get_toolkit() const
 {
     return *toolkit;
+}
+
+void CONVCOL0::set_device_pointer(NONBUS_DEVICE* device)
+{
+    this->device = device;
+}
+
+NONBUS_DEVICE* CONVCOL0::get_device_pointer() const
+{
+    return device;
+}
+
+DEVICE_ID CONVCOL0::get_device_id() const
+{
+    return device->get_device_id();
+}
+
+STEPS_DEVICE_TYPE CONVCOL0::get_device_type() const
+{
+    return get_device_id().get_device_type();
+}
+
+string CONVCOL0::get_model_name() const
+{
+    return "CONVCOL0";
 }
 
 void CONVCOL0::set_PQ_priority_flag(COL_PQ_PRIORITY pq_flag)
@@ -65,25 +90,39 @@ complex<double> CONVCOL0::get_limited_PQ_current_order(complex<double> I) const
             {
                 Iqmax = Imax;
                 Iqmin = -Imax;
-                Ipmax = steps_sqrt(Imax*Imax - Iq*Iq);
+                if(fabs(Iq)<Imax)
+                    Ipmax = steps_sqrt(Imax*Imax - Iq*Iq);
+                else
+                    Ipmax = 0.0;
+
                 Ipmin = 0;
+                if(get_device_type()==STEPS_ENERGY_STORAGE)
+                {
+                    Ipmin = -Ipmax;
+                }
                 break;
             }
             default: // P_FIRST
             {
                 Ipmax = Imax;
                 Ipmin = 0;
-                Iqmax = steps_sqrt(Imax*Imax - Ip*Ip);
+                if(get_device_type()==STEPS_ENERGY_STORAGE)
+                {
+                    Ipmin = -Ipmax;
+                }
+                if(fabs(Ip)<Imax)
+                    Iqmax = steps_sqrt(Imax*Imax - Ip*Ip);
+                else
+                    Iqmax = 0.0;
+
                 Iqmin = -Iqmax;
                 break;
             }
         }
         if(Ip>Ipmax) Ip = Ipmax;
-        else
-            if(Ip<Ipmin) Ip = Ipmin;
+        if(Ip<Ipmin) Ip = Ipmin;
         if(Iq>Iqmax) Iq = Iqmax;
-        else
-            if(Iq<Iqmin) Iq = Iqmin;
+        if(Iq<Iqmin) Iq = Iqmin;
         return complex<double>(Ip, Iq);
     }
     else
