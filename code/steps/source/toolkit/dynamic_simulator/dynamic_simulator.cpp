@@ -1456,6 +1456,22 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     toolkit->show_information_with_leading_time_stamp(osstream);
     clock_1 = clock_2;*/
 
+    n = e_storages.size();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        //set_openmp_number_of_threads(toolkit->get_pv_unit_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
+        #pragma omp parallel for schedule(static)
+        //#pragma omp parallel for num_threads(2)
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+    for(unsigned int i=0; i<n; ++i)
+        e_storages[i]->run(mode);
+
+    /*clock_2 = steady_clock::now();
+    tduration = duration_cast<nanoseconds>(clock_2-clock_1);
+    osstream<<"at time "<<TIME<<", pv models run takes "<<tduration.count()<<" ns.";
+    toolkit->show_information_with_leading_time_stamp(osstream);
+    clock_1 = clock_2;*/
+
     n = loads.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         //set_openmp_number_of_threads(toolkit->get_load_thread_number());
@@ -1993,6 +2009,29 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
             }
         }
     }
+    add_energy_storage_to_bus_current_mismatch();
+    if(not detailed_log_enabled)
+        ;
+    else
+    {
+        for(unsigned int i = 0; i<n; ++i)
+        {
+            if(std::isnan(I_mismatch[i].real()) or std::isnan(I_mismatch[i].imag()))
+            {
+                osstream<<"warning. NAN is detected when getting bus current mismatch after adding pv units when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+                for(unsigned int j = 0; j<n; ++j)
+                {
+                    if(std::isnan(I_mismatch[j].real()) or std::isnan(I_mismatch[j].imag()))
+                    {
+                        unsigned int ibus = net.get_physical_bus_number_of_internal_bus(j);
+                        osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
+                    }
+                }
+                toolkit->show_information_with_leading_time_stamp(osstream);
+                break;
+            }
+        }
+    }
     add_loads_to_bus_current_mismatch();
     if(not detailed_log_enabled)
         ;
@@ -2322,6 +2361,49 @@ void DYNAMICS_SIMULATOR::add_pv_units_to_bus_current_mismatch()
                 toolkit->show_information_with_leading_time_stamp(osstream);
                 complex<double> Edq = conv_model->get_internal_voltage_in_pu_in_dq_axis();
                 complex<double> Exy = conv_model->get_internal_voltage_in_pu_in_xy_axis();
+                osstream<<"Generator %u internal voltage: %f + j%f (dq), %f + j%f (xy)",physical_bus, Edq.real(), Edq.imag(), Exy.real(), Exy.imag());
+                toolkit->show_information_with_leading_time_stamp(osstream);*/
+            }
+        }
+    }
+}
+
+void DYNAMICS_SIMULATOR::add_energy_storage_to_bus_current_mismatch()
+{
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+
+    unsigned int nes = e_storages.size();
+
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit->get_energy_storage_thread_number());
+        #pragma omp parallel for schedule(static)
+        //#pragma omp parallel for num_threads(2)
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+    for(unsigned int i=0; i<nes; ++i)
+    {
+        complex<double> I;
+        ENERGY_STORAGE* es = e_storages[i];
+
+        if(es->get_status() == true)
+        {
+            unsigned int physical_bus = es->get_energy_storage_bus();
+
+            unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+
+            ES_CONVERTER_MODEL* conv_model = es->get_es_converter_model();
+            if(conv_model!=NULL)
+            {
+                if(conv_model->is_current_source())
+                    I = conv_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
+                else
+                    I = conv_model->get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
+                //cout<<generator->get_compound_device_name()<<" terminal or Norton current is: "<<I<<endl;
+
+                I_mismatch[internal_bus] += I;
+                /*os<< "Generator %u source current: %f + j%f",physical_bus, I.real(), I.imag());
+                toolkit->show_information_with_leading_time_stamp(osstream);
+                complex<double> Edq = gen_model->get_internal_voltage_in_pu_in_dq_axis();
+                complex<double> Exy = gen_model->get_internal_voltage_in_pu_in_xy_axis();
                 osstream<<"Generator %u internal voltage: %f + j%f (dq), %f + j%f (xy)",physical_bus, Edq.real(), Edq.imag(), Exy.real(), Exy.imag());
                 toolkit->show_information_with_leading_time_stamp(osstream);*/
             }
