@@ -49,11 +49,12 @@ double WT_GENERATOR_MODEL::get_active_current_command_in_pu_based_on_mbase()
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     WT_ELECTRICAL_MODEL* elec_model = wt_generator->get_wt_electrical_model();
     WT_VRT_MODEL* vrt_model = wt_generator->get_wt_vrt_model();
+
     if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
         return elec_model->get_active_current_command_in_pu_based_on_mbase();
     else
     {
-        if(vrt_model!=NULL and vrt_model->is_model_initialized())
+        if(vrt_model!=NULL and vrt_model->is_model_initialized() and vrt_model->is_in_vrt_status())
             return vrt_model->get_active_current_command_in_pu_based_on_mbase();
         else
             return get_initial_active_current_command_in_pu_based_on_mbase();
@@ -65,11 +66,12 @@ double WT_GENERATOR_MODEL::get_reactive_current_command_in_pu_based_on_mbase()
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     WT_ELECTRICAL_MODEL* elec_model = wt_generator->get_wt_electrical_model();
     WT_VRT_MODEL* vrt_model = wt_generator->get_wt_vrt_model();
+
     if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
         return elec_model->get_reactive_current_command_in_pu_based_on_mbase();
     else
     {
-        if(vrt_model!=NULL and vrt_model->is_model_initialized())
+        if(vrt_model!=NULL and vrt_model->is_model_initialized() and vrt_model->is_in_vrt_status())
             return vrt_model->get_reactive_current_command_in_pu_based_on_mbase();
         else
             return get_initial_reactive_current_command_in_pu_based_on_mbase();
@@ -81,11 +83,12 @@ double WT_GENERATOR_MODEL::get_reactive_voltage_command_in_pu()
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     WT_ELECTRICAL_MODEL* elec_model = wt_generator->get_wt_electrical_model();
     WT_VRT_MODEL* vrt_model = wt_generator->get_wt_vrt_model();
+
     if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
         return elec_model->get_reactive_voltage_command_in_pu();
     else
     {
-        if(vrt_model!=NULL and vrt_model->is_model_initialized())
+        if(vrt_model!=NULL and vrt_model->is_model_initialized() and vrt_model->is_in_vrt_status())
             return vrt_model->get_reactive_voltage_command_in_pu();
         else
             return get_initial_reactive_voltage_command_in_pu();
@@ -97,11 +100,12 @@ double WT_GENERATOR_MODEL::get_active_power_command_in_pu_based_on_mbase()
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     WT_ELECTRICAL_MODEL* elec_model = wt_generator->get_wt_electrical_model();
     WT_VRT_MODEL* vrt_model = wt_generator->get_wt_vrt_model();
+
     if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
         return elec_model->get_active_power_command_in_pu_based_on_mbase();
     else
     {
-        if(vrt_model!=NULL and vrt_model->is_model_initialized())
+        if(vrt_model!=NULL and vrt_model->is_model_initialized() and vrt_model->is_in_vrt_status())
             return vrt_model->get_active_power_command_in_pu_based_on_mbase();
         else
             return get_initial_active_power_command_in_pu_based_on_mbase();
@@ -113,11 +117,12 @@ double WT_GENERATOR_MODEL::get_reactive_power_command_in_pu_based_on_mbase()
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     WT_ELECTRICAL_MODEL* elec_model = wt_generator->get_wt_electrical_model();
     WT_VRT_MODEL* vrt_model = wt_generator->get_wt_vrt_model();
+
     if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
         return elec_model->get_reactive_power_command_in_pu_based_on_mbase();
     else
     {
-        if(vrt_model!=NULL and vrt_model->is_model_initialized())
+        if(vrt_model!=NULL and vrt_model->is_model_initialized() and vrt_model->is_in_vrt_status())
             return vrt_model->get_reactive_power_command_in_pu_based_on_mbase();
         else
             return get_initial_reactive_power_command_in_pu_based_on_mbase();

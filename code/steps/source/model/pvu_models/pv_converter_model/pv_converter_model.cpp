@@ -49,11 +49,12 @@ double PV_CONVERTER_MODEL::get_active_current_command_in_pu_based_on_mbase()
     PV_UNIT* pv_unit = get_pv_unit_pointer();
     PV_ELECTRICAL_MODEL* elec_model = pv_unit->get_pv_electrical_model();
     PV_VRT_MODEL* vrt_model = pv_unit->get_pv_vrt_model();
+
     if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
         return elec_model->get_active_current_command_in_pu_based_on_mbase();
     else
     {
-        if(vrt_model!=NULL and vrt_model->is_model_initialized())
+        if(vrt_model!=NULL and vrt_model->is_model_initialized() and vrt_model->is_in_vrt_status())
             return vrt_model->get_active_current_command_in_pu_based_on_mbase();
         else
             return get_initial_active_current_command_in_pu_based_on_mbase();
@@ -69,7 +70,7 @@ double PV_CONVERTER_MODEL::get_reactive_current_command_in_pu_based_on_mbase()
         return elec_model->get_reactive_current_command_in_pu_based_on_mbase();
     else
     {
-        if(vrt_model!=NULL and vrt_model->is_model_initialized())
+        if(vrt_model!=NULL and vrt_model->is_model_initialized() and vrt_model->is_in_vrt_status())
             return vrt_model->get_reactive_current_command_in_pu_based_on_mbase();
         else
             return get_initial_reactive_current_command_in_pu_based_on_mbase();
@@ -85,7 +86,7 @@ double PV_CONVERTER_MODEL::get_reactive_voltage_command_in_pu()
         return elec_model->get_reactive_voltage_command_in_pu();
     else
     {
-        if(vrt_model!=NULL and vrt_model->is_model_initialized())
+        if(vrt_model!=NULL and vrt_model->is_model_initialized() and vrt_model->is_in_vrt_status())
             return vrt_model->get_reactive_voltage_command_in_pu();
         else
             return get_initial_reactive_voltage_command_in_pu();
@@ -101,7 +102,7 @@ double PV_CONVERTER_MODEL::get_active_power_command_in_pu_based_on_mbase()
         return elec_model->get_active_power_command_in_pu_based_on_mbase();
     else
     {
-        if(vrt_model!=NULL and vrt_model->is_model_initialized())
+        if(vrt_model!=NULL and vrt_model->is_model_initialized() and vrt_model->is_in_vrt_status())
             return vrt_model->get_active_power_command_in_pu_based_on_mbase();
         else
             return get_initial_active_power_command_in_pu_based_on_mbase();
@@ -117,7 +118,7 @@ double PV_CONVERTER_MODEL::get_reactive_power_command_in_pu_based_on_mbase()
         return elec_model->get_reactive_power_command_in_pu_based_on_mbase();
     else
     {
-        if(vrt_model!=NULL and vrt_model->is_model_initialized())
+        if(vrt_model!=NULL and vrt_model->is_model_initialized() and vrt_model->is_in_vrt_status())
             return vrt_model->get_reactive_power_command_in_pu_based_on_mbase();
         else
             return get_initial_reactive_power_command_in_pu_based_on_mbase();

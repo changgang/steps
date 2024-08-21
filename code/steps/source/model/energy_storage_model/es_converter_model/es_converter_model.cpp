@@ -55,16 +55,18 @@ double ES_CONVERTER_MODEL::get_active_current_command_in_pu_based_on_mbase()
     ES_VRT_MODEL* vrt_model = energy_storage->get_es_vrt_model();
     ES_BATTERY_MODEL* battery_model = energy_storage->get_es_battery_model();
     double Ipcmd = 0.0;
+
     if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
         Ipcmd = elec_model->get_active_current_command_in_pu_based_on_mbase();
     else
     {
-        if(vrt_model!=NULL and vrt_model->is_model_initialized())
+        if(vrt_model!=NULL and vrt_model->is_model_initialized() and vrt_model->is_in_vrt_status())
             Ipcmd = vrt_model->get_active_current_command_in_pu_based_on_mbase();
         else
             Ipcmd = get_initial_active_current_command_in_pu_based_on_mbase();
     }
 
+    //SOC limit output
     if(battery_model!=NULL and battery_model->is_model_initialized())
     {
         double SOC = battery_model->get_state_of_charge_in_pu();
@@ -110,11 +112,12 @@ double ES_CONVERTER_MODEL::get_reactive_current_command_in_pu_based_on_mbase()
     ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
     ES_ELECTRICAL_MODEL* elec_model = energy_storage->get_es_electrical_model();
     ES_VRT_MODEL* vrt_model = energy_storage->get_es_vrt_model();
+
     if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
         return elec_model->get_reactive_current_command_in_pu_based_on_mbase();
     else
     {
-        if(vrt_model!=NULL and vrt_model->is_model_initialized())
+        if(vrt_model!=NULL and vrt_model->is_model_initialized() and vrt_model->is_in_vrt_status())
             return vrt_model->get_reactive_current_command_in_pu_based_on_mbase();
         else
             return get_initial_reactive_current_command_in_pu_based_on_mbase();
@@ -126,11 +129,12 @@ double ES_CONVERTER_MODEL::get_reactive_voltage_command_in_pu()
     ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
     ES_ELECTRICAL_MODEL* elec_model = energy_storage->get_es_electrical_model();
     ES_VRT_MODEL* vrt_model = energy_storage->get_es_vrt_model();
+
     if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
         return elec_model->get_reactive_voltage_command_in_pu();
     else
     {
-        if(vrt_model!=NULL and vrt_model->is_model_initialized())
+        if(vrt_model!=NULL and vrt_model->is_model_initialized() and vrt_model->is_in_vrt_status())
             return vrt_model->get_reactive_voltage_command_in_pu();
         else
             return get_initial_reactive_voltage_command_in_pu();
@@ -144,16 +148,18 @@ double ES_CONVERTER_MODEL::get_active_power_command_in_pu_based_on_mbase()
     ES_VRT_MODEL* vrt_model = energy_storage->get_es_vrt_model();
     ES_BATTERY_MODEL* battery_model = energy_storage->get_es_battery_model();
     double Pcmd = 0.0;
+
     if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
         Pcmd = elec_model->get_active_power_command_in_pu_based_on_mbase();
     else
     {
-        if(vrt_model!=NULL and vrt_model->is_model_initialized())
+        if(vrt_model!=NULL and vrt_model->is_model_initialized() and vrt_model->is_in_vrt_status())
             Pcmd = vrt_model->get_active_power_command_in_pu_based_on_mbase();
         else
             Pcmd = get_initial_active_power_command_in_pu_based_on_mbase();
     }
 
+    //SOC limit output
     if(battery_model!=NULL and battery_model->is_model_initialized())
     {
         double SOC = battery_model->get_state_of_charge_in_pu();
@@ -201,11 +207,12 @@ double ES_CONVERTER_MODEL::get_reactive_power_command_in_pu_based_on_mbase()
     ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
     ES_ELECTRICAL_MODEL* elec_model = energy_storage->get_es_electrical_model();
     ES_VRT_MODEL* vrt_model = energy_storage->get_es_vrt_model();
+
     if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
         return elec_model->get_reactive_power_command_in_pu_based_on_mbase();
     else
     {
-        if(vrt_model!=NULL and vrt_model->is_model_initialized())
+        if(vrt_model!=NULL and vrt_model->is_model_initialized() and vrt_model->is_in_vrt_status())
             return vrt_model->get_reactive_power_command_in_pu_based_on_mbase();
         else
             return get_initial_reactive_power_command_in_pu_based_on_mbase();

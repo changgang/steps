@@ -929,7 +929,7 @@ void PVVRT3::initialize()
         STEPS& toolkit = get_toolkit();
 
         double P0, Q0, Ip0, Iq0;
-        if(pv_converter_model!=NULL)
+        if(pvelecmodel!=NULL)
         {
             if(not pvelecmodel->is_model_initialized())
                 pvelecmodel->initialize();
@@ -986,7 +986,7 @@ void PVVRT3::run(DYNAMIC_MODE mode)
         {
             case VRT_NORMAL_STATUS:
             {
-                if(pv_converter_model!=NULL)
+                if(pvelecmodel!=NULL)
                 {
                     P0 = pvelecmodel->get_active_power_command_in_pu_based_on_mbase();
                     Q0 = pvelecmodel->get_reactive_power_command_in_pu_based_on_mbase();
@@ -1029,7 +1029,7 @@ void PVVRT3::run(DYNAMIC_MODE mode)
         {
             case VRT_NORMAL_STATUS:
             {
-                if(pv_converter_model!=NULL)
+                if(pvelecmodel!=NULL)
                 {
                     P0 = pvelecmodel->get_active_power_command_in_pu_based_on_mbase();
                     Q0 = pvelecmodel->get_reactive_power_command_in_pu_based_on_mbase();
