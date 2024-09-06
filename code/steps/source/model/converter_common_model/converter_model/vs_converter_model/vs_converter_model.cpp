@@ -65,7 +65,7 @@ double VS_CONVERTER_MODEL::get_initial_virtual_angle_in_rad() const
 
 double VS_CONVERTER_MODEL::get_virtual_frequency_deviation_in_Hz() const
 {
-    return get_virtual_frequency_deviation_in_Hz()*get_base_frequency_in_Hz();
+    return get_virtual_frequency_deviation_in_pu()*get_base_frequency_in_Hz();
 }
 
 double VS_CONVERTER_MODEL::get_virtual_frequency_in_pu() const
