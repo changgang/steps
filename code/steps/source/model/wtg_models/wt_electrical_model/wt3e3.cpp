@@ -118,22 +118,22 @@ string WT3E3::get_model_name() const
     return "WT3E3";
 }
 
-void WT3E3::set_var_control_mode(PE_VAR_CONTROL_MODE mode)
+void WT3E3::set_var_control_mode(REACTIVE_POWER_CONTROL_MODE mode)
 {
     conelec0.set_var_control_mode(mode);
 }
 
-PE_VAR_CONTROL_MODE WT3E3::get_var_control_mode() const
+REACTIVE_POWER_CONTROL_MODE WT3E3::get_var_control_mode() const
 {
     return conelec0.get_var_control_mode();
 }
 
-void WT3E3::set_active_power_control_mode(ACTIVE_POWER_CONTROL_MODE mode)
+void WT3E3::set_active_power_control_mode(WT_ACTIVE_POWER_CONTROL_MODE mode)
 {
     this->active_power_control_mode = mode;
 }
 
-ACTIVE_POWER_CONTROL_MODE WT3E3::get_active_power_control_mode() const
+WT_ACTIVE_POWER_CONTROL_MODE WT3E3::get_active_power_control_mode() const
 {
     return this->active_power_control_mode;
 }
@@ -631,7 +631,7 @@ bool WT3E3::setup_model_with_steps_string_vector(vector<string>& data)
             dpmx = get_double_data(data[i],"0.0"); i++;
 
             set_bus_to_regulate(bus);
-            ACTIVE_POWER_CONTROL_MODE mode;
+            WT_ACTIVE_POWER_CONTROL_MODE mode;
             switch(p_control_mode)
             {
                 case 0:
@@ -658,7 +658,7 @@ bool WT3E3::setup_model_with_steps_string_vector(vector<string>& data)
 
             set_active_power_control_mode(mode);
 
-            PE_VAR_CONTROL_MODE mode1;
+            REACTIVE_POWER_CONTROL_MODE mode1;
             switch(var_control_flag)
             {
                 case 0:
@@ -871,7 +871,7 @@ void WT3E3::run(DYNAMIC_MODE mode)
     double pelec = selec.real();
     double qelec = selec.imag();
 
-    ACTIVE_POWER_CONTROL_MODE p_mode = get_active_power_control_mode();
+    WT_ACTIVE_POWER_CONTROL_MODE p_mode = get_active_power_control_mode();
     if(p_mode == SPEED_CONTROL_MODE)
     {
         double speed     = get_wt_generator_speed_in_pu();
@@ -976,9 +976,9 @@ string WT3E3::get_standard_psse_string(bool export_internal_bus_number) const
     string model_name = "'"+get_model_name()+"'";
 
     unsigned int bus_reg = get_bus_to_regulate();
-    ACTIVE_POWER_CONTROL_MODE p_mode = get_active_power_control_mode();
+    WT_ACTIVE_POWER_CONTROL_MODE p_mode = get_active_power_control_mode();
     int pe_mode = (p_mode==SPEED_CONTROL_MODE)? 0: (p_mode==CONSTANT_TORQUE_MODE? 1 : 2);
-    PE_VAR_CONTROL_MODE mode = get_var_control_mode();
+    REACTIVE_POWER_CONTROL_MODE mode = get_var_control_mode();
     int var_mode = (mode==CONSTANT_VAR_MODE)? 0: (mode==CONSTANT_POWER_FACTOR_MODE? -1 : 1);
     unsigned int voltage_flag = get_voltage_flag();
     double xc = get_Xcomp_in_pu();
@@ -1186,7 +1186,7 @@ void WT3E3::set_model_data_with_name(string par_name, double value)
     if(par_name == "ACTIVE POWER CONTROL FLAG")
     {
         int ivalue = int(value);
-        ACTIVE_POWER_CONTROL_MODE mode = SPEED_CONTROL_MODE;
+        WT_ACTIVE_POWER_CONTROL_MODE mode = SPEED_CONTROL_MODE;
         switch(ivalue)
         {
             case 0:
@@ -1208,7 +1208,7 @@ void WT3E3::set_model_data_with_name(string par_name, double value)
     if(par_name == "VAR CONTROL FLAG")
     {
         int ivalue1 = int(value);
-        PE_VAR_CONTROL_MODE mode1 = CONSTANT_VAR_MODE;
+        REACTIVE_POWER_CONTROL_MODE mode1 = CONSTANT_VAR_MODE;
         switch(ivalue1)
         {
             case 0:

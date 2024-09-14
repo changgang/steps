@@ -16,8 +16,8 @@ class CONVELEC0: public CONVERTER_ELEC_MODEL
         virtual void clear();
         void copy_from_const_model(const CONVELEC0& model);
     public:
-        void set_var_control_mode(PE_VAR_CONTROL_MODE mode);
-        PE_VAR_CONTROL_MODE get_var_control_mode() const;
+        void set_var_control_mode(REACTIVE_POWER_CONTROL_MODE mode);
+        REACTIVE_POWER_CONTROL_MODE get_var_control_mode() const;
 
         void set_Xcomp_in_pu(double Xc);
         void set_TRV_in_s(double T);
@@ -118,7 +118,7 @@ class CONVELEC0: public CONVERTER_ELEC_MODEL
         FIRST_ORDER_BLOCK voltage_regulator_filter;
         FIRST_ORDER_BLOCK active_power_sensor;
         INTEGRAL_BLOCK Q_error_integrator;
-        PE_VAR_CONTROL_MODE pe_var_control_mode;
+        REACTIVE_POWER_CONTROL_MODE pe_var_control_mode;
         unsigned int Voltage_Flag;
         INTEGRAL_BLOCK V_error_integrator;
         double EQmax, EQmin;

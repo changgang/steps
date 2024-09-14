@@ -93,12 +93,12 @@ string PVEX::get_model_name() const
     return "PVEX";
 }
 
-void PVEX::set_var_control_mode(PE_VAR_CONTROL_MODE mode)
+void PVEX::set_var_control_mode(REACTIVE_POWER_CONTROL_MODE mode)
 {
     conelec0.set_var_control_mode(mode);
 }
 
-PE_VAR_CONTROL_MODE PVEX::get_var_control_mode() const
+REACTIVE_POWER_CONTROL_MODE PVEX::get_var_control_mode() const
 {
     return conelec0.get_var_control_mode();
 }
@@ -480,7 +480,7 @@ bool PVEX::setup_model_with_steps_string_vector(vector<string>& data)
             ipmax = get_double_data(data[i],"0.0");
 
             set_bus_to_regulate(bus);
-            PE_VAR_CONTROL_MODE mode;
+            REACTIVE_POWER_CONTROL_MODE mode;
             switch(var_control_flag)
             {
                 case 0:
@@ -707,7 +707,7 @@ string PVEX::get_standard_psse_string(bool export_internal_bus_number) const
     string model_name = "'"+get_model_name()+"'";
 
     unsigned int bus_reg = get_bus_to_regulate();
-    PE_VAR_CONTROL_MODE mode = get_var_control_mode();
+    REACTIVE_POWER_CONTROL_MODE mode = get_var_control_mode();
     int var_mode = (mode==CONSTANT_VAR_MODE)? 0: (mode==CONSTANT_POWER_FACTOR_MODE? -1 : 1);
     unsigned int voltage_flag = get_voltage_flag();
     double xc = get_Xcomp_in_pu();
@@ -879,7 +879,7 @@ void PVEX::set_model_data_with_name(string par_name, double value)
     if(par_name == "VAR CONTROL FLAG")
     {
         int ivalue = int(value);
-        PE_VAR_CONTROL_MODE mode = CONSTANT_VAR_MODE;
+        REACTIVE_POWER_CONTROL_MODE mode = CONSTANT_VAR_MODE;
         switch(ivalue)
         {
             case 0:

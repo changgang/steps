@@ -19,7 +19,7 @@ class WT3E1: public WT_ELECTRICAL_MODEL
 
 
         void set_bus_to_regulate(unsigned int bus);
-        void set_var_control_mode(PE_VAR_CONTROL_MODE mode);
+        void set_var_control_mode(REACTIVE_POWER_CONTROL_MODE mode);
         void set_transformer_from_bus(unsigned int bus);
         void set_transformer_to_bus(unsigned int bus);
         void set_transformer_id(string id);
@@ -52,7 +52,7 @@ class WT3E1: public WT_ELECTRICAL_MODEL
 
 
         unsigned int get_bus_to_regulate()  const;
-        PE_VAR_CONTROL_MODE get_var_control_mode() const;
+        REACTIVE_POWER_CONTROL_MODE get_var_control_mode() const;
         unsigned int get_transformer_from_bus() const;
         unsigned int get_transformer_to_bus() const;
         string get_transformer_id() const;

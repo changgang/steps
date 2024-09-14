@@ -102,12 +102,12 @@ void CONVELEC1::copy_from_const_model(const CONVELEC1& model)
     set_IPmax_in_pu(model.get_IPmax_in_pu());
 }
 
-void CONVELEC1::set_var_control_mode(PE_VAR_CONTROL_MODE mode)
+void CONVELEC1::set_var_control_mode(REACTIVE_POWER_CONTROL_MODE mode)
 {
     this->pe_var_control_mode = mode;
 }
 
-PE_VAR_CONTROL_MODE CONVELEC1::get_var_control_mode() const
+REACTIVE_POWER_CONTROL_MODE CONVELEC1::get_var_control_mode() const
 {
     return pe_var_control_mode;
 }
@@ -573,7 +573,7 @@ void CONVELEC1::run(DYNAMIC_MODE mode)
     voltage_regulator_filter.run(mode);
 
 
-    PE_VAR_CONTROL_MODE var_mode = get_var_control_mode();
+    REACTIVE_POWER_CONTROL_MODE var_mode = get_var_control_mode();
     double qcmd = 0.0;
     if(var_mode==CONSTANT_VAR_MODE)
         qcmd = get_reactive_power_reference_in_pu_based_on_mbase();

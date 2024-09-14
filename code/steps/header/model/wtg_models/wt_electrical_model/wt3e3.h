@@ -16,10 +16,10 @@ class WT3E3: public WT_ELECTRICAL_MODEL
     public:
         virtual string get_model_name() const;
 
-        void set_var_control_mode(PE_VAR_CONTROL_MODE mode);
-        PE_VAR_CONTROL_MODE get_var_control_mode() const;
-        void set_active_power_control_mode(ACTIVE_POWER_CONTROL_MODE mode);
-        ACTIVE_POWER_CONTROL_MODE get_active_power_control_mode() const;
+        void set_var_control_mode(REACTIVE_POWER_CONTROL_MODE mode);
+        REACTIVE_POWER_CONTROL_MODE get_var_control_mode() const;
+        void set_active_power_control_mode(WT_ACTIVE_POWER_CONTROL_MODE mode);
+        WT_ACTIVE_POWER_CONTROL_MODE get_active_power_control_mode() const;
         void set_bus_to_regulate(unsigned int bus);
         unsigned int get_bus_to_regulate() const;
 
@@ -149,7 +149,7 @@ class WT3E3: public WT_ELECTRICAL_MODEL
         void copy_from_const_model(const WT3E3& model);
 
         void trip_frequency_regulation();
-        ACTIVE_POWER_CONTROL_MODE active_power_control_mode;
+        WT_ACTIVE_POWER_CONTROL_MODE active_power_control_mode;
 
         FIRST_ORDER_BLOCK wind_turbine_speed_reference_sensor, active_power_sensor;
         PI_BLOCK torque_PI_regulator;

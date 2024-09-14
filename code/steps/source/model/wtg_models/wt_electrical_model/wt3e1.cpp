@@ -98,7 +98,7 @@ void WT3E1::set_bus_to_regulate(unsigned int bus)
     conelec1.set_bus_to_regulate(bus);
 }
 
-void WT3E1::set_var_control_mode(PE_VAR_CONTROL_MODE mode)
+void WT3E1::set_var_control_mode(REACTIVE_POWER_CONTROL_MODE mode)
 {
     conelec1.set_var_control_mode(mode);
 }
@@ -253,7 +253,7 @@ unsigned int WT3E1::get_bus_to_regulate()  const
     return conelec1.get_bus_to_regulate();
 }
 
-PE_VAR_CONTROL_MODE WT3E1::get_var_control_mode() const
+REACTIVE_POWER_CONTROL_MODE WT3E1::get_var_control_mode() const
 {
     return conelec1.get_var_control_mode();
 }
@@ -469,7 +469,7 @@ bool WT3E1::setup_model_with_steps_string_vector(vector<string>& data)
             wp100 = get_double_data(data[i],"0.0");
 
             set_bus_to_regulate(bus);
-            PE_VAR_CONTROL_MODE mode;
+            REACTIVE_POWER_CONTROL_MODE mode;
             switch(var_control_flag)
             {
                 case 0:
@@ -712,7 +712,7 @@ string WT3E1::get_standard_psse_string(bool export_internal_bus_number) const
     string model_name = "'"+get_model_name()+"'";
 
     unsigned int bus_reg = get_bus_to_regulate();
-    PE_VAR_CONTROL_MODE mode = get_var_control_mode();
+    REACTIVE_POWER_CONTROL_MODE mode = get_var_control_mode();
     int var_mode = (mode==CONSTANT_VAR_MODE)? 0:(mode==CONSTANT_POWER_FACTOR_MODE? -1 : 1);
     unsigned int voltage_flag = get_voltage_flag();
     unsigned int trans_from_bus = get_transformer_from_bus();
