@@ -205,12 +205,12 @@ unsigned int DYNAMIC_MODEL_DATABASE::get_model_size(MODEL* model) const
     if(model_name=="AERDL") return sizeof(AERDL);
 
     if(model_name=="WT3T0") return sizeof(WT3T0);
-    if(model_name=="WT3T1") return sizeof(WT3T1);
+    if(model_name=="WT3T0DBR") return sizeof(WT3T0DBR);
 
     if(model_name=="WT3E0") return sizeof(WT3E0);
     if(model_name=="WT3E1") return sizeof(WT3E1);
-    if(model_name=="WT3E2") return sizeof(WT3E2);
-    if(model_name=="WT3E3") return sizeof(WT3E3);
+    if(model_name=="WT3E0PCL") return sizeof(WT3E0PCL);
+    if(model_name=="WT3E0MPC") return sizeof(WT3E0MPC);
 
     if(model_name=="WT3P0") return sizeof(WT3P0);
     if(model_name=="WT3P1") return sizeof(WT3P1);

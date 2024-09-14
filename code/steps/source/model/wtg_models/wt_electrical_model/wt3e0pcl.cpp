@@ -1,4 +1,4 @@
-#include "header/model/wtg_models/wt_electrical_model/wt3e2.h"
+#include "header/model/wtg_models/wt_electrical_model/wt3e0pcl.h"
 #include "header/device/wt_generator.h"
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
@@ -8,7 +8,7 @@
 
 using namespace std;
 
-WT3E2::WT3E2(STEPS& toolkit) : WT_ELECTRICAL_MODEL(toolkit),
+WT3E0PCL::WT3E0PCL(STEPS& toolkit) : WT_ELECTRICAL_MODEL(toolkit),
                                wind_turbine_speed_reference_sensor(toolkit),
                                torque_PI_regulator(toolkit),
                                conelec2(toolkit)
@@ -17,7 +17,7 @@ WT3E2::WT3E2(STEPS& toolkit) : WT_ELECTRICAL_MODEL(toolkit),
     clear();
 }
 
-WT3E2::WT3E2(const WT3E2& model) : WT_ELECTRICAL_MODEL(model.get_toolkit()),
+WT3E0PCL::WT3E0PCL(const WT3E0PCL& model) : WT_ELECTRICAL_MODEL(model.get_toolkit()),
                                    wind_turbine_speed_reference_sensor(model.get_toolkit()),
                                    torque_PI_regulator(model.get_toolkit()),
                                    conelec2(model.get_toolkit())
@@ -26,12 +26,12 @@ WT3E2::WT3E2(const WT3E2& model) : WT_ELECTRICAL_MODEL(model.get_toolkit()),
     copy_from_const_model(model);
 }
 
-WT3E2::~WT3E2()
+WT3E0PCL::~WT3E0PCL()
 {
     ;
 }
 
-WT3E2& WT3E2::operator=(const WT3E2& model)
+WT3E0PCL& WT3E0PCL::operator=(const WT3E0PCL& model)
 {
     if(this==(&model)) return *this;
 
@@ -40,14 +40,14 @@ WT3E2& WT3E2::operator=(const WT3E2& model)
     return *this;
 }
 
-void WT3E2::clear()
+void WT3E0PCL::clear()
 {
     set_model_float_parameter_count(33);
     conelec2.clear();
     conelec2.set_model_name(get_model_name());
 }
 
-void WT3E2::copy_from_const_model(const WT3E2& model)
+void WT3E0PCL::copy_from_const_model(const WT3E0PCL& model)
 {
     if(model.is_model_bypassed()) bypass_model();
 
@@ -95,97 +95,97 @@ void WT3E2::copy_from_const_model(const WT3E2& model)
     set_Ipmin_in_pu(model.get_Ipmin_in_pu());
 }
 
-string WT3E2::get_model_name() const
+string WT3E0PCL::get_model_name() const
 {
-    return "WT3E2";
+    return "WT3E0PCL";
 }
 
-void WT3E2::set_var_control_mode(REACTIVE_POWER_CONTROL_MODE mode)
+void WT3E0PCL::set_var_control_mode(REACTIVE_POWER_CONTROL_MODE mode)
 {
     conelec2.set_var_control_mode(mode);
 }
 
-REACTIVE_POWER_CONTROL_MODE WT3E2::get_var_control_mode() const
+REACTIVE_POWER_CONTROL_MODE WT3E0PCL::get_var_control_mode() const
 {
     return conelec2.get_var_control_mode();
 }
 
-void WT3E2::set_bus_to_regulate(unsigned int bus)
+void WT3E0PCL::set_bus_to_regulate(unsigned int bus)
 {
     conelec2.set_bus_to_regulate(bus);
 }
 
-unsigned int WT3E2::get_bus_to_regulate() const
+unsigned int WT3E0PCL::get_bus_to_regulate() const
 {
     return conelec2.get_bus_to_regulate();
 }
 
-void WT3E2::set_Xcomp_in_pu(double Xc)
+void WT3E0PCL::set_Xcomp_in_pu(double Xc)
 {
     conelec2.set_Xcomp_in_pu(Xc);
 }
 
-void WT3E2::set_TRV_in_s(double T)
+void WT3E0PCL::set_TRV_in_s(double T)
 {
     conelec2.set_TRV_in_s(T);
 }
 
-void WT3E2::set_Fn(double Fn)
+void WT3E0PCL::set_Fn(double Fn)
 {
     conelec2.set_Fn(Fn);
 }
 
-void WT3E2::set_KIV(double K)
+void WT3E0PCL::set_KIV(double K)
 {
     conelec2.set_KIV(K);
 }
 
-void WT3E2::set_Qmax_in_pu(double q)
+void WT3E0PCL::set_Qmax_in_pu(double q)
 {
     conelec2.set_Qmax_in_pu(q);
 }
 
-void WT3E2::set_Qmin_in_pu(double q)
+void WT3E0PCL::set_Qmin_in_pu(double q)
 {
     conelec2.set_Qmin_in_pu(q);
 }
 
-void WT3E2::set_KPV(double K)
+void WT3E0PCL::set_KPV(double K)
 {
     conelec2.set_KPV(K);
 }
 
-void WT3E2::set_TV_in_s(double T)
+void WT3E0PCL::set_TV_in_s(double T)
 {
     conelec2.set_TV_in_s(T);
 }
 
-void WT3E2::set_TFV_in_s(double T)
+void WT3E0PCL::set_TFV_in_s(double T)
 {
     conelec2.set_TFV_in_s(T);
 }
 
-void WT3E2::set_TP_in_s(double T)
+void WT3E0PCL::set_TP_in_s(double T)
 {
     conelec2.set_TP_in_s(T);
 }
 
-void WT3E2::set_KQI(double K)
+void WT3E0PCL::set_KQI(double K)
 {
     conelec2.set_KQI(K);
 }
 
-void WT3E2::set_Vmax_in_pu(double v)
+void WT3E0PCL::set_Vmax_in_pu(double v)
 {
     conelec2.set_Vmax_in_pu(v);
 }
 
-void WT3E2::set_Vmin_in_pu(double v)
+void WT3E0PCL::set_Vmin_in_pu(double v)
 {
     conelec2.set_Vmin_in_pu(v);
 }
 
-void WT3E2::set_voltage_flag(unsigned int flag)
+void WT3E0PCL::set_voltage_flag(unsigned int flag)
 {
     if(flag<3)
         conelec2.set_voltage_flag(flag);
@@ -198,247 +198,247 @@ void WT3E2::set_voltage_flag(unsigned int flag)
     }
 }
 
-void WT3E2::set_KQV(double K)
+void WT3E0PCL::set_KQV(double K)
 {
     conelec2.set_KQV(K);
 }
 
-void WT3E2::set_EQmax_in_pu(double I)
+void WT3E0PCL::set_EQmax_in_pu(double I)
 {
     conelec2.set_EQmax_in_pu(I);
 }
 
-void WT3E2::set_EQmin_in_pu(double I)
+void WT3E0PCL::set_EQmin_in_pu(double I)
 {
     conelec2.set_EQmin_in_pu(I);
 }
 
-void WT3E2::set_Tspeed_in_s(double T)
+void WT3E0PCL::set_Tspeed_in_s(double T)
 {
     wind_turbine_speed_reference_sensor.set_T_in_s(T);
 }
 
-void WT3E2::set_KPP(double K)
+void WT3E0PCL::set_KPP(double K)
 {
     torque_PI_regulator.set_Kp(K);
 }
 
-void WT3E2::set_KIP(double K)
+void WT3E0PCL::set_KIP(double K)
 {
     torque_PI_regulator.set_Ki(K);
 }
 
-void WT3E2::set_Kvi(double K)
+void WT3E0PCL::set_Kvi(double K)
 {
     conelec2.set_Kvi(K);
 }
 
-void WT3E2::set_Tvi_in_s(double T)
+void WT3E0PCL::set_Tvi_in_s(double T)
 {
     conelec2.set_Tvi_in_s(T);
 }
 
-void WT3E2::set_Kdroop(double K)
+void WT3E0PCL::set_Kdroop(double K)
 {
     conelec2.set_Kdroop(K);
 }
 
-void WT3E2::set_Tdroop_in_s(double T)
+void WT3E0PCL::set_Tdroop_in_s(double T)
 {
     conelec2.set_Tdroop_in_s(T);
 }
 
-void WT3E2::set_frequency_deviation_upper_deadband_in_pu(double f)
+void WT3E0PCL::set_frequency_deviation_upper_deadband_in_pu(double f)
 {
     conelec2.set_frequency_deviation_upper_deadband_in_pu(f);
 }
 
-void WT3E2::set_frequency_deviation_lower_deadband_in_pu(double f)
+void WT3E0PCL::set_frequency_deviation_lower_deadband_in_pu(double f)
 {
     conelec2.set_frequency_deviation_lower_deadband_in_pu(f);
 }
 
-void WT3E2::set_Kfint(double K)
+void WT3E0PCL::set_Kfint(double K)
 {
     conelec2.set_Kfint(K);
 }
 
-void WT3E2::set_KPF(double K)
+void WT3E0PCL::set_KPF(double K)
 {
     conelec2.set_KPF(K);
 }
 
-void WT3E2::set_KIF(double K)
+void WT3E0PCL::set_KIF(double K)
 {
     conelec2.set_KIF(K);
 }
 
-void WT3E2::set_Ipmin_in_pu(double I)
+void WT3E0PCL::set_Ipmin_in_pu(double I)
 {
     conelec2.set_Ipmin_in_pu(I);
 }
 
-void WT3E2::set_Ipmax_in_pu(double I)
+void WT3E0PCL::set_Ipmax_in_pu(double I)
 {
     conelec2.set_Ipmax_in_pu(I);
 }
 
-double WT3E2::get_Xcomp_in_pu() const
+double WT3E0PCL::get_Xcomp_in_pu() const
 {
     return conelec2.get_Xcomp_in_pu();
 }
 
-double WT3E2::get_TRV_in_s() const
+double WT3E0PCL::get_TRV_in_s() const
 {
     return conelec2.get_TRV_in_s();
 }
 
-double WT3E2::get_Fn() const
+double WT3E0PCL::get_Fn() const
 {
     return conelec2.get_Fn();
 }
 
-double WT3E2::get_KIV() const
+double WT3E0PCL::get_KIV() const
 {
     return conelec2.get_KIV();
 }
 
-double WT3E2::get_Qmax_in_pu() const
+double WT3E0PCL::get_Qmax_in_pu() const
 {
     return conelec2.get_Qmax_in_pu();
 }
 
-double WT3E2::get_Qmin_in_pu() const
+double WT3E0PCL::get_Qmin_in_pu() const
 {
     return conelec2.get_Qmin_in_pu();
 }
 
-double WT3E2::get_KPV() const
+double WT3E0PCL::get_KPV() const
 {
     return conelec2.get_KPV();
 }
 
-double WT3E2::get_TV_in_s() const
+double WT3E0PCL::get_TV_in_s() const
 {
     return conelec2.get_TV_in_s();
 }
 
-double WT3E2::get_TFV_in_s() const
+double WT3E0PCL::get_TFV_in_s() const
 {
     return conelec2.get_TFV_in_s();
 }
 
-double WT3E2::get_TP_in_s() const
+double WT3E0PCL::get_TP_in_s() const
 {
     return conelec2.get_TP_in_s();
 }
 
-double WT3E2::get_KQI() const
+double WT3E0PCL::get_KQI() const
 {
     return conelec2.get_KQI();
 }
 
-double WT3E2::get_Vmax_in_pu() const
+double WT3E0PCL::get_Vmax_in_pu() const
 {
     return conelec2.get_Vmax_in_pu();
 }
 
-double WT3E2::get_Vmin_in_pu() const
+double WT3E0PCL::get_Vmin_in_pu() const
 {
     return conelec2.get_Vmin_in_pu();
 }
 
-unsigned int WT3E2::get_voltage_flag() const
+unsigned int WT3E0PCL::get_voltage_flag() const
 {
     return conelec2.get_voltage_flag();
 }
 
-double WT3E2::get_KQV() const
+double WT3E0PCL::get_KQV() const
 {
     return conelec2.get_KQV();
 }
 
-double WT3E2::get_EQmax_in_pu() const
+double WT3E0PCL::get_EQmax_in_pu() const
 {
     return conelec2.get_EQmax_in_pu();
 }
 
-double WT3E2::get_EQmin_in_pu() const
+double WT3E0PCL::get_EQmin_in_pu() const
 {
     return conelec2.get_EQmin_in_pu();
 }
 
-double WT3E2::get_Tspeed_in_s() const
+double WT3E0PCL::get_Tspeed_in_s() const
 {
     return wind_turbine_speed_reference_sensor.get_T_in_s();
 }
 
-double WT3E2::get_KPP() const
+double WT3E0PCL::get_KPP() const
 {
     return torque_PI_regulator.get_Kp();
 }
 
-double WT3E2::get_KIP() const
+double WT3E0PCL::get_KIP() const
 {
     return torque_PI_regulator.get_Ki();
 }
 
-double WT3E2::get_Kvi() const
+double WT3E0PCL::get_Kvi() const
 {
     return conelec2.get_Kvi();
 }
 
-double WT3E2::get_Tvi_in_s() const
+double WT3E0PCL::get_Tvi_in_s() const
 {
     return conelec2.get_Tvi_in_s();
 }
 
-double WT3E2::get_Kdroop() const
+double WT3E0PCL::get_Kdroop() const
 {
     return conelec2.get_Kdroop();
 }
 
-double WT3E2::get_Tdroop_in_s() const
+double WT3E0PCL::get_Tdroop_in_s() const
 {
     return conelec2.get_Tdroop_in_s();
 }
 
-double WT3E2::get_frequency_deviation_upper_deadband_in_pu() const
+double WT3E0PCL::get_frequency_deviation_upper_deadband_in_pu() const
 {
     return conelec2.get_frequency_deviation_upper_deadband_in_pu();
 }
 
-double WT3E2::get_frequency_deviation_lower_deadband_in_pu() const
+double WT3E0PCL::get_frequency_deviation_lower_deadband_in_pu() const
 {
     return conelec2.get_frequency_deviation_lower_deadband_in_pu();
 }
 
-double WT3E2::get_Kfint() const
+double WT3E0PCL::get_Kfint() const
 {
     return conelec2.get_Kfint();
 }
 
-double WT3E2::get_KPF() const
+double WT3E0PCL::get_KPF() const
 {
     return conelec2.get_KPF();
 }
 
-double WT3E2::get_KIF() const
+double WT3E0PCL::get_KIF() const
 {
     return conelec2.get_KIF();
 }
 
-double WT3E2::get_Ipmax_in_pu() const
+double WT3E0PCL::get_Ipmax_in_pu() const
 {
     return conelec2.get_Ipmax_in_pu();
 }
 
-double WT3E2::get_Ipmin_in_pu() const
+double WT3E0PCL::get_Ipmin_in_pu() const
 {
     return conelec2.get_Ipmin_in_pu();
 }
 
-bool WT3E2::setup_model_with_steps_string_vector(vector<string>& data)
+bool WT3E0PCL::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
     if(data.size()>=36)
@@ -560,13 +560,13 @@ bool WT3E2::setup_model_with_steps_string_vector(vector<string>& data)
         return is_successful;
 }
 
-bool WT3E2::setup_model_with_psse_string(string data)
+bool WT3E0PCL::setup_model_with_psse_string(string data)
 {
     vector<string> record = psse_dyr_string2steps_string_vector(data);
     return setup_model_with_steps_string_vector(record);
 }
 
-bool WT3E2::setup_model_with_bpa_string(string data)
+bool WT3E0PCL::setup_model_with_bpa_string(string data)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
@@ -576,13 +576,13 @@ bool WT3E2::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void WT3E2::setup_block_toolkit_and_parameters()
+void WT3E0PCL::setup_block_toolkit_and_parameters()
 {
     conelec2.set_bus_pointer(get_bus_pointer());
     conelec2.set_device_pointer(get_device_pointer());
 }
 
-void WT3E2::initialize()
+void WT3E0PCL::initialize()
 {
     ostringstream osstream;
     if(not is_model_initialized())
@@ -670,7 +670,7 @@ void WT3E2::initialize()
     }
 }
 
-void WT3E2::run(DYNAMIC_MODE mode)
+void WT3E0PCL::run(DYNAMIC_MODE mode)
 {
 
 
@@ -705,37 +705,37 @@ void WT3E2::run(DYNAMIC_MODE mode)
 }
 
 
-double WT3E2::get_active_current_command_in_pu_based_on_mbase()
+double WT3E0PCL::get_active_current_command_in_pu_based_on_mbase()
 {
     return conelec2.get_active_current_command_in_pu_based_on_mbase();
 }
 
-double WT3E2::get_active_power_command_in_pu_based_on_mbase() const
+double WT3E0PCL::get_active_power_command_in_pu_based_on_mbase() const
 {
     return conelec2.get_active_power_command_in_pu_based_on_mbase();
 }
 
-double WT3E2::get_reactive_current_command_in_pu_based_on_mbase()
+double WT3E0PCL::get_reactive_current_command_in_pu_based_on_mbase()
 {
     return conelec2.get_reactive_current_command_in_pu_based_on_mbase();
 }
 
-double WT3E2::get_reactive_power_command_in_pu_based_on_mbase()
+double WT3E0PCL::get_reactive_power_command_in_pu_based_on_mbase()
 {
     return conelec2.get_reactive_power_command_in_pu_based_on_mbase();
 }
 
-double WT3E2::get_reactive_voltage_command_in_pu() const
+double WT3E0PCL::get_reactive_voltage_command_in_pu() const
 {
     return conelec2.get_reactive_voltage_command_in_pu();
 }
 
-void WT3E2::check()
+void WT3E0PCL::check()
 {
     ;
 }
 
-void WT3E2::report()
+void WT3E0PCL::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string(false);
@@ -743,12 +743,12 @@ void WT3E2::report()
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-void WT3E2::save()
+void WT3E0PCL::save()
 {
     ;
 }
 
-string WT3E2::get_standard_psse_string(bool export_internal_bus_number) const
+string WT3E0PCL::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
     WT_GENERATOR* source = get_wt_generator_pointer();
@@ -843,7 +843,7 @@ string WT3E2::get_standard_psse_string(bool export_internal_bus_number) const
     return osstream.str();
 }
 
-void WT3E2::prepare_model_data_table()
+void WT3E0PCL::prepare_model_data_table()
 {
     clear_model_data_table();
     unsigned int i=0;
@@ -882,7 +882,7 @@ void WT3E2::prepare_model_data_table()
     add_model_data_name_and_index_pair("IPMAX IN PU", i); i++;
 }
 
-double WT3E2::get_model_data_with_name(string par_name) const
+double WT3E0PCL::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
 
@@ -925,7 +925,7 @@ double WT3E2::get_model_data_with_name(string par_name) const
     return 0.0;
 }
 
-void WT3E2::set_model_data_with_name(string par_name, double value)
+void WT3E0PCL::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
 
@@ -994,7 +994,7 @@ void WT3E2::set_model_data_with_name(string par_name, double value)
     return;
 }
 
-double WT3E2::get_minimum_nonzero_time_constant_in_s()
+double WT3E0PCL::get_minimum_nonzero_time_constant_in_s()
 {
     double mint = INFINITE_THRESHOLD;
     if(get_TRV_in_s()!=0.0 and mint>get_TRV_in_s())
@@ -1014,7 +1014,7 @@ double WT3E2::get_minimum_nonzero_time_constant_in_s()
     return mint;
 }
 
-void WT3E2::prepare_model_internal_variable_table()
+void WT3E0PCL::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
@@ -1028,7 +1028,7 @@ void WT3E2::prepare_model_internal_variable_table()
     add_model_internal_variable_name_and_index_pair("SECONDARY FREQUENCY CONTROL COMMAND", i); i++;
 }
 
-double WT3E2::get_model_internal_variable_with_name(string var_name)
+double WT3E0PCL::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
 
@@ -1043,17 +1043,17 @@ double WT3E2::get_model_internal_variable_with_name(string var_name)
     return 0.0;
 }
 
-string WT3E2::get_dynamic_data_in_psse_format() const
+string WT3E0PCL::get_dynamic_data_in_psse_format() const
 {
     return get_standard_psse_string();
 }
 
-string WT3E2::get_dynamic_data_in_bpa_format() const
+string WT3E0PCL::get_dynamic_data_in_bpa_format() const
 {
     return get_dynamic_data_in_psse_format();
 }
 
-string WT3E2::get_dynamic_data_in_steps_format() const
+string WT3E0PCL::get_dynamic_data_in_steps_format() const
 {
     return get_dynamic_data_in_psse_format();
 }

@@ -1,16 +1,16 @@
-#ifndef WT3T1_H
-#define WT3T1_H
+#ifndef WT3T0DBR_H
+#define WT3T0DBR_H
 
 #include "header/model/wtg_models/wt_turbine_model/wt_turbine_model.h"
 #include "header/block/integral_block.h"
 
-class WT3T1 : public WT_TURBINE_MODEL
+class WT3T0DBR : public WT_TURBINE_MODEL
 {
     public:
-        WT3T1(STEPS& toolkit);
-        WT3T1(const WT3T1& model);
-        virtual ~WT3T1();
-        virtual WT3T1& operator=(const WT3T1& model);
+        WT3T0DBR(STEPS& toolkit);
+        WT3T0DBR(const WT3T0DBR& model);
+        virtual ~WT3T0DBR();
+        virtual WT3T0DBR& operator=(const WT3T0DBR& model);
     public: // specific model level
         virtual string get_model_name() const;
 
@@ -54,7 +54,7 @@ class WT3T1 : public WT_TURBINE_MODEL
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
     private:
-        void copy_from_const_model(const WT3T1& model);
+        void copy_from_const_model(const WT3T0DBR& model);
 
         INTEGRAL_BLOCK shaft_twist_block;
         INTEGRAL_BLOCK turbine_inertia_block;
@@ -64,4 +64,4 @@ class WT3T1 : public WT_TURBINE_MODEL
         double Dshaft;
 };
 
-#endif // WT3T1_H
+#endif // WT3T0DBR_H

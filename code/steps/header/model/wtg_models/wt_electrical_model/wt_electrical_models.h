@@ -3,7 +3,7 @@
 
 #include "header/model/wtg_models/wt_electrical_model/wt3e0.h"
 #include "header/model/wtg_models/wt_electrical_model/wt3e1.h"
-#include "header/model/wtg_models/wt_electrical_model/wt3e2.h"
-#include "header/model/wtg_models/wt_electrical_model/wt3e3.h"
+#include "header/model/wtg_models/wt_electrical_model/wt3e0pcl.h"
+#include "header/model/wtg_models/wt_electrical_model/wt3e0mpc.h"
 
 #endif // WT_ELECTRICAL_MODELS_H

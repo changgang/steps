@@ -1,8 +1,8 @@
-#include "header/model/wtg_models/wt_turbine_model/wt3t1.h"
+#include "header/model/wtg_models/wt_turbine_model/wt3t0dbr.h"
 #include "header/basic/utility.h"
 #include "header/STEPS.h"
 
-WT3T1::WT3T1(STEPS& toolkit) : WT_TURBINE_MODEL(toolkit),
+WT3T0DBR::WT3T0DBR(STEPS& toolkit) : WT_TURBINE_MODEL(toolkit),
                                shaft_twist_block(toolkit),
                                turbine_inertia_block(toolkit),
                                generator_inertia_block(toolkit),
@@ -11,16 +11,16 @@ WT3T1::WT3T1(STEPS& toolkit) : WT_TURBINE_MODEL(toolkit),
     clear();
 }
 
-WT3T1::~WT3T1()
+WT3T0DBR::~WT3T0DBR()
 {
 }
 
-void WT3T1::clear()
+void WT3T0DBR::clear()
 {
     set_model_float_parameter_count(5);
 }
 
-void WT3T1::copy_from_const_model(const WT3T1& model)
+void WT3T0DBR::copy_from_const_model(const WT3T0DBR& model)
 {
     STEPS& toolkit = model.get_toolkit();
     set_toolkit(toolkit);
@@ -38,7 +38,7 @@ void WT3T1::copy_from_const_model(const WT3T1& model)
     set_Dshaft_in_pu(model.get_Dshaft_in_pu());
 }
 
-WT3T1::WT3T1(const WT3T1& model) : WT_TURBINE_MODEL(model.get_toolkit()),
+WT3T0DBR::WT3T0DBR(const WT3T0DBR& model) : WT_TURBINE_MODEL(model.get_toolkit()),
                                    shaft_twist_block(model.get_toolkit()),
                                    turbine_inertia_block(model.get_toolkit()),
                                    generator_inertia_block(model.get_toolkit()),
@@ -47,7 +47,7 @@ WT3T1::WT3T1(const WT3T1& model) : WT_TURBINE_MODEL(model.get_toolkit()),
     copy_from_const_model(model);
 }
 
-WT3T1& WT3T1::operator=(const WT3T1& model)
+WT3T0DBR& WT3T0DBR::operator=(const WT3T0DBR& model)
 {
     if(this==&model)
         return *this;
@@ -57,53 +57,53 @@ WT3T1& WT3T1::operator=(const WT3T1& model)
     return (*this);
 }
 
-string WT3T1::get_model_name() const
+string WT3T0DBR::get_model_name() const
 {
-    return "WT3T1";
+    return "WT3T0DBR";
 }
 
 
-void WT3T1::set_Hturbine_in_s(double H)
+void WT3T0DBR::set_Hturbine_in_s(double H)
 {
     turbine_inertia_block.set_T_in_s(2.0*H);
 }
 
-void WT3T1::set_Hgenerator_in_s(double H)
+void WT3T0DBR::set_Hgenerator_in_s(double H)
 {
     generator_inertia_block.set_T_in_s(2.0*H);
 }
 
-void WT3T1::set_Kshaft_in_pu(double K)
+void WT3T0DBR::set_Kshaft_in_pu(double K)
 {
     shaft_twist_block.set_T_in_s(1.0/K);
 }
 
-void WT3T1::set_Dshaft_in_pu(double D)
+void WT3T0DBR::set_Dshaft_in_pu(double D)
 {
     Dshaft = D;
 }
 
-double WT3T1::get_Hturbine_in_s() const
+double WT3T0DBR::get_Hturbine_in_s() const
 {
     return 0.5*turbine_inertia_block.get_T_in_s();
 }
 
-double WT3T1::get_Hgenerator_in_s() const
+double WT3T0DBR::get_Hgenerator_in_s() const
 {
     return 0.5*generator_inertia_block.get_T_in_s();
 }
 
-double WT3T1::get_Kshaft_in_pu() const
+double WT3T0DBR::get_Kshaft_in_pu() const
 {
     return 1.0/shaft_twist_block.get_T_in_s();
 }
 
-double WT3T1::get_Dshaft_in_pu() const
+double WT3T0DBR::get_Dshaft_in_pu() const
 {
     return Dshaft;
 }
 
-bool WT3T1::setup_model_with_steps_string_vector(vector<string>& data)
+bool WT3T0DBR::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
     if(data.size()>=8)
@@ -138,13 +138,13 @@ bool WT3T1::setup_model_with_steps_string_vector(vector<string>& data)
         return is_successful;
 }
 
-bool WT3T1::setup_model_with_psse_string(string data)
+bool WT3T0DBR::setup_model_with_psse_string(string data)
 {
     vector<string> record = psse_dyr_string2steps_string_vector(data);
     return setup_model_with_steps_string_vector(record);
 }
 
-bool WT3T1::setup_model_with_bpa_string(string data)
+bool WT3T0DBR::setup_model_with_bpa_string(string data)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
@@ -154,11 +154,11 @@ bool WT3T1::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void WT3T1::setup_block_toolkit_and_parameters()
+void WT3T0DBR::setup_block_toolkit_and_parameters()
 {
 }
 
-void WT3T1::initialize()
+void WT3T0DBR::initialize()
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
     STEPS& toolkit = get_toolkit();
@@ -219,7 +219,7 @@ void WT3T1::initialize()
     }
 }
 
-void WT3T1::run(DYNAMIC_MODE mode)
+void WT3T0DBR::run(DYNAMIC_MODE mode)
 {
     WT_GENERATOR* wtgen = (WT_GENERATOR*) get_device_pointer();
 
@@ -294,7 +294,7 @@ void WT3T1::run(DYNAMIC_MODE mode)
     }
 }
 
-double WT3T1::get_turbine_speed_in_pu() const
+double WT3T0DBR::get_turbine_speed_in_pu() const
 {
     if(fabs(get_Hturbine_in_s())>DOUBLE_EPSILON)
         return turbine_inertia_block.get_output()+1.0;
@@ -302,27 +302,27 @@ double WT3T1::get_turbine_speed_in_pu() const
         return get_generator_speed_in_pu();
 }
 
-double WT3T1::get_generator_speed_in_pu() const
+double WT3T0DBR::get_generator_speed_in_pu() const
 {
     return generator_inertia_block.get_output()+1.0;
 }
 
-double WT3T1::get_rotor_angle_in_deg() const
+double WT3T0DBR::get_rotor_angle_in_deg() const
 {
     return rad2deg(get_rotor_angle_in_rad());
 }
 
-double WT3T1::get_rotor_angle_in_rad() const
+double WT3T0DBR::get_rotor_angle_in_rad() const
 {
     return generator_rotor_angle_block.get_output();
 }
 
-void WT3T1::check()
+void WT3T0DBR::check()
 {
     ;
 }
 
-void WT3T1::report()
+void WT3T0DBR::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string(false);
@@ -330,11 +330,11 @@ void WT3T1::report()
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-void WT3T1::save()
+void WT3T0DBR::save()
 {
     ;
 }
-string WT3T1::get_standard_psse_string(bool export_internal_bus_number) const
+string WT3T0DBR::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
 
@@ -366,7 +366,7 @@ string WT3T1::get_standard_psse_string(bool export_internal_bus_number) const
     return osstream.str();
 }
 
-void WT3T1::prepare_model_data_table()
+void WT3T0DBR::prepare_model_data_table()
 {
     clear_model_data_table();
     unsigned int i=1;
@@ -377,7 +377,7 @@ void WT3T1::prepare_model_data_table()
     add_model_data_name_and_index_pair("GENERATOR DAMPING", i); i++; /*5*/
 }
 
-double WT3T1::get_model_data_with_name(string par_name) const
+double WT3T0DBR::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
     if(par_name=="TURBINE INERTIA") return get_Hturbine_in_s();
@@ -388,7 +388,7 @@ double WT3T1::get_model_data_with_name(string par_name) const
     return 0.0;
 }
 
-void WT3T1::set_model_data_with_name(string par_name, double value)
+void WT3T0DBR::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
     if(par_name=="TURBINE INERTIA") return set_Hturbine_in_s(value);
@@ -398,12 +398,12 @@ void WT3T1::set_model_data_with_name(string par_name, double value)
     if(par_name=="GENERATOR DAMPING") return set_damping_in_pu(value);
 }
 
-double WT3T1::get_minimum_nonzero_time_constant_in_s()
+double WT3T0DBR::get_minimum_nonzero_time_constant_in_s()
 {
     return INFINITE_THRESHOLD;
 }
 
-void WT3T1::prepare_model_internal_variable_table()
+void WT3T0DBR::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
@@ -413,7 +413,7 @@ void WT3T1::prepare_model_internal_variable_table()
     add_model_internal_variable_name_and_index_pair("STATE@ROTOR ANGLE BLOCK", i); i++;
 }
 
-double WT3T1::get_model_internal_variable_with_name(string var_name)
+double WT3T0DBR::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name=="STATE@TURBINE SPEED BLOCK") return turbine_inertia_block.get_state();
@@ -424,17 +424,17 @@ double WT3T1::get_model_internal_variable_with_name(string var_name)
     return 0.0;
 }
 
-string WT3T1::get_dynamic_data_in_psse_format() const
+string WT3T0DBR::get_dynamic_data_in_psse_format() const
 {
     return "";
 }
 
-string WT3T1::get_dynamic_data_in_bpa_format() const
+string WT3T0DBR::get_dynamic_data_in_bpa_format() const
 {
     return get_dynamic_data_in_psse_format();
 }
 
-string WT3T1::get_dynamic_data_in_steps_format() const
+string WT3T0DBR::get_dynamic_data_in_steps_format() const
 {
     return get_dynamic_data_in_psse_format();
 }

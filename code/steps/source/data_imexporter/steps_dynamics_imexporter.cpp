@@ -167,11 +167,11 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="AERD0") { add_AERD0_model(data); return;}
     if(model_name=="AERDL") { add_AERDL_model(data); return;}
     if(model_name=="WT3T0") { add_WT3T0_model(data); return;}
-    if(model_name=="WT3T1") { add_WT3T1_model(data); return;}
+    if(model_name=="WT3T0DBR") { add_WT3T0DBR_model(data); return;}
     if(model_name=="WT3E0") { add_WT3E0_model(data); return;}
     if(model_name=="WT3E1") { add_WT3E1_model(data); return;}
-    if(model_name=="WT3E2") { add_WT3E2_model(data); return;}
-    if(model_name=="WT3E3") { add_WT3E3_model(data); return;}
+    if(model_name=="WT3E0PCL") { add_WT3E0PCL_model(data); return;}
+    if(model_name=="WT3E0MPC") { add_WT3E0MPC_model(data); return;}
     if(model_name=="WT3P0") { add_WT3P0_model(data); return;}
     if(model_name=="FILEWIND") { add_FILEWIND_model(data); return;}
     if(model_name=="WTRLY0") { add_WTRLY0_model(data); return;}
@@ -2007,9 +2007,9 @@ void STEPS_IMEXPORTER::add_WT3T0_model(vector<string>& data)
     }
 }
 
-void STEPS_IMEXPORTER::add_WT3T1_model(vector<string>& data)
+void STEPS_IMEXPORTER::add_WT3T0DBR_model(vector<string>& data)
 {
-    if(get_dynamic_model_name(data) != "WT3T1")
+    if(get_dynamic_model_name(data) != "WT3T0DBR")
         return;
 
     if(data.size()<3)
@@ -2023,7 +2023,7 @@ void STEPS_IMEXPORTER::add_WT3T1_model(vector<string>& data)
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
-        WT3T1 model(toolkit);
+        WT3T0DBR model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -2031,7 +2031,7 @@ void STEPS_IMEXPORTER::add_WT3T1_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid WT3T1 model is built, but will not be set for "<<gen->get_compound_device_name();
+            osstream<<"Warning. Invalid WT3T0DBR model is built, but will not be set for "<<gen->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -2098,9 +2098,9 @@ void STEPS_IMEXPORTER::add_WT3E1_model(vector<string>& data)
     }
 }
 
-void STEPS_IMEXPORTER::add_WT3E2_model(vector<string>& data)
+void STEPS_IMEXPORTER::add_WT3E0PCL_model(vector<string>& data)
 {
-    if(get_dynamic_model_name(data) != "WT3E2")
+    if(get_dynamic_model_name(data) != "WT3E0PCL")
         return;
 
     if(data.size()<3)
@@ -2114,7 +2114,7 @@ void STEPS_IMEXPORTER::add_WT3E2_model(vector<string>& data)
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
-        WT3E2 model(toolkit);
+        WT3E0PCL model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -2122,15 +2122,15 @@ void STEPS_IMEXPORTER::add_WT3E2_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid WT3E2 model is built, but will not be set for "<<gen->get_compound_device_name();
+            osstream<<"Warning. Invalid WT3E0PCL model is built, but will not be set for "<<gen->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
 
-void STEPS_IMEXPORTER::add_WT3E3_model(vector<string>& data)
+void STEPS_IMEXPORTER::add_WT3E0MPC_model(vector<string>& data)
 {
-    if(get_dynamic_model_name(data) != "WT3E3")
+    if(get_dynamic_model_name(data) != "WT3E0MPC")
         return;
 
     if(data.size()<3)
@@ -2144,7 +2144,7 @@ void STEPS_IMEXPORTER::add_WT3E3_model(vector<string>& data)
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
-        WT3E3 model(toolkit);
+        WT3E0MPC model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -2152,7 +2152,7 @@ void STEPS_IMEXPORTER::add_WT3E3_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid WT3E3 model is built, but will not be set for "<<gen->get_compound_device_name();
+            osstream<<"Warning. Invalid WT3E0MPC model is built, but will not be set for "<<gen->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }

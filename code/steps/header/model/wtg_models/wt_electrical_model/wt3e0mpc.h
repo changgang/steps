@@ -1,18 +1,18 @@
-#ifndef WT3E3_H
-#define WT3E3_H
+#ifndef WT3E0MPC_H
+#define WT3E0MPC_H
 
 #include "header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
 #include "header/model/converter_common_model/elec_model/convelec0.h"
 #include "header/block/first_order_block.h"
 #include "header/block/pi_block.h"
 
-class WT3E3: public WT_ELECTRICAL_MODEL
+class WT3E0MPC: public WT_ELECTRICAL_MODEL
 {
     public:
-        WT3E3(STEPS& toolkit);
-        WT3E3(const WT3E3& model);
-        virtual ~WT3E3();
-        virtual WT3E3& operator=(const WT3E3& model);
+        WT3E0MPC(STEPS& toolkit);
+        WT3E0MPC(const WT3E0MPC& model);
+        virtual ~WT3E0MPC();
+        virtual WT3E0MPC& operator=(const WT3E0MPC& model);
     public:
         virtual string get_model_name() const;
 
@@ -146,7 +146,7 @@ class WT3E3: public WT_ELECTRICAL_MODEL
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
     private:
-        void copy_from_const_model(const WT3E3& model);
+        void copy_from_const_model(const WT3E0MPC& model);
 
         void trip_frequency_regulation();
         WT_ACTIVE_POWER_CONTROL_MODE active_power_control_mode;
@@ -161,4 +161,4 @@ class WT3E3: public WT_ELECTRICAL_MODEL
         double initial_torque;
 };
 
-#endif // WT3E3_H
+#endif // WT3E0MPC_H

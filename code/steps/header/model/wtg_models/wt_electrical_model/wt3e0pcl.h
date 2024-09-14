@@ -1,18 +1,18 @@
-#ifndef WT3E2_H
-#define WT3E2_H
+#ifndef WT3E0PCL_H
+#define WT3E0PCL_H
 
 #include "header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
 #include "header/model/converter_common_model/elec_model/convelec2.h"
 #include "header/block/first_order_block.h"
 #include "header/block/pi_block.h"
 
-class WT3E2: public WT_ELECTRICAL_MODEL
+class WT3E0PCL: public WT_ELECTRICAL_MODEL
 {
     public:
-        WT3E2(STEPS& toolkit);
-        WT3E2(const WT3E2& model);
-        virtual ~WT3E2();
-        virtual WT3E2& operator=(const WT3E2& model);
+        WT3E0PCL(STEPS& toolkit);
+        WT3E0PCL(const WT3E0PCL& model);
+        virtual ~WT3E0PCL();
+        virtual WT3E0PCL& operator=(const WT3E0PCL& model);
     public:
         virtual string get_model_name() const;
 
@@ -121,11 +121,11 @@ class WT3E2: public WT_ELECTRICAL_MODEL
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
     private:
-        void copy_from_const_model(const WT3E2& model);
+        void copy_from_const_model(const WT3E0PCL& model);
 
         FIRST_ORDER_BLOCK wind_turbine_speed_reference_sensor;
         PI_BLOCK torque_PI_regulator;
         CONVELEC2 conelec2;
 };
 
-#endif // WT3E2_H
+#endif // WT3E0PCL_H

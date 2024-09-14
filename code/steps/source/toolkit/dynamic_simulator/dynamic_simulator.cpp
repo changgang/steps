@@ -2018,7 +2018,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         {
             if(std::isnan(I_mismatch[i].real()) or std::isnan(I_mismatch[i].imag()))
             {
-                osstream<<"warning. NAN is detected when getting bus current mismatch after adding pv units when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+                osstream<<"warning. NAN is detected when getting bus current mismatch after adding energy storages when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
                 for(unsigned int j = 0; j<n; ++j)
                 {
                     if(std::isnan(I_mismatch[j].real()) or std::isnan(I_mismatch[j].imag()))

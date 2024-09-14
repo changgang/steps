@@ -1,4 +1,4 @@
-#include "header/model/wtg_models/wt_electrical_model/wt3e3.h"
+#include "header/model/wtg_models/wt_electrical_model/wt3e0mpc.h"
 #include "header/device/wt_generator.h"
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
@@ -8,7 +8,7 @@
 
 using namespace std;
 
-WT3E3::WT3E3(STEPS& toolkit) : WT_ELECTRICAL_MODEL(toolkit),
+WT3E0MPC::WT3E0MPC(STEPS& toolkit) : WT_ELECTRICAL_MODEL(toolkit),
                                wind_turbine_speed_reference_sensor(toolkit),
                                active_power_sensor(toolkit),
                                torque_PI_regulator(toolkit),
@@ -20,7 +20,7 @@ WT3E3::WT3E3(STEPS& toolkit) : WT_ELECTRICAL_MODEL(toolkit),
     clear();
 }
 
-WT3E3::WT3E3(const WT3E3& model) : WT_ELECTRICAL_MODEL(model.get_toolkit()),
+WT3E0MPC::WT3E0MPC(const WT3E0MPC& model) : WT_ELECTRICAL_MODEL(model.get_toolkit()),
                                    wind_turbine_speed_reference_sensor(model.get_toolkit()),
                                    active_power_sensor(model.get_toolkit()),
                                    torque_PI_regulator(model.get_toolkit()),
@@ -32,12 +32,12 @@ WT3E3::WT3E3(const WT3E3& model) : WT_ELECTRICAL_MODEL(model.get_toolkit()),
     copy_from_const_model(model);
 }
 
-WT3E3::~WT3E3()
+WT3E0MPC::~WT3E0MPC()
 {
     ;
 }
 
-WT3E3& WT3E3::operator=(const WT3E3& model)
+WT3E0MPC& WT3E0MPC::operator=(const WT3E0MPC& model)
 {
     if(this==(&model)) return *this;
 
@@ -46,7 +46,7 @@ WT3E3& WT3E3::operator=(const WT3E3& model)
     return *this;
 }
 
-void WT3E3::clear()
+void WT3E0MPC::clear()
 {
     set_model_float_parameter_count(41);
     conelec0.clear();
@@ -57,7 +57,7 @@ void WT3E3::clear()
     set_active_power_control_mode(SPEED_CONTROL_MODE);
 }
 
-void WT3E3::copy_from_const_model(const WT3E3& model)
+void WT3E0MPC::copy_from_const_model(const WT3E0MPC& model)
 {
     if(model.is_model_bypassed()) bypass_model();
 
@@ -113,108 +113,108 @@ void WT3E3::copy_from_const_model(const WT3E3& model)
     set_dPMX(model.get_dPMX());
 }
 
-string WT3E3::get_model_name() const
+string WT3E0MPC::get_model_name() const
 {
-    return "WT3E3";
+    return "WT3E0MPC";
 }
 
-void WT3E3::set_var_control_mode(REACTIVE_POWER_CONTROL_MODE mode)
+void WT3E0MPC::set_var_control_mode(REACTIVE_POWER_CONTROL_MODE mode)
 {
     conelec0.set_var_control_mode(mode);
 }
 
-REACTIVE_POWER_CONTROL_MODE WT3E3::get_var_control_mode() const
+REACTIVE_POWER_CONTROL_MODE WT3E0MPC::get_var_control_mode() const
 {
     return conelec0.get_var_control_mode();
 }
 
-void WT3E3::set_active_power_control_mode(WT_ACTIVE_POWER_CONTROL_MODE mode)
+void WT3E0MPC::set_active_power_control_mode(WT_ACTIVE_POWER_CONTROL_MODE mode)
 {
     this->active_power_control_mode = mode;
 }
 
-WT_ACTIVE_POWER_CONTROL_MODE WT3E3::get_active_power_control_mode() const
+WT_ACTIVE_POWER_CONTROL_MODE WT3E0MPC::get_active_power_control_mode() const
 {
     return this->active_power_control_mode;
 }
 
-void WT3E3::set_bus_to_regulate(unsigned int bus)
+void WT3E0MPC::set_bus_to_regulate(unsigned int bus)
 {
     conelec0.set_bus_to_regulate(bus);
 }
 
-unsigned int WT3E3::get_bus_to_regulate() const
+unsigned int WT3E0MPC::get_bus_to_regulate() const
 {
     return conelec0.get_bus_to_regulate();
 }
 
-void WT3E3::set_Xcomp_in_pu(double Xc)
+void WT3E0MPC::set_Xcomp_in_pu(double Xc)
 {
     conelec0.set_Xcomp_in_pu(Xc);
 }
 
-void WT3E3::set_TRV_in_s(double T)
+void WT3E0MPC::set_TRV_in_s(double T)
 {
     conelec0.set_TRV_in_s(T);
 }
 
-void WT3E3::set_Fn(double Fn)
+void WT3E0MPC::set_Fn(double Fn)
 {
     conelec0.set_Fn(Fn);
 }
 
-void WT3E3::set_KIV(double K)
+void WT3E0MPC::set_KIV(double K)
 {
     conelec0.set_KIV(K);
 }
 
-void WT3E3::set_Qmax_in_pu(double q)
+void WT3E0MPC::set_Qmax_in_pu(double q)
 {
     conelec0.set_Qmax_in_pu(q);
 }
 
-void WT3E3::set_Qmin_in_pu(double q)
+void WT3E0MPC::set_Qmin_in_pu(double q)
 {
     conelec0.set_Qmin_in_pu(q);
 }
 
-void WT3E3::set_KPV(double K)
+void WT3E0MPC::set_KPV(double K)
 {
     conelec0.set_KPV(K);
 }
 
-void WT3E3::set_TV_in_s(double T)
+void WT3E0MPC::set_TV_in_s(double T)
 {
     conelec0.set_TV_in_s(T);
 }
 
-void WT3E3::set_TFV_in_s(double T)
+void WT3E0MPC::set_TFV_in_s(double T)
 {
     conelec0.set_TFV_in_s(T);
 }
 
-void WT3E3::set_TP_in_s(double T)
+void WT3E0MPC::set_TP_in_s(double T)
 {
     conelec0.set_TP_in_s(T);
     active_power_sensor.set_T_in_s(T);
 }
 
-void WT3E3::set_KQI(double K)
+void WT3E0MPC::set_KQI(double K)
 {
     conelec0.set_KQI(K);
 }
 
-void WT3E3::set_Vmax_in_pu(double v)
+void WT3E0MPC::set_Vmax_in_pu(double v)
 {
     conelec0.set_Vmax_in_pu(v);
 }
 
-void WT3E3::set_Vmin_in_pu(double v)
+void WT3E0MPC::set_Vmin_in_pu(double v)
 {
     conelec0.set_Vmin_in_pu(v);
 }
 
-void WT3E3::set_voltage_flag(unsigned int flag)
+void WT3E0MPC::set_voltage_flag(unsigned int flag)
 {
     if(flag<3)
         conelec0.set_voltage_flag(flag);
@@ -227,332 +227,332 @@ void WT3E3::set_voltage_flag(unsigned int flag)
     }
 }
 
-void WT3E3::set_KQV(double K)
+void WT3E0MPC::set_KQV(double K)
 {
     conelec0.set_KQV(K);
 }
 
-void WT3E3::set_EQmax_in_pu(double I)
+void WT3E0MPC::set_EQmax_in_pu(double I)
 {
     conelec0.set_EQmax_in_pu(I);
 }
 
-void WT3E3::set_EQmin_in_pu(double I)
+void WT3E0MPC::set_EQmin_in_pu(double I)
 {
     conelec0.set_EQmin_in_pu(I);
 }
 
-void WT3E3::set_Tspeed_in_s(double T)
+void WT3E0MPC::set_Tspeed_in_s(double T)
 {
     wind_turbine_speed_reference_sensor.set_T_in_s(T);
 }
 
-void WT3E3::set_KPP(double K)
+void WT3E0MPC::set_KPP(double K)
 {
     torque_PI_regulator.set_Kp(K);
 }
 
-void WT3E3::set_KIP(double K)
+void WT3E0MPC::set_KIP(double K)
 {
     torque_PI_regulator.set_Ki(K);
 }
 
-void WT3E3::set_Kvi(double K)
+void WT3E0MPC::set_Kvi(double K)
 {
     conelec0.set_Kvi(K);
 }
 
-void WT3E3::set_Tvi_in_s(double T)
+void WT3E0MPC::set_Tvi_in_s(double T)
 {
     conelec0.set_Tvi_in_s(T);
 }
 
-void WT3E3::set_Kdroop(double K)
+void WT3E0MPC::set_Kdroop(double K)
 {
     conelec0.set_Kdroop(K);
 }
 
-void WT3E3::set_Tdroop_in_s(double T)
+void WT3E0MPC::set_Tdroop_in_s(double T)
 {
     conelec0.set_Tdroop_in_s(T);
 }
 
-void WT3E3::set_frequency_deviation_upper_deadband_in_pu(double f)
+void WT3E0MPC::set_frequency_deviation_upper_deadband_in_pu(double f)
 {
     conelec0.set_frequency_deviation_upper_deadband_in_pu(f);
 }
 
-void WT3E3::set_frequency_deviation_lower_deadband_in_pu(double f)
+void WT3E0MPC::set_frequency_deviation_lower_deadband_in_pu(double f)
 {
     conelec0.set_frequency_deviation_lower_deadband_in_pu(f);
 }
 
-void WT3E3::set_Kfint(double K)
+void WT3E0MPC::set_Kfint(double K)
 {
     conelec0.set_Kfint(K);
 }
 
-void WT3E3::set_rPmax_in_pu(double r)
+void WT3E0MPC::set_rPmax_in_pu(double r)
 {
     conelec0.set_rPmax_in_pu(r);
 }
 
-void WT3E3::set_rPmin_in_pu(double r)
+void WT3E0MPC::set_rPmin_in_pu(double r)
 {
     conelec0.set_rPmin_in_pu(r);
 }
 
-void WT3E3::set_TFP_in_s(double T)
+void WT3E0MPC::set_TFP_in_s(double T)
 {
     conelec0.set_TFP_in_s(T);
 }
 
-void WT3E3::set_Pmax_in_pu(double p)
+void WT3E0MPC::set_Pmax_in_pu(double p)
 {
     conelec0.set_Pmax_in_pu(p);
 }
 
-void WT3E3::set_Pmin_in_pu(double p)
+void WT3E0MPC::set_Pmin_in_pu(double p)
 {
     conelec0.set_Pmin_in_pu(p);
 }
 
-void WT3E3::set_IPmax_in_pu(double I)
+void WT3E0MPC::set_IPmax_in_pu(double I)
 {
     conelec0.set_IPmax_in_pu(I);
 }
 
-void WT3E3::set_KPC(double K)
+void WT3E0MPC::set_KPC(double K)
 {
     active_power_PI_controller.set_Kp(K);
 }
 
-void WT3E3::set_KIC(double K)
+void WT3E0MPC::set_KIC(double K)
 {
     active_power_PI_controller.set_Ki(K);
 }
 
-void WT3E3::set_KF(double K)
+void WT3E0MPC::set_KF(double K)
 {
     active_power_differential_controller.set_K(K);
     active_power_differential_controller.set_T_in_s(K);
 }
 
-void WT3E3::set_dPMN(double p)
+void WT3E0MPC::set_dPMN(double p)
 {
     active_power_PI_controller.set_lower_limit(p);
 }
 
-void WT3E3::set_dPMX(double p)
+void WT3E0MPC::set_dPMX(double p)
 {
     active_power_PI_controller.set_upper_limit(p);
 }
 
-void WT3E3::set_initial_Torque(double T)
+void WT3E0MPC::set_initial_Torque(double T)
 {
     this->initial_torque = T;
 }
 
-double WT3E3::get_Xcomp_in_pu() const
+double WT3E0MPC::get_Xcomp_in_pu() const
 {
     return conelec0.get_Xcomp_in_pu();
 }
 
-double WT3E3::get_TRV_in_s() const
+double WT3E0MPC::get_TRV_in_s() const
 {
     return conelec0.get_TRV_in_s();
 }
 
-double WT3E3::get_Fn() const
+double WT3E0MPC::get_Fn() const
 {
     return conelec0.get_Fn();
 }
 
-double WT3E3::get_KIV() const
+double WT3E0MPC::get_KIV() const
 {
     return conelec0.get_KIV();
 }
 
-double WT3E3::get_Qmax_in_pu() const
+double WT3E0MPC::get_Qmax_in_pu() const
 {
     return conelec0.get_Qmax_in_pu();
 }
 
-double WT3E3::get_Qmin_in_pu() const
+double WT3E0MPC::get_Qmin_in_pu() const
 {
     return conelec0.get_Qmin_in_pu();
 }
 
-double WT3E3::get_KPV() const
+double WT3E0MPC::get_KPV() const
 {
     return conelec0.get_KPV();
 }
 
-double WT3E3::get_TV_in_s() const
+double WT3E0MPC::get_TV_in_s() const
 {
     return conelec0.get_TV_in_s();
 }
 
-double WT3E3::get_TFV_in_s() const
+double WT3E0MPC::get_TFV_in_s() const
 {
     return conelec0.get_TFV_in_s();
 }
 
-double WT3E3::get_TP_in_s() const
+double WT3E0MPC::get_TP_in_s() const
 {
     return conelec0.get_TP_in_s();
 }
 
-double WT3E3::get_KQI() const
+double WT3E0MPC::get_KQI() const
 {
     return conelec0.get_KQI();
 }
 
-double WT3E3::get_Vmax_in_pu() const
+double WT3E0MPC::get_Vmax_in_pu() const
 {
     return conelec0.get_Vmax_in_pu();
 }
 
-double WT3E3::get_Vmin_in_pu() const
+double WT3E0MPC::get_Vmin_in_pu() const
 {
     return conelec0.get_Vmin_in_pu();
 }
 
-unsigned int WT3E3::get_voltage_flag() const
+unsigned int WT3E0MPC::get_voltage_flag() const
 {
     return conelec0.get_voltage_flag();
 }
 
-double WT3E3::get_KQV() const
+double WT3E0MPC::get_KQV() const
 {
     return conelec0.get_KQV();
 }
 
-double WT3E3::get_EQmax_in_pu() const
+double WT3E0MPC::get_EQmax_in_pu() const
 {
     return conelec0.get_EQmax_in_pu();
 }
 
-double WT3E3::get_EQmin_in_pu() const
+double WT3E0MPC::get_EQmin_in_pu() const
 {
     return conelec0.get_EQmin_in_pu();
 }
 
-double WT3E3::get_Tspeed_in_s() const
+double WT3E0MPC::get_Tspeed_in_s() const
 {
     return wind_turbine_speed_reference_sensor.get_T_in_s();
 }
 
-double WT3E3::get_KPP() const
+double WT3E0MPC::get_KPP() const
 {
     return torque_PI_regulator.get_Kp();
 }
 
-double WT3E3::get_KIP() const
+double WT3E0MPC::get_KIP() const
 {
     return torque_PI_regulator.get_Ki();
 }
 
-double WT3E3::get_Kvi() const
+double WT3E0MPC::get_Kvi() const
 {
     return conelec0.get_Kvi();
 }
 
-double WT3E3::get_Tvi_in_s() const
+double WT3E0MPC::get_Tvi_in_s() const
 {
     return conelec0.get_Tvi_in_s();
 }
 
-double WT3E3::get_Kdroop() const
+double WT3E0MPC::get_Kdroop() const
 {
     return conelec0.get_Kdroop();
 }
 
-double WT3E3::get_Tdroop_in_s() const
+double WT3E0MPC::get_Tdroop_in_s() const
 {
     return conelec0.get_Tdroop_in_s();
 }
 
-double WT3E3::get_frequency_deviation_upper_deadband_in_pu() const
+double WT3E0MPC::get_frequency_deviation_upper_deadband_in_pu() const
 {
     return conelec0.get_frequency_deviation_upper_deadband_in_pu();
 }
 
-double WT3E3::get_frequency_deviation_lower_deadband_in_pu() const
+double WT3E0MPC::get_frequency_deviation_lower_deadband_in_pu() const
 {
     return conelec0.get_frequency_deviation_lower_deadband_in_pu();
 }
 
-double WT3E3::get_Kfint() const
+double WT3E0MPC::get_Kfint() const
 {
     return conelec0.get_Kfint();
 }
-double WT3E3::get_rPmax_in_pu() const
+double WT3E0MPC::get_rPmax_in_pu() const
 {
     return conelec0.get_rPmax_in_pu();
 }
 
-double WT3E3::get_rPmin_in_pu() const
+double WT3E0MPC::get_rPmin_in_pu() const
 {
     return conelec0.get_rPmin_in_pu();
 }
 
-double WT3E3::get_TFP_in_s() const
+double WT3E0MPC::get_TFP_in_s() const
 {
     return conelec0.get_TFP_in_s();
 }
 
-double WT3E3::get_Pmax_in_pu() const
+double WT3E0MPC::get_Pmax_in_pu() const
 {
     return conelec0.get_Pmax_in_pu();
 }
 
-double WT3E3::get_Pmin_in_pu() const
+double WT3E0MPC::get_Pmin_in_pu() const
 {
     return conelec0.get_Pmin_in_pu();
 }
 
-double WT3E3::get_IPmax_in_pu() const
+double WT3E0MPC::get_IPmax_in_pu() const
 {
     return conelec0.get_IPmax_in_pu();
 }
 
-double WT3E3::get_KPC() const
+double WT3E0MPC::get_KPC() const
 {
     return active_power_PI_controller.get_Kp();
 }
 
-double WT3E3::get_KIC() const
+double WT3E0MPC::get_KIC() const
 {
     return active_power_PI_controller.get_Ki();
 }
 
-double WT3E3::get_KF() const
+double WT3E0MPC::get_KF() const
 {
     return active_power_differential_controller.get_K();
 }
 
-double WT3E3::get_dPMN() const
+double WT3E0MPC::get_dPMN() const
 {
     return active_power_PI_controller.get_lower_limit();
 }
 
-double WT3E3::get_dPMX() const
+double WT3E0MPC::get_dPMX() const
 {
     return active_power_PI_controller.get_upper_limit();
 }
 
-double WT3E3::get_initial_Torque() const
+double WT3E0MPC::get_initial_Torque() const
 {
     return this->initial_torque;
 }
 
-bool WT3E3::is_frequency_regulation_enabled() const
+bool WT3E0MPC::is_frequency_regulation_enabled() const
 {
     return conelec0.is_frequency_regulation_enabled();
 }
 
-void WT3E3::initialize_Torque()
+void WT3E0MPC::initialize_Torque()
 {
     double speed = get_wt_generator_speed_reference_in_pu();
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
@@ -565,12 +565,12 @@ void WT3E3::initialize_Torque()
     set_initial_Torque(pcmd/speed);
 }
 
-void WT3E3::trip_frequency_regulation()
+void WT3E0MPC::trip_frequency_regulation()
 {
     conelec0.trip_frequency_regulation();
 }
 
-bool WT3E3::setup_model_with_steps_string_vector(vector<string>& data)
+bool WT3E0MPC::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
     if(data.size()>=44)
@@ -737,13 +737,13 @@ bool WT3E3::setup_model_with_steps_string_vector(vector<string>& data)
         return is_successful;
 }
 
-bool WT3E3::setup_model_with_psse_string(string data)
+bool WT3E0MPC::setup_model_with_psse_string(string data)
 {
     vector<string> record = psse_dyr_string2steps_string_vector(data);
     return setup_model_with_steps_string_vector(record);
 }
 
-bool WT3E3::setup_model_with_bpa_string(string data)
+bool WT3E0MPC::setup_model_with_bpa_string(string data)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
@@ -753,13 +753,13 @@ bool WT3E3::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void WT3E3::setup_block_toolkit_and_parameters()
+void WT3E0MPC::setup_block_toolkit_and_parameters()
 {
     conelec0.set_bus_pointer(get_bus_pointer());
     conelec0.set_device_pointer(get_device_pointer());
 }
 
-void WT3E3::initialize()
+void WT3E0MPC::initialize()
 {
     ostringstream osstream;
     if(not is_model_initialized())
@@ -862,7 +862,7 @@ void WT3E3::initialize()
     }
 }
 
-void WT3E3::run(DYNAMIC_MODE mode)
+void WT3E0MPC::run(DYNAMIC_MODE mode)
 {
 
     double input = 0.0;
@@ -923,37 +923,37 @@ void WT3E3::run(DYNAMIC_MODE mode)
 }
 
 
-double WT3E3::get_active_current_command_in_pu_based_on_mbase()
+double WT3E0MPC::get_active_current_command_in_pu_based_on_mbase()
 {
     return conelec0.get_active_current_command_in_pu_based_on_mbase();
 }
 
-double WT3E3::get_active_power_command_in_pu_based_on_mbase() const
+double WT3E0MPC::get_active_power_command_in_pu_based_on_mbase() const
 {
     return conelec0.get_active_power_command_in_pu_based_on_mbase();
 }
 
-double WT3E3::get_reactive_current_command_in_pu_based_on_mbase()
+double WT3E0MPC::get_reactive_current_command_in_pu_based_on_mbase()
 {
     return conelec0.get_reactive_current_command_in_pu_based_on_mbase();
 }
 
-double WT3E3::get_reactive_power_command_in_pu_based_on_mbase()
+double WT3E0MPC::get_reactive_power_command_in_pu_based_on_mbase()
 {
     return conelec0.get_reactive_power_command_in_pu_based_on_mbase();
 }
 
-double WT3E3::get_reactive_voltage_command_in_pu() const
+double WT3E0MPC::get_reactive_voltage_command_in_pu() const
 {
     return conelec0.get_reactive_voltage_command_in_pu();
 }
 
-void WT3E3::check()
+void WT3E0MPC::check()
 {
     ;
 }
 
-void WT3E3::report()
+void WT3E0MPC::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string(false);
@@ -961,12 +961,12 @@ void WT3E3::report()
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-void WT3E3::save()
+void WT3E0MPC::save()
 {
     ;
 }
 
-string WT3E3::get_standard_psse_string(bool export_internal_bus_number) const
+string WT3E0MPC::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
     WT_GENERATOR* source = get_wt_generator_pointer();
@@ -1079,7 +1079,7 @@ string WT3E3::get_standard_psse_string(bool export_internal_bus_number) const
     return osstream.str();
 }
 
-void WT3E3::prepare_model_data_table()
+void WT3E0MPC::prepare_model_data_table()
 {
     clear_model_data_table();
     unsigned int i=0;
@@ -1126,7 +1126,7 @@ void WT3E3::prepare_model_data_table()
     add_model_data_name_and_index_pair("DPMX", i); i++;
 }
 
-double WT3E3::get_model_data_with_name(string par_name) const
+double WT3E0MPC::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
 
@@ -1177,7 +1177,7 @@ double WT3E3::get_model_data_with_name(string par_name) const
     return 0.0;
 }
 
-void WT3E3::set_model_data_with_name(string par_name, double value)
+void WT3E0MPC::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
 
@@ -1275,7 +1275,7 @@ void WT3E3::set_model_data_with_name(string par_name, double value)
     return;
 }
 
-double WT3E3::get_minimum_nonzero_time_constant_in_s()
+double WT3E0MPC::get_minimum_nonzero_time_constant_in_s()
 {
     double mint = INFINITE_THRESHOLD;
     if(get_TRV_in_s()!=0.0 and mint>get_TRV_in_s())
@@ -1297,7 +1297,7 @@ double WT3E3::get_minimum_nonzero_time_constant_in_s()
     return mint;
 }
 
-void WT3E3::prepare_model_internal_variable_table()
+void WT3E0MPC::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
@@ -1313,7 +1313,7 @@ void WT3E3::prepare_model_internal_variable_table()
     add_model_internal_variable_name_and_index_pair("SECONDARY FREQUENCY CONTROL COMMAND", i); i++;
 }
 
-double WT3E3::get_model_internal_variable_with_name(string var_name)
+double WT3E0MPC::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
 
@@ -1330,17 +1330,17 @@ double WT3E3::get_model_internal_variable_with_name(string var_name)
     return 0.0;
 }
 
-string WT3E3::get_dynamic_data_in_psse_format() const
+string WT3E0MPC::get_dynamic_data_in_psse_format() const
 {
     return get_standard_psse_string();
 }
 
-string WT3E3::get_dynamic_data_in_bpa_format() const
+string WT3E0MPC::get_dynamic_data_in_bpa_format() const
 {
     return get_dynamic_data_in_psse_format();
 }
 
-string WT3E3::get_dynamic_data_in_steps_format() const
+string WT3E0MPC::get_dynamic_data_in_steps_format() const
 {
     return get_dynamic_data_in_psse_format();
 }

@@ -1228,7 +1228,7 @@
 	"header/data_imexporter/steps_imexporter.h"
 	"header/STEPS.h"
 
-1726296836 d:\steps\code\steps\header\data_imexporter\steps_imexporter.h
+1726299661 d:\steps\code\steps\header\data_imexporter\steps_imexporter.h
 	"header/data_imexporter/data_imexporter.h"
 	"header/device/source.h"
 	"header/device/transformer.h"
@@ -2555,11 +2555,11 @@
 	"header/model/wtg_models/wt_aerodynamic_model/aerd0.h"
 	"header/model/wtg_models/wt_aerodynamic_model/aerdl.h"
 
-1726296836 d:\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt_electrical_models.h
+1726299692 d:\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt_electrical_models.h
 	"header/model/wtg_models/wt_electrical_model/wt3e0.h"
 	"header/model/wtg_models/wt_electrical_model/wt3e1.h"
-	"header/model/wtg_models/wt_electrical_model/wt3e2.h"
-	"header/model/wtg_models/wt_electrical_model/wt3e3.h"
+	"header/model/wtg_models/wt_electrical_model/wt3e0pcl.h"
+	"header/model/wtg_models/wt_electrical_model/wt3e0mpc.h"
 
 1726298050 d:\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3e1.h
 	"header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
@@ -2568,9 +2568,9 @@
 	"header/block/first_order_block.h"
 	"header/block/pi_block.h"
 
-1583938871 d:\steps\code\steps\header\model\wtg_models\wt_turbine_model\wt_turbine_models.h
+1726298757 d:\steps\code\steps\header\model\wtg_models\wt_turbine_model\wt_turbine_models.h
 	"header/model/wtg_models/wt_turbine_model/wt3t0.h"
-	"header/model/wtg_models/wt_turbine_model/wt3t1.h"
+	"header/model/wtg_models/wt_turbine_model/wt3t0dbr.h"
 
 1726296836 d:\steps\code\steps\header\model\wtg_models\wt_turbine_model\wt3t1.h
 	"header/model/wtg_models/wt_turbine_model/wt_turbine_model.h"
@@ -3910,7 +3910,7 @@
 	<iostream>
 	<algorithm>
 
-1726296836 source:d:\steps\code\steps\source\data_imexporter\steps_dynamics_imexporter.cpp
+1726299661 source:d:\steps\code\steps\source\data_imexporter\steps_dynamics_imexporter.cpp
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -4392,7 +4392,7 @@
 	<iostream>
 	<cstdio>
 
-1726296836 source:d:\steps\code\steps\source\dynamic_model_database.cpp
+1726299661 source:d:\steps\code\steps\source\dynamic_model_database.cpp
 	"header/dynamic_model_database.h"
 	"header/STEPS.h"
 	"header/steps_namespace.h"
@@ -27344,6 +27344,45 @@
 
 1726298306 source:d:\steps\code\steps\source\model\wtg_models\wt_electrical_model\wt3e3.cpp
 	"header/model/wtg_models/wt_electrical_model/wt3e3.h"
+	"header/device/wt_generator.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<iostream>
+
+1726298733 d:\steps\code\steps\header\model\wtg_models\wt_turbine_model\wt3t0dbr.h
+	"header/model/wtg_models/wt_turbine_model/wt_turbine_model.h"
+	"header/block/integral_block.h"
+
+1726299500 d:\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3e0pcl.h
+	"header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
+	"header/model/converter_common_model/elec_model/convelec2.h"
+	"header/block/first_order_block.h"
+	"header/block/pi_block.h"
+
+1726298764 source:d:\steps\code\steps\source\model\wtg_models\wt_turbine_model\wt3t0dbr.cpp
+	"header/model/wtg_models/wt_turbine_model/wt3t0dbr.h"
+	"header/basic/utility.h"
+	"header/STEPS.h"
+
+1726299661 d:\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3e0mpc.h
+	"header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
+	"header/model/converter_common_model/elec_model/convelec0.h"
+	"header/block/first_order_block.h"
+	"header/block/pi_block.h"
+
+1726299478 source:d:\steps\code\steps\source\model\wtg_models\wt_electrical_model\wt3e0pcl.cpp
+	"header/model/wtg_models/wt_electrical_model/wt3e0pcl.h"
+	"header/device/wt_generator.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<iostream>
+
+1726299684 source:d:\steps\code\steps\source\model\wtg_models\wt_electrical_model\wt3e0mpc.cpp
+	"header/model/wtg_models/wt_electrical_model/wt3e0mpc.h"
 	"header/device/wt_generator.h"
 	"header/power_system_database.h"
 	"header/STEPS.h"
