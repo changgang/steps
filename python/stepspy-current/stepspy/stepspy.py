@@ -2445,13 +2445,14 @@ class STEPS():
             return self.__get_string_from_c_char_p(STEPS_LIB.api_get_bus_string_data(bus, par_name, self.toolkit_index))
         return None
 
-    def __get_source_data(self, source, par_type, par_name):
+    def __get_source_data(self, source, par_type, par_name, source_type):
         """
         Private common function to get data of sources, including generator, wind turbine generator, PV unit, and energy storage.
         Args:
             (1) source: Source device id in format of (bus, ickt)
             (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
             (3) par_name: String of parameter name.
+            (4) source_type: String of source type, including "GENERATOR", "WT GENERATOR", "PV UNIT", "ENERGY STORAGE"
         Rets:
             (1) Value of parameter.
         Tips:
@@ -2466,14 +2467,15 @@ class STEPS():
         bus, ickt = self.__extract_single_bus_device_id(source)
         ickt = self.__get_c_char_p_of_string(ickt)
         par_name = self.__get_c_char_p_of_string(par_name)
+        source_type = self.__get_c_char_p_of_string(source_type)
         if par_type in ['I', 'INT', 'INTEGER']:
-            return int(STEPS_LIB.api_get_source_integer_data(bus, ickt, par_name, self.toolkit_index))
+            return int(STEPS_LIB.api_get_source_integer_data(bus, ickt, par_name, source_type, self.toolkit_index))
         if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-            return STEPS_LIB.api_get_source_float_data(bus, ickt, par_name, self.toolkit_index)
+            return STEPS_LIB.api_get_source_float_data(bus, ickt, par_name, source_type, self.toolkit_index)
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
-            return STEPS_LIB.api_get_source_boolean_data(bus, ickt, par_name, self.toolkit_index)
+            return STEPS_LIB.api_get_source_boolean_data(bus, ickt, par_name, source_type, self.toolkit_index)
         if par_type in ['S', 'STRING']:
-            return self.__get_string_from_c_char_p(STEPS_LIB.api_get_source_string_data(bus, ickt, par_name, self.toolkit_index))
+            return self.__get_string_from_c_char_p(STEPS_LIB.api_get_source_string_data(bus, ickt, par_name, source_type, self.toolkit_index))
         return None
 
     def get_generator_data(self, generator, par_type, par_name):
@@ -2491,7 +2493,7 @@ class STEPS():
         Example: N/A
         """
         global STEPS_LIB
-        return self.__get_source_data(generator, par_type, par_name)
+        return self.__get_source_data(generator, par_type, par_name, "GENERATOR")
 
     def get_generator_sequence_data(self, generator, par_type, par_name):
         """
@@ -2539,7 +2541,7 @@ class STEPS():
         Example: N/A
         """
         global STEPS_LIB
-        return self.__get_source_data(wt_generator, par_type, par_name)
+        return self.__get_source_data(wt_generator, par_type, par_name, "WT GENERATOR")
 
     def get_wt_generator_sequence_data(self, wt_generator, par_type, par_name):
         """
@@ -2587,7 +2589,7 @@ class STEPS():
         Example: N/A
         """
         global STEPS_LIB
-        return self.__get_source_data(pv_unit, par_type, par_name)
+        return self.__get_source_data(pv_unit, par_type, par_name, "PV UNIT")
 
     def get_pv_unit_sequence_data(self, pv_unit, par_type, par_name):
         """
@@ -2635,7 +2637,7 @@ class STEPS():
         Example: N/A
         """
         global STEPS_LIB
-        return self.__get_source_data(energy_storage, par_type, par_name)
+        return self.__get_source_data(energy_storage, par_type, par_name, "ENERGY STORAGE")
 
     def get_load_data(self, load, par_type, par_name):
         """
@@ -2987,7 +2989,7 @@ class STEPS():
             return STEPS_LIB.api_set_bus_string_data(bus, par_name, value, self.toolkit_index)
         return
 
-    def __set_source_data(self, source, par_type, par_name, value):
+    def __set_source_data(self, source, par_type, par_name, value, source_type):
         """
         Private common function to set data of source, including generator, wind turbine generator, PV unit, and energy storage.
         Args:
@@ -2995,6 +2997,7 @@ class STEPS():
             (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
             (3) par_name: String of parameter name.
             (4) value: Value of parameter.
+            (5) source_type: String of source type, including "GENERATOR", "WT GENERATOR", "PV UNIT", "ENERGY STORAGE"
         Rets: N/A
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
@@ -3009,15 +3012,16 @@ class STEPS():
         bus, ickt = self.__extract_single_bus_device_id(source)
         ickt = self.__get_c_char_p_of_string(ickt)
         par_name = self.__get_c_char_p_of_string(par_name)
+        source_type = self.__get_c_char_p_of_string(source_type)
         if par_type in ['I', 'INT', 'INTEGER']:
-            return STEPS_LIB.api_set_source_integer_data(bus, ickt, par_name, value, self.toolkit_index)
+            return STEPS_LIB.api_set_source_integer_data(bus, ickt, par_name, value, source_type, self.toolkit_index)
         if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-            return STEPS_LIB.api_set_source_float_data(bus, ickt, par_name, value, self.toolkit_index)
+            return STEPS_LIB.api_set_source_float_data(bus, ickt, par_name, value, source_type, self.toolkit_index)
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
-            return STEPS_LIB.api_set_source_boolean_data(bus, ickt, par_name, value, self.toolkit_index)
+            return STEPS_LIB.api_set_source_boolean_data(bus, ickt, par_name, value, source_type, self.toolkit_index)
         if par_type in ['S', 'STRING']:
             value = self.__get_c_char_p_of_string(value)
-            return STEPS_LIB.api_set_source_string_data(bus, ickt, par_name, value, self.toolkit_index)
+            return STEPS_LIB.api_set_source_string_data(bus, ickt, par_name, value, source_type, self.toolkit_index)
         return
 
     def set_generator_data(self, generator, par_type, par_name, value):
@@ -3036,7 +3040,7 @@ class STEPS():
         Example: N/A
         """
         global STEPS_LIB
-        return self.__set_source_data(generator, par_type, par_name, value)
+        return self.__set_source_data(generator, par_type, par_name, value, "GENERATOR")
 
     def set_generator_sequence_data(self, generator, par_type, par_name, value):
         """
@@ -3086,7 +3090,7 @@ class STEPS():
         Example: N/A
         """
         global STEPS_LIB
-        return self.__set_source_data(wt_generator, par_type, par_name, value)
+        return self.__set_source_data(wt_generator, par_type, par_name, value, "WT GENERATOR")
 
     def set_wt_generator_sequence_data(self, wt_generator, par_type, par_name, value):
         """
@@ -3136,7 +3140,7 @@ class STEPS():
         Example: N/A
         """
         global STEPS_LIB
-        return self.__set_source_data(pv_unit, par_type, par_name, value)
+        return self.__set_source_data(pv_unit, par_type, par_name, value, "PV UNIT")
 
     def set_pv_unit_sequence_data(self, pv_unit, par_type, par_name, value):
         """
@@ -3186,7 +3190,7 @@ class STEPS():
         Example: N/A
         """
         global STEPS_LIB
-        return self.__set_source_data(energy_storage, par_type, par_name, value)
+        return self.__set_source_data(energy_storage, par_type, par_name, value, "ENERGY STORAGE")
     
     def set_generator_power(self, generator, s):
         """

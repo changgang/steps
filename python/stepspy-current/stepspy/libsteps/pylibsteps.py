@@ -368,21 +368,21 @@ def load_library(libsteps_file):
     libsteps.api_set_load_boolean_data.argtypes = (c_uint, c_char_p, c_char_p, c_bool, c_uint)
 
     libsteps.api_get_source_integer_data.restype = (c_int)
-    libsteps.api_get_source_integer_data.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
+    libsteps.api_get_source_integer_data.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_uint)
     libsteps.api_get_source_float_data.restype = (c_double)
-    libsteps.api_get_source_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
+    libsteps.api_get_source_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_uint)
     libsteps.api_get_source_string_data.restype = (c_char_p)
-    libsteps.api_get_source_string_data.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
+    libsteps.api_get_source_string_data.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_uint)
     libsteps.api_get_source_boolean_data.restype = (c_bool)
-    libsteps.api_get_source_boolean_data.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
+    libsteps.api_get_source_boolean_data.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_uint)
     libsteps.api_set_source_integer_data.restype = None
-    libsteps.api_set_source_integer_data.argtypes = (c_uint, c_char_p, c_char_p, c_int, c_uint)
+    libsteps.api_set_source_integer_data.argtypes = (c_uint, c_char_p, c_char_p, c_int, c_char_p, c_uint)
     libsteps.api_set_source_float_data.restype = None
-    libsteps.api_set_source_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_double, c_uint)
+    libsteps.api_set_source_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_double, c_char_p, c_uint)
     libsteps.api_set_source_string_data.restype = None
-    libsteps.api_set_source_string_data.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_uint)
+    libsteps.api_set_source_string_data.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_char_p, c_uint)
     libsteps.api_set_source_boolean_data.restype = None
-    libsteps.api_set_source_boolean_data.argtypes = (c_uint, c_char_p, c_char_p, c_bool, c_uint)
+    libsteps.api_set_source_boolean_data.argtypes = (c_uint, c_char_p, c_char_p, c_bool, c_char_p, c_uint)
 
     libsteps.api_get_generator_sequence_float_data.restype = (c_double)
     libsteps.api_get_generator_sequence_float_data.argtypes = (c_uint, c_char_p, c_char_p, c_uint)

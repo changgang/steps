@@ -124,6 +124,7 @@ void add_string_to_str_int_map(const string& str);
 unsigned int get_index_of_string(const string& str);
 string get_string_of_index(unsigned int index);
 
+STEPS_DEVICE_TYPE device_string2type(string device_type);
 string device_type2string(STEPS_DEVICE_TYPE device_type);
 string dc_device_type2string(STEPS_DC_DEVICE_TYPE device_type);
 

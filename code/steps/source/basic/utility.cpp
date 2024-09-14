@@ -1028,6 +1028,30 @@ string get_string_of_index(unsigned int index)
     return toolkit_str_int_map[index];
 }
 
+STEPS_DEVICE_TYPE device_string2type(string device_type)
+{
+    device_type = string2upper(device_type);
+    if(device_type=="BUS") return STEPS_BUS;
+    if(device_type=="GENERATOR") return STEPS_GENERATOR;
+    if(device_type=="WT GENERATOR") return STEPS_WT_GENERATOR;
+    if(device_type=="PV UNIT") return STEPS_PV_UNIT;
+    if(device_type=="ENERGY STORAGE") return STEPS_ENERGY_STORAGE;
+    if(device_type=="LOAD") return STEPS_LOAD;
+    if(device_type=="FIXED SHUNT") return STEPS_FIXED_SHUNT;
+    if(device_type=="SWITCHED SHUNT") return STEPS_SWITCHED_SHUNT;
+    if(device_type=="EQUIVALENT DEVICE") return STEPS_EQUIVALENT_DEVICE;
+    if(device_type=="AC LINE") return STEPS_AC_LINE;
+    if(device_type=="TRANSFORMER") return STEPS_TRANSFORMER;
+    if(device_type=="2T LCC HVDC") return STEPS_LCC_HVDC2T;
+    if(device_type=="VSC HVDC") return STEPS_VSC_HVDC;
+    if(device_type=="FACTS") return STEPS_FACTS;
+    if(device_type=="LCC HVDC") return STEPS_LCC_HVDC;
+    if(device_type=="HYBRID DC") return STEPS_HYBRID_DC;
+    if(device_type=="GENERAL DEVICE") return STEPS_GENERAL_DEVICE;
+
+    return STEPS_INVALID_DEVICE;
+}
+
 string device_type2string(STEPS_DEVICE_TYPE device_type)
 {
     switch(device_type)

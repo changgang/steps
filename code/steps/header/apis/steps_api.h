@@ -163,14 +163,14 @@ EXPORT_STEPS_DLL void api_set_bus_string_data(unsigned int bus, char* parameter_
 EXPORT_STEPS_DLL bool api_get_bus_boolean_data(unsigned int bus, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_bus_boolean_data(unsigned int bus, char* parameter_name, bool value, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
-EXPORT_STEPS_DLL int api_get_source_integer_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_set_source_integer_data(unsigned int bus, char* identifier, char* parameter_name, int value, unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL double api_get_source_float_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_set_source_float_data(unsigned int bus, char* identifier, char* parameter_name, double value, unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL const char* api_get_source_string_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_set_source_string_data(unsigned int bus, char* identifier, char* parameter_name, char* value, unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL bool api_get_source_boolean_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_set_source_boolean_data(unsigned int bus, char* identifier, char* parameter_name, bool value, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL int api_get_source_integer_data(unsigned int bus, char* identifier, char* parameter_name, char* source_type=NULL, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_source_integer_data(unsigned int bus, char* identifier, char* parameter_name, int value, char* source_type=NULL,unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_source_float_data(unsigned int bus, char* identifier, char* parameter_name, char* source_type=NULL,unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_source_float_data(unsigned int bus, char* identifier, char* parameter_name, double value, char* source_type=NULL,unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL const char* api_get_source_string_data(unsigned int bus, char* identifier, char* parameter_name, char* source_type=NULL,unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_source_string_data(unsigned int bus, char* identifier, char* parameter_name, char* value, char* source_type=NULL,unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL bool api_get_source_boolean_data(unsigned int bus, char* identifier, char* parameter_name, char* source_type=NULL,unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_source_boolean_data(unsigned int bus, char* identifier, char* parameter_name, bool value, char* source_type=NULL,unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL double api_get_generator_sequence_float_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_generator_sequence_float_data(unsigned int bus, char* identifier, char* parameter_name, double value, unsigned int toolkit_index=INDEX_NOT_EXIST);

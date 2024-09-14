@@ -5,7 +5,7 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
 
-int api_get_source_integer_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index)
+int api_get_source_integer_data(unsigned int bus, char* identifier, char* parameter_name, char* source_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
@@ -16,14 +16,26 @@ int api_get_source_integer_data(unsigned int bus, char* identifier, char* parame
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
+    STEPS_DEVICE_TYPE SOURCE_TYPE = device_string2type(string2upper(source_type));
+
     SOURCE* sourceptr = NULL;
-    sourceptr = psdb.get_source(generator_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(wt_generator_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(pv_unit_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(energy_storage_did);
+    switch(SOURCE_TYPE)
+    {
+        case STEPS_GENERATOR:
+            sourceptr = psdb.get_source(generator_did);
+            break;
+        case STEPS_WT_GENERATOR:
+            sourceptr = psdb.get_source(wt_generator_did);
+            break;
+        case STEPS_PV_UNIT:
+            sourceptr = psdb.get_source(pv_unit_did);
+            break;
+        case STEPS_ENERGY_STORAGE:
+            sourceptr = psdb.get_source(energy_storage_did);
+            break;
+        default:
+            break;
+    }
 
 
     if(sourceptr!=NULL)
@@ -51,7 +63,7 @@ int api_get_source_integer_data(unsigned int bus, char* identifier, char* parame
     }
 }
 
-void api_set_source_integer_data(unsigned int bus, char* identifier, char* parameter_name, int value, unsigned int toolkit_index)
+void api_set_source_integer_data(unsigned int bus, char* identifier, char* parameter_name, int value, char* source_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
@@ -62,14 +74,26 @@ void api_set_source_integer_data(unsigned int bus, char* identifier, char* param
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
+    STEPS_DEVICE_TYPE SOURCE_TYPE = device_string2type(string2upper(source_type));
+
     SOURCE* sourceptr = NULL;
-    sourceptr = psdb.get_source(generator_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(wt_generator_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(pv_unit_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(energy_storage_did);
+    switch(SOURCE_TYPE)
+    {
+        case STEPS_GENERATOR:
+            sourceptr = psdb.get_source(generator_did);
+            break;
+        case STEPS_WT_GENERATOR:
+            sourceptr = psdb.get_source(wt_generator_did);
+            break;
+        case STEPS_PV_UNIT:
+            sourceptr = psdb.get_source(pv_unit_did);
+            break;
+        case STEPS_ENERGY_STORAGE:
+            sourceptr = psdb.get_source(energy_storage_did);
+            break;
+        default:
+            break;
+    }
 
     if(sourceptr!=NULL)
     {
@@ -94,7 +118,7 @@ void api_set_source_integer_data(unsigned int bus, char* identifier, char* param
     }
 }
 
-double api_get_source_float_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index)
+double api_get_source_float_data(unsigned int bus, char* identifier, char* parameter_name, char* source_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
@@ -105,14 +129,26 @@ double api_get_source_float_data(unsigned int bus, char* identifier, char* param
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
+    STEPS_DEVICE_TYPE SOURCE_TYPE = device_string2type(string2upper(source_type));
+
     SOURCE* sourceptr = NULL;
-    sourceptr = psdb.get_source(generator_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(wt_generator_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(pv_unit_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(energy_storage_did);
+    switch(SOURCE_TYPE)
+    {
+        case STEPS_GENERATOR:
+            sourceptr = psdb.get_source(generator_did);
+            break;
+        case STEPS_WT_GENERATOR:
+            sourceptr = psdb.get_source(wt_generator_did);
+            break;
+        case STEPS_PV_UNIT:
+            sourceptr = psdb.get_source(pv_unit_did);
+            break;
+        case STEPS_ENERGY_STORAGE:
+            sourceptr = psdb.get_source(energy_storage_did);
+            break;
+        default:
+            break;
+    }
 
     if(sourceptr!=NULL)
     {
@@ -166,7 +202,7 @@ double api_get_source_float_data(unsigned int bus, char* identifier, char* param
     }
 }
 
-void api_set_source_float_data(unsigned int bus, char* identifier, char* parameter_name, double value, unsigned int toolkit_index)
+void api_set_source_float_data(unsigned int bus, char* identifier, char* parameter_name, double value, char* source_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
@@ -177,14 +213,26 @@ void api_set_source_float_data(unsigned int bus, char* identifier, char* paramet
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
+    STEPS_DEVICE_TYPE SOURCE_TYPE = device_string2type(string2upper(source_type));
+
     SOURCE* sourceptr = NULL;
-    sourceptr = psdb.get_source(generator_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(wt_generator_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(pv_unit_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(energy_storage_did);
+    switch(SOURCE_TYPE)
+    {
+        case STEPS_GENERATOR:
+            sourceptr = psdb.get_source(generator_did);
+            break;
+        case STEPS_WT_GENERATOR:
+            sourceptr = psdb.get_source(wt_generator_did);
+            break;
+        case STEPS_PV_UNIT:
+            sourceptr = psdb.get_source(pv_unit_did);
+            break;
+        case STEPS_ENERGY_STORAGE:
+            sourceptr = psdb.get_source(energy_storage_did);
+            break;
+        default:
+            break;
+    }
 
     if(sourceptr!=NULL)
     {
@@ -241,7 +289,7 @@ void api_set_source_float_data(unsigned int bus, char* identifier, char* paramet
     }
 }
 
-const char* api_get_source_string_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index)
+const char* api_get_source_string_data(unsigned int bus, char* identifier, char* parameter_name, char* source_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
@@ -254,14 +302,26 @@ const char* api_get_source_string_data(unsigned int bus, char* identifier, char*
 
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
+    STEPS_DEVICE_TYPE SOURCE_TYPE = device_string2type(string2upper(source_type));
+
     SOURCE* sourceptr = NULL;
-    sourceptr = psdb.get_source(generator_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(wt_generator_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(pv_unit_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(energy_storage_did);
+    switch(SOURCE_TYPE)
+    {
+        case STEPS_GENERATOR:
+            sourceptr = psdb.get_source(generator_did);
+            break;
+        case STEPS_WT_GENERATOR:
+            sourceptr = psdb.get_source(wt_generator_did);
+            break;
+        case STEPS_PV_UNIT:
+            sourceptr = psdb.get_source(pv_unit_did);
+            break;
+        case STEPS_ENERGY_STORAGE:
+            sourceptr = psdb.get_source(energy_storage_did);
+            break;
+        default:
+            break;
+    }
 
     if(sourceptr!=NULL)
     {
@@ -282,7 +342,7 @@ const char* api_get_source_string_data(unsigned int bus, char* identifier, char*
     }
 }
 
-void api_set_source_string_data(unsigned int bus, char* identifier, char* parameter_name, char* value, unsigned int toolkit_index)
+void api_set_source_string_data(unsigned int bus, char* identifier, char* parameter_name, char* value, char* source_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
@@ -293,14 +353,26 @@ void api_set_source_string_data(unsigned int bus, char* identifier, char* parame
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
+    STEPS_DEVICE_TYPE SOURCE_TYPE = device_string2type(string2upper(source_type));
+
     SOURCE* sourceptr = NULL;
-    sourceptr = psdb.get_source(generator_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(wt_generator_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(pv_unit_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(energy_storage_did);
+    switch(SOURCE_TYPE)
+    {
+        case STEPS_GENERATOR:
+            sourceptr = psdb.get_source(generator_did);
+            break;
+        case STEPS_WT_GENERATOR:
+            sourceptr = psdb.get_source(wt_generator_did);
+            break;
+        case STEPS_PV_UNIT:
+            sourceptr = psdb.get_source(pv_unit_did);
+            break;
+        case STEPS_ENERGY_STORAGE:
+            sourceptr = psdb.get_source(energy_storage_did);
+            break;
+        default:
+            break;
+    }
 
     if(sourceptr!=NULL)
     {
@@ -320,7 +392,7 @@ void api_set_source_string_data(unsigned int bus, char* identifier, char* parame
     }
 }
 
-bool api_get_source_boolean_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index)
+bool api_get_source_boolean_data(unsigned int bus, char* identifier, char* parameter_name, char* source_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
@@ -331,14 +403,26 @@ bool api_get_source_boolean_data(unsigned int bus, char* identifier, char* param
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
+    STEPS_DEVICE_TYPE SOURCE_TYPE = device_string2type(string2upper(source_type));
+
     SOURCE* sourceptr = NULL;
-    sourceptr = psdb.get_source(generator_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(wt_generator_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(pv_unit_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(energy_storage_did);
+    switch(SOURCE_TYPE)
+    {
+        case STEPS_GENERATOR:
+            sourceptr = psdb.get_source(generator_did);
+            break;
+        case STEPS_WT_GENERATOR:
+            sourceptr = psdb.get_source(wt_generator_did);
+            break;
+        case STEPS_PV_UNIT:
+            sourceptr = psdb.get_source(pv_unit_did);
+            break;
+        case STEPS_ENERGY_STORAGE:
+            sourceptr = psdb.get_source(energy_storage_did);
+            break;
+        default:
+            break;
+    }
 
     if(sourceptr!=NULL)
     {
@@ -362,7 +446,7 @@ bool api_get_source_boolean_data(unsigned int bus, char* identifier, char* param
     }
 }
 
-void api_set_source_boolean_data(unsigned int bus, char* identifier, char* parameter_name, bool value, unsigned int toolkit_index)
+void api_set_source_boolean_data(unsigned int bus, char* identifier, char* parameter_name, bool value, char* source_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
@@ -373,14 +457,26 @@ void api_set_source_boolean_data(unsigned int bus, char* identifier, char* param
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
+    STEPS_DEVICE_TYPE SOURCE_TYPE = device_string2type(string2upper(source_type));
+
     SOURCE* sourceptr = NULL;
-    sourceptr = psdb.get_source(generator_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(wt_generator_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(pv_unit_did);
-    if(sourceptr==NULL)
-        sourceptr = psdb.get_source(energy_storage_did);
+    switch(SOURCE_TYPE)
+    {
+        case STEPS_GENERATOR:
+            sourceptr = psdb.get_source(generator_did);
+            break;
+        case STEPS_WT_GENERATOR:
+            sourceptr = psdb.get_source(wt_generator_did);
+            break;
+        case STEPS_PV_UNIT:
+            sourceptr = psdb.get_source(pv_unit_did);
+            break;
+        case STEPS_ENERGY_STORAGE:
+            sourceptr = psdb.get_source(energy_storage_did);
+            break;
+        default:
+            break;
+    }
 
     if(sourceptr!=NULL)
     {
