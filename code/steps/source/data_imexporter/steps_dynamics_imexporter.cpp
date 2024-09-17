@@ -181,6 +181,7 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
 
     if(model_name=="PVCVX") { add_PVCVX_model(data); return;}
     if(model_name=="PVCV2") { add_PVCV2_model(data); return;}
+    if(model_name=="PVGU1") { add_PVGU1_model(data); return;}
     if(model_name=="PVEX") { add_PVEX_model(data); return;}
     if(model_name=="FILEIRRAD") { add_FILEIRRAD_model(data); return;}
     if(model_name=="PVPNLX") { add_PVPNLX_model(data); return;}
@@ -2395,6 +2396,38 @@ void STEPS_IMEXPORTER::add_PVCV2_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid PVCV2 model is built, but will not be set for "<<pvu->get_compound_device_name();
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::add_PVGU1_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "PVGU1")
+        return;
+
+
+    if(data.size()<3)
+        return;
+
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
+    DEVICE_ID did = get_pv_unit_device_id_from_string_vector(data);
+
+    PV_UNIT* pvu = psdb.get_pv_unit(did);
+    if(pvu != NULL)
+    {
+        PVGU1 model(toolkit);
+        model.set_device_id(did);
+        bool successful = model.setup_model_with_steps_string_vector(data);
+
+        if(successful)
+            dmdb.add_model(&model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid PVGU1 model is built, but will not be set for "<<pvu->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }

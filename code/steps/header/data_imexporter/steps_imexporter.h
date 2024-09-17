@@ -228,6 +228,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_WTDBR1_model(vector<string>& data);
 
         void add_PVCV2_model(vector<string>& data);
+        void add_PVGU1_model(vector<string>& data);
         void add_PVCVX_model(vector<string>& data);
         void add_PVEX_model(vector<string>& data);
         void add_FILEIRRAD_model(vector<string>& data);

@@ -266,6 +266,7 @@
 		<Unit filename="header/model/pvu_models/pv_converter_model/pv_converter_models.h" />
 		<Unit filename="header/model/pvu_models/pv_converter_model/pvcv2.h" />
 		<Unit filename="header/model/pvu_models/pv_converter_model/pvcvx.h" />
+		<Unit filename="header/model/pvu_models/pv_converter_model/pvgu1.h" />
 		<Unit filename="header/model/pvu_models/pv_electrical_model/pv_electrical_model.h" />
 		<Unit filename="header/model/pvu_models/pv_electrical_model/pv_electrical_model_test.h" />
 		<Unit filename="header/model/pvu_models/pv_electrical_model/pv_electrical_models.h" />
@@ -736,6 +737,7 @@
 		<Unit filename="source/model/pvu_models/pv_converter_model/pv_converter_model.cpp" />
 		<Unit filename="source/model/pvu_models/pv_converter_model/pvcv2.cpp" />
 		<Unit filename="source/model/pvu_models/pv_converter_model/pvcvx.cpp" />
+		<Unit filename="source/model/pvu_models/pv_converter_model/pvgu1.cpp" />
 		<Unit filename="source/model/pvu_models/pv_electrical_model/pv_electrical_model.cpp" />
 		<Unit filename="source/model/pvu_models/pv_electrical_model/pvex.cpp" />
 		<Unit filename="source/model/pvu_models/pv_irradiance_model/fileirrad.cpp" />
@@ -970,9 +972,6 @@
 				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="" />
 			</AutoVersioning>
 			<lib_finder disable_auto="1" />
-			<code_completion />
-			<envvars />
-			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
