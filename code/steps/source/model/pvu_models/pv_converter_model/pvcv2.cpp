@@ -573,6 +573,8 @@ void PVCV2::prepare_model_internal_variable_table()
     unsigned int i=0;
     add_model_internal_variable_name_and_index_pair("PLL ANGLE IN DEG", i); i++;
     add_model_internal_variable_name_and_index_pair("PLL ANGLE IN RAD", i); i++;
+    add_model_internal_variable_name_and_index_pair("PLL FREQUENCY IN PU", i); i++;
+    add_model_internal_variable_name_and_index_pair("PLL FREQUENCY IN HZ", i); i++;
     add_model_internal_variable_name_and_index_pair("STATE@ACTIVE CURRENT COMMAND BLOCK", i); i++;
     add_model_internal_variable_name_and_index_pair("STATE@REACTIVE VOLTAGE COMMAND BLOCK", i); i++;
     add_model_internal_variable_name_and_index_pair("STATE@PLL FREQUENCY BLOCK", i); i++;
@@ -587,6 +589,10 @@ double PVCV2::get_model_internal_variable_with_name(string var_name)
         return get_pll_angle_in_deg();
     if(var_name == "PLL ANGLE IN RAD")
         return get_pll_angle_in_rad();
+    if(var_name == "PLL FREQUENCY IN PU")
+        return get_pll_frequency_in_pu();
+    if(var_name == "PLL FREQUENCY IN HZ")
+        return get_pll_frequency_in_Hz();
     if(var_name == "STATE@ACTIVE CURRENT COMMAND BLOCK")
         return csconv2.get_active_current_commander_state();
     if(var_name == "STATE@REACTIVE VOLTAGE COMMAND BLOCK")
@@ -596,7 +602,7 @@ double PVCV2::get_model_internal_variable_with_name(string var_name)
     if(var_name == "STATE@PLL ANGLE BLOCK")
         return csconv2.get_PLL_angle_integrator_state();
     if(var_name == "STATE@LVPL VOLTAGE SENSOR")
-        return csconv2.get_PLL_angle_integrator_state();
+        return csconv2.get_LVPL_voltage_sensor_state();
 
     return 0.0;
 }
