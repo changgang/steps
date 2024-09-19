@@ -188,6 +188,7 @@
 		<Unit filename="header/model/converter_common_model/converter_model/cs_converter_model/csconv1.h" />
 		<Unit filename="header/model/converter_common_model/converter_model/cs_converter_model/csconv2.h" />
 		<Unit filename="header/model/converter_common_model/converter_model/cs_converter_model/csconv4.h" />
+		<Unit filename="header/model/converter_common_model/converter_model/vs_converter_model/dvoc0.h" />
 		<Unit filename="header/model/converter_common_model/converter_model/vs_converter_model/vs_converter_model.h" />
 		<Unit filename="header/model/converter_common_model/converter_model/vs_converter_model/vsg0.h" />
 		<Unit filename="header/model/converter_common_model/current_order_limiter_model/convcol.h" />
@@ -422,6 +423,7 @@
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt3g2.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt3g2_test.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt3gx.h" />
+		<Unit filename="header/model/wtg_models/wt_generator_model/wt3gx2.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt_generator_model.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt_generator_model_test.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt_generator_models.h" />
@@ -673,6 +675,7 @@
 		<Unit filename="source/model/converter_common_model/converter_model/cs_converter_model/csconv1.cpp" />
 		<Unit filename="source/model/converter_common_model/converter_model/cs_converter_model/csconv2.cpp" />
 		<Unit filename="source/model/converter_common_model/converter_model/cs_converter_model/csconv4.cpp" />
+		<Unit filename="source/model/converter_common_model/converter_model/vs_converter_model/dvoc0.cpp" />
 		<Unit filename="source/model/converter_common_model/converter_model/vs_converter_model/vs_converter_model.cpp" />
 		<Unit filename="source/model/converter_common_model/converter_model/vs_converter_model/vsg0.cpp" />
 		<Unit filename="source/model/converter_common_model/current_order_limiter_model/convcol.cpp" />
@@ -897,6 +900,7 @@
 			<Option link="0" />
 		</Unit>
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt3gx.cpp" />
+		<Unit filename="source/model/wtg_models/wt_generator_model/wt3gx2.cpp" />
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt_generator_model.cpp" />
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt_generator_model_test.cpp">
 			<Option compile="0" />
