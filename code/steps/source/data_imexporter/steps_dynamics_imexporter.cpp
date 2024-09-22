@@ -189,7 +189,7 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="PVPNLY") { add_PVPNLY_model(data); return;}
     if(model_name=="PVVRT3") { add_PVVRT3_model(data); return;}
     if(model_name=="PVVRTRLY1") { add_PVVRTRLY1_model(data); return;}
-    if(model_name=="FTEMP") { add_FTEMP_model(data); return;}
+    if(model_name=="FTMP") { add_FTMP_model(data); return;}
 
     if(model_name=="ESBX") { add_ESBX_model(data); return;}
     if(model_name=="ESCVX") { add_ESCVX_model(data); return;}
@@ -2641,9 +2641,9 @@ void STEPS_IMEXPORTER::add_PVVRTRLY1_model(vector<string>& data)
     }
 }
 
-void STEPS_IMEXPORTER::add_FTEMP_model(vector<string>& data)
+void STEPS_IMEXPORTER::add_FTMP_model(vector<string>& data)
 {
-    if(get_dynamic_model_name(data) != "FTEMP")
+    if(get_dynamic_model_name(data) != "FTMP")
         return;
 
     if(data.size()<3)
@@ -2657,7 +2657,7 @@ void STEPS_IMEXPORTER::add_FTEMP_model(vector<string>& data)
     PV_UNIT* pvu = psdb.get_pv_unit(did);
     if(pvu != NULL)
     {
-        FTEMP model(toolkit);
+        FTMP model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -2665,7 +2665,7 @@ void STEPS_IMEXPORTER::add_FTEMP_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid FTEMP model is built, but will not be set for "<<pvu->get_compound_device_name();
+            osstream<<"Warning. Invalid FTMP model is built, but will not be set for "<<pvu->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }

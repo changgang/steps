@@ -1,4 +1,4 @@
-#include "header/model/pvu_models/pv_temperature_model/ftemp.h"
+#include "header/model/pvu_models/pv_temperature_model/ftmp.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 #include <istream>
@@ -6,16 +6,16 @@
 #include <cstring>
 
 using namespace std;
-FTEMP::FTEMP(STEPS& toolkit) : PV_TEMPERATURE_MODEL(toolkit)
+FTMP::FTMP(STEPS& toolkit) : PV_TEMPERATURE_MODEL(toolkit)
 {
     clear();
 }
 
-FTEMP::~FTEMP()
+FTMP::~FTMP()
 {
 }
 
-void FTEMP::clear()
+void FTMP::clear()
 {
     clear_temperature_serial_file();
     clear_temperature_data();
@@ -26,12 +26,12 @@ void FTEMP::clear()
     set_previous_position(0);
 }
 
-void FTEMP::clear_temperature_serial_file()
+void FTMP::clear_temperature_serial_file()
 {
     temperature_file[0] = '\0';
 }
 
-void FTEMP::clear_temperature_data()
+void FTMP::clear_temperature_data()
 {
     for(unsigned int i=0; i<STEPS_MAX_TEMPERATURE_RECORD_SIZE; ++i)
     {
@@ -40,7 +40,7 @@ void FTEMP::clear_temperature_data()
     }
 }
 
-void FTEMP::copy_from_const_model(const FTEMP& model)
+void FTMP::copy_from_const_model(const FTMP& model)
 {
     set_toolkit(model.get_toolkit());
 
@@ -49,12 +49,12 @@ void FTEMP::copy_from_const_model(const FTEMP& model)
     load_temperature_from_file();
 }
 
-FTEMP::FTEMP(const FTEMP& model):PV_TEMPERATURE_MODEL(model.get_toolkit())
+FTMP::FTMP(const FTMP& model):PV_TEMPERATURE_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
 
-FTEMP& FTEMP::operator=(const FTEMP& model)
+FTMP& FTMP::operator=(const FTMP& model)
 {
     if(this==&model)
         return *this;
@@ -64,19 +64,19 @@ FTEMP& FTEMP::operator=(const FTEMP& model)
     return (*this);
 }
 
-string FTEMP::get_model_name() const
+string FTMP::get_model_name() const
 {
-    return "FTEMP";
+    return "FTMP";
 }
 
 
-void FTEMP::set_temperature_serial_file(string file)
+void FTMP::set_temperature_serial_file(string file)
 {
     strncpy(temperature_file, file.c_str(), STEPS_LONG_STRING_SIZE-1);
     temperature_file[STEPS_LONG_STRING_SIZE-1]='\0';
 }
 
-void FTEMP::load_temperature_from_file()
+void FTMP::load_temperature_from_file()
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -139,12 +139,12 @@ void FTEMP::load_temperature_from_file()
     }
 }
 
-string FTEMP::get_temperature_serial_file() const
+string FTMP::get_temperature_serial_file() const
 {
     return temperature_file;
 }
 
-bool FTEMP::setup_model_with_steps_string_vector(vector<string>& data)
+bool FTMP::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
     if(data.size()>=4)
@@ -168,13 +168,13 @@ bool FTEMP::setup_model_with_steps_string_vector(vector<string>& data)
         return is_successful;
 }
 
-bool FTEMP::setup_model_with_psse_string(string data)
+bool FTMP::setup_model_with_psse_string(string data)
 {
     vector<string> record = psse_dyr_string2steps_string_vector(data);
     return setup_model_with_steps_string_vector(record);
 }
 
-bool FTEMP::setup_model_with_bpa_string(string data)
+bool FTMP::setup_model_with_bpa_string(string data)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
@@ -185,12 +185,12 @@ bool FTEMP::setup_model_with_bpa_string(string data)
 }
 
 
-void FTEMP::setup_block_toolkit_and_parameters()
+void FTMP::setup_block_toolkit_and_parameters()
 {
     ;
 }
 
-void FTEMP::initialize()
+void FTMP::initialize()
 {
     setup_block_toolkit_and_parameters();
 
@@ -210,7 +210,7 @@ void FTEMP::initialize()
     set_flag_model_initialized_as_true();
 }
 
-unsigned int FTEMP::get_temperature_record_count() const
+unsigned int FTMP::get_temperature_record_count() const
 {
     unsigned int n = 0;
     for(unsigned int i=0; i<STEPS_MAX_TEMPERATURE_RECORD_SIZE; ++i)
@@ -224,7 +224,7 @@ unsigned int FTEMP::get_temperature_record_count() const
     return n;
 }
 
-void FTEMP::run(DYNAMIC_MODE mode)
+void FTMP::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not necessary to call. Input mode is provided: "<<mode;
@@ -232,7 +232,7 @@ void FTEMP::run(DYNAMIC_MODE mode)
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-double FTEMP::get_T_in_C_deg()
+double FTMP::get_T_in_C_deg()
 {
     if(get_temperature_record_count()==0)
         return get_Tref_in_C_deg();
@@ -248,7 +248,7 @@ double FTEMP::get_T_in_C_deg()
     return current_temperature;
 }
 
-void FTEMP::set_previous_position(unsigned int pos)
+void FTMP::set_previous_position(unsigned int pos)
 {
     unsigned int n = get_temperature_record_count();
     if(n>=1)
@@ -262,12 +262,12 @@ void FTEMP::set_previous_position(unsigned int pos)
         previous_position = 0;
 }
 
-unsigned int FTEMP::get_previous_position() const
+unsigned int FTMP::get_previous_position() const
 {
     return previous_position;
 }
 
-void FTEMP::search_temperature_data_at_simulation_time()
+void FTMP::search_temperature_data_at_simulation_time()
 {
     STEPS& toolkit = get_toolkit();
     double simulation_time = toolkit.get_dynamic_simulation_time_in_s();
@@ -334,24 +334,24 @@ void FTEMP::search_temperature_data_at_simulation_time()
 }
 
 
-void FTEMP::check()
+void FTMP::check()
 {
     ;
 }
 
 
-void FTEMP::report()
+void FTMP::report()
 {
     STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(get_standard_psse_string());
 }
 
-void FTEMP::save()
+void FTMP::save()
 {
     ;
 }
 
-string FTEMP::get_standard_psse_string(bool export_internal_bus_number) const
+string FTMP::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
     PV_UNIT* pv_unit = get_pv_unit_pointer();
@@ -374,14 +374,14 @@ string FTEMP::get_standard_psse_string(bool export_internal_bus_number) const
     return osstream.str();
 }
 
-void FTEMP::prepare_model_data_table()
+void FTMP::prepare_model_data_table()
 {
     clear_model_data_table();
     unsigned int i=0;
     add_model_data_name_and_index_pair("A", i); i++;
 }
 
-double FTEMP::get_model_data_with_name(string par_name) const
+double FTMP::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
     if(par_name=="A")
@@ -390,7 +390,7 @@ double FTEMP::get_model_data_with_name(string par_name) const
     return 0.0;
 }
 
-void FTEMP::set_model_data_with_name(string par_name, double value)
+void FTMP::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
     if(par_name=="A")
@@ -399,19 +399,19 @@ void FTEMP::set_model_data_with_name(string par_name, double value)
     return;
 }
 
-double FTEMP::get_minimum_nonzero_time_constant_in_s()
+double FTMP::get_minimum_nonzero_time_constant_in_s()
 {
     return INFINITE_THRESHOLD;
 }
 
-void FTEMP::prepare_model_internal_variable_table()
+void FTMP::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
     add_model_internal_variable_name_and_index_pair("A", i); i++;
 }
 
-double FTEMP::get_model_internal_variable_with_name(string var_name)
+double FTMP::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name=="A")
@@ -419,17 +419,17 @@ double FTEMP::get_model_internal_variable_with_name(string var_name)
     return 0.0;
 }
 
-string FTEMP::get_dynamic_data_in_psse_format() const
+string FTMP::get_dynamic_data_in_psse_format() const
 {
     return get_standard_psse_string();
 }
 
-string FTEMP::get_dynamic_data_in_bpa_format() const
+string FTMP::get_dynamic_data_in_bpa_format() const
 {
     return get_standard_psse_string();
 }
 
-string FTEMP::get_dynamic_data_in_steps_format() const
+string FTMP::get_dynamic_data_in_steps_format() const
 {
     return get_standard_psse_string();
 }

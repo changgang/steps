@@ -287,7 +287,7 @@
 		<Unit filename="header/model/pvu_models/pv_relay_model/pv_relay_model_test.h" />
 		<Unit filename="header/model/pvu_models/pv_relay_model/pv_relay_models.h" />
 		<Unit filename="header/model/pvu_models/pv_relay_model/pvvrtrly1.h" />
-		<Unit filename="header/model/pvu_models/pv_temperature_model/ftemp.h" />
+		<Unit filename="header/model/pvu_models/pv_temperature_model/ftmp.h" />
 		<Unit filename="header/model/pvu_models/pv_temperature_model/pv_temperature_model.h" />
 		<Unit filename="header/model/pvu_models/pv_temperature_model/pv_temperature_models.h" />
 		<Unit filename="header/model/pvu_models/pv_vrt_model/pv_vrt_model.h" />
@@ -750,7 +750,7 @@
 		<Unit filename="source/model/pvu_models/pv_panel_model/pvpnly.cpp" />
 		<Unit filename="source/model/pvu_models/pv_relay_model/pv_relay_model.cpp" />
 		<Unit filename="source/model/pvu_models/pv_relay_model/pvvrtrly1.cpp" />
-		<Unit filename="source/model/pvu_models/pv_temperature_model/ftemp.cpp" />
+		<Unit filename="source/model/pvu_models/pv_temperature_model/ftmp.cpp" />
 		<Unit filename="source/model/pvu_models/pv_temperature_model/pv_temperature_model.cpp" />
 		<Unit filename="source/model/pvu_models/pv_vrt_model/pv_vrt_model.cpp" />
 		<Unit filename="source/model/pvu_models/pv_vrt_model/pvvrt3.cpp" />

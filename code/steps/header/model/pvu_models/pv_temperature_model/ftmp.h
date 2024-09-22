@@ -1,14 +1,14 @@
-#ifndef FTEMP_H
-#define FTEMP_H
+#ifndef FTMP_H
+#define FTMP_H
 
 #include "header/model/pvu_models/pv_temperature_model/pv_temperature_model.h"
-class FTEMP : public PV_TEMPERATURE_MODEL
+class FTMP : public PV_TEMPERATURE_MODEL
 {
     public:
-        FTEMP(STEPS& toolkit);
-        FTEMP(const FTEMP& model);
-        virtual ~FTEMP();
-        virtual FTEMP& operator=(const FTEMP& model);
+        FTMP(STEPS& toolkit);
+        FTMP(const FTMP& model);
+        virtual ~FTMP();
+        virtual FTMP& operator=(const FTMP& model);
 
         // inputs
         void set_temperature_serial_file(string file);
@@ -47,7 +47,7 @@ class FTEMP : public PV_TEMPERATURE_MODEL
     private:
         void clear_temperature_serial_file();
         void clear_temperature_data();
-        void copy_from_const_model(const FTEMP& model);
+        void copy_from_const_model(const FTMP& model);
         void search_temperature_data_at_simulation_time();
         void set_previous_position(unsigned int pos);
         unsigned int get_previous_position() const;
@@ -59,4 +59,4 @@ class FTEMP : public PV_TEMPERATURE_MODEL
         unsigned int previous_position;
 };
 
-#endif // FTEMP_H
+#endif // FTMP_H
