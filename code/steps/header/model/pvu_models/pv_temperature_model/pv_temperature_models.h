@@ -1,5 +1,5 @@
 #ifndef PV_TEMPERATURE_MODELS_H
 #define PV_TEMPERATURE_MODELS_H
 
-#include "header/model/pvu_models/pv_temperature_model/ftemp.h"
+#include "header/model/pvu_models/pv_temperature_model/ftmp.h"
 #endif // PV_TEMPERATURE_MODELS_H
