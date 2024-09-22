@@ -893,10 +893,10 @@ void DYNAMICS_SIMULATOR::save_meter_values()
             bin_output_file.write(fdata, sizeof(float));
 
             ivalue = ITER_DAE;
-            bin_output_file.write(fdata, sizeof(int));
+            bin_output_file.write(idata, sizeof(int));
 
             ivalue = ITER_NET;
-            bin_output_file.write(fdata, sizeof(int));
+            bin_output_file.write(idata, sizeof(int));
 
             fvalue = max_power_mismatch_MVA;
             bin_output_file.write(fdata, sizeof(float));
@@ -1315,7 +1315,6 @@ void DYNAMICS_SIMULATOR::update_with_event(DYNAMIC_EVENT_TYPE event_type)
     bool network_converged = false;
     unsigned int update_event_iter_max = get_max_event_update_iteration();
 
-    ITER_DAE = 0;
     ITER_NET = 0;
 
     unsigned int iter = 0;
@@ -4907,22 +4906,28 @@ bool DYNAMICS_SIMULATOR::is_buses_voltage_changing_suddenly() const
 void DYNAMICS_SIMULATOR::increase_dynamic_simulator_time_step_automatically()
 {
     double current_delt = get_dynamic_simulation_time_step_in_s();
+    double max_delt = get_max_dynamic_simulation_time_step_in_s();
     double delt = 0.0;
     if(current_delt<0.005)
         delt = current_delt;
     else
         delt = 0.005;
+    if(current_delt+delt>max_delt)
+        delt = max_delt-current_delt;
     change_dynamic_simulator_time_step_by(delt);
 }
 
 void DYNAMICS_SIMULATOR::decrease_dynamic_simulator_time_step_automatically()
 {
     double current_delt = get_dynamic_simulation_time_step_in_s();
+    double min_delt = get_min_dynamic_simulation_time_step_in_s();
     double delt = 0.0;
     if(current_delt>0.01)
         delt = -0.5*current_delt;
     else
         delt = -0.001;
+    if(current_delt+delt<min_delt)
+        delt = min_delt-current_delt;
     change_dynamic_simulator_time_step_by(delt);
 }
 
