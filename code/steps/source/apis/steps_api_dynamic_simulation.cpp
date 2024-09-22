@@ -39,35 +39,17 @@ void api_set_dynamic_simulator_integer_parameter(char* parameter_name, int value
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="MAX_DAE_ITER" or PARAMETER_NAME=="MAX DAE ITERATION")
-    {
-        ds.set_max_DAE_iteration(value);
-        return;
-    }
+        return ds.set_max_DAE_iteration(value);
     if(PARAMETER_NAME=="MIN_DAE_ITER" or PARAMETER_NAME=="MIN DAE ITERATION")
-    {
-        ds.set_min_DAE_iteration(value);
-        return;
-    }
+        return ds.set_min_DAE_iteration(value);
     if(PARAMETER_NAME=="MAX_NET_ITER" or PARAMETER_NAME=="MAX NETWORK ITERATION")
-    {
-        ds.set_max_network_iteration(value);
-        return;
-    }
+        return ds.set_max_network_iteration(value);
     if(PARAMETER_NAME=="MAX_UPDATE_ITER" or PARAMETER_NAME=="MAX UPDATE ITERATION")
-    {
-        ds.set_max_update_iteration(value);
-        return;
-    }
+        return ds.set_max_update_iteration(value);
     if(PARAMETER_NAME=="MAX_EVENT_UPDATE_ITER" or PARAMETER_NAME=="MAX EVENT UPDATE ITERATION")
-    {
-        ds.set_max_event_update_iteration(value);
-        return;
-    }
+        return ds.set_max_event_update_iteration(value);
     if(PARAMETER_NAME=="MAX_NET_DIVERGENT_THRESHOLD" or PARAMETER_NAME=="MAX NETWORK DIVERGENT THRESHOLD")
-    {
-        ds.set_max_network_solution_divergent_threshold(value);
-        return;
-    }
+        return ds.set_max_network_solution_divergent_threshold(value);
 
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n",
@@ -97,6 +79,13 @@ double api_get_dynamic_simulator_float_parameter(char* parameter_name, unsigned 
         return ds.get_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s();
     if(PARAMETER_NAME=="K FOR LEADING PART OF BUS FREQ MODEL")
         return ds.get_k_for_leading_part_of_bus_frequency_model();
+    if(PARAMETER_NAME=="SYSTEM CHANGE DETECTION TIME RANGE IN S")
+        return ds.get_system_change_detection_time_range_in_s();
+    if(PARAMETER_NAME=="SYSTEM CHANGE DETECTION BUS VOLTAGE TRHRESHOD IN PU")
+        return ds.get_system_change_detection_bus_voltage_threshold_in_pu();
+    if(PARAMETER_NAME=="SYSTEM CHANGE DETECTION ROTOR SPEED THRESHOLD IN PU")
+        return ds.get_system_change_detection_rotor_speed_threshold_in_pu();
+
 
 
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
@@ -113,45 +102,28 @@ void api_set_dynamic_simulator_float_parameter(char* parameter_name, double valu
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="DELT" or PARAMETER_NAME=="DELT IN S")
-    {
-        api_set_dynamic_simulation_time_step(value, toolkit_index);
-        return;
-    }
+        return api_set_dynamic_simulation_time_step(value, toolkit_index);
     if(PARAMETER_NAME=="MAX DELT" or PARAMETER_NAME=="MAX DELT IN S")
-    {
-        api_set_max_dynamic_simulation_time_step(value, toolkit_index);
-        return;
-    }
+        return api_set_max_dynamic_simulation_time_step(value, toolkit_index);
     if(PARAMETER_NAME=="MIN DELT" or PARAMETER_NAME=="MIN DELT IN S")
-    {
-        api_set_min_dynamic_simulation_time_step(value, toolkit_index);
-        return;
-    }
+        return api_set_min_dynamic_simulation_time_step(value, toolkit_index);
     if(PARAMETER_NAME=="MAX POWER IMBALANCE IN MVA")
-    {
-        ds.set_allowed_max_power_imbalance_in_MVA(value);
-        return;
-    }
+        return ds.set_allowed_max_power_imbalance_in_MVA(value);
     if(PARAMETER_NAME=="ITERATION ACCELERATOR")
-    {
-        ds.set_iteration_accelerator(value);
-        return;
-    }
+        return ds.set_iteration_accelerator(value);
     if(PARAMETER_NAME=="ANGLE STABILITY THRESHOLD IN DEG")
-    {
-        ds.set_rotor_angle_stability_threshold_in_deg(value);
-        return;
-    }
+        return ds.set_rotor_angle_stability_threshold_in_deg(value);
     if(PARAMETER_NAME=="DELT THRESHOLD FOR LEADING PART OF BUS FREQ MODEL IN S")
-    {
-        ds.set_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s(value);
-        return;
-    }
+        return ds.set_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s(value);
     if(PARAMETER_NAME=="K FOR LEADING PART OF BUS FREQ MODEL")
-    {
-        ds.set_k_for_leading_part_of_bus_frequency_model(value);
-        return;
-    }
+        return ds.set_k_for_leading_part_of_bus_frequency_model(value);
+    if(PARAMETER_NAME=="SYSTEM CHANGE DETECTION TIME RANGE IN S")
+        return ds.set_system_change_detection_time_range_in_s(value);
+    if(PARAMETER_NAME=="SYSTEM CHANGE DETECTION BUS VOLTAGE TRHRESHOD IN PU")
+        return ds.set_system_change_detection_bus_voltage_threshold_in_pu(value);
+    if(PARAMETER_NAME=="SYSTEM CHANGE DETECTION ROTOR SPEED THRESHOLD IN PU")
+        return ds.set_system_change_detection_rotor_speed_threshold_in_pu(value);
+
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n",
              PARAMETER_NAME.c_str(), __FUNCTION__);
@@ -233,40 +205,20 @@ void api_set_dynamic_simulator_boolean_parameter(char* parameter_name, bool valu
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="ANGLE STABILITY SURVEILLANCE LOGIC")
-    {
-        ds.set_rotor_angle_stability_surveillance_flag(value);
-        return;
-    }
+        return ds.set_rotor_angle_stability_surveillance_flag(value);
     if(PARAMETER_NAME=="NON DIVERGENT SOLUTION LOGIC")
-    {
-        ds.set_non_divergent_solution_logic(value);
-        return;
-    }
+        return ds.set_non_divergent_solution_logic(value);
     if(PARAMETER_NAME=="AUTOMATIC ACCELERATOR TUNE LOGIC")
-    {
-        ds.set_automatic_iteration_accelerator_tune_logic(value);
-        return;
-    }
+        return ds.set_automatic_iteration_accelerator_tune_logic(value);
     if(PARAMETER_NAME=="AUTOMATICALLY CHANGE TIME STEP LOGIC")
-    {
-        ds.set_change_time_step_adaptively_logic(value);
-        return;
-    }
+        return ds.set_change_time_step_adaptively_logic(value);
     if(PARAMETER_NAME=="BIN EXPORT LOGIC")
-    {
-        ds.set_bin_file_export_enable_flag(value);
-        return;
-    }
+        return ds.set_bin_file_export_enable_flag(value);
     if(PARAMETER_NAME=="CSV EXPORT LOGIC")
-    {
-        ds.set_csv_file_export_enable_flag(value);
-        return;
-    }
+        return ds.set_csv_file_export_enable_flag(value);
     if(PARAMETER_NAME=="JSON EXPORT LOGIC")
-    {
-        ds.set_json_file_export_enable_flag(value);
-        return;
-    }
+        return ds.set_json_file_export_enable_flag(value);
+
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n",
              PARAMETER_NAME.c_str(), __FUNCTION__);

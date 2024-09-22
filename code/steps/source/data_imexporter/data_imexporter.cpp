@@ -462,7 +462,6 @@ void DATA_IMEXPORTER::check_ac_line_sequence_data()
     }
     else
     {
-        osstream;
         for(unsigned int i=0; i<lines_with_no_seq_data.size(); i++)
         {
             osstream<<"Line"<<" ["<<lines_with_no_seq_data[i]->get_sending_side_bus()<<" "<<lines_with_no_seq_data[i]->get_receiving_side_bus()

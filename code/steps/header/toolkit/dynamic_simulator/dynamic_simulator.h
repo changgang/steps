@@ -56,6 +56,8 @@ class DYNAMICS_SIMULATOR
         void set_k_for_leading_part_of_bus_frequency_model(double k);
         void set_change_time_step_adaptively_logic(bool logic);
         void set_system_change_detection_time_range_in_s(double t);
+        void set_system_change_detection_bus_voltage_threshold_in_pu(double v);
+        void set_system_change_detection_rotor_speed_threshold_in_pu(double w);
 
         unsigned int get_max_DAE_iteration() const;
         unsigned int get_min_DAE_iteration() const;
@@ -73,8 +75,12 @@ class DYNAMICS_SIMULATOR
         double get_k_for_leading_part_of_bus_frequency_model() const;
         bool get_change_time_step_adaptively_logic() const;
         double get_system_change_detection_time_range_in_s() const;
+        double get_system_change_detection_bus_voltage_threshold_in_pu() const;
+        double get_system_change_detection_rotor_speed_threshold_in_pu() const;
 
+        void add_buses_for_system_change_detection(vector<unsigned int> buss);
         void add_bus_for_system_change_detection(unsigned int bus);
+        void add_generators_for_system_change_detection(vector<DEVICE_ID> dids);
         void add_generator_for_system_change_detection(DEVICE_ID did);
 
         void show_dynamic_simulator_configuration() const;
@@ -292,7 +298,9 @@ class DYNAMICS_SIMULATOR
         bool is_system_changing_suddenly() const;
         bool is_buses_voltage_changing_suddenly() const;
 
-        void increase_dynamic_simulator_time_step_by(double delt);
+        void increase_dynamic_simulator_time_step_automatically();
+        void decrease_dynamic_simulator_time_step_automatically();
+        void change_dynamic_simulator_time_step_by(double delt);
         bool is_system_in_quasi_steady_state() const;
         bool is_buses_voltage_not_changing_in_detection_time_range() const;
         bool is_generators_rotor_speed_not_changing_in_detection_time_range() const;
@@ -367,9 +375,10 @@ class DYNAMICS_SIMULATOR
         vector<GENERATOR*> generators4change_detection;
 
         double system_change_detection_time_range;
+        double system_change_detection_bus_voltage_threshold;
+        double system_change_detection_rotor_speed_threshold;
         vector<CONTINUOUS_BUFFER*> buffer4buses_voltage_change_detection;
         vector<CONTINUOUS_BUFFER*> buffer4generators_rotor_speed_change_detection;
-
 };
 
 #endif // DYNAMICS_SIMULATOR_H

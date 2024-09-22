@@ -406,9 +406,6 @@ DEVICE_ID STEPS_IMEXPORTER::get_2t_lcc_hvdc_device_id_from_string_vector(vector<
 
 string STEPS_IMEXPORTER::get_vsc_hvdc_name_from_string_vector(vector<string>& data)
 {
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
     if(data.size()<2)
         return "";
 

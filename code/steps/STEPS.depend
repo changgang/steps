@@ -586,7 +586,7 @@
 	"header/basic/sparse_matrix_define.h"
 	<ctime>
 
-1726296836 d:\steps\code\steps\header\toolkit\dynamic_simulator\dynamic_simulator.h
+1726967229 d:\steps\code\steps\header\toolkit\dynamic_simulator\dynamic_simulator.h
 	"header/basic/power_mismatch_struct.h"
 	"header/basic/continuous_buffer.h"
 	"header/meter/meter.h"
@@ -1228,7 +1228,7 @@
 	"header/data_imexporter/steps_imexporter.h"
 	"header/STEPS.h"
 
-1726299661 d:\steps\code\steps\header\data_imexporter\steps_imexporter.h
+1726959440 d:\steps\code\steps\header\data_imexporter\steps_imexporter.h
 	"header/data_imexporter/data_imexporter.h"
 	"header/device/source.h"
 	"header/device/transformer.h"
@@ -2339,11 +2339,9 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1711292341 d:\steps\code\steps\header\model\pvu_models\pv_converter_model\pvgu1.h
+1726959440 d:\steps\code\steps\header\model\pvu_models\pv_converter_model\pvgu1.h
 	"header/model/pvu_models/pv_converter_model/pv_converter_model.h"
-	"header/model/converter_common_models/lvpl_model/lvpl.h"
-	"header/block/integral_block.h"
-	"header/block/first_order_block.h"
+	"header/model/converter_common_model/converter_model/cs_converter_model/csconv2.h"
 
 1711292341 d:\steps\code\steps\header\toolkit\cct_searcher\cct_searcher_test.h
 	<istream>
@@ -2533,11 +2531,12 @@
 	"header/model/wtg_models/wt_relay_model/wt_relay_models.h"
 	"header/model/wtg_models/wt_dbr_model/wt_dbr_models.h"
 
-1711292341 d:\steps\code\steps\header\model\wtg_models\wt_generator_model\wt_generator_models.h
+1726959440 d:\steps\code\steps\header\model\wtg_models\wt_generator_model\wt_generator_models.h
 	"header/model/wtg_models/wt_generator_model/wt3g0.h"
 	"header/model/wtg_models/wt_generator_model/wt3g1.h"
 	"header/model/wtg_models/wt_generator_model/wt3g2.h"
 	"header/model/wtg_models/wt_generator_model/wt3gx.h"
+	"header/model/wtg_models/wt_generator_model/wt3gx2.h"
 
 1726296836 d:\steps\code\steps\header\model\wtg_models\wt_generator_model\wt3g2.h
 	"header/model/wtg_models/wt_generator_model/wt_generator_model.h"
@@ -2612,9 +2611,10 @@
 	"header/basic/timer.h"
 	"header/basic/constants.h"
 
-1726296836 d:\steps\code\steps\header\model\pvu_models\pv_converter_model\pv_converter_models.h
+1726959440 d:\steps\code\steps\header\model\pvu_models\pv_converter_model\pv_converter_models.h
 	"header/model/pvu_models/pv_converter_model/pvcvx.h"
 	"header/model/pvu_models/pv_converter_model/pvcv2.h"
+	"header/model/pvu_models/pv_converter_model/pvgu1.h"
 
 1711292341 d:\steps\code\steps\header\model\pvu_models\pv_converter_model\pvcv0.h
 	"header/model/pvu_models/pv_converter_model/pv_converter_model.h"
@@ -2686,7 +2686,7 @@
 	"header/data_imexporter/bpa_imexporter.h"
 	"header/data_imexporter/steps_imexporter.h"
 
-1712132723 source:d:\steps\code\steps\source\apis\steps_api_dynamic_simulation.cpp
+1726968461 source:d:\steps\code\steps\source\apis\steps_api_dynamic_simulation.cpp
 	"header/apis/steps_api.h"
 	"header/basic/utility.h"
 	"header/toolkit/cct_searcher/cct_searcher.h"
@@ -3024,7 +3024,7 @@
 	"header/basic/constants_test.h"
 	"header/basic/utility.h"
 
-1711975335 source:d:\steps\code\steps\source\basic\continuous_buffer.cpp
+1726964146 source:d:\steps\code\steps\source\basic\continuous_buffer.cpp
 	"header/basic/continuous_buffer.h"
 	"header/steps_namespace.h"
 	"header/basic/utility.h"
@@ -3823,7 +3823,7 @@
 	<iostream>
 	<fstream>
 
-1711292341 source:d:\steps\code\steps\source\data_imexporter\data_imexporter.cpp
+1726960479 source:d:\steps\code\steps\source\data_imexporter\data_imexporter.cpp
 	"header/data_imexporter/data_imexporter.h"
 	"header/STEPS.h"
 	"header/basic/utility.h"
@@ -3883,7 +3883,7 @@
 	<iostream>
 	<cstdio>
 
-1711292341 source:d:\steps\code\steps\source\data_imexporter\psse_powerflow_imexporter.cpp
+1726960525 source:d:\steps\code\steps\source\data_imexporter\psse_powerflow_imexporter.cpp
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
@@ -3900,7 +3900,7 @@
 	<iostream>
 	<algorithm>
 
-1711292341 source:d:\steps\code\steps\source\data_imexporter\psse_short_circuit_imexporter.cpp
+1726960536 source:d:\steps\code\steps\source\data_imexporter\psse_short_circuit_imexporter.cpp
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
@@ -3910,7 +3910,7 @@
 	<iostream>
 	<algorithm>
 
-1726299661 source:d:\steps\code\steps\source\data_imexporter\steps_dynamics_imexporter.cpp
+1726960554 source:d:\steps\code\steps\source\data_imexporter\steps_dynamics_imexporter.cpp
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -4392,7 +4392,7 @@
 	<iostream>
 	<cstdio>
 
-1726299661 source:d:\steps\code\steps\source\dynamic_model_database.cpp
+1726959440 source:d:\steps\code\steps\source\dynamic_model_database.cpp
 	"header/dynamic_model_database.h"
 	"header/STEPS.h"
 	"header/steps_namespace.h"
@@ -4883,8 +4883,8 @@
 	"header/model/pvu_models/pv_converter_model/pvcv0.h"
 	"header/STEPS.h"
 
-1711292341 source:d:\steps\code\steps\source\model\pvu_models\pv_converter_model\pvgu1.cpp
-	"header/model/pvu_models/pv_converter_model/pvgu1.h"
+1726959440 source:d:\steps\code\steps\source\model\pvu_models\pv_converter_model\pvgu1.cpp
+	"header/model/pvu_models/pv_converter_model/PVGU1.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 	<cstdio>
@@ -5822,7 +5822,7 @@
 	"header/model/wtg_models/wt_aerodynamic_model/aerd0.h"
 	"header/model/wtg_models/wt_turbine_model/wt3t0.h"
 
-1726296836 source:d:\steps\code\steps\source\model\wtg_models\wt_generator_model\wt3g0.cpp
+1726959440 source:d:\steps\code\steps\source\model\wtg_models\wt_generator_model\wt3g0.cpp
 	"header/model/wtg_models/wt_generator_model/wt3g0.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -5842,7 +5842,7 @@
 	<cstdio>
 	<cmath>
 
-1726296836 source:d:\steps\code\steps\source\model\wtg_models\wt_generator_model\wt3g1.cpp
+1726959440 source:d:\steps\code\steps\source\model\wtg_models\wt_generator_model\wt3g1.cpp
 	"header/model/wtg_models/wt_generator_model/wt3g1.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -5862,7 +5862,7 @@
 	<cstdio>
 	<cmath>
 
-1726296836 source:d:\steps\code\steps\source\model\wtg_models\wt_generator_model\wt3g2.cpp
+1726959440 source:d:\steps\code\steps\source\model\wtg_models\wt_generator_model\wt3g2.cpp
 	"header/model/wtg_models/wt_generator_model/wt3g2.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -6372,7 +6372,7 @@
 	"header/toolkit/contingency_screener/contingency_screener.h"
 	"header/STEPS.h"
 
-1726300920 source:d:\steps\code\steps\source\toolkit\dynamic_simulator\dynamic_simulator.cpp
+1726967433 source:d:\steps\code\steps\source\toolkit\dynamic_simulator\dynamic_simulator.cpp
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	"header/basic/constants.h"
 	"header/basic/utility.h"
@@ -6466,7 +6466,7 @@
 	"header/data_imexporter/bpa_imexporter.h"
 	<cstdio>
 
-1711292342 source:d:\steps\code\steps\source\toolkit\short_circuit_solver\short_circuit_solver.cpp
+1726960635 source:d:\steps\code\steps\source\toolkit\short_circuit_solver\short_circuit_solver.cpp
 	"header/toolkit/short_circuit_solver/short_circuit_solver.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -27210,7 +27210,7 @@
 	"header/STEPS.h"
 	"header/model/converter_common_model/vrt_model/lvrt_control.h"
 
-1726296836 source:d:\steps\code\steps\source\model\energy_storage_model\es_converter_model\escv2.cpp
+1726959440 source:d:\steps\code\steps\source\model\energy_storage_model\es_converter_model\escv2.cpp
 	"header/model/energy_storage_model/es_converter_model/escv2.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -27233,7 +27233,7 @@
 	"header/steps_namespace.h"
 	<iostream>
 
-1726296836 source:d:\steps\code\steps\source\model\pvu_models\pv_converter_model\pvcv2.cpp
+1726959440 source:d:\steps\code\steps\source\model\pvu_models\pv_converter_model\pvcv2.cpp
 	"header/model/pvu_models/pv_converter_model/pvcv2.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -47231,6 +47231,31 @@
 	"header/STEPS.h"
 
 1726747524 source:d:\desktop\steps\code\steps\source\model\wtg_models\wt_generator_model\wt3gx2.cpp
+	"header/model/wtg_models/wt_generator_model/wt3gx2.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<cstdio>
+	<istream>
+	<iostream>
+
+1726959440 d:\steps\code\steps\header\model\wtg_models\wt_generator_model\wt3gx2.h
+	"header/model/wtg_models/wt_generator_model/wt_generator_model.h"
+	"header/model/converter_common_model/converter_model/vs_converter_model/dvoc0.h"
+
+1726959440 d:\steps\code\steps\header\model\converter_common_model\converter_model\vs_converter_model\dvoc0.h
+	"header/model/converter_common_model/converter_model/vs_converter_model/vs_converter_model.h"
+	"header/model/converter_common_model/current_order_limiter_model/convcol.h"
+	"header/block/pi_block.h"
+	"header/block/first_order_block.h"
+	"header/block/integral_block.h"
+
+1726959440 source:d:\steps\code\steps\source\model\converter_common_model\converter_model\vs_converter_model\dvoc0.cpp
+	"header/model/converter_common_model/converter_model/vs_converter_model/dvoc0.h"
+	"header/basic/utility.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+
+1726959440 source:d:\steps\code\steps\source\model\wtg_models\wt_generator_model\wt3gx2.cpp
 	"header/model/wtg_models/wt_generator_model/wt3gx2.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"

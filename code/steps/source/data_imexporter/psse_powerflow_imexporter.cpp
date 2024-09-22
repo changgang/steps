@@ -34,8 +34,6 @@ void PSSE_IMEXPORTER::load_powerflow_data(string file)
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     load_powerflow_data_into_ram(file);
-    unsigned int p=raw_data_in_ram.size();
-    unsigned int q=raw_data_in_ram[0].size();
     if(raw_data_in_ram.size()==0)
     {
         osstream<<"No data in the given PSS/E file: "<<file<<endl
@@ -507,7 +505,6 @@ void PSSE_IMEXPORTER::export_vsc_powerflow_data(string file)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     ofstream ofs(file);
     if(!ofs)

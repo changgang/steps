@@ -431,7 +431,7 @@ string PSSE_IMEXPORTER::export_all_zero_sequence_mutual_impedance_data() const
 
 string PSSE_IMEXPORTER::export_zero_sequence_mutual_impedance_data(const MUTUAL_DATA* mutual) const
 {
-
+    return "";
 }
 
 string PSSE_IMEXPORTER::export_all_transformer_zero_sequence_data() const

@@ -181,7 +181,6 @@ void SHORT_CIRCUIT_SOLVER::updata_all_wt_generator_motor_data()
 void SHORT_CIRCUIT_SOLVER::update_node_voltages_with_devices_equivalent_to_source()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    double sbase = psdb.get_system_base_power_in_MVA();
     unsigned int bus_count = psdb.get_bus_count();
 
     injection_current_vector_with_internal_order.reserve(bus_count);
@@ -310,7 +309,6 @@ void SHORT_CIRCUIT_SOLVER::add_constant_speed_wt_generator_to_vector(WT_GENERATO
     // as induction machine
     if(wt_gen.get_status())
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         complex<double> Iinjection = wt_gen.get_motor_equivalent_injection_current_in_pu();
 
         unsigned int bus = wt_gen.get_generator_bus();
@@ -392,7 +390,6 @@ void SHORT_CIRCUIT_SOLVER::add_doubly_fed_wt_generator_to_vector(WT_GENERATOR& w
 void SHORT_CIRCUIT_SOLVER::add_pv_units_to_injection_current_vector_for_iterative_method()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    double sbase = psdb.get_system_base_power_in_MVA();
     vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
     unsigned int n = pv_units.size();
     for(unsigned int i=0; i<n; i++)
@@ -478,12 +475,11 @@ void SHORT_CIRCUIT_SOLVER::add_vsc_hvdcs_to_injection_current_vector()
         if(vsc_hvdc->get_sequence_parameter_import_flag()==false)
             continue;
 
-        unsigned int nn = vsc_hvdc->get_converter_count();
+        unsigned int nc = vsc_hvdc->get_converter_count();
 
-        for(unsigned int j=0; j<nn; j++)
+        for(unsigned int j=0; j<nc; j++)
         {
             unsigned int busn = vsc_hvdc->get_converter_ac_bus(j);
-            VSC_HVDC_CONVERTER_MODEL* model = vsc_hvdc->get_vsc_hvdc_converter_model(j);
 
             complex<double> Iinjection = 0.0;
             if(vsc_hvdc->get_converter_control_mode(j) == CURRENT_VECTOR_CONTROL)
@@ -1356,7 +1352,7 @@ complex<double> SHORT_CIRCUIT_SOLVER::get_initial_voltage_of_faulted_ac_line_poi
     complex<double> Uj = get_initial_voltage_of_bus_before_short_circuit(jbus);
 
     complex<double> Zline = faulted_ac_line_pointer->get_line_zero_sequence_z_in_pu();
-    complex<double> Yline = faulted_ac_line_pointer->get_line_zero_sequence_y_in_pu();
+    //complex<double> Yline = faulted_ac_line_pointer->get_line_zero_sequence_y_in_pu();
 
     complex<double> Zif = Zline*fault_location;
     complex<double> Zjf = Zline*(1.0-fault_location);
@@ -1802,7 +1798,7 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_bus_fault()
         AC_LINE& line = *lines[i];
 
         complex<double> I1, I2, I0;
-        unsigned int current_from_bus ;
+        unsigned int current_from_bus = INDEX_NOT_EXIST;
         if(line.get_sending_side_bus() == fault_bus)
         {
             current_from_bus = line.get_receiving_side_bus();
@@ -1851,7 +1847,7 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_bus_fault()
         complex<double> I1, I2, I0;
         if(trans.is_two_winding_transformer())
         {
-            unsigned int current_from_bus;
+            unsigned int current_from_bus = INDEX_NOT_EXIST;
             if(trans.get_winding_bus(PRIMARY_SIDE) == fault_bus)
             {
                 current_from_bus = trans.get_winding_bus(SECONDARY_SIDE);
@@ -2274,7 +2270,7 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
         {
             AC_LINE& line = *lines[i];
             complex<double> I1, I2, I0;
-            unsigned int current_from_bus ;
+            unsigned int current_from_bus = INDEX_NOT_EXIST;
             if(line.get_sending_side_bus() == fault_bus)
             {
                 current_from_bus = line.get_receiving_side_bus();
@@ -2322,7 +2318,7 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
             complex<double> I1, I2, I0;
             if(trans.is_two_winding_transformer())
             {
-                unsigned int current_from_bus;
+                unsigned int current_from_bus = INDEX_NOT_EXIST;
                 if(trans.get_winding_bus(PRIMARY_SIDE) == fault_bus)
                 {
                     current_from_bus = trans.get_winding_bus(SECONDARY_SIDE);
@@ -2808,11 +2804,11 @@ void SHORT_CIRCUIT_SOLVER::save_extended_short_circuit_result_to_file(const stri
                 AC_LINE& line = *lines[i];
 
                 complex<double> I1, I2, I0;
-                unsigned int to_bus ;
+                unsigned int to_bus = INDEX_NOT_EXIST;
 
                 if(line.is_faulted()==true)
                 {
-                    to_bus = 999999;
+                    to_bus = INDEX_NOT_EXIST;
                     double fault_location = line.get_fault_location_of_fault(0);
                     complex<double> Z1 = line.get_line_positive_sequence_z_in_pu();
                     complex<double> Y1 = line.get_line_positive_sequence_y_in_pu();
@@ -2893,7 +2889,7 @@ void SHORT_CIRCUIT_SOLVER::save_extended_short_circuit_result_to_file(const stri
                 }
 
                 string to_bus_name;
-                if(to_bus == 999999)
+                if(to_bus == INDEX_NOT_EXIST)
                     to_bus_name = "DUMMY BUS";
                 else
                 {
@@ -2912,7 +2908,7 @@ void SHORT_CIRCUIT_SOLVER::save_extended_short_circuit_result_to_file(const stri
                 complex<double> I1, I2, I0;
                 if(trans.is_two_winding_transformer())
                 {
-                    unsigned int to_bus;
+                    unsigned int to_bus = INDEX_NOT_EXIST;
                     if(trans.get_winding_bus(PRIMARY_SIDE) == busnum)
                     {
                         to_bus = trans.get_winding_bus(SECONDARY_SIDE);

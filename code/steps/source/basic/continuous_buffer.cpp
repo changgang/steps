@@ -365,9 +365,29 @@ double CONTINUOUS_BUFFER::get_buffer_range_in_latest_seconds(double t) const
 {
     if(buffer_size!=1)
     {
+        double thead = get_buffer_time_at_delay_index(0);
+        double max_value = get_buffer_value_at_delay_index(0);
+        double min_value = get_buffer_value_at_delay_index(0);
+        for(unsigned int i=1; i<buffer_size; ++i)
+        {
+            double time = get_buffer_time_at_delay_index(i);
+            if(thead-time<t)
+            {
+                double value = get_buffer_value_at_delay_index(i);
+                if(value>max_value)
+                    max_value = value;
+                if(value<min_value)
+                    min_value = value;
+            }
+            else
+                break;
+        }
+        return max_value-min_value;
+        /*
         double max_value = get_buffer_max_value_in_latest_seconds(t);
         double min_value = get_buffer_min_value_in_latest_seconds(t);
         return max_value - min_value;
+        */
     }
     else
         return 0;

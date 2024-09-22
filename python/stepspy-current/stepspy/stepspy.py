@@ -5915,11 +5915,29 @@ class STEPS():
         return
     
         
+    def add_buses_for_system_change_detection(self, buses):
+        """
+        Add buses for detecting system change during dynamic simulation.
+        Args:
+            (1) buses: list or tuple of buses for system change detection, support both bus name and number
+        Rets: N/A
+        Tips: N/A
+        Example:
+            buses = (1, 2, "BUS 3", "BUS 4", 5)
+            simulator.add_buses_for_system_change_detection(buses)
+        """
+        for bus in buses:
+            if isinstance(bus, str):
+                bus = self.bus_name2number(bus)
+            if isinstance(bus, int) and bus != 0:
+                self.add_bus_for_system_change_detection(bus)
+        return
+        
     def add_bus_for_system_change_detection(self, bus):
         """
         Add bus for detecting system change during dynamic simulation.
         Args:
-            (1) bus: bus for system change detection
+            (1) bus: bus number for system change detection
         Rets: N/A
         Tips: N/A
         Example:
@@ -5927,6 +5945,21 @@ class STEPS():
         """
         global STEPS_LIB
         STEPS_LIB.api_add_bus_for_system_change_detection(bus, self.toolkit_index)
+        return
+        
+    def add_generators_for_system_change_detection(self, generators):
+        """
+        Add generators for detecting system change during dynamic simulation.
+        Args:
+            (1) generator: list or tuple of generators for system change detection in format (ibus, ickt)
+        Rets: N/A
+        Tips: N/A
+        Example:
+            gens = [("1, "#1"), (2, "#1), (3, "#1")]
+            simulator.add_generator_for_system_change_detection((1, "#1"))
+        """
+        for gen in generators:
+            self.add_generator_for_system_change_detection(gen)
         return
         
     def add_generator_for_system_change_detection(self, generator):
