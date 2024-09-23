@@ -1112,8 +1112,7 @@ void DYNAMICS_SIMULATOR::start()
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 
-    if(get_change_time_step_adaptively_logic()==true)
-        initialize_buffers_for_system_change_detection();
+    initialize_buffers_for_system_change_detection();
 
     osstream<<"Dynamics initialization finished.";
     toolkit->show_information_with_leading_time_stamp(osstream);
@@ -1202,10 +1201,18 @@ void DYNAMICS_SIMULATOR::run_to(double time)
 
     while(TIME<=time-DOUBLE_EPSILON)
     {
+        bool change_time_step_for_precise_time = false;
+        double old_DELT = DELT;
         if(TIME+DELT>time and fabs(time-TIME)>FLOAT_EPSILON)
+        {
             change_dynamic_simulator_time_step_in_s(time-TIME);
+            change_time_step_for_precise_time = true;
+        }
 
         run_a_step();
+
+        if(change_time_step_for_precise_time == true)
+            change_dynamic_simulator_time_step_in_s(old_DELT);
 
         if(get_rotor_angle_stability_surveillance_flag()==true)
         {
@@ -1236,7 +1243,7 @@ void DYNAMICS_SIMULATOR::run_a_step()
     TIME += DELT;
     if(detailed_log_enabled)
     {
-        osstream<<"Run dynamic simulation at time "<<TIME<<"s.";
+        osstream<<"Run dynamic simulation to time "<<TIME<<"s.";
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
     update_equivalent_devices_buffer();
@@ -1376,9 +1383,9 @@ void DYNAMICS_SIMULATOR::update()
 {
     update_with_specific_mode(DYNAMIC_UPDATE_MODE);
 
+    update_buffers_for_system_change_detection();
     if(get_change_time_step_adaptively_logic()==true)
     {
-        update_buffers_for_system_change_detection();
         if(is_system_changing_suddenly())
             change_dynamic_simulator_time_step_to_minimum();
         else
@@ -2856,7 +2863,7 @@ void DYNAMICS_SIMULATOR::build_jacobian()
 void DYNAMICS_SIMULATOR::change_dynamic_simulator_time_step_in_s(double delt)
 {
     ostringstream osstream;
-    osstream<<"System dynamic simulation time step is changed from "<<DELT<<" s to "<<delt<<" s.";
+    osstream<<"At time "<<get_dynamic_simulation_time_in_s()<<" s, system dynamic simulation time step is changed from "<<DELT<<" s to "<<delt<<" s.";
     toolkit->show_information_with_leading_time_stamp(osstream);
 
     set_dynamic_simulation_time_step_in_s(delt);

@@ -351,13 +351,16 @@ void LEAD_LAG_BLOCK::update_simulation_time_step()
     determine_block_integration_time_step();
     determine_block_temp_variables();
 
-    double k = get_K();
-    double x = get_input();
-    double y = get_output();
-    double s = (y/t1_over_t2 - k*x)/(t2_over_t1-1.0);
-    set_state(s);
-    double z = s+h_over_2t1*(y-s);
-    set_store(z);
+    if(fabs(t2_over_t1-1.0)>FLOAT_EPSILON)
+    {
+        double k = get_K();
+        double x = get_input();
+        double y = get_output();
+        double s = (y/t1_over_t2 - k*x)/(t2_over_t1-1.0);
+        set_state(s);
+        double z = s+h_over_2t1*(y-s);
+        set_store(z);
+    }
     copy_current_input_to_old_input_in_last_time_step();
 }
 
