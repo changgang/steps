@@ -252,7 +252,7 @@ bool AERDL::setup_model_with_steps_string_vector(vector<string>& data)
 
             if(pitch0<0)
             {
-                osstream<<"Error. The parameter initial pitch angle in deg ( = "<<pitch0<<" deg ) of "<<did.get_compound_device_name()
+                osstream<<"Warning. The parameter initial pitch angle in deg ( = "<<pitch0<<" deg ) of "<<did.get_compound_device_name()
                 <<" is negative of "<<get_model_name()<<" model."<<endl
                 <<"The parameter initial pitch angle in deg will be updated as "<<-pitch0<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
@@ -262,7 +262,7 @@ bool AERDL::setup_model_with_steps_string_vector(vector<string>& data)
 
             if(co_a>0)
             {
-                osstream<<"Error. The parameter coefficient a ( = "<<co_a<<" deg ) of "<<did.get_compound_device_name()
+                osstream<<"Warning. The parameter coefficient a ( = "<<co_a<<" ) of "<<did.get_compound_device_name()
                 <<" is positive of "<<get_model_name()<<" model."<<endl
                 <<"The parameter coefficient a will be updated as "<<-co_a<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
@@ -272,7 +272,7 @@ bool AERDL::setup_model_with_steps_string_vector(vector<string>& data)
 
             if(co_b<0)
             {
-                osstream<<"Error. The parameter coefficient b ( = "<<co_b<<" deg ) of "<<did.get_compound_device_name()
+                osstream<<"Warning. The parameter coefficient b ( = "<<co_b<<" ) of "<<did.get_compound_device_name()
                 <<" is negative of "<<get_model_name()<<" model."<<endl
                 <<"The parameter coefficient b will be updated as "<<-co_b<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
@@ -282,7 +282,7 @@ bool AERDL::setup_model_with_steps_string_vector(vector<string>& data)
 
             if(co_c<0)
             {
-                osstream<<"Error. The parameter coefficient c ( = "<<co_c<<" deg ) of "<<did.get_compound_device_name()
+                osstream<<"Warning. The parameter coefficient c ( = "<<co_c<<" ) of "<<did.get_compound_device_name()
                 <<" is negative of "<<get_model_name()<<" model."<<endl
                 <<"The parameter coefficient c will be updated as "<<-co_c<<".";
                 toolkit.show_information_with_leading_time_stamp(osstream);
@@ -290,25 +290,16 @@ bool AERDL::setup_model_with_steps_string_vector(vector<string>& data)
             }
             set_c(co_c);
 
-            double max_v = get_turbine_reference_speed_in_pu_without_speed_limit(-0.5*get_b()/get_a());
-            double min_v = get_turbine_reference_speed_in_pu_without_speed_limit(0.0);
-
-            if(maxspeed>max_v)
+            if(maxspeed<=0.0)
             {
-                osstream<<"Error. The parameter max steady state turbine speed in pu of "<<did.get_compound_device_name()
-                <<" is larger than the maximum speed of the power speed curve( speed = "<<get_a()<<" pelec * pelec + "<<get_b()<<" pelec + "<<get_c()<<" ) of "<<get_model_name()<<" model."<<endl
-                <<"The parameter max steady state turbine speed will be updated as "<<max_v<<".";
+                osstream<<"Error. The parameter max steady state turbine speed in pu ( = "<<maxspeed<<" ) of "<<did.get_compound_device_name()<<" is lower than Zero.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
-                maxspeed = max_v;
             }
 
-            if(minspeed<min_v)
+            if(minspeed<=0.0)
             {
-                osstream<<"Error. The parameter min steady state turbine speed in pu of "<<did.get_compound_device_name()
-                <<" is lower than the minimum speed of the power speed curve( speed = "<<get_a()<<" pelec * pelec + "<<get_b()<<" pelec + "<<get_c()<<" ) of "<<get_model_name()<<" model."<<endl
-                <<"The parameter min steady state turbine speed will be updated as "<<min_v<<".";
+                osstream<<"Error. The parameter min steady state turbine speed in pu ( = "<<minspeed<<" ) of "<<did.get_compound_device_name()<<" is lower than Zero.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
-                minspeed = min_v;
             }
 
             set_min_steady_state_turbine_speed_in_pu(minspeed);
