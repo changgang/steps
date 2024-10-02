@@ -82,12 +82,6 @@ void PVPNLY::set_current_S_in_Wpm2_and_T_in_C_deg(double S, double T)
     update_current_Vdc_at_mppt_per_solar_cell_in_V(S,T);
 }
 
-void PVPNLY::set_current_Vdc_reference_per_solar_cell_in_V_with_over_or_under_Vdc_mode(double value)
-{
-    if(fabs(get_current_Vdc_reference_per_solar_cell_in_V_with_over_or_under_Vdc_mode()-value)>DOUBLE_EPSILON)
-        this->current_Vdc_reference_per_solar_cell_in_V_with_over_or_under_Vdc_mode = value;
-}
-
 void PVPNLY::set_current_pelec_including_loss_per_solar_cell_in_W(double value)
 {
     if(fabs(get_current_pelec_including_loss_per_solar_cell_in_W()-value)<DOUBLE_EPSILON)
@@ -98,16 +92,19 @@ void PVPNLY::set_current_pelec_including_loss_per_solar_cell_in_W(double value)
     update_current_Vdc_reference_per_solar_cell_in_V_with_over_or_under_Vdc_mode(value);
 }
 
+void PVPNLY::set_current_Vdc_reference_per_solar_cell_in_V_with_over_or_under_Vdc_mode(double value)
+{
+    this->current_Vdc_reference_per_solar_cell_in_V_with_over_or_under_Vdc_mode = value;
+}
+
 void PVPNLY::set_current_Vdc_at_mppt_per_solar_cell_in_V(double value)
 {
-    if(fabs(get_current_Vdc_at_mppt_per_solar_cell_in_V()-value)>DOUBLE_EPSILON)
-        this->current_Vdc_at_mppt_per_solar_cell_in_V = value;
+    this->current_Vdc_at_mppt_per_solar_cell_in_V = value;
 }
 
 void PVPNLY::set_current_Ipv_per_solar_cell_in_A(double value)
 {
-    if(fabs(get_current_Ipv_per_solar_cell_in_A()-value)>DOUBLE_EPSILON)
-        this->current_Ipv_per_solar_cell_in_A = value;
+    this->current_Ipv_per_solar_cell_in_A = value;
 }
 
 double PVPNLY::get_current_S_in_Wpm2() const
@@ -133,11 +130,6 @@ double PVPNLY::get_current_pelec_including_loss_per_solar_cell_in_W() const
 double PVPNLY::get_current_Vdc_at_mppt_per_solar_cell_in_V() const
 {
     return this->current_Vdc_at_mppt_per_solar_cell_in_V;
-}
-
-double PVPNLY::get_current_Ipv_per_solar_cell_in_A() const
-{
-    return this->current_Ipv_per_solar_cell_in_A;
 }
 
 void PVPNLY::set_dc_voltage_control_mode(PV_DC_VOLTAGE_MODE mode)
@@ -395,9 +387,7 @@ double PVPNLY::get_Ipv_per_solar_cell_in_A(double V, double S, double T)
     if(Ipv<0)
         Ipv = 0.0;
 
-    set_current_Ipv_per_solar_cell_in_A(Ipv);
-
-    return get_current_Ipv_per_solar_cell_in_A();
+    return Ipv;
 }
 
 double PVPNLY::get_Ipv_in_kA_per_pv_unit(double V, double S, double T)
@@ -417,20 +407,6 @@ double PVPNLY::get_maximum_available_power_extracted_power_from_irradiance_per_s
 {
     double Vdc_at_mppt = get_Vdc_at_mppt_per_solar_cell_in_V(S, T);
     return get_power_extracted_power_from_irradiance_per_solar_cell_in_W(Vdc_at_mppt, S, T);
-}
-
-double PVPNLY::get_Vdc_at_mppt_per_solar_cell_in_V(double S, double T)
-{
-    if(S==0.0)
-        return get_Vm_in_V_per_solar_cell()*(1.0-get_c()*(T-get_Tref_in_C_deg()))*log(exp(1.0)+get_b()*(S/get_Sref_in_Wpm2()-1.0));
-
-    if(fabs(get_current_S_in_Wpm2()-S)<DOUBLE_EPSILON and fabs(get_current_T_in_C_deg()-T)<DOUBLE_EPSILON)
-        return get_current_Vdc_at_mppt_per_solar_cell_in_V();
-    else
-    {
-        set_current_S_in_Wpm2_and_T_in_C_deg(S,T);
-        return get_current_Vdc_at_mppt_per_solar_cell_in_V();
-    }
 }
 
 void PVPNLY::update_current_Vdc_at_mppt_per_solar_cell_in_V(double S, double T)
@@ -656,20 +632,37 @@ double PVPNLY::get_Vdc_reference_per_solar_cell_in_V_without_limit(double S, dou
     }
     else
     {
-        if(fabs(get_current_S_in_Wpm2()-S)<DOUBLE_EPSILON and fabs(get_current_T_in_C_deg()-T)<DOUBLE_EPSILON
-           and fabs(get_current_pelec_including_loss_per_solar_cell_in_W()-P)<DOUBLE_EPSILON)
-        {
-            return get_current_Vdc_reference_per_solar_cell_in_V_with_over_or_under_Vdc_mode();
-        }
-        else
-        {
-            set_current_S_in_Wpm2_and_T_in_C_deg(S,T);
-            set_current_pelec_including_loss_per_solar_cell_in_W(P);
-            return get_current_Vdc_reference_per_solar_cell_in_V_with_over_or_under_Vdc_mode();
-        }
+        return get_Vdc_reference_per_solar_cell_in_V_with_over_or_under_Vdc_mode_without_limit(S, T, P);
     }
-    return 0.0;
+}
 
+double PVPNLY::get_Vdc_at_mppt_per_solar_cell_in_V(double S, double T)
+{
+    if(S==0.0)
+        return get_Vm_in_V_per_solar_cell()*(1.0-get_c()*(T-get_Tref_in_C_deg()))*log(exp(1.0)+get_b()*(S/get_Sref_in_Wpm2()-1.0));
+
+    if(fabs(get_current_S_in_Wpm2()-S)<DOUBLE_EPSILON and fabs(get_current_T_in_C_deg()-T)<DOUBLE_EPSILON)
+        return get_current_Vdc_at_mppt_per_solar_cell_in_V();
+    else
+    {
+        set_current_S_in_Wpm2_and_T_in_C_deg(S,T);//update mppt point
+        return get_current_Vdc_at_mppt_per_solar_cell_in_V();
+    }
+}
+
+double PVPNLY::get_Vdc_reference_per_solar_cell_in_V_with_over_or_under_Vdc_mode_without_limit(double S, double T, double P)
+{
+    if(fabs(get_current_S_in_Wpm2()-S)<DOUBLE_EPSILON and fabs(get_current_T_in_C_deg()-T)<DOUBLE_EPSILON
+       and fabs(get_current_pelec_including_loss_per_solar_cell_in_W()-P)<DOUBLE_EPSILON)
+    {
+        return get_current_Vdc_reference_per_solar_cell_in_V_with_over_or_under_Vdc_mode();
+    }
+    else
+    {
+        set_current_S_in_Wpm2_and_T_in_C_deg(S,T);//update mppt point
+        set_current_pelec_including_loss_per_solar_cell_in_W(P);//update over under Vdc ponit
+        return get_current_Vdc_reference_per_solar_cell_in_V_with_over_or_under_Vdc_mode();
+    }
 }
 
 double PVPNLY::get_Vdc_reference_per_solar_cell_in_V(double S, double T, double P)

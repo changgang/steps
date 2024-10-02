@@ -38,6 +38,7 @@ class PVPNLY : public PV_PANEL_MODEL
         double get_power_extracted_power_from_irradiance_per_solar_cell_in_W(double V, double S, double T);
         double get_maximum_available_power_extracted_power_from_irradiance_per_solar_cell_in_W(double S, double T);
         double get_Vdc_at_mppt_per_solar_cell_in_V(double S, double T);
+        double get_Vdc_reference_per_solar_cell_in_V_with_over_or_under_Vdc_mode_without_limit(double S, double T, double P);
         double get_Vdc_reference_per_solar_cell_in_V_without_limit(double S, double T, double P);
         double get_Vdc_reference_per_solar_cell_in_V(double S, double T, double P);
         double get_Vdc_reference_in_kV_per_pv_unit();
@@ -56,7 +57,6 @@ class PVPNLY : public PV_PANEL_MODEL
         double get_current_Vdc_reference_per_solar_cell_in_V_with_over_or_under_Vdc_mode() const;
         double get_current_pelec_including_loss_per_solar_cell_in_W() const;
         double get_current_Vdc_at_mppt_per_solar_cell_in_V() const;
-        double get_current_Ipv_per_solar_cell_in_A() const;
 
         void set_dc_voltage_control_mode(PV_DC_VOLTAGE_MODE mode);
         void set_Im_in_A_per_solar_cell(double I);
