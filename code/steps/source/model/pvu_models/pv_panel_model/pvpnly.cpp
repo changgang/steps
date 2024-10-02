@@ -7,15 +7,15 @@
 using namespace std;
 
 PVPNLY::PVPNLY(STEPS& toolkit) : PV_PANEL_MODEL(toolkit),
-                                 capacitor_integrator(toolkit),
-                                 Vdc_pi_controller(toolkit)
+                                 capacitor(toolkit),
+                                 Vdc_controller(toolkit)
 {
     clear();
 }
 
 PVPNLY::PVPNLY(const PVPNLY& model):PV_PANEL_MODEL(model.get_toolkit()),
-                                    capacitor_integrator(model.get_toolkit()),
-                                    Vdc_pi_controller(model.get_toolkit())
+                                    capacitor(model.get_toolkit()),
+                                    Vdc_controller(model.get_toolkit())
 
 {
     copy_from_const_model(model);
@@ -67,8 +67,8 @@ void PVPNLY::clear()
     current_Vdc_reference_per_solar_cell_in_V_with_over_or_under_Vdc_mode = DOUBLE_EPSILON;
     current_pelec_including_loss_per_solar_cell_in_W = DOUBLE_EPSILON;
     current_Vdc_at_mppt_per_solar_cell_in_V = DOUBLE_EPSILON;
-    capacitor_integrator.set_limiter_type(NON_WINDUP_LIMITER);
-    Vdc_pi_controller.set_limiter_type(NO_LIMITER);
+    capacitor.set_limiter_type(NON_WINDUP_LIMITER);
+    Vdc_controller.set_limiter_type(NO_LIMITER);
 
 }
 
@@ -207,17 +207,17 @@ void PVPNLY::set_Smax_in_Wpm2(double value)
 
 void PVPNLY::set_C_in_F(double value)
 {
-    capacitor_integrator.set_T_in_s(value);
+    capacitor.set_T_in_s(value);
 }
 
 void PVPNLY::set_Kpdc(double value)
 {
-    Vdc_pi_controller.set_Kp(value);
+    Vdc_controller.set_Kp(value);
 }
 
 void PVPNLY::set_Kidc(double value)
 {
-    Vdc_pi_controller.set_Ki(value);
+    Vdc_controller.set_Ki(value);
 }
 
 void PVPNLY::set_Vdcmin_per_solar_cell_in_V(double value)
@@ -225,7 +225,7 @@ void PVPNLY::set_Vdcmin_per_solar_cell_in_V(double value)
     this->Vdcmin_per_solar_cell_in_V = value;
     double Nse = get_Nse();
     double Vdc_min_in_kV = value*Nse/1e3;
-    capacitor_integrator.set_lower_limit(Vdc_min_in_kV);
+    capacitor.set_lower_limit(Vdc_min_in_kV);
 }
 
 void PVPNLY::set_Vdcmax_per_solar_cell_in_V(double value)
@@ -233,7 +233,7 @@ void PVPNLY::set_Vdcmax_per_solar_cell_in_V(double value)
     this->Vdcmax_per_solar_cell_in_V = value;
     double Nse = get_Nse();
     double Vdc_max_in_kV = value*Nse/1e3;
-    capacitor_integrator.set_upper_limit(Vdc_max_in_kV);
+    capacitor.set_upper_limit(Vdc_max_in_kV);
 }
 
 PV_DC_VOLTAGE_MODE PVPNLY::get_dc_voltage_control_mode() const
@@ -303,17 +303,17 @@ double PVPNLY::get_Smax_in_Wpm2() const
 
 double PVPNLY::get_C_in_F() const
 {
-    return capacitor_integrator.get_T_in_s();
+    return capacitor.get_T_in_s();
 }
 
 double PVPNLY::get_Kpdc() const
 {
-    return Vdc_pi_controller.get_Kp();
+    return Vdc_controller.get_Kp();
 }
 
 double PVPNLY::get_Kidc() const
 {
-    return Vdc_pi_controller.get_Ki();
+    return Vdc_controller.get_Ki();
 }
 
 double PVPNLY::get_Vdcmin_per_solar_cell_in_V() const
@@ -328,7 +328,7 @@ double PVPNLY::get_Vdcmax_per_solar_cell_in_V() const
 
 double PVPNLY::get_Pref_in_pu_base_on_mbase()
 {
-    double Pref = Vdc_pi_controller.get_output();
+    double Pref = Vdc_controller.get_output();
     set_current_Pref_in_pu_on_mbase(Pref);
     return get_current_Pref_in_pu_on_mbase();
 }
@@ -365,7 +365,7 @@ void PVPNLY::initialize_S0_in_Wpm2_and_Vdc_in_V_per_solar_cell_with_mppt_mode(do
 
     if(pelec>=pmin and pelec<=pmax)
     {
-        if(fabs(pelec-pmin)>DOUBLE_EPSILON)
+        if(fabs(pelec-pmin)>FLOAT_EPSILON)
         {
             unsigned int iter_max = 100;
             unsigned int iter = 0;
@@ -393,7 +393,7 @@ void PVPNLY::initialize_S0_in_Wpm2_and_Vdc_in_V_per_solar_cell_with_mppt_mode(do
             {
                 double s = 0.5*(s_low+s_high);
                 double pmax = get_maximum_available_power_extracted_power_from_irradiance_per_solar_cell_in_W(s, T);
-                if(fabs(pelec-pmax)>DOUBLE_EPSILON)
+                if(fabs(pelec-pmax)>FLOAT_EPSILON)
                 {
                     if(pmax>pelec)
                         s_high = s;
@@ -430,18 +430,20 @@ void PVPNLY::initialize_S0_in_Wpm2_and_Vdc_in_V_per_solar_cell_with_mppt_mode(do
         if(Vdc0>Vdcmax)
         {
             osstream<<"Initialized irradiance is "<<get_S0_in_Wpm2()<<" W/m2."<<endl
-            <<"The initialized Vdc per solar cell is "<<Vdc0<<" V, greater than parameter Vdcmax = "<<Vdcmax<<" V."<<endl
+            <<"Error. The initialized Vdc per solar cell is "<<Vdc0<<" V, greater than parameter Vdcmax = "<<Vdcmax<<" V."<<endl
             <<"Failed to initialize irradiance and dc voltage in PV MPPT MODE.";
             toolkit.show_information_with_leading_time_stamp(osstream);
+            set_initial_Vdc_per_solar_cell_in_V(Vdcmax);
             return;
 
         }
         if(Vdc0<Vdcmin)
         {
             osstream<<"Initialized irradiance is "<<get_S0_in_Wpm2()<<" W/m2."<<endl
-            <<"The initialized Vdc per solar cell is "<<Vdc0<<" V, less than parameter Vdcmin = "<<Vdcmin<<" V."<<endl
+            <<"Error. The initialized Vdc per solar cell is "<<Vdc0<<" V, less than parameter Vdcmin = "<<Vdcmin<<" V."<<endl
             <<"Failed to initialize irradiance and dc voltage in PV MPPT MODE.";
             toolkit.show_information_with_leading_time_stamp(osstream);
+            set_initial_Vdc_per_solar_cell_in_V(Vdcmin);
             return;
 
         }
@@ -528,14 +530,14 @@ void PVPNLY::initialize_Vdc_in_V_per_solar_cell_with_under_or_over_Vdc_mode(doub
         {
             if(psolar_max>pelec and psolar_min>pelec)
             {
-                osstream<<"Failed to initialize irradiance because power extracted power from irradiance per solar cell at "<<endl
+                osstream<<"Error. Failed to initialize irradiance because power extracted power from irradiance per solar cell at "<<endl
                 <<"Smax ( = "<<get_Smax_in_Wpm2()<<" W/m2 ) and Smin ( = "<<get_Smin_in_Wpm2()<<" W/m2 ) both greater than required power "
                 <<"at Vdcmax = "<<Vdcmax<<" V."<<endl;
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(psolar_max<pelec and psolar_min<pelec)
             {
-                osstream<<"Failed to initialize irradiance because power extracted power from irradiance per solar cell at "<<endl
+                osstream<<"Error. Failed to initialize irradiance because power extracted power from irradiance per solar cell at "<<endl
                 <<"Smax ( = "<<get_Smax_in_Wpm2()<<" W/m2 ) and Smin ( = "<<get_Smin_in_Wpm2()<<" W/m2 ) both less than required power "
                 <<"at Vdcmax = "<<Vdcmax<<" V."<<endl;
                 toolkit.show_information_with_leading_time_stamp(osstream);
@@ -545,14 +547,14 @@ void PVPNLY::initialize_Vdc_in_V_per_solar_cell_with_under_or_over_Vdc_mode(doub
         {
             if(psolar_max>pelec and psolar_min>pelec)
             {
-                osstream<<"Failed to initialize irradiance because power extracted power from irradiance per solar cell at "<<endl
+                osstream<<"Error. Failed to initialize irradiance because power extracted power from irradiance per solar cell at "<<endl
                 <<"Smax ( = "<<get_Smax_in_Wpm2()<<" W/m2 ) and Smin ( = "<<get_Smin_in_Wpm2()<<" W/m2 ) both greater than required power "
                 <<"at Vdcmin = "<<Vdcmin<<" V."<<endl;
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(psolar_max<pelec and psolar_min<pelec)
             {
-                osstream<<"Failed to initialize irradiance because power extracted power from irradiance per solar cell at "<<endl
+                osstream<<"Error. Failed to initialize irradiance because power extracted power from irradiance per solar cell at "<<endl
                 <<"Smax ( = "<<get_Smax_in_Wpm2()<<" W/m2 ) and Smin ( = "<<get_Smin_in_Wpm2()<<" W/m2 ) both less than required power "
                 <<"at Vdcmin = "<<Vdcmin<<" V."<<endl;
                 toolkit.show_information_with_leading_time_stamp(osstream);
@@ -563,7 +565,7 @@ void PVPNLY::initialize_Vdc_in_V_per_solar_cell_with_under_or_over_Vdc_mode(doub
 
     double psolar = get_power_extracted_power_from_irradiance_per_solar_cell_in_W(get_initial_Vdc_per_solar_cell_in_V(), s_low, T);
 
-    if(fabs(pelec-psolar)>DOUBLE_EPSILON)
+    if(fabs(pelec-psolar)>FLOAT_EPSILON)
     {
         unsigned int iter_count = 0, iter_max = 100;
         while(true)
@@ -592,7 +594,7 @@ void PVPNLY::initialize_Vdc_in_V_per_solar_cell_with_under_or_over_Vdc_mode(doub
             double s_new = 0.5*(s_low+s_high);
             double pnew = get_power_extracted_power_from_irradiance_per_solar_cell_in_W(get_initial_Vdc_per_solar_cell_in_V(), s_new, T);
 
-            if(fabs(pnew-pelec)>DOUBLE_EPSILON)
+            if(fabs(pnew-pelec)>FLOAT_EPSILON)
             {
                 if(pnew>pelec)
                     s_high = s_new;
@@ -604,8 +606,9 @@ void PVPNLY::initialize_Vdc_in_V_per_solar_cell_with_under_or_over_Vdc_mode(doub
                     ;
                 else
                 {
-                    osstream<<"Error. Failed to get initial irradiance in "<<iter_max<<" iterations."<<endl;
+                    osstream<<"Error. Failed to get initial irradiance in "<<iter_max<<" iterations @ line "<<__LINE__<<" of "<<__FILE__;
                     toolkit.show_information_with_leading_time_stamp(osstream);
+                    set_S0_in_Wpm2(s_new);
                     break;
                 }
             }
@@ -671,7 +674,7 @@ double PVPNLY::get_derivative_of_power_extracted_power_from_irradiance_over_dc_v
 
 double PVPNLY::get_Vdc_in_kV_per_pv_unit()
 {
-    return capacitor_integrator.get_output();
+    return capacitor.get_output();
 }
 
 double PVPNLY::get_Vdc_per_solar_cell_in_V()
@@ -1150,12 +1153,12 @@ void PVPNLY::setup_block_toolkit_and_parameters()
     }
     if(Isc<=Im)
     {
-        osstream<<"Error.The parameter Isc ( = "<<Isc<<" A ) in the "<<get_model_name()<<" model of "<<get_compound_device_name()<<" is smaller than Im ( = "<<Im<<" A ).";
+        osstream<<"Error.The parameter Isc ( = "<<Isc<<" A ) in the "<<get_model_name()<<" model of "<<get_compound_device_name()<<" is smaller than parameter Im ( = "<<Im<<" A ).";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
     if(Voc<=Vm)
     {
-        osstream<<"Error.The parameter Voc ( = "<<Voc<<" V ) in the "<<get_model_name()<<" model of "<<get_compound_device_name()<<" is smaller than Vm ( = "<<Vm<<" V ).";
+        osstream<<"Error.The parameter Voc ( = "<<Voc<<" V ) in the "<<get_model_name()<<" model of "<<get_compound_device_name()<<" is smaller than parameter Vm ( = "<<Vm<<" V ).";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
     if(eta>1.0)
@@ -1190,17 +1193,17 @@ void PVPNLY::setup_block_toolkit_and_parameters()
     }
     if(s0>smax)
     {
-        osstream<<"Error.The parameter S0 ( = "<<s0<<" W/m2 ) in the "<<get_model_name()<<" model of "<<get_compound_device_name()<<" is larger than Smax ( = "<<smax<<" W/m2 ).";
+        osstream<<"Error.The parameter S0 ( = "<<s0<<" W/m2 ) in the "<<get_model_name()<<" model of "<<get_compound_device_name()<<" is larger than parameter Smax ( = "<<smax<<" W/m2 ).";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
     if(s0<smin)
     {
-        osstream<<"Error.The parameter S0 ( = "<<s0<<" W/m2 ) in the "<<get_model_name()<<" model of "<<get_compound_device_name()<<" is less than Smin ( = "<<smin<<" W/m2 ).";
+        osstream<<"Error.The parameter S0 ( = "<<s0<<" W/m2 ) in the "<<get_model_name()<<" model of "<<get_compound_device_name()<<" is less than parameter Smin ( = "<<smin<<" W/m2 ).";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
     if(vmax<vmin)
     {
-        osstream<<"Error.The parameter Vdcmax ( = "<<vmax<<" V ) in the "<<get_model_name()<<" model of "<<get_compound_device_name()<<" is less than Vdcmin ( = "<<vmin<<" V ).";
+        osstream<<"Error.The parameter Vdcmax ( = "<<vmax<<" V ) in the "<<get_model_name()<<" model of "<<get_compound_device_name()<<" is less than parameter Vdcmin ( = "<<vmin<<" V ).";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -1263,12 +1266,12 @@ void PVPNLY::initialize()
         }
 
         double pcmd = get_pv_unit_terminal_active_power_generation_in_pu_based_on_mbase();
-        Vdc_pi_controller.set_output(pcmd);
-        Vdc_pi_controller.initialize();
+        Vdc_controller.set_output(pcmd);
+        Vdc_controller.initialize();
 
         double Vdc0 = get_initial_Vdc_in_kV_per_pv_unit();
-        capacitor_integrator.set_output(Vdc0);
-        capacitor_integrator.initialize();
+        capacitor.set_output(Vdc0);
+        capacitor.initialize();
 
         set_flag_model_initialized_as_true();
         if(toolkit.is_detailed_log_enabled())
@@ -1322,14 +1325,14 @@ void PVPNLY::run(DYNAMIC_MODE mode)
     double Ipv_in_kA_per_pv_unit = get_Ipv_in_kA_per_pv_unit(Vdc_per_solar_cell_in_V, S, T);
 
     double input = Ipv_in_kA_per_pv_unit - Pelec_per_pv_unit_in_MW/Vdc_in_kV_per_pv_unit/get_eta();
-    capacitor_integrator.set_input(input);
-    capacitor_integrator.run(mode);
+    capacitor.set_input(input);
+    capacitor.run(mode);
 
-    input = capacitor_integrator.get_output() - get_Vdc_reference_in_kV_per_pv_unit();
+    input = capacitor.get_output() - get_Vdc_reference_in_kV_per_pv_unit();
 
-    Vdc_pi_controller.set_input(input);
+    Vdc_controller.set_input(input);
 
-    Vdc_pi_controller.run(mode);
+    Vdc_controller.run(mode);
 
 
     if(mode==DYNAMIC_UPDATE_MODE)
@@ -1442,7 +1445,7 @@ void PVPNLY::prepare_model_data_table()
     add_model_data_name_and_index_pair("S0 IN W/M2", i); i++;
     add_model_data_name_and_index_pair("SMIN IN W/M2", i); i++;
     add_model_data_name_and_index_pair("SMAX IN W/M2", i); i++;
-    add_model_data_name_and_index_pair("C IN MF", i); i++;
+    add_model_data_name_and_index_pair("C IN F", i); i++;
     add_model_data_name_and_index_pair("KPDC", i); i++;
     add_model_data_name_and_index_pair("KIDC", i); i++;
     add_model_data_name_and_index_pair("VMIN IN V", i); i++;

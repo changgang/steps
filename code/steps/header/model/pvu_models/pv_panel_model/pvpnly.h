@@ -150,8 +150,8 @@ class PVPNLY : public PV_PANEL_MODEL
         double current_Vdc_at_mppt_per_solar_cell_in_V;
         double current_Ipv_per_solar_cell_in_A;
 
-        INTEGRAL_BLOCK capacitor_integrator;//T is per pv unit DC side capacitor in F
-        PI_BLOCK Vdc_pi_controller;
+        INTEGRAL_BLOCK capacitor;//T is per pv unit DC side capacitor in F
+        PI_BLOCK Vdc_controller;
 
 };
 
