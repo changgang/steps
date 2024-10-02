@@ -1025,7 +1025,7 @@ bool PVPNLY::setup_model_with_steps_string_vector(vector<string>& data)
             a = get_double_data(data[i],"0.0"); i++;
             b = get_double_data(data[i],"0.0"); i++;
             c = get_double_data(data[i],"0.0"); i++;
-            eta = get_integer_data(data[i],"0.0"); i++;
+            eta = get_double_data(data[i],"0.0"); i++;
             nse = (unsigned int)(get_integer_data(data[i],"0")); i++;
             nsh = (unsigned int)(get_integer_data(data[i],"0")); i++;
             s0 = get_double_data(data[i],"0.0"); i++;
