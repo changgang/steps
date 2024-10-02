@@ -24,6 +24,7 @@ class PVPNLY : public PV_PANEL_MODEL
 
         void initialize_S0_in_Wpm2_and_Vdc_in_V_per_solar_cell_with_mppt_mode(double T);
         void initialize_Vdc_in_V_per_solar_cell_with_under_or_over_Vdc_mode(double S, double T, double P);
+        void initialize_S0_in_Wpm2(double Vdc0, double T);
 
         void set_initial_Vdc_per_solar_cell_in_V(double v);
         double get_initial_Vdc_per_solar_cell_in_V() const;
