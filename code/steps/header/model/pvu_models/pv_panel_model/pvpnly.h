@@ -50,7 +50,6 @@ class PVPNLY : public PV_PANEL_MODEL
         void set_current_Vdc_reference_per_solar_cell_in_V_with_over_or_under_Vdc_mode(double value);
         void set_current_pelec_including_loss_per_solar_cell_in_W(double value);
         void set_current_Vdc_at_mppt_per_solar_cell_in_V(double value);
-        void set_current_Ipv_per_solar_cell_in_A(double value);
 
         double get_current_S_in_Wpm2() const;
         double get_current_T_in_C_deg() const;
@@ -69,7 +68,6 @@ class PVPNLY : public PV_PANEL_MODEL
         void set_eta(double value);
         void set_Nse(unsigned int value);
         void set_Nsh(unsigned int value);
-        void set_Smin_in_Wpm2(double value);
         void set_Smax_in_Wpm2(double value);
         void set_C_in_F(double value);//per pv unit
         void set_Kpdc(double value);
@@ -88,7 +86,6 @@ class PVPNLY : public PV_PANEL_MODEL
         double get_eta() const;
         unsigned int get_Nse() const;
         unsigned int get_Nsh() const;
-        double get_Smin_in_Wpm2() const;
         double get_Smax_in_Wpm2() const;
         double get_C_in_F() const;
         double get_Kpdc() const;
@@ -140,16 +137,16 @@ class PVPNLY : public PV_PANEL_MODEL
         double eta;//efficiency
         unsigned int Nsh, Nse;//per pv unit solar sell number
 
-        double Smax_in_Wpm2, Smin_in_Wpm2;
+        double Smax_in_Wpm2;
         double Vdcmax_per_solar_cell_in_V, Vdcmin_per_solar_cell_in_V;
 
         double initial_Vdc_per_solar_cell_in_V;//used to initialize  in all mode
 
         double current_S_in_Wpm2, current_T_in_C_deg;
-        double current_Vdc_reference_per_solar_cell_in_V_with_over_or_under_Vdc_mode;
         double current_pelec_including_loss_per_solar_cell_in_W;
+
+        double current_Vdc_reference_per_solar_cell_in_V_with_over_or_under_Vdc_mode;
         double current_Vdc_at_mppt_per_solar_cell_in_V;
-        double current_Ipv_per_solar_cell_in_A;
 
         INTEGRAL_BLOCK capacitor;//T is per pv unit DC side capacitor in F
         PI_BLOCK Vdc_controller;

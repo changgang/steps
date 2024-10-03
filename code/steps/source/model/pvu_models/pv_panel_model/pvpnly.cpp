@@ -60,7 +60,6 @@ void PVPNLY::clear()
     set_Nsh(10);
     set_dc_voltage_control_mode(PV_MPPT_MODE);
     set_Smax_in_Wpm2(INFINITE_THRESHOLD);
-    set_Smin_in_Wpm2(-INFINITE_THRESHOLD);
     set_initial_Vdc_per_solar_cell_in_V(INFINITE_THRESHOLD);
     current_S_in_Wpm2 = DOUBLE_EPSILON;
     current_T_in_C_deg = DOUBLE_EPSILON;
@@ -100,11 +99,6 @@ void PVPNLY::set_current_Vdc_reference_per_solar_cell_in_V_with_over_or_under_Vd
 void PVPNLY::set_current_Vdc_at_mppt_per_solar_cell_in_V(double value)
 {
     this->current_Vdc_at_mppt_per_solar_cell_in_V = value;
-}
-
-void PVPNLY::set_current_Ipv_per_solar_cell_in_A(double value)
-{
-    this->current_Ipv_per_solar_cell_in_A = value;
 }
 
 double PVPNLY::get_current_S_in_Wpm2() const
@@ -185,11 +179,6 @@ void PVPNLY::set_Nse(unsigned int value)
 void PVPNLY::set_Nsh(unsigned int value)
 {
     this->Nsh = value;
-}
-
-void PVPNLY::set_Smin_in_Wpm2(double value)
-{
-    this->Smin_in_Wpm2 = value;
 }
 
 void PVPNLY::set_Smax_in_Wpm2(double value)
@@ -277,11 +266,6 @@ unsigned int PVPNLY::get_Nsh() const
     return this->Nsh;
 }
 
-double PVPNLY::get_Smin_in_Wpm2() const
-{
-    return 0.0;
-}
-
 double PVPNLY::get_Smax_in_Wpm2() const
 {
     return this->Smax_in_Wpm2;
@@ -315,8 +299,7 @@ double PVPNLY::get_Vdcmax_per_solar_cell_in_V() const
 double PVPNLY::get_Pref_in_pu_base_on_mbase()
 {
     double Pref = Vdc_controller.get_output();
-    set_current_Pref_in_pu_on_mbase(Pref);
-    return get_current_Pref_in_pu_on_mbase();
+    return Pref;
 }
 
 double PVPNLY::get_maximum_available_power_extracted_power_from_irradiance_in_pu_on_mbase()
@@ -809,7 +792,6 @@ void PVPNLY::setup_block_toolkit_and_parameters()
     double eta = get_eta();
     double s0 = get_S0_in_Wpm2();
     double smax = get_Smax_in_Wpm2();
-    double smin = get_Smin_in_Wpm2();
     double vmax = get_Vdcmax_per_solar_cell_in_V();
     double vmin = get_Vdcmin_per_solar_cell_in_V();
     unsigned int nse = get_Nse();
@@ -863,11 +845,6 @@ void PVPNLY::setup_block_toolkit_and_parameters()
         osstream<<"Error. The parameter Smax ( = "<<smax<<" W/m2 ) in the "<<get_model_name()<<" model of "<<get_compound_device_name()<<" is smaller than Zero.";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
-    if(smin<0)
-    {
-        osstream<<"Error. The parameter Smin ( = "<<smin<<" W/m2 ) in the "<<get_model_name()<<" model of "<<get_compound_device_name()<<" is smaller than Zero.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
     if(nse<0)
     {
         osstream<<"Error. The parameter Nse ( = "<<nse<<" ) in the "<<get_model_name()<<" model of "<<get_compound_device_name()<<" is smaller than Zero.";
@@ -883,14 +860,6 @@ void PVPNLY::setup_block_toolkit_and_parameters()
         if(get_dc_voltage_control_mode() != PV_MPPT_MODE)
         {
             osstream<<"Error. The parameter S0 ( = "<<s0<<" W/m2 ) in the "<<get_model_name()<<" model of "<<get_compound_device_name()<<" is larger than parameter Smax ( = "<<smax<<" W/m2 ).";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-    }
-    if(s0<smin)
-    {
-        if(get_dc_voltage_control_mode() != PV_MPPT_MODE)
-        {
-            osstream<<"Error. The parameter S0 ( = "<<s0<<" W/m2 ) in the "<<get_model_name()<<" model of "<<get_compound_device_name()<<" is less than parameter Smin ( = "<<smin<<" W/m2 ).";
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -1326,7 +1295,6 @@ string PVPNLY::get_standard_psse_string(bool export_internal_bus_number) const
     unsigned int nse = get_Nse();
     unsigned int nsh = get_Nsh();
     double s0 = get_S0_in_Wpm2();
-    double smin = get_Smin_in_Wpm2();
     double smax = get_Smax_in_Wpm2();
     double c_in_F = get_C_in_F();
     double kpdc = get_Kpdc();
@@ -1358,10 +1326,9 @@ string PVPNLY::get_standard_psse_string(bool export_internal_bus_number) const
             <<setw(8)<<setprecision(6)<<nse<<", "
             <<setw(8)<<setprecision(6)<<nsh<<", "
             <<setw(8)<<setprecision(6)<<s0<<", "
-            <<setw(8)<<setprecision(6)<<smin<<", "
-            <<setw(8)<<setprecision(6)<<smax<<", \n"
+            <<setw(8)<<setprecision(6)<<smax<<", "
+            <<setw(8)<<setprecision(6)<<c_in_F<<", \n"
             <<setw(10)<<""
-            <<setw(8)<<setprecision(6)<<c_in_F<<", "
             <<setw(8)<<setprecision(6)<<kpdc<<", "
             <<setw(8)<<setprecision(6)<<kidc<<", "
             <<setw(8)<<setprecision(6)<<vmin<<", "
@@ -1388,7 +1355,6 @@ void PVPNLY::prepare_model_data_table()
     add_model_data_name_and_index_pair("NSE", i); i++;
     add_model_data_name_and_index_pair("NSH", i); i++;
     add_model_data_name_and_index_pair("S0 IN W/M2", i); i++;
-    add_model_data_name_and_index_pair("SMIN IN W/M2", i); i++;
     add_model_data_name_and_index_pair("SMAX IN W/M2", i); i++;
     add_model_data_name_and_index_pair("C IN F", i); i++;
     add_model_data_name_and_index_pair("KPDC", i); i++;
@@ -1440,8 +1406,6 @@ double PVPNLY::get_model_data_with_name(string par_name) const
         return get_Nsh();
     if(par_name=="S0 IN W/M2")
         return get_S0_in_Wpm2();
-    if(par_name=="SMIN IN W/M2")
-        return get_Smin_in_Wpm2();
     if(par_name=="SMAX IN W/M2")
         return get_Smax_in_Wpm2();
     if(par_name=="C IN F")
@@ -1511,8 +1475,6 @@ void PVPNLY::set_model_data_with_name(string par_name, double value)
             return set_Nsh((unsigned int)(value));
         if(par_name=="S0 IN W/M2")
             return set_S0_in_Wpm2(value);
-        if(par_name=="SMIN IN W/M2")
-            return set_Smin_in_Wpm2(value);
         if(par_name=="SMAX IN W/M2")
             return set_Smax_in_Wpm2(value);
         if(par_name=="C IN F")

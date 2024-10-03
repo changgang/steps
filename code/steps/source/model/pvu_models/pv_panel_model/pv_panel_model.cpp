@@ -44,17 +44,6 @@ string PV_PANEL_MODEL::get_model_type() const
     return "PV PANEL";
 }
 
-void PV_PANEL_MODEL::set_current_Pref_in_pu_on_mbase(double value)
-{
-    if(fabs(get_current_Pref_in_pu_on_mbase()-value)>DOUBLE_EPSILON)
-        this->current_Pref_in_pu = value;
-}
-
-double PV_PANEL_MODEL::get_current_Pref_in_pu_on_mbase() const
-{
-    return this->current_Pref_in_pu;
-}
-
 void PV_PANEL_MODEL::set_S0_in_Wpm2(double S)
 {
     this->S0_Wpm2 = S;
@@ -64,7 +53,6 @@ void PV_PANEL_MODEL::set_Sref_in_Wpm2(double S)
 {
     this->Sref_Wpm2 = S;
 }
-
 
 void PV_PANEL_MODEL::set_Tref_in_C_deg(double T)
 {

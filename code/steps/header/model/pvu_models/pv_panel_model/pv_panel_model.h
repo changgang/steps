@@ -21,9 +21,6 @@ class PV_PANEL_MODEL : public PVU_MODEL
     public:
         virtual string get_model_type() const;
 
-        void set_current_Pref_in_pu_on_mbase(double value);
-        double get_current_Pref_in_pu_on_mbase() const;
-
         void set_S0_in_Wpm2(double S);
         void set_Sref_in_Wpm2(double S);
         void set_Tref_in_C_deg(double T);
@@ -74,7 +71,6 @@ class PV_PANEL_MODEL : public PVU_MODEL
     private:
 
         double S0_Wpm2, Sref_Wpm2, Tref_in_C_deg;
-        double current_Pref_in_pu;
 };
 
 #endif // PV_PANEL_MODEL_H
