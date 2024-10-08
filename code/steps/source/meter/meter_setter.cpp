@@ -2096,6 +2096,30 @@ METER METER_SETTER::prepare_pv_unit_maximum_available_power_from_irradiance_in_p
     return meter;
 }
 
+METER METER_SETTER::prepare_pv_unit_panel_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("PANEL POWER IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_panel_power_in_MW(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("PANEL POWER IN MW");
+
+    return meter;
+}
+
 METER METER_SETTER::prepare_pv_unit_solar_irradiance_in_Wpm2_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());

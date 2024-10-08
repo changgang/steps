@@ -147,6 +147,8 @@ vector<string> pv_unit_meters{ "TERMINAL CURRENT IN PU ON MBASE","TERMINAL CURRE
                                "MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN PU ON MBASE",
                                "MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN MW",
                                "MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN PU ON SBASE",
+                               "PANEL POWER IN PU ON MBASE",
+                               "PANEL POWER IN MW",
                                "PV CONVERTER MODEL INTERNAL VARIABLE",
                                "PV PANEL MODEL INTERNAL VARIABLE",
                                "PV ELECTRICAL MODEL INTERNAL VARIABLE",
@@ -2177,6 +2179,20 @@ double METER::get_meter_value_as_a_pv_unit() const
             {
                 if(panel_model!= NULL)
                     return panel_model->get_maximum_available_power_extracted_power_from_irradiance_in_MW();
+                else
+                    return 0.0;
+            }
+            if(meter_type=="PANEL POWER IN PU ON MBASE")
+            {
+                if(panel_model!= NULL)
+                    return panel_model->get_pv_panel_power_in_pu_on_mbase();
+                else
+                    return 0.0;
+            }
+            if(meter_type=="PANEL POWER IN MW")
+            {
+                if(panel_model!= NULL)
+                    return panel_model->get_pv_panel_power_in_MW();
                 else
                     return 0.0;
             }

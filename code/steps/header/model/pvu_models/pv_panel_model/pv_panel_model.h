@@ -39,6 +39,9 @@ class PV_PANEL_MODEL : public PVU_MODEL
         virtual double get_Pref_in_pu_base_on_mbase() = 0;
         virtual double get_maximum_available_power_extracted_power_from_irradiance_in_pu_on_mbase() = 0;
         double get_maximum_available_power_extracted_power_from_irradiance_in_MW();
+
+        virtual double get_pv_panel_power_in_pu_on_mbase() = 0;
+        double get_pv_panel_power_in_MW();
     public:
         virtual string get_model_name() const = 0;
 

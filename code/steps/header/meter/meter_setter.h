@@ -166,6 +166,8 @@ class METER_SETTER
         METER prepare_pv_unit_maximum_available_power_from_irradiance_in_MW_meter(const DEVICE_ID& device_id);
         METER prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_mbase_meter(const DEVICE_ID& device_id);
         METER prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_sbase_meter(const DEVICE_ID& device_id);
+        METER prepare_pv_unit_panel_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id);
+        METER prepare_pv_unit_panel_power_in_MW(const DEVICE_ID& device_id);
         METER prepare_pv_unit_solar_irradiance_in_Wpm2_meter(const DEVICE_ID& device_id);
         METER prepare_pv_converter_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
         METER prepare_pv_panel_model_internal_variable_meter(const DEVICE_ID& device_id, string name);

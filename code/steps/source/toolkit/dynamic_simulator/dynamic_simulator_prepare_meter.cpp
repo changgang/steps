@@ -535,6 +535,18 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meters()
         METER meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_sbase_meter(pv_unit->get_device_id());
         append_meter(meter);
     }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_panel_power_in_pu_on_mbase_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_panel_power_in_MW(pv_unit->get_device_id());
+        append_meter(meter);
+    }
 }
 
 void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meters()
@@ -1224,6 +1236,10 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meter(const DEVICE_ID& did, str
                 meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_mbase_meter(did);
             if(meter_type=="MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN PU ON SBASE")
                 meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_sbase_meter(did);
+            if(meter_type=="PANEL POWER IN PU ON MBASE")
+                meter = setter.prepare_pv_unit_panel_power_in_pu_on_mbase_meter(did);
+            if(meter_type=="PANEL POWER IN MW")
+                meter = setter.prepare_pv_unit_panel_power_in_MW(did);
             if(meter_type=="PV CONVERTER MODEL INTERNAL VARIABLE")
                 meter = setter.prepare_pv_converter_model_internal_variable_meter(did, var_name);
             if(meter_type=="PV PANEL MODEL INTERNAL VARIABLE")

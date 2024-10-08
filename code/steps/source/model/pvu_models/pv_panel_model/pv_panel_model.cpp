@@ -150,3 +150,8 @@ double PV_PANEL_MODEL::get_maximum_available_power_extracted_power_from_irradian
 {
     return get_maximum_available_power_extracted_power_from_irradiance_in_pu_on_mbase()*get_mbase_in_MVA();
 }
+
+double PV_PANEL_MODEL::get_pv_panel_power_in_MW()
+{
+    return get_pv_panel_power_in_pu_on_mbase()*get_mbase_in_MVA();
+}

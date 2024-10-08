@@ -310,6 +310,15 @@ double PVPNLY::get_maximum_available_power_extracted_power_from_irradiance_in_pu
     return p_cell*get_Nse()*get_Nsh()*get_number_of_lumped_pv_units()/1e6/get_mbase_in_MVA();
 }
 
+double PVPNLY::get_pv_panel_power_in_pu_on_mbase()
+{
+    double V = get_Vdc_per_solar_cell_in_V();
+    double S = get_solar_irradiance_in_Wpm2();
+    double T = get_temperature_in_C_deg();
+    double p_cell = get_power_extracted_power_from_irradiance_per_solar_cell_in_W(V,S,T);
+    return p_cell*get_Nse()*get_Nsh()*get_number_of_lumped_pv_units()/1e6/get_mbase_in_MVA();
+}
+
 string PVPNLY::get_model_name() const
 {
     return "PVPNLY";

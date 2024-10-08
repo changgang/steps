@@ -87,16 +87,19 @@ double PVPNLX::get_Pmmp_in_pu(double S)
 
 double PVPNLX::get_Pref_in_pu_base_on_mbase()
 {
-    double S = get_solar_irradiance_in_Wpm2();
-    double pmmp = get_Pmmp_in_pu(S);
-    double pref = pmmp*(1.0-get_Krp());
-    return pref;
+    return get_pv_panel_power_in_pu_on_mbase();
 }
 
 double PVPNLX::get_maximum_available_power_extracted_power_from_irradiance_in_pu_on_mbase()
 {
     double S = get_solar_irradiance_in_Wpm2();
     return get_Pmmp_in_pu(S);
+}
+
+double PVPNLX::get_pv_panel_power_in_pu_on_mbase()
+{
+    double Pmmp = get_maximum_available_power_extracted_power_from_irradiance_in_pu_on_mbase();
+    return Pmmp*(1.0-get_Krp());
 }
 
 string PVPNLX::get_model_name() const
