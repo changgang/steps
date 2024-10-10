@@ -947,6 +947,8 @@ void DYNAMICS_SIMULATOR::prepare_bus_related_meter(unsigned int bus, string mete
             meter = setter.prepare_bus_angle_in_rad_meter(bus);
         if(meter_type=="FREQUENCY DEVIATION IN PU")
             meter = setter.prepare_bus_frequency_deviation_in_pu_meter(bus);
+        if(meter_type=="FREQUENCY DEVIATION IN HZ")
+            meter = setter.prepare_bus_frequency_deviation_in_Hz_meter(bus);
         if(meter_type=="FREQUENCY IN PU")
             meter = setter.prepare_bus_frequency_in_pu_meter(bus);
         if(meter_type=="FREQUENCY IN HZ")
