@@ -345,6 +345,6 @@ double VRT_CONTROL_MODEL::get_vrt_Ip_command()
 
 double VRT_CONTROL_MODEL::get_vrt_Iq_command()
 {
-    //Iq command should be negtive if terminal reactive power is bigger than zero
+    //Iqmcd and Qcmd are opposite numbers to each other
     return -get_vrt_Q_command()/get_bus_voltage();
 }

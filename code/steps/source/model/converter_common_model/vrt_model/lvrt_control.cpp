@@ -562,7 +562,6 @@ double LVRT_CONTROL::get_vrt_P_command()
                 case VRT_PREPARE2RECOVER_INITIAL_CURRENT_CONTROL_MODE:
                     Ip0 = get_Ip0_vrt_activated_in_pu();
                     order = get_k_Ip_prepare2recover()*Ip0+get_Ip_set_prepare2recover();
-                    if(order>Ip0) order = Ip0;
                     return order*get_bus_voltage();
                 case VRT_PREPARE2RECOVER_FAULTED_CURRENT_CONTROL_MODE:
                     return get_Ip0_vrt_prepare2recover_activated_in_pu()*get_bus_voltage();
@@ -579,22 +578,47 @@ double LVRT_CONTROL::get_vrt_P_command()
             t0 = get_time_when_vrt_enter_recover_status();
             Istart = get_Ip0_vrt_recover_activated_in_pu();
             Iend = get_Ip0_vrt_activated_in_pu();
-            switch(mode)
+            if(Istart<Iend)
             {
-                case VRT_RECOVER_LINEAR_CONTROL_MODE:
-                    order = Istart+get_P_recover_slope_in_pu_per_s()*(time-t0);
-                    break;
-                case VRT_RECOVER_EXPOENTIAL_CONTROL_MODE:
-                default:
-                    k = (time-t0)/get_P_recover_inertia_in_s();
-                    if(k>=5) order = Iend;
-                    else     order = Istart + (Iend - Istart)*(1.0 - exp(-k));
-                    break;
+                switch(mode)
+                {
+                    case VRT_RECOVER_LINEAR_CONTROL_MODE:
+                        order = Istart+fabs(get_P_recover_slope_in_pu_per_s())*(time-t0);
+                        break;
+                    case VRT_RECOVER_EXPOENTIAL_CONTROL_MODE:
+                    default:
+                        k = (time-t0)/get_P_recover_inertia_in_s();
+                        if(k>=5) order = Iend;
+                        else     order = Istart + (Iend - Istart)*(1.0 - exp(-k));
+                        break;
+                }
+                if(order>Iend or fabs(order-Iend)<FLOAT_EPSILON)
+                {
+                    order = Iend;
+                    P_recovered = true;
+                }
+
             }
-            if(order>Iend or fabs(order-Iend)<FLOAT_EPSILON)
+            else //Istart>=Iend
             {
-                order = Iend;
-                P_recovered = true;
+                switch(mode)
+                {
+                    case VRT_RECOVER_LINEAR_CONTROL_MODE:
+                        order = Istart-fabs(get_P_recover_slope_in_pu_per_s())*(time-t0);
+                        break;
+                    case VRT_RECOVER_EXPOENTIAL_CONTROL_MODE:
+                    default:
+                        k = (time-t0)/get_P_recover_inertia_in_s();
+                        if(k>=5) order = Iend;
+                        else     order = Istart + (Iend - Istart)*(1.0 - exp(-k));
+                        break;
+                }
+                if(order<Iend or fabs(order-Iend)<FLOAT_EPSILON)
+                {
+                    order = Iend;
+                    P_recovered = true;
+                }
+
             }
             return order*get_bus_voltage();
         }
@@ -622,9 +646,9 @@ double LVRT_CONTROL::get_vrt_Q_command()
                 case VRT_DURING_POWER_CONTROL_MODE:
                     return get_kQ_vrt_during()*get_Q0_vrt_activated_in_pu_based_on_mbase()+get_Q_set_vrt_during_in_pu();
                 case VRT_DURING_V_DEPEND_CURRENT_CONTROL_MODE:
-                    return get_bus_voltage()*(get_k1_Iq_vrt_during()*(get_vrt_voltage_threshold() - get_bus_voltage()) + get_k2_Iq_vrt_during()*fabs(get_Iq0_vrt_activated_in_pu()) + get_Iq_set_vrt_during_in_pu());
+                    return -get_bus_voltage()*(get_k1_Iq_vrt_during()*(get_vrt_voltage_threshold() - get_bus_voltage()) + get_k2_Iq_vrt_during()*get_Iq0_vrt_activated_in_pu() + get_Iq_set_vrt_during_in_pu());
                 case VRT_DURING_CONSTANT_CURRENT_CONTROL_MODE:
-                    return get_bus_voltage()*fabs(get_Iq0_vrt_activated_in_pu());
+                    return -get_bus_voltage()*get_Iq0_vrt_activated_in_pu();
                 case VRT_DURING_LVPL_CURRENT_CONTROL_MODE:
                 default:
                     return 0.0;
@@ -637,10 +661,10 @@ double LVRT_CONTROL::get_vrt_Q_command()
             switch(mode)
             {
                 case VRT_PREPARE2RECOVER_INITIAL_CURRENT_CONTROL_MODE:
-                    return fabs(get_Iq0_vrt_activated_in_pu())*get_bus_voltage();
+                    return -get_bus_voltage()*get_Iq0_vrt_activated_in_pu();
                 case VRT_PREPARE2RECOVER_FAULTED_CURRENT_CONTROL_MODE:
-                    order = get_k_Iq_prepare2recover()* fabs(get_Iq0_vrt_prepare2recover_activated_in_pu()) + get_Iq_set_prepare2recover();
-                    return order*get_bus_voltage();
+                    order = get_k_Iq_prepare2recover()* get_Iq0_vrt_prepare2recover_activated_in_pu() + get_Iq_set_prepare2recover();
+                    return -order*get_bus_voltage();
                 case VRT_PREPARE2RECOVER_FAULTED_POWER_CONTROL_MODE:
                 default:
                     return get_Q0_vrt_prepare2recover_activated_in_pu_based_on_mbase();
@@ -654,24 +678,48 @@ double LVRT_CONTROL::get_vrt_Q_command()
             t0 = get_time_when_vrt_enter_recover_status();
             Istart = get_Iq0_vrt_recover_activated_in_pu();
             Iend = get_Iq0_vrt_activated_in_pu();
-            switch(mode)
+            if(Istart<Iend)
             {
-                case VRT_RECOVER_LINEAR_CONTROL_MODE:
-                    order = Istart+get_Q_recover_slope_in_pu_per_s()*(time-t0);
-                    break;
-                case VRT_RECOVER_EXPOENTIAL_CONTROL_MODE:
-                default:
-                    k = (time-t0)/get_Q_recover_inertia_in_s();
-                    if(k>=5) order = Iend;
-                    else     order = Istart + (Iend - Istart)*(1.0 - exp(-k));
-                    break;
+                switch(mode)
+                {
+                    case VRT_RECOVER_LINEAR_CONTROL_MODE:
+                        order = Istart+fabs(get_Q_recover_slope_in_pu_per_s())*(time-t0);
+                        break;
+                    case VRT_RECOVER_EXPOENTIAL_CONTROL_MODE:
+                    default:
+                        k = (time-t0)/get_Q_recover_inertia_in_s();
+                        if(k>=5) order = Iend;
+                        else     order = Istart + (Iend - Istart)*(1.0 - exp(-k));
+                        break;
+                }
+                if(order>Iend or fabs(order-Iend)<FLOAT_EPSILON)
+                {
+                    order = Iend;
+                    Q_recovered = true;
+                }
             }
-            if(order>Iend or fabs(order-Iend)<FLOAT_EPSILON)
+            else //Istart>=Iend
             {
-                order = Iend;
-                Q_recovered = true;
+                switch(mode)
+                {
+                    case VRT_RECOVER_LINEAR_CONTROL_MODE:
+                        order = Istart-fabs(get_Q_recover_slope_in_pu_per_s())*(time-t0);
+                        break;
+                    case VRT_RECOVER_EXPOENTIAL_CONTROL_MODE:
+                    default:
+                        k = (time-t0)/get_Q_recover_inertia_in_s();
+                        if(k>=5) order = Iend;
+                        else     order = Istart + (Iend - Istart)*(1.0 - exp(-k));
+                        break;
+                }
+                if(order<Iend or fabs(order-Iend)<FLOAT_EPSILON)
+                {
+                    order = Iend;
+                    Q_recovered = true;
+                }
             }
-            return fabs(order*get_bus_voltage());
+
+            return -order*get_bus_voltage();
         }
         case VRT_NORMAL_STATUS:
         default:
