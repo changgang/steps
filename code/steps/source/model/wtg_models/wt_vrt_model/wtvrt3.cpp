@@ -1588,7 +1588,7 @@ void WTVRT3::prepare_model_data_table()
     add_model_data_name_and_index_pair("KP HVRT RECOVER IN PU PER S", i); i++;
     add_model_data_name_and_index_pair("TP HVRT RECOVER IN S", i); i++;
     add_model_data_name_and_index_pair("KQ HVRT RECOVER IN PU PER S", i); i++;
-    add_model_data_name_and_index_pair("TQ LVRT RECOVER IN S", i); i++;
+    add_model_data_name_and_index_pair("TQ HVRT RECOVER IN S", i); i++;
 }
 
 double WTVRT3::get_model_data_with_name(string par_name) const
@@ -1651,7 +1651,7 @@ double WTVRT3::get_model_data_with_name(string par_name) const
     if(par_name == "KP HVRT RECOVER IN PU PER S") return get_P_recover_slope_in_pu_per_s('H');
     if(par_name == "TP HVRT RECOVER IN S") return get_P_recover_inertia_in_s('H');
     if(par_name == "KQ HVRT RECOVER IN PU PER S") return get_Q_recover_slope_in_pu_per_s('H');
-    if(par_name == "TQ LVRT RECOVER IN S") return get_Q_recover_inertia_in_s('H');
+    if(par_name == "TQ HVRT RECOVER IN S") return get_Q_recover_inertia_in_s('H');
 
     STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
@@ -1909,7 +1909,7 @@ void WTVRT3::set_model_data_with_name(string par_name, double value)
     if(par_name == "KP HVRT RECOVER IN PU PER S") return set_P_recover_slope_in_pu_per_s('H', value);
     if(par_name == "TP HVRT RECOVER IN S") return set_P_recover_inertia_in_s('H', value);
     if(par_name == "KQ HVRT RECOVER IN PU PER S") return set_Q_recover_slope_in_pu_per_s('H', value);
-    if(par_name == "TQ LVRT RECOVER IN S") return set_Q_recover_inertia_in_s('H', value);
+    if(par_name == "TQ HVRT RECOVER IN S") return set_Q_recover_inertia_in_s('H', value);
 
     STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
