@@ -206,6 +206,8 @@
 		<Unit filename="header/model/converter_common_model/vrt_model/lvrt_relay.h" />
 		<Unit filename="header/model/converter_common_model/vrt_model/vrt_control_model.h" />
 		<Unit filename="header/model/converter_common_model/vrt_model/vrt_relay_model.h" />
+		<Unit filename="header/model/energy_storage_model/es_auxiliary_model/es_auxiliary_model.h" />
+		<Unit filename="header/model/energy_storage_model/es_auxiliary_model/es_auxiliary_models.h" />
 		<Unit filename="header/model/energy_storage_model/es_converter_model/es_converter_model.h" />
 		<Unit filename="header/model/energy_storage_model/es_converter_model/es_converter_models.h" />
 		<Unit filename="header/model/energy_storage_model/es_converter_model/escv2.h" />
@@ -214,9 +216,13 @@
 		<Unit filename="header/model/energy_storage_model/es_electrical_model/es_electrical_models.h" />
 		<Unit filename="header/model/energy_storage_model/es_electrical_model/ese0.h" />
 		<Unit filename="header/model/energy_storage_model/es_model.h" />
+		<Unit filename="header/model/energy_storage_model/es_primary_model/es_primary_model.h" />
+		<Unit filename="header/model/energy_storage_model/es_primary_model/es_primary_models.h" />
 		<Unit filename="header/model/energy_storage_model/es_relay_model/es_relay_model.h" />
 		<Unit filename="header/model/energy_storage_model/es_relay_model/es_relay_models.h" />
 		<Unit filename="header/model/energy_storage_model/es_relay_model/esvrtrly1.h" />
+		<Unit filename="header/model/energy_storage_model/es_rotor_model/es_rotor_model.h" />
+		<Unit filename="header/model/energy_storage_model/es_rotor_model/es_rotor_models.h" />
 		<Unit filename="header/model/energy_storage_model/es_soc_model/es_soc_model.h" />
 		<Unit filename="header/model/energy_storage_model/es_soc_model/es_soc_models.h" />
 		<Unit filename="header/model/energy_storage_model/es_soc_model/essoc0.h" />
