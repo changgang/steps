@@ -2484,38 +2484,38 @@ METER METER_SETTER::prepare_es_state_of_charge_in_pu_meter(const DEVICE_ID& devi
     return meter;
 }
 
-METER METER_SETTER::prepare_es_battery_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_es_soc_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("BATTERY POWER IN PU ON MBASE");
+        meter.set_meter_type("SOC POWER IN PU ON MBASE");
 
     return meter;
 }
 
-METER METER_SETTER::prepare_es_battery_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_es_soc_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("BATTERY POWER IN PU ON SBASE");
+        meter.set_meter_type("SOC POWER IN PU ON SBASE");
 
     return meter;
 }
 
-METER METER_SETTER::prepare_es_battery_power_in_MW_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_es_soc_power_in_MW_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("BATTERY POWER IN MW");
+        meter.set_meter_type("SOC POWER IN MW");
 
     return meter;
 }

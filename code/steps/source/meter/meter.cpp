@@ -171,8 +171,8 @@ vector<string> energy_storage_meters{"TERMINAL CURRENT IN PU ON MBASE", "TERMINA
                                      "REACTIVE POWER COMMAND IN PU",
                                      "REACTIVE VOLTAGE COMMAND IN PU",
                                      "STATE OF CHARGE IN PU",
-                                     "BATTERY POWER IN PU ON MBASE", "BATTERY POWER IN PU ON SBASE",
-                                     "BATTERY POWER IN MW",
+                                     "SOC POWER IN PU ON MBASE", "SOC POWER IN PU ON SBASE",
+                                     "SOC POWER IN MW",
                                      "ES CONVERTER MODEL INTERNAL VARIABLE",
                                      "ES ELECTRICAL MODEL INTERNAL VARIABLE",
                                      "ES SOC MODEL INTERNAL VARIABLE",
@@ -2433,24 +2433,24 @@ double METER::get_meter_value_as_an_energy_storage() const
                 else
                     return 0.0;
             }
-            if(meter_type=="BATTERY POWER IN PU ON MBASE")
+            if(meter_type=="SOC POWER IN PU ON MBASE")
             {
                 if(soc_model != NULL)
-                    return soc_model->get_battery_power_in_pu_based_on_mbase();
+                    return soc_model->get_soc_power_in_pu_based_on_mbase();
                 else
                     return 0.0;
             }
-            if(meter_type=="BATTERY POWER IN PU ON SBASE")
+            if(meter_type=="SOC POWER IN PU ON SBASE")
             {
                 if(soc_model != NULL)
-                    return soc_model->get_battery_power_in_MW()*one_over_sbase;
+                    return soc_model->get_soc_power_in_MW()*one_over_sbase;
                 else
                     return 0.0;
             }
-            if(meter_type=="BATTERY POWER IN MW")
+            if(meter_type=="SOC POWER IN MW")
             {
                 if(soc_model != NULL)
-                    return soc_model->get_battery_power_in_MW();
+                    return soc_model->get_soc_power_in_MW();
                 else
                     return 0.0;
             }

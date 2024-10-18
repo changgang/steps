@@ -641,13 +641,19 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meters()
     for(unsigned int i=0; i!=n; ++i)
     {
         energy_storage = energy_storages[i];
-        METER meter = setter.prepare_es_battery_power_in_pu_on_mbase_meter(energy_storage->get_device_id());
+        METER meter = setter.prepare_es_soc_power_in_pu_on_mbase_meter(energy_storage->get_device_id());
         append_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         energy_storage = energy_storages[i];
-        METER meter = setter.prepare_es_battery_power_in_MW_meter(energy_storage->get_device_id());
+        METER meter = setter.prepare_es_soc_power_in_pu_on_sbase_meter(energy_storage->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        energy_storage = energy_storages[i];
+        METER meter = setter.prepare_es_soc_power_in_MW_meter(energy_storage->get_device_id());
         append_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
@@ -1327,12 +1333,12 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(const DEVICE_ID& d
                 meter = setter.prepare_es_reactive_power_command_in_pu_meter(did);
             if(meter_type=="REACTIVE VOLTAGE COMMAND IN PU")
                 meter = setter.prepare_es_reactive_voltage_command_in_pu_meter(did);
-            if(meter_type=="BATTERY POWER IN PU ON MBASE")
-                meter = setter.prepare_es_battery_power_in_pu_on_mbase_meter(did);
-            if(meter_type=="BATTERY POWER IN PU ON SBASE")
-                meter = setter.prepare_es_battery_power_in_pu_on_sbase_meter(did);
-            if(meter_type=="BATTERY POWER IN MW")
-                meter = setter.prepare_es_battery_power_in_MW_meter(did);
+            if(meter_type=="SOC POWER IN PU ON MBASE")
+                meter = setter.prepare_es_soc_power_in_pu_on_mbase_meter(did);
+            if(meter_type=="SOC POWER IN PU ON SBASE")
+                meter = setter.prepare_es_soc_power_in_pu_on_sbase_meter(did);
+            if(meter_type=="SOC POWER IN MW")
+                meter = setter.prepare_es_soc_power_in_MW_meter(did);
             if(meter_type=="STATE OF CHARGE IN PU")
                 meter = setter.prepare_es_state_of_charge_in_pu_meter(did);
             if(meter_type=="ES CONVERTOR MODEL INTERNAL VARIABLE")

@@ -108,7 +108,7 @@ double ES_SOC_MODEL::get_terminal_active_power_in_pu_based_on_mbase() const
         return 0.0;
 }
 
-double ES_SOC_MODEL::get_battery_power_in_pu_based_on_mbase()
+double ES_SOC_MODEL::get_soc_power_in_pu_based_on_mbase()
 {
     double P = get_terminal_active_power_in_pu_based_on_mbase();
     if(P>=0)
@@ -117,9 +117,9 @@ double ES_SOC_MODEL::get_battery_power_in_pu_based_on_mbase()
         return P*get_charge_efficiency();
 }
 
-double ES_SOC_MODEL::get_battery_power_in_MW()
+double ES_SOC_MODEL::get_soc_power_in_MW()
 {
-    return get_battery_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
+    return get_soc_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
 }
 
 double ES_SOC_MODEL::get_state_of_charge_in_pu() const

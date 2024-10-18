@@ -176,7 +176,7 @@ void ESSOC0::initialize()
 void ESSOC0::run(DYNAMIC_MODE mode)
 {
     INTEGRAL_BLOCK* energy_state_block = get_energy_state_block();
-    double Preq = get_battery_power_in_pu_based_on_mbase();
+    double Preq = get_soc_power_in_pu_based_on_mbase();
     Preq = -Preq;
     energy_state_block->set_input(Preq);
     energy_state_block->run(mode);

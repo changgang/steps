@@ -33,8 +33,8 @@ class ES_SOC_MODEL : public ES_MODEL
 
 
         double get_terminal_active_power_in_pu_based_on_mbase() const;
-        double get_battery_power_in_pu_based_on_mbase();
-        double get_battery_power_in_MW();
+        double get_soc_power_in_pu_based_on_mbase();
+        double get_soc_power_in_MW();
         double get_state_of_charge_in_pu() const;
 
         INTEGRAL_BLOCK* get_energy_state_block();
