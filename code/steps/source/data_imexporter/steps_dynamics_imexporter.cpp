@@ -191,7 +191,7 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="PVVRTRLY1") { add_PVVRTRLY1_model(data); return;}
     if(model_name=="FTMP") { add_FTMP_model(data); return;}
 
-    if(model_name=="ESBX") { add_ESBX_model(data); return;}
+    if(model_name=="ESSOC0") { add_ESSOC0_model(data); return;}
     if(model_name=="ESCVX") { add_ESCVX_model(data); return;}
     if(model_name=="ESCV2") { add_ESCV2_model(data); return;}
     if(model_name=="ESE0") { add_ESE0_model(data); return;}
@@ -2671,9 +2671,9 @@ void STEPS_IMEXPORTER::add_FTMP_model(vector<string>& data)
     }
 }
 
-void STEPS_IMEXPORTER::add_ESBX_model(vector<string>& data)
+void STEPS_IMEXPORTER::add_ESSOC0_model(vector<string>& data)
 {
-    if(get_dynamic_model_name(data) != "ESBX")
+    if(get_dynamic_model_name(data) != "ESSOC0")
         return;
 
     if(data.size()<3)
@@ -2687,7 +2687,7 @@ void STEPS_IMEXPORTER::add_ESBX_model(vector<string>& data)
     ENERGY_STORAGE* es = psdb.get_energy_storage(did);
     if(es != NULL)
     {
-        ESBX model(toolkit);
+        ESSOC0 model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -2695,7 +2695,7 @@ void STEPS_IMEXPORTER::add_ESBX_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid ESBX model is built, but will not be set for "<<es->get_compound_device_name();
+            osstream<<"Warning. Invalid ESSOC0 model is built, but will not be set for "<<es->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }

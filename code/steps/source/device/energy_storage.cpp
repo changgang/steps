@@ -46,7 +46,7 @@ void ENERGY_STORAGE::clear()
     es_electrical_model = NULL;
     es_vrt_model = NULL;
     es_relay_model = NULL;
-    es_battery_model = NULL;
+    es_soc_model = NULL;
 
     sequence_parameter_import_flag = false;
 }
@@ -75,9 +75,9 @@ void ENERGY_STORAGE::set_model(MODEL* model)
             return;
         }
 
-        if(model->get_model_type()=="ES BATTERY")
+        if(model->get_model_type()=="ES SOC")
         {
-            set_es_battery_model((ES_BATTERY_MODEL*) model);
+            set_es_soc_model((ES_SOC_MODEL*) model);
             return;
         }
 
@@ -111,8 +111,8 @@ MODEL* ENERGY_STORAGE::get_model_of_type(string model_type, unsigned int index)
     model_type = string2upper(model_type);
     if(model_type=="ES CONVERTER")
         return get_es_converter_model();
-    if(model_type=="ES BATTERY")
-        return get_es_battery_model();
+    if(model_type=="ES SOC")
+        return get_es_soc_model();
     if(model_type=="ES ELECTRICAL")
         return get_es_electrical_model();
     if(model_type=="ES VRT")
@@ -128,10 +128,10 @@ void ENERGY_STORAGE::set_es_converter_model(ES_CONVERTER_MODEL* model)
         es_converter_model = model;
 }
 
-void ENERGY_STORAGE::set_es_battery_model(ES_BATTERY_MODEL* model)
+void ENERGY_STORAGE::set_es_soc_model(ES_SOC_MODEL* model)
 {
     if(model!=NULL)
-        es_battery_model = model;
+        es_soc_model = model;
 }
 
 void ENERGY_STORAGE::set_es_electrical_model(ES_ELECTRICAL_MODEL* model)
@@ -157,9 +157,9 @@ ES_CONVERTER_MODEL* ENERGY_STORAGE::get_es_converter_model() const
     return es_converter_model;
 }
 
-ES_BATTERY_MODEL* ENERGY_STORAGE::get_es_battery_model() const
+ES_SOC_MODEL* ENERGY_STORAGE::get_es_soc_model() const
 {
-    return es_battery_model;
+    return es_soc_model;
 }
 
 ES_ELECTRICAL_MODEL* ENERGY_STORAGE::get_es_electrical_model() const
@@ -186,7 +186,7 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
     {
         ES_CONVERTER_MODEL* conv = get_es_converter_model();
         ES_ELECTRICAL_MODEL* elec = get_es_electrical_model();
-        ES_BATTERY_MODEL* battery = get_es_battery_model();
+        ES_SOC_MODEL* soc = get_es_soc_model();
         ES_VRT_MODEL* vrt = get_es_vrt_model();
         ES_RELAY_MODEL* relay = get_es_relay_model();
 
@@ -206,8 +206,8 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
                 if(elec!=NULL and elec->is_model_active())
                     elec->initialize();
 
-                if(battery!=NULL and battery->is_model_active())
-                    battery->initialize();
+                if(soc!=NULL and soc->is_model_active())
+                    soc->initialize();
 
                 if(vrt!=NULL and vrt->is_model_active())
                     vrt->initialize();
@@ -238,8 +238,8 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
                     }
                 }
 
-                if(battery!=NULL and battery->is_model_active())
-                    battery->run(mode);
+                if(soc!=NULL and soc->is_model_active())
+                    soc->run(mode);
 
                 if(elec!=NULL and elec->is_model_active() and (not elec->is_model_bypassed()))
                     elec->run(mode);
@@ -306,6 +306,7 @@ ENERGY_STORAGE& ENERGY_STORAGE::operator=(const ENERGY_STORAGE& estorage)
     set_model(estorage.get_es_vrt_model());
     set_model(estorage.get_es_relay_model());
     set_model(estorage.get_es_vrt_model());
+    set_model(estorage.get_es_soc_model());
     return *this;
 }
 

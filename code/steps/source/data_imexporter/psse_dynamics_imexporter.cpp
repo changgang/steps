@@ -240,7 +240,7 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
         model = es->get_es_electrical_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
-        model = es->get_es_battery_model();
+        model = es->get_es_soc_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = es->get_es_relay_model();

@@ -4779,9 +4779,9 @@ void POWER_SYSTEM_DATABASE::check_energy_storage_related_dynamic_data()
         if(elec!=NULL)
             elec->check();
 
-        ES_BATTERY_MODEL* esb = estorage->get_es_battery_model();
-        if(esb!=NULL)
-            esb->check();
+        ES_SOC_MODEL* soc = estorage->get_es_soc_model();
+        if(soc!=NULL)
+            soc->check();
 
         ES_VRT_MODEL* vrt = estorage->get_es_vrt_model();
         if(vrt!=NULL)
@@ -4797,8 +4797,8 @@ void POWER_SYSTEM_DATABASE::check_energy_storage_related_dynamic_data()
             osstream<<"Model entry address of "<<estorage->get_compound_device_name()<<":\n"
                     <<"Es converter: "<<conv<<"\n"
                     <<"Electrical:   "<<elec<<"\n"
-                    <<"Battery:      "<<esb<<"\n"
-                    <<"VRT:          "<<vrt<<"\n"
+                    <<"Soc:          "<<soc<<"\n"
+                    <<"Vrt:          "<<vrt<<"\n"
                     <<"Relay:        "<<relay;
             toolkit->show_information_with_leading_time_stamp(osstream);
         }

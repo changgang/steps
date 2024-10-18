@@ -53,7 +53,7 @@ double ES_CONVERTER_MODEL::get_active_current_command_in_pu_based_on_mbase()
     ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
     ES_ELECTRICAL_MODEL* elec_model = energy_storage->get_es_electrical_model();
     ES_VRT_MODEL* vrt_model = energy_storage->get_es_vrt_model();
-    ES_BATTERY_MODEL* battery_model = energy_storage->get_es_battery_model();
+    ES_SOC_MODEL* soc_model = energy_storage->get_es_soc_model();
     double Ipcmd = 0.0;
 
     if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
@@ -67,11 +67,11 @@ double ES_CONVERTER_MODEL::get_active_current_command_in_pu_based_on_mbase()
     }
 
     //SOC limit output
-    if(battery_model!=NULL and battery_model->is_model_initialized())
+    if(soc_model!=NULL and soc_model->is_model_initialized())
     {
-        double SOC = battery_model->get_state_of_charge_in_pu();
-        double SOC_max = battery_model->get_max_SOC_in_pu();
-        double SOC_min = battery_model->get_min_SOC_in_pu();
+        double SOC = soc_model->get_state_of_charge_in_pu();
+        double SOC_max = soc_model->get_max_SOC_in_pu();
+        double SOC_min = soc_model->get_min_SOC_in_pu();
 
         if(SOC>SOC_min and SOC<SOC_max)
         {
@@ -146,7 +146,7 @@ double ES_CONVERTER_MODEL::get_active_power_command_in_pu_based_on_mbase()
     ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
     ES_ELECTRICAL_MODEL* elec_model = energy_storage->get_es_electrical_model();
     ES_VRT_MODEL* vrt_model = energy_storage->get_es_vrt_model();
-    ES_BATTERY_MODEL* battery_model = energy_storage->get_es_battery_model();
+    ES_SOC_MODEL* soc_model = energy_storage->get_es_soc_model();
     double Pcmd = 0.0;
 
     if(elec_model!=NULL and elec_model->is_model_initialized() and not elec_model->is_model_bypassed())
@@ -160,11 +160,11 @@ double ES_CONVERTER_MODEL::get_active_power_command_in_pu_based_on_mbase()
     }
 
     //SOC limit output
-    if(battery_model!=NULL and battery_model->is_model_initialized())
+    if(soc_model!=NULL and soc_model->is_model_initialized())
     {
-        double SOC = battery_model->get_state_of_charge_in_pu();
-        double SOC_max = battery_model->get_max_SOC_in_pu();
-        double SOC_min = battery_model->get_min_SOC_in_pu();
+        double SOC = soc_model->get_state_of_charge_in_pu();
+        double SOC_max = soc_model->get_max_SOC_in_pu();
+        double SOC_min = soc_model->get_min_SOC_in_pu();
 
         if(SOC>SOC_min and SOC<SOC_max)
         {

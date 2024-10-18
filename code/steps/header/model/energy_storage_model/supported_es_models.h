@@ -2,7 +2,7 @@
 #define SUPPORTED_ES_MODELS_H
 
 
-#include "header/model/energy_storage_model/es_battery_model/es_battery_models.h"
+#include "header/model/energy_storage_model/es_soc_model/es_soc_models.h"
 #include "header/model/energy_storage_model/es_converter_model/es_converter_models.h"
 #include "header/model/energy_storage_model/es_electrical_model/es_electrical_models.h"
 #include "header/model/energy_storage_model/es_vrt_model/es_vrt_models.h"

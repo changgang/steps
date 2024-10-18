@@ -452,7 +452,7 @@ bool METER::is_internal_variable_name_valid(string& name, unsigned int index) co
             if(meter_type=="ES ELECTRICAL MODEL INTERNAL VARIABLE")
                 model = ptr->get_es_electrical_model();
             if(meter_type=="ES BATTERY MODEL INTERNAL VARIABLE")
-                model = ptr->get_es_battery_model();
+                model = ptr->get_es_soc_model();
             if(meter_type=="ES VRT MODEL INTERNAL VARIABLE")
                 model = ptr->get_es_vrt_model();
             if(meter_type=="ES RELAY MODEL INTERNAL VARIABLE")
@@ -2271,7 +2271,7 @@ double METER::get_meter_value_as_an_energy_storage() const
             double mbase = energy_storage->get_mbase_in_MVA();
 
             ES_CONVERTER_MODEL* converter_model = energy_storage->get_es_converter_model();
-            ES_BATTERY_MODEL* battery_model = energy_storage->get_es_battery_model();
+            ES_SOC_MODEL* soc_model = energy_storage->get_es_soc_model();
             ES_ELECTRICAL_MODEL* electrical_model = energy_storage->get_es_electrical_model();
             ES_VRT_MODEL* vrt_model = energy_storage->get_es_vrt_model();
             ES_RELAY_MODEL* relay_model = energy_storage->get_es_relay_model();
@@ -2428,29 +2428,29 @@ double METER::get_meter_value_as_an_energy_storage() const
             }
             if(meter_type=="STATE OF CHARGE IN PU")
             {
-                if(battery_model != NULL)
-                    return battery_model->get_state_of_charge_in_pu();
+                if(soc_model != NULL)
+                    return soc_model->get_state_of_charge_in_pu();
                 else
                     return 0.0;
             }
             if(meter_type=="BATTERY POWER IN PU ON MBASE")
             {
-                if(battery_model != NULL)
-                    return battery_model->get_battery_power_in_pu_based_on_mbase();
+                if(soc_model != NULL)
+                    return soc_model->get_battery_power_in_pu_based_on_mbase();
                 else
                     return 0.0;
             }
             if(meter_type=="BATTERY POWER IN PU ON SBASE")
             {
-                if(battery_model != NULL)
-                    return battery_model->get_battery_power_in_MW()*one_over_sbase;
+                if(soc_model != NULL)
+                    return soc_model->get_battery_power_in_MW()*one_over_sbase;
                 else
                     return 0.0;
             }
             if(meter_type=="BATTERY POWER IN MW")
             {
-                if(battery_model != NULL)
-                    return battery_model->get_battery_power_in_MW();
+                if(soc_model != NULL)
+                    return soc_model->get_battery_power_in_MW();
                 else
                     return 0.0;
             }
@@ -2463,8 +2463,8 @@ double METER::get_meter_value_as_an_energy_storage() const
             }
             if(meter_type=="ES BATTERY MODEL INTERNAL VARIABLE")
             {
-                if(battery_model!=NULL)
-                    return battery_model->get_model_internal_variable_with_name(get_internal_variable_name());
+                if(soc_model!=NULL)
+                    return soc_model->get_model_internal_variable_with_name(get_internal_variable_name());
                 else
                     return 0.0;
             }

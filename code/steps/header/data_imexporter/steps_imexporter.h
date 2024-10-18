@@ -239,7 +239,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_PVVRTRLY1_model(vector<string>& data);
         void add_FTMP_model(vector<string>& data);
 
-        void add_ESBX_model(vector<string>& data);
+        void add_ESSOC0_model(vector<string>& data);
         void add_ESCVX_model(vector<string>& data);
         void add_ESCV2_model(vector<string>& data);
         void add_ESE0_model(vector<string>& data);

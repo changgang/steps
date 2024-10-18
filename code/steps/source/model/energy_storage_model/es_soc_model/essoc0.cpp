@@ -1,4 +1,4 @@
-#include "header/model/energy_storage_model/es_battery_model/esbx.h"
+#include "header/model/energy_storage_model/es_soc_model/essoc0.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 #include <istream>
@@ -6,27 +6,27 @@
 
 using namespace std;
 
-ESBX::ESBX(STEPS& toolkit) : ES_BATTERY_MODEL(toolkit)
+ESSOC0::ESSOC0(STEPS& toolkit) : ES_SOC_MODEL(toolkit)
 {
     clear();
 }
 
-ESBX::ESBX(const ESBX& model):ES_BATTERY_MODEL(model.get_toolkit())
+ESSOC0::ESSOC0(const ESSOC0& model):ES_SOC_MODEL(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
 
-ESBX::~ESBX()
+ESSOC0::~ESSOC0()
 {
     ;
 }
 
-void ESBX::clear()
+void ESSOC0::clear()
 {
     set_model_float_parameter_count(6);
 }
 
-ESBX& ESBX::operator=(const ESBX& model)
+ESSOC0& ESSOC0::operator=(const ESSOC0& model)
 {
     if(this==(&model))
         return *this;
@@ -34,7 +34,7 @@ ESBX& ESBX::operator=(const ESBX& model)
     return *this;
 }
 
-void ESBX::copy_from_const_model(const ESBX& model)
+void ESSOC0::copy_from_const_model(const ESSOC0& model)
 {
     STEPS& toolkit = model.get_toolkit();
     set_toolkit(toolkit);
@@ -50,12 +50,12 @@ void ESBX::copy_from_const_model(const ESBX& model)
     set_nominal_charge_time_in_s(model.get_nominal_charge_time_in_s());
 }
 
-string ESBX::get_model_name() const
+string ESSOC0::get_model_name() const
 {
-    return "ESBX";
+    return "ESSOC0";
 }
 
-bool ESBX::setup_model_with_steps_string_vector(vector<string>& data)
+bool ESSOC0::setup_model_with_steps_string_vector(vector<string>& data)
 {
     ostringstream osstream;
 
@@ -110,13 +110,13 @@ bool ESBX::setup_model_with_steps_string_vector(vector<string>& data)
         return is_successful;
 }
 
-bool ESBX::setup_model_with_psse_string(string data)
+bool ESSOC0::setup_model_with_psse_string(string data)
 {
     vector<string> record = psse_dyr_string2steps_string_vector(data);
     return setup_model_with_steps_string_vector(record);
 }
 
-bool ESBX::setup_model_with_bpa_string(string data)
+bool ESSOC0::setup_model_with_bpa_string(string data)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
@@ -126,12 +126,12 @@ bool ESBX::setup_model_with_bpa_string(string data)
     return true;
 }
 
-void ESBX::setup_block_toolkit_and_parameters()
+void ESSOC0::setup_block_toolkit_and_parameters()
 {
     ;
 }
 
-void ESBX::initialize()
+void ESSOC0::initialize()
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -173,7 +173,7 @@ void ESBX::initialize()
     }
 }
 
-void ESBX::run(DYNAMIC_MODE mode)
+void ESSOC0::run(DYNAMIC_MODE mode)
 {
     INTEGRAL_BLOCK* energy_state_block = get_energy_state_block();
     double Preq = get_battery_power_in_pu_based_on_mbase();
@@ -186,12 +186,12 @@ void ESBX::run(DYNAMIC_MODE mode)
 }
 
 
-void ESBX::check()
+void ESSOC0::check()
 {
     ;
 }
 
-void ESBX::report()
+void ESSOC0::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string(false);
@@ -199,12 +199,12 @@ void ESBX::report()
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-void ESBX::save()
+void ESSOC0::save()
 {
     ;
 }
 
-string ESBX::get_standard_psse_string(bool export_internal_bus_number) const
+string ESSOC0::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
     DEVICE_ID did = get_device_id();
@@ -231,7 +231,7 @@ string ESBX::get_standard_psse_string(bool export_internal_bus_number) const
     return osstream.str();
 }
 
-void ESBX::prepare_model_data_table()
+void ESSOC0::prepare_model_data_table()
 {
     clear_model_data_table();
     unsigned int i=0;
@@ -243,7 +243,7 @@ void ESBX::prepare_model_data_table()
     add_model_data_name_and_index_pair("DISCHARGE EFFICIENCY", i); i++;
 }
 
-double ESBX::get_model_data_with_name(string par_name) const
+double ESSOC0::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
     if(par_name=="INITIAL SOC IN PU")
@@ -262,7 +262,7 @@ double ESBX::get_model_data_with_name(string par_name) const
     return 0.0;
 }
 
-void ESBX::set_model_data_with_name(string par_name, double value)
+void ESSOC0::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
     if(par_name=="INITIAL SOC IN PU")
@@ -280,19 +280,19 @@ void ESBX::set_model_data_with_name(string par_name, double value)
     return;
 }
 
-double ESBX::get_minimum_nonzero_time_constant_in_s()
+double ESSOC0::get_minimum_nonzero_time_constant_in_s()
 {
     return get_nominal_charge_time_in_s();
 }
 
-void ESBX::prepare_model_internal_variable_table()
+void ESSOC0::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
     add_model_internal_variable_name_and_index_pair("STATE@ENERGY STATE BLOCK", i); i++;
 }
 
-double ESBX::get_model_internal_variable_with_name(string var_name)
+double ESSOC0::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "STATE@ENERGY STATE BLOCK")
@@ -301,17 +301,17 @@ double ESBX::get_model_internal_variable_with_name(string var_name)
     return 0.0;
 }
 
-string ESBX::get_dynamic_data_in_psse_format() const
+string ESSOC0::get_dynamic_data_in_psse_format() const
 {
     return "";
 }
 
-string ESBX::get_dynamic_data_in_bpa_format() const
+string ESSOC0::get_dynamic_data_in_bpa_format() const
 {
     return "";
 }
 
-string ESBX::get_dynamic_data_in_steps_format() const
+string ESSOC0::get_dynamic_data_in_steps_format() const
 {
     return "";
 }

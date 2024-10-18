@@ -1,16 +1,16 @@
-#ifndef ESBX_H
-#define ESBX_H
+#ifndef ESSOC0_H
+#define ESSOC0_H
 
-#include "header/model/energy_storage_model/es_battery_model/es_battery_model.h"
+#include "header/model/energy_storage_model/es_soc_model/es_soc_model.h"
 #include <cstdlib>
 
-class ESBX : public ES_BATTERY_MODEL
+class ESSOC0 : public ES_SOC_MODEL
 {
     public:
-        ESBX(STEPS& toolkit);
-        ESBX(const ESBX& model);
-        virtual ~ESBX();
-        virtual ESBX& operator=(const ESBX& model);
+        ESSOC0(STEPS& toolkit);
+        ESSOC0(const ESSOC0& model);
+        virtual ~ESSOC0();
+        virtual ESSOC0& operator=(const ESSOC0& model);
     public:
         virtual string get_model_name() const;
 
@@ -41,7 +41,7 @@ class ESBX : public ES_BATTERY_MODEL
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
     private:
-        void copy_from_const_model(const ESBX& model);
+        void copy_from_const_model(const ESSOC0& model);
 };
 
-#endif // ESBX_H
+#endif // ESSOC0_H

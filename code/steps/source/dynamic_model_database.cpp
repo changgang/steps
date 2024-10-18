@@ -235,7 +235,7 @@ unsigned int DYNAMIC_MODEL_DATABASE::get_model_size(MODEL* model) const
     if(model_name=="PVVRTRLY1") return sizeof(PVVRTRLY1);
     if(model_name=="FTMP") return sizeof(FTMP);
 
-    if(model_name=="ESBX") return sizeof(ESBX);
+    if(model_name=="ESSOC0") return sizeof(ESSOC0);
     if(model_name=="ESCVX") return sizeof(ESCVX);
     if(model_name=="ESCV2") return sizeof(ESCV2);
     if(model_name=="ESE0") return sizeof(ESE0);

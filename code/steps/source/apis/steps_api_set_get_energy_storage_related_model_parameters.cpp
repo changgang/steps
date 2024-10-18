@@ -17,16 +17,16 @@ const char* api_get_energy_storage_related_model_name(unsigned int bus, char* id
     }
 
     string MODEL_TYPE = string2upper(model_type);
-    if(MODEL_TYPE=="ESC" or MODEL_TYPE=="ES CONVERTER")
+    if(MODEL_TYPE=="ESCV" or MODEL_TYPE=="ES CONVERTER")
     {
         ES_CONVERTER_MODEL* model = energy_storage->get_es_converter_model();
         if(model!=NULL)
 			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (model->get_model_name()).c_str());
 		return toolkit.steps_char_buffer;
     }
-    if(MODEL_TYPE=="ESB" or MODEL_TYPE=="ES BATTERY")
+    if(MODEL_TYPE=="ESSOC" or MODEL_TYPE=="ES STATE OF CHARGE")
     {
-        ES_BATTERY_MODEL* model = energy_storage->get_es_battery_model();
+        ES_SOC_MODEL* model = energy_storage->get_es_soc_model();
         if(model!=NULL)
 			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (model->get_model_name()).c_str());
 		return toolkit.steps_char_buffer;
@@ -69,7 +69,7 @@ double api_get_energy_storage_related_model_float_parameter(unsigned int bus, ch
     }
     string MODEL_TYPE = string2upper(model_type);
     string PARAMETER_NAME = string2upper(parameter_name);
-    if(MODEL_TYPE=="ESC" or MODEL_TYPE=="ES CONVERTER")
+    if(MODEL_TYPE=="ESCV" or MODEL_TYPE=="ES CONVERTER")
     {
         ES_CONVERTER_MODEL* model = energy_storage->get_es_converter_model();
         if(model!=NULL)
@@ -78,9 +78,9 @@ double api_get_energy_storage_related_model_float_parameter(unsigned int bus, ch
             return 0.0;
     }
 
-    if(MODEL_TYPE=="ESB" or MODEL_TYPE=="ES BATTERY")
+    if(MODEL_TYPE=="ESSOC" or MODEL_TYPE=="ES STATE OF CHARGE")
     {
-        ES_BATTERY_MODEL* model = energy_storage->get_es_battery_model();
+        ES_SOC_MODEL* model = energy_storage->get_es_soc_model();
         if(model!=NULL)
             return model->get_model_data_with_name(PARAMETER_NAME);
         else
@@ -128,7 +128,7 @@ void api_set_energy_storage_related_model_float_parameter(unsigned int bus, char
     }
     string MODEL_TYPE = string2upper(model_type);
     string PARAMETER_NAME = string2upper(parameter_name);
-    if(MODEL_TYPE=="ESC" or MODEL_TYPE=="ES CONVERTER")
+    if(MODEL_TYPE=="ESCV" or MODEL_TYPE=="ES CONVERTER")
     {
         ES_CONVERTER_MODEL* model = energy_storage->get_es_converter_model();
         if(model!=NULL)
@@ -137,9 +137,9 @@ void api_set_energy_storage_related_model_float_parameter(unsigned int bus, char
             return;
     }
 
-    if(MODEL_TYPE=="ESB" or MODEL_TYPE=="ES BATTERY")
+    if(MODEL_TYPE=="ESSOC" or MODEL_TYPE=="ES STATE OF CHARGE")
     {
-        ES_BATTERY_MODEL* model = energy_storage->get_es_battery_model();
+        ES_SOC_MODEL* model = energy_storage->get_es_soc_model();
         if(model!=NULL)
             return model->set_model_data_with_name(PARAMETER_NAME, value);
         else
@@ -184,7 +184,7 @@ unsigned int api_get_energy_storage_related_model_float_parameter_count(unsigned
         return 0;
     }
     string MODEL_TYPE = string2upper(model_type);
-    if(MODEL_TYPE=="ESC" or MODEL_TYPE=="ES CONVERTER")
+    if(MODEL_TYPE=="ESCV" or MODEL_TYPE=="ES CONVERTER")
     {
         ES_CONVERTER_MODEL* model = energy_storage->get_es_converter_model();
         if(model!=NULL)
@@ -193,9 +193,9 @@ unsigned int api_get_energy_storage_related_model_float_parameter_count(unsigned
             return 0;
     }
 
-    if(MODEL_TYPE=="ESB" or MODEL_TYPE=="ES BATTERY")
+    if(MODEL_TYPE=="ESSOC" or MODEL_TYPE=="ES STATE OF CHARGE")
     {
-        ES_BATTERY_MODEL* model = energy_storage->get_es_battery_model();
+        ES_SOC_MODEL* model = energy_storage->get_es_soc_model();
         if(model!=NULL)
             return model->get_model_float_parameter_count();
         else
@@ -243,7 +243,7 @@ const char* api_get_energy_storage_related_model_float_parameter_name(unsigned i
         return toolkit.steps_char_buffer;
     }
     string MODEL_TYPE = string2upper(model_type);
-    if(MODEL_TYPE=="ESC" or MODEL_TYPE=="ES CONVERTER")
+    if(MODEL_TYPE=="ESCV" or MODEL_TYPE=="ES CONVERTER")
     {
         ES_CONVERTER_MODEL* model = energy_storage->get_es_converter_model();
         if(model!=NULL)
@@ -252,9 +252,9 @@ const char* api_get_energy_storage_related_model_float_parameter_name(unsigned i
         return toolkit.steps_char_buffer;
     }
 
-    if(MODEL_TYPE=="ESB" or MODEL_TYPE=="ES BATTERY")
+    if(MODEL_TYPE=="ESSOC" or MODEL_TYPE=="ES STATE OF CHARGE")
     {
-        ES_BATTERY_MODEL* model = energy_storage->get_es_battery_model();
+        ES_SOC_MODEL* model = energy_storage->get_es_soc_model();
         if(model!=NULL)
             name = model->get_model_data_name(parameter_index);
         snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());

@@ -1,15 +1,15 @@
-#ifndef ES_BATTERY_MODEL_H
-#define ES_BATTERY_MODEL_H
+#ifndef ES_SOC_MODEL_H
+#define ES_SOC_MODEL_H
 
 #include "header/model/energy_storage_model/es_model.h"
 #include "header/block/integral_block.h"
 #include <cstdlib>
 
-class ES_BATTERY_MODEL : public ES_MODEL
+class ES_SOC_MODEL : public ES_MODEL
 {
     public:
-        ES_BATTERY_MODEL(STEPS& toolkit);
-        virtual ~ES_BATTERY_MODEL();
+        ES_SOC_MODEL(STEPS& toolkit);
+        virtual ~ES_SOC_MODEL();
     public:
         virtual string get_model_type() const;
         void set_energy_state_block_toolkit(STEPS& toolkit);
@@ -71,4 +71,4 @@ class ES_BATTERY_MODEL : public ES_MODEL
         INTEGRAL_BLOCK energy_state_block;
 };
 
-#endif // ES_BATTERY_MODEL_H
+#endif // ES_SOC_MODEL_H
