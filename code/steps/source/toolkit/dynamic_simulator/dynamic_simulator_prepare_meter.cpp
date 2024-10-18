@@ -1339,8 +1339,8 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(const DEVICE_ID& d
                 meter = setter.prepare_es_converter_model_internal_variable_meter(did, var_name);
             if(meter_type=="ES ELECTRICAL MODEL INTERNAL VARIABLE")
                 meter = setter.prepare_es_electrical_model_internal_variable_meter(did, var_name);
-            if(meter_type=="ES BATTERY MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_es_battery_model_internal_variable_meter(did, var_name);
+            if(meter_type=="ES SOC MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_es_soc_model_internal_variable_meter(did, var_name);
             if(meter_type=="ES VRT MODEL INTERNAL VARIABLE")
                 meter = setter.prepare_es_vrt_model_internal_variable_meter(did, var_name);
             if(meter_type=="ES RELAY MODEL INTERNAL VARIABLE")

@@ -200,7 +200,7 @@ class METER_SETTER
         METER prepare_es_battery_power_in_MW_meter(const DEVICE_ID& device_id);
         METER prepare_es_converter_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
         METER prepare_es_electrical_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
-        METER prepare_es_battery_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_es_soc_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
         METER prepare_es_relay_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
         METER prepare_es_vrt_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
 

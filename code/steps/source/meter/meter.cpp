@@ -175,7 +175,7 @@ vector<string> energy_storage_meters{"TERMINAL CURRENT IN PU ON MBASE", "TERMINA
                                      "BATTERY POWER IN MW",
                                      "ES CONVERTER MODEL INTERNAL VARIABLE",
                                      "ES ELECTRICAL MODEL INTERNAL VARIABLE",
-                                     "ES BATTERY MODEL INTERNAL VARIABLE",
+                                     "ES SOC MODEL INTERNAL VARIABLE",
                                      "ES VRT MODEL INTERNAL VARIABLE",
                                      "ES RELAY MODEL INTERNAL VARIABLE"};
 
@@ -451,7 +451,7 @@ bool METER::is_internal_variable_name_valid(string& name, unsigned int index) co
                 model = ptr->get_es_converter_model();
             if(meter_type=="ES ELECTRICAL MODEL INTERNAL VARIABLE")
                 model = ptr->get_es_electrical_model();
-            if(meter_type=="ES BATTERY MODEL INTERNAL VARIABLE")
+            if(meter_type=="ES SOC MODEL INTERNAL VARIABLE")
                 model = ptr->get_es_soc_model();
             if(meter_type=="ES VRT MODEL INTERNAL VARIABLE")
                 model = ptr->get_es_vrt_model();
@@ -2461,7 +2461,7 @@ double METER::get_meter_value_as_an_energy_storage() const
                 else
                     return 0.0;
             }
-            if(meter_type=="ES BATTERY MODEL INTERNAL VARIABLE")
+            if(meter_type=="ES SOC MODEL INTERNAL VARIABLE")
             {
                 if(soc_model!=NULL)
                     return soc_model->get_model_internal_variable_with_name(get_internal_variable_name());

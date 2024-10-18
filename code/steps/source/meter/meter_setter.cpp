@@ -2550,7 +2550,7 @@ METER METER_SETTER::prepare_es_electrical_model_internal_variable_meter(const DE
     return meter;
 }
 
-METER METER_SETTER::prepare_es_battery_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+METER METER_SETTER::prepare_es_soc_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
     METER meter(get_toolkit());
 
@@ -2558,7 +2558,7 @@ METER METER_SETTER::prepare_es_battery_model_internal_variable_meter(const DEVIC
 
     if(successful)
     {
-        meter.set_meter_type("ES BATTERY MODEL INTERNAL VARIABLE");
+        meter.set_meter_type("ES SOC MODEL INTERNAL VARIABLE");
         meter.set_internal_variable_name(name);
     }
 
