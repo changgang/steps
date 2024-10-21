@@ -6,5 +6,6 @@
 #include "header/model/wtg_models/wt_generator_model/wt3g2.h"
 #include "header/model/wtg_models/wt_generator_model/wt3gx.h"
 #include "header/model/wtg_models/wt_generator_model/wt3gx2.h"
+#include "header/model/wtg_models/wt_generator_model/wt3gxg.h"
 
 #endif // WT_GENERATOR_MODELS_H
