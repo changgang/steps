@@ -23,7 +23,6 @@ void ESCV2::clear()
     set_current_source_flag(true);
 
     csconv2.clear();
-    csconv2.set_model_name(get_model_name());
 }
 
 void ESCV2::copy_from_const_model(const ESCV2& model)

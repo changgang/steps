@@ -22,7 +22,6 @@ void WT3GXG::clear()
     set_current_source_flag(false);
     set_gfm_control_mode(VSG_CONTROL);
     general_gfm.clear();
-    general_gfm.set_model_name(get_model_name());
 }
 
 void WT3GXG::copy_from_const_model(const WT3GXG& model)

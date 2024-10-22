@@ -21,7 +21,6 @@ void WT3G1::clear()
     set_model_float_parameter_count(5);
     set_current_source_flag(false);
     csconv1.clear();
-    csconv1.set_model_name(get_model_name());
 }
 
 void WT3G1::copy_from_const_model(const WT3G1& model)

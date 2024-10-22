@@ -23,7 +23,6 @@ void WT3G0::clear()
     set_current_source_flag(true);
 
     csconv2.clear();
-    csconv2.set_model_name(get_model_name());
 }
 
 void WT3G0::copy_from_const_model(const WT3G0& model)

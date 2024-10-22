@@ -2,7 +2,7 @@
 #define ESE0_H
 
 #include "header/model/energy_storage_model/es_electrical_model/es_electrical_model.h"
-#include "header/model/converter_common_model/elec_model/convelec0.h"
+#include "header/model/common_model/elec_model/convelec0.h"
 
 class ESE0: public ES_ELECTRICAL_MODEL
 {

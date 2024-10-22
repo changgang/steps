@@ -2,8 +2,8 @@
 #define PVVRT3_H
 
 #include "header/model/pvu_models/pv_vrt_model/pv_vrt_model.h"
-#include "header/model/converter_common_model/vrt_model/lvrt_control.h"
-#include "header/model/converter_common_model/vrt_model/hvrt_control.h"
+#include "header/model/common_model/vrt_model/lvrt_control.h"
+#include "header/model/common_model/vrt_model/hvrt_control.h"
 
 class PVVRT3: public PV_VRT_MODEL
 {

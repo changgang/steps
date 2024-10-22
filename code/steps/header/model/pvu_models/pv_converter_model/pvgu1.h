@@ -2,7 +2,7 @@
 #define PVGU1_H
 
 #include "header/model/pvu_models/pv_converter_model/pv_converter_model.h"
-#include "header/model/converter_common_model/converter_model/cs_converter_model/csconv2.h"
+#include "header/model/common_model/converter_common_model/converter_model/cs_converter_model/csconv2.h"
 
 class PVGU1 : public PV_CONVERTER_MODEL
 {

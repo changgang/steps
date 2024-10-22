@@ -3,7 +3,7 @@
 
 #include "header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
 #include "header/basic/multi_point_line.h"
-#include "header/model/converter_common_model/elec_model/convelec1.h"
+#include "header/model/common_model/elec_model/convelec1.h"
 #include "header/block/first_order_block.h"
 #include "header/block/pi_block.h"
 

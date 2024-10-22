@@ -2,7 +2,7 @@
 #define PVCVX_H
 
 #include "header/model/pvu_models/pv_converter_model/pv_converter_model.h"
-#include "header/model/converter_common_model/converter_model/vs_converter_model/vsg0.h"
+#include "header/model/common_model/converter_common_model/converter_model/vs_converter_model/vsg0.h"
 
 
 class PVCVX : public PV_CONVERTER_MODEL

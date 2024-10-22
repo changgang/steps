@@ -23,7 +23,6 @@ void ESCVX::clear()
     set_current_source_flag(false);
 
     vsg.clear();
-    vsg.set_model_name(get_model_name());
 }
 
 void ESCVX::copy_from_const_model(const ESCVX& model)

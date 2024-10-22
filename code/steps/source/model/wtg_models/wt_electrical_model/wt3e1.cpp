@@ -42,7 +42,6 @@ void WT3E1::clear()
     set_transformer_to_bus(0);
     set_transformer_id("");
     conelec1.clear();
-    conelec1.set_model_name(get_model_name());
     power_speed_table.clear();
 }
 

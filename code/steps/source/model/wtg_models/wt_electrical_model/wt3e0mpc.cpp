@@ -50,7 +50,6 @@ void WT3E0MPC::clear()
 {
     set_model_float_parameter_count(41);
     conelec0.clear();
-    conelec0.set_model_name(get_model_name());
     active_power_PI_controller.set_limiter_type(NON_WINDUP_LIMITER);
     active_power_differential_controller.set_limiter_type(NO_LIMITER);
     active_power_sensor.set_limiter_type(NO_LIMITER);

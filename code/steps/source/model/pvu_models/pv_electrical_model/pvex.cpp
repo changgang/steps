@@ -40,7 +40,6 @@ void PVEX::clear()
 {
     set_model_float_parameter_count(32);
     conelec0.clear();
-    conelec0.set_model_name(get_model_name());
 }
 
 void PVEX::copy_from_const_model(const PVEX& model)

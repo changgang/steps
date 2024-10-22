@@ -2,7 +2,7 @@
 #define PVEX_H
 
 #include "header/model/pvu_models/pv_electrical_model/pv_electrical_model.h"
-#include "header/model/converter_common_model/elec_model/convelec0.h"
+#include "header/model/common_model/elec_model/convelec0.h"
 
 class PVEX: public PV_ELECTRICAL_MODEL
 {

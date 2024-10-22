@@ -2,8 +2,8 @@
 #define ESVRT3_H
 
 #include "header/model/energy_storage_model/es_vrt_model/es_vrt_model.h"
-#include "header/model/converter_common_model/vrt_model/lvrt_control.h"
-#include "header/model/converter_common_model/vrt_model/hvrt_control.h"
+#include "header/model/common_model/vrt_model/lvrt_control.h"
+#include "header/model/common_model/vrt_model/hvrt_control.h"
 
 class ESVRT3: public ES_VRT_MODEL
 {

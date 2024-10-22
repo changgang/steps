@@ -23,7 +23,6 @@ void PVCVX::clear()
     set_current_source_flag(false);
 
     vsg.clear();
-    vsg.set_model_name(get_model_name());
 }
 
 void PVCVX::copy_from_const_model(const PVCVX& model)

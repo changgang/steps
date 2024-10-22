@@ -2,7 +2,7 @@
 #define ESCVX_H
 
 #include "header/model/energy_storage_model/es_converter_model/es_converter_model.h"
-#include "header/model/converter_common_model/converter_model/vs_converter_model/vsg0.h"
+#include "header/model/common_model/converter_common_model/converter_model/vs_converter_model/vsg0.h"
 
 
 class ESCVX : public ES_CONVERTER_MODEL

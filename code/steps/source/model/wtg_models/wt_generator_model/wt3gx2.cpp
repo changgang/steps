@@ -23,7 +23,6 @@ void WT3GX2::clear()
     set_current_source_flag(false);
 
     dvoc.clear();
-    dvoc.set_model_name(get_model_name());
 }
 
 void WT3GX2::copy_from_const_model(const WT3GX2& model)

@@ -2,7 +2,7 @@
 #define WT3GXG_H
 
 #include "header/model/wtg_models/wt_generator_model/wt_generator_model.h"
-#include "header/model/converter_common_model/converter_model/vs_converter_model/general_gfm.h"
+#include "header/model/common_model/converter_common_model/converter_model/vs_converter_model/general_gfm.h"
 
 
 class WT3GXG : public WT_GENERATOR_MODEL

@@ -2,8 +2,8 @@
 #define PVVRTRLY1_H
 
 #include "header/model/pvu_models/pv_relay_model/pv_relay_model.h"
-#include "header/model/converter_common_model/vrt_model/lvrt_relay.h"
-#include "header/model/converter_common_model/vrt_model/hvrt_relay.h"
+#include "header/model/common_model/vrt_model/lvrt_relay.h"
+#include "header/model/common_model/vrt_model/hvrt_relay.h"
 #include "header/basic/timer.h"
 #include "header/basic/constants.h"
 #include "header/basic/multi_point_line.h"

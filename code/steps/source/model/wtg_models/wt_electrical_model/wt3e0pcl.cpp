@@ -44,7 +44,6 @@ void WT3E0PCL::clear()
 {
     set_model_float_parameter_count(33);
     conelec2.clear();
-    conelec2.set_model_name(get_model_name());
 }
 
 void WT3E0PCL::copy_from_const_model(const WT3E0PCL& model)

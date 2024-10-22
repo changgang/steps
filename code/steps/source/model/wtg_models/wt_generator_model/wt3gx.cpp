@@ -23,7 +23,6 @@ void WT3GX::clear()
     set_current_source_flag(false);
 
     vsg.clear();
-    vsg.set_model_name(get_model_name());
 }
 
 void WT3GX::copy_from_const_model(const WT3GX& model)

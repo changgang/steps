@@ -2,7 +2,7 @@
 #define ESCV2_H
 
 #include "header/model/energy_storage_model/es_converter_model/es_converter_model.h"
-#include "header/model/converter_common_model/converter_model/cs_converter_model/csconv2.h"
+#include "header/model/common_model/converter_common_model/converter_model/cs_converter_model/csconv2.h"
 
 class ESCV2 : public ES_CONVERTER_MODEL
 {
