@@ -105,7 +105,17 @@ void HVRT_RELAY::check_vrt_relay()
                     break;
                 }
                 case STEPS_PV_UNIT:
+                {
+                    sim.shed_pv_unit(did, get_vrt_trip_scale());
+                    sim.enable_relay_action_flag();
+                    break;
+                }
                 case STEPS_ENERGY_STORAGE:
+                {
+                    sim.shed_energy_storage(did, get_vrt_trip_scale());
+                    sim.enable_relay_action_flag();
+                    break;
+                }
                 default:
                 {
                     break;
