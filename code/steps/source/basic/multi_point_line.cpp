@@ -170,10 +170,15 @@ double MULTI_POINT_LINE::get_y_at_x(double x)
     if(i_less == n-1)
         return get_point_y_with_index(n-1);
 
+
     unsigned int i_greater = i_less + 1;
 
     double x_less = get_point_x_with_index(i_less);
     double y_less = get_point_y_with_index(i_less);
+
+    if(fabs(x_less-x)<DOUBLE_EPSILON)
+        return y_less;
+
     double x_greater = get_point_x_with_index(i_greater);
     double y_greater = get_point_y_with_index(i_greater);
 
