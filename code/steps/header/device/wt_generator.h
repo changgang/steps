@@ -106,7 +106,7 @@ class WT_GENERATOR : public SOURCE
 
 
         void set_motor_rated_voltage_in_kV(double v);
-        void set_mbase_in_MVA(double m);
+        void set_motor_mbase_in_MVA(double m);
         void set_motor_Ra_in_pu(double r);
         void set_motor_Xa_in_pu(double x);
         void set_motor_Xm_in_pu(double x);

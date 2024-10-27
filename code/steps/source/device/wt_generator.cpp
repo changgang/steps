@@ -753,20 +753,12 @@ bool WT_GENERATOR::get_sequence_parameter_import_flag() const
     return sequence_parameter_import_flag;
 }
 
-
-
-
-
-
-
-
-
 void WT_GENERATOR::set_motor_rated_voltage_in_kV(double v)
 {
     motor_rated_voltge = v;
 }
 
-void WT_GENERATOR::set_mbase_in_MVA(double m)
+void WT_GENERATOR::set_motor_mbase_in_MVA(double m)
 {
     mbase = m;
 }
