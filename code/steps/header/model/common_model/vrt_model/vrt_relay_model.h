@@ -26,6 +26,11 @@ class VRT_RELAY_MODEL:public COMMON_MODEL
 
         void set_point_time_with_index(unsigned int index, double value);
         void set_point_voltage_with_index(unsigned int index, double value);
+        void enable_relay_action_flag();
+        void disable_relay_action_flag();
+        bool get_relay_action_flag() const;
+
+        void trip_device();
 
     public:
         void  copy_from_const_model(const VRT_RELAY_MODEL& model);
@@ -38,6 +43,7 @@ class VRT_RELAY_MODEL:public COMMON_MODEL
         double vrt_trip_scale;
 
         double t0_vrt_activated;
+        bool relay_action_flag;
 };
 
 #endif // VRT_RELAY_MODEL_H

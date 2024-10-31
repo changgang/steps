@@ -57,69 +57,60 @@ void HVRT_RELAY::initialize_vrt_relay()
 void HVRT_RELAY::check_vrt_relay()
 {
     STEPS& toolkit = get_toolkit();
-    DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
     ostringstream osstream;
     TIMER& timer = get_vrt_trip_timer();
     DEVICE_ID did = get_device_id();
     double v_th = get_hvrt_voltage_threshold();
-    if(not timer.is_started())
-    {
-        double v = get_bus_voltage_in_pu();
-        if(v>v_th)
-        {
-            double tnow = toolkit.get_dynamic_simulation_time_in_s();
-            if(get_time_when_vrt_enter_during_status() == INFINITE_THRESHOLD)
-            {
-                set_time_when_vrt_enter_during_status(tnow);
-            }
-            MULTI_POINT_LINE HVRT_RELAY_line = get_vrt_line();
-            double t0 = get_time_when_vrt_enter_during_status();
-            double vtrip_th = HVRT_RELAY_line.get_y_at_x(tnow-t0);
-            if(v>vtrip_th)
-            {
-                timer.start();
 
-                osstream<<"HVRT_RELAY relay timer of "<<get_compound_device_name()<<" is started at "<<toolkit.get_dynamic_simulation_time_in_s()
-                        <<"s due to voltage exceeding HVRT_RELAY trip threshold: "<<v<<" > "<<vtrip_th<<endl;
-                toolkit.show_information_with_leading_time_stamp(osstream);
+    if(get_relay_action_flag()==false)
+    {
+        if(not timer.is_started())
+        {
+            double v = get_bus_voltage_in_pu();
+            if(v>v_th)
+            {
+                double tnow = toolkit.get_dynamic_simulation_time_in_s();
+                if(get_time_when_vrt_enter_during_status() == INFINITE_THRESHOLD)
+                {
+                    set_time_when_vrt_enter_during_status(tnow);
+                }
+                MULTI_POINT_LINE HVRT_RELAY_line = get_vrt_line();
+                double t0 = get_time_when_vrt_enter_during_status();
+                double vtrip_th = HVRT_RELAY_line.get_y_at_x(tnow-t0);
+                if(v>vtrip_th)
+                {
+                    if(fabs(get_vrt_trip_time_delay_in_s())<DOUBLE_EPSILON)
+                    {
+                        osstream<<get_compound_device_name()<<" will be tripped at "<<toolkit.get_dynamic_simulation_time_in_s()
+                            <<"s due to voltage exceeding HVRT_RELAY trip threshold: "<<v<<" > "<<vtrip_th<<" and HVRT_RELAY relay timer is Zero."<<endl;
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                        trip_device();
+                        enable_relay_action_flag();
+                    }
+                    else
+                    {
+                        timer.start();
+
+                        osstream<<"HVRT_RELAY relay timer of "<<get_compound_device_name()<<" is started at "<<toolkit.get_dynamic_simulation_time_in_s()
+                            <<"s due to voltage exceeding HVRT_RELAY trip threshold: "<<v<<" > "<<vtrip_th<<endl;
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                    }
+                }
+            }
+            else
+            {
+                if(get_time_when_vrt_enter_during_status()!=INFINITE_THRESHOLD)
+                    set_time_when_vrt_enter_during_status(INFINITE_THRESHOLD);
             }
         }
         else
         {
-            if(get_time_when_vrt_enter_during_status()!=INFINITE_THRESHOLD)
-                set_time_when_vrt_enter_during_status(INFINITE_THRESHOLD);
-        }
-    }
-    else
-    {
-        if(timer.is_timed_out())
-        {
-            osstream<<"HVRT_RELAY relay timer of "<<get_compound_device_name()<<" is timed out at "<<toolkit.get_dynamic_simulation_time_in_s()<<" s"<<endl;
-            toolkit.show_information_with_leading_time_stamp(osstream);
-            switch(did.get_device_type())
+            if(timer.is_timed_out())
             {
-                case STEPS_WT_GENERATOR:
-                {
-                    sim.shed_wt_generator(did, get_vrt_trip_scale());
-                    sim.enable_relay_action_flag();
-                    break;
-                }
-                case STEPS_PV_UNIT:
-                {
-                    sim.shed_pv_unit(did, get_vrt_trip_scale());
-                    sim.enable_relay_action_flag();
-                    break;
-                }
-                case STEPS_ENERGY_STORAGE:
-                {
-                    sim.shed_energy_storage(did, get_vrt_trip_scale());
-                    sim.enable_relay_action_flag();
-                    break;
-                }
-                default:
-                {
-                    break;
-                }
+                osstream<<"HVRT_RELAY relay timer of "<<get_compound_device_name()<<" is timed out at "<<toolkit.get_dynamic_simulation_time_in_s()<<" s"<<endl;
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                trip_device();
+                enable_relay_action_flag();
             }
         }
     }

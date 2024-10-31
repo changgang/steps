@@ -17,12 +17,14 @@ void VRT_RELAY_MODEL::copy_from_const_model(const VRT_RELAY_MODEL& model)
     MULTI_POINT_LINE m = model.get_vrt_line();
     vrt_line = m;
     set_vrt_trip_scale(model.get_vrt_trip_scale());
+
 }
 
 void VRT_RELAY_MODEL::clear()
 {
     vrt_line.clear();
     vrt_trip_timer.clear();
+    relay_action_flag = false;
 }
 
 void VRT_RELAY_MODEL::set_vrt_trip_time_delay_in_s(double t)
@@ -93,4 +95,53 @@ void VRT_RELAY_MODEL::set_point_time_with_index(unsigned int index, double value
 void VRT_RELAY_MODEL::set_point_voltage_with_index(unsigned int index, double value)
 {
     vrt_line.set_point_y_with_index(index, value);
+}
+
+void VRT_RELAY_MODEL::enable_relay_action_flag()
+{
+    relay_action_flag = true;
+}
+
+void VRT_RELAY_MODEL::disable_relay_action_flag()
+{
+    relay_action_flag = false;
+}
+
+bool VRT_RELAY_MODEL::get_relay_action_flag() const
+{
+    return relay_action_flag;
+}
+
+void VRT_RELAY_MODEL::trip_device()
+{
+
+    STEPS& toolkit = get_toolkit();
+    DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
+    DEVICE_ID did = get_device_id();
+    STEPS_DEVICE_TYPE type = get_device_type();
+    switch(type)
+    {
+        case STEPS_WT_GENERATOR:
+        {
+            sim.shed_wt_generator(did, get_vrt_trip_scale());
+            sim.enable_relay_action_flag();
+            break;
+        }
+        case STEPS_PV_UNIT:
+        {
+            sim.shed_pv_unit(did, get_vrt_trip_scale());
+            sim.enable_relay_action_flag();
+            break;
+        }
+        case STEPS_ENERGY_STORAGE:
+        {
+            sim.shed_energy_storage(did, get_vrt_trip_scale());
+            sim.enable_relay_action_flag();
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
 }
