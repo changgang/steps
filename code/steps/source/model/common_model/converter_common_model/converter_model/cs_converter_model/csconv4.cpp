@@ -225,15 +225,8 @@ void CSCONV4::run(DYNAMIC_MODE mode)
 
 complex<double> CSCONV4::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_mbase()
 {
-    double Xeq = get_source_impedance_in_pu_based_on_mbase().imag();
-    double Ip_guess = active_current_commander.get_output();
-    double Iq_guess = -reactive_voltage_commander.get_output()/Xeq;
-
-    complex<double> I_guess(Ip_guess, Iq_guess);
-    complex<double> Ipq = convcol.get_limited_PQ_current_order(I_guess);
-
-    double Ip = Ipq.real();
-    double Iq = Ipq.imag();
+    double Ip = get_Ip_in_pu();
+    double Iq = get_Iq_in_pu();
 
     double pll_angle = get_pll_angle_in_rad();
 
@@ -273,4 +266,25 @@ double CSCONV4::get_pll_angle_in_rad()
 double CSCONV4::get_pll_frequency_deviation_in_pu()
 {
     return pll0.get_pll_frequency_deviation_in_pu();
+}
+
+complex<double> CSCONV4::get_Ipq_in_pu()
+{
+    double Xeq = get_source_impedance_in_pu_based_on_mbase().imag();
+    double Ip_guess = active_current_commander.get_output();
+    double Iq_guess = -reactive_voltage_commander.get_output()/Xeq;
+
+    complex<double> I_guess(Ip_guess, Iq_guess);
+    complex<double> Ipq = convcol.get_limited_PQ_current_order(I_guess);
+    return Ipq;
+}
+
+double CSCONV4::get_Ip_in_pu()
+{
+    return get_Ipq_in_pu().real();
+}
+
+double CSCONV4::get_Iq_in_pu()
+{
+    return get_Ipq_in_pu().imag();
 }

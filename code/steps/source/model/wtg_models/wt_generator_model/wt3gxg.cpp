@@ -143,7 +143,7 @@ bool WT3GXG::setup_model_with_steps_string_vector(vector<string>& data)
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
-            unsigned int ibus;
+            unsigned int ibus, n_lumped_turbine;
             string id;
             double prate, num1, num2, num3, num4, imax;
             unsigned int pqflag, mode;
@@ -173,19 +173,19 @@ bool WT3GXG::setup_model_with_steps_string_vector(vector<string>& data)
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 return is_successful;
             }
-            double n_lumped_turbine;
             double mbase = gen->get_mbase_in_MVA();
-            n_lumped_turbine = mbase/prate;
-            if(fabs(n_lumped_turbine-round(n_lumped_turbine))>0.1)
+            n_lumped_turbine = round(mbase/prate);
+            if(fabs(mbase-n_lumped_turbine*prate)>1e-2)
             {
-                osstream<<"Warning. The MBASE of "<<did.get_compound_device_name()<<" deviates from n(integer) times of the Prate in "<<get_model_name()<<" model."<<endl
-                        <<"MBASE = "<<mbase<<" MVA, Prate = "<<prate<<" MW, and N(float) = "<<n_lumped_turbine<<"."<<endl
-                        <<"User should confirm if MBASE or Prate needs to be corrected.";
+                osstream<<"Warning. The MBASE of "<<did.get_compound_device_name()<<" is far way from n times of the Prate of "<<get_model_name()<<" model."<<endl
+                       <<"MBASE = "<<mbase<<" MVA and Prate = "<<prate<<" MW."<<endl
+                       <<"Machine MBASE will be updated as "<<n_lumped_turbine*prate<<" MVA.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
 
             gen->set_number_of_lumped_wt_generators(n_lumped_turbine);
             gen->set_rated_power_per_wt_generator_in_MW(prate);
+            gen->set_mbase_in_MVA(n_lumped_turbine*prate);
 
             switch(mode)
             {

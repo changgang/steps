@@ -193,9 +193,8 @@ void CSCONV1::run(DYNAMIC_MODE mode)
 
 complex<double> CSCONV1::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_mbase()
 {
-    double Xeq = get_Xeq_in_pu();
-    double Ip = active_current_commander.get_output();
-    double Iq = -reactive_voltage_commander.get_output()/Xeq;
+    double Ip = get_Ip_in_pu();
+    double Iq = get_Iq_in_pu();
     double pll_angle = get_pll_angle_in_rad();
     double sine = steps_sin(pll_angle), cosine = steps_cos(pll_angle);
     double Ix = Ip*cosine - Iq*sine;
@@ -233,4 +232,15 @@ double CSCONV1::get_pll_angle_in_rad()
 double CSCONV1::get_pll_frequency_deviation_in_pu()
 {
     return pll0.get_pll_frequency_deviation_in_pu();
+}
+
+double CSCONV1::get_Ip_in_pu()
+{
+    return active_current_commander.get_output();
+}
+
+double CSCONV1::get_Iq_in_pu()
+{
+    double Xeq = get_Xeq_in_pu();
+    return -reactive_voltage_commander.get_output()/Xeq;
 }

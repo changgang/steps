@@ -478,6 +478,8 @@ void PVGU1::prepare_model_internal_variable_table()
     unsigned int i=0;
     add_model_internal_variable_name_and_index_pair("PLL ANGLE IN DEG", i); i++;
     add_model_internal_variable_name_and_index_pair("PLL ANGLE IN RAD", i); i++;
+    add_model_internal_variable_name_and_index_pair("ACTIVE CURRENT IN PU ON MBASE", i); i++;
+    add_model_internal_variable_name_and_index_pair("REACTIVE CURRENT IN PU ON MBASE", i); i++;
     add_model_internal_variable_name_and_index_pair("STATE@ACTIVE CURRENT COMMAND BLOCK", i); i++;
     add_model_internal_variable_name_and_index_pair("STATE@REACTIVE VOLTAGE COMMAND BLOCK", i); i++;
     add_model_internal_variable_name_and_index_pair("STATE@LVPL VOLTAGE SENSOR", i); i++;
@@ -490,6 +492,10 @@ double PVGU1::get_model_internal_variable_with_name(string var_name)
         return get_pll_angle_in_deg();
     if(var_name == "PLL ANGLE IN RAD")
         return get_pll_angle_in_rad();
+    if(var_name == "ACTIVE CURRENT IN PU ON MBASE")
+        return csconv2.get_Ip_in_pu();
+    if(var_name == "REACTIVE CURRENT IN PU ON MBASE")
+        return csconv2.get_Iq_in_pu();
     if(var_name == "STATE@ACTIVE CURRENT COMMAND BLOCK")
         return csconv2.get_active_current_commander_state();
     if(var_name == "STATE@REACTIVE VOLTAGE COMMAND BLOCK")

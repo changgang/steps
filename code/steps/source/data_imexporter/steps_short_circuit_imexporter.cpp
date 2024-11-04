@@ -441,7 +441,7 @@ void STEPS_IMEXPORTER::load_constant_speed_wtg_seq_data(WT_GENERATOR& wt_gen, ve
         mbase = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    wt_gen.set_mbase_in_MVA(mbase);
+    wt_gen.set_motor_mbase_in_MVA(mbase);
     if(data.size()>0)
     {
         Ra = get_double_data(data[n], "0.0");

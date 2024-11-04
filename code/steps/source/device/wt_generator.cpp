@@ -760,7 +760,7 @@ void WT_GENERATOR::set_motor_rated_voltage_in_kV(double v)
 
 void WT_GENERATOR::set_motor_mbase_in_MVA(double m)
 {
-    mbase = m;
+    motor_mbase = m;
 }
 
 void WT_GENERATOR::set_motor_Ra_in_pu(double r)
@@ -831,7 +831,7 @@ double WT_GENERATOR::get_motor_rated_voltage_in_kV() const
 
 double WT_GENERATOR::get_motor_mbase_in_MVA() const
 {
-    return mbase;
+    return motor_mbase;
 }
 
 double WT_GENERATOR::get_motor_Ra_in_pu() const
@@ -929,7 +929,7 @@ void WT_GENERATOR::update_motor_data()
         return;
 
     double motor_p = get_p_generation_in_MW();
-    mbase = get_motor_mbase_in_MVA();
+    motor_mbase = get_motor_mbase_in_MVA();
     double rated_voltage = get_motor_rated_voltage_in_kV();
     double Ra = get_motor_Ra_in_pu();
     double Xa = get_motor_Xa_in_pu();
@@ -941,7 +941,7 @@ void WT_GENERATOR::update_motor_data()
 
     BUS* busptr = get_bus_pointer();
     double V = busptr->get_positive_sequence_voltage_in_kV()/rated_voltage;
-    double P = motor_p/mbase/(V*V);
+    double P = motor_p/motor_mbase/(V*V);
 
     // single cage
     if((R2==0.0 and X2==0.0) or (R2==999.0 and X2==999.0))
@@ -982,7 +982,7 @@ void WT_GENERATOR::update_motor_data()
         //double s = R1/R;
 
         double Q = V*V*(Xsm*R*R+Xp*Xrm)/(Ap*R*R+Bp*R+Cp);
-        double motor_q = Q*mbase;
+        double motor_q = Q*motor_mbase;
 
         set_motor_power_in_MVA(complex<double>(motor_p, motor_q));
 
@@ -999,7 +999,7 @@ void WT_GENERATOR::update_motor_data()
 //        set_motor_internal_voltage_in_pu(E);
         double ratedV = get_motor_rated_voltage_in_kV();
         double bus_ratedV = busptr->get_base_voltage_in_kV();
-        double Zmb = ratedV*ratedV/mbase;
+        double Zmb = ratedV*ratedV/motor_mbase;
         double Zbb = bus_ratedV*bus_ratedV/sbase;
 
         complex<double> V1 = busptr->get_positive_sequence_complex_voltage_in_pu();
@@ -1057,7 +1057,7 @@ void WT_GENERATOR::update_motor_data()
         //double s = R1/R;
 
         Q = -V*V*(k*R*(a*R*R+b*R+c)-(g*R*R+h)*(d*R*R+e*R+f))/((a*R*R+b*R+c)*(a*R*R+b*R+c)+(d*R*R+e*R+f)*(d*R*R+e*R*f));
-        double motor_q = Q*mbase;
+        double motor_q = Q*motor_mbase;
         set_motor_power_in_MVA(complex<double>(motor_p, motor_q));
 
         // equivalent impedance
@@ -1072,7 +1072,7 @@ void WT_GENERATOR::update_motor_data()
 //        set_motor_internal_voltage_in_pu(E);
         double ratedV = get_motor_rated_voltage_in_kV();
         double bus_ratedV = busptr->get_base_voltage_in_kV();
-        double Zmb = ratedV*ratedV/mbase;
+        double Zmb = ratedV*ratedV/motor_mbase;
         double Zbb = bus_ratedV*bus_ratedV/sbase;
 
         complex<double> V1 = busptr->get_positive_sequence_complex_voltage_in_pu();

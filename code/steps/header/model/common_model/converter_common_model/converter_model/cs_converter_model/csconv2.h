@@ -63,6 +63,8 @@ class CSCONV2 : public CS_CONVERTER_MODEL
         virtual double get_active_power_generation_including_stator_loss_in_pu_based_on_mbase();
         virtual double get_pll_angle_in_rad();
         virtual double get_pll_frequency_deviation_in_pu();
+        virtual double get_Ip_in_pu();
+        virtual double get_Iq_in_pu();
 
 
     private:

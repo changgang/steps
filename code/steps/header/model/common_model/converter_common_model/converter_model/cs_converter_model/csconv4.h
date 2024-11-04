@@ -40,6 +40,7 @@ class CSCONV4 : public CS_CONVERTER_MODEL
         double get_reactive_voltage_commander_state() const;
         double get_PLL_frequency_integrator_state() const;
         double get_PLL_angle_integrator_state() const;
+        complex<double> get_Ipq_in_pu();
 
     public:
         virtual void setup_block_toolkit_and_parameters();
@@ -52,6 +53,8 @@ class CSCONV4 : public CS_CONVERTER_MODEL
         virtual double get_active_power_generation_including_stator_loss_in_pu_based_on_mbase();
         virtual double get_pll_angle_in_rad();
         virtual double get_pll_frequency_deviation_in_pu();
+        virtual double get_Ip_in_pu();
+        virtual double get_Iq_in_pu();
 
 
     private:

@@ -229,16 +229,14 @@ bool WT3G2::setup_model_with_steps_string_vector(vector<string>& data)
             WT_GENERATOR* gen = psdb.get_wt_generator(did);
             if(gen!=NULL)
             {
-                /*double mbase = gen->get_mbase_in_MVA();
-                n_lumped_turbine = round(mbase/prate);
+                double mbase = gen->get_mbase_in_MVA();
                 if(fabs(mbase-n_lumped_turbine*prate)>1e-2)
                 {
                     osstream<<"Warning. The MBASE of "<<did.get_compound_device_name()<<" is far way from n times of the Prate of "<<get_model_name()<<" model."<<endl
-                           <<"MBASE = "<<mbase<<" MVA and Prate = "<<prate<<" MW."<<endl
+                           <<"MBASE = "<<mbase<<" MVA , Prate = "<<prate<<" MW, n = "<<n_lumped_turbine<<"."<<endl
                            <<"Machine MBASE will be updated as "<<n_lumped_turbine*prate<<" MVA.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
-                    gen->set_mbase_in_MVA(n_lumped_turbine*prate);
-                }*/
+                }
 
                 gen->set_number_of_lumped_wt_generators(n_lumped_turbine);
                 gen->set_rated_power_per_wt_generator_in_MW(prate);
@@ -574,6 +572,8 @@ void WT3G2::prepare_model_internal_variable_table()
     add_model_internal_variable_name_and_index_pair("PLL ANGLE IN RAD", i); i++;
     add_model_internal_variable_name_and_index_pair("PLL FREQUENCY IN PU", i); i++;
     add_model_internal_variable_name_and_index_pair("PLL FREQUENCY IN HZ", i); i++;
+    add_model_internal_variable_name_and_index_pair("ACTIVE CURRENT IN PU ON MBASE", i); i++;
+    add_model_internal_variable_name_and_index_pair("REACTIVE CURRENT IN PU ON MBASE", i); i++;
     add_model_internal_variable_name_and_index_pair("STATE@ACTIVE CURRENT COMMAND BLOCK", i); i++;
     add_model_internal_variable_name_and_index_pair("STATE@REACTIVE VOLTAGE COMMAND BLOCK", i); i++;
     add_model_internal_variable_name_and_index_pair("STATE@PLL FREQUENCY BLOCK", i); i++;
@@ -592,6 +592,10 @@ double WT3G2::get_model_internal_variable_with_name(string var_name)
         return get_pll_frequency_in_pu();
     if(var_name == "PLL FREQUENCY IN HZ")
         return get_pll_frequency_in_Hz();
+    if(var_name == "ACTIVE CURRENT IN PU ON MBASE")
+        return csconv2.get_Ip_in_pu();
+    if(var_name == "REACTIVE CURRENT IN PU ON MBASE")
+        return csconv2.get_Iq_in_pu();
     if(var_name == "STATE@ACTIVE CURRENT COMMAND BLOCK")
         return csconv2.get_active_current_commander_state();
     if(var_name == "STATE@REACTIVE VOLTAGE COMMAND BLOCK")

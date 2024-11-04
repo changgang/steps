@@ -290,13 +290,13 @@ bool AERDL::setup_model_with_steps_string_vector(vector<string>& data)
             }
             set_c(co_c);
 
-            if(maxspeed<=0.0)
+            if(maxspeed<0.0)
             {
                 osstream<<"Error. The parameter max steady state turbine speed in pu ( = "<<maxspeed<<" ) of "<<did.get_compound_device_name()<<" is lower than Zero.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
 
-            if(minspeed<=0.0)
+            if(minspeed<0.0)
             {
                 osstream<<"Error. The parameter min steady state turbine speed in pu ( = "<<minspeed<<" ) of "<<did.get_compound_device_name()<<" is lower than Zero.";
                 toolkit.show_information_with_leading_time_stamp(osstream);

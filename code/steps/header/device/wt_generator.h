@@ -164,7 +164,7 @@ class WT_GENERATOR : public SOURCE
 
 
         double motor_rated_voltge;
-        double mbase;
+        double motor_mbase;
         double motor_Ra, motor_Xa, motor_Xm, motor_R1, motor_X1, motor_R2, motor_X2;
         complex<double> motor_power_in_MVA;
         complex<double> motor_internal_voltage;

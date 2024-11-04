@@ -308,37 +308,9 @@ void CSCONV2::run(DYNAMIC_MODE mode)
 
 complex<double> CSCONV2::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_mbase()
 {
-    double V = get_bus_voltage_in_pu();
 
-    double Xeq = get_source_impedance_in_pu_based_on_mbase().imag();
-
-    // low voltage active current logic
-    double V_LVACR_high = V;
-    double V_LVACR_low = 0.4;
-    if(V<=V_LVACR_low)
-        V_LVACR_low = V;
-    if(V<=0.8)
-        V_LVACR_high = 0.8;
-
-    double Ip = active_current_commander.get_output();
-
-    double lvpl_order = lvpl.get_LVPL_order(LVPL_voltage_sensor.get_output());
-    if(Ip>lvpl_order)
-        Ip =lvpl_order;
-    Ip = Ip*(V-V_LVACR_low)/(V_LVACR_high-V_LVACR_low);
-
-    // high voltage reactive current logic
-    /*double v_hvrc = get_HVRC_voltage_in_pu();
-    double overvoltage_correction_factor = 0.0;
-    if(V>=v_hvrc)
-        overvoltage_correction_factor=0.7*(V-v_hvrc);
-
-
-    double Iq = -reactive_voltage_commander.get_output()/Xeq + overvoltage_correction_factor/V;*/
-    double Iq = -reactive_voltage_commander.get_output()/Xeq;
-    double hvrc_i = get_HVRC_current_in_pu();
-    if(Iq<-hvrc_i)
-        Iq = -hvrc_i;
+    double Ip = get_Ip_in_pu();
+    double Iq = get_Iq_in_pu();
 
     double pll_angle = get_pll_angle_in_rad();
 
@@ -380,4 +352,43 @@ double CSCONV2::get_pll_angle_in_rad()
 double CSCONV2::get_pll_frequency_deviation_in_pu()
 {
     return pll0.get_pll_frequency_deviation_in_pu();
+}
+
+double CSCONV2::get_Ip_in_pu()
+{
+    double V = get_bus_voltage_in_pu();
+
+    // low voltage active current logic
+    double V_LVACR_high = V;
+    double V_LVACR_low = 0.4;
+    if(V<=V_LVACR_low)
+        V_LVACR_low = V;
+    if(V<=0.8)
+        V_LVACR_high = 0.8;
+
+    double Ip = active_current_commander.get_output();
+
+    double lvpl_order = lvpl.get_LVPL_order(LVPL_voltage_sensor.get_output());
+    if(Ip>lvpl_order)
+        Ip =lvpl_order;
+    Ip = Ip*(V-V_LVACR_low)/(V_LVACR_high-V_LVACR_low);
+    return Ip;
+}
+
+double CSCONV2::get_Iq_in_pu()
+{
+    double Xeq = get_source_impedance_in_pu_based_on_mbase().imag();
+    // high voltage reactive current logic
+    /*double v_hvrc = get_HVRC_voltage_in_pu();
+    double overvoltage_correction_factor = 0.0;
+    if(V>=v_hvrc)
+        overvoltage_correction_factor=0.7*(V-v_hvrc);
+
+
+    double Iq = -reactive_voltage_commander.get_output()/Xeq + overvoltage_correction_factor/V;*/
+    double Iq = -reactive_voltage_commander.get_output()/Xeq;
+    double hvrc_i = get_HVRC_current_in_pu();
+    if(Iq<-hvrc_i)
+        Iq = -hvrc_i;
+    return Iq;
 }

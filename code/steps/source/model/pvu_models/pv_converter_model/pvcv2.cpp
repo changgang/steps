@@ -200,7 +200,7 @@ bool PVCV2::setup_model_with_steps_string_vector(vector<string>& data)
         {
             unsigned int ibus;
             string id;
-            unsigned int n_lumped_turbine;
+            unsigned int n_lumped;
             double t_EQcmd, t_IPcmd, kpll, kipll, pllmax, prate, lvpl_v1, lvpl_v2, lvpl_g,
                    hvrc_v, hvrc_i, lvpl_rate, t_lvpl;
 
@@ -208,7 +208,7 @@ bool PVCV2::setup_model_with_steps_string_vector(vector<string>& data)
             id = get_string_data(data[2],"");
 
             unsigned int i=3;
-            n_lumped_turbine = get_integer_data(data[i],"0"); i++;
+            n_lumped = get_integer_data(data[i],"0"); i++;
             t_EQcmd = get_double_data(data[i],"0.0"); i++;
             t_IPcmd = get_double_data(data[i],"0.0"); i++;
             kpll = get_double_data(data[i],"0.0"); i++;
@@ -229,20 +229,18 @@ bool PVCV2::setup_model_with_steps_string_vector(vector<string>& data)
             PV_UNIT* pv = psdb.get_pv_unit(did);
             if(pv!=NULL)
             {
-                /*double mbase = gen->get_mbase_in_MVA();
-                n_lumped_turbine = round(mbase/prate);
-                if(fabs(mbase-n_lumped_turbine*prate)>1e-2)
+                double mbase = pv->get_mbase_in_MVA();
+                if(fabs(mbase-n_lumped*prate)>1e-2)
                 {
                     osstream<<"Warning. The MBASE of "<<did.get_compound_device_name()<<" is far way from n times of the Prate of "<<get_model_name()<<" model."<<endl
-                           <<"MBASE = "<<mbase<<" MVA and Prate = "<<prate<<" MW."<<endl
-                           <<"Machine MBASE will be updated as "<<n_lumped_turbine*prate<<" MVA.";
+                           <<"MBASE = "<<mbase<<" MVA , Prate = "<<prate<<" MW, n = "<<n_lumped<<"."<<endl
+                           <<"Machine MBASE will be updated as "<<n_lumped*prate<<" MVA.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
-                    gen->set_mbase_in_MVA(n_lumped_turbine*prate);
-                }*/
+                }
 
-                pv->set_number_of_lumped_pv_units(n_lumped_turbine);
+                pv->set_number_of_lumped_pv_units(n_lumped);
                 pv->set_rated_power_per_pv_unit_in_MW(prate);
-                pv->set_mbase_in_MVA(prate*n_lumped_turbine);
+                pv->set_mbase_in_MVA(prate*n_lumped);
 
                 set_converter_activer_current_command_T_in_s(t_IPcmd);
                 set_LVPL_max_rate_of_active_current_change(lvpl_rate);
@@ -574,6 +572,8 @@ void PVCV2::prepare_model_internal_variable_table()
     add_model_internal_variable_name_and_index_pair("PLL ANGLE IN RAD", i); i++;
     add_model_internal_variable_name_and_index_pair("PLL FREQUENCY IN PU", i); i++;
     add_model_internal_variable_name_and_index_pair("PLL FREQUENCY IN HZ", i); i++;
+    add_model_internal_variable_name_and_index_pair("ACTIVE CURRENT IN PU ON MBASE", i); i++;
+    add_model_internal_variable_name_and_index_pair("REACTIVE CURRENT IN PU ON MBASE", i); i++;
     add_model_internal_variable_name_and_index_pair("STATE@ACTIVE CURRENT COMMAND BLOCK", i); i++;
     add_model_internal_variable_name_and_index_pair("STATE@REACTIVE VOLTAGE COMMAND BLOCK", i); i++;
     add_model_internal_variable_name_and_index_pair("STATE@PLL FREQUENCY BLOCK", i); i++;
@@ -592,6 +592,10 @@ double PVCV2::get_model_internal_variable_with_name(string var_name)
         return get_pll_frequency_in_pu();
     if(var_name == "PLL FREQUENCY IN HZ")
         return get_pll_frequency_in_Hz();
+    if(var_name == "ACTIVE CURRENT IN PU ON MBASE")
+        return csconv2.get_Ip_in_pu();
+    if(var_name == "REACTIVE CURRENT IN PU ON MBASE")
+        return csconv2.get_Iq_in_pu();
     if(var_name == "STATE@ACTIVE CURRENT COMMAND BLOCK")
         return csconv2.get_active_current_commander_state();
     if(var_name == "STATE@REACTIVE VOLTAGE COMMAND BLOCK")

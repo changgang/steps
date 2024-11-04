@@ -33,6 +33,8 @@ class CS_CONVERTER_MODEL: public CONVERTER_MODEL
         virtual double get_active_power_generation_including_stator_loss_in_pu_based_on_mbase() =0;
         virtual double get_pll_angle_in_rad() = 0;
         virtual double get_pll_frequency_deviation_in_pu() = 0;
+        virtual double get_Ip_in_pu() = 0;
+        virtual double get_Iq_in_pu() = 0;
 
     private:
         double Ipcmd, Iqcmd, Eqcmd;
