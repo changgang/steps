@@ -1,20 +1,20 @@
-#ifndef CONVELEC0_H
-#define CONVELEC0_H
+#ifndef ELEC2_H
+#define ELEC2_H
 
-#include "header/model/common_model/elec_model/converter_elec_model.h"
+#include "header/model/common_model/elec_model/elec_model.h"
 #include "header/block/first_order_block.h"
 #include "header/block/pi_block.h"
 #include "header/block/integral_block.h"
 
-class CONVELEC0: public CONVERTER_ELEC_MODEL
+class ELEC2: public ELEC_MODEL
 {
     public:
-        CONVELEC0(STEPS& toolkit);
-        CONVELEC0(const CONVELEC0& model);
-        virtual ~CONVELEC0();
-        virtual CONVELEC0& operator=(const CONVELEC0& model);
+        ELEC2(STEPS& toolkit);
+        ELEC2(const ELEC2& model);
+        virtual ~ELEC2();
+        virtual ELEC2& operator=(const ELEC2& model);
         virtual void clear();
-        void copy_from_const_model(const CONVELEC0& model);
+        void copy_from_const_model(const ELEC2& model);
         string get_model_name() const;
     public:
         void set_var_control_mode(REACTIVE_POWER_CONTROL_MODE mode);
@@ -45,12 +45,10 @@ class CONVELEC0: public CONVERTER_ELEC_MODEL
         void set_frequency_deviation_upper_deadband_in_pu(double f);
         void set_frequency_deviation_lower_deadband_in_pu(double f);
         void set_Kfint(double K);
-        void set_rPmax_in_pu(double r);
-        void set_rPmin_in_pu(double r);
-        void set_TFP_in_s(double T);
-        void set_Pmax_in_pu(double p);
-        void set_Pmin_in_pu(double p);
-        void set_IPmax_in_pu(double I);
+        void set_KIF(double K);
+        void set_KPF(double K);
+        void set_Ipmax_in_pu(double I);
+        void set_Ipmin_in_pu(double I);
 
         double get_Xcomp_in_pu() const;
         double get_TRV_in_s() const;
@@ -77,14 +75,10 @@ class CONVELEC0: public CONVERTER_ELEC_MODEL
         double get_frequency_deviation_upper_deadband_in_pu() const;
         double get_frequency_deviation_lower_deadband_in_pu() const;
         double get_Kfint() const;
-        double get_TFP_in_s() const;
-        double get_rPmax_in_pu() const;
-        double get_rPmin_in_pu() const;
-        double get_Pmax_in_pu() const;
-        double get_Pmin_in_pu() const;
-        double get_IPmax_in_pu() const;
-
-        bool is_frequency_regulation_enabled() const;
+        double get_KIF() const;
+        double get_KPF() const;
+        double get_Ipmax_in_pu() const;
+        double get_Ipmin_in_pu() const;
 
         double get_voltage_sensor_state() const;
         double get_voltage_regulator_first_order_block_state() const;
@@ -96,7 +90,7 @@ class CONVELEC0: public CONVERTER_ELEC_MODEL
         double get_virtual_inertia_emulator_state() const;
         double get_frequency_droop_controller_state() const;
         double get_frequency_integral_controller_state() const;
-        double get_power_order_integrator_state() const;
+        double get_Ipcmd_controller_state() const;
     public:
 
         virtual void initialize();
@@ -108,7 +102,6 @@ class CONVELEC0: public CONVERTER_ELEC_MODEL
         virtual double get_reactive_power_command_in_pu_based_on_mbase();
         virtual double get_reactive_voltage_command_in_pu() const;
 
-        void trip_frequency_regulation();
     private:
 
         double Xcomp;
@@ -129,12 +122,11 @@ class CONVELEC0: public CONVERTER_ELEC_MODEL
 
         double f_upper_pu, f_lower_pu;
         INTEGRAL_BLOCK frequency_integral_controller;
-        double max_Pcmd_rate, min_Pcmd_rate;
-        INTEGRAL_BLOCK power_order_integrator;
-        double IPmax;
+        PI_BLOCK Ipcmd_controller;
+        double Ipmax, Ipmin;
 
-        bool frequency_regulation_enabled;
+        //bool frequency_regulation_enabled;
 };
 
-#endif // CONVELEC0_H
+#endif // ELEC2_H
 

@@ -1,6 +1,6 @@
-#include "header/model/common_model/elec_model/convelec0.h"
+#include "header/model/common_model/elec_model/elec0.h"
 
-CONVELEC0::CONVELEC0(STEPS& toolkit) : CONVERTER_ELEC_MODEL(toolkit),
+ELEC0::ELEC0(STEPS& toolkit) : ELEC_MODEL(toolkit),
                                voltage_sensor(toolkit),
                                voltage_regulator_first_order_block(toolkit),
                                voltage_regulator_integrator(toolkit),
@@ -16,7 +16,7 @@ CONVELEC0::CONVELEC0(STEPS& toolkit) : CONVERTER_ELEC_MODEL(toolkit),
     clear();
 }
 
-CONVELEC0::CONVELEC0(const CONVELEC0& model) : CONVERTER_ELEC_MODEL(model.get_toolkit()),
+ELEC0::ELEC0(const ELEC0& model) : ELEC_MODEL(model.get_toolkit()),
                                    voltage_sensor(model.get_toolkit()),
                                    voltage_regulator_first_order_block(model.get_toolkit()),
                                    voltage_regulator_integrator(model.get_toolkit()),
@@ -32,12 +32,12 @@ CONVELEC0::CONVELEC0(const CONVELEC0& model) : CONVERTER_ELEC_MODEL(model.get_to
     copy_from_const_model(model);
 }
 
-CONVELEC0::~CONVELEC0()
+ELEC0::~ELEC0()
 {
     ;
 }
 
-CONVELEC0& CONVELEC0::operator=(const CONVELEC0& model)
+ELEC0& ELEC0::operator=(const ELEC0& model)
 {
     if(this==(&model)) return *this;
 
@@ -46,7 +46,7 @@ CONVELEC0& CONVELEC0::operator=(const CONVELEC0& model)
     return *this;
 }
 
-void CONVELEC0::clear()
+void ELEC0::clear()
 {
     set_voltage_flag(0);
 
@@ -60,7 +60,7 @@ void CONVELEC0::clear()
     frequency_regulation_enabled = true;
 }
 
-void CONVELEC0::copy_from_const_model(const CONVELEC0& model)
+void ELEC0::copy_from_const_model(const ELEC0& model)
 {
     STEPS& toolkit = model.get_toolkit();
     set_toolkit(toolkit);
@@ -115,140 +115,140 @@ void CONVELEC0::copy_from_const_model(const CONVELEC0& model)
     set_IPmax_in_pu(model.get_IPmax_in_pu());
 }
 
-string CONVELEC0::get_model_name() const
+string ELEC0::get_model_name() const
 {
-    return "CONVELEC0";
+    return "ELEC0";
 }
 
-void CONVELEC0::set_var_control_mode(REACTIVE_POWER_CONTROL_MODE mode)
+void ELEC0::set_var_control_mode(REACTIVE_POWER_CONTROL_MODE mode)
 {
     this->pe_var_control_mode = mode;
 }
 
-REACTIVE_POWER_CONTROL_MODE CONVELEC0::get_var_control_mode() const
+REACTIVE_POWER_CONTROL_MODE ELEC0::get_var_control_mode() const
 {
     return pe_var_control_mode;
 }
 
-void CONVELEC0::set_Xcomp_in_pu(double Xc)
+void ELEC0::set_Xcomp_in_pu(double Xc)
 {
     Xcomp = Xc;
 }
 
-void CONVELEC0::set_TRV_in_s(double T)
+void ELEC0::set_TRV_in_s(double T)
 {
     voltage_sensor.set_T_in_s(T);
 }
 
-void CONVELEC0::set_Fn(double Fn)
+void ELEC0::set_Fn(double Fn)
 {
     this->Fn = Fn;
 }
 
-void CONVELEC0::set_KIV(double K)
+void ELEC0::set_KIV(double K)
 {
     if(K!=0.0)
         voltage_regulator_integrator.set_T_in_s(1.0/K);
 }
 
-void CONVELEC0::set_Qmax_in_pu(double q)
+void ELEC0::set_Qmax_in_pu(double q)
 {
     voltage_regulator_integrator.set_upper_limit(q);
 }
 
-void CONVELEC0::set_Qmin_in_pu(double q)
+void ELEC0::set_Qmin_in_pu(double q)
 {
     voltage_regulator_integrator.set_lower_limit(q);
 }
 
-void CONVELEC0::set_KPV(double K)
+void ELEC0::set_KPV(double K)
 {
     voltage_regulator_first_order_block.set_K(K);
 }
 
-void CONVELEC0::set_TV_in_s(double T)
+void ELEC0::set_TV_in_s(double T)
 {
     voltage_regulator_first_order_block.set_T_in_s(T);
 }
 
-void CONVELEC0::set_TFV_in_s(double T)
+void ELEC0::set_TFV_in_s(double T)
 {
     voltage_regulator_filter.set_T_in_s(T);
 }
 
-void CONVELEC0::set_TP_in_s(double T)
+void ELEC0::set_TP_in_s(double T)
 {
     active_power_sensor.set_T_in_s(T);
 }
 
-void CONVELEC0::set_KQI(double K)
+void ELEC0::set_KQI(double K)
 {
     if(K!=0.0)
         Q_error_integrator.set_T_in_s(1.0/K);
 }
 
-void CONVELEC0::set_Vmax_in_pu(double v)
+void ELEC0::set_Vmax_in_pu(double v)
 {
     Q_error_integrator.set_upper_limit(v);
 }
 
-void CONVELEC0::set_Vmin_in_pu(double v)
+void ELEC0::set_Vmin_in_pu(double v)
 {
     Q_error_integrator.set_lower_limit(v);
 }
 
-void CONVELEC0::set_voltage_flag(unsigned int flag)
+void ELEC0::set_voltage_flag(unsigned int flag)
 {
     Voltage_Flag = flag;
 }
 
-void CONVELEC0::set_KQV(double K)
+void ELEC0::set_KQV(double K)
 {
     if(K!=0.0)
         V_error_integrator.set_T_in_s(1.0/K);
 }
 
-void CONVELEC0::set_EQmax_in_pu(double I)
+void ELEC0::set_EQmax_in_pu(double I)
 {
     EQmax = I;
 }
 
-void CONVELEC0::set_EQmin_in_pu(double I)
+void ELEC0::set_EQmin_in_pu(double I)
 {
     EQmin = I;
 }
 
-void CONVELEC0::set_Kvi(double K)
+void ELEC0::set_Kvi(double K)
 {
     virtual_inertia_emulator.set_K(K);
 }
 
-void CONVELEC0::set_Tvi_in_s(double T)
+void ELEC0::set_Tvi_in_s(double T)
 {
     virtual_inertia_emulator.set_T_in_s(T);
 }
 
-void CONVELEC0::set_Kdroop(double K)
+void ELEC0::set_Kdroop(double K)
 {
     frequency_droop_controller.set_K(K);
 }
 
-void CONVELEC0::set_Tdroop_in_s(double T)
+void ELEC0::set_Tdroop_in_s(double T)
 {
     frequency_droop_controller.set_T_in_s(T);
 }
 
-void CONVELEC0::set_frequency_deviation_upper_deadband_in_pu(double f)
+void ELEC0::set_frequency_deviation_upper_deadband_in_pu(double f)
 {
     f_upper_pu = f;
 }
 
-void CONVELEC0::set_frequency_deviation_lower_deadband_in_pu(double f)
+void ELEC0::set_frequency_deviation_lower_deadband_in_pu(double f)
 {
     f_lower_pu = f;
 }
 
-void CONVELEC0::set_Kfint(double K)
+void ELEC0::set_Kfint(double K)
 {
     double t = 0.0;
     if(fabs(K)<DOUBLE_EPSILON)
@@ -257,152 +257,152 @@ void CONVELEC0::set_Kfint(double K)
         t = 1.0/K;
     frequency_integral_controller.set_T_in_s(t);
 }
-void CONVELEC0::set_rPmax_in_pu(double r)
+void ELEC0::set_rPmax_in_pu(double r)
 {
     max_Pcmd_rate = r;
 }
 
-void CONVELEC0::set_rPmin_in_pu(double r)
+void ELEC0::set_rPmin_in_pu(double r)
 {
     min_Pcmd_rate = r;
 }
 
-void CONVELEC0::set_TFP_in_s(double T)
+void ELEC0::set_TFP_in_s(double T)
 {
     power_order_integrator.set_T_in_s(T);
 }
 
-void CONVELEC0::set_Pmax_in_pu(double p)
+void ELEC0::set_Pmax_in_pu(double p)
 {
     power_order_integrator.set_upper_limit(p);
 }
 
-void CONVELEC0::set_Pmin_in_pu(double p)
+void ELEC0::set_Pmin_in_pu(double p)
 {
     power_order_integrator.set_lower_limit(p);
 }
 
-void CONVELEC0::set_IPmax_in_pu(double I)
+void ELEC0::set_IPmax_in_pu(double I)
 {
     IPmax = I;
 }
 
-double CONVELEC0::get_Xcomp_in_pu() const
+double ELEC0::get_Xcomp_in_pu() const
 {
     return Xcomp;
 }
 
-double CONVELEC0::get_TRV_in_s() const
+double ELEC0::get_TRV_in_s() const
 {
     return voltage_sensor.get_T_in_s();
 }
 
-double CONVELEC0::get_Fn() const
+double ELEC0::get_Fn() const
 {
     return Fn;
 }
 
-double CONVELEC0::get_KIV() const
+double ELEC0::get_KIV() const
 {
     return 1.0/voltage_regulator_integrator.get_T_in_s();
 }
 
-double CONVELEC0::get_Qmax_in_pu() const
+double ELEC0::get_Qmax_in_pu() const
 {
     return voltage_regulator_integrator.get_upper_limit();
 }
 
-double CONVELEC0::get_Qmin_in_pu() const
+double ELEC0::get_Qmin_in_pu() const
 {
     return voltage_regulator_integrator.get_lower_limit();
 }
 
-double CONVELEC0::get_KPV() const
+double ELEC0::get_KPV() const
 {
     return voltage_regulator_first_order_block.get_K();
 }
 
-double CONVELEC0::get_TV_in_s() const
+double ELEC0::get_TV_in_s() const
 {
     return voltage_regulator_first_order_block.get_T_in_s();
 }
 
-double CONVELEC0::get_TFV_in_s() const
+double ELEC0::get_TFV_in_s() const
 {
     return voltage_regulator_filter.get_T_in_s();
 }
 
-double CONVELEC0::get_TP_in_s() const
+double ELEC0::get_TP_in_s() const
 {
     return active_power_sensor.get_T_in_s();
 }
 
-double CONVELEC0::get_KQI() const
+double ELEC0::get_KQI() const
 {
     return 1.0/Q_error_integrator.get_T_in_s();
 }
 
-double CONVELEC0::get_Vmax_in_pu() const
+double ELEC0::get_Vmax_in_pu() const
 {
     return Q_error_integrator.get_upper_limit();
 }
 
-double CONVELEC0::get_Vmin_in_pu() const
+double ELEC0::get_Vmin_in_pu() const
 {
     return Q_error_integrator.get_lower_limit();
 }
 
-unsigned int CONVELEC0::get_voltage_flag() const
+unsigned int ELEC0::get_voltage_flag() const
 {
     return Voltage_Flag;
 }
 
-double CONVELEC0::get_KQV() const
+double ELEC0::get_KQV() const
 {
     return 1.0/V_error_integrator.get_T_in_s();
 }
 
-double CONVELEC0::get_EQmax_in_pu() const
+double ELEC0::get_EQmax_in_pu() const
 {
     return EQmax;
 }
 
-double CONVELEC0::get_EQmin_in_pu() const
+double ELEC0::get_EQmin_in_pu() const
 {
     return EQmin;
 }
 
-double CONVELEC0::get_Kvi() const
+double ELEC0::get_Kvi() const
 {
     return virtual_inertia_emulator.get_K();
 }
 
-double CONVELEC0::get_Tvi_in_s() const
+double ELEC0::get_Tvi_in_s() const
 {
     return virtual_inertia_emulator.get_T_in_s();
 }
 
-double CONVELEC0::get_Kdroop() const
+double ELEC0::get_Kdroop() const
 {
     return frequency_droop_controller.get_K();
 }
 
-double CONVELEC0::get_Tdroop_in_s() const
+double ELEC0::get_Tdroop_in_s() const
 {
     return frequency_droop_controller.get_T_in_s();
 }
 
-double CONVELEC0::get_frequency_deviation_upper_deadband_in_pu() const
+double ELEC0::get_frequency_deviation_upper_deadband_in_pu() const
 {
     return f_upper_pu;
 }
 
-double CONVELEC0::get_frequency_deviation_lower_deadband_in_pu() const
+double ELEC0::get_frequency_deviation_lower_deadband_in_pu() const
 {
     return f_lower_pu;
 }
 
-double CONVELEC0::get_Kfint() const
+double ELEC0::get_Kfint() const
 {
     double t = frequency_integral_controller.get_T_in_s();
     double k = 0.0;
@@ -413,103 +413,103 @@ double CONVELEC0::get_Kfint() const
     return k;
 }
 
-double CONVELEC0::get_rPmax_in_pu() const
+double ELEC0::get_rPmax_in_pu() const
 {
     return max_Pcmd_rate;
 }
 
-double CONVELEC0::get_rPmin_in_pu() const
+double ELEC0::get_rPmin_in_pu() const
 {
     return min_Pcmd_rate;
 }
 
-double CONVELEC0::get_TFP_in_s() const
+double ELEC0::get_TFP_in_s() const
 {
     return power_order_integrator.get_T_in_s();
 }
 
-double CONVELEC0::get_Pmax_in_pu() const
+double ELEC0::get_Pmax_in_pu() const
 {
     return power_order_integrator.get_upper_limit();
 }
 
-double CONVELEC0::get_Pmin_in_pu() const
+double ELEC0::get_Pmin_in_pu() const
 {
     return power_order_integrator.get_lower_limit();
 }
 
-double CONVELEC0::get_IPmax_in_pu() const
+double ELEC0::get_IPmax_in_pu() const
 {
     return IPmax;
 }
 
-bool CONVELEC0::is_frequency_regulation_enabled() const
+bool ELEC0::is_frequency_regulation_enabled() const
 {
     return frequency_regulation_enabled;
 }
 
-void CONVELEC0::trip_frequency_regulation()
+void ELEC0::trip_frequency_regulation()
 {
     if(frequency_regulation_enabled==true)
         frequency_regulation_enabled = false;
 }
 
-double CONVELEC0::get_voltage_sensor_state() const
+double ELEC0::get_voltage_sensor_state() const
 {
     return voltage_sensor.get_state();
 }
 
-double CONVELEC0::get_voltage_regulator_first_order_block_state() const
+double ELEC0::get_voltage_regulator_first_order_block_state() const
 {
     return voltage_regulator_first_order_block.get_state();
 }
 
-double CONVELEC0::get_voltage_regulator_integrator_state() const
+double ELEC0::get_voltage_regulator_integrator_state() const
 {
     return voltage_regulator_integrator.get_state();
 }
 
-double CONVELEC0::get_voltage_regulator_filter_state() const
+double ELEC0::get_voltage_regulator_filter_state() const
 {
     return voltage_regulator_filter.get_state();
 }
 
-double CONVELEC0::get_active_power_sensor_state() const
+double ELEC0::get_active_power_sensor_state() const
 {
     return active_power_sensor.get_state();
 }
 
-double CONVELEC0::get_Q_error_integrator_state() const
+double ELEC0::get_Q_error_integrator_state() const
 {
     return Q_error_integrator.get_state();
 }
 
-double CONVELEC0::get_V_error_integrator_state() const
+double ELEC0::get_V_error_integrator_state() const
 {
     return V_error_integrator.get_state();
 }
 
-double CONVELEC0::get_virtual_inertia_emulator_state() const
+double ELEC0::get_virtual_inertia_emulator_state() const
 {
     return virtual_inertia_emulator.get_state();
 }
 
-double CONVELEC0::get_frequency_droop_controller_state() const
+double ELEC0::get_frequency_droop_controller_state() const
 {
     return frequency_droop_controller.get_state();
 }
 
-double CONVELEC0::get_frequency_integral_controller_state() const
+double ELEC0::get_frequency_integral_controller_state() const
 {
     return frequency_integral_controller.get_state();
 }
 
-double CONVELEC0::get_power_order_integrator_state() const
+double ELEC0::get_power_order_integrator_state() const
 {
     return power_order_integrator.get_state();
 }
 
-void CONVELEC0::initialize()
+void ELEC0::initialize()
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -661,7 +661,7 @@ void CONVELEC0::initialize()
     set_voltage_reference_in_pu(vref);
 }
 
-void CONVELEC0::run(DYNAMIC_MODE mode)
+void ELEC0::run(DYNAMIC_MODE mode)
 {
     double vterm = get_bus_voltage_in_pu();
     double iterm = get_terminal_current_in_pu_based_on_mbase();
@@ -784,7 +784,7 @@ void CONVELEC0::run(DYNAMIC_MODE mode)
 }
 
 
-double CONVELEC0::get_active_current_command_in_pu_based_on_mbase()
+double ELEC0::get_active_current_command_in_pu_based_on_mbase()
 {
     double vterm = get_bus_voltage_in_pu();
     if(vterm==0.0)
@@ -798,12 +798,12 @@ double CONVELEC0::get_active_current_command_in_pu_based_on_mbase()
     return ipcmd;
 }
 
-double CONVELEC0::get_active_power_command_in_pu_based_on_mbase() const
+double ELEC0::get_active_power_command_in_pu_based_on_mbase() const
 {
     return power_order_integrator.get_output();
 }
 
-double CONVELEC0::get_reactive_current_command_in_pu_based_on_mbase()
+double ELEC0::get_reactive_current_command_in_pu_based_on_mbase()
 {
     double xeq = get_Xsource();
 
@@ -812,7 +812,7 @@ double CONVELEC0::get_reactive_current_command_in_pu_based_on_mbase()
     return eqcmd/(-xeq);
 }
 
-double CONVELEC0::get_reactive_power_command_in_pu_based_on_mbase()
+double ELEC0::get_reactive_power_command_in_pu_based_on_mbase()
 {
     REACTIVE_POWER_CONTROL_MODE mode = get_var_control_mode();
     switch(mode)
@@ -837,7 +837,7 @@ double CONVELEC0::get_reactive_power_command_in_pu_based_on_mbase()
     }
 }
 
-double CONVELEC0::get_reactive_voltage_command_in_pu() const
+double ELEC0::get_reactive_voltage_command_in_pu() const
 {
     unsigned int voltage_flag = get_voltage_flag();
     if(voltage_flag==0)

@@ -22667,9 +22667,9 @@
 	"header/model/wtg_models/wt_electrical_model/wt_electrical_model_test.h"
 	"header/STEPS.h"
 
-1730693800 d:\desktop\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3e0.h
+1730713948 d:\desktop\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3e0.h
 	"header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
-	"header/model/common_model/elec_model/convelec0.h"
+	"header/model/common_model/elec_model/elec0.h"
 	"header/block/first_order_block.h"
 	"header/block/pi_block.h"
 
@@ -22974,10 +22974,10 @@
 	"header/model/wtg_models/wt_electrical_model/wt3e0pcl.h"
 	"header/model/wtg_models/wt_electrical_model/wt3e0mpc.h"
 
-1730693800 d:\desktop\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3e1.h
+1730713957 d:\desktop\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3e1.h
 	"header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
 	"header/basic/multi_point_line.h"
-	"header/model/common_model/elec_model/convelec1.h"
+	"header/model/common_model/elec_model/elec1.h"
 	"header/block/first_order_block.h"
 	"header/block/pi_block.h"
 
@@ -23123,9 +23123,9 @@
 1730693800 d:\desktop\steps\code\steps\header\model\pvu_models\pv_electrical_model\pv_electrical_models.h
 	"header/model/pvu_models/pv_electrical_model/pvex.h"
 
-1730693800 d:\desktop\steps\code\steps\header\model\pvu_models\pv_electrical_model\pvex.h
+1730714013 d:\desktop\steps\code\steps\header\model\pvu_models\pv_electrical_model\pvex.h
 	"header/model/pvu_models/pv_electrical_model/pv_electrical_model.h"
-	"header/model/common_model/elec_model/convelec0.h"
+	"header/model/common_model/elec_model/elec0.h"
 
 1730693800 d:\desktop\steps\code\steps\header\model\pvu_models\pv_irradiance_model\pv_irradiance_models.h
 	"header/model/pvu_models/pv_irradiance_model/fileirrad.h"
@@ -23190,9 +23190,9 @@
 1730693800 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_electrical_model\es_electrical_models.h
 	"header/model/energy_storage_model/es_electrical_model/ese0.h"
 
-1730693800 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_electrical_model\ese0.h
+1730713983 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_electrical_model\ese0.h
 	"header/model/energy_storage_model/es_electrical_model/es_electrical_model.h"
-	"header/model/common_model/elec_model/convelec0.h"
+	"header/model/common_model/elec_model/elec0.h"
 
 1730693800 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_vrt_model\es_vrt_models.h
 	"header/model/energy_storage_model/es_vrt_model/esvrt3.h"
@@ -25525,7 +25525,7 @@
 	<istream>
 	<iostream>
 
-1730693800 source:d:\desktop\steps\code\steps\source\model\pvu_models\pv_converter_model\pvcvx.cpp
+1730712890 source:d:\desktop\steps\code\steps\source\model\pvu_models\pv_converter_model\pvcvx.cpp
 	"header/model/pvu_models/pv_converter_model/pvcvx.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -26408,7 +26408,7 @@
 	<istream>
 	<iostream>
 
-1730712106 source:d:\desktop\steps\code\steps\source\model\wtg_models\wt_generator_model\wt3g2.cpp
+1730713570 source:d:\desktop\steps\code\steps\source\model\wtg_models\wt_generator_model\wt3g2.cpp
 	"header/model/wtg_models/wt_generator_model/wt3g2.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -47167,15 +47167,15 @@
 	<istream>
 	<iostream>
 
-1730693800 d:\desktop\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3e0pcl.h
+1730713963 d:\desktop\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3e0pcl.h
 	"header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
-	"header/model/common_model/elec_model/convelec2.h"
+	"header/model/common_model/elec_model/elec2.h"
 	"header/block/first_order_block.h"
 	"header/block/pi_block.h"
 
-1730693800 d:\desktop\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3e0mpc.h
+1730713970 d:\desktop\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3e0mpc.h
 	"header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
-	"header/model/common_model/elec_model/convelec0.h"
+	"header/model/common_model/elec_model/elec0.h"
 	"header/block/first_order_block.h"
 	"header/block/pi_block.h"
 
@@ -80910,8 +80910,8 @@
 	"header/block/integral_block.h"
 	"header/block/first_order_block.h"
 
-1730693800 d:\desktop\steps\code\steps\header\model\common_model\elec_model\convelec0.h
-	"header/model/common_model/elec_model/converter_elec_model.h"
+1730713682 d:\desktop\steps\code\steps\header\model\common_model\elec_model\convelec0.h
+	"header/model/common_model/elec_model/elec_model.h"
 	"header/block/first_order_block.h"
 	"header/block/pi_block.h"
 	"header/block/integral_block.h"
@@ -80947,14 +80947,14 @@
 	"header/block/integral_block.h"
 	"header/block/first_order_block.h"
 
-1730693800 d:\desktop\steps\code\steps\header\model\common_model\elec_model\convelec1.h
-	"header/model/common_model/elec_model/converter_elec_model.h"
+1730713729 d:\desktop\steps\code\steps\header\model\common_model\elec_model\convelec1.h
+	"header/model/common_model/elec_model/elec_model.h"
 	"header/block/first_order_block.h"
 	"header/block/pi_block.h"
 	"header/block/integral_block.h"
 
-1730693800 d:\desktop\steps\code\steps\header\model\common_model\elec_model\convelec2.h
-	"header/model/common_model/elec_model/converter_elec_model.h"
+1730713758 d:\desktop\steps\code\steps\header\model\common_model\elec_model\convelec2.h
+	"header/model/common_model/elec_model/elec_model.h"
 	"header/block/first_order_block.h"
 	"header/block/pi_block.h"
 	"header/block/integral_block.h"
@@ -81043,10 +81043,10 @@
 1730693800 source:d:\desktop\steps\code\steps\source\model\common_model\converter_common_model\pll_model\pll_model.cpp
 	"header/model/common_model/converter_common_model/pll_model/pll_model.h"
 
-1730693800 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\convelec0.cpp
+1730713606 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\convelec0.cpp
 	"header/model/common_model/elec_model/convelec0.h"
 
-1730693800 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\convelec1.cpp
+1730713651 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\convelec1.cpp
 	"header/model/common_model/elec_model/convelec1.h"
 
 1730693800 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\convelec2.cpp
@@ -81094,4 +81094,37 @@
 	<cstdio>
 	<istream>
 	<iostream>
+
+1730713503 d:\desktop\steps\code\steps\header\model\common_model\elec_model\elec_model.h
+	"header/model/common_model/common_model.h"
+
+1730713616 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\elec_model.cpp
+	"header/model/common_model/elec_model/elec_model.h"
+
+1730713700 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\elec0.cpp
+	"header/model/common_model/elec_model/elec0.h"
+
+1730713682 d:\desktop\steps\code\steps\header\model\common_model\elec_model\elec0.h
+	"header/model/common_model/elec_model/elec_model.h"
+	"header/block/first_order_block.h"
+	"header/block/pi_block.h"
+	"header/block/integral_block.h"
+
+1730713718 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\elec1.cpp
+	"header/model/common_model/elec_model/elec1.h"
+
+1730713729 d:\desktop\steps\code\steps\header\model\common_model\elec_model\elec1.h
+	"header/model/common_model/elec_model/elec_model.h"
+	"header/block/first_order_block.h"
+	"header/block/pi_block.h"
+	"header/block/integral_block.h"
+
+1730713748 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\elec2.cpp
+	"header/model/common_model/elec_model/elec2.h"
+
+1730713758 d:\desktop\steps\code\steps\header\model\common_model\elec_model\elec2.h
+	"header/model/common_model/elec_model/elec_model.h"
+	"header/block/first_order_block.h"
+	"header/block/pi_block.h"
+	"header/block/integral_block.h"
 

@@ -2,7 +2,7 @@
 #define WT3E0_H
 
 #include "header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
-#include "header/model/common_model/elec_model/convelec0.h"
+#include "header/model/common_model/elec_model/elec0.h"
 #include "header/block/first_order_block.h"
 #include "header/block/pi_block.h"
 
@@ -133,7 +133,7 @@ class WT3E0: public WT_ELECTRICAL_MODEL
 
         FIRST_ORDER_BLOCK wind_turbine_speed_reference_sensor;
         PI_BLOCK torque_PI_regulator;
-        CONVELEC0 conelec0;
+        ELEC0 conelec0;
 };
 
 #endif // WT3E0_H

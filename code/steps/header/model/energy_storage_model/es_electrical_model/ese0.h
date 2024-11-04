@@ -2,7 +2,7 @@
 #define ESE0_H
 
 #include "header/model/energy_storage_model/es_electrical_model/es_electrical_model.h"
-#include "header/model/common_model/elec_model/convelec0.h"
+#include "header/model/common_model/elec_model/elec0.h"
 
 class ESE0: public ES_ELECTRICAL_MODEL
 {
@@ -123,7 +123,7 @@ class ESE0: public ES_ELECTRICAL_MODEL
 
         void trip_frequency_regulation();
 
-        CONVELEC0 conelec0;
+        ELEC0 conelec0;
 };
 
 #endif // EXCITER_MODEL_H

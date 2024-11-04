@@ -1,20 +1,20 @@
-#ifndef CONVELEC1_H
-#define CONVELEC1_H
+#ifndef ELEC1_H
+#define ELEC1_H
 
-#include "header/model/common_model/elec_model/converter_elec_model.h"
+#include "header/model/common_model/elec_model/elec_model.h"
 #include "header/block/first_order_block.h"
 #include "header/block/pi_block.h"
 #include "header/block/integral_block.h"
 
-class CONVELEC1: public CONVERTER_ELEC_MODEL
+class ELEC1: public ELEC_MODEL
 {
     public:
-        CONVELEC1(STEPS& toolkit);
-        CONVELEC1(const CONVELEC1& model);
-        virtual ~CONVELEC1();
-        virtual CONVELEC1& operator=(const CONVELEC1& model);
+        ELEC1(STEPS& toolkit);
+        ELEC1(const ELEC1& model);
+        virtual ~ELEC1();
+        virtual ELEC1& operator=(const ELEC1& model);
         virtual void clear();
-        void copy_from_const_model(const CONVELEC1& model);
+        void copy_from_const_model(const ELEC1& model);
         string get_model_name() const;
     public:
         void set_var_control_mode(REACTIVE_POWER_CONTROL_MODE mode);
@@ -110,5 +110,5 @@ class CONVELEC1: public CONVERTER_ELEC_MODEL
 
 };
 
-#endif // CONVELEC1_H
+#endif // ELEC1_H
 

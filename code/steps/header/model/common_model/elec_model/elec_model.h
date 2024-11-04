@@ -1,13 +1,13 @@
-#ifndef CONVERTER_ELEC_MODEL_H
-#define CONVERTER_ELEC_MODEL_H
+#ifndef ELEC_MODEL_H
+#define ELEC_MODEL_H
 
 #include "header/model/common_model/common_model.h"
 
-class CONVERTER_ELEC_MODEL:public COMMON_MODEL
+class ELEC_MODEL:public COMMON_MODEL
 {
     public:
-        CONVERTER_ELEC_MODEL(STEPS& toolkit);
-        virtual ~CONVERTER_ELEC_MODEL();
+        ELEC_MODEL(STEPS& toolkit);
+        virtual ~ELEC_MODEL();
     public:
 
         void set_terminal_current_in_pu_based_on_mbase(double Iterm);
@@ -83,5 +83,5 @@ class CONVERTER_ELEC_MODEL:public COMMON_MODEL
         double Xsource;
 };
 
-#endif // CONVERTER_ELEC_MODEL_H
+#endif // ELEC_MODEL_H
 
