@@ -8,10 +8,8 @@ ELEC0::ELEC0(STEPS& toolkit) : ELEC_MODEL(toolkit),
                                active_power_sensor(toolkit),
                                Q_error_integrator(toolkit),
                                V_error_integrator(toolkit),
-                               virtual_inertia_emulator(toolkit),
-                               frequency_droop_controller(toolkit),
-                               frequency_integral_controller(toolkit),
-                               power_order_integrator(toolkit)
+                               power_order_integrator(toolkit),
+                               frequency_controller(toolkit)
 {
     clear();
 }
@@ -24,10 +22,8 @@ ELEC0::ELEC0(const ELEC0& model) : ELEC_MODEL(model.get_toolkit()),
                                    active_power_sensor(model.get_toolkit()),
                                    Q_error_integrator(model.get_toolkit()),
                                    V_error_integrator(model.get_toolkit()),
-                                   virtual_inertia_emulator(model.get_toolkit()),
-                                   frequency_droop_controller(model.get_toolkit()),
-                                   frequency_integral_controller(model.get_toolkit()),
-                                   power_order_integrator(model.get_toolkit())
+                                   power_order_integrator(model.get_toolkit()),
+                                   frequency_controller(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -55,9 +51,9 @@ void ELEC0::clear()
     V_error_integrator.set_limiter_type(NON_WINDUP_LIMITER);
 
     power_order_integrator.set_limiter_type(NON_WINDUP_LIMITER);
-    frequency_integral_controller.set_limiter_type(NO_LIMITER);
 
-    frequency_regulation_enabled = true;
+    frequency_controller.clear();
+
 }
 
 void ELEC0::copy_from_const_model(const ELEC0& model)
@@ -71,12 +67,8 @@ void ELEC0::copy_from_const_model(const ELEC0& model)
     active_power_sensor.set_toolkit(toolkit);
     Q_error_integrator.set_toolkit(toolkit);
     V_error_integrator.set_toolkit(toolkit);
-
-    virtual_inertia_emulator.set_toolkit(toolkit);
-    frequency_droop_controller.set_toolkit(toolkit);
-
-    frequency_integral_controller.set_toolkit(toolkit);
     power_order_integrator.set_toolkit(toolkit);
+    frequency_controller.set_toolkit(toolkit);
 
     clear();
 
@@ -100,19 +92,23 @@ void ELEC0::copy_from_const_model(const ELEC0& model)
     set_KQV(model.get_KQV());
     set_EQmax_in_pu(model.get_EQmax_in_pu());
     set_EQmin_in_pu(model.get_EQmin_in_pu());
-    set_Kvi(model.get_Kvi());
-    set_Tvi_in_s(model.get_Tvi_in_s());
-    set_Kdroop(model.get_Kdroop());
-    set_Tdroop_in_s(model.get_Tdroop_in_s());
-    set_frequency_deviation_upper_deadband_in_pu(model.get_frequency_deviation_upper_deadband_in_pu());
-    set_frequency_deviation_lower_deadband_in_pu(model.get_frequency_deviation_lower_deadband_in_pu());
-    set_Kfint(model.get_Kfint());
+
     set_rPmax_in_pu(model.get_rPmax_in_pu());
     set_rPmin_in_pu(model.get_rPmin_in_pu());
     set_TFP_in_s(model.get_TFP_in_s());
     set_Pmax_in_pu(model.get_Pmax_in_pu());
     set_Pmin_in_pu(model.get_Pmin_in_pu());
     set_IPmax_in_pu(model.get_IPmax_in_pu());
+
+    set_Kvi(model.get_Kvi());
+    set_Tvi_in_s(model.get_Tvi_in_s());
+    set_Kdroop(model.get_Kdroop());
+    set_Tdroop_in_s(model.get_Tdroop_in_s());
+    set_Kfint(model.get_Kfint());
+    set_frequency_deviation_lower_deadband_in_pu(model.get_frequency_deviation_lower_deadband_in_pu());
+    set_frequency_deviation_upper_deadband_in_pu(model.get_frequency_deviation_upper_deadband_in_pu());
+
+
 }
 
 string ELEC0::get_model_name() const
@@ -220,43 +216,39 @@ void ELEC0::set_EQmin_in_pu(double I)
 
 void ELEC0::set_Kvi(double K)
 {
-    virtual_inertia_emulator.set_K(K);
+    frequency_controller.set_Kvi(K);
 }
 
 void ELEC0::set_Tvi_in_s(double T)
 {
-    virtual_inertia_emulator.set_T_in_s(T);
+    frequency_controller.set_Tvi_in_s(T);
 }
 
 void ELEC0::set_Kdroop(double K)
 {
-    frequency_droop_controller.set_K(K);
+    frequency_controller.set_Kdroop(K);
 }
 
 void ELEC0::set_Tdroop_in_s(double T)
 {
-    frequency_droop_controller.set_T_in_s(T);
+    frequency_controller.set_Tdroop_in_s(T);
 }
 
 void ELEC0::set_frequency_deviation_upper_deadband_in_pu(double f)
 {
-    f_upper_pu = f;
+    frequency_controller.set_frequency_deviation_upper_deadband_in_pu(f);
 }
 
 void ELEC0::set_frequency_deviation_lower_deadband_in_pu(double f)
 {
-    f_lower_pu = f;
+    frequency_controller.set_frequency_deviation_lower_deadband_in_pu(f);
 }
 
 void ELEC0::set_Kfint(double K)
 {
-    double t = 0.0;
-    if(fabs(K)<DOUBLE_EPSILON)
-        t = INFINITE_THRESHOLD;
-    else
-        t = 1.0/K;
-    frequency_integral_controller.set_T_in_s(t);
+    frequency_controller.set_Kfint(K);
 }
+
 void ELEC0::set_rPmax_in_pu(double r)
 {
     max_Pcmd_rate = r;
@@ -374,43 +366,37 @@ double ELEC0::get_EQmin_in_pu() const
 
 double ELEC0::get_Kvi() const
 {
-    return virtual_inertia_emulator.get_K();
+    return frequency_controller.get_Kvi();
 }
 
 double ELEC0::get_Tvi_in_s() const
 {
-    return virtual_inertia_emulator.get_T_in_s();
+    return frequency_controller.get_Tvi_in_s();
 }
 
 double ELEC0::get_Kdroop() const
 {
-    return frequency_droop_controller.get_K();
+    return frequency_controller.get_Kdroop();
 }
 
 double ELEC0::get_Tdroop_in_s() const
 {
-    return frequency_droop_controller.get_T_in_s();
+    return frequency_controller.get_Tdroop_in_s();
 }
 
 double ELEC0::get_frequency_deviation_upper_deadband_in_pu() const
 {
-    return f_upper_pu;
+    return frequency_controller.get_frequency_deviation_upper_deadband_in_pu();
 }
 
 double ELEC0::get_frequency_deviation_lower_deadband_in_pu() const
 {
-    return f_lower_pu;
+    return frequency_controller.get_frequency_deviation_lower_deadband_in_pu();
 }
 
 double ELEC0::get_Kfint() const
 {
-    double t = frequency_integral_controller.get_T_in_s();
-    double k = 0.0;
-    if(fabs(t-INFINITE_THRESHOLD)<DOUBLE_EPSILON)
-        k = 0.0;
-    else
-        k = 1.0/t;
-    return k;
+    return frequency_controller.get_Kfint();
 }
 
 double ELEC0::get_rPmax_in_pu() const
@@ -441,17 +427,6 @@ double ELEC0::get_Pmin_in_pu() const
 double ELEC0::get_IPmax_in_pu() const
 {
     return IPmax;
-}
-
-bool ELEC0::is_frequency_regulation_enabled() const
-{
-    return frequency_regulation_enabled;
-}
-
-void ELEC0::trip_frequency_regulation()
-{
-    if(frequency_regulation_enabled==true)
-        frequency_regulation_enabled = false;
 }
 
 double ELEC0::get_voltage_sensor_state() const
@@ -489,19 +464,19 @@ double ELEC0::get_V_error_integrator_state() const
     return V_error_integrator.get_state();
 }
 
-double ELEC0::get_virtual_inertia_emulator_state() const
+double ELEC0::get_virtual_inertia_controller_state() const
 {
-    return virtual_inertia_emulator.get_state();
+    return frequency_controller.get_virtual_inertia_controller_state();
 }
 
 double ELEC0::get_frequency_droop_controller_state() const
 {
-    return frequency_droop_controller.get_state();
+    return frequency_controller.get_frequency_droop_controller_state();
 }
 
 double ELEC0::get_frequency_integral_controller_state() const
 {
-    return frequency_integral_controller.get_state();
+    return frequency_controller.get_frequency_integral_controller_state();
 }
 
 double ELEC0::get_power_order_integrator_state() const
@@ -509,8 +484,16 @@ double ELEC0::get_power_order_integrator_state() const
     return power_order_integrator.get_state();
 }
 
+void ELEC0::setup_block_toolkit_and_parameters()
+{
+    frequency_controller.set_bus_pointer(get_bus_pointer());
+    frequency_controller.set_device_pointer(get_device_pointer());
+}
+
 void ELEC0::initialize()
 {
+    setup_block_toolkit_and_parameters();
+
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
@@ -545,16 +528,6 @@ void ELEC0::initialize()
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
     power_order_integrator.initialize();
-
-    virtual_inertia_emulator.set_input(0.0);
-    virtual_inertia_emulator.initialize();
-
-    frequency_droop_controller.set_output(0.0);
-    frequency_droop_controller.initialize();
-
-    frequency_integral_controller.set_output(0.0);
-    frequency_integral_controller.initialize();
-
 
     double eqcmd = get_initial_reactive_voltage_command_in_pu();
 
@@ -659,54 +632,27 @@ void ELEC0::initialize()
     voltage_sensor.initialize();
 
     set_voltage_reference_in_pu(vref);
+
+
+    frequency_controller.initialize();
 }
 
 void ELEC0::run(DYNAMIC_MODE mode)
 {
     double vterm = get_bus_voltage_in_pu();
     double iterm = get_terminal_current_in_pu_based_on_mbase();
-    double freq = get_bus_frequency_deviation_in_pu();
 
     double pelec = get_active_power_generation_in_pu_based_on_mbase();
     double qelec = get_reactive_power_generation_in_pu_based_on_mbase();
     complex<double> selec(pelec, qelec);
 
     double Pref = get_active_power_reference_in_pu_based_on_mbase();
-    double input = 0.0;
 
-    virtual_inertia_emulator.set_input(freq);
-    virtual_inertia_emulator.run(mode);
+    frequency_controller.run(mode);
 
-    frequency_droop_controller.set_input(freq);
-    frequency_droop_controller.run(mode);
+    double input = Pref + frequency_controller.get_frequency_regulation_power_deviation_in_pu();
 
-    double fupper = get_frequency_deviation_upper_deadband_in_pu();
-    double flower = get_frequency_deviation_lower_deadband_in_pu();
-    double f_int =  0;
-    if(freq>=flower and freq<=fupper)
-        ;
-    else
-    {
-        if(freq>fupper)
-            f_int = freq - fupper;
-        else
-            f_int = freq - flower;
-    }
-    frequency_integral_controller.set_input(f_int);
-    frequency_integral_controller.run(mode);
-
-
-    if(is_frequency_regulation_enabled())
-    {
-        input = Pref - power_order_integrator.get_output()
-                -(virtual_inertia_emulator.get_output()
-                  +frequency_droop_controller.get_output()
-                  +frequency_integral_controller.get_output());
-    }
-    else
-    {
-        input = Pref - power_order_integrator.get_output();
-    }
+    input = input - power_order_integrator.get_output();
 
     if(input>get_rPmax_in_pu())
         input = get_rPmax_in_pu();

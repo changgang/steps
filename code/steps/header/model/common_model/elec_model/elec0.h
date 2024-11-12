@@ -2,6 +2,7 @@
 #define ELEC0_H
 
 #include "header/model/common_model/elec_model/elec_model.h"
+#include "header/model/common_model/elec_model/frequency_controller.h"
 #include "header/block/first_order_block.h"
 #include "header/block/pi_block.h"
 #include "header/block/integral_block.h"
@@ -84,8 +85,6 @@ class ELEC0: public ELEC_MODEL
         double get_Pmin_in_pu() const;
         double get_IPmax_in_pu() const;
 
-        bool is_frequency_regulation_enabled() const;
-
         double get_voltage_sensor_state() const;
         double get_voltage_regulator_first_order_block_state() const;
         double get_voltage_regulator_integrator_state() const;
@@ -93,11 +92,13 @@ class ELEC0: public ELEC_MODEL
         double get_active_power_sensor_state() const;
         double get_Q_error_integrator_state() const;
         double get_V_error_integrator_state() const;
-        double get_virtual_inertia_emulator_state() const;
+        double get_virtual_inertia_controller_state() const;
         double get_frequency_droop_controller_state() const;
         double get_frequency_integral_controller_state() const;
         double get_power_order_integrator_state() const;
     public:
+
+        void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
@@ -107,8 +108,6 @@ class ELEC0: public ELEC_MODEL
         virtual double get_reactive_current_command_in_pu_based_on_mbase();
         virtual double get_reactive_power_command_in_pu_based_on_mbase();
         virtual double get_reactive_voltage_command_in_pu() const;
-
-        void trip_frequency_regulation();
     private:
 
         double Xcomp;
@@ -124,16 +123,12 @@ class ELEC0: public ELEC_MODEL
         INTEGRAL_BLOCK V_error_integrator;
         double EQmax, EQmin;
 
-        DIFFERENTIAL_BLOCK virtual_inertia_emulator;
-        FIRST_ORDER_BLOCK frequency_droop_controller;
-
-        double f_upper_pu, f_lower_pu;
-        INTEGRAL_BLOCK frequency_integral_controller;
         double max_Pcmd_rate, min_Pcmd_rate;
         INTEGRAL_BLOCK power_order_integrator;
         double IPmax;
 
-        bool frequency_regulation_enabled;
+        FREQUENCY_CONTROLLER frequency_controller;
+
 };
 
 #endif // ELEC0_H

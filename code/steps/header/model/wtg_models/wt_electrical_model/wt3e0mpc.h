@@ -108,8 +108,6 @@ class WT3E0MPC: public WT_ELECTRICAL_MODEL
 
         double get_initial_Torque() const;
 
-        bool is_frequency_regulation_enabled() const;
-
         void initialize_Torque();
 
     public:
@@ -148,7 +146,6 @@ class WT3E0MPC: public WT_ELECTRICAL_MODEL
     private:
         void copy_from_const_model(const WT3E0MPC& model);
 
-        void trip_frequency_regulation();
         WT_ACTIVE_POWER_CONTROL_MODE active_power_control_mode;
 
         FIRST_ORDER_BLOCK wind_turbine_speed_reference_sensor, active_power_sensor;

@@ -546,11 +546,6 @@ double WT3E0MPC::get_initial_Torque() const
     return this->initial_torque;
 }
 
-bool WT3E0MPC::is_frequency_regulation_enabled() const
-{
-    return conelec0.is_frequency_regulation_enabled();
-}
-
 void WT3E0MPC::initialize_Torque()
 {
     double speed = get_wt_generator_speed_reference_in_pu();
@@ -562,11 +557,6 @@ void WT3E0MPC::initialize_Torque()
     double pcmd = wtgenmodel->get_initial_active_power_command_in_pu_based_on_mbase();
 
     set_initial_Torque(pcmd/speed);
-}
-
-void WT3E0MPC::trip_frequency_regulation()
-{
-    conelec0.trip_frequency_regulation();
 }
 
 bool WT3E0MPC::setup_model_with_steps_string_vector(vector<string>& data)
@@ -845,7 +835,7 @@ void WT3E0MPC::initialize()
                             <<"(8) voltage error integrator state: "<<conelec0.get_V_error_integrator_state()<<endl
                             <<"(9) reference speed sensor state: "<<wind_turbine_speed_reference_sensor.get_state()<<endl
                             <<"(10) torque PI regulator state: "<<torque_PI_regulator.get_state()<<endl
-                            <<"(11) virtual inertia regulator state: "<<conelec0.get_virtual_inertia_emulator_state()<<endl
+                            <<"(11) virtual inertia regulator state: "<<conelec0.get_virtual_inertia_controller_state()<<endl
                             <<"(12) frequency droop regulator state: "<<conelec0.get_frequency_droop_controller_state()<<endl
                             <<"(13) active power PI controller state: "<<active_power_PI_controller.get_state()<<endl
                             <<"(14) active power differential controller state: "<<active_power_differential_controller.get_state()<<endl
@@ -1318,12 +1308,12 @@ double WT3E0MPC::get_model_internal_variable_with_name(string var_name)
 
     if(var_name == "STATE@SPEED REFERENCE SENSOR") return wind_turbine_speed_reference_sensor.get_state();
 	if(var_name == "STATE@TORQUE REGULATOR") return torque_PI_regulator.get_state();
-	if(var_name == "STATE@VIRTUAL INERTIA CONTROL") return conelec0.get_virtual_inertia_emulator_state();
+	if(var_name == "STATE@VIRTUAL INERTIA CONTROL") return conelec0.get_virtual_inertia_controller_state();
 	if(var_name == "STATE@PRIMARY FREQUENCY CONTROL") return conelec0.get_frequency_droop_controller_state();
 	if(var_name == "STATE@SECONDARY FREQUENCY CONTROL") return conelec0.get_frequency_integral_controller_state();
 	if(var_name == "STATE@ACTIVE POWER PI CONTROLLER") return active_power_PI_controller.get_state();
 	if(var_name == "STATE@ACTIVE POWER DIFFERENTIAL CONTROLLER") return active_power_differential_controller.get_state();
-	if(var_name == "VIRTUAL INERTIA CONTROL COMMAND") return conelec0.get_virtual_inertia_emulator_state();
+	if(var_name == "VIRTUAL INERTIA CONTROL COMMAND") return conelec0.get_virtual_inertia_controller_state();
 	if(var_name == "PRIMARY FREQUENCY CONTROL COMMAND") return conelec0.get_frequency_droop_controller_state();
 	if(var_name == "SECONDARY FREQUENCY CONTROL COMMAND") return conelec0.get_frequency_integral_controller_state();
     return 0.0;

@@ -458,16 +458,6 @@ double WT3E0::get_IPmax_in_pu() const
     return conelec0.get_IPmax_in_pu();
 }
 
-bool WT3E0::is_frequency_regulation_enabled() const
-{
-    return conelec0.is_frequency_regulation_enabled();
-}
-
-void WT3E0::trip_frequency_regulation()
-{
-    conelec0.trip_frequency_regulation();
-}
-
 bool WT3E0::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
@@ -693,7 +683,7 @@ void WT3E0::initialize()
                             <<"(8) voltage error integrator state: "<<conelec0.get_V_error_integrator_state()<<endl
                             <<"(9) reference speed sensor state: "<<wind_turbine_speed_reference_sensor.get_state()<<endl
                             <<"(10) torque PI regulator state: "<<torque_PI_regulator.get_state()<<endl
-                            <<"(11) virtual inertia regulator state: "<<conelec0.get_virtual_inertia_emulator_state()<<endl
+                            <<"(11) virtual inertia regulator state: "<<conelec0.get_virtual_inertia_controller_state()<<endl
                             <<"(12) frequency droop regulator state: "<<conelec0.get_frequency_droop_controller_state()<<endl
                             <<"(13) reactive voltage command: "<<get_reactive_voltage_command_in_pu()<<endl
                             <<"(14) active current command: "<<get_active_current_command_in_pu_based_on_mbase()<<endl
@@ -1082,10 +1072,10 @@ double WT3E0::get_model_internal_variable_with_name(string var_name)
 
     if(var_name == "STATE@SPEED REFERENCE SENSOR") return wind_turbine_speed_reference_sensor.get_state();
 	if(var_name == "STATE@TORQUE REGULATOR") return torque_PI_regulator.get_state();
-	if(var_name == "STATE@VIRTUAL INERTIA CONTROL") return conelec0.get_virtual_inertia_emulator_state();
+	if(var_name == "STATE@VIRTUAL INERTIA CONTROL") return conelec0.get_virtual_inertia_controller_state();
 	if(var_name == "STATE@PRIMARY FREQUENCY CONTROL") return conelec0.get_frequency_droop_controller_state();
 	if(var_name == "STATE@SECONDARY FREQUENCY CONTROL") return conelec0.get_frequency_integral_controller_state();
-	if(var_name == "VIRTUAL INERTIA CONTROL COMMAND") return conelec0.get_virtual_inertia_emulator_state();
+	if(var_name == "VIRTUAL INERTIA CONTROL COMMAND") return conelec0.get_virtual_inertia_controller_state();
 	if(var_name == "PRIMARY FREQUENCY CONTROL COMMAND") return conelec0.get_frequency_droop_controller_state();
 	if(var_name == "SECONDARY FREQUENCY CONTROL COMMAND") return conelec0.get_frequency_integral_controller_state();
     return 0.0;

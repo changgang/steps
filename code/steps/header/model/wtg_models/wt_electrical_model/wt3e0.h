@@ -91,8 +91,6 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         double get_Pmin_in_pu() const;
         double get_IPmax_in_pu() const;
 
-        bool is_frequency_regulation_enabled() const;
-
     public:
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
@@ -128,8 +126,6 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const WT3E0& model);
-
-        void trip_frequency_regulation();
 
         FIRST_ORDER_BLOCK wind_turbine_speed_reference_sensor;
         PI_BLOCK torque_PI_regulator;
