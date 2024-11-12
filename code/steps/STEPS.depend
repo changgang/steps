@@ -20465,7 +20465,7 @@
 
 1731290583 d:\desktop\steps\code\steps\header\basic\constants.h
 
-1731290583 d:\desktop\steps\code\steps\header\basic\steps_enum.h
+1731400018 d:\desktop\steps\code\steps\header\basic\steps_enum.h
 	<iso646.h>
 
 1731290583 d:\desktop\steps\code\steps\header\basic\terminal.h
@@ -22667,7 +22667,7 @@
 	"header/model/wtg_models/wt_electrical_model/wt_electrical_model_test.h"
 	"header/STEPS.h"
 
-1731397899 d:\desktop\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3e0.h
+1731400409 d:\desktop\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3e0.h
 	"header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
 	"header/model/common_model/elec_model/elec0.h"
 	"header/block/first_order_block.h"
@@ -22974,7 +22974,7 @@
 	"header/model/wtg_models/wt_electrical_model/wt3e0pcl.h"
 	"header/model/wtg_models/wt_electrical_model/wt3e0mpc.h"
 
-1731290584 d:\desktop\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3e1.h
+1731400409 d:\desktop\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3e1.h
 	"header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
 	"header/basic/multi_point_line.h"
 	"header/model/common_model/elec_model/elec1.h"
@@ -23123,7 +23123,7 @@
 1731290583 d:\desktop\steps\code\steps\header\model\pvu_models\pv_electrical_model\pv_electrical_models.h
 	"header/model/pvu_models/pv_electrical_model/pvex.h"
 
-1731397899 d:\desktop\steps\code\steps\header\model\pvu_models\pv_electrical_model\pvex.h
+1731400409 d:\desktop\steps\code\steps\header\model\pvu_models\pv_electrical_model\pvex.h
 	"header/model/pvu_models/pv_electrical_model/pv_electrical_model.h"
 	"header/model/common_model/elec_model/elec0.h"
 
@@ -23190,7 +23190,7 @@
 1731290583 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_electrical_model\es_electrical_models.h
 	"header/model/energy_storage_model/es_electrical_model/ese0.h"
 
-1731397899 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_electrical_model\ese0.h
+1731400409 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_electrical_model\ese0.h
 	"header/model/energy_storage_model/es_electrical_model/es_electrical_model.h"
 	"header/model/common_model/elec_model/elec0.h"
 
@@ -25218,7 +25218,7 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1731398028 source:d:\desktop\steps\code\steps\source\model\energy_storage_model\es_electrical_model\ese0.cpp
+1731400409 source:d:\desktop\steps\code\steps\source\model\energy_storage_model\es_electrical_model\ese0.cpp
 	"header/model/energy_storage_model/es_electrical_model/ese0.h"
 	"header/device/energy_storage.h"
 	"header/power_system_database.h"
@@ -47167,13 +47167,13 @@
 	<istream>
 	<iostream>
 
-1731290584 d:\desktop\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3e0pcl.h
+1731400409 d:\desktop\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3e0pcl.h
 	"header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
 	"header/model/common_model/elec_model/elec2.h"
 	"header/block/first_order_block.h"
 	"header/block/pi_block.h"
 
-1731398073 d:\desktop\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3e0mpc.h
+1731400409 d:\desktop\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3e0mpc.h
 	"header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
 	"header/model/common_model/elec_model/elec0.h"
 	"header/block/first_order_block.h"
@@ -81101,29 +81101,29 @@
 1731290584 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\elec_model.cpp
 	"header/model/common_model/elec_model/elec_model.h"
 
-1731398411 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\elec0.cpp
+1731400409 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\elec0.cpp
 	"header/model/common_model/elec_model/elec0.h"
 
-1731397727 d:\desktop\steps\code\steps\header\model\common_model\elec_model\elec0.h
+1731400409 d:\desktop\steps\code\steps\header\model\common_model\elec_model\elec0.h
 	"header/model/common_model/elec_model/elec_model.h"
 	"header/model/common_model/elec_model/frequency_controller.h"
 	"header/block/first_order_block.h"
 	"header/block/pi_block.h"
 	"header/block/integral_block.h"
 
-1731290584 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\elec1.cpp
+1731400409 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\elec1.cpp
 	"header/model/common_model/elec_model/elec1.h"
 
-1731290583 d:\desktop\steps\code\steps\header\model\common_model\elec_model\elec1.h
+1731400409 d:\desktop\steps\code\steps\header\model\common_model\elec_model\elec1.h
 	"header/model/common_model/elec_model/elec_model.h"
 	"header/block/first_order_block.h"
 	"header/block/pi_block.h"
 	"header/block/integral_block.h"
 
-1731290584 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\elec2.cpp
+1731400409 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\elec2.cpp
 	"header/model/common_model/elec_model/elec2.h"
 
-1731290583 d:\desktop\steps\code\steps\header\model\common_model\elec_model\elec2.h
+1731400409 d:\desktop\steps\code\steps\header\model\common_model\elec_model\elec2.h
 	"header/model/common_model/elec_model/elec_model.h"
 	"header/block/first_order_block.h"
 	"header/block/pi_block.h"
@@ -81136,6 +81136,16 @@
 	"header/block/differential_block.h"
 	"header/block/integral_block.h"
 
-1731396560 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\frequency_controller.cpp
+1731398555 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\frequency_controller.cpp
 	"header/model/common_model/elec_model/frequency_controller.h"
+
+1731400409 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\elecx.cpp
+	"header/model/common_model/elec_model/elecx.h"
+
+1731400409 d:\desktop\steps\code\steps\header\model\common_model\elec_model\elecx.h
+	"header/model/common_model/elec_model/elec_model.h"
+	"header/model/common_model/elec_model/frequency_controller.h"
+	"header/block/first_order_block.h"
+	"header/block/pi_block.h"
+	"header/block/integral_block.h"
 

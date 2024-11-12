@@ -201,6 +201,7 @@
 		<Unit filename="header/model/common_model/elec_model/elec1.h" />
 		<Unit filename="header/model/common_model/elec_model/elec2.h" />
 		<Unit filename="header/model/common_model/elec_model/elec_model.h" />
+		<Unit filename="header/model/common_model/elec_model/elecx.h" />
 		<Unit filename="header/model/common_model/elec_model/frequency_controller.h" />
 		<Unit filename="header/model/common_model/primary_model/primary_model.h" />
 		<Unit filename="header/model/common_model/vrt_model/hvrt_control.h" />
@@ -699,6 +700,7 @@
 		<Unit filename="source/model/common_model/elec_model/elec1.cpp" />
 		<Unit filename="source/model/common_model/elec_model/elec2.cpp" />
 		<Unit filename="source/model/common_model/elec_model/elec_model.cpp" />
+		<Unit filename="source/model/common_model/elec_model/elecx.cpp" />
 		<Unit filename="source/model/common_model/elec_model/frequency_controller.cpp" />
 		<Unit filename="source/model/common_model/vrt_model/hvrt_control.cpp" />
 		<Unit filename="source/model/common_model/vrt_model/hvrt_relay.cpp" />

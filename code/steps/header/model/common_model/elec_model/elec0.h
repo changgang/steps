@@ -18,8 +18,8 @@ class ELEC0: public ELEC_MODEL
         void copy_from_const_model(const ELEC0& model);
         string get_model_name() const;
     public:
-        void set_var_control_mode(REACTIVE_POWER_CONTROL_MODE mode);
-        REACTIVE_POWER_CONTROL_MODE get_var_control_mode() const;
+        void set_var_control_mode(ELEC_REACTIVE_POWER_CONTROL_MODE mode);
+        ELEC_REACTIVE_POWER_CONTROL_MODE get_var_control_mode() const;
 
         void set_Xcomp_in_pu(double Xc);
         void set_TRV_in_s(double T);
@@ -118,7 +118,7 @@ class ELEC0: public ELEC_MODEL
         FIRST_ORDER_BLOCK voltage_regulator_filter;
         FIRST_ORDER_BLOCK active_power_sensor;
         INTEGRAL_BLOCK Q_error_integrator;
-        REACTIVE_POWER_CONTROL_MODE pe_var_control_mode;
+        ELEC_REACTIVE_POWER_CONTROL_MODE pe_var_control_mode;
         unsigned int Voltage_Flag;
         INTEGRAL_BLOCK V_error_integrator;
         double EQmax, EQmin;

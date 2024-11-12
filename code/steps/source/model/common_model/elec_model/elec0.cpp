@@ -116,12 +116,12 @@ string ELEC0::get_model_name() const
     return "ELEC0";
 }
 
-void ELEC0::set_var_control_mode(REACTIVE_POWER_CONTROL_MODE mode)
+void ELEC0::set_var_control_mode(ELEC_REACTIVE_POWER_CONTROL_MODE mode)
 {
     this->pe_var_control_mode = mode;
 }
 
-REACTIVE_POWER_CONTROL_MODE ELEC0::get_var_control_mode() const
+ELEC_REACTIVE_POWER_CONTROL_MODE ELEC0::get_var_control_mode() const
 {
     return pe_var_control_mode;
 }
@@ -686,7 +686,7 @@ void ELEC0::run(DYNAMIC_MODE mode)
     voltage_regulator_filter.run(mode);
 
 
-    REACTIVE_POWER_CONTROL_MODE var_mode = get_var_control_mode();
+    ELEC_REACTIVE_POWER_CONTROL_MODE var_mode = get_var_control_mode();
     double qcmd = 0.0;
     if(var_mode==CONSTANT_VAR_MODE)
         qcmd = get_reactive_power_reference_in_pu_based_on_mbase();
@@ -760,7 +760,7 @@ double ELEC0::get_reactive_current_command_in_pu_based_on_mbase()
 
 double ELEC0::get_reactive_power_command_in_pu_based_on_mbase()
 {
-    REACTIVE_POWER_CONTROL_MODE mode = get_var_control_mode();
+    ELEC_REACTIVE_POWER_CONTROL_MODE mode = get_var_control_mode();
     switch(mode)
     {
         case CONSTANT_VAR_MODE:

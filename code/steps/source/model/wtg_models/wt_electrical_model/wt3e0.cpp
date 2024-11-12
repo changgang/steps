@@ -101,12 +101,12 @@ string WT3E0::get_model_name() const
     return "WT3E0";
 }
 
-void WT3E0::set_var_control_mode(REACTIVE_POWER_CONTROL_MODE mode)
+void WT3E0::set_var_control_mode(ELEC_REACTIVE_POWER_CONTROL_MODE mode)
 {
     conelec0.set_var_control_mode(mode);
 }
 
-REACTIVE_POWER_CONTROL_MODE WT3E0::get_var_control_mode() const
+ELEC_REACTIVE_POWER_CONTROL_MODE WT3E0::get_var_control_mode() const
 {
     return conelec0.get_var_control_mode();
 }
@@ -511,7 +511,7 @@ bool WT3E0::setup_model_with_steps_string_vector(vector<string>& data)
             ipmax = get_double_data(data[i],"0.0");
 
             set_bus_to_regulate(bus);
-            REACTIVE_POWER_CONTROL_MODE mode;
+            ELEC_REACTIVE_POWER_CONTROL_MODE mode;
             switch(var_control_flag)
             {
                 case 0:
@@ -783,7 +783,7 @@ string WT3E0::get_standard_psse_string(bool export_internal_bus_number) const
     string model_name = "'"+get_model_name()+"'";
 
     unsigned int bus_reg = get_bus_to_regulate();
-    REACTIVE_POWER_CONTROL_MODE mode = get_var_control_mode();
+    ELEC_REACTIVE_POWER_CONTROL_MODE mode = get_var_control_mode();
     int var_mode = (mode==CONSTANT_VAR_MODE)? 0: (mode==CONSTANT_POWER_FACTOR_MODE? -1 : 1);
     unsigned int voltage_flag = get_voltage_flag();
     double xc = get_Xcomp_in_pu();
@@ -968,7 +968,7 @@ void WT3E0::set_model_data_with_name(string par_name, double value)
     if(par_name == "VAR CONTROL FLAG")
     {
         int ivalue = int(value);
-        REACTIVE_POWER_CONTROL_MODE mode = CONSTANT_VAR_MODE;
+        ELEC_REACTIVE_POWER_CONTROL_MODE mode = CONSTANT_VAR_MODE;
         switch(ivalue)
         {
             case 0:

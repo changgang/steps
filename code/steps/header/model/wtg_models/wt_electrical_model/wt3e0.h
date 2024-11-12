@@ -16,8 +16,8 @@ class WT3E0: public WT_ELECTRICAL_MODEL
     public:
         virtual string get_model_name() const;
 
-        void set_var_control_mode(REACTIVE_POWER_CONTROL_MODE mode);
-        REACTIVE_POWER_CONTROL_MODE get_var_control_mode() const;
+        void set_var_control_mode(ELEC_REACTIVE_POWER_CONTROL_MODE mode);
+        ELEC_REACTIVE_POWER_CONTROL_MODE get_var_control_mode() const;
         void set_bus_to_regulate(unsigned int bus);
         unsigned int get_bus_to_regulate() const;
 
