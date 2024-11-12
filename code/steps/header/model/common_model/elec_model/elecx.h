@@ -21,6 +21,14 @@ class ELECX: public ELEC_MODEL
         void set_var_control_mode(ELEC_REACTIVE_POWER_CONTROL_MODE mode);
         ELEC_REACTIVE_POWER_CONTROL_MODE get_var_control_mode() const;
 
+        void set_active_power_control_mode(ELEC_ACTIVE_POWER_CONTROL_MODE mode);
+        ELEC_ACTIVE_POWER_CONTROL_MODE get_active_power_control_mode() const;
+
+        void enable_active_power_closed_loop_control();
+        void enable_active_power_open_loop_control();
+        bool get_active_power_closed_control_flag() const;
+
+        // reactive power control loop
         void set_Xcomp_in_pu(double Xc);
         void set_TRV_in_s(double T);
         void set_Fn(double Fn);
@@ -38,20 +46,6 @@ class ELECX: public ELEC_MODEL
         void set_KQV(double K);
         void set_EQmax_in_pu(double I);
         void set_EQmin_in_pu(double I);
-
-        void set_Kvi(double K);
-        void set_Tvi_in_s(double T);
-        void set_Kdroop(double K);
-        void set_Tdroop_in_s(double T);
-        void set_frequency_deviation_upper_deadband_in_pu(double f);
-        void set_frequency_deviation_lower_deadband_in_pu(double f);
-        void set_Kfint(double K);
-        void set_rPmax_in_pu(double r);
-        void set_rPmin_in_pu(double r);
-        void set_TFP_in_s(double T);
-        void set_Pmax_in_pu(double p);
-        void set_Pmin_in_pu(double p);
-        void set_IPmax_in_pu(double I);
 
         double get_Xcomp_in_pu() const;
         double get_TRV_in_s() const;
@@ -71,6 +65,15 @@ class ELECX: public ELEC_MODEL
         double get_EQmax_in_pu() const;
         double get_EQmin_in_pu() const;
 
+        // frequency controller
+        void set_Kvi(double K);
+        void set_Tvi_in_s(double T);
+        void set_Kdroop(double K);
+        void set_Tdroop_in_s(double T);
+        void set_frequency_deviation_upper_deadband_in_pu(double f);
+        void set_frequency_deviation_lower_deadband_in_pu(double f);
+        void set_Kfint(double K);
+
         double get_Kvi() const;
         double get_Tvi_in_s() const;
         double get_Kdroop() const;
@@ -78,13 +81,49 @@ class ELECX: public ELEC_MODEL
         double get_frequency_deviation_upper_deadband_in_pu() const;
         double get_frequency_deviation_lower_deadband_in_pu() const;
         double get_Kfint() const;
-        double get_TFP_in_s() const;
+
+        //active power control loop
+        //speed control with torque
+        void set_Tspeed_in_s(double T);
+        void set_KPP(double K);
+        void set_KIP(double K);
+        double get_Tspeed_in_s() const;
+        double get_KPP() const;
+        double get_KIP() const;
+
+        //speed control
+        void set_Kpspeed(double K);
+        void set_Kispeed(double K);
+        double get_Kpspeed() const;
+        double get_Kispeed() const;
+
+        //Vdc control
+        void set_Kpdc(double K);
+        void set_Kidc(double K);
+        double get_Kpdc() const;
+        double get_Kidc() const;
+
+        //other active power parameters
+        void set_rPmax_in_pu(double r);
+        void set_rPmin_in_pu(double r);
+        void set_TFP_in_s(double T);
+        void set_Pmax_in_pu(double p);
+        void set_Pmin_in_pu(double p);
+        void set_IPmax_in_pu(double I);
+        void set_Kpip(double K);
+        void set_Kiip(double K);
+
+
         double get_rPmax_in_pu() const;
         double get_rPmin_in_pu() const;
+        double get_TFP_in_s() const;
         double get_Pmax_in_pu() const;
         double get_Pmin_in_pu() const;
         double get_IPmax_in_pu() const;
+        double get_Kpip() const;
+        double get_Kiip() const;
 
+        //state of block
         double get_voltage_sensor_state() const;
         double get_voltage_regulator_first_order_block_state() const;
         double get_voltage_regulator_integrator_state() const;
@@ -96,6 +135,8 @@ class ELECX: public ELEC_MODEL
         double get_frequency_droop_controller_state() const;
         double get_frequency_integral_controller_state() const;
         double get_power_order_integrator_state() const;
+        double get_speed_reference_sensor_state() const;
+        double get_torque_controller_state() const;
     public:
 
         void setup_block_toolkit_and_parameters();
@@ -110,6 +151,11 @@ class ELECX: public ELEC_MODEL
         virtual double get_reactive_voltage_command_in_pu() const;
     private:
 
+        ELEC_ACTIVE_POWER_CONTROL_MODE pe_control_mode;
+        ELEC_REACTIVE_POWER_CONTROL_MODE pe_var_control_mode;
+        bool active_power_closed_control_flag;
+
+        //reactive power control block
         double Xcomp;
         FIRST_ORDER_BLOCK voltage_sensor;
         double Fn;
@@ -118,16 +164,22 @@ class ELECX: public ELEC_MODEL
         FIRST_ORDER_BLOCK voltage_regulator_filter;
         FIRST_ORDER_BLOCK active_power_sensor;
         INTEGRAL_BLOCK Q_error_integrator;
-        ELEC_REACTIVE_POWER_CONTROL_MODE pe_var_control_mode;
+
         unsigned int Voltage_Flag;
         INTEGRAL_BLOCK V_error_integrator;
         double EQmax, EQmin;
 
+        //active power control block
+        FREQUENCY_CONTROLLER frequency_controller;
+        FIRST_ORDER_BLOCK speed_reference_sensor;
+        PI_BLOCK speed_controller;
+        PI_BLOCK torque_controller;
+        PI_BLOCK Vdc_controller;
+        PI_BLOCK power_closed_loop_controller;
+
         double max_Pcmd_rate, min_Pcmd_rate;
         INTEGRAL_BLOCK power_order_integrator;
         double IPmax;
-
-        FREQUENCY_CONTROLLER frequency_controller;
 
 };
 

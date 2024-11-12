@@ -9,18 +9,14 @@
 using namespace std;
 
 WT3E0::WT3E0(STEPS& toolkit) : WT_ELECTRICAL_MODEL(toolkit),
-                               wind_turbine_speed_reference_sensor(toolkit),
-                               torque_PI_regulator(toolkit),
-                               conelec0(toolkit)
+                               elecx(toolkit)
 
 {
     clear();
 }
 
 WT3E0::WT3E0(const WT3E0& model) : WT_ELECTRICAL_MODEL(model.get_toolkit()),
-                                   wind_turbine_speed_reference_sensor(model.get_toolkit()),
-                                   torque_PI_regulator(model.get_toolkit()),
-                                   conelec0(model.get_toolkit())
+                                   elecx(model.get_toolkit())
 
 {
     copy_from_const_model(model);
@@ -43,7 +39,9 @@ WT3E0& WT3E0::operator=(const WT3E0& model)
 void WT3E0::clear()
 {
     set_model_float_parameter_count(35);
-    conelec0.clear();
+    elecx.clear();
+    elecx.set_active_power_control_mode(SPEED_CONTROL_MODE_WITH_TORQUE);
+    elecx.enable_active_power_open_loop_control();
 }
 
 void WT3E0::copy_from_const_model(const WT3E0& model)
@@ -52,9 +50,7 @@ void WT3E0::copy_from_const_model(const WT3E0& model)
 
     STEPS& toolkit = model.get_toolkit();
     set_toolkit(toolkit);
-    wind_turbine_speed_reference_sensor.set_toolkit(toolkit);
-    torque_PI_regulator.set_toolkit(toolkit);
-    conelec0.set_toolkit(toolkit);
+    elecx.set_toolkit(toolkit);
 
     clear();
 
@@ -103,93 +99,93 @@ string WT3E0::get_model_name() const
 
 void WT3E0::set_var_control_mode(ELEC_REACTIVE_POWER_CONTROL_MODE mode)
 {
-    conelec0.set_var_control_mode(mode);
+    elecx.set_var_control_mode(mode);
 }
 
 ELEC_REACTIVE_POWER_CONTROL_MODE WT3E0::get_var_control_mode() const
 {
-    return conelec0.get_var_control_mode();
+    return elecx.get_var_control_mode();
 }
 
 void WT3E0::set_bus_to_regulate(unsigned int bus)
 {
-    conelec0.set_bus_to_regulate(bus);
+    elecx.set_bus_to_regulate(bus);
 }
 
 unsigned int WT3E0::get_bus_to_regulate() const
 {
-    return conelec0.get_bus_to_regulate();
+    return elecx.get_bus_to_regulate();
 }
 
 void WT3E0::set_Xcomp_in_pu(double Xc)
 {
-    conelec0.set_Xcomp_in_pu(Xc);
+    elecx.set_Xcomp_in_pu(Xc);
 }
 
 void WT3E0::set_TRV_in_s(double T)
 {
-    conelec0.set_TRV_in_s(T);
+    elecx.set_TRV_in_s(T);
 }
 
 void WT3E0::set_Fn(double Fn)
 {
-    conelec0.set_Fn(Fn);
+    elecx.set_Fn(Fn);
 }
 
 void WT3E0::set_KIV(double K)
 {
-    conelec0.set_KIV(K);
+    elecx.set_KIV(K);
 }
 
 void WT3E0::set_Qmax_in_pu(double q)
 {
-    conelec0.set_Qmax_in_pu(q);
+    elecx.set_Qmax_in_pu(q);
 }
 
 void WT3E0::set_Qmin_in_pu(double q)
 {
-    conelec0.set_Qmin_in_pu(q);
+    elecx.set_Qmin_in_pu(q);
 }
 
 void WT3E0::set_KPV(double K)
 {
-    conelec0.set_KPV(K);
+    elecx.set_KPV(K);
 }
 
 void WT3E0::set_TV_in_s(double T)
 {
-    conelec0.set_TV_in_s(T);
+    elecx.set_TV_in_s(T);
 }
 
 void WT3E0::set_TFV_in_s(double T)
 {
-    conelec0.set_TFV_in_s(T);
+    elecx.set_TFV_in_s(T);
 }
 
 void WT3E0::set_TP_in_s(double T)
 {
-    conelec0.set_TP_in_s(T);
+    elecx.set_TP_in_s(T);
 }
 
 void WT3E0::set_KQI(double K)
 {
-    conelec0.set_KQI(K);
+    elecx.set_KQI(K);
 }
 
 void WT3E0::set_Vmax_in_pu(double v)
 {
-    conelec0.set_Vmax_in_pu(v);
+    elecx.set_Vmax_in_pu(v);
 }
 
 void WT3E0::set_Vmin_in_pu(double v)
 {
-    conelec0.set_Vmin_in_pu(v);
+    elecx.set_Vmin_in_pu(v);
 }
 
 void WT3E0::set_voltage_flag(unsigned int flag)
 {
     if(flag<3)
-        conelec0.set_voltage_flag(flag);
+        elecx.set_voltage_flag(flag);
     else
     {
         ostringstream osstream;
@@ -201,261 +197,261 @@ void WT3E0::set_voltage_flag(unsigned int flag)
 
 void WT3E0::set_KQV(double K)
 {
-    conelec0.set_KQV(K);
+    elecx.set_KQV(K);
 }
 
 void WT3E0::set_EQmax_in_pu(double I)
 {
-    conelec0.set_EQmax_in_pu(I);
+    elecx.set_EQmax_in_pu(I);
 }
 
 void WT3E0::set_EQmin_in_pu(double I)
 {
-    conelec0.set_EQmin_in_pu(I);
+    elecx.set_EQmin_in_pu(I);
 }
 
 void WT3E0::set_Tspeed_in_s(double T)
 {
-    wind_turbine_speed_reference_sensor.set_T_in_s(T);
+    elecx.set_Tspeed_in_s(T);
 }
 
 void WT3E0::set_KPP(double K)
 {
-    torque_PI_regulator.set_Kp(K);
+    elecx.set_KPP(K);
 }
 
 void WT3E0::set_KIP(double K)
 {
-    torque_PI_regulator.set_Ki(K);
+    elecx.set_KIP(K);
 }
 
 void WT3E0::set_Kvi(double K)
 {
-    conelec0.set_Kvi(K);
+    elecx.set_Kvi(K);
 }
 
 void WT3E0::set_Tvi_in_s(double T)
 {
-    conelec0.set_Tvi_in_s(T);
+    elecx.set_Tvi_in_s(T);
 }
 
 void WT3E0::set_Kdroop(double K)
 {
-    conelec0.set_Kdroop(K);
+    elecx.set_Kdroop(K);
 }
 
 void WT3E0::set_Tdroop_in_s(double T)
 {
-    conelec0.set_Tdroop_in_s(T);
+    elecx.set_Tdroop_in_s(T);
 }
 
 void WT3E0::set_frequency_deviation_upper_deadband_in_pu(double f)
 {
-    conelec0.set_frequency_deviation_upper_deadband_in_pu(f);
+    elecx.set_frequency_deviation_upper_deadband_in_pu(f);
 }
 
 void WT3E0::set_frequency_deviation_lower_deadband_in_pu(double f)
 {
-    conelec0.set_frequency_deviation_lower_deadband_in_pu(f);
+    elecx.set_frequency_deviation_lower_deadband_in_pu(f);
 }
 
 void WT3E0::set_Kfint(double K)
 {
-    conelec0.set_Kfint(K);
+    elecx.set_Kfint(K);
 }
 
 void WT3E0::set_rPmax_in_pu(double r)
 {
-    conelec0.set_rPmax_in_pu(r);
+    elecx.set_rPmax_in_pu(r);
 }
 
 void WT3E0::set_rPmin_in_pu(double r)
 {
-    conelec0.set_rPmin_in_pu(r);
+    elecx.set_rPmin_in_pu(r);
 }
 
 void WT3E0::set_TFP_in_s(double T)
 {
-    conelec0.set_TFP_in_s(T);
+    elecx.set_TFP_in_s(T);
 }
 
 void WT3E0::set_Pmax_in_pu(double p)
 {
-    conelec0.set_Pmax_in_pu(p);
+    elecx.set_Pmax_in_pu(p);
 }
 
 void WT3E0::set_Pmin_in_pu(double p)
 {
-    conelec0.set_Pmin_in_pu(p);
+    elecx.set_Pmin_in_pu(p);
 }
 
 void WT3E0::set_IPmax_in_pu(double I)
 {
-    conelec0.set_IPmax_in_pu(I);
+    elecx.set_IPmax_in_pu(I);
 }
 
 double WT3E0::get_Xcomp_in_pu() const
 {
-    return conelec0.get_Xcomp_in_pu();
+    return elecx.get_Xcomp_in_pu();
 }
 
 double WT3E0::get_TRV_in_s() const
 {
-    return conelec0.get_TRV_in_s();
+    return elecx.get_TRV_in_s();
 }
 
 double WT3E0::get_Fn() const
 {
-    return conelec0.get_Fn();
+    return elecx.get_Fn();
 }
 
 double WT3E0::get_KIV() const
 {
-    return conelec0.get_KIV();
+    return elecx.get_KIV();
 }
 
 double WT3E0::get_Qmax_in_pu() const
 {
-    return conelec0.get_Qmax_in_pu();
+    return elecx.get_Qmax_in_pu();
 }
 
 double WT3E0::get_Qmin_in_pu() const
 {
-    return conelec0.get_Qmin_in_pu();
+    return elecx.get_Qmin_in_pu();
 }
 
 double WT3E0::get_KPV() const
 {
-    return conelec0.get_KPV();
+    return elecx.get_KPV();
 }
 
 double WT3E0::get_TV_in_s() const
 {
-    return conelec0.get_TV_in_s();
+    return elecx.get_TV_in_s();
 }
 
 double WT3E0::get_TFV_in_s() const
 {
-    return conelec0.get_TFV_in_s();
+    return elecx.get_TFV_in_s();
 }
 
 double WT3E0::get_TP_in_s() const
 {
-    return conelec0.get_TP_in_s();
+    return elecx.get_TP_in_s();
 }
 
 double WT3E0::get_KQI() const
 {
-    return conelec0.get_KQI();
+    return elecx.get_KQI();
 }
 
 double WT3E0::get_Vmax_in_pu() const
 {
-    return conelec0.get_Vmax_in_pu();
+    return elecx.get_Vmax_in_pu();
 }
 
 double WT3E0::get_Vmin_in_pu() const
 {
-    return conelec0.get_Vmin_in_pu();
+    return elecx.get_Vmin_in_pu();
 }
 
 unsigned int WT3E0::get_voltage_flag() const
 {
-    return conelec0.get_voltage_flag();
+    return elecx.get_voltage_flag();
 }
 
 double WT3E0::get_KQV() const
 {
-    return conelec0.get_KQV();
+    return elecx.get_KQV();
 }
 
 double WT3E0::get_EQmax_in_pu() const
 {
-    return conelec0.get_EQmax_in_pu();
+    return elecx.get_EQmax_in_pu();
 }
 
 double WT3E0::get_EQmin_in_pu() const
 {
-    return conelec0.get_EQmin_in_pu();
+    return elecx.get_EQmin_in_pu();
 }
 
 double WT3E0::get_Tspeed_in_s() const
 {
-    return wind_turbine_speed_reference_sensor.get_T_in_s();
+    return elecx.get_Tspeed_in_s();
 }
 
 double WT3E0::get_KPP() const
 {
-    return torque_PI_regulator.get_Kp();
+    return elecx.get_KPP();
 }
 
 double WT3E0::get_KIP() const
 {
-    return torque_PI_regulator.get_Ki();
+    return elecx.get_KIP();
 }
 
 double WT3E0::get_Kvi() const
 {
-    return conelec0.get_Kvi();
+    return elecx.get_Kvi();
 }
 
 double WT3E0::get_Tvi_in_s() const
 {
-    return conelec0.get_Tvi_in_s();
+    return elecx.get_Tvi_in_s();
 }
 
 double WT3E0::get_Kdroop() const
 {
-    return conelec0.get_Kdroop();
+    return elecx.get_Kdroop();
 }
 
 double WT3E0::get_Tdroop_in_s() const
 {
-    return conelec0.get_Tdroop_in_s();
+    return elecx.get_Tdroop_in_s();
 }
 
 double WT3E0::get_frequency_deviation_upper_deadband_in_pu() const
 {
-    return conelec0.get_frequency_deviation_upper_deadband_in_pu();
+    return elecx.get_frequency_deviation_upper_deadband_in_pu();
 }
 
 double WT3E0::get_frequency_deviation_lower_deadband_in_pu() const
 {
-    return conelec0.get_frequency_deviation_lower_deadband_in_pu();
+    return elecx.get_frequency_deviation_lower_deadband_in_pu();
 }
 
 double WT3E0::get_Kfint() const
 {
-    return conelec0.get_Kfint();
+    return elecx.get_Kfint();
 }
 double WT3E0::get_rPmax_in_pu() const
 {
-    return conelec0.get_rPmax_in_pu();
+    return elecx.get_rPmax_in_pu();
 }
 
 double WT3E0::get_rPmin_in_pu() const
 {
-    return conelec0.get_rPmin_in_pu();
+    return elecx.get_rPmin_in_pu();
 }
 
 double WT3E0::get_TFP_in_s() const
 {
-    return conelec0.get_TFP_in_s();
+    return elecx.get_TFP_in_s();
 }
 
 double WT3E0::get_Pmax_in_pu() const
 {
-    return conelec0.get_Pmax_in_pu();
+    return elecx.get_Pmax_in_pu();
 }
 
 double WT3E0::get_Pmin_in_pu() const
 {
-    return conelec0.get_Pmin_in_pu();
+    return elecx.get_Pmin_in_pu();
 }
 
 double WT3E0::get_IPmax_in_pu() const
 {
-    return conelec0.get_IPmax_in_pu();
+    return elecx.get_IPmax_in_pu();
 }
 
 bool WT3E0::setup_model_with_steps_string_vector(vector<string>& data)
@@ -603,8 +599,8 @@ bool WT3E0::setup_model_with_bpa_string(string data)
 
 void WT3E0::setup_block_toolkit_and_parameters()
 {
-    conelec0.set_bus_pointer(get_bus_pointer());
-    conelec0.set_device_pointer(get_device_pointer());
+    elecx.set_bus_pointer(get_bus_pointer());
+    elecx.set_device_pointer(get_device_pointer());
 }
 
 void WT3E0::initialize()
@@ -645,46 +641,38 @@ void WT3E0::initialize()
                 double qcmd = wtgenmodel->get_initial_reactive_power_command_in_pu_based_on_mbase();
                 double eqcmd = wtgenmodel->get_initial_reactive_voltage_command_in_pu();
                 double xsource = get_source_impedance_in_pu_based_on_mbase().imag();
-
-                conelec0.set_terminal_current_in_pu_based_on_mbase(iterm);
-                conelec0.set_active_power_generation_in_pu_based_on_mbase(pelec);
-                conelec0.set_reactive_power_generation_in_pu_based_on_mbase(qelec);
-                conelec0.set_initial_active_current_command_in_pu_based_on_mbase(ipcmd);
-                conelec0.set_initial_active_power_command_in_pu_based_on_mbase(pcmd);
-                conelec0.set_initial_reactive_current_command_in_pu_based_on_mbase(iqcmd);
-                conelec0.set_initial_reactive_power_command_in_pu_based_on_mbase(qcmd);
-                conelec0.set_initial_reactive_voltage_command_in_pu(eqcmd);
-
-                conelec0.set_Xsource(xsource);
-
-                conelec0.initialize();
-
                 double speed = get_wt_generator_speed_in_pu();
-                double torque =  pcmd/speed;
-                torque_PI_regulator.set_output(torque);
-                torque_PI_regulator.initialize();
-
                 double speedref = get_wt_generator_speed_reference_in_pu();
 
-                wind_turbine_speed_reference_sensor.set_output(speedref);
-                wind_turbine_speed_reference_sensor.initialize();
+                elecx.set_initial_speed(speed);
+                elecx.set_speed_reference_in_pu(speedref);
+                elecx.set_terminal_current_in_pu_based_on_mbase(iterm);
+                elecx.set_active_power_generation_in_pu_based_on_mbase(pelec);
+                elecx.set_reactive_power_generation_in_pu_based_on_mbase(qelec);
+                elecx.set_initial_active_current_command_in_pu_based_on_mbase(ipcmd);
+                elecx.set_initial_active_power_command_in_pu_based_on_mbase(pcmd);
+                elecx.set_initial_reactive_current_command_in_pu_based_on_mbase(iqcmd);
+                elecx.set_initial_reactive_power_command_in_pu_based_on_mbase(qcmd);
+                elecx.set_initial_reactive_voltage_command_in_pu(eqcmd);
+                elecx.set_Xsource(xsource);
+                elecx.initialize();
 
                 set_flag_model_initialized_as_true();
                 if(toolkit.is_detailed_log_enabled())
                 {
                     osstream<<get_model_name()<<" model of "<<get_compound_device_name()<<" is initialized."<<endl
-                            <<"(1) voltage sensor state: "<<conelec0.get_voltage_sensor_state()<<endl
-                            <<"(2) voltage reference: "<<conelec0.get_voltage_reference_in_pu()<<endl
-                            <<"(3) voltage regulator integrator state: "<<conelec0.get_voltage_regulator_integrator_state()<<endl
-                            <<"(4) voltage regulator first order block state: "<<conelec0.get_voltage_regulator_first_order_block_state()<<endl
-                            <<"(5) voltage regulator filter state: "<<conelec0.get_voltage_regulator_filter_state()<<endl
-                            <<"(6) active power sensor state: "<<conelec0.get_active_power_sensor_state()<<endl
-                            <<"(7) reactive power error integrator state: "<<conelec0.get_Q_error_integrator_state()<<endl
-                            <<"(8) voltage error integrator state: "<<conelec0.get_V_error_integrator_state()<<endl
-                            <<"(9) reference speed sensor state: "<<wind_turbine_speed_reference_sensor.get_state()<<endl
-                            <<"(10) torque PI regulator state: "<<torque_PI_regulator.get_state()<<endl
-                            <<"(11) virtual inertia regulator state: "<<conelec0.get_virtual_inertia_controller_state()<<endl
-                            <<"(12) frequency droop regulator state: "<<conelec0.get_frequency_droop_controller_state()<<endl
+                            <<"(1) voltage sensor state: "<<elecx.get_voltage_sensor_state()<<endl
+                            <<"(2) voltage reference: "<<elecx.get_voltage_reference_in_pu()<<endl
+                            <<"(3) voltage regulator integrator state: "<<elecx.get_voltage_regulator_integrator_state()<<endl
+                            <<"(4) voltage regulator first order block state: "<<elecx.get_voltage_regulator_first_order_block_state()<<endl
+                            <<"(5) voltage regulator filter state: "<<elecx.get_voltage_regulator_filter_state()<<endl
+                            <<"(6) active power sensor state: "<<elecx.get_active_power_sensor_state()<<endl
+                            <<"(7) reactive power error integrator state: "<<elecx.get_Q_error_integrator_state()<<endl
+                            <<"(8) voltage error integrator state: "<<elecx.get_V_error_integrator_state()<<endl
+                            <<"(9) reference speed sensor state: "<<elecx.get_speed_reference_sensor_state()<<endl
+                            <<"(10) torque controller state: "<<elecx.get_torque_controller_state()<<endl
+                            <<"(11) virtual inertia regulator state: "<<elecx.get_virtual_inertia_controller_state()<<endl
+                            <<"(12) frequency droop regulator state: "<<elecx.get_frequency_droop_controller_state()<<endl
                             <<"(13) reactive voltage command: "<<get_reactive_voltage_command_in_pu()<<endl
                             <<"(14) active current command: "<<get_active_current_command_in_pu_based_on_mbase()<<endl
                             <<"(15) reactive current command: "<<get_reactive_current_command_in_pu_based_on_mbase();
@@ -698,7 +686,6 @@ void WT3E0::initialize()
 void WT3E0::run(DYNAMIC_MODE mode)
 {
 
-
     double iterm = get_wt_generator_terminal_current_in_pu();
 
     complex<double> selec = get_wt_generator_terminal_generation_in_pu_based_on_mbase();
@@ -708,22 +695,12 @@ void WT3E0::run(DYNAMIC_MODE mode)
     double speed     = get_wt_generator_speed_in_pu();
     double speed_ref = get_wt_generator_speed_reference_in_pu();
 
-    wind_turbine_speed_reference_sensor.set_input(speed_ref);
-    wind_turbine_speed_reference_sensor.run(mode);
-
-    double input = speed - wind_turbine_speed_reference_sensor.get_output();
-
-
-    torque_PI_regulator.set_input(input);
-    torque_PI_regulator.run(mode);
-
-    input = torque_PI_regulator.get_output()*speed;
-
-    conelec0.set_active_power_reference_in_pu_based_on_mbase(input);
-    conelec0.set_terminal_current_in_pu_based_on_mbase(iterm);
-    conelec0.set_active_power_generation_in_pu_based_on_mbase(pelec);
-    conelec0.set_reactive_power_generation_in_pu_based_on_mbase(qelec);
-    conelec0.run(mode);
+    elecx.set_speed_in_pu(speed);
+    elecx.set_speed_reference_in_pu(speed_ref);
+    elecx.set_terminal_current_in_pu_based_on_mbase(iterm);
+    elecx.set_active_power_generation_in_pu_based_on_mbase(pelec);
+    elecx.set_reactive_power_generation_in_pu_based_on_mbase(qelec);
+    elecx.run(mode);
 
     if(mode == DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
@@ -732,27 +709,27 @@ void WT3E0::run(DYNAMIC_MODE mode)
 
 double WT3E0::get_active_current_command_in_pu_based_on_mbase()
 {
-    return conelec0.get_active_current_command_in_pu_based_on_mbase();
+    return elecx.get_active_current_command_in_pu_based_on_mbase();
 }
 
 double WT3E0::get_active_power_command_in_pu_based_on_mbase() const
 {
-    return conelec0.get_active_power_command_in_pu_based_on_mbase();
+    return elecx.get_active_power_command_in_pu_based_on_mbase();
 }
 
 double WT3E0::get_reactive_current_command_in_pu_based_on_mbase()
 {
-    return conelec0.get_reactive_current_command_in_pu_based_on_mbase();
+    return elecx.get_reactive_current_command_in_pu_based_on_mbase();
 }
 
 double WT3E0::get_reactive_power_command_in_pu_based_on_mbase()
 {
-    return conelec0.get_reactive_power_command_in_pu_based_on_mbase();
+    return elecx.get_reactive_power_command_in_pu_based_on_mbase();
 }
 
 double WT3E0::get_reactive_voltage_command_in_pu() const
 {
-    return conelec0.get_reactive_voltage_command_in_pu();
+    return elecx.get_reactive_voltage_command_in_pu();
 }
 
 void WT3E0::check()
@@ -1070,14 +1047,14 @@ double WT3E0::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
 
-    if(var_name == "STATE@SPEED REFERENCE SENSOR") return wind_turbine_speed_reference_sensor.get_state();
-	if(var_name == "STATE@TORQUE REGULATOR") return torque_PI_regulator.get_state();
-	if(var_name == "STATE@VIRTUAL INERTIA CONTROL") return conelec0.get_virtual_inertia_controller_state();
-	if(var_name == "STATE@PRIMARY FREQUENCY CONTROL") return conelec0.get_frequency_droop_controller_state();
-	if(var_name == "STATE@SECONDARY FREQUENCY CONTROL") return conelec0.get_frequency_integral_controller_state();
-	if(var_name == "VIRTUAL INERTIA CONTROL COMMAND") return conelec0.get_virtual_inertia_controller_state();
-	if(var_name == "PRIMARY FREQUENCY CONTROL COMMAND") return conelec0.get_frequency_droop_controller_state();
-	if(var_name == "SECONDARY FREQUENCY CONTROL COMMAND") return conelec0.get_frequency_integral_controller_state();
+    if(var_name == "STATE@SPEED REFERENCE SENSOR") return elecx.get_speed_reference_sensor_state();
+	if(var_name == "STATE@TORQUE REGULATOR") return elecx.get_torque_controller_state();
+	if(var_name == "STATE@VIRTUAL INERTIA CONTROL") return elecx.get_virtual_inertia_controller_state();
+	if(var_name == "STATE@PRIMARY FREQUENCY CONTROL") return elecx.get_frequency_droop_controller_state();
+	if(var_name == "STATE@SECONDARY FREQUENCY CONTROL") return elecx.get_frequency_integral_controller_state();
+	if(var_name == "VIRTUAL INERTIA CONTROL COMMAND") return elecx.get_virtual_inertia_controller_state();
+	if(var_name == "PRIMARY FREQUENCY CONTROL COMMAND") return elecx.get_frequency_droop_controller_state();
+	if(var_name == "SECONDARY FREQUENCY CONTROL COMMAND") return elecx.get_frequency_integral_controller_state();
     return 0.0;
 }
 

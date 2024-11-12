@@ -53,7 +53,7 @@ void WT3E0MPC::clear()
     active_power_PI_controller.set_limiter_type(NON_WINDUP_LIMITER);
     active_power_differential_controller.set_limiter_type(NO_LIMITER);
     active_power_sensor.set_limiter_type(NO_LIMITER);
-    set_active_power_control_mode(SPEED_CONTROL_MODE);
+    set_active_power_control_mode(SPEED_CONTROL_MODE_WITH_TORQUE);
 }
 
 void WT3E0MPC::copy_from_const_model(const WT3E0MPC& model)
@@ -625,7 +625,7 @@ bool WT3E0MPC::setup_model_with_steps_string_vector(vector<string>& data)
             {
                 case 0:
                 {
-                    mode = SPEED_CONTROL_MODE;
+                    mode = SPEED_CONTROL_MODE_WITH_TORQUE;
                     break;
                 }
                 case 1:
@@ -635,12 +635,12 @@ bool WT3E0MPC::setup_model_with_steps_string_vector(vector<string>& data)
                 }
                 case 2:
                 {
-                    mode = CONSTANT_ACTIVE_POWER_MODE;
+                    mode = ACTIVE_POWER_MODE;
                     break;
                 }
                 default:
                 {
-                    mode = CONSTANT_ACTIVE_POWER_MODE;
+                    mode = ACTIVE_POWER_MODE;
                     break;
                 }
             }
@@ -861,7 +861,7 @@ void WT3E0MPC::run(DYNAMIC_MODE mode)
     double qelec = selec.imag();
 
     ELEC_ACTIVE_POWER_CONTROL_MODE p_mode = get_active_power_control_mode();
-    if(p_mode == SPEED_CONTROL_MODE)
+    if(p_mode == SPEED_CONTROL_MODE_WITH_TORQUE)
     {
         double speed     = get_wt_generator_speed_in_pu();
         double speed_ref = get_wt_generator_speed_reference_in_pu();
@@ -882,7 +882,7 @@ void WT3E0MPC::run(DYNAMIC_MODE mode)
         input = get_wt_generator_speed_in_pu()*get_initial_Torque();
 
 
-    if(p_mode == CONSTANT_ACTIVE_POWER_MODE)
+    if(p_mode == ACTIVE_POWER_MODE)
     {
         active_power_sensor.set_input(pelec);
         active_power_sensor.run(mode);
@@ -966,7 +966,7 @@ string WT3E0MPC::get_standard_psse_string(bool export_internal_bus_number) const
 
     unsigned int bus_reg = get_bus_to_regulate();
     ELEC_ACTIVE_POWER_CONTROL_MODE p_mode = get_active_power_control_mode();
-    int pe_mode = (p_mode==SPEED_CONTROL_MODE)? 0: (p_mode==CONSTANT_TORQUE_MODE? 1 : 2);
+    int pe_mode = (p_mode==SPEED_CONTROL_MODE_WITH_TORQUE)? 0: (p_mode==CONSTANT_TORQUE_MODE? 1 : 2);
     ELEC_REACTIVE_POWER_CONTROL_MODE mode = get_var_control_mode();
     int var_mode = (mode==CONSTANT_VAR_MODE)? 0: (mode==CONSTANT_POWER_FACTOR_MODE? -1 : 1);
     unsigned int voltage_flag = get_voltage_flag();
@@ -1175,7 +1175,7 @@ void WT3E0MPC::set_model_data_with_name(string par_name, double value)
     if(par_name == "ACTIVE POWER CONTROL FLAG")
     {
         int ivalue = int(value);
-        ELEC_ACTIVE_POWER_CONTROL_MODE mode = SPEED_CONTROL_MODE;
+        ELEC_ACTIVE_POWER_CONTROL_MODE mode = SPEED_CONTROL_MODE_WITH_TORQUE;
         switch(ivalue)
         {
             case 0:
@@ -1185,10 +1185,10 @@ void WT3E0MPC::set_model_data_with_name(string par_name, double value)
                 mode = CONSTANT_TORQUE_MODE;
                 break;
             case 2:
-                mode = CONSTANT_ACTIVE_POWER_MODE;
+                mode = ACTIVE_POWER_MODE;
                 break;
             default:
-                mode = CONSTANT_ACTIVE_POWER_MODE;
+                mode = ACTIVE_POWER_MODE;
                 break;
         }
         return set_active_power_control_mode(mode);

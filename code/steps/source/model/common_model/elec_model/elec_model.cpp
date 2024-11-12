@@ -10,11 +10,6 @@ ELEC_MODEL::~ELEC_MODEL()
     ;
 }
 
-void ELEC_MODEL::set_active_power_reference_in_pu_based_on_mbase(double Pref)
-{
-    this->active_power_reference_in_pu_based_on_mbase = Pref;
-}
-
 void ELEC_MODEL::set_terminal_current_in_pu_based_on_mbase(double Iterm)
 {
     this->terminal_current_in_pu_based_on_mbase = Iterm;
@@ -28,6 +23,16 @@ void ELEC_MODEL::set_active_power_generation_in_pu_based_on_mbase(double Pgen)
 void ELEC_MODEL::set_reactive_power_generation_in_pu_based_on_mbase(double Qgen)
 {
     this->reactive_power_generation_in_pu_based_on_mbase = Qgen;
+}
+
+void ELEC_MODEL::set_speed_in_pu(double s)
+{
+    this->speed_in_pu = s;
+}
+
+void ELEC_MODEL::set_Vdc(double v)
+{
+    this->Vdc = v;
 }
 
 void ELEC_MODEL::set_voltage_reference_in_pu(double Vref)
@@ -52,54 +57,29 @@ void ELEC_MODEL::set_power_factor_reference_in_pu(double pf)
     this->power_factor_reference_in_pu = pf;
 }
 
+void ELEC_MODEL::set_active_power_reference_in_pu_based_on_mbase(double Pref)
+{
+    this->active_power_reference_in_pu_based_on_mbase = Pref;
+}
+
 void ELEC_MODEL::set_reactive_power_reference_in_pu_based_on_mbase(double Qref)
 {
     this->reactive_power_reference_in_pu_based_on_mbase = Qref;
 }
 
-double ELEC_MODEL::get_active_power_reference_in_pu_based_on_mbase() const
+void ELEC_MODEL::set_speed_reference_in_pu(double s)
 {
-    return active_power_reference_in_pu_based_on_mbase;
+    this->speed_reference_in_pu = s;
 }
 
-double ELEC_MODEL::get_terminal_current_in_pu_based_on_mbase() const
+void ELEC_MODEL::set_Vdc_reference(double v)
 {
-    return terminal_current_in_pu_based_on_mbase;
-}
-
-double ELEC_MODEL::get_active_power_generation_in_pu_based_on_mbase() const
-{
-    return active_power_generation_in_pu_based_on_mbase;
-}
-
-double ELEC_MODEL::get_reactive_power_generation_in_pu_based_on_mbase() const
-{
-    return reactive_power_generation_in_pu_based_on_mbase;
-}
-
-double ELEC_MODEL::get_voltage_reference_in_pu() const
-{
-    return voltage_reference_in_pu;
-}
-
-double ELEC_MODEL::get_power_factor_reference_in_pu() const
-{
-    return power_factor_reference_in_pu;
-}
-
-double ELEC_MODEL::get_reactive_power_reference_in_pu_based_on_mbase() const
-{
-    return reactive_power_reference_in_pu_based_on_mbase;
+    this->Vdc_reference = v;
 }
 
 void ELEC_MODEL::set_bus_to_regulate(unsigned int bus)
 {
     bus_to_regulate = bus;
-}
-
-unsigned int ELEC_MODEL::get_bus_to_regulate()  const
-{
-    return bus_to_regulate;
 }
 
 void ELEC_MODEL::set_initial_active_current_command_in_pu_based_on_mbase(double Ipcmd)
@@ -127,9 +107,89 @@ void ELEC_MODEL::set_initial_reactive_voltage_command_in_pu(double eqcmd)
     this->initial_reactive_voltage_command_in_pu = eqcmd;
 }
 
+void ELEC_MODEL::set_initial_Pref(double P)
+{
+    this->initial_Pref = P;
+}
+
+void ELEC_MODEL::set_initial_speed(double s)
+{
+    this->initial_speed = s;
+}
+
+void ELEC_MODEL::set_initial_Vdc(double v)
+{
+    this->initial_Vdc = v;
+}
+
+void ELEC_MODEL::set_initial_Torque(double T)
+{
+    this->initial_Torque = T;
+}
+
 void ELEC_MODEL::set_Xsource(double X)
 {
     this->Xsource = X;
+}
+
+double ELEC_MODEL::get_terminal_current_in_pu_based_on_mbase() const
+{
+    return terminal_current_in_pu_based_on_mbase;
+}
+
+double ELEC_MODEL::get_active_power_generation_in_pu_based_on_mbase() const
+{
+    return active_power_generation_in_pu_based_on_mbase;
+}
+
+double ELEC_MODEL::get_reactive_power_generation_in_pu_based_on_mbase() const
+{
+    return reactive_power_generation_in_pu_based_on_mbase;
+}
+
+double ELEC_MODEL::get_speed_in_pu() const
+{
+    return speed_in_pu;
+}
+
+double ELEC_MODEL::get_Vdc() const
+{
+    return Vdc;
+}
+
+double ELEC_MODEL::get_voltage_reference_in_pu() const
+{
+    return voltage_reference_in_pu;
+}
+
+double ELEC_MODEL::get_power_factor_reference_in_pu() const
+{
+    return power_factor_reference_in_pu;
+}
+
+double ELEC_MODEL::get_active_power_reference_in_pu_based_on_mbase() const
+{
+    return active_power_reference_in_pu_based_on_mbase;
+}
+
+double ELEC_MODEL::get_reactive_power_reference_in_pu_based_on_mbase() const
+{
+    return reactive_power_reference_in_pu_based_on_mbase;
+}
+
+double ELEC_MODEL::get_speed_reference_in_pu() const
+{
+    return speed_reference_in_pu;
+}
+
+double ELEC_MODEL::get_Vdc_reference() const
+{
+    return Vdc_reference;
+}
+
+unsigned int ELEC_MODEL::get_bus_to_regulate()  const
+{
+    return bus_to_regulate;
 }
 
 double ELEC_MODEL::get_initial_active_current_command_in_pu_based_on_mbase() const
@@ -155,6 +215,26 @@ double ELEC_MODEL::get_initial_reactive_power_command_in_pu_based_on_mbase() con
 double ELEC_MODEL::get_initial_reactive_voltage_command_in_pu() const
 {
     return initial_reactive_voltage_command_in_pu;
+}
+
+double ELEC_MODEL::get_initial_Pref() const
+{
+    return initial_Pref;
+}
+
+double ELEC_MODEL::get_initial_speed() const
+{
+    return initial_speed;
+}
+
+double ELEC_MODEL::get_initial_Vdc() const
+{
+    return initial_Vdc;
+}
+
+double ELEC_MODEL::get_initial_Torque() const
+{
+    return initial_Torque;
 }
 
 double ELEC_MODEL::get_Xsource() const
