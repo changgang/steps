@@ -10,6 +10,31 @@ ELEC_MODEL::~ELEC_MODEL()
     ;
 }
 
+void ELEC_MODEL::clear()
+{
+    set_terminal_current_in_pu_based_on_mbase(1.0);
+    set_active_power_generation_in_pu_based_on_mbase(1.0);
+    set_reactive_power_generation_in_pu_based_on_mbase(1.0);
+    set_speed_in_pu(1.0);
+    set_Vdc_in_kV(1.0);
+    set_voltage_reference_in_pu(1.0);
+    set_power_factor_reference_in_pu(1.0);
+    set_active_power_reference_in_pu_based_on_mbase(1.0);
+    set_speed_reference_in_pu(1.0);
+    set_Vdc_reference_in_kV(1.0);
+    set_bus_to_regulate(0);
+    set_initial_active_current_command_in_pu_based_on_mbase(1.0);
+    set_initial_active_power_command_in_pu_based_on_mbase(1.0);
+    set_initial_reactive_current_command_in_pu_based_on_mbase(1.0);
+    set_initial_reactive_power_command_in_pu_based_on_mbase(1.0);
+    set_initial_reactive_voltage_command_in_pu(1.0);
+    set_initial_Pref(1.0);
+    set_initial_speed(1.0);
+    set_initial_Vdc(1.0);
+    set_initial_Torque(1.0);
+    set_Xsource(0.1);
+}
+
 void ELEC_MODEL::set_terminal_current_in_pu_based_on_mbase(double Iterm)
 {
     this->terminal_current_in_pu_based_on_mbase = Iterm;

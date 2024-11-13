@@ -670,42 +670,32 @@ void ELECX::initialize()
 
     frequency_controller.initialize();
 
-    ELEC_ACTIVE_POWER_CONTROL_MODE mode = get_active_power_control_mode();
-    if(mode == SPEED_CONTROL_MODE_WITH_TORQUE)
-    {
-        double speed = get_initial_speed();
-        double torque =  pcmd/speed;
-        torque_controller.set_output(torque);
-        torque_controller.initialize();
+    //SPEED_CONTROL_MODE_WITH_TORQUE
+    double speed = get_initial_speed();
+    double torque =  pcmd/speed;
+    torque_controller.set_output(torque);
+    torque_controller.initialize();
 
-        double speedref = get_speed_reference_in_pu();
+    double speedref = get_speed_reference_in_pu();
 
-        speed_reference_sensor.set_output(speedref);
-        speed_reference_sensor.initialize();
-    }
+    speed_reference_sensor.set_output(speedref);
+    speed_reference_sensor.initialize();
 
-    if(mode == SPEED_CONTROL_MODE)
-    {
-        speed_controller.set_output(pcmd);
-        speed_controller.initialize();
-    }
+    //SPEED_CONTROL_MODE
+    speed_controller.set_output(pcmd);
+    speed_controller.initialize();
 
-    if(mode == DC_VOLTAGE_MODE)
-    {
-        Vdc_controller.set_output(pcmd);
-        Vdc_controller.initialize();
-    }
+    //DC_VOLTAGE_MODE
+    Vdc_controller.set_output(pcmd);
+    Vdc_controller.initialize();
 
-    if(mode == CONSTANT_TORQUE_MODE)
-    {
-        double speed = get_initial_speed();
-        double torque =  pcmd/speed;
-        set_initial_Torque(torque);
-    }
+    //CONSTANT_TORQUE_MODE
+    set_initial_Torque(torque);
 
-    set_initial_Pref(pcmd);
+    //ACTIVE_POWER_MODE
     set_active_power_reference_in_pu_based_on_mbase(pcmd);
 
+    set_initial_Pref(pcmd);
     power_closed_loop_controller.set_output(ipcmd);
     power_closed_loop_controller.initialize();
 

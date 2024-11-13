@@ -213,7 +213,7 @@ void PVPNLX::initialize()
         if(toolkit.is_detailed_log_enabled())
         {
             osstream<<get_model_name()<<" model of "<<get_compound_device_name()<<" is initialized."<<endl
-                    <<"(1) Initial solar irradiance in Wpm2 = "<<get_S0_in_Wpm2()<<"Wpm2."<<endl
+                    <<"(1) Initial solar irradiance in Wpm2 = "<<get_S0_in_Wpm2()<<" Wpm2."<<endl
                     <<"(2) Pref in pu = "<<get_Pref_in_pu_base_on_mbase()<<" .";
             toolkit.show_information_with_leading_time_stamp(osstream);
         }

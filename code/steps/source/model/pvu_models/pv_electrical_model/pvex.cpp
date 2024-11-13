@@ -40,7 +40,6 @@ void PVEX::clear()
 {
     set_model_float_parameter_count(37);
     conelec0.clear();
-    set_active_power_control_mode(ACTIVE_POWER_MODE);
 }
 
 void PVEX::copy_from_const_model(const PVEX& model)
@@ -637,22 +636,13 @@ void PVEX::setup_block_toolkit_and_parameters()
     PV_PANEL_MODEL* panelmodel = pv_unit->get_pv_panel_model();
     if(panelmodel!=NULL)
     {
-        if(not panelmodel->is_model_initialized())
-            panelmodel->initialize();
-
         string panel_model_name = panelmodel->get_model_name();
-        if(panel_model_name == "PVPNLY" and get_active_power_control_mode()==ACTIVE_POWER_MODE)
-        {
-            set_active_power_control_mode(DC_VOLTAGE_MODE);
-            STEPS& toolkit = get_toolkit();
-            if(toolkit.is_detailed_log_enabled())
-            {
-                ostringstream osstream;
-                osstream<<"Warning. The active power control mode of "<<get_model_name()<<" in "<<get_compound_device_name()
-                <<" will be automatically modified to DC_VOLTAGE_MODE because PVPNLY not support ACTIVE_POWER_MODE."<<endl;
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-        }
+        if(panel_model_name == "PVPNLX") set_active_power_control_mode(ACTIVE_POWER_MODE);
+        if(panel_model_name == "PVPNLY") set_active_power_control_mode(DC_VOLTAGE_MODE);
+    }
+    else
+    {
+        set_active_power_control_mode(ACTIVE_POWER_MODE);
     }
 }
 
@@ -681,6 +671,8 @@ void PVEX::initialize()
         double eqcmd = pv_converter_model->get_initial_reactive_voltage_command_in_pu();
         double xsource = get_source_impedance_in_pu_based_on_mbase().imag();
 
+        conelec0.set_active_power_reference_in_pu_based_on_mbase(pcmd);
+
         conelec0.set_terminal_current_in_pu_based_on_mbase(iterm);
         conelec0.set_active_power_generation_in_pu_based_on_mbase(pelec);
         conelec0.set_reactive_power_generation_in_pu_based_on_mbase(qelec);
@@ -689,8 +681,6 @@ void PVEX::initialize()
         conelec0.set_initial_reactive_current_command_in_pu_based_on_mbase(iqcmd);
         conelec0.set_initial_reactive_power_command_in_pu_based_on_mbase(qcmd);
         conelec0.set_initial_reactive_voltage_command_in_pu(eqcmd);
-
-        conelec0.set_active_power_reference_in_pu_based_on_mbase(pcmd);
 
         conelec0.set_Xsource(xsource);
 
@@ -712,9 +702,14 @@ void PVEX::initialize()
                     <<"(10) frequency droop regulator state: "<<conelec0.get_frequency_droop_controller_state()<<endl
                     <<"(11) reactive voltage command: "<<get_reactive_voltage_command_in_pu()<<endl
                     <<"(12) active current command: "<<get_active_current_command_in_pu_based_on_mbase()<<endl
-                    <<"(13) reactive current command: "<<get_reactive_current_command_in_pu_based_on_mbase();
+                    <<"(13) reactive current command: "<<get_reactive_current_command_in_pu_based_on_mbase()<<endl
+                    <<"(14) active power control mode: ";
+                    if(get_active_power_control_mode()==ACTIVE_POWER_MODE)
+                       osstream<<"ACTIVE_POWER_MODE";
+                    else
+                        osstream<<"DC_VOLTAGE_MODE";
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
-
     }
 }
 
@@ -941,6 +936,10 @@ void PVEX::prepare_model_data_table()
     add_model_data_name_and_index_pair("PMIN IN PU", i); i++;
     add_model_data_name_and_index_pair("PMAX IN PU", i); i++;
     add_model_data_name_and_index_pair("ACTIVE CURRENT MAX IN PU", i); i++;
+    add_model_data_name_and_index_pair("KP CLOSED LOOP CONTROLLER", i); i++;
+    add_model_data_name_and_index_pair("KI CLOSED LOOP CONTROLLER", i); i++;
+    add_model_data_name_and_index_pair("KP DC VOLTAGE CONTROLLER", i); i++;
+    add_model_data_name_and_index_pair("KI DC VOLTAGE CONTROLLER", i); i++;
 }
 
 double PVEX::get_model_data_with_name(string par_name) const

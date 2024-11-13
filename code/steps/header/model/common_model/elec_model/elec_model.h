@@ -8,6 +8,7 @@ class ELEC_MODEL:public COMMON_MODEL
     public:
         ELEC_MODEL(STEPS& toolkit);
         virtual ~ELEC_MODEL();
+        void clear();
     public:
 
         //set

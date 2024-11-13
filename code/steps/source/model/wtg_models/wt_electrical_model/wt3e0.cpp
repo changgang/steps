@@ -40,8 +40,6 @@ void WT3E0::clear()
 {
     set_model_float_parameter_count(35);
     elecx.clear();
-    elecx.set_active_power_control_mode(SPEED_CONTROL_MODE_WITH_TORQUE);
-    elecx.enable_active_power_open_loop_control();
 }
 
 void WT3E0::copy_from_const_model(const WT3E0& model)
@@ -601,6 +599,8 @@ void WT3E0::setup_block_toolkit_and_parameters()
 {
     elecx.set_bus_pointer(get_bus_pointer());
     elecx.set_device_pointer(get_device_pointer());
+    elecx.set_active_power_control_mode(SPEED_CONTROL_MODE_WITH_TORQUE);
+    elecx.enable_active_power_open_loop_control();
 }
 
 void WT3E0::initialize()
