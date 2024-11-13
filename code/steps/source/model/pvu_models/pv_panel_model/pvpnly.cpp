@@ -7,15 +7,13 @@
 using namespace std;
 
 PVPNLY::PVPNLY(STEPS& toolkit) : PV_PANEL_MODEL(toolkit),
-                                 capacitor(toolkit),
-                                 Vdc_controller(toolkit)
+                                 capacitor(toolkit)
 {
     clear();
 }
 
 PVPNLY::PVPNLY(const PVPNLY& model):PV_PANEL_MODEL(model.get_toolkit()),
-                                    capacitor(model.get_toolkit()),
-                                    Vdc_controller(model.get_toolkit())
+                                    capacitor(model.get_toolkit())
 
 {
     copy_from_const_model(model);
@@ -46,7 +44,8 @@ void PVPNLY::copy_from_const_model(const PVPNLY& model)
 
 void PVPNLY::clear()
 {
-    set_model_float_parameter_count(20);
+    set_model_float_parameter_count(18);
+
     set_Im_in_A_per_solar_cell(7.35);
     set_Isc_in_A_per_solar_cell(7.87);
     set_Vm_in_V_per_solar_cell(29.0);
@@ -67,7 +66,6 @@ void PVPNLY::clear()
     current_pelec_including_loss_per_solar_cell_in_W = DOUBLE_EPSILON;
     current_Vdc_at_mppt_per_solar_cell_in_V = DOUBLE_EPSILON;
     capacitor.set_limiter_type(NO_LIMITER);
-    Vdc_controller.set_limiter_type(NO_LIMITER);
 
 }
 
@@ -191,16 +189,6 @@ void PVPNLY::set_C_in_F(double value)
     capacitor.set_T_in_s(value);
 }
 
-void PVPNLY::set_Kpdc(double value)
-{
-    Vdc_controller.set_Kp(value);
-}
-
-void PVPNLY::set_Kidc(double value)
-{
-    Vdc_controller.set_Ki(value);
-}
-
 void PVPNLY::set_Vdcmin_per_solar_cell_in_V(double value)
 {
     this->Vdcmin_per_solar_cell_in_V = value;
@@ -276,16 +264,6 @@ double PVPNLY::get_C_in_F() const
     return capacitor.get_T_in_s();
 }
 
-double PVPNLY::get_Kpdc() const
-{
-    return Vdc_controller.get_Kp();
-}
-
-double PVPNLY::get_Kidc() const
-{
-    return Vdc_controller.get_Ki();
-}
-
 double PVPNLY::get_Vdcmin_per_solar_cell_in_V() const
 {
     return this->Vdcmin_per_solar_cell_in_V;
@@ -298,8 +276,11 @@ double PVPNLY::get_Vdcmax_per_solar_cell_in_V() const
 
 double PVPNLY::get_Pref_in_pu_base_on_mbase()
 {
-    double Pref = Vdc_controller.get_output();
-    return Pref;
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    osstream<<"WARNING. "<<get_model_name()<<"::"<<__FUNCTION__<<"() is called without implementation. ZERO is returned with no meaning.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+    return 0.0;
 }
 
 double PVPNLY::get_maximum_available_power_extracted_power_from_irradiance_in_pu_on_mbase()
@@ -684,14 +665,14 @@ bool PVPNLY::setup_model_with_steps_string_vector(vector<string>& data)
 {
 
     bool is_successful = false;
-    if(data.size()>=23)
+    if(data.size()>=21)
     {
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
             int mode;
             double Im, Isc, Vm, Voc, Sref, Tref,a, b, c, eta,
-                    s0, smax, c_in_F, kidc, kpdc,vmax, vmin;
+                    s0, smax, c_in_F, vmax, vmin;
             unsigned int nse, nsh;
 
             unsigned int i=3;
@@ -711,8 +692,6 @@ bool PVPNLY::setup_model_with_steps_string_vector(vector<string>& data)
             s0 = get_double_data(data[i],"0.0"); i++;
             smax = get_double_data(data[i],"0.0"); i++;
             c_in_F = get_double_data(data[i],"0.0"); i++;
-            kpdc = get_double_data(data[i],"0.0"); i++;
-            kidc = get_double_data(data[i],"0.0"); i++;
             vmin = get_double_data(data[i],"0.0"); i++;
             vmax = get_double_data(data[i],"0.0"); i++;
 
@@ -758,8 +737,6 @@ bool PVPNLY::setup_model_with_steps_string_vector(vector<string>& data)
             set_S0_in_Wpm2(s0);
             set_Smax_in_Wpm2(smax);
             set_C_in_F(c_in_F);
-            set_Kpdc(kpdc);
-            set_Kidc(kidc);
             set_Vdcmin_per_solar_cell_in_V(vmin);
             set_Vdcmax_per_solar_cell_in_V(vmax);
 
@@ -935,10 +912,6 @@ void PVPNLY::initialize()
                 }
             }
         }
-
-        double pcmd = get_pv_unit_terminal_active_power_generation_in_pu_based_on_mbase();
-        Vdc_controller.set_output(pcmd);
-        Vdc_controller.initialize();
 
         double Vdc0 = get_initial_Vdc_in_kV_per_pv_unit();
         capacitor.set_output(Vdc0);
@@ -1251,13 +1224,6 @@ void PVPNLY::run(DYNAMIC_MODE mode)
     capacitor.set_input(input);
     capacitor.run(mode);
 
-    input = capacitor.get_output() - get_Vdc_reference_in_kV_per_pv_unit();
-
-    Vdc_controller.set_input(input);
-
-    Vdc_controller.run(mode);
-
-
     if(mode==DYNAMIC_UPDATE_MODE)
     {
         set_flag_model_updated_as_true();
@@ -1306,8 +1272,6 @@ string PVPNLY::get_standard_psse_string(bool export_internal_bus_number) const
     double s0 = get_S0_in_Wpm2();
     double smax = get_Smax_in_Wpm2();
     double c_in_F = get_C_in_F();
-    double kpdc = get_Kpdc();
-    double kidc = get_Kidc();
     double vmin = get_Vdcmin_per_solar_cell_in_V();
     double vmax = get_Vdcmax_per_solar_cell_in_V();
 
@@ -1338,8 +1302,6 @@ string PVPNLY::get_standard_psse_string(bool export_internal_bus_number) const
             <<setw(8)<<setprecision(6)<<smax<<", "
             <<setw(8)<<setprecision(6)<<c_in_F<<", \n"
             <<setw(10)<<""
-            <<setw(8)<<setprecision(6)<<kpdc<<", "
-            <<setw(8)<<setprecision(6)<<kidc<<", "
             <<setw(8)<<setprecision(6)<<vmin<<", "
             <<setw(8)<<setprecision(6)<<vmax<<" / ";
 
@@ -1366,8 +1328,6 @@ void PVPNLY::prepare_model_data_table()
     add_model_data_name_and_index_pair("S0 IN W/M2", i); i++;
     add_model_data_name_and_index_pair("SMAX IN W/M2", i); i++;
     add_model_data_name_and_index_pair("C IN F", i); i++;
-    add_model_data_name_and_index_pair("KPDC", i); i++;
-    add_model_data_name_and_index_pair("KIDC", i); i++;
     add_model_data_name_and_index_pair("VMIN IN V", i); i++;
     add_model_data_name_and_index_pair("VMAX IN V", i); i++;
 }
@@ -1419,10 +1379,6 @@ double PVPNLY::get_model_data_with_name(string par_name) const
         return get_Smax_in_Wpm2();
     if(par_name=="C IN F")
         return get_C_in_F();
-    if(par_name=="KPDC")
-        return get_Kpdc();
-    if(par_name=="KIDC")
-        return get_Kidc();
     if(par_name=="VMIN IN V")
         return get_Vdcmin_per_solar_cell_in_V();
     if(par_name=="VMAX IN V")
@@ -1488,10 +1444,6 @@ void PVPNLY::set_model_data_with_name(string par_name, double value)
             return set_Smax_in_Wpm2(value);
         if(par_name=="C IN F")
             return set_C_in_F(value);
-        if(par_name=="KPDC")
-            return set_Kpdc(value);
-        if(par_name=="KIDC")
-            return set_Kidc(value);
         if(par_name=="VMIN IN V")
             return set_Vdcmin_per_solar_cell_in_V(value);
         if(par_name=="VMAX IN V")
@@ -1513,7 +1465,9 @@ void PVPNLY::prepare_model_internal_variable_table()
     add_model_internal_variable_name_and_index_pair("IPV PER SOLAR CELL IN A", i); i++;
     add_model_internal_variable_name_and_index_pair("POWER PER SOLAR CELL IN W", i); i++;
     add_model_internal_variable_name_and_index_pair("VDC PER SOLAR CELL IN V", i); i++;
+    add_model_internal_variable_name_and_index_pair("VDC PER PV UNIT IN KV", i); i++;
     add_model_internal_variable_name_and_index_pair("VDC REFERENCE PER SOLAR CELL IN V", i); i++;
+    add_model_internal_variable_name_and_index_pair("VDC REFERENCE PER PV UNIT IN KV", i); i++;
     add_model_internal_variable_name_and_index_pair("VDC PER SOLAR CELL AT MPPT IN V", i); i++;
 }
 
@@ -1530,8 +1484,12 @@ double PVPNLY::get_model_internal_variable_with_name(string var_name)
         return get_power_extracted_power_from_irradiance_per_solar_cell_in_W(V,S,T);
     if(var_name == "VDC PER SOLAR CELL IN V")
         return get_Vdc_per_solar_cell_in_V();
+    if(var_name == "VDC PER PV UNIT IN KV")
+        return get_Vdc_in_kV_per_pv_unit();
     if(var_name == "VDC REFERENCE PER SOLAR CELL IN V")
         return get_Vdc_reference_per_solar_cell_in_V(S,T,P);
+    if(var_name == "VDC REFERENCE PER PV UNIT IN KV")
+        return get_Vdc_reference_in_kV_per_pv_unit();
     if(var_name == "VDC PER SOLAR CELL AT MPPT IN V")
         return get_Vdc_at_mppt_per_solar_cell_in_V(S,T);
 

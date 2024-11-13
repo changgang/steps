@@ -24,6 +24,9 @@ class PVPNLX : public PV_PANEL_MODEL
 
         virtual double get_Pref_in_pu_base_on_mbase();
 
+        virtual double get_Vdc_in_kV_per_pv_unit();
+        virtual double get_Vdc_reference_in_kV_per_pv_unit();
+
         virtual double get_maximum_available_power_extracted_power_from_irradiance_in_pu_on_mbase();
         virtual double get_pv_panel_power_in_pu_on_mbase();
 

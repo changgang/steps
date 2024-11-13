@@ -15,7 +15,7 @@ class ELEC_MODEL:public COMMON_MODEL
         void set_active_power_generation_in_pu_based_on_mbase(double Pgen);
         void set_reactive_power_generation_in_pu_based_on_mbase(double Qgen);
         void set_speed_in_pu(double s);
-        void set_Vdc(double v);
+        void set_Vdc_in_kV(double v);
 
 
         void set_voltage_reference_in_pu(double Vref);
@@ -24,7 +24,7 @@ class ELEC_MODEL:public COMMON_MODEL
         void set_active_power_reference_in_pu_based_on_mbase(double Pref);
         void set_reactive_power_reference_in_pu_based_on_mbase(double Qref);
         void set_speed_reference_in_pu(double s);
-        void set_Vdc_reference(double V);
+        void set_Vdc_reference_in_kV(double V);
 
         void set_bus_to_regulate(unsigned int bus);
 
@@ -44,14 +44,14 @@ class ELEC_MODEL:public COMMON_MODEL
         double get_active_power_generation_in_pu_based_on_mbase() const;
         double get_reactive_power_generation_in_pu_based_on_mbase() const;
         double get_speed_in_pu() const;
-        double get_Vdc() const;
+        double get_Vdc_in_kV() const;
 
         double get_voltage_reference_in_pu() const;
         double get_power_factor_reference_in_pu() const;
         double get_active_power_reference_in_pu_based_on_mbase() const;
         double get_reactive_power_reference_in_pu_based_on_mbase() const;
         double get_speed_reference_in_pu() const;
-        double get_Vdc_reference() const;
+        double get_Vdc_reference_in_kV() const;
 
         unsigned int get_bus_to_regulate()  const;
 
@@ -84,7 +84,7 @@ class ELEC_MODEL:public COMMON_MODEL
         double active_power_generation_in_pu_based_on_mbase;
         double reactive_power_generation_in_pu_based_on_mbase;
         double speed_in_pu;
-        double Vdc;
+        double Vdc_in_kV;
 
         //reference
         double voltage_reference_in_pu;
@@ -92,7 +92,7 @@ class ELEC_MODEL:public COMMON_MODEL
         double active_power_reference_in_pu_based_on_mbase;
         double reactive_power_reference_in_pu_based_on_mbase;
         double speed_reference_in_pu;
-        double Vdc_reference;
+        double Vdc_reference_in_kV;
 
         unsigned int bus_to_regulate;
 

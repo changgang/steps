@@ -21,6 +21,8 @@ class PV_ELECTRICAL_MODEL : public PVU_MODEL
         double get_pv_unit_terminal_current_in_pu() const;
 
         double get_active_power_reference_in_pu_from_panel_model() const;
+        double get_Vdc_in_kV_per_pv_unit_from_panel_model() const;
+        double get_Vdc_reference_in_kV_per_pv_unit_from_panel_model() const;
 
     public:
         virtual string get_model_name() const = 0;
@@ -33,6 +35,8 @@ class PV_ELECTRICAL_MODEL : public PVU_MODEL
 
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
+        virtual void set_active_power_control_mode(ELEC_ACTIVE_POWER_CONTROL_MODE mode) = 0;
+        virtual ELEC_ACTIVE_POWER_CONTROL_MODE get_active_power_control_mode() const = 0;
         virtual double get_active_current_command_in_pu_based_on_mbase() = 0;
         virtual double get_active_power_command_in_pu_based_on_mbase() const = 0;
         virtual double get_reactive_current_command_in_pu_based_on_mbase() = 0;
@@ -57,6 +61,7 @@ class PV_ELECTRICAL_MODEL : public PVU_MODEL
         virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
         bool flag_model_bypassed;
+        ELEC_ACTIVE_POWER_CONTROL_MODE p_mode;
 };
 
 

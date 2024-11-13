@@ -69,6 +69,7 @@ void ELECX::clear()
     power_closed_loop_controller.set_limiter_type(NO_LIMITER);
 
     frequency_controller.clear();
+    enable_active_power_open_loop_control();
 
 }
 
@@ -625,6 +626,26 @@ double ELECX::get_torque_controller_state() const
     return torque_controller.get_state();
 }
 
+double ELECX::get_virtual_inertia_power_deviation_in_pu() const
+{
+    return frequency_controller.get_virtual_inertia_power_deviation_in_pu();
+}
+
+double ELECX::get_frequency_droop_power_deviation_in_pu() const
+{
+    return frequency_controller.get_frequency_droop_power_deviation_in_pu();
+}
+
+double ELECX::get_frequency_integral_power_deviation_in_pu() const
+{
+    return frequency_controller.get_frequency_integral_power_deviation_in_pu();
+}
+
+double ELECX::get_frequency_regulation_power_deviation_in_pu() const
+{
+    return frequency_controller.get_frequency_regulation_power_deviation_in_pu();
+}
+
 void ELECX::setup_block_toolkit_and_parameters()
 {
     frequency_controller.set_bus_pointer(get_bus_pointer());
@@ -871,8 +892,8 @@ void ELECX::run(DYNAMIC_MODE mode)
 
     if(active_power_mode == DC_VOLTAGE_MODE)
     {
-        double Vdc = get_Vdc();
-        double Vdc_ref = get_Vdc_reference();
+        double Vdc = get_Vdc_in_kV();
+        double Vdc_ref = get_Vdc_reference_in_kV();
         input = Vdc - Vdc_ref;
         Vdc_controller.set_input(input);
         Vdc_controller.run(mode);
@@ -901,6 +922,7 @@ void ELECX::run(DYNAMIC_MODE mode)
 
     input = power_order_integrator.get_output() - pelec;
     power_closed_loop_controller.set_input(input);
+    power_closed_loop_controller.run(mode);
 
     active_power_sensor.set_input(pelec);
     active_power_sensor.run(mode);

@@ -2,7 +2,7 @@
 #define PVEX_H
 
 #include "header/model/pvu_models/pv_electrical_model/pv_electrical_model.h"
-#include "header/model/common_model/elec_model/elec0.h"
+#include "header/model/common_model/elec_model/elecx.h"
 
 class PVEX: public PV_ELECTRICAL_MODEL
 {
@@ -16,6 +16,11 @@ class PVEX: public PV_ELECTRICAL_MODEL
 
         void set_var_control_mode(ELEC_REACTIVE_POWER_CONTROL_MODE mode);
         ELEC_REACTIVE_POWER_CONTROL_MODE get_var_control_mode() const;
+
+        void enable_active_power_closed_loop_control();
+        void enable_active_power_open_loop_control();
+        bool get_active_power_closed_control_flag() const;
+
         void set_bus_to_regulate(unsigned int bus);
         unsigned int get_bus_to_regulate() const;
 
@@ -44,11 +49,15 @@ class PVEX: public PV_ELECTRICAL_MODEL
         void set_frequency_deviation_upper_deadband_in_pu(double f);
         void set_frequency_deviation_lower_deadband_in_pu(double f);
         void set_Kfint(double K);
+        void set_Kpdc(double K);
+        void set_Kidc(double K);
         void set_rPmax_in_pu(double r);
         void set_rPmin_in_pu(double r);
         void set_TFP_in_s(double T);
         void set_Pmax_in_pu(double p);
         void set_Pmin_in_pu(double p);
+        void set_Kpip(double K);
+        void set_Kiip(double K);
         void set_IPmax_in_pu(double I);
 
         double get_Xcomp_in_pu() const;
@@ -76,11 +85,15 @@ class PVEX: public PV_ELECTRICAL_MODEL
         double get_frequency_deviation_upper_deadband_in_pu() const;
         double get_frequency_deviation_lower_deadband_in_pu() const;
         double get_Kfint() const;
+        double get_Kpdc() const;
+        double get_Kidc() const;
         double get_TFP_in_s() const;
         double get_rPmax_in_pu() const;
         double get_rPmin_in_pu() const;
         double get_Pmax_in_pu() const;
         double get_Pmin_in_pu() const;
+        double get_Kpip() const;
+        double get_Kiip() const;
         double get_IPmax_in_pu() const;
 
     public:
@@ -95,12 +108,13 @@ class PVEX: public PV_ELECTRICAL_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
+        virtual void set_active_power_control_mode(ELEC_ACTIVE_POWER_CONTROL_MODE mode);
+        virtual ELEC_ACTIVE_POWER_CONTROL_MODE get_active_power_control_mode() const;
         virtual double get_active_current_command_in_pu_based_on_mbase();
         virtual double get_active_power_command_in_pu_based_on_mbase() const;
         virtual double get_reactive_current_command_in_pu_based_on_mbase();
         virtual double get_reactive_power_command_in_pu_based_on_mbase();
         virtual double get_reactive_voltage_command_in_pu() const;
-
 
         virtual void check();
         virtual void clear();
@@ -119,7 +133,7 @@ class PVEX: public PV_ELECTRICAL_MODEL
     private:
         void copy_from_const_model(const PVEX& model);
 
-        ELEC0 conelec0;
+        ELECX conelec0;
 };
 
 #endif // EXCITER_MODEL_H

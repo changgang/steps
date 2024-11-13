@@ -198,7 +198,22 @@ void FREQUENCY_CONTROLLER::run(DYNAMIC_MODE mode)
 
 double FREQUENCY_CONTROLLER::get_frequency_regulation_power_deviation_in_pu() const
 {
-    return -(virtual_inertia_controller.get_output()
-              +frequency_droop_controller.get_output()
-              +frequency_integral_controller.get_output());
+    return get_virtual_inertia_power_deviation_in_pu()
+            +get_frequency_droop_power_deviation_in_pu()
+            +get_frequency_integral_power_deviation_in_pu();
+}
+
+double FREQUENCY_CONTROLLER::get_virtual_inertia_power_deviation_in_pu() const
+{
+    return -virtual_inertia_controller.get_output();
+}
+
+double FREQUENCY_CONTROLLER::get_frequency_droop_power_deviation_in_pu() const
+{
+    return -frequency_droop_controller.get_output();
+}
+
+double FREQUENCY_CONTROLLER::get_frequency_integral_power_deviation_in_pu() const
+{
+    return -frequency_integral_controller.get_output();
 }

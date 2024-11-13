@@ -38,6 +38,10 @@ class FREQUENCY_CONTROLLER: public COMMON_MODEL
         double get_frequency_droop_controller_state() const;
         double get_frequency_integral_controller_state() const;
 
+        double get_virtual_inertia_power_deviation_in_pu() const;
+        double get_frequency_droop_power_deviation_in_pu() const;
+        double get_frequency_integral_power_deviation_in_pu() const;
+
         double get_frequency_regulation_power_deviation_in_pu() const;
     public:
 

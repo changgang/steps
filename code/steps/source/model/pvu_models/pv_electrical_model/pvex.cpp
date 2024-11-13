@@ -38,8 +38,9 @@ PVEX& PVEX::operator=(const PVEX& model)
 
 void PVEX::clear()
 {
-    set_model_float_parameter_count(32);
+    set_model_float_parameter_count(37);
     conelec0.clear();
+    set_active_power_control_mode(ACTIVE_POWER_MODE);
 }
 
 void PVEX::copy_from_const_model(const PVEX& model)
@@ -100,6 +101,21 @@ void PVEX::set_var_control_mode(ELEC_REACTIVE_POWER_CONTROL_MODE mode)
 ELEC_REACTIVE_POWER_CONTROL_MODE PVEX::get_var_control_mode() const
 {
     return conelec0.get_var_control_mode();
+}
+
+void PVEX::enable_active_power_closed_loop_control()
+{
+    conelec0.enable_active_power_closed_loop_control();
+}
+
+void PVEX::enable_active_power_open_loop_control()
+{
+    conelec0.enable_active_power_open_loop_control();
+}
+
+bool PVEX::get_active_power_closed_control_flag() const
+{
+    return conelec0.get_active_power_closed_control_flag();
 }
 
 void PVEX::set_bus_to_regulate(unsigned int bus)
@@ -240,6 +256,16 @@ void PVEX::set_Kfint(double K)
     conelec0.set_Kfint(K);
 }
 
+void PVEX::set_Kpdc(double K)
+{
+    conelec0.set_Kpdc(K);
+}
+
+void PVEX::set_Kidc(double K)
+{
+    conelec0.set_Kidc(K);
+}
+
 void PVEX::set_rPmax_in_pu(double r)
 {
     conelec0.set_rPmax_in_pu(r);
@@ -263,6 +289,16 @@ void PVEX::set_Pmax_in_pu(double p)
 void PVEX::set_Pmin_in_pu(double p)
 {
     conelec0.set_Pmin_in_pu(p);
+}
+
+void PVEX::set_Kpip(double K)
+{
+    conelec0.set_Kpip(K);
+}
+
+void PVEX::set_Kiip(double K)
+{
+    conelec0.set_Kiip(K);
 }
 
 void PVEX::set_IPmax_in_pu(double I)
@@ -389,6 +425,17 @@ double PVEX::get_Kfint() const
 {
     return conelec0.get_Kfint();
 }
+
+double PVEX::get_Kpdc() const
+{
+    return conelec0.get_Kpdc();
+}
+
+double PVEX::get_Kidc() const
+{
+    return conelec0.get_Kidc();
+}
+
 double PVEX::get_rPmax_in_pu() const
 {
     return conelec0.get_rPmax_in_pu();
@@ -414,6 +461,16 @@ double PVEX::get_Pmin_in_pu() const
     return conelec0.get_Pmin_in_pu();
 }
 
+double PVEX::get_Kpip() const
+{
+    return conelec0.get_Kpip();
+}
+
+double PVEX::get_Kiip() const
+{
+    return conelec0.get_Kiip();
+}
+
 double PVEX::get_IPmax_in_pu() const
 {
     return conelec0.get_IPmax_in_pu();
@@ -422,21 +479,23 @@ double PVEX::get_IPmax_in_pu() const
 bool PVEX::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()>=35)
+    if(data.size()>=40)
     {
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
             unsigned int bus, voltage_flag;
-            int var_control_flag;
+            int var_control_flag, loop_flag;
             double tfv, kpv, kiv, xc, tfp, pmax, pmin, qmax, qmin,
                    ipmax, trv, rpmax, rpmin, kqi, vmax, vmin,
                    kqv, eqmax, eqmin, tv, tp, fn,
-                   kvi, tvi, kdroop, tdroop, fupper, flower, kint;
+                   kvi, tvi, kdroop, tdroop, fupper, flower, kint,
+                   kpdc, kidc, kpip, kiip;
 
             unsigned int i=3;
             bus = get_integer_data(data[i],"0"); i++;
             var_control_flag = get_integer_data(data[i],"0"); i++;
+            loop_flag = get_integer_data(data[i],"0"); i++;
             voltage_flag = (unsigned int)(get_integer_data(data[i],"0")); i++;
             xc = get_double_data(data[i],"0.0"); i++;
             trv = get_double_data(data[i],"0.0"); i++;
@@ -466,7 +525,11 @@ bool PVEX::setup_model_with_steps_string_vector(vector<string>& data)
             tfp = get_double_data(data[i],"0.0"); i++;
             pmin = get_double_data(data[i],"0.0"); i++;
             pmax = get_double_data(data[i],"0.0"); i++;
-            ipmax = get_double_data(data[i],"0.0");
+            ipmax = get_double_data(data[i],"0.0"); i++;
+            kpip = get_double_data(data[i],"0.0"); i++;
+            kiip = get_double_data(data[i],"0.0"); i++;
+            kpdc = get_double_data(data[i],"0.0"); i++;
+            kidc = get_double_data(data[i],"0.0");
 
             set_bus_to_regulate(bus);
             ELEC_REACTIVE_POWER_CONTROL_MODE mode;
@@ -495,6 +558,12 @@ bool PVEX::setup_model_with_steps_string_vector(vector<string>& data)
             }
 
             set_var_control_mode(mode);
+
+            if(loop_flag==1)
+                enable_active_power_closed_loop_control();
+            else
+                enable_active_power_open_loop_control();
+
             set_Xcomp_in_pu(xc);
             set_TRV_in_s(trv);
             set_Fn(fn);
@@ -528,6 +597,10 @@ bool PVEX::setup_model_with_steps_string_vector(vector<string>& data)
             set_Pmin_in_pu(pmin);
             set_Pmax_in_pu(pmax);
             set_IPmax_in_pu(ipmax);
+            set_Kpip(kpip);
+            set_Kiip(kiip);
+            set_Kpdc(kpdc);
+            set_Kidc(kidc);
 
             is_successful = true;
 
@@ -560,6 +633,27 @@ void PVEX::setup_block_toolkit_and_parameters()
 {
     conelec0.set_bus_pointer(get_bus_pointer());
     conelec0.set_device_pointer(get_device_pointer());
+    PV_UNIT* pv_unit = get_pv_unit_pointer();
+    PV_PANEL_MODEL* panelmodel = pv_unit->get_pv_panel_model();
+    if(panelmodel!=NULL)
+    {
+        if(not panelmodel->is_model_initialized())
+            panelmodel->initialize();
+
+        string panel_model_name = panelmodel->get_model_name();
+        if(panel_model_name == "PVPNLY" and get_active_power_control_mode()==ACTIVE_POWER_MODE)
+        {
+            set_active_power_control_mode(DC_VOLTAGE_MODE);
+            STEPS& toolkit = get_toolkit();
+            if(toolkit.is_detailed_log_enabled())
+            {
+                ostringstream osstream;
+                osstream<<"Warning. The active power control mode of "<<get_model_name()<<" in "<<get_compound_device_name()
+                <<" will be automatically modified to DC_VOLTAGE_MODE because PVPNLY not support ACTIVE_POWER_MODE."<<endl;
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+        }
+    }
 }
 
 void PVEX::initialize()
@@ -596,7 +690,7 @@ void PVEX::initialize()
         conelec0.set_initial_reactive_power_command_in_pu_based_on_mbase(qcmd);
         conelec0.set_initial_reactive_voltage_command_in_pu(eqcmd);
 
-        conelec0.set_active_power_reference_in_pu_based_on_mbase(pcmd);//const
+        conelec0.set_active_power_reference_in_pu_based_on_mbase(pcmd);
 
         conelec0.set_Xsource(xsource);
 
@@ -626,13 +720,24 @@ void PVEX::initialize()
 
 void PVEX::run(DYNAMIC_MODE mode)
 {
-    double pref = get_active_power_reference_in_pu_from_panel_model();
     double iterm = get_pv_unit_terminal_current_in_pu();
     complex<double> selec = get_pv_unit_terminal_generation_in_pu_based_on_mbase();
     double pelec = selec.real();
     double qelec = selec.imag();
+    if(get_active_power_control_mode()==ACTIVE_POWER_MODE)
+    {
+        double pref = get_active_power_reference_in_pu_from_panel_model();
+        conelec0.set_active_power_reference_in_pu_based_on_mbase(pref);
+    }
 
-    conelec0.set_active_power_reference_in_pu_based_on_mbase(pref);
+    if(get_active_power_control_mode()==DC_VOLTAGE_MODE)
+    {
+        double Vdc = get_Vdc_in_kV_per_pv_unit_from_panel_model();
+        double Vdcref = get_Vdc_reference_in_kV_per_pv_unit_from_panel_model();
+        conelec0.set_Vdc_in_kV(Vdc);
+        conelec0.set_Vdc_reference_in_kV(Vdcref);
+    }
+
     conelec0.set_terminal_current_in_pu_based_on_mbase(iterm);
     conelec0.set_active_power_generation_in_pu_based_on_mbase(pelec);
     conelec0.set_reactive_power_generation_in_pu_based_on_mbase(qelec);
@@ -642,6 +747,15 @@ void PVEX::run(DYNAMIC_MODE mode)
         set_flag_model_updated_as_true();
 }
 
+void PVEX::set_active_power_control_mode(ELEC_ACTIVE_POWER_CONTROL_MODE mode)
+{
+    conelec0.set_active_power_control_mode(mode);
+}
+
+ELEC_ACTIVE_POWER_CONTROL_MODE PVEX::get_active_power_control_mode() const
+{
+    return conelec0.get_active_power_control_mode();
+}
 
 double PVEX::get_active_current_command_in_pu_based_on_mbase()
 {
@@ -698,6 +812,7 @@ string PVEX::get_standard_psse_string(bool export_internal_bus_number) const
     unsigned int bus_reg = get_bus_to_regulate();
     ELEC_REACTIVE_POWER_CONTROL_MODE mode = get_var_control_mode();
     int var_mode = (mode==CONSTANT_VAR_MODE)? 0: (mode==CONSTANT_POWER_FACTOR_MODE? -1 : 1);
+    int loop_flag = (get_active_power_closed_control_flag()==true)? 1: 0;
     unsigned int voltage_flag = get_voltage_flag();
     double xc = get_Xcomp_in_pu();
     double trv = get_TRV_in_s();
@@ -728,6 +843,10 @@ string PVEX::get_standard_psse_string(bool export_internal_bus_number) const
     double pmin = get_Pmin_in_pu();
     double pmax = get_Pmax_in_pu();
     double ipmax = get_IPmax_in_pu();
+    double kpip = get_Kpip();
+    double kiip = get_Kiip();
+    double kpdc = get_Kpdc();
+    double kidc = get_Kidc();
 
     STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network = toolkit.get_network_matrix();
@@ -742,12 +861,13 @@ string PVEX::get_standard_psse_string(bool export_internal_bus_number) const
             <<setw(6)<<identifier<<", "
             <<setw(8)<<bus_reg<<", "
             <<setw(8)<<var_mode<<", "
+            <<setw(8)<<loop_flag<<", "
             <<setw(8)<<voltage_flag<<", "
             <<setw(8)<<setprecision(6)<<xc<<", "
             <<setw(8)<<setprecision(6)<<trv<<", "
-            <<setw(8)<<setprecision(6)<<fn<<", "
-            <<setw(8)<<setprecision(6)<<kpv<<", \n"
+            <<setw(8)<<setprecision(6)<<fn<<", \n"
             <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<kpv<<", "
             <<setw(8)<<setprecision(6)<<tv<<", "
             <<setw(8)<<setprecision(6)<<kiv<<", "
             <<setw(8)<<setprecision(6)<<qmin<<", "
@@ -755,9 +875,9 @@ string PVEX::get_standard_psse_string(bool export_internal_bus_number) const
             <<setw(8)<<setprecision(6)<<tfv<<", "
             <<setw(8)<<setprecision(6)<<tp<<", "
             <<setw(8)<<setprecision(6)<<kqi<<", "
-            <<setw(8)<<setprecision(6)<<vmin<<", "
-            <<setw(8)<<setprecision(6)<<vmax<<", \n"
+            <<setw(8)<<setprecision(6)<<vmin<<", \n"
             <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<vmax<<", "
             <<setw(8)<<setprecision(6)<<kqv<<", "
             <<setw(8)<<setprecision(6)<<eqmin<<", "
             <<setw(8)<<setprecision(6)<<eqmax<<", "
@@ -765,16 +885,21 @@ string PVEX::get_standard_psse_string(bool export_internal_bus_number) const
             <<setw(8)<<setprecision(6)<<tvi<<", "
             <<setw(8)<<setprecision(6)<<kdroop<<", "
             <<setw(8)<<setprecision(6)<<tdroop<<", "
-            <<setw(8)<<setprecision(6)<<flower<<", "
-            <<setw(8)<<setprecision(6)<<fupper<<", \n"
+            <<setw(8)<<setprecision(6)<<flower<<", \n"
             <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<fupper<<", "
             <<setw(8)<<setprecision(6)<<kint<<", "
             <<setw(8)<<setprecision(6)<<rpmin<<", "
             <<setw(8)<<setprecision(6)<<rpmax<<", "
             <<setw(8)<<setprecision(6)<<tfp<<", "
             <<setw(8)<<setprecision(6)<<pmin<<", "
             <<setw(8)<<setprecision(6)<<pmax<<", "
-            <<setw(8)<<setprecision(6)<<ipmax<<" / ";
+            <<setw(8)<<setprecision(6)<<ipmax<<", "
+            <<setw(8)<<setprecision(6)<<kpip<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<kiip<<", "
+            <<setw(8)<<setprecision(6)<<kpdc<<", "
+            <<setw(8)<<setprecision(6)<<kidc<<" / ";
 
     return osstream.str();
 }
@@ -785,6 +910,7 @@ void PVEX::prepare_model_data_table()
     unsigned int i=0;
     add_model_data_name_and_index_pair("BUS TO REGULATE", i); i++;
     add_model_data_name_and_index_pair("VAR CONTROL FLAG", i); i++;
+    add_model_data_name_and_index_pair("LOOP CONTROL FLAG", i); i++;
     add_model_data_name_and_index_pair("VOLTAGE FLAG", i); i++;
     add_model_data_name_and_index_pair("XCOMP IN PU", i); i++;
     add_model_data_name_and_index_pair("T VOLTAGE SENSOR IN S", i); i++;
@@ -822,7 +948,19 @@ double PVEX::get_model_data_with_name(string par_name) const
     par_name = string2upper(par_name);
 
     if(par_name == "BUS TO REGULATE")  return get_bus_to_regulate();
-    if(par_name == "VAR CONTROL FLAG") return get_var_control_mode();
+    if(par_name == "VAR CONTROL FLAG")
+    {
+        ELEC_REACTIVE_POWER_CONTROL_MODE mode = get_var_control_mode();
+        int var_mode = (mode==CONSTANT_VAR_MODE)? 0: (mode==CONSTANT_POWER_FACTOR_MODE? -1 : 1);
+        return var_mode;
+    }
+
+    if(par_name == "LOOP CONTROL FLAG")
+    {
+        int loop_flag = (get_active_power_closed_control_flag()==true)? 1: 0;
+        return loop_flag;
+    }
+
     if(par_name == "VOLTAGE FLAG")     return get_voltage_flag();
     if(par_name == "XCOMP IN PU")           return get_Xcomp_in_pu();
     if(par_name == "T VOLTAGE SENSOR IN S") return get_TRV_in_s();
@@ -853,6 +991,10 @@ double PVEX::get_model_data_with_name(string par_name) const
     if(par_name == "PMIN IN PU")                       return get_Pmin_in_pu();
     if(par_name == "PMAX IN PU")                       return get_Pmax_in_pu();
     if(par_name == "ACTIVE CURRENT MAX IN PU")         return get_IPmax_in_pu();
+    if(par_name == "KP CLOSED LOOP CONTROLLER")        return get_Kpip();
+    if(par_name == "KI CLOSED LOOP CONTROLLER")        return get_Kiip();
+    if(par_name == "KP DC VOLTAGE CONTROLLER")         return get_Kpdc();
+    if(par_name == "KI DC VOLTAGE CONTROLLER")         return get_Kidc();
 
     STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
@@ -887,11 +1029,19 @@ void PVEX::set_model_data_with_name(string par_name, double value)
         return set_var_control_mode(mode);
     }
 
+    if(par_name == "LOOP CONTROL FLAG")
+    {
+        int flag = (int)(value);
+        if(flag==1) return enable_active_power_closed_loop_control();
+        if(flag==0) return enable_active_power_open_loop_control();
+    }
+
     if(par_name == "VOLTAGE FLAG")
     {
         unsigned int flag = (unsigned int)(value);
         return set_voltage_flag(flag);
     }
+
     if(par_name == "XCOMP IN PU")           return set_Xcomp_in_pu(value);
     if(par_name == "T VOLTAGE SENSOR IN S") return set_TRV_in_s(value);
     if(par_name == "FN")                    return set_Fn(value);
@@ -921,6 +1071,10 @@ void PVEX::set_model_data_with_name(string par_name, double value)
     if(par_name == "PMIN IN PU")                       return set_Pmin_in_pu(value);
     if(par_name == "PMAX IN PU")                       return set_Pmax_in_pu(value);
     if(par_name == "ACTIVE CURRENT MAX IN PU")         return set_IPmax_in_pu(value);
+    if(par_name == "KP CLOSED LOOP CONTROLLER")        return set_Kpip(value);
+    if(par_name == "KI CLOSED LOOP CONTROLLER")        return set_Kiip(value);
+    if(par_name == "KP DC VOLTAGE CONTROLLER")         return set_Kpdc(value);
+    if(par_name == "KI DC VOLTAGE CONTROLLER")         return set_Kidc(value);
 
     STEPS& toolkit = get_toolkit();
     toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
@@ -957,6 +1111,7 @@ void PVEX::prepare_model_internal_variable_table()
     add_model_internal_variable_name_and_index_pair("VIRTUAL INERTIA CONTROL COMMAND", i); i++;
     add_model_internal_variable_name_and_index_pair("PRIMARY FREQUENCY CONTROL COMMAND", i); i++;
     add_model_internal_variable_name_and_index_pair("SECONDARY FREQUENCY CONTROL COMMAND", i); i++;
+    add_model_internal_variable_name_and_index_pair("FREQUENCY CONTROL COMMAND", i); i++;
 }
 
 double PVEX::get_model_internal_variable_with_name(string var_name)
@@ -965,9 +1120,10 @@ double PVEX::get_model_internal_variable_with_name(string var_name)
 	if(var_name == "STATE@VIRTUAL INERTIA CONTROL") return conelec0.get_virtual_inertia_controller_state();
 	if(var_name == "STATE@PRIMARY FREQUENCY CONTROL") return conelec0.get_frequency_droop_controller_state();
 	if(var_name == "STATE@SECONDARY FREQUENCY CONTROL") return conelec0.get_frequency_integral_controller_state();
-	if(var_name == "VIRTUAL INERTIA CONTROL COMMAND") return conelec0.get_virtual_inertia_controller_state();
-	if(var_name == "PRIMARY FREQUENCY CONTROL COMMAND") return conelec0.get_frequency_droop_controller_state();
-	if(var_name == "SECONDARY FREQUENCY CONTROL COMMAND") return conelec0.get_frequency_integral_controller_state();
+	if(var_name == "VIRTUAL INERTIA CONTROL COMMAND") return conelec0.get_virtual_inertia_power_deviation_in_pu();
+	if(var_name == "PRIMARY FREQUENCY CONTROL COMMAND") return conelec0.get_frequency_droop_power_deviation_in_pu();
+	if(var_name == "SECONDARY FREQUENCY CONTROL COMMAND") return conelec0.get_frequency_integral_power_deviation_in_pu();
+	if(var_name == "FREQUENCY CONTROL COMMAND") return conelec0.get_frequency_regulation_power_deviation_in_pu();
     return 0.0;
 }
 

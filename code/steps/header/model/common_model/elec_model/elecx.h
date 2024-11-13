@@ -137,6 +137,12 @@ class ELECX: public ELEC_MODEL
         double get_power_order_integrator_state() const;
         double get_speed_reference_sensor_state() const;
         double get_torque_controller_state() const;
+
+        double get_virtual_inertia_power_deviation_in_pu() const;
+        double get_frequency_droop_power_deviation_in_pu() const;
+        double get_frequency_integral_power_deviation_in_pu() const;
+
+        double get_frequency_regulation_power_deviation_in_pu() const;
     public:
 
         void setup_block_toolkit_and_parameters();

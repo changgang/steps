@@ -6,12 +6,6 @@
 
 class PV_PANEL_MODEL : public PVU_MODEL
 {
-    /*  aero dynamic model for WTG
-        inputs:
-            vwind: wind speed, in pu or in mps
-            beta: pitch angle, in deg
-            speed: wt rotor speed, in pu, or rad/s. not speed deviation
-    */
     public:
         PV_PANEL_MODEL(STEPS& toolkit);
         PV_PANEL_MODEL(const PV_PANEL_MODEL& model);
@@ -37,6 +31,8 @@ class PV_PANEL_MODEL : public PVU_MODEL
         double get_active_power_generation_including_stator_loss_in_MW() const;
 
         virtual double get_Pref_in_pu_base_on_mbase() = 0;
+        virtual double get_Vdc_in_kV_per_pv_unit() = 0;
+        virtual double get_Vdc_reference_in_kV_per_pv_unit() = 0;
         virtual double get_maximum_available_power_extracted_power_from_irradiance_in_pu_on_mbase() = 0;
         double get_maximum_available_power_extracted_power_from_irradiance_in_MW();
 

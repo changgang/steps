@@ -30,9 +30,9 @@ void ELEC_MODEL::set_speed_in_pu(double s)
     this->speed_in_pu = s;
 }
 
-void ELEC_MODEL::set_Vdc(double v)
+void ELEC_MODEL::set_Vdc_in_kV(double v)
 {
-    this->Vdc = v;
+    this->Vdc_in_kV = v;
 }
 
 void ELEC_MODEL::set_voltage_reference_in_pu(double Vref)
@@ -72,9 +72,9 @@ void ELEC_MODEL::set_speed_reference_in_pu(double s)
     this->speed_reference_in_pu = s;
 }
 
-void ELEC_MODEL::set_Vdc_reference(double v)
+void ELEC_MODEL::set_Vdc_reference_in_kV(double v)
 {
-    this->Vdc_reference = v;
+    this->Vdc_reference_in_kV = v;
 }
 
 void ELEC_MODEL::set_bus_to_regulate(unsigned int bus)
@@ -152,9 +152,9 @@ double ELEC_MODEL::get_speed_in_pu() const
     return speed_in_pu;
 }
 
-double ELEC_MODEL::get_Vdc() const
+double ELEC_MODEL::get_Vdc_in_kV() const
 {
-    return Vdc;
+    return Vdc_in_kV;
 }
 
 double ELEC_MODEL::get_voltage_reference_in_pu() const
@@ -182,9 +182,9 @@ double ELEC_MODEL::get_speed_reference_in_pu() const
     return speed_reference_in_pu;
 }
 
-double ELEC_MODEL::get_Vdc_reference() const
+double ELEC_MODEL::get_Vdc_reference_in_kV() const
 {
-    return Vdc_reference;
+    return Vdc_reference_in_kV;
 }
 
 unsigned int ELEC_MODEL::get_bus_to_regulate()  const

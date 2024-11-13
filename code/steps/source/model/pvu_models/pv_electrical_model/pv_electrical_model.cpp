@@ -73,6 +73,7 @@ double PV_ELECTRICAL_MODEL::get_active_power_reference_in_pu_from_panel_model() 
 {
     PV_UNIT* pv_unit = get_pv_unit_pointer();
     PV_PANEL_MODEL* panelmodel = pv_unit->get_pv_panel_model();
+    PV_CONVERTER_MODEL* converter = pv_unit->get_pv_converter_model();
     if(panelmodel!=NULL)
     {
         if(not panelmodel->is_model_initialized())
@@ -81,5 +82,38 @@ double PV_ELECTRICAL_MODEL::get_active_power_reference_in_pu_from_panel_model() 
         return panelmodel->get_Pref_in_pu_base_on_mbase();
     }
     else
+    {
+        return converter->get_initial_active_power_command_in_pu_based_on_mbase();
+    }
+}
+
+double PV_ELECTRICAL_MODEL::get_Vdc_in_kV_per_pv_unit_from_panel_model() const
+{
+    PV_UNIT* pv_unit = get_pv_unit_pointer();
+    PV_PANEL_MODEL* panelmodel = pv_unit->get_pv_panel_model();
+    if(panelmodel!=NULL)
+    {
+        if(not panelmodel->is_model_initialized())
+            panelmodel->initialize();
+
+        return panelmodel->get_Vdc_in_kV_per_pv_unit();
+    }
+    else
         return 0.0;
+}
+
+double PV_ELECTRICAL_MODEL::get_Vdc_reference_in_kV_per_pv_unit_from_panel_model() const
+{
+    PV_UNIT* pv_unit = get_pv_unit_pointer();
+    PV_PANEL_MODEL* panelmodel = pv_unit->get_pv_panel_model();
+    if(panelmodel!=NULL)
+    {
+        if(not panelmodel->is_model_initialized())
+            panelmodel->initialize();
+
+        return panelmodel->get_Vdc_reference_in_kV_per_pv_unit();
+    }
+    else
+        return 0.0;
+
 }

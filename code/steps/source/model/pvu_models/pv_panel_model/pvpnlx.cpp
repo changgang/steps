@@ -90,6 +90,24 @@ double PVPNLX::get_Pref_in_pu_base_on_mbase()
     return get_pv_panel_power_in_pu_on_mbase();
 }
 
+double PVPNLX::get_Vdc_in_kV_per_pv_unit()
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    osstream<<"WARNING. "<<get_model_name()<<"::"<<__FUNCTION__<<"() is called without implementation. ZERO is returned with no meaning.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+    return 0.0;
+}
+
+double PVPNLX::get_Vdc_reference_in_kV_per_pv_unit()
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    osstream<<"WARNING. "<<get_model_name()<<"::"<<__FUNCTION__<<"() is called without implementation. ZERO is returned with no meaning.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+    return 0.0;
+}
+
 double PVPNLX::get_maximum_available_power_extracted_power_from_irradiance_in_pu_on_mbase()
 {
     double S = get_solar_irradiance_in_Wpm2();

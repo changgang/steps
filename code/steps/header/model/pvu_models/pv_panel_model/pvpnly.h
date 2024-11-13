@@ -70,8 +70,6 @@ class PVPNLY : public PV_PANEL_MODEL
         void set_Nsh(unsigned int value);
         void set_Smax_in_Wpm2(double value);
         void set_C_in_F(double value);//per pv unit
-        void set_Kpdc(double value);
-        void set_Kidc(double value);
         void set_Vdcmin_per_solar_cell_in_V(double value);
         void set_Vdcmax_per_solar_cell_in_V(double value);
 
@@ -88,8 +86,6 @@ class PVPNLY : public PV_PANEL_MODEL
         unsigned int get_Nsh() const;
         double get_Smax_in_Wpm2() const;
         double get_C_in_F() const;
-        double get_Kpdc() const;
-        double get_Kidc() const;
         double get_Vdcmin_per_solar_cell_in_V() const;
         double get_Vdcmax_per_solar_cell_in_V() const;
 
@@ -150,7 +146,6 @@ class PVPNLY : public PV_PANEL_MODEL
         double current_Vdc_at_mppt_per_solar_cell_in_V;
 
         INTEGRAL_BLOCK capacitor;//T is per pv unit DC side capacitor in F
-        PI_BLOCK Vdc_controller;
 
 };
 
