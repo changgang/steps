@@ -137,6 +137,7 @@ class ELECX: public ELEC_MODEL
         double get_power_order_integrator_state() const;
         double get_speed_reference_sensor_state() const;
         double get_torque_controller_state() const;
+        double get_power_pi_controller_state() const;
 
         double get_virtual_inertia_power_deviation_in_pu() const;
         double get_frequency_droop_power_deviation_in_pu() const;
@@ -181,7 +182,7 @@ class ELECX: public ELEC_MODEL
         PI_BLOCK speed_controller;
         PI_BLOCK torque_controller;
         PI_BLOCK Vdc_controller;
-        PI_BLOCK power_closed_loop_controller;
+        PI_BLOCK power_pi_controller;
 
         double max_Pcmd_rate, min_Pcmd_rate;
         INTEGRAL_BLOCK power_order_integrator;

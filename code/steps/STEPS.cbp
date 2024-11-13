@@ -199,7 +199,6 @@
 		<Unit filename="header/model/common_model/converter_common_model/pll_model/pll_model.h" />
 		<Unit filename="header/model/common_model/elec_model/elec0.h" />
 		<Unit filename="header/model/common_model/elec_model/elec1.h" />
-		<Unit filename="header/model/common_model/elec_model/elec2.h" />
 		<Unit filename="header/model/common_model/elec_model/elec_model.h" />
 		<Unit filename="header/model/common_model/elec_model/elecx.h" />
 		<Unit filename="header/model/common_model/elec_model/frequency_controller.h" />
@@ -420,10 +419,9 @@
 		<Unit filename="header/model/wtg_models/wt_dbr_model/wtdbr1.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt3e0.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt3e0_test.h" />
-		<Unit filename="header/model/wtg_models/wt_electrical_model/wt3e0mpc.h" />
-		<Unit filename="header/model/wtg_models/wt_electrical_model/wt3e0pcl.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt3e1.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt3e1_test.h" />
+		<Unit filename="header/model/wtg_models/wt_electrical_model/wt3ex.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt_electrical_model.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt_electrical_model_test.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt_electrical_models.h" />
@@ -698,7 +696,6 @@
 		<Unit filename="source/model/common_model/converter_common_model/pll_model/pll_model.cpp" />
 		<Unit filename="source/model/common_model/elec_model/elec0.cpp" />
 		<Unit filename="source/model/common_model/elec_model/elec1.cpp" />
-		<Unit filename="source/model/common_model/elec_model/elec2.cpp" />
 		<Unit filename="source/model/common_model/elec_model/elec_model.cpp" />
 		<Unit filename="source/model/common_model/elec_model/elecx.cpp" />
 		<Unit filename="source/model/common_model/elec_model/frequency_controller.cpp" />
@@ -891,13 +888,12 @@
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
-		<Unit filename="source/model/wtg_models/wt_electrical_model/wt3e0mpc.cpp" />
-		<Unit filename="source/model/wtg_models/wt_electrical_model/wt3e0pcl.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt3e1.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt3e1_test.cpp">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
+		<Unit filename="source/model/wtg_models/wt_electrical_model/wt3ex.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt_electrical_model.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt_electrical_model_test.cpp">
 			<Option compile="0" />

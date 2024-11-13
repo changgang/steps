@@ -1,28 +1,39 @@
-#ifndef WT3E0MPC_H
-#define WT3E0MPC_H
+#ifndef WT3EX_H
+#define WT3EX_H
 
 #include "header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
-#include "header/model/common_model/elec_model/elec0.h"
+#include "header/model/common_model/elec_model/elecx.h"
 #include "header/block/first_order_block.h"
 #include "header/block/pi_block.h"
 
-class WT3E0MPC: public WT_ELECTRICAL_MODEL
+class WT3EX: public WT_ELECTRICAL_MODEL
 {
     public:
-        WT3E0MPC(STEPS& toolkit);
-        WT3E0MPC(const WT3E0MPC& model);
-        virtual ~WT3E0MPC();
-        virtual WT3E0MPC& operator=(const WT3E0MPC& model);
+        WT3EX(STEPS& toolkit);
+        WT3EX(const WT3EX& model);
+        virtual ~WT3EX();
+        virtual WT3EX& operator=(const WT3EX& model);
     public:
         virtual string get_model_name() const;
 
-        void set_var_control_mode(ELEC_REACTIVE_POWER_CONTROL_MODE mode);
-        ELEC_REACTIVE_POWER_CONTROL_MODE get_var_control_mode() const;
-        void set_active_power_control_mode(ELEC_ACTIVE_POWER_CONTROL_MODE mode);
-        ELEC_ACTIVE_POWER_CONTROL_MODE get_active_power_control_mode() const;
         void set_bus_to_regulate(unsigned int bus);
         unsigned int get_bus_to_regulate() const;
 
+        void set_var_control_mode(ELEC_REACTIVE_POWER_CONTROL_MODE mode);
+        ELEC_REACTIVE_POWER_CONTROL_MODE get_var_control_mode() const;
+
+        void set_active_power_control_mode(ELEC_ACTIVE_POWER_CONTROL_MODE mode);
+        ELEC_ACTIVE_POWER_CONTROL_MODE get_active_power_control_mode() const;
+
+        void enable_active_power_closed_loop_control();
+        void enable_active_power_open_loop_control();
+        bool get_active_power_closed_control_flag() const;
+
+        void set_voltage_flag(unsigned int flag);
+        unsigned int get_voltage_flag() const;
+
+
+        // reactive power control loop
         void set_Xcomp_in_pu(double Xc);
         void set_TRV_in_s(double T);
         void set_Fn(double Fn);
@@ -36,35 +47,9 @@ class WT3E0MPC: public WT_ELECTRICAL_MODEL
         void set_KQI(double K);
         void set_Vmax_in_pu(double v);
         void set_Vmin_in_pu(double v);
-        void set_voltage_flag(unsigned int flag);
         void set_KQV(double K);
         void set_EQmax_in_pu(double I);
         void set_EQmin_in_pu(double I);
-
-        void set_Tspeed_in_s(double T);
-        void set_KPP(double K);
-        void set_KIP(double K);
-        void set_Kvi(double K);
-        void set_Tvi_in_s(double T);
-        void set_Kdroop(double K);
-        void set_Tdroop_in_s(double T);
-        void set_frequency_deviation_upper_deadband_in_pu(double f);
-        void set_frequency_deviation_lower_deadband_in_pu(double f);
-        void set_Kfint(double K);
-        void set_rPmax_in_pu(double r);
-        void set_rPmin_in_pu(double r);
-        void set_TFP_in_s(double T);
-        void set_Pmax_in_pu(double p);
-        void set_Pmin_in_pu(double p);
-        void set_IPmax_in_pu(double I);
-        void set_KPC(double K);
-        void set_KIC(double K);
-        void set_KF(double K);
-        void set_dPMN(double p);
-        void set_dPMX(double p);
-
-
-        void set_initial_Torque(double T);
 
         double get_Xcomp_in_pu() const;
         double get_TRV_in_s() const;
@@ -79,14 +64,19 @@ class WT3E0MPC: public WT_ELECTRICAL_MODEL
         double get_KQI() const;
         double get_Vmax_in_pu() const;
         double get_Vmin_in_pu() const;
-        unsigned int get_voltage_flag() const;
         double get_KQV() const;
         double get_EQmax_in_pu() const;
         double get_EQmin_in_pu() const;
 
-        double get_Tspeed_in_s() const;
-        double get_KPP() const;
-        double get_KIP() const;
+        // frequency controller
+        void set_Kvi(double K);
+        void set_Tvi_in_s(double T);
+        void set_Kdroop(double K);
+        void set_Tdroop_in_s(double T);
+        void set_frequency_deviation_upper_deadband_in_pu(double f);
+        void set_frequency_deviation_lower_deadband_in_pu(double f);
+        void set_Kfint(double K);
+
         double get_Kvi() const;
         double get_Tvi_in_s() const;
         double get_Kdroop() const;
@@ -94,22 +84,62 @@ class WT3E0MPC: public WT_ELECTRICAL_MODEL
         double get_frequency_deviation_upper_deadband_in_pu() const;
         double get_frequency_deviation_lower_deadband_in_pu() const;
         double get_Kfint() const;
-        double get_TFP_in_s() const;
+
+        //active power control loop
+        //speed control with torque
+        void set_Tspeed_in_s(double T);
+        void set_KPP(double K);
+        void set_KIP(double K);
+        double get_Tspeed_in_s() const;
+        double get_KPP() const;
+        double get_KIP() const;
+
+        //speed control
+        void set_Kpspeed(double K);
+        void set_Kispeed(double K);
+        double get_Kpspeed() const;
+        double get_Kispeed() const;
+
+        //other active power parameters
+        void set_rPmax_in_pu(double r);
+        void set_rPmin_in_pu(double r);
+        void set_TFP_in_s(double T);
+        void set_Pmax_in_pu(double p);
+        void set_Pmin_in_pu(double p);
+        void set_IPmax_in_pu(double I);
+        void set_Kpip(double K);
+        void set_Kiip(double K);
+
+
         double get_rPmax_in_pu() const;
         double get_rPmin_in_pu() const;
+        double get_TFP_in_s() const;
         double get_Pmax_in_pu() const;
         double get_Pmin_in_pu() const;
         double get_IPmax_in_pu() const;
-        double get_KPC() const;
-        double get_KIC() const;
-        double get_KF() const;
-        double get_dPMN() const;
-        double get_dPMX() const;
+        double get_Kpip() const;
+        double get_Kiip() const;
 
-        double get_initial_Torque() const;
+        //state of block
+        double get_voltage_sensor_state() const;
+        double get_voltage_regulator_first_order_block_state() const;
+        double get_voltage_regulator_integrator_state() const;
+        double get_voltage_regulator_filter_state() const;
+        double get_active_power_sensor_state() const;
+        double get_Q_error_integrator_state() const;
+        double get_V_error_integrator_state() const;
+        double get_virtual_inertia_controller_state() const;
+        double get_frequency_droop_controller_state() const;
+        double get_frequency_integral_controller_state() const;
+        double get_power_order_integrator_state() const;
+        double get_speed_reference_sensor_state() const;
+        double get_torque_controller_state() const;
 
-        void initialize_Torque();
+        double get_virtual_inertia_power_deviation_in_pu() const;
+        double get_frequency_droop_power_deviation_in_pu() const;
+        double get_frequency_integral_power_deviation_in_pu() const;
 
+        double get_frequency_regulation_power_deviation_in_pu() const;
     public:
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
@@ -144,18 +174,8 @@ class WT3E0MPC: public WT_ELECTRICAL_MODEL
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
     private:
-        void copy_from_const_model(const WT3E0MPC& model);
-
-        ELEC_ACTIVE_POWER_CONTROL_MODE active_power_control_mode;
-
-        FIRST_ORDER_BLOCK wind_turbine_speed_reference_sensor, active_power_sensor;
-        PI_BLOCK torque_PI_regulator;
-        PI_BLOCK active_power_PI_controller;
-        DIFFERENTIAL_BLOCK active_power_differential_controller;
-
-        ELEC0 conelec0;
-
-        double initial_torque;
+        void copy_from_const_model(const WT3EX& model);
+        ELECX elecx;
 };
 
-#endif // WT3E0MPC_H
+#endif // WT3EX_H

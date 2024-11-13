@@ -13,7 +13,7 @@ ELECX::ELECX(STEPS& toolkit) : ELEC_MODEL(toolkit),
                                speed_controller(toolkit),
                                torque_controller(toolkit),
                                Vdc_controller(toolkit),
-                               power_closed_loop_controller(toolkit),
+                               power_pi_controller(toolkit),
                                power_order_integrator(toolkit)
 {
     clear();
@@ -32,7 +32,7 @@ ELECX::ELECX(const ELECX& model) : ELEC_MODEL(model.get_toolkit()),
                                    speed_controller(model.get_toolkit()),
                                    torque_controller(model.get_toolkit()),
                                    Vdc_controller(model.get_toolkit()),
-                                   power_closed_loop_controller(model.get_toolkit()),
+                                   power_pi_controller(model.get_toolkit()),
                                    power_order_integrator(model.get_toolkit())
 {
     copy_from_const_model(model);
@@ -66,7 +66,7 @@ void ELECX::clear()
     speed_controller.set_limiter_type(NO_LIMITER);
     torque_controller.set_limiter_type(NO_LIMITER);
     Vdc_controller.set_limiter_type(NO_LIMITER);
-    power_closed_loop_controller.set_limiter_type(NO_LIMITER);
+    power_pi_controller.set_limiter_type(NO_LIMITER);
 
     frequency_controller.clear();
     enable_active_power_open_loop_control();
@@ -513,12 +513,12 @@ void ELECX::set_IPmax_in_pu(double I)
 
 void ELECX::set_Kpip(double K)
 {
-    power_closed_loop_controller.set_Kp(K);
+    power_pi_controller.set_Kp(K);
 }
 
 void ELECX::set_Kiip(double K)
 {
-    power_closed_loop_controller.set_Ki(K);
+    power_pi_controller.set_Ki(K);
 }
 
 double ELECX::get_rPmax_in_pu() const
@@ -553,12 +553,12 @@ double ELECX::get_IPmax_in_pu() const
 
 double ELECX::get_Kpip() const
 {
-    return power_closed_loop_controller.get_Kp();
+    return power_pi_controller.get_Kp();
 }
 
 double ELECX::get_Kiip() const
 {
-    return power_closed_loop_controller.get_Ki();
+    return power_pi_controller.get_Ki();
 }
 
 double ELECX::get_voltage_sensor_state() const
@@ -624,6 +624,11 @@ double ELECX::get_speed_reference_sensor_state() const
 double ELECX::get_torque_controller_state() const
 {
     return torque_controller.get_state();
+}
+
+double ELECX::get_power_pi_controller_state() const
+{
+    return power_pi_controller.get_state();
 }
 
 double ELECX::get_virtual_inertia_power_deviation_in_pu() const
@@ -696,8 +701,8 @@ void ELECX::initialize()
     set_active_power_reference_in_pu_based_on_mbase(pcmd);
 
     set_initial_Pref(pcmd);
-    power_closed_loop_controller.set_output(ipcmd);
-    power_closed_loop_controller.initialize();
+    power_pi_controller.set_output(ipcmd);
+    power_pi_controller.initialize();
 
 
     double ipmax = get_IPmax_in_pu();
@@ -911,8 +916,8 @@ void ELECX::run(DYNAMIC_MODE mode)
     power_order_integrator.run(mode);
 
     input = power_order_integrator.get_output() - pelec;
-    power_closed_loop_controller.set_input(input);
-    power_closed_loop_controller.run(mode);
+    power_pi_controller.set_input(input);
+    power_pi_controller.run(mode);
 
     active_power_sensor.set_input(pelec);
     active_power_sensor.run(mode);
@@ -998,7 +1003,7 @@ double ELECX::get_active_current_command_in_pu_based_on_mbase()
     }
     else
     {
-        double ipcmd = power_closed_loop_controller.get_output();
+        double ipcmd = power_pi_controller.get_output();
         double ipmax = get_IPmax_in_pu();
         if(ipcmd>ipmax)
             ipcmd = ipmax;
@@ -1012,7 +1017,7 @@ double ELECX::get_active_power_command_in_pu_based_on_mbase() const
         return power_order_integrator.get_output();
     else
     {
-        double ipcmd = power_closed_loop_controller.get_output();
+        double ipcmd = power_pi_controller.get_output();
         double ipmax = get_IPmax_in_pu();
         if(ipcmd>ipmax)
             ipcmd = ipmax;

@@ -17,6 +17,9 @@ class PVEX: public PV_ELECTRICAL_MODEL
         void set_var_control_mode(ELEC_REACTIVE_POWER_CONTROL_MODE mode);
         ELEC_REACTIVE_POWER_CONTROL_MODE get_var_control_mode() const;
 
+        void set_active_power_control_mode(ELEC_ACTIVE_POWER_CONTROL_MODE mode);
+        ELEC_ACTIVE_POWER_CONTROL_MODE get_active_power_control_mode() const;
+
         void enable_active_power_closed_loop_control();
         void enable_active_power_open_loop_control();
         bool get_active_power_closed_control_flag() const;
@@ -108,8 +111,6 @@ class PVEX: public PV_ELECTRICAL_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
-        virtual void set_active_power_control_mode(ELEC_ACTIVE_POWER_CONTROL_MODE mode);
-        virtual ELEC_ACTIVE_POWER_CONTROL_MODE get_active_power_control_mode() const;
         virtual double get_active_current_command_in_pu_based_on_mbase();
         virtual double get_active_power_command_in_pu_based_on_mbase() const;
         virtual double get_reactive_current_command_in_pu_based_on_mbase();
