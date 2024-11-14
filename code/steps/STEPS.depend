@@ -25887,7 +25887,7 @@
 	<cstdio>
 	<cmath>
 
-1731290584 source:d:\desktop\steps\code\steps\source\model\sg_models\stabilizer_model\iee2st.cpp
+1731498100 source:d:\desktop\steps\code\steps\source\model\sg_models\stabilizer_model\iee2st.cpp
 	"header/model/sg_models/stabilizer_model/IEE2ST.h"
 	"header/basic/constants.h"
 	"header/STEPS.h"
@@ -25996,7 +25996,7 @@
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 
-1731290584 source:d:\desktop\steps\code\steps\source\model\sg_models\stabilizer_model\stabilizer_model.cpp
+1731498100 source:d:\desktop\steps\code\steps\source\model\sg_models\stabilizer_model\stabilizer_model.cpp
 	"header/model/sg_models/stabilizer_model/stabilizer_model.h"
 	<cstdio>
 	"header/basic/utility.h"
@@ -81148,7 +81148,7 @@
 	"header/block/pi_block.h"
 	"header/block/integral_block.h"
 
-1731496169 source:d:\desktop\steps\code\steps\source\model\wtg_models\wt_electrical_model\wt3ex.cpp
+1731496290 source:d:\desktop\steps\code\steps\source\model\wtg_models\wt_electrical_model\wt3ex.cpp
 	"header/model/wtg_models/wt_electrical_model/wt3ex.h"
 	"header/device/wt_generator.h"
 	"header/power_system_database.h"
@@ -81162,4 +81162,21 @@
 	"header/model/common_model/elec_model/elecx.h"
 	"header/block/first_order_block.h"
 	"header/block/pi_block.h"
+
+1731513835 source:d:\desktop\steps\code\steps\source\model\common_model\primary_model\gov11.cpp
+	"header/model/common_model/primary_model/gov11.h"
+
+1731559083 d:\desktop\steps\code\steps\header\model\common_model\primary_model\gov11.h
+	"header/model/common_model/primary_model/primary_model.h"
+	"header/block/first_order_block.h"
+	"header/block/integral_block.h"
+	"header/block/lead_lag_block.h"
+	"header/block/proportional_block.h"
+
+1731510878 d:\desktop\steps\code\steps\header\model\common_model\primary_model\primary_model.h
+	"header/model/common_model/common_model.h"
+	"header/block/first_order_block.h"
+
+1731510878 source:d:\desktop\steps\code\steps\source\model\common_model\primary_model\primary_model.cpp
+	"header/model/common_model/primary_model/primary_model.h"
 
