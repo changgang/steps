@@ -9,6 +9,9 @@
 #include "header/model/energy_storage_model/es_soc_model/es_soc_model.h"
 #include "header/model/energy_storage_model/es_vrt_model/es_vrt_model.h"
 #include "header/model/energy_storage_model/es_relay_model/es_relay_model.h"
+#include "header/model/energy_storage_model/es_auxiliary_model/es_auxiliary_model.h"
+#include "header/model/energy_storage_model/es_rotor_model/es_rotor_model.h"
+#include "header/model/energy_storage_model/es_primary_model/es_primary_model.h"
 
 using namespace std;
 
@@ -37,12 +40,18 @@ class ENERGY_STORAGE : public SOURCE
         void set_es_electrical_model(ES_ELECTRICAL_MODEL* model);
         void set_es_vrt_model(ES_VRT_MODEL* model);
         void set_es_relay_model(ES_RELAY_MODEL* model);
+        void set_es_auxiliary_model(ES_AUXILIARY_MODEL* model);
+        void set_es_rotor_model(ES_ROTOR_MODEL* model);
+        void set_es_primary_model(ES_PRIMARY_MODEL* model);
 
         ES_CONVERTER_MODEL* get_es_converter_model() const;
         ES_SOC_MODEL* get_es_soc_model() const;
         ES_ELECTRICAL_MODEL* get_es_electrical_model() const;
         ES_VRT_MODEL* get_es_vrt_model() const;
         ES_RELAY_MODEL* get_es_relay_model() const;
+        ES_AUXILIARY_MODEL* get_es_auxiliary_model() const;
+        ES_ROTOR_MODEL* get_es_rotor_model() const;
+        ES_PRIMARY_MODEL* get_es_primary_model() const;
 
         virtual void run(DYNAMIC_MODE mode);
 
@@ -59,6 +68,9 @@ class ENERGY_STORAGE : public SOURCE
         ES_ELECTRICAL_MODEL* es_electrical_model;
         ES_VRT_MODEL* es_vrt_model;
         ES_RELAY_MODEL* es_relay_model;
+        ES_AUXILIARY_MODEL* es_auxiliary_model;
+        ES_ROTOR_MODEL* es_rotor_model;
+        ES_PRIMARY_MODEL* es_primary_model;
     private:
         virtual complex<double> get_complex_internal_voltage_in_pu_in_xy_axis() const;
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power();

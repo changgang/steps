@@ -17,7 +17,7 @@ class ES_PRIMARY_MODEL : public ES_MODEL
         double get_rotor_speed_reference_in_pu() const;
         double get_rotor_speed_in_pu() const;
         double get_active_power_reference_in_pu() const;
-        double get_guide_vane_opening_reference_in_pu() const;
+        double get_valve_reference_in_pu() const;
 
         virtual double get_mechanical_power_in_pu() const = 0;
         virtual bool setup_model_with_steps_string_vector(vector<string>& data) = 0;

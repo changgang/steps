@@ -1351,6 +1351,12 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(const DEVICE_ID& d
                 meter = setter.prepare_es_vrt_model_internal_variable_meter(did, var_name);
             if(meter_type=="ES RELAY MODEL INTERNAL VARIABLE")
                 meter = setter.prepare_es_relay_model_internal_variable_meter(did, var_name);
+            if(meter_type=="ES PRIMARY MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_es_primary_model_internal_variable_meter(did, var_name);
+            if(meter_type=="ES ROTOR MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_es_rotor_model_internal_variable_meter(did, var_name);
+            if(meter_type=="ES AUXILIARY MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_es_auxiliary_model_internal_variable_meter(did, var_name);
 
             if(meter.is_valid())
                 append_meter(meter);

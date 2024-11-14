@@ -2595,6 +2595,51 @@ METER METER_SETTER::prepare_es_vrt_model_internal_variable_meter(const DEVICE_ID
     return meter;
 }
 
+METER METER_SETTER::prepare_es_primary_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("ES PRIMARY MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_rotor_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("ES ROTOR MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_auxiliary_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("ES AUXILIARY MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
 bool METER_SETTER::prepare_2t_lcc_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
 {
     bool successful = false;

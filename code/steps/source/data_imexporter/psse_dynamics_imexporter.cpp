@@ -175,13 +175,13 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
         model = wt_gen->get_wt_generator_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
+        model = wt_gen->get_wt_electrical_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = wt_gen->get_wt_aerodynamic_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = wt_gen->get_wt_turbine_model();
-        if(model!=NULL)
-            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
-        model = wt_gen->get_wt_electrical_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = wt_gen->get_wt_pitch_model();
@@ -209,10 +209,10 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
         model = pv->get_pv_converter_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
-        model = pv->get_pv_panel_model();
+        model = pv->get_pv_electrical_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
-        model = pv->get_pv_electrical_model();
+        model = pv->get_pv_panel_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = pv->get_pv_irradiance_model();
@@ -240,13 +240,22 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
         model = es->get_es_electrical_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
+        model = es->get_es_primary_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
+        model = es->get_es_rotor_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
+        model = es->get_es_auxiliary_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = es->get_es_soc_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
-        model = es->get_es_relay_model();
+        model = es->get_es_vrt_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
-        model = es->get_es_vrt_model();
+        model = es->get_es_relay_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
     }

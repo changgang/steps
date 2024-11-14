@@ -47,6 +47,9 @@ void ENERGY_STORAGE::clear()
     es_vrt_model = NULL;
     es_relay_model = NULL;
     es_soc_model = NULL;
+    es_auxiliary_model = NULL;
+    es_primary_model = NULL;
+    es_rotor_model = NULL;
 
     sequence_parameter_import_flag = false;
 }
@@ -99,6 +102,24 @@ void ENERGY_STORAGE::set_model(MODEL* model)
             return;
         }
 
+        if(model->get_model_type()=="ES AUXILIARY")
+        {
+            set_es_auxiliary_model((ES_AUXILIARY_MODEL*) model);
+            return;
+        }
+
+        if(model->get_model_type()=="ES ROTOR")
+        {
+            set_es_rotor_model((ES_ROTOR_MODEL*) model);
+            return;
+        }
+
+        if(model->get_model_type()=="ES PRIMARY")
+        {
+            set_es_primary_model((ES_PRIMARY_MODEL*) model);
+            return;
+        }
+
         ostringstream osstream;
         osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up energy storage-related model.";
         STEPS& toolkit = get_toolkit();
@@ -119,6 +140,12 @@ MODEL* ENERGY_STORAGE::get_model_of_type(string model_type, unsigned int index)
         return get_es_vrt_model();
     if(model_type=="ES RELAY")
         return get_es_relay_model();
+    if(model_type=="ES AUXILIARY")
+        return get_es_auxiliary_model();
+    if(model_type=="ES ROTOR")
+        return get_es_rotor_model();
+    if(model_type=="ES PRIMARY")
+        return get_es_primary_model();
     return NULL;
 }
 
@@ -152,6 +179,24 @@ void ENERGY_STORAGE::set_es_relay_model(ES_RELAY_MODEL* model)
         es_relay_model = model;
 }
 
+void ENERGY_STORAGE::set_es_auxiliary_model(ES_AUXILIARY_MODEL* model)
+{
+    if(model!=NULL)
+        es_auxiliary_model = model;
+}
+
+void ENERGY_STORAGE::set_es_rotor_model(ES_ROTOR_MODEL* model)
+{
+    if(model!=NULL)
+        es_rotor_model = model;
+}
+
+void ENERGY_STORAGE::set_es_primary_model(ES_PRIMARY_MODEL* model)
+{
+    if(model!=NULL)
+        es_primary_model = model;
+}
+
 ES_CONVERTER_MODEL* ENERGY_STORAGE::get_es_converter_model() const
 {
     return es_converter_model;
@@ -177,6 +222,21 @@ ES_RELAY_MODEL* ENERGY_STORAGE::get_es_relay_model() const
     return es_relay_model;
 }
 
+ES_AUXILIARY_MODEL* ENERGY_STORAGE::get_es_auxiliary_model() const
+{
+    return es_auxiliary_model;
+}
+
+ES_ROTOR_MODEL* ENERGY_STORAGE::get_es_rotor_model() const
+{
+    return es_rotor_model;
+}
+
+ES_PRIMARY_MODEL* ENERGY_STORAGE::get_es_primary_model() const
+{
+    return es_primary_model;
+}
+
 void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;
@@ -189,6 +249,9 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
         ES_SOC_MODEL* soc = get_es_soc_model();
         ES_VRT_MODEL* vrt = get_es_vrt_model();
         ES_RELAY_MODEL* relay = get_es_relay_model();
+        ES_AUXILIARY_MODEL* auxiliary = get_es_auxiliary_model();
+        ES_ROTOR_MODEL* rotor = get_es_rotor_model();
+        ES_PRIMARY_MODEL* primary = get_es_primary_model();
 
         switch(mode)
         {
@@ -203,17 +266,26 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
                     return;
                 }
 
-                if(elec!=NULL and elec->is_model_active())
-                    elec->initialize();
-
                 if(soc!=NULL and soc->is_model_active())
                     soc->initialize();
+
+                if(elec!=NULL and elec->is_model_active())
+                    elec->initialize();
 
                 if(vrt!=NULL and vrt->is_model_active())
                     vrt->initialize();
 
                 if(relay!=NULL and relay->is_model_active())
                     relay->initialize();
+
+                if(auxiliary!=NULL and auxiliary->is_model_active())
+                    auxiliary->initialize();
+
+                if(primary!=NULL and primary->is_model_active())
+                    primary->initialize();
+
+                if(rotor!=NULL and rotor->is_model_active())
+                    rotor->initialize();
 
                 break;
             }
@@ -238,14 +310,24 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
                     }
                 }
 
-                if(soc!=NULL and soc->is_model_active())
-                    soc->run(mode);
+                if(auxiliary!=NULL and auxiliary->is_model_active())
+                    auxiliary->run(mode);
+
+                if(primary!=NULL and primary->is_model_active())
+                    primary->run(mode);
+
+                if(rotor!=NULL and rotor->is_model_active())
+                    rotor->run(mode);
 
                 if(elec!=NULL and elec->is_model_active() and (not elec->is_model_bypassed()))
                     elec->run(mode);
 
                 if(conv!=NULL and conv->is_model_active())
                     conv->run(mode);
+
+                if(soc!=NULL and soc->is_model_active())
+                    soc->run(mode);
+
                 break;
             }
             case DYNAMIC_RELAY_MODE:
@@ -305,8 +387,10 @@ ENERGY_STORAGE& ENERGY_STORAGE::operator=(const ENERGY_STORAGE& estorage)
     set_model(estorage.get_es_electrical_model());
     set_model(estorage.get_es_vrt_model());
     set_model(estorage.get_es_relay_model());
-    set_model(estorage.get_es_vrt_model());
     set_model(estorage.get_es_soc_model());
+    set_model(estorage.get_es_auxiliary_model());
+    set_model(estorage.get_es_primary_model());
+    set_model(estorage.get_es_rotor_model());
     return *this;
 }
 

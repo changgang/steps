@@ -11,12 +11,11 @@ class ES_AUXILIARY_MODEL : public ES_MODEL
         virtual ~ES_AUXILIARY_MODEL();
     public:
         virtual string get_model_type() const;
-    public:
         virtual string get_model_name() const = 0;
 
-        virtual double get_active_power_reference_in_pu() const;
-        virtual double get_rotor_speed_reference_in_pu() const;
-
+        virtual double get_active_power_reference_in_pu() const = 0;
+        virtual double get_rotor_speed_reference_in_pu() const = 0;
+        virtual double get_valve_reference_in_pu() const = 0;
 
         virtual bool setup_model_with_steps_string_vector(vector<string>& data) = 0;
         virtual bool setup_model_with_psse_string(string data) = 0;

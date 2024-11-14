@@ -52,6 +52,27 @@ const char* api_get_energy_storage_related_model_name(unsigned int bus, char* id
 			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (model->get_model_name()).c_str());
 		return toolkit.steps_char_buffer;
     }
+    if(MODEL_TYPE=="ESPMY" or MODEL_TYPE=="ES PRIMARY")
+    {
+        ES_PRIMARY_MODEL* model = energy_storage->get_es_primary_model();
+        if(model!=NULL)
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (model->get_model_name()).c_str());
+		return toolkit.steps_char_buffer;
+    }
+    if(MODEL_TYPE=="ESROTOR" or MODEL_TYPE=="ES ROTOR")
+    {
+        ES_ROTOR_MODEL* model = energy_storage->get_es_rotor_model();
+        if(model!=NULL)
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (model->get_model_name()).c_str());
+		return toolkit.steps_char_buffer;
+    }
+    if(MODEL_TYPE=="ESAUX" or MODEL_TYPE=="ES AUXILIARY")
+    {
+        ES_AUXILIARY_MODEL* model = energy_storage->get_es_auxiliary_model();
+        if(model!=NULL)
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (model->get_model_name()).c_str());
+		return toolkit.steps_char_buffer;
+    }
     show_model_type_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
 	return toolkit.steps_char_buffer;
 }
@@ -106,6 +127,30 @@ double api_get_energy_storage_related_model_float_parameter(unsigned int bus, ch
     if(MODEL_TYPE=="ESRLY" or MODEL_TYPE=="ES RELAY")
     {
         ES_RELAY_MODEL* model = energy_storage->get_es_relay_model();
+        if(model!=NULL)
+            return model->get_model_data_with_name(PARAMETER_NAME);
+        else
+            return 0.0;
+    }
+    if(MODEL_TYPE=="ESPMY" or MODEL_TYPE=="ES PRIMARY")
+    {
+        ES_PRIMARY_MODEL* model = energy_storage->get_es_primary_model();
+        if(model!=NULL)
+            return model->get_model_data_with_name(PARAMETER_NAME);
+        else
+            return 0.0;
+    }
+    if(MODEL_TYPE=="ESROTOR" or MODEL_TYPE=="ES ROTOR")
+    {
+        ES_ROTOR_MODEL* model = energy_storage->get_es_rotor_model();
+        if(model!=NULL)
+            return model->get_model_data_with_name(PARAMETER_NAME);
+        else
+            return 0.0;
+    }
+    if(MODEL_TYPE=="ESAUX" or MODEL_TYPE=="ES AUXILIARY")
+    {
+        ES_AUXILIARY_MODEL* model = energy_storage->get_es_auxiliary_model();
         if(model!=NULL)
             return model->get_model_data_with_name(PARAMETER_NAME);
         else
@@ -169,6 +214,30 @@ void api_set_energy_storage_related_model_float_parameter(unsigned int bus, char
         else
             return;
     }
+    if(MODEL_TYPE=="ESPMY" or MODEL_TYPE=="ES PRIMARY")
+    {
+        ES_PRIMARY_MODEL* model = energy_storage->get_es_primary_model();
+        if(model!=NULL)
+            return model->set_model_data_with_name(PARAMETER_NAME, value);
+        else
+            return;
+    }
+    if(MODEL_TYPE=="ESROTOR" or MODEL_TYPE=="ES ROTOR")
+    {
+        ES_ROTOR_MODEL* model = energy_storage->get_es_rotor_model();
+        if(model!=NULL)
+            return model->set_model_data_with_name(PARAMETER_NAME, value);
+        else
+            return;
+    }
+    if(MODEL_TYPE=="ESAUX" or MODEL_TYPE=="ES AUXILIARY")
+    {
+        ES_AUXILIARY_MODEL* model = energy_storage->get_es_auxiliary_model();
+        if(model!=NULL)
+            return model->set_model_data_with_name(PARAMETER_NAME, value);
+        else
+            return;
+    }
     show_model_type_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
 }
 
@@ -220,6 +289,30 @@ unsigned int api_get_energy_storage_related_model_float_parameter_count(unsigned
     if(MODEL_TYPE=="ESRLY" or MODEL_TYPE=="ES RELAY")
     {
         ES_RELAY_MODEL* model = energy_storage->get_es_relay_model();
+        if(model!=NULL)
+            return model->get_model_float_parameter_count();
+        else
+            return 0;
+    }
+    if(MODEL_TYPE=="ESPMY" or MODEL_TYPE=="ES PRIMARY")
+    {
+        ES_PRIMARY_MODEL* model = energy_storage->get_es_primary_model();
+        if(model!=NULL)
+            return model->get_model_float_parameter_count();
+        else
+            return 0;
+    }
+    if(MODEL_TYPE=="ESROTOR" or MODEL_TYPE=="ES ROTOR")
+    {
+        ES_ROTOR_MODEL* model = energy_storage->get_es_rotor_model();
+        if(model!=NULL)
+            return model->get_model_float_parameter_count();
+        else
+            return 0;
+    }
+    if(MODEL_TYPE=="ESAUX" or MODEL_TYPE=="ES AUXILIARY")
+    {
+        ES_AUXILIARY_MODEL* model = energy_storage->get_es_auxiliary_model();
         if(model!=NULL)
             return model->get_model_float_parameter_count();
         else
@@ -279,6 +372,30 @@ const char* api_get_energy_storage_related_model_float_parameter_name(unsigned i
     if(MODEL_TYPE=="ESRLY" or MODEL_TYPE=="ES RELAY")
     {
         ES_RELAY_MODEL* model = energy_storage->get_es_relay_model();
+        if(model!=NULL)
+            name = model->get_model_data_name(parameter_index);
+        snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+    if(MODEL_TYPE=="ESPMY" or MODEL_TYPE=="ES PRIMARY")
+    {
+        ES_PRIMARY_MODEL* model = energy_storage->get_es_primary_model();
+        if(model!=NULL)
+            name = model->get_model_data_name(parameter_index);
+        snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+    if(MODEL_TYPE=="ESROTOR" or MODEL_TYPE=="ES ROTOR")
+    {
+        ES_ROTOR_MODEL* model = energy_storage->get_es_rotor_model();
+        if(model!=NULL)
+            name = model->get_model_data_name(parameter_index);
+        snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+    if(MODEL_TYPE=="ESAUX" or MODEL_TYPE=="ES AUXILIARY")
+    {
+        ES_AUXILIARY_MODEL* model = energy_storage->get_es_auxiliary_model();
         if(model!=NULL)
             name = model->get_model_data_name(parameter_index);
         snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());

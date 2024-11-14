@@ -11,13 +11,12 @@ class ES_ROTOR_MODEL : public ES_MODEL
         virtual ~ES_ROTOR_MODEL();
     public:
         virtual string get_model_type() const;
-    public:
         virtual string get_model_name() const = 0;
 
         double get_mechanical_power_in_pu() const;
         double get_terminal_active_power_including_stator_loss_in_pu() const;
 
-        virtual double get_rotor_speed_in_pu() const;
+        virtual double get_rotor_speed_in_pu() const = 0;
         virtual bool setup_model_with_steps_string_vector(vector<string>& data) = 0;
         virtual bool setup_model_with_psse_string(string data) = 0;
         virtual bool setup_model_with_bpa_string(string data) = 0;

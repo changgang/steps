@@ -177,7 +177,10 @@ vector<string> energy_storage_meters{"TERMINAL CURRENT IN PU ON MBASE", "TERMINA
                                      "ES ELECTRICAL MODEL INTERNAL VARIABLE",
                                      "ES SOC MODEL INTERNAL VARIABLE",
                                      "ES VRT MODEL INTERNAL VARIABLE",
-                                     "ES RELAY MODEL INTERNAL VARIABLE"};
+                                     "ES RELAY MODEL INTERNAL VARIABLE",
+                                     "ES PRIMARY MODEL INTERNAL VARIABLE",
+                                     "ES ROTOR MODEL INTERNAL VARIABLE",
+                                     "ES AUXILIARY MODEL INTERNAL VARIABLE"};
 
 vector<string> lcc_hvdc2t_meters{ "DC CURRENT IN KA",
                                   "RECTIFIER DC CURRENT IN KA",   "INVERTER DC CURRENT IN KA",
@@ -439,6 +442,8 @@ bool METER::is_internal_variable_name_valid(string& name, unsigned int index) co
                 model = ptr->get_pv_electrical_model();
             if(meter_type=="PV IRRADIANCE MODEL INTERNAL VARIABLE")
                 model = ptr->get_pv_irradiance_model();
+            if(meter_type=="PV TEMPERATURE MODEL INTERNAL VARIABLE")
+                model = ptr->get_pv_temperature_model();
             if(meter_type=="PV VRT MODEL INTERNAL VARIABLE")
                 model = ptr->get_pv_vrt_model();
             if(meter_type=="PV RELAY MODEL INTERNAL VARIABLE")
@@ -457,6 +462,12 @@ bool METER::is_internal_variable_name_valid(string& name, unsigned int index) co
                 model = ptr->get_es_vrt_model();
             if(meter_type=="ES RELAY MODEL INTERNAL VARIABLE")
                 model = ptr->get_es_relay_model();
+            if(meter_type=="ES PRIMARY MODEL INTERNAL VARIABLE")
+                model = ptr->get_es_primary_model();
+            if(meter_type=="ES ROTOR MODEL INTERNAL VARIABLE")
+                model = ptr->get_es_rotor_model();
+            if(meter_type=="ES AUXILIARY MODEL INTERNAL VARIABLE")
+                model = ptr->get_es_auxiliary_model();
         }
         if(device_type==STEPS_LCC_HVDC2T)
         {
@@ -2275,6 +2286,9 @@ double METER::get_meter_value_as_an_energy_storage() const
             ES_ELECTRICAL_MODEL* electrical_model = energy_storage->get_es_electrical_model();
             ES_VRT_MODEL* vrt_model = energy_storage->get_es_vrt_model();
             ES_RELAY_MODEL* relay_model = energy_storage->get_es_relay_model();
+            ES_PRIMARY_MODEL* primary_model = energy_storage->get_es_primary_model();
+            ES_ROTOR_MODEL* rotor_model = energy_storage->get_es_rotor_model();
+            ES_AUXILIARY_MODEL* aux_model = energy_storage->get_es_auxiliary_model();
 
             if(meter_type=="TERMINAL CURRENT IN PU ON MBASE")
             {
@@ -2486,6 +2500,27 @@ double METER::get_meter_value_as_an_energy_storage() const
             {
                 if(relay_model!=NULL)
                     return relay_model->get_model_internal_variable_with_name(get_internal_variable_name());
+                else
+                    return 0.0;
+            }
+            if(meter_type=="ES PRIMARY MODEL INTERNAL VARIABLE")
+            {
+                if(primary_model!=NULL)
+                    return primary_model->get_model_internal_variable_with_name(get_internal_variable_name());
+                else
+                    return 0.0;
+            }
+            if(meter_type=="ES ROTOR MODEL INTERNAL VARIABLE")
+            {
+                if(rotor_model!=NULL)
+                    return rotor_model->get_model_internal_variable_with_name(get_internal_variable_name());
+                else
+                    return 0.0;
+            }
+            if(meter_type=="ES AUXILIARY MODEL INTERNAL VARIABLE")
+            {
+                if(aux_model!=NULL)
+                    return aux_model->get_model_internal_variable_with_name(get_internal_variable_name());
                 else
                     return 0.0;
             }

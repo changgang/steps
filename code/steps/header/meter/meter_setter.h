@@ -203,6 +203,9 @@ class METER_SETTER
         METER prepare_es_soc_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
         METER prepare_es_relay_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
         METER prepare_es_vrt_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_es_primary_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_es_rotor_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_es_auxiliary_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
 
         METER prepare_2t_lcc_hvdc_dc_current_in_kA_meter(const DEVICE_ID& device_id);
         METER prepare_2t_lcc_hvdc_rectifier_dc_current_in_kA_meter(const DEVICE_ID& device_id);

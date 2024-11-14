@@ -4791,12 +4791,27 @@ void POWER_SYSTEM_DATABASE::check_energy_storage_related_dynamic_data()
         if(relay!=NULL)
             relay->check();
 
+        ES_PRIMARY_MODEL* primary = estorage->get_es_primary_model();
+        if(primary!=NULL)
+            primary->check();
+
+        ES_ROTOR_MODEL* rotor = estorage->get_es_rotor_model();
+        if(rotor!=NULL)
+            rotor->check();
+
+        ES_AUXILIARY_MODEL* aux = estorage->get_es_auxiliary_model();
+        if(aux!=NULL)
+            aux->check();
+
         if(toolkit->is_detailed_log_enabled())
         {
             ostringstream osstream;
             osstream<<"Model entry address of "<<estorage->get_compound_device_name()<<":\n"
-                    <<"Es converter: "<<conv<<"\n"
+                    <<"Converter:    "<<conv<<"\n"
+                    <<"Primary:      "<<primary<<"\n"
                     <<"Electrical:   "<<elec<<"\n"
+                    <<"Auxiliary:    "<<aux<<"\n"
+                    <<"Rotor:        "<<rotor<<"\n"
                     <<"Soc:          "<<soc<<"\n"
                     <<"Vrt:          "<<vrt<<"\n"
                     <<"Relay:        "<<relay;
