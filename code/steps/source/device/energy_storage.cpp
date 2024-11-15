@@ -257,6 +257,9 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
         {
             case DYNAMIC_INITIALIZE_MODE:
             {
+
+                initialize_energy_storage_mode();
+
                 if(conv!=NULL and conv->is_model_active())
                     conv->initialize();
                 else
@@ -266,11 +269,17 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
                     return;
                 }
 
-                if(soc!=NULL and soc->is_model_active())
-                    soc->initialize();
+                if(auxiliary!=NULL and auxiliary->is_model_active())
+                    auxiliary->initialize();
+
+                if(rotor!=NULL and rotor->is_model_active())
+                    rotor->initialize();
 
                 if(elec!=NULL and elec->is_model_active())
                     elec->initialize();
+
+                if(primary!=NULL and primary->is_model_active())
+                    primary->initialize();
 
                 if(vrt!=NULL and vrt->is_model_active())
                     vrt->initialize();
@@ -278,14 +287,8 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
                 if(relay!=NULL and relay->is_model_active())
                     relay->initialize();
 
-                if(auxiliary!=NULL and auxiliary->is_model_active())
-                    auxiliary->initialize();
-
-                if(primary!=NULL and primary->is_model_active())
-                    primary->initialize();
-
-                if(rotor!=NULL and rotor->is_model_active())
-                    rotor->initialize();
+                if(soc!=NULL and soc->is_model_active())
+                    soc->initialize();
 
                 break;
             }
@@ -414,4 +417,22 @@ void ENERGY_STORAGE::set_sequence_parameter_import_flag(bool flag)
 bool ENERGY_STORAGE::get_sequence_parameter_import_flag() const
 {
     return sequence_parameter_import_flag;
+}
+
+void ENERGY_STORAGE::set_energy_storage_mode(ES_MODE m)
+{
+    this->mode = m;
+}
+
+ES_MODE ENERGY_STORAGE::get_energy_storage_mode() const
+{
+    return this->mode;
+}
+
+void ENERGY_STORAGE::initialize_energy_storage_mode()
+{
+    double P = get_p_generation_in_MW();
+    if(fabs(P)<=DOUBLE_EPSILON) set_energy_storage_mode(ES_OUT_SERVICE_MODE);
+    if(P>DOUBLE_EPSILON) set_energy_storage_mode(ES_DISCHARGE_MODE);
+    if(P<DOUBLE_EPSILON) set_energy_storage_mode(ES_CHARGE_MODE);
 }

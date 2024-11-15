@@ -19,7 +19,18 @@ class ES_PRIMARY_MODEL : public ES_MODEL
         double get_active_power_reference_in_pu() const;
         double get_valve_reference_in_pu() const;
 
-        virtual double get_mechanical_power_in_pu() const = 0;
+        void set_initial_rotor_speed_in_pu(double s);
+        void set_initial_active_power_reference_in_pu(double p);
+        void set_initial_valve_in_pu(double v);
+        double get_initial_rotor_speed_in_pu() const;
+        double get_initial_active_power_reference_in_pu() const;
+        double get_initial_valve_in_pu() const;
+
+
+        virtual double get_valve_in_pu() const = 0;
+        virtual double get_delta_Y_in_pu() const = 0;
+        virtual double get_mechanical_power_in_pu_on_mbase() const = 0;
+
         virtual bool setup_model_with_steps_string_vector(vector<string>& data) = 0;
         virtual bool setup_model_with_psse_string(string data) = 0;
         virtual bool setup_model_with_bpa_string(string data) = 0;
@@ -47,6 +58,9 @@ class ES_PRIMARY_MODEL : public ES_MODEL
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
+        double initial_Pref;
+        double initial_speed;
+        double initial_valve;
 
 };
 

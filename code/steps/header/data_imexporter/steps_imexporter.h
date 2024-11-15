@@ -242,8 +242,10 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_ESSOC0_model(vector<string>& data);
         void add_ESCVX_model(vector<string>& data);
         void add_ESCV2_model(vector<string>& data);
-        void add_ESE0_model(vector<string>& data);
+        void add_ESEX_model(vector<string>& data);
         void add_ESVRT3_model(vector<string>& data);
+        void add_ESROT0_model(vector<string>& data);
+        void add_ESP11_model(vector<string>& data);
         void add_ESVRTRLY1_model(vector<string>& data);
 
         DEVICE_ID get_generator_device_id_from_string_vector(vector<string>& data);

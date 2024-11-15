@@ -12,8 +12,11 @@ class GOV11:public PRIMARY_MODEL
     //PSASP11 turbine governor
     public:
         GOV11(STEPS& toolkit);
+        GOV11(const GOV11& model);
         virtual ~GOV11();
-        void clear();
+        virtual GOV11& operator=(const GOV11& model);
+        virtual void clear();
+        void copy_from_const_model(const GOV11& model);
         string get_model_name() const;
     public:
 
@@ -45,8 +48,9 @@ class GOV11:public PRIMARY_MODEL
         double get_Ts_in_s() const;
         double get_Twg_in_s() const;
 
-        double get_valve_in_pu();
-        double get_delta_Y_in_pu();
+        double get_valve_in_pu() const;
+        double get_delta_Y_in_pu() const;
+        double get_mechanical_power_in_pu_on_mbase() const;
 
     public:
 

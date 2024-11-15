@@ -25,20 +25,72 @@ string ES_PRIMARY_MODEL::get_model_type() const
 
 double ES_PRIMARY_MODEL::get_rotor_speed_reference_in_pu() const
 {
-    return 0;
+    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
+    ES_AUXILIARY_MODEL* aux_model = energy_storage->get_es_auxiliary_model();
+    if(aux_model!=NULL)
+    {
+        return aux_model->get_rotor_speed_reference_in_pu();
+    }
+    else
+    {
+        ES_MODE mode = get_energy_storage_mode();
+        if(mode==ES_OUT_SERVICE_MODE)
+            return 0.0;
+        if(mode==ES_CHARGE_MODE)
+            return -1.0;
+        if(mode==ES_DISCHARGE_MODE)
+            return 1.0;
+
+        return 0.0;
+    }
 }
 
 double ES_PRIMARY_MODEL::get_rotor_speed_in_pu() const
 {
-    return 0;
+    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
+    ES_ROTOR_MODEL* rotor_model = energy_storage->get_es_rotor_model();
+    if(rotor_model!=NULL)
+    {
+        return rotor_model->get_rotor_speed_in_pu();
+    }
+    else
+    {
+        ES_MODE mode = get_energy_storage_mode();
+        if(mode==ES_OUT_SERVICE_MODE)
+            return 0.0;
+        if(mode==ES_CHARGE_MODE or mode==ES_START_CHARGE_MODE or mode == ES_STOP_CHARGE_MODE)
+            return -1.0;
+        if(mode==ES_DISCHARGE_MODE or mode==ES_START_DISCHARGE_MODE or mode==ES_STOP_DISCHARGE_MODE)
+            return 1.0;
+
+        return 0.0;
+    }
 }
 
 double ES_PRIMARY_MODEL::get_active_power_reference_in_pu() const
 {
-    return 0;
+    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
+    ES_ELECTRICAL_MODEL* elec_model = energy_storage->get_es_electrical_model();
+    if(elec_model!=NULL)
+        return elec_model->get_frequency_regulation_power_in_pu();
+    else
+    {
+        ES_CONVERTER_MODEL* converter_model = energy_storage->get_es_converter_model();
+        return converter_model->get_initial_active_power_command_in_pu_based_on_mbase();
+    }
 }
 
 double ES_PRIMARY_MODEL::get_valve_reference_in_pu() const
 {
-    return 0;
+    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
+    ES_AUXILIARY_MODEL* aux_model = energy_storage->get_es_auxiliary_model();
+    if(aux_model!=NULL)
+    {
+        return aux_model->get_valve_reference_in_pu();
+    }
+    else
+    {
+        ES_CONVERTER_MODEL* converter_model = energy_storage->get_es_converter_model();
+        return converter_model->get_initial_active_power_command_in_pu_based_on_mbase();
+    }
 }

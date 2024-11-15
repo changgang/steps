@@ -2,7 +2,7 @@
 
 ELEC_MODEL::ELEC_MODEL(STEPS& toolkit):COMMON_MODEL(toolkit)
 {
-
+    clear();
 }
 
 ELEC_MODEL::~ELEC_MODEL()
@@ -33,6 +33,7 @@ void ELEC_MODEL::clear()
     set_initial_Vdc(1.0);
     set_initial_Torque(1.0);
     set_Xsource(0.1);
+    activate_active_power_control();
 }
 
 void ELEC_MODEL::set_terminal_current_in_pu_based_on_mbase(double Iterm)
@@ -265,4 +266,19 @@ double ELEC_MODEL::get_initial_Torque() const
 double ELEC_MODEL::get_Xsource() const
 {
     return Xsource;
+}
+
+void ELEC_MODEL::activate_active_power_control()
+{
+    this->is_active_power_control_flag = true;
+}
+
+void ELEC_MODEL::deactivate_active_power_control()
+{
+    this->is_active_power_control_flag = false;
+}
+
+bool ELEC_MODEL::is_active_power_control_activated() const
+{
+    return is_active_power_control_flag;
 }

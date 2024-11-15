@@ -20463,9 +20463,9 @@
 	<functional>
 	"terminal.h"
 
-1731290583 d:\desktop\steps\code\steps\header\basic\constants.h
+1731571769 d:\desktop\steps\code\steps\header\basic\constants.h
 
-1731401314 d:\desktop\steps\code\steps\header\basic\steps_enum.h
+1731642295 d:\desktop\steps\code\steps\header\basic\steps_enum.h
 	<iso646.h>
 
 1731290583 d:\desktop\steps\code\steps\header\basic\terminal.h
@@ -20739,7 +20739,7 @@
 1731290583 d:\desktop\steps\code\steps\header\model\pvu_models\pv_relay_model\pv_relay_model.h
 	"header/model/pvu_models/pvu_model.h"
 
-1731561095 d:\desktop\steps\code\steps\header\device\energy_storage.h
+1731647152 d:\desktop\steps\code\steps\header\device\energy_storage.h
 	<complex>
 	<string>
 	"header/device/source.h"
@@ -20755,11 +20755,11 @@
 1731290583 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_converter_model\es_converter_model.h
 	"header/model/energy_storage_model/es_model.h"
 
-1731290583 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_model.h
+1731638960 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_model.h
 	"header/model/model.h"
 	<complex>
 
-1731290583 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_electrical_model\es_electrical_model.h
+1731656526 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_electrical_model\es_electrical_model.h
 	"header/model/energy_storage_model/es_model.h"
 	<complex>
 
@@ -21668,7 +21668,7 @@
 	"header/data_imexporter/steps_imexporter.h"
 	"header/STEPS.h"
 
-1731493468 d:\desktop\steps\code\steps\header\data_imexporter\steps_imexporter.h
+1731661152 d:\desktop\steps\code\steps\header\data_imexporter\steps_imexporter.h
 	"header/data_imexporter/data_imexporter.h"
 	"header/device/source.h"
 	"header/device/transformer.h"
@@ -23189,8 +23189,8 @@
 	"header/model/energy_storage_model/es_converter_model/es_converter_model.h"
 	"header/model/common_model/converter_common_model/converter_model/cs_converter_model/csconv2.h"
 
-1731290583 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_electrical_model\es_electrical_models.h
-	"header/model/energy_storage_model/es_electrical_model/ese0.h"
+1731656370 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_electrical_model\es_electrical_models.h
+	"header/model/energy_storage_model/es_electrical_model/esex.h"
 
 1731400409 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_electrical_model\ese0.h
 	"header/model/energy_storage_model/es_electrical_model/es_electrical_model.h"
@@ -24485,7 +24485,7 @@
 	<iostream>
 	<algorithm>
 
-1731493550 source:d:\desktop\steps\code\steps\source\data_imexporter\steps_dynamics_imexporter.cpp
+1731661193 source:d:\desktop\steps\code\steps\source\data_imexporter\steps_dynamics_imexporter.cpp
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -24628,7 +24628,7 @@
 	<istream>
 	<iostream>
 
-1731563254 source:d:\desktop\steps\code\steps\source\device\energy_storage.cpp
+1731656163 source:d:\desktop\steps\code\steps\source\device\energy_storage.cpp
 	"header/device/energy_storage.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -24960,7 +24960,7 @@
 	<iostream>
 	<cstdio>
 
-1731493423 source:d:\desktop\steps\code\steps\source\dynamic_model_database.cpp
+1731661191 source:d:\desktop\steps\code\steps\source\dynamic_model_database.cpp
 	"header/dynamic_model_database.h"
 	"header/STEPS.h"
 	"header/steps_namespace.h"
@@ -25213,7 +25213,7 @@
 	<istream>
 	<iostream>
 
-1731290584 source:d:\desktop\steps\code\steps\source\model\energy_storage_model\es_electrical_model\es_electrical_model.cpp
+1731653328 source:d:\desktop\steps\code\steps\source\model\energy_storage_model\es_electrical_model\es_electrical_model.cpp
 	"header/model/energy_storage_model/es_electrical_model/es_electrical_model.h"
 	"header/basic/utility.h"
 	"header/device/energy_storage.h"
@@ -25229,7 +25229,7 @@
 	"header/steps_namespace.h"
 	<iostream>
 
-1731290584 source:d:\desktop\steps\code\steps\source\model\energy_storage_model\es_model.cpp
+1731639031 source:d:\desktop\steps\code\steps\source\model\energy_storage_model\es_model.cpp
 	"header/model/energy_storage_model/es_model.h"
 	"header/basic/utility.h"
 	"header/power_system_database.h"
@@ -80991,9 +80991,11 @@
 	"header/model/energy_storage_model/es_soc_model/es_soc_model.h"
 	<cstdlib>
 
-1731290583 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_primary_model\es_primary_models.h
+1731661107 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_primary_model\es_primary_models.h
+	"header/model/energy_storage_model/es_primary_model/esp11.h"
 
-1731290583 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_rotor_model\es_rotor_models.h
+1731661085 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_rotor_model\es_rotor_models.h
+	"header/model/energy_storage_model/es_rotor_model/esrot0.h"
 
 1731290583 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_auxiliary_model\es_auxiliary_models.h
 
@@ -81097,10 +81099,10 @@
 	<istream>
 	<iostream>
 
-1731479936 d:\desktop\steps\code\steps\header\model\common_model\elec_model\elec_model.h
+1731650932 d:\desktop\steps\code\steps\header\model\common_model\elec_model\elec_model.h
 	"header/model/common_model/common_model.h"
 
-1731480174 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\elec_model.cpp
+1731651912 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\elec_model.cpp
 	"header/model/common_model/elec_model/elec_model.h"
 
 1731400409 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\elec0.cpp
@@ -81141,10 +81143,10 @@
 1731469489 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\frequency_controller.cpp
 	"header/model/common_model/elec_model/frequency_controller.h"
 
-1731489304 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\elecx.cpp
+1731656505 source:d:\desktop\steps\code\steps\source\model\common_model\elec_model\elecx.cpp
 	"header/model/common_model/elec_model/elecx.h"
 
-1731489271 d:\desktop\steps\code\steps\header\model\common_model\elec_model\elecx.h
+1731656505 d:\desktop\steps\code\steps\header\model\common_model\elec_model\elecx.h
 	"header/model/common_model/elec_model/elec_model.h"
 	"header/model/common_model/elec_model/frequency_controller.h"
 	"header/block/first_order_block.h"
@@ -81160,16 +81162,14 @@
 	"header/steps_namespace.h"
 	<iostream>
 
-1731487594 d:\desktop\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3ex.h
+1731652662 d:\desktop\steps\code\steps\header\model\wtg_models\wt_electrical_model\wt3ex.h
 	"header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
 	"header/model/common_model/elec_model/elecx.h"
-	"header/block/first_order_block.h"
-	"header/block/pi_block.h"
 
-1731513835 source:d:\desktop\steps\code\steps\source\model\common_model\primary_model\gov11.cpp
+1731661444 source:d:\desktop\steps\code\steps\source\model\common_model\primary_model\gov11.cpp
 	"header/model/common_model/primary_model/gov11.h"
 
-1731559083 d:\desktop\steps\code\steps\header\model\common_model\primary_model\gov11.h
+1731661427 d:\desktop\steps\code\steps\header\model\common_model\primary_model\gov11.h
 	"header/model/common_model/primary_model/primary_model.h"
 	"header/block/first_order_block.h"
 	"header/block/integral_block.h"
@@ -81183,7 +81183,7 @@
 1731510878 source:d:\desktop\steps\code\steps\source\model\common_model\primary_model\primary_model.cpp
 	"header/model/common_model/primary_model/primary_model.h"
 
-1731559974 source:d:\desktop\steps\code\steps\source\model\energy_storage_model\es_auxiliary_model\es_auxiliary_model.cpp
+1731661870 source:d:\desktop\steps\code\steps\source\model\energy_storage_model\es_auxiliary_model\es_auxiliary_model.cpp
 	"header/model/energy_storage_model/es_auxiliary_model/es_auxiliary_model.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -81192,11 +81192,11 @@
 	<istream>
 	<iostream>
 
-1731560190 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_auxiliary_model\es_auxiliary_model.h
+1731661905 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_auxiliary_model\es_auxiliary_model.h
 	"header/model/energy_storage_model/es_model.h"
 	<cstdlib>
 
-1731559757 source:d:\desktop\steps\code\steps\source\model\energy_storage_model\es_primary_model\es_primary_model.cpp
+1731657426 source:d:\desktop\steps\code\steps\source\model\energy_storage_model\es_primary_model\es_primary_model.cpp
 	"header/model/energy_storage_model/es_primary_model/es_primary_model.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -81205,11 +81205,11 @@
 	<istream>
 	<iostream>
 
-1731559369 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_primary_model\es_primary_model.h
+1731661489 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_primary_model\es_primary_model.h
 	"header/model/energy_storage_model/es_model.h"
 	<cstdlib>
 
-1731560142 source:d:\desktop\steps\code\steps\source\model\energy_storage_model\es_rotor_model\es_rotor_model.cpp
+1731642505 source:d:\desktop\steps\code\steps\source\model\energy_storage_model\es_rotor_model\es_rotor_model.cpp
 	"header/model/energy_storage_model/es_rotor_model/es_rotor_model.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -81218,7 +81218,48 @@
 	<istream>
 	<iostream>
 
-1731560219 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_rotor_model\es_rotor_model.h
+1731645231 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_rotor_model\es_rotor_model.h
 	"header/model/energy_storage_model/es_model.h"
+	"header/block/integral_block.h"
+	<cstdlib>
+
+1731657943 source:d:\desktop\steps\code\steps\source\model\energy_storage_model\es_rotor_model\esrot0.cpp
+	"header/model/energy_storage_model/es_rotor_model/esrot0.h"
+	"header/basic/utility.h"
+	"header/basic/constants.h"
+	"header/steps_namespace.h"
+	<cstdio>
+	<istream>
+	<iostream>
+
+1731646409 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_rotor_model\esrot0.h
+	"header/model/energy_storage_model/es_rotor_model/es_rotor_model.h"
+	<cstdlib>
+
+1731656503 source:d:\desktop\steps\code\steps\source\model\energy_storage_model\es_electrical_model\esex.cpp
+	"header/model/energy_storage_model/es_electrical_model/esex.h"
+	"header/device/energy_storage.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<iostream>
+
+1731656440 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_electrical_model\esex.h
+	"header/model/energy_storage_model/es_electrical_model/es_electrical_model.h"
+	"header/model/common_model/elec_model/elecx.h"
+
+1731661467 source:d:\desktop\steps\code\steps\source\model\energy_storage_model\es_primary_model\esp11.cpp
+	"header/model/energy_storage_model/es_primary_model/esp11.h"
+	"header/basic/utility.h"
+	"header/basic/constants.h"
+	"header/steps_namespace.h"
+	<cstdio>
+	<istream>
+	<iostream>
+
+1731661462 d:\desktop\steps\code\steps\header\model\energy_storage_model\es_primary_model\esp11.h
+	"header/model/energy_storage_model/es_primary_model/es_primary_model.h"
+	"header/model/common_model/primary_model/gov11.h"
 	<cstdlib>
 

@@ -651,6 +651,11 @@ double ELECX::get_frequency_regulation_power_deviation_in_pu() const
     return frequency_controller.get_frequency_regulation_power_deviation_in_pu();
 }
 
+double ELECX::get_frequency_regulation_power_in_pu() const
+{
+    return get_initial_Pref()+get_frequency_regulation_power_deviation_in_pu();
+}
+
 void ELECX::setup_block_toolkit_and_parameters()
 {
     frequency_controller.set_bus_pointer(get_bus_pointer());
@@ -847,78 +852,83 @@ void ELECX::run(DYNAMIC_MODE mode)
 
     frequency_controller.run(mode);
 
-    double Pref = 0.0;
-    double input = 0.0;
-    ELEC_ACTIVE_POWER_CONTROL_MODE active_power_mode = get_active_power_control_mode();
-    if(active_power_mode == SPEED_CONTROL_MODE_WITH_TORQUE)
+
+    double input=0.0;
+    if(is_active_power_control_activated())
     {
-        double speed     = get_speed_in_pu();
-        double speed_ref = get_speed_reference_in_pu();
+        double Pref = 0.0;
+        ELEC_ACTIVE_POWER_CONTROL_MODE active_power_mode = get_active_power_control_mode();
+        if(active_power_mode == SPEED_CONTROL_MODE_WITH_TORQUE)
+        {
+            double speed     = get_speed_in_pu();
+            double speed_ref = get_speed_reference_in_pu();
 
-        speed_reference_sensor.set_input(speed_ref);
-        speed_reference_sensor.run(mode);
+            speed_reference_sensor.set_input(speed_ref);
+            speed_reference_sensor.run(mode);
 
-        input = speed - speed_reference_sensor.get_output();
+            input = speed - speed_reference_sensor.get_output();
 
 
-        torque_controller.set_input(input);
-        torque_controller.run(mode);
+            torque_controller.set_input(input);
+            torque_controller.run(mode);
 
-        Pref = torque_controller.get_output()*speed;
+            Pref = torque_controller.get_output()*speed;
 
+        }
+
+        if(active_power_mode == SPEED_CONTROL_MODE)
+        {
+            double speed     = get_speed_in_pu();
+            double speed_ref = get_speed_reference_in_pu();
+            input = speed - speed_ref;
+
+            speed_controller.set_input(input);
+            speed_controller.run(mode);
+
+            Pref = speed_controller.get_output();
+        }
+
+        if(active_power_mode == ACTIVE_POWER_MODE)
+        {
+            Pref = get_active_power_reference_in_pu_based_on_mbase();
+        }
+
+        if(active_power_mode == DC_VOLTAGE_MODE)
+        {
+            double Vdc = get_Vdc_in_kV();
+            double Vdc_ref = get_Vdc_reference_in_kV();
+            input = Vdc - Vdc_ref;
+            Vdc_controller.set_input(input);
+            Vdc_controller.run(mode);
+
+            Pref = Vdc_controller.get_output();
+        }
+
+        if(active_power_mode == CONSTANT_TORQUE_MODE)
+        {
+            double speed     = get_speed_in_pu();
+            Pref = speed*get_initial_Torque();
+
+        }
+
+        input = Pref + frequency_controller.get_frequency_regulation_power_deviation_in_pu();
+
+        input = input - power_order_integrator.get_output();
+
+        if(input>get_rPmax_in_pu())
+            input = get_rPmax_in_pu();
+        if(input<get_rPmin_in_pu())
+            input = get_rPmin_in_pu();
+
+        power_order_integrator.set_input(input);
+        power_order_integrator.run(mode);
+
+        input = power_order_integrator.get_output() - pelec;
+        power_pi_controller.set_input(input);
+        power_pi_controller.run(mode);
     }
 
-    if(active_power_mode == SPEED_CONTROL_MODE)
-    {
-        double speed     = get_speed_in_pu();
-        double speed_ref = get_speed_reference_in_pu();
-        input = speed - speed_ref;
-
-        speed_controller.set_input(input);
-        speed_controller.run(mode);
-
-        Pref = speed_controller.get_output();
-    }
-
-    if(active_power_mode == ACTIVE_POWER_MODE)
-    {
-        Pref = get_active_power_reference_in_pu_based_on_mbase();
-    }
-
-    if(active_power_mode == DC_VOLTAGE_MODE)
-    {
-        double Vdc = get_Vdc_in_kV();
-        double Vdc_ref = get_Vdc_reference_in_kV();
-        input = Vdc - Vdc_ref;
-        Vdc_controller.set_input(input);
-        Vdc_controller.run(mode);
-
-        Pref = Vdc_controller.get_output();
-    }
-
-    if(active_power_mode == CONSTANT_TORQUE_MODE)
-    {
-        double speed     = get_speed_in_pu();
-        Pref = speed*get_initial_Torque();
-
-    }
-
-    input = Pref + frequency_controller.get_frequency_regulation_power_deviation_in_pu();
-
-    input = input - power_order_integrator.get_output();
-
-    if(input>get_rPmax_in_pu())
-        input = get_rPmax_in_pu();
-    if(input<get_rPmin_in_pu())
-        input = get_rPmin_in_pu();
-
-    power_order_integrator.set_input(input);
-    power_order_integrator.run(mode);
-
-    input = power_order_integrator.get_output() - pelec;
-    power_pi_controller.set_input(input);
-    power_pi_controller.run(mode);
-
+    //reactive power control
     active_power_sensor.set_input(pelec);
     active_power_sensor.run(mode);
 

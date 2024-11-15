@@ -10,6 +10,7 @@ class ES_AUXILIARY_MODEL : public ES_MODEL
         ES_AUXILIARY_MODEL(STEPS& toolkit);
         virtual ~ES_AUXILIARY_MODEL();
     public:
+
         virtual string get_model_type() const;
         virtual string get_model_name() const = 0;
 

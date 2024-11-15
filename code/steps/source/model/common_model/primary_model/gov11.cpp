@@ -10,10 +10,30 @@ GOV11::GOV11(STEPS& toolkit):PRIMARY_MODEL(toolkit),
     clear();
 }
 
+GOV11::GOV11(const GOV11& model) : PRIMARY_MODEL(model.get_toolkit()),
+                                    speed_sensor(model.get_toolkit()),
+                                    Kp(model.get_toolkit()),
+                                    governor(model.get_toolkit()),
+                                    servo_motor(model.get_toolkit()),
+                                    water_turbine(model.get_toolkit())
+{
+    copy_from_const_model(model);
+}
+
 GOV11::~GOV11()
 {
     ;
 }
+
+GOV11& GOV11::operator=(const GOV11& model)
+{
+    if(this==(&model)) return *this;
+
+    copy_from_const_model(model);
+
+    return *this;
+}
+
 
 void GOV11::clear()
 {
@@ -21,6 +41,15 @@ void GOV11::clear()
     governor.set_limiter_type(NON_WINDUP_LIMITER);
     servo_motor.set_limiter_type(NO_LIMITER);
     water_turbine.set_limiter_type(NO_LIMITER);
+}
+
+void GOV11::copy_from_const_model(const GOV11& model)
+{
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+
+    clear();
+
 }
 
 string GOV11::get_model_name() const
@@ -270,7 +299,7 @@ void GOV11::run(DYNAMIC_MODE mode)
 
 }
 
-double GOV11::get_valve_in_pu()
+double GOV11::get_valve_in_pu() const
 {
     double valve = servo_motor.get_output();
     double umax = get_umax();
@@ -282,7 +311,7 @@ double GOV11::get_valve_in_pu()
     return valve;
 }
 
-double GOV11::get_delta_Y_in_pu()
+double GOV11::get_delta_Y_in_pu() const
 {
     double dY = Kp.get_output()+governor.get_output();
     double PImax = get_PImax();
@@ -294,3 +323,7 @@ double GOV11::get_delta_Y_in_pu()
     return dY;
 }
 
+double GOV11::get_mechanical_power_in_pu_on_mbase() const
+{
+    return water_turbine.get_output();
+}

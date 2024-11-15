@@ -2,6 +2,7 @@
 #define ES_ROTOR_MODEL_H
 
 #include "header/model/energy_storage_model/es_model.h"
+#include "header/block/integral_block.h"
 #include <cstdlib>
 
 class ES_ROTOR_MODEL : public ES_MODEL
@@ -13,10 +14,31 @@ class ES_ROTOR_MODEL : public ES_MODEL
         virtual string get_model_type() const;
         virtual string get_model_name() const = 0;
 
-        double get_mechanical_power_in_pu() const;
-        double get_terminal_active_power_including_stator_loss_in_pu() const;
+        void set_initial_mechanical_power_in_pu_on_mbase(double p);
+        double get_initial_mechanical_power_in_pu_on_mbase() const;
+        void set_initial_rotor_speed_reference_in_pu(double s);
+        double get_initial_rotor_speed_reference_in_pu() const;
 
-        virtual double get_rotor_speed_in_pu() const = 0;
+        void set_H_in_s(double H);
+        double get_H_in_s() const;
+
+        INTEGRAL_BLOCK* get_rotor_speed_block();
+
+        void lock_rotor();
+        void unlock_rotor();
+        bool is_rotor_locked() const;
+
+        void activate_rotor_braking();
+        void deactivate_rotor_braking();
+        bool is_rotor_braking_activated() const;
+
+        double get_mechanical_power_in_pu_on_mbase() const;
+        double get_active_power_including_stator_loss_in_pu_on_mbase() const;
+        double get_rotor_speed_reference_in_pu() const;
+
+        virtual void check_rotor_lock_logic() = 0;
+        virtual void check_rotor_braking_logic() = 0;
+        virtual double get_rotor_speed_in_pu() = 0;
         virtual bool setup_model_with_steps_string_vector(vector<string>& data) = 0;
         virtual bool setup_model_with_psse_string(string data) = 0;
         virtual bool setup_model_with_bpa_string(string data) = 0;
@@ -44,6 +66,11 @@ class ES_ROTOR_MODEL : public ES_MODEL
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
+        double initial_Pmech_in_pu_on_mbase;
+        double initial_rotor_speed_reference_in_pu;
+        INTEGRAL_BLOCK rotor_speed_block;
+        bool rotor_lock_flag;
+        bool rotor_braking_flag;
 
 };
 

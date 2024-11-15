@@ -26,6 +26,7 @@ const double DOUBLE_EPSILON = 1e-10;
 const double DSTATE_THRESHOLD = 100.0;
 const unsigned int INDEX_NOT_EXIST = 1000000000;
 const double INFINITE_THRESHOLD = 1e9;
+const double MINIMUM_ROTOR_SPEED_THRESHOLD = 0.001;
 
 const unsigned int STEPS_MAX_TOOLKIT_SIZE = 1000;
 const unsigned int STEPS_MAX_TEMP_CHAR_BUFFER_SIZE = 500;

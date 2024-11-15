@@ -12,6 +12,11 @@ class ES_ELECTRICAL_MODEL : public ES_MODEL
         void unbypass_model();
         void bypass_model();
         bool is_model_bypassed() const;
+
+        void activate_active_power_control();
+        void deactivate_active_power_control();
+        bool is_active_power_control_activated() const;
+
     public:
         virtual string get_model_type() const;
 
@@ -19,6 +24,8 @@ class ES_ELECTRICAL_MODEL : public ES_MODEL
         complex<double> get_energy_storage_terminal_generation_in_pu_based_on_mbase() const;
         complex<double> get_energy_storage_terminal_complex_current_in_pu() const;
         double get_energy_storage_terminal_current_in_pu() const;
+        double get_rotor_speed_in_pu() const;
+        double get_rotor_speed_reference_in_pu() const;
 
     public:
         virtual string get_model_name() const = 0;
@@ -31,6 +38,7 @@ class ES_ELECTRICAL_MODEL : public ES_MODEL
 
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
+        virtual double get_frequency_regulation_power_in_pu() const = 0;
         virtual double get_active_current_command_in_pu_based_on_mbase() = 0;
         virtual double get_active_power_command_in_pu_based_on_mbase() const = 0;
         virtual double get_reactive_current_command_in_pu_based_on_mbase() = 0;
@@ -55,6 +63,7 @@ class ES_ELECTRICAL_MODEL : public ES_MODEL
         virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
         bool flag_model_bypassed;
+        bool flag_active_model_activated;
 };
 
 

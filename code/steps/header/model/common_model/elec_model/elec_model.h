@@ -67,6 +67,10 @@ class ELEC_MODEL:public COMMON_MODEL
         double get_initial_Vdc() const;
         double get_initial_Torque() const;
         double get_Xsource() const;
+
+        void activate_active_power_control();
+        void deactivate_active_power_control();
+        bool is_active_power_control_activated() const;
     public:
 
 
@@ -111,6 +115,8 @@ class ELEC_MODEL:public COMMON_MODEL
         double initial_Torque;
 
         double Xsource;
+
+        bool is_active_power_control_flag;
 };
 
 #endif // ELEC_MODEL_H

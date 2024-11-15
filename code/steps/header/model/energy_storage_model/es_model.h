@@ -6,9 +6,10 @@
 
 class ENERGY_STORAGE;
 
+
 class ES_MODEL : public MODEL
 {
-public:
+    public:
         ES_MODEL(STEPS& toolkit);
         virtual ~ES_MODEL();
 
@@ -21,6 +22,9 @@ public:
         double get_terminal_voltage_angle_in_rad() const;
         double get_bus_base_frequency_in_Hz() const;
         complex<double> get_source_impedance_in_pu_based_on_mbase() const;
+
+        void set_energy_storage_mode(ES_MODE m);
+        ES_MODE get_energy_storage_mode() const;
 
     public: // specific model level
         virtual string get_model_type() const = 0;
@@ -52,5 +56,8 @@ public:
         virtual string get_dynamic_data_in_psse_format() const = 0;
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
+
+    private:
+
 };
 #endif // ES_MODEL_H

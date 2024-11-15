@@ -1,24 +1,37 @@
-#ifndef ESE0_H
-#define ESE0_H
+#ifndef ESEX_H
+#define ESEX_H
 
 #include "header/model/energy_storage_model/es_electrical_model/es_electrical_model.h"
-#include "header/model/common_model/elec_model/elec0.h"
+#include "header/model/common_model/elec_model/elecx.h"
 
-class ESE0: public ES_ELECTRICAL_MODEL
+class ESEX: public ES_ELECTRICAL_MODEL
 {
     public:
-        ESE0(STEPS& toolkit);
-        ESE0(const ESE0& model);
-        virtual ~ESE0();
-        virtual ESE0& operator=(const ESE0& model);
+        ESEX(STEPS& toolkit);
+        ESEX(const ESEX& model);
+        virtual ~ESEX();
+        virtual ESEX& operator=(const ESEX& model);
     public:
         virtual string get_model_name() const;
 
-        void set_var_control_mode(ELEC_REACTIVE_POWER_CONTROL_MODE mode);
-        ELEC_REACTIVE_POWER_CONTROL_MODE get_var_control_mode() const;
         void set_bus_to_regulate(unsigned int bus);
         unsigned int get_bus_to_regulate() const;
 
+        void set_var_control_mode(ELEC_REACTIVE_POWER_CONTROL_MODE mode);
+        ELEC_REACTIVE_POWER_CONTROL_MODE get_var_control_mode() const;
+
+        void set_active_power_control_mode(ELEC_ACTIVE_POWER_CONTROL_MODE mode);
+        ELEC_ACTIVE_POWER_CONTROL_MODE get_active_power_control_mode() const;
+
+        void enable_active_power_closed_loop_control();
+        void enable_active_power_open_loop_control();
+        bool get_active_power_closed_control_flag() const;
+
+        void set_voltage_flag(unsigned int flag);
+        unsigned int get_voltage_flag() const;
+
+
+        // reactive power control loop
         void set_Xcomp_in_pu(double Xc);
         void set_TRV_in_s(double T);
         void set_Fn(double Fn);
@@ -32,24 +45,9 @@ class ESE0: public ES_ELECTRICAL_MODEL
         void set_KQI(double K);
         void set_Vmax_in_pu(double v);
         void set_Vmin_in_pu(double v);
-        void set_voltage_flag(unsigned int flag);
         void set_KQV(double K);
         void set_EQmax_in_pu(double I);
         void set_EQmin_in_pu(double I);
-
-        void set_Kvi(double K);
-        void set_Tvi_in_s(double T);
-        void set_Kdroop(double K);
-        void set_Tdroop_in_s(double T);
-        void set_frequency_deviation_upper_deadband_in_pu(double f);
-        void set_frequency_deviation_lower_deadband_in_pu(double f);
-        void set_Kfint(double K);
-        void set_rPmax_in_pu(double r);
-        void set_rPmin_in_pu(double r);
-        void set_TFP_in_s(double T);
-        void set_Pmax_in_pu(double p);
-        void set_Pmin_in_pu(double p);
-        void set_IPmax_in_pu(double I);
 
         double get_Xcomp_in_pu() const;
         double get_TRV_in_s() const;
@@ -64,10 +62,18 @@ class ESE0: public ES_ELECTRICAL_MODEL
         double get_KQI() const;
         double get_Vmax_in_pu() const;
         double get_Vmin_in_pu() const;
-        unsigned int get_voltage_flag() const;
         double get_KQV() const;
         double get_EQmax_in_pu() const;
         double get_EQmin_in_pu() const;
+
+        // frequency controller
+        void set_Kvi(double K);
+        void set_Tvi_in_s(double T);
+        void set_Kdroop(double K);
+        void set_Tdroop_in_s(double T);
+        void set_frequency_deviation_upper_deadband_in_pu(double f);
+        void set_frequency_deviation_lower_deadband_in_pu(double f);
+        void set_Kfint(double K);
 
         double get_Kvi() const;
         double get_Tvi_in_s() const;
@@ -76,14 +82,65 @@ class ESE0: public ES_ELECTRICAL_MODEL
         double get_frequency_deviation_upper_deadband_in_pu() const;
         double get_frequency_deviation_lower_deadband_in_pu() const;
         double get_Kfint() const;
-        double get_TFP_in_s() const;
+
+        //active power control loop
+        //speed control with torque
+        void set_Tspeed_in_s(double T);
+        void set_KPP(double K);
+        void set_KIP(double K);
+        double get_Tspeed_in_s() const;
+        double get_KPP() const;
+        double get_KIP() const;
+
+        //speed control
+        void set_Kpspeed(double K);
+        void set_Kispeed(double K);
+        double get_Kpspeed() const;
+        double get_Kispeed() const;
+
+        //other active power parameters
+        void set_rPmax_in_pu(double r);
+        void set_rPmin_in_pu(double r);
+        void set_TFP_in_s(double T);
+        void set_Pmax_in_pu(double p);
+        void set_Pmin_in_pu(double p);
+        void set_IPmax_in_pu(double I);
+        void set_Kpip(double K);
+        void set_Kiip(double K);
+
+
         double get_rPmax_in_pu() const;
         double get_rPmin_in_pu() const;
+        double get_TFP_in_s() const;
         double get_Pmax_in_pu() const;
         double get_Pmin_in_pu() const;
         double get_IPmax_in_pu() const;
+        double get_Kpip() const;
+        double get_Kiip() const;
+
+        //state of block
+        double get_voltage_sensor_state() const;
+        double get_voltage_regulator_first_order_block_state() const;
+        double get_voltage_regulator_integrator_state() const;
+        double get_voltage_regulator_filter_state() const;
+        double get_active_power_sensor_state() const;
+        double get_Q_error_integrator_state() const;
+        double get_V_error_integrator_state() const;
+        double get_virtual_inertia_controller_state() const;
+        double get_frequency_droop_controller_state() const;
+        double get_frequency_integral_controller_state() const;
+        double get_power_order_integrator_state() const;
+        double get_speed_reference_sensor_state() const;
+        double get_torque_controller_state() const;
+
+        double get_virtual_inertia_power_deviation_in_pu() const;
+        double get_frequency_droop_power_deviation_in_pu() const;
+        double get_frequency_integral_power_deviation_in_pu() const;
+
+        double get_frequency_regulation_power_deviation_in_pu() const;
 
     public:
+
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
@@ -95,6 +152,7 @@ class ESE0: public ES_ELECTRICAL_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
+        virtual double get_frequency_regulation_power_in_pu() const;
         virtual double get_active_current_command_in_pu_based_on_mbase();
         virtual double get_active_power_command_in_pu_based_on_mbase() const;
         virtual double get_reactive_current_command_in_pu_based_on_mbase();
@@ -117,8 +175,8 @@ class ESE0: public ES_ELECTRICAL_MODEL
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
     private:
-        void copy_from_const_model(const ESE0& model);
-        ELEC0 conelec0;
+        void copy_from_const_model(const ESEX& model);
+        ELECX elecx;
 };
 
-#endif // EXCITER_MODEL_H
+#endif // ESEX_H

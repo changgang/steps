@@ -62,6 +62,11 @@ class ENERGY_STORAGE : public SOURCE
 
         void set_sequence_parameter_import_flag(bool flag);
         bool get_sequence_parameter_import_flag() const;
+
+        void set_energy_storage_mode(ES_MODE m);
+        ES_MODE get_energy_storage_mode() const;
+
+        void initialize_energy_storage_mode();
     private:
         ES_CONVERTER_MODEL* es_converter_model;
         ES_SOC_MODEL* es_soc_model;
@@ -76,5 +81,7 @@ class ENERGY_STORAGE : public SOURCE
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power();
 
         bool sequence_parameter_import_flag;
+
+        ES_MODE mode;
 };
 #endif // ENERGY_STORAGE_H

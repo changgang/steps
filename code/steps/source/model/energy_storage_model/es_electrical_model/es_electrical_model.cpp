@@ -29,6 +29,21 @@ bool ES_ELECTRICAL_MODEL::is_model_bypassed() const
     return flag_model_bypassed;
 }
 
+void ES_ELECTRICAL_MODEL::activate_active_power_control()
+{
+    flag_active_model_activated = true;
+}
+
+void ES_ELECTRICAL_MODEL::deactivate_active_power_control()
+{
+    flag_active_model_activated =false;
+}
+
+bool ES_ELECTRICAL_MODEL::is_active_power_control_activated() const
+{
+    return flag_active_model_activated;
+}
+
 string ES_ELECTRICAL_MODEL::get_model_type() const
 {
     return "ES ELECTRICAL";
@@ -69,3 +84,46 @@ double ES_ELECTRICAL_MODEL::get_energy_storage_terminal_current_in_pu() const
 	return steps_fast_complex_abs(get_energy_storage_terminal_complex_current_in_pu());
 }
 
+double ES_ELECTRICAL_MODEL::get_rotor_speed_in_pu() const
+{
+    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
+    ES_ROTOR_MODEL* rotor_model = energy_storage->get_es_rotor_model();
+    if(rotor_model!=NULL)
+    {
+        return rotor_model->get_rotor_speed_in_pu();
+    }
+    else
+    {
+        ES_MODE mode = get_energy_storage_mode();
+        if(mode==ES_OUT_SERVICE_MODE)
+            return 0.0;
+        if(mode==ES_CHARGE_MODE or mode==ES_START_CHARGE_MODE or mode == ES_STOP_CHARGE_MODE)
+            return -1.0;
+        if(mode==ES_DISCHARGE_MODE or mode==ES_START_DISCHARGE_MODE or mode==ES_STOP_DISCHARGE_MODE)
+            return 1.0;
+
+        return 0.0;
+    }
+}
+
+double ES_ELECTRICAL_MODEL::get_rotor_speed_reference_in_pu() const
+{
+    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
+    ES_AUXILIARY_MODEL* aux_model = energy_storage->get_es_auxiliary_model();
+    if(aux_model!=NULL)
+    {
+        return aux_model->get_rotor_speed_reference_in_pu();
+    }
+    else
+    {
+        ES_MODE mode = get_energy_storage_mode();
+        if(mode==ES_OUT_SERVICE_MODE)
+            return 0.0;
+        if(mode==ES_CHARGE_MODE)
+            return -1.0;
+        if(mode==ES_DISCHARGE_MODE)
+            return 1.0;
+
+        return 0.0;
+    }
+}

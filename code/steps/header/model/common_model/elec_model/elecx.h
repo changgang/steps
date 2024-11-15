@@ -144,6 +144,8 @@ class ELECX: public ELEC_MODEL
         double get_frequency_integral_power_deviation_in_pu() const;
 
         double get_frequency_regulation_power_deviation_in_pu() const;
+        double get_frequency_regulation_power_in_pu() const;
+
     public:
 
         void setup_block_toolkit_and_parameters();

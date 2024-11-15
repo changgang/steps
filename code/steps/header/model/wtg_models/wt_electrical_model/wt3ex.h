@@ -3,8 +3,6 @@
 
 #include "header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
 #include "header/model/common_model/elec_model/elecx.h"
-#include "header/block/first_order_block.h"
-#include "header/block/pi_block.h"
 
 class WT3EX: public WT_ELECTRICAL_MODEL
 {
