@@ -313,16 +313,24 @@ void ESP11::initialize()
     ostringstream osstream;
     if(not is_model_initialized())
     {
+        setup_block_toolkit_and_parameters();
+
         double speed = get_rotor_speed_in_pu();
         ENERGY_STORAGE* es = get_energy_storage_pointer();
         ES_CONVERTER_MODEL* con_model = es->get_es_converter_model();
         double p = con_model->get_active_power_generation_including_stator_loss_in_pu_based_on_mbase();
-        double Y = get_valve_in_pu();
+        double Y = get_valve_reference_in_pu();
+
+        ES_MODE mode = get_energy_storage_mode();
+        if(mode==ES_CHARGE_MODE)
+            gov.set_energy_storage_in_charge_mode();
+        if(mode==ES_DISCHARGE_MODE)
+            gov.set_energy_storage_in_discharge_mode();
 
         gov.set_initial_speed_in_pu(speed);
         gov.set_initial_mechanical_power_in_pu(p);
         gov.set_initial_valve_reference_in_pu(Y);
-
+        gov.initialize();
         set_flag_model_initialized_as_true();
 
         if(toolkit.is_detailed_log_enabled())

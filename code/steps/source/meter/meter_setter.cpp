@@ -2520,6 +2520,54 @@ METER METER_SETTER::prepare_es_soc_power_in_MW_meter(const DEVICE_ID& device_id)
     return meter;
 }
 
+METER METER_SETTER::prepare_es_rotor_speed_reference_in_pu_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ROTOR SPEED REFERENCE IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_valve_reference_in_pu_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("VALVE REFERENCE IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_rotor_speed_in_pu_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ROTOR SPEED IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_mechanical_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("MECHANICAL POWER IN PU ON MBASE");
+
+    return meter;
+}
+
 METER METER_SETTER::prepare_es_converter_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
     METER meter(get_toolkit());

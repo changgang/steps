@@ -23,6 +23,7 @@ void ESROT0::clear()
     set_model_float_parameter_count(4);
     INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
     rotor_speed_block->set_limiter_type(NO_LIMITER);
+    discharge_to_out_service = false;
 }
 
 void ESROT0::copy_from_const_model(const ESROT0& model)
@@ -188,8 +189,16 @@ void ESROT0::initialize()
         if(mode==ES_OUT_SERVICE_MODE)
             lock_rotor();
 
-        if(mode==ES_CHARGE_MODE or mode==ES_DISCHARGE_MODE)
+        if(mode==ES_CHARGE_MODE)
+        {
+            discharge_to_out_service = false;
             unlock_rotor();
+        }
+        if(mode==ES_DISCHARGE_MODE)
+        {
+            discharge_to_out_service = true;
+            unlock_rotor();
+        }
 
         INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
         rotor_speed_block->set_output(speed);
@@ -208,14 +217,31 @@ void ESROT0::initialize()
 
 void ESROT0::check_rotor_lock_logic()
 {
+    STEPS& toolkit = get_toolkit();
+    double time = toolkit.get_dynamic_simulation_time_in_s();
+    ostringstream osstream;
     ES_MODE mode = get_energy_storage_mode();
     if(not is_rotor_locked())//没有锁的时候
     {
-        if(mode==ES_OUT_SERVICE_MODE or mode==ES_STOP_CHARGE_MODE or mode==ES_STOP_DISCHARGE_MODE)
+        double speed = get_rotor_speed_in_pu();
+        if(discharge_to_out_service==true)
         {
-            double speed = get_rotor_speed_in_pu();
-            if(fabs(speed)<=MINIMUM_ROTOR_SPEED_THRESHOLD)
+            if(speed<=MINIMUM_ROTOR_SPEED_THRESHOLD)
+            {
+                osstream<<"The rotor of "<<get_model_name()<<" model of "<<get_compound_device_name()<<" is locked at time "<<time<<" s."<<endl;
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 lock_rotor();
+            }
+        }
+        else
+        {
+            if(speed>=-MINIMUM_ROTOR_SPEED_THRESHOLD)
+            {
+                osstream<<"The rotor of "<<get_model_name()<<" model of "<<get_compound_device_name()<<" is locked at time "<<time<<" s."<<endl;
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                lock_rotor();
+            }
+
         }
     }
     else //锁了的时候

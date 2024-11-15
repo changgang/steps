@@ -134,3 +134,18 @@ double PRIMARY_MODEL::get_Bp() const
     return Bp;
 }
 
+bool PRIMARY_MODEL::is_in_charge_mode() const
+{
+    return charge_flag;
+}
+
+void PRIMARY_MODEL::set_energy_storage_in_charge_mode()
+{
+    charge_flag = true;
+}
+
+void PRIMARY_MODEL::set_energy_storage_in_discharge_mode()
+{
+    charge_flag = false;
+}
+

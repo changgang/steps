@@ -173,6 +173,10 @@ vector<string> energy_storage_meters{"TERMINAL CURRENT IN PU ON MBASE", "TERMINA
                                      "STATE OF CHARGE IN PU",
                                      "SOC POWER IN PU ON MBASE", "SOC POWER IN PU ON SBASE",
                                      "SOC POWER IN MW",
+                                     "ROTOR SPEED IN PU",
+                                     "MECHANICAL POWER IN PU ON MBASE",
+                                     "ROTOR SPEED REFERENCE IN PU",
+                                     "VALVE REFERENCE IN PU",
                                      "ES CONVERTER MODEL INTERNAL VARIABLE",
                                      "ES ELECTRICAL MODEL INTERNAL VARIABLE",
                                      "ES SOC MODEL INTERNAL VARIABLE",
@@ -2465,6 +2469,34 @@ double METER::get_meter_value_as_an_energy_storage() const
             {
                 if(soc_model != NULL)
                     return soc_model->get_soc_power_in_MW();
+                else
+                    return 0.0;
+            }
+            if(meter_type=="MECHANICAL POWER IN PU ON MBASE")
+            {
+                if(primary_model != NULL)
+                    return primary_model->get_mechanical_power_in_pu_on_mbase();
+                else
+                    return 0.0;
+            }
+            if(meter_type=="ROTOR SPEED IN PU")
+            {
+                if(rotor_model != NULL)
+                    return rotor_model->get_rotor_speed_in_pu();
+                else
+                    return 0.0;
+            }
+            if(meter_type=="ROTOR SPEED REFERENCE IN PU")
+            {
+                if(primary_model != NULL)
+                    return primary_model->get_rotor_speed_reference_in_pu();
+                else
+                    return 0.0;
+            }
+            if(meter_type=="VALVE REFERENCE IN PU")
+            {
+                if(primary_model != NULL)
+                    return primary_model->get_valve_reference_in_pu();
                 else
                     return 0.0;
             }

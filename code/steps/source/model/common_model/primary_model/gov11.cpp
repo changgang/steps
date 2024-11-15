@@ -227,7 +227,7 @@ void GOV11::initialize()
     double umax = get_umax();
     if(Pmech>umax)
     {
-        osstream<<"Initialization error. Y(valve) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
+        osstream<<"Initialization error. Y(valve) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit. "
           <<"Y is "<<Pmech<<", and umax is "<<umax<<".";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
@@ -235,7 +235,7 @@ void GOV11::initialize()
     double umin = get_umin();
     if(Pmech<umin)
     {
-        osstream<<"Initialization error. Y(valve) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
+        osstream<<"Initialization error. Y(valve) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit. "
           <<"Y is "<<Pmech<<", and umin is "<<umin<<".";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
@@ -243,7 +243,7 @@ void GOV11::initialize()
     double PImax = get_PImax();
     if(deltaY>PImax)
     {
-        osstream<<"Initialization error. DeltaY of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
+        osstream<<"Initialization error. DeltaY of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit. "
           <<"DeltaY is "<<deltaY<<", and PImax is "<<PImax<<".";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
@@ -251,7 +251,7 @@ void GOV11::initialize()
     double PImin = get_PImin();
     if(deltaY<PImin)
     {
-        osstream<<"Initialization error. DeltaY of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
+        osstream<<"Initialization error. DeltaY of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit. "
           <<"DeltaY is "<<deltaY<<", and PImin is "<<PImin<<".";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
@@ -263,8 +263,11 @@ void GOV11::run(DYNAMIC_MODE mode)
     double speedref = get_speed_reference_in_pu();
     speed_sensor.set_input(speed);
     speed_sensor.run(mode);
-
-    double delta_speed = speedref - speed;
+    double delta_speed;
+    if(not is_in_charge_mode())
+        delta_speed = speedref - speed;
+    else
+        delta_speed = speed - speedref;
 
     double input = 0.0;
     double dbp = get_dbp();

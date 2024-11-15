@@ -714,7 +714,7 @@ void ELECX::initialize()
     if(ipcmd>ipmax)
     {
         osstream<<"Initialization error. IPcmd (Active current command) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
-          <<"IPcmd is "<<ipcmd<<", and IPmax is "<<ipmax<<".";
+          <<" IPcmd is "<<ipcmd<<", and IPmax is "<<ipmax<<".";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 
@@ -724,13 +724,13 @@ void ELECX::initialize()
     if(pcmd>pmax)
     {
         osstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
-          <<"Porder is "<<pcmd<<", and Pmax is "<<pmax<<".";
+          <<" Porder is "<<pcmd<<", and Pmax is "<<pmax<<".";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
     if(pcmd<pmin)
     {
         osstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
-          <<"Porder is "<<pcmd<<", and Pmin is "<<pmin<<".";
+          <<" Porder is "<<pcmd<<", and Pmin is "<<pmin<<".";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
     power_order_integrator.initialize();

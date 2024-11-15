@@ -198,6 +198,10 @@ class METER_SETTER
         METER prepare_es_soc_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id);
         METER prepare_es_soc_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id);
         METER prepare_es_soc_power_in_MW_meter(const DEVICE_ID& device_id);
+        METER prepare_es_rotor_speed_reference_in_pu_meter(const DEVICE_ID& device_id);
+        METER prepare_es_valve_reference_in_pu_meter(const DEVICE_ID& device_id);
+        METER prepare_es_rotor_speed_in_pu_meter(const DEVICE_ID& device_id);
+        METER prepare_es_mechanical_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id);
         METER prepare_es_converter_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
         METER prepare_es_electrical_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
         METER prepare_es_soc_model_internal_variable_meter(const DEVICE_ID& device_id, string name);

@@ -60,6 +60,7 @@ class ESROT0 : public ES_ROTOR_MODEL
         unsigned int rotor_braking_mode;
         double rotor_braking_Damp;
         double rotor_unlock_power_threshold_in_pu;
+        bool discharge_to_out_service;
 };
 
 #endif // ESROT0_H

@@ -1341,6 +1341,14 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(const DEVICE_ID& d
                 meter = setter.prepare_es_soc_power_in_MW_meter(did);
             if(meter_type=="STATE OF CHARGE IN PU")
                 meter = setter.prepare_es_state_of_charge_in_pu_meter(did);
+            if(meter_type=="VALVE REFERENCE IN PU")
+                meter = setter.prepare_es_valve_reference_in_pu_meter(did);
+            if(meter_type=="ROTOR SPEED REFERENCE IN PU")
+                meter = setter.prepare_es_rotor_speed_reference_in_pu_meter(did);
+            if(meter_type=="ROTOR SPEED IN PU")
+                meter = setter.prepare_es_rotor_speed_in_pu_meter(did);
+            if(meter_type=="MECHANICAL POWER IN PU ON MBASE")
+                meter = setter.prepare_es_mechanical_power_in_pu_on_mbase_meter(did);
             if(meter_type=="ES CONVERTOR MODEL INTERNAL VARIABLE")
                 meter = setter.prepare_es_converter_model_internal_variable_meter(did, var_name);
             if(meter_type=="ES ELECTRICAL MODEL INTERNAL VARIABLE")

@@ -36,6 +36,9 @@ class PRIMARY_MODEL:public COMMON_MODEL
         double get_Eb() const;
         double get_Bp() const;
 
+        bool is_in_charge_mode() const;
+        void set_energy_storage_in_charge_mode();
+        void set_energy_storage_in_discharge_mode();
     public:
 
         virtual void initialize() = 0;
@@ -61,6 +64,7 @@ class PRIMARY_MODEL:public COMMON_MODEL
         double Eb;
         double Bp;
 
+        bool charge_flag;
 
 };
 
