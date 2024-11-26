@@ -71,11 +71,17 @@ class ELEC_MODEL:public COMMON_MODEL
         void activate_active_power_control();
         void deactivate_active_power_control();
         bool is_active_power_control_activated() const;
+
+
+        bool is_in_charge_mode() const;
+        void set_energy_storage_in_charge_mode();
+        void set_energy_storage_in_discharge_mode();
     public:
 
 
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
+        virtual void initialize_active_power_control_as_zero() = 0;
 
         virtual double get_active_current_command_in_pu_based_on_mbase() = 0;
         virtual double get_active_power_command_in_pu_based_on_mbase() const = 0;
@@ -117,6 +123,8 @@ class ELEC_MODEL:public COMMON_MODEL
         double Xsource;
 
         bool is_active_power_control_flag;
+
+        bool charge_flag;
 };
 
 #endif // ELEC_MODEL_H

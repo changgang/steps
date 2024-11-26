@@ -322,15 +322,22 @@ void ESP11::initialize()
         double Y = get_valve_reference_in_pu();
 
         ES_MODE mode = get_energy_storage_mode();
+
         if(mode==ES_CHARGE_MODE)
             gov.set_energy_storage_in_charge_mode();
-        if(mode==ES_DISCHARGE_MODE)
+        else
             gov.set_energy_storage_in_discharge_mode();
+
+        if(mode==ES_OUT_SERVICE_MODE)
+            freeze_primary_model();
+        else
+            unfreeze_primary_model();
 
         gov.set_initial_speed_in_pu(speed);
         gov.set_initial_mechanical_power_in_pu(p);
         gov.set_initial_valve_reference_in_pu(Y);
         gov.initialize();
+
         set_flag_model_initialized_as_true();
 
         if(toolkit.is_detailed_log_enabled())
@@ -344,22 +351,64 @@ void ESP11::initialize()
 
 void ESP11::run(DYNAMIC_MODE mode)
 {
-    double speed = get_rotor_speed_in_pu();
-    double speedref = get_rotor_speed_reference_in_pu();
-    double Yref = get_valve_reference_in_pu();
+    if(not is_primary_model_frozen())
+    {
+        double speed = get_rotor_speed_in_pu();
+        double speedref = get_rotor_speed_reference_in_pu();
+        double Yref = get_valve_reference_in_pu();
 
-    gov.set_speed_in_pu(speed);
-    gov.set_speed_reference_in_pu(speedref);
-    gov.set_valve_reference_in_pu(Yref);
-    gov.run(mode);
+        ES_MODE es_mode = get_energy_storage_mode();
+        if(es_mode==ES_STOP_CHARGE_MODE or es_mode==ES_START_CHARGE_MODE or es_mode==ES_CHARGE_MODE)
+        {
+            gov.set_energy_storage_in_charge_mode();
+        }
+        else
+        {
+            gov.set_energy_storage_in_discharge_mode();
+        }
+        gov.set_speed_in_pu(speed);
+        gov.set_speed_reference_in_pu(speedref);
+        gov.set_valve_reference_in_pu(Yref);
+        gov.run(mode);
 
-    if(mode==DYNAMIC_UPDATE_MODE)
-        set_flag_model_updated_as_true();
+        if(mode==DYNAMIC_UPDATE_MODE)
+            set_flag_model_updated_as_true();
+    }
+
+}
+
+void ESP11::initialize_Pmech_as_zero()
+{
+    gov.set_initial_speed_in_pu(0.0);
+    gov.set_initial_mechanical_power_in_pu(0.0);
+    gov.set_initial_valve_reference_in_pu(0.0);
+    gov.initialize();
 }
 
 double ESP11::get_mechanical_power_in_pu_on_mbase() const
 {
-    return gov.get_mechanical_power_in_pu_on_mbase();
+    ES_MODE mode = get_energy_storage_mode();
+    double pmech = gov.get_mechanical_power_in_pu_on_mbase();
+
+    if(mode==ES_START_DISCHARGE_MODE or mode==ES_STOP_DISCHARGE_MODE or mode==ES_DISCHARGE_MODE)
+    {
+        if(pmech<0.0)
+            pmech = 0.0;
+    }
+    else
+    {
+        if(mode==ES_START_CHARGE_MODE or mode==ES_STOP_CHARGE_MODE or mode==ES_CHARGE_MODE)
+        {
+            if(pmech>0.0)
+                pmech = 0.0;
+        }
+        else
+        {
+            pmech = 0.0;
+        }
+    }
+
+    return pmech;
 }
 
 double ESP11::get_valve_in_pu() const

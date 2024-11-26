@@ -177,6 +177,7 @@ vector<string> energy_storage_meters{"TERMINAL CURRENT IN PU ON MBASE", "TERMINA
                                      "MECHANICAL POWER IN PU ON MBASE",
                                      "ROTOR SPEED REFERENCE IN PU",
                                      "VALVE REFERENCE IN PU",
+                                     "ACTIVE POWER REFERENCE IN PU ON MBASE",
                                      "ES CONVERTER MODEL INTERNAL VARIABLE",
                                      "ES ELECTRICAL MODEL INTERNAL VARIABLE",
                                      "ES SOC MODEL INTERNAL VARIABLE",
@@ -2482,7 +2483,13 @@ double METER::get_meter_value_as_an_energy_storage() const
             if(meter_type=="ROTOR SPEED IN PU")
             {
                 if(rotor_model != NULL)
-                    return rotor_model->get_rotor_speed_in_pu();
+                {
+                    double speed = rotor_model->get_rotor_speed_in_pu();
+                    if(speed<=MINIMUM_ROTOR_SPEED_THRESHOLD and speed>=-MINIMUM_ROTOR_SPEED_THRESHOLD)
+                        speed = 0.0;
+
+                    return speed;
+                }
                 else
                     return 0.0;
             }
@@ -2497,6 +2504,13 @@ double METER::get_meter_value_as_an_energy_storage() const
             {
                 if(primary_model != NULL)
                     return primary_model->get_valve_reference_in_pu();
+                else
+                    return 0.0;
+            }
+            if(meter_type=="ACTIVE POWER REFERENCE IN PU ON MBASE")
+            {
+                if(aux_model != NULL)
+                    return aux_model->get_active_power_reference_in_pu();
                 else
                     return 0.0;
             }

@@ -38,6 +38,7 @@ class ES_ELECTRICAL_MODEL : public ES_MODEL
 
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
+        virtual void initialize_active_power_control_as_zero() = 0;
         virtual double get_frequency_regulation_power_in_pu() const = 0;
         virtual double get_active_current_command_in_pu_based_on_mbase() = 0;
         virtual double get_active_power_command_in_pu_based_on_mbase() const = 0;

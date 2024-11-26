@@ -4724,6 +4724,32 @@ void DYNAMICS_SIMULATOR::change_generator_mechanical_power_in_MW(const DEVICE_ID
     }
 }
 
+void DYNAMICS_SIMULATOR::change_energy_storage_power_reference_in_pu_based_on_mbase(const DEVICE_ID& es_id, double pref)
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    ENERGY_STORAGE* energy_storage = psdb.get_energy_storage(es_id);
+    if(energy_storage != NULL)
+    {
+        ES_AUXILIARY_MODEL* au = energy_storage->get_es_auxiliary_model();
+        if(au==NULL)
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Es auxiliary model not exists for "<<energy_storage->get_compound_device_name()<<". No manual change is allowed.";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+        }
+        else
+        {
+            au->set_manual_power_in_pu(pref);
+        }
+    }
+    else
+    {
+        ostringstream osstream;
+        osstream<<"Warning. "<<es_id.get_compound_device_name()<<" does not exist when trying to change energy storage power reference in pu based on mbase. No change is made";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+}
+
 double DYNAMICS_SIMULATOR::get_2t_lcc_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id)
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();

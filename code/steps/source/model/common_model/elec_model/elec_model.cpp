@@ -34,6 +34,7 @@ void ELEC_MODEL::clear()
     set_initial_Torque(1.0);
     set_Xsource(0.1);
     activate_active_power_control();
+    set_energy_storage_in_discharge_mode();
 }
 
 void ELEC_MODEL::set_terminal_current_in_pu_based_on_mbase(double Iterm)
@@ -281,4 +282,19 @@ void ELEC_MODEL::deactivate_active_power_control()
 bool ELEC_MODEL::is_active_power_control_activated() const
 {
     return is_active_power_control_flag;
+}
+
+bool ELEC_MODEL::is_in_charge_mode() const
+{
+    return charge_flag;
+}
+
+void ELEC_MODEL::set_energy_storage_in_charge_mode()
+{
+    charge_flag = true;
+}
+
+void ELEC_MODEL::set_energy_storage_in_discharge_mode()
+{
+    charge_flag = false;
 }

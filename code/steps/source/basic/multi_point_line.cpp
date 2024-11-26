@@ -156,7 +156,7 @@ void MULTI_POINT_LINE::reorder_points()
     }
 }
 
-double MULTI_POINT_LINE::get_y_at_x(double x)
+double MULTI_POINT_LINE::get_y_at_x(double x) const
 {
     unsigned int n = get_valid_point_size();
     if(n<1)
@@ -187,7 +187,7 @@ double MULTI_POINT_LINE::get_y_at_x(double x)
 }
 
 
-unsigned int MULTI_POINT_LINE::get_the_last_point_with_x_less_than_or_equal_to(double x)
+unsigned int MULTI_POINT_LINE::get_the_last_point_with_x_less_than_or_equal_to(double x) const
 {
     unsigned int n = get_valid_point_size();
     unsigned int index = INDEX_NOT_EXIST;

@@ -94,3 +94,30 @@ double ES_PRIMARY_MODEL::get_valve_reference_in_pu() const
         return converter_model->get_initial_active_power_command_in_pu_based_on_mbase();
     }
 }
+
+bool ES_PRIMARY_MODEL::is_primary_model_frozen() const
+{
+    return primary_model_freeze_flag;
+}
+
+void ES_PRIMARY_MODEL::freeze_primary_model()
+{
+    primary_model_freeze_flag = true;
+}
+
+void ES_PRIMARY_MODEL::unfreeze_primary_model()
+{
+    primary_model_freeze_flag = false;
+}
+
+bool ES_PRIMARY_MODEL::is_rotor_locked() const
+{
+    ENERGY_STORAGE* es = get_energy_storage_pointer();
+    ES_ROTOR_MODEL* rotor = es->get_es_rotor_model();
+    if(rotor!=NULL)
+    {
+        return rotor->is_rotor_locked();
+    }
+    else
+        return true;
+}

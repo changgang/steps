@@ -526,6 +526,11 @@ void ELEC1::initialize()
     set_voltage_reference_in_pu(vref);
 }
 
+void ELEC1::initialize_active_power_control_as_zero()
+{
+
+}
+
 void ELEC1::run(DYNAMIC_MODE mode)
 {
     double vterm = get_bus_voltage_in_pu();

@@ -14,6 +14,7 @@ class ES_PRIMARY_MODEL : public ES_MODEL
     public:
         virtual string get_model_name() const = 0;
 
+        bool is_rotor_locked() const;
         double get_rotor_speed_reference_in_pu() const;
         double get_rotor_speed_in_pu() const;
         double get_active_power_reference_in_pu() const;
@@ -26,6 +27,9 @@ class ES_PRIMARY_MODEL : public ES_MODEL
         double get_initial_active_power_reference_in_pu() const;
         double get_initial_valve_in_pu() const;
 
+        bool is_primary_model_frozen() const;
+        void freeze_primary_model();
+        void unfreeze_primary_model();
 
         virtual double get_valve_in_pu() const = 0;
         virtual double get_delta_Y_in_pu() const = 0;
@@ -39,6 +43,7 @@ class ES_PRIMARY_MODEL : public ES_MODEL
 
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
+        virtual void initialize_Pmech_as_zero() = 0;
 
         virtual void check() = 0;
         virtual void clear() = 0;
@@ -61,6 +66,8 @@ class ES_PRIMARY_MODEL : public ES_MODEL
         double initial_Pref;
         double initial_speed;
         double initial_valve;
+
+        bool primary_model_freeze_flag;
 
 };
 

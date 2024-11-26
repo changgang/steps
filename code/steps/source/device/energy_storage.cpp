@@ -432,7 +432,14 @@ ES_MODE ENERGY_STORAGE::get_energy_storage_mode() const
 void ENERGY_STORAGE::initialize_energy_storage_mode()
 {
     double P = get_p_generation_in_MW();
-    if(fabs(P)<=DOUBLE_EPSILON) set_energy_storage_mode(ES_OUT_SERVICE_MODE);
-    if(P>DOUBLE_EPSILON) set_energy_storage_mode(ES_DISCHARGE_MODE);
-    if(P<DOUBLE_EPSILON) set_energy_storage_mode(ES_CHARGE_MODE);
+    if(P>DOUBLE_EPSILON)
+        set_energy_storage_mode(ES_DISCHARGE_MODE);
+    else
+    {
+        if(P<-DOUBLE_EPSILON)
+            set_energy_storage_mode(ES_CHARGE_MODE);
+        else
+            set_energy_storage_mode(ES_OUT_SERVICE_MODE);
+
+    }
 }

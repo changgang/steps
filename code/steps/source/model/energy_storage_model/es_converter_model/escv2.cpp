@@ -345,7 +345,27 @@ complex<double> ESCV2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mb
 
 double ESCV2::get_active_power_generation_including_stator_loss_in_pu_based_on_mbase()
 {
-    return csconv2.get_active_power_generation_including_stator_loss_in_pu_based_on_mbase();
+    double Pe = csconv2.get_active_power_generation_including_stator_loss_in_pu_based_on_mbase();
+
+    ES_MODE mode = get_energy_storage_mode();
+    if(mode==ES_START_DISCHARGE_MODE or mode==ES_STOP_DISCHARGE_MODE or mode==ES_DISCHARGE_MODE)
+    {
+        if(Pe<0.0)
+            Pe = 0.0;
+    }
+    else
+    {
+        if(mode==ES_START_CHARGE_MODE or mode==ES_STOP_CHARGE_MODE or mode==ES_CHARGE_MODE)
+        {
+            if(Pe>0.0)
+                Pe = 0.0;
+        }
+        else
+        {
+            Pe = 0.0;
+        }
+    }
+    return Pe;
 }
 
 complex<double> ESCV2::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_mbase()

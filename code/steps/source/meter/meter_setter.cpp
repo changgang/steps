@@ -2311,7 +2311,7 @@ METER METER_SETTER::prepare_es_terminal_active_power_in_pu_on_sbase_meter(const 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("TERMINAL ACTIVE POWER IN PU ON MBASE");
+        meter.set_meter_type("TERMINAL ACTIVE POWER IN PU ON SBASE");
 
     return meter;
 }
@@ -2323,7 +2323,7 @@ METER METER_SETTER::prepare_es_terminal_active_power_in_pu_on_mbase_meter(const 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("TERMINAL ACTIVE POWER IN PU ON SBASE");
+        meter.set_meter_type("TERMINAL ACTIVE POWER IN PU ON MBASE");
 
     return meter;
 }
@@ -2540,6 +2540,18 @@ METER METER_SETTER::prepare_es_valve_reference_in_pu_meter(const DEVICE_ID& devi
 
     if(successful)
         meter.set_meter_type("VALVE REFERENCE IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_es_active_power_reference_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ACTIVE POWER REFERENCE IN PU ON MBASE");
 
     return meter;
 }

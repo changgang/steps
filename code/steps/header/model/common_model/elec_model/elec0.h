@@ -102,6 +102,7 @@ class ELEC0: public ELEC_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
+        virtual void initialize_active_power_control_as_zero();
 
         virtual double get_active_current_command_in_pu_based_on_mbase();
         virtual double get_active_power_command_in_pu_based_on_mbase() const;

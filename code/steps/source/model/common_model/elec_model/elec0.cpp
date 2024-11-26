@@ -637,6 +637,11 @@ void ELEC0::initialize()
     frequency_controller.initialize();
 }
 
+void ELEC0::initialize_active_power_control_as_zero()
+{
+
+}
+
 void ELEC0::run(DYNAMIC_MODE mode)
 {
     double vterm = get_bus_voltage_in_pu();

@@ -213,6 +213,7 @@
 		<Unit filename="header/model/common_model/vrt_model/vrt_relay_model.h" />
 		<Unit filename="header/model/energy_storage_model/es_auxiliary_model/es_auxiliary_model.h" />
 		<Unit filename="header/model/energy_storage_model/es_auxiliary_model/es_auxiliary_models.h" />
+		<Unit filename="header/model/energy_storage_model/es_auxiliary_model/esau0.h" />
 		<Unit filename="header/model/energy_storage_model/es_converter_model/es_converter_model.h" />
 		<Unit filename="header/model/energy_storage_model/es_converter_model/es_converter_models.h" />
 		<Unit filename="header/model/energy_storage_model/es_converter_model/escv2.h" />
@@ -715,6 +716,7 @@
 		<Unit filename="source/model/common_model/vrt_model/vrt_control_model.cpp" />
 		<Unit filename="source/model/common_model/vrt_model/vrt_relay_model.cpp" />
 		<Unit filename="source/model/energy_storage_model/es_auxiliary_model/es_auxiliary_model.cpp" />
+		<Unit filename="source/model/energy_storage_model/es_auxiliary_model/esau0.cpp" />
 		<Unit filename="source/model/energy_storage_model/es_converter_model/es_converter_model.cpp" />
 		<Unit filename="source/model/energy_storage_model/es_converter_model/escv2.cpp" />
 		<Unit filename="source/model/energy_storage_model/es_converter_model/escvx.cpp" />

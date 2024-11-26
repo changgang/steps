@@ -240,6 +240,7 @@ unsigned int DYNAMIC_MODEL_DATABASE::get_model_size(MODEL* model) const
     if(model_name=="ESCV2") return sizeof(ESCV2);
     if(model_name=="ESEX") return sizeof(ESEX);
     if(model_name=="ESP11") return sizeof(ESP11);
+    if(model_name=="ESAU0") return sizeof(ESAU0);
     if(model_name=="ESROT0") return sizeof(ESROT0);
     if(model_name=="ESVRT3") return sizeof(ESVRT3);
     if(model_name=="ESVRTRLY1") return sizeof(ESVRTRLY1);

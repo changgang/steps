@@ -696,27 +696,22 @@ bool ESEX::setup_model_with_steps_string_vector(vector<string>& data)
             {
                 case 0:
                 {
-                    pmode = SPEED_CONTROL_MODE_WITH_TORQUE;
+                    pmode = SPEED_CONTROL_MODE;
                     break;
                 }
                 case 1:
                 {
-                    pmode = SPEED_CONTROL_MODE;
-                    break;
-                }
-                case 2:
-                {
                     pmode = ACTIVE_POWER_MODE;
                     break;
                 }
-                case 3:
+                case 2:
                 {
                     pmode = CONSTANT_TORQUE_MODE;
                     break;
                 }
                 default:
                 {
-                    pmode = SPEED_CONTROL_MODE_WITH_TORQUE;
+                    pmode = SPEED_CONTROL_MODE;
                     break;
                 }
             }
@@ -832,6 +827,11 @@ void ESEX::initialize()
         else
             elecx.activate_active_power_control();
 
+        if(mode==ES_CHARGE_MODE)
+            elecx.set_energy_storage_in_charge_mode();
+        else
+            elecx.set_energy_storage_in_discharge_mode();
+
         elecx.set_initial_speed(speed);
         elecx.set_speed_reference_in_pu(speedref);
         elecx.set_active_power_reference_in_pu_based_on_mbase(pcmd);
@@ -874,6 +874,11 @@ void ESEX::initialize()
     }
 }
 
+void ESEX::initialize_active_power_control_as_zero()
+{
+    elecx.initialize_active_power_control_as_zero();
+}
+
 void ESEX::run(DYNAMIC_MODE mode)
 {
     double iterm = get_energy_storage_terminal_current_in_pu();
@@ -888,6 +893,20 @@ void ESEX::run(DYNAMIC_MODE mode)
         elecx.activate_active_power_control();
     else
         elecx.deactivate_active_power_control();
+
+    ES_MODE es_mode = get_energy_storage_mode();
+    if(es_mode==ES_START_CHARGE_MODE or es_mode == ES_STOP_CHARGE_MODE or es_mode==ES_CHARGE_MODE)
+        elecx.set_energy_storage_in_charge_mode();
+    else
+        elecx.set_energy_storage_in_discharge_mode();
+
+    ENERGY_STORAGE* es= get_energy_storage_pointer();
+    ES_AUXILIARY_MODEL*au_model = es->get_es_auxiliary_model();
+    if(au_model!=NULL)
+    {
+        double pref = au_model->get_active_power_reference_in_pu();
+        elecx.set_active_power_reference_in_pu_based_on_mbase(pref);
+    }
 
     elecx.set_speed_in_pu(speed);
     elecx.set_speed_reference_in_pu(speed_ref);
@@ -966,10 +985,9 @@ string ESEX::get_standard_psse_string(bool export_internal_bus_number) const
 
     ELEC_ACTIVE_POWER_CONTROL_MODE p_mode = get_active_power_control_mode();
     int pe_control = 0;
-    if(p_mode==SPEED_CONTROL_MODE_WITH_TORQUE) pe_control = 0;
-    if(p_mode==SPEED_CONTROL_MODE) pe_control = 1;
-    if(p_mode==ACTIVE_POWER_MODE) pe_control = 2;
-    if(p_mode==CONSTANT_TORQUE_MODE) pe_control = 3;
+    if(p_mode==SPEED_CONTROL_MODE) pe_control = 0;
+    if(p_mode==ACTIVE_POWER_MODE) pe_control = 1;
+    if(p_mode==CONSTANT_TORQUE_MODE) pe_control = 2;
 
     int loop_flag = (get_active_power_closed_control_flag()==true)? 1: 0;
 

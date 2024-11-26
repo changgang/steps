@@ -57,6 +57,7 @@ class ESP11 : public ES_PRIMARY_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
+        virtual void initialize_Pmech_as_zero();
 
         virtual void check();
         virtual void clear();

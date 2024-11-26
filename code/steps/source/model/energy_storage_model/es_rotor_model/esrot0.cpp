@@ -20,10 +20,9 @@ ESROT0::~ESROT0()
 
 void ESROT0::clear()
 {
-    set_model_float_parameter_count(4);
+    set_model_float_parameter_count(1);
     INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
     rotor_speed_block->set_limiter_type(NO_LIMITER);
-    discharge_to_out_service = false;
 }
 
 void ESROT0::copy_from_const_model(const ESROT0& model)
@@ -32,10 +31,7 @@ void ESROT0::copy_from_const_model(const ESROT0& model)
     set_toolkit(toolkit);
 
     clear();
-    set_rotor_braking_mode(model.get_rotor_braking_mode());
     set_H_in_s(model.get_H_in_s());
-    set_rotor_braking_Damp(model.get_rotor_braking_Damp());
-    set_rotor_unlock_power_threshold_in_pu(model.get_rotor_unlock_power_threshold_in_pu());
 
 }
 
@@ -69,50 +65,26 @@ double ESROT0::get_rotor_unlock_power_threshold_in_pu() const
     return this->rotor_unlock_power_threshold_in_pu;
 }
 
-void ESROT0::set_rotor_braking_Damp(double D)
-{
-    this->rotor_braking_Damp = D;
-}
-
-double ESROT0::get_rotor_braking_Damp() const
-{
-    return this->rotor_braking_Damp;
-}
-
-void ESROT0::set_rotor_braking_mode(unsigned int mode)
-{
-    this->rotor_braking_mode = mode;
-}
-
-unsigned int ESROT0::get_rotor_braking_mode() const
-{
-    return this->rotor_braking_mode;
-}
-
 bool ESROT0::setup_model_with_steps_string_vector(vector<string>& data)
 {
     ostringstream osstream;
 
     bool is_successful = false;
 
-    if(data.size()>=7)
+    if(data.size()>=4)
     {
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
             unsigned int ibus;
             string id;
-            unsigned int mode;
-            double H, D, pu;
+            double H;
 
             ibus = (unsigned int)(get_integer_data(data[1],"0"));
             id = get_string_data(data[2],"");
 
             unsigned int i=3;
-            mode = (unsigned int)(get_integer_data(data[i],"0"));i++;
             H = get_double_data(data[i],"0.0"); i++;
-            D = get_double_data(data[i],"0.0"); i++;
-            pu = get_double_data(data[i],"0.0");
 
             DEVICE_ID did = get_energy_storage_device_id(ibus, id);
             STEPS& toolkit = get_toolkit();
@@ -120,11 +92,7 @@ bool ESROT0::setup_model_with_steps_string_vector(vector<string>& data)
             ENERGY_STORAGE* es = psdb.get_energy_storage(did);
             if(es!=NULL)
             {
-                set_rotor_braking_mode(mode);
                 set_H_in_s(H);
-                set_rotor_braking_Damp(D);
-                set_rotor_unlock_power_threshold_in_pu(pu);
-
                 is_successful = true;
 
                 return is_successful;
@@ -184,21 +152,12 @@ void ESROT0::initialize()
         set_initial_rotor_speed_reference_in_pu(speed);
 
         ES_MODE mode = get_energy_storage_mode();
-        deactivate_rotor_braking();
 
         if(mode==ES_OUT_SERVICE_MODE)
             lock_rotor();
 
-        if(mode==ES_CHARGE_MODE)
-        {
-            discharge_to_out_service = false;
+        if(mode==ES_CHARGE_MODE or mode==ES_DISCHARGE_MODE)
             unlock_rotor();
-        }
-        if(mode==ES_DISCHARGE_MODE)
-        {
-            discharge_to_out_service = true;
-            unlock_rotor();
-        }
 
         INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
         rotor_speed_block->set_output(speed);
@@ -215,91 +174,8 @@ void ESROT0::initialize()
     }
 }
 
-void ESROT0::check_rotor_lock_logic()
-{
-    STEPS& toolkit = get_toolkit();
-    double time = toolkit.get_dynamic_simulation_time_in_s();
-    ostringstream osstream;
-    ES_MODE mode = get_energy_storage_mode();
-    if(not is_rotor_locked())//没有锁的时候
-    {
-        double speed = get_rotor_speed_in_pu();
-        if(discharge_to_out_service==true)
-        {
-            if(speed<=MINIMUM_ROTOR_SPEED_THRESHOLD)
-            {
-                osstream<<"The rotor of "<<get_model_name()<<" model of "<<get_compound_device_name()<<" is locked at time "<<time<<" s."<<endl;
-                toolkit.show_information_with_leading_time_stamp(osstream);
-                lock_rotor();
-            }
-        }
-        else
-        {
-            if(speed>=-MINIMUM_ROTOR_SPEED_THRESHOLD)
-            {
-                osstream<<"The rotor of "<<get_model_name()<<" model of "<<get_compound_device_name()<<" is locked at time "<<time<<" s."<<endl;
-                toolkit.show_information_with_leading_time_stamp(osstream);
-                lock_rotor();
-            }
-
-        }
-    }
-    else //锁了的时候
-    {
-        if(mode==ES_START_DISCHARGE_MODE) //开机且达到阈值会解锁
-        {
-            double Pmech = get_mechanical_power_in_pu_on_mbase();
-            double Pe = get_active_power_including_stator_loss_in_pu_on_mbase();
-            double p_threshold = get_rotor_unlock_power_threshold_in_pu();
-            if((Pmech-Pe)>=p_threshold)
-                unlock_rotor();
-        }
-        if(mode==ES_START_CHARGE_MODE) //开机且达到阈值会解锁
-        {
-            double Pmech = get_mechanical_power_in_pu_on_mbase();
-            double Pe = get_active_power_including_stator_loss_in_pu_on_mbase();
-            double p_threshold = get_rotor_unlock_power_threshold_in_pu();
-            if((Pmech-Pe)<=p_threshold)
-                unlock_rotor();
-        }
-    }
-}
-
-void ESROT0::check_rotor_braking_logic()
-{
-    ES_MODE mode = get_energy_storage_mode();
-    if(not is_rotor_braking_activated())//没有投入制动的时候
-    {
-        if(not is_rotor_locked())//没有被锁的时候
-        {
-            unsigned int braking_mode = get_rotor_braking_mode();
-            if(braking_mode==0)
-            {
-                if(mode==ES_OUT_SERVICE_MODE)  //仅空载时才会制动
-                    activate_rotor_braking();
-            }
-            else
-            {
-                if(mode==ES_OUT_SERVICE_MODE or mode==ES_STOP_CHARGE_MODE or mode == ES_STOP_DISCHARGE_MODE)//在停机阶段就会开始制动。
-                    activate_rotor_braking();
-            }
-        }
-    }
-    else//投入了制动
-    {
-        if(is_rotor_locked())//被锁了
-        {
-            deactivate_rotor_braking();
-        }
-    }
-
-}
-
 void ESROT0::run(DYNAMIC_MODE mode)
 {
-    check_rotor_lock_logic();
-    check_rotor_braking_logic();
-
     if(not is_rotor_locked())
     {
         double Pmech = get_mechanical_power_in_pu_on_mbase();
@@ -308,10 +184,12 @@ void ESROT0::run(DYNAMIC_MODE mode)
 
         double input = (Pmech-Pe)/speed;
 
-        if(is_rotor_braking_activated())
+        ENERGY_STORAGE* es = get_energy_storage_pointer();
+        ES_AUXILIARY_MODEL* au_model = es->get_es_auxiliary_model();
+        if(au_model!=NULL and au_model->is_rotor_braking_activated())
         {
-            double D = get_rotor_braking_Damp();
-            input = input - D*speed;
+            double D = au_model->get_rotor_braking_Damp();
+            input = - D*speed;
         }
 
         INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
@@ -325,28 +203,26 @@ void ESROT0::run(DYNAMIC_MODE mode)
 
 double ESROT0::get_rotor_speed_in_pu()
 {
-    if(not is_rotor_locked())
+    if(is_rotor_locked())
     {
-        INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
-        return rotor_speed_block->get_output();
-    }
-    else
-    {
-        ES_MODE mode = get_energy_storage_mode();
-        if(mode==ES_OUT_SERVICE_MODE)
-        {
-            return 0.0;
-        }
-        if(mode==ES_START_DISCHARGE_MODE)
-        {
-            return MINIMUM_ROTOR_SPEED_THRESHOLD;
-        }
-        if(mode==ES_START_CHARGE_MODE)
-        {
-            return -MINIMUM_ROTOR_SPEED_THRESHOLD;
-        }
         return 0.0;
     }
+
+    INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
+    double speed =  rotor_speed_block->get_output();
+
+    ES_MODE mode = get_energy_storage_mode();
+    if(mode==ES_START_DISCHARGE_MODE and speed<=MINIMUM_ROTOR_SPEED_THRESHOLD)
+    {
+        speed = MINIMUM_ROTOR_SPEED_THRESHOLD;
+    }
+
+    if(mode==ES_START_CHARGE_MODE and speed>=-MINIMUM_ROTOR_SPEED_THRESHOLD)
+    {
+        speed = -MINIMUM_ROTOR_SPEED_THRESHOLD;
+    }
+
+    return speed;
 }
 
 void ESROT0::check()
@@ -385,10 +261,7 @@ string ESROT0::get_standard_psse_string(bool export_internal_bus_number) const
     osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "
             <<setw(6)<<identifier<<", "
-            <<setw(8)<<get_rotor_braking_mode()<<", "
-            <<setw(8)<<setprecision(4)<<get_H_in_s()<<", "
-            <<setw(8)<<setprecision(4)<<get_rotor_braking_Damp()<<", "
-            <<setw(8)<<setprecision(4)<<get_rotor_unlock_power_threshold_in_pu()<<" /";
+            <<setw(8)<<setprecision(4)<<get_H_in_s()<<" /";
 
     return osstream.str();
 }

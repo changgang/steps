@@ -54,6 +54,11 @@ double ES_ROTOR_MODEL::get_H_in_s() const
     return rotor_speed_block.get_T_in_s()/2.0;
 }
 
+INTEGRAL_BLOCK* ES_ROTOR_MODEL::get_rotor_speed_block()
+{
+    return &rotor_speed_block;
+}
+
 void ES_ROTOR_MODEL::lock_rotor()
 {
     rotor_lock_flag = true;
@@ -67,26 +72,6 @@ void ES_ROTOR_MODEL::unlock_rotor()
 bool ES_ROTOR_MODEL::is_rotor_locked() const
 {
     return rotor_lock_flag;
-}
-
-void ES_ROTOR_MODEL::activate_rotor_braking()
-{
-    this->rotor_braking_flag = true;
-}
-
-void ES_ROTOR_MODEL::deactivate_rotor_braking()
-{
-    this->rotor_braking_flag = false;
-}
-
-bool ES_ROTOR_MODEL::is_rotor_braking_activated() const
-{
-    return this->rotor_braking_flag;
-}
-
-INTEGRAL_BLOCK* ES_ROTOR_MODEL::get_rotor_speed_block()
-{
-    return &rotor_speed_block;
 }
 
 double ES_ROTOR_MODEL::get_mechanical_power_in_pu_on_mbase() const

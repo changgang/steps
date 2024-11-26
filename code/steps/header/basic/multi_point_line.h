@@ -15,7 +15,7 @@ class MULTI_POINT_LINE
     public:
         void clear();
         void add_x_and_y_pair(double x, double y);
-        double get_y_at_x(double x);
+        double get_y_at_x(double x) const;
         const vector<vector<double>> get_line() const;
         double get_point_x_with_index(unsigned int i) const;
         double get_point_y_with_index(unsigned int i) const;
@@ -28,7 +28,7 @@ class MULTI_POINT_LINE
         void copy_from_const_line(const MULTI_POINT_LINE& m);
         void reorder_points();
         bool is_point_exist(double x, double y) const;
-        unsigned int get_the_last_point_with_x_less_than_or_equal_to(double x);
+        unsigned int get_the_last_point_with_x_less_than_or_equal_to(double x) const;
         double line[STEPS_MAX_MULTI_POINT_LINE_SIZE][2];
 };
 

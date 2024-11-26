@@ -16,16 +16,7 @@ class ESROT0 : public ES_ROTOR_MODEL
         void set_rotor_unlock_power_threshold_in_pu(double p);
         double get_rotor_unlock_power_threshold_in_pu() const;
 
-        void set_rotor_braking_Damp(double D);
-        double get_rotor_braking_Damp() const;
-
-        void set_rotor_braking_mode(unsigned int mode);
-        unsigned int get_rotor_braking_mode() const;
-
         virtual string get_model_name() const;
-
-        virtual void check_rotor_lock_logic();
-        virtual void check_rotor_braking_logic();
 
         virtual double get_rotor_speed_in_pu();
 
@@ -57,10 +48,8 @@ class ESROT0 : public ES_ROTOR_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const ESROT0& model);
-        unsigned int rotor_braking_mode;
-        double rotor_braking_Damp;
         double rotor_unlock_power_threshold_in_pu;
-        bool discharge_to_out_service;
+
 };
 
 #endif // ESROT0_H

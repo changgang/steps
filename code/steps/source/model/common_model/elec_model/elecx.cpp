@@ -662,6 +662,36 @@ void ELECX::setup_block_toolkit_and_parameters()
     frequency_controller.set_device_pointer(get_device_pointer());
 }
 
+void ELECX::initialize_active_power_control_as_zero()
+{
+    torque_controller.set_output(0.0);
+    torque_controller.initialize();
+
+    speed_reference_sensor.set_output(0.0);
+    speed_reference_sensor.initialize();
+
+    //SPEED_CONTROL_MODE
+    speed_controller.set_output(0.0);
+    speed_controller.initialize();
+
+    //DC_VOLTAGE_MODE
+    Vdc_controller.set_output(0.0);
+    Vdc_controller.initialize();
+
+    //CONSTANT_TORQUE_MODE
+    set_initial_Torque(0.0);
+
+    //ACTIVE_POWER_MODE
+    set_active_power_reference_in_pu_based_on_mbase(0.0);
+
+    power_pi_controller.set_output(0.0);
+    power_pi_controller.initialize();
+
+    power_order_integrator.set_output(0.0);
+    power_order_integrator.initialize();
+
+}
+
 void ELECX::initialize()
 {
     setup_block_toolkit_and_parameters();
@@ -880,7 +910,14 @@ void ELECX::run(DYNAMIC_MODE mode)
         {
             double speed     = get_speed_in_pu();
             double speed_ref = get_speed_reference_in_pu();
-            input = speed - speed_ref;
+            if(not is_in_charge_mode())
+            {
+                input = speed - speed_ref;
+            }
+            else
+            {
+                input = speed_ref - speed;
+            }
 
             speed_controller.set_input(input);
             speed_controller.run(mode);
@@ -911,7 +948,10 @@ void ELECX::run(DYNAMIC_MODE mode)
 
         }
 
-        input = Pref + frequency_controller.get_frequency_regulation_power_deviation_in_pu();
+        if(get_device_type()!=STEPS_ENERGY_STORAGE)
+            input = Pref + frequency_controller.get_frequency_regulation_power_deviation_in_pu();
+        else
+            input = Pref;
 
         input = input - power_order_integrator.get_output();
 
