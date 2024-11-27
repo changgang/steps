@@ -605,26 +605,20 @@ void ESAU0::check_when_energy_storage_in_stop_discharge_mode()
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
 
-            if(not is_primary_model_frozen())
+            if((Pmech<=FLOAT_EPSILON or is_rotor_locked()) and not is_primary_model_frozen())
             {
-                if(Pmech<=FLOAT_EPSILON or is_rotor_locked())
-                {
-                    osstream<<"The Primary model of "<<get_compound_device_name()<<" is frozen at time "<<time<<" s.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                    freeze_primary_model();
-                    initialize_primary_model_as_out_service_mode();
-                }
+                freeze_primary_model();
+                initialize_primary_model_as_out_service_mode();
+                osstream<<"The primary model of "<<get_compound_device_name()<<" is frozen at time "<<time<<" s.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
 
-            if(not is_electrical_active_power_control_frozen())
+            if((Pcmd<=FLOAT_EPSILON or is_rotor_locked()) and not is_electrical_active_power_control_frozen())
             {
-                if((Pcmd<=FLOAT_EPSILON or is_rotor_locked()) and power_reach_target_flag==true)
-                {
-                    freeze_electrical_active_power_control();
-                    initialize_electrical_model_as_out_service_mode();
-                    osstream<<"The Active power control in Electrical model of "<<get_compound_device_name()<<" is frozen at time "<<time<<" s.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
+                freeze_electrical_active_power_control();
+                initialize_electrical_model_as_out_service_mode();
+                osstream<<"The active power control in Electrical model of "<<get_compound_device_name()<<" is frozen at time "<<time<<" s.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
 
             if(is_primary_model_frozen() and is_electrical_active_power_control_frozen())
@@ -656,7 +650,7 @@ void ESAU0::check_when_energy_storage_in_stop_discharge_mode()
     }
     else//manual control
     {
-        if(Ptarget<=0.0)//指令为0，准备进入空载
+        if(Ptarget<=0.0)
         {
             ES_PRIMARY_MODEL* primary_model = energy_storage->get_es_primary_model();
             ES_ELECTRICAL_MODEL* elec_model = energy_storage->get_es_electrical_model();
@@ -671,26 +665,20 @@ void ESAU0::check_when_energy_storage_in_stop_discharge_mode()
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
 
-            if(not is_primary_model_frozen())
+            if((Pmech<=FLOAT_EPSILON or is_rotor_locked()) and not is_primary_model_frozen())
             {
-                if(Pmech<=FLOAT_EPSILON or is_rotor_locked())
-                {
-                    osstream<<"The Primary model of "<<get_compound_device_name()<<" is frozen at time "<<time<<" s.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                    freeze_primary_model();
-                    initialize_primary_model_as_out_service_mode();
-                }
+                freeze_primary_model();
+                initialize_primary_model_as_out_service_mode();
+                osstream<<"The primary model of "<<get_compound_device_name()<<" is frozen at time "<<time<<" s.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
 
-            if(not is_electrical_active_power_control_frozen())
+            if((Pcmd<=FLOAT_EPSILON or is_rotor_locked()) and not is_electrical_active_power_control_frozen())
             {
-                if((Pcmd<=FLOAT_EPSILON or is_rotor_locked()) and power_reach_target_flag==true)
-                {
-                    freeze_electrical_active_power_control();
-                    initialize_electrical_model_as_out_service_mode();
-                    osstream<<"The Active power control in Electrical model of "<<get_compound_device_name()<<" is frozen at time "<<time<<" s.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
+                freeze_electrical_active_power_control();
+                initialize_electrical_model_as_out_service_mode();
+                osstream<<"The active power control in electrical model of "<<get_compound_device_name()<<" is frozen at time "<<time<<" s.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
 
             if(is_primary_model_frozen() and is_electrical_active_power_control_frozen())
@@ -718,9 +706,9 @@ void ESAU0::check_when_energy_storage_in_stop_discharge_mode()
                 }
             }
         }
-        else//指令>0
+        else
         {
-            if(Ptarget>get_current_Pref())//在放电停止过程中突然人工增大指令值  将进入放电启动过程  否则准备进入放电过程。
+            if(Ptarget>get_current_Pref())
             {
                 set_power_reference_when_into_start_discharge_mode(p0);
                 set_speed_reference_when_into_start_discharge_mode(speed0);
@@ -795,7 +783,7 @@ void ESAU0::check_when_energy_storage_in_discharge_mode()
     }
     else//manual
     {
-        if(Ptarget>get_current_Pref())//放电模式下突然增大指令将进入放电启动状态
+        if(Ptarget>get_current_Pref())
         {
             set_power_reference_when_into_start_discharge_mode(p0);
             set_speed_reference_when_into_start_discharge_mode(speed0);
@@ -816,7 +804,7 @@ void ESAU0::check_when_energy_storage_in_discharge_mode()
         }
         else
         {
-            if(Ptarget<get_current_Pref())//放电模式下突然减小指令将进入放电停止状态
+            if(Ptarget<get_current_Pref())
             {
                 power_reach_target_flag = false;
                 speed_reach_target_flag = false;
@@ -871,7 +859,7 @@ void ESAU0::check_when_energy_storage_in_start_charge_mode()
                     <<"ES_START_CHARGE_MODE to ES_STOP_CHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<"(>"<<Pc<<").";
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
-        else //Ptarget<=Pc
+        else
         {
             if(power_reach_target_flag==true and speed_reach_target_flag==true and valve_reach_target_flag==true)
             {
@@ -891,7 +879,7 @@ void ESAU0::check_when_energy_storage_in_start_charge_mode()
     else //manually
     {
 
-        if(Ptarget>get_current_Pref())//在充电启动过程中突然人工增大指令值  将进入充电关闭状态
+        if(Ptarget>get_current_Pref())
         {
             set_power_reference_when_into_stop_charge_mode(p0);
             set_speed_reference_when_into_stop_charge_mode(speed0);
@@ -912,7 +900,7 @@ void ESAU0::check_when_energy_storage_in_start_charge_mode()
         }
         else
         {
-            if(power_reach_target_flag==true and speed_reach_target_flag==true and valve_reach_target_flag==true)//充电启动过程结束
+            if(power_reach_target_flag==true and speed_reach_target_flag==true and valve_reach_target_flag==true)
             {
                 power_reach_target_flag = false;
                 speed_reach_target_flag = false;
@@ -962,7 +950,7 @@ void ESAU0::check_when_energy_storage_in_stop_charge_mode()
                     <<"ES_STOP_CHARGE_MODE to ES_START_CHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<"(<"<<Pc<<").";
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
-        else //Ptarget>=Pc
+        else
         {
             ES_PRIMARY_MODEL* primary_model = energy_storage->get_es_primary_model();
             ES_ELECTRICAL_MODEL* elec_model = energy_storage->get_es_electrical_model();
@@ -977,26 +965,21 @@ void ESAU0::check_when_energy_storage_in_stop_charge_mode()
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
 
-            if(not is_primary_model_frozen())
+            if((Pmech>=-FLOAT_EPSILON or is_rotor_locked()) and not is_primary_model_frozen())
             {
-                if(Pmech>=-FLOAT_EPSILON or is_rotor_locked())
-                {
-                    osstream<<"The Primary model of "<<get_compound_device_name()<<" is frozen at time "<<time<<" s.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                    freeze_primary_model();
-                    initialize_primary_model_as_out_service_mode();
-                }
+                freeze_primary_model();
+                initialize_primary_model_as_out_service_mode();
+                osstream<<"The primary model of "<<get_compound_device_name()<<" is frozen at time "<<time<<" s.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
 
-            if(not is_electrical_active_power_control_frozen())
+
+            if((Pcmd>=-FLOAT_EPSILON or is_rotor_locked()) and not is_electrical_active_power_control_frozen())
             {
-                if((Pcmd>=-FLOAT_EPSILON or is_rotor_locked()) and power_reach_target_flag==true)
-                {
-                    freeze_electrical_active_power_control();
-                    initialize_electrical_model_as_out_service_mode();
-                    osstream<<"The Active power control in Electrical model of "<<get_compound_device_name()<<" is frozen at time "<<time<<" s.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
+                freeze_electrical_active_power_control();
+                initialize_electrical_model_as_out_service_mode();
+                osstream<<"The active power control in electrical model of "<<get_compound_device_name()<<" is frozen at time "<<time<<" s.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
 
             if(is_primary_model_frozen() and is_electrical_active_power_control_frozen())
@@ -1043,28 +1026,21 @@ void ESAU0::check_when_energy_storage_in_stop_charge_mode()
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
 
-            if(not is_primary_model_frozen())
+            if((Pmech>=-FLOAT_EPSILON or is_rotor_locked()) and not is_primary_model_frozen())
             {
-                if(Pmech>=-FLOAT_EPSILON or is_rotor_locked())
-                {
-                    osstream<<"The Primary model of "<<get_compound_device_name()<<" is frozen at time "<<time<<" s.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                    freeze_primary_model();
-                    initialize_primary_model_as_out_service_mode();
-                }
+                freeze_primary_model();
+                initialize_primary_model_as_out_service_mode();
+                osstream<<"The primary model of "<<get_compound_device_name()<<" is frozen at time "<<time<<" s.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
 
-            if(not is_electrical_active_power_control_frozen())
+            if((Pcmd>=-FLOAT_EPSILON or is_rotor_locked()) and not is_electrical_active_power_control_frozen())
             {
-                if((Pcmd>=-FLOAT_EPSILON or is_rotor_locked()) and power_reach_target_flag==true)
-                {
-                    freeze_electrical_active_power_control();
-                    initialize_electrical_model_as_out_service_mode();
-                    osstream<<"The Active power control in Electrical model of "<<get_compound_device_name()<<" is frozen at time "<<time<<" s.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
+                freeze_electrical_active_power_control();
+                initialize_electrical_model_as_out_service_mode();
+                osstream<<"The active power control in electrical model of "<<get_compound_device_name()<<" is frozen at time "<<time<<" s.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
-
 
             if(is_primary_model_frozen() and is_electrical_active_power_control_frozen())
             {

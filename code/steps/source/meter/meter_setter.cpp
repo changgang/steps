@@ -2556,6 +2556,18 @@ METER METER_SETTER::prepare_es_active_power_reference_in_pu_on_mbase_meter(const
     return meter;
 }
 
+METER METER_SETTER::prepare_es_frequency_regulation_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("FREQUENCY REGULATION POWER IN PU ON MBASE");
+
+    return meter;
+}
+
 METER METER_SETTER::prepare_es_rotor_speed_in_pu_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());

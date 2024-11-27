@@ -1345,6 +1345,8 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(const DEVICE_ID& d
                 meter = setter.prepare_es_valve_reference_in_pu_meter(did);
             if(meter_type=="ACTIVE POWER REFERENCE IN PU ON MBASE")
                 meter = setter.prepare_es_active_power_reference_in_pu_on_mbase_meter(did);
+            if(meter_type=="FREQUENCY REGULATION POWER IN PU ON MBASE")
+                meter = setter.prepare_es_frequency_regulation_power_in_pu_on_mbase_meter(did);
             if(meter_type=="ROTOR SPEED REFERENCE IN PU")
                 meter = setter.prepare_es_rotor_speed_reference_in_pu_meter(did);
             if(meter_type=="ROTOR SPEED IN PU")
