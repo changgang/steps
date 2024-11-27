@@ -48,6 +48,7 @@ class ESP11 : public ES_PRIMARY_MODEL
 
         virtual double get_valve_in_pu() const;
         virtual double get_delta_Y_in_pu() const;
+        virtual double get_delta_Yref_in_pu() const;
         virtual double get_mechanical_power_in_pu_on_mbase() const;
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);

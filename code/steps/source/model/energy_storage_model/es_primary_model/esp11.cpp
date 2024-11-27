@@ -343,7 +343,9 @@ void ESP11::initialize()
         if(toolkit.is_detailed_log_enabled())
         {
             osstream<<get_model_name()<<" model of "<<get_compound_device_name()<<" is initialized."<<endl
-                    <<"(1) Initial speedref = "<<endl;
+                    <<"(1) Initial speedref in pu = "<<speed<<endl
+                    <<"(2) Initial mechanical power in pu = "<<p<<endl
+                    <<"(3) Initial valve in pu = "<<Y<<endl;
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -421,6 +423,11 @@ double ESP11::get_delta_Y_in_pu() const
     return gov.get_delta_Y_in_pu();
 }
 
+double ESP11::get_delta_Yref_in_pu() const
+{
+    return gov.get_delta_Yref_in_pu();
+}
+
 void ESP11::check()
 {
     ;
@@ -460,7 +467,19 @@ string ESP11::get_standard_psse_string(bool export_internal_bus_number) const
             <<setw(8)<<setprecision(4)<<get_Tr_in_s()<<", "
             <<setw(8)<<setprecision(4)<<get_Ka()<<", "
             <<setw(8)<<setprecision(4)<<get_dbp()<<", "
-            <<setw(8)<<setprecision(4)<<get_dbn()<<" /";
+            <<setw(8)<<setprecision(4)<<get_dbn()<<", "
+            <<setw(8)<<setprecision(4)<<get_Kp()<<", "
+            <<setw(8)<<setprecision(4)<<get_Ki()<<", "
+            <<setw(8)<<setprecision(4)<<get_INTmax()<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(4)<<get_INTmin()<<", "
+            <<setw(8)<<setprecision(4)<<get_PImax()<<", "
+            <<setw(8)<<setprecision(4)<<get_PImin()<<", "
+            <<setw(8)<<setprecision(4)<<get_Bp()<<", "
+            <<setw(8)<<setprecision(4)<<get_umax()<<", "
+            <<setw(8)<<setprecision(4)<<get_umin()<<", "
+            <<setw(8)<<setprecision(4)<<get_Ts_in_s()<<", "
+            <<setw(8)<<setprecision(4)<<get_Twg_in_s()<<" /";
 
     return osstream.str();
 }
@@ -469,30 +488,83 @@ void ESP11::prepare_model_data_table()
 {
     clear_model_data_table();
     unsigned int i=0;
-    add_model_data_name_and_index_pair("A", i); i++;
+    add_model_data_name_and_index_pair("TR", i); i++;
+    add_model_data_name_and_index_pair("KA", i); i++;
+    add_model_data_name_and_index_pair("DBP", i); i++;
+    add_model_data_name_and_index_pair("DBN", i); i++;
+    add_model_data_name_and_index_pair("KP", i); i++;
+    add_model_data_name_and_index_pair("KI", i); i++;
+    add_model_data_name_and_index_pair("INTMAX", i); i++;
+    add_model_data_name_and_index_pair("INTMIN", i); i++;
+    add_model_data_name_and_index_pair("PIMAX", i); i++;
+    add_model_data_name_and_index_pair("PIMIN", i); i++;
+    add_model_data_name_and_index_pair("BP", i); i++;
+    add_model_data_name_and_index_pair("UMAX", i); i++;
+    add_model_data_name_and_index_pair("UMIN", i); i++;
+    add_model_data_name_and_index_pair("TS", i); i++;
+    add_model_data_name_and_index_pair("TWG", i); i++;
 }
 
 double ESP11::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return 0;
 
+    if(par_name == "TR")        return get_Tr_in_s();
+    if(par_name == "KA")        return get_Ka();
+    if(par_name == "DBP")       return get_dbp();
+    if(par_name == "DBN")       return get_dbn();
+    if(par_name == "KP")        return get_Kp();
+    if(par_name == "KI")        return get_Ki();
+    if(par_name == "INTMAX")    return get_INTmax();
+    if(par_name == "INTMIN")    return get_INTmin();
+    if(par_name == "PIMAX")     return get_PImax();
+    if(par_name == "PIMIN")     return get_PImin();
+    if(par_name == "BP")        return get_Bp();
+    if(par_name == "UMAX")      return get_umax();
+    if(par_name == "UMIN")      return get_umin();
+    if(par_name == "TS")        return get_Ts_in_s();
+    if(par_name == "TWG")       return get_Twg_in_s();
+
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
 void ESP11::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return ;
 
+    if(par_name=="TR")      return set_Tr_in_s(value);
+    if(par_name=="KA")      return set_Ka(value);
+    if(par_name=="DBP")     return set_dbp(value);
+    if(par_name=="DBN")     return set_dbn(value);
+    if(par_name=="KP")      return set_Kp(value);
+    if(par_name=="KI")      return set_Ki(value);
+    if(par_name=="INTMAX")  return set_INTmax(value);
+    if(par_name=="INTMIN")  return set_INTmin(value);
+    if(par_name=="PIMAX")   return set_PImax(value);
+    if(par_name=="PIMIN")   return set_PImin(value);
+    if(par_name=="BP")      return set_Bp(value);
+    if(par_name=="UMAX")    return set_umax(value);
+    if(par_name=="UMIN")    return set_umin(value);
+    if(par_name=="TS")      return set_Ts_in_s(value);
+    if(par_name=="TWG")     return set_Twg_in_s(value);
+
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }
 
 double ESP11::get_minimum_nonzero_time_constant_in_s()
 {
     double mint = INFINITE_THRESHOLD;
+    if(get_Tr_in_s()!=0 and mint>get_Tr_in_s())
+        mint = get_Tr_in_s();
+    if(get_Ts_in_s()!=0 and mint>get_Ts_in_s())
+        mint = get_Ts_in_s();
+    if(get_Twg_in_s()!=0 and mint>get_Twg_in_s())
+        mint = get_Twg_in_s();
+
     return mint;
 }
 
@@ -500,14 +572,17 @@ void ESP11::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
-    add_model_internal_variable_name_and_index_pair("AA", i); i++;
+    add_model_internal_variable_name_and_index_pair("DELTA VALVE IN PU", i); i++;
+    add_model_internal_variable_name_and_index_pair("DELTA VALVE REFERENCE IN PU", i); i++;
 }
 
 double ESP11::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
-    if(var_name == "A")
-        return 0.0;
+    if(var_name == "DELTA VALVE IN PU")
+        return get_delta_Y_in_pu();
+    if(var_name == "DELTA VALVE REFERENCE IN PU")
+        return get_delta_Yref_in_pu();
 
     return 0.0;
 }

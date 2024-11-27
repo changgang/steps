@@ -284,15 +284,18 @@ void GOV11::run(DYNAMIC_MODE mode)
     double Y = get_valve_in_pu();
     double deltaY = get_delta_Y_in_pu();
     double Yref = get_valve_reference_in_pu();
+    double deltaYref = get_delta_Yref_in_pu();
 
-    input = input*get_Ka()+get_Bp()*((Y-Yref)-deltaY);
+    input = input*get_Ka()+get_Bp()*(deltaYref-deltaY);
     Kp.set_input(input);
     Kp.run(mode);
+
     governor.set_input(input);
     governor.run(mode);
 
     deltaY = get_delta_Y_in_pu();
     input = deltaY + Yref;
+
     servo_motor.set_input(input);
     servo_motor.run(mode);
 
@@ -324,6 +327,13 @@ double GOV11::get_delta_Y_in_pu() const
     if(dY<PImin)
         dY = PImin;
     return dY;
+}
+
+double GOV11::get_delta_Yref_in_pu() const
+{
+    double Y = get_valve_in_pu();
+    double Yref = get_valve_reference_in_pu();
+    return Y-Yref;
 }
 
 double GOV11::get_mechanical_power_in_pu_on_mbase() const

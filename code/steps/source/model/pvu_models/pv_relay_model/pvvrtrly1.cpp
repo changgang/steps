@@ -264,32 +264,34 @@ string PVVRTRLY1::get_standard_psse_string(bool export_internal_bus_number) cons
     {
         osstream<<setw(8)<<setprecision(4)<<get_lvrt_time_threshold(i)<<", ";
         number++;
-        if(number == 10 or (number-10)%9 == 0)
+        if(number == 10 or ((number-10)%9 == 0 and number>10))
             osstream<<"\n"<<setw(10)<<"";
         osstream<<setw(8)<<setprecision(4)<<get_lvrt_volt_threshold(i)<<", ";
         number++;
-        if(number == 10 or (number-10)%9 == 0)
+        if(number == 10 or ((number-10)%9 == 0 and number>10))
             osstream<<"\n"<<setw(10)<<"";
     }
-    osstream<<setw(8)<<setprecision(4)<<get_lvrt_trip_scale()<<", \n";
-    osstream<<setw(10)<<"";
+    osstream<<setw(8)<<setprecision(4)<<get_lvrt_trip_scale()<<", ";
+    number++;
+    if(number == 10 or ((number-10)%9 == 0 and number>10))
+            osstream<<"\n"<<setw(10)<<"";
 
     n=get_hvrt_point_number();
 
     osstream<<setw(8)<<n<<", ";
     number++;
-    if(number == 10 or (number-10)%9 == 0)
+    if(number == 10 or ((number-10)%9 == 0 and number>10))
         osstream<<"\n"<<setw(10)<<"";
 
     for(unsigned int i=0; i<n; ++i)
     {
         osstream<<setw(8)<<setprecision(4)<<get_hvrt_time_threshold(i)<<", ";
         number++;
-        if(number == 10 or (number-10)%9 == 0)
+        if(number == 10 or ((number-10)%9 == 0 and number>10))
             osstream<<"\n"<<setw(10)<<"";
         osstream<<setw(8)<<setprecision(4)<<get_hvrt_volt_threshold(i)<<", ";
         number++;
-        if(number == 10 or (number-10)%9 == 0)
+        if(number == 10 or ((number-10)%9 == 0 and number>10))
             osstream<<"\n"<<setw(10)<<"";
     }
     osstream<<setw(8)<<setprecision(4)<<get_hvrt_trip_scale()<<" /";

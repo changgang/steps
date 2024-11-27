@@ -1455,7 +1455,6 @@ void ESAU0::initialize()
 void ESAU0::run(DYNAMIC_MODE mode)
 {
     check_energy_storage_mode();
-    //check_rotor_lock_logic();
 
     double Pref = get_active_power_reference_in_pu();
     double speed = get_rotor_speed_reference_in_pu();
@@ -1766,13 +1765,163 @@ string ESAU0::get_standard_psse_string(bool export_internal_bus_number) const
     if(export_internal_bus_number==true)
         bus = network.get_internal_bus_number_of_physical_bus(bus)+1;
 
-    /*osstream<<setw(8)<<bus<<", "
+    int mode = (is_manual_control()==true)? 1 : 0;
+    double p_d = get_start_discharge_mode_power_threshold();
+    double p_c = get_start_charge_mode_power_threshold();
+
+    double pcmd_d_1 = power_speed_table_in_discharge.get_point_x_with_index(0);
+    double speed_d_1 = power_speed_table_in_discharge.get_point_y_with_index(0);
+    double valve_d_1 = power_valve_table_in_discharge.get_point_y_with_index(0);
+    double pcmd_d_2 = power_speed_table_in_discharge.get_point_x_with_index(1);
+    double speed_d_2 = power_speed_table_in_discharge.get_point_y_with_index(1);
+    double valve_d_2 = power_valve_table_in_discharge.get_point_y_with_index(1);
+    double pcmd_d_3 = power_speed_table_in_discharge.get_point_x_with_index(2);
+    double speed_d_3 = power_speed_table_in_discharge.get_point_y_with_index(2);
+    double valve_d_3 = power_valve_table_in_discharge.get_point_y_with_index(2);
+    double pcmd_d_4 = power_speed_table_in_discharge.get_point_x_with_index(3);
+    double speed_d_4 = power_speed_table_in_discharge.get_point_y_with_index(3);
+    double valve_d_4 = power_valve_table_in_discharge.get_point_y_with_index(3);
+    double pcmd_d_5 = power_speed_table_in_discharge.get_point_x_with_index(4);
+    double speed_d_5 = power_speed_table_in_discharge.get_point_y_with_index(4);
+    double valve_d_5 = power_valve_table_in_discharge.get_point_y_with_index(4);
+    double pcmd_d_6 = power_speed_table_in_discharge.get_point_x_with_index(5);
+    double speed_d_6 = power_speed_table_in_discharge.get_point_y_with_index(5);
+    double valve_d_6 = power_valve_table_in_discharge.get_point_y_with_index(5);
+    double pcmd_d_7 = power_speed_table_in_discharge.get_point_x_with_index(6);
+    double speed_d_7 = power_speed_table_in_discharge.get_point_y_with_index(6);
+    double valve_d_7 = power_valve_table_in_discharge.get_point_y_with_index(6);
+    double pcmd_d_8 = power_speed_table_in_discharge.get_point_x_with_index(7);
+    double speed_d_8 = power_speed_table_in_discharge.get_point_y_with_index(7);
+    double valve_d_8 = power_valve_table_in_discharge.get_point_y_with_index(7);
+    double pcmd_d_9 = power_speed_table_in_discharge.get_point_x_with_index(8);
+    double speed_d_9 = power_speed_table_in_discharge.get_point_y_with_index(8);
+    double valve_d_9 = power_valve_table_in_discharge.get_point_y_with_index(8);
+
+    double pcmd_c_1 = power_speed_table_in_charge.get_point_x_with_index(8);
+    double speed_c_1 = power_speed_table_in_charge.get_point_y_with_index(8);
+    double valve_c_1 = power_valve_table_in_charge.get_point_y_with_index(8);
+    double pcmd_c_2 = power_speed_table_in_charge.get_point_x_with_index(7);
+    double speed_c_2 = power_speed_table_in_charge.get_point_y_with_index(7);
+    double valve_c_2 = power_valve_table_in_charge.get_point_y_with_index(7);
+    double pcmd_c_3 = power_speed_table_in_charge.get_point_x_with_index(6);
+    double speed_c_3 = power_speed_table_in_charge.get_point_y_with_index(6);
+    double valve_c_3 = power_valve_table_in_charge.get_point_y_with_index(6);
+    double pcmd_c_4 = power_speed_table_in_charge.get_point_x_with_index(5);
+    double speed_c_4 = power_speed_table_in_charge.get_point_y_with_index(5);
+    double valve_c_4 = power_valve_table_in_charge.get_point_y_with_index(5);
+    double pcmd_c_5 = power_speed_table_in_charge.get_point_x_with_index(4);
+    double speed_c_5 = power_speed_table_in_charge.get_point_y_with_index(4);
+    double valve_c_5 = power_valve_table_in_charge.get_point_y_with_index(4);
+    double pcmd_c_6 = power_speed_table_in_charge.get_point_x_with_index(3);
+    double speed_c_6 = power_speed_table_in_charge.get_point_y_with_index(3);
+    double valve_c_6 = power_valve_table_in_charge.get_point_y_with_index(3);
+    double pcmd_c_7 = power_speed_table_in_charge.get_point_x_with_index(2);
+    double speed_c_7 = power_speed_table_in_charge.get_point_y_with_index(2);
+    double valve_c_7 = power_valve_table_in_charge.get_point_y_with_index(2);
+    double pcmd_c_8 = power_speed_table_in_charge.get_point_x_with_index(1);
+    double speed_c_8 = power_speed_table_in_charge.get_point_y_with_index(1);
+    double valve_c_8 = power_valve_table_in_charge.get_point_y_with_index(1);
+    double pcmd_c_9 = power_speed_table_in_charge.get_point_x_with_index(0);
+    double speed_c_9 = power_speed_table_in_charge.get_point_y_with_index(0);
+    double valve_c_9 = power_valve_table_in_charge.get_point_y_with_index(0);
+
+    double kp_start_c = get_power_slope_in_start_charge_mode();
+    double kp_stop_c = get_power_slope_in_stop_charge_mode();
+    double kp_start_d = get_power_slope_in_start_discharge_mode();
+    double kp_stop_d = get_power_slope_in_stop_discharge_mode();
+
+    double ks_start_c = get_speed_slope_in_start_charge_mode();
+    double ks_stop_c = get_speed_slope_in_stop_charge_mode();
+    double ks_start_d = get_speed_slope_in_start_discharge_mode();
+    double ks_stop_d = get_speed_slope_in_stop_discharge_mode();
+
+    double kv_start_c = get_valve_slope_in_start_charge_mode();
+    double kv_stop_c = get_valve_slope_in_stop_charge_mode();
+    double kv_start_d = get_valve_slope_in_start_discharge_mode();
+    double kv_stop_d = get_valve_slope_in_stop_discharge_mode();
+
+    double D = get_rotor_braking_Damp();
+
+    osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "
             <<setw(6)<<identifier<<", "
-            <<setw(8)<<get_rotor_braking_mode()<<", "
-            <<setw(8)<<setprecision(4)<<get_H_in_s()<<", "
-            <<setw(8)<<setprecision(4)<<get_rotor_braking_Damp()<<", "
-            <<setw(8)<<setprecision(4)<<get_rotor_unlock_power_threshold_in_pu()<<" /";*/
+            <<setw(8)<<mode<<", "
+            <<setw(8)<<setprecision(4)<<p_d<<", "
+            <<setw(8)<<setprecision(4)<<p_c<<", "
+            <<setw(8)<<setprecision(4)<<pcmd_d_1<<", "
+            <<setw(8)<<setprecision(4)<<speed_d_1<<", "
+            <<setw(8)<<setprecision(4)<<valve_d_1<<", "
+            <<setw(8)<<setprecision(4)<<pcmd_d_2<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(4)<<speed_d_2<<", "
+            <<setw(8)<<setprecision(4)<<valve_d_2<<", "
+            <<setw(8)<<setprecision(4)<<pcmd_d_3<<", "
+            <<setw(8)<<setprecision(4)<<speed_d_3<<", "
+            <<setw(8)<<setprecision(4)<<valve_d_3<<", "
+            <<setw(8)<<setprecision(4)<<pcmd_d_4<<", "
+            <<setw(8)<<setprecision(4)<<speed_d_4<<", "
+            <<setw(8)<<setprecision(4)<<valve_d_4<<", "
+            <<setw(8)<<setprecision(4)<<pcmd_d_5<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(4)<<speed_d_5<<", "
+            <<setw(8)<<setprecision(4)<<valve_d_5<<", "
+            <<setw(8)<<setprecision(4)<<pcmd_d_6<<", "
+            <<setw(8)<<setprecision(4)<<speed_d_6<<", "
+            <<setw(8)<<setprecision(4)<<valve_d_6<<", "
+            <<setw(8)<<setprecision(4)<<pcmd_d_7<<", "
+            <<setw(8)<<setprecision(4)<<speed_d_7<<", "
+            <<setw(8)<<setprecision(4)<<valve_d_7<<", "
+            <<setw(8)<<setprecision(4)<<pcmd_d_8<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(4)<<speed_d_8<<", "
+            <<setw(8)<<setprecision(4)<<valve_d_8<<", "
+            <<setw(8)<<setprecision(4)<<pcmd_d_9<<", "
+            <<setw(8)<<setprecision(4)<<speed_d_9<<", "
+            <<setw(8)<<setprecision(4)<<valve_d_9<<", "
+            <<setw(8)<<setprecision(4)<<pcmd_c_1<<", "
+            <<setw(8)<<setprecision(4)<<speed_c_1<<", "
+            <<setw(8)<<setprecision(4)<<valve_c_1<<", "
+            <<setw(8)<<setprecision(4)<<pcmd_c_2<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(4)<<speed_c_2<<", "
+            <<setw(8)<<setprecision(4)<<valve_c_2<<", "
+            <<setw(8)<<setprecision(4)<<pcmd_c_3<<", "
+            <<setw(8)<<setprecision(4)<<speed_c_3<<", "
+            <<setw(8)<<setprecision(4)<<valve_c_3<<", "
+            <<setw(8)<<setprecision(4)<<pcmd_c_4<<", "
+            <<setw(8)<<setprecision(4)<<speed_c_4<<", "
+            <<setw(8)<<setprecision(4)<<valve_c_4<<", "
+            <<setw(8)<<setprecision(4)<<pcmd_c_5<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(4)<<speed_c_5<<", "
+            <<setw(8)<<setprecision(4)<<valve_c_5<<", "
+            <<setw(8)<<setprecision(4)<<pcmd_c_6<<", "
+            <<setw(8)<<setprecision(4)<<speed_c_6<<", "
+            <<setw(8)<<setprecision(4)<<valve_c_6<<", "
+            <<setw(8)<<setprecision(4)<<pcmd_c_7<<", "
+            <<setw(8)<<setprecision(4)<<speed_c_7<<", "
+            <<setw(8)<<setprecision(4)<<valve_c_7<<", "
+            <<setw(8)<<setprecision(4)<<pcmd_c_8<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(4)<<speed_c_8<<", "
+            <<setw(8)<<setprecision(4)<<valve_c_8<<", "
+            <<setw(8)<<setprecision(4)<<pcmd_c_9<<", "
+            <<setw(8)<<setprecision(4)<<speed_c_9<<", "
+            <<setw(8)<<setprecision(4)<<valve_c_9<<", "
+            <<setw(8)<<setprecision(4)<<kp_start_c<<", "
+            <<setw(8)<<setprecision(4)<<kp_stop_c<<", "
+            <<setw(8)<<setprecision(4)<<kp_start_d<<", "
+            <<setw(8)<<setprecision(4)<<kp_stop_d<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(4)<<ks_start_c<<", "
+            <<setw(8)<<setprecision(4)<<ks_stop_c<<", "
+            <<setw(8)<<setprecision(4)<<ks_start_d<<", "
+            <<setw(8)<<setprecision(4)<<ks_stop_d<<", "
+            <<setw(8)<<setprecision(4)<<kv_start_c<<", "
+            <<setw(8)<<setprecision(4)<<kv_stop_c<<", "
+            <<setw(8)<<setprecision(4)<<kv_start_d<<", "
+            <<setw(8)<<setprecision(4)<<kv_stop_d<<", "
+            <<setw(8)<<setprecision(4)<<D<<" /";
 
     return osstream.str();
 }

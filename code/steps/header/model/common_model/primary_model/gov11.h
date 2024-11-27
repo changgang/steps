@@ -50,6 +50,7 @@ class GOV11:public PRIMARY_MODEL
 
         double get_valve_in_pu() const;
         double get_delta_Y_in_pu() const;
+        double get_delta_Yref_in_pu() const;
         double get_mechanical_power_in_pu_on_mbase() const;
 
     public:

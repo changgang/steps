@@ -166,8 +166,7 @@ void ESSOC0::initialize()
             osstream<<get_model_name()<<" model of "<<get_compound_device_name()<<" is initialized."<<endl
                     <<"(1) Initial SOC = "<<get_initial_SOC_in_pu()<<" pu."<<endl
                     <<"(2) Initial battery power = "<<P<<" pu."<<endl
-                    <<"(3) States of blocks"<<endl
-                    <<"    energy_state_block block state: "<<energy_state_block->get_state()<<endl;
+                    <<"(3) energy state block state: "<<energy_state_block->get_state()<<endl;
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }

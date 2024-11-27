@@ -2544,6 +2544,18 @@ METER METER_SETTER::prepare_es_valve_reference_in_pu_meter(const DEVICE_ID& devi
     return meter;
 }
 
+METER METER_SETTER::prepare_es_valve_in_pu_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("VALVE IN PU");
+
+    return meter;
+}
+
 METER METER_SETTER::prepare_es_active_power_reference_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());

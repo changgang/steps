@@ -177,6 +177,7 @@ vector<string> energy_storage_meters{"TERMINAL CURRENT IN PU ON MBASE", "TERMINA
                                      "MECHANICAL POWER IN PU ON MBASE",
                                      "ROTOR SPEED REFERENCE IN PU",
                                      "VALVE REFERENCE IN PU",
+                                     "VALVE IN PU",
                                      "ACTIVE POWER REFERENCE IN PU ON MBASE",
                                      "FREQUENCY REGULATION POWER IN PU ON MBASE",
                                      "ES CONVERTER MODEL INTERNAL VARIABLE",
@@ -2505,6 +2506,13 @@ double METER::get_meter_value_as_an_energy_storage() const
             {
                 if(primary_model != NULL)
                     return primary_model->get_valve_reference_in_pu();
+                else
+                    return 0.0;
+            }
+            if(meter_type=="VALVE IN PU")
+            {
+                if(primary_model != NULL)
+                    return primary_model->get_valve_in_pu();
                 else
                     return 0.0;
             }

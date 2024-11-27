@@ -200,6 +200,7 @@ class METER_SETTER
         METER prepare_es_soc_power_in_MW_meter(const DEVICE_ID& device_id);
         METER prepare_es_rotor_speed_reference_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_es_valve_reference_in_pu_meter(const DEVICE_ID& device_id);
+        METER prepare_es_valve_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_es_active_power_reference_in_pu_on_mbase_meter(const DEVICE_ID& device_id);
         METER prepare_es_frequency_regulation_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id);
         METER prepare_es_rotor_speed_in_pu_meter(const DEVICE_ID& device_id);

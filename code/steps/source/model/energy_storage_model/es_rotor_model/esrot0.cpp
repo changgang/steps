@@ -270,24 +270,28 @@ void ESROT0::prepare_model_data_table()
 {
     clear_model_data_table();
     unsigned int i=0;
-    add_model_data_name_and_index_pair("A", i); i++;
+    add_model_data_name_and_index_pair("H", i); i++;
 }
 
 double ESROT0::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return 0;
+    if(par_name=="H")
+        return get_H_in_s();
 
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
 void ESROT0::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return ;
+    if(par_name=="H")
+        return set_H_in_s(value);
 
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_set_get_model_data_with_name_error(get_compound_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }
 
@@ -301,14 +305,14 @@ void ESROT0::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
-    add_model_internal_variable_name_and_index_pair("AA", i); i++;
+    add_model_internal_variable_name_and_index_pair("STATE@ROTOR SPEED BLOCK", i); i++;
 }
 
 double ESROT0::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
-    if(var_name == "A")
-        return 0.0;
+    if(var_name == "STATE@ROTOR SPEED BLOCK")
+        return get_rotor_speed_block()->get_state();
 
     return 0.0;
 }
