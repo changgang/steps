@@ -229,8 +229,8 @@ double ESAU0::get_target_power_reference_in_pu() const
             p = con_model->get_initial_active_power_command_in_pu_based_on_mbase();
         }
 
-        if(p<=get_start_discharge_mode_power_threshold() and p>=get_start_charge_mode_power_threshold())
-            p=0.0;
+        //if(p<=get_start_discharge_mode_power_threshold() and p>=get_start_charge_mode_power_threshold())
+          //  p=0.0;
 
         return p;
     }
@@ -261,6 +261,12 @@ double ESAU0::get_target_speed_reference_in_pu() const
     if(mode==ES_STOP_CHARGE_MODE and p>0)
         return 0.0;
 
+    if(not is_manual_control())
+    {
+        if(p<=get_start_discharge_mode_power_threshold() and p>=get_start_charge_mode_power_threshold())
+           return 0.0;
+    }
+
     if(p>0.0)
     {
         return power_speed_table_in_discharge.get_y_at_x(p);
@@ -285,6 +291,12 @@ double ESAU0::get_target_valve_reference_in_pu() const
 
     if(mode==ES_STOP_CHARGE_MODE and p>0)
         return 0.0;
+
+    if(not is_manual_control())
+    {
+        if(p<=get_start_discharge_mode_power_threshold() and p>=get_start_charge_mode_power_threshold())
+           return 0.0;
+    }
 
     if(p>0.0)
     {
@@ -513,7 +525,7 @@ void ESAU0::check_when_energy_storage_in_start_discharge_mode()
                 energy_storage->set_energy_storage_mode(ES_DISCHARGE_MODE);
 
                 osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
-                        <<"ES_START_DISCHARGE_MODE to ES_DISCHARGE_MODE at time "<<time<<" s since wref and Pref both reach target.";
+                        <<"ES_START_DISCHARGE_MODE to ES_DISCHARGE_MODE at time "<<time<<" s since both Pref, wref and Yref reach target.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -871,7 +883,7 @@ void ESAU0::check_when_energy_storage_in_start_charge_mode()
                 energy_storage->set_energy_storage_mode(ES_CHARGE_MODE);
 
                 osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
-                        <<"ES_START_CHARGE_MODE to ES_CHARGE_MODE at time "<<time<<" s since both Pref, wref and Yref reach target manually.";
+                        <<"ES_START_CHARGE_MODE to ES_CHARGE_MODE at time "<<time<<" s since both Pref, wref and Yref reach target.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
