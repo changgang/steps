@@ -4730,17 +4730,7 @@ void DYNAMICS_SIMULATOR::change_energy_storage_power_reference_in_pu_based_on_mb
     ENERGY_STORAGE* energy_storage = psdb.get_energy_storage(es_id);
     if(energy_storage != NULL)
     {
-        ES_AUXILIARY_MODEL* au = energy_storage->get_es_auxiliary_model();
-        if(au==NULL)
-        {
-            ostringstream osstream;
-            osstream<<"Warning. Es auxiliary model not exists for "<<energy_storage->get_compound_device_name()<<". No manual change is allowed.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
-        }
-        else
-        {
-            au->set_manual_power_in_pu(pref);
-        }
+        energy_storage->set_manual_power_in_pu(pref);
     }
     else
     {

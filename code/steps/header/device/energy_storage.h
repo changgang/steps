@@ -66,7 +66,11 @@ class ENERGY_STORAGE : public SOURCE
         void set_energy_storage_mode(ES_MODE m);
         ES_MODE get_energy_storage_mode() const;
 
+        void set_manual_power_in_pu(double p);
+        double get_manual_power_in_pu() const;
+
         void initialize_energy_storage_mode();
+        void initialize_manual_power_in_pu();
     private:
         ES_CONVERTER_MODEL* es_converter_model;
         ES_SOC_MODEL* es_soc_model;
@@ -83,5 +87,7 @@ class ENERGY_STORAGE : public SOURCE
         bool sequence_parameter_import_flag;
 
         ES_MODE mode;
+
+        double manual_power;
 };
 #endif // ENERGY_STORAGE_H

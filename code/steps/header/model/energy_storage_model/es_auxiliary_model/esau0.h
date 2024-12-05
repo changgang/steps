@@ -75,6 +75,14 @@ class ESAU0 : public ES_AUXILIARY_MODEL
         virtual void check_when_energy_storage_in_stop_charge_mode();
         virtual void check_when_energy_storage_in_charge_mode();
 
+        virtual void set_energy_storage_in_out_service_mode();
+        virtual void set_energy_storage_in_start_discharge_mode();
+        virtual void set_energy_storage_in_stop_discharge_mode();
+        virtual void set_energy_storage_in_discharge_mode();
+        virtual void set_energy_storage_in_start_charge_mode();
+        virtual void set_energy_storage_in_stop_charge_mode();
+        virtual void set_energy_storage_in_charge_mode();
+
         virtual double get_active_power_reference_in_pu();
         virtual double get_rotor_speed_reference_in_pu();
         virtual double get_valve_reference_in_pu();

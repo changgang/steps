@@ -21,6 +21,12 @@ ESAU0::~ESAU0()
 void ESAU0::clear()
 {
     set_model_float_parameter_count(70);
+
+    speed_reach_target_flag = false;
+    power_reach_target_flag = false;
+    valve_reach_target_flag = false;
+
+    deactivate_rotor_braking();
 }
 
 void ESAU0::copy_from_const_model(const ESAU0& model)
@@ -214,52 +220,32 @@ void ESAU0::add_power_valve_pair_in_discharge(double power, double valve)
 
 double ESAU0::get_target_power_reference_in_pu() const
 {
+    double p = 0.0;
     if(not is_manual_control())
     {
-        double p = 0.0;
         ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
         ES_ELECTRICAL_MODEL* elec_model = energy_storage->get_es_electrical_model();
         ES_CONVERTER_MODEL* con_model = energy_storage->get_es_converter_model();
         if(elec_model!=NULL)
-        {
             p = elec_model->get_frequency_regulation_power_in_pu();
-        }
         else
-        {
             p = con_model->get_initial_active_power_command_in_pu_based_on_mbase();
-        }
-
-        //if(p<=get_start_discharge_mode_power_threshold() and p>=get_start_charge_mode_power_threshold())
-          //  p=0.0;
-
-        return p;
     }
     else
     {
-        double p = get_manual_power_in_pu();
-
-        ES_MODE mode = get_energy_storage_mode();
-        if(mode==ES_STOP_DISCHARGE_MODE and p<0)
-            return 0.0;
-
-        if(mode==ES_STOP_CHARGE_MODE and p>0)
-            return 0.0;
-
-        return p;
+        p = get_manual_power_in_pu();
     }
+
+    ES_MODE mode = get_energy_storage_mode();
+    if((mode==ES_STOP_DISCHARGE_MODE and p<0) or (mode==ES_STOP_CHARGE_MODE and p>0))
+        p = 0.0;
+    return p;
 
 }
 
 double ESAU0::get_target_speed_reference_in_pu() const
 {
     double p = get_target_power_reference_in_pu();
-    ES_MODE mode = get_energy_storage_mode();
-
-    if(mode==ES_STOP_DISCHARGE_MODE and p<0)
-        return 0.0;
-
-    if(mode==ES_STOP_CHARGE_MODE and p>0)
-        return 0.0;
 
     if(not is_manual_control())
     {
@@ -277,20 +263,13 @@ double ESAU0::get_target_speed_reference_in_pu() const
             return power_speed_table_in_charge.get_y_at_x(p);
         else
             return 0.0;
-
     }
+
 }
 
 double ESAU0::get_target_valve_reference_in_pu() const
 {
     double p = get_target_power_reference_in_pu();
-    ES_MODE mode = get_energy_storage_mode();
-
-    if(mode==ES_STOP_DISCHARGE_MODE and p<0)
-        return 0.0;
-
-    if(mode==ES_STOP_CHARGE_MODE and p>0)
-        return 0.0;
 
     if(not is_manual_control())
     {
@@ -308,8 +287,167 @@ double ESAU0::get_target_valve_reference_in_pu() const
             return power_valve_table_in_charge.get_y_at_x(p);
         else
             return 0.0;
-
     }
+}
+
+void ESAU0::set_energy_storage_in_out_service_mode()
+{
+    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
+    power_reach_target_flag = false;
+    speed_reach_target_flag = false;
+    valve_reach_target_flag = false;
+
+    freeze_primary_model();
+    initialize_primary_model_as_out_service_mode();
+
+    freeze_electrical_active_power_control();
+    initialize_electrical_model_as_out_service_mode();
+
+    lock_rotor();
+    deactivate_rotor_braking();
+    energy_storage->set_energy_storage_mode(ES_OUT_SERVICE_MODE);
+}
+
+void ESAU0::set_energy_storage_in_start_discharge_mode()
+{
+    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
+    double p0 = get_current_Pref();
+    double speed0 = get_current_speedref();
+    double yref0 = get_current_Yref();
+    ostringstream osstream;
+    STEPS & toolkit = get_toolkit();
+    double time = toolkit.get_dynamic_simulation_time_in_s();
+
+    set_power_reference_when_into_start_discharge_mode(p0);
+    set_speed_reference_when_into_start_discharge_mode(speed0);
+    set_valve_reference_when_into_start_discharge_mode(yref0);
+
+    set_time_when_into_start_discharge_mode(time);
+
+    power_reach_target_flag = false;
+    speed_reach_target_flag = false;
+    valve_reach_target_flag = false;
+
+    unfreeze_primary_model();
+    unfreeze_electrical_active_power_control();
+
+    unlock_rotor();
+    deactivate_rotor_braking();
+    energy_storage->set_energy_storage_mode(ES_START_DISCHARGE_MODE);
+}
+
+void ESAU0::set_energy_storage_in_stop_discharge_mode()
+{
+    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
+    double p0 = get_current_Pref();
+    double speed0 = get_current_speedref();
+    double yref0 = get_current_Yref();
+    ostringstream osstream;
+    STEPS & toolkit = get_toolkit();
+    double time = toolkit.get_dynamic_simulation_time_in_s();
+
+    set_power_reference_when_into_stop_discharge_mode(p0);
+    set_speed_reference_when_into_stop_discharge_mode(speed0);
+    set_valve_reference_when_into_stop_discharge_mode(yref0);
+    set_time_when_into_stop_discharge_mode(time);
+
+    power_reach_target_flag = false;
+    speed_reach_target_flag = false;
+    valve_reach_target_flag = false;
+
+    unfreeze_primary_model();
+    unfreeze_electrical_active_power_control();
+
+    unlock_rotor();
+    deactivate_rotor_braking();
+    energy_storage->set_energy_storage_mode(ES_STOP_DISCHARGE_MODE);
+
+}
+
+void ESAU0::set_energy_storage_in_discharge_mode()
+{
+    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
+    power_reach_target_flag = false;
+    speed_reach_target_flag = false;
+    valve_reach_target_flag = false;
+
+    unfreeze_primary_model();
+    unfreeze_electrical_active_power_control();
+
+    unlock_rotor();
+    deactivate_rotor_braking();
+    energy_storage->set_energy_storage_mode(ES_DISCHARGE_MODE);
+}
+
+void ESAU0::set_energy_storage_in_start_charge_mode()
+{
+    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
+    double p0 = get_current_Pref();
+    double speed0 = get_current_speedref();
+    double yref0 = get_current_Yref();
+    ostringstream osstream;
+    STEPS & toolkit = get_toolkit();
+    double time = toolkit.get_dynamic_simulation_time_in_s();
+
+    set_power_reference_when_into_start_charge_mode(p0);
+    set_speed_reference_when_into_start_charge_mode(speed0);
+    set_valve_reference_when_into_start_charge_mode(yref0);
+    set_time_when_into_start_charge_mode(time);
+
+    power_reach_target_flag = false;
+    speed_reach_target_flag = false;
+    valve_reach_target_flag = false;
+
+    unfreeze_primary_model();
+    unfreeze_electrical_active_power_control();
+
+    unlock_rotor();
+    deactivate_rotor_braking();
+    energy_storage->set_energy_storage_mode(ES_START_CHARGE_MODE);
+}
+
+void ESAU0::set_energy_storage_in_stop_charge_mode()
+{
+    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
+    double p0 = get_current_Pref();
+    double speed0 = get_current_speedref();
+    double yref0 = get_current_Yref();
+    ostringstream osstream;
+    STEPS & toolkit = get_toolkit();
+    double time = toolkit.get_dynamic_simulation_time_in_s();
+
+    set_power_reference_when_into_stop_charge_mode(p0);
+    set_speed_reference_when_into_stop_charge_mode(speed0);
+    set_valve_reference_when_into_stop_charge_mode(yref0);
+    set_time_when_into_stop_charge_mode(time);
+
+    power_reach_target_flag = false;
+    speed_reach_target_flag = false;
+    valve_reach_target_flag = false;
+
+    unfreeze_primary_model();
+    unfreeze_electrical_active_power_control();
+
+    unlock_rotor();
+    deactivate_rotor_braking();
+    energy_storage->set_energy_storage_mode(ES_STOP_CHARGE_MODE);
+
+}
+
+void ESAU0::set_energy_storage_in_charge_mode()
+{
+    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
+    power_reach_target_flag = false;
+    speed_reach_target_flag = false;
+    valve_reach_target_flag = false;
+
+    unfreeze_primary_model();
+    unfreeze_electrical_active_power_control();
+
+    unlock_rotor();
+    deactivate_rotor_braking();
+    energy_storage->set_energy_storage_mode(ES_CHARGE_MODE);
+
 }
 
 void ESAU0::check_energy_storage_mode()
@@ -362,13 +500,9 @@ void ESAU0::check_energy_storage_mode()
 
 void ESAU0::check_when_energy_storage_in_out_service_mode()
 {
-    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
     double Ptarget = get_target_power_reference_in_pu();
     double Pd = get_start_discharge_mode_power_threshold();
     double Pc = get_start_charge_mode_power_threshold();
-    double p0 = get_current_Pref();
-    double speed0 = get_current_speedref();
-    double yref0 = get_current_Yref();
     ostringstream osstream;
     STEPS & toolkit = get_toolkit();
     double time = toolkit.get_dynamic_simulation_time_in_s();
@@ -376,23 +510,7 @@ void ESAU0::check_when_energy_storage_in_out_service_mode()
     {
         if(Ptarget>Pd)
         {
-            set_power_reference_when_into_start_discharge_mode(p0);
-            set_speed_reference_when_into_start_discharge_mode(speed0);
-            set_valve_reference_when_into_start_discharge_mode(yref0);
-
-            set_time_when_into_start_discharge_mode(time);
-
-            power_reach_target_flag = false;
-            speed_reach_target_flag = false;
-            valve_reach_target_flag = false;
-
-            unfreeze_primary_model();
-            unfreeze_electrical_active_power_control();
-
-            deactivate_rotor_braking();
-            unlock_rotor();
-            energy_storage->set_energy_storage_mode(ES_START_DISCHARGE_MODE);
-
+            set_energy_storage_in_start_discharge_mode();
             osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                     <<"ES_OUT_SERVICE_MODE to ES_START_DISCHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<"(>"<<Pd<<")."<<endl
                     <<"The rotor is unlocked at time "<<time<<" s."<<endl;
@@ -402,21 +520,7 @@ void ESAU0::check_when_energy_storage_in_out_service_mode()
         {
             if(Ptarget<Pc)
             {
-                set_power_reference_when_into_start_charge_mode(p0);
-                set_speed_reference_when_into_start_charge_mode(speed0);
-                set_valve_reference_when_into_start_charge_mode(yref0);
-                set_time_when_into_start_charge_mode(time);
-
-                power_reach_target_flag = false;
-                speed_reach_target_flag = false;
-                valve_reach_target_flag = false;
-
-                unfreeze_primary_model();
-                unfreeze_electrical_active_power_control();
-
-                deactivate_rotor_braking();
-                unlock_rotor();
-                energy_storage->set_energy_storage_mode(ES_START_CHARGE_MODE);
+                set_energy_storage_in_start_charge_mode();
                 osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                         <<"ES_OUT_SERVICE_MODE to ES_START_CHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<"(<"<<Pc<<")."<<endl
                         <<"The rotor is unlocked at time "<<time<<" s."<<endl;
@@ -429,23 +533,7 @@ void ESAU0::check_when_energy_storage_in_out_service_mode()
     {
         if(Ptarget>0.0)
         {
-
-            set_power_reference_when_into_start_discharge_mode(p0);
-            set_speed_reference_when_into_start_discharge_mode(speed0);
-            set_valve_reference_when_into_start_discharge_mode(yref0);
-            set_time_when_into_start_discharge_mode(time);
-
-            power_reach_target_flag = false;
-            speed_reach_target_flag = false;
-            valve_reach_target_flag = false;
-
-            unfreeze_primary_model();
-            unfreeze_electrical_active_power_control();
-
-            deactivate_rotor_braking();
-            unlock_rotor();
-            energy_storage->set_energy_storage_mode(ES_START_DISCHARGE_MODE);
-
+            set_energy_storage_in_start_discharge_mode();
             osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                     <<"ES_OUT_SERVICE_MODE to ES_START_DISCHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<" manually."<<endl
                     <<"The rotor is unlocked at time "<<time<<" s."<<endl;
@@ -456,21 +544,7 @@ void ESAU0::check_when_energy_storage_in_out_service_mode()
         {
             if(Ptarget<0.0)
             {
-                set_power_reference_when_into_start_charge_mode(p0);
-                set_speed_reference_when_into_start_charge_mode(speed0);
-                set_valve_reference_when_into_start_charge_mode(yref0);
-                set_time_when_into_start_charge_mode(time);
-
-                power_reach_target_flag = false;
-                speed_reach_target_flag = false;
-                valve_reach_target_flag = false;
-
-                unfreeze_primary_model();
-                unfreeze_electrical_active_power_control();
-
-                deactivate_rotor_braking();
-                unlock_rotor();
-                energy_storage->set_energy_storage_mode(ES_START_CHARGE_MODE);
+                set_energy_storage_in_start_charge_mode();
                 osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                         <<"ES_OUT_SERVICE_MODE to ES_START_CHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<" manually."<<endl
                         <<"The rotor is unlocked at time "<<time<<" s."<<endl;
@@ -484,46 +558,25 @@ void ESAU0::check_when_energy_storage_in_out_service_mode()
 
 void ESAU0::check_when_energy_storage_in_start_discharge_mode()
 {
-    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
     double Ptarget = get_target_power_reference_in_pu();
     double Pd = get_start_discharge_mode_power_threshold();
-    double p0 = get_current_Pref();
-    double speed0 = get_current_speedref();
-    double yref0 = get_current_Yref();
     ostringstream osstream;
     STEPS & toolkit = get_toolkit();
     double time = toolkit.get_dynamic_simulation_time_in_s();
     if(not is_manual_control())
     {
-        if(Ptarget<=Pd)//Ptarget=0.0
+        if(Ptarget<=Pd)
         {
-            set_power_reference_when_into_stop_discharge_mode(p0);
-            set_speed_reference_when_into_stop_discharge_mode(speed0);
-            set_valve_reference_when_into_stop_discharge_mode(yref0);
-            set_time_when_into_stop_discharge_mode(time);
-
-            power_reach_target_flag = false;
-            speed_reach_target_flag = false;
-            valve_reach_target_flag = false;
-
-            deactivate_rotor_braking();
-            energy_storage->set_energy_storage_mode(ES_STOP_DISCHARGE_MODE);
-
+            set_energy_storage_in_stop_discharge_mode();
             osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                     <<"ES_START_DISCHARGE_MODE to ES_STOP_DISCHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<"(<"<<Pd<<").";
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
-        else//Ptarget>Pd
+        else
         {
             if(power_reach_target_flag==true and speed_reach_target_flag==true and valve_reach_target_flag==true)
             {
-                power_reach_target_flag = false;
-                speed_reach_target_flag = false;
-                valve_reach_target_flag = false;
-
-                deactivate_rotor_braking();
-                energy_storage->set_energy_storage_mode(ES_DISCHARGE_MODE);
-
+                set_energy_storage_in_discharge_mode();
                 osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                         <<"ES_START_DISCHARGE_MODE to ES_DISCHARGE_MODE at time "<<time<<" s since both Pref, wref and Yref reach target.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
@@ -534,18 +587,7 @@ void ESAU0::check_when_energy_storage_in_start_discharge_mode()
     {
         if(Ptarget<get_current_Pref())
         {
-            set_power_reference_when_into_stop_discharge_mode(p0);
-            set_speed_reference_when_into_stop_discharge_mode(speed0);
-            set_valve_reference_when_into_stop_discharge_mode(yref0);
-            set_time_when_into_stop_discharge_mode(time);
-
-            power_reach_target_flag = false;
-            speed_reach_target_flag = false;
-            valve_reach_target_flag = false;
-
-            deactivate_rotor_braking();
-            energy_storage->set_energy_storage_mode(ES_STOP_DISCHARGE_MODE);
-
+            set_energy_storage_in_stop_discharge_mode();
             osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                     <<"ES_START_DISCHARGE_MODE to ES_STOP_DISCHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<" manually.";
             toolkit.show_information_with_leading_time_stamp(osstream);
@@ -555,13 +597,7 @@ void ESAU0::check_when_energy_storage_in_start_discharge_mode()
         {
             if(power_reach_target_flag==true and speed_reach_target_flag==true and valve_reach_target_flag==true)
             {
-                power_reach_target_flag = false;
-                speed_reach_target_flag = false;
-                valve_reach_target_flag = false;
-
-                deactivate_rotor_braking();
-                energy_storage->set_energy_storage_mode(ES_DISCHARGE_MODE);
-
+                set_energy_storage_in_discharge_mode();
                 osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                         <<"ES_START_DISCHARGE_MODE to ES_DISCHARGE_MODE at time "<<time<<" s since both Pref, wref and Yref reach target manually.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
@@ -576,9 +612,6 @@ void ESAU0::check_when_energy_storage_in_stop_discharge_mode()
     ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
     double Ptarget = get_target_power_reference_in_pu();
     double Pd = get_start_discharge_mode_power_threshold();
-    double p0 = get_current_Pref();
-    double speed0 = get_current_speedref();
-    double yref0 = get_current_Yref();
     ostringstream osstream;
     STEPS & toolkit = get_toolkit();
     double time = toolkit.get_dynamic_simulation_time_in_s();
@@ -586,23 +619,12 @@ void ESAU0::check_when_energy_storage_in_stop_discharge_mode()
     {
         if(Ptarget>Pd)
         {
-            set_power_reference_when_into_start_discharge_mode(p0);
-            set_speed_reference_when_into_start_discharge_mode(speed0);
-            set_valve_reference_when_into_start_discharge_mode(yref0);
-            set_time_when_into_start_discharge_mode(time);
-
-            power_reach_target_flag = false;
-            speed_reach_target_flag = false;
-            valve_reach_target_flag = false;
-
-            deactivate_rotor_braking();
-            energy_storage->set_energy_storage_mode(ES_START_DISCHARGE_MODE);
-
+            set_energy_storage_in_start_discharge_mode();
             osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                     <<"ES_STOP_DISCHARGE_MODE to ES_START_DISCHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<"(>"<<Pd<<").";
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
-        else//Ptarget<=Pd
+        else
         {
             ES_PRIMARY_MODEL* primary_model = energy_storage->get_es_primary_model();
             ES_ELECTRICAL_MODEL* elec_model = energy_storage->get_es_electrical_model();
@@ -647,12 +669,7 @@ void ESAU0::check_when_energy_storage_in_stop_discharge_mode()
                 }
                 else
                 {
-                    power_reach_target_flag = false;
-                    speed_reach_target_flag = false;
-                    valve_reach_target_flag = false;
-
-                    deactivate_rotor_braking();
-                    energy_storage->set_energy_storage_mode(ES_OUT_SERVICE_MODE);
+                    set_energy_storage_in_out_service_mode();
                     osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                             <<"ES_STOP_DISCHARGE_MODE to ES_OUT_SERVICE_MODE at time "<<time<<" s.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -706,12 +723,7 @@ void ESAU0::check_when_energy_storage_in_stop_discharge_mode()
                 }
                 else
                 {
-                    power_reach_target_flag = false;
-                    speed_reach_target_flag = false;
-                    valve_reach_target_flag = false;
-
-                    deactivate_rotor_braking();
-                    energy_storage->set_energy_storage_mode(ES_OUT_SERVICE_MODE);
+                    set_energy_storage_in_out_service_mode();
                     osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                             <<"ES_STOP_DISCHARGE_MODE to ES_OUT_SERVICE_MODE at time "<<time<<" s manually.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -722,18 +734,7 @@ void ESAU0::check_when_energy_storage_in_stop_discharge_mode()
         {
             if(Ptarget>get_current_Pref())
             {
-                set_power_reference_when_into_start_discharge_mode(p0);
-                set_speed_reference_when_into_start_discharge_mode(speed0);
-                set_valve_reference_when_into_start_discharge_mode(yref0);
-                set_time_when_into_start_discharge_mode(time);
-
-                power_reach_target_flag = false;
-                speed_reach_target_flag = false;
-                valve_reach_target_flag = false;
-
-                deactivate_rotor_braking();
-                energy_storage->set_energy_storage_mode(ES_START_DISCHARGE_MODE);
-
+                set_energy_storage_in_start_discharge_mode();
                 osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                         <<"ES_STOP_DISCHARGE_MODE to ES_STAT_DISCHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<" manually.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
@@ -742,13 +743,7 @@ void ESAU0::check_when_energy_storage_in_stop_discharge_mode()
             {
                 if(power_reach_target_flag==true and speed_reach_target_flag==true and valve_reach_target_flag==true)
                 {
-                    power_reach_target_flag = false;
-                    speed_reach_target_flag = false;
-                    valve_reach_target_flag = false;
-
-                    deactivate_rotor_braking();
-                    energy_storage->set_energy_storage_mode(ES_DISCHARGE_MODE);
-
+                    set_energy_storage_in_discharge_mode();
                     osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                             <<"ES_STOP_DISCHARGE_MODE to ES_DISCHARGE_MODE at time "<<time<<" s since both Pref, wref and Yref reach target manually.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -763,12 +758,8 @@ void ESAU0::check_when_energy_storage_in_stop_discharge_mode()
 
 void ESAU0::check_when_energy_storage_in_discharge_mode()
 {
-    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
     double Ptarget = get_target_power_reference_in_pu();
     double Pd = get_start_discharge_mode_power_threshold();
-    double p0 = get_current_Pref();
-    double speed0 = get_current_speedref();
-    double yref0 = get_current_Yref();
     ostringstream osstream;
     STEPS & toolkit = get_toolkit();
     double time = toolkit.get_dynamic_simulation_time_in_s();
@@ -776,18 +767,7 @@ void ESAU0::check_when_energy_storage_in_discharge_mode()
     {
         if(Ptarget<=Pd)
         {
-            power_reach_target_flag = false;
-            speed_reach_target_flag = false;
-            valve_reach_target_flag = false;
-
-            set_power_reference_when_into_stop_discharge_mode(p0);
-            set_speed_reference_when_into_stop_discharge_mode(speed0);
-            set_valve_reference_when_into_stop_discharge_mode(yref0);
-            set_time_when_into_stop_discharge_mode(time);
-
-            deactivate_rotor_braking();
-            energy_storage->set_energy_storage_mode(ES_STOP_DISCHARGE_MODE);
-
+            set_energy_storage_in_stop_discharge_mode();
             osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                     <<"ES_DISCHARGE_MODE to ES_STOP_DISCHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<"(<"<<Pd<<").";
             toolkit.show_information_with_leading_time_stamp(osstream);
@@ -797,18 +777,7 @@ void ESAU0::check_when_energy_storage_in_discharge_mode()
     {
         if(Ptarget>get_current_Pref())
         {
-            set_power_reference_when_into_start_discharge_mode(p0);
-            set_speed_reference_when_into_start_discharge_mode(speed0);
-            set_valve_reference_when_into_start_discharge_mode(yref0);
-            set_time_when_into_start_discharge_mode(time);
-
-            power_reach_target_flag = false;
-            speed_reach_target_flag = false;
-            valve_reach_target_flag = false;
-
-            deactivate_rotor_braking();
-            energy_storage->set_energy_storage_mode(ES_START_DISCHARGE_MODE);
-
+            set_energy_storage_in_start_discharge_mode();
             osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                     <<"ES_STOP_DISCHARGE_MODE to ES_STAT_DISCHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<" manually.";
             toolkit.show_information_with_leading_time_stamp(osstream);
@@ -818,18 +787,7 @@ void ESAU0::check_when_energy_storage_in_discharge_mode()
         {
             if(Ptarget<get_current_Pref())
             {
-                power_reach_target_flag = false;
-                speed_reach_target_flag = false;
-                valve_reach_target_flag =false;
-
-                set_power_reference_when_into_stop_discharge_mode(p0);
-                set_speed_reference_when_into_stop_discharge_mode(speed0);
-                set_valve_reference_when_into_stop_discharge_mode(yref0);
-                set_time_when_into_stop_discharge_mode(time);
-
-                deactivate_rotor_braking();
-                energy_storage->set_energy_storage_mode(ES_STOP_DISCHARGE_MODE);
-
+                set_energy_storage_in_stop_discharge_mode();
                 osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                         <<"ES_DISCHARGE_MODE to ES_STOP_DISCHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<" manually.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
@@ -842,12 +800,8 @@ void ESAU0::check_when_energy_storage_in_discharge_mode()
 
 void ESAU0::check_when_energy_storage_in_start_charge_mode()
 {
-    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
     double Ptarget = get_target_power_reference_in_pu();
     double Pc = get_start_charge_mode_power_threshold();
-    double p0 = get_current_Pref();
-    double speed0 = get_current_speedref();
-    double yref0 = get_current_Yref();
     ostringstream osstream;
     STEPS & toolkit = get_toolkit();
     double time = toolkit.get_dynamic_simulation_time_in_s();
@@ -855,18 +809,7 @@ void ESAU0::check_when_energy_storage_in_start_charge_mode()
     {
         if(Ptarget>Pc)
         {
-            set_power_reference_when_into_stop_charge_mode(p0);
-            set_speed_reference_when_into_stop_charge_mode(speed0);
-            set_valve_reference_when_into_stop_charge_mode(yref0);
-            set_time_when_into_stop_charge_mode(time);
-
-            power_reach_target_flag = false;
-            speed_reach_target_flag = false;
-            valve_reach_target_flag = false;
-
-            deactivate_rotor_braking();
-            energy_storage->set_energy_storage_mode(ES_STOP_CHARGE_MODE);
-
+            set_energy_storage_in_stop_charge_mode();
             osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                     <<"ES_START_CHARGE_MODE to ES_STOP_CHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<"(>"<<Pc<<").";
             toolkit.show_information_with_leading_time_stamp(osstream);
@@ -875,13 +818,7 @@ void ESAU0::check_when_energy_storage_in_start_charge_mode()
         {
             if(power_reach_target_flag==true and speed_reach_target_flag==true and valve_reach_target_flag==true)
             {
-                power_reach_target_flag = false;
-                speed_reach_target_flag = false;
-                valve_reach_target_flag = false;
-
-                deactivate_rotor_braking();
-                energy_storage->set_energy_storage_mode(ES_CHARGE_MODE);
-
+                set_energy_storage_in_charge_mode();
                 osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                         <<"ES_START_CHARGE_MODE to ES_CHARGE_MODE at time "<<time<<" s since both Pref, wref and Yref reach target.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
@@ -893,18 +830,7 @@ void ESAU0::check_when_energy_storage_in_start_charge_mode()
 
         if(Ptarget>get_current_Pref())
         {
-            set_power_reference_when_into_stop_charge_mode(p0);
-            set_speed_reference_when_into_stop_charge_mode(speed0);
-            set_valve_reference_when_into_stop_charge_mode(yref0);
-            set_time_when_into_stop_charge_mode(time);
-
-            power_reach_target_flag = false;
-            speed_reach_target_flag = false;
-            valve_reach_target_flag = false;
-
-            deactivate_rotor_braking();
-            energy_storage->set_energy_storage_mode(ES_STOP_CHARGE_MODE);
-
+            set_energy_storage_in_stop_charge_mode();
             osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                     <<"ES_START_CHARGE_MODE to ES_STOP_CHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<" manually.";
             toolkit.show_information_with_leading_time_stamp(osstream);
@@ -914,13 +840,7 @@ void ESAU0::check_when_energy_storage_in_start_charge_mode()
         {
             if(power_reach_target_flag==true and speed_reach_target_flag==true and valve_reach_target_flag==true)
             {
-                power_reach_target_flag = false;
-                speed_reach_target_flag = false;
-                valve_reach_target_flag = false;
-
-                deactivate_rotor_braking();
-                energy_storage->set_energy_storage_mode(ES_CHARGE_MODE);
-
+                set_energy_storage_in_charge_mode();
                 osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                         <<"ES_START_CHARGE_MODE to ES_CHARGE_MODE at time "<<time<<" s since both Pref, wref and Yref reach target manually.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
@@ -936,9 +856,6 @@ void ESAU0::check_when_energy_storage_in_stop_charge_mode()
     ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
     double Ptarget = get_target_power_reference_in_pu();
     double Pc = get_start_charge_mode_power_threshold();
-    double p0 = get_current_Pref();
-    double speed0 = get_current_speedref();
-    double yref0 = get_current_Yref();
     ostringstream osstream;
     STEPS & toolkit = get_toolkit();
     double time = toolkit.get_dynamic_simulation_time_in_s();
@@ -946,18 +863,7 @@ void ESAU0::check_when_energy_storage_in_stop_charge_mode()
     {
         if(Ptarget<Pc)
         {
-            set_power_reference_when_into_start_charge_mode(p0);
-            set_speed_reference_when_into_start_charge_mode(speed0);
-            set_valve_reference_when_into_start_charge_mode(yref0);
-            set_time_when_into_start_charge_mode(time);
-
-            power_reach_target_flag = false;
-            speed_reach_target_flag = false;
-            valve_reach_target_flag = false;
-
-            deactivate_rotor_braking();
-            energy_storage->set_energy_storage_mode(ES_START_CHARGE_MODE);
-
+            set_energy_storage_in_start_charge_mode();
             osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                     <<"ES_STOP_CHARGE_MODE to ES_START_CHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<"(<"<<Pc<<").";
             toolkit.show_information_with_leading_time_stamp(osstream);
@@ -1007,12 +913,7 @@ void ESAU0::check_when_energy_storage_in_stop_charge_mode()
                 }
                 else
                 {
-                    power_reach_target_flag = false;
-                    speed_reach_target_flag = false;
-                    valve_reach_target_flag = false;
-
-                    deactivate_rotor_braking();
-                    energy_storage->set_energy_storage_mode(ES_OUT_SERVICE_MODE);
+                    set_energy_storage_in_out_service_mode();
                     osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                             <<"ES_STOP_CHARGE_MODE to ES_OUT_SERVICE_MODE at time "<<time<<" s.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -1067,11 +968,7 @@ void ESAU0::check_when_energy_storage_in_stop_charge_mode()
                 }
                 else
                 {
-                    power_reach_target_flag = false;
-                    speed_reach_target_flag = false;
-                    valve_reach_target_flag = false;
-                    deactivate_rotor_braking();
-                    energy_storage->set_energy_storage_mode(ES_OUT_SERVICE_MODE);
+                    set_energy_storage_in_out_service_mode();
                     osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                             <<"ES_STOP_CHARGE_MODE to ES_OUT_SERVICE_MODE at time "<<time<<" s manually.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -1083,18 +980,7 @@ void ESAU0::check_when_energy_storage_in_stop_charge_mode()
         {
             if(Ptarget<get_current_Pref())
             {
-                set_power_reference_when_into_start_charge_mode(p0);
-                set_speed_reference_when_into_start_charge_mode(speed0);
-                set_valve_reference_when_into_start_charge_mode(yref0);
-                set_time_when_into_start_charge_mode(time);
-
-                power_reach_target_flag = false;
-                speed_reach_target_flag = false;
-                valve_reach_target_flag = false;
-
-                deactivate_rotor_braking();
-                energy_storage->set_energy_storage_mode(ES_START_CHARGE_MODE);
-
+                set_energy_storage_in_start_charge_mode();
                 osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                         <<"ES_STOP_CHARGE_MODE to ES_STAT_CHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<" manually.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
@@ -1103,13 +989,7 @@ void ESAU0::check_when_energy_storage_in_stop_charge_mode()
             {
                 if(speed_reach_target_flag==true and power_reach_target_flag==true and valve_reach_target_flag==true)
                 {
-                    power_reach_target_flag = false;
-                    speed_reach_target_flag = false;
-                    valve_reach_target_flag = false;
-
-                    deactivate_rotor_braking();
-                    energy_storage->set_energy_storage_mode(ES_CHARGE_MODE);
-
+                    set_energy_storage_in_charge_mode();
                     osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                         <<"ES_STOP_CHARGE_MODE to ES_CHARGE_MODE at time "<<time<<" s since both Pref, wref and Yref reach target manually.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -1122,12 +1002,8 @@ void ESAU0::check_when_energy_storage_in_stop_charge_mode()
 
 void ESAU0::check_when_energy_storage_in_charge_mode()
 {
-    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
     double Ptarget = get_target_power_reference_in_pu();
     double Pc = get_start_charge_mode_power_threshold();
-    double p0 = get_current_Pref();
-    double speed0 = get_current_speedref();
-    double yref0 = get_current_Yref();
     ostringstream osstream;
     STEPS & toolkit = get_toolkit();
     double time = toolkit.get_dynamic_simulation_time_in_s();
@@ -1135,18 +1011,7 @@ void ESAU0::check_when_energy_storage_in_charge_mode()
     {
         if(Ptarget>=Pc)
         {
-            power_reach_target_flag = false;
-            speed_reach_target_flag = false;
-            valve_reach_target_flag = false;
-
-            set_power_reference_when_into_stop_charge_mode(p0);
-            set_speed_reference_when_into_stop_charge_mode(speed0);
-            set_valve_reference_when_into_stop_charge_mode(yref0);
-            set_time_when_into_stop_charge_mode(time);
-
-            deactivate_rotor_braking();
-            energy_storage->set_energy_storage_mode(ES_STOP_CHARGE_MODE);
-
+            set_energy_storage_in_stop_charge_mode();
             osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                     <<"ES_CHARGE_MODE to ES_STOP_CHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<"(>"<<Pc<<").";
             toolkit.show_information_with_leading_time_stamp(osstream);
@@ -1156,18 +1021,7 @@ void ESAU0::check_when_energy_storage_in_charge_mode()
     {
         if(Ptarget<get_current_Pref())
         {
-            set_power_reference_when_into_start_charge_mode(p0);
-            set_speed_reference_when_into_start_charge_mode(speed0);
-            set_valve_reference_when_into_start_charge_mode(yref0);
-            set_time_when_into_start_charge_mode(time);
-
-            power_reach_target_flag = false;
-            speed_reach_target_flag = false;
-            valve_reach_target_flag = false;
-
-            deactivate_rotor_braking();
-            energy_storage->set_energy_storage_mode(ES_START_CHARGE_MODE);
-
+            set_energy_storage_in_start_charge_mode();
             osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                     <<"ES_STOP_CHARGE_MODE to ES_STAT_CHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<" manually.";
             toolkit.show_information_with_leading_time_stamp(osstream);
@@ -1177,18 +1031,7 @@ void ESAU0::check_when_energy_storage_in_charge_mode()
         {
             if(Ptarget>get_current_Pref())
             {
-                power_reach_target_flag = false;
-                speed_reach_target_flag = false;
-                valve_reach_target_flag = false;
-
-                set_power_reference_when_into_stop_charge_mode(p0);
-                set_speed_reference_when_into_stop_charge_mode(speed0);
-                set_valve_reference_when_into_stop_charge_mode(yref0);
-                set_time_when_into_stop_charge_mode(time);
-
-                deactivate_rotor_braking();
-                energy_storage->set_energy_storage_mode(ES_STOP_CHARGE_MODE);
-
+                set_energy_storage_in_stop_charge_mode();
                 osstream<<"MODE of "<<get_compound_device_name()<<" is changed from "
                         <<"ES_CHARGE_MODE to ES_STOP_CHARGE_MODE at time "<<time<<" s since Ptarget is "<<Ptarget<<" manually.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
@@ -1436,23 +1279,15 @@ void ESAU0::initialize()
         {
             freeze_electrical_active_power_control();
             freeze_primary_model();
+            lock_rotor();
+
         }
         else
         {
             unfreeze_electrical_active_power_control();
             unfreeze_primary_model();
+            unlock_rotor();
         }
-
-        deactivate_rotor_braking();
-
-        ENERGY_STORAGE* es = get_energy_storage_pointer();
-        ES_CONVERTER_MODEL* con = es->get_es_converter_model();
-        double p0 = con->get_initial_active_power_command_in_pu_based_on_mbase();
-        set_manual_power_in_pu(p0);
-
-        speed_reach_target_flag = false;
-        power_reach_target_flag = false;
-        valve_reach_target_flag = false;
 
         set_flag_model_initialized_as_true();
 

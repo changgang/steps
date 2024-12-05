@@ -259,6 +259,7 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
             {
 
                 initialize_energy_storage_mode();
+                initialize_manual_power_in_pu();
 
                 if(conv!=NULL and conv->is_model_active())
                     conv->initialize();
@@ -385,6 +386,8 @@ ENERGY_STORAGE& ENERGY_STORAGE::operator=(const ENERGY_STORAGE& estorage)
     set_source_impedance_in_pu(estorage.get_source_impedance_in_pu());
     set_bus_to_regulate(estorage.get_bus_to_regulate());
     set_voltage_to_regulate_in_pu(estorage.get_voltage_to_regulate_in_pu());
+    set_energy_storage_mode(estorage.get_energy_storage_mode());
+    set_manual_power_in_pu(estorage.get_manual_power_in_pu());
 
     set_model(estorage.get_es_converter_model());
     set_model(estorage.get_es_electrical_model());
@@ -429,6 +432,16 @@ ES_MODE ENERGY_STORAGE::get_energy_storage_mode() const
     return this->mode;
 }
 
+void ENERGY_STORAGE::set_manual_power_in_pu(double p)
+{
+    this->manual_power = p;
+}
+
+double ENERGY_STORAGE::get_manual_power_in_pu() const
+{
+    return this->manual_power;
+}
+
 void ENERGY_STORAGE::initialize_energy_storage_mode()
 {
     double P = get_p_generation_in_MW();
@@ -440,6 +453,12 @@ void ENERGY_STORAGE::initialize_energy_storage_mode()
             set_energy_storage_mode(ES_CHARGE_MODE);
         else
             set_energy_storage_mode(ES_OUT_SERVICE_MODE);
-
     }
+}
+
+void ENERGY_STORAGE::initialize_manual_power_in_pu()
+{
+    double P = get_p_generation_in_MW();
+    double mbase = get_mbase_in_MVA();
+    set_manual_power_in_pu(P/mbase);
 }

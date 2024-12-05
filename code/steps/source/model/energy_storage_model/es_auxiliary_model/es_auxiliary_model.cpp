@@ -264,12 +264,14 @@ double ES_AUXILIARY_MODEL::get_time_when_into_stop_charge_mode() const
 
 void ES_AUXILIARY_MODEL::set_manual_power_in_pu(double p)
 {
-    this->manual_power = p;
+    ENERGY_STORAGE* es = get_energy_storage_pointer();
+    es->set_manual_power_in_pu(p);
 }
 
 double ES_AUXILIARY_MODEL::get_manual_power_in_pu() const
 {
-    return this->manual_power;
+    ENERGY_STORAGE* es = get_energy_storage_pointer();
+    return es->get_manual_power_in_pu();
 }
 
 void ES_AUXILIARY_MODEL::activate_rotor_braking()
