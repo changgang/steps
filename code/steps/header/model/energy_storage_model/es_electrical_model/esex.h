@@ -20,9 +20,6 @@ class ESEX: public ES_ELECTRICAL_MODEL
         void set_var_control_mode(ELEC_REACTIVE_POWER_CONTROL_MODE mode);
         ELEC_REACTIVE_POWER_CONTROL_MODE get_var_control_mode() const;
 
-        void set_active_power_control_mode(ELEC_ACTIVE_POWER_CONTROL_MODE mode);
-        ELEC_ACTIVE_POWER_CONTROL_MODE get_active_power_control_mode() const;
-
         void enable_active_power_closed_loop_control();
         void enable_active_power_open_loop_control();
         bool get_active_power_closed_control_flag() const;

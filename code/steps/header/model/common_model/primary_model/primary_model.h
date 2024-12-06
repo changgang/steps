@@ -43,6 +43,7 @@ class PRIMARY_MODEL:public COMMON_MODEL
 
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
+        virtual void initialize_mechanical_power_as_zero() = 0;
 
     private:
         //input from outside model

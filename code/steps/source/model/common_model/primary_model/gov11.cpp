@@ -74,7 +74,7 @@ void GOV11::set_dbn(double k)
 
 void GOV11::set_Kp(double k)
 {
-    Kp.set_K(k);;
+    Kp.set_K(k);
 }
 
 void GOV11::set_Ki(double k)
@@ -201,6 +201,21 @@ double GOV11::get_Twg_in_s() const
     return -water_turbine.get_T1_in_s();
 }
 
+void GOV11::initialize_mechanical_power_as_zero()
+{
+    speed_sensor.set_output(0.0);
+    speed_sensor.initialize();
+
+    water_turbine.set_output(0.0);
+    water_turbine.initialize();
+
+    governor.set_output(0.0);
+    governor.initialize();
+
+    Kp.set_output(0.0);
+    Kp.initialize();
+}
+
 void GOV11::initialize()
 {
     double speed = get_initial_speed_in_pu();
@@ -227,7 +242,7 @@ void GOV11::initialize()
     double umax = get_umax();
     if(Pmech>umax)
     {
-        osstream<<"Initialization error. Y(valve) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit. "
+        osstream<<"Initialization warning. Y(valve) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit. "
           <<"Y is "<<Pmech<<", and umax is "<<umax<<".";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
@@ -235,7 +250,7 @@ void GOV11::initialize()
     double umin = get_umin();
     if(Pmech<umin)
     {
-        osstream<<"Initialization error. Y(valve) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit. "
+        osstream<<"Initialization warning. Y(valve) of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit. "
           <<"Y is "<<Pmech<<", and umin is "<<umin<<".";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
@@ -243,7 +258,7 @@ void GOV11::initialize()
     double PImax = get_PImax();
     if(deltaY>PImax)
     {
-        osstream<<"Initialization error. DeltaY of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit. "
+        osstream<<"Initialization warning. DeltaY of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit. "
           <<"DeltaY is "<<deltaY<<", and PImax is "<<PImax<<".";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
@@ -251,7 +266,7 @@ void GOV11::initialize()
     double PImin = get_PImin();
     if(deltaY<PImin)
     {
-        osstream<<"Initialization error. DeltaY of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit. "
+        osstream<<"Initialization warning. DeltaY of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit. "
           <<"DeltaY is "<<deltaY<<", and PImin is "<<PImin<<".";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }

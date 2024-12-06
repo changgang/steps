@@ -113,14 +113,6 @@ class ES_AUXILIARY_MODEL : public ES_MODEL
         virtual void check_when_energy_storage_in_stop_charge_mode() = 0;
         virtual void check_when_energy_storage_in_charge_mode() = 0;
 
-        virtual void set_energy_storage_in_out_service_mode() = 0;
-        virtual void set_energy_storage_in_start_discharge_mode() = 0;
-        virtual void set_energy_storage_in_stop_discharge_mode() = 0;
-        virtual void set_energy_storage_in_discharge_mode() = 0;
-        virtual void set_energy_storage_in_start_charge_mode() = 0;
-        virtual void set_energy_storage_in_stop_charge_mode() = 0;
-        virtual void set_energy_storage_in_charge_mode() = 0;
-
         virtual double get_active_power_reference_in_pu() = 0;
         virtual double get_rotor_speed_reference_in_pu() = 0;
         virtual double get_valve_reference_in_pu() = 0;

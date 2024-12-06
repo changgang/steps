@@ -17,6 +17,12 @@ class ES_ELECTRICAL_MODEL : public ES_MODEL
         void deactivate_active_power_control();
         bool is_active_power_control_activated() const;
 
+        void set_active_power_control_mode_in_discharge(unsigned int mode);
+        void set_active_power_control_mode_in_charge(unsigned int mode);
+
+        unsigned int get_active_power_control_mode_in_discharge() const;
+        unsigned int get_active_power_control_mode_in_charge() const;
+
     public:
         virtual string get_model_type() const;
 
@@ -26,6 +32,7 @@ class ES_ELECTRICAL_MODEL : public ES_MODEL
         double get_energy_storage_terminal_current_in_pu() const;
         double get_rotor_speed_in_pu() const;
         double get_rotor_speed_reference_in_pu() const;
+        double get_active_power_reference_in_pu() const;
 
     public:
         virtual string get_model_name() const = 0;
@@ -65,6 +72,8 @@ class ES_ELECTRICAL_MODEL : public ES_MODEL
     private:
         bool flag_model_bypassed;
         bool flag_active_model_activated;
+
+        unsigned int active_power_control_mode_in_discharge, active_power_control_mode_in_charge;
 };
 
 

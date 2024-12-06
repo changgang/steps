@@ -57,6 +57,7 @@ class GOV11:public PRIMARY_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
+        virtual void initialize_mechanical_power_as_zero();
 
     private:
 

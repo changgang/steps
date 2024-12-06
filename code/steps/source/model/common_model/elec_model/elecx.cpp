@@ -71,6 +71,10 @@ void ELECX::clear()
     frequency_controller.clear();
     enable_active_power_open_loop_control();
 
+    set_active_power_control_mode(ACTIVE_POWER_MODE);
+
+    activate_active_power_control();
+
 }
 
 void ELECX::copy_from_const_model(const ELECX& model)
@@ -91,6 +95,7 @@ void ELECX::copy_from_const_model(const ELECX& model)
 
     set_bus_to_regulate(model.get_bus_to_regulate());
     set_var_control_mode(model.get_var_control_mode());
+    set_active_power_control_mode(model.get_active_power_control_mode());
 
     set_Xcomp_in_pu(model.get_Xcomp_in_pu());
     set_TRV_in_s(model.get_TRV_in_s());

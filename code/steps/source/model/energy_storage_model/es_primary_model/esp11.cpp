@@ -381,10 +381,7 @@ void ESP11::run(DYNAMIC_MODE mode)
 
 void ESP11::initialize_Pmech_as_zero()
 {
-    gov.set_initial_speed_in_pu(0.0);
-    gov.set_initial_mechanical_power_in_pu(0.0);
-    gov.set_initial_valve_reference_in_pu(0.0);
-    gov.initialize();
+    gov.initialize_mechanical_power_as_zero();
 }
 
 double ESP11::get_mechanical_power_in_pu_on_mbase() const

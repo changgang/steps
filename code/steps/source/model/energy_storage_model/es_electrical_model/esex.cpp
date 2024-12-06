@@ -38,7 +38,7 @@ ESEX& ESEX::operator=(const ESEX& model)
 
 void ESEX::clear()
 {
-    set_model_float_parameter_count(41);
+    set_model_float_parameter_count(42);
     elecx.clear();
 }
 
@@ -54,7 +54,6 @@ void ESEX::copy_from_const_model(const ESEX& model)
 
 
     set_bus_to_regulate(model.get_bus_to_regulate());
-    set_active_power_control_mode(model.get_active_power_control_mode());
     set_var_control_mode(model.get_var_control_mode());
     set_Xcomp_in_pu(model.get_Xcomp_in_pu());
     set_TRV_in_s(model.get_TRV_in_s());
@@ -104,16 +103,6 @@ void ESEX::set_var_control_mode(ELEC_REACTIVE_POWER_CONTROL_MODE mode)
 ELEC_REACTIVE_POWER_CONTROL_MODE ESEX::get_var_control_mode() const
 {
     return elecx.get_var_control_mode();
-}
-
-void ESEX::set_active_power_control_mode(ELEC_ACTIVE_POWER_CONTROL_MODE mode)
-{
-    elecx.set_active_power_control_mode(mode);
-}
-
-ELEC_ACTIVE_POWER_CONTROL_MODE ESEX::get_active_power_control_mode() const
-{
-    return elecx.get_active_power_control_mode();
 }
 
 void ESEX::enable_active_power_closed_loop_control()
@@ -599,7 +588,7 @@ double ESEX::get_frequency_regulation_power_deviation_in_pu() const
 bool ESEX::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()>=44)
+    if(data.size()>=45)
     {
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
@@ -607,7 +596,7 @@ bool ESEX::setup_model_with_steps_string_vector(vector<string>& data)
             unsigned int bus;
             int var_control_flag;
             unsigned int voltage_flag;
-            int p_control_mode;
+            unsigned int p_control_mode_in_discharge, p_control_mode_in_charge;
             int loop_flag;
             double xcomp, trv, fn, kiv, qmax, qmin, kpv, tv, tfv, tp, kqi, vmax,
                     vmin, kqv, eqmax, eqmin, kvi, tvi, kdroop, tdroop, fupper, flower,
@@ -618,7 +607,8 @@ bool ESEX::setup_model_with_steps_string_vector(vector<string>& data)
             bus = (unsigned int)(get_integer_data(data[i],"0")); i++;
             var_control_flag = get_integer_data(data[i],"0"); i++;
             voltage_flag = (unsigned int)(get_integer_data(data[i],"0")); i++;
-            p_control_mode = get_integer_data(data[i],"0"); i++;
+            p_control_mode_in_discharge = (unsigned int)(get_integer_data(data[i],"0")); i++;
+            p_control_mode_in_charge = (unsigned int)(get_integer_data(data[i],"0")); i++;
             loop_flag = get_integer_data(data[i],"0"); i++;
             xcomp = get_double_data(data[i],"0.0"); i++;
             trv = get_double_data(data[i],"0.0"); i++;
@@ -688,35 +678,11 @@ bool ESEX::setup_model_with_steps_string_vector(vector<string>& data)
 
             if(voltage_flag>2)
                 voltage_flag = 2;
+
             set_voltage_flag(voltage_flag);
 
-
-            ELEC_ACTIVE_POWER_CONTROL_MODE pmode;
-            switch(p_control_mode)
-            {
-                case 0:
-                {
-                    pmode = SPEED_CONTROL_MODE;
-                    break;
-                }
-                case 1:
-                {
-                    pmode = ACTIVE_POWER_MODE;
-                    break;
-                }
-                case 2:
-                {
-                    pmode = CONSTANT_TORQUE_MODE;
-                    break;
-                }
-                default:
-                {
-                    pmode = SPEED_CONTROL_MODE;
-                    break;
-                }
-            }
-
-            set_active_power_control_mode(pmode);
+            set_active_power_control_mode_in_discharge(p_control_mode_in_discharge);
+            set_active_power_control_mode_in_charge(p_control_mode_in_charge);
 
             if(loop_flag==1)
                 enable_active_power_closed_loop_control();
@@ -828,9 +794,21 @@ void ESEX::initialize()
             elecx.activate_active_power_control();
 
         if(mode==ES_CHARGE_MODE)
+        {
             elecx.set_energy_storage_in_charge_mode();
+            if(get_active_power_control_mode_in_charge()==0)
+                elecx.set_active_power_control_mode(SPEED_CONTROL_MODE);
+            else
+                elecx.set_active_power_control_mode(ACTIVE_POWER_MODE);
+        }
         else
+        {
             elecx.set_energy_storage_in_discharge_mode();
+            if(get_active_power_control_mode_in_discharge()==0)
+                elecx.set_active_power_control_mode(SPEED_CONTROL_MODE);
+            else
+                elecx.set_active_power_control_mode(ACTIVE_POWER_MODE);
+        }
 
         elecx.set_initial_speed(speed);
         elecx.set_speed_reference_in_pu(speedref);
@@ -896,18 +874,24 @@ void ESEX::run(DYNAMIC_MODE mode)
 
     ES_MODE es_mode = get_energy_storage_mode();
     if(es_mode==ES_START_CHARGE_MODE or es_mode == ES_STOP_CHARGE_MODE or es_mode==ES_CHARGE_MODE)
-        elecx.set_energy_storage_in_charge_mode();
-    else
-        elecx.set_energy_storage_in_discharge_mode();
-
-    ENERGY_STORAGE* es= get_energy_storage_pointer();
-    ES_AUXILIARY_MODEL*au_model = es->get_es_auxiliary_model();
-    if(au_model!=NULL)
     {
-        double pref = au_model->get_active_power_reference_in_pu();
-        elecx.set_active_power_reference_in_pu_based_on_mbase(pref);
+        elecx.set_energy_storage_in_charge_mode();
+        if(get_active_power_control_mode_in_charge()==0)
+            elecx.set_active_power_control_mode(SPEED_CONTROL_MODE);
+        else
+            elecx.set_active_power_control_mode(ACTIVE_POWER_MODE);
+    }
+    else
+    {
+        elecx.set_energy_storage_in_discharge_mode();
+        if(get_active_power_control_mode_in_charge()==0)
+            elecx.set_active_power_control_mode(SPEED_CONTROL_MODE);
+        else
+            elecx.set_active_power_control_mode(ACTIVE_POWER_MODE);
     }
 
+    double pref = get_active_power_reference_in_pu();
+    elecx.set_active_power_reference_in_pu_based_on_mbase(pref);
     elecx.set_speed_in_pu(speed);
     elecx.set_speed_reference_in_pu(speed_ref);
     elecx.set_terminal_current_in_pu_based_on_mbase(iterm);
@@ -983,11 +967,8 @@ string ESEX::get_standard_psse_string(bool export_internal_bus_number) const
 
     unsigned int voltage_flag = get_voltage_flag();
 
-    ELEC_ACTIVE_POWER_CONTROL_MODE p_mode = get_active_power_control_mode();
-    int pe_control = 0;
-    if(p_mode==SPEED_CONTROL_MODE) pe_control = 0;
-    if(p_mode==ACTIVE_POWER_MODE) pe_control = 1;
-    if(p_mode==CONSTANT_TORQUE_MODE) pe_control = 2;
+    unsigned int pe_control_discharge = get_active_power_control_mode_in_discharge();
+    unsigned int pe_control_charge = get_active_power_control_mode_in_charge();
 
     int loop_flag = (get_active_power_closed_control_flag()==true)? 1: 0;
 
@@ -1042,11 +1023,12 @@ string ESEX::get_standard_psse_string(bool export_internal_bus_number) const
             <<setw(8)<<bus_reg<<", "
             <<setw(8)<<var_mode<<", "
             <<setw(8)<<voltage_flag<<", "
-            <<setw(8)<<pe_control<<", "
+            <<setw(8)<<pe_control_discharge<<", "
+            <<setw(8)<<pe_control_charge<<", "
             <<setw(8)<<loop_flag<<", "
-            <<setw(8)<<setprecision(6)<<xcomp<<", "
-            <<setw(8)<<setprecision(6)<<trv<<", \n"
+            <<setw(8)<<setprecision(6)<<xcomp<<", \n"
             <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<trv<<", "
             <<setw(8)<<setprecision(6)<<fn<<", "
             <<setw(8)<<setprecision(6)<<kiv<<", "
             <<setw(8)<<setprecision(6)<<qmax<<", "
@@ -1054,9 +1036,9 @@ string ESEX::get_standard_psse_string(bool export_internal_bus_number) const
             <<setw(8)<<setprecision(6)<<kpv<<", "
             <<setw(8)<<setprecision(6)<<tv<<", "
             <<setw(8)<<setprecision(6)<<tfv<<", "
-            <<setw(8)<<setprecision(6)<<tp<<", "
-            <<setw(8)<<setprecision(6)<<kqi<<", \n"
+            <<setw(8)<<setprecision(6)<<tp<<", \n"
             <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<kqi<<", "
             <<setw(8)<<setprecision(6)<<vmax<<", "
             <<setw(8)<<setprecision(6)<<vmin<<", "
             <<setw(8)<<setprecision(6)<<kqv<<", "
@@ -1064,9 +1046,9 @@ string ESEX::get_standard_psse_string(bool export_internal_bus_number) const
             <<setw(8)<<setprecision(6)<<eqmin<<", "
             <<setw(8)<<setprecision(6)<<kvi<<", "
             <<setw(8)<<setprecision(6)<<tvi<<", "
-            <<setw(8)<<setprecision(6)<<kdroop<<", "
-            <<setw(8)<<setprecision(6)<<tdroop<<", \n"
+            <<setw(8)<<setprecision(6)<<kdroop<<", \n"
             <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<tdroop<<", "
             <<setw(8)<<setprecision(6)<<fupper<<", "
             <<setw(8)<<setprecision(6)<<flower<<", "
             <<setw(8)<<setprecision(6)<<kfint<<", "
@@ -1074,9 +1056,9 @@ string ESEX::get_standard_psse_string(bool export_internal_bus_number) const
             <<setw(8)<<setprecision(6)<<kpp<<", "
             <<setw(8)<<setprecision(6)<<kip<<", "
             <<setw(8)<<setprecision(6)<<kpspeed<<", "
-            <<setw(8)<<setprecision(6)<<kispeed<<", "
-            <<setw(8)<<setprecision(6)<<rpmax<<", \n"
+            <<setw(8)<<setprecision(6)<<kispeed<<", \n"
             <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<rpmax<<", "
             <<setw(8)<<setprecision(6)<<rpmin<<", "
             <<setw(8)<<setprecision(6)<<tfp<<", "
             <<setw(8)<<setprecision(6)<<pmax<<", "
@@ -1093,9 +1075,11 @@ void ESEX::prepare_model_data_table()
     clear_model_data_table();
     unsigned int i=0;
     add_model_data_name_and_index_pair("BUS TO REGULATE", i); i++;
-    add_model_data_name_and_index_pair("ACTIVE POWER CONTROL FLAG", i); i++;
     add_model_data_name_and_index_pair("VAR CONTROL FLAG", i); i++;
     add_model_data_name_and_index_pair("VOLTAGE FLAG", i); i++;
+    add_model_data_name_and_index_pair("ACTIVE POWER CONTROL FLAG IN DISCHARGE", i); i++;
+    add_model_data_name_and_index_pair("ACTIVE POWER CONTROL FLAG IN CHARGE", i); i++;
+    add_model_data_name_and_index_pair("LOOP CONTROL FLAG", i); i++;
     add_model_data_name_and_index_pair("XCOMP IN PU", i); i++;
     add_model_data_name_and_index_pair("T VOLTAGE SENSOR IN S", i); i++;
     add_model_data_name_and_index_pair("FN", i); i++;
@@ -1139,16 +1123,8 @@ double ESEX::get_model_data_with_name(string par_name) const
     par_name = string2upper(par_name);
 
     if(par_name == "BUS TO REGULATE")  return get_bus_to_regulate();
-    if(par_name == "ACTIVE POWER CONTROL FLAG")
-    {
-        ELEC_ACTIVE_POWER_CONTROL_MODE p_mode = get_active_power_control_mode();
-        int pe_control = 0;
-        if(p_mode==SPEED_CONTROL_MODE_WITH_TORQUE) pe_control = 0;
-        if(p_mode==SPEED_CONTROL_MODE) pe_control = 1;
-        if(p_mode==ACTIVE_POWER_MODE) pe_control = 2;
-        if(p_mode==CONSTANT_TORQUE_MODE) pe_control = 3;
-        return pe_control;
-    }
+    if(par_name == "ACTIVE POWER CONTROL FLAG IN DISCHARGE") return get_active_power_control_mode_in_discharge();
+    if(par_name == "ACTIVE POWER CONTROL FLAG IN CHARGE") return get_active_power_control_mode_in_charge();
 
     if(par_name == "LOOP CONTROL FLAG")
     {
@@ -1206,26 +1182,16 @@ void ESEX::set_model_data_with_name(string par_name, double value)
 
     if(par_name == "BUS TO REGULATE") return set_bus_to_regulate((unsigned int)(value));
 
-    if(par_name == "ACTIVE POWER CONTROL FLAG")
+    if(par_name == "ACTIVE POWER CONTROL FLAG IN DISCHARGE")
     {
-        int ivalue = int(value);
-        ELEC_ACTIVE_POWER_CONTROL_MODE pmode = SPEED_CONTROL_MODE_WITH_TORQUE;
-        switch(ivalue)
-        {
-            case 0:
-                pmode = SPEED_CONTROL_MODE;
-                break;
-            case 1:
-                pmode = CONSTANT_TORQUE_MODE;
-                break;
-            case 2:
-                pmode = ACTIVE_POWER_MODE;
-                break;
-            default:
-                pmode = ACTIVE_POWER_MODE;
-                break;
-        }
-        return set_active_power_control_mode(pmode);
+        unsigned int ivalue = (unsigned int)(value);
+        return set_active_power_control_mode_in_discharge(ivalue);
+    }
+
+    if(par_name == "ACTIVE POWER CONTROL FLAG IN CHARGE")
+    {
+        unsigned int ivalue = (unsigned int)(value);
+        return set_active_power_control_mode_in_charge(ivalue);
     }
 
     if(par_name == "VAR CONTROL FLAG")

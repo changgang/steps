@@ -70,9 +70,9 @@ double ES_PRIMARY_MODEL::get_rotor_speed_in_pu() const
 double ES_PRIMARY_MODEL::get_active_power_reference_in_pu() const
 {
     ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
-    ES_ELECTRICAL_MODEL* elec_model = energy_storage->get_es_electrical_model();
-    if(elec_model!=NULL)
-        return elec_model->get_frequency_regulation_power_in_pu();
+    ES_AUXILIARY_MODEL* aux_model = energy_storage->get_es_auxiliary_model();
+    if(aux_model!=NULL)
+        return aux_model->get_active_power_reference_in_pu();
     else
     {
         ES_CONVERTER_MODEL* converter_model = energy_storage->get_es_converter_model();

@@ -203,6 +203,7 @@
 		<Unit filename="header/model/common_model/elec_model/elecx.h" />
 		<Unit filename="header/model/common_model/elec_model/frequency_controller.h" />
 		<Unit filename="header/model/common_model/primary_model/gov11.h" />
+		<Unit filename="header/model/common_model/primary_model/prim0.h" />
 		<Unit filename="header/model/common_model/primary_model/primary_model.h" />
 		<Unit filename="header/model/common_model/vrt_model/hvrt_control.h" />
 		<Unit filename="header/model/common_model/vrt_model/hvrt_relay.h" />
@@ -224,6 +225,7 @@
 		<Unit filename="header/model/energy_storage_model/es_model.h" />
 		<Unit filename="header/model/energy_storage_model/es_primary_model/es_primary_model.h" />
 		<Unit filename="header/model/energy_storage_model/es_primary_model/es_primary_models.h" />
+		<Unit filename="header/model/energy_storage_model/es_primary_model/esp0.h" />
 		<Unit filename="header/model/energy_storage_model/es_primary_model/esp11.h" />
 		<Unit filename="header/model/energy_storage_model/es_relay_model/es_relay_model.h" />
 		<Unit filename="header/model/energy_storage_model/es_relay_model/es_relay_models.h" />
@@ -704,6 +706,7 @@
 		<Unit filename="source/model/common_model/elec_model/elecx.cpp" />
 		<Unit filename="source/model/common_model/elec_model/frequency_controller.cpp" />
 		<Unit filename="source/model/common_model/primary_model/gov11.cpp" />
+		<Unit filename="source/model/common_model/primary_model/prim0.cpp" />
 		<Unit filename="source/model/common_model/primary_model/primary_model.cpp" />
 		<Unit filename="source/model/common_model/vrt_model/hvrt_control.cpp" />
 		<Unit filename="source/model/common_model/vrt_model/hvrt_relay.cpp" />
@@ -724,6 +727,7 @@
 		<Unit filename="source/model/energy_storage_model/es_electrical_model/esex.cpp" />
 		<Unit filename="source/model/energy_storage_model/es_model.cpp" />
 		<Unit filename="source/model/energy_storage_model/es_primary_model/es_primary_model.cpp" />
+		<Unit filename="source/model/energy_storage_model/es_primary_model/esp0.cpp" />
 		<Unit filename="source/model/energy_storage_model/es_primary_model/esp11.cpp" />
 		<Unit filename="source/model/energy_storage_model/es_relay_model/es_relay_model.cpp" />
 		<Unit filename="source/model/energy_storage_model/es_relay_model/esvrtrly1.cpp" />
