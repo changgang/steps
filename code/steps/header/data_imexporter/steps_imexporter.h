@@ -202,6 +202,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
 
         void add_CDC4T_model(vector<string>& data);
         void add_CDC6T_model(vector<string>& data);
+        void add_CDC7T_model(vector<string>& data);
 
         void add_VSCHVDCP0_model(vector<string>& data);
         void add_VSCHVDCC0_model(vector<string>& data);

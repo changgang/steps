@@ -247,6 +247,7 @@
 		<Unit filename="header/model/lcc_hvdc2t_model/CDC4T_test.h" />
 		<Unit filename="header/model/lcc_hvdc2t_model/CDC6T.h" />
 		<Unit filename="header/model/lcc_hvdc2t_model/CDC6T_test.h" />
+		<Unit filename="header/model/lcc_hvdc2t_model/CDC7T.h" />
 		<Unit filename="header/model/lcc_hvdc2t_model/lcc_hvdc2t_model.h" />
 		<Unit filename="header/model/lcc_hvdc2t_model/lcc_hvdc2t_model_test.h" />
 		<Unit filename="header/model/lcc_hvdc2t_model/lcc_hvdc2t_models.h" />
@@ -494,9 +495,7 @@
 		<Unit filename="main_cct_search_screening.cpp">
 			<Option link="0" />
 		</Unit>
-		<Unit filename="main_dynamics_simulation.cpp">
-			<Option link="0" />
-		</Unit>
+		<Unit filename="main_dynamics_simulation.cpp" />
 		<Unit filename="main_gprof.cpp">
 			<Option link="0" />
 		</Unit>
@@ -506,7 +505,9 @@
 		<Unit filename="main_short_circuit.cpp">
 			<Option link="0" />
 		</Unit>
-		<Unit filename="main_small_signal_analysis.cpp" />
+		<Unit filename="main_small_signal_analysis.cpp">
+			<Option link="0" />
+		</Unit>
 		<Unit filename="main_tests.cpp">
 			<Option link="0" />
 		</Unit>
@@ -743,6 +744,7 @@
 		<Unit filename="source/model/lcc_hvdc2t_model/CDC4T_test.cpp" />
 		<Unit filename="source/model/lcc_hvdc2t_model/CDC6T.cpp" />
 		<Unit filename="source/model/lcc_hvdc2t_model/CDC6T_test.cpp" />
+		<Unit filename="source/model/lcc_hvdc2t_model/CDC7T.cpp" />
 		<Unit filename="source/model/lcc_hvdc2t_model/lcc_hvdc2t_model.cpp" />
 		<Unit filename="source/model/lcc_hvdc2t_model/lcc_hvdc2t_model_test.cpp" />
 		<Unit filename="source/model/lcc_hvdc2t_model/vdcol.cpp" />

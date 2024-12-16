@@ -3,5 +3,6 @@
 
 #include "header/model/lcc_hvdc2t_model/CDC4T.h"
 #include "header/model/lcc_hvdc2t_model/CDC6T.h"
+#include "header/model/lcc_hvdc2t_model/CDC7T.h"
 
 #endif // LCC_HVDC2T_MODELS_H

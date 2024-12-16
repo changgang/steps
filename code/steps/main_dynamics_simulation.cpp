@@ -30,12 +30,15 @@ int main()
     //importer.load_vsc_powerflow_data("../../../bench/4_terminal_vsc_hvdc.vscraw");
 
     //importer.load_powerflow_data("../../../bench/shandong_original/bench_shandong.raw");
-    cout<<"Done loading powerflow file"<<endl;
+    //cout<<"Done loading powerflow file"<<endl;
     //importer.load_vsc_powerflow_data("../../../bench/shandong/4_terminal_vsc_hvdc.vscraw");
 
-    importer.load_powerflow_data("../../../bench/39_bus/IEEE39.raw");
+    //importer.load_powerflow_data("../../../bench/39_bus/IEEE39.raw");
+    //cout<<"Done loading powerflow file"<<endl;
+    //importer.load_vsc_powerflow_data("../../../bench/39_bus/2_VSC.vscraw");
+
+    importer.load_powerflow_data("../../../bench/2LCC/IEEE39.raw");
     cout<<"Done loading powerflow file"<<endl;
-    importer.load_vsc_powerflow_data("../../../bench/39_bus/2_VSC.vscraw");
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -49,7 +52,7 @@ int main()
     powerflow_solver.save_extended_powerflow_result_to_file("39_bus.csv");
 
     //importer.load_dynamic_data("../../../bench/shandong_load/5_bus.dyr");
-    importer.load_dynamic_data("../../../bench/39_bus/IEEE39.dyr");
+    importer.load_dynamic_data("../../../bench/2LCC/IEEE39.dyr");
 
     //vector<GENERATOR*> gens = psdb.get_all_generators();
     //unsigned int n = gens.size();
@@ -97,13 +100,15 @@ int main()
     simulator.prepare_bus_related_meter(9104, "FREQUENCY DEVIATION IN HZ");
 */
 
-    simulator.prepare_bus_related_meters();
-    simulator.prepare_vsc_hvdc_related_meters();
-    simulator.prepare_generator_related_meters();
+    //simulator.prepare_bus_related_meters();
+    //simulator.prepare_vsc_hvdc_related_meters();
+    //simulator.prepare_generator_related_meters();
+    simulator.prepare_2t_lcc_hvdc_related_meters();
     //simulator.prepare_load_related_meters();
     //simulator.prepare_wt_generator_related_meters();
 
-    simulator.set_output_file("IEEE39_vsc");
+    simulator.set_output_file("IEEE39_2LCC");
+
 
     //simulator.set_output_file("IEEE39_2VSC");
 
@@ -120,7 +125,7 @@ int main()
 
 
     simulator.start();
-    simulator.run_to(0.01);
+    simulator.run_to(1);
 /*
     DEVICE_ID did;
     did.set_device_type(STEPS_LOAD);
@@ -131,19 +136,19 @@ int main()
 
     simulator.scale_load(did, 0.05);
     */
-    /*
+
     DEVICE_ID did;
     did.set_device_type(STEPS_AC_LINE);
     TERMINAL terminal;
-    terminal.append_bus(16);
-    terminal.append_bus(21);
+    terminal.append_bus(14);
+    terminal.append_bus(15);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    simulator.set_ac_line_fault(did, 16, 0.0, complex<double>(0, -100));
+    simulator.set_ac_line_fault(did, 14, 1.0, complex<double>(0, -100));
     simulator.run_to(1.1);
-    simulator.clear_ac_line_fault(did, 16, 0.0);
-    */
+    simulator.clear_ac_line_fault(did, 14, 1.0);
 
+    /*
     DEVICE_ID did;
     did.set_device_type(STEPS_LOAD);
     TERMINAL terminal;
@@ -151,6 +156,7 @@ int main()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
     simulator.scale_load(did, 0.5);
+    */
 
 /*
     did.set_device_type(STEPS_WT_GENERATOR);
@@ -179,7 +185,7 @@ int main()
 
 
     //simulator.scale_all_load(-0.05);
-    simulator.run_to(5);
+    simulator.run_to(3);
 
 
     /*did.set_device_type(STEPS_GENERATOR);

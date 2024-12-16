@@ -100,6 +100,7 @@ class LCC_HVDC2T_MODEL : public MODEL
         // common solver
         void solve_2t_lcc_hvdc_model_without_line_dynamics(double Iset_kA, double Vset_kV);
         void solve_2t_lcc_hvdc_model_with_line_dynamics(double Iset_kA, double Vset_kV);
+        void solve_2t_lcc_hvdc_model_with_line_dynamics_and_control_dynamics(double Iset_kA, double alpha_in_deg, double gamma_in_deg);
         //
 
         double get_converter_dc_voltage_in_kV(CONVERTER_SIDE converter) const;
@@ -150,6 +151,9 @@ class LCC_HVDC2T_MODEL : public MODEL
         virtual string get_dynamic_data_in_psse_format() const = 0;
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
+
+        bool is_pi_controller_dynamics_considered;
+
     private:
         void solve_2t_lcc_hvdc_as_bypassed(double Iset_kA);
         void clear_record_of_bytime_time();

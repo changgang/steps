@@ -145,6 +145,7 @@ class LCC_HVDC2T : public NONBUS_DEVICE
         double get_converter_transformer_tap_in_pu(CONVERTER_SIDE converter) const;
 
         double get_converter_commutating_overlap_angle_in_deg(CONVERTER_SIDE converter) const;
+        double get_inverter_lead_firing_angle_beta_in_rad(CONVERTER_SIDE converter, double Idc) const;
         double get_converter_dc_voltage_in_kV(CONVERTER_SIDE converter) const;
         double get_line_dc_current_in_kA() const;
         double get_converter_dc_current_in_kA(CONVERTER_SIDE converter) const;

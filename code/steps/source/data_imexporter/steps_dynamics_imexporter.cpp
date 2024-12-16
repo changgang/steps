@@ -154,6 +154,7 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
 
     if(model_name=="CDC4T") { add_CDC4T_model(data); return;}
     if(model_name=="CDC6T") { add_CDC6T_model(data); return;}
+    if(model_name=="CDC7T") { add_CDC7T_model(data); return;}
 
     if(model_name=="VSCHVDCP0") { add_VSCHVDCP0_model(data); return;}
     if(model_name=="VSCHVDCC0") { add_VSCHVDCC0_model(data); return;}
@@ -1674,6 +1675,36 @@ void STEPS_IMEXPORTER::add_CDC6T_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid CDC6T model is built, but will not be set for "<<hvdc->get_compound_device_name();
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::add_CDC7T_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "CDC7T")
+        return;
+
+    if(data.size()<2)
+        return;
+
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id_from_string_vector(data);
+
+    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(did);
+    if(hvdc != NULL)
+    {
+        CDC7T model(toolkit);
+        model.set_device_id(did);
+        bool successful = model.setup_model_with_steps_string_vector(data);
+        if(successful)
+            dmdb.add_model(&model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid CDC7T model is built, but will not be set for "<<hvdc->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }

@@ -1512,6 +1512,33 @@ double LCC_HVDC2T::get_converter_commutating_overlap_angle_in_deg(CONVERTER_SIDE
     return rad2deg(mu);
 }
 
+double LCC_HVDC2T::get_inverter_lead_firing_angle_beta_in_rad(CONVERTER_SIDE converter, double Idc) const
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    if(converter==INVERTER)
+    {
+        double TurnRatio = get_converter_transformer_grid_side_base_voltage_in_kV(converter)/get_converter_transformer_converter_side_base_voltage_in_kV(converter);
+        double Tap = get_converter_transformer_tap_in_pu(converter);
+        double Vac = psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(converter));
+        double Eac = Vac/(TurnRatio*Tap);
+        double Xc = get_converter_transformer_impedance_in_ohm(converter).imag();
+
+        double alpha_gamma = deg2rad(get_converter_alpha_or_gamma_in_deg(converter));
+
+        double beta = steps_acos(cos_converter_firing_angle[converter]-SQRT2*Idc*Xc/Eac);
+        return beta;
+    }
+    else
+    {
+        osstream<<"LEAD FIRING ANGLE IS NOT SUPPORTED IN RECTIFIER.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return 0.0;
+    }
+}
+
 double LCC_HVDC2T::get_converter_dc_voltage_in_kV(CONVERTER_SIDE converter) const
 {
     return converter_dc_voltage_in_kV[converter];
