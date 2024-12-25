@@ -1096,7 +1096,7 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(const DEVICE_ID& did
             if(meter_type=="MECHANICAL POWER IN MW")
                 meter = setter.prepare_wt_generator_mechanical_power_in_MW_meter(did);
             if(meter_type=="MECHANICAL POWER IN PU ON MBASE")
-                meter = setter.prepare_wt_generator_max_available_mechanical_power_in_pu_on_mbase_meter(did);
+                meter = setter.prepare_wt_generator_mechanical_power_in_pu_on_mbase_meter(did);
             if(meter_type=="MECHANICAL POWER IN PU ON SBASE")
                 meter = setter.prepare_wt_generator_max_available_mechanical_power_in_pu_on_sbase_meter(did);
             if(meter_type=="MAX AVAILABLE MECHANICAL POWER IN PU ON MBASE")
