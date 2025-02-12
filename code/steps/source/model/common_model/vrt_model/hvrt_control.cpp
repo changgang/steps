@@ -366,7 +366,7 @@ void HVRT_CONTROL::check_when_vrt_in_normal_status()
         set_time_when_vrt_enter_during_status(time);
 
         ostringstream osstream;
-        osstream<<"LVRT status of "<<get_compound_device_name()<<" is changed from "
+        osstream<<"HVRT status of "<<get_compound_device_name()<<" is changed from "
                 <<" VRT_NORMAL_STATUS to VRT_DURING_STATUS at time "<<time<<" s since V is "<<v<<"(>"<<vth<<").";;
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
@@ -388,7 +388,7 @@ void HVRT_CONTROL::check_when_vrt_in_during_status()
             set_time_when_vrt_enter_prepare2recover_status(time);
             start_vrt_prepare2recover_timer();
 
-            osstream<<"LVRT status of "<<get_compound_device_name()<<" is changed from "
+            osstream<<"HVRT status of "<<get_compound_device_name()<<" is changed from "
                     <<" VRT_DURING_STATUS to VRT_PREPARE2RECOVER_STATUS at time "<<time<<" s since V is "<<v<<"(<"<<vth<<").";
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
@@ -407,7 +407,7 @@ void HVRT_CONTROL::check_when_vrt_in_during_status()
             set_time_when_vrt_enter_during_status(INFINITE_THRESHOLD);
             set_time_when_vrt_enter_recover_status(time);
 
-            osstream<<"LVRT status of "<<get_compound_device_name()<<" is changed from "
+            osstream<<"HVRT status of "<<get_compound_device_name()<<" is changed from "
                     <<" VRT_DURING_STATUS to VRT_RECOVER_STATUS at time "<<time<<" s since V is "<<v<<"(<"<<vth<<") and prepare2recover timer delay is ZERO.";
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
@@ -429,7 +429,7 @@ void HVRT_CONTROL::check_when_vrt_in_prepare2recover_status()
         set_time_when_vrt_enter_prepare2recover_status(INFINITE_THRESHOLD);
         reset_vrt_prepare2recover_timer();
 
-        osstream<<"LVRT status of "<<get_compound_device_name()<<" is changed from "
+        osstream<<"HVRT status of "<<get_compound_device_name()<<" is changed from "
                 <<" VRT_PREPARE2RECOVER_STATUS to VRT_DURING_STATUS at time "<<time<<" s since V is "<<v<<"(>"<<vth<<").";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
@@ -437,7 +437,7 @@ void HVRT_CONTROL::check_when_vrt_in_prepare2recover_status()
     {
         if(is_vrt_prepare2recover_timer_timed_out())
         {
-            osstream<<"LVRT status of "<<get_compound_device_name()<<" is changed from "
+            osstream<<"HVRT status of "<<get_compound_device_name()<<" is changed from "
                     <<" VRT_PREPARE2RECOVER_STATUS to VRT_RECOVER_STATUS at time "<<time<<" s since prepare2recover timer is timed out.";
             toolkit.show_information_with_leading_time_stamp(osstream);
 
@@ -466,7 +466,7 @@ void HVRT_CONTROL::check_when_vrt_in_recover_status()
         set_time_when_vrt_enter_during_status(time);
         set_time_when_vrt_enter_recover_status(INFINITE_THRESHOLD);
 
-        osstream<<"LVRT status of "<<get_compound_device_name()<<" is changed from "
+        osstream<<"HVRT status of "<<get_compound_device_name()<<" is changed from "
                 <<" VRT_RECOVER_STATUS to VRT_DURING_STATUS at time "<<time<<" s since V is "<<v<<"(>"<<vth<<").";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
@@ -477,7 +477,7 @@ void HVRT_CONTROL::check_when_vrt_in_recover_status()
             set_vrt_status(VRT_NORMAL_STATUS);
             set_time_when_vrt_enter_recover_status(INFINITE_THRESHOLD);
 
-            osstream<<"LVRT status of "<<get_compound_device_name()<<" is changed from "
+            osstream<<"HVRT status of "<<get_compound_device_name()<<" is changed from "
                     <<" VRT_RECOVER_STATUS to VRT_NORMAL_STATUS at time "<<time<<" s since both P and Q command recovered.";
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
