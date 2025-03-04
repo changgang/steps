@@ -108,8 +108,28 @@ void LVRT_RELAY::check_vrt_relay()
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 trip_device();
                 enable_relay_action_flag();
-
             }
         }
     }
+}
+
+double LVRT_RELAY::get_lvrt_voltage_trip_boundary_in_pu()
+{
+    STEPS& toolkit = get_toolkit();
+    TIMER& timer = get_vrt_trip_timer();
+    double v_th = get_lvrt_voltage_threshold();
+    double tnow = toolkit.get_dynamic_simulation_time_in_s();
+    MULTI_POINT_LINE LVRT_RELAY_line = get_vrt_line();
+    double t0 = get_time_when_vrt_enter_during_status();
+
+    if(not timer.is_started())
+    {
+        if(t0!=INFINITE_THRESHOLD)
+            return LVRT_RELAY_line.get_y_at_x(tnow-t0);
+        else
+            return v_th;
+    }
+    else
+        return LVRT_RELAY_line.get_y_at_x(tnow-t0);
+
 }

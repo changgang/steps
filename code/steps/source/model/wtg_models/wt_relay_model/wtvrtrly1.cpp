@@ -394,14 +394,18 @@ double WTVRTRLY1::get_minimum_nonzero_time_constant_in_s()
 void WTVRTRLY1::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    //unsigned int i=1;
-    //add_model_internal_variable_name_and_index_pair("STATE@TURBINE SPEED BLOCK", i); i++;
+    unsigned int i=0;
+    add_model_internal_variable_name_and_index_pair("LVRT VOLTAGE TRIP BOUNDARY IN PU", i); i++;
+    add_model_internal_variable_name_and_index_pair("HVRT VOLTAGE TRIP BOUNDARY IN PU", i); i++;
 }
 
 double WTVRTRLY1::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
-    //if(var_name=="STATE@TURBINE SPEED BLOCK") return turbine_inertia_block.get_state();
+    if(var_name=="LVRT VOLTAGE TRIP BOUNDARY IN PU")
+        return lvrt.get_lvrt_voltage_trip_boundary_in_pu();
+    if(var_name=="HVRT VOLTAGE TRIP BOUNDARY IN PU")
+        return hvrt.get_hvrt_voltage_trip_boundary_in_pu();
 
     return 0.0;
 }

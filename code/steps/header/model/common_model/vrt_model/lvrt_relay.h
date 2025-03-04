@@ -17,6 +17,7 @@ class LVRT_RELAY : public VRT_RELAY_MODEL
         double get_lvrt_voltage_threshold() const;
         virtual void initialize_vrt_relay();
         virtual void check_vrt_relay();
+        double get_lvrt_voltage_trip_boundary_in_pu();
     private:
         double vth_lvrt;
 };
