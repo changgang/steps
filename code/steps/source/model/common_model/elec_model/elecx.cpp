@@ -893,6 +893,8 @@ void ELECX::run(DYNAMIC_MODE mode)
     {
         double Pref = 0.0;
         ELEC_ACTIVE_POWER_CONTROL_MODE active_power_mode = get_active_power_control_mode();
+
+        //SPEED_CONTROL_MODE_WITH_TORQUE
         if(active_power_mode == SPEED_CONTROL_MODE_WITH_TORQUE)
         {
             double speed     = get_speed_in_pu();
@@ -911,6 +913,7 @@ void ELECX::run(DYNAMIC_MODE mode)
 
         }
 
+        //SPEED_CONTROL_MODE
         if(active_power_mode == SPEED_CONTROL_MODE)
         {
             double speed     = get_speed_in_pu();
@@ -930,11 +933,13 @@ void ELECX::run(DYNAMIC_MODE mode)
             Pref = speed_controller.get_output();
         }
 
+        //ACTIVE_POWER_MODE
         if(active_power_mode == ACTIVE_POWER_MODE)
         {
             Pref = get_active_power_reference_in_pu_based_on_mbase();
         }
 
+        //DC_VOLTAGE_MODE
         if(active_power_mode == DC_VOLTAGE_MODE)
         {
             double Vdc = get_Vdc_in_kV();
@@ -946,6 +951,7 @@ void ELECX::run(DYNAMIC_MODE mode)
             Pref = Vdc_controller.get_output();
         }
 
+        //CONSTANT_TORQUE_MODE
         if(active_power_mode == CONSTANT_TORQUE_MODE)
         {
             double speed     = get_speed_in_pu();

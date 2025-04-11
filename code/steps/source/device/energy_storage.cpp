@@ -314,9 +314,6 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
                     }
                 }
 
-                if(auxiliary!=NULL and auxiliary->is_model_active())
-                    auxiliary->run(mode);
-
                 if(primary!=NULL and primary->is_model_active())
                     primary->run(mode);
 
@@ -338,6 +335,9 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
             {
                 if(relay!=NULL and relay->is_model_active())
                     relay->run(mode);
+
+                if(auxiliary!=NULL and auxiliary->is_model_active())
+                    auxiliary->run(mode);
                 break;
             }
             default:

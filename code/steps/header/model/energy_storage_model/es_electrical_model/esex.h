@@ -3,6 +3,7 @@
 
 #include "header/model/energy_storage_model/es_electrical_model/es_electrical_model.h"
 #include "header/model/common_model/elec_model/elecx.h"
+#include "header/model/common_model/elec_model/frequency_controller.h"
 
 class ESEX: public ES_ELECTRICAL_MODEL
 {
@@ -175,6 +176,7 @@ class ESEX: public ES_ELECTRICAL_MODEL
     private:
         void copy_from_const_model(const ESEX& model);
         ELECX elecx;
+        FREQUENCY_CONTROLLER frequency_controller;
 };
 
 #endif // ESEX_H

@@ -9,14 +9,18 @@
 using namespace std;
 
 ESEX::ESEX(STEPS& toolkit) : ES_ELECTRICAL_MODEL(toolkit),
-                               elecx(toolkit)
+                            elecx(toolkit),
+                            frequency_controller(toolkit)
+
 
 {
     clear();
 }
 
 ESEX::ESEX(const ESEX& model) : ES_ELECTRICAL_MODEL(model.get_toolkit()),
-                                   elecx(model.get_toolkit())
+                                elecx(model.get_toolkit()),
+                                frequency_controller(model.get_toolkit())
+
 
 {
     copy_from_const_model(model);
@@ -302,72 +306,72 @@ double ESEX::get_EQmin_in_pu() const
 
 void ESEX::set_Kvi(double K)
 {
-    elecx.set_Kvi(K);
+    frequency_controller.set_Kvi(K);
 }
 
 void ESEX::set_Tvi_in_s(double T)
 {
-    elecx.set_Tvi_in_s(T);
+    frequency_controller.set_Tvi_in_s(T);
 }
 
 void ESEX::set_Kdroop(double K)
 {
-    elecx.set_Kdroop(K);
+    frequency_controller.set_Kdroop(K);
 }
 
 void ESEX::set_Tdroop_in_s(double T)
 {
-    elecx.set_Tdroop_in_s(T);
+    frequency_controller.set_Tdroop_in_s(T);
 }
 
 void ESEX::set_frequency_deviation_upper_deadband_in_pu(double f)
 {
-    elecx.set_frequency_deviation_upper_deadband_in_pu(f);
+    frequency_controller.set_frequency_deviation_upper_deadband_in_pu(f);
 }
 
 void ESEX::set_frequency_deviation_lower_deadband_in_pu(double f)
 {
-    elecx.set_frequency_deviation_lower_deadband_in_pu(f);
+    frequency_controller.set_frequency_deviation_lower_deadband_in_pu(f);
 }
 
 void ESEX::set_Kfint(double K)
 {
-    elecx.set_Kfint(K);
+    frequency_controller.set_Kfint(K);
 }
 
 double ESEX::get_Kvi() const
 {
-    return elecx.get_Kvi();
+    return frequency_controller.get_Kvi();
 }
 
 double ESEX::get_Tvi_in_s() const
 {
-    return elecx.get_Tvi_in_s();
+    return frequency_controller.get_Tvi_in_s();
 }
 
 double ESEX::get_Kdroop() const
 {
-    return elecx.get_Kdroop();
+    return frequency_controller.get_Kdroop();
 }
 
 double ESEX::get_Tdroop_in_s() const
 {
-    return elecx.get_Tdroop_in_s();
+    return frequency_controller.get_Tdroop_in_s();
 }
 
 double ESEX::get_frequency_deviation_upper_deadband_in_pu() const
 {
-    return elecx.get_frequency_deviation_upper_deadband_in_pu();
+    return frequency_controller.get_frequency_deviation_upper_deadband_in_pu();
 }
 
 double ESEX::get_frequency_deviation_lower_deadband_in_pu() const
 {
-    return elecx.get_frequency_deviation_lower_deadband_in_pu();
+    return frequency_controller.get_frequency_deviation_lower_deadband_in_pu();
 }
 
 double ESEX::get_Kfint() const
 {
-    return elecx.get_Kfint();
+    return frequency_controller.get_Kfint();
 }
 
 void ESEX::set_Tspeed_in_s(double T)
@@ -758,6 +762,9 @@ void ESEX::setup_block_toolkit_and_parameters()
 {
     elecx.set_bus_pointer(get_bus_pointer());
     elecx.set_device_pointer(get_device_pointer());
+
+    frequency_controller.set_bus_pointer(get_bus_pointer());
+    frequency_controller.set_device_pointer(get_device_pointer());
 }
 
 void ESEX::initialize()
@@ -770,9 +777,9 @@ void ESEX::initialize()
         ES_CONVERTER_MODEL* es_converter_model = es->get_es_converter_model();
         ES_MODE mode = get_energy_storage_mode();
 
-        setup_block_toolkit_and_parameters();
-
         STEPS& toolkit = get_toolkit();
+
+        frequency_controller.initialize();
 
         double iterm = get_energy_storage_terminal_current_in_pu();
         complex<double> selec = get_energy_storage_terminal_generation_in_pu_based_on_mbase();
@@ -859,6 +866,8 @@ void ESEX::initialize_active_power_control_as_zero()
 
 void ESEX::run(DYNAMIC_MODE mode)
 {
+    frequency_controller.run(mode);
+
     double iterm = get_energy_storage_terminal_current_in_pu();
     complex<double> selec = get_energy_storage_terminal_generation_in_pu_based_on_mbase();
     double pelec = selec.real();
@@ -884,14 +893,21 @@ void ESEX::run(DYNAMIC_MODE mode)
     else
     {
         elecx.set_energy_storage_in_discharge_mode();
-        if(get_active_power_control_mode_in_charge()==0)
+        if(get_active_power_control_mode_in_discharge()==0)
             elecx.set_active_power_control_mode(SPEED_CONTROL_MODE);
         else
             elecx.set_active_power_control_mode(ACTIVE_POWER_MODE);
     }
 
-    double pref = get_active_power_reference_in_pu();
-    elecx.set_active_power_reference_in_pu_based_on_mbase(pref);
+    double Pref = 0.0;
+    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
+    ES_AUXILIARY_MODEL* aux_model = energy_storage->get_es_auxiliary_model();
+    if(aux_model!=NULL)
+        Pref = aux_model->get_active_power_reference_in_pu();
+    else
+        Pref = get_frequency_regulation_power_in_pu();
+
+    elecx.set_active_power_reference_in_pu_based_on_mbase(Pref);
     elecx.set_speed_in_pu(speed);
     elecx.set_speed_reference_in_pu(speed_ref);
     elecx.set_terminal_current_in_pu_based_on_mbase(iterm);
@@ -906,7 +922,7 @@ void ESEX::run(DYNAMIC_MODE mode)
 
 double ESEX::get_frequency_regulation_power_in_pu() const
 {
-    return elecx.get_frequency_regulation_power_in_pu();
+    return elecx.get_initial_active_power_command_in_pu_based_on_mbase()+frequency_controller.get_frequency_regulation_power_deviation_in_pu();
 }
 
 double ESEX::get_active_current_command_in_pu_based_on_mbase()

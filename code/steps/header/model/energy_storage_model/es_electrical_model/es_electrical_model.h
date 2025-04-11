@@ -32,7 +32,6 @@ class ES_ELECTRICAL_MODEL : public ES_MODEL
         double get_energy_storage_terminal_current_in_pu() const;
         double get_rotor_speed_in_pu() const;
         double get_rotor_speed_reference_in_pu() const;
-        double get_active_power_reference_in_pu() const;
 
     public:
         virtual string get_model_name() const = 0;

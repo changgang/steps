@@ -225,6 +225,7 @@
 		<Unit filename="header/model/energy_storage_model/es_model.h" />
 		<Unit filename="header/model/energy_storage_model/es_primary_model/es_primary_model.h" />
 		<Unit filename="header/model/energy_storage_model/es_primary_model/es_primary_models.h" />
+		<Unit filename="header/model/energy_storage_model/es_primary_model/esb0.h" />
 		<Unit filename="header/model/energy_storage_model/es_primary_model/esp0.h" />
 		<Unit filename="header/model/energy_storage_model/es_primary_model/esp11.h" />
 		<Unit filename="header/model/energy_storage_model/es_relay_model/es_relay_model.h" />
@@ -728,6 +729,7 @@
 		<Unit filename="source/model/energy_storage_model/es_electrical_model/esex.cpp" />
 		<Unit filename="source/model/energy_storage_model/es_model.cpp" />
 		<Unit filename="source/model/energy_storage_model/es_primary_model/es_primary_model.cpp" />
+		<Unit filename="source/model/energy_storage_model/es_primary_model/esb0.cpp" />
 		<Unit filename="source/model/energy_storage_model/es_primary_model/esp0.cpp" />
 		<Unit filename="source/model/energy_storage_model/es_primary_model/esp11.cpp" />
 		<Unit filename="source/model/energy_storage_model/es_relay_model/es_relay_model.cpp" />

@@ -199,6 +199,7 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="ESVRT3") { add_ESVRT3_model(data); return;}
     if(model_name=="ESROT0") { add_ESROT0_model(data); return;}
     if(model_name=="ESP11") { add_ESP11_model(data); return;}
+    if(model_name=="ESB0") { add_ESB0_model(data); return;}
     if(model_name=="ESAU0") { add_ESAU0_model(data); return;}
     if(model_name=="ESVRTRLY1") { add_ESVRTRLY1_model(data); return;}
 
@@ -2850,6 +2851,36 @@ void STEPS_IMEXPORTER::add_ESP11_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid ESP11 model is built, but will not be set for "<<es->get_compound_device_name();
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::add_ESB0_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "ESB0")
+        return;
+
+    if(data.size()<3)
+        return;
+
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
+    DEVICE_ID did = get_energy_storage_device_id_from_string_vector(data);
+
+    ENERGY_STORAGE* es = psdb.get_energy_storage(did);
+    if(es != NULL)
+    {
+        ESB0 model(toolkit);
+        model.set_device_id(did);
+        bool successful = model.setup_model_with_steps_string_vector(data);
+        if(successful)
+            dmdb.add_model(&model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid ESB0 model is built, but will not be set for "<<es->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }

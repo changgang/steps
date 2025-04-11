@@ -247,6 +247,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_ESVRT3_model(vector<string>& data);
         void add_ESROT0_model(vector<string>& data);
         void add_ESP11_model(vector<string>& data);
+        void add_ESB0_model(vector<string>& data);
         void add_ESAU0_model(vector<string>& data);
         void add_ESVRTRLY1_model(vector<string>& data);
 

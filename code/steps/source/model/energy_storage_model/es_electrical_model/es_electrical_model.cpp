@@ -147,17 +147,3 @@ double ES_ELECTRICAL_MODEL::get_rotor_speed_reference_in_pu() const
         return 0.0;
     }
 }
-
-double ES_ELECTRICAL_MODEL::get_active_power_reference_in_pu() const
-{
-    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
-    ES_AUXILIARY_MODEL* aux_model = energy_storage->get_es_auxiliary_model();
-    if(aux_model!=NULL)
-        return aux_model->get_active_power_reference_in_pu();
-    else
-    {
-        ES_CONVERTER_MODEL* converter_model = energy_storage->get_es_converter_model();
-        return converter_model->get_initial_active_power_command_in_pu_based_on_mbase();
-    }
-
-}

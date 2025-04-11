@@ -7,6 +7,7 @@
 
 class ESP11 : public ES_PRIMARY_MODEL
 {
+    //Turbine governor model 11 in PSASP
     public:
         ESP11(STEPS& toolkit);
         ESP11(const ESP11& model);
