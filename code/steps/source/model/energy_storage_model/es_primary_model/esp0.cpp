@@ -420,7 +420,33 @@ double ESP0::get_delta_Yref_in_pu() const
 
 void ESP0::check()
 {
-    ;
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+
+    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_compound_device_name()<<".\n";
+    bool error_found = false;
+    ENERGY_STORAGE* es = get_energy_storage_pointer();
+    ES_AUXILIARY_MODEL* au_model = es->get_es_auxiliary_model();
+    if(au_model!=NULL)
+    {
+        if(get_Ka()==0.0)
+        {
+            osstream<<"Ka=0 was detected\n";
+            error_found = true;
+        }
+        if(get_Eb()==0.0)
+        {
+            osstream<<"Eb=0 was detected\n";
+            error_found = true;
+        }
+        if(get_Bp()==0.0)
+        {
+            osstream<<"Bp=0 was detected\n";
+            error_found = true;
+        }
+    }
+    if(error_found)
+        toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void ESP0::report()

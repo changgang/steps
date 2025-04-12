@@ -760,11 +760,38 @@ bool ESEX::setup_model_with_bpa_string(string data)
 
 void ESEX::setup_block_toolkit_and_parameters()
 {
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+
     elecx.set_bus_pointer(get_bus_pointer());
     elecx.set_device_pointer(get_device_pointer());
 
     frequency_controller.set_bus_pointer(get_bus_pointer());
     frequency_controller.set_device_pointer(get_device_pointer());
+
+
+    ENERGY_STORAGE* es = get_energy_storage_pointer();
+    ES_PRIMARY_MODEL* prim_model = es->get_es_primary_model();
+
+    if(prim_model!=NULL and prim_model->get_model_name()=="ESB0")
+    {
+        if(get_active_power_control_mode_in_charge()!=1)
+        {
+            set_active_power_control_mode_in_charge(1);
+            osstream<<"Warning. The active power control mode in charge at "<<get_model_name()<<" model of "<<get_compound_device_name()
+                    <<" has been automatically corrected to ACTIVE_POWER_MODE as primary model is ESB0."<<endl;
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+        if(get_active_power_control_mode_in_discharge()!=1)
+        {
+            set_active_power_control_mode_in_charge(1);
+            osstream<<"Warning. The active power control mode in discharge at "<<get_model_name()<<" model of "<<get_compound_device_name()
+                    <<" has been automatically corrected to ACTIVE_POWER_MODE as primary model is ESB0."<<endl;
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+
+    }
+
 }
 
 void ESEX::initialize()
@@ -952,7 +979,43 @@ double ESEX::get_reactive_voltage_command_in_pu() const
 
 void ESEX::check()
 {
-    ;
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+
+    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_compound_device_name()<<".\n";
+    bool error_found = false;
+    ENERGY_STORAGE* es = get_energy_storage_pointer();
+    ES_AUXILIARY_MODEL* au_model = es->get_es_auxiliary_model();
+    ES_PRIMARY_MODEL* prim_model = es->get_es_primary_model();
+    if(au_model!=NULL and (get_active_power_control_mode_in_charge()==SPEED_CONTROL_MODE or get_active_power_control_mode_in_discharge()==SPEED_CONTROL_MODE))
+    {
+        if(get_KIP()==0.0)
+        {
+            osstream<<"Kip=0 was detected\n";
+            error_found = true;
+        }
+        if(get_KPP()==0.0)
+        {
+            osstream<<"Kpp=0 was detected\n";
+            error_found = true;
+        }
+    }
+
+    if(prim_model!=NULL and prim_model->get_model_name()=="ESB0")
+    {
+        if(get_active_power_control_mode_in_charge()==SPEED_CONTROL_MODE)
+        {
+            osstream<<"Active_power_control_mode_in_charge = SPEED_CONTROL_MODE was detected\n";
+            error_found = true;
+        }
+        if(get_active_power_control_mode_in_discharge()==SPEED_CONTROL_MODE)
+        {
+            osstream<<"Active_power_control_mode_in_discharge = SPEED_CONTROL_MODE was detected\n";
+            error_found = true;
+        }
+    }
+    if(error_found)
+        toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void ESEX::report()

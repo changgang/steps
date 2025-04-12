@@ -630,6 +630,8 @@ bool PVEX::setup_model_with_bpa_string(string data)
 
 void PVEX::setup_block_toolkit_and_parameters()
 {
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
     conelec0.set_bus_pointer(get_bus_pointer());
     conelec0.set_device_pointer(get_device_pointer());
     PV_UNIT* pv_unit = get_pv_unit_pointer();
@@ -637,12 +639,20 @@ void PVEX::setup_block_toolkit_and_parameters()
     if(panelmodel!=NULL)
     {
         string panel_model_name = panelmodel->get_model_name();
-        if(panel_model_name == "PVPNLX") set_active_power_control_mode(ACTIVE_POWER_MODE);
-        if(panel_model_name == "PVPNLY") set_active_power_control_mode(DC_VOLTAGE_MODE);
-    }
-    else
-    {
-        set_active_power_control_mode(ACTIVE_POWER_MODE);
+        if(panel_model_name == "PVPNLX" and get_active_power_control_mode()!=ACTIVE_POWER_MODE)
+        {
+            set_active_power_control_mode(ACTIVE_POWER_MODE);
+            osstream<<"Warning. The active power control mode at "<<get_model_name()<<" model of "<<get_compound_device_name()
+                    <<" has been automatically corrected to ACTIVE_POWER_MODE as panel model is PVPNLX."<<endl;
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+        if(panel_model_name == "PVPNLY" and get_active_power_control_mode()!=DC_VOLTAGE_MODE)
+        {
+            set_active_power_control_mode(DC_VOLTAGE_MODE);
+            osstream<<"Warning. The active power control mode at "<<get_model_name()<<" model of "<<get_compound_device_name()
+                    <<" has been automatically corrected to DC_VOLTAGE_MODE as panel model is PVPNLY."<<endl;
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
     }
 }
 
@@ -779,7 +789,47 @@ double PVEX::get_reactive_voltage_command_in_pu() const
 
 void PVEX::check()
 {
-    ;
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+
+    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_compound_device_name()<<".\n";
+    bool error_found = false;
+    PV_UNIT* pv = get_pv_unit_pointer();
+    PV_PANEL_MODEL* panel_model = pv->get_pv_panel_model();
+    if(panel_model!=NULL)
+    {
+        if(panel_model->get_model_name()=="PVPNLX")
+        {
+            if(get_active_power_control_mode()==DC_VOLTAGE_MODE)
+            {
+                osstream<<"Active power control mode = DC_VOLTAGE_MODE was detected\n";
+                error_found = true;
+            }
+        }
+
+        if(panel_model->get_model_name()=="PVPNLY")
+        {
+            if(get_active_power_control_mode()==ACTIVE_POWER_MODE)
+            {
+                osstream<<"Active power control mode = ACTIVE_POWER_MODE was detected\n";
+                error_found = true;
+            }
+            if(get_Kpdc()==0.0)
+            {
+                osstream<<"Kpdc = 0 was detected\n";
+                error_found = true;
+            }
+
+            if(get_Kidc()==0.0)
+            {
+                osstream<<"Kidc = 0 was detected\n";
+                error_found = true;
+            }
+        }
+
+    }
+    if(error_found)
+        toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void PVEX::report()
