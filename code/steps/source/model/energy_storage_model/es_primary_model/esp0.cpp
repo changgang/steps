@@ -451,13 +451,13 @@ string ESP0::get_standard_psse_string(bool export_internal_bus_number) const
     if(export_internal_bus_number==true)
         bus = network.get_internal_bus_number_of_physical_bus(bus)+1;
 
-    /*osstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "
             <<setw(6)<<identifier<<", "
             <<setw(8)<<setprecision(4)<<get_Tr_in_s()<<", "
             <<setw(8)<<setprecision(4)<<get_Ka()<<", "
-            <<setw(8)<<setprecision(4)<<get_dbp()<<", "
-            <<setw(8)<<setprecision(4)<<get_dbn()<<", "
+            <<setw(8)<<setprecision(4)<<get_Eb()<<", "
+            <<setw(8)<<setprecision(4)<<get_Bp()<<", "
             <<setw(8)<<setprecision(4)<<get_Kp()<<", "
             <<setw(8)<<setprecision(4)<<get_Ki()<<", "
             <<setw(8)<<setprecision(4)<<get_INTmax()<<", \n"
@@ -465,12 +465,11 @@ string ESP0::get_standard_psse_string(bool export_internal_bus_number) const
             <<setw(8)<<setprecision(4)<<get_INTmin()<<", "
             <<setw(8)<<setprecision(4)<<get_PImax()<<", "
             <<setw(8)<<setprecision(4)<<get_PImin()<<", "
-            <<setw(8)<<setprecision(4)<<get_Bp()<<", "
             <<setw(8)<<setprecision(4)<<get_umax()<<", "
             <<setw(8)<<setprecision(4)<<get_umin()<<", "
             <<setw(8)<<setprecision(4)<<get_Ts_in_s()<<", "
             <<setw(8)<<setprecision(4)<<get_Twg_in_s()<<" /";
-*/
+
     return osstream.str();
 }
 

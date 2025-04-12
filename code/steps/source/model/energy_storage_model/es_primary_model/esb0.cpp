@@ -518,26 +518,28 @@ string ESB0::get_standard_psse_string(bool export_internal_bus_number) const
     if(export_internal_bus_number==true)
         bus = network.get_internal_bus_number_of_physical_bus(bus)+1;
 
-    /*osstream<<setw(8)<<bus<<", "
+    double Eoc;
+    if(stage_number==1)
+        Eoc = 0.0;
+    else
+        Eoc = get_Eoc_per_cell_in_V();
+
+    osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "
             <<setw(6)<<identifier<<", "
-            <<setw(8)<<setprecision(4)<<get_Tr_in_s()<<", "
-            <<setw(8)<<setprecision(4)<<get_Ka()<<", "
-            <<setw(8)<<setprecision(4)<<get_dbp()<<", "
-            <<setw(8)<<setprecision(4)<<get_dbn()<<", "
-            <<setw(8)<<setprecision(4)<<get_Kp()<<", "
-            <<setw(8)<<setprecision(4)<<get_Ki()<<", "
-            <<setw(8)<<setprecision(4)<<get_INTmax()<<", \n"
+            <<setw(8)<<get_converter_number()<<", "
+            <<setw(8)<<get_Nse_per_converter()<<", "
+            <<setw(8)<<get_Nsh_per_converter()<<", "
+            <<setw(8)<<setprecision(4)<<get_capacitor_nominal_dc_voltage_in_kV()<<", "
+            <<setw(8)<<setprecision(4)<<Eoc<<", "
+            <<setw(8)<<setprecision(4)<<get_Rb_per_cell_in_mOhm()<<", "
+            <<setw(8)<<setprecision(4)<<get_Rp_per_cell_in_mOhm()<<", \n"
             <<setw(10)<<""
-            <<setw(8)<<setprecision(4)<<get_INTmin()<<", "
-            <<setw(8)<<setprecision(4)<<get_PImax()<<", "
-            <<setw(8)<<setprecision(4)<<get_PImin()<<", "
-            <<setw(8)<<setprecision(4)<<get_Bp()<<", "
-            <<setw(8)<<setprecision(4)<<get_umax()<<", "
-            <<setw(8)<<setprecision(4)<<get_umin()<<", "
-            <<setw(8)<<setprecision(4)<<get_Ts_in_s()<<", "
-            <<setw(8)<<setprecision(4)<<get_Twg_in_s()<<" /";
-*/
+            <<setw(8)<<setprecision(4)<<get_Cp_per_cell_in_mF()<<", "
+            <<setw(8)<<setprecision(4)<<get_C_per_converter_in_F()<<", "
+            <<setw(8)<<setprecision(4)<<get_Kpdc_per_converter()<<", "
+            <<setw(8)<<setprecision(4)<<get_Kidc_per_converter()<<" /";
+
     return osstream.str();
 }
 
