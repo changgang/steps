@@ -272,7 +272,7 @@ void PRIM0::run(DYNAMIC_MODE mode)
     double speedref = get_speed_reference_in_pu();
     double input;
 
-     if(not is_in_charge_mode())
+     if(not is_in_charge_mode())//in discharge mode
         input = speedref - speed;
     else
         input = speed - speedref;

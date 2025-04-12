@@ -246,48 +246,55 @@ double ESAU0::get_target_power_reference_in_pu() const
 double ESAU0::get_target_speed_reference_in_pu() const
 {
     double p = get_target_power_reference_in_pu();
-
-    if(not is_manual_control())
-    {
-        if(p<=get_start_discharge_mode_power_threshold() and p>=get_start_charge_mode_power_threshold())
-           return 0.0;
-    }
+    double speed_ref;
 
     if(p>0.0)
     {
-        return power_speed_table_in_discharge.get_y_at_x(p);
+        speed_ref = power_speed_table_in_discharge.get_y_at_x(p);
+
+        if(p<(get_start_discharge_mode_power_threshold()-FLOAT_EPSILON))
+            speed_ref = power_speed_table_in_discharge.get_min_y();
     }
     else
     {
         if(p<0.0)
-            return power_speed_table_in_charge.get_y_at_x(p);
+        {
+            speed_ref = power_speed_table_in_charge.get_y_at_x(p);
+            if(p>(get_start_charge_mode_power_threshold()+FLOAT_EPSILON))
+                speed_ref = power_speed_table_in_charge.get_max_y();
+        }
         else
-            return 0.0;
+            speed_ref = 0.0;
     }
+
+    return speed_ref;
 
 }
 
 double ESAU0::get_target_valve_reference_in_pu() const
 {
     double p = get_target_power_reference_in_pu();
-
-    if(not is_manual_control())
-    {
-        if(p<=get_start_discharge_mode_power_threshold() and p>=get_start_charge_mode_power_threshold())
-           return 0.0;
-    }
+    double yref;
 
     if(p>0.0)
     {
-        return power_valve_table_in_discharge.get_y_at_x(p);
+        yref = power_valve_table_in_discharge.get_y_at_x(p);
+        if(p<(get_start_discharge_mode_power_threshold()-FLOAT_EPSILON))
+            yref = power_valve_table_in_discharge.get_min_y();
     }
     else
     {
         if(p<0.0)
-            return power_valve_table_in_charge.get_y_at_x(p);
+        {
+            yref = power_valve_table_in_charge.get_y_at_x(p);
+            if(p>(get_start_charge_mode_power_threshold()+FLOAT_EPSILON))
+                yref = power_valve_table_in_charge.get_max_y();
+        }
         else
-            return 0.0;
+            yref = 0.0;
     }
+
+    return yref;
 }
 
 void ESAU0::set_energy_storage_in_out_service_mode()
@@ -1301,18 +1308,19 @@ void ESAU0::initialize()
 
 void ESAU0::run(DYNAMIC_MODE mode)
 {
-    check_energy_storage_mode();
-
-    double Pref = get_active_power_reference_in_pu();
-    double speed = get_rotor_speed_reference_in_pu();
-    double Y = get_valve_reference_in_pu();
-    set_current_Pref(Pref);
-    set_current_speedref(speed);
-    set_current_Yref(Y);
-
-
     if(mode==DYNAMIC_UPDATE_MODE)
+    {
+        check_energy_storage_mode();
+
+        double Pref = get_active_power_reference_in_pu();
+        double speed = get_rotor_speed_reference_in_pu();
+        double Y = get_valve_reference_in_pu();
+        set_current_Pref(Pref);
+        set_current_speedref(speed);
+        set_current_Yref(Y);
+
         set_flag_model_updated_as_true();
+    }
 }
 
 double ESAU0::get_active_power_reference_in_pu()
@@ -1427,6 +1435,7 @@ double ESAU0::get_rotor_speed_reference_in_pu()
             {
                 speed_reach_target_flag = true;
                 order = target;
+
             }
             return order;
         }
