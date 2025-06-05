@@ -1167,6 +1167,9 @@ void SHORT_CIRCUIT_SOLVER::solve_with_iteration()
         voltages_of_last_iteration.push_back(V);
     }
 
+    osstream<<"Start iterating."<<endl;
+    toolkit->show_information_with_leading_time_stamp(osstream);
+
     while(iteration_count < max_iteration)
     {
         iteration_count++;
