@@ -4397,6 +4397,30 @@ class STEPS():
         file = self.__get_c_char_p_of_string(file)
         STEPS_LIB.api_save_extended_short_circuit_result_to_file(file, self.toolkit_index)
         return
+    
+    def get_short_circuit_ratio_of_HVDC(self, hvdc_bus):
+        """
+        Get short circuit of hvdc.
+        Args:
+            (1) hvdc bus.
+        Rets: short circuit ratio
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_get_short_circuit_ratio_of_HVDC(hvdc_bus, self.toolkit_index)
+        return
+
+    def get_short_circuit_ratio_of_RES(self, res_bus):
+        """
+        Get short circuit of RES.
+        Args:
+            (1) res bus.
+        Rets: short circuit ratio
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_get_short_circuit_ratio_of_RES(res_bus, self.toolkit_index)
+        return
         
     def load_dynamic_data(self, file, ftype):
         """

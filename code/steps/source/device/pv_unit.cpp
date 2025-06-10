@@ -577,3 +577,105 @@ bool PV_UNIT::get_sequence_parameter_import_flag() const
     return sequence_parameter_import_flag;
 }
 
+complex<double> PV_UNIT::get_complex_dq_axis_current_in_pu_short_circuit_solver()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    BUS* busptr = psdb.get_bus(get_source_bus());
+    double sbase = psdb.get_system_base_power_in_MVA();
+
+    double K = get_support_coefficient_of_reactive_current_during_LVRT();
+    double Vmax = get_max_voltage_of_LVRT_strategy_in_pu();
+    double Vmin = get_min_voltage_of_LVRT_strategy_in_pu();
+    double Imax = get_max_short_circuit_current_of_inverter_in_pu();
+
+    double V = busptr->get_positive_sequence_voltage_in_pu();
+    double deg_V = busptr->get_positive_sequence_angle_in_deg();
+    double P = get_p_generation_in_MW()/sbase;
+    double Q = get_q_generation_in_MVar()/sbase;
+    double mbase = get_mbase_in_MVA();
+    double In = mbase/sbase;
+
+    double Id = 0.0;
+    double Iq = 0.0;
+
+    if(V>=Vmax)
+    {
+        Id = P/V;
+        Iq = 0.0;
+    }
+    else if((V<Vmax)&&(V>Vmin))
+    {
+        Id = P/V;
+        Iq = 0.0 + K*(Vmax-V)*In;
+
+        if((sqrt(Id*Id+Iq*Iq)>Imax*In)&&(Iq<Imax*In))
+        {
+            Id = sqrt(Imax*Imax*In*In-Iq*Iq);
+        }
+        else if(Iq>=Imax*In)
+        {
+            Id = 0.0;
+            Iq = Imax*In;
+        }
+    }
+    else if(V<Vmin)
+    {
+        Id = 0.0;
+        Iq = 0.0;
+    }
+
+    return complex<double> (Id, Iq);
+}
+
+complex<double> PV_UNIT::get_positive_sequence_complex_injection_current_in_pu_for_short_circuit_solver()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    BUS* busptr = psdb.get_bus(get_source_bus());
+    double deg_V = busptr->get_positive_sequence_angle_in_deg();
+
+    complex<double> Idq = get_complex_dq_axis_current_in_pu_short_circuit_solver();
+    double Id = Idq.real();
+    double Iq = Idq.imag();
+
+    double I = sqrt(Id*Id+Iq*Iq);
+    double theta = deg_V;
+
+    if(Id==0.0)
+        theta = deg_V - 90;
+    else
+        theta = deg_V - atan(Iq/Id)*180/PI;
+
+    return complex<double> (I*cos(theta*PI/180), I*sin(theta*PI/180));
+}
+
+complex<double> PV_UNIT::get_negative_sequence_complex_injection_current_in_pu_for_short_circuit_solver()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
+    BUS* busptr = psdb.get_bus(get_source_bus());
+
+    double mbase = get_mbase_in_MVA();
+    double In = mbase/sbase;
+
+    double Imax = get_max_short_circuit_current_of_inverter_in_pu();
+
+    complex<double> Idq = get_complex_dq_axis_current_in_pu_short_circuit_solver();
+    double Iq = Idq.imag();
+
+    if(Iq<Imax*In)
+    {
+        double Kneg = get_support_coefficient_of_neg_seq_current();
+        double Vneg = busptr->get_negative_sequence_voltage_in_pu();
+        double neg_angle = busptr->get_negative_sequence_angle_in_deg();
+
+        double Iq_neg = Kneg*Vneg;
+        return complex<double> (0.0, -Iq_neg);
+    }
+    else
+    {
+        return complex<double> (0.0,0.0);
+    }
+}

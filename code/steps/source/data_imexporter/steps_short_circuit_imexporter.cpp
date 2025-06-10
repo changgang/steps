@@ -168,7 +168,7 @@ void STEPS_IMEXPORTER::load_source_seq_data()
                     continue;
                 }
 
-                if(data.size()==13 or data.size()==6 or false)   // change "false' to number of constant speed wtg and doubly fed wtg ...
+                if(data.size()==13 or data.size()==17 or false)   // change "false' to number of constant speed wtg and doubly fed wtg ...
                 {
                     load_wt_generator_seq_data(*wt_generator, data);
                     wt_generator->set_sequence_parameter_import_flag(true);
@@ -397,14 +397,17 @@ void STEPS_IMEXPORTER::load_wt_generator_seq_data(WT_GENERATOR& wt_generator, ve
             break;
         case 4:
             wt_generator.set_wt_generator_type(CONSTANT_SPEED_WT_GENERATOR);
+            load_constant_speed_wtg_seq_data(wt_generator, data);
             load_wt_generator_LVRT_data_for_iterative_method(wt_generator, data);
             break;
         case 5:
             wt_generator.set_wt_generator_type(DOUBLY_FED_WT_GENERATOR);
+            load_doubly_fed_wtg_seq_data(wt_generator, data);
             load_wt_generator_LVRT_data_for_iterative_method(wt_generator, data);
             break;
         case 6:
             wt_generator.set_wt_generator_type(DIRECT_DRIVEN_WT_GENERATOR);
+            load_direct_driven_wtg_seq_data(wt_generator, data);
             load_wt_generator_LVRT_data_for_iterative_method(wt_generator, data);
             break;
         default: load_direct_driven_wtg_seq_data(wt_generator, data);

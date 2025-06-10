@@ -20,38 +20,38 @@ double api_get_wt_generator_sequence_float_data(unsigned int bus, char* identifi
     }
 
     string PARAMETER_NAME = string2upper(parameter_name);
-    if(PARAMETER_NAME == "RPOS_PU" or "POSITIVE SEQUENCE RESISTANCE IN PU")
+    if(PARAMETER_NAME == "RPOS_PU" or PARAMETER_NAME == "POSITIVE SEQUENCE RESISTANCE IN PU")
         return wt_generator->get_positive_sequence_resistance_in_pu();
-    if(PARAMETER_NAME == "XPPDV_PU" or "POSITIVE SEQUENCE SUBTRANSIENT REACTANCE IN PU")
+    if(PARAMETER_NAME == "XPPDV_PU" or PARAMETER_NAME == "POSITIVE SEQUENCE SUBTRANSIENT REACTANCE IN PU")
         return wt_generator->get_positive_sequence_subtransient_reactance_in_pu();
-    if(PARAMETER_NAME == "XPDV_PU" or "POSITIVE SEQUENCE TRANSIENT REACTANCE IN PU")
+    if(PARAMETER_NAME == "XPDV_PU" or PARAMETER_NAME == "POSITIVE SEQUENCE TRANSIENT REACTANCE IN PU")
         return wt_generator->get_positive_sequence_transient_reactance_in_pu();
-    if(PARAMETER_NAME == "XSDV_PU" or "POSITIVE SEQUENCE SYNCHRONOUS REACTANCE IN PU")
+    if(PARAMETER_NAME == "XSDV_PU" or PARAMETER_NAME == "POSITIVE SEQUENCE SYNCHRONOUS REACTANCE IN PU")
         return wt_generator->get_positive_sequence_syncronous_reactance_in_pu();
-    if(PARAMETER_NAME == "RNEG_PU" or "NEGATIVE SEQUENCE RESISTANCE IN PU")
+    if(PARAMETER_NAME == "RNEG_PU" or PARAMETER_NAME == "NEGATIVE SEQUENCE RESISTANCE IN PU")
         return wt_generator->get_negative_sequence_resistance_in_pu();
-    if(PARAMETER_NAME == "XNEG_PU" or "NEGATIVE SEQUENCE REACTANCE IN PU")
+    if(PARAMETER_NAME == "XNEG_PU" or PARAMETER_NAME == "NEGATIVE SEQUENCE REACTANCE IN PU")
         return wt_generator->get_negative_sequence_reactance_in_pu();
-    if(PARAMETER_NAME == "RZERO_PU" or "ZERO SEQUENCE RESISTANCE IN PU")
+    if(PARAMETER_NAME == "RZERO_PU" or PARAMETER_NAME == "ZERO SEQUENCE RESISTANCE IN PU")
         return wt_generator->get_zero_sequence_resistance_in_pu();
-    if(PARAMETER_NAME == "XZERO_PU" or "ZERO SEQUENCE REACTANCE IN PU")
+    if(PARAMETER_NAME == "XZERO_PU" or PARAMETER_NAME == "ZERO SEQUENCE REACTANCE IN PU")
         return wt_generator->get_zero_sequence_reactance_in_pu();
-    if(PARAMETER_NAME == "RG_PU" or "GROUNDING RESISTANCE")
+    if(PARAMETER_NAME == "RG_PU" or PARAMETER_NAME == "GROUNDING RESISTANCE")
         return wt_generator->get_grounding_resistance_in_pu();
-    if(PARAMETER_NAME == "XG_PU" or "GROUNDING REACTANCE")
+    if(PARAMETER_NAME == "XG_PU" or PARAMETER_NAME == "GROUNDING REACTANCE")
         return wt_generator->get_grounding_reactance_in_pu();
 
-    if(PARAMETER_NAME=="I1_PU" or "POSITIVE SEQUENCE CURRENT IN PU")
+    if(PARAMETER_NAME=="I1_PU" or PARAMETER_NAME == "POSITIVE SEQUENCE CURRENT IN PU")
         return abs(wt_generator->get_positive_sequence_complex_current_in_pu());
-    if(PARAMETER_NAME=="I2_PU" or "NEGATIVE SEQUENCE CURRENT IN PU")
+    if(PARAMETER_NAME=="I2_PU" or PARAMETER_NAME == "NEGATIVE SEQUENCE CURRENT IN PU")
         return abs(wt_generator->get_negative_sequence_complex_current_in_pu());
-    if(PARAMETER_NAME=="I0_PU" or "ZERO SEQUENCE CURRENT IN PU")
+    if(PARAMETER_NAME=="I0_PU" or PARAMETER_NAME == "ZERO SEQUENCE CURRENT IN PU")
         return abs(wt_generator->get_zero_sequence_complex_current_in_pu());
-    if(PARAMETER_NAME=="I1_KA" or "POSITIVE SEQUENCE CURRENT IN KA")
+    if(PARAMETER_NAME=="I1_KA" or PARAMETER_NAME == "POSITIVE SEQUENCE CURRENT IN KA")
         return abs(wt_generator->get_positive_sequence_complex_current_in_kA());
-    if(PARAMETER_NAME=="I2_KA" or "NEGATIVE SEQUENCE CURRENT IN KA")
+    if(PARAMETER_NAME=="I2_KA" or PARAMETER_NAME == "NEGATIVE SEQUENCE CURRENT IN KA")
         return abs(wt_generator->get_negative_sequence_complex_current_in_kA());
-    if(PARAMETER_NAME=="I0_KA" or "ZERO SEQUENCE CURRENT IN KA")
+    if(PARAMETER_NAME=="I0_KA" or PARAMETER_NAME == "ZERO SEQUENCE CURRENT IN KA")
         return abs(wt_generator->get_zero_sequence_complex_current_in_kA());
 
     if(PARAMETER_NAME=="ANGLE_RAD" or PARAMETER_NAME=="ANGLE IN RAD" or PARAMETER_NAME=="POSITIVE ANGLE IN RAD")
@@ -67,7 +67,18 @@ double api_get_wt_generator_sequence_float_data(unsigned int bus, char* identifi
     if(PARAMETER_NAME=="ZERO_ANGLE_DEG" or PARAMETER_NAME=="ZERO ANGLE IN DEG")
         return rad2deg(arg(wt_generator->get_zero_sequence_complex_current_in_pu()));
 
+    if(PARAMETER_NAME=="ID_PU" or PARAMETER_NAME=="D AXIS CURRENT OF LVRT IN PU")
+        return wt_generator->get_complex_dq_axis_current_in_pu_short_circuit_solver().real();
+    if(PARAMETER_NAME=="IQ_PU" or PARAMETER_NAME=="Q AXIS CURRENT OF LVRT IN PU")
+        return wt_generator->get_complex_dq_axis_current_in_pu_short_circuit_solver().imag();
+
+    if(PARAMETER_NAME=="I_LVRT_PU")
+        return abs(wt_generator->get_positive_sequence_complex_injection_current_in_pu_for_short_circuit_solver());
+    if(PARAMETER_NAME=="I_LVRT_RAD")
+        return arg(wt_generator->get_positive_sequence_complex_injection_current_in_pu_for_short_circuit_solver());
+
     show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
+    return 0.0;
 }
 void api_set_wt_generator_sequence_float_data(unsigned int bus, char* identifier, char* parameter_name, double value, unsigned int toolkit_index)
 {
@@ -83,25 +94,25 @@ void api_set_wt_generator_sequence_float_data(unsigned int bus, char* identifier
     }
 
     string PARAMETER_NAME = string2upper(parameter_name);
-    if(PARAMETER_NAME == "RPOS_PU" or "POSITIVE SEQUENCE RESISTANCE IN PU")
+    if(PARAMETER_NAME == "RPOS_PU" or PARAMETER_NAME == "POSITIVE SEQUENCE RESISTANCE IN PU")
         return wt_generator->set_positive_sequence_resistance_in_pu(value);
-    if(PARAMETER_NAME == "XPPDV_PU" or "POSITIVE SEQUENCE SUBTRANSIENT REACTANCE IN PU")
+    if(PARAMETER_NAME == "XPPDV_PU" or PARAMETER_NAME == "POSITIVE SEQUENCE SUBTRANSIENT REACTANCE IN PU")
         return wt_generator->set_positive_sequence_subtransient_reactance_in_pu(value);
-    if(PARAMETER_NAME == "XPDV_PU"  or "POSITIVE SEQUENCE TRANSIENT REACTANCE IN PU")
+    if(PARAMETER_NAME == "XPDV_PU"  or PARAMETER_NAME == "POSITIVE SEQUENCE TRANSIENT REACTANCE IN PU")
         return wt_generator->set_positive_sequence_transient_reactance_in_pu(value);
-    if(PARAMETER_NAME == "XSDV_PU"  or "POSITIVE SEQUENCE SYNCHRONOUS REACTANCE IN PU")
+    if(PARAMETER_NAME == "XSDV_PU"  or PARAMETER_NAME == "POSITIVE SEQUENCE SYNCHRONOUS REACTANCE IN PU")
         return wt_generator->set_positive_sequence_syncronous_reactance_in_pu(value);
-    if(PARAMETER_NAME == "RNEG_PU" or "NEGATIVE SEQUENCE RESISTANCE IN PU")
+    if(PARAMETER_NAME == "RNEG_PU" or PARAMETER_NAME == "NEGATIVE SEQUENCE RESISTANCE IN PU")
         return wt_generator->set_negative_sequence_resistance_in_pu(value);
-    if(PARAMETER_NAME == "XNEG_PU" or "NEGATIVE SEQUENCE REACTANCE IN PU")
+    if(PARAMETER_NAME == "XNEG_PU" or PARAMETER_NAME == "NEGATIVE SEQUENCE REACTANCE IN PU")
         return wt_generator->set_negative_sequence_reactance_in_pu(value);
-    if(PARAMETER_NAME == "RZERO_PU" or "ZERO SEQUENCE RESISTANCE IN PU")
+    if(PARAMETER_NAME == "RZERO_PU" or PARAMETER_NAME == "ZERO SEQUENCE RESISTANCE IN PU")
         return wt_generator->set_zero_sequence_resistance_in_pu(value);
-    if(PARAMETER_NAME == "XZERO_PU" or "ZERO SEQUENCE REACTANCE IN PU")
+    if(PARAMETER_NAME == "XZERO_PU" or PARAMETER_NAME == "ZERO SEQUENCE REACTANCE IN PU")
         return wt_generator->set_zero_sequence_reactance_in_pu(value);
-    if(PARAMETER_NAME == "RG_PU" or "GROUNDING RESISTANCE")
+    if(PARAMETER_NAME == "RG_PU" or PARAMETER_NAME == "GROUNDING RESISTANCE")
         return wt_generator->set_grounding_resistance_in_pu(value);
-    if(PARAMETER_NAME == "XG_PU" or "GROUNDING REACTANCE")
+    if(PARAMETER_NAME == "XG_PU" or PARAMETER_NAME == "GROUNDING REACTANCE")
         return wt_generator->set_grounding_reactance_in_pu(value);
 
     show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);

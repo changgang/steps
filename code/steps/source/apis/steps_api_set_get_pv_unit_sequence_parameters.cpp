@@ -52,6 +52,7 @@ double api_get_pv_unit_sequence_float_data(unsigned int bus, char* identifier, c
         return abs(pv_unit->get_zero_sequence_complex_current_in_kA());
 
     show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
+    return 0.0;
 }
 void api_set_pv_unit_sequence_float_data(unsigned int bus, char* identifier, char* parameter_name, double value, unsigned int toolkit_index)
 {

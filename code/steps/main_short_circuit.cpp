@@ -14,16 +14,8 @@ int main()
     PSSE_IMEXPORTER importer(default_toolkit);
     importer.set_supplement_sequence_model_from_dynamic_model_logic(false);
 
-//    importer.load_powerflow_data("../../../bench/IEEE9.raw");
-//    importer.load_sequence_data("../../../bench/IEEE9.seq");
- //   importer.load_dynamic_data("../../../bench/IEEE9_detail.dyr");
-
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_sequence_data("../../../bench/IEEE39.seq");
-
-//    importer.load_powerflow_data("../../../bench/example_grid.raw");
-//    importer.load_sequence_data("../../../bench/example_grid.seq");
-
 
     POWERFLOW_SOLVER solver(default_toolkit);
     solver.set_max_iteration(30);
@@ -32,9 +24,7 @@ int main()
     solver.set_flat_start_logic(false);
     solver.set_transformer_tap_adjustment_logic(true);
 
-    solver.solve_with_fast_decoupled_solution();
-    //solver.solve_with_full_Newton_Raphson_solution();
-    solver.show_powerflow_result();
+    solver.solve_with_fast_decoupled_solution();    solver.show_powerflow_result();
     solver.save_network_Y_matrix_to_file("pf_matrix_steps.csv");
     solver.save_bus_powerflow_result_to_file("pf_bus_result.csv");
 
@@ -44,39 +34,11 @@ int main()
     sc_solver.set_coordinates_of_currents_and_voltages(RECTANGULAR);
     sc_solver.set_consider_load_logic(true);
     sc_solver.set_consider_motor_load_logic(true);
-//    sc_solver.set_option_of_DC_lines(CONVERT_TO_CONSTANT_ADMITTANCE_LOAD);
     sc_solver.set_option_of_DC_lines(BLOCK_AND_IGNORE);
 
 
-//    DEVICE_ID did = get_ac_line_device_id(1, 2, "1");
-//    sc_solver.set_ac_line_fault(did, 1, 0.3, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
-
-
-//    sc_solver.set_bus_fault(6, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
-//    sc_solver.solve();
-//    sc_solver.show_short_circuit_result();
-//
-//    sc_solver.clear_fault();
-//    sc_solver.set_bus_fault(7, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
-//    sc_solver.solve();
-//    sc_solver.show_short_circuit_result();
-//
-//    sc_solver.clear_fault();
-//    sc_solver.set_bus_fault(8, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
-//    sc_solver.solve();
-//    sc_solver.show_short_circuit_result();
-
-//    importer.export_sequence_data("IEEE9.seq");
-//
-//    sc_solver.save_positive_sequence_Y_matrix_to_file("positive_sequence_Y.csv");
-//    sc_solver.save_negative_sequence_Y_matrix_to_file("negative_sequence_Y.csv");
-//    sc_solver.save_zero_sequence_Y_matrix_to_file("zero_sequence_Y.csv");
-//    sc_solver.save_short_circuit_result_to_file("short_circuit_result.csv");
-//    sc_solver.save_extended_short_circuit_result_to_file("extended_short_circuit_result.csv");
-
-
     sc_solver.set_max_iteration_cout_for_iterative_method(10);
-    sc_solver.set_voltage_threshold_for_iterative_method(0.001);
+    sc_solver.set_current_threshold_for_iterative_method(0.001);
 
     sc_solver.set_bus_fault(6, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
     sc_solver.solve_with_iteration();

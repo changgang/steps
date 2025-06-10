@@ -183,6 +183,17 @@ double api_get_source_float_data(unsigned int bus, char* identifier, char* param
         if(PARAMETER_NAME=="XSOURCE_PU" or PARAMETER_NAME=="SOURCE REACTANCE IN PU")
             return sourceptr->get_source_impedance_in_pu().imag();
 
+        if(PARAMETER_NAME=="KQ" or PARAMETER_NAME=="REACTIVE CURRENT INJECTION COEFFICIENT")
+            return sourceptr->get_support_coefficient_of_reactive_current_during_LVRT();
+
+        if(PARAMETER_NAME=="UMAX_OF_LVRT_IN_PU" or PARAMETER_NAME=="MAX VOLTAGE OF LVRT STRATEGY IN PU")
+            return sourceptr->get_max_voltage_of_LVRT_strategy_in_pu();
+
+        if(PARAMETER_NAME=="UMIN_OF_LVRT_IN_PU" or PARAMETER_NAME=="MIN VOLTAGE OF LVRT STRATEGY IN PU")
+            return sourceptr->get_min_voltage_of_LVRT_strategy_in_pu();
+
+        if(PARAMETER_NAME=="IMAX_OF_INVERTER_IN_PU" or PARAMETER_NAME=="MAX VOLTAGE OF LVRT STRATEGY IN PU")
+            return sourceptr->get_max_short_circuit_current_of_inverter_in_pu();
 
         if(PARAMETER_NAME=="FRAC1" or PARAMETER_NAME=="FRAC2" or PARAMETER_NAME=="FRAC3" or PARAMETER_NAME=="FRAC4")
             return get_owner_fraction_of_nonbus_device(sourceptr, parameter_name);
@@ -275,6 +286,18 @@ void api_set_source_float_data(unsigned int bus, char* identifier, char* paramet
 
         if(PARAMETER_NAME=="FRAC1" or PARAMETER_NAME=="FRAC2" or PARAMETER_NAME=="FRAC3" or PARAMETER_NAME=="FRAC4")
             return set_owner_fraction_of_nonbus_device(sourceptr, PARAMETER_NAME, value);
+
+        if(PARAMETER_NAME=="KQ" or PARAMETER_NAME=="REACTIVE CURRENT INJECTION COEFFICIENT")
+            return sourceptr->set_support_coefficient_of_reactive_current_during_LVRT(value);
+
+        if(PARAMETER_NAME=="UMAX_OF_LVRT_IN_PU" or PARAMETER_NAME=="MAX VOLTAGE OF LVRT STRATEGY IN PU")
+            return sourceptr->set_max_voltage_of_LVRT_strategy_in_pu(value);
+
+        if(PARAMETER_NAME=="UMIN_OF_LVRT_IN_PU" or PARAMETER_NAME=="MIN VOLTAGE OF LVRT STRATEGY IN PU")
+            return sourceptr->set_min_voltage_of_LVRT_strategy_in_pu(value);
+
+        if(PARAMETER_NAME=="IMAX_OF_INVERTER_IN_PU" or PARAMETER_NAME=="MAX VOLTAGE OF LVRT STRATEGY IN PU")
+            return sourceptr->set_max_short_circuit_current_of_inverter_in_pu(value);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, sourceptr->get_device_id(), __FUNCTION__);
     }

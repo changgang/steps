@@ -37,6 +37,30 @@ void api_save_zero_sequence_network_Y_matrix(char* file, unsigned int toolkit_in
     network_matrix.save_zero_sequence_Y_matrix_to_file(file);
 }
 
+void api_save_positive_sequence_network_Z_matrix(char* file, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.save_positive_sequence_Z_matrix_to_file(file);
+}
+
+void api_save_negative_sequence_network_Z_matrix(char* file, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.save_negative_sequence_Z_matrix_to_file(file);
+}
+
+void api_save_zero_sequence_network_Z_matrix(char* file, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.save_zero_sequence_Z_matrix_to_file(file);
+}
+
 void api_set_short_circuit_solver_integer_parameter(char* parameter_name, int value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
@@ -100,6 +124,14 @@ void api_set_short_circuit_solver_integer_parameter(char* parameter_name, int va
             return;
         }
     }
+    else if(PARAMETER_NAME=="MAX_ITER_COUNT" or PARAMETER_NAME=="MAX ITER COUNT")
+    {
+        if(value>0)
+        {
+            solver.set_max_iteration_cout_for_iterative_method(value);
+            return;
+        }
+    }
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for short circuit solver with api %s.\n",
              PARAMETER_NAME.c_str(), __FUNCTION__);
@@ -128,6 +160,12 @@ unsigned int api_get_short_circuit_solver_integer_parameter(char* parameter_name
     if(PARAMETER_NAME=="OPTION OF DC LINES")
         return solver.get_option_of_DC_lines();
 
+    if(PARAMETER_NAME=="MAX_ITER_COUNT" or PARAMETER_NAME=="MAX ITER COUNT")
+        return solver.get_max_iteration_count_for_iterative_method();
+
+    if(PARAMETER_NAME=="ITERATION_COUNT" or PARAMETER_NAME=="ITER COUNT")
+        return solver.get_iteration_count();
+
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for short circuit solver with api %s.\n"
              "0 will be returned.", PARAMETER_NAME.c_str(), __FUNCTION__);
@@ -142,6 +180,23 @@ void api_set_short_circuit_solver_float_parameter(char* parameter_name, double v
 
     string PARAMETER_NAME = string2upper(parameter_name);
 
+    if(PARAMETER_NAME=="CURRENT THRESHOLD")
+    {
+        if(value>0.0)
+        {
+            solver.set_current_threshold_for_iterative_method(value);
+            return;
+        }
+    }
+    if(PARAMETER_NAME=="ITERATION FACTOR" or PARAMETER_NAME=="ITER FACTOR")
+    {
+        if(value>0.0)
+        {
+            solver.set_iteration_factor(value);
+            return;
+        }
+    }
+
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for short circuit solver with api %s.\n",
              PARAMETER_NAME.c_str(), __FUNCTION__);
@@ -155,6 +210,11 @@ double api_get_short_circuit_solver_float_parameter(char* parameter_name, unsign
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
 
     string PARAMETER_NAME = string2upper(parameter_name);
+
+    if(PARAMETER_NAME=="CURRENT THRESHOLD")
+        return solver.get_current_threshold_for_iterative_method();
+    if(PARAMETER_NAME=="ITERATION FACTOR" or PARAMETER_NAME=="ITER FACTOR")
+        return solver.get_iteration_factor();
 
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for short circuit solver with api %s.\n"
@@ -180,6 +240,16 @@ void api_set_short_circuit_solver_boolean_parameter(char* parameter_name, bool v
         solver.set_consider_motor_load_logic(value);
         return;
     }
+    if(PARAMETER_NAME=="EXPORT DETAILED ITERATION LOGIC")
+    {
+        solver.set_export_detailed_iteration_log_logic(value);
+        return;
+    }
+    if(PARAMETER_NAME=="CONSIDER NEGATIVE SEQUENCE SUPPORT OF RES LOGIC")
+    {
+        solver.set_consider_negative_sequence_support_of_RES_logic(value);
+        return;
+    }
 
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for short circuit solver with api %s.\n",
@@ -197,12 +267,18 @@ bool api_get_short_circuit_solver_boolean_parameter(char* parameter_name, unsign
         return solver.get_consider_load_logic();
     if(PARAMETER_NAME=="CONSIDER MOTOR LOAD LOGIC")
         return solver.get_consider_motor_load_logic();
+    if(PARAMETER_NAME=="CONVERGENCE FLAG")
+        return solver.get_convergence_flag();
+    if(PARAMETER_NAME=="EXPORT DETAILED ITERATION LOGIC")
+        return solver.get_export_detailed_iteration_log_logic();
+    if(PARAMETER_NAME=="CONSIDER NEGATIVE SEQUENCE SUPPORT OF RES LOGIC")
+        return solver.get_consider_negative_sequence_support_of_RES_logic();
 
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for short circuit solver with api %s.\n"
              "0.0 will be returned.", PARAMETER_NAME.c_str(), __FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(buffer);
-    return 0.0;
+    return false;
 }
 
 void api_short_circuit_set_bus_fault(unsigned int bus, char* fault_type, double fault_G, double fault_B, unsigned int toolkit_index)
@@ -288,11 +364,78 @@ void api_short_circuit_clear_fault(unsigned int toolkit_index)
     solver.clear_fault();
 }
 
+void api_short_circuit_build_positive_sequence_network_Y_matrix(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.build_positive_sequence_network_Y_matrix();
+}
+
+void api_short_circuit_build_negative_sequence_network_Y_matrix(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.build_negative_sequence_network_Y_matrix();
+}
+
+void api_short_circuit_build_zero_sequence_network_Y_matrix(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.build_zero_sequence_network_Y_matrix();
+}
+
+void api_short_circuit_build_positive_sequence_network_Z_matrix(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.build_positive_sequence_network_Z_matrix();
+}
+void api_short_circuit_build_negative_sequence_network_Z_matrix(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.build_negative_sequence_network_Z_matrix();
+}
+void api_short_circuit_build_zero_sequence_network_Z_matrix(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.build_zero_sequence_network_Z_matrix();
+}
+
+void api_short_circuit_update_internal_voltage(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    solver.update_internal_voltage_of_all_generators_and_wt_generators();
+}
+
 void api_solve_short_circuit(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
     solver.solve();
+}
+
+void api_solve_short_circuit_with_iteration(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    solver.solve_with_iteration();
+}
+
+void api_short_circuit_current_scanning(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    solver.short_circuit_current_scanning();
 }
 
 double api_get_short_circuit_result_float_data(char* parameter_name, unsigned int toolkit_index)
@@ -359,7 +502,6 @@ double api_get_short_circuit_result_float_data(char* parameter_name, unsigned in
     if(PARAMETER_NAME=="X0_PU" or PARAMETER_NAME=="ZERO SEQUENCE EQUIVALENT X IN PU")
         return solver.get_zero_sequence_thevenin_impedance_at_fault_in_pu().imag();
 
-
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for short circuit result with api %s.\n"
              "0.0 will be returned.", PARAMETER_NAME.c_str(), __FUNCTION__);
@@ -388,4 +530,18 @@ void api_save_extended_short_circuit_result_to_file(char* file, unsigned int too
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
     solver.save_extended_short_circuit_result_to_file(file);
 }
+double api_get_short_circuit_ratio_of_HVDC(unsigned int hvdc_bus, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    double Kmscr = solver.get_short_circuit_ratio_of_HVDC(hvdc_bus);
+    return Kmscr;
+}
 
+double api_get_short_circuit_ratio_of_RES(unsigned int res_bus, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    double Kmrscr = solver.get_short_circuit_ratio_of_HVDC(res_bus);
+    return Kmrscr;
+}

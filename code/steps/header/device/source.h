@@ -33,6 +33,7 @@ class SOURCE : public NONBUS_DEVICE
         void set_max_voltage_of_LVRT_strategy_in_pu(double v);
         void set_min_voltage_of_LVRT_strategy_in_pu(double v);
         void set_max_short_circuit_current_of_inverter_in_pu(double I);
+        void set_support_coefficient_of_neg_seq_current(double c);
 
 
         unsigned int get_source_bus() const;
@@ -56,6 +57,7 @@ class SOURCE : public NONBUS_DEVICE
         double get_max_voltage_of_LVRT_strategy_in_pu() const;
         double get_min_voltage_of_LVRT_strategy_in_pu() const;
         double get_max_short_circuit_current_of_inverter_in_pu() const;
+        double get_support_coefficient_of_neg_seq_current() const;
 
         virtual bool is_valid() const;
         virtual void check();
@@ -76,8 +78,6 @@ class SOURCE : public NONBUS_DEVICE
 
         virtual complex<double> get_complex_internal_voltage_in_pu_in_xy_axis() const = 0;
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power() = 0;
-
-        complex<double> get_complex_current_in_pu_during_LVRT();
     private:
         unsigned int source_identifier_index;
         double p_generation_MW, q_generation_MVar;
@@ -98,5 +98,7 @@ class SOURCE : public NONBUS_DEVICE
                 max_voltage_of_LVRT_strategy_in_pu,
                 min_voltage_of_LVRT_strategy_in_pu,
                 max_short_circuit_current_of_inverter_in_pu;
+
+        double support_coefficient_of_neg_seq_current;
 };
 #endif // SOURCE_H

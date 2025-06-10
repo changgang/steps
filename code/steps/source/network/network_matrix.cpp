@@ -3303,6 +3303,16 @@ void NETWORK_MATRIX::add_2t_lcc_hvdc_to_positive_sequence_network(const LCC_HVDC
         double P_inverter = hvdc.get_converter_ac_active_power_in_MW(INVERTER);
         double Q_rectifier = hvdc.get_converter_ac_reactive_power_in_MVar(RECTIFIER);
         double Q_inverter = hvdc.get_converter_ac_reactive_power_in_MVar(INVERTER);
+        if(P_rectifier<DOUBLE_EPSILON)
+        {
+            P_rectifier = hvdc.get_nominal_dc_power_in_MW();
+            Q_rectifier = 0.0;
+        }
+        if(P_inverter<DOUBLE_EPSILON)
+        {
+            P_inverter = hvdc.get_nominal_dc_power_in_MW();
+            Q_inverter = 0.0;
+        }
         complex<double> S_rectifier = complex<double>(P_rectifier, Q_rectifier);
         complex<double> S_inverter = complex<double>(-P_inverter, Q_inverter);
 
@@ -5199,6 +5209,135 @@ void NETWORK_MATRIX::save_zero_sequence_Y_matrix_to_file(const string& filename)
     {
         osstream<<"File '"<<filename<<"' cannot be opened for saving zero sequence network matrix to file."<<endl
           <<"No zero sequence network matrix will be exported.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void NETWORK_MATRIX::save_positive_sequence_Z_matrix_to_file(const string& filename)
+{
+        ostringstream osstream;
+
+    ofstream file(filename);
+    if(file.is_open())
+    {
+        file<<"ROW,ROW_BUS,COLUMN,COLUMN_BUS,REAL,IMAGINARY"<<endl;
+
+        unsigned int i, ibus, jbus;
+        unsigned int n = network_Z1_matrix.get_matrix_size();
+        int k_starting, k_ending;
+        k_starting = 0;
+        complex<double> z;
+        char buffer[1000];
+        for(unsigned int j=0; j!=n; ++j)
+        {
+            k_ending = network_Z1_matrix.get_starting_index_of_column(j+1);
+            for(int k=k_starting; k!=k_ending; ++k)
+            {
+                z = network_Z1_matrix.get_entry_value(k);
+                i = network_Z1_matrix.get_row_number_of_entry_index(k);
+                ibus = get_physical_bus_number_of_internal_bus(i);
+                jbus = get_physical_bus_number_of_internal_bus(j);
+
+                if(z.real()!=INFINITE_THRESHOLD and z.imag()!=INFINITE_THRESHOLD)
+                {
+                    snprintf(buffer, 1000, "%u,%u,%u,%u,%.14f,%.14f",i, ibus, j, jbus, z.real(), z.imag());
+                    file<<buffer<<endl;
+                }
+            }
+            k_starting = k_ending;
+        }
+        file.close();
+    }
+    else
+    {
+        osstream<<"File '"<<filename<<"' cannot be opened for saving positive sequence network Z matrix to file."<<endl
+          <<"No network Z matrix will be exported.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void NETWORK_MATRIX::save_negative_sequence_Z_matrix_to_file(const string& filename)
+{
+    ostringstream osstream;
+
+    ofstream file(filename);
+    if(file.is_open())
+    {
+        file<<"ROW,ROW_BUS,COLUMN,COLUMN_BUS,REAL,IMAGINARY"<<endl;
+
+        unsigned int i, ibus, jbus;
+        unsigned int n = network_Z2_matrix.get_matrix_size();
+        int k_starting, k_ending;
+        k_starting = 0;
+        complex<double> z;
+        char buffer[1000];
+        for(unsigned int j=0; j!=n; ++j)
+        {
+            k_ending = network_Z2_matrix.get_starting_index_of_column(j+1);
+            for(int k=k_starting; k!=k_ending; ++k)
+            {
+                z = network_Z2_matrix.get_entry_value(k);
+                i = network_Z2_matrix.get_row_number_of_entry_index(k);
+                ibus = get_physical_bus_number_of_internal_bus(i);
+                jbus = get_physical_bus_number_of_internal_bus(j);
+
+                if(z.real()!=INFINITE_THRESHOLD and z.imag()!=INFINITE_THRESHOLD)
+                {
+                    snprintf(buffer, 1000, "%u,%u,%u,%u,%.14f,%.14f",i, ibus, j, jbus, z.real(), z.imag());
+                    file<<buffer<<endl;
+                }
+            }
+            k_starting = k_ending;
+        }
+        file.close();
+    }
+    else
+    {
+        osstream<<"File '"<<filename<<"' cannot be opened for saving negative sequence network Z matrix to file."<<endl
+          <<"No network Z matrix will be exported.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void NETWORK_MATRIX::save_zero_sequence_Z_matrix_to_file(const string& filename)
+{
+    ostringstream osstream;
+
+    ofstream file(filename);
+    if(file.is_open())
+    {
+        file<<"ROW,ROW_BUS,COLUMN,COLUMN_BUS,REAL,IMAGINARY"<<endl;
+
+        unsigned int i, ibus, jbus;
+        unsigned int n = network_Z0_matrix.get_matrix_size();
+        int k_starting, k_ending;
+        k_starting = 0;
+        complex<double> z;
+        char buffer[1000];
+        for(unsigned int j=0; j!=n; ++j)
+        {
+            k_ending = network_Z0_matrix.get_starting_index_of_column(j+1);
+            for(int k=k_starting; k!=k_ending; ++k)
+            {
+                z = network_Z0_matrix.get_entry_value(k);
+                i = network_Z0_matrix.get_row_number_of_entry_index(k);
+                ibus = get_physical_bus_number_of_internal_bus(i);
+                jbus = get_physical_bus_number_of_internal_bus(j);
+
+                if(z.real()!=INFINITE_THRESHOLD and z.imag()!=INFINITE_THRESHOLD)
+                {
+                    snprintf(buffer, 1000, "%u,%u,%u,%u,%.14f,%.14f",i, ibus, j, jbus, z.real(), z.imag());
+                    file<<buffer<<endl;
+                }
+            }
+            k_starting = k_ending;
+        }
+        file.close();
+    }
+    else
+    {
+        osstream<<"File '"<<filename<<"' cannot be opened for saving zero sequence network Z matrix to file."<<endl
+          <<"No network Z matrix will be exported.";
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }

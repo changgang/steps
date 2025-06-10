@@ -263,6 +263,7 @@ string PSSE_IMEXPORTER::export_generator_sequence_data(const GENERATOR* generato
     osstream<<right
             <<setw(8)<<bus<<", "
             <<setw(6)<<("\""+ickt+"\"")<<", "
+            <<setw(4)<<"0"<<", "
             <<setw(12)<<setprecision(6)<<fixed<<generator->get_positive_sequence_resistance_in_pu()<<", "
             <<setw(12)<<setprecision(6)<<fixed<<generator->get_positive_sequence_subtransient_reactance_in_pu()<<", "
             <<setw(12)<<setprecision(6)<<fixed<<generator->get_positive_sequence_transient_reactance_in_pu()<<", "
@@ -273,8 +274,7 @@ string PSSE_IMEXPORTER::export_generator_sequence_data(const GENERATOR* generato
             <<setw(12)<<setprecision(6)<<fixed<<generator->get_zero_sequence_reactance_in_pu()<<", "
             <<setw(4)<<"1"<<", "
             <<setw(12)<<setprecision(6)<<fixed<<generator->get_grounding_resistance_in_pu()<<", "
-            <<setw(12)<<setprecision(6)<<fixed<<generator->get_grounding_reactance_in_pu()<<", "
-            <<setw(4)<<"0"
+            <<setw(12)<<setprecision(6)<<fixed<<generator->get_grounding_reactance_in_pu()
             <<endl;
 
     return osstream.str();
@@ -302,6 +302,8 @@ string PSSE_IMEXPORTER::export_wt_generator_sequence_data(const WT_GENERATOR* wt
     osstream<<right
             <<setw(8)<<bus<<", "
             <<setw(6)<<("\""+ickt+"\"")<<", "
+            <<setw(4)<<"1"<<", "
+            <<setw(4)<<"5"<<", "
             <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_positive_sequence_resistance_in_pu()<<", "
             <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_positive_sequence_subtransient_reactance_in_pu()<<", "
             <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_positive_sequence_transient_reactance_in_pu()<<", "
@@ -313,7 +315,10 @@ string PSSE_IMEXPORTER::export_wt_generator_sequence_data(const WT_GENERATOR* wt
             <<setw(4)<<"1"<<", "
             <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_grounding_resistance_in_pu()<<", "
             <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_grounding_reactance_in_pu()<<", "
-            <<setw(4)<<"1"
+            <<setw(6)<<setprecision(2)<<fixed<<wt_generator->get_support_coefficient_of_reactive_current_during_LVRT()<<", "
+            <<setw(6)<<setprecision(2)<<fixed<<wt_generator->get_max_voltage_of_LVRT_strategy_in_pu()<<", "
+            <<setw(6)<<setprecision(2)<<fixed<<wt_generator->get_min_voltage_of_LVRT_strategy_in_pu()<<", "
+            <<setw(6)<<setprecision(2)<<fixed<<wt_generator->get_max_short_circuit_current_of_inverter_in_pu()
             <<endl;
 
     return osstream.str();

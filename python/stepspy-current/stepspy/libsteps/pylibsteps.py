@@ -692,6 +692,10 @@ def load_library(libsteps_file):
     libsteps.api_save_short_circuit_result_to_file.argtypes = (c_char_p, c_uint)
     libsteps.api_save_extended_short_circuit_result_to_file.restype = None
     libsteps.api_save_extended_short_circuit_result_to_file.argtypes = (c_char_p, c_uint)
+    libsteps.api_get_short_circuit_ratio_of_HVDC.restype = (c_double)
+    libsteps.api_get_short_circuit_ratio_of_HVDC.argtypes = (c_uint, c_uint)
+    libsteps.api_get_short_circuit_ratio_of_RES.restype = (c_double)
+    libsteps.api_get_short_circuit_ratio_of_RES.argtypes = (c_uint, c_uint)
 
     libsteps.api_short_circuit_set_bus_fault.restype = None
     libsteps.api_short_circuit_set_bus_fault.argtypes = (c_uint, c_char_p, c_double, c_double, c_uint)

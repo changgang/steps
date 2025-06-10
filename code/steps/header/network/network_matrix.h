@@ -101,6 +101,9 @@ class NETWORK_MATRIX
         void save_positive_sequence_Y_matrix_to_file(const string& filename);
         void save_negative_sequence_Y_matrix_to_file(const string& filename);
         void save_zero_sequence_Y_matrix_to_file(const string& filename);
+        void save_positive_sequence_Z_matrix_to_file(const string& filename);
+        void save_negative_sequence_Z_matrix_to_file(const string& filename);
+        void save_zero_sequence_Z_matrix_to_file(const string& filename);
 
         unsigned int get_memory_usage_in_bytes();
     private:
@@ -152,13 +155,6 @@ class NETWORK_MATRIX
 
         void add_vsc_hvdcs_to_dynamic_network();
         void add_vsc_hvdc_to_dynamic_network(const VSC_HVDC& vsc_hvdc);
-
-//        void add_ac_lines_to_sequence_network();
-//        void add_faulted_ac_line_to_sequence_network(const AC_LINE& line);
-//        void add_generators_to_sequence_network();
-//        void add_generator_to_sequence_network(const GENERATOR& gen);
-//        void add_wt_generators_to_sequence_network();
-//        void add_wt_generator_to_sequence_network(const WT_GENERATOR& gen);
 
         void add_ac_lines_to_positive_sequence_network();
         void add_faulted_ac_line_to_positive_sequence_network(const AC_LINE& line);

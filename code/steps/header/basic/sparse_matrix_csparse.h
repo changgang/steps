@@ -74,9 +74,9 @@ private:
     cs     *matrix_imag; // imaginary components , not used for real matrix
     csn    *LU;
     css    *LU_symbolic;
-    double *LU_workspace;
-    double* bb;
-    unsigned int bb_size;
+    // double *LU_workspace;
+    // double* bb;
+    // unsigned int bb_size;
 
     bool add_entry_callled;
 };

@@ -29,8 +29,16 @@ class SHORT_CIRCUIT_SOLVER
         COORDINATES_OPTION get_coordinates_of_currents_and_voltages();
         void set_max_iteration_cout_for_iterative_method(unsigned int n);
         unsigned int get_max_iteration_count_for_iterative_method();
-        void set_voltage_threshold_for_iterative_method(double threshold);
-        double get_voltage_threshold_for_iterative_method();
+        void set_current_threshold_for_iterative_method(double threshold);
+        double get_current_threshold_for_iterative_method();
+        void set_export_detailed_iteration_log_logic(bool logic);
+        bool get_export_detailed_iteration_log_logic();
+        void set_iteration_factor(double f);
+        double get_iteration_factor();
+        void set_consider_negative_sequence_support_of_RES_logic(bool logic);
+        bool get_consider_negative_sequence_support_of_RES_logic();
+        void set_HVDC_block_threshold_in_pu(double t);
+        double get_HVDC_block_threshold_in_pu();
 
         void set_consider_load_logic(bool logic);
         bool get_consider_load_logic();
@@ -48,6 +56,7 @@ class SHORT_CIRCUIT_SOLVER
         FAULT_TYPE get_fault_type();
 
         void build_sequence_network();
+        void update_internal_voltage_of_all_generators_and_wt_generators();
 
         complex<double> get_positive_sequence_thevenin_impedance_at_fault_in_pu();
         complex<double> get_negative_sequence_thevenin_impedance_at_fault_in_pu();
@@ -75,8 +84,29 @@ class SHORT_CIRCUIT_SOLVER
 
         void solve();
         void solve_with_iteration();
+        void solve_with_iteration_considering_positive_sequence_support_of_RES();
+        void solve_with_iteration_considering_positive_and_negative_sequence_support_of_RES();
+
+        void short_circuit_current_scanning();
+        vector<vector<complex<double> > > get_positive_seq_mutual_impedances_between_internal_buses_to_wtg_buses();
+        vector<vector<complex<double> > > get_negative_seq_mutual_impedances_between_internal_buses_to_wtg_buses();
+        vector<vector<complex<double> > > get_positive_seq_mutual_impedances_between_internal_buses_to_pvu_buses();
+        vector<vector<complex<double> > > get_negative_seq_mutual_impedances_between_internal_buses_to_pvu_buses();
+        vector<vector<complex<double> > > get_positive_seq_impedance_matrix();
+        STEPS_SPARSE_MATRIX get_jacobian_matrix_from_positive_seq_Y_matrix();
+        STEPS_SPARSE_MATRIX get_jacobian_matrix_from_negative_seq_Y_matrix();
+
+        vector<complex<double> > get_initial_positive_sequence_injection_current_vector_for_iteration();
+        vector<complex<double> > get_initial_negative_sequence_injection_current_vector_for_iteration();
+        void update_bus_sequence_voltage_after_iteration_considering_positive_sequence_support_of_RES();
+        void update_bus_sequence_voltage_after_iteration_considering_positive_and_negative_sequence_support_of_RES();
 
         complex<double> get_initial_voltage_of_fault_location_before_short_circuit();
+
+        void set_iteration_count(unsigned int c);
+        unsigned int get_iteration_count();
+        void set_convergence_flag(bool flag);
+        bool get_convergence_flag();
 
         void show_short_circuit_result();
         void save_short_circuit_result_to_file(const string& filename);
@@ -88,6 +118,9 @@ class SHORT_CIRCUIT_SOLVER
         void save_positive_sequence_Y_matrix_to_file(const string& filename);
         void save_negative_sequence_Y_matrix_to_file(const string& filename);
         void save_zero_sequence_Y_matrix_to_file(const string& filename);
+
+        double get_short_circuit_ratio_of_HVDC(unsigned int hvdc_bus);
+        double get_short_circuit_ratio_of_RES(unsigned int res_bus);
     private:
         void store_bus_initial_voltage_before_short_circuit();
         void restore_bus_initial_voltage();
@@ -95,7 +128,6 @@ class SHORT_CIRCUIT_SOLVER
         complex<double> get_initial_voltage_of_bus_before_short_circuit(unsigned int bus);
         complex<double> get_initial_voltage_of_faulted_ac_line_point_before_short_circuit();
 
-        void update_internal_voltage_of_all_generators_and_wt_generators();
         void update_internal_voltage_of_all_generators();
         void update_internal_voltage_of_all_wt_generators();
         void update_all_motor_load_data();
@@ -177,8 +209,13 @@ class SHORT_CIRCUIT_SOLVER
 
         vector<complex<double> > injection_current_vector_with_internal_order;
 
-        unsigned int max_iteration_count;
-        double voltage_threshold_in_pu_for_iterative_method;
+        unsigned int max_iteration_count, iteration_count;
+        double current_threshold_in_pu_for_iterative_method;
+        bool convergence_flag;
+        bool detailed_iter_log_enabled;
+        double iteration_factor;
+        bool consider_negative_sequence_support_of_RES_logic;
+        double HVDC_block_threshold_in_pu;
 };
 
 #endif // SHORT_CIRCUIT_SOLVER_H
