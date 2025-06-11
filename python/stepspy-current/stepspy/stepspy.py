@@ -4267,6 +4267,17 @@ class STEPS():
         global STEPS_LIB
         STEPS_LIB.api_solve_short_circuit(self.toolkit_index)
         return
+    
+    def solve_short_circuit_with_iteration(self):
+        """
+        Solve short circuit with iteration.
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_solve_short_circuit_with_iteration(self.toolkit_index)
+        return
 
     def set_short_circuit_bus_fault(self, bus, fault_type, fault_shunt):
         """
@@ -4328,7 +4339,19 @@ class STEPS():
             simulator.clear_short_circuit_fault()	
         """	
         global STEPS_LIB	
-        STEPS_LIB.api_short_circuit_clear_fault(self.toolkit_index)	
+        STEPS_LIB.api_short_circuit_clear_fault(self.toolkit_index)
+        return
+
+    def short_circuit_current_scanning(self):	
+        """	
+        Short circuit current scanning.
+        Args:N/A	
+        Rets: N/A	
+        Example:	
+            simulator.short_circuit_current_scanning()	
+        """	
+        global STEPS_LIB	
+        STEPS_LIB.api_short_circuit_current_scanning(self.toolkit_index)
         return
 
     def get_short_circuit_result_data(self, par_type, par_name):
@@ -4407,8 +4430,7 @@ class STEPS():
         Example: N/A
         """
         global STEPS_LIB
-        STEPS_LIB.api_get_short_circuit_ratio_of_HVDC(hvdc_bus, self.toolkit_index)
-        return
+        return STEPS_LIB.api_get_short_circuit_ratio_of_HVDC(hvdc_bus, self.toolkit_index)
 
     def get_short_circuit_ratio_of_RES(self, res_bus):
         """
@@ -4419,8 +4441,7 @@ class STEPS():
         Example: N/A
         """
         global STEPS_LIB
-        STEPS_LIB.api_get_short_circuit_ratio_of_RES(res_bus, self.toolkit_index)
-        return
+        return STEPS_LIB.api_get_short_circuit_ratio_of_RES(res_bus, self.toolkit_index)
         
     def load_dynamic_data(self, file, ftype):
         """

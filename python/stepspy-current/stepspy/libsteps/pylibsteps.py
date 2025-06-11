@@ -684,6 +684,8 @@ def load_library(libsteps_file):
 
     libsteps.api_solve_short_circuit.restype = None
     libsteps.api_solve_short_circuit.argtypes = (c_uint, )
+    libsteps.api_solve_short_circuit_with_iteration.restype = None
+    libsteps.api_solve_short_circuit_with_iteration.argtypes = (c_uint, )
     libsteps.api_get_short_circuit_result_float_data.restype = (c_double)
     libsteps.api_get_short_circuit_result_float_data.argtypes = (c_char_p, c_uint)
     libsteps.api_show_short_circuit_result.restype = None
@@ -702,7 +704,9 @@ def load_library(libsteps_file):
     libsteps.api_short_circuit_set_line_fault.restype = None
     libsteps.api_short_circuit_set_line_fault.argtypes = (c_uint, c_uint, c_char_p, c_char_p, c_double, c_double, c_double, c_uint)
     libsteps.api_short_circuit_clear_fault.restype = None	
-    libsteps.api_short_circuit_clear_fault.argtype = (c_uint)
+    libsteps.api_short_circuit_clear_fault.argtypes = (c_uint, )
+    libsteps.api_short_circuit_current_scanning.restype = None	
+    libsteps.api_short_circuit_current_scanning.argtypes = (c_uint, )
 
     libsteps.api_get_dynamic_simulator_integer_parameter.restype = (c_uint)
     libsteps.api_get_dynamic_simulator_integer_parameter.argtypes = (c_char_p, c_uint)
