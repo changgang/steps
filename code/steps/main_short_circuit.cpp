@@ -42,7 +42,7 @@ int main()
 
     sc_solver.set_bus_fault(6, SINGLE_PHASE_GROUNDED_FAULT, complex<double>(0.0, -1e3));
     sc_solver.solve_with_iteration();
-    sc_solver.show_short_circuit_result();
+    sc_solver.show_short_circuit_result_at_fault_point();
 
     return 0;
 }

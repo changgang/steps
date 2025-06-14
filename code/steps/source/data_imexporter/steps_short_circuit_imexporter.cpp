@@ -753,28 +753,28 @@ void STEPS_IMEXPORTER::load_pv_unit_LVRT_data_for_iterative_method(PV_UNIT& pv_u
         Kq = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    pv_unit.set_support_coefficient_of_reactive_current_during_LVRT(Kq);
+    pv_unit.set_support_coefficient_of_converter_reactive_current_during_LVRT(Kq);
 
     if(data.size()>0)
     {
         max_voltage_of_LVRT_in_pu = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    pv_unit.set_max_voltage_of_LVRT_strategy_in_pu(max_voltage_of_LVRT_in_pu);
+    pv_unit.set_max_voltage_of_converter_LVRT_strategy_in_pu(max_voltage_of_LVRT_in_pu);
 
     if(data.size()>0)
     {
         min_voltage_of_LVRT_in_pu = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    pv_unit.set_min_voltage_of_LVRT_strategy_in_pu(min_voltage_of_LVRT_in_pu);
+    pv_unit.set_min_voltage_of_converter_LVRT_strategy_in_pu(min_voltage_of_LVRT_in_pu);
 
     if(data.size()>0)
     {
         max_short_circuit_current_of_inverter_in_pu = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    pv_unit.set_max_short_circuit_current_of_inverter_in_pu(max_short_circuit_current_of_inverter_in_pu);
+    pv_unit.set_max_allowed_short_circuit_current_of_converter_in_pu(max_short_circuit_current_of_inverter_in_pu);
 }
 
 
@@ -791,28 +791,28 @@ void STEPS_IMEXPORTER::load_wt_generator_LVRT_data_for_iterative_method(WT_GENER
         Kq = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    wt_generator.set_support_coefficient_of_reactive_current_during_LVRT(Kq);
+    wt_generator.set_support_coefficient_of_converter_reactive_current_during_LVRT(Kq);
 
     if(data.size()>0)
     {
         max_voltage_of_LVRT_in_pu = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    wt_generator.set_max_voltage_of_LVRT_strategy_in_pu(max_voltage_of_LVRT_in_pu);
+    wt_generator.set_max_voltage_of_converter_LVRT_strategy_in_pu(max_voltage_of_LVRT_in_pu);
 
     if(data.size()>0)
     {
         min_voltage_of_LVRT_in_pu = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    wt_generator.set_min_voltage_of_LVRT_strategy_in_pu(min_voltage_of_LVRT_in_pu);
+    wt_generator.set_min_voltage_of_converter_LVRT_strategy_in_pu(min_voltage_of_LVRT_in_pu);
 
     if(data.size()>0)
     {
         max_short_circuit_current_of_inverter_in_pu = get_double_data(data[n], "0.0");
         data.erase(data.begin());
     }
-    wt_generator.set_max_short_circuit_current_of_inverter_in_pu(max_short_circuit_current_of_inverter_in_pu);
+    wt_generator.set_max_allowed_short_circuit_current_of_converter_in_pu(max_short_circuit_current_of_inverter_in_pu);
 }
 
 void STEPS_IMEXPORTER::load_energy_storage_seq_data(ENERGY_STORAGE& estorage, vector<string>& data)

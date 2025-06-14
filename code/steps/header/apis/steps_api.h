@@ -358,6 +358,13 @@ EXPORT_STEPS_DLL void api_build_dc_network_B_matrix(unsigned int toolkit_index=I
 EXPORT_STEPS_DLL void api_build_dynamic_network_Y_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_build_network_Z_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_build_sequence_network_Y_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_build_positive_sequence_network_Y_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_build_negative_sequence_network_Y_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_build_zero_sequence_network_Y_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_build_sequence_network_Z_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_build_positive_sequence_network_Z_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_build_negative_sequence_network_Z_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_build_zero_sequence_network_Z_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void api_save_network_Y_matrix(char* file, bool export_full=false, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_decoupled_network_B_matrix(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
@@ -377,23 +384,17 @@ EXPORT_STEPS_DLL void api_set_short_circuit_solver_float_parameter(char* paramet
 EXPORT_STEPS_DLL double api_get_short_circuit_solver_float_parameter(char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_short_circuit_solver_boolean_parameter(char* parameter_name, bool value, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL bool api_get_short_circuit_solver_boolean_parameter(char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_short_circuit_set_bus_fault(unsigned int bus, char* fault_type, double fault_G, double fault_B, unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_short_circuit_set_line_fault(unsigned int ibus, unsigned int jbus, char* identifier, char* fault_type, double fault_location, double fault_G, double fault_B, unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_short_circuit_clear_fault(unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_short_circuit_build_positive_sequence_network_Y_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_short_circuit_build_negative_sequence_network_Y_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_short_circuit_build_zero_sequence_network_Y_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_short_circuit_build_positive_sequence_network_Z_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_short_circuit_build_negative_sequence_network_Z_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_short_circuit_build_zero_sequence_network_Z_matrix(unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_short_circuit_update_internal_voltage(unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_short_circuit_bus_fault(unsigned int bus, char* fault_type, double fault_G, double fault_B, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_short_circuit_line_fault(unsigned int ibus, unsigned int jbus, char* identifier, char* fault_type, double fault_location, double fault_G, double fault_B, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_clear_short_circuit_fault(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_solve_short_circuit(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_solve_short_circuit_with_iteration(unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_short_circuit_current_scanning(unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL double api_get_short_circuit_result_float_data(char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_show_short_circuit_result(unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_save_short_circuit_result_to_file(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_scan_short_circuit_current_of_all_buses(unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_short_circuit_value_at_fault_point(char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_show_short_circuit_result_at_fault_point(unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_save_short_circuit_result_at_fault_point_to_file(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_extended_short_circuit_result_to_file(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_short_circuit_capacity_at_bus_in_MVA(unsigned int bus, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_short_circuit_ratio_of_HVDC(unsigned int hvdc_bus, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_short_circuit_ratio_of_RES(unsigned int res_bus, unsigned int toolkit_index=INDEX_NOT_EXIST);
 

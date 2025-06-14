@@ -138,7 +138,7 @@ class WT_GENERATOR : public SOURCE
         complex<double> get_static_power_in_MVA() const;
         void update_motor_data();
 
-        complex<double> get_complex_dq_axis_current_in_pu_short_circuit_solver();
+        complex<double> get_complex_dq_axis_current_in_pu_for_short_circuit_solver();
         complex<double> get_positive_sequence_complex_injection_current_in_pu_for_short_circuit_solver();
         complex<double> get_negative_sequence_complex_injection_current_in_pu_for_short_circuit_solver();
     private:

@@ -634,6 +634,7 @@ void WT_GENERATOR::update_internal_voltage_for_short_circuit_solver()
             X = get_positive_sequence_transient_reactance_in_pu();
             break;
         case SYNCHRONOUS_REACTANCE:
+        default:
             X = get_positive_sequence_syncronous_reactance_in_pu();
             break;
     }
@@ -667,6 +668,7 @@ complex<double> WT_GENERATOR::get_positive_sequence_complex_current_in_pu()
             X = get_positive_sequence_transient_reactance_in_pu();
             break;
         case SYNCHRONOUS_REACTANCE:
+        default:
             X = get_positive_sequence_syncronous_reactance_in_pu();
             break;
     }
@@ -1083,22 +1085,21 @@ void WT_GENERATOR::update_motor_data()
     }
 }
 
-complex<double> WT_GENERATOR::get_complex_dq_axis_current_in_pu_short_circuit_solver()
+complex<double> WT_GENERATOR::get_complex_dq_axis_current_in_pu_for_short_circuit_solver()
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     BUS* busptr = psdb.get_bus(get_source_bus());
     double sbase = psdb.get_system_base_power_in_MVA();
 
-    double K = get_support_coefficient_of_reactive_current_during_LVRT();
-    double Vmax = get_max_voltage_of_LVRT_strategy_in_pu();
-    double Vmin = get_min_voltage_of_LVRT_strategy_in_pu();
-    double Imax = get_max_short_circuit_current_of_inverter_in_pu();
+    double K = get_support_coefficient_of_converter_reactive_current_during_LVRT();
+    double Vmax = get_max_voltage_of_converter_LVRT_strategy_in_pu();
+    double Vmin = get_min_voltage_of_converter_LVRT_strategy_in_pu();
+    double Imax = get_max_allowed_short_circuit_current_of_converter_in_pu();
 
     double V = busptr->get_positive_sequence_voltage_in_pu();
-    double deg_V = busptr->get_positive_sequence_angle_in_deg();
     double P = get_p_generation_in_MW()/sbase;
-    double Q = get_q_generation_in_MVar()/sbase;
+    //double Q = get_q_generation_in_MVar()/sbase;
     double mbase = get_mbase_in_MVA();
     double In = mbase/sbase;
 
@@ -1141,7 +1142,7 @@ complex<double> WT_GENERATOR::get_positive_sequence_complex_injection_current_in
     BUS* busptr = psdb.get_bus(get_source_bus());
     double deg_V = busptr->get_positive_sequence_angle_in_deg();
 
-    complex<double> Idq = get_complex_dq_axis_current_in_pu_short_circuit_solver();
+    complex<double> Idq = get_complex_dq_axis_current_in_pu_for_short_circuit_solver();
     double Id = Idq.real();
     double Iq = Idq.imag();
 
@@ -1166,16 +1167,16 @@ complex<double> WT_GENERATOR::get_negative_sequence_complex_injection_current_in
     double mbase = get_mbase_in_MVA();
     double In = mbase/sbase;
 
-    double Imax = get_max_short_circuit_current_of_inverter_in_pu();
+    double Imax = get_max_allowed_short_circuit_current_of_converter_in_pu();
 
-    complex<double> Idq = get_complex_dq_axis_current_in_pu_short_circuit_solver();
+    complex<double> Idq = get_complex_dq_axis_current_in_pu_for_short_circuit_solver();
     double Iq = Idq.imag();
 
     if(Iq<Imax*In)
     {
-        double Kneg = get_support_coefficient_of_neg_seq_current();
+        double Kneg = get_support_coefficient_of_converter_negative_sequence_current();
         double Vneg = busptr->get_negative_sequence_voltage_in_pu();
-        double neg_angle = busptr->get_negative_sequence_angle_in_deg();
+        //double neg_angle = busptr->get_negative_sequence_angle_in_deg();
 
         double Iq_neg = Kneg*Vneg;
         return complex<double> (0.0, -Iq_neg);

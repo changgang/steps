@@ -23,15 +23,6 @@ PV_PANEL_MODEL::~PV_PANEL_MODEL()
     ;
 }
 
-PV_PANEL_MODEL& PV_PANEL_MODEL::operator=(const PV_PANEL_MODEL& model)
-{
-    if(this==(&model))
-        return *this;
-
-    copy_from_const_model(model);
-    return *this;
-}
-
 void PV_PANEL_MODEL::copy_from_const_model(const PV_PANEL_MODEL& model)
 {
     set_toolkit(model.get_toolkit());

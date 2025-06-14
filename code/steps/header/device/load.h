@@ -145,7 +145,7 @@ class LOAD : public NONBUS_DEVICE
 
         bool has_motor_load() const;
 
-        void update_motor_load_data();
+        void update_motor_load_data_for_short_circuit_solver();
 
         void set_sequence_parameter_import_flag(bool flag);
         bool get_sequence_parameter_import_flag() const;

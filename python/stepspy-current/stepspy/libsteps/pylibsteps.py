@@ -657,12 +657,35 @@ def load_library(libsteps_file):
 
     libsteps.api_build_sequence_network_Y_matrix.restype = None
     libsteps.api_build_sequence_network_Y_matrix.argtypes = (c_uint, )
+    libsteps.api_build_positive_sequence_network_Y_matrix.restype = None
+    libsteps.api_build_positive_sequence_network_Y_matrix.argtypes = (c_uint, )
+    libsteps.api_build_negative_sequence_network_Y_matrix.restype = None
+    libsteps.api_build_negative_sequence_network_Y_matrix.argtypes = (c_uint, )
+    libsteps.api_build_zero_sequence_network_Y_matrix.restype = None
+    libsteps.api_build_zero_sequence_network_Y_matrix.argtypes = (c_uint, )
+
+    libsteps.api_build_sequence_network_Z_matrix.restype = None
+    libsteps.api_build_sequence_network_Z_matrix.argtypes = (c_uint, )
+    libsteps.api_build_positive_sequence_network_Z_matrix.restype = None
+    libsteps.api_build_positive_sequence_network_Z_matrix.argtypes = (c_uint, )
+    libsteps.api_build_negative_sequence_network_Z_matrix.restype = None
+    libsteps.api_build_negative_sequence_network_Z_matrix.argtypes = (c_uint, )
+    libsteps.api_build_zero_sequence_network_Z_matrix.restype = None
+    libsteps.api_build_zero_sequence_network_Z_matrix.argtypes = (c_uint, )
+
     libsteps.api_save_positive_sequence_network_Y_matrix.restype = None
     libsteps.api_save_positive_sequence_network_Y_matrix.argtypes = (c_char_p, c_uint)
     libsteps.api_save_negative_sequence_network_Y_matrix.restype = None
     libsteps.api_save_negative_sequence_network_Y_matrix.argtypes = (c_char_p, c_uint)
     libsteps.api_save_zero_sequence_network_Y_matrix.restype = None
     libsteps.api_save_zero_sequence_network_Y_matrix.argtypes = (c_char_p, c_uint)
+
+    libsteps.api_save_positive_sequence_network_Z_matrix.restype = None
+    libsteps.api_save_positive_sequence_network_Z_matrix.argtypes = (c_char_p, c_uint)
+    libsteps.api_save_negative_sequence_network_Z_matrix.restype = None
+    libsteps.api_save_negative_sequence_network_Z_matrix.argtypes = (c_char_p, c_uint)
+    libsteps.api_save_zero_sequence_network_Z_matrix.restype = None
+    libsteps.api_save_zero_sequence_network_Z_matrix.argtypes = (c_char_p, c_uint)
 
     libsteps.api_build_dynamic_network_Y_matrix.restype = None
     libsteps.api_build_dynamic_network_Y_matrix.argtypes = (c_uint, )
@@ -686,27 +709,29 @@ def load_library(libsteps_file):
     libsteps.api_solve_short_circuit.argtypes = (c_uint, )
     libsteps.api_solve_short_circuit_with_iteration.restype = None
     libsteps.api_solve_short_circuit_with_iteration.argtypes = (c_uint, )
-    libsteps.api_get_short_circuit_result_float_data.restype = (c_double)
-    libsteps.api_get_short_circuit_result_float_data.argtypes = (c_char_p, c_uint)
-    libsteps.api_show_short_circuit_result.restype = None
-    libsteps.api_show_short_circuit_result.argtypes = (c_uint, )
-    libsteps.api_save_short_circuit_result_to_file.restype = None
-    libsteps.api_save_short_circuit_result_to_file.argtypes = (c_char_p, c_uint)
+    libsteps.api_get_short_circuit_value_at_fault_point.restype = (c_double)
+    libsteps.api_get_short_circuit_value_at_fault_point.argtypes = (c_char_p, c_uint)
+    libsteps.api_show_short_circuit_result_at_fault_point.restype = None
+    libsteps.api_show_short_circuit_result_at_fault_point.argtypes = (c_uint, )
+    libsteps.api_save_short_circuit_result_at_fault_point_to_file.restype = None
+    libsteps.api_save_short_circuit_result_at_fault_point_to_file.argtypes = (c_char_p, c_uint)
     libsteps.api_save_extended_short_circuit_result_to_file.restype = None
     libsteps.api_save_extended_short_circuit_result_to_file.argtypes = (c_char_p, c_uint)
+    libsteps.api_get_short_circuit_capacity_at_bus_in_MVA.restype = (c_double)
+    libsteps.api_get_short_circuit_capacity_at_bus_in_MVA.argtypes = (c_uint, c_uint)
     libsteps.api_get_short_circuit_ratio_of_HVDC.restype = (c_double)
     libsteps.api_get_short_circuit_ratio_of_HVDC.argtypes = (c_uint, c_uint)
     libsteps.api_get_short_circuit_ratio_of_RES.restype = (c_double)
     libsteps.api_get_short_circuit_ratio_of_RES.argtypes = (c_uint, c_uint)
 
-    libsteps.api_short_circuit_set_bus_fault.restype = None
-    libsteps.api_short_circuit_set_bus_fault.argtypes = (c_uint, c_char_p, c_double, c_double, c_uint)
-    libsteps.api_short_circuit_set_line_fault.restype = None
-    libsteps.api_short_circuit_set_line_fault.argtypes = (c_uint, c_uint, c_char_p, c_char_p, c_double, c_double, c_double, c_uint)
-    libsteps.api_short_circuit_clear_fault.restype = None	
-    libsteps.api_short_circuit_clear_fault.argtypes = (c_uint, )
-    libsteps.api_short_circuit_current_scanning.restype = None	
-    libsteps.api_short_circuit_current_scanning.argtypes = (c_uint, )
+    libsteps.api_set_short_circuit_bus_fault.restype = None
+    libsteps.api_set_short_circuit_bus_fault.argtypes = (c_uint, c_char_p, c_double, c_double, c_uint)
+    libsteps.api_set_short_circuit_line_fault.restype = None
+    libsteps.api_set_short_circuit_line_fault.argtypes = (c_uint, c_uint, c_char_p, c_char_p, c_double, c_double, c_double, c_uint)
+    libsteps.api_clear_short_circuit_fault.restype = None	
+    libsteps.api_clear_short_circuit_fault.argtypes = (c_uint, )
+    libsteps.api_scan_short_circuit_current_of_all_buses.restype = None	
+    libsteps.api_scan_short_circuit_current_of_all_buses.argtypes = (c_uint, )
 
     libsteps.api_get_dynamic_simulator_integer_parameter.restype = (c_uint)
     libsteps.api_get_dynamic_simulator_integer_parameter.argtypes = (c_char_p, c_uint)

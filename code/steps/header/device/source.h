@@ -29,11 +29,11 @@ class SOURCE : public NONBUS_DEVICE
         void set_voltage_to_regulate_in_pu(double v_pu);
         void set_bus_to_regulate(unsigned int bus);
         void set_source_impedance_in_pu(const complex<double>& z_pu);
-        void set_support_coefficient_of_reactive_current_during_LVRT(double K);
-        void set_max_voltage_of_LVRT_strategy_in_pu(double v);
-        void set_min_voltage_of_LVRT_strategy_in_pu(double v);
-        void set_max_short_circuit_current_of_inverter_in_pu(double I);
-        void set_support_coefficient_of_neg_seq_current(double c);
+        void set_support_coefficient_of_converter_reactive_current_during_LVRT(double K);
+        void set_max_voltage_of_converter_LVRT_strategy_in_pu(double v);
+        void set_min_voltage_of_converter_LVRT_strategy_in_pu(double v);
+        void set_max_allowed_short_circuit_current_of_converter_in_pu(double I);
+        void set_support_coefficient_of_converter_negative_sequence_current(double c);
 
 
         unsigned int get_source_bus() const;
@@ -53,11 +53,11 @@ class SOURCE : public NONBUS_DEVICE
         double get_voltage_to_regulate_in_pu() const;
         unsigned int get_bus_to_regulate() const;
         complex<double> get_source_impedance_in_pu() const;
-        double get_support_coefficient_of_reactive_current_during_LVRT() const;
-        double get_max_voltage_of_LVRT_strategy_in_pu() const;
-        double get_min_voltage_of_LVRT_strategy_in_pu() const;
-        double get_max_short_circuit_current_of_inverter_in_pu() const;
-        double get_support_coefficient_of_neg_seq_current() const;
+        double get_support_coefficient_of_converter_reactive_current_during_LVRT() const;
+        double get_max_voltage_of_converter_LVRT_strategy_in_pu() const;
+        double get_min_voltage_of_converter_LVRT_strategy_in_pu() const;
+        double get_max_allowed_short_circuit_current_of_converter_in_pu() const;
+        double get_support_coefficient_of_converter_negative_sequence_current() const;
 
         virtual bool is_valid() const;
         virtual void check();
@@ -94,11 +94,11 @@ class SOURCE : public NONBUS_DEVICE
         double voltage_to_regulate_pu;
         bool status;
 
-        double support_coefficient_of_reactive_current_during_LVRT,
-                max_voltage_of_LVRT_strategy_in_pu,
-                min_voltage_of_LVRT_strategy_in_pu,
-                max_short_circuit_current_of_inverter_in_pu;
+        double support_coefficient_of_converter_reactive_current_during_LVRT,
+                max_voltage_of_converter_LVRT_strategy_in_pu,
+                min_voltage_of_converter_LVRT_strategy_in_pu,
+                max_allowed_short_circuit_current_of_converter_in_pu;
 
-        double support_coefficient_of_neg_seq_current;
+        double support_coefficient_of_converter_negative_sequence_current;
 };
 #endif // SOURCE_H

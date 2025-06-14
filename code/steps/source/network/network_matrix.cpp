@@ -3116,12 +3116,19 @@ void NETWORK_MATRIX::add_generator_to_positive_sequence_network(const GENERATOR&
         double R = gen.get_positive_sequence_resistance_in_pu();
 
         GENERATOR_REACTANCE_OPTION gen_X = get_generator_reactance_option();
-        double X;
+        double X = 0;
         switch(gen_X)
         {
-            case SUBTRANSIENT_REACTANCE:    X = gen.get_positive_sequence_subtransient_reactance_in_pu();break;
-            case TRANSIENT_REACTANCE:       X = gen.get_positive_sequence_transient_reactance_in_pu();break;
-            case SYNCHRONOUS_REACTANCE:     X = gen.get_positive_sequence_syncronous_reactance_in_pu();break;
+            case SUBTRANSIENT_REACTANCE:
+                X = gen.get_positive_sequence_subtransient_reactance_in_pu();
+                break;
+            case TRANSIENT_REACTANCE:
+                X = gen.get_positive_sequence_transient_reactance_in_pu();
+                break;
+            case SYNCHRONOUS_REACTANCE:
+            default:
+                X = gen.get_positive_sequence_syncronous_reactance_in_pu();
+                break;
         }
         double one_over_mbase = gen.get_one_over_mbase_in_one_over_MVA();
         double sbase = psdb.get_system_base_power_in_MVA();
@@ -3146,29 +3153,6 @@ void NETWORK_MATRIX::add_wt_generators_to_positive_sequence_network()
 
 void NETWORK_MATRIX::add_wt_generator_to_positive_sequence_network(const WT_GENERATOR& wt_gen)
 {
-//    if(wt_gen.get_status()==true)
-//    {
-//        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-//        double R = wt_gen.get_positive_sequence_resistance_in_pu();
-//
-//        GENERATOR_REACTANCE_OPTION gen_X = get_generator_reactance_option();
-//        double X;
-//        switch(gen_X)
-//        {
-//            case SUBTRANSIENT_REACTANCE:    X = wt_gen.get_positive_sequence_subtransient_reactance_in_pu();break;
-//            case TRANSIENT_REACTANCE:       X = wt_gen.get_positive_sequence_transient_reactance_in_pu();break;
-//            case SYNCHRONOUS_REACTANCE:     X = wt_gen.get_positive_sequence_syncronous_reactance_in_pu();break;
-//        }
-//        double one_over_mbase = wt_gen.get_one_over_mbase_in_one_over_MVA();
-//        double sbase = psdb.get_system_base_power_in_MVA();
-//
-//        complex<double> Z = complex<double>(R, X) * (one_over_mbase*sbase);
-//
-//        unsigned int bus = wt_gen.get_generator_bus();
-//        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
-//        this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
-//    }
-
     if(wt_gen.get_sequence_parameter_import_flag()==false)
         return;
 
@@ -3296,21 +3280,26 @@ void NETWORK_MATRIX::add_2t_lcc_hvdcs_to_positive_sequence_network()
 void NETWORK_MATRIX::add_2t_lcc_hvdc_to_positive_sequence_network(const LCC_HVDC2T& hvdc)
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    POWERFLOW_SOLVER& pf_solver = toolkit->get_powerflow_solver();
     double sbase = psdb.get_system_base_power_in_MVA();
     if(hvdc.get_status()==true)
     {
-        double P_rectifier = hvdc.get_converter_ac_active_power_in_MW(RECTIFIER);
-        double P_inverter = hvdc.get_converter_ac_active_power_in_MW(INVERTER);
-        double Q_rectifier = hvdc.get_converter_ac_reactive_power_in_MVar(RECTIFIER);
-        double Q_inverter = hvdc.get_converter_ac_reactive_power_in_MVar(INVERTER);
-        if(P_rectifier<DOUBLE_EPSILON)
+        double P_rectifier = 0;
+        double P_inverter = 0;
+        double Q_rectifier = 0;
+        double Q_inverter = 0;
+        if(pf_solver.is_converged())
+        {
+            P_rectifier = hvdc.get_converter_ac_active_power_in_MW(RECTIFIER);
+            P_inverter = hvdc.get_converter_ac_active_power_in_MW(INVERTER);
+            Q_rectifier = hvdc.get_converter_ac_reactive_power_in_MVar(RECTIFIER);
+            Q_inverter = hvdc.get_converter_ac_reactive_power_in_MVar(INVERTER);
+        }
+        else
         {
             P_rectifier = hvdc.get_nominal_dc_power_in_MW();
             Q_rectifier = 0.0;
-        }
-        if(P_inverter<DOUBLE_EPSILON)
-        {
-            P_inverter = hvdc.get_nominal_dc_power_in_MW();
+            P_inverter = P_rectifier;
             Q_inverter = 0.0;
         }
         complex<double> S_rectifier = complex<double>(P_rectifier, Q_rectifier);
@@ -3348,7 +3337,6 @@ void NETWORK_MATRIX::add_vsc_hvdc_to_positive_sequence_network(const VSC_HVDC& v
     if(vsc_hvdc.get_sequence_parameter_import_flag()==false)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     if(vsc_hvdc.get_status()==true)
     {
         unsigned int n = vsc_hvdc.get_converter_count();

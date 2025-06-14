@@ -1,4 +1,4 @@
-#include "header/model/pvu_models/pv_converter_model/PVGU1.h"
+#include "header/model/pvu_models/pv_converter_model/pvgu1.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 #include <cstdio>

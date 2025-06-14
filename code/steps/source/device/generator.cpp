@@ -197,14 +197,14 @@ void GENERATOR::update_internal_voltage_for_short_circuit_solver()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     GENERATOR_REACTANCE_OPTION option = get_generator_reactance_option();
 
-    complex<double> V = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_source_bus());
+    complex<double> V = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_generator_bus());
 
     complex<double> sbase = psdb.get_system_base_power_in_MVA();
     complex<double> s = get_complex_generation_in_MVA();
     complex<double> I = conj(s/sbase/V);
 
     double R = get_positive_sequence_resistance_in_pu();
-    double X;
+    double X = 0.0;
     switch(option)
     {
         case SUBTRANSIENT_REACTANCE:
@@ -214,6 +214,7 @@ void GENERATOR::update_internal_voltage_for_short_circuit_solver()
             X = get_positive_sequence_transient_reactance_in_pu();
             break;
         case SYNCHRONOUS_REACTANCE:
+        default:
             X = get_positive_sequence_syncronous_reactance_in_pu();
             break;
     }

@@ -140,29 +140,29 @@ void SOURCE::set_source_impedance_in_pu(const complex<double>& z_pu)
     source_Z_pu = z_pu;
 }
 
-void SOURCE::set_support_coefficient_of_reactive_current_during_LVRT(double K)
+void SOURCE::set_support_coefficient_of_converter_reactive_current_during_LVRT(double K)
 {
-    support_coefficient_of_reactive_current_during_LVRT = K;
+    support_coefficient_of_converter_reactive_current_during_LVRT = K;
 }
 
-void SOURCE::set_max_voltage_of_LVRT_strategy_in_pu(double v)
+void SOURCE::set_max_voltage_of_converter_LVRT_strategy_in_pu(double v)
 {
-    max_voltage_of_LVRT_strategy_in_pu = v;
+    max_voltage_of_converter_LVRT_strategy_in_pu = v;
 }
 
-void SOURCE::set_min_voltage_of_LVRT_strategy_in_pu(double v)
+void SOURCE::set_min_voltage_of_converter_LVRT_strategy_in_pu(double v)
 {
-    min_voltage_of_LVRT_strategy_in_pu = v;
+    min_voltage_of_converter_LVRT_strategy_in_pu = v;
 }
 
-void SOURCE::set_max_short_circuit_current_of_inverter_in_pu(double I)
+void SOURCE::set_max_allowed_short_circuit_current_of_converter_in_pu(double I)
 {
-    max_short_circuit_current_of_inverter_in_pu = I;
+    max_allowed_short_circuit_current_of_converter_in_pu = I;
 }
 
-void SOURCE::set_support_coefficient_of_neg_seq_current(double c)
+void SOURCE::set_support_coefficient_of_converter_negative_sequence_current(double c)
 {
-    support_coefficient_of_neg_seq_current = c;
+    support_coefficient_of_converter_negative_sequence_current = c;
 }
 
 unsigned int SOURCE::get_source_bus() const
@@ -253,29 +253,29 @@ complex<double> SOURCE::get_source_impedance_in_pu() const
     return source_Z_pu;
 }
 
-double SOURCE::get_support_coefficient_of_reactive_current_during_LVRT() const
+double SOURCE::get_support_coefficient_of_converter_reactive_current_during_LVRT() const
 {
-    return support_coefficient_of_reactive_current_during_LVRT;
+    return support_coefficient_of_converter_reactive_current_during_LVRT;
 }
 
-double SOURCE::get_max_voltage_of_LVRT_strategy_in_pu() const
+double SOURCE::get_max_voltage_of_converter_LVRT_strategy_in_pu() const
 {
-    return max_voltage_of_LVRT_strategy_in_pu;
+    return max_voltage_of_converter_LVRT_strategy_in_pu;
 }
 
-double SOURCE::get_min_voltage_of_LVRT_strategy_in_pu() const
+double SOURCE::get_min_voltage_of_converter_LVRT_strategy_in_pu() const
 {
-    return min_voltage_of_LVRT_strategy_in_pu;
+    return min_voltage_of_converter_LVRT_strategy_in_pu;
 }
 
-double SOURCE::get_max_short_circuit_current_of_inverter_in_pu() const
+double SOURCE::get_max_allowed_short_circuit_current_of_converter_in_pu() const
 {
-    return max_short_circuit_current_of_inverter_in_pu;
+    return max_allowed_short_circuit_current_of_converter_in_pu;
 }
 
-double SOURCE::get_support_coefficient_of_neg_seq_current() const
+double SOURCE::get_support_coefficient_of_converter_negative_sequence_current() const
 {
-    return support_coefficient_of_neg_seq_current;
+    return support_coefficient_of_converter_negative_sequence_current;
 }
 
 bool SOURCE::is_valid() const
@@ -329,10 +329,10 @@ void SOURCE::clear()
     set_bus_to_regulate(0);
     set_source_impedance_in_pu(0.0);
 
-    set_support_coefficient_of_reactive_current_during_LVRT(0.0);
-    set_max_voltage_of_LVRT_strategy_in_pu(0.0);
-    set_min_voltage_of_LVRT_strategy_in_pu(0.0);
-    set_max_short_circuit_current_of_inverter_in_pu(0.0);
+    set_support_coefficient_of_converter_reactive_current_during_LVRT(0.0);
+    set_max_voltage_of_converter_LVRT_strategy_in_pu(0.0);
+    set_min_voltage_of_converter_LVRT_strategy_in_pu(0.0);
+    set_max_allowed_short_circuit_current_of_converter_in_pu(0.0);
 }
 
 bool SOURCE::is_connected_to_bus(unsigned int bus) const

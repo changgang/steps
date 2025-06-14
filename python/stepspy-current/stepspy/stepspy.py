@@ -4084,6 +4084,83 @@ class STEPS():
         global STEPS_LIB
         STEPS_LIB.api_build_sequence_network_Y_matrix(self.toolkit_index)
         return
+    
+    def build_positive_sequence_network_Y_matrix(self):
+        """
+        Build positive sequence network complex Y matrix for short circuit solution.
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_build_positive_sequence_network_Y_matrix(self.toolkit_index)
+        return
+    
+    def build_negative_sequence_network_Y_matrix(self):
+        """
+        Build negative sequence network complex Y matrix for short circuit solution.
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_build_negative_sequence_network_Y_matrix(self.toolkit_index)
+        return
+    
+    def build_zero_sequence_network_Y_matrix(self):
+        """
+        Build zero sequence network complex Y matrix for short circuit solution.
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_build_zero_sequence_network_Y_matrix(self.toolkit_index)
+        return
+        
+    def build_sequence_network_Z_matrix(self):
+        """
+        Build sequence network complex Z matrix for powerflow solution.
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_build_sequence_network_Z_matrix(self.toolkit_index)
+        return
+    
+    def build_positive_sequence_network_Z_matrix(self):
+        """
+        Build positive sequence network complex Z matrix for short circuit solution.
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_build_positive_sequence_network_Z_matrix(self.toolkit_index)
+        return
+    
+    def build_negative_sequence_network_Z_matrix(self):
+        """
+        Build negative sequence network complex Z matrix for short circuit solution.
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_build_negative_sequence_network_Z_matrix(self.toolkit_index)
+        return
+    
+    def build_zero_sequence_network_Z_matrix(self):
+        """
+        Build zero sequence network complex Z matrix for short circuit solution.
+        Args: N/A
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        STEPS_LIB.api_build_zero_sequence_network_Z_matrix(self.toolkit_index)
+        return
         
     def save_network_Y_matrix(self, file, export_full=False):
         """
@@ -4160,7 +4237,7 @@ class STEPS():
             (1) file: String of target file name of sparse Y matrix.  
         Rets: N/A
         Example:
-            simulator.save_positive_sequence_network_Y_matrix("y.csv") 
+            simulator.save_positive_sequence_network_Y_matrix("y1.csv") 
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -4174,7 +4251,7 @@ class STEPS():
             (1) file: String of target file name of sparse Y matrix.
         Rets: N/A
         Example:
-            simulator.save_negative_sequence_network_Y_matrix("y.csv") 
+            simulator.save_negative_sequence_network_Y_matrix("y2.csv") 
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
@@ -4188,11 +4265,54 @@ class STEPS():
             (1) file: String of target file name of sparse Y matrix.
         Rets: N/A
         Example:
-            simulator.save_zero_sequence_network_Y_matrix("y.csv") 
+            simulator.save_zero_sequence_network_Y_matrix("y0.csv") 
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         STEPS_LIB.api_save_zero_sequence_network_Y_matrix(file, self.toolkit_index)
+        return
+        
+
+    def save_positive_sequence_network_Z_matrix(self, file):
+        """
+        Save positive sequence network complex Z matrix to file.
+        Args:
+            (1) file: String of target file name of sparse Z matrix.  
+        Rets: N/A
+        Example:
+            simulator.save_positive_sequence_network_Z_matrix("z1.csv") 
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        STEPS_LIB.api_save_positive_sequence_network_Z_matrix(file, self.toolkit_index)
+        return
+
+    def save_negative_sequence_network_Z_matrix(self, file):
+        """
+        Save negative sequence network complex Z matrix to file.
+        Args:
+            (1) file: String of target file name of sparse Z matrix.
+        Rets: N/A
+        Example:
+            simulator.save_negative_sequence_network_Z_matrix("z2.csv") 
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        STEPS_LIB.api_save_negative_sequence_network_Z_matrix(file, self.toolkit_index)
+        return
+    
+    def save_zero_sequence_network_Z_matrix(self, file):
+        """
+        Save zero sequence network complex Z matrix to file.
+        Args:
+            (1) file: String of target file name of sparse Z matrix.
+        Rets: N/A
+        Example:
+            simulator.save_zero_sequence_network_Z_matrix("z0.csv") 
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        STEPS_LIB.api_save_zero_sequence_network_Z_matrix(file, self.toolkit_index)
         return
         
     def check_network_connectivity(self, remove_void_islands=False):
@@ -4281,7 +4401,7 @@ class STEPS():
 
     def set_short_circuit_bus_fault(self, bus, fault_type, fault_shunt):
         """
-        Set bus fault.
+        Set bus fault for short circuit analysis.
         Args:
             (1) bus: Bus number.
             (2) fault_type: String of fault type. THREE PHASES FAULT, SINGLE PHASE GROUNDED FAULT, DOUBLE PHASES FAULT, DOUBLE PHASES GROUNDED FAULT.
@@ -4298,12 +4418,12 @@ class STEPS():
         """
         global STEPS_LIB
         fault_type = self.__get_c_char_p_of_string(fault_type)
-        STEPS_LIB.api_short_circuit_set_bus_fault(bus, fault_type, fault_shunt[0], fault_shunt[1], self.toolkit_index)
+        STEPS_LIB.api_set_short_circuit_bus_fault(bus, fault_type, fault_shunt[0], fault_shunt[1], self.toolkit_index)
         return
 
     def set_short_circuit_line_fault(self, line, fault_type, fault_location, fault_shunt):
         """
-        Set transmission line fault.
+        Set transmission line fault for short circuit analysis.
         Args:
             (1) line: Transmission line device id in format of (ibus, jbus, ickt).
             (2) fault_type: String of fault type. THREE PHASES FAULT, SINGLE PHASE GROUNDED FAULT, DOUBLE PHASES FAULT, DOUBLE PHASES GROUNDED FAULT.
@@ -4321,13 +4441,13 @@ class STEPS():
             line = (1, 2, "1#")
             location = 0.2
             shunt = (0.0, -2e4)
-            simulator.set_line_fault(line, "three phase fault", location, shunt)
+            simulator.set_short_circuit_line_fault(line, "three phase fault", location, shunt)
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
         ickt = self.__get_c_char_p_of_string(ickt)
         fault_type = self.__get_c_char_p_of_string(fault_type)
-        STEPS_LIB.api_short_circuit_set_line_fault(ibus, jbus, ickt, fault_type, fault_location, fault_shunt[0], fault_shunt[1], self.toolkit_index)
+        STEPS_LIB.api_set_short_circuit_line_fault(ibus, jbus, ickt, fault_type, fault_location, fault_shunt[0], fault_shunt[1], self.toolkit_index)
         return
 
     def clear_short_circuit_fault(self):	
@@ -4339,10 +4459,10 @@ class STEPS():
             simulator.clear_short_circuit_fault()	
         """	
         global STEPS_LIB	
-        STEPS_LIB.api_short_circuit_clear_fault(self.toolkit_index)
+        STEPS_LIB.api_clear_short_circuit_fault(self.toolkit_index)
         return
 
-    def short_circuit_current_scanning(self):	
+    def scan_short_circuit_current(self):	
         """	
         Short circuit current scanning.
         Args:N/A	
@@ -4354,9 +4474,9 @@ class STEPS():
         STEPS_LIB.api_short_circuit_current_scanning(self.toolkit_index)
         return
 
-    def get_short_circuit_result_data(self, par_type, par_name):
+    def get_short_circuit_value_at_fault_point(self, par_type, par_name):
         """
-        Get short circuit  result data.
+        Get short circuit value of give parameter at fault point.
         Args:
             (1) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
             (2) par_name: String of parameter name.
@@ -4375,25 +4495,25 @@ class STEPS():
         if par_type in ['I', 'INT', 'INTEGER']:
             return None
         if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-            return STEPS_LIB.api_get_short_circuit_result_float_data(par_name, self.toolkit_index)
+            return STEPS_LIB.api_get_short_circuit_value_at_fault_point(par_name, self.toolkit_index)
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return None
         return None
 
-    def show_short_circuit_result(self):
+    def show_short_circuit_result_at_fault_point(self):
         """
-        Show short circuit result in log.
+        Show short circuit result at fault point in log.
         Args: N/A
         Rets: N/A
         Example: N/A
         """
         global STEPS_LIB
-        STEPS_LIB.api_show_short_circuit_result(self.toolkit_index)
+        STEPS_LIB.api_show_short_circuit_result_at_fault_point(self.toolkit_index)
         return
         
-    def save_short_circuit_result(self, file):
+    def save_short_circuit_result_at_fault_point(self, file):
         """
-        Save short circuit result to file.
+        Save short circuit result at fault point to file.
         Args:
             (1) file: String of target file name.
         Rets: N/A
@@ -4403,7 +4523,7 @@ class STEPS():
         """
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
-        STEPS_LIB.api_save_short_circuit_result_to_file(file, self.toolkit_index)
+        STEPS_LIB.api_save_short_circuit_result_at_fault_point_to_file(file, self.toolkit_index)
         return
     
     def save_extended_short_circuit_result(self, file):
@@ -4420,6 +4540,17 @@ class STEPS():
         file = self.__get_c_char_p_of_string(file)
         STEPS_LIB.api_save_extended_short_circuit_result_to_file(file, self.toolkit_index)
         return
+    
+    def get_short_circuit_capacity_at_bus_in_MVA(self, bus):
+        """
+        Get short circuit capacity of bus.
+        Args:
+            (1) bus: bus number.
+        Rets: short circuit capacity in MVA
+        Example: N/A
+        """
+        global STEPS_LIB
+        return STEPS_LIB.api_get_short_circuit_capacity_at_bus_in_MVA(bus, self.toolkit_index)
     
     def get_short_circuit_ratio_of_HVDC(self, hvdc_bus):
         """

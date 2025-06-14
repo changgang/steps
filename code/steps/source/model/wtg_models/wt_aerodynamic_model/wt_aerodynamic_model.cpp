@@ -41,15 +41,6 @@ WT_AERODYNAMIC_MODEL::~WT_AERODYNAMIC_MODEL()
 
 }
 
-WT_AERODYNAMIC_MODEL& WT_AERODYNAMIC_MODEL::operator=(const WT_AERODYNAMIC_MODEL& model)
-{
-    if(this==(&model))
-        return *this;
-
-    copy_from_const_model(model);
-    return *this;
-}
-
 void WT_AERODYNAMIC_MODEL::copy_from_const_model(const WT_AERODYNAMIC_MODEL& model)
 {
     set_toolkit(model.get_toolkit());

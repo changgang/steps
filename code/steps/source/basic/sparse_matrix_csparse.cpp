@@ -20,9 +20,6 @@ SPARSE_MATRIX_CSPARSE::SPARSE_MATRIX_CSPARSE():SPARSE_MATRIX()
     matrix_imag = NULL;
     LU = NULL;
     LU_symbolic = NULL;
-    // LU_workspace = NULL;
-    // bb = NULL;
-    // bb_size = 0;
     add_entry_callled = false;
 
     clear();
@@ -34,9 +31,6 @@ SPARSE_MATRIX_CSPARSE::SPARSE_MATRIX_CSPARSE(const SPARSE_MATRIX_CSPARSE& matrix
     matrix_imag = NULL;
     LU = NULL;
     LU_symbolic = NULL;
-    // LU_workspace = NULL;
-    // bb = NULL;
-    // bb_size = 0;
     add_entry_callled = false;
 
     clear();
@@ -109,16 +103,6 @@ SPARSE_MATRIX_CSPARSE::~SPARSE_MATRIX_CSPARSE()
     if(matrix_imag!=NULL) cs_spfree(matrix_imag);
     if(LU!=NULL)          cs_nfree(LU);
     if(LU_symbolic!=NULL) cs_sfree(LU_symbolic);
-    // if(LU_workspace!=NULL) free(LU_workspace);
-    // if(bb!=NULL) free(bb);
-
-    /*matrix_real = NULL;
-    matrix_imag = NULL;
-    LU = NULL;
-    LU_symbolic = NULL;
-    LU_workspace = NULL;
-    bb = NULL;
-    bb_size = 0;*/
 }
 
 void SPARSE_MATRIX_CSPARSE::clear()
@@ -131,16 +115,11 @@ void SPARSE_MATRIX_CSPARSE::clear()
     if(matrix_imag!=NULL) cs_spfree(matrix_imag);
     if(LU!=NULL)          cs_nfree(LU);
     if(LU_symbolic!=NULL) cs_sfree(LU_symbolic);
-    // if(LU_workspace!=NULL) free(LU_workspace);
-    // if(bb!=NULL) free(bb);
 
     matrix_real = NULL;
     matrix_imag = NULL;
     LU = NULL;
     LU_symbolic = NULL;
-    // LU_workspace = NULL;
-    // bb = NULL;
-    // bb_size = 0;
     add_entry_callled = false;
 
     matrix_real = cs_spalloc(1,1,1,1,1); // arguments: row = 1, column = 1, max_entry = 1, allocate_memory = 1, triplet_form = 1
@@ -481,26 +460,15 @@ void SPARSE_MATRIX_CSPARSE::LU_factorization(int order, double tolerance)
 
     cs_nfree(LU); // free LU (csn *)
     cs_sfree(LU_symbolic);
-    csi n, ok ;
+    csi ok ;
     if (CS_CSC (matrix_real))/* check inputs */
     {
-        n = matrix_real->n ;
         LU_symbolic = cs_sqr (order, matrix_real, 0) ;              /* ordering and symbolic analysis */
         LU = cs_lu (matrix_real, LU_symbolic, tolerance) ;                 /* numeric LU factorization */
 
         ok = (LU_symbolic && LU) ; // check
         if(ok==1)
         {
-            // reset working space
-            // if(LU_workspace!=NULL) free(LU_workspace);
-            // LU_workspace = (double *)cs_malloc(n, sizeof (double)) ;  // get workspace
-            // if(LU_workspace != NULL)
-            //     ;
-            // else
-            // {
-            //     snprintf(buffer, 256, "Global variable LU_workspace was not successfully set. No workspace for LU solution. (line %d in file %s)\n",__LINE__,__FILE__);
-            //     show_information_with_leading_time_stamp_with_default_toolkit(buffer);
-            // }
             update_clock_when_LU_factorization_is_performed(); // mark the clock when finish the LU decomposition
         }
         else
@@ -560,26 +528,8 @@ vector<double>& SPARSE_MATRIX_CSPARSE::solve_Ax_eq_b(vector<double>& b)
 void SPARSE_MATRIX_CSPARSE::solve_Lx_eq_b(vector<double>& b)
 {
     ostringstream osstream;
-    char buffer[256];
     unsigned int n = b.size();
-//    if(bb!=NULL)
-//    {
-//        if(n<=bb_size)
-//        {
-//            ;
-//        }
-//        else
-//        {
-//            free(bb);
-//            bb = (double*)malloc(n*sizeof(double));
-//            bb_size = n;
-//        }
-//    }
-//    else
-//    {
     double* bb = (double*)malloc(n*sizeof(double));
-//        bb_size = n;
-//    }
     if(bb!=NULL)
     {
         for(unsigned int i=0; i!=n; ++i) bb[i]=b[i]; // set bb
@@ -596,21 +546,21 @@ void SPARSE_MATRIX_CSPARSE::solve_Lx_eq_b(vector<double>& b)
             }
             else
             {
-                osstream<<"Error. Failed to solve Lx=b.(function "<<__FUNCTION__<<" in file "<<__FILE__;
+                osstream<<"Error. Failed to solve Lx=b.(function "<<__FUNCTION__<<" in file "<<__FILE__<<")";
                 show_information_with_leading_time_stamp_with_default_toolkit(osstream);
             }
             free(LU_workspace);
         }
         else
         {
-            snprintf(buffer, 256, "Variable LU_workspace was not successfully set. No workspace for LU solution. (line %d in file %s)\n",__LINE__,__FILE__);
-            show_information_with_leading_time_stamp_with_default_toolkit(buffer);
+            osstream<<"Error. Variable LU_workspace was not successfully set. No workspace for LU solution. (function "<<__FUNCTION__<<" in file "<<__FILE__<<")";
+            show_information_with_leading_time_stamp_with_default_toolkit(osstream);
         }
         free(bb);
     }
     else
     {
-        osstream<<"Error. Failed to allocate temporary array for solving Lx=b.(function "<<__FUNCTION__<<" in file "<<__FILE__;
+        osstream<<"Error. Failed to allocate temporary array bb for solving Lx=b.(function "<<__FUNCTION__<<" in file "<<__FILE__;
         show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     }
 }
@@ -621,24 +571,7 @@ void SPARSE_MATRIX_CSPARSE::solve_xU_eq_b(vector<double>& b)
     char cbuffer[1000];
 
     unsigned int n = b.size();
-//    if(bb!=NULL)
-//    {
-//        if(n<=bb_size)
-//        {
-//            ;
-//        }
-//        else
-//        {
-//            free(bb);
-//            bb = (double*)malloc(n*sizeof(double));
-//            bb_size = n;
-//        }
-//    }
-//    else
-//    {
     double* bb = (double*)malloc(n*sizeof(double));
-//        bb_size = n;
-//    }
     if(bb!=NULL)
     {
         double* LU_workspace = (double *)cs_malloc(n, sizeof (double)) ;
@@ -671,7 +604,7 @@ void SPARSE_MATRIX_CSPARSE::solve_xU_eq_b(vector<double>& b)
     }
     else
     {
-        snprintf(cbuffer, 1000, "Error. Failed to allocate temporary array for solving xU=b.(function %s in file %s)\n",__FUNCTION__,__FILE__);
+        snprintf(cbuffer, 1000, "Error. Failed to allocate temporary array bb for solving xU=b.(function %s in file %s)\n",__FUNCTION__,__FILE__);
         buffer = cbuffer;
         show_information_with_leading_time_stamp_with_default_toolkit(buffer);
     }
@@ -901,8 +834,6 @@ unsigned int SPARSE_MATRIX_CSPARSE::get_memory_usage_in_bytes()
              LU->U->n*sizeof(csi)+
              LU->L->n*sizeof(csi)+
              LU->L->n*sizeof(double);
-    // n += matrix_real->n*sizeof(double)+
-    //      bb_size*sizeof(double);
     n += matrix_real->n*sizeof(double);
     return n;
 }

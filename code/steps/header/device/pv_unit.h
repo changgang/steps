@@ -88,7 +88,7 @@ class PV_UNIT : public SOURCE
         void set_sequence_parameter_import_flag(bool flag);
         bool get_sequence_parameter_import_flag() const;
 
-        complex<double> get_complex_dq_axis_current_in_pu_short_circuit_solver();
+        complex<double> get_complex_dq_axis_current_in_pu_for_short_circuit_solver();
         complex<double> get_positive_sequence_complex_injection_current_in_pu_for_short_circuit_solver();
         complex<double> get_negative_sequence_complex_injection_current_in_pu_for_short_circuit_solver();
     private:

@@ -315,10 +315,10 @@ string PSSE_IMEXPORTER::export_wt_generator_sequence_data(const WT_GENERATOR* wt
             <<setw(4)<<"1"<<", "
             <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_grounding_resistance_in_pu()<<", "
             <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_grounding_reactance_in_pu()<<", "
-            <<setw(6)<<setprecision(2)<<fixed<<wt_generator->get_support_coefficient_of_reactive_current_during_LVRT()<<", "
-            <<setw(6)<<setprecision(2)<<fixed<<wt_generator->get_max_voltage_of_LVRT_strategy_in_pu()<<", "
-            <<setw(6)<<setprecision(2)<<fixed<<wt_generator->get_min_voltage_of_LVRT_strategy_in_pu()<<", "
-            <<setw(6)<<setprecision(2)<<fixed<<wt_generator->get_max_short_circuit_current_of_inverter_in_pu()
+            <<setw(6)<<setprecision(2)<<fixed<<wt_generator->get_support_coefficient_of_converter_reactive_current_during_LVRT()<<", "
+            <<setw(6)<<setprecision(2)<<fixed<<wt_generator->get_max_voltage_of_converter_LVRT_strategy_in_pu()<<", "
+            <<setw(6)<<setprecision(2)<<fixed<<wt_generator->get_min_voltage_of_converter_LVRT_strategy_in_pu()<<", "
+            <<setw(6)<<setprecision(2)<<fixed<<wt_generator->get_max_allowed_short_circuit_current_of_converter_in_pu()
             <<endl;
 
     return osstream.str();

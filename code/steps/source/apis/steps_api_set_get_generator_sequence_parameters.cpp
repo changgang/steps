@@ -36,9 +36,9 @@ double api_get_generator_sequence_float_data(unsigned int bus, char* identifier,
         return generator->get_zero_sequence_resistance_in_pu();
     if(PARAMETER_NAME == "XZERO_PU" or PARAMETER_NAME == "ZERO SEQUENCE REACTANCE IN PU")
         return generator->get_zero_sequence_reactance_in_pu();
-    if(PARAMETER_NAME == "RG_PU" or PARAMETER_NAME == "GROUNDING RESISTANCE")
+    if(PARAMETER_NAME == "RG_PU" or PARAMETER_NAME == "GROUNDING RESISTANCE IN PU")
         return generator->get_grounding_resistance_in_pu();
-    if(PARAMETER_NAME == "XG_PU" or PARAMETER_NAME == "GROUNDING REACTANCE")
+    if(PARAMETER_NAME == "XG_PU" or PARAMETER_NAME == "GROUNDING REACTANCE IN PU")
         return generator->get_grounding_reactance_in_pu();
 
     if(PARAMETER_NAME == "I1_PU" or PARAMETER_NAME == "POSITIVE SEQUENCE CURRENT IN PU")
@@ -54,23 +54,25 @@ double api_get_generator_sequence_float_data(unsigned int bus, char* identifier,
     if(PARAMETER_NAME == "I0_KA" or PARAMETER_NAME == "ZERO SEQUENCE CURRENT IN KA")
         return abs(generator->get_zero_sequence_complex_current_in_kA());
 
-    if(PARAMETER_NAME=="ANGLE_RAD" or PARAMETER_NAME=="ANGLE IN RAD" or PARAMETER_NAME=="POSITIVE ANGLE IN RAD")
+    if(PARAMETER_NAME=="I1_ANG_RAD" or PARAMETER_NAME=="POSITIVE SEQUENCE CURRENT ANGLE IN RAD")
         return arg(generator->get_positive_sequence_complex_current_in_pu());
-    if(PARAMETER_NAME=="ANGLE_DEG" or PARAMETER_NAME=="ANGLE IN DEG" or PARAMETER_NAME=="POSITIVE ANGLE IN DEG")
+    if(PARAMETER_NAME=="I1_ANG_DEG" or PARAMETER_NAME=="POSITIVE SEQUENCE CURRENT ANGLE IN DEG")
         return rad2deg(arg(generator->get_positive_sequence_complex_current_in_pu()));
-    if(PARAMETER_NAME=="NEGATIVE_ANGLE_RAD" or PARAMETER_NAME=="NEGATIVE ANGLE IN RAD")
+    if(PARAMETER_NAME=="I2_ANG_RAD" or PARAMETER_NAME=="NEGATIVE SEQUENCE CURRENT ANGLE IN RAD")
         return arg(generator->get_negative_sequence_complex_current_in_pu());
-    if(PARAMETER_NAME=="NEGATIVE_ANGLE_DEG" or PARAMETER_NAME=="NEGATIVE ANGLE IN DEG")
+    if(PARAMETER_NAME=="I2_ANG_DEG" or PARAMETER_NAME=="NEGATIVE SEQUENCE CURRENT ANGLE IN DEG")
         return rad2deg(arg(generator->get_negative_sequence_complex_current_in_pu()));
-    if(PARAMETER_NAME=="ZERO_ANGLE_RAD" or PARAMETER_NAME=="ZERO ANGLE IN RAD")
+    if(PARAMETER_NAME=="I0_ANG_RAD" or PARAMETER_NAME=="ZERO SEQUENCE CURRENT ANGLE IN RAD")
         return arg(generator->get_zero_sequence_complex_current_in_pu());
-    if(PARAMETER_NAME=="ZERO_ANGLE_DEG" or PARAMETER_NAME=="ZERO ANGLE IN DEG")
+    if(PARAMETER_NAME=="I0_ANG_DEG" or PARAMETER_NAME=="ZERO SEQUENCE CURRENT ANGLE IN DEG")
         return rad2deg(arg(generator->get_zero_sequence_complex_current_in_pu()));
 
     if(PARAMETER_NAME=="E_PU" or PARAMETER_NAME=="INTERNAL VOLTAGE IN PU")
         return abs(generator->get_complex_internal_voltage_for_short_circuit_solver_in_pu());
-    if(PARAMETER_NAME=="E_RAD" or PARAMETER_NAME=="INTERNAL VOLTAGE ANGLE IN RAD")
+    if(PARAMETER_NAME=="E_ANG_RAD" or PARAMETER_NAME=="INTERNAL VOLTAGE ANGLE IN RAD")
         return arg(generator->get_complex_internal_voltage_for_short_circuit_solver_in_pu());
+    if(PARAMETER_NAME=="E_ANG_DEG" or PARAMETER_NAME=="INTERNAL VOLTAGE ANGLE IN DEG")
+        return rad2deg(arg(generator->get_complex_internal_voltage_for_short_circuit_solver_in_pu()));
 
     show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
     return 0.0;
@@ -106,9 +108,9 @@ void api_set_generator_sequence_float_data(unsigned int bus, char* identifier, c
         return generator->set_zero_sequence_resistance_in_pu(value);
     if(PARAMETER_NAME == "XZERO_PU" or PARAMETER_NAME == "ZERO SEQUENCE REACTANCE IN PU")
         return generator->set_zero_sequence_reactance_in_pu(value);
-    if(PARAMETER_NAME == "RG_PU" or PARAMETER_NAME == "GROUNDING RESISTANCE")
+    if(PARAMETER_NAME == "RG_PU" or PARAMETER_NAME == "GROUNDING RESISTANCE IN PU")
         return generator->set_grounding_resistance_in_pu(value);
-    if(PARAMETER_NAME == "XG_PU" or PARAMETER_NAME == "GROUNDING REACTANCE")
+    if(PARAMETER_NAME == "XG_PU" or PARAMETER_NAME == "GROUNDING REACTANCE IN PU")
         return generator->set_grounding_reactance_in_pu(value);
 
     show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);

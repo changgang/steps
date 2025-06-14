@@ -13,6 +13,62 @@ void api_build_sequence_network_Y_matrix(unsigned int toolkit_index)
     network_matrix.build_sequence_network_Y_matrix();
 }
 
+void api_build_positive_sequence_network_Y_matrix(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.build_positive_sequence_network_Y_matrix();
+}
+
+void api_build_negative_sequence_network_Y_matrix(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.build_negative_sequence_network_Y_matrix();
+}
+
+void api_build_zero_sequence_network_Y_matrix(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.build_zero_sequence_network_Y_matrix();
+}
+
+void api_build_sequence_network_Z_matrix(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.build_sequence_network_Z_matrix();
+}
+
+void api_build_positive_sequence_network_Z_matrix(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.build_positive_sequence_network_Z_matrix();
+}
+
+void api_build_negative_sequence_network_Z_matrix(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.build_negative_sequence_network_Z_matrix();
+}
+
+void api_build_zero_sequence_network_Z_matrix(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.build_zero_sequence_network_Z_matrix();
+}
+
 void api_save_positive_sequence_network_Y_matrix(char* file, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
@@ -67,7 +123,7 @@ void api_set_short_circuit_solver_integer_parameter(char* parameter_name, int va
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
 
     string PARAMETER_NAME = string2upper(parameter_name);
-    if(PARAMETER_NAME=="GENERATOR REACTANCE")
+    if(PARAMETER_NAME=="GENERATOR REACTANCE OPTION")
     {
         if(value==0)
         {
@@ -85,7 +141,7 @@ void api_set_short_circuit_solver_integer_parameter(char* parameter_name, int va
             return;
         }
     }
-    else if(PARAMETER_NAME=="UNITS")
+    else if(PARAMETER_NAME=="UNIT OPTION")
     {
         if(value==0)
         {
@@ -98,7 +154,7 @@ void api_set_short_circuit_solver_integer_parameter(char* parameter_name, int va
             return;
         }
     }
-    else if(PARAMETER_NAME=="COORDINATES")
+    else if(PARAMETER_NAME=="COORDINATE OPTION")
     {
         if(value==0)
         {
@@ -111,7 +167,7 @@ void api_set_short_circuit_solver_integer_parameter(char* parameter_name, int va
             return;
         }
     }
-    else if(PARAMETER_NAME=="OPTION OF DC LINES")
+    else if(PARAMETER_NAME=="DC LINE OPTION")
     {
         if(value==0)
         {
@@ -145,19 +201,19 @@ unsigned int api_get_short_circuit_solver_integer_parameter(char* parameter_name
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
 
     string PARAMETER_NAME = string2upper(parameter_name);
-    if(PARAMETER_NAME=="GENERATOR REACTANCE")
+    if(PARAMETER_NAME=="GENERATOR REACTANCE OPTION")
         return solver.get_generator_reactance_option();
 
-    if(PARAMETER_NAME=="UNITS")
+    if(PARAMETER_NAME=="UNIT OPTION")
         return solver.get_units_of_currents_and_voltages();
 
-    if(PARAMETER_NAME=="COORDINATES")
+    if(PARAMETER_NAME=="COORDINATE OPTION")
         return solver.get_coordinates_of_currents_and_voltages();
 
     if(PARAMETER_NAME=="FAULT TYPE")
         return solver.get_fault_type();
 
-    if(PARAMETER_NAME=="OPTION OF DC LINES")
+    if(PARAMETER_NAME=="DC LINE OPTION")
         return solver.get_option_of_DC_lines();
 
     if(PARAMETER_NAME=="MAX_ITER_COUNT" or PARAMETER_NAME=="MAX ITER COUNT")
@@ -188,11 +244,19 @@ void api_set_short_circuit_solver_float_parameter(char* parameter_name, double v
             return;
         }
     }
-    if(PARAMETER_NAME=="ITERATION FACTOR" or PARAMETER_NAME=="ITER FACTOR")
+    if(PARAMETER_NAME=="ITERATION ACCELERATION FACTOR" or PARAMETER_NAME=="ACCL FACTOR")
     {
         if(value>0.0)
         {
-            solver.set_iteration_factor(value);
+            solver.set_iteration_acceleration_factor(value);
+            return;
+        }
+    }
+    if(PARAMETER_NAME=="HVDC BLOCK VOLTAGE THRESHOLD" or PARAMETER_NAME=="HVDC BLOCK VTH")
+    {
+        if(value>0.0)
+        {
+            solver.set_voltage_threshold_for_hvdc_blocking_in_pu(value);
             return;
         }
     }
@@ -213,8 +277,10 @@ double api_get_short_circuit_solver_float_parameter(char* parameter_name, unsign
 
     if(PARAMETER_NAME=="CURRENT THRESHOLD")
         return solver.get_current_threshold_for_iterative_method();
-    if(PARAMETER_NAME=="ITERATION FACTOR" or PARAMETER_NAME=="ITER FACTOR")
-        return solver.get_iteration_factor();
+    if(PARAMETER_NAME=="ITERATION ACCELERATION FACTOR" or PARAMETER_NAME=="ACCL FACTOR")
+        return solver.get_iteration_acceleration_factor();
+    if(PARAMETER_NAME=="HVDC BLOCK VOLTAGE THRESHOLD" or PARAMETER_NAME=="HVDC BLOCK VTH")
+        return solver.get_voltage_threshold_for_hvdc_blocking_in_pu();
 
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for short circuit solver with api %s.\n"
@@ -240,7 +306,7 @@ void api_set_short_circuit_solver_boolean_parameter(char* parameter_name, bool v
         solver.set_consider_motor_load_logic(value);
         return;
     }
-    if(PARAMETER_NAME=="EXPORT DETAILED ITERATION LOGIC")
+    if(PARAMETER_NAME=="EXPORT DETAILED ITERATION LOG LOGIC")
     {
         solver.set_export_detailed_iteration_log_logic(value);
         return;
@@ -269,7 +335,7 @@ bool api_get_short_circuit_solver_boolean_parameter(char* parameter_name, unsign
         return solver.get_consider_motor_load_logic();
     if(PARAMETER_NAME=="CONVERGENCE FLAG")
         return solver.get_convergence_flag();
-    if(PARAMETER_NAME=="EXPORT DETAILED ITERATION LOGIC")
+    if(PARAMETER_NAME=="EXPORT DETAILED ITERATION LOG LOGIC")
         return solver.get_export_detailed_iteration_log_logic();
     if(PARAMETER_NAME=="CONSIDER NEGATIVE SEQUENCE SUPPORT OF RES LOGIC")
         return solver.get_consider_negative_sequence_support_of_RES_logic();
@@ -281,7 +347,7 @@ bool api_get_short_circuit_solver_boolean_parameter(char* parameter_name, unsign
     return false;
 }
 
-void api_short_circuit_set_bus_fault(unsigned int bus, char* fault_type, double fault_G, double fault_B, unsigned int toolkit_index)
+void api_set_short_circuit_bus_fault(unsigned int bus, char* fault_type, double fault_G, double fault_B, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     SHORT_CIRCUIT_SOLVER& sc_solver = toolkit.get_short_circuit_solver();
@@ -312,7 +378,7 @@ void api_short_circuit_set_bus_fault(unsigned int bus, char* fault_type, double 
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
-void api_short_circuit_set_line_fault(unsigned int ibus, unsigned int jbus, char* identifier, char* fault_type, double fault_location, double fault_G, double fault_B, unsigned int toolkit_index)
+void api_set_short_circuit_line_fault(unsigned int ibus, unsigned int jbus, char* identifier, char* fault_type, double fault_location, double fault_G, double fault_B, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     SHORT_CIRCUIT_SOLVER& sc_solver = toolkit.get_short_circuit_solver();
@@ -357,64 +423,11 @@ void api_short_circuit_set_line_fault(unsigned int ibus, unsigned int jbus, char
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
-void api_short_circuit_clear_fault(unsigned int toolkit_index)
+void api_clear_short_circuit_fault(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
     solver.clear_fault();
-}
-
-void api_short_circuit_build_positive_sequence_network_Y_matrix(unsigned int toolkit_index)
-{
-    STEPS& toolkit = get_toolkit(toolkit_index);
-    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
-    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
-    network_matrix.build_positive_sequence_network_Y_matrix();
-}
-
-void api_short_circuit_build_negative_sequence_network_Y_matrix(unsigned int toolkit_index)
-{
-    STEPS& toolkit = get_toolkit(toolkit_index);
-    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
-    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
-    network_matrix.build_negative_sequence_network_Y_matrix();
-}
-
-void api_short_circuit_build_zero_sequence_network_Y_matrix(unsigned int toolkit_index)
-{
-    STEPS& toolkit = get_toolkit(toolkit_index);
-    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
-    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
-    network_matrix.build_zero_sequence_network_Y_matrix();
-}
-
-void api_short_circuit_build_positive_sequence_network_Z_matrix(unsigned int toolkit_index)
-{
-    STEPS& toolkit = get_toolkit(toolkit_index);
-    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
-    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
-    network_matrix.build_positive_sequence_network_Z_matrix();
-}
-void api_short_circuit_build_negative_sequence_network_Z_matrix(unsigned int toolkit_index)
-{
-    STEPS& toolkit = get_toolkit(toolkit_index);
-    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
-    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
-    network_matrix.build_negative_sequence_network_Z_matrix();
-}
-void api_short_circuit_build_zero_sequence_network_Z_matrix(unsigned int toolkit_index)
-{
-    STEPS& toolkit = get_toolkit(toolkit_index);
-    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
-    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
-    network_matrix.build_zero_sequence_network_Z_matrix();
-}
-
-void api_short_circuit_update_internal_voltage(unsigned int toolkit_index)
-{
-    STEPS& toolkit = get_toolkit(toolkit_index);
-    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
-    solver.update_internal_voltage_of_all_generators_and_wt_generators();
 }
 
 void api_solve_short_circuit(unsigned int toolkit_index)
@@ -431,14 +444,14 @@ void api_solve_short_circuit_with_iteration(unsigned int toolkit_index)
     solver.solve_with_iteration();
 }
 
-void api_short_circuit_current_scanning(unsigned int toolkit_index)
+void api_scan_short_circuit_current_of_all_buses(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
-    solver.short_circuit_current_scanning();
+    solver.scan_short_circuit_current_of_all_buses();
 }
 
-double api_get_short_circuit_result_float_data(char* parameter_name, unsigned int toolkit_index)
+double api_get_short_circuit_value_at_fault_point(char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
@@ -446,61 +459,75 @@ double api_get_short_circuit_result_float_data(char* parameter_name, unsigned in
     string PARAMETER_NAME = string2upper(parameter_name);
 
     if(PARAMETER_NAME=="IF1_PU" or PARAMETER_NAME=="POSITIVE SEQUENCE CURRENT IN PU")
-        return abs(solver.get_positive_sequence_fault_current_in_pu());
+        return abs(solver.get_positive_sequence_fault_current_of_fault_point_in_pu());
     if(PARAMETER_NAME=="IF2_PU" or PARAMETER_NAME=="NEGATIVE SEQUENCE CURRENT IN PU")
-        return abs(solver.get_negative_sequence_fault_current_in_pu());
+        return abs(solver.get_negative_sequence_fault_current_of_fault_point_in_pu());
     if(PARAMETER_NAME=="IF0_PU" or PARAMETER_NAME=="ZERO SEQUENCE CURRENT IN PU")
-        return abs(solver.get_zero_sequence_fault_current_in_pu());
+        return abs(solver.get_zero_sequence_fault_current_of_fault_point_in_pu());
 
     if(PARAMETER_NAME=="IF1_KA" or PARAMETER_NAME=="POSITIVE SEQUENCE CURRENT IN KA")
-        return abs(solver.get_positive_sequence_fault_current_in_kA());
+        return abs(solver.get_positive_sequence_fault_current_of_fault_point_in_kA());
     if(PARAMETER_NAME=="IF2_KA" or PARAMETER_NAME=="NEGATIVE SEQUENCE CURRENT IN KA")
-        return abs(solver.get_negative_sequence_fault_current_in_kA());
+        return abs(solver.get_negative_sequence_fault_current_of_fault_point_in_kA());
     if(PARAMETER_NAME=="IF0_KA" or PARAMETER_NAME=="ZERO SEQUENCE CURRENT IN KA")
-        return abs(solver.get_zero_sequence_fault_current_in_kA());
+        return abs(solver.get_zero_sequence_fault_current_of_fault_point_in_kA());
 
-    if(PARAMETER_NAME=="IF1_DEG" or PARAMETER_NAME=="POSITIVE SEQUENCE CURRENT IN DEG")
-        return rad2deg(arg(solver.get_positive_sequence_fault_current_in_pu()));
-    if(PARAMETER_NAME=="IF2_DEG" or PARAMETER_NAME=="NEGATIVE SEQUENCE CURRENT IN DEG")
-        return rad2deg(arg(solver.get_negative_sequence_fault_current_in_pu()));
-    if(PARAMETER_NAME=="IF0_DEG" or PARAMETER_NAME=="ZERO SEQUENCE CURRENT IN DEG")
-        return rad2deg(arg(solver.get_zero_sequence_fault_current_in_pu()));
+    if(PARAMETER_NAME=="IF1ANG_DEG" or PARAMETER_NAME=="POSITIVE SEQUENCE CURRENT ANGLE IN DEG")
+        return rad2deg(arg(solver.get_positive_sequence_fault_current_of_fault_point_in_pu()));
+    if(PARAMETER_NAME=="IF2ANG_DEG" or PARAMETER_NAME=="NEGATIVE SEQUENCE CURRENT ANGLE IN DEG")
+        return rad2deg(arg(solver.get_negative_sequence_fault_current_of_fault_point_in_pu()));
+    if(PARAMETER_NAME=="IF0ANG_DEG" or PARAMETER_NAME=="ZERO SEQUENCE CURRENT ANGLE IN DEG")
+        return rad2deg(arg(solver.get_zero_sequence_fault_current_of_fault_point_in_pu()));
 
 
-    if(PARAMETER_NAME=="VF1_PU" or PARAMETER_NAME=="POSITIVE SEQUENCE VOLTAGE AT FAULT PLACE IN PU")
+    if(PARAMETER_NAME=="VF1_PU" or PARAMETER_NAME=="POSITIVE SEQUENCE VOLTAGE IN PU")
         return abs(solver.get_positive_sequence_voltage_of_fault_point_in_pu());
-    if(PARAMETER_NAME=="VF2_PU" or PARAMETER_NAME=="NEGATIVE SEQUENCE VOLTAGE AT FAULT PLACE IN PU")
+    if(PARAMETER_NAME=="VF2_PU" or PARAMETER_NAME=="NEGATIVE SEQUENCE VOLTAGE IN PU")
         return abs(solver.get_negative_sequence_voltage_of_fault_point_in_pu());
-    if(PARAMETER_NAME=="VF0_PU" or PARAMETER_NAME=="ZERO SEQUENCE VOLTAGE AT FAULT PLACE IN PU")
+    if(PARAMETER_NAME=="VF0_PU" or PARAMETER_NAME=="ZERO SEQUENCE VOLTAGE IN PU")
         return abs(solver.get_zero_sequence_voltage_of_fault_point_in_pu());
 
-    if(PARAMETER_NAME=="VF1_KA" or PARAMETER_NAME=="POSITIVE SEQUENCE VOLTAGE AT FAULT PLACE IN KA")
+    if(PARAMETER_NAME=="VF1_KV" or PARAMETER_NAME=="POSITIVE SEQUENCE VOLTAGE IN KV")
         return abs(solver.get_positive_sequence_voltage_of_fault_point_in_kV());
-    if(PARAMETER_NAME=="VF2_KA" or PARAMETER_NAME=="NEGATIVE SEQUENCE VOLTAGE AT FAULT PLACE IN KA")
+    if(PARAMETER_NAME=="VF2_KV" or PARAMETER_NAME=="NEGATIVE SEQUENCE VOLTAGE IN KV")
         return abs(solver.get_negative_sequence_voltage_of_fault_point_in_kV());
-    if(PARAMETER_NAME=="VF0_KA" or PARAMETER_NAME=="ZERO SEQUENCE VOLTAGE AT FAULT PLACE IN KA")
+    if(PARAMETER_NAME=="VF0_KV" or PARAMETER_NAME=="ZERO SEQUENCE VOLTAGE IN KV")
         return abs(solver.get_zero_sequence_voltage_of_fault_point_in_kV());
 
-    if(PARAMETER_NAME=="VF1_DEG" or PARAMETER_NAME=="POSITIVE SEQUENCE VOLTAGE AT FAULT IN DEG")
+    if(PARAMETER_NAME=="VF1ANG_DEG" or PARAMETER_NAME=="POSITIVE SEQUENCE VOLTAGE ANGLE IN DEG")
         return rad2deg(arg(solver.get_positive_sequence_voltage_of_fault_point_in_pu()));
-    if(PARAMETER_NAME=="VF2_DEG" or PARAMETER_NAME=="NEGATIVE SEQUENCE VOLTAGE AT FAULT IN DEG")
+    if(PARAMETER_NAME=="VF2ANG_DEG" or PARAMETER_NAME=="NEGATIVE SEQUENCE VOLTAGE ANGLE IN DEG")
         return rad2deg(arg(solver.get_negative_sequence_voltage_of_fault_point_in_pu()));
-    if(PARAMETER_NAME=="VF0_DEG" or PARAMETER_NAME=="ZERO SEQUENCE VOLTAGE AT FAULT IN DEG")
+    if(PARAMETER_NAME=="VF0ANG_DEG" or PARAMETER_NAME=="ZERO SEQUENCE VOLTAGE ANGLE IN DEG")
         return rad2deg(arg(solver.get_zero_sequence_voltage_of_fault_point_in_pu()));
+
+    if(PARAMETER_NAME=="S1_PU" or PARAMETER_NAME=="POSITIVE SEQUENCE SHORT CIRCUIT CAPACITY IN PU")
+        return solver.get_positive_sequence_short_circuit_capacity_of_fault_point_in_pu();
+    if(PARAMETER_NAME=="S2_PU" or PARAMETER_NAME=="NEGATIVE SEQUENCE SHORT CIRCUIT CAPACITY IN PU")
+        return solver.get_negative_sequence_short_circuit_capacity_of_fault_point_in_pu();
+    if(PARAMETER_NAME=="S0_PU" or PARAMETER_NAME=="ZERO SEQUENCE SHORT CIRCUIT CAPACITY IN PU")
+        return solver.get_zero_sequence_short_circuit_capacity_of_fault_point_in_pu();
+
+    if(PARAMETER_NAME=="S1_MVA" or PARAMETER_NAME=="POSITIVE SEQUENCE SHORT CIRCUIT CAPACITY IN MVA")
+        return solver.get_positive_sequence_short_circuit_capacity_of_fault_point_in_MVA();
+    if(PARAMETER_NAME=="S2_MVA" or PARAMETER_NAME=="NEGATIVE SEQUENCE SHORT CIRCUIT CAPACITY IN MVA")
+        return solver.get_negative_sequence_short_circuit_capacity_of_fault_point_in_MVA();
+    if(PARAMETER_NAME=="S0_MVA" or PARAMETER_NAME=="ZERO SEQUENCE SHORT CIRCUIT CAPACITY IN MVA")
+        return solver.get_zero_sequence_short_circuit_capacity_of_fault_point_in_MVA();
 
 
     if(PARAMETER_NAME=="R1_PU" or PARAMETER_NAME=="POSITIVE SEQUENCE EQUIVALENT R IN PU")
-        return solver.get_positive_sequence_thevenin_impedance_at_fault_in_pu().real();
+        return solver.get_positive_sequence_thevenin_impedance_at_fault_point_in_pu().real();
     if(PARAMETER_NAME=="X1_PU" or PARAMETER_NAME=="POSITIVE SEQUENCE EQUIVALENT X IN PU")
-        return solver.get_positive_sequence_thevenin_impedance_at_fault_in_pu().imag();
+        return solver.get_positive_sequence_thevenin_impedance_at_fault_point_in_pu().imag();
     if(PARAMETER_NAME=="R2_PU" or PARAMETER_NAME=="NEGATIVE SEQUENCE EQUIVALENT R IN PU")
-        return solver.get_negative_sequence_thevenin_impedance_at_fault_in_pu().real();
+        return solver.get_negative_sequence_thevenin_impedance_at_fault_point_in_pu().real();
     if(PARAMETER_NAME=="X2_PU" or PARAMETER_NAME=="NEGATIVE SEQUENCE EQUIVALENT X IN PU")
-        return solver.get_negative_sequence_thevenin_impedance_at_fault_in_pu().imag();
+        return solver.get_negative_sequence_thevenin_impedance_at_fault_point_in_pu().imag();
     if(PARAMETER_NAME=="R0_PU" or PARAMETER_NAME=="ZERO SEQUENCE EQUIVALENT R IN PU")
-        return solver.get_zero_sequence_thevenin_impedance_at_fault_in_pu().real();
+        return solver.get_zero_sequence_thevenin_impedance_at_fault_point_in_pu().real();
     if(PARAMETER_NAME=="X0_PU" or PARAMETER_NAME=="ZERO SEQUENCE EQUIVALENT X IN PU")
-        return solver.get_zero_sequence_thevenin_impedance_at_fault_in_pu().imag();
+        return solver.get_zero_sequence_thevenin_impedance_at_fault_point_in_pu().imag();
 
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for short circuit result with api %s.\n"
@@ -510,18 +537,18 @@ double api_get_short_circuit_result_float_data(char* parameter_name, unsigned in
 }
 
 
-void api_show_short_circuit_result(unsigned int toolkit_index)
+void api_show_short_circuit_result_at_fault_point(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
-    solver.show_short_circuit_result();
+    solver.show_short_circuit_result_at_fault_point();
 }
 
-void api_save_short_circuit_result_to_file(char* file, unsigned int toolkit_index)
+void api_save_short_circuit_result_at_fault_point_to_file(char* file, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
-    solver.save_short_circuit_result_to_file(file);
+    solver.save_short_circuit_result_at_fault_point_to_file(file);
 }
 
 void api_save_extended_short_circuit_result_to_file(char* file, unsigned int toolkit_index)
@@ -530,6 +557,14 @@ void api_save_extended_short_circuit_result_to_file(char* file, unsigned int too
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
     solver.save_extended_short_circuit_result_to_file(file);
 }
+
+double api_get_short_circuit_capacity_at_bus_in_MVA(unsigned int bus, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+    return solver.get_positive_sequence_short_circuit_capacity_of_bus_in_MVA(bus);
+}
+
 double api_get_short_circuit_ratio_of_HVDC(unsigned int hvdc_bus, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

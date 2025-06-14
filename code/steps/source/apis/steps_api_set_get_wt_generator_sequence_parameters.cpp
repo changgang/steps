@@ -68,9 +68,9 @@ double api_get_wt_generator_sequence_float_data(unsigned int bus, char* identifi
         return rad2deg(arg(wt_generator->get_zero_sequence_complex_current_in_pu()));
 
     if(PARAMETER_NAME=="ID_PU" or PARAMETER_NAME=="D AXIS CURRENT OF LVRT IN PU")
-        return wt_generator->get_complex_dq_axis_current_in_pu_short_circuit_solver().real();
+        return wt_generator->get_complex_dq_axis_current_in_pu_for_short_circuit_solver().real();
     if(PARAMETER_NAME=="IQ_PU" or PARAMETER_NAME=="Q AXIS CURRENT OF LVRT IN PU")
-        return wt_generator->get_complex_dq_axis_current_in_pu_short_circuit_solver().imag();
+        return wt_generator->get_complex_dq_axis_current_in_pu_for_short_circuit_solver().imag();
 
     if(PARAMETER_NAME=="I_LVRT_PU")
         return abs(wt_generator->get_positive_sequence_complex_injection_current_in_pu_for_short_circuit_solver());

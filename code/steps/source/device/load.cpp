@@ -838,11 +838,6 @@ complex<double> LOAD::get_zero_sequence_complex_current_in_kA()
     return get_zero_sequence_complex_current_in_pu()*sbase/(SQRT3*psdb.get_bus_base_voltage_in_kV(get_load_bus()));
 }
 
-
-
-
-
-
 void LOAD::set_ratio_of_motor_active_power(double r)
 {
     ratio_of_motor_P = r;
@@ -1034,7 +1029,7 @@ bool LOAD::has_motor_load() const
         return false;
 }
 
-void LOAD::update_motor_load_data()
+void LOAD::update_motor_load_data_for_short_circuit_solver()
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
@@ -1073,11 +1068,9 @@ void LOAD::update_motor_load_data()
 
         BUS* busptr = get_bus_pointer();
         double V = busptr->get_positive_sequence_voltage_in_kV()/rated_voltage;
-        complex<double> complex_V = busptr->get_positive_sequence_complex_voltage_in_kV()/rated_voltage;
         double P = motor_p/mbase/(V*V);
 
-        // single cage
-        if((R2==0.0 and X2==0.0) or (R2==999.0 and X2==999.0))
+        if((R2==0.0 and X2==0.0) or (R2==999.0 and X2==999.0))// single cage
         {
             double Xrm = X1 + Xm;
             double Xsm = Xa + Xm;
@@ -1124,13 +1117,6 @@ void LOAD::update_motor_load_data()
             set_motor_positive_sequence_impedance_in_pu(Z);
             set_motor_negative_sequence_impedance_in_pu(Z);
 
-            // internal voltage
-//            complex<double> motor_power = get_motor_power_in_MVA();
-//            complex<double> I = motor_power/mbase/complex_V;
-//            complex<double> E = complex_V - I*Z;
-//            set_motor_internal_voltage_in_pu(E);
-
-
             double ratedV = get_motor_rated_voltage_in_kV();
             double bus_ratedV = busptr->get_base_voltage_in_kV();
             double Zmb = ratedV*ratedV/mbase;
@@ -1147,9 +1133,6 @@ void LOAD::update_motor_load_data()
 
             complex<double> E = V1 - I*Z1;
             set_motor_internal_voltage_in_pu(E);
-
-
-            // set_motor_internal_voltage_in_pu(complex_V);
         }
         else    //double cage
         {
@@ -1219,7 +1202,6 @@ void LOAD::update_motor_load_data()
 
             complex<double> E = V1 - I*Z1;
             set_motor_internal_voltage_in_pu(E);
-
         }
     }
 }
