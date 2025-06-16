@@ -437,13 +437,6 @@ void api_solve_short_circuit(unsigned int toolkit_index)
     solver.solve();
 }
 
-void api_solve_short_circuit_with_iteration(unsigned int toolkit_index)
-{
-    STEPS& toolkit = get_toolkit(toolkit_index);
-    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
-    solver.solve_with_iteration();
-}
-
 void api_scan_short_circuit_current_of_all_buses(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
@@ -565,18 +558,80 @@ double api_get_short_circuit_capacity_at_bus_in_MVA(unsigned int bus, unsigned i
     return solver.get_positive_sequence_short_circuit_capacity_of_bus_in_MVA(bus);
 }
 
-double api_get_short_circuit_ratio_of_HVDC(unsigned int hvdc_bus, unsigned int toolkit_index)
+double api_get_short_circuit_ratio_of_LCC_HVDC2T(unsigned int ibus, unsigned int jbus, char* identifier, char* side, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
-    double Kmscr = solver.get_short_circuit_ratio_of_HVDC(hvdc_bus);
-    return Kmscr;
+
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
+    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
+
+    string SIDE = string2upper(side);
+    CONVERTER_SIDE con_side = (SIDE=="RECTIFIER"?RECTIFIER:INVERTER);
+
+    return  solver.get_short_circuit_ratio_of_LCC_HVDC2T(*hvdcptr, con_side);
 }
 
-double api_get_short_circuit_ratio_of_RES(unsigned int res_bus, unsigned int toolkit_index)
+double api_get_short_circuit_ratio_of_wt_generator(unsigned int wtg_bus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
+    DEVICE_ID did = get_wt_generator_device_id(wtg_bus, identifier);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    WT_GENERATOR* wt_generator = psdb.get_wt_generator(did);
+
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
-    double Kmrscr = solver.get_short_circuit_ratio_of_HVDC(res_bus);
-    return Kmrscr;
+
+    return solver.get_short_circuit_ratio_of_wt_generator(*wt_generator);
+}
+
+double api_get_short_circuit_ratio_of_pv_unit(unsigned int pvu_bus, char* identifier, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DEVICE_ID did = get_pv_unit_device_id(pvu_bus, identifier);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    PV_UNIT* pv_unit = psdb.get_pv_unit(did);
+
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+
+    return solver.get_short_circuit_ratio_of_pv_unit(*pv_unit);
+}
+
+double api_get_multiple_infeed_short_circuit_ratio_of_LCC_HVDC2T(unsigned int ibus, unsigned int jbus, char* identifier, char* side, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+
+    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
+    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
+
+    string SIDE = string2upper(side);
+    CONVERTER_SIDE con_side = (SIDE=="RECTIFIER"?RECTIFIER:INVERTER);
+
+    return  solver.get_multiple_infeed_short_circuit_ratio_of_LCC_HVDC2T(*hvdcptr, con_side);
+}
+
+double api_get_multiple_renewable_energy_station_short_circuit_ratio_of_wt_generator(unsigned int wtg_bus, char* identifier, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DEVICE_ID did = get_wt_generator_device_id(wtg_bus, identifier);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    WT_GENERATOR* wt_generator = psdb.get_wt_generator(did);
+
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+
+    return solver.get_multiple_renewable_energy_station_short_circuit_ratio_of_wt_generator(*wt_generator);
+}
+
+double api_get_multiple_renewable_energy_station_short_circuit_ratio_of_pv_unit(unsigned int pvu_bus, char* identifier, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DEVICE_ID did = get_pv_unit_device_id(pvu_bus, identifier);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    PV_UNIT* pv_unit = psdb.get_pv_unit(did);
+
+    SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
+
+    return solver.get_multiple_renewable_energy_station_short_circuit_ratio_of_pv_unit(*pv_unit);
 }

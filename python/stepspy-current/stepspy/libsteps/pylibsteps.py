@@ -707,8 +707,6 @@ def load_library(libsteps_file):
 
     libsteps.api_solve_short_circuit.restype = None
     libsteps.api_solve_short_circuit.argtypes = (c_uint, )
-    libsteps.api_solve_short_circuit_with_iteration.restype = None
-    libsteps.api_solve_short_circuit_with_iteration.argtypes = (c_uint, )
     libsteps.api_get_short_circuit_value_at_fault_point.restype = (c_double)
     libsteps.api_get_short_circuit_value_at_fault_point.argtypes = (c_char_p, c_uint)
     libsteps.api_show_short_circuit_result_at_fault_point.restype = None
@@ -719,10 +717,19 @@ def load_library(libsteps_file):
     libsteps.api_save_extended_short_circuit_result_to_file.argtypes = (c_char_p, c_uint)
     libsteps.api_get_short_circuit_capacity_at_bus_in_MVA.restype = (c_double)
     libsteps.api_get_short_circuit_capacity_at_bus_in_MVA.argtypes = (c_uint, c_uint)
-    libsteps.api_get_short_circuit_ratio_of_HVDC.restype = (c_double)
-    libsteps.api_get_short_circuit_ratio_of_HVDC.argtypes = (c_uint, c_uint)
-    libsteps.api_get_short_circuit_ratio_of_RES.restype = (c_double)
-    libsteps.api_get_short_circuit_ratio_of_RES.argtypes = (c_uint, c_uint)
+    
+    libsteps.api_get_short_circuit_ratio_of_LCC_HVDC2T.restype = (c_double)
+    libsteps.api_get_short_circuit_ratio_of_LCC_HVDC2T.argtypes = (c_uint, c_uint, c_char_p, c_char_p, c_uint)
+    libsteps.api_get_short_circuit_ratio_of_wt_generator.restype = (c_double)
+    libsteps.api_get_short_circuit_ratio_of_wt_generator.argtypes = (c_uint, c_char_p, c_uint)
+    libsteps.api_get_short_circuit_ratio_of_pv_unit.restype = (c_double)
+    libsteps.api_get_short_circuit_ratio_of_pv_unit.argtypes = (c_uint, c_char_p, c_uint)
+    libsteps.api_get_multiple_infeed_short_circuit_ratio_of_LCC_HVDC2T.restype = (c_double)
+    libsteps.api_get_multiple_infeed_short_circuit_ratio_of_LCC_HVDC2T.argtypes = (c_uint, c_uint, c_char_p, c_char_p, c_uint)
+    libsteps.api_get_multiple_renewable_energy_station_short_circuit_ratio_of_wt_generator.restype = (c_double)
+    libsteps.api_get_multiple_renewable_energy_station_short_circuit_ratio_of_wt_generator.argtypes = (c_uint, c_char_p, c_uint)
+    libsteps.api_get_multiple_renewable_energy_station_short_circuit_ratio_of_pv_unit.restype = (c_double)
+    libsteps.api_get_multiple_renewable_energy_station_short_circuit_ratio_of_pv_unit.argtypes = (c_uint, c_char_p, c_uint)
 
     libsteps.api_set_short_circuit_bus_fault.restype = None
     libsteps.api_set_short_circuit_bus_fault.argtypes = (c_uint, c_char_p, c_double, c_double, c_uint)

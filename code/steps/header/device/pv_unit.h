@@ -88,6 +88,7 @@ class PV_UNIT : public SOURCE
         void set_sequence_parameter_import_flag(bool flag);
         bool get_sequence_parameter_import_flag() const;
 
+        void update_internal_voltage_for_short_circuit_solver();
         complex<double> get_complex_dq_axis_current_in_pu_for_short_circuit_solver();
         complex<double> get_positive_sequence_complex_injection_current_in_pu_for_short_circuit_solver();
         complex<double> get_negative_sequence_complex_injection_current_in_pu_for_short_circuit_solver();
@@ -105,5 +106,6 @@ class PV_UNIT : public SOURCE
 
         double R1, X1, R2, X2, R0, X0, Rground, Xground;
         bool sequence_parameter_import_flag;
+        complex<double> internal_voltage_for_short_circuit_solver;
 };
 #endif // PV_UNIT_H

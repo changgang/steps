@@ -45,9 +45,7 @@ void STEPS_IMEXPORTER::load_all_seq_data_to_devices()
 
 void STEPS_IMEXPORTER::load_change_code_data()
 {
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    unsigned int IC;
+    unsigned int IC=0;
     string REV;
 
     if(splitted_sseq_data_in_ram.size()<1)
@@ -258,7 +256,7 @@ void STEPS_IMEXPORTER::load_generator_seq_data(GENERATOR& generator, vector<stri
     double R_pos = 0.0, X_pos_subtransient = 0.0, X_pos_transient = 0.0, X_pos_sync = 0.0;
     double R_neg = 0.0, X_neg = 0.0;
     double R_zero = 0.0, X_zero = 0.0;
-    unsigned int unit_of_grounding_Z;
+    unsigned int unit_of_grounding_Z=0;
     double R_ground = 0.0, X_ground = 0.0;
     unsigned int n = 0;
 
@@ -361,15 +359,8 @@ void STEPS_IMEXPORTER::load_generator_seq_data(GENERATOR& generator, vector<stri
 void STEPS_IMEXPORTER::load_wt_generator_seq_data(WT_GENERATOR& wt_generator, vector<string>& data)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    double R_pos = 0.0, X_pos_subtransient = 0.0, X_pos_transient = 0.0, X_pos_sync = 0.0;
-    double R_neg = 0.0, X_neg = 0.0;
-    double R_zero = 0.0, X_zero = 0.0;
-    unsigned int unit_of_grounding_Z;
-    double R_ground = 0.0, X_ground = 0.0;
-    unsigned int type;
+    unsigned int type=0;
     unsigned int n = 0;
 
     if(data.size()>0)
@@ -418,19 +409,19 @@ void STEPS_IMEXPORTER::load_wt_generator_seq_data(WT_GENERATOR& wt_generator, ve
 void STEPS_IMEXPORTER::load_constant_speed_wtg_seq_data(WT_GENERATOR& wt_gen, vector<string>& data)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    double R_pos = 0.0, X_pos_subtransient = 0.0, X_pos_transient = 0.0, X_pos_sync = 0.0;
-    double R_neg = 0.0, X_neg = 0.0;
-    double R_zero = 0.0, X_zero = 0.0;
-    unsigned int unit_of_grounding_Z;
-    double R_ground = 0.0, X_ground = 0.0;
-    unsigned int type;
-
     wt_gen.set_wt_generator_type(CONSTANT_SPEED_WT_GENERATOR);
 
-    double ratedVoltage, mbase, Ra, Xa, Xm, R1, X1, R2, X2, R0, X0;
+    double ratedVoltage = 0.0;
+    double mbase = 0.0;
+    double Ra = 0.0;
+    double Xa = 0.0;
+    double Xm = 0.0;
+    double R1 = 0.0;
+    double X1 = 0.0;
+    double R2 = 0.0;
+    double X2 = 0.0;
+    double R0 = 0.0;
+    double X0 = 0.0;
 
     unsigned int n = 0;
     if(data.size()>0)
@@ -509,9 +500,8 @@ void STEPS_IMEXPORTER::load_doubly_fed_wtg_seq_data(WT_GENERATOR& wt_gen, vector
     double R_pos = 0.0, X_pos_subtransient = 0.0, X_pos_transient = 0.0, X_pos_sync = 0.0;
     double R_neg = 0.0, X_neg = 0.0;
     double R_zero = 0.0, X_zero = 0.0;
-    unsigned int unit_of_grounding_Z;
+    unsigned int unit_of_grounding_Z=0;
     double R_ground = 0.0, X_ground = 0.0;
-    unsigned int type;
     unsigned int n = 0;
 
     wt_gen.set_wt_generator_type(DOUBLY_FED_WT_GENERATOR);
@@ -615,8 +605,6 @@ void STEPS_IMEXPORTER::load_direct_driven_wtg_seq_data(WT_GENERATOR& wt_gen, vec
 void STEPS_IMEXPORTER::load_pv_unit_seq_data(PV_UNIT& pv_unit, vector<string>& data)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int n = 0;
 
@@ -626,7 +614,7 @@ void STEPS_IMEXPORTER::load_pv_unit_seq_data(PV_UNIT& pv_unit, vector<string>& d
         data.erase(data.begin());
     }
 
-    unsigned int type_of_pv;
+    unsigned int type_of_pv = 0;
     if(data.size()>0)
     {
         type_of_pv = get_integer_data(data[n], "0");
@@ -654,7 +642,7 @@ void STEPS_IMEXPORTER::load_pv_unit_seq_data_for_non_iterative_method(PV_UNIT& p
     double R_pos = 0.0, X_pos = 0.0;
     double R_neg = 0.0, X_neg = 0.0;
     double R_zero = 0.0, X_zero = 0.0;
-    unsigned int unit_of_grounding_Z;
+    unsigned int unit_of_grounding_Z=0;
     double R_ground = 0.0, X_ground = 0.0;
     unsigned int n = 0;
 
@@ -818,10 +806,6 @@ void STEPS_IMEXPORTER::load_wt_generator_LVRT_data_for_iterative_method(WT_GENER
 void STEPS_IMEXPORTER::load_energy_storage_seq_data(ENERGY_STORAGE& estorage, vector<string>& data)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    unsigned int n = 0;
 
     if(data.size()>0)
     {
@@ -897,7 +881,7 @@ void STEPS_IMEXPORTER::load_static_load_seq_data(LOAD& load, vector<string>& dat
 {
     unsigned int n=0;
     double P_neg=0.0, Q_neg=0.0, P_zero=0.0, Q_zero=0.0;
-    unsigned int ground_flag;
+    unsigned int ground_flag = 0;
     if(data.size()>0)
     {
         P_neg = get_double_data(data[n], "0.0");
@@ -972,7 +956,6 @@ void STEPS_IMEXPORTER::load_motor_load_seq_data(LOAD& load, vector<string>& data
     if(data.size()>0)
     {
         mbase = get_double_data(data[n], "0.0");
-        data.erase(data.begin());
     }
     load.set_mbase_in_MVA(mbase);
 
@@ -1430,8 +1413,10 @@ void STEPS_IMEXPORTER::load_two_winding_transformer_zero_seq_data(TRANSFORMER& t
     double Ubase_primary = trans.get_winding_nominal_voltage_in_kV(PRIMARY_SIDE);
     double Ubase_secondary = trans.get_winding_nominal_voltage_in_kV(SECONDARY_SIDE);
 
-    unsigned int units_of_non_grounding_impedance, units_of_grounding_impedance, connection_code;
-    double Rg1, Xg1, R12, X12, Rg2, Xg2, R02, X02, Rnutrl, Xnutrl;
+    unsigned int units_of_non_grounding_impedance=0;
+    unsigned int units_of_grounding_impedance=0;
+    unsigned int connection_code=0;
+    double Rg1=0, Xg1=0, R12=0, X12=0, Rg2=0, Xg2=0, R02=0, X02=0, Rnutrl=0, Xnutrl=0;
     unsigned int n = 0;
 
     if(data.size()>0)
@@ -1500,7 +1485,6 @@ void STEPS_IMEXPORTER::load_two_winding_transformer_zero_seq_data(TRANSFORMER& t
         data.erase(data.begin());
     }
 
-    //
     if(data.size()>0)
     {
         R02 = get_double_data(data[n], "0.0");
@@ -1578,8 +1562,8 @@ void STEPS_IMEXPORTER::load_three_winding_transformer_zero_seq_data(TRANSFORMER 
     double Ubase_secondary = trans.get_winding_nominal_voltage_in_kV(SECONDARY_SIDE);
     double Ubase_tertiary = trans.get_winding_nominal_voltage_in_kV(TERTIARY_SIDE);
 
-    unsigned int units_of_non_grounding_impedance, units_of_grounding_impedance, connection_code;
-    double Rg1, Xg1, R01, X01, Rg2, Xg2, R02, X02, Rg3, Xg3, R03, X03, Rnutrl, Xnutrl;
+    unsigned int units_of_non_grounding_impedance=0, units_of_grounding_impedance=0, connection_code=0;
+    double Rg1=0, Xg1=0, R01=0, X01=0, Rg2=0, Xg2=0, R02=0, X02=0, Rg3=0, Xg3=0, R03=0, X03=0, Rnutrl=0, Xnutrl=0;
     unsigned int n = 0;
 
     if(data.size()>0)

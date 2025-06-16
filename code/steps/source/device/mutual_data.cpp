@@ -30,17 +30,17 @@ void MUTUAL_DATA::clear()
 
 bool MUTUAL_DATA::is_in_area(unsigned int area) const
 {
-    ;
+    return false;
 }
 
 bool MUTUAL_DATA::is_in_zone(unsigned int zone) const
 {
-    ;
+    return false;
 }
 
 bool MUTUAL_DATA::is_valid() const
 {
-    ;
+    return false;
 }
 
 void MUTUAL_DATA::check()
@@ -57,7 +57,6 @@ DEVICE_ID MUTUAL_DATA::get_device_id() const
 {
     ;
 }
-
 
 void MUTUAL_DATA::set_first_ac_line_pointer(AC_LINE* lineptr)
 {

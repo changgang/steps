@@ -577,6 +577,24 @@ bool PV_UNIT::get_sequence_parameter_import_flag() const
     return sequence_parameter_import_flag;
 }
 
+void PV_UNIT::update_internal_voltage_for_short_circuit_solver()
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    complex<double> V = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_source_bus());
+    complex<double> sbase = psdb.get_system_base_power_in_MVA();
+    complex<double> s = get_complex_generation_in_MVA();
+    complex<double> I = conj(s/sbase/V);
+
+    double R = get_positive_sequence_resistance_in_pu();
+    double X = get_positive_sequence_reactance_in_pu();
+    complex<double> mbase = get_mbase_in_MVA();
+    complex<double> Z = complex<double>(R,X)/mbase*sbase;
+
+    internal_voltage_for_short_circuit_solver = V + Z*I;
+}
+
 complex<double> PV_UNIT::get_complex_dq_axis_current_in_pu_for_short_circuit_solver()
 {
     STEPS& toolkit = get_toolkit();

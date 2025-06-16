@@ -395,8 +395,12 @@ EXPORT_STEPS_DLL void api_show_short_circuit_result_at_fault_point(unsigned int 
 EXPORT_STEPS_DLL void api_save_short_circuit_result_at_fault_point_to_file(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_extended_short_circuit_result_to_file(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_short_circuit_capacity_at_bus_in_MVA(unsigned int bus, unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL double api_get_short_circuit_ratio_of_HVDC(unsigned int hvdc_bus, unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL double api_get_short_circuit_ratio_of_RES(unsigned int res_bus, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_short_circuit_ratio_of_LCC_HVDC2T(unsigned int ibus, unsigned int jbus, char* identifier, char* side, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_short_circuit_ratio_of_wt_generator(unsigned int wtg_bus, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_short_circuit_ratio_of_pv_unit(unsigned int pvu_bus, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_multiple_infeed_short_circuit_ratio_of_LCC_HVDC2T(unsigned int ibus, unsigned int jbus, char* identifier, char* side, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_multiple_renewable_energy_station_short_circuit_ratio_of_wt_generator(unsigned int wtg_bus, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_multiple_renewable_energy_station_short_circuit_ratio_of_pv_unit(unsigned int pvu_bus, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL unsigned int api_get_dynamic_simulator_integer_parameter(char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_dynamic_simulator_integer_parameter(char* parameter_name, int value, unsigned int toolkit_index=INDEX_NOT_EXIST);

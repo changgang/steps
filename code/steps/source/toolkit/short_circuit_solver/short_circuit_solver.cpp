@@ -165,10 +165,11 @@ complex<double> SHORT_CIRCUIT_SOLVER::get_initial_voltage_of_bus_before_short_ci
         return bus_initial_voltage_before_short_circuit[bus_index];
 }
 
-void SHORT_CIRCUIT_SOLVER::update_internal_voltage_of_all_generators_and_wt_generators()
+void SHORT_CIRCUIT_SOLVER::update_internal_voltage_of_voltage_source_models()
 {
     update_internal_voltage_of_all_generators();
-    update_internal_voltage_of_all_wt_generators();
+    update_internal_voltage_of_wt_generators();
+    update_internal_voltage_of_pv_units();
 }
 
 void SHORT_CIRCUIT_SOLVER::update_internal_voltage_of_all_generators()
@@ -181,7 +182,7 @@ void SHORT_CIRCUIT_SOLVER::update_internal_voltage_of_all_generators()
         gens[i]->update_internal_voltage_for_short_circuit_solver();
 }
 
-void SHORT_CIRCUIT_SOLVER::update_internal_voltage_of_all_wt_generators()
+void SHORT_CIRCUIT_SOLVER::update_internal_voltage_of_wt_generators()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<WT_GENERATOR*> wt_gens = psdb.get_all_wt_generators();
@@ -189,6 +190,16 @@ void SHORT_CIRCUIT_SOLVER::update_internal_voltage_of_all_wt_generators()
     unsigned int n = wt_gens.size();
     for(unsigned int i=0; i<n; i++)
         wt_gens[i]->update_internal_voltage_for_short_circuit_solver();
+}
+
+void SHORT_CIRCUIT_SOLVER::update_internal_voltage_of_pv_units()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
+
+    unsigned int n = pv_units.size();
+    for(unsigned int i=0; i<n; i++)
+        pv_units[i]->update_internal_voltage_for_short_circuit_solver();
 }
 
 void SHORT_CIRCUIT_SOLVER::update_all_motor_load_data()
@@ -1129,16 +1140,57 @@ complex<double> SHORT_CIRCUIT_SOLVER::get_zero_sequence_equivalent_mutual_impeda
     return Z0_between_internal_bus_to_fault_place[b];
 }
 
+bool SHORT_CIRCUIT_SOLVER::is_iteration_solution_is_required()
+{
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
+    vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
+    unsigned int nw = wt_generators.size();
+    unsigned int np = pv_units.size();
+    if(nw+np==0)
+        return false;
+    else
+    {
+        for(unsigned int i=0; i<nw; i++)
+        {
+            WT_GENERATOR* wtg = wt_generators[i];
+            double Kq = wtg->get_support_coefficient_of_converter_reactive_current_during_LVRT();
+            if(Kq > DOUBLE_EPSILON)
+                return true;
+        }
+        for(unsigned int i=0; i<nw; i++)
+        {
+            PV_UNIT* pvu = pv_units[i];
+            double Kq = pvu->get_support_coefficient_of_converter_reactive_current_during_LVRT();
+            if(Kq > DOUBLE_EPSILON)
+                return true;
+        }
+        return false;
+    }
+}
+
 void SHORT_CIRCUIT_SOLVER::solve()
+{
+    if(is_iteration_solution_is_required()==false)
+    {
+        solve_short_circuit_with_direct_solution();
+    }
+    else
+    {
+        solve_short_circuit_with_iteration_solution();
+    }
+}
+
+void SHORT_CIRCUIT_SOLVER::solve_short_circuit_with_direct_solution()
 {
     ostringstream osstream;
     if(is_fault())
     {
         initialize_short_circuit_solver();
-
         build_sequence_Y_matrix();
         calculate_and_store_equivalent_impedance_between_bus_and_fault_place();
-        update_internal_voltage_of_all_generators_and_wt_generators();
+        update_internal_voltage_of_voltage_source_models();
         store_bus_initial_voltage_before_short_circuit();
         update_node_voltages_with_devices_equivalent_to_source();
 
@@ -1153,7 +1205,7 @@ void SHORT_CIRCUIT_SOLVER::solve()
     }
 }
 
-void SHORT_CIRCUIT_SOLVER::solve_with_iteration()
+void SHORT_CIRCUIT_SOLVER::solve_short_circuit_with_iteration_solution()
 {
     bool consider_negative_support_of_RES = get_consider_negative_sequence_support_of_RES_logic();
     if(consider_negative_support_of_RES == false or get_fault_type()==THREE_PHASES_FAULT)
@@ -1170,7 +1222,6 @@ void SHORT_CIRCUIT_SOLVER::solve_with_iteration_considering_positive_sequence_su
     unsigned int nwt = psdb.get_wt_generator_count();
     unsigned int npv = psdb.get_pv_unit_count();
     unsigned int fault_bus = faulted_bus_pointer->get_bus_number();
-
     vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
     vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
 
@@ -1652,417 +1703,310 @@ void SHORT_CIRCUIT_SOLVER::scan_short_circuit_current_of_all_buses()
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    unsigned int bus_count = psdb.get_bus_count();
 
-    unsigned int nwt = psdb.get_wt_generator_count();
+    vector<BUS*> buses = psdb.get_all_buses();
+    unsigned int nbuses = buses.size();
 
-    vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
-    initialize_short_circuit_solver();
-
-    build_sequence_Y_matrix();
-
-    vector<vector<complex<double> > > Z1_matrix = get_positive_sequence_impedance_matrix();
-
-    store_bus_initial_voltage_before_short_circuit();
-    update_internal_voltage_of_all_generators();
-
-    vector<complex<double> > initial_injection_current_vector = get_initial_positive_sequence_injection_current_vector_for_iteration();
-    vector<BUS*> fault_buses = psdb.get_all_buses();
-    for(unsigned int ff=0; ff<bus_count; ff++)
+    Z1_matrix = get_positive_sequence_impedance_matrix();
+    Z2_matrix = get_negative_sequence_impedance_matrix();
+    set_flag_for_building_z_matrix_for_each_solution(false);
+    for(unsigned int i=0; i<nbuses; i++)
     {
-        BUS* busptr = fault_buses[ff];
-        unsigned int fault_bus = busptr->get_bus_number();
-        set_bus_fault(fault_bus, THREE_PHASES_FAULT, complex<double>(0.0,-1000000));
-
-        unsigned int fb = get_internal_bus_number_of_physical_bus(fault_bus);
-        calculate_and_store_equivalent_impedance_between_bus_and_fault_place();
-
-        vector<vector<complex<double> > > Z1_between_internal_bus_to_RES_buses;
-        Z1_between_internal_bus_to_RES_buses.clear();
-        Z1_between_internal_bus_to_RES_buses.reserve(nwt);
-        for(unsigned int i=0; i<nwt; i++)
-        {
-            WT_GENERATOR* wt_gen = wt_generators[i];
-            unsigned int wtbus = wt_gen->get_source_bus();
-            unsigned int internal_wtbus = get_internal_bus_number_of_physical_bus(wtbus);
-            Z1_between_internal_bus_to_RES_buses.push_back(Z1_matrix[internal_wtbus]);
-        }
-
-        vector<complex<double> > injection_current_of_RES_in_last_iter;
-        injection_current_of_RES_in_last_iter.clear();
-        injection_current_of_RES_in_last_iter.reserve(nwt);
-        vector<complex<double> > RES_current_in_vector;
-        RES_current_in_vector.clear();
-        RES_current_in_vector.reserve(nwt);
-        for(unsigned int i=0; i<nwt; i++)
-        {
-            WT_GENERATOR* wt_gen = wt_generators[i];
-            BUS* busptr = wt_gen->get_bus_pointer();
-            complex<double> s = wt_gen->get_complex_generation_in_MVA();
-            complex<double> V = busptr->get_positive_sequence_complex_voltage_in_pu();
-            s = s/100.0;
-            complex<double> I = conj(s/V);
-            injection_current_of_RES_in_last_iter.push_back(I);
-            RES_current_in_vector.push_back(I);
-        }
-        complex<double> Uf = faulted_bus_pointer->get_positive_sequence_complex_voltage_in_pu();
-        solve_fault_current(Uf);
-        update_bus_sequence_voltage();
-        unsigned int max_iteration = get_max_iteration_count_for_iterative_method();
-        double max_allowed_threshold_in_pu = get_current_threshold_for_iterative_method();
-        double iter_factor = get_iteration_acceleration_factor();
-        if(nwt != 0)
-        {
-            osstream<<"Start iterating!"<<endl;
-            toolkit->show_information_with_leading_time_stamp(osstream);
-
-            vector<complex<double> > injection_current_vector_of_iter = initial_injection_current_vector;
-
-            complex<double> If1_iteration = get_positive_sequence_fault_current_of_fault_point_in_pu();
-            injection_current_vector_of_iter[fb] -= If1_iteration;
-            unsigned int iteration_count = 0;
-            while(iteration_count < max_iteration)
-            {
-                WT_GENERATOR* wtg_with_max_error = NULL;
-
-                iteration_count++;
-
-                if(get_export_detailed_iteration_log_logic())
-                {
-                    osstream<<"**** Iter "<<iteration_count<<" ****"<<endl;
-                    toolkit->show_information_with_leading_time_stamp(osstream);
-                }
-
-                double max_current_error_of_iter = 0.0;
-                for(unsigned int i=0; i<nwt; i++)
-                {
-                    WT_GENERATOR* wt_gen = wt_generators[i];
-                    unsigned int wt_bus = wt_gen->get_source_bus();
-                    unsigned int b = get_internal_bus_number_of_physical_bus(wt_bus);
-
-                    complex<double> Iwt_in_this_iter = wt_gen->get_positive_sequence_complex_injection_current_in_pu_for_short_circuit_solver();
-                    complex<double> delta_I = Iwt_in_this_iter - injection_current_of_RES_in_last_iter[i];
-
-                    injection_current_vector_of_iter[b] -= RES_current_in_vector[i];
-                    injection_current_vector_of_iter[b] += injection_current_of_RES_in_last_iter[i] + iter_factor*delta_I;
-                    if(abs(delta_I) > max_current_error_of_iter)
-                    {
-                        max_current_error_of_iter = abs(delta_I);
-                        wtg_with_max_error = wt_gen;
-                    }
-
-                    RES_current_in_vector[i] = injection_current_of_RES_in_last_iter[i] + iter_factor*delta_I;
-                    injection_current_of_RES_in_last_iter[i] = Iwt_in_this_iter;
-                }
-
-                if(get_export_detailed_iteration_log_logic() && (max_current_error_of_iter > DOUBLE_EPSILON))
-                {
-                    osstream<<"Max current error: "<<max_current_error_of_iter<<endl;
-                    osstream<<"Max error on "<<wtg_with_max_error->get_compound_device_name()<<endl;
-                    complex<double> Iwt = wtg_with_max_error->get_positive_sequence_complex_injection_current_in_pu_for_short_circuit_solver();
-                    BUS* busptr = wtg_with_max_error->get_bus_pointer();
-                    double V = busptr->get_positive_sequence_voltage_in_pu();
-                    osstream<<"Complex injection current is "<<Iwt<<", bus voltage is "<<V<<endl;
-                    toolkit->show_information_with_leading_time_stamp(osstream);
-                }
-
-                complex<double> If1_iteration = get_positive_sequence_fault_current_of_fault_point_in_pu();
-                injection_current_vector_of_iter[fb] += If1_iteration;
-                complex<double> Uf = 0.0;
-                for(unsigned int j=0; j<bus_count; j++)
-                    Uf = Uf + Z1_between_internal_bus_to_fault_place[j]*injection_current_vector_of_iter[j];
-                solve_fault_current(Uf);
-                If1_iteration = get_positive_sequence_fault_current_of_fault_point_in_pu();
-                injection_current_vector_of_iter[fb] -= If1_iteration;
-
-                if(get_export_detailed_iteration_log_logic())
-                {
-                    osstream<<"Uf = "<<abs(Uf)<<" If1 = "<<If1_iteration<<endl;
-                    toolkit->show_information_with_leading_time_stamp(osstream);
-                }
-                vector<complex<double> > bus_voltage_of_wtg_in_this_iter;
-                bus_voltage_of_wtg_in_this_iter.clear();
-                bus_voltage_of_wtg_in_this_iter.reserve(nwt);
-                for(unsigned int i=0; i<nwt; i++)
-                    bus_voltage_of_wtg_in_this_iter.push_back(0.0);
-                #ifdef ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
-                    set_openmp_number_of_threads(toolkit->get_thread_number());
-                    #pragma omp parallel for schedule(static)
-                #endif // ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
-                for(unsigned int i=0; i<nwt; i++)
-                {
-                    vector<complex<double> > Zcol = Z1_between_internal_bus_to_RES_buses[i];
-                    complex<double> V = 0.0;
-                    for(unsigned int j=0; j<bus_count; j++)
-                        V = V + Zcol[j]*injection_current_vector_of_iter[j];
-
-                    bus_voltage_of_wtg_in_this_iter[i] = V;
-                }
-
-                for(unsigned int i=0; i<nwt; i++)
-                {
-                    WT_GENERATOR* wt_gen = wt_generators[i];
-                    BUS* busptr = wt_gen->get_bus_pointer();
-                    complex<double> V = bus_voltage_of_wtg_in_this_iter[i];
-                    busptr->set_positive_sequence_voltage_in_pu(abs(V));
-                    busptr->set_positive_sequence_angle_in_rad(arg(V));
-                }
-
-                if(max_current_error_of_iter<max_allowed_threshold_in_pu)
-                {
-                    convergence_flag = true;
-                    break;
-                }
-            }
-
-            if(convergence_flag==false)
-            {
-                If1 = 0.0;
-                osstream<<"Iterative calculation of short-circuit current did not converge within "<<max_iteration<<" times."<<endl;
-                toolkit->show_information_with_leading_time_stamp(osstream);
-            }
-            else
-            {
-                osstream<<"Iterative calculation of short-circuit current converged within "<<iteration_count<<" times."<<endl;
-                osstream<<"Fault current is (kA):"<<get_positive_sequence_fault_current_of_fault_point_in_kA()<<endl;
-                toolkit->show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        Z2_between_internal_bus_to_fault_place.clear();
-        Z2_between_internal_bus_to_fault_place.reserve(bus_count);
-        Z0_between_internal_bus_to_fault_place.clear();
-        Z0_between_internal_bus_to_fault_place.reserve(bus_count);
-        for(unsigned int i=0; i<bus_count; i++)
-        {
-            Z2_between_internal_bus_to_fault_place.push_back(0.0);
-            Z0_between_internal_bus_to_fault_place.push_back(0.0);
-        }
+        BUS* busptr = buses[i];
+        unsigned int bus = busptr->get_bus_number();
+        set_bus_fault(bus, THREE_PHASES_FAULT, complex<double>(0.0,-1e10));
+        solve();
         show_short_circuit_result_at_fault_point();
         clear_fault();
     }
+    set_flag_for_building_z_matrix_for_each_solution(true);
 }
 
 vector<vector<complex<double> > > SHORT_CIRCUIT_SOLVER::get_positive_sequence_mutual_impedances_between_internal_buses_to_wtg_buses()
 {
-    ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
-    STEPS_SPARSE_MATRIX jacobian_matrix = get_jacobian_matrix_from_positive_sequence_Y_matrix();
 
-    jacobian_matrix.LU_factorization(1, 1e-13);
-
-    vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
-
-    unsigned int n = psdb.get_bus_count();
-    unsigned int nwt = wt_generators.size();
-
-    vector<vector<complex<double> > > Z1_between_internal_bus_to_RES_buses;
-
-    Z1_between_internal_bus_to_RES_buses.reserve(nwt);
-    for(unsigned int i=0; i<nwt; i++)
+    if(get_flag_for_building_z_matrix_for_each_solution()==true)
     {
-        vector<complex<double> > Zcol;
-        Zcol.clear();
-        Zcol.reserve(n);
-        for(unsigned int j=0; j<n; j++)
-            Zcol.push_back(0.0);
-        Z1_between_internal_bus_to_RES_buses.push_back(Zcol);
-    }
+        NETWORK_MATRIX& network_matrix = get_network_matrix();
+        STEPS_SPARSE_MATRIX jacobian_matrix = get_jacobian_matrix_from_positive_sequence_Y_matrix();
 
-    #ifdef ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
-        set_openmp_number_of_threads(toolkit->get_thread_number());
-        #pragma omp parallel for schedule(static)
-    #endif // ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
-    for(unsigned int i=0; i<nwt; i++)
+        jacobian_matrix.LU_factorization(1, 1e-13);
+
+        vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
+
+        unsigned int n = psdb.get_bus_count();
+        unsigned int nwt = wt_generators.size();
+
+        vector<vector<complex<double> > > Z1_between_internal_bus_to_RES_buses;
+
+        Z1_between_internal_bus_to_RES_buses.reserve(nwt);
+        for(unsigned int i=0; i<nwt; i++)
+        {
+            vector<complex<double> > Zcol;
+            Zcol.clear();
+            Zcol.reserve(n);
+            for(unsigned int j=0; j<n; j++)
+                Zcol.push_back(0.0);
+            Z1_between_internal_bus_to_RES_buses.push_back(Zcol);
+        }
+        #ifdef ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
+            set_openmp_number_of_threads(toolkit->get_thread_number());
+            #pragma omp parallel for schedule(static)
+        #endif // ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
+        for(unsigned int i=0; i<nwt; i++)
+        {
+            WT_GENERATOR* wt_gen = wt_generators[i];
+            unsigned int wt_bus = wt_gen->get_source_bus();
+            unsigned int col = network_matrix.get_internal_bus_number_of_physical_bus(wt_bus);
+
+            unsigned int n2 = n+n;
+            vector<double> I;
+            I.reserve(n2);
+
+            for(unsigned int j=0; j<n2; ++j)
+                I.push_back(0.0);
+
+            I[col]=1.0;
+            vector<double> Zreal = I/jacobian_matrix;
+            vector<complex<double> > Z;
+            Z.reserve(n);
+            for(unsigned int j=0; j<n; ++j)
+                Z1_between_internal_bus_to_RES_buses[i][j] = complex<double>(Zreal[j], Zreal[j+n]);
+        }
+
+        return Z1_between_internal_bus_to_RES_buses;
+    }
+    else
     {
-        WT_GENERATOR* wt_gen = wt_generators[i];
-        unsigned int wt_bus = wt_gen->get_source_bus();
-        unsigned int col = network_matrix.get_internal_bus_number_of_physical_bus(wt_bus);
-//        STEPS_SPARSE_MATRIX jm = jacobian_matrix;
+        vector<vector<complex<double> > > Z1_between_internal_bus_to_RES_buses;
 
-        unsigned int n2 = n+n;
-        vector<double> I;
-        I.reserve(n2);
-
-        for(unsigned int j=0; j<n2; ++j)
-            I.push_back(0.0);
-
-        I[col]=1.0;
-        vector<double> Zreal = I/jacobian_matrix;
-        vector<complex<double> > Z;
-        Z.reserve(n);
-        for(unsigned int j=0; j<n; ++j)
-            Z1_between_internal_bus_to_RES_buses[i][j] = complex<double>(Zreal[j], Zreal[j+n]);
+        vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
+        unsigned int nw = wt_generators.size();
+        for(unsigned int i=0; i<nw; i++)
+        {
+            WT_GENERATOR* wtg = wt_generators[i];
+            unsigned int bus = wtg->get_generator_bus();
+            unsigned int internal_bus = get_internal_bus_number_of_physical_bus(bus);
+            Z1_between_internal_bus_to_RES_buses.push_back(Z1_matrix[internal_bus]);
+        }
+        return Z1_between_internal_bus_to_RES_buses;
     }
-
-    return Z1_between_internal_bus_to_RES_buses;
 }
 
 vector<vector<complex<double> > > SHORT_CIRCUIT_SOLVER::get_negative_sequence_mutual_impedances_between_internal_buses_to_wtg_buses()
 {
-    ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
-    STEPS_SPARSE_MATRIX jacobian_matrix = get_jacobian_matrix_from_negative_sequence_Y_matrix();
 
-    jacobian_matrix.LU_factorization(1, 1e-13);
-
-    vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
-
-    unsigned int n = psdb.get_bus_count();
-    unsigned int nwt = wt_generators.size();
-
-    vector<vector<complex<double> > > Z2_between_internal_bus_to_RES_buses;
-    Z2_between_internal_bus_to_RES_buses.reserve(nwt);
-    for(unsigned int i=0; i<nwt; i++)
+    if(get_flag_for_building_z_matrix_for_each_solution()==true)
     {
-        vector<complex<double> > Zcol;
-        Zcol.clear();
-        Zcol.reserve(n);
-        for(unsigned int j=0; j<n; j++)
-            Zcol.push_back(0.0);
-        Z2_between_internal_bus_to_RES_buses.push_back(Zcol);
-    }
+        NETWORK_MATRIX& network_matrix = get_network_matrix();
+        STEPS_SPARSE_MATRIX jacobian_matrix = get_jacobian_matrix_from_negative_sequence_Y_matrix();
 
-    #ifdef ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
-        set_openmp_number_of_threads(toolkit->get_thread_number());
-        #pragma omp parallel for schedule(static)
-    #endif // ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
-    for(unsigned int i=0; i<nwt; i++)
+        jacobian_matrix.LU_factorization(1, 1e-13);
+
+        vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
+
+        unsigned int n = psdb.get_bus_count();
+        unsigned int nwt = wt_generators.size();
+
+        vector<vector<complex<double> > > Z2_between_internal_bus_to_RES_buses;
+        Z2_between_internal_bus_to_RES_buses.reserve(nwt);
+        for(unsigned int i=0; i<nwt; i++)
+        {
+            vector<complex<double> > Zcol;
+            Zcol.clear();
+            Zcol.reserve(n);
+            for(unsigned int j=0; j<n; j++)
+                Zcol.push_back(0.0);
+            Z2_between_internal_bus_to_RES_buses.push_back(Zcol);
+        }
+
+        #ifdef ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
+            set_openmp_number_of_threads(toolkit->get_thread_number());
+            #pragma omp parallel for schedule(static)
+        #endif // ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
+        for(unsigned int i=0; i<nwt; i++)
+        {
+            WT_GENERATOR* wt_gen = wt_generators[i];
+            unsigned int wt_bus = wt_gen->get_source_bus();
+            unsigned int col = network_matrix.get_internal_bus_number_of_physical_bus(wt_bus);
+
+            unsigned int n2 = n+n;
+            vector<double> I;
+            I.reserve(n2);
+
+            for(unsigned int j=0; j<n2; ++j)
+                I.push_back(0.0);
+
+            I[col]=1.0;
+            vector<double> Zreal = I/jacobian_matrix;
+            vector<complex<double> > Z;
+            Z.reserve(n);
+            for(unsigned int j=0; j<n; ++j)
+                Z2_between_internal_bus_to_RES_buses[i][j] = complex<double>(Zreal[j], Zreal[j+n]);
+        }
+
+        return Z2_between_internal_bus_to_RES_buses;
+    }
+    else
     {
-        WT_GENERATOR* wt_gen = wt_generators[i];
-        unsigned int wt_bus = wt_gen->get_source_bus();
-        unsigned int col = network_matrix.get_internal_bus_number_of_physical_bus(wt_bus);
-//        STEPS_SPARSE_MATRIX jm = jacobian_matrix;
+        vector<vector<complex<double> > > Z2_between_internal_bus_to_RES_buses;
 
-        unsigned int n2 = n+n;
-        vector<double> I;
-        I.reserve(n2);
-
-        for(unsigned int j=0; j<n2; ++j)
-            I.push_back(0.0);
-
-        I[col]=1.0;
-        vector<double> Zreal = I/jacobian_matrix;
-        vector<complex<double> > Z;
-        Z.reserve(n);
-        for(unsigned int j=0; j<n; ++j)
-            Z2_between_internal_bus_to_RES_buses[i][j] = complex<double>(Zreal[j], Zreal[j+n]);
+        vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
+        unsigned int nw = wt_generators.size();
+        for(unsigned int i=0; i<nw; i++)
+        {
+            WT_GENERATOR* wtg = wt_generators[i];
+            unsigned int bus = wtg->get_generator_bus();
+            unsigned int internal_bus = get_internal_bus_number_of_physical_bus(bus);
+            Z2_between_internal_bus_to_RES_buses.push_back(Z2_matrix[internal_bus]);
+        }
+        return Z2_between_internal_bus_to_RES_buses;
     }
-
-    return Z2_between_internal_bus_to_RES_buses;
 }
 
 
 vector<vector<complex<double> > > SHORT_CIRCUIT_SOLVER::get_positive_sequence_mutual_impedances_between_internal_buses_to_pvu_buses()
 {
-    ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
-    STEPS_SPARSE_MATRIX jacobian_matrix = get_jacobian_matrix_from_positive_sequence_Y_matrix();
 
-    jacobian_matrix.LU_factorization(1, 1e-13);
-
-    vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
-
-    unsigned int n = psdb.get_bus_count();
-    unsigned int npv = pv_units.size();
-
-    vector<vector<complex<double> > > Z1_between_internal_bus_to_pvu_buses;
-
-    Z1_between_internal_bus_to_pvu_buses.reserve(npv);
-    for(unsigned int i=0; i<npv; i++)
+    if(get_flag_for_building_z_matrix_for_each_solution()==true)
     {
-        vector<complex<double> > Zcol;
-        Zcol.clear();
-        Zcol.reserve(n);
-        for(unsigned int j=0; j<n; j++)
-            Zcol.push_back(0.0);
-        Z1_between_internal_bus_to_pvu_buses.push_back(Zcol);
-    }
+        NETWORK_MATRIX& network_matrix = get_network_matrix();
+        STEPS_SPARSE_MATRIX jacobian_matrix = get_jacobian_matrix_from_positive_sequence_Y_matrix();
 
-    #ifdef ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
-        set_openmp_number_of_threads(toolkit->get_thread_number());
-        #pragma omp parallel for schedule(static)
-    #endif // ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
-    for(unsigned int i=0; i<npv; i++)
+        jacobian_matrix.LU_factorization(1, 1e-13);
+
+        vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
+
+        unsigned int n = psdb.get_bus_count();
+        unsigned int npv = pv_units.size();
+
+        vector<vector<complex<double> > > Z1_between_internal_bus_to_pvu_buses;
+
+        Z1_between_internal_bus_to_pvu_buses.reserve(npv);
+        for(unsigned int i=0; i<npv; i++)
+        {
+            vector<complex<double> > Zcol;
+            Zcol.clear();
+            Zcol.reserve(n);
+            for(unsigned int j=0; j<n; j++)
+                Zcol.push_back(0.0);
+            Z1_between_internal_bus_to_pvu_buses.push_back(Zcol);
+        }
+
+        #ifdef ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
+            set_openmp_number_of_threads(toolkit->get_thread_number());
+            #pragma omp parallel for schedule(static)
+        #endif // ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
+        for(unsigned int i=0; i<npv; i++)
+        {
+            PV_UNIT* pv_unit = pv_units[i];
+            unsigned int pv_bus = pv_unit->get_source_bus();
+            unsigned int col = network_matrix.get_internal_bus_number_of_physical_bus(pv_bus);
+
+            unsigned int n2 = n+n;
+            vector<double> I;
+            I.reserve(n2);
+
+            for(unsigned int j=0; j<n2; ++j)
+                I.push_back(0.0);
+
+            I[col]=1.0;
+            vector<double> Zreal = I/jacobian_matrix;
+            vector<complex<double> > Z;
+            Z.reserve(n);
+            for(unsigned int j=0; j<n; ++j)
+                Z1_between_internal_bus_to_pvu_buses[i][j] = complex<double>(Zreal[j], Zreal[j+n]);
+        }
+
+        return Z1_between_internal_bus_to_pvu_buses;
+    }
+    else
     {
-        PV_UNIT* pv_unit = pv_units[i];
-        unsigned int pv_bus = pv_unit->get_source_bus();
-        unsigned int col = network_matrix.get_internal_bus_number_of_physical_bus(pv_bus);
-//        STEPS_SPARSE_MATRIX jm = jacobian_matrix;
-
-        unsigned int n2 = n+n;
-        vector<double> I;
-        I.reserve(n2);
-
-        for(unsigned int j=0; j<n2; ++j)
-            I.push_back(0.0);
-
-        I[col]=1.0;
-        vector<double> Zreal = I/jacobian_matrix;
-        vector<complex<double> > Z;
-        Z.reserve(n);
-        for(unsigned int j=0; j<n; ++j)
-            Z1_between_internal_bus_to_pvu_buses[i][j] = complex<double>(Zreal[j], Zreal[j+n]);
+        vector<vector<complex<double> > > Z1_between_internal_bus_to_RES_buses;
+        vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
+        unsigned int np = pv_units.size();
+        for(unsigned int i=0; i<np; i++)
+        {
+            PV_UNIT* pvu = pv_units[i];
+            unsigned int bus = pvu->get_source_bus();
+            unsigned int internal_bus = get_internal_bus_number_of_physical_bus(bus);
+            Z1_between_internal_bus_to_RES_buses.push_back(Z1_matrix[internal_bus]);
+        }
+        return Z1_between_internal_bus_to_RES_buses;
     }
-
-    return Z1_between_internal_bus_to_pvu_buses;
 }
 
 vector<vector<complex<double> > > SHORT_CIRCUIT_SOLVER::get_negative_sequence_mutual_impedances_between_internal_buses_to_pvu_buses()
 {
-    ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
-    STEPS_SPARSE_MATRIX jacobian_matrix = get_jacobian_matrix_from_negative_sequence_Y_matrix();
-
-    jacobian_matrix.LU_factorization(1, 1e-13);
-
-    vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
-
-    unsigned int n = psdb.get_bus_count();
-    unsigned int npv = pv_units.size();
-
-    vector<vector<complex<double> > > Z2_between_internal_bus_to_pvu_buses;
-    Z2_between_internal_bus_to_pvu_buses.reserve(npv);
-    for(unsigned int i=0; i<npv; i++)
+    if(get_flag_for_building_z_matrix_for_each_solution()==true)
     {
-        vector<complex<double> > Zcol;
-        Zcol.clear();
-        Zcol.reserve(n);
-        for(unsigned int j=0; j<n; j++)
-            Zcol.push_back(0.0);
-        Z2_between_internal_bus_to_pvu_buses.push_back(Zcol);
-    }
+        NETWORK_MATRIX& network_matrix = get_network_matrix();
+        STEPS_SPARSE_MATRIX jacobian_matrix = get_jacobian_matrix_from_negative_sequence_Y_matrix();
 
-    #ifdef ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
-        set_openmp_number_of_threads(toolkit->get_thread_number());
-        #pragma omp parallel for schedule(static)
-    #endif // ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
-    for(unsigned int i=0; i<npv; i++)
+        jacobian_matrix.LU_factorization(1, 1e-13);
+
+        vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
+
+        unsigned int n = psdb.get_bus_count();
+        unsigned int npv = pv_units.size();
+
+        vector<vector<complex<double> > > Z2_between_internal_bus_to_pvu_buses;
+        Z2_between_internal_bus_to_pvu_buses.reserve(npv);
+        for(unsigned int i=0; i<npv; i++)
+        {
+            vector<complex<double> > Zcol;
+            Zcol.clear();
+            Zcol.reserve(n);
+            for(unsigned int j=0; j<n; j++)
+                Zcol.push_back(0.0);
+            Z2_between_internal_bus_to_pvu_buses.push_back(Zcol);
+        }
+
+        #ifdef ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
+            set_openmp_number_of_threads(toolkit->get_thread_number());
+            #pragma omp parallel for schedule(static)
+        #endif // ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
+        for(unsigned int i=0; i<npv; i++)
+        {
+            PV_UNIT* pv_unit = pv_units[i];
+            unsigned int pv_bus = pv_unit->get_source_bus();
+            unsigned int col = network_matrix.get_internal_bus_number_of_physical_bus(pv_bus);
+
+            unsigned int n2 = n+n;
+            vector<double> I;
+            I.reserve(n2);
+
+            for(unsigned int j=0; j<n2; ++j)
+                I.push_back(0.0);
+
+            I[col]=1.0;
+            vector<double> Zreal = I/jacobian_matrix;
+            vector<complex<double> > Z;
+            Z.reserve(n);
+            for(unsigned int j=0; j<n; ++j)
+                Z2_between_internal_bus_to_pvu_buses[i][j] = complex<double>(Zreal[j], Zreal[j+n]);
+        }
+
+        return Z2_between_internal_bus_to_pvu_buses;
+    }
+    else
     {
-        PV_UNIT* pv_unit = pv_units[i];
-        unsigned int pv_bus = pv_unit->get_source_bus();
-        unsigned int col = network_matrix.get_internal_bus_number_of_physical_bus(pv_bus);
-//        STEPS_SPARSE_MATRIX jm = jacobian_matrix;
-
-        unsigned int n2 = n+n;
-        vector<double> I;
-        I.reserve(n2);
-
-        for(unsigned int j=0; j<n2; ++j)
-            I.push_back(0.0);
-
-        I[col]=1.0;
-        vector<double> Zreal = I/jacobian_matrix;
-        vector<complex<double> > Z;
-        Z.reserve(n);
-        for(unsigned int j=0; j<n; ++j)
-            Z2_between_internal_bus_to_pvu_buses[i][j] = complex<double>(Zreal[j], Zreal[j+n]);
+        vector<vector<complex<double> > > Z2_between_internal_bus_to_RES_buses;
+        vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
+        unsigned int np = pv_units.size();
+        for(unsigned int i=0; i<np; i++)
+        {
+            PV_UNIT* pvu = pv_units[i];
+            unsigned int bus = pvu->get_source_bus();
+            unsigned int internal_bus = get_internal_bus_number_of_physical_bus(bus);
+            Z2_between_internal_bus_to_RES_buses.push_back(Z2_matrix[internal_bus]);
+        }
+        return Z2_between_internal_bus_to_RES_buses;
     }
-
-    return Z2_between_internal_bus_to_pvu_buses;
 }
 
 vector<vector<complex<double> > > SHORT_CIRCUIT_SOLVER::get_positive_sequence_impedance_matrix()
@@ -2109,6 +2053,52 @@ vector<vector<complex<double> > > SHORT_CIRCUIT_SOLVER::get_positive_sequence_im
     }
 
     return Z1_matrix;
+}
+
+vector<vector<complex<double> > > SHORT_CIRCUIT_SOLVER::get_negative_sequence_impedance_matrix()
+{
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    STEPS_SPARSE_MATRIX jacobian_matrix = get_jacobian_matrix_from_negative_sequence_Y_matrix();
+
+    jacobian_matrix.LU_factorization(1, 1e-13);
+
+    unsigned int n = psdb.get_bus_count();
+    vector<vector<complex<double> > > Z2_matrix;
+    Z2_matrix.clear();
+    Z2_matrix.reserve(n);
+    for(unsigned int i=0; i<n; i++)
+    {
+        vector<complex<double> > Zcol;
+        Zcol.clear();
+        Zcol.reserve(n);
+        for(unsigned int j=0; j<n; j++)
+            Zcol.push_back(0.0);
+        Z2_matrix.push_back(Zcol);
+    }
+
+    #ifdef ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
+        set_openmp_number_of_threads(toolkit->get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
+    for(unsigned int i=0; i<n; i++)
+    {
+        unsigned int n2 = n+n;
+        vector<double> I;
+        I.reserve(n2);
+
+        for(unsigned int j=0; j<n2; ++j)
+            I.push_back(0.0);
+
+        I[i]=1.0;
+        vector<double> Zreal = I/jacobian_matrix;
+        vector<complex<double> > Z;
+        Z.reserve(n);
+        for(unsigned int j=0; j<n; ++j)
+            Z2_matrix[i][j] = complex<double>(Zreal[j], Zreal[j+n]);
+    }
+
+    return Z2_matrix;
 }
 
 STEPS_SPARSE_MATRIX SHORT_CIRCUIT_SOLVER::get_jacobian_matrix_from_positive_sequence_Y_matrix()
@@ -2770,7 +2760,7 @@ double SHORT_CIRCUIT_SOLVER::get_positive_sequence_short_circuit_capacity_of_bus
     clear_fault();
     complex<double> fshunt(0, -2e10);
     set_bus_fault(bus, THREE_PHASES_FAULT, fshunt);
-    solve_with_iteration();
+    solve();
     double S = get_positive_sequence_short_circuit_capacity_of_fault_point_in_pu();
     clear_fault();
     return S;
@@ -4437,63 +4427,48 @@ void SHORT_CIRCUIT_SOLVER::save_zero_sequence_Y_matrix_to_file(const string& fil
     network_matrix.save_zero_sequence_Y_matrix_to_file(filename);
 }
 
-double SHORT_CIRCUIT_SOLVER::get_short_circuit_ratio_of_HVDC(unsigned int hvdc_bus)
+double SHORT_CIRCUIT_SOLVER::get_short_circuit_ratio_of_LCC_HVDC2T(LCC_HVDC2T& lcc_hvdc2t, CONVERTER_SIDE side)
 {
-    ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
-    double sbase = psdb.get_system_base_power_in_MVA();
+    POWERFLOW_SOLVER& pf_solver = toolkit->get_powerflow_solver();
 
-    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
-    unsigned nhvdc = hvdcs.size();
-    double temp = 0.0;
-    for(unsigned int i=0; i<nhvdc; i++)
-    {
-        LCC_HVDC2T* hvdc = hvdcs[i];
-        unsigned int hbus = hvdc->get_converter_bus(RECTIFIER);
+    unsigned int hvdc_bus = lcc_hvdc2t.get_converter_bus(side);
+    double S = get_positive_sequence_short_circuit_capacity_of_bus_in_MVA(hvdc_bus);
+    double P = 0.0;
+    if(pf_solver.is_converged())
+        P = lcc_hvdc2t.get_converter_ac_active_power_in_MW(side);
+    else
+        P = lcc_hvdc2t.get_nominal_dc_power_in_MW();
 
-        double Phvdc = hvdc->get_nominal_dc_power_in_MW()/sbase;
-        complex<double> Zeq = network_matrix.get_positive_sequence_mutual_impedance_between_physical_bus(hvdc_bus, hbus);
-        double Zeq_abs = abs(Zeq);
-        temp = temp + Zeq_abs*Phvdc;
-    }
-    double Kmscr = 1.0/temp;
-
-    return Kmscr;
+    return S/P;
 }
 
-double SHORT_CIRCUIT_SOLVER::get_short_circuit_ratio_of_RES(unsigned int res_bus)
+double SHORT_CIRCUIT_SOLVER::get_short_circuit_ratio_of_wt_generator(WT_GENERATOR& wtg)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
-    double sbase = psdb.get_system_base_power_in_MVA();
-
-    vector<WT_GENERATOR*> wtgs = psdb.get_all_wt_generators();
-    unsigned int nwtgs = wtgs.size();
-    double temp = 0.0;
-    for(unsigned int i=0; i<nwtgs; i++)
-    {
-        WT_GENERATOR* wtg = wtgs[i];
-        unsigned int rbus = wtg->get_source_bus();
-        double Pw = wtg->get_p_generation_in_MW()/sbase;
-        complex<double> Zeq = network_matrix.get_positive_sequence_mutual_impedance_between_physical_bus(res_bus, rbus);
-        double Zeq_abs = abs(Zeq);
-        temp = temp + Zeq_abs*Pw;
-    }
-
-    vector<PV_UNIT*> pvus = psdb.get_all_pv_units();
-    unsigned int npvus = pvus.size();
-    for(unsigned int i=0; i<npvus; i++)
-    {
-        PV_UNIT* pvu = pvus[i];
-        unsigned int rbus = pvu->get_source_bus();
-        double Pp = pvu->get_p_generation_in_MW()/sbase;
-        complex<double> Zeq = network_matrix.get_positive_sequence_mutual_impedance_between_physical_bus(res_bus, rbus);
-        double Zeq_abs = abs(Zeq);
-        temp = temp + Zeq_abs*Pp;
-    }
-
-    double Kmrscr = 1.0/temp;
-    return Kmrscr;
+    unsigned int bus = wtg.get_generator_bus();
+    double S = get_positive_sequence_short_circuit_capacity_of_bus_in_MVA(bus);
+    double P = wtg.get_p_generation_in_MW();
+    return S/P;
 }
 
+double SHORT_CIRCUIT_SOLVER::get_short_circuit_ratio_of_pv_unit(PV_UNIT& pvu)
+{
+    unsigned int bus = pvu.get_source_bus();
+    double S = get_positive_sequence_short_circuit_capacity_of_bus_in_MVA(bus);
+    double P = pvu.get_p_generation_in_MW();
+    return S/P;
+}
+
+double SHORT_CIRCUIT_SOLVER::get_multiple_infeed_short_circuit_ratio_of_LCC_HVDC2T(LCC_HVDC2T& lcc_hvdc2t, CONVERTER_SIDE side)
+{
+    return 0.0;
+}
+
+double SHORT_CIRCUIT_SOLVER::get_multiple_renewable_energy_station_short_circuit_ratio_of_wt_generator(WT_GENERATOR& wtg)
+{
+    return 0.0;
+}
+
+double SHORT_CIRCUIT_SOLVER::get_multiple_renewable_energy_station_short_circuit_ratio_of_pv_unit(PV_UNIT& pvu)
+{
+    return 0.0;
+}

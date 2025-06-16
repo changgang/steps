@@ -58,7 +58,7 @@ class SHORT_CIRCUIT_SOLVER
         FAULT_TYPE get_fault_type();
 
         void build_sequence_Y_matrix();
-        void update_internal_voltage_of_all_generators_and_wt_generators();
+        void update_internal_voltage_of_voltage_source_models();
 
         complex<double> get_positive_sequence_thevenin_impedance_at_fault_point_in_pu();
         complex<double> get_negative_sequence_thevenin_impedance_at_fault_point_in_pu();
@@ -90,8 +90,10 @@ class SHORT_CIRCUIT_SOLVER
         double get_positive_sequence_short_circuit_capacity_of_bus_in_pu(unsigned int bus);
         double get_positive_sequence_short_circuit_capacity_of_bus_in_MVA(unsigned int bus);
 
+        bool is_iteration_solution_is_required();
         void solve();
-        void solve_with_iteration();
+        void solve_short_circuit_with_direct_solution();
+        void solve_short_circuit_with_iteration_solution();
         void solve_with_iteration_considering_positive_sequence_support_of_RES();
         void solve_with_iteration_considering_positive_and_negative_sequence_support_of_RES();
 
@@ -101,6 +103,7 @@ class SHORT_CIRCUIT_SOLVER
         vector<vector<complex<double> > > get_positive_sequence_mutual_impedances_between_internal_buses_to_pvu_buses();
         vector<vector<complex<double> > > get_negative_sequence_mutual_impedances_between_internal_buses_to_pvu_buses();
         vector<vector<complex<double> > > get_positive_sequence_impedance_matrix();
+        vector<vector<complex<double> > > get_negative_sequence_impedance_matrix();
         STEPS_SPARSE_MATRIX get_jacobian_matrix_from_positive_sequence_Y_matrix();
         STEPS_SPARSE_MATRIX get_jacobian_matrix_from_negative_sequence_Y_matrix();
 
@@ -127,8 +130,12 @@ class SHORT_CIRCUIT_SOLVER
         void save_negative_sequence_Y_matrix_to_file(const string& filename);
         void save_zero_sequence_Y_matrix_to_file(const string& filename);
 
-        double get_short_circuit_ratio_of_HVDC(unsigned int hvdc_bus);
-        double get_short_circuit_ratio_of_RES(unsigned int res_bus);
+        double get_short_circuit_ratio_of_LCC_HVDC2T(LCC_HVDC2T& lcc_hvdc2t, CONVERTER_SIDE side);
+        double get_short_circuit_ratio_of_wt_generator(WT_GENERATOR& wtg);
+        double get_short_circuit_ratio_of_pv_unit(PV_UNIT& pvu);
+        double get_multiple_infeed_short_circuit_ratio_of_LCC_HVDC2T(LCC_HVDC2T& lcc_hvdc2t, CONVERTER_SIDE side);
+        double get_multiple_renewable_energy_station_short_circuit_ratio_of_wt_generator(WT_GENERATOR& wtg);
+        double get_multiple_renewable_energy_station_short_circuit_ratio_of_pv_unit(PV_UNIT& pvu);
     private:
         void store_bus_initial_voltage_before_short_circuit();
         void restore_bus_initial_voltage();
@@ -137,7 +144,8 @@ class SHORT_CIRCUIT_SOLVER
         complex<double> get_initial_voltage_of_faulted_ac_line_point_before_short_circuit();
 
         void update_internal_voltage_of_all_generators();
-        void update_internal_voltage_of_all_wt_generators();
+        void update_internal_voltage_of_wt_generators();
+        void update_internal_voltage_of_pv_units();
         void update_all_motor_load_data();
         void updata_all_wt_generator_motor_data();
 
@@ -206,6 +214,7 @@ class SHORT_CIRCUIT_SOLVER
         complex<double> Z1, Z2, Z0;
 
         vector<complex<double> > Z1_between_internal_bus_to_fault_place, Z2_between_internal_bus_to_fault_place, Z0_between_internal_bus_to_fault_place;
+        vector<vector<complex<double> > > Z1_matrix, Z2_matrix;
 
         FAULT fault;
         vector<complex<double> > Yif_mutual, Yfj_mutual;

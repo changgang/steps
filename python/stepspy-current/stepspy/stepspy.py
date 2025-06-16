@@ -4387,17 +4387,6 @@ class STEPS():
         global STEPS_LIB
         STEPS_LIB.api_solve_short_circuit(self.toolkit_index)
         return
-    
-    def solve_short_circuit_with_iteration(self):
-        """
-        Solve short circuit with iteration.
-        Args: N/A
-        Rets: N/A
-        Example: N/A
-        """
-        global STEPS_LIB
-        STEPS_LIB.api_solve_short_circuit_with_iteration(self.toolkit_index)
-        return
 
     def set_short_circuit_bus_fault(self, bus, fault_type, fault_shunt):
         """
@@ -4462,16 +4451,16 @@ class STEPS():
         STEPS_LIB.api_clear_short_circuit_fault(self.toolkit_index)
         return
 
-    def scan_short_circuit_current(self):	
+    def scan_short_circuit_current_of_all_buses(self):	
         """	
-        Short circuit current scanning.
+        Scan short circuit current of all buses.
         Args:N/A	
         Rets: N/A	
         Example:	
             simulator.short_circuit_current_scanning()	
         """	
         global STEPS_LIB	
-        STEPS_LIB.api_short_circuit_current_scanning(self.toolkit_index)
+        STEPS_LIB.api_scan_short_circuit_current_of_all_buses(self.toolkit_index)
         return
 
     def get_short_circuit_value_at_fault_point(self, par_type, par_name):
@@ -4552,27 +4541,73 @@ class STEPS():
         global STEPS_LIB
         return STEPS_LIB.api_get_short_circuit_capacity_at_bus_in_MVA(bus, self.toolkit_index)
     
-    def get_short_circuit_ratio_of_HVDC(self, hvdc_bus):
+    def get_short_circuit_ratio_of_LCC_HVDC2T(self, hvdc, side):
         """
-        Get short circuit of hvdc.
+        Get short circuit ratio of lcc hvdc.
         Args:
-            (1) hvdc bus.
+            (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
+            (3) side: String of converter side. One of {"RECTIFIER", "INVERTER"} or {"R", "I"}.
         Rets: short circuit ratio
         Example: N/A
         """
         global STEPS_LIB
-        return STEPS_LIB.api_get_short_circuit_ratio_of_HVDC(hvdc_bus, self.toolkit_index)
+        return STEPS_LIB.api_get_short_circuit_ratio_of_LCC_HVDC2T(hvdc, side, self.toolkit_index)
 
-    def get_short_circuit_ratio_of_RES(self, res_bus):
+    def get_short_circuit_ratio_of_wt_generator(self, wt_genertor):
         """
-        Get short circuit of RES.
+        Get short circuit ratio of wt generator.
         Args:
-            (1) res bus.
+            (1) wt_generator: Wind turbine generator device id in format of (bus, ickt).
         Rets: short circuit ratio
         Example: N/A
         """
         global STEPS_LIB
-        return STEPS_LIB.api_get_short_circuit_ratio_of_RES(res_bus, self.toolkit_index)
+        return STEPS_LIB.api_get_short_circuit_ratio_of_wt_generator(wt_genertor, self.toolkit_index)
+
+    def get_short_circuit_ratio_of_pv_unit(self, pv_unit):
+        """
+        Get short circuit ratio of pv unit.
+        Args:
+            (1) pv_unit: pv unit device id in format of (bus, ickt).
+        Rets: short circuit ratio
+        Example: N/A
+        """
+        global STEPS_LIB
+        return STEPS_LIB.api_get_short_circuit_ratio_of_pv_unit(pv_unit, self.toolkit_index)
+    
+    def get_multiple_infeed_short_circuit_ratio_of_LCC_HVDC2T(self, hvdc, side):
+        """
+        Get multiple infeed short circuit ratio of lcc hvdc.
+        Args:
+            (1) hvdc: HVDC link device id in format of (ibus, jbus, ickt).
+            (3) side: String of converter side. One of {"RECTIFIER", "INVERTER"} or {"R", "I"}.
+        Rets: short circuit ratio
+        Example: N/A
+        """
+        global STEPS_LIB
+        return STEPS_LIB.api_get_multiple_infeed_short_circuit_ratio_of_LCC_HVDC2T(hvdc, side, self.toolkit_index)
+    
+    def get_multiple_renewable_energy_station_short_circuit_ratio_of_wt_generator(self, wt_genertor):
+        """
+        Get multiple renewable energy station short circuit ratio of wt generator.
+        Args:
+            (1) wt_generator: Wind turbine generator device id in format of (bus, ickt).
+        Rets: short circuit ratio
+        Example: N/A
+        """
+        global STEPS_LIB
+        return STEPS_LIB.api_get_multiple_renewable_energy_station_short_circuit_ratio_of_wt_generator(wt_genertor, self.toolkit_index)
+
+    def get_multiple_renewable_energy_station_short_circuit_ratio_of_pv_unit(self, pv_unit):
+        """
+        Get multiple renewable energy station short circuit ratio of pv unit.
+        Args:
+            (1) pv_unit: pv unit device id in format of (bus, ickt).
+        Rets: short circuit ratio
+        Example: N/A
+        """
+        global STEPS_LIB
+        return STEPS_LIB.api_get_multiple_renewable_energy_station_short_circuit_ratio_of_pv_unit(pv_unit, self.toolkit_index)
         
     def load_dynamic_data(self, file, ftype):
         """
