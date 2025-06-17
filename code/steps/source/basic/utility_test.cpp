@@ -414,8 +414,6 @@ void UTILITY_TEST::test_generate_and_delete_toolkit()
         TEST_ASSERT(get_toolkit_count()==i+1);
         if(toolkits[i]!=NULL)
             toolkits[i]->show_information_with_leading_time_stamp("You should find this message in log.");
-        else
-            toolkits[i]->show_information_with_leading_time_stamp("You should NOT find this message in log.");
     }
     for(unsigned int k=0; k!=3; ++k)
     {

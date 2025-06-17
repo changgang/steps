@@ -111,7 +111,6 @@ void SECOND_ORDER_BLOCK_TEST::test_linearized_ABCD()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"SECOND_ORDER_BLOCK_TEST");
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
-    double h = default_toolkit.get_dynamic_simulation_time_step_in_s();
 
     double a = 2.0, b = 5.0, c = 1.0, d=1.5, e=0.3;
     block.set_a(a);

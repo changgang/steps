@@ -1004,7 +1004,6 @@ complex<double> AC_LINE::get_line_zero_sequence_complex_current_at_sending_side_
             vector<AC_LINE*> lineptrs_of_Y_mutual = get_line_pointers_corresponding_to_mutual_admittances();
             complex<double> Y = get_line_zero_sequence_y_in_pu();
             complex<double> Ys = 0.5*Y + get_shunt_zero_sequence_y_at_sending_side_in_pu();
-            complex<double> Yr = 0.5*Y + get_shunt_zero_sequence_y_at_receiving_side_in_pu();
             complex<double> Vs = get_line_zero_sequence_complex_voltage_at_sending_side_in_pu();
 
             complex<double> I = 0.0;
@@ -1051,7 +1050,6 @@ complex<double> AC_LINE::get_line_zero_sequence_complex_current_at_receiving_sid
             vector<complex<double> > Y_mutual = get_mutual_admittances();
             vector<AC_LINE*> lineptrs_of_Y_mutual = get_line_pointers_corresponding_to_mutual_admittances();
             complex<double> Y = get_line_zero_sequence_y_in_pu();
-            complex<double> Ys = 0.5*Y + get_shunt_zero_sequence_y_at_sending_side_in_pu();
             complex<double> Yr = 0.5*Y + get_shunt_zero_sequence_y_at_receiving_side_in_pu();
             complex<double> Vr = get_line_zero_sequence_complex_voltage_at_receiving_side_in_pu();
 

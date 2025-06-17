@@ -185,7 +185,6 @@ void FIRST_ORDER_BLOCK_TEST::test_linearized_ABCD()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"FIRST_ORDER_BLOCK_TEST");
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
-    double h = default_toolkit.get_dynamic_simulation_time_step_in_s();
 
     double K = 2.0;
     double T = 5.0;

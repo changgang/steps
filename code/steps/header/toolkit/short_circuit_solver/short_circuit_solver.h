@@ -90,10 +90,10 @@ class SHORT_CIRCUIT_SOLVER
         double get_positive_sequence_short_circuit_capacity_of_bus_in_pu(unsigned int bus);
         double get_positive_sequence_short_circuit_capacity_of_bus_in_MVA(unsigned int bus);
 
-        bool is_iteration_solution_is_required();
+        bool is_iterative_solution_required();
         void solve();
         void solve_short_circuit_with_direct_solution();
-        void solve_short_circuit_with_iteration_solution();
+        void solve_short_circuit_with_iterative_solution();
         void solve_with_iteration_considering_positive_sequence_support_of_RES();
         void solve_with_iteration_considering_positive_and_negative_sequence_support_of_RES();
 

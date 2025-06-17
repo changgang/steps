@@ -856,7 +856,7 @@ void DYNAMICS_SIMULATOR::save_meter_information()
                 bin_output_file.write((char *)(&n_meter_string_size), sizeof(n_meter_string_size));
 
                 char * pmeter_name = new char[n_meter_string_size+1];
-                sprintf(pmeter_name, meter_names.c_str());
+                strcpy(pmeter_name, meter_names.c_str());
                 pmeter_name[n_meter_string_size]='\0';
 
                 bin_output_file.write((char *)(pmeter_name), strlen(pmeter_name));
@@ -3072,7 +3072,6 @@ void DYNAMICS_SIMULATOR::update_generators_in_islands()
 bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
 {
     ostringstream osstream;
-    double TIME = TIME;
     bool system_is_stable = true;
     unsigned int nislands = generators_in_islands.size();
     vector<double> angles;

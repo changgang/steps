@@ -144,7 +144,6 @@ void PID_BLOCK_TEST::test_linearized_ABCD()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PID_BLOCK_TEST");
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
-    double h = default_toolkit.get_dynamic_simulation_time_step_in_s();
 
     double kp = 2.0, ki = 5.0, kd = 1.0, td=1.5;
     block.set_Kp(kp);
@@ -157,7 +156,6 @@ void PID_BLOCK_TEST::test_linearized_ABCD()
     block.set_output(y);
     block.initialize();
     double si = block.get_integrator_state();
-    double sd = block.get_differentiator_state();
 
     TEST_ASSERT(fabs(si-1.2)<FLOAT_EPSILON);
 

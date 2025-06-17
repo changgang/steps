@@ -1105,7 +1105,7 @@ void LOAD::update_motor_load_data_for_short_circuit_solver()
                     return;
                 }
             }
-            double s = R1/R;
+            //double s = R1/R;
 
             double Q = V*V*(Xsm*R*R+Xp*Xrm)/(Ap*R*R+Bp*R+Cp);
             double motor_q = Q*mbase;
@@ -1174,7 +1174,7 @@ void LOAD::update_motor_load_data_for_short_circuit_solver()
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 return;
             }
-            double s = R1/R;
+            //double s = R1/R;
 
             Q = -V*V*(k*R*(a*R*R+b*R+c)-(g*R*R+h)*(d*R*R+e*R+f))/((a*R*R+b*R+c)*(a*R*R+b*R+c)+(d*R*R+e*R+f)*(d*R*R+e*R*f));
             double motor_q = Q*mbase;

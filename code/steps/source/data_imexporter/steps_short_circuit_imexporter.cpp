@@ -45,8 +45,7 @@ void STEPS_IMEXPORTER::load_all_seq_data_to_devices()
 
 void STEPS_IMEXPORTER::load_change_code_data()
 {
-    unsigned int IC=0;
-    string REV;
+    unsigned int IC = 0, REV = 0;
 
     if(splitted_sseq_data_in_ram.size()<1)
         return;

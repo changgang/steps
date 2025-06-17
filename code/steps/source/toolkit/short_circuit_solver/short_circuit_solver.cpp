@@ -1140,7 +1140,7 @@ complex<double> SHORT_CIRCUIT_SOLVER::get_zero_sequence_equivalent_mutual_impeda
     return Z0_between_internal_bus_to_fault_place[b];
 }
 
-bool SHORT_CIRCUIT_SOLVER::is_iteration_solution_is_required()
+bool SHORT_CIRCUIT_SOLVER::is_iterative_solution_required()
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -1172,13 +1172,13 @@ bool SHORT_CIRCUIT_SOLVER::is_iteration_solution_is_required()
 
 void SHORT_CIRCUIT_SOLVER::solve()
 {
-    if(is_iteration_solution_is_required()==false)
+    if(is_iterative_solution_required()==false)
     {
         solve_short_circuit_with_direct_solution();
     }
     else
     {
-        solve_short_circuit_with_iteration_solution();
+        solve_short_circuit_with_iterative_solution();
     }
 }
 
@@ -1205,7 +1205,7 @@ void SHORT_CIRCUIT_SOLVER::solve_short_circuit_with_direct_solution()
     }
 }
 
-void SHORT_CIRCUIT_SOLVER::solve_short_circuit_with_iteration_solution()
+void SHORT_CIRCUIT_SOLVER::solve_short_circuit_with_iterative_solution()
 {
     bool consider_negative_support_of_RES = get_consider_negative_sequence_support_of_RES_logic();
     if(consider_negative_support_of_RES == false or get_fault_type()==THREE_PHASES_FAULT)

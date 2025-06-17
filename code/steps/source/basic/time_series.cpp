@@ -45,7 +45,12 @@ void TIME_SERIES::load_time_series_from_file(string file)
         char buffer[1024];
         string sbuffer;
 
-        fgets(buffer, 1024, fid);
+        if(fgets(buffer, 1024, fid)==NULL)
+        {
+            fclose(fid);
+            return;
+        }
+
         sbuffer = buffer;
         sbuffer = trim_string(sbuffer);
         sbuffer = string2upper(sbuffer);

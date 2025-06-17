@@ -43,7 +43,7 @@ int main()
     importer.load_vsc_powerflow_data("../../../bench/shandong/4_terminal_vsc_hvdc.vscraw");
 
     POWERFLOW_SOLVER& solver = default_toolkit.get_powerflow_solver();
-    NETWORK_MATRIX& network = default_toolkit.get_network_matrix();
+    //NETWORK_MATRIX& network = default_toolkit.get_network_matrix();
 
     solver.set_max_iteration(150);
     solver.set_non_divergent_solution_logic(false);
