@@ -389,7 +389,7 @@ EXPORT_STEPS_DLL void api_set_short_circuit_line_fault(unsigned int ibus, unsign
 EXPORT_STEPS_DLL void api_clear_short_circuit_fault(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_solve_short_circuit(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_solve_short_circuit_with_iteration(unsigned int toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_scan_short_circuit_current_of_all_buses(unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_scan_short_circuit_current_of_all_buses(char* fault_type, char* result_file, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_short_circuit_value_at_fault_point(char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_show_short_circuit_result_at_fault_point(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_short_circuit_result_at_fault_point_to_file(char* file, unsigned int toolkit_index=INDEX_NOT_EXIST);

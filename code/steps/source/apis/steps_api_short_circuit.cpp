@@ -437,11 +437,19 @@ void api_solve_short_circuit(unsigned int toolkit_index)
     solver.solve();
 }
 
-void api_scan_short_circuit_current_of_all_buses(unsigned int toolkit_index)
+void api_scan_short_circuit_current_of_all_buses(char* fault_type,  char* result_file, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
-    solver.scan_short_circuit_current_of_all_buses();
+    string fault_type_str = string2upper(fault_type);
+    FAULT_TYPE ftype = THREE_PHASES_FAULT;
+    if(fault_type_str=="THREE PHASES FAULT") ftype = THREE_PHASES_FAULT;
+    if(fault_type_str=="SINGLE PHASE GROUNDED FAULT") ftype = SINGLE_PHASE_GROUNDED_FAULT;
+    if(fault_type_str=="DOUBLE PHASES FAULT") ftype = DOUBLE_PHASES_FAULT;
+    if(fault_type_str=="DOUBLE PHASES GROUNDED FAULT") ftype = DOUBLE_PHASES_GROUNDED_FAULT;
+
+    string result_file_str = result_file;
+    solver.scan_short_circuit_current_of_all_buses(ftype, result_file_str);
 }
 
 double api_get_short_circuit_value_at_fault_point(char* parameter_name, unsigned int toolkit_index)

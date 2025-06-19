@@ -89,25 +89,40 @@ void SHORT_CIRCUIT_SOLVER::show_short_circuit_solver_configuration()
 {
     ostringstream osstream;
 
-    string gen_X;
+    string gen_X_opt;
     switch(get_generator_reactance_option())
     {
-        case SUBTRANSIENT_REACTANCE: gen_X = "Subtransient reactance";break;
-        case TRANSIENT_REACTANCE:    gen_X = "Transient reactance";   break;
-        case SYNCHRONOUS_REACTANCE:  gen_X = "Synchronous reactance"; break;
+        case SUBTRANSIENT_REACTANCE: gen_X_opt = "Subtransient reactance";break;
+        case TRANSIENT_REACTANCE:    gen_X_opt = "Transient reactance";   break;
+        case SYNCHRONOUS_REACTANCE:  gen_X_opt = "Synchronous reactance"; break;
+    }
+    string unit_opt;
+    switch(get_units_of_currents_and_voltages())
+    {
+        case PU: unit_opt = "Per Unit"; break;
+        case PHYSICAL: unit_opt = "Physical Unit"; break;
+    }
+    string coordinate_opt;
+    switch(get_coordinates_of_currents_and_voltages())
+    {
+        case RECTANGULAR: coordinate_opt = "Rectangular Coordinate"; break;
+        case POLAR: coordinate_opt = "Polar Coordinate"; break;
     }
 
-    osstream<<"Configuration of short circuit solver:"<<endl;
-    toolkit->show_information_with_leading_time_stamp(osstream);
-    osstream<<"Generator reactance option: "<<gen_X<<endl;
-    toolkit->show_information_with_leading_time_stamp(osstream);
-    osstream<<"Consider load logic: "<<(get_consider_load_logic()?"True":"False")<<endl;
-    toolkit->show_information_with_leading_time_stamp(osstream);
-    osstream<<"Consider motor load logic: "<<(get_consider_motor_load_logic()?"True":"False")<<endl;
-    toolkit->show_information_with_leading_time_stamp(osstream);
-    osstream<<"DC lines option: "<<(get_option_of_DC_lines()==BLOCK_AND_IGNORE?"Block and ignore":"Convert to constant admittance load")<<endl;
-    toolkit->show_information_with_leading_time_stamp(osstream);
-    osstream<<"Export detailed iteration logic: "<<(get_export_detailed_iteration_log_logic()?"True":"False")<<endl;
+    osstream<<"Configuration of short circuit solver:\n"
+            <<"Fast sin/cos/tan functions: "<<(use_steps_fast_math?"Enabled":"Disabled")<<"\n"
+            <<"Generator reactance option: "<<gen_X_opt<<"\n"
+            <<"Unit option for output: "<<unit_opt<<"\n"
+            <<"Coordinate option for output: "<<coordinate_opt<<"\n"
+            <<"Maximum iteration: "<<get_max_iteration_count_for_iterative_method()<<"\n"
+            <<"Iteration acceleration factor: "<<get_iteration_acceleration_factor()<<"\n"
+            <<"Allowed maximum I mismatch: "<<get_current_threshold_for_iterative_method()<<" pu\n"
+            <<"Logic of exporting detailed iteration log logic: "<<(get_export_detailed_iteration_log_logic()?"Enabled":"Disabled")<<"\n"
+            <<"Logic of considering negative sequence support of RES: "<<(get_consider_negative_sequence_support_of_RES_logic()?"Enabled":"Disabled")<<"\n"
+            <<"Voltage threshold of HVDC blocking: "<<get_voltage_threshold_for_hvdc_blocking_in_pu()<<" pu\n"
+            <<"Consider load logic: "<<(get_consider_load_logic()?"True":"False")<<endl
+            <<"Consider motor load logic: "<<(get_consider_motor_load_logic()?"True":"False")<<endl
+            <<"DC lines option: "<<(get_option_of_DC_lines()==BLOCK_AND_IGNORE?"Block and ignore":"Convert to constant admittance load");
     toolkit->show_information_with_leading_time_stamp(osstream);
 }
 
@@ -1699,7 +1714,7 @@ void SHORT_CIRCUIT_SOLVER::solve_with_iteration_considering_positive_and_negativ
     }
 }
 
-void SHORT_CIRCUIT_SOLVER::scan_short_circuit_current_of_all_buses()
+void SHORT_CIRCUIT_SOLVER::scan_short_circuit_current_of_all_buses(FAULT_TYPE fault_type, string result_file)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -1714,7 +1729,7 @@ void SHORT_CIRCUIT_SOLVER::scan_short_circuit_current_of_all_buses()
     {
         BUS* busptr = buses[i];
         unsigned int bus = busptr->get_bus_number();
-        set_bus_fault(bus, THREE_PHASES_FAULT, complex<double>(0.0,-1e10));
+        set_bus_fault(bus, fault_type, complex<double>(0.0,-1e10));
         solve();
         show_short_circuit_result_at_fault_point();
         clear_fault();

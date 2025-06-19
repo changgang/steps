@@ -738,7 +738,7 @@ def load_library(libsteps_file):
     libsteps.api_clear_short_circuit_fault.restype = None	
     libsteps.api_clear_short_circuit_fault.argtypes = (c_uint, )
     libsteps.api_scan_short_circuit_current_of_all_buses.restype = None	
-    libsteps.api_scan_short_circuit_current_of_all_buses.argtypes = (c_uint, )
+    libsteps.api_scan_short_circuit_current_of_all_buses.argtypes = (c_char_p, c_char_p, c_uint)
 
     libsteps.api_get_dynamic_simulator_integer_parameter.restype = (c_uint)
     libsteps.api_get_dynamic_simulator_integer_parameter.argtypes = (c_char_p, c_uint)

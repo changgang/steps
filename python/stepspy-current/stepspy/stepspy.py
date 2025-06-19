@@ -4451,16 +4451,20 @@ class STEPS():
         STEPS_LIB.api_clear_short_circuit_fault(self.toolkit_index)
         return
 
-    def scan_short_circuit_current_of_all_buses(self):	
+    def scan_short_circuit_current_of_all_buses(self, fault_type, result_file):	
         """	
         Scan short circuit current of all buses.
-        Args:N/A	
+        Args:
+            (1)fault_type: String of fault type. THREE PHASES FAULT, SINGLE PHASE GROUNDED FAULT, DOUBLE PHASES FAULT, DOUBLE PHASES GROUNDED FAULT.
+            (1)result_file: String of result file.
         Rets: N/A	
         Example:	
-            simulator.short_circuit_current_scanning()	
+            simulator.short_circuit_current_scanning("THREE PHASES FAULT", "sc_result.csv")	
         """	
         global STEPS_LIB	
-        STEPS_LIB.api_scan_short_circuit_current_of_all_buses(self.toolkit_index)
+        fault_type = self.__get_c_char_p_of_string(fault_type)
+        result_file = self.__get_c_char_p_of_string(result_file)
+        STEPS_LIB.api_scan_short_circuit_current_of_all_buses(fault_type, result_file, self.toolkit_index)
         return
 
     def get_short_circuit_value_at_fault_point(self, par_type, par_name):

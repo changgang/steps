@@ -97,7 +97,7 @@ class SHORT_CIRCUIT_SOLVER
         void solve_with_iteration_considering_positive_sequence_support_of_RES();
         void solve_with_iteration_considering_positive_and_negative_sequence_support_of_RES();
 
-        void scan_short_circuit_current_of_all_buses();
+        void scan_short_circuit_current_of_all_buses(FAULT_TYPE fault_type, string result_file);
         vector<vector<complex<double> > > get_positive_sequence_mutual_impedances_between_internal_buses_to_wtg_buses();
         vector<vector<complex<double> > > get_negative_sequence_mutual_impedances_between_internal_buses_to_wtg_buses();
         vector<vector<complex<double> > > get_positive_sequence_mutual_impedances_between_internal_buses_to_pvu_buses();
