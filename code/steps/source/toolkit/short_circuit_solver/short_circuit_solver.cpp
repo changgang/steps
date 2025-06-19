@@ -1457,6 +1457,8 @@ void SHORT_CIRCUIT_SOLVER::solve_with_iteration_considering_positive_sequence_su
         if(convergence_flag==false)
         {
             If1 = 0.0;
+            If2 = 0.0;
+            If0 = 0.0;
             osstream<<"Iterative calculation of short-circuit current did not converge within "<<max_iteration<<" times."<<endl;
             toolkit->show_information_with_leading_time_stamp(osstream);
         }
@@ -1719,9 +1721,24 @@ void SHORT_CIRCUIT_SOLVER::scan_short_circuit_current_of_all_buses(FAULT_TYPE fa
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
+    ofstream file(result_file);
+    char buffer[1000];
+    if(file.is_open())
+    {
+        file<<"fault bus, If1/kA, If2/kA, If0/kA, R1/p.u.,X1/p.u.,R2/p.u.,X2/p.u.,R0/p.u.,X0/p.u."<<endl;
+    }
+    else
+    {
+        osstream<<"File '"<<result_file<<"' cannot be opened for saving short circuit current result to file."<<endl
+                <<"No result will be exported.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
     vector<BUS*> buses = psdb.get_all_buses();
     unsigned int nbuses = buses.size();
 
+    build_sequence_Y_matrix();
     Z1_matrix = get_positive_sequence_impedance_matrix();
     Z2_matrix = get_negative_sequence_impedance_matrix();
     set_flag_for_building_z_matrix_for_each_solution(false);
@@ -1732,9 +1749,21 @@ void SHORT_CIRCUIT_SOLVER::scan_short_circuit_current_of_all_buses(FAULT_TYPE fa
         set_bus_fault(bus, fault_type, complex<double>(0.0,-1e10));
         solve();
         show_short_circuit_result_at_fault_point();
+
+        double If1 = abs(get_positive_sequence_fault_current_of_fault_point_in_kA());
+        double If2 = abs(get_negative_sequence_fault_current_of_fault_point_in_kA());
+        double If0 = abs(get_zero_sequence_fault_current_of_fault_point_in_kA());
+
+        complex<double> Z1 = get_positive_sequence_thevenin_impedance_at_fault_point_in_pu();
+        complex<double> Z2 = get_negative_sequence_thevenin_impedance_at_fault_point_in_pu();
+        complex<double> Z0 = get_zero_sequence_thevenin_impedance_at_fault_point_in_pu();
+        snprintf(buffer, 1000, "%u,%.14f,%.14f,%.14f,%.14f,%.14f,%.14f,%.14f,%.14f,%.14f", bus, If1, If2, If0, Z1.real(), Z1.imag(), Z2.real(), Z2.imag(), Z0.real(), Z0.imag());
+                    file<<buffer<<endl;
+
         clear_fault();
     }
     set_flag_for_building_z_matrix_for_each_solution(true);
+    file.close();
 }
 
 vector<vector<complex<double> > > SHORT_CIRCUIT_SOLVER::get_positive_sequence_mutual_impedances_between_internal_buses_to_wtg_buses()
@@ -2033,9 +2062,9 @@ vector<vector<complex<double> > > SHORT_CIRCUIT_SOLVER::get_positive_sequence_im
     jacobian_matrix.LU_factorization(1, 1e-13);
 
     unsigned int n = psdb.get_bus_count();
-    vector<vector<complex<double> > > Z1_matrix;
-    Z1_matrix.clear();
-    Z1_matrix.reserve(n);
+    vector<vector<complex<double> > > Z1_matrix_;
+    Z1_matrix_.clear();
+    Z1_matrix_.reserve(n);
     for(unsigned int i=0; i<n; i++)
     {
         vector<complex<double> > Zcol;
@@ -2043,7 +2072,7 @@ vector<vector<complex<double> > > SHORT_CIRCUIT_SOLVER::get_positive_sequence_im
         Zcol.reserve(n);
         for(unsigned int j=0; j<n; j++)
             Zcol.push_back(0.0);
-        Z1_matrix.push_back(Zcol);
+        Z1_matrix_.push_back(Zcol);
     }
 
     #ifdef ENABLE_OPENMP_FOR_SHORT_CIRCUIT_SOLVER
@@ -2063,11 +2092,11 @@ vector<vector<complex<double> > > SHORT_CIRCUIT_SOLVER::get_positive_sequence_im
         vector<double> Zreal = I/jacobian_matrix;
         vector<complex<double> > Z;
         Z.reserve(n);
-        for(unsigned int j=0; j<n; ++j)
-            Z1_matrix[i][j] = complex<double>(Zreal[j], Zreal[j+n]);
+        for(unsigned int j=0; j<n; j++)
+            Z1_matrix_[i][j] = complex<double>(Zreal[j], Zreal[j+n]);
     }
 
-    return Z1_matrix;
+    return Z1_matrix_;
 }
 
 vector<vector<complex<double> > > SHORT_CIRCUIT_SOLVER::get_negative_sequence_impedance_matrix()
@@ -2301,25 +2330,35 @@ void SHORT_CIRCUIT_SOLVER::update_bus_sequence_voltage_after_iteration_consideri
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
     vector<WT_GENERATOR*> wtgs = psdb.get_all_wt_generators();
-    vector<vector<complex<double> > >  Z1_between_internal_bus_to_RES_buses = get_positive_sequence_mutual_impedances_between_internal_buses_to_wtg_buses();
+    vector<PV_UNIT*> pvus = psdb.get_all_pv_units();
+    vector<vector<complex<double> > >  Z1_between_internal_bus_to_wtg_buses = get_positive_sequence_mutual_impedances_between_internal_buses_to_wtg_buses();
+    vector<vector<complex<double> > >  Z1_between_internal_bus_to_pvu_buses = get_positive_sequence_mutual_impedances_between_internal_buses_to_pvu_buses();
 
     unsigned int n = psdb.get_bus_count();
     unsigned int nwtg = psdb.get_wt_generator_count();
+    unsigned int npvu = psdb.get_pv_unit_count();
+
     vector<complex<double> > injection_current_of_RES_in_last_iter;
     injection_current_of_RES_in_last_iter.clear();
-    injection_current_of_RES_in_last_iter.reserve(nwtg);
+    injection_current_of_RES_in_last_iter.reserve(nwtg+npvu);
     for(unsigned int i=0; i<nwtg; i++)
     {
         WT_GENERATOR* wtg = wtgs[i];
         complex<double> Iwt = wtg->get_positive_sequence_complex_injection_current_in_pu_for_short_circuit_solver();
         injection_current_of_RES_in_last_iter.push_back(Iwt);
     }
+    for(unsigned int i=0; i<npvu; i++)
+    {
+        PV_UNIT* pvu = pvus[i];
+        complex<double> Ipv = pvu->get_positive_sequence_complex_injection_current_in_pu_for_short_circuit_solver();
+        injection_current_of_RES_in_last_iter.push_back(Ipv);
+    }
 
     restore_bus_initial_voltage();
 
     vector<complex<double> > initial_injection_current_of_RES;
     initial_injection_current_of_RES.clear();
-    initial_injection_current_of_RES.reserve(nwtg);
+    initial_injection_current_of_RES.reserve(nwtg+npvu);
     for(unsigned int i=0; i<nwtg; i++)
     {
         WT_GENERATOR* wtg = wtgs[i];
@@ -2330,30 +2369,54 @@ void SHORT_CIRCUIT_SOLVER::update_bus_sequence_voltage_after_iteration_consideri
         complex<double> I = conj(s/V);
         initial_injection_current_of_RES.push_back(I);
     }
+    for(unsigned int i=0; i<npvu; i++)
+    {
+        PV_UNIT* pvu = pvus[i];
+        BUS* busptr = pvu->get_bus_pointer();
+        complex<double> s = pvu->get_complex_generation_in_MVA();
+        complex<double> V = busptr->get_positive_sequence_complex_voltage_in_pu();
+        s = s/100.0;
+        complex<double> I = conj(s/V);
+        initial_injection_current_of_RES.push_back(I);
+    }
 
     vector<complex<double> > delta_injection_current_of_RES;
     delta_injection_current_of_RES.clear();
-    delta_injection_current_of_RES.reserve(nwtg);
+    delta_injection_current_of_RES.reserve(nwtg+npvu);
     for(unsigned int i=0; i<nwtg; i++)
     {
         complex<double> deltaI = injection_current_of_RES_in_last_iter[i] - initial_injection_current_of_RES[i];
         delta_injection_current_of_RES.push_back(deltaI);
     }
 
-    complex<double> If = get_positive_sequence_fault_current_of_fault_point_in_pu();
+    complex<double> If1 = get_positive_sequence_fault_current_of_fault_point_in_pu();
+    complex<double> If2 = get_negative_sequence_fault_current_of_fault_point_in_pu();
+    complex<double> If0 = get_zero_sequence_fault_current_of_fault_point_in_pu();
     for(unsigned int k=0; k<n; k++)
     {
         unsigned int busk = network_matrix.get_physical_bus_number_of_internal_bus(k);
 
          BUS* busptr = psdb.get_bus(busk);
-         complex<double> V = busptr->get_positive_sequence_complex_voltage_in_pu();
+         complex<double> V1 = busptr->get_positive_sequence_complex_voltage_in_pu();
          for(unsigned int j=0; j<nwtg; j++)
-            V = V + Z1_between_internal_bus_to_RES_buses[j][k]*delta_injection_current_of_RES[j];
+            V1 = V1 + Z1_between_internal_bus_to_wtg_buses[j][k]*delta_injection_current_of_RES[j];
+        for(unsigned int j=0; j<npvu; j++)
+            V1 = V1 + Z1_between_internal_bus_to_pvu_buses[j][k]*delta_injection_current_of_RES[j+nwtg];
 
-         V = V - If*Z1_between_internal_bus_to_fault_place[k];
+         V1 = V1 - If1*Z1_between_internal_bus_to_fault_place[k];
 
-         busptr->set_positive_sequence_voltage_in_pu(abs(V));
-         busptr->set_positive_sequence_angle_in_rad(arg(V));
+         complex<double> V2 = 0.0;
+         V2 = V2 - If2*Z2_between_internal_bus_to_fault_place[k];
+
+         complex<double> V0 = 0.0;
+         V0 = V0 - If0*Z0_between_internal_bus_to_fault_place[k];
+
+         busptr->set_positive_sequence_voltage_in_pu(abs(V1));
+         busptr->set_positive_sequence_angle_in_rad(arg(V1));
+         busptr->set_negative_sequence_voltage_in_pu(abs(V2));
+         busptr->set_negative_sequence_voltage_in_pu(arg(V2));
+         busptr->set_zero_sequence_voltage_in_pu(abs(V0));
+         busptr->set_zero_sequence_angle_in_rad(arg(V0));
     }
 }
 
