@@ -32,6 +32,7 @@ void DYNAMICS_SIMULATOR::prepare_meters()
     prepare_transformer_related_meters();
     prepare_2t_lcc_hvdc_related_meters();
     prepare_vsc_hvdc_related_meters();
+    prepare_mt_hvdc_related_meters();
     prepare_equivalent_device_related_meters();
 }
 
@@ -893,6 +894,122 @@ void DYNAMICS_SIMULATOR::prepare_vsc_hvdc_related_meters()
             append_meter(meter);
             meter = setter.prepare_vsc_hvdc_dc_line_power_in_MW_meter(did, dc_line_did, jbus);
             append_meter(meter);
+        }
+    }
+}
+
+void DYNAMICS_SIMULATOR::prepare_mt_hvdc_related_meters()
+{
+
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+
+    METER_SETTER setter(*toolkit);
+
+    unsigned int n;
+
+    n = psdb.get_mt_hvdc_count();
+    vector<MT_HVDC*> mtdcs = psdb.get_all_mt_hvdcs();
+    MT_HVDC* mtdc;
+    DEVICE_ID did;
+    for(unsigned int i=0;i!=n;++i)
+    {
+        mtdc = mtdcs[i];
+        did = mtdc->get_device_id();
+        //lcc
+        vector<HLCC*> lccs = mtdc->get_all_lcc_converters();
+        unsigned int n_lcc = lccs.size();
+        for(unsigned int j=0;j!=n_lcc;++j)
+        {
+            string lcc_name = lccs[j]->get_converter_name();
+
+            METER meter = setter.prepare_mt_hvdc_lcc_converter_dc_current_in_kA_meter(did, lcc_name);
+            append_meter(meter);
+
+            meter = setter.prepare_mt_hvdc_lcc_converter_dc_voltage_in_kV_meter(did, lcc_name);
+            append_meter(meter);
+
+            meter = setter.prepare_mt_hvdc_lcc_converter_dc_power_in_kV_MW_meter(did, lcc_name);
+            append_meter(meter);
+
+            meter = setter.prepare_mt_hvdc_lcc_converter_ac_current_in_kA_meter(did, lcc_name);
+            append_meter(meter);
+
+            meter = setter.prepare_mt_hvdc_lcc_converter_firing_angle_in_deg_meter(did, lcc_name);
+            append_meter(meter);
+
+            meter = setter.prepare_mt_hvdc_lcc_converter_ac_active_power_in_MW_meter(did, lcc_name);
+            append_meter(meter);
+
+            meter = setter.prepare_mt_hvdc_lcc_converter_ac_reactive_power_in_Mvar_meter(did, lcc_name);
+            append_meter(meter);
+
+            meter = setter.prepare_mt_hvdc_lcc_converter_command_ang_of_cc_in_deg_meter(did, lcc_name);
+            append_meter(meter);
+
+            meter = setter.prepare_mt_hvdc_lcc_converter_command_ang_of_cea_in_deg_meter(did, lcc_name);
+            append_meter(meter);
+
+            meter = setter.prepare_mt_hvdc_lcc_converter_command_ang_of_cv_in_deg_meter(did, lcc_name);
+            append_meter(meter);
+
+            meter = setter.prepare_mt_hvdc_lcc_converter_command_idc_in_kA_meter(did, lcc_name);
+            append_meter(meter);
+
+        }
+        //vsc
+        vector<HVSC*> vscs = mtdc->get_all_vsc_converters();
+        unsigned int n_vsc = vscs.size();
+        for(unsigned int j=0;j!=n_vsc;++j)
+        {
+            string vsc_name = vscs[j]->get_converter_name();
+
+            METER meter = setter.prepare_mt_hvdc_vsc_converter_dc_current_in_kA_meter(did, vsc_name);
+            append_meter(meter);
+
+            meter = setter.prepare_mt_hvdc_vsc_converter_dc_voltage_in_kV_meter(did, vsc_name);
+            append_meter(meter);
+
+            meter = setter.prepare_mt_hvdc_vsc_converter_dc_power_in_kV_MW_meter(did, vsc_name);
+            append_meter(meter);
+
+            meter = setter.prepare_mt_hvdc_vsc_converter_ac_current_in_kA_meter(did, vsc_name);
+            append_meter(meter);
+
+            meter = setter.prepare_mt_hvdc_vsc_converter_ac_active_power_in_MW_meter(did, vsc_name);
+            append_meter(meter);
+
+            meter = setter.prepare_mt_hvdc_vsc_converter_ac_reactive_power_in_Mvar_meter(did, vsc_name);
+            append_meter(meter);
+
+            meter = setter.prepare_mt_hvdc_vsc_converter_id_in_kA_meter(did, vsc_name);
+            append_meter(meter);
+
+            meter = setter.prepare_mt_hvdc_vsc_converter_iq_in_kA_meter(did, vsc_name);
+            append_meter(meter);
+        }
+        //dc bus
+        vector<DC_BUS*> dcbuses = mtdc->get_all_dc_buses();
+        unsigned int n_dcbus = dcbuses.size();
+        for(unsigned int j=0;j!=n_dcbus;++j)
+        {
+            string dcbus_name = dcbuses[j]->get_name();
+
+            METER meter = setter.prepare_mt_hvdc_dc_bus_voltage_in_kV_meter(did, dcbus_name);
+            append_meter(meter);
+        }
+        //dc line
+        vector<DC_LINE*> dc_lines = mtdc->get_all_dc_lines();
+        unsigned int n_dclines = dc_lines.size();
+        for(unsigned int j=0;j!=n_dclines;++j)
+        {
+            string line_name = dc_lines[j]->get_dc_line_name();
+
+            METER meter = setter.prepare_mt_hvdc_dc_line_dc_current_on_sending_side_in_kA_meter(did, line_name);
+            append_meter(meter);
+
+            meter = setter.prepare_mt_hvdc_dc_line_dc_current_on_receiving_side_in_kA_meter(did, line_name);
+            append_meter(meter);
+
         }
     }
 }
@@ -1793,6 +1910,102 @@ void DYNAMICS_SIMULATOR::prepare_vsc_hvdc_related_dc_line_meter(const DEVICE_ID&
     else
     {
         osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not VSC LCC_HVDC2T when setting up meter with "<<__FUNCTION__;
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void DYNAMICS_SIMULATOR::prepare_mt_hvdc_related_meter(const DEVICE_ID& did, string device_name, string meter_type, string var_name)
+ {
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    //MT_HVDC* mtdc = psdb.get_mt_hvdc(did);
+    if(did.get_device_type()==STEPS_HYBRID_DC)
+    {
+        if(psdb.is_mt_hvdc_exist(did))
+        {
+            METER_SETTER setter(*toolkit);
+            METER meter(*toolkit);
+            //device_type = string2upper(device_type);
+            meter_type = string2upper(meter_type);
+
+            if(meter_type=="LCC CONVERTER DC CURRENT IN KA")
+                meter = setter.prepare_mt_hvdc_lcc_converter_dc_current_in_kA_meter(did, device_name);
+            if(meter_type=="LCC CONVERTER DC VOLTAGE IN KV")
+                meter = setter.prepare_mt_hvdc_lcc_converter_dc_voltage_in_kV_meter(did, device_name);
+            if(meter_type=="LCC CONVERTER DC POWER IN MW")
+                meter = setter.prepare_mt_hvdc_lcc_converter_dc_power_in_kV_MW_meter(did, device_name);
+            if(meter_type=="LCC CONVERTER AC CURRENT IN KA")
+                meter = setter.prepare_mt_hvdc_lcc_converter_ac_current_in_kA_meter(did, device_name);
+            if(meter_type=="LCC CONVERTER FIRING ANGLE IN DEG")
+                meter = setter.prepare_mt_hvdc_lcc_converter_firing_angle_in_deg_meter(did, device_name);
+            if(meter_type=="LCC CONVERTER ACTIVE POWER IN MW")
+                meter = setter.prepare_mt_hvdc_lcc_converter_ac_active_power_in_MW_meter(did, device_name);
+            if(meter_type=="LCC CONVERTER REACTIVE POWER IN MVAR")
+                meter = setter.prepare_mt_hvdc_lcc_converter_ac_reactive_power_in_Mvar_meter(did, device_name);
+
+            if(meter_type=="VSC CONVERTER DC CURRENT IN KA")
+                meter = setter.prepare_mt_hvdc_vsc_converter_dc_current_in_kA_meter(did, device_name);
+            if(meter_type=="VSC CONVERTER DC VOLTAGE IN KV")
+                meter = setter.prepare_mt_hvdc_vsc_converter_dc_voltage_in_kV_meter(did, device_name);
+            if(meter_type=="VSC CONVERTER DC POWER IN MW")
+                meter = setter.prepare_mt_hvdc_vsc_converter_dc_power_in_kV_MW_meter(did, device_name);
+            if(meter_type=="VSC CONVERTER AC CURRENT IN KA")
+                meter = setter.prepare_mt_hvdc_vsc_converter_ac_current_in_kA_meter(did, device_name);
+            if(meter_type=="VSC CONVERTER AVTIVE POWER IN MW")
+                meter = setter.prepare_mt_hvdc_vsc_converter_ac_active_power_in_MW_meter(did, device_name);
+            if(meter_type=="VSC CONVERTER REACTIVE POWER IN MVAR")
+                meter = setter.prepare_mt_hvdc_vsc_converter_ac_reactive_power_in_Mvar_meter(did, device_name);
+            if(meter_type=="VSC CONVERTER ID IN KA")
+                meter = setter.prepare_mt_hvdc_vsc_converter_id_in_kA_meter(did, device_name);
+            if(meter_type=="VSC CONVERTER IQ IN KA")
+                meter = setter.prepare_mt_hvdc_vsc_converter_iq_in_kA_meter(did, device_name);
+
+            if(meter_type=="DC BUS VOLTAGE IN KV")
+                meter = setter.prepare_mt_hvdc_dc_bus_voltage_in_kV_meter(did, device_name);
+
+            if(meter_type=="DC LINE IDC ON SENDING SIDE")
+                meter = setter.prepare_mt_hvdc_dc_line_dc_current_on_sending_side_in_kA_meter(did, device_name);
+            if(meter_type=="DC LINE IDC ON RECEIVING SIDE")
+                meter = setter.prepare_mt_hvdc_dc_line_dc_current_on_receiving_side_in_kA_meter(did, device_name);
+
+
+            if(meter.is_valid())
+            {
+                append_meter(meter);
+            }
+            else
+            {
+                osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
+                toolkit->show_information_with_leading_time_stamp(osstream);
+            }
+
+        }
+        else
+        {
+            osstream<<"Warning. Meter of "<<did.get_compound_device_name()<<" cannot be set since the given device does not exist in the power system database";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not MT HVDC when setting up meter with "<<__FUNCTION__;
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+ }
+
+void DYNAMICS_SIMULATOR::prepare_mt_hvdc_related_meter(string mtdc_name, string device_name, string meter_type, string var_name)
+{
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    MT_HVDC* mtdc = psdb.get_mt_hvdc(mtdc_name);
+    if(mtdc!=NULL)
+    {
+        DEVICE_ID did = mtdc->get_device_id();
+        prepare_mt_hvdc_related_meter(did,device_name,meter_type,var_name);
+    }
+    else
+    {
+        osstream<<"Warning. Meter of MTDC project:"<<mtdc_name<<" cannot be set since the given project name does not exist in the power system database";
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }

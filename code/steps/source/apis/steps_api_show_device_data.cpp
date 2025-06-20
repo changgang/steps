@@ -118,6 +118,18 @@ void api_show_device_data(const char* device_type, unsigned int toolkit_index)
         }
     }
 
+    if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="MT HVDC")
+    {
+        vector<MT_HVDC*> mtdcs = psdb.get_all_mt_hvdcs();
+        unsigned int n = mtdcs.size();
+
+        for(unsigned int i=0; i!=n; ++i)
+        {
+            MT_HVDC* mtdcptr = mtdcs[i];
+            mtdcptr->report();
+        }
+    }
+
     if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="EQUIVALENT DEVICE")
     {
         vector<EQUIVALENT_DEVICE*> eds = psdb.get_all_equivalent_devices();

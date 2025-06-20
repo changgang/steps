@@ -13,6 +13,10 @@
 #include "header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_models.h"
 #include "header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_models.h"
 
+#include "header/model/mt_hvdc_model/mt_hvdc_converter_model/mt_hvdc_lcc_model/hlcc_models.h"
+#include "header/model/mt_hvdc_model/mt_hvdc_converter_model/mt_hvdc_vsc_model/hvsc_models.h"
+#include "header/model/mt_hvdc_model/mt_hvdc_dc_grid_model/mt_dc_grid_models.h"
+
 #include "header/model/wtg_models/supported_wtg_models.h"
 
 #include "header/model/pvu_models/supported_pvu_models.h"

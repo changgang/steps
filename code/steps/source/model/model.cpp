@@ -98,7 +98,7 @@ void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRU
     if(device_type==STEPS_BUS or device_type==STEPS_GENERATOR or device_type==STEPS_WT_GENERATOR or
        device_type==STEPS_PV_UNIT or device_type==STEPS_LOAD or device_type==STEPS_AC_LINE or
        device_type==STEPS_TRANSFORMER or device_type==STEPS_LCC_HVDC2T or device_type==STEPS_VSC_HVDC or
-       device_type==STEPS_FIXED_SHUNT or
+       device_type==STEPS_FIXED_SHUNT or device_type==STEPS_HYBRID_DC or
        device_type==STEPS_SWITCHED_SHUNT or device_type==STEPS_EQUIVALENT_DEVICE or device_type==STEPS_ENERGY_STORAGE)
     {
         if(not has_allowed_device_type(device_type))

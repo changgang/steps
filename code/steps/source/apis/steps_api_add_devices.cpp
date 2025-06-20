@@ -151,6 +151,18 @@ void api_add_vsc_hvdc(char* vsc_name, unsigned int toolkit_index)
 
 }
 
+void api_add_mt_hvdc(char* mtdc_name, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    if(not psdb.is_mt_hvdc_exist(mtdc_name))
+    {
+        MT_HVDC newmtdc(toolkit);
+        psdb.append_mt_hvdc(newmtdc);
+    }
+}
+
 void api_add_transformer(unsigned int primary_side_bus_number, unsigned int secondary_side_bus_number, unsigned int tertiary_side_bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

@@ -314,6 +314,7 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
                 if(jacobian.is_lu_factorization_successful())
                 {
                     update_bus_voltage_and_angle(bus_delta_voltage_angle);
+                    updata_Qac_of_vscs_in_mt_hvdc();
                     ++iteration_count;
                 }
                 else
@@ -556,6 +557,7 @@ void POWERFLOW_SOLVER::prepare_devices_for_solution()
     transformers = psdb.get_all_transformers();
     hvdcs = psdb.get_all_2t_lcc_hvdcs();
     vsc_hvdcs = psdb.get_all_vsc_hvdcs();
+    mt_hvdcs = psdb.get_all_mt_hvdcs();
 
     e_devices = psdb.get_all_equivalent_devices();
 }
@@ -645,6 +647,22 @@ void POWERFLOW_SOLVER::initialize_PQ_bus_type()
                     }
                 }
             }
+
+            vector<MT_HVDC*> mtdcs = psdb.get_all_mt_hvdcs();
+            unsigned int n_mtdc = mtdcs.size();
+            for(unsigned int j=0;j!=n_mtdc;j++)
+            {
+                if(mtdcs[j]->get_status()==true)
+                {
+                    vector<HVSC*> hvscs = mtdcs[j]->get_vsc_converters_connect_to_ac_bus(bus);
+                    unsigned int n_vsc = hvscs.size();
+                    for(unsigned int k=0;k!=n_vsc;k++)
+                    {
+                        if(hvscs[k]->get_status()==true and hvscs[k]->get_converter_q_axis_control_mode()==VSC_CONSTANT_AC_VOLTAGE_MODE)
+                            buses[i]->set_bus_type(PV_TYPE);
+                    }
+                }
+            }
         }
     }
 }
@@ -713,6 +731,26 @@ void POWERFLOW_SOLVER::initialize_PV_bus_type()
                     }
                 }
             }
+
+            vector<MT_HVDC*> mtdcs = psdb.get_mt_hvdcs_connecting_to_bus(bus);
+            unsigned int n_dc = mtdcs.size();
+            for(unsigned int j=0;j!=n_dc;j++)
+            {
+                MT_HVDC* mtdc = mtdcs[j];
+                if(mtdc->get_status()==true)
+                {
+                    vector<HVSC*> hvscs = mtdc->get_vsc_converters_connect_to_ac_bus(bus);
+                    unsigned int n_hvsc = hvscs.size();
+                    for(unsigned int k=0;k!=n_hvsc;k++)
+                    {
+                        if(hvscs[k]->get_converter_q_axis_control_mode()==VSC_CONSTANT_AC_VOLTAGE_MODE and hvscs[k]->get_status()==true)
+                        {
+                            ++n_inservice;
+                        }
+                    }
+                }
+            }
+
             if(buses[i]->get_bus_type()==SLACK_TYPE)
                 continue;
             else
@@ -858,6 +896,29 @@ void POWERFLOW_SOLVER::initialize_bus_voltage_to_regulate()
                             busptr->set_voltage_to_regulate_in_pu(vreg);
                         }
                     }
+                }
+            }
+        }
+    }
+
+    unsigned int n_mtdc = mt_hvdcs.size();
+     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit->get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(unsigned int i=0;i<n_mtdc;i++)
+    {
+        if(mt_hvdcs[i]->get_status()==true)
+        {
+            vector<HVSC*> hvscs = mt_hvdcs[i]->get_all_vsc_converters();
+            unsigned int n_vsc = hvscs.size();
+            for(unsigned int j=0;j<n_vsc;j++)
+            {
+                if(hvscs[j]->get_status()==true and hvscs[j]->get_converter_q_axis_control_mode()==VSC_CONSTANT_AC_VOLTAGE_MODE)
+                {
+                    double vac = hvscs[j]->get_converter_nominal_ac_voltage_to_regulate();
+                    BUS* busptr = hvscs[j]->get_converter_ac_bus_pointer();
+                    busptr->set_voltage_to_regulate_in_pu(vac);
                 }
             }
         }
@@ -1079,6 +1140,7 @@ void POWERFLOW_SOLVER::try_to_solve_dc_system_steady_state()
 {
     try_to_solve_2t_lcc_hvdc_steady_state();
     try_to_solve_vsc_hvdc_steady_state();
+    try_to_solve_mt_hvdc_steady_state();
 }
 
 void POWERFLOW_SOLVER::try_to_solve_2t_lcc_hvdc_steady_state()
@@ -1115,6 +1177,24 @@ void POWERFLOW_SOLVER::try_to_solve_vsc_hvdc_steady_state()
             vsc_hvdcs[i]->set_allowed_max_P_mismatch_in_MW(get_allowed_max_active_power_imbalance_in_MW());
             vsc_hvdcs[i]->solve_steady_state();
             //vsc_hvdcs[i]->show_solved_steady_state();
+        }
+    }
+}
+
+void POWERFLOW_SOLVER:: try_to_solve_mt_hvdc_steady_state()
+{
+    unsigned int nhdc = mt_hvdcs.size();
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit->get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(unsigned int i=0; i<nhdc; ++i)
+    {
+        if(mt_hvdcs[i]->get_status()==true)
+        {
+            mt_hvdcs[i]->set_dc_system_max_iteration_in_powerflow(get_max_iteration());
+            mt_hvdcs[i]->set_dc_system_allow_power_mismatch_in_powerflow(get_allowed_max_active_power_imbalance_in_MW());
+            mt_hvdcs[i]->solve_steady_state();
         }
     }
 }
@@ -1194,6 +1274,19 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
             if(std::isnan(bus_power[i].real()) or std::isnan(bus_power[i].imag()))
             {
                 osstream<<"after adding vsc-hvdc NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
+                toolkit->show_information_with_leading_time_stamp(osstream);
+            }
+        }
+    }
+
+    add_mt_hvdc_to_bus_power_mismatch();
+    if(toolkit->is_detailed_log_enabled())
+    {
+        for(unsigned int i=0; i!=nbus; ++i)
+        {
+            if(std::isnan(bus_power[i].real()) or std::isnan(bus_power[i].imag()))
+            {
+                osstream<<"after adding mt-hvdc NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
                 toolkit->show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -1514,6 +1607,80 @@ void POWERFLOW_SOLVER::add_vsc_hvdc_to_bus_power_mismatch()
             //ostringstream osstream;
             //osstream<<hvdcs[i]->get_compound_device_name()<<": Srec = "<<S_rec<<" MVA, Sinv = "<<S_inv<<" MVA."<<endl;
             //toolkit->show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
+void POWERFLOW_SOLVER::add_mt_hvdc_to_bus_power_mismatch()
+{
+    ostringstream osstream;
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+
+    double one_over_sbase = toolkit->get_one_over_system_base_power_in_one_over_MVA();
+
+    unsigned int n_mthvdc = mt_hvdcs.size();
+
+
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit->get_mt_hvdc_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+
+    for(unsigned int i=0; i<n_mthvdc; ++i)
+    {
+        if(mt_hvdcs[i]->get_status()==true)
+        {
+            unsigned int nlcc = mt_hvdcs[i]->get_lcc_converter_count();
+            vector<HLCC*> lccs = mt_hvdcs[i]->get_all_lcc_converters();
+            for(unsigned int j=0;j!=nlcc;j++)
+            {
+                if(lccs[j]->get_status()==true)
+                {
+                    unsigned int physical_bus_number = lccs[j]->get_converter_ac_bus();
+                    unsigned int internal_bus_number = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus_number);
+                    complex<double> S_lcc = lccs[j]->get_lcc_converter_power_to_ac();
+
+                     bus_power[internal_bus_number] -= S_lcc*one_over_sbase;
+
+                     //osstream << "physical bus number: " << physical_bus_number<<" internal bus number: "<< internal_bus_number << " S LCC:"<<S_lcc<<" S LCC/ S base: "<<S_lcc*one_over_sbase;
+                     //toolkit->show_information_with_leading_time_stamp(osstream);
+                }
+            }
+
+            unsigned int nvsc = mt_hvdcs[i]->get_vsc_converter_count();
+            vector<HVSC*> vscs = mt_hvdcs[i]->get_all_vsc_converters();
+            for(unsigned int j=0;j!=nvsc;j++)
+            {
+                if(vscs[j]->get_status()==true)
+                {
+                    if(vscs[j]->get_converter_q_axis_control_mode()==VSC_CONSTANT_AC_VOLTAGE_MODE)
+                    {
+
+                        unsigned int physical_bus_number = vscs[j]->get_converter_ac_bus();
+                        unsigned int internal_bus_number = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus_number);
+
+                        double P = vscs[j]->get_converter_P_to_AC_bus_MW();
+                        double Q = vscs[j]->get_converter_Q_to_AC_bus_Mvar();
+
+                        complex<double> S_VSC = complex<double>(P,Q);
+
+                        bus_power[internal_bus_number] -= S_VSC*one_over_sbase;
+                    }
+
+                    if(vscs[j]->get_converter_q_axis_control_mode()==VSC_CONSTANT_AC_REACTIVE_POWER_MODE)
+                    {
+                        unsigned int physical_bus_number = vscs[j]->get_converter_ac_bus();
+                        unsigned int internal_bus_number = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus_number);
+
+                        double P = vscs[j]->get_converter_P_to_AC_bus_MW();
+                        double Q = vscs[j]->get_converter_Q_to_AC_bus_Mvar();
+
+                        complex<double> S_VSC = complex<double>(P,Q);
+
+                        bus_power[internal_bus_number] -= S_VSC*one_over_sbase;
+                    };
+                }
+            }
         }
     }
 }
@@ -2674,6 +2841,54 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
     }
 }
 
+void POWERFLOW_SOLVER::updata_Qac_of_vscs_in_mt_hvdc()
+{
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<MT_HVDC*> mtdcs = psdb.get_all_mt_hvdcs();
+    unsigned int n_mtdc = mtdcs.size();
+    for(unsigned int i=0;i!=n_mtdc;i++)
+    {
+        if(mtdcs[i]->get_status()==true)
+        {
+            vector<HVSC*> vscs = mtdcs[i]->get_all_vsc_converters();
+            unsigned int n_vsc = vscs.size();
+            for(unsigned int j=0;j!=n_vsc;j++)
+            {
+                if(vscs[j]->get_status()==true and vscs[j]->get_converter_q_axis_control_mode()==VSC_CONSTANT_AC_VOLTAGE_MODE)
+                {
+                    unsigned int bus = vscs[j]->get_converter_ac_bus();
+                    complex<double> S_trans = 0.0;
+                    vector<TRANSFORMER*> trans = psdb.get_transformers_connecting_to_bus(bus);
+                    unsigned int n_trans = trans.size();
+                    for(unsigned int m=0;m!=n_trans;m++)
+                    {
+                        if(trans[m]->get_winding_bus(PRIMARY_SIDE)==bus)
+                            S_trans +=trans[m]->get_winding_complex_power_in_MVA(PRIMARY_SIDE);
+                        else
+                            S_trans +=trans[m]->get_winding_complex_power_in_MVA(SECONDARY_SIDE);
+                    }
+                    double Q_trans = S_trans.imag();
+
+                    complex<double> S_shunts = 0.0;
+                    vector<FIXED_SHUNT*> shunts = psdb.get_fixed_shunts_connecting_to_bus(bus);
+                    unsigned int n_shunts = shunts.size();
+                    for(unsigned int k=0;k!=n_shunts;k++)
+                    {
+                        S_shunts += shunts[k]->get_actual_impedance_shunt_in_MVA();
+                    }
+                    double Q_shunt = S_shunts.imag();
+
+                    double Q_converter = -Q_trans-Q_shunt;
+                    vscs[j]->set_converter_Q_to_AC_bus_Mvar(Q_converter);
+                    //osstream<<"Converter Q to AC BUS OF "<<vscs[j]->get_converter_name()<<" UPDATA TO "<<Q_converter;
+                    //toolkit->show_information_with_leading_time_stamp(osstream);
+                }
+            }
+        }
+    }
+}
+
 void POWERFLOW_SOLVER::show_powerflow_result()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -3086,6 +3301,92 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
                 }
             }
         }
+
+        unsigned int n_mt_hvdc = mt_hvdcs.size();
+        if(n_mt_hvdc>0)
+        {
+            file<<"% Multi-Terminal HVDC"<<endl;
+            for(unsigned int i=0;i!=n_mt_hvdc;i++)
+            {
+                file<<"% Multi-Terminal HVDC Project: "<<mt_hvdcs[i]->get_name()<<endl;
+                unsigned int n_lcc = mt_hvdcs[i]->get_lcc_converter_count();
+                if(n_lcc>0)
+                {
+                    file<<"LCC Converters"<<endl;
+                    file<<"CONVERTER_NAME,ACBUS,VDC/KV,IDC/KA,PDC/MW,PAC/MW,QAC/MVAR,Firing_Angle/deg,Transformer_Tap/PU"<<endl;
+
+                    vector<HLCC*> lccs = mt_hvdcs[i]->get_all_lcc_converters();
+                    for(unsigned int j=0;j!=n_lcc;j++)
+                    {
+                        string name = lccs[j]->get_converter_name();
+                        unsigned int ac_bus = lccs[j]->get_converter_ac_bus();
+                        double Vdc = lccs[j]->get_udc_in_kV();
+                        double Idc = lccs[j]->get_idc_in_kA();
+                        double Pdc = Vdc*Idc;
+                        double PAC = lccs[j]->get_converter_P_2_ac_bus();
+                        double Qac = lccs[j]->get_converter_Q_2_ac_bus();
+                        double angle = lccs[j]->get_firing_angle_in_deg();
+                        double tap = lccs[j]->get_converter_transformer_tap_in_pu();
+
+                        snprintf(buffer, 1000, "%s/,%u,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
+                                         name.c_str(),ac_bus,Vdc,Idc,Pdc,PAC,Qac,angle,tap);
+
+                        file<<buffer<<endl;
+                    }
+                }
+
+                unsigned int n_vsc = mt_hvdcs[i]->get_vsc_converter_count();
+                if(n_vsc>0)
+                {
+                    file<<"VSC Converters"<<endl;
+                    file<<"CONVERTER_NAME,ACBUS,VDC/KV,IDC/KA,PDC/MW,PAC/MW,QAC/PW,Ploss/MW"<<endl;
+
+                    vector<HVSC*> vscs = mt_hvdcs[i]->get_all_vsc_converters();
+                    for(unsigned int j=0;j!=n_vsc;j++)
+                    {
+                        string name = vscs[j]->get_converter_name();
+                        unsigned int ac_bus = vscs[j]->get_converter_ac_bus();
+                        double Vdc = vscs[j]->get_udc_in_kV();
+                        double Idc = vscs[j]->get_idc_in_kA();
+                        double Pdc = Vdc*Idc;
+                        double P2AC = vscs[j]->get_converter_P_to_AC_bus_MW();
+                        double Q2ac = vscs[j]->get_converter_Q_to_AC_bus_Mvar();
+                        double Ploss = vscs[j]->get_converter_Ploss_MW();
+
+                        snprintf(buffer, 1000, "%s/,%u,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
+                                         name.c_str(),ac_bus,Vdc,Idc,Pdc,P2AC,Q2ac,Ploss);
+
+                        file<<buffer<<endl;
+                    }
+                }
+
+                unsigned int n_line =mt_hvdcs[i]->get_dc_line_count();
+                if(n_line>0)
+                {
+                    file<<"DC Lines"<<endl;
+                    file<<"LINE_NAME,IDCBUS,JDCBUS,VDC_IDCBUS/KV,VDC_JDCBUS/KV,IDC/KA,PDC_IDCBUS/MW,PDC_JDCBUS/MW,Ploss/MW"<<endl;
+
+                    vector<DC_LINE*> dc_lines = mt_hvdcs[i]->get_all_dc_lines();
+                    for(unsigned j=0;j!=n_line;j++)
+                    {
+                        string name = dc_lines[j]->get_dc_line_name();
+                        unsigned int idcbus = dc_lines[j]->get_sending_side_bus_number();
+                        unsigned int jdcbus = dc_lines[j]->get_receiving_side_bus_number();
+                        double Ui = dc_lines[j]->get_Udc_ibus_in_kV();
+                        double Uj = dc_lines[j]->get_Udc_jbus_in_kV();
+                        double Idc = dc_lines[j]->get_dc_line_current();
+                        double Pi = dc_lines[j]->get_sending_side_power();
+                        double Pj = dc_lines[j]->get_receiving_side_power();
+                        double Ploss_line = Pi-Pj;
+
+                        snprintf(buffer, 1000, "%s/,%u,%u,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
+                                         name.c_str(),idcbus,jdcbus,Ui,Uj,Idc,Pi,Pj,Ploss_line);
+
+                        file<<buffer<<endl;
+                    }
+                }
+            }
+        }
         file.close();
     }
     else
@@ -3354,6 +3655,92 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(const string& file
                             vsc_hvdcs[i]->get_dc_line_power_in_MW(j,RECEIVING_SIDE),
                             vsc_hvdcs[i]->get_dc_line_loss_in_MW(j));
                     file<<buffer<<endl;
+                }
+            }
+        }
+
+        unsigned int n_mt_hvdc = mt_hvdcs.size();
+        if(n_mt_hvdc>0)
+        {
+            file<<"% Multi-Terminal HVDC"<<endl;
+            for(unsigned int i=0;i!=n_mt_hvdc;i++)
+            {
+                file<<"% Multi-Terminal HVDC Project: "<<mt_hvdcs[i]->get_name()<<endl;
+                unsigned int n_lcc = mt_hvdcs[i]->get_lcc_converter_count();
+                if(n_lcc>0)
+                {
+                    file<<"LCC Converters"<<endl;
+                    file<<"CONVERTER_NAME,ACBUS,VDC/KV,IDC/KA,PDC/MW,PAC/MW,QAC/MVAR,Firing_Angle/deg,Transformer_Tap/PU"<<endl;
+
+                    vector<HLCC*> lccs = mt_hvdcs[i]->get_all_lcc_converters();
+                    for(unsigned int j=0;j!=n_lcc;j++)
+                    {
+                        string name = lccs[j]->get_converter_name();
+                        unsigned int ac_bus = lccs[j]->get_converter_ac_bus();
+                        double Vdc = lccs[j]->get_udc_in_kV();
+                        double Idc = lccs[j]->get_idc_in_kA();
+                        double Pdc = Vdc*Idc;
+                        double PAC = lccs[j]->get_converter_P_2_ac_bus();
+                        double Qac = lccs[j]->get_converter_Q_2_ac_bus();
+                        double angle = lccs[j]->get_firing_angle_in_deg();
+                        double tap = lccs[j]->get_converter_transformer_tap_in_pu();
+
+                        snprintf(buffer, 1000, "%s/,%u,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
+                                         name.c_str(),ac_bus,Vdc,Idc,Pdc,PAC,Qac,angle,tap);
+
+                        file<<buffer<<endl;
+                    }
+                }
+
+                unsigned int n_vsc = mt_hvdcs[i]->get_vsc_converter_count();
+                if(n_vsc>0)
+                {
+                    file<<"VSC Converters"<<endl;
+                    file<<"CONVERTER_NAME,ACBUS,VDC/KV,IDC/KA,PDC/MW,PAC/MW,QAC/MVAR,Ploss/MW"<<endl;
+
+                    vector<HVSC*> vscs = mt_hvdcs[i]->get_all_vsc_converters();
+                    for(unsigned int j=0;j!=n_vsc;j++)
+                    {
+                        string name = vscs[j]->get_converter_name();
+                        unsigned int ac_bus = vscs[j]->get_converter_ac_bus();
+                        double Vdc = vscs[j]->get_udc_in_kV();
+                        double Idc = vscs[j]->get_idc_in_kA();
+                        double Pdc = Vdc*Idc;
+                        double PAC = vscs[j]->get_converter_P_to_AC_bus_MW();
+                        double QAC = vscs[j]->get_converter_Q_to_AC_bus_Mvar();
+                        double Ploss = vscs[j]->get_converter_Ploss_MW();
+
+                        snprintf(buffer, 1000, "%s/,%u,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
+                                         name.c_str(),ac_bus,Vdc,Idc,Pdc,PAC,QAC,Ploss);
+
+                        file<<buffer<<endl;
+                    }
+                }
+
+                unsigned int n_line =mt_hvdcs[i]->get_dc_line_count();
+                if(n_line>0)
+                {
+                    file<<"DC Lines"<<endl;
+                    file<<"LINE_NAME,IDCBUS,JDCBUS,VDC_IDCBUS/KV,VDC_JDCBUS/KV,IDC/KA,PDC_IDCBUS/MW,PDC_JDCBUS/MW,Ploss/MW"<<endl;
+
+                    vector<DC_LINE*> dc_lines = mt_hvdcs[i]->get_all_dc_lines();
+                    for(unsigned j=0;j!=n_line;j++)
+                    {
+                        string name = dc_lines[j]->get_dc_line_name();
+                        unsigned int idcbus = dc_lines[j]->get_sending_side_bus_number();
+                        unsigned int jdcbus = dc_lines[j]->get_receiving_side_bus_number();
+                        double Ui = dc_lines[j]->get_Udc_ibus_in_kV();
+                        double Uj = dc_lines[j]->get_Udc_jbus_in_kV();
+                        double Idc = dc_lines[j]->get_dc_line_current();
+                        double Pi = dc_lines[j]->get_sending_side_power();
+                        double Pj = dc_lines[j]->get_receiving_side_power();
+                        double Ploss_line = Pi-Pj;
+
+                        snprintf(buffer, 1000, "%s/,%u,%u,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
+                                         name.c_str(),idcbus,jdcbus,Ui,Uj,Idc,Pi,Pj,Ploss_line);
+
+                        file<<buffer<<endl;
+                    }
                 }
             }
         }

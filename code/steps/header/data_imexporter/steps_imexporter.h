@@ -14,6 +14,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
 
         virtual void load_powerflow_data(string file);
         void load_vsc_hvdc_raw_data(vector<vector<string> > DATA);
+        void load_mt_hvdc_raw_data(vector<vector<string> > DATA);
         virtual void load_powerflow_result(string file);
         virtual void load_dynamic_data(string dy_source);
         virtual void load_sequence_data(string sq_source);
@@ -71,6 +72,15 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<vector<string> > vsc_hvdc_converter_data);
         void add_vsc_hvdc_dc_bus_data(VSC_HVDC& vsc_hvdc, vector<vector<string> > vsc_hvdc_dc_bus_data);
         void add_vsc_hvdc_dc_line_data(VSC_HVDC& vsc_hvdc, vector<vector<string> > vsc_hvdc_dc_line_data);
+
+        void add_mt_hvdc_with_data(vector<vector<string> > hdc_data);
+        void add_mt_hvdc_basic_data(MT_HVDC& hdc, vector<string> data);
+        void add_mt_hvdc_dc_terminal_data(MT_HVDC& hdc, vector<vector<string> > hdc_dc_terminal_data);
+        void add_mt_hvdc_dc_station_data(MT_HVDC& hdc, vector<vector<string> > hdc_dc_station_data);
+        void add_mt_hvdc_lcc_converter_data(MT_HVDC& hdc, vector<vector<string> > hdc_lcc_converter_data);
+        void add_mt_hvdc_vsc_converter_data(MT_HVDC& hdc,  vector<vector<string> > hdc_vsc_converter_data);
+        void add_mt_hvdc_dc_bus_data(MT_HVDC& hdc, vector<vector<string> > hdc_dc_bus_data);
+        void add_mt_hvdc_dc_line_data(MT_HVDC& hdc, vector<vector<string> > hdc_dc_line_data);
 
         void load_transformer_impedance_correction_table_data();
         void load_multi_terminal_hvdc_data();
@@ -209,6 +219,10 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_VSCHVDCC1_model(vector<string>& data);
         void add_VSCHVDCC2_model(vector<string>& data);
 
+        void add_MTHVDCLCC1_model(vector<string>& data);
+        void add_MTHVDCVSC1_model(vector<string>& data);
+        void add_MTDCGRID4_model(vector<string>& data);
+
         void add_WT3G1_model(vector<string>& data);
         void add_WT3G0_model(vector<string>& data);
         void add_WT3G2_model(vector<string>& data);
@@ -260,6 +274,8 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         DEVICE_ID get_2t_lcc_hvdc_device_id_from_string_vector(vector<string>& data);
         string get_vsc_hvdc_name_from_string_vector(vector<string>& data);
         DEVICE_ID get_vsc_hvdc_device_id_from_string_vector(vector<string>& data);
+        string get_mt_hvdc_name_from_string_vector(vector<string>& data);
+        DEVICE_ID get_mt_hvdc_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_transformer_device_id_from_string_vector(vector<string>& data);
 
 

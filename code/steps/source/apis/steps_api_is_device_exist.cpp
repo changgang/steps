@@ -81,6 +81,13 @@ bool api_is_vsc_hvdc_exist(char* vsc_name, unsigned int toolkit_index)
     return psdb.is_vsc_hvdc_exist(vsc_name);
 }
 
+bool api_is_mt_hvdc_exist(char* mtdc_name, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    return psdb.is_mt_hvdc_exist(mtdc_name);
+}
+
 bool api_is_equivalent_device_exist(unsigned int bus, char* ickt, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

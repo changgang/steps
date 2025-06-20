@@ -138,12 +138,12 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(STEPS_DEVICE_TYPE dev
 
     if(device_type==STEPS_HYBRID_DC)
     {
-        enable_allow_terminal();
+        enable_allow_name();
         enable_allow_identifier();
 
         this->device_type = device_type;
-        set_minimum_allowed_terminal_count(3);
-        set_maximum_allowed_terminal_count(100);
+        set_minimum_allowed_terminal_count(0);
+        set_maximum_allowed_terminal_count(0);
 
         return;
     }
@@ -334,6 +334,18 @@ string DEVICE_ID::get_compound_device_name() const
             for(unsigned int i=0; i<bus_count-1; ++i)
                 comp_device_name +=num2str(buses[i])+" ";
             comp_device_name +="AND "+num2str(buses[bus_count-1]);
+
+            return comp_device_name;
+        }
+
+        if(device_type==STEPS_HYBRID_DC)
+        {
+            if(ident=="")
+                comp_device_name = device_type_str + " ";
+            else
+                comp_device_name = device_type_str + " "+ident+" ";
+            comp_device_name += ": ";
+            comp_device_name += get_device_name();
 
             return comp_device_name;
         }
@@ -675,6 +687,14 @@ DEVICE_ID get_vsc_hvdc_device_id(const vector<unsigned int>& bus, const string& 
 
     did.set_device_identifier_index(get_index_of_string(identifier));
 
+    return did;
+}
+
+DEVICE_ID get_mt_hvdc_device_id(const string name)
+{
+    DEVICE_ID did;
+    did.set_device_type(STEPS_HYBRID_DC);
+    did.set_device_name_index(get_index_of_string(name));
     return did;
 }
 

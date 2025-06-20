@@ -211,6 +211,22 @@ vector<string> vsc_hvdc_meters{ "CONVERTER DC CURRENT IN KA",  "CONVERTER AC CUR
                                 "VSC LCC_HVDC2T NETWORK MODEL INTERNAL VARIABLE",
                                 "VSC LCC_HVDC2T CONVERTER MODEL INTERNAL VARIABLE"};
 
+vector<string> mt_hvdc_meters{"LCC CONVERTER DC CURRENT IN KA",        "LCC CONVERTER DC VOLTAGE IN KV",
+                                "LCC CONVERTER DC POWER IN MW",          "LCC CONVERTER AC CURRENT IN KA",
+                                "LCC CONVERTER FIRING ANGLE IN DEG",     "LCC CONVERTER ACTIVE POWER IN MW",
+                                "LCC CONVERTER REACTIVE POWER IN MVAR",  "LCC CONVERTER ANGLE REF OF CC",
+                                "LCC CONVERTER ANGLE REF OF CEA",         "LCC CONVERTER ANGLE REF OF CV",
+                                "LCC CONVERTER IDC REF IN KA",
+                                "VSC CONVERTER DC CURRENT IN KA",        "VSC CONVERTER DC VOLTAGE IN KV",
+                                "VSC CONVERTER DC POWER IN MW",          "VSC CONVERTER AC CURRENT IN KA",
+                                "VSC CONVERTER AVTIVE POWER IN MW",      "VSC CONVERTER REACTIVE POWER IN MVAR",
+                                "VSC CONVERTER ID IN KA",                "VSC CONVERTER IQ IN KA",
+                                "DC BUS VOLTAGE IN KV",
+                                "DC LINE IDC ON SENDING SIDE", "DC LINE IDC ON RECEIVING SIDE",
+                                "HLCC CONVERTER MODEL INTERNAL VARIABLE",
+                                "HVSC CONVERTER MODEL INTERNAL VARIABLE",
+                                "MT HVDC NETWORK MODEL INTERNAL VARIABLE"};
+
 vector<string> equivalent_device_meters{"VOLTAGE SOURCE VOLTAGE IN PU",
                                          "VOLTAGE SOURCE VOLTAGE ANGLE IN DEG",
                                          "VOLTAGE SOURCE RESISTANCE IN PU",
@@ -250,6 +266,7 @@ map<STEPS_DEVICE_TYPE, vector<string>> SUPPORTED_METERS{    {STEPS_BUS,         
                                                             {STEPS_ENERGY_STORAGE, energy_storage_meters},
                                                             {STEPS_LCC_HVDC2T, lcc_hvdc2t_meters},
                                                             {STEPS_VSC_HVDC, vsc_hvdc_meters},
+                                                            {STEPS_HYBRID_DC, mt_hvdc_meters},
                                                             {STEPS_EQUIVALENT_DEVICE, equivalent_device_meters}};
 METER::METER(STEPS& toolkit)
 {
@@ -266,9 +283,7 @@ void METER::copy_from_const_meter(const METER& meter)
     string meter_type = get_meter_type();
     if(meter_type.find("INTERNAL VARIABLE") != string::npos)
         set_internal_variable_name(meter.get_internal_variable_name());
-    if(get_device_type()!=STEPS_VSC_HVDC)
-        set_meter_side_bus(meter.get_meter_side_bus());
-    else
+    if(get_device_type()==STEPS_VSC_HVDC)
     {
         if(get_meter_type().rfind("CONVERTER", 0) == 0)
             set_meter_side_bus(meter.get_meter_side_bus());
@@ -278,6 +293,14 @@ void METER::copy_from_const_meter(const METER& meter)
             if(get_meter_type().rfind("DC LINE", 0) == 0)
                 set_sub_dc_device_id(meter.get_sub_dc_device_id());
         }
+    }
+    else if(get_device_type()==STEPS_HYBRID_DC)
+    {
+        set_hybrid_dc_meter_device_name(meter.get_hybrid_dc_meter_device_name());
+    }
+    else
+    {
+        set_meter_side_bus(meter.get_meter_side_bus());
     }
     if(meter.get_meter_side_bus()!=get_meter_side_bus())
         cout<<"error detected. different metered bus. old is "<<meter.get_meter_side_bus()
@@ -490,6 +513,16 @@ bool METER::is_internal_variable_name_valid(string& name, unsigned int index) co
             if(meter_type=="VSC LCC_HVDC2T CONVERTER MODEL INTERNAL VARIABLE")
                 model = ptr->get_vsc_hvdc_converter_model(index);
         }
+        if(device_type==STEPS_HYBRID_DC)
+        {
+            MT_HVDC* ptr = (MT_HVDC*)get_device_pointer();
+            if(meter_type=="MT HVDC NETWORK MODEL INTERNAL VARIABLE")
+                model = ptr->get_mtdc_network_model();
+            if(meter_type=="MT HVDC LCC MODEL INTERNAL VARIABLE")
+                model = ptr->get_lcc_model_with_index(index);
+            if(meter_type=="MT HVDC VSC MODEL INTERNAL VARIABLE")
+                model = ptr->get_vsc_model_with_index(index);
+        }
         if(model!=NULL)
             return model->is_model_internal_variable_exist(name);
         else
@@ -551,6 +584,21 @@ void METER::set_meter_side_bus(unsigned int meter_side)
                 }
             }
         }
+    }
+}
+
+void METER::set_hybrid_dc_meter_device_name(string name)
+{
+    if(get_device_type()==STEPS_HYBRID_DC)
+    {
+        if(get_meter_type().rfind("LCC CONVERTER",0) == 0)
+            this->hybrid_dc_device_name = name;
+        if(get_meter_type().rfind("VSC CONVERTER",0) == 0)
+            this->hybrid_dc_device_name = name;
+        if(get_meter_type().rfind("DC BUS",0) == 0)
+            this->hybrid_dc_device_name = name;
+        if(get_meter_type().rfind("DC LINE",0) == 0)
+            this->hybrid_dc_device_name = name;
     }
 }
 
@@ -658,6 +706,11 @@ STEPS_DEVICE_TYPE METER::get_device_type() const
         return STEPS_INVALID_DEVICE;
 }
 
+string METER::get_hybrid_dc_meter_device_name() const
+{
+    return hybrid_dc_device_name;
+}
+
 string METER::get_internal_variable_name() const
 {
     if(internal_variable_name_index!=INDEX_NOT_EXIST)
@@ -694,6 +747,10 @@ string METER::get_meter_name() const
            device_type==STEPS_TRANSFORMER or
            device_type==STEPS_VSC_HVDC)
             name += " @ SIDE "+num2str(get_meter_side_bus());
+        if(device_type==STEPS_HYBRID_DC)
+        {
+            name += " @ DC DEVICE "+ get_hybrid_dc_meter_device_name();
+        }
 
         name = trim_string(name);
         return name;
@@ -723,8 +780,14 @@ bool METER::is_valid() const
                 return false;
             }
         }
-        else
-            return true;
+        if(device_type==STEPS_HYBRID_DC)
+        {
+            if(get_hybrid_dc_meter_device_name()!="")
+                return true;
+            else
+                return false;
+        }
+        return true;
     }
     else
     {
@@ -740,6 +803,7 @@ void METER::clear()
     meter_type_string_index = INDEX_NOT_EXIST;
     meter_side_bus = 0;
     internal_variable_name_index = INDEX_NOT_EXIST;
+    hybrid_dc_device_name = "";
 }
 
 
@@ -825,6 +889,10 @@ void METER::set_device_pointer(DEVICE_ID device_id)
             deviceptr = (DEVICE*) psdb.get_vsc_hvdc(device_id);
             break;
 
+        case STEPS_HYBRID_DC:
+            deviceptr = (DEVICE*) psdb.get_mt_hvdc(device_id);
+            break;
+
         case STEPS_EQUIVALENT_DEVICE:
             deviceptr = (DEVICE*) psdb.get_equivalent_device(device_id);
             break;
@@ -869,6 +937,8 @@ double METER::get_meter_value() const
                 return get_meter_value_as_a_2t_lcc_hvdc();
             case STEPS_VSC_HVDC:
                 return get_meter_value_as_a_vsc_hvdc();
+            case STEPS_HYBRID_DC:
+                return get_meter_value_as_a_mt_hvdc();
             case STEPS_EQUIVALENT_DEVICE:
                 return get_meter_value_as_an_equivalent_device();
             default:
@@ -2754,6 +2824,170 @@ double METER::get_meter_value_as_a_vsc_hvdc() const
     }
     else
         return 0.0;
+}
+
+double METER::get_meter_value_as_a_mt_hvdc() const
+{
+    ostringstream osstream;
+    MT_HVDC* mtdc = (MT_HVDC*) get_device_pointer();
+    if(mtdc!=NULL)
+    {
+        if(mtdc->get_status()==true)
+        {
+            string meter_type = get_meter_type();
+            //lcc
+            if(meter_type=="LCC CONVERTER DC CURRENT IN KA")
+            {
+                string lcc_name = get_hybrid_dc_meter_device_name();
+                HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
+                return lcc->get_idc_in_kA();
+            }
+            if(meter_type=="LCC CONVERTER DC VOLTAGE IN KV")
+            {
+                string lcc_name = get_hybrid_dc_meter_device_name();
+                HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
+                return lcc->get_udc_in_kV();
+            }
+            if(meter_type=="LCC CONVERTER DC POWER IN MW")
+            {
+                string lcc_name = get_hybrid_dc_meter_device_name();
+                HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
+                return lcc->get_converter_dc_power_in_MW();
+            }
+            if(meter_type=="LCC CONVERTER AC CURRENT IN KA")
+            {
+                string lcc_name = get_hybrid_dc_meter_device_name();
+                HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
+                complex<double> Iac_pu = lcc->get_converter_dynamic_ac_current_in_pu_on_system_base();
+                double Iac = abs(Iac_pu);
+                return Iac;
+            }
+            if(meter_type=="LCC CONVERTER FIRING ANGLE IN DEG")
+            {
+                string lcc_name = get_hybrid_dc_meter_device_name();
+                HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
+                return lcc->get_firing_angle_in_deg();
+            }
+            if(meter_type=="LCC CONVERTER ACTIVE POWER IN MW")
+            {
+                string lcc_name = get_hybrid_dc_meter_device_name();
+                HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
+                return lcc->get_converter_P_2_ac_bus();
+            }
+            if(meter_type=="LCC CONVERTER REACTIVE POWER IN MVAR")
+            {
+                string lcc_name = get_hybrid_dc_meter_device_name();
+                HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
+                return lcc->get_converter_Q_2_ac_bus();
+            }
+            if(meter_type=="LCC CONVERTER ANGLE REF OF CC")
+            {
+                string lcc_name = get_hybrid_dc_meter_device_name();
+                HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
+                return lcc->get_dynamic_ang_ref_in_deg_of_cc();
+            }
+            if(meter_type=="LCC CONVERTER ANGLE REF OF CEA")
+            {
+                string lcc_name = get_hybrid_dc_meter_device_name();
+                HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
+                return lcc->get_dynamic_ang_ref_in_deg_of_cea();
+            }
+            if(meter_type=="LCC CONVERTER ANGLE REF OF CV")
+            {
+                string lcc_name = get_hybrid_dc_meter_device_name();
+                HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
+                return lcc->get_dynamic_ang_ref_in_deg_of_cv();
+            }
+            if(meter_type=="LCC CONVERTER IDC REF IN KA")
+            {
+                string lcc_name = get_hybrid_dc_meter_device_name();
+                HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
+                return lcc->get_dynamic_idc_ref_in_kA();
+            }
+
+            //vsc
+            if(meter_type=="VSC CONVERTER DC CURRENT IN KA")
+            {
+                string vsc_name = get_hybrid_dc_meter_device_name();
+                HVSC* vsc = mtdc->get_vsc_converter_with_name(vsc_name);
+                return vsc->get_idc_in_kA();
+            }
+            if(meter_type=="VSC CONVERTER DC VOLTAGE IN KV")
+            {
+                string vsc_name = get_hybrid_dc_meter_device_name();
+                HVSC* vsc = mtdc->get_vsc_converter_with_name(vsc_name);
+                return vsc->get_udc_in_kV();
+
+            }
+            if(meter_type=="VSC CONVERTER DC POWER IN MW")
+            {
+                string vsc_name = get_hybrid_dc_meter_device_name();
+                HVSC* vsc = mtdc->get_vsc_converter_with_name(vsc_name);
+                return vsc->get_converter_pdc_in_MW();
+            }
+            if(meter_type=="VSC CONVERTER AC CURRENT IN KA")
+            {
+                string vsc_name = get_hybrid_dc_meter_device_name();
+                HVSC* vsc = mtdc->get_vsc_converter_with_name(vsc_name);
+                complex<double> Ixy = vsc->get_converter_dynamic_ac_current_in_kA();
+                return abs(Ixy);
+            }
+            if(meter_type=="VSC CONVERTER AVTIVE POWER IN MW")
+            {
+                string vsc_name = get_hybrid_dc_meter_device_name();
+                HVSC* vsc = mtdc->get_vsc_converter_with_name(vsc_name);
+                return vsc->get_converter_dynamic_active_power_in_MW();
+            }
+            if(meter_type=="VSC CONVERTER REACTIVE POWER IN MVAR")
+            {
+                string vsc_name = get_hybrid_dc_meter_device_name();
+                HVSC* vsc = mtdc->get_vsc_converter_with_name(vsc_name);
+                return vsc->get_converter_dynamic_reactive_power_in_Mvar();
+            }
+            if(meter_type=="VSC CONVERTER ID IN KA")
+            {
+                string vsc_name = get_hybrid_dc_meter_device_name();
+                HVSC* vsc = mtdc->get_vsc_converter_with_name(vsc_name);
+                return vsc->get_converter_dynamic_d_axis_current_in_pu();
+            }
+            if(meter_type=="VSC CONVERTER IQ IN KA")
+            {
+                string vsc_name = get_hybrid_dc_meter_device_name();
+                HVSC* vsc = mtdc->get_vsc_converter_with_name(vsc_name);
+                return vsc->get_converter_dynamic_q_axis_current_in_pu();
+            }
+            //dc bus
+            if(meter_type=="DC BUS VOLTAGE IN KV")
+            {
+                string dcbus_name = get_hybrid_dc_meter_device_name();
+                DC_BUS* bus = mtdc->get_dc_bus_with_name(dcbus_name);
+                return bus->get_dc_bus_voltage_in_kV();
+            }
+            //dc line
+            if(meter_type=="DC LINE IDC ON SENDING SIDE")
+            {
+                string line_name = get_hybrid_dc_meter_device_name();
+                DC_LINE* line = mtdc->get_dc_line_with_line_name(line_name);
+                return line->get_i_RL_in_kA_on_sending_side();
+            }
+            if(meter_type=="DC LINE IDC ON RECEIVING SIDE")
+            {
+                string line_name = get_hybrid_dc_meter_device_name();
+                DC_LINE* line = mtdc->get_dc_line_with_line_name(line_name);
+                return line->get_i_RL_in_kA_on_receiving_side();
+            }
+
+            //internal
+            if(meter_type=="HLCC CONVERTER MODEL INTERNAL VARIABLE")
+                return 0.0;
+            if(meter_type=="HVSC CONVERTER MODEL INTERNAL VARIABLE")
+                return 0.0;
+            if(meter_type=="MT HVDC NETWORK MODEL INTERNAL VARIABLE")
+                return 0.0;
+
+        }
+    }
+    return 0.0;
 }
 
 double METER::get_meter_value_as_an_equivalent_device() const

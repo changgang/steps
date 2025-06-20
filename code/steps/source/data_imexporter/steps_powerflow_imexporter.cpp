@@ -1932,6 +1932,37 @@ void STEPS_IMEXPORTER::load_vsc_hvdc_raw_data(vector<vector<string> > DATA)
     }
 }
 
+void STEPS_IMEXPORTER::load_mt_hvdc_raw_data(vector<vector<string> > DATA)
+{
+    vector<string> data;
+    unsigned int ndata=DATA.size();
+
+    vector<vector<string> > hdc_data;
+    for(unsigned int i=0;i<ndata;)
+    {
+        hdc_data.clear();
+        data=DATA[i];
+        hdc_data.push_back(data);
+        ++i;
+        unsigned int n_terminal = get_integer_data(data[1],"0");
+        unsigned int n_station = get_integer_data(data[2],"0");
+        unsigned int n_lcc = get_integer_data(data[3],"0");
+        unsigned int n_vsc = get_integer_data(data[4],"0");
+        unsigned int nbus=get_integer_data(data[5],"0");
+        unsigned int ndc_line=get_integer_data(data[6],"0");
+        unsigned int nlines_to_read= n_terminal+n_station+n_lcc+n_vsc+nbus+ndc_line;
+
+        for(unsigned int j=0; j!=nlines_to_read;++j)
+        {
+            if(i>=ndata) break;
+            data=DATA[i];
+           hdc_data.push_back(data);
+            ++i;
+        }
+        add_mt_hvdc_with_data(hdc_data);
+    }
+}
+
 void STEPS_IMEXPORTER::add_vsc_hvdc_with_data(vector<vector<string> > vsc_hvdc_data)
 {
     STEPS& toolkit = get_toolkit();
@@ -2399,6 +2430,738 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_dc_line_data(VSC_HVDC& vsc_hvdc, vector<vect
         {
             double Ldc=get_double_data(data.front(),"0.0");
             vsc_hvdc.set_dc_line_inductance_in_mH(i,Ldc);
+            data.erase(data.begin());
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::add_mt_hvdc_with_data(vector<vector<string> >hdc_data)
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    MT_HVDC hdc(toolkit);
+    unsigned int i = 0;
+
+    vector<string> basic_data=hdc_data[i];  ++i;
+
+    unsigned int nterminal = get_integer_data(basic_data[1],"0");
+    unsigned int nstation = get_integer_data(basic_data[2],"0");
+    unsigned int nlcc=get_integer_data(basic_data[3],"0");
+    unsigned int nvsc=get_integer_data(basic_data[4],"0");
+    unsigned int ndc_bus=get_integer_data(basic_data[5],"0");
+    unsigned int ndc_line=get_integer_data(basic_data[6],"0");
+
+    vector<vector<string> > hdc_dc_terminal_data;
+    vector<vector<string> > hdc_dc_station_data;
+    vector<vector<string> > hdc_lcc_converter_data;
+    vector<vector<string> > hdc_vsc_converter_data;
+    vector<vector<string> > hdc_dc_bus_data;
+    vector<vector<string> > hdc_dc_line_data;
+    vector<string> data;
+
+    hdc_dc_terminal_data.clear();
+    hdc_dc_station_data.clear();
+    hdc_lcc_converter_data.clear();
+    hdc_vsc_converter_data.clear();
+    hdc_dc_bus_data.clear();
+    hdc_dc_line_data.clear();
+    data.clear();
+
+    for(unsigned int j=0;j<nterminal;++j)
+    {
+        data=hdc_data[i];  ++i;
+        hdc_dc_terminal_data.push_back(data);
+    }
+    for(unsigned int j=0;j<nstation;++j)
+    {
+        data=hdc_data[i];  ++i;
+        hdc_dc_station_data.push_back(data);
+    }
+    for(unsigned int j=0;j<nlcc;++j)
+    {
+        data=hdc_data[i];  ++i;
+        hdc_lcc_converter_data.push_back(data);
+    }
+    for(unsigned int j=0;j<nvsc;++j)
+    {
+        data=hdc_data[i];  ++i;
+        hdc_vsc_converter_data.push_back(data);
+    }
+
+    for(unsigned int j=0;j<ndc_bus;++j)
+    {
+        data=hdc_data[i]; ++i;
+        hdc_dc_bus_data.push_back(data);
+    }
+
+    for(unsigned int j=0;j<ndc_line;++j)
+    {
+        data=hdc_data[i]; ++i;
+        hdc_dc_line_data.push_back(data);
+    }
+
+    add_mt_hvdc_basic_data(hdc, basic_data);
+    add_mt_hvdc_dc_terminal_data(hdc,hdc_dc_terminal_data);
+    add_mt_hvdc_dc_station_data(hdc, hdc_dc_station_data);
+    add_mt_hvdc_lcc_converter_data(hdc, hdc_lcc_converter_data);
+    add_mt_hvdc_vsc_converter_data(hdc, hdc_vsc_converter_data);
+    add_mt_hvdc_dc_bus_data(hdc, hdc_dc_bus_data);
+    add_mt_hvdc_dc_line_data(hdc, hdc_dc_line_data);
+
+    while(psdb.is_mt_hvdc_exist(hdc.get_device_id()))
+        hdc.set_identifier(hdc.get_identifier()+"#");
+
+    psdb.append_mt_hvdc(hdc);
+}
+
+void STEPS_IMEXPORTER::add_mt_hvdc_basic_data(MT_HVDC& hdc, vector<string> data)
+{
+
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+    if(data.size()>0)
+    {
+        string name = get_string_data(data.front(), "");
+        hdc.set_name(name);
+        hdc.set_identifier(name);
+        data.erase(data.begin());
+    }
+    if(data.size()>0)
+    {
+        unsigned int n_terminal = get_integer_data(data.front(),"0");
+        hdc.set_dc_terminal_count(n_terminal);
+        data.erase(data.begin());
+    }
+    if(data.size()>0)
+    {
+        unsigned int n_station = get_integer_data(data.front(),"0");
+        hdc.set_dc_station_count(n_station);
+        data.erase(data.begin());
+    }
+    if(data.size()>0)
+    {
+        unsigned int n_lcc_converter = get_integer_data(data.front(),"0");
+        hdc.set_lcc_converter_count(n_lcc_converter);
+        data.erase(data.begin());
+    }
+    if(data.size()>0)
+    {
+        unsigned int n_vsc_converter = get_integer_data(data.front(),"0");
+        hdc.set_vsc_converter_count(n_vsc_converter);
+        data.erase(data.begin());
+    }
+    if(data.size()>0)
+    {
+        unsigned int n_dc_bus=get_integer_data(data.front(),"0");
+        hdc.set_dc_bus_count(n_dc_bus);
+        data.erase(data.begin());
+    }
+    if(data.size()>0)
+    {
+        unsigned int n_dc_line=get_integer_data(data.front(),"0");
+        hdc.set_dc_line_count(n_dc_line);
+        data.erase(data.begin());
+    }
+
+    if (data.size()>0)
+    {
+        double vbase = get_double_data(data.front(),"0.0");
+        hdc.set_dc_base_voltage(vbase);
+        data.erase(data.begin());
+    }
+    if(data.size()>0)
+    {
+        int status=get_integer_data(data.front(),"0");
+        if(status==0)
+            hdc.set_status(false);
+        else
+            hdc.set_status(true);
+        data.erase(data.begin());
+    }
+
+}
+
+void STEPS_IMEXPORTER::add_mt_hvdc_dc_terminal_data(MT_HVDC& hdc, vector<vector<string> > hdc_dc_terminal_data)
+{
+    vector<string> data;
+    data.clear();
+
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+    unsigned int n_terminal = hdc_dc_terminal_data.size();
+    for(unsigned int i=0;i!=n_terminal;++i)
+    {
+        data=hdc_dc_terminal_data[i];
+        if(data.size()>0)
+        {
+            string terminal_name = get_string_data(data.front(),"");
+            hdc.set_terminal_name(i,terminal_name);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            unsigned int terminal_number = get_integer_data(data.front(),"0");
+            hdc.set_terminal_number(i,terminal_number);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            unsigned int dcbus_number = get_integer_data(data.front(),"0");
+            hdc.set_terminal_dc_bus_number(i,dcbus_number);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            string terminal_mode = get_string_data(data.front(),"");
+            if(terminal_mode=="P_Terminal")
+                hdc.set_terminal_mode(i,DC_P_TERMIANL);
+            else if(terminal_mode=="I_Terminal")
+                hdc.set_terminal_mode(i,DC_I_TERMINAL);
+            else if(terminal_mode=="U_Terminal")
+                hdc.set_terminal_mode(i,DC_U_TERMINAL);
+            else if(terminal_mode=="ANGLE_Terminal")
+                hdc.set_terminal_mode(i,DC_ANGLE_TERMINAL);
+            else
+                osstream<<"Invalid mode for terminal: "<<hdc.get_terminal_name(i);
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            unsigned int terminal_status = get_integer_data(data.front(),"0");
+            if(terminal_status==0)
+                hdc.set_termianl_status(i,false);
+            else
+                hdc.set_termianl_status(i,true);
+            data.erase(data.begin());
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::add_mt_hvdc_dc_station_data(MT_HVDC& hdc, vector<vector<string> > hdc_dc_station_data)
+{
+    vector<string> data;
+    data.clear();
+
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+
+    unsigned int n_station = hdc_dc_station_data.size();
+    for(unsigned int i=0;i!=n_station;++i)
+    {
+        data=hdc_dc_station_data[i];
+        if(data.size()>0)
+        {
+            string station_name = get_string_data(data.front(),"");
+            hdc.set_station_name(i,station_name);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            unsigned int station_number = get_integer_data(data.front(),"0");
+            hdc.set_station_number(i,station_number);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            unsigned int station_terminal_number = get_integer_data(data.front(),"0");
+            hdc.set_station_terminal_number(i,station_terminal_number);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            string station_structure = get_string_data(data.front(),"");
+            if(station_structure=="LCC_Cascade")
+                hdc.set_station_structure(i,LCC_CASCADE);
+            else if(station_structure=="VSC_Parallel")
+                hdc.set_station_structure(i,VSC_PARALLEL);
+            else if(station_structure=="LCC_HCM")
+                hdc.set_station_structure(i,LCC_HCM);
+            else
+                hdc.set_station_structure(i,INVALID_DC_STATION_STRUCTURE);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            unsigned int n_lcc_cascade = get_integer_data(data.front(),"0");
+            hdc.set_station_cascade_lcc_number(i,n_lcc_cascade);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            unsigned int n_vsc_parallel = get_integer_data(data.front(),"0");
+            hdc.set_station_parallel_vsc_number(i,n_vsc_parallel);
+            data.erase(data.begin());
+        }
+
+        if(data.size()>0)
+        {
+            string station_mode = get_string_data(data.front(),"");
+            if(station_mode=="P_Station")
+                hdc.set_station_mode(i,DC_P_STATION);
+            else if(station_mode =="U_Station")
+                hdc.set_station_mode(i,DC_U_STATION);
+            else if(station_mode =="ANGLE_Station")
+                hdc.set_station_mode(i,DC_ANGLE_STATION);
+            else if(station_mode =="I_Station")
+                hdc.set_station_mode(i,DC_I_STATION);
+            else
+                hdc.set_station_mode(i,DC_P_STATION);
+            data.erase(data.begin());
+        }
+
+        if(data.size()>0)
+        {
+            unsigned int station_status = get_integer_data(data.front(),"0");
+            if(station_status==0)
+                hdc.set_station_status(i,false);
+            else
+                hdc.set_station_status(i,true);
+            data.erase(data.begin());
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::add_mt_hvdc_lcc_converter_data(MT_HVDC& hdc, vector<vector<string> > hdc_lcc_converter_data)
+{
+    vector<string> data;
+    data.clear();
+
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+
+    unsigned int n_converter = hdc_lcc_converter_data.size();
+    for(unsigned int i=0;i!=n_converter;++i)
+    {
+        data=hdc_lcc_converter_data[i];
+        if(data.size()>0)
+        {
+            unsigned int ac_bus = get_integer_data(data.front(),"0");
+            hdc.set_lcc_converter_ac_bus(i,ac_bus);
+            data.erase(data.begin());
+
+        }
+        if(data.size()>0)
+        {
+            unsigned int lcc_station =get_integer_data(data.front(),"0");
+            hdc.set_lcc_converter_station_number(i,lcc_station);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            string lcc_name = get_string_data(data.front(),"");
+            hdc.set_lcc_converter_name(i,lcc_name);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            int status = get_integer_data(data.front(),"0");
+            if(status ==0)
+                hdc.set_lcc_converter_status(i,false);
+            else
+                hdc.set_lcc_converter_status(i,true);
+
+
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            string omode = get_string_data(data.front(),"");
+            if(omode == "RECTIFIER")
+                hdc.set_lcc_converter_operating_mode(i,LCC_RECTIFIER);
+            if(omode == "INVERTER")
+                hdc.set_lcc_converter_operating_mode(i,LCC_INVERTER);
+
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            string cmode = get_string_data(data.front(),"");
+            if(cmode == "Vdc_control")
+                hdc.set_lcc_converter_control_mode(i,LCC_CONSTANT_VOLTAGE_MODE);
+            else if(cmode == "Pdc_control")
+                hdc.set_lcc_converter_control_mode(i,LCC_CONSTANT_POWER_MODE);
+            else if(cmode == "Idc_control")
+                hdc.set_lcc_converter_control_mode(i,LCC_CONSTANT_CURRENT_MODE);
+            else if(cmode == "Angle_control")
+                hdc.set_lcc_converter_control_mode(i,LCC_CONSTANR_FIRING_ANGLE_MODE);
+            else
+            {
+                osstream<<"The input lcc conrol mode "<<cmode<<"  is invalid, please check the lcc control mode data."<<endl;
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                hdc.set_lcc_converter_control_mode(i,LCC_INVALID_CONTROL_MODE);
+            }
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double udc_ref = get_double_data(data.front(),"0.0");;
+            hdc.set_lcc_converter_command_udc_in_kV(i,udc_ref);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double pdc_ref = get_double_data(data.front(),"0.0");;
+            hdc.set_lcc_converter_command_pdc_in_MW(i,pdc_ref);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double idc_ref = get_double_data(data.front(),"0.0");;
+            hdc.set_lcc_converter_command_idc_in_kA(i,idc_ref);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double angle_ref = get_double_data(data.front(),"0.0");
+            hdc.set_lcc_converter_command_firing_angle(i,angle_ref);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            int n_bridge = get_integer_data(data.front(),"0");
+            hdc.set_lcc_converter_brideg_number(i,n_bridge);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double vdrop = get_double_data(data.front(),"0.0");
+            hdc.set_lcc_converter_voltage_drop_per_bridge_in_kV(i,vdrop);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double smooth_l = get_double_data(data.front(),"0.0");
+            hdc.set_lcc_converter_line_smoothing_L_in_H(i,smooth_l);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double smooth_r = get_double_data(data.front(),"0.0");
+            hdc.set_lcc_converter_line_smoothing_R_in_ohm(i,smooth_r);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double vbase_grid = get_double_data(data.front(),"0.0");
+            hdc.set_lcc_converter_transformer_grid_side_base_voltage_in_kV(i,vbase_grid);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double vbase_converter = get_double_data(data.front(),"0.0");
+            hdc.set_lcc_converter_transformer_converter_side_base_voltage_in_kV(i,vbase_converter);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double trans_r = get_double_data(data.front(),"0.0");
+            hdc.set_lcc_converter_transformer_R_in_ohm(i,trans_r);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double trans_x = get_double_data(data.front(),"0.0");
+            hdc.set_lcc_converter_transformer_X_in_ohm(i,trans_x);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double tap_max = get_double_data(data.front(),"0.0");
+            hdc.set_lcc_converter_transformer_max_tap_in_pu(i,tap_max);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double tap_min = get_double_data(data.front(),"0.0");
+            hdc.set_lcc_converter_transformer_min_tap_in_pu(i,tap_min);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double tap_number = get_double_data(data.front(),"0.0");
+            hdc.set_lcc_converter_transformer_number_of_taps(i,tap_number);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double angle_max = get_double_data(data.front(),"0.0");
+            hdc.set_lcc_converter_max_firing_angle_in_deg(i,angle_max);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double angle_min = get_double_data(data.front(),"0.0");
+            hdc.set_lcc_converter_min_firing_angle_in_deg(i,angle_min);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double sbase = get_double_data(data.front(),"0.0");
+            hdc.set_lcc_converter_rated_capacity_in_MVA(i,sbase);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double vbase = get_double_data(data.front(),"0.0");
+            hdc.set_lcc_converter_base_voltage_in_kV(i,vbase);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double margin = get_double_data(data.front(),"0.0");
+            hdc.set_lcc_converter_current_margin_in_pu(i,margin);
+            data.erase(data.begin());
+        }
+    }
+
+}
+
+void STEPS_IMEXPORTER::add_mt_hvdc_vsc_converter_data(MT_HVDC& hdc,  vector<vector<string> > hdc_vsc_converter_data)
+{
+    STEPS&toolkit = get_toolkit();
+    ostringstream osstream;
+    vector<string> data;
+    data.clear();
+
+    unsigned int nvsc = hdc_vsc_converter_data.size();
+    for(unsigned int i=0;i!=nvsc;++i)
+    {
+        data=hdc_vsc_converter_data[i];
+        if(data.size()>0)
+        {
+            int acbus =get_integer_data(data.front(),"0");
+            hdc.set_vsc_converter_ac_bus(i,acbus);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            int vsc_station =get_integer_data(data.front(),"0");
+            hdc.set_vsc_converter_station_number(i,vsc_station);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            string name = get_string_data(data.front(),"");
+            hdc.set_vsc_converter_name(i,name);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            int status = get_integer_data(data.front(),"0");
+            if(status==0)
+            {
+                hdc.set_vsc_converter_status(i,false);
+            }
+            else
+            {
+                hdc.set_vsc_converter_status(i,true);
+            }
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            int priority = get_integer_data(data.front(),"0");
+            hdc.set_vsc_converter_priority(i,priority);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            string dmode = get_string_data(data.front(),"");
+            if(dmode=="Pac_control")
+                hdc.set_vsc_converter_d_axis_control_mode(i,VSC_CONSTANT_AC_ACTIVE_POWER_MODE);
+            else if(dmode == "Vdc_control")
+                hdc.set_vsc_converter_d_axis_control_mode(i,VSC_CONSTANT_DC_VOLTAGE_MODE);
+            else
+            {
+                osstream << "VSC d-axis CONTROL MODE"<<dmode<<" is invalid, please check the vsc control mode data.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                hdc.set_vsc_converter_d_axis_control_mode(i,VSC_INVALID_D_CONTROL_MODE);
+            }
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            string qmode = get_string_data(data.front(),"");
+            if(qmode=="Qac_control")
+                hdc.set_vsc_converter_q_axis_control_mode(i,VSC_CONSTANT_AC_REACTIVE_POWER_MODE);
+            else if(qmode == "Vac_control")
+                hdc.set_vsc_converter_q_axis_control_mode(i,VSC_CONSTANT_AC_VOLTAGE_MODE);
+            else
+            {
+                osstream << "VSC q-axis CONTROL MODE"<<qmode<<" is invalid, please check the vsc control mode data.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                hdc.set_vsc_converter_q_axis_control_mode(i,VSC_INVALID_Q_CONTROL_MODE);
+            }
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double pac_command = get_double_data(data.front(),"0.0");
+            hdc.set_vsc_converter_pac_command(i,pac_command);
+            hdc.set_vsc_converter_P_to_ac_bus_in_MW(i,pac_command);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double qac_command = get_double_data(data.front(),"0.0");
+            hdc.set_vsc_converter_qac_command(i,qac_command);
+            hdc.set_vsc_converter_Q_to_ac_bus_in_Mvar(i,qac_command);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double udc_command = get_double_data(data.front(),"0.0");
+            hdc.set_vsc_converter_udc_command(i,udc_command);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double uac_command = get_double_data(data.front(),"0.0");
+            hdc.set_vsc_converter_us_command(i,uac_command);
+
+
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double a = get_double_data(data.front(),"0.0");
+            hdc.set_vsc_converter_loss_coefficient_A(i,a);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double b = get_double_data(data.front(),"0.0");
+            hdc.set_vsc_converter_loss_coefficient_B(i,b);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double c = get_double_data(data.front(),"0.0");
+            hdc.set_vsc_converter_loss_coefficient_C(i,c);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double min_loss = get_double_data(data.front(),"0.0");
+            hdc.set_vsc_converter_min_loss_in_kW(i,min_loss);
+            data.erase(data.begin());
+        }
+        double r=0;
+        double x=0;
+        if(data.size()>0)
+        {
+            r = get_double_data(data.front(),"0.0");
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            x = get_double_data(data.front(),"0.0");
+            data.erase(data.begin());
+        }
+        complex<double>Z = complex<double>(r,x);
+        hdc.set_vsc_converter_Z_in_ohm(i,Z);
+
+        if(data.size()>0)
+        {
+            double sbase = get_double_data(data.front(),"0.0");
+            hdc.set_vsc_converter_rated_capacity_in_MVA(i,sbase);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double vbase = get_double_data(data.front(),"0.0");
+            hdc.set_vsc_converter_base_voltage_in_kV(i,vbase);
+            data.erase(data.begin());
+
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::add_mt_hvdc_dc_bus_data(MT_HVDC& hdc, vector<vector<string> > hdc_dc_bus_data)
+{
+    STEPS&toolkit = get_toolkit();
+    ostringstream osstream;
+    vector<string> data;
+    data.clear();
+
+    unsigned int nbus = hdc_dc_bus_data.size();
+    for(unsigned int i=0;i!=nbus;++i)
+    {
+        data=hdc_dc_bus_data[i];
+        if(data.size()>0)
+        {
+            int dc_bus_number =get_integer_data(data.front(),"0");
+            hdc.set_dc_bus_number(i,dc_bus_number);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            string dc_bus_name = get_string_data(data.front(),"");
+            hdc.set_dc_bus_name(i,dc_bus_name);
+            data.erase(data.begin());
+        }
+
+    }
+}
+
+void STEPS_IMEXPORTER::add_mt_hvdc_dc_line_data(MT_HVDC& hdc, vector<vector<string>> hdc_dc_line_data)
+{
+    STEPS&toolkit = get_toolkit();
+    ostringstream osstream;
+    vector<string> data;
+    data.clear();
+
+    unsigned int ndc_line = hdc_dc_line_data.size();
+    for(unsigned int i=0;i!=ndc_line;++i)
+    {
+        data=hdc_dc_line_data[i];
+        if(data.size()>0)
+        {
+            int sending_bus = get_integer_data(data.front(),"0");
+            hdc.set_dc_line_sending_side_bus(i,sending_bus);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            int receiving_bus = get_integer_data(data.front(),"0");
+            hdc.set_dc_line_receiving_side_bus(i,receiving_bus);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            string dc_line_name = get_string_data(data.front(),"");
+            hdc.set_dc_line_name(i,dc_line_name);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            int status = get_integer_data(data.front(),"0");
+            if(status==0)
+                hdc.set_dc_line_status(i,false);
+            else
+            {
+                hdc.set_dc_line_status(i,true);
+            }
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double dc_line_r = get_double_data(data.front(),"0.0");
+            hdc.set_dc_line_R_in_ohm(i,dc_line_r);
+            data.erase(data.begin());
+
+        }
+        if(data.size()>0)
+        {
+            double dc_line_l = get_double_data(data.front(),"0.0");
+            hdc.set_dc_line_L_in_H(i,dc_line_l);
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            double dc_line_c = get_double_data(data.front(),"0.0");
+            hdc.set_dc_line_C_in_uF(i,dc_line_c);
             data.erase(data.begin());
         }
     }

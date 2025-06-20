@@ -553,7 +553,18 @@ class STEPS():
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("VSC HVDC")
-        return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))    
+        return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index)) 
+
+    def get_mt_hvdc_capacity(self):
+        """
+        Get capacity for storing MT HVDC projects in database.
+        Args: N/A
+        Rets:
+            (1) Maximum number of MT HVDC projects that can be stored in the database.
+        """
+        global STEPS_LIB
+        device = self.__get_c_char_p_of_string("MT HVDC")
+        return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))     
 
     def get_equivalent_device_capacity(self):
         """
@@ -768,6 +779,21 @@ class STEPS():
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("VSC HVDC")
         return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)  
+    
+    def set_mt_hvdc_capacity(self, capacity):
+        """
+        Set capacity for storing MT HVDC projects in database.
+        Args:
+            (1) capacity: Maximum number of MT HVDC projects that can be stored in the database.
+        Rets: N/A
+        Tips:
+            This function SHOULD be called before adding devices to the database.
+        Example: 
+            simulator.set_mt_hvdc_capacity(capacity)
+        """
+        global STEPS_LIB
+        device = self.__get_c_char_p_of_string("MT HVDC")
+        return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)  
 
     def set_equivalent_device_capacity(self, capacity):
         """
@@ -974,6 +1000,19 @@ class STEPS():
         global STEPS_LIB
         vschvdc = self.__get_c_char_p_of_string(vschvdc)
         STEPS_LIB.api_add_vsc_hvdc(vschvdc, self.toolkit_index)
+        return
+    
+    def add_mt_hvdc(self, mthvdc):
+        """
+        Add new MT HVDC project with project name.
+        Args:
+            (1) mthvdc: MT HVDC project name in format of string.
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        mthvdc = self.__get_c_char_p_of_string(mthvdc)
+        STEPS_LIB.api_add_mt_hvdc(mthvdc, self.toolkit_index)
         return
 
     def add_transformer(self, transformer):
@@ -1183,6 +1222,19 @@ class STEPS():
         global STEPS_LIB
         vschvdc = self.__get_c_char_p_of_string(vschvdc)
         STEPS_LIB.api_remove_vsc_hvdc(vschvdc, self.toolkit_index)
+        return
+    
+    def remove_mt_hvdc(self, mthvdc):
+        """
+        Remove MT HVDC project with project name.
+        Args:
+            (1) mthvdc: MT HVDC projecct name in format of string.
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        mthvdc = self.__get_c_char_p_of_string(mthvdc)
+        STEPS_LIB.api_remove_mt_hvdc(mthvdc, self.toolkit_index)
         return
 
     def remove_transformer(self, transformer):
@@ -1413,6 +1465,17 @@ class STEPS():
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("VSC HVDC")
+        return STEPS_LIB.api_get_device_count(device, self.toolkit_index)    
+    
+    def get_mt_hvdc_count(self):
+        """
+        Return number of MT HVDC projects.
+        Args: N/A
+        Rets: 
+            (1) Number of MT HVDC projects.
+        """
+        global STEPS_LIB
+        device = self.__get_c_char_p_of_string("MT HVDC")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)    
 
     def get_equivalent_device_count(self):
@@ -1656,6 +1719,19 @@ class STEPS():
         global STEPS_LIB
         vschvdc = self.__get_c_char_p_of_string(vschvdc)
         return STEPS_LIB.api_is_vsc_hvdc_exist(vschvdc, self.toolkit_index)
+    
+    def is_mt_hvdc_exist(self, mthvdc):
+        """
+        Check if given MT HVDC project exists or not.
+        Args:
+            (1) mthvdc: MT HVDC project name in format of string.
+        Rets:
+            (1) True if the MT HVDC project exists, False otherwise.
+        Example: N/A
+        """
+        global STEPS_LIB
+        mthvdc = self.__get_c_char_p_of_string(mthvdc)
+        return STEPS_LIB.api_is_mt_hvdc_exist(mthvdc, self.toolkit_index)
 
     def is_equivalent_device_exist(self, equivalent_device):
         """
@@ -2214,6 +2290,40 @@ class STEPS():
             vscs.append((int(nbus), id))
             STEPS_LIB.api_goto_next_device(device, self.toolkit_index)
         return tuple(vscs)
+    
+    def get_all_mt_hvdcs(self):
+        """
+        Get all VSC HVDC projects in the database.
+        Args: N/A
+        Rets:
+            (1) Tuple of all VSC HVDC projects. Empty tuple if no VSC HVDC projects in the database.
+        """
+
+        return self.get_mt_hvdcs_at_bus(0)
+    
+    def get_mt_hvdcs_at_bus(self, bus):
+        """
+        Get all MT HVDC projects at bus with input bus number.
+        Args:
+            (1) bus: bus number
+        Rets:
+            (1) Tuple of all MT HVDC projects at given bus. Empty tuple if no MT HVDC projects at given bus.
+        """
+        global STEPS_LIB
+        device = "MT HVDC"
+        device = self.__get_c_char_p_of_string(device)
+        blank = self.__get_c_char_p_of_string("")
+        STEPS_LIB.api_initialize_device_search(device, bus, self.toolkit_index)
+        mtdcs = []
+        while True:
+            nbus = STEPS_LIB.api_get_current_device_bus_number(device, blank, self.toolkit_index)
+            if nbus==0:
+                break
+            id = STEPS_LIB.api_get_current_device_identifier(device, self.toolkit_index)
+            id = self.__get_string_from_c_char_p(id)
+            mtdcs.append(id)
+            STEPS_LIB.api_goto_next_device(device, self.toolkit_index)
+        return tuple(mtdcs) 
 
     def get_generators_with_constraints(self, area=0, zone=0):
         """
@@ -2869,6 +2979,60 @@ class STEPS():
         if par_type in ['S', 'STRING']:
             return self.__get_string_from_c_char_p(STEPS_LIB.api_get_vsc_hvdc_string_data(vschvdc, dev_type, par_name, index, self.toolkit_index))
         return None
+    
+    def get_mt_hvdc_data(self, mthvdc, dev_type, dev_name, par_type, par_name):
+        """
+        Get MT HVDC project data.
+        Args:
+            (1) mthvdc: MT HVDC project name
+            (2) dev_type: String of device type. Choose one from("MTDC", "TERMINAL", "STATION", "LCC", "VSC", "DCBUS", "DCLINE")
+            (3) dev_name: String of device name.
+            (4) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+            (5) par_name: String of parameter name.
+        Rets:
+            (1) Value of parameter.
+        Tips:
+            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+            The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        """
+        global STEPS_LIB
+        par_type = par_type.upper()
+        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
+            return None
+        dev_type = dev_type.upper()
+        par_name = par_name.upper()
+        mthvdc = self.__get_c_char_p_of_string(mthvdc)
+        dev_name = self.__get_c_char_p_of_string(dev_name)
+        dev_type = self.__get_c_char_p_of_string(dev_type)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        if par_type in ['I', 'INT', 'INTEGER']:
+            return int(STEPS_LIB.api_get_mt_hvdc_integer_data(mthvdc, dev_type, dev_name, par_name, self.toolkit_index))
+        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
+            return STEPS_LIB.api_get_mt_hvdc_float_data(mthvdc, dev_type, dev_name, par_name, self.toolkit_index)
+        if par_type in ['B', 'BOOL', 'BOOLEAN']:
+            return STEPS_LIB.api_get_mt_hvdc_boolean_data(mthvdc, dev_type, dev_name, par_name, self.toolkit_index)
+        if par_type in ['S', 'STRING']:
+            return self.__get_string_from_c_char_p(STEPS_LIB.api_get_mt_hvdc_string_data(mthvdc, dev_type, dev_name, par_name, self.toolkit_index))
+        return None
+
+    def get_mt_hvdc_device_name(self, mthvdc, dev_type, index):
+        """
+        Get MT HVDC device name.
+        Args:
+            (1) mthvdc: MT HVDC project name
+            (2) dev_type: String of device type. Choose one from("MTDC", "TERMINAL", "STATION", "LCC", "VSC", "DCBUS", "DCLINE")
+            (3) index: Int of device index.
+        Rets:
+            (1) Value of parameter.
+        Tips:
+            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+            The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        """
+        global STEPS_LIB
+        dev_type = dev_type.upper()
+        mthvdc = self.__get_c_char_p_of_string(mthvdc)
+        dev_type = self.__get_c_char_p_of_string(dev_type)
+        return self.__get_string_from_c_char_p(STEPS_LIB.api_get_mt_hvdc_device_name_with_index(mthvdc,dev_type,index,self.toolkit_index))
 
     def get_area_data(self, area, par_type, par_name):
         """
@@ -3529,6 +3693,63 @@ class STEPS():
             value = self.__get_c_char_p_of_string(value)
             return self.__get_string_from_c_char_p(STEPS_LIB.api_set_vsc_hvdc_string_data(vschvdc, dev_type, par_name, value, index, self.toolkit_index))
         return None
+    
+    def set_mt_hvdc_data(self, mthvdc, dev_type, dev_name, par_type, par_name, value):
+        """
+        Set MT HVDC project data.
+        Args:
+            (1) mthvdc: MT HVDC project name
+            (2) dev_type: String of device type. Choose one from("MT HVDC", "TERMINAL", "STATION", "LCC", "VSC", "DCBUS", "DCLINE")
+            (3) dev_name: String of device name. 
+            (4) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+            (5) par_name: String of parameter name.
+            (6) value: Value of parameter.
+        Rets: N/A
+        Tips:
+            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+            The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+        """
+        global STEPS_LIB
+        par_type = par_type.upper()
+        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
+            return None
+        dev_type = dev_type.upper()
+        par_name = par_name.upper()
+        mthvdc = self.__get_c_char_p_of_string(mthvdc)
+        dev_type = self.__get_c_char_p_of_string(dev_type)
+        dev_name = self.__get_c_char_p_of_string(dev_name)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        if par_type in ['I', 'INT', 'INTEGER']:
+            return int(STEPS_LIB.api_set_mt_hvdc_integer_data(mthvdc, dev_type, dev_name, par_name, value, self.toolkit_index))
+        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
+            return STEPS_LIB.api_set_mt_hvdc_float_data(mthvdc, dev_type, dev_name, par_name, value, self.toolkit_index)
+        if par_type in ['B', 'BOOL', 'BOOLEAN']:
+            return STEPS_LIB.api_set_mt_hvdc_boolean_data(mthvdc, dev_type, dev_name, par_name, value, self.toolkit_index)
+        if par_type in ['S', 'STRING']:
+            value = self.__get_c_char_p_of_string(value)
+            return self.__get_string_from_c_char_p(STEPS_LIB.api_set_mt_hvdc_string_data(mthvdc, dev_type, dev_name, par_name, value, self.toolkit_index))
+        return None
+
+    def set_mt_hvdc_device_name(self, mthvdc, dev_type, index, value):
+        """
+        Get MT HVDC device name.
+        Args:
+            (1) mthvdc: MT HVDC project name
+            (2) dev_type: String of device type. Choose one from("MTDC", "TERMINAL", "STATION", "LCC", "VSC", "DCBUS", "DCLINE")
+            (3) index: Int of device index.
+            (4) value: String of device name.
+        Rets:
+            (1) Value of parameter.
+        Tips:
+            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+            The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        """
+        global STEPS_LIB
+        dev_type = dev_type.upper()
+        mthvdc = self.__get_c_char_p_of_string(mthvdc)
+        dev_type = self.__get_c_char_p_of_string(dev_type)
+        value = self.__get_c_char_p_of_string(value)
+        return STEPS_LIB.api_set_mt_hvdc_device_name_with_index(mthvdc, dev_type, index, value, self.toolkit_index)
 
     def set_area_data(self, area, par_type, par_name, value):
         """
@@ -3649,6 +3870,19 @@ class STEPS():
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
         STEPS_LIB.api_load_vsc_hvdc_powerflow_data_from_file(file, ftype, self.toolkit_index)
+
+    def load_mt_hvdc_powerflow_data(self, file, ftype):
+        """
+        Load MT HVDC powerflow data from file.
+        Args:
+            (1) file: string, source MT HVDC powerflow file name.
+            (2) ftype: string, powerflow data format. Choose one from {"PSSE", "STEPS"}.
+        Rets: N/A
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        ftype = self.__get_c_char_p_of_string(ftype)
+        STEPS_LIB.api_load_mt_hvdc_powerflow_data_from_file(file, ftype, self.toolkit_index)
 
     def check_powerflow_data(self):
         """
@@ -5396,6 +5630,103 @@ class STEPS():
             par_name = self.__get_string_from_c_char_p(par_name)
             parameters.append((par_name, par_value))
         return tuple(parameters)
+    
+    def get_mt_hvdc_related_model_name(self, mthvdc, model_type, dev_name):
+        """
+        Get MT HVDC project related model name.
+        Args:
+            (1) mthvdc: MT HVDC project name in format of string.
+            (2) model_type: String of model type. Chose from{"MTDC", "LCC", "VSC"}
+            (3) dev_name:  String of device name.
+        Rets:
+            (1) String of model name.
+        Tips:
+            If model type is not supported, empty string is returned.
+        Example: N/A
+        """
+        global STEPS_LIB
+        model_type = model_type.upper()
+        mthvdc = self.__get_c_char_p_of_string(mthvdc)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        dev_name =  self.__get_c_char_p_of_string(dev_name)
+        model_name = self.__get_string_from_c_char_p(STEPS_LIB.api_get_mt_hvdc_related_model_name(mthvdc, model_type, dev_name, self.toolkit_index))
+        if model_name=="":
+            model_name = None
+        return model_name
+    
+    def get_mt_hvdc_related_model_data(self, mthvdc, model_type, dev_name, par_name):
+        """
+        Get MT HVDC project related model data.
+        Args:
+            (1) mthvdc: MT HVDC project name in format of string.
+            (2) model_type: String of model type. Chose from{"MTDC", "LCC", "VSC"}
+            (3) dev_name:  String of device name.
+            (4) par_name: String of parameter name.
+        Rets:
+            (1) Value of parameter
+        Tips:
+            If model type or parameter name is not supported, 0.0 is returned.
+        Example: N/A
+        """
+        global STEPS_LIB
+        model_type = model_type.upper()
+        par_name = par_name.upper()
+        mthvdc = self.__get_c_char_p_of_string(mthvdc)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        dev_name = self.__get_c_char_p_of_string(dev_name)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        return STEPS_LIB.api_get_mt_hvdc_related_model_float_parameter(mthvdc, model_type, dev_name, par_name, self.toolkit_index)
+    
+    def set_mt_hvdc_related_model_data(self, mthvdc, model_type, dev_name, par_name, value):
+        """
+        Set MT HVDC project related model data.
+        Args:
+            (1) mthvdc: MT HVDC project name in format of string.
+            (2) model_type: String of model type. Chose from{"MTDC", "LCC", "VSC"}
+            (3) dev_name:  String of device name.
+            (4) par_name: String of parameter name.
+            (5) value: Value of parameter.)
+        Rets: N/A
+        Tips:
+            If model type or parameter name is not supported, nothing will be changed.
+            If value is not a number, function may malfunction and package may exit with error.
+        Example: N/A
+        """
+        global STEPS_LIB
+        model_type = model_type.upper()
+        par_name = par_name.upper()
+        mthvdc = self.__get_c_char_p_of_string(mthvdc)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        dev_name = self.__get_c_char_p_of_string(dev_name)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        return STEPS_LIB.api_set_mt_hvdc_related_model_float_parameter(mthvdc, model_type, dev_name, par_name, value, self.toolkit_index)
+    
+    def get_mt_hvdc_related_model_parameter_pair(self, mthvdc, model_type, dev_name):
+        """
+        Get MT HVDC project related model parameter pair.
+        Args:
+            (1) mthvdc: MT HVDC project name in format of string.
+            (2) model_type: String of model type.
+            (2) dev_name: String of device name.
+        Rets:
+            (1) Tuple of parameter name and value pairs. Each parameter name and value pair is in format of (string of parameter name, value of parameter).
+        Tips:
+            If model type is not supported, empty tuple is returned.
+        Example: N/A
+        """
+        global STEPS_LIB
+        model_type = model_type.upper()
+        mthvdc = self.__get_c_char_p_of_string(mthvdc)
+        dev_name = self.__get_c_char_p_of_string(dev_name)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        parameters = []
+        n = STEPS_LIB.api_get_mt_hvdc_related_model_float_parameter_count(mthvdc, model_type, dev_name, self.toolkit_index)
+        for parameter_index in range(n):
+            par_name = STEPS_LIB.api_get_mt_hvdc_related_model_float_parameter_name(mthvdc, model_type, parameter_index, dev_name, self.toolkit_index)
+            par_value = STEPS_LIB.api_get_mt_hvdc_related_model_float_parameter(mthvdc, model_type, dev_name, par_name, self.toolkit_index)
+            par_name = self.__get_string_from_c_char_p(par_name)
+            parameters.append((par_name, par_value))
+        return tuple(parameters)
 
     def get_generator_governor_pmax(self, gen):
         """
@@ -5734,6 +6065,7 @@ class STEPS():
                 DYNAMIC_SIMULATOR::prepare_transformer_related_meters()
                 DYNAMIC_SIMULATOR::prepare_hvdc_related_meters()
                 DYNAMIC_SIMULATOR::prepare_vsc_hvdc_related_meters()
+                DYNAMIC_SIMULATOR::prepare_mt_hvdc_related_meters()
                 DYNAMIC_SIMULATOR::prepare_equivalent_device_related_meters()                
         Example: N/A
         """
@@ -5772,6 +6104,8 @@ class STEPS():
         if device_type in ["VSC HVDC"]:
             STEPS_LIB.api_prepare_vsc_hvdc_related_meters(self.toolkit_index)
             return
+        if device_type in ["MT HVDC"]:
+            STEPS_LIB.api_prepare_mt_hvdc_related_meters(self.toolkit_index)
         if device_type in ["EQUIVALENT DEVICE"]:
             STEPS_LIB.api_prepare_equivalent_device_related_meters(self.toolkit_index)
             return
@@ -5988,6 +6322,29 @@ class STEPS():
         meter_type = self.__get_c_char_p_of_string(meter_type)
         var_name = self.__get_c_char_p_of_string(var_name)
         STEPS_LIB.api_prepare_vsc_hvdc_related_meter(vschvdc, meter_type, side, var_name, self.toolkit_index)
+        return
+    
+    def prepare_mt_hvdc_meter(self, mthvdc, dev_name, meter_type, var_name=""):
+        """
+        Prepare specific MT HVDC project meter.
+        Args:
+            (1) mthvdc: MT HVDC project name in format of string.
+            (2) dev_name: String of device name.
+            (3) meter_type: String of meter type.
+            (4) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
+        Rets: N/A
+        Tips:
+            For the supported meter types, see implementation of the following function of STEPS:
+                DYNAMIC_SIMULATOR::prepare_mt_hvdc_related_meter()
+        Example: N/A
+        """
+        global STEPS_LIB
+        meter_type = meter_type.upper()
+        mthvdc = self.__get_c_char_p_of_string(mthvdc)
+        dev_name = self.__get_c_char_p_of_string(dev_name)
+        meter_type = self.__get_c_char_p_of_string(meter_type)
+        var_name = self.__get_c_char_p_of_string(var_name)
+        STEPS_LIB.api_prepare_mt_hvdc_related_meter(mthvdc, dev_name, meter_type, var_name, self.toolkit_index)
         return
 
     def prepare_equivalent_device_meter(self, edevice, meter_type, var_name=""):

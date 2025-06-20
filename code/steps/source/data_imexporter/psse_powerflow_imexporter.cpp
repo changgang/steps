@@ -132,6 +132,57 @@ void PSSE_IMEXPORTER::load_vsc_powerflow_data(string file)
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
+void PSSE_IMEXPORTER::load_mt_hvdc_powerflow_data(string file)
+{
+    ostringstream osstream;
+    osstream<<"Loading hybird dc powerflow data from hdcraw file: "<<file;
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
+    load_mt_hvdc_data_into_ram(file);
+
+    if(raw_data_in_ram.size()==0)
+    {
+        osstream<<"No data in the given hdcraw file: "<<file<<endl
+                <<"Please check if the file exist or not.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    STEPS_IMEXPORTER steps_importer(toolkit);
+
+    vector<vector<string> > data = convert_mt_hvdc_raw_data2steps_vector();
+
+    steps_importer.load_mt_hvdc_raw_data(data);
+
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    vector<unsigned int> buses = psdb.get_all_buses_number();
+    size_t n = buses.size();
+    unsigned int max_bus_number = 0;
+    for(size_t i=0; i<n; ++i)
+        if(buses[i]>max_bus_number) max_bus_number = buses[i];
+
+    osstream<<"System maximum bus number is "<<max_bus_number<<" of "<<psdb.bus_number2bus_name(max_bus_number);
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
+    osstream<<"There are totally:\n"
+            <<psdb.get_bus_count()<<" buses\n"
+            <<psdb.get_generator_count()<<" generators\n"
+            <<psdb.get_wt_generator_count()<<" WT generators\n"
+            <<psdb.get_pv_unit_count()<<" PV units\n"
+            <<psdb.get_energy_storage_count()<<" energy storages\n"
+            <<psdb.get_ac_line_count()<<" lines\n"
+            <<psdb.get_transformer_count()<<" transformers\n"
+            <<psdb.get_fixed_shunt_count()<<" fixed shunts\n"
+            <<psdb.get_2t_lcc_hvdc_count()<<" HVDCs\n"
+            <<psdb.get_vsc_hvdc_count()<<" VSC HVDCs\n"
+            <<psdb.get_mt_hvdc_count()<<" HYBIRD DCs\n"
+            <<psdb.get_load_count()<<" loads\n"
+            <<psdb.get_area_count()<<" areas\n"
+            <<psdb.get_zone_count()<<" zones\n"
+            <<psdb.get_owner_count()<<" owners";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+}
 
 void PSSE_IMEXPORTER::load_powerflow_result(string file)
 {
@@ -260,6 +311,51 @@ void PSSE_IMEXPORTER::load_vsc_hvdc_data_into_ram(string file)
             break;
     }
     fclose(fid);
+}
+
+void PSSE_IMEXPORTER::load_mt_hvdc_data_into_ram(string file)
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    raw_data_in_ram.clear();
+
+    FILE* fid = fopen(file.c_str(),"rt");
+    if(fid == NULL)
+    {
+        osstream<<"PSS/E MT_HVDC raw file '"<<file<<"' is not accessible. Loading PSS/E raw data is failed.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    const unsigned int buffer_size = 4096;
+    char buffer[buffer_size];
+    string sbuffer;
+
+    vector<string> data_of_one_type;
+    data_of_one_type.clear();
+
+    while(true)
+    {
+        if(fgets(buffer, buffer_size, fid)==NULL)
+        {
+            if(data_of_one_type.size()!=0)
+            {
+                raw_data_in_ram.push_back(data_of_one_type);
+                data_of_one_type.clear();
+            }
+            break;
+        }
+        sbuffer = trim_psse_comment(buffer);
+        sbuffer = trim_string(sbuffer);
+        //osstream<<"sbuffer data : '"<<sbuffer;
+        //toolkit.show_information_with_leading_time_stamp(osstream);
+
+        if(sbuffer.size()!=0)
+            data_of_one_type.push_back(sbuffer);
+        else
+            break;
+    }
+    fclose(fid);;
 }
 
 string PSSE_IMEXPORTER::trim_psse_comment(string str)
@@ -396,6 +492,20 @@ vector<vector<string> > PSSE_IMEXPORTER::convert_vsc_hvdc_raw_data2steps_vector(
     }
     return data;
 }
+
+vector<vector<string> > PSSE_IMEXPORTER::convert_mt_hvdc_raw_data2steps_vector() const
+{
+    vector<vector<string> > data;
+    vector<string> raw_data = raw_data_in_ram[0];
+    unsigned int n = raw_data.size();
+    for(unsigned int i=0; i<n; ++i)
+    {
+        string DATA = raw_data[i];
+        data.push_back(split_string(DATA,","));
+    }
+    return data;;
+}
+
 vector<vector<string> > PSSE_IMEXPORTER::convert_transformer_inpedance_correction_table_data2steps_vector() const
 {
     return convert_i_th_type_data2steps_vector(11);

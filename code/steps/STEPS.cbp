@@ -8,10 +8,11 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="release">
-				<Option output="../../build/bin/release/libSTEPS" imp_lib="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).a" def_file="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).def" prefix_auto="1" extension_auto="1" />
+				<Option output="../../build/bin/release/STEPS" prefix_auto="1" extension_auto="1" />
 				<Option object_output="../../build/obj/release/" />
-				<Option type="3" />
+				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
 				<Option parameters="--compiler " />
 				<Compiler>
 					<Add option="-O3" />
@@ -141,6 +142,12 @@
 		<Unit filename="header/device/converter_station.h" />
 		<Unit filename="header/device/converter_station_test.h" />
 		<Unit filename="header/device/converter_test.h" />
+		<Unit filename="header/device/dc_component/dc_bus.h" />
+		<Unit filename="header/device/dc_component/dc_line.h" />
+		<Unit filename="header/device/dc_component/dc_station.h" />
+		<Unit filename="header/device/dc_component/dc_terminal.h" />
+		<Unit filename="header/device/dc_component/hlcc.h" />
+		<Unit filename="header/device/dc_component/hvsc.h" />
 		<Unit filename="header/device/device.h" />
 		<Unit filename="header/device/energy_storage.h" />
 		<Unit filename="header/device/engergy_storage_test.h" />
@@ -159,6 +166,7 @@
 		<Unit filename="header/device/lcc_test.h" />
 		<Unit filename="header/device/load.h" />
 		<Unit filename="header/device/load_test.h" />
+		<Unit filename="header/device/mt_hvdc.h" />
 		<Unit filename="header/device/mutual_data.h" />
 		<Unit filename="header/device/nonbus_device.h" />
 		<Unit filename="header/device/pv_unit.h" />
@@ -281,6 +289,16 @@
 		<Unit filename="header/model/model_test.h" />
 		<Unit filename="header/model/model_var_table.h" />
 		<Unit filename="header/model/model_var_table_test.h" />
+		<Unit filename="header/model/mt_hvdc_model/mt_hvdc_converter_model/mt_hvdc_lcc_model/MTHVDCLCC1.h" />
+		<Unit filename="header/model/mt_hvdc_model/mt_hvdc_converter_model/mt_hvdc_lcc_model/hlcc_model.h" />
+		<Unit filename="header/model/mt_hvdc_model/mt_hvdc_converter_model/mt_hvdc_lcc_model/hlcc_models.h" />
+		<Unit filename="header/model/mt_hvdc_model/mt_hvdc_converter_model/mt_hvdc_vsc_model/MTHVDCVSC1.h" />
+		<Unit filename="header/model/mt_hvdc_model/mt_hvdc_converter_model/mt_hvdc_vsc_model/hvsc_model.h" />
+		<Unit filename="header/model/mt_hvdc_model/mt_hvdc_converter_model/mt_hvdc_vsc_model/hvsc_models.h" />
+		<Unit filename="header/model/mt_hvdc_model/mt_hvdc_dc_grid_model/MTDCGRID4.h" />
+		<Unit filename="header/model/mt_hvdc_model/mt_hvdc_dc_grid_model/mt_dc_grid_model.h" />
+		<Unit filename="header/model/mt_hvdc_model/mt_hvdc_dc_grid_model/mt_dc_grid_models.h" />
+		<Unit filename="header/model/mt_hvdc_model/mt_hvdc_model.h" />
 		<Unit filename="header/model/pvu_models/pv_converter_model/pv_converter_model.h" />
 		<Unit filename="header/model/pvu_models/pv_converter_model/pv_converter_models.h" />
 		<Unit filename="header/model/pvu_models/pv_converter_model/pvcv2.h" />
@@ -540,6 +558,8 @@
 		<Unit filename="source/apis/steps_api_set_get_line_related_model_parameters.cpp" />
 		<Unit filename="source/apis/steps_api_set_get_load_parameters.cpp" />
 		<Unit filename="source/apis/steps_api_set_get_load_related_model_parameters.cpp" />
+		<Unit filename="source/apis/steps_api_set_get_mt_hvdc_parameters.cpp" />
+		<Unit filename="source/apis/steps_api_set_get_mt_hvdc_related_model_parameters.cpp" />
 		<Unit filename="source/apis/steps_api_set_get_owner_parameters.cpp" />
 		<Unit filename="source/apis/steps_api_set_get_pv_unit_related_model_parameters.cpp" />
 		<Unit filename="source/apis/steps_api_set_get_pv_unit_sequence_parameters.cpp" />
@@ -646,6 +666,12 @@
 		<Unit filename="source/device/converter_station.cpp" />
 		<Unit filename="source/device/converter_station_test.cpp" />
 		<Unit filename="source/device/converter_test.cpp" />
+		<Unit filename="source/device/dc_component/dc_bus.cpp" />
+		<Unit filename="source/device/dc_component/dc_line.cpp" />
+		<Unit filename="source/device/dc_component/dc_station.cpp" />
+		<Unit filename="source/device/dc_component/dc_terminal.cpp" />
+		<Unit filename="source/device/dc_component/hlcc.cpp" />
+		<Unit filename="source/device/dc_component/hvsc.cpp" />
 		<Unit filename="source/device/device.cpp" />
 		<Unit filename="source/device/energy_storage.cpp" />
 		<Unit filename="source/device/energy_storage_test.cpp" />
@@ -664,6 +690,7 @@
 		<Unit filename="source/device/lcc_test.cpp" />
 		<Unit filename="source/device/load.cpp" />
 		<Unit filename="source/device/load_test.cpp" />
+		<Unit filename="source/device/mt_hvdc.cpp" />
 		<Unit filename="source/device/mutual_data.cpp" />
 		<Unit filename="source/device/nonbus_device.cpp" />
 		<Unit filename="source/device/pv_unit.cpp" />
@@ -773,6 +800,13 @@
 		<Unit filename="source/model/model_test.cpp" />
 		<Unit filename="source/model/model_var_table.cpp" />
 		<Unit filename="source/model/model_var_table_test.cpp" />
+		<Unit filename="source/model/mt_hvdc_model/mt_hvdc_converter_model/mt_hvdc_lcc_model/MTHVDCLCC1.cpp" />
+		<Unit filename="source/model/mt_hvdc_model/mt_hvdc_converter_model/mt_hvdc_lcc_model/hlcc_model.cpp" />
+		<Unit filename="source/model/mt_hvdc_model/mt_hvdc_converter_model/mt_hvdc_vsc_model/MTHVDCVSC1.cpp" />
+		<Unit filename="source/model/mt_hvdc_model/mt_hvdc_converter_model/mt_hvdc_vsc_model/hvsc_model.cpp" />
+		<Unit filename="source/model/mt_hvdc_model/mt_hvdc_dc_grid_model/MTDCGRID4.cpp" />
+		<Unit filename="source/model/mt_hvdc_model/mt_hvdc_dc_grid_model/mt_dc_grid_model.cpp" />
+		<Unit filename="source/model/mt_hvdc_model/mt_hvdc_model.cpp" />
 		<Unit filename="source/model/pvu_models/pv_converter_model/pv_converter_model.cpp" />
 		<Unit filename="source/model/pvu_models/pv_converter_model/pvcv2.cpp" />
 		<Unit filename="source/model/pvu_models/pv_converter_model/pvcvx.cpp" />

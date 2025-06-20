@@ -1,0 +1,10 @@
+"HDC-Project1  ",  2, 2, 2, 0,  2,  1,  100,  1
+"Terminal_1",  1,  1,  "I_Terminal",  1
+"Terminal_2",  2,  2,  "U_Terminal",  1
+"Station_1",  1,  1,  "LCC_Cascade",   1,  0,  "I_Station",  1
+"Station_2",  2,  2,  "LCC_Cascade",   1,  0,  "U_Station",  1
+14,   1,   "lcc1",    1,   "RECTIFIER",   "Idc_control",   100,   140,  1.4,   15,    1,   0,   0,    0,    100,    100,    0.0,   1,   1.2,    0.8,    5,    90,    15,   200,   100,   0.15
+4,    2,   "lcc2",    1,   "INVERTER",    "Vdc_control",   100,   140,  1.4,   15,    1,   0,   0,    0,    100,    100,    0.0,   1,   1.2,    0.8,    5,    90,    15,   200,   100,   0.15
+1,   "DCBUS1"
+2,   "DCBUS2"
+1,   2,   "DCLINE1",    1,    1,    0.01,   1000

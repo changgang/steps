@@ -93,6 +93,7 @@ class POWERFLOW_SOLVER
         void try_to_solve_dc_system_steady_state();
         void try_to_solve_2t_lcc_hvdc_steady_state();
         void try_to_solve_vsc_hvdc_steady_state();
+        void try_to_solve_mt_hvdc_steady_state();
         void calculate_raw_bus_power_mismatch();
         void calculate_raw_bus_power_into_network();
         void calculate_raw_bus_current_into_network();
@@ -117,11 +118,13 @@ class POWERFLOW_SOLVER
         void update_bus_voltage_and_angle(vector<double>& update);
         void update_bus_voltage(vector<double>& update);
         void update_bus_angle(vector<double>& update);
+        void updata_Qac_of_vscs_in_mt_hvdc();
 
         void add_source_to_bus_power_mismatch();
         void add_load_to_bus_power_mismatch();
         void add_2t_lcc_hvdc_to_bus_power_mismatch();
         void add_vsc_hvdc_to_bus_power_mismatch();
+        void add_mt_hvdc_to_bus_power_mismatch();
         void add_generator_to_bus_power_mismatch();
         void add_wt_generator_to_bus_power_mismatch();
 
@@ -167,6 +170,7 @@ class POWERFLOW_SOLVER
         vector<TRANSFORMER*> transformers;
         vector<LCC_HVDC2T*> hvdcs;
         vector<VSC_HVDC*> vsc_hvdcs;
+        vector<MT_HVDC*> mt_hvdcs;
         vector<EQUIVALENT_DEVICE*> e_devices;
 
         vector<BUS*> internal_bus_pointers;

@@ -1143,6 +1143,7 @@ void DYNAMICS_SIMULATOR::prepare_devices_for_run()
     hvdcs = psdb.get_all_2t_lcc_hvdcs();
 
     vsc_hvdcs = psdb.get_all_vsc_hvdcs();
+    mt_hvdcs = psdb.get_all_mt_hvdcs();
 
     e_devices = psdb.get_all_equivalent_devices();
 }
@@ -1568,6 +1569,20 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
             vsc_hvdc->run(mode);
     }
 
+    n = mt_hvdcs.size();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        //set_openmp_number_of_threads(toolkit->get_mt_hvdc_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
+        #pragma omp parallel for schedule(static)
+        //#pragma omp parallel for num_threads(2)
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+    for(unsigned int i=0; i<n; ++i)
+    {
+        MT_HVDC* mt_hvdc = mt_hvdcs[i];
+        if(mt_hvdc->get_status()==true)
+            mt_hvdc->run(mode);
+    }
+
     /*clock_2 = steady_clock::now();
     tduration = duration_cast<nanoseconds>(clock_2-clock_1);
     osstream<<"at time "<<TIME<<", hvdc models run takes "<<tduration.count()<<" ns.";
@@ -1735,6 +1750,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
     solve_2t_lcc_hvdcs_without_integration();
 
     update_vsc_hvdcs_converter_model();
+    solve_mt_hvdc_systems();
 
     get_bus_current_mismatch();
 
@@ -1953,6 +1969,24 @@ void DYNAMICS_SIMULATOR::update_vsc_hvdcs_converter_model()
     }
 }
 
+void DYNAMICS_SIMULATOR::solve_mt_hvdc_systems()
+{
+     unsigned int n = mt_hvdcs.size();
+     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        //set_openmp_number_of_threads(toolkit->get_mt_hvdc_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
+        #pragma omp parallel for schedule(static)
+        //#pragma omp parallel for num_threads(2)
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+
+    //osstream<<"Start to solve mt hvdc system in dynamic simulatiion";
+    //toolkit->show_information_with_leading_time_stamp(osstream);
+    for(unsigned int i=0; i<n; ++i)
+    {
+        mt_hvdcs[i]->solve_dynamic_dc_systems();
+    }
+ }
+
 void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
 {
     ostringstream osstream;
@@ -2146,6 +2180,29 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
                     {
                         unsigned int ibus = net.get_physical_bus_number_of_internal_bus(j);
                         osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[j]<<endl;
+                    }
+                }
+                toolkit->show_information_with_leading_time_stamp(osstream);
+                break;
+            }
+        }
+    }
+    add_mt_hvdcs_to_bus_current_mismatch();
+    if(not detailed_log_enabled)
+        ;
+    else
+    {
+        for(unsigned int i = 0; i<n; ++i)
+        {
+            if(std::isnan(I_mismatch[i].real()) or std::isnan(I_mismatch[i].imag()))
+            {
+                osstream<<"warning. NAN is detected when getting bus current mismatch after adding equivalent devices when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+                for(unsigned int j = 0; j<n; ++j)
+                {
+                    if(std::isnan(I_mismatch[j].real()) or std::isnan(I_mismatch[j].imag()))
+                    {
+                        unsigned int ibus = net.get_physical_bus_number_of_internal_bus(j);
+                        osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
                     }
                 }
                 toolkit->show_information_with_leading_time_stamp(osstream);
@@ -2605,6 +2662,95 @@ void DYNAMICS_SIMULATOR::add_vsc_hvdcs_to_bus_current_mismatch()
                         osstream<<"Current at vsc-hvdc ac side of "<<vsc_hvdc->get_compound_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
                                 <<"Complex power = "<<SQRT3*psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
                         toolkit->show_information_with_leading_time_stamp(osstream);
+                    }
+                }
+            }
+        }
+    }
+}
+
+void DYNAMICS_SIMULATOR::add_mt_hvdcs_to_bus_current_mismatch()
+{
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+
+    unsigned int nmtdc = mt_hvdcs.size();
+
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit->get_mt_hvdc_thread_number());
+        #pragma omp parallel for schedule(static)
+        //#pragma omp parallel for num_threads(2)
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR;
+    for(unsigned int i=0; i<nmtdc; ++i)
+    {
+        complex<double> I;
+        MT_HVDC* mtdc = mt_hvdcs[i];
+        if(mtdc->get_status()==true)
+        {
+            vector<HLCC*> lccs = mtdc->get_all_lcc_converters();
+            unsigned int n_lcc = lccs.size();
+            for(unsigned int j=0;j!=n_lcc;++j)
+            {
+                if(lccs[j]->get_status()==true)
+                {
+                    unsigned int physical_bus = lccs[j]->get_converter_ac_bus();
+                    unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+
+                    I_mismatch[internal_bus] -= lccs[j]->get_converter_dynamic_ac_current_in_pu_on_system_base();
+
+                    /*
+                    I  = lccs[j]->get_converter_dynamic_ac_current_in_pu_on_system_base();
+                    I *= (psdb.get_system_base_power_in_MVA()/(SQRT3*psdb.get_bus_base_voltage_in_kV(physical_bus)));
+                    osstream<<"AC curent at mt-hvdc:"<<mtdc->get_compound_device_name()<<" at LCC side: "<<lccs[j]->get_converter_name()<<"to AC BUS: "<<physical_bus<<" IS :"<<I<<"kA or "<<abs(I)<<"kA"<<endl
+                            <<"UAC = "<<psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)<<endl
+                            <<"Complex power = "<<SQRT3*psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
+                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    */
+                    if(not detailed_log_enabled)
+                        ;
+                    else
+                    {
+                        I  = lccs[j]->get_converter_dynamic_ac_current_in_pu_on_system_base();
+                        I *= (psdb.get_system_base_power_in_MVA()/(SQRT3*psdb.get_bus_base_voltage_in_kV(physical_bus)));
+                        osstream<<"AC curent at mt-hvdc:"<<mtdc->get_compound_device_name()<<" at LCC side "<<lccs[j]->get_converter_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
+                                <<"Complex power = "<<SQRT3*psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
+                        toolkit->show_information_with_leading_time_stamp(osstream);
+
+                    }
+                }
+
+            }
+
+            vector<HVSC*> vscs = mtdc->get_all_vsc_converters();
+            unsigned int n_vsc = vscs.size();
+            for(unsigned int j=0;j!=n_vsc;++j)
+            {
+                if(vscs[j]->get_status()==true)
+                {
+                    unsigned int physical_bus = vscs[j]->get_converter_ac_bus();
+                    unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+
+                    I_mismatch[internal_bus] -= vscs[j]->get_converter_dynamic_ac_current_in_pu_on_system_base();
+
+                    /*
+                    I  = vscs[j]->get_converter_dynamic_ac_current_in_pu_on_system_base();
+                    I *= (psdb.get_system_base_power_in_MVA()/(SQRT3*psdb.get_bus_base_voltage_in_kV(physical_bus)));
+                    osstream<<"AC curent at mt-hvdc:"<<mtdc->get_compound_device_name()<<" at VSC side "<<vscs[j]->get_converter_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
+                            <<"Complex power = "<<SQRT3*psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
+                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    */
+
+                    if(not detailed_log_enabled)
+                        ;
+                    else
+                    {
+                        I  = vscs[j]->get_converter_dynamic_ac_current_in_pu_on_system_base();
+                        I *= (psdb.get_system_base_power_in_MVA()/(SQRT3*psdb.get_bus_base_voltage_in_kV(physical_bus)));
+                        osstream<<"AC curent at mt-hvdc:"<<mtdc->get_compound_device_name()<<" at VSC side "<<vscs[j]->get_converter_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
+                                <<"Complex power = "<<SQRT3*psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
+                        toolkit->show_information_with_leading_time_stamp(osstream);
+
                     }
                 }
             }

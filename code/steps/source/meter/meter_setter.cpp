@@ -3212,6 +3212,408 @@ METER METER_SETTER::prepare_vsc_hvdc_model_internal_variable_meter(const DEVICE_
     return meter;
 }
 
+bool METER_SETTER::prepare_mt_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
+{
+
+    bool successful = false;
+
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+
+    STEPS_DEVICE_TYPE device_type = device_id.get_device_type();
+    if(device_type!=STEPS_HYBRID_DC)
+    {
+        osstream<<"Warning. This device given ("<<device_type2string(device_type)<<") is not an mt hvdc when trying to set up an mt hvdc meter. "
+          <<"No mt hvdc meter will be added.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return successful;
+    }
+
+    if(not psdb.is_mt_hvdc_exist(device_id))
+    {
+        osstream<<"Warning. "<<device_id.get_compound_device_name()<<" does not exist in current power system database. "
+          <<"No mt hvdc meter will be added.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return successful;
+    }
+
+    meter.set_device_id(device_id);
+
+    successful = true;
+
+
+    return successful;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_lcc_converter_dc_current_in_kA_meter(const DEVICE_ID& device_id, string lcc_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("LCC CONVERTER DC CURRENT IN KA");
+        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_lcc_converter_dc_voltage_in_kV_meter(const DEVICE_ID& device_id, string lcc_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("LCC CONVERTER DC VOLTAGE IN KV");
+        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_lcc_converter_dc_power_in_kV_MW_meter(const DEVICE_ID& device_id, string lcc_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("LCC CONVERTER DC POWER IN MW");
+        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_lcc_converter_ac_current_in_kA_meter(const DEVICE_ID& device_id, string lcc_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("LCC CONVERTER AC CURRENT IN KA");
+        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_lcc_converter_firing_angle_in_deg_meter(const DEVICE_ID& device_id, string lcc_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("LCC CONVERTER FIRING ANGLE IN DEG");
+        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_lcc_converter_ac_active_power_in_MW_meter(const DEVICE_ID& device_id, string lcc_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("LCC CONVERTER ACTIVE POWER IN MW");
+        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_lcc_converter_ac_reactive_power_in_Mvar_meter(const DEVICE_ID& device_id, string lcc_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("LCC CONVERTER REACTIVE POWER IN MVAR");
+        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_lcc_converter_command_ang_of_cc_in_deg_meter(const DEVICE_ID& device_id, string lcc_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("LCC CONVERTER ANGLE REF OF CC");
+        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_lcc_converter_command_ang_of_cea_in_deg_meter(const DEVICE_ID& device_id, string lcc_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("LCC CONVERTER ANGLE REF OF CEA");
+        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_lcc_converter_command_ang_of_cv_in_deg_meter(const DEVICE_ID& device_id, string lcc_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("LCC CONVERTER ANGLE REF OF CV");
+        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_lcc_converter_command_idc_in_kA_meter(const DEVICE_ID& device_id, string lcc_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("LCC CONVERTER IDC REF IN KA");
+        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;;
+}
+
+
+METER METER_SETTER::prepare_mt_hvdc_vsc_converter_dc_current_in_kA_meter(const DEVICE_ID& device_id, string vsc_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("VSC CONVERTER DC CURRENT IN KA");
+        meter.set_hybrid_dc_meter_device_name(vsc_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_vsc_converter_dc_voltage_in_kV_meter(const DEVICE_ID& device_id, string vsc_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("VSC CONVERTER DC VOLTAGE IN KV");
+        meter.set_hybrid_dc_meter_device_name(vsc_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_vsc_converter_dc_power_in_kV_MW_meter(const DEVICE_ID& device_id, string vsc_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("VSC CONVERTER DC POWER IN MW");
+        meter.set_hybrid_dc_meter_device_name(vsc_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_vsc_converter_ac_current_in_kA_meter(const DEVICE_ID& device_id, string vsc_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("VSC CONVERTER AC CURRENT IN KA");
+        meter.set_hybrid_dc_meter_device_name(vsc_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_vsc_converter_ac_active_power_in_MW_meter(const DEVICE_ID& device_id, string vsc_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("VSC CONVERTER AVTIVE POWER IN MW");
+        meter.set_hybrid_dc_meter_device_name(vsc_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_vsc_converter_ac_reactive_power_in_Mvar_meter(const DEVICE_ID& device_id, string vsc_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("VSC CONVERTER REACTIVE POWER IN MVAR");
+        meter.set_hybrid_dc_meter_device_name(vsc_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_vsc_converter_id_in_kA_meter(const DEVICE_ID& device_id, string vsc_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("VSC CONVERTER ID IN KA");
+        meter.set_hybrid_dc_meter_device_name(vsc_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_vsc_converter_iq_in_kA_meter(const DEVICE_ID& device_id, string vsc_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("VSC CONVERTER IQ IN KA");
+        meter.set_hybrid_dc_meter_device_name(vsc_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_dc_bus_voltage_in_kV_meter(const DEVICE_ID& device_id, string dcbus_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("DC BUS VOLTAGE IN KV");
+       meter.set_hybrid_dc_meter_device_name(dcbus_name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_dc_line_dc_current_on_sending_side_in_kA_meter(const DEVICE_ID& device_id, string line_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("DC LINE IDC ON SENDING SIDE");
+        meter.set_hybrid_dc_meter_device_name(line_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_dc_line_dc_current_on_receiving_side_in_kA_meter(const DEVICE_ID& device_id, string line_name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("DC LINE IDC ON RECEIVING SIDE");
+        meter.set_hybrid_dc_meter_device_name(line_name);
+        //meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_model_internal_variable_meter(const DEVICE_ID& device_id, string var_name, unsigned int meter_side)
+{
+
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("HLCC CONVERTER MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(var_name);
+        meter.set_meter_side_bus(meter_side);
+    }
+
+    return meter;
+}
+
 
 bool METER_SETTER::prepare_equivalent_device_meter(METER& meter, const DEVICE_ID& device_id)
 {

@@ -31,6 +31,8 @@ unsigned int api_get_device_count(const char* device_type, unsigned int toolkit_
         return psdb.get_2t_lcc_hvdc_count();
     if(DEVICE_TYPE=="VSC HVDC")
         return psdb.get_vsc_hvdc_count();
+    if(DEVICE_TYPE=="MT HVDC")
+        return psdb.get_mt_hvdc_count();
     if(DEVICE_TYPE=="EQUIVALENT DEVICE")
         return psdb.get_equivalent_device_count();
     if(DEVICE_TYPE=="ENERGY STORAGE")

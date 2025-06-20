@@ -20,6 +20,7 @@ class METER
         void set_meter_type(string meter_type);
         void set_internal_variable_name(string name);
         void set_meter_side_bus(unsigned int meter_side);
+        void set_hybrid_dc_meter_device_name(string name);
 
         void change_device_id(DEVICE_ID did);
         void change_meter_type(const string& meter_type);
@@ -32,6 +33,7 @@ class METER
         string get_meter_type() const;
         unsigned int get_meter_side_bus() const;
         string get_internal_variable_name() const;
+        string get_hybrid_dc_meter_device_name() const;
 
         string get_meter_name() const;
 
@@ -61,6 +63,7 @@ class METER
         double get_meter_value_as_a_pv_unit() const;
         double get_meter_value_as_a_2t_lcc_hvdc() const;
         double get_meter_value_as_a_vsc_hvdc() const;
+        double get_meter_value_as_a_mt_hvdc() const;
         double get_meter_value_as_an_equivalent_device() const;
         double get_meter_value_as_an_energy_storage() const;
 
@@ -70,6 +73,7 @@ class METER
         unsigned int meter_type_string_index;
         unsigned int meter_side_bus;
         unsigned int internal_variable_name_index;
+        string hybrid_dc_device_name;
 };
 
 
@@ -83,6 +87,7 @@ extern vector<string> pv_unit_meters;
 extern vector<string> energy_storage_meters;
 extern vector<string> lcc_hvdc2t_meters;
 extern vector<string> vsc_hvdc_meters;
+extern vector<string> mt_hvdc_meters;
 extern vector<string> equivalent_device_meters;
 extern map<STEPS_DEVICE_TYPE, vector<string>> SUPPORTED_METERS;
 

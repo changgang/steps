@@ -50,6 +50,7 @@ class STEPS
         unsigned int get_transformer_thread_number() const;
         unsigned int get_lcc_hvdc2t_thread_number() const;
         unsigned int get_vsc_hvdc_thread_number() const;
+        unsigned int get_mt_hvdc_thread_number() const;
         unsigned int get_equivalent_device_thread_number() const;
 
         void set_dynamic_model_database_size_in_bytes(unsigned int n);
@@ -128,6 +129,7 @@ class STEPS
                      load_thread_number, fixed_shunt_thread_number,
                      line_thread_number, transformer_thread_number,
                      lcc_hvdc2t_thread_number, vsc_hvdc_thread_number,
+                     mt_hvdc_thread_number,
                      equivalent_device_thread_number;
         unsigned int dynamic_model_db_size;
 };

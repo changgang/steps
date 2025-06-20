@@ -161,6 +161,10 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="VSCHVDCC1") { add_VSCHVDCC1_model(data); return;}
     if(model_name=="VSCHVDCC2") { add_VSCHVDCC2_model(data); return;}
 
+    if(model_name=="MTHVDCLCC1") { add_MTHVDCLCC1_model(data); return;}
+    if(model_name=="MTHVDCVSC1") { add_MTHVDCVSC1_model(data); return;}
+    if(model_name=="MTDCGRID4") { add_MTDCGRID4_model(data); return;}
+
     if(model_name=="WT3G1") { add_WT3G1_model(data); return;}
     if(model_name=="WT3G0") { add_WT3G0_model(data); return;}
     if(model_name=="WT3G2") { add_WT3G2_model(data); return;}
@@ -438,6 +442,42 @@ DEVICE_ID STEPS_IMEXPORTER::get_vsc_hvdc_device_id_from_string_vector(vector<str
     VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_hvdc_name);
     if(vsc_hvdc!=NULL)
         return vsc_hvdc->get_device_id();
+    else
+        return did;
+}
+
+string STEPS_IMEXPORTER::get_mt_hvdc_name_from_string_vector(vector<string>& data)
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    if(data.size()<2)
+        return "";
+
+    string mt_hvdc_name;
+
+    unsigned int i=1;
+    mt_hvdc_name = get_string_data(data[i], "0");
+
+    return mt_hvdc_name;
+}
+
+DEVICE_ID STEPS_IMEXPORTER::get_mt_hvdc_device_id_from_string_vector(vector<string>& data)
+{
+    DEVICE_ID did;
+    did.set_device_type(STEPS_HYBRID_DC);
+
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    if(data.size()<2)
+        return did;
+
+    string mt_hvdc_name = get_mt_hvdc_name_from_string_vector(data);
+
+    MT_HVDC* mt_hvdc = psdb.get_mt_hvdc(mt_hvdc_name);
+    if(mt_hvdc!=NULL)
+        return mt_hvdc->get_device_id();
     else
         return did;
 }
@@ -1828,6 +1868,94 @@ void STEPS_IMEXPORTER::add_VSCHVDCC2_model(vector<string>& data)
         }
     }
 }
+
+void STEPS_IMEXPORTER::add_MTHVDCLCC1_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "MTHVDCLCC1")
+        return;
+
+    if(data.size()<21)
+        return;
+
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    DEVICE_ID did = get_mt_hvdc_device_id_from_string_vector(data);
+
+    MT_HVDC* mt_hvdc = psdb.get_mt_hvdc(did);
+    if(mt_hvdc != NULL)
+    {
+        MTHVDCLCC1* model = new MTHVDCLCC1(toolkit);
+        model->set_device_id(did);
+        bool successful = model->setup_model_with_steps_string_vector(data);
+        if(successful)
+            mt_hvdc->set_model(model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid MTHVDCLCC1 model is built, but will not be set for "<<mt_hvdc->get_compound_device_name();
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::add_MTHVDCVSC1_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "MTHVDCVSC1")
+        return;
+
+    if(data.size()<15)
+        return;
+
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    DEVICE_ID did = get_mt_hvdc_device_id_from_string_vector(data);
+
+    MT_HVDC* mt_hvdc = psdb.get_mt_hvdc(did);
+    if(mt_hvdc != NULL)
+    {
+        MTHVDCVSC1* model = new MTHVDCVSC1(toolkit);
+        model->set_device_id(did);
+        bool successful = model->setup_model_with_steps_string_vector(data);
+        if(successful)
+            mt_hvdc->set_model(model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid MTHVDCVSC1 model is built, but will not be set for "<<mt_hvdc->get_compound_device_name();
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::add_MTDCGRID4_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "MTDCGRID4")
+        return;
+
+    if(data.size()<4)
+        return;
+
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    DEVICE_ID did = get_mt_hvdc_device_id_from_string_vector(data);
+
+    MT_HVDC* mt_hvdc = psdb.get_mt_hvdc(did);
+    if(mt_hvdc != NULL)
+    {
+        MTDCGRID4* model = new MTDCGRID4(toolkit);
+        model->set_device_id(did);
+        bool successful = model->setup_model_with_steps_string_vector(data);
+        if(successful)
+            mt_hvdc->set_model(model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid MTDCGRID4 model is built, but will not be set for "<<mt_hvdc->get_compound_device_name();
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
 
 void STEPS_IMEXPORTER::add_WT3G1_model(vector<string>& data)
 {

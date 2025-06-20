@@ -102,6 +102,7 @@ class DYNAMICS_SIMULATOR
         void prepare_transformer_related_meters();
         void prepare_2t_lcc_hvdc_related_meters();
         void prepare_vsc_hvdc_related_meters();
+        void prepare_mt_hvdc_related_meters();
         void prepare_equivalent_device_related_meters();
 
         void prepare_bus_related_meter(unsigned int bus, string meter_type);
@@ -116,6 +117,8 @@ class DYNAMICS_SIMULATOR
         void prepare_vsc_hvdc_related_meter(const DEVICE_ID& did, string meter_type, unsigned int side, string var_name="");
         void prepare_vsc_hvdc_related_meter(string vsc_name, string meter_type, unsigned int side, string var_name="");
         void prepare_vsc_hvdc_related_dc_line_meter(const DEVICE_ID& did, string meter_type, const DC_DEVICE_ID dc_did, unsigned int side, string var_name="");
+        void prepare_mt_hvdc_related_meter(const DEVICE_ID& did, string device_name, string meter_type, string var_name="");
+        void prepare_mt_hvdc_related_meter(string mtdc_name, string device_name, string meter_type, string var_name="");
         void prepare_equivalent_device_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
 
         void append_meter(const METER& meter);
@@ -245,6 +248,7 @@ class DYNAMICS_SIMULATOR
 
         void solve_2t_lcc_hvdcs_without_integration();
         void update_vsc_hvdcs_converter_model();
+        void solve_mt_hvdc_systems();
 
         void get_bus_current_mismatch();
         void get_bus_currnet_into_network();
@@ -255,6 +259,7 @@ class DYNAMICS_SIMULATOR
         void add_loads_to_bus_current_mismatch();
         void add_2t_lcc_hvdcs_to_bus_current_mismatch();
         void add_vsc_hvdcs_to_bus_current_mismatch();
+        void add_mt_hvdcs_to_bus_current_mismatch();
         void add_equivalent_devices_to_bus_current_mismatch();
 
         complex<double> get_bus_complex_voltage_in_pu_with_internal_bus_number(unsigned int internal_bus) const;
@@ -338,6 +343,7 @@ class DYNAMICS_SIMULATOR
         vector<AC_LINE*> lines;
         vector<LCC_HVDC2T*> hvdcs;
         vector<VSC_HVDC*> vsc_hvdcs;
+        vector<MT_HVDC*> mt_hvdcs;
         vector<EQUIVALENT_DEVICE*> e_devices;
 
         vector<BUS*> internal_bus_pointers;

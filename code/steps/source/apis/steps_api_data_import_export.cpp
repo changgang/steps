@@ -43,6 +43,24 @@ void api_load_vsc_hvdc_powerflow_data_from_file(char* file, char* file_type, uns
     }
 }
 
+void api_load_mt_hvdc_powerflow_data_from_file(char* file, char* file_type, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    string string_file_type = string2upper(file_type);
+    if(string_file_type=="STEPS" or string_file_type=="PSS/E")
+    {
+        PSSE_IMEXPORTER importer(toolkit);
+        importer.load_mt_hvdc_powerflow_data(file);
+    }
+    else
+    {
+        if(string_file_type=="BPA")
+        {
+            ;
+        }
+    }
+}
+
 void api_load_powerflow_result_from_file(char* file, char* file_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

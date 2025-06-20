@@ -1,0 +1,10 @@
+"HDC-Project1  ",  2, 2, 0, 2,  2,  1,  100,  1
+"Terminal_1",  1,  1,  "P_Terminal",  1
+"Terminal_2",  2,  2,  "U_Terminal",  1
+"Station_1",  1,  1,  "VSC_Parallel",   0,  1,  "P_Station",  1
+"Station_2",  2,  2,  "VSC_Parallel",   0,  1,  "U_Station",  1
+101,    1,   "vsc1",   1,   1,  "Pac_control",  "Qac_control",  109.0,    15.53,    100,  100,  0,  0,    0,   0.00,    0.1,  2,   200, 100
+102,    2,   "vsc2",   1,   1,  "Vdc_control",  "Vac_control",  100.0,   100.00,    101,  101,  0,  0,    0,   0.00,    0.1,  1,   600, 100
+1,   "DCBUS1"
+2,   "DCBUS2"
+1,   2,   "DCLINE1",    1,    2,    0.01, 1000
