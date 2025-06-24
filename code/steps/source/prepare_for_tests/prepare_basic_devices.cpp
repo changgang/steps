@@ -307,7 +307,7 @@ void prepare_basic_pv_units()
 void prepare_basic_energy_strorages()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    //DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
 
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();

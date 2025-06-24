@@ -230,7 +230,7 @@ void UVLS::setup_block_toolkit_and_parameters()
 
 void UVLS::initialize()
 {
-    LOAD* load = get_load_pointer();
+    //LOAD* load = get_load_pointer();
     setup_block_toolkit_and_parameters();
 
     //double volt = psdb.get_bus_positive_sequence_voltage_in_pu(load->get_load_bus());

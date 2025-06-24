@@ -2089,22 +2089,23 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
         if(data.size()>0)
         {
             string type=get_string_data(data.front(),"");
-            data.erase(data.begin());
-            if(type=="Vdc_control")
+            type = string2upper(type);
+            if(type=="VDC_CONTROL")
                 vsc_hvdc.set_converter_active_power_operation_mode(i, VSC_DC_VOLTAGE_CONTORL);
-            if(type=="Pac_control")
+            if(type=="PAC_CONTROL")
                 vsc_hvdc.set_converter_active_power_operation_mode(i, VSC_AC_ACTIVE_POWER_CONTORL);
-            if(type=="VPdc_control")
+            if(type=="VPDC_CONTROL")
                 vsc_hvdc.set_converter_active_power_operation_mode(i, VSC_DC_ACTIVE_POWER_VOLTAGE_DROOP_CONTROL);
-            if(type=="VIdc_control")
+            if(type=="VIDC_CONTROL")
                 vsc_hvdc.set_converter_active_power_operation_mode(i, VSC_DC_CURRENT_VOLTAGE_DROOP_CONTROL);
-            if(type=="angle_control")
+            if(type=="ANGLE_CONTROL")
                 vsc_hvdc.set_converter_active_power_operation_mode(i, VSC_AC_VOLTAGE_ANGLE_CONTROL);
             else
             {
                 ostringstream osstream;
                 osstream<<"The input control mode "<<type<<" not supported, please check DC control mode."<<endl;
             }
+            data.erase(data.begin());
         }
         if(data.size()>0)
         {
@@ -2115,17 +2116,17 @@ void STEPS_IMEXPORTER::add_vsc_hvdc_converter_data(VSC_HVDC& vsc_hvdc, vector<ve
         if(data.size()>0)
         {
             string mode=get_string_data(data.front(),"");
-            data.erase(data.begin());
-            if(mode=="Vac_control")
+            mode = string2upper(mode);
+            if(mode=="VAC_CONTROL")
                 vsc_hvdc.set_converter_reactive_power_operation_mode(i,VSC_AC_VOLTAGE_CONTROL);
-            if(mode=="Qac_control")
+            if(mode=="QAC_CONTROL")
                 vsc_hvdc.set_converter_reactive_power_operation_mode(i,VSC_AC_REACTIVE_POWER_CONTROL);
             else
             {
                 ostringstream osstream;
                 osstream<<"The input control mode "<<mode<<" not supported, please check AC control mode."<<endl;
             }
-
+            data.erase(data.begin());
         }
         if(data.size()>0)
         {
@@ -2516,8 +2517,6 @@ void STEPS_IMEXPORTER::add_mt_hvdc_with_data(vector<vector<string> >hdc_data)
 
 void STEPS_IMEXPORTER::add_mt_hvdc_basic_data(MT_HVDC& hdc, vector<string> data)
 {
-
-    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     if(data.size()>0)
     {
@@ -2613,17 +2612,20 @@ void STEPS_IMEXPORTER::add_mt_hvdc_dc_terminal_data(MT_HVDC& hdc, vector<vector<
         if(data.size()>0)
         {
             string terminal_mode = get_string_data(data.front(),"");
-            if(terminal_mode=="P_Terminal")
+            terminal_mode = string2upper(terminal_mode);
+            if(terminal_mode=="P_TERMINAL")
                 hdc.set_terminal_mode(i,DC_P_TERMIANL);
-            else if(terminal_mode=="I_Terminal")
+            else if(terminal_mode=="I_TERMINAL")
                 hdc.set_terminal_mode(i,DC_I_TERMINAL);
-            else if(terminal_mode=="U_Terminal")
+            else if(terminal_mode=="U_TERMINAL")
                 hdc.set_terminal_mode(i,DC_U_TERMINAL);
-            else if(terminal_mode=="ANGLE_Terminal")
+            else if(terminal_mode=="ANGLE_TERMINAL")
                 hdc.set_terminal_mode(i,DC_ANGLE_TERMINAL);
             else
+            {
                 osstream<<"Invalid mode for terminal: "<<hdc.get_terminal_name(i);
                 toolkit.show_information_with_leading_time_stamp(osstream);
+            }
             data.erase(data.begin());
         }
         if(data.size()>0)
@@ -2643,7 +2645,6 @@ void STEPS_IMEXPORTER::add_mt_hvdc_dc_station_data(MT_HVDC& hdc, vector<vector<s
     vector<string> data;
     data.clear();
 
-    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     unsigned int n_station = hdc_dc_station_data.size();
@@ -2671,9 +2672,10 @@ void STEPS_IMEXPORTER::add_mt_hvdc_dc_station_data(MT_HVDC& hdc, vector<vector<s
         if(data.size()>0)
         {
             string station_structure = get_string_data(data.front(),"");
-            if(station_structure=="LCC_Cascade")
+            station_structure = string2upper(station_structure);
+            if(station_structure=="LCC_CASCADE")
                 hdc.set_station_structure(i,LCC_CASCADE);
-            else if(station_structure=="VSC_Parallel")
+            else if(station_structure=="VSC_PARALLEL")
                 hdc.set_station_structure(i,VSC_PARALLEL);
             else if(station_structure=="LCC_HCM")
                 hdc.set_station_structure(i,LCC_HCM);
@@ -2697,13 +2699,14 @@ void STEPS_IMEXPORTER::add_mt_hvdc_dc_station_data(MT_HVDC& hdc, vector<vector<s
         if(data.size()>0)
         {
             string station_mode = get_string_data(data.front(),"");
-            if(station_mode=="P_Station")
+            station_mode = string2upper(station_mode);
+            if(station_mode=="P_STATION")
                 hdc.set_station_mode(i,DC_P_STATION);
-            else if(station_mode =="U_Station")
+            else if(station_mode =="U_STATION")
                 hdc.set_station_mode(i,DC_U_STATION);
-            else if(station_mode =="ANGLE_Station")
+            else if(station_mode =="ANGLE_STATION")
                 hdc.set_station_mode(i,DC_ANGLE_STATION);
-            else if(station_mode =="I_Station")
+            else if(station_mode =="I_STATION")
                 hdc.set_station_mode(i,DC_I_STATION);
             else
                 hdc.set_station_mode(i,DC_P_STATION);
@@ -2968,9 +2971,10 @@ void STEPS_IMEXPORTER::add_mt_hvdc_vsc_converter_data(MT_HVDC& hdc,  vector<vect
         if(data.size()>0)
         {
             string dmode = get_string_data(data.front(),"");
-            if(dmode=="Pac_control")
+            dmode = string2upper(dmode);
+            if(dmode=="PAC_CONTROL")
                 hdc.set_vsc_converter_d_axis_control_mode(i,VSC_CONSTANT_AC_ACTIVE_POWER_MODE);
-            else if(dmode == "Vdc_control")
+            else if(dmode == "VDC_CONTROL")
                 hdc.set_vsc_converter_d_axis_control_mode(i,VSC_CONSTANT_DC_VOLTAGE_MODE);
             else
             {
@@ -2983,9 +2987,10 @@ void STEPS_IMEXPORTER::add_mt_hvdc_vsc_converter_data(MT_HVDC& hdc,  vector<vect
         if(data.size()>0)
         {
             string qmode = get_string_data(data.front(),"");
-            if(qmode=="Qac_control")
+            qmode = string2upper(qmode);
+            if(qmode=="QAC_CONTROL")
                 hdc.set_vsc_converter_q_axis_control_mode(i,VSC_CONSTANT_AC_REACTIVE_POWER_MODE);
-            else if(qmode == "Vac_control")
+            else if(qmode == "VAC_CONTROL")
                 hdc.set_vsc_converter_q_axis_control_mode(i,VSC_CONSTANT_AC_VOLTAGE_MODE);
             else
             {
@@ -3080,7 +3085,6 @@ void STEPS_IMEXPORTER::add_mt_hvdc_vsc_converter_data(MT_HVDC& hdc,  vector<vect
 
 void STEPS_IMEXPORTER::add_mt_hvdc_dc_bus_data(MT_HVDC& hdc, vector<vector<string> > hdc_dc_bus_data)
 {
-    STEPS&toolkit = get_toolkit();
     ostringstream osstream;
     vector<string> data;
     data.clear();
@@ -3107,7 +3111,6 @@ void STEPS_IMEXPORTER::add_mt_hvdc_dc_bus_data(MT_HVDC& hdc, vector<vector<strin
 
 void STEPS_IMEXPORTER::add_mt_hvdc_dc_line_data(MT_HVDC& hdc, vector<vector<string>> hdc_dc_line_data)
 {
-    STEPS&toolkit = get_toolkit();
     ostringstream osstream;
     vector<string> data;
     data.clear();

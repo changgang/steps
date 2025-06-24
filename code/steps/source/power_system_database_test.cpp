@@ -3230,10 +3230,10 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdcs_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-
     prepare_database_for_test();
 /*
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+
     vector<VSC_HVDC*> device = psdb.get_vsc_hvdcs_connecting_to_bus(1);
 
     TEST_ASSERT(device.size()==6);

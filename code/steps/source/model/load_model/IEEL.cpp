@@ -670,7 +670,7 @@ void IEEL::build_linearized_matrix_ABCD()
     STEPS_SPARSE_MATRIX C;
     STEPS_SPARSE_MATRIX D;
 
-    complex<double> V = get_bus_positive_sequence_complex_voltage_in_pu();
+    /*complex<double> V = get_bus_positive_sequence_complex_voltage_in_pu();
     double Ux = V.real();
     double Uy = V.imag();
     double U = sqrt(Ux*Ux+Uy*Uy);
@@ -690,7 +690,7 @@ void IEEL::build_linearized_matrix_ABCD()
     double np3 = get_P_n_power_3();
     double nq1 = get_Q_n_power_1();
     double nq2 = get_Q_n_power_2();
-    double nq3 = get_Q_n_power_3();
+    double nq3 = get_Q_n_power_3();*/
 
     /* codes are wrong. need further check
     D.add_entry(0,0, (P0*Ux*Ux*(ap2+2*ap3)+Q0*Ux*Uy*(aq2+2*aq3))/(U*U*U*U)-P0/(U*U));

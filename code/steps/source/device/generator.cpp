@@ -238,7 +238,7 @@ complex<double> GENERATOR::get_positive_sequence_complex_current_in_pu()
     double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
 
     double R = get_positive_sequence_resistance_in_pu();
-    double X;
+    double X = 0;
     switch(option)
     {
         case SUBTRANSIENT_REACTANCE:
@@ -248,6 +248,7 @@ complex<double> GENERATOR::get_positive_sequence_complex_current_in_pu()
             X = get_positive_sequence_transient_reactance_in_pu();
             break;
         case SYNCHRONOUS_REACTANCE:
+        default:
             X = get_positive_sequence_syncronous_reactance_in_pu();
             break;
     }

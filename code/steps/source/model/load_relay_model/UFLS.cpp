@@ -231,7 +231,7 @@ void UFLS::setup_block_toolkit_and_parameters()
 
 void UFLS::initialize()
 {
-    LOAD* load = get_load_pointer();
+    //LOAD* load = get_load_pointer();
     setup_block_toolkit_and_parameters();
 
     double fbase = get_bus_base_frequency_in_Hz();

@@ -76,7 +76,7 @@ void STEPS_IMEXPORTER::load_source_seq_data()
     vector<vector<string> >DATA = splitted_sseq_data_in_ram[1];
     vector<string> data;
 
-    unsigned int bus;
+    unsigned int bus = 0;
     string ID;
 
     unsigned int ndata = DATA.size();
@@ -827,7 +827,7 @@ void STEPS_IMEXPORTER::load_load_seq_data()
     unsigned int ndata = DATA.size();
 
     unsigned int n = 0;
-    unsigned int bus;
+    unsigned int bus = 0;
     string ID;
 
     for(unsigned int i=0; i!=ndata; ++i)
@@ -1075,7 +1075,7 @@ void STEPS_IMEXPORTER::load_zero_seq_non_transformer_branch_data()
 
         if(lineptr == NULL)
         {
-            osstream<<"Line ["<<lineptr->get_compound_device_name()<<"]"<<" is not existed."<<endl
+            osstream<<"Line ["<<did.get_compound_device_name()<<"]"<<" is not existed."<<endl
                     <<"Please check seq file.";
             toolkit.show_information_with_leading_time_stamp(osstream);
             continue;
@@ -1202,7 +1202,7 @@ void STEPS_IMEXPORTER::load_zero_seq_mutual_impedance_data()
 
         if(lineptr_ij == NULL)
         {
-            osstream<<"Line ["<<lineptr_ij->get_compound_device_name()<<"]"<<" is not existed."<<endl
+            osstream<<"Line ["<<did1.get_compound_device_name()<<"]"<<" is not existed."<<endl
                     <<"Please check mutual impedance data in seq file.";
             toolkit.show_information_with_leading_time_stamp(osstream);
             continue;
@@ -1228,7 +1228,7 @@ void STEPS_IMEXPORTER::load_zero_seq_mutual_impedance_data()
 
         if(lineptr_pq == NULL)
         {
-            osstream<<"Line ["<<lineptr_pq->get_compound_device_name()<<"]"<<" is not existed."<<endl
+            osstream<<"Line ["<<did2.get_compound_device_name()<<"]"<<" is not existed."<<endl
                     <<"Please check mutual impedance data in seq file.";
             toolkit.show_information_with_leading_time_stamp(osstream);
             continue;
@@ -1374,7 +1374,7 @@ void STEPS_IMEXPORTER::load_zero_seq_transformer_data()
 
         if(transptr == NULL)
         {
-            osstream<<"Transformer ["<<transptr->get_compound_device_name()<<"]"<<" is not existed."<<endl
+            osstream<<"Transformer ["<<did.get_compound_device_name()<<"]"<<" is not existed."<<endl
                     <<"Please check seq file.";
             toolkit.show_information_with_leading_time_stamp(osstream);
             continue;
@@ -1754,7 +1754,7 @@ void STEPS_IMEXPORTER::load_zero_seq_fixed_shunt_data()
     unsigned int ndata = DATA.size();
 
     unsigned int n = 0;
-    unsigned int bus;
+    unsigned int bus = 0;
     string ID = "1";
     double P0 = 0.0, Q0=0.0;
 
@@ -1863,7 +1863,7 @@ void STEPS_IMEXPORTER::load_vsc_hvdc_seq_data()
 
         for(unsigned int j=0; j<ncon; ++j)
         {
-            unsigned int bus;
+            unsigned int bus = 0;
             string control_mode;
             if(data.size()>0)
             {

@@ -312,7 +312,7 @@ void PUFLS::initialize()
     if(is_model_initialized())
         return;
 
-    LOAD* load = get_load_pointer();
+    //LOAD* load = get_load_pointer();
     setup_block_toolkit_and_parameters();
 
     STEPS& toolkit = get_toolkit();

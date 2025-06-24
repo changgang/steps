@@ -420,7 +420,6 @@ string AERDF::get_standard_psse_string(bool export_internal_bus_number) const
 
 void AERDF::save_data_to_Cp_file() const
 {
-    STEPS& toolkit = get_toolkit();
     Cp_Matrix->clear();
 
     ofstream fid((*cp_file_name));
