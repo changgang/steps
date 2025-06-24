@@ -134,6 +134,10 @@ bool api_get_powerflow_solver_boolean_parameter(char* parameter_name, unsigned i
         return solver.get_non_divergent_solution_logic();
     if(PARAMETER_NAME=="VAR LIMIT CHECK LOGIC")
         return solver.get_var_limit_check_logic();
+    if(PARAMETER_NAME=="DECOUPLED P SOLUTION LOGIC")
+        return solver.is_decoupled_P_solution_flag_enabled();
+    if(PARAMETER_NAME=="DECOUPLED Q SOLUTION LOGIC")
+        return solver.is_decoupled_Q_solution_flag_enabled();
     if(PARAMETER_NAME=="EXPORT JACOBIAN LOGIC")
         return solver.get_export_jacobian_matrix_step_by_step_logic();
 
@@ -168,6 +172,22 @@ void api_set_powerflow_solver_boolean_parameter(char* parameter_name, bool value
     if(PARAMETER_NAME=="VAR LIMIT CHECK LOGIC")
     {
         solver.set_var_limit_check_logic(value);
+        return;
+    }
+    if(PARAMETER_NAME=="DECOUPLED P SOLUTION LOGIC")
+    {
+        if(value==true)
+            solver.enable_decoupled_P_solution_flag();
+        else
+            solver.disable_decoupled_P_solution_flag();
+        return;
+    }
+    if(PARAMETER_NAME=="DECOUPLED Q SOLUTION LOGIC")
+    {
+        if(value==true)
+            solver.enable_decoupled_Q_solution_flag();
+        else
+            solver.disable_decoupled_Q_solution_flag();
         return;
     }
     if(PARAMETER_NAME=="EXPORT JACOBIAN LOGIC")

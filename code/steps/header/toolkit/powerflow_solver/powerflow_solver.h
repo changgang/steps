@@ -31,6 +31,10 @@ class POWERFLOW_SOLVER
         void set_iteration_accelerator(double alpha);
         void set_non_divergent_solution_logic(bool logic);
         void set_var_limit_check_logic(bool logic);
+        void enable_decoupled_P_solution_flag();
+        void disable_decoupled_P_solution_flag();
+        void enable_decoupled_Q_solution_flag();
+        void disable_decoupled_Q_solution_flag();
         void set_export_jacobian_matrix_step_by_step_logic(bool flag);
 
         unsigned int get_max_iteration() const;
@@ -44,6 +48,8 @@ class POWERFLOW_SOLVER
         double get_iteration_accelerator() const;
         bool get_non_divergent_solution_logic() const;
         bool get_var_limit_check_logic() const;
+        bool is_decoupled_P_solution_flag_enabled() const;
+        bool is_decoupled_Q_solution_flag_enabled() const;
         bool get_export_jacobian_matrix_step_by_step_logic() const;
 
         void show_powerflow_solver_configuration() const;
@@ -150,6 +156,7 @@ class POWERFLOW_SOLVER
         double maximum_voltage_change_in_pu, maximum_angle_change_in_deg;
         bool non_divergent_solution_enabled;
         bool var_limit_check_enabled;
+        bool decoupled_P_solution_enabled, decoupled_Q_solution_enabled;
         bool export_jacobian_matrix_step_by_step;
 
         bool converged;

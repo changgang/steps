@@ -35,6 +35,8 @@ void POWERFLOW_SOLVER::clear()
     set_transformer_tap_adjustment_logic(true);
     set_non_divergent_solution_logic(true);
     set_var_limit_check_logic(true);
+    enable_decoupled_P_solution_flag();
+    enable_decoupled_Q_solution_flag();
     set_export_jacobian_matrix_step_by_step_logic(false);
     set_allowed_max_active_power_imbalance_in_MW(0.001);
     set_allowed_max_reactive_power_imbalance_in_MVar(0.001);
@@ -140,6 +142,26 @@ void POWERFLOW_SOLVER::set_var_limit_check_logic(bool logic)
     var_limit_check_enabled = logic;
 }
 
+void POWERFLOW_SOLVER::enable_decoupled_P_solution_flag()
+{
+    decoupled_P_solution_enabled = true;
+}
+
+void POWERFLOW_SOLVER::disable_decoupled_P_solution_flag()
+{
+    decoupled_P_solution_enabled = false;
+}
+
+void POWERFLOW_SOLVER::enable_decoupled_Q_solution_flag()
+{
+    decoupled_Q_solution_enabled = true;
+}
+
+void POWERFLOW_SOLVER::disable_decoupled_Q_solution_flag()
+{
+    decoupled_Q_solution_enabled = false;
+}
+
 void POWERFLOW_SOLVER::set_export_jacobian_matrix_step_by_step_logic(bool flag)
 {
     export_jacobian_matrix_step_by_step = flag;
@@ -195,6 +217,16 @@ bool POWERFLOW_SOLVER::get_var_limit_check_logic() const
     return var_limit_check_enabled;
 }
 
+bool POWERFLOW_SOLVER::is_decoupled_P_solution_flag_enabled() const
+{
+    return decoupled_P_solution_enabled;
+}
+
+bool POWERFLOW_SOLVER::is_decoupled_Q_solution_flag_enabled() const
+{
+    return decoupled_Q_solution_enabled;
+}
+
 bool POWERFLOW_SOLVER::get_export_jacobian_matrix_step_by_step_logic() const
 {
     return export_jacobian_matrix_step_by_step;
@@ -215,7 +247,9 @@ void POWERFLOW_SOLVER::show_powerflow_solver_configuration() const
             <<"Transformer tap adjustment: "<<(get_transformer_tap_adjustment_logic()?"Enabled":"Disabled")<<"\n"
             <<"Non-divergent solution: "<<(get_non_divergent_solution_logic()?"Enabled":"Disabled")<<"\n"
             <<"Var limit check: "<<(get_var_limit_check_logic()?"Enabled":"Disabled")<<"\n"
-            <<"Network ordering optimization: "<<toolkit->is_optimize_network_enabled()<<"\n"
+            <<"Decoupled P solution: "<<(is_decoupled_P_solution_flag_enabled()?"Enabled":"Disabled")<<"\n"
+            <<"Decoupled Q solution: "<<(is_decoupled_Q_solution_flag_enabled()?"Enabled":"Disabled")<<"\n"
+            <<"Network ordering optimization: "<<(toolkit->is_optimize_network_enabled()?"Enabled":"Disabled")<<"\n"
             <<"Export jacobian matrix step by step: "<<(get_export_jacobian_matrix_step_by_step_logic()?"Enabled":"Disabled");
     toolkit->show_information_with_leading_time_stamp(osstream);
 }
@@ -344,7 +378,7 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
 
         NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-        double max_P_mismatch_in_MW, max_Q_mismatch_in_MVar;
+        double max_P_mismatch_in_MW = 0, max_Q_mismatch_in_MVar = 0;
         vector<double> bus_delta_voltage, bus_delta_angle;
 
         network_matrix.build_network_Y_matrix();
@@ -372,8 +406,10 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
             try_to_solve_dc_system_steady_state();
             calculate_raw_bus_power_mismatch();
 
-            max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
-            max_Q_mismatch_in_MVar = get_maximum_reactive_power_mismatch_in_MVar();
+            if(is_decoupled_P_solution_flag_enabled())
+                max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
+            if(is_decoupled_Q_solution_flag_enabled())
+                max_Q_mismatch_in_MVar = get_maximum_reactive_power_mismatch_in_MVar();
 
             bool bus_type_changed = false;
             if(get_var_limit_check_logic()==true)
@@ -391,8 +427,10 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
                 try_to_solve_dc_system_steady_state();
                 calculate_raw_bus_power_mismatch();
 
-                max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
-                max_Q_mismatch_in_MVar = get_maximum_reactive_power_mismatch_in_MVar();
+                if(is_decoupled_P_solution_flag_enabled())
+                    max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
+                if(is_decoupled_Q_solution_flag_enabled())
+                    max_Q_mismatch_in_MVar = get_maximum_reactive_power_mismatch_in_MVar();
                 //continue;
             }
 
@@ -412,8 +450,12 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
             }
             else
             {
-                if(max_P_mismatch_in_MW < get_allowed_max_active_power_imbalance_in_MW() and
-                   max_Q_mismatch_in_MVar < get_allowed_max_reactive_power_imbalance_in_MVar())
+                bool P_converged = true, Q_converged = true;
+                if(is_decoupled_P_solution_flag_enabled() and max_P_mismatch_in_MW > get_allowed_max_active_power_imbalance_in_MW())
+                    P_converged = false;
+                if(is_decoupled_Q_solution_flag_enabled() and max_Q_mismatch_in_MVar > get_allowed_max_reactive_power_imbalance_in_MVar())
+                    Q_converged = false;
+                if(P_converged and Q_converged)
                 {
                     set_convergence_flag(true);
 
@@ -431,67 +473,79 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
                     break;
                 }
 
-                build_bus_P_power_mismatch_vector_for_decoupled_solution();
-                unsigned int n = internal_P_equation_buses.size();
-
-                #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-                    set_openmp_number_of_threads(toolkit->get_thread_number());
-                    #pragma omp parallel for schedule(static)
-                #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-                for(unsigned int i=0; i<n; ++i)
+                unsigned int n = 0;
+                if(is_decoupled_P_solution_flag_enabled())
                 {
-                    unsigned int internal_bus = internal_P_equation_buses[i];
-                    //physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i]);
-                    //P_mismatch[i] /= psdb.get_bus_positive_sequence_voltage_in_pu(physical_bus);
-                    P_mismatch[i] /= get_bus_positive_sequence_voltage_in_pu_with_internal_bus_number(internal_bus);
-                }
-                if(BP.is_lu_factorization_successful())
-                    bus_delta_angle = P_mismatch/BP;
-                else
-                {
-                    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "No further powerflow solution will be attempted since LU factorization of P-Q BP matrix is failed.");
-                    toolkit->show_information_with_leading_time_stamp(buffer);
-                    break;
-                }
-                //BP.report_brief();
-                //for(unsigned int i=0; i<P_mismatch.size(); i++)
-                //    cout<<i<<","<<P_mismatch[i]<<endl;
-                //for(unsigned int i=0; i<internal_P_equation_buses.size(); ++i)
-                //{
-                //    cout<<bus_delta_angle[i]<<endl;
-                //    //bus_delta_angle[i] /= abs(psdb.get_bus_positive_sequence_complex_voltage_in_pu(network_matrix.get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i])));
-                //}
-                update_bus_angle(bus_delta_angle);
+                    build_bus_P_power_mismatch_vector_for_decoupled_solution();
+                    n = internal_P_equation_buses.size();
 
-                try_to_solve_dc_system_steady_state();
-                calculate_raw_bus_power_mismatch();
+                    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+                        set_openmp_number_of_threads(toolkit->get_thread_number());
+                        #pragma omp parallel for schedule(static)
+                    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+                    for(unsigned int i=0; i<n; ++i)
+                    {
+                        unsigned int internal_bus = internal_P_equation_buses[i];
+                        //physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i]);
+                        //P_mismatch[i] /= psdb.get_bus_positive_sequence_voltage_in_pu(physical_bus);
+                        P_mismatch[i] /= get_bus_positive_sequence_voltage_in_pu_with_internal_bus_number(internal_bus);
+                    }
+                    if(BP.is_lu_factorization_successful())
+                        bus_delta_angle = P_mismatch/BP;
+                    else
+                    {
+                        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "No further powerflow solution will be attempted since LU factorization of P-Q BP matrix is failed.");
+                        toolkit->show_information_with_leading_time_stamp(buffer);
+                        break;
+                    }
+                    //BP.report_brief();
+                    //for(unsigned int i=0; i<P_mismatch.size(); i++)
+                    //    cout<<i<<","<<P_mismatch[i]<<endl;
+                    //for(unsigned int i=0; i<internal_P_equation_buses.size(); ++i)
+                    //{
+                    //    cout<<bus_delta_angle[i]<<endl;
+                    //    //bus_delta_angle[i] /= abs(psdb.get_bus_positive_sequence_complex_voltage_in_pu(network_matrix.get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i])));
+                    //}
+                    update_bus_angle(bus_delta_angle);
 
-                max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
-                max_Q_mismatch_in_MVar = get_maximum_reactive_power_mismatch_in_MVar();
+                    try_to_solve_dc_system_steady_state();
+                    calculate_raw_bus_power_mismatch();
 
-                build_bus_Q_power_mismatch_vector_for_decoupled_solution();
-                n = internal_Q_equation_buses.size();
-                #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-                    set_openmp_number_of_threads(toolkit->get_thread_number());
-                    #pragma omp parallel for schedule(static)
-                #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
-                for(unsigned int i=0; i<n; ++i)
-                {
-                    unsigned int internal_bus = internal_Q_equation_buses[i];
-                    //physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_Q_equation_buses[i]);
-                    //Q_mismatch[i] /= psdb.get_bus_positive_sequence_voltage_in_pu(physical_bus);
-                    Q_mismatch[i] /= get_bus_positive_sequence_voltage_in_pu_with_internal_bus_number(internal_bus);
-                }
-                if(BQ.is_lu_factorization_successful())
-                    bus_delta_voltage = Q_mismatch/BQ;
-                else
-                {
-                    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "No further powerflow solution will be attempted since LU factorization of P-Q BQ matrix is failed.");
-                    toolkit->show_information_with_leading_time_stamp(buffer);
-                    break;
+                    max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
                 }
 
-                update_bus_voltage(bus_delta_voltage);
+                if(is_decoupled_Q_solution_flag_enabled())
+                {
+                    build_bus_Q_power_mismatch_vector_for_decoupled_solution();
+                    n = internal_Q_equation_buses.size();
+                    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+                        set_openmp_number_of_threads(toolkit->get_thread_number());
+                        #pragma omp parallel for schedule(static)
+                    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+                    for(unsigned int i=0; i<n; ++i)
+                    {
+                        unsigned int internal_bus = internal_Q_equation_buses[i];
+                        //physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_Q_equation_buses[i]);
+                        //Q_mismatch[i] /= psdb.get_bus_positive_sequence_voltage_in_pu(physical_bus);
+                        Q_mismatch[i] /= get_bus_positive_sequence_voltage_in_pu_with_internal_bus_number(internal_bus);
+                    }
+                    if(BQ.is_lu_factorization_successful())
+                        bus_delta_voltage = Q_mismatch/BQ;
+                    else
+                    {
+                        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "No further powerflow solution will be attempted since LU factorization of P-Q BQ matrix is failed.");
+                        toolkit->show_information_with_leading_time_stamp(buffer);
+                        break;
+                    }
+
+                    update_bus_voltage(bus_delta_voltage);
+
+                    try_to_solve_dc_system_steady_state();
+                    calculate_raw_bus_power_mismatch();
+
+                    max_Q_mismatch_in_MVar = get_maximum_reactive_power_mismatch_in_MVar();
+
+                }
 
                 iteration_count ++;
             }
