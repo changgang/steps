@@ -537,7 +537,7 @@ EXPORT_STEPS_DLL void api_set_generator_excitation_voltage_in_pu(unsigned int bu
 EXPORT_STEPS_DLL void api_set_generator_mechanical_power_in_pu_based_on_mbase(unsigned int bus, char* identifier, double value, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_generator_mechanical_power_in_MW(unsigned int bus, char* identifier, double value, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
-EXPORT_STEPS_DLL void api_set_energy_storage_power_reference_in_pu_based_on_mbase(unsigned int bus, char* identifier, double value, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_energy_storage_active_power_reference_in_pu_based_on_mbase(unsigned int bus, char* identifier, double value, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL double api_get_hvdc_power_order_in_MW(unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_hvdc_power_order_in_MW(unsigned int ibus, unsigned int jbus, char* identifier, double value, unsigned int toolkit_index=INDEX_NOT_EXIST);

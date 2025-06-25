@@ -85,7 +85,7 @@ complex<double> CONVCOL1::get_limited_xy_current_order(complex<double> Ixy_guess
     {
         if(steps_fast_complex_abs(Ixy_guess) > Imax)
         {
-            double angle_in_rad, Id, Iq, Ix, Iy;
+            double angle_in_rad = 0, Id = 0, Iq = 0, Ix = 0, Iy = 0;
 
             if(dq_oriented_flag == ACL_ORIENTED)
                 angle_in_rad = virtual_angle_in_rad;

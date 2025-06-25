@@ -1002,8 +1002,8 @@ def load_library(libsteps_file):
     libsteps.api_set_generator_mechanical_power_in_MW.restype = None
     libsteps.api_set_generator_mechanical_power_in_MW.argtypes = (c_uint, c_char_p, c_double, c_uint)
     
-    libsteps.api_set_energy_storage_power_reference_in_pu_based_on_mbase.restype = None
-    libsteps.api_set_energy_storage_power_reference_in_pu_based_on_mbase.argtypes = (c_uint, c_char_p, c_double, c_uint)
+    libsteps.api_set_energy_storage_active_power_reference_in_pu_based_on_mbase.restype = None
+    libsteps.api_set_energy_storage_active_power_reference_in_pu_based_on_mbase.argtypes = (c_uint, c_char_p, c_double, c_uint)
 
     libsteps.api_get_hvdc_power_order_in_MW.restype = (c_double)
     libsteps.api_get_hvdc_power_order_in_MW.argtypes = (c_uint, c_uint, c_char_p, c_uint)

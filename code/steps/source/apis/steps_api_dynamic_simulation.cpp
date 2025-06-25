@@ -1171,12 +1171,12 @@ void api_set_generator_mechanical_power_in_MW(unsigned int bus, char* identifier
     ds.change_generator_mechanical_power_in_MW(did, value);
 }
 
-void api_set_energy_storage_power_reference_in_pu_based_on_mbase(unsigned int bus, char* identifier, double value, unsigned int toolkit_index)
+void api_set_energy_storage_active_power_reference_in_pu_based_on_mbase(unsigned int bus, char* identifier, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_energy_storage_device_id(bus, identifier);
-    ds.change_energy_storage_power_reference_in_pu_based_on_mbase(did, value);
+    ds.change_energy_storage_active_power_reference_in_pu_based_on_mbase(did, value);
 }
 
 double api_get_hvdc_power_order_in_MW(unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index)

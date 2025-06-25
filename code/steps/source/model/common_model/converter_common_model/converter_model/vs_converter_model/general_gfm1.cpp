@@ -1,4 +1,4 @@
-#include "header/model/common_model/converter_common_model/converter_model/vs_converter_model/GENERAL_GFM1.h"
+#include "header/model/common_model/converter_common_model/converter_model/vs_converter_model/general_gfm1.h"
 
 GENERAL_GFM1::GENERAL_GFM1(STEPS& toolkit) : VS_CONVERTER_MODEL(toolkit),
                              active_power_sensor(toolkit),

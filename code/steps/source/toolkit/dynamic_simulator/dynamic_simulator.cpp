@@ -4869,7 +4869,7 @@ void DYNAMICS_SIMULATOR::change_generator_mechanical_power_in_MW(const DEVICE_ID
     }
 }
 
-void DYNAMICS_SIMULATOR::change_energy_storage_power_reference_in_pu_based_on_mbase(const DEVICE_ID& es_id, double pref)
+void DYNAMICS_SIMULATOR::change_energy_storage_active_power_reference_in_pu_based_on_mbase(const DEVICE_ID& es_id, double pref)
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     ENERGY_STORAGE* energy_storage = psdb.get_energy_storage(es_id);

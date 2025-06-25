@@ -210,7 +210,7 @@ class DYNAMICS_SIMULATOR
         void change_generator_mechanical_power_in_pu_based_on_mbase(const DEVICE_ID& gen_id, double pmech);
         void change_generator_mechanical_power_in_MW(const DEVICE_ID& gen_id, double pmech);
 
-        void change_energy_storage_power_reference_in_pu_based_on_mbase(const DEVICE_ID& es_id, double pref);
+        void change_energy_storage_active_power_reference_in_pu_based_on_mbase(const DEVICE_ID& es_id, double pref);
 
         double get_2t_lcc_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id);
         void change_2t_lcc_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id, double porder);

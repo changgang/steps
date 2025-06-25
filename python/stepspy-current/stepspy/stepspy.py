@@ -3383,8 +3383,8 @@ class STEPS():
             set_wt_generator_power((1,"#1"), 100+20j)
         Example: N/A
         """
-        self.set_wt_generator_data(generator, "F", "PGEN_MW", s.real)
-        self.set_wt_generator_data(generator, "F", "QGEN_MVAR", s.imag)
+        self.set_wt_generator_data(wt_generator, "F", "PGEN_MW", s.real)
+        self.set_wt_generator_data(wt_generator, "F", "QGEN_MVAR", s.imag)
     
     def set_pv_unit_power(self, pv_unit, s):
         """
@@ -3398,8 +3398,8 @@ class STEPS():
             set_pv_unit_power((1,"#1"), 100+20j)
         Example: N/A
         """
-        self.set_pv_unit_data(generator, "F", "PGEN_MW", s.real)
-        self.set_pv_unit_data(generator, "F", "QGEN_MVAR", s.imag)
+        self.set_pv_unit_data(pv_unit, "F", "PGEN_MW", s.real)
+        self.set_pv_unit_data(pv_unit, "F", "QGEN_MVAR", s.imag)
     
     def set_energy_storage_power(self, energy_storage, s):
         """
@@ -7391,22 +7391,22 @@ class STEPS():
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_set_generator_mechanical_power_in_MW(ibus, ickt, value, self.toolkit_index)
 
-    def set_energy_storage_power_reference_in_pu(self, energystorage, value):
+    def set_energy_storage_active_power_reference_in_pu(self, energystorage, value):
         """
-        Set energy storage power reference of auxiliary model when in manual control.
+        Set energy storage active power reference of auxiliary model when in manual control.
         Args:
             (1) energystorage: energystorage device id in format of (bus, ickt).
-            (2) value: New power reference in pu.
+            (2) value: New active power reference in pu.
         Rets: N/A
         Example:
             energystorage = (1, "#1")
             Pref = 0.8
-            simulator.set_energy_storage_power_reference_in_pu(energystorage, Pref)
+            simulator.set_energy_storage_active_power_reference_in_pu(energystorage, Pref)
         """
         global STEPS_LIB
         ibus, ickt = self.__extract_single_bus_device_id(energystorage)
         ickt = self.__get_c_char_p_of_string(ickt)
-        return STEPS_LIB.api_set_energy_storage_power_reference_in_pu_based_on_mbase(ibus, ickt, value, self.toolkit_index)
+        return STEPS_LIB.api_set_energy_storage_active_power_reference_in_pu_based_on_mbase(ibus, ickt, value, self.toolkit_index)
 
     def get_hvdc_power_order_in_MW(self, hvdc):
         """
