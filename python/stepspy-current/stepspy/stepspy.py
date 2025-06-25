@@ -5286,7 +5286,94 @@ class STEPS():
             par_name = self.__get_string_from_c_char_p(par_name)
             parameters.append((par_name, par_value))
         return tuple(parameters)
-         
+
+    def get_energy_storage_related_model_name(self, energy_storage, model_type):
+        """
+        Get energy_storage related model name.
+        Args:
+            (1) energy_storage: energy_storage device id in format of (bus, ickt).
+            (2) model_type: String of model type.
+        Rets:
+            (1) String of model name.
+        Tips:
+            If model type is not supported, empty string is returned.
+        Example: N/A
+        """
+        global STEPS_LIB
+        ibus, ickt = self.__extract_single_bus_device_id(energy_storage)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        model_name = self.__get_string_from_c_char_p(STEPS_LIB.api_get_energy_storage_related_model_name(ibus, ickt, model_type, self.toolkit_index))
+        if model_name=="":
+            model_name = None
+        return model_name
+
+    def get_energy_storage_related_model_data(self, energy_storage, model_type, par_name):
+        """
+        Get energy_storage related model data.
+        Args:
+            (1) pv_unit: energy_storage device id in format of (bus, ickt).
+            (2) model_type: String of model type.
+            (3) par_name: String of parameter name.
+        Rets:
+            (1) Value of parameter
+        Tips:
+            If model type or parameter name is not supported, 0.0 is returned.
+        Example: N/A
+        """
+        global STEPS_LIB
+        ibus, ickt = self.__extract_single_bus_device_id(energy_storage)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        return STEPS_LIB.api_get_energy_storage_related_model_float_parameter(ibus, ickt, model_type, par_name, self.toolkit_index)
+        
+    def set_energy_storage_related_model_data(self, energy_storage, model_type, par_name, value):
+        """
+        Set energy_storage related model data.
+        Args:
+            (1) energy_storage: energy_storage device id in format of (bus, ickt).
+            (2) model_type: String of model type.
+            (3) par_name: String of parameter name.
+            (4) value: Value of parameter.
+        Rets: N/A
+        Tips:
+            If model type or parameter name is not supported, nothing will be changed.
+            If value is not a number, function may malfunction and package may exit with error.
+        Example: N/A
+        """
+        global STEPS_LIB
+        ibus, ickt = self.__extract_single_bus_device_id(energy_storage)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        return STEPS_LIB.api_set_energy_storage_related_model_float_parameter(ibus, ickt, model_type, par_name, value, self.toolkit_index)
+        
+    def get_energy_storage_related_model_parameter_pair(self, energy_storage, model_type):
+        """
+        Get energy_storage related model parameter pair.
+        Args:
+            (1) energy_storage: energy_storage device id in format of (bus, ickt).
+            (2) model_type: String of model type.
+        Rets:
+            (1) Tuple of parameter name and value pairs. Each parameter name and value pair is in format of (string of parameter name, value of parameter).
+        Tips:
+            If model type is not supported, empty tuple is returned.
+        Example: N/A
+        """
+        global STEPS_LIB
+        ibus, ickt = self.__extract_single_bus_device_id(energy_storage)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        parameters = []
+        n = STEPS_LIB.api_get_energy_storage_related_model_float_parameter_count(ibus, ickt, model_type, self.toolkit_index)
+        for parameter_index in range(n):
+            par_name = STEPS_LIB.api_get_energy_storage_related_model_float_parameter_name(ibus, ickt, model_type, parameter_index, self.toolkit_index)
+            par_value = STEPS_LIB.api_get_energy_storage_related_model_float_parameter(ibus, ickt, model_type, par_name, self.toolkit_index);
+            par_name = self.__get_string_from_c_char_p(par_name)
+            parameters.append((par_name, par_value))
+        return tuple(parameters)
+
     def get_load_related_model_name(self, load, model_type):
         """
         Get load related model name.
@@ -7303,6 +7390,23 @@ class STEPS():
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_set_generator_mechanical_power_in_MW(ibus, ickt, value, self.toolkit_index)
+
+    def set_energy_storage_power_reference_in_pu(self, energystorage, value):
+        """
+        Set energy storage power reference of auxiliary model when in manual control.
+        Args:
+            (1) energystorage: energystorage device id in format of (bus, ickt).
+            (2) value: New power reference in pu.
+        Rets: N/A
+        Example:
+            energystorage = (1, "#1")
+            Pref = 0.8
+            simulator.set_energy_storage_power_reference_in_pu(energystorage, Pref)
+        """
+        global STEPS_LIB
+        ibus, ickt = self.__extract_single_bus_device_id(energystorage)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        return STEPS_LIB.api_set_energy_storage_power_reference_in_pu_based_on_mbase(ibus, ickt, value, self.toolkit_index)
 
     def get_hvdc_power_order_in_MW(self, hvdc):
         """

@@ -8,11 +8,10 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="release">
-				<Option output="../../build/bin/release/STEPS" prefix_auto="1" extension_auto="1" />
+				<Option output="../../build/bin/release/libSTEPS" imp_lib="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).a" def_file="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).def" prefix_auto="1" extension_auto="1" />
 				<Option object_output="../../build/obj/release/" />
-				<Option type="1" />
+				<Option type="3" />
 				<Option compiler="gcc" />
-				<Option use_console_runner="0" />
 				<Option parameters="--compiler " />
 				<Compiler>
 					<Add option="-O3" />
@@ -199,9 +198,11 @@
 		<Unit filename="header/model/common_model/converter_common_model/converter_model/cs_converter_model/csconv4.h" />
 		<Unit filename="header/model/common_model/converter_common_model/converter_model/vs_converter_model/dvoc0.h" />
 		<Unit filename="header/model/common_model/converter_common_model/converter_model/vs_converter_model/general_gfm.h" />
+		<Unit filename="header/model/common_model/converter_common_model/converter_model/vs_converter_model/general_gfm1.h" />
 		<Unit filename="header/model/common_model/converter_common_model/converter_model/vs_converter_model/vs_converter_model.h" />
 		<Unit filename="header/model/common_model/converter_common_model/converter_model/vs_converter_model/vsg0.h" />
 		<Unit filename="header/model/common_model/converter_common_model/current_order_limiter_model/convcol.h" />
+		<Unit filename="header/model/common_model/converter_common_model/current_order_limiter_model/convcol1.h" />
 		<Unit filename="header/model/common_model/converter_common_model/lvpl_model/lvpl.h" />
 		<Unit filename="header/model/common_model/converter_common_model/pll_model/pll0.h" />
 		<Unit filename="header/model/common_model/converter_common_model/pll_model/pll_model.h" />
@@ -227,6 +228,7 @@
 		<Unit filename="header/model/energy_storage_model/es_converter_model/es_converter_models.h" />
 		<Unit filename="header/model/energy_storage_model/es_converter_model/escv2.h" />
 		<Unit filename="header/model/energy_storage_model/es_converter_model/escvx.h" />
+		<Unit filename="header/model/energy_storage_model/es_converter_model/escvxg1.h" />
 		<Unit filename="header/model/energy_storage_model/es_electrical_model/es_electrical_model.h" />
 		<Unit filename="header/model/energy_storage_model/es_electrical_model/es_electrical_models.h" />
 		<Unit filename="header/model/energy_storage_model/es_electrical_model/esex.h" />
@@ -303,6 +305,7 @@
 		<Unit filename="header/model/pvu_models/pv_converter_model/pv_converter_models.h" />
 		<Unit filename="header/model/pvu_models/pv_converter_model/pvcv2.h" />
 		<Unit filename="header/model/pvu_models/pv_converter_model/pvcvx.h" />
+		<Unit filename="header/model/pvu_models/pv_converter_model/pvcvxg1.h" />
 		<Unit filename="header/model/pvu_models/pv_converter_model/pvgu1.h" />
 		<Unit filename="header/model/pvu_models/pv_electrical_model/pv_electrical_model.h" />
 		<Unit filename="header/model/pvu_models/pv_electrical_model/pv_electrical_model_test.h" />
@@ -460,6 +463,7 @@
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt3gx.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt3gx2.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt3gxg.h" />
+		<Unit filename="header/model/wtg_models/wt_generator_model/wt3gxg1.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt_generator_model.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt_generator_model_test.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt_generator_models.h" />
@@ -523,7 +527,9 @@
 		<Unit filename="main_powerflow.cpp">
 			<Option link="0" />
 		</Unit>
-		<Unit filename="main_short_circuit.cpp" />
+		<Unit filename="main_short_circuit.cpp">
+			<Option link="0" />
+		</Unit>
 		<Unit filename="main_small_signal_analysis.cpp">
 			<Option link="0" />
 		</Unit>
@@ -723,9 +729,11 @@
 		<Unit filename="source/model/common_model/converter_common_model/converter_model/cs_converter_model/csconv4.cpp" />
 		<Unit filename="source/model/common_model/converter_common_model/converter_model/vs_converter_model/dvoc0.cpp" />
 		<Unit filename="source/model/common_model/converter_common_model/converter_model/vs_converter_model/general_gfm.cpp" />
+		<Unit filename="source/model/common_model/converter_common_model/converter_model/vs_converter_model/general_gfm1.cpp" />
 		<Unit filename="source/model/common_model/converter_common_model/converter_model/vs_converter_model/vs_converter_model.cpp" />
 		<Unit filename="source/model/common_model/converter_common_model/converter_model/vs_converter_model/vsg0.cpp" />
 		<Unit filename="source/model/common_model/converter_common_model/current_order_limiter_model/convcol.cpp" />
+		<Unit filename="source/model/common_model/converter_common_model/current_order_limiter_model/convcol1.cpp" />
 		<Unit filename="source/model/common_model/converter_common_model/lvpl_model/lvpl.cpp" />
 		<Unit filename="source/model/common_model/converter_common_model/pll_model/pll0.cpp" />
 		<Unit filename="source/model/common_model/converter_common_model/pll_model/pll_model.cpp" />
@@ -752,6 +760,7 @@
 		<Unit filename="source/model/energy_storage_model/es_converter_model/es_converter_model.cpp" />
 		<Unit filename="source/model/energy_storage_model/es_converter_model/escv2.cpp" />
 		<Unit filename="source/model/energy_storage_model/es_converter_model/escvx.cpp" />
+		<Unit filename="source/model/energy_storage_model/es_converter_model/escvxg1.cpp" />
 		<Unit filename="source/model/energy_storage_model/es_electrical_model/es_electrical_model.cpp" />
 		<Unit filename="source/model/energy_storage_model/es_electrical_model/esex.cpp" />
 		<Unit filename="source/model/energy_storage_model/es_model.cpp" />
@@ -810,6 +819,7 @@
 		<Unit filename="source/model/pvu_models/pv_converter_model/pv_converter_model.cpp" />
 		<Unit filename="source/model/pvu_models/pv_converter_model/pvcv2.cpp" />
 		<Unit filename="source/model/pvu_models/pv_converter_model/pvcvx.cpp" />
+		<Unit filename="source/model/pvu_models/pv_converter_model/pvcvxg1.cpp" />
 		<Unit filename="source/model/pvu_models/pv_converter_model/pvgu1.cpp" />
 		<Unit filename="source/model/pvu_models/pv_electrical_model/pv_electrical_model.cpp" />
 		<Unit filename="source/model/pvu_models/pv_electrical_model/pvex.cpp" />
@@ -971,6 +981,8 @@
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt3gx.cpp" />
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt3gx2.cpp" />
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt3gxg.cpp" />
+		<Unit filename="source/model/wtg_models/wt_generator_model/wt3gxg1.cpp" />
+		<Unit filename="source/model/wtg_models/wt_generator_model/wt3gxg1.h" />
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt_generator_model.cpp" />
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt_generator_model_test.cpp">
 			<Option compile="0" />

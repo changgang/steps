@@ -229,6 +229,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_WT3GX_model(vector<string>& data);
         void add_WT3GX2_model(vector<string>& data);
         void add_WT3GXG_model(vector<string>& data);
+        void add_WT3GXG1_model(vector<string>& data);
         void add_AERD0_model(vector<string>& data);
         void add_AERDL_model(vector<string>& data);
         void add_WT3T0_model(vector<string>& data);
@@ -246,6 +247,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_PVCV2_model(vector<string>& data);
         void add_PVGU1_model(vector<string>& data);
         void add_PVCVX_model(vector<string>& data);
+        void add_PVCVXG1_model(vector<string>& data);
         void add_PVEX_model(vector<string>& data);
         void add_FILEIRRAD_model(vector<string>& data);
         void add_PVPNLX_model(vector<string>& data);
@@ -256,6 +258,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
 
         void add_ESSOC0_model(vector<string>& data);
         void add_ESCVX_model(vector<string>& data);
+        void add_ESCVXG1_model(vector<string>& data);
         void add_ESCV2_model(vector<string>& data);
         void add_ESEX_model(vector<string>& data);
         void add_ESVRT3_model(vector<string>& data);

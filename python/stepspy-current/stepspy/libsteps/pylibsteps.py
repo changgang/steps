@@ -592,6 +592,16 @@ def load_library(libsteps_file):
     libsteps.api_get_pv_unit_related_model_float_parameter_name.restype = c_char_p
     libsteps.api_get_pv_unit_related_model_float_parameter_name.argtypes = (c_uint, c_char_p, c_char_p, c_uint, c_uint)
 
+    libsteps.api_get_energy_storage_related_model_name.restype = c_char_p
+    libsteps.api_get_energy_storage_related_model_name.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
+    libsteps.api_get_energy_storage_related_model_float_parameter.restype = c_double
+    libsteps.api_get_energy_storage_related_model_float_parameter.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_uint)
+    libsteps.api_set_energy_storage_related_model_float_parameter.restype = None
+    libsteps.api_set_energy_storage_related_model_float_parameter.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_double, c_uint)
+    libsteps.api_get_energy_storage_related_model_float_parameter_count.restype = c_uint
+    libsteps.api_get_energy_storage_related_model_float_parameter_count.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
+    libsteps.api_get_energy_storage_related_model_float_parameter_name.restype = c_char_p
+    libsteps.api_get_energy_storage_related_model_float_parameter_name.argtypes = (c_uint, c_char_p, c_char_p, c_uint, c_uint)
 
     libsteps.api_get_load_related_model_name.restype = c_char_p
     libsteps.api_get_load_related_model_name.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
@@ -992,6 +1002,9 @@ def load_library(libsteps_file):
     libsteps.api_set_generator_mechanical_power_in_MW.restype = None
     libsteps.api_set_generator_mechanical_power_in_MW.argtypes = (c_uint, c_char_p, c_double, c_uint)
     
+    libsteps.api_set_energy_storage_power_reference_in_pu_based_on_mbase.restype = None
+    libsteps.api_set_energy_storage_power_reference_in_pu_based_on_mbase.argtypes = (c_uint, c_char_p, c_double, c_uint)
+
     libsteps.api_get_hvdc_power_order_in_MW.restype = (c_double)
     libsteps.api_get_hvdc_power_order_in_MW.argtypes = (c_uint, c_uint, c_char_p, c_uint)
     libsteps.api_set_hvdc_power_order_in_MW.restype = None
