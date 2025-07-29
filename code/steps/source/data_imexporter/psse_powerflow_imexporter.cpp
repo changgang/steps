@@ -1071,8 +1071,8 @@ string PSSE_IMEXPORTER::export_source_common_data(const SOURCE* source) const
            <<setw(6)<<("\""+ickt+"\"")<<", "
            <<setw(12)<<setprecision(6)<<fixed<<source->get_p_generation_in_MW()<<", "
            <<setw(12)<<setprecision(6)<<fixed<<source->get_q_generation_in_MVar()<<", "
-           <<setw(12)<<setprecision(6)<<fixed<<source->get_q_max_in_MVar()<<", "
-           <<setw(12)<<setprecision(6)<<fixed<<source->get_q_min_in_MVar()<<", "
+           <<setw(12)<<setprecision(6)<<fixed<<source->get_q_max_nominal_in_MVar()<<", "
+           <<setw(12)<<setprecision(6)<<fixed<<source->get_q_min_nominal_in_MVar()<<", "
            <<setw(8)<<setprecision(6)<<fixed<<source->get_voltage_to_regulate_in_pu()<<", ";
     if(source->get_bus_to_regulate()==source->get_source_bus())
         osstream<<setw(8)<<0<<", ";
@@ -1115,7 +1115,9 @@ string PSSE_IMEXPORTER::export_source_var_control_data(const SOURCE* source) con
     }
     else
     {
-        double pf = p/steps_sqrt(p*p+qmax*qmax);
+        double pf = 0.0;
+        if(fabs(p)>DOUBLE_EPSILON)
+            pf = p/steps_sqrt(p*p+qmax*qmax);
         osstream<<"2, "<<setw(4)<<setiosflags(ios::fixed)<<setprecision(2)<<pf;
     }
     return osstream.str();

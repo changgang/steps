@@ -387,7 +387,9 @@ void ENERGY_STORAGE::report() const
             <<"Pmin = "<<setw(8)<<setprecision(4)<<fixed<<get_p_min_in_MW()<<" MW"<<endl
             <<"Q = "<<setw(8)<<setprecision(4)<<fixed<<get_q_generation_in_MVar()<<" MVar, "
             <<"Qmax = "<<setw(8)<<setprecision(4)<<fixed<<get_q_max_in_MVar()<<" MVar, "
-            <<"Qmin = "<<setw(8)<<setprecision(4)<<fixed<<get_q_min_in_MVar()<<" MVar";
+            <<"Qmin = "<<setw(8)<<setprecision(4)<<fixed<<get_q_min_in_MVar()<<" MVar, "
+            <<"Qmax_Nominal = "<<setw(8)<<setprecision(4)<<fixed<<get_q_max_nominal_in_MVar()<<" MVar, "
+            <<"Qmin_Nominal = "<<setw(8)<<setprecision(4)<<fixed<<get_q_min_nominal_in_MVar()<<" MVar"<<endl;
     STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -414,6 +416,8 @@ ENERGY_STORAGE& ENERGY_STORAGE::operator=(const ENERGY_STORAGE& estorage)
     set_p_min_in_MW(estorage.get_p_min_in_MW());
     set_q_max_in_MVar(estorage.get_q_max_in_MVar());
     set_q_min_in_MVar(estorage.get_q_min_in_MVar());
+    set_q_max_nominal_in_MVar(estorage.get_q_max_nominal_in_MVar());
+    set_q_min_nominal_in_MVar(estorage.get_q_min_nominal_in_MVar());
     set_source_impedance_in_pu(estorage.get_source_impedance_in_pu());
     set_bus_to_regulate(estorage.get_bus_to_regulate());
     set_voltage_to_regulate_in_pu(estorage.get_voltage_to_regulate_in_pu());

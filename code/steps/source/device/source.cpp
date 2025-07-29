@@ -106,6 +106,16 @@ void SOURCE::set_q_min_in_MVar(double q_min)
     this->q_min_MVar = q_min;
 }
 
+void SOURCE::set_q_max_nominal_in_MVar(double q_max)
+{
+    this->q_max_nominal_MVar = q_max;
+}
+
+void SOURCE::set_q_min_nominal_in_MVar(double q_min)
+{
+    this->q_min_nominal_MVar = q_min;
+}
+
 void SOURCE::set_voltage_to_regulate_in_pu(double v_pu)
 {
     if(v_pu<=0.0)
@@ -235,6 +245,16 @@ double SOURCE::get_q_min_in_MVar() const
     return q_min_MVar;
 }
 
+double SOURCE::get_q_max_nominal_in_MVar() const
+{
+    return q_max_nominal_MVar;
+}
+
+double SOURCE::get_q_min_nominal_in_MVar() const
+{
+    return q_min_nominal_MVar;
+}
+
 double SOURCE::get_voltage_to_regulate_in_pu() const
 {
     return voltage_to_regulate_pu;
@@ -325,6 +345,8 @@ void SOURCE::clear()
     set_p_min_in_MW(0.0);
     set_q_max_in_MVar(0.0);
     set_q_min_in_MVar(0.0);
+    set_q_max_nominal_in_MVar(0.0);
+    set_q_min_nominal_in_MVar(0.0);
     set_voltage_to_regulate_in_pu(1.0);
     set_bus_to_regulate(0);
     set_source_impedance_in_pu(0.0);

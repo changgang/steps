@@ -26,6 +26,8 @@ class SOURCE : public NONBUS_DEVICE
         void set_p_min_in_MW(double p_min_MW);
         void set_q_max_in_MVar(double q_max_MVar);
         void set_q_min_in_MVar(double q_min_MVar);
+        void set_q_max_nominal_in_MVar(double q_max_MVar);
+        void set_q_min_nominal_in_MVar(double q_min_MVar);
         void set_voltage_to_regulate_in_pu(double v_pu);
         void set_bus_to_regulate(unsigned int bus);
         void set_source_impedance_in_pu(const complex<double>& z_pu);
@@ -50,6 +52,8 @@ class SOURCE : public NONBUS_DEVICE
         double get_p_min_in_MW() const;
         double get_q_max_in_MVar() const;
         double get_q_min_in_MVar() const;
+        double get_q_max_nominal_in_MVar() const;
+        double get_q_min_nominal_in_MVar() const;
         double get_voltage_to_regulate_in_pu() const;
         unsigned int get_bus_to_regulate() const;
         complex<double> get_source_impedance_in_pu() const;
@@ -91,6 +95,7 @@ class SOURCE : public NONBUS_DEVICE
         double one_over_mbase;
 
         double p_max_MW, p_min_MW, q_max_MVar, q_min_MVar;
+        double q_max_nominal_MVar, q_min_nominal_MVar;
         double voltage_to_regulate_pu;
         bool status;
 

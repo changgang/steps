@@ -977,10 +977,12 @@ void BPA_IMEXPORTER::load_generator_data()
             qmax_str = format_bpa_data_to_readable_data(qmax_str, "F5.0");
             double qmax = get_double_data(qmax_str, "0.0");
             generator.set_q_max_in_MVar(qmax);
+            generator.set_q_max_nominal_in_MVar(qmax);
 
             qmin_str = format_bpa_data_to_readable_data(qmin_str, "F5.0");
             double qmin = get_double_data(qmin_str, "0.0");
             generator.set_q_min_in_MVar(qmin);
+            generator.set_q_min_nominal_in_MVar(qmin);
 
             v_schedule_str = format_bpa_data_to_readable_data(v_schedule_str, "F4.3");
             double v_schedule = get_double_data(v_schedule_str, "1.0");

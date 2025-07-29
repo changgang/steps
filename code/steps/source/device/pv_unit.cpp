@@ -200,7 +200,9 @@ void PV_UNIT::report() const
       <<"Pmin = "<<setw(8)<<setprecision(4)<<fixed<<get_p_min_in_MW()<<" MW"<<endl
       <<"Q = "<<setw(8)<<setprecision(4)<<fixed<<get_q_generation_in_MVar()<<" MVar, "
       <<"Qmax = "<<setw(8)<<setprecision(4)<<fixed<<get_q_max_in_MVar()<<" MVar, "
-      <<"Qmin = "<<setw(8)<<setprecision(4)<<fixed<<get_q_min_in_MVar()<<" MVar"<<endl
+      <<"Qmin = "<<setw(8)<<setprecision(4)<<fixed<<get_q_min_in_MVar()<<" MVar, "
+      <<"Qmax_Nominal = "<<setw(8)<<setprecision(4)<<fixed<<get_q_max_nominal_in_MVar()<<" MVar, "
+      <<"Qmin_Nominal = "<<setw(8)<<setprecision(4)<<fixed<<get_q_min_nominal_in_MVar()<<" MVar"<<endl
       <<"Zsource = "<<setw(8)<<setprecision(6)<<fixed<<get_source_impedance_in_pu();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -378,6 +380,8 @@ PV_UNIT& PV_UNIT::operator=(const PV_UNIT& pvu)
     set_p_min_in_MW(pvu.get_p_min_in_MW());
     set_q_max_in_MVar(pvu.get_q_max_in_MVar());
     set_q_min_in_MVar(pvu.get_q_min_in_MVar());
+    set_q_max_nominal_in_MVar(pvu.get_q_max_nominal_in_MVar());
+    set_q_min_nominal_in_MVar(pvu.get_q_min_nominal_in_MVar());
     set_source_impedance_in_pu(pvu.get_source_impedance_in_pu());
     set_bus_to_regulate(pvu.get_bus_to_regulate());
     set_voltage_to_regulate_in_pu(pvu.get_voltage_to_regulate_in_pu());

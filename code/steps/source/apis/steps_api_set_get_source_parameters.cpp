@@ -174,6 +174,12 @@ double api_get_source_float_data(unsigned int bus, char* identifier, char* param
         if(PARAMETER_NAME=="QMIN_MVAR" or PARAMETER_NAME=="MIN REACTIVE POWER GENERATION IN MVAR")
             return sourceptr->get_q_min_in_MVar();
 
+        if(PARAMETER_NAME=="QMAX_NOMINAL_MVAR" or PARAMETER_NAME=="NOMINAL MAX REACTIVE POWER GENERATION IN MVAR")
+            return sourceptr->get_q_max_nominal_in_MVar();
+
+        if(PARAMETER_NAME=="QMIN_NOMINAL_MVAR" or PARAMETER_NAME=="NOMINAL MIN REACTIVE POWER GENERATION IN MVAR")
+            return sourceptr->get_q_min_nominal_in_MVar();
+
         if(PARAMETER_NAME=="VREG_PU" or PARAMETER_NAME=="VOLTAGE TO REGULATE IN PU")
             return sourceptr->get_voltage_to_regulate_in_pu();
 
@@ -269,6 +275,12 @@ void api_set_source_float_data(unsigned int bus, char* identifier, char* paramet
 
         if(PARAMETER_NAME=="QMIN_MVAR" or PARAMETER_NAME=="MIN REACTIVE POWER GENERATION IN MVAR")
             return sourceptr->set_q_min_in_MVar(value);
+
+        if(PARAMETER_NAME=="QMAX_NOMINAL_MVAR" or PARAMETER_NAME=="NOMINAL MAX REACTIVE POWER GENERATION IN MVAR")
+            return sourceptr->set_q_max_nominal_in_MVar(value);
+
+        if(PARAMETER_NAME=="QMIN_NOMINAL_MVAR" or PARAMETER_NAME=="NOMINAL MIN REACTIVE POWER GENERATION IN MVAR")
+            return sourceptr->set_q_min_nominal_in_MVar(value);
 
         if(PARAMETER_NAME=="VREG_PU" or PARAMETER_NAME=="VOLTAGE TO REGULATE IN PU")
             return sourceptr->set_voltage_to_regulate_in_pu(value);
