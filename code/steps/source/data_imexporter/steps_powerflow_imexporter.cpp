@@ -770,6 +770,7 @@ void STEPS_IMEXPORTER::load_source_var_control_data(vector<string>& data, SOURCE
     if(data.size()>0)
     {
         var_control_mode = get_integer_data(data.front(),"0");
+        var_control_mode = 0;
         data.erase(data.begin());
         if(data.size()>0)
         {

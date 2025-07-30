@@ -1102,6 +1102,9 @@ string PSSE_IMEXPORTER::export_source_common_data(const SOURCE* source) const
 string PSSE_IMEXPORTER::export_source_var_control_data(const SOURCE* source) const
 {
     ostringstream osstream;
+    osstream<<"0, 0.00";
+    return osstream.str();
+
     double p = source->get_p_generation_in_MW();
 
     double qmax = source->get_q_max_in_MVar();
