@@ -240,7 +240,7 @@ void POWERFLOW_SOLVER::show_powerflow_solver_configuration() const
             <<"Maximum iteration: "<<get_max_iteration()<<"\n"
             <<"Iteration accelerator: "<<get_iteration_accelerator()<<"\n"
             <<"Allowed maximum P mismatch: "<<get_allowed_max_active_power_imbalance_in_MW()<<" MW\n"
-            <<"Allowed maximum Q mismatch: "<<get_allowed_max_reactive_power_imbalance_in_MVar()<<"MVar\n"
+            <<"Allowed maximum Q mismatch: "<<get_allowed_max_reactive_power_imbalance_in_MVar()<<" MVar\n"
             <<"Maximum voltage change: "<<get_maximum_voltage_change_in_pu()<<" pu\n"
             <<"Maximum angle change: "<<get_maximum_angle_change_in_deg()<<" deg ("<<get_maximum_angle_change_in_rad()<<" rad)\n"
             <<"Flat start: "<<(get_flat_start_logic()?"Enabled":"Disabled")<<"\n"
