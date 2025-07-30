@@ -701,10 +701,7 @@ DC_DEVICE_ID METER::get_sub_dc_device_id() const
 
 STEPS_DEVICE_TYPE METER::get_device_type() const
 {
-    if(device_pointer!=NULL)
-        return device_pointer->get_device_id().get_device_type();
-    else
-        return STEPS_INVALID_DEVICE;
+    return device_type;
 }
 
 string METER::get_hybrid_dc_meter_device_name() const
@@ -801,6 +798,7 @@ void METER::clear()
 {
     device_pointer = NULL;
     dc_did.clear();
+    device_type = STEPS_INVALID_DEVICE;
     meter_type_string_index = INDEX_NOT_EXIST;
     meter_side_bus = 0;
     internal_variable_name_index = INDEX_NOT_EXIST;
@@ -843,7 +841,7 @@ void METER::set_device_pointer(DEVICE_ID device_id)
     }
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    STEPS_DEVICE_TYPE device_type = device_id.get_device_type();
+    device_type = device_id.get_device_type();
     DEVICE* deviceptr = NULL;
     switch(device_type)
     {
@@ -915,8 +913,7 @@ double METER::get_meter_value() const
 {
     if(get_device_pointer()!=NULL)
     {
-        STEPS_DEVICE_TYPE device_type = get_device_type();
-        switch(device_type)
+        switch(get_device_type())
         {
             case STEPS_BUS:
                 return get_meter_value_as_a_bus();
