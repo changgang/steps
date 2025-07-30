@@ -59,7 +59,7 @@ vector<string> load_meters{ "CURRENT IN KA",
                             "FREQUENCY RELAY MODEL INTERNAL VARIABLE",
                             "VOLTAGE RELAY MODEL INTERNAL VARIABLE"};
 
-vector<string> generator_meters{"ROTOR ANGLE IN DEG",
+vector<string> generator_meters{"ROTOR ANGLE IN DEG",              "ROTOR ANGLE IN RAD",
                                 "ROTOR SPEED IN PU",               "ROTOR SPEED IN HZ",
                                 "ROTOR SPEED DEVIATION IN PU",     "ROTOR SPEED DEVIATION IN HZ",
                                 "TERMINAL VOLTAGE IN PU",
@@ -214,8 +214,9 @@ vector<string> vsc_hvdc_meters{ "CONVERTER DC CURRENT IN KA",  "CONVERTER AC CUR
 vector<string> mt_hvdc_meters{"LCC CONVERTER DC CURRENT IN KA",        "LCC CONVERTER DC VOLTAGE IN KV",
                                 "LCC CONVERTER DC POWER IN MW",          "LCC CONVERTER AC CURRENT IN KA",
                                 "LCC CONVERTER FIRING ANGLE IN DEG",     "LCC CONVERTER ACTIVE POWER IN MW",
-                                "LCC CONVERTER REACTIVE POWER IN MVAR",  "LCC CONVERTER ANGLE REF OF CC",
-                                "LCC CONVERTER ANGLE REF OF CEA",         "LCC CONVERTER ANGLE REF OF CV",
+                                "LCC CONVERTER REACTIVE POWER IN MVAR",
+                                "LCC CONVERTER REFERENCE ANGLE OF CC",
+                                "LCC CONVERTER REFERENCE ANGLE OF CEA",  "LCC CONVERTER REFERENCE ANGLE OF CV",
                                 "LCC CONVERTER IDC REF IN KA",
                                 "VSC CONVERTER DC CURRENT IN KA",        "VSC CONVERTER DC VOLTAGE IN KV",
                                 "VSC CONVERTER DC POWER IN MW",          "VSC CONVERTER AC CURRENT IN KA",
@@ -225,7 +226,7 @@ vector<string> mt_hvdc_meters{"LCC CONVERTER DC CURRENT IN KA",        "LCC CONV
                                 "DC LINE IDC ON SENDING SIDE", "DC LINE IDC ON RECEIVING SIDE",
                                 "HLCC CONVERTER MODEL INTERNAL VARIABLE",
                                 "HVSC CONVERTER MODEL INTERNAL VARIABLE",
-                                "MT HVDC NETWORK MODEL INTERNAL VARIABLE"};
+                                "DC NETWORK MODEL INTERNAL VARIABLE"};
 
 vector<string> equivalent_device_meters{"VOLTAGE SOURCE VOLTAGE IN PU",
                                          "VOLTAGE SOURCE VOLTAGE ANGLE IN DEG",
@@ -664,7 +665,7 @@ bool METER::is_valid_meter_type_of_device(const string& meter_type, STEPS_DEVICE
     }
     else
     {
-        osstream<<"Warning. Device type "<<device_type<<" is not supported for setting up meter.";
+        osstream<<"Warning. Meter type "<<meter_type<<" is invalid for device type "<<device_type<<".";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return false;
     }
@@ -971,6 +972,8 @@ double METER::get_meter_value_as_a_bus() const
             return 1.0+bus->get_frequency_deviation_in_pu();
         if(meter_type=="FREQUENCY IN HZ")
             return bus->get_base_frequency_in_Hz()+bus->get_frequency_deviation_in_Hz();
+        if(meter_type=="ROCOF IN HZ/S")
+            return bus->get_ROCOF_in_Hz_per_second();
 
         return 0.0;
     }
@@ -1369,6 +1372,13 @@ double METER::get_meter_value_as_a_generator() const
                     return 0.0;
                 else
                     return gen_model->get_rotor_angle_in_deg();
+            }
+            if(meter_type=="ROTOR ANGLE IN RAD")
+            {
+                if(gen_model == NULL)
+                    return 0.0;
+                else
+                    return gen_model->get_rotor_angle_in_rad();
             }
             if(meter_type =="ROTOR SPEED IN PU")
             {
@@ -2880,19 +2890,19 @@ double METER::get_meter_value_as_a_mt_hvdc() const
                 HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
                 return lcc->get_converter_Q_2_ac_bus();
             }
-            if(meter_type=="LCC CONVERTER ANGLE REF OF CC")
+            if(meter_type=="LCC CONVERTER REFERENCE ANGLE OF CC")
             {
                 string lcc_name = get_hybrid_dc_meter_device_name();
                 HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
                 return lcc->get_dynamic_ang_ref_in_deg_of_cc();
             }
-            if(meter_type=="LCC CONVERTER ANGLE REF OF CEA")
+            if(meter_type=="LCC CONVERTER REFERENCE ANGLE OF CEA")
             {
                 string lcc_name = get_hybrid_dc_meter_device_name();
                 HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
                 return lcc->get_dynamic_ang_ref_in_deg_of_cea();
             }
-            if(meter_type=="LCC CONVERTER ANGLE REF OF CV")
+            if(meter_type=="LCC CONVERTER REFERENCE ANGLE OF CV")
             {
                 string lcc_name = get_hybrid_dc_meter_device_name();
                 HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
@@ -2982,7 +2992,7 @@ double METER::get_meter_value_as_a_mt_hvdc() const
                 return 0.0;
             if(meter_type=="HVSC CONVERTER MODEL INTERNAL VARIABLE")
                 return 0.0;
-            if(meter_type=="MT HVDC NETWORK MODEL INTERNAL VARIABLE")
+            if(meter_type=="DC NETWORK MODEL INTERNAL VARIABLE")
                 return 0.0;
 
         }

@@ -704,6 +704,18 @@ METER METER_SETTER::prepare_generator_rotor_angle_in_deg_meter(const DEVICE_ID& 
     return meter;
 }
 
+METER METER_SETTER::prepare_generator_rotor_angle_in_rad_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ROTOR ANGLE IN RAD");
+
+    return meter;
+}
+
 METER METER_SETTER::prepare_generator_rotor_speed_in_pu_meter(const DEVICE_ID& device_id)
 {
     METER meter(get_toolkit());
@@ -3357,7 +3369,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_ac_reactive_power_in_Mvar_mete
     return meter;;
 }
 
-METER METER_SETTER::prepare_mt_hvdc_lcc_converter_command_ang_of_cc_in_deg_meter(const DEVICE_ID& device_id, string lcc_name)
+METER METER_SETTER::prepare_mt_hvdc_lcc_converter_reference_angle_of_cc_in_deg_meter(const DEVICE_ID& device_id, string lcc_name)
 {
     METER meter(get_toolkit());
 
@@ -3365,7 +3377,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_command_ang_of_cc_in_deg_meter
 
     if(successful)
     {
-        meter.set_meter_type("LCC CONVERTER ANGLE REF OF CC");
+        meter.set_meter_type("LCC CONVERTER REFERENCE ANGLE OF CC");
         meter.set_hybrid_dc_meter_device_name(lcc_name);
         //meter.set_meter_side_bus(meter_side);
     }
@@ -3373,7 +3385,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_command_ang_of_cc_in_deg_meter
     return meter;;
 }
 
-METER METER_SETTER::prepare_mt_hvdc_lcc_converter_command_ang_of_cea_in_deg_meter(const DEVICE_ID& device_id, string lcc_name)
+METER METER_SETTER::prepare_mt_hvdc_lcc_converter_reference_angle_of_cea_in_deg_meter(const DEVICE_ID& device_id, string lcc_name)
 {
     METER meter(get_toolkit());
 
@@ -3381,7 +3393,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_command_ang_of_cea_in_deg_mete
 
     if(successful)
     {
-        meter.set_meter_type("LCC CONVERTER ANGLE REF OF CEA");
+        meter.set_meter_type("LCC CONVERTER REFERENCE ANGLE OF CEA");
         meter.set_hybrid_dc_meter_device_name(lcc_name);
         //meter.set_meter_side_bus(meter_side);
     }
@@ -3389,7 +3401,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_command_ang_of_cea_in_deg_mete
     return meter;;
 }
 
-METER METER_SETTER::prepare_mt_hvdc_lcc_converter_command_ang_of_cv_in_deg_meter(const DEVICE_ID& device_id, string lcc_name)
+METER METER_SETTER::prepare_mt_hvdc_lcc_converter_reference_angle_of_cv_in_deg_meter(const DEVICE_ID& device_id, string lcc_name)
 {
     METER meter(get_toolkit());
 
@@ -3397,7 +3409,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_command_ang_of_cv_in_deg_meter
 
     if(successful)
     {
-        meter.set_meter_type("LCC CONVERTER ANGLE REF OF CV");
+        meter.set_meter_type("LCC CONVERTER REFERENCE ANGLE OF CV");
         meter.set_hybrid_dc_meter_device_name(lcc_name);
         //meter.set_meter_side_bus(meter_side);
     }
@@ -3405,7 +3417,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_command_ang_of_cv_in_deg_meter
     return meter;;
 }
 
-METER METER_SETTER::prepare_mt_hvdc_lcc_converter_command_idc_in_kA_meter(const DEVICE_ID& device_id, string lcc_name)
+METER METER_SETTER::prepare_mt_hvdc_lcc_converter_reference_idc_in_kA_meter(const DEVICE_ID& device_id, string lcc_name)
 {
     METER meter(get_toolkit());
 
@@ -3597,7 +3609,7 @@ METER METER_SETTER::prepare_mt_hvdc_dc_line_dc_current_on_receiving_side_in_kA_m
     return meter;
 }
 
-METER METER_SETTER::prepare_mt_hvdc_model_internal_variable_meter(const DEVICE_ID& device_id, string var_name, unsigned int meter_side)
+METER METER_SETTER::prepare_mt_hvdc_model_hlcc_converter_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
 
     METER meter(get_toolkit());
@@ -3607,8 +3619,39 @@ METER METER_SETTER::prepare_mt_hvdc_model_internal_variable_meter(const DEVICE_I
     if(successful)
     {
         meter.set_meter_type("HLCC CONVERTER MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_name(var_name);
-        meter.set_meter_side_bus(meter_side);
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_model_hvsc_converter_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("HVSC CONVERTER MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_mt_hvdc_model_dc_network_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+
+    METER meter(get_toolkit());
+
+    bool successful = prepare_mt_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("DC NETWORK MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
     }
 
     return meter;

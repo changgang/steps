@@ -943,16 +943,16 @@ void DYNAMICS_SIMULATOR::prepare_mt_hvdc_related_meters()
             meter = setter.prepare_mt_hvdc_lcc_converter_ac_reactive_power_in_Mvar_meter(did, lcc_name);
             append_meter(meter);
 
-            meter = setter.prepare_mt_hvdc_lcc_converter_command_ang_of_cc_in_deg_meter(did, lcc_name);
+            meter = setter.prepare_mt_hvdc_lcc_converter_reference_angle_of_cc_in_deg_meter(did, lcc_name);
             append_meter(meter);
 
-            meter = setter.prepare_mt_hvdc_lcc_converter_command_ang_of_cea_in_deg_meter(did, lcc_name);
+            meter = setter.prepare_mt_hvdc_lcc_converter_reference_angle_of_cea_in_deg_meter(did, lcc_name);
             append_meter(meter);
 
-            meter = setter.prepare_mt_hvdc_lcc_converter_command_ang_of_cv_in_deg_meter(did, lcc_name);
+            meter = setter.prepare_mt_hvdc_lcc_converter_reference_angle_of_cv_in_deg_meter(did, lcc_name);
             append_meter(meter);
 
-            meter = setter.prepare_mt_hvdc_lcc_converter_command_idc_in_kA_meter(did, lcc_name);
+            meter = setter.prepare_mt_hvdc_lcc_converter_reference_idc_in_kA_meter(did, lcc_name);
             append_meter(meter);
 
         }
@@ -1076,7 +1076,16 @@ void DYNAMICS_SIMULATOR::prepare_bus_related_meter(unsigned int bus, string mete
             meter = setter.prepare_bus_frequency_in_pu_meter(bus);
         if(meter_type=="FREQUENCY IN HZ")
             meter = setter.prepare_bus_frequency_in_Hz_meter(bus);
-
+        if(meter_type=="VOLTAGE IN KV")
+            meter = setter.prepare_bus_voltage_in_kV_meter(bus);
+        if(meter_type=="ROCOV IN PU/S")
+            meter = setter.prepare_bus_ROCOV_in_pu_per_s_meter(bus);
+        if(meter_type=="ROCOV IN KV/S")
+            meter = setter.prepare_bus_ROCOV_in_kV_per_s_meter(bus);
+        if(meter_type=="ROCOF IN PU/S")
+            meter = setter.prepare_bus_ROCOF_in_pu_per_s_meter(bus);
+        if(meter_type=="ROCOF IN HZ/S")
+            meter = setter.prepare_bus_ROCOF_in_Hz_per_s_meter(bus);
         if(meter.is_valid())
             append_meter(meter);
         else
@@ -1109,8 +1118,16 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meter(const DEVICE_ID& did, s
 
             if(meter_type=="ROTOR ANGLE IN DEG")
                 meter = setter.prepare_generator_rotor_angle_in_deg_meter(did);
+            if(meter_type=="ROTOR ANGLE IN RAD")
+                meter = setter.prepare_generator_rotor_angle_in_rad_meter(did);
+            if(meter_type=="ROTOR SPEED IN PU")
+                meter = setter.prepare_generator_rotor_speed_in_pu_meter(did);
+            if(meter_type=="ROTOR SPEED IN HZ")
+                meter = setter.prepare_generator_rotor_speed_in_Hz_meter(did);
             if(meter_type=="ROTOR SPEED DEVIATION IN PU")
                 meter = setter.prepare_generator_rotor_speed_deviation_in_pu_meter(did);
+            if(meter_type=="ROTOR SPEED DEVIATION IN HZ")
+                meter = setter.prepare_generator_rotor_speed_deviation_in_Hz_meter(did);
             if(meter_type=="EXCITATION VOLTAGE IN PU")
                 meter = setter.prepare_generator_excitation_voltage_in_pu_meter(did);
             if(meter_type=="STABILIZING SIGNAL IN PU")
@@ -1127,6 +1144,16 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meter(const DEVICE_ID& did, s
                 meter = setter.prepare_generator_mechanical_power_in_pu_on_sbase_meter(did);
             if(meter_type=="MECHANICAL POWER REFERENCE IN MW")
                 meter = setter.prepare_generator_mechanical_power_reference_in_MW_meter(did);
+            if(meter_type=="MECHANICAL POWER REFERENCE IN PU ON MBASE")
+                meter = setter.prepare_generator_mechanical_power_reference_in_pu_on_mbase_meter(did);
+            if(meter_type=="MECHANICAL POWER REFERENCE IN PU ON SBASE")
+                meter = setter.prepare_generator_mechanical_power_reference_in_pu_on_sbase_meter(did);
+            if(meter_type=="TERMINAL CURRENT IN KA")
+                meter = setter.prepare_generator_terminal_current_in_kA_meter(did);
+            if(meter_type=="TERMINAL CURRENT IN PU ON MBASE")
+                meter = setter.prepare_generator_terminal_current_in_pu_on_mbase_meter(did);
+            if(meter_type=="TERMINAL CURRENT IN PU ON SBASE")
+                meter = setter.prepare_generator_terminal_current_in_pu_on_sbase_meter(did);
             if(meter_type=="TERMINAL ACTIVE POWER IN MW")
                 meter = setter.prepare_generator_terminal_active_power_in_MW_meter(did);
             if(meter_type=="TERMINAL ACTIVE POWER IN PU ON MBASE")
@@ -1139,6 +1166,20 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meter(const DEVICE_ID& did, s
                 meter = setter.prepare_generator_terminal_reactive_power_in_pu_on_mbase_meter(did);
             if(meter_type=="TERMINAL REACTIVE POWER IN PU ON SBASE")
                 meter = setter.prepare_generator_terminal_reactive_power_in_pu_on_sbase_meter(did);
+            if(meter_type=="AIRGAP POWER IN MW")
+                meter = setter.prepare_generator_airgap_power_in_MW_meter(did);
+            if(meter_type=="AIRGAP POWER IN PU ON MBASE")
+                meter = setter.prepare_generator_airgap_power_in_pu_on_mbase_meter(did);
+            if(meter_type=="AIRGAP POWER IN PU ON SBASE")
+                meter = setter.prepare_generator_airgap_power_in_pu_on_sbase_meter(did);
+            if(meter_type=="ACCELERATING POWER IN MW")
+                meter = setter.prepare_generator_accelerating_power_in_MW_meter(did);
+            if(meter_type=="ACCELERATING POWER IN PU ON MBASE")
+                meter = setter.prepare_generator_accelerating_power_in_pu_on_mbase_meter(did);
+            if(meter_type=="ACCELERATING POWER IN PU ON SBASE")
+                meter = setter.prepare_generator_accelerating_power_in_pu_on_sbase_meter(did);
+            if(meter_type=="COMPENSATED VOLTAGE IN PU")
+                meter = setter.prepare_generator_compensated_voltage_in_pu_meter(did);
             if(meter_type=="SYNC GENERATOR MODEL INTERNAL VARIABLE")
                 meter = setter.prepare_generator_sync_generator_model_internal_variable_meter(did, var_name);
             if(meter_type=="COMPENSATOR MODEL INTERNAL VARIABLE")
@@ -1149,6 +1190,8 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meter(const DEVICE_ID& did, s
                 meter = setter.prepare_generator_stabilizer_model_internal_variable_meter(did, var_name);
             if(meter_type=="TURBINE GOVERNOR MODEL INTERNAL VARIABLE")
                 meter = setter.prepare_generator_turbine_governor_model_internal_variable_meter(did, var_name);
+            if(meter_type=="TURBINE LOAD CONTROLLER MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_generator_turbine_load_controller_model_internal_variable_meter(did, var_name);
 
             if(meter.is_valid())
                 append_meter(meter);
@@ -1337,6 +1380,12 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meter(const DEVICE_ID& did, str
                 meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_mbase_meter(did);
             if(meter_type=="TERMINAL REACTIVE POWER IN PU ON SBASE")
                 meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_sbase_meter(did);
+            if(meter_type=="TERMINAL APPARENT POWER IN MVA")
+                meter = setter.prepare_pv_unit_terminal_apparent_power_in_MVA_meter(did);
+            if(meter_type=="TERMINAL APPARENT POWER IN PU ON MBASE")
+                meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_mbase_meter(did);
+            if(meter_type=="TERMINAL APPARENT POWER IN PU ON SBASE")
+                meter = setter.prepare_pv_unit_terminal_apparent_power_in_pu_on_sbase_meter(did);
             if(meter_type=="ACTIVE CURRENT COMMAND IN PU")
                 meter = setter.prepare_pv_unit_active_current_command_in_pu_meter(did);
             if(meter_type=="REACTIVE CURRENT COMMAND IN PU")
@@ -1524,11 +1573,18 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meter(const DEVICE_ID& did, string
             METER meter(*toolkit);
 
             meter_type = string2upper(meter_type);
-
+            if(meter_type=="CURRENT IN KA")
+                meter = setter.prepare_load_current_in_kA_meter(did);
+            if(meter_type=="CURRENT IN PU")
+                meter = setter.prepare_load_current_in_pu_meter(did);
             if(meter_type=="ACTIVE POWER IN MW")
                 meter = setter.prepare_load_active_power_in_MW_meter(did);
             if(meter_type=="REACTIVE POWER IN MVAR")
                 meter = setter.prepare_load_reactive_power_in_MVar_meter(did);
+            if(meter_type=="ACTIVE POWER IN PU")
+                meter = setter.prepare_load_active_power_in_pu_meter(did);
+            if(meter_type=="REACTIVE POWER IN PU")
+                meter = setter.prepare_load_reactive_power_in_pu_meter(did);
             if(meter_type=="TOTAL SCALE IN PU")
                 meter = setter.prepare_load_total_scale_in_pu_meter(did);
             if(meter_type=="MANUALLY SCALE IN PU")
@@ -1537,6 +1593,10 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meter(const DEVICE_ID& did, string
                 meter = setter.prepare_load_relay_shed_scale_in_pu_meter(did);
             if(meter_type=="LOAD MODEL INTERNAL VARIABLE")
                 meter = setter.prepare_load_load_model_internal_variable_meter(did, var_name);
+            if(meter_type=="FREQUENCY RELAY MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_load_frequency_relay_model_internal_variable_meter(did, var_name);
+            if(meter_type=="VOLTAGE RELAY MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_load_voltage_relay_model_internal_variable_meter(did, var_name);
 
             if(meter.is_valid())
                 append_meter(meter);
@@ -1590,7 +1650,20 @@ void DYNAMICS_SIMULATOR::prepare_ac_line_related_meter(const DEVICE_ID& did, str
                 meter = setter.prepare_ac_line_reactive_power_in_MVar_meter(did, bus);
             if(meter_type=="CURRENT IN KA")
                 meter = setter.prepare_ac_line_current_in_kA_meter(did, bus);
-
+            if(meter_type=="APPARENT IMPEDANCE IN OHM")
+                meter = setter.prepare_ac_line_apparent_impedance_in_Ohm_meter(did, bus);
+            if(meter_type=="APPARENT IMPEDANCE ANGLE IN DEG")
+                meter = setter.prepare_ac_line_apparent_impedance_angle_in_deg_meter(did, bus);
+            if(meter_type=="CURRENT IN PU")
+                meter = setter.prepare_ac_line_current_in_pu_meter(did, bus);
+            if(meter_type=="ACTIVE POWER IN PU")
+                meter = setter.prepare_ac_line_active_power_in_pu_meter(did, bus);
+            if(meter_type=="REACTIVE POWER IN PU")
+                meter = setter.prepare_ac_line_reactive_power_in_pu_meter(did, bus);
+            if(meter_type=="APPARENT IMPEDANCE IN PU")
+                meter = setter.prepare_ac_line_apparent_impedance_in_pu_meter(did, bus);
+            if(meter_type=="APPARENT IMPEDANCE ANGLE IN RAD")
+                meter = setter.prepare_ac_line_apparent_impedance_angle_in_rad_meter(did, bus);
             if(meter.is_valid())
                 append_meter(meter);
             else
@@ -1646,6 +1719,12 @@ void DYNAMICS_SIMULATOR::prepare_transformer_related_meter(const DEVICE_ID& did,
                 meter = setter.prepare_transformer_reactive_power_in_MVar_meter(did, bus);
             if(meter_type=="CURRENT IN KA")
                 meter = setter.prepare_transformer_current_in_kA_meter(did, bus);
+            if(meter_type=="CURRENT IN PU")
+                meter = setter.prepare_transformer_current_in_pu_meter(did, bus);
+            if(meter_type=="ACTIVE POWER IN PU")
+                meter = setter.prepare_transformer_active_power_in_pu_meter(did, bus);
+            if(meter_type=="REACTIVE POWER IN PU")
+                meter = setter.prepare_transformer_reactive_power_in_pu_meter(did, bus);
 
             if(meter.is_valid())
                 append_meter(meter);
@@ -1729,6 +1808,9 @@ void DYNAMICS_SIMULATOR::prepare_2t_lcc_hvdc_related_meter(const DEVICE_ID& did,
                 if(meter_type=="AC CURRENT IN KA")
                     meter = setter.prepare_2t_lcc_hvdc_inverter_ac_current_in_kA_meter(did);
             }
+             if(meter_type=="2T LCC HVDC MODEL INTERNAL VARIABLE")
+                    meter = setter.prepare_2t_lcc_hvdc_model_internal_variable_meter(did, var_name);
+
             if(meter.is_valid())
                 append_meter(meter);
             else
@@ -1914,7 +1996,7 @@ void DYNAMICS_SIMULATOR::prepare_vsc_hvdc_related_dc_line_meter(const DEVICE_ID&
     }
 }
 
-void DYNAMICS_SIMULATOR::prepare_mt_hvdc_related_meter(const DEVICE_ID& did, string device_name, string meter_type, string var_name)
+void DYNAMICS_SIMULATOR::prepare_mt_hvdc_related_meter(const DEVICE_ID& did, string sub_device_name, string meter_type, string var_name)
  {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -1929,44 +2011,57 @@ void DYNAMICS_SIMULATOR::prepare_mt_hvdc_related_meter(const DEVICE_ID& did, str
             meter_type = string2upper(meter_type);
 
             if(meter_type=="LCC CONVERTER DC CURRENT IN KA")
-                meter = setter.prepare_mt_hvdc_lcc_converter_dc_current_in_kA_meter(did, device_name);
+                meter = setter.prepare_mt_hvdc_lcc_converter_dc_current_in_kA_meter(did, sub_device_name);
             if(meter_type=="LCC CONVERTER DC VOLTAGE IN KV")
-                meter = setter.prepare_mt_hvdc_lcc_converter_dc_voltage_in_kV_meter(did, device_name);
+                meter = setter.prepare_mt_hvdc_lcc_converter_dc_voltage_in_kV_meter(did, sub_device_name);
             if(meter_type=="LCC CONVERTER DC POWER IN MW")
-                meter = setter.prepare_mt_hvdc_lcc_converter_dc_power_in_kV_MW_meter(did, device_name);
+                meter = setter.prepare_mt_hvdc_lcc_converter_dc_power_in_kV_MW_meter(did, sub_device_name);
             if(meter_type=="LCC CONVERTER AC CURRENT IN KA")
-                meter = setter.prepare_mt_hvdc_lcc_converter_ac_current_in_kA_meter(did, device_name);
+                meter = setter.prepare_mt_hvdc_lcc_converter_ac_current_in_kA_meter(did, sub_device_name);
             if(meter_type=="LCC CONVERTER FIRING ANGLE IN DEG")
-                meter = setter.prepare_mt_hvdc_lcc_converter_firing_angle_in_deg_meter(did, device_name);
+                meter = setter.prepare_mt_hvdc_lcc_converter_firing_angle_in_deg_meter(did, sub_device_name);
             if(meter_type=="LCC CONVERTER ACTIVE POWER IN MW")
-                meter = setter.prepare_mt_hvdc_lcc_converter_ac_active_power_in_MW_meter(did, device_name);
+                meter = setter.prepare_mt_hvdc_lcc_converter_ac_active_power_in_MW_meter(did, sub_device_name);
             if(meter_type=="LCC CONVERTER REACTIVE POWER IN MVAR")
-                meter = setter.prepare_mt_hvdc_lcc_converter_ac_reactive_power_in_Mvar_meter(did, device_name);
-
+                meter = setter.prepare_mt_hvdc_lcc_converter_ac_reactive_power_in_Mvar_meter(did, sub_device_name);
+            if(meter_type=="LCC CONVERTER REFERENCE ANGLE OF CC")
+                meter = setter.prepare_mt_hvdc_lcc_converter_reference_angle_of_cc_in_deg_meter(did, sub_device_name);
+            if(meter_type=="LCC CONVERTER REFERENCE ANGLE OF CEA")
+                meter = setter.prepare_mt_hvdc_lcc_converter_reference_angle_of_cea_in_deg_meter(did, sub_device_name);
+            if(meter_type=="LCC CONVERTER REFERENCE ANGLE OF CV")
+                meter = setter.prepare_mt_hvdc_lcc_converter_reference_angle_of_cv_in_deg_meter(did, sub_device_name);
+            if(meter_type=="LCC CONVERTER IDC REF IN KA")
+                meter = setter.prepare_mt_hvdc_lcc_converter_reference_idc_in_kA_meter(did, sub_device_name);
             if(meter_type=="VSC CONVERTER DC CURRENT IN KA")
-                meter = setter.prepare_mt_hvdc_vsc_converter_dc_current_in_kA_meter(did, device_name);
+                meter = setter.prepare_mt_hvdc_vsc_converter_dc_current_in_kA_meter(did, sub_device_name);
             if(meter_type=="VSC CONVERTER DC VOLTAGE IN KV")
-                meter = setter.prepare_mt_hvdc_vsc_converter_dc_voltage_in_kV_meter(did, device_name);
+                meter = setter.prepare_mt_hvdc_vsc_converter_dc_voltage_in_kV_meter(did, sub_device_name);
             if(meter_type=="VSC CONVERTER DC POWER IN MW")
-                meter = setter.prepare_mt_hvdc_vsc_converter_dc_power_in_kV_MW_meter(did, device_name);
+                meter = setter.prepare_mt_hvdc_vsc_converter_dc_power_in_kV_MW_meter(did, sub_device_name);
             if(meter_type=="VSC CONVERTER AC CURRENT IN KA")
-                meter = setter.prepare_mt_hvdc_vsc_converter_ac_current_in_kA_meter(did, device_name);
+                meter = setter.prepare_mt_hvdc_vsc_converter_ac_current_in_kA_meter(did, sub_device_name);
             if(meter_type=="VSC CONVERTER AVTIVE POWER IN MW")
-                meter = setter.prepare_mt_hvdc_vsc_converter_ac_active_power_in_MW_meter(did, device_name);
+                meter = setter.prepare_mt_hvdc_vsc_converter_ac_active_power_in_MW_meter(did, sub_device_name);
             if(meter_type=="VSC CONVERTER REACTIVE POWER IN MVAR")
-                meter = setter.prepare_mt_hvdc_vsc_converter_ac_reactive_power_in_Mvar_meter(did, device_name);
+                meter = setter.prepare_mt_hvdc_vsc_converter_ac_reactive_power_in_Mvar_meter(did, sub_device_name);
             if(meter_type=="VSC CONVERTER ID IN KA")
-                meter = setter.prepare_mt_hvdc_vsc_converter_id_in_kA_meter(did, device_name);
+                meter = setter.prepare_mt_hvdc_vsc_converter_id_in_kA_meter(did, sub_device_name);
             if(meter_type=="VSC CONVERTER IQ IN KA")
-                meter = setter.prepare_mt_hvdc_vsc_converter_iq_in_kA_meter(did, device_name);
+                meter = setter.prepare_mt_hvdc_vsc_converter_iq_in_kA_meter(did, sub_device_name);
 
             if(meter_type=="DC BUS VOLTAGE IN KV")
-                meter = setter.prepare_mt_hvdc_dc_bus_voltage_in_kV_meter(did, device_name);
+                meter = setter.prepare_mt_hvdc_dc_bus_voltage_in_kV_meter(did, sub_device_name);
 
             if(meter_type=="DC LINE IDC ON SENDING SIDE")
-                meter = setter.prepare_mt_hvdc_dc_line_dc_current_on_sending_side_in_kA_meter(did, device_name);
+                meter = setter.prepare_mt_hvdc_dc_line_dc_current_on_sending_side_in_kA_meter(did, sub_device_name);
             if(meter_type=="DC LINE IDC ON RECEIVING SIDE")
-                meter = setter.prepare_mt_hvdc_dc_line_dc_current_on_receiving_side_in_kA_meter(did, device_name);
+                meter = setter.prepare_mt_hvdc_dc_line_dc_current_on_receiving_side_in_kA_meter(did, sub_device_name);
+            if(meter_type=="HLCC CONVERTER MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_mt_hvdc_model_hlcc_converter_model_internal_variable_meter(did, var_name);
+            if(meter_type=="HVSC CONVERTER MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_mt_hvdc_model_hvsc_converter_model_internal_variable_meter(did, var_name);
+            if(meter_type=="DC NETWORK MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_mt_hvdc_model_dc_network_model_internal_variable_meter(did, var_name);
 
 
             if(meter.is_valid())
@@ -2024,7 +2119,26 @@ void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meter(const DEVICE_ID
             METER meter(*toolkit);
 
             meter_type = string2upper(meter_type);
-
+            if(meter_type=="VOLTAGE SOURCE VOLTAGE IN PU")
+                meter = setter.prepare_equivalent_device_voltage_source_voltage_in_pu_meter(did);
+            if(meter_type=="VOLTAGE SOURCE VOLTAGE ANGLE IN DEG")
+                meter = setter.prepare_equivalent_device_voltage_source_voltage_angle_in_deg_meter(did);
+            if(meter_type=="VOLTAGE SOURCE RESISTANCE IN PU")
+                meter = setter.prepare_equivalent_device_voltage_source_resistance_in_pu_meter(did);
+            if(meter_type=="VOLTAGE SOURCE REACTANCE IN PU")
+                meter = setter.prepare_equivalent_device_voltage_source_reactance_in_pu_meter(did);
+            if(meter_type=="ACTIVE CONSTANT POWER LOAD IN MW")
+                meter = setter.prepare_equivalent_device_nominal_active_constant_power_load_in_MW_meter(did);
+            if(meter_type=="REACTIVE CONSTANT POWER LOAD IN MVAR")
+                meter = setter.prepare_equivalent_device_nominal_reactive_constant_power_load_in_MVar_meter(did);
+            if(meter_type=="ACTIVE CONSTANT CURRENT LOAD IN MW")
+                meter = setter.prepare_equivalent_device_nominal_active_constant_current_load_in_MW_meter(did);
+            if(meter_type=="REACTIVE CONSTANT CURRENT LOAD IN MVAR")
+                meter = setter.prepare_equivalent_device_nominal_reactive_constant_current_load_in_MVar_meter(did);
+            if(meter_type=="ACTIVE CONSTANT IMPEDANCE LOAD IN MW")
+                meter = setter.prepare_equivalent_device_nominal_active_constant_impedance_load_in_MW_meter(did);
+            if(meter_type=="REACTIVE CONSTANT IMPEDANCE LOAD IN MVAR")
+                meter = setter.prepare_equivalent_device_nominal_reactive_constant_impedance_load_in_MVar_meter(did);
             if(meter_type=="ACTIVE POWER GENERATION IN MW")
                 meter = setter.prepare_equivalent_device_active_power_generation_in_MW_meter(did);
             if(meter_type=="REACTIVE POWER GENERATION IN MVAR")
@@ -2037,6 +2151,30 @@ void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meter(const DEVICE_ID
                 meter = setter.prepare_equivalent_device_active_power_net_load_in_MW_meter(did);
             if(meter_type=="REACTIVE POWER NET LOAD IN MVAR")
                 meter = setter.prepare_equivalent_device_reactive_power_net_load_in_MVar_meter(did);
+            if(meter_type=="ACTIVE CONSTANT POWER LOAD IN PU")
+                meter = setter.prepare_equivalent_device_nominal_active_constant_power_load_in_pu_meter(did);
+            if(meter_type=="REACTIVE CONSTANT POWER LOAD IN PU")
+                meter = setter.prepare_equivalent_device_nominal_reactive_constant_power_load_in_pu_meter(did);
+            if(meter_type=="ACTIVE CONSTANT CURRENT LOAD IN PU")
+                meter = setter.prepare_equivalent_device_nominal_active_constant_current_load_in_pu_meter(did);
+            if(meter_type=="REACTIVE CONSTANT CURRENT LOAD IN PU")
+                meter = setter.prepare_equivalent_device_nominal_reactive_constant_current_load_in_pu_meter(did);
+            if(meter_type=="ACTIVE CONSTANT IMPEDANCE LOAD IN PU")
+                meter = setter.prepare_equivalent_device_nominal_active_constant_impedance_load_in_pu_meter(did);
+            if(meter_type=="REACTIVE CONSTANT IMPEDANCE LOAD IN PU")
+                meter = setter.prepare_equivalent_device_nominal_reactive_constant_impedance_load_in_pu_meter(did);
+            if(meter_type=="ACTIVE POWER GENERATION IN PU")
+                meter = setter.prepare_equivalent_device_active_power_generation_in_pu_meter(did);
+            if(meter_type=="REACTIVE POWER GENERATION IN PU")
+                meter = setter.prepare_equivalent_device_reactive_power_generation_in_pu_meter(did);
+            if(meter_type=="ACTIVE POWER LOAD IN PU")
+                meter = setter.prepare_equivalent_device_active_power_load_in_pu_meter(did);
+            if(meter_type=="REACTIVE POWER LOAD IN PU")
+                meter = setter.prepare_equivalent_device_reactive_power_load_in_pu_meter(did);
+            if(meter_type=="ACTIVE POWER NET LOAD IN PU")
+                meter = setter.prepare_equivalent_device_active_power_net_load_in_pu_meter(did);
+            if(meter_type=="REACTIVE POWER NET LOAD IN PU")
+                meter = setter.prepare_equivalent_device_reactive_power_net_load_in_pu_meter(did);
 
             if(meter.is_valid())
                 append_meter(meter);

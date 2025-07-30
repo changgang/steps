@@ -57,6 +57,7 @@ class METER_SETTER
         METER prepare_load_relay_shed_scale_in_pu_meter(const DEVICE_ID& device_id);
 
         METER prepare_generator_rotor_angle_in_deg_meter(const DEVICE_ID& device_id);
+        METER prepare_generator_rotor_angle_in_rad_meter(const DEVICE_ID& device_id);
         METER prepare_generator_rotor_speed_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_generator_rotor_speed_in_Hz_meter(const DEVICE_ID& device_id);
         METER prepare_generator_rotor_speed_deviation_in_pu_meter(const DEVICE_ID& device_id);
@@ -256,10 +257,10 @@ class METER_SETTER
         METER prepare_mt_hvdc_lcc_converter_firing_angle_in_deg_meter(const DEVICE_ID& device_id, string lcc_name);
         METER prepare_mt_hvdc_lcc_converter_ac_active_power_in_MW_meter(const DEVICE_ID& device_id, string lcc_name);
         METER prepare_mt_hvdc_lcc_converter_ac_reactive_power_in_Mvar_meter(const DEVICE_ID& device_id, string lcc_name);
-        METER prepare_mt_hvdc_lcc_converter_command_ang_of_cc_in_deg_meter(const DEVICE_ID& device_id, string lcc_name);
-        METER prepare_mt_hvdc_lcc_converter_command_ang_of_cea_in_deg_meter(const DEVICE_ID& device_id, string lcc_name);
-        METER prepare_mt_hvdc_lcc_converter_command_ang_of_cv_in_deg_meter(const DEVICE_ID& device_id, string lcc_name);
-        METER prepare_mt_hvdc_lcc_converter_command_idc_in_kA_meter(const DEVICE_ID& device_id, string lcc_name);
+        METER prepare_mt_hvdc_lcc_converter_reference_angle_of_cc_in_deg_meter(const DEVICE_ID& device_id, string lcc_name);
+        METER prepare_mt_hvdc_lcc_converter_reference_angle_of_cea_in_deg_meter(const DEVICE_ID& device_id, string lcc_name);
+        METER prepare_mt_hvdc_lcc_converter_reference_angle_of_cv_in_deg_meter(const DEVICE_ID& device_id, string lcc_name);
+        METER prepare_mt_hvdc_lcc_converter_reference_idc_in_kA_meter(const DEVICE_ID& device_id, string lcc_name);
         //vsc
         METER prepare_mt_hvdc_vsc_converter_dc_current_in_kA_meter(const DEVICE_ID& device_id, string vsc_name);
         METER prepare_mt_hvdc_vsc_converter_dc_voltage_in_kV_meter(const DEVICE_ID& device_id, string vsc_name);
@@ -278,7 +279,9 @@ class METER_SETTER
         METER prepare_mt_hvdc_dc_line_ic_on_receiving_side_in_kA_meter(const DEVICE_ID& device_id, string line_name);
         METER prepare_mt_hvdc_dc_line_virtual_bus_voltage_in_kV_meter(const DEVICE_ID& device_id, string line_name);
         METER prepare_mt_hvdc_dc_line_virtual_bus_current_in_kA_meter(const DEVICE_ID& device_id, string line_name);
-        METER prepare_mt_hvdc_model_internal_variable_meter(const DEVICE_ID& device_id, string var_name, unsigned int meter_side);
+        METER prepare_mt_hvdc_model_hlcc_converter_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_mt_hvdc_model_hvsc_converter_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_mt_hvdc_model_dc_network_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
 
         METER prepare_equivalent_device_voltage_source_voltage_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_equivalent_device_voltage_source_voltage_angle_in_deg_meter(const DEVICE_ID& device_id);

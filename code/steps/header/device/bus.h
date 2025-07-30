@@ -118,6 +118,7 @@ class BUS : public DEVICE
         double get_frequency_deviation_in_Hz() const;
         double get_frequency_in_pu() const;
         double get_frequency_in_Hz() const;
+        double get_ROCOF_in_Hz_per_second() const;
     private:
         unsigned int bus_number;
         unsigned int bus_name_index;

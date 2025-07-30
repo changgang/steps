@@ -7,7 +7,8 @@
 
 using namespace std;
 
-BUS_FREQUENCY_MODEL::BUS_FREQUENCY_MODEL(STEPS& toolkit) : frequency_block(toolkit)
+BUS_FREQUENCY_MODEL::BUS_FREQUENCY_MODEL(STEPS& toolkit) : frequency_block(toolkit),
+                                                           ROCOF_block(toolkit)
 {
     set_toolkit(toolkit);
     frequency_block.set_K(ONE_OVER_DOUBLE_PI);
@@ -57,6 +58,11 @@ void BUS_FREQUENCY_MODEL::initialize()
     frequency_block.initialize();
 
     frequency_block_output_old = frequency_block.get_output();
+
+    ROCOF_block.set_T_in_s(DELT*4);
+    ROCOF_block.set_input(frequency_block.get_output());
+    ROCOF_block.initialize();
+
     is_model_updated = true;
 }
 
@@ -76,6 +82,9 @@ void BUS_FREQUENCY_MODEL::run(DYNAMIC_MODE mode)
 
         frequency_block.set_input(bus_ptr->get_positive_sequence_angle_in_rad());
         frequency_block.run(mode);
+
+        ROCOF_block.set_input(frequency_block.get_output());
+        ROCOF_block.run(mode);
     }
     else
     {
@@ -85,6 +94,10 @@ void BUS_FREQUENCY_MODEL::run(DYNAMIC_MODE mode)
             frequency_block.set_T_in_s(DELT*4.0);
             frequency_block.set_input(bus_ptr->get_positive_sequence_angle_in_rad());
             frequency_block.run(mode);
+
+            ROCOF_block.set_T_in_s(DELT);
+            ROCOF_block.set_input(frequency_block.get_output());
+            ROCOF_block.run(mode);
         }
         else
         {
@@ -158,4 +171,9 @@ double BUS_FREQUENCY_MODEL::get_frequency_in_pu() const
 double BUS_FREQUENCY_MODEL::get_frequency_in_Hz() const
 {
     return fbase_Hz+get_frequency_deviation_in_Hz();
+}
+
+double BUS_FREQUENCY_MODEL::get_ROCOF_in_Hz_per_second() const
+{
+    return ROCOF_block.get_output();
 }

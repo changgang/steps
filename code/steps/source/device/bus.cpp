@@ -687,3 +687,8 @@ double BUS::get_frequency_in_Hz() const
 {
     return get_frequency_deviation_in_Hz()+get_base_frequency_in_Hz();
 }
+
+double BUS::get_ROCOF_in_Hz_per_second() const
+{
+    return bus_frequency_model.get_ROCOF_in_Hz_per_second();
+}

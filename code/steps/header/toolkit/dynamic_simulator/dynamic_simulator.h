@@ -117,7 +117,7 @@ class DYNAMICS_SIMULATOR
         void prepare_vsc_hvdc_related_meter(const DEVICE_ID& did, string meter_type, unsigned int side, string var_name="");
         void prepare_vsc_hvdc_related_meter(string vsc_name, string meter_type, unsigned int side, string var_name="");
         void prepare_vsc_hvdc_related_dc_line_meter(const DEVICE_ID& did, string meter_type, const DC_DEVICE_ID dc_did, unsigned int side, string var_name="");
-        void prepare_mt_hvdc_related_meter(const DEVICE_ID& did, string device_name, string meter_type, string var_name="");
+        void prepare_mt_hvdc_related_meter(const DEVICE_ID& did, string sub_device_name, string meter_type, string var_name="");
         void prepare_mt_hvdc_related_meter(string mtdc_name, string device_name, string meter_type, string var_name="");
         void prepare_equivalent_device_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
 
