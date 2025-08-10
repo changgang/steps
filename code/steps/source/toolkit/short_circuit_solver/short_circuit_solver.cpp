@@ -2414,7 +2414,7 @@ void SHORT_CIRCUIT_SOLVER::update_bus_sequence_voltage_after_iteration_consideri
          busptr->set_positive_sequence_voltage_in_pu(abs(V1));
          busptr->set_positive_sequence_angle_in_rad(arg(V1));
          busptr->set_negative_sequence_voltage_in_pu(abs(V2));
-         busptr->set_negative_sequence_voltage_in_pu(arg(V2));
+         busptr->set_negative_sequence_angle_in_rad(arg(V2));
          busptr->set_zero_sequence_voltage_in_pu(abs(V0));
          busptr->set_zero_sequence_angle_in_rad(arg(V0));
     }
