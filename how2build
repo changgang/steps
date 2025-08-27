@@ -1,0 +1,47 @@
+1. Install CMake
+Go to https://cmake.org/ and download CMake. Install Cmake with instructions.
+STEPS use CMake 4.1.0 or newer version. Older version may work, however, it is not tested.
+
+2. Install gcc and g++
+2.1 Windows
+On Windows, go to https://www.mingw-w64.org/ and download pre-built MinGW.
+You can find MinGW-W64-builds on https://github.com/niXman/mingw-builds-binaries/releases.
+Download version with "poxis-seh" (such as posix-seh-ucrt-rt).
+Unpack the downloaded version to any directory you like.
+
+2.2 Linux
+On linux, you can install gcc with command. For example, on Debian or Ubuntu, you can try:
+sudo apt install gcc g++
+
+2.3 Check version
+Make sure you have the latest version of gcc and g++.
+You can check the version with following command:
+gcc --version
+g++ --version
+
+3. Build STEPS
+3.1 Go to build directory
+If there is no build directory like "steps/build", create one.
+Then cd to build directory with command:
+cd steps/build
+3.2 Generate Makefile
+In steps/build directory, run following command to generate Makefile:
+cmake -G "MinGW Makefiles" ..    # for Windows
+or
+cmake -G "Unix Makefiles" ..     # for Linux
+If you can not find gcc or g++ on Window, you may need to check the Compiler variable in the CMakeLists.txt.
+
+3.3 Build STEPS
+Run the following command to build STEPS:
+make  # for Linux
+or
+"D:\Program Files\mingw-64\x86_64-15.1.0-posix-seh-ucrt-rt_v12-rev0\bin\mingw32-make.exe"   # for Windows
+If you want to speed up compilation, you can add -j option to make command.
+For example,
+make -j4  # for Linux
+or
+"D:\Program Files\mingw-64\x86_64-15.1.0-posix-seh-ucrt-rt_v12-rev0\bin\mingw32-make.exe" -j4  # for Windows
+
+
+
+
