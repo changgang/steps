@@ -316,6 +316,7 @@ void IEEL::initialize()
     setup_block_toolkit_and_parameters();
 
     synchronize_bus_voltage_and_frequency();
+    swap_parameters();
 
     LOAD* load = get_load_pointer();
 
@@ -355,6 +356,40 @@ void IEEL::initialize()
     set_flag_model_initialized_as_true();
 }
 
+void IEEL::swap_parameters()
+{
+    if(P_n_power_1>P_n_power_2)
+    {
+        swap(P_n_power_1, P_n_power_2);
+        swap(P_alpha_1, P_alpha_2);
+    }
+    if(P_n_power_1>P_n_power_3)
+    {
+        swap(P_n_power_1, P_n_power_3);
+        swap(P_alpha_1, P_alpha_3);
+    }
+    if(P_n_power_2>P_n_power_3)
+    {
+        swap(P_n_power_2, P_n_power_3);
+        swap(P_alpha_2, P_alpha_3);
+    }
+    if(Q_n_power_1>Q_n_power_2)
+    {
+        swap(Q_n_power_1, Q_n_power_2);
+        swap(Q_alpha_1, Q_alpha_2);
+    }
+    if(Q_n_power_1>Q_n_power_3)
+    {
+        swap(Q_n_power_1, Q_n_power_3);
+        swap(Q_alpha_1, Q_alpha_3);
+    }
+    if(Q_n_power_2>Q_n_power_3)
+    {
+        swap(Q_n_power_2, Q_n_power_3);
+        swap(Q_alpha_2, Q_alpha_3);
+    }
+}
+
 void IEEL::initialize_to_start()
 {
     if(not is_model_initialized())
@@ -382,35 +417,40 @@ complex<double> IEEL::get_load_power_in_MVA()
     double alpha1 = get_P_alpha_1();
     double alpha2 = get_P_alpha_2();
     double alpha3 = get_P_alpha_3();
-    double n1 = get_P_n_power_1();
-    double n2 = get_P_n_power_2();
-    double n3 = get_P_n_power_3();
+    double n1_P = get_P_n_power_1();
+    double n2_P = get_P_n_power_2();
+    double n3_P = get_P_n_power_3();
     double kf = get_P_Kf();
 
-    double P = alpha1*load->get_load_scale_with_voltage(n1, V, LOAD_ELLIPTICAL_CV) +
-               alpha2*load->get_load_scale_with_voltage(n2, V, LOAD_ELLIPTICAL_CV) +
-               alpha3*load->get_load_scale_with_voltage(n3, V, LOAD_ELLIPTICAL_CV);
-    /*double P = alpha1*load->get_load_scale_with_voltage(n1, V, LOAD_LINEAR_CV) +
-               alpha2*load->get_load_scale_with_voltage(n2, V, LOAD_LINEAR_CV) +
-               alpha3*load->get_load_scale_with_voltage(n3, V, LOAD_LINEAR_CV);*/
+    double voltage_scale1 = load->get_load_scale_with_voltage(n1_P, V, LOAD_LINEAR_CV);
+    double voltage_scale2 = load->get_load_scale_with_voltage(n2_P, V, LOAD_LINEAR_CV);
+    double voltage_scale3 = load->get_load_scale_with_voltage(n3_P, V, LOAD_LINEAR_CV);
+
+    double P = alpha1*voltage_scale1 + alpha2*voltage_scale2 + alpha3*voltage_scale3;
 
     P = P0*P*(1.0+kf*f);
 
     alpha1 = get_Q_alpha_1();
     alpha2 = get_Q_alpha_2();
     alpha3 = get_Q_alpha_3();
-    n1 = get_Q_n_power_1();
-    n2 = get_Q_n_power_2();
-    n3 = get_Q_n_power_3();
+    double n1_Q = get_Q_n_power_1();
+    double n2_Q = get_Q_n_power_2();
+    double n3_Q = get_Q_n_power_3();
     kf = get_Q_Kf();
 
-    double Q = alpha1*load->get_load_scale_with_voltage(n1, V, LOAD_ELLIPTICAL_CV) +
-               alpha2*load->get_load_scale_with_voltage(n2, V, LOAD_ELLIPTICAL_CV) +
-               alpha3*load->get_load_scale_with_voltage(n3, V, LOAD_ELLIPTICAL_CV);
-    /*double Q = alpha1*load->get_load_scale_with_voltage(n1, V, LOAD_LINEAR_CV) +
-               alpha2*load->get_load_scale_with_voltage(n2, V, LOAD_LINEAR_CV) +
-               alpha3*load->get_load_scale_with_voltage(n3, V, LOAD_LINEAR_CV);*/
+    double Q = 0;
+    if(fabs(n1_P-n1_Q)<FLOAT_EPSILON and fabs(n2_P-n2_Q)<FLOAT_EPSILON and fabs(n3_P-n3_Q)<FLOAT_EPSILON)
+    {
+        Q = alpha1*voltage_scale1 + alpha2*voltage_scale2 + alpha3*voltage_scale3;
+    }
+    else
+    {
+        voltage_scale1 = load->get_load_scale_with_voltage(n1_Q, V, LOAD_LINEAR_CV);
+        voltage_scale2 = load->get_load_scale_with_voltage(n2_Q, V, LOAD_LINEAR_CV);
+        voltage_scale3 = load->get_load_scale_with_voltage(n3_Q, V, LOAD_LINEAR_CV);
 
+        Q = alpha1*voltage_scale1 + alpha2*voltage_scale2 + alpha3*voltage_scale3;
+    }
     Q = Q0*Q*(1.0+kf*f);
 
     return complex<double>(P,Q);
