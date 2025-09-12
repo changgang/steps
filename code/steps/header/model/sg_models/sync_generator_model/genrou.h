@@ -80,6 +80,7 @@ class GENROU : public SYNC_GENERATOR_MODEL
         void copy_from_const_model(const GENROU& model);
 
         double get_initial_rotor_angle() const;
+        complex<double> Edq;
 };
 
 

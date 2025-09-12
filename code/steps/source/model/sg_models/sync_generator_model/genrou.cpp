@@ -191,8 +191,10 @@ void GENROU::initialize()
     complex<double> Exy = Vxy+Ixy*Zsource;
 
     complex<double> Idq = xy2dq_with_angle_in_rad(Ixy, rotor_angle);
-    complex<double> Edq = xy2dq_with_angle_in_rad(Exy, rotor_angle);
-    complex<double> Flux_dq = Edq*complex<double>(0.0, -1.0);
+    Edq = xy2dq_with_angle_in_rad(Exy, rotor_angle);
+    complex<double> Flux_dq = Edq*complex<double>(0.0, -1.0);//Edq = j*Fdq
+    double flux_d = Flux_dq.real();
+    double flux_q = Flux_dq.imag();
     double Flux = steps_fast_complex_abs(Flux_dq);
     double delta_XadIfd = get_saturation_with_flux(Flux)*Flux;
 
@@ -215,17 +217,18 @@ void GENROU::initialize()
     // or
     //spp=Fd-Id*(Xd"-Xl)
 
-    //spp = Flux_dq.real()-Idq.real()*(xpp-xl);
-    //sp  = spp+Idq.real()*(xdp-xl);
+    //spp = Flux_d-Id*(xpp-xl);
+    //sp  = spp+Id*(xdp-xl);
 
     // A*sp + B*spp = fluxd
     // sp - spp = id*(xdp-xl)
     // sp = spp + id*(xdp-xl)
     // (A+B)*spp + A*id*(xdp-xl) = fluxd
+    double Id = Idq.real();
     double A = (xpp-xl)/(xdp-xl), B = (xdp-xpp)/(xdp-xl);
     double sdp, sdpp; // state of transient, and subtransient
-    sdpp = (Flux_dq.real()-A*Idq.real()*(xdp-xl))/(A+B);
-    sdp = sdpp + Idq.real()*(xdp-xl);
+    sdpp = (flux_d-A*Id*(xdp-xl))/(A+B);
+    sdp = sdpp + Id*(xdp-xl);
 
     transient_block_d_axis->set_output(sdp);
     transient_block_d_axis->initialize();
@@ -234,7 +237,7 @@ void GENROU::initialize()
     subtransient_block_d_axis->initialize();
 
     // excitation voltage
-    double efd0 = sdp+Idq.real()*(xd-xdp)+Flux_dq.real()*delta_XadIfd/Flux;
+    double efd0 = sdp+Id*(xd-xdp)+flux_d*delta_XadIfd/Flux;
     set_initial_excitation_voltage_in_pu(efd0);
     if(efd0>5.0)
     {
@@ -256,13 +259,13 @@ void GENROU::initialize()
     // spp*(Xq'-Xl)/(Xq"-Xl)=-Fq*(Xq'-Xl)/(Xq"-Xl)+Iq*(Xq'-Xl)
     // or
     // spp=-Fq+Iq*(Xq"-Xl)
-    spp = -Flux_dq.imag()+Idq.imag()*(xpp-xl);
-    sp  = spp-Idq.imag()*(xqp-xl);
+    spp = -Flux_q+Iq*(xpp-xl);
+    sp  = spp-Iq*(xqp-xl);
     transient_block_q_axis->set_output(sp);
     subtransient_block_q_axis->set_output(spp);
 
-    sp = Idq.imag()*(xq-xqp)+Flux_dq.imag()*delta_XadIfd*(xq-xl)/(xd-xl)/Flux;
-    spp = sp+Idq.imag()*(xqp-xl);*/
+    sp = Iq*(xq-xqp)+Flux_q*delta_XadIfd*(xq-xl)/(xd-xl)/Flux;
+    spp = sp+Iq*(xqp-xl);*/
 
     A = (xpp-xl)/(xqp-xl); B = (xqp-xpp)/(xqp-xl);
     // sp*A+spp*B = -fluxq
@@ -270,8 +273,9 @@ void GENROU::initialize()
     // sp = spp - iq*(xqp-xl)
     // (A+B)*spp -A*iq*(xqp-xl) = -fluxq
     double sqp, sqpp; // state of transient, and subtransient
-    sqpp = (-Flux_dq.imag()+A*Idq.imag()*(xqp-xl))/(A+B);
-    sqp = sqpp - Idq.imag()*(xqp-xl);
+    double Iq = Idq.imag();
+    sqpp = (-flux_q+A*Iq*(xqp-xl))/(A+B);
+    sqp = sqpp - Iq*(xqp-xl);
 
     transient_block_q_axis->set_output(sqp);
     transient_block_q_axis->initialize();
@@ -372,10 +376,11 @@ void GENROU::run(DYNAMIC_MODE mode)
     double one_over_xdp_minus_xl = 1.0/(xdp-xl);
     double one_over_xqp_minus_xl = 1.0/(xqp-xl);
 
-    double fluxd = (transient_block_d_axis->get_output()*(xpp-xl) + subtransient_block_d_axis->get_output()*(xdp-xpp))*one_over_xdp_minus_xl;
-    double fluxq = (transient_block_q_axis->get_output()*(xpp-xl) + subtransient_block_q_axis->get_output()*(xqp-xpp))*one_over_xqp_minus_xl;
-    fluxq = -fluxq;
-    complex<double> Flux_dq(fluxd, fluxq);
+    // get flux before integration, for calculating saturation
+    double flux_d = (transient_block_d_axis->get_output()*(xpp-xl) + subtransient_block_d_axis->get_output()*(xdp-xpp))*one_over_xdp_minus_xl;
+    double flux_q = (transient_block_q_axis->get_output()*(xpp-xl) + subtransient_block_q_axis->get_output()*(xqp-xpp))*one_over_xqp_minus_xl;
+    flux_q = -flux_q;
+    complex<double> Flux_dq = complex<double>(flux_d, flux_q);
     double Flux = steps_fast_complex_abs(Flux_dq);
     double saturation = get_saturation_with_flux(Flux);
 
@@ -385,7 +390,7 @@ void GENROU::run(DYNAMIC_MODE mode)
     // d-axis
     input = transient_block_d_axis->get_output()-subtransient_block_d_axis->get_output()-Idq.real()*(xdp-xl);
     input = get_excitation_voltage_in_pu()-(xd-xdp)*(Idq.real()+input*(xdp-xpp)*one_over_xdp_minus_xl*one_over_xdp_minus_xl)-
-            Flux_dq.real()*saturation;
+            flux_d*saturation;
     transient_block_d_axis->set_input(input);
     transient_block_d_axis->run(mode);
 
@@ -396,13 +401,20 @@ void GENROU::run(DYNAMIC_MODE mode)
     // q-axis
     input = transient_block_q_axis->get_output()-subtransient_block_q_axis->get_output()+Idq.imag()*(xqp-xl);
     input = (xq-xqp)*(Idq.imag()-input*(xqp-xpp)*one_over_xqp_minus_xl*one_over_xqp_minus_xl)+
-            Flux_dq.imag()*(xq-xl)/(xd-xl)*saturation;
+            flux_q*(xq-xl)/(xd-xl)*saturation;
     transient_block_q_axis->set_input(input);
     transient_block_q_axis->run(mode);
 
     input = transient_block_q_axis->get_output()+Idq.imag()*(xqp-xl);
     subtransient_block_q_axis->set_input(input);
     subtransient_block_q_axis->run(mode);
+
+    // update flux after integration
+    flux_d = (transient_block_d_axis->get_output()*(xpp-xl) + subtransient_block_d_axis->get_output()*(xdp-xpp))*one_over_xdp_minus_xl;
+    flux_q = (transient_block_q_axis->get_output()*(xpp-xl) + subtransient_block_q_axis->get_output()*(xqp-xpp))*one_over_xqp_minus_xl;
+    flux_q = -flux_q;
+    Flux_dq = complex<double>(flux_d, flux_q);
+    Edq = Flux_dq*complex<double>(0, 1); // Edq = j*Fdq
 
     double damping = get_D();
 
@@ -915,26 +927,7 @@ double GENROU::get_rotor_speed_in_pu()
 
 complex<double> GENROU::get_internal_voltage_in_pu_in_dq_axis()
 {
-    FIRST_ORDER_BLOCK* transient_block_d_axis = get_d_axis_transient_block();
-    FIRST_ORDER_BLOCK* subtransient_block_d_axis = get_d_axis_subtransient_block();
-    FIRST_ORDER_BLOCK* transient_block_q_axis = get_q_axis_transient_block();
-    FIRST_ORDER_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
-
-    double flux_d = transient_block_d_axis->get_output()*(get_Xpp()-get_Xl())+subtransient_block_d_axis->get_output()*(get_Xdp()-get_Xpp());
-    flux_d /= (get_Xdp()-get_Xl());
-
-    double flux_q = transient_block_q_axis->get_output()*(get_Xpp()-get_Xl())+subtransient_block_q_axis->get_output()*(get_Xqp()-get_Xpp());
-    flux_q /= (get_Xqp()-get_Xl());
-
-    return complex<double>(flux_q, flux_d);
-
-    /*
-    flux_q = -flux_q;
-    complex<double> Flux_dq(flux_d, flux_q);
-    complex<double> Edq = Flux_dq/complex<double>(0.0, -1.0);  // omega is ignored when converting from flux to voltage
-    //cout<<"Flux_dq = "<<Flux_dq<<", Edq = "<<Edq<<", Eq0'="<<transient_block_q_axis->get_output()<<", Eq0''="<<subtransient_block_q_axis->get_output()<<endl;
-
-    return Edq;*/
+    return Edq;
 }
 
 
