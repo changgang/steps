@@ -706,30 +706,22 @@ vector<AC_LINE*> AC_LINE::get_line_pointers_corresponding_to_mutual_admittances(
 
 complex<double> AC_LINE::get_line_complex_voltage_at_sending_side_in_pu() const
 {
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    return psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_sending_side_bus());
+    return sending_side_busptr->get_positive_sequence_complex_voltage_in_pu();
 }
 
 complex<double> AC_LINE::get_line_complex_voltage_at_receiving_side_in_pu() const
 {
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    return psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_receiving_side_bus());
+    return receiving_side_busptr->get_positive_sequence_complex_voltage_in_pu();
 }
 
 complex<double> AC_LINE::get_line_complex_voltage_at_sending_side_in_kV() const
 {
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    return psdb.get_bus_positive_sequence_complex_voltage_in_kV(get_sending_side_bus());
+    return sending_side_busptr->get_positive_sequence_complex_voltage_in_kV();
 }
 
 complex<double> AC_LINE::get_line_complex_voltage_at_receiving_side_in_kV() const
 {
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    return psdb.get_bus_positive_sequence_complex_voltage_in_kV(get_receiving_side_bus());
+    return receiving_side_busptr->get_positive_sequence_complex_voltage_in_kV();
 }
 
 complex<double> AC_LINE::get_line_positive_sequence_complex_voltage_at_sending_side_in_pu() const
