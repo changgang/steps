@@ -1992,7 +1992,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
     ostringstream osstream;
     NETWORK_MATRIX& net = get_network_matrix();
 
-    get_bus_currnet_into_network();
+    get_bus_current_into_network();
 
     unsigned int n = I_mismatch.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2011,7 +2011,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         {
             if(std::isnan(I_mismatch[i].real()) or std::isnan(I_mismatch[i].imag()))
             {
-                osstream<<"warning. NAN is detected when getting bus current mismatch after get_bus_currnet_into_network() when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+                osstream<<"warning. NAN is detected when getting bus current mismatch after get_bus_current_into_network() when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
                 for(unsigned int j = 0; j<n; ++j)
                 {
                     if(std::isnan(I_mismatch[j].real()) or std::isnan(I_mismatch[j].imag()))
@@ -2276,79 +2276,14 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
     */
 }
 
-void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
+void DYNAMICS_SIMULATOR::get_bus_current_into_network()
 {
-    ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
-    const STEPS_COMPLEX_SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_Y_matrix();
-    unsigned int nbus = psdb.get_in_service_bus_count();
+    STEPS_COMPLEX_SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_Y_matrix();
 
-	if(I_mismatch.size()!=nbus)
-		I_mismatch.resize(nbus, 0.0);
-
-    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_bus_thread_number());
-        #pragma omp parallel for schedule(static)
-        //#pragma omp parallel for num_threads(2)
-    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-	for (unsigned int i = 0; i<nbus; ++i)
-		I_mismatch[i] = 0.0;
-
-    int nsize = Y.get_matrix_size();
-
-    // tho following codes can not be parallelized due to code I_mismatch[row] += Y.get_entry_value(k)*voltage;
-    int k_start = Y.get_starting_index_of_column(0);
-    for(int column=0; column<nsize; ++column)
-    {
-		//complex<double> voltage = psdb.get_bus_positive_sequence_complex_voltage_in_pu(column_physical_bus);
-		complex<double> voltage = get_bus_complex_voltage_in_pu_with_internal_bus_number(column);
-
-        int k_end = Y.get_starting_index_of_column(column+1);
-
-        // parallelization of the following codes is time-consuming since the k_end-k_start is usually very small
-        for(int k=k_start; k<k_end; ++k)
-        {
-            int row = Y.get_row_number_of_entry_index(k);
-            I_mismatch[row] += Y.get_entry_value(k)*voltage;
-            /*
-            if(not detailed_log_enabled)
-                continue;
-            else
-            {
-                complex<double> current = Y.get_entry_value(k)*voltage;
-                if(std::isnan(current.real()) or std::isnan(current.imag()))
-                {
-                    unsigned int column_physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(column);
-                    osstream<<"NAN is detected in "<<__FUNCTION__<<"() with Y["
-                            <<row<<"("<<network_matrix.get_physical_bus_number_of_internal_bus(row)<<", "
-                            <<column<<"("<<column_physical_bus<<"] = "<<Y.get_entry_value(k)<<", voltage["
-                            <<column<<"("<<column_physical_bus<<"] = "<<voltage;
-                    toolkit->show_information_with_leading_time_stamp(osstream);
-                }
-            }
-            */
-        }
-        k_start = k_end;
-    }
-/*
-    ostringstream osstream;
-    osstream<<"Current and power flowing into network (physical bus).");
-    toolkit->show_information_with_leading_time_stamp(osstream);
-    osstream<<"bus     Ireal(pu)    Iimag(pu)    P(pu)   Q(pu)");
-    toolkit->show_information_with_leading_time_stamp(osstream);
-
-    complex<double> s;
-    for(unsigned int i=0; i!=nbus; ++i)Warning. Network solution converged in
-    {
-        column_physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
-        voltage = psdb.get_bus_positive_sequence_complex_voltage_in_pu(column_physical_bus);
-        s = voltage*conj(bus_current[i]);
-
-        osstream<<"%-8u %-10f %-10f %-10f %-10f",column_physical_bus, bus_current[i].real(), bus_current[i].imag(), s.real(), s.imag());
-        toolkit->show_information_with_leading_time_stamp(osstream);
-    }
-*/
+    vector<complex<double> > V;
+    V = internal_bus_complex_voltage_in_pu;
+    I_mismatch = Y.multiply_vector_b(V);
 }
 
 void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()

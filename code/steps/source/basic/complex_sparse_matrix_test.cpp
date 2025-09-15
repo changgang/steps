@@ -31,6 +31,7 @@ COMPLEX_SPARSE_MATRIX_TEST::COMPLEX_SPARSE_MATRIX_TEST()
     TEST_ADD(COMPLEX_SPARSE_MATRIX_TEST::test_get_reorder_permutation);
     TEST_ADD(COMPLEX_SPARSE_MATRIX_TEST::test_slove_Ax_equal_b);
     TEST_ADD(COMPLEX_SPARSE_MATRIX_TEST::test_solve_Ax_equal_b_with_operator_slash);
+    TEST_ADD(COMPLEX_SPARSE_MATRIX_TEST::test_multiply_vector_b);
 
     TEST_ADD(COMPLEX_SPARSE_MATRIX_TEST::test_copy_with_operator_equal);
     TEST_ADD(COMPLEX_SPARSE_MATRIX_TEST::test_copy_with_copy_constructor);
@@ -62,6 +63,8 @@ void COMPLEX_SPARSE_MATRIX_TEST::prepare_basic_matrix()
     //     [1  0  1]      [0  0  1]
     // solution to A*x = b where b=[2 -3+j57 1+j8]' is
     // [2  4+j1  3+j2]'
+    // solution to A*b where b=[2 -3+j57 1+j8]' is
+    // [2  -359+j140  -13+j10]'
 
     matrix.add_entry(0,0,1.0);
     matrix.add_entry(1,1,complex<double>(2.0, 5.0));
@@ -381,6 +384,25 @@ void COMPLEX_SPARSE_MATRIX_TEST::test_solve_Ax_equal_b_with_operator_slash()
     TEST_ASSERT(abs(x[0] - complex<double>(2.0, 0.0))<FLOAT_EPSILON);
     TEST_ASSERT(abs(x[1] - complex<double>(4.0, 1.0))<FLOAT_EPSILON);
     TEST_ASSERT(abs(x[2] - complex<double>(3.0, 2.0))<FLOAT_EPSILON);
+}
+
+void COMPLEX_SPARSE_MATRIX_TEST::test_multiply_vector_b()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"COMPLEX_SPARSE_MATRIX_TEST");
+
+    prepare_basic_matrix();
+
+    vector<complex<double> > b;
+    b.reserve(3);
+    b.push_back(complex<double>(2.0, 0.0));
+    b.push_back(complex<double>(-3.0, 57.0));
+    b.push_back(complex<double>(1.0, 8.0));
+
+    vector<complex<double> > x = matrix.multiply_vector_b(b);
+
+    TEST_ASSERT(abs(x[0] - complex<double>(2.0, 0.0))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(x[1] - complex<double>(-359.0, 140.0))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(x[2] - complex<double>(-13.0, 10.0))<FLOAT_EPSILON);
 }
 
 void COMPLEX_SPARSE_MATRIX_TEST::test_copy_with_operator_equal()

@@ -251,7 +251,7 @@ class DYNAMICS_SIMULATOR
         void solve_mt_hvdc_systems();
 
         void get_bus_current_mismatch();
-        void get_bus_currnet_into_network();
+        void get_bus_current_into_network();
         void add_generators_to_bus_current_mismatch();
         void add_wt_generators_to_bus_current_mismatch();
         void add_pv_units_to_bus_current_mismatch();

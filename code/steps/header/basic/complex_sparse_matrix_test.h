@@ -50,6 +50,7 @@ class COMPLEX_SPARSE_MATRIX_TEST : public Test::Suite
         void test_LU_factorization();
         void test_slove_Ax_equal_b();
         void test_solve_Ax_equal_b_with_operator_slash();
+        void test_multiply_vector_b();
 
         void test_copy_with_operator_equal();
         void test_copy_with_copy_constructor();

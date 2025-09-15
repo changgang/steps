@@ -47,6 +47,12 @@
 				</Linker>
 			</Target>
 		</Build>
+		<Compiler>
+			<Add option="-pg" />
+		</Compiler>
+		<Linker>
+			<Add option="-pg" />
+		</Linker>
 		<Unit filename="header/STEPS.h" />
 		<Unit filename="header/apis/steps_api.h" />
 		<Unit filename="header/apis/steps_api_common.h" />

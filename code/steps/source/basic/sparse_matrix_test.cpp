@@ -31,6 +31,7 @@ SPARSE_MATRIX_TEST::SPARSE_MATRIX_TEST()
     TEST_ADD(SPARSE_MATRIX_TEST::test_get_reorder_permutation);
     TEST_ADD(SPARSE_MATRIX_TEST::test_slove_Ax_equal_b);
     TEST_ADD(SPARSE_MATRIX_TEST::test_solve_Ax_equal_b_with_operator_slash);
+    TEST_ADD(SPARSE_MATRIX_TEST::test_multiply_vector_b);
 
     TEST_ADD(SPARSE_MATRIX_TEST::test_copy_with_operator_equal);
     TEST_ADD(SPARSE_MATRIX_TEST::test_copy_with_copy_constructor);
@@ -75,6 +76,8 @@ void SPARSE_MATRIX_TEST::prepare_basic_matrix()
     //     [1  0  1]      [0  0  1]
     // solution to real*x = b where b=[2 20 5]' is
     // [2  4  3]'
+    // solution to real*b where b=[2 20 5]' is
+    // [2  60  7]'
 
     matrix.clear();
     matrix.add_entry(0,0,1.0);
@@ -375,6 +378,25 @@ void SPARSE_MATRIX_TEST::test_slove_Ax_equal_b()
     TEST_ASSERT(fabs(x[0] - 2.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(x[1] - 4.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(x[2] - 3.0)<FLOAT_EPSILON);
+}
+
+void SPARSE_MATRIX_TEST::test_multiply_vector_b()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"SPARSE_MATRIX_TEST");
+
+    prepare_basic_matrix();
+
+    vector<double> b;
+    b.reserve(3);
+    b.push_back(2.0);
+    b.push_back(20.0);
+    b.push_back(5.0);
+
+    vector<double> x = matrix.multiply_vector_b(b);
+
+    TEST_ASSERT(fabs(x[0] - 2.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(x[1] - 60.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(x[2] - 7.0)<FLOAT_EPSILON);
 }
 
 void SPARSE_MATRIX_TEST::test_solve_Ax_equal_b_with_operator_slash()

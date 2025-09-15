@@ -610,6 +610,37 @@ void SPARSE_MATRIX_CSPARSE::solve_xU_eq_b(vector<double>& b)
     }
 }
 
+vector<double> SPARSE_MATRIX_CSPARSE::multiply_vector_b(const vector<double> & b)
+{
+    int n = b.size();
+
+    cs *bb;
+    bb = cs_spalloc(1,1,1,1,1);
+    int row, col;
+    for(int k=0; k!=n; ++k)
+    {
+        row = k;
+        col = 0;
+        cs_entry(bb, row, col, b[k]);
+    }
+
+    cs * B;
+    B = cs_compress(bb);
+
+    cs_spfree(bb); //free bb
+
+    cs * C = cs_multiply(matrix_real, B);
+
+    cs_spfree(B); // free B
+
+    vector<double> result;
+    result.assign(n, 0);
+    for(int k=0; k!=n; ++k) result[C->i[k]]=C->x[k];
+
+    cs_spfree(C); // free C
+
+    return result;
+}
 
 void SPARSE_MATRIX_CSPARSE::report_brief() const
 {

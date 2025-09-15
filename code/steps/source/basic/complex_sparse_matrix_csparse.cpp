@@ -575,6 +575,37 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::solve_xU_eq_b(vector<complex<double> >& b)
     }
 }
 
+vector<complex<double> > COMPLEX_SPARSE_MATRIX_CSPARSE::multiply_vector_b(const vector<complex<double> >& b)
+{
+    int n = b.size();
+
+    cxs *bb;
+    bb = cxs_spalloc(1,1,1,1,1);
+    int row, col;
+    for(int k=0; k!=n; ++k)
+    {
+        row = k;
+        col = 0;
+        cxs_entry(bb, row, col, b[k]);
+    }
+
+    cxs * B;
+    B = cxs_compress(bb);
+
+    cxs_spfree(bb); //free bb
+
+    cxs * C = cxs_multiply(matrix_complex, B);
+
+    cxs_spfree(B); // free B
+
+    vector<complex<double> > result;
+    result.assign(n, 0.0);
+    for(int k=0; k!=n; ++k) result[C->i[k]]=C->x[k];
+
+    cxs_spfree(C); // free C
+
+    return result;
+}
 
 void COMPLEX_SPARSE_MATRIX_CSPARSE::report_brief() const
 {
