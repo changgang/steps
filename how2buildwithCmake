@@ -1,6 +1,6 @@
 1. Install CMake
 Go to https://cmake.org/ and download CMake. Install Cmake with instructions.
-STEPS use CMake 4.1.0 or newer version. Older version may work, however, it is not tested.
+STEPS use CMake 3.28 or newer version. Older version may work, however, it is not tested.
 
 2. Install gcc and g++
 2.1 Windows
