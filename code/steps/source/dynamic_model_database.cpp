@@ -205,6 +205,7 @@ unsigned int DYNAMIC_MODEL_DATABASE::get_model_size(MODEL* model) const
     if(model_name=="WT3G0") return sizeof(WT3G0);
     if(model_name=="WT3G1") return sizeof(WT3G1);
     if(model_name=="WT3G2") return sizeof(WT3G2);
+    if(model_name=="SGFLWTGA") return sizeof(SGFLWTGA);
     if(model_name=="WT3GX") return sizeof(WT3GX);
     if(model_name=="WT3GXG") return sizeof(WT3GXG);
     if(model_name=="WT3GXG1") return sizeof(WT3GXG1);
@@ -235,6 +236,7 @@ unsigned int DYNAMIC_MODEL_DATABASE::get_model_size(MODEL* model) const
     if(model_name=="PVCVXG1") return sizeof(PVCVXG1);
     if(model_name=="PVCV2") return sizeof(PVCV2);
     if(model_name=="PVGU1") return sizeof(PVGU1);
+    if(model_name=="SGFLPVU") return sizeof(SGFLPVU);
     if(model_name=="PVEX") return sizeof(PVEX);
     if(model_name=="FILEIRRAD") return sizeof(FILEIRRAD);
     if(model_name=="PVPNLX") return sizeof(PVPNLX);
@@ -247,6 +249,7 @@ unsigned int DYNAMIC_MODEL_DATABASE::get_model_size(MODEL* model) const
     if(model_name=="ESCVX") return sizeof(ESCVX);
     if(model_name=="ESCVXG1") return sizeof(ESCVXG1);
     if(model_name=="ESCV2") return sizeof(ESCV2);
+    if(model_name=="SGFLES") return sizeof(SGFLES);
     if(model_name=="ESEX") return sizeof(ESEX);
     if(model_name=="ESP11") return sizeof(ESP11);
     if(model_name=="ESB0") return sizeof(ESB0);

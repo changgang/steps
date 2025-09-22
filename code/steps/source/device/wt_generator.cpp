@@ -115,7 +115,13 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
                 WT_AERODYNAMIC_MODEL* aero = get_wt_aerodynamic_model();
                 WIND_SPEED_MODEL* wind = get_wind_speed_model();
                 if(gen!=NULL and gen->is_model_active())
+                {
                     gen->initialize();
+                    if(gen->get_model_name() == "SGFLWTGA")
+                    {
+                        break;
+                    }
+                }
                 else
                 {
                     osstream<<"Error. No WT_GENERATOR_MODEL is provided for "<<get_compound_device_name()<<" for dynamic initialization.";

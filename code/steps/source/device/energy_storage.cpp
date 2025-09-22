@@ -262,7 +262,13 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
                 initialize_manual_power_in_pu();
 
                 if(conv!=NULL and conv->is_model_active())
+                {
                     conv->initialize();
+                    if(conv->get_model_name() == "SGFLES")
+                    {
+                        break;
+                    }
+                }
                 else
                 {
                     osstream<<"Error. No ES CONVERTER model is provided for "<<get_compound_device_name()<<" for dynamic initialization.";

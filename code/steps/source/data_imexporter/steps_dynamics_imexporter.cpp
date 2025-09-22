@@ -168,6 +168,7 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="WT3G1") { add_WT3G1_model(data); return;}
     if(model_name=="WT3G0") { add_WT3G0_model(data); return;}
     if(model_name=="WT3G2") { add_WT3G2_model(data); return;}
+    if(model_name=="SGFLWTGA") { add_SGFLWTGA_model(data); return;}
     if(model_name=="WT3GX") { add_WT3GX_model(data); return;}
     if(model_name=="WT3GX2") { add_WT3GX2_model(data); return;}
     if(model_name=="WT3GXG") { add_WT3GXG_model(data); return;}
@@ -190,6 +191,7 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="PVCV2") { add_PVCV2_model(data); return;}
     if(model_name=="PVGU1") { add_PVGU1_model(data); return;}
     if(model_name=="PVCVXG1") { add_PVCVXG1_model(data); return;}
+    if(model_name=="SGFLPVU") { add_SGFLPVU_model(data); return;}
     if(model_name=="PVEX") { add_PVEX_model(data); return;}
     if(model_name=="FILEIRRAD") { add_FILEIRRAD_model(data); return;}
     if(model_name=="PVPNLX") { add_PVPNLX_model(data); return;}
@@ -202,6 +204,7 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="ESCVX") { add_ESCVX_model(data); return;}
     if(model_name=="ESCVXG1") { add_ESCVXG1_model(data); return;}
     if(model_name=="ESCV2") { add_ESCV2_model(data); return;}
+    if(model_name=="SGFLES") { add_SGFLES_model(data); return;}
     if(model_name=="ESEX") { add_ESEX_model(data); return;}
     if(model_name=="ESVRT3") { add_ESVRT3_model(data); return;}
     if(model_name=="ESROT0") { add_ESROT0_model(data); return;}
@@ -2052,6 +2055,36 @@ void STEPS_IMEXPORTER::add_WT3G2_model(vector<string>& data)
     }
 }
 
+void STEPS_IMEXPORTER::add_SGFLWTGA_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "SGFLWTGA")
+        return;
+
+    if(data.size()<3)
+        return;
+
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
+    DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
+
+    WT_GENERATOR* gen = psdb.get_wt_generator(did);
+    if(gen != NULL)
+    {
+        SGFLWTGA model(toolkit);
+        model.set_device_id(did);
+        bool successful = model.setup_model_with_steps_string_vector(data);
+        if(successful)
+            dmdb.add_model(&model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid SGFLWTGA model is built, but will not be set for "<<gen->get_compound_device_name();
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
 void STEPS_IMEXPORTER::add_WT3GX_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "WT3GX")
@@ -2687,6 +2720,38 @@ void STEPS_IMEXPORTER::add_PVGU1_model(vector<string>& data)
     }
 }
 
+void STEPS_IMEXPORTER::add_SGFLPVU_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "SGFLPVU")
+        return;
+
+
+    if(data.size()<3)
+        return;
+
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
+    DEVICE_ID did = get_pv_unit_device_id_from_string_vector(data);
+
+    PV_UNIT* pvu = psdb.get_pv_unit(did);
+    if(pvu != NULL)
+    {
+        SGFLPVU model(toolkit);
+        model.set_device_id(did);
+        bool successful = model.setup_model_with_steps_string_vector(data);
+
+        if(successful)
+            dmdb.add_model(&model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid SGFLPVU model is built, but will not be set for "<<pvu->get_compound_device_name();
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
 void STEPS_IMEXPORTER::add_PVEX_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "PVEX")
@@ -3012,6 +3077,36 @@ void STEPS_IMEXPORTER::add_ESCV2_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid ESCV2 model is built, but will not be set for "<<es->get_compound_device_name();
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::add_SGFLES_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "SGFLES")
+        return;
+
+    if(data.size()<3)
+        return;
+
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
+    DEVICE_ID did = get_energy_storage_device_id_from_string_vector(data);
+
+    ENERGY_STORAGE* es = psdb.get_energy_storage(did);
+    if(es != NULL)
+    {
+        SGFLES model(toolkit);
+        model.set_device_id(did);
+        bool successful = model.setup_model_with_steps_string_vector(data);
+        if(successful)
+            dmdb.add_model(&model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid SGFLES model is built, but will not be set for "<<es->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }

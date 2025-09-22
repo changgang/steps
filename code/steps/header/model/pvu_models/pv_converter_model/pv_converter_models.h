@@ -5,5 +5,6 @@
 #include "header/model/pvu_models/pv_converter_model/pvcv2.h"
 #include "header/model/pvu_models/pv_converter_model/pvgu1.h"
 #include "header/model/pvu_models/pv_converter_model/pvcvxg1.h"
+#include "header/model/pvu_models/pv_converter_model/sgflpvu.h"
 
 #endif // PV_CONVERTER_MODELS_H

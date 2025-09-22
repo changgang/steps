@@ -108,7 +108,13 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
             case DYNAMIC_INITIALIZE_MODE:
             {
                 if(conv!=NULL and conv->is_model_active())
+                {
                     conv->initialize();
+                    if(conv->get_model_name() == "SGFLPVU")
+                    {
+                        break;
+                    }
+                }
                 else
                 {
                     osstream<<"Error. No PV CONVERTER model is provided for "<<get_compound_device_name()<<" for dynamic initialization.";
