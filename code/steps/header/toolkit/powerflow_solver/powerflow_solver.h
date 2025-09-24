@@ -82,6 +82,8 @@ class POWERFLOW_SOLVER
         void initialize_SLACK_bus_type();
         void initialize_bus_voltage_to_regulate();
         void initialize_bus_voltage();
+        void initialize_sources_at_all_buses();
+        vector<SOURCE*> get_sources_at_physical_bus(unsigned int bus);
 
         void optimize_bus_numbers();
         void set_internal_bus_pointer();
@@ -181,6 +183,8 @@ class POWERFLOW_SOLVER
         vector<EQUIVALENT_DEVICE*> e_devices;
 
         vector<BUS*> internal_bus_pointers;
+
+        vector<vector<SOURCE*> > sources_at_bus;
 };
 
 #endif // POWERFLOW_SOLVER_H

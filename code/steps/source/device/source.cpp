@@ -359,6 +359,7 @@ void SOURCE::clear()
 
 bool SOURCE::is_connected_to_bus(unsigned int bus) const
 {
+    return source_bus == bus;
     if(get_source_bus()==bus) return true;
     else                      return false;
 }

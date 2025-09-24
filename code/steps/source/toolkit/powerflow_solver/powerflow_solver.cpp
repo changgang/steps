@@ -575,8 +575,11 @@ void POWERFLOW_SOLVER::initialize_powerflow_solver()
 
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     psdb.update_in_service_bus_count();
+    psdb.initialize_regulatable_q_max_and_min();
 
     prepare_devices_for_solution();
+
+    initialize_sources_at_all_buses();
 
     initialize_bus_type();
     initialize_bus_voltage_to_regulate();
@@ -753,7 +756,7 @@ void POWERFLOW_SOLVER::initialize_PV_bus_type()
         BUS_TYPE btype = buses[i]->get_bus_type();
         if(btype==PV_TYPE)
         {
-            vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(bus);
+            vector<SOURCE*> sources = get_sources_at_physical_bus(bus);
             unsigned int nsource = sources.size();
             unsigned int n_inservice = 0;
             for(unsigned int j=0; j!=nsource; ++j)
@@ -835,7 +838,7 @@ void POWERFLOW_SOLVER::initialize_SLACK_bus_type()
         BUS_TYPE btype = buses[i]->get_bus_type();
         if(btype==SLACK_TYPE)
         {
-            vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(bus);
+            vector<SOURCE*> sources = get_sources_at_physical_bus(bus);
             unsigned int nsource = sources.size();
 
             unsigned int n_inservice_source = 0;
@@ -1045,6 +1048,33 @@ void POWERFLOW_SOLVER::initialize_bus_voltage()
                  buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg());
         toolkit->show_information_with_leading_time_stamp(buffer);
     }
+}
+
+void POWERFLOW_SOLVER::initialize_sources_at_all_buses()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<unsigned int> buses = psdb.get_all_buses_number();
+    unsigned int n = buses.size();
+    vector<SOURCE*> temp;
+    sources_at_bus.assign(n, temp);
+    unsigned int m = sources.size();
+
+    for(unsigned int i=0; i<m; ++i)
+    {
+        SOURCE* source = sources[i];
+        unsigned int bus = source->get_source_bus();
+        unsigned int index = psdb.get_bus_index(bus);
+        sources_at_bus[index].push_back(source);
+        //vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(buses[i]);
+        //sources_at_bus.push_back(sources);
+    }
+}
+
+vector<SOURCE*> POWERFLOW_SOLVER::get_sources_at_physical_bus(unsigned int bus)
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    unsigned int index = psdb.get_bus_index(bus);
+    return sources_at_bus[index];
 }
 
 void POWERFLOW_SOLVER::optimize_bus_numbers()
@@ -1887,8 +1917,9 @@ void POWERFLOW_SOLVER::check_SLACK_bus_constraint_of_physical_bus(unsigned int p
 
         double total_p_max_in_MW = psdb.get_regulatable_p_max_at_physical_bus_in_MW(physical_bus);
         double total_p_min_in_MW = psdb.get_regulatable_p_min_at_physical_bus_in_MW(physical_bus);
-        double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
-        double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
+        double total_q_max_in_MVar = 0;
+        double total_q_min_in_MVar = 0;
+        psdb.get_regulatable_q_max_min_at_physical_bus_in_MVar(physical_bus, total_q_max_in_MVar, total_q_min_in_MVar);
 
         double P_loading_percentage = (bus_P_mismatch_in_MW-total_p_min_in_MW);
                P_loading_percentage /= (total_p_max_in_MW - total_p_min_in_MW);
@@ -1896,7 +1927,7 @@ void POWERFLOW_SOLVER::check_SLACK_bus_constraint_of_physical_bus(unsigned int p
                Q_loading_percentage /= (total_q_max_in_MVar - total_q_min_in_MVar);
 
         unsigned int n;
-        vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
+        vector<SOURCE*> sources = get_sources_at_physical_bus(physical_bus);
         n = sources.size();
         for(unsigned int i=0; i!=n; ++i)
         {
@@ -1957,8 +1988,9 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
         double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*psdb.get_system_base_power_in_MVA();
         //cout<<"PV bus "<<physical_bus<<" power allocation:  mismatch: "<<bus_Q_mismatch_in_MVar<<endl;
 
-        double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
-        double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
+        double total_q_max_in_MVar = 0;
+        double total_q_min_in_MVar = 0;
+        psdb.get_regulatable_q_max_min_at_physical_bus_in_MVar(physical_bus, total_q_max_in_MVar, total_q_min_in_MVar);
 
         if(fabs(total_q_max_in_MVar-total_q_min_in_MVar)<DOUBLE_EPSILON)
         {
@@ -2017,7 +2049,7 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(unsigned int phys
         double Q_loading_percentage = (bus_Q_mismatch_in_MVar-total_q_min_in_MVar);
         Q_loading_percentage /= (total_q_max_in_MVar - total_q_min_in_MVar);
 
-        vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
+        vector<SOURCE*> sources = get_sources_at_physical_bus(physical_bus);
         unsigned int n;
         n = sources.size();
         for(unsigned int i=0; i!=n; ++i)
@@ -2071,8 +2103,9 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
 
     ostringstream osstream;
 
-    double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
-    double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
+    double total_q_max_in_MVar = 0;
+    double total_q_min_in_MVar = 0;
+    psdb.get_regulatable_q_max_min_at_physical_bus_in_MVar(physical_bus, total_q_max_in_MVar, total_q_min_in_MVar);
 
     if(fabs(total_q_max_in_MVar-total_q_min_in_MVar)>DOUBLE_EPSILON)
         ;
@@ -2303,7 +2336,7 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
 void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_min(unsigned int physical_bus)
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
+    vector<SOURCE*> sources = get_sources_at_physical_bus(physical_bus);
 
     unsigned int n = sources.size();
     for(unsigned int i=0; i!=n; ++i)
@@ -2315,7 +2348,7 @@ void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_min(unsigned int phy
 void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_max(unsigned int physical_bus)
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
+    vector<SOURCE*> sources = get_sources_at_physical_bus(physical_bus);
 
     unsigned int n = sources.size();
     for(unsigned int i=0; i!=n; ++i)
@@ -2409,7 +2442,7 @@ void POWERFLOW_SOLVER::allocate_PV_bus_power_mismatch_without_checking_bus_type_
         double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*psdb.get_system_base_power_in_MVA();
 
         unsigned int n;
-        vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
+        vector<SOURCE*> sources = get_sources_at_physical_bus(physical_bus);
         n = sources.size();
         unsigned int n_regulating_source =  0;
         for(unsigned int i=0; i!=n; ++i)
@@ -2438,8 +2471,9 @@ void POWERFLOW_SOLVER::allocate_PV_bus_power_mismatch_without_checking_bus_type_
 
         unsigned int n_regulating_source_and_vsc = n_regulating_source+n_regulating_vsc;
 
-        double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
-        double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
+        double total_q_max_in_MVar = 0;
+        double total_q_min_in_MVar = 0;
+        psdb.get_regulatable_q_max_min_at_physical_bus_in_MVar(physical_bus, total_q_max_in_MVar, total_q_min_in_MVar);
 
         double Q_loading_percentage = (bus_Q_mismatch_in_MVar-total_q_min_in_MVar);
         if(total_q_max_in_MVar != total_q_min_in_MVar)

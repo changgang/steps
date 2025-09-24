@@ -553,9 +553,11 @@ class POWER_SYSTEM_DATABASE
         double get_bus_frequency_in_Hz(unsigned int bus);
         double get_bus_frequency_in_pu(unsigned int bus);
 
+        void initialize_regulatable_q_max_and_min();
         double get_voltage_to_regulate_of_physical_bus_in_pu(unsigned int bus);
         double get_regulatable_p_max_at_physical_bus_in_MW(unsigned int bus);
         double get_regulatable_p_min_at_physical_bus_in_MW(unsigned int bus);
+        void get_regulatable_q_max_min_at_physical_bus_in_MVar(unsigned int bus, double& qmax, double& qmin);
         double get_regulatable_q_max_at_physical_bus_in_MVar(unsigned int bus);
         double get_regulatable_q_min_at_physical_bus_in_MVar(unsigned int bus);
         double get_total_regulating_p_generation_at_physical_bus_in_MW(unsigned int bus);
@@ -621,5 +623,6 @@ class POWER_SYSTEM_DATABASE
                             ac_line_index, transformer_index, hvdc_index, vsc_hvdc_index, equivalent_device_index, energy_storage_index,
                             lcc_hvdc_index, mt_hvdc_index;
         map<unsigned int,  unsigned int> area_index, zone_index, owner_index;
+        vector<double> regulatable_qmax_at_bus_MVar, regulatable_qmin_at_bus_MVar;
 };
 #endif // POWER_SYSTEM_DATABASE_H
