@@ -117,7 +117,7 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
                 if(gen!=NULL and gen->is_model_active())
                 {
                     gen->initialize();
-                    if(gen->get_model_name() == "SGFLWTGA")
+                    if(gen->get_model_name() == "SGFLWTG")
                     {
                         break;
                     }

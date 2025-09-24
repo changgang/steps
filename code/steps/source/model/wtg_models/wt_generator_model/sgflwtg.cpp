@@ -1,4 +1,4 @@
-#include "header/model/wtg_models/wt_generator_model/sgflwtga.h"
+#include "header/model/wtg_models/wt_generator_model/sgflwtg.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 #include <cstdio>
@@ -6,7 +6,7 @@
 #include <iostream>
 using namespace std;
 
-SGFLWTGA::SGFLWTGA(STEPS& toolkit) : WT_GENERATOR_MODEL(toolkit),
+SGFLWTG::SGFLWTG(STEPS& toolkit) : WT_GENERATOR_MODEL(toolkit),
                                csconv3(toolkit),
                                frequency_controller(toolkit),
                                active_power_regulator_filter(toolkit),
@@ -16,11 +16,11 @@ SGFLWTGA::SGFLWTGA(STEPS& toolkit) : WT_GENERATOR_MODEL(toolkit),
     clear();
 }
 
-SGFLWTGA::~SGFLWTGA()
+SGFLWTG::~SGFLWTG()
 {
 }
 
-void SGFLWTGA::clear()
+void SGFLWTG::clear()
 {
     set_model_float_parameter_count(17);
     set_current_source_flag(true);
@@ -32,7 +32,7 @@ void SGFLWTGA::clear()
     unbypass_model();
 }
 
-void SGFLWTGA::copy_from_const_model(const SGFLWTGA& model)
+void SGFLWTG::copy_from_const_model(const SGFLWTG& model)
 {
     STEPS& toolkit = model.get_toolkit();
     set_toolkit(toolkit);
@@ -49,7 +49,7 @@ void SGFLWTGA::copy_from_const_model(const SGFLWTGA& model)
     set_PLLmax(model.get_PLLmax());
 }
 
-SGFLWTGA::SGFLWTGA(const SGFLWTGA& model):WT_GENERATOR_MODEL(model.get_toolkit()),
+SGFLWTG::SGFLWTG(const SGFLWTG& model):WT_GENERATOR_MODEL(model.get_toolkit()),
                                                            csconv3(model.get_toolkit()),
                                                            frequency_controller(model.get_toolkit()),
                                                            active_power_regulator_filter(model.get_toolkit()),
@@ -59,7 +59,7 @@ SGFLWTGA::SGFLWTGA(const SGFLWTGA& model):WT_GENERATOR_MODEL(model.get_toolkit()
     copy_from_const_model(model);
 }
 
-SGFLWTGA& SGFLWTGA::operator=(const SGFLWTGA& model)
+SGFLWTG& SGFLWTG::operator=(const SGFLWTG& model)
 {
     if(this==&model)
         return *this;
@@ -69,187 +69,187 @@ SGFLWTGA& SGFLWTGA::operator=(const SGFLWTGA& model)
     return (*this);
 }
 
-void SGFLWTGA::set_KPLL(double K)
+void SGFLWTG::set_KPLL(double K)
 {
     csconv3.set_KPLL(K);
 }
 
-void SGFLWTGA::set_KIPLL(double K)
+void SGFLWTG::set_KIPLL(double K)
 {
     csconv3.set_KIPLL(K);
 }
 
-void SGFLWTGA::set_PLLmax(double pmax)
+void SGFLWTG::set_PLLmax(double pmax)
 {
     csconv3.set_PLLmax(pmax);
 }
 
-void SGFLWTGA::set_Imax_in_pu_based_on_mbase(double Imax)
+void SGFLWTG::set_Imax_in_pu_based_on_mbase(double Imax)
 {
     this->Imax = Imax;
 }
 
-void SGFLWTGA::set_Kvi(double K)
+void SGFLWTG::set_Kvi(double K)
 {
     frequency_controller.set_Kvi(K);
 }
 
-void SGFLWTGA::set_Tvi_in_s(double T)
+void SGFLWTG::set_Tvi_in_s(double T)
 {
     frequency_controller.set_Tvi_in_s(T);
 }
 
-void SGFLWTGA::set_Kdroop(double K)
+void SGFLWTG::set_Kdroop(double K)
 {
     frequency_controller.set_Kdroop(K);
 }
 
-void SGFLWTGA::set_Tdroop_in_s(double T)
+void SGFLWTG::set_Tdroop_in_s(double T)
 {
     frequency_controller.set_Tdroop_in_s(T);
 }
 
-void SGFLWTGA::set_Tpcmd(double T)
+void SGFLWTG::set_Tpcmd(double T)
 {
     active_power_regulator_filter.set_T_in_s(T);
 }
 
-void SGFLWTGA::set_Tv(double Tv)
+void SGFLWTG::set_Tv(double Tv)
 {
     voltage_regulator_integrator.set_T_in_s(Tv);
 }
 
-void SGFLWTGA::set_Tqcmd(double Tqcmd)
+void SGFLWTG::set_Tqcmd(double Tqcmd)
 {
     reactive_current_regulator_filter.set_T_in_s(Tqcmd);
 }
 
-void SGFLWTGA::set_lvrt_voltage_threshold(double v)
+void SGFLWTG::set_lvrt_voltage_threshold(double v)
 {
     this->lvrt_voltage_threshold = v;
 }
 
-void SGFLWTGA::set_k_Ip_lvrt_during(double k)
+void SGFLWTG::set_k_Ip_lvrt_during(double k)
 {
     this->k_Ip_lvrt_during = k;
 }
 
-void SGFLWTGA::set_Ipset_lvrt_during(double I)
+void SGFLWTG::set_Ipset_lvrt_during(double I)
 {
     this->Ipset_lvrt_during = I;
 }
 
-void SGFLWTGA::set_slope_Ip_lvrt_recover(double slope)
+void SGFLWTG::set_slope_Ip_lvrt_recover(double slope)
 {
     this->slope_Ip_lvrt_recover = slope;
 }
 
-void SGFLWTGA::set_k_Iq_lvrt_during(double k)
+void SGFLWTG::set_k_Iq_lvrt_during(double k)
 {
     this->k_Iq_lvrt_during = k;
 }
 
-void SGFLWTGA::set_Iqset_lvrt_during(double I)
+void SGFLWTG::set_Iqset_lvrt_during(double I)
 {
     this->Iqset_lvrt_during = I;
 }
 
-void SGFLWTGA::set_slope_Iq_lvrt_recover(double slope)
+void SGFLWTG::set_slope_Iq_lvrt_recover(double slope)
 {
     this->slope_Iq_lvrt_recover = slope;
 }
 
-double SGFLWTGA::get_KPLL() const
+double SGFLWTG::get_KPLL() const
 {
     return csconv3.get_KPLL();
 }
 
-double SGFLWTGA::get_KIPLL() const
+double SGFLWTG::get_KIPLL() const
 {
     return csconv3.get_KIPLL();
 }
 
-double SGFLWTGA::get_PLLmax() const
+double SGFLWTG::get_PLLmax() const
 {
     return csconv3.get_PLLmax();
 }
 
-double SGFLWTGA::get_Imax_in_pu_based_on_mbase() const
+double SGFLWTG::get_Imax_in_pu_based_on_mbase() const
 {
     return Imax;
 }
 
-double SGFLWTGA::get_Kvi() const
+double SGFLWTG::get_Kvi() const
 {
     return frequency_controller.get_Kvi();
 }
 
-double SGFLWTGA::get_Tvi_in_s() const
+double SGFLWTG::get_Tvi_in_s() const
 {
     return frequency_controller.get_Tvi_in_s();
 }
 
-double SGFLWTGA::get_Kdroop() const
+double SGFLWTG::get_Kdroop() const
 {
     return frequency_controller.get_Kdroop();
 }
 
-double SGFLWTGA::get_Tdroop_in_s() const
+double SGFLWTG::get_Tdroop_in_s() const
 {
     return frequency_controller.get_Tdroop_in_s();
 }
 
-double SGFLWTGA::get_Tpcmd() const
+double SGFLWTG::get_Tpcmd() const
 {
     return active_power_regulator_filter.get_T_in_s();
 }
 
-double SGFLWTGA::get_Tv() const
+double SGFLWTG::get_Tv() const
 {
     return voltage_regulator_integrator.get_T_in_s();
 }
 
-double SGFLWTGA::get_Tqcmd() const
+double SGFLWTG::get_Tqcmd() const
 {
     return reactive_current_regulator_filter.get_T_in_s();
 }
 
-double SGFLWTGA::get_lvrt_voltage_threshold() const
+double SGFLWTG::get_lvrt_voltage_threshold() const
 {
     return lvrt_voltage_threshold;
 }
 
-double SGFLWTGA::get_k_Ip_lvrt_during() const
+double SGFLWTG::get_k_Ip_lvrt_during() const
 {
     return k_Ip_lvrt_during;
 }
 
-double SGFLWTGA::get_Ipset_lvrt_during() const
+double SGFLWTG::get_Ipset_lvrt_during() const
 {
     return Ipset_lvrt_during;
 }
 
-double SGFLWTGA::get_slope_Ip_lvrt_recover() const
+double SGFLWTG::get_slope_Ip_lvrt_recover() const
 {
     return slope_Ip_lvrt_recover;
 }
 
-double SGFLWTGA::get_k_Iq_lvrt_during() const
+double SGFLWTG::get_k_Iq_lvrt_during() const
 {
     return k_Iq_lvrt_during;
 }
 
-double SGFLWTGA::get_Iqset_lvrt_during() const
+double SGFLWTG::get_Iqset_lvrt_during() const
 {
     return Iqset_lvrt_during;
 }
 
-double SGFLWTGA::get_slope_Iq_lvrt_recover() const
+double SGFLWTG::get_slope_Iq_lvrt_recover() const
 {
     return slope_Iq_lvrt_recover;
 }
 
-double SGFLWTGA::get_Ipcmd_in_pu_based_on_mbase()
+double SGFLWTG::get_Ipcmd_in_pu_based_on_mbase()
 {
     double Ipcmd;
 
@@ -281,7 +281,7 @@ double SGFLWTGA::get_Ipcmd_in_pu_based_on_mbase()
     return Ipcmd;
 }
 
-double SGFLWTGA::get_Iqcmd_in_pu_based_on_mbase()
+double SGFLWTG::get_Iqcmd_in_pu_based_on_mbase()
 {
 
 
@@ -314,38 +314,38 @@ double SGFLWTGA::get_Iqcmd_in_pu_based_on_mbase()
     return Iqcmd;
 }
 
-double SGFLWTGA::get_bus_voltage_in_pu() const
+double SGFLWTG::get_bus_voltage_in_pu() const
 {
     BUS* bus = get_bus_pointer();
     return bus->get_positive_sequence_voltage_in_pu();
 }
 
-void SGFLWTGA::set_voltage_reference_in_pu(double Vref)
+void SGFLWTG::set_voltage_reference_in_pu(double Vref)
 {
     this->Vref = Vref;
 }
 
-double SGFLWTGA::get_voltage_reference_in_pu() const
+double SGFLWTG::get_voltage_reference_in_pu() const
 {
     return Vref;
 }
 
-void SGFLWTGA::unbypass_model()
+void SGFLWTG::unbypass_model()
 {
     elec_control_bypassed = false;
 }
 
-void SGFLWTGA::bypass_model()
+void SGFLWTG::bypass_model()
 {
     elec_control_bypassed = true;
 }
 
-bool SGFLWTGA::is_elec_control_bypassed() const
+bool SGFLWTG::is_elec_control_bypassed() const
 {
     return elec_control_bypassed;
 }
 
-void SGFLWTGA::check_lvrt_status()
+void SGFLWTG::check_lvrt_status()
 {
     VRT_STATUS current_status = get_lvrt_status();
     switch(current_status)
@@ -431,27 +431,27 @@ void SGFLWTGA::check_lvrt_status()
     }
 }
 
-void SGFLWTGA::set_lvrt_status(VRT_STATUS status)
+void SGFLWTG::set_lvrt_status(VRT_STATUS status)
 {
     this->lvrt_status = status;
 }
 
-VRT_STATUS SGFLWTGA::get_lvrt_status() const
+VRT_STATUS SGFLWTG::get_lvrt_status() const
 {
     return lvrt_status;
 }
 
-bool SGFLWTGA::is_active_power_recovered() const
+bool SGFLWTG::is_active_power_recovered() const
 {
     return P_recovered;
 }
 
-bool SGFLWTGA::is_reactive_power_recovered() const
+bool SGFLWTG::is_reactive_power_recovered() const
 {
     return Q_recovered;
 }
 
-double SGFLWTGA::get_lvrt_IP_command()
+double SGFLWTG::get_lvrt_IP_command()
 {
     STEPS& toolkit = get_toolkit();
     VRT_STATUS current_status = get_lvrt_status();
@@ -499,7 +499,7 @@ double SGFLWTGA::get_lvrt_IP_command()
     }
 }
 
-double SGFLWTGA::get_lvrt_IQ_command()
+double SGFLWTG::get_lvrt_IQ_command()
 {
     STEPS& toolkit = get_toolkit();
     VRT_STATUS current_status = get_lvrt_status();
@@ -546,74 +546,74 @@ double SGFLWTGA::get_lvrt_IQ_command()
     }
 }
 
-void SGFLWTGA::update_IPQ0_in_lvrt_during_status(double Ip0, double Iq0)
+void SGFLWTG::update_IPQ0_in_lvrt_during_status(double Ip0, double Iq0)
 {
     set_Ip0_lvrt_activated_in_pu(Ip0);
     set_Iq0_lvrt_activated_in_pu(Iq0);
 }
 
-void SGFLWTGA::update_IPQ0_in_lvrt_recover_status(double Ip0, double Iq0)
+void SGFLWTG::update_IPQ0_in_lvrt_recover_status(double Ip0, double Iq0)
 {
     set_Ip0_lvrt_recover_activated_in_pu(Ip0);
     set_Iq0_lvrt_recover_activated_in_pu(Iq0);
 }
 
-void SGFLWTGA::set_time_when_lvrt_enter_recover_status(double t)
+void SGFLWTG::set_time_when_lvrt_enter_recover_status(double t)
 {
     this->t0_lvrt_recover_activated = t;
 }
 
-void SGFLWTGA::set_Ip0_lvrt_activated_in_pu(double I)
+void SGFLWTG::set_Ip0_lvrt_activated_in_pu(double I)
 {
     this->Ip0_lvrt_activated = I;
 }
 
-void SGFLWTGA::set_Iq0_lvrt_activated_in_pu(double I)
+void SGFLWTG::set_Iq0_lvrt_activated_in_pu(double I)
 {
     this->Iq0_lvrt_activated = I;
 }
 
-void SGFLWTGA::set_Ip0_lvrt_recover_activated_in_pu(double I)
+void SGFLWTG::set_Ip0_lvrt_recover_activated_in_pu(double I)
 {
     this->Ip0_lvrt_recover_activated = I;
 }
 
-void SGFLWTGA::set_Iq0_lvrt_recover_activated_in_pu(double I)
+void SGFLWTG::set_Iq0_lvrt_recover_activated_in_pu(double I)
 {
     this->Iq0_lvrt_recover_activated = I;
 }
 
-double SGFLWTGA::get_time_when_lvrt_enter_recover_status() const
+double SGFLWTG::get_time_when_lvrt_enter_recover_status() const
 {
     return t0_lvrt_recover_activated;
 }
 
-double SGFLWTGA::get_Ip0_lvrt_activated_in_pu() const
+double SGFLWTG::get_Ip0_lvrt_activated_in_pu() const
 {
     return Ip0_lvrt_activated;
 }
 
-double SGFLWTGA::get_Iq0_lvrt_activated_in_pu() const
+double SGFLWTG::get_Iq0_lvrt_activated_in_pu() const
 {
     return Iq0_lvrt_activated;
 }
 
-double SGFLWTGA::get_Ip0_lvrt_recover_activated_in_pu() const
+double SGFLWTG::get_Ip0_lvrt_recover_activated_in_pu() const
 {
     return Ip0_lvrt_recover_activated;
 }
 
-double SGFLWTGA::get_Iq0_lvrt_recover_activated_in_pu() const
+double SGFLWTG::get_Iq0_lvrt_recover_activated_in_pu() const
 {
     return Iq0_lvrt_recover_activated;
 }
 
-string SGFLWTGA::get_model_name() const
+string SGFLWTG::get_model_name() const
 {
-    return "SGFLWTGA";
+    return "SGFLWTG";
 }
 
-bool SGFLWTGA::setup_model_with_steps_string_vector(vector<string>& data)
+bool SGFLWTG::setup_model_with_steps_string_vector(vector<string>& data)
 {
     ostringstream osstream;
 
@@ -700,13 +700,13 @@ bool SGFLWTGA::setup_model_with_steps_string_vector(vector<string>& data)
         return is_successful;
 }
 
-bool SGFLWTGA::setup_model_with_psse_string(string data)
+bool SGFLWTG::setup_model_with_psse_string(string data)
 {
     vector<string> record = psse_dyr_string2steps_string_vector(data);
     return setup_model_with_steps_string_vector(record);
 }
 
-bool SGFLWTGA::setup_model_with_bpa_string(string data)
+bool SGFLWTG::setup_model_with_bpa_string(string data)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
@@ -716,7 +716,7 @@ bool SGFLWTGA::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void SGFLWTGA::setup_block_toolkit_and_parameters()
+void SGFLWTG::setup_block_toolkit_and_parameters()
 {
     csconv3.set_bus_pointer(get_bus_pointer());
     csconv3.set_device_pointer(get_device_pointer());
@@ -724,7 +724,7 @@ void SGFLWTGA::setup_block_toolkit_and_parameters()
     frequency_controller.set_device_pointer(get_device_pointer());
 }
 
-void SGFLWTGA::initialize()
+void SGFLWTG::initialize()
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -791,7 +791,7 @@ void SGFLWTGA::initialize()
     }
 }
 
-void SGFLWTGA::run(DYNAMIC_MODE mode)
+void SGFLWTG::run(DYNAMIC_MODE mode)
 {
     check_lvrt_status();
 
@@ -819,57 +819,57 @@ void SGFLWTGA::run(DYNAMIC_MODE mode)
         set_flag_model_updated_as_true();
 }
 
-complex<double> SGFLWTGA::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase()
+complex<double> SGFLWTG::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase()
 {
     return csconv3.get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
 }
 
-double SGFLWTGA::get_active_power_generation_including_stator_loss_in_pu_based_on_mbase()
+double SGFLWTG::get_active_power_generation_including_stator_loss_in_pu_based_on_mbase()
 {
     return csconv3.get_active_power_generation_including_stator_loss_in_pu_based_on_mbase();
 }
 
-complex<double> SGFLWTGA::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_mbase()
+complex<double> SGFLWTG::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_mbase()
 {
     return csconv3.get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_mbase();
 }
 
-complex<double> SGFLWTGA::get_internal_voltage_in_pu_in_xy_axis()
+complex<double> SGFLWTG::get_internal_voltage_in_pu_in_xy_axis()
 {
     return csconv3.get_internal_voltage_in_pu_in_xy_axis();
 }
 
-double SGFLWTGA::get_initial_active_current_command_in_pu_based_on_mbase() const
+double SGFLWTG::get_initial_active_current_command_in_pu_based_on_mbase() const
 {
     return csconv3.get_initial_active_current_command_in_pu_based_on_mbase();
 }
 
-double SGFLWTGA::get_initial_reactive_current_command_in_pu_based_on_mbase() const
+double SGFLWTG::get_initial_reactive_current_command_in_pu_based_on_mbase() const
 {
     return csconv3.get_initial_reactive_current_command_in_pu_based_on_mbase();
 }
 
-double SGFLWTGA::get_initial_reactive_voltage_command_in_pu() const
+double SGFLWTG::get_initial_reactive_voltage_command_in_pu() const
 {
     return csconv3.get_initial_reactive_voltage_command_in_pu();
 }
 
-double SGFLWTGA::get_initial_active_power_command_in_pu_based_on_mbase() const
+double SGFLWTG::get_initial_active_power_command_in_pu_based_on_mbase() const
 {
     return csconv3.get_initial_active_power_command_in_pu_based_on_mbase();
 }
 
-double SGFLWTGA::get_initial_reactive_power_command_in_pu_based_on_mbase() const
+double SGFLWTG::get_initial_reactive_power_command_in_pu_based_on_mbase() const
 {
     return csconv3.get_initial_reactive_power_command_in_pu_based_on_mbase();
 }
 
-void SGFLWTGA::check()
+void SGFLWTG::check()
 {
     ;
 }
 
-void SGFLWTGA::report()
+void SGFLWTG::report()
 {
     ostringstream osstream;
     osstream<<get_standard_psse_string(false);
@@ -877,12 +877,12 @@ void SGFLWTGA::report()
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-void SGFLWTGA::save()
+void SGFLWTG::save()
 {
     ;
 }
 
-string SGFLWTGA::get_standard_psse_string(bool export_internal_bus_number) const
+string SGFLWTG::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
     DEVICE_ID did = get_device_id();
@@ -920,7 +920,7 @@ string SGFLWTGA::get_standard_psse_string(bool export_internal_bus_number) const
     return osstream.str();
 }
 
-void SGFLWTGA::prepare_model_data_table()
+void SGFLWTG::prepare_model_data_table()
 {
     clear_model_data_table();
     unsigned int i=0;
@@ -944,7 +944,7 @@ void SGFLWTGA::prepare_model_data_table()
     add_model_data_name_and_index_pair("IQSLOPE_LVRT", i); i++;
 }
 
-double SGFLWTGA::get_model_data_with_name(string par_name) const
+double SGFLWTG::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
     if(par_name=="KPLL")
@@ -986,7 +986,7 @@ double SGFLWTGA::get_model_data_with_name(string par_name) const
     return 0.0;
 }
 
-void SGFLWTGA::set_model_data_with_name(string par_name, double value)
+void SGFLWTG::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
     if(par_name=="KPLL")
@@ -1028,12 +1028,12 @@ void SGFLWTGA::set_model_data_with_name(string par_name, double value)
     return;
 }
 
-double SGFLWTGA::get_minimum_nonzero_time_constant_in_s()
+double SGFLWTG::get_minimum_nonzero_time_constant_in_s()
 {
     return INFINITE_THRESHOLD;
 }
 
-void SGFLWTGA::prepare_model_internal_variable_table()
+void SGFLWTG::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     unsigned int i=0;
@@ -1056,7 +1056,7 @@ void SGFLWTGA::prepare_model_internal_variable_table()
     add_model_internal_variable_name_and_index_pair("STATE@VOLTAGE REGULATOR INTEGRATOR", i); i++;
 }
 
-double SGFLWTGA::get_model_internal_variable_with_name(string var_name)
+double SGFLWTG::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "PLL ANGLE IN DEG")
@@ -1096,47 +1096,47 @@ double SGFLWTGA::get_model_internal_variable_with_name(string var_name)
     return 0.0;
 }
 
-double SGFLWTGA::get_pll_angle_in_rad()
+double SGFLWTG::get_pll_angle_in_rad()
 {
     return csconv3.get_pll_angle_in_rad();
 }
 
-double SGFLWTGA::get_pll_angle_in_deg()
+double SGFLWTG::get_pll_angle_in_deg()
 {
     return csconv3.get_pll_angle_in_deg();
 }
 
-double SGFLWTGA::get_pll_frequency_deviation_in_pu()
+double SGFLWTG::get_pll_frequency_deviation_in_pu()
 {
     return csconv3.get_pll_frequency_deviation_in_pu();
 }
 
-double SGFLWTGA::get_pll_frequency_deviation_in_Hz()
+double SGFLWTG::get_pll_frequency_deviation_in_Hz()
 {
     return csconv3.get_pll_frequency_deviation_in_Hz();
 }
 
-double SGFLWTGA::get_pll_frequency_in_pu()
+double SGFLWTG::get_pll_frequency_in_pu()
 {
     return csconv3.get_pll_frequency_deviation_in_pu();
 }
 
-double SGFLWTGA::get_pll_frequency_in_Hz()
+double SGFLWTG::get_pll_frequency_in_Hz()
 {
     return csconv3.get_pll_frequency_in_Hz();
 }
 
-string SGFLWTGA::get_dynamic_data_in_psse_format() const
+string SGFLWTG::get_dynamic_data_in_psse_format() const
 {
     return "";
 }
 
-string SGFLWTGA::get_dynamic_data_in_bpa_format() const
+string SGFLWTG::get_dynamic_data_in_bpa_format() const
 {
     return get_dynamic_data_in_psse_format();
 }
 
-string SGFLWTGA::get_dynamic_data_in_steps_format() const
+string SGFLWTG::get_dynamic_data_in_steps_format() const
 {
     return get_dynamic_data_in_psse_format();
 }

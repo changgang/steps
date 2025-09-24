@@ -168,7 +168,7 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="WT3G1") { add_WT3G1_model(data); return;}
     if(model_name=="WT3G0") { add_WT3G0_model(data); return;}
     if(model_name=="WT3G2") { add_WT3G2_model(data); return;}
-    if(model_name=="SGFLWTGA") { add_SGFLWTGA_model(data); return;}
+    if(model_name=="SGFLWTG") { add_SGFLWTG_model(data); return;}
     if(model_name=="WT3GX") { add_WT3GX_model(data); return;}
     if(model_name=="WT3GX2") { add_WT3GX2_model(data); return;}
     if(model_name=="WT3GXG") { add_WT3GXG_model(data); return;}
@@ -2055,9 +2055,9 @@ void STEPS_IMEXPORTER::add_WT3G2_model(vector<string>& data)
     }
 }
 
-void STEPS_IMEXPORTER::add_SGFLWTGA_model(vector<string>& data)
+void STEPS_IMEXPORTER::add_SGFLWTG_model(vector<string>& data)
 {
-    if(get_dynamic_model_name(data) != "SGFLWTGA")
+    if(get_dynamic_model_name(data) != "SGFLWTG")
         return;
 
     if(data.size()<3)
@@ -2071,7 +2071,7 @@ void STEPS_IMEXPORTER::add_SGFLWTGA_model(vector<string>& data)
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
-        SGFLWTGA model(toolkit);
+        SGFLWTG model(toolkit);
         model.set_device_id(did);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
@@ -2079,7 +2079,7 @@ void STEPS_IMEXPORTER::add_SGFLWTGA_model(vector<string>& data)
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Invalid SGFLWTGA model is built, but will not be set for "<<gen->get_compound_device_name();
+            osstream<<"Warning. Invalid SGFLWTG model is built, but will not be set for "<<gen->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }

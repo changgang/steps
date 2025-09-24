@@ -1,5 +1,5 @@
-#ifndef SGFLWTGA_H
-#define SGFLWTGA_H
+#ifndef SGFLWTG_H
+#define SGFLWTG_H
 
 #include "header/model/wtg_models/wt_generator_model/wt_generator_model.h"
 #include "header/model/common_model/converter_common_model/converter_model/cs_converter_model/csconv3.h"
@@ -8,13 +8,13 @@
 #include "header/block/pi_block.h"
 #include "header/block/integral_block.h"
 
-class SGFLWTGA : public WT_GENERATOR_MODEL
+class SGFLWTG : public WT_GENERATOR_MODEL
 {
     public:
-        SGFLWTGA(STEPS& toolkit);
-        SGFLWTGA(const SGFLWTGA& model);
-        virtual ~SGFLWTGA();
-        virtual SGFLWTGA& operator=(const SGFLWTGA&);
+        SGFLWTG(STEPS& toolkit);
+        SGFLWTG(const SGFLWTG& model);
+        virtual ~SGFLWTG();
+        virtual SGFLWTG& operator=(const SGFLWTG&);
 
         void set_KPLL(double K);
         void set_KIPLL(double K);
@@ -133,7 +133,7 @@ class SGFLWTGA : public WT_GENERATOR_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
 
     private:
-        void copy_from_const_model(const SGFLWTGA& model);
+        void copy_from_const_model(const SGFLWTG& model);
 
         CSCONV3 csconv3;
         double Imax;
@@ -157,4 +157,4 @@ class SGFLWTGA : public WT_GENERATOR_MODEL
 
 };
 
-#endif // SGFLWTGA
+#endif // SGFLWTG
