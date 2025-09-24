@@ -255,6 +255,30 @@ void api_add_owner(unsigned int owner_number, char* owner_name, unsigned int too
     }
 }
 
+void api_replace_generator_with_wt_generator(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
+{
+    DEVICE_ID did = get_generator_device_id(bus_number, identifier);
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    psdb.replace_generator_with_wt_generator(did);
+}
+
+void api_replace_generator_with_pv_unit(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
+{
+    DEVICE_ID did = get_generator_device_id(bus_number, identifier);
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    psdb.replace_generator_with_pv_unit(did);
+}
+
+void api_replace_generator_with_energy_storage(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
+{
+    DEVICE_ID did = get_generator_device_id(bus_number, identifier);
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    psdb.replace_generator_with_energy_storage(did);
+}
+
 void api_change_bus_number(unsigned int original_bus_number, unsigned int new_bus_number, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

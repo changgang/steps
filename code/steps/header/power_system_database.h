@@ -120,6 +120,10 @@ class POWER_SYSTEM_DATABASE
         void append_owner(OWNER& owner);
         void append_mutual_data(MUTUAL_DATA& mutual_data);
 
+        void replace_generator_with_wt_generator(DEVICE_ID& gendid);
+        void replace_generator_with_pv_unit(DEVICE_ID& gendid);
+        void replace_generator_with_energy_storage(DEVICE_ID& gendid);
+
         void update_device_id(const DEVICE_ID& did_old, const DEVICE_ID& did_new);
 
         void update_all_bus_base_frequency(double fbase_Hz);

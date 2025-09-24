@@ -85,6 +85,10 @@ EXPORT_STEPS_DLL void api_add_area(unsigned int area_number, char* area_name, un
 EXPORT_STEPS_DLL void api_add_zone(unsigned int zone_number, char* zone_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_add_owner(unsigned int owner_number, char* owner_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
+EXPORT_STEPS_DLL void api_replace_generator_with_wt_generator(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_replace_generator_with_pv_unit(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_replace_generator_with_energy_storage(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
+
 
 EXPORT_STEPS_DLL void api_remove_bus(unsigned int bus_number, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_remove_generator(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);

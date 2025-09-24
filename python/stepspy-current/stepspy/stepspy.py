@@ -1101,6 +1101,48 @@ class STEPS():
         STEPS_LIB.api_add_owner(ownernumber, ownername, self.toolkit_index)
         return
 
+    def replace_generator_with_wt_generator(self, generator):
+        """
+        Replace GENERATOR with new WT_GENERATOR
+        Args:
+            (1) generator: Tuple generator device id in format of (bus, ickt).
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        bus, ickt = self.__extract_single_bus_device_id(generator)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        STEPS_LIB.api_replace_generator_with_wt_generator(bus, ickt, self.toolkit_index)
+        return
+
+    def replace_generator_with_pv_unit(self, generator):
+        """
+        Replace GENERATOR with new PV_UNIT
+        Args:
+            (1) generator: Tuple generator device id in format of (bus, ickt).
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        bus, ickt = self.__extract_single_bus_device_id(generator)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        STEPS_LIB.api_replace_generator_with_pv_unit(bus, ickt, self.toolkit_index)
+        return
+
+    def replace_generator_with_energy_storage(self, generator):
+        """
+        Replace GENERATOR with new ENERGY_STORAGE
+        Args:
+            (1) generator: Tuple generator device id in format of (bus, ickt).
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        bus, ickt = self.__extract_single_bus_device_id(generator)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        STEPS_LIB.api_replace_generator_with_energy_storage(bus, ickt, self.toolkit_index)
+        return
+
     def remove_bus(self, busnumber):
         """
         Remove bus of bus number.

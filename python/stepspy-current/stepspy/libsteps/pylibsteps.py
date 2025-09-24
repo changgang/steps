@@ -305,6 +305,13 @@ def load_library(libsteps_file):
     libsteps.api_add_owner.restype = None
     libsteps.api_add_owner.argtypes = (c_uint, c_char_p, c_uint)
 
+    libsteps.api_replace_generator_with_wt_generator.restype = None
+    libsteps.api_replace_generator_with_wt_generator.argtype = (c_uint, c_char_p, c_uint)
+    libsteps.api_replace_generator_with_pv_unit.restype = None
+    libsteps.api_replace_generator_with_pv_unit.argtype = (c_uint, c_char_p, c_uint)
+    libsteps.api_replace_generator_with_energy_storage.restype = None
+    libsteps.api_replace_generator_with_energy_storage.argtype = (c_uint, c_char_p, c_uint)
+
     libsteps.api_remove_bus.restype = None
     libsteps.api_remove_bus.argtypes = (c_uint, c_uint)
     libsteps.api_remove_generator.restype = None

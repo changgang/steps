@@ -1233,6 +1233,151 @@ void POWER_SYSTEM_DATABASE::append_mutual_data(MUTUAL_DATA& mutual_data)
     Mutual_data.push_back(mutual_data);
 }
 
+
+void POWER_SYSTEM_DATABASE::replace_generator_with_wt_generator(DEVICE_ID& gendid)
+{
+    if(gendid.get_device_type() == STEPS_GENERATOR)
+    {
+        if(is_generator_exist(gendid))
+        {
+            GENERATOR* gen = get_generator(gendid);
+
+            DEVICE_ID wtgendid;
+            wtgendid.set_device_type(STEPS_WT_GENERATOR);
+            TERMINAL terminal;
+            terminal.append_bus(gen->get_generator_bus());
+            wtgendid.set_device_terminal(terminal);
+            wtgendid.set_device_identifier_index(gen->get_identifier_index());
+
+            if(not is_wt_generator_exist(wtgendid))
+            {
+                WT_GENERATOR wtgen(*toolkit);
+                wtgen.set_generator_bus(gen->get_generator_bus());
+                wtgen.set_identifier(gen->get_identifier());
+                wtgen.set_status(gen->get_status());
+                wtgen.set_mbase_in_MVA(gen->get_mbase_in_MVA());
+                wtgen.set_p_generation_in_MW(gen->get_p_generation_in_MW());
+                wtgen.set_q_generation_in_MVar(gen->get_q_generation_in_MVar());
+                wtgen.set_p_max_in_MW(gen->get_p_max_in_MW());
+                wtgen.set_p_min_in_MW(gen->get_p_min_in_MW());
+                wtgen.set_q_max_in_MVar(gen->get_q_max_in_MVar());
+                wtgen.set_q_min_in_MVar(gen->get_q_min_in_MVar());
+                wtgen.set_q_max_nominal_in_MVar(gen->get_q_max_nominal_in_MVar());
+                wtgen.set_q_min_nominal_in_MVar(gen->get_q_min_nominal_in_MVar());
+                wtgen.set_source_impedance_in_pu(gen->get_source_impedance_in_pu());
+                wtgen.set_voltage_to_regulate_in_pu(gen->get_voltage_to_regulate_in_pu());
+                wtgen.set_bus_to_regulate(gen->get_bus_to_regulate());
+
+                append_wt_generator(wtgen);
+                clear_generator(gendid);
+            }
+            else
+            {
+                ostringstream osstream;
+                osstream<<"Warning. "<<gendid.get_compound_device_name()<<" cannot be replaced with WT GENERATOR since "
+                        <<wtgendid.get_compound_device_name()<<" already exists in POWER_SYSTEM_DATABSE.";
+                toolkit->show_information_with_leading_time_stamp(osstream);
+            }
+        }
+    }
+}
+
+void POWER_SYSTEM_DATABASE::replace_generator_with_pv_unit(DEVICE_ID& gendid)
+{
+    if(gendid.get_device_type() == STEPS_GENERATOR)
+    {
+        if(is_generator_exist(gendid))
+        {
+            GENERATOR* gen = get_generator(gendid);
+
+            DEVICE_ID pvudid;
+            pvudid.set_device_type(STEPS_PV_UNIT);
+            TERMINAL terminal;
+            terminal.append_bus(gen->get_generator_bus());
+            pvudid.set_device_terminal(terminal);
+            pvudid.set_device_identifier_index(gen->get_identifier_index());
+
+            if(not is_wt_generator_exist(pvudid))
+            {
+                PV_UNIT pvu(*toolkit);
+                pvu.set_unit_bus(gen->get_generator_bus());
+                pvu.set_identifier(gen->get_identifier());
+                pvu.set_status(gen->get_status());
+                pvu.set_mbase_in_MVA(gen->get_mbase_in_MVA());
+                pvu.set_p_generation_in_MW(gen->get_p_generation_in_MW());
+                pvu.set_q_generation_in_MVar(gen->get_q_generation_in_MVar());
+                pvu.set_p_max_in_MW(gen->get_p_max_in_MW());
+                pvu.set_p_min_in_MW(gen->get_p_min_in_MW());
+                pvu.set_q_max_in_MVar(gen->get_q_max_in_MVar());
+                pvu.set_q_min_in_MVar(gen->get_q_min_in_MVar());
+                pvu.set_q_max_nominal_in_MVar(gen->get_q_max_nominal_in_MVar());
+                pvu.set_q_min_nominal_in_MVar(gen->get_q_min_nominal_in_MVar());
+                pvu.set_source_impedance_in_pu(gen->get_source_impedance_in_pu());
+                pvu.set_voltage_to_regulate_in_pu(gen->get_voltage_to_regulate_in_pu());
+                pvu.set_bus_to_regulate(gen->get_bus_to_regulate());
+
+                append_pv_unit(pvu);
+                clear_generator(gendid);
+            }
+            else
+            {
+                ostringstream osstream;
+                osstream<<"Warning. "<<gendid.get_compound_device_name()<<" cannot be replaced with PV UNIT since "
+                        <<pvudid.get_compound_device_name()<<" already exists in POWER_SYSTEM_DATABSE.";
+                toolkit->show_information_with_leading_time_stamp(osstream);
+            }
+        }
+    }
+}
+
+void POWER_SYSTEM_DATABASE::replace_generator_with_energy_storage(DEVICE_ID& gendid)
+{
+    if(gendid.get_device_type() == STEPS_GENERATOR)
+    {
+        if(is_generator_exist(gendid))
+        {
+            GENERATOR* gen = get_generator(gendid);
+
+            DEVICE_ID esdid;
+            esdid.set_device_type(STEPS_ENERGY_STORAGE);
+            TERMINAL terminal;
+            terminal.append_bus(gen->get_generator_bus());
+            esdid.set_device_terminal(terminal);
+            esdid.set_device_identifier_index(gen->get_identifier_index());
+
+            if(not is_wt_generator_exist(esdid))
+            {
+                ENERGY_STORAGE es(*toolkit);
+                es.set_energy_storage_bus(gen->get_generator_bus());
+                es.set_identifier(gen->get_identifier());
+                es.set_status(gen->get_status());
+                es.set_mbase_in_MVA(gen->get_mbase_in_MVA());
+                es.set_p_generation_in_MW(gen->get_p_generation_in_MW());
+                es.set_q_generation_in_MVar(gen->get_q_generation_in_MVar());
+                es.set_p_max_in_MW(gen->get_p_max_in_MW());
+                es.set_p_min_in_MW(gen->get_p_min_in_MW());
+                es.set_q_max_in_MVar(gen->get_q_max_in_MVar());
+                es.set_q_min_in_MVar(gen->get_q_min_in_MVar());
+                es.set_q_max_nominal_in_MVar(gen->get_q_max_nominal_in_MVar());
+                es.set_q_min_nominal_in_MVar(gen->get_q_min_nominal_in_MVar());
+                es.set_source_impedance_in_pu(gen->get_source_impedance_in_pu());
+                es.set_voltage_to_regulate_in_pu(gen->get_voltage_to_regulate_in_pu());
+                es.set_bus_to_regulate(gen->get_bus_to_regulate());
+
+                append_energy_storage(es);
+                clear_generator(gendid);
+            }
+            else
+            {
+                ostringstream osstream;
+                osstream<<"Warning. "<<gendid.get_compound_device_name()<<" cannot be replaced with ENERGY STORAGE since "
+                        <<esdid.get_compound_device_name()<<" already exists in POWER_SYSTEM_DATABSE.";
+                toolkit->show_information_with_leading_time_stamp(osstream);
+            }
+        }
+    }
+}
+
 void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEVICE_ID& did_new)
 {
     ostringstream osstream;
