@@ -28,20 +28,36 @@ void GAST2A_TEST::setup()
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
     model.set_device_id(genptr->get_device_id());
 
-    model.set_K(20.0);
-    model.set_T1_in_s(0.1);
-    model.set_T2_in_s(0.5);
-    model.set_T3_in_s(0.2);
-    model.set_Uo_in_pu(0.1);
-    model.set_Uc_in_pu(-0.1);
-    model.set_Pmax_in_pu(1.0);
-    model.set_Pmin_in_pu(0.0);
-    model.set_T4_in_s(0.3);
-    model.set_K1(0.3);
-    model.set_T5_in_s(7.0);
-    model.set_K3(0.3);
-    model.set_T6_in_s(1.0);
-    model.set_K5(0.4);
+    model.set_gas_W(20.0);
+    model.set_gas_X_in_s(0.1);
+    model.set_gas_Y_in_s(0.5);
+    model.set_gas_Z(0.2);
+    model.set_gas_ETD_in_s(0.1);
+    model.set_gas_TCD_in_s(-0.1);
+    model.set_gas_Prate_in_MW(1.0);
+    model.set_gas_T_in_s(0.0);
+    model.set_gas_max_in_pu(0.3);
+    model.set_gas_min_in_pu(0.3);
+    model.set_gas_ECR_in_s(7.0);
+    model.set_gas_K3(0.3);
+    model.set_gas_a(1.0);
+    model.set_gas_b_in_s(0.4);
+    model.set_gas_c(0.4);
+    model.set_gas_Kf(0.4);
+    model.set_gas_K5(0.4);
+    model.set_gas_K4(0.4);
+    model.set_gas_T3_in_s(0.4);
+    model.set_gas_T4_in_s(0.4);
+    model.set_gas_Tt_in_s(0.4);
+    model.set_gas_T5_in_s(0.4);
+    model.set_gas_af1(0.4);
+    model.set_gas_bf1(0.4);
+    model.set_gas_af2(0.4);
+    model.set_gas_bf2(0.4);
+    model.set_gas_cf2(0.4);
+    model.set_gas_TR_in_deg(0.4);
+    model.set_gas_K6(0.4);
+    model.set_gas_TC_in_deg(0.4);
 
     dmdb.add_model(&model);
 }
@@ -78,26 +94,35 @@ void GAST2A_TEST::test_set_get_parameters()
 
     GAST2A* model = (GAST2A*) get_test_turbine_governor_model();
 
-    TEST_ASSERT(fabs(model->get_K()-20.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_T1_in_s()-0.1)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_T2_in_s()-0.5)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_T3_in_s()-0.2)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_Uo_in_pu()-0.1)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_Uc_in_pu()+0.1)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_Pmax_in_pu()-1.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_Pmin_in_pu()-0.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_T4_in_s()-0.3)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_K1()-0.3)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_T5_in_s()-7.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_K3()-0.3)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_T6_in_s()-1.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_K5()-0.4)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_T7_in_s()-0.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_K2()-0.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_K4()-0.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_K6()-0.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_K7()-0.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_K8()-0.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_W()-20.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_X_in_s()-0.1)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_Y_in_s()-0.5)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_Z()-0.2)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_ETD_in_s()-0.1)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_TCD_in_s()+0.1)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_Prate_in_MW()-1.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_T_in_s()-0.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_max_in_pu()-0.3)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_min_in_pu()-0.3)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_ECR_in_s()-7.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_K3()-0.3)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_a()-1.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_b_in_s()-0.4)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_c()-0.4)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_Kf()-0.4)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_K5()-0.4)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_K4()-0.4)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_T3_in_s()-0.4)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_T4_in_s()-0.4)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_T5_in_s()-0.4)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_af1()-0.4)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_bf1()-0.4)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_af2()-0.4)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_bf2()-0.4)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_cf2()-0.4)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_TR_in_deg()-0.4)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_K6()-0.4)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_gas_TC_in_deg()-0.4)<FLOAT_EPSILON);
 }
 
 void GAST2A_TEST::test_initialize()

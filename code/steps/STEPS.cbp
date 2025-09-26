@@ -890,10 +890,7 @@
 		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS4.cpp" />
 		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS4_test.cpp" />
 		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS5.cpp" />
-		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS5_test.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
+		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS5_test.cpp" />
 		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS6.cpp" />
 		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS6_test.cpp" />
 		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS8.cpp" />

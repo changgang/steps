@@ -38,6 +38,9 @@ class POWERFLOW_SOLVER_TEST : public Test::Suite
         void test_set_get_var_limit_check_logic();
         void test_set_get_export_jacobian_matrix_step_by_step_logic();
 
+        void test_get_regulatable_q_max_at_physical_bus_in_MVar();
+        void test_get_regulatable_q_min_at_physical_bus_in_MVar();
+
         void check_Arthur_R_Bergen_3_bus_model_powerflow_result();
         void check_IEEE_9_bus_model_powerflow_result();
         void check_ISO_New_England_39_bus_model_powerflow_result();

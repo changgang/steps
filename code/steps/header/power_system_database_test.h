@@ -345,8 +345,6 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_get_voltage_to_regulate_of_physical_bus_in_pu();
         void test_get_regulatable_p_max_at_physical_bus_in_MW();
         void test_get_regulatable_p_min_at_physical_bus_in_MW();
-        void test_get_regulatable_q_max_at_physical_bus_in_MVar();
-        void test_get_regulatable_q_min_at_physical_bus_in_MVar();
         void test_get_total_regulating_p_generation_at_physical_bus_in_MW();
         void test_get_total_regulating_q_generation_at_physical_bus_in_MVar();
         void test_get_total_p_generation_of_sources_at_physical_bus_in_MW();

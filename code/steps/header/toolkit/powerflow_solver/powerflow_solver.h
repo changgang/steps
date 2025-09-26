@@ -58,6 +58,10 @@ class POWERFLOW_SOLVER
         void solve_with_fast_decoupled_solution();
         void solve_with_modified_Gaussian_Seidel_solution();
 
+        void initialize_regulatable_q_max_and_min();
+        double get_regulatable_q_max_at_physical_bus_in_MVar(unsigned int bus);
+        double get_regulatable_q_min_at_physical_bus_in_MVar(unsigned int bus);
+
         bool get_convergence_flag() const;
         bool is_converged();
         bool is_nan_detected();
@@ -83,15 +87,12 @@ class POWERFLOW_SOLVER
         void initialize_bus_voltage_to_regulate();
         void initialize_bus_voltage();
         void initialize_sources_at_all_buses();
-        void initialize_regulatable_q_max_and_min();
         vector<SOURCE*> get_sources_at_physical_bus(unsigned int bus);
 
         void optimize_bus_numbers();
         void set_internal_bus_pointer();
 
         void get_regulatable_q_max_min_at_physical_bus_in_MVar(unsigned int bus, double& qmax, double& qmin);
-        double get_regulatable_q_max_at_physical_bus_in_MVar(unsigned int bus);
-        double get_regulatable_q_min_at_physical_bus_in_MVar(unsigned int bus);
 
         complex<double> get_bus_complex_voltage_in_pu_with_internal_bus_number(unsigned int internal_bus) const;
         double get_bus_positive_sequence_voltage_in_pu_with_internal_bus_number(unsigned int internal_bus) const;

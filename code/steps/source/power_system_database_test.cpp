@@ -315,8 +315,6 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_bus_angle);
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_voltage_to_regulate_of_physical_bus_in_pu);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_regulatable_q_max_at_physical_bus_in_MVar);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_regulatable_q_min_at_physical_bus_in_MVar);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_total_regulating_p_generation_at_physical_bus_in_MW);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_total_regulating_q_generation_at_physical_bus_in_MVar);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_total_p_generation_of_sources_at_physical_bus_in_MW);
@@ -9420,44 +9418,6 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_regulatable_p_min_at_physical_bus_in_M
     TEST_ASSERT(fabs(psdb.get_regulatable_p_min_at_physical_bus_in_MW(1)-(-433.0))<FLOAT_EPSILON);
     TEST_ASSERT(fabs(psdb.get_regulatable_p_min_at_physical_bus_in_MW(2)-0.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(psdb.get_regulatable_p_min_at_physical_bus_in_MW(3)-0.0)<FLOAT_EPSILON);
-}
-
-void POWER_SYSTEM_DATABASE_TEST::test_get_regulatable_q_max_at_physical_bus_in_MVar()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
-
-    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-
-    prepare_database_for_test();
-    // 1                       2                     3
-    // VA                      PV                    PQ
-    // 110/-110   120/-120     210/-210 220/-220     310/-310 320/-320
-    // 101/-101   102/-102     201/-201 202/-202     301/-301 302/-302
-    // 101/-101   102/-102     201/-201 202/-202     301/-301 302/-302
-    // 101/-101   102/-102     201/-201 202/-202     301/-301 302/-302
-
-    TEST_ASSERT(fabs(psdb.get_regulatable_q_max_at_physical_bus_in_MVar(1)-839.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(psdb.get_regulatable_q_max_at_physical_bus_in_MVar(2)-1639.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(psdb.get_regulatable_q_max_at_physical_bus_in_MVar(3)-0.0)<FLOAT_EPSILON);
-}
-
-void POWER_SYSTEM_DATABASE_TEST::test_get_regulatable_q_min_at_physical_bus_in_MVar()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
-
-    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-
-    prepare_database_for_test();
-    // 1                       2                     3
-    // VA                      PV                    PQ
-    // 110/-110   120/-120     210/-210 220/-220     310/-310 320/-320
-    // 101/-101   102/-102     201/-201 202/-202     301/-301 302/-302
-    // 101/-101   102/-102     201/-201 202/-202     301/-301 302/-302
-    // 101/-101   102/-102     201/-201 202/-202     301/-301 302/-302
-
-    TEST_ASSERT(fabs(psdb.get_regulatable_q_min_at_physical_bus_in_MVar(1)-(-839.0))<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(psdb.get_regulatable_q_min_at_physical_bus_in_MVar(2)-(-1639.0))<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(psdb.get_regulatable_q_min_at_physical_bus_in_MVar(3)-0.0)<FLOAT_EPSILON);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_total_regulating_p_generation_at_physical_bus_in_MW()

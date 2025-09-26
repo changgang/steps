@@ -86,6 +86,12 @@ file(GLOB_RECURSE STEPS_SOURCES "${STEPS_SOURCE_DIR}/source/*.cpp")
 # if you want to remove those unit test codes, uncomment the following 2 lines
 file(GLOB_RECURSE STEPS_TEST_SOURCES "${STEPS_SOURCE_DIR}/source/*test.cpp")
 list(REMOVE_ITEM STEPS_SOURCES ${STEPS_TEST_SOURCES})
+#file(GLOB_RECURSE STEPS_METER_TEST_SOURCES "${STEPS_SOURCE_DIR}/source/meter/*test.cpp")
+#list(REMOVE_ITEM STEPS_SOURCES ${STEPS_METER_TEST_SOURCES})
+#file(GLOB_RECURSE STEPS_LVRT_TEST_SOURCES "${STEPS_SOURCE_DIR}/source/model/common_model/vrt_model/*test.cpp")
+#list(REMOVE_ITEM STEPS_SOURCES ${STEPS_LVRT_TEST_SOURCES})
+#file(GLOB_RECURSE STEPS_GAST2A_TEST_SOURCES "${STEPS_SOURCE_DIR}/source/model/sg_models/turbine_governors/GAST2A_test.cpp")
+#list(REMOVE_ITEM STEPS_SOURCES ${STEPS_GAST2A_TEST_SOURCES})
 #
 # here are some special files need to to be removed
 file(GLOB_RECURSE VSC_CPP_SOURCES "${STEPS_SOURCE_DIR}/source/*/vsc.cpp")

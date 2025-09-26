@@ -23,6 +23,10 @@ POWERFLOW_SOLVER_TEST::POWERFLOW_SOLVER_TEST()
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_set_get_transformer_tap_adjustment_logic);
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_set_get_non_divergent_solution_logic);
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_set_get_var_limit_check_logic);
+    TEST_ADD(POWERFLOW_SOLVER_TEST::test_set_get_export_jacobian_matrix_step_by_step_logic);
+
+    TEST_ADD(POWERFLOW_SOLVER_TEST::test_get_regulatable_q_max_at_physical_bus_in_MVar);
+    TEST_ADD(POWERFLOW_SOLVER_TEST::test_get_regulatable_q_min_at_physical_bus_in_MVar);
 
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_solve_Arthur_R_Bergen_3_bus_model_with_full_Newton_Raphson_solution);
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_solve_Arthur_R_Bergen_3_bus_model_with_fast_decoupled_solution);
@@ -203,6 +207,32 @@ void POWERFLOW_SOLVER_TEST::test_set_get_export_jacobian_matrix_step_by_step_log
 
     powerflow_solver.set_export_jacobian_matrix_step_by_step_logic(false);
     TEST_ASSERT(powerflow_solver.get_export_jacobian_matrix_step_by_step_logic()==false);
+}
+
+void POWERFLOW_SOLVER_TEST::test_get_regulatable_q_max_at_physical_bus_in_MVar()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWERFLOW_SOLVER_TEST");
+
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
+
+    prepare_Arthur_R_Bergen_3_bus_model();
+
+    powerflow_solver.initialize_regulatable_q_max_and_min();
+
+    TEST_ASSERT(fabs(powerflow_solver.get_regulatable_q_max_at_physical_bus_in_MVar(1)-999.0*2)<FLOAT_EPSILON);
+}
+
+void POWERFLOW_SOLVER_TEST::test_get_regulatable_q_min_at_physical_bus_in_MVar()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWERFLOW_SOLVER_TEST");
+
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
+
+    prepare_Arthur_R_Bergen_3_bus_model();
+
+    powerflow_solver.initialize_regulatable_q_max_and_min();
+
+    TEST_ASSERT(fabs(powerflow_solver.get_regulatable_q_max_at_physical_bus_in_MVar(1)-(-999.0)*2)<FLOAT_EPSILON);
 }
 
 void POWERFLOW_SOLVER_TEST::test_solve_Arthur_R_Bergen_3_bus_model_with_full_Newton_Raphson_solution()
