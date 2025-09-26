@@ -464,8 +464,6 @@ void POWER_SYSTEM_DATABASE::append_bus(BUS& bus)
     Bus.push_back(bus);
 
     bus_index.set_bus_with_index(bus_number, bus_count);
-
-    update_in_service_bus_count();
 }
 
 void POWER_SYSTEM_DATABASE::append_generator(GENERATOR& generator)
