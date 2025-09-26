@@ -904,6 +904,7 @@ string SGFLPVU::get_standard_psse_string(bool export_internal_bus_number) const
             <<setw(8)<<setprecision(6)<<get_KPLL()<<", "
             <<setw(8)<<setprecision(6)<<get_KIPLL()<<", "
             <<setw(8)<<setprecision(6)<<get_PLLmax()<<", "
+            <<setw(8)<<setprecision(6)<<get_Imax_in_pu_based_on_mbase()<<", "
             <<setw(8)<<setprecision(6)<<get_Kvi()<<", "
             <<setw(8)<<setprecision(6)<<get_Tvi_in_s()<<", "
             <<setw(8)<<setprecision(6)<<get_Kdroop()<<", "
