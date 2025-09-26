@@ -83,10 +83,15 @@ class POWERFLOW_SOLVER
         void initialize_bus_voltage_to_regulate();
         void initialize_bus_voltage();
         void initialize_sources_at_all_buses();
+        void initialize_regulatable_q_max_and_min();
         vector<SOURCE*> get_sources_at_physical_bus(unsigned int bus);
 
         void optimize_bus_numbers();
         void set_internal_bus_pointer();
+
+        void get_regulatable_q_max_min_at_physical_bus_in_MVar(unsigned int bus, double& qmax, double& qmin);
+        double get_regulatable_q_max_at_physical_bus_in_MVar(unsigned int bus);
+        double get_regulatable_q_min_at_physical_bus_in_MVar(unsigned int bus);
 
         complex<double> get_bus_complex_voltage_in_pu_with_internal_bus_number(unsigned int internal_bus) const;
         double get_bus_positive_sequence_voltage_in_pu_with_internal_bus_number(unsigned int internal_bus) const;
@@ -185,6 +190,7 @@ class POWERFLOW_SOLVER
         vector<BUS*> internal_bus_pointers;
 
         vector<vector<SOURCE*> > sources_at_bus;
+        vector<double> regulatable_qmax_at_bus_MVar, regulatable_qmin_at_bus_MVar;
 };
 
 #endif // POWERFLOW_SOLVER_H
