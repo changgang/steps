@@ -392,12 +392,12 @@ double LOAD::get_load_scale_with_voltage(double exp, double v, LOAD_CURRENT_VOLT
 {
     if(exp==0.0) // constant power
     {
-        double vth = get_voltage_threshold_of_constant_power_load_in_pu();
+        double vth = voltage_threshold_of_constant_power_load_in_pu;
         if(v>=vth)
             return 1.0;
         else
         {
-            double Imax = get_one_over_voltage_threshold_of_constant_power_load_in_pu();
+            double Imax = one_over_voltage_threshold_of_constant_power_load_in_pu;
             return get_load_scale_with_Imax_and_voltage(Imax, v, vth, cv_type);
         }
     }
@@ -405,7 +405,7 @@ double LOAD::get_load_scale_with_voltage(double exp, double v, LOAD_CURRENT_VOLT
     {
         if(exp==1.0) // constant current
         {
-            double vth = get_voltage_threshold_of_constant_current_load_in_pu();
+            double vth = voltage_threshold_of_constant_current_load_in_pu;
             if(v>vth)
                 return v;
             else
@@ -424,7 +424,7 @@ double LOAD::get_load_scale_with_voltage(double exp, double v, LOAD_CURRENT_VOLT
                     return steps_pow(v, exp);
                 else // otherwise, treat as constant current
                 {
-                    double vth = get_voltage_threshold_of_constant_current_load_in_pu();
+                    double vth = voltage_threshold_of_constant_current_load_in_pu;
                     if(v>=vth)
                         return steps_pow(v, exp);
                     else
@@ -483,26 +483,23 @@ double LOAD::get_load_scale_with_voltage(double exp, double v, LOAD_CURRENT_VOLT
 
 double LOAD::get_load_scale_with_Imax_and_voltage(double Imax, double v, double vth, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type)
 {
-    switch(cv_type)
+    if(cv_type == LOAD_LINEAR_CV)
     {
-        case LOAD_LINEAR_CV:
-        {
-            double I = Imax*v/vth;
-            return v*I;
-        }
-        case LOAD_ELLIPTICAL_CV:
-        {
-            // (v-vth)^2/vth^2+I^2/Imax^2=1
-            //double vscale = v/vth-1.0;
-            double vscale = v/vth-1.0;
+        double I = Imax*v/vth;
+        return v*I;
+    }
+    else if(cv_type == LOAD_ELLIPTICAL_CV)
+    {
+        // (v-vth)^2/vth^2+I^2/Imax^2=1
+        //double vscale = v/vth-1.0;
+        double vscale = v/vth-1.0;
 
-            double I = steps_sqrt(1.0-vscale*vscale)*Imax;
-            return v*I;
-        }
-        default: // LOAD_CONSTANT_CV
-        {
-            return v*Imax;
-        }
+        double I = steps_sqrt(1.0-vscale*vscale)*Imax;
+        return v*I;
+    }
+    else
+    {
+        return v*Imax;
     }
 }
 
@@ -669,7 +666,7 @@ void LOAD::run(DYNAMIC_MODE mode)
 
 complex<double> LOAD::get_dynamic_load_in_MVA()
 {
-    if(get_status()==true)
+    if(status==true)
     {
         double scale = 1.0+get_load_total_scale_factor_in_pu();
 
@@ -694,9 +691,10 @@ complex<double> LOAD::get_dynamic_load_in_pu()
 double LOAD::get_load_total_scale_factor_in_pu() const
 {
     double scale = get_load_manually_scale_factor_in_pu()-get_load_relay_shed_scale_factor_in_pu();
-    if(scale<-1.0)
-        scale = -1.0;
-    return scale;
+    if(scale>-1.0)
+        return scale;
+    else
+        return -1.0;
 }
 
 double LOAD::get_load_manually_scale_factor_in_pu() const
@@ -706,10 +704,12 @@ double LOAD::get_load_manually_scale_factor_in_pu() const
 
 double LOAD::get_load_relay_shed_scale_factor_in_pu() const
 {
-    if(get_status()==true)
+    if(status == true)
     {
         LOAD_FREQUENCY_RELAY_MODEL* frelay = get_load_frequency_relay_model();
         LOAD_VOLTAGE_RELAY_MODEL* vrelay = get_load_voltage_relay_model();
+        if(frelay == NULL and vrelay == NULL)
+            return 0.0;
 
         double total_shed = 0.0;
 
@@ -728,7 +728,7 @@ double LOAD::get_load_relay_shed_scale_factor_in_pu() const
 
 complex<double> LOAD::get_dynamics_load_current_in_pu_based_on_system_base_power()
 {
-    if(get_status()==true)
+    if(status==true)
     {
         double scale = 1.0+get_load_total_scale_factor_in_pu();
 

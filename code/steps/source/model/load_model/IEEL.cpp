@@ -405,8 +405,6 @@ void IEEL::run(DYNAMIC_MODE mode)
 
 complex<double> IEEL::get_load_power_in_MVA()
 {
-    LOAD* load = get_load_pointer();
-
     double V = get_bus_positive_sequence_voltage_in_pu();
     double f = get_bus_frequency_deviation_in_pu();
 
@@ -414,44 +412,28 @@ complex<double> IEEL::get_load_power_in_MVA()
     double P0 = PQ0.real();
     double Q0 = PQ0.imag();
 
-    double alpha1 = get_P_alpha_1();
-    double alpha2 = get_P_alpha_2();
-    double alpha3 = get_P_alpha_3();
-    double n1_P = get_P_n_power_1();
-    double n2_P = get_P_n_power_2();
-    double n3_P = get_P_n_power_3();
-    double kf = get_P_Kf();
+    double voltage_scale1 = LOAD::get_load_scale_with_voltage(P_n_power_1, V, LOAD_LINEAR_CV);
+    double voltage_scale2 = LOAD::get_load_scale_with_voltage(P_n_power_2, V, LOAD_LINEAR_CV);
+    double voltage_scale3 = LOAD::get_load_scale_with_voltage(P_n_power_3, V, LOAD_LINEAR_CV);
 
-    double voltage_scale1 = load->get_load_scale_with_voltage(n1_P, V, LOAD_LINEAR_CV);
-    double voltage_scale2 = load->get_load_scale_with_voltage(n2_P, V, LOAD_LINEAR_CV);
-    double voltage_scale3 = load->get_load_scale_with_voltage(n3_P, V, LOAD_LINEAR_CV);
+    double P = P_alpha_1*voltage_scale1 + P_alpha_2*voltage_scale2 + P_alpha_3*voltage_scale3;
 
-    double P = alpha1*voltage_scale1 + alpha2*voltage_scale2 + alpha3*voltage_scale3;
-
-    P = P0*P*(1.0+kf*f);
-
-    alpha1 = get_Q_alpha_1();
-    alpha2 = get_Q_alpha_2();
-    alpha3 = get_Q_alpha_3();
-    double n1_Q = get_Q_n_power_1();
-    double n2_Q = get_Q_n_power_2();
-    double n3_Q = get_Q_n_power_3();
-    kf = get_Q_Kf();
+    P = P0*P*(1.0+P_Kf*f);
 
     double Q = 0;
-    if(fabs(n1_P-n1_Q)<FLOAT_EPSILON and fabs(n2_P-n2_Q)<FLOAT_EPSILON and fabs(n3_P-n3_Q)<FLOAT_EPSILON)
+    if(fabs(P_n_power_1-Q_n_power_1)<FLOAT_EPSILON and fabs(P_n_power_2-Q_n_power_2)<FLOAT_EPSILON and fabs(P_n_power_3-Q_n_power_3)<FLOAT_EPSILON)
     {
-        Q = alpha1*voltage_scale1 + alpha2*voltage_scale2 + alpha3*voltage_scale3;
+        Q = Q_alpha_1*voltage_scale1 + Q_alpha_2*voltage_scale2 + Q_alpha_3*voltage_scale3;
     }
     else
     {
-        voltage_scale1 = load->get_load_scale_with_voltage(n1_Q, V, LOAD_LINEAR_CV);
-        voltage_scale2 = load->get_load_scale_with_voltage(n2_Q, V, LOAD_LINEAR_CV);
-        voltage_scale3 = load->get_load_scale_with_voltage(n3_Q, V, LOAD_LINEAR_CV);
+        voltage_scale1 = LOAD::get_load_scale_with_voltage(Q_n_power_1, V, LOAD_LINEAR_CV);
+        voltage_scale2 = LOAD::get_load_scale_with_voltage(Q_n_power_2, V, LOAD_LINEAR_CV);
+        voltage_scale3 = LOAD::get_load_scale_with_voltage(Q_n_power_3, V, LOAD_LINEAR_CV);
 
-        Q = alpha1*voltage_scale1 + alpha2*voltage_scale2 + alpha3*voltage_scale3;
+        Q = Q_alpha_1*voltage_scale1 + Q_alpha_2*voltage_scale2 + Q_alpha_3*voltage_scale3;
     }
-    Q = Q0*Q*(1.0+kf*f);
+    Q = Q0*Q*(1.0+Q_Kf*f);
 
     return complex<double>(P,Q);
 }
