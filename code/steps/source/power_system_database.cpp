@@ -1376,6 +1376,232 @@ void POWER_SYSTEM_DATABASE::replace_generator_with_energy_storage(DEVICE_ID& gen
     }
 }
 
+
+
+void POWER_SYSTEM_DATABASE::copy_generator(DEVICE_ID& new_did, DEVICE_ID& old_did)
+{
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+    if(new_did.get_device_type() != STEPS_GENERATOR or old_did.get_device_type() != STEPS_GENERATOR)
+    {
+        osstream<<"Warning. DEVICE_ID with type STEPS_GENERATOR is required when copying generator in POWER_SYSTEM_DATABASE."<<endl
+                <<"However, "<<new_did.get_compound_device_name()<<" and "<<old_did.get_compound_device_name()<<" are provided."<<endl
+                <<"No copy operation will be executed.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    if(not is_generator_exist(new_did))
+    {
+        if(is_generator_exist(old_did))
+        {
+            GENERATOR new_gen(toolkit);
+            TERMINAL terminal = new_did.get_device_terminal();
+            vector<unsigned int> buses = terminal.get_buses();
+            unsigned int bus = buses[0];
+            string identifier = new_did.get_device_identifier();
+
+            new_gen.set_generator_bus(bus);
+            new_gen.set_identifier(identifier);
+
+            GENERATOR* old_gen = get_generator(old_did);
+
+            new_gen.set_status(old_gen->get_status());
+            new_gen.set_mbase_in_MVA(old_gen->get_mbase_in_MVA());
+            new_gen.set_p_generation_in_MW(old_gen->get_p_generation_in_MW());
+            new_gen.set_q_generation_in_MVar(old_gen->get_q_generation_in_MVar());
+            new_gen.set_p_max_in_MW(old_gen->get_p_max_in_MW());
+            new_gen.set_p_min_in_MW(old_gen->get_p_min_in_MW());
+            new_gen.set_q_max_in_MVar(old_gen->get_q_max_in_MVar());
+            new_gen.set_q_min_in_MVar(old_gen->get_q_min_in_MVar());
+            new_gen.set_q_max_nominal_in_MVar(old_gen->get_q_max_nominal_in_MVar());
+            new_gen.set_q_min_nominal_in_MVar(old_gen->get_q_min_nominal_in_MVar());
+            new_gen.set_source_impedance_in_pu(old_gen->get_source_impedance_in_pu());
+            new_gen.set_voltage_to_regulate_in_pu(old_gen->get_voltage_to_regulate_in_pu());
+            new_gen.set_bus_to_regulate(old_gen->get_bus_to_regulate());
+
+            append_generator(new_gen);
+        }
+        else
+        {
+            osstream<<old_did.get_compound_device_name()<<" does not exist in POWER_SYSTEM_DATABASE when copying generator as source.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<new_did.get_compound_device_name()<<" already exists in POWER_SYSTEM_DATABASE when copying generator as destination.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void POWER_SYSTEM_DATABASE::copy_wt_generator(DEVICE_ID& new_did, DEVICE_ID& old_did)
+{
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+    if(new_did.get_device_type() != STEPS_WT_GENERATOR or old_did.get_device_type() != STEPS_WT_GENERATOR)
+    {
+        osstream<<"Warning. DEVICE_ID with type STEPS_WT_GENERATOR is required when copying wt generator in POWER_SYSTEM_DATABASE."<<endl
+                <<"However, "<<new_did.get_compound_device_name()<<" and "<<old_did.get_compound_device_name()<<" are provided."<<endl
+                <<"No copy operation will be executed.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    if(not is_wt_generator_exist(new_did))
+    {
+        if(is_wt_generator_exist(old_did))
+        {
+            WT_GENERATOR new_wt_gen(toolkit);
+            TERMINAL terminal = new_did.get_device_terminal();
+            vector<unsigned int> buses = terminal.get_buses();
+            unsigned int bus = buses[0];
+            string identifier = new_did.get_device_identifier();
+
+            new_wt_gen.set_generator_bus(bus);
+            new_wt_gen.set_identifier(identifier);
+
+            WT_GENERATOR* old_wt_gen = get_wt_generator(old_did);
+
+            new_wt_gen.set_status(old_wt_gen->get_status());
+            new_wt_gen.set_mbase_in_MVA(old_wt_gen->get_mbase_in_MVA());
+            new_wt_gen.set_p_generation_in_MW(old_wt_gen->get_p_generation_in_MW());
+            new_wt_gen.set_q_generation_in_MVar(old_wt_gen->get_q_generation_in_MVar());
+            new_wt_gen.set_p_max_in_MW(old_wt_gen->get_p_max_in_MW());
+            new_wt_gen.set_p_min_in_MW(old_wt_gen->get_p_min_in_MW());
+            new_wt_gen.set_q_max_in_MVar(old_wt_gen->get_q_max_in_MVar());
+            new_wt_gen.set_q_min_in_MVar(old_wt_gen->get_q_min_in_MVar());
+            new_wt_gen.set_q_max_nominal_in_MVar(old_wt_gen->get_q_max_nominal_in_MVar());
+            new_wt_gen.set_q_min_nominal_in_MVar(old_wt_gen->get_q_min_nominal_in_MVar());
+            new_wt_gen.set_source_impedance_in_pu(old_wt_gen->get_source_impedance_in_pu());
+            new_wt_gen.set_voltage_to_regulate_in_pu(old_wt_gen->get_voltage_to_regulate_in_pu());
+            new_wt_gen.set_bus_to_regulate(old_wt_gen->get_bus_to_regulate());
+
+            append_wt_generator(new_wt_gen);
+        }
+        else
+        {
+            osstream<<old_did.get_compound_device_name()<<" does not exist in POWER_SYSTEM_DATABASE when copying wt generator as source.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<new_did.get_compound_device_name()<<" already exists in POWER_SYSTEM_DATABASE when copying wt generator as destination.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void POWER_SYSTEM_DATABASE::copy_pv_unit(DEVICE_ID& new_did, DEVICE_ID& old_did)
+{
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+    if(new_did.get_device_type() != STEPS_PV_UNIT or old_did.get_device_type() != STEPS_PV_UNIT)
+    {
+        osstream<<"Warning. DEVICE_ID with type STEPS_PV_UNIT is required when copying pv unit in POWER_SYSTEM_DATABASE."<<endl
+                <<"However, "<<new_did.get_compound_device_name()<<" and "<<old_did.get_compound_device_name()<<" are provided."<<endl
+                <<"No copy operation will be executed.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    if(not is_pv_unit_exist(new_did))
+    {
+        if(is_pv_unit_exist(old_did))
+        {
+            PV_UNIT new_pvu(toolkit);
+            TERMINAL terminal = new_did.get_device_terminal();
+            vector<unsigned int> buses = terminal.get_buses();
+            unsigned int bus = buses[0];
+            string identifier = new_did.get_device_identifier();
+
+            new_pvu.set_unit_bus(bus);
+            new_pvu.set_identifier(identifier);
+
+            PV_UNIT* old_pvu = get_pv_unit(old_did);
+
+            new_pvu.set_status(old_pvu->get_status());
+            new_pvu.set_mbase_in_MVA(old_pvu->get_mbase_in_MVA());
+            new_pvu.set_p_generation_in_MW(old_pvu->get_p_generation_in_MW());
+            new_pvu.set_q_generation_in_MVar(old_pvu->get_q_generation_in_MVar());
+            new_pvu.set_p_max_in_MW(old_pvu->get_p_max_in_MW());
+            new_pvu.set_p_min_in_MW(old_pvu->get_p_min_in_MW());
+            new_pvu.set_q_max_in_MVar(old_pvu->get_q_max_in_MVar());
+            new_pvu.set_q_min_in_MVar(old_pvu->get_q_min_in_MVar());
+            new_pvu.set_q_max_nominal_in_MVar(old_pvu->get_q_max_nominal_in_MVar());
+            new_pvu.set_q_min_nominal_in_MVar(old_pvu->get_q_min_nominal_in_MVar());
+            new_pvu.set_source_impedance_in_pu(old_pvu->get_source_impedance_in_pu());
+            new_pvu.set_voltage_to_regulate_in_pu(old_pvu->get_voltage_to_regulate_in_pu());
+            new_pvu.set_bus_to_regulate(old_pvu->get_bus_to_regulate());
+
+            append_pv_unit(new_pvu);
+        }
+        else
+        {
+            osstream<<old_did.get_compound_device_name()<<" does not exist in POWER_SYSTEM_DATABASE when copying pv unit as source.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<new_did.get_compound_device_name()<<" already exists in POWER_SYSTEM_DATABASE when copying pv unit as destination.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void POWER_SYSTEM_DATABASE::copy_energy_storage(DEVICE_ID& new_did, DEVICE_ID& old_did)
+{
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+    if(new_did.get_device_type() != STEPS_ENERGY_STORAGE or old_did.get_device_type() != STEPS_ENERGY_STORAGE)
+    {
+        osstream<<"Warning. DEVICE_ID with type STEPS_ENERGY_STORAGE is required when copying energy storage in POWER_SYSTEM_DATABASE."<<endl
+                <<"However, "<<new_did.get_compound_device_name()<<" and "<<old_did.get_compound_device_name()<<" are provided."<<endl
+                <<"No copy operation will be executed.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    if(not is_energy_storage_exist(new_did))
+    {
+        if(is_energy_storage_exist(old_did))
+        {
+            ENERGY_STORAGE new_es(toolkit);
+            TERMINAL terminal = new_did.get_device_terminal();
+            vector<unsigned int> buses = terminal.get_buses();
+            unsigned int bus = buses[0];
+            string identifier = new_did.get_device_identifier();
+
+            new_es.set_energy_storage_bus(bus);
+            new_es.set_identifier(identifier);
+
+            ENERGY_STORAGE* old_es = get_energy_storage(old_did);
+
+            new_es.set_status(old_es->get_status());
+            new_es.set_mbase_in_MVA(old_es->get_mbase_in_MVA());
+            new_es.set_p_generation_in_MW(old_es->get_p_generation_in_MW());
+            new_es.set_q_generation_in_MVar(old_es->get_q_generation_in_MVar());
+            new_es.set_p_max_in_MW(old_es->get_p_max_in_MW());
+            new_es.set_p_min_in_MW(old_es->get_p_min_in_MW());
+            new_es.set_q_max_in_MVar(old_es->get_q_max_in_MVar());
+            new_es.set_q_min_in_MVar(old_es->get_q_min_in_MVar());
+            new_es.set_q_max_nominal_in_MVar(old_es->get_q_max_nominal_in_MVar());
+            new_es.set_q_min_nominal_in_MVar(old_es->get_q_min_nominal_in_MVar());
+            new_es.set_source_impedance_in_pu(old_es->get_source_impedance_in_pu());
+            new_es.set_voltage_to_regulate_in_pu(old_es->get_voltage_to_regulate_in_pu());
+            new_es.set_bus_to_regulate(old_es->get_bus_to_regulate());
+
+            append_energy_storage(new_es);
+        }
+        else
+        {
+            osstream<<old_did.get_compound_device_name()<<" does not exist in POWER_SYSTEM_DATABASE when copying energy storage as source.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<new_did.get_compound_device_name()<<" already exists in POWER_SYSTEM_DATABASE when copying energy storage as destination.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+}
+
 void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEVICE_ID& did_new)
 {
     ostringstream osstream;

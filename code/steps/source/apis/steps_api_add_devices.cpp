@@ -279,6 +279,48 @@ void api_replace_generator_with_energy_storage(unsigned int bus_number, char* id
     psdb.replace_generator_with_energy_storage(did);
 }
 
+
+void api_copy_generator(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index)
+{
+    add_string_to_str_int_map(new_identifier);
+    DEVICE_ID new_did = get_generator_device_id(new_bus_number, new_identifier);
+    DEVICE_ID old_did = get_generator_device_id(old_bus_number, old_identifier);
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    psdb.copy_generator(new_did, old_did);
+}
+
+void api_copy_wt_generator(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index)
+{
+    add_string_to_str_int_map(new_identifier);
+    DEVICE_ID new_did = get_wt_generator_device_id(new_bus_number, new_identifier);
+    DEVICE_ID old_did = get_wt_generator_device_id(old_bus_number, old_identifier);
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    psdb.copy_wt_generator(new_did, old_did);
+}
+
+void api_copy_pv_unit(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index)
+{
+    add_string_to_str_int_map(new_identifier);
+    DEVICE_ID new_did = get_pv_unit_device_id(new_bus_number, new_identifier);
+    DEVICE_ID old_did = get_pv_unit_device_id(old_bus_number, old_identifier);
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    psdb.copy_pv_unit(new_did, old_did);
+}
+
+void api_copy_energy_storage(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index)
+{
+    add_string_to_str_int_map(new_identifier);
+    DEVICE_ID new_did = get_energy_storage_device_id(new_bus_number, new_identifier);
+    DEVICE_ID old_did = get_energy_storage_device_id(old_bus_number, old_identifier);
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    psdb.copy_energy_storage(new_did, old_did);
+}
+
+
 void api_change_bus_number(unsigned int original_bus_number, unsigned int new_bus_number, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

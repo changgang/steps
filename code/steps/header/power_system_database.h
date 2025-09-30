@@ -124,6 +124,11 @@ class POWER_SYSTEM_DATABASE
         void replace_generator_with_pv_unit(DEVICE_ID& gendid);
         void replace_generator_with_energy_storage(DEVICE_ID& gendid);
 
+        void copy_generator(DEVICE_ID& new_did, DEVICE_ID& old_did);
+        void copy_wt_generator(DEVICE_ID& new_did, DEVICE_ID& old_did);
+        void copy_pv_unit(DEVICE_ID& new_did, DEVICE_ID& old_did);
+        void copy_energy_storage(DEVICE_ID& new_did, DEVICE_ID& old_did);
+
         void update_device_id(const DEVICE_ID& did_old, const DEVICE_ID& did_new);
 
         void update_all_bus_base_frequency(double fbase_Hz);

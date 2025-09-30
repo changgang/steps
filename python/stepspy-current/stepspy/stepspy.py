@@ -1143,6 +1143,74 @@ class STEPS():
         STEPS_LIB.api_replace_generator_with_energy_storage(bus, ickt, self.toolkit_index)
         return
 
+    def copy_generator(self, new_generator, old_generator):
+        """
+        Copy new generator from old generator
+        Args:
+            (1) new_generator: Tuple generator device id in format of (bus, ickt).
+            (2) old_generator: Tuple generator device id in format of (bus, ickt).
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        new_bus, new_ickt = self.__extract_single_bus_device_id(new_generator)
+        new_ickt = self.__get_c_char_p_of_string(new_ickt)
+        old_bus, old_ickt = self.__extract_single_bus_device_id(old_generator)
+        old_ickt = self.__get_c_char_p_of_string(old_ickt)
+        STEPS_LIB.api_copy_generator(new_bus, new_ickt, old_bus, old_ickt, self.toolkit_index)
+        return
+
+    def copy_wt_generator(self, new_generator, old_generator):
+        """
+        Copy new WT generator from old WT generator
+        Args:
+            (1) new_generator: Tuple WT generator device id in format of (bus, ickt).
+            (2) old_generator: Tuple WT generator device id in format of (bus, ickt).
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        new_bus, new_ickt = self.__extract_single_bus_device_id(new_generator)
+        new_ickt = self.__get_c_char_p_of_string(new_ickt)
+        old_bus, old_ickt = self.__extract_single_bus_device_id(old_generator)
+        old_ickt = self.__get_c_char_p_of_string(old_ickt)
+        STEPS_LIB.api_copy_wt_generator(new_bus, new_ickt, old_bus, old_ickt, self.toolkit_index)
+        return
+
+    def copy_pv_unit(self, new_pvu, old_pvu):
+        """
+        Copy new PV unit from old PV unit
+        Args:
+            (1) new_pvu: Tuple PV unit device id in format of (bus, ickt).
+            (2) old_pvu: Tuple PV unit device id in format of (bus, ickt).
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        new_bus, new_ickt = self.__extract_single_bus_device_id(new_pvu)
+        new_ickt = self.__get_c_char_p_of_string(new_ickt)
+        old_bus, old_ickt = self.__extract_single_bus_device_id(old_pvu)
+        old_ickt = self.__get_c_char_p_of_string(old_ickt)
+        STEPS_LIB.api_copy_pv_unit(new_bus, new_ickt, old_bus, old_ickt, self.toolkit_index)
+        return
+
+    def copy_energy_storage(self, new_es, old_es):
+        """
+        Copy new energy storage from old energy storage
+        Args:
+            (1) new_es: Tuple energy storage device id in format of (bus, ickt).
+            (2) old_es: Tuple energy storage device id in format of (bus, ickt).
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        new_bus, new_ickt = self.__extract_single_bus_device_id(new_es)
+        new_ickt = self.__get_c_char_p_of_string(new_ickt)
+        old_bus, old_ickt = self.__extract_single_bus_device_id(old_es)
+        old_ickt = self.__get_c_char_p_of_string(old_ickt)
+        STEPS_LIB.api_copy_energy_storage(new_bus, new_ickt, old_bus, old_ickt, self.toolkit_index)
+        return
+
     def remove_bus(self, busnumber):
         """
         Remove bus of bus number.

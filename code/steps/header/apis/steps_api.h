@@ -89,6 +89,11 @@ EXPORT_STEPS_DLL void api_replace_generator_with_wt_generator(unsigned int bus_n
 EXPORT_STEPS_DLL void api_replace_generator_with_pv_unit(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_replace_generator_with_energy_storage(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
+EXPORT_STEPS_DLL void api_copy_generator(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_copy_wt_generator(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_copy_pv_unit(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_copy_energy_storage(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
+
 
 EXPORT_STEPS_DLL void api_remove_bus(unsigned int bus_number, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_remove_generator(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
