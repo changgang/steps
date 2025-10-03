@@ -253,21 +253,22 @@ double SGFLES::get_Ipcmd_in_pu_based_on_mbase()
 {
     double Ipcmd;
 
+    double Imax = get_Imax_in_pu_based_on_mbase();
     if(not is_elec_control_bypassed())
     {
         Ipcmd = active_power_regulator_filter.get_output() / get_bus_voltage_in_pu();
-        if (Ipcmd > get_Imax_in_pu_based_on_mbase())
+        if (Ipcmd > Imax)
             Ipcmd = get_Imax_in_pu_based_on_mbase();
         else
         {
-            if(Ipcmd < 0.0)
-                Ipcmd = 0.0;
+            if(Ipcmd < -Imax)
+                Ipcmd = -Imax;
         }
     }
     else
     {
         Ipcmd = get_lvrt_IP_command();
-        double value = pow(get_Imax_in_pu_based_on_mbase(),2) - pow(get_Iqcmd_in_pu_based_on_mbase(),2);
+        double value = Imax*Imax - pow(get_Iqcmd_in_pu_based_on_mbase(),2);
         double Ipmax = 0.0;
         if(value < 0)
             Ipmax = 0;
@@ -275,8 +276,8 @@ double SGFLES::get_Ipcmd_in_pu_based_on_mbase()
             Ipmax = steps_sqrt(value);
         if(Ipcmd > Ipmax)
             Ipcmd = Ipmax;
-        if(Ipcmd < 0)
-            Ipcmd = 0;
+        if(Ipcmd < -Ipmax)
+            Ipcmd = -Ipmax;
     }
     return Ipcmd;
 }
@@ -729,6 +730,14 @@ void SGFLES::initialize()
         double vterm = get_bus_voltage_in_pu();
         double vref = vterm;
         set_voltage_reference_in_pu(vref);
+
+        double Imax = get_Imax_in_pu_based_on_mbase();
+        if(P*P+Q*Q>Imax*(vterm*vterm))
+        {
+            osstream<<"Initialization Error. Initial power exceeds converter allowed maximum current for SGFLES model of "<<get_compound_device_name()<<"."<<endl
+                    <<"P = "<<P*mbase<<" MW, Q = "<<Q*mbase<<" MVar, MBASE = "<<mbase<<" MVA, Imax = "<<Imax<<" pu.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
 
         csconv3.set_initial_P_generation_in_pu(P);
         csconv3.set_initial_Q_generation_in_pu(Q);

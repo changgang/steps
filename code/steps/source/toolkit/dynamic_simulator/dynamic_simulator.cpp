@@ -2943,13 +2943,16 @@ void DYNAMICS_SIMULATOR::build_jacobian()
 
 void DYNAMICS_SIMULATOR::change_dynamic_simulator_time_step_in_s(double delt)
 {
-    ostringstream osstream;
-    osstream<<"At time "<<get_dynamic_simulation_time_in_s()<<" s, system dynamic simulation time step is changed from "<<DELT<<" s to "<<delt<<" s.";
-    toolkit->show_information_with_leading_time_stamp(osstream);
+    if(fabs(DELT-delt)>FLOAT_EPSILON)
+    {
+        ostringstream osstream;
+        osstream<<"At time "<<get_dynamic_simulation_time_in_s()<<" s, system dynamic simulation time step is changed from "<<DELT<<" s to "<<delt<<" s.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
 
-    set_dynamic_simulation_time_step_in_s(delt);
+        set_dynamic_simulation_time_step_in_s(delt);
 
-    update_with_event(TIME_STEP_CHANGE_EVENT);
+        update_with_event(TIME_STEP_CHANGE_EVENT);
+    }
 }
 
 

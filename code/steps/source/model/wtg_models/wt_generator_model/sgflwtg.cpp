@@ -736,6 +736,12 @@ void SGFLWTG::initialize()
         double mbase = get_mbase_in_MVA();
         double P = wt_generator->get_p_generation_in_MW();
         double Q = wt_generator->get_q_generation_in_MVar();
+        if(P<0)
+        {
+            osstream<<"Initialization Error. Negative P generation is not allowed for SGFLWTG model of "<<get_compound_device_name()<<"."<<endl
+                    <<"P = "<<P<<" MW";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
         P /= mbase;
         Q /= mbase;
 
@@ -747,6 +753,14 @@ void SGFLWTG::initialize()
         double vterm = get_bus_voltage_in_pu();
         double vref = vterm;
         set_voltage_reference_in_pu(vref);
+
+        double Imax = get_Imax_in_pu_based_on_mbase();
+        if(P*P+Q*Q>Imax*(vterm*vterm))
+        {
+            osstream<<"Initialization Error. Initial power exceeds converter allowed maximum current for SGFLWTG model of "<<get_compound_device_name()<<"."<<endl
+                    <<"P = "<<P*mbase<<" MW, Q = "<<Q*mbase<<" MVar, MBASE = "<<mbase<<" MVA, Imax = "<<Imax<<" pu.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
 
         csconv3.set_initial_P_generation_in_pu(P);
         csconv3.set_initial_Q_generation_in_pu(Q);
