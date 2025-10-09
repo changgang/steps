@@ -702,6 +702,11 @@ void CSEET2::initialize()
     }
 }
 
+void CSEET2::check_limits_in_initialization()
+{
+    return;
+}
+
 void CSEET2::run(DYNAMIC_MODE mode)
 {
     sensor.set_input(get_compensated_voltage_in_pu());

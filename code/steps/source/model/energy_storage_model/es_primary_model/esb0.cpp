@@ -380,6 +380,11 @@ void ESB0::initialize()
     }
 }
 
+void ESB0::check_limits_in_initialization()
+{
+    return;
+}
+
 void ESB0::run(DYNAMIC_MODE mode)
 {
     double input = 0.0;

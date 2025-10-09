@@ -11,6 +11,7 @@ using namespace std;
 ES_CONVERTER_MODEL::ES_CONVERTER_MODEL(STEPS& toolkit) : ES_MODEL(toolkit)
 {
     set_current_source_flag(true);
+    set_simplified_model_flag(false);
     set_max_active_current_command_in_pu_based_on_mbase(INFINITE_THRESHOLD);
     set_max_active_power_command_in_pu_based_on_mbase(INFINITE_THRESHOLD);
     set_min_active_current_command_in_pu_based_on_mbase(-INFINITE_THRESHOLD);
@@ -46,6 +47,16 @@ bool ES_CONVERTER_MODEL::is_current_source() const
 bool ES_CONVERTER_MODEL::is_voltage_source() const
 {
     return not is_current_source();
+}
+
+void ES_CONVERTER_MODEL::set_simplified_model_flag(bool flag)
+{
+    simplified_model_flag = flag;
+}
+
+bool ES_CONVERTER_MODEL::is_simplified_model() const
+{
+    return simplified_model_flag;
 }
 
 double ES_CONVERTER_MODEL::get_active_current_command_in_pu_based_on_mbase()

@@ -326,6 +326,11 @@ void PSASPS1::initialize()
     set_flag_model_initialized_as_true();
 }
 
+void PSASPS1::check_limits_in_initialization()
+{
+    return;
+}
+
 void PSASPS1::run(DYNAMIC_MODE mode)
 {
     double speed_deviation_pu = get_signal_value_of_slot(0);

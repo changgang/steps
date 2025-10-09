@@ -929,6 +929,11 @@ void MTDCGRID4::initialize()
     }
 }
 
+void MTDCGRID4::check_limits_in_initialization()
+{
+    return;
+}
+
 void MTDCGRID4::run(DYNAMIC_MODE mode)
 {
     run_a_step();

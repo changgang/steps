@@ -71,6 +71,7 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
+        virtual void check_limits_in_initialization();
         virtual void run(DYNAMIC_MODE mode);
         virtual double get_maximum_available_mechanical_power_per_wt_generator_in_MW_considering_gear_efficiency(double vwind);
         double get_turbine_mechanical_power_per_wt_generator_in_MW();

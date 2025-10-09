@@ -83,6 +83,7 @@ class CIM6 : public LOAD_MODEL
 
         virtual void initialize();
         virtual void initialize_to_start();
+        virtual void check_limits_in_initialization();
         virtual void run(DYNAMIC_MODE mode);
         complex<double> get_internal_voltage_in_pu() const;
         virtual complex<double> get_load_power_in_MVA();

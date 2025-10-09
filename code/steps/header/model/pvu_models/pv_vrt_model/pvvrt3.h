@@ -98,6 +98,7 @@ class PVVRT3: public PV_VRT_MODEL
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
+        virtual void check_limits_in_initialization();
         virtual void run(DYNAMIC_MODE mode);
 
         virtual bool is_in_vrt_status() const;

@@ -396,6 +396,11 @@ void IEE2ST::initialize()
     set_flag_model_initialized_as_true();
 }
 
+void IEE2ST::check_limits_in_initialization()
+{
+    return;
+}
+
 void IEE2ST::run(DYNAMIC_MODE mode)
 {
     double slot_value = get_signal_value_of_slot(0);

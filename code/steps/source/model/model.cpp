@@ -423,6 +423,7 @@ void MODEL::set_flag_model_initialized_as_false()
 
 void MODEL::set_flag_model_initialized_as_true()
 {
+    check_limits_in_initialization();
     flag_model_initialized = true;
 }
 

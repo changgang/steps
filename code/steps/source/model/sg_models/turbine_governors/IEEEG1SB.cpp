@@ -568,6 +568,11 @@ void IEEEG1SB::initialize()
     }
 }
 
+void IEEEG1SB::check_limits_in_initialization()
+{
+    return;
+}
+
 void IEEEG1SB::run(DYNAMIC_MODE mode)
 {
     double Pref = get_mechanical_power_reference_in_pu_based_on_mbase();

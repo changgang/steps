@@ -233,6 +233,11 @@ void SEXS::initialize()
     }
 }
 
+void SEXS::check_limits_in_initialization()
+{
+    return;
+}
+
 void SEXS::run(DYNAMIC_MODE mode)
 {
     double Ecomp = get_compensated_voltage_in_pu();

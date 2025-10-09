@@ -1022,6 +1022,11 @@ void CSEET1::initialize()
     }
 }
 
+void CSEET1::check_limits_in_initialization()
+{
+    return;
+}
+
 void CSEET1::run(DYNAMIC_MODE mode)
 {
     GENERATOR* generator = get_generator_pointer();

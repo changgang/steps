@@ -129,6 +129,7 @@ class LCC_HVDC2T_MODEL : public MODEL
         void set_common_timer_toolkit();
 
         virtual void initialize() = 0;
+        virtual void check_limits_in_initialization() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
         virtual void check_blocking_logic() = 0;
         virtual void check_bypassing_logic() = 0;

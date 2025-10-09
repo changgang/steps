@@ -885,6 +885,11 @@ void WT3EX::initialize()
     }
 }
 
+void WT3EX::check_limits_in_initialization()
+{
+    return;
+}
+
 void WT3EX::run(DYNAMIC_MODE mode)
 {
     double iterm = get_wt_generator_terminal_current_in_pu();

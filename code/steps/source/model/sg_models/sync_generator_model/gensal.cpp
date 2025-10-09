@@ -284,6 +284,12 @@ void GENSAL::initialize_rotor_angle()
     rotor_angle_block->set_output(rotor_angle);
     rotor_angle_block->initialize();
 }
+
+void GENSAL::check_limits_in_initialization()
+{
+    return;
+}
+
 void GENSAL::run(DYNAMIC_MODE mode)
 {
     INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();

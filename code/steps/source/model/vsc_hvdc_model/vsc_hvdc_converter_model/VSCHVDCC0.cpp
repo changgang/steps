@@ -599,6 +599,11 @@ void VSCHVDCC0::initialize()
     }
 }
 
+void VSCHVDCC0::check_limits_in_initialization()
+{
+    return;
+}
+
 void VSCHVDCC0::run(DYNAMIC_MODE mode)
 {
     VSC_HVDC* vsc_hvdc = get_vsc_hvdc_pointer();

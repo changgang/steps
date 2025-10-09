@@ -363,6 +363,11 @@ void IEEEG3::initialize()
     }
 }
 
+void IEEEG3::check_limits_in_initialization()
+{
+    return;
+}
+
 void IEEEG3::run(DYNAMIC_MODE mode)
 {
     double Pref = get_mechanical_power_reference_in_pu_based_on_mbase();

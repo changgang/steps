@@ -360,6 +360,11 @@ void WT3P0::initialize()
     }
 }
 
+void WT3P0::check_limits_in_initialization()
+{
+    return;
+}
+
 void WT3P0::run(DYNAMIC_MODE mode)
 {
     double speed = get_wt_generator_speed_in_pu();

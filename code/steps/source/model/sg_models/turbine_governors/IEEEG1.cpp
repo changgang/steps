@@ -420,6 +420,11 @@ void IEEEG1::initialize()
     }
 }
 
+void IEEEG1::check_limits_in_initialization()
+{
+    return;
+}
+
 void IEEEG1::run(DYNAMIC_MODE mode)
 {
     double Pref = get_mechanical_power_reference_in_pu_based_on_mbase();

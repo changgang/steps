@@ -24,6 +24,7 @@ class GENCLS : public SYNC_GENERATOR_MODEL
         virtual void prepare_model_internal_variable_table();
 
         virtual void initialize();
+        virtual void check_limits_in_initialization();
         virtual void initialize_rotor_angle();
         virtual void run(DYNAMIC_MODE mode);
         virtual complex<double> get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();

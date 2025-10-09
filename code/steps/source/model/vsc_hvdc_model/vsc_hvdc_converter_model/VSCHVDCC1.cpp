@@ -559,6 +559,11 @@ void VSCHVDCC1::initialize()
     }
 }
 
+void VSCHVDCC1::check_limits_in_initialization()
+{
+    return;
+}
+
 void VSCHVDCC1::run(DYNAMIC_MODE mode)
 {
     STEPS& toolkit = get_toolkit();

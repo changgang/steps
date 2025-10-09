@@ -20,6 +20,7 @@ class PV_TEMPERATURE_MODEL : public PVU_MODEL
         virtual void setup_block_toolkit_and_parameters() = 0;
 
         virtual void initialize() = 0;
+        virtual void check_limits_in_initialization() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
         virtual double get_T_in_C_deg() = 0;
 

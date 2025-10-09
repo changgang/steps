@@ -308,6 +308,11 @@ void PSASPE1::initialize()
     }
 }
 
+void PSASPE1::check_limits_in_initialization()
+{
+    return;
+}
+
 void PSASPE1::run(DYNAMIC_MODE mode)
 {
     double Ecomp = get_compensated_voltage_in_pu();

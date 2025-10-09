@@ -300,6 +300,11 @@ void PSASPS5::initialize()
     set_flag_model_initialized_as_true();
 }
 
+void PSASPS5::check_limits_in_initialization()
+{
+    return;
+}
+
 void PSASPS5::run(DYNAMIC_MODE mode)
 {
     if(mode==DYNAMIC_UPDATE_MODE)

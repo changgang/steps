@@ -30,6 +30,7 @@ class AUXILIARY_SIGNAL_MODEL : public MODEL
         virtual bool setup_model_with_bpa_string(string data) = 0;
 
         virtual void initialize() = 0;
+        virtual void check_limits_in_initialization() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
         virtual double get_auxiliary_signal_in_MW() const = 0;
         virtual void check() = 0;

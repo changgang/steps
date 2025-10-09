@@ -17,6 +17,9 @@ class ES_CONVERTER_MODEL : public ES_MODEL
         bool is_current_source() const;
         bool is_voltage_source() const;
 
+        void set_simplified_model_flag(bool flag);
+        bool is_simplified_model() const;
+
         // get inputs for dynamics run
         double get_active_current_command_in_pu_based_on_mbase();
         double get_reactive_current_command_in_pu_based_on_mbase();
@@ -60,6 +63,7 @@ class ES_CONVERTER_MODEL : public ES_MODEL
         virtual void setup_block_toolkit_and_parameters() = 0;
 
         virtual void initialize() = 0;
+        virtual void check_limits_in_initialization() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
 
         virtual void check() = 0;
@@ -93,6 +97,7 @@ class ES_CONVERTER_MODEL : public ES_MODEL
 
     private:
         bool current_source_flag;
+        bool simplified_model_flag;
         double max_active_current_command_in_pu_based_on_mbase;
         double min_active_current_command_in_pu_based_on_mbase;
         double max_active_power_command_in_pu_based_on_mbase;

@@ -1306,6 +1306,11 @@ void ESAU0::initialize()
     }
 }
 
+void ESAU0::check_limits_in_initialization()
+{
+    return;
+}
+
 void ESAU0::run(DYNAMIC_MODE mode)
 {
     if(mode==DYNAMIC_UPDATE_MODE)

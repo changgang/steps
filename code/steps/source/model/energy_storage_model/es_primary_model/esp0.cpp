@@ -342,6 +342,11 @@ void ESP0::initialize()
     }
 }
 
+void ESP0::check_limits_in_initialization()
+{
+    return;
+}
+
 void ESP0::run(DYNAMIC_MODE mode)
 {
     if(not is_primary_model_frozen())

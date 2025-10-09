@@ -270,6 +270,11 @@ void WT3GX2::initialize()
     }
 }
 
+void WT3GX2::check_limits_in_initialization()
+{
+    return;
+}
+
 void WT3GX2::run(DYNAMIC_MODE mode)
 {
     double Pref = get_active_power_command_in_pu_based_on_mbase();

@@ -683,6 +683,11 @@ void WT3E0::initialize()
     }
 }
 
+void WT3E0::check_limits_in_initialization()
+{
+    return;
+}
+
 void WT3E0::run(DYNAMIC_MODE mode)
 {
 

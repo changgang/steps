@@ -24,6 +24,7 @@ void SGFLPVU::clear()
 {
     set_model_float_parameter_count(17);
     set_current_source_flag(true);
+    set_simplified_model_flag(true);
     csconv3.clear();
 
     frequency_controller.clear();
@@ -805,6 +806,11 @@ void SGFLPVU::initialize()
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
+}
+
+void SGFLPVU::check_limits_in_initialization()
+{
+    return;
 }
 
 void SGFLPVU::run(DYNAMIC_MODE mode)

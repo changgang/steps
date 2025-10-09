@@ -236,6 +236,11 @@ unsigned int FILEIRRAD::get_solar_irradiance_record_count() const
     return n;
 }
 
+void FILEIRRAD::check_limits_in_initialization()
+{
+    return;
+}
+
 void FILEIRRAD::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;

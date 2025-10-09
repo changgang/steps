@@ -34,6 +34,7 @@ class WT3T0 : public WT_TURBINE_MODEL
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
+        virtual void check_limits_in_initialization();
         virtual void run(DYNAMIC_MODE mode);
         virtual double get_turbine_speed_in_pu() const;
         virtual double get_generator_speed_in_pu() const;

@@ -48,6 +48,7 @@ class ARXL : public EQUIVALENT_MODEL
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
+        virtual void check_limits_in_initialization();
         virtual void run(DYNAMIC_MODE mode);
         virtual void update_meters_buffer();
         virtual void update_equivalent_outputs();

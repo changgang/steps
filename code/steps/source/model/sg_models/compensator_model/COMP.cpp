@@ -116,6 +116,11 @@ void COMP::initialize()
     }
 }
 
+void COMP::check_limits_in_initialization()
+{
+    return;
+}
+
 void COMP::run(DYNAMIC_MODE mode)
 {
     if(mode==DYNAMIC_UPDATE_MODE)

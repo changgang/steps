@@ -420,6 +420,11 @@ void CDC6T::initialize()
     }
 }
 
+void CDC6T::check_limits_in_initialization()
+{
+    return;
+}
+
 void CDC6T::run(DYNAMIC_MODE mode)
 {
     LCC_HVDC2T* hvdc = get_2t_lcc_hvdc_pointer();

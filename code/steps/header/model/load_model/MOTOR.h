@@ -23,6 +23,7 @@ class MOTOR : public LOAD_MODEL
         virtual bool setup_model_with_bpa_string(string data);
 
         virtual void initialize();
+        virtual void check_limits_in_initialization();
         virtual void run(DYNAMIC_MODE mode);
         virtual void check();
         virtual void report();

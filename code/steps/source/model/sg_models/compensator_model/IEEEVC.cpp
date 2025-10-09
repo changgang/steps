@@ -125,6 +125,11 @@ void IEEEVC::initialize()
     }
 }
 
+void IEEEVC::check_limits_in_initialization()
+{
+    return;
+}
+
 void IEEEVC::run(DYNAMIC_MODE mode)
 {
     if(mode==DYNAMIC_UPDATE_MODE)

@@ -108,18 +108,46 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
             case DYNAMIC_INITIALIZE_MODE:
             {
                 if(conv!=NULL and conv->is_model_active())
-                {
                     conv->initialize();
-                    if(conv->get_model_name() == "SGFLPVU")
-                    {
-                        break;
-                    }
-                }
                 else
                 {
-                    osstream<<"Error. No PV CONVERTER model is provided for "<<get_compound_device_name()<<" for dynamic initialization.";
+                    osstream<<"Error. No PV_CONVERTER_MODEL is provided for "<<get_compound_device_name()<<" for dynamic initialization.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     return;
+                }
+
+                if(conv->is_simplified_model())
+                {
+                    unsigned int i = 0;
+                    osstream<<"Warning. Simplified PV_CONVERTER_MODEL '"<<conv->get_model_name()<<"' is provided for "<<get_compound_device_name()<<"."<<endl
+                            <<"The following models will be passed for dynamic simulation:"<<endl;
+                    if(temp!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") PV_TEMPERATURE_MODEL '"<<temp->get_model_name()<<"'\n";
+                    }
+                    if(panel!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") PV_PANEL_MODEL '"<<panel->get_model_name()<<"'\n";
+                    }
+                    if(irrd!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") PV_IRRADIANCE_MODEL '"<<irrd->get_model_name()<<"'\n";
+                    }
+                    if(elec!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") PV_ELECTRICAL_MODEL '"<<elec->get_model_name()<<"'\n";
+                    }
+                    if(vrt!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") PV_VRT_MODEL '"<<vrt->get_model_name()<<"'\n";
+                    }
+                    if(relay!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") PV_RELAY_MODEL '"<<relay->get_model_name()<<"'\n";
+                    }
+                    osstream<<"You can remove these models with no hesitation.";
+                    if(i!=0)
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                 }
 
                 if(temp!=NULL and temp->is_model_active())
@@ -129,9 +157,12 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
                     panel->initialize();
                 else
                 {
-                    osstream<<"Error. No PV PANEL model is provided for "<<get_compound_device_name()<<" for dynamic initialization.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                    return;
+                    if(not conv->is_simplified_model())
+                    {
+                        osstream<<"Error. No PV_PANEL_MODEL is provided for "<<get_compound_device_name()<<" for dynamic initialization.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                        return;
+                    }
                 }
 
                 if(irrd!=NULL and irrd->is_model_active())
@@ -152,31 +183,34 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
             case DYNAMIC_UPDATE_MODE:
             case DYNAMIC_UPDATE_TIME_STEP_MODE:
             {
-                if(vrt!=NULL and vrt->is_model_active())
+                if(not conv->is_simplified_model())
                 {
-                    vrt->run(mode);
-
-                    if(elec!=NULL and elec->is_model_active())
+                    if(vrt!=NULL and vrt->is_model_active())
                     {
-                        if(elec->is_model_bypassed()
-                            and (not vrt->is_in_vrt_status()))
-                            elec->unbypass_model();
-                        else
+                        vrt->run(mode);
+
+                        if(elec!=NULL and elec->is_model_active())
                         {
-                            if(not elec->is_model_bypassed()
-                                and (vrt->is_in_vrt_status()))
-                                elec->bypass_model();
+                            if(elec->is_model_bypassed()
+                                and (not vrt->is_in_vrt_status()))
+                                elec->unbypass_model();
+                            else
+                            {
+                                if(not elec->is_model_bypassed()
+                                    and (vrt->is_in_vrt_status()))
+                                    elec->bypass_model();
+                            }
                         }
                     }
+
+                    //temp and irrd model not necessary run
+
+                    if(panel!=NULL and panel->is_model_active())
+                        panel->run(mode);
+
+                    if(elec!=NULL and elec->is_model_active() and (not elec->is_model_bypassed()))
+                        elec->run(mode);
                 }
-
-                //temp and irrd model not necessary run
-
-                if(panel!=NULL and panel->is_model_active())
-                    panel->run(mode);
-
-                if(elec!=NULL and elec->is_model_active() and (not elec->is_model_bypassed()))
-                    elec->run(mode);
 
                 if(conv!=NULL and conv->is_model_active())
                     conv->run(mode);

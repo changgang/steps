@@ -220,6 +220,11 @@ void PVPNLX::initialize()
     }
 }
 
+void PVPNLX::check_limits_in_initialization()
+{
+    return;
+}
+
 void PVPNLX::run(DYNAMIC_MODE mode)
 {
     ;

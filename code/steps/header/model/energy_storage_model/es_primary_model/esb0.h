@@ -59,6 +59,7 @@ class ESB0 : public ES_PRIMARY_MODEL
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
+        virtual void check_limits_in_initialization();
         virtual void run(DYNAMIC_MODE mode);
         virtual void initialize_Pmech_as_zero();
 

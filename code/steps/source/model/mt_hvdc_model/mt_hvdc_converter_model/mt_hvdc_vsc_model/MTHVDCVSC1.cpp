@@ -422,6 +422,11 @@ void MTHVDCVSC1::initialize()
     }
 }
 
+void MTHVDCVSC1::check_limits_in_initialization()
+{
+    return;
+}
+
 void MTHVDCVSC1::run(DYNAMIC_MODE mode)
 {
     HVSC* vsc = get_hvsc_pointer();

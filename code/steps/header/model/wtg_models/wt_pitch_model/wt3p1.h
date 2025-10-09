@@ -41,6 +41,7 @@ class WT3P1 : public WT_PITCH_MODEL
         virtual void prepare_model_internal_variable_table();
 
         virtual void initialize();
+        virtual void check_limits_in_initialization();
         virtual void run(DYNAMIC_MODE mode);
         virtual double get_pitch_angle_in_deg() const;
         virtual void check();

@@ -122,6 +122,11 @@ void PSASPVC::initialize()
     }
 }
 
+void PSASPVC::check_limits_in_initialization()
+{
+    return;
+}
+
 void PSASPVC::run(DYNAMIC_MODE mode)
 {
     if(mode==DYNAMIC_UPDATE_MODE)

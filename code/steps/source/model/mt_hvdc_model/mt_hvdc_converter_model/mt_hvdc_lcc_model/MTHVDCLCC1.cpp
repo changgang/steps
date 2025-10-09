@@ -496,6 +496,11 @@ void MTHVDCLCC1::initialize()
     }
 }
 
+void MTHVDCLCC1::check_limits_in_initialization()
+{
+    return;
+}
+
 void MTHVDCLCC1::run(DYNAMIC_MODE mode)
 {
     STEPS& toolkit = get_toolkit();

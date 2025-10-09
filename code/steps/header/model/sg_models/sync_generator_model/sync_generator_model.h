@@ -102,6 +102,7 @@ class SYNC_GENERATOR_MODEL : public SG_MODEL
 
         virtual void initialize() = 0;
         virtual void initialize_rotor_angle() = 0;
+        virtual void check_limits_in_initialization() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
         virtual complex<double> get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase() = 0;
         virtual complex<double> get_terminal_complex_current_in_pu_in_dq_axis_based_on_mbase() = 0;

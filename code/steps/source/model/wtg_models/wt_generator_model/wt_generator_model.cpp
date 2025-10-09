@@ -11,6 +11,7 @@ using namespace std;
 WT_GENERATOR_MODEL::WT_GENERATOR_MODEL(STEPS& toolkit) : WTG_MODEL(toolkit)
 {
     set_current_source_flag(true);
+    set_simplified_model_flag(false);
 }
 
 WT_GENERATOR_MODEL::~WT_GENERATOR_MODEL()
@@ -42,6 +43,16 @@ bool WT_GENERATOR_MODEL::is_current_source() const
 bool WT_GENERATOR_MODEL::is_voltage_source() const
 {
     return not is_current_source();
+}
+
+void WT_GENERATOR_MODEL::set_simplified_model_flag(bool flag)
+{
+    simplified_model_flag = flag;
+}
+
+bool WT_GENERATOR_MODEL::is_simplified_model() const
+{
+    return simplified_model_flag;
 }
 
 double WT_GENERATOR_MODEL::get_active_current_command_in_pu_based_on_mbase()

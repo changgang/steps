@@ -723,6 +723,11 @@ void PVEX::initialize()
     }
 }
 
+void PVEX::check_limits_in_initialization()
+{
+    return;
+}
+
 void PVEX::run(DYNAMIC_MODE mode)
 {
     double iterm = get_pv_unit_terminal_current_in_pu();

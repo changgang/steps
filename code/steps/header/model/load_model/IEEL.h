@@ -58,6 +58,7 @@ class IEEL : public LOAD_MODEL
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
+        virtual void check_limits_in_initialization();
         virtual void initialize_to_start();
         virtual void run(DYNAMIC_MODE mode);
         virtual complex<double> get_load_power_in_MVA();

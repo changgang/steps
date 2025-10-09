@@ -891,6 +891,11 @@ void ESEX::initialize_active_power_control_as_zero()
     elecx.initialize_active_power_control_as_zero();
 }
 
+void ESEX::check_limits_in_initialization()
+{
+    return;
+}
+
 void ESEX::run(DYNAMIC_MODE mode)
 {
     frequency_controller.run(mode);

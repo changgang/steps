@@ -172,6 +172,11 @@ void ESSOC0::initialize()
     }
 }
 
+void ESSOC0::check_limits_in_initialization()
+{
+    return;
+}
+
 void ESSOC0::run(DYNAMIC_MODE mode)
 {
     INTEGRAL_BLOCK* energy_state_block = get_energy_state_block();

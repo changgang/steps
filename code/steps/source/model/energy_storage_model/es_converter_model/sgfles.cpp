@@ -24,6 +24,7 @@ void SGFLES::clear()
 {
     set_model_float_parameter_count(16);
     set_current_source_flag(true);
+    set_simplified_model_flag(true);
     csconv3.clear();
 
     frequency_controller.clear();
@@ -780,6 +781,11 @@ void SGFLES::initialize()
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
+}
+
+void SGFLES::check_limits_in_initialization()
+{
+    return;
 }
 
 void SGFLES::run(DYNAMIC_MODE mode)

@@ -38,6 +38,7 @@ class COMPENSATOR_MODEL : public SG_MODEL
         virtual void setup_block_toolkit_and_parameters() = 0;
 
         virtual void initialize() = 0;
+        virtual void check_limits_in_initialization() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
         virtual double get_compensated_voltage_in_pu() = 0; // output
         virtual void check() = 0;

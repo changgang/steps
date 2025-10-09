@@ -366,6 +366,11 @@ void WTRLY0::initialize()
     }
 }
 
+void WTRLY0::check_limits_in_initialization()
+{
+    return;
+}
+
 void WTRLY0::run(DYNAMIC_MODE mode)
 {
     if(mode==DYNAMIC_RELAY_MODE)

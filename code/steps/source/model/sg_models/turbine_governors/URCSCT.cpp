@@ -1103,6 +1103,11 @@ void URCSCT::initialize()
     }
 }
 
+void URCSCT::check_limits_in_initialization()
+{
+    return;
+}
+
 void URCSCT::run(DYNAMIC_MODE mode)
 {
     STEPS& toolkit = get_toolkit();

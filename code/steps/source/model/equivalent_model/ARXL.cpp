@@ -309,6 +309,11 @@ void ARXL::initialize()
     set_flag_model_initialized_as_true();
 }
 
+void ARXL::check_limits_in_initialization()
+{
+    return;
+}
+
 void ARXL::run(DYNAMIC_MODE mode)
 {
 

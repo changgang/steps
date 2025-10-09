@@ -262,18 +262,50 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
                 initialize_manual_power_in_pu();
 
                 if(conv!=NULL and conv->is_model_active())
-                {
                     conv->initialize();
-                    if(conv->get_model_name() == "SGFLES")
-                    {
-                        break;
-                    }
-                }
                 else
                 {
-                    osstream<<"Error. No ES CONVERTER model is provided for "<<get_compound_device_name()<<" for dynamic initialization.";
+                    osstream<<"Error. No ES_CONVERTER_model is provided for "<<get_compound_device_name()<<" for dynamic initialization.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     return;
+                }
+
+                if(conv->is_simplified_model())
+                {
+                    unsigned int i = 0;
+                    osstream<<"Warning. Simplified ES_CONVERTER_MODEL '"<<conv->get_model_name()<<"' is provided for "<<get_compound_device_name()<<"."<<endl
+                            <<"The following models will be passed for dynamic simulation:"<<endl;
+                    if(auxiliary!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") ES_AUXILIARY_MODEL '"<<auxiliary->get_model_name()<<"'\n";
+                    }
+                    if(primary!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") ES_PRIMARY_MODEL '"<<primary->get_model_name()<<"'\n";
+                    }
+                    if(rotor!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") ES_ROTOR_MODEL '"<<rotor->get_model_name()<<"'\n";
+                    }
+                    if(elec!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") ES_ELECTRICAL_MODEL '"<<elec->get_model_name()<<"'\n";
+                    }
+                    if(vrt!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") ES_VRT_MODEL '"<<vrt->get_model_name()<<"'\n";
+                    }
+                    if(relay!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") ES_RELAY_MODEL '"<<relay->get_model_name()<<"'\n";
+                    }
+                    if(soc!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") ES_SOC_MODEL '"<<soc->get_model_name()<<"'\n";
+                    }
+                    osstream<<"You can remove these models with no hesitation.";
+                    if(i!=0)
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                 }
 
                 if(auxiliary!=NULL and auxiliary->is_model_active())
@@ -334,34 +366,37 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
             case DYNAMIC_UPDATE_MODE:
             case DYNAMIC_UPDATE_TIME_STEP_MODE:
             {
-                if(vrt!=NULL and vrt->is_model_active())
+                if(not conv->is_simplified_model())
                 {
-                    vrt->run(mode);
-                    if(elec!=NULL and elec->is_model_active())
+                    if(vrt!=NULL and vrt->is_model_active())
                     {
-                        if(elec->is_model_bypassed()
-                            and (not vrt->is_in_vrt_status()))
-                            elec->unbypass_model();
-                        else
+                        vrt->run(mode);
+                        if(elec!=NULL and elec->is_model_active())
                         {
-                            if(not elec->is_model_bypassed()
-                                and (vrt->is_in_vrt_status()))
-                                elec->bypass_model();
+                            if(elec->is_model_bypassed()
+                                and (not vrt->is_in_vrt_status()))
+                                elec->unbypass_model();
+                            else
+                            {
+                                if(not elec->is_model_bypassed()
+                                    and (vrt->is_in_vrt_status()))
+                                    elec->bypass_model();
+                            }
                         }
                     }
+
+                    if(auxiliary!=NULL and auxiliary->is_model_active())
+                        auxiliary->run(mode);
+
+                    if(primary!=NULL and primary->is_model_active())
+                        primary->run(mode);
+
+                    if(rotor!=NULL and rotor->is_model_active())
+                        rotor->run(mode);
+
+                    if(elec!=NULL and elec->is_model_active() and (not elec->is_model_bypassed()))
+                        elec->run(mode);
                 }
-
-                if(auxiliary!=NULL and auxiliary->is_model_active())
-                    auxiliary->run(mode);
-
-                if(primary!=NULL and primary->is_model_active())
-                    primary->run(mode);
-
-                if(rotor!=NULL and rotor->is_model_active())
-                    rotor->run(mode);
-
-                if(elec!=NULL and elec->is_model_active() and (not elec->is_model_bypassed()))
-                    elec->run(mode);
 
                 if(conv!=NULL and conv->is_model_active())
                     conv->run(mode);

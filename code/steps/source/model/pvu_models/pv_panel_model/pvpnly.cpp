@@ -1208,6 +1208,11 @@ void PVPNLY::initialize_S0_in_Wpm2(double Vdc0, double T)
     }
 }
 
+void PVPNLY::check_limits_in_initialization()
+{
+    return;
+}
+
 void PVPNLY::run(DYNAMIC_MODE mode)
 {
 

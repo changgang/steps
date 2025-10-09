@@ -11,6 +11,7 @@ using namespace std;
 PV_CONVERTER_MODEL::PV_CONVERTER_MODEL(STEPS& toolkit) : PVU_MODEL(toolkit)
 {
     set_current_source_flag(true);
+    set_simplified_model_flag(false);
 }
 
 PV_CONVERTER_MODEL::~PV_CONVERTER_MODEL()
@@ -42,6 +43,16 @@ bool PV_CONVERTER_MODEL::is_current_source() const
 bool PV_CONVERTER_MODEL::is_voltage_source() const
 {
     return not is_current_source();
+}
+
+void PV_CONVERTER_MODEL::set_simplified_model_flag(bool flag)
+{
+    simplified_model_flag = flag;
+}
+
+bool PV_CONVERTER_MODEL::is_simplified_model() const
+{
+    return simplified_model_flag;
 }
 
 double PV_CONVERTER_MODEL::get_active_current_command_in_pu_based_on_mbase()

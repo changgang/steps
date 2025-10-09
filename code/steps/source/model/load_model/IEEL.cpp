@@ -396,6 +396,11 @@ void IEEL::initialize_to_start()
         initialize();
 }
 
+void IEEL::check_limits_in_initialization()
+{
+    return;
+}
+
 void IEEL::run(DYNAMIC_MODE mode)
 {
     synchronize_bus_voltage_and_frequency();

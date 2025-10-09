@@ -209,6 +209,11 @@ void PVVRTRLY1::initialize()
     hvrt.initialize_vrt_relay();
 }
 
+void PVVRTRLY1::check_limits_in_initialization()
+{
+    return;
+}
+
 void PVVRTRLY1::run(DYNAMIC_MODE mode)
 {
     if(mode==DYNAMIC_RELAY_MODE)

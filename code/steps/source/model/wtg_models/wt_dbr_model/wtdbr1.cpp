@@ -136,6 +136,11 @@ void WTDBR1::initialize()
     }
 }
 
+void WTDBR1::check_limits_in_initialization()
+{
+    return;
+}
+
 void WTDBR1::run(DYNAMIC_MODE mode)
 {
     double pcmd = get_active_power_command_in_pu_based_on_mbase();

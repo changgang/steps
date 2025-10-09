@@ -964,6 +964,11 @@ void ESVRT3::initialize()
     }
 }
 
+void ESVRT3::check_limits_in_initialization()
+{
+    return;
+}
+
 void ESVRT3::run(DYNAMIC_MODE mode)
 {
     if(mode == DYNAMIC_UPDATE_MODE)

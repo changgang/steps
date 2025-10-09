@@ -965,6 +965,11 @@ void WTVRT3::initialize()
     }
 }
 
+void WTVRT3::check_limits_in_initialization()
+{
+    return;
+}
+
 void WTVRT3::run(DYNAMIC_MODE mode)
 {
     if(mode == DYNAMIC_UPDATE_MODE)

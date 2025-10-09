@@ -351,6 +351,11 @@ void ESP11::initialize()
     }
 }
 
+void ESP11::check_limits_in_initialization()
+{
+    return;
+}
+
 void ESP11::run(DYNAMIC_MODE mode)
 {
     if(not is_primary_model_frozen())

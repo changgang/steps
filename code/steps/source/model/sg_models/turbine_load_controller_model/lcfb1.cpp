@@ -273,6 +273,11 @@ void LCFB1::initialize()
     set_flag_model_initialized_as_true();
 }
 
+void LCFB1::check_limits_in_initialization()
+{
+    return;
+}
+
 void LCFB1::run(DYNAMIC_MODE mode)
 {
     double pelec = get_terminal_active_power_in_pu_based_on_mbase_from_generator_model();

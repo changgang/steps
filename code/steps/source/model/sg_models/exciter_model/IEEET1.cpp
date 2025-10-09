@@ -284,7 +284,6 @@ void IEEET1::setup_block_toolkit_and_parameters()
 
 void IEEET1::initialize()
 {
-    ostringstream osstream;
     if(not is_model_initialized())
     {
         GENERATOR* generator = get_generator_pointer();
@@ -296,7 +295,6 @@ void IEEET1::initialize()
 
             setup_block_toolkit_and_parameters();
 
-            STEPS& toolkit = get_toolkit();
             double Ecomp = get_compensated_voltage_in_pu();
 
             sensor.set_output(Ecomp);
@@ -314,19 +312,6 @@ void IEEET1::initialize()
             double SE = saturation_block.get_saturation(Efd);
             double input = (KE+SE)*Efd;
 
-            if(input>get_VRmax_in_pu())
-            {
-                osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
-                  <<"VR is "<<input<<", and VRmax is "<<get_VRmax_in_pu()<<".";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-            if(input<get_VRmin_in_pu())
-            {
-                osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
-                  <<"VR is "<<input<<", and VRmin is "<<get_VRmin_in_pu()<<".";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-
             regulator.set_output(input);
             regulator.initialize();
 
@@ -337,6 +322,30 @@ void IEEET1::initialize()
 
             set_flag_model_initialized_as_true();
         }
+    }
+}
+
+void IEEET1::check_limits_in_initialization()
+{
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+
+    double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
+    double KE = get_KE();
+    double SE = saturation_block.get_saturation(Efd);
+    double input = (KE+SE)*Efd;
+
+    if(input>get_VRmax_in_pu())
+    {
+        osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds upper limit."
+          <<"VR is "<<input<<", and VRmax is "<<get_VRmax_in_pu()<<".";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+    if(input<get_VRmin_in_pu())
+    {
+        osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_compound_device_name()<<" exceeds lower limit."
+          <<"VR is "<<input<<", and VRmin is "<<get_VRmin_in_pu()<<".";
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 

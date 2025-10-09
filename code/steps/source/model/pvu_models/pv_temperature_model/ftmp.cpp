@@ -224,6 +224,11 @@ unsigned int FTMP::get_temperature_record_count() const
     return n;
 }
 
+void FTMP::check_limits_in_initialization()
+{
+    return;
+}
+
 void FTMP::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;

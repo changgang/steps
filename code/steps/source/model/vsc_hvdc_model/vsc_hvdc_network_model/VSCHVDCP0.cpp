@@ -84,6 +84,11 @@ void VSCHVDCP0::initialize()
     build_dynamic_dc_network_matrix();
 }
 
+void VSCHVDCP0::check_limits_in_initialization()
+{
+    return;
+}
+
 void VSCHVDCP0::run(DYNAMIC_MODE mode)
 {
     solve_dynamic_network_with_quasi_steady_state_model();

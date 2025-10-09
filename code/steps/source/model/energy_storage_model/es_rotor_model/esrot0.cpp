@@ -174,6 +174,11 @@ void ESROT0::initialize()
     }
 }
 
+void ESROT0::check_limits_in_initialization()
+{
+    return;
+}
+
 void ESROT0::run(DYNAMIC_MODE mode)
 {
     if(not is_rotor_locked())

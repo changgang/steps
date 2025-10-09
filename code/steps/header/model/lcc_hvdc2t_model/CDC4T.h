@@ -43,6 +43,7 @@ class CDC4T: public LCC_HVDC2T_MODEL
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
+        virtual void check_limits_in_initialization();
         virtual void run(DYNAMIC_MODE mode);
         virtual void check_blocking_logic();
         virtual void check_bypassing_logic();

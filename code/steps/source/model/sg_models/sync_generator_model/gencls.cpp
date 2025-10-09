@@ -176,6 +176,11 @@ void GENCLS::initialize_rotor_angle()
     set_flag_model_initialized_as_true();
 }
 
+void GENCLS::check_limits_in_initialization()
+{
+    return;
+}
+
 void GENCLS::run(DYNAMIC_MODE mode)
 {
     INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();

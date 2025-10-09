@@ -289,6 +289,11 @@ void PVGU1::initialize()
     }
 }
 
+void PVGU1::check_limits_in_initialization()
+{
+    return;
+}
+
 void PVGU1::run(DYNAMIC_MODE mode)
 {
     double Ipcmd = get_active_current_command_in_pu_based_on_mbase();

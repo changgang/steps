@@ -247,6 +247,11 @@ void UVLS::initialize()
     }
 }
 
+void UVLS::check_limits_in_initialization()
+{
+    return;
+}
+
 void UVLS::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;

@@ -110,6 +110,7 @@ class PVEX: public PV_ELECTRICAL_MODEL
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
+        virtual void check_limits_in_initialization();
         virtual void run(DYNAMIC_MODE mode);
         virtual double get_active_current_command_in_pu_based_on_mbase();
         virtual double get_active_power_command_in_pu_based_on_mbase() const;

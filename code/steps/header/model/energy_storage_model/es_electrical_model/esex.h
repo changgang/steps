@@ -149,6 +149,7 @@ class ESEX: public ES_ELECTRICAL_MODEL
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
+        virtual void check_limits_in_initialization();
         virtual void run(DYNAMIC_MODE mode);
         virtual void initialize_active_power_control_as_zero();
         virtual double get_frequency_regulation_power_in_pu() const;

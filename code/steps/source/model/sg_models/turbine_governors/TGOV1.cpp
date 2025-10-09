@@ -209,6 +209,11 @@ void TGOV1::initialize()
     set_flag_model_initialized_as_true();
 }
 
+void TGOV1::check_limits_in_initialization()
+{
+    return;
+}
+
 void TGOV1::run(DYNAMIC_MODE mode)
 {
     double Pref = get_mechanical_power_reference_in_pu_based_on_mbase();

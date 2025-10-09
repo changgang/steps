@@ -219,6 +219,11 @@ void WT3T0::initialize()
     }
 }
 
+void WT3T0::check_limits_in_initialization()
+{
+    return;
+}
+
 void WT3T0::run(DYNAMIC_MODE mode)
 {
     WT_GENERATOR* wtgen = (WT_GENERATOR*) get_device_pointer();

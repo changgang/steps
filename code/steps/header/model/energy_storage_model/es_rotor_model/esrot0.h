@@ -27,6 +27,7 @@ class ESROT0 : public ES_ROTOR_MODEL
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
+        virtual void check_limits_in_initialization();
         virtual void run(DYNAMIC_MODE mode);
 
         virtual void check();

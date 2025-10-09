@@ -655,6 +655,11 @@ void GAST2A::initialize()
     }
 }
 
+void GAST2A::check_limits_in_initialization()
+{
+    return;
+}
+
 void GAST2A::run(DYNAMIC_MODE mode)
 {
     STEPS& toolkit = get_toolkit();

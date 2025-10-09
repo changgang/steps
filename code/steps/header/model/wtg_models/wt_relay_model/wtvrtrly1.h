@@ -44,6 +44,7 @@ class WTVRTRLY1 : public WT_RELAY_MODEL
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
+        virtual void check_limits_in_initialization();
         virtual void run(DYNAMIC_MODE mode);
         virtual void check();
         virtual void clear();

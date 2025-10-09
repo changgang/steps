@@ -115,18 +115,53 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
                 WT_AERODYNAMIC_MODEL* aero = get_wt_aerodynamic_model();
                 WIND_SPEED_MODEL* wind = get_wind_speed_model();
                 if(gen!=NULL and gen->is_model_active())
-                {
                     gen->initialize();
-                    if(gen->get_model_name() == "SGFLWTG")
-                    {
-                        break;
-                    }
-                }
                 else
                 {
                     osstream<<"Error. No WT_GENERATOR_MODEL is provided for "<<get_compound_device_name()<<" for dynamic initialization.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     return;
+                }
+                if(gen->is_simplified_model())
+                {
+                    unsigned int i = 0;
+                    osstream<<"Warning. Simplified WT_GENERATOR_MODEL '"<<gen->get_model_name()<<"' is provided for "<<get_compound_device_name()<<"."<<endl
+                            <<"The following models will be passed for dynamic simulation:"<<endl;
+                    if(wind!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") WIND_SPEED_MODEL '"<<wind->get_model_name()<<"'\n";
+                    }
+                    if(aero!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") WT_AERO_DYNAMIC_MODEL '"<<aero->get_model_name()<<"'\n";
+                    }
+                    if(turbine!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") WT_TURBINE_MODEL '"<<turbine->get_model_name()<<"'\n";
+                    }
+                    if(elec!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") WT_ELECTRICAL_MODEL '"<<elec->get_model_name()<<"'\n";
+                    }
+                    if(dbr!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") WT_DBR_MODEL '"<<dbr->get_model_name()<<"'\n";
+                    }
+                    if(pitch!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") WT_PITCH_MODEL '"<<pitch->get_model_name()<<"'\n";
+                    }
+                    if(vrt!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") WT_VRT_MODEL '"<<vrt->get_model_name()<<"'\n";
+                    }
+                    if(relay!=NULL)
+                    {
+                        ++i; osstream<<"("<<i<<") WT_RELAY_MODEL '"<<relay->get_model_name()<<"'\n";
+                    }
+                    osstream<<"You can remove these models with no hesitation.";
+                    if(i!=0)
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                 }
 
                 if(wind!=NULL and wind->is_model_active())
@@ -136,18 +171,24 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
                     aero->initialize();
                 else
                 {
-                    osstream<<"Error. No WT_AERO_DYNAMIC_MODEL is provided for "<<get_compound_device_name()<<" for dynamic initialization.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                    return;
+                    if(not gen->is_simplified_model())
+                    {
+                        osstream<<"Error. No WT_AERO_DYNAMIC_MODEL is provided for "<<get_compound_device_name()<<" for dynamic initialization.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                        return;
+                    }
                 }
 
                 if(turbine!=NULL and turbine->is_model_active())
                     turbine->initialize();
                 else
                 {
-                    osstream<<"Error. No WT_TURBINE_MODEL is provided for "<<get_compound_device_name()<<" for dynamic initialization.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                    return;
+                    if(not gen->is_simplified_model())
+                    {
+                        osstream<<"Error. No WT_TURBINE_MODEL is provided for "<<get_compound_device_name()<<" for dynamic initialization.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                        return;
+                    }
                 }
 
                 if(elec!=NULL and elec->is_model_active())
@@ -171,38 +212,41 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
             case DYNAMIC_UPDATE_MODE:
             case DYNAMIC_UPDATE_TIME_STEP_MODE:
             {
-                if(vrt!=NULL and vrt->is_model_active())
+                if(not gen->is_simplified_model())
                 {
-                    vrt->run(mode);
-
-                    if(elec!=NULL and elec->is_model_active())
+                    if(vrt!=NULL and vrt->is_model_active())
                     {
-                        if(elec->is_model_bypassed()
-                            and (not vrt->is_in_vrt_status()))
-                            elec->unbypass_model();
-                        else
+                        vrt->run(mode);
+
+                        if(elec!=NULL and elec->is_model_active())
                         {
-                            if(not elec->is_model_bypassed()
-                                and (vrt->is_in_vrt_status()))
-                                elec->bypass_model();
+                            if(elec->is_model_bypassed()
+                                and (not vrt->is_in_vrt_status()))
+                                elec->unbypass_model();
+                            else
+                            {
+                                if(not elec->is_model_bypassed()
+                                    and (vrt->is_in_vrt_status()))
+                                    elec->bypass_model();
+                            }
                         }
                     }
+
+                    if(pitch!=NULL and pitch->is_model_active())
+                        pitch->run(mode);
+
+                    //if(wind!=NULL and wind->is_model_active())
+                    //    wind->run(mode);
+
+                    if(turbine!=NULL and turbine->is_model_active())
+                        turbine->run(mode);
+
+                    if(elec!=NULL and elec->is_model_active() and (not elec->is_model_bypassed()))
+                        elec->run(mode);
+
+                    if(turbine!=NULL and turbine->is_model_active())
+                        turbine->run(mode);
                 }
-
-                if(pitch!=NULL and pitch->is_model_active())
-                    pitch->run(mode);
-
-                //if(wind!=NULL and wind->is_model_active())
-                //    wind->run(mode);
-
-                if(turbine!=NULL and turbine->is_model_active())
-                    turbine->run(mode);
-
-                if(elec!=NULL and elec->is_model_active() and (not elec->is_model_bypassed()))
-                    elec->run(mode);
-
-                if(turbine!=NULL and turbine->is_model_active())
-                    turbine->run(mode);
 
                 //if(aero!=NULL)
                 //    aero->run(mode);

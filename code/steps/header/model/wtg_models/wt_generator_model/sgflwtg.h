@@ -97,7 +97,9 @@ class SGFLWTG : public WT_GENERATOR_MODEL
         virtual void prepare_model_internal_variable_table();
 
         virtual void setup_block_toolkit_and_parameters();
+
         virtual void initialize();
+        virtual void check_limits_in_initialization();
         virtual void run(DYNAMIC_MODE mode);
 
         virtual void check();

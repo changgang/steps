@@ -342,6 +342,11 @@ void PUFLS::initialize()
     current_continuous_shed_command_in_pu = 0.0;
 }
 
+void PUFLS::check_limits_in_initialization()
+{
+    return;
+}
+
 void PUFLS::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;

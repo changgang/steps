@@ -618,6 +618,11 @@ void WT3E1::initialize()
     }
 }
 
+void WT3E1::check_limits_in_initialization()
+{
+    return;
+}
+
 void WT3E1::run(DYNAMIC_MODE mode)
 {
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();

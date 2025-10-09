@@ -891,6 +891,11 @@ void CIM6::initialize_to_start()
     }
 }
 
+void CIM6::check_limits_in_initialization()
+{
+    return;
+}
+
 void CIM6::run(DYNAMIC_MODE mode)
 {
     synchronize_bus_voltage_and_frequency();

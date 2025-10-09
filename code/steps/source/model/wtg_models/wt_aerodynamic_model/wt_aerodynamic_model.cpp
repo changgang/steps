@@ -844,6 +844,11 @@ void WT_AERODYNAMIC_MODEL::initialize_turbine_speed()
     set_initial_turbine_speed_in_rad_per_s(w);
 }
 
+void WT_AERODYNAMIC_MODEL::check_limits_in_initialization()
+{
+    return;
+}
+
 void WT_AERODYNAMIC_MODEL::run(DYNAMIC_MODE mode)
 {
     //ostringstream osstream;

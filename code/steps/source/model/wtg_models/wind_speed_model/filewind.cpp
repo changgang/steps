@@ -235,6 +235,11 @@ unsigned int FILEWIND::get_wind_record_count() const
     return n;
 }
 
+void FILEWIND::check_limits_in_initialization()
+{
+    return;
+}
+
 void FILEWIND::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;

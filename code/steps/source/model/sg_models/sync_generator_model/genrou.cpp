@@ -355,6 +355,11 @@ void GENROU::initialize_rotor_angle()
     rotor_angle_block->initialize();
 }
 
+void GENROU::check_limits_in_initialization()
+{
+    return;
+}
+
 void GENROU::run(DYNAMIC_MODE mode)
 {
     INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
