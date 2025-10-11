@@ -295,10 +295,6 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
                     {
                         ++i; osstream<<"("<<i<<") ES_VRT_MODEL '"<<vrt->get_model_name()<<"'\n";
                     }
-                    if(relay!=NULL)
-                    {
-                        ++i; osstream<<"("<<i<<") ES_RELAY_MODEL '"<<relay->get_model_name()<<"'\n";
-                    }
                     if(soc!=NULL)
                     {
                         ++i; osstream<<"("<<i<<") ES_SOC_MODEL '"<<soc->get_model_name()<<"'\n";
@@ -311,7 +307,7 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
                 if(auxiliary!=NULL and auxiliary->is_model_active())
                 {
                     auxiliary->initialize();
-                    if(primary->get_model_name()=="ESB0")//battery storage
+                    if(primary!=NULL and primary->get_model_name()=="ESB0")//battery storage
                     {
                         osstream<<"Warning. ES AUXILIARY model is not need exit for "<<get_compound_device_name()<<".";
                         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -320,7 +316,7 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
                 }
                 else
                 {
-                    if(primary->get_model_name()!="ESB0")//pumped storage
+                    if(primary!=NULL and primary->get_model_name()!="ESB0")//pumped storage
                     {
                         osstream<<"Warning. No ES AUXILIARY model is provided for "<<get_compound_device_name()<<" for dynamic initialization.";
                         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -330,7 +326,7 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
                 if(rotor!=NULL and rotor->is_model_active())
                 {
                     rotor->initialize();
-                    if(primary->get_model_name()=="ESB0")//battery storage
+                    if(primary!=NULL and primary->get_model_name()=="ESB0")//battery storage
                     {
                         osstream<<"Warning. ES ROTOR model is not need exit for "<<get_compound_device_name()<<".";
                         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -338,7 +334,7 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
                 }
                 else
                 {
-                    if(primary->get_model_name()!="ESB0")//pumped storage
+                    if(primary!=NULL and primary->get_model_name()!="ESB0")//pumped storage
                     {
                         osstream<<"Error. No ES ROTOR model is provided for "<<get_compound_device_name()<<" for dynamic initialization.";
                         toolkit.show_information_with_leading_time_stamp(osstream);

@@ -141,10 +141,6 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
                     {
                         ++i; osstream<<"("<<i<<") PV_VRT_MODEL '"<<vrt->get_model_name()<<"'\n";
                     }
-                    if(relay!=NULL)
-                    {
-                        ++i; osstream<<"("<<i<<") PV_RELAY_MODEL '"<<relay->get_model_name()<<"'\n";
-                    }
                     osstream<<"You can remove these models with no hesitation.";
                     if(i!=0)
                         toolkit.show_information_with_leading_time_stamp(osstream);

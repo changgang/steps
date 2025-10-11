@@ -29,11 +29,12 @@ class SGFLPVU : public PV_CONVERTER_MODEL
         void set_Tqcmd(double Tqcmd);
         void set_lvrt_voltage_threshold(double v);
         void set_k_Ip_lvrt_during(double k);
-        void set_Ipset_lvrt_during(double I);
         void set_slope_Ip_lvrt_recover(double slope);
         void set_k_Iq_lvrt_during(double k);
-        void set_Iqset_lvrt_during(double I);
         void set_slope_Iq_lvrt_recover(double slope);
+        void set_hvrt_voltage_threshold(double v);
+        void set_k_Iq_hvrt_during(double k);
+        void set_slope_Iq_hvrt_recover(double slope);
 
         double get_KPLL() const;
         double get_KIPLL() const;
@@ -48,11 +49,12 @@ class SGFLPVU : public PV_CONVERTER_MODEL
         double get_Tqcmd() const;
         double get_lvrt_voltage_threshold() const;
         double get_k_Ip_lvrt_during() const;
-        double get_Ipset_lvrt_during() const;
         double get_slope_Ip_lvrt_recover() const;
         double get_k_Iq_lvrt_during() const;
-        double get_Iqset_lvrt_during() const;
         double get_slope_Iq_lvrt_recover() const;
+        double get_hvrt_voltage_threshold() const;
+        double get_k_Iq_hvrt_during() const;
+        double get_slope_Iq_hvrt_recover() const;
 
         double get_Ipcmd_in_pu_based_on_mbase();
         double get_Iqcmd_in_pu_based_on_mbase();
@@ -61,17 +63,20 @@ class SGFLPVU : public PV_CONVERTER_MODEL
         void set_voltage_reference_in_pu(double Vref);
         double get_voltage_reference_in_pu() const;
 
-        void unbypass_model();
-        void bypass_model();
-        bool is_elec_control_bypassed() const;
+        bool is_P_elec_control_bypassed() const;
+        bool is_Q_elec_control_bypassed() const;
 
         void check_lvrt_status();
         void set_lvrt_status(VRT_STATUS status);
         VRT_STATUS get_lvrt_status() const;
+        void check_hvrt_status();
+        void set_hvrt_status(VRT_STATUS status);
+        VRT_STATUS get_hvrt_status() const;
         bool is_active_power_recovered() const;
         bool is_reactive_power_recovered() const;
         double get_lvrt_IP_command();
         double get_lvrt_IQ_command();
+        double get_hvrt_IQ_command();
 
         void update_IPQ0_in_lvrt_during_status(double Ip0, double Iq0);
         void update_IPQ0_in_lvrt_recover_status(double Ip0, double Iq0);
@@ -80,12 +85,24 @@ class SGFLPVU : public PV_CONVERTER_MODEL
         void set_Iq0_lvrt_activated_in_pu(double I);
         void set_Ip0_lvrt_recover_activated_in_pu(double I);
         void set_Iq0_lvrt_recover_activated_in_pu(double I);
-
         double get_time_when_lvrt_enter_recover_status() const;
         double get_Ip0_lvrt_activated_in_pu() const;
         double get_Iq0_lvrt_activated_in_pu() const;
         double get_Ip0_lvrt_recover_activated_in_pu() const;
         double get_Iq0_lvrt_recover_activated_in_pu() const;
+
+        void update_IPQ0_in_hvrt_during_status(double Ip0, double Iq0);
+        void update_IPQ0_in_hvrt_recover_status(double Ip0, double Iq0);
+        void set_time_when_hvrt_enter_recover_status(double t);
+        void set_Ip0_hvrt_activated_in_pu(double I);
+        void set_Iq0_hvrt_activated_in_pu(double I);
+        void set_Ip0_hvrt_recover_activated_in_pu(double I);
+        void set_Iq0_hvrt_recover_activated_in_pu(double I);
+        double get_time_when_hvrt_enter_recover_status() const;
+        double get_Ip0_hvrt_activated_in_pu() const;
+        double get_Iq0_hvrt_activated_in_pu() const;
+        double get_Ip0_hvrt_recover_activated_in_pu() const;
+        double get_Iq0_hvrt_recover_activated_in_pu() const;
 
         virtual string get_model_name() const;
 
@@ -97,6 +114,7 @@ class SGFLPVU : public PV_CONVERTER_MODEL
         virtual void prepare_model_internal_variable_table();
 
         virtual void setup_block_toolkit_and_parameters();
+
         virtual void initialize();
         virtual void check_limits_in_initialization();
         virtual void run(DYNAMIC_MODE mode);
@@ -145,16 +163,22 @@ class SGFLPVU : public PV_CONVERTER_MODEL
         INTEGRAL_BLOCK voltage_regulator_integrator;
 
         double lvrt_voltage_threshold;
-        double k_Ip_lvrt_during, Ipset_lvrt_during, slope_Ip_lvrt_recover;
-        double k_Iq_lvrt_during, Iqset_lvrt_during, slope_Iq_lvrt_recover;
+        double k_Ip_lvrt_during, slope_Ip_lvrt_recover;
+        double k_Iq_lvrt_during, slope_Iq_lvrt_recover;
+
+        double hvrt_voltage_threshold;
+        double k_Iq_hvrt_during, slope_Iq_hvrt_recover;
 
         double Vref;
         VRT_STATUS lvrt_status, hvrt_status;
         bool P_recovered, Q_recovered;
-        bool elec_control_bypassed;
+        bool P_elec_control_bypassed, Q_elec_control_bypassed;
         double Ip0_lvrt_activated, Ip0_lvrt_recover_activated;
         double Iq0_lvrt_activated, Iq0_lvrt_recover_activated;
         double t0_lvrt_recover_activated;
+        double Ip0_hvrt_activated, Ip0_hvrt_recover_activated;
+        double Iq0_hvrt_activated, Iq0_hvrt_recover_activated;
+        double t0_hvrt_recover_activated;
 
 };
 
