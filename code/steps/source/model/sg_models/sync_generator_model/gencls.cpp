@@ -178,7 +178,19 @@ void GENCLS::initialize_rotor_angle()
 
 void GENCLS::check_limits_in_initialization()
 {
-    return;
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+
+    double rs = get_Rs();
+    double xdp = get_Xdp();
+
+    if(fabs(rs)<FLOAT_EPSILON and fabs(xdp)<FLOAT_EPSILON)
+    {
+        osstream<<"Initialization error. Zero ZSOURCE is detected for "<<get_model_name()<<" model of "<<get_compound_device_name()<<".\n"
+                <<"It can lead to Inf to network Y maxtrix and NAN to following network solution.\n"
+                <<"This is a FATAL error and must be fixed by changing generator Rsource and Xsource.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
 }
 
 void GENCLS::run(DYNAMIC_MODE mode)

@@ -449,6 +449,9 @@ void CDC6T::run(DYNAMIC_MODE mode)
 
 void CDC6T::solve_2t_lcc_hvdc_model_without_integration()
 {
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+
     check_blocking_logic();
     check_bypassing_logic();
     check_mode_switching_logic();
@@ -459,6 +462,15 @@ void CDC6T::solve_2t_lcc_hvdc_model_without_integration()
         double Idc_measured = dc_current_sensor.get_output();
         double Icommand = get_rectifier_dc_current_command_in_kA(Vdci_measured, Idc_measured);
         double Vcommand = get_inverter_dc_voltage_command_in_kV();
+        if(toolkit.is_detailed_log_enabled())
+        {
+            if(isnan(Icommand))
+            {
+                osstream<<"NAN is detected for Icommand for "<<get_model_name()<<" model of "<<get_compound_device_name()
+                        <<" at time "<<toolkit.get_dynamic_simulation_time_in_s()<<"s at "<<__LINE__<<" in "<<__FILE__;
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+        }
         solve_2t_lcc_hvdc_model_without_line_dynamics(Icommand, Vcommand);
     }
 }
