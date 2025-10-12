@@ -70,8 +70,8 @@ vector<string> generator_meters{"ROTOR ANGLE IN DEG",              "ROTOR ANGLE 
                                 "TERMINAL ACTIVE POWER IN MW",
                                 "TERMINAL REACTIVE POWER IN PU ON MBASE", "TERMINAL REACTIVE POWER IN PU ON SBASE",
                                 "TERMINAL REACTIVE POWER IN MVAR",
-                                "TERMINAL APPRAENT POWER IN PU ON MBASE", "TERMINAL APPRAENT POWER IN PU ON SBASE",
-                                "TERMINAL APPRAENT POWER IN MVA",
+                                "TERMINAL APPARENT POWER IN PU ON MBASE", "TERMINAL APPARENT POWER IN PU ON SBASE",
+                                "TERMINAL APPARENT POWER IN MVA",
                                 "AIRGAP POWER IN PU ON MBASE", "AIRGAP POWER IN PU ON SBASE",
                                 "AIRGAP POWER IN MW",
                                 "ACCELERATING POWER IN PU ON MBASE", "ACCELERATING POWER IN PU ON SBASE",
@@ -97,8 +97,8 @@ vector<string> wt_generator_meters{ "TERMINAL CURRENT IN PU ON MBASE",  "TERMINA
                                     "TERMINAL ACTIVE POWER IN MW",
                                     "TERMINAL REACTIVE POWER IN PU ON MBASE", "TERMINAL REACTIVE POWER IN PU ON SBASE",
                                     "TERMINAL REACTIVE POWER IN MVAR",
-                                    "TERMINAL APPRAENT POWER IN PU ON MBASE", "TERMINAL APPRAENT POWER IN PU ON SBASE",
-                                    "TERMINAL APPRAENT POWER IN MVA",
+                                    "TERMINAL APPARENT POWER IN PU ON MBASE", "TERMINAL APPARENT POWER IN PU ON SBASE",
+                                    "TERMINAL APPARENT POWER IN MVA",
                                     "MECHANICAL POWER IN PU ON MBASE", "MECHANICAL POWER IN PU ON SBASE",
                                     "MECHANICAL POWER IN MW",
                                     "MAX AVAILABLE MECHANICAL POWER IN PU ON MBASE", "MAX AVAILABLE MECHANICAL POWER IN PU ON SBASE",
@@ -1486,7 +1486,7 @@ double METER::get_meter_value_as_a_generator() const
                 else
                     return gen_model->get_terminal_reactive_power_in_MVar();
             }
-            if(meter_type =="TERMINAL APPRAENT POWER IN PU ON MBASE")
+            if(meter_type =="TERMINAL APPRRENT POWER IN PU ON MBASE")
             {
                 if(gen_model == NULL)
                     return 0.0;
@@ -1497,7 +1497,7 @@ double METER::get_meter_value_as_a_generator() const
                     return steps_sqrt(p*p+q*q);
                 }
             }
-            if(meter_type =="TERMINAL APPRAENT POWER IN PU ON SBASE")
+            if(meter_type =="TERMINAL APPARENT POWER IN PU ON SBASE")
             {
                 if(gen_model == NULL)
                     return 0.0;
@@ -1508,7 +1508,7 @@ double METER::get_meter_value_as_a_generator() const
                     return steps_sqrt(p*p+q*q)*(mbase*one_over_sbase);
                 }
             }
-            if(meter_type =="TERMINAL APPRAENT POWER IN MVA")
+            if(meter_type =="TERMINAL APPARENT POWER IN MVA")
             {
                 if(gen_model == NULL)
                     return 0.0;

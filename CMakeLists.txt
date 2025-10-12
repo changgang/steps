@@ -1,6 +1,6 @@
 # script for cmake
 # Author: Changgang Li
-# Date: Sep. 16, 2025
+# Date: Oct. 12, 2025
 
 # set cmake version required. 
 # Since I am using Ubuntu 24.04.3 LTS with kernel 6.14.0, cmake of version 3.28 is supported.
@@ -127,56 +127,88 @@ target_include_directories(STEPS PRIVATE ${STEPSCODE_SOURCE_DIR})
 target_link_libraries(STEPS CSparse CXSparse CppTest)
 
 # to build STEPS as executable, you should include source with main() function
-# for example, the following code shows how to add main_gprof.cpp for compilation
-file(GLOB_RECURSE STEPS_MAIN_SOURCE "${STEPS_SOURCE_DIR}/main_gprof.cpp")
-list(APPEND STEPS_SOURCES ${STEPS_MAIN_SOURCE})
-# add target: executable
-add_executable(STEPS_gprof ${STEPS_SOURCES})
-# add headers
-target_include_directories(STEPS_gprof PRIVATE ${STEPS_SOURCE_DIR})
-target_include_directories(STEPS_gprof PRIVATE ${CSPARSE_SOURCE_DIR}/Include)
-target_include_directories(STEPS_gprof PRIVATE ${CXSPARSE_SOURCE_DIR}/Include)
-target_include_directories(STEPS_gprof PRIVATE ${SUITESPARSE_SOURCE_DIR}/SuiteSparse_config)
-target_include_directories(STEPS_gprof PRIVATE ${CPPTEST_SOURCE_DIR})
-set(KLU_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/KLU)
-target_include_directories(STEPS_gprof PRIVATE ${KLU_SOURCE_DIR}/Include)
-set(UMFPACK_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/UMFPACK)
-target_include_directories(STEPS_gprof PRIVATE ${UMFPACK_SOURCE_DIR}/Include)
-set(AMD_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/AMD)
-target_include_directories(STEPS_gprof PRIVATE ${AMD_SOURCE_DIR}/Include)
-set(COLAMD_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/COLAMD)
-target_include_directories(STEPS_gprof PRIVATE ${COLAMD_SOURCE_DIR}/Include)
-set(BTF_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/BTF)
-target_include_directories(STEPS_gprof PRIVATE ${BTF_SOURCE_DIR}/Include)
-set(STEPSCODE_SOURCE_DIR "./code")
-target_include_directories(STEPS_gprof PRIVATE ${STEPSCODE_SOURCE_DIR})
-# static libraries CSparse, CXSparse, and CppTest must be included.
-target_link_libraries(STEPS_gprof CSparse CXSparse CppTest)
-
-# to build STEPS as executable, you should include source with main() function
-# for example, the following code shows how to add main_gprof.cpp for compilation
+# for example, the following code shows how to add main_gprof_pf.cpp for compilation
 list(REMOVE_ITEM STEPS_SOURCES ${STEPS_MAIN_SOURCE})
-file(GLOB_RECURSE STEPS_MAIN_PF_SOURCE "${STEPS_SOURCE_DIR}/main_pf_gprof.cpp")
+file(GLOB_RECURSE STEPS_MAIN_PF_SOURCE "${STEPS_SOURCE_DIR}/main_gprof_pf.cpp")
 list(APPEND STEPS_SOURCES ${STEPS_MAIN_PF_SOURCE})
 # add target: executable
-add_executable(STEPS_pf_gprof ${STEPS_SOURCES})
+add_executable(STEPS_gprof_pf ${STEPS_SOURCES})
 # add headers
-target_include_directories(STEPS_pf_gprof PRIVATE ${STEPS_SOURCE_DIR})
-target_include_directories(STEPS_pf_gprof PRIVATE ${CSPARSE_SOURCE_DIR}/Include)
-target_include_directories(STEPS_pf_gprof PRIVATE ${CXSPARSE_SOURCE_DIR}/Include)
-target_include_directories(STEPS_pf_gprof PRIVATE ${SUITESPARSE_SOURCE_DIR}/SuiteSparse_config)
-target_include_directories(STEPS_pf_gprof PRIVATE ${CPPTEST_SOURCE_DIR})
+target_include_directories(STEPS_gprof_pf PRIVATE ${STEPS_SOURCE_DIR})
+target_include_directories(STEPS_gprof_pf PRIVATE ${CSPARSE_SOURCE_DIR}/Include)
+target_include_directories(STEPS_gprof_pf PRIVATE ${CXSPARSE_SOURCE_DIR}/Include)
+target_include_directories(STEPS_gprof_pf PRIVATE ${SUITESPARSE_SOURCE_DIR}/SuiteSparse_config)
+target_include_directories(STEPS_gprof_pf PRIVATE ${CPPTEST_SOURCE_DIR})
 set(KLU_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/KLU)
-target_include_directories(STEPS_pf_gprof PRIVATE ${KLU_SOURCE_DIR}/Include)
+target_include_directories(STEPS_gprof_pf PRIVATE ${KLU_SOURCE_DIR}/Include)
 set(UMFPACK_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/UMFPACK)
-target_include_directories(STEPS_pf_gprof PRIVATE ${UMFPACK_SOURCE_DIR}/Include)
+target_include_directories(STEPS_gprof_pf PRIVATE ${UMFPACK_SOURCE_DIR}/Include)
 set(AMD_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/AMD)
-target_include_directories(STEPS_pf_gprof PRIVATE ${AMD_SOURCE_DIR}/Include)
+target_include_directories(STEPS_gprof_pf PRIVATE ${AMD_SOURCE_DIR}/Include)
 set(COLAMD_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/COLAMD)
-target_include_directories(STEPS_pf_gprof PRIVATE ${COLAMD_SOURCE_DIR}/Include)
+target_include_directories(STEPS_gprof_pf PRIVATE ${COLAMD_SOURCE_DIR}/Include)
 set(BTF_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/BTF)
-target_include_directories(STEPS_pf_gprof PRIVATE ${BTF_SOURCE_DIR}/Include)
+target_include_directories(STEPS_gprof_pf PRIVATE ${BTF_SOURCE_DIR}/Include)
 set(STEPSCODE_SOURCE_DIR "./code")
-target_include_directories(STEPS_pf_gprof PRIVATE ${STEPSCODE_SOURCE_DIR})
+target_include_directories(STEPS_gprof_pf PRIVATE ${STEPSCODE_SOURCE_DIR})
 # static libraries CSparse, CXSparse, and CppTest must be included.
-target_link_libraries(STEPS_pf_gprof CSparse CXSparse CppTest)
+target_link_libraries(STEPS_gprof_pf CSparse CXSparse CppTest)
+
+
+
+# to build STEPS as executable, you should include source with main() function
+# for example, the following code shows how to add main_gprof_dy_sd133.cpp for compilation
+file(GLOB_RECURSE STEPS_MAIN_DY_SD133_SOURCE "${STEPS_SOURCE_DIR}/main_gprof_dy_sd133.cpp")
+list(REMOVE_ITEM STEPS_SOURCES ${STEPS_MAIN_PF_SOURCE})
+list(APPEND STEPS_SOURCES ${STEPS_MAIN_DY_SD133_SOURCE})
+# add target: executable
+add_executable(STEPS_gprof_dy_sd133 ${STEPS_SOURCES})
+# add headers
+target_include_directories(STEPS_gprof_dy_sd133 PRIVATE ${STEPS_SOURCE_DIR})
+target_include_directories(STEPS_gprof_dy_sd133 PRIVATE ${CSPARSE_SOURCE_DIR}/Include)
+target_include_directories(STEPS_gprof_dy_sd133 PRIVATE ${CXSPARSE_SOURCE_DIR}/Include)
+target_include_directories(STEPS_gprof_dy_sd133 PRIVATE ${SUITESPARSE_SOURCE_DIR}/SuiteSparse_config)
+target_include_directories(STEPS_gprof_dy_sd133 PRIVATE ${CPPTEST_SOURCE_DIR})
+set(KLU_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/KLU)
+target_include_directories(STEPS_gprof_dy_sd133 PRIVATE ${KLU_SOURCE_DIR}/Include)
+set(UMFPACK_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/UMFPACK)
+target_include_directories(STEPS_gprof_dy_sd133 PRIVATE ${UMFPACK_SOURCE_DIR}/Include)
+set(AMD_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/AMD)
+target_include_directories(STEPS_gprof_dy_sd133 PRIVATE ${AMD_SOURCE_DIR}/Include)
+set(COLAMD_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/COLAMD)
+target_include_directories(STEPS_gprof_dy_sd133 PRIVATE ${COLAMD_SOURCE_DIR}/Include)
+set(BTF_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/BTF)
+target_include_directories(STEPS_gprof_dy_sd133 PRIVATE ${BTF_SOURCE_DIR}/Include)
+set(STEPSCODE_SOURCE_DIR "./code")
+target_include_directories(STEPS_gprof_dy_sd133 PRIVATE ${STEPSCODE_SOURCE_DIR})
+# static libraries CSparse, CXSparse, and CppTest must be included.
+target_link_libraries(STEPS_gprof_dy_sd133 CSparse CXSparse CppTest)
+
+
+# to build STEPS as executable, you should include source with main() function
+# for example, the following code shows how to add main_gprof_dy_nccc10k.cpp for compilation
+file(GLOB_RECURSE STEPS_MAIN_DY_NCCC10K_SOURCE "${STEPS_SOURCE_DIR}/main_gprof_dy_nccc10k.cpp")
+list(REMOVE_ITEM STEPS_SOURCES ${STEPS_MAIN_DY_SD133_SOURCE})
+list(APPEND STEPS_SOURCES ${STEPS_MAIN_DY_NCCC10K_SOURCE})
+# add target: executable
+add_executable(STEPS_gprof_dy_nccc10k ${STEPS_SOURCES})
+# add headers
+target_include_directories(STEPS_gprof_dy_nccc10k PRIVATE ${STEPS_SOURCE_DIR})
+target_include_directories(STEPS_gprof_dy_nccc10k PRIVATE ${CSPARSE_SOURCE_DIR}/Include)
+target_include_directories(STEPS_gprof_dy_nccc10k PRIVATE ${CXSPARSE_SOURCE_DIR}/Include)
+target_include_directories(STEPS_gprof_dy_nccc10k PRIVATE ${SUITESPARSE_SOURCE_DIR}/SuiteSparse_config)
+target_include_directories(STEPS_gprof_dy_nccc10k PRIVATE ${CPPTEST_SOURCE_DIR})
+set(KLU_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/KLU)
+target_include_directories(STEPS_gprof_dy_nccc10k PRIVATE ${KLU_SOURCE_DIR}/Include)
+set(UMFPACK_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/UMFPACK)
+target_include_directories(STEPS_gprof_dy_nccc10k PRIVATE ${UMFPACK_SOURCE_DIR}/Include)
+set(AMD_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/AMD)
+target_include_directories(STEPS_gprof_dy_nccc10k PRIVATE ${AMD_SOURCE_DIR}/Include)
+set(COLAMD_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/COLAMD)
+target_include_directories(STEPS_gprof_dy_nccc10k PRIVATE ${COLAMD_SOURCE_DIR}/Include)
+set(BTF_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/BTF)
+target_include_directories(STEPS_gprof_dy_nccc10k PRIVATE ${BTF_SOURCE_DIR}/Include)
+set(STEPSCODE_SOURCE_DIR "./code")
+target_include_directories(STEPS_gprof_dy_nccc10k PRIVATE ${STEPSCODE_SOURCE_DIR})
+# static libraries CSparse, CXSparse, and CppTest must be included.
+target_link_libraries(STEPS_gprof_dy_nccc10k CSparse CXSparse CppTest)
