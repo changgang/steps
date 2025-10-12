@@ -34,8 +34,9 @@ class PLL0 : public PLL_MODEL
         virtual double get_pll_frequency_deviation_in_pu() const;
         virtual double get_pll_angle_in_rad() const;
     private:
-        double Kp;
+        double Kp, Ki;
         INTEGRAL_BLOCK frequency_deviation_block, angle_in_rad_block;
+        bool ideal_pll_flag;
 };
 
 #endif // PLL0_H

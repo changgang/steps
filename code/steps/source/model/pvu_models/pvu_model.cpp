@@ -17,18 +17,6 @@ PV_UNIT* PVU_MODEL::get_pv_unit_pointer() const
     return (PV_UNIT*) get_device_pointer();
 }
 
-double PVU_MODEL::get_mbase_in_MVA() const
-{
-    PV_UNIT* pv_unit = get_pv_unit_pointer();
-    return pv_unit->get_mbase_in_MVA();
-}
-
-double PVU_MODEL::get_one_over_mbase_in_one_over_MVA() const
-{
-    PV_UNIT* pv_unit = get_pv_unit_pointer();
-    return pv_unit->get_one_over_mbase_in_one_over_MVA();
-}
-
 unsigned int PVU_MODEL::get_number_of_lumped_pv_units() const
 {
     PV_UNIT* pv_unit = get_pv_unit_pointer();

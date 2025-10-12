@@ -42,18 +42,6 @@ GENERATOR* SG_MODEL::get_generator_pointer() const
     return (GENERATOR*) get_device_pointer();
 }
 
-double SG_MODEL::get_mbase_in_MVA() const
-{
-    GENERATOR* gen = get_generator_pointer();
-    return gen->get_mbase_in_MVA();
-}
-
-double SG_MODEL::get_one_over_mbase_in_one_over_MVA() const
-{
-    GENERATOR* gen = get_generator_pointer();
-    return gen->get_one_over_mbase_in_one_over_MVA();
-}
-
 double SG_MODEL::get_bus_base_frequency_in_Hz() const
 {
     BUS* bus = get_bus_pointer();

@@ -14,8 +14,6 @@ class ES_MODEL : public MODEL
         virtual ~ES_MODEL();
 
         ENERGY_STORAGE* get_energy_storage_pointer() const;
-        double get_mbase_in_MVA() const;
-        double get_one_over_mbase_in_one_over_MVA() const;
 
         double get_terminal_voltage_in_pu() const;
         complex<double> get_terminal_complex_voltage_in_pu() const;

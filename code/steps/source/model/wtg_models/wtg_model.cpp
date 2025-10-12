@@ -17,18 +17,6 @@ WT_GENERATOR* WTG_MODEL::get_wt_generator_pointer() const
     return (WT_GENERATOR*) get_device_pointer();
 }
 
-double WTG_MODEL::get_mbase_in_MVA() const
-{
-    WT_GENERATOR* gen = get_wt_generator_pointer();
-    return gen->get_mbase_in_MVA();
-}
-
-double WTG_MODEL::get_one_over_mbase_in_one_over_MVA() const
-{
-    WT_GENERATOR* gen = get_wt_generator_pointer();
-    return gen->get_one_over_mbase_in_one_over_MVA();
-}
-
 double WTG_MODEL::get_number_of_lumped_wt_generators() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();

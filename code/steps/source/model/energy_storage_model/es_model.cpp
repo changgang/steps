@@ -17,18 +17,6 @@ ENERGY_STORAGE* ES_MODEL::get_energy_storage_pointer() const
     return (ENERGY_STORAGE*) get_device_pointer();
 }
 
-double ES_MODEL::get_mbase_in_MVA() const
-{
-    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
-    return energy_storage->get_mbase_in_MVA();
-}
-
-double ES_MODEL::get_one_over_mbase_in_one_over_MVA() const
-{
-    ENERGY_STORAGE* energy_storage = get_energy_storage_pointer();
-    return energy_storage->get_one_over_mbase_in_one_over_MVA();
-}
-
 double ES_MODEL::get_terminal_voltage_in_pu() const
 {
     BUS* bus = get_bus_pointer();

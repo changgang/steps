@@ -38,6 +38,7 @@ void PLL0::clear()
     set_Ki(0.0);
     set_Pllmax(0.0);
     set_Pllmin(0.0);
+    ideal_pll_flag = true;
 }
 
 void PLL0::copy_from_const_model(const PLL0& model)
@@ -60,6 +61,7 @@ void PLL0::set_Kp(double K)
 
 void PLL0::set_Ki(double K)
 {
+    Ki = K;
     if(fabs(K)>FLOAT_EPSILON)
         frequency_deviation_block.set_T_in_s(1.0/K);
     else
@@ -116,13 +118,17 @@ void PLL0::initialize()
 
     frequency_deviation_block.set_output(0.0);
     frequency_deviation_block.initialize();
+
+    Ki = get_Ki();
+    if(Kp==0.0 and Ki==0.0)
+        ideal_pll_flag = true;
+    else
+        ideal_pll_flag = false;
 }
 
 void PLL0::run(DYNAMIC_MODE mode)
 {
-    double kp = get_Kp();
-    double ki = get_Ki();
-    if(kp!=0.0 or ki!=0.0)
+    if(ideal_pll_flag == false)
     {
         complex<double> Vxy = get_bus_complex_voltage_in_pu();
         double Vr = Vxy.real();
@@ -132,8 +138,8 @@ void PLL0::run(DYNAMIC_MODE mode)
         double Vy = -Vr*steps_sin(angle)+Vi*steps_cos(angle);
 
         double wbase = get_base_angle_speed_in_radps();
-        double input = Vy*kp/wbase;
-        if(ki!=0)
+        double input = Vy*Kp/wbase;
+        if(Ki!=0)
         {
             frequency_deviation_block.set_input(input);
             frequency_deviation_block.run(mode);
@@ -162,9 +168,7 @@ void PLL0::run(DYNAMIC_MODE mode)
 
 double PLL0::get_pll_frequency_deviation_in_pu() const
 {
-    double kp = get_Kp();
-    double ki = get_Ki();
-    if(kp!=0.0 or ki!=0.0)
+    if(ideal_pll_flag == false)
     {
         complex<double> Vxy = get_bus_complex_voltage_in_pu();
         double Vr = Vxy.real();
@@ -174,8 +178,8 @@ double PLL0::get_pll_frequency_deviation_in_pu() const
         double Vy = -Vr*steps_sin(angle)+Vi*steps_cos(angle);
 
         double wbase = get_base_angle_speed_in_radps();
-        double input = Vy*kp/wbase;
-        if(ki!=0)
+        double input = Vy*Kp/wbase;
+        if(Ki!=0)
         {
             double output = frequency_deviation_block.get_output();
             input += output;
@@ -200,9 +204,7 @@ double PLL0::get_pll_frequency_deviation_in_pu() const
 
 double PLL0::get_pll_angle_in_rad() const
 {
-    double kp = get_Kp();
-    double ki = get_Ki();
-    if(kp!=0.0 or ki!=0.0)
+    if(ideal_pll_flag == false)
         return angle_in_rad_block.get_output();
     else
         return get_bus_voltage_angle_in_rad();

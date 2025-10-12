@@ -319,6 +319,8 @@ void MODEL::set_device_id(DEVICE_ID did)
             case STEPS_WT_GENERATOR:
             case STEPS_PV_UNIT:
             case STEPS_ENERGY_STORAGE:
+                mbase = ((SOURCE*) device_pointer)->get_mbase_in_MVA();
+                one_over_mbase = ((SOURCE*) device_pointer)->get_one_over_mbase_in_one_over_MVA();
                 bus_pointer = ((SOURCE*) device_pointer)->get_bus_pointer();
                 return;
             case STEPS_LOAD:
@@ -415,6 +417,16 @@ BUS* MODEL::get_bus_pointer(TRANSFORMER_WINDING_SIDE winding) const
             //return tertiary_winding_bus_pointer;
     }
 }*/
+
+double MODEL::get_mbase_in_MVA() const
+{
+    return mbase;
+}
+
+double MODEL::get_one_over_mbase_in_one_over_MVA() const
+{
+    return one_over_mbase;
+}
 
 void MODEL::set_flag_model_initialized_as_false()
 {

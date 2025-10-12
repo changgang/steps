@@ -54,6 +54,9 @@ class MODEL
         //BUS* get_bus_pointer(LINE_SIDE side) const;
         //BUS* get_bus_pointer(TRANSFORMER_WINDING_SIDE winding) const;
 
+        double get_mbase_in_MVA() const;
+        double get_one_over_mbase_in_one_over_MVA() const;
+
         void set_flag_model_initialized_as_false();
         void set_flag_model_initialized_as_true();
         bool is_model_initialized() const;
@@ -130,6 +133,8 @@ class MODEL
         bool flag_model_updated;
 
         bool flag_model_active;
+
+        double mbase, one_over_mbase;
 
         MODEL_VAR_TABLE *model_data_table, *model_internal_variable_table;
 
