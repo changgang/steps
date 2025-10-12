@@ -690,11 +690,8 @@ complex<double> LOAD::get_dynamic_load_in_pu()
 
 double LOAD::get_load_total_scale_factor_in_pu() const
 {
-    double scale = get_load_manually_scale_factor_in_pu()-get_load_relay_shed_scale_factor_in_pu();
-    if(scale>-1.0)
-        return scale;
-    else
-        return -1.0;
+    double scale = manually_scale_in_pu-get_load_relay_shed_scale_factor_in_pu();
+    return scale>-1.0?scale:-1.0;
 }
 
 double LOAD::get_load_manually_scale_factor_in_pu() const
@@ -704,20 +701,18 @@ double LOAD::get_load_manually_scale_factor_in_pu() const
 
 double LOAD::get_load_relay_shed_scale_factor_in_pu() const
 {
-    if(status == true)
+    if(status)
     {
-        LOAD_FREQUENCY_RELAY_MODEL* frelay = get_load_frequency_relay_model();
-        LOAD_VOLTAGE_RELAY_MODEL* vrelay = get_load_voltage_relay_model();
-        if(frelay == NULL and vrelay == NULL)
+        if(load_frequency_relay_model == NULL and load_voltage_relay_model == NULL)
             return 0.0;
 
         double total_shed = 0.0;
 
-        if(frelay!=NULL)
-            total_shed += frelay->get_total_shed_scale_factor_in_pu();
+        if(load_frequency_relay_model!=NULL)
+            total_shed += load_frequency_relay_model->get_total_shed_scale_factor_in_pu();
 
-        if(vrelay!=NULL)
-            total_shed += vrelay->get_total_shed_scale_factor_in_pu();
+        if(load_voltage_relay_model!=NULL)
+            total_shed += load_voltage_relay_model->get_total_shed_scale_factor_in_pu();
 
         return total_shed;
     }
@@ -728,11 +723,10 @@ double LOAD::get_load_relay_shed_scale_factor_in_pu() const
 
 complex<double> LOAD::get_dynamics_load_current_in_pu_based_on_system_base_power()
 {
-    if(status==true)
+    if(status)
     {
         double scale = 1.0+get_load_total_scale_factor_in_pu();
 
-        LOAD_MODEL* load_model = get_load_model();
         if(load_model!=NULL)
             return scale*(load_model->get_load_current_in_pu_based_on_SBASE());
         else

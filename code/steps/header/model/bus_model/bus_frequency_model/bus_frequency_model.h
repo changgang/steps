@@ -33,6 +33,7 @@ class BUS_FREQUENCY_MODEL
         BUS* bus_ptr;
         double fbase_Hz, tbase_s;
         double frequency_block_output_old;
+        double DELT, DELT_threshold;
         bool is_model_updated;
 };
 

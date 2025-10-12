@@ -13,6 +13,8 @@ BUS_FREQUENCY_MODEL::BUS_FREQUENCY_MODEL(STEPS& toolkit) : frequency_block(toolk
     set_toolkit(toolkit);
     frequency_block.set_K(ONE_OVER_DOUBLE_PI);
     bus_ptr = NULL;
+    DELT = 0.0;
+    DELT_threshold = 0.0;
 }
 
 BUS_FREQUENCY_MODEL::~BUS_FREQUENCY_MODEL()
@@ -50,7 +52,10 @@ void BUS_FREQUENCY_MODEL::initialize()
     fbase_Hz = bus_ptr->get_base_frequency_in_Hz();
     tbase_s = bus_ptr->get_base_period_in_s();
 
-    double DELT = toolkit->get_dynamic_simulation_time_step_in_s();
+    DELT = toolkit->get_dynamic_simulation_time_step_in_s();
+    DYNAMICS_SIMULATOR& ds = toolkit->get_dynamic_simulator();
+    DELT_threshold = ds.get_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s();
+
     frequency_block.set_T_in_s(DELT*4.0);
 
     frequency_block.set_input(bus_ptr->get_positive_sequence_angle_in_rad());
@@ -90,7 +95,7 @@ void BUS_FREQUENCY_MODEL::run(DYNAMIC_MODE mode)
     {
         if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
         {
-            double DELT= toolkit->get_dynamic_simulation_time_step_in_s();
+            DELT= toolkit->get_dynamic_simulation_time_step_in_s();
             frequency_block.set_T_in_s(DELT*4.0);
             frequency_block.set_input(bus_ptr->get_positive_sequence_angle_in_rad());
             frequency_block.run(mode);
@@ -126,8 +131,8 @@ void BUS_FREQUENCY_MODEL::update_for_applying_event(DYNAMIC_EVENT_TYPE type)
         }
         case TIME_STEP_CHANGE_EVENT:
         {
-            double new_DELT= toolkit->get_dynamic_simulation_time_step_in_s();
-            frequency_block.set_T_in_s(new_DELT*4.0);
+            DELT= toolkit->get_dynamic_simulation_time_step_in_s();
+            frequency_block.set_T_in_s(DELT*4.0);
             T = frequency_block.get_T_in_s();
             frequency_block.set_state_WITH_CAUTION(K/T*input-temp);
             frequency_block.run(DYNAMIC_UPDATE_TIME_STEP_MODE);
@@ -149,14 +154,12 @@ double BUS_FREQUENCY_MODEL::get_frequency_deviation_in_pu() const
 
 double BUS_FREQUENCY_MODEL::get_frequency_deviation_in_Hz() const
 {
-    double DELT= toolkit->get_dynamic_simulation_time_step_in_s();
-    DYNAMICS_SIMULATOR& ds = toolkit->get_dynamic_simulator();
-    double h_th = ds.get_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s();
-    if(DELT<h_th)
+    if(DELT<DELT_threshold)
         return frequency_block.get_output();
     else
     {
         // assuming an additional (1+s*k*DELT) block is added following the frequency_block
+        DYNAMICS_SIMULATOR& ds = toolkit->get_dynamic_simulator();
         double k = ds.get_k_for_leading_part_of_bus_frequency_model();
         double f = frequency_block.get_output();
         return f + (f-frequency_block_output_old)*k;
