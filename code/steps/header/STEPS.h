@@ -86,8 +86,8 @@ class STEPS
         EIGN_CALCULATOR& get_eign_calculator();
         NETWORK_MATRIX& get_network_matrix();
 
-        double get_system_base_power_in_MVA() const;
-        double get_one_over_system_base_power_in_one_over_MVA() const;
+        inline double get_system_base_power_in_MVA() const;
+        inline double get_one_over_system_base_power_in_one_over_MVA() const;
 
         void set_max_dynamic_simulation_time_step_in_s(double delt);
         double get_max_dynamic_simulation_time_step_in_s();
@@ -133,4 +133,14 @@ class STEPS
                      equivalent_device_thread_number;
         unsigned int dynamic_model_db_size;
 };
+
+double STEPS::get_system_base_power_in_MVA() const
+{
+    return power_system_db.get_system_base_power_in_MVA();
+}
+
+double STEPS::get_one_over_system_base_power_in_one_over_MVA() const
+{
+    return power_system_db.get_one_over_system_base_power_in_one_over_MVA();
+}
 #endif // STEPS_H

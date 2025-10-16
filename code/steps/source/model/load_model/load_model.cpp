@@ -82,34 +82,10 @@ void LOAD_MODEL::synchronize_bus_voltage_and_frequency()
     frequency_deviation_pu = bus->get_frequency_deviation_in_pu();
 }
 
-double LOAD_MODEL::get_bus_positive_sequence_voltage_in_pu() const
-{
-    return voltage_pu;
-
-    BUS* bus = get_bus_pointer();
-    return bus->get_positive_sequence_voltage_in_pu();
-}
-
 double LOAD_MODEL::get_bus_positive_sequence_voltage_in_kV() const
 {
     BUS* bus = get_bus_pointer();
     return bus->get_positive_sequence_voltage_in_kV();
-}
-
-complex<double> LOAD_MODEL::get_bus_positive_sequence_complex_voltage_in_pu() const
-{
-    return complex_voltage_pu;
-
-    BUS* bus = get_bus_pointer();
-    return bus->get_positive_sequence_complex_voltage_in_pu();
-}
-
-double LOAD_MODEL::get_bus_frequency_deviation_in_pu() const
-{
-    return frequency_deviation_pu;
-
-    BUS* bus = get_bus_pointer();
-    return bus->get_frequency_deviation_in_pu();
 }
 
 double LOAD_MODEL::get_bus_base_frequency_in_Hz() const

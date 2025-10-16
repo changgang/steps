@@ -36,11 +36,6 @@ MODEL::MODEL(STEPS& toolkit)
     user_input_time_series = NULL;
 }
 
-STEPS& MODEL::get_toolkit() const
-{
-    return *toolkit;
-}
-
 void MODEL::set_toolkit(STEPS& toolkit)
 {
     this->toolkit = (&toolkit);

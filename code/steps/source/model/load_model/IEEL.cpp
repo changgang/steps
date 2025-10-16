@@ -668,12 +668,6 @@ double IEEL::get_model_internal_variable_with_name(string var_name)
     return 0.0;
 }
 
-complex<double> IEEL::get_initial_load_power_in_MVA() const
-{
-    return complex<double>(P0, Q0);
-}
-
-
 string IEEL::get_dynamic_data_in_psse_format() const
 {
     return "";

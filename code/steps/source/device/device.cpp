@@ -20,11 +20,6 @@ void DEVICE::set_toolkit(STEPS& toolkit)
     this->toolkit = (&toolkit);
 }
 
-STEPS& DEVICE::get_toolkit() const
-{
-    return (*toolkit);
-}
-
 string DEVICE::get_compound_device_name() const
 {
     return get_device_id().get_compound_device_name();

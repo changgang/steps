@@ -14,7 +14,7 @@ class MODEL
 {
     public:// common model level
         MODEL(STEPS& toolkit);
-        STEPS& get_toolkit() const;
+        inline STEPS& get_toolkit() const;
         void set_toolkit(STEPS& toolkit);
         virtual ~MODEL();
 
@@ -142,4 +142,8 @@ class MODEL
         TIME_SERIES *user_input_time_series;
 };
 
+STEPS& MODEL::get_toolkit() const
+{
+    return *toolkit;
+}
 #endif // MODEL_H

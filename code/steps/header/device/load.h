@@ -33,7 +33,7 @@ class LOAD : public NONBUS_DEVICE
         void set_grounding_flag(const bool flag);
 
         unsigned int get_load_bus() const;
-        BUS* get_bus_pointer() const;
+        inline BUS* get_bus_pointer() const;
 
         string get_identifier() const;
         unsigned int get_identifier_index() const;
@@ -202,4 +202,9 @@ class LOAD : public NONBUS_DEVICE
 
         STEPS_SPARSE_MATRIX *Aptr, *Bptr, *Cptr, *Dptr;
 };
+
+BUS* LOAD::get_bus_pointer() const
+{
+    return busptr;
+}
 #endif // LOAD_H

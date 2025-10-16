@@ -17,7 +17,7 @@ class DEVICE
         DEVICE(STEPS& toolkit);
         virtual ~DEVICE();
         void set_toolkit(STEPS& toolkit);
-        STEPS& get_toolkit() const;
+        inline STEPS& get_toolkit() const;
 
         virtual bool is_in_area(unsigned int area) const = 0;
         virtual bool is_in_zone(unsigned int zone) const = 0;
@@ -34,4 +34,9 @@ class DEVICE
         STEPS* toolkit;
 
 };
+
+STEPS& DEVICE::get_toolkit() const
+{
+    return (*toolkit);
+}
 #endif // DEVICE_H

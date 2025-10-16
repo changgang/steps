@@ -151,11 +151,6 @@ unsigned int LOAD::get_load_bus() const
     return bus;
 }
 
-BUS* LOAD::get_bus_pointer() const
-{
-    return busptr;
-}
-
 string LOAD::get_identifier() const
 {
     return get_string_of_index(identifier_index);
