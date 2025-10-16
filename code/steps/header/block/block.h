@@ -24,8 +24,8 @@ class BLOCK
         void set_input(double input);
         void set_output(double output);
 
-        double get_input() const;
-        double get_output() const;
+        inline double get_input() const;
+        inline double get_output() const;
 
         void set_limiter_type(LIMITER_TYPE limiter_type);
         void set_upper_limit(double vmax);
@@ -72,4 +72,14 @@ class BLOCK
 
         unsigned int state_index;
 };
+
+double BLOCK::get_input() const
+{
+    return input;
+}
+
+double BLOCK::get_output() const
+{
+    return output;
+}
 #endif // BLOCK_H

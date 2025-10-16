@@ -37,7 +37,7 @@ class LOAD : public NONBUS_DEVICE
 
         string get_identifier() const;
         unsigned int get_identifier_index() const;
-        bool get_status() const;
+        inline bool get_status() const;
         complex<double> get_nominal_constant_power_load_in_MVA() const;
         complex<double> get_nominal_constant_current_load_in_MVA() const;
         complex<double> get_nominal_constant_impedance_load_in_MVA() const;
@@ -86,9 +86,9 @@ class LOAD : public NONBUS_DEVICE
         void set_load_frequency_relay_model(LOAD_FREQUENCY_RELAY_MODEL* model);
         void set_load_voltage_relay_model(LOAD_VOLTAGE_RELAY_MODEL* model);
 
-        LOAD_MODEL* get_load_model() const;
-        LOAD_FREQUENCY_RELAY_MODEL* get_load_frequency_relay_model() const;
-        LOAD_VOLTAGE_RELAY_MODEL* get_load_voltage_relay_model() const;
+        inline LOAD_MODEL* get_load_model() const;
+        inline LOAD_FREQUENCY_RELAY_MODEL* get_load_frequency_relay_model() const;
+        inline LOAD_VOLTAGE_RELAY_MODEL* get_load_voltage_relay_model() const;
 
         virtual void run(DYNAMIC_MODE mode);
         complex<double> get_dynamic_load_in_MVA();
@@ -206,5 +206,25 @@ class LOAD : public NONBUS_DEVICE
 BUS* LOAD::get_bus_pointer() const
 {
     return busptr;
+}
+
+bool LOAD::get_status() const
+{
+    return status;
+}
+
+LOAD_MODEL* LOAD::get_load_model() const
+{
+    return load_model;
+}
+
+LOAD_FREQUENCY_RELAY_MODEL* LOAD::get_load_frequency_relay_model() const
+{
+    return load_frequency_relay_model;
+}
+
+LOAD_VOLTAGE_RELAY_MODEL* LOAD::get_load_voltage_relay_model() const
+{
+    return load_voltage_relay_model;
 }
 #endif // LOAD_H

@@ -108,16 +108,6 @@ void BLOCK::set_output(double y)
     this->output = y;
 }
 
-double BLOCK::get_input() const
-{
-    return input;
-}
-
-double BLOCK::get_output() const
-{
-    return output;
-}
-
 void BLOCK::enable_automatic_large_time_step_logic()
 {
     automatic_large_time_step_logic = true;

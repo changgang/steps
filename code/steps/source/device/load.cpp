@@ -161,11 +161,6 @@ unsigned int LOAD::get_identifier_index() const
     return identifier_index;
 }
 
-bool LOAD::get_status() const
-{
-    return status;
-}
-
 complex<double> LOAD::get_nominal_constant_power_load_in_MVA() const
 {
     return s_constant_power_in_MVA;
@@ -587,22 +582,6 @@ void LOAD::set_load_voltage_relay_model(LOAD_VOLTAGE_RELAY_MODEL* model)
 {
     if(model != NULL)
         load_voltage_relay_model = model;
-}
-
-
-LOAD_MODEL* LOAD::get_load_model() const
-{
-    return load_model;
-}
-
-LOAD_FREQUENCY_RELAY_MODEL* LOAD::get_load_frequency_relay_model() const
-{
-    return load_frequency_relay_model;
-}
-
-LOAD_VOLTAGE_RELAY_MODEL* LOAD::get_load_voltage_relay_model() const
-{
-    return load_voltage_relay_model;
 }
 
 void LOAD::run(DYNAMIC_MODE mode)

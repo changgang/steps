@@ -80,11 +80,6 @@ double CONVERTER_MODEL::get_initial_reactive_voltage_command_in_pu() const
     return initial_reactive_voltage_command_in_pu;
 }
 
-complex<double> CONVERTER_MODEL::get_source_impedance_in_pu_based_on_mbase() const
-{
-    return this->Zsource;
-}
-
 void CONVERTER_MODEL::set_source_impedance_in_pu_based_on_mbase(complex<double> Z)
 {
     this->Zsource = Z;

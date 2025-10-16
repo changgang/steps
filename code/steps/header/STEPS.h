@@ -21,7 +21,7 @@ class STEPS
         STEPS(const string& name="TK DFLT", const string& log_file="");
         virtual ~STEPS();
         void set_toolkit_name(const string& name);
-        string get_toolkit_name() const;
+        inline string get_toolkit_name() const;
 
         void enable_use_steps_fast_math_logic();
         void disable_use_steps_fast_math_logic();
@@ -133,6 +133,11 @@ class STEPS
                      equivalent_device_thread_number;
         unsigned int dynamic_model_db_size;
 };
+
+string STEPS::get_toolkit_name() const
+{
+    return toolkit_name;
+}
 
 double STEPS::get_system_base_power_in_MVA() const
 {

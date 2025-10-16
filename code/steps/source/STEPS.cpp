@@ -69,12 +69,6 @@ void STEPS::set_toolkit_name(const string& name)
     }
 }
 
-string STEPS::get_toolkit_name() const
-{
-    return toolkit_name;
-}
-
-
 void STEPS::enable_use_steps_fast_math_logic()
 {
     use_steps_fast_math = true;
