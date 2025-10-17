@@ -32,7 +32,7 @@ class BUS : public DEVICE
         void set_area_number(unsigned int number);
         void set_zone_number(unsigned int number);
         void set_owner_number(unsigned int number);
-        void set_positive_sequence_voltage_in_pu(double voltage);
+        inline void set_positive_sequence_voltage_in_pu(double voltage){positive_sequence_voltage_in_pu = voltage;}
         void set_positive_sequence_voltage_in_kV(double voltage);
         void set_positive_sequence_angle_in_rad(double angle, complex<double> euler=0.0);
         void set_positive_sequence_angle_in_deg(double angle);
@@ -53,16 +53,16 @@ class BUS : public DEVICE
         void set_base_frequency_in_Hz(double fn);
         void set_voltage_to_regulate_in_pu(double voltage);
 
-        unsigned int get_bus_number() const;
+        inline unsigned int get_bus_number() const{return bus_number;}
         string get_bus_name() const;
         double get_base_voltage_in_kV() const;
         BUS_TYPE get_bus_type() const;
         unsigned int get_area_number() const;
         unsigned int get_zone_number() const;
         unsigned int get_owner_number() const;
-        double get_positive_sequence_voltage_in_pu() const;
+        inline double get_positive_sequence_voltage_in_pu() const{return positive_sequence_voltage_in_pu;}
         double get_positive_sequence_voltage_in_kV() const;
-        double get_positive_sequence_angle_in_rad() const;
+        inline double get_positive_sequence_angle_in_rad() const{return positive_sequence_angle_in_rad;}
         double get_positive_sequence_angle_in_deg() const;
         double get_negative_sequence_voltage_in_pu() const;
         double get_negative_sequence_voltage_in_kV() const;
@@ -81,7 +81,7 @@ class BUS : public DEVICE
         double get_base_frequency_in_Hz() const;
         double get_base_period_in_s() const;
         double get_voltage_to_regulate_in_pu() const;
-        complex<double> get_positive_sequence_complex_voltage_in_pu() const;
+        inline complex<double> get_positive_sequence_complex_voltage_in_pu() const{return positive_sequence_voltage_in_pu*positive_sequence_Euler_complex_number;}
         complex<double> get_positive_sequence_complex_voltage_in_kV() const;
         complex<double> get_negative_sequence_complex_voltage_in_pu() const;
         complex<double> get_negative_sequence_complex_voltage_in_kV() const;

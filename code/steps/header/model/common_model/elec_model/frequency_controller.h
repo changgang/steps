@@ -26,8 +26,8 @@ class FREQUENCY_CONTROLLER: public COMMON_MODEL
         void set_Kdroop(double K);
         void set_Tdroop_in_s(double T);
 
-        double get_frequency_deviation_upper_deadband_in_pu() const;
-        double get_frequency_deviation_lower_deadband_in_pu() const;
+        inline double get_frequency_deviation_upper_deadband_in_pu() const{return f_upper_pu;}
+        inline double get_frequency_deviation_lower_deadband_in_pu() const{return f_lower_pu;}
         double get_Kfint() const;
         double get_Kvi() const;
         double get_Tvi_in_s() const;

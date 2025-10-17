@@ -61,10 +61,10 @@ class SGFLWTG : public WT_GENERATOR_MODEL
 
         double get_bus_voltage_in_pu() const;
         void set_voltage_reference_in_pu(double Vref);
-        double get_voltage_reference_in_pu() const;
+        inline double get_voltage_reference_in_pu() const{return Vref;}
 
-        bool is_P_elec_control_bypassed() const;
-        bool is_Q_elec_control_bypassed() const;
+        inline bool is_P_elec_control_bypassed() const{return P_elec_control_bypassed;}
+        inline bool is_Q_elec_control_bypassed() const{return Q_elec_control_bypassed;}
 
         void check_lvrt_status();
         void set_lvrt_status(VRT_STATUS status);

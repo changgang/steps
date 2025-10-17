@@ -18,7 +18,7 @@ class COMMON_MODEL
         STEPS& get_toolkit() const;
 
         void set_bus_pointer(BUS* bus);
-        BUS* get_bus_pointer() const;
+        inline BUS* get_bus_pointer() const{return bus;}
         unsigned int get_bus_number() const;
         void set_device_pointer(NONBUS_DEVICE* device);
         NONBUS_DEVICE* get_device_pointer() const;

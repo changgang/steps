@@ -21,7 +21,7 @@ class STEPS
         STEPS(const string& name="TK DFLT", const string& log_file="");
         virtual ~STEPS();
         void set_toolkit_name(const string& name);
-        inline string get_toolkit_name() const;
+        inline string get_toolkit_name() const{return toolkit_name;}
 
         void enable_use_steps_fast_math_logic();
         void disable_use_steps_fast_math_logic();
@@ -36,7 +36,7 @@ class STEPS
         bool get_dynamic_blocks_automatic_large_time_step_logic();
 
         void set_thread_number(unsigned int n);
-        unsigned int get_thread_number() const;
+        inline unsigned int get_thread_number() const{return thread_number;}
 
         void update_device_thread_number();
         unsigned int get_bus_thread_number() const;
@@ -86,8 +86,8 @@ class STEPS
         EIGN_CALCULATOR& get_eign_calculator();
         NETWORK_MATRIX& get_network_matrix();
 
-        inline double get_system_base_power_in_MVA() const;
-        inline double get_one_over_system_base_power_in_one_over_MVA() const;
+        inline double get_system_base_power_in_MVA() const{return power_system_db.get_system_base_power_in_MVA();}
+        inline double get_one_over_system_base_power_in_one_over_MVA() const{return power_system_db.get_one_over_system_base_power_in_one_over_MVA();}
 
         void set_max_dynamic_simulation_time_step_in_s(double delt);
         double get_max_dynamic_simulation_time_step_in_s();
@@ -133,19 +133,4 @@ class STEPS
                      equivalent_device_thread_number;
         unsigned int dynamic_model_db_size;
 };
-
-string STEPS::get_toolkit_name() const
-{
-    return toolkit_name;
-}
-
-double STEPS::get_system_base_power_in_MVA() const
-{
-    return power_system_db.get_system_base_power_in_MVA();
-}
-
-double STEPS::get_one_over_system_base_power_in_one_over_MVA() const
-{
-    return power_system_db.get_one_over_system_base_power_in_one_over_MVA();
-}
 #endif // STEPS_H

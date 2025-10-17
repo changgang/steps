@@ -350,21 +350,6 @@ void SGFLWTG::set_voltage_reference_in_pu(double Vref)
     this->Vref = Vref;
 }
 
-double SGFLWTG::get_voltage_reference_in_pu() const
-{
-    return Vref;
-}
-
-bool SGFLWTG::is_P_elec_control_bypassed() const
-{
-    return P_elec_control_bypassed;
-}
-
-bool SGFLWTG::is_Q_elec_control_bypassed() const
-{
-    return Q_elec_control_bypassed;
-}
-
 void SGFLWTG::check_lvrt_status()
 {
     VRT_STATUS current_status = get_lvrt_status();

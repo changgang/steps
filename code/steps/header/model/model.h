@@ -14,7 +14,7 @@ class MODEL
 {
     public:// common model level
         MODEL(STEPS& toolkit);
-        inline STEPS& get_toolkit() const;
+        inline STEPS& get_toolkit() const{return *toolkit;}
         void set_toolkit(STEPS& toolkit);
         virtual ~MODEL();
 
@@ -46,16 +46,16 @@ class MODEL
         bool is_model_internal_variable_exist(unsigned int var_index) const;
 
         void set_device_id(DEVICE_ID did);
-        NONBUS_DEVICE* get_device_pointer() const;
+        inline NONBUS_DEVICE* get_device_pointer() const{return device_pointer;}
         DEVICE_ID get_device_id() const;
         string get_compound_device_name() const;
-        BUS* get_bus_pointer() const;
+        inline BUS* get_bus_pointer() const{return bus_pointer;}
         //BUS* get_bus_pointer(CONVERTER_SIDE converter) const;
         //BUS* get_bus_pointer(LINE_SIDE side) const;
         //BUS* get_bus_pointer(TRANSFORMER_WINDING_SIDE winding) const;
 
-        double get_mbase_in_MVA() const;
-        double get_one_over_mbase_in_one_over_MVA() const;
+        inline double get_mbase_in_MVA() const{return mbase;}
+        inline double get_one_over_mbase_in_one_over_MVA() const{return one_over_mbase;}
 
         void set_flag_model_initialized_as_false();
         void set_flag_model_initialized_as_true();
@@ -141,9 +141,4 @@ class MODEL
         string *user_input_time_series_file;
         TIME_SERIES *user_input_time_series;
 };
-
-STEPS& MODEL::get_toolkit() const
-{
-    return *toolkit;
-}
 #endif // MODEL_H

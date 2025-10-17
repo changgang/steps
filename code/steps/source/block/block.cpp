@@ -98,16 +98,6 @@ double BLOCK::get_lower_limit() const
     return lower_limit;
 }
 
-void BLOCK::set_input(double x)
-{
-    this->input = x;
-}
-
-void BLOCK::set_output(double y)
-{
-    this->output = y;
-}
-
 void BLOCK::enable_automatic_large_time_step_logic()
 {
     automatic_large_time_step_logic = true;

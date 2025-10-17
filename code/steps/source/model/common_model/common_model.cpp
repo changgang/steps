@@ -30,11 +30,6 @@ void COMMON_MODEL::set_device_pointer(NONBUS_DEVICE* device)
     this->device = device;
 }
 
-BUS* COMMON_MODEL::get_bus_pointer() const
-{
-    return bus;
-}
-
 unsigned int COMMON_MODEL::get_bus_number() const
 {
     return bus->get_bus_number();

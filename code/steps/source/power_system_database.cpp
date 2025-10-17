@@ -4603,17 +4603,6 @@ vector<unsigned int> POWER_SYSTEM_DATABASE::get_all_owners_number()
     return owners_number;
 }
 
-
-unsigned int POWER_SYSTEM_DATABASE::get_bus_count() const
-{
-    return Bus.size();
-}
-
-unsigned int POWER_SYSTEM_DATABASE::get_in_service_bus_count() const
-{
-    return in_service_bus_count;
-}
-
 void POWER_SYSTEM_DATABASE::update_in_service_bus_count()
 {
     unsigned int n = Bus.size();
@@ -4627,11 +4616,6 @@ void POWER_SYSTEM_DATABASE::update_in_service_bus_count()
     }
 
     in_service_bus_count = n-n_out_of_service;
-}
-
-unsigned int POWER_SYSTEM_DATABASE::get_overshadowed_bus_count() const
-{
-    return overshadowed_bus_count;
 }
 
 void POWER_SYSTEM_DATABASE::set_all_buses_un_overshadowed()
@@ -4716,21 +4700,6 @@ unsigned int POWER_SYSTEM_DATABASE::get_equivalent_bus_of_bus(unsigned int bus)
         return 0;
 }
 
-unsigned int POWER_SYSTEM_DATABASE::get_generator_count() const
-{
-    return Generator.size();
-}
-
-unsigned int POWER_SYSTEM_DATABASE::get_wt_generator_count() const
-{
-    return WT_Generator.size();
-}
-
-unsigned int POWER_SYSTEM_DATABASE::get_pv_unit_count() const
-{
-    return PV_Unit.size();
-}
-
 unsigned int POWER_SYSTEM_DATABASE::get_source_count() const
 {
     unsigned int n = 0;
@@ -4739,26 +4708,6 @@ unsigned int POWER_SYSTEM_DATABASE::get_source_count() const
     n += get_pv_unit_count();
     n += get_energy_storage_count();
     return n;
-}
-
-unsigned int POWER_SYSTEM_DATABASE::get_load_count() const
-{
-    return Load.size();
-}
-
-unsigned int POWER_SYSTEM_DATABASE::get_ac_line_count() const
-{
-    return Ac_line.size();
-}
-
-unsigned int POWER_SYSTEM_DATABASE::get_transformer_count() const
-{
-    return Transformer.size();
-}
-
-unsigned int POWER_SYSTEM_DATABASE::get_fixed_shunt_count() const
-{
-    return Fixed_shunt.size();
 }
 
 unsigned int POWER_SYSTEM_DATABASE::get_2t_lcc_hvdc_count() const

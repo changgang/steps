@@ -32,12 +32,12 @@ class LOAD : public NONBUS_DEVICE
         void set_zero_sequence_load_in_MVA(const complex<double>& s);
         void set_grounding_flag(const bool flag);
 
-        unsigned int get_load_bus() const;
-        inline BUS* get_bus_pointer() const;
+        inline unsigned int get_load_bus() const{return bus;}
+        inline BUS* get_bus_pointer() const{return busptr;}
 
         string get_identifier() const;
         unsigned int get_identifier_index() const;
-        inline bool get_status() const;
+        inline bool get_status() const{return status;}
         complex<double> get_nominal_constant_power_load_in_MVA() const;
         complex<double> get_nominal_constant_current_load_in_MVA() const;
         complex<double> get_nominal_constant_impedance_load_in_MVA() const;
@@ -202,16 +202,6 @@ class LOAD : public NONBUS_DEVICE
 
         STEPS_SPARSE_MATRIX *Aptr, *Bptr, *Cptr, *Dptr;
 };
-
-BUS* LOAD::get_bus_pointer() const
-{
-    return busptr;
-}
-
-bool LOAD::get_status() const
-{
-    return status;
-}
 
 LOAD_MODEL* LOAD::get_load_model() const
 {

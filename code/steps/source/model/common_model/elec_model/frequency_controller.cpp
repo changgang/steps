@@ -119,16 +119,6 @@ double FREQUENCY_CONTROLLER::get_Tdroop_in_s() const
     return frequency_droop_controller.get_T_in_s();
 }
 
-double FREQUENCY_CONTROLLER::get_frequency_deviation_upper_deadband_in_pu() const
-{
-    return f_upper_pu;
-}
-
-double FREQUENCY_CONTROLLER::get_frequency_deviation_lower_deadband_in_pu() const
-{
-    return f_lower_pu;
-}
-
 double FREQUENCY_CONTROLLER::get_Kfint() const
 {
     double t = frequency_integral_controller.get_T_in_s();

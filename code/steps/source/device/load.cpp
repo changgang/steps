@@ -146,11 +146,6 @@ void LOAD::set_grounding_flag(const bool flag)
     grounding_flag = flag;
 }
 
-unsigned int LOAD::get_load_bus() const
-{
-    return bus;
-}
-
 string LOAD::get_identifier() const
 {
     return get_string_of_index(identifier_index);
@@ -252,8 +247,7 @@ void LOAD::clear()
 
 bool LOAD::is_connected_to_bus(unsigned int target_bus) const
 {
-    if(target_bus==get_load_bus()) return true;
-    else return false;
+    return target_bus==bus;
 }
 
 bool LOAD::is_in_area(unsigned int area) const

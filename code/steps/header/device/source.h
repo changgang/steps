@@ -38,13 +38,13 @@ class SOURCE : public NONBUS_DEVICE
         void set_support_coefficient_of_converter_negative_sequence_current(double c);
 
 
-        unsigned int get_source_bus() const;
+        inline unsigned int get_source_bus() const{return source_bus;}
         BUS* get_bus_pointer() const;
         string get_identifier() const;
         unsigned int get_identifier_index() const;
-        bool get_status() const;
-        double get_mbase_in_MVA() const;
-        double get_one_over_mbase_in_one_over_MVA() const;
+        inline bool get_status() const{return status;}
+        inline double get_mbase_in_MVA() const{return mbase_MVA;}
+        inline double get_one_over_mbase_in_one_over_MVA() const{return one_over_mbase;}
         double get_p_generation_in_MW() const;
         double get_q_generation_in_MVar() const;
         complex<double> get_complex_generation_in_MVA() const;

@@ -26,7 +26,7 @@ class WT_GENERATOR : public SOURCE
         virtual DEVICE_ID get_device_id() const;
 
         void set_generator_bus(unsigned int bus);
-        unsigned int get_generator_bus() const;
+        inline unsigned int get_generator_bus() const{return get_source_bus();}
 
         void set_number_of_lumped_wt_generators(double n);
         void set_rated_power_per_wt_generator_in_MW(double P);
@@ -47,15 +47,15 @@ class WT_GENERATOR : public SOURCE
         void set_wt_relay_model(WT_RELAY_MODEL* model);
         void set_wt_dbr_model(WT_DBR_MODEL* model);
 
-        WT_GENERATOR_MODEL* get_wt_generator_model() const;
-        WT_AERODYNAMIC_MODEL* get_wt_aerodynamic_model() const;
-        WT_TURBINE_MODEL* get_wt_turbine_model() const;
-        WT_ELECTRICAL_MODEL* get_wt_electrical_model() const;
-        WT_PITCH_MODEL* get_wt_pitch_model() const;
-        WIND_SPEED_MODEL* get_wind_speed_model() const;
-        WT_VRT_MODEL* get_wt_vrt_model() const;
-        WT_RELAY_MODEL* get_wt_relay_model() const;
-        WT_DBR_MODEL* get_wt_dbr_model() const;
+        inline WT_GENERATOR_MODEL* get_wt_generator_model() const{return wt_generator_model;}
+        inline WT_AERODYNAMIC_MODEL* get_wt_aerodynamic_model() const{return wt_aerodynamic_model;}
+        inline WT_TURBINE_MODEL* get_wt_turbine_model() const{return wt_turbine_model;}
+        inline WT_ELECTRICAL_MODEL* get_wt_electrical_model() const{return wt_electrical_model;}
+        inline WT_PITCH_MODEL* get_wt_pitch_model() const{return wt_pitch_model;}
+        inline WIND_SPEED_MODEL* get_wind_speed_model() const{return wind_speed_model;}
+        inline WT_VRT_MODEL* get_wt_vrt_model() const{return wt_vrt_model;}
+        inline WT_RELAY_MODEL* get_wt_relay_model() const{return wt_relay_model;}
+        inline WT_DBR_MODEL* get_wt_dbr_model() const{return wt_dbr_model;}
 
         virtual void run(DYNAMIC_MODE mode);
         virtual void report() const;

@@ -175,11 +175,6 @@ void SOURCE::set_support_coefficient_of_converter_negative_sequence_current(doub
     support_coefficient_of_converter_negative_sequence_current = c;
 }
 
-unsigned int SOURCE::get_source_bus() const
-{
-    return source_bus;
-}
-
 BUS* SOURCE::get_bus_pointer() const
 {
     return busptr;
@@ -193,21 +188,6 @@ string SOURCE::get_identifier() const
 unsigned int SOURCE::get_identifier_index() const
 {
     return source_identifier_index;
-}
-
-bool SOURCE::get_status() const
-{
-    return status;
-}
-
-double SOURCE::get_mbase_in_MVA() const
-{
-    return mbase_MVA;
-}
-
-double SOURCE::get_one_over_mbase_in_one_over_MVA() const
-{
-    return one_over_mbase;
 }
 
 double SOURCE::get_p_generation_in_MW() const

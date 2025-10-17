@@ -53,8 +53,8 @@ STEPS::~STEPS()
 {
     report_toolkit_memory_usage();
 
-    if(toolkit_name!="TK DFLT")
-        show_information_with_leading_time_stamp("STEPS simulation toolkit ["+toolkit_name+"] @ 0X"+num2hex_str(size_t(this))+" is deleted.");
+    //if(toolkit_name!="TK DFLT")
+    show_information_with_leading_time_stamp("STEPS simulation toolkit ["+toolkit_name+"] @ 0X"+num2hex_str(size_t(this))+" is deleted.");
     close_log_file();
 }
 
@@ -132,11 +132,6 @@ void STEPS::set_thread_number(unsigned int n)
 
     if(power_system_db.get_bus_count()!=0)
         update_device_thread_number();
-}
-
-unsigned int STEPS::get_thread_number() const
-{
-    return thread_number;
 }
 
 void STEPS::update_device_thread_number()

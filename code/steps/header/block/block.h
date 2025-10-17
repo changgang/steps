@@ -21,8 +21,8 @@ class BLOCK
 
         virtual void check() = 0;
 
-        void set_input(double input);
-        void set_output(double output);
+        inline void set_input(double input){this->input = input;}
+        inline void set_output(double output){this->output = output;}
 
         inline double get_input() const;
         inline double get_output() const;

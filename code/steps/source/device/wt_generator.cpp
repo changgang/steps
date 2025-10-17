@@ -66,11 +66,6 @@ void WT_GENERATOR::set_generator_bus(unsigned int bus)
     set_source_bus(bus);
 }
 
-unsigned int WT_GENERATOR::get_generator_bus() const
-{
-    return get_source_bus();
-}
-
 void WT_GENERATOR::set_number_of_lumped_wt_generators(double n)
 {
     if(n==0)
@@ -433,51 +428,6 @@ void WT_GENERATOR::set_wt_dbr_model(WT_DBR_MODEL* model)
 {
     if(model!=NULL)
         wt_dbr_model = model;
-}
-
-WT_GENERATOR_MODEL* WT_GENERATOR::get_wt_generator_model() const
-{
-    return wt_generator_model;
-}
-
-WT_AERODYNAMIC_MODEL* WT_GENERATOR::get_wt_aerodynamic_model() const
-{
-    return wt_aerodynamic_model;
-}
-
-WT_TURBINE_MODEL* WT_GENERATOR::get_wt_turbine_model() const
-{
-    return wt_turbine_model;
-}
-
-WT_ELECTRICAL_MODEL* WT_GENERATOR::get_wt_electrical_model() const
-{
-    return wt_electrical_model;
-}
-
-WT_PITCH_MODEL* WT_GENERATOR::get_wt_pitch_model() const
-{
-    return wt_pitch_model;
-}
-
-WIND_SPEED_MODEL* WT_GENERATOR::get_wind_speed_model() const
-{
-    return wind_speed_model;
-}
-
-WT_VRT_MODEL* WT_GENERATOR::get_wt_vrt_model() const
-{
-    return wt_vrt_model;
-}
-
-WT_RELAY_MODEL* WT_GENERATOR::get_wt_relay_model() const
-{
-    return wt_relay_model;
-}
-
-WT_DBR_MODEL* WT_GENERATOR::get_wt_dbr_model() const
-{
-    return wt_dbr_model;
 }
 
 WT_GENERATOR& WT_GENERATOR::operator=(const WT_GENERATOR& gen)

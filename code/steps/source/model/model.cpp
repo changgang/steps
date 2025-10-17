@@ -351,11 +351,6 @@ void MODEL::set_device_id(DEVICE_ID did)
     }
 }
 
-NONBUS_DEVICE* MODEL::get_device_pointer() const
-{
-    return device_pointer;
-}
-
 DEVICE_ID MODEL::get_device_id() const
 {
     DEVICE_ID did;
@@ -375,11 +370,6 @@ DEVICE_ID MODEL::get_device_id() const
 string MODEL::get_compound_device_name() const
 {
     return get_device_id().get_compound_device_name();
-}
-
-BUS* MODEL::get_bus_pointer() const
-{
-    return bus_pointer;
 }
 
 
@@ -412,16 +402,6 @@ BUS* MODEL::get_bus_pointer(TRANSFORMER_WINDING_SIDE winding) const
             //return tertiary_winding_bus_pointer;
     }
 }*/
-
-double MODEL::get_mbase_in_MVA() const
-{
-    return mbase;
-}
-
-double MODEL::get_one_over_mbase_in_one_over_MVA() const
-{
-    return one_over_mbase;
-}
 
 void MODEL::set_flag_model_initialized_as_false()
 {

@@ -80,30 +80,6 @@ void BUS::set_owner_number(unsigned int number)
     owner_number = number;
 }
 
-void BUS::set_positive_sequence_voltage_in_pu(double voltage)
-{
-    positive_sequence_voltage_in_pu = voltage;
-    return;
-    if(voltage>=0.0)
-        positive_sequence_voltage_in_pu = voltage;
-    else
-    {
-        STEPS& toolkit = get_toolkit();
-        ostringstream osstream;
-        osstream<<"Warning. Non-positive voltage ("<<voltage<<" pu) is not allowed for setting up voltage for bus "
-               <<get_bus_number()<<" ("<<get_bus_name()<<")."<<endl
-               <<"0.0 will be set automatically. [current dynamic simulation time is: "<<toolkit.get_dynamic_simulation_time_in_s()<<"s]";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        positive_sequence_voltage_in_pu = 0.0;
-        if(std::isnan(voltage))
-        {
-            osstream<<"STEPS will exit abnormally.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-            exit(1);
-        }
-    }
-}
-
 void BUS::set_positive_sequence_voltage_in_kV(double voltage)
 {
     if(get_base_voltage_in_kV()!=0.0)
@@ -286,11 +262,6 @@ void BUS::set_voltage_to_regulate_in_pu(double voltage)
     }
 }
 
-unsigned int BUS::get_bus_number() const
-{
-    return bus_number;
-}
-
 string BUS::get_bus_name() const
 {
     return get_string_of_index(bus_name_index);
@@ -321,19 +292,9 @@ unsigned int BUS::get_owner_number() const
     return owner_number;
 }
 
-double BUS::get_positive_sequence_voltage_in_pu() const
-{
-    return positive_sequence_voltage_in_pu;
-}
-
 double BUS::get_positive_sequence_voltage_in_kV() const
 {
     return get_base_voltage_in_kV()*get_positive_sequence_voltage_in_pu();
-}
-
-double BUS::get_positive_sequence_angle_in_rad() const
-{
-    return positive_sequence_angle_in_rad;
 }
 
 double BUS::get_positive_sequence_angle_in_deg() const
@@ -426,11 +387,6 @@ double BUS::get_base_period_in_s() const
 double BUS::get_voltage_to_regulate_in_pu() const
 {
     return voltage_to_regulate_in_pu;
-}
-
-complex<double> BUS::get_positive_sequence_complex_voltage_in_pu() const
-{
-    return positive_sequence_voltage_in_pu*positive_sequence_Euler_complex_number;
 }
 
 complex<double> BUS::get_positive_sequence_complex_voltage_in_kV() const

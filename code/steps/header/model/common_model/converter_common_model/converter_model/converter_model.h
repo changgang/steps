@@ -28,7 +28,7 @@ class CONVERTER_MODEL:public COMMON_MODEL
         double get_initial_reactive_power_command_in_pu_based_on_mbase() const;
         double get_initial_reactive_voltage_command_in_pu() const;
 
-        inline complex<double> get_source_impedance_in_pu_based_on_mbase() const;
+        inline complex<double> get_source_impedance_in_pu_based_on_mbase() const{return Zsource;}
         void set_source_impedance_in_pu_based_on_mbase(complex<double> Z);
         complex<double> get_terminal_complex_power_in_pu_based_on_mbase();
         double get_terminal_active_power_in_pu_based_on_mbase();
@@ -55,10 +55,4 @@ class CONVERTER_MODEL:public COMMON_MODEL
 
         complex<double> Zsource;
 };
-
-
-complex<double> CONVERTER_MODEL::get_source_impedance_in_pu_based_on_mbase() const
-{
-    return this->Zsource;
-}
 #endif // CONVERTER_MODEL_H

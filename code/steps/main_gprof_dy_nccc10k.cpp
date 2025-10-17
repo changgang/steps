@@ -94,7 +94,6 @@ int main()
     simulator.trip_ac_line(did);
 
     simulator.run_to(0.5);
-    default_toolkit.close_log_file();
 
     clock_t stop = clock();
 

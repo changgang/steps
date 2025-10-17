@@ -355,16 +355,6 @@ double SGFLPVU::get_voltage_reference_in_pu() const
     return Vref;
 }
 
-bool SGFLPVU::is_P_elec_control_bypassed() const
-{
-    return P_elec_control_bypassed;
-}
-
-bool SGFLPVU::is_Q_elec_control_bypassed() const
-{
-    return Q_elec_control_bypassed;
-}
-
 void SGFLPVU::check_lvrt_status()
 {
     VRT_STATUS current_status = get_lvrt_status();

@@ -13,12 +13,12 @@ class WT_GENERATOR_MODEL : public WTG_MODEL
         virtual string get_model_type() const;
     public:
         void set_current_source_flag(bool flag);
-        bool get_current_source_flag() const;
-        bool is_current_source() const;
-        bool is_voltage_source() const;
+        inline bool get_current_source_flag() const{return current_source_flag;}
+        inline bool is_current_source() const{return current_source_flag;}
+        inline bool is_voltage_source() const{return not current_source_flag;}
 
         void set_simplified_model_flag(bool flag);
-        bool is_simplified_model() const;
+        inline bool is_simplified_model() const{return simplified_model_flag;}
 
         // get inputs for dynamics run
         double get_active_current_command_in_pu_based_on_mbase();

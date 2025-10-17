@@ -321,17 +321,17 @@ class POWER_SYSTEM_DATABASE
         vector<unsigned int> get_all_zones_number();
         vector<unsigned int> get_all_owners_number();
 
-        unsigned int get_bus_count() const;
-        unsigned int get_in_service_bus_count() const;
-        unsigned int get_overshadowed_bus_count() const;
-        unsigned int get_generator_count() const;
-        unsigned int get_wt_generator_count() const;
-        unsigned int get_pv_unit_count() const;
+        inline unsigned int get_bus_count() const{return Bus.size();}
+        inline unsigned int get_in_service_bus_count() const{return in_service_bus_count;}
+        inline unsigned int get_overshadowed_bus_count() const{return overshadowed_bus_count;}
+        inline unsigned int get_generator_count() const{return Generator.size();}
+        inline unsigned int get_wt_generator_count() const{return WT_Generator.size();}
+        inline unsigned int get_pv_unit_count() const{return PV_Unit.size();}
         unsigned int get_source_count() const;
-        unsigned int get_load_count() const;
-        unsigned int get_ac_line_count() const;
-        unsigned int get_transformer_count() const;
-        unsigned int get_fixed_shunt_count() const;
+        inline unsigned int get_load_count() const{return Load.size();}
+        inline unsigned int get_ac_line_count() const{return Ac_line.size();}
+        inline unsigned int get_transformer_count() const{return Transformer.size();}
+        inline unsigned int get_fixed_shunt_count() const{return Fixed_shunt.size();}
         unsigned int get_2t_lcc_hvdc_count() const;
         unsigned int get_vsc_hvdc_count() const;
         unsigned int get_mt_hvdc_count() const;

@@ -57,7 +57,5 @@ int main()
 
     ssa_calculator.save_system_linearized_matrix_to_file("State_Matrix.csv");
 
-
-    default_toolkit.close_log_file();
     return 0;
 }
