@@ -25,10 +25,10 @@ class LOAD_MODEL : public MODEL
         virtual string get_model_type() const;
         // common inputs
         void synchronize_bus_voltage_and_frequency();
-        inline double get_bus_positive_sequence_voltage_in_pu() const;
+        inline double get_bus_positive_sequence_voltage_in_pu() const{return voltage_pu;}
         double get_bus_positive_sequence_voltage_in_kV() const;
-        inline complex<double> get_bus_positive_sequence_complex_voltage_in_pu() const;
-        inline double get_bus_frequency_deviation_in_pu() const;
+        inline complex<double> get_bus_positive_sequence_complex_voltage_in_pu() const{return complex_voltage_pu;}
+        inline double get_bus_frequency_deviation_in_pu() const{return frequency_deviation_pu;}
         double get_bus_base_frequency_in_Hz() const;
         // common scale
         void set_subsystem_type(SUBSYSTEM_TYPE subtype);
@@ -94,19 +94,4 @@ class LOAD_MODEL : public MODEL
         STEPS_SPARSE_MATRIX *Aptr, *Bptr, *Cptr, *Dptr;
 
 };
-
-double LOAD_MODEL::get_bus_positive_sequence_voltage_in_pu() const
-{
-    return voltage_pu;
-}
-
-complex<double> LOAD_MODEL::get_bus_positive_sequence_complex_voltage_in_pu() const
-{
-    return complex_voltage_pu;
-}
-
-double LOAD_MODEL::get_bus_frequency_deviation_in_pu() const
-{
-    return frequency_deviation_pu;
-}
 #endif // LOAD_MODEL_H

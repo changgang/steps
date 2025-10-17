@@ -86,9 +86,9 @@ class LOAD : public NONBUS_DEVICE
         void set_load_frequency_relay_model(LOAD_FREQUENCY_RELAY_MODEL* model);
         void set_load_voltage_relay_model(LOAD_VOLTAGE_RELAY_MODEL* model);
 
-        inline LOAD_MODEL* get_load_model() const;
-        inline LOAD_FREQUENCY_RELAY_MODEL* get_load_frequency_relay_model() const;
-        inline LOAD_VOLTAGE_RELAY_MODEL* get_load_voltage_relay_model() const;
+        inline LOAD_MODEL* get_load_model() const{return load_model;}
+        inline LOAD_FREQUENCY_RELAY_MODEL* get_load_frequency_relay_model() const{return load_frequency_relay_model;}
+        inline LOAD_VOLTAGE_RELAY_MODEL* get_load_voltage_relay_model() const{return load_voltage_relay_model;}
 
         virtual void run(DYNAMIC_MODE mode);
         complex<double> get_dynamic_load_in_MVA();
@@ -202,19 +202,4 @@ class LOAD : public NONBUS_DEVICE
 
         STEPS_SPARSE_MATRIX *Aptr, *Bptr, *Cptr, *Dptr;
 };
-
-LOAD_MODEL* LOAD::get_load_model() const
-{
-    return load_model;
-}
-
-LOAD_FREQUENCY_RELAY_MODEL* LOAD::get_load_frequency_relay_model() const
-{
-    return load_frequency_relay_model;
-}
-
-LOAD_VOLTAGE_RELAY_MODEL* LOAD::get_load_voltage_relay_model() const
-{
-    return load_voltage_relay_model;
-}
 #endif // LOAD_H

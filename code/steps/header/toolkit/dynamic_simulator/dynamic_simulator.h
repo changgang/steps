@@ -20,13 +20,13 @@ class DYNAMICS_SIMULATOR
         void clear();
 
         void set_max_dynamic_simulation_time_step_in_s(double delt);
-        double get_max_dynamic_simulation_time_step_in_s() const;
+        inline double get_max_dynamic_simulation_time_step_in_s() const{return DELT_MAX;}
         void set_min_dynamic_simulation_time_step_in_s(double delt);
-        double get_min_dynamic_simulation_time_step_in_s() const;
+        inline double get_min_dynamic_simulation_time_step_in_s() const{return DELT_MIN;}
         void set_dynamic_simulation_time_step_in_s(double delt);
-        double get_dynamic_simulation_time_step_in_s() const;
-        void set_dynamic_simulation_time_in_s(double time);
-        double get_dynamic_simulation_time_in_s() const;
+        inline double get_dynamic_simulation_time_step_in_s() const{return DELT;}
+        inline void set_dynamic_simulation_time_in_s(double time){TIME = time;}
+        inline double get_dynamic_simulation_time_in_s() const{return TIME;}
 
         NETWORK_MATRIX& get_network_matrix();
 

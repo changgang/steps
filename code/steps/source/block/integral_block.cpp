@@ -36,6 +36,7 @@ void INTEGRAL_BLOCK::initialize()
 
     if(fabs(t)>DOUBLE_EPSILON and fabs(t-INFINITE_THRESHOLD)>DOUBLE_EPSILON)
     {
+        is_dynamic_block = true;
         STEPS& toolkit = get_toolkit();
         double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
@@ -69,6 +70,7 @@ void INTEGRAL_BLOCK::initialize()
     }
     else
     {
+        is_dynamic_block = false;
         set_state(y);
         set_store(0.0);
         set_input(0.0);
@@ -77,23 +79,20 @@ void INTEGRAL_BLOCK::initialize()
 
 void INTEGRAL_BLOCK::run(DYNAMIC_MODE mode)
 {
-    ostringstream osstream;
-    double t = get_T_in_s();
-    if(fabs(t)>DOUBLE_EPSILON and fabs(t-INFINITE_THRESHOLD)>DOUBLE_EPSILON)
+    if(is_dynamic_block)
     {
         if(mode==DYNAMIC_INTEGRATE_MODE)
             integrate();
-        if(mode==DYNAMIC_UPDATE_MODE)
+        else if(mode==DYNAMIC_UPDATE_MODE)
             update();
-        if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
+        else if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
             update_simulation_time_step();
     }
 }
 
 void INTEGRAL_BLOCK::integrate()
 {
-    double t = get_T_in_s();
-    if(fabs(t)>DOUBLE_EPSILON and fabs(t-INFINITE_THRESHOLD)>DOUBLE_EPSILON)
+    if(is_dynamic_block)
     {
         double x = get_input();
 
@@ -157,8 +156,7 @@ void INTEGRAL_BLOCK::integrate()
 
 void INTEGRAL_BLOCK::update()
 {
-    double t = get_T_in_s();
-    if(fabs(t)>DOUBLE_EPSILON and fabs(t-INFINITE_THRESHOLD)>DOUBLE_EPSILON)
+    if(is_dynamic_block)
     {
         double x = get_input();
 
@@ -216,8 +214,7 @@ void INTEGRAL_BLOCK::update()
 
 void INTEGRAL_BLOCK::update_simulation_time_step()
 {
-    double t = get_T_in_s();
-    if(fabs(t)>DOUBLE_EPSILON and fabs(t-INFINITE_THRESHOLD)>DOUBLE_EPSILON)
+    if(is_dynamic_block)
     {
         STEPS& toolkit = get_toolkit();
         double h = toolkit.get_dynamic_simulation_time_step_in_s();

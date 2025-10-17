@@ -374,21 +374,6 @@ double BUS::get_voltage_lower_limit_in_pu() const
     return get_normal_voltage_lower_limit_in_pu();
 }
 
-double BUS::get_base_frequency_in_Hz() const
-{
-    return fn_Hz;
-}
-
-double BUS::get_base_period_in_s() const
-{
-    return tn_s;
-}
-
-double BUS::get_voltage_to_regulate_in_pu() const
-{
-    return voltage_to_regulate_in_pu;
-}
-
 complex<double> BUS::get_positive_sequence_complex_voltage_in_kV() const
 {
     return base_voltage_in_kV*positive_sequence_voltage_in_pu*positive_sequence_Euler_complex_number;
@@ -418,11 +403,6 @@ complex<double> BUS::get_zero_sequence_complex_voltage_in_kV() const
 void BUS::set_equivalent_bus_number(unsigned int number)
 {
     equivalent_bus_number = number;
-}
-
-unsigned int BUS::get_equivalent_bus_number() const
-{
-    return equivalent_bus_number;
 }
 
 bool BUS::is_bus_overshadowed() const

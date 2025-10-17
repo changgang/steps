@@ -79,7 +79,7 @@ void STEPS::disable_use_steps_fast_math_logic()
     use_steps_fast_math = false;
 }
 
-bool STEPS::get_use_steps_fast_math_logic()
+bool STEPS::get_use_steps_fast_math_logic() const
 {
     return use_steps_fast_math;
 }
@@ -240,80 +240,9 @@ void STEPS::update_device_thread_number()
     }
 }
 
-
-unsigned int STEPS::get_bus_thread_number() const
-{
-    return thread_number;
-}
-
-unsigned int STEPS::get_generator_thread_number() const
-{
-    return generator_thread_number;
-}
-
-unsigned int STEPS::get_wt_generator_thread_number() const
-{
-    return wt_generator_thread_number;
-}
-
-unsigned int STEPS::get_pv_unit_thread_number() const
-{
-    return pv_unit_thread_number;
-}
-
-unsigned int STEPS::get_energy_storage_thread_number() const
-{
-    return energy_storage_thread_number;
-}
-
-unsigned int STEPS::get_load_thread_number() const
-{
-    return load_thread_number;
-}
-
-unsigned int STEPS::get_fixed_shunt_thread_number() const
-{
-    return fixed_shunt_thread_number;
-}
-
-unsigned int STEPS::get_ac_line_thread_number() const
-{
-    return line_thread_number;
-}
-
-unsigned int STEPS::get_transformer_thread_number() const
-{
-    return transformer_thread_number;
-}
-
-unsigned int STEPS::get_lcc_hvdc2t_thread_number() const
-{
-    return lcc_hvdc2t_thread_number;
-}
-
-unsigned int STEPS::get_vsc_hvdc_thread_number() const
-{
-    return vsc_hvdc_thread_number;
-}
-
-unsigned int STEPS::get_mt_hvdc_thread_number() const
-{
-    return mt_hvdc_thread_number;
-}
-
-unsigned int STEPS::get_equivalent_device_thread_number() const
-{
-    return equivalent_device_thread_number;
-}
-
 void STEPS::set_dynamic_model_database_size_in_bytes(unsigned int n)
 {
     dynamic_model_db_size = n;
-}
-
-unsigned int STEPS::get_dynamic_model_database_size_in_bytes()
-{
-    return dynamic_model_db_size;
 }
 
 void STEPS::report_toolkit_memory_usage()
@@ -385,11 +314,6 @@ void STEPS::disable_detailed_log()
     detailed_log_enabled = false;
 }
 
-bool STEPS::is_detailed_log_enabled()
-{
-    return detailed_log_enabled;
-}
-
 void STEPS::enable_optimize_network()
 {
     optimize_network_enabled = true;
@@ -398,11 +322,6 @@ void STEPS::enable_optimize_network()
 void STEPS::disable_optimize_network()
 {
     optimize_network_enabled = false;
-}
-
-bool STEPS::is_optimize_network_enabled()
-{
-    return optimize_network_enabled;
 }
 
 void STEPS::reset()
@@ -422,41 +341,6 @@ void STEPS::terminate()
     show_information_with_leading_time_stamp(osstream);
 }
 
-POWER_SYSTEM_DATABASE& STEPS::get_power_system_database()
-{
-    return power_system_db;
-}
-
-DYNAMIC_MODEL_DATABASE& STEPS::get_dynamic_model_database()
-{
-    return dynamic_model_db;
-}
-
-POWERFLOW_SOLVER& STEPS::get_powerflow_solver()
-{
-    return powerflow_solver;
-}
-
-SHORT_CIRCUIT_SOLVER& STEPS::get_short_circuit_solver()
-{
-    return short_circuit_solver;
-}
-
-DYNAMICS_SIMULATOR& STEPS::get_dynamic_simulator()
-{
-    return dynamic_simulator;
-}
-
-EIGN_CALCULATOR& STEPS::get_eign_calculator()
-{
-    return eign_calculator;
-}
-
-NETWORK_MATRIX& STEPS::get_network_matrix()
-{
-    return network_matrix;
-}
-
 void STEPS::set_max_dynamic_simulation_time_step_in_s(double delt)
 {
     dynamic_simulator.set_max_dynamic_simulation_time_step_in_s(delt);
@@ -474,27 +358,7 @@ void STEPS::set_min_dynamic_simulation_time_step_in_s(double delt)
 
 double STEPS::get_min_dynamic_simulation_time_step_in_s()
 {
-    return dynamic_simulator.get_min_dynamic_simulation_time_step_in_s();;
-}
-
-void STEPS::set_dynamic_simulation_time_step_in_s(double delt)
-{
-    dynamic_simulator.set_dynamic_simulation_time_step_in_s(delt);
-}
-
-double STEPS::get_dynamic_simulation_time_step_in_s()
-{
-    return dynamic_simulator.get_dynamic_simulation_time_step_in_s();;
-}
-
-void STEPS::set_dynamic_simulation_time_in_s(double time)
-{
-    dynamic_simulator.set_dynamic_simulation_time_in_s(time);
-}
-
-double STEPS::get_dynamic_simulation_time_in_s()
-{
-    return dynamic_simulator.get_dynamic_simulation_time_in_s();;
+    return dynamic_simulator.get_min_dynamic_simulation_time_step_in_s();
 }
 
 void STEPS::show_information_with_leading_time_stamp(ostringstream& stream)

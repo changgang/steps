@@ -37,11 +37,6 @@ void BUS_FREQUENCY_MODEL::set_bus_pointer(BUS* bus)
     bus_ptr = bus;
 }
 
-BUS* BUS_FREQUENCY_MODEL::get_bus_pointer() const
-{
-    return bus_ptr;
-}
-
 unsigned int BUS_FREQUENCY_MODEL::get_bus() const
 {
     return bus_ptr->get_bus_number();

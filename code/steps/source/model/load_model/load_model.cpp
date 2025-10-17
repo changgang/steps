@@ -73,7 +73,6 @@ string LOAD_MODEL::get_model_type() const
     return "LOAD CHARACTERISTICS";
 }
 
-
 void LOAD_MODEL::synchronize_bus_voltage_and_frequency()
 {
     BUS* bus = get_bus_pointer();

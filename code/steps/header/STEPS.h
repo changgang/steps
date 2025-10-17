@@ -25,7 +25,7 @@ class STEPS
 
         void enable_use_steps_fast_math_logic();
         void disable_use_steps_fast_math_logic();
-        bool get_use_steps_fast_math_logic();
+        bool get_use_steps_fast_math_logic() const;
 
         void enable_correct_three_winding_transformer_impedance_logic();
         void disable_correct_three_winding_transformer_impedance_logic();
@@ -39,22 +39,22 @@ class STEPS
         inline unsigned int get_thread_number() const{return thread_number;}
 
         void update_device_thread_number();
-        unsigned int get_bus_thread_number() const;
-        unsigned int get_generator_thread_number() const;
-        unsigned int get_wt_generator_thread_number() const;
-        unsigned int get_pv_unit_thread_number() const;
-        unsigned int get_energy_storage_thread_number() const;
-        unsigned int get_load_thread_number() const;
-        unsigned int get_fixed_shunt_thread_number() const;
-        unsigned int get_ac_line_thread_number() const;
-        unsigned int get_transformer_thread_number() const;
-        unsigned int get_lcc_hvdc2t_thread_number() const;
-        unsigned int get_vsc_hvdc_thread_number() const;
-        unsigned int get_mt_hvdc_thread_number() const;
-        unsigned int get_equivalent_device_thread_number() const;
+        inline unsigned int get_bus_thread_number() const{return thread_number;}
+        inline unsigned int get_generator_thread_number() const{return generator_thread_number;}
+        inline unsigned int get_wt_generator_thread_number() const{return wt_generator_thread_number;}
+        inline unsigned int get_pv_unit_thread_number() const{return pv_unit_thread_number;}
+        inline unsigned int get_energy_storage_thread_number() const{return energy_storage_thread_number;}
+        inline unsigned int get_load_thread_number() const{return load_thread_number;}
+        inline unsigned int get_fixed_shunt_thread_number() const{return fixed_shunt_thread_number;}
+        inline unsigned int get_ac_line_thread_number() const{return line_thread_number;}
+        inline unsigned int get_transformer_thread_number() const{return transformer_thread_number;}
+        inline unsigned int get_lcc_hvdc2t_thread_number() const{return lcc_hvdc2t_thread_number;}
+        inline unsigned int get_vsc_hvdc_thread_number() const{return vsc_hvdc_thread_number;}
+        inline unsigned int get_mt_hvdc_thread_number() const{return mt_hvdc_thread_number;}
+        inline unsigned int get_equivalent_device_thread_number() const{return equivalent_device_thread_number;}
 
         void set_dynamic_model_database_size_in_bytes(unsigned int n);
-        unsigned int get_dynamic_model_database_size_in_bytes();
+        inline unsigned int get_dynamic_model_database_size_in_bytes(){return dynamic_model_db_size;}
 
         void report_toolkit_memory_usage();
 
@@ -63,10 +63,10 @@ class STEPS
         void close_log_file();
         void enable_detailed_log();
         void disable_detailed_log();
-        bool is_detailed_log_enabled();
+        inline bool is_detailed_log_enabled(){return detailed_log_enabled;}
         void enable_optimize_network();
         void disable_optimize_network();
-        bool is_optimize_network_enabled();
+        inline bool is_optimize_network_enabled(){return optimize_network_enabled;}
 
         void show_information_with_leading_time_stamp(const string& info);
         void show_information_with_leading_time_stamp(ostringstream& stream);
@@ -78,13 +78,13 @@ class STEPS
         void reset();
         void terminate();
 
-        POWER_SYSTEM_DATABASE& get_power_system_database();
-        DYNAMIC_MODEL_DATABASE& get_dynamic_model_database();
-        POWERFLOW_SOLVER& get_powerflow_solver();
-        SHORT_CIRCUIT_SOLVER& get_short_circuit_solver();
-        DYNAMICS_SIMULATOR& get_dynamic_simulator();
-        EIGN_CALCULATOR& get_eign_calculator();
-        NETWORK_MATRIX& get_network_matrix();
+        inline POWER_SYSTEM_DATABASE& get_power_system_database(){return power_system_db;}
+        inline DYNAMIC_MODEL_DATABASE& get_dynamic_model_database(){return dynamic_model_db;}
+        inline POWERFLOW_SOLVER& get_powerflow_solver(){return powerflow_solver;}
+        inline SHORT_CIRCUIT_SOLVER& get_short_circuit_solver(){return short_circuit_solver;}
+        inline DYNAMICS_SIMULATOR& get_dynamic_simulator(){return dynamic_simulator;}
+        inline EIGN_CALCULATOR& get_eign_calculator(){return eign_calculator;}
+        inline NETWORK_MATRIX& get_network_matrix(){return network_matrix;}
 
         inline double get_system_base_power_in_MVA() const{return power_system_db.get_system_base_power_in_MVA();}
         inline double get_one_over_system_base_power_in_one_over_MVA() const{return power_system_db.get_one_over_system_base_power_in_one_over_MVA();}
@@ -93,10 +93,10 @@ class STEPS
         double get_max_dynamic_simulation_time_step_in_s();
         void set_min_dynamic_simulation_time_step_in_s(double delt);
         double get_min_dynamic_simulation_time_step_in_s();
-        void set_dynamic_simulation_time_step_in_s(double delt);
-        double get_dynamic_simulation_time_step_in_s();
-        void set_dynamic_simulation_time_in_s(double time);
-        double get_dynamic_simulation_time_in_s();
+        inline void set_dynamic_simulation_time_step_in_s(double delt){dynamic_simulator.set_dynamic_simulation_time_step_in_s(delt);}
+        inline double get_dynamic_simulation_time_step_in_s(){return dynamic_simulator.get_dynamic_simulation_time_step_in_s();}
+        inline void set_dynamic_simulation_time_in_s(double time){dynamic_simulator.set_dynamic_simulation_time_in_s(time);}
+        inline double get_dynamic_simulation_time_in_s(){return dynamic_simulator.get_dynamic_simulation_time_in_s();}
 
     public:
         char steps_char_buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];

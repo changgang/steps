@@ -29,6 +29,7 @@ class INTEGRAL_BLOCK : public BLOCK
         void update_simulation_time_step();
 
         double T;
+        bool is_dynamic_block;
 
         double one_over_t, h_over_t;
 };

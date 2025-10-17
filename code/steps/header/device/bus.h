@@ -78,9 +78,9 @@ class BUS : public DEVICE
         double get_emergency_voltage_lower_limit_in_pu() const;
         double get_voltage_upper_limit_in_pu() const;
         double get_voltage_lower_limit_in_pu() const;
-        double get_base_frequency_in_Hz() const;
-        double get_base_period_in_s() const;
-        double get_voltage_to_regulate_in_pu() const;
+        inline double get_base_frequency_in_Hz() const{return fn_Hz;}
+        inline double get_base_period_in_s() const{return tn_s;}
+        inline double get_voltage_to_regulate_in_pu() const{return voltage_to_regulate_in_pu;}
         inline complex<double> get_positive_sequence_complex_voltage_in_pu() const{return positive_sequence_voltage_in_pu*positive_sequence_Euler_complex_number;}
         complex<double> get_positive_sequence_complex_voltage_in_kV() const;
         complex<double> get_negative_sequence_complex_voltage_in_pu() const;
@@ -89,7 +89,7 @@ class BUS : public DEVICE
         complex<double> get_zero_sequence_complex_voltage_in_kV() const;
 
         void set_equivalent_bus_number(unsigned int number);
-        unsigned int get_equivalent_bus_number() const;
+        inline unsigned int get_equivalent_bus_number() const{return equivalent_bus_number;}
 
         bool is_bus_overshadowed() const;
 

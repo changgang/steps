@@ -14,7 +14,7 @@ class BUS_FREQUENCY_MODEL
         STEPS& get_toolkit() const;
 
         void set_bus_pointer(BUS* bus);
-        BUS* get_bus_pointer() const;
+        inline BUS* get_bus_pointer() const{return bus_ptr;}
         unsigned int get_bus() const;
 
         void initialize();

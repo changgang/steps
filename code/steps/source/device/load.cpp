@@ -638,7 +638,6 @@ complex<double> LOAD::get_dynamic_load_in_MVA()
     {
         double scale = 1.0+get_load_total_scale_factor_in_pu();
 
-        LOAD_MODEL* load_model = get_load_model();
         if(load_model!=NULL)
             return scale*(load_model->get_load_power_in_MVA());
         else
@@ -659,7 +658,7 @@ complex<double> LOAD::get_dynamic_load_in_pu()
 double LOAD::get_load_total_scale_factor_in_pu() const
 {
     double scale = manually_scale_in_pu-get_load_relay_shed_scale_factor_in_pu();
-    return scale>-1.0?scale:-1.0;
+    return scale+1>0?scale:-1.0;
 }
 
 double LOAD::get_load_manually_scale_factor_in_pu() const

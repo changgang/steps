@@ -99,19 +99,9 @@ void DYNAMICS_SIMULATOR::set_max_dynamic_simulation_time_step_in_s(double delt)
     DELT_MAX = delt;
 }
 
-double DYNAMICS_SIMULATOR::get_max_dynamic_simulation_time_step_in_s() const
-{
-    return DELT_MAX;
-}
-
 void DYNAMICS_SIMULATOR::set_min_dynamic_simulation_time_step_in_s(double delt)
 {
     DELT_MIN = delt;
-}
-
-double DYNAMICS_SIMULATOR::get_min_dynamic_simulation_time_step_in_s() const
-{
-    return DELT_MIN;
 }
 
 void DYNAMICS_SIMULATOR::set_dynamic_simulation_time_step_in_s(double delt)
@@ -120,21 +110,6 @@ void DYNAMICS_SIMULATOR::set_dynamic_simulation_time_step_in_s(double delt)
     ostringstream osstream;
     osstream<<"System dynamic simulation time step is set as :"<<DELT<<" s.";
     toolkit->show_information_with_leading_time_stamp(osstream);
-}
-
-double DYNAMICS_SIMULATOR::get_dynamic_simulation_time_step_in_s() const
-{
-    return DELT;
-}
-
-void DYNAMICS_SIMULATOR::set_dynamic_simulation_time_in_s(double time)
-{
-    TIME = time;
-}
-
-double DYNAMICS_SIMULATOR::get_dynamic_simulation_time_in_s() const
-{
-    return TIME;
 }
 
 NETWORK_MATRIX& DYNAMICS_SIMULATOR::get_network_matrix()
@@ -2281,9 +2256,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_into_network()
     NETWORK_MATRIX& network_matrix = get_network_matrix();
     STEPS_COMPLEX_SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_Y_matrix();
 
-    vector<complex<double> > V;
-    V = internal_bus_complex_voltage_in_pu;
-    I_mismatch = Y.multiply_vector_b(V);
+    I_mismatch = Y.multiply_vector_b(internal_bus_complex_voltage_in_pu);
 }
 
 void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
@@ -2338,7 +2311,6 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<ngen; ++i)
     {
-        complex<double> I;
         WT_GENERATOR* generator = wt_generators[i];
 
         if(generator->get_status() == true)
@@ -2351,12 +2323,11 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
             if(gen_model!=NULL)
             {
                 if(gen_model->is_current_source())
-                    I = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
+                    I_mismatch[internal_bus] += gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
                 else
-                    I = gen_model->get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
+                    I_mismatch[internal_bus] += gen_model->get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
                 //cout<<generator->get_compound_device_name()<<" terminal or Norton current is: "<<I<<endl;
 
-                I_mismatch[internal_bus] += I;
                 /*os<< "Generator %u source current: %f + j%f",physical_bus, I.real(), I.imag());
                 toolkit->show_information_with_leading_time_stamp(osstream);
                 complex<double> Edq = gen_model->get_internal_voltage_in_pu_in_dq_axis();
@@ -2476,13 +2447,18 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
             unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
             LOAD_MODEL* model = load->get_load_model();
-            if(model==NULL or (not model->is_voltage_source()))
+            if(model!=NULL)
             {
-                if(model!=NULL) model->synchronize_bus_voltage_and_frequency();
-                I_mismatch[internal_bus] -= load->get_dynamics_load_current_in_pu_based_on_system_base_power();
+                if(not model->is_voltage_source())
+                {
+                    model->synchronize_bus_voltage_and_frequency();
+                    I_mismatch[internal_bus] -= load->get_dynamics_load_current_in_pu_based_on_system_base_power();
+                }
+                else
+                    I_mismatch[internal_bus] += load->get_dynamics_load_norton_current_in_pu_based_on_system_base_power();
             }
             else
-                I_mismatch[internal_bus] += load->get_dynamics_load_norton_current_in_pu_based_on_system_base_power();
+                I_mismatch[internal_bus] -= load->get_dynamics_load_current_in_pu_based_on_system_base_power();
         }
     }
 }
