@@ -376,31 +376,17 @@ double LOAD::get_load_scale_with_voltage(double exp, double v, LOAD_CURRENT_VOLT
 {
     if(exp==0.0) // constant power
     {
-        double vth = voltage_threshold_of_constant_power_load_in_pu;
-        if(v>=vth)
-            return 1.0;
-        else
-        {
-            double Imax = one_over_voltage_threshold_of_constant_power_load_in_pu;
-            return get_load_scale_with_Imax_and_voltage(Imax, v, vth, cv_type);
-        }
+        return get_constant_power_load_scale_with_voltage(v, cv_type);
     }
     else
     {
         if(exp==1.0) // constant current
         {
-            double vth = voltage_threshold_of_constant_current_load_in_pu;
-            if(v>vth)
-                return v;
-            else
-            {
-                double Imax = 1.0;
-                return get_load_scale_with_Imax_and_voltage(Imax, v, vth, cv_type);
-            }
+            return get_constant_current_load_scale_with_voltage(v, cv_type);
         }
         else
         {
-            if(exp==2.0) // constant power
+            if(exp==2.0) // constant impedance
                 return v*v;
             else
             {
@@ -463,6 +449,35 @@ double LOAD::get_load_scale_with_voltage(double exp, double v, LOAD_CURRENT_VOLT
         }
     }
     */
+}
+
+double LOAD::get_constant_power_load_scale_with_voltage(double v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type)
+{
+    double vth = voltage_threshold_of_constant_power_load_in_pu;
+    if(v>=vth)
+        return 1.0;
+    else
+    {
+        double Imax = one_over_voltage_threshold_of_constant_power_load_in_pu;
+        return get_load_scale_with_Imax_and_voltage(Imax, v, vth, cv_type);
+    }
+}
+
+double LOAD::get_constant_current_load_scale_with_voltage(double v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type)
+{
+    double vth = voltage_threshold_of_constant_current_load_in_pu;
+    if(v>vth)
+        return v;
+    else
+    {
+        double Imax = 1.0;
+        return get_load_scale_with_Imax_and_voltage(Imax, v, vth, cv_type);
+    }
+}
+
+double LOAD::get_constant_impedance_load_scale_with_voltage(double v)
+{
+    return v*v;
 }
 
 double LOAD::get_load_scale_with_Imax_and_voltage(double Imax, double v, double vth, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type)
@@ -657,8 +672,13 @@ complex<double> LOAD::get_dynamic_load_in_pu()
 
 double LOAD::get_load_total_scale_factor_in_pu() const
 {
-    double scale = manually_scale_in_pu-get_load_relay_shed_scale_factor_in_pu();
-    return scale+1>0?scale:-1.0;
+    if(fabs(manually_scale_in_pu)<FLOAT_EPSILON and load_frequency_relay_model == NULL and load_voltage_relay_model == NULL)
+        return 0.0;
+    else
+    {
+        double scale = manually_scale_in_pu-get_load_relay_shed_scale_factor_in_pu();
+        return scale+1>0?scale:-1.0;
+    }
 }
 
 double LOAD::get_load_manually_scale_factor_in_pu() const

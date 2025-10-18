@@ -70,6 +70,9 @@ class LOAD : public NONBUS_DEVICE
         complex<double> get_actual_constant_current_load_in_MVA() const;
         complex<double> get_actual_constant_impedance_load_in_MVA() const;
         static double get_load_scale_with_voltage(double exp, double v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type = LOAD_ELLIPTICAL_CV);
+        static double get_constant_power_load_scale_with_voltage(double v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type = LOAD_ELLIPTICAL_CV);
+        static double get_constant_current_load_scale_with_voltage(double v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type = LOAD_ELLIPTICAL_CV);
+        static double get_constant_impedance_load_scale_with_voltage(double v);
         static double get_load_scale_with_Imax_and_voltage(double Imax, double v, double vth, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type);
 
         static void set_voltage_threshold_of_constant_power_load_in_pu(double v);

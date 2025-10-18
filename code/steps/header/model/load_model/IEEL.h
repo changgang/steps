@@ -75,7 +75,7 @@ class IEEL : public LOAD_MODEL
         virtual double get_minimum_nonzero_time_constant_in_s();
         virtual double get_model_internal_variable_with_name(string var_name);
 
-        inline complex<double> get_initial_load_power_in_MVA() const;
+        inline complex<double> get_initial_load_power_in_MVA() const{return complex<double>(P0, Q0);}
 
         virtual string get_dynamic_data_in_psse_format() const;
         virtual string get_dynamic_data_in_bpa_format() const;
@@ -92,10 +92,6 @@ class IEEL : public LOAD_MODEL
         double P_n_power_1, P_n_power_2, P_n_power_3, Q_n_power_1, Q_n_power_2, Q_n_power_3;
         double P_Kf, Q_Kf;
 
+        bool is_PIZ;
 };
-
-complex<double> IEEL::get_initial_load_power_in_MVA() const
-{
-    return complex<double>(P0, Q0);
-}
 #endif // IEEL_H

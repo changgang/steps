@@ -353,6 +353,12 @@ void IEEL::initialize()
             alpha2*load->get_load_scale_with_voltage(n2, V, LOAD_LINEAR_CV)+
             alpha3*load->get_load_scale_with_voltage(n3, V, LOAD_LINEAR_CV));
 
+    if(fabs(P_n_power_1-0)<FLOAT_EPSILON and fabs(P_n_power_2-1)<FLOAT_EPSILON and fabs(P_n_power_3-2)<FLOAT_EPSILON and
+       fabs(Q_n_power_1-0)<FLOAT_EPSILON and fabs(Q_n_power_2-1)<FLOAT_EPSILON and fabs(Q_n_power_3-2)<FLOAT_EPSILON)
+        is_PIZ = true;
+    else
+        is_PIZ = false;
+
     set_flag_model_initialized_as_true();
 }
 
@@ -403,7 +409,6 @@ void IEEL::check_limits_in_initialization()
 
 void IEEL::run(DYNAMIC_MODE mode)
 {
-    synchronize_bus_voltage_and_frequency();
     if(mode==DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
@@ -412,35 +417,46 @@ complex<double> IEEL::get_load_power_in_MVA()
 {
     double V = get_bus_positive_sequence_voltage_in_pu();
     double f = get_bus_frequency_deviation_in_pu();
-
-    complex<double> PQ0 = get_initial_load_power_in_MVA();
-    double P0 = PQ0.real();
-    double Q0 = PQ0.imag();
-
-    double voltage_scale1 = LOAD::get_load_scale_with_voltage(P_n_power_1, V, LOAD_LINEAR_CV);
-    double voltage_scale2 = LOAD::get_load_scale_with_voltage(P_n_power_2, V, LOAD_LINEAR_CV);
-    double voltage_scale3 = LOAD::get_load_scale_with_voltage(P_n_power_3, V, LOAD_LINEAR_CV);
-
-    double P = P_alpha_1*voltage_scale1 + P_alpha_2*voltage_scale2 + P_alpha_3*voltage_scale3;
-
-    P = P0*P*(1.0+P_Kf*f);
-
-    double Q = 0;
-    if(fabs(P_n_power_1-Q_n_power_1)<FLOAT_EPSILON and fabs(P_n_power_2-Q_n_power_2)<FLOAT_EPSILON and fabs(P_n_power_3-Q_n_power_3)<FLOAT_EPSILON)
+    if(is_PIZ)
     {
-        Q = Q_alpha_1*voltage_scale1 + Q_alpha_2*voltage_scale2 + Q_alpha_3*voltage_scale3;
+        double voltage_scale1 = LOAD::get_constant_power_load_scale_with_voltage(V, LOAD_LINEAR_CV);
+        double voltage_scale2 = LOAD::get_constant_current_load_scale_with_voltage(V, LOAD_LINEAR_CV);
+        double voltage_scale3 = V*V;
+
+        double P_scale = P_alpha_1*voltage_scale1 + P_alpha_2*voltage_scale2 + P_alpha_3*voltage_scale3;
+        double Q_scale = Q_alpha_1*voltage_scale1 + Q_alpha_2*voltage_scale2 + Q_alpha_3*voltage_scale3;
+
+        double P = P0*P_scale*(1.0+P_Kf*f);
+        double Q = Q0*Q_scale*(1.0+Q_Kf*f);
+
+        return complex<double>(P,Q);
     }
     else
     {
-        voltage_scale1 = LOAD::get_load_scale_with_voltage(Q_n_power_1, V, LOAD_LINEAR_CV);
-        voltage_scale2 = LOAD::get_load_scale_with_voltage(Q_n_power_2, V, LOAD_LINEAR_CV);
-        voltage_scale3 = LOAD::get_load_scale_with_voltage(Q_n_power_3, V, LOAD_LINEAR_CV);
+        double voltage_scale1 = LOAD::get_load_scale_with_voltage(P_n_power_1, V, LOAD_LINEAR_CV);
+        double voltage_scale2 = LOAD::get_load_scale_with_voltage(P_n_power_2, V, LOAD_LINEAR_CV);
+        double voltage_scale3 = LOAD::get_load_scale_with_voltage(P_n_power_3, V, LOAD_LINEAR_CV);
 
-        Q = Q_alpha_1*voltage_scale1 + Q_alpha_2*voltage_scale2 + Q_alpha_3*voltage_scale3;
+        double scale = P_alpha_1*voltage_scale1 + P_alpha_2*voltage_scale2 + P_alpha_3*voltage_scale3;
+
+        double P = P0*scale*(1.0+P_Kf*f);
+
+        if(fabs(P_n_power_1-Q_n_power_1)<FLOAT_EPSILON and fabs(P_n_power_2-Q_n_power_2)<FLOAT_EPSILON and fabs(P_n_power_3-Q_n_power_3)<FLOAT_EPSILON)
+        {
+            scale = Q_alpha_1*voltage_scale1 + Q_alpha_2*voltage_scale2 + Q_alpha_3*voltage_scale3;
+        }
+        else
+        {
+            voltage_scale1 = LOAD::get_load_scale_with_voltage(Q_n_power_1, V, LOAD_LINEAR_CV);
+            voltage_scale2 = LOAD::get_load_scale_with_voltage(Q_n_power_2, V, LOAD_LINEAR_CV);
+            voltage_scale3 = LOAD::get_load_scale_with_voltage(Q_n_power_3, V, LOAD_LINEAR_CV);
+
+            scale = Q_alpha_1*voltage_scale1 + Q_alpha_2*voltage_scale2 + Q_alpha_3*voltage_scale3;
+        }
+        double Q = Q0*scale*(1.0+Q_Kf*f);
+
+        return complex<double>(P,Q);
     }
-    Q = Q0*Q*(1.0+Q_Kf*f);
-
-    return complex<double>(P,Q);
 }
 
 complex<double> IEEL::get_load_current_in_pu_based_on_SBASE()
