@@ -18,11 +18,11 @@ class SECOND_ORDER_BLOCK : public BLOCK
         void set_d(double d);
         void set_e(double e);
 
-        double get_a() const;
-        double get_b() const;
-        double get_c() const;
-        double get_d() const;
-        double get_e() const;
+        inline double get_a() const{return a;}
+        inline double get_b() const{return b;}
+        inline double get_c() const{return c;}
+        inline double get_d() const{return d;}
+        inline double get_e() const{return e;}
 
         void initialize();
         void run(DYNAMIC_MODE mode);

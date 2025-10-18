@@ -52,39 +52,6 @@ void SATURATION_BLOCK::set_S2(double S)
     is_initialized = false;
 }
 
-SATURATION_TYPE SATURATION_BLOCK::get_saturation_type() const
-{
-    return type;
-}
-
-double SATURATION_BLOCK::get_V1() const
-{
-    return V1;
-}
-
-double SATURATION_BLOCK::get_V2() const
-{
-    return V2;
-}
-
-double SATURATION_BLOCK::get_S1() const
-{
-    return S1;
-}
-
-double SATURATION_BLOCK::get_S2() const
-{
-    return S2;
-}
-
-bool SATURATION_BLOCK::is_saturation_considered() const
-{
-    if(S1!=0.0 or S2!=0.0)
-        return true;
-    else
-        return false;
-}
-
 double SATURATION_BLOCK::get_saturation(double V)
 {
     if(is_saturation_considered())

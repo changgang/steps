@@ -17,14 +17,14 @@ class SATURATION_BLOCK
         void set_S1(double S);
         void set_S2(double S);
 
-        SATURATION_TYPE get_saturation_type() const;
-        double get_V1() const;
-        double get_V2() const;
-        double get_S1() const;
-        double get_S2() const;
+        inline SATURATION_TYPE get_saturation_type() const{return type;}
+        inline double get_V1() const{return V1;}
+        inline double get_V2() const{return V2;}
+        inline double get_S1() const{return S1;}
+        inline double get_S2() const{return S2;}
 
         double get_saturation(double V);
-        bool is_saturation_considered() const;
+        inline bool is_saturation_considered() const{return S1!=0.0 or S2!=0.0;}
         virtual void check();
     private:
         inline bool is_ABC_initialized() const;

@@ -14,11 +14,11 @@ class PI_BLOCK : public BLOCK
         void set_Kp(double K);
         void set_Ki(double K);
 
-        double get_Kp() const;
-        double get_Ki() const;
+        inline double get_Kp() const{return pid_block.get_Kp();}
+        inline double get_Ki() const{return pid_block.get_Ki();}
 
-        double get_state() const;
-        double get_store() const;
+        inline double get_state() const{return pid_block.get_integrator_state();}
+        inline double get_store() const{return pid_block.get_integrator_store();}
 
         void initialize();
         void run(DYNAMIC_MODE mode);

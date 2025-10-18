@@ -11,7 +11,7 @@ class INTEGRAL_BLOCK : public BLOCK
         ~INTEGRAL_BLOCK();
 
         void set_T_in_s(double T);
-        double get_T_in_s() const;
+        inline double get_T_in_s() const{return T;}
 
         void initialize();
         void run(DYNAMIC_MODE);

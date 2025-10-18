@@ -30,19 +30,9 @@ void PD_BLOCK::set_Kp(double K)
     p_block.set_K(K);
 }
 
-double PD_BLOCK::get_Kp() const
-{
-    return p_block.get_K();
-}
-
 void PD_BLOCK::set_Kd(double K)
 {
     d_block.set_K(K);
-}
-
-double PD_BLOCK::get_Kd() const
-{
-    return d_block.get_K();
 }
 
 void PD_BLOCK::set_Td_in_s(double T)
@@ -56,21 +46,6 @@ void PD_BLOCK::set_Td_in_s(double T)
         return;
     }
     d_block.set_T_in_s(T);
-}
-
-double PD_BLOCK::get_Td_in_s() const
-{
-    return d_block.get_T_in_s();
-}
-
-double PD_BLOCK::get_differentiator_state() const
-{
-    return d_block.get_state();
-}
-
-double PD_BLOCK::get_differentiator_store() const
-{
-    return d_block.get_store();
 }
 
 void PD_BLOCK::initialize()
@@ -93,9 +68,9 @@ void PD_BLOCK::run(DYNAMIC_MODE mode)
 
     if(mode==DYNAMIC_INTEGRATE_MODE)
         integrate();
-    if(mode==DYNAMIC_UPDATE_MODE)
+    else if(mode==DYNAMIC_UPDATE_MODE)
         update();
-    if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
+    else if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
         update_simulation_time_step();
 
     double y = p_block.get_output() + d_block.get_output();

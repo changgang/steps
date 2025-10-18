@@ -11,7 +11,7 @@ class PROPORTIONAL_BLOCK : public BLOCK
         ~PROPORTIONAL_BLOCK();
 
         void set_K(double K);
-        double get_K() const;
+        inline double get_K() const{return K;}
 
         void initialize();
         void run(DYNAMIC_MODE mode);

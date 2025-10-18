@@ -17,32 +17,32 @@ class BLOCK
         virtual ~BLOCK();
 
         void set_toolkit(STEPS& toolkit);
-        STEPS& get_toolkit() const;
+        inline STEPS& get_toolkit() const{return *toolkit;}
 
         virtual void check() = 0;
 
         inline void set_input(double input){this->input = input;}
         inline void set_output(double output){this->output = output;}
 
-        inline double get_input() const;
-        inline double get_output() const;
+        inline double get_input() const{return input;}
+        inline double get_output() const{return output;}
 
         void set_limiter_type(LIMITER_TYPE limiter_type);
         void set_upper_limit(double vmax);
         void set_lower_limit(double vmin);
 
-        LIMITER_TYPE get_limiter_type() const;
-        double get_upper_limit() const;
-        double get_lower_limit() const;
+        inline LIMITER_TYPE get_limiter_type() const{return limiter_type;}
+        inline double get_upper_limit() const{return (limiter_type != NO_LIMITER)?upper_limit:0.0;}
+        inline double get_lower_limit() const{return (limiter_type != NO_LIMITER)?lower_limit:0.0;}
 
         void set_integration_time_step_mode(BLOCK_INTEGRATION_TIME_STEP_MODE mode);
-        BLOCK_INTEGRATION_TIME_STEP_MODE get_integration_time_step_mode();
+        inline BLOCK_INTEGRATION_TIME_STEP_MODE get_integration_time_step_mode(){return integration_time_step_mode;}
 
         void copy_current_input_to_old_input_in_last_time_step();
-        double get_old_input_in_last_time_step() const;
+        inline double get_old_input_in_last_time_step() const{return old_input_of_last_main_step;}
 
-        double get_state() const;
-        double get_store() const;
+        inline double get_state() const{return state;}
+        inline double get_store() const{return store;}
 
         static void enable_automatic_large_time_step_logic();
         static void disable_automatic_large_time_step_logic();
@@ -55,8 +55,8 @@ class BLOCK
     public:
         void set_state_WITH_CAUTION(double value);
     protected:
-        void set_state(double value);
-        void set_store(double value);
+        inline void set_state(double value){state = value;}
+        inline void set_store(double value){store = value;}
     private:
         STEPS* toolkit;
         double state, store;
@@ -72,14 +72,4 @@ class BLOCK
 
         unsigned int state_index;
 };
-
-double BLOCK::get_input() const
-{
-    return input;
-}
-
-double BLOCK::get_output() const
-{
-    return output;
-}
 #endif // BLOCK_H

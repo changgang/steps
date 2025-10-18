@@ -16,12 +16,12 @@ class PD_BLOCK : public BLOCK
         void set_Kd(double K);
         void set_Td_in_s(double T);
 
-        double get_Kp() const;
-        double get_Kd() const;
-        double get_Td_in_s() const;
+        inline double get_Kp() const{return p_block.get_K();}
+        inline double get_Kd() const{return d_block.get_K();}
+        inline double get_Td_in_s() const{return d_block.get_T_in_s();}
 
-        double get_differentiator_state() const;
-        double get_differentiator_store() const;
+        inline double get_differentiator_state() const{return d_block.get_state();}
+        inline double get_differentiator_store() const{return d_block.get_store();}
 
         void initialize();
         void run(DYNAMIC_MODE mode);

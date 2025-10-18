@@ -31,29 +31,14 @@ void LEAD_LAG_BLOCK::set_K(double k)
     this->K = k;
 }
 
-double LEAD_LAG_BLOCK::get_K() const
-{
-    return K;
-}
-
 void LEAD_LAG_BLOCK::set_T1_in_s(double T)
 {
     this->T1 = T;
 }
 
-double LEAD_LAG_BLOCK::get_T1_in_s() const
-{
-    return T1;
-}
-
 void LEAD_LAG_BLOCK::set_T2_in_s(double T)
 {
     this->T2 = T;
-}
-
-double LEAD_LAG_BLOCK::get_T2_in_s() const
-{
-    return T2;
 }
 
 void LEAD_LAG_BLOCK::initialize()
@@ -91,7 +76,7 @@ void LEAD_LAG_BLOCK::determine_block_integration_time_step_mode()
         {
             if(global_h<7.68*t2) // magic number is NOT allowed. must be removed.
             {
-                if(global_h>t2/4)
+                if(global_h>t2*0.25)
                     mode = SMALL_INTEGRATION_TIME_STEP_MODE;
             }
             else

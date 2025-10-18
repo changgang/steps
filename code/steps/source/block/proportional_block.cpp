@@ -26,11 +26,6 @@ void PROPORTIONAL_BLOCK::set_K(double k)
     this->K = k;
 }
 
-double PROPORTIONAL_BLOCK::get_K() const
-{
-    return K;
-}
-
 void PROPORTIONAL_BLOCK::initialize()
 {
     double k = get_K();

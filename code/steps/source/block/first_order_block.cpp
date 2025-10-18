@@ -29,19 +29,9 @@ void FIRST_ORDER_BLOCK::set_K(double k)
     this->K = k;
 }
 
-double FIRST_ORDER_BLOCK::get_K() const
-{
-    return K;
-}
-
 void FIRST_ORDER_BLOCK::set_T_in_s(double t)
 {
     this->T = t;
-}
-
-double FIRST_ORDER_BLOCK::get_T_in_s() const
-{
-    return T;
 }
 
 void FIRST_ORDER_BLOCK::initialize()
@@ -77,7 +67,7 @@ void FIRST_ORDER_BLOCK::determine_block_integration_time_step_mode()
         double t = get_T_in_s();
         if(global_h<6.91*t) // magic number is NOT allowed. must be removed.
         {
-            if(global_h>t/4)
+            if(global_h>t*0.25)
                 mode = SMALL_INTEGRATION_TIME_STEP_MODE;
         }
         else
@@ -205,9 +195,9 @@ void FIRST_ORDER_BLOCK::run(DYNAMIC_MODE mode)
 {
     if(mode==DYNAMIC_INTEGRATE_MODE)
         integrate();
-    if(mode==DYNAMIC_UPDATE_MODE)
+    else if(mode==DYNAMIC_UPDATE_MODE)
         update();
-    if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
+    else if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
         update_simulation_time_step();
 }
 

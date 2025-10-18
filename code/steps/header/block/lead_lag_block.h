@@ -15,9 +15,9 @@ class LEAD_LAG_BLOCK : public BLOCK
         void set_T1_in_s(double T);
         void set_T2_in_s(double T);
 
-        double get_K() const;
-        double get_T1_in_s() const;
-        double get_T2_in_s() const;
+        inline double get_K() const{return K;}
+        inline double get_T1_in_s() const{return T1;}
+        inline double get_T2_in_s() const{return T2;}
 
         void initialize();
         void run(DYNAMIC_MODE mode);

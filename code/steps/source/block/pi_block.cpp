@@ -31,11 +31,6 @@ void PI_BLOCK::set_Kp(double K)
     pid_block.set_Kp(K);
 }
 
-double PI_BLOCK::get_Kp() const
-{
-    return pid_block.get_Kp();
-}
-
 void PI_BLOCK::set_Ki(double K)
 {
     /*if(K==0)
@@ -47,23 +42,6 @@ void PI_BLOCK::set_Ki(double K)
     }*/
     pid_block.set_Ki(K);
 }
-
-double PI_BLOCK::get_Ki() const
-{
-    return pid_block.get_Ki();
-}
-
-double PI_BLOCK::get_state() const
-{
-    return pid_block.get_integrator_state();
-}
-
-double PI_BLOCK::get_store() const
-{
-    return pid_block.get_integrator_store();
-}
-
-
 
 void PI_BLOCK::initialize()
 {
@@ -103,9 +81,9 @@ void PI_BLOCK::run(DYNAMIC_MODE mode)
 
     if(mode==DYNAMIC_INTEGRATE_MODE)
         integrate();
-    if(mode==DYNAMIC_UPDATE_MODE)
+    else if(mode==DYNAMIC_UPDATE_MODE)
         update();
-    if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
+    else if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
         update_simulation_time_step();
 
     double y = pid_block.get_output();

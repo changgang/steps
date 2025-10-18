@@ -21,12 +21,6 @@ void INTEGRAL_BLOCK::set_T_in_s(double t)
     this->T = t;
 }
 
-double INTEGRAL_BLOCK::get_T_in_s() const
-{
-    return T;
-}
-
-
 void INTEGRAL_BLOCK::initialize()
 {
     ostringstream osstream;

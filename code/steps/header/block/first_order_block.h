@@ -14,8 +14,8 @@ class FIRST_ORDER_BLOCK : public BLOCK
         void set_K(double K);
         void set_T_in_s(double T);
 
-        double get_K() const;
-        double get_T_in_s() const;
+        inline double get_K() const{return K;}
+        inline double get_T_in_s() const{return T;}
 
         void initialize();
         void run(DYNAMIC_MODE mode);

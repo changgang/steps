@@ -31,11 +31,6 @@ void PID_BLOCK::set_Kp(double K)
     p_block.set_K(K);
 }
 
-double PID_BLOCK::get_Kp() const
-{
-    return p_block.get_K();
-}
-
 void PID_BLOCK::set_Ki(double K)
 {
     /*if(K==0)
@@ -64,11 +59,6 @@ void PID_BLOCK::set_Kd(double K)
     d_block.set_K(K);
 }
 
-double PID_BLOCK::get_Kd() const
-{
-    return d_block.get_K();
-}
-
 void PID_BLOCK::set_Td_in_s(double T)
 {
     if(T<=0.0)
@@ -81,43 +71,6 @@ void PID_BLOCK::set_Td_in_s(double T)
     }
     d_block.set_T_in_s(T);
 }
-
-double PID_BLOCK::get_Td_in_s() const
-{
-    return d_block.get_T_in_s();
-}
-
-double PID_BLOCK::get_integrator_state() const
-{
-    return i_block.get_state();
-}
-
-double PID_BLOCK::get_differentiator_state() const
-{
-    return d_block.get_state();
-}
-
-double PID_BLOCK::get_integrator_store() const
-{
-    return i_block.get_store();
-}
-
-double PID_BLOCK::get_differentiator_store() const
-{
-    return d_block.get_store();
-}
-
-double PID_BLOCK::get_state() const
-{
-    return get_integrator_state();
-}
-
-double PID_BLOCK::get_store() const
-{
-    return get_integrator_store();
-}
-
-
 
 void PID_BLOCK::initialize()
 {
@@ -172,7 +125,7 @@ void PID_BLOCK::run(DYNAMIC_MODE mode)
     {
         if(mode==DYNAMIC_UPDATE_MODE)
             update();
-        if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
+        else if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
             update_simulation_time_step();
     }
 

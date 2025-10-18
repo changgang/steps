@@ -46,31 +46,6 @@ void SECOND_ORDER_BLOCK::set_e(double e)
     this->e = e;
 }
 
-double SECOND_ORDER_BLOCK::get_a() const
-{
-    return a;
-}
-
-double SECOND_ORDER_BLOCK::get_b() const
-{
-    return b;
-}
-
-double SECOND_ORDER_BLOCK::get_c() const
-{
-    return c;
-}
-
-double SECOND_ORDER_BLOCK::get_d() const
-{
-    return d;
-}
-
-double SECOND_ORDER_BLOCK::get_e() const
-{
-    return e;
-}
-
 void SECOND_ORDER_BLOCK::initialize()
 {
     // when d!=0
@@ -143,9 +118,9 @@ void SECOND_ORDER_BLOCK::run(DYNAMIC_MODE mode)
 {
     if(mode==DYNAMIC_INTEGRATE_MODE)
         integrate();
-    if(mode==DYNAMIC_UPDATE_MODE)
+    else if(mode==DYNAMIC_UPDATE_MODE)
         update();
-    if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
+    else if(mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
         update_simulation_time_step();
 }
 
