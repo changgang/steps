@@ -79,6 +79,9 @@ void INPHNO::set_physical_internal_bus_number_pair(unsigned int physical_bus, un
 
             physical_to_internal_lookup_table[physical_bus] = internal_bus;
             internal_to_physical_lookup_table[internal_bus] = physical_bus;
+
+            internal2physical_size = internal_to_physical_lookup_table.size();
+            physical2internal_size = physical_to_internal_lookup_table.size();
         }
     }
 }
@@ -160,30 +163,27 @@ bool INPHNO::is_table_full() const
 
 bool INPHNO::empty() const
 {
-    if(physical_to_internal_lookup_table.size()<=1 or internal_to_physical_lookup_table.size()==0)
-        return true;
-    else
-        return false;
+    return internal2physical_size == 0;
 }
 
 void INPHNO::clear()
 {
     physical_to_internal_lookup_table.clear();
     internal_to_physical_lookup_table.clear();
+    internal2physical_size = 0;
+    physical2internal_size = 0;
 }
 
 unsigned int INPHNO::get_table_size() const
 {
-    //return physical_to_internal_lookup_table.size();
-    return internal_to_physical_lookup_table.size();
+    return internal2physical_size;
 }
 
 unsigned int INPHNO::get_internal_bus_number_of_physical_bus_number(unsigned int bus) const
 {
-    if(not empty())
+    if(internal2physical_size > 0)
     {
-        unsigned int nmax = physical_to_internal_lookup_table.size();
-        if(bus<=nmax-1)
+        if(bus<=physical2internal_size-1)
             return physical_to_internal_lookup_table[bus];
         else
             return INDEX_NOT_EXIST;
@@ -194,10 +194,9 @@ unsigned int INPHNO::get_internal_bus_number_of_physical_bus_number(unsigned int
 
 unsigned int INPHNO::get_physical_bus_number_of_internal_bus_number(unsigned int bus) const
 {
-    if(not empty())
+    if(internal2physical_size > 0)
     {
-        unsigned int nmax = internal_to_physical_lookup_table.size();
-        if(bus<nmax)
+        if(bus<internal2physical_size)
             return internal_to_physical_lookup_table[bus];
         else
             return INDEX_NOT_EXIST;

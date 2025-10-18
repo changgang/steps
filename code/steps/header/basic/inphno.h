@@ -35,6 +35,7 @@ class INPHNO
         bool is_new_internal_bus_permutation_correct(const vector<unsigned int>& P);
         vector<unsigned int> physical_to_internal_lookup_table;
         vector<unsigned int> internal_to_physical_lookup_table;
+        unsigned int internal2physical_size, physical2internal_size;
 };
 
 #endif // INPHNO_H
