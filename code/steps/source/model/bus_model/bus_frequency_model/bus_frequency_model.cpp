@@ -144,7 +144,10 @@ void BUS_FREQUENCY_MODEL::set_frequency_deviation_in_pu(double f)
 
 double BUS_FREQUENCY_MODEL::get_frequency_deviation_in_pu() const
 {
-    return get_frequency_deviation_in_Hz()*tbase_s;
+    if(DELT<DELT_threshold)
+        return frequency_block.get_output()*tbase_s;
+    else
+        return get_frequency_deviation_in_Hz()*tbase_s;
 }
 
 double BUS_FREQUENCY_MODEL::get_frequency_deviation_in_Hz() const

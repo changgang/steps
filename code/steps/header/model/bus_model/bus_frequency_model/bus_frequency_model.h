@@ -29,11 +29,11 @@ class BUS_FREQUENCY_MODEL
         double get_ROCOF_in_Hz_per_second() const;
     private:
         STEPS* toolkit;
+        double DELT, DELT_threshold;
         DIFFERENTIAL_BLOCK frequency_block, ROCOF_block;
         BUS* bus_ptr;
         double fbase_Hz, tbase_s;
         double frequency_block_output_old;
-        double DELT, DELT_threshold;
         bool is_model_updated;
 };
 
