@@ -260,47 +260,6 @@ double IEEEG1::get_T7_in_s() const
     return delayer4.get_T_in_s();
 }
 
-double IEEEG1::get_K1() const
-{
-    return K1;
-}
-
-double IEEEG1::get_K2() const
-{
-    return K2;
-}
-
-double IEEEG1::get_K3() const
-{
-    return K3;
-}
-
-double IEEEG1::get_K4() const
-{
-    return K4;
-}
-
-double IEEEG1::get_K5() const
-{
-    return K5;
-}
-
-double IEEEG1::get_K6() const
-{
-    return K6;
-}
-
-double IEEEG1::get_K7() const
-{
-    return K7;
-}
-
-double IEEEG1::get_K8() const
-{
-    return K8;
-}
-
-
 bool IEEEG1::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
@@ -438,10 +397,7 @@ void IEEEG1::run(DYNAMIC_MODE mode)
 
     input = input/Tservo;
 
-    if(input>Uo)
-        input = Uo;
-    if(input<Uc)
-        input = Uc;
+    input = (input>Uo)?Uo:(input<Uc?Uc:input);
 
     servo_motor.set_input(input);
     servo_motor.run(mode);

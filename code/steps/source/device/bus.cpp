@@ -99,10 +99,10 @@ void BUS::set_positive_sequence_voltage_in_kV(double voltage)
 void BUS::set_positive_sequence_angle_in_rad(double angle, complex<double> euler)
 {
     positive_sequence_angle_in_rad = angle;
-    if(euler!=0.0)
-        positive_sequence_Euler_complex_number = euler;
-    else
+    if(euler==0.0)
         positive_sequence_Euler_complex_number = complex<double>(steps_cos(positive_sequence_angle_in_rad), steps_sin(positive_sequence_angle_in_rad));
+    else
+        positive_sequence_Euler_complex_number = euler;
 }
 
 void BUS::set_positive_sequence_angle_in_deg(double angle)

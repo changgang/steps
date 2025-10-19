@@ -56,7 +56,8 @@ void DC_STATION::clear()
 
  DEVICE_ID DC_STATION::get_device_id() const
  {
-     ;
+    DEVICE_ID did;
+    return did;
  }
 
  //SET

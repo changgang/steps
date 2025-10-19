@@ -321,19 +321,9 @@ void SYNC_GENERATOR_MODEL::set_initial_mechanical_power_in_pu_based_on_mbase(dou
     Pmech0 = pmech;
 }
 
-double SYNC_GENERATOR_MODEL::get_initial_mechanical_power_in_pu_based_on_mbase() const
-{
-    return Pmech0;
-}
-
 void SYNC_GENERATOR_MODEL::set_initial_excitation_voltage_in_pu(double efd)
 {
     Efd0 = efd;
-}
-
-double SYNC_GENERATOR_MODEL::get_initial_excitation_voltage_in_pu() const
-{
-    return Efd0;
 }
 
 double SYNC_GENERATOR_MODEL::get_mechanical_power_in_pu_based_on_mbase() const

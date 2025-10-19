@@ -90,7 +90,8 @@ void DC_LINE::save() const
 
 DEVICE_ID DC_LINE::get_device_id() const
 {
-    ;
+    DEVICE_ID did;
+    return did;
 }
 
 void DC_LINE::set_model(MODEL* model)
@@ -100,7 +101,7 @@ void DC_LINE::set_model(MODEL* model)
 
 MODEL* DC_LINE::get_model_of_type(string model_type, unsigned int index)
 {
-    ;
+    return NULL;
 }
 
 void DC_LINE::set_sending_side_bus(const unsigned int bus)

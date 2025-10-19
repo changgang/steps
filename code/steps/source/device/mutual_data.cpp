@@ -55,7 +55,8 @@ void MUTUAL_DATA::report() const
 
 DEVICE_ID MUTUAL_DATA::get_device_id() const
 {
-    ;
+    DEVICE_ID did;
+    return did;
 }
 
 void MUTUAL_DATA::set_first_ac_line_pointer(AC_LINE* lineptr)

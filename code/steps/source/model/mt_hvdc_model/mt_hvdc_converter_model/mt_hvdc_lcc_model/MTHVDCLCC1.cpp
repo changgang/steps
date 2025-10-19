@@ -846,7 +846,7 @@ void MTHVDCLCC1::prepare_model_internal_variable_table()
 
 double MTHVDCLCC1::get_model_internal_variable_with_name(string var_name)
 {
-    ;
+    return 0.0;
 }
 
 

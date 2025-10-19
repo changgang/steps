@@ -42,7 +42,8 @@ void DC_TERMINAL::clear()
 
 DEVICE_ID DC_TERMINAL:: get_device_id() const
 {
-    ;
+    DEVICE_ID did;
+    return did;
 }
 
 void DC_TERMINAL::set_model(MODEL* model)
@@ -52,7 +53,7 @@ void DC_TERMINAL::set_model(MODEL* model)
 
 MODEL* DC_TERMINAL::get_model_of_type(string model_type, unsigned int index)
 {
-    ;
+    return NULL;
 }
 
 void DC_TERMINAL::set_terminal_name(const string name)

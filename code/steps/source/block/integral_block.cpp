@@ -104,6 +104,8 @@ void INTEGRAL_BLOCK::integrate()
 
             switch(get_limiter_type())
             {
+                case NO_LIMITER:
+                    break;
                 case WINDUP_LIMITER:
                 {
                     double vmax = get_upper_limit();
@@ -136,7 +138,6 @@ void INTEGRAL_BLOCK::integrate()
                     }
                     break;
                 }
-                case NO_LIMITER:
                 default:
                     break;
             }
@@ -163,6 +164,8 @@ void INTEGRAL_BLOCK::update()
 
         switch(get_limiter_type())
         {
+            case NO_LIMITER:
+                break;
             case WINDUP_LIMITER:
             {
                 double vmax = get_upper_limit();
@@ -195,7 +198,6 @@ void INTEGRAL_BLOCK::update()
                 }
                 break;
             }
-            case NO_LIMITER:
             default:
                 break;
         }

@@ -78,10 +78,10 @@ class SYNC_GENERATOR_MODEL : public SG_MODEL
     public:
         // set initial efd and pmech for initialization
         void set_initial_mechanical_power_in_pu_based_on_mbase(double pmech);
-        double get_initial_mechanical_power_in_pu_based_on_mbase() const;
+        inline double get_initial_mechanical_power_in_pu_based_on_mbase() const{return Pmech0;}
 
         void set_initial_excitation_voltage_in_pu(double efd);
-        double get_initial_excitation_voltage_in_pu() const;
+        inline double get_initial_excitation_voltage_in_pu() const{return Efd0;}
         // get inputs for dynamics run
         double get_mechanical_power_in_pu_based_on_mbase() const;
         double get_mechanical_power_in_MW() const;

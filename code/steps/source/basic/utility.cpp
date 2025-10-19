@@ -150,31 +150,6 @@ string string2upper(string str)
     return str;
 }
 
-double rad2deg(double angle)
-{
-    return angle*ONE_EIGHTY_OVER_PI;
-}
-
-double deg2rad(double angle)
-{
-    return angle*PI_OVER_180;
-}
-
-double radps2hz(double w)
-{
-    return w*ONE_OVER_DOUBLE_PI;
-}
-
-double hz2radps(double f)
-{
-    return DOUBLE_PI*f;
-}
-
-bool is_nan(double& x)
-{
-    return x!=x;
-}
-
 double round_angle_in_rad_to_PI(double angle)
 {
     double abs_angle = fabs(angle);
@@ -195,6 +170,7 @@ double round_angle_in_rad_to_HALF_PI(double angle)
 
 double steps_fast_complex_abs(const complex<double>& z)
 {
+    return abs(z);
 	double x = z.real();
 	double y = z.imag();
 	return steps_sqrt(x*x+y*y);
@@ -202,6 +178,7 @@ double steps_fast_complex_abs(const complex<double>& z)
 
 double steps_fast_complex_arg(const complex<double>& z)
 {
+    return arg(z);
 	double x = z.real();
 	double y = z.imag();
 
@@ -778,22 +755,10 @@ complex<double> get_xy2dq_rotation_with_angle_in_deg(double angle)
     return get_xy2dq_rotation_with_angle_in_rad(deg2rad(angle));
 }
 
-complex<double> get_xy2dq_rotation_with_angle_in_rad(double angle)
-{
-    // (Vx+jVy)*(sin+jcos) =(Vx*sin-Vy*cos)+j(Vx*cos+Vy*sin)
-    return complex<double> (steps_sin(angle), steps_cos(angle));
-}
-
 complex<double> get_dq2xy_rotation_with_angle_in_deg(double angle)
 {
     // (Vd+jVq)*(sin-jcos) =(Vd*sin+Vq*cos)+j(Vq*sin-Vd*cos)
     return get_dq2xy_rotation_with_angle_in_rad(deg2rad(angle));
-}
-
-complex<double> get_dq2xy_rotation_with_angle_in_rad(double angle)
-{
-    // (Vd+jVq)*(sin-jcos) =(Vd*sin+Vq*cos)+j(Vq*sin-Vd*cos)
-    return complex<double> (steps_sin(angle), -steps_cos(angle));
 }
 
 complex<double> ab2dq_with_angle_in_deg(const complex<double>& V, double angle)

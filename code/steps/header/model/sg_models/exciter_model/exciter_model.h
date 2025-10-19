@@ -25,8 +25,8 @@ class EXCITER_MODEL : public SG_MODEL
         double get_stabilizing_signal_in_pu();
         double get_field_current_in_pu() const;
         // reference
-        void set_voltage_reference_in_pu(double vref);
-        double get_voltage_reference_in_pu() const;
+        inline void set_voltage_reference_in_pu(double vref){voltage_reference_in_pu = vref;}
+        inline double get_voltage_reference_in_pu() const{return voltage_reference_in_pu;}
 
         virtual STEPS_SPARSE_MATRIX* get_linearized_matrix(string matrix_type);
         virtual void set_linearized_matrix(string matrix_type, STEPS_SPARSE_MATRIX* matrix);

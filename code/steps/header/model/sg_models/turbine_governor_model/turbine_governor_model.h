@@ -15,7 +15,7 @@ class TURBINE_GOVERNOR_MODEL : public SG_MODEL
 
         //reference
         void set_initial_mechanical_power_reference_in_pu_based_on_mbase(double P);
-        double get_initial_mechanical_power_reference_in_pu_based_on_mbase() const;
+        inline double get_initial_mechanical_power_reference_in_pu_based_on_mbase() const{return initial_mechanical_power_reference_in_pu;}
 
         double get_mechanical_power_reference_in_pu_based_on_mbase() const;
 

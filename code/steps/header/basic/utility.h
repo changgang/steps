@@ -27,13 +27,13 @@ unsigned int get_vector_identity(const vector<double>& vec);
 
 string string2upper(string str);
 
-double rad2deg(double angle);
-double deg2rad(double angle);
+inline double rad2deg(double angle){return angle*ONE_EIGHTY_OVER_PI;}
+inline double deg2rad(double angle){return angle*PI_OVER_180;}
 
-double radps2hz(double w);
-double hz2radps(double f);
+inline double radps2hz(double w){return w*ONE_OVER_DOUBLE_PI;}
+inline double hz2radps(double f){return DOUBLE_PI*f;}
 
-bool is_nan(double& x);
+inline bool is_nan(double& x){return x!=x;}
 
 double steps_sin(double angle_in_rad);
 double steps_fast_sin(double angle_in_rad);
@@ -84,9 +84,17 @@ complex<double> dq2xy_with_angle_in_deg(const complex<double>& V, double angle);
 complex<double> dq2xy_with_angle_in_rad(const complex<double>& V, double angle);
 
 complex<double> get_xy2dq_rotation_with_angle_in_deg(double angle);
-complex<double> get_xy2dq_rotation_with_angle_in_rad(double angle);
+inline complex<double> get_xy2dq_rotation_with_angle_in_rad(double angle)
+{
+    // (Vx+jVy)*(sin+jcos) =(Vx*sin-Vy*cos)+j(Vx*cos+Vy*sin)
+    return complex<double> (steps_sin(angle), steps_cos(angle));
+}
 complex<double> get_dq2xy_rotation_with_angle_in_deg(double angle);
-complex<double> get_dq2xy_rotation_with_angle_in_rad(double angle);
+inline complex<double> get_dq2xy_rotation_with_angle_in_rad(double angle)
+{
+    // (Vd+jVq)*(sin-jcos) =(Vd*sin+Vq*cos)+j(Vq*sin-Vd*cos)
+    return complex<double> (steps_sin(angle), -steps_cos(angle));
+}
 
 complex<double> ab2dq_with_angle_in_deg(const complex<double>& V, double angle);
 complex<double> ab2dq_with_angle_in_rad(const complex<double>& V, double angle);

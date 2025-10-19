@@ -37,14 +37,14 @@ double EXCITER_MODEL::get_compensated_voltage_in_pu()
 {
     GENERATOR* generator = get_generator_pointer();
     COMPENSATOR_MODEL* comp_model = generator->get_compensator_model();
-    if(comp_model!=NULL)
-        return comp_model->get_compensated_voltage_in_pu();
-    else
+    if(comp_model==NULL)
     {
         //unsigned int bus = generator->get_generator_bus();
         //return psdb.get_bus_positive_sequence_voltage_in_pu(bus);
         return get_terminal_voltage_in_pu();
     }
+    else
+        return comp_model->get_compensated_voltage_in_pu();
 }
 
 double EXCITER_MODEL::get_stabilizing_signal_in_pu()
@@ -71,15 +71,6 @@ double EXCITER_MODEL::get_field_current_in_pu() const
         return gen_model->get_field_current_in_pu_based_on_mbase();
     else
         return 0.0;
-}
-
-void EXCITER_MODEL::set_voltage_reference_in_pu(double vref)
-{
-    voltage_reference_in_pu = vref;
-}
-double EXCITER_MODEL::get_voltage_reference_in_pu() const
-{
-    return voltage_reference_in_pu;
 }
 
 STEPS_SPARSE_MATRIX* EXCITER_MODEL::get_linearized_matrix(string matrix_type)

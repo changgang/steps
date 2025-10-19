@@ -49,14 +49,14 @@ class IEEEG1 : public TURBINE_GOVERNOR_MODEL
         double get_T5_in_s() const;
         double get_T6_in_s() const;
         double get_T7_in_s() const;
-        double get_K1() const;
-        double get_K2() const;
-        double get_K3() const;
-        double get_K4() const;
-        double get_K5() const;
-        double get_K6() const;
-        double get_K7() const;
-        double get_K8() const;
+        inline double get_K1() const{return K1;}
+        inline double get_K2() const{return K2;}
+        inline double get_K3() const{return K3;}
+        inline double get_K4() const{return K4;}
+        inline double get_K5() const{return K5;}
+        inline double get_K6() const{return K6;}
+        inline double get_K7() const{return K7;}
+        inline double get_K8() const{return K8;}
 
     public:
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);

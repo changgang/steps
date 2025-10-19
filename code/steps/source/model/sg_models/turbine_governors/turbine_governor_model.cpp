@@ -45,19 +45,14 @@ void TURBINE_GOVERNOR_MODEL::set_initial_mechanical_power_reference_in_pu_based_
     initial_mechanical_power_reference_in_pu = P;
 }
 
-double TURBINE_GOVERNOR_MODEL::get_initial_mechanical_power_reference_in_pu_based_on_mbase() const
-{
-    return initial_mechanical_power_reference_in_pu;
-}
-
 double TURBINE_GOVERNOR_MODEL::get_mechanical_power_reference_in_pu_based_on_mbase() const
 {
     GENERATOR* generator = get_generator_pointer();
     TURBINE_LOAD_CONTROLLER_MODEL* model =generator->get_turbine_load_controller_model();
-    if(model!=NULL)
-        return model->get_mechanical_power_reference_in_pu_based_on_mbase();
-    else
+    if(model==NULL)
         return get_initial_mechanical_power_reference_in_pu_based_on_mbase();
+    else
+        return model->get_mechanical_power_reference_in_pu_based_on_mbase();
 }
 
 STEPS_SPARSE_MATRIX* TURBINE_GOVERNOR_MODEL::get_linearized_matrix(string matrix_type)

@@ -692,7 +692,7 @@ void MTHVDCVSC1::prepare_model_internal_variable_table()
 
 double MTHVDCVSC1::get_model_internal_variable_with_name(string var_name)
 {
-    ;
+    return 0.0;
 }
 
 string MTHVDCVSC1::get_dynamic_data_in_psse_format() const

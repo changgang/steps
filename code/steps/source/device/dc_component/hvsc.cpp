@@ -101,7 +101,8 @@ void HVSC::save() const
 
 DEVICE_ID HVSC::get_device_id() const
 {
-    ;
+    DEVICE_ID did;
+    return did;
 }
 
 void HVSC::set_model(HVSC_MODEL* model)
