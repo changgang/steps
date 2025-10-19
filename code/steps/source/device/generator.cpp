@@ -121,11 +121,6 @@ void GENERATOR::set_grounding_reactance_in_pu(double x)
     Xground = x;
 }
 
-unsigned int GENERATOR::get_generator_bus() const
-{
-    return get_source_bus();
-}
-
 complex<double> GENERATOR::get_generator_impedance_in_pu() const
 {
     return get_source_impedance_in_pu();

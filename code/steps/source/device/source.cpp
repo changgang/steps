@@ -337,13 +337,6 @@ void SOURCE::clear()
     set_max_allowed_short_circuit_current_of_converter_in_pu(0.0);
 }
 
-bool SOURCE::is_connected_to_bus(unsigned int bus) const
-{
-    return source_bus == bus;
-    if(get_source_bus()==bus) return true;
-    else                      return false;
-}
-
 bool SOURCE::is_in_area(unsigned int area) const
 {
     STEPS& toolkit = get_toolkit();

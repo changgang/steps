@@ -59,16 +59,15 @@ class MODEL
 
         void set_flag_model_initialized_as_false();
         void set_flag_model_initialized_as_true();
-        bool is_model_initialized() const;
+        inline bool is_model_initialized() const{return flag_model_initialized;}
 
         void set_flag_model_updated_as_false();
         void set_flag_model_updated_as_true();
-        bool is_model_updated() const;
+        inline bool is_model_updated() const{return flag_model_updated;}
 
         void activate_model();
         void deactivate_model();
-
-        bool is_model_active() const;
+        inline bool is_model_active() const{return flag_model_active;}
     public: // specific type level
         virtual string get_model_type() const = 0;
 

@@ -61,11 +61,6 @@ void PV_UNIT::set_unit_bus(unsigned int bus)
     set_source_bus(bus);
 }
 
-unsigned int PV_UNIT::get_unit_bus() const
-{
-    return get_source_bus();
-}
-
 void PV_UNIT::set_number_of_lumped_pv_units(double n)
 {
     if(n==0)

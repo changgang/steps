@@ -414,11 +414,6 @@ void MODEL::set_flag_model_initialized_as_true()
     flag_model_initialized = true;
 }
 
-bool MODEL::is_model_initialized() const
-{
-    return flag_model_initialized;
-}
-
 void MODEL::set_flag_model_updated_as_false()
 {
     flag_model_updated = false;
@@ -429,12 +424,6 @@ void MODEL::set_flag_model_updated_as_true()
     flag_model_updated = true;
 }
 
-bool MODEL::is_model_updated() const
-{
-    return flag_model_updated;
-}
-
-
 void MODEL::activate_model()
 {
     flag_model_active = true;
@@ -443,9 +432,3 @@ void MODEL::deactivate_model()
 {
     flag_model_active = false;
 }
-
-bool MODEL::is_model_active() const
-{
-    return flag_model_active;
-}
-

@@ -100,7 +100,10 @@ void BUS::set_positive_sequence_angle_in_rad(double angle, complex<double> euler
 {
     positive_sequence_angle_in_rad = angle;
     if(euler==0.0)
-        positive_sequence_Euler_complex_number = complex<double>(steps_cos(positive_sequence_angle_in_rad), steps_sin(positive_sequence_angle_in_rad));
+    {
+        positive_sequence_Euler_complex_number.real(steps_cos(positive_sequence_angle_in_rad));
+        positive_sequence_Euler_complex_number.imag(steps_sin(positive_sequence_angle_in_rad));
+    }
     else
         positive_sequence_Euler_complex_number = euler;
 }
@@ -602,11 +605,6 @@ BUS_FREQUENCY_MODEL* BUS::get_bus_frequency_model()
 void BUS::set_frequency_deviation_in_pu(double f)
 {
     return bus_frequency_model.set_frequency_deviation_in_pu(f);
-}
-
-double BUS::get_frequency_deviation_in_pu() const
-{
-    return bus_frequency_model.get_frequency_deviation_in_pu();
 }
 
 double BUS::get_frequency_deviation_in_Hz() const

@@ -32,7 +32,7 @@ class GENERATOR : public SOURCE
         void set_grounding_resistance_in_pu(double r);
         void set_grounding_reactance_in_pu(double x);
 
-        unsigned int get_generator_bus() const;
+        inline unsigned int get_generator_bus() const{return get_source_bus();}
         complex<double> get_generator_impedance_in_pu() const;
         double get_positive_sequence_resistance_in_pu() const;
         double get_positive_sequence_syncronous_reactance_in_pu() const;

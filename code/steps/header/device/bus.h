@@ -114,7 +114,7 @@ class BUS : public DEVICE
 
         BUS_FREQUENCY_MODEL* get_bus_frequency_model();
         void set_frequency_deviation_in_pu(double f);
-        double get_frequency_deviation_in_pu() const;
+        inline double get_frequency_deviation_in_pu() const{return bus_frequency_model.get_frequency_deviation_in_pu();}
         double get_frequency_deviation_in_Hz() const;
         double get_frequency_in_pu() const;
         double get_frequency_in_Hz() const;

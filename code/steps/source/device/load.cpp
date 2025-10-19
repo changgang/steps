@@ -245,11 +245,6 @@ void LOAD::clear()
     set_sequence_parameter_import_flag(false);
 }
 
-bool LOAD::is_connected_to_bus(unsigned int target_bus) const
-{
-    return target_bus==bus;
-}
-
 bool LOAD::is_in_area(unsigned int area) const
 {
     return get_area_number()==area;

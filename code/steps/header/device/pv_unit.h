@@ -24,7 +24,7 @@ class PV_UNIT : public SOURCE
         virtual DEVICE_ID get_device_id() const;
 
         void set_unit_bus(unsigned int bus);
-        unsigned int get_unit_bus() const;
+        inline unsigned int get_unit_bus() const{return get_source_bus();}
 
         void set_number_of_lumped_pv_units(double n);
         void set_rated_power_per_pv_unit_in_MW(double P);

@@ -52,7 +52,7 @@ class LOAD : public NONBUS_DEVICE
         virtual bool is_valid() const;
         virtual void check();
         virtual void clear();
-        virtual bool is_connected_to_bus(unsigned int bus) const;
+        inline virtual bool is_connected_to_bus(unsigned int bus) const{return bus==this->bus;}
         virtual bool is_in_area(unsigned int area) const;
         virtual bool is_in_zone(unsigned int zone) const;
         virtual void report() const;

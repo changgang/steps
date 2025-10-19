@@ -1479,13 +1479,34 @@ vector<LOAD*> STEPS_IMEXPORTER::get_all_loads_of(vector<string>& data)
     unsigned int model_name_size = model_name.size();
     string model_subsystem_type = model_name.substr(model_name_size-2,2);
 
-    if(model_subsystem_type=="AL")
+    if(model_subsystem_type=="BL")
+    {
+        unsigned int bus_no = subsystem_number;
+        if(identifier!="*")
+        {
+            DEVICE_ID did;
+            did.set_device_type(STEPS_LOAD);
+            TERMINAL terminal;
+            terminal.append_bus(bus_no);
+            did.set_device_terminal(terminal);
+            did.set_device_identifier_index(get_index_of_string(identifier));
+            LOAD* load = psdb.get_load(did);
+            if(load!=NULL) loads.push_back(load);
+        }
+        else
+        {
+            loads = psdb.get_loads_connecting_to_bus(bus_no);
+            loads = remove_loads_with_different_identifier(loads, identifier);
+        }
+        return loads;
+    }
+    else if(model_subsystem_type=="AL")
     {
         loads = psdb.get_all_loads();
         loads = remove_loads_with_different_identifier(loads, identifier);
         return loads;
     }
-    if(model_subsystem_type=="AR")
+    else if(model_subsystem_type=="AR")
     {
         unsigned int area_no = subsystem_number;
         loads = psdb.get_all_loads();
@@ -1499,7 +1520,7 @@ vector<LOAD*> STEPS_IMEXPORTER::get_all_loads_of(vector<string>& data)
         loads = remove_loads_with_different_identifier(loads, identifier);
         return loads;
     }
-    if(model_subsystem_type=="ZN")
+    else if(model_subsystem_type=="ZN")
     {
         unsigned int zone_no = subsystem_number;
         loads = psdb.get_all_loads();
@@ -1510,13 +1531,6 @@ vector<LOAD*> STEPS_IMEXPORTER::get_all_loads_of(vector<string>& data)
             if(zone!=zone_no)
                 loads.erase(iter);
         }
-        loads = remove_loads_with_different_identifier(loads, identifier);
-        return loads;
-    }
-    if(model_subsystem_type=="BL")
-    {
-        unsigned int bus_no = subsystem_number;
-        loads = psdb.get_loads_connecting_to_bus(bus_no);
         loads = remove_loads_with_different_identifier(loads, identifier);
         return loads;
     }
