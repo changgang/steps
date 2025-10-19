@@ -117,21 +117,21 @@ bool STEPS::get_dynamic_blocks_automatic_large_time_step_logic()
 void STEPS::set_thread_number(unsigned int n)
 {
     thread_number = n;
-    generator_thread_number = 1;
-    wt_generator_thread_number = 1;
-    pv_unit_thread_number = 1;
-    energy_storage_thread_number = 1;
-    load_thread_number = 1;
-    fixed_shunt_thread_number = 1;
-    line_thread_number = 1;
-    transformer_thread_number = 1;
-    lcc_hvdc2t_thread_number = 1;
-    vsc_hvdc_thread_number = 1;
-    mt_hvdc_thread_number = 1;
-    equivalent_device_thread_number = 1;
+    generator_thread_number = n;
+    wt_generator_thread_number = n;
+    pv_unit_thread_number = n;
+    energy_storage_thread_number = n;
+    load_thread_number = n;
+    fixed_shunt_thread_number = n;
+    line_thread_number = n;
+    transformer_thread_number = n;
+    lcc_hvdc2t_thread_number = n;
+    vsc_hvdc_thread_number = n;
+    mt_hvdc_thread_number = n;
+    equivalent_device_thread_number = n;
 
-    if(power_system_db.get_bus_count()!=0)
-        update_device_thread_number();
+    //if(power_system_db.get_bus_count()!=0)
+    //    update_device_thread_number();
 }
 
 void STEPS::update_device_thread_number()

@@ -92,8 +92,8 @@ class POWER_SYSTEM_DATABASE
         bool is_bus_in_allowed_range(unsigned int bus) const;
 
         void set_system_base_power_in_MVA(const double s);
-        double get_system_base_power_in_MVA() const;
-        double get_one_over_system_base_power_in_one_over_MVA() const;
+        inline double get_system_base_power_in_MVA() const{return system_base_power_in_MVA;}
+        inline double get_one_over_system_base_power_in_one_over_MVA() const{return one_over_system_base_power;}
 
         void set_case_information(const string& title);
         void set_case_additional_information(const string& title);

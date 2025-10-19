@@ -364,41 +364,6 @@ void PV_UNIT::set_pv_relay_model(PV_RELAY_MODEL* model)
         pv_relay_model = model;
 }
 
-PV_CONVERTER_MODEL* PV_UNIT::get_pv_converter_model() const
-{
-    return pv_converter_model;
-}
-
-PV_PANEL_MODEL* PV_UNIT::get_pv_panel_model() const
-{
-    return pv_panel_model;
-}
-
-PV_ELECTRICAL_MODEL* PV_UNIT::get_pv_electrical_model() const
-{
-    return pv_electrical_model;
-}
-
-PV_IRRADIANCE_MODEL* PV_UNIT::get_pv_irradiance_model() const
-{
-    return pv_irradiance_model;
-}
-
-PV_TEMPERATURE_MODEL* PV_UNIT::get_pv_temperature_model() const
-{
-    return pv_temperature_model;
-}
-
-PV_VRT_MODEL* PV_UNIT::get_pv_vrt_model() const
-{
-    return pv_vrt_model;
-}
-
-PV_RELAY_MODEL* PV_UNIT::get_pv_relay_model() const
-{
-    return pv_relay_model;
-}
-
 PV_UNIT& PV_UNIT::operator=(const PV_UNIT& pvu)
 {
     if(this==(&pvu)) return *this;

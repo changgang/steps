@@ -16,10 +16,6 @@ using namespace chrono;
 
 class STEPS;
 
-#define ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-
-#define USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
-
 void DYNAMICS_SIMULATOR::prepare_meters()
 {
     prepare_bus_related_meters();

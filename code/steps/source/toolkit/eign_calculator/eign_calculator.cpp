@@ -15,10 +15,6 @@ using namespace chrono;
 
 class STEPS;
 
-#define ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-
-#define USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
-
 EIGN_CALCULATOR::EIGN_CALCULATOR(STEPS& toolkit)
 {
     this->toolkit = (&toolkit);

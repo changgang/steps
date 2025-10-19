@@ -43,13 +43,13 @@ class PV_UNIT : public SOURCE
         void set_pv_relay_model(PV_RELAY_MODEL* model);
         void set_pv_temperature_model(PV_TEMPERATURE_MODEL* model);
 
-        PV_CONVERTER_MODEL* get_pv_converter_model() const;
-        PV_PANEL_MODEL* get_pv_panel_model() const;
-        PV_ELECTRICAL_MODEL* get_pv_electrical_model() const;
-        PV_IRRADIANCE_MODEL* get_pv_irradiance_model() const;
-        PV_TEMPERATURE_MODEL* get_pv_temperature_model() const;
-        PV_VRT_MODEL* get_pv_vrt_model() const;
-        PV_RELAY_MODEL* get_pv_relay_model() const;
+        inline PV_CONVERTER_MODEL* get_pv_converter_model() const{return pv_converter_model;}
+        inline PV_PANEL_MODEL* get_pv_panel_model() const{return pv_panel_model;}
+        inline PV_ELECTRICAL_MODEL* get_pv_electrical_model() const{return pv_electrical_model;}
+        inline PV_IRRADIANCE_MODEL* get_pv_irradiance_model() const{return pv_irradiance_model;}
+        inline PV_TEMPERATURE_MODEL* get_pv_temperature_model() const{return pv_temperature_model;}
+        inline PV_VRT_MODEL* get_pv_vrt_model() const{return pv_vrt_model;}
+        inline PV_RELAY_MODEL* get_pv_relay_model() const{return pv_relay_model;}
 
         virtual void run(DYNAMIC_MODE mode);
         virtual void report() const;

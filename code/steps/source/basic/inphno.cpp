@@ -181,26 +181,16 @@ unsigned int INPHNO::get_table_size() const
 
 unsigned int INPHNO::get_internal_bus_number_of_physical_bus_number(unsigned int bus) const
 {
-    if(internal2physical_size > 0)
-    {
-        if(bus<=physical2internal_size-1)
-            return physical_to_internal_lookup_table[bus];
-        else
-            return INDEX_NOT_EXIST;
-    }
+    if(internal2physical_size > 0 and bus<=physical2internal_size-1)
+        return physical_to_internal_lookup_table[bus];
     else
         return INDEX_NOT_EXIST;
 }
 
 unsigned int INPHNO::get_physical_bus_number_of_internal_bus_number(unsigned int bus) const
 {
-    if(internal2physical_size > 0)
-    {
-        if(bus<internal2physical_size)
-            return internal_to_physical_lookup_table[bus];
-        else
-            return INDEX_NOT_EXIST;
-    }
+    if(internal2physical_size > 0 and bus<internal2physical_size)
+        return internal_to_physical_lookup_table[bus];
     else
         return INDEX_NOT_EXIST;
 }

@@ -41,13 +41,14 @@ set(CMAKE_C_FLAGS_DEBUG   "${CAMKE_C_FLAGS}")
 
 # Set C++ compiler flags
 set(CMAKE_CXX_FLAGS "-std=c++14")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -pg")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fopenmp -static-libgcc -static-libstdc++ -Wall -march=native -funroll-loops")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -malign-double -minline-all-stringops")
 # same flags for release
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -pg")
+#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -pg")
 # add -pg to profile for debug
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -pg")
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -pg")
 
 # from here, you are going to set up source directories of STEPS and its dependent third-party modules
 

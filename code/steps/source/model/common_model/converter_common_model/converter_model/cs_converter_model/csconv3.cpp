@@ -180,14 +180,13 @@ void CSCONV3::run(DYNAMIC_MODE mode)
 
 complex<double> CSCONV3::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_mbase()
 {
-    double Ip = get_Ip_in_pu();
-    double Iq = get_Iq_in_pu();
-    double pll_angle = get_pll_angle_in_rad();
+    double Ip = active_current_commander.get_output();
+    double Iq = reactive_current_commander.get_output();
+    double pll_angle = pll0.get_pll_angle_in_rad();
     double sine = steps_sin(pll_angle), cosine = steps_cos(pll_angle);
     double Ix = Ip*cosine - Iq*sine;
     double Iy = Ip*sine + Iq*cosine;
-    complex<double> Ixy(Ix, Iy);
-    return Ixy;
+    return complex<double>(Ix, Iy);
 }
 
 complex<double> CSCONV3::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase()

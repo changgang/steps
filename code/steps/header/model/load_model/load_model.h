@@ -19,7 +19,7 @@ class LOAD_MODEL : public MODEL
         void set_voltage_source_flag(bool flag);
         LOAD_MODEL_TYPE get_load_model_type() const;
         bool get_voltage_source_flag() const;
-        bool is_voltage_source() const;
+        inline bool is_voltage_source() const{return voltage_source_flag;}
 
         // common load model
         virtual string get_model_type() const;

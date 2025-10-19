@@ -63,11 +63,6 @@ bool LOAD_MODEL::get_voltage_source_flag() const
     return voltage_source_flag;
 }
 
-bool LOAD_MODEL::is_voltage_source() const
-{
-    return voltage_source_flag==true;
-}
-
 string LOAD_MODEL::get_model_type() const
 {
     return "LOAD CHARACTERISTICS";
