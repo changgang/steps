@@ -167,6 +167,10 @@ double round_angle_in_rad_to_HALF_PI(double angle)
     else
         return angle;
 }
+double steps_complex_abs_square(const complex<double>& z)
+{
+    return z.real()*z.real()+z.imag()*z.imag();
+}
 
 double steps_fast_complex_abs(const complex<double>& z)
 {

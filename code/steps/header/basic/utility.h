@@ -56,6 +56,7 @@ double steps_fast_atan(double x);
 double round_angle_in_rad_to_PI(double angle);
 double round_angle_in_rad_to_HALF_PI(double angle);
 
+double steps_complex_abs_square(const complex<double>& z);
 double steps_fast_complex_abs(const complex<double>& z);
 double steps_fast_complex_arg(const complex<double>& z);
 

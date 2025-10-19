@@ -2732,18 +2732,21 @@ GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_power_mismatc
 {
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    double smax = 0.0;
+    double smax2 = 0.0;
     unsigned int smax_bus = 0;
     unsigned int n = S_mismatch.size();
+    double s2 = 0.0;
     for(unsigned int i=0; i!=n; ++i)
     {
-        double s = steps_fast_complex_abs(S_mismatch[i]);
-        if(s>smax)
+        s2 = steps_complex_abs_square(S_mismatch[i]);
+        if(s2>smax2)
         {
-            smax = s;
-            smax_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
+            smax2 = s2;
+            smax_bus = i;
         }
     }
+    double smax = steps_sqrt(smax2);
+    smax_bus = network_matrix.get_physical_bus_number_of_internal_bus(smax_bus);
     GREATEST_POWER_CURRENT_MISMATCH_STRUCT s_mismatch;
     s_mismatch.greatest_power_mismatch_in_MVA = smax;
     s_mismatch.bus_with_greatest_power_mismatch = smax_bus;
@@ -2755,39 +2758,58 @@ GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_current_misma
 {
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    double Imax = 0.0;
+    double Imax2 = 0.0;
     unsigned int Imax_bus = 0, Imax_internal_bus = 0;
     unsigned int n = I_mismatch.size();
-    for(unsigned int i=0; i<n; ++i)
+    double I2 = 0.0, J2 = 0.0;
+    unsigned int i=0;
+    while(true)
     {
-        double I = steps_fast_complex_abs(I_mismatch[i]);
-        /*
-        STEPS_SHOW_FILE_FUNCTION_AND_LINE_INFO
-        if(I>5e-7)
+        I2 = steps_complex_abs_square(I_mismatch[i]);
+        J2 = steps_complex_abs_square(I_mismatch[i+1]);
+        if(I2>Imax2)
         {
-            cout<<"dynamic current mismatch exceeding threshold @ bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)
-                <<": "<<I<<endl;
-        }*/
-        if(I>Imax)
-        {
-            Imax = I;
+            Imax2 = I2;
             Imax_internal_bus = i;
         }
+        if(J2>Imax2)
+        {
+            Imax2 = J2;
+            Imax_internal_bus = i+1;
+        }
+        i += 2;
+        if(i+1<n)
+            continue;
+        else
+        {
+            for(;i<n;++i)
+            {
+                double I2 = steps_complex_abs_square(I_mismatch[i]);
+                if(I2>Imax2)
+                {
+                    Imax2 = I2;
+                    Imax_internal_bus = i;
+                }
+            }
+            break;
+        }
     }
+    double Imax = steps_sqrt(Imax2);
     Imax_bus = network_matrix.get_physical_bus_number_of_internal_bus(Imax_internal_bus);
     GREATEST_POWER_CURRENT_MISMATCH_STRUCT i_mismatch;
     i_mismatch.greatest_current_mismatch_in_pu = Imax;
     i_mismatch.bus_with_greatest_current_mismatch = Imax_bus;
 
-    if(toolkit->is_detailed_log_enabled())
+    if(not toolkit->is_detailed_log_enabled())
+        return i_mismatch;
+    else
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         ostringstream osstream;
         osstream<<"Maximum current mismatch at bus "<<Imax_bus<<"("<<psdb.bus_number2bus_name(Imax_bus)<<"): "<<Imax;
         toolkit->show_information_with_leading_time_stamp(osstream);
+        return i_mismatch;
     }
-
-    return i_mismatch;
 }
 
 
