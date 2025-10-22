@@ -4593,6 +4593,20 @@ vector<unsigned int> POWER_SYSTEM_DATABASE::get_all_owners_number()
     return owners_number;
 }
 
+unsigned int POWER_SYSTEM_DATABASE::get_in_service_bus_count()
+{
+    if(in_service_bus_count == 0)
+        update_in_service_bus_count();
+    return in_service_bus_count;
+}
+
+unsigned int POWER_SYSTEM_DATABASE::get_overshadowed_bus_count()
+{
+    if(overshadowed_bus_count == 0)
+        update_overshadowed_bus_count();
+    return overshadowed_bus_count;
+}
+
 void POWER_SYSTEM_DATABASE::update_in_service_bus_count()
 {
     unsigned int n = Bus.size();

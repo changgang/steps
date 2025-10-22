@@ -985,6 +985,13 @@ STEPS& get_toolkit(unsigned int toolkit_index)
 void add_string_to_str_int_map(const string& str)
 {
     toolkit_str_int_map.add_new_string(str);
+    if(str.find(",")!=string::npos)
+    {
+        ostringstream osstream;
+        osstream<<"Warning. String including comma, a.k.a, \',\', is inputted to STEPS ("<<str<<"). If it is used as device name or identifier, it will be stored in output file.\n"
+                <<"If the output file is reloaded, possible error may occur when splitting string.";
+        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
+    }
 }
 
 unsigned int get_index_of_string(const string& str)

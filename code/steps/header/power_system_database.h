@@ -322,8 +322,8 @@ class POWER_SYSTEM_DATABASE
         vector<unsigned int> get_all_owners_number();
 
         inline unsigned int get_bus_count() const{return Bus.size();}
-        inline unsigned int get_in_service_bus_count() const{return in_service_bus_count;}
-        inline unsigned int get_overshadowed_bus_count() const{return overshadowed_bus_count;}
+        unsigned int get_in_service_bus_count();
+        unsigned int get_overshadowed_bus_count();
         inline unsigned int get_generator_count() const{return Generator.size();}
         inline unsigned int get_wt_generator_count() const{return WT_Generator.size();}
         inline unsigned int get_pv_unit_count() const{return PV_Unit.size();}
