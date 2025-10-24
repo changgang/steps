@@ -14,10 +14,11 @@
 				<Option compiler="gcc" />
 				<Option parameters="--compiler " />
 				<Compiler>
+					<Add option="-flto" />
 					<Add option="-O3" />
 					<Add option="-Wall" />
-					<Add option="-fPIC" />
 					<Add option="-std=c++14" />
+					<Add option="-fPIC" />
 					<Add option="-march=native" />
 					<Add option="-funroll-loops" />
 					<Add option="-malign-double" />
@@ -36,6 +37,7 @@
 					<Add directory="../thirdparty/SuiteSparse/CXSparse/Include" />
 				</Compiler>
 				<Linker>
+					<Add option="-flto" />
 					<Add option="-static-libstdc++" />
 					<Add option="-static-libgcc" />
 					<Add option="-fopenmp" />
