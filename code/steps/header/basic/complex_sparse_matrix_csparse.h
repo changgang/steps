@@ -66,6 +66,8 @@ private:
     complex<double> *LU_workspace;
     complex<double> *bb;
     unsigned int bb_size;
+    cxs     *vb;
+    vector<complex<double> > result;
 };
 
 

@@ -226,6 +226,7 @@ class DYNAMICS_SIMULATOR
         void optimize_network_ordering();
         void set_internal_bus_pointer();
         void set_internal_bus_complex_voltage_vector();
+        void set_loads_internal_bus();
 
         void prepare_devices_for_run();
 

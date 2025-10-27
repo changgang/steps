@@ -21,6 +21,7 @@ COMPLEX_SPARSE_MATRIX_CSPARSE::COMPLEX_SPARSE_MATRIX_CSPARSE():COMPLEX_SPARSE_MA
     LU_workspace = NULL;
     bb = NULL;
     bb_size = 0;
+    vb = NULL;
 
     clear();
 }
@@ -106,6 +107,7 @@ COMPLEX_SPARSE_MATRIX_CSPARSE::~COMPLEX_SPARSE_MATRIX_CSPARSE()
     if(LU_symbolic!=NULL) cxs_sfree(LU_symbolic);
     if(LU_workspace!=NULL) free(LU_workspace);
     if(bb!=NULL) free(bb);
+    if(vb!=NULL) free(vb);
 
     /*matrix_complex = NULL;
     LU = NULL;
@@ -126,6 +128,7 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::clear()
     if(LU_symbolic!=NULL) cxs_sfree(LU_symbolic);
     if(LU_workspace!=NULL) free(LU_workspace);
     if(bb!=NULL) free(bb);
+    if(vb!=NULL) free(vb);
 
     matrix_complex = NULL;
     LU = NULL;
@@ -133,6 +136,7 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::clear()
     LU_workspace = NULL;
     bb = NULL;
     bb_size = 0;
+    vb = NULL;
 
     matrix_complex = cxs_spalloc(1,1,1,1,1); // arguments: row = 1, column = 1, max_entry = 1, allocate_memory = 1, triplet_form = 1
 
@@ -579,27 +583,34 @@ vector<complex<double> > COMPLEX_SPARSE_MATRIX_CSPARSE::multiply_vector_b(const 
 {
     int n = b.size();
 
-    cxs *bb;
-    bb = cxs_spalloc(1,1,1,1,1);
-    int row, col;
-    for(int k=0; k!=n; ++k)
+    if(vb!=NULL and vb->n == n)
     {
-        row = k;
-        col = 0;
-        cxs_entry(bb, row, col, b[k]);
+        for(int k=0; k!=n; vb->x[k]=b[k],++k)
+            ;
+    }
+    else
+    {
+        if(vb!=NULL)
+        {
+            cxs_spfree(vb); // free vb and reallocate
+            vb = NULL;
+        }
+        cxs *bb;
+        bb = cxs_spalloc(1,1,1,1,1);
+        int row, col;
+        for(int k=0; k!=n; ++k)
+        {
+            row = k;
+            col = 0;
+            cxs_entry(bb, row, col, b[k]);
+        }
+        vb = cxs_compress(bb);
+        cxs_spfree(bb); //free bb
     }
 
-    cxs * B;
-    B = cxs_compress(bb);
+    cxs * C = cxs_multiply(matrix_complex, vb);
 
-    cxs_spfree(bb); //free bb
-
-    cxs * C = cxs_multiply(matrix_complex, B);
-
-    cxs_spfree(B); // free B
-
-    vector<complex<double> > result;
-    result.assign(n, 0.0);
+    if(result.size()!=n) result.assign(n, 0.0);
     for(int k=0; k!=n; ++k) result[C->i[k]]=C->x[k];
 
     cxs_spfree(C); // free C

@@ -15,6 +15,7 @@
 				<Option compiler="gcc" />
 				<Option parameters="--compiler " />
 				<Compiler>
+					<Add option="-flto" />
 					<Add option="-O3" />
 					<Add option="-Wall" />
 					<Add option="-std=c++14" />
@@ -23,6 +24,9 @@
 					<Add directory="SuiteSparse/UMFPACK/Include" />
 					<Add directory="SuiteSparse/CSparse/Include" />
 				</Compiler>
+				<Linker>
+					<Add option="-flto" />
+				</Linker>
 			</Target>
 		</Build>
 		<Compiler>

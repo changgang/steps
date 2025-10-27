@@ -32,20 +32,25 @@ set(CMAKE_C_STANDARD 17)
 set(CMAKE_CXX_STANDARD 14)
 
 # Set C compiler flags
-set(CMAKE_C_FLAGS   "${CAMKE_C_FLAGS} -O3")
-set(CMAKE_C_FLAGS   "${CAMKE_C_FLAGS} -pg")
+set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -O3")
+set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -pg")
+#set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -ffast-math")
 set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -fcf-protection=none")
+set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -flto")
+set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -fno-strict-aliasing")
 # same flags for release
-set(CMAKE_C_FLAGS_RELEASE   "${CAMKE_C_FLAGS}")
+set(CMAKE_C_FLAGS_RELEASE   "${CMAKE_C_FLAGS}")
 # add -pg to profile for debug
-set(CMAKE_C_FLAGS_DEBUG   "${CAMKE_C_FLAGS}")
+set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS}")
 
 # Set C++ compiler flags
 set(CMAKE_CXX_FLAGS "-std=c++14")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffast-math")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcf-protection=none")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-strict-aliasing")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fopenmp -static-libgcc -static-libstdc++ -march=native -funroll-loops")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -malign-double -minline-all-stringops")

@@ -18,6 +18,7 @@ class LOAD : public NONBUS_DEVICE
         virtual ~LOAD();
 
         void set_load_bus(unsigned int bus);
+        inline void set_load_internal_bus(unsigned int bus){internal_bus = bus;}
         void set_identifier(string identifier);
         void set_status(bool status);
         void set_nominal_constant_power_load_in_MVA(const complex<double>& s);
@@ -33,6 +34,7 @@ class LOAD : public NONBUS_DEVICE
         void set_grounding_flag(const bool flag);
 
         inline unsigned int get_load_bus() const{return bus;}
+        inline unsigned int get_load_internal_bus() const{return internal_bus;}
         inline BUS* get_bus_pointer() const{return busptr;}
 
         string get_identifier() const;
@@ -166,6 +168,7 @@ class LOAD : public NONBUS_DEVICE
         STEPS_SPARSE_MATRIX* get_linearized_matrix_pointer_D();
     private:
         unsigned int bus;
+        unsigned int internal_bus;
         BUS* busptr;
 
         unsigned int identifier_index;
