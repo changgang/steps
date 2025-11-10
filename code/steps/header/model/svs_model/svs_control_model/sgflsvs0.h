@@ -2,7 +2,7 @@
 #define SGFLSVS0_H
 
 #include "header/model/svs_model/svs_control_model/svs_control_model.h"
-#include "header/block/PI_block.h"
+#include "header/block/pi_block.h"
 #include "header/block/first_order_block.h"
 #include "header/block/lead_lag_block.h"
 #include <complex>

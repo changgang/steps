@@ -51,7 +51,7 @@ class CSCONV3 : public CS_CONVERTER_MODEL
         FIRST_ORDER_BLOCK active_current_commander;
         FIRST_ORDER_BLOCK reactive_current_commander;
         PLL0 pll0;
-
+        double Ip, Iq, pll_angle;
 };
 
 #endif // CSCONV3_H

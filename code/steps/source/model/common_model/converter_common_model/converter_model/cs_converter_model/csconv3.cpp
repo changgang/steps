@@ -142,25 +142,26 @@ void CSCONV3::initialize()
     double Iy = Isource.imag();
 
     double sine = steps_sin(angle_in_rad), cosine = steps_cos(angle_in_rad);
-    double IP = Ix*cosine + Iy*sine;
-    double IQ =-Ix*sine + Iy*cosine;
+    Ip = Ix*cosine + Iy*sine;
+    Iq =-Ix*sine + Iy*cosine;
 
 
-    double EQ = IQ*(-xeq);
+    double EQ = Iq*(-xeq);
 
-    set_initial_active_current_command_in_pu_based_on_mbase(IP);
+    set_initial_active_current_command_in_pu_based_on_mbase(Ip);
     set_initial_active_power_command_in_pu_based_on_mbase(P);
-    set_initial_reactive_current_command_in_pu_based_on_mbase(IQ);
+    set_initial_reactive_current_command_in_pu_based_on_mbase(Iq);
     set_initial_reactive_power_command_in_pu_based_on_mbase(Q);
     set_initial_reactive_voltage_command_in_pu(EQ);
 
-    active_current_commander.set_output(IP);
+    active_current_commander.set_output(Ip);
     active_current_commander.initialize();
 
-    reactive_current_commander.set_output(IQ);
+    reactive_current_commander.set_output(Iq);
     reactive_current_commander.initialize();
 
     pll0.initialize();
+    pll_angle = pll0.get_pll_angle_in_rad();
 
 }
 
@@ -169,20 +170,19 @@ void CSCONV3::run(DYNAMIC_MODE mode)
     double IP = get_Ipcmd_in_pu_based_on_mbase();
     active_current_commander.set_input(IP);
     active_current_commander.run(mode);
+    Ip = active_current_commander.get_output();
 
     double IQ = get_Iqcmd_in_pu_based_on_mbase();
     reactive_current_commander.set_input(IQ);
     reactive_current_commander.run(mode);
+    Iq = reactive_current_commander.get_output();
 
     pll0.run(mode);
-
+    pll_angle = pll0.get_pll_angle_in_rad();
 }
 
 complex<double> CSCONV3::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_mbase()
 {
-    double Ip = active_current_commander.get_output();
-    double Iq = reactive_current_commander.get_output();
-    double pll_angle = pll0.get_pll_angle_in_rad();
     double sine = steps_sin(pll_angle), cosine = steps_cos(pll_angle);
     double Ix = Ip*cosine - Iq*sine;
     double Iy = Ip*sine + Iq*cosine;
