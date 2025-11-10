@@ -34,7 +34,6 @@ void VSC_HVDC_CONVERTER_MODEL::set_converter_name(string name)
         if(index!=INDEX_NOT_EXIST)
         {
             converter_index = index;
-            add_string_to_str_int_map(name);
             converter_name_index = get_index_of_string(name);
 
             unsigned int bus = vsc->get_converter_ac_bus(converter_index);

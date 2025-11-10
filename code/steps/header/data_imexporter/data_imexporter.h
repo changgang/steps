@@ -53,6 +53,7 @@ class DATA_IMEXPORTER
         vector<unsigned int> get_all_wt_generator_buses();
         vector<unsigned int> get_all_pv_unit_buses();
         vector<unsigned int> get_all_energy_storage_buses();
+        vector<unsigned int> get_all_sv_source_buses();
         vector<unsigned int> get_all_load_buses();
         vector<unsigned int> get_all_2t_lcc_hvdc_buses();
         vector<unsigned int> get_all_fixed_shunt_buses();
@@ -67,6 +68,7 @@ class DATA_IMEXPORTER
         void check_and_supplement_wt_generator_sequence_data();
         void check_and_supplement_pv_unit_sequence_data();
         void check_and_supplement_energy_storage_sequence_data();
+        void check_and_supplement_sv_source_sequence_data();
         void check_and_supplement_vsc_hvdc_sequence_data();
 
         void supplement_load_sequence_model_from_dynamic_model(LOAD& load);

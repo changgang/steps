@@ -454,12 +454,10 @@ void UTILITY_TEST::test_string_int_map_add_and_get_operations()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
 
-    add_string_to_str_int_map("ABC");
     unsigned int index = get_index_of_string("ABC");
     TEST_ASSERT(get_string_of_index(index)=="ABC");
 
 
-    add_string_to_str_int_map("DEF");
     index = get_index_of_string("DEF");
     TEST_ASSERT(get_string_of_index(index)=="DEF");
 }

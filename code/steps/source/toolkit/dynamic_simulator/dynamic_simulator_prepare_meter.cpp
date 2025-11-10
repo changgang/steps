@@ -23,6 +23,7 @@ void DYNAMICS_SIMULATOR::prepare_meters()
     prepare_wt_generator_related_meters();
     prepare_pv_unit_related_meters();
     prepare_energy_storage_related_meters();
+    prepare_sv_source_related_meters();
     prepare_load_related_meters();
     prepare_ac_line_related_meters();
     prepare_transformer_related_meters();
@@ -657,6 +658,32 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meters()
     {
         energy_storage = energy_storages[i];
         METER meter = setter.prepare_es_state_of_charge_in_pu_meter(energy_storage->get_device_id());
+        append_meter(meter);
+    }
+}
+
+void DYNAMICS_SIMULATOR::prepare_sv_source_related_meters()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+
+    METER_SETTER setter(*toolkit);
+
+    unsigned int n;
+
+    n = psdb.get_sv_source_count();
+    vector<SV_SOURCE*> svss = psdb.get_all_sv_sources();
+    SV_SOURCE* svs;
+
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        svs = svss[i];
+        METER meter = setter.prepare_svs_terminal_current_in_pu_on_sbase_meter(svs->get_device_id());
+        append_meter(meter);
+    }
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        svs = svss[i];
+        METER meter = setter.prepare_svs_terminal_reactive_power_in_MVar_meter(svs->get_device_id());
         append_meter(meter);
     }
 }
@@ -1551,6 +1578,51 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(const DEVICE_ID& d
     else
     {
         osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not ENERGY STORAGE when setting up meter with "<<__FUNCTION__;
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void DYNAMICS_SIMULATOR::prepare_sv_source_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
+{
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+
+    if(did.get_device_type()==STEPS_SV_SOURCE)
+    {
+        if(psdb.is_sv_source_exist(did))
+        {
+            METER_SETTER setter(*toolkit);
+
+            METER meter(*toolkit);
+
+            meter_type = string2upper(meter_type);
+
+            if(meter_type=="TERMINAL CURRENT IN PU ON SBASE")
+                meter = setter.prepare_svs_terminal_current_in_pu_on_sbase_meter(did);
+            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON SBASE")
+                meter = setter.prepare_svs_terminal_reactive_power_in_pu_on_sbase_meter(did);
+            if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
+                meter = setter.prepare_svs_terminal_reactive_power_in_MVar_meter(did);
+            if(meter_type=="SVS CONTROL MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_svs_control_model_internal_variable_meter(did, var_name);
+
+            if(meter.is_valid())
+                append_meter(meter);
+            else
+            {
+                osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
+                toolkit->show_information_with_leading_time_stamp(osstream);
+            }
+        }
+        else
+        {
+            osstream<<"Warning. Meter of "<<did.get_compound_device_name()<<" cannot be set since the given device does not exist in the power system database";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not SV SOURCE when setting up meter with "<<__FUNCTION__;
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }

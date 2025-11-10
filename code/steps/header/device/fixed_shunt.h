@@ -49,7 +49,6 @@ class FIXED_SHUNT : public NONBUS_DEVICE
         virtual FIXED_SHUNT& operator=(const FIXED_SHUNT& load);
 
         virtual DEVICE_ID get_device_id() const;
-        //virtual string get_compound_device_name() const;
 
         complex<double> get_actual_impedance_shunt_in_MVA() const;
 

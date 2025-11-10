@@ -197,6 +197,8 @@ def load_library(libsteps_file):
     libsteps.api_is_pv_unit_exist.argtypes = (c_uint, c_char_p, c_uint)
     libsteps.api_is_energy_storage_exist.restype = c_bool
     libsteps.api_is_energy_storage_exist.argtypes = (c_uint, c_char_p, c_uint)
+    libsteps.api_is_sv_source_exist.restype = c_bool
+    libsteps.api_is_sv_source_exist.argtypes = (c_uint, c_char_p, c_uint)
     libsteps.api_is_load_exist.restype = c_bool
     libsteps.api_is_load_exist.argtypes = (c_uint, c_char_p, c_uint)
     libsteps.api_is_fixed_shunt_exist.restype = c_bool
@@ -282,6 +284,8 @@ def load_library(libsteps_file):
     libsteps.api_add_pv_unit.argtypes = (c_uint, c_char_p, c_uint)
     libsteps.api_add_energy_storage.restype = None
     libsteps.api_add_energy_storage.argtypes = (c_uint, c_char_p, c_uint)
+    libsteps.api_add_sv_source.restype = None
+    libsteps.api_add_sv_source.argtypes = (c_uint, c_char_p, c_uint)
     libsteps.api_add_load.restype = None
     libsteps.api_add_load.argtypes = (c_uint, c_char_p, c_uint)
     libsteps.api_add_fixed_shunt.restype = None
@@ -311,6 +315,8 @@ def load_library(libsteps_file):
     libsteps.api_replace_generator_with_pv_unit.argtype = (c_uint, c_char_p, c_uint)
     libsteps.api_replace_generator_with_energy_storage.restype = None
     libsteps.api_replace_generator_with_energy_storage.argtype = (c_uint, c_char_p, c_uint)
+    libsteps.api_replace_generator_with_sv_source.restype = None
+    libsteps.api_replace_generator_with_sv_source.argtype = (c_uint, c_char_p, c_uint)
 
     libsteps.api_copy_generator.restype = None
     libsteps.api_copy_generator.argtype = (c_uint, c_char_p, c_uint, c_char_p, c_uint)
@@ -320,6 +326,8 @@ def load_library(libsteps_file):
     libsteps.api_copy_pv_unit.argtype = (c_uint, c_char_p, c_uint, c_char_p, c_uint)
     libsteps.api_copy_energy_storage.restype = None
     libsteps.api_copy_energy_storage.argtype = (c_uint, c_char_p, c_uint, c_char_p, c_uint)
+    libsteps.api_copy_sv_source.restype = None
+    libsteps.api_copy_sv_source.argtype = (c_uint, c_char_p, c_uint, c_char_p, c_uint)
 
     libsteps.api_remove_bus.restype = None
     libsteps.api_remove_bus.argtypes = (c_uint, c_uint)
@@ -331,6 +339,8 @@ def load_library(libsteps_file):
     libsteps.api_remove_pv_unit.argtypes = (c_uint, c_char_p, c_uint)
     libsteps.api_remove_energy_storage.restype = None
     libsteps.api_remove_energy_storage.argtypes = (c_uint, c_char_p, c_uint)
+    libsteps.api_remove_sv_source.restype = None
+    libsteps.api_remove_sv_source.argtypes = (c_uint, c_char_p, c_uint)
     libsteps.api_remove_load.restype = None
     libsteps.api_remove_load.argtypes = (c_uint, c_char_p, c_uint)
     libsteps.api_remove_fixed_shunt.restype = None
@@ -619,6 +629,17 @@ def load_library(libsteps_file):
     libsteps.api_get_energy_storage_related_model_float_parameter_name.restype = c_char_p
     libsteps.api_get_energy_storage_related_model_float_parameter_name.argtypes = (c_uint, c_char_p, c_char_p, c_uint, c_uint)
 
+    libsteps.api_get_sv_source_related_model_name.restype = c_char_p
+    libsteps.api_get_sv_source_related_model_name.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
+    libsteps.api_get_sv_source_related_model_float_parameter.restype = c_double
+    libsteps.api_get_sv_source_related_model_float_parameter.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_uint)
+    libsteps.api_set_sv_source_related_model_float_parameter.restype = None
+    libsteps.api_set_sv_source_related_model_float_parameter.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_double, c_uint)
+    libsteps.api_get_sv_source_related_model_float_parameter_count.restype = c_uint
+    libsteps.api_get_sv_source_related_model_float_parameter_count.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
+    libsteps.api_get_sv_source_related_model_float_parameter_name.restype = c_char_p
+    libsteps.api_get_sv_source_related_model_float_parameter_name.argtypes = (c_uint, c_char_p, c_char_p, c_uint, c_uint)
+
     libsteps.api_get_load_related_model_name.restype = c_char_p
     libsteps.api_get_load_related_model_name.argtypes = (c_uint, c_char_p, c_char_p, c_uint)
     libsteps.api_get_load_related_model_float_parameter.restype = c_double
@@ -860,6 +881,8 @@ def load_library(libsteps_file):
     libsteps.api_prepare_pv_unit_related_meters.argtypes = (c_uint, )
     libsteps.api_prepare_energy_storage_related_meters.restype = None
     libsteps.api_prepare_energy_storage_related_meters.argtypes = (c_uint, )
+    libsteps.api_prepare_sv_source_related_meters.restype = None
+    libsteps.api_prepare_sv_source_related_meters.argtypes = (c_uint, )
     libsteps.api_prepare_load_related_meters.restype = None
     libsteps.api_prepare_load_related_meters.argtypes = (c_uint, )
     libsteps.api_prepare_line_related_meters.restype = None
@@ -886,6 +909,8 @@ def load_library(libsteps_file):
     libsteps.api_prepare_pv_unit_related_meter.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_uint)
     libsteps.api_prepare_energy_storage_related_meter.restype = None
     libsteps.api_prepare_energy_storage_related_meter.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_uint)
+    libsteps.api_prepare_sv_source_related_meter.restype = None
+    libsteps.api_prepare_sv_source_related_meter.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_uint)
     libsteps.api_prepare_load_related_meter.restype = None
     libsteps.api_prepare_load_related_meter.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_uint)
     libsteps.api_prepare_line_related_meter.restype = None

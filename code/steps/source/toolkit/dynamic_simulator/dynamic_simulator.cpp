@@ -482,6 +482,7 @@ unsigned int DYNAMICS_SIMULATOR::get_memory_usage_in_bytes()
            wt_generators.capacity()*sizeof(WT_GENERATOR*)+
            pv_units.capacity()*sizeof(PV_UNIT*)+
            e_storages.capacity()*sizeof(ENERGY_STORAGE*)+
+           sv_sources.capacity()*sizeof(SV_SOURCE*)+
            loads.capacity()*sizeof(LOAD*)+
            lines.capacity()*sizeof(AC_LINE*)+
            hvdcs.capacity()*sizeof(LCC_HVDC2T*)+
@@ -1111,6 +1112,7 @@ void DYNAMICS_SIMULATOR::prepare_devices_for_run()
     wt_generators = psdb.get_all_wt_generators();
     pv_units = psdb.get_all_pv_units();
     e_storages = psdb.get_all_energy_storages();
+    sv_sources = psdb.get_all_sv_sources();
 
     loads = psdb.get_all_loads();
 
@@ -1486,13 +1488,23 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 
     n = e_storages.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_pv_unit_thread_number());
+        //set_openmp_number_of_threads(toolkit->get_energy_storage_thread_number());
         set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
         e_storages[i]->run(mode);
+
+    n = sv_sources.size();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        //set_openmp_number_of_threads(toolkit->get_sv_source_thread_number());
+        set_openmp_number_of_threads(toolkit->get_thread_number());
+        #pragma omp parallel for schedule(static)
+        //#pragma omp parallel for num_threads(2)
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+    for(unsigned int i=0; i<n; ++i)
+        sv_sources[i]->run(mode);
 
     /*clock_2 = steady_clock::now();
     tduration = duration_cast<nanoseconds>(clock_2-clock_1);
@@ -2093,6 +2105,29 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
             }
         }
     }
+    add_sv_source_to_bus_current_mismatch();
+    if(not detailed_log_enabled)
+        ;
+    else
+    {
+        for(unsigned int i = 0; i<n; ++i)
+        {
+            if(std::isnan(I_mismatch[i].real()) or std::isnan(I_mismatch[i].imag()))
+            {
+                osstream<<"warning. NAN is detected when getting bus current mismatch after adding sv sources when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+                for(unsigned int j = 0; j<n; ++j)
+                {
+                    if(std::isnan(I_mismatch[j].real()) or std::isnan(I_mismatch[j].imag()))
+                    {
+                        unsigned int ibus = net.get_physical_bus_number_of_internal_bus(j);
+                        osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
+                    }
+                }
+                toolkit->show_information_with_leading_time_stamp(osstream);
+                break;
+            }
+        }
+    }
     add_loads_to_bus_current_mismatch();
     if(not detailed_log_enabled)
         ;
@@ -2421,6 +2456,38 @@ void DYNAMICS_SIMULATOR::add_energy_storage_to_bus_current_mismatch()
                 complex<double> Exy = gen_model->get_internal_voltage_in_pu_in_xy_axis();
                 osstream<<"Generator %u internal voltage: %f + j%f (dq), %f + j%f (xy)",physical_bus, Edq.real(), Edq.imag(), Exy.real(), Exy.imag());
                 toolkit->show_information_with_leading_time_stamp(osstream);*/
+            }
+        }
+    }
+}
+
+void DYNAMICS_SIMULATOR::add_sv_source_to_bus_current_mismatch()
+{
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+
+    unsigned int nsvs = sv_sources.size();
+
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit->get_sv_source_thread_number());
+        #pragma omp parallel for schedule(static)
+        //#pragma omp parallel for num_threads(2)
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+    for(unsigned int i=0; i<nsvs; ++i)
+    {
+        complex<double> I;
+        SV_SOURCE* svs = sv_sources[i];
+
+        if(svs->get_status() == true)
+        {
+            unsigned int physical_bus = svs->get_sv_source_bus();
+
+            unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+
+            SVS_CONTROL_MODEL* svs_ctrl_model = svs->get_svs_control_model();
+            if(svs_ctrl_model!=NULL)
+            {
+                I = svs_ctrl_model->get_terminal_complex_current_in_pu_based_on_sbase();
+                I_mismatch[internal_bus] += I;
             }
         }
     }
@@ -4272,6 +4339,98 @@ void DYNAMICS_SIMULATOR::shed_energy_storage(const DEVICE_ID& gen_id,double perc
                 <<"No energy storage will be shed at time "<<TIME<<" s."<<endl;
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
+}
+
+void DYNAMICS_SIMULATOR::trip_sv_source(const DEVICE_ID& gen_id)
+{
+    ostringstream osstream;
+
+    if(gen_id.get_device_type()==STEPS_SV_SOURCE)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        SV_SOURCE* svs = psdb.get_sv_source(gen_id);
+        if(svs!=NULL)
+        {
+            string busname = psdb.bus_number2bus_name(svs->get_sv_source_bus());
+
+            if(svs->get_status()==true)
+            {
+                svs->set_status(false);
+
+                //network_matrix.build_dynamic_network_Y_matrix();
+                //build_jacobian();
+
+                osstream<<svs->get_compound_device_name()<<" is tripped at time "<<TIME<<" s.";
+                toolkit->show_information_with_leading_time_stamp(osstream);
+            }
+        }
+        else
+        {
+            osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist in power system database."<<endl
+                    <<"No sv source will be tripped at time "<<TIME<<" s.";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<"The given device is not a SV SOURCE (it is a "<<gen_id.get_device_type()<<") for tripping sv source."<<endl
+                <<"No sv source will be tripped at time "<<TIME<<" s."<<endl;
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void DYNAMICS_SIMULATOR::shed_sv_source(const DEVICE_ID& gen_id,double percent)
+{/*
+    ostringstream osstream;
+
+    if(gen_id.get_device_type()==STEPS_SV_SOURCE)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        SV_SOURCE* svs = psdb.get_sv_source(gen_id);
+        if(svs!=NULL)
+        {
+            string busname = psdb.bus_number2bus_name(svs->get_sv_source_bus());
+
+            if(fabs(percent)>DOUBLE_EPSILON)
+            {
+                if(percent==1.0)
+                {
+                    osstream<<svs->get_compound_device_name()<<" is shed by "<<100.0<<"% at time "<<TIME<<" s."<<endl
+                            <<"SV source is to be tripped.";
+                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    trip_sv_source(gen_id);
+                }
+                else
+                {
+                    double mbase = svs->get_mbase_in_MVA();
+                    osstream<<svs->get_compound_device_name()<<" is shed by "<<percent*100.0<<"% at time "<<TIME<<" s."<<endl
+                            <<"MBASE is changed from "<<mbase<<" MVA to ";
+
+                    svs->set_mbase_in_MVA(mbase*(1.0-percent));
+                    osstream<<svs->get_mbase_in_MVA()<<" MVA.";
+                    toolkit->show_information_with_leading_time_stamp(osstream);
+                }
+            }
+            else
+            {
+                osstream<<" SV source shed percent is 0.0 for "<<svs->get_compound_device_name()<<endl
+                        <<"No sv source will be shed at time "<<TIME<<" s."<<endl;
+                toolkit->show_information_with_leading_time_stamp(osstream);
+            }
+        }
+        else
+        {
+            osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist in power system database."<<endl
+                    <<"No sv source will be shed at time "<<TIME<<" s.";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<"The given device is not a SV SOURCE (it is a "<<gen_id.get_device_type()<<") for shedding sv source."<<endl
+                <<"No sv source will be shed at time "<<TIME<<" s."<<endl;
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }*/
 }
 
 void DYNAMICS_SIMULATOR::trip_load(const DEVICE_ID& load_id)

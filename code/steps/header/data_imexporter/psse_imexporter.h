@@ -72,6 +72,8 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         string export_pv_unit_data(const PV_UNIT* pvu) const;
         string export_all_energy_storage_data() const;
         string export_energy_storage_data(const ENERGY_STORAGE* estorage) const;
+        string export_all_sv_source_data() const;
+        string export_sv_source_data(const SV_SOURCE* sv_source) const;
         string export_source_common_data(const SOURCE* source) const;
         string export_source_var_control_data(const SOURCE* source) const;
         string export_all_ac_line_data() const;

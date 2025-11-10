@@ -479,6 +479,19 @@ class STEPS():
         device = self.__get_c_char_p_of_string("Energy Storage")
         return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
 
+    def get_sv_source_capacity(self):
+        """
+        Get capacity for storing SV sources in database.
+        Args: N/A
+        Rets:
+            (1) Maximum number of SV sources that can be stored in the database.
+        Example:
+            nsv_source_max = simulator.get_sv_source_capacity()
+        """
+        global STEPS_LIB
+        device = self.__get_c_char_p_of_string("Sv Source")
+        return int(STEPS_LIB.api_get_device_capacity(device, self.toolkit_index))
+
     def get_load_capacity(self):
         """
         Get capacity for storing loads in database.
@@ -689,7 +702,22 @@ class STEPS():
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Energy Storage")
         return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
-        
+
+    def set_sv_source_capacity(self, capacity):
+        """
+        Set capacity for storing SV sources in database.
+        Args:
+            (1) capacity: Maximum number of SV sources that can be stored in the database.
+        Rets: N/A
+        Tips:
+            This function SHOULD be called before adding devices to the database.
+        Example: 
+            simulator.set_sv_source_capacity(capacity)
+        """
+        global STEPS_LIB
+        device = self.__get_c_char_p_of_string("Sv Source")
+        return STEPS_LIB.api_set_device_capacity(device, capacity, self.toolkit_index)
+       
     def set_load_capacity(self, capacity):
         """
         Set capacity for storing loads in database.
@@ -1059,6 +1087,20 @@ class STEPS():
         STEPS_LIB.api_add_energy_storage(bus, ickt, self.toolkit_index)
         return
 
+    def add_sv_source(self, svs):
+        """
+        Add new SV source with device id.
+        Args:
+            (1) sv_source: Tuple device id in format of (bus, ickt).
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        bus, ickt = self.__extract_single_bus_device_id(svs)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        STEPS_LIB.api_add_sv_source(bus, ickt, self.toolkit_index)
+        return
+
     def add_area(self, areanumber, areaname):
         """
         Add new area with area number and area name.
@@ -1143,6 +1185,20 @@ class STEPS():
         STEPS_LIB.api_replace_generator_with_energy_storage(bus, ickt, self.toolkit_index)
         return
 
+    def replace_generator_with_sv_source(self, generator):
+        """
+        Replace GENERATOR with new SV_SOURCE
+        Args:
+            (1) generator: Tuple generator device id in format of (bus, ickt).
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        bus, ickt = self.__extract_single_bus_device_id(generator)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        STEPS_LIB.api_replace_generator_with_sv_source(bus, ickt, self.toolkit_index)
+        return
+    
     def copy_generator(self, new_generator, old_generator):
         """
         Copy new generator from old generator
@@ -1211,6 +1267,23 @@ class STEPS():
         STEPS_LIB.api_copy_energy_storage(new_bus, new_ickt, old_bus, old_ickt, self.toolkit_index)
         return
 
+    def copy_sv_source(self, new_svs, old_svs):
+        """
+        Copy new SV source from old SV source
+        Args:
+            (1) new_svs: Tuple SV source device id in format of (bus, ickt).
+            (2) old_svs: Tuple SV source device id in format of (bus, ickt).
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        new_bus, new_ickt = self.__extract_single_bus_device_id(new_svs)
+        new_ickt = self.__get_c_char_p_of_string(new_ickt)
+        old_bus, old_ickt = self.__extract_single_bus_device_id(old_svs)
+        old_ickt = self.__get_c_char_p_of_string(old_ickt)
+        STEPS_LIB.api_copy_sv_source(new_bus, new_ickt, old_bus, old_ickt, self.toolkit_index)
+        return
+    
     def remove_bus(self, busnumber):
         """
         Remove bus of bus number.
@@ -1391,6 +1464,20 @@ class STEPS():
         STEPS_LIB.api_remove_energy_storage(bus, ickt, self.toolkit_index)
         return
 
+    def remove_sv_source(self, sv_source):
+        """
+        Remove SV source with device id.
+        Args:
+            (1) sv_source: Tuple SV source device id in format of (bus, ickt).
+        Rets: N/A
+        Example: N/A
+        """
+        global STEPS_LIB
+        bus, ickt = self.__extract_single_bus_device_id(sv_source)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        STEPS_LIB.api_remove_sv_source(bus, ickt, self.toolkit_index)
+        return
+    
     def remove_area(self, areanumber):
         """
         Remove area with area number.
@@ -1610,6 +1697,18 @@ class STEPS():
         """
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("Energy Storage")
+        return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
+
+    def get_sv_source_count(self):
+        """
+        Return number of SV sources.
+        Args: N/A
+        Rets: 
+            (1) Number of SV sources.
+        Example: N/A
+        """
+        global STEPS_LIB
+        device = self.__get_c_char_p_of_string("Sv Source")
         return STEPS_LIB.api_get_device_count(device, self.toolkit_index)
 
     def get_area_count(self):
@@ -1870,6 +1969,20 @@ class STEPS():
         bus, ickt = self.__extract_single_bus_device_id(energy_storage)
         ickt = self.__get_c_char_p_of_string(ickt)
         return STEPS_LIB.api_is_energy_storage_exist(bus, ickt, self.toolkit_index)
+
+    def is_sv_source_exist(self, sv_source):
+        """
+        Check if given SV source device exists or not.
+        Args:
+            (1) sv_source: tuple of SV source device id in format of (bus, ickt).
+        Rets:
+            (1) True if the SV source device exists, False otherwise.
+        Example: N/A
+        """
+        global STEPS_LIB
+        bus, ickt = self.__extract_single_bus_device_id(sv_source)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        return STEPS_LIB.api_is_sv_source_exist(bus, ickt, self.toolkit_index)
     
     def bus_name2number(self, name, vbase=0.0):
         """
@@ -1956,7 +2069,8 @@ class STEPS():
     def get_generators_at_bus(self, bus):
         """
         Get all generators in the database.
-        Args: N/A
+        Args: 
+            (1) bus: bus number. If bus is 0, all generators will be returned.
         Rets:
             (1) Tuple of all generators. Empty tuple if no generators in the database.
         Example: N/A
@@ -1991,7 +2105,7 @@ class STEPS():
         """
         Get all wind turbine generators at given bus.
         Args: 
-            (1) bus: bus number
+            (1) bus: bus number. If bus is 0, all WT generators will be returned.
         Rets:
             (1) Tuple of all wind turbine generators at given bus. Empty tuple if no wind turbine generators at given bus.
         Example: N/A
@@ -2026,7 +2140,7 @@ class STEPS():
         """
         Get all PV units at given bus.
         Args: 
-            (1) bus: bus number
+            (1) bus: bus number. If bus is 0, all PV units will be returned.
         Rets:
             (1) Tuple of all PV units at given bus. Empty tuple if no PV units at given bus.
         Example: N/A
@@ -2061,7 +2175,7 @@ class STEPS():
         """
         Get all energy storages at bus with input bus number.
         Args:
-            (1) bus: bus number
+            (1) bus: bus number. If bus is 0, all energy storages will be returned.
         Rets:
             (1) Tuple of all energy storages at given bus. Empty tuple if no energy storages at given bus.
         Example: N/A
@@ -2082,6 +2196,41 @@ class STEPS():
             STEPS_LIB.api_goto_next_device(device, self.toolkit_index)
         return tuple(energy_storages)
         
+    def get_all_sv_sources(self):
+        """
+        Get all SV sources in the database.
+        Args: N/A
+        Rets:
+            (1) Tuple of all SV sources. Empty tuple if no SV sources in the database.
+        Example: N/A
+        """
+        return self.get_sv_sources_at_bus(0)
+        
+    def get_sv_sources_at_bus(self, bus):
+        """
+        Get all SV sources at bus with input bus number.
+        Args:
+            (1) bus: bus number. If bus is 0, all SV sources will be returned.
+        Rets
+            (1) Tuple of all SV sources at given bus. Empty tuple if no SV sources at given bus.
+        Example: N/A
+        """
+        global STEPS_LIB
+        device = "SV SOURCE"
+        device = self.__get_c_char_p_of_string(device)
+        blank = self.__get_c_char_p_of_string("")
+        STEPS_LIB.api_initialize_device_search(device, bus, self.toolkit_index)
+        sv_sources = []
+        while True:
+            bus = STEPS_LIB.api_get_current_device_bus_number(device, blank, self.toolkit_index)
+            if bus==0:
+                break
+            id = STEPS_LIB.api_get_current_device_identifier(device, self.toolkit_index)
+            id = self.__get_string_from_c_char_p(id)
+            sv_sources.append((int(bus), id))
+            STEPS_LIB.api_goto_next_device(device, self.toolkit_index)
+        return tuple(sv_sources)
+    
     def get_all_loads(self):
         """
         Get all loads in the database.
@@ -2096,7 +2245,7 @@ class STEPS():
         """
         Get all loads at bus with input bus number.
         Args:
-            (1) bus: bus number
+            (1) bus: bus number. If bus is 0, all loads will be returned.
         Rets:
             (1) Tuple of all loads at given bus. Empty tuple if no loads at given bus.
         Example: N/A
@@ -2131,7 +2280,7 @@ class STEPS():
         """
         Get all fixed shunts at bus with input bus number.
         Args:
-            (1) bus: bus number
+            (1) bus: bus number. If bus is 0, all fixed shunts will be returned.
         Rets:
             (1) Tuple of all fixed shunts at given bus. Empty tuple if no fixed shunts at given bus.
         Example: N/A
@@ -2166,7 +2315,7 @@ class STEPS():
         """
         Get all equivalent devices at bus with input bus number.
         Args:
-            (1) bus: bus number
+            (1) bus: bus number. If bus is 0, all equivalent devices will be returned.
         Rets:
             (1) Tuple of all equivalent devices at given bus. Empty tuple if no equivalent devices at given bus.
         Example: N/A
@@ -2667,12 +2816,12 @@ class STEPS():
 
     def __get_source_data(self, source, par_type, par_name, source_type):
         """
-        Private common function to get data of sources, including generator, wind turbine generator, PV unit, and energy storage.
+        Private common function to get data of sources, including generator, wind turbine generator, PV unit, energy storage and SV source.
         Args:
             (1) source: Source device id in format of (bus, ickt)
             (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
             (3) par_name: String of parameter name.
-            (4) source_type: String of source type, including "GENERATOR", "WT GENERATOR", "PV UNIT", "ENERGY STORAGE"
+            (4) source_type: String of source type, including "GENERATOR", "WT GENERATOR", "PV UNIT", "ENERGY STORAGE", "SV SOURCE"
         Rets:
             (1) Value of parameter.
         Tips:
@@ -2859,6 +3008,23 @@ class STEPS():
         global STEPS_LIB
         return self.__get_source_data(energy_storage, par_type, par_name, "ENERGY STORAGE")
 
+    def get_sv_source_data(self, sv_source, par_type, par_name):
+        """
+        Get SV source data.
+        Args:
+            (1) sv_source: SV source device id in format of (bus, ickt)
+            (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+            (3) par_name: String of parameter name.
+        Rets:
+            (1) Value of parameter.
+        Tips:
+            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+            The type of given parameter MUST be consistent with the given parameter type. Otherwise, 0, 0.0, "", or False will be returned.
+        Example: N/A
+        """
+        global STEPS_LIB
+        return self.__get_source_data(sv_source, par_type, par_name, "SV SOURCE")
+    
     def get_load_data(self, load, par_type, par_name):
         """
         Get load data.
@@ -3265,13 +3431,13 @@ class STEPS():
 
     def __set_source_data(self, source, par_type, par_name, value, source_type):
         """
-        Private common function to set data of source, including generator, wind turbine generator, PV unit, and energy storage.
+        Private common function to set data of source, including generator, wind turbine generator, PV unit, energy storage and SV source.
         Args:
             (1) source: Source device id in format of (bus, ickt).
             (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
             (3) par_name: String of parameter name.
             (4) value: Value of parameter.
-            (5) source_type: String of source type, including "GENERATOR", "WT GENERATOR", "PV UNIT", "ENERGY STORAGE"
+            (5) source_type: String of source type, including "GENERATOR", "WT GENERATOR", "PV UNIT", "ENERGY STORAGE", "SV SOURCE"
         Rets: N/A
         Tips:
             The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
@@ -3466,6 +3632,24 @@ class STEPS():
         global STEPS_LIB
         return self.__set_source_data(energy_storage, par_type, par_name, value, "ENERGY STORAGE")
     
+    def set_sv_source_data(self, sv_source, par_type, par_name, value):
+        """
+        Set SV source data.
+        Args:
+            (1) sv_source: SV source device id in format of (bus, ickt).
+            (2) par_type: String of parameter type. Choose one from {"I", "F", "D", "S", "B"}.
+            (3) par_name: String of parameter name.
+            (4) value: Value of parameter.
+        Rets: N/A
+        Tips:
+            The par_type meaning: "I": integer number, "F" or "D": float number, "S": string, "B": boolean data.
+            The type of given parameter MUST be consistent with the given parameter type. Otherwise, nothing will be done.
+            The value MUST be consistent with the given parameter type. Otherwise, function may malfunction and package may exist with error.
+        Example: N/A
+        """
+        global STEPS_LIB
+        return self.__set_source_data(sv_source, par_type, par_name, value, "SV SOURCE")
+    
     def set_generator_power(self, generator, s):
         """
         Set generator power.
@@ -3483,7 +3667,7 @@ class STEPS():
     
     def set_wt_generator_power(self, wt_generator, s):
         """
-        Set wt generator power.
+        Set WT generator power.
         Args:
             (1) wt_generator: WT generator device id in format of (bus, ickt).
             (2) s: Complex power generation in MVA.
@@ -3498,7 +3682,7 @@ class STEPS():
     
     def set_pv_unit_power(self, pv_unit, s):
         """
-        Set pv unit power.
+        Set PV unit power.
         Args:
             (1) pv_unit: PV unit device id in format of (bus, ickt).
             (2) s: Complex power generation in MVA.
@@ -3526,6 +3710,21 @@ class STEPS():
         self.set_energy_storage_data(energy_storage, "F", "PGEN_MW", s.real)
         self.set_energy_storage_data(energy_storage, "F", "QGEN_MVAR", s.imag)
         
+    def set_sv_source_power(self, sv_source, s):
+        """
+        Set SV source power.
+        Args:
+            (1) sv_source: SV source device id in format of (bus, ickt).
+            (2) s: Complex power generation in MVA.
+        Rets: N/A
+        Tips: N/A
+        Example: 
+            set_sv_source_power((1,"#1"), 100+20j)
+        Example: N/A
+        """
+        self.set_sv_source_data(sv_source, "F", "PGEN_MW", s.real)
+        self.set_sv_source_data(sv_source, "F", "QGEN_MVAR", s.imag)
+
     def set_load_data(self, load, par_type, par_name, value):
         """
         Set load data.
@@ -4903,7 +5102,7 @@ class STEPS():
 
     def get_short_circuit_ratio_of_wt_generator(self, wt_genertor):
         """
-        Get short circuit ratio of wt generator.
+        Get short circuit ratio of WT generator.
         Args:
             (1) wt_generator: Wind turbine generator device id in format of (bus, ickt).
         Rets: short circuit ratio
@@ -4914,9 +5113,9 @@ class STEPS():
 
     def get_short_circuit_ratio_of_pv_unit(self, pv_unit):
         """
-        Get short circuit ratio of pv unit.
+        Get short circuit ratio of PV unit.
         Args:
-            (1) pv_unit: pv unit device id in format of (bus, ickt).
+            (1) pv_unit: PV unit device id in format of (bus, ickt).
         Rets: short circuit ratio
         Example: N/A
         """
@@ -4937,7 +5136,7 @@ class STEPS():
     
     def get_multiple_renewable_energy_station_short_circuit_ratio_of_wt_generator(self, wt_genertor):
         """
-        Get multiple renewable energy station short circuit ratio of wt generator.
+        Get multiple renewable energy station short circuit ratio of WT generator.
         Args:
             (1) wt_generator: Wind turbine generator device id in format of (bus, ickt).
         Rets: short circuit ratio
@@ -4948,9 +5147,9 @@ class STEPS():
 
     def get_multiple_renewable_energy_station_short_circuit_ratio_of_pv_unit(self, pv_unit):
         """
-        Get multiple renewable energy station short circuit ratio of pv unit.
+        Get multiple renewable energy station short circuit ratio of PV unit.
         Args:
-            (1) pv_unit: pv unit device id in format of (bus, ickt).
+            (1) pv_unit: PV unit device id in format of (bus, ickt).
         Rets: short circuit ratio
         Example: N/A
         """
@@ -5374,7 +5573,7 @@ class STEPS():
         
     def get_pv_unit_related_model_parameter_pair(self, pv_unit, model_type):
         """
-        Get pv unit related model parameter pair.
+        Get PV unit related model parameter pair.
         Args:
             (1) pv_unit: PV unit device id in format of (bus, ickt).
             (2) model_type: String of model type.
@@ -5484,6 +5683,93 @@ class STEPS():
             parameters.append((par_name, par_value))
         return tuple(parameters)
 
+    def get_sv_source_related_model_name(self, sv_source, model_type):
+        """
+        Get sv_source related model name.
+        Args:
+            (1) sv_source: sv_source device id in format of (bus, ickt).
+            (2) model_type: String of model type.
+        Rets:
+            (1) String of model name.
+        Tips:
+            If model type is not supported, empty string is returned.
+        Example: N/A
+        """
+        global STEPS_LIB
+        ibus, ickt = self.__extract_single_bus_device_id(sv_source)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        model_name = self.__get_string_from_c_char_p(STEPS_LIB.api_get_sv_source_related_model_name(ibus, ickt, model_type, self.toolkit_index))
+        if model_name=="":
+            model_name = None
+        return model_name
+
+    def get_sv_source_related_model_data(self, sv_source, model_type, par_name):
+        """
+        Get sv_source related model data.
+        Args:
+            (1) sv_source: sv_source device id in format of (bus, ickt).
+            (2) model_type: String of model type.
+            (3) par_name: String of parameter name.
+        Rets:
+            (1) Value of parameter
+        Tips:
+            If model type or parameter name is not supported, 0.0 is returned.
+        Example: N/A
+        """
+        global STEPS_LIB
+        ibus, ickt = self.__extract_single_bus_device_id(sv_source)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        return STEPS_LIB.api_get_sv_source_related_model_float_parameter(ibus, ickt, model_type, par_name, self.toolkit_index)
+        
+    def set_sv_source_related_model_data(self, sv_source, model_type, par_name, value):
+        """
+        Set sv_source related model data.
+        Args:
+            (1) sv_source: sv_source device id in format of (bus, ickt).
+            (2) model_type: String of model type.
+            (3) par_name: String of parameter name.
+            (4) value: Value of parameter.
+        Rets: N/A
+        Tips:
+            If model type or parameter name is not supported, nothing will be changed.
+            If value is not a number, function may malfunction and package may exit with error.
+        Example: N/A
+        """
+        global STEPS_LIB
+        ibus, ickt = self.__extract_single_bus_device_id(sv_source)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        return STEPS_LIB.api_set_sv_source_related_model_float_parameter(ibus, ickt, model_type, par_name, value, self.toolkit_index)
+        
+    def get_sv_source_related_model_parameter_pair(self, sv_source, model_type):
+        """
+        Get sv_source related model parameter pair.
+        Args:
+            (1) sv_source: sv_source device id in format of (bus, ickt).
+            (2) model_type: String of model type.
+        Rets:
+            (1) Tuple of parameter name and value pairs. Each parameter name and value pair is in format of (string of parameter name, value of parameter).
+        Tips:
+            If model type is not supported, empty tuple is returned.
+        Example: N/A
+        """
+        global STEPS_LIB
+        ibus, ickt = self.__extract_single_bus_device_id(sv_source)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        parameters = []
+        n = STEPS_LIB.api_get_sv_source_related_model_float_parameter_count(ibus, ickt, model_type, self.toolkit_index)
+        for parameter_index in range(n):
+            par_name = STEPS_LIB.api_get_sv_source_related_model_float_parameter_name(ibus, ickt, model_type, parameter_index, self.toolkit_index)
+            par_value = STEPS_LIB.api_get_sv_source_related_model_float_parameter(ibus, ickt, model_type, par_name, self.toolkit_index);
+            par_name = self.__get_string_from_c_char_p(par_name)
+            parameters.append((par_name, par_value))
+        return tuple(parameters)
+    
     def get_load_related_model_name(self, load, model_type):
         """
         Get load related model name.
@@ -6249,14 +6535,15 @@ class STEPS():
             (1) device_type: String of device type.
         Rets: N/A
         Tips:
-            The device type should be one of {"ALL", "BUS", "GENERATOR", "WT GENERATOR", "PV UNIT", "ENERGY STORAGE", "LOAD", "AC Line", "TRANSFORMER", "2T LCC HVDC", "EQUIVALENT DEVICE"}.
-            If "ALL" is set, all general meters of {"BUS", "GENERATOR", "WT GENERATOR", "PV UNIT", "ENERGY STORAGE", "LOAD", "AC Line", "TRANSFORMER", "2T LCC HVDC", "EQUIVALENT DEVICE"} are set.
+            The device type should be one of {"ALL", "BUS", "GENERATOR", "WT GENERATOR", "PV UNIT", "ENERGY STORAGE", "SV SOURCE", "LOAD", "AC Line", "TRANSFORMER", "2T LCC HVDC", "EQUIVALENT DEVICE"}.
+            If "ALL" is set, all general meters of {"BUS", "GENERATOR", "WT GENERATOR", "PV UNIT", "ENERGY STORAGE", "SV SOURCE", "LOAD", "AC Line", "TRANSFORMER", "2T LCC HVDC", "EQUIVALENT DEVICE"} are set.
             For the supported general meters, see implementation of the following functions of STEPS:
                 DYNAMIC_SIMULATOR::prepare_bus_related_meters()
                 DYNAMIC_SIMULATOR::prepare_generator_related_meters()
                 DYNAMIC_SIMULATOR::prepare_wt_generator_related_meters()
                 DYNAMIC_SIMULATOR::prepare_pv_unit_related_meters()
                 DYNAMIC_SIMULATOR::prepare_energy_storage_related_meters()
+                DYNAMIC_SIMULATOR::prepare_sv_source_related_meters()
                 DYNAMIC_SIMULATOR::prepare_load_related_meters()
                 DYNAMIC_SIMULATOR::prepare_line_related_meters()
                 DYNAMIC_SIMULATOR::prepare_transformer_related_meters()
@@ -6285,6 +6572,9 @@ class STEPS():
             return
         if device_type in ["ENERGY STORAGE"]:
             STEPS_LIB.api_prepare_energy_storage_related_meters(self.toolkit_index)
+            return
+        if device_type in ["SV SOURCE"]:
+            STEPS_LIB.api_prepare_sv_source_related_meters(self.toolkit_index)
             return
         if device_type in ["LOAD"]:
             STEPS_LIB.api_prepare_load_related_meters(self.toolkit_index)
@@ -6409,6 +6699,27 @@ class STEPS():
         STEPS_LIB.api_prepare_energy_storage_related_meter(bus, ickt, meter_type, var_name, self.toolkit_index)
         return
 
+    def prepare_sv_source_meter(self, sv_source, meter_type, var_name=""):
+        """
+        Prepare specific SV source meter.
+        Args:
+            (1) sv_source: SV source device id in format of (bus, ickt).
+            (2) meter_type: String of meter type.
+            (3) var_name: String of internal variable name. Only valid when meter type is internal variable of dynamic models.
+        Rets: N/A
+        Tips:
+            For the supported meter types, see implementation of the following function of STEPS:
+                DYNAMIC_SIMULATOR::prepare_sv_source_related_meter()
+        Example: N/A
+        """
+        global STEPS_LIB
+        bus, ickt = self.__extract_single_bus_device_id(sv_source)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        meter_type = self.__get_c_char_p_of_string(meter_type)
+        var_name = self.__get_c_char_p_of_string(var_name)
+        STEPS_LIB.api_prepare_sv_source_related_meter(bus, ickt, meter_type, var_name, self.toolkit_index)
+        return
+    
     def prepare_load_meter(self, load, meter_type, var_name=""):
         """
         Prepare specific load meter.

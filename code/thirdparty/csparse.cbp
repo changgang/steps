@@ -16,7 +16,6 @@
 				<Option parameters="--compiler " />
 				<Compiler>
 					<Add option="-fomit-frame-pointer" />
-					<Add option="-flto" />
 					<Add option="-O3" />
 					<Add option="-Wall" />
 					<Add option="-std=c++14" />
@@ -32,9 +31,6 @@
 					<Add directory="SuiteSparse/SuiteSparse_config" />
 					<Add directory="SuiteSparse/AMD/Include" />
 				</Compiler>
-				<Linker>
-					<Add option="-flto" />
-				</Linker>
 			</Target>
 		</Build>
 		<Compiler>

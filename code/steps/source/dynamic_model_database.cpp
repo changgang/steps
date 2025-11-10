@@ -258,6 +258,8 @@ unsigned int DYNAMIC_MODEL_DATABASE::get_model_size(MODEL* model) const
     if(model_name=="ESVRT3") return sizeof(ESVRT3);
     if(model_name=="ESVRTRLY1") return sizeof(ESVRTRLY1);
 
+    if(model_name=="SGFLSVS0") return sizeof(SGFLSVS0);
+
     if(model_name=="ARXL") return sizeof(ARXL);
 
     ostringstream osstream;

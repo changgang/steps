@@ -266,6 +266,9 @@ void DATA_IMEXPORTER::setup_ordered_buses_with_mode_SAVE_TO_ORDER_BUS_WITH_DYNAM
     buses = get_all_energy_storage_buses();
     append_buses_to_ordered_buses(buses, existing_buses);
 
+    buses = get_all_sv_source_buses();
+    append_buses_to_ordered_buses(buses, existing_buses);
+
     buses = get_all_load_buses();
     append_buses_to_ordered_buses(buses, existing_buses);
 
@@ -347,6 +350,24 @@ vector<unsigned int> DATA_IMEXPORTER::get_all_energy_storage_buses()
     {
         ENERGY_STORAGE* dvc = devices[i];
         buses.push_back(dvc->get_energy_storage_bus());
+    }
+    return buses;
+}
+
+vector<unsigned int> DATA_IMEXPORTER::get_all_sv_source_buses()
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+
+    vector<unsigned int> buses;
+    vector<SV_SOURCE*> devices = psdb.get_all_sv_sources();
+    unsigned int n = devices.size();
+    buses.reserve(n);
+    buses.clear();
+
+    for(unsigned int i=0; i<n; ++i)
+    {
+        SV_SOURCE* dvc = devices[i];
+        buses.push_back(dvc->get_sv_source_bus());
     }
     return buses;
 }
@@ -436,6 +457,7 @@ void DATA_IMEXPORTER::check_and_supplement_sequence_model_from_dynamic_model()
     check_and_supplement_wt_generator_sequence_data();
     check_and_supplement_pv_unit_sequence_data();
     check_and_supplement_energy_storage_sequence_data();
+    check_and_supplement_sv_source_sequence_data();
     check_and_supplement_vsc_hvdc_sequence_data();
 }
 
@@ -699,6 +721,10 @@ void DATA_IMEXPORTER::check_and_supplement_energy_storage_sequence_data()
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
+}
+void DATA_IMEXPORTER::check_and_supplement_sv_source_sequence_data()
+{
+
 }
 void DATA_IMEXPORTER::check_and_supplement_vsc_hvdc_sequence_data()
 {

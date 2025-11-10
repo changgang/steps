@@ -982,18 +982,6 @@ STEPS& get_toolkit(unsigned int toolkit_index)
     }
 }
 
-void add_string_to_str_int_map(const string& str)
-{
-    toolkit_str_int_map.add_new_string(str);
-    if(str.find(",")!=string::npos)
-    {
-        ostringstream osstream;
-        osstream<<"Warning. String including comma, a.k.a, \',\', is inputted to STEPS ("<<str<<"). If it is used as device name or identifier, it will be stored in output file.\n"
-                <<"If the output file is reloaded, possible error may occur when splitting string.";
-        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
-    }
-}
-
 unsigned int get_index_of_string(const string& str)
 {
     return toolkit_str_int_map[str];
@@ -1012,6 +1000,7 @@ STEPS_DEVICE_TYPE device_string2type(string device_type)
     if(device_type=="WT GENERATOR") return STEPS_WT_GENERATOR;
     if(device_type=="PV UNIT") return STEPS_PV_UNIT;
     if(device_type=="ENERGY STORAGE") return STEPS_ENERGY_STORAGE;
+    if(device_type=="SV SOURCE") return STEPS_SV_SOURCE;
     if(device_type=="LOAD") return STEPS_LOAD;
     if(device_type=="FIXED SHUNT") return STEPS_FIXED_SHUNT;
     if(device_type=="SWITCHED SHUNT") return STEPS_SWITCHED_SHUNT;
@@ -1042,6 +1031,8 @@ string device_type2string(STEPS_DEVICE_TYPE device_type)
             return "PV UNIT";
         case STEPS_ENERGY_STORAGE:
             return "ENERGY STORAGE";
+        case STEPS_SV_SOURCE:
+            return "SV SOURCE";
         case STEPS_LOAD:
             return "LOAD";
         case STEPS_FIXED_SHUNT:

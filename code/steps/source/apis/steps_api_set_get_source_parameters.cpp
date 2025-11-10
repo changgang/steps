@@ -8,11 +8,12 @@
 int api_get_source_integer_data(unsigned int bus, char* identifier, char* parameter_name, char* source_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
+    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did, sv_source_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
     pv_unit_did = get_pv_unit_device_id(bus, identifier);
     energy_storage_did = get_energy_storage_device_id(bus, identifier);
+    sv_source_did = get_sv_source_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -32,6 +33,9 @@ int api_get_source_integer_data(unsigned int bus, char* identifier, char* parame
             break;
         case STEPS_ENERGY_STORAGE:
             sourceptr = psdb.get_source(energy_storage_did);
+            break;
+        case STEPS_SV_SOURCE:
+            sourceptr = psdb.get_source(sv_source_did);
             break;
         default:
             break;
@@ -53,12 +57,7 @@ int api_get_source_integer_data(unsigned int bus, char* identifier, char* parame
     }
     else
     {
-        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
-                 "0 will be returned.",
-                 (generator_did.get_compound_device_name()).c_str(), (wt_generator_did.get_compound_device_name()).c_str(),
-                 (pv_unit_did.get_compound_device_name()).c_str(), (energy_storage_did.get_compound_device_name()).c_str(), __FUNCTION__);
-        toolkit.show_information_with_leading_time_stamp(buffer);
+        show_source_not_exist_with_api(bus, identifier, __FUNCTION__);
         return 0;
     }
 }
@@ -66,11 +65,12 @@ int api_get_source_integer_data(unsigned int bus, char* identifier, char* parame
 void api_set_source_integer_data(unsigned int bus, char* identifier, char* parameter_name, int value, char* source_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
+    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did, sv_source_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
     pv_unit_did = get_pv_unit_device_id(bus, identifier);
     energy_storage_did = get_energy_storage_device_id(bus, identifier);
+    sv_source_did = get_sv_source_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -90,6 +90,9 @@ void api_set_source_integer_data(unsigned int bus, char* identifier, char* param
             break;
         case STEPS_ENERGY_STORAGE:
             sourceptr = psdb.get_source(energy_storage_did);
+            break;
+        case STEPS_SV_SOURCE:
+            sourceptr = psdb.get_source(sv_source_did);
             break;
         default:
             break;
@@ -108,24 +111,18 @@ void api_set_source_integer_data(unsigned int bus, char* identifier, char* param
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, sourceptr->get_device_id(), __FUNCTION__);
     }
     else
-    {
-        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
-                 "Nothing will be changed.",
-                 (generator_did.get_compound_device_name()).c_str(), (wt_generator_did.get_compound_device_name()).c_str(),
-                 (pv_unit_did.get_compound_device_name()).c_str(), (energy_storage_did.get_compound_device_name()).c_str(), __FUNCTION__);
-        toolkit.show_information_with_leading_time_stamp(buffer);
-    }
+        show_source_not_exist_with_api(bus, identifier, __FUNCTION__);
 }
 
 double api_get_source_float_data(unsigned int bus, char* identifier, char* parameter_name, char* source_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
+    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did, sv_source_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
     pv_unit_did = get_pv_unit_device_id(bus, identifier);
     energy_storage_did = get_energy_storage_device_id(bus, identifier);
+    sv_source_did = get_sv_source_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -145,6 +142,9 @@ double api_get_source_float_data(unsigned int bus, char* identifier, char* param
             break;
         case STEPS_ENERGY_STORAGE:
             sourceptr = psdb.get_source(energy_storage_did);
+            break;
+        case STEPS_SV_SOURCE:
+            sourceptr = psdb.get_source(sv_source_did);
             break;
         default:
             break;
@@ -209,12 +209,7 @@ double api_get_source_float_data(unsigned int bus, char* identifier, char* param
     }
     else
     {
-        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
-                 "0.0 will be returned.",
-                 (generator_did.get_compound_device_name()).c_str(), (wt_generator_did.get_compound_device_name()).c_str(),
-                 (pv_unit_did.get_compound_device_name()).c_str(), (energy_storage_did.get_compound_device_name()).c_str(), __FUNCTION__);
-        toolkit.show_information_with_leading_time_stamp(buffer);
+        show_source_not_exist_with_api(bus, identifier, __FUNCTION__);
         return 0.0;
     }
 }
@@ -222,11 +217,12 @@ double api_get_source_float_data(unsigned int bus, char* identifier, char* param
 void api_set_source_float_data(unsigned int bus, char* identifier, char* parameter_name, double value, char* source_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
+    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did, sv_source_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
     pv_unit_did = get_pv_unit_device_id(bus, identifier);
     energy_storage_did = get_energy_storage_device_id(bus, identifier);
+    sv_source_did = get_sv_source_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -246,6 +242,9 @@ void api_set_source_float_data(unsigned int bus, char* identifier, char* paramet
             break;
         case STEPS_ENERGY_STORAGE:
             sourceptr = psdb.get_source(energy_storage_did);
+            break;
+        case STEPS_SV_SOURCE:
+            sourceptr = psdb.get_source(sv_source_did);
             break;
         default:
             break;
@@ -314,24 +313,18 @@ void api_set_source_float_data(unsigned int bus, char* identifier, char* paramet
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, sourceptr->get_device_id(), __FUNCTION__);
     }
     else
-    {
-        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
-                 "Nothing will be changed.",
-                 (generator_did.get_compound_device_name()).c_str(), (wt_generator_did.get_compound_device_name()).c_str(),
-                 (pv_unit_did.get_compound_device_name()).c_str(), (energy_storage_did.get_compound_device_name()).c_str(), __FUNCTION__);
-        toolkit.show_information_with_leading_time_stamp(buffer);
-    }
+        show_source_not_exist_with_api(bus, identifier, __FUNCTION__);
 }
 
 const char* api_get_source_string_data(unsigned int bus, char* identifier, char* parameter_name, char* source_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
+    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did, sv_source_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
     pv_unit_did = get_pv_unit_device_id(bus, identifier);
     energy_storage_did = get_energy_storage_device_id(bus, identifier);
+    sv_source_did = get_sv_source_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -354,6 +347,9 @@ const char* api_get_source_string_data(unsigned int bus, char* identifier, char*
         case STEPS_ENERGY_STORAGE:
             sourceptr = psdb.get_source(energy_storage_did);
             break;
+        case STEPS_SV_SOURCE:
+            sourceptr = psdb.get_source(sv_source_did);
+            break;
         default:
             break;
     }
@@ -367,12 +363,7 @@ const char* api_get_source_string_data(unsigned int bus, char* identifier, char*
     }
     else
     {
-        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
-                 "EMPTY STRING will be returned.",
-                 (generator_did.get_compound_device_name()).c_str(), (wt_generator_did.get_compound_device_name()).c_str(),
-                 (pv_unit_did.get_compound_device_name()).c_str(), (energy_storage_did.get_compound_device_name()).c_str(), __FUNCTION__);
-        toolkit.show_information_with_leading_time_stamp(buffer);
+        show_source_not_exist_with_api(bus, identifier, __FUNCTION__);
         return toolkit.steps_char_buffer;
     }
 }
@@ -380,11 +371,12 @@ const char* api_get_source_string_data(unsigned int bus, char* identifier, char*
 void api_set_source_string_data(unsigned int bus, char* identifier, char* parameter_name, char* value, char* source_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
+    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did, sv_source_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
     pv_unit_did = get_pv_unit_device_id(bus, identifier);
     energy_storage_did = get_energy_storage_device_id(bus, identifier);
+    sv_source_did = get_sv_source_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -404,6 +396,9 @@ void api_set_source_string_data(unsigned int bus, char* identifier, char* parame
             break;
         case STEPS_ENERGY_STORAGE:
             sourceptr = psdb.get_source(energy_storage_did);
+            break;
+        case STEPS_SV_SOURCE:
+            sourceptr = psdb.get_source(sv_source_did);
             break;
         default:
             break;
@@ -414,27 +409,20 @@ void api_set_source_string_data(unsigned int bus, char* identifier, char* parame
         string PARAMETER_NAME = string2upper(parameter_name);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, sourceptr->get_device_id(), __FUNCTION__);
-        return;
     }
     else
-    {
-        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
-                 "Nothing will be changed.",
-                 (generator_did.get_compound_device_name()).c_str(), (wt_generator_did.get_compound_device_name()).c_str(),
-                 (pv_unit_did.get_compound_device_name()).c_str(), (energy_storage_did.get_compound_device_name()).c_str(), __FUNCTION__);
-        toolkit.show_information_with_leading_time_stamp(buffer);
-    }
+        show_source_not_exist_with_api(bus, identifier, __FUNCTION__);
 }
 
 bool api_get_source_boolean_data(unsigned int bus, char* identifier, char* parameter_name, char* source_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
+    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did, sv_source_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
     pv_unit_did = get_pv_unit_device_id(bus, identifier);
     energy_storage_did = get_energy_storage_device_id(bus, identifier);
+    sv_source_did = get_sv_source_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -454,6 +442,9 @@ bool api_get_source_boolean_data(unsigned int bus, char* identifier, char* param
             break;
         case STEPS_ENERGY_STORAGE:
             sourceptr = psdb.get_source(energy_storage_did);
+            break;
+        case STEPS_SV_SOURCE:
+            sourceptr = psdb.get_source(sv_source_did);
             break;
         default:
             break;
@@ -471,12 +462,7 @@ bool api_get_source_boolean_data(unsigned int bus, char* identifier, char* param
     }
     else
     {
-        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
-                 "False will be returned.",
-                 (generator_did.get_compound_device_name()).c_str(), (wt_generator_did.get_compound_device_name()).c_str(),
-                 (pv_unit_did.get_compound_device_name()).c_str(), (energy_storage_did.get_compound_device_name()).c_str(), __FUNCTION__);
-        toolkit.show_information_with_leading_time_stamp(buffer);
+        show_source_not_exist_with_api(bus, identifier, __FUNCTION__);
         return false;
     }
 }
@@ -484,11 +470,12 @@ bool api_get_source_boolean_data(unsigned int bus, char* identifier, char* param
 void api_set_source_boolean_data(unsigned int bus, char* identifier, char* parameter_name, bool value, char* source_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
+    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did, sv_source_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
     pv_unit_did = get_pv_unit_device_id(bus, identifier);
     energy_storage_did = get_energy_storage_device_id(bus, identifier);
+    sv_source_did = get_sv_source_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -509,6 +496,9 @@ void api_set_source_boolean_data(unsigned int bus, char* identifier, char* param
         case STEPS_ENERGY_STORAGE:
             sourceptr = psdb.get_source(energy_storage_did);
             break;
+        case STEPS_SV_SOURCE:
+            sourceptr = psdb.get_source(sv_source_did);
+            break;
         default:
             break;
     }
@@ -521,15 +511,7 @@ void api_set_source_boolean_data(unsigned int bus, char* identifier, char* param
             return sourceptr->set_status(value);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, sourceptr->get_device_id(), __FUNCTION__);
-        return;
     }
     else
-    {
-        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
-                 "Nothing will be changed.",
-                 (generator_did.get_compound_device_name()).c_str(), (wt_generator_did.get_compound_device_name()).c_str(),
-                 (pv_unit_did.get_compound_device_name()).c_str(), (energy_storage_did.get_compound_device_name()).c_str(), __FUNCTION__);
-        toolkit.show_information_with_leading_time_stamp(buffer);
-    }
+        show_source_not_exist_with_api(bus, identifier, __FUNCTION__);
 }

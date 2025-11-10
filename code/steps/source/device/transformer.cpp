@@ -35,14 +35,12 @@ string TRANSFORMER::get_winding_name(TRANSFORMER_WINDING_SIDE winding) const
 void TRANSFORMER::set_identifier(string trans_id)
 {
     trans_id = trim_string(trans_id);
-    add_string_to_str_int_map(trans_id);
     this->identifier_index = get_index_of_string(trans_id);
 }
 
 void TRANSFORMER::set_name(string trans_name)
 {
     trans_name = trim_string(trans_name);
-    add_string_to_str_int_map(trans_name);
     this->name_index = get_index_of_string(trans_name);
 }
 

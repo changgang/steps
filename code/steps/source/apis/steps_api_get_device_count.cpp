@@ -37,6 +37,8 @@ unsigned int api_get_device_count(const char* device_type, unsigned int toolkit_
         return psdb.get_equivalent_device_count();
     if(DEVICE_TYPE=="ENERGY STORAGE")
         return psdb.get_energy_storage_count();
+    if(DEVICE_TYPE=="SV SOURCE")
+        return psdb.get_sv_source_count();
 
     show_parameter_not_supported_with_api(DEVICE_TYPE, __FUNCTION__);
     return 0;

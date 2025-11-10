@@ -47,6 +47,26 @@ void show_device_not_exist_with_api(DEVICE_ID did, string api_func, unsigned int
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
+void show_source_not_exist_with_api(unsigned int bus, string identifier, string api_func, unsigned int toolkit_index)
+{
+    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did, sv_source_did;
+    generator_did = get_generator_device_id(bus, identifier);
+    wt_generator_did = get_wt_generator_device_id(bus, identifier);
+    pv_unit_did = get_pv_unit_device_id(bus, identifier);
+    energy_storage_did = get_energy_storage_device_id(bus, identifier);
+    sv_source_did = get_sv_source_device_id(bus, identifier);
+
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, %s, and %s exists in database when retrieving source data with api %s."
+             "Nothing will be changed.\n"
+             "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
+             (generator_did.get_compound_device_name()).c_str(), (wt_generator_did.get_compound_device_name()).c_str(),
+             (pv_unit_did.get_compound_device_name()).c_str(), (energy_storage_did.get_compound_device_name()).c_str(),
+             (sv_source_did.get_compound_device_name()).c_str(),api_func.c_str());
+    toolkit.show_information_with_leading_time_stamp(buffer);
+}
+
 void show_vsc_hvdc_not_exist_with_api(string name, string api_func, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

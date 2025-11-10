@@ -81,6 +81,7 @@ EXPORT_STEPS_DLL void api_add_mt_hvdc(char* mtdc_name, unsigned int toolkit_inde
 EXPORT_STEPS_DLL void api_add_transformer(unsigned int primary_side_bus_number, unsigned int secondary_side_bus_number, unsigned int tertiary_side_bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_add_equivalent_device(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_add_energy_storage(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_add_sv_source(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_add_area(unsigned int area_number, char* area_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_add_zone(unsigned int zone_number, char* zone_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_add_owner(unsigned int owner_number, char* owner_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
@@ -88,12 +89,13 @@ EXPORT_STEPS_DLL void api_add_owner(unsigned int owner_number, char* owner_name,
 EXPORT_STEPS_DLL void api_replace_generator_with_wt_generator(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_replace_generator_with_pv_unit(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_replace_generator_with_energy_storage(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_replace_generator_with_sv_source(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void api_copy_generator(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_copy_wt_generator(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_copy_pv_unit(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_copy_energy_storage(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
-
+EXPORT_STEPS_DLL void api_copy_sv_source(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void api_remove_bus(unsigned int bus_number, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_remove_generator(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
@@ -108,6 +110,7 @@ EXPORT_STEPS_DLL void api_remove_mt_hvdc(char* mt_hvdc, unsigned int toolkit_ind
 EXPORT_STEPS_DLL void api_remove_transformer(unsigned int primary_side_bus_number, unsigned int secondary_side_bus_number, unsigned int tertiary_side_bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_remove_equivalent_device(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_remove_energy_storage(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_remove_sv_source(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_remove_area(unsigned int area_number, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_remove_zone(unsigned int zone_number, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_remove_owner(unsigned int owner_number, unsigned int toolkit_index=INDEX_NOT_EXIST);
@@ -129,6 +132,7 @@ EXPORT_STEPS_DLL bool api_is_vsc_hvdc_exist(char* vsc_name, unsigned int toolkit
 EXPORT_STEPS_DLL bool api_is_mt_hvdc_exist(char* mtdc_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL bool api_is_equivalent_device_exist(unsigned int bus, char* ickt, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL bool api_is_energy_storage_exist(unsigned int bus, char* ickt, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL bool api_is_sv_source_exist(unsigned int bus, char* ickt, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL unsigned int api_get_device_count(const char* device_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL unsigned int api_get_area_count(unsigned int toolkit_index=INDEX_NOT_EXIST);
@@ -326,6 +330,12 @@ EXPORT_STEPS_DLL void api_set_energy_storage_related_model_float_parameter(unsig
 EXPORT_STEPS_DLL unsigned int api_get_energy_storage_related_model_float_parameter_count(unsigned int bus, char* identifier, char* model_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL const char* api_get_energy_storage_related_model_float_parameter_name(unsigned int bus, char* identifier, char* model_type, unsigned int parameter_index, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
+EXPORT_STEPS_DLL const char* api_get_sv_source_related_model_name(unsigned int bus, char* identifier, char* model_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_sv_source_related_model_float_parameter(unsigned int bus, char* identifier, char* model_type, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_sv_source_related_model_float_parameter(unsigned int bus, char* identifier, char* model_type, char* parameter_name, double value, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL unsigned int api_get_sv_source_related_model_float_parameter_count(unsigned int bus, char* identifier, char* model_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL const char* api_get_sv_source_related_model_float_parameter_name(unsigned int bus, char* identifier, char* model_type, unsigned int parameter_index, unsigned int toolkit_index=INDEX_NOT_EXIST);
+
 EXPORT_STEPS_DLL const char* api_get_load_related_model_name(unsigned int bus, char* identifier, char* model_type, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_load_related_model_float_parameter(unsigned int bus, char* identifier, char* model_type, char* parameter_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_load_related_model_float_parameter(unsigned int bus, char* identifier, char* model_type, char* parameter_name, double value, unsigned int toolkit_index=INDEX_NOT_EXIST);
@@ -360,6 +370,7 @@ EXPORT_STEPS_DLL double api_get_generator_related_model_float_variable(unsigned 
 EXPORT_STEPS_DLL double api_get_wt_generator_related_model_float_variable(unsigned int bus, char* identifier, char* model_type, char* variable_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_pv_unit_related_model_float_variable(unsigned int bus, char* identifier, char* model_type, char* variable_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_energy_storage_related_model_float_variable(unsigned int bus, char* identifier, char* model_type, char* variable_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_sv_source_related_model_float_variable(unsigned int bus, char* identifier, char* model_type, char* variable_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_load_related_model_float_variable(unsigned int bus, char* identifier, char* model_type, char* variable_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_line_related_model_float_variable(unsigned int ibus, unsigned int jbus, char* identifier, char* model_type, char* variable_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_hvdc_related_model_float_variable(unsigned int ibus, unsigned int jbus, char* identifier, char* model_type, char* variable_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
@@ -460,6 +471,7 @@ EXPORT_STEPS_DLL void api_prepare_generator_related_meters(unsigned int toolkit_
 EXPORT_STEPS_DLL void api_prepare_wt_generator_related_meters(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_pv_unit_related_meters(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_energy_storage_related_meters(unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_prepare_sv_source_related_meters(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_load_related_meters(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_line_related_meters(unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_transformer_related_meters(unsigned int toolkit_index=INDEX_NOT_EXIST);
@@ -473,6 +485,7 @@ EXPORT_STEPS_DLL void api_prepare_generator_related_meter(unsigned int bus, char
 EXPORT_STEPS_DLL void api_prepare_wt_generator_related_meter(unsigned int bus, char* id, char* meter_type, char* var_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_pv_unit_related_meter(unsigned int bus, char* id, char* meter_type, char* var_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_energy_storage_related_meter(unsigned int bus, char* id, char* meter_type, char* var_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_prepare_sv_source_related_meter(unsigned int bus, char* id, char* meter_type, char* var_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_load_related_meter(unsigned int bus, char* id, char* meter_type, char* var_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_line_related_meter(unsigned int ibus, unsigned int jbus, char* id, char* meter_type, char* side, char* var_name, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_transformer_related_meter(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* id, char* meter_type, char* side, char* var_name, unsigned int toolkit_index=INDEX_NOT_EXIST);

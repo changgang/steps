@@ -179,7 +179,6 @@ void VSC_HVDC::clear()
 void VSC_HVDC::set_identifier(const string id)
 {
     string new_id = trim_string(id);
-    add_string_to_str_int_map(new_id);
     identifier_index = get_index_of_string(new_id);
     vsc_hvdc_name_index = identifier_index;
 }
@@ -187,7 +186,6 @@ void VSC_HVDC::set_identifier(const string id)
 void VSC_HVDC::set_name(const string name)
 {
     string new_name = trim_string(name);
-    add_string_to_str_int_map(name);
     vsc_hvdc_name_index = get_index_of_string(name);
     identifier_index = vsc_hvdc_name_index;
 }
@@ -353,7 +351,6 @@ void VSC_HVDC::set_converter_name(const unsigned int index, string name)
         return;
     else
     {
-        add_string_to_str_int_map(name);
         converters[index].converter_name_index = get_index_of_string(name);
     }
 }
@@ -614,7 +611,6 @@ void VSC_HVDC::set_dc_bus_name(const unsigned int index, const string name)
         return;
     string tmp_name = name;
     tmp_name = trim_string(tmp_name);
-    add_string_to_str_int_map(tmp_name);
     dc_buses[index].dc_bus_name_index = get_index_of_string(tmp_name);
 }
 
@@ -715,7 +711,6 @@ void VSC_HVDC::set_dc_line_identifier(const unsigned int index, const string lin
         return;
     string tmp_id = line_id;
     tmp_id = trim_string(tmp_id);
-    add_string_to_str_int_map(tmp_id);
     dc_lines[index].identifier_index = get_index_of_string(tmp_id);
 }
 

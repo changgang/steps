@@ -608,6 +608,7 @@ void POWERFLOW_SOLVER::prepare_devices_for_solution()
     wt_generators = psdb.get_all_wt_generators();
     pv_units = psdb.get_all_pv_units();
     e_storages = psdb.get_all_energy_storages();
+    sv_sources = psdb.get_all_sv_sources();
 
     loads = psdb.get_all_loads();
 
@@ -3338,6 +3339,20 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
                 file<<buffer<<endl;
             }
         }
+        unsigned int nsvs = sv_sources.size();
+        if(nsvs>0)
+        {
+            file<<"% SV source"<<endl;
+            file<<"BUS,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
+            for(unsigned int i=0; i!=nsvs; ++i)
+            {
+                snprintf(buffer, 1000, "%u,\"%s\",%.6f,%.6f,%.6f",
+                         sv_sources[i]->get_sv_source_bus(),(sv_sources[i]->get_identifier()).c_str(),
+                         sv_sources[i]->get_p_generation_in_MW(), sv_sources[i]->get_q_generation_in_MVar(),
+                         (sv_sources[i]->get_bus_pointer())->get_positive_sequence_voltage_in_pu());
+                file<<buffer<<endl;
+            }
+        }
         //vector<LOAD*> loads = psdb.get_all_loads();
         unsigned int nload = loads.size();
         if(nload>0)
@@ -4012,6 +4027,7 @@ unsigned int POWERFLOW_SOLVER::get_memory_usage_in_bytes()
            wt_generators.capacity()*sizeof(WT_GENERATOR*)+
            pv_units.capacity()*sizeof(PV_UNIT*)+
            e_storages.capacity()*sizeof(ENERGY_STORAGE*)+
+           sv_sources.capacity()*sizeof(SV_SOURCE*)+
            loads.capacity()*sizeof(LOAD*)+
            lines.capacity()*sizeof(AC_LINE*)+
            transformers.capacity()*sizeof(TRANSFORMER*)+

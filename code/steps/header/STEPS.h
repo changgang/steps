@@ -44,6 +44,7 @@ class STEPS
         inline unsigned int get_wt_generator_thread_number() const{return wt_generator_thread_number;}
         inline unsigned int get_pv_unit_thread_number() const{return pv_unit_thread_number;}
         inline unsigned int get_energy_storage_thread_number() const{return energy_storage_thread_number;}
+        inline unsigned int get_sv_source_thread_number() const{return sv_source_thread_number;}
         inline unsigned int get_load_thread_number() const{return load_thread_number;}
         inline unsigned int get_fixed_shunt_thread_number() const{return fixed_shunt_thread_number;}
         inline unsigned int get_ac_line_thread_number() const{return line_thread_number;}
@@ -125,7 +126,7 @@ class STEPS
 
         unsigned int thread_number;
         unsigned int generator_thread_number, wt_generator_thread_number,
-                     pv_unit_thread_number, energy_storage_thread_number,
+                     pv_unit_thread_number, energy_storage_thread_number, sv_source_thread_number,
                      load_thread_number, fixed_shunt_thread_number,
                      line_thread_number, transformer_thread_number,
                      lcc_hvdc2t_thread_number, vsc_hvdc_thread_number,

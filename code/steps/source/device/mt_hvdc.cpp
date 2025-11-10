@@ -703,14 +703,12 @@ unsigned int MT_HVDC::get_name_index() const
 void MT_HVDC::set_identifier(const string hdc_id)
 {
     string hdc_id_temp = trim_string(hdc_id);
-    add_string_to_str_int_map(hdc_id_temp);
     this->identifier_index = get_index_of_string(hdc_id_temp);
 }
 
 void MT_HVDC::set_name(const string name)
 {
     string new_name = trim_string(name);
-    add_string_to_str_int_map(name);
     this->name_index = get_index_of_string(name);
 }
 

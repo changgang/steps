@@ -104,3 +104,10 @@ bool api_is_energy_storage_exist(unsigned int bus, char* ickt, unsigned int tool
     return psdb.is_energy_storage_exist(did);
 }
 
+bool api_is_sv_source_exist(unsigned int bus, char* ickt, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    DEVICE_ID did = get_sv_source_device_id(bus, ickt);
+    return psdb.is_sv_source_exist(did);
+}

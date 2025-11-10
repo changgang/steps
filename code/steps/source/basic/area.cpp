@@ -44,7 +44,6 @@ void AREA::set_area_number(unsigned int number)
 void AREA::set_area_name(string name)
 {
     name = trim_string(name);
-    add_string_to_str_int_map(name);
     this->area_name_index = get_index_of_string(name);
 }
 

@@ -127,7 +127,6 @@ class LCC_HVDC2T : public NONBUS_DEVICE
         virtual LCC_HVDC2T& operator=(const LCC_HVDC2T& hvdc);
 
         virtual DEVICE_ID get_device_id() const;
-        //virtual string get_compound_device_name() const;
 
         void solve_steady_state();
         void show_solved_steady_state() const;

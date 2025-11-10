@@ -16,11 +16,16 @@ STR_INT_MAP::~STR_INT_MAP()
 
 void STR_INT_MAP::add_new_string(const string& str)
 {
-    if(get_index_of_string(str)==INDEX_NOT_EXIST)
+    unsigned int n = get_map_size();
+    int2str_vector.push_back(str);
+    str2int_map.insert(pair<string, unsigned int>(str, n));
+    if(str.find(",")!=string::npos)
     {
-        unsigned int n = get_map_size();
-        int2str_vector.push_back(str);
-        str2int_map.insert(pair<string, unsigned int>(str, n));
+        ostringstream osstream;
+        osstream<<"Warning. String including comma, a.k.a, \',\', is inputted to STEPS ("<<str<<"). \n"
+                <<"If it is used as device name or identifier, it will be stored in output file.\n"
+                <<"If the output file is reloaded, possible error may occur when splitting string.";
+        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     }
 }
 
@@ -31,17 +36,21 @@ void STR_INT_MAP::clear()
     add_new_string("");
 }
 
-unsigned int STR_INT_MAP::operator[](const string& str) const
+unsigned int STR_INT_MAP::operator[](const string& str)
 {
     return get_index_of_string(str);
 }
 
-unsigned int STR_INT_MAP::get_index_of_string(const string& str) const
+unsigned int STR_INT_MAP::get_index_of_string(const string& str)
 {
     map<string, unsigned int>::const_iterator iter = str2int_map.begin();
     iter = str2int_map.find(str);
     if(iter!=str2int_map.end()) return iter->second;
-    else                        return INDEX_NOT_EXIST;
+    else
+    {
+        add_new_string(str);
+        return get_map_size()-1;
+    }
 }
 
 string STR_INT_MAP::operator[](unsigned int index) const

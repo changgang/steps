@@ -60,6 +60,7 @@ void POWER_SYSTEM_DATABASE::set_database_capacity()
     unsigned int generator_capacity = (unsigned int)(round(bus_capacity*0.5));
     unsigned int wt_generator_capacity = (unsigned int)(round(bus_capacity*0.5));
     unsigned int pv_unit_capacity = (unsigned int)(round(bus_capacity*0.5));
+    unsigned int sv_source_capacity = (unsigned int)(round(bus_capacity*0.2));
     unsigned int load_capacity = (unsigned int)(round(bus_capacity*0.5));
     unsigned int fixedshunt_capacity = (unsigned int)(round(bus_capacity*0.5));
     unsigned int line_capacity = (unsigned int)(round(bus_capacity*3.0));
@@ -95,6 +96,9 @@ void POWER_SYSTEM_DATABASE::set_database_capacity()
 
         if(document.HasMember("pvUnit") and document["pvUnit"].IsInt())
             pv_unit_capacity = (unsigned int)(document["pvUnit"].GetInt());
+
+        if(document.HasMember("svSource") and document["svSource"].IsInt())
+            sv_source_capacity = (unsigned int)(document["svSource"].GetInt());
 
         if(document.HasMember("load") and document["load"].IsInt())
             load_capacity = (unsigned int)(document["load"].GetInt());
@@ -145,6 +149,7 @@ void POWER_SYSTEM_DATABASE::set_database_capacity()
     set_generator_capacity(generator_capacity);
     set_wt_generator_capacity(wt_generator_capacity);
     set_pv_unit_capacity(pv_unit_capacity);
+    set_sv_source_capacity(sv_source_capacity);
     set_load_capacity(load_capacity);
     set_fixed_shunt_capacity(fixedshunt_capacity);
     set_ac_line_capacity(line_capacity);
@@ -178,6 +183,16 @@ unsigned int POWER_SYSTEM_DATABASE::get_wt_generator_capacity() const
 unsigned int POWER_SYSTEM_DATABASE::get_pv_unit_capacity() const
 {
     return PV_Unit.capacity();
+}
+
+unsigned int POWER_SYSTEM_DATABASE::get_energy_storage_capacity() const
+{
+    return Energy_storage.capacity();
+}
+
+unsigned int POWER_SYSTEM_DATABASE::get_sv_source_capacity() const
+{
+    return SV_source.capacity();
 }
 
 unsigned int POWER_SYSTEM_DATABASE::get_load_capacity() const
@@ -215,19 +230,14 @@ unsigned int POWER_SYSTEM_DATABASE::get_mt_hvdc_capacity() const
     return Mt_hvdc.capacity();
 }
 
-unsigned int POWER_SYSTEM_DATABASE::get_equivalent_device_capacity() const
-{
-    return Equivalent_device.capacity();
-}
-
-unsigned int POWER_SYSTEM_DATABASE::get_energy_storage_capacity() const
-{
-    return Energy_storage.capacity();
-}
-
 unsigned int POWER_SYSTEM_DATABASE::get_lcc_hvdc_capacity() const
 {
     return Lcc_hvdc.capacity();
+}
+
+unsigned int POWER_SYSTEM_DATABASE::get_equivalent_device_capacity() const
+{
+    return Equivalent_device.capacity();
 }
 
 unsigned int POWER_SYSTEM_DATABASE::get_area_capacity() const
@@ -265,6 +275,16 @@ void POWER_SYSTEM_DATABASE::set_pv_unit_capacity(unsigned int n)
     PV_Unit.reserve(n);
 }
 
+void POWER_SYSTEM_DATABASE::set_energy_storage_capacity(unsigned int n)
+{
+    Energy_storage.reserve(n);
+}
+
+void POWER_SYSTEM_DATABASE::set_sv_source_capacity(unsigned int n)
+{
+    SV_source.reserve(n);
+}
+
 void POWER_SYSTEM_DATABASE::set_load_capacity(unsigned int n)
 {
     Load.reserve(n);
@@ -300,19 +320,14 @@ void POWER_SYSTEM_DATABASE::set_mt_hvdc_capacity(unsigned int n)
     Mt_hvdc.reserve(n);
 }
 
-void POWER_SYSTEM_DATABASE::set_equivalent_device_capacity(unsigned int n)
-{
-    Equivalent_device.reserve(n);
-}
-
-void POWER_SYSTEM_DATABASE::set_energy_storage_capacity(unsigned int n)
-{
-    Energy_storage.reserve(n);
-}
-
 void POWER_SYSTEM_DATABASE::set_lcc_hvdc_capacity(unsigned int n)
 {
     Lcc_hvdc.reserve(n);
+}
+
+void POWER_SYSTEM_DATABASE::set_equivalent_device_capacity(unsigned int n)
+{
+    Equivalent_device.reserve(n);
 }
 
 void POWER_SYSTEM_DATABASE::set_area_capacity(unsigned int n)
@@ -664,6 +679,58 @@ void POWER_SYSTEM_DATABASE::append_energy_storage(ENERGY_STORAGE& estorage)
     energy_storage_index.set_device_index(device_id, energy_storage_count);
  }
 
+void POWER_SYSTEM_DATABASE::append_sv_source(SV_SOURCE& sv_source)
+{
+    sv_source.set_toolkit(*toolkit);
+
+    ostringstream osstream;
+
+    if(not sv_source.is_valid())
+    {
+        osstream<<"Warning. Failed to append invalid sv source to power system database '"<<get_system_name()<<"'.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    unsigned int bus = sv_source.get_sv_source_bus();
+
+    if(not this->is_bus_in_allowed_range(bus))
+    {
+        osstream<<"Warning. Bus "<<bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<sv_source.get_compound_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+                <<"SV source will not be appended into the database.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    string identifier = sv_source.get_identifier();
+    DEVICE_ID device_id;
+    device_id.set_device_type(STEPS_SV_SOURCE);
+    TERMINAL terminal;
+    terminal.append_bus(bus);
+    device_id.set_device_terminal(terminal);
+    device_id.set_device_identifier_index(get_index_of_string(identifier));
+
+    if(this->is_sv_source_exist(device_id))
+    {
+        osstream<<"Warning. "<<sv_source.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': SV_source.\n"
+                <<"Duplicate copy is not allowed.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    if(SV_source.capacity()==SV_source.size())
+    {
+        osstream<<"Warning. Capacity limit ("<<SV_source.capacity()<<") reached when appending sv source to power system database '"<<get_system_name()<<"'."<<endl
+                <<"Increase capacity by odifing steps_config.json.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    unsigned int sv_source_count = get_sv_source_count();
+    SV_source.push_back(sv_source);
+    sv_source_index.set_device_index(device_id, sv_source_count);
+}
+
 void POWER_SYSTEM_DATABASE::append_load(LOAD& load)
 {
     load.set_toolkit(*toolkit);
@@ -714,6 +781,58 @@ void POWER_SYSTEM_DATABASE::append_load(LOAD& load)
     unsigned int load_count = get_load_count();
     Load.push_back(load);
     load_index.set_device_index(device_id, load_count);
+}
+
+void POWER_SYSTEM_DATABASE::append_fixed_shunt(FIXED_SHUNT& shunt)
+{
+    shunt.set_toolkit(*toolkit);
+
+    ostringstream osstream;
+
+    if(not shunt.is_valid())
+    {
+        osstream<<"Warning. Failed to append invalid fixed shunt to power system database '"<<get_system_name()<<"'.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    unsigned int shunt_bus = shunt.get_shunt_bus();
+
+    if(not this->is_bus_in_allowed_range(shunt_bus))
+    {
+        osstream<<"Warning. Bus "<<shunt_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<shunt.get_compound_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+          <<"Fixed shunt will not be appended into the database.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    string identifier = shunt.get_identifier();
+    DEVICE_ID device_id;
+    device_id.set_device_type(STEPS_FIXED_SHUNT);
+    TERMINAL terminal;
+    terminal.append_bus(shunt_bus);
+    device_id.set_device_terminal(terminal);
+    device_id.set_device_identifier_index(get_index_of_string(identifier));
+
+    if(this->is_fixed_shunt_exist(device_id))
+    {
+        osstream<<"Warning. "<<shunt.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Fixed_shunt.\n"
+          <<"Duplicate copy is not allowed.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    if(Fixed_shunt.capacity()==Fixed_shunt.size())
+    {
+        osstream<<"Warning. Capacity limit ("<<Fixed_shunt.capacity()<<") reached when appending fixed shunt to power system database '"<<get_system_name()<<"'."<<endl
+          <<"Increase capacity by modified steps_config.json.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    unsigned int shunt_count = get_fixed_shunt_count();
+    Fixed_shunt.push_back(shunt);
+    fixed_shunt_index.set_device_index(device_id, shunt_count);
 }
 
 void POWER_SYSTEM_DATABASE::append_ac_line(AC_LINE& line)
@@ -844,58 +963,6 @@ void POWER_SYSTEM_DATABASE::append_transformer(TRANSFORMER& transformer)
     unsigned int transformer_count = get_transformer_count();
     Transformer.push_back(transformer);
     transformer_index.set_device_index(device_id, transformer_count);
-}
-
-void POWER_SYSTEM_DATABASE::append_fixed_shunt(FIXED_SHUNT& shunt)
-{
-    shunt.set_toolkit(*toolkit);
-
-    ostringstream osstream;
-
-    if(not shunt.is_valid())
-    {
-        osstream<<"Warning. Failed to append invalid fixed shunt to power system database '"<<get_system_name()<<"'.";
-        toolkit->show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
-    unsigned int shunt_bus = shunt.get_shunt_bus();
-
-    if(not this->is_bus_in_allowed_range(shunt_bus))
-    {
-        osstream<<"Warning. Bus "<<shunt_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<shunt.get_compound_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
-          <<"Fixed shunt will not be appended into the database.";
-        toolkit->show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
-    string identifier = shunt.get_identifier();
-    DEVICE_ID device_id;
-    device_id.set_device_type(STEPS_FIXED_SHUNT);
-    TERMINAL terminal;
-    terminal.append_bus(shunt_bus);
-    device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier_index(get_index_of_string(identifier));
-
-    if(this->is_fixed_shunt_exist(device_id))
-    {
-        osstream<<"Warning. "<<shunt.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Fixed_shunt.\n"
-          <<"Duplicate copy is not allowed.";
-        toolkit->show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
-    if(Fixed_shunt.capacity()==Fixed_shunt.size())
-    {
-        osstream<<"Warning. Capacity limit ("<<Fixed_shunt.capacity()<<") reached when appending fixed shunt to power system database '"<<get_system_name()<<"'."<<endl
-          <<"Increase capacity by modified steps_config.json.";
-        toolkit->show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
-    unsigned int shunt_count = get_fixed_shunt_count();
-    Fixed_shunt.push_back(shunt);
-    fixed_shunt_index.set_device_index(device_id, shunt_count);
 }
 
 void POWER_SYSTEM_DATABASE::append_2t_lcc_hvdc(LCC_HVDC2T& hvdc)
@@ -1042,6 +1109,45 @@ void POWER_SYSTEM_DATABASE::append_mt_hvdc(MT_HVDC& mt_hvdc)
     mt_hvdc_index.set_device_index(device_id, mt_hvdc_count);
 }
 
+void POWER_SYSTEM_DATABASE::append_lcc_hvdc(LCC_HVDC& lcc_hvdc)
+{
+    lcc_hvdc.set_toolkit(*toolkit);
+
+    ostringstream osstream;
+
+    if(not lcc_hvdc.is_valid())
+    {
+        osstream<<"Warning. Failed to append invalid LCC LCC_HVDC2T to power system database '"<<get_system_name()<<"'.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    string name = lcc_hvdc.get_name();
+    DEVICE_ID device_id;
+    device_id.set_device_type(STEPS_LCC_HVDC);
+    device_id.set_device_name_index(get_index_of_string(name));
+
+    if(this->is_lcc_hvdc_exist(device_id))
+    {
+        osstream<<"Warning. "<<lcc_hvdc.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Lcc_hvdc.\n"
+                <<"Duplicate copy is not allowed.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    if(Lcc_hvdc.capacity()==Lcc_hvdc.size())
+    {
+        osstream<<"Warning. Capacity limit ("<<Lcc_hvdc.capacity()<<") reached when appending LCC LCC_HVDC2T to power system database '"<<get_system_name()<<"'."<<endl
+                <<"Increase capacity by modified steps_config.json.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    unsigned int lcc_hvdc_count = get_lcc_hvdc_count();
+    Lcc_hvdc.push_back(lcc_hvdc);
+    lcc_hvdc_index.set_device_index(device_id, lcc_hvdc_count);
+ }
+
 void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
 {
     edevice.set_toolkit(*toolkit);
@@ -1092,46 +1198,6 @@ void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
     unsigned int equivalent_device_count = get_equivalent_device_count();
     Equivalent_device.push_back(edevice);
     equivalent_device_index.set_device_index(device_id, equivalent_device_count);
- }
-
-void POWER_SYSTEM_DATABASE::append_lcc_hvdc(LCC_HVDC& lcc_hvdc)
-{
-    lcc_hvdc.set_toolkit(*toolkit);
-
-    ostringstream osstream;
-
-    if(not lcc_hvdc.is_valid())
-    {
-        osstream<<"Warning. Failed to append invalid LCC LCC_HVDC2T to power system database '"<<get_system_name()<<"'.";
-        toolkit->show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
-    string name = lcc_hvdc.get_name();
-    add_string_to_str_int_map(name);
-    DEVICE_ID device_id;
-    device_id.set_device_type(STEPS_LCC_HVDC);
-    device_id.set_device_name_index(get_index_of_string(name));
-
-    if(this->is_lcc_hvdc_exist(device_id))
-    {
-        osstream<<"Warning. "<<lcc_hvdc.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Lcc_hvdc.\n"
-                <<"Duplicate copy is not allowed.";
-        toolkit->show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
-    if(Lcc_hvdc.capacity()==Lcc_hvdc.size())
-    {
-        osstream<<"Warning. Capacity limit ("<<Lcc_hvdc.capacity()<<") reached when appending LCC LCC_HVDC2T to power system database '"<<get_system_name()<<"'."<<endl
-                <<"Increase capacity by modified steps_config.json.";
-        toolkit->show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
-    unsigned int lcc_hvdc_count = get_lcc_hvdc_count();
-    Lcc_hvdc.push_back(lcc_hvdc);
-    lcc_hvdc_index.set_device_index(device_id, lcc_hvdc_count);
  }
 
 void POWER_SYSTEM_DATABASE::append_area(AREA& area)
@@ -1285,7 +1351,7 @@ void POWER_SYSTEM_DATABASE::replace_generator_with_pv_unit(DEVICE_ID& gendid)
             pvudid.set_device_terminal(terminal);
             pvudid.set_device_identifier_index(gen->get_identifier_index());
 
-            if(not is_wt_generator_exist(pvudid))
+            if(not is_pv_unit_exist(pvudid))
             {
                 PV_UNIT pvu(*toolkit);
                 pvu.set_unit_bus(gen->get_generator_bus());
@@ -1333,7 +1399,7 @@ void POWER_SYSTEM_DATABASE::replace_generator_with_energy_storage(DEVICE_ID& gen
             esdid.set_device_terminal(terminal);
             esdid.set_device_identifier_index(gen->get_identifier_index());
 
-            if(not is_wt_generator_exist(esdid))
+            if(not is_energy_storage_exist(esdid))
             {
                 ENERGY_STORAGE es(*toolkit);
                 es.set_energy_storage_bus(gen->get_generator_bus());
@@ -1366,7 +1432,53 @@ void POWER_SYSTEM_DATABASE::replace_generator_with_energy_storage(DEVICE_ID& gen
     }
 }
 
+void POWER_SYSTEM_DATABASE::replace_generator_with_sv_source(DEVICE_ID& gendid)
+{
+    if(gendid.get_device_type() == STEPS_GENERATOR)
+    {
+        if(is_generator_exist(gendid))
+        {
+            GENERATOR* gen = get_generator(gendid);
 
+            DEVICE_ID svsdid;
+            svsdid.set_device_type(STEPS_SV_SOURCE);
+            TERMINAL terminal;
+            terminal.append_bus(gen->get_generator_bus());
+            svsdid.set_device_terminal(terminal);
+            svsdid.set_device_identifier_index(gen->get_identifier_index());
+
+            if(not is_sv_source_exist(svsdid))
+            {
+                SV_SOURCE svs(*toolkit);
+                svs.set_sv_source_bus(gen->get_generator_bus());
+                svs.set_identifier(gen->get_identifier());
+                svs.set_status(gen->get_status());
+                svs.set_mbase_in_MVA(gen->get_mbase_in_MVA());
+                svs.set_p_generation_in_MW(gen->get_p_generation_in_MW());
+                svs.set_q_generation_in_MVar(gen->get_q_generation_in_MVar());
+                svs.set_p_max_in_MW(gen->get_p_max_in_MW());
+                svs.set_p_min_in_MW(gen->get_p_min_in_MW());
+                svs.set_q_max_in_MVar(gen->get_q_max_in_MVar());
+                svs.set_q_min_in_MVar(gen->get_q_min_in_MVar());
+                svs.set_q_max_nominal_in_MVar(gen->get_q_max_nominal_in_MVar());
+                svs.set_q_min_nominal_in_MVar(gen->get_q_min_nominal_in_MVar());
+                svs.set_source_impedance_in_pu(gen->get_source_impedance_in_pu());
+                svs.set_voltage_to_regulate_in_pu(gen->get_voltage_to_regulate_in_pu());
+                svs.set_bus_to_regulate(gen->get_bus_to_regulate());
+
+                append_sv_source(svs);
+                clear_generator(gendid);
+            }
+            else
+            {
+                ostringstream osstream;
+                osstream<<"Warning. "<<gendid.get_compound_device_name()<<" cannot be replaced with SV SOURCE since "
+                        <<svsdid.get_compound_device_name()<<" already exists in POWER_SYSTEM_DATABSE.";
+                toolkit->show_information_with_leading_time_stamp(osstream);
+            }
+        }
+    }
+}
 
 void POWER_SYSTEM_DATABASE::copy_generator(DEVICE_ID& new_did, DEVICE_ID& old_did)
 {
@@ -1384,12 +1496,12 @@ void POWER_SYSTEM_DATABASE::copy_generator(DEVICE_ID& new_did, DEVICE_ID& old_di
     {
         if(is_generator_exist(old_did))
         {
-            GENERATOR new_gen(toolkit);
             TERMINAL terminal = new_did.get_device_terminal();
             vector<unsigned int> buses = terminal.get_buses();
             unsigned int bus = buses[0];
             string identifier = new_did.get_device_identifier();
 
+            GENERATOR new_gen(toolkit);
             new_gen.set_generator_bus(bus);
             new_gen.set_identifier(identifier);
 
@@ -1440,12 +1552,12 @@ void POWER_SYSTEM_DATABASE::copy_wt_generator(DEVICE_ID& new_did, DEVICE_ID& old
     {
         if(is_wt_generator_exist(old_did))
         {
-            WT_GENERATOR new_wt_gen(toolkit);
             TERMINAL terminal = new_did.get_device_terminal();
             vector<unsigned int> buses = terminal.get_buses();
             unsigned int bus = buses[0];
             string identifier = new_did.get_device_identifier();
 
+            WT_GENERATOR new_wt_gen(toolkit);
             new_wt_gen.set_generator_bus(bus);
             new_wt_gen.set_identifier(identifier);
 
@@ -1496,12 +1608,12 @@ void POWER_SYSTEM_DATABASE::copy_pv_unit(DEVICE_ID& new_did, DEVICE_ID& old_did)
     {
         if(is_pv_unit_exist(old_did))
         {
-            PV_UNIT new_pvu(toolkit);
             TERMINAL terminal = new_did.get_device_terminal();
             vector<unsigned int> buses = terminal.get_buses();
             unsigned int bus = buses[0];
             string identifier = new_did.get_device_identifier();
 
+            PV_UNIT new_pvu(toolkit);
             new_pvu.set_unit_bus(bus);
             new_pvu.set_identifier(identifier);
 
@@ -1552,12 +1664,12 @@ void POWER_SYSTEM_DATABASE::copy_energy_storage(DEVICE_ID& new_did, DEVICE_ID& o
     {
         if(is_energy_storage_exist(old_did))
         {
-            ENERGY_STORAGE new_es(toolkit);
             TERMINAL terminal = new_did.get_device_terminal();
             vector<unsigned int> buses = terminal.get_buses();
             unsigned int bus = buses[0];
             string identifier = new_did.get_device_identifier();
 
+            ENERGY_STORAGE new_es(toolkit);
             new_es.set_energy_storage_bus(bus);
             new_es.set_identifier(identifier);
 
@@ -1592,6 +1704,62 @@ void POWER_SYSTEM_DATABASE::copy_energy_storage(DEVICE_ID& new_did, DEVICE_ID& o
     }
 }
 
+void POWER_SYSTEM_DATABASE::copy_sv_source(DEVICE_ID& new_did, DEVICE_ID& old_did)
+{
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+    if(new_did.get_device_type() != STEPS_SV_SOURCE or old_did.get_device_type() != STEPS_SV_SOURCE)
+    {
+        osstream<<"Warning. DEVICE_ID with type STEPS_SV_SOURCE is required when copying sv source in POWER_SYSTEM_DATABASE."<<endl
+                <<"However, "<<new_did.get_compound_device_name()<<" and "<<old_did.get_compound_device_name()<<" are provided."<<endl
+                <<"No copy operation will be executed.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    if(not is_sv_source_exist(new_did))
+    {
+        if(is_sv_source_exist(old_did))
+        {
+            TERMINAL terminal = new_did.get_device_terminal();
+            vector<unsigned int> buses = terminal.get_buses();
+            unsigned int bus = buses[0];
+            string identifier = new_did.get_device_identifier();
+
+            SV_SOURCE new_svs(toolkit);
+            new_svs.set_sv_source_bus(bus);
+            new_svs.set_identifier(identifier);
+
+            SV_SOURCE* old_svs = get_sv_source(old_did);
+
+            new_svs.set_status(old_svs->get_status());
+            new_svs.set_mbase_in_MVA(old_svs->get_mbase_in_MVA());
+            new_svs.set_p_generation_in_MW(old_svs->get_p_generation_in_MW());
+            new_svs.set_q_generation_in_MVar(old_svs->get_q_generation_in_MVar());
+            new_svs.set_p_max_in_MW(old_svs->get_p_max_in_MW());
+            new_svs.set_p_min_in_MW(old_svs->get_p_min_in_MW());
+            new_svs.set_q_max_in_MVar(old_svs->get_q_max_in_MVar());
+            new_svs.set_q_min_in_MVar(old_svs->get_q_min_in_MVar());
+            new_svs.set_q_max_nominal_in_MVar(old_svs->get_q_max_nominal_in_MVar());
+            new_svs.set_q_min_nominal_in_MVar(old_svs->get_q_min_nominal_in_MVar());
+            new_svs.set_source_impedance_in_pu(old_svs->get_source_impedance_in_pu());
+            new_svs.set_voltage_to_regulate_in_pu(old_svs->get_voltage_to_regulate_in_pu());
+            new_svs.set_bus_to_regulate(old_svs->get_bus_to_regulate());
+
+            append_sv_source(new_svs);
+        }
+        else
+        {
+            osstream<<old_did.get_compound_device_name()<<" does not exist in POWER_SYSTEM_DATABASE when copying sv source as source.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<new_did.get_compound_device_name()<<" already exists in POWER_SYSTEM_DATABASE when copying sv source as destination.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+}
+
 void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEVICE_ID& did_new)
 {
     ostringstream osstream;
@@ -1607,12 +1775,13 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
     }
     STEPS_DEVICE_TYPE device_type = old_device_type;
     if(device_type!=STEPS_GENERATOR and device_type!=STEPS_WT_GENERATOR and device_type!=STEPS_PV_UNIT and
-       device_type!=STEPS_ENERGY_STORAGE and device_type!=STEPS_LOAD and device_type!=STEPS_FIXED_SHUNT and
+       device_type!=STEPS_ENERGY_STORAGE and device_type!=STEPS_SV_SOURCE and
+       device_type!=STEPS_LOAD and device_type!=STEPS_FIXED_SHUNT and
        device_type!=STEPS_AC_LINE and device_type!=STEPS_TRANSFORMER and device_type!=STEPS_LCC_HVDC2T and
        device_type!=STEPS_VSC_HVDC and device_type!=STEPS_LCC_HVDC and device_type!=STEPS_HYBRID_DC)
     {
         osstream<<"Device ID type is not in the following allowed types when calling "<<__FUNCTION__<<":\n"
-                <<"[GENERATOR, WT GENERATOR, PV UNIT, ENERGY STORAGE, LOAD, FIXED SHUNT, LINE, TRANSFORMER, 2T LCC HVDC, VSC HVDC, LCC HVDC].\n"
+                <<"[GENERATOR, WT GENERATOR, PV UNIT, ENERGY STORAGE, SV SOURCE, LOAD, FIXED SHUNT, LINE, TRANSFORMER, 2T LCC HVDC, VSC HVDC, LCC HVDC].\n"
                 <<"The input device type is: "<<device_type2string(device_type)<<".\n"
                 <<"No device id will be updated.";
         toolkit->show_information_with_leading_time_stamp(osstream);
@@ -1755,6 +1924,27 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
         energy_storage_index.swap_device_index(did_old, did_new);
         es->set_energy_storage_bus(ibus);
         es->set_identifier(new_id);
+        return;
+    }
+
+    if(device_type==STEPS_SV_SOURCE)
+    {
+        if(not is_sv_source_exist(did_old))
+        {
+            osstream<<"Warning. The old device "<<did_old.get_compound_device_name()<<" does not exist in database. No device id will be updated.";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        if(is_sv_source_exist(did_new))
+        {
+            osstream<<"Warning. The new device "<<did_new.get_compound_device_name()<<" already exist in database. No device id will be updated.";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        SV_SOURCE* svs = get_sv_source(did_old);
+        sv_source_index.swap_device_index(did_old, did_new);
+        svs->set_sv_source_bus(ibus);
+        svs->set_identifier(new_id);
         return;
     }
 
@@ -1935,9 +2125,30 @@ bool POWER_SYSTEM_DATABASE::is_pv_unit_exist(const DEVICE_ID& device_id) const
     else                       return false;
 }
 
+bool POWER_SYSTEM_DATABASE::is_energy_storage_exist(const DEVICE_ID& device_id) const
+{
+    unsigned int index = get_energy_storage_index(device_id);
+    if(index!=INDEX_NOT_EXIST) return true;
+    else                       return false;
+}
+
+bool POWER_SYSTEM_DATABASE::is_sv_source_exist(const DEVICE_ID& device_id) const
+{
+    unsigned int index = get_sv_source_index(device_id);
+    if(index!=INDEX_NOT_EXIST) return true;
+    else                       return false;
+}
+
 bool POWER_SYSTEM_DATABASE::is_load_exist(const DEVICE_ID& device_id) const
 {
     unsigned int index = get_load_index(device_id);
+    if(index!=INDEX_NOT_EXIST) return true;
+    else                       return false;
+}
+
+bool POWER_SYSTEM_DATABASE::is_fixed_shunt_exist(const DEVICE_ID& device_id) const
+{
+    unsigned int index = get_fixed_shunt_index(device_id);
     if(index!=INDEX_NOT_EXIST) return true;
     else                       return false;
 }
@@ -1952,13 +2163,6 @@ bool POWER_SYSTEM_DATABASE::is_ac_line_exist(const DEVICE_ID& device_id) const
 bool POWER_SYSTEM_DATABASE::is_transformer_exist(const DEVICE_ID& device_id) const
 {
     unsigned int index = get_transformer_index(device_id);
-    if(index!=INDEX_NOT_EXIST) return true;
-    else                       return false;
-}
-
-bool POWER_SYSTEM_DATABASE::is_fixed_shunt_exist(const DEVICE_ID& device_id) const
-{
-    unsigned int index = get_fixed_shunt_index(device_id);
     if(index!=INDEX_NOT_EXIST) return true;
     else                       return false;
 }
@@ -1998,23 +2202,16 @@ bool POWER_SYSTEM_DATABASE::is_mt_hvdc_exist(const string mt_hvdc_name) const
     else                       return false;
 }
 
-bool POWER_SYSTEM_DATABASE::is_equivalent_device_exist(const DEVICE_ID& device_id) const
-{
-    unsigned int index = get_equivalent_device_index(device_id);
-    if(index!=INDEX_NOT_EXIST) return true;
-    else                       return false;
-}
-
-bool POWER_SYSTEM_DATABASE::is_energy_storage_exist(const DEVICE_ID& device_id) const
-{
-    unsigned int index = get_energy_storage_index(device_id);
-    if(index!=INDEX_NOT_EXIST) return true;
-    else                       return false;
-}
-
 bool POWER_SYSTEM_DATABASE::is_lcc_hvdc_exist(const DEVICE_ID& device_id) const
 {
     unsigned int index = get_lcc_hvdc_index(device_id);
+    if(index!=INDEX_NOT_EXIST) return true;
+    else                       return false;
+}
+
+bool POWER_SYSTEM_DATABASE::is_equivalent_device_exist(const DEVICE_ID& device_id) const
+{
+    unsigned int index = get_equivalent_device_index(device_id);
     if(index!=INDEX_NOT_EXIST) return true;
     else                       return false;
 }
@@ -2109,6 +2306,20 @@ void POWER_SYSTEM_DATABASE::change_bus_number(unsigned int original_bus_number, 
             estorage->set_energy_storage_bus(new_bus_number);
             DEVICE_ID new_did = estorage->get_device_id();
             energy_storage_index.set_device_index(new_did, index);
+        }
+
+        vector<SV_SOURCE*> sv_sources = get_sv_sources_connecting_to_bus(original_bus_number);
+        unsigned int nsv_source = sv_sources.size();
+        for(unsigned int i=0; i!=nsv_source; ++i)
+        {
+            SV_SOURCE* sv_source = sv_sources[i];
+            DEVICE_ID old_did = sv_source->get_device_id();
+            unsigned int index = get_sv_source_index(old_did);
+            sv_source_index.set_device_index(old_did, INDEX_NOT_EXIST);
+
+            sv_source->set_sv_source_bus(new_bus_number);
+            DEVICE_ID new_did = sv_source->get_device_id();
+            sv_source_index.set_device_index(new_did, index);
         }
 
         vector<LOAD*> loads = get_loads_connecting_to_bus(original_bus_number);
@@ -2339,6 +2550,9 @@ NONBUS_DEVICE* POWER_SYSTEM_DATABASE::get_nonbus_device(const DEVICE_ID& device_
         if(dtype==STEPS_ENERGY_STORAGE)
             return get_energy_storage(device_id);
 
+        if(dtype==STEPS_SV_SOURCE)
+            return get_sv_source(device_id);
+
         if(dtype==STEPS_LOAD)
             return get_load(device_id);
 
@@ -2425,28 +2639,40 @@ PV_UNIT* POWER_SYSTEM_DATABASE::get_pv_unit(const DEVICE_ID & device_id)
         return NULL;
 }
 
+ENERGY_STORAGE* POWER_SYSTEM_DATABASE::get_energy_storage(const DEVICE_ID & device_id)
+{
+    unsigned int index = energy_storage_index.get_index_of_device(device_id);
+    if(index!=INDEX_NOT_EXIST)
+        return &(Energy_storage[index]);
+    else
+        return NULL;
+}
+
+SV_SOURCE* POWER_SYSTEM_DATABASE::get_sv_source(const DEVICE_ID & device_id)
+{
+    unsigned int index = sv_source_index.get_index_of_device(device_id);
+    if(index!=INDEX_NOT_EXIST)
+        return &(SV_source[index]);
+    else
+        return NULL;
+}
+
 SOURCE* POWER_SYSTEM_DATABASE::get_source(const DEVICE_ID & device_id)
 {
-    SOURCE* source = NULL;
-    source = (SOURCE*) get_generator(device_id);
-    if(source!=NULL)
-        return source;
-    else
+    switch(device_id.get_device_type())
     {
-        source = (SOURCE*) get_wt_generator(device_id);
-        if(source!=NULL)
-            return source;
-        else
-        {
-            source = (SOURCE*) get_pv_unit(device_id);
-            if(source!=NULL)
-                return source;
-            else
-            {
-                source = (SOURCE*) get_energy_storage(device_id);
-                return source;
-            }
-        }
+        case STEPS_GENERATOR:
+            return (SOURCE*) get_generator(device_id);
+        case STEPS_WT_GENERATOR:
+            return (SOURCE*) get_wt_generator(device_id);
+        case STEPS_PV_UNIT:
+            return (SOURCE*) get_pv_unit(device_id);
+        case STEPS_ENERGY_STORAGE:
+            return (SOURCE*) get_energy_storage(device_id);
+        case STEPS_SV_SOURCE:
+            return (SOURCE*) get_sv_source(device_id);
+        default:
+            return NULL;
     }
 }
 
@@ -2455,6 +2681,15 @@ LOAD* POWER_SYSTEM_DATABASE::get_load(const DEVICE_ID & device_id)
     unsigned int index = load_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
         return &(Load[index]);
+    else
+        return NULL;
+}
+
+FIXED_SHUNT* POWER_SYSTEM_DATABASE::get_fixed_shunt(const DEVICE_ID & device_id)
+{
+    unsigned int index = fixed_shunt_index.get_index_of_device(device_id);
+    if(index!=INDEX_NOT_EXIST)
+        return &(Fixed_shunt[index]);
     else
         return NULL;
 }
@@ -2473,15 +2708,6 @@ TRANSFORMER* POWER_SYSTEM_DATABASE::get_transformer(const DEVICE_ID & device_id)
     unsigned int index = transformer_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
         return &(Transformer[index]);
-    else
-        return NULL;
-}
-
-FIXED_SHUNT* POWER_SYSTEM_DATABASE::get_fixed_shunt(const DEVICE_ID & device_id)
-{
-    unsigned int index = fixed_shunt_index.get_index_of_device(device_id);
-    if(index!=INDEX_NOT_EXIST)
-        return &(Fixed_shunt[index]);
     else
         return NULL;
 }
@@ -2535,29 +2761,20 @@ MT_HVDC* POWER_SYSTEM_DATABASE::get_mt_hvdc(const string name)
     return NULL;
 }
 
-EQUIVALENT_DEVICE* POWER_SYSTEM_DATABASE::get_equivalent_device(const DEVICE_ID & device_id)
-{
-    unsigned int index = equivalent_device_index.get_index_of_device(device_id);
-    if(index!=INDEX_NOT_EXIST)
-        return &(Equivalent_device[index]);
-    else
-        return NULL;
-}
-
-ENERGY_STORAGE* POWER_SYSTEM_DATABASE::get_energy_storage(const DEVICE_ID & device_id)
-{
-    unsigned int index = energy_storage_index.get_index_of_device(device_id);
-    if(index!=INDEX_NOT_EXIST)
-        return &(Energy_storage[index]);
-    else
-        return NULL;
-}
-
 LCC_HVDC* POWER_SYSTEM_DATABASE::get_lcc_hvdc(const DEVICE_ID & device_id)
 {
     unsigned int index = lcc_hvdc_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
         return &(Lcc_hvdc[index]);
+    else
+        return NULL;
+}
+
+EQUIVALENT_DEVICE* POWER_SYSTEM_DATABASE::get_equivalent_device(const DEVICE_ID & device_id)
+{
+    unsigned int index = equivalent_device_index.get_index_of_device(device_id);
+    if(index!=INDEX_NOT_EXIST)
+        return &(Equivalent_device[index]);
     else
         return NULL;
 }
@@ -2696,6 +2913,38 @@ vector<PV_UNIT*> POWER_SYSTEM_DATABASE::get_pv_units_connecting_to_bus(const uns
     return device;
 }
 
+vector<ENERGY_STORAGE*> POWER_SYSTEM_DATABASE::get_energy_storages_connecting_to_bus(const unsigned int bus)
+{
+    vector<ENERGY_STORAGE*> device;
+    device.reserve(8);
+
+    unsigned int n = get_energy_storage_count();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(not Energy_storage[i].is_connected_to_bus(bus))
+            continue;
+        else
+            device.push_back(&(Energy_storage[i]));
+    }
+    return device;
+}
+
+vector<SV_SOURCE*> POWER_SYSTEM_DATABASE::get_sv_sources_connecting_to_bus(const unsigned int bus)
+{
+    vector<SV_SOURCE*> device;
+    device.reserve(8);
+
+    unsigned int n = get_sv_source_count();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(not SV_source[i].is_connected_to_bus(bus))
+            continue;
+        else
+            device.push_back(&(SV_source[i]));
+    }
+    return device;
+}
+
 vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_connecting_to_bus(const unsigned int bus)
 {
     vector<SOURCE*> device;
@@ -2703,6 +2952,7 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_connecting_to_bus(const unsig
     vector<WT_GENERATOR*> wt_generator_device;
     vector<PV_UNIT*> pv_unit_device;
     vector<ENERGY_STORAGE*> estorage_device;
+    vector<SV_SOURCE*> sv_source_device;
     device.reserve(8);
 
     gen_device = get_generators_connecting_to_bus(bus);
@@ -2725,6 +2975,10 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_connecting_to_bus(const unsig
     for(unsigned int i=0; i!=nes; ++i)
         device.push_back(estorage_device[i]);
 
+    sv_source_device = get_sv_sources_connecting_to_bus(bus);
+    unsigned int nsvs = sv_source_device.size();
+    for(unsigned int i=0; i!=nsvs; ++i)
+        device.push_back(sv_source_device[i]);
     return device;
 }
 
@@ -2740,6 +2994,22 @@ vector<LOAD*> POWER_SYSTEM_DATABASE::get_loads_connecting_to_bus(const unsigned 
             continue;
         else
             device.push_back(&(Load[i]));
+    }
+    return device;
+}
+
+vector<FIXED_SHUNT*> POWER_SYSTEM_DATABASE::get_fixed_shunts_connecting_to_bus(const unsigned int bus)
+{
+    vector<FIXED_SHUNT*> device;
+    device.reserve(8);
+
+    unsigned int n = get_fixed_shunt_count();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(not Fixed_shunt[i].is_connected_to_bus(bus))
+            continue;
+        else
+            device.push_back(&(Fixed_shunt[i]));
     }
     return device;
 }
@@ -2772,22 +3042,6 @@ vector<TRANSFORMER*> POWER_SYSTEM_DATABASE::get_transformers_connecting_to_bus(c
             continue;
         else
             device.push_back(&(Transformer[i]));
-    }
-    return device;
-}
-
-vector<FIXED_SHUNT*> POWER_SYSTEM_DATABASE::get_fixed_shunts_connecting_to_bus(const unsigned int bus)
-{
-    vector<FIXED_SHUNT*> device;
-    device.reserve(8);
-
-    unsigned int n = get_fixed_shunt_count();
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        if(not Fixed_shunt[i].is_connected_to_bus(bus))
-            continue;
-        else
-            device.push_back(&(Fixed_shunt[i]));
     }
     return device;
 }
@@ -2840,38 +3094,6 @@ vector<MT_HVDC*> POWER_SYSTEM_DATABASE::get_mt_hvdcs_connecting_to_bus(const uns
     return device;
 }
 
-vector<EQUIVALENT_DEVICE*> POWER_SYSTEM_DATABASE::get_equivalent_devices_connecting_to_bus(const unsigned int bus)
-{
-    vector<EQUIVALENT_DEVICE*> device;
-    device.reserve(8);
-
-    unsigned int n = get_equivalent_device_count();
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        if(not Equivalent_device[i].is_connected_to_bus(bus))
-            continue;
-        else
-            device.push_back(&(Equivalent_device[i]));
-    }
-    return device;
-}
-
-vector<ENERGY_STORAGE*> POWER_SYSTEM_DATABASE::get_energy_storages_connecting_to_bus(const unsigned int bus)
-{
-    vector<ENERGY_STORAGE*> device;
-    device.reserve(8);
-
-    unsigned int n = get_energy_storage_count();
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        if(not Energy_storage[i].is_connected_to_bus(bus))
-            continue;
-        else
-            device.push_back(&(Energy_storage[i]));
-    }
-    return device;
-}
-
 vector<LCC_HVDC*> POWER_SYSTEM_DATABASE::get_lcc_hvdcs_connecting_to_bus(const unsigned int bus)
 {
     vector<LCC_HVDC*> device;
@@ -2884,6 +3106,22 @@ vector<LCC_HVDC*> POWER_SYSTEM_DATABASE::get_lcc_hvdcs_connecting_to_bus(const u
             continue;
         else
             device.push_back(&(Lcc_hvdc[i]));
+    }
+    return device;
+}
+
+vector<EQUIVALENT_DEVICE*> POWER_SYSTEM_DATABASE::get_equivalent_devices_connecting_to_bus(const unsigned int bus)
+{
+    vector<EQUIVALENT_DEVICE*> device;
+    device.reserve(8);
+
+    unsigned int n = get_equivalent_device_count();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(not Equivalent_device[i].is_connected_to_bus(bus))
+            continue;
+        else
+            device.push_back(&(Equivalent_device[i]));
     }
     return device;
 }
@@ -2952,6 +3190,30 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_pv_units_device_id_connecting_to_bu
     return dids;
 }
 
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_energy_storages_device_id_connecting_to_bus(const unsigned int bus)
+{
+    vector<ENERGY_STORAGE*> devices = get_energy_storages_connecting_to_bus(bus);
+    unsigned int n = devices.size();
+
+    vector<DEVICE_ID> dids;
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(devices[i]->get_device_id());
+
+    return dids;
+}
+
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_sv_sources_device_id_connecting_to_bus(const unsigned int bus)
+{
+    vector<SV_SOURCE*> devices = get_sv_sources_connecting_to_bus(bus);
+    unsigned int n = devices.size();
+
+    vector<DEVICE_ID> dids;
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(devices[i]->get_device_id());
+
+    return dids;
+}
+
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_sources_device_id_connecting_to_bus(const unsigned int bus)
 {
     vector<SOURCE*> devices = get_sources_connecting_to_bus(bus);
@@ -2976,6 +3238,18 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_loads_device_id_connecting_to_bus(c
     return dids;
 }
 
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_fixed_shunts_device_id_connecting_to_bus(const unsigned int bus)
+{
+    vector<FIXED_SHUNT*> devices = get_fixed_shunts_connecting_to_bus(bus);
+    unsigned int n = devices.size();
+
+    vector<DEVICE_ID> dids;
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(devices[i]->get_device_id());
+
+    return dids;
+}
+
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_ac_lines_device_id_connecting_to_bus(const unsigned int bus)
 {
     vector<AC_LINE*> devices = get_ac_lines_connecting_to_bus(bus);
@@ -2991,18 +3265,6 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_ac_lines_device_id_connecting_to_bu
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_transformers_device_id_connecting_to_bus(const unsigned int bus)
 {
     vector<TRANSFORMER*> devices = get_transformers_connecting_to_bus(bus);
-    unsigned int n = devices.size();
-
-    vector<DEVICE_ID> dids;
-    for(unsigned int i=0; i!=n; ++i)
-        dids.push_back(devices[i]->get_device_id());
-
-    return dids;
-}
-
-vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_fixed_shunts_device_id_connecting_to_bus(const unsigned int bus)
-{
-    vector<FIXED_SHUNT*> devices = get_fixed_shunts_connecting_to_bus(bus);
     unsigned int n = devices.size();
 
     vector<DEVICE_ID> dids;
@@ -3048,30 +3310,6 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_mt_hvdcs_device_id_connecting_to_bu
     return dids;
 }
 
-vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_equivalent_devices_device_id_connecting_to_bus(const unsigned int bus)
-{
-    vector<EQUIVALENT_DEVICE*> devices = get_equivalent_devices_connecting_to_bus(bus);
-    unsigned int n = devices.size();
-
-    vector<DEVICE_ID> dids;
-    for(unsigned int i=0; i!=n; ++i)
-        dids.push_back(devices[i]->get_device_id());
-
-    return dids;
-}
-
-vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_energy_storages_device_id_connecting_to_bus(const unsigned int bus)
-{
-    vector<ENERGY_STORAGE*> devices = get_energy_storages_connecting_to_bus(bus);
-    unsigned int n = devices.size();
-
-    vector<DEVICE_ID> dids;
-    for(unsigned int i=0; i!=n; ++i)
-        dids.push_back(devices[i]->get_device_id());
-
-    return dids;
-}
-
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_lcc_hvdcs_device_id_connecting_to_bus(const unsigned int bus)
 {
     vector<LCC_HVDC*> devices = get_lcc_hvdcs_connecting_to_bus(bus);
@@ -3084,6 +3322,17 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_lcc_hvdcs_device_id_connecting_to_b
     return dids;
 }
 
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_equivalent_devices_device_id_connecting_to_bus(const unsigned int bus)
+{
+    vector<EQUIVALENT_DEVICE*> devices = get_equivalent_devices_connecting_to_bus(bus);
+    unsigned int n = devices.size();
+
+    vector<DEVICE_ID> dids;
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(devices[i]->get_device_id());
+
+    return dids;
+}
 
 vector<DEVICE*> POWER_SYSTEM_DATABASE::get_all_devices_in_area(const unsigned int area)
 {
@@ -3208,6 +3457,38 @@ vector<PV_UNIT*> POWER_SYSTEM_DATABASE::get_pv_units_in_area(const unsigned int 
     return device;
 }
 
+vector<ENERGY_STORAGE*> POWER_SYSTEM_DATABASE::get_energy_storages_in_area(const unsigned int area)
+{
+    vector<ENERGY_STORAGE*> device;
+    device.reserve(8);
+
+    unsigned int n = get_energy_storage_count();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(not Energy_storage[i].is_in_area(area))
+            continue;
+        else
+            device.push_back(&(Energy_storage[i]));
+    }
+    return device;
+}
+
+vector<SV_SOURCE*> POWER_SYSTEM_DATABASE::get_sv_sources_in_area(const unsigned int area)
+{
+    vector<SV_SOURCE*> device;
+    device.reserve(8);
+
+    unsigned int n = get_sv_source_count();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(not SV_source[i].is_in_area(area))
+            continue;
+        else
+            device.push_back(&(SV_source[i]));
+    }
+    return device;
+}
+
 vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_in_area(const unsigned int area)
 {
     vector<SOURCE*> device;
@@ -3215,6 +3496,7 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_in_area(const unsigned int ar
     vector<WT_GENERATOR*> wt_generator_device;
     vector<PV_UNIT*> pv_unit_device;
     vector<ENERGY_STORAGE*> estorage_device;
+    vector<SV_SOURCE*> sv_source_device;
     device.reserve(8);
 
     gen_device = get_generators_in_area(area);
@@ -3237,6 +3519,10 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_in_area(const unsigned int ar
     for(unsigned int i=0; i!=nes; ++i)
         device.push_back(estorage_device[i]);
 
+    sv_source_device = get_sv_sources_in_area(area);
+    unsigned int nsvs = sv_source_device.size();
+    for(unsigned int i=0; i!=nsvs; ++i)
+        device.push_back(sv_source_device[i]);
     return device;
 }
 
@@ -3252,6 +3538,22 @@ vector<LOAD*> POWER_SYSTEM_DATABASE::get_loads_in_area(const unsigned int area)
             continue;
         else
             device.push_back(&(Load[i]));
+    }
+    return device;
+}
+
+vector<FIXED_SHUNT*> POWER_SYSTEM_DATABASE::get_fixed_shunts_in_area(const unsigned int area)
+{
+    vector<FIXED_SHUNT*> device;
+    device.reserve(8);
+
+    unsigned int n = get_fixed_shunt_count();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(not Fixed_shunt[i].is_in_area(area))
+            continue;
+        else
+            device.push_back(&(Fixed_shunt[i]));
     }
     return device;
 }
@@ -3288,22 +3590,6 @@ vector<TRANSFORMER*> POWER_SYSTEM_DATABASE::get_transformers_in_area(const unsig
     return device;
 }
 
-vector<FIXED_SHUNT*> POWER_SYSTEM_DATABASE::get_fixed_shunts_in_area(const unsigned int area)
-{
-    vector<FIXED_SHUNT*> device;
-    device.reserve(8);
-
-    unsigned int n = get_fixed_shunt_count();
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        if(not Fixed_shunt[i].is_in_area(area))
-            continue;
-        else
-            device.push_back(&(Fixed_shunt[i]));
-    }
-    return device;
-}
-
 vector<LCC_HVDC2T*> POWER_SYSTEM_DATABASE::get_2t_lcc_hvdcs_in_area(const unsigned int area)
 {
     vector<LCC_HVDC2T*> device;
@@ -3336,38 +3622,6 @@ vector<VSC_HVDC*> POWER_SYSTEM_DATABASE::get_vsc_hvdcs_in_area(const unsigned in
     return device;
 }
 
-vector<EQUIVALENT_DEVICE*> POWER_SYSTEM_DATABASE::get_equivalent_devices_in_area(const unsigned int area)
-{
-    vector<EQUIVALENT_DEVICE*> device;
-    device.reserve(8);
-
-    unsigned int n = get_equivalent_device_count();
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        if(not Equivalent_device[i].is_in_area(area))
-            continue;
-        else
-            device.push_back(&(Equivalent_device[i]));
-    }
-    return device;
-}
-
-vector<ENERGY_STORAGE*> POWER_SYSTEM_DATABASE::get_energy_storages_in_area(const unsigned int area)
-{
-    vector<ENERGY_STORAGE*> device;
-    device.reserve(8);
-
-    unsigned int n = get_energy_storage_count();
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        if(not Energy_storage[i].is_in_area(area))
-            continue;
-        else
-            device.push_back(&(Energy_storage[i]));
-    }
-    return device;
-}
-
 vector<LCC_HVDC*> POWER_SYSTEM_DATABASE::get_lcc_hvdcs_in_area(const unsigned int area)
 {
     vector<LCC_HVDC*> device;
@@ -3384,7 +3638,21 @@ vector<LCC_HVDC*> POWER_SYSTEM_DATABASE::get_lcc_hvdcs_in_area(const unsigned in
     return device;
 }
 
+vector<EQUIVALENT_DEVICE*> POWER_SYSTEM_DATABASE::get_equivalent_devices_in_area(const unsigned int area)
+{
+    vector<EQUIVALENT_DEVICE*> device;
+    device.reserve(8);
 
+    unsigned int n = get_equivalent_device_count();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(not Equivalent_device[i].is_in_area(area))
+            continue;
+        else
+            device.push_back(&(Equivalent_device[i]));
+    }
+    return device;
+}
 
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_devices_device_id_in_area(const unsigned int area)
 {
@@ -3446,6 +3714,30 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_pv_units_device_id_in_area(const un
     return dids;
 }
 
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_energy_storages_device_id_in_area(const unsigned int area)
+{
+    vector<ENERGY_STORAGE*> devices = get_energy_storages_in_area(area);
+    unsigned int n = devices.size();
+
+    vector<DEVICE_ID> dids;
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(devices[i]->get_device_id());
+
+    return dids;
+}
+
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_sv_sources_device_id_in_area(const unsigned int area)
+{
+    vector<SV_SOURCE*> devices = get_sv_sources_in_area(area);
+    unsigned int n = devices.size();
+
+    vector<DEVICE_ID> dids;
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(devices[i]->get_device_id());
+
+    return dids;
+}
+
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_sources_device_id_in_area(const unsigned int area)
 {
     vector<SOURCE*> devices = get_sources_in_area(area);
@@ -3461,6 +3753,18 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_sources_device_id_in_area(const uns
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_loads_device_id_in_area(const unsigned int area)
 {
     vector<LOAD*> devices = get_loads_in_area(area);
+    unsigned int n = devices.size();
+
+    vector<DEVICE_ID> dids;
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(devices[i]->get_device_id());
+
+    return dids;
+}
+
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_fixed_shunts_device_id_in_area(const unsigned int area)
+{
+    vector<FIXED_SHUNT*> devices = get_fixed_shunts_in_area(area);
     unsigned int n = devices.size();
 
     vector<DEVICE_ID> dids;
@@ -3494,18 +3798,6 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_transformers_device_id_in_area(cons
     return dids;
 }
 
-vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_fixed_shunts_device_id_in_area(const unsigned int area)
-{
-    vector<FIXED_SHUNT*> devices = get_fixed_shunts_in_area(area);
-    unsigned int n = devices.size();
-
-    vector<DEVICE_ID> dids;
-    for(unsigned int i=0; i!=n; ++i)
-        dids.push_back(devices[i]->get_device_id());
-
-    return dids;
-}
-
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_2t_lcc_hvdcs_device_id_in_area(const unsigned int area)
 {
     vector<LCC_HVDC2T*> devices = get_2t_lcc_hvdcs_in_area(area);
@@ -3530,33 +3822,21 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_vsc_hvdcs_device_id_in_area(const u
     return dids;
 }
 
-vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_equivalent_devices_device_id_in_area(const unsigned int area)
-{
-    vector<EQUIVALENT_DEVICE*> devices = get_equivalent_devices_in_area(area);
-    unsigned int n = devices.size();
-
-    vector<DEVICE_ID> dids;
-    for(unsigned int i=0; i!=n; ++i)
-        dids.push_back(devices[i]->get_device_id());
-
-    return dids;
-}
-
-vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_energy_storages_device_id_in_area(const unsigned int area)
-{
-    vector<ENERGY_STORAGE*> devices = get_energy_storages_in_area(area);
-    unsigned int n = devices.size();
-
-    vector<DEVICE_ID> dids;
-    for(unsigned int i=0; i!=n; ++i)
-        dids.push_back(devices[i]->get_device_id());
-
-    return dids;
-}
-
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_lcc_hvdcs_device_id_in_area(const unsigned int area)
 {
     vector<LCC_HVDC*> devices = get_lcc_hvdcs_in_area(area);
+    unsigned int n = devices.size();
+
+    vector<DEVICE_ID> dids;
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(devices[i]->get_device_id());
+
+    return dids;
+}
+
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_equivalent_devices_device_id_in_area(const unsigned int area)
+{
+    vector<EQUIVALENT_DEVICE*> devices = get_equivalent_devices_in_area(area);
     unsigned int n = devices.size();
 
     vector<DEVICE_ID> dids;
@@ -3688,6 +3968,38 @@ vector<PV_UNIT*> POWER_SYSTEM_DATABASE::get_pv_units_in_zone(const unsigned int 
     return device;
 }
 
+vector<ENERGY_STORAGE*> POWER_SYSTEM_DATABASE::get_energy_storages_in_zone(const unsigned int zone)
+{
+    vector<ENERGY_STORAGE*> device;
+    device.reserve(8);
+
+    unsigned int n = get_energy_storage_count();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(not Energy_storage[i].is_in_zone(zone))
+            continue;
+        else
+            device.push_back(&(Energy_storage[i]));
+    }
+    return device;
+}
+
+vector<SV_SOURCE*> POWER_SYSTEM_DATABASE::get_sv_sources_in_zone(const unsigned int zone)
+{
+    vector<SV_SOURCE*> device;
+    device.reserve(8);
+
+    unsigned int n = get_sv_source_count();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(not SV_source[i].is_in_zone(zone))
+            continue;
+        else
+            device.push_back(&(SV_source[i]));
+    }
+    return device;
+}
+
 vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_in_zone(const unsigned int zone)
 {
     vector<SOURCE*> device;
@@ -3695,6 +4007,7 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_in_zone(const unsigned int zo
     vector<WT_GENERATOR*> wt_generator_device;
     vector<PV_UNIT*> pv_unit_device;
     vector<ENERGY_STORAGE*> estorage_device;
+    vector<SV_SOURCE*> sv_source_device;
     device.reserve(8);
 
     gen_device = get_generators_in_zone(zone);
@@ -3717,6 +4030,10 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_in_zone(const unsigned int zo
     for(unsigned int i=0; i!=nes; ++i)
         device.push_back(estorage_device[i]);
 
+    sv_source_device = get_sv_sources_in_zone(zone);
+    unsigned int nsvs = sv_source_device.size();
+    for(unsigned int i=0; i!=nsvs; ++i)
+        device.push_back(sv_source_device[i]);
     return device;
 }
 
@@ -3732,6 +4049,22 @@ vector<LOAD*> POWER_SYSTEM_DATABASE::get_loads_in_zone(const unsigned int zone)
             continue;
         else
             device.push_back(&(Load[i]));
+    }
+    return device;
+}
+
+vector<FIXED_SHUNT*> POWER_SYSTEM_DATABASE::get_fixed_shunts_in_zone(const unsigned int zone)
+{
+    vector<FIXED_SHUNT*> device;
+    device.reserve(8);
+
+    unsigned int n = get_fixed_shunt_count();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(not Fixed_shunt[i].is_in_zone(zone))
+            continue;
+        else
+            device.push_back(&(Fixed_shunt[i]));
     }
     return device;
 }
@@ -3768,22 +4101,6 @@ vector<TRANSFORMER*> POWER_SYSTEM_DATABASE::get_transformers_in_zone(const unsig
     return device;
 }
 
-vector<FIXED_SHUNT*> POWER_SYSTEM_DATABASE::get_fixed_shunts_in_zone(const unsigned int zone)
-{
-    vector<FIXED_SHUNT*> device;
-    device.reserve(8);
-
-    unsigned int n = get_fixed_shunt_count();
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        if(not Fixed_shunt[i].is_in_zone(zone))
-            continue;
-        else
-            device.push_back(&(Fixed_shunt[i]));
-    }
-    return device;
-}
-
 vector<LCC_HVDC2T*> POWER_SYSTEM_DATABASE::get_2t_lcc_hvdcs_in_zone(const unsigned int zone)
 {
     vector<LCC_HVDC2T*> device;
@@ -3816,38 +4133,6 @@ vector<VSC_HVDC*> POWER_SYSTEM_DATABASE::get_vsc_hvdcs_in_zone(const unsigned in
     return device;
 }
 
-vector<EQUIVALENT_DEVICE*> POWER_SYSTEM_DATABASE::get_equivalent_devices_in_zone(const unsigned int zone)
-{
-    vector<EQUIVALENT_DEVICE*> device;
-    device.reserve(8);
-
-    unsigned int n = get_equivalent_device_count();
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        if(not Equivalent_device[i].is_in_zone(zone))
-            continue;
-        else
-            device.push_back(&(Equivalent_device[i]));
-    }
-    return device;
-}
-
-vector<ENERGY_STORAGE*> POWER_SYSTEM_DATABASE::get_energy_storages_in_zone(const unsigned int zone)
-{
-    vector<ENERGY_STORAGE*> device;
-    device.reserve(8);
-
-    unsigned int n = get_energy_storage_count();
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        if(not Energy_storage[i].is_in_zone(zone))
-            continue;
-        else
-            device.push_back(&(Energy_storage[i]));
-    }
-    return device;
-}
-
 vector<LCC_HVDC*> POWER_SYSTEM_DATABASE::get_lcc_hvdcs_in_zone(const unsigned int zone)
 {
     vector<LCC_HVDC*> device;
@@ -3860,6 +4145,22 @@ vector<LCC_HVDC*> POWER_SYSTEM_DATABASE::get_lcc_hvdcs_in_zone(const unsigned in
             continue;
         else
             device.push_back(&(Lcc_hvdc[i]));
+    }
+    return device;
+}
+
+vector<EQUIVALENT_DEVICE*> POWER_SYSTEM_DATABASE::get_equivalent_devices_in_zone(const unsigned int zone)
+{
+    vector<EQUIVALENT_DEVICE*> device;
+    device.reserve(8);
+
+    unsigned int n = get_equivalent_device_count();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        if(not Equivalent_device[i].is_in_zone(zone))
+            continue;
+        else
+            device.push_back(&(Equivalent_device[i]));
     }
     return device;
 }
@@ -3924,6 +4225,30 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_pv_units_device_id_in_zone(const un
     return dids;
 }
 
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_energy_storages_device_id_in_zone(const unsigned int zone)
+{
+    vector<ENERGY_STORAGE*> devices = get_energy_storages_in_zone(zone);
+    unsigned int n = devices.size();
+
+    vector<DEVICE_ID> dids;
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(devices[i]->get_device_id());
+
+    return dids;
+}
+
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_sv_sources_device_id_in_zone(const unsigned int zone)
+{
+    vector<SV_SOURCE*> devices = get_sv_sources_in_zone(zone);
+    unsigned int n = devices.size();
+
+    vector<DEVICE_ID> dids;
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(devices[i]->get_device_id());
+
+    return dids;
+}
+
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_sources_device_id_in_zone(const unsigned int zone)
 {
     vector<SOURCE*> devices = get_sources_in_zone(zone);
@@ -3939,6 +4264,18 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_sources_device_id_in_zone(const uns
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_loads_device_id_in_zone(const unsigned int zone)
 {
     vector<LOAD*> devices = get_loads_in_zone(zone);
+    unsigned int n = devices.size();
+
+    vector<DEVICE_ID> dids;
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(devices[i]->get_device_id());
+
+    return dids;
+}
+
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_fixed_shunts_device_id_in_zone(const unsigned int zone)
+{
+    vector<FIXED_SHUNT*> devices = get_fixed_shunts_in_zone(zone);
     unsigned int n = devices.size();
 
     vector<DEVICE_ID> dids;
@@ -3972,18 +4309,6 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_transformers_device_id_in_zone(cons
     return dids;
 }
 
-vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_fixed_shunts_device_id_in_zone(const unsigned int zone)
-{
-    vector<FIXED_SHUNT*> devices = get_fixed_shunts_in_zone(zone);
-    unsigned int n = devices.size();
-
-    vector<DEVICE_ID> dids;
-    for(unsigned int i=0; i!=n; ++i)
-        dids.push_back(devices[i]->get_device_id());
-
-    return dids;
-}
-
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_2t_lcc_hvdcs_device_id_in_zone(const unsigned int zone)
 {
     vector<LCC_HVDC2T*> devices = get_2t_lcc_hvdcs_in_zone(zone);
@@ -4008,33 +4333,21 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_vsc_hvdcs_device_id_in_zone(const u
     return dids;
 }
 
-vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_equivalent_devices_device_id_in_zone(const unsigned int zone)
-{
-    vector<EQUIVALENT_DEVICE*> devices = get_equivalent_devices_in_zone(zone);
-    unsigned int n = devices.size();
-
-    vector<DEVICE_ID> dids;
-    for(unsigned int i=0; i!=n; ++i)
-        dids.push_back(devices[i]->get_device_id());
-
-    return dids;
-}
-
-vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_energy_storages_device_id_in_zone(const unsigned int zone)
-{
-    vector<ENERGY_STORAGE*> devices = get_energy_storages_in_zone(zone);
-    unsigned int n = devices.size();
-
-    vector<DEVICE_ID> dids;
-    for(unsigned int i=0; i!=n; ++i)
-        dids.push_back(devices[i]->get_device_id());
-
-    return dids;
-}
-
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_lcc_hvdcs_device_id_in_zone(const unsigned int zone)
 {
     vector<LCC_HVDC*> devices = get_lcc_hvdcs_in_zone(zone);
+    unsigned int n = devices.size();
+
+    vector<DEVICE_ID> dids;
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(devices[i]->get_device_id());
+
+    return dids;
+}
+
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_equivalent_devices_device_id_in_zone(const unsigned int zone)
+{
+    vector<EQUIVALENT_DEVICE*> devices = get_equivalent_devices_in_zone(zone);
     unsigned int n = devices.size();
 
     vector<DEVICE_ID> dids;
@@ -4182,6 +4495,26 @@ vector<PV_UNIT*> POWER_SYSTEM_DATABASE::get_all_pv_units()
     return device;
 }
 
+vector<ENERGY_STORAGE*> POWER_SYSTEM_DATABASE::get_all_energy_storages()
+{
+    vector<ENERGY_STORAGE*> device;
+    unsigned int n = get_energy_storage_count();
+    device.reserve(n);
+    for(unsigned int i=0; i!=n; ++i)
+        device.push_back(&(Energy_storage[i]));
+    return device;
+}
+
+vector<SV_SOURCE*> POWER_SYSTEM_DATABASE::get_all_sv_sources()
+{
+    vector<SV_SOURCE*> device;
+    unsigned int n = get_sv_source_count();
+    device.reserve(n);
+    for(unsigned int i=0; i!=n; ++i)
+        device.push_back(&(SV_source[i]));
+    return device;
+}
+
 vector<SOURCE*> POWER_SYSTEM_DATABASE::get_all_sources()
 {
     vector<SOURCE*> device;
@@ -4189,6 +4522,7 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_all_sources()
     vector<WT_GENERATOR*> wt_generator_device;
     vector<PV_UNIT*> pv_unit_device;
     vector<ENERGY_STORAGE*> estorage_device;
+    vector<SV_SOURCE*> sv_source_device;
     device.reserve(get_source_count());
 
     gen_device = get_all_generators();
@@ -4211,6 +4545,11 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_all_sources()
     for(unsigned int i=0; i!=nes; ++i)
         device.push_back(estorage_device[i]);
 
+    sv_source_device = get_all_sv_sources();
+    unsigned int nsvs = sv_source_device.size();
+    for(unsigned int i=0; i!=nsvs; ++i)
+        device.push_back(sv_source_device[i]);
+
     return device;
 }
 
@@ -4221,6 +4560,16 @@ vector<LOAD*> POWER_SYSTEM_DATABASE::get_all_loads()
     device.reserve(n);
     for(unsigned int i=0; i!=n; ++i)
         device.push_back(&(Load[i]));
+    return device;
+}
+
+vector<FIXED_SHUNT*> POWER_SYSTEM_DATABASE::get_all_fixed_shunts()
+{
+    vector<FIXED_SHUNT*> device;
+    unsigned int n = get_fixed_shunt_count();
+    device.reserve(n);
+    for(unsigned int i=0; i!=n; ++i)
+        device.push_back(&(Fixed_shunt[i]));
     return device;
 }
 
@@ -4241,16 +4590,6 @@ vector<TRANSFORMER*> POWER_SYSTEM_DATABASE::get_all_transformers()
     device.reserve(n);
     for(unsigned int i=0; i!=n; ++i)
         device.push_back(&(Transformer[i]));
-    return device;
-}
-
-vector<FIXED_SHUNT*> POWER_SYSTEM_DATABASE::get_all_fixed_shunts()
-{
-    vector<FIXED_SHUNT*> device;
-    unsigned int n = get_fixed_shunt_count();
-    device.reserve(n);
-    for(unsigned int i=0; i!=n; ++i)
-        device.push_back(&(Fixed_shunt[i]));
     return device;
 }
 
@@ -4284,26 +4623,6 @@ vector<MT_HVDC*> POWER_SYSTEM_DATABASE::get_all_mt_hvdcs()
     return device;
 }
 
-vector<EQUIVALENT_DEVICE*> POWER_SYSTEM_DATABASE::get_all_equivalent_devices()
-{
-    vector<EQUIVALENT_DEVICE*> device;
-    unsigned int n = get_equivalent_device_count();
-    device.reserve(n);
-    for(unsigned int i=0; i!=n; ++i)
-        device.push_back(&(Equivalent_device[i]));
-    return device;
-}
-
-vector<ENERGY_STORAGE*> POWER_SYSTEM_DATABASE::get_all_energy_storages()
-{
-    vector<ENERGY_STORAGE*> device;
-    unsigned int n = get_energy_storage_count();
-    device.reserve(n);
-    for(unsigned int i=0; i!=n; ++i)
-        device.push_back(&(Energy_storage[i]));
-    return device;
-}
-
 vector<LCC_HVDC*> POWER_SYSTEM_DATABASE::get_all_lcc_hvdcs()
 {
     vector<LCC_HVDC*> device;
@@ -4311,6 +4630,16 @@ vector<LCC_HVDC*> POWER_SYSTEM_DATABASE::get_all_lcc_hvdcs()
     device.reserve(n);
     for(unsigned int i=0; i!=n; ++i)
         device.push_back(&(Lcc_hvdc[i]));
+    return device;
+}
+
+vector<EQUIVALENT_DEVICE*> POWER_SYSTEM_DATABASE::get_all_equivalent_devices()
+{
+    vector<EQUIVALENT_DEVICE*> device;
+    unsigned int n = get_equivalent_device_count();
+    device.reserve(n);
+    for(unsigned int i=0; i!=n; ++i)
+        device.push_back(&(Equivalent_device[i]));
     return device;
 }
 
@@ -4440,6 +4769,26 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_pv_units_device_id()
     return dids;
 }
 
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_energy_storages_device_id()
+{
+    vector<DEVICE_ID> dids;
+    unsigned int n=get_energy_storage_count();
+    dids.reserve(n);
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(Energy_storage[i].get_device_id());
+    return dids;
+}
+
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_sv_sources_device_id()
+{
+    vector<DEVICE_ID> dids;
+    unsigned int n=get_sv_source_count();
+    dids.reserve(n);
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(SV_source[i].get_device_id());
+    return dids;
+}
+
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_sources_device_id()
 {
     vector<DEVICE_ID> dids;
@@ -4460,6 +4809,10 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_sources_device_id()
     unsigned int nes = get_energy_storage_count();
     for(unsigned int i=0; i!=nes; ++i)
         dids.push_back(Energy_storage[i].get_device_id());
+
+    unsigned int nsvs = get_sv_source_count();
+    for(unsigned int i=0; i!=nsvs; ++i)
+        dids.push_back(SV_source[i].get_device_id());
     return dids;
 }
 
@@ -4470,6 +4823,16 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_loads_device_id()
     dids.reserve(n);
     for(unsigned int i=0; i!=n; ++i)
         dids.push_back(Load[i].get_device_id());
+    return dids;
+}
+
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_fixed_shunts_device_id()
+{
+    vector<DEVICE_ID> dids;
+    unsigned int n=get_fixed_shunt_count();
+    dids.reserve(n);
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(Fixed_shunt[i].get_device_id());
     return dids;
 }
 
@@ -4490,16 +4853,6 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_transformers_device_id()
     dids.reserve(n);
     for(unsigned int i=0; i!=n; ++i)
         dids.push_back(Transformer[i].get_device_id());
-    return dids;
-}
-
-vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_fixed_shunts_device_id()
-{
-    vector<DEVICE_ID> dids;
-    unsigned int n=get_fixed_shunt_count();
-    dids.reserve(n);
-    for(unsigned int i=0; i!=n; ++i)
-        dids.push_back(Fixed_shunt[i].get_device_id());
     return dids;
 }
 
@@ -4533,26 +4886,6 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_mt_hvdcs_device_id()
     return dids;
 }
 
-vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_equivalent_devices_device_id()
-{
-    vector<DEVICE_ID> dids;
-    unsigned int n=get_equivalent_device_count();
-    dids.reserve(n);
-    for(unsigned int i=0; i!=n; ++i)
-        dids.push_back(Equivalent_device[i].get_device_id());
-    return dids;
-}
-
-vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_energy_storages_device_id()
-{
-    vector<DEVICE_ID> dids;
-    unsigned int n=get_energy_storage_count();
-    dids.reserve(n);
-    for(unsigned int i=0; i!=n; ++i)
-        dids.push_back(Energy_storage[i].get_device_id());
-    return dids;
-}
-
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_lcc_hvdcs_device_id()
 {
     vector<DEVICE_ID> dids;
@@ -4560,6 +4893,16 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_lcc_hvdcs_device_id()
     dids.reserve(n);
     for(unsigned int i=0; i!=n; ++i)
         dids.push_back(Lcc_hvdc[i].get_device_id());
+    return dids;
+}
+
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_equivalent_devices_device_id()
+{
+    vector<DEVICE_ID> dids;
+    unsigned int n=get_equivalent_device_count();
+    dids.reserve(n);
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(Equivalent_device[i].get_device_id());
     return dids;
 }
 
@@ -4711,6 +5054,7 @@ unsigned int POWER_SYSTEM_DATABASE::get_source_count() const
     n += get_wt_generator_count();
     n += get_pv_unit_count();
     n += get_energy_storage_count();
+    n += get_sv_source_count();
     return n;
 }
 
@@ -4729,19 +5073,14 @@ unsigned int POWER_SYSTEM_DATABASE::get_mt_hvdc_count() const
     return Mt_hvdc.size();
 }
 
-unsigned int POWER_SYSTEM_DATABASE::get_equivalent_device_count() const
-{
-    return Equivalent_device.size();
-}
-
-unsigned int POWER_SYSTEM_DATABASE::get_energy_storage_count() const
-{
-    return Energy_storage.size();
-}
-
 unsigned int POWER_SYSTEM_DATABASE::get_lcc_hvdc_count() const
 {
     return Lcc_hvdc.size();
+}
+
+unsigned int POWER_SYSTEM_DATABASE::get_equivalent_device_count() const
+{
+    return Equivalent_device.size();
 }
 
 unsigned int POWER_SYSTEM_DATABASE::get_area_count() const
@@ -4784,9 +5123,24 @@ unsigned int POWER_SYSTEM_DATABASE::get_pv_unit_index(const DEVICE_ID & device_i
     return pv_unit_index.get_index_of_device(device_id);
 }
 
+unsigned int POWER_SYSTEM_DATABASE::get_energy_storage_index(const DEVICE_ID & device_id) const
+{
+    return energy_storage_index.get_index_of_device(device_id);
+}
+
+unsigned int POWER_SYSTEM_DATABASE::get_sv_source_index(const DEVICE_ID & device_id) const
+{
+    return sv_source_index.get_index_of_device(device_id);
+}
+
 unsigned int POWER_SYSTEM_DATABASE::get_load_index(const DEVICE_ID & device_id) const
 {
     return load_index.get_index_of_device(device_id);
+}
+
+unsigned int POWER_SYSTEM_DATABASE::get_fixed_shunt_index(const DEVICE_ID & device_id) const
+{
+    return fixed_shunt_index.get_index_of_device(device_id);
 }
 
 unsigned int POWER_SYSTEM_DATABASE::get_ac_line_index(const DEVICE_ID & device_id) const
@@ -4797,11 +5151,6 @@ unsigned int POWER_SYSTEM_DATABASE::get_ac_line_index(const DEVICE_ID & device_i
 unsigned int POWER_SYSTEM_DATABASE::get_transformer_index(const DEVICE_ID & device_id) const
 {
     return transformer_index.get_index_of_device(device_id);
-}
-
-unsigned int POWER_SYSTEM_DATABASE::get_fixed_shunt_index(const DEVICE_ID & device_id) const
-{
-    return fixed_shunt_index.get_index_of_device(device_id);
 }
 
 unsigned int POWER_SYSTEM_DATABASE::get_2t_lcc_hvdc_index(const DEVICE_ID & device_id) const
@@ -4836,19 +5185,14 @@ unsigned int POWER_SYSTEM_DATABASE::get_mt_hvdc_index(const string mt_hvdc_name)
     return INDEX_NOT_EXIST;
 }
 
-unsigned int POWER_SYSTEM_DATABASE::get_equivalent_device_index(const DEVICE_ID & device_id) const
-{
-    return equivalent_device_index.get_index_of_device(device_id);
-}
-
-unsigned int POWER_SYSTEM_DATABASE::get_energy_storage_index(const DEVICE_ID & device_id) const
-{
-    return energy_storage_index.get_index_of_device(device_id);
-}
-
 unsigned int POWER_SYSTEM_DATABASE::get_lcc_hvdc_index(const DEVICE_ID & device_id) const
 {
     return lcc_hvdc_index.get_index_of_device(device_id);
+}
+
+unsigned int POWER_SYSTEM_DATABASE::get_equivalent_device_index(const DEVICE_ID & device_id) const
+{
+    return equivalent_device_index.get_index_of_device(device_id);
 }
 
 unsigned int POWER_SYSTEM_DATABASE::get_area_index(const unsigned int no) const
@@ -5018,6 +5362,7 @@ void POWER_SYSTEM_DATABASE::check_all_sources()
     check_all_wt_generators();
     check_all_pv_units();
     check_all_energy_storages();
+    check_all_sv_sources();
 }
 
 void POWER_SYSTEM_DATABASE::check_all_generators()
@@ -5039,6 +5384,20 @@ void POWER_SYSTEM_DATABASE::check_all_pv_units()
     unsigned int n = get_pv_unit_count();
     for(unsigned int i=0; i!=n; ++i)
         PV_Unit[i].check();
+}
+
+void POWER_SYSTEM_DATABASE::check_all_energy_storages()
+{
+    unsigned int n = get_energy_storage_count();
+    for(unsigned int i=0; i!=n; ++i)
+        Energy_storage[i].check();
+}
+
+void POWER_SYSTEM_DATABASE::check_all_sv_sources()
+{
+    unsigned int n = get_sv_source_count();
+    for(unsigned int i=0; i!=n; ++i)
+        SV_source[i].check();
 }
 
 void POWER_SYSTEM_DATABASE::check_all_loads()
@@ -5090,25 +5449,18 @@ void POWER_SYSTEM_DATABASE::check_all_mt_hvdcs()
         Mt_hvdc[i].check();
 }
 
-void POWER_SYSTEM_DATABASE::check_all_equivalent_devices()
-{
-    unsigned int n = get_equivalent_device_count();
-    for(unsigned int i=0; i!=n; ++i)
-        Equivalent_device[i].check();
-}
-
-void POWER_SYSTEM_DATABASE::check_all_energy_storages()
-{
-    unsigned int n = get_energy_storage_count();
-    for(unsigned int i=0; i!=n; ++i)
-        Energy_storage[i].check();
-}
-
 void POWER_SYSTEM_DATABASE::check_all_lcc_hvdcs()
 {
     unsigned int n = get_lcc_hvdc_count();
     for(unsigned int i=0; i!=n; ++i)
         Lcc_hvdc[i].check();
+}
+
+void POWER_SYSTEM_DATABASE::check_all_equivalent_devices()
+{
+    unsigned int n = get_equivalent_device_count();
+    for(unsigned int i=0; i!=n; ++i)
+        Equivalent_device[i].check();
 }
 
 void POWER_SYSTEM_DATABASE::check_all_areas()
@@ -5138,6 +5490,7 @@ void POWER_SYSTEM_DATABASE::check_dynamic_data()
     check_generator_related_dynamic_data();
     check_wt_generator_related_dynamic_data();
     check_pv_unit_related_dynamic_data();
+    check_sv_source_related_dynamic_data();
     check_energy_storage_related_dynamic_data();
     check_load_related_dynamic_data();
     check_ac_line_related_dynamic_data();
@@ -5367,6 +5720,29 @@ void POWER_SYSTEM_DATABASE::check_energy_storage_related_dynamic_data()
     }
 }
 
+void POWER_SYSTEM_DATABASE::check_sv_source_related_dynamic_data()
+{
+    vector<SV_SOURCE*> sv_sources = get_all_sv_sources();
+    unsigned int n = sv_sources.size();
+    SV_SOURCE* sv_source;
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        sv_source = sv_sources[i];
+
+        SVS_CONTROL_MODEL* svs_ctrl_model = sv_source->get_svs_control_model();
+        if(svs_ctrl_model!=NULL)
+            svs_ctrl_model->check();
+
+        if(toolkit->is_detailed_log_enabled())
+        {
+            ostringstream osstream;
+            osstream<<"Model entry address of "<<sv_source->get_compound_device_name()<<":\n"
+                    <<"SVS CONTROL MODEL:    "<<svs_ctrl_model;
+            toolkit->show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
 void POWER_SYSTEM_DATABASE::check_load_related_dynamic_data()
 {
     ostringstream osstream;
@@ -5481,6 +5857,15 @@ void POWER_SYSTEM_DATABASE::check_mt_hvdc_related_dynamic_data()
     }
 }
 
+
+void POWER_SYSTEM_DATABASE::check_lcc_hvdc_related_dynamic_data()
+{
+    ostringstream osstream;
+    osstream<<"No LCC LCC_HVDC2T is checked for dynamic data.";
+    toolkit->show_information_with_leading_time_stamp(osstream);
+    return;
+}
+
 void POWER_SYSTEM_DATABASE::check_equivalent_device_related_dynamic_data()
 {
     vector<EQUIVALENT_DEVICE*> edevices = get_all_equivalent_devices();
@@ -5497,21 +5882,13 @@ void POWER_SYSTEM_DATABASE::check_equivalent_device_related_dynamic_data()
 }
 
 
-void POWER_SYSTEM_DATABASE::check_lcc_hvdc_related_dynamic_data()
-{
-    ostringstream osstream;
-    osstream<<"No LCC LCC_HVDC2T is checked for dynamic data.";
-    toolkit->show_information_with_leading_time_stamp(osstream);
-    return;
-}
-
-
 void POWER_SYSTEM_DATABASE::check_missing_models()
 {
     check_missing_generator_related_model();
     check_missing_wt_generator_related_model();
     check_missing_pv_unit_related_model();
     check_missing_energy_storage_related_model();
+    check_missing_sv_source_related_model();
     check_missing_load_related_model();
     check_missing_ac_line_related_model();
     check_missing_2t_lcc_hvdc_related_model();
@@ -5758,6 +6135,14 @@ void POWER_SYSTEM_DATABASE::check_missing_energy_storage_related_model()
         osstream.str("");
 }
 
+void POWER_SYSTEM_DATABASE::check_missing_sv_source_related_model()
+{
+    ostringstream osstream;
+    osstream<<"No sv source is checked for model missing.";
+    toolkit->show_information_with_leading_time_stamp(osstream);
+    return;
+}
+
 void POWER_SYSTEM_DATABASE::check_missing_load_related_model()
 {
     ostringstream osstream;
@@ -5897,19 +6282,19 @@ void POWER_SYSTEM_DATABASE::check_missing_mt_hvdc_related_model()
         osstream.str("");
 }
 
-void POWER_SYSTEM_DATABASE::check_missing_equivalent_device_related_model()
+void POWER_SYSTEM_DATABASE::check_missing_lcc_hvdc_related_model()
 {
     ostringstream osstream;
-    osstream<<"No equivalent device is checked for model missing.";
+    osstream<<"No LCC LCC_HVDC2T is checked for model missing.";
     toolkit->show_information_with_leading_time_stamp(osstream);
 
     return;
 }
 
-void POWER_SYSTEM_DATABASE::check_missing_lcc_hvdc_related_model()
+void POWER_SYSTEM_DATABASE::check_missing_equivalent_device_related_model()
 {
     ostringstream osstream;
-    osstream<<"No LCC LCC_HVDC2T is checked for model missing.";
+    osstream<<"No equivalent device is checked for model missing.";
     toolkit->show_information_with_leading_time_stamp(osstream);
 
     return;
@@ -6183,6 +6568,43 @@ void POWER_SYSTEM_DATABASE::scale_energy_storages_power_in_zone(unsigned int zon
         scale_energy_storage_power(ess[i], scale);
 }
 
+void POWER_SYSTEM_DATABASE::scale_sv_source_power(const DEVICE_ID& did, double scale)
+{
+    scale_source_power(did, scale);
+}
+
+void POWER_SYSTEM_DATABASE::scale_all_sv_sources_power(double scale)
+{
+    vector<DEVICE_ID> svss = get_all_sv_sources_device_id();
+    unsigned int n = svss.size();
+    for(unsigned int i=0; i!=n; ++i)
+        scale_sv_source_power(svss[i], scale);
+}
+
+void POWER_SYSTEM_DATABASE::scale_sv_sources_power_at_bus(unsigned int bus, double scale)
+{
+    vector<DEVICE_ID> svss = get_sv_sources_device_id_connecting_to_bus(bus);
+    unsigned int n = svss.size();
+    for(unsigned int i=0; i!=n; ++i)
+        scale_sv_source_power(svss[i], scale);
+}
+
+void POWER_SYSTEM_DATABASE::scale_sv_sources_power_in_area(unsigned int area_number, double scale)
+{
+    vector<DEVICE_ID> svss = get_sv_sources_device_id_in_area(area_number);
+    unsigned int n = svss.size();
+    for(unsigned int i=0; i!=n; ++i)
+        scale_sv_source_power(svss[i], scale);
+}
+
+void POWER_SYSTEM_DATABASE::scale_sv_sources_power_in_zone(unsigned int zone_number, double scale)
+{
+    vector<DEVICE_ID> svss = get_sv_sources_device_id_in_zone(zone_number);
+    unsigned int n = svss.size();
+    for(unsigned int i=0; i!=n; ++i)
+        scale_sv_source_power(svss[i], scale);
+}
+
 void POWER_SYSTEM_DATABASE::clear_bus(unsigned int bus)
 {
     if(is_bus_exist(bus))
@@ -6255,17 +6677,12 @@ void POWER_SYSTEM_DATABASE::clear_generator(const DEVICE_ID& device_id)
 void POWER_SYSTEM_DATABASE::clear_generators_connecting_to_bus(const unsigned int bus)
 {
     DEVICE_ID device_id;
-    TERMINAL terminal;
     device_id.set_device_type(STEPS_GENERATOR);
     while(true)
     {
         vector<GENERATOR*> generator = get_generators_connecting_to_bus(bus);
         if(generator.size()!=0)
         {
-            /*terminal.clear();
-            terminal.append_bus(bus);
-            device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier_index(generator[0]->get_identifier_index());*/
             device_id = generator[0]->get_device_id();
             clear_generator(device_id);
         }
@@ -6279,7 +6696,6 @@ void POWER_SYSTEM_DATABASE::clear_all_generators()
     Generator.clear();
     generator_index.clear();
 }
-
 
 void POWER_SYSTEM_DATABASE::clear_wt_generator(const DEVICE_ID& device_id)
 {
@@ -6300,17 +6716,12 @@ void POWER_SYSTEM_DATABASE::clear_wt_generator(const DEVICE_ID& device_id)
 void POWER_SYSTEM_DATABASE::clear_wt_generators_connecting_to_bus(const unsigned int bus)
 {
     DEVICE_ID device_id;
-    TERMINAL terminal;
     device_id.set_device_type(STEPS_WT_GENERATOR);
     while(true)
     {
         vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
         if(wt_generator.size()!=0)
         {
-            /*terminal.clear();
-            terminal.append_bus(bus);
-            device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier_index(wt_generator[0]->get_identifier_index());*/
             device_id = wt_generator[0]->get_device_id();
             clear_wt_generator(device_id);
         }
@@ -6345,17 +6756,12 @@ void POWER_SYSTEM_DATABASE::clear_pv_unit(const DEVICE_ID& device_id)
 void POWER_SYSTEM_DATABASE::clear_pv_units_connecting_to_bus(const unsigned int bus)
 {
     DEVICE_ID device_id;
-    TERMINAL terminal;
     device_id.set_device_type(STEPS_PV_UNIT);
     while(true)
     {
         vector<PV_UNIT*> pv_unit = get_pv_units_connecting_to_bus(bus);
         if(pv_unit.size()!=0)
         {
-            /*terminal.clear();
-            terminal.append_bus(bus);
-            device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier_index(pv_unit[0]->get_identifier_index());*/
             device_id = pv_unit[0]->get_device_id();
             clear_pv_unit(device_id);
         }
@@ -6370,12 +6776,93 @@ void POWER_SYSTEM_DATABASE::clear_all_pv_units()
     pv_unit_index.clear();
 }
 
+void POWER_SYSTEM_DATABASE::clear_energy_storage(const DEVICE_ID& device_id)
+{
+    if(is_energy_storage_exist(device_id))
+    {
+        unsigned int current_index = get_energy_storage_index(device_id);
+
+        vector<ENERGY_STORAGE>::iterator iter_edevice = Energy_storage.begin();
+
+
+        std::advance(iter_edevice, current_index);
+        Energy_storage.erase(iter_edevice);
+        energy_storage_index.set_device_index(device_id, INDEX_NOT_EXIST);
+
+        energy_storage_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+    }
+}
+
+void POWER_SYSTEM_DATABASE::clear_energy_storages_connecting_to_bus(const unsigned int bus)
+{
+    DEVICE_ID device_id;
+    device_id.set_device_type(STEPS_ENERGY_STORAGE);
+    while(true)
+    {
+        vector<ENERGY_STORAGE*> estorage = get_energy_storages_connecting_to_bus(bus);
+        if(estorage.size()!=0)
+        {
+            device_id = estorage[0]->get_device_id();
+            clear_energy_storage(device_id);
+        }
+        else
+            break;
+    }
+}
+
+void POWER_SYSTEM_DATABASE::clear_all_energy_storages()
+{
+    Energy_storage.clear();
+    energy_storage_index.clear();
+}
+
+void POWER_SYSTEM_DATABASE::clear_sv_source(const DEVICE_ID& device_id)
+{
+    if(is_sv_source_exist(device_id))
+    {
+        unsigned int current_index = get_sv_source_index(device_id);
+
+        vector<SV_SOURCE>::iterator iter_sv_source = SV_source.begin();
+
+        std::advance(iter_sv_source, current_index);
+        SV_source.erase(iter_sv_source);
+        sv_source_index.set_device_index(device_id, INDEX_NOT_EXIST);
+
+        sv_source_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+    }
+}
+
+
+void POWER_SYSTEM_DATABASE::clear_sv_sources_connecting_to_bus(const unsigned int bus)
+{
+    DEVICE_ID device_id;
+    device_id.set_device_type(STEPS_SV_SOURCE);
+    while(true)
+    {
+        vector<SV_SOURCE*> sv_source = get_sv_sources_connecting_to_bus(bus);
+        if(sv_source.size()!=0)
+        {
+            device_id = sv_source[0]->get_device_id();
+            clear_sv_source(device_id);
+        }
+        else
+            break;
+    }
+}
+
+void POWER_SYSTEM_DATABASE::clear_all_sv_sources()
+{
+    SV_source.clear();
+    sv_source_index.clear();
+}
+
 void POWER_SYSTEM_DATABASE::clear_sources_connecting_to_bus(const unsigned int bus)
 {
     clear_generators_connecting_to_bus(bus);
     clear_wt_generators_connecting_to_bus(bus);
     clear_pv_units_connecting_to_bus(bus);
     clear_energy_storages_connecting_to_bus(bus);
+    clear_sv_sources_connecting_to_bus(bus);
 }
 
 void POWER_SYSTEM_DATABASE::clear_all_sources()
@@ -6384,6 +6871,7 @@ void POWER_SYSTEM_DATABASE::clear_all_sources()
     clear_all_wt_generators();
     clear_all_pv_units();
     clear_all_energy_storages();
+    clear_all_sv_sources();
 }
 
 void POWER_SYSTEM_DATABASE::clear_load(const DEVICE_ID& device_id)
@@ -6406,17 +6894,12 @@ void POWER_SYSTEM_DATABASE::clear_load(const DEVICE_ID& device_id)
 void POWER_SYSTEM_DATABASE::clear_loads_connecting_to_bus(const unsigned int bus)
 {
     DEVICE_ID device_id;
-    TERMINAL terminal;
     device_id.set_device_type(STEPS_LOAD);
     while(true)
     {
         vector<LOAD*> load = get_loads_connecting_to_bus(bus);
         if(load.size()!=0)
         {
-            /*terminal.clear();
-            terminal.append_bus(bus);
-            device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier_index(load[0]->get_identifier_index());*/
             device_id = load[0]->get_device_id();
             clear_load(device_id);
         }
@@ -6431,102 +6914,6 @@ void POWER_SYSTEM_DATABASE::clear_all_loads()
     Load.clear();
     load_index.clear();
 }
-
-
-void POWER_SYSTEM_DATABASE::clear_ac_line(const DEVICE_ID& device_id)
-{
-    if(is_ac_line_exist(device_id))
-    {
-        unsigned int current_index = get_ac_line_index(device_id);
-
-        vector<AC_LINE>::iterator iter_line = Ac_line.begin();
-
-
-        std::advance(iter_line, current_index);
-        Ac_line.erase(iter_line);
-        ac_line_index.set_device_index(device_id, INDEX_NOT_EXIST);
-
-        ac_line_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
-    }
-}
-
-void POWER_SYSTEM_DATABASE::clear_ac_lines_connecting_to_bus(const unsigned int bus)
-{
-    DEVICE_ID device_id;
-    TERMINAL terminal;
-    device_id.set_device_type(STEPS_AC_LINE);
-    while(true)
-    {
-        vector<AC_LINE*> line = get_ac_lines_connecting_to_bus(bus);
-        if(line.size()!=0)
-        {
-            /*terminal.clear();
-            terminal.append_bus(line[0]->get_sending_side_bus());
-            terminal.append_bus(line[0]->get_receiving_side_bus());
-            device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier_index(line[0]->get_identifier_index());*/
-            device_id = line[0]->get_device_id();
-            clear_ac_line(device_id);
-        }
-        else
-            break;
-
-    }
-}
-
-void POWER_SYSTEM_DATABASE::clear_all_ac_lines()
-{
-    Ac_line.clear();
-    ac_line_index.clear();
-}
-
-void POWER_SYSTEM_DATABASE::clear_transformer(const DEVICE_ID& device_id)
-{
-    if(is_transformer_exist(device_id))
-    {
-        unsigned int current_index = get_transformer_index(device_id);
-
-        vector<TRANSFORMER>::iterator iter_transformer = Transformer.begin();
-
-        std::advance(iter_transformer, current_index);
-        Transformer.erase(iter_transformer);
-        transformer_index.set_device_index(device_id, INDEX_NOT_EXIST);
-
-        transformer_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
-    }
-}
-
-void POWER_SYSTEM_DATABASE::clear_transformers_connecting_to_bus(const unsigned int bus)
-{
-    DEVICE_ID device_id;
-    TERMINAL terminal;
-    device_id.set_device_type(STEPS_TRANSFORMER);
-    while(true)
-    {
-        vector<TRANSFORMER*> transformer = get_transformers_connecting_to_bus(bus);
-
-        if(transformer.size()!=0)
-        {
-            /*terminal.clear();
-            terminal.append_bus(transformer[0]->get_winding_bus(PRIMARY_SIDE));
-            terminal.append_bus(transformer[0]->get_winding_bus(SECONDARY_SIDE));
-            terminal.append_bus(transformer[0]->get_winding_bus(TERTIARY_SIDE));
-            device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier_index(transformer[0]->get_identifier_index());*/
-            device_id = transformer[0]->get_device_id();
-            clear_transformer(device_id);
-        }
-        else
-            break;
-    }
-}
-
-void POWER_SYSTEM_DATABASE::clear_all_transformers()
-{
-    Transformer.clear();
-    transformer_index.clear();
-}
-
 
 void POWER_SYSTEM_DATABASE::clear_fixed_shunt(const DEVICE_ID& device_id)
 {
@@ -6590,6 +6977,87 @@ void POWER_SYSTEM_DATABASE::clear_all_fixed_shunts()
     fixed_shunt_index.clear();
 }
 
+void POWER_SYSTEM_DATABASE::clear_ac_line(const DEVICE_ID& device_id)
+{
+    if(is_ac_line_exist(device_id))
+    {
+        unsigned int current_index = get_ac_line_index(device_id);
+
+        vector<AC_LINE>::iterator iter_line = Ac_line.begin();
+
+
+        std::advance(iter_line, current_index);
+        Ac_line.erase(iter_line);
+        ac_line_index.set_device_index(device_id, INDEX_NOT_EXIST);
+
+        ac_line_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+    }
+}
+
+void POWER_SYSTEM_DATABASE::clear_ac_lines_connecting_to_bus(const unsigned int bus)
+{
+    DEVICE_ID device_id;
+    device_id.set_device_type(STEPS_AC_LINE);
+    while(true)
+    {
+        vector<AC_LINE*> line = get_ac_lines_connecting_to_bus(bus);
+        if(line.size()!=0)
+        {
+            device_id = line[0]->get_device_id();
+            clear_ac_line(device_id);
+        }
+        else
+            break;
+
+    }
+}
+
+void POWER_SYSTEM_DATABASE::clear_all_ac_lines()
+{
+    Ac_line.clear();
+    ac_line_index.clear();
+}
+
+void POWER_SYSTEM_DATABASE::clear_transformer(const DEVICE_ID& device_id)
+{
+    if(is_transformer_exist(device_id))
+    {
+        unsigned int current_index = get_transformer_index(device_id);
+
+        vector<TRANSFORMER>::iterator iter_transformer = Transformer.begin();
+
+        std::advance(iter_transformer, current_index);
+        Transformer.erase(iter_transformer);
+        transformer_index.set_device_index(device_id, INDEX_NOT_EXIST);
+
+        transformer_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+    }
+}
+
+void POWER_SYSTEM_DATABASE::clear_transformers_connecting_to_bus(const unsigned int bus)
+{
+    DEVICE_ID device_id;
+    device_id.set_device_type(STEPS_TRANSFORMER);
+    while(true)
+    {
+        vector<TRANSFORMER*> transformer = get_transformers_connecting_to_bus(bus);
+
+        if(transformer.size()!=0)
+        {
+            device_id = transformer[0]->get_device_id();
+            clear_transformer(device_id);
+        }
+        else
+            break;
+    }
+}
+
+void POWER_SYSTEM_DATABASE::clear_all_transformers()
+{
+    Transformer.clear();
+    transformer_index.clear();
+}
+
 void POWER_SYSTEM_DATABASE::clear_2t_lcc_hvdc(const DEVICE_ID& device_id)
 {
     if(is_2t_lcc_hvdc_exist(device_id))
@@ -6610,18 +7078,12 @@ void POWER_SYSTEM_DATABASE::clear_2t_lcc_hvdc(const DEVICE_ID& device_id)
 void POWER_SYSTEM_DATABASE::clear_2t_lcc_hvdcs_connecting_to_bus(const unsigned int bus)
 {
     DEVICE_ID device_id;
-    TERMINAL terminal;
     device_id.set_device_type(STEPS_LCC_HVDC2T);
     while(true)
     {
         vector<LCC_HVDC2T*> hvdc = get_2t_lcc_hvdcs_connecting_to_bus(bus);
         if(hvdc.size()!=0)
         {
-            /*terminal.clear();
-            terminal.append_bus(hvdc[0]->get_converter_bus(RECTIFIER));
-            terminal.append_bus(hvdc[0]->get_converter_bus(INVERTER));
-            device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier_index(hvdc[0]->get_identifier_index());*/
             device_id = hvdc[0]->get_device_id();
             clear_2t_lcc_hvdc(device_id);
         }
@@ -6736,97 +7198,6 @@ void POWER_SYSTEM_DATABASE::clear_all_mt_hvdcs()
     mt_hvdc_index.clear();
 }
 
-void POWER_SYSTEM_DATABASE::clear_equivalent_device(const DEVICE_ID& device_id)
-{
-    if(is_equivalent_device_exist(device_id))
-    {
-        unsigned int current_index = get_equivalent_device_index(device_id);
-
-        vector<EQUIVALENT_DEVICE>::iterator iter_edevice = Equivalent_device.begin();
-
-
-        std::advance(iter_edevice, current_index);
-        Equivalent_device.erase(iter_edevice);
-        equivalent_device_index.set_device_index(device_id, INDEX_NOT_EXIST);
-
-        equivalent_device_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
-    }
-}
-
-void POWER_SYSTEM_DATABASE::clear_equivalent_devices_connecting_to_bus(const unsigned int bus)
-{
-    DEVICE_ID device_id;
-    TERMINAL terminal;
-    device_id.set_device_type(STEPS_EQUIVALENT_DEVICE);
-    while(true)
-    {
-        vector<EQUIVALENT_DEVICE*> edevice = get_equivalent_devices_connecting_to_bus(bus);
-        if(edevice.size()!=0)
-        {
-            /*terminal.clear();
-            terminal.append_bus(edevice[0]->get_equivalent_device_bus());
-            device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier_index(edevice[0]->get_identifier_index());*/
-            device_id = edevice[0]->get_device_id();
-            clear_equivalent_device(device_id);
-        }
-        else
-            break;
-    }
-}
-
-void POWER_SYSTEM_DATABASE::clear_all_equivalent_devices()
-{
-    Equivalent_device.clear();
-    equivalent_device_index.clear();
-}
-
-
-void POWER_SYSTEM_DATABASE::clear_energy_storage(const DEVICE_ID& device_id)
-{
-    if(is_energy_storage_exist(device_id))
-    {
-        unsigned int current_index = get_energy_storage_index(device_id);
-
-        vector<ENERGY_STORAGE>::iterator iter_edevice = Energy_storage.begin();
-
-
-        std::advance(iter_edevice, current_index);
-        Energy_storage.erase(iter_edevice);
-        energy_storage_index.set_device_index(device_id, INDEX_NOT_EXIST);
-
-        energy_storage_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
-    }
-}
-
-void POWER_SYSTEM_DATABASE::clear_energy_storages_connecting_to_bus(const unsigned int bus)
-{
-    DEVICE_ID device_id;
-    TERMINAL terminal;
-    device_id.set_device_type(STEPS_ENERGY_STORAGE);
-    while(true)
-    {
-        vector<ENERGY_STORAGE*> estorage = get_energy_storages_connecting_to_bus(bus);
-        if(estorage.size()!=0)
-        {
-            /*terminal.clear();
-            terminal.append_bus(estorage[0]->get_energy_storage_bus());
-            device_id.set_device_terminal(terminal);
-            device_id.set_device_identifier_index(estorage[0]->get_identifier_index());*/
-            device_id = estorage[0]->get_device_id();
-            clear_energy_storage(device_id);
-        }
-        else
-            break;
-    }
-}
-
-void POWER_SYSTEM_DATABASE::clear_all_energy_storages()
-{
-    Energy_storage.clear();
-    energy_storage_index.clear();
-}
-
 void POWER_SYSTEM_DATABASE::clear_lcc_hvdc(const DEVICE_ID& device_id)
 {
     if(is_lcc_hvdc_exist(device_id))
@@ -6867,6 +7238,47 @@ void POWER_SYSTEM_DATABASE::clear_all_lcc_hvdcs()
 {
     Lcc_hvdc.clear();
     lcc_hvdc_index.clear();
+}
+
+void POWER_SYSTEM_DATABASE::clear_equivalent_device(const DEVICE_ID& device_id)
+{
+    if(is_equivalent_device_exist(device_id))
+    {
+        unsigned int current_index = get_equivalent_device_index(device_id);
+
+        vector<EQUIVALENT_DEVICE>::iterator iter_edevice = Equivalent_device.begin();
+
+
+        std::advance(iter_edevice, current_index);
+        Equivalent_device.erase(iter_edevice);
+        equivalent_device_index.set_device_index(device_id, INDEX_NOT_EXIST);
+
+        equivalent_device_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+    }
+}
+
+void POWER_SYSTEM_DATABASE::clear_equivalent_devices_connecting_to_bus(const unsigned int bus)
+{
+    DEVICE_ID device_id;
+    TERMINAL terminal;
+    device_id.set_device_type(STEPS_EQUIVALENT_DEVICE);
+    while(true)
+    {
+        vector<EQUIVALENT_DEVICE*> edevice = get_equivalent_devices_connecting_to_bus(bus);
+        if(edevice.size()!=0)
+        {
+            device_id = edevice[0]->get_device_id();
+            clear_equivalent_device(device_id);
+        }
+        else
+            break;
+    }
+}
+
+void POWER_SYSTEM_DATABASE::clear_all_equivalent_devices()
+{
+    Equivalent_device.clear();
+    equivalent_device_index.clear();
 }
 
 void POWER_SYSTEM_DATABASE::clear_area(unsigned int area)
@@ -6957,6 +7369,17 @@ void POWER_SYSTEM_DATABASE::trip_bus(unsigned int bus)
                 {
                     ess[i]->set_status(false);
                     osstream<<ess[i]->get_compound_device_name()<<endl;
+                }
+            }
+
+            vector<SV_SOURCE*> svss = get_sv_sources_connecting_to_bus(bus);
+            n=svss.size();
+            for(unsigned int i=0; i!=n; ++i)
+            {
+                if(svss[i]->get_status()==true)
+                {
+                    svss[i]->set_status(false);
+                    osstream<<svss[i]->get_compound_device_name()<<endl;
                 }
             }
 
@@ -7743,33 +8166,35 @@ unsigned int POWER_SYSTEM_DATABASE::get_memory_usage_in_bytes()
     toolkit->show_information_with_leading_time_stamp(osstream);
 
     osstream<<"Power system database device used:\n"
-            <<"Bus         : "<<setw(9)<<Bus.capacity()*sizeof(BUS)<<"B, "<<setw(9)<<Bus.size()*sizeof(BUS)<<"B, "<<setw(9)<<sizeof(BUS)<<"B\n"
-            <<"Generator   : "<<setw(9)<<Generator.capacity()*sizeof(GENERATOR)<<"B, "<<setw(9)<<Generator.size()*sizeof(GENERATOR)<<"B, "<<setw(9)<<sizeof(GENERATOR)<<"B\n"
-            <<"WT Generator: "<<setw(9)<<WT_Generator.capacity()*sizeof(WT_GENERATOR)<<"B, "<<setw(9)<<WT_Generator.size()*sizeof(WT_GENERATOR)<<"B, "<<setw(9)<<sizeof(WT_GENERATOR)<<"B\n"
-            <<"PV unit     : "<<setw(9)<<PV_Unit.capacity()*sizeof(PV_UNIT)<<"B, "<<setw(9)<<PV_Unit.size()*sizeof(PV_UNIT)<<"B, "<<setw(9)<<sizeof(PV_UNIT)<<"B\n"
-            <<"Load        : "<<setw(9)<<Load.capacity()*sizeof(LOAD)<<"B, "<<setw(9)<<Load.size()*sizeof(LOAD)<<"B, "<<setw(9)<<sizeof(LOAD)<<"B\n"
-            <<"Line        : "<<setw(9)<<Ac_line.capacity()*sizeof(AC_LINE)<<"B, "<<setw(9)<<Ac_line.size()*sizeof(AC_LINE)<<"B, "<<setw(9)<<sizeof(AC_LINE)<<"B\n"
-            <<"Transformer : "<<setw(9)<<Transformer.capacity()*sizeof(TRANSFORMER)<<"B, "<<setw(9)<<Transformer.size()*sizeof(TRANSFORMER)<<"B, "<<setw(9)<<sizeof(TRANSFORMER)<<"B\n"
-            <<"Fixed shunt : "<<setw(9)<<Fixed_shunt.capacity()*sizeof(FIXED_SHUNT)<<"B, "<<setw(9)<<Fixed_shunt.size()*sizeof(FIXED_SHUNT)<<"B, "<<setw(9)<<sizeof(FIXED_SHUNT)<<"B\n"
-            <<"Equiv device: "<<setw(9)<<Equivalent_device.capacity()*sizeof(EQUIVALENT_DEVICE)<<"B, "<<setw(9)<<Equivalent_device.size()*sizeof(EQUIVALENT_DEVICE)<<"B, "<<setw(9)<<sizeof(EQUIVALENT_DEVICE)<<"B\n"
-            <<"Energy strge: "<<setw(9)<<Energy_storage.capacity()*sizeof(ENERGY_STORAGE)<<"B, "<<setw(9)<<Energy_storage.size()*sizeof(ENERGY_STORAGE)<<"B, "<<setw(9)<<sizeof(ENERGY_STORAGE)<<"B\n"
-            <<"Hvdc        : "<<setw(9)<<Lcc_hvdc2t.capacity()*sizeof(LCC_HVDC2T)<<"B, "<<setw(9)<<Lcc_hvdc2t.size()*sizeof(LCC_HVDC2T)<<"B, "<<setw(9)<<sizeof(LCC_HVDC2T)<<"B\n"
-            <<"Area        : "<<setw(9)<<Area.capacity()*sizeof(AREA)<<"B, "<<setw(9)<<Area.size()*sizeof(AREA)<<"B, "<<setw(9)<<sizeof(AREA)<<"B\n"
-            <<"Zone        : "<<setw(9)<<Zone.capacity()*sizeof(ZONE)<<"B, "<<setw(9)<<Zone.size()*sizeof(ZONE)<<"B, "<<setw(9)<<sizeof(ZONE)<<"B\n"
-            <<"Owner       : "<<setw(9)<<Owner.capacity()*sizeof(OWNER)<<"B, "<<setw(9)<<Owner.size()*sizeof(OWNER)<<"B, "<<setw(9)<<sizeof(OWNER)<<"B";
-    toolkit->show_information_with_leading_time_stamp(osstream);
+            <<"Bus           : "<<setw(9)<<Bus.capacity()*sizeof(BUS)<<"B, "<<setw(9)<<Bus.size()*sizeof(BUS)<<"B, "<<setw(9)<<sizeof(BUS)<<"B\n"
+            <<"Generator     : "<<setw(9)<<Generator.capacity()*sizeof(GENERATOR)<<"B, "<<setw(9)<<Generator.size()*sizeof(GENERATOR)<<"B, "<<setw(9)<<sizeof(GENERATOR)<<"B\n"
+            <<"WT generator  : "<<setw(9)<<WT_Generator.capacity()*sizeof(WT_GENERATOR)<<"B, "<<setw(9)<<WT_Generator.size()*sizeof(WT_GENERATOR)<<"B, "<<setw(9)<<sizeof(WT_GENERATOR)<<"B\n"
+            <<"PV unit       : "<<setw(9)<<PV_Unit.capacity()*sizeof(PV_UNIT)<<"B, "<<setw(9)<<PV_Unit.size()*sizeof(PV_UNIT)<<"B, "<<setw(9)<<sizeof(PV_UNIT)<<"B\n"
+            <<"Energy storage: "<<setw(9)<<Energy_storage.capacity()*sizeof(ENERGY_STORAGE)<<"B, "<<setw(9)<<Energy_storage.size()*sizeof(ENERGY_STORAGE)<<"B, "<<setw(9)<<sizeof(ENERGY_STORAGE)<<"B\n"
+            <<"SV source     : "<<setw(9)<<SV_source.capacity()*sizeof(SV_SOURCE)<<"B, "<<setw(9)<<SV_source.size()*sizeof(SV_SOURCE)<<"B, "<<setw(9)<<sizeof(SV_SOURCE)<<"B\n"
+            <<"Load          : "<<setw(9)<<Load.capacity()*sizeof(LOAD)<<"B, "<<setw(9)<<Load.size()*sizeof(LOAD)<<"B, "<<setw(9)<<sizeof(LOAD)<<"B\n"
+            <<"Fixed shunt   : "<<setw(9)<<Fixed_shunt.capacity()*sizeof(FIXED_SHUNT)<<"B, "<<setw(9)<<Fixed_shunt.size()*sizeof(FIXED_SHUNT)<<"B, "<<setw(9)<<sizeof(FIXED_SHUNT)<<"B\n"
+            <<"Line          : "<<setw(9)<<Ac_line.capacity()*sizeof(AC_LINE)<<"B, "<<setw(9)<<Ac_line.size()*sizeof(AC_LINE)<<"B, "<<setw(9)<<sizeof(AC_LINE)<<"B\n"
+            <<"Transformer   : "<<setw(9)<<Transformer.capacity()*sizeof(TRANSFORMER)<<"B, "<<setw(9)<<Transformer.size()*sizeof(TRANSFORMER)<<"B, "<<setw(9)<<sizeof(TRANSFORMER)<<"B\n"
+            <<"Hvdc          : "<<setw(9)<<Lcc_hvdc2t.capacity()*sizeof(LCC_HVDC2T)<<"B, "<<setw(9)<<Lcc_hvdc2t.size()*sizeof(LCC_HVDC2T)<<"B, "<<setw(9)<<sizeof(LCC_HVDC2T)<<"B\n"
+            <<"Equiv device  : "<<setw(9)<<Equivalent_device.capacity()*sizeof(EQUIVALENT_DEVICE)<<"B, "<<setw(9)<<Equivalent_device.size()*sizeof(EQUIVALENT_DEVICE)<<"B, "<<setw(9)<<sizeof(EQUIVALENT_DEVICE)<<"B\n"
+            <<"Area          : "<<setw(9)<<Area.capacity()*sizeof(AREA)<<"B, "<<setw(9)<<Area.size()*sizeof(AREA)<<"B, "<<setw(9)<<sizeof(AREA)<<"B\n"
+            <<"Zone          : "<<setw(9)<<Zone.capacity()*sizeof(ZONE)<<"B, "<<setw(9)<<Zone.size()*sizeof(ZONE)<<"B, "<<setw(9)<<sizeof(ZONE)<<"B\n"
+            <<"Owner         : "<<setw(9)<<Owner.capacity()*sizeof(OWNER)<<"B, "<<setw(9)<<Owner.size()*sizeof(OWNER)<<"B, "<<setw(9)<<sizeof(OWNER)<<"B.";
+            toolkit->show_information_with_leading_time_stamp(osstream);
 
     return Bus.capacity()*sizeof(BUS)+
            Generator.capacity()*sizeof(GENERATOR)+
            WT_Generator.capacity()*sizeof(WT_GENERATOR)+
            PV_Unit.capacity()*sizeof(PV_UNIT)+
+           Energy_storage.capacity()*sizeof(ENERGY_STORAGE)+
+           SV_source.capacity()*sizeof(SV_SOURCE)+
            Load.capacity()*sizeof(LOAD)+
+           Fixed_shunt.capacity()*sizeof(FIXED_SHUNT)+
            Ac_line.capacity()*sizeof(AC_LINE)+
            Transformer.capacity()*sizeof(TRANSFORMER)+
-           Fixed_shunt.capacity()*sizeof(FIXED_SHUNT)+
            Lcc_hvdc2t.capacity()*sizeof(LCC_HVDC2T)+
            Equivalent_device.capacity()*sizeof(EQUIVALENT_DEVICE)+
-           Energy_storage.capacity()*sizeof(ENERGY_STORAGE)+
            Area.capacity()*sizeof(AREA)+
            Zone.capacity()*sizeof(ZONE)+
            Owner.capacity()*sizeof(OWNER)+
@@ -7777,6 +8202,8 @@ unsigned int POWER_SYSTEM_DATABASE::get_memory_usage_in_bytes()
            generator_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
            wt_generator_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
            pv_unit_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
+           energy_storage_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
+           sv_source_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
            load_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
            fixed_shunt_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
            switched_shunt_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
@@ -7784,7 +8211,6 @@ unsigned int POWER_SYSTEM_DATABASE::get_memory_usage_in_bytes()
            transformer_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
            hvdc_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
            equivalent_device_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
-           energy_storage_index.get_map_size()*(sizeof(DEVICE_ID)+sizeof(unsigned int))*2+
            area_index.size()*sizeof(unsigned int)*2+
            zone_index.size()*sizeof(unsigned int)*2+
            owner_index.size()*sizeof(unsigned int)*2;

@@ -22,6 +22,8 @@ class STEPS_API_SEARCH_BUFFER
         unsigned int wt_generator_pointer;
         vector<PV_UNIT*> pv_units;
         unsigned int pv_unit_pointer;
+        vector<SV_SOURCE*> sv_sources;
+        unsigned int sv_source_pointer;
         vector<LOAD*> loads;
         unsigned int load_pointer;
         vector<FIXED_SHUNT*> fixed_shunts;

@@ -97,6 +97,7 @@ class DYNAMICS_SIMULATOR
         void prepare_wt_generator_related_meters();
         void prepare_pv_unit_related_meters();
         void prepare_energy_storage_related_meters();
+        void prepare_sv_source_related_meters();
         void prepare_load_related_meters();
         void prepare_ac_line_related_meters();
         void prepare_transformer_related_meters();
@@ -110,6 +111,7 @@ class DYNAMICS_SIMULATOR
         void prepare_wt_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
         void prepare_pv_unit_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
         void prepare_energy_storage_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
+        void prepare_sv_source_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
         void prepare_load_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
         void prepare_ac_line_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name="");
         void prepare_transformer_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name="");
@@ -180,6 +182,9 @@ class DYNAMICS_SIMULATOR
 
         void trip_energy_storage(const DEVICE_ID& gen_id);
         void shed_energy_storage(const DEVICE_ID& gen_id, double percent);
+
+        void trip_sv_source(const DEVICE_ID& gen_id);
+        void shed_sv_source(const DEVICE_ID& gen_id, double percent);
 
         void trip_load(const DEVICE_ID& load_id);
         void close_load(const DEVICE_ID& load_id);
@@ -257,6 +262,7 @@ class DYNAMICS_SIMULATOR
         void add_wt_generators_to_bus_current_mismatch();
         void add_pv_units_to_bus_current_mismatch();
         void add_energy_storage_to_bus_current_mismatch();
+        void add_sv_source_to_bus_current_mismatch();
         void add_loads_to_bus_current_mismatch();
         void add_2t_lcc_hvdcs_to_bus_current_mismatch();
         void add_vsc_hvdcs_to_bus_current_mismatch();
@@ -340,6 +346,7 @@ class DYNAMICS_SIMULATOR
         vector<WT_GENERATOR*> wt_generators;
         vector<PV_UNIT*> pv_units;
         vector<ENERGY_STORAGE*> e_storages;
+        vector<SV_SOURCE*> sv_sources;
         vector<LOAD*> loads;
         vector<AC_LINE*> lines;
         vector<LCC_HVDC2T*> hvdcs;

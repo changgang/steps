@@ -121,6 +121,7 @@ void STEPS::set_thread_number(unsigned int n)
     wt_generator_thread_number = n;
     pv_unit_thread_number = n;
     energy_storage_thread_number = n;
+    sv_source_thread_number = n;
     load_thread_number = n;
     fixed_shunt_thread_number = n;
     line_thread_number = n;
@@ -143,6 +144,7 @@ void STEPS::update_device_thread_number()
         wt_generator_thread_number = thread_number;
         pv_unit_thread_number = thread_number;
         energy_storage_thread_number = thread_number;
+        sv_source_thread_number = thread_number;
         load_thread_number = thread_number;
         fixed_shunt_thread_number = thread_number;
         line_thread_number = thread_number;
@@ -186,6 +188,12 @@ void STEPS::update_device_thread_number()
                 {
                     vector<ENERGY_STORAGE*> devices = psdb.get_energy_storages_connecting_to_bus(bus_number);
                     if(devices.size()>1) energy_storage_thread_number = 1;
+                }
+
+                if(sv_source_thread_number!=1)
+                {
+                    vector<SV_SOURCE*> devices = psdb.get_sv_sources_connecting_to_bus(bus_number);
+                    if(devices.size()>1) sv_source_thread_number = 1;
                 }
 
                 if(load_thread_number!=1)
@@ -236,6 +244,20 @@ void STEPS::update_device_thread_number()
                     if(devices.size()>1) equivalent_device_thread_number = 1;
                 }
             }
+            if(generator_thread_number == 1 and
+                wt_generator_thread_number == 1 and
+                pv_unit_thread_number == 1 and
+                energy_storage_thread_number == 1 and
+                sv_source_thread_number == 1 and
+                load_thread_number == 1 and
+                fixed_shunt_thread_number == 1 and
+                line_thread_number == 1 and
+                transformer_thread_number == 1 and
+                lcc_hvdc2t_thread_number == 1 and
+                vsc_hvdc_thread_number == 1 and
+                mt_hvdc_thread_number == 1 and
+                equivalent_device_thread_number == 1)
+                break;
         }
     }
 }

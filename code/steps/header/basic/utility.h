@@ -129,7 +129,6 @@ unsigned int get_toolkit_count();
 STEPS& get_default_toolkit();
 STEPS& get_toolkit(unsigned int toolkit_index);
 
-void add_string_to_str_int_map(const string& str);
 unsigned int get_index_of_string(const string& str);
 string get_string_of_index(unsigned int index);
 

@@ -91,10 +91,11 @@ void MODEL::destroy_manually_allocated_storage()
 void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_DEVICE_TYPE device_type)
 {
     if(device_type==STEPS_BUS or device_type==STEPS_GENERATOR or device_type==STEPS_WT_GENERATOR or
-       device_type==STEPS_PV_UNIT or device_type==STEPS_LOAD or device_type==STEPS_AC_LINE or
-       device_type==STEPS_TRANSFORMER or device_type==STEPS_LCC_HVDC2T or device_type==STEPS_VSC_HVDC or
-       device_type==STEPS_FIXED_SHUNT or device_type==STEPS_HYBRID_DC or
-       device_type==STEPS_SWITCHED_SHUNT or device_type==STEPS_EQUIVALENT_DEVICE or device_type==STEPS_ENERGY_STORAGE)
+       device_type==STEPS_PV_UNIT or device_type==STEPS_ENERGY_STORAGE or device_type==STEPS_SV_SOURCE or
+       device_type==STEPS_LOAD or device_type==STEPS_FIXED_SHUNT or device_type==STEPS_SWITCHED_SHUNT or
+       device_type==STEPS_AC_LINE or device_type==STEPS_TRANSFORMER or
+       device_type==STEPS_LCC_HVDC2T or device_type==STEPS_VSC_HVDC or
+       device_type==STEPS_HYBRID_DC or device_type==STEPS_EQUIVALENT_DEVICE)
     {
         if(not has_allowed_device_type(device_type))
         {
@@ -314,6 +315,7 @@ void MODEL::set_device_id(DEVICE_ID did)
             case STEPS_WT_GENERATOR:
             case STEPS_PV_UNIT:
             case STEPS_ENERGY_STORAGE:
+            case STEPS_SV_SOURCE:
                 mbase = ((SOURCE*) device_pointer)->get_mbase_in_MVA();
                 one_over_mbase = ((SOURCE*) device_pointer)->get_one_over_mbase_in_one_over_MVA();
                 bus_pointer = ((SOURCE*) device_pointer)->get_bus_pointer();

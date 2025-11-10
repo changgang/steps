@@ -11,6 +11,7 @@ void show_side_not_supported_for_device_with_api(string side, DEVICE_ID did, str
 void show_parameter_not_supported_for_device_with_api(string par_name, DEVICE_ID did, string api_func, unsigned int toolkit_index=INDEX_NOT_EXIST);
 void show_parameter_not_supported_with_api(string par_name, string api_func, unsigned int toolkit_index=INDEX_NOT_EXIST);
 void show_device_not_exist_with_api(DEVICE_ID did, string api_func, unsigned int toolkit_index=INDEX_NOT_EXIST);
+void show_source_not_exist_with_api(unsigned int bus, string identifier, string api_func, unsigned int toolkit_index=INDEX_NOT_EXIST);
 void show_vsc_hvdc_not_exist_with_api(string name, string api_func, unsigned int toolkit_index=INDEX_NOT_EXIST);
 void show_mtdc_device_not_exist_with_api(string name, string api_func, unsigned int toolkit_index=INDEX_NOT_EXIST);
 void show_mtdc_device_type_not_supported_with_api(string device_type, string api_func, unsigned int toolkit_index=INDEX_NOT_EXIST);

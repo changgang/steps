@@ -89,6 +89,7 @@ void STEPS_IMEXPORTER::load_powerflow_result(string file)
     load_wt_generator_powerflow_result(data_in_ram);
     load_pv_unit_powerflow_result(data_in_ram);
     load_energy_storage_powerflow_result(data_in_ram);
+    load_sv_source_powerflow_result(data_in_ram);
     load_transformer_powerflow_result(data_in_ram);
     load_2t_lcc_hvdc_powerflow_result(data_in_ram);
 
@@ -527,6 +528,9 @@ void STEPS_IMEXPORTER::load_source_data()
                 case 3:
                     source_type = ENERGY_STORAGE_SOURCE;
                     break;
+                case 4:
+                    source_type = STATIC_VAR_SOURCE;
+                    break;
                 default:
                     source_type = SYNC_GENERATOR_SOURCE;
                     break;
@@ -552,6 +556,11 @@ void STEPS_IMEXPORTER::load_source_data()
             case ENERGY_STORAGE_SOURCE:
             {
                 load_energy_storage_data(data);
+                break;
+            }
+            case STATIC_VAR_SOURCE:
+            {
+                load_sv_source_data(data);
                 break;
             }
             default:
@@ -623,6 +632,18 @@ void STEPS_IMEXPORTER::load_energy_storage_data(vector<string>& data)
     load_source_var_control_data(data, &estorage);
 
     psdb.append_energy_storage(estorage);
+}
+
+void STEPS_IMEXPORTER::load_sv_source_data(vector<string>& data)
+{
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    SV_SOURCE sv_source(toolkit);
+
+    load_source_common_data(data, &sv_source);
+
+    psdb.append_sv_source(sv_source);
 }
 
 void STEPS_IMEXPORTER::load_source_common_data(vector<string>& data, SOURCE* source)
@@ -3483,6 +3504,7 @@ string STEPS_IMEXPORTER::export_source_data() const
     osstream<<export_wt_generator_data();
     osstream<<export_pv_unit_data();
     osstream<<export_energy_storage_data();
+    osstream<<export_sv_source_data();
 
     return osstream.str();
 }
@@ -3570,6 +3592,26 @@ string STEPS_IMEXPORTER::export_energy_storage_data() const
         osstream<<export_source_var_control_data(estorage);
 
         osstream<<", 3"<<endl;
+    }
+    return osstream.str();
+}
+
+string STEPS_IMEXPORTER::export_sv_source_data() const
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    vector<SV_SOURCE*> sv_sources = psdb.get_all_sv_sources();
+    unsigned int n = sv_sources.size();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        SV_SOURCE* sv_source = sv_sources[i];
+        if(get_export_out_of_service_bus_logic()==false and psdb.get_bus_type(sv_source->get_source_bus())==OUT_OF_SERVICE)
+            continue;
+
+        osstream<<export_source_common_data(sv_source);
+        osstream<<"0, 0.00, 4"<<endl;
     }
     return osstream.str();
 }
@@ -4621,6 +4663,56 @@ void STEPS_IMEXPORTER::load_energy_storage_powerflow_result(const vector<string>
         {
             es->set_p_generation_in_MW(P);
             es->set_q_generation_in_MVar(Q);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::load_sv_source_powerflow_result(const vector<string>& data)
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    unsigned int n_data = data.size();
+    unsigned int starting_index = get_starting_index_of_device_powerflow_result(data, "% SV source");
+    if(starting_index == INDEX_NOT_EXIST)
+    {
+        osstream<<"Warning! No sv source powerflow result is found in the powerflow result file. No sv source P and Q is updated.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    string header = data[starting_index+1];
+    vector<string> header_contents = split_string(header, ",");
+
+    unsigned int bus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "BUS");
+    unsigned int identifier_index = get_data_column_index_in_powerflow_result(data, starting_index, "ID");
+    unsigned int P_index = get_data_column_index_in_powerflow_result(data, starting_index, "P/MW");
+    unsigned int Q_index = get_data_column_index_in_powerflow_result(data, starting_index, "Q/MVAR");
+    if(bus_number_index==INDEX_NOT_EXIST or identifier_index==INDEX_NOT_EXIST or P_index==INDEX_NOT_EXIST or Q_index==INDEX_NOT_EXIST)
+    {
+        osstream<<"Index of sv source contents not found. "<<bus_number_index<<", "<<identifier_index<<", "<<P_index<<", "<<Q_index;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    // go load powerflow result
+    for(unsigned int i=starting_index+2; i<n_data; ++i)
+    {
+        string line = data[i];
+        if(line.size()==0 or line.at(0)=='%')
+            break;
+
+        vector<string> contents = split_string(line, ",");
+        unsigned int bus_number = str2int(contents[bus_number_index]);
+        string identifier = contents[identifier_index];
+        identifier = trim_string(identifier, "\"\'");
+        double P = str2double(contents[P_index]);
+        double Q = str2double(contents[Q_index]);
+        DEVICE_ID did = get_sv_source_device_id(bus_number,identifier);
+        SV_SOURCE*svs = psdb.get_sv_source(did);
+        if(svs!=NULL)
+        {
+            svs->set_p_generation_in_MW(P);
+            svs->set_q_generation_in_MVar(Q);
         }
     }
 }

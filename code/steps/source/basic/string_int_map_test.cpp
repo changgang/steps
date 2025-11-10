@@ -50,9 +50,14 @@ void STR_INT_MAP_TEST::test_map_add_and_index()
 
     TEST_ASSERT(test_map.get_map_size() == 1);
 
-    test_map.add_new_string("A");
-    test_map.add_new_string("Z");
-    test_map.add_new_string("#1");
+    TEST_ASSERT(test_map[""] == 0);
+    TEST_ASSERT(test_map["A"] == 1);
+    TEST_ASSERT(test_map["Z"] == 2);
+    TEST_ASSERT(test_map["#1"] == 3);
+
+    TEST_ASSERT(test_map.get_map_size()==4);
+
+    TEST_ASSERT(test_map["Z"] == 2);
 
     TEST_ASSERT(test_map.get_map_size()==4);
 
@@ -61,16 +66,7 @@ void STR_INT_MAP_TEST::test_map_add_and_index()
     TEST_ASSERT(test_map["Z"] == 2);
     TEST_ASSERT(test_map["#1"] == 3);
 
-    test_map.add_new_string("Z");
-
-    TEST_ASSERT(test_map.get_map_size()==4);
-
-    TEST_ASSERT(test_map[""] == 0);
-    TEST_ASSERT(test_map["A"] == 1);
-    TEST_ASSERT(test_map["Z"] == 2);
-    TEST_ASSERT(test_map["#1"] == 3);
-
-    TEST_ASSERT(test_map["#2"] == INDEX_NOT_EXIST);
-    TEST_ASSERT(test_map["B"] == INDEX_NOT_EXIST);
+    TEST_ASSERT(test_map["#2"] == 4);//Non-existent string will be automatically added to map.
+    TEST_ASSERT(test_map["B"] == 5);
 }
 #endif

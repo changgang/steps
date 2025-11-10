@@ -74,6 +74,7 @@ DEVICE_ID get_generator_device_id(unsigned int bus, const string& identifier);
 DEVICE_ID get_wt_generator_device_id(unsigned int bus, const string& identifier);
 DEVICE_ID get_pv_unit_device_id(unsigned int bus, const string& identifier);
 DEVICE_ID get_energy_storage_device_id(unsigned int bus, const string& identifier);
+DEVICE_ID get_sv_source_device_id(unsigned int bus, const string& identifier);
 DEVICE_ID get_load_device_id(unsigned int bus, const string& identifier);
 DEVICE_ID get_fixed_shunt_device_id(unsigned int bus, const string& identifier);
 DEVICE_ID get_ac_line_device_id(unsigned int ibus, unsigned int jbus, const string& identifier);

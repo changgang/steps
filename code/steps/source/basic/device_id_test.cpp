@@ -377,7 +377,6 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_lcc_hvdc()
     TEST_ASSERT(device_id.get_minimum_allowed_terminal_count()==0);
     TEST_ASSERT(device_id.get_maximum_allowed_terminal_count()==0);
 
-    add_string_to_str_int_map("LCC LCC_HVDC2T A");
     device_id.set_device_name_index(get_index_of_string("LCC LCC_HVDC2T A"));
     TEST_ASSERT(device_id.get_device_name()=="LCC LCC_HVDC2T A");
 }
@@ -405,7 +404,6 @@ void DEVICE_ID_TEST::test_set_get_device_identifier()
     device_id.set_device_identifier_index(0);
     TEST_ASSERT(device_id.get_device_identifier_index()==0);
 
-    add_string_to_str_int_map("xy");
     device_id.set_device_identifier_index(get_index_of_string("xy"));
     TEST_ASSERT(device_id.get_device_identifier_index()==get_index_of_string("xy"));
 }
@@ -427,7 +425,6 @@ void DEVICE_ID_TEST::test_get_compound_device_name()
     terminal.append_bus(1);
     terminal.append_bus(2);
     device_id.set_device_terminal(terminal);
-    add_string_to_str_int_map("#1");
     device_id.set_device_identifier_index(get_index_of_string("#1"));
     TEST_ASSERT(device_id.get_compound_device_name()=="AC LINE #1 LINKING BUS 1 AND 2");
 
@@ -532,7 +529,6 @@ void DEVICE_ID_TEST::test_get_compound_device_name()
 
     device_id.clear();
     device_id.set_device_type(STEPS_LCC_HVDC);
-    add_string_to_str_int_map("LCC-A");
     device_id.set_device_name_index(get_index_of_string("LCC-A"));
     TEST_ASSERT(device_id.get_compound_device_name()=="LCC LCC_HVDC2T LCC-A");
 }
@@ -543,7 +539,6 @@ void DEVICE_ID_TEST::test_is_valid()
 
     device_id.set_device_type(STEPS_GENERATOR);
     device_id.set_device_terminal(terminal_1_bus);
-    add_string_to_str_int_map("ab");
     device_id.set_device_identifier_index(get_index_of_string("ab"));
 
     TEST_ASSERT(device_id.is_valid()==true);
@@ -561,7 +556,6 @@ void DEVICE_ID_TEST::test_clear()
 
     device_id.set_device_type(STEPS_GENERATOR);
     device_id.set_device_terminal(terminal_1_bus);
-    add_string_to_str_int_map("ab");
     device_id.set_device_identifier_index(get_index_of_string("ab"));
 
     device_id.clear();
@@ -581,7 +575,6 @@ void DEVICE_ID_TEST::test_copy_with_operator_equal()
 
     device_id.set_device_type(STEPS_GENERATOR);
     device_id.set_device_terminal(terminal_1_bus);
-    add_string_to_str_int_map("ab");
     device_id.set_device_identifier_index(get_index_of_string("ab"));
 
     DEVICE_ID newdevice_id = device_id;
@@ -600,13 +593,11 @@ void DEVICE_ID_TEST::test_compare_less()
 
     device_id.set_device_type(STEPS_GENERATOR);
     device_id.set_device_terminal(terminal_1_bus);
-    add_string_to_str_int_map("ab");
     device_id.set_device_identifier_index(get_index_of_string("ab"));
 
     DEVICE_ID newdevice_id;
     newdevice_id.set_device_type(STEPS_GENERATOR);
     newdevice_id.set_device_terminal(terminal_1_bus);
-    add_string_to_str_int_map("ac");
     newdevice_id.set_device_identifier_index(get_index_of_string("ac"));
 
     TEST_ASSERT(device_id<newdevice_id);
@@ -626,14 +617,12 @@ void DEVICE_ID_TEST::test_compare_equal_not_equal()
 
     device_id.set_device_type(STEPS_GENERATOR);
     device_id.set_device_terminal(terminal_1_bus);
-    add_string_to_str_int_map("ab");
     device_id.set_device_identifier_index(get_index_of_string("ab"));
 
 
     DEVICE_ID newdevice_id;
     newdevice_id.set_device_type(STEPS_GENERATOR);
     newdevice_id.set_device_terminal(terminal_1_bus);
-    add_string_to_str_int_map("ab");
     newdevice_id.set_device_identifier_index(get_index_of_string("ab"));
 
 

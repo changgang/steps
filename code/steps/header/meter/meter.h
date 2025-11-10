@@ -66,6 +66,7 @@ class METER
         double get_meter_value_as_a_mt_hvdc() const;
         double get_meter_value_as_an_equivalent_device() const;
         double get_meter_value_as_an_energy_storage() const;
+        double get_meter_value_as_a_sv_source() const;
 
         STEPS* toolkit;
         DEVICE* device_pointer;
@@ -86,6 +87,7 @@ extern vector<string> load_meters;
 extern vector<string> wt_generator_meters;
 extern vector<string> pv_unit_meters;
 extern vector<string> energy_storage_meters;
+extern vector<string> sv_source_meters;
 extern vector<string> lcc_hvdc2t_meters;
 extern vector<string> vsc_hvdc_meters;
 extern vector<string> mt_hvdc_meters;

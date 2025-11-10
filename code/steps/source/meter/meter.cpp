@@ -189,6 +189,11 @@ vector<string> energy_storage_meters{"TERMINAL CURRENT IN PU ON MBASE", "TERMINA
                                      "ES ROTOR MODEL INTERNAL VARIABLE",
                                      "ES AUXILIARY MODEL INTERNAL VARIABLE"};
 
+vector<string> sv_source_meters{"TERMINAL CURRENT IN PU ON SBASE",
+                                "TERMINAL REACTIVE POWER IN PU ON SBASE",
+                                "TERMINAL REACTIVE POWER IN MVAR",
+                                "SVS CONTROL MODEL INTERNAL VARIABLE"};
+
 vector<string> lcc_hvdc2t_meters{ "DC CURRENT IN KA",
                                   "RECTIFIER DC CURRENT IN KA",   "INVERTER DC CURRENT IN KA",
                                   "RECTIFIER AC CURRENT IN KA",   "INVERTER AC CURRENT IN KA",
@@ -265,6 +270,7 @@ map<STEPS_DEVICE_TYPE, vector<string>> SUPPORTED_METERS{    {STEPS_BUS,         
                                                             {STEPS_WT_GENERATOR,wt_generator_meters},
                                                             {STEPS_PV_UNIT,     pv_unit_meters},
                                                             {STEPS_ENERGY_STORAGE, energy_storage_meters},
+                                                            {STEPS_SV_SOURCE, sv_source_meters},
                                                             {STEPS_LCC_HVDC2T, lcc_hvdc2t_meters},
                                                             {STEPS_VSC_HVDC, vsc_hvdc_meters},
                                                             {STEPS_HYBRID_DC, mt_hvdc_meters},
@@ -500,6 +506,12 @@ bool METER::is_internal_variable_name_valid(string& name, unsigned int index) co
             if(meter_type=="ES AUXILIARY MODEL INTERNAL VARIABLE")
                 model = ptr->get_es_auxiliary_model();
         }
+        if(device_type==STEPS_SV_SOURCE)
+        {
+            SV_SOURCE* ptr = (SV_SOURCE*)get_device_pointer();
+            if(meter_type=="SVS CONTROL MODEL INTERNAL VARIABLE")
+                model = ptr->get_svs_control_model();
+        }
         if(device_type==STEPS_LCC_HVDC2T)
         {
             LCC_HVDC2T* ptr = (LCC_HVDC2T*)get_device_pointer();
@@ -616,7 +628,6 @@ void METER::change_device_id(DEVICE_ID did)
 
 void METER::change_meter_type(const string& meter_type)
 {
-    add_string_to_str_int_map(meter_type);
     this->meter_type_string_index = get_index_of_string(meter_type);
     /*strncpy(this->meter_type, meter_type.c_str(), STEPS_METER_TYPE_STRING_SIZE-1);
     this->meter_type[STEPS_METER_TYPE_STRING_SIZE-1] = '\0';*/
@@ -624,7 +635,6 @@ void METER::change_meter_type(const string& meter_type)
 
 void METER::change_meter_internal_variable_name(const string& name)
 {
-    add_string_to_str_int_map(name);
     this->internal_variable_name_index = get_index_of_string(name);
     /*strncpy(this->internal_variable_name, name.c_str(), STEPS_METER_TYPE_STRING_SIZE-1);
     this->internal_variable_name[STEPS_METER_TYPE_STRING_SIZE-1] = '\0';*/
@@ -880,6 +890,10 @@ void METER::set_device_pointer(DEVICE_ID device_id)
             deviceptr = (DEVICE*) psdb.get_energy_storage(device_id);
             break;
 
+        case STEPS_SV_SOURCE:
+            deviceptr = (DEVICE*) psdb.get_sv_source(device_id);
+            break;
+
         case STEPS_LCC_HVDC2T:
             deviceptr = (DEVICE*) psdb.get_2t_lcc_hvdc(device_id);
             break;
@@ -931,6 +945,8 @@ double METER::get_meter_value() const
                 return get_meter_value_as_a_pv_unit();
             case STEPS_ENERGY_STORAGE:
                 return get_meter_value_as_an_energy_storage();
+            case STEPS_SV_SOURCE:
+                return get_meter_value_as_a_sv_source();
             case STEPS_LCC_HVDC2T:
                 return get_meter_value_as_a_2t_lcc_hvdc();
             case STEPS_VSC_HVDC:
@@ -2660,6 +2676,57 @@ double METER::get_meter_value_as_an_energy_storage() const
             {
                 if(aux_model!=NULL)
                     return aux_model->get_model_internal_variable_with_name(get_internal_variable_name());
+                else
+                    return 0.0;
+            }
+            return 0.0;
+        }
+        else
+            return 0.0;
+    }
+    else
+        return 0.0;
+}
+
+double METER::get_meter_value_as_a_sv_source() const
+{
+    ostringstream osstream;
+
+    SV_SOURCE* svs = (SV_SOURCE*) get_device_pointer();
+    if(svs != NULL)
+    {
+        if(svs->get_status()==true)
+        {
+            string meter_type = get_meter_type();
+
+            SVS_CONTROL_MODEL* svs_ctrl_model = svs->get_svs_control_model();
+
+            if(meter_type=="TERMINAL CURRENT IN PU ON SBASE")
+            {
+                if(svs_ctrl_model != NULL)
+                    return svs_ctrl_model->get_terminal_current_in_pu_based_on_sbase();
+                else
+                    return 0.0;
+            }
+            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON SBASE")
+            {
+                if(svs_ctrl_model != NULL)
+                    return svs_ctrl_model->get_terminal_reactive_power_in_pu_based_on_sbase();
+                else
+                    return 0.0;
+            }
+            if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
+            {
+                if(svs_ctrl_model != NULL)
+                    return svs_ctrl_model->get_terminal_reactive_power_in_MVar();
+                else
+                    return 0.0;
+            }
+
+            if(meter_type=="SVS CONTROL MODEL INTERNAL VARIABLE")
+            {
+                if(svs_ctrl_model!=NULL)
+                    return svs_ctrl_model->get_model_internal_variable_with_name(get_internal_variable_name());
                 else
                     return 0.0;
             }

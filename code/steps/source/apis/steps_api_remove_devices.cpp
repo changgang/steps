@@ -118,6 +118,15 @@ void api_remove_energy_storage(unsigned int bus_number, char* identifier, unsign
         psdb.clear_energy_storage(did);
 }
 
+void api_remove_sv_source(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    DEVICE_ID did = get_sv_source_device_id(bus_number, identifier);
+    if(psdb.is_sv_source_exist(did))
+        psdb.clear_sv_source(did);
+}
+
 void api_remove_area(unsigned int area_number, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

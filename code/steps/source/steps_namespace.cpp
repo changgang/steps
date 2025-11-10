@@ -3,7 +3,7 @@
 STR_INT_MAP toolkit_str_int_map;
 vector<STEPS_DEVICE_TYPE> STEPS_DEVICE_TYPE_LIST = {STEPS_BUS,
                                                     STEPS_GENERATOR, STEPS_WT_GENERATOR, STEPS_PV_UNIT, STEPS_ENERGY_STORAGE,
-                                                    STEPS_LOAD,
+                                                    STEPS_SV_SOURCE, STEPS_LOAD,
                                                     STEPS_FIXED_SHUNT,
                                                     STEPS_AC_LINE, STEPS_TRANSFORMER,
                                                     STEPS_LCC_HVDC2T, STEPS_VSC_HVDC,

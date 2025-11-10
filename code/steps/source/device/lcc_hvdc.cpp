@@ -23,7 +23,6 @@ LCC_HVDC::~LCC_HVDC()
 void LCC_HVDC::set_name(const string name)
 {
     string temp_name = trim_string(name);
-    add_string_to_str_int_map(temp_name);
     this->name_index = get_index_of_string(temp_name);
 }
 

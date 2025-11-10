@@ -49,6 +49,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void load_wt_generator_data(vector<string>& data);
         void load_pv_unit_data(vector<string>& data);
         void load_energy_storage_data(vector<string>& data);
+        void load_sv_source_data(vector<string>& data);
         void load_source_common_data(vector<string>& data, SOURCE* source);
         void load_source_var_control_data(vector<string>& data, SOURCE* source);
         void load_ac_line_data();
@@ -100,6 +101,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         string export_wt_generator_data() const;
         string export_pv_unit_data() const;
         string export_energy_storage_data() const;
+        string export_sv_source_data() const;
         string export_source_common_data(SOURCE* source) const;
         string export_source_var_control_data(SOURCE* source) const;
         string export_ac_line_data() const;
@@ -127,6 +129,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void load_wt_generator_powerflow_result(const vector<string>& data);
         void load_pv_unit_powerflow_result(const vector<string>& data);
         void load_energy_storage_powerflow_result(const vector<string>& data);
+        void load_sv_source_powerflow_result(const vector<string>& data);
         void load_transformer_powerflow_result(const vector<string>& data);
         void load_2t_lcc_hvdc_powerflow_result(const vector<string>& data);
 
@@ -271,10 +274,13 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_ESAU0_model(vector<string>& data);
         void add_ESVRTRLY1_model(vector<string>& data);
 
+        void add_SGFLSVS0_model(vector<string>& data);
+
         DEVICE_ID get_generator_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_wt_generator_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_pv_unit_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_energy_storage_device_id_from_string_vector(vector<string>& data);
+        DEVICE_ID get_sv_source_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_load_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_ac_line_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_2t_lcc_hvdc_device_id_from_string_vector(vector<string>& data);

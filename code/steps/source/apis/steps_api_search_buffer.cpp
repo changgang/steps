@@ -14,6 +14,8 @@ STEPS_API_SEARCH_BUFFER::STEPS_API_SEARCH_BUFFER()
     pv_unit_pointer = 0;
     energy_storages.clear();
     energy_storage_pointer = 0;
+    sv_sources.clear();
+    sv_source_pointer = 0;
     loads.clear();
     load_pointer = 0;
     fixed_shunts.clear();

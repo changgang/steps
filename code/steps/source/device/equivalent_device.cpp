@@ -46,7 +46,6 @@ void EQUIVALENT_DEVICE::set_equivalent_device_bus(unsigned int device_bus)
 void EQUIVALENT_DEVICE::set_identifier(string identifier)
 {
     identifier = trim_string(identifier);
-    add_string_to_str_int_map(identifier);
     this->identifier_index = get_index_of_string(identifier);
 }
 

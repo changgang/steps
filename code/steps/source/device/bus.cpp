@@ -41,7 +41,6 @@ void BUS::set_bus_number(unsigned int number)
 void BUS::set_bus_name(string name)
 {
     name = trim_string(name);
-    add_string_to_str_int_map(name);
     bus_name_index =  get_index_of_string(name);
 }
 

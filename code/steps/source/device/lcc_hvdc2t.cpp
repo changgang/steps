@@ -65,14 +65,12 @@ void LCC_HVDC2T::set_converter_bus(CONVERTER_SIDE converter, const unsigned int 
 void LCC_HVDC2T::set_converter_valve_side_bus_name(CONVERTER_SIDE converter, string name)
 {
     name = trim_string(name);
-    add_string_to_str_int_map(name);
     converter_valve_bus_name_index[converter] = get_index_of_string(name);
 }
 
 void LCC_HVDC2T::set_identifier(const string hvdc_id)
 {
     string hvdc_id_temp = trim_string(hvdc_id);
-    add_string_to_str_int_map(hvdc_id_temp);
     this->identifier_index = get_index_of_string(hvdc_id_temp);
 }
 

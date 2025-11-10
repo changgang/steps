@@ -213,6 +213,8 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="ESAU0") { add_ESAU0_model(data); return;}
     if(model_name=="ESVRTRLY1") { add_ESVRTRLY1_model(data); return;}
 
+    if(model_name=="SGFLSVS0") { add_SGFLSVS0_model(data); return;}
+
     osstream<<"Warning. Dynamic model '"<<model_name<<"' is not supported. Check line "<<__LINE__<<" in file "<<__FILE__;
     STEPS& toolkit = get_toolkit();
     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -323,6 +325,29 @@ DEVICE_ID STEPS_IMEXPORTER::get_energy_storage_device_id_from_string_vector(vect
 {
     DEVICE_ID did;
     did.set_device_type(STEPS_ENERGY_STORAGE);
+
+    if(data.size()<3)
+        return did;
+
+    unsigned int bus;
+    string identifier;
+
+    unsigned int i=1;
+    bus = get_integer_data(data[i], "0"); ++i;
+    identifier = get_string_data(data[i],"");
+
+    TERMINAL terminal;
+    terminal.append_bus(bus);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier_index(get_index_of_string(identifier));
+
+    return did;
+}
+
+DEVICE_ID STEPS_IMEXPORTER::get_sv_source_device_id_from_string_vector(vector<string>& data)
+{
+    DEVICE_ID did;
+    did.set_device_type(STEPS_SV_SOURCE);
 
     if(data.size()<3)
         return did;
@@ -3331,6 +3356,36 @@ void STEPS_IMEXPORTER::add_ESVRTRLY1_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid ESVRTRLY1 model is built, but will not be set for "<<es->get_compound_device_name();
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::add_SGFLSVS0_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "SGFLSVS0")
+        return;
+
+    if(data.size()<3)
+        return;
+
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
+    DEVICE_ID did = get_sv_source_device_id_from_string_vector(data);
+
+    SV_SOURCE* svs = psdb.get_sv_source(did);
+    if(svs != NULL)
+    {
+        SGFLSVS0 model(toolkit);
+        model.set_device_id(did);
+        bool successful = model.setup_model_with_steps_string_vector(data);
+        if(successful)
+            dmdb.add_model(&model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid SGFLSVS0 model is built, but will not be set for "<<svs->get_compound_device_name();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }

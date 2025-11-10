@@ -49,7 +49,6 @@ void SOURCE::set_source_bus(unsigned int bus)
 void SOURCE::set_identifier(string id)
 {
     id = trim_string(id);
-    add_string_to_str_int_map(id);
     source_identifier_index = get_index_of_string(id);
 }
 

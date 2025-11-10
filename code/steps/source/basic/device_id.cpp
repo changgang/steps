@@ -79,6 +79,7 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(STEPS_DEVICE_TYPE dev
        device_type==STEPS_WT_GENERATOR ||
        device_type==STEPS_PV_UNIT   ||
        device_type==STEPS_ENERGY_STORAGE     ||
+       device_type==STEPS_SV_SOURCE     ||
        device_type==STEPS_LOAD        ||
        device_type==STEPS_FIXED_SHUNT ||
        device_type==STEPS_SWITCHED_SHUNT ||
@@ -175,7 +176,7 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(STEPS_DEVICE_TYPE dev
     ostringstream osstream;
     osstream<<"Device type '"<<device_type<<"' is not supported when building DEVICE_ID object."<<endl
             <<"Allowed device types are: "<<endl
-            <<"GENERATOR, WT GENERATOR, PV UNIT, ENERGY STORAGE, LOAD, FIXED SHUNT, SWITCHED SHUNT"<<endl
+            <<"GENERATOR, WT GENERATOR, PV UNIT, ENERGY STORAGE, SV SOURCE, LOAD, FIXED SHUNT, SWITCHED SHUNT"<<endl
             <<"AC LINE, TRANSFORMER, 2T LCC HVDC, VSC HVDC, FACTS, LCC HVDC, HYBRID DC, EQUIVALENT DEVICE, and GENERAL DEVICE."<<endl
             <<"Device type will be set as blank, and \"NONE\" will be returned if get_device_type() is called.";
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
@@ -215,7 +216,6 @@ void DEVICE_ID::set_device_identifier(string identifier)
     if(allow_identifier)
     {
         identifier = trim_string(identifier);
-        add_string_to_str_int_map(identifier);
         this->device_identifier_index = get_index_of_string(identifier);
     }
     else
@@ -227,7 +227,6 @@ void DEVICE_ID::set_device_name(string name)
     if(allow_name)
     {
         name = trim_string(name);
-        add_string_to_str_int_map(name);
         this->device_name_index = get_index_of_string(name);
     }
     else
@@ -364,8 +363,8 @@ string DEVICE_ID::get_compound_device_name() const
         }
 
         if(device_type==STEPS_GENERATOR or device_type==STEPS_WT_GENERATOR or device_type==STEPS_PV_UNIT or
-           device_type==STEPS_ENERGY_STORAGE or device_type==STEPS_LOAD or device_type==STEPS_FIXED_SHUNT or
-           device_type==STEPS_SWITCHED_SHUNT or device_type==STEPS_EQUIVALENT_DEVICE)
+           device_type==STEPS_ENERGY_STORAGE or device_type == STEPS_SV_SOURCE or device_type==STEPS_LOAD or
+           device_type==STEPS_FIXED_SHUNT or device_type==STEPS_SWITCHED_SHUNT or device_type==STEPS_EQUIVALENT_DEVICE)
         {
             if(ident=="")
                 comp_device_name = device_type_str + " ";
@@ -600,6 +599,21 @@ DEVICE_ID get_energy_storage_device_id(unsigned int bus, const string& identifie
 {
     DEVICE_ID did;
     did.set_device_type(STEPS_ENERGY_STORAGE);
+
+    TERMINAL terminal;
+    terminal.append_bus(bus);
+
+    did.set_device_terminal(terminal);
+
+    did.set_device_identifier_index(get_index_of_string(identifier));
+
+    return did;
+}
+
+DEVICE_ID get_sv_source_device_id(unsigned int bus, const string& identifier)
+{
+    DEVICE_ID did;
+    did.set_device_type(STEPS_SV_SOURCE);
 
     TERMINAL terminal;
     terminal.append_bus(bus);

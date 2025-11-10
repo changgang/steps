@@ -213,6 +213,22 @@ void api_add_energy_storage(unsigned int bus_number, char* identifier, unsigned 
     }
 }
 
+void api_add_sv_source(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    DEVICE_ID did = get_sv_source_device_id(bus_number, identifier);
+
+    if(not psdb.is_sv_source_exist(did))
+    {
+        SV_SOURCE newsvs(toolkit);
+        newsvs.set_sv_source_bus(bus_number);
+        newsvs.set_identifier(identifier);
+        psdb.append_sv_source(newsvs);
+    }
+}
+
 void api_add_area(unsigned int area_number, char* area_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
@@ -279,10 +295,16 @@ void api_replace_generator_with_energy_storage(unsigned int bus_number, char* id
     psdb.replace_generator_with_energy_storage(did);
 }
 
+void api_replace_generator_with_sv_source(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
+{
+    DEVICE_ID did = get_generator_device_id(bus_number, identifier);
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    psdb.replace_generator_with_sv_source(did);
+}
 
 void api_copy_generator(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index)
 {
-    add_string_to_str_int_map(new_identifier);
     DEVICE_ID new_did = get_generator_device_id(new_bus_number, new_identifier);
     DEVICE_ID old_did = get_generator_device_id(old_bus_number, old_identifier);
     STEPS& toolkit = get_toolkit(toolkit_index);
@@ -292,7 +314,6 @@ void api_copy_generator(unsigned int new_bus_number, char* new_identifier, unsig
 
 void api_copy_wt_generator(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index)
 {
-    add_string_to_str_int_map(new_identifier);
     DEVICE_ID new_did = get_wt_generator_device_id(new_bus_number, new_identifier);
     DEVICE_ID old_did = get_wt_generator_device_id(old_bus_number, old_identifier);
     STEPS& toolkit = get_toolkit(toolkit_index);
@@ -302,7 +323,6 @@ void api_copy_wt_generator(unsigned int new_bus_number, char* new_identifier, un
 
 void api_copy_pv_unit(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index)
 {
-    add_string_to_str_int_map(new_identifier);
     DEVICE_ID new_did = get_pv_unit_device_id(new_bus_number, new_identifier);
     DEVICE_ID old_did = get_pv_unit_device_id(old_bus_number, old_identifier);
     STEPS& toolkit = get_toolkit(toolkit_index);
@@ -312,7 +332,6 @@ void api_copy_pv_unit(unsigned int new_bus_number, char* new_identifier, unsigne
 
 void api_copy_energy_storage(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index)
 {
-    add_string_to_str_int_map(new_identifier);
     DEVICE_ID new_did = get_energy_storage_device_id(new_bus_number, new_identifier);
     DEVICE_ID old_did = get_energy_storage_device_id(old_bus_number, old_identifier);
     STEPS& toolkit = get_toolkit(toolkit_index);
@@ -320,6 +339,14 @@ void api_copy_energy_storage(unsigned int new_bus_number, char* new_identifier, 
     psdb.copy_energy_storage(new_did, old_did);
 }
 
+void api_copy_sv_source(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index)
+{
+    DEVICE_ID new_did = get_sv_source_device_id(new_bus_number, new_identifier);
+    DEVICE_ID old_did = get_sv_source_device_id(old_bus_number, old_identifier);
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    psdb.copy_sv_source(new_did, old_did);
+}
 
 void api_change_bus_number(unsigned int original_bus_number, unsigned int new_bus_number, unsigned int toolkit_index)
 {

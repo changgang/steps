@@ -338,6 +338,13 @@ void api_prepare_energy_storage_related_meters(unsigned int toolkit_index)
     ds.prepare_energy_storage_related_meters();
 }
 
+void api_prepare_sv_source_related_meters(unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    ds.prepare_sv_source_related_meters();
+}
+
 void api_prepare_load_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
@@ -424,6 +431,14 @@ void api_prepare_energy_storage_related_meter(unsigned int bus, char* id, char* 
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_energy_storage_device_id(bus, id);
     ds.prepare_energy_storage_related_meter(did, meter_type, var_name);
+}
+
+void api_prepare_sv_source_related_meter(unsigned int bus, char* id, char* meter_type, char* var_name, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    DEVICE_ID did = get_sv_source_device_id(bus, id);
+    ds.prepare_sv_source_related_meter(did, meter_type, var_name);
 }
 
 void api_prepare_load_related_meter(unsigned int bus, char* id, char* meter_type, char* var_name, unsigned int toolkit_index)

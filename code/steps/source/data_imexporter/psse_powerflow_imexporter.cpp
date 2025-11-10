@@ -66,6 +66,7 @@ void PSSE_IMEXPORTER::load_powerflow_data(string file)
             <<psdb.get_wt_generator_count()<<" WT generators\n"
             <<psdb.get_pv_unit_count()<<" PV units\n"
             <<psdb.get_energy_storage_count()<<" energy storages\n"
+            <<psdb.get_sv_source_count()<<" SV sources\n"
             <<psdb.get_ac_line_count()<<" lines\n"
             <<psdb.get_transformer_count()<<" transformers\n"
             <<psdb.get_fixed_shunt_count()<<" fixed shunts\n"
@@ -120,6 +121,7 @@ void PSSE_IMEXPORTER::load_vsc_powerflow_data(string file)
             <<psdb.get_wt_generator_count()<<" WT generators\n"
             <<psdb.get_pv_unit_count()<<" PV units\n"
             <<psdb.get_energy_storage_count()<<" energy storages\n"
+            <<psdb.get_sv_source_count()<<" SV sources\n"
             <<psdb.get_ac_line_count()<<" lines\n"
             <<psdb.get_transformer_count()<<" transformers\n"
             <<psdb.get_fixed_shunt_count()<<" fixed shunts\n"
@@ -171,6 +173,7 @@ void PSSE_IMEXPORTER::load_mt_hvdc_powerflow_data(string file)
             <<psdb.get_wt_generator_count()<<" WT generators\n"
             <<psdb.get_pv_unit_count()<<" PV units\n"
             <<psdb.get_energy_storage_count()<<" energy storages\n"
+            <<psdb.get_sv_source_count()<<" SV sources\n"
             <<psdb.get_ac_line_count()<<" lines\n"
             <<psdb.get_transformer_count()<<" transformers\n"
             <<psdb.get_fixed_shunt_count()<<" fixed shunts\n"
@@ -871,6 +874,7 @@ string PSSE_IMEXPORTER::export_all_source_data() const
     osstream<<export_all_wt_generator_data();
     osstream<<export_all_pv_unit_data();
     osstream<<export_all_energy_storage_data();
+    osstream<<export_all_sv_source_data();
 
     return osstream.str();
 }
@@ -1038,6 +1042,46 @@ string PSSE_IMEXPORTER::export_energy_storage_data(const ENERGY_STORAGE* estorag
     osstream<<export_source_var_control_data(estorage);
 
     osstream<<", 3"<<endl;
+
+    return osstream.str();
+}
+
+string PSSE_IMEXPORTER::export_all_sv_source_data() const
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    const vector<unsigned int>& ordered_buses = get_ordered_buses();
+    unsigned int n = ordered_buses.size();
+
+    vector<SV_SOURCE*> sv_sources;
+    for(unsigned int i=0; i<n; ++i)
+    {
+        unsigned int bus = ordered_buses[i];
+        vector<SV_SOURCE*> sv_sources_at_bus = psdb.get_sv_sources_connecting_to_bus(bus);
+        unsigned int m = sv_sources_at_bus.size();
+        for(unsigned int j=0; j<m; ++j)
+            sv_sources.push_back(sv_sources_at_bus[j]);
+    }
+
+    n = sv_sources.size();
+    for(unsigned int i=0; i!=n; ++i)
+        osstream<<export_sv_source_data(sv_sources[i]);
+    return osstream.str();
+}
+
+string PSSE_IMEXPORTER::export_sv_source_data(const SV_SOURCE* sv_source) const
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    if(get_export_out_of_service_bus_logic()==false and psdb.get_bus_type(sv_source->get_source_bus())==OUT_OF_SERVICE)
+        return "";
+
+    osstream<<export_source_common_data(sv_source);
+    osstream<<"0, 0.00, 4"<<endl;
 
     return osstream.str();
 }

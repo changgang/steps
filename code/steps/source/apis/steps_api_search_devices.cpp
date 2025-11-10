@@ -68,113 +68,132 @@ void api_initialize_device_search(const char* device_type, unsigned int bus, uns
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    string DEVICE_TYPE = string2upper(device_type);
-    if(DEVICE_TYPE=="GENERATOR")
+    STEPS_DEVICE_TYPE dtype = device_string2type(device_type);
+    switch(dtype)
     {
-        if(bus==0)
-            toolkit.api_search_buffer.generators = psdb.get_all_generators();
-        else
-            toolkit.api_search_buffer.generators = psdb.get_generators_connecting_to_bus(bus);
-        toolkit.api_search_buffer.generator_pointer = 0;
-    }
-
-    if(DEVICE_TYPE=="WT GENERATOR")
-    {
-        if(bus==0)
-            toolkit.api_search_buffer.wt_generators = psdb.get_all_wt_generators();
-        else
-            toolkit.api_search_buffer.wt_generators = psdb.get_wt_generators_connecting_to_bus(bus);
-        toolkit.api_search_buffer.wt_generator_pointer = 0;
-    }
-
-    if(DEVICE_TYPE=="PV UNIT")
-    {
-        if(bus==0)
-            toolkit.api_search_buffer.pv_units = psdb.get_all_pv_units();
-        else
-            toolkit.api_search_buffer.pv_units = psdb.get_pv_units_connecting_to_bus(bus);
-        toolkit.api_search_buffer.pv_unit_pointer = 0;
-    }
-
-    if(DEVICE_TYPE=="LOAD")
-    {
-        if(bus==0)
-            toolkit.api_search_buffer.loads = psdb.get_all_loads();
-        else
-            toolkit.api_search_buffer.loads = psdb.get_loads_connecting_to_bus(bus);
-        toolkit.api_search_buffer.load_pointer = 0;
-    }
-
-    if(DEVICE_TYPE=="FIXED SHUNT")
-    {
-        if(bus==0)
-            toolkit.api_search_buffer.fixed_shunts = psdb.get_all_fixed_shunts();
-        else
-            toolkit.api_search_buffer.fixed_shunts = psdb.get_fixed_shunts_connecting_to_bus(bus);
-        toolkit.api_search_buffer.fixed_shunt_pointer = 0;
-    }
-
-    if(DEVICE_TYPE=="AC LINE")
-    {
-        if(bus==0)
-            toolkit.api_search_buffer.ac_lines = psdb.get_all_ac_lines();
-        else
-            toolkit.api_search_buffer.ac_lines = psdb.get_ac_lines_connecting_to_bus(bus);
-        toolkit.api_search_buffer.ac_line_pointer = 0;
-    }
-
-    if(DEVICE_TYPE=="TRANSFORMER")
-    {
-        if(bus==0)
-            toolkit.api_search_buffer.transformers = psdb.get_all_transformers();
-        else
-            toolkit.api_search_buffer.transformers = psdb.get_transformers_connecting_to_bus(bus);
-        toolkit.api_search_buffer.transformer_pointer = 0;
-    }
-
-    if(DEVICE_TYPE=="2T LCC HVDC")
-    {
-        if(bus==0)
-            toolkit.api_search_buffer.hvdcs = psdb.get_all_2t_lcc_hvdcs();
-        else
-            toolkit.api_search_buffer.hvdcs = psdb.get_2t_lcc_hvdcs_connecting_to_bus(bus);
-        toolkit.api_search_buffer.hvdc_pointer = 0;
-    }
-
-    if(DEVICE_TYPE=="VSC HVDC")
-    {
-        if(bus==0)
-            toolkit.api_search_buffer.vscs = psdb.get_all_vsc_hvdcs();
-        else
-            toolkit.api_search_buffer.vscs = psdb.get_vsc_hvdcs_connecting_to_bus(bus);
-        toolkit.api_search_buffer.vsc_pointer = 0;
-    }
-
-    if(DEVICE_TYPE=="MT HVDC")
-    {
-        if(bus==0)
-            toolkit.api_search_buffer.mt_hvdcs = psdb.get_all_mt_hvdcs();
-        else
-            toolkit.api_search_buffer.mt_hvdcs = psdb.get_mt_hvdcs_connecting_to_bus(bus);
-        toolkit.api_search_buffer.mt_hvdc_pointer = 0;
-    }
-
-    if(DEVICE_TYPE=="EQUIVALENT DEVICE")
-    {
-        if(bus==0)
-            toolkit.api_search_buffer.equivalent_devices = psdb.get_all_equivalent_devices();
-        else
-            toolkit.api_search_buffer.equivalent_devices = psdb.get_equivalent_devices_connecting_to_bus(bus);
-        toolkit.api_search_buffer.equivalent_device_pointer = 0;
-    }
-
-    if(DEVICE_TYPE=="ENERGY STORAGE")
-    {
-        if(bus==0)
-            toolkit.api_search_buffer.energy_storages = psdb.get_all_energy_storages();
-        else
-            toolkit.api_search_buffer.energy_storages = psdb.get_energy_storages_connecting_to_bus(bus);
-        toolkit.api_search_buffer.energy_storage_pointer = 0;
+        case STEPS_GENERATOR:
+        {
+            if(bus==0)
+                toolkit.api_search_buffer.generators = psdb.get_all_generators();
+            else
+                toolkit.api_search_buffer.generators = psdb.get_generators_connecting_to_bus(bus);
+            toolkit.api_search_buffer.generator_pointer = 0;
+            break;
+        }
+        case STEPS_WT_GENERATOR:
+        {
+            if(bus==0)
+                toolkit.api_search_buffer.wt_generators = psdb.get_all_wt_generators();
+            else
+                toolkit.api_search_buffer.wt_generators = psdb.get_wt_generators_connecting_to_bus(bus);
+            toolkit.api_search_buffer.wt_generator_pointer = 0;
+            break;
+        }
+        case STEPS_PV_UNIT:
+        {
+            if(bus==0)
+                toolkit.api_search_buffer.pv_units = psdb.get_all_pv_units();
+            else
+                toolkit.api_search_buffer.pv_units = psdb.get_pv_units_connecting_to_bus(bus);
+            toolkit.api_search_buffer.pv_unit_pointer = 0;
+            break;
+        }
+        case STEPS_ENERGY_STORAGE:
+        {
+            if(bus==0)
+                toolkit.api_search_buffer.energy_storages = psdb.get_all_energy_storages();
+            else
+                toolkit.api_search_buffer.energy_storages = psdb.get_energy_storages_connecting_to_bus(bus);
+            toolkit.api_search_buffer.energy_storage_pointer = 0;
+            break;
+        }
+        case STEPS_SV_SOURCE:
+        {
+            if(bus==0)
+                toolkit.api_search_buffer.sv_sources = psdb.get_all_sv_sources();
+            else
+                toolkit.api_search_buffer.sv_sources = psdb.get_sv_sources_connecting_to_bus(bus);
+            toolkit.api_search_buffer.sv_source_pointer = 0;
+            break;
+        }
+        case STEPS_LOAD:
+        {
+            if(bus==0)
+                toolkit.api_search_buffer.loads = psdb.get_all_loads();
+            else
+                toolkit.api_search_buffer.loads = psdb.get_loads_connecting_to_bus(bus);
+            toolkit.api_search_buffer.load_pointer = 0;
+            break;
+        }
+        case STEPS_FIXED_SHUNT:
+        {
+            if(bus==0)
+                toolkit.api_search_buffer.fixed_shunts = psdb.get_all_fixed_shunts();
+            else
+                toolkit.api_search_buffer.fixed_shunts = psdb.get_fixed_shunts_connecting_to_bus(bus);
+            toolkit.api_search_buffer.fixed_shunt_pointer = 0;
+            break;
+        }
+        case STEPS_AC_LINE:
+        {
+            if(bus==0)
+                toolkit.api_search_buffer.ac_lines = psdb.get_all_ac_lines();
+            else
+                toolkit.api_search_buffer.ac_lines = psdb.get_ac_lines_connecting_to_bus(bus);
+            toolkit.api_search_buffer.ac_line_pointer = 0;
+            break;
+        }
+        case STEPS_TRANSFORMER:
+        {
+            if(bus==0)
+                toolkit.api_search_buffer.transformers = psdb.get_all_transformers();
+            else
+                toolkit.api_search_buffer.transformers = psdb.get_transformers_connecting_to_bus(bus);
+            toolkit.api_search_buffer.transformer_pointer = 0;
+            break;
+        }
+        case STEPS_LCC_HVDC2T:
+        {
+            if(bus==0)
+                toolkit.api_search_buffer.hvdcs = psdb.get_all_2t_lcc_hvdcs();
+            else
+                toolkit.api_search_buffer.hvdcs = psdb.get_2t_lcc_hvdcs_connecting_to_bus(bus);
+            toolkit.api_search_buffer.hvdc_pointer = 0;
+            break;
+        }
+        case STEPS_VSC_HVDC:
+        {
+            if(bus==0)
+                toolkit.api_search_buffer.vscs = psdb.get_all_vsc_hvdcs();
+            else
+                toolkit.api_search_buffer.vscs = psdb.get_vsc_hvdcs_connecting_to_bus(bus);
+            toolkit.api_search_buffer.vsc_pointer = 0;
+            break;
+        }
+        case STEPS_EQUIVALENT_DEVICE:
+        {
+            if(bus==0)
+                toolkit.api_search_buffer.equivalent_devices = psdb.get_all_equivalent_devices();
+            else
+                toolkit.api_search_buffer.equivalent_devices = psdb.get_equivalent_devices_connecting_to_bus(bus);
+            toolkit.api_search_buffer.equivalent_device_pointer = 0;
+            break;
+        }
+        case STEPS_SWITCHED_SHUNT:
+        case STEPS_FACTS:
+        case STEPS_LCC_HVDC:
+        case STEPS_HYBRID_DC:
+        default:
+        {
+            if(string2upper(device_type)=="MT HVDC")
+            {
+                if(bus==0)
+                    toolkit.api_search_buffer.mt_hvdcs = psdb.get_all_mt_hvdcs();
+                else
+                    toolkit.api_search_buffer.mt_hvdcs = psdb.get_mt_hvdcs_connecting_to_bus(bus);
+                toolkit.api_search_buffer.mt_hvdc_pointer = 0;
+            }
+        }
     }
 }
 
@@ -209,6 +228,26 @@ unsigned int api_get_current_device_bus_number(const char* device_type, const ch
         unsigned int n = toolkit.api_search_buffer.pv_units.size();
         if(index<n)
             return toolkit.api_search_buffer.pv_units[index]->get_unit_bus();
+        else
+            return 0;
+    }
+
+    if(DEVICE_TYPE=="ENERGY STORAGE")
+    {
+        unsigned int index = toolkit.api_search_buffer.energy_storage_pointer;
+        unsigned int n = toolkit.api_search_buffer.energy_storages.size();
+        if(index<n)
+            return toolkit.api_search_buffer.energy_storages[index]->get_energy_storage_bus();
+        else
+            return 0;
+    }
+
+    if(DEVICE_TYPE=="SV SOURCE")
+    {
+        unsigned int index = toolkit.api_search_buffer.sv_source_pointer;
+        unsigned int n = toolkit.api_search_buffer.sv_sources.size();
+        if(index<n)
+            return toolkit.api_search_buffer.sv_sources[index]->get_sv_source_bus();
         else
             return 0;
     }
@@ -315,17 +354,6 @@ unsigned int api_get_current_device_bus_number(const char* device_type, const ch
         else
             return 0;
     }
-
-    if(DEVICE_TYPE=="ENERGY STORAGE")
-    {
-        unsigned int index = toolkit.api_search_buffer.energy_storage_pointer;
-        unsigned int n = toolkit.api_search_buffer.energy_storages.size();
-        if(index<n)
-            return toolkit.api_search_buffer.energy_storages[index]->get_energy_storage_bus();
-        else
-            return 0;
-    }
-
     show_parameter_not_supported_with_api(DEVICE_TYPE, __FUNCTION__);
     return 0;
 }
@@ -491,6 +519,18 @@ unsigned int api_get_current_device_bus_number(const char* device_type, const ch
             return toolkit.steps_char_buffer;
     }
 
+    if(DEVICE_TYPE=="SV SOURCE")
+    {
+        unsigned int index = toolkit.api_search_buffer.sv_source_pointer;
+        unsigned int n = toolkit.api_search_buffer.sv_sources.size();
+        if(index<n)
+		{
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (toolkit.api_search_buffer.sv_sources[index]->get_identifier()).c_str());
+			return toolkit.steps_char_buffer;
+		}
+        else
+            return toolkit.steps_char_buffer;
+    }
     show_parameter_not_supported_with_api(DEVICE_TYPE, __FUNCTION__);
     return toolkit.steps_char_buffer;
 }
@@ -604,6 +644,15 @@ void api_goto_next_device(const char* device_type, unsigned int toolkit_index)
         unsigned int n = toolkit.api_search_buffer.energy_storages.size();
         if(index<n)
             ++(toolkit.api_search_buffer.energy_storage_pointer);
+        return;
+    }
+
+    if(DEVICE_TYPE=="SV SOURCE")
+    {
+        unsigned int index = toolkit.api_search_buffer.sv_source_pointer;
+        unsigned int n = toolkit.api_search_buffer.sv_sources.size();
+        if(index<n)
+            ++(toolkit.api_search_buffer.sv_source_pointer);
         return;
     }
 

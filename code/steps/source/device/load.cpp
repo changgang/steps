@@ -81,7 +81,6 @@ void LOAD::set_load_bus(unsigned int load_bus)
 void LOAD::set_identifier(string load_id)
 {
     load_id = trim_string(load_id);
-    add_string_to_str_int_map(load_id);
     this->identifier_index = get_index_of_string(load_id);
 }
 

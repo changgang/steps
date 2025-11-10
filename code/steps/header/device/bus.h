@@ -105,7 +105,6 @@ class BUS : public DEVICE
         BUS& operator=(const BUS& bus);
 
         virtual DEVICE_ID get_device_id() const;
-        //virtual string get_compound_device_name() const;
 
         void set_fault(const FAULT& fault);
         FAULT get_fault() const;

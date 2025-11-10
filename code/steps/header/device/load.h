@@ -64,7 +64,6 @@ class LOAD : public NONBUS_DEVICE
         virtual LOAD& operator=(const LOAD& load);
 
         virtual DEVICE_ID get_device_id() const;
-        //virtual string get_compound_device_name() const;
 
         complex<double> get_nominal_total_load_in_MVA() const;
         complex<double> get_actual_total_load_in_MVA() const;

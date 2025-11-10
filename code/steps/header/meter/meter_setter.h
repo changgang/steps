@@ -215,6 +215,12 @@ class METER_SETTER
         METER prepare_es_rotor_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
         METER prepare_es_auxiliary_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
 
+        METER prepare_svs_terminal_current_in_pu_on_sbase_meter(const DEVICE_ID& device_id);
+        METER prepare_svs_terminal_reactive_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id);
+        METER prepare_svs_terminal_reactive_power_in_MVar_meter(const DEVICE_ID& device_id);
+        METER prepare_svs_control_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+
+
         METER prepare_2t_lcc_hvdc_dc_current_in_kA_meter(const DEVICE_ID& device_id);
         METER prepare_2t_lcc_hvdc_rectifier_dc_current_in_kA_meter(const DEVICE_ID& device_id);
         METER prepare_2t_lcc_hvdc_inverter_dc_current_in_kA_meter(const DEVICE_ID& device_id);
@@ -321,6 +327,7 @@ class METER_SETTER
         bool prepare_wt_generator_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_pv_unit_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_energy_storage_meter(METER& meter, const DEVICE_ID& device_id);
+        bool prepare_sv_source_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_2t_lcc_hvdc_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_vsc_hvdc_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_mt_hvdc_meter(METER& meter, const DEVICE_ID& device_id);

@@ -51,14 +51,12 @@ void FIXED_SHUNT::set_shunt_bus(unsigned int shunt_bus)
 void FIXED_SHUNT::set_identifier(string shunt_id)
 {
     shunt_id = trim_string(shunt_id);
-    add_string_to_str_int_map(shunt_id);
     this->identifier_index = get_index_of_string(shunt_id);
 }
 
 void FIXED_SHUNT::set_name(string name)
 {
     name = trim_string(name);
-    add_string_to_str_int_map(name);
     this->name_index = get_index_of_string(name);
 }
 

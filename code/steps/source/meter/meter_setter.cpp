@@ -2736,6 +2736,88 @@ METER METER_SETTER::prepare_es_auxiliary_model_internal_variable_meter(const DEV
     return meter;
 }
 
+bool METER_SETTER::prepare_sv_source_meter(METER& meter, const DEVICE_ID& device_id)
+{
+    bool successful = false;
+
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+
+    STEPS_DEVICE_TYPE device_type = device_id.get_device_type();
+    if(device_type!=STEPS_SV_SOURCE)
+    {
+        osstream<<"Warning. This device given ("<<device_type2string(device_type)<<") is not a sv source when trying to set up a sv source meter. "
+                <<"No sv source meter will be added.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return successful;
+    }
+
+    if(not psdb.is_sv_source_exist(device_id))
+    {
+        osstream<<"Warning. "<<device_id.get_compound_device_name()<<" does not exist in current power system database. "
+                <<"No sv source meter will be added.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+        return successful;
+    }
+
+    meter.set_device_id(device_id);
+
+    successful = true;
+
+    return successful;
+}
+
+METER METER_SETTER::prepare_svs_terminal_current_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_sv_source_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL CURRENT IN PU ON SBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_svs_terminal_reactive_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_sv_source_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL REACTIVE POWER IN PU ON SBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_svs_terminal_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_sv_source_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL REACTIVE POWER IN MVAR");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_svs_control_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    METER meter(get_toolkit());
+
+    bool successful = prepare_sv_source_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("SVS CONTROL MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
 bool METER_SETTER::prepare_2t_lcc_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
 {
     bool successful = false;

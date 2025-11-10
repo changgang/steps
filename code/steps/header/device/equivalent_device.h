@@ -74,7 +74,6 @@ class EQUIVALENT_DEVICE : public NONBUS_DEVICE
         virtual EQUIVALENT_DEVICE& operator=(const EQUIVALENT_DEVICE& load);
 
         virtual DEVICE_ID get_device_id() const;
-        ////virtual string get_compound_device_name() const;
 
         virtual void set_model(MODEL* model);
         virtual MODEL* get_model_of_type(string model_type, unsigned int index=0);

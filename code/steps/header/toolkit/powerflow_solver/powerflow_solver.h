@@ -180,6 +180,7 @@ class POWERFLOW_SOLVER
         vector<WT_GENERATOR*> wt_generators;
         vector<PV_UNIT*> pv_units;
         vector<ENERGY_STORAGE*> e_storages;
+        vector<SV_SOURCE*> sv_sources;
         vector<LOAD*> loads;
         vector<AC_LINE*> lines;
         vector<TRANSFORMER*> transformers;

@@ -78,14 +78,12 @@ void AC_LINE::set_receiving_side_bus(unsigned int bus)
 void AC_LINE::set_identifier(string line_id)
 {
     line_id = trim_string(line_id);
-    add_string_to_str_int_map(line_id);
     this->identifier_index = get_index_of_string(line_id);
 }
 
 void AC_LINE::set_name(string name)
 {
     name = trim_string(name);
-    add_string_to_str_int_map(name);
     this->name_index = get_index_of_string(name);
 }
 

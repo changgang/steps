@@ -274,6 +274,8 @@ unsigned int api_get_device_capacity(const char* device_type, unsigned int toolk
         return psdb.get_equivalent_device_capacity();
     if(DEVICE_TYPE=="ENERGY STORAGE")
         return psdb.get_energy_storage_capacity();
+    if(DEVICE_TYPE=="SV SOURCE")
+        return psdb.get_sv_source_capacity();
 
     show_parameter_not_supported_with_api(DEVICE_TYPE, __FUNCTION__);
     return 0;
@@ -334,6 +336,8 @@ void api_set_device_capacity(const char* device_type, unsigned int cap, unsigned
         return psdb.set_equivalent_device_capacity(cap);
     if(DEVICE_TYPE=="ENERGY STORAGE")
         return psdb.set_energy_storage_capacity(cap);
+    if(DEVICE_TYPE=="SV SOURCE")
+        return psdb.set_sv_source_capacity(cap);
 
     show_parameter_not_supported_with_api(DEVICE_TYPE, __FUNCTION__);
 }
