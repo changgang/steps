@@ -31,7 +31,7 @@ void AC_LINE::set_sending_side_bus(unsigned int bus)
         else
         {
             osstream<<"Warning. Bus "<<bus<<" does not exist for setting up sending side bus of line."<<endl
-              <<"0 will be set to indicate invalid transmission line.";
+                    <<"0 will be set to indicate invalid transmission line.";
             toolkit.show_information_with_leading_time_stamp(osstream);
             sending_side_bus = 0;
         }
@@ -39,10 +39,11 @@ void AC_LINE::set_sending_side_bus(unsigned int bus)
     else
     {
         osstream<<"Warning. Zero bus number (0) is not allowed for setting up sending side bus of line."<<endl
-          <<"0 will be set to indicate invalid transmission line.";
+                <<"0 will be set to indicate invalid transmission line.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         sending_side_bus = 0;
     }
+    check_bus_voltage_coherency();
 }
 
 void AC_LINE::set_receiving_side_bus(unsigned int bus)
@@ -72,6 +73,25 @@ void AC_LINE::set_receiving_side_bus(unsigned int bus)
                 <<"0 will be set to indicate invalid transmission line.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         receiving_side_bus = 0;
+    }
+    check_bus_voltage_coherency();
+}
+
+void AC_LINE::check_bus_voltage_coherency()
+{
+    if(sending_side_bus!=0 and receiving_side_bus!=0)
+    {
+        double ivbase = sending_side_busptr->get_base_voltage_in_kV();
+        double jvbase = receiving_side_busptr->get_base_voltage_in_kV();
+        if(fabs(ivbase-jvbase)>FLOAT_EPSILON)
+        {
+            ostringstream osstream;
+            STEPS& toolkit = get_toolkit();
+            osstream<<"Warning. Base voltages of sending and receiving side buses are different when setting up "
+                    <<get_compound_device_name()<<":\n"
+                    <<"Vbase["<<sending_side_bus<<"] = "<<ivbase<<"kV, Vbase["<<receiving_side_bus<<"] = "<<jvbase<<"kV.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
     }
 }
 
@@ -453,9 +473,7 @@ void AC_LINE::check()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int ibus = get_sending_side_bus();
-    unsigned int jbus = get_receiving_side_bus();
     double ivbase = psdb.get_bus_base_voltage_in_kV(ibus);
-    double jvbase = psdb.get_bus_base_voltage_in_kV(jbus);
 
     osstream<<"Warning detected when checking "<<ivbase<<"kV "<<get_compound_device_name()<<"["
             <<psdb.bus_number2bus_name(get_sending_side_bus())<<"-"
@@ -463,13 +481,6 @@ void AC_LINE::check()
 
     unsigned int error_count = 0;
 
-    if( ivbase!= jvbase)
-    {
-        error_count++;
-        osstream<<"("<<error_count<<") Base voltage at sending and receiving sides are different: "
-                <<"Vbase["<<ibus<<"] = "<<ivbase<<"kV. "
-                <<"Vbase["<<jbus<<"] = "<<jvbase<<"kV.\n";
-    }
     complex<double> z = get_line_positive_sequence_z_in_pu();
     double r = z.real(), x = z.imag();
     if(r<0)

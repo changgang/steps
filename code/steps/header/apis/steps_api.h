@@ -577,6 +577,7 @@ EXPORT_STEPS_DLL void api_check_missing_models(unsigned int toolkit_index=INDEX_
 EXPORT_STEPS_DLL void api_check_least_dynamic_time_constants(unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void api_check_network_connectivity(bool remove_void_island=false, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_save_network_islands_to_file(char* filename, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL double api_search_cct(char* pf_file, char* dy_file, unsigned int ibus, unsigned int jbus, char* id, unsigned int sidebus, unsigned int trip_line, unsigned int toolkit_index=INDEX_NOT_EXIST);
 

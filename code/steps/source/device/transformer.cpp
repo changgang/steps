@@ -127,20 +127,29 @@ void TRANSFORMER::set_winding_connection_type(TRANSFORMER_WINDING_SIDE winding, 
 
 void TRANSFORMER::set_winding_nominal_voltage_in_kV(TRANSFORMER_WINDING_SIDE winding, double v)
 {
-    unsigned int bus = get_winding_bus(winding);
+    ostringstream osstream;
+    string device = get_compound_device_name();
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    unsigned int bus = get_winding_bus(winding);
+    double vbase = psdb.get_bus_base_voltage_in_kV(bus);
 
     if(v==0.0)
-        v = psdb.get_bus_base_voltage_in_kV(bus);
+        v = vbase;
     if(v==0.0)
     {
-        ostringstream osstream;
-        DEVICE_ID did = get_device_id();
-        string device = did.get_compound_device_name();
         osstream<<"Error. Zero (0.0kV) nominal voltage is not allowed for setting up "<<get_winding_name(winding)<<" winding nominal voltage of "<<device<<"."<<endl
-          <<"0.0 will be set to indicate invalid transformer";
+                <<"0.0 will be set to indicate invalid transformer";
         toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+    else
+    {
+        if(v>vbase*1.1 or v<vbase*0.9)
+        {
+            osstream<<"Warning. Winding nominal voltage differs more than 10% from the bus base voltage when setting up "<<get_winding_name(winding)<<" winding nominal voltage of "<<device<<"."<<endl
+                    <<"Winding nominal voltage = "<<v<<"kV, bus base voltage = "<<vbase<<"kV.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
     }
     winding_nominal_voltage_in_kV[winding] = v;
 }

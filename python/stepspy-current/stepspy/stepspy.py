@@ -4868,6 +4868,19 @@ class STEPS():
         global STEPS_LIB
         STEPS_LIB.api_check_network_connectivity(remove_void_islands, self.toolkit_index)
         
+    def save_network_islands_to_file(self, file):
+        """
+        Save network islands to file.
+        Args:
+            (1) file: String of output file. file ending '.csv' is suggested.
+        Rets: N/A
+        Example:
+            sim.save_network_islands_to_file("islands.csv")
+        """
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        STEPS_LIB.api_save_network_islands_to_file(file, self.toolkit_index)
+
     def get_short_circuit_solver_parameter(self, par_type, par_name):
         """
         Get short circuit solver configuration parameter.

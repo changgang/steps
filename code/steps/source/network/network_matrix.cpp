@@ -4610,6 +4610,67 @@ void NETWORK_MATRIX::check_network_connectivity(bool remove_void_island)
     }
 }
 
+void NETWORK_MATRIX::save_network_islands_to_file(string filename)
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    ostringstream osstream;
+    ofstream file(filename);
+    if(file.is_open())
+    {
+        vector< vector<unsigned int> > islands = get_islands_with_physical_bus_number();
+        unsigned int nislands = islands.size();
+        file<<"Island count: "<<nislands<<"\n";
+
+        unsigned int physical_bus;
+        BUS* bus;
+        for(unsigned int i=0; i!=nislands; ++i)
+        {
+            file<<"Island "<<i<<":\n";
+            file<<"Areas in island "<<i<<":\n";
+            file<<"Id, Area Number, Area Name\n";
+            unsigned int nbus = islands[i].size();
+            set<unsigned int> areas_in_island;
+            for(unsigned int j=0; j!=nbus; ++j)
+            {
+                physical_bus = islands[i][j];
+                bus = psdb.get_bus(physical_bus);
+                unsigned int area = bus->get_area_number();
+                areas_in_island.insert(area);
+            }
+            set<unsigned int>::iterator iter;
+            unsigned int area_count = 0;
+            for(iter = areas_in_island.begin() ; iter != areas_in_island.end() ; ++iter)
+            {
+                area_count++;
+                unsigned int area = *iter;
+                file<<area_count<<","<<area<<","<<psdb.area_number2area_name(area)<<"\n";
+            }
+            file<<"Physical buses in island "<<i<<":\n";
+            file<<"Id,Bus Number,Bus Name,Base kV,Type,Area,Area Name,Zone,Zone Name\n";
+            unsigned int bus_count = 0;
+            for(unsigned int j=0; j!=nbus; ++j)
+            {
+                bus_count ++;
+                physical_bus = islands[i][j];
+                bus = psdb.get_bus(physical_bus);
+                unsigned int area = bus->get_area_number();
+                unsigned int zone = bus->get_zone_number();
+                file<<bus_count<<","<<physical_bus<<","<<bus->get_bus_name()<<","
+                    <<bus->get_base_voltage_in_kV()<<","<<bus->get_bus_type()<<","
+                    <<area<<","<<psdb.area_number2area_name(area)<<","<<zone<<","<<psdb.zone_number2zone_name(zone)<<"\n";
+            }
+        }
+        file<<"Island analysis done.";
+        file.close();
+    }
+    else
+    {
+        osstream<<"File '"<<filename<<"' cannot be opened for saving network islands to file."<<endl
+                <<"No network islands will be exported.";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+    }
+}
+
 vector< vector<unsigned int> > NETWORK_MATRIX::get_islands_with_internal_bus_number()
 {
     vector< vector<unsigned int> > islands;

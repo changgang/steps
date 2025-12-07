@@ -409,15 +409,9 @@ void MTDCGRID4::add_dc_line_to_injection_current()
     {
         unsigned int i_physical_bus = dc_lines[i]->get_sending_side_bus_number();
         unsigned int j_physical_bus = dc_lines[i]->get_receiving_side_bus_number();
-        DC_BUS* ibus = mtdc->get_dc_bus_with_bus_number(i_physical_bus);
-        DC_BUS* jbus = mtdc->get_dc_bus_with_bus_number(j_physical_bus);
 
         double Ui = dc_lines[i]->get_dc_line_history_Ui_in_kV();
         double Uj = dc_lines[i]->get_dc_line_history_Uj_in_kV();
-
-        //double Ui = ibus->get_dc_bus_voltage_in_kV();
-        //double Uj = jbus->get_dc_bus_voltage_in_kV();
-        //double Uv = vbus->get_dc_bus_voltage_in_kV();
 
         double IL0 = dc_lines[i]->get_i_RL_in_kA_on_sending_side();
 
@@ -426,10 +420,8 @@ void MTDCGRID4::add_dc_line_to_injection_current()
         double i_internal = dynamic_inphno_dc_buses.get_internal_bus_number_of_physical_bus_number(i_physical_bus);
         double j_internal = dynamic_inphno_dc_buses.get_internal_bus_number_of_physical_bus_number(j_physical_bus);
 
-
         injection_current[i_internal] = injection_current[i_internal]-Ieq_L;
         injection_current[j_internal] = injection_current[j_internal]+Ieq_L;
-
     }
 }
 
@@ -860,8 +852,8 @@ bool MTDCGRID4::setup_model_with_steps_string_vector(vector<string>& data)
             double dc_simulation_time_step = get_double_data(data[data_index],"0.001"); data_index++;
             set_dc_network_simulation_time_step(dc_simulation_time_step);
 
-            int is_dc_line_dynamic_considered = get_double_data(data[data_index],"0"); data_index++;
-            set_is_dc_network_dynamics_consider(false);
+            int is_dc_line_dynamic_considered = get_integer_data(data[data_index],"0"); data_index++;
+            set_is_dc_network_dynamics_consider(is_dc_line_dynamic_considered?true:false);
 
             is_successful = true;
         }
@@ -1229,7 +1221,7 @@ void MTDCGRID4::show_bus_injection_current()
     ostringstream osstream;
     osstream<<" dc bus injection current " ;
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
-    int n = injection_current.capacity();
+    unsigned int n = injection_current.capacity();
     for(unsigned int i=0;i!=n;i++)
     {
         osstream<<" bus injection current of internal bus: " <<i<<" is:"<<injection_current[i];

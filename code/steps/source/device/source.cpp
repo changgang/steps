@@ -291,21 +291,44 @@ void SOURCE::check()
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    string error_leading_string = "Error detected when checking "+get_compound_device_name()+": ";
+    osstream<<"Error detected when checking "+get_compound_device_name()+"["<<psdb.bus_number2bus_name(get_source_bus())<<"]:\n";
 
+    unsigned int error_count = 0;
     unsigned int bus = get_source_bus();
-    double qmax = get_q_max_in_MVar();
-    double qmin = get_q_min_in_MVar();
-    if(fabs(qmax-qmin)<DOUBLE_EPSILON)
+
+    BUS_TYPE btype = psdb.get_bus_type(bus);
+    if(btype==SLACK_TYPE)
     {
-        BUS_TYPE btype = psdb.get_bus_type(bus);
-        if(btype==SLACK_TYPE)
+        double qmax = get_q_max_in_MVar();
+        double qmin = get_q_min_in_MVar();
+        if(fabs(qmax-qmin)<DOUBLE_EPSILON)
         {
-            osstream<<error_leading_string<<"Qmax and Qmin are identical for SLACK source. NaN may be detected when distributing reactive power to generators.\n"
-                    <<"Qmax = "<<qmax<<"MVar. Qmin = "<<qmin<<"MVar. ";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            error_count++;
+            osstream<<"("<<error_count<<") Qmax and Qmin are identical for SLACK source. NaN may be detected when distributing reactive power to sources.\n"
+                    <<"Qmax = "<<qmax<<"MVar. Qmin = "<<qmin<<"MVar.\n";
         }
     }
+    else
+    {
+        double pmax = get_p_max_in_MW();
+        double pmin = get_p_min_in_MW();
+        double pgen = get_p_generation_in_MW();
+        if(pgen>pmax or pgen<pmin)
+        {
+            error_count++;
+            osstream<<"("<<error_count<<") Pgen beyond [Pmin, Pmax], a.k.a., "<<pgen<<"MW exceeds ["<<pmin<<", "<<pmax<<"]MW.\n";
+        }
+    }
+    double R = source_Z_pu.real();
+    double X = source_Z_pu.imag();
+    if(R==0 and X==0)
+    {
+        error_count++;
+        osstream<<"("<<error_count<<") ZSOURCE is 0, which could lead to dynamics initialization failure.\n";
+    }
+
+    if(error_count!=0)
+        toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void SOURCE::clear()

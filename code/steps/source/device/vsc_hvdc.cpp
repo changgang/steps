@@ -2637,11 +2637,6 @@ INPHNO VSC_HVDC::get_network_internal_physical_number_inphno() const
 
 void VSC_HVDC::update_P_equation_internal_buses()
 {
-    STEPS& toolkit = get_toolkit();
-    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
-    //snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Updating powerflow P equation buses for %s",get_compound_device_name().c_str());
-    //toolkit.show_information_with_leading_time_stamp(buffer);
-
     unsigned int nbus = get_dc_bus_count();
 
     internal_P_equation_buses.clear();
@@ -3118,6 +3113,7 @@ double VSC_HVDC::get_maximum_active_power_mismatch_in_MW()
             }
         }
     }
+    /*
     string maxbusname = get_dc_bus_name(dc_bus_no2index(max_P_error_physical_bus));
 
     STEPS& toolkit = get_toolkit();
@@ -3127,7 +3123,8 @@ double VSC_HVDC::get_maximum_active_power_mismatch_in_MW()
              max_P_error_in_MW,
              max_P_error_physical_bus,
              maxbusname.c_str());
-    //toolkit.show_information_with_leading_time_stamp(buffer);
+    toolkit.show_information_with_leading_time_stamp(buffer);
+    */
     return max_P_error_in_MW;
 }
 
@@ -3407,7 +3404,7 @@ void VSC_HVDC::update_dc_bus_voltage()
         if(dcbus!=current_dc_slack_bus)
         {
             double Vdc = get_dc_bus_Vdc_in_kV(index);
-            int i = inphno.get_internal_bus_number_of_physical_bus_number(dcbus);
+            unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(dcbus);
             if(i<current_dc_slack_bus_internal_number)
                 Vdc += Udc_mismatch[i];
             else

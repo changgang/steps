@@ -425,13 +425,18 @@ bool BUS::is_valid() const
 
 void BUS::check()
 {
-    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+
+    osstream<<"Error detected when checking bus "<<get_bus_number()+"["<<get_bus_name()<<"] "<<get_base_voltage_in_kV()<<"kV:\n";
+    unsigned int error_count = 0;
     if(get_bus_number()==0)
     {
-        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Invalid bus number 0 is detected.");
-        STEPS& toolkit = get_toolkit();
-        toolkit.show_information_with_leading_time_stamp(buffer);
+        error_count++;
+        osstream<<"("<<error_count<<") bus number should not be 0.";
     }
+    if(error_count!=0)
+        toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void BUS::clear()

@@ -2435,7 +2435,6 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned in
 
 void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_min(unsigned int physical_bus)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<SOURCE*> sources = get_sources_at_physical_bus(physical_bus);
 
     unsigned int n = sources.size();
@@ -2447,7 +2446,6 @@ void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_min(unsigned int phy
 }
 void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_max(unsigned int physical_bus)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     vector<SOURCE*> sources = get_sources_at_physical_bus(physical_bus);
 
     unsigned int n = sources.size();

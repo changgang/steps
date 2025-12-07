@@ -149,6 +149,7 @@ class AC_LINE : public NONBUS_DEVICE
         void set_sequence_parameter_import_flag(bool flag);
         bool get_sequence_parameter_import_flag() const;
     private:
+        void check_bus_voltage_coherency();
         //map<double,FAULT>::iterator get_iterator_of_fault_at_location_to_sending_side(double location);
         unsigned int sending_side_bus, receiving_side_bus;
         BUS* sending_side_busptr, *receiving_side_busptr;

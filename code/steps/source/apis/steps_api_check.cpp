@@ -37,3 +37,11 @@ void api_check_network_connectivity(bool remove_void_island, unsigned int toolki
     network.build_network_Y_matrix();
     network.check_network_connectivity(remove_void_island);
 }
+
+void api_save_network_islands_to_file(char* filename, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    network.build_network_Y_matrix();
+    network.save_network_islands_to_file(filename);
+}

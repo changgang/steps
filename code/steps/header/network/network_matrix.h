@@ -78,6 +78,7 @@ class NETWORK_MATRIX
 
         void optimize_network_ordering();
         void check_network_connectivity(bool remove_void_island=false);
+        void save_network_islands_to_file(string filename);
         vector< vector<unsigned int> > get_islands_with_internal_bus_number();
         vector< vector<unsigned int> > get_islands_with_physical_bus_number();
 
