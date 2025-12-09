@@ -1475,43 +1475,43 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
             }
         }
     }
-    /*
-    osstream<<"Power mismatch of buses.";
-    toolkit->show_information_with_leading_time_stamp(osstream);
-    osstream<<"bus      name           Pmismatch(MW) Qmismatch(MVar)";
-    toolkit->show_information_with_leading_time_stamp(osstream);
-    */
-/*
-    double sbase = psdb.get_system_base_power_in_MVA();
-    for(unsigned int i=0; i!=nbus; ++i)
+    if(toolkit->is_detailed_log_enabled())
     {
-        unsigned int bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
-        string bus_name = psdb.bus_number2bus_name(bus);
-        BUS_TYPE btype = psdb.get_bus(bus)->get_bus_type();
-        double p = bus_power[i].real()*sbase;
-        double q = bus_power[i].imag()*sbase;
-        if(btype==PV_TYPE or btype == SLACK_TYPE)
-            q = 0.0;
-        if(btype==SLACK_TYPE)
-            p = 0.0;
-        osstream<<left;
-        osstream<<setw(7)<<setfill(' ')<<bus<<"  "<<setw(14)<<bus_name<<" ";
-        osstream<<right;
-        osstream<<setw(12)<<setprecision(6)<<p<<"   "<<setw(13)<<setprecision(6)<<q;
-        switch(btype)
-        {
-            case PV_TYPE:
-                osstream<<"  <--PV";
-                break;
-            case SLACK_TYPE:
-                osstream<<"  <--SLACK";
-                break;
-            default:
-                break;
-        }
+        osstream<<"Power mismatch of buses.";
         toolkit->show_information_with_leading_time_stamp(osstream);
+        osstream<<"bus      name           Pmismatch(MW) Qmismatch(MVar)";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+
+        double sbase = psdb.get_system_base_power_in_MVA();
+        for(unsigned int i=0; i!=nbus; ++i)
+        {
+            unsigned int bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
+            string bus_name = psdb.bus_number2bus_name(bus);
+            BUS_TYPE btype = psdb.get_bus(bus)->get_bus_type();
+            double p = bus_power[i].real()*sbase;
+            double q = bus_power[i].imag()*sbase;
+            if(btype==PV_TYPE or btype == SLACK_TYPE)
+                q = 0.0;
+            if(btype==SLACK_TYPE)
+                p = 0.0;
+            osstream<<left;
+            osstream<<setw(7)<<setfill(' ')<<bus<<"  "<<setw(14)<<bus_name<<" ";
+            osstream<<right;
+            osstream<<setw(12)<<setprecision(6)<<p<<"   "<<setw(13)<<setprecision(6)<<q;
+            switch(btype)
+            {
+                case PV_TYPE:
+                    osstream<<"  <--PV";
+                    break;
+                case SLACK_TYPE:
+                    osstream<<"  <--SLACK";
+                    break;
+                default:
+                    break;
+            }
+            toolkit->show_information_with_leading_time_stamp(osstream);
+        }
     }
-*/
 }
 
 void POWERFLOW_SOLVER::calculate_raw_bus_power_into_network()

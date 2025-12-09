@@ -15,6 +15,8 @@ STEPS::STEPS(const string& name, const string& log_file) : power_system_db(*this
                                                            eign_calculator(*this),
                                                            network_matrix(*this)
 {
+    initialize_package();
+
     disable_use_steps_fast_math_logic();
 
     ostringstream osstream;

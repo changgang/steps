@@ -1,6 +1,7 @@
 #include "header/basic/utility.h"
 #include "header/basic/constants.h"
 #include "header/steps_namespace.h"
+#include "header/meter/meter_map_builder.h"
 
 #include <cstdio>
 #include <algorithm>
@@ -891,10 +892,25 @@ string psse_dyr_string2steps_string(const string& data)
 
 void initialize_package()
 {
-    return;
-    default_toolkit.set_toolkit_name("TK DFLT");
-    for(unsigned int i=0; i<STEPS_MAX_TOOLKIT_SIZE; ++i)
-        toolkits[i] = NULL;
+    if(package_initialized == false)
+    {
+        build_bus_meter_map();
+        build_sg_meter_map();
+        build_wtg_meter_map();
+        build_pvu_meter_map();
+        build_es_meter_map();
+        build_sv_source_meter_map();
+        build_load_meter_map();
+        build_fixed_shunt_meter_map();
+        build_ac_line_meter_map();
+        build_transformer_meter_map();
+        build_lcc_hvdc2t_meter_map();
+        build_vsc_hvdc_meter_map();
+        build_mt_hvdc_meter_map();
+        build_equivalent_device_meter_map();
+
+        package_initialized = true;
+    }
 }
 
 unsigned int generate_new_toolkit(string log_file)

@@ -67,6 +67,12 @@ int main(int argc, char* argv[])
         GENERATOR* gen = gens[i];
         simulator.prepare_generator_related_meter(gen->get_device_id(), "ROTOR SPEED DEVIATION IN PU");
     }
+    vector<WT_GENERATOR*> wt_gens = psdb.get_all_wt_generators();
+    for(unsigned int i=0; i<wt_gens.size(); ++i)
+    {
+        WT_GENERATOR* wtgen = wt_gens[i];
+        simulator.prepare_wt_generator_related_meter(wtgen->get_device_id(), "TERMINAL ACTIVE POWER IN MW");
+    }
 
     simulator.set_output_file("bench_NCCC_10k_bus_model_dynamic_test");
     simulator.set_allowed_max_power_imbalance_in_MVA(0.001);

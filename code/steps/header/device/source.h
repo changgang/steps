@@ -45,6 +45,8 @@ class SOURCE : public NONBUS_DEVICE
         inline bool get_status() const{return status;}
         inline double get_mbase_in_MVA() const{return mbase_MVA;}
         inline double get_one_over_mbase_in_one_over_MVA() const{return one_over_mbase;}
+        double get_sbase_over_mbase() const;
+        double get_mbase_over_sbase() const;
         double get_p_generation_in_MW() const;
         double get_q_generation_in_MVar() const;
         complex<double> get_complex_generation_in_MVA() const;

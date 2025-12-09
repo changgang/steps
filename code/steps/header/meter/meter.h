@@ -5,6 +5,7 @@
 #include "header/basic/device_id.h"
 #include "header/basic/dc_device_id.h"
 #include "header/device/device.h"
+#include "header/meter/meter_parameter_struct.h"
 
 class METER
 {
@@ -67,6 +68,8 @@ class METER
         double get_meter_value_as_an_equivalent_device() const;
         double get_meter_value_as_an_energy_storage() const;
         double get_meter_value_as_a_sv_source() const;
+
+        double get_meter_value_with_function(std::function<double(METER_PARAMETER)> f) const;
 
         STEPS* toolkit;
         DEVICE* device_pointer;

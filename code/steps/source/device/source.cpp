@@ -189,6 +189,16 @@ unsigned int SOURCE::get_identifier_index() const
     return source_identifier_index;
 }
 
+double SOURCE::get_sbase_over_mbase() const
+{
+    return get_toolkit().get_system_base_power_in_MVA()*one_over_mbase;
+}
+
+double SOURCE::get_mbase_over_sbase() const
+{
+    return mbase_MVA*get_toolkit().get_one_over_system_base_power_in_one_over_MVA();
+}
+
 double SOURCE::get_p_generation_in_MW() const
 {
     return p_generation_MW;

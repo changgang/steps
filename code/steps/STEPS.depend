@@ -11,12 +11,13 @@
 	"header/prepare_for_tests/prepare_models_for_test.h"
 	"header/data_imexporter/equivalent_model_imexporter.h"
 
-1761136505 d:\steps\code\steps\header\power_system_database.h
+1764151595 d:\steps\code\steps\header\power_system_database.h
 	"header/device/bus.h"
 	"header/device/generator.h"
 	"header/device/wt_generator.h"
 	"header/device/pv_unit.h"
 	"header/device/energy_storage.h"
+	"header/device/sv_source.h"
 	"header/device/load.h"
 	"header/device/ac_line.h"
 	"header/device/transformer.h"
@@ -35,7 +36,7 @@
 	"header/basic/device_index_map.h"
 	<string>
 
-1760926594 d:\steps\code\steps\header\device\bus.h
+1764151595 d:\steps\code\steps\header\device\bus.h
 	"header/device/device.h"
 	"header/basic/area.h"
 	"header/basic/zone.h"
@@ -60,7 +61,7 @@
 	<vector>
 	<map>
 
-1750741436 d:\steps\code\steps\header\basic\device_id.h
+1764151595 d:\steps\code\steps\header\basic\device_id.h
 	"header/basic/constants.h"
 	"header/basic/steps_enum.h"
 	<vector>
@@ -70,7 +71,7 @@
 
 1750741436 d:\steps\code\steps\header\basic\constants.h
 
-1750741436 d:\steps\code\steps\header\basic\steps_enum.h
+1764151595 d:\steps\code\steps\header\basic\steps_enum.h
 	<iso646.h>
 
 1664187911 d:\steps\code\steps\header\basic\terminal.h
@@ -107,7 +108,7 @@
 	<ctime>
 	<complex>
 
-1758888325 d:\steps\code\steps\header\basic\complex_sparse_matrix_csparse.h
+1764151595 d:\steps\code\steps\header\basic\complex_sparse_matrix_csparse.h
 	"cxs.h"
 	<vector>
 	<ctime>
@@ -168,7 +169,7 @@
 1760926594 d:\steps\code\steps\header\block\differential_block.h
 	"header/block/block.h"
 
-1760926594 d:\steps\code\steps\header\device\generator.h
+1764151595 d:\steps\code\steps\header\device\generator.h
 	<string>
 	<complex>
 	"header/device/source.h"
@@ -179,7 +180,7 @@
 	"header/model/sg_models/turbine_governor_model/turbine_governor_model.h"
 	"header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model.h"
 
-1760926594 d:\steps\code\steps\header\device\source.h
+1765282212 d:\steps\code\steps\header\device\source.h
 	<string>
 	<complex>
 	"header/device/nonbus_device.h"
@@ -232,11 +233,12 @@
 	"header/basic/constants.h"
 	"header/meter/meter.h"
 
-1757678516 d:\steps\code\steps\header\meter\meter.h
+1765278203 d:\steps\code\steps\header\meter\meter.h
 	"header/basic/constants.h"
 	"header/basic/device_id.h"
 	"header/basic/dc_device_id.h"
 	"header/device/device.h"
+	"header/meter/meter_parameter_struct.h"
 
 1664187911 d:\steps\code\steps\header\basic\dc_device_id.h
 	"header/basic/constants.h"
@@ -342,7 +344,7 @@
 1759997805 d:\steps\code\steps\header\model\pvu_models\pv_relay_model\pv_relay_model.h
 	"header/model/pvu_models/pvu_model.h"
 
-1750741436 d:\steps\code\steps\header\device\energy_storage.h
+1764151595 d:\steps\code\steps\header\device\energy_storage.h
 	<complex>
 	<string>
 	"header/device/source.h"
@@ -359,7 +361,7 @@
 	"header/model/model.h"
 	<complex>
 
-1760926594 d:\steps\code\steps\header\device\load.h
+1764151595 d:\steps\code\steps\header\device\load.h
 	"header/device/nonbus_device.h"
 	"header/model/load_model/load_model.h"
 	"header/model/load_relay_model/load_voltage_relay_model.h"
@@ -394,14 +396,14 @@
 
 1583938871 d:\steps\code\steps\header\basic\rating.h
 
-1697457172 d:\steps\code\steps\header\device\transformer.h
+1764151595 d:\steps\code\steps\header\device\transformer.h
 	"header/device/nonbus_device.h"
 	"header/basic/steps_enum.h"
 	"header/basic/rating.h"
 	<string>
 	<complex>
 
-1697457172 d:\steps\code\steps\header\device\fixed_shunt.h
+1764151595 d:\steps\code\steps\header\device\fixed_shunt.h
 	"header/device/nonbus_device.h"
 	<string>
 	<complex>
@@ -474,7 +476,7 @@
 1760926594 d:\steps\code\steps\header\basic\inphno.h
 	<vector>
 
-1664187911 d:\steps\code\steps\header\device\equivalent_device.h
+1764151595 d:\steps\code\steps\header\device\equivalent_device.h
 	"header/device/nonbus_device.h"
 	"header/model/equivalent_model/equivalent_model.h"
 	<string>
@@ -547,14 +549,15 @@
 	<map>
 	<unordered_map>
 
-1664187911 d:\steps\code\steps\header\steps_namespace.h
+1765280141 d:\steps\code\steps\header\steps_namespace.h
 	"header/STEPS.h"
 	"header/basic/steps_define.h"
 	"header/basic/constants.h"
 	"header/basic/string_int_map.h"
+	"header/meter/meter_parameter_struct.h"
 	<mutex>
 
-1760926594 d:\steps\code\steps\header\steps.h
+1764151595 d:\steps\code\steps\header\steps.h
 	"header/power_system_database.h"
 	"header/dynamic_model_database.h"
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
@@ -571,12 +574,12 @@
 	"header/model/model.h"
 	<vector>
 
-1758888947 d:\steps\code\steps\header\toolkit\powerflow_solver\powerflow_solver.h
+1764151595 d:\steps\code\steps\header\toolkit\powerflow_solver\powerflow_solver.h
 	"header/network/network_matrix.h"
 	"header/network/jacobian_builder.h"
 	"header/basic/sparse_matrix_define.h"
 
-1750741436 d:\steps\code\steps\header\network\network_matrix.h
+1764638482 d:\steps\code\steps\header\network\network_matrix.h
 	"header/power_system_database.h"
 	"header/basic/sparse_matrix_define.h"
 	"header/basic/inphno.h"
@@ -590,7 +593,7 @@
 	"header/basic/sparse_matrix_define.h"
 	<ctime>
 
-1760926594 d:\steps\code\steps\header\toolkit\dynamic_simulator\dynamic_simulator.h
+1764151595 d:\steps\code\steps\header\toolkit\dynamic_simulator\dynamic_simulator.h
 	"header/basic/power_mismatch_struct.h"
 	"header/basic/continuous_buffer.h"
 	"header/meter/meter.h"
@@ -610,19 +613,19 @@
 	<string>
 	<complex>
 
-1750741436 d:\steps\code\steps\header\apis\steps_api_search_buffer.h
+1764151595 d:\steps\code\steps\header\apis\steps_api_search_buffer.h
 	"header/power_system_database.h"
 	"header/basic/constants.h"
 	<ctime>
 	<string>
 
-1664187911 d:\steps\code\steps\header\basic\string_int_map.h
+1764151595 d:\steps\code\steps\header\basic\string_int_map.h
 	<vector>
 	<string>
 	<map>
 	<functional>
 
-1760926594 d:\steps\code\steps\header\basic\utility.h
+1764151595 d:\steps\code\steps\header\basic\utility.h
 	"header/power_system_database.h"
 	"header/network/network_matrix.h"
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
@@ -630,14 +633,14 @@
 	"header/basic/complex3.h"
 	<complex>
 
-1750741436 d:\steps\code\steps\header\data_imexporter\psse_imexporter.h
+1764151595 d:\steps\code\steps\header\data_imexporter\psse_imexporter.h
 	"header/data_imexporter/data_imexporter.h"
 	"header/device/source.h"
 	"header/device/transformer.h"
 	"header/device/lcc_hvdc2t.h"
 	<vector>
 
-1711292341 d:\steps\code\steps\header\data_imexporter\data_imexporter.h
+1764151595 d:\steps\code\steps\header\data_imexporter\data_imexporter.h
 	"header/power_system_database.h"
 	<string>
 	<fstream>
@@ -694,7 +697,7 @@
 	<cmath>
 	<ctime>
 
-1754485004 d:\steps\code\steps\header\meter\meter_setter.h
+1764151595 d:\steps\code\steps\header\meter\meter_setter.h
 	"header/meter/meter.h"
 
 1750741436 source:d:\steps\code\steps\main_powerflow.cpp
@@ -1232,7 +1235,7 @@
 	"header/data_imexporter/steps_imexporter.h"
 	"header/STEPS.h"
 
-1758888325 d:\steps\code\steps\header\data_imexporter\steps_imexporter.h
+1764151595 d:\steps\code\steps\header\data_imexporter\steps_imexporter.h
 	"header/data_imexporter/data_imexporter.h"
 	"header/device/source.h"
 	"header/device/transformer.h"
@@ -2383,7 +2386,7 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/model/all_supported_models.h"
 
-1750741436 d:\steps\code\steps\header\model\all_supported_models.h
+1764151595 d:\steps\code\steps\header\model\all_supported_models.h
 	"header/model/sg_models/supported_sg_models.h"
 	"header/model/load_model/load_models.h"
 	"header/model/load_relay_model/load_relay_models.h"
@@ -2396,6 +2399,7 @@
 	"header/model/wtg_models/supported_wtg_models.h"
 	"header/model/pvu_models/supported_pvu_models.h"
 	"header/model/energy_storage_model/supported_es_models.h"
+	"header/model/svs_model/supported_svs_models.h"
 	"header/model/equivalent_model/ARXL.h"
 
 1711292341 d:\steps\code\steps\header\model\sg_models\supported_sg_models.h
@@ -2659,31 +2663,31 @@
 	"header/basic/continuous_buffer.h"
 	<complex>
 
-1759245413 source:d:\steps\code\steps\source\apis\steps_api_add_devices.cpp
+1764151595 source:d:\steps\code\steps\source\apis\steps_api_add_devices.cpp
 	"header/apis/steps_api.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/bpa_imexporter.h"
 
-1759245413 d:\steps\code\steps\header\apis\steps_api.h
+1764640696 d:\steps\code\steps\header\apis\steps_api.h
 	<cstdlib>
 	"header/basic/constants.h"
 	"header/basic/dc_device_id.h"
 
-1664187911 source:d:\steps\code\steps\source\apis\steps_api_check.cpp
+1764657327 source:d:\steps\code\steps\source\apis\steps_api_check.cpp
 	"header/apis/steps_api.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
 	"header/power_system_database.h"
 
-1750741436 source:d:\steps\code\steps\source\apis\steps_api_common.cpp
+1764151595 source:d:\steps\code\steps\source\apis\steps_api_common.cpp
 	"header/apis/steps_api_common.h"
 	"header/apis/steps_api.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 
-1750741436 d:\steps\code\steps\header\apis\steps_api_common.h
+1764151595 d:\steps\code\steps\header\apis\steps_api_common.h
 	"header/STEPS.h"
 	"header/power_system_database.h"
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
@@ -2697,14 +2701,14 @@
 	"header/data_imexporter/bpa_imexporter.h"
 	"header/data_imexporter/steps_imexporter.h"
 
-1753706366 source:d:\steps\code\steps\source\apis\steps_api_dynamic_simulation.cpp
+1764151595 source:d:\steps\code\steps\source\apis\steps_api_dynamic_simulation.cpp
 	"header/apis/steps_api.h"
 	"header/basic/utility.h"
 	"header/toolkit/cct_searcher/cct_searcher.h"
 	"header/steps_namespace.h"
 	<iostream>
 
-1750741436 source:d:\steps\code\steps\source\apis\steps_api_get_device_count.cpp
+1764151595 source:d:\steps\code\steps\source\apis\steps_api_get_device_count.cpp
 	"header/apis/steps_api.h"
 	"header/apis/steps_api_common.h"
 	"header/basic/utility.h"
@@ -2712,7 +2716,7 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/bpa_imexporter.h"
 
-1750741436 source:d:\steps\code\steps\source\apis\steps_api_is_device_exist.cpp
+1764151595 source:d:\steps\code\steps\source\apis\steps_api_is_device_exist.cpp
 	"header/apis/steps_api.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -2723,18 +2727,18 @@
 	"header/steps_namespace.h"
 	<iostream>
 
-1750741436 source:d:\steps\code\steps\source\apis\steps_api_remove_devices.cpp
+1764151595 source:d:\steps\code\steps\source\apis\steps_api_remove_devices.cpp
 	"header/apis/steps_api.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/bpa_imexporter.h"
 
-1711292341 source:d:\steps\code\steps\source\apis\steps_api_search_buffer.cpp
+1764151595 source:d:\steps\code\steps\source\apis\steps_api_search_buffer.cpp
 	"header/apis/steps_api_search_buffer.h"
 	<iostream>
 
-1750741436 source:d:\steps\code\steps\source\apis\steps_api_search_devices.cpp
+1764151595 source:d:\steps\code\steps\source\apis\steps_api_search_devices.cpp
 	<istream>
 	"header/apis/steps_api.h"
 	"header/apis/steps_api_common.h"
@@ -2862,7 +2866,7 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/bpa_imexporter.h"
 
-1754485004 source:d:\steps\code\steps\source\apis\steps_api_set_get_source_parameters.cpp
+1764151595 source:d:\steps\code\steps\source\apis\steps_api_set_get_source_parameters.cpp
 	"header/apis/steps_api.h"
 	"header/apis/steps_api_common.h"
 	"header/basic/utility.h"
@@ -2929,13 +2933,13 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/bpa_imexporter.h"
 
-1750741436 source:d:\steps\code\steps\source\apis\steps_api_utilities.cpp
+1764151595 source:d:\steps\code\steps\source\apis\steps_api_utilities.cpp
 	"header/apis/steps_api.h"
 	"header/apis/steps_api_common.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 
-1664187911 source:d:\steps\code\steps\source\basic\area.cpp
+1764151595 source:d:\steps\code\steps\source\basic\area.cpp
 	"header/basic/area.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -3002,7 +3006,7 @@
 	<iostream>
 	<fstream>
 
-1758888325 source:d:\steps\code\steps\source\basic\complex_sparse_matrix_csparse.cpp
+1764151595 source:d:\steps\code\steps\source\basic\complex_sparse_matrix_csparse.cpp
 	"header/basic/complex_sparse_matrix_csparse.h"
 	"header/basic/constants.h"
 	"header/basic/utility.h"
@@ -3066,7 +3070,7 @@
 
 1583938871 d:\steps\code\steps\header\basic\exception.h
 
-1750741436 source:d:\steps\code\steps\source\basic\device_id.cpp
+1764151595 source:d:\steps\code\steps\source\basic\device_id.cpp
 	"header/basic/device_id.h"
 	"header/basic/exception.h"
 	"header/basic/utility.h"
@@ -3075,7 +3079,7 @@
 	<cstdio>
 	<algorithm>
 
-1711292341 source:d:\steps\code\steps\source\basic\device_id_test.cpp
+1764151595 source:d:\steps\code\steps\source\basic\device_id_test.cpp
 	"header/basic/test_macro.h"
 	"header/basic/device_id_test.h"
 	"header/basic/utility.h"
@@ -3498,14 +3502,14 @@
 	<cstdio>
 	<complex>
 
-1664187911 source:d:\steps\code\steps\source\basic\string_int_map.cpp
+1764151595 source:d:\steps\code\steps\source\basic\string_int_map.cpp
 	"header/basic/string_int_map.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
 	<istream>
 	<iostream>
 
-1634637238 source:d:\steps\code\steps\source\basic\string_int_map_test.cpp
+1764151595 source:d:\steps\code\steps\source\basic\string_int_map_test.cpp
 	<cmath>
 	"cpptest.h"
 	"header/basic/test_macro.h"
@@ -3577,10 +3581,11 @@
 	<iostream>
 	<cstdio>
 
-1760926594 source:d:\steps\code\steps\source\basic\utility.cpp
+1765280290 source:d:\steps\code\steps\source\basic\utility.cpp
 	"header/basic/utility.h"
 	"header/basic/constants.h"
 	"header/steps_namespace.h"
+	"header/meter/meter_map_builder.h"
 	<cstdio>
 	<algorithm>
 	<istream>
@@ -3591,7 +3596,7 @@
 	<mutex>
 	<omp.h>
 
-1750741436 source:d:\steps\code\steps\source\basic\utility_test.cpp
+1764151595 source:d:\steps\code\steps\source\basic\utility_test.cpp
 	"header/basic/test_macro.h"
 	"header/basic/utility_test.h"
 	"header/steps_namespace.h"
@@ -3834,7 +3839,7 @@
 	<iostream>
 	<fstream>
 
-1750741436 source:d:\steps\code\steps\source\data_imexporter\data_imexporter.cpp
+1764151595 source:d:\steps\code\steps\source\data_imexporter\data_imexporter.cpp
 	"header/data_imexporter/data_imexporter.h"
 	"header/STEPS.h"
 	"header/basic/utility.h"
@@ -3871,7 +3876,7 @@
 	<iostream>
 	<cstdio>
 
-1750741436 source:d:\steps\code\steps\source\data_imexporter\psse_dynamics_imexporter.cpp
+1764151595 source:d:\steps\code\steps\source\data_imexporter\psse_dynamics_imexporter.cpp
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
@@ -3894,7 +3899,7 @@
 	<iostream>
 	<cstdio>
 
-1757678516 source:d:\steps\code\steps\source\data_imexporter\psse_powerflow_imexporter.cpp
+1764151595 source:d:\steps\code\steps\source\data_imexporter\psse_powerflow_imexporter.cpp
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
@@ -3921,7 +3926,7 @@
 	<iostream>
 	<algorithm>
 
-1760926594 source:d:\steps\code\steps\source\data_imexporter\steps_dynamics_imexporter.cpp
+1764151595 source:d:\steps\code\steps\source\data_imexporter\steps_dynamics_imexporter.cpp
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -3943,7 +3948,7 @@
 	<iostream>
 	<cstdio>
 
-1757678516 source:d:\steps\code\steps\source\data_imexporter\steps_powerflow_imexporter.cpp
+1764151595 source:d:\steps\code\steps\source\data_imexporter\steps_powerflow_imexporter.cpp
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
 	"header/device/bus.h"
@@ -3967,7 +3972,7 @@
 	<iostream>
 	<algorithm>
 
-1760926594 source:d:\steps\code\steps\source\device\bus.cpp
+1764930818 source:d:\steps\code\steps\source\device\bus.cpp
 	"header/device/bus.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -4063,7 +4068,7 @@
 	<iostream>
 	<cstdio>
 
-1711292341 source:d:\steps\code\steps\source\device\equivalent_device.cpp
+1764151595 source:d:\steps\code\steps\source\device\equivalent_device.cpp
 	"header/device/nonbus_device.h"
 	"header/basic/utility.h"
 	"header/model/equivalent_model/equivalent_model.h"
@@ -4085,7 +4090,7 @@
 	<cstdio>
 	<cstdlib>
 
-1697457172 source:d:\steps\code\steps\source\device\fixed_shunt.cpp
+1764151595 source:d:\steps\code\steps\source\device\fixed_shunt.cpp
 	"header/device/fixed_shunt.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -4172,7 +4177,7 @@
 	<iostream>
 	<cstdio>
 
-1711292341 source:d:\steps\code\steps\source\device\lcc_hvdc.cpp
+1764151595 source:d:\steps\code\steps\source\device\lcc_hvdc.cpp
 	"header/device/lcc_hvdc.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -4251,7 +4256,7 @@
 	<iostream>
 	<cstdio>
 
-1760926594 source:d:\steps\code\steps\source\device\load.cpp
+1764151595 source:d:\steps\code\steps\source\device\load.cpp
 	"header/device/load.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -4311,7 +4316,7 @@
 	<iostream>
 	<cstdio>
 
-1760926594 source:d:\steps\code\steps\source\device\source.cpp
+1765282194 source:d:\steps\code\steps\source\device\source.cpp
 	"header/device/source.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -4333,7 +4338,7 @@
 	<iostream>
 	<cstdio>
 
-1697457172 source:d:\steps\code\steps\source\device\transformer.cpp
+1764945474 source:d:\steps\code\steps\source\device\transformer.cpp
 	"header/device/transformer.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -4353,7 +4358,7 @@
 	<iostream>
 	<cstdio>
 
-1711292341 source:d:\steps\code\steps\source\device\vsc_hvdc.cpp
+1764987211 source:d:\steps\code\steps\source\device\vsc_hvdc.cpp
 	"header/device/vsc_hvdc.h"
 	"header/basic/utility.h"
 	"header/basic/steps_define.h"
@@ -4403,7 +4408,7 @@
 	<iostream>
 	<cstdio>
 
-1758888325 source:d:\steps\code\steps\source\dynamic_model_database.cpp
+1764151595 source:d:\steps\code\steps\source\dynamic_model_database.cpp
 	"header/dynamic_model_database.h"
 	"header/STEPS.h"
 	"header/steps_namespace.h"
@@ -4414,7 +4419,7 @@
 	<fstream>
 	<cstring>
 
-1760419856 source:d:\steps\code\steps\source\meter\meter.cpp
+1765281387 source:d:\steps\code\steps\source\meter\meter.cpp
 	"header/meter/meter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -4424,7 +4429,7 @@
 	<iostream>
 	<cstring>
 
-1754485004 source:d:\steps\code\steps\source\meter\meter_setter.cpp
+1764151595 source:d:\steps\code\steps\source\meter\meter_setter.cpp
 	"header/meter/meter_setter.h"
 	"header/basic/terminal.h"
 	"header/basic/utility.h"
@@ -4820,7 +4825,7 @@
 	<cstdio>
 	<cmath>
 
-1760926594 source:d:\steps\code\steps\source\model\model.cpp
+1764151595 source:d:\steps\code\steps\source\model\model.cpp
 	"header/model/model.h"
 	<cstdio>
 	"header/basic/utility.h"
@@ -5649,7 +5654,7 @@
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 
-1711292341 source:d:\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_converter_model\vsc_hvdc_converter_model.cpp
+1764151595 source:d:\steps\code\steps\source\model\vsc_hvdc_model\vsc_hvdc_converter_model\vsc_hvdc_converter_model.cpp
 	"header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_model.h"
 	"header/device/vsc_hvdc.h"
 	"header/basic/utility.h"
@@ -6070,7 +6075,7 @@
 	"header/steps_namespace.h"
 	<cstdio>
 
-1761136682 source:d:\steps\code\steps\source\network\network_matrix.cpp
+1764659305 source:d:\steps\code\steps\source\network\network_matrix.cpp
 	"header/network/network_matrix.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -6091,7 +6096,7 @@
 	<cstdio>
 	<cmath>
 
-1761136464 source:d:\steps\code\steps\source\power_system_database.cpp
+1764151595 source:d:\steps\code\steps\source\power_system_database.cpp
 	"header/power_system_database.h"
 	"header/STEPS.h"
 	"header/steps_namespace.h"
@@ -6300,7 +6305,7 @@
 	"header/steps_namespace.h"
 	"header/basic/utility.h"
 
-1760926594 source:d:\steps\code\steps\source\steps.cpp
+1765280201 source:d:\steps\code\steps\source\steps.cpp
 	"header/STEPS.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -6309,7 +6314,7 @@
 	<chrono>
 	<thread>
 
-1711292342 source:d:\steps\code\steps\source\steps_namespace.cpp
+1765280151 source:d:\steps\code\steps\source\steps_namespace.cpp
 	"header/steps_namespace.h"
 
 1711292342 source:d:\steps\code\steps\source\toolkit\cct_searcher\cct_searcher.cpp
@@ -6383,7 +6388,7 @@
 	"header/toolkit/contingency_screener/contingency_screener.h"
 	"header/STEPS.h"
 
-1760926594 source:d:\steps\code\steps\source\toolkit\dynamic_simulator\dynamic_simulator.cpp
+1764151595 source:d:\steps\code\steps\source\toolkit\dynamic_simulator\dynamic_simulator.cpp
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	"header/basic/constants.h"
 	"header/basic/utility.h"
@@ -6397,7 +6402,7 @@
 	<ctime>
 	<chrono>
 
-1760926594 source:d:\steps\code\steps\source\toolkit\dynamic_simulator\dynamic_simulator_prepare_meter.cpp
+1764151595 source:d:\steps\code\steps\source\toolkit\dynamic_simulator\dynamic_simulator_prepare_meter.cpp
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	"header/basic/constants.h"
 	"header/basic/utility.h"
@@ -6456,7 +6461,7 @@
 	<cstdio>
 	<cmath>
 
-1758888325 source:d:\steps\code\steps\source\toolkit\powerflow_solver\powerflow_solver.cpp
+1765188405 source:d:\steps\code\steps\source\toolkit\powerflow_solver\powerflow_solver.cpp
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -6959,7 +6964,7 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1750741436 d:\steps\code\steps\header\device\lcc_hvdc2t.h
+1764151595 d:\steps\code\steps\header\device\lcc_hvdc2t.h
 	"header/device/nonbus_device.h"
 	"header/basic/device_id.h"
 	"header/basic/steps_enum.h"
@@ -7050,7 +7055,7 @@
 	"header/model/lcc_hvdc2t_model/lcc_hvdc2t_model_test.h"
 	"header/STEPS.h"
 
-1750741436 source:d:\steps\code\steps\source\device\lcc_hvdc2t.cpp
+1764151595 source:d:\steps\code\steps\source\device\lcc_hvdc2t.cpp
 	"header/device/lcc_hvdc2t.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -7135,7 +7140,7 @@
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 
-1711292341 d:\steps\code\steps\header\device\ac_line.h
+1764946084 d:\steps\code\steps\header\device\ac_line.h
 	"header/device/nonbus_device.h"
 	"header/basic/device_id.h"
 	"header/basic/rating.h"
@@ -7153,7 +7158,7 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1758888325 source:d:\steps\code\steps\source\device\ac_line.cpp
+1764947155 source:d:\steps\code\steps\source\device\ac_line.cpp
 	"header/device/ac_line.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -149546,7 +149551,7 @@
 	<iostream>
 	<cstdio>
 
-1750741436 source:d:\steps\code\steps\source\device\mt_hvdc.cpp
+1764151595 source:d:\steps\code\steps\source\device\mt_hvdc.cpp
 	"header/device/mt_hvdc.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -149822,7 +149827,7 @@
 	<istream>
 	<iostream>
 
-1760001973 source:d:\steps\code\steps\source\model\mt_hvdc_model\mt_hvdc_dc_grid_model\mtdcgrid4.cpp
+1764987096 source:d:\steps\code\steps\source\model\mt_hvdc_model\mt_hvdc_dc_grid_model\mtdcgrid4.cpp
 	"header/model/mt_hvdc_model/mt_hvdc_dc_grid_model/MTDCGRID4.h"
 	"header/steps_namespace.h"
 	"header/basic/utility.h"
@@ -156979,7 +156984,7 @@
 	"header/block/pi_block.h"
 	"header/block/integral_block.h"
 
-1758888325 d:\steps\code\steps\header\model\common_model\converter_common_model\converter_model\cs_converter_model\csconv3.h
+1764151595 d:\steps\code\steps\header\model\common_model\converter_common_model\converter_model\cs_converter_model\csconv3.h
 	"header/model/common_model/converter_common_model/converter_model/cs_converter_model/cs_converter_model.h"
 	"header/model/common_model/converter_common_model/lvpl_model/lvpl.h"
 	"header/model/common_model/converter_common_model/pll_model/pll0.h"
@@ -157002,7 +157007,7 @@
 	"header/block/pi_block.h"
 	"header/block/integral_block.h"
 
-1760926594 source:d:\steps\code\steps\source\model\common_model\converter_common_model\converter_model\cs_converter_model\csconv3.cpp
+1764151595 source:d:\steps\code\steps\source\model\common_model\converter_common_model\converter_model\cs_converter_model\csconv3.cpp
 	"header/model/common_model/converter_common_model/converter_model/cs_converter_model/csconv3.h"
 
 1760419856 source:d:\steps\code\steps\source\model\energy_storage_model\es_converter_model\sgfles.cpp
@@ -157093,7 +157098,7 @@
 	<cmath>
 	<ctime>
 
-1760926594 source:d:\steps\code\steps\main_gprof_dy_nccc10k.cpp
+1765280740 source:d:\steps\code\steps\main_gprof_dy_nccc10k.cpp
 	"header/basic/utility.h"
 	"header/data_imexporter/psse_imexporter.h"
 	"header/prepare_for_tests/prepare_models_for_test.h"
@@ -157125,7 +157130,7 @@
 	<cmath>
 	<ctime>
 
-1760419856 source:d:\steps\code\steps\main_gprof_pf.cpp
+1764986807 source:d:\steps\code\steps\main_gprof_pf.cpp
 	"header/basic/utility.h"
 	"header/data_imexporter/psse_imexporter.h"
 	"header/prepare_for_tests/prepare_models_for_test.h"
@@ -164317,4 +164322,93 @@
 	"header/basic/utility.h"
 	"header/STEPS.h"
 	<cstdio>
+
+1764151595 d:\steps\code\steps\header\device\sv_source.h
+	<complex>
+	<string>
+	"header/device/source.h"
+	"header/model/svs_model/svs_control_model/svs_control_model.h"
+
+1764151595 d:\steps\code\steps\header\model\svs_model\svs_control_model\svs_control_model.h
+	"header/model/svs_model/svs_model.h"
+
+1764151595 d:\steps\code\steps\header\model\svs_model\svs_model.h
+	"header/model/model.h"
+	<complex>
+
+1764151595 d:\steps\code\steps\header\model\svs_model\supported_svs_models.h
+	"header/model/svs_model/svs_control_model/svs_control_models.h"
+
+1764151595 d:\steps\code\steps\header\model\svs_model\svs_control_model\svs_control_models.h
+	"header/model/svs_model/svs_control_model/sgflsvs0.h"
+
+1764151595 d:\steps\code\steps\header\model\svs_model\svs_control_model\sgflsvs0.h
+	"header/model/svs_model/svs_control_model/svs_control_model.h"
+	"header/block/pi_block.h"
+	"header/block/first_order_block.h"
+	"header/block/lead_lag_block.h"
+	<complex>
+
+1764151595 source:d:\steps\code\steps\source\apis\steps_api_set_get_sv_source_related_model_parameters.cpp
+	"header/apis/steps_api.h"
+	"header/apis/steps_api_common.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+
+1764151595 source:d:\steps\code\steps\source\device\sv_source.cpp
+	"header/device/sv_source.h"
+	"header/basic/utility.h"
+	"header/STEPS.h"
+	<istream>
+	<iostream>
+
+1764151595 source:d:\steps\code\steps\source\model\svs_model\svs_control_model\sgflsvs0.cpp
+	"header/model/svs_model/svs_control_model/sgflsvs0.h"
+	"header/basic/utility.h"
+	"header/STEPS.h"
+	<cstdio>
+
+1764151595 source:d:\steps\code\steps\source\model\svs_model\svs_control_model\svs_control_model.cpp
+	"header/model/svs_model/svs_control_model/svs_control_model.h"
+	"header/basic/utility.h"
+	"header/basic/constants.h"
+	"header/steps_namespace.h"
+	<cstdio>
+	<istream>
+	<iostream>
+
+1764151595 source:d:\steps\code\steps\source\model\svs_model\svs_model.cpp
+	"header/model/svs_model/svs_model.h"
+	"header/basic/utility.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+
+1765276932 d:\steps\code\steps\header\meter\meter_parameter_struct.h
+	"header/device/device.h"
+
+1765278814 d:\steps\code\steps\header\meter\meter_map_builder.h
+
+1765279997 source:d:\steps\code\steps\source\meter\meter_map_builder.cpp
+	"header/meter/meter_map_builder.h"
+	"header/meter/wtg_meter_getter.h"
+	"header/steps_namespace.h"
+
+1765276915 d:\steps\code\steps\header\meter\wtg_meter_getter.h
+	"header/meter/meter_parameter_struct.h"
+	<string>
+
+1765282067 source:d:\steps\code\steps\source\meter\wtg_meter_getter.cpp
+	"header/meter/wtg_meter_getter.h"
+	"header/device/wt_generator.h"
+	"header/model/wtg_models/wt_generator_model/wt_generator_model.h"
+	"header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model.h"
+	"header/model/wtg_models/wt_turbine_model/wt_turbine_model.h"
+	"header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
+	"header/model/wtg_models/wt_pitch_model/wt_pitch_model.h"
+	"header/model/wtg_models/wt_vrt_model/wt_vrt_model.h"
+	"header/model/wtg_models/wt_relay_model/wt_relay_model.h"
+	"header/model/wtg_models/wind_speed_model/wind_speed_model.h"
+	"header/model/wtg_models/wt_dbr_model/wt_dbr_model.h"
+	"header/steps_namespace.h"
+	"header/basic/utility.h"
 
