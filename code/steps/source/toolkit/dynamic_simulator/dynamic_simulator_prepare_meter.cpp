@@ -11,6 +11,7 @@
 #include <iostream>
 #include <ctime>
 #include <chrono>
+#include <algorithm>
 
 using namespace std;
 using namespace chrono;
@@ -134,17 +135,20 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meters()
 
 void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    vector<DEVICE_ID> dids = psdb.get_all_wt_generators_device_id();
+    vector<string> keys;
+    keys.reserve(wtg_meter_map.size());
+    for (auto iter = wtg_meter_map.begin(); iter != wtg_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
+    unsigned int m = keys.size();
+
+    vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_wt_generators_device_id();
     unsigned int n = dids.size();
 
     DYNAMICS_SIMULATOR& sim = toolkit->get_dynamic_simulator();
-    for (auto iter = wtg_meter_map.begin(); iter != wtg_meter_map.end(); ++iter)
-    {
-        string meter_type = iter->first;
-        for(unsigned int i=0; i!=n; ++i)
-            sim.prepare_wt_generator_related_meter(dids[i], meter_type);
-    }
+    for (unsigned int i=0; i<m; ++i)
+        for(unsigned int j=0; j!=n; ++j)
+            sim.prepare_wt_generator_related_meter(dids[j], keys[i]);
 }
 
 void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meters()
