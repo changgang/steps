@@ -95,55 +95,6 @@ class METER_SETTER
         METER prepare_generator_turbine_governor_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
         METER prepare_generator_turbine_load_controller_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
 
-        METER prepare_wt_generator_terminal_current_in_pu_on_mbase_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_terminal_current_in_pu_on_sbase_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_terminal_current_in_kA_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_terminal_active_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_terminal_active_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_terminal_active_power_in_MW_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_terminal_reactive_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_terminal_reactive_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_terminal_reactive_power_in_MVar_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_terminal_apparent_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_terminal_apparent_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_terminal_apparent_power_in_MVA_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_mechanical_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_mechanical_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_mechanical_power_in_MW_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_max_available_mechanical_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_max_available_mechanical_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_max_available_mechanical_power_in_MW_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_speed_reference_in_pu_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_speed_reference_in_rad_per_s_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_turbine_speed_deviation_in_pu_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_turbine_speed_deviation_in_Hz_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_turbine_speed_in_pu_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_turbine_speed_in_Hz_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_rotor_speed_deviation_in_pu_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_rotor_speed_deviation_in_Hz_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_rotor_speed_in_pu_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_rotor_speed_in_Hz_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_rotor_angle_in_deg_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_rotor_angle_in_rad_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_braking_resistor_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_active_current_command_in_pu_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_reactive_current_command_in_pu_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_active_power_command_in_pu_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_reactive_power_command_in_pu_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_reactive_voltage_command_in_pu_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_pitch_angle_in_deg_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_wind_speed_in_pu_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_wind_speed_in_mps_meter(const DEVICE_ID& device_id);
-        METER prepare_wt_generator_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
-        METER prepare_wt_aerodynamic_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
-        METER prepare_wt_turbine_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
-        METER prepare_wt_electrical_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
-        METER prepare_wt_pitch_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
-        METER prepare_wind_speed_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
-        METER prepare_wt_vrt_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
-        METER prepare_wt_relay_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
-        METER prepare_wt_dbr_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
-
         METER prepare_pv_unit_terminal_current_in_pu_on_mbase_meter(const DEVICE_ID& device_id);
         METER prepare_pv_unit_terminal_current_in_pu_on_sbase_meter(const DEVICE_ID& device_id);
         METER prepare_pv_unit_terminal_current_in_kA_meter(const DEVICE_ID& device_id);
@@ -317,14 +268,13 @@ class METER_SETTER
         METER prepare_equivalent_device_reactive_power_load_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_equivalent_device_active_power_net_load_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_equivalent_device_reactive_power_net_load_in_pu_meter(const DEVICE_ID& device_id);
-
     private:
         bool prepare_bus_meter(METER& meter, const unsigned int bus);
         bool prepare_ac_line_meter(METER& meter, const DEVICE_ID& device_id, unsigned int side_bus);
         bool prepare_transformer_meter(METER& meter, const DEVICE_ID& device_id, unsigned int side_bus);
         bool prepare_load_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_generator_meter(METER& meter, const DEVICE_ID& device_id);
-        bool prepare_wt_generator_meter(METER& meter, const DEVICE_ID& device_id);
+
         bool prepare_pv_unit_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_energy_storage_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_sv_source_meter(METER& meter, const DEVICE_ID& device_id);

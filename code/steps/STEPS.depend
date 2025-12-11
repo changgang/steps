@@ -549,7 +549,7 @@
 	<map>
 	<unordered_map>
 
-1765280141 d:\steps\code\steps\header\steps_namespace.h
+1765426594 d:\steps\code\steps\header\steps_namespace.h
 	"header/STEPS.h"
 	"header/basic/steps_define.h"
 	"header/basic/constants.h"
@@ -697,7 +697,7 @@
 	<cmath>
 	<ctime>
 
-1764151595 d:\steps\code\steps\header\meter\meter_setter.h
+1765429698 d:\steps\code\steps\header\meter\meter_setter.h
 	"header/meter/meter.h"
 
 1750741436 source:d:\steps\code\steps\main_powerflow.cpp
@@ -4419,7 +4419,7 @@
 	<fstream>
 	<cstring>
 
-1765281387 source:d:\steps\code\steps\source\meter\meter.cpp
+1765426594 source:d:\steps\code\steps\source\meter\meter.cpp
 	"header/meter/meter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -4429,7 +4429,7 @@
 	<iostream>
 	<cstring>
 
-1764151595 source:d:\steps\code\steps\source\meter\meter_setter.cpp
+1765429691 source:d:\steps\code\steps\source\meter\meter_setter.cpp
 	"header/meter/meter_setter.h"
 	"header/basic/terminal.h"
 	"header/basic/utility.h"
@@ -6314,7 +6314,7 @@
 	<chrono>
 	<thread>
 
-1765280151 source:d:\steps\code\steps\source\steps_namespace.cpp
+1765426594 source:d:\steps\code\steps\source\steps_namespace.cpp
 	"header/steps_namespace.h"
 
 1711292342 source:d:\steps\code\steps\source\toolkit\cct_searcher\cct_searcher.cpp
@@ -6402,12 +6402,13 @@
 	<ctime>
 	<chrono>
 
-1764151595 source:d:\steps\code\steps\source\toolkit\dynamic_simulator\dynamic_simulator_prepare_meter.cpp
+1765429747 source:d:\steps\code\steps\source\toolkit\dynamic_simulator\dynamic_simulator_prepare_meter.cpp
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	"header/basic/constants.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 	"header/meter/meter_setter.h"
+	"header/meter/basic_meter_preparer.h"
 	<cstdio>
 	<cstdlib>
 	<cstring>
@@ -164388,7 +164389,7 @@
 
 1765278814 d:\steps\code\steps\header\meter\meter_map_builder.h
 
-1765279997 source:d:\steps\code\steps\source\meter\meter_map_builder.cpp
+1765426594 source:d:\steps\code\steps\source\meter\meter_map_builder.cpp
 	"header/meter/meter_map_builder.h"
 	"header/meter/wtg_meter_getter.h"
 	"header/steps_namespace.h"
@@ -164411,4 +164412,15 @@
 	"header/model/wtg_models/wt_dbr_model/wt_dbr_model.h"
 	"header/steps_namespace.h"
 	"header/basic/utility.h"
+
+1765429751 d:\steps\code\steps\header\meter\basic_meter_preparer.h
+	"header/meter/meter.h"
+	"header/STEPS.h"
+
+1765429754 source:d:\steps\code\steps\source\meter\basic_meter_preparer.cpp
+	"header/meter/basic_meter_preparer.h"
+	"header/basic/terminal.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<iostream>
 
