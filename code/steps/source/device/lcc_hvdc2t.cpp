@@ -18,21 +18,10 @@ LCC_HVDC2T::~LCC_HVDC2T()
 {
 }
 
-string LCC_HVDC2T::get_converter_side_name(CONVERTER_SIDE converter) const
-{
-    switch(converter)
-    {
-        case RECTIFIER:
-            return "RECTIFIER";
-        default:
-            return "INVERTER";
-    }
-}
-
 void LCC_HVDC2T::set_converter_bus(CONVERTER_SIDE converter, const unsigned int bus)
 {
     ostringstream osstream;
-    string converter_name = get_converter_side_name(converter);
+    string converter_name = converter_side2string(converter);
 
     if(bus!=0)
     {
@@ -262,7 +251,7 @@ void LCC_HVDC2T::set_meter_end(const CONVERTER_SIDE converter)
 void LCC_HVDC2T::set_converter_operation_mode(CONVERTER_SIDE converter, const HVDC_OPERATION_MODE mode)
 {
     ostringstream osstream;
-    string converter_name = get_converter_side_name(converter);
+    string converter_name = converter_side2string(converter);
 
     if(converter==RECTIFIER)
     {
@@ -298,7 +287,7 @@ void LCC_HVDC2T::set_converter_number_of_bridge(CONVERTER_SIDE converter, const 
         this->bridge_number[converter] = nbridge;
     else
     {
-        string converter_name = get_converter_side_name(converter);
+        string converter_name = converter_side2string(converter);
         ostringstream osstream;
         osstream<<"Error. Zero (0) is not allowed for setting LCC_LCC_HVDC2T2T "<<converter_name<<" bridge number of "<<get_compound_device_name()<<endl
                 <<"0 will be set to indicate invalid LCC_LCC_HVDC2T2T link.";
@@ -314,7 +303,7 @@ void LCC_HVDC2T::set_converter_voltage_drop_per_bridge_in_kV(CONVERTER_SIDE conv
         this->voltage_drop_per_bridge_in_kV[converter] = V;
     else
     {
-        string converter_name = get_converter_side_name(converter);
+        string converter_name = converter_side2string(converter);
         ostringstream osstream;
         osstream<<"Warning. Negative ("<<V<<" kV) is not allowed for setting LCC_LCC_HVDC2T2T "<<converter_name<<" voltage drop of "<<get_compound_device_name()<<endl
                 <<"0 will be set automatically.";
@@ -355,7 +344,7 @@ void LCC_HVDC2T::set_converter_transformer_grid_side_base_voltage_in_kV(CONVERTE
     else
     {
         ostringstream osstream;
-        string converter_name = get_converter_side_name(converter);
+        string converter_name = converter_side2string(converter);
         if(V == 0.0)
         {
             STEPS& toolkit = get_toolkit();
@@ -391,7 +380,7 @@ void LCC_HVDC2T::set_converter_transformer_converter_side_base_voltage_in_kV(CON
         this->converter_transformer_converter_side_base_voltage_in_kV[converter] = V;
     else
     {
-        string converter_name = get_converter_side_name(converter);
+        string converter_name = converter_side2string(converter);
         ostringstream osstream;
         osstream<<"Error. Non-positive ("<<V<<" kV) is not allowed for setting LCC_LCC_HVDC2T2T "<<converter_name<<" transformer converter side base voltage of "<<get_compound_device_name()<<endl
           <<"0.0 will be set to indicate invalid base voltage.";
@@ -585,7 +574,7 @@ double LCC_HVDC2T::get_converter_cos_min_alpha_or_gamma(CONVERTER_SIDE converter
 
 double LCC_HVDC2T::get_converter_transformer_grid_side_base_voltage_in_kV(CONVERTER_SIDE converter) const
 {
-    string converter_name = get_converter_side_name(converter);
+    string converter_name = converter_side2string(converter);
     double V = converter_transformer_grid_side_base_voltage_in_kV[converter];
     if(V != 0.0)
         return V;
@@ -1720,7 +1709,7 @@ void LCC_HVDC2T::solve_as_rectifier_regulating_power_and_inverter_regulating_vol
 bool LCC_HVDC2T::solve_converter_transformer_tap_and_desired_firing_angle(CONVERTER_SIDE converter, double Vdc, double Idc)
 {
     ostringstream osstream;
-    //cout<<"solving "<<get_compound_device_name()<<" with "<<__FUNCTION__<<": "<<get_converter_side_name(converter)<<" desired Vdc = "<<Vdc<<"kV, Idc = "<<Idc<<endl;
+    //cout<<"solving "<<get_compound_device_name()<<" with "<<__FUNCTION__<<": "<<converter_side2string(converter)<<" desired Vdc = "<<Vdc<<"kV, Idc = "<<Idc<<endl;
     solve_best_converter_transformer_tap_with_min_angle(converter, Vdc, Idc);
     double Tap = get_converter_transformer_tap_in_pu(converter);
 
@@ -1760,7 +1749,7 @@ bool LCC_HVDC2T::solve_converter_transformer_tap_and_desired_firing_angle(CONVER
     else
         set_converter_alpha_or_gamma_in_deg(converter, get_converter_min_alpha_or_gamma_in_deg(converter), cos_min_firing_angle[converter]);
 
-    //osstream<<get_compound_device_name()<<": trying to solve "<<get_converter_side_name(converter)<<" transformer tap = "<<get_converter_transformer_tap_in_pu(converter)
+    //osstream<<get_compound_device_name()<<": trying to solve "<<converter_side2string(converter)<<" transformer tap = "<<get_converter_transformer_tap_in_pu(converter)
     //       <<", best firing angle = "<<get_converter_alpha_or_gamma_in_deg(converter)<<" deg";
     //show_information_with_leading_time_stamp(osstream);
 
@@ -1803,7 +1792,7 @@ void LCC_HVDC2T::solve_best_converter_transformer_tap_with_min_angle(CONVERTER_S
     if(Tap < minTap) Tap = minTap; // apply limit
     if(Tap > maxTap) Tap = maxTap;
 
-    //osstream<<"Best converter transformer tap with min angle: "<<Tap<<" for "<<get_converter_side_name(converter).c_str()<<endl
+    //osstream<<"Best converter transformer tap with min angle: "<<Tap<<" for "<<converter_side2string(converter).c_str()<<endl
     //        <<"Vbus = "<<psdb.get_bus_positive_sequence_voltage_in_pu(get_converter_bus(converter));
     //toolkit.show_information_with_leading_time_stamp(osstream);
 

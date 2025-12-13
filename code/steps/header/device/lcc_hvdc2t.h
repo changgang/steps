@@ -157,8 +157,6 @@ class LCC_HVDC2T : public NONBUS_DEVICE
 
         complex<double> get_converter_dynamic_current_in_pu_based_on_system_base_power(CONVERTER_SIDE converter);
     private:
-        string get_converter_side_name(CONVERTER_SIDE converter) const;
-
         void solve_as_rectifier_regulating_power_and_inverter_regulating_voltage();
         void solve_as_rectifier_regulating_current_and_inverter_regulating_voltage();
         void solve_as_rectifier_regulating_power_and_inverter_regulating_gamma();

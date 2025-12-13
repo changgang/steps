@@ -1428,6 +1428,15 @@ double LCC_HVDC2T_MODEL::get_converter_commutation_overlap_angle_in_deg(CONVERTE
         double mu = steps_cos(angle)-SQRT2*idc*xc/eac;
         mu = steps_acos(mu)-angle;
 
+        STEPS& toolkit = get_toolkit();
+        if(fabs(mu)<FLOAT_EPSILON and toolkit.is_detailed_log_enabled())
+        {
+            ostringstream osstream;
+            osstream<<"mu<FLOAT_EPSILON ("<<mu<<") is detected for "<<get_model_name()<<" of "<<get_compound_device_name()<<endl
+                    <<converter_side2string(converter)<<": angle = "<<angle<<" rad, Idc = "<<idc<<" kA, Eac = "<<eac<<" kV";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+
         return rad2deg(mu);
     }
     else
@@ -1478,6 +1487,15 @@ double LCC_HVDC2T_MODEL::get_converter_ac_power_factor_angle_in_deg(CONVERTER_SI
         double total_angle_2 = (angle+mu)*2.0;
         double tan_phi = mu2+steps_sin(angle2)-steps_sin(total_angle_2);
         tan_phi /= (steps_cos(angle2)-steps_cos(total_angle_2));
+        STEPS& toolkit = get_toolkit();
+        if(isnan(tan_phi) and toolkit.is_detailed_log_enabled())
+        {
+            LCC_HVDC2T* hvdc = get_2t_lcc_hvdc_pointer();
+            ostringstream osstream;
+            osstream<<"NAN is detected for tan_phi of "<<get_model_name()<<" of "<<get_compound_device_name()<<endl
+                    <<converter_side2string(converter)<<": angle = "<<angle<<" rad, mu = "<<mu<<" rad";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
 
         if(tan_phi>5)
         {

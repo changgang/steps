@@ -1096,6 +1096,16 @@ string dc_device_type2string(STEPS_DC_DEVICE_TYPE device_type)
             return "UNNAMED DC DEVICE TYPE OF NUMBER "+num2str(device_type);
     }
 }
+string converter_side2string(CONVERTER_SIDE converter)
+{
+    switch(converter)
+    {
+        case RECTIFIER:
+            return "RECTIFIER";
+        default:
+            return "INVERTER";
+    }
+}
 
 void set_openmp_number_of_threads(unsigned int n)
 {

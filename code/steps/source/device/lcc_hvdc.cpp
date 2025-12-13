@@ -502,17 +502,6 @@ const LCC_STATION& LCC_HVDC::get_station(CONVERTER_SIDE side) const
     return station[side];
 }
 
-string LCC_HVDC::get_converter_side_name(CONVERTER_SIDE side) const
-{
-    switch(side)
-    {
-        case RECTIFIER:
-            return "RECTIFIER";
-        default:
-            return "INVERTER";
-    }
-}
-
 void LCC_HVDC::set_status(const bool status)
 {
     this->status = status;
@@ -806,7 +795,7 @@ void LCC_HVDC::show_solved_steady_state() const
         CONVERTER_SIDE side = RECTIFIER;
         if(converter==1) side = INVERTER;
 
-        osstream<<get_converter_side_name(side)<<":";
+        osstream<<converter_side2string(side)<<":";
         toolkit.show_information_with_leading_time_stamp(osstream);
 
         unsigned int n = get_converter_count(side);

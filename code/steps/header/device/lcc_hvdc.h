@@ -133,7 +133,6 @@ class LCC_HVDC : public NONBUS_DEVICE
         void solve_steady_state();
         void show_solved_steady_state() const;
     private:
-        string get_converter_side_name(CONVERTER_SIDE side) const;
         double get_line_dc_current_in_kA() const;
     private:
         LCC_STATION station[2];

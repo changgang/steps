@@ -41,6 +41,5 @@ CONVERTER_SIDE CONVERTER_STATION::get_converter_side() const { return side; }
 
 string CONVERTER_STATION::get_converter_side_name() const
 {
-    if(side==RECTIFIER) return "RECTIFIER";
-    else                return "INVERTER";
+    return converter_side2string(side);
 }
