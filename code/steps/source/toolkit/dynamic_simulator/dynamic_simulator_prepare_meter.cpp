@@ -71,6 +71,27 @@ void DYNAMICS_SIMULATOR::prepare_bus_related_meters()
     }
 }
 
+void DYNAMICS_SIMULATOR::prepare_bus_related_meters(unsigned int bus)
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+
+    METER_SETTER setter(*toolkit);
+
+    METER meter(*toolkit);
+
+    meter = setter.prepare_bus_voltage_in_pu_meter(bus);
+    append_meter(meter);
+
+    meter = setter.prepare_bus_angle_in_deg_meter(bus);
+    append_meter(meter);
+
+    meter = setter.prepare_bus_frequency_deviation_in_pu_meter(bus);
+    append_meter(meter);
+
+    meter = setter.prepare_bus_frequency_in_Hz_meter(bus);
+    append_meter(meter);
+}
+
 
 void DYNAMICS_SIMULATOR::prepare_generator_related_meters()
 {
@@ -133,6 +154,39 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meters()
     }
 }
 
+void DYNAMICS_SIMULATOR::prepare_generator_related_meters(const DEVICE_ID& did)
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+
+    METER_SETTER setter(*toolkit);
+
+    METER meter(*toolkit);
+
+    meter = setter.prepare_generator_rotor_angle_in_deg_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_generator_rotor_speed_deviation_in_pu_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_generator_excitation_voltage_in_pu_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_generator_stabilizing_signal_in_pu_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_generator_mechanical_power_in_MW_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_generator_mechanical_power_reference_in_MW_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_generator_terminal_active_power_in_MW_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_generator_terminal_reactive_power_in_MVar_meter(did);
+    append_meter(meter);
+}
+
 void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
 {
     vector<string> keys;
@@ -149,6 +203,20 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
     for (unsigned int i=0; i<m; ++i)
         for(unsigned int j=0; j!=n; ++j)
             sim.prepare_wt_generator_related_meter(dids[j], keys[i]);
+}
+
+void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters(const DEVICE_ID& did)
+{
+    vector<string> keys;
+    keys.reserve(wtg_meter_map.size());
+    for (auto iter = wtg_meter_map.begin(); iter != wtg_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
+    unsigned int m = keys.size();
+
+    DYNAMICS_SIMULATOR& sim = toolkit->get_dynamic_simulator();
+    for (unsigned int i=0; i<m; ++i)
+        sim.prepare_wt_generator_related_meter(did, keys[i]);
 }
 
 void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meters()
@@ -320,6 +388,93 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meters()
     }
 }
 
+void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meters(const DEVICE_ID& did)
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+
+    METER_SETTER setter(*toolkit);
+
+    METER meter(*toolkit);
+
+    meter = setter.prepare_pv_unit_terminal_current_in_kA_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_terminal_current_in_pu_on_mbase_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_terminal_current_in_pu_on_sbase_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_terminal_active_power_in_pu_on_mbase_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_terminal_active_power_in_pu_on_sbase_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_terminal_active_power_in_MW_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_mbase_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_sbase_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_terminal_reactive_power_in_MVar_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_terminal_apparent_power_in_pu_on_mbase_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_terminal_apparent_power_in_pu_on_sbase_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_terminal_apparent_power_in_MVA_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_active_current_command_in_pu_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_reactive_current_command_in_pu_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_active_power_command_in_pu_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_reactive_power_command_in_pu_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_reactive_voltage_command_in_pu_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_solar_irradiance_in_pu_on_s0_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_solar_irradiance_in_pu_on_sref_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_solar_irradiance_in_Wpm2_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_temperature_in_c_deg_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_MW_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_mbase_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_sbase_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_panel_power_in_pu_on_mbase_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_pv_unit_panel_power_in_MW(did);
+    append_meter(meter);
+}
+
 void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meters()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -433,6 +588,65 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meters()
         METER meter = setter.prepare_es_state_of_charge_in_pu_meter(energy_storage->get_device_id());
         append_meter(meter);
     }
+}
+
+void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meters(const DEVICE_ID& did)
+{
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+
+    METER_SETTER setter(*toolkit);
+    METER meter(*toolkit);
+
+    meter = setter.prepare_es_terminal_current_in_kA_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_es_terminal_current_in_pu_on_mbase_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_es_terminal_current_in_pu_on_sbase_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_es_terminal_active_power_in_MW_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_es_terminal_reactive_power_in_MVar_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_es_terminal_apparent_power_in_pu_on_mbase_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_es_terminal_apparent_power_in_pu_on_sbase_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_es_terminal_apparent_power_in_MVA_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_es_active_current_command_in_pu_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_es_reactive_current_command_in_pu_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_es_active_power_command_in_pu_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_es_reactive_power_command_in_pu_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_es_reactive_voltage_command_in_pu_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_es_soc_power_in_pu_on_mbase_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_es_soc_power_in_pu_on_sbase_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_es_soc_power_in_MW_meter(did);
+    append_meter(meter);
+
+    meter = setter.prepare_es_state_of_charge_in_pu_meter(did);
+    append_meter(meter);
 }
 
 void DYNAMICS_SIMULATOR::prepare_sv_source_related_meters()

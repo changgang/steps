@@ -106,6 +106,20 @@ class DYNAMICS_SIMULATOR
         void prepare_mt_hvdc_related_meters();
         void prepare_equivalent_device_related_meters();
 
+        void prepare_bus_related_meters(unsigned int bus);
+        void prepare_generator_related_meters(const DEVICE_ID& did);
+        void prepare_wt_generator_related_meters(const DEVICE_ID& did);
+        void prepare_pv_unit_related_meters(const DEVICE_ID& did);
+        void prepare_energy_storage_related_meters(const DEVICE_ID& did);
+        void prepare_sv_source_related_meters(const DEVICE_ID& did);
+        void prepare_load_related_meters(const DEVICE_ID& did);
+        void prepare_ac_line_related_meters(const DEVICE_ID& did);
+        void prepare_transformer_related_meters(const DEVICE_ID& did);
+        void prepare_2t_lcc_hvdc_related_meters(const DEVICE_ID& did);
+        void prepare_vsc_hvdc_related_meters(const DEVICE_ID& did);
+        void prepare_mt_hvdc_related_meters(const DEVICE_ID& did);
+        void prepare_equivalent_device_related_meters(const DEVICE_ID& did);
+
         void prepare_bus_related_meter(unsigned int bus, string meter_type);
         void prepare_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
         void prepare_wt_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
