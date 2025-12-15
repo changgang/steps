@@ -3,6 +3,7 @@
 #include "header/meter/sg_meter_getter.h"
 #include "header/meter/wtg_meter_getter.h"
 #include "header/meter/pvu_meter_getter.h"
+#include "header/meter/es_meter_getter.h"
 #include "header/steps_namespace.h"
 
 void build_bus_meter_map()
@@ -167,6 +168,43 @@ void build_pvu_meter_map()
 
 void build_es_meter_map()
 {
+    using namespace es_meter_getter;
+    es_meter_map.insert({"TERMINAL CURRENT IN PU ON MBASE",           get_terminal_current_pu_mbase});
+    es_meter_map.insert({"TERMINAL CURRENT IN PU ON SBASE",           get_terminal_current_pu_sbase});
+    es_meter_map.insert({"TERMINAL CURRENT IN KA",                    get_terminal_current_ka});
+    es_meter_map.insert({"TERMINAL ACTIVE POWER IN PU ON MBASE",      get_terminal_active_power_pu_mbase});
+    es_meter_map.insert({"TERMINAL ACTIVE POWER IN PU ON SBASE",      get_terminal_active_power_pu_sbase});
+    es_meter_map.insert({"TERMINAL ACTIVE POWER IN MW",               get_terminal_active_power_mw});
+    es_meter_map.insert({"TERMINAL REACTIVE POWER IN PU ON MBASE",    get_terminal_reactive_power_pu_mbase});
+    es_meter_map.insert({"TERMINAL REACTIVE POWER IN PU ON SBASE",    get_terminal_reactive_power_pu_sbase});
+    es_meter_map.insert({"TERMINAL REACTIVE POWER IN MVAR",           get_terminal_reactive_power_mvar});
+    es_meter_map.insert({"TERMINAL APPARENT POWER IN PU ON MBASE",    get_terminal_apparent_power_pu_mbase});
+    es_meter_map.insert({"TERMINAL APPARENT POWER IN PU ON SBASE",    get_terminal_apparent_power_pu_sbase});
+    es_meter_map.insert({"TERMINAL APPARENT POWER IN MVA",            get_terminal_apparent_power_mva});
+    es_meter_map.insert({"ACTIVE CURRENT COMMAND IN PU",              get_active_current_command_pu});
+    es_meter_map.insert({"REACTIVE CURRENT COMMAND IN PU",            get_reactive_current_command_pu});
+    es_meter_map.insert({"ACTIVE POWER COMMAND IN PU",                get_active_power_command_pu});
+    es_meter_map.insert({"REACTIVE POWER COMMAND IN PU",              get_reactive_power_command_pu});
+    es_meter_map.insert({"REACTIVE VOLTAGE COMMAND IN PU",            get_reactive_voltage_command_pu});
+    es_meter_map.insert({"STATE OF CHARGE IN PU",                     get_state_of_charge_pu});
+    es_meter_map.insert({"SOC POWER IN PU ON MBASE",                  get_soc_power_pu_mbase});
+    es_meter_map.insert({"SOC POWER IN PU ON SBASE",                  get_soc_power_pu_sbase});
+    es_meter_map.insert({"SOC POWER IN MW",                           get_soc_power_mw});
+    es_meter_map.insert({"MECHANICAL POWER IN PU ON MBASE",           get_mechanical_power_pu_mbase});
+    es_meter_map.insert({"ROTOR SPEED IN PU",                         get_rotor_speed_pu});
+    es_meter_map.insert({"ROTOR SPEED REFERENCE IN PU",               get_rotor_speed_reference_pu});
+    es_meter_map.insert({"VALVE REFERENCE IN PU",                     get_valve_reference_pu});
+    es_meter_map.insert({"VALVE IN PU",                               get_valve_pu});
+    es_meter_map.insert({"ACTIVE POWER REFERENCE IN PU ON MBASE",     get_active_power_reference_pu_mbase});
+    es_meter_map.insert({"FREQUENCY REGULATION POWER IN PU ON MBASE", get_frequency_regulation_power_pu_mbase});
+    es_meter_map.insert({"ES CONVERTER MODEL INTERNAL VARIABLE",      get_converter_model_internal_variable});
+    es_meter_map.insert({"ES SOC MODEL INTERNAL VARIABLE",            get_soc_model_internal_variable});
+    es_meter_map.insert({"ES ELECTRICAL MODEL INTERNAL VARIABLE",     get_electrical_model_internal_variable});
+    es_meter_map.insert({"ES VRT MODEL INTERNAL VARIABLE",            get_vrt_model_internal_variable});
+    es_meter_map.insert({"ES RELAY MODEL INTERNAL VARIABLE",          get_relay_model_internal_variable});
+    es_meter_map.insert({"ES PRIMARY MODEL INTERNAL VARIABLE",        get_primary_model_internal_variable});
+    es_meter_map.insert({"ES ROTOR MODEL INTERNAL VARIABLE",          get_rotor_model_internal_variable});
+    es_meter_map.insert({"ES AUXILIARY MODEL INTERNAL VARIABLE",      get_auxiliary_model_internal_variable});
 }
 
 void build_sv_source_meter_map()
