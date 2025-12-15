@@ -1,5 +1,6 @@
 #include "header/meter/meter_map_builder.h"
 #include "header/meter/bus_meter_getter.h"
+#include "header/meter/sg_meter_getter.h"
 #include "header/meter/wtg_meter_getter.h"
 #include "header/steps_namespace.h"
 
@@ -18,6 +19,49 @@ void build_bus_meter_map()
 
 void build_sg_meter_map()
 {
+    using namespace sg_meter_getter;
+    sg_meter_map.insert({"ROTOR ANGLE IN DEG",                              get_rotor_angle_deg});
+    sg_meter_map.insert({"ROTOR ANGLE IN RAD",                              get_rotor_angle_rad});
+    sg_meter_map.insert({"ROTOR SPEED IN PU",                               get_rotor_speed_pu});
+    sg_meter_map.insert({"ROTOR SPEED IN HZ",                               get_rotor_speed_hz});
+    sg_meter_map.insert({"ROTOR SPEED DEVIATION IN PU",                     get_rotor_speed_deviation_pu});
+    sg_meter_map.insert({"ROTOR SPEED DEVIATION IN HZ",                     get_rotor_speed_deviation_hz});
+    sg_meter_map.insert({"TERMINAL VOLTAGE IN PU",                          get_terminal_voltage_pu});
+    sg_meter_map.insert({"INTERNAL VOLTAGE IN PU",                          get_internal_voltage_pu});
+    sg_meter_map.insert({"TERMINAL CURRENT IN PU ON MBASE",                 get_terminal_current_pu_mbase});
+    sg_meter_map.insert({"TERMINAL CURRENT IN PU ON SBASE",                 get_terminal_current_pu_sbase});
+    sg_meter_map.insert({"TERMINAL CURRENT IN KA",                          get_terminal_current_ka});
+    sg_meter_map.insert({"TERMINAL ACTIVE POWER IN PU ON MBASE",            get_terminal_active_power_pu_mbase});
+    sg_meter_map.insert({"TERMINAL ACTIVE POWER IN PU ON SBASE",            get_terminal_active_power_pu_sbase});
+    sg_meter_map.insert({"TERMINAL ACTIVE POWER IN MW",                     get_terminal_active_power_mw});
+    sg_meter_map.insert({"TERMINAL REACTIVE POWER IN PU ON MBASE",          get_terminal_reactive_power_pu_mbase});
+    sg_meter_map.insert({"TERMINAL REACTIVE POWER IN PU ON SBASE",          get_terminal_reactive_power_pu_sbase});
+    sg_meter_map.insert({"TERMINAL REACTIVE POWER IN MVAR",                 get_terminal_reactive_power_mvar});
+    sg_meter_map.insert({"TERMINAL APPRRENT POWER IN PU ON MBASE",          get_terminal_apparent_power_pu_mbase});
+    sg_meter_map.insert({"TERMINAL APPARENT POWER IN PU ON SBASE",          get_terminal_apparent_power_pu_sbase});
+    sg_meter_map.insert({"TERMINAL APPARENT POWER IN MVA",                  get_terminal_apparent_power_mva});
+    sg_meter_map.insert({"AIRGAP POWER IN PU ON MBASE",                     get_airgap_power_pu_mbase});
+    sg_meter_map.insert({"AIRGAP POWER IN PU ON SBASE",                     get_airgap_power_pu_sbase});
+    sg_meter_map.insert({"AIRGAP POWER IN MW",                              get_airgap_power_mw});
+    sg_meter_map.insert({"ACCELERATING POWER IN PU ON MBASE",               get_accelerating_power_pu_mbase});
+    sg_meter_map.insert({"ACCELERATING POWER IN PU ON SBASE",               get_accelerating_power_pu_sbase});
+    sg_meter_map.insert({"ACCELERATING POWER IN MW",                        get_accelerating_power_mw});
+    sg_meter_map.insert({"MECHANICAL POWER IN PU ON MBASE",                 get_mechanical_power_pu_mbase});
+    sg_meter_map.insert({"MECHANICAL POWER IN PU ON SBASE",                 get_mechanical_power_pu_sbase});
+    sg_meter_map.insert({"MECHANICAL POWER IN MW",                          get_mechanical_power_mw});
+    sg_meter_map.insert({"MECHANICAL POWER REFERENCE IN PU ON MBASE",       get_mechanical_power_reference_pu_mbase});
+    sg_meter_map.insert({"MECHANICAL POWER REFERENCE IN PU ON SBASE",       get_mechanical_power_reference_pu_sbase});
+    sg_meter_map.insert({"MECHANICAL POWER REFERENCE IN MW",                get_mechanical_power_reference_mw});
+    sg_meter_map.insert({"COMPENSATED VOLTAGE IN PU",                       get_compensated_voltage_pu});
+    sg_meter_map.insert({"VOLTAGE REFERENCE IN PU",                         get_voltage_reference_pu});
+    sg_meter_map.insert({"STABILIZING SIGNAL IN PU",                        get_stabilizing_signal_pu});
+    sg_meter_map.insert({"EXCITATION VOLTAGE IN PU",                        get_excitation_voltage_pu});
+    sg_meter_map.insert({"SYNC GENERATOR MODEL INTERNAL VARIABLE",          get_sync_generator_model_internal_variable});
+    sg_meter_map.insert({"COMPENSATOR MODEL INTERNAL VARIABLE",             get_compensator_model_internal_variable});
+    sg_meter_map.insert({"STABILIZER MODEL INTERNAL VARIABLE",              get_stabilizer_model_internal_variable});
+    sg_meter_map.insert({"EXCITER MODEL INTERNAL VARIABLE",                 get_exciter_model_internal_variable});
+    sg_meter_map.insert({"TURBINE GOVERNOR MODEL INTERNAL VARIABLE",        get_turbine_governor_model_internal_variable});
+    sg_meter_map.insert({"TURBINE LOAD CONTROLLER MODEL INTERNAL VARIABLE", get_turbine_load_controller_model_internal_variable});
 }
 
 void build_wtg_meter_map()

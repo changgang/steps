@@ -63,23 +63,29 @@ int main(int argc, char* argv[])
 
     simulator.prepare_bus_related_meters(306);
 
-    vector<GENERATOR*> gens = psdb.get_all_generators();
+    vector<GENERATOR*> gens = psdb.get_generators_connecting_to_bus(18231);
     for(unsigned int i=0; i<1; ++i)
     {
         GENERATOR* gen = gens[i];
         simulator.prepare_generator_related_meters(gen->get_device_id());
     }
-    vector<WT_GENERATOR*> wt_gens = psdb.get_all_wt_generators();
+    vector<WT_GENERATOR*> wt_gens = psdb.get_wt_generators_connecting_to_bus(21125);
     for(unsigned int i=0; i<1; ++i)
     {
         WT_GENERATOR* wtgen = wt_gens[i];
         simulator.prepare_wt_generator_related_meters(wtgen->get_device_id());
     }
-    vector<PV_UNIT*> pvus = psdb.get_all_pv_units();
+    vector<PV_UNIT*> pvus = psdb.get_pv_units_connecting_to_bus(21382);
     for(unsigned int i=0; i<1; ++i)
     {
         PV_UNIT* pvu = pvus[i];
         simulator.prepare_pv_unit_related_meters(pvu->get_device_id());
+    }
+    vector<ENERGY_STORAGE*> ess = psdb.get_energy_storages_connecting_to_bus(21331);
+    for(unsigned int i=0; i<1; ++i)
+    {
+        ENERGY_STORAGE* es = ess[i];
+        simulator.prepare_energy_storage_related_meters(es->get_device_id());
     }
 
     simulator.set_output_file("bench_NCCC_10k_bus_model_dynamic_test");
