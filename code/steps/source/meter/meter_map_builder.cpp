@@ -1,9 +1,19 @@
 #include "header/meter/meter_map_builder.h"
+#include "header/meter/bus_meter_getter.h"
 #include "header/meter/wtg_meter_getter.h"
 #include "header/steps_namespace.h"
 
 void build_bus_meter_map()
 {
+    using namespace bus_meter_getter;
+    bus_meter_map.insert({"VOLTAGE IN PU",                     get_voltage_pu});
+    bus_meter_map.insert({"VOLTAGE IN KV",                     get_voltage_kV});
+    bus_meter_map.insert({"ANGLE IN DEG",                      get_angle_deg});
+    bus_meter_map.insert({"FREQUENCY DEVIATION IN PU",         get_frequency_deviation_pu});
+    bus_meter_map.insert({"FREQUENCY DEVIATION IN HZ",         get_frequency_deviation_Hz});
+    bus_meter_map.insert({"FREQUENCY IN PU",                   get_frequency_pu});
+    bus_meter_map.insert({"FREQUENCY IN HZ",                   get_frequency_Hz});
+    bus_meter_map.insert({"ROCOF IN HZ/S",                     get_rocof_Hz_per_second});
 }
 
 void build_sg_meter_map()

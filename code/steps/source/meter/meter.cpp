@@ -9,14 +9,6 @@
 
 using namespace std;
 
-vector<string> bus_meters{ "VOLTAGE IN PU",             "VOLTAGE IN KV",
-                            "ANGLE IN DEG",              "ANGLE IN RAD",
-                            "FREQUENCY IN PU",           "FREQUENCY IN HZ",
-                            "FREQUENCY DEVIATION IN PU", "FREQUENCY DEVIATION IN HZ",
-                            "ROCOV IN PU/S",             "ROCOV IN KV/S",
-                            "ROCOF IN PU/S",             "ROCOF IN HZ/S"};
-
-
 vector<string> line_meters{"CURRENT AT SENDING SIDE IN KA",                    "CURRENT AT RECEIVING SIDE IN KA",
                             "ACTIVE POWER AT SENDING SIDE IN MW",               "ACTIVE POWER AT RECEIVING SIDE IN MW",
                             "REACTIVE POWER AT SENDING SIDE IN MVAR",           "REACTIVE POWER AT RECEIVING SIDE IN MVAR",
@@ -226,7 +218,7 @@ vector<string> equivalent_device_meters{"VOLTAGE SOURCE VOLTAGE IN PU",
                                          "ACTIVE POWER NET LOAD IN PU",
                                          "REACTIVE POWER NET LOAD IN PU"};
 
-map<STEPS_DEVICE_TYPE, vector<string>> SUPPORTED_METERS{    {STEPS_BUS,         bus_meters},
+map<STEPS_DEVICE_TYPE, vector<string>> SUPPORTED_METERS{
                                                             {STEPS_AC_LINE,        line_meters},
                                                             {STEPS_TRANSFORMER, transformer_meters},
                                                             {STEPS_LOAD,        load_meters},
@@ -620,6 +612,7 @@ bool METER::is_valid_meter_type_of_device(const string& meter_type, STEPS_DEVICE
 {
     ostringstream osstream;
 
+    if(device_type == STEPS_BUS) return bus_meter_map.find(meter_type) != bus_meter_map.end();
     if(device_type == STEPS_WT_GENERATOR) return wtg_meter_map.find(meter_type) != wtg_meter_map.end();
 
     map<STEPS_DEVICE_TYPE, vector<string> >::const_iterator it = SUPPORTED_METERS.find(device_type);
@@ -932,29 +925,9 @@ double METER::get_meter_value() const
 
 double METER::get_meter_value_as_a_bus() const
 {
-    BUS* bus = (BUS*) get_device_pointer();
-    if(bus->get_bus_type()!=OUT_OF_SERVICE)
-    {
-        string meter_type = get_meter_type();
-        if(meter_type=="VOLTAGE IN PU")
-            return bus->get_positive_sequence_voltage_in_pu();
-        if(meter_type=="VOLTAGE IN KV")
-            return bus->get_positive_sequence_voltage_in_kV();
-        if(meter_type=="ANGLE IN DEG")
-            return bus->get_positive_sequence_angle_in_deg();
-        if(meter_type=="FREQUENCY DEVIATION IN PU")
-            return bus->get_frequency_deviation_in_pu();
-        if(meter_type=="FREQUENCY DEVIATION IN HZ")
-            return bus->get_frequency_deviation_in_Hz();
-        if(meter_type=="FREQUENCY IN PU")
-            return 1.0+bus->get_frequency_deviation_in_pu();
-        if(meter_type=="FREQUENCY IN HZ")
-            return bus->get_base_frequency_in_Hz()+bus->get_frequency_deviation_in_Hz();
-        if(meter_type=="ROCOF IN HZ/S")
-            return bus->get_ROCOF_in_Hz_per_second();
-
-        return 0.0;
-    }
+    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = bus_meter_map.find(get_meter_type());
+    if (it != bus_meter_map.end())
+        return get_meter_value_with_function(it->second);
     else
         return 0.0;
 }

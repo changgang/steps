@@ -184,6 +184,7 @@
 		<Unit filename="header/device/wt_generator_test.h" />
 		<Unit filename="header/dynamic_model_database.h" />
 		<Unit filename="header/meter/basic_meter_preparer.h" />
+		<Unit filename="header/meter/bus_meter_getter.h" />
 		<Unit filename="header/meter/meter.h" />
 		<Unit filename="header/meter/meter_map_builder.h" />
 		<Unit filename="header/meter/meter_parameter_struct.h" />
@@ -735,6 +736,7 @@
 		<Unit filename="source/device/wt_generator_test.cpp" />
 		<Unit filename="source/dynamic_model_database.cpp" />
 		<Unit filename="source/meter/basic_meter_preparer.cpp" />
+		<Unit filename="source/meter/bus_meter_getter.cpp" />
 		<Unit filename="source/meter/meter.cpp" />
 		<Unit filename="source/meter/meter_map_builder.cpp" />
 		<Unit filename="source/meter/meter_setter.cpp" />
