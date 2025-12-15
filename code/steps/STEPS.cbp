@@ -191,6 +191,7 @@
 		<Unit filename="header/meter/meter_setter.h" />
 		<Unit filename="header/meter/meter_setter_test.h" />
 		<Unit filename="header/meter/meter_test.h" />
+		<Unit filename="header/meter/pvu_meter_getter.h" />
 		<Unit filename="header/meter/sg_meter_getter.h" />
 		<Unit filename="header/meter/wtg_meter_getter.h" />
 		<Unit filename="header/model/all_supported_models.h" />
@@ -749,6 +750,7 @@
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
+		<Unit filename="source/meter/pvu_meter_getter.cpp" />
 		<Unit filename="source/meter/sg_meter_getter.cpp" />
 		<Unit filename="source/meter/wtg_meter_getter.cpp" />
 		<Unit filename="source/model/bus_model/bus_frequency_model/bus_frequency_model.cpp" />

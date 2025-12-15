@@ -2,6 +2,7 @@
 #include "header/meter/bus_meter_getter.h"
 #include "header/meter/sg_meter_getter.h"
 #include "header/meter/wtg_meter_getter.h"
+#include "header/meter/pvu_meter_getter.h"
 #include "header/steps_namespace.h"
 
 void build_bus_meter_map()
@@ -119,6 +120,49 @@ void build_wtg_meter_map()
 
 void build_pvu_meter_map()
 {
+    using namespace pvu_meter_getter;
+    pvu_meter_map.insert({"TERMINAL CURRENT IN PU ON MBASE",                        get_terminal_current_pu_mbase});
+    pvu_meter_map.insert({"TERMINAL CURRENT IN PU ON SBASE",                        get_terminal_current_pu_sbase});
+    pvu_meter_map.insert({"TERMINAL CURRENT IN KA",                                 get_terminal_current_ka});
+
+    pvu_meter_map.insert({"TERMINAL ACTIVE POWER IN PU ON MBASE",                   get_terminal_active_power_pu_mbase});
+    pvu_meter_map.insert({"TERMINAL ACTIVE POWER IN PU ON SBASE",                   get_terminal_active_power_pu_sbase});
+    pvu_meter_map.insert({"TERMINAL ACTIVE POWER IN MW",                            get_terminal_active_power_mw});
+
+    pvu_meter_map.insert({"TERMINAL REACTIVE POWER IN PU ON MBASE",                 get_terminal_reactive_power_pu_mbase});
+    pvu_meter_map.insert({"TERMINAL REACTIVE POWER IN PU ON SBASE",                 get_terminal_reactive_power_pu_sbase});
+    pvu_meter_map.insert({"TERMINAL REACTIVE POWER IN MVAR",                        get_terminal_reactive_power_mvar});
+
+    pvu_meter_map.insert({"TERMINAL APPARENT POWER IN PU ON MBASE",                 get_terminal_apparent_power_pu_mbase});
+    pvu_meter_map.insert({"TERMINAL APPARENT POWER IN PU ON SBASE",                 get_terminal_apparent_power_pu_sbase});
+    pvu_meter_map.insert({"TERMINAL APPARENT POWER IN MVA",                         get_terminal_apparent_power_mva});
+
+    pvu_meter_map.insert({"ACTIVE CURRENT COMMAND IN PU",                           get_active_current_command_pu});
+    pvu_meter_map.insert({"REACTIVE CURRENT COMMAND IN PU",                         get_reactive_current_command_pu});
+    pvu_meter_map.insert({"ACTIVE POWER COMMAND IN PU",                             get_active_power_command_pu});
+    pvu_meter_map.insert({"REACTIVE POWER COMMAND IN PU",                           get_reactive_power_command_pu});
+    pvu_meter_map.insert({"REACTIVE VOLTAGE COMMAND IN PU",                         get_reactive_voltage_command_pu});
+
+    pvu_meter_map.insert({"SOLAR IRRADIANCE IN PU ON S0",                           get_solar_irradiance_pu_S0});
+    pvu_meter_map.insert({"SOLAR IRRADIANCE IN PU ON SREF",                         get_solar_irradiance_pu_Sref});
+    pvu_meter_map.insert({"SOLAR IRRADIANCE IN W/M2",                               get_solar_irradiance_wpm2});
+
+    pvu_meter_map.insert({"TEMPERATURE IN C DEG",                                   get_temperature_c_deg});
+
+    pvu_meter_map.insert({"MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN PU ON MBASE", get_max_available_power_irradiance_pu_mbase});
+    pvu_meter_map.insert({"MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN PU ON SBASE", get_max_available_power_irradiance_pu_sbase});
+    pvu_meter_map.insert({"MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN MW",          get_max_available_power_irradiance_mw});
+
+    pvu_meter_map.insert({"PANEL POWER IN PU ON MBASE",                             get_panel_power_pu_mbase});
+    pvu_meter_map.insert({"PANEL POWER IN MW",                                      get_panel_power_mw});
+
+    pvu_meter_map.insert({"PV CONVERTER MODEL INTERNAL VARIABLE",                   get_converter_model_internal_variable});
+    pvu_meter_map.insert({"PV PANEL MODEL INTERNAL VARIABLE",                       get_panel_model_internal_variable});
+    pvu_meter_map.insert({"PV ELECTRICAL MODEL INTERNAL VARIABLE",                  get_electrical_model_internal_variable});
+    pvu_meter_map.insert({"PV IRRADIANCE MODEL INTERNAL VARIABLE",                  get_irradiance_model_internal_variable});
+    pvu_meter_map.insert({"PV TEMPERATURE MODEL INTERNAL VARIABLE",                 get_temperature_model_internal_variable});
+    pvu_meter_map.insert({"PV VRT MODEL INTERNAL VARIABLE",                         get_vrt_model_internal_variable});
+    pvu_meter_map.insert({"PV RELAY MODEL INTERNAL VARIABLE",                       get_relay_model_internal_variable});
 }
 
 void build_es_meter_map()
