@@ -401,6 +401,7 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::LU_factorization(int order, double tolerance
     //if(LU_factorization_is_performed()) return;
 
     char buffer[256];
+    clock_t lu_start = clock();
 
     cxs_nfree(LU); // free LU (csn *)
     cxs_sfree(LU_symbolic);
@@ -418,7 +419,11 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::LU_factorization(int order, double tolerance
             if(LU_workspace!=NULL) free(LU_workspace);
             LU_workspace = (complex<double> *)cxs_malloc(n, sizeof (complex<double>)) ;  // get workspace
             if(LU_workspace != NULL)
-                ;
+            {
+                clock_t lu_finished = clock();
+                snprintf(buffer, 256, "Successful LU factorization of complex matrix takes %f ms\n",(1000.0/double(CLOCKS_PER_SEC))*double(lu_finished-lu_start));
+                show_information_with_leading_time_stamp_with_default_toolkit(buffer);
+            }
             else
             {
                 snprintf(buffer, 256, "Global variable LU_workspace was not successfully set. No workspace for LU solution. (line %d in file %s)\n",__LINE__,__FILE__);

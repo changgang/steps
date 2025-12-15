@@ -457,6 +457,7 @@ void SPARSE_MATRIX_CSPARSE::LU_factorization(int order, double tolerance)
     //if(LU_factorization_is_performed()) return;
 
     char buffer[256];
+    clock_t lu_start = clock();
 
     cs_nfree(LU); // free LU (csn *)
     cs_sfree(LU_symbolic);
@@ -470,6 +471,10 @@ void SPARSE_MATRIX_CSPARSE::LU_factorization(int order, double tolerance)
         if(ok==1)
         {
             update_clock_when_LU_factorization_is_performed(); // mark the clock when finish the LU decomposition
+
+            clock_t lu_finished = clock();
+            snprintf(buffer, 256, "Successful LU factorization of real matrix takes %f ms\n",(1000.0/double(CLOCKS_PER_SEC))*double(lu_finished-lu_start));
+            show_information_with_leading_time_stamp_with_default_toolkit(buffer);
         }
         else
         {
