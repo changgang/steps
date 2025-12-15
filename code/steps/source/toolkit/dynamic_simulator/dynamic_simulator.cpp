@@ -2292,6 +2292,9 @@ void DYNAMICS_SIMULATOR::get_bus_current_into_network()
     STEPS_COMPLEX_SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_Y_matrix();
 
     I_mismatch = Y.multiply_vector_b(internal_bus_complex_voltage_in_pu);
+
+    if(get_toolkit().is_detailed_log_enabled())
+        check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
@@ -2331,6 +2334,9 @@ void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
             }
         }
     }
+
+    if(get_toolkit().is_detailed_log_enabled())
+        check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
@@ -2372,6 +2378,9 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
             }
         }
     }
+
+    if(get_toolkit().is_detailed_log_enabled())
+        check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::add_pv_units_to_bus_current_mismatch()
@@ -2416,6 +2425,9 @@ void DYNAMICS_SIMULATOR::add_pv_units_to_bus_current_mismatch()
             }
         }
     }
+
+    if(get_toolkit().is_detailed_log_enabled())
+        check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::add_energy_storage_to_bus_current_mismatch()
@@ -2459,6 +2471,9 @@ void DYNAMICS_SIMULATOR::add_energy_storage_to_bus_current_mismatch()
             }
         }
     }
+
+    if(get_toolkit().is_detailed_log_enabled())
+        check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::add_sv_source_to_bus_current_mismatch()
@@ -2491,6 +2506,9 @@ void DYNAMICS_SIMULATOR::add_sv_source_to_bus_current_mismatch()
             }
         }
     }
+
+    if(get_toolkit().is_detailed_log_enabled())
+        check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
@@ -2525,6 +2543,9 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
                 I_mismatch[internal_bus] -= load->get_dynamics_load_current_in_pu_based_on_system_base_power();
         }
     }
+
+    if(get_toolkit().is_detailed_log_enabled())
+        check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::add_2t_lcc_hvdcs_to_bus_current_mismatch()
@@ -2587,6 +2608,9 @@ void DYNAMICS_SIMULATOR::add_2t_lcc_hvdcs_to_bus_current_mismatch()
             }
         }
     }
+
+    if(get_toolkit().is_detailed_log_enabled())
+        check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::add_vsc_hvdcs_to_bus_current_mismatch()
@@ -2642,6 +2666,9 @@ void DYNAMICS_SIMULATOR::add_vsc_hvdcs_to_bus_current_mismatch()
             }
         }
     }
+
+    if(get_toolkit().is_detailed_log_enabled())
+        check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::add_mt_hvdcs_to_bus_current_mismatch()
@@ -2731,6 +2758,9 @@ void DYNAMICS_SIMULATOR::add_mt_hvdcs_to_bus_current_mismatch()
             }
         }
     }
+
+    if(get_toolkit().is_detailed_log_enabled())
+        check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
@@ -2756,6 +2786,23 @@ void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
 
             I_mismatch[internal_bus] -= conj(S/V);
         }
+    }
+
+    if(get_toolkit().is_detailed_log_enabled())
+        check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
+}
+
+void DYNAMICS_SIMULATOR::check_abnormal_current_mismatch_after_calling_function(string f)
+{
+    GREATEST_POWER_CURRENT_MISMATCH_STRUCT greatest_mismatch_struct = get_max_current_mismatch_struct();
+    double max_current_mismatch_pu = greatest_mismatch_struct.greatest_current_mismatch_in_pu;
+    unsigned int max_mismatch_bus = greatest_mismatch_struct.bus_with_greatest_current_mismatch;
+    if(max_current_mismatch_pu>1e6)
+    {
+        ostringstream osstream;
+        osstream<<"Abnormal bus current mismatch (>10^6 pu) is deteced: "<<max_current_mismatch_pu<<" at bus "<<max_mismatch_bus<<"["
+                <<toolkit->get_power_system_database().bus_number2bus_name(max_mismatch_bus)<<" after DYNAMIC_SIMULATOR::"<<f<<"() at time "<<TIME;
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }
 }
 

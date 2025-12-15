@@ -1433,8 +1433,10 @@ double LCC_HVDC2T_MODEL::get_converter_commutation_overlap_angle_in_deg(CONVERTE
         {
             ostringstream osstream;
             osstream<<"mu<FLOAT_EPSILON ("<<mu<<") is detected for "<<get_model_name()<<" of "<<get_compound_device_name()<<endl
-                    <<converter_side2string(converter)<<": angle = "<<angle<<" rad, Idc = "<<idc<<" kA, Eac = "<<eac<<" kV";
+                    <<converter_side2string(converter)<<": angle = "<<angle<<" rad, Idc = "<<idc<<" kA, Eac = "<<eac<<" kV"<<endl
+                    <<"To avoid further NAN in calculating converter Q, FORCE to set mu as 1.0 deg.";
             toolkit.show_information_with_leading_time_stamp(osstream);
+            return 1.0;
         }
 
         return rad2deg(mu);
