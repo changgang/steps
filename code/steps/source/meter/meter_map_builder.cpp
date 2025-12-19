@@ -4,6 +4,7 @@
 #include "header/meter/wtg_meter_getter.h"
 #include "header/meter/pvu_meter_getter.h"
 #include "header/meter/es_meter_getter.h"
+#include "header/meter/sv_source_meter_getter.h"
 #include "header/steps_namespace.h"
 
 void build_bus_meter_map()
@@ -209,6 +210,11 @@ void build_es_meter_map()
 
 void build_sv_source_meter_map()
 {
+    using namespace sv_source_meter_getter;
+    sv_source_meter_map.insert({"TERMINAL CURRENT IN PU ON SBASE",        get_terminal_current_pu_sbase});
+    sv_source_meter_map.insert({"TERMINAL REACTIVE POWER IN PU ON SBASE", get_terminal_reactive_power_pu_sbase});
+    sv_source_meter_map.insert({"TERMINAL REACTIVE POWER IN MVAR",        get_terminal_reactive_power_mvar});
+    sv_source_meter_map.insert({"SVS CONTROL MODEL INTERNAL VARIABLE",    get_svs_control_model_internal_variable});
 }
 
 void build_load_meter_map()

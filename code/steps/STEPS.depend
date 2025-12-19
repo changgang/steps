@@ -6096,7 +6096,7 @@
 	<cstdio>
 	<cmath>
 
-1764151595 source:d:\steps\code\steps\source\power_system_database.cpp
+1765869248 source:d:\steps\code\steps\source\power_system_database.cpp
 	"header/power_system_database.h"
 	"header/STEPS.h"
 	"header/steps_namespace.h"
@@ -164390,13 +164390,14 @@
 
 1765278814 d:\steps\code\steps\header\meter\meter_map_builder.h
 
-1765843348 source:d:\steps\code\steps\source\meter\meter_map_builder.cpp
+1766135985 source:d:\steps\code\steps\source\meter\meter_map_builder.cpp
 	"header/meter/meter_map_builder.h"
 	"header/meter/bus_meter_getter.h"
 	"header/meter/sg_meter_getter.h"
 	"header/meter/wtg_meter_getter.h"
 	"header/meter/pvu_meter_getter.h"
 	"header/meter/es_meter_getter.h"
+	"header/meter/sv_source_meter_getter.h"
 	"header/steps_namespace.h"
 
 1765276915 d:\steps\code\steps\header\meter\wtg_meter_getter.h
@@ -164506,4 +164507,14 @@
 	"header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model.h"
 	"header/steps_namespace.h"
 	"header/basic/utility.h"
+
+1766135696 d:\steps\code\steps\header\meter\sv_source_meter_getter.h
+	"header/meter/meter_parameter_struct.h"
+	<string>
+
+1766135622 source:d:\steps\code\steps\source\meter\sv_source_meter_getter.cpp
+	"header/meter/sv_source_meter_getter.h"
+	"header/device/sv_source.h"
+	"header/model/svs_model/svs_control_model/svs_control_model.h"
+	"header/steps_namespace.h"
 

@@ -51,11 +51,6 @@ vector<string> load_meters{ "CURRENT IN KA",
                             "FREQUENCY RELAY MODEL INTERNAL VARIABLE",
                             "VOLTAGE RELAY MODEL INTERNAL VARIABLE"};
 
-vector<string> sv_source_meters{"TERMINAL CURRENT IN PU ON SBASE",
-                                "TERMINAL REACTIVE POWER IN PU ON SBASE",
-                                "TERMINAL REACTIVE POWER IN MVAR",
-                                "SVS CONTROL MODEL INTERNAL VARIABLE"};
-
 vector<string> lcc_hvdc2t_meters{ "DC CURRENT IN KA",
                                   "RECTIFIER DC CURRENT IN KA",   "INVERTER DC CURRENT IN KA",
                                   "RECTIFIER AC CURRENT IN KA",   "INVERTER AC CURRENT IN KA",
@@ -128,7 +123,6 @@ map<STEPS_DEVICE_TYPE, vector<string>> SUPPORTED_METERS{
                                                             {STEPS_AC_LINE,        line_meters},
                                                             {STEPS_TRANSFORMER, transformer_meters},
                                                             {STEPS_LOAD,        load_meters},
-                                                            {STEPS_SV_SOURCE, sv_source_meters},
                                                             {STEPS_LCC_HVDC2T, lcc_hvdc2t_meters},
                                                             {STEPS_VSC_HVDC, vsc_hvdc_meters},
                                                             {STEPS_HYBRID_DC, mt_hvdc_meters},
@@ -520,6 +514,7 @@ bool METER::is_valid_meter_type_of_device(const string& meter_type, STEPS_DEVICE
     if(device_type == STEPS_WT_GENERATOR) return wtg_meter_map.find(meter_type) != wtg_meter_map.end();
     if(device_type == STEPS_PV_UNIT) return pvu_meter_map.find(meter_type) != pvu_meter_map.end();
     if(device_type == STEPS_ENERGY_STORAGE) return es_meter_map.find(meter_type) != es_meter_map.end();
+    if(device_type == STEPS_SV_SOURCE) return sv_source_meter_map.find(meter_type) != sv_source_meter_map.end();
 
     map<STEPS_DEVICE_TYPE, vector<string> >::const_iterator it = SUPPORTED_METERS.find(device_type);
     if(it!=SUPPORTED_METERS.end())
@@ -1247,51 +1242,9 @@ double METER::get_meter_value_as_an_energy_storage() const
 
 double METER::get_meter_value_as_a_sv_source() const
 {
-    ostringstream osstream;
-
-    SV_SOURCE* svs = (SV_SOURCE*) get_device_pointer();
-    if(svs != NULL)
-    {
-        if(svs->get_status()==true)
-        {
-            string meter_type = get_meter_type();
-
-            SVS_CONTROL_MODEL* svs_ctrl_model = svs->get_svs_control_model();
-
-            if(meter_type=="TERMINAL CURRENT IN PU ON SBASE")
-            {
-                if(svs_ctrl_model != NULL)
-                    return svs_ctrl_model->get_terminal_current_in_pu_based_on_sbase();
-                else
-                    return 0.0;
-            }
-            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON SBASE")
-            {
-                if(svs_ctrl_model != NULL)
-                    return svs_ctrl_model->get_terminal_reactive_power_in_pu_based_on_sbase();
-                else
-                    return 0.0;
-            }
-            if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
-            {
-                if(svs_ctrl_model != NULL)
-                    return svs_ctrl_model->get_terminal_reactive_power_in_MVar();
-                else
-                    return 0.0;
-            }
-
-            if(meter_type=="SVS CONTROL MODEL INTERNAL VARIABLE")
-            {
-                if(svs_ctrl_model!=NULL)
-                    return svs_ctrl_model->get_model_internal_variable_with_name(get_internal_variable_name());
-                else
-                    return 0.0;
-            }
-            return 0.0;
-        }
-        else
-            return 0.0;
-    }
+    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = sv_source_meter_map.find(get_meter_type());
+    if (it != sv_source_meter_map.end())
+        return get_meter_value_with_function(it->second);
     else
         return 0.0;
 }
