@@ -10,6 +10,7 @@ struct METER_PARAMETER
     std::string internal_var_name;
     unsigned int metered_side_bus;
     DC_DEVICE_ID sub_dc_did;
+    std::string hybrid_dc_device_name;
 };
 
 

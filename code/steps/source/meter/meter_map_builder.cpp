@@ -9,6 +9,8 @@
 #include "header/meter/ac_line_meter_getter.h"
 #include "header/meter/transformer_meter_getter.h"
 #include "header/meter/lcc_hvdc2t_meter_getter.h"
+#include "header/meter/vsc_hvdc_meter_getter.h"
+#include "header/meter/mt_hvdc_meter_getter.h"
 #include "header/steps_namespace.h"
 
 void build_bus_meter_map()
@@ -326,10 +328,55 @@ void build_lcc_hvdc2t_meter_map()
 
 void build_vsc_hvdc_meter_map()
 {
+    using namespace vsc_hvdc_meter_getter;
+    vsc_hvdc_meter_map.insert({"CONVERTER AC VOLTAGE IN PU",                       get_converter_ac_voltage_in_pu});
+    vsc_hvdc_meter_map.insert({"CONVERTER AC VOLTAGE IN KV",                       get_converter_ac_voltage_in_kv});
+    vsc_hvdc_meter_map.insert({"CONVERTER AC CURRENT IN KA",                       get_converter_ac_current_in_ka});
+    vsc_hvdc_meter_map.insert({"CONVERTER DC VOLTAGE IN KV",                       get_converter_dc_voltage_in_kv});
+    vsc_hvdc_meter_map.insert({"CONVERTER DC CURRENT IN KA",                       get_converter_dc_current_in_ka});
+    vsc_hvdc_meter_map.insert({"CONVERTER DC POWER IN MW",                         get_converter_dc_power_in_mw});
+    vsc_hvdc_meter_map.insert({"CONVERTER AC ACTIVE POWER IN MW",                  get_converter_ac_active_power_in_mw});
+    vsc_hvdc_meter_map.insert({"CONVERTER AC REACTIVE POWER IN MVAR",              get_converter_ac_reactive_power_in_mvar});
+    vsc_hvdc_meter_map.insert({"DC BUS VOLTAGE IN KV",                             get_dc_bus_voltage_in_kv});
+    vsc_hvdc_meter_map.insert({"DC LINE CURRENT IN KA",                            get_dc_line_current_in_ka});
+    vsc_hvdc_meter_map.insert({"DC LINE POWER IN MW",                              get_dc_line_power_in_mw});
+    vsc_hvdc_meter_map.insert({"VSC LCC_HVDC2T NETWORK MODEL INTERNAL VARIABLE",   get_vsc_hvdc_network_model_internal_variable});
+    vsc_hvdc_meter_map.insert({"VSC LCC_HVDC2T CONVERTER MODEL INTERNAL VARIABLE", get_vsc_hvdc_converter_model_internal_variable});
 }
 
 void build_mt_hvdc_meter_map()
 {
+    using namespace mt_hvdc_meter_getter;
+
+    mt_hvdc_meter_map.insert({"LCC CONVERTER DC CURRENT IN KA",         get_lcc_converter_dc_current_in_ka});
+    mt_hvdc_meter_map.insert({"LCC CONVERTER DC VOLTAGE IN KV",         get_lcc_converter_dc_voltage_in_kv});
+    mt_hvdc_meter_map.insert({"LCC CONVERTER DC POWER IN MW",           get_lcc_converter_dc_power_in_mw});
+    mt_hvdc_meter_map.insert({"LCC CONVERTER AC CURRENT IN KA",         get_lcc_converter_ac_current_in_ka});
+    mt_hvdc_meter_map.insert({"LCC CONVERTER FIRING ANGLE IN DEG",      get_lcc_converter_firing_angle_in_deg});
+    mt_hvdc_meter_map.insert({"LCC CONVERTER ACTIVE POWER IN MW",       get_lcc_converter_active_power_in_mw});
+    mt_hvdc_meter_map.insert({"LCC CONVERTER REACTIVE POWER IN MVAR",   get_lcc_converter_reactive_power_in_mvar});
+    mt_hvdc_meter_map.insert({"LCC CONVERTER REFERENCE ANGLE OF CC",    get_lcc_converter_reference_angle_of_cc});
+    mt_hvdc_meter_map.insert({"LCC CONVERTER REFERENCE ANGLE OF CEA",   get_lcc_converter_reference_angle_of_cea});
+    mt_hvdc_meter_map.insert({"LCC CONVERTER REFERENCE ANGLE OF CV",    get_lcc_converter_reference_angle_of_cv});
+    mt_hvdc_meter_map.insert({"LCC CONVERTER IDC REF IN KA",            get_lcc_converter_idc_ref_in_ka});
+
+    mt_hvdc_meter_map.insert({"VSC CONVERTER DC CURRENT IN KA",         get_vsc_converter_dc_current_in_ka});
+    mt_hvdc_meter_map.insert({"VSC CONVERTER DC VOLTAGE IN KV",         get_vsc_converter_dc_voltage_in_kv});
+    mt_hvdc_meter_map.insert({"VSC CONVERTER DC POWER IN MW",           get_vsc_converter_dc_power_in_mw});
+    mt_hvdc_meter_map.insert({"VSC CONVERTER AC CURRENT IN KA",         get_vsc_converter_ac_current_in_ka});
+    mt_hvdc_meter_map.insert({"VSC CONVERTER ACTIVE POWER IN MW",       get_vsc_converter_active_power_in_mw});
+    mt_hvdc_meter_map.insert({"VSC CONVERTER REACTIVE POWER IN MVAR",   get_vsc_converter_reactive_power_in_mvar});
+    mt_hvdc_meter_map.insert({"VSC CONVERTER ID IN KA",                 get_vsc_converter_id_in_ka});
+    mt_hvdc_meter_map.insert({"VSC CONVERTER IQ IN KA",                 get_vsc_converter_iq_in_ka});
+
+    mt_hvdc_meter_map.insert({"DC BUS VOLTAGE IN KV",                   get_dc_bus_voltage_in_kv});
+
+    mt_hvdc_meter_map.insert({"DC LINE IDC ON SENDING SIDE",            get_dc_line_idc_on_sending_side});
+    mt_hvdc_meter_map.insert({"DC LINE IDC ON RECEIVING SIDE",          get_dc_line_idc_on_receiving_side});
+
+    mt_hvdc_meter_map.insert({"HLCC CONVERTER MODEL INTERNAL VARIABLE", get_hlcc_converter_model_internal_variable});
+    mt_hvdc_meter_map.insert({"HVSC CONVERTER MODEL INTERNAL VARIABLE", get_hvsc_converter_model_internal_variable});
+    mt_hvdc_meter_map.insert({"DC NETWORK MODEL INTERNAL VARIABLE",     get_dc_network_model_internal_variable});
 }
 
 void build_equivalent_device_meter_map()
