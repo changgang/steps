@@ -149,18 +149,6 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(STEPS_DEVICE_TYPE dev
         return;
     }
 
-    if(device_type==STEPS_LCC_HVDC)
-    {
-        enable_allow_name();
-        disable_allow_identifier();
-
-        this->device_type = device_type;
-        set_minimum_allowed_terminal_count(0);
-        set_maximum_allowed_terminal_count(0);
-
-        return;
-    }
-
     if(device_type==STEPS_GENERAL_DEVICE)
     {
         enable_allow_terminal();
@@ -371,16 +359,6 @@ string DEVICE_ID::get_compound_device_name() const
             else
                 comp_device_name = device_type_str + " "+ident+" ";
             comp_device_name += "AT BUS "+num2str(buses[0]);
-            return comp_device_name;
-        }
-
-        if(device_type==STEPS_LCC_HVDC)
-        {
-            if(device_name=="")
-                comp_device_name = device_type_str + " INVALID";
-            else
-                comp_device_name = device_type_str + " "+device_name;
-
             return comp_device_name;
         }
 
@@ -741,14 +719,6 @@ DEVICE_ID get_equivalent_device_id(unsigned int bus, const string& identifier)
 
     did.set_device_identifier_index(get_index_of_string(identifier));
 
-    return did;
-}
-
-DEVICE_ID get_lcc_hvdc_device_id(const string& name)
-{
-    DEVICE_ID did;
-    did.set_device_type(STEPS_LCC_HVDC);
-    did.set_device_name_index(get_index_of_string(name));
     return did;
 }
 

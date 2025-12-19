@@ -83,7 +83,6 @@ DEVICE_ID get_vsc_hvdc_device_id(const vector<unsigned int>& bus, const string& 
 DEVICE_ID get_mt_hvdc_device_id(const string name);
 DEVICE_ID get_transformer_device_id(unsigned int ibus, unsigned int jbus, unsigned int kbus, const string& identifier);
 DEVICE_ID get_equivalent_device_id(unsigned int bus, const string& identifier);
-DEVICE_ID get_lcc_hvdc_device_id(const string& name);
 DEVICE_ID get_general_device_id(const vector<unsigned int>& bus, const string& identifier);
 
 

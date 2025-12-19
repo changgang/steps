@@ -181,7 +181,6 @@ void api_initialize_device_search(const char* device_type, unsigned int bus, uns
         }
         case STEPS_SWITCHED_SHUNT:
         case STEPS_FACTS:
-        case STEPS_LCC_HVDC:
         case STEPS_HYBRID_DC:
         default:
         {

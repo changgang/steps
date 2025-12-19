@@ -1026,7 +1026,6 @@ STEPS_DEVICE_TYPE device_string2type(string device_type)
     if(device_type=="2T LCC HVDC") return STEPS_LCC_HVDC2T;
     if(device_type=="VSC HVDC") return STEPS_VSC_HVDC;
     if(device_type=="FACTS") return STEPS_FACTS;
-    if(device_type=="LCC HVDC") return STEPS_LCC_HVDC;
     if(device_type=="HYBRID DC") return STEPS_HYBRID_DC;
     if(device_type=="GENERAL DEVICE") return STEPS_GENERAL_DEVICE;
 
@@ -1067,8 +1066,6 @@ string device_type2string(STEPS_DEVICE_TYPE device_type)
             return "VSC HVDC";
         case STEPS_FACTS:
             return "FACTS";
-        case STEPS_LCC_HVDC:
-            return "LCC HVDC";
         case STEPS_HYBRID_DC:
             return "HYBRID DC";
         case STEPS_GENERAL_DEVICE:

@@ -51,8 +51,6 @@ class DEVICE_ID_TEST : public Test::Suite
 
         void test_constructor_and_get_device_type_multidc();
 
-        void test_constructor_and_get_device_type_lcc_hvdc();
-
         void test_constructor_and_get_device_type_general();
 
         void test_set_get_device_identifier();

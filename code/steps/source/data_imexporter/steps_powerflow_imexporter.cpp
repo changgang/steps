@@ -56,7 +56,6 @@ void STEPS_IMEXPORTER::load_all_devices()
     load_transformer_data();
     load_area_data();
     load_2t_lcc_hvdc_data();
-    load_lcc_hvdc_data();
     load_vsc_hvdc_data();
     load_transformer_impedance_correction_table_data();
     load_multi_terminal_hvdc_data();
@@ -1888,27 +1887,6 @@ void STEPS_IMEXPORTER::add_2t_lcc_hvdc_converter_data(LCC_HVDC2T& hvdc, CONVERTE
     {
         data.erase(data.begin());
     }
-}
-
-
-void STEPS_IMEXPORTER::load_lcc_hvdc_data()
-{
-
-}
-
-void STEPS_IMEXPORTER::add_lcc_hvdc_with_data(vector<vector<string> > hvdc_data)
-{
-
-}
-
-void STEPS_IMEXPORTER::add_lcc_hvdc_basic_data(LCC_HVDC& hvdc, vector<string> data)
-{
-
-}
-
-void STEPS_IMEXPORTER::add_lcc_hvdc_converter_data(LCC_HVDC& hvdc, CONVERTER_SIDE side, unsigned int converter_index, vector<string> data)
-{
-
 }
 
 void STEPS_IMEXPORTER::load_vsc_hvdc_data()

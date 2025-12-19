@@ -16,7 +16,6 @@
 #include "header/device/mt_hvdc.h"
 #include "header/device/equivalent_device.h"
 #include "header/device/source.h"
-#include "header/device/lcc_hvdc.h"
 #include "header/device/mutual_data.h"
 #include "header/basic/area.h"
 #include "header/basic/zone.h"
@@ -62,7 +61,6 @@ class POWER_SYSTEM_DATABASE
         unsigned int get_2t_lcc_hvdc_capacity() const;
         unsigned int get_vsc_hvdc_capacity() const;
         unsigned int get_mt_hvdc_capacity() const;
-        unsigned int get_lcc_hvdc_capacity() const;
         unsigned int get_equivalent_device_capacity() const;
         unsigned int get_area_capacity() const;
         unsigned int get_zone_capacity() const;
@@ -81,7 +79,6 @@ class POWER_SYSTEM_DATABASE
         void set_2t_lcc_hvdc_capacity(unsigned int n);
         void set_vsc_hvdc_capacity(unsigned int n);
         void set_mt_hvdc_capacity(unsigned int n);
-        void set_lcc_hvdc_capacity(unsigned int n);
         void set_equivalent_device_capacity(unsigned int n);
         void set_area_capacity(unsigned int n);
         void set_zone_capacity(unsigned int n);
@@ -117,7 +114,6 @@ class POWER_SYSTEM_DATABASE
         void append_2t_lcc_hvdc(LCC_HVDC2T& hvdc);
         void append_vsc_hvdc(VSC_HVDC& vsc_hvdc);
         void append_mt_hvdc(MT_HVDC& mt_hvdc);
-        void append_lcc_hvdc(LCC_HVDC& hvdc);
         void append_equivalent_device(EQUIVALENT_DEVICE& edevice);
         void append_area(AREA& area);
         void append_zone(ZONE& zone);
@@ -159,7 +155,6 @@ class POWER_SYSTEM_DATABASE
         bool is_vsc_hvdc_exist(const string vsc_name) const;
         bool is_mt_hvdc_exist(const DEVICE_ID& device_id) const;
         bool is_mt_hvdc_exist(const string mt_hvdc_name) const;
-        bool is_lcc_hvdc_exist(const DEVICE_ID& device_id) const;
         bool is_equivalent_device_exist(const DEVICE_ID& device_id) const;
         bool is_area_exist(const unsigned int no) const;
         bool is_zone_exist(const unsigned int no) const;
@@ -187,7 +182,6 @@ class POWER_SYSTEM_DATABASE
         VSC_HVDC* get_vsc_hvdc(string name);
         MT_HVDC* get_mt_hvdc(const DEVICE_ID & device_id);
         MT_HVDC* get_mt_hvdc(const string name);
-        LCC_HVDC* get_lcc_hvdc(const DEVICE_ID & device_id);
         EQUIVALENT_DEVICE* get_equivalent_device(const DEVICE_ID & device_id);
         AREA* get_area(const unsigned int no);
         ZONE* get_zone(const unsigned int no);
@@ -207,7 +201,6 @@ class POWER_SYSTEM_DATABASE
         vector<LCC_HVDC2T*> get_2t_lcc_hvdcs_connecting_to_bus(const unsigned int bus);
         vector<VSC_HVDC*> get_vsc_hvdcs_connecting_to_bus(const unsigned int bus);
         vector<MT_HVDC*> get_mt_hvdcs_connecting_to_bus(const unsigned int bus);
-        vector<LCC_HVDC*> get_lcc_hvdcs_connecting_to_bus(const unsigned int bus);
         vector<EQUIVALENT_DEVICE*> get_equivalent_devices_connecting_to_bus(const unsigned int bus);
         vector<MUTUAL_DATA*> get_mutual_data_with_line(const unsigned int ibus, const unsigned int jbus, string identifier);
 
@@ -225,7 +218,6 @@ class POWER_SYSTEM_DATABASE
         vector<DEVICE_ID> get_2t_lcc_hvdcs_device_id_connecting_to_bus(const unsigned int bus);
         vector<DEVICE_ID> get_vsc_hvdcs_device_id_connecting_to_bus(const unsigned int bus);
         vector<DEVICE_ID> get_mt_hvdcs_device_id_connecting_to_bus(const unsigned int bus);
-        vector<DEVICE_ID> get_lcc_hvdcs_device_id_connecting_to_bus(const unsigned int bus);
         vector<DEVICE_ID> get_equivalent_devices_device_id_connecting_to_bus(const unsigned int bus);
 
         vector<DEVICE*> get_all_devices_in_area(const unsigned int area);
@@ -242,7 +234,6 @@ class POWER_SYSTEM_DATABASE
         vector<TRANSFORMER*> get_transformers_in_area(const unsigned int area);
         vector<LCC_HVDC2T*> get_2t_lcc_hvdcs_in_area(const unsigned int area);
         vector<VSC_HVDC*> get_vsc_hvdcs_in_area(const unsigned int area);
-        vector<LCC_HVDC*> get_lcc_hvdcs_in_area(const unsigned int area);
         vector<EQUIVALENT_DEVICE*> get_equivalent_devices_in_area(const unsigned int area);
 
         vector<DEVICE_ID> get_all_devices_device_id_in_area(const unsigned int area);
@@ -259,7 +250,6 @@ class POWER_SYSTEM_DATABASE
         vector<DEVICE_ID> get_transformers_device_id_in_area(const unsigned int area);
         vector<DEVICE_ID> get_2t_lcc_hvdcs_device_id_in_area(const unsigned int area);
         vector<DEVICE_ID> get_vsc_hvdcs_device_id_in_area(const unsigned int area);
-        vector<DEVICE_ID> get_lcc_hvdcs_device_id_in_area(const unsigned int area);
         vector<DEVICE_ID> get_equivalent_devices_device_id_in_area(const unsigned int area);
 
         vector<DEVICE*> get_all_devices_in_zone(const unsigned int zone);
@@ -276,7 +266,6 @@ class POWER_SYSTEM_DATABASE
         vector<TRANSFORMER*> get_transformers_in_zone(const unsigned int zone);
         vector<LCC_HVDC2T*> get_2t_lcc_hvdcs_in_zone(const unsigned int zone);
         vector<VSC_HVDC*> get_vsc_hvdcs_in_zone(const unsigned int zone);
-        vector<LCC_HVDC*> get_lcc_hvdcs_in_zone(const unsigned int zone);
         vector<EQUIVALENT_DEVICE*> get_equivalent_devices_in_zone(const unsigned int zone);
 
         vector<DEVICE_ID> get_all_devices_device_id_in_zone(const unsigned int zone);
@@ -293,7 +282,6 @@ class POWER_SYSTEM_DATABASE
         vector<DEVICE_ID> get_transformers_device_id_in_zone(const unsigned int zone);
         vector<DEVICE_ID> get_2t_lcc_hvdcs_device_id_in_zone(const unsigned int zone);
         vector<DEVICE_ID> get_vsc_hvdcs_device_id_in_zone(const unsigned int zone);
-        vector<DEVICE_ID> get_lcc_hvdcs_device_id_in_zone(const unsigned int zone);
         vector<DEVICE_ID> get_equivalent_devices_device_id_in_zone(const unsigned int zone);
 
         vector<DEVICE*> get_all_devices();
@@ -313,7 +301,6 @@ class POWER_SYSTEM_DATABASE
         vector<LCC_HVDC2T*> get_all_2t_lcc_hvdcs();
         vector<VSC_HVDC*> get_all_vsc_hvdcs();
         vector<MT_HVDC*> get_all_mt_hvdcs();
-        vector<LCC_HVDC*> get_all_lcc_hvdcs();
         vector<EQUIVALENT_DEVICE*> get_all_equivalent_devices();
         vector<AREA*> get_all_areas();
         vector<ZONE*> get_all_zones();
@@ -336,7 +323,6 @@ class POWER_SYSTEM_DATABASE
         vector<DEVICE_ID> get_all_2t_lcc_hvdcs_device_id();
         vector<DEVICE_ID> get_all_vsc_hvdcs_device_id();
         vector<DEVICE_ID> get_all_mt_hvdcs_device_id();
-        vector<DEVICE_ID> get_all_lcc_hvdcs_device_id();
         vector<DEVICE_ID> get_all_equivalent_devices_device_id();
         vector<unsigned int> get_all_areas_number();
         vector<unsigned int> get_all_zones_number();
@@ -358,7 +344,6 @@ class POWER_SYSTEM_DATABASE
         unsigned int get_2t_lcc_hvdc_count() const;
         unsigned int get_vsc_hvdc_count() const;
         unsigned int get_mt_hvdc_count() const;
-        unsigned int get_lcc_hvdc_count() const;
         unsigned int get_equivalent_device_count() const;
         unsigned int get_area_count() const;
         unsigned int get_zone_count() const;
@@ -380,7 +365,6 @@ class POWER_SYSTEM_DATABASE
         unsigned int get_vsc_hvdc_index(const string vsc_name) const;
         unsigned int get_mt_hvdc_index(const DEVICE_ID & device_id) const;
         unsigned int get_mt_hvdc_index(const string mt_hvdc_name) const;
-        unsigned int get_lcc_hvdc_index(const DEVICE_ID & device_id) const;
         unsigned int get_equivalent_device_index(const DEVICE_ID & device_id) const;
         unsigned int get_area_index(const unsigned int no) const;
         unsigned int get_zone_index(const unsigned int no) const;
@@ -410,7 +394,6 @@ class POWER_SYSTEM_DATABASE
         void check_all_2t_lcc_hvdcs();
         void check_all_vsc_hvdcs();
         void check_all_mt_hvdcs();
-        void check_all_lcc_hvdcs();
         void check_all_equivalent_devices();
         void check_all_areas();
         void check_all_zones();
@@ -427,7 +410,6 @@ class POWER_SYSTEM_DATABASE
         void check_2t_lcc_hvdc_related_dynamic_data();
         void check_vsc_hvdc_related_dynamic_data();
         void check_mt_hvdc_related_dynamic_data();
-        void check_lcc_hvdc_related_dynamic_data();
         void check_equivalent_device_related_dynamic_data();
 
         void check_missing_models();
@@ -441,7 +423,6 @@ class POWER_SYSTEM_DATABASE
         void check_missing_2t_lcc_hvdc_related_model();
         void check_missing_vsc_hvdc_related_model();
         void check_missing_mt_hvdc_related_model();
-        void check_missing_lcc_hvdc_related_model();
         void check_missing_equivalent_device_related_model();
 
 
@@ -542,10 +523,6 @@ class POWER_SYSTEM_DATABASE
         void clear_mt_hvdc(const string mtdc_name);
         void clear_all_mt_hvdcs();
 
-        void clear_lcc_hvdc(const DEVICE_ID& device_id);
-        void clear_lcc_hvdcs_connecting_to_bus(const unsigned int bus);
-        void clear_all_lcc_hvdcs();
-
         void clear_equivalent_device(const DEVICE_ID& device_id);
         void clear_equivalent_devices_connecting_to_bus(const unsigned int bus);
         void clear_all_equivalent_devices();
@@ -621,7 +598,6 @@ class POWER_SYSTEM_DATABASE
         void check_2t_lcc_hvdc_status_for_out_of_service_bus(unsigned int bus);
         void check_vsc_hvdc_status_for_out_of_service_bus(unsigned int bus);
         void check_mt_hvdc_status_for_out_of_service_bus(unsigned int bus);
-        void check_lcc_hvdc_status_for_out_of_service_bus(unsigned int bus);
 
         STEPS* toolkit;
 
@@ -643,7 +619,6 @@ class POWER_SYSTEM_DATABASE
         vector<LCC_HVDC2T> Lcc_hvdc2t;
         vector<VSC_HVDC> Vsc_hvdc;
         vector<MT_HVDC> Mt_hvdc;
-        vector<LCC_HVDC> Lcc_hvdc;
         vector<EQUIVALENT_DEVICE> Equivalent_device;
         vector<AREA> Area;
         vector<ZONE> Zone;
@@ -659,7 +634,7 @@ class POWER_SYSTEM_DATABASE
         BUS_INDEX bus_index;
         DEVICE_INDEX_MAP generator_index, wt_generator_index, pv_unit_index, energy_storage_index, sv_source_index,
                          load_index, fixed_shunt_index, switched_shunt_index, ac_line_index, transformer_index,
-                         hvdc_index, vsc_hvdc_index, lcc_hvdc_index, mt_hvdc_index, equivalent_device_index;
+                         lcc_hvdc2t_index, vsc_hvdc_index, mt_hvdc_index, equivalent_device_index;
         map<unsigned int,  unsigned int> area_index, zone_index, owner_index;
 };
 #endif // POWER_SYSTEM_DATABASE_H

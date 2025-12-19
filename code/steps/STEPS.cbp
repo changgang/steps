@@ -158,7 +158,6 @@
 		<Unit filename="header/device/generator.h" />
 		<Unit filename="header/device/generator_test.h" />
 		<Unit filename="header/device/lcc.h" />
-		<Unit filename="header/device/lcc_hvdc.h" />
 		<Unit filename="header/device/lcc_hvdc2t.h" />
 		<Unit filename="header/device/lcc_hvdc2t_test.h" />
 		<Unit filename="header/device/lcc_station.h" />
@@ -723,7 +722,6 @@
 		<Unit filename="source/device/generator.cpp" />
 		<Unit filename="source/device/generator_test.cpp" />
 		<Unit filename="source/device/lcc.cpp" />
-		<Unit filename="source/device/lcc_hvdc.cpp" />
 		<Unit filename="source/device/lcc_hvdc2t.cpp" />
 		<Unit filename="source/device/lcc_hvdc2t_test.cpp" />
 		<Unit filename="source/device/lcc_station.cpp" />
