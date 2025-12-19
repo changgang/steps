@@ -35,17 +35,13 @@ void METER::copy_from_const_meter(const METER& meter)
                 set_sub_dc_device_id(meter.get_sub_dc_device_id());
         }
     }
-    else if(get_device_type()==STEPS_HYBRID_DC)
-    {
-        set_hybrid_dc_meter_device_name(meter.get_hybrid_dc_meter_device_name());
-    }
     else
     {
-        set_metered_side_bus(meter.get_metered_side_bus());
+        if(get_device_type()==STEPS_HYBRID_DC)
+            set_hybrid_dc_meter_device_name(meter.get_hybrid_dc_meter_device_name());
+        else
+            set_metered_side_bus(meter.get_metered_side_bus());
     }
-    if(meter.get_metered_side_bus()!=get_metered_side_bus())
-        cout<<"error detected. different metered bus. old is "<<meter.get_metered_side_bus()
-            <<" new is "<<get_metered_side_bus()<<". line "<<__LINE__<<endl;
 }
 
 METER::METER(const METER& meter)
@@ -480,34 +476,27 @@ DEVICE* METER::get_device_pointer() const
 
 string METER::get_meter_name() const
 {
-    string name;
     string meter_type = get_meter_type();
     if(meter_type!="")
     {
-        name = get_meter_type();
+        string name = meter_type;
         if(meter_type.find("INTERNAL VARIABLE")!=string::npos)
             name += " " + get_internal_variable_name();
 
-        //name += " OF "+get_device_id().get_compound_device_name()+" IN PS "+toolkit->get_power_system_database()->get_system_name();
-        if(get_device_type()==STEPS_VSC_HVDC)
-        {
-            if(get_meter_type().rfind("DC LINE",0)==0)
-                name += " @ "+get_sub_dc_device_id().get_compound_device_name();
-        }
+        STEPS_DEVICE_TYPE device_type = get_device_type();
+        if(device_type==STEPS_VSC_HVDC and meter_type.rfind("DC LINE",0)==0)
+            name += " @ "+get_sub_dc_device_id().get_compound_device_name();
+
         name += " @ "+get_device_id().get_compound_device_name();
 
-        STEPS_DEVICE_TYPE device_type = get_device_type();
         if(device_type==STEPS_AC_LINE or
            device_type==STEPS_TRANSFORMER or
            device_type==STEPS_VSC_HVDC)
             name += " @ SIDE "+num2str(get_metered_side_bus());
         if(device_type==STEPS_HYBRID_DC)
-        {
             name += " @ DC DEVICE "+ get_hybrid_dc_meter_device_name();
-        }
 
-        name = trim_string(name);
-        return name;
+        return trim_string(name);
     }
     else
         return "";
@@ -518,21 +507,14 @@ bool METER::is_valid() const
     if(device_pointer!=NULL and get_meter_type()!="")
     {
         STEPS_DEVICE_TYPE device_type = get_device_type();
-        //cout<<"device_type: "<<device_type<<endl;
         if(device_type==STEPS_AC_LINE or
            device_type==STEPS_TRANSFORMER or
            device_type==STEPS_VSC_HVDC)
         {
             if(get_metered_side_bus()!=0)
-            {
-                //cout<<"true"<<endl;
                 return true;
-            }
             else
-            {
-                //cout<<"invalid meter is detected at METER::line "<<__LINE__<<", "<<get_meter_name()<<endl;
                 return false;
-            }
         }
         if(device_type==STEPS_HYBRID_DC)
         {
@@ -544,10 +526,7 @@ bool METER::is_valid() const
         return true;
     }
     else
-    {
-        //cout<<"invalid meter is detected at METER::line "<<__LINE__<<", "<<get_meter_name()<<endl;
         return false;
-    }
 }
 
 void METER::clear()
@@ -677,12 +656,6 @@ double METER::get_meter_value() const
         {
             case STEPS_BUS:
                 return get_meter_value_as_a_bus();
-            case STEPS_AC_LINE:
-                return get_meter_value_as_an_ac_line();
-            case STEPS_TRANSFORMER:
-                return get_meter_value_as_a_transformer();
-            case STEPS_LOAD:
-                return get_meter_value_as_a_load();
             case STEPS_GENERATOR:
                 return get_meter_value_as_a_generator();
             case STEPS_WT_GENERATOR:
@@ -693,6 +666,12 @@ double METER::get_meter_value() const
                 return get_meter_value_as_an_energy_storage();
             case STEPS_SV_SOURCE:
                 return get_meter_value_as_a_sv_source();
+            case STEPS_LOAD:
+                return get_meter_value_as_a_load();
+            case STEPS_AC_LINE:
+                return get_meter_value_as_an_ac_line();
+            case STEPS_TRANSFORMER:
+                return get_meter_value_as_a_transformer();
             case STEPS_LCC_HVDC2T:
                 return get_meter_value_as_a_2t_lcc_hvdc();
             case STEPS_VSC_HVDC:
@@ -709,7 +688,6 @@ double METER::get_meter_value() const
     else
         return 0.0;
 }
-
 
 double METER::get_meter_value_as_a_bus() const
 {
