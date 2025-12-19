@@ -134,6 +134,11 @@ class POWER_SYSTEM_DATABASE
         void copy_pv_unit(DEVICE_ID& new_did, DEVICE_ID& old_did);
         void copy_energy_storage(DEVICE_ID& new_did, DEVICE_ID& old_did);
         void copy_sv_source(DEVICE_ID& new_did, DEVICE_ID& old_did);
+        void copy_load(DEVICE_ID& new_did, DEVICE_ID& old_did);
+        void copy_fixed_shunt(DEVICE_ID& new_did, DEVICE_ID& old_did);
+        void copy_ac_line(DEVICE_ID& new_did, DEVICE_ID& old_did);
+        void copy_transformer(DEVICE_ID& new_did, DEVICE_ID& old_did);
+        void copy_lcc_hvdc2t(DEVICE_ID& new_did, DEVICE_ID& old_did);
 
         void update_device_id(const DEVICE_ID& did_old, const DEVICE_ID& did_new);
 

@@ -1760,6 +1760,31 @@ void POWER_SYSTEM_DATABASE::copy_sv_source(DEVICE_ID& new_did, DEVICE_ID& old_di
     }
 }
 
+void POWER_SYSTEM_DATABASE::copy_load(DEVICE_ID& new_did, DEVICE_ID& old_did)
+{
+
+}
+
+void POWER_SYSTEM_DATABASE::copy_fixed_shunt(DEVICE_ID& new_did, DEVICE_ID& old_did)
+{
+
+}
+
+void POWER_SYSTEM_DATABASE::copy_ac_line(DEVICE_ID& new_did, DEVICE_ID& old_did)
+{
+
+}
+
+void POWER_SYSTEM_DATABASE::copy_transformer(DEVICE_ID& new_did, DEVICE_ID& old_did)
+{
+
+}
+
+void POWER_SYSTEM_DATABASE::copy_lcc_hvdc2t(DEVICE_ID& new_did, DEVICE_ID& old_did)
+{
+
+}
+
 void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEVICE_ID& did_new)
 {
     ostringstream osstream;
