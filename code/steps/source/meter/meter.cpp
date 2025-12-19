@@ -8,19 +8,6 @@
 #include <cstring>
 
 using namespace std;
-vector<string> transformer_meters{"CURRENT AT PRIMARY WINDING IN KA",  "CURRENT AT SECONDARY WINDING IN KA",
-                                   "CURRENT AT TERTIARY WINDING IN KA",
-                                   "ACTIVE POWER AT PRIMARY WINDING IN MW",    "ACTIVE POWER AT SECONDARY WINDING IN MW",
-                                   "ACTIVE POWER AT TERTIARY WINDING IN MW",
-                                   "REACTIVE POWER AT PRIMARY WINDING IN MVAR", "REACTIVE POWER AT SECONDARY WINDING IN MVAR",
-                                   "REACTIVE POWER AT TERTIARY WINDING IN MVAR",
-                                   "CURRENT IN KA",
-                                   "ACTIVE POWER IN MW",
-                                   "REACTIVE POWER IN MVAR",
-                                   "CURRENT IN PU",
-                                   "ACTIVE POWER IN PU",
-                                   "REACTIVE POWER IN PU"};
-
 vector<string> lcc_hvdc2t_meters{ "DC CURRENT IN KA",
                                   "RECTIFIER DC CURRENT IN KA",   "INVERTER DC CURRENT IN KA",
                                   "RECTIFIER AC CURRENT IN KA",   "INVERTER AC CURRENT IN KA",
@@ -90,7 +77,6 @@ vector<string> equivalent_device_meters{"VOLTAGE SOURCE VOLTAGE IN PU",
                                          "REACTIVE POWER NET LOAD IN PU"};
 
 map<STEPS_DEVICE_TYPE, vector<string>> SUPPORTED_METERS{
-                                                            {STEPS_TRANSFORMER, transformer_meters},
                                                             {STEPS_LCC_HVDC2T, lcc_hvdc2t_meters},
                                                             {STEPS_VSC_HVDC, vsc_hvdc_meters},
                                                             {STEPS_HYBRID_DC, mt_hvdc_meters},
@@ -485,6 +471,7 @@ bool METER::is_valid_meter_type_of_device(const string& meter_type, STEPS_DEVICE
     if(device_type == STEPS_SV_SOURCE) return sv_source_meter_map.find(meter_type) != sv_source_meter_map.end();
     if(device_type == STEPS_LOAD) return load_meter_map.find(meter_type) != load_meter_map.end();
     if(device_type == STEPS_AC_LINE) return ac_line_meter_map.find(meter_type) != ac_line_meter_map.end();
+    if(device_type == STEPS_TRANSFORMER) return transformer_meter_map.find(meter_type) != transformer_meter_map.end();
 
     map<STEPS_DEVICE_TYPE, vector<string> >::const_iterator it = SUPPORTED_METERS.find(device_type);
     if(it!=SUPPORTED_METERS.end())
@@ -814,164 +801,9 @@ double METER::get_meter_value_as_an_ac_line() const
 
 double METER::get_meter_value_as_a_transformer() const
 {
-    TRANSFORMER* trans = (TRANSFORMER*) get_device_pointer();
-    if(trans != NULL)
-    {
-        string meter_type = get_meter_type();
-        unsigned int metered_bus = get_metered_side_bus();
-        if(trans->is_two_winding_transformer())
-        {
-            if(meter_type=="CURRENT IN KA")
-            {
-                if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE))
-                    return steps_fast_complex_abs(trans->get_winding_complex_current_in_kA(PRIMARY_SIDE));
-                else
-                    return steps_fast_complex_abs(trans->get_winding_complex_current_in_kA(SECONDARY_SIDE));
-            }
-
-            if(meter_type=="CURRENT IN PU")
-            {
-                if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE))
-                    return steps_fast_complex_abs(trans->get_winding_complex_current_in_pu(PRIMARY_SIDE));
-                else
-                    return steps_fast_complex_abs(trans->get_winding_complex_current_in_pu(SECONDARY_SIDE));
-            }
-
-            if(meter_type=="ACTIVE POWER IN MW")
-            {
-                if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE))
-                    return (trans->get_winding_complex_power_in_MVA(PRIMARY_SIDE)).real();
-                else
-                    return (trans->get_winding_complex_power_in_MVA(SECONDARY_SIDE)).real();
-            }
-
-            if(meter_type=="ACTIVE POWER IN PU")
-            {
-                if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE))
-                    return (trans->get_winding_complex_power_in_pu(PRIMARY_SIDE)).real();
-                else
-                    return (trans->get_winding_complex_power_in_pu(SECONDARY_SIDE)).real();
-            }
-
-            if(meter_type=="REACTIVE POWER IN MVAR")
-            {
-                if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE))
-                    return (trans->get_winding_complex_power_in_MVA(PRIMARY_SIDE)).imag();
-                else
-                    return (trans->get_winding_complex_power_in_MVA(SECONDARY_SIDE)).imag();
-            }
-
-            if(meter_type=="REACTIVE POWER IN PU")
-            {
-                if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE))
-                    return (trans->get_winding_complex_power_in_pu(PRIMARY_SIDE)).imag();
-                else
-                    return (trans->get_winding_complex_power_in_pu(SECONDARY_SIDE)).imag();
-            }
-        }
-        else
-        {
-            if(meter_type=="CURRENT IN KA")
-            {
-                if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE) and metered_bus!=trans->get_winding_bus(TERTIARY_SIDE))
-                    return steps_fast_complex_abs(trans->get_winding_complex_current_in_kA(PRIMARY_SIDE));
-                else
-                {
-                    if(metered_bus==trans->get_winding_bus(SECONDARY_SIDE))
-                        return steps_fast_complex_abs(trans->get_winding_complex_current_in_kA(SECONDARY_SIDE));
-                    else
-                        return steps_fast_complex_abs(trans->get_winding_complex_current_in_kA(TERTIARY_SIDE));
-                }
-            }
-
-            if(meter_type=="CURRENT IN PU")
-            {
-                if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE) and metered_bus!=trans->get_winding_bus(TERTIARY_SIDE))
-                    return steps_fast_complex_abs(trans->get_winding_complex_current_in_pu(PRIMARY_SIDE));
-                else
-                {
-                    if(metered_bus==trans->get_winding_bus(SECONDARY_SIDE))
-                        return steps_fast_complex_abs(trans->get_winding_complex_current_in_pu(SECONDARY_SIDE));
-                    else
-                        return steps_fast_complex_abs(trans->get_winding_complex_current_in_pu(TERTIARY_SIDE));
-                }
-            }
-
-            if(meter_type=="ACTIVE POWER IN MW")
-            {
-                if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE) and metered_bus!=trans->get_winding_bus(TERTIARY_SIDE))
-                    return (trans->get_winding_complex_power_in_MVA(PRIMARY_SIDE)).real();
-                else
-                {
-                    if(metered_bus==trans->get_winding_bus(SECONDARY_SIDE))
-                        return (trans->get_winding_complex_power_in_MVA(SECONDARY_SIDE)).real();
-                    else
-                        return (trans->get_winding_complex_power_in_MVA(TERTIARY_SIDE)).real();
-                }
-            }
-
-            if(meter_type=="ACTIVE POWER IN PU")
-            {
-                if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE) and metered_bus!=trans->get_winding_bus(TERTIARY_SIDE))
-                    return (trans->get_winding_complex_power_in_pu(PRIMARY_SIDE)).real();
-                else
-                {
-                    if(metered_bus==trans->get_winding_bus(SECONDARY_SIDE))
-                        return (trans->get_winding_complex_power_in_pu(SECONDARY_SIDE)).real();
-                    else
-                        return (trans->get_winding_complex_power_in_pu(TERTIARY_SIDE)).real();
-                }
-            }
-
-            if(meter_type=="REACTIVE POWER IN MVAR")
-            {
-                if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE) and metered_bus!=trans->get_winding_bus(TERTIARY_SIDE))
-                    return (trans->get_winding_complex_power_in_MVA(PRIMARY_SIDE)).imag();
-                else
-                {
-                    if(metered_bus==trans->get_winding_bus(SECONDARY_SIDE))
-                        return (trans->get_winding_complex_power_in_MVA(SECONDARY_SIDE)).imag();
-                    else
-                        return (trans->get_winding_complex_power_in_MVA(TERTIARY_SIDE)).imag();
-                }
-            }
-
-            if(meter_type=="REACTIVE POWER IN PU")
-            {
-                if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE) and metered_bus!=trans->get_winding_bus(TERTIARY_SIDE))
-                    return (trans->get_winding_complex_power_in_pu(PRIMARY_SIDE)).imag();
-                else
-                {
-                    if(metered_bus==trans->get_winding_bus(SECONDARY_SIDE))
-                        return (trans->get_winding_complex_power_in_pu(SECONDARY_SIDE)).imag();
-                    else
-                        return (trans->get_winding_complex_power_in_pu(TERTIARY_SIDE)).imag();
-                }
-            }
-        }
-
-
-        if(meter_type=="CURRENT AT PRIMARY WINDING IN KA")
-            return steps_fast_complex_abs(trans->get_winding_complex_current_in_kA(PRIMARY_SIDE));
-        if(meter_type=="CURRENT AT SECONDARY WINDING IN KA")
-            return steps_fast_complex_abs(trans->get_winding_complex_current_in_kA(SECONDARY_SIDE));
-        if(meter_type=="CURRENT AT TERTIARY WINDING IN KA")
-            return steps_fast_complex_abs(trans->get_winding_complex_current_in_kA(TERTIARY_SIDE));
-        if(meter_type=="ACTIVE POWER AT PRIMARY WINDING IN MW")
-            return (trans->get_winding_complex_power_in_MVA(PRIMARY_SIDE)).real();
-        if(meter_type=="ACTIVE POWER AT SECONDARY WINDING IN MW")
-            return (trans->get_winding_complex_power_in_MVA(SECONDARY_SIDE)).real();
-        if(meter_type=="ACTIVE POWER AT TERTIARY WINDING IN MW")
-            return (trans->get_winding_complex_power_in_MVA(TERTIARY_SIDE)).real();
-        if(meter_type=="REACTIVE POWER AT PRIMARY WINDING IN MVAR")
-            return (trans->get_winding_complex_power_in_MVA(PRIMARY_SIDE)).imag();
-        if(meter_type=="REACTIVE POWER AT SECONDARY WINDING IN MVAR")
-            return (trans->get_winding_complex_power_in_MVA(SECONDARY_SIDE)).imag();
-        if(meter_type=="REACTIVE POWER AT TERTIARY WINDING IN MVAR")
-            return (trans->get_winding_complex_power_in_MVA(TERTIARY_SIDE)).imag();
-
-        return 0.0;
-    }
+    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = transformer_meter_map.find(get_meter_type());
+    if (it != transformer_meter_map.end())
+        return get_meter_value_with_function(it->second);
     else
         return 0.0;
 }

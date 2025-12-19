@@ -7,6 +7,7 @@
 #include "header/meter/sv_source_meter_getter.h"
 #include "header/meter/load_meter_getter.h"
 #include "header/meter/ac_line_meter_getter.h"
+#include "header/meter/transformer_meter_getter.h"
 #include "header/steps_namespace.h"
 
 void build_bus_meter_map()
@@ -267,6 +268,34 @@ void build_ac_line_meter_map()
 
 void build_transformer_meter_map()
 {
+    using namespace transformer_meter_getter;
+    transformer_meter_map.insert({"CURRENT IN KA",                               get_current_ka_bus_side});
+    transformer_meter_map.insert({"CURRENT IN PU",                               get_current_pu_bus_side});
+    transformer_meter_map.insert({"ACTIVE POWER IN MW",                          get_active_power_mw_bus_side});
+    transformer_meter_map.insert({"ACTIVE POWER IN PU",                          get_active_power_pu_bus_side});
+    transformer_meter_map.insert({"REACTIVE POWER IN MVAR",                      get_reactive_power_mvar_bus_side});
+    transformer_meter_map.insert({"REACTIVE POWER IN PU",                        get_reactive_power_pu_bus_side});
+
+    transformer_meter_map.insert({"CURRENT AT PRIMARY WINDING IN KA",            get_current_ka_primary});
+    transformer_meter_map.insert({"CURRENT AT SECONDARY WINDING IN KA",          get_current_ka_secondary});
+    transformer_meter_map.insert({"CURRENT AT TERTIARY WINDING IN KA",           get_current_ka_tertiary});
+    transformer_meter_map.insert({"CURRENT AT PRIMARY WINDING IN PU",            get_current_pu_primary});
+    transformer_meter_map.insert({"CURRENT AT SECONDARY WINDING IN PU",          get_current_pu_secondary});
+    transformer_meter_map.insert({"CURRENT AT TERTIARY WINDING IN PU",           get_current_pu_tertiary});
+
+    transformer_meter_map.insert({"ACTIVE POWER AT PRIMARY WINDING IN MW",       get_active_power_mw_primary});
+    transformer_meter_map.insert({"ACTIVE POWER AT SECONDARY WINDING IN MW",     get_active_power_mw_secondary});
+    transformer_meter_map.insert({"ACTIVE POWER AT TERTIARY WINDING IN MW",      get_active_power_mw_tertiary});
+    transformer_meter_map.insert({"ACTIVE POWER AT PRIMARY WINDING IN PU",       get_active_power_pu_primary});
+    transformer_meter_map.insert({"ACTIVE POWER AT SECONDARY WINDING IN PU",     get_active_power_pu_secondary});
+    transformer_meter_map.insert({"ACTIVE POWER AT TERTIARY WINDING IN PU",      get_active_power_pu_tertiary});
+
+    transformer_meter_map.insert({"REACTIVE POWER AT PRIMARY WINDING IN MVAR",   get_reactive_power_mvar_primary});
+    transformer_meter_map.insert({"REACTIVE POWER AT SECONDARY WINDING IN MVAR", get_reactive_power_mvar_secondary});
+    transformer_meter_map.insert({"REACTIVE POWER AT TERTIARY WINDING IN MVAR",  get_reactive_power_mvar_tertiary});
+    transformer_meter_map.insert({"REACTIVE POWER AT PRIMARY WINDING IN PU",     get_reactive_power_pu_primary});
+    transformer_meter_map.insert({"REACTIVE POWER AT SECONDARY WINDING IN PU",   get_reactive_power_pu_secondary});
+    transformer_meter_map.insert({"REACTIVE POWER AT TERTIARY WINDING IN PU",    get_reactive_power_pu_tertiary});
 }
 
 void build_lcc_hvdc2t_meter_map()

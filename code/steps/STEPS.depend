@@ -4429,7 +4429,7 @@
 	<iostream>
 	<cstring>
 
-1765429691 source:d:\steps\code\steps\source\meter\meter_setter.cpp
+1766138300 source:d:\steps\code\steps\source\meter\meter_setter.cpp
 	"header/meter/meter_setter.h"
 	"header/basic/terminal.h"
 	"header/basic/utility.h"
@@ -4602,7 +4602,7 @@
 	"header/model/energy_storage_model/estr0.h"
 	"header/STEPS.h"
 
-1760001908 source:d:\steps\code\steps\source\model\equivalent_model\arxl.cpp
+1766138300 source:d:\steps\code\steps\source\model\equivalent_model\arxl.cpp
 	"header/model/equivalent_model/ARXL.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -164544,4 +164544,14 @@
 1766136430 d:\steps\code\steps\header\meter\ac_line_meter_getter.h
 	<string>
 	"header/meter/meter_parameter_struct.h"
+
+1766138801 source:d:\steps\code\steps\source\meter\transformer_meter_getter.cpp
+	"header/meter/transformer_meter_getter.h"
+	"header/device/transformer.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+
+1766136567 d:\steps\code\steps\header\meter\transformer_meter_getter.h
+	"header/meter/meter_parameter_struct.h"
+	<string>
 
