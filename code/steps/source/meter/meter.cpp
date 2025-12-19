@@ -8,18 +8,6 @@
 #include <cstring>
 
 using namespace std;
-vector<string> lcc_hvdc2t_meters{ "DC CURRENT IN KA",
-                                  "RECTIFIER DC CURRENT IN KA",   "INVERTER DC CURRENT IN KA",
-                                  "RECTIFIER AC CURRENT IN KA",   "INVERTER AC CURRENT IN KA",
-                                  "RECTIFIER ALPHA IN DEG",       "INVERTER GAMMA IN DEG",
-                                  "RECTIFIER MU IN DEG",          "INVERTER MU IN DEG",
-                                  "RECTIFIER DC VOLTAGE IN KV",   "INVERTER DC VOLTAGE IN KV",
-                                  "RECTIFIER AC VOLTAGE IN PU",   "INVERTER AC VOLTAGE IN PU",
-                                  "RECTIFIER DC POWER IN MW",     "INVERTER DC POWER IN MW",
-                                  "RECTIFIER AC ACTIVE POWER IN MW","INVERTER AC ACTIVE POWER IN MW",
-                                  "RECTIFIER AC REACTIVE POWER IN MVAR","INVERTER AC REACTIVE POWER IN MVAR",
-                                  "2T LCC HVDC MODEL INTERNAL VARIABLE"};
-
 vector<string> vsc_hvdc_meters{ "CONVERTER DC CURRENT IN KA",  "CONVERTER AC CURRENT IN KA",
                                 "CONVERTER AC VOLTAGE IN KV",  "CONVERTER AC VOLTAGE IN PU",
                                 "CONVERTER DC POWER IN MW",
@@ -77,7 +65,6 @@ vector<string> equivalent_device_meters{"VOLTAGE SOURCE VOLTAGE IN PU",
                                          "REACTIVE POWER NET LOAD IN PU"};
 
 map<STEPS_DEVICE_TYPE, vector<string>> SUPPORTED_METERS{
-                                                            {STEPS_LCC_HVDC2T, lcc_hvdc2t_meters},
                                                             {STEPS_VSC_HVDC, vsc_hvdc_meters},
                                                             {STEPS_HYBRID_DC, mt_hvdc_meters},
                                                             {STEPS_EQUIVALENT_DEVICE, equivalent_device_meters}};
@@ -472,6 +459,7 @@ bool METER::is_valid_meter_type_of_device(const string& meter_type, STEPS_DEVICE
     if(device_type == STEPS_LOAD) return load_meter_map.find(meter_type) != load_meter_map.end();
     if(device_type == STEPS_AC_LINE) return ac_line_meter_map.find(meter_type) != ac_line_meter_map.end();
     if(device_type == STEPS_TRANSFORMER) return transformer_meter_map.find(meter_type) != transformer_meter_map.end();
+    if(device_type == STEPS_LCC_HVDC2T) return lcc_hvdc2t_meter_map.find(meter_type) != lcc_hvdc2t_meter_map.end();
 
     map<STEPS_DEVICE_TYPE, vector<string> >::const_iterator it = SUPPORTED_METERS.find(device_type);
     if(it!=SUPPORTED_METERS.end())
@@ -864,83 +852,9 @@ double METER::get_meter_value_as_a_sv_source() const
 
 double METER::get_meter_value_as_a_2t_lcc_hvdc() const
 {
-    LCC_HVDC2T* hvdc = (LCC_HVDC2T*) get_device_pointer();
-    if(hvdc != NULL)
-    {
-        if(hvdc->get_status()==true)
-        {
-            string meter_type = get_meter_type();
-            LCC_HVDC2T_MODEL* hvdc_model = hvdc->get_2t_lcc_hvdc_model();
-            if(hvdc_model != NULL)
-            {
-                if(meter_type=="DC CURRENT IN KA")
-                    return hvdc_model->get_converter_dc_current_in_kA(RECTIFIER);
-
-                if(meter_type=="RECTIFIER DC CURRENT IN KA")
-                    return hvdc_model->get_converter_dc_current_in_kA(RECTIFIER);
-
-                if(meter_type=="RECTIFIER AC CURRENT IN KA")
-                    return steps_fast_complex_abs(hvdc_model->get_converter_ac_current_in_kA(RECTIFIER));
-
-                if(meter_type=="INVERTER DC CURRENT IN KA")
-                    return hvdc_model->get_converter_dc_current_in_kA(INVERTER);
-
-                if(meter_type=="INVERTER AC CURRENT IN KA")
-                    return steps_fast_complex_abs(hvdc_model->get_converter_ac_current_in_kA(INVERTER));
-
-                if(meter_type=="RECTIFIER ALPHA IN DEG")
-                    return hvdc_model->get_converter_alpha_or_gamma_in_deg(RECTIFIER);
-
-                if(meter_type=="INVERTER GAMMA IN DEG")
-                    return hvdc_model->get_converter_alpha_or_gamma_in_deg(INVERTER);
-
-                if(meter_type=="RECTIFIER MU IN DEG")
-                    return hvdc_model->get_converter_commutation_overlap_angle_in_deg(RECTIFIER);
-
-                if(meter_type=="INVERTER MU IN DEG")
-                    return hvdc_model->get_converter_commutation_overlap_angle_in_deg(INVERTER);
-
-                if(meter_type=="RECTIFIER DC VOLTAGE IN KV")
-                    return hvdc_model->get_converter_dc_voltage_in_kV(RECTIFIER);
-
-                if(meter_type=="INVERTER DC VOLTAGE IN KV")
-                    return hvdc_model->get_converter_dc_voltage_in_kV(INVERTER);
-
-                if(meter_type=="RECTIFIER AC VOLTAGE IN PU")
-                    return hvdc_model->get_converter_ac_voltage_in_pu(RECTIFIER);
-
-                if(meter_type=="INVERTER AC VOLTAGE IN PU")
-                    return hvdc_model->get_converter_ac_voltage_in_pu(INVERTER);
-
-                if(meter_type=="RECTIFIER DC POWER IN MW")
-                    return hvdc_model->get_converter_dc_power_in_MW(RECTIFIER);
-
-                if(meter_type=="INVERTER DC POWER IN MW")
-                    return hvdc_model->get_converter_dc_power_in_MW(INVERTER);
-
-                if(meter_type=="RECTIFIER AC ACTIVE POWER IN MW")
-                    return hvdc_model->get_converter_ac_complex_power_in_MVA(RECTIFIER).real();
-
-                if(meter_type=="INVERTER AC ACTIVE POWER IN MW")
-                    return hvdc_model->get_converter_ac_complex_power_in_MVA(INVERTER).real();
-
-                if(meter_type=="RECTIFIER AC REACTIVE POWER IN MVAR")
-                    return hvdc_model->get_converter_ac_complex_power_in_MVA(RECTIFIER).imag();
-
-                if(meter_type=="INVERTER AC REACTIVE POWER IN MVAR")
-                    return hvdc_model->get_converter_ac_complex_power_in_MVA(INVERTER).imag();
-
-                if(meter_type=="2T LCC HVDC MODEL INTERNAL VARIABLE")
-                    return hvdc_model->get_model_internal_variable_with_name(get_internal_variable_name());
-
-                return 0.0;
-            }
-            else
-                return 0.0;
-        }
-        else
-            return 0.0;
-    }
+    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = lcc_hvdc2t_meter_map.find(get_meter_type());
+    if (it != lcc_hvdc2t_meter_map.end())
+        return get_meter_value_with_function(it->second);
     else
         return 0.0;
 }

@@ -4419,7 +4419,7 @@
 	<fstream>
 	<cstring>
 
-1766138083 source:d:\steps\code\steps\source\meter\meter.cpp
+1766139026 source:d:\steps\code\steps\source\meter\meter.cpp
 	"header/meter/meter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -164390,7 +164390,7 @@
 
 1765278814 d:\steps\code\steps\header\meter\meter_map_builder.h
 
-1766137878 source:d:\steps\code\steps\source\meter\meter_map_builder.cpp
+1766139199 source:d:\steps\code\steps\source\meter\meter_map_builder.cpp
 	"header/meter/meter_map_builder.h"
 	"header/meter/bus_meter_getter.h"
 	"header/meter/sg_meter_getter.h"
@@ -164400,6 +164400,8 @@
 	"header/meter/sv_source_meter_getter.h"
 	"header/meter/load_meter_getter.h"
 	"header/meter/ac_line_meter_getter.h"
+	"header/meter/transformer_meter_getter.h"
+	"header/meter/lcc_hvdc2t_meter_getter.h"
 	"header/steps_namespace.h"
 
 1765276915 d:\steps\code\steps\header\meter\wtg_meter_getter.h
@@ -164552,6 +164554,17 @@
 	"header/steps_namespace.h"
 
 1766136567 d:\steps\code\steps\header\meter\transformer_meter_getter.h
+	"header/meter/meter_parameter_struct.h"
+	<string>
+
+1766139045 source:d:\steps\code\steps\source\meter\lcc_hvdc2t_meter_getter.cpp
+	"header/meter/lcc_hvdc2t_meter_getter.h"
+	"header/device/lcc_hvdc2t.h"
+	"header/model/lcc_hvdc2t_model/lcc_hvdc2t_model.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+
+1766139045 d:\steps\code\steps\header\meter\lcc_hvdc2t_meter_getter.h
 	"header/meter/meter_parameter_struct.h"
 	<string>
 
