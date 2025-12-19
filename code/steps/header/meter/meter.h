@@ -76,7 +76,7 @@ class METER
         DC_DEVICE_ID dc_did;
         STEPS_DEVICE_TYPE device_type;
         unsigned int meter_type_string_index;
-        unsigned int meter_side_bus;
+        unsigned int metered_side_bus;
         unsigned int internal_variable_name_index;
         string hybrid_dc_device_name;
 };

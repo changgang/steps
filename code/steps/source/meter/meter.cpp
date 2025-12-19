@@ -392,16 +392,16 @@ bool METER::is_internal_variable_name_valid(string& name, unsigned int index) co
 void METER::set_meter_side_bus(unsigned int meter_side)
 {
     if(get_device_type()==STEPS_BUS)
-        meter_side_bus = 0;
+        metered_side_bus = 0;
     else
     {
         if(get_device_type()!=STEPS_VSC_HVDC)
         {
             NONBUS_DEVICE* device = (NONBUS_DEVICE*) get_device_pointer();
             if(device->is_connected_to_bus(meter_side))
-                meter_side_bus = meter_side;
+                metered_side_bus = meter_side;
             else
-                meter_side_bus = 0;
+                metered_side_bus = 0;
         }
         else
         {
@@ -409,30 +409,30 @@ void METER::set_meter_side_bus(unsigned int meter_side)
             if(get_meter_type().rfind("CONVERTER", 0) == 0)
             {
                 if(vsc_hvdc->is_connected_to_bus(meter_side) or vsc_hvdc->is_connected_to_dc_bus(meter_side))
-                    meter_side_bus = meter_side;
+                    metered_side_bus = meter_side;
                 else
-                    meter_side_bus = 0;
+                    metered_side_bus = 0;
             }
             else
             {
                 if(get_meter_type().rfind("DC BUS", 0) == 0)
                 {
                     if(vsc_hvdc->is_connected_to_dc_bus(meter_side))
-                        meter_side_bus = meter_side;
+                        metered_side_bus = meter_side;
                     else
-                        meter_side_bus = 0;
+                        metered_side_bus = 0;
                 }
                 else
                 {
                     if(get_meter_type().rfind("DC LINE", 0) == 0)
                     {
                         if(vsc_hvdc->is_connected_to_dc_bus(meter_side))
-                            meter_side_bus = meter_side;
+                            metered_side_bus = meter_side;
                         else
-                            meter_side_bus = 0;
+                            metered_side_bus = 0;
                     }
                     else
-                        meter_side_bus = 0;
+                        metered_side_bus = 0;
                 }
             }
         }
@@ -548,7 +548,7 @@ string METER::get_meter_type() const
 
 unsigned int METER::get_meter_side_bus() const
 {
-    return meter_side_bus;
+    return metered_side_bus;
 }
 
 DC_DEVICE_ID METER::get_sub_dc_device_id() const
@@ -657,7 +657,7 @@ void METER::clear()
     dc_did.clear();
     device_type = STEPS_INVALID_DEVICE;
     meter_type_string_index = INDEX_NOT_EXIST;
-    meter_side_bus = 0;
+    metered_side_bus = 0;
     internal_variable_name_index = INDEX_NOT_EXIST;
     hybrid_dc_device_name = "";
 }

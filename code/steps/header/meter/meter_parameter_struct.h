@@ -7,6 +7,7 @@ struct METER_PARAMETER
 {
     DEVICE* device_pointer;
     std::string internal_var_name;
+    unsigned int metered_side_bus;
 };
 
 
