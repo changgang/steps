@@ -39,18 +39,6 @@ vector<string> transformer_meters{"CURRENT AT PRIMARY WINDING IN KA",  "CURRENT 
                                    "ACTIVE POWER IN PU",
                                    "REACTIVE POWER IN PU"};
 
-
-vector<string> load_meters{ "CURRENT IN KA",
-                            "CURRENT IN PU",
-                            "ACTIVE POWER IN MW", "REACTIVE POWER IN MVAR",
-                            "ACTIVE POWER IN PU", "REACTIVE POWER IN PU",
-                            "TOTAL SCALE IN PU",
-                            "MANUALLY SCALE IN PU",
-                            "RELAY SHED SCALE IN PU",
-                            "LOAD MODEL INTERNAL VARIABLE",
-                            "FREQUENCY RELAY MODEL INTERNAL VARIABLE",
-                            "VOLTAGE RELAY MODEL INTERNAL VARIABLE"};
-
 vector<string> lcc_hvdc2t_meters{ "DC CURRENT IN KA",
                                   "RECTIFIER DC CURRENT IN KA",   "INVERTER DC CURRENT IN KA",
                                   "RECTIFIER AC CURRENT IN KA",   "INVERTER AC CURRENT IN KA",
@@ -122,7 +110,6 @@ vector<string> equivalent_device_meters{"VOLTAGE SOURCE VOLTAGE IN PU",
 map<STEPS_DEVICE_TYPE, vector<string>> SUPPORTED_METERS{
                                                             {STEPS_AC_LINE,        line_meters},
                                                             {STEPS_TRANSFORMER, transformer_meters},
-                                                            {STEPS_LOAD,        load_meters},
                                                             {STEPS_LCC_HVDC2T, lcc_hvdc2t_meters},
                                                             {STEPS_VSC_HVDC, vsc_hvdc_meters},
                                                             {STEPS_HYBRID_DC, mt_hvdc_meters},
@@ -515,6 +502,7 @@ bool METER::is_valid_meter_type_of_device(const string& meter_type, STEPS_DEVICE
     if(device_type == STEPS_PV_UNIT) return pvu_meter_map.find(meter_type) != pvu_meter_map.end();
     if(device_type == STEPS_ENERGY_STORAGE) return es_meter_map.find(meter_type) != es_meter_map.end();
     if(device_type == STEPS_SV_SOURCE) return sv_source_meter_map.find(meter_type) != sv_source_meter_map.end();
+    if(device_type == STEPS_LOAD) return load_meter_map.find(meter_type) != load_meter_map.end();
 
     map<STEPS_DEVICE_TYPE, vector<string> >::const_iterator it = SUPPORTED_METERS.find(device_type);
     if(it!=SUPPORTED_METERS.end())
@@ -1119,79 +1107,9 @@ double METER::get_meter_value_as_a_transformer() const
 
 double METER::get_meter_value_as_a_load() const
 {
-    LOAD* load = (LOAD*) get_device_pointer();
-    if(load!=NULL)
-    {
-        if(load->get_status()==true)
-        {
-            string meter_type = get_meter_type();
-            if(meter_type=="ACTIVE POWER IN MW")
-                return (load->get_dynamic_load_in_MVA()).real();
-
-            if(meter_type=="ACTIVE POWER IN PU")
-                return (load->get_dynamic_load_in_pu()).real();
-
-            if(meter_type=="REACTIVE POWER IN MVAR")
-                return (load->get_dynamic_load_in_MVA()).imag();
-
-            if(meter_type=="REACTIVE POWER IN PU")
-                return (load->get_dynamic_load_in_pu()).imag();
-
-            if(meter_type=="CURRENT IN KA")
-            {
-                POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-                double sbase = psdb.get_system_base_power_in_MVA();
-                double vbase = psdb.get_bus_base_voltage_in_kV(load->get_load_bus());
-                double ibase = sbase/(SQRT3*vbase);
-                return ibase* steps_fast_complex_abs(load->get_dynamics_load_current_in_pu_based_on_system_base_power());
-            }
-
-            if(meter_type=="CURRENT IN PU")
-            {
-                return steps_fast_complex_abs(load->get_dynamics_load_current_in_pu_based_on_system_base_power());
-            }
-
-            if(meter_type=="LOAD MODEL INTERNAL VARIABLE")
-            {
-                LOAD_MODEL* model = load->get_load_model();
-                if(model==NULL)
-                    return 0.0;
-                else
-                    return model->get_model_internal_variable_with_name(get_internal_variable_name());
-            }
-            if(meter_type=="FREQUENCY RELAY MODEL INTERNAL VARIABLE")
-            {
-                LOAD_FREQUENCY_RELAY_MODEL* model = load->get_load_frequency_relay_model();
-                if(model==NULL)
-                    return 0.0;
-                else
-                    return model->get_model_internal_variable_with_name(get_internal_variable_name());
-            }
-            if(meter_type=="VOLTAGE RELAY MODEL INTERNAL VARIABLE")
-            {
-                LOAD_VOLTAGE_RELAY_MODEL* model = load->get_load_voltage_relay_model();
-                if(model==NULL)
-                    return 0.0;
-                else
-                    return model->get_model_internal_variable_with_name(get_internal_variable_name());
-            }
-            if(meter_type=="TOTAL SCALE IN PU")
-            {
-                return load->get_load_total_scale_factor_in_pu();
-            }
-            if(meter_type=="MANUALLY SCALE IN PU")
-            {
-                return load->get_load_manually_scale_factor_in_pu();
-            }
-            if(meter_type=="RELAY SHED SCALE IN PU")
-            {
-                return load->get_load_relay_shed_scale_factor_in_pu();
-            }
-            return 0.0;
-        }
-        else
-            return 0.0;
-    }
+    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = load_meter_map.find(get_meter_type());
+    if (it != load_meter_map.end())
+        return get_meter_value_with_function(it->second);
     else
         return 0.0;
 }

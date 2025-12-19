@@ -5,6 +5,7 @@
 #include "header/meter/pvu_meter_getter.h"
 #include "header/meter/es_meter_getter.h"
 #include "header/meter/sv_source_meter_getter.h"
+#include "header/meter/load_meter_getter.h"
 #include "header/steps_namespace.h"
 
 void build_bus_meter_map()
@@ -219,6 +220,19 @@ void build_sv_source_meter_map()
 
 void build_load_meter_map()
 {
+    using namespace load_meter_getter;
+    load_meter_map.insert({"ACTIVE POWER IN MW",                      get_active_power_mw});
+    load_meter_map.insert({"ACTIVE POWER IN PU",                      get_active_power_pu});
+    load_meter_map.insert({"REACTIVE POWER IN MVAR",                  get_reactive_power_mvar});
+    load_meter_map.insert({"REACTIVE POWER IN PU",                    get_reactive_power_pu});
+    load_meter_map.insert({"CURRENT IN KA",                           get_current_ka});
+    load_meter_map.insert({"CURRENT IN PU",                           get_current_pu});
+    load_meter_map.insert({"LOAD MODEL INTERNAL VARIABLE",            get_load_model_internal_variable});
+    load_meter_map.insert({"FREQUENCY RELAY MODEL INTERNAL VARIABLE", get_frequency_relay_model_internal_variable});
+    load_meter_map.insert({"VOLTAGE RELAY MODEL INTERNAL VARIABLE",   get_voltage_relay_model_internal_variable});
+    load_meter_map.insert({"TOTAL SCALE IN PU",                       get_total_scale_in_pu});
+    load_meter_map.insert({"MANUALLY SCALE IN PU",                    get_manually_scale_in_pu});
+    load_meter_map.insert({"RELAY SHED SCALE IN PU",                  get_relay_shed_scale_in_pu});
 }
 
 void build_fixed_shunt_meter_map()
