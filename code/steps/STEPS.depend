@@ -233,7 +233,7 @@
 	"header/basic/constants.h"
 	"header/meter/meter.h"
 
-1766138300 d:\steps\code\steps\header\meter\meter.h
+1766139904 d:\steps\code\steps\header\meter\meter.h
 	"header/basic/constants.h"
 	"header/basic/device_id.h"
 	"header/basic/dc_device_id.h"
@@ -4419,7 +4419,7 @@
 	<fstream>
 	<cstring>
 
-1766139026 source:d:\steps\code\steps\source\meter\meter.cpp
+1766140387 source:d:\steps\code\steps\source\meter\meter.cpp
 	"header/meter/meter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -164385,8 +164385,9 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1766136935 d:\steps\code\steps\header\meter\meter_parameter_struct.h
+1766140028 d:\steps\code\steps\header\meter\meter_parameter_struct.h
 	"header/device/device.h"
+	"header/basic/dc_device_id.h"
 
 1765278814 d:\steps\code\steps\header\meter\meter_map_builder.h
 
@@ -164565,6 +164566,18 @@
 	"header/steps_namespace.h"
 
 1766139045 d:\steps\code\steps\header\meter\lcc_hvdc2t_meter_getter.h
+	"header/meter/meter_parameter_struct.h"
+	<string>
+
+1766140297 source:d:\steps\code\steps\source\meter\vsc_hvdc_meter_getter.cpp
+	"header/meter/vsc_hvdc_meter_getter.h"
+	"header/device/vsc_hvdc.h"
+	"header/model/vsc_hvdc_model/vsc_hvdc_network_model/vsc_hvdc_network_model.h"
+	"header/model/vsc_hvdc_model/vsc_hvdc_converter_model/vsc_hvdc_converter_model.h"
+	"header/steps_namespace.h"
+	"header/basic/utility.h"
+
+1766139310 d:\steps\code\steps\header\meter\vsc_hvdc_meter_getter.h
 	"header/meter/meter_parameter_struct.h"
 	<string>
 

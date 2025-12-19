@@ -199,6 +199,7 @@
 		<Unit filename="header/meter/sg_meter_getter.h" />
 		<Unit filename="header/meter/sv_source_meter_getter.h" />
 		<Unit filename="header/meter/transformer_meter_getter.h" />
+		<Unit filename="header/meter/vsc_hvdc_meter_getter.h" />
 		<Unit filename="header/meter/wtg_meter_getter.h" />
 		<Unit filename="header/model/all_supported_models.h" />
 		<Unit filename="header/model/auxiliary_signal_model/auxiliary_signal_model.h" />
@@ -764,6 +765,7 @@
 		<Unit filename="source/meter/sg_meter_getter.cpp" />
 		<Unit filename="source/meter/sv_source_meter_getter.cpp" />
 		<Unit filename="source/meter/transformer_meter_getter.cpp" />
+		<Unit filename="source/meter/vsc_hvdc_meter_getter.cpp" />
 		<Unit filename="source/meter/wtg_meter_getter.cpp" />
 		<Unit filename="source/model/bus_model/bus_frequency_model/bus_frequency_model.cpp" />
 		<Unit filename="source/model/common_model/common_model.cpp" />

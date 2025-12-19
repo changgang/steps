@@ -73,11 +73,11 @@ class METER
 
         STEPS* toolkit;
         DEVICE* device_pointer;
-        DC_DEVICE_ID dc_did;
         STEPS_DEVICE_TYPE device_type;
         unsigned int meter_type_string_index;
         unsigned int metered_side_bus;
         unsigned int internal_variable_name_index;
+        DC_DEVICE_ID sub_dc_did;
         string hybrid_dc_device_name;
 };
 
