@@ -614,7 +614,7 @@ void POWERFLOW_SOLVER::prepare_devices_for_solution()
 
     lines = psdb.get_all_ac_lines();
     transformers = psdb.get_all_transformers();
-    hvdcs = psdb.get_all_2t_lcc_hvdcs();
+    hvdcs = psdb.get_all_lcc_hvdc2ts();
     vsc_hvdcs = psdb.get_all_vsc_hvdcs();
     mt_hvdcs = psdb.get_all_mt_hvdcs();
 
@@ -1322,14 +1322,14 @@ bool POWERFLOW_SOLVER::is_nan_detected()
 }
 void POWERFLOW_SOLVER::try_to_solve_dc_system_steady_state()
 {
-    try_to_solve_2t_lcc_hvdc_steady_state();
+    try_to_solve_lcc_hvdc2t_steady_state();
     try_to_solve_vsc_hvdc_steady_state();
     try_to_solve_mt_hvdc_steady_state();
 }
 
-void POWERFLOW_SOLVER::try_to_solve_2t_lcc_hvdc_steady_state()
+void POWERFLOW_SOLVER::try_to_solve_lcc_hvdc2t_steady_state()
 {
-    //vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
+    //vector<LCC_HVDC2T*> hvdcs = psdb.get_all_lcc_hvdc2ts();
     unsigned int nhvdc = hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
         set_openmp_number_of_threads(toolkit->get_thread_number());
@@ -1437,7 +1437,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
         }
     }
 
-    add_2t_lcc_hvdc_to_bus_power_mismatch();
+    add_lcc_hvdc2t_to_bus_power_mismatch();
     if(toolkit->is_detailed_log_enabled())
     {
         for(unsigned int i=0; i!=nbus; ++i)
@@ -1682,7 +1682,7 @@ void POWERFLOW_SOLVER::add_load_to_bus_power_mismatch()
     }
 }
 
-void POWERFLOW_SOLVER::add_2t_lcc_hvdc_to_bus_power_mismatch()
+void POWERFLOW_SOLVER::add_lcc_hvdc2t_to_bus_power_mismatch()
 {
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -2782,7 +2782,7 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
         double Qerror0 = get_maximum_reactive_power_mismatch_in_MVar();
         for(unsigned int i=0; i<10; ++i)
         {
-            try_to_solve_2t_lcc_hvdc_steady_state();
+            try_to_solve_lcc_hvdc2t_steady_state();
             calculate_raw_bus_power_mismatch();
             double Perror = get_maximum_active_power_mismatch_in_MW();
             double Qerror = get_maximum_reactive_power_mismatch_in_MVar();
@@ -2899,7 +2899,7 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
     {
         for(unsigned int i=0; i<10; ++i)
         {
-            try_to_solve_2t_lcc_hvdc_steady_state();
+            try_to_solve_lcc_hvdc2t_steady_state();
             calculate_raw_bus_power_mismatch();
             double Qerror = get_maximum_reactive_power_mismatch_in_MVar();
             if(Qerror>Qerror0 and Qerror>get_allowed_max_reactive_power_imbalance_in_MVar())
@@ -2997,7 +2997,7 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
     {
         for(unsigned int i=0; i<10; ++i)
         {
-            try_to_solve_2t_lcc_hvdc_steady_state();
+            try_to_solve_lcc_hvdc2t_steady_state();
             calculate_raw_bus_power_mismatch();
             double Perror = get_maximum_active_power_mismatch_in_MW();
             if(Perror>Perror0 and Perror>get_allowed_max_active_power_imbalance_in_MW())
@@ -3409,7 +3409,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
             }
         }
 
-        //vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
+        //vector<LCC_HVDC2T*> hvdcs = psdb.get_all_lcc_hvdc2ts();
         unsigned int nhvdc = hvdcs.size();
         if(nhvdc>0)
         {
@@ -3761,7 +3761,7 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(const string& file
             }
         }
 
-        //vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
+        //vector<LCC_HVDC2T*> hvdcs = psdb.get_all_lcc_hvdc2ts();
         unsigned int nhvdc = hvdcs.size();
         if(nhvdc>0)
         {

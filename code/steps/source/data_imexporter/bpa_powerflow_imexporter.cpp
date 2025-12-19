@@ -111,7 +111,7 @@ void BPA_IMEXPORTER::load_powerflow_data(string file)
     load_load_and_fixed_shunt_data();
     load_ac_line_data();
     load_transformer_data();
-    load_2t_lcc_hvdc_data();
+    load_lcc_hvdc2t_data();
     /*
     load_case_data();
     */
@@ -1616,7 +1616,7 @@ void BPA_IMEXPORTER::load_transformer_data()
     }
 }
 
-void BPA_IMEXPORTER::load_2t_lcc_hvdc_data()
+void BPA_IMEXPORTER::load_lcc_hvdc2t_data()
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -1700,7 +1700,7 @@ void BPA_IMEXPORTER::load_2t_lcc_hvdc_data()
             terminal.append_bus(inverter_grid_side_bus);
             did.set_device_terminal(terminal);
 
-            LCC_HVDC2T* hvdc_ptr = psdb.get_2t_lcc_hvdc(did);
+            LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(did);
 
             string bus_names_of_two_converters = rectifier_grid_side_bus_name+","+inverter_grid_side_bus_name;
             if( hvdc_ptr != NULL)
@@ -1729,12 +1729,12 @@ void BPA_IMEXPORTER::load_2t_lcc_hvdc_data()
             hvdc.set_nominal_dc_voltage_in_kV(nominal_dc_voltage_per_pole_in_kV);
 
 
-            while(psdb.is_2t_lcc_hvdc_exist(hvdc.get_device_id()))
+            while(psdb.is_lcc_hvdc2t_exist(hvdc.get_device_id()))
                 hvdc.set_identifier(hvdc.get_identifier()+"#");
 
-            string hvdc_name = "DC-"+num2str(psdb.get_2t_lcc_hvdc_count()+1);
+            string hvdc_name = "DC-"+num2str(psdb.get_lcc_hvdc2t_count()+1);
             hvdc.set_name(hvdc_name);
-            psdb.append_2t_lcc_hvdc(hvdc);
+            psdb.append_lcc_hvdc2t(hvdc);
         }
     }
 
@@ -1770,7 +1770,7 @@ void BPA_IMEXPORTER::load_2t_lcc_hvdc_data()
             if(converter_grid_side_bus_number==0)
                 continue;
 
-            vector<LCC_HVDC2T*> hvdcs = psdb.get_2t_lcc_hvdcs_connecting_to_bus(converter_grid_side_bus_number);
+            vector<LCC_HVDC2T*> hvdcs = psdb.get_lcc_hvdc2ts_connecting_to_bus(converter_grid_side_bus_number);
             CONVERTER_SIDE converter_side_type;
             for(unsigned int j=0; j<hvdcs.size(); ++j)
             {
@@ -1817,7 +1817,7 @@ void BPA_IMEXPORTER::load_2t_lcc_hvdc_data()
             terminal.append_bus(inverter_grid_side_bus);
             did.set_device_terminal(terminal);
 
-            LCC_HVDC2T* hvdc_ptr = psdb.get_2t_lcc_hvdc(did);   //
+            LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(did);   //
 
             if(hvdc_ptr == NULL)
                 continue;
@@ -1889,7 +1889,7 @@ void BPA_IMEXPORTER::load_2t_lcc_hvdc_data()
             complex <double> impedance_in_ohm(resistance_in_ohm,reactance_in_ohm);
             complex <double> admittance_in_siemens(conductance_in_siemens,susceptance_in_siemens);
 
-            vector<LCC_HVDC2T*> hvdcs = psdb.get_2t_lcc_hvdcs_connecting_to_bus(converter_bus);
+            vector<LCC_HVDC2T*> hvdcs = psdb.get_lcc_hvdc2ts_connecting_to_bus(converter_bus);
 
             CONVERTER_SIDE converter_side_type;
             for(unsigned int j=0; j<hvdcs.size(); ++j)
@@ -1940,7 +1940,7 @@ void BPA_IMEXPORTER::load_2t_lcc_hvdc_data()
                 terminal.append_bus(inverter_grid_side_bus);
                 did.set_device_terminal(terminal);
 
-                LCC_HVDC2T* hvdc_ptr = psdb.get_2t_lcc_hvdc(did);
+                LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(did);
 
                 if( hvdc_ptr==NULL)
                     continue;
@@ -1993,7 +1993,7 @@ void BPA_IMEXPORTER::load_2t_lcc_hvdc_data()
 
             unsigned int converter_bus = (primary_bus_number!=0 ? primary_bus_number:secondary_bus_number);
 
-            vector<LCC_HVDC2T*> hvdcs = psdb.get_2t_lcc_hvdcs_connecting_to_bus(converter_bus);
+            vector<LCC_HVDC2T*> hvdcs = psdb.get_lcc_hvdc2ts_connecting_to_bus(converter_bus);
 
             CONVERTER_SIDE converter_side_type;
             for(unsigned int j=0; j<hvdcs.size(); ++j)
@@ -2043,7 +2043,7 @@ void BPA_IMEXPORTER::load_2t_lcc_hvdc_data()
                 terminal.append_bus(inverter_grid_side_bus);
                 did.set_device_terminal(terminal);
 
-                LCC_HVDC2T* hvdc_ptr = psdb.get_2t_lcc_hvdc(did);
+                LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(did);
 
                 if(hvdc_ptr==NULL)
                     continue;
@@ -2091,7 +2091,7 @@ void BPA_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedan
     ofs<<export_transformer_data();
 
     ofs<<". Here goes hvdc data"<<endl;
-    ofs<<export_2t_lcc_hvdc_data();
+    ofs<<export_lcc_hvdc2t_data();
 
     ofs.close();
 
@@ -3060,13 +3060,13 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
     return osstream.str();
 }
 
-string BPA_IMEXPORTER::export_2t_lcc_hvdc_data() const
+string BPA_IMEXPORTER::export_lcc_hvdc2t_data() const
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_lcc_hvdc2ts();
     unsigned int n = hvdcs.size();
 
     double sbase_MVA = psdb.get_system_base_power_in_MVA();

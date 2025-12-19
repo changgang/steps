@@ -265,7 +265,7 @@ unsigned int api_get_device_capacity(const char* device_type, unsigned int toolk
     if(DEVICE_TYPE=="TRANSFORMER")
         return psdb.get_transformer_capacity();
     if(DEVICE_TYPE=="2T LCC HVDC")
-        return psdb.get_2t_lcc_hvdc_capacity();
+        return psdb.get_lcc_hvdc2t_capacity();
     if(DEVICE_TYPE=="VSC HVDC")
         return psdb.get_vsc_hvdc_capacity();
     if(DEVICE_TYPE=="MT HVDC")
@@ -327,7 +327,7 @@ void api_set_device_capacity(const char* device_type, unsigned int cap, unsigned
     if(DEVICE_TYPE=="TRANSFORMER")
         return psdb.set_transformer_capacity(cap);
     if(DEVICE_TYPE=="2T LCC HVDC")
-        return psdb.set_2t_lcc_hvdc_capacity(cap);
+        return psdb.set_lcc_hvdc2t_capacity(cap);
     if(DEVICE_TYPE=="VSC HVDC")
         return psdb.set_vsc_hvdc_capacity(cap);
     if(DEVICE_TYPE=="MT HVDC")

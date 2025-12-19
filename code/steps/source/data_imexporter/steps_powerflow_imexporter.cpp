@@ -55,7 +55,7 @@ void STEPS_IMEXPORTER::load_all_devices()
     load_ac_line_data();
     load_transformer_data();
     load_area_data();
-    load_2t_lcc_hvdc_data();
+    load_lcc_hvdc2t_data();
     load_vsc_hvdc_data();
     load_transformer_impedance_correction_table_data();
     load_multi_terminal_hvdc_data();
@@ -90,7 +90,7 @@ void STEPS_IMEXPORTER::load_powerflow_result(string file)
     load_energy_storage_powerflow_result(data_in_ram);
     load_sv_source_powerflow_result(data_in_ram);
     load_transformer_powerflow_result(data_in_ram);
-    load_2t_lcc_hvdc_powerflow_result(data_in_ram);
+    load_lcc_hvdc2t_powerflow_result(data_in_ram);
 
     osstream<<"Done loading powerflow result.";
     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -1683,7 +1683,7 @@ void STEPS_IMEXPORTER::load_area_data()
     }
 }
 
-void STEPS_IMEXPORTER::load_2t_lcc_hvdc_data()
+void STEPS_IMEXPORTER::load_lcc_hvdc2t_data()
 {
     if(splitted_sraw_data_in_ram.size()<9)
         return;
@@ -1712,11 +1712,11 @@ void STEPS_IMEXPORTER::load_2t_lcc_hvdc_data()
         data = DATA[i];
         hvdc_data.push_back(data);
 
-        add_2t_lcc_hvdc_with_data(hvdc_data);
+        add_lcc_hvdc2t_with_data(hvdc_data);
     }
 }
 
-void STEPS_IMEXPORTER::add_2t_lcc_hvdc_with_data(vector<vector<string> > hvdc_data)
+void STEPS_IMEXPORTER::add_lcc_hvdc2t_with_data(vector<vector<string> > hvdc_data)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -1727,16 +1727,16 @@ void STEPS_IMEXPORTER::add_2t_lcc_hvdc_with_data(vector<vector<string> > hvdc_da
     vector<string> data_rec = hvdc_data[1];
     vector<string> data_inv = hvdc_data[2];
 
-    add_2t_lcc_hvdc_basic_data(hvdc, data_lcc_hvdc2t);
-    add_2t_lcc_hvdc_converter_data(hvdc, RECTIFIER, data_rec);
-    add_2t_lcc_hvdc_converter_data(hvdc, INVERTER, data_inv);
+    add_lcc_hvdc2t_basic_data(hvdc, data_lcc_hvdc2t);
+    add_lcc_hvdc2t_converter_data(hvdc, RECTIFIER, data_rec);
+    add_lcc_hvdc2t_converter_data(hvdc, INVERTER, data_inv);
 
-    while(psdb.is_2t_lcc_hvdc_exist(hvdc.get_device_id()))
+    while(psdb.is_lcc_hvdc2t_exist(hvdc.get_device_id()))
         hvdc.set_identifier(hvdc.get_identifier()+"#");
 
-    psdb.append_2t_lcc_hvdc(hvdc);
+    psdb.append_lcc_hvdc2t(hvdc);
 }
-void STEPS_IMEXPORTER::add_2t_lcc_hvdc_basic_data(LCC_HVDC2T& hvdc, vector<string> data)
+void STEPS_IMEXPORTER::add_lcc_hvdc2t_basic_data(LCC_HVDC2T& hvdc, vector<string> data)
 {
     if(data.size()>0)
     {
@@ -1814,7 +1814,7 @@ void STEPS_IMEXPORTER::add_2t_lcc_hvdc_basic_data(LCC_HVDC2T& hvdc, vector<strin
     }
 }
 
-void STEPS_IMEXPORTER::add_2t_lcc_hvdc_converter_data(LCC_HVDC2T& hvdc, CONVERTER_SIDE converter, vector<string> data)
+void STEPS_IMEXPORTER::add_lcc_hvdc2t_converter_data(LCC_HVDC2T& hvdc, CONVERTER_SIDE converter, vector<string> data)
 {
     if(data.size()>0)
     {
@@ -3302,7 +3302,7 @@ void STEPS_IMEXPORTER::export_powerflow_data(string file, bool export_zero_imped
     ofs<<"0 / END OF TRANSFORMER DATA, BEGIN AREA DATA"<<endl;
     ofs<<export_area_data();
     ofs<<"0 / END OF AREA DATA, BEGIN TWO-TERMINAL LCC_HVDC2T DATA"<<endl;
-    ofs<<export_2t_lcc_hvdc_data();
+    ofs<<export_lcc_hvdc2t_data();
     ofs<<"'0' / END OF TWO-TERMINAL LCC_HVDC2T DATA, BEGIN VSC LCC_HVDC2T LINE DATA"<<endl;
     ofs<<export_vsc_hvdc_data();
     ofs<<"'0' / END OF VSC LCC_HVDC2T LINE DATA, BEGIN IMPEDANCE CORRECTION DATA"<<endl;
@@ -4048,13 +4048,13 @@ string STEPS_IMEXPORTER::export_area_data() const
 
     return osstream.str();
 }
-string STEPS_IMEXPORTER::export_2t_lcc_hvdc_data() const
+string STEPS_IMEXPORTER::export_lcc_hvdc2t_data() const
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_lcc_hvdc2ts();
     unsigned int n = hvdcs.size();
     for(unsigned int i=0; i!=n; ++i)
     {
@@ -4756,7 +4756,7 @@ void STEPS_IMEXPORTER::load_transformer_powerflow_result(const vector<string>& d
     }
 }
 
-void STEPS_IMEXPORTER::load_2t_lcc_hvdc_powerflow_result(const vector<string>& data)
+void STEPS_IMEXPORTER::load_lcc_hvdc2t_powerflow_result(const vector<string>& data)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
@@ -4805,8 +4805,8 @@ void STEPS_IMEXPORTER::load_2t_lcc_hvdc_powerflow_result(const vector<string>& d
         double itap = str2double(contents[itap_index]);
         double alpha = str2double(contents[alpha_index]);
         double gamma = str2double(contents[gamma_index]);
-        DEVICE_ID did = get_2t_lcc_hvdc_device_id(rbus_number,ibus_number,identifier);
-        LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(did);
+        DEVICE_ID did = get_lcc_hvdc2t_device_id(rbus_number,ibus_number,identifier);
+        LCC_HVDC2T* hvdc = psdb.get_lcc_hvdc2t(did);
         if(hvdc!=NULL)
         {
             hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, alpha);

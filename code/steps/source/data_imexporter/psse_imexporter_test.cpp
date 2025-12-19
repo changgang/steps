@@ -28,7 +28,7 @@ PSSE_IMEXPORTER_TEST::PSSE_IMEXPORTER_TEST() : importer(default_toolkit)
     TEST_ADD(PSSE_IMEXPORTER_TEST::test_load_ac_line_data);
     TEST_ADD(PSSE_IMEXPORTER_TEST::test_load_transformer_data);
     TEST_ADD(PSSE_IMEXPORTER_TEST::test_load_area_data);
-    TEST_ADD(PSSE_IMEXPORTER_TEST::test_load_2t_lcc_hvdc_data);
+    TEST_ADD(PSSE_IMEXPORTER_TEST::test_load_lcc_hvdc2t_data);
     TEST_ADD(PSSE_IMEXPORTER_TEST::test_load_vsc_hvdc_data);
     TEST_ADD(PSSE_IMEXPORTER_TEST::test_load_zone_data);
     TEST_ADD(PSSE_IMEXPORTER_TEST::test_load_owner_data);
@@ -497,12 +497,12 @@ void PSSE_IMEXPORTER_TEST::test_load_area_data()
         areas[i]->report();
 }
 
-void PSSE_IMEXPORTER_TEST::test_load_2t_lcc_hvdc_data()
+void PSSE_IMEXPORTER_TEST::test_load_lcc_hvdc2t_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSSE_IMEXPORTER_TEST");
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_lcc_hvdc2ts();
     unsigned int n = hvdcs.size();
 
     TEST_ASSERT(n==2);

@@ -116,10 +116,10 @@ class LCC_HVDC2T : public NONBUS_DEVICE
         virtual void set_model(MODEL* model);
         virtual MODEL* get_model_of_type(string model_type, unsigned int index=0);
 
-        void set_2t_lcc_hvdc_model(LCC_HVDC2T_MODEL* model);
+        void set_lcc_hvdc2t_model(LCC_HVDC2T_MODEL* model);
         void set_auxiliary_signal_model(AUXILIARY_SIGNAL_MODEL* model);
 
-        LCC_HVDC2T_MODEL* get_2t_lcc_hvdc_model() const;
+        LCC_HVDC2T_MODEL* get_lcc_hvdc2t_model() const;
         AUXILIARY_SIGNAL_MODEL* get_auxiliary_signal_model() const;
 
         virtual void run(DYNAMIC_MODE mode);

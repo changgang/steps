@@ -531,7 +531,7 @@ DEVICE_ID BPA_IMEXPORTER::get_ac_line_device_id_from_string(string data)
 
     return did;
 }
-DEVICE_ID BPA_IMEXPORTER::get_2t_lcc_hvdc_device_id_from_string(string data)
+DEVICE_ID BPA_IMEXPORTER::get_lcc_hvdc2t_device_id_from_string(string data)
 {
     DEVICE_ID did;
     did.set_device_type(STEPS_LCC_HVDC2T);

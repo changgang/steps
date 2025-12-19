@@ -224,7 +224,7 @@ void STEPS::update_device_thread_number()
 
                 if(lcc_hvdc2t_thread_number!=1)
                 {
-                    vector<LCC_HVDC2T*> devices = psdb.get_2t_lcc_hvdcs_connecting_to_bus(bus_number);
+                    vector<LCC_HVDC2T*> devices = psdb.get_lcc_hvdc2ts_connecting_to_bus(bus_number);
                     if(devices.size()>1) lcc_hvdc2t_thread_number = 1;
                 }
 

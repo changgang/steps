@@ -79,7 +79,7 @@ class LCC_HVDC2T_TEST : public Test::Suite
         void test_get_converter_ac_power_factor();
         void test_get_converter_commutating_overlap_angle();
 
-        void test_set_get_2t_lcc_hvdc_model();
+        void test_set_get_lcc_hvdc2t_model();
 
     private:
         void prepare_lcc_hvdc2t_buses();

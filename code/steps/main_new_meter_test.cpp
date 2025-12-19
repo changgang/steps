@@ -39,12 +39,12 @@ int main(int argc, char* argv[])
     psdb.set_ac_line_capacity(10000);
     psdb.set_transformer_capacity(4500);
     psdb.set_fixed_shunt_capacity(3100);
-    psdb.set_2t_lcc_hvdc_capacity(50);
+    psdb.set_lcc_hvdc2t_capacity(50);
     psdb.set_load_capacity(14000);
 
     importer.load_powerflow_data("nccc10k.raw");
 
-    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_lcc_hvdc2ts();
     unsigned int n = hvdcs.size();
     for(unsigned int i=0; i!=n; ++i)
         hvdcs[i]->turn_rectifier_constant_power_mode_into_constant_current_mode();

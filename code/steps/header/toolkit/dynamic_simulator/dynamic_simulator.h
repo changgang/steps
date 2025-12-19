@@ -101,7 +101,7 @@ class DYNAMICS_SIMULATOR
         void prepare_load_related_meters();
         void prepare_ac_line_related_meters();
         void prepare_transformer_related_meters();
-        void prepare_2t_lcc_hvdc_related_meters();
+        void prepare_lcc_hvdc2t_related_meters();
         void prepare_vsc_hvdc_related_meters();
         void prepare_mt_hvdc_related_meters();
         void prepare_equivalent_device_related_meters();
@@ -115,7 +115,7 @@ class DYNAMICS_SIMULATOR
         void prepare_load_related_meters(const DEVICE_ID& did);
         void prepare_ac_line_related_meters(const DEVICE_ID& did);
         void prepare_transformer_related_meters(const DEVICE_ID& did);
-        void prepare_2t_lcc_hvdc_related_meters(const DEVICE_ID& did);
+        void prepare_lcc_hvdc2t_related_meters(const DEVICE_ID& did);
         void prepare_vsc_hvdc_related_meters(const DEVICE_ID& did);
         void prepare_mt_hvdc_related_meters(const DEVICE_ID& did);
         void prepare_equivalent_device_related_meters(const DEVICE_ID& did);
@@ -129,7 +129,7 @@ class DYNAMICS_SIMULATOR
         void prepare_load_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
         void prepare_ac_line_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name="");
         void prepare_transformer_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name="");
-        void prepare_2t_lcc_hvdc_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name="");
+        void prepare_lcc_hvdc2t_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name="");
         void prepare_vsc_hvdc_related_meter(const DEVICE_ID& did, string meter_type, unsigned int side, string var_name="");
         void prepare_vsc_hvdc_related_meter(string vsc_name, string meter_type, unsigned int side, string var_name="");
         void prepare_vsc_hvdc_related_dc_line_meter(const DEVICE_ID& did, string meter_type, const DC_DEVICE_ID dc_did, unsigned int side, string var_name="");
@@ -208,10 +208,10 @@ class DYNAMICS_SIMULATOR
         void trip_fixed_shunt(const DEVICE_ID& shunt_id);
         void close_fixed_shunt(const DEVICE_ID& shunt_id);
 
-        void manual_bypass_2t_lcc_hvdc(const DEVICE_ID& hvdc_id);
-        void manual_block_2t_lcc_hvdc(const DEVICE_ID& hvdc_id);
-        void manual_unbypass_2t_lcc_hvdc(const DEVICE_ID& hvdc_id);
-        void manual_unblock_2t_lcc_hvdc(const DEVICE_ID& hvdc_id);
+        void manual_bypass_lcc_hvdc2t(const DEVICE_ID& hvdc_id);
+        void manual_block_lcc_hvdc2t(const DEVICE_ID& hvdc_id);
+        void manual_unbypass_lcc_hvdc2t(const DEVICE_ID& hvdc_id);
+        void manual_unblock_lcc_hvdc2t(const DEVICE_ID& hvdc_id);
 
         double get_generator_voltage_reference_in_pu(const DEVICE_ID& gen_id);
         double get_generator_mechanical_power_reference_in_pu_based_on_mbase(const DEVICE_ID& gen_id);
@@ -231,8 +231,8 @@ class DYNAMICS_SIMULATOR
 
         void change_energy_storage_active_power_reference_in_pu_based_on_mbase(const DEVICE_ID& es_id, double pref);
 
-        double get_2t_lcc_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id);
-        void change_2t_lcc_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id, double porder);
+        double get_lcc_hvdc2t_power_order_in_MW(const DEVICE_ID& hvdc_id);
+        void change_lcc_hvdc2t_power_order_in_MW(const DEVICE_ID& hvdc_id, double porder);
 
         void set_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did, unsigned int side_bus, double location, double fault_r);
         void clear_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did);
@@ -266,7 +266,7 @@ class DYNAMICS_SIMULATOR
 
         void build_vsc_hvdc_dynamic_dc_network_matrix();
 
-        void solve_2t_lcc_hvdcs_without_integration();
+        void solve_lcc_hvdc2ts_without_integration();
         void update_vsc_hvdcs_converter_model();
         void solve_mt_hvdc_systems();
 
@@ -278,7 +278,7 @@ class DYNAMICS_SIMULATOR
         void add_energy_storage_to_bus_current_mismatch();
         void add_sv_source_to_bus_current_mismatch();
         void add_loads_to_bus_current_mismatch();
-        void add_2t_lcc_hvdcs_to_bus_current_mismatch();
+        void add_lcc_hvdc2ts_to_bus_current_mismatch();
         void add_vsc_hvdcs_to_bus_current_mismatch();
         void add_mt_hvdcs_to_bus_current_mismatch();
         void add_equivalent_devices_to_bus_current_mismatch();

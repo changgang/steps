@@ -572,8 +572,8 @@ double api_get_short_circuit_ratio_of_LCC_HVDC2T(unsigned int ibus, unsigned int
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
 
-    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
-    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
+    DEVICE_ID did = get_lcc_hvdc2t_device_id(ibus, jbus, identifier);
+    LCC_HVDC2T* hvdcptr = psdb.get_lcc_hvdc2t(did);
 
     string SIDE = string2upper(side);
     CONVERTER_SIDE con_side = (SIDE=="RECTIFIER"?RECTIFIER:INVERTER);
@@ -611,8 +611,8 @@ double api_get_multiple_infeed_short_circuit_ratio_of_LCC_HVDC2T(unsigned int ib
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     SHORT_CIRCUIT_SOLVER& solver = toolkit.get_short_circuit_solver();
 
-    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
-    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
+    DEVICE_ID did = get_lcc_hvdc2t_device_id(ibus, jbus, identifier);
+    LCC_HVDC2T* hvdcptr = psdb.get_lcc_hvdc2t(did);
 
     string SIDE = string2upper(side);
     CONVERTER_SIDE con_side = (SIDE=="RECTIFIER"?RECTIFIER:INVERTER);

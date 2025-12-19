@@ -326,7 +326,7 @@ void build_lcc_hvdc2t_meter_map()
     lcc_hvdc2t_meter_map.insert({"INVERTER AC ACTIVE POWER IN MW",      get_inverter_ac_active_power_in_mw});
     lcc_hvdc2t_meter_map.insert({"RECTIFIER AC REACTIVE POWER IN MVAR", get_rectifier_ac_reactive_power_in_mvar});
     lcc_hvdc2t_meter_map.insert({"INVERTER AC REACTIVE POWER IN MVAR",  get_inverter_ac_reactive_power_in_mvar});
-    lcc_hvdc2t_meter_map.insert({"2T LCC HVDC MODEL INTERNAL VARIABLE", get_2t_lcc_hvdc_model_internal_variable});
+    lcc_hvdc2t_meter_map.insert({"2T LCC HVDC MODEL INTERNAL VARIABLE", get_lcc_hvdc2t_model_internal_variable});
 }
 
 void build_vsc_hvdc_meter_map()

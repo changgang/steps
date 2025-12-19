@@ -16,7 +16,7 @@ class LCC_HVDC2T_MODEL : public MODEL
     public:
         LCC_HVDC2T_MODEL(STEPS& toolkit);
         virtual ~LCC_HVDC2T_MODEL();
-        LCC_HVDC2T* get_2t_lcc_hvdc_pointer() const;
+        LCC_HVDC2T* get_lcc_hvdc2t_pointer() const;
     public: // hvdc common
         virtual string get_model_type() const;
         // get input for initialization
@@ -67,10 +67,10 @@ class LCC_HVDC2T_MODEL : public MODEL
         double get_rectifier_dc_current_command_in_kA(double Vdci_measured, double Idc_measured);
 
         // block and bypass logic
-        void block_2t_lcc_hvdc();
-        void unblock_2t_lcc_hvdc();
-        void manual_block_2t_lcc_hvdc();
-        void manual_unblock_2t_lcc_hvdc();
+        void block_lcc_hvdc2t();
+        void unblock_lcc_hvdc2t();
+        void manual_block_lcc_hvdc2t();
+        void manual_unblock_lcc_hvdc2t();
         bool is_blocked() const;
         bool is_unblocking() const;
         bool is_manual_blocked() const;
@@ -79,10 +79,10 @@ class LCC_HVDC2T_MODEL : public MODEL
         void clear_unblocking_time(CONVERTER_SIDE converter);
         bool is_block_timer_timed_out() const;
 
-        void bypass_2t_lcc_hvdc();
-        void unbypass_2t_lcc_hvdc();
-        void manual_bypass_2t_lcc_hvdc();
-        void manual_unbypass_2t_lcc_hvdc();
+        void bypass_lcc_hvdc2t();
+        void unbypass_lcc_hvdc2t();
+        void manual_bypass_lcc_hvdc2t();
+        void manual_unbypass_lcc_hvdc2t();
         bool is_manual_bypassed() const;
         bool is_bypassed() const;
         bool is_unbypassing() const;
@@ -91,16 +91,16 @@ class LCC_HVDC2T_MODEL : public MODEL
         void clear_unbypassing_time();
         bool is_bypass_timer_timed_out() const;
 
-        void switch_2t_lcc_hvdc_mode();
-        void switch_2t_lcc_hvdc_mode_back();
+        void switch_lcc_hvdc2t_mode();
+        void switch_lcc_hvdc2t_mode_back();
         bool is_mode_switched() const;
         double get_mode_switched_time() const;
         bool is_mode_switch_timer_timed_out() const;
 
         // common solver
-        void solve_2t_lcc_hvdc_model_without_line_dynamics(double Iset_kA, double Vset_kV);
-        void solve_2t_lcc_hvdc_model_with_line_dynamics(double Iset_kA, double Vset_kV);
-        void solve_2t_lcc_hvdc_model_with_line_dynamics_and_control_dynamics(double Iset_kA, double alpha_in_deg, double gamma_in_deg);
+        void solve_lcc_hvdc2t_model_without_line_dynamics(double Iset_kA, double Vset_kV);
+        void solve_lcc_hvdc2t_model_with_line_dynamics(double Iset_kA, double Vset_kV);
+        void solve_lcc_hvdc2t_model_with_line_dynamics_and_control_dynamics(double Iset_kA, double alpha_in_deg, double gamma_in_deg);
         //
 
         double get_converter_dc_voltage_in_kV(CONVERTER_SIDE converter) const;
@@ -134,7 +134,7 @@ class LCC_HVDC2T_MODEL : public MODEL
         virtual void check_blocking_logic() = 0;
         virtual void check_bypassing_logic() = 0;
         virtual void check_mode_switching_logic() = 0;
-        virtual void solve_2t_lcc_hvdc_model_without_integration() = 0;
+        virtual void solve_lcc_hvdc2t_model_without_integration() = 0;
         virtual void check() = 0;
         virtual void clear() = 0;
         virtual void report() = 0;
@@ -156,7 +156,7 @@ class LCC_HVDC2T_MODEL : public MODEL
         bool is_pi_controller_dynamics_considered;
 
     private:
-        void solve_2t_lcc_hvdc_as_bypassed(double Iset_kA);
+        void solve_lcc_hvdc2t_as_bypassed(double Iset_kA);
         void clear_record_of_bytime_time();
         void append_bypass_record(double time);
         unsigned int get_bypass_record_count() const;

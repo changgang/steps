@@ -1229,7 +1229,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_Shandong_benchmark_100_bus_model_with_HVD
     osstream<<"Solve with constant power LCC_HVDC2T links";
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
-    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_lcc_hvdc2ts();
     unsigned int n = hvdcs.size();
     for(unsigned int i=0; i!=n; ++i)
     {

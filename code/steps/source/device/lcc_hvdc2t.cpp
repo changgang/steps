@@ -1054,7 +1054,7 @@ void LCC_HVDC2T::set_model(MODEL* model)
         model->set_device_id(get_device_id());
         if(model->get_model_type()=="2T LCC HVDC")
         {
-            set_2t_lcc_hvdc_model((LCC_HVDC2T_MODEL*) model);
+            set_lcc_hvdc2t_model((LCC_HVDC2T_MODEL*) model);
             return;
         }
         if(model->get_model_type()=="AUXILIARY SIGNAL")
@@ -1073,13 +1073,13 @@ MODEL* LCC_HVDC2T::get_model_of_type(string model_type, unsigned int index)
 {
     model_type = string2upper(model_type);
     if(model_type=="2T LCC HVDC")
-        return get_2t_lcc_hvdc_model();
+        return get_lcc_hvdc2t_model();
     if(model_type=="AUXILIARY SIGNAL")
         return get_auxiliary_signal_model();
     return NULL;
 }
 
-void LCC_HVDC2T::set_2t_lcc_hvdc_model(LCC_HVDC2T_MODEL* model)
+void LCC_HVDC2T::set_lcc_hvdc2t_model(LCC_HVDC2T_MODEL* model)
 {
     if(model!=NULL)
         hvdc_model = model;
@@ -1091,7 +1091,7 @@ void LCC_HVDC2T::set_auxiliary_signal_model(AUXILIARY_SIGNAL_MODEL* model)
         auxiliary_signal_model = model;
 }
 
-LCC_HVDC2T_MODEL* LCC_HVDC2T::get_2t_lcc_hvdc_model() const
+LCC_HVDC2T_MODEL* LCC_HVDC2T::get_lcc_hvdc2t_model() const
 {
     return hvdc_model;
 }
@@ -1117,7 +1117,7 @@ void LCC_HVDC2T::run(DYNAMIC_MODE mode)
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     show_solved_steady_state();
                 }
-                LCC_HVDC2T_MODEL* hvdc_model = get_2t_lcc_hvdc_model();
+                LCC_HVDC2T_MODEL* hvdc_model = get_lcc_hvdc2t_model();
                 if(hvdc_model!=NULL and hvdc_model->is_model_active())
                     hvdc_model->initialize();
                 else
@@ -1129,7 +1129,7 @@ void LCC_HVDC2T::run(DYNAMIC_MODE mode)
             }
             default:
             {
-                LCC_HVDC2T_MODEL* hvdc_model = get_2t_lcc_hvdc_model();
+                LCC_HVDC2T_MODEL* hvdc_model = get_lcc_hvdc2t_model();
                 if(hvdc_model!=NULL and hvdc_model->is_model_active())
                     hvdc_model->run(mode);
                 break;
@@ -1195,7 +1195,7 @@ LCC_HVDC2T& LCC_HVDC2T::operator=(const LCC_HVDC2T& hvdc)
     set_converter_transformer_number_of_taps(RECTIFIER, hvdc.get_converter_transformer_number_of_taps(RECTIFIER));
     set_converter_transformer_number_of_taps(INVERTER, hvdc.get_converter_transformer_number_of_taps(INVERTER));
 
-    set_model(hvdc.get_2t_lcc_hvdc_model());
+    set_model(hvdc.get_lcc_hvdc2t_model());
     set_auxiliary_signal_model(hvdc.get_auxiliary_signal_model());
 
     return *this;
@@ -2153,7 +2153,7 @@ complex<double> LCC_HVDC2T::get_converter_dynamic_current_in_pu_based_on_system_
 {
     if(get_status() == true)
     {
-        LCC_HVDC2T_MODEL* model = get_2t_lcc_hvdc_model();
+        LCC_HVDC2T_MODEL* model = get_lcc_hvdc2t_model();
         if(model!=NULL)
             return model->get_converter_ac_current_in_pu(converter);
         else

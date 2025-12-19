@@ -269,7 +269,7 @@ void NETWORK_MATRIX::build_positive_sequence_network_Y_matrix()
         add_loads_to_positive_sequence_network();
     add_fixed_shunts_to_positive_sequence_network();
     if(get_option_of_dc_lines()==CONVERT_TO_CONSTANT_ADMITTANCE_LOAD)
-        add_2t_lcc_hvdcs_to_positive_sequence_network();
+        add_lcc_hvdc2ts_to_positive_sequence_network();
 
     network_Y1_matrix.compress_and_merge_duplicate_entries();
 }
@@ -3267,17 +3267,17 @@ void NETWORK_MATRIX::add_fixed_shunts_to_positive_sequence_network()
     add_fixed_shunts_to_network();
 }
 
-void NETWORK_MATRIX::add_2t_lcc_hvdcs_to_positive_sequence_network()
+void NETWORK_MATRIX::add_lcc_hvdc2ts_to_positive_sequence_network()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_lcc_hvdc2ts();
 
     unsigned int n = hvdcs.size();
     for(unsigned int i=0; i!=n; i++)
-        add_2t_lcc_hvdc_to_positive_sequence_network(*(hvdcs[i]));
+        add_lcc_hvdc2t_to_positive_sequence_network(*(hvdcs[i]));
 }
 
-void NETWORK_MATRIX::add_2t_lcc_hvdc_to_positive_sequence_network(const LCC_HVDC2T& hvdc)
+void NETWORK_MATRIX::add_lcc_hvdc2t_to_positive_sequence_network(const LCC_HVDC2T& hvdc)
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     POWERFLOW_SOLVER& pf_solver = toolkit->get_powerflow_solver();

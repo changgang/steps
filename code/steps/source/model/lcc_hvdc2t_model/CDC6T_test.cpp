@@ -16,7 +16,7 @@ void CDC6T_TEST::setup()
 {
     LCC_HVDC2T_MODEL_TEST::setup();
 
-    LCC_HVDC2T* hvdcptr = get_test_2t_lcc_hvdc();
+    LCC_HVDC2T* hvdcptr = get_test_lcc_hvdc2t();
 
     CDC6T model(default_toolkit);
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
@@ -77,7 +77,7 @@ void CDC6T_TEST::test_get_model_type()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CDC6T_TEST");
 
-    LCC_HVDC2T_MODEL* model = get_test_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = get_test_lcc_hvdc2t_model();
 
     TEST_ASSERT(model->get_model_type()=="2T LCC HVDC");
 }
@@ -86,7 +86,7 @@ void CDC6T_TEST::test_get_model_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CDC6T_TEST");
 
-    LCC_HVDC2T_MODEL* model = get_test_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = get_test_lcc_hvdc2t_model();
 
     TEST_ASSERT(model->get_model_name()=="CDC6T");
 }
@@ -95,7 +95,7 @@ void CDC6T_TEST::test_set_get_parameters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CDC6T_TEST");
 
-    CDC6T* model = (CDC6T*) get_test_2t_lcc_hvdc_model();
+    CDC6T* model = (CDC6T*) get_test_lcc_hvdc2t_model();
 
     TEST_ASSERT(fabs(model->get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER)-5.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER) -5.0)<FLOAT_EPSILON);

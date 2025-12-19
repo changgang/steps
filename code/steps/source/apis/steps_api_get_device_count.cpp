@@ -28,7 +28,7 @@ unsigned int api_get_device_count(const char* device_type, unsigned int toolkit_
     if(DEVICE_TYPE=="TRANSFORMER")
         return psdb.get_transformer_count();
     if(DEVICE_TYPE=="2T LCC HVDC")
-        return psdb.get_2t_lcc_hvdc_count();
+        return psdb.get_lcc_hvdc2t_count();
     if(DEVICE_TYPE=="VSC HVDC")
         return psdb.get_vsc_hvdc_count();
     if(DEVICE_TYPE=="MT HVDC")

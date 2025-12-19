@@ -70,9 +70,9 @@ void api_remove_hvdc(unsigned int rectifier_bus_number, unsigned int inverter_bu
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    DEVICE_ID did = get_2t_lcc_hvdc_device_id(rectifier_bus_number, inverter_bus_number, identifier);
-    if(psdb.is_2t_lcc_hvdc_exist(did))
-        psdb.clear_2t_lcc_hvdc(did);
+    DEVICE_ID did = get_lcc_hvdc2t_device_id(rectifier_bus_number, inverter_bus_number, identifier);
+    if(psdb.is_lcc_hvdc2t_exist(did))
+        psdb.clear_lcc_hvdc2t(did);
 }
 
 void api_remove_vsc_hvdc(char* vsc_name, unsigned int toolkit_index)

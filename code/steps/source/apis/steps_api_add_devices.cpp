@@ -122,15 +122,15 @@ void api_add_hvdc(unsigned int rectifier_bus_number, unsigned int inverter_bus_n
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    DEVICE_ID did = get_2t_lcc_hvdc_device_id(rectifier_bus_number, inverter_bus_number, identifier);
+    DEVICE_ID did = get_lcc_hvdc2t_device_id(rectifier_bus_number, inverter_bus_number, identifier);
 
-    if(not psdb.is_2t_lcc_hvdc_exist(did))
+    if(not psdb.is_lcc_hvdc2t_exist(did))
     {
         LCC_HVDC2T newhvdc(toolkit);
         newhvdc.set_converter_bus(RECTIFIER, rectifier_bus_number);
         newhvdc.set_converter_bus(INVERTER, inverter_bus_number);
         newhvdc.set_identifier(identifier);
-        psdb.append_2t_lcc_hvdc(newhvdc);
+        psdb.append_lcc_hvdc2t(newhvdc);
     }
 }
 
@@ -395,8 +395,8 @@ void api_copy_3w_transformer(unsigned int new_ibus_number, unsigned int new_jbus
 
 void api_copy_lcc_hvdc2t(unsigned int new_rec_bus_number, unsigned int new_inv_bus_number, char* new_hvdcname, unsigned int old_rec_bus_number, unsigned int old_inv_bus_number, char* old_hvdcname, unsigned int toolkit_index)
 {
-    DEVICE_ID new_did = get_2t_lcc_hvdc_device_id(new_rec_bus_number, new_inv_bus_number, new_hvdcname);
-    DEVICE_ID old_did = get_2t_lcc_hvdc_device_id(old_rec_bus_number, old_inv_bus_number, old_hvdcname);
+    DEVICE_ID new_did = get_lcc_hvdc2t_device_id(new_rec_bus_number, new_inv_bus_number, new_hvdcname);
+    DEVICE_ID old_did = get_lcc_hvdc2t_device_id(old_rec_bus_number, old_inv_bus_number, old_hvdcname);
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     psdb.copy_lcc_hvdc2t(new_did, old_did);

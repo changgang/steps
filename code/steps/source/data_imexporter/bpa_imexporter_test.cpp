@@ -29,7 +29,7 @@ BPA_IMEXPORTER_TEST::BPA_IMEXPORTER_TEST() : importer(default_toolkit)
     TEST_ADD(BPA_IMEXPORTER_TEST::test_load_generator_data);
     TEST_ADD(BPA_IMEXPORTER_TEST::test_load_load_and_fixed_shunt_data);
     TEST_ADD(BPA_IMEXPORTER_TEST::test_load_transformer_data);
-    TEST_ADD(BPA_IMEXPORTER_TEST::test_load_2t_lcc_hvdc_data);
+    TEST_ADD(BPA_IMEXPORTER_TEST::test_load_lcc_hvdc2t_data);
     TEST_ADD(BPA_IMEXPORTER_TEST::test_convert_data_into_bpa_format);
     TEST_ADD(BPA_IMEXPORTER_TEST::test_export_powerflow_data);
     /*TEST_ADD(BPA_IMEXPORTER_TEST::test_load_case_data);
@@ -432,14 +432,14 @@ void BPA_IMEXPORTER_TEST::test_load_transformer_data()
         trans[i]->report();
 }
 
-void BPA_IMEXPORTER_TEST::test_load_2t_lcc_hvdc_data()
+void BPA_IMEXPORTER_TEST::test_load_lcc_hvdc2t_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
     ostringstream osstream;
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_lcc_hvdc2ts();
     unsigned int n = hvdcs.size();
 
     //TEST_ASSERT(n==2);

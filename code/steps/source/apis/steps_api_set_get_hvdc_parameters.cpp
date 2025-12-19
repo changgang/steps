@@ -8,11 +8,11 @@
 int api_get_hvdc_integer_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_lcc_hvdc2t_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
+    LCC_HVDC2T* hvdcptr = psdb.get_lcc_hvdc2t(did);
     if(hvdcptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -63,11 +63,11 @@ int api_get_hvdc_integer_data(unsigned int ibus, unsigned int jbus, char* identi
 void api_set_hvdc_integer_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, int value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_lcc_hvdc2t_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
+    LCC_HVDC2T* hvdcptr = psdb.get_lcc_hvdc2t(did);
     if(hvdcptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -118,11 +118,11 @@ void api_set_hvdc_integer_data(unsigned int ibus, unsigned int jbus, char* ident
 double api_get_hvdc_float_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_lcc_hvdc2t_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
+    LCC_HVDC2T* hvdcptr = psdb.get_lcc_hvdc2t(did);
     if(hvdcptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -279,11 +279,11 @@ double api_get_hvdc_float_data(unsigned int ibus, unsigned int jbus, char* ident
 void api_set_hvdc_float_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_lcc_hvdc2t_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
+    LCC_HVDC2T* hvdcptr = psdb.get_lcc_hvdc2t(did);
     if(hvdcptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -417,13 +417,13 @@ void api_set_hvdc_float_data(unsigned int ibus, unsigned int jbus, char* identif
 const char* api_get_hvdc_string_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_lcc_hvdc2t_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
-    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
+    LCC_HVDC2T* hvdcptr = psdb.get_lcc_hvdc2t(did);
     if(hvdcptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -461,11 +461,11 @@ const char* api_get_hvdc_string_data(unsigned int ibus, unsigned int jbus, char*
 void api_set_hvdc_string_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, char* value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_lcc_hvdc2t_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
+    LCC_HVDC2T* hvdcptr = psdb.get_lcc_hvdc2t(did);
     if(hvdcptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -494,11 +494,11 @@ void api_set_hvdc_string_data(unsigned int ibus, unsigned int jbus, char* identi
 bool api_get_hvdc_boolean_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_lcc_hvdc2t_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
+    LCC_HVDC2T* hvdcptr = psdb.get_lcc_hvdc2t(did);
     if(hvdcptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -526,11 +526,11 @@ bool api_get_hvdc_boolean_data(unsigned int ibus, unsigned int jbus, char* ident
 void api_set_hvdc_boolean_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, bool value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    DEVICE_ID did = get_2t_lcc_hvdc_device_id(ibus, jbus, identifier);
+    DEVICE_ID did = get_lcc_hvdc2t_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
+    LCC_HVDC2T* hvdcptr = psdb.get_lcc_hvdc2t(did);
     if(hvdcptr!=NULL)
     {
         string SIDE = string2upper(side);

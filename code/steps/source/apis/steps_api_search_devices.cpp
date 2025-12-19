@@ -155,9 +155,9 @@ void api_initialize_device_search(const char* device_type, unsigned int bus, uns
         case STEPS_LCC_HVDC2T:
         {
             if(bus==0)
-                toolkit.api_search_buffer.hvdcs = psdb.get_all_2t_lcc_hvdcs();
+                toolkit.api_search_buffer.hvdcs = psdb.get_all_lcc_hvdc2ts();
             else
-                toolkit.api_search_buffer.hvdcs = psdb.get_2t_lcc_hvdcs_connecting_to_bus(bus);
+                toolkit.api_search_buffer.hvdcs = psdb.get_lcc_hvdc2ts_connecting_to_bus(bus);
             toolkit.api_search_buffer.hvdc_pointer = 0;
             break;
         }

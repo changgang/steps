@@ -7,7 +7,7 @@
 double lcc_hvdc2t_meter_getter::get_dc_current_in_ka(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return model->get_converter_dc_current_in_kA(RECTIFIER);
@@ -19,7 +19,7 @@ double lcc_hvdc2t_meter_getter::get_dc_current_in_ka(const METER_PARAMETER& para
 double lcc_hvdc2t_meter_getter::get_rectifier_dc_current_in_ka(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return model->get_converter_dc_current_in_kA(RECTIFIER);
@@ -31,7 +31,7 @@ double lcc_hvdc2t_meter_getter::get_rectifier_dc_current_in_ka(const METER_PARAM
 double lcc_hvdc2t_meter_getter::get_rectifier_ac_current_in_ka(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return steps_fast_complex_abs(model->get_converter_ac_current_in_kA(RECTIFIER));
@@ -43,7 +43,7 @@ double lcc_hvdc2t_meter_getter::get_rectifier_ac_current_in_ka(const METER_PARAM
 double lcc_hvdc2t_meter_getter::get_inverter_dc_current_in_ka(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return model->get_converter_dc_current_in_kA(INVERTER);
@@ -55,7 +55,7 @@ double lcc_hvdc2t_meter_getter::get_inverter_dc_current_in_ka(const METER_PARAME
 double lcc_hvdc2t_meter_getter::get_inverter_ac_current_in_ka(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return steps_fast_complex_abs(model->get_converter_ac_current_in_kA(INVERTER));
@@ -67,7 +67,7 @@ double lcc_hvdc2t_meter_getter::get_inverter_ac_current_in_ka(const METER_PARAME
 double lcc_hvdc2t_meter_getter::get_rectifier_alpha_in_deg(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return model->get_converter_alpha_or_gamma_in_deg(RECTIFIER);
@@ -79,7 +79,7 @@ double lcc_hvdc2t_meter_getter::get_rectifier_alpha_in_deg(const METER_PARAMETER
 double lcc_hvdc2t_meter_getter::get_inverter_gamma_in_deg(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return model->get_converter_alpha_or_gamma_in_deg(INVERTER);
@@ -91,7 +91,7 @@ double lcc_hvdc2t_meter_getter::get_inverter_gamma_in_deg(const METER_PARAMETER&
 double lcc_hvdc2t_meter_getter::get_rectifier_mu_in_deg(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return model->get_converter_commutation_overlap_angle_in_deg(RECTIFIER);
@@ -103,7 +103,7 @@ double lcc_hvdc2t_meter_getter::get_rectifier_mu_in_deg(const METER_PARAMETER& p
 double lcc_hvdc2t_meter_getter::get_inverter_mu_in_deg(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return model->get_converter_commutation_overlap_angle_in_deg(INVERTER);
@@ -115,7 +115,7 @@ double lcc_hvdc2t_meter_getter::get_inverter_mu_in_deg(const METER_PARAMETER& pa
 double lcc_hvdc2t_meter_getter::get_rectifier_dc_voltage_in_kv(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return model->get_converter_dc_voltage_in_kV(RECTIFIER);
@@ -127,7 +127,7 @@ double lcc_hvdc2t_meter_getter::get_rectifier_dc_voltage_in_kv(const METER_PARAM
 double lcc_hvdc2t_meter_getter::get_inverter_dc_voltage_in_kv(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return model->get_converter_dc_voltage_in_kV(INVERTER);
@@ -139,7 +139,7 @@ double lcc_hvdc2t_meter_getter::get_inverter_dc_voltage_in_kv(const METER_PARAME
 double lcc_hvdc2t_meter_getter::get_rectifier_ac_voltage_in_pu(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return model->get_converter_ac_voltage_in_pu(RECTIFIER);
@@ -151,7 +151,7 @@ double lcc_hvdc2t_meter_getter::get_rectifier_ac_voltage_in_pu(const METER_PARAM
 double lcc_hvdc2t_meter_getter::get_inverter_ac_voltage_in_pu(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return model->get_converter_ac_voltage_in_pu(INVERTER);
@@ -163,7 +163,7 @@ double lcc_hvdc2t_meter_getter::get_inverter_ac_voltage_in_pu(const METER_PARAME
 double lcc_hvdc2t_meter_getter::get_rectifier_dc_power_in_mw(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return model->get_converter_dc_power_in_MW(RECTIFIER);
@@ -175,7 +175,7 @@ double lcc_hvdc2t_meter_getter::get_rectifier_dc_power_in_mw(const METER_PARAMET
 double lcc_hvdc2t_meter_getter::get_inverter_dc_power_in_mw(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return model->get_converter_dc_power_in_MW(INVERTER);
@@ -187,7 +187,7 @@ double lcc_hvdc2t_meter_getter::get_inverter_dc_power_in_mw(const METER_PARAMETE
 double lcc_hvdc2t_meter_getter::get_rectifier_ac_active_power_in_mw(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return model->get_converter_ac_complex_power_in_MVA(RECTIFIER).real();
@@ -199,7 +199,7 @@ double lcc_hvdc2t_meter_getter::get_rectifier_ac_active_power_in_mw(const METER_
 double lcc_hvdc2t_meter_getter::get_inverter_ac_active_power_in_mw(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return model->get_converter_ac_complex_power_in_MVA(INVERTER).real();
@@ -211,7 +211,7 @@ double lcc_hvdc2t_meter_getter::get_inverter_ac_active_power_in_mw(const METER_P
 double lcc_hvdc2t_meter_getter::get_rectifier_ac_reactive_power_in_mvar(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return model->get_converter_ac_complex_power_in_MVA(RECTIFIER).imag();
@@ -223,7 +223,7 @@ double lcc_hvdc2t_meter_getter::get_rectifier_ac_reactive_power_in_mvar(const ME
 double lcc_hvdc2t_meter_getter::get_inverter_ac_reactive_power_in_mvar(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return model->get_converter_ac_complex_power_in_MVA(INVERTER).imag();
@@ -232,11 +232,11 @@ double lcc_hvdc2t_meter_getter::get_inverter_ac_reactive_power_in_mvar(const MET
         return 0.0;
 }
 
-double lcc_hvdc2t_meter_getter::get_2t_lcc_hvdc_model_internal_variable(const METER_PARAMETER& para)
+double lcc_hvdc2t_meter_getter::get_lcc_hvdc2t_model_internal_variable(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
-    LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
         return model->get_model_internal_variable_with_name(internal_var_name);

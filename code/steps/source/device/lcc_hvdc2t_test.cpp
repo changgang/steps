@@ -75,7 +75,7 @@ LCC_HVDC2T_TEST::LCC_HVDC2T_TEST() : hvdc(default_toolkit)
     TEST_ADD(LCC_HVDC2T_TEST::test_get_converter_ac_power_factor);
     TEST_ADD(LCC_HVDC2T_TEST::test_get_converter_commutating_overlap_angle);
 
-    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_2t_lcc_hvdc_model);
+    TEST_ADD(LCC_HVDC2T_TEST::test_set_get_lcc_hvdc2t_model);
 }
 
 void LCC_HVDC2T_TEST::setup()
@@ -1312,7 +1312,7 @@ void LCC_HVDC2T_TEST::test_get_converter_commutating_overlap_angle()
 }
 
 
-void LCC_HVDC2T_TEST::test_set_get_2t_lcc_hvdc_model()
+void LCC_HVDC2T_TEST::test_set_get_lcc_hvdc2t_model()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"LCC_HVDC2T_TEST");
 
@@ -1323,13 +1323,13 @@ void LCC_HVDC2T_TEST::test_set_get_2t_lcc_hvdc_model()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
 
-    psdb.append_2t_lcc_hvdc(hvdc);
+    psdb.append_lcc_hvdc2t(hvdc);
 
     DEVICE_ID did = hvdc.get_device_id();
 
-    LCC_HVDC2T* hvdcptr = psdb.get_2t_lcc_hvdc(did);
+    LCC_HVDC2T* hvdcptr = psdb.get_lcc_hvdc2t(did);
     TEST_ASSERT(hvdcptr!=NULL);
-    TEST_ASSERT(hvdcptr->get_2t_lcc_hvdc_model()==NULL);
+    TEST_ASSERT(hvdcptr->get_lcc_hvdc2t_model()==NULL);
 
     CDC4T model(default_toolkit);
     model.set_device_id(did);
@@ -1337,7 +1337,7 @@ void LCC_HVDC2T_TEST::test_set_get_2t_lcc_hvdc_model()
     model.set_inverter_dc_voltage_sensor_T_in_s(0.1);
     dmdb.add_model(&model);
 
-    CDC4T* hvdcmodel = (CDC4T*) hvdcptr->get_2t_lcc_hvdc_model();
+    CDC4T* hvdcmodel = (CDC4T*) hvdcptr->get_lcc_hvdc2t_model();
 
     TEST_ASSERT(hvdcmodel!=NULL);
     TEST_ASSERT(fabs(hvdcmodel->get_inverter_dc_voltage_sensor_T_in_s()-0.1)<FLOAT_EPSILON);

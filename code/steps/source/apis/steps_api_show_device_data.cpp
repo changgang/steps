@@ -96,7 +96,7 @@ void api_show_device_data(const char* device_type, unsigned int toolkit_index)
 
     if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="2T LCC HVDC")
     {
-        vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
+        vector<LCC_HVDC2T*> hvdcs = psdb.get_all_lcc_hvdc2ts();
         unsigned int n = hvdcs.size();
 
         for(unsigned int i=0; i!=n; ++i)

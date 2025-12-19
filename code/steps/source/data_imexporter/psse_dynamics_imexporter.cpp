@@ -269,13 +269,13 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
         if(model!=NULL)
             ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
     }
-    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_lcc_hvdc2ts();
     LCC_HVDC2T* hvdc = NULL;
     n = hvdcs.size();
     for(unsigned int i=0; i!=n; ++i)
     {
         hvdc = hvdcs[i];
-        model = hvdc->get_2t_lcc_hvdc_model();
+        model = hvdc->get_lcc_hvdc2t_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string(export_internal_bus_number)<<"\n";
         model = hvdc->get_auxiliary_signal_model();

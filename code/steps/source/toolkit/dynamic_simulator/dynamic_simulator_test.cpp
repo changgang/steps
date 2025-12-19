@@ -627,7 +627,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_SD_133_bus_model()
     importer.load_powerflow_data("../../../bench/SD133_model.raw");
     importer.load_dynamic_data("../../../bench/SD133_model.dyr");
 
-    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_lcc_hvdc2ts();
     unsigned int n = hvdcs.size();
     for(unsigned int i=0; i!=n; ++i)
         hvdcs[i]->turn_rectifier_constant_power_mode_into_constant_current_mode();
@@ -740,7 +740,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
     importer.load_powerflow_data("../../../bench/bench_shandong_change.raw");
     importer.load_dynamic_data("../../../bench/bench_shandong_change_with_gov.dyr");
 
-    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_lcc_hvdc2ts();
     unsigned int n = hvdcs.size();
     for(unsigned int i=0; i!=n; ++i)
         hvdcs[i]->turn_rectifier_constant_power_mode_into_constant_current_mode();

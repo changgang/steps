@@ -105,7 +105,7 @@ class POWERFLOW_SOLVER
         void set_bus_power_mismatch_vector_for_solution();
 
         void try_to_solve_dc_system_steady_state();
-        void try_to_solve_2t_lcc_hvdc_steady_state();
+        void try_to_solve_lcc_hvdc2t_steady_state();
         void try_to_solve_vsc_hvdc_steady_state();
         void try_to_solve_mt_hvdc_steady_state();
         void calculate_raw_bus_power_mismatch();
@@ -136,7 +136,7 @@ class POWERFLOW_SOLVER
 
         void add_source_to_bus_power_mismatch();
         void add_load_to_bus_power_mismatch();
-        void add_2t_lcc_hvdc_to_bus_power_mismatch();
+        void add_lcc_hvdc2t_to_bus_power_mismatch();
         void add_vsc_hvdc_to_bus_power_mismatch();
         void add_mt_hvdc_to_bus_power_mismatch();
         void add_generator_to_bus_power_mismatch();

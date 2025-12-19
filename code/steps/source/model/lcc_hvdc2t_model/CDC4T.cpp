@@ -240,7 +240,7 @@ void CDC4T::initialize()
 {
     if(not is_model_initialized())
     {
-        LCC_HVDC2T* hvdc = get_2t_lcc_hvdc_pointer();
+        LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
 
         setup_block_toolkit_and_parameters();
 
@@ -263,9 +263,9 @@ void CDC4T::check_limits_in_initialization()
 
 void CDC4T::run(DYNAMIC_MODE mode)
 {
-    LCC_HVDC2T* hvdc = get_2t_lcc_hvdc_pointer();
+    LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
 
-    //solve_2t_lcc_hvdc_model_without_integration();
+    //solve_lcc_hvdc2t_model_without_integration();
 
     double Vdci = hvdc->get_converter_dc_voltage_in_kV(INVERTER);
     inverter_dc_voltage_sensor.set_input(Vdci);
@@ -279,7 +279,7 @@ void CDC4T::run(DYNAMIC_MODE mode)
         set_flag_model_updated_as_true();
 }
 
-void CDC4T::solve_2t_lcc_hvdc_model_without_integration()
+void CDC4T::solve_lcc_hvdc2t_model_without_integration()
 {
     check_blocking_logic();
     check_bypassing_logic();
@@ -291,7 +291,7 @@ void CDC4T::solve_2t_lcc_hvdc_model_without_integration()
         double Idc_measured = dc_current_sensor.get_output();
         double Icommand = get_rectifier_dc_current_command_in_kA(Vdci_measured, Idc_measured);
         double Vcommand = get_inverter_dc_voltage_command_in_kV();
-        solve_2t_lcc_hvdc_model_without_line_dynamics(Icommand, Vcommand);
+        solve_lcc_hvdc2t_model_without_line_dynamics(Icommand, Vcommand);
     }
 }
 
@@ -318,7 +318,7 @@ void CDC4T::check_blocking_logic()
                 osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and AC blocking voltage threshold is "<<vblock<<" pu.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
 
-                block_2t_lcc_hvdc();
+                block_lcc_hvdc2t();
             }
         }
         else
@@ -329,7 +329,7 @@ void CDC4T::check_blocking_logic()
                 osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and AC unblocking voltage threshold is "<<vunblock<<" pu.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
 
-                unblock_2t_lcc_hvdc();
+                unblock_lcc_hvdc2t();
             }
         }
     }
@@ -362,7 +362,7 @@ void CDC4T::check_bypassing_logic()
                     osstream<<"Inverter DC voltage is "<<vdc_i<<" kV, and DC bypassing voltage threshold is "<<vbypass<<" kV.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
 
-                    bypass_2t_lcc_hvdc();
+                    bypass_lcc_hvdc2t();
                 }
             }
         }
@@ -380,7 +380,7 @@ void CDC4T::check_bypassing_logic()
                 osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and AC unbypassing voltage threshold is "<<vunbypass<<" pu.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
 
-                unbypass_2t_lcc_hvdc();
+                unbypass_lcc_hvdc2t();
             }
         }
     }
@@ -390,7 +390,7 @@ void CDC4T::check_mode_switching_logic()
 {
     if(not is_blocked() and not is_bypassed())
     {
-        LCC_HVDC2T* hvdc = get_2t_lcc_hvdc_pointer();
+        LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
         STEPS& toolkit = get_toolkit();
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
@@ -412,7 +412,7 @@ void CDC4T::check_mode_switching_logic()
                     osstream<<"Inverter DC voltage is "<<vdc_i<<" kV, and DC mode switch voltage threshold is "<<vmode<<" kV.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
 
-                    switch_2t_lcc_hvdc_mode();
+                    switch_lcc_hvdc2t_mode();
                 }
             }
         }
@@ -425,7 +425,7 @@ void CDC4T::check_mode_switching_logic()
                 osstream<<"Inverter DC voltage is "<<vdc_i<<" pu, andDC mode switch voltage threshold is "<<vmode<<" pu.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
 
-                switch_2t_lcc_hvdc_mode_back();
+                switch_lcc_hvdc2t_mode_back();
             }
         }
     }
@@ -454,7 +454,7 @@ string CDC4T::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
 
-    LCC_HVDC2T* hvdc = get_2t_lcc_hvdc_pointer();
+    LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
     //unsigned int rbus = hvdc->get_converter_bus(RECTIFIER);
     //unsigned int ibus = hvdc->get_converter_bus(INVERTER);
     string dcname = "'"+hvdc->get_name()+"'";

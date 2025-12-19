@@ -70,7 +70,7 @@ void PSSE_IMEXPORTER::load_powerflow_data(string file)
             <<psdb.get_ac_line_count()<<" lines\n"
             <<psdb.get_transformer_count()<<" transformers\n"
             <<psdb.get_fixed_shunt_count()<<" fixed shunts\n"
-            <<psdb.get_2t_lcc_hvdc_count()<<" 2T LCC HVDCs\n"
+            <<psdb.get_lcc_hvdc2t_count()<<" 2T LCC HVDCs\n"
             <<psdb.get_vsc_hvdc_count()<<" VSC HVDCs\n"
             <<psdb.get_load_count()<<" loads\n"
             <<psdb.get_area_count()<<" areas\n"
@@ -125,7 +125,7 @@ void PSSE_IMEXPORTER::load_vsc_powerflow_data(string file)
             <<psdb.get_ac_line_count()<<" lines\n"
             <<psdb.get_transformer_count()<<" transformers\n"
             <<psdb.get_fixed_shunt_count()<<" fixed shunts\n"
-            <<psdb.get_2t_lcc_hvdc_count()<<" 2T LCC HVDCs\n"
+            <<psdb.get_lcc_hvdc2t_count()<<" 2T LCC HVDCs\n"
             <<psdb.get_vsc_hvdc_count()<<" VSC HVDCs\n"
             <<psdb.get_load_count()<<" loads\n"
             <<psdb.get_area_count()<<" areas\n"
@@ -177,7 +177,7 @@ void PSSE_IMEXPORTER::load_mt_hvdc_powerflow_data(string file)
             <<psdb.get_ac_line_count()<<" lines\n"
             <<psdb.get_transformer_count()<<" transformers\n"
             <<psdb.get_fixed_shunt_count()<<" fixed shunts\n"
-            <<psdb.get_2t_lcc_hvdc_count()<<" HVDCs\n"
+            <<psdb.get_lcc_hvdc2t_count()<<" HVDCs\n"
             <<psdb.get_vsc_hvdc_count()<<" VSC HVDCs\n"
             <<psdb.get_mt_hvdc_count()<<" HYBIRD DCs\n"
             <<psdb.get_load_count()<<" loads\n"
@@ -384,7 +384,7 @@ vector<vector<vector<string> > >  PSSE_IMEXPORTER::convert_psse_raw_data2steps_v
     data.push_back(convert_source_data2steps_vector());
     data.push_back(convert_ac_line_data2steps_vector());
     data.push_back(convert_transformer_data2steps_vector());
-    data.push_back(convert_2t_lcc_hvdc_data2steps_vector());
+    data.push_back(convert_lcc_hvdc2t_data2steps_vector());
     data.push_back(convert_area_data2steps_vector());
     data.push_back(convert_vsc_hvdc_data2steps_vector());
     data.push_back(convert_transformer_inpedance_correction_table_data2steps_vector());
@@ -470,7 +470,7 @@ vector<vector<string> > PSSE_IMEXPORTER::convert_transformer_data2steps_vector()
 {
     return convert_i_th_type_data2steps_vector(7);
 }
-vector<vector<string> > PSSE_IMEXPORTER::convert_2t_lcc_hvdc_data2steps_vector() const
+vector<vector<string> > PSSE_IMEXPORTER::convert_lcc_hvdc2t_data2steps_vector() const
 {
     return convert_i_th_type_data2steps_vector(8);
 }
@@ -581,7 +581,7 @@ void PSSE_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impeda
     ofs<<"0 / END OF TRANSFORMER DATA, BEGIN AREA DATA"<<endl;
     ofs<<export_all_area_data();
     ofs<<"0 / END OF AREA DATA, BEGIN TWO-TERMINAL LCC_HVDC2T DATA"<<endl;
-    ofs<<export_all_2t_lcc_hvdc_data();
+    ofs<<export_all_lcc_hvdc2t_data();
     ofs<<"'0' / END OF TWO-TERMINAL LCC_HVDC2T DATA, BEGIN VSC LCC_HVDC2T LINE DATA"<<endl;
     ofs<<export_all_vsc_hvdc_data();
     ofs<<"'0' / END OF VSC LCC_HVDC2T LINE DATA, BEGIN IMPEDANCE CORRECTION DATA"<<endl;
@@ -1618,29 +1618,29 @@ string PSSE_IMEXPORTER::export_area_data(const AREA* area) const
     return osstream.str();
 }
 
-string PSSE_IMEXPORTER::export_all_2t_lcc_hvdc_data() const
+string PSSE_IMEXPORTER::export_all_lcc_hvdc2t_data() const
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    //vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
+    //vector<LCC_HVDC2T*> hvdcs = psdb.get_all_lcc_hvdc2ts();
     //unsigned int n = hvdcs.size();
 
-    vector<DEVICE_ID> dids = psdb.get_all_2t_lcc_hvdcs_device_id();
+    vector<DEVICE_ID> dids = psdb.get_all_lcc_hvdc2ts_device_id();
     sort(dids.begin(), dids.end());
     vector<LCC_HVDC2T*> hvdcs;
     unsigned int n = dids.size();
     for(unsigned int i=0; i!=n; ++i)
-        hvdcs.push_back(psdb.get_2t_lcc_hvdc(dids[i]));
+        hvdcs.push_back(psdb.get_lcc_hvdc2t(dids[i]));
 
     for(unsigned int i=0; i!=n; ++i)
-        osstream<<export_2t_lcc_hvdc_data(hvdcs[i]);
+        osstream<<export_lcc_hvdc2t_data(hvdcs[i]);
 
     return osstream.str();
 }
 
-string PSSE_IMEXPORTER::export_2t_lcc_hvdc_data(const LCC_HVDC2T* hvdc) const
+string PSSE_IMEXPORTER::export_lcc_hvdc2t_data(const LCC_HVDC2T* hvdc) const
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();

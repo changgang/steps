@@ -29,7 +29,7 @@ void DYNAMICS_SIMULATOR::prepare_meters()
     prepare_load_related_meters();
     prepare_ac_line_related_meters();
     prepare_transformer_related_meters();
-    prepare_2t_lcc_hvdc_related_meters();
+    prepare_lcc_hvdc2t_related_meters();
     prepare_vsc_hvdc_related_meters();
     prepare_mt_hvdc_related_meters();
     prepare_equivalent_device_related_meters();
@@ -771,7 +771,7 @@ void DYNAMICS_SIMULATOR::prepare_transformer_related_meters()
     }
 }
 
-void DYNAMICS_SIMULATOR::prepare_2t_lcc_hvdc_related_meters()
+void DYNAMICS_SIMULATOR::prepare_lcc_hvdc2t_related_meters()
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
@@ -779,65 +779,65 @@ void DYNAMICS_SIMULATOR::prepare_2t_lcc_hvdc_related_meters()
 
     unsigned int n;
 
-    n = psdb.get_2t_lcc_hvdc_count();
-    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_2t_lcc_hvdcs();
+    n = psdb.get_lcc_hvdc2t_count();
+    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_lcc_hvdc2ts();
     LCC_HVDC2T* hvdc;
     for(unsigned int i=0; i!=n; ++i)
     {
         hvdc = hvdcs[i];
 
-        METER meter = setter.prepare_2t_lcc_hvdc_rectifier_ac_voltage_in_pu_meter(hvdc->get_device_id());
+        METER meter = setter.prepare_lcc_hvdc2t_rectifier_ac_voltage_in_pu_meter(hvdc->get_device_id());
         append_meter(meter);
 
-        meter = setter.prepare_2t_lcc_hvdc_inverter_ac_voltage_in_pu_meter(hvdc->get_device_id());
+        meter = setter.prepare_lcc_hvdc2t_inverter_ac_voltage_in_pu_meter(hvdc->get_device_id());
         append_meter(meter);
 
-        meter = setter.prepare_2t_lcc_hvdc_rectifier_dc_voltage_in_kV_meter(hvdc->get_device_id());
+        meter = setter.prepare_lcc_hvdc2t_rectifier_dc_voltage_in_kV_meter(hvdc->get_device_id());
         append_meter(meter);
 
-        meter = setter.prepare_2t_lcc_hvdc_inverter_dc_voltage_in_kV_meter(hvdc->get_device_id());
+        meter = setter.prepare_lcc_hvdc2t_inverter_dc_voltage_in_kV_meter(hvdc->get_device_id());
         append_meter(meter);
 
-        meter = setter.prepare_2t_lcc_hvdc_rectifier_dc_current_in_kA_meter(hvdc->get_device_id());
+        meter = setter.prepare_lcc_hvdc2t_rectifier_dc_current_in_kA_meter(hvdc->get_device_id());
         append_meter(meter);
 
-        meter = setter.prepare_2t_lcc_hvdc_inverter_dc_current_in_kA_meter(hvdc->get_device_id());
+        meter = setter.prepare_lcc_hvdc2t_inverter_dc_current_in_kA_meter(hvdc->get_device_id());
         append_meter(meter);
 
-        meter = setter.prepare_2t_lcc_hvdc_rectifier_alpha_in_deg_meter(hvdc->get_device_id());
+        meter = setter.prepare_lcc_hvdc2t_rectifier_alpha_in_deg_meter(hvdc->get_device_id());
         append_meter(meter);
 
-        meter = setter.prepare_2t_lcc_hvdc_rectifier_mu_in_deg_meter(hvdc->get_device_id());
+        meter = setter.prepare_lcc_hvdc2t_rectifier_mu_in_deg_meter(hvdc->get_device_id());
         append_meter(meter);
 
-        meter = setter.prepare_2t_lcc_hvdc_inverter_gamma_in_deg_meter(hvdc->get_device_id());
+        meter = setter.prepare_lcc_hvdc2t_inverter_gamma_in_deg_meter(hvdc->get_device_id());
         append_meter(meter);
 
-        meter = setter.prepare_2t_lcc_hvdc_inverter_mu_in_deg_meter(hvdc->get_device_id());
+        meter = setter.prepare_lcc_hvdc2t_inverter_mu_in_deg_meter(hvdc->get_device_id());
         append_meter(meter);
 
-        meter = setter.prepare_2t_lcc_hvdc_rectifier_dc_power_in_MW_meter(hvdc->get_device_id());
+        meter = setter.prepare_lcc_hvdc2t_rectifier_dc_power_in_MW_meter(hvdc->get_device_id());
         append_meter(meter);
 
-        meter = setter.prepare_2t_lcc_hvdc_inverter_dc_power_in_MW_meter(hvdc->get_device_id());
+        meter = setter.prepare_lcc_hvdc2t_inverter_dc_power_in_MW_meter(hvdc->get_device_id());
         append_meter(meter);
 
-        meter = setter.prepare_2t_lcc_hvdc_rectifier_ac_active_power_in_MW_meter(hvdc->get_device_id());
+        meter = setter.prepare_lcc_hvdc2t_rectifier_ac_active_power_in_MW_meter(hvdc->get_device_id());
         append_meter(meter);
 
-        meter = setter.prepare_2t_lcc_hvdc_rectifier_ac_reactive_power_in_MVar_meter(hvdc->get_device_id());
+        meter = setter.prepare_lcc_hvdc2t_rectifier_ac_reactive_power_in_MVar_meter(hvdc->get_device_id());
         append_meter(meter);
 
-        meter = setter.prepare_2t_lcc_hvdc_inverter_ac_active_power_in_MW_meter(hvdc->get_device_id());
+        meter = setter.prepare_lcc_hvdc2t_inverter_ac_active_power_in_MW_meter(hvdc->get_device_id());
         append_meter(meter);
 
-        meter = setter.prepare_2t_lcc_hvdc_inverter_ac_reactive_power_in_MVar_meter(hvdc->get_device_id());
+        meter = setter.prepare_lcc_hvdc2t_inverter_ac_reactive_power_in_MVar_meter(hvdc->get_device_id());
         append_meter(meter);
 
-        meter = setter.prepare_2t_lcc_hvdc_rectifier_ac_current_in_kA_meter(hvdc->get_device_id());
+        meter = setter.prepare_lcc_hvdc2t_rectifier_ac_current_in_kA_meter(hvdc->get_device_id());
         append_meter(meter);
 
-        meter = setter.prepare_2t_lcc_hvdc_inverter_ac_current_in_kA_meter(hvdc->get_device_id());
+        meter = setter.prepare_lcc_hvdc2t_inverter_ac_current_in_kA_meter(hvdc->get_device_id());
         append_meter(meter);
     }
 }
@@ -1693,14 +1693,14 @@ void DYNAMICS_SIMULATOR::prepare_transformer_related_meter(const DEVICE_ID& did,
 }
 
 
-void DYNAMICS_SIMULATOR::prepare_2t_lcc_hvdc_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
+void DYNAMICS_SIMULATOR::prepare_lcc_hvdc2t_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     if(did.get_device_type()==STEPS_LCC_HVDC2T)
     {
-        if(psdb.is_2t_lcc_hvdc_exist(did))
+        if(psdb.is_lcc_hvdc2t_exist(did))
         {
             METER_SETTER setter(*toolkit);
 
@@ -1712,48 +1712,48 @@ void DYNAMICS_SIMULATOR::prepare_2t_lcc_hvdc_related_meter(const DEVICE_ID& did,
             if(side=="RECTIFIER" or side=="R")
             {
                 if(meter_type=="AC VOLTAGE IN PU")
-                    meter = setter.prepare_2t_lcc_hvdc_rectifier_ac_voltage_in_pu_meter(did);
+                    meter = setter.prepare_lcc_hvdc2t_rectifier_ac_voltage_in_pu_meter(did);
                 if(meter_type=="DC VOLTAGE IN KV")
-                    meter = setter.prepare_2t_lcc_hvdc_rectifier_dc_voltage_in_kV_meter(did);
+                    meter = setter.prepare_lcc_hvdc2t_rectifier_dc_voltage_in_kV_meter(did);
                 if(meter_type=="DC CURRENT IN KA")
-                    meter = setter.prepare_2t_lcc_hvdc_rectifier_dc_current_in_kA_meter(did);
+                    meter = setter.prepare_lcc_hvdc2t_rectifier_dc_current_in_kA_meter(did);
                 if(meter_type=="ALPHA IN DEG")
-                    meter = setter.prepare_2t_lcc_hvdc_rectifier_alpha_in_deg_meter(did);
+                    meter = setter.prepare_lcc_hvdc2t_rectifier_alpha_in_deg_meter(did);
                 if(meter_type=="MU IN DEG")
-                    meter = setter.prepare_2t_lcc_hvdc_rectifier_mu_in_deg_meter(did);
+                    meter = setter.prepare_lcc_hvdc2t_rectifier_mu_in_deg_meter(did);
                 if(meter_type=="DC POWER IN MW")
-                    meter = setter.prepare_2t_lcc_hvdc_rectifier_dc_power_in_MW_meter(did);
+                    meter = setter.prepare_lcc_hvdc2t_rectifier_dc_power_in_MW_meter(did);
                 if(meter_type=="AC ACTIVE POWER IN MW")
-                    meter = setter.prepare_2t_lcc_hvdc_rectifier_ac_active_power_in_MW_meter(did);
+                    meter = setter.prepare_lcc_hvdc2t_rectifier_ac_active_power_in_MW_meter(did);
                 if(meter_type=="AC REACTIVE POWER IN MVAR")
-                    meter = setter.prepare_2t_lcc_hvdc_rectifier_ac_reactive_power_in_MVar_meter(did);
+                    meter = setter.prepare_lcc_hvdc2t_rectifier_ac_reactive_power_in_MVar_meter(did);
                 if(meter_type=="AC CURRENT IN KA")
-                    meter = setter.prepare_2t_lcc_hvdc_rectifier_ac_current_in_kA_meter(did);
+                    meter = setter.prepare_lcc_hvdc2t_rectifier_ac_current_in_kA_meter(did);
             }
 
             if(side=="INVERTER" or side=="I")
             {
                 if(meter_type=="AC VOLTAGE IN PU")
-                    meter = setter.prepare_2t_lcc_hvdc_inverter_ac_voltage_in_pu_meter(did);
+                    meter = setter.prepare_lcc_hvdc2t_inverter_ac_voltage_in_pu_meter(did);
                 if(meter_type=="DC VOLTAGE IN KV")
-                    meter = setter.prepare_2t_lcc_hvdc_inverter_dc_voltage_in_kV_meter(did);
+                    meter = setter.prepare_lcc_hvdc2t_inverter_dc_voltage_in_kV_meter(did);
                 if(meter_type=="DC CURRENT IN KA")
-                    meter = setter.prepare_2t_lcc_hvdc_inverter_dc_current_in_kA_meter(did);
+                    meter = setter.prepare_lcc_hvdc2t_inverter_dc_current_in_kA_meter(did);
                 if(meter_type=="GAMMA IN DEG")
-                    meter = setter.prepare_2t_lcc_hvdc_inverter_gamma_in_deg_meter(did);
+                    meter = setter.prepare_lcc_hvdc2t_inverter_gamma_in_deg_meter(did);
                 if(meter_type=="MU IN DEG")
-                    meter = setter.prepare_2t_lcc_hvdc_inverter_mu_in_deg_meter(did);
+                    meter = setter.prepare_lcc_hvdc2t_inverter_mu_in_deg_meter(did);
                 if(meter_type=="DC POWER IN MW")
-                    meter = setter.prepare_2t_lcc_hvdc_inverter_dc_power_in_MW_meter(did);
+                    meter = setter.prepare_lcc_hvdc2t_inverter_dc_power_in_MW_meter(did);
                 if(meter_type=="AC ACTIVE POWER IN MW")
-                    meter = setter.prepare_2t_lcc_hvdc_inverter_ac_active_power_in_MW_meter(did);
+                    meter = setter.prepare_lcc_hvdc2t_inverter_ac_active_power_in_MW_meter(did);
                 if(meter_type=="AC REACTIVE POWER IN MVAR")
-                    meter = setter.prepare_2t_lcc_hvdc_inverter_ac_reactive_power_in_MVar_meter(did);
+                    meter = setter.prepare_lcc_hvdc2t_inverter_ac_reactive_power_in_MVar_meter(did);
                 if(meter_type=="AC CURRENT IN KA")
-                    meter = setter.prepare_2t_lcc_hvdc_inverter_ac_current_in_kA_meter(did);
+                    meter = setter.prepare_lcc_hvdc2t_inverter_ac_current_in_kA_meter(did);
             }
              if(meter_type=="2T LCC HVDC MODEL INTERNAL VARIABLE")
-                    meter = setter.prepare_2t_lcc_hvdc_model_internal_variable_meter(did, var_name);
+                    meter = setter.prepare_lcc_hvdc2t_model_internal_variable_meter(did, var_name);
 
             if(meter.is_valid())
                 append_meter(meter);

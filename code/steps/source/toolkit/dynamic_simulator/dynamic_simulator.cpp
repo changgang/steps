@@ -1117,7 +1117,7 @@ void DYNAMICS_SIMULATOR::prepare_devices_for_run()
     loads = psdb.get_all_loads();
 
     lines = psdb.get_all_ac_lines();
-    hvdcs = psdb.get_all_2t_lcc_hvdcs();
+    hvdcs = psdb.get_all_lcc_hvdc2ts();
 
     vsc_hvdcs = psdb.get_all_vsc_hvdcs();
     mt_hvdcs = psdb.get_all_mt_hvdcs();
@@ -1734,7 +1734,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
     GREATEST_POWER_CURRENT_MISMATCH_STRUCT greatest_mismatch_struct;
 
 
-    solve_2t_lcc_hvdcs_without_integration();
+    solve_lcc_hvdc2ts_without_integration();
 
     update_vsc_hvdcs_converter_model();
     solve_mt_hvdc_systems();
@@ -1786,7 +1786,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
                     for(unsigned int i=0; i<5; ++i)
                     {
                         //++network_iter_count;
-                        solve_2t_lcc_hvdcs_without_integration();
+                        solve_lcc_hvdc2ts_without_integration();
                         update_vsc_hvdcs_converter_model();
                         get_bus_current_mismatch();
                         #ifndef USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
@@ -1810,7 +1810,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
                 }
                 ++network_iter_count;
 
-                solve_2t_lcc_hvdcs_without_integration();
+                solve_lcc_hvdc2ts_without_integration();
                 update_vsc_hvdcs_converter_model();
                 get_bus_current_mismatch();
                 #ifndef USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
@@ -1918,7 +1918,7 @@ void DYNAMICS_SIMULATOR::tune_iteration_accelerator_based_on_maximum_current_mis
     //toolkit->show_information_with_leading_time_stamp(osstream);
 }
 
-void DYNAMICS_SIMULATOR::solve_2t_lcc_hvdcs_without_integration()
+void DYNAMICS_SIMULATOR::solve_lcc_hvdc2ts_without_integration()
 {
     unsigned int n = hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -1929,9 +1929,9 @@ void DYNAMICS_SIMULATOR::solve_2t_lcc_hvdcs_without_integration()
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
     {
-        LCC_HVDC2T_MODEL* model = hvdcs[i]->get_2t_lcc_hvdc_model();
+        LCC_HVDC2T_MODEL* model = hvdcs[i]->get_lcc_hvdc2t_model();
         if(model!=NULL)
-            model->solve_2t_lcc_hvdc_model_without_integration();
+            model->solve_lcc_hvdc2t_model_without_integration();
     }
 }
 
@@ -2151,7 +2151,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
             }
         }
     }
-    add_2t_lcc_hvdcs_to_bus_current_mismatch();
+    add_lcc_hvdc2ts_to_bus_current_mismatch();
     if(not detailed_log_enabled)
         ;
     else
@@ -2548,7 +2548,7 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
-void DYNAMICS_SIMULATOR::add_2t_lcc_hvdcs_to_bus_current_mismatch()
+void DYNAMICS_SIMULATOR::add_lcc_hvdc2ts_to_bus_current_mismatch()
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -4706,57 +4706,57 @@ void DYNAMICS_SIMULATOR::close_fixed_shunt(const DEVICE_ID& shunt_id)
 }
 
 
-void DYNAMICS_SIMULATOR::manual_bypass_2t_lcc_hvdc(const DEVICE_ID& hvdc_id)
+void DYNAMICS_SIMULATOR::manual_bypass_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
 {
     ostringstream osstream;
 
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(hvdc_id);
+    LCC_HVDC2T* hvdc = psdb.get_lcc_hvdc2t(hvdc_id);
     if(hvdc!=NULL)
     {
-        LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+        LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
         if(model!=NULL and (not model->is_blocked() and not model->is_bypassed()) )
-            model->manual_bypass_2t_lcc_hvdc();
+            model->manual_bypass_lcc_hvdc2t();
     }
 }
 
-void DYNAMICS_SIMULATOR::manual_unbypass_2t_lcc_hvdc(const DEVICE_ID& hvdc_id)
+void DYNAMICS_SIMULATOR::manual_unbypass_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(hvdc_id);
+    LCC_HVDC2T* hvdc = psdb.get_lcc_hvdc2t(hvdc_id);
     if(hvdc!=NULL)
     {
-        LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+        LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
         if(model!=NULL and (not model->is_blocked() and model->is_manual_bypassed()))
-            model->manual_unbypass_2t_lcc_hvdc();
+            model->manual_unbypass_lcc_hvdc2t();
     }
 }
 
-void DYNAMICS_SIMULATOR::manual_block_2t_lcc_hvdc(const DEVICE_ID& hvdc_id)
+void DYNAMICS_SIMULATOR::manual_block_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(hvdc_id);
+    LCC_HVDC2T* hvdc = psdb.get_lcc_hvdc2t(hvdc_id);
 
     if(hvdc!=NULL)
     {
-        LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+        LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
         if(model!=NULL and (not model->is_blocked()))
-            model->manual_block_2t_lcc_hvdc();
+            model->manual_block_lcc_hvdc2t();
     }
 }
 
-void DYNAMICS_SIMULATOR::manual_unblock_2t_lcc_hvdc(const DEVICE_ID& hvdc_id)
+void DYNAMICS_SIMULATOR::manual_unblock_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(hvdc_id);
+    LCC_HVDC2T* hvdc = psdb.get_lcc_hvdc2t(hvdc_id);
     if(hvdc!=NULL)
     {
-        LCC_HVDC2T_MODEL* model = hvdc->get_2t_lcc_hvdc_model();
+        LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
         if(model!=NULL and model->is_manual_blocked())
-            model->manual_unblock_2t_lcc_hvdc();
+            model->manual_unblock_lcc_hvdc2t();
     }
 }
 
@@ -5024,20 +5024,20 @@ void DYNAMICS_SIMULATOR::change_energy_storage_active_power_reference_in_pu_base
     }
 }
 
-double DYNAMICS_SIMULATOR::get_2t_lcc_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id)
+double DYNAMICS_SIMULATOR::get_lcc_hvdc2t_power_order_in_MW(const DEVICE_ID& hvdc_id)
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(hvdc_id);
+    LCC_HVDC2T* hvdc = psdb.get_lcc_hvdc2t(hvdc_id);
     if(hvdc != NULL)
         return hvdc->get_nominal_dc_power_in_MW();
     else
         return 0.0;
 }
 
-void DYNAMICS_SIMULATOR::change_2t_lcc_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id, double porder)
+void DYNAMICS_SIMULATOR::change_lcc_hvdc2t_power_order_in_MW(const DEVICE_ID& hvdc_id, double porder)
 {
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    LCC_HVDC2T* hvdc = psdb.get_2t_lcc_hvdc(hvdc_id);
+    LCC_HVDC2T* hvdc = psdb.get_lcc_hvdc2t(hvdc_id);
     if(hvdc != NULL)
     {
         hvdc->set_nominal_dc_power_in_MW(porder);

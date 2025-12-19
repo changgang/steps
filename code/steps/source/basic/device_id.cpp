@@ -649,7 +649,7 @@ DEVICE_ID get_ac_line_device_id(unsigned int ibus, unsigned int jbus, const stri
     return did;
 }
 
-DEVICE_ID get_2t_lcc_hvdc_device_id(unsigned int ibus, unsigned int jbus, const string& identifier)
+DEVICE_ID get_lcc_hvdc2t_device_id(unsigned int ibus, unsigned int jbus, const string& identifier)
 {
     DEVICE_ID did;
     did.set_device_type(STEPS_LCC_HVDC2T);

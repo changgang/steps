@@ -24,8 +24,8 @@ class LCC_HVDC2T_MODEL_TEST : public Test::Suite
         virtual void setup();
         virtual void tear_down();
     protected:
-        LCC_HVDC2T* get_test_2t_lcc_hvdc();
-        LCC_HVDC2T_MODEL* get_test_2t_lcc_hvdc_model();
+        LCC_HVDC2T* get_test_lcc_hvdc2t();
+        LCC_HVDC2T_MODEL* get_test_lcc_hvdc2t_model();
         void test_initialize();
         void test_rectifier_voltage_ramp_response();
         void test_inverter_voltage_ramp_response();

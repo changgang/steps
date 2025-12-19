@@ -338,7 +338,7 @@ double CDC7T::get_rectifier_min_unblock_alpha_value_in_deg() const
 double CDC7T::solve_inverter_gamma_with_beta_in_deg(double beta_in_deg)
 {
     STEPS& toolkit = get_toolkit();
-    LCC_HVDC2T* hvdc = get_2t_lcc_hvdc_pointer();
+    LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
 
     //double Idc = hvdc->get_line_dc_current_in_kA();
     double Idc = dc_line_dynamic_block.get_output();
@@ -666,7 +666,7 @@ void CDC7T::setup_block_toolkit_and_parameters()
 
     set_cos_firing_angle_max_min();
 
-    LCC_HVDC2T* hvdc = get_2t_lcc_hvdc_pointer();
+    LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
     //double R = hvdc->get_line_inductance_in_mH();
     //double L = hvdc->get_line_resistance_in_ohm();
     //L and R are not setted
@@ -698,7 +698,7 @@ void CDC7T::initialize()
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
 
-        LCC_HVDC2T* hvdc = get_2t_lcc_hvdc_pointer();
+        LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
 
         setup_block_toolkit_and_parameters();
 
@@ -742,9 +742,9 @@ void CDC7T::check_limits_in_initialization()
 
 void CDC7T::run(DYNAMIC_MODE mode)
 {
-    LCC_HVDC2T* hvdc = get_2t_lcc_hvdc_pointer();
+    LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
 
-    //solve_2t_lcc_hvdc_model_without_integration();
+    //solve_lcc_hvdc2t_model_without_integration();
 
 
     //is per unit necessary?
@@ -812,7 +812,7 @@ void CDC7T::run(DYNAMIC_MODE mode)
 
 }
 
-void CDC7T::solve_2t_lcc_hvdc_model_without_integration()
+void CDC7T::solve_lcc_hvdc2t_model_without_integration()
 {
     check_blocking_logic();
     check_bypassing_logic();
@@ -827,7 +827,7 @@ void CDC7T::solve_2t_lcc_hvdc_model_without_integration()
         double alpha_command_in_deg = get_rectifier_firing_angle_alpha_command_value_in_deg();
         double beta_command_in_deg = get_inverter_firing_angle_beta_command_value_in_deg();
         double gamma_command_in_deg = solve_inverter_gamma_with_beta_in_deg(beta_command_in_deg);
-        solve_2t_lcc_hvdc_model_with_line_dynamics_and_control_dynamics(Idc_measured,alpha_command_in_deg,gamma_command_in_deg);
+        solve_lcc_hvdc2t_model_with_line_dynamics_and_control_dynamics(Idc_measured,alpha_command_in_deg,gamma_command_in_deg);
     }
 }
 
@@ -856,7 +856,7 @@ void CDC7T::check_blocking_logic()
                 toolkit.show_information_with_leading_time_stamp(osstream);
 
                 block_flag = true;
-                block_2t_lcc_hvdc();
+                block_lcc_hvdc2t();
             }
         }
         else //blocked
@@ -870,7 +870,7 @@ void CDC7T::check_blocking_logic()
 
             if(alpha_in_deg>min_unblock_alpha and gamma_in_deg<min_unbypass_gamma)
             {
-                unblock_2t_lcc_hvdc();
+                unblock_lcc_hvdc2t();
                 osstream<<get_compound_device_name()<<" will be unblocked at time "<<TIME<<" s due to sufficient alpha£º"<<alpha_in_deg<<" with min unblock alpha: "<<min_unblock_alpha<<endl;
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
@@ -898,7 +898,7 @@ void CDC7T::check_bypassing_logic()
             {
                 osstream<<get_compound_device_name()<<" will be bypassed at time "<<TIME<<" s due to INSUFFICIENT GAMMA: "<<gamma_in_deg<<" with MIN GAMMA: "<<min_gamma_in_deg<<endl;
                 toolkit.show_information_with_leading_time_stamp(osstream);
-                bypass_2t_lcc_hvdc();
+                bypass_lcc_hvdc2t();
             }
         }
         else
@@ -913,18 +913,18 @@ void CDC7T::check_bypassing_logic()
             {
                 osstream<<get_compound_device_name()<<" will be unbypassed at time "<<TIME<<" s due to SUFFICIENT GAMMA: "<<gamma_in_deg<<"  with MIN UNBYPASS GAMMA:  "<<min_unbypass_gamma_in_deg<<endl;
                 toolkit.show_information_with_leading_time_stamp(osstream);
-                unbypass_2t_lcc_hvdc();
+                unbypass_lcc_hvdc2t();
             }
         }
         /*
 
         if(is_bypassed_flag==true)
         {
-            bypass_2t_lcc_hvdc();
+            bypass_lcc_hvdc2t();
         }
         if(is_bypassed_flag==false)
         {
-            unbypass_2t_lcc_hvdc();
+            unbypass_lcc_hvdc2t();
         }
         */
     }
@@ -934,7 +934,7 @@ void CDC7T::check_mode_switching_logic()
 {
     if(not is_blocked() and not is_bypassed())
     {
-        LCC_HVDC2T* hvdc = get_2t_lcc_hvdc_pointer();
+        LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
         STEPS& toolkit = get_toolkit();
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
@@ -956,7 +956,7 @@ void CDC7T::check_mode_switching_logic()
                     osstream<<"Inverter DC voltage is "<<vdc_i<<" kV, and DC mode switch voltage threshold is "<<vmode<<" kV.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
 
-                    switch_2t_lcc_hvdc_mode();
+                    switch_lcc_hvdc2t_mode();
                 }
             }
         }
@@ -969,7 +969,7 @@ void CDC7T::check_mode_switching_logic()
                 osstream<<"Inverter DC voltage is "<<vdc_i<<" pu, andDC mode switch voltage threshold is "<<vmode<<" pu.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
 
-                switch_2t_lcc_hvdc_mode_back();
+                switch_lcc_hvdc2t_mode_back();
             }
         }
     }
@@ -997,7 +997,7 @@ string CDC7T::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
 
-    LCC_HVDC2T* hvdc = get_2t_lcc_hvdc_pointer();
+    LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
     //unsigned int rbus = hvdc->get_converter_bus(RECTIFIER);
     //unsigned int ibus = hvdc->get_converter_bus(INVERTER);
     string dcname = "'"+hvdc->get_name()+"'";

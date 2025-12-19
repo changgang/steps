@@ -23,7 +23,7 @@ class AUXILIARY_SIGNAL_MODEL_TEST : public Test::Suite
         virtual void setup();
         virtual void tear_down();
     protected:
-        LCC_HVDC2T* get_2t_lcc_hvdc();
+        LCC_HVDC2T* get_lcc_hvdc2t();
         void apply_voltage_drop_of_10_percent();
         void run_step_response_of_exciter_model(AUXILIARY_SIGNAL_MODEL* model);
 

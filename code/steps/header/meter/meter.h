@@ -62,7 +62,7 @@ class METER
         double get_meter_value_as_a_generator() const;
         double get_meter_value_as_a_wt_generator() const;
         double get_meter_value_as_a_pv_unit() const;
-        double get_meter_value_as_a_2t_lcc_hvdc() const;
+        double get_meter_value_as_a_lcc_hvdc2t() const;
         double get_meter_value_as_a_vsc_hvdc() const;
         double get_meter_value_as_a_mt_hvdc() const;
         double get_meter_value_as_an_equivalent_device() const;

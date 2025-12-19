@@ -26,7 +26,7 @@ namespace lcc_hvdc2t_meter_getter
     double get_inverter_ac_active_power_in_mw(const METER_PARAMETER& para);
     double get_rectifier_ac_reactive_power_in_mvar(const METER_PARAMETER& para);
     double get_inverter_ac_reactive_power_in_mvar(const METER_PARAMETER& para);
-    double get_2t_lcc_hvdc_model_internal_variable(const METER_PARAMETER& para);
+    double get_lcc_hvdc2t_model_internal_variable(const METER_PARAMETER& para);
 }
 
 #endif // LCC_HVDC2T_METER_GETTER_H

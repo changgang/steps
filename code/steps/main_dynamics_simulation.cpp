@@ -103,7 +103,7 @@ int main()
     //simulator.prepare_bus_related_meters();
     //simulator.prepare_vsc_hvdc_related_meters();
     //simulator.prepare_generator_related_meters();
-    simulator.prepare_2t_lcc_hvdc_related_meters();
+    simulator.prepare_lcc_hvdc2t_related_meters();
     //simulator.prepare_load_related_meters();
     //simulator.prepare_wt_generator_related_meters();
 
@@ -179,8 +179,8 @@ int main()
     */
 
     /*DEVICE_ID did;
-    did = get_2t_lcc_hvdc_device_id(57,201,"ZaQingDi");
-    simulator.manual_block_2t_lcc_hvdc(did);*/
+    did = get_lcc_hvdc2t_device_id(57,201,"ZaQingDi");
+    simulator.manual_block_lcc_hvdc2t(did);*/
     //simulator.run_to(5);
 
 

@@ -25,7 +25,7 @@ METER_TEST::METER_TEST() : meter(default_toolkit)
     TEST_ADD(METER_TEST::test_set_get_transformer_meter_type);
     TEST_ADD(METER_TEST::test_set_get_generator_meter_type);
     TEST_ADD(METER_TEST::test_set_get_load_meter_type);
-    TEST_ADD(METER_TEST::test_set_get_2t_lcc_hvdc_meter_type);
+    TEST_ADD(METER_TEST::test_set_get_lcc_hvdc2t_meter_type);
     TEST_ADD(METER_TEST::test_set_get_vsc_hvdc_meter_type);
     TEST_ADD(METER_TEST::test_set_get_wt_generator_meter_type);
     TEST_ADD(METER_TEST::test_set_get_equivalent_device_meter_type);
@@ -98,7 +98,7 @@ void METER_TEST::setup()
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
     hvdc.set_identifier("#1");
-    psdb.append_2t_lcc_hvdc(hvdc);
+    psdb.append_lcc_hvdc2t(hvdc);
 
     EQUIVALENT_DEVICE edevice(default_toolkit);
     edevice.set_equivalent_device_bus(1);
@@ -334,7 +334,7 @@ void METER_TEST::test_set_get_load_meter_type()
     }
 }
 
-void METER_TEST::test_set_get_2t_lcc_hvdc_meter_type()
+void METER_TEST::test_set_get_lcc_hvdc2t_meter_type()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 
@@ -723,7 +723,7 @@ void METER_TEST::test_get_wt_generator_meter_value()
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 }
 
-void METER_TEST::test_get_2t_lcc_hvdc_meter_value()
+void METER_TEST::test_get_lcc_hvdc2t_meter_value()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 }

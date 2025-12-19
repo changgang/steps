@@ -246,7 +246,7 @@ bool METER::is_internal_variable_name_valid(string& name, unsigned int index) co
         {
             LCC_HVDC2T* ptr = (LCC_HVDC2T*)get_device_pointer();
             if(meter_type=="2T LCC HVDC MODEL INTERNAL VARIABLE")
-                model = ptr->get_2t_lcc_hvdc_model();
+                model = ptr->get_lcc_hvdc2t_model();
         }
         if(device_type==STEPS_VSC_HVDC)
         {
@@ -610,7 +610,7 @@ void METER::set_device_pointer(DEVICE_ID device_id)
             deviceptr = (DEVICE*) psdb.get_transformer(device_id);
             break;
         case STEPS_LCC_HVDC2T:
-            deviceptr = (DEVICE*) psdb.get_2t_lcc_hvdc(device_id);
+            deviceptr = (DEVICE*) psdb.get_lcc_hvdc2t(device_id);
             break;
         case STEPS_VSC_HVDC:
             deviceptr = (DEVICE*) psdb.get_vsc_hvdc(device_id);
@@ -658,7 +658,7 @@ double METER::get_meter_value() const
             case STEPS_TRANSFORMER:
                 return get_meter_value_as_a_transformer();
             case STEPS_LCC_HVDC2T:
-                return get_meter_value_as_a_2t_lcc_hvdc();
+                return get_meter_value_as_a_lcc_hvdc2t();
             case STEPS_VSC_HVDC:
                 return get_meter_value_as_a_vsc_hvdc();
             case STEPS_HYBRID_DC:
@@ -755,7 +755,7 @@ double METER::get_meter_value_as_a_sv_source() const
         return 0.0;
 }
 
-double METER::get_meter_value_as_a_2t_lcc_hvdc() const
+double METER::get_meter_value_as_a_lcc_hvdc2t() const
 {
     unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = lcc_hvdc2t_meter_map.find(get_meter_type());
     if (it != lcc_hvdc2t_meter_map.end())

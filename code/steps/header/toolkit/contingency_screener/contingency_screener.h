@@ -26,8 +26,8 @@ class CONTINGENCY_SCREENER
         void scan_N_k_ac_ine_trip(vector<DEVICE_ID> lines);
         void scan_N_1_generator_trip();
         void scan_N_2_generator_trip();
-        void scan_N_1_2t_lcc_hvdc_bypass(double recover_time);
-        void scan_N_1_2t_lcc_hvdc_block(double unblock_time);
+        void scan_N_1_lcc_hvdc2t_bypass(double recover_time);
+        void scan_N_1_lcc_hvdc2t_block(double unblock_time);
 
 
         void set_powerflow_data_filename(string filename);
