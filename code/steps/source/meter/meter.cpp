@@ -9,8 +9,6 @@
 
 using namespace std;
 
-map<STEPS_DEVICE_TYPE, vector<string>> SUPPORTED_METERS{
-                                                        };
 METER::METER(STEPS& toolkit)
 {
     this->toolkit = (&toolkit);
@@ -391,43 +389,41 @@ bool METER::is_valid_meter_type(string& meter_type) const
 
 bool METER::is_valid_meter_type_of_device(const string& meter_type, STEPS_DEVICE_TYPE device_type) const
 {
-    ostringstream osstream;
-
-    if(device_type == STEPS_BUS) return bus_meter_map.find(meter_type) != bus_meter_map.end();
-    if(device_type == STEPS_GENERATOR) return sg_meter_map.find(meter_type) != sg_meter_map.end();
-    if(device_type == STEPS_WT_GENERATOR) return wtg_meter_map.find(meter_type) != wtg_meter_map.end();
-    if(device_type == STEPS_PV_UNIT) return pvu_meter_map.find(meter_type) != pvu_meter_map.end();
-    if(device_type == STEPS_ENERGY_STORAGE) return es_meter_map.find(meter_type) != es_meter_map.end();
-    if(device_type == STEPS_SV_SOURCE) return sv_source_meter_map.find(meter_type) != sv_source_meter_map.end();
-    if(device_type == STEPS_LOAD) return load_meter_map.find(meter_type) != load_meter_map.end();
-    if(device_type == STEPS_AC_LINE) return ac_line_meter_map.find(meter_type) != ac_line_meter_map.end();
-    if(device_type == STEPS_TRANSFORMER) return transformer_meter_map.find(meter_type) != transformer_meter_map.end();
-    if(device_type == STEPS_LCC_HVDC2T) return lcc_hvdc2t_meter_map.find(meter_type) != lcc_hvdc2t_meter_map.end();
-    if(device_type == STEPS_VSC_HVDC) return vsc_hvdc_meter_map.find(meter_type) != vsc_hvdc_meter_map.end();
-    if(device_type == STEPS_HYBRID_DC) return mt_hvdc_meter_map.find(meter_type) != mt_hvdc_meter_map.end();
-    if(device_type == STEPS_EQUIVALENT_DEVICE) return equivalent_device_meter_map.find(meter_type) != equivalent_device_meter_map.end();
-
-    map<STEPS_DEVICE_TYPE, vector<string> >::const_iterator it = SUPPORTED_METERS.find(device_type);
-    if(it!=SUPPORTED_METERS.end())
+    switch(device_type)
     {
-        vector<string> supported_meters = it->second;
-        unsigned int n = supported_meters.size();
-        bool flag_valid = false;
-        for(unsigned int i=0; i!=n; ++i)
+        case STEPS_BUS:
+            return bus_meter_map.find(meter_type) != bus_meter_map.end();
+        case STEPS_GENERATOR:
+            return sg_meter_map.find(meter_type) != sg_meter_map.end();
+        case STEPS_WT_GENERATOR:
+            return wtg_meter_map.find(meter_type) != wtg_meter_map.end();
+        case STEPS_PV_UNIT:
+            return pvu_meter_map.find(meter_type) != pvu_meter_map.end();
+        case STEPS_ENERGY_STORAGE:
+            return es_meter_map.find(meter_type) != es_meter_map.end();
+        case STEPS_SV_SOURCE:
+            return sv_source_meter_map.find(meter_type) != sv_source_meter_map.end();
+        case STEPS_LOAD:
+            return load_meter_map.find(meter_type) != load_meter_map.end();
+        case STEPS_AC_LINE:
+            return ac_line_meter_map.find(meter_type) != ac_line_meter_map.end();
+        case STEPS_TRANSFORMER:
+            return transformer_meter_map.find(meter_type) != transformer_meter_map.end();
+        case STEPS_LCC_HVDC2T:
+            return lcc_hvdc2t_meter_map.find(meter_type) != lcc_hvdc2t_meter_map.end();
+        case STEPS_VSC_HVDC:
+            return vsc_hvdc_meter_map.find(meter_type) != vsc_hvdc_meter_map.end();
+        case STEPS_HYBRID_DC:
+            return mt_hvdc_meter_map.find(meter_type) != mt_hvdc_meter_map.end();
+        case STEPS_EQUIVALENT_DEVICE:
+            return equivalent_device_meter_map.find(meter_type) != equivalent_device_meter_map.end();
+        default:
         {
-            if(meter_type == supported_meters[i])
-            {
-                flag_valid = true;
-                break;
-            }
+            ostringstream osstream;
+            osstream<<"Warning. Device type "<<device_type<<" is invalid for setting meter type of "<<meter_type<<".";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+            return false;
         }
-        return flag_valid;
-    }
-    else
-    {
-        osstream<<"Warning. Meter type "<<meter_type<<" is invalid for device type "<<device_type<<".";
-        toolkit->show_information_with_leading_time_stamp(osstream);
-        return false;
     }
 }
 

@@ -220,10 +220,9 @@ void METER_TEST::test_set_get_bus_meter_type()
 
     meter.set_device_id(did);
 
-    unsigned int n = bus_meters.size();
-    for(unsigned int i=0; i!=n; ++i)
+    for (auto iter = bus_meter_map.begin(); iter != bus_meter_map.end(); ++iter)
     {
-        meter_type = bus_meters[i];
+        meter_type = iter->first;
         meter.set_meter_type(meter_type);
         TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
@@ -245,10 +244,9 @@ void METER_TEST::test_set_get_ac_line_meter_type()
 
     meter.set_device_id(did);
 
-    unsigned int n = line_meters.size();
-    for(unsigned int i=0; i!=n; ++i)
+    for (auto iter = ac_line_meter_map.begin(); iter != ac_line_meter_map.end(); ++iter)
     {
-        meter_type = line_meters[i];
+        meter_type = iter->first;
         meter.set_meter_type(meter_type);
         TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
@@ -270,10 +268,9 @@ void METER_TEST::test_set_get_transformer_meter_type()
 
     meter.set_device_id(did);
 
-    unsigned int n = transformer_meters.size();
-    for(unsigned int i=0; i!=n; ++i)
+    for (auto iter = transformer_meter_map.begin(); iter != transformer_meter_map.end(); ++iter)
     {
-        meter_type = transformer_meters[i];
+        meter_type = iter->first;
         meter.set_meter_type(meter_type);
         TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
@@ -283,9 +280,9 @@ void METER_TEST::test_set_get_transformer_meter_type()
 
     meter.set_device_id(did);
 
-    for(unsigned int i=0; i!=n; ++i)
+    for (auto iter = transformer_meter_map.begin(); iter != transformer_meter_map.end(); ++iter)
     {
-        meter_type = transformer_meters[i];
+        meter_type = iter->first;
         meter.set_meter_type(meter_type);
         TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
@@ -306,10 +303,9 @@ void METER_TEST::test_set_get_generator_meter_type()
 
     meter.set_device_id(did);
 
-    unsigned int n = generator_meters.size();
-    for(unsigned int i=0; i!=n; ++i)
+    for (auto iter = sg_meter_map.begin(); iter != sg_meter_map.end(); ++iter)
     {
-        meter_type = generator_meters[i];
+        meter_type = iter->first;
         meter.set_meter_type(meter_type);
         TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
@@ -330,10 +326,9 @@ void METER_TEST::test_set_get_load_meter_type()
 
     meter.set_device_id(did);
 
-    unsigned int n = load_meters.size();
-    for(unsigned int i=0; i!=n; ++i)
+    for (auto iter = load_meter_map.begin(); iter != load_meter_map.end(); ++iter)
     {
-        meter_type = load_meters[i];
+        meter_type = iter->first;
         meter.set_meter_type(meter_type);
         TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
@@ -355,10 +350,9 @@ void METER_TEST::test_set_get_2t_lcc_hvdc_meter_type()
 
     meter.set_device_id(did);
 
-    unsigned int n = lcc_hvdc2t_meters.size();
-    for(unsigned int i=0; i!=n; ++i)
+    for (auto iter = lcc_hvdc2t_meter_map.begin(); iter != lcc_hvdc2t_meter_map.end(); ++iter)
     {
-        meter_type = lcc_hvdc2t_meters[i];
+        meter_type = iter->first;
         meter.set_meter_type(meter_type);
         TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
@@ -380,10 +374,9 @@ void METER_TEST::test_set_get_vsc_hvdc_meter_type()
 
     meter.set_device_id(did);
 
-    unsigned int n = vsc_hvdc_meters.size();
-    for(unsigned int i=0; i!=n; ++i)
+    for (auto iter = vsc_hvdc_meter_map.begin(); iter != vsc_hvdc_meter_map.end(); ++iter)
     {
-        meter_type = vsc_hvdc_meters[i];
+        meter_type = iter->first;
         meter.set_meter_type(meter_type);
         TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
@@ -404,10 +397,9 @@ void METER_TEST::test_set_get_wt_generator_meter_type()
 
     meter.set_device_id(did);
 
-    unsigned int n = wt_generator_meters.size();
-    for(unsigned int i=0; i!=n; ++i)
+    for (auto iter = wtg_meter_map.begin(); iter != wtg_meter_map.end(); ++iter)
     {
-        meter_type = wt_generator_meters[i];
+        meter_type = iter->first;
         meter.set_meter_type(meter_type);
         TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
@@ -428,10 +420,9 @@ void METER_TEST::test_set_get_equivalent_device_meter_type()
 
     meter.set_device_id(did);
 
-    unsigned int n = equivalent_device_meters.size();
-    for(unsigned int i=0; i!=n; ++i)
+    for (auto iter = equivalent_device_meter_map.begin(); iter != equivalent_device_meter_map.end(); ++iter)
     {
-        meter_type = equivalent_device_meters[i];
+        meter_type = iter->first;
         meter.set_meter_type(meter_type);
         TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
@@ -453,10 +444,9 @@ void METER_TEST::test_set_get_energy_storage_meter_type()
 
     meter.set_device_id(did);
 
-    unsigned int n = energy_storage_meters.size();
-    for(unsigned int i=0; i!=n; ++i)
+    for (auto iter = es_meter_map.begin(); iter != es_meter_map.end(); ++iter)
     {
-        meter_type = energy_storage_meters[i];
+        meter_type = iter->first;
         meter.set_meter_type(meter_type);
         TEST_ASSERT(meter.get_meter_type()==meter_type);
     }

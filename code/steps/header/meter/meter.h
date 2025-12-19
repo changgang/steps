@@ -80,21 +80,4 @@ class METER
         DC_DEVICE_ID sub_dc_did;
         string hybrid_dc_device_name;
 };
-
-
-extern vector<string> bus_meters;
-extern vector<string> line_meters;
-extern vector<string> transformer_meters;
-extern vector<string> generator_meters;
-extern vector<string> load_meters;
-extern vector<string> wt_generator_meters;
-extern vector<string> pv_unit_meters;
-extern vector<string> energy_storage_meters;
-extern vector<string> sv_source_meters;
-extern vector<string> lcc_hvdc2t_meters;
-extern vector<string> vsc_hvdc_meters;
-extern vector<string> mt_hvdc_meters;
-extern vector<string> equivalent_device_meters;
-extern map<STEPS_DEVICE_TYPE, vector<string>> SUPPORTED_METERS;
-
 #endif // METER_H
