@@ -186,6 +186,7 @@
 		<Unit filename="header/meter/ac_line_meter_getter.h" />
 		<Unit filename="header/meter/basic_meter_preparer.h" />
 		<Unit filename="header/meter/bus_meter_getter.h" />
+		<Unit filename="header/meter/equivalent_device_meter_getter.h" />
 		<Unit filename="header/meter/es_meter_getter.h" />
 		<Unit filename="header/meter/lcc_hvdc2t_meter_getter.h" />
 		<Unit filename="header/meter/load_meter_getter.h" />
@@ -748,6 +749,7 @@
 		<Unit filename="source/meter/ac_line_meter_getter.cpp" />
 		<Unit filename="source/meter/basic_meter_preparer.cpp" />
 		<Unit filename="source/meter/bus_meter_getter.cpp" />
+		<Unit filename="source/meter/equivalent_device_meter_getter.cpp" />
 		<Unit filename="source/meter/es_meter_getter.cpp" />
 		<Unit filename="source/meter/lcc_hvdc2t_meter_getter.cpp" />
 		<Unit filename="source/meter/load_meter_getter.cpp" />

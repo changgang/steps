@@ -4419,7 +4419,7 @@
 	<fstream>
 	<cstring>
 
-1766140387 source:d:\steps\code\steps\source\meter\meter.cpp
+1766142903 source:d:\steps\code\steps\source\meter\meter.cpp
 	"header/meter/meter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -164391,8 +164391,9 @@
 
 1765278814 d:\steps\code\steps\header\meter\meter_map_builder.h
 
-1766141341 source:d:\steps\code\steps\source\meter\meter_map_builder.cpp
+1766142816 source:d:\steps\code\steps\source\meter\meter_map_builder.cpp
 	"header/meter/meter_map_builder.h"
+	"header/steps_namespace.h"
 	"header/meter/bus_meter_getter.h"
 	"header/meter/sg_meter_getter.h"
 	"header/meter/wtg_meter_getter.h"
@@ -164405,7 +164406,7 @@
 	"header/meter/lcc_hvdc2t_meter_getter.h"
 	"header/meter/vsc_hvdc_meter_getter.h"
 	"header/meter/mt_hvdc_meter_getter.h"
-	"header/steps_namespace.h"
+	"header/meter/equivalent_device_meter_getter.h"
 
 1765276915 d:\steps\code\steps\header\meter\wtg_meter_getter.h
 	"header/meter/meter_parameter_struct.h"
@@ -164597,4 +164598,14 @@
 	"header/basic/steps_enum.h"
 	"header/basic/utility.h"
 	"header/meter/meter.h"
+
+1766142386 source:d:\steps\code\steps\source\meter\equivalent_device_meter_getter.cpp
+	"header/meter/equivalent_device_meter_getter.h"
+	"header/device/equivalent_device.h"
+	"header/steps_namespace.h"
+	"header/basic/utility.h"
+
+1766142386 d:\steps\code\steps\header\meter\equivalent_device_meter_getter.h
+	"header/meter/meter_parameter_struct.h"
+	<string>
 

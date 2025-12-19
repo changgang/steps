@@ -1,4 +1,7 @@
 #include "header/meter/meter_map_builder.h"
+
+#include "header/steps_namespace.h"
+
 #include "header/meter/bus_meter_getter.h"
 #include "header/meter/sg_meter_getter.h"
 #include "header/meter/wtg_meter_getter.h"
@@ -11,7 +14,7 @@
 #include "header/meter/lcc_hvdc2t_meter_getter.h"
 #include "header/meter/vsc_hvdc_meter_getter.h"
 #include "header/meter/mt_hvdc_meter_getter.h"
-#include "header/steps_namespace.h"
+#include "header/meter/equivalent_device_meter_getter.h"
 
 void build_bus_meter_map()
 {
@@ -381,4 +384,37 @@ void build_mt_hvdc_meter_map()
 
 void build_equivalent_device_meter_map()
 {
+    using namespace equivalent_device_meter_getter;
+    equivalent_device_meter_map.insert({"VOLTAGE SOURCE VOLTAGE IN PU",             get_voltage_source_voltage_in_pu});
+    equivalent_device_meter_map.insert({"VOLTAGE SOURCE VOLTAGE ANGLE IN DEG",      get_voltage_source_voltage_angle_in_deg});
+    equivalent_device_meter_map.insert({"VOLTAGE SOURCE RESISTANCE IN PU",          get_voltage_source_resistance_in_pu});
+    equivalent_device_meter_map.insert({"VOLTAGE SOURCE REACTANCE IN PU",           get_voltage_source_reactance_in_pu});
+
+    equivalent_device_meter_map.insert({"ACTIVE CONSTANT POWER LOAD IN MW",         get_active_constant_power_load_in_mw});
+    equivalent_device_meter_map.insert({"REACTIVE CONSTANT POWER LOAD IN MVAR",     get_reactive_constant_power_load_in_mvar});
+    equivalent_device_meter_map.insert({"ACTIVE CONSTANT CURRENT LOAD IN MW",       get_active_constant_current_load_in_mw});
+    equivalent_device_meter_map.insert({"REACTIVE CONSTANT CURRENT LOAD IN MVAR",   get_reactive_constant_current_load_in_mvar});
+    equivalent_device_meter_map.insert({"ACTIVE CONSTANT IMPEDANCE LOAD IN MW",     get_active_constant_impedance_load_in_mw});
+    equivalent_device_meter_map.insert({"REACTIVE CONSTANT IMPEDANCE LOAD IN MVAR", get_reactive_constant_impedance_load_in_mvar});
+
+    equivalent_device_meter_map.insert({"ACTIVE POWER GENERATION IN MW",            get_active_power_generation_in_mw});
+    equivalent_device_meter_map.insert({"REACTIVE POWER GENERATION IN MVAR",        get_reactive_power_generation_in_mvar});
+    equivalent_device_meter_map.insert({"ACTIVE POWER LOAD IN MW",                  get_active_power_load_in_mw});
+    equivalent_device_meter_map.insert({"REACTIVE POWER LOAD IN MVAR",              get_reactive_power_load_in_mvar});
+    equivalent_device_meter_map.insert({"ACTIVE POWER NET LOAD IN MW",              get_active_power_net_load_in_mw});
+    equivalent_device_meter_map.insert({"REACTIVE POWER NET LOAD IN MVAR",          get_reactive_power_net_load_in_mvar});
+
+    equivalent_device_meter_map.insert({"ACTIVE CONSTANT POWER LOAD IN PU",         get_active_constant_power_load_in_pu});
+    equivalent_device_meter_map.insert({"REACTIVE CONSTANT POWER LOAD IN PU",       get_reactive_constant_power_load_in_pu});
+    equivalent_device_meter_map.insert({"ACTIVE CONSTANT CURRENT LOAD IN PU",       get_active_constant_current_load_in_pu});
+    equivalent_device_meter_map.insert({"REACTIVE CONSTANT CURRENT LOAD IN PU",     get_reactive_constant_current_load_in_pu});
+    equivalent_device_meter_map.insert({"ACTIVE CONSTANT IMPEDANCE LOAD IN PU",     get_active_constant_impedance_load_in_pu});
+    equivalent_device_meter_map.insert({"REACTIVE CONSTANT IMPEDANCE LOAD IN PU",   get_reactive_constant_impedance_load_in_pu});
+
+    equivalent_device_meter_map.insert({"ACTIVE POWER GENERATION IN PU",            get_active_power_generation_in_pu});
+    equivalent_device_meter_map.insert({"REACTIVE POWER GENERATION IN PU",          get_reactive_power_generation_in_pu});
+    equivalent_device_meter_map.insert({"ACTIVE POWER LOAD IN PU",                  get_active_power_load_in_pu});
+    equivalent_device_meter_map.insert({"REACTIVE POWER LOAD IN PU",                get_reactive_power_load_in_pu});
+    equivalent_device_meter_map.insert({"ACTIVE POWER NET LOAD IN PU",              get_active_power_net_load_in_pu});
+    equivalent_device_meter_map.insert({"REACTIVE POWER NET LOAD IN PU",            get_reactive_power_net_load_in_pu});
 }
