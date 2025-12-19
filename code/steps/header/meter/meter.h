@@ -20,7 +20,7 @@ class METER
         void set_sub_dc_device_id(DC_DEVICE_ID did);
         void set_meter_type(string meter_type);
         void set_internal_variable_name(string name);
-        void set_meter_side_bus(unsigned int meter_side);
+        void set_metered_side_bus(unsigned int meter_side);
         void set_hybrid_dc_meter_device_name(string name);
 
         void change_device_id(DEVICE_ID did);
@@ -32,7 +32,7 @@ class METER
         STEPS_DEVICE_TYPE get_device_type() const;
         DC_DEVICE_ID get_sub_dc_device_id() const;
         string get_meter_type() const;
-        unsigned int get_meter_side_bus() const;
+        unsigned int get_metered_side_bus() const;
         string get_internal_variable_name() const;
         string get_hybrid_dc_meter_device_name() const;
 

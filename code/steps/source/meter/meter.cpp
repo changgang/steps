@@ -8,24 +8,6 @@
 #include <cstring>
 
 using namespace std;
-
-vector<string> line_meters{"CURRENT AT SENDING SIDE IN KA",                    "CURRENT AT RECEIVING SIDE IN KA",
-                            "ACTIVE POWER AT SENDING SIDE IN MW",               "ACTIVE POWER AT RECEIVING SIDE IN MW",
-                            "REACTIVE POWER AT SENDING SIDE IN MVAR",           "REACTIVE POWER AT RECEIVING SIDE IN MVAR",
-                            "APPARENT IMPEDANCE AT SENDING SIDE IN OHM",        "APPARENT IMPEDANCE AT RECEIVING SIDE IN OHM",
-                            "APPARENT IMPEDANCE ANGLE AT SENDING SIDE IN DEG",  "APPARENT IMPEDANCE ANGLE AT RECEIVING SIDE IN DEG",
-                            "CURRENT IN KA",
-                            "ACTIVE POWER IN MW",
-                            "REACTIVE POWER IN MVAR",
-                            "APPARENT IMPEDANCE IN OHM",
-                            "APPARENT IMPEDANCE ANGLE IN DEG",
-                            "CURRENT IN PU",
-                            "ACTIVE POWER IN PU",
-                            "REACTIVE POWER IN PU",
-                            "APPARENT IMPEDANCE IN PU",
-                            "APPARENT IMPEDANCE ANGLE IN RAD"};
-
-
 vector<string> transformer_meters{"CURRENT AT PRIMARY WINDING IN KA",  "CURRENT AT SECONDARY WINDING IN KA",
                                    "CURRENT AT TERTIARY WINDING IN KA",
                                    "ACTIVE POWER AT PRIMARY WINDING IN MW",    "ACTIVE POWER AT SECONDARY WINDING IN MW",
@@ -108,7 +90,6 @@ vector<string> equivalent_device_meters{"VOLTAGE SOURCE VOLTAGE IN PU",
                                          "REACTIVE POWER NET LOAD IN PU"};
 
 map<STEPS_DEVICE_TYPE, vector<string>> SUPPORTED_METERS{
-                                                            {STEPS_AC_LINE,        line_meters},
                                                             {STEPS_TRANSFORMER, transformer_meters},
                                                             {STEPS_LCC_HVDC2T, lcc_hvdc2t_meters},
                                                             {STEPS_VSC_HVDC, vsc_hvdc_meters},
@@ -132,10 +113,10 @@ void METER::copy_from_const_meter(const METER& meter)
     if(get_device_type()==STEPS_VSC_HVDC)
     {
         if(get_meter_type().rfind("CONVERTER", 0) == 0)
-            set_meter_side_bus(meter.get_meter_side_bus());
+            set_metered_side_bus(meter.get_metered_side_bus());
         else
         {
-            set_meter_side_bus(meter.get_meter_side_bus());
+            set_metered_side_bus(meter.get_metered_side_bus());
             if(get_meter_type().rfind("DC LINE", 0) == 0)
                 set_sub_dc_device_id(meter.get_sub_dc_device_id());
         }
@@ -146,11 +127,11 @@ void METER::copy_from_const_meter(const METER& meter)
     }
     else
     {
-        set_meter_side_bus(meter.get_meter_side_bus());
+        set_metered_side_bus(meter.get_metered_side_bus());
     }
-    if(meter.get_meter_side_bus()!=get_meter_side_bus())
-        cout<<"error detected. different metered bus. old is "<<meter.get_meter_side_bus()
-            <<" new is "<<get_meter_side_bus()<<". line "<<__LINE__<<endl;
+    if(meter.get_metered_side_bus()!=get_metered_side_bus())
+        cout<<"error detected. different metered bus. old is "<<meter.get_metered_side_bus()
+            <<" new is "<<get_metered_side_bus()<<". line "<<__LINE__<<endl;
 }
 
 METER::METER(const METER& meter)
@@ -389,7 +370,7 @@ bool METER::is_internal_variable_name_valid(string& name, unsigned int index) co
         return false;
 }
 
-void METER::set_meter_side_bus(unsigned int meter_side)
+void METER::set_metered_side_bus(unsigned int meter_side)
 {
     if(get_device_type()==STEPS_BUS)
         metered_side_bus = 0;
@@ -503,6 +484,7 @@ bool METER::is_valid_meter_type_of_device(const string& meter_type, STEPS_DEVICE
     if(device_type == STEPS_ENERGY_STORAGE) return es_meter_map.find(meter_type) != es_meter_map.end();
     if(device_type == STEPS_SV_SOURCE) return sv_source_meter_map.find(meter_type) != sv_source_meter_map.end();
     if(device_type == STEPS_LOAD) return load_meter_map.find(meter_type) != load_meter_map.end();
+    if(device_type == STEPS_AC_LINE) return ac_line_meter_map.find(meter_type) != ac_line_meter_map.end();
 
     map<STEPS_DEVICE_TYPE, vector<string> >::const_iterator it = SUPPORTED_METERS.find(device_type);
     if(it!=SUPPORTED_METERS.end())
@@ -546,7 +528,7 @@ string METER::get_meter_type() const
     //return meter_type;
 }
 
-unsigned int METER::get_meter_side_bus() const
+unsigned int METER::get_metered_side_bus() const
 {
     return metered_side_bus;
 }
@@ -601,7 +583,7 @@ string METER::get_meter_name() const
         if(device_type==STEPS_AC_LINE or
            device_type==STEPS_TRANSFORMER or
            device_type==STEPS_VSC_HVDC)
-            name += " @ SIDE "+num2str(get_meter_side_bus());
+            name += " @ SIDE "+num2str(get_metered_side_bus());
         if(device_type==STEPS_HYBRID_DC)
         {
             name += " @ DC DEVICE "+ get_hybrid_dc_meter_device_name();
@@ -624,7 +606,7 @@ bool METER::is_valid() const
            device_type==STEPS_TRANSFORMER or
            device_type==STEPS_VSC_HVDC)
         {
-            if(get_meter_side_bus()!=0)
+            if(get_metered_side_bus()!=0)
             {
                 //cout<<"true"<<endl;
                 return true;
@@ -823,120 +805,9 @@ double METER::get_meter_value_as_a_bus() const
 
 double METER::get_meter_value_as_an_ac_line() const
 {
-    AC_LINE* line = (AC_LINE*) get_device_pointer();
-    if(line != NULL)
-    {
-        if(line->get_sending_side_breaker_status()==true or line->get_receiving_side_breaker_status()==true)
-        {
-            string meter_type = get_meter_type();
-            unsigned int metered_bus = get_meter_side_bus();
-            if(meter_type=="CURRENT IN KA")
-            {
-                if(metered_bus!=line->get_receiving_side_bus())
-                    return steps_fast_complex_abs(line->get_line_complex_current_at_sending_side_in_kA());
-                else
-                    return steps_fast_complex_abs(line->get_line_complex_current_at_receiving_side_in_kA());
-            }
-            if(meter_type=="CURRENT IN PU")
-            {
-                if(metered_bus!=line->get_receiving_side_bus())
-                    return steps_fast_complex_abs(line->get_line_complex_current_at_sending_side_in_pu());
-                else
-                    return steps_fast_complex_abs(line->get_line_complex_current_at_receiving_side_in_pu());
-            }
-
-            if(meter_type=="ACTIVE POWER IN MW")
-            {
-                if(metered_bus!=line->get_receiving_side_bus())
-                    return (line->get_line_complex_power_at_sending_side_in_MVA()).real();
-                else
-                    return (line->get_line_complex_power_at_receiving_side_in_MVA()).real();
-            }
-
-            if(meter_type=="ACTIVE POWER IN PU")
-            {
-                if(metered_bus!=line->get_receiving_side_bus())
-                    return (line->get_line_complex_power_at_sending_side_in_pu()).real();
-                else
-                    return (line->get_line_complex_power_at_receiving_side_in_pu()).real();
-            }
-
-            if(meter_type=="REACTIVE POWER IN MVAR")
-            {
-                if(metered_bus!=line->get_receiving_side_bus())
-                    return (line->get_line_complex_power_at_sending_side_in_MVA()).imag();
-                else
-                    return (line->get_line_complex_power_at_receiving_side_in_MVA()).imag();
-            }
-
-            if(meter_type=="REACTIVE POWER IN PU")
-            {
-                if(metered_bus!=line->get_receiving_side_bus())
-                    return (line->get_line_complex_power_at_sending_side_in_pu()).imag();
-                else
-                    return (line->get_line_complex_power_at_receiving_side_in_pu()).imag();
-            }
-
-            if(meter_type=="APPARENT IMPEDANCE IN OHM")
-            {
-                if(metered_bus!=line->get_receiving_side_bus())
-                    return steps_fast_complex_abs(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm());
-                else
-                    return steps_fast_complex_abs(line->get_line_complex_apparent_impedance_at_receiving_side_in_ohm());
-            }
-
-            if(meter_type=="APPARENT IMPEDANCE IN PU")
-            {
-                if(metered_bus!=line->get_receiving_side_bus())
-                    return steps_fast_complex_abs(line->get_line_complex_apparent_impedance_at_sending_side_in_pu());
-                else
-                    return steps_fast_complex_abs(line->get_line_complex_apparent_impedance_at_receiving_side_in_pu());
-            }
-
-            if(meter_type=="APPARENT IMPEDANCE ANGLE IN DEG")
-            {
-                if(metered_bus!=line->get_receiving_side_bus())
-                    return rad2deg(steps_fast_complex_arg(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm()));
-                else
-                    return rad2deg(steps_fast_complex_arg(line->get_line_complex_apparent_impedance_at_receiving_side_in_ohm()));
-            }
-
-            if(meter_type=="APPARENT IMPEDANCE ANGLE IN RAD")
-            {
-                if(metered_bus!=line->get_receiving_side_bus())
-                    return steps_fast_complex_arg(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm());
-                else
-                    return steps_fast_complex_arg(line->get_line_complex_apparent_impedance_at_receiving_side_in_ohm());
-            }
-
-
-            if(meter_type=="CURRENT AT SENDING SIDE IN KA")
-                return steps_fast_complex_abs(line->get_line_complex_current_at_sending_side_in_kA());
-            if(meter_type=="ACTIVE POWER AT SENDING SIDE IN MW")
-                return (line->get_line_complex_power_at_sending_side_in_MVA()).real();
-            if(meter_type=="REACTIVE POWER AT SENDING SIDE IN MVAR")
-                return (line->get_line_complex_power_at_sending_side_in_MVA()).imag();
-            if(meter_type=="CURRENT AT RECEIVING SIDE IN KA")
-                return steps_fast_complex_abs(line->get_line_complex_current_at_receiving_side_in_kA());
-            if(meter_type=="ACTIVE POWER AT RECEIVING SIDE IN MW")
-                return (line->get_line_complex_power_at_receiving_side_in_MVA()).real();
-            if(meter_type=="REACTIVE POWER AT RECEIVING SIDE IN MVAR")
-                return (line->get_line_complex_power_at_receiving_side_in_MVA()).imag();
-
-            if(meter_type=="APPARENT IMPEDANCE AT SENDING SIDE IN OHM")
-                return steps_fast_complex_abs(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm());
-            if(meter_type=="APPARENT IMPEDANCE ANGLE AT SENDING SIDE IN DEG")
-                return rad2deg(steps_fast_complex_arg(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm()));
-            if(meter_type=="APPARENT IMPEDANCE AT RECEIVING SIDE IN OHM")
-                return steps_fast_complex_abs(line->get_line_complex_apparent_impedance_at_receiving_side_in_ohm());
-            if(meter_type=="APPARENT IMPEDANCE ANGLE AT RECEIVING SIDE IN DEG")
-                return rad2deg(steps_fast_complex_arg(line->get_line_complex_apparent_impedance_at_receiving_side_in_ohm()));
-
-            return 0.0;
-        }
-        else
-            return 0.0;
-    }
+    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = ac_line_meter_map.find(get_meter_type());
+    if (it != ac_line_meter_map.end())
+        return get_meter_value_with_function(it->second);
     else
         return 0.0;
 }
@@ -947,7 +818,7 @@ double METER::get_meter_value_as_a_transformer() const
     if(trans != NULL)
     {
         string meter_type = get_meter_type();
-        unsigned int metered_bus = get_meter_side_bus();
+        unsigned int metered_bus = get_metered_side_bus();
         if(trans->is_two_winding_transformer())
         {
             if(meter_type=="CURRENT IN KA")
@@ -1132,14 +1003,6 @@ double METER::get_meter_value_as_a_wt_generator() const
         return 0.0;
 }
 
-double METER::get_meter_value_with_function(std::function<double(METER_PARAMETER)> f) const
-{
-    METER_PARAMETER para;
-    para.device_pointer = get_device_pointer();
-    para.internal_var_name = get_internal_variable_name();
-    return f(para);
-}
-
 double METER::get_meter_value_as_a_pv_unit() const
 {
     unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = pvu_meter_map.find(get_meter_type());
@@ -1258,7 +1121,7 @@ double METER::get_meter_value_as_a_vsc_hvdc() const
         if(vsc_hvdc->get_status()==true)
         {
             string meter_type = get_meter_type();
-            unsigned int metered_bus = get_meter_side_bus();
+            unsigned int metered_bus = get_metered_side_bus();
             VSC_HVDC_NETWORK_MODEL* vsc_hvdc_network_model = vsc_hvdc->get_vsc_hvdc_network_model();
             vector<VSC_HVDC_CONVERTER_MODEL*> vsc_hvdc_converter_models = vsc_hvdc->get_vsc_hvdc_converter_models();
 
@@ -1296,19 +1159,19 @@ double METER::get_meter_value_as_a_vsc_hvdc() const
             }
             if(meter_type=="DC BUS VOLTAGE IN KV")
             {
-                unsigned int dcbus = get_meter_side_bus();
+                unsigned int dcbus = get_metered_side_bus();
                 return vsc_hvdc->get_dc_bus_Vdc_in_kV_with_dc_bus_number(dcbus);
             }
             if(meter_type=="DC LINE CURRENT IN KA")
             {
                 DC_DEVICE_ID dc_did = get_sub_dc_device_id();
-                unsigned int dc_bus = get_meter_side_bus();
+                unsigned int dc_bus = get_metered_side_bus();
                 return vsc_hvdc->get_dc_line_current_in_kA(dc_did, dc_bus);
             }
             if(meter_type=="DC LINE POWER IN MW")
             {
                 DC_DEVICE_ID dc_did = get_sub_dc_device_id();
-                unsigned int dc_bus = get_meter_side_bus();
+                unsigned int dc_bus = get_metered_side_bus();
                 return vsc_hvdc->get_dc_line_power_in_MW(dc_did, dc_bus);
             }
             if(meter_type=="VSC LCC_HVDC2T NETWORK MODEL INTERNAL VARIABLE")
@@ -1745,4 +1608,11 @@ double METER::get_meter_value_as_an_equivalent_device() const
         return 0.0;
 }
 
-
+double METER::get_meter_value_with_function(std::function<double(METER_PARAMETER)> f) const
+{
+    METER_PARAMETER para;
+    para.device_pointer = get_device_pointer();
+    para.internal_var_name = get_internal_variable_name();
+    para.metered_side_bus = get_metered_side_bus();
+    return f(para);
+}

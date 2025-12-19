@@ -6,6 +6,7 @@
 #include "header/meter/es_meter_getter.h"
 #include "header/meter/sv_source_meter_getter.h"
 #include "header/meter/load_meter_getter.h"
+#include "header/meter/ac_line_meter_getter.h"
 #include "header/steps_namespace.h"
 
 void build_bus_meter_map()
@@ -241,6 +242,27 @@ void build_fixed_shunt_meter_map()
 
 void build_ac_line_meter_map()
 {
+    using namespace ac_line_meter_getter;
+    ac_line_meter_map.insert({"CURRENT IN KA",                                     get_current_in_ka});
+    ac_line_meter_map.insert({"CURRENT IN PU",                                     get_current_in_pu});
+    ac_line_meter_map.insert({"ACTIVE POWER IN MW",                                get_active_power_in_mw});
+    ac_line_meter_map.insert({"ACTIVE POWER IN PU",                                get_active_power_in_pu});
+    ac_line_meter_map.insert({"REACTIVE POWER IN MVAR",                            get_reactive_power_in_mvar});
+    ac_line_meter_map.insert({"REACTIVE POWER IN PU",                              get_reactive_power_in_pu});
+    ac_line_meter_map.insert({"APPARENT IMPEDANCE IN OHM",                         get_apparent_impedance_in_ohm});
+    ac_line_meter_map.insert({"APPARENT IMPEDANCE IN PU",                          get_apparent_impedance_in_pu});
+    ac_line_meter_map.insert({"APPARENT IMPEDANCE ANGLE IN DEG",                   get_apparent_impedance_angle_in_deg});
+    ac_line_meter_map.insert({"APPARENT IMPEDANCE ANGLE IN RAD",                   get_apparent_impedance_angle_in_rad});
+    ac_line_meter_map.insert({"CURRENT AT SENDING SIDE IN KA",                     get_current_at_sending_side_in_ka});
+    ac_line_meter_map.insert({"ACTIVE POWER AT SENDING SIDE IN MW",                get_active_power_at_sending_side_in_mw});
+    ac_line_meter_map.insert({"REACTIVE POWER AT SENDING SIDE IN MVAR",            get_reactive_power_at_sending_side_in_mvar});
+    ac_line_meter_map.insert({"CURRENT AT RECEIVING SIDE IN KA",                   get_current_at_receiving_side_in_ka});
+    ac_line_meter_map.insert({"ACTIVE POWER AT RECEIVING SIDE IN MW",              get_active_power_at_receiving_side_in_mw});
+    ac_line_meter_map.insert({"REACTIVE POWER AT RECEIVING SIDE IN MVAR",          get_reactive_power_at_receiving_side_in_mvar});
+    ac_line_meter_map.insert({"APPARENT IMPEDANCE AT SENDING SIDE IN OHM",         get_apparent_impedance_at_sending_side_in_ohm});
+    ac_line_meter_map.insert({"APPARENT IMPEDANCE ANGLE AT SENDING SIDE IN DEG",   get_apparent_impedance_angle_at_sending_side_in_deg});
+    ac_line_meter_map.insert({"APPARENT IMPEDANCE AT RECEIVING SIDE IN OHM",       get_apparent_impedance_at_receiving_side_in_ohm});
+    ac_line_meter_map.insert({"APPARENT IMPEDANCE ANGLE AT RECEIVING SIDE IN DEG", get_apparent_impedance_angle_at_receiving_side_in_deg});
 }
 
 void build_transformer_meter_map()
