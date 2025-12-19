@@ -150,16 +150,6 @@ bool METER::is_internal_variable_name_valid(string& name, unsigned int index) co
         string meter_type = get_meter_type();
         MODEL* model=NULL;
         STEPS_DEVICE_TYPE device_type = get_device_type();
-        if(device_type==STEPS_LOAD)
-        {
-            LOAD* ptr = (LOAD*)get_device_pointer();
-            if(meter_type=="LOAD MODEL INTERNAL VARIABLE")
-                model = ptr->get_load_model();
-            if(meter_type=="FREQUENCY RELAY MODEL INTERNAL VARIABLE")
-                model = ptr->get_load_frequency_relay_model();
-            if(meter_type=="VOLTAGE RELAY MODEL INTERNAL VARIABLE")
-                model = ptr->get_load_voltage_relay_model();
-        }
         if(device_type==STEPS_GENERATOR)
         {
             GENERATOR* ptr = (GENERATOR*)get_device_pointer();
@@ -241,6 +231,16 @@ bool METER::is_internal_variable_name_valid(string& name, unsigned int index) co
             SV_SOURCE* ptr = (SV_SOURCE*)get_device_pointer();
             if(meter_type=="SVS CONTROL MODEL INTERNAL VARIABLE")
                 model = ptr->get_svs_control_model();
+        }
+        if(device_type==STEPS_LOAD)
+        {
+            LOAD* ptr = (LOAD*)get_device_pointer();
+            if(meter_type=="LOAD MODEL INTERNAL VARIABLE")
+                model = ptr->get_load_model();
+            if(meter_type=="FREQUENCY RELAY MODEL INTERNAL VARIABLE")
+                model = ptr->get_load_frequency_relay_model();
+            if(meter_type=="VOLTAGE RELAY MODEL INTERNAL VARIABLE")
+                model = ptr->get_load_voltage_relay_model();
         }
         if(device_type==STEPS_LCC_HVDC2T)
         {
@@ -567,8 +567,6 @@ bool METER::operator!=(const METER& meter)
 
 void METER::set_device_pointer(DEVICE_ID device_id)
 {
-    ostringstream osstream;
-
     if(not device_id.is_valid())
     {
         device_pointer = NULL;
@@ -587,59 +585,46 @@ void METER::set_device_pointer(DEVICE_ID device_id)
             deviceptr = (DEVICE*) psdb.get_bus(tbuses[0]);
             break;
         }
-        case STEPS_AC_LINE:
-            deviceptr = (DEVICE*) psdb.get_ac_line(device_id);
-            break;
-
-        case STEPS_TRANSFORMER:
-            deviceptr = (DEVICE*) psdb.get_transformer(device_id);
-            break;
-
-        case STEPS_LOAD:
-            deviceptr = (DEVICE*) psdb.get_load(device_id);
-            break;
-
         case STEPS_GENERATOR:
             deviceptr = (DEVICE*) psdb.get_generator(device_id);
             break;
-
         case STEPS_WT_GENERATOR:
             deviceptr = (DEVICE*) psdb.get_wt_generator(device_id);
             break;
-
         case STEPS_PV_UNIT:
             deviceptr = (DEVICE*) psdb.get_pv_unit(device_id);
             break;
-
         case STEPS_ENERGY_STORAGE:
             deviceptr = (DEVICE*) psdb.get_energy_storage(device_id);
             break;
-
         case STEPS_SV_SOURCE:
             deviceptr = (DEVICE*) psdb.get_sv_source(device_id);
             break;
-
+        case STEPS_LOAD:
+            deviceptr = (DEVICE*) psdb.get_load(device_id);
+            break;
+        case STEPS_AC_LINE:
+            deviceptr = (DEVICE*) psdb.get_ac_line(device_id);
+            break;
+        case STEPS_TRANSFORMER:
+            deviceptr = (DEVICE*) psdb.get_transformer(device_id);
+            break;
         case STEPS_LCC_HVDC2T:
             deviceptr = (DEVICE*) psdb.get_2t_lcc_hvdc(device_id);
             break;
-
         case STEPS_VSC_HVDC:
             deviceptr = (DEVICE*) psdb.get_vsc_hvdc(device_id);
             break;
-
         case STEPS_HYBRID_DC:
             deviceptr = (DEVICE*) psdb.get_mt_hvdc(device_id);
             break;
-
         case STEPS_EQUIVALENT_DEVICE:
             deviceptr = (DEVICE*) psdb.get_equivalent_device(device_id);
             break;
-
         default:
             break;
     }
-
-    this->device_pointer = deviceptr;
+    device_pointer = deviceptr;
     if(deviceptr==NULL)
     {
         ostringstream osstream;
