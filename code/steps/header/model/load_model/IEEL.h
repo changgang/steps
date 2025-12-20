@@ -64,6 +64,7 @@ class IEEL : public LOAD_MODEL
         virtual complex<double> get_load_power_in_MVA();
         virtual complex<double> get_load_current_in_pu_based_on_SBASE();
         virtual complex<double> get_norton_current_in_pu_based_on_SBASE();
+        virtual complex<double> get_derivative_of_load_current_wrt_voltage_on_SBASE();
         virtual void check();
         virtual void clear();
         virtual void report();

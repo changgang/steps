@@ -368,25 +368,25 @@ complex<double> LOAD::get_actual_constant_impedance_load_in_MVA() const
 
 double LOAD::get_load_scale_with_voltage(double exp, double v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type)
 {
-    if(exp==0.0) // constant power
+    if(exp==0.0)
     {
         return get_constant_power_load_scale_with_voltage(v, cv_type);
     }
     else
     {
-        if(exp==1.0) // constant current
+        if(exp==1.0)
         {
             return get_constant_current_load_scale_with_voltage(v, cv_type);
         }
         else
         {
-            if(exp==2.0) // constant impedance
+            if(exp==2.0)
                 return v*v;
             else
             {
-                if(exp>2.0) // higher than constant power
+                if(exp>2.0)
                     return steps_pow(v, exp);
-                else // otherwise, treat as constant current
+                else
                 {
                     double vth = voltage_threshold_of_constant_current_load_in_pu;
                     if(v>=vth)
@@ -495,6 +495,93 @@ double LOAD::get_load_scale_with_Imax_and_voltage(double Imax, double v, double 
         return v*Imax;
     }
 }
+
+complex<double> LOAD::get_derivative_of_load_scale_with_voltage(double exp, double v, complex<double> complex_v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type)
+{
+    if(exp==0.0)
+    {
+        return get_derivative_of_constant_power_load_scale_with_voltage(v, complex_v, cv_type);
+    }
+    else
+    {
+        if(exp==1.0)
+        {
+            return get_derivative_of_constant_current_load_scale_with_voltage(v, complex_v, cv_type);
+        }
+        else
+        {
+            if(exp==2.0)
+                return get_derivative_of_constant_impedance_load_scale_with_voltage(complex_v);
+            else
+            {
+                if(exp>2.0)
+                    return 0.5*exp*steps_pow(v, exp-2.0)*conj(complex_v);
+                else
+                {
+                    double vth = voltage_threshold_of_constant_current_load_in_pu;
+                    if(v>=vth)
+                        return 0.5*exp*steps_pow(v, exp-2.0)*conj(complex_v);
+                    else
+                    {
+                        double Imax = 1.0/steps_pow(vth, exp-1.0);
+                        return get_derivative_of_load_scale_with_Imax_and_voltage(Imax, v, vth, complex_v, cv_type);
+                    }
+                }
+            }
+        }
+    }
+}
+
+complex<double> LOAD::get_derivative_of_constant_power_load_scale_with_voltage(double v, complex<double> complex_v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type)
+{
+    double vth = voltage_threshold_of_constant_power_load_in_pu;
+    if(v>=vth)
+        return 0.0;
+    else
+    {
+        double Imax = one_over_voltage_threshold_of_constant_power_load_in_pu;
+        return get_derivative_of_load_scale_with_Imax_and_voltage(Imax, v, vth, complex_v, cv_type);
+    }
+}
+
+complex<double> LOAD::get_derivative_of_constant_current_load_scale_with_voltage(double v, complex<double> complex_v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type)
+{
+    double vth = voltage_threshold_of_constant_current_load_in_pu;
+    if(v>vth)
+        return 0.5*conj(complex_v)/v;
+    else
+    {
+        double Imax = 1.0;
+        return get_derivative_of_load_scale_with_Imax_and_voltage(Imax, v, vth, complex_v, cv_type);
+    }
+}
+
+complex<double> LOAD::get_derivative_of_constant_impedance_load_scale_with_voltage(complex<double> complex_v)
+{
+    return conj(complex_v);
+}
+
+complex<double> LOAD::get_derivative_of_load_scale_with_Imax_and_voltage(double Imax, double v, double vth, complex<double> complex_v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type)
+{
+    if(cv_type == LOAD_LINEAR_CV)
+    {
+        return (Imax/vth)*conj(complex_v);
+    }
+    else if(cv_type == LOAD_ELLIPTICAL_CV)
+    {
+        double vscale = v/vth-1.0;
+        double sqrt_one_minus_square_vscale = steps_sqrt(1.0-vscale*vscale);
+        complex<double> dv_over_dcomplex_v = 0.5*conj(complex_v)/v;
+        double k = Imax*(sqrt_one_minus_square_vscale-vscale*v/vth/sqrt_one_minus_square_vscale);
+        return k*dv_over_dcomplex_v;
+    }
+    else
+    {
+        return 0.5*Imax*conj(complex_v)/v;
+    }
+}
+
+
 
 void LOAD::set_voltage_threshold_of_constant_power_load_in_pu(double v)
 {
@@ -736,6 +823,37 @@ complex<double> LOAD::get_dynamics_load_norton_current_in_pu_based_on_system_bas
     {
         double scale = 1.0+get_load_total_scale_factor_in_pu();
         return scale*load_model->get_norton_current_in_pu_based_on_SBASE();
+    }
+    else
+        return 0.0;
+}
+
+complex<double> LOAD::get_derivative_of_load_current_wrt_voltage_on_SBASE()
+{
+    if(status)
+    {
+        double scale = 1.0+get_load_total_scale_factor_in_pu();
+
+        if(load_model!=NULL and not load_model->is_voltage_source())
+            return scale*(load_model->get_derivative_of_load_current_wrt_voltage_on_SBASE());
+        else if(load_model==NULL)
+        {
+            double one_over_sbase = get_toolkit().get_one_over_system_base_power_in_one_over_MVA();
+            double v = busptr->get_positive_sequence_voltage_in_pu();
+            complex<double> complex_v = busptr->get_positive_sequence_complex_voltage_in_pu();
+
+            complex<double> SP = get_nominal_constant_power_load_in_MVA();
+            complex<double> SI = get_nominal_constant_current_load_in_MVA();
+            complex<double> SZ = get_nominal_constant_impedance_load_in_MVA();
+
+            complex<double> s = SP*get_derivative_of_constant_power_load_scale_with_voltage(v, complex_v, LOAD_LINEAR_CV) +
+                                SI*get_derivative_of_constant_current_load_scale_with_voltage(v, complex_v, LOAD_LINEAR_CV) +
+                                SZ*conj(complex_v);
+
+            return (scale*one_over_sbase)*conj(s/complex_v);
+        }
+        else
+            return 0.0;
     }
     else
         return 0.0;

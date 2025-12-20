@@ -15,9 +15,7 @@ class LOAD_MODEL : public MODEL
         virtual ~LOAD_MODEL();
         LOAD* get_load_pointer() const;
 
-        void set_load_model_type(LOAD_MODEL_TYPE type);
         void set_voltage_source_flag(bool flag);
-        LOAD_MODEL_TYPE get_load_model_type() const;
         bool get_voltage_source_flag() const;
         inline bool is_voltage_source() const{return voltage_source_flag;}
 
@@ -64,6 +62,7 @@ class LOAD_MODEL : public MODEL
         virtual complex<double> get_load_power_in_MVA() = 0;
         virtual complex<double> get_load_current_in_pu_based_on_SBASE() = 0;
         virtual complex<double> get_norton_current_in_pu_based_on_SBASE() = 0;
+        virtual complex<double> get_derivative_of_load_current_wrt_voltage_on_SBASE() = 0;
         virtual void check() = 0;
         virtual void clear() = 0;
         virtual void report() = 0;
@@ -84,8 +83,6 @@ class LOAD_MODEL : public MODEL
 
         virtual void build_linearized_matrix_ABCD() = 0;
     private:
-        LOAD_MODEL_TYPE model_type;
-
         SUBSYSTEM_TYPE subsystem_type;
         bool voltage_source_flag;
         double voltage_pu, frequency_deviation_pu;

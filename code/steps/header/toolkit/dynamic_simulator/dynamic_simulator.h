@@ -294,6 +294,8 @@ class DYNAMICS_SIMULATOR
         void build_bus_current_mismatch_vector();
 
         void build_jacobian();
+        void build_basic_jacobian_with_Y_matrix();
+        void update_jacobian_with_load_models();
 
         void check_convergence() const;
 

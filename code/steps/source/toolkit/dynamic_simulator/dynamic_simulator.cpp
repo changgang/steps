@@ -1177,8 +1177,13 @@ void DYNAMICS_SIMULATOR::run_to(double time)
 
     update_with_event(FAULT_OR_OPERATION_EVENT);
 
+    unsigned int jacobian_update_count = 0;
+
     while(TIME<=time-DOUBLE_EPSILON)
     {
+        if(jacobian_update_count<3)
+            build_jacobian();
+        jacobian_update_count++;
         bool change_time_step_for_precise_time = false;
         double old_DELT = DELT;
         if(TIME+DELT>time and fabs(time-TIME)>FLOAT_EPSILON)
@@ -1765,7 +1770,6 @@ bool DYNAMICS_SIMULATOR::solve_network()
             {
                 //if(get_automatic_iteration_accelerator_tune_logic()==true)
                 //    tune_iteration_accelerator_based_on_maximum_current_mismatch(max_current_mismatch_pu);
-
                 delta_V = I_mismatch/jacobian;
                 if(jacobian.is_lu_factorization_failed())
                 {
@@ -3015,6 +3019,20 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
 
 void DYNAMICS_SIMULATOR::build_jacobian()
 {
+    clock_t tstart = clock();
+    build_basic_jacobian_with_Y_matrix();
+    if(true)
+    {
+        update_jacobian_with_load_models();
+    }
+    clock_t tfinished = clock();
+    ostringstream osstream;
+    osstream<<"Successful Jacobian build for dynamic simulation takes "<<(1000.0/double(CLOCKS_PER_SEC))*double(tfinished-tstart)<<" ms\n";
+    toolkit->show_information_with_leading_time_stamp(osstream);
+}
+
+void DYNAMICS_SIMULATOR::build_basic_jacobian_with_Y_matrix()
+{
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     jacobian.clear();
@@ -3049,6 +3067,31 @@ void DYNAMICS_SIMULATOR::build_jacobian()
     jacobian.compress_and_merge_duplicate_entries();
 }
 
+void DYNAMICS_SIMULATOR::update_jacobian_with_load_models()
+{
+    clock_t tstart = clock();
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+    unsigned int nload = loads.size();
+    for(unsigned int i=0; i<nload; ++i)
+    {
+        LOAD* load = loads[i];
+        if(load->get_status()==true)
+        {
+            unsigned int physical_bus = load->get_load_bus();
+            unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+
+            unsigned int k = jacobian.get_entry_index(internal_bus, internal_bus);
+            complex<double> s0 = jacobian.get_entry_value(k);
+
+            complex<double> s = load->get_derivative_of_load_current_wrt_voltage_on_SBASE();
+            jacobian.change_entry_value(k, s0-s);
+        }
+    }
+    clock_t tfinished = clock();
+    ostringstream osstream;
+    osstream<<"Successful Jacobian update with load model for dynamic simulation takes "<<(1000.0/double(CLOCKS_PER_SEC))*double(tfinished-tstart)<<" ms\n";
+    toolkit->show_information_with_leading_time_stamp(osstream);
+}
 
 void DYNAMICS_SIMULATOR::change_dynamic_simulator_time_step_in_s(double delt)
 {

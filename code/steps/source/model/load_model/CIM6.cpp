@@ -85,7 +85,6 @@ CIM6::~CIM6()
 
 void CIM6::clear()
 {
-    set_load_model_type(DYNAMIC_LOAD_MODEL);
     set_voltage_source_flag(true);
 
     set_model_float_parameter_count(23);
@@ -1044,6 +1043,11 @@ complex<double> CIM6::get_norton_current_in_pu_based_on_SBASE()
     STEPS& toolkit = get_toolkit();
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     return I*Mbase*one_over_sbase;
+}
+
+complex<double> CIM6::get_derivative_of_load_current_wrt_voltage_on_SBASE()
+{
+    return 0.0;
 }
 
 void CIM6::check()

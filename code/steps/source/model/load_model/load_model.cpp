@@ -7,7 +7,6 @@
 LOAD_MODEL::LOAD_MODEL(STEPS& toolkit) : MODEL(toolkit)
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_LOAD);
-    model_type = DYNAMIC_LOAD_MODEL;
     Aptr = NULL;
     Bptr = NULL;
     Cptr = NULL;
@@ -43,19 +42,9 @@ LOAD* LOAD_MODEL::get_load_pointer() const
     return (LOAD*) get_device_pointer();
 }
 
-void LOAD_MODEL::set_load_model_type(LOAD_MODEL_TYPE type)
-{
-    model_type = type;
-}
-
 void LOAD_MODEL::set_voltage_source_flag(bool flag)
 {
     voltage_source_flag = flag;
-}
-
-LOAD_MODEL_TYPE LOAD_MODEL::get_load_model_type() const
-{
-    return model_type;
 }
 
 bool LOAD_MODEL::get_voltage_source_flag() const

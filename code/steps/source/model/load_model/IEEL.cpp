@@ -13,7 +13,6 @@ IEEL::~IEEL()
 
 void IEEL::clear()
 {
-    set_load_model_type(STATIC_LOAD_MODEL);
     set_voltage_source_flag(false);
 
     set_model_float_parameter_count(14);
@@ -419,12 +418,12 @@ complex<double> IEEL::get_load_power_in_MVA()
     double f = get_bus_frequency_deviation_in_pu();
     if(is_PIZ)
     {
-        double voltage_scale1 = LOAD::get_constant_power_load_scale_with_voltage(V, LOAD_LINEAR_CV);
-        double voltage_scale2 = LOAD::get_constant_current_load_scale_with_voltage(V, LOAD_LINEAR_CV);
-        double voltage_scale3 = V*V;
+        double voltage_scale_P = LOAD::get_constant_power_load_scale_with_voltage(V, LOAD_LINEAR_CV);
+        double voltage_scale_I = LOAD::get_constant_current_load_scale_with_voltage(V, LOAD_LINEAR_CV);
+        double voltage_scale_Z = V*V;
 
-        double P_scale = P_alpha_1*voltage_scale1 + P_alpha_2*voltage_scale2 + P_alpha_3*voltage_scale3;
-        double Q_scale = Q_alpha_1*voltage_scale1 + Q_alpha_2*voltage_scale2 + Q_alpha_3*voltage_scale3;
+        double P_scale = P_alpha_1*voltage_scale_P + P_alpha_2*voltage_scale_I + P_alpha_3*voltage_scale_Z;
+        double Q_scale = Q_alpha_1*voltage_scale_P + Q_alpha_2*voltage_scale_I + Q_alpha_3*voltage_scale_Z;
 
         double P = P0*P_scale*(1.0+P_Kf*f);
         double Q = Q0*Q_scale*(1.0+Q_Kf*f);
@@ -472,6 +471,56 @@ complex<double> IEEL::get_load_current_in_pu_based_on_SBASE()
 complex<double> IEEL::get_norton_current_in_pu_based_on_SBASE()
 {
     return 0.0;
+}
+
+complex<double> IEEL::get_derivative_of_load_current_wrt_voltage_on_SBASE()
+{
+    STEPS& toolkit = get_toolkit();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
+    double V = get_bus_positive_sequence_voltage_in_pu();
+    complex<double> complex_v = get_bus_positive_sequence_complex_voltage_in_pu();
+    double f = get_bus_frequency_deviation_in_pu();
+    complex<double> j = complex<double>(0, 1.0);
+    if(is_PIZ)
+    {
+        complex<double> d_voltage_scale_P_over_d_complex_v = LOAD::get_derivative_of_constant_power_load_scale_with_voltage(V, complex_v, LOAD_LINEAR_CV);
+        complex<double> d_voltage_scale_I_over_d_complex_v = LOAD::get_derivative_of_constant_current_load_scale_with_voltage(V, complex_v, LOAD_LINEAR_CV);
+        complex<double> d_voltage_scale_Z_over_d_complex_v = conj(complex_v);
+
+        complex<double> dP_scale_over_d_complex_v = P_alpha_1*d_voltage_scale_P_over_d_complex_v + P_alpha_2*d_voltage_scale_I_over_d_complex_v + P_alpha_3*d_voltage_scale_Z_over_d_complex_v;
+        complex<double> dQ_scale_over_d_complex_v = Q_alpha_1*d_voltage_scale_P_over_d_complex_v + Q_alpha_2*d_voltage_scale_I_over_d_complex_v + Q_alpha_3*d_voltage_scale_Z_over_d_complex_v;
+
+        complex<double> dP_over_d_complex_v = P0*dP_scale_over_d_complex_v*(1.0+P_Kf*f);
+        complex<double> dQ_over_d_complex_v = Q0*dQ_scale_over_d_complex_v*(1.0+Q_Kf*f);
+
+        return one_over_sbase*(dP_over_d_complex_v-j*dQ_over_d_complex_v)/conj(complex_v);
+    }
+    else
+    {
+        complex<double> d_voltage_scale1_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(P_n_power_1, V, complex_v, LOAD_LINEAR_CV);
+        complex<double> d_voltage_scale2_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(P_n_power_2, V, complex_v, LOAD_LINEAR_CV);
+        complex<double> d_voltage_scale3_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(P_n_power_3, V, complex_v, LOAD_LINEAR_CV);
+
+         complex<double> d_scale_over_d_complex_v = P_alpha_1*d_voltage_scale1_over_d_complex_v + P_alpha_2*d_voltage_scale2_over_d_complex_v + P_alpha_3*d_voltage_scale3_over_d_complex_v;
+
+        complex<double> dP_over_d_complex_v = P0*d_scale_over_d_complex_v*(1.0+P_Kf*f);
+
+        if(fabs(P_n_power_1-Q_n_power_1)<FLOAT_EPSILON and fabs(P_n_power_2-Q_n_power_2)<FLOAT_EPSILON and fabs(P_n_power_3-Q_n_power_3)<FLOAT_EPSILON)
+        {
+            d_scale_over_d_complex_v = Q_alpha_1*d_voltage_scale1_over_d_complex_v + Q_alpha_2*d_voltage_scale2_over_d_complex_v + Q_alpha_3*d_voltage_scale3_over_d_complex_v;
+        }
+        else
+        {
+            d_voltage_scale1_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(Q_n_power_1, V, complex_v, LOAD_LINEAR_CV);
+            d_voltage_scale2_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(Q_n_power_2, V, complex_v, LOAD_LINEAR_CV);
+            d_voltage_scale3_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(Q_n_power_3, V, complex_v, LOAD_LINEAR_CV);
+
+            d_scale_over_d_complex_v = Q_alpha_1*d_voltage_scale1_over_d_complex_v + Q_alpha_2*d_voltage_scale2_over_d_complex_v + Q_alpha_3*d_voltage_scale3_over_d_complex_v;
+        }
+        complex<double> dQ_over_d_complex_v = Q0*d_scale_over_d_complex_v*(1.0+Q_Kf*f);
+
+        return one_over_sbase*(dP_over_d_complex_v-j*dQ_over_d_complex_v)/conj(complex_v);
+    }
 }
 
 void IEEL::check()

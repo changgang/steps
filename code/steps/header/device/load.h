@@ -70,11 +70,19 @@ class LOAD : public NONBUS_DEVICE
         complex<double> get_actual_constant_power_load_in_MVA() const;
         complex<double> get_actual_constant_current_load_in_MVA() const;
         complex<double> get_actual_constant_impedance_load_in_MVA() const;
+
         static double get_load_scale_with_voltage(double exp, double v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type = LOAD_ELLIPTICAL_CV);
         static double get_constant_power_load_scale_with_voltage(double v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type = LOAD_ELLIPTICAL_CV);
         static double get_constant_current_load_scale_with_voltage(double v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type = LOAD_ELLIPTICAL_CV);
         static double get_constant_impedance_load_scale_with_voltage(double v);
         static double get_load_scale_with_Imax_and_voltage(double Imax, double v, double vth, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type);
+
+        static complex<double> get_derivative_of_load_scale_with_voltage(double exp, double v, complex<double> complex_v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type = LOAD_ELLIPTICAL_CV);
+        static complex<double> get_derivative_of_constant_power_load_scale_with_voltage(double v, complex<double> complex_v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type = LOAD_ELLIPTICAL_CV);
+        static complex<double> get_derivative_of_constant_current_load_scale_with_voltage(double v, complex<double> complex_v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type = LOAD_ELLIPTICAL_CV);
+        static complex<double> get_derivative_of_constant_impedance_load_scale_with_voltage(complex<double> complex_v);
+        static complex<double> get_derivative_of_load_scale_with_Imax_and_voltage(double Imax, double v, double vth, complex<double> complex_v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type);
+
 
         static void set_voltage_threshold_of_constant_power_load_in_pu(double v);
         static void set_voltage_threshold_of_constant_current_load_in_pu(double v);
@@ -102,6 +110,7 @@ class LOAD : public NONBUS_DEVICE
         double get_load_relay_shed_scale_factor_in_pu() const;
         complex<double> get_dynamics_load_current_in_pu_based_on_system_base_power();
         complex<double> get_dynamics_load_norton_current_in_pu_based_on_system_base_power();
+        complex<double> get_derivative_of_load_current_wrt_voltage_on_SBASE();
 
         complex<double> get_positive_sequence_complex_current_in_pu();
         complex<double> get_negative_sequence_complex_current_in_pu();
