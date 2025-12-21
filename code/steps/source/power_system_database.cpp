@@ -1425,6 +1425,38 @@ void POWER_SYSTEM_DATABASE::replace_generator_with_sv_source(DEVICE_ID& gendid)
     }
 }
 
+void POWER_SYSTEM_DATABASE::copy_bus(unsigned int new_bus_number, string new_bus_name, double new_basekV, unsigned int old_bus_number)
+{
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+    if(not is_bus_exist(new_bus_number))
+    {
+        if(is_bus_exist(old_bus_number))
+        {
+            BUS new_bus(toolkit);
+            BUS* old_bus = get_bus(old_bus_number);
+
+            new_bus.set_bus_number(new_bus_number);
+            new_bus.set_bus_name(new_bus_name);
+            new_bus.set_base_voltage_in_kV(new_basekV);
+
+            new_bus.copy_basic_data_from_bus(*old_bus);
+
+            append_bus(new_bus);
+        }
+        else
+        {
+            osstream<<"Bus "<<old_bus_number<<" does not exist in POWER_SYSTEM_DATABASE when copying bus as source.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<"Bus "<<new_bus_number<<" already exists in POWER_SYSTEM_DATABASE when copying bus as destination.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+}
+
 void POWER_SYSTEM_DATABASE::copy_generator(DEVICE_ID& new_did, DEVICE_ID& old_did)
 {
     STEPS& toolkit = get_toolkit();
@@ -1447,24 +1479,12 @@ void POWER_SYSTEM_DATABASE::copy_generator(DEVICE_ID& new_did, DEVICE_ID& old_di
             string identifier = new_did.get_device_identifier();
 
             GENERATOR new_gen(toolkit);
+            GENERATOR* old_gen = get_generator(old_did);
+
             new_gen.set_generator_bus(bus);
             new_gen.set_identifier(identifier);
 
-            GENERATOR* old_gen = get_generator(old_did);
-
-            new_gen.set_status(old_gen->get_status());
-            new_gen.set_mbase_in_MVA(old_gen->get_mbase_in_MVA());
-            new_gen.set_p_generation_in_MW(old_gen->get_p_generation_in_MW());
-            new_gen.set_q_generation_in_MVar(old_gen->get_q_generation_in_MVar());
-            new_gen.set_p_max_in_MW(old_gen->get_p_max_in_MW());
-            new_gen.set_p_min_in_MW(old_gen->get_p_min_in_MW());
-            new_gen.set_q_max_in_MVar(old_gen->get_q_max_in_MVar());
-            new_gen.set_q_min_in_MVar(old_gen->get_q_min_in_MVar());
-            new_gen.set_q_max_nominal_in_MVar(old_gen->get_q_max_nominal_in_MVar());
-            new_gen.set_q_min_nominal_in_MVar(old_gen->get_q_min_nominal_in_MVar());
-            new_gen.set_source_impedance_in_pu(old_gen->get_source_impedance_in_pu());
-            new_gen.set_voltage_to_regulate_in_pu(old_gen->get_voltage_to_regulate_in_pu());
-            new_gen.set_bus_to_regulate(old_gen->get_bus_to_regulate());
+            new_gen.copy_basic_data_from_generator(*old_gen);
 
             append_generator(new_gen);
         }
@@ -1503,24 +1523,12 @@ void POWER_SYSTEM_DATABASE::copy_wt_generator(DEVICE_ID& new_did, DEVICE_ID& old
             string identifier = new_did.get_device_identifier();
 
             WT_GENERATOR new_wt_gen(toolkit);
+            WT_GENERATOR* old_wt_gen = get_wt_generator(old_did);
+
             new_wt_gen.set_generator_bus(bus);
             new_wt_gen.set_identifier(identifier);
 
-            WT_GENERATOR* old_wt_gen = get_wt_generator(old_did);
-
-            new_wt_gen.set_status(old_wt_gen->get_status());
-            new_wt_gen.set_mbase_in_MVA(old_wt_gen->get_mbase_in_MVA());
-            new_wt_gen.set_p_generation_in_MW(old_wt_gen->get_p_generation_in_MW());
-            new_wt_gen.set_q_generation_in_MVar(old_wt_gen->get_q_generation_in_MVar());
-            new_wt_gen.set_p_max_in_MW(old_wt_gen->get_p_max_in_MW());
-            new_wt_gen.set_p_min_in_MW(old_wt_gen->get_p_min_in_MW());
-            new_wt_gen.set_q_max_in_MVar(old_wt_gen->get_q_max_in_MVar());
-            new_wt_gen.set_q_min_in_MVar(old_wt_gen->get_q_min_in_MVar());
-            new_wt_gen.set_q_max_nominal_in_MVar(old_wt_gen->get_q_max_nominal_in_MVar());
-            new_wt_gen.set_q_min_nominal_in_MVar(old_wt_gen->get_q_min_nominal_in_MVar());
-            new_wt_gen.set_source_impedance_in_pu(old_wt_gen->get_source_impedance_in_pu());
-            new_wt_gen.set_voltage_to_regulate_in_pu(old_wt_gen->get_voltage_to_regulate_in_pu());
-            new_wt_gen.set_bus_to_regulate(old_wt_gen->get_bus_to_regulate());
+            new_wt_gen.copy_basic_data_from_wt_generator(*old_wt_gen);
 
             append_wt_generator(new_wt_gen);
         }
@@ -1559,24 +1567,12 @@ void POWER_SYSTEM_DATABASE::copy_pv_unit(DEVICE_ID& new_did, DEVICE_ID& old_did)
             string identifier = new_did.get_device_identifier();
 
             PV_UNIT new_pvu(toolkit);
+            PV_UNIT* old_pvu = get_pv_unit(old_did);
+
             new_pvu.set_unit_bus(bus);
             new_pvu.set_identifier(identifier);
 
-            PV_UNIT* old_pvu = get_pv_unit(old_did);
-
-            new_pvu.set_status(old_pvu->get_status());
-            new_pvu.set_mbase_in_MVA(old_pvu->get_mbase_in_MVA());
-            new_pvu.set_p_generation_in_MW(old_pvu->get_p_generation_in_MW());
-            new_pvu.set_q_generation_in_MVar(old_pvu->get_q_generation_in_MVar());
-            new_pvu.set_p_max_in_MW(old_pvu->get_p_max_in_MW());
-            new_pvu.set_p_min_in_MW(old_pvu->get_p_min_in_MW());
-            new_pvu.set_q_max_in_MVar(old_pvu->get_q_max_in_MVar());
-            new_pvu.set_q_min_in_MVar(old_pvu->get_q_min_in_MVar());
-            new_pvu.set_q_max_nominal_in_MVar(old_pvu->get_q_max_nominal_in_MVar());
-            new_pvu.set_q_min_nominal_in_MVar(old_pvu->get_q_min_nominal_in_MVar());
-            new_pvu.set_source_impedance_in_pu(old_pvu->get_source_impedance_in_pu());
-            new_pvu.set_voltage_to_regulate_in_pu(old_pvu->get_voltage_to_regulate_in_pu());
-            new_pvu.set_bus_to_regulate(old_pvu->get_bus_to_regulate());
+            new_pvu.copy_basic_data_from_pv_unit(*old_pvu);
 
             append_pv_unit(new_pvu);
         }
@@ -1615,24 +1611,12 @@ void POWER_SYSTEM_DATABASE::copy_energy_storage(DEVICE_ID& new_did, DEVICE_ID& o
             string identifier = new_did.get_device_identifier();
 
             ENERGY_STORAGE new_es(toolkit);
+            ENERGY_STORAGE* old_es = get_energy_storage(old_did);
+
             new_es.set_energy_storage_bus(bus);
             new_es.set_identifier(identifier);
 
-            ENERGY_STORAGE* old_es = get_energy_storage(old_did);
-
-            new_es.set_status(old_es->get_status());
-            new_es.set_mbase_in_MVA(old_es->get_mbase_in_MVA());
-            new_es.set_p_generation_in_MW(old_es->get_p_generation_in_MW());
-            new_es.set_q_generation_in_MVar(old_es->get_q_generation_in_MVar());
-            new_es.set_p_max_in_MW(old_es->get_p_max_in_MW());
-            new_es.set_p_min_in_MW(old_es->get_p_min_in_MW());
-            new_es.set_q_max_in_MVar(old_es->get_q_max_in_MVar());
-            new_es.set_q_min_in_MVar(old_es->get_q_min_in_MVar());
-            new_es.set_q_max_nominal_in_MVar(old_es->get_q_max_nominal_in_MVar());
-            new_es.set_q_min_nominal_in_MVar(old_es->get_q_min_nominal_in_MVar());
-            new_es.set_source_impedance_in_pu(old_es->get_source_impedance_in_pu());
-            new_es.set_voltage_to_regulate_in_pu(old_es->get_voltage_to_regulate_in_pu());
-            new_es.set_bus_to_regulate(old_es->get_bus_to_regulate());
+            new_es.copy_basic_data_from_energy_storage(*old_es);
 
             append_energy_storage(new_es);
         }
@@ -1671,24 +1655,12 @@ void POWER_SYSTEM_DATABASE::copy_sv_source(DEVICE_ID& new_did, DEVICE_ID& old_di
             string identifier = new_did.get_device_identifier();
 
             SV_SOURCE new_svs(toolkit);
+            SV_SOURCE* old_svs = get_sv_source(old_did);
+
             new_svs.set_sv_source_bus(bus);
             new_svs.set_identifier(identifier);
 
-            SV_SOURCE* old_svs = get_sv_source(old_did);
-
-            new_svs.set_status(old_svs->get_status());
-            new_svs.set_mbase_in_MVA(old_svs->get_mbase_in_MVA());
-            new_svs.set_p_generation_in_MW(old_svs->get_p_generation_in_MW());
-            new_svs.set_q_generation_in_MVar(old_svs->get_q_generation_in_MVar());
-            new_svs.set_p_max_in_MW(old_svs->get_p_max_in_MW());
-            new_svs.set_p_min_in_MW(old_svs->get_p_min_in_MW());
-            new_svs.set_q_max_in_MVar(old_svs->get_q_max_in_MVar());
-            new_svs.set_q_min_in_MVar(old_svs->get_q_min_in_MVar());
-            new_svs.set_q_max_nominal_in_MVar(old_svs->get_q_max_nominal_in_MVar());
-            new_svs.set_q_min_nominal_in_MVar(old_svs->get_q_min_nominal_in_MVar());
-            new_svs.set_source_impedance_in_pu(old_svs->get_source_impedance_in_pu());
-            new_svs.set_voltage_to_regulate_in_pu(old_svs->get_voltage_to_regulate_in_pu());
-            new_svs.set_bus_to_regulate(old_svs->get_bus_to_regulate());
+            new_svs.copy_basic_data_from_sv_source(*old_svs);
 
             append_sv_source(new_svs);
         }
@@ -1707,27 +1679,310 @@ void POWER_SYSTEM_DATABASE::copy_sv_source(DEVICE_ID& new_did, DEVICE_ID& old_di
 
 void POWER_SYSTEM_DATABASE::copy_load(DEVICE_ID& new_did, DEVICE_ID& old_did)
 {
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+    if(new_did.get_device_type() != STEPS_LOAD or old_did.get_device_type() != STEPS_LOAD)
+    {
+        osstream<<"Warning. DEVICE_ID with type STEPS_LOAD is required when copying load in POWER_SYSTEM_DATABASE."<<endl
+                <<"However, "<<new_did.get_compound_device_name()<<" and "<<old_did.get_compound_device_name()<<" are provided."<<endl
+                <<"No copy operation will be executed.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    if(not is_load_exist(new_did))
+    {
+        if(is_load_exist(old_did))
+        {
+            TERMINAL terminal = new_did.get_device_terminal();
+            vector<unsigned int> buses = terminal.get_buses();
+            unsigned int bus = buses[0];
+            string identifier = new_did.get_device_identifier();
 
+            LOAD new_load(toolkit);
+            LOAD* old_load = get_load(old_did);
+
+            new_load.set_load_bus(bus);
+            new_load.set_identifier(identifier);
+
+            new_load.copy_basic_data_from_load(*old_load);
+
+            append_load(new_load);
+        }
+        else
+        {
+            osstream<<old_did.get_compound_device_name()<<" does not exist in POWER_SYSTEM_DATABASE when copying load as source.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<new_did.get_compound_device_name()<<" already exists in POWER_SYSTEM_DATABASE when copying load as destination.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
 }
 
 void POWER_SYSTEM_DATABASE::copy_fixed_shunt(DEVICE_ID& new_did, DEVICE_ID& old_did)
 {
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+    if(new_did.get_device_type() != STEPS_FIXED_SHUNT or old_did.get_device_type() != STEPS_FIXED_SHUNT)
+    {
+        osstream<<"Warning. DEVICE_ID with type STEPS_FIXED_SHUNT is required when copying fixed shunt in POWER_SYSTEM_DATABASE."<<endl
+                <<"However, "<<new_did.get_compound_device_name()<<" and "<<old_did.get_compound_device_name()<<" are provided."<<endl
+                <<"No copy operation will be executed.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    if(not is_fixed_shunt_exist(new_did))
+    {
+        if(is_fixed_shunt_exist(old_did))
+        {
+            TERMINAL terminal = new_did.get_device_terminal();
+            vector<unsigned int> buses = terminal.get_buses();
+            unsigned int bus = buses[0];
+            string identifier = new_did.get_device_identifier();
 
+            FIXED_SHUNT new_fixed_shunt(toolkit);
+            FIXED_SHUNT* old_fixed_shunt = get_fixed_shunt(old_did);
+
+            new_fixed_shunt.set_shunt_bus(bus);
+            new_fixed_shunt.set_identifier(identifier);
+
+            new_fixed_shunt.copy_basic_data_from_fixed_shunt(*old_fixed_shunt);
+
+            append_fixed_shunt(new_fixed_shunt);
+        }
+        else
+        {
+            osstream<<old_did.get_compound_device_name()<<" does not exist in POWER_SYSTEM_DATABASE when copying fixed shunt as source.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<new_did.get_compound_device_name()<<" already exists in POWER_SYSTEM_DATABASE when copying fixed shunt as destination.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
 }
 
 void POWER_SYSTEM_DATABASE::copy_ac_line(DEVICE_ID& new_did, DEVICE_ID& old_did)
 {
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+    if(new_did.get_device_type() != STEPS_AC_LINE or old_did.get_device_type() != STEPS_AC_LINE)
+    {
+        osstream<<"Warning. DEVICE_ID with type STEPS_AC_LINE is required when copying ac line in POWER_SYSTEM_DATABASE."<<endl
+                <<"However, "<<new_did.get_compound_device_name()<<" and "<<old_did.get_compound_device_name()<<" are provided."<<endl
+                <<"No copy operation will be executed.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    if(not is_ac_line_exist(new_did))
+    {
+        if(is_ac_line_exist(old_did))
+        {
+            TERMINAL terminal = new_did.get_device_terminal();
+            vector<unsigned int> buses = terminal.get_buses();
+            unsigned int ibus = buses[0];
+            unsigned int jbus = buses[1];
+            string identifier = new_did.get_device_identifier();
 
+            AC_LINE new_line(toolkit);
+            AC_LINE* old_line = get_ac_line(old_did);
+
+            new_line.set_sending_side_bus(ibus);
+            new_line.set_receiving_side_bus(jbus);
+            new_line.set_identifier(identifier);
+
+            new_line.copy_basic_data_from_ac_line(*old_line);
+
+            append_ac_line(new_line);
+        }
+        else
+        {
+            osstream<<old_did.get_compound_device_name()<<" does not exist in POWER_SYSTEM_DATABASE when copying ac line as source.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<new_did.get_compound_device_name()<<" already exists in POWER_SYSTEM_DATABASE when copying ac line as destination.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
 }
 
 void POWER_SYSTEM_DATABASE::copy_transformer(DEVICE_ID& new_did, DEVICE_ID& old_did)
 {
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+    if(new_did.get_device_type() != STEPS_TRANSFORMER or old_did.get_device_type() != STEPS_TRANSFORMER)
+    {
+        osstream<<"Warning. DEVICE_ID with type STEPS_TRANSFORMER is required when copying transformer in POWER_SYSTEM_DATABASE."<<endl
+                <<"However, "<<new_did.get_compound_device_name()<<" and "<<old_did.get_compound_device_name()<<" are provided."<<endl
+                <<"No copy operation will be executed.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    if(not is_transformer_exist(new_did))
+    {
+        if(is_transformer_exist(old_did))
+        {
+            TERMINAL terminal = new_did.get_device_terminal();
+            vector<unsigned int> buses = terminal.get_buses();
+            unsigned int ibus = buses[0];
+            unsigned int jbus = buses[1];
+            unsigned int kbus = 0;
+            if(buses.size()==3)
+                kbus = buses[2];
+            string identifier = new_did.get_device_identifier();
 
+            terminal = old_did.get_device_terminal();
+            buses = terminal.get_buses();
+            unsigned int ibus2 = buses[0];
+            unsigned int jbus2 = buses[1];
+            unsigned int kbus2 = 0;
+            if(buses.size()==3)
+                kbus2 = buses[2];
+
+            if((kbus==0 and kbus2!=0) or (kbus!=0 and kbus2==0))
+            {
+                osstream<<"Warning. 2-winding and 3-winding transformers are not copiable when copying transformer in POWER_SYSTEM_DATABASE."<<endl
+                        <<new_did.get_compound_device_name()<<" and "<<old_did.get_compound_device_name()<<" are provided."<<endl
+                        <<"No copy operation will be executed.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                return;
+            }
+            TRANSFORMER  new_transformer(toolkit);
+            TRANSFORMER* old_transformer = get_transformer(old_did);
+            if(kbus == 0)
+            {
+                double ibasekV = get_bus_base_voltage_in_kV(ibus);
+                double jbasekV = get_bus_base_voltage_in_kV(jbus);
+                double ibasekV2 = get_bus_base_voltage_in_kV(ibus2);
+                double jbasekV2 = get_bus_base_voltage_in_kV(jbus2);
+                if(ibasekV>jbasekV and ibasekV2>jbasekV2)
+                {
+                    new_transformer.set_winding_bus(old_transformer->get_winding_bus_side(ibus2), ibus);
+                    new_transformer.set_winding_bus(old_transformer->get_winding_bus_side(jbus2), jbus);
+                }
+                else
+                {
+                    new_transformer.set_winding_bus(old_transformer->get_winding_bus_side(ibus2), jbus);
+                    new_transformer.set_winding_bus(old_transformer->get_winding_bus_side(jbus2), ibus);
+                }
+            }
+            else
+            {
+                unsigned int bus_with_greatest_vbase = get_bus_with_greatest_vbase(ibus, jbus, kbus);
+                unsigned int bus_with_medium_vbase   =   get_bus_with_medium_vbase(ibus, jbus, kbus);
+                unsigned int bus_with_lowest_vbase   =   get_bus_with_lowest_vbase(ibus, jbus, kbus);
+
+                unsigned int bus_with_greatest_vbase2 = get_bus_with_greatest_vbase(ibus2, jbus2, kbus2);
+                unsigned int bus_with_medium_vbase2   =   get_bus_with_medium_vbase(ibus2, jbus2, kbus2);
+                unsigned int bus_with_lowest_vbase2   =   get_bus_with_lowest_vbase(ibus2, jbus2, kbus2);
+
+
+                new_transformer.set_winding_bus(old_transformer->get_winding_bus_side(bus_with_greatest_vbase2), bus_with_greatest_vbase);
+                new_transformer.set_winding_bus(old_transformer->get_winding_bus_side(bus_with_medium_vbase2), bus_with_medium_vbase);
+                new_transformer.set_winding_bus(old_transformer->get_winding_bus_side(bus_with_lowest_vbase2), bus_with_lowest_vbase);
+            }
+            new_transformer.set_identifier(identifier);
+
+            new_transformer.copy_basic_data_from_transformer(*old_transformer);
+
+            append_transformer(new_transformer);
+        }
+        else
+        {
+            osstream<<old_did.get_compound_device_name()<<" does not exist in POWER_SYSTEM_DATABASE when copying transformer as source.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<new_did.get_compound_device_name()<<" already exists in POWER_SYSTEM_DATABASE when copying transformer as destination.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
 }
 
-void POWER_SYSTEM_DATABASE::copy_lcc_hvdc2t(DEVICE_ID& new_did, DEVICE_ID& old_did)
+unsigned int POWER_SYSTEM_DATABASE::get_bus_with_greatest_vbase(unsigned int ibus, unsigned int jbus, unsigned int kbus) const
 {
+    double ibasekV = get_bus_base_voltage_in_kV(ibus);
+    double jbasekV = get_bus_base_voltage_in_kV(jbus);
+    double kbasekV = get_bus_base_voltage_in_kV(kbus);
+    if(ibasekV>jbasekV and ibasekV>kbasekV)
+        return ibus;
+    else if(jbasekV>ibasekV and jbasekV>kbasekV)
+        return jbus;
+    else
+        return kbus;
+}
 
+unsigned int POWER_SYSTEM_DATABASE::get_bus_with_medium_vbase(unsigned int ibus, unsigned int jbus, unsigned int kbus) const
+{
+    double ibasekV = get_bus_base_voltage_in_kV(ibus);
+    double jbasekV = get_bus_base_voltage_in_kV(jbus);
+    double kbasekV = get_bus_base_voltage_in_kV(kbus);
+    if((jbasekV-ibasekV)*(kbasekV-ibasekV)>0.0)
+        return ibus;
+    else if((ibasekV-jbasekV)*(kbasekV-jbasekV)>0.0)
+        return jbus;
+    else
+        return kbus;
+}
+
+unsigned int POWER_SYSTEM_DATABASE::get_bus_with_lowest_vbase(unsigned int ibus, unsigned int jbus, unsigned int kbus) const
+{
+    double ibasekV = get_bus_base_voltage_in_kV(ibus);
+    double jbasekV = get_bus_base_voltage_in_kV(jbus);
+    double kbasekV = get_bus_base_voltage_in_kV(kbus);
+    if(ibasekV<jbasekV and ibasekV<kbasekV)
+        return ibus;
+    else if(jbasekV<ibasekV and jbasekV<kbasekV)
+        return jbus;
+    else
+        return kbus;
+}
+
+void POWER_SYSTEM_DATABASE::copy_lcc_hvdc2t(unsigned int new_rec_bus_number, unsigned int new_inv_bus_number, char* new_hvdcname, DEVICE_ID& old_did)
+{
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+    DEVICE_ID new_did = get_lcc_hvdc2t_device_id(new_rec_bus_number, new_inv_bus_number, new_hvdcname);
+    if(new_did.get_device_type() != STEPS_LCC_HVDC2T or old_did.get_device_type() != STEPS_LCC_HVDC2T)
+    {
+        osstream<<"Warning. DEVICE_ID with type STEPS_LCC_HVDC2T is required when copying lcc hvdc 2t in POWER_SYSTEM_DATABASE."<<endl
+                <<"However, "<<new_did.get_compound_device_name()<<" and "<<old_did.get_compound_device_name()<<" are provided."<<endl
+                <<"No copy operation will be executed.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    if(not is_lcc_hvdc2t_exist(new_did))
+    {
+        if(is_lcc_hvdc2t_exist(old_did))
+        {
+            LCC_HVDC2T new_hvdc(toolkit);
+            LCC_HVDC2T* old_hvdc = get_lcc_hvdc2t(old_did);
+
+            new_hvdc.set_converter_bus(RECTIFIER, new_rec_bus_number);
+            new_hvdc.set_converter_bus(INVERTER, new_inv_bus_number);
+            new_hvdc.set_identifier(new_hvdcname);
+
+            new_hvdc.copy_basic_data_from_lcc_hvdc2t(*old_hvdc);
+
+            append_lcc_hvdc2t(new_hvdc);
+        }
+        else
+        {
+            osstream<<old_did.get_compound_device_name()<<" does not exist in POWER_SYSTEM_DATABASE when copying lcc hvdc 2t as source.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<new_did.get_compound_device_name()<<" already exists in POWER_SYSTEM_DATABASE when copying lcc hvdc 2t as destination.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
 }
 
 void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEVICE_ID& did_new)
@@ -2460,7 +2715,7 @@ void POWER_SYSTEM_DATABASE::change_bus_number_with_file(string file)
     fclose(fid);
 }
 
-DEVICE* POWER_SYSTEM_DATABASE::get_device(const DEVICE_ID& device_id)
+DEVICE* POWER_SYSTEM_DATABASE::get_device(const DEVICE_ID& device_id) const
 {
     // this function is not tested
     if(device_id.is_valid())
@@ -2475,7 +2730,7 @@ DEVICE* POWER_SYSTEM_DATABASE::get_device(const DEVICE_ID& device_id)
         return NULL;
 }
 
-NONBUS_DEVICE* POWER_SYSTEM_DATABASE::get_nonbus_device(const DEVICE_ID& device_id)
+NONBUS_DEVICE* POWER_SYSTEM_DATABASE::get_nonbus_device(const DEVICE_ID& device_id) const
 {
     // this function is not tested
     if(device_id.is_valid())
@@ -2526,16 +2781,16 @@ NONBUS_DEVICE* POWER_SYSTEM_DATABASE::get_nonbus_device(const DEVICE_ID& device_
         return NULL;
 }
 
-BUS* POWER_SYSTEM_DATABASE::get_bus(unsigned int bus)
+BUS* POWER_SYSTEM_DATABASE::get_bus(unsigned int bus) const
 {
     unsigned int index = bus_index.get_index_of_bus(bus);
     if(index!=INDEX_NOT_EXIST)
-        return &(Bus[index]);
+        return const_cast<BUS*>(&(Bus[index]));
     else
         return NULL;
 }
 
-BUS* POWER_SYSTEM_DATABASE::get_bus(const DEVICE_ID & device_id)
+BUS* POWER_SYSTEM_DATABASE::get_bus(const DEVICE_ID & device_id) const
 {
     if(device_id.is_valid())
     {
@@ -2552,52 +2807,52 @@ BUS* POWER_SYSTEM_DATABASE::get_bus(const DEVICE_ID & device_id)
         return NULL;
 }
 
-GENERATOR* POWER_SYSTEM_DATABASE::get_generator(const DEVICE_ID & device_id)
+GENERATOR* POWER_SYSTEM_DATABASE::get_generator(const DEVICE_ID & device_id) const
 {
     unsigned int index = generator_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
-        return &(Generator[index]);
+        return const_cast<GENERATOR*>(&(Generator[index]));
     else
         return NULL;
 }
 
-WT_GENERATOR* POWER_SYSTEM_DATABASE::get_wt_generator(const DEVICE_ID & device_id)
+WT_GENERATOR* POWER_SYSTEM_DATABASE::get_wt_generator(const DEVICE_ID & device_id) const
 {
     unsigned int index = wt_generator_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
-        return &(WT_Generator[index]);
+        return const_cast<WT_GENERATOR*>(&(WT_Generator[index]));
     else
         return NULL;
 }
 
-PV_UNIT* POWER_SYSTEM_DATABASE::get_pv_unit(const DEVICE_ID & device_id)
+PV_UNIT* POWER_SYSTEM_DATABASE::get_pv_unit(const DEVICE_ID & device_id) const
 {
     unsigned int index = pv_unit_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
-        return &(PV_Unit[index]);
+        return const_cast<PV_UNIT*>(&(PV_Unit[index]));
     else
         return NULL;
 }
 
-ENERGY_STORAGE* POWER_SYSTEM_DATABASE::get_energy_storage(const DEVICE_ID & device_id)
+ENERGY_STORAGE* POWER_SYSTEM_DATABASE::get_energy_storage(const DEVICE_ID & device_id) const
 {
     unsigned int index = energy_storage_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
-        return &(Energy_storage[index]);
+        return const_cast<ENERGY_STORAGE*>(&(Energy_storage[index]));
     else
         return NULL;
 }
 
-SV_SOURCE* POWER_SYSTEM_DATABASE::get_sv_source(const DEVICE_ID & device_id)
+SV_SOURCE* POWER_SYSTEM_DATABASE::get_sv_source(const DEVICE_ID & device_id) const
 {
     unsigned int index = sv_source_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
-        return &(SV_source[index]);
+        return const_cast<SV_SOURCE*>(&(SV_source[index]));
     else
         return NULL;
 }
 
-SOURCE* POWER_SYSTEM_DATABASE::get_source(const DEVICE_ID & device_id)
+SOURCE* POWER_SYSTEM_DATABASE::get_source(const DEVICE_ID & device_id) const
 {
     switch(device_id.get_device_type())
     {
@@ -2616,123 +2871,123 @@ SOURCE* POWER_SYSTEM_DATABASE::get_source(const DEVICE_ID & device_id)
     }
 }
 
-LOAD* POWER_SYSTEM_DATABASE::get_load(const DEVICE_ID & device_id)
+LOAD* POWER_SYSTEM_DATABASE::get_load(const DEVICE_ID & device_id) const
 {
     unsigned int index = load_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
-        return &(Load[index]);
+        return const_cast<LOAD*>(&(Load[index]));
     else
         return NULL;
 }
 
-FIXED_SHUNT* POWER_SYSTEM_DATABASE::get_fixed_shunt(const DEVICE_ID & device_id)
+FIXED_SHUNT* POWER_SYSTEM_DATABASE::get_fixed_shunt(const DEVICE_ID & device_id) const
 {
     unsigned int index = fixed_shunt_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
-        return &(Fixed_shunt[index]);
+        return const_cast<FIXED_SHUNT*>(&(Fixed_shunt[index]));
     else
         return NULL;
 }
 
-AC_LINE* POWER_SYSTEM_DATABASE::get_ac_line(const DEVICE_ID & device_id)
+AC_LINE* POWER_SYSTEM_DATABASE::get_ac_line(const DEVICE_ID & device_id) const
 {
     unsigned int index = ac_line_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
-        return &(Ac_line[index]);
+        return const_cast<AC_LINE*>(&(Ac_line[index]));
     else
         return NULL;
 }
 
-TRANSFORMER* POWER_SYSTEM_DATABASE::get_transformer(const DEVICE_ID & device_id)
+TRANSFORMER* POWER_SYSTEM_DATABASE::get_transformer(const DEVICE_ID & device_id) const
 {
     unsigned int index = transformer_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
-        return &(Transformer[index]);
+        return const_cast<TRANSFORMER*>(&(Transformer[index]));
     else
         return NULL;
 }
 
-LCC_HVDC2T* POWER_SYSTEM_DATABASE::get_lcc_hvdc2t(const DEVICE_ID & device_id)
+LCC_HVDC2T* POWER_SYSTEM_DATABASE::get_lcc_hvdc2t(const DEVICE_ID & device_id) const
 {
     unsigned int index = lcc_hvdc2t_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
-        return &(Lcc_hvdc2t[index]);
+        return const_cast<LCC_HVDC2T*>(&(Lcc_hvdc2t[index]));
     else
         return NULL;
 }
 
-VSC_HVDC* POWER_SYSTEM_DATABASE::get_vsc_hvdc(const DEVICE_ID & device_id)
+VSC_HVDC* POWER_SYSTEM_DATABASE::get_vsc_hvdc(const DEVICE_ID & device_id) const
 {
     unsigned int index = vsc_hvdc_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
-        return &(Vsc_hvdc[index]);
+        return const_cast<VSC_HVDC*>(&(Vsc_hvdc[index]));
     else
         return NULL;
 }
 
-VSC_HVDC* POWER_SYSTEM_DATABASE::get_vsc_hvdc(string name)
+VSC_HVDC* POWER_SYSTEM_DATABASE::get_vsc_hvdc(string name) const
 {
     unsigned int n = Vsc_hvdc.size();
     for(unsigned int index=0; index!=n; ++index)
     {
         if(Vsc_hvdc[index].get_name()==name)
-            return &(Vsc_hvdc[index]);
+            return const_cast<VSC_HVDC*>(&(Vsc_hvdc[index]));
     }
     return NULL;
 }
 
-MT_HVDC* POWER_SYSTEM_DATABASE::get_mt_hvdc(const DEVICE_ID & device_id)
+MT_HVDC* POWER_SYSTEM_DATABASE::get_mt_hvdc(const DEVICE_ID & device_id) const
 {
     unsigned int index = mt_hvdc_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
-        return &(Mt_hvdc[index]);
+        return const_cast<MT_HVDC*>(&(Mt_hvdc[index]));
     else
         return NULL;
 }
 
-MT_HVDC* POWER_SYSTEM_DATABASE::get_mt_hvdc(const string name)
+MT_HVDC* POWER_SYSTEM_DATABASE::get_mt_hvdc(const string name) const
 {
     unsigned int n = Mt_hvdc.size();
     for(unsigned int index=0; index!=n; ++index)
     {
         if(Mt_hvdc[index].get_name()==name)
-            return &(Mt_hvdc[index]);
+            return const_cast<MT_HVDC*>(&(Mt_hvdc[index]));
     }
     return NULL;
 }
 
-EQUIVALENT_DEVICE* POWER_SYSTEM_DATABASE::get_equivalent_device(const DEVICE_ID & device_id)
+EQUIVALENT_DEVICE* POWER_SYSTEM_DATABASE::get_equivalent_device(const DEVICE_ID & device_id) const
 {
     unsigned int index = equivalent_device_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
-        return &(Equivalent_device[index]);
+        return const_cast<EQUIVALENT_DEVICE*>(&(Equivalent_device[index]));
     else
         return NULL;
 }
 
-AREA* POWER_SYSTEM_DATABASE::get_area(const unsigned int no)
+AREA* POWER_SYSTEM_DATABASE::get_area(const unsigned int no) const
 {
     unsigned int index = get_area_index(no);
     if(index!=INDEX_NOT_EXIST)
-        return &(Area[index]);
+        return const_cast<AREA*>(&(Area[index]));
     else
         return NULL;
 }
 
-ZONE* POWER_SYSTEM_DATABASE::get_zone(const unsigned int no)
+ZONE* POWER_SYSTEM_DATABASE::get_zone(const unsigned int no) const
 {
     unsigned int index = get_zone_index(no);
     if(index!=INDEX_NOT_EXIST)
-        return &(Zone[index]);
+        return const_cast<ZONE*>(&(Zone[index]));
     else
         return NULL;
 }
 
-OWNER* POWER_SYSTEM_DATABASE::get_owner(const unsigned int no)
+OWNER* POWER_SYSTEM_DATABASE::get_owner(const unsigned int no) const
 {
     unsigned int index = get_owner_index(no);
     if(index!=INDEX_NOT_EXIST)
-        return &(Owner[index]);
+        return const_cast<OWNER*>(&(Owner[index]));
     else
         return NULL;
 }
@@ -7395,7 +7650,7 @@ void POWER_SYSTEM_DATABASE::calibrate_generators_pmax_and_pmin_with_turbine_gove
     }
 }
 
-BUS_TYPE POWER_SYSTEM_DATABASE::get_bus_type(unsigned int bus)
+BUS_TYPE POWER_SYSTEM_DATABASE::get_bus_type(unsigned int bus) const
 {
     BUS* busptr = get_bus(bus);
     if(busptr!=NULL)
@@ -7404,7 +7659,7 @@ BUS_TYPE POWER_SYSTEM_DATABASE::get_bus_type(unsigned int bus)
         return OUT_OF_SERVICE;
 }
 
-double POWER_SYSTEM_DATABASE::get_bus_base_frequency_in_Hz(unsigned int bus)
+double POWER_SYSTEM_DATABASE::get_bus_base_frequency_in_Hz(unsigned int bus) const
 {
     BUS* busptr = get_bus(bus);
     if(busptr!=NULL)
@@ -7413,7 +7668,7 @@ double POWER_SYSTEM_DATABASE::get_bus_base_frequency_in_Hz(unsigned int bus)
         return 0.0;
 }
 
-double POWER_SYSTEM_DATABASE::get_bus_base_voltage_in_kV(unsigned int bus)
+double POWER_SYSTEM_DATABASE::get_bus_base_voltage_in_kV(unsigned int bus) const
 {
     BUS* busptr = get_bus(bus);
     if(busptr!=NULL)

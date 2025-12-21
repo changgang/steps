@@ -698,6 +698,20 @@ GENERATOR& GENERATOR::operator=(const GENERATOR& gen)
 
     set_generator_bus(gen.get_generator_bus());
     set_identifier(gen.get_identifier());
+
+    copy_basic_data_from_generator(gen);
+
+    set_model(gen.get_sync_generator_model());
+    set_model(gen.get_compensator_model());
+    set_model(gen.get_exciter_model());
+    set_model(gen.get_stabilizer_model());
+    set_model(gen.get_turbine_governor_model());
+    set_model(gen.get_turbine_load_controller_model());
+    return *this;
+}
+
+void GENERATOR::copy_basic_data_from_generator(const GENERATOR& gen)
+{
     set_status(gen.get_status());
     set_mbase_in_MVA(gen.get_mbase_in_MVA());
     set_p_generation_in_MW(gen.get_p_generation_in_MW());
@@ -712,13 +726,6 @@ GENERATOR& GENERATOR::operator=(const GENERATOR& gen)
     set_bus_to_regulate(gen.get_bus_to_regulate());
     set_voltage_to_regulate_in_pu(gen.get_voltage_to_regulate_in_pu());
 
-    set_model(gen.get_sync_generator_model());
-    set_model(gen.get_compensator_model());
-    set_model(gen.get_exciter_model());
-    set_model(gen.get_stabilizer_model());
-    set_model(gen.get_turbine_governor_model());
-    set_model(gen.get_turbine_load_controller_model());
-
     set_positive_sequence_resistance_in_pu(gen.get_positive_sequence_resistance_in_pu());
     set_positive_sequence_syncronous_reactance_in_pu(gen.get_positive_sequence_syncronous_reactance_in_pu());
     set_positive_sequence_transient_reactance_in_pu(gen.get_positive_sequence_transient_reactance_in_pu());
@@ -728,7 +735,6 @@ GENERATOR& GENERATOR::operator=(const GENERATOR& gen)
     set_zero_sequence_resistance_in_pu(gen.get_zero_sequence_resistance_in_pu());
     set_zero_sequence_reactance_in_pu(gen.get_zero_sequence_reactance_in_pu());
     set_generator_reactance_option(gen.get_generator_reactance_option());
-    return *this;
 }
 
 complex<double> GENERATOR::get_complex_internal_voltage_in_pu_in_xy_axis() const

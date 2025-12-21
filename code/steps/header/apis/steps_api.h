@@ -91,6 +91,7 @@ EXPORT_STEPS_DLL void api_replace_generator_with_pv_unit(unsigned int bus_number
 EXPORT_STEPS_DLL void api_replace_generator_with_energy_storage(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_replace_generator_with_sv_source(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
+EXPORT_STEPS_DLL void api_copy_bus(unsigned int new_bus_number, char* new_bus_name, double new_basekV, unsigned int old_bus_number, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_copy_generator(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_copy_wt_generator(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_copy_pv_unit(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
@@ -102,6 +103,10 @@ EXPORT_STEPS_DLL void api_copy_ac_line(unsigned int new_ibus_number, unsigned in
 EXPORT_STEPS_DLL void api_copy_2w_transformer(unsigned int new_ibus_number, unsigned int new_jbus_number, char* new_identifier, unsigned int old_ibus_number, unsigned int old_jbus_number, char* old_identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_copy_3w_transformer(unsigned int new_ibus_number, unsigned int new_jbus_number,  unsigned int new_kbus_number, char* new_identifier, unsigned int old_ibus_number, unsigned int old_jbus_number, unsigned int old_kbus_number, char* old_identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_copy_lcc_hvdc2t(unsigned int new_rec_bus_number, unsigned int new_inv_bus_number, char* new_hvdcname, unsigned int old_rec_bus_number, unsigned int old_inv_bus_number, char* old_hvdcname, unsigned int toolkit_index=INDEX_NOT_EXIST);
+
+EXPORT_STEPS_DLL void api_scale_ac_line_parameters(unsigned int ibus, unsigned int jbus, char* identifier, double scale, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_scale_2w_transformer_winding_capacity(unsigned int ibus, unsigned int jbus, char* identifier, double scale, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_scale_3w_transformer_winding_capacity(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* identifier, double scale, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void api_remove_bus(unsigned int bus_number, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_remove_generator(unsigned int bus_number, char* identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);

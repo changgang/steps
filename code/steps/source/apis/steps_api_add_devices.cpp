@@ -303,6 +303,13 @@ void api_replace_generator_with_sv_source(unsigned int bus_number, char* identif
     psdb.replace_generator_with_sv_source(did);
 }
 
+void api_copy_bus(unsigned int new_bus_number, char* new_bus_name, double new_basekV, unsigned int old_bus_number, unsigned int toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    psdb.copy_bus(new_bus_number, new_bus_name, new_basekV, old_bus_number);
+}
+
 void api_copy_generator(unsigned int new_bus_number, char* new_identifier, unsigned int old_bus_number, char* old_identifier, unsigned int toolkit_index)
 {
     DEVICE_ID new_did = get_generator_device_id(new_bus_number, new_identifier);
@@ -377,11 +384,9 @@ void api_copy_ac_line(unsigned int new_ibus_number, unsigned int new_jbus_number
 
 void api_copy_2w_transformer(unsigned int new_ibus_number, unsigned int new_jbus_number, char* new_identifier, unsigned int old_ibus_number, unsigned int old_jbus_number, char* old_identifier, unsigned int toolkit_index)
 {
-    DEVICE_ID new_did = get_transformer_device_id(new_ibus_number, new_jbus_number, 0, new_identifier);
-    DEVICE_ID old_did = get_transformer_device_id(old_ibus_number, old_jbus_number, 0, old_identifier);
-    STEPS& toolkit = get_toolkit(toolkit_index);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    psdb.copy_transformer(new_did, old_did);
+    api_copy_3w_transformer(new_ibus_number, new_jbus_number, 0, new_identifier,
+                            old_ibus_number, old_jbus_number, 0, old_identifier,
+                            toolkit_index);
 }
 
 void api_copy_3w_transformer(unsigned int new_ibus_number, unsigned int new_jbus_number,  unsigned int new_kbus_number, char* new_identifier, unsigned int old_ibus_number, unsigned int old_jbus_number, unsigned int old_kbus_number, char* old_identifier, unsigned int toolkit_index)
@@ -395,11 +400,33 @@ void api_copy_3w_transformer(unsigned int new_ibus_number, unsigned int new_jbus
 
 void api_copy_lcc_hvdc2t(unsigned int new_rec_bus_number, unsigned int new_inv_bus_number, char* new_hvdcname, unsigned int old_rec_bus_number, unsigned int old_inv_bus_number, char* old_hvdcname, unsigned int toolkit_index)
 {
-    DEVICE_ID new_did = get_lcc_hvdc2t_device_id(new_rec_bus_number, new_inv_bus_number, new_hvdcname);
     DEVICE_ID old_did = get_lcc_hvdc2t_device_id(old_rec_bus_number, old_inv_bus_number, old_hvdcname);
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    psdb.copy_lcc_hvdc2t(new_did, old_did);
+    psdb.copy_lcc_hvdc2t(new_rec_bus_number, new_inv_bus_number, new_hvdcname, old_did);
+}
+
+void api_scale_ac_line_parameters(unsigned int ibus, unsigned int jbus, char* identifier, double scale, unsigned int toolkit_index)
+{
+    DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    AC_LINE* line = psdb.get_ac_line(did);
+    line->scale_line_parameters(scale);
+}
+
+void api_scale_2w_transformer_winding_capacity(unsigned int ibus, unsigned int jbus, char* identifier, double scale, unsigned int toolkit_index)
+{
+    api_scale_3w_transformer_winding_capacity(ibus, jbus, 0, identifier, scale, toolkit_index);
+}
+
+void api_scale_3w_transformer_winding_capacity(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* identifier, double scale, unsigned int toolkit_index)
+{
+    DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    TRANSFORMER* trans = psdb.get_transformer(did);
+    trans->scale_transformer_winding_capacity(scale);
 }
 
 void api_change_bus_number(unsigned int original_bus_number, unsigned int new_bus_number, unsigned int toolkit_index)

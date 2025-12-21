@@ -368,6 +368,22 @@ PV_UNIT& PV_UNIT::operator=(const PV_UNIT& pvu)
 
     set_unit_bus(pvu.get_unit_bus());
     set_identifier(pvu.get_identifier());
+
+    copy_basic_data_from_pv_unit(pvu);
+
+    set_model(pvu.get_pv_converter_model());
+    set_model(pvu.get_pv_panel_model());
+    set_model(pvu.get_pv_electrical_model());
+    set_model(pvu.get_pv_irradiance_model());
+    set_model(pvu.get_pv_vrt_model());
+    set_model(pvu.get_pv_relay_model());
+    set_model(pvu.get_pv_temperature_model());
+
+    return *this;
+}
+
+void PV_UNIT::copy_basic_data_from_pv_unit(const PV_UNIT& pvu)
+{
     set_status(pvu.get_status());
     set_mbase_in_MVA(pvu.get_mbase_in_MVA());
     set_p_generation_in_MW(pvu.get_p_generation_in_MW());
@@ -385,14 +401,6 @@ PV_UNIT& PV_UNIT::operator=(const PV_UNIT& pvu)
     set_number_of_lumped_pv_units(pvu.get_number_of_lumped_pv_units());
     set_rated_power_per_pv_unit_in_MW(pvu.get_rated_power_per_pv_unit_in_MW());
 
-    set_model(pvu.get_pv_converter_model());
-    set_model(pvu.get_pv_panel_model());
-    set_model(pvu.get_pv_electrical_model());
-    set_model(pvu.get_pv_irradiance_model());
-    set_model(pvu.get_pv_vrt_model());
-    set_model(pvu.get_pv_relay_model());
-    set_model(pvu.get_pv_temperature_model());
-
     set_positive_sequence_resistance_in_pu(pvu.get_positive_sequence_resistance_in_pu());
     set_positive_sequence_reactance_in_pu(pvu.get_positive_sequence_reactance_in_pu());
     set_negative_sequence_resistance_in_pu(pvu.get_negative_sequence_resistance_in_pu());
@@ -401,8 +409,6 @@ PV_UNIT& PV_UNIT::operator=(const PV_UNIT& pvu)
     set_zero_sequence_reactance_in_pu(pvu.get_zero_sequence_reactance_in_pu());
     set_grounding_resistance_in_pu(pvu.get_grounding_resistance_in_pu());
     set_grounding_reactance_in_pu(pvu.get_grounding_reactance_in_pu());
-
-    return *this;
 }
 
 complex<double> PV_UNIT::get_complex_internal_voltage_in_pu_in_xy_axis() const

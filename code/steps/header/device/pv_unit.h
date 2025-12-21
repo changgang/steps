@@ -55,7 +55,8 @@ class PV_UNIT : public SOURCE
         virtual void report() const;
         virtual void save() const;
 
-        virtual PV_UNIT& operator=(const PV_UNIT& gen);
+        virtual PV_UNIT& operator=(const PV_UNIT& pvu);
+        void copy_basic_data_from_pv_unit(const PV_UNIT& pvu);
 
         virtual complex<double> get_complex_internal_voltage_in_pu_in_xy_axis() const;
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power();

@@ -125,6 +125,7 @@ class LCC_HVDC2T : public NONBUS_DEVICE
         virtual void run(DYNAMIC_MODE mode);
 
         virtual LCC_HVDC2T& operator=(const LCC_HVDC2T& hvdc);
+        void copy_basic_data_from_lcc_hvdc2t(const LCC_HVDC2T& hvdc);
 
         virtual DEVICE_ID get_device_id() const;
 

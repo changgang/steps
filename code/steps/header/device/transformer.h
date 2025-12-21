@@ -48,6 +48,7 @@ class TRANSFORMER : public NONBUS_DEVICE
         void set_common_zero_sequence_nutural_grounding_impedance_based_on_winding_nominals_in_pu(complex<double> z);
         void set_zero_sequence_impedance_between_windings_based_on_winding_nominals_in_pu(TRANSFORMER_WINDING_SIDE winding1, TRANSFORMER_WINDING_SIDE winding2, complex<double> z);
 
+        void scale_transformer_winding_capacity(double scale);
 
 
         string get_identifier() const;
@@ -58,6 +59,7 @@ class TRANSFORMER : public NONBUS_DEVICE
         complex<double> get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu() const;
 
         unsigned int get_winding_bus(TRANSFORMER_WINDING_SIDE winding) const;
+        TRANSFORMER_WINDING_SIDE get_winding_bus_side(unsigned int bus);
         //BUS* get_winding_bus_pointer(TRANSFORMER_WINDING_SIDE winding) const;
         bool get_winding_breaker_status(TRANSFORMER_WINDING_SIDE winding) const;
         TRANSFORMER_WINDING_CONNECTION_TYPE get_winding_connection_type(TRANSFORMER_WINDING_SIDE winding) const;
@@ -100,6 +102,7 @@ class TRANSFORMER : public NONBUS_DEVICE
         virtual void set_model(MODEL* model);
         virtual MODEL* get_model_of_type(string model_type, unsigned int index=0);
         virtual TRANSFORMER& operator=(const TRANSFORMER& transformer);
+        void copy_basic_data_from_transformer(const TRANSFORMER& transformer);
 
         bool is_two_winding_transformer() const;
         bool is_three_winding_transformer() const;

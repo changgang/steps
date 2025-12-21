@@ -46,7 +46,8 @@ class FIXED_SHUNT : public NONBUS_DEVICE
         virtual void set_model(MODEL* model);
         virtual MODEL* get_model_of_type(string model_type, unsigned int index=0);
 
-        virtual FIXED_SHUNT& operator=(const FIXED_SHUNT& load);
+        virtual FIXED_SHUNT& operator=(const FIXED_SHUNT& fixed_shunt);
+        void copy_basic_data_from_fixed_shunt(const FIXED_SHUNT& fixed_shunt);
 
         virtual DEVICE_ID get_device_id() const;
 

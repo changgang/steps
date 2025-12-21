@@ -33,6 +33,7 @@ class SV_SOURCE : public SOURCE
         virtual void save() const;
 
         virtual SV_SOURCE& operator=(const SV_SOURCE& sv_source);
+        void copy_basic_data_from_sv_source(const SV_SOURCE& sv_source);
 
         void set_sequence_parameter_import_flag(bool flag);
         bool get_sequence_parameter_import_flag() const;

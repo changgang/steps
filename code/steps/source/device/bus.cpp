@@ -571,6 +571,16 @@ void BUS::copy_from_const_bus(const BUS& bus)
     set_bus_number(bus.get_bus_number());
     set_bus_name(bus.get_bus_name());
     set_base_voltage_in_kV(bus.get_base_voltage_in_kV());
+    copy_basic_data_from_bus(bus);
+
+    if(bus.is_faulted())
+    {
+        set_fault(bus.get_fault());
+    }
+}
+
+void BUS::copy_basic_data_from_bus(const BUS& bus)
+{
     set_base_frequency_in_Hz(bus.get_base_frequency_in_Hz());
     set_bus_type(bus.get_bus_type());
     set_area_number(bus.get_area_number());
@@ -579,11 +589,6 @@ void BUS::copy_from_const_bus(const BUS& bus)
     set_positive_sequence_voltage_in_pu(bus.get_positive_sequence_voltage_in_pu());
     set_positive_sequence_angle_in_rad(bus.get_positive_sequence_angle_in_rad());
     set_voltage_to_regulate_in_pu(bus.get_voltage_to_regulate_in_pu());
-
-    if(bus.is_faulted())
-    {
-        set_fault(bus.get_fault());
-    }
 }
 
 void BUS::report() const

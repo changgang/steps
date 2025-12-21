@@ -264,13 +264,18 @@ FIXED_SHUNT& FIXED_SHUNT::operator=(const FIXED_SHUNT& fixed_shunt)
     set_shunt_bus(fixed_shunt.get_shunt_bus());
     set_identifier(fixed_shunt.get_identifier());
     set_name(fixed_shunt.get_name());
-    set_status(fixed_shunt.get_status());
-    set_nominal_positive_sequence_impedance_shunt_in_MVA(fixed_shunt.get_nominal_positive_sequence_impedance_shunt_in_MVA());
-    set_nominal_zero_sequence_impedance_shunt_in_MVA(fixed_shunt.get_nominal_zero_sequence_impedance_shunt_in_MVA());
+
+    copy_basic_data_from_fixed_shunt(fixed_shunt);
 
     return *this;
 }
 
+void FIXED_SHUNT::copy_basic_data_from_fixed_shunt(const FIXED_SHUNT& fixed_shunt)
+{
+    set_status(fixed_shunt.get_status());
+    set_nominal_positive_sequence_impedance_shunt_in_MVA(fixed_shunt.get_nominal_positive_sequence_impedance_shunt_in_MVA());
+    set_nominal_zero_sequence_impedance_shunt_in_MVA(fixed_shunt.get_nominal_zero_sequence_impedance_shunt_in_MVA());
+}
 
 DEVICE_ID FIXED_SHUNT::get_device_id() const
 {

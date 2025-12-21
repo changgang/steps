@@ -280,6 +280,18 @@ LOAD& LOAD::operator=(const LOAD& load)
 
     set_load_bus(load.get_load_bus());
     set_identifier(load.get_identifier());
+
+    copy_basic_data_from_load(load);
+
+    set_model(load.get_load_model());
+    set_model(load.get_load_voltage_relay_model());
+    set_model(load.get_load_frequency_relay_model());
+
+    return *this;
+}
+
+void LOAD::copy_basic_data_from_load(const LOAD& load)
+{
     set_status(load.get_status());
     set_nominal_constant_power_load_in_MVA(load.get_nominal_constant_power_load_in_MVA());
     set_nominal_constant_current_load_in_MVA(load.get_nominal_constant_current_load_in_MVA());
@@ -288,15 +300,9 @@ LOAD& LOAD::operator=(const LOAD& load)
     set_zone_number(load.get_zone_number());
     set_owner_number(load.get_owner_number());
 
-    set_model(load.get_load_model());
-    set_model(load.get_load_voltage_relay_model());
-    set_model(load.get_load_frequency_relay_model());
-
     set_negative_sequence_load_in_MVA(load.get_negative_sequence_load_in_MVA());
     set_zero_sequence_load_in_MVA(load.get_zero_sequence_load_in_MVA());
     set_grounding_flag(load.get_grounding_flag());
-
-    return *this;
 }
 
 DEVICE_ID LOAD::get_device_id() const

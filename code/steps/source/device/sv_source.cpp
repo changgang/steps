@@ -160,6 +160,15 @@ SV_SOURCE& SV_SOURCE::operator=(const SV_SOURCE& sv_source)
 
     set_sv_source_bus(sv_source.get_sv_source_bus());
     set_identifier(sv_source.get_identifier());
+
+    copy_basic_data_from_sv_source(sv_source);
+
+    set_model(sv_source.get_svs_control_model());
+    return *this;
+}
+
+void SV_SOURCE::copy_basic_data_from_sv_source(const SV_SOURCE& sv_source)
+{
     set_status(sv_source.get_status());
     set_mbase_in_MVA(sv_source.get_mbase_in_MVA());
     set_p_generation_in_MW(sv_source.get_p_generation_in_MW());
@@ -173,9 +182,6 @@ SV_SOURCE& SV_SOURCE::operator=(const SV_SOURCE& sv_source)
     set_source_impedance_in_pu(sv_source.get_source_impedance_in_pu());
     set_bus_to_regulate(sv_source.get_bus_to_regulate());
     set_voltage_to_regulate_in_pu(sv_source.get_voltage_to_regulate_in_pu());
-
-    set_model(sv_source.get_svs_control_model());
-    return *this;
 }
 
 complex<double> SV_SOURCE::get_complex_internal_voltage_in_pu_in_xy_axis() const

@@ -62,6 +62,7 @@ class LOAD : public NONBUS_DEVICE
 
 
         virtual LOAD& operator=(const LOAD& load);
+        void copy_basic_data_from_load(const LOAD& load);
 
         virtual DEVICE_ID get_device_id() const;
 

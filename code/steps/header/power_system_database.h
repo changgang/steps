@@ -125,6 +125,7 @@ class POWER_SYSTEM_DATABASE
         void replace_generator_with_energy_storage(DEVICE_ID& gendid);
         void replace_generator_with_sv_source(DEVICE_ID& gendid);
 
+        void copy_bus(unsigned int new_bus_number, string new_bus_name, double new_basekV, unsigned int old_bus_number);
         void copy_generator(DEVICE_ID& new_did, DEVICE_ID& old_did);
         void copy_wt_generator(DEVICE_ID& new_did, DEVICE_ID& old_did);
         void copy_pv_unit(DEVICE_ID& new_did, DEVICE_ID& old_did);
@@ -134,7 +135,11 @@ class POWER_SYSTEM_DATABASE
         void copy_fixed_shunt(DEVICE_ID& new_did, DEVICE_ID& old_did);
         void copy_ac_line(DEVICE_ID& new_did, DEVICE_ID& old_did);
         void copy_transformer(DEVICE_ID& new_did, DEVICE_ID& old_did);
-        void copy_lcc_hvdc2t(DEVICE_ID& new_did, DEVICE_ID& old_did);
+        void copy_lcc_hvdc2t(unsigned int new_rec_bus_number, unsigned int new_inv_bus_number, char* new_hvdcname, DEVICE_ID& old_did);
+
+        unsigned int get_bus_with_greatest_vbase(unsigned int ibus, unsigned int jbus, unsigned int kbus) const;
+        unsigned int get_bus_with_medium_vbase(unsigned int ibus, unsigned int jbus, unsigned int kbus) const;
+        unsigned int get_bus_with_lowest_vbase(unsigned int ibus, unsigned int jbus, unsigned int kbus) const;
 
         void update_device_id(const DEVICE_ID& did_old, const DEVICE_ID& did_new);
 
@@ -163,29 +168,29 @@ class POWER_SYSTEM_DATABASE
         void change_bus_number(unsigned int original_bus_number, unsigned int new_bus_number);
         void change_bus_number_with_file(string file);
 
-        DEVICE* get_device(const DEVICE_ID& device_id);
-        NONBUS_DEVICE* get_nonbus_device(const DEVICE_ID& device_id);
-        BUS* get_bus(unsigned int bus);
-        BUS* get_bus(const DEVICE_ID & device_id);
-        GENERATOR* get_generator(const DEVICE_ID & device_id);
-        WT_GENERATOR* get_wt_generator(const DEVICE_ID & device_id);
-        PV_UNIT* get_pv_unit(const DEVICE_ID & device_id);
-        ENERGY_STORAGE* get_energy_storage(const DEVICE_ID & device_id);
-        SV_SOURCE* get_sv_source(const DEVICE_ID & device_id);
-        SOURCE* get_source(const DEVICE_ID & device_id);
-        LOAD* get_load(const DEVICE_ID & device_id);
-        AC_LINE* get_ac_line(const DEVICE_ID & device_id);
-        TRANSFORMER* get_transformer(const DEVICE_ID & device_id);
-        FIXED_SHUNT* get_fixed_shunt(const DEVICE_ID & device_id);
-        LCC_HVDC2T* get_lcc_hvdc2t(const DEVICE_ID & device_id);
-        VSC_HVDC* get_vsc_hvdc(const DEVICE_ID & device_id);
-        VSC_HVDC* get_vsc_hvdc(string name);
-        MT_HVDC* get_mt_hvdc(const DEVICE_ID & device_id);
-        MT_HVDC* get_mt_hvdc(const string name);
-        EQUIVALENT_DEVICE* get_equivalent_device(const DEVICE_ID & device_id);
-        AREA* get_area(const unsigned int no);
-        ZONE* get_zone(const unsigned int no);
-        OWNER* get_owner(const unsigned int no);
+        DEVICE* get_device(const DEVICE_ID& device_id) const;
+        NONBUS_DEVICE* get_nonbus_device(const DEVICE_ID& device_id) const;
+        BUS* get_bus(unsigned int bus) const;
+        BUS* get_bus(const DEVICE_ID & device_id) const;
+        GENERATOR* get_generator(const DEVICE_ID & device_id) const;
+        WT_GENERATOR* get_wt_generator(const DEVICE_ID & device_id) const;
+        PV_UNIT* get_pv_unit(const DEVICE_ID & device_id) const;
+        ENERGY_STORAGE* get_energy_storage(const DEVICE_ID & device_id) const;
+        SV_SOURCE* get_sv_source(const DEVICE_ID & device_id) const;
+        SOURCE* get_source(const DEVICE_ID & device_id) const;
+        LOAD* get_load(const DEVICE_ID & device_id) const;
+        AC_LINE* get_ac_line(const DEVICE_ID & device_id) const;
+        TRANSFORMER* get_transformer(const DEVICE_ID & device_id) const;
+        FIXED_SHUNT* get_fixed_shunt(const DEVICE_ID & device_id) const;
+        LCC_HVDC2T* get_lcc_hvdc2t(const DEVICE_ID & device_id) const;
+        VSC_HVDC* get_vsc_hvdc(const DEVICE_ID & device_id) const;
+        VSC_HVDC* get_vsc_hvdc(string name) const;
+        MT_HVDC* get_mt_hvdc(const DEVICE_ID & device_id) const;
+        MT_HVDC* get_mt_hvdc(const string name) const;
+        EQUIVALENT_DEVICE* get_equivalent_device(const DEVICE_ID & device_id) const;
+        AREA* get_area(const unsigned int no) const;
+        ZONE* get_zone(const unsigned int no) const;
+        OWNER* get_owner(const unsigned int no) const;
 
         vector<DEVICE*> get_all_devices_connecting_to_bus(const unsigned int bus);
         vector<GENERATOR*> get_generators_connecting_to_bus(const unsigned int bus);
@@ -542,9 +547,9 @@ class POWER_SYSTEM_DATABASE
         void calibrate_sources_pmax_and_pmin_with_dynamic_model();
         void calibrate_generators_pmax_and_pmin_with_turbine_governor_model();
 
-        BUS_TYPE get_bus_type(unsigned int bus);
-        double get_bus_base_frequency_in_Hz(unsigned int bus);
-        double get_bus_base_voltage_in_kV(unsigned int bus);
+        BUS_TYPE get_bus_type(unsigned int bus) const;
+        double get_bus_base_frequency_in_Hz(unsigned int bus) const;
+        double get_bus_base_voltage_in_kV(unsigned int bus) const;
         double get_bus_positive_sequence_voltage_in_pu(unsigned int bus);
         double get_bus_positive_sequence_voltage_in_kV(unsigned int bus);
         double get_bus_positive_sequence_angle_in_deg(unsigned int bus);

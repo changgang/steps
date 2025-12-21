@@ -39,6 +39,8 @@ class AC_LINE : public NONBUS_DEVICE
         void set_meter_end_bus(unsigned int meter_bus);
         void set_length(double length);
 
+        void scale_line_parameters(double scale);
+
         void set_mutual_admittances(vector<complex<double>> Y);
         void set_line_pointers_corresponding_to_mutual_admittances(vector<AC_LINE*> lineptrs);
         void set_is_mutual_logic(bool b);
@@ -92,6 +94,7 @@ class AC_LINE : public NONBUS_DEVICE
         virtual MODEL* get_model_of_type(string model_type, unsigned int index=0);
 
         virtual AC_LINE& operator=(const AC_LINE& line);
+        void copy_basic_data_from_ac_line(const AC_LINE& line);
 
         virtual DEVICE_ID get_device_id() const;
 

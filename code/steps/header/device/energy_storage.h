@@ -58,6 +58,7 @@ class ENERGY_STORAGE : public SOURCE
         virtual void save() const;
 
         virtual ENERGY_STORAGE& operator=(const ENERGY_STORAGE& estorage);
+        void copy_basic_data_from_energy_storage(const ENERGY_STORAGE& estorage);
 
         void set_sequence_parameter_import_flag(bool flag);
         bool get_sequence_parameter_import_flag() const;

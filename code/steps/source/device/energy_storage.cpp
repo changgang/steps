@@ -445,6 +445,21 @@ ENERGY_STORAGE& ENERGY_STORAGE::operator=(const ENERGY_STORAGE& estorage)
 
     set_energy_storage_bus(estorage.get_energy_storage_bus());
     set_identifier(estorage.get_identifier());
+
+    copy_basic_data_from_energy_storage(estorage);
+
+    set_model(estorage.get_es_converter_model());
+    set_model(estorage.get_es_electrical_model());
+    set_model(estorage.get_es_vrt_model());
+    set_model(estorage.get_es_relay_model());
+    set_model(estorage.get_es_soc_model());
+    set_model(estorage.get_es_auxiliary_model());
+    set_model(estorage.get_es_primary_model());
+    set_model(estorage.get_es_rotor_model());
+    return *this;
+}
+void ENERGY_STORAGE::copy_basic_data_from_energy_storage(const ENERGY_STORAGE& estorage)
+{
     set_status(estorage.get_status());
     set_mbase_in_MVA(estorage.get_mbase_in_MVA());
     set_p_generation_in_MW(estorage.get_p_generation_in_MW());
@@ -460,16 +475,6 @@ ENERGY_STORAGE& ENERGY_STORAGE::operator=(const ENERGY_STORAGE& estorage)
     set_voltage_to_regulate_in_pu(estorage.get_voltage_to_regulate_in_pu());
     set_energy_storage_mode(estorage.get_energy_storage_mode());
     set_manual_power_in_pu(estorage.get_manual_power_in_pu());
-
-    set_model(estorage.get_es_converter_model());
-    set_model(estorage.get_es_electrical_model());
-    set_model(estorage.get_es_vrt_model());
-    set_model(estorage.get_es_relay_model());
-    set_model(estorage.get_es_soc_model());
-    set_model(estorage.get_es_auxiliary_model());
-    set_model(estorage.get_es_primary_model());
-    set_model(estorage.get_es_rotor_model());
-    return *this;
 }
 
 complex<double> ENERGY_STORAGE::get_complex_internal_voltage_in_pu_in_xy_axis() const

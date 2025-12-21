@@ -1153,6 +1153,17 @@ LCC_HVDC2T& LCC_HVDC2T::operator=(const LCC_HVDC2T& hvdc)
 
     set_identifier(hvdc.get_identifier());
     set_name(hvdc.get_name());
+
+    copy_basic_data_from_lcc_hvdc2t(hvdc);
+
+    set_model(hvdc.get_lcc_hvdc2t_model());
+    set_auxiliary_signal_model(hvdc.get_auxiliary_signal_model());
+
+    return *this;
+}
+
+void LCC_HVDC2T::copy_basic_data_from_lcc_hvdc2t(const LCC_HVDC2T& hvdc)
+{
     set_status(hvdc.get_status());
     set_line_resistance_in_ohm(hvdc.get_line_resistance_in_ohm());
     set_line_inductance_in_mH(hvdc.get_line_inductance_in_mH());
@@ -1194,11 +1205,6 @@ LCC_HVDC2T& LCC_HVDC2T::operator=(const LCC_HVDC2T& hvdc)
     set_converter_transformer_min_tap_in_pu(INVERTER, hvdc.get_converter_transformer_min_tap_in_pu(INVERTER));
     set_converter_transformer_number_of_taps(RECTIFIER, hvdc.get_converter_transformer_number_of_taps(RECTIFIER));
     set_converter_transformer_number_of_taps(INVERTER, hvdc.get_converter_transformer_number_of_taps(INVERTER));
-
-    set_model(hvdc.get_lcc_hvdc2t_model());
-    set_auxiliary_signal_model(hvdc.get_auxiliary_signal_model());
-
-    return *this;
 }
 
 DEVICE_ID LCC_HVDC2T::get_device_id() const

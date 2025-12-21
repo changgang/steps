@@ -106,6 +106,8 @@ class BUS : public DEVICE
 
         virtual DEVICE_ID get_device_id() const;
 
+        void copy_basic_data_from_bus(const BUS& bus);
+
         void set_fault(const FAULT& fault);
         FAULT get_fault() const;
         void clear_fault();

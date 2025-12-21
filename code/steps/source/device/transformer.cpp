@@ -358,6 +358,13 @@ void TRANSFORMER::set_zero_sequence_impedance_between_windings_based_on_winding_
     }
 }
 
+void TRANSFORMER::scale_transformer_winding_capacity(double scale)
+{
+    set_winding_nominal_capacity_in_MVA(PRIMARY_SIDE,  SECONDARY_SIDE, scale*get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE,  SECONDARY_SIDE));
+    set_winding_nominal_capacity_in_MVA(SECONDARY_SIDE,TERTIARY_SIDE,  scale*get_winding_nominal_capacity_in_MVA(SECONDARY_SIDE,TERTIARY_SIDE));
+    set_winding_nominal_capacity_in_MVA(TERTIARY_SIDE, PRIMARY_SIDE,   scale*get_winding_nominal_capacity_in_MVA(TERTIARY_SIDE, PRIMARY_SIDE));
+}
+
 string TRANSFORMER::get_identifier() const
 {
     return get_string_of_index(identifier_index);
@@ -391,6 +398,18 @@ complex<double> TRANSFORMER::get_magnetizing_admittance_based_on_primary_winding
 unsigned int TRANSFORMER::get_winding_bus(TRANSFORMER_WINDING_SIDE winding) const
 {
     return winding_bus[winding];
+}
+
+TRANSFORMER_WINDING_SIDE TRANSFORMER::get_winding_bus_side(unsigned int bus)
+{
+    if(bus==get_winding_bus(PRIMARY_SIDE)) return PRIMARY_SIDE;
+    if(bus==get_winding_bus(SECONDARY_SIDE)) return SECONDARY_SIDE;
+    if(bus==get_winding_bus(TERTIARY_SIDE)) return TERTIARY_SIDE;
+    ostringstream osstream;
+    osstream<<"Error. Bus "<<bus<<" does not exist in "<<get_compound_device_name()<<" when calling TRANSFORMER::"<<__FUNCTION__<<"()\n"
+            <<"PRIMARY_SIDE will be returned.";
+    get_toolkit().show_information_with_leading_time_stamp(osstream);
+    return PRIMARY_SIDE;
 }
 
 /*BUS* TRANSFORMER::get_winding_bus_pointer(TRANSFORMER_WINDING_SIDE winding) const
@@ -1051,6 +1070,14 @@ TRANSFORMER& TRANSFORMER::operator=(const TRANSFORMER& transformer)
     set_winding_bus(TERTIARY_SIDE, transformer.get_winding_bus(TERTIARY_SIDE));
     set_identifier(transformer.get_identifier());
     set_name(transformer.get_name());
+
+    copy_basic_data_from_transformer(transformer);
+
+    return *this;
+}
+
+void TRANSFORMER::copy_basic_data_from_transformer(const TRANSFORMER& transformer)
+{
     set_winding_breaker_status(PRIMARY_SIDE, transformer.get_winding_breaker_status(PRIMARY_SIDE));
     set_winding_breaker_status(SECONDARY_SIDE, transformer.get_winding_breaker_status(SECONDARY_SIDE));
     set_winding_breaker_status(TERTIARY_SIDE, transformer.get_winding_breaker_status(TERTIARY_SIDE));
@@ -1181,9 +1208,7 @@ TRANSFORMER& TRANSFORMER::operator=(const TRANSFORMER& transformer)
         transformer.get_winding_zero_sequence_impedance_based_on_winding_nominals_in_pu(TERTIARY_SIDE));
 
     set_common_zero_sequence_nutural_grounding_impedance_based_on_winding_nominals_in_pu(transformer.get_common_zero_sequence_nutural_grounding_impedance_based_on_winding_nominals_in_pu());
-    return *this;
 }
-
 
 bool TRANSFORMER::is_two_winding_transformer() const
 {

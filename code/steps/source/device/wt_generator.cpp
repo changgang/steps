@@ -439,6 +439,24 @@ WT_GENERATOR& WT_GENERATOR::operator=(const WT_GENERATOR& gen)
 
     set_generator_bus(gen.get_generator_bus());
     set_identifier(gen.get_identifier());
+
+    copy_basic_data_from_wt_generator(gen);
+
+    set_model(gen.get_wt_generator_model());
+    set_model(gen.get_wt_aerodynamic_model());
+    set_model(gen.get_wt_electrical_model());
+    set_model(gen.get_wt_turbine_model());
+    set_model(gen.get_wt_pitch_model());
+    set_model(gen.get_wind_speed_model());
+    set_model(gen.get_wt_vrt_model());
+    set_model(gen.get_wt_relay_model());
+    set_model(gen.get_wt_dbr_model());
+
+    return *this;
+}
+
+void WT_GENERATOR::copy_basic_data_from_wt_generator(const WT_GENERATOR& gen)
+{
     set_status(gen.get_status());
     set_mbase_in_MVA(gen.get_mbase_in_MVA());
     set_p_generation_in_MW(gen.get_p_generation_in_MW());
@@ -456,16 +474,6 @@ WT_GENERATOR& WT_GENERATOR::operator=(const WT_GENERATOR& gen)
     set_number_of_lumped_wt_generators(gen.get_number_of_lumped_wt_generators());
     set_rated_power_per_wt_generator_in_MW(gen.get_rated_power_per_wt_generator_in_MW());
 
-    set_model(gen.get_wt_generator_model());
-    set_model(gen.get_wt_aerodynamic_model());
-    set_model(gen.get_wt_electrical_model());
-    set_model(gen.get_wt_turbine_model());
-    set_model(gen.get_wt_pitch_model());
-    set_model(gen.get_wind_speed_model());
-    set_model(gen.get_wt_vrt_model());
-    set_model(gen.get_wt_relay_model());
-    set_model(gen.get_wt_dbr_model());
-
     set_positive_sequence_resistance_in_pu(gen.get_positive_sequence_resistance_in_pu());
     set_positive_sequence_syncronous_reactance_in_pu(gen.get_positive_sequence_syncronous_reactance_in_pu());
     set_positive_sequence_transient_reactance_in_pu(gen.get_positive_sequence_transient_reactance_in_pu());
@@ -477,7 +485,6 @@ WT_GENERATOR& WT_GENERATOR::operator=(const WT_GENERATOR& gen)
     set_grounding_resistance_in_pu(gen.get_grounding_resistance_in_pu());
     set_grounding_reactance_in_pu(gen.get_grounding_reactance_in_pu());
     set_generator_reactance_option(gen.get_generator_reactance_option());
-    return *this;
 }
 
 complex<double> WT_GENERATOR::get_complex_internal_voltage_in_pu_in_xy_axis() const

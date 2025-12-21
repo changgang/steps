@@ -173,6 +173,24 @@ void AC_LINE::set_length(double line_length)
     if(line_length>=0.0) this->length = line_length;
 }
 
+void AC_LINE::scale_line_parameters(double scale)
+{
+    set_line_positive_sequence_z_in_pu(scale*get_line_positive_sequence_z_in_pu());
+    set_line_positive_sequence_y_in_pu(scale*get_line_positive_sequence_y_in_pu());
+    set_shunt_positive_sequence_y_at_sending_side_in_pu(scale*get_shunt_positive_sequence_y_at_sending_side_in_pu());
+    set_shunt_positive_sequence_y_at_receiving_side_in_pu(scale*get_shunt_positive_sequence_y_at_receiving_side_in_pu());
+    set_line_zero_sequence_z_in_pu(scale*get_line_zero_sequence_z_in_pu());
+    set_line_zero_sequence_y_in_pu(scale*get_line_zero_sequence_y_in_pu());
+    set_shunt_zero_sequence_y_at_sending_side_in_pu(scale*get_shunt_zero_sequence_y_at_sending_side_in_pu());
+    set_shunt_zero_sequence_y_at_receiving_side_in_pu(scale*get_shunt_zero_sequence_y_at_receiving_side_in_pu());
+    RATING rate = get_rating();
+    rate.set_rating_A_MVA(rate.get_rating_A_MVA()*scale);
+    rate.set_rating_B_MVA(rate.get_rating_B_MVA()*scale);
+    rate.set_rating_C_MVA(rate.get_rating_C_MVA()*scale);
+    set_rating(rate);
+    set_length(scale*get_length());
+}
+
 void AC_LINE::set_mutual_admittances(vector<complex<double>> Y)
 {
     Ymutual.assign(Y.begin(), Y.end());
@@ -650,19 +668,10 @@ AC_LINE& AC_LINE::operator=(const AC_LINE& line)
     set_receiving_side_bus(line.get_receiving_side_bus());
     set_identifier(line.get_identifier());
     set_name(line.get_name());
-    set_sending_side_breaker_status(line.get_sending_side_breaker_status());
-    set_receiving_side_breaker_status(line.get_receiving_side_breaker_status());
-    set_line_positive_sequence_z_in_pu(line.get_line_positive_sequence_z_in_pu());
-    set_line_positive_sequence_y_in_pu(line.get_line_positive_sequence_y_in_pu());
-    set_shunt_positive_sequence_y_at_sending_side_in_pu(line.get_shunt_positive_sequence_y_at_sending_side_in_pu());
-    set_shunt_positive_sequence_y_at_receiving_side_in_pu(line.get_shunt_positive_sequence_y_at_receiving_side_in_pu());
-    set_line_zero_sequence_z_in_pu(line.get_line_zero_sequence_z_in_pu());
-    set_line_zero_sequence_y_in_pu(line.get_line_zero_sequence_y_in_pu());
-    set_shunt_zero_sequence_y_at_sending_side_in_pu(line.get_shunt_zero_sequence_y_at_sending_side_in_pu());
-    set_shunt_zero_sequence_y_at_receiving_side_in_pu(line.get_shunt_zero_sequence_y_at_receiving_side_in_pu());
-    set_rating(line.get_rating());
     set_meter_end_bus(line.get_meter_end_bus());
-    set_length(line.get_length());
+
+    copy_basic_data_from_ac_line(line);
+
     if(line.is_faulted())
     {
         unsigned int nfault = line.get_fault_count();
@@ -679,6 +688,21 @@ AC_LINE& AC_LINE::operator=(const AC_LINE& line)
     return *this;
 }
 
+void AC_LINE::copy_basic_data_from_ac_line(const AC_LINE& line)
+{
+    set_sending_side_breaker_status(line.get_sending_side_breaker_status());
+    set_receiving_side_breaker_status(line.get_receiving_side_breaker_status());
+    set_line_positive_sequence_z_in_pu(line.get_line_positive_sequence_z_in_pu());
+    set_line_positive_sequence_y_in_pu(line.get_line_positive_sequence_y_in_pu());
+    set_shunt_positive_sequence_y_at_sending_side_in_pu(line.get_shunt_positive_sequence_y_at_sending_side_in_pu());
+    set_shunt_positive_sequence_y_at_receiving_side_in_pu(line.get_shunt_positive_sequence_y_at_receiving_side_in_pu());
+    set_line_zero_sequence_z_in_pu(line.get_line_zero_sequence_z_in_pu());
+    set_line_zero_sequence_y_in_pu(line.get_line_zero_sequence_y_in_pu());
+    set_shunt_zero_sequence_y_at_sending_side_in_pu(line.get_shunt_zero_sequence_y_at_sending_side_in_pu());
+    set_shunt_zero_sequence_y_at_receiving_side_in_pu(line.get_shunt_zero_sequence_y_at_receiving_side_in_pu());
+    set_rating(line.get_rating());
+    set_length(line.get_length());
+}
 
 DEVICE_ID AC_LINE::get_device_id() const
 {
