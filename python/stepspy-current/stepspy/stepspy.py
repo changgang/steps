@@ -1108,7 +1108,8 @@ class STEPS():
             (1) areanumber: Area number.
             (2) areaname: String of area name.
         Rets: N/A
-        Example: N/A
+        Example:
+            sim.add_area(1, "Area 1")
         """
         global STEPS_LIB
         areaname = self.__get_c_char_p_of_string(areaname)
@@ -1122,7 +1123,8 @@ class STEPS():
             (1) zonenumber: Zone number.
             (2) zonename: String of zone name.
         Rets: N/A
-        Example: N/A
+        Example:
+            sim.add_zone(1, "Zone 1")
         """
         global STEPS_LIB
         zonename = self.__get_c_char_p_of_string(zonename)
@@ -1136,7 +1138,8 @@ class STEPS():
             (1) ownernumber: Owner number.
             (2) ownername: String of owner name.
         Rets: N/A
-        Example: N/A
+        Example:
+            sim.add_owner(1, "Owner 1")
         """
         global STEPS_LIB
         ownername = self.__get_c_char_p_of_string(ownername)
@@ -1149,7 +1152,8 @@ class STEPS():
         Args:
             (1) generator: Tuple generator device id in format of (bus, ickt).
         Rets: N/A
-        Example: N/A
+        Example: 
+            sim.replace_generator_with_wt_generator((1, "#1"))
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
@@ -1163,7 +1167,8 @@ class STEPS():
         Args:
             (1) generator: Tuple generator device id in format of (bus, ickt).
         Rets: N/A
-        Example: N/A
+        Example: 
+            sim.replace_generator_with_pv_unit((1, "#1"))
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
@@ -1177,7 +1182,8 @@ class STEPS():
         Args:
             (1) generator: Tuple generator device id in format of (bus, ickt).
         Rets: N/A
-        Example: N/A
+        Example: 
+            sim.replace_generator_with_energy_storage((1, "#1"))
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
@@ -1191,12 +1197,30 @@ class STEPS():
         Args:
             (1) generator: Tuple generator device id in format of (bus, ickt).
         Rets: N/A
-        Example: N/A
+        Example: 
+            sim.replace_generator_with_sv_source((1, "#1"))
         """
         global STEPS_LIB
         bus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         STEPS_LIB.api_replace_generator_with_sv_source(bus, ickt, self.toolkit_index)
+        return
+    
+    def copy_bus(self, new_busnumber, new_busname, new_basevoltage, old_busnumber):
+        """
+        Add new bus with bus number, bus name, and base voltage, by copying data from old bus with old_busnumber.
+        Args:
+            (1) new_busnumber: New bus number.
+            (2) new_busname: String of new bus name.
+            (3) new_basevoltage: New base voltage in kV.
+            (3) old_busnumber: Old bus number.
+        Rets: N/A
+        Example:
+            sim.copy_bus(101, "BUS 101", 500.0, 1)
+        """
+        global STEPS_LIB
+        new_busname = self.__get_c_char_p_of_string(new_busname)
+        STEPS_LIB.api_copy_bus(new_busnumber, new_busname, new_basevoltage, old_busnumber, self.toolkit_index)
         return
     
     def copy_generator(self, new_generator, old_generator):
@@ -1206,7 +1230,8 @@ class STEPS():
             (1) new_generator: Tuple generator device id in format of (bus, ickt).
             (2) old_generator: Tuple generator device id in format of (bus, ickt).
         Rets: N/A
-        Example: N/A
+        Example: 
+            sim.copy_generator((101, "#1"), (1, "#1"))
         """
         global STEPS_LIB
         new_bus, new_ickt = self.__extract_single_bus_device_id(new_generator)
@@ -1223,7 +1248,8 @@ class STEPS():
             (1) new_generator: Tuple WT generator device id in format of (bus, ickt).
             (2) old_generator: Tuple WT generator device id in format of (bus, ickt).
         Rets: N/A
-        Example: N/A
+        Example: 
+            sim.copy_wt_generator((101, "#1"), (1, "#1"))
         """
         global STEPS_LIB
         new_bus, new_ickt = self.__extract_single_bus_device_id(new_generator)
@@ -1240,7 +1266,8 @@ class STEPS():
             (1) new_pvu: Tuple PV unit device id in format of (bus, ickt).
             (2) old_pvu: Tuple PV unit device id in format of (bus, ickt).
         Rets: N/A
-        Example: N/A
+        Example: 
+            sim.copy_pv_unit((101, "#1"), (1, "#1"))
         """
         global STEPS_LIB
         new_bus, new_ickt = self.__extract_single_bus_device_id(new_pvu)
@@ -1257,7 +1284,8 @@ class STEPS():
             (1) new_es: Tuple energy storage device id in format of (bus, ickt).
             (2) old_es: Tuple energy storage device id in format of (bus, ickt).
         Rets: N/A
-        Example: N/A
+        Example: 
+            sim.copy_energy_storage((101, "#1"), (1, "#1"))
         """
         global STEPS_LIB
         new_bus, new_ickt = self.__extract_single_bus_device_id(new_es)
@@ -1274,7 +1302,8 @@ class STEPS():
             (1) new_svs: Tuple SV source device id in format of (bus, ickt).
             (2) old_svs: Tuple SV source device id in format of (bus, ickt).
         Rets: N/A
-        Example: N/A
+        Example: 
+            sim.copy_sv_source((101, "#1"), (1, "#1"))
         """
         global STEPS_LIB
         new_bus, new_ickt = self.__extract_single_bus_device_id(new_svs)
@@ -1282,6 +1311,131 @@ class STEPS():
         old_bus, old_ickt = self.__extract_single_bus_device_id(old_svs)
         old_ickt = self.__get_c_char_p_of_string(old_ickt)
         STEPS_LIB.api_copy_sv_source(new_bus, new_ickt, old_bus, old_ickt, self.toolkit_index)
+        return
+
+    def copy_load(self, new_load, old_load):
+        """
+        Copy new load from old load
+        Args:
+            (1) new_load: Tuple load device id in format of (bus, ickt).
+            (2) old_load: Tuple load device id in format of (bus, ickt).
+        Rets: N/A
+        Example: 
+            sim.copy_load((101, "#1"), (1, "#1"))
+        """
+        global STEPS_LIB
+        new_bus, new_ickt = self.__extract_single_bus_device_id(new_load)
+        new_ickt = self.__get_c_char_p_of_string(new_ickt)
+        old_bus, old_ickt = self.__extract_single_bus_device_id(old_load)
+        old_ickt = self.__get_c_char_p_of_string(old_ickt)
+        STEPS_LIB.api_copy_load(new_bus, new_ickt, old_bus, old_ickt, self.toolkit_index)
+        return
+
+    def copy_fixed_shunt(self, new_fixed_shunt, old_fixed_shunt):
+        """
+        Copy new fixed shunt from old fixed shunt
+        Args:
+            (1) new_fixed_shunt: Tuple fixed shunt device id in format of (bus, ickt).
+            (2) old_fixed_shunt: Tuple fixed shunt device id in format of (bus, ickt).
+        Rets: N/A
+        Example: 
+            sim.copy_fixed_shunt((101, "#1"), (1, "#1"))
+        """
+        global STEPS_LIB
+        new_bus, new_ickt = self.__extract_single_bus_device_id(new_fixed_shunt)
+        new_ickt = self.__get_c_char_p_of_string(new_ickt)
+        old_bus, old_ickt = self.__extract_single_bus_device_id(old_fixed_shunt)
+        old_ickt = self.__get_c_char_p_of_string(old_ickt)
+        STEPS_LIB.api_copy_fixed_shunt(new_bus, new_ickt, old_bus, old_ickt, self.toolkit_index)
+        return
+
+    def copy_ac_line(self, new_ac_line, old_ac_line):
+        """
+        Copy new ac line from old ac line
+        Args:
+            (1) new_ac_line: Tuple ac line device id in format of (ibus, jbus, ickt).
+            (2) old_ac_line: Tuple ac line device id in format of (ibus, jbus, ickt).
+        Rets: N/A
+        Example: 
+            sim.copy_ac_line((101, 102, "#1"), (1, 2, "#1"))
+        """
+        global STEPS_LIB
+        new_ibus, new_jbus, new_ickt = self.__extract_double_bus_device_id(new_ac_line)
+        new_ickt = self.__get_c_char_p_of_string(new_ickt)
+        old_ibus, old_jbus, old_ickt = self.__extract_double_bus_device_id(old_ac_line)
+        old_ickt = self.__get_c_char_p_of_string(old_ickt)
+        STEPS_LIB.api_copy_ac_line(new_ibus, new_jbus, new_ickt, old_ibus, old_jbus, old_ickt, self.toolkit_index)
+        return
+
+    def copy_transformer(self, new_transformer, old_transformer):
+        """
+        Copy new transformer from old transformer
+        Args:
+            (1) new_transformer: Tuple transformer device id in format of (ibus, jbus, ickt) or (ibus, jbus, kbus, ickt).
+            (2) old_transformer: Tuple transformer device id in format of (ibus, jbus, ickt) or (ibus, jbus, kbus, ickt).
+        Rets: N/A
+        Example: 
+            sim.copy_transformer((101, 102, 103, "#new"), (1, 2, 3, "#1"))
+            sim.copy_transformer((104, 105, "#new"), (4, 5, "#1"))
+        """
+        global STEPS_LIB
+        new_ibus, new_jbus, new_kbus, new_ickt = self.__extract_triple_bus_device_id(new_transformer)
+        new_ickt = self.__get_c_char_p_of_string(new_ickt)
+        old_ibus, old_jbus, old_kbus, old_ickt = self.__extract_triple_bus_device_id(old_transformer)
+        old_ickt = self.__get_c_char_p_of_string(old_ickt)
+        STEPS_LIB.api_copy_transformer(new_ibus, new_jbus, new_kbus, new_ickt, old_ibus, old_jbus, old_kbus, old_ickt, self.toolkit_index)
+        return
+    
+    def copy_lcc_hvdc2t(self, new_lcc_hvdc2t, old_lcc_hvdc2t):
+        """
+        Copy new lcc hvdc2t from old lcc hvdc2t
+        Args:
+            (1) new_lcc_hvdc2t: Tuple lcc hvdc2t device id in format of (ibus, jbus, name).
+            (2) old_lcc_hvdc2t: Tuple lcc hvdc2t device id in format of (ibus, jbus, name).
+        Rets: N/A
+        Example: 
+            sim.copy_lcc_hvdc2t((101, 102, "newDC Link"), (1, 2, "DC Link"))
+        """
+        global STEPS_LIB
+        new_ibus, new_jbus, new_name = self.__extract_double_bus_device_id(new_lcc_hvdc2t)
+        new_name = self.__get_c_char_p_of_string(new_name)
+        old_ibus, old_jbus, old_name = self.__extract_double_bus_device_id(old_lcc_hvdc2t)
+        old_name = self.__get_c_char_p_of_string(old_name)
+        STEPS_LIB.api_copy_lcc_hvdc2t(new_ibus, new_jbus, new_name, old_ibus, old_jbus, old_name, self.toolkit_index)
+        return
+    
+    def scale_ac_line_parameters(self, line, scale):
+        """
+        Scale ac line parameters
+        Args:
+            (1) line: Tuple ac line device id in format of (ibus, jbus, ickt).
+            (2) scale: double
+        Rets: N/A
+        Example: 
+            sim.copy_ac_line((101, 102, "#1"), (1, 2, "#1")) # copy a new line
+            sim.scale_ac_line_parameters((101, 102, "#1"), 0.5) # change line parameters to half
+        """
+        global STEPS_LIB
+        ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        STEPS_LIB.api_scale_ac_line_parameters(ibus, jbus, ickt, scale, self.toolkit_index)
+        return
+    
+    def scale_transformer_winding_capacity(self, transformer, scale):
+        """
+        Scale transformer winding capacity
+        Args:
+            (1) transformer: Tuple transformer device id in format of (ibus, jbus, ickt) or (ibus, jbus, kbus, ickt).
+            (2) scale: double
+        Rets: N/A
+        Example: 
+            sim.copy_transformer((101, 102, "#1"), (1, 2, "#1")) # copy a new transformer
+            sim.scale_transformer_winding_capacity((101, 102, "#1"), 0.5) # change transformer winding capacity to half
+        """
+        global STEPS_LIB
+        ibus, jbus, kbus, ickt = self.__extract_triple_bus_device_id(transformer)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        STEPS_LIB.api_scale_transformer_winding_capacity(ibus, jbus, kbus, ickt, scale, self.toolkit_index)
         return
     
     def remove_bus(self, busnumber):

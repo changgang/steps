@@ -321,6 +321,8 @@ def load_library(libsteps_file):
     libsteps.api_replace_generator_with_sv_source.restype = None
     libsteps.api_replace_generator_with_sv_source.argtype = (c_uint, c_char_p, c_uint)
 
+    libsteps.api_copy_bus.restype = None
+    libsteps.api_copy_bus.argtype = (c_uint, c_char_p, c_double, c_uint, c_uint)
     libsteps.api_copy_generator.restype = None
     libsteps.api_copy_generator.argtype = (c_uint, c_char_p, c_uint, c_char_p, c_uint)
     libsteps.api_copy_wt_generator.restype = None
@@ -331,6 +333,21 @@ def load_library(libsteps_file):
     libsteps.api_copy_energy_storage.argtype = (c_uint, c_char_p, c_uint, c_char_p, c_uint)
     libsteps.api_copy_sv_source.restype = None
     libsteps.api_copy_sv_source.argtype = (c_uint, c_char_p, c_uint, c_char_p, c_uint)
+    libsteps.api_copy_load.restype = None
+    libsteps.api_copy_load.argtype = (c_uint, c_char_p, c_uint, c_char_p, c_uint)
+    libsteps.api_copy_fixed_shunt.restype = None
+    libsteps.api_copy_fixed_shunt.argtype = (c_uint, c_char_p, c_uint, c_char_p, c_uint)
+    libsteps.api_copy_ac_line.restype = None
+    libsteps.api_copy_ac_line.argtype = (c_uint, c_uint, c_char_p, c_uint, c_uint, c_char_p, c_uint)
+    libsteps.api_copy_transformer.restype = None
+    libsteps.api_copy_transformer.argtype = (c_uint, c_uint, c_uint, c_char_p, c_uint, c_uint, c_uint, c_char_p, c_uint)
+    libsteps.api_copy_lcc_hvdc.restype = None
+    libsteps.api_copy_lcc_hvdc.argtype = (c_uint, c_uint, c_char_p, c_uint, c_uint, c_char_p, c_uint)
+
+    libsteps.api_scale_ac_line_parameters.restype = None
+    libsteps.api_scale_ac_line_parameters.argtype = (c_uint, c_uint, c_char_p, c_double, c_uint)
+    libsteps.api_scale_transformer_winding_capacity.restype = None
+    libsteps.api_scale_transformer_winding_capacity.argtype = (c_uint, c_uint, c_uint, c_char_p, c_double, c_uint)
 
     libsteps.api_remove_bus.restype = None
     libsteps.api_remove_bus.argtypes = (c_uint, c_uint)

@@ -382,14 +382,7 @@ void api_copy_ac_line(unsigned int new_ibus_number, unsigned int new_jbus_number
     psdb.copy_ac_line(new_did, old_did);
 }
 
-void api_copy_2w_transformer(unsigned int new_ibus_number, unsigned int new_jbus_number, char* new_identifier, unsigned int old_ibus_number, unsigned int old_jbus_number, char* old_identifier, unsigned int toolkit_index)
-{
-    api_copy_3w_transformer(new_ibus_number, new_jbus_number, 0, new_identifier,
-                            old_ibus_number, old_jbus_number, 0, old_identifier,
-                            toolkit_index);
-}
-
-void api_copy_3w_transformer(unsigned int new_ibus_number, unsigned int new_jbus_number,  unsigned int new_kbus_number, char* new_identifier, unsigned int old_ibus_number, unsigned int old_jbus_number, unsigned int old_kbus_number, char* old_identifier, unsigned int toolkit_index)
+void api_copy_transformer(unsigned int new_ibus_number, unsigned int new_jbus_number,  unsigned int new_kbus_number, char* new_identifier, unsigned int old_ibus_number, unsigned int old_jbus_number, unsigned int old_kbus_number, char* old_identifier, unsigned int toolkit_index)
 {
     DEVICE_ID new_did = get_transformer_device_id(new_ibus_number, new_jbus_number, new_kbus_number, new_identifier);
     DEVICE_ID old_did = get_transformer_device_id(old_ibus_number, old_jbus_number, old_kbus_number, old_identifier);
@@ -415,12 +408,7 @@ void api_scale_ac_line_parameters(unsigned int ibus, unsigned int jbus, char* id
     line->scale_line_parameters(scale);
 }
 
-void api_scale_2w_transformer_winding_capacity(unsigned int ibus, unsigned int jbus, char* identifier, double scale, unsigned int toolkit_index)
-{
-    api_scale_3w_transformer_winding_capacity(ibus, jbus, 0, identifier, scale, toolkit_index);
-}
-
-void api_scale_3w_transformer_winding_capacity(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* identifier, double scale, unsigned int toolkit_index)
+void api_scale_transformer_winding_capacity(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* identifier, double scale, unsigned int toolkit_index)
 {
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
     STEPS& toolkit = get_toolkit(toolkit_index);
