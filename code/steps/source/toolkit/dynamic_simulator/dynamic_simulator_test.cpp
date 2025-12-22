@@ -856,8 +856,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     simulator.install_meter(meter);
     simulator.prepare_meters();
     */
-    simulator.prepare_bus_related_meter(3, "Frequency in Hz");
-    simulator.prepare_bus_related_meter(3, "Voltage in pu");
+    simulator.prepare_one_bus_related_meter(3, "Frequency in Hz");
+    simulator.prepare_one_bus_related_meter(3, "Voltage in pu");
     meters = simulator.prepare_wt_generator_related_meters();
     simulator.install_meters(meters);
 
@@ -971,15 +971,15 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
     simulator.install_meter(meter);
     simulator.prepare_meters();
     */
-    simulator.prepare_bus_related_meter(1, "Frequency in Hz");
-    simulator.prepare_bus_related_meter(2, "Frequency in Hz");
-    simulator.prepare_bus_related_meter(3, "Frequency in Hz");
-    simulator.prepare_bus_related_meter(1, "Voltage in pu");
-    simulator.prepare_bus_related_meter(2, "Voltage in pu");
-    simulator.prepare_bus_related_meter(3, "Voltage in pu");
-    simulator.prepare_bus_related_meter(1, "Angle in deg");
-    simulator.prepare_bus_related_meter(2, "Angle in deg");
-    simulator.prepare_bus_related_meter(3, "Angle in deg");
+    simulator.prepare_one_bus_related_meter(1, "Frequency in Hz");
+    simulator.prepare_one_bus_related_meter(2, "Frequency in Hz");
+    simulator.prepare_one_bus_related_meter(3, "Frequency in Hz");
+    simulator.prepare_one_bus_related_meter(1, "Voltage in pu");
+    simulator.prepare_one_bus_related_meter(2, "Voltage in pu");
+    simulator.prepare_one_bus_related_meter(3, "Voltage in pu");
+    simulator.prepare_one_bus_related_meter(1, "Angle in deg");
+    simulator.prepare_one_bus_related_meter(2, "Angle in deg");
+    simulator.prepare_one_bus_related_meter(3, "Angle in deg");
     meters = simulator.prepare_wt_generator_related_meters();
     simulator.install_meters(meters);
 

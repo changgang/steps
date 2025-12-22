@@ -341,8 +341,8 @@ def load_library(libsteps_file):
     libsteps.api_copy_ac_line.argtype = (c_uint, c_uint, c_char_p, c_uint, c_uint, c_char_p, c_uint)
     libsteps.api_copy_transformer.restype = None
     libsteps.api_copy_transformer.argtype = (c_uint, c_uint, c_uint, c_char_p, c_uint, c_uint, c_uint, c_char_p, c_uint)
-    libsteps.api_copy_lcc_hvdc.restype = None
-    libsteps.api_copy_lcc_hvdc.argtype = (c_uint, c_uint, c_char_p, c_uint, c_uint, c_char_p, c_uint)
+    libsteps.api_copy_lcc_hvdc2t.restype = None
+    libsteps.api_copy_lcc_hvdc2t.argtype = (c_uint, c_uint, c_char_p, c_uint, c_uint, c_char_p, c_uint)
 
     libsteps.api_scale_ac_line_length_and_related_parameters.restype = None
     libsteps.api_scale_ac_line_length_and_related_parameters.argtype = (c_uint, c_uint, c_char_p, c_double, c_uint)
