@@ -421,11 +421,11 @@ void PSASPS3::check_limits_in_initialization()
 
 void PSASPS3::run(DYNAMIC_MODE mode)
 {
-    double speed_deviation_pu = get_signal_value_of_slot(0);
+    double speed_deviation_in_pu = get_signal_value_of_slot(0);
     double Pe_pu = get_signal_value_of_slot(1);
     double Pmech_pu = get_signal_value_of_slot(2);
 
-    double input = Macc*(speed_deviation_pu-speed_deviation_ref_pu)+Iacc*(Pmech_pu-Pmech_ref_pu)-Nacc*(Pe_pu-Pe_ref_pu);
+    double input = Macc*(speed_deviation_in_pu-speed_deviation_ref_pu)+Iacc*(Pmech_pu-Pmech_ref_pu)-Nacc*(Pe_pu-Pe_ref_pu);
 
     if(get_dedc_1_flag()==false)
     {

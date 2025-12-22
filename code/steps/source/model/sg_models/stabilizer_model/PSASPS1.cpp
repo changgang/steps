@@ -333,11 +333,11 @@ void PSASPS1::check_limits_in_initialization()
 
 void PSASPS1::run(DYNAMIC_MODE mode)
 {
-    double speed_deviation_pu = get_signal_value_of_slot(0);
+    double speed_deviation_in_pu = get_signal_value_of_slot(0);
     double Pe_pu = get_signal_value_of_slot(1);
     double Vterminal_pu = get_signal_value_of_slot(2);
 
-    double input = Kq1*(speed_deviation_pu-speed_deviation_ref_pu)-Kq2*(Pe_pu-Pe_ref_pu)-Kq3*(Vterminal_pu-Vterminal_ref_pu);
+    double input = Kq1*(speed_deviation_in_pu-speed_deviation_ref_pu)-Kq2*(Pe_pu-Pe_ref_pu)-Kq3*(Vterminal_pu-Vterminal_ref_pu);
     if(K==0)
     {
         dedc_block.set_input(input);

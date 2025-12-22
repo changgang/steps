@@ -11,14 +11,14 @@
 #include "header/steps_namespace.h"
 #include "header/basic/utility.h"
 
-double es_meter_getter::get_terminal_current_pu_mbase(const METER_PARAMETER& para)
+double es_meter_getter::get_terminal_current_in_pu_mbase(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
     return model ? model->get_terminal_current_in_pu_based_on_mbase() : 0.0;
 }
 
-double es_meter_getter::get_terminal_current_pu_sbase(const METER_PARAMETER& para)
+double es_meter_getter::get_terminal_current_in_pu_sbase(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
@@ -33,7 +33,7 @@ double es_meter_getter::get_terminal_current_pu_sbase(const METER_PARAMETER& par
         return 0.0;
 }
 
-double es_meter_getter::get_terminal_current_kA(const METER_PARAMETER& para)
+double es_meter_getter::get_terminal_current_in_kA(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
@@ -51,14 +51,14 @@ double es_meter_getter::get_terminal_current_kA(const METER_PARAMETER& para)
         return 0.0;
 }
 
-double es_meter_getter::get_terminal_active_power_pu_mbase(const METER_PARAMETER& para)
+double es_meter_getter::get_terminal_active_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
     return model ? model->get_terminal_active_power_in_pu_based_on_mbase() : 0.0;
 }
 
-double es_meter_getter::get_terminal_active_power_pu_sbase(const METER_PARAMETER& para)
+double es_meter_getter::get_terminal_active_power_in_pu_sbase(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
@@ -72,21 +72,21 @@ double es_meter_getter::get_terminal_active_power_pu_sbase(const METER_PARAMETER
         return 0.0;
 }
 
-double es_meter_getter::get_terminal_active_power_MW(const METER_PARAMETER& para)
+double es_meter_getter::get_terminal_active_power_in_MW(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
     return model ? model->get_terminal_active_power_in_MW() : 0.0;
 }
 
-double es_meter_getter::get_terminal_reactive_power_pu_mbase(const METER_PARAMETER& para)
+double es_meter_getter::get_terminal_reactive_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
     return model ? model->get_terminal_reactive_power_in_pu_based_on_mbase() : 0.0;
 }
 
-double es_meter_getter::get_terminal_reactive_power_pu_sbase(const METER_PARAMETER& para)
+double es_meter_getter::get_terminal_reactive_power_in_pu_sbase(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
@@ -100,14 +100,14 @@ double es_meter_getter::get_terminal_reactive_power_pu_sbase(const METER_PARAMET
         return 0.0;
 }
 
-double es_meter_getter::get_terminal_reactive_power_MVar(const METER_PARAMETER& para)
+double es_meter_getter::get_terminal_reactive_power_in_MVar(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
     return model ? model->get_terminal_reactive_power_in_MVar() : 0.0;
 }
 
-double es_meter_getter::get_terminal_apparent_power_pu_mbase(const METER_PARAMETER& para)
+double es_meter_getter::get_terminal_apparent_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
@@ -121,7 +121,7 @@ double es_meter_getter::get_terminal_apparent_power_pu_mbase(const METER_PARAMET
         return 0.0;
 }
 
-double es_meter_getter::get_terminal_apparent_power_pu_sbase(const METER_PARAMETER& para)
+double es_meter_getter::get_terminal_apparent_power_in_pu_sbase(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
@@ -137,7 +137,7 @@ double es_meter_getter::get_terminal_apparent_power_pu_sbase(const METER_PARAMET
         return 0.0;
 }
 
-double es_meter_getter::get_terminal_apparent_power_MVA(const METER_PARAMETER& para)
+double es_meter_getter::get_terminal_apparent_power_in_MVA(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
@@ -151,56 +151,56 @@ double es_meter_getter::get_terminal_apparent_power_MVA(const METER_PARAMETER& p
         return 0.0;
 }
 
-double es_meter_getter::get_active_current_command_pu(const METER_PARAMETER& para)
+double es_meter_getter::get_active_current_command_in_pu(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
     return model ? model->get_active_current_command_in_pu_based_on_mbase() : 0.0;
 }
 
-double es_meter_getter::get_reactive_current_command_pu(const METER_PARAMETER& para)
+double es_meter_getter::get_reactive_current_command_in_pu(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
     return model ? model->get_reactive_current_command_in_pu_based_on_mbase() : 0.0;
 }
 
-double es_meter_getter::get_active_power_command_pu(const METER_PARAMETER& para)
+double es_meter_getter::get_active_power_command_in_pu(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
     return model ? model->get_active_power_command_in_pu_based_on_mbase() : 0.0;
 }
 
-double es_meter_getter::get_reactive_power_command_pu(const METER_PARAMETER& para)
+double es_meter_getter::get_reactive_power_command_in_pu(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
     return model ? model->get_reactive_power_command_in_pu_based_on_mbase() : 0.0;
 }
 
-double es_meter_getter::get_reactive_voltage_command_pu(const METER_PARAMETER& para)
+double es_meter_getter::get_reactive_voltage_command_in_pu(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
     return model ? model->get_reactive_voltage_command_in_pu() : 0.0;
 }
 
-double es_meter_getter::get_state_of_charge_pu(const METER_PARAMETER& para)
+double es_meter_getter::get_state_of_charge_in_pu(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_SOC_MODEL* model = es->get_es_soc_model();
     return model ? model->get_state_of_charge_in_pu() : 0.0;
 }
 
-double es_meter_getter::get_soc_power_pu_mbase(const METER_PARAMETER& para)
+double es_meter_getter::get_soc_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_SOC_MODEL* model = es->get_es_soc_model();
     return model ? model->get_soc_power_in_pu_based_on_mbase() : 0.0;
 }
 
-double es_meter_getter::get_soc_power_pu_sbase(const METER_PARAMETER& para)
+double es_meter_getter::get_soc_power_in_pu_sbase(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_SOC_MODEL* model = es->get_es_soc_model();
@@ -214,21 +214,21 @@ double es_meter_getter::get_soc_power_pu_sbase(const METER_PARAMETER& para)
         return 0.0;
 }
 
-double es_meter_getter::get_soc_power_MW(const METER_PARAMETER& para)
+double es_meter_getter::get_soc_power_in_MW(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_SOC_MODEL* model = es->get_es_soc_model();
     return model ? model->get_soc_power_in_MW() : 0.0;
 }
 
-double es_meter_getter::get_mechanical_power_pu_mbase(const METER_PARAMETER& para)
+double es_meter_getter::get_mechanical_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_PRIMARY_MODEL* model = es->get_es_primary_model();
     return model ? model->get_mechanical_power_in_pu_on_mbase() : 0.0;
 }
 
-double es_meter_getter::get_rotor_speed_pu(const METER_PARAMETER& para)
+double es_meter_getter::get_rotor_speed_in_pu(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_ROTOR_MODEL* model = es->get_es_rotor_model();
@@ -243,35 +243,35 @@ double es_meter_getter::get_rotor_speed_pu(const METER_PARAMETER& para)
         return 0.0;
 }
 
-double es_meter_getter::get_rotor_speed_reference_pu(const METER_PARAMETER& para)
+double es_meter_getter::get_rotor_speed_reference_in_pu(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_PRIMARY_MODEL* model = es->get_es_primary_model();
     return model ? model->get_rotor_speed_reference_in_pu() : 0.0;
 }
 
-double es_meter_getter::get_valve_reference_pu(const METER_PARAMETER& para)
+double es_meter_getter::get_valve_reference_in_pu(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_PRIMARY_MODEL* model = es->get_es_primary_model();
     return model ? model->get_valve_reference_in_pu() : 0.0;
 }
 
-double es_meter_getter::get_valve_pu(const METER_PARAMETER& para)
+double es_meter_getter::get_valve_in_pu(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_PRIMARY_MODEL* model = es->get_es_primary_model();
     return model ? model->get_valve_in_pu() : 0.0;
 }
 
-double es_meter_getter::get_active_power_reference_pu_mbase(const METER_PARAMETER& para)
+double es_meter_getter::get_active_power_reference_in_pu_mbase(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_AUXILIARY_MODEL* model = es->get_es_auxiliary_model();
     return model ? model->get_active_power_reference_in_pu() : 0.0;
 }
 
-double es_meter_getter::get_frequency_regulation_power_pu_mbase(const METER_PARAMETER& para)
+double es_meter_getter::get_frequency_regulation_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_ELECTRICAL_MODEL* model = es->get_es_electrical_model();

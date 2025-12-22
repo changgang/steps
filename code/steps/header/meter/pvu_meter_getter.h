@@ -7,27 +7,27 @@ using namespace std;
 
 namespace pvu_meter_getter
 {
-    double get_terminal_current_pu_mbase(const METER_PARAMETER& para);
-    double get_terminal_current_pu_sbase(const METER_PARAMETER& para);
-    double get_terminal_current_kA(const METER_PARAMETER& para);
+    double get_terminal_current_in_pu_mbase(const METER_PARAMETER& para);
+    double get_terminal_current_in_pu_sbase(const METER_PARAMETER& para);
+    double get_terminal_current_in_kA(const METER_PARAMETER& para);
 
-    double get_terminal_active_power_pu_mbase(const METER_PARAMETER& para);
-    double get_terminal_active_power_pu_sbase(const METER_PARAMETER& para);
-    double get_terminal_active_power_MW(const METER_PARAMETER& para);
+    double get_terminal_active_power_in_pu_mbase(const METER_PARAMETER& para);
+    double get_terminal_active_power_in_pu_sbase(const METER_PARAMETER& para);
+    double get_terminal_active_power_in_MW(const METER_PARAMETER& para);
 
-    double get_terminal_reactive_power_pu_mbase(const METER_PARAMETER& para);
-    double get_terminal_reactive_power_pu_sbase(const METER_PARAMETER& para);
-    double get_terminal_reactive_power_MVar(const METER_PARAMETER& para);
+    double get_terminal_reactive_power_in_pu_mbase(const METER_PARAMETER& para);
+    double get_terminal_reactive_power_in_pu_sbase(const METER_PARAMETER& para);
+    double get_terminal_reactive_power_in_MVar(const METER_PARAMETER& para);
 
-    double get_terminal_apparent_power_pu_mbase(const METER_PARAMETER& para);
-    double get_terminal_apparent_power_pu_sbase(const METER_PARAMETER& para);
-    double get_terminal_apparent_power_MVA(const METER_PARAMETER& para);
+    double get_terminal_apparent_power_in_pu_mbase(const METER_PARAMETER& para);
+    double get_terminal_apparent_power_in_pu_sbase(const METER_PARAMETER& para);
+    double get_terminal_apparent_power_in_MVA(const METER_PARAMETER& para);
 
-    double get_active_current_command_pu(const METER_PARAMETER& para);
-    double get_reactive_current_command_pu(const METER_PARAMETER& para);
-    double get_active_power_command_pu(const METER_PARAMETER& para);
-    double get_reactive_power_command_pu(const METER_PARAMETER& para);
-    double get_reactive_voltage_command_pu(const METER_PARAMETER& para);
+    double get_active_current_command_in_pu(const METER_PARAMETER& para);
+    double get_reactive_current_command_in_pu(const METER_PARAMETER& para);
+    double get_active_power_command_in_pu(const METER_PARAMETER& para);
+    double get_reactive_power_command_in_pu(const METER_PARAMETER& para);
+    double get_reactive_voltage_command_in_pu(const METER_PARAMETER& para);
 
     double get_solar_irradiance_pu_S0(const METER_PARAMETER& para);
     double get_solar_irradiance_pu_Sref(const METER_PARAMETER& para);
@@ -39,8 +39,8 @@ namespace pvu_meter_getter
     double get_max_available_power_irradiance_pu_sbase(const METER_PARAMETER& para);
     double get_max_available_power_irradiance_MW(const METER_PARAMETER& para);
 
-    double get_panel_power_pu_mbase(const METER_PARAMETER& para);
-    double get_panel_power_MW(const METER_PARAMETER& para);
+    double get_panel_power_in_pu_mbase(const METER_PARAMETER& para);
+    double get_panel_power_in_MW(const METER_PARAMETER& para);
 
     double get_converter_model_internal_variable(const METER_PARAMETER& para);
     double get_panel_model_internal_variable(const METER_PARAMETER& para);

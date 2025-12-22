@@ -60,9 +60,9 @@ string LOAD_MODEL::get_model_type() const
 void LOAD_MODEL::synchronize_bus_voltage_and_frequency()
 {
     BUS* bus = get_bus_pointer();
-    voltage_pu = bus->get_positive_sequence_voltage_in_pu();
-    complex_voltage_pu = bus->get_positive_sequence_complex_voltage_in_pu();
-    frequency_deviation_pu = bus->get_frequency_deviation_in_pu();
+    voltage_in_pu = bus->get_positive_sequence_voltage_in_pu();
+    complex_voltage_in_pu = bus->get_positive_sequence_complex_voltage_in_pu();
+    frequency_deviation_in_pu = bus->get_frequency_deviation_in_pu();
 }
 
 double LOAD_MODEL::get_bus_positive_sequence_voltage_in_kV() const

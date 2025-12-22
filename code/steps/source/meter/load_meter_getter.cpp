@@ -7,31 +7,31 @@
 #include "header/basic/utility.h"
 #include <complex>
 
-double load_meter_getter::get_active_power_MW(const METER_PARAMETER& para)
+double load_meter_getter::get_active_power_in_MW(const METER_PARAMETER& para)
 {
     LOAD* load = (LOAD*) para.device_pointer;
     return load->get_dynamic_load_in_MVA().real();
 }
 
-double load_meter_getter::get_active_power_pu(const METER_PARAMETER& para)
+double load_meter_getter::get_active_power_in_pu(const METER_PARAMETER& para)
 {
     LOAD* load = (LOAD*) para.device_pointer;
     return load->get_dynamic_load_in_pu().real();
 }
 
-double load_meter_getter::get_reactive_power_MVar(const METER_PARAMETER& para)
+double load_meter_getter::get_reactive_power_in_MVar(const METER_PARAMETER& para)
 {
     LOAD* load = (LOAD*) para.device_pointer;
     return load->get_dynamic_load_in_MVA().imag();
 }
 
-double load_meter_getter::get_reactive_power_pu(const METER_PARAMETER& para)
+double load_meter_getter::get_reactive_power_in_pu(const METER_PARAMETER& para)
 {
     LOAD* load = (LOAD*) para.device_pointer;
     return load->get_dynamic_load_in_pu().imag();
 }
 
-double load_meter_getter::get_current_kA(const METER_PARAMETER& para)
+double load_meter_getter::get_current_in_kA(const METER_PARAMETER& para)
 {
     LOAD* load = (LOAD*) para.device_pointer;
     STEPS& toolkit = load->get_toolkit();
@@ -42,10 +42,28 @@ double load_meter_getter::get_current_kA(const METER_PARAMETER& para)
     return ibase * steps_fast_complex_abs(load->get_dynamics_load_current_in_pu_based_on_system_base_power());
 }
 
-double load_meter_getter::get_current_pu(const METER_PARAMETER& para)
+double load_meter_getter::get_current_in_pu(const METER_PARAMETER& para)
 {
     LOAD* load = (LOAD*) para.device_pointer;
     return steps_fast_complex_abs(load->get_dynamics_load_current_in_pu_based_on_system_base_power());
+}
+
+double load_meter_getter::get_total_scale_in_pu(const METER_PARAMETER& para)
+{
+    LOAD* load = (LOAD*) para.device_pointer;
+    return load->get_load_total_scale_factor_in_pu();
+}
+
+double load_meter_getter::get_manually_scale_in_pu(const METER_PARAMETER& para)
+{
+    LOAD* load = (LOAD*) para.device_pointer;
+    return load->get_load_manually_scale_factor_in_pu();
+}
+
+double load_meter_getter::get_relay_shed_scale_in_pu(const METER_PARAMETER& para)
+{
+    LOAD* load = (LOAD*) para.device_pointer;
+    return load->get_load_relay_shed_scale_factor_in_pu();
 }
 
 double load_meter_getter::get_load_model_internal_variable(const METER_PARAMETER& para)
@@ -70,22 +88,4 @@ double load_meter_getter::get_voltage_relay_model_internal_variable(const METER_
     string internal_var_name = para.internal_var_name;
     LOAD_VOLTAGE_RELAY_MODEL* model = load->get_load_voltage_relay_model();
     return model->get_model_internal_variable_with_name(internal_var_name);
-}
-
-double load_meter_getter::get_total_scale_in_pu(const METER_PARAMETER& para)
-{
-    LOAD* load = (LOAD*) para.device_pointer;
-    return load->get_load_total_scale_factor_in_pu();
-}
-
-double load_meter_getter::get_manually_scale_in_pu(const METER_PARAMETER& para)
-{
-    LOAD* load = (LOAD*) para.device_pointer;
-    return load->get_load_manually_scale_factor_in_pu();
-}
-
-double load_meter_getter::get_relay_shed_scale_in_pu(const METER_PARAMETER& para)
-{
-    LOAD* load = (LOAD*) para.device_pointer;
-    return load->get_load_relay_shed_scale_factor_in_pu();
 }

@@ -395,11 +395,11 @@ void PSASPS2::check_limits_in_initialization()
 
 void PSASPS2::run(DYNAMIC_MODE mode)
 {
-    double speed_deviation_pu = get_signal_value_of_slot(0);
+    double speed_deviation_in_pu = get_signal_value_of_slot(0);
     double Pe_pu = get_signal_value_of_slot(1);
     double Pmech_pu = get_signal_value_of_slot(2);
 
-    sensor_w.set_input(speed_deviation_pu);
+    sensor_w.set_input(speed_deviation_in_pu);
     sensor_w.run(mode);
 
     sensor_p.set_input(Pe_pu);
