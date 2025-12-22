@@ -103,7 +103,7 @@ EXPORT_STEPS_DLL void api_copy_ac_line(unsigned int new_ibus_number, unsigned in
 EXPORT_STEPS_DLL void api_copy_transformer(unsigned int new_ibus_number, unsigned int new_jbus_number,  unsigned int new_kbus_number, char* new_identifier, unsigned int old_ibus_number, unsigned int old_jbus_number, unsigned int old_kbus_number, char* old_identifier, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_copy_lcc_hvdc2t(unsigned int new_rec_bus_number, unsigned int new_inv_bus_number, char* new_hvdcname, unsigned int old_rec_bus_number, unsigned int old_inv_bus_number, char* old_hvdcname, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
-EXPORT_STEPS_DLL void api_scale_ac_line_parameters(unsigned int ibus, unsigned int jbus, char* identifier, double scale, unsigned int toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_scale_ac_line_length_and_related_parameters(unsigned int ibus, unsigned int jbus, char* identifier, double scale, unsigned int toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_scale_transformer_winding_capacity(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* identifier, double scale, unsigned int toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void api_remove_bus(unsigned int bus_number, unsigned int toolkit_index=INDEX_NOT_EXIST);

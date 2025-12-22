@@ -1404,21 +1404,21 @@ class STEPS():
         STEPS_LIB.api_copy_lcc_hvdc2t(new_ibus, new_jbus, new_name, old_ibus, old_jbus, old_name, self.toolkit_index)
         return
     
-    def scale_ac_line_parameters(self, line, scale):
+    def scale_ac_line_length_and_related_parameters(self, line, scale):
         """
-        Scale ac line parameters
+        Scale ac line length and related parameters, including Z and Y parameters.
         Args:
             (1) line: Tuple ac line device id in format of (ibus, jbus, ickt).
             (2) scale: double
         Rets: N/A
         Example: 
             sim.copy_ac_line((101, 102, "#1"), (1, 2, "#1")) # copy a new line
-            sim.scale_ac_line_parameters((101, 102, "#1"), 0.5) # change line parameters to half
+            sim.scale_ac_line_length_and_related_parameters((101, 102, "#1"), 0.5) # change line parameters to half
         """
         global STEPS_LIB
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
         ickt = self.__get_c_char_p_of_string(ickt)
-        STEPS_LIB.api_scale_ac_line_parameters(ibus, jbus, ickt, scale, self.toolkit_index)
+        STEPS_LIB.api_scale_ac_line_length_and_related_parameters(ibus, jbus, ickt, scale, self.toolkit_index)
         return
     
     def scale_transformer_winding_capacity(self, transformer, scale):

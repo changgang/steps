@@ -344,8 +344,8 @@ def load_library(libsteps_file):
     libsteps.api_copy_lcc_hvdc.restype = None
     libsteps.api_copy_lcc_hvdc.argtype = (c_uint, c_uint, c_char_p, c_uint, c_uint, c_char_p, c_uint)
 
-    libsteps.api_scale_ac_line_parameters.restype = None
-    libsteps.api_scale_ac_line_parameters.argtype = (c_uint, c_uint, c_char_p, c_double, c_uint)
+    libsteps.api_scale_ac_line_length_and_related_parameters.restype = None
+    libsteps.api_scale_ac_line_length_and_related_parameters.argtype = (c_uint, c_uint, c_char_p, c_double, c_uint)
     libsteps.api_scale_transformer_winding_capacity.restype = None
     libsteps.api_scale_transformer_winding_capacity.argtype = (c_uint, c_uint, c_uint, c_char_p, c_double, c_uint)
 

@@ -399,13 +399,13 @@ void api_copy_lcc_hvdc2t(unsigned int new_rec_bus_number, unsigned int new_inv_b
     psdb.copy_lcc_hvdc2t(new_rec_bus_number, new_inv_bus_number, new_hvdcname, old_did);
 }
 
-void api_scale_ac_line_parameters(unsigned int ibus, unsigned int jbus, char* identifier, double scale, unsigned int toolkit_index)
+void api_scale_ac_line_length_and_related_parameters(unsigned int ibus, unsigned int jbus, char* identifier, double scale, unsigned int toolkit_index)
 {
     DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     AC_LINE* line = psdb.get_ac_line(did);
-    line->scale_line_parameters(scale);
+    line->scale_length_and_related_parameters(scale);
 }
 
 void api_scale_transformer_winding_capacity(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* identifier, double scale, unsigned int toolkit_index)

@@ -39,7 +39,7 @@ class AC_LINE : public NONBUS_DEVICE
         void set_meter_end_bus(unsigned int meter_bus);
         void set_length(double length);
 
-        void scale_line_parameters(double scale);
+        void scale_length_and_related_parameters(double scale);
 
         void set_mutual_admittances(vector<complex<double>> Y);
         void set_line_pointers_corresponding_to_mutual_admittances(vector<AC_LINE*> lineptrs);

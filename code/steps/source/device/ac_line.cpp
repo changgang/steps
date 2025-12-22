@@ -173,7 +173,7 @@ void AC_LINE::set_length(double line_length)
     if(line_length>=0.0) this->length = line_length;
 }
 
-void AC_LINE::scale_line_parameters(double scale)
+void AC_LINE::scale_length_and_related_parameters(double scale)
 {
     set_line_positive_sequence_z_in_pu(scale*get_line_positive_sequence_z_in_pu());
     set_line_positive_sequence_y_in_pu(scale*get_line_positive_sequence_y_in_pu());
