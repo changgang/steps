@@ -93,8 +93,8 @@ class DYNAMICS_SIMULATOR
 
         void prepare_meters();
         void prepare_bus_related_meters();
-        void prepare_generator_related_meters();
-        void prepare_wt_generator_related_meters();
+        vector<METER> prepare_generator_related_meters();
+        vector<METER> prepare_wt_generator_related_meters();
         void prepare_pv_unit_related_meters();
         void prepare_energy_storage_related_meters();
         void prepare_sv_source_related_meters();
@@ -107,8 +107,8 @@ class DYNAMICS_SIMULATOR
         void prepare_equivalent_device_related_meters();
 
         void prepare_one_bus_related_meters(unsigned int bus);
-        void prepare_one_generator_related_meters(const DEVICE_ID& did);
-        void prepare_one_wt_generator_related_meters(const DEVICE_ID& did);
+        vector<METER> prepare_one_generator_related_meters(const DEVICE_ID& did);
+        vector<METER> prepare_one_wt_generator_related_meters(const DEVICE_ID& did);
         void prepare_one_pv_unit_related_meters(const DEVICE_ID& did);
         void prepare_one_energy_storage_related_meters(const DEVICE_ID& did);
         void prepare_one_sv_source_related_meters(const DEVICE_ID& did);
@@ -121,8 +121,8 @@ class DYNAMICS_SIMULATOR
         void prepare_one_equivalent_device_related_meters(const DEVICE_ID& did);
 
         void prepare_one_bus_related_meter(unsigned int bus, string meter_type);
-        void prepare_one_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
-        void prepare_one_wt_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
+        METER prepare_one_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
+        METER prepare_one_wt_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
         void prepare_one_pv_unit_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
         void prepare_one_energy_storage_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
         void prepare_one_sv_source_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
@@ -137,7 +137,8 @@ class DYNAMICS_SIMULATOR
         void prepare_one_mt_hvdc_related_meter(string mtdc_name, string device_name, string meter_type, string var_name="");
         void prepare_one_equivalent_device_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
 
-        void append_meter(const METER& meter);
+        void install_meters(const vector<METER>& meters);
+        void install_meter(const METER& meter);
         unsigned int get_meter_count() const;
         METER get_meter(unsigned int i);
         void update_all_meters_value();

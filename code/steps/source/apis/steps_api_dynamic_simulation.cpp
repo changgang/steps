@@ -314,14 +314,16 @@ void api_prepare_generator_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    ds.prepare_generator_related_meters();
+    vector<METER> meters = ds.prepare_generator_related_meters();
+    ds.install_meters(meters);
 }
 
 void api_prepare_wt_generator_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    ds.prepare_wt_generator_related_meters();
+    vector<METER> meters = ds.prepare_wt_generator_related_meters();
+    ds.install_meters(meters);
 }
 
 void api_prepare_pv_unit_related_meters(unsigned int toolkit_index)
@@ -406,7 +408,8 @@ void api_prepare_generator_related_meter(unsigned int bus, char* id, char* meter
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_generator_device_id(bus, id);
-    ds.prepare_one_generator_related_meter(did, meter_type, var_name);
+    METER meter = ds.prepare_one_generator_related_meter(did, meter_type, var_name);
+    ds.install_meter(meter);
 }
 
 void api_prepare_wt_generator_related_meter(unsigned int bus, char* id, char* meter_type, char* var_name, unsigned int toolkit_index)
@@ -414,7 +417,8 @@ void api_prepare_wt_generator_related_meter(unsigned int bus, char* id, char* me
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_wt_generator_device_id(bus, id);
-    ds.prepare_one_wt_generator_related_meter(did, meter_type, var_name);
+    METER meter = ds.prepare_one_wt_generator_related_meter(did, meter_type, var_name);
+    ds.install_meter(meter);
 }
 
 void api_prepare_pv_unit_related_meter(unsigned int bus, char* id, char* meter_type, char* var_name, unsigned int toolkit_index)

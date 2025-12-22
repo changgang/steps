@@ -77,6 +77,9 @@ int main()
     simulator.set_iteration_accelerator(0.8);
     simulator.set_allowed_max_power_imbalance_in_MVA(0.00001);
 
+    METER meter(default_toolkit);
+    vector<METER> meters;
+
 /*
     simulator.prepare_bus_related_meter(9101, "voltage in pu");
     simulator.prepare_bus_related_meter(9102, "voltage in pu");
@@ -102,10 +105,12 @@ int main()
 
     //simulator.prepare_bus_related_meters();
     //simulator.prepare_vsc_hvdc_related_meters();
-    //simulator.prepare_generator_related_meters();
+    //meters = simulator.prepare_generator_related_meters();
+    //simulator.install_meters(meters);
     simulator.prepare_lcc_hvdc2t_related_meters();
     //simulator.prepare_load_related_meters();
-    //simulator.prepare_wt_generator_related_meters();
+    //meters = simulator.prepare_wt_generator_related_meters();
+    //simulator.install_meters(meters);
 
     simulator.set_output_file("IEEE39_2LCC");
 

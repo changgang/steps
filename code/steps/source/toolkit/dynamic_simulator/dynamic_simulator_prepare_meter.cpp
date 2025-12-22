@@ -20,9 +20,12 @@ class STEPS;
 
 void DYNAMICS_SIMULATOR::prepare_meters()
 {
+    vector<METER> meters;
     prepare_bus_related_meters();
-    prepare_generator_related_meters();
-    prepare_wt_generator_related_meters();
+    meters = prepare_generator_related_meters();
+    install_meters(meters);
+    meters = prepare_wt_generator_related_meters();
+    install_meters(meters);
     prepare_pv_unit_related_meters();
     prepare_energy_storage_related_meters();
     prepare_sv_source_related_meters();
@@ -48,30 +51,31 @@ void DYNAMICS_SIMULATOR::prepare_bus_related_meters()
     {
         bus = buses[i];
         METER meter = setter.prepare_bus_voltage_in_pu_meter(bus->get_bus_number());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         bus = buses[i];
         METER meter = setter.prepare_bus_angle_in_deg_meter(bus->get_bus_number());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         bus = buses[i];
         METER meter = setter.prepare_bus_frequency_deviation_in_pu_meter(bus->get_bus_number());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         bus = buses[i];
         METER meter = setter.prepare_bus_frequency_in_Hz_meter(bus->get_bus_number());
-        append_meter(meter);
+        install_meter(meter);
     }
 }
 
-void DYNAMICS_SIMULATOR::prepare_generator_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::prepare_generator_related_meters()
 {
+    vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     METER_SETTER setter(*toolkit);
@@ -85,54 +89,64 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meters()
     {
         generator = generators[i];
         METER meter = setter.prepare_generator_rotor_angle_in_deg_meter(generator->get_device_id());
-        append_meter(meter);
+        if(meter.is_valid())
+            meters.push_back(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_generator_rotor_speed_deviation_in_pu_meter(generator->get_device_id());
-        append_meter(meter);
+        if(meter.is_valid())
+            meters.push_back(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_generator_excitation_voltage_in_pu_meter(generator->get_device_id());
-        append_meter(meter);
+        if(meter.is_valid())
+            meters.push_back(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_generator_stabilizing_signal_in_pu_meter(generator->get_device_id());
-        append_meter(meter);
+        if(meter.is_valid())
+            meters.push_back(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_generator_mechanical_power_in_MW_meter(generator->get_device_id());
-        append_meter(meter);
+        if(meter.is_valid())
+            meters.push_back(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_generator_mechanical_power_reference_in_MW_meter(generator->get_device_id());
-        append_meter(meter);
+        if(meter.is_valid())
+            meters.push_back(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_generator_terminal_active_power_in_MW_meter(generator->get_device_id());
-        append_meter(meter);
+        if(meter.is_valid())
+            meters.push_back(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_generator_terminal_reactive_power_in_MVar_meter(generator->get_device_id());
-        append_meter(meter);
+        if(meter.is_valid())
+            meters.push_back(meter);
     }
+    return meters;
 }
 
-void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
 {
+    vector<METER> meters;
     vector<string> keys;
     keys.reserve(wtg_meter_map.size());
     for (auto iter = wtg_meter_map.begin(); iter != wtg_meter_map.end(); ++iter)
@@ -146,7 +160,12 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
     DYNAMICS_SIMULATOR& sim = toolkit->get_dynamic_simulator();
     for (unsigned int i=0; i<m; ++i)
         for(unsigned int j=0; j!=n; ++j)
-            sim.prepare_one_wt_generator_related_meter(dids[j], keys[i]);
+        {
+            METER meter = sim.prepare_one_wt_generator_related_meter(dids[j], keys[i]);
+            if(meter.is_valid())
+                meters.push_back(meter);
+        }
+    return meters;
 }
 
 void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meters()
@@ -164,157 +183,157 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meters()
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_terminal_current_in_kA_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_terminal_current_in_pu_on_mbase_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_terminal_current_in_pu_on_sbase_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_terminal_active_power_in_pu_on_mbase_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_terminal_active_power_in_pu_on_sbase_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_terminal_active_power_in_MW_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_mbase_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_sbase_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_terminal_reactive_power_in_MVar_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_terminal_apparent_power_in_pu_on_mbase_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_terminal_apparent_power_in_pu_on_sbase_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_terminal_apparent_power_in_MVA_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_active_current_command_in_pu_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_reactive_current_command_in_pu_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_active_power_command_in_pu_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_reactive_power_command_in_pu_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_reactive_voltage_command_in_pu_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_solar_irradiance_in_pu_on_s0_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_solar_irradiance_in_pu_on_sref_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_solar_irradiance_in_Wpm2_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_temperature_in_c_deg_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_MW_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_mbase_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_sbase_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_panel_power_in_pu_on_mbase_meter(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_panel_power_in_MW(pv_unit->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
 }
 
@@ -333,103 +352,103 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meters()
     {
         energy_storage = energy_storages[i];
         METER meter = setter.prepare_es_terminal_current_in_kA_meter(energy_storage->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         energy_storage = energy_storages[i];
         METER meter = setter.prepare_es_terminal_current_in_pu_on_mbase_meter(energy_storage->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         energy_storage = energy_storages[i];
         METER meter = setter.prepare_es_terminal_current_in_pu_on_sbase_meter(energy_storage->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         energy_storage = energy_storages[i];
         METER meter = setter.prepare_es_terminal_active_power_in_MW_meter(energy_storage->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         energy_storage = energy_storages[i];
         METER meter = setter.prepare_es_terminal_reactive_power_in_MVar_meter(energy_storage->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         energy_storage = energy_storages[i];
         METER meter = setter.prepare_es_terminal_apparent_power_in_pu_on_mbase_meter(energy_storage->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         energy_storage = energy_storages[i];
         METER meter = setter.prepare_es_terminal_apparent_power_in_pu_on_sbase_meter(energy_storage->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         energy_storage = energy_storages[i];
         METER meter = setter.prepare_es_terminal_apparent_power_in_MVA_meter(energy_storage->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         energy_storage = energy_storages[i];
         METER meter = setter.prepare_es_active_current_command_in_pu_meter(energy_storage->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         energy_storage = energy_storages[i];
         METER meter = setter.prepare_es_reactive_current_command_in_pu_meter(energy_storage->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         energy_storage = energy_storages[i];
         METER meter = setter.prepare_es_active_power_command_in_pu_meter(energy_storage->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         energy_storage = energy_storages[i];
         METER meter = setter.prepare_es_reactive_power_command_in_pu_meter(energy_storage->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         energy_storage = energy_storages[i];
         METER meter = setter.prepare_es_reactive_voltage_command_in_pu_meter(energy_storage->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         energy_storage = energy_storages[i];
         METER meter = setter.prepare_es_soc_power_in_pu_on_mbase_meter(energy_storage->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         energy_storage = energy_storages[i];
         METER meter = setter.prepare_es_soc_power_in_pu_on_sbase_meter(energy_storage->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         energy_storage = energy_storages[i];
         METER meter = setter.prepare_es_soc_power_in_MW_meter(energy_storage->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         energy_storage = energy_storages[i];
         METER meter = setter.prepare_es_state_of_charge_in_pu_meter(energy_storage->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
 }
 
@@ -449,13 +468,13 @@ void DYNAMICS_SIMULATOR::prepare_sv_source_related_meters()
     {
         svs = svss[i];
         METER meter = setter.prepare_svs_terminal_current_in_pu_on_sbase_meter(svs->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
     for(unsigned int i=0; i!=n; ++i)
     {
         svs = svss[i];
         METER meter = setter.prepare_svs_terminal_reactive_power_in_MVar_meter(svs->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
 }
 
@@ -474,15 +493,15 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meters()
     {
         load = loads[i];
         METER meter = setter.prepare_load_active_power_in_MW_meter(load->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
         meter = setter.prepare_load_reactive_power_in_MVar_meter(load->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
         meter = setter.prepare_load_total_scale_in_pu_meter(load->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
         meter = setter.prepare_load_manually_scale_in_pu_meter(load->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
         meter = setter.prepare_load_relay_shed_scale_in_pu_meter(load->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
 
 }
@@ -502,17 +521,17 @@ void DYNAMICS_SIMULATOR::prepare_ac_line_related_meters()
     {
         line = lines[i];
         METER meter = setter.prepare_ac_line_active_power_in_MW_meter(line->get_device_id(),line->get_sending_side_bus());
-        append_meter(meter);
+        install_meter(meter);
         meter = setter.prepare_ac_line_reactive_power_in_MVar_meter(line->get_device_id(),line->get_sending_side_bus());
-        append_meter(meter);
+        install_meter(meter);
         meter = setter.prepare_ac_line_current_in_kA_meter(line->get_device_id(),line->get_sending_side_bus());
-        append_meter(meter);
+        install_meter(meter);
         meter = setter.prepare_ac_line_active_power_in_MW_meter(line->get_device_id(),line->get_receiving_side_bus());
-        append_meter(meter);
+        install_meter(meter);
         meter = setter.prepare_ac_line_reactive_power_in_MVar_meter(line->get_device_id(),line->get_receiving_side_bus());
-        append_meter(meter);
+        install_meter(meter);
         meter = setter.prepare_ac_line_current_in_kA_meter(line->get_device_id(),line->get_receiving_side_bus());
-        append_meter(meter);
+        install_meter(meter);
     }
 }
 
@@ -532,25 +551,25 @@ void DYNAMICS_SIMULATOR::prepare_transformer_related_meters()
     {
         trans = transes[i];
         METER meter = setter.prepare_transformer_active_power_in_MW_meter(trans->get_device_id(), trans->get_winding_bus(PRIMARY_SIDE));
-        append_meter(meter);
+        install_meter(meter);
         meter = setter.prepare_transformer_reactive_power_in_MVar_meter(trans->get_device_id(), trans->get_winding_bus(PRIMARY_SIDE));
-        append_meter(meter);
+        install_meter(meter);
         meter = setter.prepare_transformer_current_in_kA_meter(trans->get_device_id(), trans->get_winding_bus(PRIMARY_SIDE));
-        append_meter(meter);
+        install_meter(meter);
         meter = setter.prepare_transformer_active_power_in_MW_meter(trans->get_device_id(), trans->get_winding_bus(SECONDARY_SIDE));
-        append_meter(meter);
+        install_meter(meter);
         meter = setter.prepare_transformer_reactive_power_in_MVar_meter(trans->get_device_id(), trans->get_winding_bus(SECONDARY_SIDE));
-        append_meter(meter);
+        install_meter(meter);
         meter = setter.prepare_transformer_current_in_kA_meter(trans->get_device_id(), trans->get_winding_bus(SECONDARY_SIDE));
-        append_meter(meter);
+        install_meter(meter);
         if(trans->is_three_winding_transformer())
         {
             meter = setter.prepare_transformer_active_power_in_MW_meter(trans->get_device_id(), trans->get_winding_bus(SECONDARY_SIDE));
-            append_meter(meter);
+            install_meter(meter);
             meter = setter.prepare_transformer_reactive_power_in_MVar_meter(trans->get_device_id(), trans->get_winding_bus(SECONDARY_SIDE));
-            append_meter(meter);
+            install_meter(meter);
             meter = setter.prepare_transformer_current_in_kA_meter(trans->get_device_id(), trans->get_winding_bus(SECONDARY_SIDE));
-            append_meter(meter);
+            install_meter(meter);
         }
     }
 }
@@ -571,58 +590,58 @@ void DYNAMICS_SIMULATOR::prepare_lcc_hvdc2t_related_meters()
         hvdc = hvdcs[i];
 
         METER meter = setter.prepare_lcc_hvdc2t_rectifier_ac_voltage_in_pu_meter(hvdc->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_lcc_hvdc2t_inverter_ac_voltage_in_pu_meter(hvdc->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_lcc_hvdc2t_rectifier_dc_voltage_in_kV_meter(hvdc->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_lcc_hvdc2t_inverter_dc_voltage_in_kV_meter(hvdc->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_lcc_hvdc2t_rectifier_dc_current_in_kA_meter(hvdc->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_lcc_hvdc2t_inverter_dc_current_in_kA_meter(hvdc->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_lcc_hvdc2t_rectifier_alpha_in_deg_meter(hvdc->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_lcc_hvdc2t_rectifier_mu_in_deg_meter(hvdc->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_lcc_hvdc2t_inverter_gamma_in_deg_meter(hvdc->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_lcc_hvdc2t_inverter_mu_in_deg_meter(hvdc->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_lcc_hvdc2t_rectifier_dc_power_in_MW_meter(hvdc->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_lcc_hvdc2t_inverter_dc_power_in_MW_meter(hvdc->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_lcc_hvdc2t_rectifier_ac_active_power_in_MW_meter(hvdc->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_lcc_hvdc2t_rectifier_ac_reactive_power_in_MVar_meter(hvdc->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_lcc_hvdc2t_inverter_ac_active_power_in_MW_meter(hvdc->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_lcc_hvdc2t_inverter_ac_reactive_power_in_MVar_meter(hvdc->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_lcc_hvdc2t_rectifier_ac_current_in_kA_meter(hvdc->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_lcc_hvdc2t_inverter_ac_current_in_kA_meter(hvdc->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
 }
 
@@ -648,29 +667,29 @@ void DYNAMICS_SIMULATOR::prepare_vsc_hvdc_related_meters()
         {
             unsigned int meter_side = vsc_hvdc->get_converter_ac_bus(j);
             METER meter = setter.prepare_vsc_hvdc_converter_dc_current_in_kA_meter(did, meter_side);
-            append_meter(meter);
+            install_meter(meter);
 
             meter = setter.prepare_vsc_hvdc_converter_ac_current_in_kA_meter(did, meter_side);
-            append_meter(meter);
+            install_meter(meter);
             meter = setter.prepare_vsc_hvdc_converter_ac_voltage_in_kV_meter(did, meter_side);
-            append_meter(meter);
+            install_meter(meter);
             meter = setter.prepare_vsc_hvdc_converter_ac_voltage_in_pu_meter(did, meter_side);
-            append_meter(meter);
+            install_meter(meter);
             meter = setter.prepare_vsc_hvdc_converter_dc_power_in_MW_meter(did, meter_side);
-            append_meter(meter);
+            install_meter(meter);
             meter = setter.prepare_vsc_hvdc_converter_dc_voltage_in_kV_meter(did, meter_side);
-            append_meter(meter);
+            install_meter(meter);
             meter = setter.prepare_vsc_hvdc_converter_ac_active_power_in_MW_meter(did, meter_side);
-            append_meter(meter);
+            install_meter(meter);
             meter = setter.prepare_vsc_hvdc_converter_ac_reactive_power_in_MVar_meter(did, meter_side);
-            append_meter(meter);
+            install_meter(meter);
         }
         unsigned int n_dc_bus = vsc_hvdc->get_dc_bus_count();
         for(unsigned int j=0; j!=n_dc_bus; ++j)
         {
             unsigned int meter_side = vsc_hvdc->get_dc_bus_number(j);
             METER meter = setter.prepare_vsc_hvdc_dc_bus_voltage_in_kV_meter(did, meter_side);
-            append_meter(meter);
+            install_meter(meter);
         }
         unsigned int n_dc_line = vsc_hvdc->get_dc_line_count();
         for(unsigned int j=0; j!=n_dc_line; ++j)
@@ -681,13 +700,13 @@ void DYNAMICS_SIMULATOR::prepare_vsc_hvdc_related_meters()
             unsigned int jbus = vsc_hvdc->get_dc_line_receiving_side_bus(j);
 
             METER meter = setter.prepare_vsc_hvdc_dc_line_current_in_kA_meter(did, dc_line_did, ibus);
-            append_meter(meter);
+            install_meter(meter);
             meter = setter.prepare_vsc_hvdc_dc_line_current_in_kA_meter(did, dc_line_did, jbus);
-            append_meter(meter);
+            install_meter(meter);
             meter = setter.prepare_vsc_hvdc_dc_line_power_in_MW_meter(did, dc_line_did, ibus);
-            append_meter(meter);
+            install_meter(meter);
             meter = setter.prepare_vsc_hvdc_dc_line_power_in_MW_meter(did, dc_line_did, jbus);
-            append_meter(meter);
+            install_meter(meter);
         }
     }
 }
@@ -717,37 +736,37 @@ void DYNAMICS_SIMULATOR::prepare_mt_hvdc_related_meters()
             string lcc_name = lccs[j]->get_converter_name();
 
             METER meter = setter.prepare_mt_hvdc_lcc_converter_dc_current_in_kA_meter(did, lcc_name);
-            append_meter(meter);
+            install_meter(meter);
 
             meter = setter.prepare_mt_hvdc_lcc_converter_dc_voltage_in_kV_meter(did, lcc_name);
-            append_meter(meter);
+            install_meter(meter);
 
             meter = setter.prepare_mt_hvdc_lcc_converter_dc_power_in_kV_MW_meter(did, lcc_name);
-            append_meter(meter);
+            install_meter(meter);
 
             meter = setter.prepare_mt_hvdc_lcc_converter_ac_current_in_kA_meter(did, lcc_name);
-            append_meter(meter);
+            install_meter(meter);
 
             meter = setter.prepare_mt_hvdc_lcc_converter_firing_angle_in_deg_meter(did, lcc_name);
-            append_meter(meter);
+            install_meter(meter);
 
             meter = setter.prepare_mt_hvdc_lcc_converter_ac_active_power_in_MW_meter(did, lcc_name);
-            append_meter(meter);
+            install_meter(meter);
 
             meter = setter.prepare_mt_hvdc_lcc_converter_ac_reactive_power_in_Mvar_meter(did, lcc_name);
-            append_meter(meter);
+            install_meter(meter);
 
             meter = setter.prepare_mt_hvdc_lcc_converter_reference_angle_of_cc_in_deg_meter(did, lcc_name);
-            append_meter(meter);
+            install_meter(meter);
 
             meter = setter.prepare_mt_hvdc_lcc_converter_reference_angle_of_cea_in_deg_meter(did, lcc_name);
-            append_meter(meter);
+            install_meter(meter);
 
             meter = setter.prepare_mt_hvdc_lcc_converter_reference_angle_of_cv_in_deg_meter(did, lcc_name);
-            append_meter(meter);
+            install_meter(meter);
 
             meter = setter.prepare_mt_hvdc_lcc_converter_reference_idc_in_kA_meter(did, lcc_name);
-            append_meter(meter);
+            install_meter(meter);
 
         }
         //vsc
@@ -758,28 +777,28 @@ void DYNAMICS_SIMULATOR::prepare_mt_hvdc_related_meters()
             string vsc_name = vscs[j]->get_converter_name();
 
             METER meter = setter.prepare_mt_hvdc_vsc_converter_dc_current_in_kA_meter(did, vsc_name);
-            append_meter(meter);
+            install_meter(meter);
 
             meter = setter.prepare_mt_hvdc_vsc_converter_dc_voltage_in_kV_meter(did, vsc_name);
-            append_meter(meter);
+            install_meter(meter);
 
             meter = setter.prepare_mt_hvdc_vsc_converter_dc_power_in_kV_MW_meter(did, vsc_name);
-            append_meter(meter);
+            install_meter(meter);
 
             meter = setter.prepare_mt_hvdc_vsc_converter_ac_current_in_kA_meter(did, vsc_name);
-            append_meter(meter);
+            install_meter(meter);
 
             meter = setter.prepare_mt_hvdc_vsc_converter_ac_active_power_in_MW_meter(did, vsc_name);
-            append_meter(meter);
+            install_meter(meter);
 
             meter = setter.prepare_mt_hvdc_vsc_converter_ac_reactive_power_in_Mvar_meter(did, vsc_name);
-            append_meter(meter);
+            install_meter(meter);
 
             meter = setter.prepare_mt_hvdc_vsc_converter_id_in_kA_meter(did, vsc_name);
-            append_meter(meter);
+            install_meter(meter);
 
             meter = setter.prepare_mt_hvdc_vsc_converter_iq_in_kA_meter(did, vsc_name);
-            append_meter(meter);
+            install_meter(meter);
         }
         //dc bus
         vector<DC_BUS*> dcbuses = mtdc->get_all_dc_buses();
@@ -789,7 +808,7 @@ void DYNAMICS_SIMULATOR::prepare_mt_hvdc_related_meters()
             string dcbus_name = dcbuses[j]->get_name();
 
             METER meter = setter.prepare_mt_hvdc_dc_bus_voltage_in_kV_meter(did, dcbus_name);
-            append_meter(meter);
+            install_meter(meter);
         }
         //dc line
         vector<DC_LINE*> dc_lines = mtdc->get_all_dc_lines();
@@ -799,10 +818,10 @@ void DYNAMICS_SIMULATOR::prepare_mt_hvdc_related_meters()
             string line_name = dc_lines[j]->get_dc_line_name();
 
             METER meter = setter.prepare_mt_hvdc_dc_line_dc_current_on_sending_side_in_kA_meter(did, line_name);
-            append_meter(meter);
+            install_meter(meter);
 
             meter = setter.prepare_mt_hvdc_dc_line_dc_current_on_receiving_side_in_kA_meter(did, line_name);
-            append_meter(meter);
+            install_meter(meter);
 
         }
     }
@@ -824,22 +843,22 @@ void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meters()
         edevice = edevices[i];
 
         METER meter = setter.prepare_equivalent_device_active_power_generation_in_MW_meter(edevice->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_equivalent_device_reactive_power_generation_in_MVar_meter(edevice->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_equivalent_device_active_power_load_in_MW_meter(edevice->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_equivalent_device_reactive_power_load_in_MVar_meter(edevice->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_equivalent_device_active_power_net_load_in_MW_meter(edevice->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
 
         meter = setter.prepare_equivalent_device_reactive_power_net_load_in_MVar_meter(edevice->get_device_id());
-        append_meter(meter);
+        install_meter(meter);
     }
 }
 
@@ -852,20 +871,22 @@ void DYNAMICS_SIMULATOR::prepare_one_bus_related_meters(unsigned int bus)
     METER meter(*toolkit);
 
     meter = setter.prepare_bus_voltage_in_pu_meter(bus);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_bus_angle_in_deg_meter(bus);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_bus_frequency_deviation_in_pu_meter(bus);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_bus_frequency_in_Hz_meter(bus);
-    append_meter(meter);
+    install_meter(meter);
 }
 
-void DYNAMICS_SIMULATOR::prepare_one_generator_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::prepare_one_generator_related_meters(const DEVICE_ID& did)
 {
+    vector<METER> meters;
+
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
     METER_SETTER setter(*toolkit);
@@ -873,32 +894,43 @@ void DYNAMICS_SIMULATOR::prepare_one_generator_related_meters(const DEVICE_ID& d
     METER meter(*toolkit);
 
     meter = setter.prepare_generator_rotor_angle_in_deg_meter(did);
-    append_meter(meter);
+    if(meter.is_valid())
+        meters.push_back(meter);
 
     meter = setter.prepare_generator_rotor_speed_deviation_in_pu_meter(did);
-    append_meter(meter);
+    if(meter.is_valid())
+        meters.push_back(meter);
 
     meter = setter.prepare_generator_excitation_voltage_in_pu_meter(did);
-    append_meter(meter);
+    if(meter.is_valid())
+        meters.push_back(meter);
 
     meter = setter.prepare_generator_stabilizing_signal_in_pu_meter(did);
-    append_meter(meter);
+    if(meter.is_valid())
+        meters.push_back(meter);
 
     meter = setter.prepare_generator_mechanical_power_in_MW_meter(did);
-    append_meter(meter);
+    if(meter.is_valid())
+        meters.push_back(meter);
 
     meter = setter.prepare_generator_mechanical_power_reference_in_MW_meter(did);
-    append_meter(meter);
+    if(meter.is_valid())
+        meters.push_back(meter);
 
     meter = setter.prepare_generator_terminal_active_power_in_MW_meter(did);
-    append_meter(meter);
+    if(meter.is_valid())
+        meters.push_back(meter);
 
     meter = setter.prepare_generator_terminal_reactive_power_in_MVar_meter(did);
-    append_meter(meter);
+    if(meter.is_valid())
+        meters.push_back(meter);
+
+    return meters;
 }
 
-void DYNAMICS_SIMULATOR::prepare_one_wt_generator_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::prepare_one_wt_generator_related_meters(const DEVICE_ID& did)
 {
+    vector<METER> meters;
     vector<string> keys;
     keys.reserve(wtg_meter_map.size());
     for (auto iter = wtg_meter_map.begin(); iter != wtg_meter_map.end(); ++iter)
@@ -908,7 +940,12 @@ void DYNAMICS_SIMULATOR::prepare_one_wt_generator_related_meters(const DEVICE_ID
 
     DYNAMICS_SIMULATOR& sim = toolkit->get_dynamic_simulator();
     for (unsigned int i=0; i<m; ++i)
-        sim.prepare_one_wt_generator_related_meter(did, keys[i]);
+    {
+        METER meter = sim.prepare_one_wt_generator_related_meter(did, keys[i]);
+        if(meter.is_valid())
+            meters.push_back(meter);
+    }
+    return meters;
 }
 
 void DYNAMICS_SIMULATOR::prepare_one_pv_unit_related_meters(const DEVICE_ID& did)
@@ -920,82 +957,82 @@ void DYNAMICS_SIMULATOR::prepare_one_pv_unit_related_meters(const DEVICE_ID& did
     METER meter(*toolkit);
 
     meter = setter.prepare_pv_unit_terminal_current_in_kA_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_terminal_current_in_pu_on_mbase_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_terminal_current_in_pu_on_sbase_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_terminal_active_power_in_pu_on_mbase_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_terminal_active_power_in_pu_on_sbase_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_terminal_active_power_in_MW_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_mbase_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_sbase_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_terminal_reactive_power_in_MVar_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_terminal_apparent_power_in_pu_on_mbase_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_terminal_apparent_power_in_pu_on_sbase_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_terminal_apparent_power_in_MVA_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_active_current_command_in_pu_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_reactive_current_command_in_pu_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_active_power_command_in_pu_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_reactive_power_command_in_pu_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_reactive_voltage_command_in_pu_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_solar_irradiance_in_pu_on_s0_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_solar_irradiance_in_pu_on_sref_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_solar_irradiance_in_Wpm2_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_temperature_in_c_deg_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_MW_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_mbase_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_sbase_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_panel_power_in_pu_on_mbase_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_pv_unit_panel_power_in_MW(did);
-    append_meter(meter);
+    install_meter(meter);
 }
 
 void DYNAMICS_SIMULATOR::prepare_one_energy_storage_related_meters(const DEVICE_ID& did)
@@ -1006,55 +1043,55 @@ void DYNAMICS_SIMULATOR::prepare_one_energy_storage_related_meters(const DEVICE_
     METER meter(*toolkit);
 
     meter = setter.prepare_es_terminal_current_in_kA_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_es_terminal_current_in_pu_on_mbase_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_es_terminal_current_in_pu_on_sbase_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_es_terminal_active_power_in_MW_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_es_terminal_reactive_power_in_MVar_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_es_terminal_apparent_power_in_pu_on_mbase_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_es_terminal_apparent_power_in_pu_on_sbase_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_es_terminal_apparent_power_in_MVA_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_es_active_current_command_in_pu_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_es_reactive_current_command_in_pu_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_es_active_power_command_in_pu_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_es_reactive_power_command_in_pu_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_es_reactive_voltage_command_in_pu_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_es_soc_power_in_pu_on_mbase_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_es_soc_power_in_pu_on_sbase_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_es_soc_power_in_MW_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 
     meter = setter.prepare_es_state_of_charge_in_pu_meter(did);
-    append_meter(meter);
+    install_meter(meter);
 }
 
 
@@ -1128,7 +1165,7 @@ void DYNAMICS_SIMULATOR::prepare_one_bus_related_meter(unsigned int bus, string 
         if(meter_type=="ROCOF IN HZ/S")
             meter = setter.prepare_bus_ROCOF_in_Hz_per_s_meter(bus);
         if(meter.is_valid())
-            append_meter(meter);
+            install_meter(meter);
         else
         {
             osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for bus "<<bus;
@@ -1142,8 +1179,9 @@ void DYNAMICS_SIMULATOR::prepare_one_bus_related_meter(unsigned int bus, string 
     }
 }
 
-void DYNAMICS_SIMULATOR::prepare_one_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
+METER DYNAMICS_SIMULATOR::prepare_one_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
+    METER meter(*toolkit);
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
@@ -1152,8 +1190,6 @@ void DYNAMICS_SIMULATOR::prepare_one_generator_related_meter(const DEVICE_ID& di
         if(psdb.is_generator_exist(did))
         {
             METER_SETTER setter(*toolkit);
-
-            METER meter(*toolkit);
 
             meter_type = string2upper(meter_type);
 
@@ -1233,14 +1269,6 @@ void DYNAMICS_SIMULATOR::prepare_one_generator_related_meter(const DEVICE_ID& di
                 meter = setter.prepare_generator_turbine_governor_model_internal_variable_meter(did, var_name);
             if(meter_type=="TURBINE LOAD CONTROLLER MODEL INTERNAL VARIABLE")
                 meter = setter.prepare_generator_turbine_load_controller_model_internal_variable_meter(did, var_name);
-
-            if(meter.is_valid())
-                append_meter(meter);
-            else
-            {
-                osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
-                toolkit->show_information_with_leading_time_stamp(osstream);
-            }
         }
         else
         {
@@ -1253,9 +1281,10 @@ void DYNAMICS_SIMULATOR::prepare_one_generator_related_meter(const DEVICE_ID& di
         osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not GENERATOR when setting up meter with "<<__FUNCTION__;
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
+    return meter;
 }
 
-void DYNAMICS_SIMULATOR::prepare_one_wt_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
+METER DYNAMICS_SIMULATOR::prepare_one_wt_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     METER meter(*toolkit);
     bool successful = basic_meter_preparer::prepare_wt_generator_meter(*toolkit, meter, did);
@@ -1266,15 +1295,8 @@ void DYNAMICS_SIMULATOR::prepare_one_wt_generator_related_meter(const DEVICE_ID&
         meter.set_meter_type(meter_type);
         if(meter_type.find("INTERNAL VARIABLE") != std::string::npos)
             meter.set_internal_variable_name(var_name);
-        if(meter.is_valid())
-            append_meter(meter);
-        else
-        {
-            ostringstream osstream;
-            osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
-            toolkit->show_information_with_leading_time_stamp(osstream);
-        }
     }
+    return meter;
 }
 
 void DYNAMICS_SIMULATOR::prepare_one_pv_unit_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
@@ -1360,7 +1382,7 @@ void DYNAMICS_SIMULATOR::prepare_one_pv_unit_related_meter(const DEVICE_ID& did,
                 meter = setter.prepare_pv_temperature_model_internal_variable_meter(did, var_name);
 
             if(meter.is_valid())
-                append_meter(meter);
+                install_meter(meter);
             else
             {
                 osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
@@ -1469,7 +1491,7 @@ void DYNAMICS_SIMULATOR::prepare_one_energy_storage_related_meter(const DEVICE_I
                 meter = setter.prepare_es_auxiliary_model_internal_variable_meter(did, var_name);
 
             if(meter.is_valid())
-                append_meter(meter);
+                install_meter(meter);
             else
             {
                 osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
@@ -1514,7 +1536,7 @@ void DYNAMICS_SIMULATOR::prepare_one_sv_source_related_meter(const DEVICE_ID& di
                 meter = setter.prepare_svs_control_model_internal_variable_meter(did, var_name);
 
             if(meter.is_valid())
-                append_meter(meter);
+                install_meter(meter);
             else
             {
                 osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
@@ -1574,7 +1596,7 @@ void DYNAMICS_SIMULATOR::prepare_one_load_related_meter(const DEVICE_ID& did, st
                 meter = setter.prepare_load_voltage_relay_model_internal_variable_meter(did, var_name);
 
             if(meter.is_valid())
-                append_meter(meter);
+                install_meter(meter);
             else
             {
                 osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
@@ -1640,7 +1662,7 @@ void DYNAMICS_SIMULATOR::prepare_one_ac_line_related_meter(const DEVICE_ID& did,
             if(meter_type=="APPARENT IMPEDANCE ANGLE IN RAD")
                 meter = setter.prepare_ac_line_apparent_impedance_angle_in_rad_meter(did, bus);
             if(meter.is_valid())
-                append_meter(meter);
+                install_meter(meter);
             else
             {
                 osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
@@ -1702,7 +1724,7 @@ void DYNAMICS_SIMULATOR::prepare_one_transformer_related_meter(const DEVICE_ID& 
                 meter = setter.prepare_transformer_reactive_power_in_pu_meter(did, bus);
 
             if(meter.is_valid())
-                append_meter(meter);
+                install_meter(meter);
             else
             {
                 osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
@@ -1787,7 +1809,7 @@ void DYNAMICS_SIMULATOR::prepare_one_lcc_hvdc2t_related_meter(const DEVICE_ID& d
                     meter = setter.prepare_lcc_hvdc2t_model_internal_variable_meter(did, var_name);
 
             if(meter.is_valid())
-                append_meter(meter);
+                install_meter(meter);
             else
             {
                 osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
@@ -1847,7 +1869,7 @@ void DYNAMICS_SIMULATOR::prepare_one_vsc_hvdc_related_meter(const DEVICE_ID& did
             }
 
             if(meter.is_valid())
-                append_meter(meter);
+                install_meter(meter);
             else
             {
                 osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
@@ -1909,7 +1931,7 @@ void DYNAMICS_SIMULATOR::prepare_one_vsc_hvdc_related_meter(string vsc_name, str
             }
 
             if(meter.is_valid())
-                append_meter(meter);
+                install_meter(meter);
             else
             {
                 osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
@@ -1951,7 +1973,7 @@ void DYNAMICS_SIMULATOR::prepare_one_vsc_hvdc_related_dc_line_meter(const DEVICE
                 meter = setter.prepare_vsc_hvdc_dc_line_power_in_MW_meter(did, dc_did, side);
 
             if(meter.is_valid())
-                append_meter(meter);
+                install_meter(meter);
             else
             {
                 osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
@@ -2041,7 +2063,7 @@ void DYNAMICS_SIMULATOR::prepare_one_mt_hvdc_related_meter(const DEVICE_ID& did,
 
             if(meter.is_valid())
             {
-                append_meter(meter);
+                install_meter(meter);
             }
             else
             {
@@ -2152,7 +2174,7 @@ void DYNAMICS_SIMULATOR::prepare_one_equivalent_device_related_meter(const DEVIC
                 meter = setter.prepare_equivalent_device_reactive_power_net_load_in_pu_meter(did);
 
             if(meter.is_valid())
-                append_meter(meter);
+                install_meter(meter);
             else
             {
                 osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();

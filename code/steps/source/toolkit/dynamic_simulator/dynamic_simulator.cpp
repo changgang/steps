@@ -518,7 +518,14 @@ bool DYNAMICS_SIMULATOR::is_network_matrix_update_required() const
     return network_matrix_update_required;
 }
 
-void DYNAMICS_SIMULATOR::append_meter(const METER& meter)
+void DYNAMICS_SIMULATOR::install_meters(const vector<METER>& meters)
+{
+    unsigned int n = meters.size();
+    for(unsigned int i = 0; i < n; ++i)
+        install_meter(meters[i]);
+}
+
+void DYNAMICS_SIMULATOR::install_meter(const METER& meter)
 {
     if(meter.is_valid())
     {

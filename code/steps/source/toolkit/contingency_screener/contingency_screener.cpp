@@ -450,7 +450,7 @@ void CONTINGENCY_SCREENER::set_meters(DYNAMICS_SIMULATOR& simulator)
         if(did.is_valid() and did.get_device_type()==STEPS_GENERATOR)
         {
             METER meter = setter.prepare_generator_rotor_angle_in_deg_meter(did);
-            simulator.append_meter(meter);
+            simulator.install_meter(meter);
         }
     }
 }
