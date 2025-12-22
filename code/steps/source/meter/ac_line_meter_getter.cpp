@@ -4,7 +4,7 @@
 #include "header/steps_namespace.h"
 #include "header/meter/meter.h"
 
-double ac_line_meter_getter::get_current_in_ka(const METER_PARAMETER& para)
+double ac_line_meter_getter::get_current_in_kA(const METER_PARAMETER& para)
 {
     AC_LINE* line = (AC_LINE*) para.device_pointer;
     if(line != NULL)
@@ -38,7 +38,7 @@ double ac_line_meter_getter::get_current_in_pu(const METER_PARAMETER& para)
     return 0.0;
 }
 
-double ac_line_meter_getter::get_active_power_in_mw(const METER_PARAMETER& para)
+double ac_line_meter_getter::get_active_power_in_MW(const METER_PARAMETER& para)
 {
     AC_LINE* line = (AC_LINE*) para.device_pointer;
     if(line != NULL)
@@ -72,7 +72,7 @@ double ac_line_meter_getter::get_active_power_in_pu(const METER_PARAMETER& para)
     return 0.0;
 }
 
-double ac_line_meter_getter::get_reactive_power_in_mvar(const METER_PARAMETER& para)
+double ac_line_meter_getter::get_reactive_power_in_MVar(const METER_PARAMETER& para)
 {
     AC_LINE* line = (AC_LINE*) para.device_pointer;
     if(line != NULL)
@@ -174,7 +174,7 @@ double ac_line_meter_getter::get_apparent_impedance_angle_in_rad(const METER_PAR
     return 0.0;
 }
 
-double ac_line_meter_getter::get_current_at_sending_side_in_ka(const METER_PARAMETER& para)
+double ac_line_meter_getter::get_current_at_sending_side_in_kA(const METER_PARAMETER& para)
 {
     AC_LINE* line = (AC_LINE*) para.device_pointer;
     if(line != NULL)
@@ -183,7 +183,7 @@ double ac_line_meter_getter::get_current_at_sending_side_in_ka(const METER_PARAM
     return 0.0;
 }
 
-double ac_line_meter_getter::get_active_power_at_sending_side_in_mw(const METER_PARAMETER& para)
+double ac_line_meter_getter::get_active_power_at_sending_side_in_MW(const METER_PARAMETER& para)
 {
     AC_LINE* line = (AC_LINE*) para.device_pointer;
     if(line != NULL)
@@ -192,7 +192,7 @@ double ac_line_meter_getter::get_active_power_at_sending_side_in_mw(const METER_
     return 0.0;
 }
 
-double ac_line_meter_getter::get_reactive_power_at_sending_side_in_mvar(const METER_PARAMETER& para)
+double ac_line_meter_getter::get_reactive_power_at_sending_side_in_MVar(const METER_PARAMETER& para)
 {
     AC_LINE* line = (AC_LINE*) para.device_pointer;
     if(line != NULL)
@@ -201,7 +201,7 @@ double ac_line_meter_getter::get_reactive_power_at_sending_side_in_mvar(const ME
     return 0.0;
 }
 
-double ac_line_meter_getter::get_current_at_receiving_side_in_ka(const METER_PARAMETER& para)
+double ac_line_meter_getter::get_current_at_receiving_side_in_kA(const METER_PARAMETER& para)
 {
     AC_LINE* line = (AC_LINE*) para.device_pointer;
     if(line != NULL)
@@ -210,7 +210,7 @@ double ac_line_meter_getter::get_current_at_receiving_side_in_ka(const METER_PAR
     return 0.0;
 }
 
-double ac_line_meter_getter::get_active_power_at_receiving_side_in_mw(const METER_PARAMETER& para)
+double ac_line_meter_getter::get_active_power_at_receiving_side_in_MW(const METER_PARAMETER& para)
 {
     AC_LINE* line = (AC_LINE*) para.device_pointer;
     if(line != NULL)
@@ -219,7 +219,7 @@ double ac_line_meter_getter::get_active_power_at_receiving_side_in_mw(const METE
     return 0.0;
 }
 
-double ac_line_meter_getter::get_reactive_power_at_receiving_side_in_mvar(const METER_PARAMETER& para)
+double ac_line_meter_getter::get_reactive_power_at_receiving_side_in_MVar(const METER_PARAMETER& para)
 {
     AC_LINE* line = (AC_LINE*) para.device_pointer;
     if(line != NULL)

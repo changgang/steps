@@ -17,7 +17,7 @@ double sv_source_meter_getter::get_terminal_reactive_power_pu_sbase(const METER_
     return model ? model->get_terminal_reactive_power_in_pu_based_on_sbase() : 0.0;
 }
 
-double sv_source_meter_getter::get_terminal_reactive_power_mvar(const METER_PARAMETER& para)
+double sv_source_meter_getter::get_terminal_reactive_power_MVar(const METER_PARAMETER& para)
 {
     SV_SOURCE* svs = (SV_SOURCE*) para.device_pointer;
     SVS_CONTROL_MODEL* model = svs->get_svs_control_model();

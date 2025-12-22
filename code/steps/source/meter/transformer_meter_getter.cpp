@@ -3,19 +3,19 @@
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
-double transformer_meter_getter::get_current_ka_primary(const METER_PARAMETER& para)
+double transformer_meter_getter::get_current_kA_primary(const METER_PARAMETER& para)
 {
     TRANSFORMER* trans = (TRANSFORMER*) para.device_pointer;
     return steps_fast_complex_abs(trans->get_winding_complex_current_in_kA(PRIMARY_SIDE));
 }
 
-double transformer_meter_getter::get_current_ka_secondary(const METER_PARAMETER& para)
+double transformer_meter_getter::get_current_kA_secondary(const METER_PARAMETER& para)
 {
     TRANSFORMER* trans = (TRANSFORMER*) para.device_pointer;
     return steps_fast_complex_abs(trans->get_winding_complex_current_in_kA(SECONDARY_SIDE));
 }
 
-double transformer_meter_getter::get_current_ka_tertiary(const METER_PARAMETER& para)
+double transformer_meter_getter::get_current_kA_tertiary(const METER_PARAMETER& para)
 {
     TRANSFORMER* trans = (TRANSFORMER*) para.device_pointer;
     return steps_fast_complex_abs(trans->get_winding_complex_current_in_kA(TERTIARY_SIDE));
@@ -39,19 +39,19 @@ double transformer_meter_getter::get_current_pu_tertiary(const METER_PARAMETER& 
     return steps_fast_complex_abs(trans->get_winding_complex_current_in_pu(TERTIARY_SIDE));
 }
 
-double transformer_meter_getter::get_active_power_mw_primary(const METER_PARAMETER& para)
+double transformer_meter_getter::get_active_power_MW_primary(const METER_PARAMETER& para)
 {
     TRANSFORMER* trans = (TRANSFORMER*) para.device_pointer;
     return (trans->get_winding_complex_power_in_MVA(PRIMARY_SIDE)).real();
 }
 
-double transformer_meter_getter::get_active_power_mw_secondary(const METER_PARAMETER& para)
+double transformer_meter_getter::get_active_power_MW_secondary(const METER_PARAMETER& para)
 {
     TRANSFORMER* trans = (TRANSFORMER*) para.device_pointer;
     return (trans->get_winding_complex_power_in_MVA(SECONDARY_SIDE)).real();
 }
 
-double transformer_meter_getter::get_active_power_mw_tertiary(const METER_PARAMETER& para)
+double transformer_meter_getter::get_active_power_MW_tertiary(const METER_PARAMETER& para)
 {
     TRANSFORMER* trans = (TRANSFORMER*) para.device_pointer;
     return (trans->get_winding_complex_power_in_MVA(TERTIARY_SIDE)).real();
@@ -75,19 +75,19 @@ double transformer_meter_getter::get_active_power_pu_tertiary(const METER_PARAME
     return (trans->get_winding_complex_power_in_pu(TERTIARY_SIDE)).real();
 }
 
-double transformer_meter_getter::get_reactive_power_mvar_primary(const METER_PARAMETER& para)
+double transformer_meter_getter::get_reactive_power_MVar_primary(const METER_PARAMETER& para)
 {
     TRANSFORMER* trans = (TRANSFORMER*) para.device_pointer;
     return (trans->get_winding_complex_power_in_MVA(PRIMARY_SIDE)).imag();
 }
 
-double transformer_meter_getter::get_reactive_power_mvar_secondary(const METER_PARAMETER& para)
+double transformer_meter_getter::get_reactive_power_MVar_secondary(const METER_PARAMETER& para)
 {
     TRANSFORMER* trans = (TRANSFORMER*) para.device_pointer;
     return (trans->get_winding_complex_power_in_MVA(SECONDARY_SIDE)).imag();
 }
 
-double transformer_meter_getter::get_reactive_power_mvar_tertiary(const METER_PARAMETER& para)
+double transformer_meter_getter::get_reactive_power_MVar_tertiary(const METER_PARAMETER& para)
 {
     TRANSFORMER* trans = (TRANSFORMER*) para.device_pointer;
     return (trans->get_winding_complex_power_in_MVA(TERTIARY_SIDE)).imag();
@@ -111,8 +111,7 @@ double transformer_meter_getter::get_reactive_power_pu_tertiary(const METER_PARA
     return (trans->get_winding_complex_power_in_pu(TERTIARY_SIDE)).imag();
 }
 
-// 针对接在特定母线的绕组 - 与原始代码保持完全相同的逻辑
-double transformer_meter_getter::get_current_ka_bus_side(const METER_PARAMETER& para)
+double transformer_meter_getter::get_current_kA_bus_side(const METER_PARAMETER& para)
 {
     TRANSFORMER* trans = (TRANSFORMER*) para.device_pointer;
     unsigned int metered_bus = para.metered_side_bus;
@@ -166,7 +165,7 @@ double transformer_meter_getter::get_current_pu_bus_side(const METER_PARAMETER& 
     }
 }
 
-double transformer_meter_getter::get_active_power_mw_bus_side(const METER_PARAMETER& para)
+double transformer_meter_getter::get_active_power_MW_bus_side(const METER_PARAMETER& para)
 {
     TRANSFORMER* trans = (TRANSFORMER*) para.device_pointer;
     unsigned int metered_bus = para.metered_side_bus;
@@ -220,7 +219,7 @@ double transformer_meter_getter::get_active_power_pu_bus_side(const METER_PARAME
     }
 }
 
-double transformer_meter_getter::get_reactive_power_mvar_bus_side(const METER_PARAMETER& para)
+double transformer_meter_getter::get_reactive_power_MVar_bus_side(const METER_PARAMETER& para)
 {
     TRANSFORMER* trans = (TRANSFORMER*) para.device_pointer;
     unsigned int metered_bus = para.metered_side_bus;

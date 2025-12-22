@@ -9,7 +9,7 @@ namespace sv_source_meter_getter
 {
     double get_terminal_current_pu_sbase(const METER_PARAMETER& para);
     double get_terminal_reactive_power_pu_sbase(const METER_PARAMETER& para);
-    double get_terminal_reactive_power_mvar(const METER_PARAMETER& para);
+    double get_terminal_reactive_power_MVar(const METER_PARAMETER& para);
     double get_svs_control_model_internal_variable(const METER_PARAMETER& para);
 }
 

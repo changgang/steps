@@ -20,7 +20,7 @@ double vsc_hvdc_meter_getter::get_converter_ac_voltage_in_pu(const METER_PARAMET
     return 0.0;
 }
 
-double vsc_hvdc_meter_getter::get_converter_ac_voltage_in_kv(const METER_PARAMETER& para)
+double vsc_hvdc_meter_getter::get_converter_ac_voltage_in_kV(const METER_PARAMETER& para)
 {
     VSC_HVDC* vsc_hvdc = (VSC_HVDC*) para.device_pointer;
     unsigned int metered_bus = para.metered_side_bus;
@@ -35,7 +35,7 @@ double vsc_hvdc_meter_getter::get_converter_ac_voltage_in_kv(const METER_PARAMET
     return 0.0;
 }
 
-double vsc_hvdc_meter_getter::get_converter_ac_current_in_ka(const METER_PARAMETER& para)
+double vsc_hvdc_meter_getter::get_converter_ac_current_in_kA(const METER_PARAMETER& para)
 {
     VSC_HVDC* vsc_hvdc = (VSC_HVDC*) para.device_pointer;
     unsigned int metered_bus = para.metered_side_bus;
@@ -50,7 +50,7 @@ double vsc_hvdc_meter_getter::get_converter_ac_current_in_ka(const METER_PARAMET
     return 0.0;
 }
 
-double vsc_hvdc_meter_getter::get_converter_dc_voltage_in_kv(const METER_PARAMETER& para)
+double vsc_hvdc_meter_getter::get_converter_dc_voltage_in_kV(const METER_PARAMETER& para)
 {
     VSC_HVDC* vsc_hvdc = (VSC_HVDC*) para.device_pointer;
     unsigned int metered_bus = para.metered_side_bus;
@@ -65,7 +65,7 @@ double vsc_hvdc_meter_getter::get_converter_dc_voltage_in_kv(const METER_PARAMET
     return 0.0;
 }
 
-double vsc_hvdc_meter_getter::get_converter_dc_current_in_ka(const METER_PARAMETER& para)
+double vsc_hvdc_meter_getter::get_converter_dc_current_in_kA(const METER_PARAMETER& para)
 {
     VSC_HVDC* vsc_hvdc = (VSC_HVDC*) para.device_pointer;
     unsigned int metered_bus = para.metered_side_bus;
@@ -80,7 +80,7 @@ double vsc_hvdc_meter_getter::get_converter_dc_current_in_ka(const METER_PARAMET
     return 0.0;
 }
 
-double vsc_hvdc_meter_getter::get_converter_dc_power_in_mw(const METER_PARAMETER& para)
+double vsc_hvdc_meter_getter::get_converter_dc_power_in_MW(const METER_PARAMETER& para)
 {
     VSC_HVDC* vsc_hvdc = (VSC_HVDC*) para.device_pointer;
     unsigned int metered_bus = para.metered_side_bus;
@@ -95,7 +95,7 @@ double vsc_hvdc_meter_getter::get_converter_dc_power_in_mw(const METER_PARAMETER
     return 0.0;
 }
 
-double vsc_hvdc_meter_getter::get_converter_ac_active_power_in_mw(const METER_PARAMETER& para)
+double vsc_hvdc_meter_getter::get_converter_ac_active_power_in_MW(const METER_PARAMETER& para)
 {
     VSC_HVDC* vsc_hvdc = (VSC_HVDC*) para.device_pointer;
     unsigned int metered_bus = para.metered_side_bus;
@@ -110,7 +110,7 @@ double vsc_hvdc_meter_getter::get_converter_ac_active_power_in_mw(const METER_PA
     return 0.0;
 }
 
-double vsc_hvdc_meter_getter::get_converter_ac_reactive_power_in_mvar(const METER_PARAMETER& para)
+double vsc_hvdc_meter_getter::get_converter_ac_reactive_power_in_MVar(const METER_PARAMETER& para)
 {
     VSC_HVDC* vsc_hvdc = (VSC_HVDC*) para.device_pointer;
     unsigned int metered_bus = para.metered_side_bus;
@@ -125,7 +125,7 @@ double vsc_hvdc_meter_getter::get_converter_ac_reactive_power_in_mvar(const METE
     return 0.0;
 }
 
-double vsc_hvdc_meter_getter::get_dc_bus_voltage_in_kv(const METER_PARAMETER& para)
+double vsc_hvdc_meter_getter::get_dc_bus_voltage_in_kV(const METER_PARAMETER& para)
 {
     VSC_HVDC* vsc_hvdc = (VSC_HVDC*) para.device_pointer;
     unsigned int dc_bus = para.metered_side_bus;
@@ -140,7 +140,7 @@ double vsc_hvdc_meter_getter::get_dc_bus_voltage_in_kv(const METER_PARAMETER& pa
     return 0.0;
 }
 
-double vsc_hvdc_meter_getter::get_dc_line_current_in_ka(const METER_PARAMETER& para)
+double vsc_hvdc_meter_getter::get_dc_line_current_in_kA(const METER_PARAMETER& para)
 {
     VSC_HVDC* vsc_hvdc = (VSC_HVDC*) para.device_pointer;
     unsigned int dc_bus = para.metered_side_bus;
@@ -156,7 +156,7 @@ double vsc_hvdc_meter_getter::get_dc_line_current_in_ka(const METER_PARAMETER& p
     return 0.0;
 }
 
-double vsc_hvdc_meter_getter::get_dc_line_power_in_mw(const METER_PARAMETER& para)
+double vsc_hvdc_meter_getter::get_dc_line_power_in_MW(const METER_PARAMETER& para)
 {
     VSC_HVDC* vsc_hvdc = (VSC_HVDC*) para.device_pointer;
     unsigned int dc_bus = para.metered_side_bus;

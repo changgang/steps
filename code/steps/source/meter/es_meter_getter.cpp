@@ -33,7 +33,7 @@ double es_meter_getter::get_terminal_current_pu_sbase(const METER_PARAMETER& par
         return 0.0;
 }
 
-double es_meter_getter::get_terminal_current_ka(const METER_PARAMETER& para)
+double es_meter_getter::get_terminal_current_kA(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
@@ -72,7 +72,7 @@ double es_meter_getter::get_terminal_active_power_pu_sbase(const METER_PARAMETER
         return 0.0;
 }
 
-double es_meter_getter::get_terminal_active_power_mw(const METER_PARAMETER& para)
+double es_meter_getter::get_terminal_active_power_MW(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
@@ -100,7 +100,7 @@ double es_meter_getter::get_terminal_reactive_power_pu_sbase(const METER_PARAMET
         return 0.0;
 }
 
-double es_meter_getter::get_terminal_reactive_power_mvar(const METER_PARAMETER& para)
+double es_meter_getter::get_terminal_reactive_power_MVar(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
@@ -137,7 +137,7 @@ double es_meter_getter::get_terminal_apparent_power_pu_sbase(const METER_PARAMET
         return 0.0;
 }
 
-double es_meter_getter::get_terminal_apparent_power_mva(const METER_PARAMETER& para)
+double es_meter_getter::get_terminal_apparent_power_MVA(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_CONVERTER_MODEL* model = es->get_es_converter_model();
@@ -214,7 +214,7 @@ double es_meter_getter::get_soc_power_pu_sbase(const METER_PARAMETER& para)
         return 0.0;
 }
 
-double es_meter_getter::get_soc_power_mw(const METER_PARAMETER& para)
+double es_meter_getter::get_soc_power_MW(const METER_PARAMETER& para)
 {
     ENERGY_STORAGE* es = (ENERGY_STORAGE*) para.device_pointer;
     ES_SOC_MODEL* model = es->get_es_soc_model();

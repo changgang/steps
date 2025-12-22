@@ -32,7 +32,7 @@ double pvu_meter_getter::get_terminal_current_pu_sbase(const METER_PARAMETER& pa
         return 0.0;
 }
 
-double pvu_meter_getter::get_terminal_current_ka(const METER_PARAMETER& para)
+double pvu_meter_getter::get_terminal_current_kA(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
@@ -71,7 +71,7 @@ double pvu_meter_getter::get_terminal_active_power_pu_sbase(const METER_PARAMETE
         return 0.0;
 }
 
-double pvu_meter_getter::get_terminal_active_power_mw(const METER_PARAMETER& para)
+double pvu_meter_getter::get_terminal_active_power_MW(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
@@ -99,7 +99,7 @@ double pvu_meter_getter::get_terminal_reactive_power_pu_sbase(const METER_PARAME
         return 0.0;
 }
 
-double pvu_meter_getter::get_terminal_reactive_power_mvar(const METER_PARAMETER& para)
+double pvu_meter_getter::get_terminal_reactive_power_MVar(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
@@ -136,7 +136,7 @@ double pvu_meter_getter::get_terminal_apparent_power_pu_sbase(const METER_PARAME
         return 0.0;
 }
 
-double pvu_meter_getter::get_terminal_apparent_power_mva(const METER_PARAMETER& para)
+double pvu_meter_getter::get_terminal_apparent_power_MVA(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
@@ -234,7 +234,7 @@ double pvu_meter_getter::get_max_available_power_irradiance_pu_sbase(const METER
         return 0.0;
 }
 
-double pvu_meter_getter::get_max_available_power_irradiance_mw(const METER_PARAMETER& para)
+double pvu_meter_getter::get_max_available_power_irradiance_MW(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_PANEL_MODEL* model = pv_unit->get_pv_panel_model();
@@ -248,7 +248,7 @@ double pvu_meter_getter::get_panel_power_pu_mbase(const METER_PARAMETER& para)
     return model ? model->get_pv_panel_power_in_pu_on_mbase() : 0.0;
 }
 
-double pvu_meter_getter::get_panel_power_mw(const METER_PARAMETER& para)
+double pvu_meter_getter::get_panel_power_MW(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_PANEL_MODEL* model = pv_unit->get_pv_panel_model();

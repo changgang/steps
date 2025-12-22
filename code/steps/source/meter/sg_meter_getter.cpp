@@ -30,7 +30,7 @@ double sg_meter_getter::get_rotor_speed_pu(const METER_PARAMETER& para)
     return model ? model->get_rotor_speed_in_pu() : 0.0;
 }
 
-double sg_meter_getter::get_rotor_speed_hz(const METER_PARAMETER& para)
+double sg_meter_getter::get_rotor_speed_Hz(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -53,7 +53,7 @@ double sg_meter_getter::get_rotor_speed_deviation_pu(const METER_PARAMETER& para
     return model ? model->get_rotor_speed_deviation_in_pu() : 0.0;
 }
 
-double sg_meter_getter::get_rotor_speed_deviation_hz(const METER_PARAMETER& para)
+double sg_meter_getter::get_rotor_speed_deviation_Hz(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -97,7 +97,7 @@ double sg_meter_getter::get_terminal_current_pu_sbase(const METER_PARAMETER& par
     return model ? model->get_terminal_current_in_pu_based_on_sbase() : 0.0;
 }
 
-double sg_meter_getter::get_terminal_current_ka(const METER_PARAMETER& para)
+double sg_meter_getter::get_terminal_current_kA(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -142,7 +142,7 @@ double sg_meter_getter::get_terminal_active_power_pu_sbase(const METER_PARAMETER
         return 0.0;
 }
 
-double sg_meter_getter::get_terminal_active_power_mw(const METER_PARAMETER& para)
+double sg_meter_getter::get_terminal_active_power_MW(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -176,7 +176,7 @@ double sg_meter_getter::get_terminal_reactive_power_pu_sbase(const METER_PARAMET
         return 0.0;
 }
 
-double sg_meter_getter::get_terminal_reactive_power_mvar(const METER_PARAMETER& para)
+double sg_meter_getter::get_terminal_reactive_power_MVar(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -214,7 +214,7 @@ double sg_meter_getter::get_terminal_apparent_power_pu_sbase(const METER_PARAMET
         return 0.0;
 }
 
-double sg_meter_getter::get_terminal_apparent_power_mva(const METER_PARAMETER& para)
+double sg_meter_getter::get_terminal_apparent_power_MVA(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -250,7 +250,7 @@ double sg_meter_getter::get_airgap_power_pu_sbase(const METER_PARAMETER& para)
         return 0.0;
 }
 
-double sg_meter_getter::get_airgap_power_mw(const METER_PARAMETER& para)
+double sg_meter_getter::get_airgap_power_MW(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -278,7 +278,7 @@ double sg_meter_getter::get_accelerating_power_pu_sbase(const METER_PARAMETER& p
         return 0.0;
 }
 
-double sg_meter_getter::get_accelerating_power_mw(const METER_PARAMETER& para)
+double sg_meter_getter::get_accelerating_power_MW(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -306,7 +306,7 @@ double sg_meter_getter::get_mechanical_power_pu_sbase(const METER_PARAMETER& par
         return 0.0;
 }
 
-double sg_meter_getter::get_mechanical_power_mw(const METER_PARAMETER& para)
+double sg_meter_getter::get_mechanical_power_MW(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -335,7 +335,7 @@ double sg_meter_getter::get_mechanical_power_reference_pu_sbase(const METER_PARA
         return 0.0;
 }
 
-double sg_meter_getter::get_mechanical_power_reference_mw(const METER_PARAMETER& para)
+double sg_meter_getter::get_mechanical_power_reference_MW(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     TURBINE_GOVERNOR_MODEL* model = gen->get_turbine_governor_model();

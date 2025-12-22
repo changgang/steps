@@ -35,35 +35,35 @@ void build_sg_meter_map()
     sg_meter_map.insert({"ROTOR ANGLE IN DEG",                              get_rotor_angle_deg});
     sg_meter_map.insert({"ROTOR ANGLE IN RAD",                              get_rotor_angle_rad});
     sg_meter_map.insert({"ROTOR SPEED IN PU",                               get_rotor_speed_pu});
-    sg_meter_map.insert({"ROTOR SPEED IN HZ",                               get_rotor_speed_hz});
+    sg_meter_map.insert({"ROTOR SPEED IN HZ",                               get_rotor_speed_Hz});
     sg_meter_map.insert({"ROTOR SPEED DEVIATION IN PU",                     get_rotor_speed_deviation_pu});
-    sg_meter_map.insert({"ROTOR SPEED DEVIATION IN HZ",                     get_rotor_speed_deviation_hz});
+    sg_meter_map.insert({"ROTOR SPEED DEVIATION IN HZ",                     get_rotor_speed_deviation_Hz});
     sg_meter_map.insert({"TERMINAL VOLTAGE IN PU",                          get_terminal_voltage_pu});
     sg_meter_map.insert({"INTERNAL VOLTAGE IN PU",                          get_internal_voltage_pu});
     sg_meter_map.insert({"TERMINAL CURRENT IN PU ON MBASE",                 get_terminal_current_pu_mbase});
     sg_meter_map.insert({"TERMINAL CURRENT IN PU ON SBASE",                 get_terminal_current_pu_sbase});
-    sg_meter_map.insert({"TERMINAL CURRENT IN KA",                          get_terminal_current_ka});
+    sg_meter_map.insert({"TERMINAL CURRENT IN KA",                          get_terminal_current_kA});
     sg_meter_map.insert({"TERMINAL ACTIVE POWER IN PU ON MBASE",            get_terminal_active_power_pu_mbase});
     sg_meter_map.insert({"TERMINAL ACTIVE POWER IN PU ON SBASE",            get_terminal_active_power_pu_sbase});
-    sg_meter_map.insert({"TERMINAL ACTIVE POWER IN MW",                     get_terminal_active_power_mw});
+    sg_meter_map.insert({"TERMINAL ACTIVE POWER IN MW",                     get_terminal_active_power_MW});
     sg_meter_map.insert({"TERMINAL REACTIVE POWER IN PU ON MBASE",          get_terminal_reactive_power_pu_mbase});
     sg_meter_map.insert({"TERMINAL REACTIVE POWER IN PU ON SBASE",          get_terminal_reactive_power_pu_sbase});
-    sg_meter_map.insert({"TERMINAL REACTIVE POWER IN MVAR",                 get_terminal_reactive_power_mvar});
+    sg_meter_map.insert({"TERMINAL REACTIVE POWER IN MVAR",                 get_terminal_reactive_power_MVar});
     sg_meter_map.insert({"TERMINAL APPRRENT POWER IN PU ON MBASE",          get_terminal_apparent_power_pu_mbase});
     sg_meter_map.insert({"TERMINAL APPARENT POWER IN PU ON SBASE",          get_terminal_apparent_power_pu_sbase});
-    sg_meter_map.insert({"TERMINAL APPARENT POWER IN MVA",                  get_terminal_apparent_power_mva});
+    sg_meter_map.insert({"TERMINAL APPARENT POWER IN MVA",                  get_terminal_apparent_power_MVA});
     sg_meter_map.insert({"AIRGAP POWER IN PU ON MBASE",                     get_airgap_power_pu_mbase});
     sg_meter_map.insert({"AIRGAP POWER IN PU ON SBASE",                     get_airgap_power_pu_sbase});
-    sg_meter_map.insert({"AIRGAP POWER IN MW",                              get_airgap_power_mw});
+    sg_meter_map.insert({"AIRGAP POWER IN MW",                              get_airgap_power_MW});
     sg_meter_map.insert({"ACCELERATING POWER IN PU ON MBASE",               get_accelerating_power_pu_mbase});
     sg_meter_map.insert({"ACCELERATING POWER IN PU ON SBASE",               get_accelerating_power_pu_sbase});
-    sg_meter_map.insert({"ACCELERATING POWER IN MW",                        get_accelerating_power_mw});
+    sg_meter_map.insert({"ACCELERATING POWER IN MW",                        get_accelerating_power_MW});
     sg_meter_map.insert({"MECHANICAL POWER IN PU ON MBASE",                 get_mechanical_power_pu_mbase});
     sg_meter_map.insert({"MECHANICAL POWER IN PU ON SBASE",                 get_mechanical_power_pu_sbase});
-    sg_meter_map.insert({"MECHANICAL POWER IN MW",                          get_mechanical_power_mw});
+    sg_meter_map.insert({"MECHANICAL POWER IN MW",                          get_mechanical_power_MW});
     sg_meter_map.insert({"MECHANICAL POWER REFERENCE IN PU ON MBASE",       get_mechanical_power_reference_pu_mbase});
     sg_meter_map.insert({"MECHANICAL POWER REFERENCE IN PU ON SBASE",       get_mechanical_power_reference_pu_sbase});
-    sg_meter_map.insert({"MECHANICAL POWER REFERENCE IN MW",                get_mechanical_power_reference_mw});
+    sg_meter_map.insert({"MECHANICAL POWER REFERENCE IN MW",                get_mechanical_power_reference_MW});
     sg_meter_map.insert({"COMPENSATED VOLTAGE IN PU",                       get_compensated_voltage_pu});
     sg_meter_map.insert({"VOLTAGE REFERENCE IN PU",                         get_voltage_reference_pu});
     sg_meter_map.insert({"STABILIZING SIGNAL IN PU",                        get_stabilizing_signal_pu});
@@ -81,32 +81,32 @@ void build_wtg_meter_map()
     using namespace wtg_meter_getter;
     wtg_meter_map.insert({"TERMINAL CURRENT IN PU ON MBASE",               get_terminal_current_pu_mbase});
     wtg_meter_map.insert({"TERMINAL CURRENT IN PU ON SBASE",               get_terminal_current_pu_sbase});
-    wtg_meter_map.insert({"TERMINAL CURRENT IN KA",                        get_terminal_current_ka});
+    wtg_meter_map.insert({"TERMINAL CURRENT IN KA",                        get_terminal_current_kA});
     wtg_meter_map.insert({"TERMINAL ACTIVE POWER IN PU ON MBASE",          get_terminal_active_power_pu_mbase});
     wtg_meter_map.insert({"TERMINAL ACTIVE POWER IN PU ON SBASE",          get_terminal_active_power_pu_sbase});
-    wtg_meter_map.insert({"TERMINAL ACTIVE POWER IN MW",                   get_terminal_active_power_mw});
+    wtg_meter_map.insert({"TERMINAL ACTIVE POWER IN MW",                   get_terminal_active_power_MW});
     wtg_meter_map.insert({"TERMINAL REACTIVE POWER IN PU ON MBASE",        get_terminal_reactive_power_pu_mbase});
     wtg_meter_map.insert({"TERMINAL REACTIVE POWER IN PU ON SBASE",        get_terminal_reactive_power_pu_sbase});
-    wtg_meter_map.insert({"TERMINAL REACTIVE POWER IN MVAR",               get_terminal_reactive_power_mvar});
+    wtg_meter_map.insert({"TERMINAL REACTIVE POWER IN MVAR",               get_terminal_reactive_power_MVar});
     wtg_meter_map.insert({"TERMINAL APPARENT POWER IN PU ON MBASE",        get_terminal_apparent_power_pu_mbase});
     wtg_meter_map.insert({"TERMINAL APPARENT POWER IN PU ON SBASE",        get_terminal_apparent_power_pu_sbase});
-    wtg_meter_map.insert({"TERMINAL APPARENT POWER IN MVA",                get_terminal_apparent_power_mva});
+    wtg_meter_map.insert({"TERMINAL APPARENT POWER IN MVA",                get_terminal_apparent_power_MVA});
     wtg_meter_map.insert({"MECHANICAL POWER IN PU ON MBASE",               get_mechanical_power_pu_mbase});
     wtg_meter_map.insert({"MECHANICAL POWER IN PU ON SBASE",               get_mechanical_power_pu_sbase});
-    wtg_meter_map.insert({"MECHANICAL POWER IN MW",                        get_mechanical_power_mw});
+    wtg_meter_map.insert({"MECHANICAL POWER IN MW",                        get_mechanical_power_MW});
     wtg_meter_map.insert({"MAX AVAILABLE MECHANICAL POWER IN PU ON MBASE", get_max_available_mechanical_power_pu_mbase});
     wtg_meter_map.insert({"MAX AVAILABLE MECHANICAL POWER IN PU ON SBASE", get_max_available_mechanical_power_pu_sbase});
-    wtg_meter_map.insert({"MAX AVAILABLE MECHANICAL POWER IN MW",          get_max_available_mechanical_power_mw});
+    wtg_meter_map.insert({"MAX AVAILABLE MECHANICAL POWER IN MW",          get_max_available_mechanical_power_MW});
     wtg_meter_map.insert({"SPEED REFERENCE IN PU",                         get_speed_reference_pu});
     wtg_meter_map.insert({"SPEED REFERENCE IN RAD/S",                      get_speed_reference_rad_s});
     wtg_meter_map.insert({"TURBINE SPEED DEVIATION IN PU",                 get_turbine_speed_deviation_pu});
-    wtg_meter_map.insert({"TURBINE SPEED DEVIATION IN HZ",                 get_turbine_speed_deviation_hz});
+    wtg_meter_map.insert({"TURBINE SPEED DEVIATION IN HZ",                 get_turbine_speed_deviation_Hz});
     wtg_meter_map.insert({"TURBINE SPEED IN PU",                           get_turbine_speed_pu});
-    wtg_meter_map.insert({"TURBINE SPEED IN HZ",                           get_turbine_speed_hz});
+    wtg_meter_map.insert({"TURBINE SPEED IN HZ",                           get_turbine_speed_Hz});
     wtg_meter_map.insert({"ROTOR SPEED DEVIATION IN PU",                   get_rotor_speed_deviation_pu});
-    wtg_meter_map.insert({"ROTOR SPEED DEVIATION IN HZ",                   get_rotor_speed_deviation_hz});
+    wtg_meter_map.insert({"ROTOR SPEED DEVIATION IN HZ",                   get_rotor_speed_deviation_Hz});
     wtg_meter_map.insert({"ROTOR SPEED IN PU",                             get_rotor_speed_pu});
-    wtg_meter_map.insert({"ROTOR SPEED IN HZ",                             get_rotor_speed_hz});
+    wtg_meter_map.insert({"ROTOR SPEED IN HZ",                             get_rotor_speed_Hz});
     wtg_meter_map.insert({"ROTOR ANGLE IN DEG",                            get_rotor_angle_deg});
     wtg_meter_map.insert({"ROTOR ANGLE IN RAD",                            get_rotor_angle_rad});
     wtg_meter_map.insert({"ACTIVE CURRENT COMMAND IN PU",                  get_active_current_command_pu});
@@ -134,19 +134,19 @@ void build_pvu_meter_map()
     using namespace pvu_meter_getter;
     pvu_meter_map.insert({"TERMINAL CURRENT IN PU ON MBASE",                        get_terminal_current_pu_mbase});
     pvu_meter_map.insert({"TERMINAL CURRENT IN PU ON SBASE",                        get_terminal_current_pu_sbase});
-    pvu_meter_map.insert({"TERMINAL CURRENT IN KA",                                 get_terminal_current_ka});
+    pvu_meter_map.insert({"TERMINAL CURRENT IN KA",                                 get_terminal_current_kA});
 
     pvu_meter_map.insert({"TERMINAL ACTIVE POWER IN PU ON MBASE",                   get_terminal_active_power_pu_mbase});
     pvu_meter_map.insert({"TERMINAL ACTIVE POWER IN PU ON SBASE",                   get_terminal_active_power_pu_sbase});
-    pvu_meter_map.insert({"TERMINAL ACTIVE POWER IN MW",                            get_terminal_active_power_mw});
+    pvu_meter_map.insert({"TERMINAL ACTIVE POWER IN MW",                            get_terminal_active_power_MW});
 
     pvu_meter_map.insert({"TERMINAL REACTIVE POWER IN PU ON MBASE",                 get_terminal_reactive_power_pu_mbase});
     pvu_meter_map.insert({"TERMINAL REACTIVE POWER IN PU ON SBASE",                 get_terminal_reactive_power_pu_sbase});
-    pvu_meter_map.insert({"TERMINAL REACTIVE POWER IN MVAR",                        get_terminal_reactive_power_mvar});
+    pvu_meter_map.insert({"TERMINAL REACTIVE POWER IN MVAR",                        get_terminal_reactive_power_MVar});
 
     pvu_meter_map.insert({"TERMINAL APPARENT POWER IN PU ON MBASE",                 get_terminal_apparent_power_pu_mbase});
     pvu_meter_map.insert({"TERMINAL APPARENT POWER IN PU ON SBASE",                 get_terminal_apparent_power_pu_sbase});
-    pvu_meter_map.insert({"TERMINAL APPARENT POWER IN MVA",                         get_terminal_apparent_power_mva});
+    pvu_meter_map.insert({"TERMINAL APPARENT POWER IN MVA",                         get_terminal_apparent_power_MVA});
 
     pvu_meter_map.insert({"ACTIVE CURRENT COMMAND IN PU",                           get_active_current_command_pu});
     pvu_meter_map.insert({"REACTIVE CURRENT COMMAND IN PU",                         get_reactive_current_command_pu});
@@ -162,10 +162,10 @@ void build_pvu_meter_map()
 
     pvu_meter_map.insert({"MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN PU ON MBASE", get_max_available_power_irradiance_pu_mbase});
     pvu_meter_map.insert({"MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN PU ON SBASE", get_max_available_power_irradiance_pu_sbase});
-    pvu_meter_map.insert({"MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN MW",          get_max_available_power_irradiance_mw});
+    pvu_meter_map.insert({"MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN MW",          get_max_available_power_irradiance_MW});
 
     pvu_meter_map.insert({"PANEL POWER IN PU ON MBASE",                             get_panel_power_pu_mbase});
-    pvu_meter_map.insert({"PANEL POWER IN MW",                                      get_panel_power_mw});
+    pvu_meter_map.insert({"PANEL POWER IN MW",                                      get_panel_power_MW});
 
     pvu_meter_map.insert({"PV CONVERTER MODEL INTERNAL VARIABLE",                   get_converter_model_internal_variable});
     pvu_meter_map.insert({"PV PANEL MODEL INTERNAL VARIABLE",                       get_panel_model_internal_variable});
@@ -181,16 +181,16 @@ void build_es_meter_map()
     using namespace es_meter_getter;
     es_meter_map.insert({"TERMINAL CURRENT IN PU ON MBASE",           get_terminal_current_pu_mbase});
     es_meter_map.insert({"TERMINAL CURRENT IN PU ON SBASE",           get_terminal_current_pu_sbase});
-    es_meter_map.insert({"TERMINAL CURRENT IN KA",                    get_terminal_current_ka});
+    es_meter_map.insert({"TERMINAL CURRENT IN KA",                    get_terminal_current_kA});
     es_meter_map.insert({"TERMINAL ACTIVE POWER IN PU ON MBASE",      get_terminal_active_power_pu_mbase});
     es_meter_map.insert({"TERMINAL ACTIVE POWER IN PU ON SBASE",      get_terminal_active_power_pu_sbase});
-    es_meter_map.insert({"TERMINAL ACTIVE POWER IN MW",               get_terminal_active_power_mw});
+    es_meter_map.insert({"TERMINAL ACTIVE POWER IN MW",               get_terminal_active_power_MW});
     es_meter_map.insert({"TERMINAL REACTIVE POWER IN PU ON MBASE",    get_terminal_reactive_power_pu_mbase});
     es_meter_map.insert({"TERMINAL REACTIVE POWER IN PU ON SBASE",    get_terminal_reactive_power_pu_sbase});
-    es_meter_map.insert({"TERMINAL REACTIVE POWER IN MVAR",           get_terminal_reactive_power_mvar});
+    es_meter_map.insert({"TERMINAL REACTIVE POWER IN MVAR",           get_terminal_reactive_power_MVar});
     es_meter_map.insert({"TERMINAL APPARENT POWER IN PU ON MBASE",    get_terminal_apparent_power_pu_mbase});
     es_meter_map.insert({"TERMINAL APPARENT POWER IN PU ON SBASE",    get_terminal_apparent_power_pu_sbase});
-    es_meter_map.insert({"TERMINAL APPARENT POWER IN MVA",            get_terminal_apparent_power_mva});
+    es_meter_map.insert({"TERMINAL APPARENT POWER IN MVA",            get_terminal_apparent_power_MVA});
     es_meter_map.insert({"ACTIVE CURRENT COMMAND IN PU",              get_active_current_command_pu});
     es_meter_map.insert({"REACTIVE CURRENT COMMAND IN PU",            get_reactive_current_command_pu});
     es_meter_map.insert({"ACTIVE POWER COMMAND IN PU",                get_active_power_command_pu});
@@ -199,7 +199,7 @@ void build_es_meter_map()
     es_meter_map.insert({"STATE OF CHARGE IN PU",                     get_state_of_charge_pu});
     es_meter_map.insert({"SOC POWER IN PU ON MBASE",                  get_soc_power_pu_mbase});
     es_meter_map.insert({"SOC POWER IN PU ON SBASE",                  get_soc_power_pu_sbase});
-    es_meter_map.insert({"SOC POWER IN MW",                           get_soc_power_mw});
+    es_meter_map.insert({"SOC POWER IN MW",                           get_soc_power_MW});
     es_meter_map.insert({"MECHANICAL POWER IN PU ON MBASE",           get_mechanical_power_pu_mbase});
     es_meter_map.insert({"ROTOR SPEED IN PU",                         get_rotor_speed_pu});
     es_meter_map.insert({"ROTOR SPEED REFERENCE IN PU",               get_rotor_speed_reference_pu});
@@ -222,18 +222,18 @@ void build_sv_source_meter_map()
     using namespace sv_source_meter_getter;
     sv_source_meter_map.insert({"TERMINAL CURRENT IN PU ON SBASE",        get_terminal_current_pu_sbase});
     sv_source_meter_map.insert({"TERMINAL REACTIVE POWER IN PU ON SBASE", get_terminal_reactive_power_pu_sbase});
-    sv_source_meter_map.insert({"TERMINAL REACTIVE POWER IN MVAR",        get_terminal_reactive_power_mvar});
+    sv_source_meter_map.insert({"TERMINAL REACTIVE POWER IN MVAR",        get_terminal_reactive_power_MVar});
     sv_source_meter_map.insert({"SVS CONTROL MODEL INTERNAL VARIABLE",    get_svs_control_model_internal_variable});
 }
 
 void build_load_meter_map()
 {
     using namespace load_meter_getter;
-    load_meter_map.insert({"ACTIVE POWER IN MW",                      get_active_power_mw});
+    load_meter_map.insert({"ACTIVE POWER IN MW",                      get_active_power_MW});
     load_meter_map.insert({"ACTIVE POWER IN PU",                      get_active_power_pu});
-    load_meter_map.insert({"REACTIVE POWER IN MVAR",                  get_reactive_power_mvar});
+    load_meter_map.insert({"REACTIVE POWER IN MVAR",                  get_reactive_power_MVar});
     load_meter_map.insert({"REACTIVE POWER IN PU",                    get_reactive_power_pu});
-    load_meter_map.insert({"CURRENT IN KA",                           get_current_ka});
+    load_meter_map.insert({"CURRENT IN KA",                           get_current_kA});
     load_meter_map.insert({"CURRENT IN PU",                           get_current_pu});
     load_meter_map.insert({"LOAD MODEL INTERNAL VARIABLE",            get_load_model_internal_variable});
     load_meter_map.insert({"FREQUENCY RELAY MODEL INTERNAL VARIABLE", get_frequency_relay_model_internal_variable});
@@ -250,22 +250,22 @@ void build_fixed_shunt_meter_map()
 void build_ac_line_meter_map()
 {
     using namespace ac_line_meter_getter;
-    ac_line_meter_map.insert({"CURRENT IN KA",                                     get_current_in_ka});
+    ac_line_meter_map.insert({"CURRENT IN KA",                                     get_current_in_kA});
     ac_line_meter_map.insert({"CURRENT IN PU",                                     get_current_in_pu});
-    ac_line_meter_map.insert({"ACTIVE POWER IN MW",                                get_active_power_in_mw});
+    ac_line_meter_map.insert({"ACTIVE POWER IN MW",                                get_active_power_in_MW});
     ac_line_meter_map.insert({"ACTIVE POWER IN PU",                                get_active_power_in_pu});
-    ac_line_meter_map.insert({"REACTIVE POWER IN MVAR",                            get_reactive_power_in_mvar});
+    ac_line_meter_map.insert({"REACTIVE POWER IN MVAR",                            get_reactive_power_in_MVar});
     ac_line_meter_map.insert({"REACTIVE POWER IN PU",                              get_reactive_power_in_pu});
     ac_line_meter_map.insert({"APPARENT IMPEDANCE IN OHM",                         get_apparent_impedance_in_ohm});
     ac_line_meter_map.insert({"APPARENT IMPEDANCE IN PU",                          get_apparent_impedance_in_pu});
     ac_line_meter_map.insert({"APPARENT IMPEDANCE ANGLE IN DEG",                   get_apparent_impedance_angle_in_deg});
     ac_line_meter_map.insert({"APPARENT IMPEDANCE ANGLE IN RAD",                   get_apparent_impedance_angle_in_rad});
-    ac_line_meter_map.insert({"CURRENT AT SENDING SIDE IN KA",                     get_current_at_sending_side_in_ka});
-    ac_line_meter_map.insert({"ACTIVE POWER AT SENDING SIDE IN MW",                get_active_power_at_sending_side_in_mw});
-    ac_line_meter_map.insert({"REACTIVE POWER AT SENDING SIDE IN MVAR",            get_reactive_power_at_sending_side_in_mvar});
-    ac_line_meter_map.insert({"CURRENT AT RECEIVING SIDE IN KA",                   get_current_at_receiving_side_in_ka});
-    ac_line_meter_map.insert({"ACTIVE POWER AT RECEIVING SIDE IN MW",              get_active_power_at_receiving_side_in_mw});
-    ac_line_meter_map.insert({"REACTIVE POWER AT RECEIVING SIDE IN MVAR",          get_reactive_power_at_receiving_side_in_mvar});
+    ac_line_meter_map.insert({"CURRENT AT SENDING SIDE IN KA",                     get_current_at_sending_side_in_kA});
+    ac_line_meter_map.insert({"ACTIVE POWER AT SENDING SIDE IN MW",                get_active_power_at_sending_side_in_MW});
+    ac_line_meter_map.insert({"REACTIVE POWER AT SENDING SIDE IN MVAR",            get_reactive_power_at_sending_side_in_MVar});
+    ac_line_meter_map.insert({"CURRENT AT RECEIVING SIDE IN KA",                   get_current_at_receiving_side_in_kA});
+    ac_line_meter_map.insert({"ACTIVE POWER AT RECEIVING SIDE IN MW",              get_active_power_at_receiving_side_in_MW});
+    ac_line_meter_map.insert({"REACTIVE POWER AT RECEIVING SIDE IN MVAR",          get_reactive_power_at_receiving_side_in_MVar});
     ac_line_meter_map.insert({"APPARENT IMPEDANCE AT SENDING SIDE IN OHM",         get_apparent_impedance_at_sending_side_in_ohm});
     ac_line_meter_map.insert({"APPARENT IMPEDANCE ANGLE AT SENDING SIDE IN DEG",   get_apparent_impedance_angle_at_sending_side_in_deg});
     ac_line_meter_map.insert({"APPARENT IMPEDANCE AT RECEIVING SIDE IN OHM",       get_apparent_impedance_at_receiving_side_in_ohm});
@@ -275,30 +275,30 @@ void build_ac_line_meter_map()
 void build_transformer_meter_map()
 {
     using namespace transformer_meter_getter;
-    transformer_meter_map.insert({"CURRENT IN KA",                               get_current_ka_bus_side});
+    transformer_meter_map.insert({"CURRENT IN KA",                               get_current_kA_bus_side});
     transformer_meter_map.insert({"CURRENT IN PU",                               get_current_pu_bus_side});
-    transformer_meter_map.insert({"ACTIVE POWER IN MW",                          get_active_power_mw_bus_side});
+    transformer_meter_map.insert({"ACTIVE POWER IN MW",                          get_active_power_MW_bus_side});
     transformer_meter_map.insert({"ACTIVE POWER IN PU",                          get_active_power_pu_bus_side});
-    transformer_meter_map.insert({"REACTIVE POWER IN MVAR",                      get_reactive_power_mvar_bus_side});
+    transformer_meter_map.insert({"REACTIVE POWER IN MVAR",                      get_reactive_power_MVar_bus_side});
     transformer_meter_map.insert({"REACTIVE POWER IN PU",                        get_reactive_power_pu_bus_side});
 
-    transformer_meter_map.insert({"CURRENT AT PRIMARY WINDING IN KA",            get_current_ka_primary});
-    transformer_meter_map.insert({"CURRENT AT SECONDARY WINDING IN KA",          get_current_ka_secondary});
-    transformer_meter_map.insert({"CURRENT AT TERTIARY WINDING IN KA",           get_current_ka_tertiary});
+    transformer_meter_map.insert({"CURRENT AT PRIMARY WINDING IN KA",            get_current_kA_primary});
+    transformer_meter_map.insert({"CURRENT AT SECONDARY WINDING IN KA",          get_current_kA_secondary});
+    transformer_meter_map.insert({"CURRENT AT TERTIARY WINDING IN KA",           get_current_kA_tertiary});
     transformer_meter_map.insert({"CURRENT AT PRIMARY WINDING IN PU",            get_current_pu_primary});
     transformer_meter_map.insert({"CURRENT AT SECONDARY WINDING IN PU",          get_current_pu_secondary});
     transformer_meter_map.insert({"CURRENT AT TERTIARY WINDING IN PU",           get_current_pu_tertiary});
 
-    transformer_meter_map.insert({"ACTIVE POWER AT PRIMARY WINDING IN MW",       get_active_power_mw_primary});
-    transformer_meter_map.insert({"ACTIVE POWER AT SECONDARY WINDING IN MW",     get_active_power_mw_secondary});
-    transformer_meter_map.insert({"ACTIVE POWER AT TERTIARY WINDING IN MW",      get_active_power_mw_tertiary});
+    transformer_meter_map.insert({"ACTIVE POWER AT PRIMARY WINDING IN MW",       get_active_power_MW_primary});
+    transformer_meter_map.insert({"ACTIVE POWER AT SECONDARY WINDING IN MW",     get_active_power_MW_secondary});
+    transformer_meter_map.insert({"ACTIVE POWER AT TERTIARY WINDING IN MW",      get_active_power_MW_tertiary});
     transformer_meter_map.insert({"ACTIVE POWER AT PRIMARY WINDING IN PU",       get_active_power_pu_primary});
     transformer_meter_map.insert({"ACTIVE POWER AT SECONDARY WINDING IN PU",     get_active_power_pu_secondary});
     transformer_meter_map.insert({"ACTIVE POWER AT TERTIARY WINDING IN PU",      get_active_power_pu_tertiary});
 
-    transformer_meter_map.insert({"REACTIVE POWER AT PRIMARY WINDING IN MVAR",   get_reactive_power_mvar_primary});
-    transformer_meter_map.insert({"REACTIVE POWER AT SECONDARY WINDING IN MVAR", get_reactive_power_mvar_secondary});
-    transformer_meter_map.insert({"REACTIVE POWER AT TERTIARY WINDING IN MVAR",  get_reactive_power_mvar_tertiary});
+    transformer_meter_map.insert({"REACTIVE POWER AT PRIMARY WINDING IN MVAR",   get_reactive_power_MVar_primary});
+    transformer_meter_map.insert({"REACTIVE POWER AT SECONDARY WINDING IN MVAR", get_reactive_power_MVar_secondary});
+    transformer_meter_map.insert({"REACTIVE POWER AT TERTIARY WINDING IN MVAR",  get_reactive_power_MVar_tertiary});
     transformer_meter_map.insert({"REACTIVE POWER AT PRIMARY WINDING IN PU",     get_reactive_power_pu_primary});
     transformer_meter_map.insert({"REACTIVE POWER AT SECONDARY WINDING IN PU",   get_reactive_power_pu_secondary});
     transformer_meter_map.insert({"REACTIVE POWER AT TERTIARY WINDING IN PU",    get_reactive_power_pu_tertiary});
@@ -307,25 +307,25 @@ void build_transformer_meter_map()
 void build_lcc_hvdc2t_meter_map()
 {
     using namespace lcc_hvdc2t_meter_getter;
-    lcc_hvdc2t_meter_map.insert({"DC CURRENT IN KA",                    get_dc_current_in_ka});
-    lcc_hvdc2t_meter_map.insert({"RECTIFIER DC CURRENT IN KA",          get_rectifier_dc_current_in_ka});
-    lcc_hvdc2t_meter_map.insert({"RECTIFIER AC CURRENT IN KA",          get_rectifier_ac_current_in_ka});
-    lcc_hvdc2t_meter_map.insert({"INVERTER DC CURRENT IN KA",           get_inverter_dc_current_in_ka});
-    lcc_hvdc2t_meter_map.insert({"INVERTER AC CURRENT IN KA",           get_inverter_ac_current_in_ka});
+    lcc_hvdc2t_meter_map.insert({"DC CURRENT IN KA",                    get_dc_current_in_kA});
+    lcc_hvdc2t_meter_map.insert({"RECTIFIER DC CURRENT IN KA",          get_rectifier_dc_current_in_kA});
+    lcc_hvdc2t_meter_map.insert({"RECTIFIER AC CURRENT IN KA",          get_rectifier_ac_current_in_kA});
+    lcc_hvdc2t_meter_map.insert({"INVERTER DC CURRENT IN KA",           get_inverter_dc_current_in_kA});
+    lcc_hvdc2t_meter_map.insert({"INVERTER AC CURRENT IN KA",           get_inverter_ac_current_in_kA});
     lcc_hvdc2t_meter_map.insert({"RECTIFIER ALPHA IN DEG",              get_rectifier_alpha_in_deg});
     lcc_hvdc2t_meter_map.insert({"INVERTER GAMMA IN DEG",               get_inverter_gamma_in_deg});
     lcc_hvdc2t_meter_map.insert({"RECTIFIER MU IN DEG",                 get_rectifier_mu_in_deg});
     lcc_hvdc2t_meter_map.insert({"INVERTER MU IN DEG",                  get_inverter_mu_in_deg});
-    lcc_hvdc2t_meter_map.insert({"RECTIFIER DC VOLTAGE IN KV",          get_rectifier_dc_voltage_in_kv});
-    lcc_hvdc2t_meter_map.insert({"INVERTER DC VOLTAGE IN KV",           get_inverter_dc_voltage_in_kv});
+    lcc_hvdc2t_meter_map.insert({"RECTIFIER DC VOLTAGE IN KV",          get_rectifier_dc_voltage_in_kV});
+    lcc_hvdc2t_meter_map.insert({"INVERTER DC VOLTAGE IN KV",           get_inverter_dc_voltage_in_kV});
     lcc_hvdc2t_meter_map.insert({"RECTIFIER AC VOLTAGE IN PU",          get_rectifier_ac_voltage_in_pu});
     lcc_hvdc2t_meter_map.insert({"INVERTER AC VOLTAGE IN PU",           get_inverter_ac_voltage_in_pu});
-    lcc_hvdc2t_meter_map.insert({"RECTIFIER DC POWER IN MW",            get_rectifier_dc_power_in_mw});
-    lcc_hvdc2t_meter_map.insert({"INVERTER DC POWER IN MW",             get_inverter_dc_power_in_mw});
-    lcc_hvdc2t_meter_map.insert({"RECTIFIER AC ACTIVE POWER IN MW",     get_rectifier_ac_active_power_in_mw});
-    lcc_hvdc2t_meter_map.insert({"INVERTER AC ACTIVE POWER IN MW",      get_inverter_ac_active_power_in_mw});
-    lcc_hvdc2t_meter_map.insert({"RECTIFIER AC REACTIVE POWER IN MVAR", get_rectifier_ac_reactive_power_in_mvar});
-    lcc_hvdc2t_meter_map.insert({"INVERTER AC REACTIVE POWER IN MVAR",  get_inverter_ac_reactive_power_in_mvar});
+    lcc_hvdc2t_meter_map.insert({"RECTIFIER DC POWER IN MW",            get_rectifier_dc_power_in_MW});
+    lcc_hvdc2t_meter_map.insert({"INVERTER DC POWER IN MW",             get_inverter_dc_power_in_MW});
+    lcc_hvdc2t_meter_map.insert({"RECTIFIER AC ACTIVE POWER IN MW",     get_rectifier_ac_active_power_in_MW});
+    lcc_hvdc2t_meter_map.insert({"INVERTER AC ACTIVE POWER IN MW",      get_inverter_ac_active_power_in_MW});
+    lcc_hvdc2t_meter_map.insert({"RECTIFIER AC REACTIVE POWER IN MVAR", get_rectifier_ac_reactive_power_in_MVar});
+    lcc_hvdc2t_meter_map.insert({"INVERTER AC REACTIVE POWER IN MVAR",  get_inverter_ac_reactive_power_in_MVar});
     lcc_hvdc2t_meter_map.insert({"2T LCC HVDC MODEL INTERNAL VARIABLE", get_lcc_hvdc2t_model_internal_variable});
 }
 
@@ -333,16 +333,16 @@ void build_vsc_hvdc_meter_map()
 {
     using namespace vsc_hvdc_meter_getter;
     vsc_hvdc_meter_map.insert({"CONVERTER AC VOLTAGE IN PU",                       get_converter_ac_voltage_in_pu});
-    vsc_hvdc_meter_map.insert({"CONVERTER AC VOLTAGE IN KV",                       get_converter_ac_voltage_in_kv});
-    vsc_hvdc_meter_map.insert({"CONVERTER AC CURRENT IN KA",                       get_converter_ac_current_in_ka});
-    vsc_hvdc_meter_map.insert({"CONVERTER DC VOLTAGE IN KV",                       get_converter_dc_voltage_in_kv});
-    vsc_hvdc_meter_map.insert({"CONVERTER DC CURRENT IN KA",                       get_converter_dc_current_in_ka});
-    vsc_hvdc_meter_map.insert({"CONVERTER DC POWER IN MW",                         get_converter_dc_power_in_mw});
-    vsc_hvdc_meter_map.insert({"CONVERTER AC ACTIVE POWER IN MW",                  get_converter_ac_active_power_in_mw});
-    vsc_hvdc_meter_map.insert({"CONVERTER AC REACTIVE POWER IN MVAR",              get_converter_ac_reactive_power_in_mvar});
-    vsc_hvdc_meter_map.insert({"DC BUS VOLTAGE IN KV",                             get_dc_bus_voltage_in_kv});
-    vsc_hvdc_meter_map.insert({"DC LINE CURRENT IN KA",                            get_dc_line_current_in_ka});
-    vsc_hvdc_meter_map.insert({"DC LINE POWER IN MW",                              get_dc_line_power_in_mw});
+    vsc_hvdc_meter_map.insert({"CONVERTER AC VOLTAGE IN KV",                       get_converter_ac_voltage_in_kV});
+    vsc_hvdc_meter_map.insert({"CONVERTER AC CURRENT IN KA",                       get_converter_ac_current_in_kA});
+    vsc_hvdc_meter_map.insert({"CONVERTER DC VOLTAGE IN KV",                       get_converter_dc_voltage_in_kV});
+    vsc_hvdc_meter_map.insert({"CONVERTER DC CURRENT IN KA",                       get_converter_dc_current_in_kA});
+    vsc_hvdc_meter_map.insert({"CONVERTER DC POWER IN MW",                         get_converter_dc_power_in_MW});
+    vsc_hvdc_meter_map.insert({"CONVERTER AC ACTIVE POWER IN MW",                  get_converter_ac_active_power_in_MW});
+    vsc_hvdc_meter_map.insert({"CONVERTER AC REACTIVE POWER IN MVAR",              get_converter_ac_reactive_power_in_MVar});
+    vsc_hvdc_meter_map.insert({"DC BUS VOLTAGE IN KV",                             get_dc_bus_voltage_in_kV});
+    vsc_hvdc_meter_map.insert({"DC LINE CURRENT IN KA",                            get_dc_line_current_in_kA});
+    vsc_hvdc_meter_map.insert({"DC LINE POWER IN MW",                              get_dc_line_power_in_MW});
     vsc_hvdc_meter_map.insert({"VSC LCC_HVDC2T NETWORK MODEL INTERNAL VARIABLE",   get_vsc_hvdc_network_model_internal_variable});
     vsc_hvdc_meter_map.insert({"VSC LCC_HVDC2T CONVERTER MODEL INTERNAL VARIABLE", get_vsc_hvdc_converter_model_internal_variable});
 }
@@ -351,28 +351,28 @@ void build_mt_hvdc_meter_map()
 {
     using namespace mt_hvdc_meter_getter;
 
-    mt_hvdc_meter_map.insert({"LCC CONVERTER DC CURRENT IN KA",         get_lcc_converter_dc_current_in_ka});
-    mt_hvdc_meter_map.insert({"LCC CONVERTER DC VOLTAGE IN KV",         get_lcc_converter_dc_voltage_in_kv});
-    mt_hvdc_meter_map.insert({"LCC CONVERTER DC POWER IN MW",           get_lcc_converter_dc_power_in_mw});
-    mt_hvdc_meter_map.insert({"LCC CONVERTER AC CURRENT IN KA",         get_lcc_converter_ac_current_in_ka});
+    mt_hvdc_meter_map.insert({"LCC CONVERTER DC CURRENT IN KA",         get_lcc_converter_dc_current_in_kA});
+    mt_hvdc_meter_map.insert({"LCC CONVERTER DC VOLTAGE IN KV",         get_lcc_converter_dc_voltage_in_kV});
+    mt_hvdc_meter_map.insert({"LCC CONVERTER DC POWER IN MW",           get_lcc_converter_dc_power_in_MW});
+    mt_hvdc_meter_map.insert({"LCC CONVERTER AC CURRENT IN KA",         get_lcc_converter_ac_current_in_kA});
     mt_hvdc_meter_map.insert({"LCC CONVERTER FIRING ANGLE IN DEG",      get_lcc_converter_firing_angle_in_deg});
-    mt_hvdc_meter_map.insert({"LCC CONVERTER ACTIVE POWER IN MW",       get_lcc_converter_active_power_in_mw});
-    mt_hvdc_meter_map.insert({"LCC CONVERTER REACTIVE POWER IN MVAR",   get_lcc_converter_reactive_power_in_mvar});
+    mt_hvdc_meter_map.insert({"LCC CONVERTER ACTIVE POWER IN MW",       get_lcc_converter_active_power_in_MW});
+    mt_hvdc_meter_map.insert({"LCC CONVERTER REACTIVE POWER IN MVAR",   get_lcc_converter_reactive_power_in_MVar});
     mt_hvdc_meter_map.insert({"LCC CONVERTER REFERENCE ANGLE OF CC",    get_lcc_converter_reference_angle_of_cc});
     mt_hvdc_meter_map.insert({"LCC CONVERTER REFERENCE ANGLE OF CEA",   get_lcc_converter_reference_angle_of_cea});
     mt_hvdc_meter_map.insert({"LCC CONVERTER REFERENCE ANGLE OF CV",    get_lcc_converter_reference_angle_of_cv});
-    mt_hvdc_meter_map.insert({"LCC CONVERTER IDC REF IN KA",            get_lcc_converter_idc_ref_in_ka});
+    mt_hvdc_meter_map.insert({"LCC CONVERTER IDC REF IN KA",            get_lcc_converter_idc_ref_in_kA});
 
-    mt_hvdc_meter_map.insert({"VSC CONVERTER DC CURRENT IN KA",         get_vsc_converter_dc_current_in_ka});
-    mt_hvdc_meter_map.insert({"VSC CONVERTER DC VOLTAGE IN KV",         get_vsc_converter_dc_voltage_in_kv});
-    mt_hvdc_meter_map.insert({"VSC CONVERTER DC POWER IN MW",           get_vsc_converter_dc_power_in_mw});
-    mt_hvdc_meter_map.insert({"VSC CONVERTER AC CURRENT IN KA",         get_vsc_converter_ac_current_in_ka});
-    mt_hvdc_meter_map.insert({"VSC CONVERTER ACTIVE POWER IN MW",       get_vsc_converter_active_power_in_mw});
-    mt_hvdc_meter_map.insert({"VSC CONVERTER REACTIVE POWER IN MVAR",   get_vsc_converter_reactive_power_in_mvar});
-    mt_hvdc_meter_map.insert({"VSC CONVERTER ID IN KA",                 get_vsc_converter_id_in_ka});
-    mt_hvdc_meter_map.insert({"VSC CONVERTER IQ IN KA",                 get_vsc_converter_iq_in_ka});
+    mt_hvdc_meter_map.insert({"VSC CONVERTER DC CURRENT IN KA",         get_vsc_converter_dc_current_in_kA});
+    mt_hvdc_meter_map.insert({"VSC CONVERTER DC VOLTAGE IN KV",         get_vsc_converter_dc_voltage_in_kV});
+    mt_hvdc_meter_map.insert({"VSC CONVERTER DC POWER IN MW",           get_vsc_converter_dc_power_in_MW});
+    mt_hvdc_meter_map.insert({"VSC CONVERTER AC CURRENT IN KA",         get_vsc_converter_ac_current_in_kA});
+    mt_hvdc_meter_map.insert({"VSC CONVERTER ACTIVE POWER IN MW",       get_vsc_converter_active_power_in_MW});
+    mt_hvdc_meter_map.insert({"VSC CONVERTER REACTIVE POWER IN MVAR",   get_vsc_converter_reactive_power_in_MVar});
+    mt_hvdc_meter_map.insert({"VSC CONVERTER ID IN KA",                 get_vsc_converter_id_in_kA});
+    mt_hvdc_meter_map.insert({"VSC CONVERTER IQ IN KA",                 get_vsc_converter_iq_in_kA});
 
-    mt_hvdc_meter_map.insert({"DC BUS VOLTAGE IN KV",                   get_dc_bus_voltage_in_kv});
+    mt_hvdc_meter_map.insert({"DC BUS VOLTAGE IN KV",                   get_dc_bus_voltage_in_kV});
 
     mt_hvdc_meter_map.insert({"DC LINE IDC ON SENDING SIDE",            get_dc_line_idc_on_sending_side});
     mt_hvdc_meter_map.insert({"DC LINE IDC ON RECEIVING SIDE",          get_dc_line_idc_on_receiving_side});
@@ -390,19 +390,19 @@ void build_equivalent_device_meter_map()
     equivalent_device_meter_map.insert({"VOLTAGE SOURCE RESISTANCE IN PU",          get_voltage_source_resistance_in_pu});
     equivalent_device_meter_map.insert({"VOLTAGE SOURCE REACTANCE IN PU",           get_voltage_source_reactance_in_pu});
 
-    equivalent_device_meter_map.insert({"ACTIVE CONSTANT POWER LOAD IN MW",         get_active_constant_power_load_in_mw});
-    equivalent_device_meter_map.insert({"REACTIVE CONSTANT POWER LOAD IN MVAR",     get_reactive_constant_power_load_in_mvar});
-    equivalent_device_meter_map.insert({"ACTIVE CONSTANT CURRENT LOAD IN MW",       get_active_constant_current_load_in_mw});
-    equivalent_device_meter_map.insert({"REACTIVE CONSTANT CURRENT LOAD IN MVAR",   get_reactive_constant_current_load_in_mvar});
-    equivalent_device_meter_map.insert({"ACTIVE CONSTANT IMPEDANCE LOAD IN MW",     get_active_constant_impedance_load_in_mw});
-    equivalent_device_meter_map.insert({"REACTIVE CONSTANT IMPEDANCE LOAD IN MVAR", get_reactive_constant_impedance_load_in_mvar});
+    equivalent_device_meter_map.insert({"ACTIVE CONSTANT POWER LOAD IN MW",         get_active_constant_power_load_in_MW});
+    equivalent_device_meter_map.insert({"REACTIVE CONSTANT POWER LOAD IN MVAR",     get_reactive_constant_power_load_in_MVar});
+    equivalent_device_meter_map.insert({"ACTIVE CONSTANT CURRENT LOAD IN MW",       get_active_constant_current_load_in_MW});
+    equivalent_device_meter_map.insert({"REACTIVE CONSTANT CURRENT LOAD IN MVAR",   get_reactive_constant_current_load_in_MVar});
+    equivalent_device_meter_map.insert({"ACTIVE CONSTANT IMPEDANCE LOAD IN MW",     get_active_constant_impedance_load_in_MW});
+    equivalent_device_meter_map.insert({"REACTIVE CONSTANT IMPEDANCE LOAD IN MVAR", get_reactive_constant_impedance_load_in_MVar});
 
-    equivalent_device_meter_map.insert({"ACTIVE POWER GENERATION IN MW",            get_active_power_generation_in_mw});
-    equivalent_device_meter_map.insert({"REACTIVE POWER GENERATION IN MVAR",        get_reactive_power_generation_in_mvar});
-    equivalent_device_meter_map.insert({"ACTIVE POWER LOAD IN MW",                  get_active_power_load_in_mw});
-    equivalent_device_meter_map.insert({"REACTIVE POWER LOAD IN MVAR",              get_reactive_power_load_in_mvar});
-    equivalent_device_meter_map.insert({"ACTIVE POWER NET LOAD IN MW",              get_active_power_net_load_in_mw});
-    equivalent_device_meter_map.insert({"REACTIVE POWER NET LOAD IN MVAR",          get_reactive_power_net_load_in_mvar});
+    equivalent_device_meter_map.insert({"ACTIVE POWER GENERATION IN MW",            get_active_power_generation_in_MW});
+    equivalent_device_meter_map.insert({"REACTIVE POWER GENERATION IN MVAR",        get_reactive_power_generation_in_MVar});
+    equivalent_device_meter_map.insert({"ACTIVE POWER LOAD IN MW",                  get_active_power_load_in_MW});
+    equivalent_device_meter_map.insert({"REACTIVE POWER LOAD IN MVAR",              get_reactive_power_load_in_MVar});
+    equivalent_device_meter_map.insert({"ACTIVE POWER NET LOAD IN MW",              get_active_power_net_load_in_MW});
+    equivalent_device_meter_map.insert({"REACTIVE POWER NET LOAD IN MVAR",          get_reactive_power_net_load_in_MVar});
 
     equivalent_device_meter_map.insert({"ACTIVE CONSTANT POWER LOAD IN PU",         get_active_constant_power_load_in_pu});
     equivalent_device_meter_map.insert({"REACTIVE CONSTANT POWER LOAD IN PU",       get_reactive_constant_power_load_in_pu});

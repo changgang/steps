@@ -7,7 +7,7 @@
 #include "header/basic/utility.h"
 #include <complex>
 
-double load_meter_getter::get_active_power_mw(const METER_PARAMETER& para)
+double load_meter_getter::get_active_power_MW(const METER_PARAMETER& para)
 {
     LOAD* load = (LOAD*) para.device_pointer;
     return load->get_dynamic_load_in_MVA().real();
@@ -19,7 +19,7 @@ double load_meter_getter::get_active_power_pu(const METER_PARAMETER& para)
     return load->get_dynamic_load_in_pu().real();
 }
 
-double load_meter_getter::get_reactive_power_mvar(const METER_PARAMETER& para)
+double load_meter_getter::get_reactive_power_MVar(const METER_PARAMETER& para)
 {
     LOAD* load = (LOAD*) para.device_pointer;
     return load->get_dynamic_load_in_MVA().imag();
@@ -31,7 +31,7 @@ double load_meter_getter::get_reactive_power_pu(const METER_PARAMETER& para)
     return load->get_dynamic_load_in_pu().imag();
 }
 
-double load_meter_getter::get_current_ka(const METER_PARAMETER& para)
+double load_meter_getter::get_current_kA(const METER_PARAMETER& para)
 {
     LOAD* load = (LOAD*) para.device_pointer;
     STEPS& toolkit = load->get_toolkit();

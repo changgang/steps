@@ -7,11 +7,11 @@ using namespace std;
 
 namespace load_meter_getter
 {
-    double get_active_power_mw(const METER_PARAMETER& para);
+    double get_active_power_MW(const METER_PARAMETER& para);
     double get_active_power_pu(const METER_PARAMETER& para);
-    double get_reactive_power_mvar(const METER_PARAMETER& para);
+    double get_reactive_power_MVar(const METER_PARAMETER& para);
     double get_reactive_power_pu(const METER_PARAMETER& para);
-    double get_current_ka(const METER_PARAMETER& para);
+    double get_current_kA(const METER_PARAMETER& para);
     double get_current_pu(const METER_PARAMETER& para);
     double get_load_model_internal_variable(const METER_PARAMETER& para);
     double get_frequency_relay_model_internal_variable(const METER_PARAMETER& para);

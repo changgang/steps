@@ -9,16 +9,16 @@ namespace es_meter_getter
 {
     double get_terminal_current_pu_mbase(const METER_PARAMETER& para);
     double get_terminal_current_pu_sbase(const METER_PARAMETER& para);
-    double get_terminal_current_ka(const METER_PARAMETER& para);
+    double get_terminal_current_kA(const METER_PARAMETER& para);
     double get_terminal_active_power_pu_mbase(const METER_PARAMETER& para);
     double get_terminal_active_power_pu_sbase(const METER_PARAMETER& para);
-    double get_terminal_active_power_mw(const METER_PARAMETER& para);
+    double get_terminal_active_power_MW(const METER_PARAMETER& para);
     double get_terminal_reactive_power_pu_mbase(const METER_PARAMETER& para);
     double get_terminal_reactive_power_pu_sbase(const METER_PARAMETER& para);
-    double get_terminal_reactive_power_mvar(const METER_PARAMETER& para);
+    double get_terminal_reactive_power_MVar(const METER_PARAMETER& para);
     double get_terminal_apparent_power_pu_mbase(const METER_PARAMETER& para);
     double get_terminal_apparent_power_pu_sbase(const METER_PARAMETER& para);
-    double get_terminal_apparent_power_mva(const METER_PARAMETER& para);
+    double get_terminal_apparent_power_MVA(const METER_PARAMETER& para);
     double get_active_current_command_pu(const METER_PARAMETER& para);
     double get_reactive_current_command_pu(const METER_PARAMETER& para);
     double get_active_power_command_pu(const METER_PARAMETER& para);
@@ -27,7 +27,7 @@ namespace es_meter_getter
     double get_state_of_charge_pu(const METER_PARAMETER& para);
     double get_soc_power_pu_mbase(const METER_PARAMETER& para);
     double get_soc_power_pu_sbase(const METER_PARAMETER& para);
-    double get_soc_power_mw(const METER_PARAMETER& para);
+    double get_soc_power_MW(const METER_PARAMETER& para);
     double get_mechanical_power_pu_mbase(const METER_PARAMETER& para);
     double get_rotor_speed_pu(const METER_PARAMETER& para);
     double get_rotor_speed_reference_pu(const METER_PARAMETER& para);
