@@ -398,7 +398,9 @@ bool CCT_SEARCHER::perform_simulation_with_clearing_time(double clearing_time)
 
     prepare_generators_in_islands(simulator);
 
-    simulator.prepare_meters();
+    vector<METER> meters;
+    meters = simulator.prepare_meters();
+    simulator.install_meters(meters);
 
     string filename = get_search_title();
     if(filename != "")

@@ -477,7 +477,9 @@ void DYNAMICS_SIMULATOR_TEST::test_run_single_machine_model()
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
     simulator.set_output_file("test_log/test_run_single_machine_model");
 
-    simulator.prepare_meters();
+    vector<METER> meters;
+    meters = simulator.prepare_meters();
+    simulator.install_meters(meters);
 
     simulator.start();
     simulator.run_to(1.0);
@@ -531,7 +533,9 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_classical_model()
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.0083333);
     simulator.set_output_file("test_log/test_run_IEEE_9_bus_classical_model");
 
-    simulator.prepare_meters();
+    vector<METER> meters;
+    meters = simulator.prepare_meters();
+    simulator.install_meters(meters);
 
 
     simulator.start();
@@ -586,7 +590,9 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model()
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    simulator.prepare_meters();
+    vector<METER> meters;
+    meters = simulator.prepare_meters();
+    simulator.install_meters(meters);
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 
     simulator.set_output_file("test_log/test_run_IEEE_39_bus_model");
@@ -642,7 +648,9 @@ void DYNAMICS_SIMULATOR_TEST::test_run_SD_133_bus_model()
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    simulator.prepare_meters();
+    vector<METER> meters;
+    meters = simulator.prepare_meters();
+    simulator.install_meters(meters);
     simulator.set_output_file("test_log/test_run_SD_133_bus_model");
 
     simulator.set_allowed_max_power_imbalance_in_MVA(0.001);
@@ -699,7 +707,9 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_with_wind()
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    simulator.prepare_meters();
+    vector<METER> meters;
+    meters = simulator.prepare_meters();
+    simulator.install_meters(meters);
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 
     simulator.set_output_file("test_log/IEEE_39_bus_model_with_wind");
@@ -755,7 +765,9 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    simulator.prepare_meters();
+    vector<METER> meters;
+    meters = simulator.prepare_meters();
+    simulator.install_meters(meters);
     simulator.set_output_file("test_log/bench_shandong_100_bus_model_dynamic_test_result_GENROU_CDC4T");
 
     simulator.set_output_file("test_log/bench_shandong_100_bus_model_dynamic_test_result_GENROU_CDC4T");
@@ -854,10 +866,13 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     simulator.install_meter(meter);
     meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,17);
     simulator.install_meter(meter);
-    simulator.prepare_meters();
+    meters = simulator.prepare_meters();
+    simulator.install_meters(meters);
     */
-    simulator.prepare_one_bus_related_meter(3, "Frequency in Hz");
-    simulator.prepare_one_bus_related_meter(3, "Voltage in pu");
+    meter = simulator.prepare_one_bus_related_meter(3, "Frequency in Hz");
+    simulator.install_meter(meter);
+    meter = simulator.prepare_one_bus_related_meter(3, "Voltage in pu");
+    simulator.install_meter(meter);
     meters = simulator.prepare_wt_generator_related_meters();
     simulator.install_meters(meters);
 
@@ -969,17 +984,27 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
     simulator.install_meter(meter);
     meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,17);
     simulator.install_meter(meter);
-    simulator.prepare_meters();
+    meters = simulator.prepare_meters();
+    simulator.install_meters(meters);
     */
-    simulator.prepare_one_bus_related_meter(1, "Frequency in Hz");
-    simulator.prepare_one_bus_related_meter(2, "Frequency in Hz");
-    simulator.prepare_one_bus_related_meter(3, "Frequency in Hz");
-    simulator.prepare_one_bus_related_meter(1, "Voltage in pu");
-    simulator.prepare_one_bus_related_meter(2, "Voltage in pu");
-    simulator.prepare_one_bus_related_meter(3, "Voltage in pu");
-    simulator.prepare_one_bus_related_meter(1, "Angle in deg");
-    simulator.prepare_one_bus_related_meter(2, "Angle in deg");
-    simulator.prepare_one_bus_related_meter(3, "Angle in deg");
+    meter = simulator.prepare_one_bus_related_meter(1, "Frequency in Hz");
+    simulator.install_meter(meter);
+    meter = simulator.prepare_one_bus_related_meter(2, "Frequency in Hz");
+    simulator.install_meter(meter);
+    meter = simulator.prepare_one_bus_related_meter(3, "Frequency in Hz");
+    simulator.install_meter(meter);
+    meter = simulator.prepare_one_bus_related_meter(1, "Voltage in pu");
+    simulator.install_meter(meter);
+    meter = simulator.prepare_one_bus_related_meter(2, "Voltage in pu");
+    simulator.install_meter(meter);
+    meter = simulator.prepare_one_bus_related_meter(3, "Voltage in pu");
+    simulator.install_meter(meter);
+    meter = simulator.prepare_one_bus_related_meter(1, "Angle in deg");
+    simulator.install_meter(meter);
+    meter = simulator.prepare_one_bus_related_meter(2, "Angle in deg");
+    simulator.install_meter(meter);
+    meter = simulator.prepare_one_bus_related_meter(3, "Angle in deg");
+    simulator.install_meter(meter);
     meters = simulator.prepare_wt_generator_related_meters();
     simulator.install_meters(meters);
 

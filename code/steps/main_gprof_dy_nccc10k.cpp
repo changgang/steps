@@ -60,7 +60,9 @@ int main(int argc, char* argv[])
     powerflow_solver.solve_with_fast_decoupled_solution();
 
     importer.load_dynamic_data("nccc10k.dyr");
-    //simulator.prepare_meters();
+    //vector<METER> meters;
+    //meters = simulator.prepare_meters();
+    ///simulator.install_meters(meters);
     vector<GENERATOR*> gens = psdb.get_all_generators();
     METER meter(default_toolkit);
     for(unsigned int i=0; i<gens.size(); ++i)

@@ -44,7 +44,9 @@ int main()
     powerflow_solver.solve_with_fast_decoupled_solution();
 
     importer.load_dynamic_data("../../../bench/sd133.dyr");
-    simulator.prepare_meters();
+    vector<METER> meters;
+    meters = simulator.prepare_meters();
+    simulator.install_meters(meters);
 
     simulator.set_output_file("bench_shandong_100_bus_model_dynamic_test_result_GENROU_CDC4T");
     simulator.set_allowed_max_power_imbalance_in_MVA(0.001);

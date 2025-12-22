@@ -62,7 +62,8 @@ int main(int argc, char* argv[])
     importer.load_dynamic_data("nccc10k.dyr");
 
     vector<METER> meters;
-    simulator.prepare_one_bus_related_meters(306);
+    meters = simulator.prepare_one_bus_related_meters(306);
+    simulator.install_meters(meters);
 
     vector<GENERATOR*> gens = psdb.get_generators_connecting_to_bus(18231);
     for(unsigned int i=0; i<1; ++i)
@@ -82,13 +83,15 @@ int main(int argc, char* argv[])
     for(unsigned int i=0; i<1; ++i)
     {
         PV_UNIT* pvu = pvus[i];
-        simulator.prepare_one_pv_unit_related_meters(pvu->get_device_id());
+        meters = simulator.prepare_one_pv_unit_related_meters(pvu->get_device_id());
+        simulator.install_meters(meters);
     }
     vector<ENERGY_STORAGE*> ess = psdb.get_energy_storages_connecting_to_bus(21331);
     for(unsigned int i=0; i<1; ++i)
     {
         ENERGY_STORAGE* es = ess[i];
-        simulator.prepare_one_energy_storage_related_meters(es->get_device_id());
+        meters = simulator.prepare_one_energy_storage_related_meters(es->get_device_id());
+        simulator.install_meters(meters);
     }
 
     simulator.set_output_file("bench_NCCC_10k_bus_model_dynamic_test");
