@@ -18,53 +18,53 @@ using namespace chrono;
 
 class STEPS;
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_meters()
+vector<METER> DYNAMICS_SIMULATOR::prepare_all_meters()
 {
     vector<METER> all_meters;
     vector<METER> meters;
-    meters = prepare_bus_related_meters();
+    meters = prepare_all_buses_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_generator_related_meters();
+    meters = prepare_all_generators_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_wt_generator_related_meters();
+    meters = prepare_all_wt_generators_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_pv_unit_related_meters();
+    meters = prepare_all_pv_units_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_energy_storage_related_meters();
+    meters = prepare_all_energy_storages_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_sv_source_related_meters();
+    meters = prepare_all_sv_sources_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_load_related_meters();
+    meters = prepare_all_loads_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_ac_line_related_meters();
+    meters = prepare_all_ac_lines_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_transformer_related_meters();
+    meters = prepare_all_transformers_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_lcc_hvdc2t_related_meters();
+    meters = prepare_all_lcc_hvdc2ts_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_vsc_hvdc_related_meters();
+    meters = prepare_all_vsc_hvdcs_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_mt_hvdc_related_meters();
+    meters = prepare_all_mt_hvdcs_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_equivalent_device_related_meters();
+    meters = prepare_all_equivalent_devices_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
     return all_meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_bus_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::prepare_all_buses_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -105,7 +105,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_bus_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_generator_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::prepare_all_generators_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -176,7 +176,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_generator_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::prepare_all_wt_generators_related_meters()
 {
     vector<METER> meters;
     vector<string> keys;
@@ -200,7 +200,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_pv_unit_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::prepare_all_pv_units_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -397,7 +397,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_pv_unit_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_energy_storage_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::prepare_all_energy_storages_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -531,7 +531,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_energy_storage_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_sv_source_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::prepare_all_sv_sources_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -561,7 +561,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_sv_source_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_load_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::prepare_all_loads_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -595,7 +595,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_load_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_ac_line_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::prepare_all_ac_lines_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -632,8 +632,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_ac_line_related_meters()
     return meters;
 }
 
-
-vector<METER> DYNAMICS_SIMULATOR::prepare_transformer_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::prepare_all_transformers_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -682,7 +681,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_transformer_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_lcc_hvdc2t_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::prepare_all_lcc_hvdc2ts_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -773,7 +772,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_lcc_hvdc2t_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_vsc_hvdc_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::prepare_all_vsc_hvdcs_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -854,7 +853,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_vsc_hvdc_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_mt_hvdc_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::prepare_all_mt_hvdcs_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -991,7 +990,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_mt_hvdc_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::prepare_all_equivalent_devices_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();

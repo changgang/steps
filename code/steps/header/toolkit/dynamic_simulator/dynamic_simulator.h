@@ -91,20 +91,20 @@ class DYNAMICS_SIMULATOR
         void set_network_matrix_update_as_required();
         bool is_network_matrix_update_required() const;
 
-        vector<METER> prepare_meters();
-        vector<METER> prepare_bus_related_meters();
-        vector<METER> prepare_generator_related_meters();
-        vector<METER> prepare_wt_generator_related_meters();
-        vector<METER> prepare_pv_unit_related_meters();
-        vector<METER> prepare_energy_storage_related_meters();
-        vector<METER> prepare_sv_source_related_meters();
-        vector<METER> prepare_load_related_meters();
-        vector<METER> prepare_ac_line_related_meters();
-        vector<METER> prepare_transformer_related_meters();
-        vector<METER> prepare_lcc_hvdc2t_related_meters();
-        vector<METER> prepare_vsc_hvdc_related_meters();
-        vector<METER> prepare_mt_hvdc_related_meters();
-        vector<METER> prepare_equivalent_device_related_meters();
+        vector<METER> prepare_all_meters();
+        vector<METER> prepare_all_buses_related_meters();
+        vector<METER> prepare_all_generators_related_meters();
+        vector<METER> prepare_all_wt_generators_related_meters();
+        vector<METER> prepare_all_pv_units_related_meters();
+        vector<METER> prepare_all_energy_storages_related_meters();
+        vector<METER> prepare_all_sv_sources_related_meters();
+        vector<METER> prepare_all_loads_related_meters();
+        vector<METER> prepare_all_ac_lines_related_meters();
+        vector<METER> prepare_all_transformers_related_meters();
+        vector<METER> prepare_all_lcc_hvdc2ts_related_meters();
+        vector<METER> prepare_all_vsc_hvdcs_related_meters();
+        vector<METER> prepare_all_mt_hvdcs_related_meters();
+        vector<METER> prepare_all_equivalent_devices_related_meters();
 
         vector<METER> prepare_one_bus_related_meters(unsigned int bus);
         vector<METER> prepare_one_generator_related_meters(const DEVICE_ID& did);

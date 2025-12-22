@@ -300,7 +300,7 @@ void api_prepare_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.prepare_meters();
+    vector<METER> meters = ds.prepare_all_meters();
     ds.install_meters(meters);
 }
 
@@ -308,7 +308,7 @@ void api_prepare_bus_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.prepare_bus_related_meters();
+    vector<METER> meters = ds.prepare_all_buses_related_meters();
     ds.install_meters(meters);
 }
 
@@ -316,7 +316,7 @@ void api_prepare_generator_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.prepare_generator_related_meters();
+    vector<METER> meters = ds.prepare_all_generators_related_meters();
     ds.install_meters(meters);
 }
 
@@ -324,7 +324,7 @@ void api_prepare_wt_generator_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.prepare_wt_generator_related_meters();
+    vector<METER> meters = ds.prepare_all_wt_generators_related_meters();
     ds.install_meters(meters);
 }
 
@@ -332,7 +332,7 @@ void api_prepare_pv_unit_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.prepare_pv_unit_related_meters();
+    vector<METER> meters = ds.prepare_all_pv_units_related_meters();
     ds.install_meters(meters);
 }
 
@@ -340,7 +340,7 @@ void api_prepare_energy_storage_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.prepare_energy_storage_related_meters();
+    vector<METER> meters = ds.prepare_all_energy_storages_related_meters();
     ds.install_meters(meters);
 }
 
@@ -348,7 +348,7 @@ void api_prepare_sv_source_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.prepare_sv_source_related_meters();
+    vector<METER> meters = ds.prepare_all_sv_sources_related_meters();
     ds.install_meters(meters);
 }
 
@@ -356,7 +356,7 @@ void api_prepare_load_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.prepare_load_related_meters();
+    vector<METER> meters = ds.prepare_all_loads_related_meters();
     ds.install_meters(meters);
 }
 
@@ -364,7 +364,7 @@ void api_prepare_line_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.prepare_ac_line_related_meters();
+    vector<METER> meters = ds.prepare_all_ac_lines_related_meters();
     ds.install_meters(meters);
 }
 
@@ -372,7 +372,7 @@ void api_prepare_transformer_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.prepare_transformer_related_meters();
+    vector<METER> meters = ds.prepare_all_transformers_related_meters();
     ds.install_meters(meters);
 }
 
@@ -380,7 +380,7 @@ void api_prepare_hvdc_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.prepare_lcc_hvdc2t_related_meters();
+    vector<METER> meters = ds.prepare_all_lcc_hvdc2ts_related_meters();
     ds.install_meters(meters);
 }
 
@@ -388,7 +388,7 @@ void api_prepare_vsc_hvdc_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.prepare_vsc_hvdc_related_meters();
+    vector<METER> meters = ds.prepare_all_vsc_hvdcs_related_meters();
     ds.install_meters(meters);
 }
 
@@ -396,7 +396,7 @@ void api_prepare_mt_hvdc_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.prepare_mt_hvdc_related_meters();
+    vector<METER> meters = ds.prepare_all_mt_hvdcs_related_meters();
     ds.install_meters(meters);
 }
 
@@ -404,7 +404,7 @@ void api_prepare_equivalent_device_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.prepare_equivalent_device_related_meters();
+    vector<METER> meters = ds.prepare_all_equivalent_devices_related_meters();
     ds.install_meters(meters);
 }
 

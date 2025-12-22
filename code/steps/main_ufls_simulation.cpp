@@ -37,7 +37,7 @@ int main()
     simulator.set_iteration_accelerator(0.8);
 
     vector<METER> meters;
-    meters = simulator.prepare_meters();
+    meters = simulator.prepare_all_meters();
     simulator.install_meters(meters);
 
     simulator.set_output_file("IEEE_39_bus_model_dynamic_test_result_GENROU_SEXS_IEEEG1_UFLS");
