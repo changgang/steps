@@ -1968,11 +1968,11 @@ void DYNAMICS_SIMULATOR::prepare_mt_hvdc_related_meter(const DEVICE_ID& did, str
                 meter = setter.prepare_mt_hvdc_lcc_converter_ac_active_power_in_MW_meter(did, sub_device_name);
             if(meter_type=="LCC CONVERTER REACTIVE POWER IN MVAR")
                 meter = setter.prepare_mt_hvdc_lcc_converter_ac_reactive_power_in_Mvar_meter(did, sub_device_name);
-            if(meter_type=="LCC CONVERTER REFERENCE ANGLE OF CC")
+            if(meter_type=="LCC CONVERTER REFERENCE ANGLE OF CC IN DEG")
                 meter = setter.prepare_mt_hvdc_lcc_converter_reference_angle_of_cc_in_deg_meter(did, sub_device_name);
-            if(meter_type=="LCC CONVERTER REFERENCE ANGLE OF CEA")
+            if(meter_type=="LCC CONVERTER REFERENCE ANGLE OF CEA IN DEG")
                 meter = setter.prepare_mt_hvdc_lcc_converter_reference_angle_of_cea_in_deg_meter(did, sub_device_name);
-            if(meter_type=="LCC CONVERTER REFERENCE ANGLE OF CV")
+            if(meter_type=="LCC CONVERTER REFERENCE ANGLE OF CV IN DEG")
                 meter = setter.prepare_mt_hvdc_lcc_converter_reference_angle_of_cv_in_deg_meter(did, sub_device_name);
             if(meter_type=="LCC CONVERTER IDC REF IN KA")
                 meter = setter.prepare_mt_hvdc_lcc_converter_reference_idc_in_kA_meter(did, sub_device_name);
@@ -1996,9 +1996,9 @@ void DYNAMICS_SIMULATOR::prepare_mt_hvdc_related_meter(const DEVICE_ID& did, str
             if(meter_type=="DC BUS VOLTAGE IN KV")
                 meter = setter.prepare_mt_hvdc_dc_bus_voltage_in_kV_meter(did, sub_device_name);
 
-            if(meter_type=="DC LINE IDC ON SENDING SIDE")
+            if(meter_type=="DC LINE CURRENT ON SENDING SIDE IN KA")
                 meter = setter.prepare_mt_hvdc_dc_line_dc_current_on_sending_side_in_kA_meter(did, sub_device_name);
-            if(meter_type=="DC LINE IDC ON RECEIVING SIDE")
+            if(meter_type=="DC LINE CURRENT ON RECEIVING SIDE IN KA")
                 meter = setter.prepare_mt_hvdc_dc_line_dc_current_on_receiving_side_in_kA_meter(did, sub_device_name);
             if(meter_type=="HLCC CONVERTER MODEL INTERNAL VARIABLE")
                 meter = setter.prepare_mt_hvdc_model_hlcc_converter_model_internal_variable_meter(did, var_name);

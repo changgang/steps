@@ -7,36 +7,36 @@ using namespace std;
 
 namespace transformer_meter_getter
 {
-    double get_current_kA_primary(const METER_PARAMETER& para);
-    double get_current_kA_secondary(const METER_PARAMETER& para);
-    double get_current_kA_tertiary(const METER_PARAMETER& para);
+    double get_primary_side_current_kA(const METER_PARAMETER& para);
+    double get_secondary_side_current_kA(const METER_PARAMETER& para);
+    double get_tertiary_side_current_kA(const METER_PARAMETER& para);
 
-    double get_current_pu_primary(const METER_PARAMETER& para);
-    double get_current_pu_secondary(const METER_PARAMETER& para);
-    double get_current_pu_tertiary(const METER_PARAMETER& para);
+    double get_primary_side_current_pu(const METER_PARAMETER& para);
+    double get_secondary_side_current_pu(const METER_PARAMETER& para);
+    double get_tertiary_side_current_pu(const METER_PARAMETER& para);
 
-    double get_active_power_MW_primary(const METER_PARAMETER& para);
-    double get_active_power_MW_secondary(const METER_PARAMETER& para);
-    double get_active_power_MW_tertiary(const METER_PARAMETER& para);
+    double get_primary_side_active_power_MW(const METER_PARAMETER& para);
+    double get_secondary_side_active_power_MW(const METER_PARAMETER& para);
+    double get_tertiary_side_active_power_MW(const METER_PARAMETER& para);
 
-    double get_active_power_pu_primary(const METER_PARAMETER& para);
-    double get_active_power_pu_secondary(const METER_PARAMETER& para);
-    double get_active_power_pu_tertiary(const METER_PARAMETER& para);
+    double get_primary_side_active_power_pu(const METER_PARAMETER& para);
+    double get_secondary_side_active_power_pu(const METER_PARAMETER& para);
+    double get_tertiary_side_active_power_pu(const METER_PARAMETER& para);
 
-    double get_reactive_power_MVar_primary(const METER_PARAMETER& para);
-    double get_reactive_power_MVar_secondary(const METER_PARAMETER& para);
-    double get_reactive_power_MVar_tertiary(const METER_PARAMETER& para);
+    double get_primary_side_reactive_power_MVar(const METER_PARAMETER& para);
+    double get_secondary_side_reactive_power_MVar(const METER_PARAMETER& para);
+    double get_tertiary_side_reactive_power_MVar(const METER_PARAMETER& para);
 
-    double get_reactive_power_pu_primary(const METER_PARAMETER& para);
-    double get_reactive_power_pu_secondary(const METER_PARAMETER& para);
-    double get_reactive_power_pu_tertiary(const METER_PARAMETER& para);
+    double get_primary_side_reactive_power_pu(const METER_PARAMETER& para);
+    double get_secondary_side_reactive_power_pu(const METER_PARAMETER& para);
+    double get_tertiary_side_reactive_power_pu(const METER_PARAMETER& para);
 
-    double get_current_kA_bus_side(const METER_PARAMETER& para);
-    double get_current_pu_bus_side(const METER_PARAMETER& para);
-    double get_active_power_MW_bus_side(const METER_PARAMETER& para);
-    double get_active_power_pu_bus_side(const METER_PARAMETER& para);
-    double get_reactive_power_MVar_bus_side(const METER_PARAMETER& para);
-    double get_reactive_power_pu_bus_side(const METER_PARAMETER& para);
+    double get_winding_current_kA(const METER_PARAMETER& para);
+    double get_winding_current_pu(const METER_PARAMETER& para);
+    double get_winding_active_power_MW(const METER_PARAMETER& para);
+    double get_winding_active_power_pu(const METER_PARAMETER& para);
+    double get_winding_reactive_power_MVar(const METER_PARAMETER& para);
+    double get_winding_reactive_power_pu(const METER_PARAMETER& para);
 }
 
 #endif //TRANSFORMER_METER_GETTER_H

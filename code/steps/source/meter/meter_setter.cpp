@@ -2827,7 +2827,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_reference_angle_of_cc_in_deg_m
 
     if(successful)
     {
-        meter.set_meter_type("LCC CONVERTER REFERENCE ANGLE OF CC");
+        meter.set_meter_type("LCC CONVERTER REFERENCE ANGLE OF CC IN DEG");
         meter.set_hybrid_dc_meter_device_name(lcc_name);
         //meter.set_metered_side_bus(meter_side);
     }
@@ -2843,7 +2843,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_reference_angle_of_cea_in_deg_
 
     if(successful)
     {
-        meter.set_meter_type("LCC CONVERTER REFERENCE ANGLE OF CEA");
+        meter.set_meter_type("LCC CONVERTER REFERENCE ANGLE OF CEA IN DEG");
         meter.set_hybrid_dc_meter_device_name(lcc_name);
         //meter.set_metered_side_bus(meter_side);
     }
@@ -2859,7 +2859,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_reference_angle_of_cv_in_deg_m
 
     if(successful)
     {
-        meter.set_meter_type("LCC CONVERTER REFERENCE ANGLE OF CV");
+        meter.set_meter_type("LCC CONVERTER REFERENCE ANGLE OF CV IN DEG");
         meter.set_hybrid_dc_meter_device_name(lcc_name);
         //meter.set_metered_side_bus(meter_side);
     }
@@ -3035,7 +3035,7 @@ METER METER_SETTER::prepare_mt_hvdc_dc_line_dc_current_on_sending_side_in_kA_met
 
     if(successful)
     {
-        meter.set_meter_type("DC LINE IDC ON SENDING SIDE");
+        meter.set_meter_type("DC LINE CURRENT ON SENDING SIDE IN KA");
         meter.set_hybrid_dc_meter_device_name(line_name);
         //meter.set_metered_side_bus(meter_side);
     }
@@ -3051,7 +3051,7 @@ METER METER_SETTER::prepare_mt_hvdc_dc_line_dc_current_on_receiving_side_in_kA_m
 
     if(successful)
     {
-        meter.set_meter_type("DC LINE IDC ON RECEIVING SIDE");
+        meter.set_meter_type("DC LINE CURRENT ON RECEIVING SIDE IN KA");
         meter.set_hybrid_dc_meter_device_name(line_name);
         //meter.set_metered_side_bus(meter_side);
     }

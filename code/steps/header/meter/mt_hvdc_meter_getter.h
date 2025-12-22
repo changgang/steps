@@ -15,9 +15,9 @@ namespace mt_hvdc_meter_getter
     double get_lcc_converter_firing_angle_in_deg(const METER_PARAMETER& para);
     double get_lcc_converter_active_power_in_MW(const METER_PARAMETER& para);
     double get_lcc_converter_reactive_power_in_MVar(const METER_PARAMETER& para);
-    double get_lcc_converter_reference_angle_of_cc(const METER_PARAMETER& para);
-    double get_lcc_converter_reference_angle_of_cea(const METER_PARAMETER& para);
-    double get_lcc_converter_reference_angle_of_cv(const METER_PARAMETER& para);
+    double get_lcc_converter_reference_angle_of_cc_in_deg(const METER_PARAMETER& para);
+    double get_lcc_converter_reference_angle_of_cea_in_deg(const METER_PARAMETER& para);
+    double get_lcc_converter_reference_angle_of_cv_in_deg(const METER_PARAMETER& para);
     double get_lcc_converter_idc_ref_in_kA(const METER_PARAMETER& para);
 
     // VSC converter meter getters
@@ -34,8 +34,8 @@ namespace mt_hvdc_meter_getter
     double get_dc_bus_voltage_in_kV(const METER_PARAMETER& para);
 
     // DC line meter getters
-    double get_dc_line_idc_on_sending_side(const METER_PARAMETER& para);
-    double get_dc_line_idc_on_receiving_side(const METER_PARAMETER& para);
+    double get_dc_line_current_on_sending_side_in_kA(const METER_PARAMETER& para);
+    double get_dc_line_current_on_receiving_side_in_kA(const METER_PARAMETER& para);
 
     // Internal variable meter getters (currently return 0.0)
     double get_hlcc_converter_model_internal_variable(const METER_PARAMETER& para);
