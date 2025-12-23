@@ -57,6 +57,7 @@ class LCC_HVDC2T : public NONBUS_DEVICE
 
         unsigned int get_converter_bus(CONVERTER_SIDE converter) const;
         BUS* get_bus_pointer(CONVERTER_SIDE converter) const;
+        CONVERTER_SIDE get_converter_side_at_bus(unsigned int bus) const;
 
         string get_converter_valve_side_bus_name(CONVERTER_SIDE converter) const;
         string get_identifier() const;

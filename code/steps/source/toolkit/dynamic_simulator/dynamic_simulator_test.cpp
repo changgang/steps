@@ -873,7 +873,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     simulator.install_meter(meter);
     meter = simulator.build_one_bus_related_meter(3, "Voltage in pu");
     simulator.install_meter(meter);
-    meters = simulator.build_all_wt_generators_related_meters();
+    meters = simulator.build_all_wt_generators_complete_meters();
     simulator.install_meters(meters);
 
     simulator.set_output_file("test_log/IEEE9_test_with_wt3_models");
@@ -1005,7 +1005,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
     simulator.install_meter(meter);
     meter = simulator.build_one_bus_related_meter(3, "Angle in deg");
     simulator.install_meter(meter);
-    meters = simulator.build_all_wt_generators_related_meters();
+    meters = simulator.build_all_wt_generators_complete_meters();
     simulator.install_meters(meters);
 
     simulator.set_output_file("test_log/IEEE9_test_with_all_wt3_models");

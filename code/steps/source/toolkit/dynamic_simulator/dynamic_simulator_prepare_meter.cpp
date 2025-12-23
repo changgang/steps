@@ -3,7 +3,6 @@
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 #include "header/meter/meter_setter.h"
-#include "header/meter/basic_meter_preparer.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -22,161 +21,106 @@ vector<METER> DYNAMICS_SIMULATOR::build_all_meters()
 {
     vector<METER> all_meters;
     vector<METER> meters;
-    meters = build_all_buses_related_meters();
-    for(unsigned int i=0; i<meters.size(); ++i)
-        all_meters.push_back(meters[i]);
-    meters = build_all_generators_related_meters();
-    for(unsigned int i=0; i<meters.size(); ++i)
-        all_meters.push_back(meters[i]);
-    meters = build_all_wt_generators_related_meters();
-    for(unsigned int i=0; i<meters.size(); ++i)
-        all_meters.push_back(meters[i]);
-    meters = build_all_pv_units_related_meters();
-    for(unsigned int i=0; i<meters.size(); ++i)
-        all_meters.push_back(meters[i]);
-    meters = build_all_energy_storages_related_meters();
-    for(unsigned int i=0; i<meters.size(); ++i)
-        all_meters.push_back(meters[i]);
-    meters = build_all_sv_sources_related_meters();
-    for(unsigned int i=0; i<meters.size(); ++i)
-        all_meters.push_back(meters[i]);
-    meters = build_all_loads_related_meters();
-    for(unsigned int i=0; i<meters.size(); ++i)
-        all_meters.push_back(meters[i]);
-    meters = build_all_ac_lines_related_meters();
-    for(unsigned int i=0; i<meters.size(); ++i)
-        all_meters.push_back(meters[i]);
-    meters = build_all_transformers_related_meters();
-    for(unsigned int i=0; i<meters.size(); ++i)
-        all_meters.push_back(meters[i]);
-    meters = build_all_lcc_hvdc2ts_related_meters();
-    for(unsigned int i=0; i<meters.size(); ++i)
-        all_meters.push_back(meters[i]);
-    meters = build_all_vsc_hvdcs_related_meters();
-    for(unsigned int i=0; i<meters.size(); ++i)
-        all_meters.push_back(meters[i]);
-    meters = build_all_mt_hvdcs_related_meters();
-    for(unsigned int i=0; i<meters.size(); ++i)
-        all_meters.push_back(meters[i]);
-    meters = build_all_equivalent_devices_related_meters();
-    for(unsigned int i=0; i<meters.size(); ++i)
-        all_meters.push_back(meters[i]);
+
+    meters = build_all_buses_complete_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_generators_complete_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_wt_generators_complete_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_pv_units_complete_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_energy_storages_complete_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_sv_sources_complete_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_loads_complete_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_ac_lines_complete_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_transformers_complete_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_lcc_hvdc2ts_complete_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_vsc_hvdcs_complete_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_mt_hvdcs_complete_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_equivalent_devices_complete_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
     return all_meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_buses_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_buses_complete_meters()
 {
     vector<METER> meters;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<string> keys;
+    keys.reserve(bus_meter_map.size());
+    for (auto iter = bus_meter_map.begin(); iter != bus_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
+    unsigned int m = keys.size();
 
-    METER_SETTER setter(*toolkit);
+    vector<unsigned int> bus_numbers = toolkit->get_power_system_database().get_all_buses_number();
+    unsigned int n = bus_numbers.size();
 
-    unsigned int n = psdb.get_bus_count();
-    vector<BUS*> buses = psdb.get_all_buses();
-    BUS* bus;
-    for(unsigned int i=0; i!=n; ++i)
+    for(unsigned int i=0; i<m; ++i)
     {
-        bus = buses[i];
-        METER meter = setter.prepare_bus_voltage_in_pu_meter(bus->get_bus_number());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        bus = buses[i];
-        METER meter = setter.prepare_bus_angle_in_deg_meter(bus->get_bus_number());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        bus = buses[i];
-        METER meter = setter.prepare_bus_frequency_deviation_in_pu_meter(bus->get_bus_number());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        bus = buses[i];
-        METER meter = setter.prepare_bus_frequency_in_Hz_meter(bus->get_bus_number());
-        if(meter.is_valid())
-            meters.push_back(meter);
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            for(unsigned int j=0; j!=n; ++j)
+            {
+                METER meter = build_one_bus_related_meter(bus_numbers[j], keys[i]);
+                if(meter.is_valid())
+                    meters.push_back(meter);
+            }
+        }
     }
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_generators_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_generators_complete_meters()
 {
     vector<METER> meters;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<string> keys;
+    keys.reserve(sg_meter_map.size());
+    for (auto iter = sg_meter_map.begin(); iter != sg_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
+    unsigned int m = keys.size();
 
-    METER_SETTER setter(*toolkit);
+    vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_generators_device_id();
+    unsigned int n = dids.size();
 
-    unsigned int n;
-
-    n = psdb.get_generator_count();
-    vector<GENERATOR*> generators = psdb.get_all_generators();
-    GENERATOR* generator;
-    for(unsigned int i=0; i!=n; ++i)
+    for(unsigned int i=0; i<m; ++i)
     {
-        generator = generators[i];
-        METER meter = setter.prepare_generator_rotor_angle_in_deg_meter(generator->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        generator = generators[i];
-        METER meter = setter.prepare_generator_rotor_speed_deviation_in_pu_meter(generator->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        generator = generators[i];
-        METER meter = setter.prepare_generator_excitation_voltage_in_pu_meter(generator->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        generator = generators[i];
-        METER meter = setter.prepare_generator_stabilizing_signal_in_pu_meter(generator->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        generator = generators[i];
-        METER meter = setter.prepare_generator_mechanical_power_in_MW_meter(generator->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        generator = generators[i];
-        METER meter = setter.prepare_generator_mechanical_power_reference_in_MW_meter(generator->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        generator = generators[i];
-        METER meter = setter.prepare_generator_terminal_active_power_in_MW_meter(generator->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        generator = generators[i];
-        METER meter = setter.prepare_generator_terminal_reactive_power_in_MVar_meter(generator->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            for(unsigned int j=0; j!=n; ++j)
+            {
+                METER meter = build_one_generator_related_meter(dids[j], keys[i]);
+                if(meter.is_valid())
+                    meters.push_back(meter);
+            }
+        }
     }
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_wt_generators_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_wt_generators_complete_meters()
 {
     vector<METER> meters;
     vector<string> keys;
@@ -189,590 +133,514 @@ vector<METER> DYNAMICS_SIMULATOR::build_all_wt_generators_related_meters()
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_wt_generators_device_id();
     unsigned int n = dids.size();
 
-    DYNAMICS_SIMULATOR& sim = toolkit->get_dynamic_simulator();
+    for(unsigned int i=0; i<m; ++i)
+    {
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            for(unsigned int j=0; j!=n; ++j)
+            {
+                METER meter = build_one_wt_generator_related_meter(dids[j], keys[i]);
+                if(meter.is_valid())
+                    meters.push_back(meter);
+            }
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_all_pv_units_complete_meters()
+{
+    vector<METER> meters;
+    vector<string> keys;
+    keys.reserve(pvu_meter_map.size());
+    for (auto iter = pvu_meter_map.begin(); iter != pvu_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
+    unsigned int m = keys.size();
+
+    vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_pv_units_device_id();
+    unsigned int n = dids.size();
+
     for (unsigned int i=0; i<m; ++i)
+    {
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            for(unsigned int j=0; j!=n; ++j)
+            {
+                METER meter = build_one_pv_unit_related_meter(dids[j], keys[i]);
+                if(meter.is_valid())
+                    meters.push_back(meter);
+            }
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_all_energy_storages_complete_meters()
+{
+    vector<METER> meters;
+    vector<string> keys;
+    keys.reserve(es_meter_map.size());
+    for (auto iter = es_meter_map.begin(); iter != es_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
+    unsigned int m = keys.size();
+
+    vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_energy_storages_device_id();
+    unsigned int n = dids.size();
+
+    for (unsigned int i=0; i<m; ++i)
+    {
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            for(unsigned int j=0; j!=n; ++j)
+            {
+                METER meter = build_one_energy_storage_related_meter(dids[j], keys[i]);
+                if(meter.is_valid())
+                    meters.push_back(meter);
+            }
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_all_sv_sources_complete_meters()
+{
+    vector<METER> meters;
+    vector<string> keys;
+    keys.reserve(sv_source_meter_map.size());
+    for (auto iter = sv_source_meter_map.begin(); iter != sv_source_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
+    unsigned int m = keys.size();
+
+    vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_sv_sources_device_id();
+    unsigned int n = dids.size();
+
+    for (unsigned int i=0; i<m; ++i)
+    {
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            for(unsigned int j=0; j!=n; ++j)
+            {
+                METER meter = build_one_sv_source_related_meter(dids[j], keys[i]);
+                if(meter.is_valid())
+                    meters.push_back(meter);
+            }
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_all_loads_complete_meters()
+{
+    vector<METER> meters;
+    vector<string> keys;
+    keys.reserve(load_meter_map.size());
+    for (auto iter = load_meter_map.begin(); iter != load_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
+    unsigned int m = keys.size();
+
+    vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_loads_device_id();
+    unsigned int n = dids.size();
+
+    for (unsigned int i = 0; i < m; ++i)
+    {
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            for(unsigned int j = 0; j != n; ++j)
+            {
+                METER meter = build_one_load_related_meter(dids[j], keys[i]);
+                if(meter.is_valid())
+                    meters.push_back(meter);
+            }
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_all_ac_lines_complete_meters()
+{
+    vector<METER> meters;
+    vector<string> keys;
+    keys.reserve(ac_line_meter_map.size());
+    for (auto iter = ac_line_meter_map.begin(); iter != ac_line_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
+    unsigned int m = keys.size();
+
+    vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_ac_lines_device_id();
+    unsigned int n = dids.size();
+
+    for (unsigned int i=0; i<m; ++i)
+    {
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            for(unsigned int j=0; j!=n; ++j)
+            {
+                METER meter = build_one_ac_line_related_meter(dids[j], keys[i], "SENDING", "");
+                if(meter.is_valid())
+                    meters.push_back(meter);
+
+                meter = build_one_ac_line_related_meter(dids[j], keys[i], "RECEIVING", "");
+                if(meter.is_valid())
+                    meters.push_back(meter);
+            }
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_all_transformers_complete_meters()
+{
+    vector<METER> meters;
+    vector<string> keys;
+    keys.reserve(transformer_meter_map.size());
+    for (auto iter = transformer_meter_map.begin(); iter != transformer_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
+    unsigned int m = keys.size();
+
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<DEVICE_ID> dids = psdb.get_all_transformers_device_id();
+    unsigned int n = dids.size();
+
+    for (unsigned int i=0; i<m; ++i)
+    {
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            for(unsigned int j=0; j!=n; ++j)
+            {
+                METER meter = build_one_transformer_related_meter(dids[j], keys[i], "PRIMARY", "");
+                if(meter.is_valid())
+                    meters.push_back(meter);
+
+                meter = build_one_transformer_related_meter(dids[j], keys[i], "SECONDARY", "");
+                if(meter.is_valid())
+                    meters.push_back(meter);
+
+                TRANSFORMER* trans = psdb.get_transformer(dids[j]);
+                if(trans->is_three_winding_transformer())
+                {
+                    meter = build_one_transformer_related_meter(dids[j], keys[i], "TERTIARY", "");
+                    if(meter.is_valid())
+                        meters.push_back(meter);
+                }
+            }
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_all_lcc_hvdc2ts_complete_meters()
+{
+    vector<METER> meters;
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_all_vsc_hvdcs_complete_meters()
+{
+    vector<METER> meters;
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_all_mt_hvdcs_complete_meters()
+{
+    vector<METER> meters;
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_all_equivalent_devices_complete_meters()
+{
+    vector<METER> meters;
+    vector<string> keys;
+    keys.reserve(equivalent_device_meter_map.size());
+    for (auto iter = equivalent_device_meter_map.begin(); iter != equivalent_device_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
+    unsigned int m = keys.size();
+
+    vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_equivalent_devices_device_id();
+    unsigned int n = dids.size();
+
+    for (unsigned int i=0; i<m; ++i)
+    {
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            for(unsigned int j=0; j!=n; ++j)
+            {
+                METER meter = build_one_equivalent_device_related_meter(dids[j], keys[i]);
+                if(meter.is_valid())
+                    meters.push_back(meter);
+            }
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_all_common_meters()
+{
+    vector<METER> all_meters;
+    vector<METER> meters;
+
+    meters = build_all_buses_common_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_generators_common_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_wt_generators_common_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_pv_units_common_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_energy_storages_common_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_sv_sources_common_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_loads_common_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_ac_lines_common_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_transformers_common_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_lcc_hvdc2ts_common_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_vsc_hvdcs_common_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_mt_hvdcs_common_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    meters = build_all_equivalent_devices_common_meters();
+    all_meters.insert(all_meters.end(), meters.begin(), meters.end());
+
+    return all_meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_all_buses_common_meters()
+{
+    vector<string> common_meter_types = {"VOLTAGE IN PU", "ANGLE IN DEG", "FREQUENCY IN HZ"};
+
+    vector<unsigned int> buses = toolkit->get_power_system_database().get_all_buses_number();
+    unsigned int n = buses.size();
+
+    vector<METER> meters;
+    for(unsigned int i = 0; i<common_meter_types.size(); ++i)
+    {
         for(unsigned int j=0; j!=n; ++j)
         {
-            METER meter = sim.build_one_wt_generator_related_meter(dids[j], keys[i]);
-            if(meter.is_valid())
-                meters.push_back(meter);
+            METER meter = build_one_bus_related_meter(buses[j], common_meter_types[i]);
+            meters.push_back(meter);
         }
-    return meters;
-}
-
-vector<METER> DYNAMICS_SIMULATOR::build_all_pv_units_related_meters()
-{
-    vector<METER> meters;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-
-    METER_SETTER setter(*toolkit);
-
-    unsigned int n;
-
-    n = psdb.get_pv_unit_count();
-    vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
-    PV_UNIT* pv_unit;
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_terminal_current_in_kA_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_terminal_current_in_pu_on_mbase_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_terminal_current_in_pu_on_sbase_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_terminal_active_power_in_pu_on_mbase_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_terminal_active_power_in_pu_on_sbase_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_terminal_active_power_in_MW_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_mbase_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_sbase_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_terminal_reactive_power_in_MVar_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_terminal_apparent_power_in_pu_on_mbase_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_terminal_apparent_power_in_pu_on_sbase_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_terminal_apparent_power_in_MVA_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_active_current_command_in_pu_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_reactive_current_command_in_pu_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_active_power_command_in_pu_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_reactive_power_command_in_pu_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_reactive_voltage_command_in_pu_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_solar_irradiance_in_pu_on_s0_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_solar_irradiance_in_pu_on_sref_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_solar_irradiance_in_Wpm2_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_temperature_in_c_deg_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_MW_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_mbase_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_sbase_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_panel_power_in_pu_on_mbase_meter(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        pv_unit = pv_units[i];
-        METER meter = setter.prepare_pv_unit_panel_power_in_MW(pv_unit->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
     }
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_energy_storages_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_generators_common_meters()
 {
+    vector<string> common_meter_types = {"TERMINAL ACTIVE POWER IN MW", "TERMINAL REACTIVE POWER IN MVAR",
+                                      "MECHANICAL POWER IN MW",      "EXCITATION VOLTAGE IN PU",
+                                      "STABILIZING SIGNAL IN PU",
+                                      "ROTOR ANGLE IN DEG",          "ROTOR SPEED DEVIATION IN PU"};
+
+    vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_generators_device_id();
+    unsigned int n = dids.size();
+
     vector<METER> meters;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-
-    METER_SETTER setter(*toolkit);
-
-    unsigned int n;
-
-    n = psdb.get_energy_storage_count();
-    vector<ENERGY_STORAGE*> energy_storages = psdb.get_all_energy_storages();
-    ENERGY_STORAGE* energy_storage;
-    for(unsigned int i=0; i!=n; ++i)
+    for(unsigned int i = 0; i<common_meter_types.size(); ++i)
     {
-        energy_storage = energy_storages[i];
-        METER meter = setter.prepare_es_terminal_current_in_kA_meter(energy_storage->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        energy_storage = energy_storages[i];
-        METER meter = setter.prepare_es_terminal_current_in_pu_on_mbase_meter(energy_storage->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        energy_storage = energy_storages[i];
-        METER meter = setter.prepare_es_terminal_current_in_pu_on_sbase_meter(energy_storage->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        energy_storage = energy_storages[i];
-        METER meter = setter.prepare_es_terminal_active_power_in_MW_meter(energy_storage->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        energy_storage = energy_storages[i];
-        METER meter = setter.prepare_es_terminal_reactive_power_in_MVar_meter(energy_storage->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        energy_storage = energy_storages[i];
-        METER meter = setter.prepare_es_terminal_apparent_power_in_pu_on_mbase_meter(energy_storage->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        energy_storage = energy_storages[i];
-        METER meter = setter.prepare_es_terminal_apparent_power_in_pu_on_sbase_meter(energy_storage->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        energy_storage = energy_storages[i];
-        METER meter = setter.prepare_es_terminal_apparent_power_in_MVA_meter(energy_storage->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        energy_storage = energy_storages[i];
-        METER meter = setter.prepare_es_active_current_command_in_pu_meter(energy_storage->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        energy_storage = energy_storages[i];
-        METER meter = setter.prepare_es_reactive_current_command_in_pu_meter(energy_storage->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        energy_storage = energy_storages[i];
-        METER meter = setter.prepare_es_active_power_command_in_pu_meter(energy_storage->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        energy_storage = energy_storages[i];
-        METER meter = setter.prepare_es_reactive_power_command_in_pu_meter(energy_storage->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        energy_storage = energy_storages[i];
-        METER meter = setter.prepare_es_reactive_voltage_command_in_pu_meter(energy_storage->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        energy_storage = energy_storages[i];
-        METER meter = setter.prepare_es_soc_power_in_pu_on_mbase_meter(energy_storage->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        energy_storage = energy_storages[i];
-        METER meter = setter.prepare_es_soc_power_in_pu_on_sbase_meter(energy_storage->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        energy_storage = energy_storages[i];
-        METER meter = setter.prepare_es_soc_power_in_MW_meter(energy_storage->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        energy_storage = energy_storages[i];
-        METER meter = setter.prepare_es_state_of_charge_in_pu_meter(energy_storage->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    return meters;
-}
-
-vector<METER> DYNAMICS_SIMULATOR::build_all_sv_sources_related_meters()
-{
-    vector<METER> meters;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-
-    METER_SETTER setter(*toolkit);
-
-    unsigned int n;
-
-    n = psdb.get_sv_source_count();
-    vector<SV_SOURCE*> svss = psdb.get_all_sv_sources();
-    SV_SOURCE* svs;
-
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        svs = svss[i];
-        METER meter = setter.prepare_svs_terminal_current_in_pu_on_sbase_meter(svs->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        svs = svss[i];
-        METER meter = setter.prepare_svs_terminal_reactive_power_in_MVar_meter(svs->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    return meters;
-}
-
-vector<METER> DYNAMICS_SIMULATOR::build_all_loads_related_meters()
-{
-    vector<METER> meters;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-
-    METER_SETTER setter(*toolkit);
-
-    unsigned int n;
-
-    n = psdb.get_load_count();
-    vector<LOAD*> loads = psdb.get_all_loads();
-    LOAD* load;
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        load = loads[i];
-        METER meter = setter.prepare_load_active_power_in_MW_meter(load->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-        meter = setter.prepare_load_reactive_power_in_MVar_meter(load->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-        meter = setter.prepare_load_total_scale_in_pu_meter(load->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-        meter = setter.prepare_load_manually_scale_in_pu_meter(load->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-        meter = setter.prepare_load_relay_shed_scale_in_pu_meter(load->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    return meters;
-}
-
-vector<METER> DYNAMICS_SIMULATOR::build_all_ac_lines_related_meters()
-{
-    vector<METER> meters;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-
-    METER_SETTER setter(*toolkit);
-
-    unsigned int n;
-
-    n = psdb.get_ac_line_count();
-    vector<AC_LINE*> lines = psdb.get_all_ac_lines();
-    AC_LINE* line;
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        line = lines[i];
-        METER meter = setter.prepare_ac_line_active_power_in_MW_meter(line->get_device_id(),line->get_sending_side_bus());
-        if(meter.is_valid())
-            meters.push_back(meter);
-        meter = setter.prepare_ac_line_reactive_power_in_MVar_meter(line->get_device_id(),line->get_sending_side_bus());
-        if(meter.is_valid())
-            meters.push_back(meter);
-        meter = setter.prepare_ac_line_current_in_kA_meter(line->get_device_id(),line->get_sending_side_bus());
-        if(meter.is_valid())
-            meters.push_back(meter);
-        meter = setter.prepare_ac_line_active_power_in_MW_meter(line->get_device_id(),line->get_receiving_side_bus());
-        if(meter.is_valid())
-            meters.push_back(meter);
-        meter = setter.prepare_ac_line_reactive_power_in_MVar_meter(line->get_device_id(),line->get_receiving_side_bus());
-        if(meter.is_valid())
-            meters.push_back(meter);
-        meter = setter.prepare_ac_line_current_in_kA_meter(line->get_device_id(),line->get_receiving_side_bus());
-        if(meter.is_valid())
-            meters.push_back(meter);
-    }
-    return meters;
-}
-
-vector<METER> DYNAMICS_SIMULATOR::build_all_transformers_related_meters()
-{
-    vector<METER> meters;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-
-    METER_SETTER setter(*toolkit);
-
-    unsigned int n;
-
-    n = psdb.get_transformer_count();
-    vector<TRANSFORMER*> transes = psdb.get_all_transformers();
-    TRANSFORMER* trans;
-    for(unsigned int i=0; i!=n; ++i)
-    {
-        trans = transes[i];
-        METER meter = setter.prepare_transformer_active_power_in_MW_meter(trans->get_device_id(), trans->get_winding_bus(PRIMARY_SIDE));
-        if(meter.is_valid())
-            meters.push_back(meter);
-        meter = setter.prepare_transformer_reactive_power_in_MVar_meter(trans->get_device_id(), trans->get_winding_bus(PRIMARY_SIDE));
-        if(meter.is_valid())
-            meters.push_back(meter);
-        meter = setter.prepare_transformer_current_in_kA_meter(trans->get_device_id(), trans->get_winding_bus(PRIMARY_SIDE));
-        if(meter.is_valid())
-            meters.push_back(meter);
-        meter = setter.prepare_transformer_active_power_in_MW_meter(trans->get_device_id(), trans->get_winding_bus(SECONDARY_SIDE));
-        if(meter.is_valid())
-            meters.push_back(meter);
-        meter = setter.prepare_transformer_reactive_power_in_MVar_meter(trans->get_device_id(), trans->get_winding_bus(SECONDARY_SIDE));
-        if(meter.is_valid())
-            meters.push_back(meter);
-        meter = setter.prepare_transformer_current_in_kA_meter(trans->get_device_id(), trans->get_winding_bus(SECONDARY_SIDE));
-        if(meter.is_valid())
-            meters.push_back(meter);
-        if(trans->is_three_winding_transformer())
+        for(unsigned int j=0; j!=n; ++j)
         {
-            meter = setter.prepare_transformer_active_power_in_MW_meter(trans->get_device_id(), trans->get_winding_bus(SECONDARY_SIDE));
-            if(meter.is_valid())
-                meters.push_back(meter);
-            meter = setter.prepare_transformer_reactive_power_in_MVar_meter(trans->get_device_id(), trans->get_winding_bus(SECONDARY_SIDE));
-            if(meter.is_valid())
-                meters.push_back(meter);
-            meter = setter.prepare_transformer_current_in_kA_meter(trans->get_device_id(), trans->get_winding_bus(SECONDARY_SIDE));
-            if(meter.is_valid())
-                meters.push_back(meter);
+            METER meter = build_one_generator_related_meter(dids[j], common_meter_types[i]);
+            meters.push_back(meter);
         }
     }
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_lcc_hvdc2ts_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_wt_generators_common_meters()
 {
+    vector<string> common_meter_types = {"TERMINAL ACTIVE POWER IN MW", "TERMINAL REACTIVE POWER IN MVAR",
+                                      "MECHANICAL POWER IN MW",
+                                      "ACTIVE CURRENT COMMAND IN PU", "REACTIVE CURRENT COMMAND IN PU",
+                                      "TURBINE SPEED IN PU",         "PITCH ANGLE IN DEG"};
+
+    vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_wt_generators_device_id();
+    unsigned int n = dids.size();
+
     vector<METER> meters;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-
-    METER_SETTER setter(*toolkit);
-
-    unsigned int n;
-
-    n = psdb.get_lcc_hvdc2t_count();
-    vector<LCC_HVDC2T*> hvdcs = psdb.get_all_lcc_hvdc2ts();
-    LCC_HVDC2T* hvdc;
-    for(unsigned int i=0; i!=n; ++i)
+    for(unsigned int i = 0; i<common_meter_types.size(); ++i)
     {
-        hvdc = hvdcs[i];
-
-        METER meter = setter.prepare_lcc_hvdc2t_rectifier_ac_voltage_in_pu_meter(hvdc->get_device_id());
-        if(meter.is_valid())
+        for(unsigned int j=0; j!=n; ++j)
+        {
+            METER meter = build_one_wt_generator_related_meter(dids[j], common_meter_types[i]);
             meters.push_back(meter);
-
-        meter = setter.prepare_lcc_hvdc2t_inverter_ac_voltage_in_pu_meter(hvdc->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_lcc_hvdc2t_rectifier_dc_voltage_in_kV_meter(hvdc->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_lcc_hvdc2t_inverter_dc_voltage_in_kV_meter(hvdc->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_lcc_hvdc2t_rectifier_dc_current_in_kA_meter(hvdc->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_lcc_hvdc2t_inverter_dc_current_in_kA_meter(hvdc->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_lcc_hvdc2t_rectifier_alpha_in_deg_meter(hvdc->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_lcc_hvdc2t_rectifier_mu_in_deg_meter(hvdc->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_lcc_hvdc2t_inverter_gamma_in_deg_meter(hvdc->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_lcc_hvdc2t_inverter_mu_in_deg_meter(hvdc->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_lcc_hvdc2t_rectifier_dc_power_in_MW_meter(hvdc->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_lcc_hvdc2t_inverter_dc_power_in_MW_meter(hvdc->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_lcc_hvdc2t_rectifier_ac_active_power_in_MW_meter(hvdc->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_lcc_hvdc2t_rectifier_ac_reactive_power_in_MVar_meter(hvdc->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_lcc_hvdc2t_inverter_ac_active_power_in_MW_meter(hvdc->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_lcc_hvdc2t_inverter_ac_reactive_power_in_MVar_meter(hvdc->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_lcc_hvdc2t_rectifier_ac_current_in_kA_meter(hvdc->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_lcc_hvdc2t_inverter_ac_current_in_kA_meter(hvdc->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
+        }
     }
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_vsc_hvdcs_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_pv_units_common_meters()
+{
+    vector<string> common_meter_types = {"TERMINAL ACTIVE POWER IN MW", "TERMINAL REACTIVE POWER IN MVAR",
+                                      "ACTIVE CURRENT COMMAND IN PU", "REACTIVE CURRENT COMMAND IN PU"};
+
+    vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_pv_units_device_id();
+    unsigned int n = dids.size();
+
+    vector<METER> meters;
+    for(unsigned int i = 0; i<common_meter_types.size(); ++i)
+    {
+        for(unsigned int j=0; j!=n; ++j)
+        {
+            METER meter = build_one_pv_unit_related_meter(dids[j], common_meter_types[i]);
+            meters.push_back(meter);
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_all_energy_storages_common_meters()
+{
+    vector<string> common_meter_types = {"TERMINAL ACTIVE POWER IN MW", "TERMINAL REACTIVE POWER IN MVAR",
+                                      "ACTIVE CURRENT COMMAND IN PU", "REACTIVE CURRENT COMMAND IN PU"};
+
+    vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_energy_storages_device_id();
+    unsigned int n = dids.size();
+
+    vector<METER> meters;
+    for(unsigned int i = 0; i<common_meter_types.size(); ++i)
+    {
+        for(unsigned int j=0; j!=n; ++j)
+        {
+            METER meter = build_one_energy_storage_related_meter(dids[j], common_meter_types[i]);
+            meters.push_back(meter);
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_all_sv_sources_common_meters()
+{
+    vector<string> common_meter_types = {"TERMINAL REACTIVE POWER IN MVAR", "TERMINAL CURRENT IN PU ON SBASE"};
+
+    vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_sv_sources_device_id();
+    unsigned int n = dids.size();
+
+    vector<METER> meters;
+    for(unsigned int i = 0; i<common_meter_types.size(); ++i)
+    {
+        for(unsigned int j=0; j!=n; ++j)
+        {
+            METER meter = build_one_sv_source_related_meter(dids[j], common_meter_types[i]);
+            meters.push_back(meter);
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_all_loads_common_meters()
+{
+    vector<string> common_meter_types = {"ACTIVE POWER IN MW", "REACTIVE POWER IN MVAR", "TOTAL SCALE IN PU"};
+
+    vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_loads_device_id();
+    unsigned int n = dids.size();
+
+    vector<METER> meters;
+    for(unsigned int i = 0; i<common_meter_types.size(); ++i)
+    {
+        for(unsigned int j=0; j!=n; ++j)
+        {
+            METER meter = build_one_load_related_meter(dids[j], common_meter_types[i]);
+            meters.push_back(meter);
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_all_ac_lines_common_meters()
+{
+    vector<string> common_meter_types = {"ACTIVE POWER IN MW", "REACTIVE POWER IN MVAR", "CURRENT IN KA"};
+
+    vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_ac_lines_device_id();
+    unsigned int n = dids.size();
+
+    vector<METER> meters;
+    for(unsigned int i = 0; i<common_meter_types.size(); ++i)
+    {
+        for(unsigned int j=0; j!=n; ++j)
+        {
+            METER meter = build_one_ac_line_related_meter(dids[j], common_meter_types[i], "SENDING");
+            meters.push_back(meter);
+            meter = build_one_ac_line_related_meter(dids[j], common_meter_types[i], "RECEIVING");
+            meters.push_back(meter);
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_all_transformers_common_meters()
+{
+    vector<string> common_meter_types = {"ACTIVE POWER IN MW", "REACTIVE POWER IN MVAR", "CURRENT IN KA"};
+
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    vector<DEVICE_ID> dids = psdb.get_all_transformers_device_id();
+    unsigned int n = dids.size();
+
+    vector<METER> meters;
+    for(unsigned int i = 0; i<common_meter_types.size(); ++i)
+    {
+        for(unsigned int j=0; j!=n; ++j)
+        {
+            METER meter = build_one_transformer_related_meter(dids[j], common_meter_types[i], "PRIMARY");
+            meters.push_back(meter);
+            meter = build_one_transformer_related_meter(dids[j], common_meter_types[i], "SECONDARY");
+            meters.push_back(meter);
+            if(psdb.get_transformer(dids[j])->is_three_winding_transformer())
+            {
+                meter = build_one_transformer_related_meter(dids[j], common_meter_types[i], "TERTIARY");
+                meters.push_back(meter);
+            }
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_all_lcc_hvdc2ts_common_meters()
+{
+    vector<string> common_meter_types = {"DC VOLTAGE IN KV",     "DC CURRENT IN KA", "DC POWER IN MW",
+                                         "ANGLE IN DEG",         "MU IN DEG",
+                                         "AC VOLTAGE IN PU",     "AC CURRENT IN KA",
+                                         "AC ACTIVE POWER IN MW","AC REACTIVE POWER IN MVAR"};
+
+    vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_lcc_hvdc2ts_device_id();
+    unsigned int n = dids.size();
+
+    vector<METER> meters;
+    for(unsigned int i = 0; i<common_meter_types.size(); ++i)
+    {
+        for(unsigned int j=0; j!=n; ++j)
+        {
+            METER meter = build_one_lcc_hvdc2t_related_meter(dids[j], common_meter_types[i], "RECTIFIER");
+            meters.push_back(meter);
+
+            meter = build_one_lcc_hvdc2t_related_meter(dids[j], common_meter_types[i], "INVERTER");
+            meters.push_back(meter);
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_all_vsc_hvdcs_common_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -853,7 +721,7 @@ vector<METER> DYNAMICS_SIMULATOR::build_all_vsc_hvdcs_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_mt_hvdcs_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_mt_hvdcs_common_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -990,118 +858,77 @@ vector<METER> DYNAMICS_SIMULATOR::build_all_mt_hvdcs_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_equivalent_devices_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_equivalent_devices_common_meters()
 {
+    vector<string> common_meter_types = {"VOLTAGE SOURCE VOLTAGE IN PU",         "VOLTAGE SOURCE VOLTAGE ANGLE IN DEG",
+                                      "VOLTAGE SOURCE RESISTANCE IN PU",      "VOLTAGE SOURCE REACTANCE IN PU",
+                                      "ACTIVE CONSTANT POWER LOAD IN MW",     "REACTIVE CONSTANT POWER LOAD IN MVAR",
+                                      "ACTIVE CONSTANT CURRENT LOAD IN MW",   "REACTIVE CONSTANT CURRENT LOAD IN MVAR",
+                                      "ACTIVE CONSTANT IMPEDANCE LOAD IN MW", "REACTIVE CONSTANT IMPEDANCE LOAD IN MVAR",
+                                      "ACTIVE POWER GENERATION IN MW",        "REACTIVE POWER GENERATION IN MVAR",
+                                      "ACTIVE POWER LOAD IN MW",              "REACTIVE POWER LOAD IN MVAR",
+                                      "ACTIVE POWER NET LOAD IN MW",          "REACTIVE POWER NET LOAD IN MVAR"};
+
+    vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_equivalent_devices_device_id();
+    unsigned int n = dids.size();
+
     vector<METER> meters;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-
-    METER_SETTER setter(*toolkit);
-
-    unsigned int n;
-
-    n = psdb.get_equivalent_device_count();
-    vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
-    EQUIVALENT_DEVICE* edevice;
-    for(unsigned int i=0; i!=n; ++i)
+    for(unsigned int i = 0; i<common_meter_types.size(); ++i)
     {
-        edevice = edevices[i];
-
-        METER meter = setter.prepare_equivalent_device_active_power_generation_in_MW_meter(edevice->get_device_id());
-        if(meter.is_valid())
+        for(unsigned int j=0; j!=n; ++j)
+        {
+            METER meter = build_one_equivalent_device_related_meter(dids[j], common_meter_types[i]);
             meters.push_back(meter);
-
-        meter = setter.prepare_equivalent_device_reactive_power_generation_in_MVar_meter(edevice->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_equivalent_device_active_power_load_in_MW_meter(edevice->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_equivalent_device_reactive_power_load_in_MVar_meter(edevice->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_equivalent_device_active_power_net_load_in_MW_meter(edevice->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
-
-        meter = setter.prepare_equivalent_device_reactive_power_net_load_in_MVar_meter(edevice->get_device_id());
-        if(meter.is_valid())
-            meters.push_back(meter);
+        }
     }
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_bus_related_meters(unsigned int bus)
+vector<METER> DYNAMICS_SIMULATOR::build_one_bus_complete_meters(unsigned int bus)
 {
     vector<METER> meters;
-    METER_SETTER setter(*toolkit);
+    vector<string> keys;
+    keys.reserve(bus_meter_map.size());
+    for (auto iter = bus_meter_map.begin(); iter != bus_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
 
-    METER meter(*toolkit);
-
-    meter = setter.prepare_bus_voltage_in_pu_meter(bus);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_bus_angle_in_deg_meter(bus);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_bus_frequency_deviation_in_pu_meter(bus);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_bus_frequency_in_Hz_meter(bus);
-    if(meter.is_valid())
-        meters.push_back(meter);
+    unsigned int m = keys.size();
+    for (unsigned int i=0; i<m; ++i)
+    {
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            METER meter = build_one_bus_related_meter(bus, keys[i]);
+            if(meter.is_valid())
+                meters.push_back(meter);
+        }
+    }
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_generator_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::build_one_generator_complete_meters(const DEVICE_ID& did)
 {
     vector<METER> meters;
+    vector<string> keys;
+    keys.reserve(sg_meter_map.size());
+    for (auto iter = sg_meter_map.begin(); iter != sg_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
 
-    METER_SETTER setter(*toolkit);
-
-    METER meter(*toolkit);
-
-    meter = setter.prepare_generator_rotor_angle_in_deg_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_generator_rotor_speed_deviation_in_pu_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_generator_excitation_voltage_in_pu_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_generator_stabilizing_signal_in_pu_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_generator_mechanical_power_in_MW_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_generator_mechanical_power_reference_in_MW_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_generator_terminal_active_power_in_MW_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_generator_terminal_reactive_power_in_MVar_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
+    unsigned int m = keys.size();
+    for (unsigned int i=0; i<m; ++i)
+    {
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            METER meter = build_one_generator_related_meter(did, keys[i]);
+            if(meter.is_valid())
+                meters.push_back(meter);
+        }
+    }
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_wt_generator_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::build_one_wt_generator_complete_meters(const DEVICE_ID& did)
 {
     vector<METER> meters;
     vector<string> keys;
@@ -1109,302 +936,273 @@ vector<METER> DYNAMICS_SIMULATOR::build_one_wt_generator_related_meters(const DE
     for (auto iter = wtg_meter_map.begin(); iter != wtg_meter_map.end(); ++iter)
         keys.push_back(iter->first);
     std::sort(keys.begin(), keys.end());
-    unsigned int m = keys.size();
 
-    DYNAMICS_SIMULATOR& sim = toolkit->get_dynamic_simulator();
+    unsigned int m = keys.size();
     for (unsigned int i=0; i<m; ++i)
     {
-        METER meter = sim.build_one_wt_generator_related_meter(did, keys[i]);
-        if(meter.is_valid())
-            meters.push_back(meter);
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            METER meter = build_one_wt_generator_related_meter(did, keys[i]);
+            if(meter.is_valid())
+                meters.push_back(meter);
+        }
     }
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_pv_unit_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::build_one_pv_unit_complete_meters(const DEVICE_ID& did)
 {
     vector<METER> meters;
+    vector<string> keys;
+    keys.reserve(pvu_meter_map.size());
+    for (auto iter = pvu_meter_map.begin(); iter != pvu_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
 
-    METER_SETTER setter(*toolkit);
-
-    METER meter(*toolkit);
-
-    meter = setter.prepare_pv_unit_terminal_current_in_kA_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_terminal_current_in_pu_on_mbase_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_terminal_current_in_pu_on_sbase_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_terminal_active_power_in_pu_on_mbase_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_terminal_active_power_in_pu_on_sbase_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_terminal_active_power_in_MW_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_mbase_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_sbase_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_terminal_reactive_power_in_MVar_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_terminal_apparent_power_in_pu_on_mbase_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_terminal_apparent_power_in_pu_on_sbase_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_terminal_apparent_power_in_MVA_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_active_current_command_in_pu_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_reactive_current_command_in_pu_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_active_power_command_in_pu_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_reactive_power_command_in_pu_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_reactive_voltage_command_in_pu_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_solar_irradiance_in_pu_on_s0_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_solar_irradiance_in_pu_on_sref_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_solar_irradiance_in_Wpm2_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_temperature_in_c_deg_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_MW_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_mbase_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_sbase_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_panel_power_in_pu_on_mbase_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_pv_unit_panel_power_in_MW(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
+    unsigned int m = keys.size();
+    for (unsigned int i=0; i<m; ++i)
+    {
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            METER meter = build_one_pv_unit_related_meter(did, keys[i]);
+            if(meter.is_valid())
+                meters.push_back(meter);
+        }
+    }
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_energy_storage_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::build_one_energy_storage_complete_meters(const DEVICE_ID& did)
 {
     vector<METER> meters;
+    vector<string> keys;
+    keys.reserve(es_meter_map.size());
+    for (auto iter = es_meter_map.begin(); iter != es_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
 
-    METER_SETTER setter(*toolkit);
-    METER meter(*toolkit);
-
-    meter = setter.prepare_es_terminal_current_in_kA_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_es_terminal_current_in_pu_on_mbase_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_es_terminal_current_in_pu_on_sbase_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_es_terminal_active_power_in_MW_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_es_terminal_reactive_power_in_MVar_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_es_terminal_apparent_power_in_pu_on_mbase_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_es_terminal_apparent_power_in_pu_on_sbase_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_es_terminal_apparent_power_in_MVA_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_es_active_current_command_in_pu_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_es_reactive_current_command_in_pu_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_es_active_power_command_in_pu_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_es_reactive_power_command_in_pu_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_es_reactive_voltage_command_in_pu_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_es_soc_power_in_pu_on_mbase_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_es_soc_power_in_pu_on_sbase_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_es_soc_power_in_MW_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
-
-    meter = setter.prepare_es_state_of_charge_in_pu_meter(did);
-    if(meter.is_valid())
-        meters.push_back(meter);
+    unsigned int m = keys.size();
+    for (unsigned int i=0; i<m; ++i)
+    {
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            METER meter = build_one_energy_storage_related_meter(did, keys[i]);
+            if(meter.is_valid())
+                meters.push_back(meter);
+        }
+    }
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_sv_source_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::build_one_sv_source_complete_meters(const DEVICE_ID& did)
+{
+    vector<METER> meters;
+    vector<string> keys;
+    keys.reserve(sv_source_meter_map.size());
+    for (auto iter = sv_source_meter_map.begin(); iter != sv_source_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
+
+    unsigned int m = keys.size();
+    for (unsigned int i=0; i<m; ++i)
+    {
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            METER meter = build_one_sv_source_related_meter(did, keys[i]);
+            if(meter.is_valid())
+                meters.push_back(meter);
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_one_load_complete_meters(const DEVICE_ID& did)
+{
+    vector<METER> meters;
+    vector<string> keys;
+    keys.reserve(load_meter_map.size());
+    for (auto iter = load_meter_map.begin(); iter != load_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
+
+    unsigned int m = keys.size();
+    for (unsigned int i = 0; i < m; ++i)
+    {
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            METER meter = build_one_load_related_meter(did, keys[i]);
+            if(meter.is_valid())
+                meters.push_back(meter);
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_one_ac_line_complete_meters(const DEVICE_ID& did)
+{
+    vector<METER> meters;
+    vector<string> keys;
+    keys.reserve(ac_line_meter_map.size());
+    for (auto iter = ac_line_meter_map.begin(); iter != ac_line_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
+
+    unsigned int m = keys.size();
+    for (unsigned int i=0; i<m; ++i)
+    {
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            METER meter = build_one_ac_line_related_meter(did, keys[i], "SENDING");
+            if(meter.is_valid())
+                meters.push_back(meter);
+
+            meter = build_one_ac_line_related_meter(did, keys[i], "RECEIVING");
+            if(meter.is_valid())
+                meters.push_back(meter);
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_one_transformer_complete_meters(const DEVICE_ID& did)
+{
+    vector<METER> meters;
+    vector<string> keys;
+    keys.reserve(transformer_meter_map.size());
+    for (auto iter = transformer_meter_map.begin(); iter != transformer_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
+
+    unsigned int m = keys.size();
+
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    TRANSFORMER* trans = psdb.get_transformer(did);
+    for (unsigned int i=0; i<m; ++i)
+    {
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            METER meter = build_one_transformer_related_meter(did, keys[i], "PRIMARY");
+            if(meter.is_valid())
+                meters.push_back(meter);
+            meter = build_one_transformer_related_meter(did, keys[i], "SECONDARY");
+            if(meter.is_valid())
+                meters.push_back(meter);
+            if(trans->is_three_winding_transformer())
+            {
+                meter = build_one_transformer_related_meter(did, keys[i], "TERTIARY");
+                if(meter.is_valid())
+                    meters.push_back(meter);
+            }
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_one_lcc_hvdc2t_complete_meters(const DEVICE_ID& did)
+{
+    vector<METER> meters;
+    vector<string> keys;
+    keys.reserve(lcc_hvdc2t_meter_map.size());
+    for (auto iter = lcc_hvdc2t_meter_map.begin(); iter != lcc_hvdc2t_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
+
+    unsigned int m = keys.size();
+    for (unsigned int i=0; i<m; ++i)
+    {
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            METER meter = build_one_lcc_hvdc2t_related_meter(did, keys[i], "RECTIFIER");
+            if(meter.is_valid())
+                meters.push_back(meter);
+
+            meter = build_one_lcc_hvdc2t_related_meter(did, keys[i], "INVERTER");
+            if(meter.is_valid())
+                meters.push_back(meter);
+        }
+    }
+    return meters;
+}
+
+vector<METER> DYNAMICS_SIMULATOR::build_one_vsc_hvdc_complete_meters(const DEVICE_ID& did)
 {
     vector<METER> meters;
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_load_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::build_one_mt_hvdc_complete_meters(const DEVICE_ID& did)
 {
     vector<METER> meters;
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_ac_line_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::build_one_equivalent_device_complete_meters(const DEVICE_ID& did)
 {
     vector<METER> meters;
-    return meters;
-}
+    vector<string> keys;
+    keys.reserve(equivalent_device_meter_map.size());
+    for (auto iter = equivalent_device_meter_map.begin(); iter != equivalent_device_meter_map.end(); ++iter)
+        keys.push_back(iter->first);
+    std::sort(keys.begin(), keys.end());
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_transformer_related_meters(const DEVICE_ID& did)
-{
-    vector<METER> meters;
-    return meters;
-}
-
-vector<METER> DYNAMICS_SIMULATOR::build_one_lcc_hvdc2t_related_meters(const DEVICE_ID& did)
-{
-    vector<METER> meters;
-    return meters;
-}
-
-vector<METER> DYNAMICS_SIMULATOR::build_one_vsc_hvdc_related_meters(const DEVICE_ID& did)
-{
-    vector<METER> meters;
-    return meters;
-}
-
-vector<METER> DYNAMICS_SIMULATOR::build_one_mt_hvdc_related_meters(const DEVICE_ID& did)
-{
-    vector<METER> meters;
-    return meters;
-}
-
-vector<METER> DYNAMICS_SIMULATOR::build_one_equivalent_device_related_meters(const DEVICE_ID& did)
-{
-    vector<METER> meters;
+    unsigned int m = keys.size();
+    for (unsigned int i=0; i<m; ++i)
+    {
+        if(keys[i].find("INTERNAL VARIABLE") == std::string::npos)
+        {
+            METER meter = build_one_equivalent_device_related_meter(did, keys[i]);
+            if(meter.is_valid())
+                meters.push_back(meter);
+        }
+    }
     return meters;
 }
 
 METER DYNAMICS_SIMULATOR::build_one_bus_related_meter(unsigned int bus, string meter_type)
 {
     METER meter(*toolkit);
-    ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    if(psdb.is_bus_exist(bus))
+    DEVICE_ID device_id;
+    device_id.set_device_type(STEPS_BUS);
+    TERMINAL terminal;
+    terminal.append_bus(bus);
+    device_id.set_device_terminal(terminal);
+
+    meter.set_device_id(device_id);
+
+    meter_type = string2upper(meter_type);
+    meter.set_meter_type(meter_type);
+    if(not meter.is_valid())
     {
-        METER_SETTER setter(*toolkit);
-
-        meter_type = string2upper(meter_type);
-
-        if(meter_type=="VOLTAGE IN PU")
-            meter = setter.prepare_bus_voltage_in_pu_meter(bus);
-        if(meter_type=="ANGLE IN DEG")
-            meter = setter.prepare_bus_angle_in_deg_meter(bus);
-        if(meter_type=="ANGLE IN RAD")
-            meter = setter.prepare_bus_angle_in_rad_meter(bus);
-        if(meter_type=="FREQUENCY DEVIATION IN PU")
-            meter = setter.prepare_bus_frequency_deviation_in_pu_meter(bus);
-        if(meter_type=="FREQUENCY DEVIATION IN HZ")
-            meter = setter.prepare_bus_frequency_deviation_in_Hz_meter(bus);
-        if(meter_type=="FREQUENCY IN PU")
-            meter = setter.prepare_bus_frequency_in_pu_meter(bus);
-        if(meter_type=="FREQUENCY IN HZ")
-            meter = setter.prepare_bus_frequency_in_Hz_meter(bus);
-        if(meter_type=="VOLTAGE IN KV")
-            meter = setter.prepare_bus_voltage_in_kV_meter(bus);
-        if(meter_type=="ROCOV IN PU/S")
-            meter = setter.prepare_bus_ROCOV_in_pu_per_s_meter(bus);
-        if(meter_type=="ROCOV IN KV/S")
-            meter = setter.prepare_bus_ROCOV_in_kV_per_s_meter(bus);
-        if(meter_type=="ROCOF IN PU/S")
-            meter = setter.prepare_bus_ROCOF_in_pu_per_s_meter(bus);
-        if(meter_type=="ROCOF IN HZ/S")
-            meter = setter.prepare_bus_ROCOF_in_Hz_per_s_meter(bus);
-        if(not meter.is_valid())
-        {
-            osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for bus "<<bus;
-            toolkit->show_information_with_leading_time_stamp(osstream);
-        }
+        ostringstream osstream;
+        osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for bus "<<bus;
+        toolkit->show_information_with_leading_time_stamp(osstream);
     }
-    else
+    return meter;
+}
+
+METER DYNAMICS_SIMULATOR::build_one_meter(const DEVICE_ID& did, string meter_type, string var_name, unsigned int side_bus)
+{
+    METER meter(*toolkit);
+
+    meter.set_device_id(did);
+
+    meter_type = string2upper(meter_type);
+    meter.set_meter_type(meter_type);
+
+    if(side_bus != 0)
+        meter.set_metered_side_bus(side_bus);
+
+    if(meter_type.find("INTERNAL VARIABLE") != std::string::npos)
     {
-        osstream<<"Warning. Meter of bus "<<bus<<" cannot be set since the given bus does not exist in the power system database";
+        var_name = string2upper(var_name);
+        meter.set_internal_variable_name(var_name);
+    }
+
+    if(not meter.is_valid())
+    {
+        ostringstream osstream;
+        osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
         toolkit->show_information_with_leading_time_stamp(osstream);
     }
     return meter;
@@ -1412,703 +1210,109 @@ METER DYNAMICS_SIMULATOR::build_one_bus_related_meter(unsigned int bus, string m
 
 METER DYNAMICS_SIMULATOR::build_one_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
-    METER meter(*toolkit);
-    ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-
-    if(did.get_device_type()==STEPS_GENERATOR)
-    {
-        if(psdb.is_generator_exist(did))
-        {
-            METER_SETTER setter(*toolkit);
-
-            meter_type = string2upper(meter_type);
-
-            if(meter_type=="ROTOR ANGLE IN DEG")
-                meter = setter.prepare_generator_rotor_angle_in_deg_meter(did);
-            if(meter_type=="ROTOR ANGLE IN RAD")
-                meter = setter.prepare_generator_rotor_angle_in_rad_meter(did);
-            if(meter_type=="ROTOR SPEED IN PU")
-                meter = setter.prepare_generator_rotor_speed_in_pu_meter(did);
-            if(meter_type=="ROTOR SPEED IN HZ")
-                meter = setter.prepare_generator_rotor_speed_in_Hz_meter(did);
-            if(meter_type=="ROTOR SPEED DEVIATION IN PU")
-                meter = setter.prepare_generator_rotor_speed_deviation_in_pu_meter(did);
-            if(meter_type=="ROTOR SPEED DEVIATION IN HZ")
-                meter = setter.prepare_generator_rotor_speed_deviation_in_Hz_meter(did);
-            if(meter_type=="EXCITATION VOLTAGE IN PU")
-                meter = setter.prepare_generator_excitation_voltage_in_pu_meter(did);
-            if(meter_type=="STABILIZING SIGNAL IN PU")
-                meter = setter.prepare_generator_stabilizing_signal_in_pu_meter(did);
-            if(meter_type=="TERMINAL VOLTAGE IN PU")
-                meter = setter.prepare_generator_terminal_voltage_in_pu_meter(did);
-            if(meter_type=="INTERNAL VOLTAGE IN PU")
-                meter = setter.prepare_generator_internal_voltage_in_pu_meter(did);
-            if(meter_type=="MECHANICAL POWER IN MW")
-                meter = setter.prepare_generator_mechanical_power_in_MW_meter(did);
-            if(meter_type=="MECHANICAL POWER IN PU ON MBASE")
-                meter = setter.prepare_generator_mechanical_power_in_pu_on_mbase_meter(did);
-            if(meter_type=="MECHANICAL POWER IN PU ON SBASE")
-                meter = setter.prepare_generator_mechanical_power_in_pu_on_sbase_meter(did);
-            if(meter_type=="MECHANICAL POWER REFERENCE IN MW")
-                meter = setter.prepare_generator_mechanical_power_reference_in_MW_meter(did);
-            if(meter_type=="MECHANICAL POWER REFERENCE IN PU ON MBASE")
-                meter = setter.prepare_generator_mechanical_power_reference_in_pu_on_mbase_meter(did);
-            if(meter_type=="MECHANICAL POWER REFERENCE IN PU ON SBASE")
-                meter = setter.prepare_generator_mechanical_power_reference_in_pu_on_sbase_meter(did);
-            if(meter_type=="TERMINAL CURRENT IN KA")
-                meter = setter.prepare_generator_terminal_current_in_kA_meter(did);
-            if(meter_type=="TERMINAL CURRENT IN PU ON MBASE")
-                meter = setter.prepare_generator_terminal_current_in_pu_on_mbase_meter(did);
-            if(meter_type=="TERMINAL CURRENT IN PU ON SBASE")
-                meter = setter.prepare_generator_terminal_current_in_pu_on_sbase_meter(did);
-            if(meter_type=="TERMINAL ACTIVE POWER IN MW")
-                meter = setter.prepare_generator_terminal_active_power_in_MW_meter(did);
-            if(meter_type=="TERMINAL ACTIVE POWER IN PU ON MBASE")
-                meter = setter.prepare_generator_terminal_active_power_in_pu_on_mbase_meter(did);
-            if(meter_type=="TERMINAL ACTIVE POWER IN PU ON SBASE")
-                meter = setter.prepare_generator_terminal_active_power_in_pu_on_sbase_meter(did);
-            if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
-                meter = setter.prepare_generator_terminal_reactive_power_in_MVar_meter(did);
-            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON MBASE")
-                meter = setter.prepare_generator_terminal_reactive_power_in_pu_on_mbase_meter(did);
-            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON SBASE")
-                meter = setter.prepare_generator_terminal_reactive_power_in_pu_on_sbase_meter(did);
-            if(meter_type=="AIRGAP POWER IN MW")
-                meter = setter.prepare_generator_airgap_power_in_MW_meter(did);
-            if(meter_type=="AIRGAP POWER IN PU ON MBASE")
-                meter = setter.prepare_generator_airgap_power_in_pu_on_mbase_meter(did);
-            if(meter_type=="AIRGAP POWER IN PU ON SBASE")
-                meter = setter.prepare_generator_airgap_power_in_pu_on_sbase_meter(did);
-            if(meter_type=="ACCELERATING POWER IN MW")
-                meter = setter.prepare_generator_accelerating_power_in_MW_meter(did);
-            if(meter_type=="ACCELERATING POWER IN PU ON MBASE")
-                meter = setter.prepare_generator_accelerating_power_in_pu_on_mbase_meter(did);
-            if(meter_type=="ACCELERATING POWER IN PU ON SBASE")
-                meter = setter.prepare_generator_accelerating_power_in_pu_on_sbase_meter(did);
-            if(meter_type=="COMPENSATED VOLTAGE IN PU")
-                meter = setter.prepare_generator_compensated_voltage_in_pu_meter(did);
-            if(meter_type=="SYNC GENERATOR MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_generator_sync_generator_model_internal_variable_meter(did, var_name);
-            if(meter_type=="COMPENSATOR MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_generator_compensator_model_internal_variable_meter(did, var_name);
-            if(meter_type=="EXCITER MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_generator_exciter_model_internal_variable_meter(did, var_name);
-            if(meter_type=="STABILIZER MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_generator_stabilizer_model_internal_variable_meter(did, var_name);
-            if(meter_type=="TURBINE GOVERNOR MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_generator_turbine_governor_model_internal_variable_meter(did, var_name);
-            if(meter_type=="TURBINE LOAD CONTROLLER MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_generator_turbine_load_controller_model_internal_variable_meter(did, var_name);
-            if(not meter.is_valid())
-            {
-                osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
-                toolkit->show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            osstream<<"Warning. Meter of "<<did.get_compound_device_name()<<" cannot be set since the given device does not exist in the power system database";
-            toolkit->show_information_with_leading_time_stamp(osstream);
-        }
-    }
-    else
-    {
-        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not GENERATOR when setting up meter with "<<__FUNCTION__;
-        toolkit->show_information_with_leading_time_stamp(osstream);
-    }
-    return meter;
+    return build_one_meter(did, meter_type, var_name);
 }
 
 METER DYNAMICS_SIMULATOR::build_one_wt_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
-    METER meter(*toolkit);
-    bool successful = basic_meter_preparer::prepare_wt_generator_meter(*toolkit, meter, did);
-    if(successful)
-    {
-        meter_type = string2upper(meter_type);
-        var_name = string2upper(var_name);
-        meter.set_meter_type(meter_type);
-        if(meter_type.find("INTERNAL VARIABLE") != std::string::npos)
-            meter.set_internal_variable_name(var_name);
-        if(not meter.is_valid())
-        {
-            ostringstream osstream;
-            osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
-            toolkit->show_information_with_leading_time_stamp(osstream);
-        }
-    }
-    return meter;
+    return build_one_meter(did, meter_type, var_name);
 }
 
 METER DYNAMICS_SIMULATOR::build_one_pv_unit_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
-    METER meter(*toolkit);
-    ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-
-    if(did.get_device_type()==STEPS_PV_UNIT)
-    {
-        if(psdb.is_pv_unit_exist(did))
-        {
-            METER_SETTER setter(*toolkit);
-
-            meter_type = string2upper(meter_type);
-
-            if(meter_type=="TERMINAL CURRENT IN KA")
-                meter = setter.prepare_pv_unit_terminal_current_in_kA_meter(did);
-            if(meter_type=="TERMINAL CURRENT IN PU ON MBASE")
-                meter = setter.prepare_pv_unit_terminal_current_in_pu_on_mbase_meter(did);
-            if(meter_type=="TERMINAL CURRENT IN PU ON SBASE")
-                meter = setter.prepare_pv_unit_terminal_current_in_pu_on_sbase_meter(did);
-            if(meter_type=="TERMINAL ACTIVE POWER IN MW")
-                meter = setter.prepare_pv_unit_terminal_active_power_in_MW_meter(did);
-            if(meter_type=="TERMINAL ACTIVE POWER IN PU ON MBASE")
-                meter = setter.prepare_pv_unit_terminal_active_power_in_pu_on_mbase_meter(did);
-            if(meter_type=="TERMINAL ACTIVE POWER IN PU ON SBASE")
-                meter = setter.prepare_pv_unit_terminal_active_power_in_pu_on_sbase_meter(did);
-            if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
-                meter = setter.prepare_pv_unit_terminal_reactive_power_in_MVar_meter(did);
-            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON MBASE")
-                meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_mbase_meter(did);
-            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON SBASE")
-                meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_sbase_meter(did);
-            if(meter_type=="TERMINAL APPARENT POWER IN MVA")
-                meter = setter.prepare_pv_unit_terminal_apparent_power_in_MVA_meter(did);
-            if(meter_type=="TERMINAL APPARENT POWER IN PU ON MBASE")
-                meter = setter.prepare_pv_unit_terminal_reactive_power_in_pu_on_mbase_meter(did);
-            if(meter_type=="TERMINAL APPARENT POWER IN PU ON SBASE")
-                meter = setter.prepare_pv_unit_terminal_apparent_power_in_pu_on_sbase_meter(did);
-            if(meter_type=="ACTIVE CURRENT COMMAND IN PU")
-                meter = setter.prepare_pv_unit_active_current_command_in_pu_meter(did);
-            if(meter_type=="REACTIVE CURRENT COMMAND IN PU")
-                meter = setter.prepare_pv_unit_reactive_current_command_in_pu_meter(did);
-            if(meter_type=="ACTIVE POWER COMMAND IN PU")
-                meter = setter.prepare_pv_unit_active_power_command_in_pu_meter(did);
-            if(meter_type=="REACTIVE POWER COMMAND IN PU")
-                meter = setter.prepare_pv_unit_reactive_power_command_in_pu_meter(did);
-            if(meter_type=="REACTIVE VOLTAGE COMMAND IN PU")
-                meter = setter.prepare_pv_unit_reactive_voltage_command_in_pu_meter(did);
-            if(meter_type=="SOLAR IRRADIANCE IN PU ON S0")
-                meter = setter.prepare_pv_unit_solar_irradiance_in_pu_on_s0_meter(did);
-            if(meter_type=="SOLAR IRRADIANCE IN PU ON SREF")
-                meter = setter.prepare_pv_unit_solar_irradiance_in_pu_on_sref_meter(did);
-            if(meter_type=="SOLAR IRRADIANCE IN W/M2")
-                meter = setter.prepare_pv_unit_solar_irradiance_in_Wpm2_meter(did);
-            if(meter_type=="TEMPERATURE IN C DEG")
-                meter = setter.prepare_pv_unit_temperature_in_c_deg_meter(did);
-            if(meter_type=="MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN MW")
-                meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_MW_meter(did);
-            if(meter_type=="MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN PU ON MBASE")
-                meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_mbase_meter(did);
-            if(meter_type=="MAXIMUM AVAILABLE POWER FROM IRRADIANCE IN PU ON SBASE")
-                meter = setter.prepare_pv_unit_maximum_available_power_from_irradiance_in_pu_on_sbase_meter(did);
-            if(meter_type=="PANEL POWER IN PU ON MBASE")
-                meter = setter.prepare_pv_unit_panel_power_in_pu_on_mbase_meter(did);
-            if(meter_type=="PANEL POWER IN MW")
-                meter = setter.prepare_pv_unit_panel_power_in_MW(did);
-            if(meter_type=="PV CONVERTER MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_pv_converter_model_internal_variable_meter(did, var_name);
-            if(meter_type=="PV PANEL MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_pv_panel_model_internal_variable_meter(did, var_name);
-            if(meter_type=="PV ELECTRICAL MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_pv_electrical_model_internal_variable_meter(did, var_name);
-            if(meter_type=="PV IRRADIANCE MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_pv_irradiance_model_internal_variable_meter(did, var_name);
-            if(meter_type=="PV VRT MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_pv_vrt_model_internal_variable_meter(did, var_name);
-            if(meter_type=="PV RELAY MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_pv_relay_model_internal_variable_meter(did, var_name);
-            if(meter_type=="PV TEMPERATURE MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_pv_temperature_model_internal_variable_meter(did, var_name);
-            if(not meter.is_valid())
-            {
-                osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
-                toolkit->show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            osstream<<"Warning. Meter of "<<did.get_compound_device_name()<<" cannot be set since the given device does not exist in the power system database";
-            toolkit->show_information_with_leading_time_stamp(osstream);
-        }
-    }
-    else
-    {
-        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not PV UNIT when setting up meter with "<<__FUNCTION__;
-        toolkit->show_information_with_leading_time_stamp(osstream);
-    }
-    return meter;
+    return build_one_meter(did, meter_type, var_name);
 }
 
 METER DYNAMICS_SIMULATOR::build_one_energy_storage_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
-    METER meter(*toolkit);
-    ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-
-    if(did.get_device_type()==STEPS_ENERGY_STORAGE)
-    {
-        if(psdb.is_energy_storage_exist(did))
-        {
-            METER_SETTER setter(*toolkit);
-
-            meter_type = string2upper(meter_type);
-
-            if(meter_type=="TERMINAL CURRENT IN KA")
-                meter = setter.prepare_es_terminal_current_in_kA_meter(did);
-            if(meter_type=="TERMINAL CURRENT IN PU ON SBASE")
-                meter = setter.prepare_es_terminal_current_in_pu_on_sbase_meter(did);
-            if(meter_type=="TERMINAL CURRENT IN PU ON MBASE")
-                meter = setter.prepare_es_terminal_current_in_pu_on_mbase_meter(did);
-            if(meter_type=="TERMINAL ACTIVE POWER IN PU ON MBASE")
-                meter = setter.prepare_es_terminal_active_power_in_pu_on_mbase_meter(did);
-            if(meter_type=="TERMINAL ACTIVE POWER IN PU ON SBASE")
-                meter = setter.prepare_es_terminal_active_power_in_pu_on_sbase_meter(did);
-            if(meter_type=="TERMINAL ACTIVE POWER IN MW")
-                meter = setter.prepare_es_terminal_active_power_in_MW_meter(did);
-            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON MBASE")
-                meter = setter.prepare_es_terminal_reactive_power_in_pu_on_mbase_meter(did);
-            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON SBASE")
-                meter = setter.prepare_es_terminal_reactive_power_in_pu_on_sbase_meter(did);
-            if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
-                meter = setter.prepare_es_terminal_reactive_power_in_MVar_meter(did);
-            if(meter_type=="TERMINAL APPARENT POWER IN PU ON MBASE")
-                meter = setter.prepare_es_terminal_apparent_power_in_pu_on_mbase_meter(did);
-            if(meter_type=="TERMINAL APPARENT POWER IN PU ON SBASE")
-                meter = setter.prepare_es_terminal_apparent_power_in_pu_on_sbase_meter(did);
-            if(meter_type=="TERMINAL APPARENT POWER IN MVA")
-                meter = setter.prepare_es_terminal_apparent_power_in_MVA_meter(did);
-            if(meter_type=="ACTIVE CURRENT COMMAND IN PU")
-                meter = setter.prepare_es_active_current_command_in_pu_meter(did);
-            if(meter_type=="REACTIVE CURRENT COMMAND IN PU")
-                meter = setter.prepare_es_reactive_current_command_in_pu_meter(did);
-            if(meter_type=="ACTIVE POWER COMMAND IN PU")
-                meter = setter.prepare_es_active_power_command_in_pu_meter(did);
-            if(meter_type=="REACTIVE POWER COMMAND IN PU")
-                meter = setter.prepare_es_reactive_power_command_in_pu_meter(did);
-            if(meter_type=="REACTIVE VOLTAGE COMMAND IN PU")
-                meter = setter.prepare_es_reactive_voltage_command_in_pu_meter(did);
-            if(meter_type=="SOC POWER IN PU ON MBASE")
-                meter = setter.prepare_es_soc_power_in_pu_on_mbase_meter(did);
-            if(meter_type=="SOC POWER IN PU ON SBASE")
-                meter = setter.prepare_es_soc_power_in_pu_on_sbase_meter(did);
-            if(meter_type=="SOC POWER IN MW")
-                meter = setter.prepare_es_soc_power_in_MW_meter(did);
-            if(meter_type=="STATE OF CHARGE IN PU")
-                meter = setter.prepare_es_state_of_charge_in_pu_meter(did);
-            if(meter_type=="VALVE REFERENCE IN PU")
-                meter = setter.prepare_es_valve_reference_in_pu_meter(did);
-            if(meter_type=="VALVE IN PU")
-                meter = setter.prepare_es_valve_in_pu_meter(did);
-            if(meter_type=="ACTIVE POWER REFERENCE IN PU ON MBASE")
-                meter = setter.prepare_es_active_power_reference_in_pu_on_mbase_meter(did);
-            if(meter_type=="FREQUENCY REGULATION POWER IN PU ON MBASE")
-                meter = setter.prepare_es_frequency_regulation_power_in_pu_on_mbase_meter(did);
-            if(meter_type=="ROTOR SPEED REFERENCE IN PU")
-                meter = setter.prepare_es_rotor_speed_reference_in_pu_meter(did);
-            if(meter_type=="ROTOR SPEED IN PU")
-                meter = setter.prepare_es_rotor_speed_in_pu_meter(did);
-            if(meter_type=="MECHANICAL POWER IN PU ON MBASE")
-                meter = setter.prepare_es_mechanical_power_in_pu_on_mbase_meter(did);
-            if(meter_type=="ES CONVERTOR MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_es_converter_model_internal_variable_meter(did, var_name);
-            if(meter_type=="ES ELECTRICAL MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_es_electrical_model_internal_variable_meter(did, var_name);
-            if(meter_type=="ES SOC MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_es_soc_model_internal_variable_meter(did, var_name);
-            if(meter_type=="ES VRT MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_es_vrt_model_internal_variable_meter(did, var_name);
-            if(meter_type=="ES RELAY MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_es_relay_model_internal_variable_meter(did, var_name);
-            if(meter_type=="ES PRIMARY MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_es_primary_model_internal_variable_meter(did, var_name);
-            if(meter_type=="ES ROTOR MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_es_rotor_model_internal_variable_meter(did, var_name);
-            if(meter_type=="ES AUXILIARY MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_es_auxiliary_model_internal_variable_meter(did, var_name);
-            if(not meter.is_valid())
-            {
-                osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
-                toolkit->show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            osstream<<"Warning. Meter of "<<did.get_compound_device_name()<<" cannot be set since the given device does not exist in the power system database";
-            toolkit->show_information_with_leading_time_stamp(osstream);
-        }
-    }
-    else
-    {
-        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not ENERGY STORAGE when setting up meter with "<<__FUNCTION__;
-        toolkit->show_information_with_leading_time_stamp(osstream);
-    }
-    return meter;
+    return build_one_meter(did, meter_type, var_name);
 }
 
 METER DYNAMICS_SIMULATOR::build_one_sv_source_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
-    METER meter(*toolkit);
-    ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-
-    if(did.get_device_type()==STEPS_SV_SOURCE)
-    {
-        if(psdb.is_sv_source_exist(did))
-        {
-            METER_SETTER setter(*toolkit);
-
-            meter_type = string2upper(meter_type);
-
-            if(meter_type=="TERMINAL CURRENT IN PU ON SBASE")
-                meter = setter.prepare_svs_terminal_current_in_pu_on_sbase_meter(did);
-            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON SBASE")
-                meter = setter.prepare_svs_terminal_reactive_power_in_pu_on_sbase_meter(did);
-            if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
-                meter = setter.prepare_svs_terminal_reactive_power_in_MVar_meter(did);
-            if(meter_type=="SVS CONTROL MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_svs_control_model_internal_variable_meter(did, var_name);
-
-            if(not meter.is_valid())
-            {
-                osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
-                toolkit->show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            osstream<<"Warning. Meter of "<<did.get_compound_device_name()<<" cannot be set since the given device does not exist in the power system database";
-            toolkit->show_information_with_leading_time_stamp(osstream);
-        }
-    }
-    else
-    {
-        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not SV SOURCE when setting up meter with "<<__FUNCTION__;
-        toolkit->show_information_with_leading_time_stamp(osstream);
-    }
-    return meter;
+    return build_one_meter(did, meter_type, var_name);
 }
 
 METER DYNAMICS_SIMULATOR::build_one_load_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
-    METER meter(*toolkit);
-    ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-
-    if(did.get_device_type()==STEPS_LOAD)
-    {
-        if(psdb.is_load_exist(did))
-        {
-            METER_SETTER setter(*toolkit);
-
-            meter_type = string2upper(meter_type);
-            if(meter_type=="CURRENT IN KA")
-                meter = setter.prepare_load_current_in_kA_meter(did);
-            if(meter_type=="CURRENT IN PU")
-                meter = setter.prepare_load_current_in_pu_meter(did);
-            if(meter_type=="ACTIVE POWER IN MW")
-                meter = setter.prepare_load_active_power_in_MW_meter(did);
-            if(meter_type=="REACTIVE POWER IN MVAR")
-                meter = setter.prepare_load_reactive_power_in_MVar_meter(did);
-            if(meter_type=="ACTIVE POWER IN PU")
-                meter = setter.prepare_load_active_power_in_pu_meter(did);
-            if(meter_type=="REACTIVE POWER IN PU")
-                meter = setter.prepare_load_reactive_power_in_pu_meter(did);
-            if(meter_type=="TOTAL SCALE IN PU")
-                meter = setter.prepare_load_total_scale_in_pu_meter(did);
-            if(meter_type=="MANUALLY SCALE IN PU")
-                meter = setter.prepare_load_manually_scale_in_pu_meter(did);
-            if(meter_type=="RELAY SHED SCALE IN PU")
-                meter = setter.prepare_load_relay_shed_scale_in_pu_meter(did);
-            if(meter_type=="LOAD MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_load_load_model_internal_variable_meter(did, var_name);
-            if(meter_type=="FREQUENCY RELAY MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_load_frequency_relay_model_internal_variable_meter(did, var_name);
-            if(meter_type=="VOLTAGE RELAY MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_load_voltage_relay_model_internal_variable_meter(did, var_name);
-
-            if(not meter.is_valid())
-            {
-                osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
-                toolkit->show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            osstream<<"Warning. Meter of "<<did.get_compound_device_name()<<" cannot be set since the given device does not exist in the power system database";
-            toolkit->show_information_with_leading_time_stamp(osstream);
-        }
-    }
-    else
-    {
-        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not LOAD when setting up meter with "<<__FUNCTION__;
-        toolkit->show_information_with_leading_time_stamp(osstream);
-    }
-    return meter;
+    return build_one_meter(did, meter_type, var_name);
 }
 
 METER DYNAMICS_SIMULATOR::build_one_ac_line_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
 {
     METER meter(*toolkit);
-    ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-
-    if(did.get_device_type()==STEPS_AC_LINE)
+    if(psdb.is_ac_line_exist(did))
     {
-        if(psdb.is_ac_line_exist(did))
-        {
-            METER_SETTER setter(*toolkit);
+        side = string2upper(side);
 
-            meter_type = string2upper(meter_type);
-            side = string2upper(side);
+        AC_LINE* line = psdb.get_ac_line(did);
+        unsigned int bus = 0;
+        if(side=="SENDING" or side=="S")
+            bus = line->get_sending_side_bus();
+        if(side=="RECEIVING" or side=="R")
+            bus = line->get_receiving_side_bus();
 
-            AC_LINE* line = psdb.get_ac_line(did);
-            unsigned int bus = 0;
-            if(side=="SENDING" or side=="S")
-                bus = line->get_sending_side_bus();
-            if(side=="RECEIVING" or side=="R")
-                bus = line->get_receiving_side_bus();
-            if(bus==0)
-                return meter;
-
-            if(meter_type=="ACTIVE POWER IN MW")
-                meter = setter.prepare_ac_line_active_power_in_MW_meter(did, bus);
-            if(meter_type=="REACTIVE POWER IN MVAR")
-                meter = setter.prepare_ac_line_reactive_power_in_MVar_meter(did, bus);
-            if(meter_type=="CURRENT IN KA")
-                meter = setter.prepare_ac_line_current_in_kA_meter(did, bus);
-            if(meter_type=="APPARENT IMPEDANCE IN OHM")
-                meter = setter.prepare_ac_line_apparent_impedance_in_Ohm_meter(did, bus);
-            if(meter_type=="APPARENT IMPEDANCE ANGLE IN DEG")
-                meter = setter.prepare_ac_line_apparent_impedance_angle_in_deg_meter(did, bus);
-            if(meter_type=="CURRENT IN PU")
-                meter = setter.prepare_ac_line_current_in_pu_meter(did, bus);
-            if(meter_type=="ACTIVE POWER IN PU")
-                meter = setter.prepare_ac_line_active_power_in_pu_meter(did, bus);
-            if(meter_type=="REACTIVE POWER IN PU")
-                meter = setter.prepare_ac_line_reactive_power_in_pu_meter(did, bus);
-            if(meter_type=="APPARENT IMPEDANCE IN PU")
-                meter = setter.prepare_ac_line_apparent_impedance_in_pu_meter(did, bus);
-            if(meter_type=="APPARENT IMPEDANCE ANGLE IN RAD")
-                meter = setter.prepare_ac_line_apparent_impedance_angle_in_rad_meter(did, bus);
-            if(not meter.is_valid())
-            {
-                osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
-                toolkit->show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            osstream<<"Warning. Meter of "<<did.get_compound_device_name()<<" cannot be set since the given device does not exist in the power system database";
-            toolkit->show_information_with_leading_time_stamp(osstream);
-        }
-    }
-    else
-    {
-        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not LINE when setting up meter with "<<__FUNCTION__;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        meter = build_one_ac_line_related_meter(did, meter_type, bus, var_name);
     }
     return meter;
+}
+
+METER DYNAMICS_SIMULATOR::build_one_ac_line_related_meter(const DEVICE_ID& did, string meter_type, unsigned int bus, string var_name)
+{
+    return build_one_meter(did, meter_type, var_name, bus);
 }
 
 METER DYNAMICS_SIMULATOR::build_one_transformer_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
 {
     METER meter(*toolkit);
-    ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-
-    if(did.get_device_type()==STEPS_TRANSFORMER)
+    if(psdb.is_transformer_exist(did))
     {
-        if(psdb.is_transformer_exist(did))
-        {
-            METER_SETTER setter(*toolkit);
+        side = string2upper(side);
 
-            meter_type = string2upper(meter_type);
-            side = string2upper(side);
+        TRANSFORMER* trans = psdb.get_transformer(did);
+        unsigned int bus = trans->get_winding_bus(transformer_winding_string2winding_side(side));
 
-            TRANSFORMER* trans = psdb.get_transformer(did);
-            unsigned int bus = 0;
-            if(side=="PRIMARY" or side=="P")
-                bus = trans->get_winding_bus(PRIMARY_SIDE);
-            if(side=="SECONDARY" or side=="S")
-                bus = trans->get_winding_bus(SECONDARY_SIDE);
-            if(side=="TERTIARY" or side=="T")
-                bus = trans->get_winding_bus(TERTIARY_SIDE);
-            if(bus==0)
-                return meter;
-
-            if(meter_type=="ACTIVE POWER IN MW")
-                meter = setter.prepare_transformer_active_power_in_MW_meter(did, bus);
-            if(meter_type=="REACTIVE POWER IN MVAR")
-                meter = setter.prepare_transformer_reactive_power_in_MVar_meter(did, bus);
-            if(meter_type=="CURRENT IN KA")
-                meter = setter.prepare_transformer_current_in_kA_meter(did, bus);
-            if(meter_type=="CURRENT IN PU")
-                meter = setter.prepare_transformer_current_in_pu_meter(did, bus);
-            if(meter_type=="ACTIVE POWER IN PU")
-                meter = setter.prepare_transformer_active_power_in_pu_meter(did, bus);
-            if(meter_type=="REACTIVE POWER IN PU")
-                meter = setter.prepare_transformer_reactive_power_in_pu_meter(did, bus);
-
-            if(not meter.is_valid())
-            {
-                osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
-                toolkit->show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            osstream<<"Warning. Meter of "<<did.get_compound_device_name()<<" cannot be set since the given device does not exist in the power system database";
-            toolkit->show_information_with_leading_time_stamp(osstream);
-        }
-    }
-    else
-    {
-        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not TRANSFORMER when setting up meter with "<<__FUNCTION__;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        meter = build_one_transformer_related_meter(did, meter_type, bus, var_name);
     }
     return meter;
 }
 
+METER DYNAMICS_SIMULATOR::build_one_transformer_related_meter(const DEVICE_ID& did, string meter_type, unsigned int side_bus, string var_name)
+{
+    return build_one_meter(did, meter_type, var_name, side_bus);
+}
 
 METER DYNAMICS_SIMULATOR::build_one_lcc_hvdc2t_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
 {
     METER meter(*toolkit);
-    ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-
-    if(did.get_device_type()==STEPS_LCC_HVDC2T)
+    if(psdb.is_lcc_hvdc2t_exist(did))
     {
-        if(psdb.is_lcc_hvdc2t_exist(did))
-        {
-            METER_SETTER setter(*toolkit);
+        side = string2upper(side);
 
-            meter_type = string2upper(meter_type);
-            side = string2upper(side);
+        LCC_HVDC2T* hvdc = psdb.get_lcc_hvdc2t(did);
+        unsigned int bus = hvdc->get_converter_bus(converter_string2side(side));
 
-            if(side=="RECTIFIER" or side=="R")
-            {
-                if(meter_type=="AC VOLTAGE IN PU")
-                    meter = setter.prepare_lcc_hvdc2t_rectifier_ac_voltage_in_pu_meter(did);
-                if(meter_type=="DC VOLTAGE IN KV")
-                    meter = setter.prepare_lcc_hvdc2t_rectifier_dc_voltage_in_kV_meter(did);
-                if(meter_type=="DC CURRENT IN KA")
-                    meter = setter.prepare_lcc_hvdc2t_rectifier_dc_current_in_kA_meter(did);
-                if(meter_type=="ALPHA IN DEG")
-                    meter = setter.prepare_lcc_hvdc2t_rectifier_alpha_in_deg_meter(did);
-                if(meter_type=="MU IN DEG")
-                    meter = setter.prepare_lcc_hvdc2t_rectifier_mu_in_deg_meter(did);
-                if(meter_type=="DC POWER IN MW")
-                    meter = setter.prepare_lcc_hvdc2t_rectifier_dc_power_in_MW_meter(did);
-                if(meter_type=="AC ACTIVE POWER IN MW")
-                    meter = setter.prepare_lcc_hvdc2t_rectifier_ac_active_power_in_MW_meter(did);
-                if(meter_type=="AC REACTIVE POWER IN MVAR")
-                    meter = setter.prepare_lcc_hvdc2t_rectifier_ac_reactive_power_in_MVar_meter(did);
-                if(meter_type=="AC CURRENT IN KA")
-                    meter = setter.prepare_lcc_hvdc2t_rectifier_ac_current_in_kA_meter(did);
-            }
-
-            if(side=="INVERTER" or side=="I")
-            {
-                if(meter_type=="AC VOLTAGE IN PU")
-                    meter = setter.prepare_lcc_hvdc2t_inverter_ac_voltage_in_pu_meter(did);
-                if(meter_type=="DC VOLTAGE IN KV")
-                    meter = setter.prepare_lcc_hvdc2t_inverter_dc_voltage_in_kV_meter(did);
-                if(meter_type=="DC CURRENT IN KA")
-                    meter = setter.prepare_lcc_hvdc2t_inverter_dc_current_in_kA_meter(did);
-                if(meter_type=="GAMMA IN DEG")
-                    meter = setter.prepare_lcc_hvdc2t_inverter_gamma_in_deg_meter(did);
-                if(meter_type=="MU IN DEG")
-                    meter = setter.prepare_lcc_hvdc2t_inverter_mu_in_deg_meter(did);
-                if(meter_type=="DC POWER IN MW")
-                    meter = setter.prepare_lcc_hvdc2t_inverter_dc_power_in_MW_meter(did);
-                if(meter_type=="AC ACTIVE POWER IN MW")
-                    meter = setter.prepare_lcc_hvdc2t_inverter_ac_active_power_in_MW_meter(did);
-                if(meter_type=="AC REACTIVE POWER IN MVAR")
-                    meter = setter.prepare_lcc_hvdc2t_inverter_ac_reactive_power_in_MVar_meter(did);
-                if(meter_type=="AC CURRENT IN KA")
-                    meter = setter.prepare_lcc_hvdc2t_inverter_ac_current_in_kA_meter(did);
-            }
-             if(meter_type=="2T LCC HVDC MODEL INTERNAL VARIABLE")
-                    meter = setter.prepare_lcc_hvdc2t_model_internal_variable_meter(did, var_name);
-
-            if(not meter.is_valid())
-            {
-                osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
-                toolkit->show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            osstream<<"Warning. Meter of "<<did.get_compound_device_name()<<" cannot be set since the given device does not exist in the power system database";
-            toolkit->show_information_with_leading_time_stamp(osstream);
-        }
+        meter = build_one_lcc_hvdc2t_related_meter(did, meter_type, bus, var_name);
     }
-    else
-    {
-        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not LCC_HVDC2T when setting up meter with "<<__FUNCTION__;
-        toolkit->show_information_with_leading_time_stamp(osstream);
-    }
+    return meter;
+
+}
+
+METER DYNAMICS_SIMULATOR::build_one_lcc_hvdc2t_related_meter(const DEVICE_ID& did, string meter_type, unsigned int side_bus, string var_name)
+{
+    METER meter(*toolkit);
+    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    if(psdb.is_lcc_hvdc2t_exist(did))
+        meter = build_one_meter(did, meter_type, var_name, side_bus);
     return meter;
 }
 
 METER DYNAMICS_SIMULATOR::build_one_vsc_hvdc_related_meter(const DEVICE_ID& did, string meter_type, unsigned int side, string var_name)
 {
-    METER meter(*toolkit);
-    ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-
-    if(did.get_device_type()==STEPS_VSC_HVDC)
-    {
-        if(psdb.is_vsc_hvdc_exist(did))
-        {
-            METER_SETTER setter(*toolkit);
-
-            meter_type = string2upper(meter_type);
-
-            if(meter_type=="CONVERTER DC CURRENT IN KA")
-                meter = setter.prepare_vsc_hvdc_converter_dc_current_in_kA_meter(did, side);
-            if(meter_type=="CONVERTER AC CURRENT IN KA")
-                meter = setter.prepare_vsc_hvdc_converter_ac_current_in_kA_meter(did, side);
-            if(meter_type=="CONVERTER AC VOLTAGE IN KV")
-                meter = setter.prepare_vsc_hvdc_converter_ac_voltage_in_kV_meter(did, side);
-            if(meter_type=="CONVERTER AC VOLTAGE IN PU")
-                meter = setter.prepare_vsc_hvdc_converter_ac_voltage_in_pu_meter(did, side);
-            if(meter_type=="CONVERTER DC POWER IN MW")
-                meter = setter.prepare_vsc_hvdc_converter_dc_power_in_MW_meter(did, side);
-            if(meter_type=="CONVERTER DC VOLTAGE IN KV")
-                meter = setter.prepare_vsc_hvdc_converter_dc_voltage_in_kV_meter(did, side);
-            if(meter_type=="CONVERTER AC ACTIVE POWER IN MW")
-                meter = setter.prepare_vsc_hvdc_converter_ac_active_power_in_MW_meter(did, side);
-            if(meter_type=="CONVERTER AC REACTIVE POWER IN MVAR")
-                meter = setter.prepare_vsc_hvdc_converter_ac_reactive_power_in_MVar_meter(did, side);
-            if(meter_type=="DC BUS VOLTAGE IN KV")
-                meter = setter.prepare_vsc_hvdc_dc_bus_voltage_in_kV_meter(did, side);
-            if(meter_type=="VSC LCC_HVDC2T MODEL INTERNAL VARIABLE")
-            {
-                var_name = string2upper(var_name);
-                meter = setter.prepare_vsc_hvdc_model_internal_variable_meter(did, var_name, side);
-            }
-
-            if(not meter.is_valid())
-            {
-                osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
-                toolkit->show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            osstream<<"Warning. Meter of "<<did.get_compound_device_name()<<" cannot be set since the given device does not exist in the power system database";
-            toolkit->show_information_with_leading_time_stamp(osstream);
-        }
-    }
-    else
-    {
-        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not VSC HVDC when setting up meter with "<<__FUNCTION__;
-        toolkit->show_information_with_leading_time_stamp(osstream);
-    }
-    return meter;
+    return build_one_meter(did, meter_type, var_name, side);
 }
 
 METER DYNAMICS_SIMULATOR::build_one_vsc_hvdc_related_meter(string vsc_name, string meter_type, unsigned int side, string var_name)
@@ -2281,90 +1485,5 @@ METER DYNAMICS_SIMULATOR::build_one_mt_hvdc_related_meter(string mtdc_name, stri
 
 METER DYNAMICS_SIMULATOR::build_one_equivalent_device_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
-    METER meter(*toolkit);
-    ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-
-    if(did.get_device_type()==STEPS_EQUIVALENT_DEVICE)
-    {
-        if(psdb.is_equivalent_device_exist(did))
-        {
-            METER_SETTER setter(*toolkit);
-
-            meter_type = string2upper(meter_type);
-            if(meter_type=="VOLTAGE SOURCE VOLTAGE IN PU")
-                meter = setter.prepare_equivalent_device_voltage_source_voltage_in_pu_meter(did);
-            if(meter_type=="VOLTAGE SOURCE VOLTAGE ANGLE IN DEG")
-                meter = setter.prepare_equivalent_device_voltage_source_voltage_angle_in_deg_meter(did);
-            if(meter_type=="VOLTAGE SOURCE RESISTANCE IN PU")
-                meter = setter.prepare_equivalent_device_voltage_source_resistance_in_pu_meter(did);
-            if(meter_type=="VOLTAGE SOURCE REACTANCE IN PU")
-                meter = setter.prepare_equivalent_device_voltage_source_reactance_in_pu_meter(did);
-            if(meter_type=="ACTIVE CONSTANT POWER LOAD IN MW")
-                meter = setter.prepare_equivalent_device_nominal_active_constant_power_load_in_MW_meter(did);
-            if(meter_type=="REACTIVE CONSTANT POWER LOAD IN MVAR")
-                meter = setter.prepare_equivalent_device_nominal_reactive_constant_power_load_in_MVar_meter(did);
-            if(meter_type=="ACTIVE CONSTANT CURRENT LOAD IN MW")
-                meter = setter.prepare_equivalent_device_nominal_active_constant_current_load_in_MW_meter(did);
-            if(meter_type=="REACTIVE CONSTANT CURRENT LOAD IN MVAR")
-                meter = setter.prepare_equivalent_device_nominal_reactive_constant_current_load_in_MVar_meter(did);
-            if(meter_type=="ACTIVE CONSTANT IMPEDANCE LOAD IN MW")
-                meter = setter.prepare_equivalent_device_nominal_active_constant_impedance_load_in_MW_meter(did);
-            if(meter_type=="REACTIVE CONSTANT IMPEDANCE LOAD IN MVAR")
-                meter = setter.prepare_equivalent_device_nominal_reactive_constant_impedance_load_in_MVar_meter(did);
-            if(meter_type=="ACTIVE POWER GENERATION IN MW")
-                meter = setter.prepare_equivalent_device_active_power_generation_in_MW_meter(did);
-            if(meter_type=="REACTIVE POWER GENERATION IN MVAR")
-                meter = setter.prepare_equivalent_device_reactive_power_generation_in_MVar_meter(did);
-            if(meter_type=="ACTIVE POWER LOAD IN MW")
-                meter = setter.prepare_equivalent_device_active_power_load_in_MW_meter(did);
-            if(meter_type=="REACTIVE POWER LOAD IN MVAR")
-                meter = setter.prepare_equivalent_device_reactive_power_load_in_MVar_meter(did);
-            if(meter_type=="ACTIVE POWER NET LOAD IN MW")
-                meter = setter.prepare_equivalent_device_active_power_net_load_in_MW_meter(did);
-            if(meter_type=="REACTIVE POWER NET LOAD IN MVAR")
-                meter = setter.prepare_equivalent_device_reactive_power_net_load_in_MVar_meter(did);
-            if(meter_type=="ACTIVE CONSTANT POWER LOAD IN PU")
-                meter = setter.prepare_equivalent_device_nominal_active_constant_power_load_in_pu_meter(did);
-            if(meter_type=="REACTIVE CONSTANT POWER LOAD IN PU")
-                meter = setter.prepare_equivalent_device_nominal_reactive_constant_power_load_in_pu_meter(did);
-            if(meter_type=="ACTIVE CONSTANT CURRENT LOAD IN PU")
-                meter = setter.prepare_equivalent_device_nominal_active_constant_current_load_in_pu_meter(did);
-            if(meter_type=="REACTIVE CONSTANT CURRENT LOAD IN PU")
-                meter = setter.prepare_equivalent_device_nominal_reactive_constant_current_load_in_pu_meter(did);
-            if(meter_type=="ACTIVE CONSTANT IMPEDANCE LOAD IN PU")
-                meter = setter.prepare_equivalent_device_nominal_active_constant_impedance_load_in_pu_meter(did);
-            if(meter_type=="REACTIVE CONSTANT IMPEDANCE LOAD IN PU")
-                meter = setter.prepare_equivalent_device_nominal_reactive_constant_impedance_load_in_pu_meter(did);
-            if(meter_type=="ACTIVE POWER GENERATION IN PU")
-                meter = setter.prepare_equivalent_device_active_power_generation_in_pu_meter(did);
-            if(meter_type=="REACTIVE POWER GENERATION IN PU")
-                meter = setter.prepare_equivalent_device_reactive_power_generation_in_pu_meter(did);
-            if(meter_type=="ACTIVE POWER LOAD IN PU")
-                meter = setter.prepare_equivalent_device_active_power_load_in_pu_meter(did);
-            if(meter_type=="REACTIVE POWER LOAD IN PU")
-                meter = setter.prepare_equivalent_device_reactive_power_load_in_pu_meter(did);
-            if(meter_type=="ACTIVE POWER NET LOAD IN PU")
-                meter = setter.prepare_equivalent_device_active_power_net_load_in_pu_meter(did);
-            if(meter_type=="REACTIVE POWER NET LOAD IN PU")
-                meter = setter.prepare_equivalent_device_reactive_power_net_load_in_pu_meter(did);
-
-            if(not meter.is_valid())
-            {
-                osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_compound_device_name();
-                toolkit->show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            osstream<<"Warning. Meter of "<<did.get_compound_device_name()<<" cannot be set since the given device does not exist in the power system database";
-            toolkit->show_information_with_leading_time_stamp(osstream);
-        }
-    }
-    else
-    {
-        osstream<<"Warning. The device type of "<<did.get_compound_device_name()<<" is not EQUIVALENT DEVICE when setting up meter with "<<__FUNCTION__;
-        toolkit->show_information_with_leading_time_stamp(osstream);
-    }
-    return meter;
+    return build_one_meter(did, meter_type, var_name);
 }

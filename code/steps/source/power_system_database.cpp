@@ -2435,6 +2435,44 @@ bool POWER_SYSTEM_DATABASE::is_owner_exist(const unsigned int no) const
     else                       return false;
 }
 
+bool POWER_SYSTEM_DATABASE::is_device_exist(const DEVICE_ID& device_id) const
+{
+    switch(device_id.get_device_type())
+    {
+        case STEPS_BUS:
+        {
+            unsigned int bus = device_id.get_device_terminal()[0];
+            return is_bus_exist(bus);
+        }
+        case STEPS_GENERATOR:
+            return is_generator_exist(device_id);
+        case STEPS_WT_GENERATOR:
+            return is_wt_generator_exist(device_id);
+        case STEPS_PV_UNIT:
+            return is_pv_unit_exist(device_id);
+        case STEPS_ENERGY_STORAGE:
+            return is_energy_storage_exist(device_id);
+        case STEPS_SV_SOURCE:
+            return is_sv_source_exist(device_id);
+        case STEPS_LOAD:
+            return is_load_exist(device_id);
+        case STEPS_AC_LINE:
+            return is_ac_line_exist(device_id);
+        case STEPS_TRANSFORMER:
+            return is_transformer_exist(device_id);
+        case STEPS_LCC_HVDC2T:
+            return is_lcc_hvdc2t_exist(device_id);
+        case STEPS_VSC_HVDC:
+            return is_vsc_hvdc_exist(device_id);
+        case STEPS_HYBRID_DC:
+            return is_mt_hvdc_exist(device_id);
+        case STEPS_EQUIVALENT_DEVICE:
+            return is_equivalent_device_exist(device_id);
+        default:
+            return false;
+    }
+}
+
 void POWER_SYSTEM_DATABASE::change_bus_number(unsigned int original_bus_number, unsigned int new_bus_number)
 {
     ostringstream osstream;

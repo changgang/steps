@@ -47,7 +47,7 @@ void METER_SETTER_TEST::test_constructor()
 
 }
 
-void METER_SETTER_TEST::test_prepare_bus_related_meters()
+void METER_SETTER_TEST::test_prepare_bus_complete_meters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_SETTER_TEST");
 
@@ -111,7 +111,7 @@ void METER_SETTER_TEST::test_prepare_bus_related_meters()
     TEST_ASSERT(meter.get_meter_type()=="ROCOF IN HZ/S");
 }
 
-void METER_SETTER_TEST::test_prepare_ac_line_related_meters()
+void METER_SETTER_TEST::test_prepare_ac_line_complete_meters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_SETTER_TEST");
 
@@ -229,7 +229,7 @@ void METER_SETTER_TEST::test_prepare_ac_line_related_meters()
     TEST_ASSERT(meter.get_metered_side_bus()==2);
 }
 
-void METER_SETTER_TEST::test_prepare_transformer_related_meters()
+void METER_SETTER_TEST::test_prepare_transformer_complete_meters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_SETTER_TEST");
 
@@ -401,7 +401,7 @@ void METER_SETTER_TEST::test_prepare_transformer_related_meters()
     TEST_ASSERT(meter.get_metered_side_bus()==3);
 }
 
-void METER_SETTER_TEST::test_prepare_load_related_meters()
+void METER_SETTER_TEST::test_prepare_load_complete_meters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_SETTER_TEST");
 
@@ -469,7 +469,7 @@ void METER_SETTER_TEST::test_prepare_load_related_meters()
     TEST_ASSERT(meter.get_internal_variable_name()=="SHED SCALE IN PU");
 }
 
-void METER_SETTER_TEST::test_prepare_generator_related_meters()
+void METER_SETTER_TEST::test_prepare_generator_complete_meters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_SETTER_TEST");
 
@@ -628,7 +628,7 @@ void METER_SETTER_TEST::test_prepare_generator_related_meters()
     TEST_ASSERT(meter.get_internal_variable_name()=="STATE@POWER SENSOR");
 }
 
-void METER_SETTER_TEST::test_prepare_wt_generator_related_meters()
+void METER_SETTER_TEST::test_prepare_wt_generator_complete_meters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_SETTER_TEST");
 
@@ -783,7 +783,7 @@ void METER_SETTER_TEST::test_prepare_wt_generator_related_meters()
     TEST_ASSERT(meter.get_internal_variable_name()=="WIND SPEED IN M/S");
 }
 
-void METER_SETTER_TEST::test_prepare_pv_unit_related_meters()
+void METER_SETTER_TEST::test_prepare_pv_unit_complete_meters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_SETTER_TEST");
 
@@ -860,7 +860,7 @@ void METER_SETTER_TEST::test_prepare_pv_unit_related_meters()
     TEST_ASSERT(meter.get_internal_variable_name()=="STATE@PRIMARY FREQUENCY CONTROL");*/
 }
 
-void METER_SETTER_TEST::test_prepare_energy_storage_related_meters()
+void METER_SETTER_TEST::test_prepare_energy_storage_complete_meters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_SETTER_TEST");
 
@@ -910,7 +910,7 @@ void METER_SETTER_TEST::test_prepare_energy_storage_related_meters()
     TEST_ASSERT(meter.get_internal_variable_name()=="STATE OF ENERGY");
 }
 
-void METER_SETTER_TEST::test_prepare_lcc_hvdc2t_related_meters()
+void METER_SETTER_TEST::test_prepare_lcc_hvdc2t_complete_meters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_SETTER_TEST");
 
@@ -1001,7 +1001,7 @@ void METER_SETTER_TEST::test_prepare_lcc_hvdc2t_related_meters()
     TEST_ASSERT(meter.get_internal_variable_name()=="STATE@INVERTER DC VOLTAGE SENSOR");
 }
 
-void METER_SETTER_TEST::test_prepare_vsc_hvdc_related_meters()
+void METER_SETTER_TEST::test_prepare_vsc_hvdc_complete_meters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_SETTER_TEST");
 
@@ -1076,7 +1076,7 @@ void METER_SETTER_TEST::test_prepare_vsc_hvdc_related_meters()
 
 }
 
-void METER_SETTER_TEST::test_prepare_equivalent_device_related_meters()
+void METER_SETTER_TEST::test_prepare_equivalent_device_complete_meters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_SETTER_TEST");
 

@@ -164,6 +164,7 @@ class POWER_SYSTEM_DATABASE
         bool is_area_exist(const unsigned int no) const;
         bool is_zone_exist(const unsigned int no) const;
         bool is_owner_exist(const unsigned int no) const;
+        bool is_device_exist(const DEVICE_ID& device_id) const;
 
         void change_bus_number(unsigned int original_bus_number, unsigned int new_bus_number);
         void change_bus_number_with_file(string file);

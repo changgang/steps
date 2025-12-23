@@ -307,7 +307,16 @@ void build_transformer_meter_map()
 void build_lcc_hvdc2t_meter_map()
 {
     using namespace lcc_hvdc2t_meter_getter;
-    lcc_hvdc2t_meter_map.insert({"DC CURRENT IN KA",                    get_dc_current_in_kA});
+    lcc_hvdc2t_meter_map.insert({"DC CURRENT IN KA",          get_dc_current_in_kA});
+    lcc_hvdc2t_meter_map.insert({"AC CURRENT IN KA",          get_ac_current_in_kA});
+    lcc_hvdc2t_meter_map.insert({"ANGLE IN DEG",              get_angle_in_deg});
+    lcc_hvdc2t_meter_map.insert({"MU IN DEG",                 get_mu_in_deg});
+    lcc_hvdc2t_meter_map.insert({"DC VOLTAGE IN KV",          get_dc_voltage_in_kV});
+    lcc_hvdc2t_meter_map.insert({"AC VOLTAGE IN PU",          get_ac_voltage_in_pu});
+    lcc_hvdc2t_meter_map.insert({"DC POWER IN MW",            get_dc_power_in_MW});
+    lcc_hvdc2t_meter_map.insert({"AC ACTIVE POWER IN MW",     get_ac_active_power_in_MW});
+    lcc_hvdc2t_meter_map.insert({"AC REACTIVE POWER IN MVAR", get_ac_reactive_power_in_MVar});
+    /*
     lcc_hvdc2t_meter_map.insert({"RECTIFIER DC CURRENT IN KA",          get_rectifier_dc_current_in_kA});
     lcc_hvdc2t_meter_map.insert({"RECTIFIER AC CURRENT IN KA",          get_rectifier_ac_current_in_kA});
     lcc_hvdc2t_meter_map.insert({"INVERTER DC CURRENT IN KA",           get_inverter_dc_current_in_kA});
@@ -326,6 +335,7 @@ void build_lcc_hvdc2t_meter_map()
     lcc_hvdc2t_meter_map.insert({"INVERTER AC ACTIVE POWER IN MW",      get_inverter_ac_active_power_in_MW});
     lcc_hvdc2t_meter_map.insert({"RECTIFIER AC REACTIVE POWER IN MVAR", get_rectifier_ac_reactive_power_in_MVar});
     lcc_hvdc2t_meter_map.insert({"INVERTER AC REACTIVE POWER IN MVAR",  get_inverter_ac_reactive_power_in_MVar});
+    */
     lcc_hvdc2t_meter_map.insert({"2T LCC HVDC MODEL INTERNAL VARIABLE", get_lcc_hvdc2t_model_internal_variable});
 }
 

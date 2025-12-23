@@ -10,7 +10,112 @@ double lcc_hvdc2t_meter_getter::get_dc_current_in_kA(const METER_PARAMETER& para
     LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
-        return model->get_converter_dc_current_in_kA(RECTIFIER);
+        CONVERTER_SIDE side = hvdc->get_converter_side_at_bus(para.metered_side_bus);
+        return model->get_converter_dc_current_in_kA(side);
+    }
+    else
+        return 0.0;
+}
+
+double lcc_hvdc2t_meter_getter::get_ac_current_in_kA(const METER_PARAMETER& para)
+{
+    LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
+    if(model != NULL && hvdc->get_status()==true)
+    {
+        CONVERTER_SIDE side = hvdc->get_converter_side_at_bus(para.metered_side_bus);
+        return steps_fast_complex_abs(model->get_converter_ac_current_in_kA(side));
+    }
+    else
+        return 0.0;
+}
+
+double lcc_hvdc2t_meter_getter::get_angle_in_deg(const METER_PARAMETER& para)
+{
+    LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
+    if(model != NULL && hvdc->get_status()==true)
+    {
+        CONVERTER_SIDE side = hvdc->get_converter_side_at_bus(para.metered_side_bus);
+        return model->get_converter_alpha_or_gamma_in_deg(side);
+    }
+    else
+        return 0.0;
+}
+
+double lcc_hvdc2t_meter_getter::get_mu_in_deg(const METER_PARAMETER& para)
+{
+    LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
+    if(model != NULL && hvdc->get_status()==true)
+    {
+        CONVERTER_SIDE side = hvdc->get_converter_side_at_bus(para.metered_side_bus);
+        return model->get_converter_commutation_overlap_angle_in_deg(side);
+    }
+    else
+        return 0.0;
+}
+
+double lcc_hvdc2t_meter_getter::get_dc_voltage_in_kV(const METER_PARAMETER& para)
+{
+    LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
+    if(model != NULL && hvdc->get_status()==true)
+    {
+        CONVERTER_SIDE side = hvdc->get_converter_side_at_bus(para.metered_side_bus);
+        return model->get_converter_dc_voltage_in_kV(side);
+    }
+    else
+        return 0.0;
+}
+
+double lcc_hvdc2t_meter_getter::get_ac_voltage_in_pu(const METER_PARAMETER& para)
+{
+    LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
+    if(model != NULL && hvdc->get_status()==true)
+    {
+        CONVERTER_SIDE side = hvdc->get_converter_side_at_bus(para.metered_side_bus);
+        return model->get_converter_ac_voltage_in_pu(side);
+    }
+    else
+        return 0.0;
+}
+
+double lcc_hvdc2t_meter_getter::get_dc_power_in_MW(const METER_PARAMETER& para)
+{
+    LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
+    if(model != NULL && hvdc->get_status()==true)
+    {
+        CONVERTER_SIDE side = hvdc->get_converter_side_at_bus(para.metered_side_bus);
+        return model->get_converter_dc_power_in_MW(side);
+    }
+    else
+        return 0.0;
+}
+
+double lcc_hvdc2t_meter_getter::get_ac_active_power_in_MW(const METER_PARAMETER& para)
+{
+    LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
+    if(model != NULL && hvdc->get_status()==true)
+    {
+        CONVERTER_SIDE side = hvdc->get_converter_side_at_bus(para.metered_side_bus);
+        return model->get_converter_ac_complex_power_in_MVA(side).real();
+    }
+    else
+        return 0.0;
+}
+
+double lcc_hvdc2t_meter_getter::get_ac_reactive_power_in_MVar(const METER_PARAMETER& para)
+{
+    LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
+    LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
+    if(model != NULL && hvdc->get_status()==true)
+    {
+        CONVERTER_SIDE side = hvdc->get_converter_side_at_bus(para.metered_side_bus);
+        return model->get_converter_ac_complex_power_in_MVA(side).imag();
     }
     else
         return 0.0;
@@ -94,7 +199,8 @@ double lcc_hvdc2t_meter_getter::get_rectifier_mu_in_deg(const METER_PARAMETER& p
     LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
     if(model != NULL && hvdc->get_status()==true)
     {
-        return model->get_converter_commutation_overlap_angle_in_deg(RECTIFIER);
+        CONVERTER_SIDE side = hvdc->get_converter_side_at_bus(para.metered_side_bus);
+        return model->get_converter_commutation_overlap_angle_in_deg(side);
     }
     else
         return 0.0;

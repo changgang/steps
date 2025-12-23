@@ -434,6 +434,14 @@ BUS* LCC_HVDC2T::get_bus_pointer(CONVERTER_SIDE converter) const
     return converter_busptr[converter];
 }
 
+CONVERTER_SIDE LCC_HVDC2T::get_converter_side_at_bus(unsigned int bus) const
+{
+    if(bus==get_converter_bus(RECTIFIER))
+        return RECTIFIER;
+    else
+        return INVERTER;
+}
+
 string LCC_HVDC2T::get_converter_valve_side_bus_name(CONVERTER_SIDE converter) const
 {
     return get_string_of_index(converter_valve_bus_name_index[converter]);

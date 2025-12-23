@@ -1077,6 +1077,17 @@ string device_type2string(STEPS_DEVICE_TYPE device_type)
     }
 }
 
+TRANSFORMER_WINDING_SIDE transformer_winding_string2winding_side(string winding)
+{
+    winding = string2upper(winding);
+    if(winding=="PRIMARY" or winding=="P")
+        return PRIMARY_SIDE;
+    else if(winding=="SECONDARY" or winding=="S")
+        return SECONDARY_SIDE;
+    else
+        return TERTIARY_SIDE;
+}
+
 string dc_device_type2string(STEPS_DC_DEVICE_TYPE device_type)
 {
     switch(device_type)
@@ -1102,6 +1113,15 @@ string converter_side2string(CONVERTER_SIDE converter)
         default:
             return "INVERTER";
     }
+}
+
+CONVERTER_SIDE converter_string2side(string converter)
+{
+    converter = string2upper(converter);
+    if(converter == "RECTIFIER" or converter == "R")
+        return RECTIFIER;
+    else
+        return INVERTER;
 }
 
 void set_openmp_number_of_threads(unsigned int n)

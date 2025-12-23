@@ -27,17 +27,17 @@ class METER_SETTER_TEST : public Test::Suite
         virtual void tear_down();
     private:
         void test_constructor();
-        void test_prepare_bus_related_meters();
-        void test_prepare_ac_line_related_meters();
-        void test_prepare_transformer_related_meters();
-        void test_prepare_load_related_meters();
-        void test_prepare_generator_related_meters();
-        void test_prepare_wt_generator_related_meters();
-        void test_prepare_pv_unit_related_meters();
-        void test_prepare_energy_storage_related_meters();
-        void test_prepare_lcc_hvdc2t_related_meters();
-        void test_prepare_vsc_hvdc_related_meters();
-        void test_prepare_equivalent_device_related_meters();
+        void test_prepare_bus_complete_meters();
+        void test_prepare_ac_line_complete_meters();
+        void test_prepare_transformer_complete_meters();
+        void test_prepare_load_complete_meters();
+        void test_prepare_generator_complete_meters();
+        void test_prepare_wt_generator_complete_meters();
+        void test_prepare_pv_unit_complete_meters();
+        void test_prepare_energy_storage_complete_meters();
+        void test_prepare_lcc_hvdc2t_complete_meters();
+        void test_prepare_vsc_hvdc_complete_meters();
+        void test_prepare_equivalent_device_complete_meters();
     private:
         METER_SETTER setter;
 

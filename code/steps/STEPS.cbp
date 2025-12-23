@@ -183,7 +183,6 @@
 		<Unit filename="header/device/wt_generator_test.h" />
 		<Unit filename="header/dynamic_model_database.h" />
 		<Unit filename="header/meter/ac_line_meter_getter.h" />
-		<Unit filename="header/meter/basic_meter_preparer.h" />
 		<Unit filename="header/meter/bus_meter_getter.h" />
 		<Unit filename="header/meter/equivalent_device_meter_getter.h" />
 		<Unit filename="header/meter/es_meter_getter.h" />
@@ -745,7 +744,6 @@
 		<Unit filename="source/device/wt_generator_test.cpp" />
 		<Unit filename="source/dynamic_model_database.cpp" />
 		<Unit filename="source/meter/ac_line_meter_getter.cpp" />
-		<Unit filename="source/meter/basic_meter_preparer.cpp" />
 		<Unit filename="source/meter/bus_meter_getter.cpp" />
 		<Unit filename="source/meter/equivalent_device_meter_getter.cpp" />
 		<Unit filename="source/meter/es_meter_getter.cpp" />
@@ -1110,9 +1108,6 @@
 				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="" />
 			</AutoVersioning>
 			<lib_finder disable_auto="1" />
-			<code_completion />
-			<envvars />
-			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
