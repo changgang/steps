@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
     for(unsigned int i=0; i<buses.size(); ++i)
     {
         meter = simulator.build_one_bus_related_meter(buses[i], "VOLTAGE IN PU");
-        simulator.install_meter(meter);
+        //simulator.install_meter(meter);
     }
     vector<GENERATOR*> gens = psdb.get_all_generators();
     for(unsigned int i=0; i<gens.size(); ++i)

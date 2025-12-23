@@ -359,15 +359,13 @@ void METER::change_device_id(DEVICE_ID did)
 void METER::change_meter_type(const string& meter_type)
 {
     this->meter_type_string_index = get_index_of_string(meter_type);
-    /*strncpy(this->meter_type, meter_type.c_str(), STEPS_METER_TYPE_STRING_SIZE-1);
-    this->meter_type[STEPS_METER_TYPE_STRING_SIZE-1] = '\0';*/
+    if(meter_type!="")
+        update_meter_function();
 }
 
 void METER::change_meter_internal_variable_name(const string& name)
 {
     this->internal_variable_name_index = get_index_of_string(name);
-    /*strncpy(this->internal_variable_name, name.c_str(), STEPS_METER_TYPE_STRING_SIZE-1);
-    this->internal_variable_name[STEPS_METER_TYPE_STRING_SIZE-1] = '\0';*/
 }
 
 bool METER::is_valid_meter_type(string& meter_type) const
@@ -438,7 +436,6 @@ string METER::get_meter_type() const
         return get_string_of_index(meter_type_string_index);
     else
         return "";
-    //return meter_type;
 }
 
 unsigned int METER::get_metered_side_bus() const
@@ -538,6 +535,8 @@ void METER::clear()
     internal_variable_name_index = INDEX_NOT_EXIST;
     sub_dc_did.clear();
     hybrid_dc_device_name = "";
+
+    meter_function = nullptr;
 }
 
 
@@ -635,169 +634,131 @@ void METER::set_device_pointer(DEVICE_ID device_id)
 
 double METER::get_meter_value() const
 {
-    if(get_device_pointer()!=NULL)
-    {
-        switch(get_device_type())
-        {
-            case STEPS_BUS:
-                return get_meter_value_as_a_bus();
-            case STEPS_GENERATOR:
-                return get_meter_value_as_a_generator();
-            case STEPS_WT_GENERATOR:
-                return get_meter_value_as_a_wt_generator();
-            case STEPS_PV_UNIT:
-                return get_meter_value_as_a_pv_unit();
-            case STEPS_ENERGY_STORAGE:
-                return get_meter_value_as_an_energy_storage();
-            case STEPS_SV_SOURCE:
-                return get_meter_value_as_a_sv_source();
-            case STEPS_LOAD:
-                return get_meter_value_as_a_load();
-            case STEPS_AC_LINE:
-                return get_meter_value_as_an_ac_line();
-            case STEPS_TRANSFORMER:
-                return get_meter_value_as_a_transformer();
-            case STEPS_LCC_HVDC2T:
-                return get_meter_value_as_a_lcc_hvdc2t();
-            case STEPS_VSC_HVDC:
-                return get_meter_value_as_a_vsc_hvdc();
-            case STEPS_HYBRID_DC:
-                return get_meter_value_as_a_mt_hvdc();
-            case STEPS_EQUIVALENT_DEVICE:
-                return get_meter_value_as_an_equivalent_device();
-            default:
-                return 0.0;
-        }
-        return 0.0;
-    }
-    else
-        return 0.0;
-}
-
-double METER::get_meter_value_as_a_bus() const
-{
-    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = bus_meter_map.find(get_meter_type());
-    if (it != bus_meter_map.end())
-        return get_meter_value_with_function(it->second);
-    else
-        return 0.0;
-}
-
-double METER::get_meter_value_as_an_ac_line() const
-{
-    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = ac_line_meter_map.find(get_meter_type());
-    if (it != ac_line_meter_map.end())
-        return get_meter_value_with_function(it->second);
-    else
-        return 0.0;
-}
-
-double METER::get_meter_value_as_a_transformer() const
-{
-    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = transformer_meter_map.find(get_meter_type());
-    if (it != transformer_meter_map.end())
-        return get_meter_value_with_function(it->second);
-    else
-        return 0.0;
-}
-
-double METER::get_meter_value_as_a_load() const
-{
-    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = load_meter_map.find(get_meter_type());
-    if (it != load_meter_map.end())
-        return get_meter_value_with_function(it->second);
-    else
-        return 0.0;
-}
-
-double METER::get_meter_value_as_a_generator() const
-{
-    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = sg_meter_map.find(get_meter_type());
-    if (it != sg_meter_map.end())
-        return get_meter_value_with_function(it->second);
-    else
-        return 0.0;
-}
-
-double METER::get_meter_value_as_a_wt_generator() const
-{
-    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = wtg_meter_map.find(get_meter_type());
-    if (it != wtg_meter_map.end())
-        return get_meter_value_with_function(it->second);
-    else
-        return 0.0;
-}
-
-double METER::get_meter_value_as_a_pv_unit() const
-{
-    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = pvu_meter_map.find(get_meter_type());
-    if (it != pvu_meter_map.end())
-        return get_meter_value_with_function(it->second);
-    else
-        return 0.0;
-}
-
-double METER::get_meter_value_as_an_energy_storage() const
-{
-    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = es_meter_map.find(get_meter_type());
-    if (it != es_meter_map.end())
-        return get_meter_value_with_function(it->second);
-    else
-        return 0.0;
-}
-
-double METER::get_meter_value_as_a_sv_source() const
-{
-    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = sv_source_meter_map.find(get_meter_type());
-    if (it != sv_source_meter_map.end())
-        return get_meter_value_with_function(it->second);
-    else
-        return 0.0;
-}
-
-double METER::get_meter_value_as_a_lcc_hvdc2t() const
-{
-    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = lcc_hvdc2t_meter_map.find(get_meter_type());
-    if (it != lcc_hvdc2t_meter_map.end())
-        return get_meter_value_with_function(it->second);
-    else
-        return 0.0;
-}
-
-double METER::get_meter_value_as_a_vsc_hvdc() const
-{
-    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = vsc_hvdc_meter_map.find(get_meter_type());
-    if (it != vsc_hvdc_meter_map.end())
-        return get_meter_value_with_function(it->second);
-    else
-        return 0.0;
-}
-
-double METER::get_meter_value_as_a_mt_hvdc() const
-{
-    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = mt_hvdc_meter_map.find(get_meter_type());
-    if (it != mt_hvdc_meter_map.end())
-        return get_meter_value_with_function(it->second);
-    else
-        return 0.0;
-}
-
-double METER::get_meter_value_as_an_equivalent_device() const
-{
-    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = equivalent_device_meter_map.find(get_meter_type());
-    if (it != equivalent_device_meter_map.end())
-        return get_meter_value_with_function(it->second);
-    else
-        return 0.0;
-}
-
-double METER::get_meter_value_with_function(std::function<double(METER_PARAMETER)> f) const
-{
     METER_PARAMETER para;
     para.device_pointer = get_device_pointer();
     para.internal_var_name = get_internal_variable_name();
     para.metered_side_bus = get_metered_side_bus();
     para.sub_dc_did = get_sub_dc_device_id();
     para.hybrid_dc_device_name = get_hybrid_dc_meter_device_name();
-    return f(para);
+    return meter_function(para);
+}
+
+void METER::update_meter_function()
+{
+    switch(get_device_type())
+    {
+        case STEPS_BUS:
+            update_meter_function_as_a_bus();
+            break;
+        case STEPS_GENERATOR:
+            update_meter_function_as_a_generator();
+            break;
+        case STEPS_WT_GENERATOR:
+            update_meter_function_as_a_wt_generator();
+            break;
+        case STEPS_PV_UNIT:
+            update_meter_function_as_a_pv_unit();
+            break;
+        case STEPS_ENERGY_STORAGE:
+            update_meter_function_as_an_energy_storage();
+            break;
+        case STEPS_SV_SOURCE:
+            update_meter_function_as_a_sv_source();
+            break;
+        case STEPS_LOAD:
+            update_meter_function_as_a_load();
+            break;
+        case STEPS_AC_LINE:
+            update_meter_function_as_an_ac_line();
+            break;
+        case STEPS_TRANSFORMER:
+            update_meter_function_as_a_transformer();
+            break;
+        case STEPS_LCC_HVDC2T:
+            update_meter_function_as_a_lcc_hvdc2t();
+            break;
+        case STEPS_VSC_HVDC:
+            update_meter_function_as_a_vsc_hvdc();
+            break;
+        case STEPS_HYBRID_DC:
+            update_meter_function_as_a_mt_hvdc();
+            break;
+        case STEPS_EQUIVALENT_DEVICE:
+            update_meter_function_as_an_equivalent_device();
+            break;
+        default:
+            break;
+    }
+}
+
+void METER::update_meter_function_as_a_bus()
+{
+    update_meter_function_with_meter_function_map(bus_meter_map);
+}
+
+void METER::update_meter_function_as_a_generator()
+{
+    update_meter_function_with_meter_function_map(sg_meter_map);
+}
+
+void METER::update_meter_function_as_a_wt_generator()
+{
+    update_meter_function_with_meter_function_map(wtg_meter_map);
+}
+
+void METER::update_meter_function_as_a_pv_unit()
+{
+    update_meter_function_with_meter_function_map(pvu_meter_map);
+}
+
+void METER::update_meter_function_as_an_energy_storage()
+{
+    update_meter_function_with_meter_function_map(es_meter_map);
+}
+
+void METER::update_meter_function_as_a_sv_source()
+{
+    update_meter_function_with_meter_function_map(sv_source_meter_map);
+}
+
+void METER::update_meter_function_as_a_load()
+{
+    update_meter_function_with_meter_function_map(load_meter_map);
+}
+
+void METER::update_meter_function_as_an_ac_line()
+{
+    update_meter_function_with_meter_function_map(ac_line_meter_map);
+}
+
+void METER::update_meter_function_as_a_transformer()
+{
+    update_meter_function_with_meter_function_map(transformer_meter_map);
+}
+
+void METER::update_meter_function_as_a_lcc_hvdc2t()
+{
+    update_meter_function_with_meter_function_map(lcc_hvdc2t_meter_map);
+}
+
+void METER::update_meter_function_as_a_vsc_hvdc()
+{
+    update_meter_function_with_meter_function_map(vsc_hvdc_meter_map);
+}
+
+void METER::update_meter_function_as_a_mt_hvdc()
+{
+    update_meter_function_with_meter_function_map(mt_hvdc_meter_map);
+}
+
+void METER::update_meter_function_as_an_equivalent_device()
+{
+    update_meter_function_with_meter_function_map(equivalent_device_meter_map);
+}
+
+void METER::update_meter_function_with_meter_function_map(unordered_map<string, function<double(METER_PARAMETER)>>& meter_map)
+{
+    unordered_map<string, function<double(METER_PARAMETER)>>::const_iterator it = meter_map.find(get_meter_type());
+    if (it != meter_map.end())
+        meter_function = it->second;
 }

@@ -6,7 +6,7 @@
 #include "header/basic/dc_device_id.h"
 #include "header/device/device.h"
 #include "header/meter/meter_parameter_struct.h"
-
+#include <unordered_map>
 class METER
 {
     public:
@@ -55,21 +55,21 @@ class METER
 
         bool is_internal_variable_name_valid(string& name, unsigned int index=0) const;
 
-        double get_meter_value_as_a_bus() const;
-        double get_meter_value_as_an_ac_line() const;
-        double get_meter_value_as_a_transformer() const;
-        double get_meter_value_as_a_load() const;
-        double get_meter_value_as_a_generator() const;
-        double get_meter_value_as_a_wt_generator() const;
-        double get_meter_value_as_a_pv_unit() const;
-        double get_meter_value_as_a_lcc_hvdc2t() const;
-        double get_meter_value_as_a_vsc_hvdc() const;
-        double get_meter_value_as_a_mt_hvdc() const;
-        double get_meter_value_as_an_equivalent_device() const;
-        double get_meter_value_as_an_energy_storage() const;
-        double get_meter_value_as_a_sv_source() const;
-
-        double get_meter_value_with_function(std::function<double(METER_PARAMETER)> f) const;
+        void update_meter_function();
+        void update_meter_function_as_a_bus();
+        void update_meter_function_as_a_generator();
+        void update_meter_function_as_a_wt_generator();
+        void update_meter_function_as_a_pv_unit();
+        void update_meter_function_as_an_energy_storage();
+        void update_meter_function_as_a_sv_source();
+        void update_meter_function_as_a_load();
+        void update_meter_function_as_an_ac_line();
+        void update_meter_function_as_a_transformer();
+        void update_meter_function_as_a_lcc_hvdc2t();
+        void update_meter_function_as_a_vsc_hvdc();
+        void update_meter_function_as_a_mt_hvdc();
+        void update_meter_function_as_an_equivalent_device();
+        void update_meter_function_with_meter_function_map(unordered_map<string, function<double(METER_PARAMETER)>>& meter_map);
 
         STEPS* toolkit;
         DEVICE* device_pointer;
@@ -79,5 +79,7 @@ class METER
         unsigned int internal_variable_name_index;
         DC_DEVICE_ID sub_dc_did;
         string hybrid_dc_device_name;
+
+        std::function<double(METER_PARAMETER)> meter_function;
 };
 #endif // METER_H
