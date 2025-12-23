@@ -40,7 +40,7 @@ void prepare_training_load_scale_case()
     powerflow_solver.solve_with_fast_decoupled_solution();
 
     vector<METER> meters;
-    meters = simulator.prepare_all_meters();
+    meters = simulator.build_all_meters();
     simulator.install_meters(meters);
 
     simulator.set_output_file("test_log/IEEE_39_bus_model_GENROU_SEXS_IEEEG1_load_scale_down_at_bus_3_by_10%");
@@ -91,7 +91,7 @@ void prepare_training_generation_shed_case()
     powerflow_solver.solve_with_fast_decoupled_solution();
 
     vector<METER> meters;
-    meters = simulator.prepare_all_meters();
+    meters = simulator.build_all_meters();
     simulator.install_meters(meters);
 
     simulator.set_output_file("test_log/IEEE_39_bus_model_GENROU_SEXS_IEEEG1_generation_shed_down_at_bus_38_by_10%");
@@ -153,7 +153,7 @@ int main()
     powerflow_solver.solve_with_fast_decoupled_solution();
 
     vector<METER> meters;
-    meters = simulator.prepare_all_meters();
+    meters = simulator.build_all_meters();
     simulator.install_meters(meters);
 
     simulator.set_output_file("test_log/IEEE_39_bus_model_GENROU_SEXS_IEEEG1_with_ARXL");

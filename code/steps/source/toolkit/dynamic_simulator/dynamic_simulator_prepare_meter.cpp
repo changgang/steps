@@ -18,53 +18,53 @@ using namespace chrono;
 
 class STEPS;
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_all_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_meters()
 {
     vector<METER> all_meters;
     vector<METER> meters;
-    meters = prepare_all_buses_related_meters();
+    meters = build_all_buses_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_all_generators_related_meters();
+    meters = build_all_generators_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_all_wt_generators_related_meters();
+    meters = build_all_wt_generators_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_all_pv_units_related_meters();
+    meters = build_all_pv_units_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_all_energy_storages_related_meters();
+    meters = build_all_energy_storages_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_all_sv_sources_related_meters();
+    meters = build_all_sv_sources_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_all_loads_related_meters();
+    meters = build_all_loads_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_all_ac_lines_related_meters();
+    meters = build_all_ac_lines_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_all_transformers_related_meters();
+    meters = build_all_transformers_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_all_lcc_hvdc2ts_related_meters();
+    meters = build_all_lcc_hvdc2ts_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_all_vsc_hvdcs_related_meters();
+    meters = build_all_vsc_hvdcs_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_all_mt_hvdcs_related_meters();
+    meters = build_all_mt_hvdcs_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
-    meters = prepare_all_equivalent_devices_related_meters();
+    meters = build_all_equivalent_devices_related_meters();
     for(unsigned int i=0; i<meters.size(); ++i)
         all_meters.push_back(meters[i]);
     return all_meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_all_buses_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_buses_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -105,7 +105,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_all_buses_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_all_generators_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_generators_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -176,7 +176,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_all_generators_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_all_wt_generators_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_wt_generators_related_meters()
 {
     vector<METER> meters;
     vector<string> keys;
@@ -193,14 +193,14 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_all_wt_generators_related_meters()
     for (unsigned int i=0; i<m; ++i)
         for(unsigned int j=0; j!=n; ++j)
         {
-            METER meter = sim.prepare_one_wt_generator_related_meter(dids[j], keys[i]);
+            METER meter = sim.build_one_wt_generator_related_meter(dids[j], keys[i]);
             if(meter.is_valid())
                 meters.push_back(meter);
         }
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_all_pv_units_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_pv_units_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -397,7 +397,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_all_pv_units_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_all_energy_storages_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_energy_storages_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -531,7 +531,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_all_energy_storages_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_all_sv_sources_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_sv_sources_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -561,7 +561,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_all_sv_sources_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_all_loads_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_loads_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -595,7 +595,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_all_loads_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_all_ac_lines_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_ac_lines_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -632,7 +632,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_all_ac_lines_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_all_transformers_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_transformers_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -681,7 +681,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_all_transformers_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_all_lcc_hvdc2ts_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_lcc_hvdc2ts_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -772,7 +772,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_all_lcc_hvdc2ts_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_all_vsc_hvdcs_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_vsc_hvdcs_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -853,7 +853,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_all_vsc_hvdcs_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_all_mt_hvdcs_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_mt_hvdcs_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -990,7 +990,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_all_mt_hvdcs_related_meters()
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_all_equivalent_devices_related_meters()
+vector<METER> DYNAMICS_SIMULATOR::build_all_equivalent_devices_related_meters()
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -1033,7 +1033,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_all_equivalent_devices_related_meters(
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_one_bus_related_meters(unsigned int bus)
+vector<METER> DYNAMICS_SIMULATOR::build_one_bus_related_meters(unsigned int bus)
 {
     vector<METER> meters;
     METER_SETTER setter(*toolkit);
@@ -1058,7 +1058,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_one_bus_related_meters(unsigned int bu
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_one_generator_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::build_one_generator_related_meters(const DEVICE_ID& did)
 {
     vector<METER> meters;
 
@@ -1101,7 +1101,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_one_generator_related_meters(const DEV
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_one_wt_generator_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::build_one_wt_generator_related_meters(const DEVICE_ID& did)
 {
     vector<METER> meters;
     vector<string> keys;
@@ -1114,14 +1114,14 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_one_wt_generator_related_meters(const 
     DYNAMICS_SIMULATOR& sim = toolkit->get_dynamic_simulator();
     for (unsigned int i=0; i<m; ++i)
     {
-        METER meter = sim.prepare_one_wt_generator_related_meter(did, keys[i]);
+        METER meter = sim.build_one_wt_generator_related_meter(did, keys[i]);
         if(meter.is_valid())
             meters.push_back(meter);
     }
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_one_pv_unit_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::build_one_pv_unit_related_meters(const DEVICE_ID& did)
 {
     vector<METER> meters;
 
@@ -1235,7 +1235,7 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_one_pv_unit_related_meters(const DEVIC
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_one_energy_storage_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::build_one_energy_storage_related_meters(const DEVICE_ID& did)
 {
     vector<METER> meters;
 
@@ -1312,55 +1312,55 @@ vector<METER> DYNAMICS_SIMULATOR::prepare_one_energy_storage_related_meters(cons
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_one_sv_source_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::build_one_sv_source_related_meters(const DEVICE_ID& did)
 {
     vector<METER> meters;
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_one_load_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::build_one_load_related_meters(const DEVICE_ID& did)
 {
     vector<METER> meters;
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_one_ac_line_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::build_one_ac_line_related_meters(const DEVICE_ID& did)
 {
     vector<METER> meters;
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_one_transformer_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::build_one_transformer_related_meters(const DEVICE_ID& did)
 {
     vector<METER> meters;
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_one_lcc_hvdc2t_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::build_one_lcc_hvdc2t_related_meters(const DEVICE_ID& did)
 {
     vector<METER> meters;
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_one_vsc_hvdc_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::build_one_vsc_hvdc_related_meters(const DEVICE_ID& did)
 {
     vector<METER> meters;
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_one_mt_hvdc_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::build_one_mt_hvdc_related_meters(const DEVICE_ID& did)
 {
     vector<METER> meters;
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::prepare_one_equivalent_device_related_meters(const DEVICE_ID& did)
+vector<METER> DYNAMICS_SIMULATOR::build_one_equivalent_device_related_meters(const DEVICE_ID& did)
 {
     vector<METER> meters;
     return meters;
 }
 
-METER DYNAMICS_SIMULATOR::prepare_one_bus_related_meter(unsigned int bus, string meter_type)
+METER DYNAMICS_SIMULATOR::build_one_bus_related_meter(unsigned int bus, string meter_type)
 {
     METER meter(*toolkit);
     ostringstream osstream;
@@ -1410,7 +1410,7 @@ METER DYNAMICS_SIMULATOR::prepare_one_bus_related_meter(unsigned int bus, string
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::prepare_one_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
+METER DYNAMICS_SIMULATOR::build_one_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     METER meter(*toolkit);
     ostringstream osstream;
@@ -1520,7 +1520,7 @@ METER DYNAMICS_SIMULATOR::prepare_one_generator_related_meter(const DEVICE_ID& d
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::prepare_one_wt_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
+METER DYNAMICS_SIMULATOR::build_one_wt_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     METER meter(*toolkit);
     bool successful = basic_meter_preparer::prepare_wt_generator_meter(*toolkit, meter, did);
@@ -1541,7 +1541,7 @@ METER DYNAMICS_SIMULATOR::prepare_one_wt_generator_related_meter(const DEVICE_ID
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::prepare_one_pv_unit_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
+METER DYNAMICS_SIMULATOR::build_one_pv_unit_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     METER meter(*toolkit);
     ostringstream osstream;
@@ -1641,7 +1641,7 @@ METER DYNAMICS_SIMULATOR::prepare_one_pv_unit_related_meter(const DEVICE_ID& did
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::prepare_one_energy_storage_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
+METER DYNAMICS_SIMULATOR::build_one_energy_storage_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     METER meter(*toolkit);
     ostringstream osstream;
@@ -1747,7 +1747,7 @@ METER DYNAMICS_SIMULATOR::prepare_one_energy_storage_related_meter(const DEVICE_
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::prepare_one_sv_source_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
+METER DYNAMICS_SIMULATOR::build_one_sv_source_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     METER meter(*toolkit);
     ostringstream osstream;
@@ -1790,7 +1790,7 @@ METER DYNAMICS_SIMULATOR::prepare_one_sv_source_related_meter(const DEVICE_ID& d
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::prepare_one_load_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
+METER DYNAMICS_SIMULATOR::build_one_load_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     METER meter(*toolkit);
     ostringstream osstream;
@@ -1848,7 +1848,7 @@ METER DYNAMICS_SIMULATOR::prepare_one_load_related_meter(const DEVICE_ID& did, s
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::prepare_one_ac_line_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
+METER DYNAMICS_SIMULATOR::build_one_ac_line_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
 {
     METER meter(*toolkit);
     ostringstream osstream;
@@ -1912,7 +1912,7 @@ METER DYNAMICS_SIMULATOR::prepare_one_ac_line_related_meter(const DEVICE_ID& did
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::prepare_one_transformer_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
+METER DYNAMICS_SIMULATOR::build_one_transformer_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
 {
     METER meter(*toolkit);
     ostringstream osstream;
@@ -1972,7 +1972,7 @@ METER DYNAMICS_SIMULATOR::prepare_one_transformer_related_meter(const DEVICE_ID&
 }
 
 
-METER DYNAMICS_SIMULATOR::prepare_one_lcc_hvdc2t_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
+METER DYNAMICS_SIMULATOR::build_one_lcc_hvdc2t_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
 {
     METER meter(*toolkit);
     ostringstream osstream;
@@ -2053,7 +2053,7 @@ METER DYNAMICS_SIMULATOR::prepare_one_lcc_hvdc2t_related_meter(const DEVICE_ID& 
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::prepare_one_vsc_hvdc_related_meter(const DEVICE_ID& did, string meter_type, unsigned int side, string var_name)
+METER DYNAMICS_SIMULATOR::build_one_vsc_hvdc_related_meter(const DEVICE_ID& did, string meter_type, unsigned int side, string var_name)
 {
     METER meter(*toolkit);
     ostringstream osstream;
@@ -2111,7 +2111,7 @@ METER DYNAMICS_SIMULATOR::prepare_one_vsc_hvdc_related_meter(const DEVICE_ID& di
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::prepare_one_vsc_hvdc_related_meter(string vsc_name, string meter_type, unsigned int side, string var_name)
+METER DYNAMICS_SIMULATOR::build_one_vsc_hvdc_related_meter(string vsc_name, string meter_type, unsigned int side, string var_name)
 {
     METER meter(*toolkit);
     ostringstream osstream;
@@ -2121,7 +2121,7 @@ METER DYNAMICS_SIMULATOR::prepare_one_vsc_hvdc_related_meter(string vsc_name, st
     if(vsc_hvdc != NULL)
     {
         DEVICE_ID did = vsc_hvdc->get_device_id();
-        meter = prepare_one_vsc_hvdc_related_meter(did, meter_type, side, var_name);
+        meter = build_one_vsc_hvdc_related_meter(did, meter_type, side, var_name);
     }
     else
     {
@@ -2132,7 +2132,7 @@ METER DYNAMICS_SIMULATOR::prepare_one_vsc_hvdc_related_meter(string vsc_name, st
 }
 
 
-METER DYNAMICS_SIMULATOR::prepare_one_vsc_hvdc_related_dc_line_meter(const DEVICE_ID& did, string meter_type, const DC_DEVICE_ID dc_did, unsigned int side, string var_name)
+METER DYNAMICS_SIMULATOR::build_one_vsc_hvdc_related_dc_line_meter(const DEVICE_ID& did, string meter_type, const DC_DEVICE_ID dc_did, unsigned int side, string var_name)
 {
     METER meter(*toolkit);
     ostringstream osstream;
@@ -2171,7 +2171,7 @@ METER DYNAMICS_SIMULATOR::prepare_one_vsc_hvdc_related_dc_line_meter(const DEVIC
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::prepare_one_mt_hvdc_related_meter(const DEVICE_ID& did, string sub_device_name, string meter_type, string var_name)
+METER DYNAMICS_SIMULATOR::build_one_mt_hvdc_related_meter(const DEVICE_ID& did, string sub_device_name, string meter_type, string var_name)
  {
     METER meter(*toolkit);
     ostringstream osstream;
@@ -2260,7 +2260,7 @@ METER DYNAMICS_SIMULATOR::prepare_one_mt_hvdc_related_meter(const DEVICE_ID& did
     return meter;
  }
 
-METER DYNAMICS_SIMULATOR::prepare_one_mt_hvdc_related_meter(string mtdc_name, string device_name, string meter_type, string var_name)
+METER DYNAMICS_SIMULATOR::build_one_mt_hvdc_related_meter(string mtdc_name, string device_name, string meter_type, string var_name)
 {
     METER meter(*toolkit);
     ostringstream osstream;
@@ -2269,7 +2269,7 @@ METER DYNAMICS_SIMULATOR::prepare_one_mt_hvdc_related_meter(string mtdc_name, st
     if(mtdc!=NULL)
     {
         DEVICE_ID did = mtdc->get_device_id();
-        meter = prepare_one_mt_hvdc_related_meter(did,device_name,meter_type,var_name);
+        meter = build_one_mt_hvdc_related_meter(did,device_name,meter_type,var_name);
     }
     else
     {
@@ -2279,7 +2279,7 @@ METER DYNAMICS_SIMULATOR::prepare_one_mt_hvdc_related_meter(string mtdc_name, st
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::prepare_one_equivalent_device_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
+METER DYNAMICS_SIMULATOR::build_one_equivalent_device_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     METER meter(*toolkit);
     ostringstream osstream;

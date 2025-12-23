@@ -123,17 +123,17 @@ int main()
     simulator.install_meter(meter);
 */
 
-    //meters = simulator.prepare_all_buses_related_meters();
+    //meters = simulator.build_all_buses_related_meters();
     //simulator.install_meters(meters);
-    //meters = simulator.prepare_all_vsc_hvdcs_related_meters();
+    //meters = simulator.build_all_vsc_hvdcs_related_meters();
     //simulator.install_meters(meters);
-    //meters = simulator.prepare_all_generators_related_meters();
+    //meters = simulator.build_all_generators_related_meters();
     //simulator.install_meters(meters);
-    meters = simulator.prepare_all_lcc_hvdc2ts_related_meters();
+    meters = simulator.build_all_lcc_hvdc2ts_related_meters();
     simulator.install_meters(meters);
-    //meters = simulator.prepare_all_loads_related_meters();
+    //meters = simulator.build_all_loads_related_meters();
     //simulator.install_meters(meters);
-    //meters = simulator.prepare_all_wt_generators_related_meters();
+    //meters = simulator.build_all_wt_generators_related_meters();
     //simulator.install_meters(meters);
 
     simulator.set_output_file("IEEE39_2LCC");
