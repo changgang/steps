@@ -2716,7 +2716,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_dc_current_in_kA_meter(const D
     if(successful)
     {
         meter.set_meter_type("LCC CONVERTER DC CURRENT IN KA");
-        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        meter.set_sub_device_name(lcc_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -2732,7 +2732,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_dc_voltage_in_kV_meter(const D
     if(successful)
     {
         meter.set_meter_type("LCC CONVERTER DC VOLTAGE IN KV");
-        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        meter.set_sub_device_name(lcc_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -2748,7 +2748,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_dc_power_in_kV_MW_meter(const 
     if(successful)
     {
         meter.set_meter_type("LCC CONVERTER DC POWER IN MW");
-        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        meter.set_sub_device_name(lcc_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -2764,7 +2764,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_ac_current_in_kA_meter(const D
     if(successful)
     {
         meter.set_meter_type("LCC CONVERTER AC CURRENT IN KA");
-        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        meter.set_sub_device_name(lcc_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -2780,7 +2780,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_firing_angle_in_deg_meter(cons
     if(successful)
     {
         meter.set_meter_type("LCC CONVERTER FIRING ANGLE IN DEG");
-        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        meter.set_sub_device_name(lcc_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -2796,7 +2796,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_ac_active_power_in_MW_meter(co
     if(successful)
     {
         meter.set_meter_type("LCC CONVERTER ACTIVE POWER IN MW");
-        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        meter.set_sub_device_name(lcc_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -2812,7 +2812,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_ac_reactive_power_in_Mvar_mete
     if(successful)
     {
         meter.set_meter_type("LCC CONVERTER REACTIVE POWER IN MVAR");
-        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        meter.set_sub_device_name(lcc_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -2828,7 +2828,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_reference_angle_of_cc_in_deg_m
     if(successful)
     {
         meter.set_meter_type("LCC CONVERTER REFERENCE ANGLE OF CC IN DEG");
-        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        meter.set_sub_device_name(lcc_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -2844,7 +2844,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_reference_angle_of_cea_in_deg_
     if(successful)
     {
         meter.set_meter_type("LCC CONVERTER REFERENCE ANGLE OF CEA IN DEG");
-        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        meter.set_sub_device_name(lcc_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -2860,7 +2860,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_reference_angle_of_cv_in_deg_m
     if(successful)
     {
         meter.set_meter_type("LCC CONVERTER REFERENCE ANGLE OF CV IN DEG");
-        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        meter.set_sub_device_name(lcc_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -2876,7 +2876,7 @@ METER METER_SETTER::prepare_mt_hvdc_lcc_converter_reference_idc_in_kA_meter(cons
     if(successful)
     {
         meter.set_meter_type("LCC CONVERTER IDC REF IN KA");
-        meter.set_hybrid_dc_meter_device_name(lcc_name);
+        meter.set_sub_device_name(lcc_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -2893,7 +2893,7 @@ METER METER_SETTER::prepare_mt_hvdc_vsc_converter_dc_current_in_kA_meter(const D
     if(successful)
     {
         meter.set_meter_type("VSC CONVERTER DC CURRENT IN KA");
-        meter.set_hybrid_dc_meter_device_name(vsc_name);
+        meter.set_sub_device_name(vsc_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -2909,7 +2909,7 @@ METER METER_SETTER::prepare_mt_hvdc_vsc_converter_dc_voltage_in_kV_meter(const D
     if(successful)
     {
         meter.set_meter_type("VSC CONVERTER DC VOLTAGE IN KV");
-        meter.set_hybrid_dc_meter_device_name(vsc_name);
+        meter.set_sub_device_name(vsc_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -2925,7 +2925,7 @@ METER METER_SETTER::prepare_mt_hvdc_vsc_converter_dc_power_in_kV_MW_meter(const 
     if(successful)
     {
         meter.set_meter_type("VSC CONVERTER DC POWER IN MW");
-        meter.set_hybrid_dc_meter_device_name(vsc_name);
+        meter.set_sub_device_name(vsc_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -2941,7 +2941,7 @@ METER METER_SETTER::prepare_mt_hvdc_vsc_converter_ac_current_in_kA_meter(const D
     if(successful)
     {
         meter.set_meter_type("VSC CONVERTER AC CURRENT IN KA");
-        meter.set_hybrid_dc_meter_device_name(vsc_name);
+        meter.set_sub_device_name(vsc_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -2957,7 +2957,7 @@ METER METER_SETTER::prepare_mt_hvdc_vsc_converter_ac_active_power_in_MW_meter(co
     if(successful)
     {
         meter.set_meter_type("VSC CONVERTER AVTIVE POWER IN MW");
-        meter.set_hybrid_dc_meter_device_name(vsc_name);
+        meter.set_sub_device_name(vsc_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -2973,7 +2973,7 @@ METER METER_SETTER::prepare_mt_hvdc_vsc_converter_ac_reactive_power_in_Mvar_mete
     if(successful)
     {
         meter.set_meter_type("VSC CONVERTER REACTIVE POWER IN MVAR");
-        meter.set_hybrid_dc_meter_device_name(vsc_name);
+        meter.set_sub_device_name(vsc_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -2989,7 +2989,7 @@ METER METER_SETTER::prepare_mt_hvdc_vsc_converter_id_in_kA_meter(const DEVICE_ID
     if(successful)
     {
         meter.set_meter_type("VSC CONVERTER ID IN KA");
-        meter.set_hybrid_dc_meter_device_name(vsc_name);
+        meter.set_sub_device_name(vsc_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -3005,7 +3005,7 @@ METER METER_SETTER::prepare_mt_hvdc_vsc_converter_iq_in_kA_meter(const DEVICE_ID
     if(successful)
     {
         meter.set_meter_type("VSC CONVERTER IQ IN KA");
-        meter.set_hybrid_dc_meter_device_name(vsc_name);
+        meter.set_sub_device_name(vsc_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -3021,7 +3021,7 @@ METER METER_SETTER::prepare_mt_hvdc_dc_bus_voltage_in_kV_meter(const DEVICE_ID& 
     if(successful)
     {
         meter.set_meter_type("DC BUS VOLTAGE IN KV");
-       meter.set_hybrid_dc_meter_device_name(dcbus_name);
+       meter.set_sub_device_name(dcbus_name);
     }
 
     return meter;
@@ -3036,7 +3036,7 @@ METER METER_SETTER::prepare_mt_hvdc_dc_line_dc_current_on_sending_side_in_kA_met
     if(successful)
     {
         meter.set_meter_type("DC LINE CURRENT ON SENDING SIDE IN KA");
-        meter.set_hybrid_dc_meter_device_name(line_name);
+        meter.set_sub_device_name(line_name);
         //meter.set_metered_side_bus(meter_side);
     }
 
@@ -3052,7 +3052,7 @@ METER METER_SETTER::prepare_mt_hvdc_dc_line_dc_current_on_receiving_side_in_kA_m
     if(successful)
     {
         meter.set_meter_type("DC LINE CURRENT ON RECEIVING SIDE IN KA");
-        meter.set_hybrid_dc_meter_device_name(line_name);
+        meter.set_sub_device_name(line_name);
         //meter.set_metered_side_bus(meter_side);
     }
 

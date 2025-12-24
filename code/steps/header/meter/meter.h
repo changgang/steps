@@ -21,7 +21,7 @@ class METER
         void set_meter_type(string meter_type);
         void set_internal_variable_name(string name);
         void set_metered_side_bus(unsigned int meter_side);
-        void set_hybrid_dc_meter_device_name(string name);
+        void set_sub_device_name(string name);
 
         void change_device_id(DEVICE_ID did);
         void change_meter_type(const string& meter_type);
@@ -34,7 +34,7 @@ class METER
         string get_meter_type() const;
         unsigned int get_metered_side_bus() const;
         string get_internal_variable_name() const;
-        string get_hybrid_dc_meter_device_name() const;
+        string get_sub_device_name() const;
 
         string get_meter_name() const;
 
@@ -73,12 +73,12 @@ class METER
 
         STEPS* toolkit;
         DEVICE* device_pointer;
+        string sub_device_name;
         STEPS_DEVICE_TYPE device_type;
         unsigned int meter_type_string_index;
         unsigned int metered_side_bus;
         unsigned int internal_variable_name_index;
         DC_DEVICE_ID sub_dc_did;
-        string hybrid_dc_device_name;
 
         std::function<double(METER_PARAMETER)> meter_function;
 };

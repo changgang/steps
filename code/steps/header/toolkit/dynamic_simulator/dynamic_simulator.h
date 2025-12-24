@@ -152,9 +152,14 @@ class DYNAMICS_SIMULATOR
         METER build_one_vsc_hvdc_related_meter(string vsc_name, string meter_type, unsigned int side, string var_name="");
         METER build_one_vsc_hvdc_related_dc_line_meter(const DEVICE_ID& did, string meter_type, const DC_DEVICE_ID dc_did, unsigned int side, string var_name="");
         METER build_one_mt_hvdc_related_meter(const DEVICE_ID& did, string sub_device_name, string meter_type, string var_name="");
-        METER build_one_mt_hvdc_related_meter(string mtdc_name, string device_name, string meter_type, string var_name="");
+        METER build_one_mt_hvdc_related_meter(string mtdc_name, string sub_device_name, string meter_type, string var_name="");
         METER build_one_equivalent_device_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
         METER build_one_meter(const DEVICE_ID& did, string meter_type, string var_name="", unsigned int side_bus = 0);
+        METER build_one_meter_with_sub_device_name(const DEVICE_ID& did, string sub_device_name, string meter_type, string var_name="", unsigned int side_bus = 0);
+
+        vector<METER> build_meters_with_multi_devices_and_meter_typs(const vector<DEVICE_ID>& dids, vector<string>& keys);
+
+        vector<string> get_sorted_keys_from_meter_map(unordered_map<string, function<double(METER_PARAMETER)>>& meter_map);
 
         void install_meters(const vector<METER>& meters);
         void install_meter(const METER& meter);

@@ -7,10 +7,10 @@
 struct METER_PARAMETER
 {
     DEVICE* device_pointer;
-    std::string internal_var_name;
+    std::string sub_device_name;
     unsigned int metered_side_bus;
+    std::string internal_var_name;
     DC_DEVICE_ID sub_dc_did;
-    std::string hybrid_dc_device_name;
 };
 
 

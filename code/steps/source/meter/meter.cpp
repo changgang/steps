@@ -38,7 +38,7 @@ void METER::copy_from_const_meter(const METER& meter)
     else
     {
         if(get_device_type()==STEPS_HYBRID_DC)
-            set_hybrid_dc_meter_device_name(meter.get_hybrid_dc_meter_device_name());
+            set_sub_device_name(meter.get_sub_device_name());
         else
             set_metered_side_bus(meter.get_metered_side_bus());
     }
@@ -330,18 +330,18 @@ void METER::set_metered_side_bus(unsigned int meter_side)
     }
 }
 
-void METER::set_hybrid_dc_meter_device_name(string name)
+void METER::set_sub_device_name(string name)
 {
     if(get_device_type()==STEPS_HYBRID_DC)
     {
         if(get_meter_type().rfind("LCC CONVERTER",0) == 0)
-            this->hybrid_dc_device_name = name;
+            this->sub_device_name = name;
         if(get_meter_type().rfind("VSC CONVERTER",0) == 0)
-            this->hybrid_dc_device_name = name;
+            this->sub_device_name = name;
         if(get_meter_type().rfind("DC BUS",0) == 0)
-            this->hybrid_dc_device_name = name;
+            this->sub_device_name = name;
         if(get_meter_type().rfind("DC LINE",0) == 0)
-            this->hybrid_dc_device_name = name;
+            this->sub_device_name = name;
     }
 }
 
@@ -453,9 +453,9 @@ STEPS_DEVICE_TYPE METER::get_device_type() const
     return device_type;
 }
 
-string METER::get_hybrid_dc_meter_device_name() const
+string METER::get_sub_device_name() const
 {
-    return hybrid_dc_device_name;
+    return sub_device_name;
 }
 
 string METER::get_internal_variable_name() const
@@ -491,7 +491,7 @@ string METER::get_meter_name() const
            device_type==STEPS_VSC_HVDC)
             name += " @ SIDE "+num2str(get_metered_side_bus());
         if(device_type==STEPS_HYBRID_DC)
-            name += " @ DC DEVICE "+ get_hybrid_dc_meter_device_name();
+            name += " @ DC DEVICE "+ get_sub_device_name();
 
         return trim_string(name);
     }
@@ -515,7 +515,7 @@ bool METER::is_valid() const
         }
         if(device_type==STEPS_HYBRID_DC)
         {
-            if(get_hybrid_dc_meter_device_name()!="")
+            if(get_sub_device_name()!="")
                 return true;
             else
                 return false;
@@ -529,12 +529,12 @@ bool METER::is_valid() const
 void METER::clear()
 {
     device_pointer = NULL;
+    sub_device_name = "";
     device_type = STEPS_INVALID_DEVICE;
     meter_type_string_index = INDEX_NOT_EXIST;
     metered_side_bus = 0;
     internal_variable_name_index = INDEX_NOT_EXIST;
     sub_dc_did.clear();
-    hybrid_dc_device_name = "";
 
     meter_function = nullptr;
 }
@@ -636,10 +636,10 @@ double METER::get_meter_value() const
 {
     METER_PARAMETER para;
     para.device_pointer = get_device_pointer();
-    para.internal_var_name = get_internal_variable_name();
+    para.sub_device_name = get_sub_device_name();
     para.metered_side_bus = get_metered_side_bus();
+    para.internal_var_name = get_internal_variable_name();
     para.sub_dc_did = get_sub_dc_device_id();
-    para.hybrid_dc_device_name = get_hybrid_dc_meter_device_name();
     return meter_function(para);
 }
 
