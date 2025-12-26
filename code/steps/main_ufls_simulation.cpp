@@ -7,6 +7,7 @@
 #include "header/basic/utility.h"
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/model/all_supported_models.h"
+#include "header/meter/meter_builder.h"
 using namespace std;
 
 int main()
@@ -37,7 +38,8 @@ int main()
     simulator.set_iteration_accelerator(0.8);
 
     vector<METER> meters;
-    meters = simulator.build_all_meters();
+    METER_BUILDER builder(default_toolkit);
+    meters = builder.build_all_meters();
     simulator.install_meters(meters);
 
     simulator.set_output_file("IEEE_39_bus_model_dynamic_test_result_GENROU_SEXS_IEEEG1_UFLS");

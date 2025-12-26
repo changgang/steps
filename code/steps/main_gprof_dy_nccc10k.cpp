@@ -4,6 +4,7 @@
 #include "header/steps_namespace.h"
 #include "header/toolkit/powerflow_solver/powerflow_solver.h"
 #include "header/toolkit/dynamic_simulator/dynamic_simulator.h"
+#include "header/meter/meter_builder.h"
 #include <cstdlib>
 #include <cstring>
 #include <istream>
@@ -64,23 +65,24 @@ int main(int argc, char* argv[])
     ///simulator.install_meters(meters);
     vector<unsigned int> buses = psdb.get_all_buses_number();
     METER meter(default_toolkit);
+    METER_BUILDER builder(default_toolkit);
     for(unsigned int i=0; i<buses.size(); ++i)
     {
-        meter = simulator.build_one_bus_related_meter(buses[i], "VOLTAGE IN PU");
-        //simulator.install_meter(meter);
+        meter = builder.build_one_bus_related_meter(buses[i], "VOLTAGE IN PU");
+        simulator.install_meter(meter);
     }
     vector<GENERATOR*> gens = psdb.get_all_generators();
     for(unsigned int i=0; i<gens.size(); ++i)
     {
         GENERATOR* gen = gens[i];
-        meter = simulator.build_one_generator_related_meter(gen->get_device_id(), "ROTOR SPEED DEVIATION IN PU");
+        meter = builder.build_one_generator_related_meter(gen->get_device_id(), "ROTOR SPEED DEVIATION IN PU");
         simulator.install_meter(meter);
     }
     vector<WT_GENERATOR*> wt_gens = psdb.get_all_wt_generators();
     for(unsigned int i=0; i<wt_gens.size(); ++i)
     {
         WT_GENERATOR* wtgen = wt_gens[i];
-        meter = simulator.build_one_wt_generator_related_meter(wtgen->get_device_id(), "TERMINAL ACTIVE POWER IN MW");
+        meter = builder.build_one_wt_generator_related_meter(wtgen->get_device_id(), "TERMINAL ACTIVE POWER IN MW");
         simulator.install_meter(meter);
     }
 

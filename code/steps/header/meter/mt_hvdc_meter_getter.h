@@ -35,8 +35,6 @@ namespace mt_hvdc_meter_getter
 
     // DC line meter getters
     double get_dc_line_current_in_kA(const METER_PARAMETER& para);
-    double get_dc_line_current_on_sending_side_in_kA(const METER_PARAMETER& para);
-    double get_dc_line_current_on_receiving_side_in_kA(const METER_PARAMETER& para);
 
     // Internal variable meter getters (currently return 0.0)
     double get_hlcc_converter_model_internal_variable(const METER_PARAMETER& para);

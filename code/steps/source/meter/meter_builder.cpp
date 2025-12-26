@@ -1,22 +1,24 @@
-#include "header/toolkit/dynamic_simulator/dynamic_simulator.h"
-#include "header/basic/constants.h"
+#include "header/meter/meter_builder.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <istream>
-#include <iostream>
-#include <ctime>
-#include <chrono>
-#include <algorithm>
-
 using namespace std;
-using namespace chrono;
 
-class STEPS;
+METER_BUILDER::METER_BUILDER(STEPS& toolkit)
+{
+    this->toolkit = (&toolkit);
+}
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_meters()
+METER_BUILDER::~METER_BUILDER()
+{
+    ;
+}
+
+STEPS& METER_BUILDER::get_toolkit() const
+{
+    return *toolkit;
+}
+
+vector<METER> METER_BUILDER::build_all_meters()
 {
     vector<METER> all_meters;
     vector<METER> meters;
@@ -63,98 +65,98 @@ vector<METER> DYNAMICS_SIMULATOR::build_all_meters()
     return all_meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_buses_complete_meters()
+vector<METER> METER_BUILDER::build_all_buses_complete_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_buses_device_id();
     vector<string> keys = get_sorted_keys_from_meter_map(bus_meter_map);
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_generators_complete_meters()
+vector<METER> METER_BUILDER::build_all_generators_complete_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_generators_device_id();
     vector<string> keys = get_sorted_keys_from_meter_map(sg_meter_map);
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_wt_generators_complete_meters()
+vector<METER> METER_BUILDER::build_all_wt_generators_complete_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_wt_generators_device_id();
     vector<string> keys = get_sorted_keys_from_meter_map(wtg_meter_map);
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_pv_units_complete_meters()
+vector<METER> METER_BUILDER::build_all_pv_units_complete_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_pv_units_device_id();
     vector<string> keys = get_sorted_keys_from_meter_map(pvu_meter_map);
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_energy_storages_complete_meters()
+vector<METER> METER_BUILDER::build_all_energy_storages_complete_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_energy_storages_device_id();
     vector<string> keys = get_sorted_keys_from_meter_map(es_meter_map);
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_sv_sources_complete_meters()
+vector<METER> METER_BUILDER::build_all_sv_sources_complete_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_sv_sources_device_id();
     vector<string> keys = get_sorted_keys_from_meter_map(sv_source_meter_map);
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_loads_complete_meters()
+vector<METER> METER_BUILDER::build_all_loads_complete_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_loads_device_id();
     vector<string> keys = get_sorted_keys_from_meter_map(load_meter_map);
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_ac_lines_complete_meters()
+vector<METER> METER_BUILDER::build_all_ac_lines_complete_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_ac_lines_device_id();
     vector<string> keys = get_sorted_keys_from_meter_map(ac_line_meter_map);
     return build_meters_with_multi_ac_lines_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_transformers_complete_meters()
+vector<METER> METER_BUILDER::build_all_transformers_complete_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_transformers_device_id();
     vector<string> keys = get_sorted_keys_from_meter_map(transformer_meter_map);
     return build_meters_with_multi_transformers_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_lcc_hvdc2ts_complete_meters()
+vector<METER> METER_BUILDER::build_all_lcc_hvdc2ts_complete_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_lcc_hvdc2ts_device_id();
     vector<string> keys = get_sorted_keys_from_meter_map(lcc_hvdc2t_meter_map);
     return build_meters_with_multi_lcc_hvdc2t_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_vsc_hvdcs_complete_meters()
+vector<METER> METER_BUILDER::build_all_vsc_hvdcs_complete_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_vsc_hvdcs_device_id();
     vector<string> keys = get_sorted_keys_from_meter_map(vsc_hvdc_meter_map);
     return build_meters_with_multi_vsc_hvdcs_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_mt_hvdcs_complete_meters()
+vector<METER> METER_BUILDER::build_all_mt_hvdcs_complete_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_mt_hvdcs_device_id();
     vector<string> keys = get_sorted_keys_from_meter_map(mt_hvdc_meter_map);
     return build_meters_with_multi_mt_hvdcs_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_equivalent_devices_complete_meters()
+vector<METER> METER_BUILDER::build_all_equivalent_devices_complete_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_equivalent_devices_device_id();
     vector<string> keys = get_sorted_keys_from_meter_map(equivalent_device_meter_map);
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_common_meters()
+vector<METER> METER_BUILDER::build_all_common_meters()
 {
     vector<METER> all_meters;
     vector<METER> meters;
@@ -201,14 +203,14 @@ vector<METER> DYNAMICS_SIMULATOR::build_all_common_meters()
     return all_meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_buses_common_meters()
+vector<METER> METER_BUILDER::build_all_buses_common_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_buses_device_id();
     vector<string> keys = {"VOLTAGE IN PU", "ANGLE IN DEG", "FREQUENCY IN HZ"};
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_generators_common_meters()
+vector<METER> METER_BUILDER::build_all_generators_common_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_generators_device_id();
     vector<string> keys = {"TERMINAL ACTIVE POWER IN MW", "TERMINAL REACTIVE POWER IN MVAR",
@@ -218,7 +220,7 @@ vector<METER> DYNAMICS_SIMULATOR::build_all_generators_common_meters()
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_wt_generators_common_meters()
+vector<METER> METER_BUILDER::build_all_wt_generators_common_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_wt_generators_device_id();
     vector<string> keys = {"TERMINAL ACTIVE POWER IN MW", "TERMINAL REACTIVE POWER IN MVAR",
@@ -228,7 +230,7 @@ vector<METER> DYNAMICS_SIMULATOR::build_all_wt_generators_common_meters()
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_pv_units_common_meters()
+vector<METER> METER_BUILDER::build_all_pv_units_common_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_pv_units_device_id();
     vector<string> keys = {"TERMINAL ACTIVE POWER IN MW", "TERMINAL REACTIVE POWER IN MVAR",
@@ -236,7 +238,7 @@ vector<METER> DYNAMICS_SIMULATOR::build_all_pv_units_common_meters()
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_energy_storages_common_meters()
+vector<METER> METER_BUILDER::build_all_energy_storages_common_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_energy_storages_device_id();
     vector<string> keys = {"TERMINAL ACTIVE POWER IN MW", "TERMINAL REACTIVE POWER IN MVAR",
@@ -244,35 +246,35 @@ vector<METER> DYNAMICS_SIMULATOR::build_all_energy_storages_common_meters()
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_sv_sources_common_meters()
+vector<METER> METER_BUILDER::build_all_sv_sources_common_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_sv_sources_device_id();
     vector<string> keys = {"TERMINAL REACTIVE POWER IN MVAR", "TERMINAL CURRENT IN PU ON SBASE"};
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_loads_common_meters()
+vector<METER> METER_BUILDER::build_all_loads_common_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_loads_device_id();
     vector<string> keys = {"ACTIVE POWER IN MW", "REACTIVE POWER IN MVAR", "TOTAL SCALE IN PU"};
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_ac_lines_common_meters()
+vector<METER> METER_BUILDER::build_all_ac_lines_common_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_ac_lines_device_id();
     vector<string> keys = {"ACTIVE POWER IN MW", "REACTIVE POWER IN MVAR", "CURRENT IN KA"};
     return build_meters_with_multi_ac_lines_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_transformers_common_meters()
+vector<METER> METER_BUILDER::build_all_transformers_common_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_transformers_device_id();
     vector<string> keys = {"ACTIVE POWER IN MW", "REACTIVE POWER IN MVAR", "CURRENT IN KA"};
     return build_meters_with_multi_transformers_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_lcc_hvdc2ts_common_meters()
+vector<METER> METER_BUILDER::build_all_lcc_hvdc2ts_common_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_lcc_hvdc2ts_device_id();
     vector<string> keys = {"DC VOLTAGE IN KV",     "DC CURRENT IN KA", "DC POWER IN MW",
@@ -282,7 +284,7 @@ vector<METER> DYNAMICS_SIMULATOR::build_all_lcc_hvdc2ts_common_meters()
     return build_meters_with_multi_lcc_hvdc2t_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_vsc_hvdcs_common_meters()
+vector<METER> METER_BUILDER::build_all_vsc_hvdcs_common_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_vsc_hvdcs_device_id();
     vector<string> keys = {"CONVERTER AC VOLTAGE IN PU",  "CONVERTER AC CURRENT IN KA",
@@ -293,7 +295,7 @@ vector<METER> DYNAMICS_SIMULATOR::build_all_vsc_hvdcs_common_meters()
     return build_meters_with_multi_vsc_hvdcs_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_mt_hvdcs_common_meters()
+vector<METER> METER_BUILDER::build_all_mt_hvdcs_common_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_mt_hvdcs_device_id();
     vector<string> keys = {"CONVERTER AC VOLTAGE IN PU",  "CONVERTER AC CURRENT IN KA",
@@ -304,7 +306,7 @@ vector<METER> DYNAMICS_SIMULATOR::build_all_mt_hvdcs_common_meters()
     return build_meters_with_multi_mt_hvdcs_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_all_equivalent_devices_common_meters()
+vector<METER> METER_BUILDER::build_all_equivalent_devices_common_meters()
 {
     vector<DEVICE_ID> dids = toolkit->get_power_system_database().get_all_equivalent_devices_device_id();
     vector<string> keys = {"VOLTAGE SOURCE VOLTAGE IN PU",         "VOLTAGE SOURCE VOLTAGE ANGLE IN DEG",
@@ -318,7 +320,7 @@ vector<METER> DYNAMICS_SIMULATOR::build_all_equivalent_devices_common_meters()
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_bus_complete_meters(unsigned int bus)
+vector<METER> METER_BUILDER::build_one_bus_complete_meters(unsigned int bus)
 {
     DEVICE_ID did = get_bus_device_id(bus);
     vector<DEVICE_ID> dids = {did};
@@ -326,127 +328,127 @@ vector<METER> DYNAMICS_SIMULATOR::build_one_bus_complete_meters(unsigned int bus
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_generator_complete_meters(const DEVICE_ID& did)
+vector<METER> METER_BUILDER::build_one_generator_complete_meters(const DEVICE_ID& did)
 {
     vector<DEVICE_ID> dids = {did};
     vector<string> keys = get_sorted_keys_from_meter_map(sg_meter_map);
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_wt_generator_complete_meters(const DEVICE_ID& did)
+vector<METER> METER_BUILDER::build_one_wt_generator_complete_meters(const DEVICE_ID& did)
 {
     vector<DEVICE_ID> dids = {did};
     vector<string> keys = get_sorted_keys_from_meter_map(wtg_meter_map);
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_pv_unit_complete_meters(const DEVICE_ID& did)
+vector<METER> METER_BUILDER::build_one_pv_unit_complete_meters(const DEVICE_ID& did)
 {
     vector<DEVICE_ID> dids = {did};
     vector<string> keys = get_sorted_keys_from_meter_map(pvu_meter_map);
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_energy_storage_complete_meters(const DEVICE_ID& did)
+vector<METER> METER_BUILDER::build_one_energy_storage_complete_meters(const DEVICE_ID& did)
 {
     vector<DEVICE_ID> dids = {did};
     vector<string> keys = get_sorted_keys_from_meter_map(es_meter_map);
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_sv_source_complete_meters(const DEVICE_ID& did)
+vector<METER> METER_BUILDER::build_one_sv_source_complete_meters(const DEVICE_ID& did)
 {
     vector<DEVICE_ID> dids = {did};
     vector<string> keys = get_sorted_keys_from_meter_map(sv_source_meter_map);
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_load_complete_meters(const DEVICE_ID& did)
+vector<METER> METER_BUILDER::build_one_load_complete_meters(const DEVICE_ID& did)
 {
     vector<DEVICE_ID> dids = {did};
     vector<string> keys = get_sorted_keys_from_meter_map(load_meter_map);
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_ac_line_complete_meters(const DEVICE_ID& did)
+vector<METER> METER_BUILDER::build_one_ac_line_complete_meters(const DEVICE_ID& did)
 {
     vector<DEVICE_ID> dids = {did};
     vector<string> keys = get_sorted_keys_from_meter_map(ac_line_meter_map);
     return build_meters_with_multi_ac_lines_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_transformer_complete_meters(const DEVICE_ID& did)
+vector<METER> METER_BUILDER::build_one_transformer_complete_meters(const DEVICE_ID& did)
 {
     vector<DEVICE_ID> dids = {did};
     vector<string> keys = get_sorted_keys_from_meter_map(transformer_meter_map);
     return build_meters_with_multi_transformers_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_lcc_hvdc2t_complete_meters(const DEVICE_ID& did)
+vector<METER> METER_BUILDER::build_one_lcc_hvdc2t_complete_meters(const DEVICE_ID& did)
 {
     vector<DEVICE_ID> dids = {did};
     vector<string> keys = get_sorted_keys_from_meter_map(lcc_hvdc2t_meter_map);
     return build_meters_with_multi_lcc_hvdc2t_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_vsc_hvdc_complete_meters(const DEVICE_ID& did)
+vector<METER> METER_BUILDER::build_one_vsc_hvdc_complete_meters(const DEVICE_ID& did)
 {
     vector<DEVICE_ID> dids = {did};
     vector<string> keys = get_sorted_keys_from_meter_map(vsc_hvdc_meter_map);
     return build_meters_with_multi_vsc_hvdcs_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_mt_hvdc_complete_meters(const DEVICE_ID& did)
+vector<METER> METER_BUILDER::build_one_mt_hvdc_complete_meters(const DEVICE_ID& did)
 {
     vector<DEVICE_ID> dids = {did};
     vector<string> keys = get_sorted_keys_from_meter_map(vsc_hvdc_meter_map);
     return build_meters_with_multi_mt_hvdcs_and_meter_types(dids, keys);
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_one_equivalent_device_complete_meters(const DEVICE_ID& did)
+vector<METER> METER_BUILDER::build_one_equivalent_device_complete_meters(const DEVICE_ID& did)
 {
     vector<DEVICE_ID> dids = {did};
     vector<string> keys = get_sorted_keys_from_meter_map(equivalent_device_meter_map);
     return build_meters_with_multi_devices_and_meter_types(dids, keys);
 }
 
-METER DYNAMICS_SIMULATOR::build_one_bus_related_meter(unsigned int bus, string meter_type)
+METER METER_BUILDER::build_one_bus_related_meter(unsigned int bus, string meter_type)
 {
     DEVICE_ID did = get_bus_device_id(bus);
     return build_one_meter(did, meter_type);
 }
 
-METER DYNAMICS_SIMULATOR::build_one_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
+METER METER_BUILDER::build_one_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     return build_one_meter(did, meter_type, 0, var_name);
 }
 
-METER DYNAMICS_SIMULATOR::build_one_wt_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
+METER METER_BUILDER::build_one_wt_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     return build_one_meter(did, meter_type, 0, var_name);
 }
 
-METER DYNAMICS_SIMULATOR::build_one_pv_unit_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
+METER METER_BUILDER::build_one_pv_unit_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     return build_one_meter(did, meter_type, 0, var_name);
 }
 
-METER DYNAMICS_SIMULATOR::build_one_energy_storage_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
+METER METER_BUILDER::build_one_energy_storage_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     return build_one_meter(did, meter_type, 0, var_name);
 }
 
-METER DYNAMICS_SIMULATOR::build_one_sv_source_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
+METER METER_BUILDER::build_one_sv_source_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     return build_one_meter(did, meter_type, 0, var_name);
 }
 
-METER DYNAMICS_SIMULATOR::build_one_load_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
+METER METER_BUILDER::build_one_load_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     return build_one_meter(did, meter_type, 0, var_name);
 }
 
-METER DYNAMICS_SIMULATOR::build_one_ac_line_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
+METER METER_BUILDER::build_one_ac_line_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
 {
     METER meter(*toolkit);
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -466,12 +468,12 @@ METER DYNAMICS_SIMULATOR::build_one_ac_line_related_meter(const DEVICE_ID& did, 
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::build_one_ac_line_related_meter(const DEVICE_ID& did, string meter_type, unsigned int bus, string var_name)
+METER METER_BUILDER::build_one_ac_line_related_meter(const DEVICE_ID& did, string meter_type, unsigned int bus, string var_name)
 {
     return build_one_meter(did, meter_type, bus, var_name);
 }
 
-METER DYNAMICS_SIMULATOR::build_one_transformer_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
+METER METER_BUILDER::build_one_transformer_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
 {
     METER meter(*toolkit);
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -487,12 +489,12 @@ METER DYNAMICS_SIMULATOR::build_one_transformer_related_meter(const DEVICE_ID& d
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::build_one_transformer_related_meter(const DEVICE_ID& did, string meter_type, unsigned int side_bus, string var_name)
+METER METER_BUILDER::build_one_transformer_related_meter(const DEVICE_ID& did, string meter_type, unsigned int side_bus, string var_name)
 {
     return build_one_meter(did, meter_type, side_bus, var_name);
 }
 
-METER DYNAMICS_SIMULATOR::build_one_lcc_hvdc2t_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
+METER METER_BUILDER::build_one_lcc_hvdc2t_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
 {
     METER meter(*toolkit);
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -509,7 +511,7 @@ METER DYNAMICS_SIMULATOR::build_one_lcc_hvdc2t_related_meter(const DEVICE_ID& di
 
 }
 
-METER DYNAMICS_SIMULATOR::build_one_lcc_hvdc2t_related_meter(const DEVICE_ID& did, string meter_type, unsigned int side_bus, string var_name)
+METER METER_BUILDER::build_one_lcc_hvdc2t_related_meter(const DEVICE_ID& did, string meter_type, unsigned int side_bus, string var_name)
 {
     METER meter(*toolkit);
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -518,12 +520,12 @@ METER DYNAMICS_SIMULATOR::build_one_lcc_hvdc2t_related_meter(const DEVICE_ID& di
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::build_one_vsc_hvdc_related_meter(const DEVICE_ID& did, string meter_type, unsigned int side, string var_name)
+METER METER_BUILDER::build_one_vsc_hvdc_related_meter(const DEVICE_ID& did, string meter_type, unsigned int side, string var_name)
 {
     return build_one_meter(did, meter_type, side, var_name);
 }
 
-METER DYNAMICS_SIMULATOR::build_one_vsc_hvdc_related_meter(string vsc_name, string meter_type, unsigned int side, string var_name)
+METER METER_BUILDER::build_one_vsc_hvdc_related_meter(string vsc_name, string meter_type, unsigned int side, string var_name)
 {
     METER meter(*toolkit);
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -539,7 +541,7 @@ METER DYNAMICS_SIMULATOR::build_one_vsc_hvdc_related_meter(string vsc_name, stri
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::build_one_vsc_hvdc_related_dc_line_meter(const DEVICE_ID& did, string meter_type, const DC_DEVICE_ID dc_did, unsigned int side, string var_name)
+METER METER_BUILDER::build_one_vsc_hvdc_related_dc_line_meter(const DEVICE_ID& did, string meter_type, const DC_DEVICE_ID dc_did, unsigned int side, string var_name)
 {
     METER meter(*toolkit);
     meter = build_one_vsc_hvdc_related_meter(did, meter_type, side, var_name);
@@ -547,7 +549,7 @@ METER DYNAMICS_SIMULATOR::build_one_vsc_hvdc_related_dc_line_meter(const DEVICE_
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::build_one_mt_hvdc_related_meter(const DEVICE_ID& did, string sub_device_name, string meter_type, string var_name)
+METER METER_BUILDER::build_one_mt_hvdc_related_meter(const DEVICE_ID& did, string sub_device_name, string meter_type, string var_name)
  {
     METER meter(*toolkit);
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -556,7 +558,7 @@ METER DYNAMICS_SIMULATOR::build_one_mt_hvdc_related_meter(const DEVICE_ID& did, 
     return meter;
  }
 
-METER DYNAMICS_SIMULATOR::build_one_mt_hvdc_related_meter(string mtdc_name, string sub_device_name, string meter_type, string var_name)
+METER METER_BUILDER::build_one_mt_hvdc_related_meter(string mtdc_name, string sub_device_name, string meter_type, string var_name)
 {
     METER meter(*toolkit);
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
@@ -572,12 +574,12 @@ METER DYNAMICS_SIMULATOR::build_one_mt_hvdc_related_meter(string mtdc_name, stri
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::build_one_equivalent_device_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
+METER METER_BUILDER::build_one_equivalent_device_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     return build_one_meter(did, meter_type, 0, var_name);
 }
 
-METER DYNAMICS_SIMULATOR::build_one_meter(const DEVICE_ID& did, string meter_type, unsigned int side_bus, string var_name)
+METER METER_BUILDER::build_one_meter(const DEVICE_ID& did, string meter_type, unsigned int side_bus, string var_name)
 {
     METER meter(*toolkit);
     meter_type = string2upper(meter_type);
@@ -597,21 +599,21 @@ METER DYNAMICS_SIMULATOR::build_one_meter(const DEVICE_ID& did, string meter_typ
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::build_one_meter_with_sub_device_name(const DEVICE_ID& did, string sub_device_name, string meter_type, unsigned int side_bus, string var_name)
+METER METER_BUILDER::build_one_meter_with_sub_device_name(const DEVICE_ID& did, string sub_device_name, string meter_type, unsigned int side_bus, string var_name)
 {
     METER meter = build_one_meter(did, meter_type, side_bus, var_name);
     meter.set_sub_device_name(sub_device_name);
     return meter;
 }
 
-METER DYNAMICS_SIMULATOR::build_one_meter_with_sub_dc_device_id(const DEVICE_ID& did, DC_DEVICE_ID& sub_dc_did, string meter_type, unsigned int side_bus, string var_name)
+METER METER_BUILDER::build_one_meter_with_sub_dc_device_id(const DEVICE_ID& did, DC_DEVICE_ID& sub_dc_did, string meter_type, unsigned int side_bus, string var_name)
 {
     METER meter = build_one_meter(did, meter_type, side_bus, var_name);
     meter.set_sub_dc_device_id(sub_dc_did);
     return meter;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_meters_with_multi_devices_and_meter_types(const vector<DEVICE_ID>& dids, vector<string>& keys)
+vector<METER> METER_BUILDER::build_meters_with_multi_devices_and_meter_types(const vector<DEVICE_ID>& dids, vector<string>& keys)
 {
     vector<METER> meters;
     unsigned int m = keys.size();
@@ -631,7 +633,7 @@ vector<METER> DYNAMICS_SIMULATOR::build_meters_with_multi_devices_and_meter_type
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_meters_with_multi_ac_lines_and_meter_types(const vector<DEVICE_ID>& dids, vector<string>& keys)
+vector<METER> METER_BUILDER::build_meters_with_multi_ac_lines_and_meter_types(const vector<DEVICE_ID>& dids, vector<string>& keys)
 {
     vector<METER> meters;
     unsigned int m = keys.size();
@@ -655,7 +657,7 @@ vector<METER> DYNAMICS_SIMULATOR::build_meters_with_multi_ac_lines_and_meter_typ
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_meters_with_multi_transformers_and_meter_types(const vector<DEVICE_ID>& dids, vector<string>& keys)
+vector<METER> METER_BUILDER::build_meters_with_multi_transformers_and_meter_types(const vector<DEVICE_ID>& dids, vector<string>& keys)
 {
     POWER_SYSTEM_DATABASE& psdb = get_toolkit().get_power_system_database();
     vector<METER> meters;
@@ -688,7 +690,7 @@ vector<METER> DYNAMICS_SIMULATOR::build_meters_with_multi_transformers_and_meter
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_meters_with_multi_lcc_hvdc2t_and_meter_types(const vector<DEVICE_ID>& dids, vector<string>& keys)
+vector<METER> METER_BUILDER::build_meters_with_multi_lcc_hvdc2t_and_meter_types(const vector<DEVICE_ID>& dids, vector<string>& keys)
 {
     vector<METER> meters;
     unsigned int m = keys.size();
@@ -712,7 +714,7 @@ vector<METER> DYNAMICS_SIMULATOR::build_meters_with_multi_lcc_hvdc2t_and_meter_t
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_meters_with_multi_vsc_hvdcs_and_meter_types(const vector<DEVICE_ID>& dids, vector<string>& keys)
+vector<METER> METER_BUILDER::build_meters_with_multi_vsc_hvdcs_and_meter_types(const vector<DEVICE_ID>& dids, vector<string>& keys)
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = get_toolkit().get_power_system_database();
@@ -775,7 +777,7 @@ vector<METER> DYNAMICS_SIMULATOR::build_meters_with_multi_vsc_hvdcs_and_meter_ty
     return meters;
 }
 
-vector<METER> DYNAMICS_SIMULATOR::build_meters_with_multi_mt_hvdcs_and_meter_types(const vector<DEVICE_ID>& dids, vector<string>& keys)
+vector<METER> METER_BUILDER::build_meters_with_multi_mt_hvdcs_and_meter_types(const vector<DEVICE_ID>& dids, vector<string>& keys)
 {
     vector<METER> meters;
     POWER_SYSTEM_DATABASE& psdb = get_toolkit().get_power_system_database();
@@ -849,7 +851,7 @@ vector<METER> DYNAMICS_SIMULATOR::build_meters_with_multi_mt_hvdcs_and_meter_typ
     return meters;
 }
 
-vector<string> DYNAMICS_SIMULATOR::get_sorted_keys_from_meter_map(unordered_map<string, function<double(METER_PARAMETER)>>& meter_map)
+vector<string> METER_BUILDER::get_sorted_keys_from_meter_map(unordered_map<string, function<double(METER_PARAMETER)>>& meter_map)
 {
     vector<string> keys;
     keys.reserve(meter_map.size());

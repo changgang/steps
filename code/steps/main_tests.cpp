@@ -76,7 +76,7 @@
 #include "header/block/saturation_block_test.h"
 
 #include "header/meter/meter_test.h"
-#include "header/meter/meter_setter_test.h"
+#include "header/meter/meter_builder_test.h"
 
 
 #include "header/toolkit/dynamic_simulator/dynamic_simulator_test.h"
@@ -294,7 +294,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new MODEL_VAR_TABLE_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new METER_TEST));
-        //ts.add(unique_ptr<Test::Suite>(new METER_SETTER_TEST));
+        //ts.add(unique_ptr<Test::Suite>(new METER_BUILDER_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new MODEL_TEST));
 

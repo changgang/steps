@@ -4,6 +4,7 @@
 #include "header/steps_namespace.h"
 #include "header/toolkit/powerflow_solver/powerflow_solver.h"
 #include "header/toolkit/dynamic_simulator/dynamic_simulator.h"
+#include "header/meter/meter_builder.h"
 #include <cstdlib>
 #include <cstring>
 #include <istream>
@@ -61,35 +62,36 @@ int main(int argc, char* argv[])
     importer.load_dynamic_data("nccc10k.dyr");
 
     vector<METER> meters;
-    meters = simulator.build_one_bus_complete_meters(306);
+    METER_BUILDER builder(default_toolkit);
+    meters = builder.build_one_bus_complete_meters(306);
     simulator.install_meters(meters);
 
     vector<GENERATOR*> gens = psdb.get_generators_connecting_to_bus(18231);
     for(unsigned int i=0; i<1; ++i)
     {
         GENERATOR* gen = gens[i];
-        meters = simulator.build_one_generator_complete_meters(gen->get_device_id());
+        meters = builder.build_one_generator_complete_meters(gen->get_device_id());
         simulator.install_meters(meters);
     }
     vector<WT_GENERATOR*> wt_gens = psdb.get_wt_generators_connecting_to_bus(21125);
     for(unsigned int i=0; i<1; ++i)
     {
         WT_GENERATOR* wtgen = wt_gens[i];
-        meters = simulator.build_one_wt_generator_complete_meters(wtgen->get_device_id());
+        meters = builder.build_one_wt_generator_complete_meters(wtgen->get_device_id());
         simulator.install_meters(meters);
     }
     vector<PV_UNIT*> pvus = psdb.get_pv_units_connecting_to_bus(21382);
     for(unsigned int i=0; i<1; ++i)
     {
         PV_UNIT* pvu = pvus[i];
-        meters = simulator.build_one_pv_unit_complete_meters(pvu->get_device_id());
+        meters = builder.build_one_pv_unit_complete_meters(pvu->get_device_id());
         simulator.install_meters(meters);
     }
     vector<ENERGY_STORAGE*> ess = psdb.get_energy_storages_connecting_to_bus(21331);
     for(unsigned int i=0; i<1; ++i)
     {
         ENERGY_STORAGE* es = ess[i];
-        meters = simulator.build_one_energy_storage_complete_meters(es->get_device_id());
+        meters = builder.build_one_energy_storage_complete_meters(es->get_device_id());
         simulator.install_meters(meters);
     }
 

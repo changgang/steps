@@ -3,7 +3,7 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
-#include "header/meter/meter_setter.h"
+#include "header/meter/meter_builder.h"
 #include <cstdio>
 #include <istream>
 #include <iostream>
@@ -439,7 +439,7 @@ DEVICE_ID CONTINGENCY_SCREENER::get_monitored_generator(unsigned int i) const
 
 void CONTINGENCY_SCREENER::set_meters(DYNAMICS_SIMULATOR& simulator)
 {
-    METER_SETTER setter(default_toolkit);
+    METER_BUILDER builder(default_toolkit);
 
     simulator.clear_meters();
 
@@ -449,7 +449,7 @@ void CONTINGENCY_SCREENER::set_meters(DYNAMICS_SIMULATOR& simulator)
         DEVICE_ID did = get_monitored_generator(i);
         if(did.is_valid() and did.get_device_type()==STEPS_GENERATOR)
         {
-            METER meter = setter.prepare_generator_rotor_angle_in_deg_meter(did);
+            METER meter = builder.build_one_generator_related_meter(did, "ROTOR ANGLE IN DEG");
             simulator.install_meter(meter);
         }
     }

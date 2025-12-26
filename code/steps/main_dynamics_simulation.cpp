@@ -7,6 +7,7 @@
 #include "header/basic/utility.h"
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/prepare_for_tests/prepare_models_for_test.h"
+#include "header/meter/meter_builder.h"
 using namespace std;
 
 int main()
@@ -78,62 +79,20 @@ int main()
     simulator.set_allowed_max_power_imbalance_in_MVA(0.00001);
 
     METER meter(default_toolkit);
+    METER_BUILDER builder(default_toolkit);
     vector<METER> meters;
 
-/*
-    meter = simulator.prepare_bus_related_meter(9101, "voltage in pu");
-    simulator.install_meter(meter);
-    meter = simulator.prepare_bus_related_meter(9102, "voltage in pu");
-    simulator.install_meter(meter);
-    meter = simulator.prepare_bus_related_meter(9103, "voltage in pu");
-    simulator.install_meter(meter);
-    meter = simulator.prepare_bus_related_meter(9104, "voltage in pu");
-    simulator.install_meter(meter);
-    meter = simulator.prepare_bus_related_meter(9101, "frequency in pu");
-    simulator.install_meter(meter);
-    meter = simulator.prepare_bus_related_meter(9102, "frequency in pu");
-    simulator.install_meter(meter);
-    meter = simulator.prepare_bus_related_meter(9103, "frequency in pu");
-    simulator.install_meter(meter);
-    meter = simulator.prepare_bus_related_meter(9104, "frequency in pu");
-    simulator.install_meter(meter);
-    meter = simulator.prepare_bus_related_meter(9101, "ANGLE IN DEG");
-    simulator.install_meter(meter);
-    meter = simulator.prepare_bus_related_meter(9102, "ANGLE IN DEG");
-    simulator.install_meter(meter);
-    meter = simulator.prepare_bus_related_meter(9103, "ANGLE IN DEG");
-    simulator.install_meter(meter);
-    meter = simulator.prepare_bus_related_meter(9104, "ANGLE IN DEG");
-    simulator.install_meter(meter);
-    meter = simulator.prepare_bus_related_meter(9101, "FREQUENCY DEVIATION IN PU");
-    simulator.install_meter(meter);
-    meter = simulator.prepare_bus_related_meter(9102, "FREQUENCY DEVIATION IN PU");
-    simulator.install_meter(meter);
-    meter = simulator.prepare_bus_related_meter(9103, "FREQUENCY DEVIATION IN PU");
-    simulator.install_meter(meter);
-    meter = simulator.prepare_bus_related_meter(9104, "FREQUENCY DEVIATION IN PU");
-    simulator.install_meter(meter);
-    meter = simulator.prepare_bus_related_meter(9101, "FREQUENCY DEVIATION IN HZ");
-    simulator.install_meter(meter);
-    meter = simulator.prepare_bus_related_meter(9102, "FREQUENCY DEVIATION IN HZ");
-    simulator.install_meter(meter);
-    meter = simulator.prepare_bus_related_meter(9103, "FREQUENCY DEVIATION IN HZ");
-    simulator.install_meter(meter);
-    meter = simulator.prepare_bus_related_meter(9104, "FREQUENCY DEVIATION IN HZ");
-    simulator.install_meter(meter);
-*/
-
-    //meters = simulator.build_all_buses_complete_meters();
+    //meters = builder.build_all_buses_complete_meters();
     //simulator.install_meters(meters);
-    //meters = simulator.build_all_vsc_hvdcs_complete_meters();
+    //meters = builder.build_all_vsc_hvdcs_complete_meters();
     //simulator.install_meters(meters);
-    //meters = simulator.build_all_generators_complete_meters();
+    //meters = builder.build_all_generators_complete_meters();
     //simulator.install_meters(meters);
-    meters = simulator.build_all_lcc_hvdc2ts_complete_meters();
+    meters = builder.build_all_lcc_hvdc2ts_complete_meters();
     simulator.install_meters(meters);
-    //meters = simulator.build_all_loads_complete_meters();
+    //meters = builder.build_all_loads_complete_meters();
     //simulator.install_meters(meters);
-    //meters = simulator.build_all_wt_generators_complete_meters();
+    //meters = builder.build_all_wt_generators_complete_meters();
     //simulator.install_meters(meters);
 
     simulator.set_output_file("IEEE39_2LCC");

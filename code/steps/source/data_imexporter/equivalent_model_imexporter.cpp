@@ -1,7 +1,7 @@
 #include "header/data_imexporter/equivalent_model_imexporter.h"
 #include "header/model/equivalent_model/equivalent_models.h"
 #include "header/basic/utility.h"
-#include "header/meter/meter_setter.h"
+#include "header/meter/meter_builder.h"
 #include "header/STEPS.h"
 #include <cstdio>
 #include <istream>
@@ -124,7 +124,7 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
 {
     ostringstream osstream;
 
-    METER_SETTER setter(*toolkit);
+    METER_BUILDER builder(*toolkit);
 
     METER meter(*toolkit);
 
@@ -135,108 +135,49 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
         return meter;
     }
 
+    string meter_type = data_line[2];
     if(data_line[1]=="BUS")
     {
         unsigned int bus = get_integer_data(data_line[3],"0");
         delay = get_integer_data(data_line[4],"0");
         coefficient = get_double_data(data_line[5],"0.0");
 
-        if(data_line[2].find("VOLTAGE_PU")!=string::npos)
-            meter = setter.prepare_bus_voltage_in_pu_meter(bus);
-        else
-            if(data_line[2].find("VOLTAGE_KV")!=string::npos)
-                meter = setter.prepare_bus_voltage_in_kV_meter(bus);
-            else
-                if(data_line[2].find("ANGLE_DEG")!=string::npos)
-                    meter = setter.prepare_bus_angle_in_deg_meter(bus);
-                else
-                    if(data_line[2].find("ANGLE_RAD")!=string::npos)
-                        meter = setter.prepare_bus_angle_in_rad_meter(bus);
-                    else
-                        if(data_line[2].find("FREQUENY_DEVIATION_PU")!=string::npos)
-                            meter = setter.prepare_bus_frequency_deviation_in_pu_meter(bus);
-                        else
-                            if(data_line[2].find("FREQUENY_DEVIATION_HZ")!=string::npos)
-                                meter = setter.prepare_bus_frequency_deviation_in_Hz_meter(bus);
-                            else
-                                if(data_line[2].find("FREQUENY_PU")!=string::npos)
-                                    meter = setter.prepare_bus_frequency_in_pu_meter(bus);
-                                else
-                                    if(data_line[2].find("FREQUENY_HZ")!=string::npos)
-                                        meter = setter.prepare_bus_frequency_in_Hz_meter(bus);
+        meter = builder.build_one_bus_related_meter(bus, meter_type);
+
         return meter;
     }
 
 
     if(data_line[1]=="LINE")
     {
-        DEVICE_ID did;
-        did.set_device_type(STEPS_AC_LINE);
-        TERMINAL terminal;
-        terminal.clear();
-        terminal.append_bus(get_integer_data(data_line[3],"0"));
-        terminal.append_bus(get_integer_data(data_line[4],"0"));
-        did.set_device_terminal(terminal);
-        did.set_device_identifier_index(get_index_of_string(get_string_data(data_line[5],"")));
-
+        unsigned int ibus = get_integer_data(data_line[3],"0");
+        unsigned int jbus = get_integer_data(data_line[4],"0");
+        string identifier = get_string_data(data_line[5],"");
         unsigned int side_bus = get_integer_data(data_line[6],"0");
-
         delay = get_integer_data(data_line[7],"0");
         coefficient = get_double_data(data_line[8],"0.0");
 
-        if(data_line[2].find("ACTIVE_POWER_MW")!=string::npos)
-            meter = setter.prepare_ac_line_active_power_in_MW_meter(did, side_bus);
-        else
-            if(data_line[2].find("ACTIVE_POWER_PU")!=string::npos)
-                meter = setter.prepare_ac_line_active_power_in_pu_meter(did, side_bus);
-            else
-                if(data_line[2].find("REACTIVE_POWER_MVAR")!=string::npos)
-                    meter = setter.prepare_ac_line_reactive_power_in_MVar_meter(did, side_bus);
-                else
-                    if(data_line[2].find("REACTIVE_POWER_PU")!=string::npos)
-                        meter = setter.prepare_ac_line_reactive_power_in_pu_meter(did, side_bus);
-                    else
-                        if(data_line[2].find("CURRENT_KA")!=string::npos)
-                            meter = setter.prepare_ac_line_current_in_kA_meter(did, side_bus);
-                        else
-                            if(data_line[2].find("CURRENT_PU")!=string::npos)
-                                meter = setter.prepare_ac_line_current_in_pu_meter(did, side_bus);
+        DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
+
+        meter = builder.build_one_ac_line_related_meter(did, meter_type, side_bus);
+
         return meter;
     }
 
     if(data_line[1]=="TRANSFORMER")
     {
-        DEVICE_ID did;
-        did.set_device_type(STEPS_TRANSFORMER);
-        TERMINAL terminal;
-        terminal.clear();
-        terminal.append_bus(get_integer_data(data_line[3],"0"));
-        terminal.append_bus(get_integer_data(data_line[4],"0"));
-        did.set_device_terminal(terminal);
-        did.set_device_identifier_index(get_index_of_string(get_string_data(data_line[5],"")));
+        unsigned int ibus = get_integer_data(data_line[3],"0");
+        unsigned int jbus = get_integer_data(data_line[4],"0");
+        unsigned int kbus = get_integer_data(data_line[5],"0");
+        string identifier = get_string_data(data_line[6],"");
+        unsigned int side_bus = get_integer_data(data_line[7],"0");
+        delay = get_integer_data(data_line[8],"0");
+        coefficient = get_double_data(data_line[9],"0.0");
 
-        unsigned int side_bus = get_integer_data(data_line[6],"0");
+        DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-        delay = get_integer_data(data_line[7],"0");
-        coefficient = get_double_data(data_line[8],"0.0");
+        meter = builder.build_one_transformer_related_meter(did, meter_type, side_bus);
 
-        if(data_line[2].find("ACTIVE_POWER_MW")!=string::npos)
-            meter = setter.prepare_transformer_active_power_in_MW_meter(did, side_bus);
-        else
-            if(data_line[2].find("ACTIVE_POWER_PU")!=string::npos)
-                meter = setter.prepare_transformer_active_power_in_pu_meter(did, side_bus);
-            else
-                if(data_line[2].find("REACTIVE_POWER_MVAR")!=string::npos)
-                    meter = setter.prepare_transformer_reactive_power_in_MVar_meter(did, side_bus);
-                else
-                    if(data_line[2].find("REACTIVE_POWER_PU")!=string::npos)
-                        meter = setter.prepare_transformer_reactive_power_in_pu_meter(did, side_bus);
-                    else
-                        if(data_line[2].find("CURRENT_KA")!=string::npos)
-                            meter = setter.prepare_transformer_current_in_kA_meter(did, side_bus);
-                        else
-                            if(data_line[2].find("CURRENT_PU")!=string::npos)
-                                meter = setter.prepare_transformer_current_in_pu_meter(did, side_bus);
         return meter;
     }
 
@@ -248,34 +189,9 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
         delay = get_integer_data(data_line[5],"0");
         coefficient = get_double_data(data_line[6],"0.0");
 
-        DEVICE_ID did;
-        did.set_device_type(STEPS_GENERATOR);
-        TERMINAL terminal;
-        terminal.clear();
-        terminal.append_bus(bus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier_index(get_index_of_string(identifier));
+        DEVICE_ID did = get_generator_device_id(bus, identifier);
 
-        if(data_line[2].find("ACTIVE_POWER_MW")!=string::npos)
-            meter = setter.prepare_generator_terminal_active_power_in_MW_meter(did);
-        else
-            if(data_line[2].find("ACTIVE_POWER_PU")!=string::npos)
-                meter = setter.prepare_generator_terminal_active_power_in_pu_on_sbase_meter(did);
-            else
-                if(data_line[2].find("REACTIVE_POWER_MVAR")!=string::npos)
-                    meter = setter.prepare_generator_terminal_reactive_power_in_MVar_meter(did);
-                else
-                    if(data_line[2].find("REACTIVE_POWER_PU")!=string::npos)
-                        meter = setter.prepare_generator_terminal_reactive_power_in_pu_on_sbase_meter(did);
-                    else
-                        if(data_line[2].find("EXCITATION_VOLTAGE_PU")!=string::npos)
-                            meter = setter.prepare_generator_excitation_voltage_in_pu_meter(did);
-                        else
-                            if(data_line[2].find("MECHANICAL_POWER_MW")!=string::npos)
-                                meter = setter.prepare_generator_mechanical_power_in_MW_meter(did);
-                            else
-                                if(data_line[2].find("MECHANICAL_POWER_PU")!=string::npos)
-                                    meter = setter.prepare_generator_mechanical_power_in_pu_on_sbase_meter(did);
+        meter = builder.build_one_generator_related_meter(did, meter_type);
         return meter;
     }
 
@@ -287,25 +203,10 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
         delay = get_integer_data(data_line[5],"0");
         coefficient = get_double_data(data_line[6],"0.0");
 
-        DEVICE_ID did;
-        did.set_device_type(STEPS_LOAD);
-        TERMINAL terminal;
-        terminal.clear();
-        terminal.append_bus(bus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier_index(get_index_of_string(identifier));
+        DEVICE_ID did = get_load_device_id(bus, identifier);
 
-        if(data_line[2].find("ACTIVE_POWER_MW")!=string::npos)
-            meter = setter.prepare_load_active_power_in_MW_meter(did);
-        else
-            if(data_line[2].find("ACTIVE_POWER_PU")!=string::npos)
-                meter = setter.prepare_load_active_power_in_pu_meter(did);
-            else
-                if(data_line[2].find("REACTIVE_POWER_MVAR")!=string::npos)
-                    meter = setter.prepare_load_reactive_power_in_MVar_meter(did);
-                else
-                    if(data_line[2].find("REACTIVE_POWER_PU")!=string::npos)
-                        meter = setter.prepare_load_reactive_power_in_pu_meter(did);
+        meter = builder.build_one_load_related_meter(did, meter_type);
+
         return meter;
     }
 
@@ -354,8 +255,6 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
     did.set_device_identifier_index(get_index_of_string(identifier));
 
     model.set_output_line(did, side_bus);
-
-    METER_SETTER setter(*toolkit);
 
     METER meter(*toolkit);
     unsigned int delay = 0;

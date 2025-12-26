@@ -329,36 +329,6 @@ double mt_hvdc_meter_getter::get_dc_line_current_in_kA(const METER_PARAMETER& pa
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_dc_line_current_on_sending_side_in_kA(const METER_PARAMETER& para)
-{
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
-    {
-        if(mtdc->get_status() == true)
-        {
-            string line_name = para.sub_device_name;
-            DC_LINE* line = mtdc->get_dc_line_with_line_name(line_name);
-            return line->get_i_RL_in_kA_on_sending_side();
-        }
-    }
-    return 0.0;
-}
-
-double mt_hvdc_meter_getter::get_dc_line_current_on_receiving_side_in_kA(const METER_PARAMETER& para)
-{
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
-    {
-        if(mtdc->get_status() == true)
-        {
-            string line_name = para.sub_device_name;
-            DC_LINE* line = mtdc->get_dc_line_with_line_name(line_name);
-            return line->get_i_RL_in_kA_on_receiving_side();
-        }
-    }
-    return 0.0;
-}
-
 double mt_hvdc_meter_getter::get_hlcc_converter_model_internal_variable(const METER_PARAMETER& para)
 {
     return 0.0;

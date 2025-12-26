@@ -1,7 +1,7 @@
 #include "header/model/equivalent_model/ARXL.h"
 #include "header/basic/utility.h"
 #include "header/STEPS.h"
-#include "header/meter/meter_setter.h"
+#include "header/meter/meter_builder.h"
 #include <cstdio>
 ARXL::ARXL(STEPS& toolkit) : EQUIVALENT_MODEL(toolkit)
 {
@@ -87,14 +87,14 @@ void ARXL::set_output_line(DEVICE_ID did, unsigned int meter_side)
 
     clear();
 
-    METER_SETTER setter(toolkit);
+    METER_BUILDER builder(toolkit);
 
     METER meter(get_toolkit());
 
-    meter = setter.prepare_ac_line_active_power_in_MW_meter(did, meter_side);
+    meter = builder.build_one_ac_line_related_meter(did, "ACTIVE POWER IN MW", meter_side);
     add_P_input_item(meter, 0, 0.0);
 
-    meter = setter.prepare_ac_line_reactive_power_in_MVar_meter(did, meter_side);
+    meter = builder.build_one_ac_line_related_meter(did, "REACTIVE POWER IN MVAR", meter_side);
     add_Q_input_item(meter, 0, 0.0);
 }
 
@@ -504,7 +504,7 @@ void ARXL::switch_output_to_equivalent_device()
 
 
     // change 0-meters into equivalent device meters
-    METER_SETTER setter(toolkit);
+    METER_BUILDER builder(toolkit);
 
     DEVICE_ID  edevice_did = edevice->get_device_id();
 
@@ -512,11 +512,11 @@ void ARXL::switch_output_to_equivalent_device()
            <<"Q_meters[0] was "<<q_meters[0].get_meter_name()<<endl;
     toolkit.show_information_with_leading_time_stamp(osstream);
 
-    METER meter = setter.prepare_equivalent_device_nominal_active_constant_power_load_in_MW_meter(edevice_did);
+    METER meter = builder.build_one_equivalent_device_related_meter(edevice_did, "ACTIVE CONSTANT POWER LOAD IN MW");
     p_meters[0].change_device_id(meter.get_device_id());
     p_meters[0].change_meter_type(meter.get_meter_type());
 
-    meter = setter.prepare_equivalent_device_nominal_reactive_constant_power_load_in_MVar_meter(edevice_did);
+    meter = builder.build_one_equivalent_device_related_meter(edevice_did, "REACTIVE CONSTANT POWER LOAD IN MVAR");
     q_meters[0].change_device_id(meter.get_device_id());
     q_meters[0].change_meter_type(meter.get_meter_type());
 

@@ -1,5 +1,6 @@
 #include "header/apis/steps_api.h"
 #include "header/basic/utility.h"
+#include "header/meter/meter_builder.h"
 #include "header/toolkit/cct_searcher/cct_searcher.h"
 #include "header/steps_namespace.h"
 #include <iostream>
@@ -300,7 +301,8 @@ void api_prepare_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.build_all_meters();
+    METER_BUILDER builder(toolkit);
+    vector<METER> meters = builder.build_all_meters();
     ds.install_meters(meters);
 }
 
@@ -308,7 +310,8 @@ void api_prepare_bus_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.build_all_buses_complete_meters();
+    METER_BUILDER builder(toolkit);
+    vector<METER> meters = builder.build_all_buses_complete_meters();
     ds.install_meters(meters);
 }
 
@@ -316,7 +319,8 @@ void api_prepare_generator_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.build_all_generators_complete_meters();
+    METER_BUILDER builder(toolkit);
+    vector<METER> meters = builder.build_all_generators_complete_meters();
     ds.install_meters(meters);
 }
 
@@ -324,7 +328,8 @@ void api_prepare_wt_generator_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.build_all_wt_generators_complete_meters();
+    METER_BUILDER builder(toolkit);
+    vector<METER> meters = builder.build_all_wt_generators_complete_meters();
     ds.install_meters(meters);
 }
 
@@ -332,7 +337,8 @@ void api_prepare_pv_unit_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.build_all_pv_units_complete_meters();
+    METER_BUILDER builder(toolkit);
+    vector<METER> meters = builder.build_all_pv_units_complete_meters();
     ds.install_meters(meters);
 }
 
@@ -340,7 +346,8 @@ void api_prepare_energy_storage_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.build_all_energy_storages_complete_meters();
+    METER_BUILDER builder(toolkit);
+    vector<METER> meters = builder.build_all_energy_storages_complete_meters();
     ds.install_meters(meters);
 }
 
@@ -348,7 +355,8 @@ void api_prepare_sv_source_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.build_all_sv_sources_complete_meters();
+    METER_BUILDER builder(toolkit);
+    vector<METER> meters = builder.build_all_sv_sources_complete_meters();
     ds.install_meters(meters);
 }
 
@@ -356,7 +364,8 @@ void api_prepare_load_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.build_all_loads_complete_meters();
+    METER_BUILDER builder(toolkit);
+    vector<METER> meters = builder.build_all_loads_complete_meters();
     ds.install_meters(meters);
 }
 
@@ -364,7 +373,8 @@ void api_prepare_line_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.build_all_ac_lines_complete_meters();
+    METER_BUILDER builder(toolkit);
+    vector<METER> meters = builder.build_all_ac_lines_complete_meters();
     ds.install_meters(meters);
 }
 
@@ -372,7 +382,8 @@ void api_prepare_transformer_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.build_all_transformers_complete_meters();
+    METER_BUILDER builder(toolkit);
+    vector<METER> meters = builder.build_all_transformers_complete_meters();
     ds.install_meters(meters);
 }
 
@@ -380,7 +391,8 @@ void api_prepare_hvdc_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.build_all_lcc_hvdc2ts_complete_meters();
+    METER_BUILDER builder(toolkit);
+    vector<METER> meters = builder.build_all_lcc_hvdc2ts_complete_meters();
     ds.install_meters(meters);
 }
 
@@ -388,7 +400,8 @@ void api_prepare_vsc_hvdc_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.build_all_vsc_hvdcs_complete_meters();
+    METER_BUILDER builder(toolkit);
+    vector<METER> meters = builder.build_all_vsc_hvdcs_complete_meters();
     ds.install_meters(meters);
 }
 
@@ -396,7 +409,8 @@ void api_prepare_mt_hvdc_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.build_all_mt_hvdcs_complete_meters();
+    METER_BUILDER builder(toolkit);
+    vector<METER> meters = builder.build_all_mt_hvdcs_complete_meters();
     ds.install_meters(meters);
 }
 
@@ -404,7 +418,8 @@ void api_prepare_equivalent_device_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    vector<METER> meters = ds.build_all_equivalent_devices_complete_meters();
+    METER_BUILDER builder(toolkit);
+    vector<METER> meters = builder.build_all_equivalent_devices_complete_meters();
     ds.install_meters(meters);
 }
 
@@ -412,7 +427,8 @@ void api_prepare_bus_related_meter(unsigned int bus, char* meter_type, unsigned 
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    METER meter = ds.build_one_bus_related_meter(bus, meter_type);
+    METER_BUILDER builder(toolkit);
+    METER meter = builder.build_one_bus_related_meter(bus, meter_type);
     ds.install_meter(meter);
 }
 
@@ -421,7 +437,8 @@ void api_prepare_generator_related_meter(unsigned int bus, char* id, char* meter
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_generator_device_id(bus, id);
-    METER meter = ds.build_one_generator_related_meter(did, meter_type, var_name);
+    METER_BUILDER builder(toolkit);
+    METER meter = builder.build_one_generator_related_meter(did, meter_type, var_name);
     ds.install_meter(meter);
 }
 
@@ -430,7 +447,8 @@ void api_prepare_wt_generator_related_meter(unsigned int bus, char* id, char* me
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_wt_generator_device_id(bus, id);
-    METER meter = ds.build_one_wt_generator_related_meter(did, meter_type, var_name);
+    METER_BUILDER builder(toolkit);
+    METER meter = builder.build_one_wt_generator_related_meter(did, meter_type, var_name);
     ds.install_meter(meter);
 }
 
@@ -439,7 +457,8 @@ void api_prepare_pv_unit_related_meter(unsigned int bus, char* id, char* meter_t
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_pv_unit_device_id(bus, id);
-    METER meter = ds.build_one_pv_unit_related_meter(did, meter_type, var_name);
+    METER_BUILDER builder(toolkit);
+    METER meter = builder.build_one_pv_unit_related_meter(did, meter_type, var_name);
     ds.install_meter(meter);
 }
 
@@ -448,7 +467,8 @@ void api_prepare_energy_storage_related_meter(unsigned int bus, char* id, char* 
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_energy_storage_device_id(bus, id);
-    METER meter = ds.build_one_energy_storage_related_meter(did, meter_type, var_name);
+    METER_BUILDER builder(toolkit);
+    METER meter = builder.build_one_energy_storage_related_meter(did, meter_type, var_name);
     ds.install_meter(meter);
 }
 
@@ -457,7 +477,8 @@ void api_prepare_sv_source_related_meter(unsigned int bus, char* id, char* meter
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_sv_source_device_id(bus, id);
-    METER meter = ds.build_one_sv_source_related_meter(did, meter_type, var_name);
+    METER_BUILDER builder(toolkit);
+    METER meter = builder.build_one_sv_source_related_meter(did, meter_type, var_name);
     ds.install_meter(meter);
 }
 
@@ -466,7 +487,8 @@ void api_prepare_load_related_meter(unsigned int bus, char* id, char* meter_type
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_load_device_id(bus, id);
-    METER meter = ds.build_one_load_related_meter(did, meter_type, var_name);
+    METER_BUILDER builder(toolkit);
+    METER meter = builder.build_one_load_related_meter(did, meter_type, var_name);
     ds.install_meter(meter);
 }
 
@@ -475,7 +497,8 @@ void api_prepare_line_related_meter(unsigned int ibus, unsigned int jbus, char* 
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_ac_line_device_id(ibus, jbus, id);
-    METER meter = ds.build_one_ac_line_related_meter(did, meter_type, side, var_name);
+    METER_BUILDER builder(toolkit);
+    METER meter = builder.build_one_ac_line_related_meter(did, meter_type, side, var_name);
     ds.install_meter(meter);
 }
 
@@ -484,7 +507,8 @@ void api_prepare_transformer_related_meter(unsigned int ibus, unsigned int jbus,
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, id);
-    METER meter = ds.build_one_transformer_related_meter(did, meter_type, side, var_name);
+    METER_BUILDER builder(toolkit);
+    METER meter = builder.build_one_transformer_related_meter(did, meter_type, side, var_name);
     ds.install_meter(meter);
 }
 
@@ -493,7 +517,8 @@ void api_prepare_hvdc_related_meter(unsigned int ibus, unsigned int jbus, char* 
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_lcc_hvdc2t_device_id(ibus, jbus, id);
-    METER meter = ds.build_one_lcc_hvdc2t_related_meter(did, meter_type, side, var_name);
+    METER_BUILDER builder(toolkit);
+    METER meter = builder.build_one_lcc_hvdc2t_related_meter(did, meter_type, side, var_name);
     ds.install_meter(meter);
 }
 
@@ -501,7 +526,8 @@ void api_prepare_vsc_hvdc_related_meter(char* vsc_name, char* meter_type, unsign
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    METER meter = ds.build_one_vsc_hvdc_related_meter(vsc_name, meter_type, side, var_name);
+    METER_BUILDER builder(toolkit);
+    METER meter = builder.build_one_vsc_hvdc_related_meter(vsc_name, meter_type, side, var_name);
     ds.install_meter(meter);
 }
 
@@ -509,7 +535,8 @@ void api_prepare_mt_hvdc_related_meter(char* mtdc_name, char* device_name, char*
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    METER meter = ds.build_one_mt_hvdc_related_meter(mtdc_name,device_name,meter_type,var_name);
+    METER_BUILDER builder(toolkit);
+    METER meter = builder.build_one_mt_hvdc_related_meter(mtdc_name,device_name,meter_type,var_name);
     ds.install_meter(meter);
 }
 
@@ -518,7 +545,8 @@ void api_prepare_equivalent_device_related_meter(unsigned int bus, char* id, cha
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_equivalent_device_id(bus, id);
-    METER meter = ds.build_one_equivalent_device_related_meter(did, meter_type, var_name);
+    METER_BUILDER builder(toolkit);
+    METER meter = builder.build_one_equivalent_device_related_meter(did, meter_type, var_name);
     ds.install_meter(meter);
 }
 

@@ -189,10 +189,10 @@
 		<Unit filename="header/meter/lcc_hvdc2t_meter_getter.h" />
 		<Unit filename="header/meter/load_meter_getter.h" />
 		<Unit filename="header/meter/meter.h" />
+		<Unit filename="header/meter/meter_builder.h" />
+		<Unit filename="header/meter/meter_builder_test.h" />
 		<Unit filename="header/meter/meter_map_builder.h" />
 		<Unit filename="header/meter/meter_parameter_struct.h" />
-		<Unit filename="header/meter/meter_setter.h" />
-		<Unit filename="header/meter/meter_setter_test.h" />
 		<Unit filename="header/meter/meter_test.h" />
 		<Unit filename="header/meter/mt_hvdc_meter_getter.h" />
 		<Unit filename="header/meter/pvu_meter_getter.h" />
@@ -750,12 +750,12 @@
 		<Unit filename="source/meter/lcc_hvdc2t_meter_getter.cpp" />
 		<Unit filename="source/meter/load_meter_getter.cpp" />
 		<Unit filename="source/meter/meter.cpp" />
-		<Unit filename="source/meter/meter_map_builder.cpp" />
-		<Unit filename="source/meter/meter_setter.cpp" />
-		<Unit filename="source/meter/meter_setter_test.cpp">
+		<Unit filename="source/meter/meter_builder.cpp" />
+		<Unit filename="source/meter/meter_builder_test.cpp">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
+		<Unit filename="source/meter/meter_map_builder.cpp" />
 		<Unit filename="source/meter/meter_test.cpp">
 			<Option compile="0" />
 			<Option link="0" />
@@ -1091,7 +1091,6 @@
 		<Unit filename="source/toolkit/contingency_screener/contingency_screener.cpp" />
 		<Unit filename="source/toolkit/contingency_screener/contingency_screener_test.cpp" />
 		<Unit filename="source/toolkit/dynamic_simulator/dynamic_simulator.cpp" />
-		<Unit filename="source/toolkit/dynamic_simulator/dynamic_simulator_prepare_meter.cpp" />
 		<Unit filename="source/toolkit/dynamic_simulator/dynamic_simulator_test.cpp" />
 		<Unit filename="source/toolkit/eign_calculator/eign_calculator.cpp" />
 		<Unit filename="source/toolkit/powerflow_case_generator/powerflow_case_generator.cpp" />

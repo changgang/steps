@@ -3,6 +3,7 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
+#include "header/meter/meter_builder.h"
 #include <cstdio>
 #include <istream>
 #include <iostream>
@@ -398,7 +399,8 @@ bool CCT_SEARCHER::perform_simulation_with_clearing_time(double clearing_time)
     prepare_generators_in_islands(simulator);
 
     vector<METER> meters;
-    meters = simulator.build_all_meters();
+    METER_BUILDER builder(default_toolkit);
+    meters = builder.build_all_meters();
     simulator.install_meters(meters);
 
     string filename = get_search_title();

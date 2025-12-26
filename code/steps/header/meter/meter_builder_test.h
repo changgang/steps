@@ -1,5 +1,5 @@
-#ifndef METER_SETTER_TEST_H
-#define METER_SETTER_TEST_H
+#ifndef METER_BUILDER_TEST_H
+#define METER_BUILDER_TEST_H
 
 #include <istream>
 #include <cstdlib>
@@ -12,16 +12,16 @@
 
 #include "cpptest.h"
 
-#include "header/meter/meter_setter.h"
+#include "header/meter/meter_builder.h"
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
 
 using namespace std;
 
-class METER_SETTER_TEST : public Test::Suite
+class METER_BUILDER_TEST : public Test::Suite
 {
     public:
-        METER_SETTER_TEST();
+        METER_BUILDER_TEST();
     protected:
         virtual void setup();
         virtual void tear_down();
@@ -39,7 +39,7 @@ class METER_SETTER_TEST : public Test::Suite
         void test_prepare_vsc_hvdc_complete_meters();
         void test_prepare_equivalent_device_complete_meters();
     private:
-        METER_SETTER setter;
+        METER_BUILDER builder;
 
 };
 

@@ -3,7 +3,7 @@
 #include "header/basic/utility.h"
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/prepare_for_tests/prepare_models_for_test.h"
-#include "header/meter/meter_setter.h"
+#include "header/meter/meter_builder.h"
 #include "header/steps_namespace.h"
 #include "header/toolkit/powerflow_solver/powerflow_solver.h"
 #include <cstdlib>
@@ -478,7 +478,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_single_machine_model()
     simulator.set_output_file("test_log/test_run_single_machine_model");
 
     vector<METER> meters;
-    meters = simulator.build_all_meters();
+    METER_BUILDER builder(default_toolkit);
+    meters = builder.build_all_meters();
     simulator.install_meters(meters);
 
     simulator.start();
@@ -534,7 +535,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_classical_model()
     simulator.set_output_file("test_log/test_run_IEEE_9_bus_classical_model");
 
     vector<METER> meters;
-    meters = simulator.build_all_meters();
+    METER_BUILDER builder(default_toolkit);
+    meters = builder.build_all_meters();
     simulator.install_meters(meters);
 
 
@@ -591,7 +593,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model()
     powerflow_solver.solve_with_fast_decoupled_solution();
 
     vector<METER> meters;
-    meters = simulator.build_all_meters();
+    METER_BUILDER builder(default_toolkit);
+    meters = builder.build_all_meters();
     simulator.install_meters(meters);
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 
@@ -649,7 +652,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_SD_133_bus_model()
     powerflow_solver.solve_with_fast_decoupled_solution();
 
     vector<METER> meters;
-    meters = simulator.build_all_meters();
+    METER_BUILDER builder(default_toolkit);
+    meters = builder.build_all_meters();
     simulator.install_meters(meters);
     simulator.set_output_file("test_log/test_run_SD_133_bus_model");
 
@@ -708,7 +712,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_with_wind()
     powerflow_solver.solve_with_fast_decoupled_solution();
 
     vector<METER> meters;
-    meters = simulator.build_all_meters();
+    METER_BUILDER builder(default_toolkit);
+    meters = builder.build_all_meters();
     simulator.install_meters(meters);
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 
@@ -766,7 +771,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
     powerflow_solver.solve_with_fast_decoupled_solution();
 
     vector<METER> meters;
-    meters = simulator.build_all_meters();
+    METER_BUILDER builder(default_toolkit);
+    meters = builder.build_all_meters();
     simulator.install_meters(meters);
     simulator.set_output_file("test_log/bench_shandong_100_bus_model_dynamic_test_result_GENROU_CDC4T");
 
@@ -848,32 +854,12 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
 
     METER meter(default_toolkit);
     vector<METER> meters;
-    /*METER_SETTER setter(default_toolkit);
-    setter.set_power_system_database;
-    meter = setter.prepare_bus_voltage_in_pu_meter(3);
+    METER_BUILDER builder(default_toolkit);
+    meter = builder.build_one_bus_related_meter(3, "Frequency in Hz");
     simulator.install_meter(meter);
-    meter = setter.prepare_bus_angle_in_deg_meter(3);
+    meter = builder.build_one_bus_related_meter(3, "Voltage in pu");
     simulator.install_meter(meter);
-    meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,0);
-    simulator.install_meter(meter);
-    meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,13);
-    simulator.install_meter(meter);
-    meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,14);
-    simulator.install_meter(meter);
-    meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,15);
-    simulator.install_meter(meter);
-    meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,16);
-    simulator.install_meter(meter);
-    meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,17);
-    simulator.install_meter(meter);
-    meters = simulator.prepare_meters();
-    simulator.install_meters(meters);
-    */
-    meter = simulator.build_one_bus_related_meter(3, "Frequency in Hz");
-    simulator.install_meter(meter);
-    meter = simulator.build_one_bus_related_meter(3, "Voltage in pu");
-    simulator.install_meter(meter);
-    meters = simulator.build_all_wt_generators_complete_meters();
+    meters = builder.build_all_wt_generators_complete_meters();
     simulator.install_meters(meters);
 
     simulator.set_output_file("test_log/IEEE9_test_with_wt3_models");
@@ -966,46 +952,26 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
 
     METER meter(default_toolkit);
     vector<METER> meters;
-    /*METER_SETTER setter(default_toolkit);
-    setter.set_power_system_database;
-    meter = setter.prepare_bus_voltage_in_pu_meter(3);
+    METER_BUILDER builder(default_toolkit);
+    meter = builder.build_one_bus_related_meter(1, "Frequency in Hz");
     simulator.install_meter(meter);
-    meter = setter.prepare_bus_angle_in_deg_meter(3);
+    meter = builder.build_one_bus_related_meter(2, "Frequency in Hz");
     simulator.install_meter(meter);
-    meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,0);
+    meter = builder.build_one_bus_related_meter(3, "Frequency in Hz");
     simulator.install_meter(meter);
-    meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,13);
+    meter = builder.build_one_bus_related_meter(1, "Voltage in pu");
     simulator.install_meter(meter);
-    meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,14);
+    meter = builder.build_one_bus_related_meter(2, "Voltage in pu");
     simulator.install_meter(meter);
-    meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,15);
+    meter = builder.build_one_bus_related_meter(3, "Voltage in pu");
     simulator.install_meter(meter);
-    meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,16);
+    meter = builder.build_one_bus_related_meter(1, "Angle in deg");
     simulator.install_meter(meter);
-    meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,17);
+    meter = builder.build_one_bus_related_meter(2, "Angle in deg");
     simulator.install_meter(meter);
-    meters = simulator.prepare_meters();
-    simulator.install_meters(meters);
-    */
-    meter = simulator.build_one_bus_related_meter(1, "Frequency in Hz");
+    meter = builder.build_one_bus_related_meter(3, "Angle in deg");
     simulator.install_meter(meter);
-    meter = simulator.build_one_bus_related_meter(2, "Frequency in Hz");
-    simulator.install_meter(meter);
-    meter = simulator.build_one_bus_related_meter(3, "Frequency in Hz");
-    simulator.install_meter(meter);
-    meter = simulator.build_one_bus_related_meter(1, "Voltage in pu");
-    simulator.install_meter(meter);
-    meter = simulator.build_one_bus_related_meter(2, "Voltage in pu");
-    simulator.install_meter(meter);
-    meter = simulator.build_one_bus_related_meter(3, "Voltage in pu");
-    simulator.install_meter(meter);
-    meter = simulator.build_one_bus_related_meter(1, "Angle in deg");
-    simulator.install_meter(meter);
-    meter = simulator.build_one_bus_related_meter(2, "Angle in deg");
-    simulator.install_meter(meter);
-    meter = simulator.build_one_bus_related_meter(3, "Angle in deg");
-    simulator.install_meter(meter);
-    meters = simulator.build_all_wt_generators_complete_meters();
+    meters = builder.build_all_wt_generators_complete_meters();
     simulator.install_meters(meters);
 
     simulator.set_output_file("test_log/IEEE9_test_with_all_wt3_models");
