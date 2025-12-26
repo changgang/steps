@@ -5,7 +5,7 @@
 #include <string>
 using namespace std;
 
-namespace load_meter_getter
+namespace load_meter_interface
 {
     double get_active_power_in_MW(const METER_PARAMETER& para);
     double get_active_power_in_pu(const METER_PARAMETER& para);

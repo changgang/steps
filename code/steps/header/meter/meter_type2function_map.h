@@ -1,5 +1,5 @@
-#ifndef METER_MAP_BUILDER_H
-#define METER_MAP_BUILDER_H
+#ifndef METER_TYPE2FUNCTION_MAP_H
+#define METER_TYPE2FUNCTION_MAP_H
 
 void build_bus_meter_map();
 void build_sg_meter_map();
@@ -16,4 +16,4 @@ void build_vsc_hvdc_meter_map();
 void build_mt_hvdc_meter_map();
 void build_equivalent_device_meter_map();
 
-#endif // METER_MAP_BUILDER_H
+#endif // METER_TYPE2FUNCTION_MAP_H

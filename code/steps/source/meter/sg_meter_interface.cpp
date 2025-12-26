@@ -1,4 +1,4 @@
-#include "header/meter/sg_meter_getter.h"
+#include "header/meter/sg_meter_interface.h"
 #include "header/device/generator.h"
 #include "header/model/sg_models/sync_generator_model/sync_generator_model.h"
 #include "header/model/sg_models/compensator_model/compensator_model.h"
@@ -9,28 +9,28 @@
 #include "header/steps_namespace.h"
 #include "header/basic/utility.h"
 
-double sg_meter_getter::get_rotor_angle_in_deg(const METER_PARAMETER& para)
+double sg_meter_interface::get_rotor_angle_in_deg(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
     return model ? model->get_rotor_angle_in_deg() : 0.0;
 }
 
-double sg_meter_getter::get_rotor_angle_in_rad(const METER_PARAMETER& para)
+double sg_meter_interface::get_rotor_angle_in_rad(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
     return model ? model->get_rotor_angle_in_rad() : 0.0;
 }
 
-double sg_meter_getter::get_rotor_speed_in_pu(const METER_PARAMETER& para)
+double sg_meter_interface::get_rotor_speed_in_pu(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
     return model ? model->get_rotor_speed_in_pu() : 0.0;
 }
 
-double sg_meter_getter::get_rotor_speed_in_Hz(const METER_PARAMETER& para)
+double sg_meter_interface::get_rotor_speed_in_Hz(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -46,14 +46,14 @@ double sg_meter_getter::get_rotor_speed_in_Hz(const METER_PARAMETER& para)
         return 0.0;
 }
 
-double sg_meter_getter::get_rotor_speed_deviation_in_pu(const METER_PARAMETER& para)
+double sg_meter_interface::get_rotor_speed_deviation_in_pu(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
     return model ? model->get_rotor_speed_deviation_in_pu() : 0.0;
 }
 
-double sg_meter_getter::get_rotor_speed_deviation_in_Hz(const METER_PARAMETER& para)
+double sg_meter_interface::get_rotor_speed_deviation_in_Hz(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -69,35 +69,35 @@ double sg_meter_getter::get_rotor_speed_deviation_in_Hz(const METER_PARAMETER& p
         return 0.0;
 }
 
-double sg_meter_getter::get_terminal_voltage_in_pu(const METER_PARAMETER& para)
+double sg_meter_interface::get_terminal_voltage_in_pu(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
     return model ? steps_fast_complex_abs(model->get_terminal_voltage_in_pu()) : 0.0;
 }
 
-double sg_meter_getter::get_internal_voltage_in_pu(const METER_PARAMETER& para)
+double sg_meter_interface::get_internal_voltage_in_pu(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
     return model ? steps_fast_complex_abs(model->get_internal_voltage_in_pu_in_dq_axis()) : 0.0;
 }
 
-double sg_meter_getter::get_terminal_current_in_pu_mbase(const METER_PARAMETER& para)
+double sg_meter_interface::get_terminal_current_in_pu_mbase(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
     return model ? model->get_terminal_current_in_pu_based_on_mbase() : 0.0;
 }
 
-double sg_meter_getter::get_terminal_current_in_pu_sbase(const METER_PARAMETER& para)
+double sg_meter_interface::get_terminal_current_in_pu_sbase(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
     return model ? model->get_terminal_current_in_pu_based_on_sbase() : 0.0;
 }
 
-double sg_meter_getter::get_terminal_current_in_kA(const METER_PARAMETER& para)
+double sg_meter_interface::get_terminal_current_in_kA(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -115,7 +115,7 @@ double sg_meter_getter::get_terminal_current_in_kA(const METER_PARAMETER& para)
         return 0.0;
 }
 
-double sg_meter_getter::get_terminal_active_power_in_pu_mbase(const METER_PARAMETER& para)
+double sg_meter_interface::get_terminal_active_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -128,7 +128,7 @@ double sg_meter_getter::get_terminal_active_power_in_pu_mbase(const METER_PARAME
         return 0.0;
 }
 
-double sg_meter_getter::get_terminal_active_power_in_pu_sbase(const METER_PARAMETER& para)
+double sg_meter_interface::get_terminal_active_power_in_pu_sbase(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -142,14 +142,14 @@ double sg_meter_getter::get_terminal_active_power_in_pu_sbase(const METER_PARAME
         return 0.0;
 }
 
-double sg_meter_getter::get_terminal_active_power_in_MW(const METER_PARAMETER& para)
+double sg_meter_interface::get_terminal_active_power_in_MW(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
     return model ? model->get_terminal_active_power_in_MW() : 0.0;
 }
 
-double sg_meter_getter::get_terminal_reactive_power_in_pu_mbase(const METER_PARAMETER& para)
+double sg_meter_interface::get_terminal_reactive_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -162,7 +162,7 @@ double sg_meter_getter::get_terminal_reactive_power_in_pu_mbase(const METER_PARA
         return 0.0;
 }
 
-double sg_meter_getter::get_terminal_reactive_power_in_pu_sbase(const METER_PARAMETER& para)
+double sg_meter_interface::get_terminal_reactive_power_in_pu_sbase(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -176,14 +176,14 @@ double sg_meter_getter::get_terminal_reactive_power_in_pu_sbase(const METER_PARA
         return 0.0;
 }
 
-double sg_meter_getter::get_terminal_reactive_power_in_MVar(const METER_PARAMETER& para)
+double sg_meter_interface::get_terminal_reactive_power_in_MVar(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
     return model ? model->get_terminal_reactive_power_in_MVar() : 0.0;
 }
 
-double sg_meter_getter::get_terminal_apparent_power_in_pu_mbase(const METER_PARAMETER& para)
+double sg_meter_interface::get_terminal_apparent_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -197,7 +197,7 @@ double sg_meter_getter::get_terminal_apparent_power_in_pu_mbase(const METER_PARA
         return 0.0;
 }
 
-double sg_meter_getter::get_terminal_apparent_power_in_pu_sbase(const METER_PARAMETER& para)
+double sg_meter_interface::get_terminal_apparent_power_in_pu_sbase(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -214,7 +214,7 @@ double sg_meter_getter::get_terminal_apparent_power_in_pu_sbase(const METER_PARA
         return 0.0;
 }
 
-double sg_meter_getter::get_terminal_apparent_power_in_MVA(const METER_PARAMETER& para)
+double sg_meter_interface::get_terminal_apparent_power_in_MVA(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -229,14 +229,14 @@ double sg_meter_getter::get_terminal_apparent_power_in_MVA(const METER_PARAMETER
         return 0.0;
 }
 
-double sg_meter_getter::get_airgap_power_in_pu_mbase(const METER_PARAMETER& para)
+double sg_meter_interface::get_airgap_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
     return model ? model->get_air_gap_power_in_pu_based_on_mbase() : 0.0;
 }
 
-double sg_meter_getter::get_airgap_power_in_pu_sbase(const METER_PARAMETER& para)
+double sg_meter_interface::get_airgap_power_in_pu_sbase(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -250,21 +250,21 @@ double sg_meter_getter::get_airgap_power_in_pu_sbase(const METER_PARAMETER& para
         return 0.0;
 }
 
-double sg_meter_getter::get_airgap_power_in_MW(const METER_PARAMETER& para)
+double sg_meter_interface::get_airgap_power_in_MW(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
     return model ? model->get_air_gap_power_in_MW() : 0.0;
 }
 
-double sg_meter_getter::get_accelerating_power_in_pu_mbase(const METER_PARAMETER& para)
+double sg_meter_interface::get_accelerating_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
     return model ? model->get_accelerating_power_in_pu_based_on_mbase() : 0.0;
 }
 
-double sg_meter_getter::get_accelerating_power_in_pu_sbase(const METER_PARAMETER& para)
+double sg_meter_interface::get_accelerating_power_in_pu_sbase(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -278,21 +278,21 @@ double sg_meter_getter::get_accelerating_power_in_pu_sbase(const METER_PARAMETER
         return 0.0;
 }
 
-double sg_meter_getter::get_accelerating_power_in_MW(const METER_PARAMETER& para)
+double sg_meter_interface::get_accelerating_power_in_MW(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
     return model ? model->get_accelerating_power_in_MW() : 0.0;
 }
 
-double sg_meter_getter::get_mechanical_power_in_pu_mbase(const METER_PARAMETER& para)
+double sg_meter_interface::get_mechanical_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
     return model ? model->get_mechanical_power_in_pu_based_on_mbase() : 0.0;
 }
 
-double sg_meter_getter::get_mechanical_power_in_pu_sbase(const METER_PARAMETER& para)
+double sg_meter_interface::get_mechanical_power_in_pu_sbase(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
@@ -306,21 +306,21 @@ double sg_meter_getter::get_mechanical_power_in_pu_sbase(const METER_PARAMETER& 
         return 0.0;
 }
 
-double sg_meter_getter::get_mechanical_power_in_MW(const METER_PARAMETER& para)
+double sg_meter_interface::get_mechanical_power_in_MW(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
     return model ? model->get_mechanical_power_in_MW() : 0.0;
 }
 
-double sg_meter_getter::get_mechanical_power_reference_in_pu_mbase(const METER_PARAMETER& para)
+double sg_meter_interface::get_mechanical_power_reference_in_pu_mbase(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     TURBINE_GOVERNOR_MODEL* model = gen->get_turbine_governor_model();
     return model ? model->get_mechanical_power_reference_in_pu_based_on_mbase() : 0.0;
 }
 
-double sg_meter_getter::get_mechanical_power_reference_in_pu_sbase(const METER_PARAMETER& para)
+double sg_meter_interface::get_mechanical_power_reference_in_pu_sbase(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     TURBINE_GOVERNOR_MODEL* model = gen->get_turbine_governor_model();
@@ -335,7 +335,7 @@ double sg_meter_getter::get_mechanical_power_reference_in_pu_sbase(const METER_P
         return 0.0;
 }
 
-double sg_meter_getter::get_mechanical_power_reference_in_MW(const METER_PARAMETER& para)
+double sg_meter_interface::get_mechanical_power_reference_in_MW(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     TURBINE_GOVERNOR_MODEL* model = gen->get_turbine_governor_model();
@@ -348,35 +348,35 @@ double sg_meter_getter::get_mechanical_power_reference_in_MW(const METER_PARAMET
         return 0.0;
 }
 
-double sg_meter_getter::get_compensated_voltage_in_pu(const METER_PARAMETER& para)
+double sg_meter_interface::get_compensated_voltage_in_pu(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     EXCITER_MODEL* model = gen->get_exciter_model();
     return model ? model->get_compensated_voltage_in_pu() : 0.0;
 }
 
-double sg_meter_getter::get_voltage_reference_in_pu(const METER_PARAMETER& para)
+double sg_meter_interface::get_voltage_reference_in_pu(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     EXCITER_MODEL* model = gen->get_exciter_model();
     return model ? model->get_voltage_reference_in_pu() : 0.0;
 }
 
-double sg_meter_getter::get_stabilizing_signal_in_pu(const METER_PARAMETER& para)
+double sg_meter_interface::get_stabilizing_signal_in_pu(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     EXCITER_MODEL* model = gen->get_exciter_model();
     return model ? model->get_stabilizing_signal_in_pu() : 0.0;
 }
 
-double sg_meter_getter::get_excitation_voltage_in_pu(const METER_PARAMETER& para)
+double sg_meter_interface::get_excitation_voltage_in_pu(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     SYNC_GENERATOR_MODEL* model = gen->get_sync_generator_model();
     return model ? model->get_excitation_voltage_in_pu() : 0.0;
 }
 
-double sg_meter_getter::get_sync_generator_model_internal_variable(const METER_PARAMETER& para)
+double sg_meter_interface::get_sync_generator_model_internal_variable(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
@@ -384,7 +384,7 @@ double sg_meter_getter::get_sync_generator_model_internal_variable(const METER_P
     return model ? model->get_model_internal_variable_with_name(internal_var_name) : 0.0;
 }
 
-double sg_meter_getter::get_compensator_model_internal_variable(const METER_PARAMETER& para)
+double sg_meter_interface::get_compensator_model_internal_variable(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
@@ -392,7 +392,7 @@ double sg_meter_getter::get_compensator_model_internal_variable(const METER_PARA
     return model ? model->get_model_internal_variable_with_name(internal_var_name) : 0.0;
 }
 
-double sg_meter_getter::get_stabilizer_model_internal_variable(const METER_PARAMETER& para)
+double sg_meter_interface::get_stabilizer_model_internal_variable(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
@@ -400,7 +400,7 @@ double sg_meter_getter::get_stabilizer_model_internal_variable(const METER_PARAM
     return model ? model->get_model_internal_variable_with_name(internal_var_name) : 0.0;
 }
 
-double sg_meter_getter::get_exciter_model_internal_variable(const METER_PARAMETER& para)
+double sg_meter_interface::get_exciter_model_internal_variable(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
@@ -408,7 +408,7 @@ double sg_meter_getter::get_exciter_model_internal_variable(const METER_PARAMETE
     return model ? model->get_model_internal_variable_with_name(internal_var_name) : 0.0;
 }
 
-double sg_meter_getter::get_turbine_governor_model_internal_variable(const METER_PARAMETER& para)
+double sg_meter_interface::get_turbine_governor_model_internal_variable(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
@@ -416,7 +416,7 @@ double sg_meter_getter::get_turbine_governor_model_internal_variable(const METER
     return model ? model->get_model_internal_variable_with_name(internal_var_name) : 0.0;
 }
 
-double sg_meter_getter::get_turbine_load_controller_model_internal_variable(const METER_PARAMETER& para)
+double sg_meter_interface::get_turbine_load_controller_model_internal_variable(const METER_PARAMETER& para)
 {
     GENERATOR* gen = (GENERATOR*) para.device_pointer;
     string internal_var_name = para.internal_var_name;

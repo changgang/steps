@@ -1,4 +1,4 @@
-#include "header/meter/pvu_meter_getter.h"
+#include "header/meter/pvu_meter_interface.h"
 #include "header/device/pv_unit.h"
 #include "header/model/pvu_models/pv_converter_model/pv_converter_model.h"
 #include "header/model/pvu_models/pv_panel_model/pv_panel_model.h"
@@ -10,14 +10,14 @@
 #include "header/steps_namespace.h"
 #include "header/basic/utility.h"
 
-double pvu_meter_getter::get_terminal_current_in_pu_mbase(const METER_PARAMETER& para)
+double pvu_meter_interface::get_terminal_current_in_pu_mbase(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
     return model ? model->get_terminal_current_in_pu_based_on_mbase() : 0.0;
 }
 
-double pvu_meter_getter::get_terminal_current_in_pu_sbase(const METER_PARAMETER& para)
+double pvu_meter_interface::get_terminal_current_in_pu_sbase(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
@@ -32,7 +32,7 @@ double pvu_meter_getter::get_terminal_current_in_pu_sbase(const METER_PARAMETER&
         return 0.0;
 }
 
-double pvu_meter_getter::get_terminal_current_in_kA(const METER_PARAMETER& para)
+double pvu_meter_interface::get_terminal_current_in_kA(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
@@ -50,14 +50,14 @@ double pvu_meter_getter::get_terminal_current_in_kA(const METER_PARAMETER& para)
         return 0.0;
 }
 
-double pvu_meter_getter::get_terminal_active_power_in_pu_mbase(const METER_PARAMETER& para)
+double pvu_meter_interface::get_terminal_active_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
     return model ? model->get_terminal_active_power_in_pu_based_on_mbase() : 0.0;
 }
 
-double pvu_meter_getter::get_terminal_active_power_in_pu_sbase(const METER_PARAMETER& para)
+double pvu_meter_interface::get_terminal_active_power_in_pu_sbase(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
@@ -71,21 +71,21 @@ double pvu_meter_getter::get_terminal_active_power_in_pu_sbase(const METER_PARAM
         return 0.0;
 }
 
-double pvu_meter_getter::get_terminal_active_power_in_MW(const METER_PARAMETER& para)
+double pvu_meter_interface::get_terminal_active_power_in_MW(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
     return model ? model->get_terminal_active_power_in_MW() : 0.0;
 }
 
-double pvu_meter_getter::get_terminal_reactive_power_in_pu_mbase(const METER_PARAMETER& para)
+double pvu_meter_interface::get_terminal_reactive_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
     return model ? model->get_terminal_reactive_power_in_pu_based_on_mbase() : 0.0;
 }
 
-double pvu_meter_getter::get_terminal_reactive_power_in_pu_sbase(const METER_PARAMETER& para)
+double pvu_meter_interface::get_terminal_reactive_power_in_pu_sbase(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
@@ -99,14 +99,14 @@ double pvu_meter_getter::get_terminal_reactive_power_in_pu_sbase(const METER_PAR
         return 0.0;
 }
 
-double pvu_meter_getter::get_terminal_reactive_power_in_MVar(const METER_PARAMETER& para)
+double pvu_meter_interface::get_terminal_reactive_power_in_MVar(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
     return model ? model->get_terminal_reactive_power_in_MVar() : 0.0;
 }
 
-double pvu_meter_getter::get_terminal_apparent_power_in_pu_mbase(const METER_PARAMETER& para)
+double pvu_meter_interface::get_terminal_apparent_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
@@ -120,7 +120,7 @@ double pvu_meter_getter::get_terminal_apparent_power_in_pu_mbase(const METER_PAR
         return 0.0;
 }
 
-double pvu_meter_getter::get_terminal_apparent_power_in_pu_sbase(const METER_PARAMETER& para)
+double pvu_meter_interface::get_terminal_apparent_power_in_pu_sbase(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
@@ -136,7 +136,7 @@ double pvu_meter_getter::get_terminal_apparent_power_in_pu_sbase(const METER_PAR
         return 0.0;
 }
 
-double pvu_meter_getter::get_terminal_apparent_power_in_MVA(const METER_PARAMETER& para)
+double pvu_meter_interface::get_terminal_apparent_power_in_MVA(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
@@ -150,77 +150,77 @@ double pvu_meter_getter::get_terminal_apparent_power_in_MVA(const METER_PARAMETE
         return 0.0;
 }
 
-double pvu_meter_getter::get_active_current_command_in_pu(const METER_PARAMETER& para)
+double pvu_meter_interface::get_active_current_command_in_pu(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
     return model ? model->get_active_current_command_in_pu_based_on_mbase() : 0.0;
 }
 
-double pvu_meter_getter::get_reactive_current_command_in_pu(const METER_PARAMETER& para)
+double pvu_meter_interface::get_reactive_current_command_in_pu(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
     return model ? model->get_reactive_current_command_in_pu_based_on_mbase() : 0.0;
 }
 
-double pvu_meter_getter::get_active_power_command_in_pu(const METER_PARAMETER& para)
+double pvu_meter_interface::get_active_power_command_in_pu(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
     return model ? model->get_active_power_command_in_pu_based_on_mbase() : 0.0;
 }
 
-double pvu_meter_getter::get_reactive_power_command_in_pu(const METER_PARAMETER& para)
+double pvu_meter_interface::get_reactive_power_command_in_pu(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
     return model ? model->get_reactive_power_command_in_pu_based_on_mbase() : 0.0;
 }
 
-double pvu_meter_getter::get_reactive_voltage_command_in_pu(const METER_PARAMETER& para)
+double pvu_meter_interface::get_reactive_voltage_command_in_pu(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
     return model ? model->get_reactive_voltage_command_in_pu() : 0.0;
 }
 
-double pvu_meter_getter::get_solar_irradiance_pu_S0(const METER_PARAMETER& para)
+double pvu_meter_interface::get_solar_irradiance_pu_S0(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_PANEL_MODEL* model = pv_unit->get_pv_panel_model();
     return model ? model->get_solar_irradiance_in_pu_based_on_S0() : 0.0;
 }
 
-double pvu_meter_getter::get_solar_irradiance_pu_Sref(const METER_PARAMETER& para)
+double pvu_meter_interface::get_solar_irradiance_pu_Sref(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_PANEL_MODEL* model = pv_unit->get_pv_panel_model();
     return model ? model->get_solar_irradiance_in_pu_based_on_Sref() : 0.0;
 }
 
-double pvu_meter_getter::get_solar_irradiance_wpm2(const METER_PARAMETER& para)
+double pvu_meter_interface::get_solar_irradiance_wpm2(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_PANEL_MODEL* model = pv_unit->get_pv_panel_model();
     return model ? model->get_solar_irradiance_in_Wpm2() : 0.0;
 }
 
-double pvu_meter_getter::get_temperature_c_deg(const METER_PARAMETER& para)
+double pvu_meter_interface::get_temperature_c_deg(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_TEMPERATURE_MODEL* model = pv_unit->get_pv_temperature_model();
     return model ? model->get_Tref_in_C_deg() : 0.0;
 }
 
-double pvu_meter_getter::get_max_available_power_irradiance_pu_mbase(const METER_PARAMETER& para)
+double pvu_meter_interface::get_max_available_power_irradiance_pu_mbase(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_PANEL_MODEL* model = pv_unit->get_pv_panel_model();
     return model ? model->get_maximum_available_power_extracted_power_from_irradiance_in_pu_on_mbase() : 0.0;
 }
 
-double pvu_meter_getter::get_max_available_power_irradiance_pu_sbase(const METER_PARAMETER& para)
+double pvu_meter_interface::get_max_available_power_irradiance_pu_sbase(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_PANEL_MODEL* model = pv_unit->get_pv_panel_model();
@@ -234,28 +234,28 @@ double pvu_meter_getter::get_max_available_power_irradiance_pu_sbase(const METER
         return 0.0;
 }
 
-double pvu_meter_getter::get_max_available_power_irradiance_MW(const METER_PARAMETER& para)
+double pvu_meter_interface::get_max_available_power_irradiance_MW(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_PANEL_MODEL* model = pv_unit->get_pv_panel_model();
     return model ? model->get_maximum_available_power_extracted_power_from_irradiance_in_MW() : 0.0;
 }
 
-double pvu_meter_getter::get_panel_power_in_pu_mbase(const METER_PARAMETER& para)
+double pvu_meter_interface::get_panel_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_PANEL_MODEL* model = pv_unit->get_pv_panel_model();
     return model ? model->get_pv_panel_power_in_pu_on_mbase() : 0.0;
 }
 
-double pvu_meter_getter::get_panel_power_in_MW(const METER_PARAMETER& para)
+double pvu_meter_interface::get_panel_power_in_MW(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     PV_PANEL_MODEL* model = pv_unit->get_pv_panel_model();
     return model ? model->get_pv_panel_power_in_MW() : 0.0;
 }
 
-double pvu_meter_getter::get_converter_model_internal_variable(const METER_PARAMETER& para)
+double pvu_meter_interface::get_converter_model_internal_variable(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
@@ -263,7 +263,7 @@ double pvu_meter_getter::get_converter_model_internal_variable(const METER_PARAM
     return model ? model->get_model_internal_variable_with_name(internal_var_name) : 0.0;
 }
 
-double pvu_meter_getter::get_panel_model_internal_variable(const METER_PARAMETER& para)
+double pvu_meter_interface::get_panel_model_internal_variable(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
@@ -271,7 +271,7 @@ double pvu_meter_getter::get_panel_model_internal_variable(const METER_PARAMETER
     return model ? model->get_model_internal_variable_with_name(internal_var_name) : 0.0;
 }
 
-double pvu_meter_getter::get_electrical_model_internal_variable(const METER_PARAMETER& para)
+double pvu_meter_interface::get_electrical_model_internal_variable(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
@@ -279,7 +279,7 @@ double pvu_meter_getter::get_electrical_model_internal_variable(const METER_PARA
     return model ? model->get_model_internal_variable_with_name(internal_var_name) : 0.0;
 }
 
-double pvu_meter_getter::get_irradiance_model_internal_variable(const METER_PARAMETER& para)
+double pvu_meter_interface::get_irradiance_model_internal_variable(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
@@ -287,7 +287,7 @@ double pvu_meter_getter::get_irradiance_model_internal_variable(const METER_PARA
     return model ? model->get_model_internal_variable_with_name(internal_var_name) : 0.0;
 }
 
-double pvu_meter_getter::get_temperature_model_internal_variable(const METER_PARAMETER& para)
+double pvu_meter_interface::get_temperature_model_internal_variable(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
@@ -295,7 +295,7 @@ double pvu_meter_getter::get_temperature_model_internal_variable(const METER_PAR
     return model ? model->get_model_internal_variable_with_name(internal_var_name) : 0.0;
 }
 
-double pvu_meter_getter::get_vrt_model_internal_variable(const METER_PARAMETER& para)
+double pvu_meter_interface::get_vrt_model_internal_variable(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
@@ -303,7 +303,7 @@ double pvu_meter_getter::get_vrt_model_internal_variable(const METER_PARAMETER& 
     return model ? model->get_model_internal_variable_with_name(internal_var_name) : 0.0;
 }
 
-double pvu_meter_getter::get_relay_model_internal_variable(const METER_PARAMETER& para)
+double pvu_meter_interface::get_relay_model_internal_variable(const METER_PARAMETER& para)
 {
     PV_UNIT* pv_unit = (PV_UNIT*) para.device_pointer;
     string internal_var_name = para.internal_var_name;

@@ -1,24 +1,24 @@
-#include "header/meter/meter_map_builder.h"
+#include "header/meter/meter_type2function_map.h"
 
 #include "header/steps_namespace.h"
 
-#include "header/meter/bus_meter_getter.h"
-#include "header/meter/sg_meter_getter.h"
-#include "header/meter/wtg_meter_getter.h"
-#include "header/meter/pvu_meter_getter.h"
-#include "header/meter/es_meter_getter.h"
-#include "header/meter/sv_source_meter_getter.h"
-#include "header/meter/load_meter_getter.h"
-#include "header/meter/ac_line_meter_getter.h"
-#include "header/meter/transformer_meter_getter.h"
-#include "header/meter/lcc_hvdc2t_meter_getter.h"
-#include "header/meter/vsc_hvdc_meter_getter.h"
-#include "header/meter/mt_hvdc_meter_getter.h"
-#include "header/meter/equivalent_device_meter_getter.h"
+#include "header/meter/bus_meter_interface.h"
+#include "header/meter/sg_meter_interface.h"
+#include "header/meter/wtg_meter_interface.h"
+#include "header/meter/pvu_meter_interface.h"
+#include "header/meter/es_meter_interface.h"
+#include "header/meter/sv_source_meter_interface.h"
+#include "header/meter/load_meter_interface.h"
+#include "header/meter/ac_line_meter_interface.h"
+#include "header/meter/transformer_meter_interface.h"
+#include "header/meter/lcc_hvdc2t_meter_interface.h"
+#include "header/meter/vsc_hvdc_meter_interface.h"
+#include "header/meter/mt_hvdc_meter_interface.h"
+#include "header/meter/equivalent_device_meter_interface.h"
 
 void build_bus_meter_map()
 {
-    using namespace bus_meter_getter;
+    using namespace bus_meter_interface;
     bus_meter_map.insert({"VOLTAGE IN PU",                     get_voltage_in_pu});
     bus_meter_map.insert({"VOLTAGE IN KV",                     get_voltage_in_kV});
     bus_meter_map.insert({"ANGLE IN DEG",                      get_angle_in_deg});
@@ -31,7 +31,7 @@ void build_bus_meter_map()
 
 void build_sg_meter_map()
 {
-    using namespace sg_meter_getter;
+    using namespace sg_meter_interface;
     sg_meter_map.insert({"ROTOR ANGLE IN DEG",                              get_rotor_angle_in_deg});
     sg_meter_map.insert({"ROTOR ANGLE IN RAD",                              get_rotor_angle_in_rad});
     sg_meter_map.insert({"ROTOR SPEED IN PU",                               get_rotor_speed_in_pu});
@@ -78,7 +78,7 @@ void build_sg_meter_map()
 
 void build_wtg_meter_map()
 {
-    using namespace wtg_meter_getter;
+    using namespace wtg_meter_interface;
     wtg_meter_map.insert({"TERMINAL CURRENT IN PU ON MBASE",               get_terminal_current_in_pu_mbase});
     wtg_meter_map.insert({"TERMINAL CURRENT IN PU ON SBASE",               get_terminal_current_in_pu_sbase});
     wtg_meter_map.insert({"TERMINAL CURRENT IN KA",                        get_terminal_current_in_kA});
@@ -131,7 +131,7 @@ void build_wtg_meter_map()
 
 void build_pvu_meter_map()
 {
-    using namespace pvu_meter_getter;
+    using namespace pvu_meter_interface;
     pvu_meter_map.insert({"TERMINAL CURRENT IN PU ON MBASE",                        get_terminal_current_in_pu_mbase});
     pvu_meter_map.insert({"TERMINAL CURRENT IN PU ON SBASE",                        get_terminal_current_in_pu_sbase});
     pvu_meter_map.insert({"TERMINAL CURRENT IN KA",                                 get_terminal_current_in_kA});
@@ -178,7 +178,7 @@ void build_pvu_meter_map()
 
 void build_es_meter_map()
 {
-    using namespace es_meter_getter;
+    using namespace es_meter_interface;
     es_meter_map.insert({"TERMINAL CURRENT IN PU ON MBASE",           get_terminal_current_in_pu_mbase});
     es_meter_map.insert({"TERMINAL CURRENT IN PU ON SBASE",           get_terminal_current_in_pu_sbase});
     es_meter_map.insert({"TERMINAL CURRENT IN KA",                    get_terminal_current_in_kA});
@@ -219,7 +219,7 @@ void build_es_meter_map()
 
 void build_sv_source_meter_map()
 {
-    using namespace sv_source_meter_getter;
+    using namespace sv_source_meter_interface;
     sv_source_meter_map.insert({"TERMINAL CURRENT IN PU ON SBASE",        get_terminal_current_in_pu_sbase});
     sv_source_meter_map.insert({"TERMINAL REACTIVE POWER IN PU ON SBASE", get_terminal_reactive_power_in_pu_sbase});
     sv_source_meter_map.insert({"TERMINAL REACTIVE POWER IN MVAR",        get_terminal_reactive_power_in_MVar});
@@ -228,7 +228,7 @@ void build_sv_source_meter_map()
 
 void build_load_meter_map()
 {
-    using namespace load_meter_getter;
+    using namespace load_meter_interface;
     load_meter_map.insert({"ACTIVE POWER IN MW",                      get_active_power_in_MW});
     load_meter_map.insert({"ACTIVE POWER IN PU",                      get_active_power_in_pu});
     load_meter_map.insert({"REACTIVE POWER IN MVAR",                  get_reactive_power_in_MVar});
@@ -249,7 +249,7 @@ void build_fixed_shunt_meter_map()
 
 void build_ac_line_meter_map()
 {
-    using namespace ac_line_meter_getter;
+    using namespace ac_line_meter_interface;
     ac_line_meter_map.insert({"CURRENT IN KA",                                     get_current_in_kA});
     ac_line_meter_map.insert({"CURRENT IN PU",                                     get_current_in_pu});
     ac_line_meter_map.insert({"ACTIVE POWER IN MW",                                get_active_power_in_MW});
@@ -274,7 +274,7 @@ void build_ac_line_meter_map()
 
 void build_transformer_meter_map()
 {
-    using namespace transformer_meter_getter;
+    using namespace transformer_meter_interface;
     transformer_meter_map.insert({"CURRENT IN KA",                               get_winding_current_in_kA});
     transformer_meter_map.insert({"CURRENT IN PU",                               get_winding_current_in_pu});
     transformer_meter_map.insert({"ACTIVE POWER IN MW",                          get_winding_active_power_in_MW});
@@ -306,7 +306,7 @@ void build_transformer_meter_map()
 
 void build_lcc_hvdc2t_meter_map()
 {
-    using namespace lcc_hvdc2t_meter_getter;
+    using namespace lcc_hvdc2t_meter_interface;
     lcc_hvdc2t_meter_map.insert({"DC CURRENT IN KA",          get_dc_current_in_kA});
     lcc_hvdc2t_meter_map.insert({"AC CURRENT IN KA",          get_ac_current_in_kA});
     lcc_hvdc2t_meter_map.insert({"ANGLE IN DEG",              get_angle_in_deg});
@@ -322,7 +322,7 @@ void build_lcc_hvdc2t_meter_map()
 
 void build_vsc_hvdc_meter_map()
 {
-    using namespace vsc_hvdc_meter_getter;
+    using namespace vsc_hvdc_meter_interface;
     vsc_hvdc_meter_map.insert({"CONVERTER AC VOLTAGE IN PU",                       get_converter_ac_voltage_in_pu});
     vsc_hvdc_meter_map.insert({"CONVERTER AC VOLTAGE IN KV",                       get_converter_ac_voltage_in_kV});
     vsc_hvdc_meter_map.insert({"CONVERTER AC CURRENT IN KA",                       get_converter_ac_current_in_kA});
@@ -340,7 +340,7 @@ void build_vsc_hvdc_meter_map()
 
 void build_mt_hvdc_meter_map()
 {
-    using namespace mt_hvdc_meter_getter;
+    using namespace mt_hvdc_meter_interface;
 
     mt_hvdc_meter_map.insert({"LCC CONVERTER DC CURRENT IN KA",             get_lcc_converter_dc_current_in_kA});
     mt_hvdc_meter_map.insert({"LCC CONVERTER DC VOLTAGE IN KV",             get_lcc_converter_dc_voltage_in_kV});
@@ -374,7 +374,7 @@ void build_mt_hvdc_meter_map()
 
 void build_equivalent_device_meter_map()
 {
-    using namespace equivalent_device_meter_getter;
+    using namespace equivalent_device_meter_interface;
     equivalent_device_meter_map.insert({"VOLTAGE SOURCE VOLTAGE IN PU",             get_voltage_source_voltage_in_pu});
     equivalent_device_meter_map.insert({"VOLTAGE SOURCE VOLTAGE ANGLE IN DEG",      get_voltage_source_voltage_angle_in_deg});
     equivalent_device_meter_map.insert({"VOLTAGE SOURCE RESISTANCE IN PU",          get_voltage_source_resistance_in_pu});

@@ -1,4 +1,4 @@
-#include "header/meter/mt_hvdc_meter_getter.h"
+#include "header/meter/mt_hvdc_meter_interface.h"
 #include "header/device/mt_hvdc.h"
 #include "header/device/dc_component/dc_bus.h"
 #include "header/device/dc_component/dc_line.h"
@@ -8,7 +8,7 @@
 #include "header/basic/utility.h"
 #include "header/meter/meter.h"
 
-double mt_hvdc_meter_getter::get_lcc_converter_dc_current_in_kA(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_lcc_converter_dc_current_in_kA(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -23,7 +23,7 @@ double mt_hvdc_meter_getter::get_lcc_converter_dc_current_in_kA(const METER_PARA
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_lcc_converter_dc_voltage_in_kV(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_lcc_converter_dc_voltage_in_kV(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -38,7 +38,7 @@ double mt_hvdc_meter_getter::get_lcc_converter_dc_voltage_in_kV(const METER_PARA
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_lcc_converter_dc_power_in_MW(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_lcc_converter_dc_power_in_MW(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -53,7 +53,7 @@ double mt_hvdc_meter_getter::get_lcc_converter_dc_power_in_MW(const METER_PARAME
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_lcc_converter_ac_current_in_kA(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_lcc_converter_ac_current_in_kA(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -69,7 +69,7 @@ double mt_hvdc_meter_getter::get_lcc_converter_ac_current_in_kA(const METER_PARA
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_lcc_converter_firing_angle_in_deg(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_lcc_converter_firing_angle_in_deg(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -84,7 +84,7 @@ double mt_hvdc_meter_getter::get_lcc_converter_firing_angle_in_deg(const METER_P
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_lcc_converter_active_power_in_MW(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_lcc_converter_active_power_in_MW(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -99,7 +99,7 @@ double mt_hvdc_meter_getter::get_lcc_converter_active_power_in_MW(const METER_PA
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_lcc_converter_reactive_power_in_MVar(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_lcc_converter_reactive_power_in_MVar(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -114,7 +114,7 @@ double mt_hvdc_meter_getter::get_lcc_converter_reactive_power_in_MVar(const METE
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_lcc_converter_reference_angle_of_cc_in_deg(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_lcc_converter_reference_angle_of_cc_in_deg(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -129,7 +129,7 @@ double mt_hvdc_meter_getter::get_lcc_converter_reference_angle_of_cc_in_deg(cons
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_lcc_converter_reference_angle_of_cea_in_deg(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_lcc_converter_reference_angle_of_cea_in_deg(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -144,7 +144,7 @@ double mt_hvdc_meter_getter::get_lcc_converter_reference_angle_of_cea_in_deg(con
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_lcc_converter_reference_angle_of_cv_in_deg(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_lcc_converter_reference_angle_of_cv_in_deg(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -159,7 +159,7 @@ double mt_hvdc_meter_getter::get_lcc_converter_reference_angle_of_cv_in_deg(cons
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_lcc_converter_idc_ref_in_kA(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_lcc_converter_idc_ref_in_kA(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -174,7 +174,7 @@ double mt_hvdc_meter_getter::get_lcc_converter_idc_ref_in_kA(const METER_PARAMET
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_vsc_converter_dc_current_in_kA(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_vsc_converter_dc_current_in_kA(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -189,7 +189,7 @@ double mt_hvdc_meter_getter::get_vsc_converter_dc_current_in_kA(const METER_PARA
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_vsc_converter_dc_voltage_in_kV(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_vsc_converter_dc_voltage_in_kV(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -204,7 +204,7 @@ double mt_hvdc_meter_getter::get_vsc_converter_dc_voltage_in_kV(const METER_PARA
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_vsc_converter_dc_power_in_MW(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_vsc_converter_dc_power_in_MW(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -219,7 +219,7 @@ double mt_hvdc_meter_getter::get_vsc_converter_dc_power_in_MW(const METER_PARAME
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_vsc_converter_ac_current_in_kA(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_vsc_converter_ac_current_in_kA(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -235,7 +235,7 @@ double mt_hvdc_meter_getter::get_vsc_converter_ac_current_in_kA(const METER_PARA
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_vsc_converter_active_power_in_MW(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_vsc_converter_active_power_in_MW(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -250,7 +250,7 @@ double mt_hvdc_meter_getter::get_vsc_converter_active_power_in_MW(const METER_PA
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_vsc_converter_reactive_power_in_MVar(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_vsc_converter_reactive_power_in_MVar(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -265,7 +265,7 @@ double mt_hvdc_meter_getter::get_vsc_converter_reactive_power_in_MVar(const METE
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_vsc_converter_id_in_kA(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_vsc_converter_id_in_kA(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -280,7 +280,7 @@ double mt_hvdc_meter_getter::get_vsc_converter_id_in_kA(const METER_PARAMETER& p
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_vsc_converter_iq_in_kA(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_vsc_converter_iq_in_kA(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -295,7 +295,7 @@ double mt_hvdc_meter_getter::get_vsc_converter_iq_in_kA(const METER_PARAMETER& p
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_dc_bus_voltage_in_kV(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_dc_bus_voltage_in_kV(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -310,7 +310,7 @@ double mt_hvdc_meter_getter::get_dc_bus_voltage_in_kV(const METER_PARAMETER& par
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_dc_line_current_in_kA(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_dc_line_current_in_kA(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -329,17 +329,17 @@ double mt_hvdc_meter_getter::get_dc_line_current_in_kA(const METER_PARAMETER& pa
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_hlcc_converter_model_internal_variable(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_hlcc_converter_model_internal_variable(const METER_PARAMETER& para)
 {
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_hvsc_converter_model_internal_variable(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_hvsc_converter_model_internal_variable(const METER_PARAMETER& para)
 {
     return 0.0;
 }
 
-double mt_hvdc_meter_getter::get_dc_network_model_internal_variable(const METER_PARAMETER& para)
+double mt_hvdc_meter_interface::get_dc_network_model_internal_variable(const METER_PARAMETER& para)
 {
     return 0.0;
 }

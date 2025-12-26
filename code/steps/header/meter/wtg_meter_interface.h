@@ -5,7 +5,7 @@
 #include <string>
 using namespace std;
 
-namespace wtg_meter_getter
+namespace wtg_meter_interface
 {
     double get_terminal_current_in_pu_mbase(const METER_PARAMETER& para);
     double get_terminal_current_in_pu_sbase(const METER_PARAMETER& para);

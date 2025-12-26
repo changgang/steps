@@ -6,7 +6,7 @@
 #include <string>
 using namespace std;
 
-namespace sg_meter_getter
+namespace sg_meter_interface
 {
     double get_rotor_angle_in_deg(const METER_PARAMETER& para);
     double get_rotor_angle_in_rad(const METER_PARAMETER& para);

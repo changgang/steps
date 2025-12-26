@@ -5,7 +5,7 @@
 #include <string>
 using namespace std;
 
-namespace es_meter_getter
+namespace es_meter_interface
 {
     double get_terminal_current_in_pu_mbase(const METER_PARAMETER& para);
     double get_terminal_current_in_pu_sbase(const METER_PARAMETER& para);

@@ -1,10 +1,10 @@
-#include "header/meter/lcc_hvdc2t_meter_getter.h"
+#include "header/meter/lcc_hvdc2t_meter_interface.h"
 #include "header/device/lcc_hvdc2t.h"
 #include "header/model/lcc_hvdc2t_model/lcc_hvdc2t_model.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
-double lcc_hvdc2t_meter_getter::get_dc_current_in_kA(const METER_PARAMETER& para)
+double lcc_hvdc2t_meter_interface::get_dc_current_in_kA(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
     LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
@@ -17,7 +17,7 @@ double lcc_hvdc2t_meter_getter::get_dc_current_in_kA(const METER_PARAMETER& para
         return 0.0;
 }
 
-double lcc_hvdc2t_meter_getter::get_ac_current_in_kA(const METER_PARAMETER& para)
+double lcc_hvdc2t_meter_interface::get_ac_current_in_kA(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
     LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
@@ -30,7 +30,7 @@ double lcc_hvdc2t_meter_getter::get_ac_current_in_kA(const METER_PARAMETER& para
         return 0.0;
 }
 
-double lcc_hvdc2t_meter_getter::get_angle_in_deg(const METER_PARAMETER& para)
+double lcc_hvdc2t_meter_interface::get_angle_in_deg(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
     LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
@@ -43,7 +43,7 @@ double lcc_hvdc2t_meter_getter::get_angle_in_deg(const METER_PARAMETER& para)
         return 0.0;
 }
 
-double lcc_hvdc2t_meter_getter::get_mu_in_deg(const METER_PARAMETER& para)
+double lcc_hvdc2t_meter_interface::get_mu_in_deg(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
     LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
@@ -56,7 +56,7 @@ double lcc_hvdc2t_meter_getter::get_mu_in_deg(const METER_PARAMETER& para)
         return 0.0;
 }
 
-double lcc_hvdc2t_meter_getter::get_dc_voltage_in_kV(const METER_PARAMETER& para)
+double lcc_hvdc2t_meter_interface::get_dc_voltage_in_kV(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
     LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
@@ -69,7 +69,7 @@ double lcc_hvdc2t_meter_getter::get_dc_voltage_in_kV(const METER_PARAMETER& para
         return 0.0;
 }
 
-double lcc_hvdc2t_meter_getter::get_ac_voltage_in_pu(const METER_PARAMETER& para)
+double lcc_hvdc2t_meter_interface::get_ac_voltage_in_pu(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
     LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
@@ -82,7 +82,7 @@ double lcc_hvdc2t_meter_getter::get_ac_voltage_in_pu(const METER_PARAMETER& para
         return 0.0;
 }
 
-double lcc_hvdc2t_meter_getter::get_dc_power_in_MW(const METER_PARAMETER& para)
+double lcc_hvdc2t_meter_interface::get_dc_power_in_MW(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
     LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
@@ -95,7 +95,7 @@ double lcc_hvdc2t_meter_getter::get_dc_power_in_MW(const METER_PARAMETER& para)
         return 0.0;
 }
 
-double lcc_hvdc2t_meter_getter::get_ac_active_power_in_MW(const METER_PARAMETER& para)
+double lcc_hvdc2t_meter_interface::get_ac_active_power_in_MW(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
     LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
@@ -108,7 +108,7 @@ double lcc_hvdc2t_meter_getter::get_ac_active_power_in_MW(const METER_PARAMETER&
         return 0.0;
 }
 
-double lcc_hvdc2t_meter_getter::get_ac_reactive_power_in_MVar(const METER_PARAMETER& para)
+double lcc_hvdc2t_meter_interface::get_ac_reactive_power_in_MVar(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
     LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
@@ -121,7 +121,7 @@ double lcc_hvdc2t_meter_getter::get_ac_reactive_power_in_MVar(const METER_PARAME
         return 0.0;
 }
 
-double lcc_hvdc2t_meter_getter::get_lcc_hvdc2t_model_internal_variable(const METER_PARAMETER& para)
+double lcc_hvdc2t_meter_interface::get_lcc_hvdc2t_model_internal_variable(const METER_PARAMETER& para)
 {
     LCC_HVDC2T* hvdc = (LCC_HVDC2T*) para.device_pointer;
     string internal_var_name = para.internal_var_name;

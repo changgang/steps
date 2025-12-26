@@ -6,7 +6,7 @@ using namespace std;
 
 #include "header/meter/meter_parameter_struct.h"
 
-namespace ac_line_meter_getter {
+namespace ac_line_meter_interface {
     double get_current_in_kA(const METER_PARAMETER& para);
     double get_current_in_pu(const METER_PARAMETER& para);
     double get_active_power_in_MW(const METER_PARAMETER& para);

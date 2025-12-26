@@ -5,7 +5,7 @@
 #include <string>
 using namespace std;
 
-namespace lcc_hvdc2t_meter_getter
+namespace lcc_hvdc2t_meter_interface
 {
     double get_dc_current_in_kA(const METER_PARAMETER& para);
     double get_ac_current_in_kA(const METER_PARAMETER& para);

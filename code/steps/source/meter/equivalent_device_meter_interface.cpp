@@ -1,9 +1,9 @@
-#include "header/meter/equivalent_device_meter_getter.h"
+#include "header/meter/equivalent_device_meter_interface.h"
 #include "header/device/equivalent_device.h"
 #include "header/steps_namespace.h"
 #include "header/basic/utility.h"
 
-double equivalent_device_meter_getter::get_voltage_source_voltage_in_pu(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_voltage_source_voltage_in_pu(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -17,7 +17,7 @@ double equivalent_device_meter_getter::get_voltage_source_voltage_in_pu(const ME
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_voltage_source_voltage_angle_in_deg(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_voltage_source_voltage_angle_in_deg(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -31,7 +31,7 @@ double equivalent_device_meter_getter::get_voltage_source_voltage_angle_in_deg(c
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_voltage_source_resistance_in_pu(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_voltage_source_resistance_in_pu(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -45,7 +45,7 @@ double equivalent_device_meter_getter::get_voltage_source_resistance_in_pu(const
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_voltage_source_reactance_in_pu(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_voltage_source_reactance_in_pu(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -59,7 +59,7 @@ double equivalent_device_meter_getter::get_voltage_source_reactance_in_pu(const 
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_active_constant_power_load_in_MW(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_active_constant_power_load_in_MW(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -73,7 +73,7 @@ double equivalent_device_meter_getter::get_active_constant_power_load_in_MW(cons
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_reactive_constant_power_load_in_MVar(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_reactive_constant_power_load_in_MVar(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -87,7 +87,7 @@ double equivalent_device_meter_getter::get_reactive_constant_power_load_in_MVar(
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_active_constant_current_load_in_MW(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_active_constant_current_load_in_MW(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -101,7 +101,7 @@ double equivalent_device_meter_getter::get_active_constant_current_load_in_MW(co
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_reactive_constant_current_load_in_MVar(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_reactive_constant_current_load_in_MVar(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -115,7 +115,7 @@ double equivalent_device_meter_getter::get_reactive_constant_current_load_in_MVa
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_active_constant_impedance_load_in_MW(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_active_constant_impedance_load_in_MW(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -129,7 +129,7 @@ double equivalent_device_meter_getter::get_active_constant_impedance_load_in_MW(
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_reactive_constant_impedance_load_in_MVar(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_reactive_constant_impedance_load_in_MVar(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -143,7 +143,7 @@ double equivalent_device_meter_getter::get_reactive_constant_impedance_load_in_M
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_active_power_generation_in_MW(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_active_power_generation_in_MW(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -157,7 +157,7 @@ double equivalent_device_meter_getter::get_active_power_generation_in_MW(const M
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_reactive_power_generation_in_MVar(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_reactive_power_generation_in_MVar(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -171,7 +171,7 @@ double equivalent_device_meter_getter::get_reactive_power_generation_in_MVar(con
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_active_power_load_in_MW(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_active_power_load_in_MW(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -185,7 +185,7 @@ double equivalent_device_meter_getter::get_active_power_load_in_MW(const METER_P
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_reactive_power_load_in_MVar(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_reactive_power_load_in_MVar(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -199,7 +199,7 @@ double equivalent_device_meter_getter::get_reactive_power_load_in_MVar(const MET
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_active_power_net_load_in_MW(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_active_power_net_load_in_MW(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -213,7 +213,7 @@ double equivalent_device_meter_getter::get_active_power_net_load_in_MW(const MET
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_reactive_power_net_load_in_MVar(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_reactive_power_net_load_in_MVar(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -227,7 +227,7 @@ double equivalent_device_meter_getter::get_reactive_power_net_load_in_MVar(const
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_active_constant_power_load_in_pu(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_active_constant_power_load_in_pu(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -241,7 +241,7 @@ double equivalent_device_meter_getter::get_active_constant_power_load_in_pu(cons
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_reactive_constant_power_load_in_pu(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_reactive_constant_power_load_in_pu(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -255,7 +255,7 @@ double equivalent_device_meter_getter::get_reactive_constant_power_load_in_pu(co
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_active_constant_current_load_in_pu(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_active_constant_current_load_in_pu(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -269,7 +269,7 @@ double equivalent_device_meter_getter::get_active_constant_current_load_in_pu(co
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_reactive_constant_current_load_in_pu(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_reactive_constant_current_load_in_pu(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -283,7 +283,7 @@ double equivalent_device_meter_getter::get_reactive_constant_current_load_in_pu(
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_active_constant_impedance_load_in_pu(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_active_constant_impedance_load_in_pu(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -297,7 +297,7 @@ double equivalent_device_meter_getter::get_active_constant_impedance_load_in_pu(
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_reactive_constant_impedance_load_in_pu(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_reactive_constant_impedance_load_in_pu(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -311,7 +311,7 @@ double equivalent_device_meter_getter::get_reactive_constant_impedance_load_in_p
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_active_power_generation_in_pu(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_active_power_generation_in_pu(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -325,7 +325,7 @@ double equivalent_device_meter_getter::get_active_power_generation_in_pu(const M
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_reactive_power_generation_in_pu(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_reactive_power_generation_in_pu(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -339,7 +339,7 @@ double equivalent_device_meter_getter::get_reactive_power_generation_in_pu(const
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_active_power_load_in_pu(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_active_power_load_in_pu(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -353,7 +353,7 @@ double equivalent_device_meter_getter::get_active_power_load_in_pu(const METER_P
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_reactive_power_load_in_pu(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_reactive_power_load_in_pu(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -367,7 +367,7 @@ double equivalent_device_meter_getter::get_reactive_power_load_in_pu(const METER
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_active_power_net_load_in_pu(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_active_power_net_load_in_pu(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)
@@ -381,7 +381,7 @@ double equivalent_device_meter_getter::get_active_power_net_load_in_pu(const MET
         return 0.0;
 }
 
-double equivalent_device_meter_getter::get_reactive_power_net_load_in_pu(const METER_PARAMETER& para)
+double equivalent_device_meter_interface::get_reactive_power_net_load_in_pu(const METER_PARAMETER& para)
 {
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) para.device_pointer;
     if(edevice != NULL)

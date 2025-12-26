@@ -5,7 +5,7 @@
 #include <string>
 using namespace std;
 
-namespace bus_meter_getter
+namespace bus_meter_interface
 {
     double get_voltage_in_pu(const METER_PARAMETER& para);
     double get_voltage_in_kV(const METER_PARAMETER& para);

@@ -5,7 +5,7 @@
 #include <string>
 using namespace std;
 
-namespace equivalent_device_meter_getter
+namespace equivalent_device_meter_interface
 {
     double get_voltage_source_voltage_in_pu(const METER_PARAMETER& para);
     double get_voltage_source_voltage_angle_in_deg(const METER_PARAMETER& para);

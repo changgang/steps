@@ -5,7 +5,7 @@
 #include <string>
 using namespace std;
 
-namespace sv_source_meter_getter
+namespace sv_source_meter_interface
 {
     double get_terminal_current_in_pu_sbase(const METER_PARAMETER& para);
     double get_terminal_reactive_power_in_pu_sbase(const METER_PARAMETER& para);

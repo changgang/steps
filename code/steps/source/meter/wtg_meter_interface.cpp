@@ -1,4 +1,4 @@
-#include "header/meter/wtg_meter_getter.h"
+#include "header/meter/wtg_meter_interface.h"
 #include "header/device/wt_generator.h"
 #include "header/model/wtg_models/wt_generator_model/wt_generator_model.h"
 #include "header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model.h"
@@ -12,21 +12,21 @@
 #include "header/steps_namespace.h"
 #include "header/basic/utility.h"
 
-double wtg_meter_getter::get_terminal_current_in_pu_mbase(const METER_PARAMETER& para)
+double wtg_meter_interface::get_terminal_current_in_pu_mbase(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
     return model ? model->get_terminal_current_in_pu_based_on_mbase() : 0.0;
 }
 
-double wtg_meter_getter::get_terminal_current_in_pu_sbase(const METER_PARAMETER& para)
+double wtg_meter_interface::get_terminal_current_in_pu_sbase(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
     return model ? model->get_terminal_current_in_pu_based_on_mbase() * gen->get_mbase_over_sbase() : 0.0;
 }
 
-double wtg_meter_getter::get_terminal_current_in_kA(const METER_PARAMETER& para)
+double wtg_meter_interface::get_terminal_current_in_kA(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
@@ -43,14 +43,14 @@ double wtg_meter_getter::get_terminal_current_in_kA(const METER_PARAMETER& para)
         return 0.0;
 }
 
-double wtg_meter_getter::get_terminal_active_power_in_pu_mbase(const METER_PARAMETER& para)
+double wtg_meter_interface::get_terminal_active_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
     return model ? model->get_terminal_active_power_in_pu_based_on_mbase() : 0.0;
 }
 
-double wtg_meter_getter::get_terminal_active_power_in_pu_sbase(const METER_PARAMETER& para)
+double wtg_meter_interface::get_terminal_active_power_in_pu_sbase(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
@@ -60,21 +60,21 @@ double wtg_meter_getter::get_terminal_active_power_in_pu_sbase(const METER_PARAM
     return model->get_terminal_active_power_in_MW() * one_over_sbase;
 }
 
-double wtg_meter_getter::get_terminal_active_power_in_MW(const METER_PARAMETER& para)
+double wtg_meter_interface::get_terminal_active_power_in_MW(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
     return model ? model->get_terminal_active_power_in_MW() : 0.0;
 }
 
-double wtg_meter_getter::get_terminal_reactive_power_in_pu_mbase(const METER_PARAMETER& para)
+double wtg_meter_interface::get_terminal_reactive_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
     return model ? model->get_terminal_reactive_power_in_pu_based_on_mbase() : 0.0;
 }
 
-double wtg_meter_getter::get_terminal_reactive_power_in_pu_sbase(const METER_PARAMETER& para)
+double wtg_meter_interface::get_terminal_reactive_power_in_pu_sbase(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
@@ -85,14 +85,14 @@ double wtg_meter_getter::get_terminal_reactive_power_in_pu_sbase(const METER_PAR
     return model->get_terminal_reactive_power_in_MVar() * one_over_sbase;
 }
 
-double wtg_meter_getter::get_terminal_reactive_power_in_MVar(const METER_PARAMETER& para)
+double wtg_meter_interface::get_terminal_reactive_power_in_MVar(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
     return model ? model->get_terminal_reactive_power_in_MVar() : 0.0;
 }
 
-double wtg_meter_getter::get_terminal_apparent_power_in_pu_mbase(const METER_PARAMETER& para)
+double wtg_meter_interface::get_terminal_apparent_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
@@ -103,7 +103,7 @@ double wtg_meter_getter::get_terminal_apparent_power_in_pu_mbase(const METER_PAR
     return steps_sqrt(p * p + q * q);
 }
 
-double wtg_meter_getter::get_terminal_apparent_power_in_pu_sbase(const METER_PARAMETER& para)
+double wtg_meter_interface::get_terminal_apparent_power_in_pu_sbase(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
@@ -116,7 +116,7 @@ double wtg_meter_getter::get_terminal_apparent_power_in_pu_sbase(const METER_PAR
     return steps_sqrt(p * p + q * q);
 }
 
-double wtg_meter_getter::get_terminal_apparent_power_in_MVA(const METER_PARAMETER& para)
+double wtg_meter_interface::get_terminal_apparent_power_in_MVA(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
@@ -127,7 +127,7 @@ double wtg_meter_getter::get_terminal_apparent_power_in_MVA(const METER_PARAMETE
     return steps_sqrt(p * p + q * q);
 }
 
-double wtg_meter_getter::get_mechanical_power_in_pu_mbase(const METER_PARAMETER& para)
+double wtg_meter_interface::get_mechanical_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_AERODYNAMIC_MODEL* model = gen->get_wt_aerodynamic_model();
@@ -137,7 +137,7 @@ double wtg_meter_getter::get_mechanical_power_in_pu_mbase(const METER_PARAMETER&
     return model->get_turbine_mechanical_power_in_MW() * one_over_mbase;
 }
 
-double wtg_meter_getter::get_mechanical_power_in_pu_sbase(const METER_PARAMETER& para)
+double wtg_meter_interface::get_mechanical_power_in_pu_sbase(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_AERODYNAMIC_MODEL* model = gen->get_wt_aerodynamic_model();
@@ -148,14 +148,14 @@ double wtg_meter_getter::get_mechanical_power_in_pu_sbase(const METER_PARAMETER&
     return model->get_turbine_mechanical_power_in_MW() * one_over_sbase;
 }
 
-double wtg_meter_getter::get_mechanical_power_in_MW(const METER_PARAMETER& para)
+double wtg_meter_interface::get_mechanical_power_in_MW(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_AERODYNAMIC_MODEL* model = gen->get_wt_aerodynamic_model();
     return model ? model->get_turbine_mechanical_power_in_MW() : 0.0;
 }
 
-double wtg_meter_getter::get_max_available_mechanical_power_in_pu_mbase(const METER_PARAMETER& para)
+double wtg_meter_interface::get_max_available_mechanical_power_in_pu_mbase(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_AERODYNAMIC_MODEL* model = gen->get_wt_aerodynamic_model();
@@ -169,7 +169,7 @@ double wtg_meter_getter::get_max_available_mechanical_power_in_pu_mbase(const ME
     return pmax * n * one_over_mbase;
 }
 
-double wtg_meter_getter::get_max_available_mechanical_power_in_pu_sbase(const METER_PARAMETER& para)
+double wtg_meter_interface::get_max_available_mechanical_power_in_pu_sbase(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_AERODYNAMIC_MODEL* model = gen->get_wt_aerodynamic_model();
@@ -185,7 +185,7 @@ double wtg_meter_getter::get_max_available_mechanical_power_in_pu_sbase(const ME
     return pmax * n * one_over_sbase;
 }
 
-double wtg_meter_getter::get_max_available_mechanical_power_in_MW(const METER_PARAMETER& para)
+double wtg_meter_interface::get_max_available_mechanical_power_in_MW(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_AERODYNAMIC_MODEL* model = gen->get_wt_aerodynamic_model();
@@ -198,28 +198,28 @@ double wtg_meter_getter::get_max_available_mechanical_power_in_MW(const METER_PA
     return pmax * n;
 }
 
-double wtg_meter_getter::get_speed_reference_in_pu(const METER_PARAMETER& para)
+double wtg_meter_interface::get_speed_reference_in_pu(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_AERODYNAMIC_MODEL* model = gen->get_wt_aerodynamic_model();
     return model ? model->get_turbine_reference_speed_in_pu() : 0.0;
 }
 
-double wtg_meter_getter::get_speed_reference_in_rad_s(const METER_PARAMETER& para)
+double wtg_meter_interface::get_speed_reference_in_rad_s(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_AERODYNAMIC_MODEL* model = gen->get_wt_aerodynamic_model();
     return model ? model->get_turbine_reference_speed_in_rad_per_s() : 0.0;
 }
 
-double wtg_meter_getter::get_turbine_speed_deviation_in_pu(const METER_PARAMETER& para)
+double wtg_meter_interface::get_turbine_speed_deviation_in_pu(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_TURBINE_MODEL* model = gen->get_wt_turbine_model();
     return model ? model->get_turbine_speed_in_pu() - 1.0 : 0.0;
 }
 
-double wtg_meter_getter::get_turbine_speed_deviation_in_Hz(const METER_PARAMETER& para)
+double wtg_meter_interface::get_turbine_speed_deviation_in_Hz(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_TURBINE_MODEL* turbine_model = gen->get_wt_turbine_model();
@@ -231,14 +231,14 @@ double wtg_meter_getter::get_turbine_speed_deviation_in_Hz(const METER_PARAMETER
     return (turbine_model->get_turbine_speed_in_pu() - 1.0) * fn;
 }
 
-double wtg_meter_getter::get_turbine_speed_in_pu(const METER_PARAMETER& para)
+double wtg_meter_interface::get_turbine_speed_in_pu(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_TURBINE_MODEL* model = gen->get_wt_turbine_model();
     return model ? model->get_turbine_speed_in_pu() : 0.0;
 }
 
-double wtg_meter_getter::get_turbine_speed_in_Hz(const METER_PARAMETER& para)
+double wtg_meter_interface::get_turbine_speed_in_Hz(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_TURBINE_MODEL* turbine_model = gen->get_wt_turbine_model();
@@ -250,14 +250,14 @@ double wtg_meter_getter::get_turbine_speed_in_Hz(const METER_PARAMETER& para)
     return turbine_model->get_turbine_speed_in_pu() * wn;
 }
 
-double wtg_meter_getter::get_rotor_speed_deviation_in_pu(const METER_PARAMETER& para)
+double wtg_meter_interface::get_rotor_speed_deviation_in_pu(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_TURBINE_MODEL* model = gen->get_wt_turbine_model();
     return model ? model->get_generator_speed_in_pu() - 1.0 : 0.0;
 }
 
-double wtg_meter_getter::get_rotor_speed_deviation_in_Hz(const METER_PARAMETER& para)
+double wtg_meter_interface::get_rotor_speed_deviation_in_Hz(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_TURBINE_MODEL* turbine_model = gen->get_wt_turbine_model();
@@ -274,14 +274,14 @@ double wtg_meter_getter::get_rotor_speed_deviation_in_Hz(const METER_PARAMETER& 
     return (turbine_model->get_generator_speed_in_pu() - 1.0) * fn;
 }
 
-double wtg_meter_getter::get_rotor_speed_in_pu(const METER_PARAMETER& para)
+double wtg_meter_interface::get_rotor_speed_in_pu(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_TURBINE_MODEL* model = gen->get_wt_turbine_model();
     return model ? model->get_generator_speed_in_pu() : 0.0;
 }
 
-double wtg_meter_getter::get_rotor_speed_in_Hz(const METER_PARAMETER& para)
+double wtg_meter_interface::get_rotor_speed_in_Hz(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_TURBINE_MODEL* turbine_model = gen->get_wt_turbine_model();
@@ -298,63 +298,63 @@ double wtg_meter_getter::get_rotor_speed_in_Hz(const METER_PARAMETER& para)
     return turbine_model->get_generator_speed_in_pu() * fn;
 }
 
-double wtg_meter_getter::get_rotor_angle_in_deg(const METER_PARAMETER& para)
+double wtg_meter_interface::get_rotor_angle_in_deg(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_TURBINE_MODEL* model = gen->get_wt_turbine_model();
     return model ? model->get_rotor_angle_in_deg() : 0.0;
 }
 
-double wtg_meter_getter::get_rotor_angle_in_rad(const METER_PARAMETER& para)
+double wtg_meter_interface::get_rotor_angle_in_rad(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_TURBINE_MODEL* model = gen->get_wt_turbine_model();
     return model ? model->get_rotor_angle_in_rad() : 0.0;
 }
 
-double wtg_meter_getter::get_active_current_command_in_pu(const METER_PARAMETER& para)
+double wtg_meter_interface::get_active_current_command_in_pu(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
     return model ? model->get_active_current_command_in_pu_based_on_mbase() : 0.0;
 }
 
-double wtg_meter_getter::get_reactive_current_command_in_pu(const METER_PARAMETER& para)
+double wtg_meter_interface::get_reactive_current_command_in_pu(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
     return model ? model->get_reactive_current_command_in_pu_based_on_mbase() : 0.0;
 }
 
-double wtg_meter_getter::get_active_power_command_in_pu(const METER_PARAMETER& para)
+double wtg_meter_interface::get_active_power_command_in_pu(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
     return model ? model->get_active_power_command_in_pu_based_on_mbase() : 0.0;
 }
 
-double wtg_meter_getter::get_reactive_power_command_in_pu(const METER_PARAMETER& para)
+double wtg_meter_interface::get_reactive_power_command_in_pu(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
     return model ? model->get_reactive_power_command_in_pu_based_on_mbase() : 0.0;
 }
 
-double wtg_meter_getter::get_reactive_voltage_command_in_pu(const METER_PARAMETER& para)
+double wtg_meter_interface::get_reactive_voltage_command_in_pu(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
     return model ? model->get_reactive_voltage_command_in_pu() : 0.0;
 }
 
-double wtg_meter_getter::get_pitch_angle_in_deg(const METER_PARAMETER& para)
+double wtg_meter_interface::get_pitch_angle_in_deg(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_AERODYNAMIC_MODEL* model = gen->get_wt_aerodynamic_model();
     return model ? model->get_pitch_angle_in_deg() : 0.0;
 }
 
-double wtg_meter_getter::get_wind_speed_in_pu(const METER_PARAMETER& para)
+double wtg_meter_interface::get_wind_speed_in_pu(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WIND_SPEED_MODEL* windspeed_model = gen->get_wind_speed_model();
@@ -368,7 +368,7 @@ double wtg_meter_getter::get_wind_speed_in_pu(const METER_PARAMETER& para)
         return 0.0;
 }
 
-double wtg_meter_getter::get_wind_speed_mps(const METER_PARAMETER& para)
+double wtg_meter_interface::get_wind_speed_mps(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WIND_SPEED_MODEL* windspeed_model = gen->get_wind_speed_model();
@@ -382,14 +382,14 @@ double wtg_meter_getter::get_wind_speed_mps(const METER_PARAMETER& para)
         return 0.0;
 }
 
-double wtg_meter_getter::get_braking_resistor_power_in_pu(const METER_PARAMETER& para)
+double wtg_meter_interface::get_braking_resistor_power_in_pu(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     WT_DBR_MODEL* model = gen->get_wt_dbr_model();
     return model ? model->get_braking_resistor_power_in_pu_based_on_mbase() : 0.0;
 }
 
-double wtg_meter_getter::get_generator_model_internal_variable(const METER_PARAMETER& para)
+double wtg_meter_interface::get_generator_model_internal_variable(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
@@ -397,7 +397,7 @@ double wtg_meter_getter::get_generator_model_internal_variable(const METER_PARAM
     return model ? model->get_model_internal_variable_with_name(internal_var_name) : 0.0;
 }
 
-double wtg_meter_getter::get_aerodynamic_model_internal_variable(const METER_PARAMETER& para)
+double wtg_meter_interface::get_aerodynamic_model_internal_variable(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
@@ -405,7 +405,7 @@ double wtg_meter_getter::get_aerodynamic_model_internal_variable(const METER_PAR
     return model ? model->get_model_internal_variable_with_name(internal_var_name) : 0.0;
 }
 
-double wtg_meter_getter::get_turbine_model_internal_variable(const METER_PARAMETER& para)
+double wtg_meter_interface::get_turbine_model_internal_variable(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
@@ -413,7 +413,7 @@ double wtg_meter_getter::get_turbine_model_internal_variable(const METER_PARAMET
     return model ? model->get_model_internal_variable_with_name(internal_var_name) : 0.0;
 }
 
-double wtg_meter_getter::get_electrical_model_internal_variable(const METER_PARAMETER& para)
+double wtg_meter_interface::get_electrical_model_internal_variable(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
@@ -421,7 +421,7 @@ double wtg_meter_getter::get_electrical_model_internal_variable(const METER_PARA
     return model ? model->get_model_internal_variable_with_name(internal_var_name) : 0.0;
 }
 
-double wtg_meter_getter::get_pitch_model_internal_variable(const METER_PARAMETER& para)
+double wtg_meter_interface::get_pitch_model_internal_variable(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
@@ -429,7 +429,7 @@ double wtg_meter_getter::get_pitch_model_internal_variable(const METER_PARAMETER
     return model ? model->get_model_internal_variable_with_name(internal_var_name) : 0.0;
 }
 
-double wtg_meter_getter::get_vrt_model_internal_variable(const METER_PARAMETER& para)
+double wtg_meter_interface::get_vrt_model_internal_variable(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
@@ -437,7 +437,7 @@ double wtg_meter_getter::get_vrt_model_internal_variable(const METER_PARAMETER& 
     return model ? model->get_model_internal_variable_with_name(internal_var_name) : 0.0;
 }
 
-double wtg_meter_getter::get_relay_model_internal_variable(const METER_PARAMETER& para)
+double wtg_meter_interface::get_relay_model_internal_variable(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
@@ -445,7 +445,7 @@ double wtg_meter_getter::get_relay_model_internal_variable(const METER_PARAMETER
     return model ? model->get_model_internal_variable_with_name(internal_var_name) : 0.0;
 }
 
-double wtg_meter_getter::get_windspeed_model_internal_variable(const METER_PARAMETER& para)
+double wtg_meter_interface::get_windspeed_model_internal_variable(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     string internal_var_name = para.internal_var_name;
@@ -453,7 +453,7 @@ double wtg_meter_getter::get_windspeed_model_internal_variable(const METER_PARAM
     return model ? model->get_model_internal_variable_with_name(internal_var_name) : 0.0;
 }
 
-double wtg_meter_getter::get_dbr_model_internal_variable(const METER_PARAMETER& para)
+double wtg_meter_interface::get_dbr_model_internal_variable(const METER_PARAMETER& para)
 {
     WT_GENERATOR* gen = (WT_GENERATOR*) para.device_pointer;
     string internal_var_name = para.internal_var_name;

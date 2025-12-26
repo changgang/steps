@@ -5,7 +5,7 @@
 #include <string>
 using namespace std;
 
-namespace vsc_hvdc_meter_getter
+namespace vsc_hvdc_meter_interface
 {
     double get_converter_ac_voltage_in_pu(const METER_PARAMETER& para);
     double get_converter_ac_voltage_in_kV(const METER_PARAMETER& para);

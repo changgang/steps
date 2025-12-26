@@ -5,7 +5,7 @@
 #include <string>
 using namespace std;
 
-namespace transformer_meter_getter
+namespace transformer_meter_interface
 {
     double get_primary_side_current_in_kA(const METER_PARAMETER& para);
     double get_secondary_side_current_in_kA(const METER_PARAMETER& para);

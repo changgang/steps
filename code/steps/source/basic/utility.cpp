@@ -1,7 +1,7 @@
 #include "header/basic/utility.h"
 #include "header/basic/constants.h"
 #include "header/steps_namespace.h"
-#include "header/meter/meter_map_builder.h"
+#include "header/meter/meter_type2function_map.h"
 
 #include <cstdio>
 #include <algorithm>
@@ -894,23 +894,27 @@ void initialize_package()
 {
     if(package_initialized == false)
     {
-        build_bus_meter_map();
-        build_sg_meter_map();
-        build_wtg_meter_map();
-        build_pvu_meter_map();
-        build_es_meter_map();
-        build_sv_source_meter_map();
-        build_load_meter_map();
-        build_fixed_shunt_meter_map();
-        build_ac_line_meter_map();
-        build_transformer_meter_map();
-        build_lcc_hvdc2t_meter_map();
-        build_vsc_hvdc_meter_map();
-        build_mt_hvdc_meter_map();
-        build_equivalent_device_meter_map();
-
+        initialize_meter_maps();
         package_initialized = true;
     }
+}
+
+void initialize_meter_maps()
+{
+    build_bus_meter_map();
+    build_sg_meter_map();
+    build_wtg_meter_map();
+    build_pvu_meter_map();
+    build_es_meter_map();
+    build_sv_source_meter_map();
+    build_load_meter_map();
+    build_fixed_shunt_meter_map();
+    build_ac_line_meter_map();
+    build_transformer_meter_map();
+    build_lcc_hvdc2t_meter_map();
+    build_vsc_hvdc_meter_map();
+    build_mt_hvdc_meter_map();
+    build_equivalent_device_meter_map();
 }
 
 unsigned int generate_new_toolkit(string log_file)

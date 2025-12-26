@@ -123,6 +123,7 @@ vector<string> psse_dyr_string2steps_string_vector(const string& data);
 string psse_dyr_string2steps_string(const string& data);
 
 void initialize_package();
+void initialize_meter_maps();
 unsigned int generate_new_toolkit(string log_file="");
 void delete_toolkit(unsigned int toolkit_index);
 unsigned int get_toolkit_count();
