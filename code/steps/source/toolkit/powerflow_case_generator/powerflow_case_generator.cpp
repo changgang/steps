@@ -3,7 +3,6 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
-#include "header/meter/meter_setter.h"
 #include <cstdio>
 #include <istream>
 #include <iostream>

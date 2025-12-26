@@ -384,8 +384,9 @@ void build_mt_hvdc_meter_map()
 
     mt_hvdc_meter_map.insert({"DC BUS VOLTAGE IN KV",                   get_dc_bus_voltage_in_kV});
 
-    mt_hvdc_meter_map.insert({"DC LINE CURRENT ON SENDING SIDE IN KA",  get_dc_line_current_on_sending_side_in_kA});
-    mt_hvdc_meter_map.insert({"DC LINE CURRENT ON RECEIVING SIDE IN KA",get_dc_line_current_on_receiving_side_in_kA});
+    mt_hvdc_meter_map.insert({"DC LINE CURRENT IN KA",  get_dc_line_current_in_kA});
+    /*mt_hvdc_meter_map.insert({"DC LINE CURRENT ON SENDING SIDE IN KA",  get_dc_line_current_on_sending_side_in_kA});
+    mt_hvdc_meter_map.insert({"DC LINE CURRENT ON RECEIVING SIDE IN KA",get_dc_line_current_on_receiving_side_in_kA});*/
 
     mt_hvdc_meter_map.insert({"HLCC CONVERTER MODEL INTERNAL VARIABLE", get_hlcc_converter_model_internal_variable});
     mt_hvdc_meter_map.insert({"HVSC CONVERTER MODEL INTERNAL VARIABLE", get_hvsc_converter_model_internal_variable});

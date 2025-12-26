@@ -4849,6 +4849,16 @@ vector<unsigned int> POWER_SYSTEM_DATABASE::get_all_in_service_buses_number()
     return buses_number;
 }
 
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_buses_device_id()
+{
+    vector<DEVICE_ID> dids;
+    unsigned int n=get_bus_count();
+    dids.reserve(n);
+    for(unsigned int i=0; i!=n; ++i)
+        dids.push_back(Bus[i].get_device_id());
+    return dids;
+}
+
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_generators_device_id()
 {
     vector<DEVICE_ID> dids;

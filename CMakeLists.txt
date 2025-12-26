@@ -29,7 +29,7 @@ endif()
 
 # set C and C++ standard
 set(CMAKE_C_STANDARD 17)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 20)
 
 # Set C compiler flags
 set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -O3")

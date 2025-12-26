@@ -316,6 +316,7 @@ class POWER_SYSTEM_DATABASE
         vector<unsigned int> get_all_buses_number();
         vector<unsigned int> get_buses_number_with_constraints(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, unsigned int area, unsigned int zone, unsigned int owner);
         vector<unsigned int> get_all_in_service_buses_number();
+        vector<DEVICE_ID> get_all_buses_device_id();
         vector<DEVICE_ID> get_all_generators_device_id();
         vector<DEVICE_ID> get_all_wt_generators_device_id();
         vector<DEVICE_ID> get_all_pv_units_device_id();

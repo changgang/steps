@@ -310,6 +310,25 @@ double mt_hvdc_meter_getter::get_dc_bus_voltage_in_kV(const METER_PARAMETER& par
     return 0.0;
 }
 
+double mt_hvdc_meter_getter::get_dc_line_current_in_kA(const METER_PARAMETER& para)
+{
+    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
+    if(mtdc != NULL)
+    {
+        if(mtdc->get_status() == true)
+        {
+            string line_name = para.sub_device_name;
+            unsigned int side_bus = para.metered_side_bus;
+            DC_LINE* line = mtdc->get_dc_line_with_line_name(line_name);
+            if(line->get_sending_side_bus_number() == side_bus)
+                return line->get_i_RL_in_kA_on_sending_side();
+            else if(line->get_receiving_side_bus_number() == side_bus)
+                return line->get_i_RL_in_kA_on_receiving_side();
+        }
+    }
+    return 0.0;
+}
+
 double mt_hvdc_meter_getter::get_dc_line_current_on_sending_side_in_kA(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;

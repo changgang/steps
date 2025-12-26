@@ -1923,6 +1923,15 @@ void MT_HVDC::set_vsc_converter_base_voltage_in_kV(const unsigned int index,cons
 }
 
 //get vsc
+
+string MT_HVDC::get_vsc_converter_name(unsigned int index) const
+{
+    if(vsc_index_is_out_of_range_in_function(index,__FUNCTION__))
+        return "";
+    return Hvsc[index].get_converter_name();
+}
+
+
 vector<HVSC*> MT_HVDC::get_all_vsc_converters()
 {
     vector<HVSC*> all_vsc;

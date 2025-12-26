@@ -34,6 +34,7 @@ namespace mt_hvdc_meter_getter
     double get_dc_bus_voltage_in_kV(const METER_PARAMETER& para);
 
     // DC line meter getters
+    double get_dc_line_current_in_kA(const METER_PARAMETER& para);
     double get_dc_line_current_on_sending_side_in_kA(const METER_PARAMETER& para);
     double get_dc_line_current_on_receiving_side_in_kA(const METER_PARAMETER& para);
 

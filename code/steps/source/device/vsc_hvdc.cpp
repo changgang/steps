@@ -1727,9 +1727,7 @@ double VSC_HVDC::get_dc_bus_Vdc_in_kV(unsigned int index) const
 
 double VSC_HVDC::get_dc_bus_Vdc_in_kV_with_dc_bus_number(unsigned int bus) const
 {
-    //cout<<"get_dc_bus_Vdc_in_kV_with_dc_bus_number: bus:"<<bus<<endl;
     unsigned int index = dc_bus_no2index(bus);
-    //cout<<"get_dc_bus_Vdc_in_kV_with_dc_bus_number: index:"<<index<<endl;
     return get_dc_bus_Vdc_in_kV(index);
 }
 

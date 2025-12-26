@@ -271,6 +271,7 @@ class MT_HVDC : public NONBUS_DEVICE
         void set_vsc_converter_base_voltage_in_kV(const unsigned int index,const double vbase);
 
         //get vsc
+        string get_vsc_converter_name(unsigned int index) const;
         vector<HVSC*> get_all_vsc_converters();
         vector<HVSC*> get_vsc_converters_connect_to_ac_bus(unsigned int ac_bus);
         HVSC* get_vsc_converter_with_name(string name);

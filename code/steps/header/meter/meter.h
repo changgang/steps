@@ -73,12 +73,17 @@ class METER
 
         STEPS* toolkit;
         DEVICE* device_pointer;
-        string sub_device_name;
         STEPS_DEVICE_TYPE device_type;
         unsigned int meter_type_string_index;
-        unsigned int metered_side_bus;
-        unsigned int internal_variable_name_index;
+
+        string sub_device_name;
+        string sub_device_type;
+
         DC_DEVICE_ID sub_dc_did;
+
+        unsigned int metered_side_bus;
+
+        unsigned int internal_variable_name_index;
 
         std::function<double(METER_PARAMETER)> meter_function;
 };
