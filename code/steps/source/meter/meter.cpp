@@ -282,11 +282,15 @@ bool METER::is_internal_variable_name_valid(string& name, unsigned int index) co
 
 void METER::set_metered_side_bus(unsigned int meter_side)
 {
-    if(get_device_type()==STEPS_BUS)
+    STEPS_DEVICE_TYPE dtype = get_device_type();
+    string meter_type = get_meter_type();
+    if(dtype == STEPS_BUS or dtype == STEPS_GENERATOR or dtype == STEPS_WT_GENERATOR
+       or dtype == STEPS_PV_UNIT or dtype == STEPS_ENERGY_STORAGE or dtype == STEPS_SV_SOURCE
+       or dtype == STEPS_LOAD or dtype == STEPS_FIXED_SHUNT)
         metered_side_bus = 0;
     else
     {
-        if(get_device_type()!=STEPS_VSC_HVDC)
+        if(dtype == STEPS_AC_LINE or dtype == STEPS_TRANSFORMER or dtype == STEPS_LCC_HVDC2T)
         {
             NONBUS_DEVICE* device = (NONBUS_DEVICE*) get_device_pointer();
             if(device->is_connected_to_bus(meter_side))
@@ -294,10 +298,10 @@ void METER::set_metered_side_bus(unsigned int meter_side)
             else
                 metered_side_bus = 0;
         }
-        else
+        else if(dtype == STEPS_VSC_HVDC)
         {
             VSC_HVDC* vsc_hvdc = (VSC_HVDC*) get_device_pointer();
-            if(get_meter_type().rfind("CONVERTER", 0) == 0)
+            if(meter_type.starts_with("CONVERTER"))
             {
                 if(vsc_hvdc->is_connected_to_bus(meter_side) or vsc_hvdc->is_connected_to_dc_bus(meter_side))
                     metered_side_bus = meter_side;
@@ -306,7 +310,7 @@ void METER::set_metered_side_bus(unsigned int meter_side)
             }
             else
             {
-                if(get_meter_type().rfind("DC BUS", 0) == 0)
+                if(meter_type.starts_with("DC BUS"))
                 {
                     if(vsc_hvdc->is_connected_to_dc_bus(meter_side))
                         metered_side_bus = meter_side;
@@ -315,9 +319,42 @@ void METER::set_metered_side_bus(unsigned int meter_side)
                 }
                 else
                 {
-                    if(get_meter_type().rfind("DC LINE", 0) == 0)
+                    if(meter_type.starts_with("DC LINE"))
                     {
                         if(vsc_hvdc->is_connected_to_dc_bus(meter_side))
+                            metered_side_bus = meter_side;
+                        else
+                            metered_side_bus = 0;
+                    }
+                    else
+                        metered_side_bus = 0;
+                }
+            }
+        }
+        else if(dtype == STEPS_HYBRID_DC)
+        {
+            MT_HVDC* mt_hvdc = (MT_HVDC*) get_device_pointer();
+            if(meter_type.starts_with("LCC CONVERTER") or meter_type.starts_with("VSC CONVERTER"))
+            {
+                if(mt_hvdc->is_connected_to_bus(meter_side) or mt_hvdc->is_connected_to_dcbus(meter_side))
+                    metered_side_bus = meter_side;
+                else
+                    metered_side_bus = 0;
+            }
+            else
+            {
+                if(meter_type.starts_with("DC BUS"))
+                {
+                    if(mt_hvdc->is_connected_to_dcbus(meter_side))
+                        metered_side_bus = meter_side;
+                    else
+                        metered_side_bus = 0;
+                }
+                else
+                {
+                    if(meter_type.starts_with("DC LINE"))
+                    {
+                        if(mt_hvdc->is_connected_to_dcbus(meter_side))
                             metered_side_bus = meter_side;
                         else
                             metered_side_bus = 0;
@@ -334,13 +371,9 @@ void METER::set_sub_device_name(string name)
 {
     if(get_device_type()==STEPS_HYBRID_DC)
     {
-        if(get_meter_type().rfind("LCC CONVERTER",0) == 0)
-            this->sub_device_name = name;
-        if(get_meter_type().rfind("VSC CONVERTER",0) == 0)
-            this->sub_device_name = name;
-        if(get_meter_type().rfind("DC BUS",0) == 0)
-            this->sub_device_name = name;
-        if(get_meter_type().rfind("DC LINE",0) == 0)
+        string meter_type = get_meter_type();
+        if(meter_type.starts_with("LCC CONVERTER") or meter_type.starts_with("VSC CONVERTER")
+           or meter_type.starts_with("DC BUS") or meter_type.starts_with("DC LINE"))
             this->sub_device_name = name;
     }
 }
