@@ -148,8 +148,10 @@ class HVSC
         complex<double> get_converter_dynamic_complex_power_in_MVA();
         double get_converter_dynamic_active_power_in_MW();
         double get_converter_dynamic_reactive_power_in_Mvar();
-        double get_converter_dynamic_d_axis_current_in_pu();
-        double get_converter_dynamic_q_axis_current_in_pu();
+        double get_converter_dynamic_d_axis_current_in_pu_on_converter_base();
+        double get_converter_dynamic_q_axis_current_in_pu_on_converter_base();
+        double get_converter_dynamic_d_axis_current_in_kA();
+        double get_converter_dynamic_q_axis_current_in_kA();
     private://parameters
         STEPS* toolkit;
 

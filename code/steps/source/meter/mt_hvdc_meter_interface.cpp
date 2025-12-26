@@ -67,7 +67,7 @@ double mt_hvdc_meter_interface::get_lcc_converter_ac_current_in_kA(const METER_P
     HLCC* lcc = get_lcc_converter_of_mt_hvdc_from_meter(para);
     if(lcc != nullptr)
     {
-        complex<double> Iac_pu = lcc->get_converter_dynamic_ac_current_in_pu_on_system_base();
+        complex<double> Iac_pu = lcc->get_converter_dynamic_ac_current_in_kA();
         return abs(Iac_pu);
     }
     else
@@ -198,7 +198,7 @@ double mt_hvdc_meter_interface::get_vsc_converter_id_in_kA(const METER_PARAMETER
 {
     HVSC* vsc = get_vsc_converter_of_mt_hvdc_from_meter(para);
     if(vsc != nullptr)
-        return vsc->get_converter_dynamic_d_axis_current_in_pu();
+        return vsc->get_converter_dynamic_d_axis_current_in_kA();
     else
         return 0.0;
 }
@@ -207,7 +207,7 @@ double mt_hvdc_meter_interface::get_vsc_converter_iq_in_kA(const METER_PARAMETER
 {
     HVSC* vsc = get_vsc_converter_of_mt_hvdc_from_meter(para);
     if(vsc != nullptr)
-        return vsc->get_converter_dynamic_q_axis_current_in_pu();
+        return vsc->get_converter_dynamic_q_axis_current_in_kA();
     else
         return 0.0;
 }

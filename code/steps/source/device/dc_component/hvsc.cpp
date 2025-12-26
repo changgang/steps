@@ -875,13 +875,27 @@ double HVSC::get_converter_dynamic_reactive_power_in_Mvar()
     return hvsc_model->get_converter_dynamic_reactive_power_in_Mvar();
 }
 
-double HVSC::get_converter_dynamic_d_axis_current_in_pu()
+double HVSC::get_converter_dynamic_d_axis_current_in_pu_on_converter_base()
 {
     complex<double> idq = hvsc_model->get_converter_dynamic_current_from_ac_bus_to_converter_in_dq_axis_in_pu_on_converter_base();
     return idq.real();
 }
-double HVSC::get_converter_dynamic_q_axis_current_in_pu()
+double HVSC::get_converter_dynamic_q_axis_current_in_pu_on_converter_base()
 {
     complex<double> idq = hvsc_model->get_converter_dynamic_current_from_ac_bus_to_converter_in_dq_axis_in_pu_on_converter_base();
     return idq.imag();
+}
+double HVSC::get_converter_dynamic_d_axis_current_in_kA()
+{
+    double id = get_converter_dynamic_d_axis_current_in_pu_on_converter_base();
+    double sbase = get_converter_rated_capacity_in_MVA();
+    double vbase = get_converter_ac_bus_pointer()->get_base_voltage_in_kV();
+    return id*(sbase/(SQRT3*vbase));
+}
+double HVSC::get_converter_dynamic_q_axis_current_in_kA()
+{
+    double iq = get_converter_dynamic_q_axis_current_in_pu_on_converter_base();
+    double sbase = get_converter_rated_capacity_in_MVA();
+    double vbase = get_converter_ac_bus_pointer()->get_base_voltage_in_kV();
+    return iq*(sbase/(SQRT3*vbase));
 }
