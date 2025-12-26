@@ -2,6 +2,8 @@
 #define MT_HVDC_METER_GETTER_H
 
 #include "header/meter/meter_parameter_struct.h"
+#include "header/device/dc_component/hlcc.h"
+#include "header/device/dc_component/hvsc.h"
 #include <string>
 using namespace std;
 
@@ -41,5 +43,8 @@ namespace mt_hvdc_meter_interface
     double get_hvsc_converter_model_internal_variable(const METER_PARAMETER& para);
     double get_dc_network_model_internal_variable(const METER_PARAMETER& para);
 }
+
+HLCC* get_lcc_converter_of_mt_hvdc_from_meter(const METER_PARAMETER& para);
+HVSC* get_vsc_converter_of_mt_hvdc_from_meter(const METER_PARAMETER& para);
 
 #endif // MT_HVDC_METER_GETTER_H

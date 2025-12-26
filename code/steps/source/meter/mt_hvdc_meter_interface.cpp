@@ -2,13 +2,12 @@
 #include "header/device/mt_hvdc.h"
 #include "header/device/dc_component/dc_bus.h"
 #include "header/device/dc_component/dc_line.h"
-#include "header/device/dc_component/hlcc.h"
-#include "header/device/dc_component/hvsc.h"
 #include "header/basic/steps_enum.h"
 #include "header/basic/utility.h"
 #include "header/meter/meter.h"
 
-double mt_hvdc_meter_interface::get_lcc_converter_dc_current_in_kA(const METER_PARAMETER& para)
+
+HLCC* get_lcc_converter_of_mt_hvdc_from_meter(const METER_PARAMETER& para)
 {
     MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
     if(mtdc != NULL)
@@ -16,283 +15,201 @@ double mt_hvdc_meter_interface::get_lcc_converter_dc_current_in_kA(const METER_P
         if(mtdc->get_status() == true)
         {
             string lcc_name = para.sub_device_name;
-            HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
-            return lcc->get_idc_in_kA();
+            return mtdc->get_lcc_converter_with_name(lcc_name);
         }
     }
-    return 0.0;
+    return NULL;
+}
+
+HVSC* get_vsc_converter_of_mt_hvdc_from_meter(const METER_PARAMETER& para)
+{
+    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
+    if(mtdc != NULL)
+    {
+        if(mtdc->get_status() == true)
+        {
+            string vsc_name = para.sub_device_name;
+            return mtdc->get_vsc_converter_with_name(vsc_name);
+        }
+    }
+    return NULL;
+}
+
+double mt_hvdc_meter_interface::get_lcc_converter_dc_current_in_kA(const METER_PARAMETER& para)
+{
+    HLCC* lcc = get_lcc_converter_of_mt_hvdc_from_meter(para);
+    if(lcc != nullptr)
+        return lcc->get_idc_in_kA();
+    else
+        return 0.0;
 }
 
 double mt_hvdc_meter_interface::get_lcc_converter_dc_voltage_in_kV(const METER_PARAMETER& para)
 {
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
-    {
-        if(mtdc->get_status() == true)
-        {
-            string lcc_name = para.sub_device_name;
-            HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
-            return lcc->get_udc_in_kV();
-        }
-    }
-    return 0.0;
+    HLCC* lcc = get_lcc_converter_of_mt_hvdc_from_meter(para);
+    if(lcc != nullptr)
+        return lcc->get_udc_in_kV();
+    else
+        return 0.0;
 }
 
 double mt_hvdc_meter_interface::get_lcc_converter_dc_power_in_MW(const METER_PARAMETER& para)
 {
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
-    {
-        if(mtdc->get_status() == true)
-        {
-            string lcc_name = para.sub_device_name;
-            HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
-            return lcc->get_converter_dc_power_in_MW();
-        }
-    }
-    return 0.0;
+    HLCC* lcc = get_lcc_converter_of_mt_hvdc_from_meter(para);
+    if(lcc != nullptr)
+        return lcc->get_converter_dc_power_in_MW();
+    else
+        return 0.0;
 }
 
 double mt_hvdc_meter_interface::get_lcc_converter_ac_current_in_kA(const METER_PARAMETER& para)
 {
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
+    HLCC* lcc = get_lcc_converter_of_mt_hvdc_from_meter(para);
+    if(lcc != nullptr)
     {
-        if(mtdc->get_status() == true)
-        {
-            string lcc_name = para.sub_device_name;
-            HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
-            complex<double> Iac_pu = lcc->get_converter_dynamic_ac_current_in_pu_on_system_base();
-            return abs(Iac_pu);
-        }
+        complex<double> Iac_pu = lcc->get_converter_dynamic_ac_current_in_pu_on_system_base();
+        return abs(Iac_pu);
     }
-    return 0.0;
+    else
+        return 0.0;
 }
 
 double mt_hvdc_meter_interface::get_lcc_converter_firing_angle_in_deg(const METER_PARAMETER& para)
 {
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
-    {
-        if(mtdc->get_status() == true)
-        {
-            string lcc_name = para.sub_device_name;
-            HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
-            return lcc->get_firing_angle_in_deg();
-        }
-    }
-    return 0.0;
+    HLCC* lcc = get_lcc_converter_of_mt_hvdc_from_meter(para);
+    if(lcc != nullptr)
+        return lcc->get_firing_angle_in_deg();
+    else
+        return 0.0;
 }
 
 double mt_hvdc_meter_interface::get_lcc_converter_active_power_in_MW(const METER_PARAMETER& para)
 {
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
-    {
-        if(mtdc->get_status() == true)
-        {
-            string lcc_name = para.sub_device_name;
-            HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
-            return lcc->get_converter_P_2_ac_bus();
-        }
-    }
-    return 0.0;
+    HLCC* lcc = get_lcc_converter_of_mt_hvdc_from_meter(para);
+    if(lcc != nullptr)
+        return lcc->get_converter_P_2_ac_bus();
+    else
+        return 0.0;
 }
 
 double mt_hvdc_meter_interface::get_lcc_converter_reactive_power_in_MVar(const METER_PARAMETER& para)
 {
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
-    {
-        if(mtdc->get_status() == true)
-        {
-            string lcc_name = para.sub_device_name;
-            HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
-            return lcc->get_converter_Q_2_ac_bus();
-        }
-    }
-    return 0.0;
+    HLCC* lcc = get_lcc_converter_of_mt_hvdc_from_meter(para);
+    if(lcc != nullptr)
+        return lcc->get_converter_Q_2_ac_bus();
+    else
+        return 0.0;
 }
 
 double mt_hvdc_meter_interface::get_lcc_converter_reference_angle_of_cc_in_deg(const METER_PARAMETER& para)
 {
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
-    {
-        if(mtdc->get_status() == true)
-        {
-            string lcc_name = para.sub_device_name;
-            HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
-            return lcc->get_dynamic_ang_ref_in_deg_of_cc();
-        }
-    }
-    return 0.0;
+    HLCC* lcc = get_lcc_converter_of_mt_hvdc_from_meter(para);
+    if(lcc != nullptr)
+        return lcc->get_dynamic_ang_ref_in_deg_of_cc();
+    else
+        return 0.0;
 }
 
 double mt_hvdc_meter_interface::get_lcc_converter_reference_angle_of_cea_in_deg(const METER_PARAMETER& para)
 {
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
-    {
-        if(mtdc->get_status() == true)
-        {
-            string lcc_name = para.sub_device_name;
-            HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
-            return lcc->get_dynamic_ang_ref_in_deg_of_cea();
-        }
-    }
-    return 0.0;
+    HLCC* lcc = get_lcc_converter_of_mt_hvdc_from_meter(para);
+    if(lcc != nullptr)
+        return lcc->get_dynamic_ang_ref_in_deg_of_cea();
+    else
+        return 0.0;
 }
 
 double mt_hvdc_meter_interface::get_lcc_converter_reference_angle_of_cv_in_deg(const METER_PARAMETER& para)
 {
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
-    {
-        if(mtdc->get_status() == true)
-        {
-            string lcc_name = para.sub_device_name;
-            HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
-            return lcc->get_dynamic_ang_ref_in_deg_of_cv();
-        }
-    }
-    return 0.0;
+    HLCC* lcc = get_lcc_converter_of_mt_hvdc_from_meter(para);
+    if(lcc != nullptr)
+        return lcc->get_dynamic_ang_ref_in_deg_of_cv();
+    else
+        return 0.0;
 }
 
 double mt_hvdc_meter_interface::get_lcc_converter_idc_ref_in_kA(const METER_PARAMETER& para)
 {
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
-    {
-        if(mtdc->get_status() == true)
-        {
-            string lcc_name = para.sub_device_name;
-            HLCC* lcc = mtdc->get_lcc_converter_with_name(lcc_name);
-            return lcc->get_dynamic_idc_ref_in_kA();
-        }
-    }
-    return 0.0;
+    HLCC* lcc = get_lcc_converter_of_mt_hvdc_from_meter(para);
+    if(lcc != nullptr)
+        return lcc->get_dynamic_idc_ref_in_kA();
+    else
+        return 0.0;
 }
 
 double mt_hvdc_meter_interface::get_vsc_converter_dc_current_in_kA(const METER_PARAMETER& para)
 {
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
-    {
-        if(mtdc->get_status() == true)
-        {
-            string vsc_name = para.sub_device_name;
-            HVSC* vsc = mtdc->get_vsc_converter_with_name(vsc_name);
-            return vsc->get_idc_in_kA();
-        }
-    }
-    return 0.0;
+    HVSC* vsc = get_vsc_converter_of_mt_hvdc_from_meter(para);
+    if(vsc != nullptr)
+        return vsc->get_idc_in_kA();
+    else
+        return 0.0;
 }
 
 double mt_hvdc_meter_interface::get_vsc_converter_dc_voltage_in_kV(const METER_PARAMETER& para)
 {
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
-    {
-        if(mtdc->get_status() == true)
-        {
-            string vsc_name = para.sub_device_name;
-            HVSC* vsc = mtdc->get_vsc_converter_with_name(vsc_name);
-            return vsc->get_udc_in_kV();
-        }
-    }
-    return 0.0;
+    HVSC* vsc = get_vsc_converter_of_mt_hvdc_from_meter(para);
+    if(vsc != nullptr)
+        return vsc->get_udc_in_kV();
+    else
+        return 0.0;
 }
 
 double mt_hvdc_meter_interface::get_vsc_converter_dc_power_in_MW(const METER_PARAMETER& para)
 {
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
-    {
-        if(mtdc->get_status() == true)
-        {
-            string vsc_name = para.sub_device_name;
-            HVSC* vsc = mtdc->get_vsc_converter_with_name(vsc_name);
-            return vsc->get_converter_pdc_in_MW();
-        }
-    }
-    return 0.0;
+    HVSC* vsc = get_vsc_converter_of_mt_hvdc_from_meter(para);
+    if(vsc != nullptr)
+        return vsc->get_converter_pdc_in_MW();
+    else
+        return 0.0;
 }
 
 double mt_hvdc_meter_interface::get_vsc_converter_ac_current_in_kA(const METER_PARAMETER& para)
 {
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
+    HVSC* vsc = get_vsc_converter_of_mt_hvdc_from_meter(para);
+    if(vsc != nullptr)
     {
-        if(mtdc->get_status() == true)
-        {
-            string vsc_name = para.sub_device_name;
-            HVSC* vsc = mtdc->get_vsc_converter_with_name(vsc_name);
-            complex<double> Ixy = vsc->get_converter_dynamic_ac_current_in_kA();
-            return abs(Ixy);
-        }
+        complex<double> Ixy = vsc->get_converter_dynamic_ac_current_in_kA();
+        return abs(Ixy);
     }
-    return 0.0;
+    else
+        return 0.0;
 }
 
 double mt_hvdc_meter_interface::get_vsc_converter_active_power_in_MW(const METER_PARAMETER& para)
 {
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
-    {
-        if(mtdc->get_status() == true)
-        {
-            string vsc_name = para.sub_device_name;
-            HVSC* vsc = mtdc->get_vsc_converter_with_name(vsc_name);
-            return vsc->get_converter_dynamic_active_power_in_MW();
-        }
-    }
-    return 0.0;
+    HVSC* vsc = get_vsc_converter_of_mt_hvdc_from_meter(para);
+    if(vsc != nullptr)
+        return vsc->get_converter_dynamic_active_power_in_MW();
+    else
+        return 0.0;
 }
 
 double mt_hvdc_meter_interface::get_vsc_converter_reactive_power_in_MVar(const METER_PARAMETER& para)
 {
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
-    {
-        if(mtdc->get_status() == true)
-        {
-            string vsc_name = para.sub_device_name;
-            HVSC* vsc = mtdc->get_vsc_converter_with_name(vsc_name);
-            return vsc->get_converter_dynamic_reactive_power_in_Mvar();
-        }
-    }
-    return 0.0;
+    HVSC* vsc = get_vsc_converter_of_mt_hvdc_from_meter(para);
+    if(vsc != nullptr)
+        return vsc->get_converter_dynamic_reactive_power_in_Mvar();
+    else
+        return 0.0;
 }
 
 double mt_hvdc_meter_interface::get_vsc_converter_id_in_kA(const METER_PARAMETER& para)
 {
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
-    {
-        if(mtdc->get_status() == true)
-        {
-            string vsc_name = para.sub_device_name;
-            HVSC* vsc = mtdc->get_vsc_converter_with_name(vsc_name);
-            return vsc->get_converter_dynamic_d_axis_current_in_pu();
-        }
-    }
-    return 0.0;
+    HVSC* vsc = get_vsc_converter_of_mt_hvdc_from_meter(para);
+    if(vsc != nullptr)
+        return vsc->get_converter_dynamic_d_axis_current_in_pu();
+    else
+        return 0.0;
 }
 
 double mt_hvdc_meter_interface::get_vsc_converter_iq_in_kA(const METER_PARAMETER& para)
 {
-    MT_HVDC* mtdc = (MT_HVDC*) para.device_pointer;
-    if(mtdc != NULL)
-    {
-        if(mtdc->get_status() == true)
-        {
-            string vsc_name = para.sub_device_name;
-            HVSC* vsc = mtdc->get_vsc_converter_with_name(vsc_name);
-            return vsc->get_converter_dynamic_q_axis_current_in_pu();
-        }
-    }
-    return 0.0;
+    HVSC* vsc = get_vsc_converter_of_mt_hvdc_from_meter(para);
+    if(vsc != nullptr)
+        return vsc->get_converter_dynamic_q_axis_current_in_pu();
+    else
+        return 0.0;
 }
 
 double mt_hvdc_meter_interface::get_dc_bus_voltage_in_kV(const METER_PARAMETER& para)
