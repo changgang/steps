@@ -44,6 +44,23 @@ int main(int argc, char* argv[])
 
     importer.load_powerflow_data("nccc10k.raw");
 
+    DEVICE_ID trans_did;
+    trans_did.set_device_type(STEPS_TRANSFORMER);
+    TERMINAL terminal;
+    terminal.append_bus(7);
+    terminal.append_bus(6);
+    terminal.append_bus(70);
+    trans_did.set_device_terminal(terminal);
+    trans_did.set_device_identifier_index(get_index_of_string("湖北.江陵换流站.#2主变"));
+    TRANSFORMER* trans = psdb.get_transformer(trans_did);
+    trans->set_winding_breaker_status(PRIMARY_SIDE, false);
+    trans->set_winding_breaker_status(SECONDARY_SIDE, false);
+    //trans->set_winding_breaker_status(TERTIARY_SIDE, false);
+
+    NETWORK_MATRIX& network = default_toolkit.get_network_matrix();
+    network.build_decoupled_network_B_matrix();
+    network.save_decoupled_network_B_matrix_to_file("B.csv");
+
     vector<LCC_HVDC2T*> hvdcs = psdb.get_all_lcc_hvdc2ts();
     unsigned int n = hvdcs.size();
     for(unsigned int i=0; i!=n; ++i)

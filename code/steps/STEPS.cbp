@@ -546,16 +546,16 @@
 		<Unit filename="main_dynamics_simulation.cpp">
 			<Option link="0" />
 		</Unit>
-		<Unit filename="main_gprof_dy_nccc10k.cpp">
-			<Option link="0" />
-		</Unit>
+		<Unit filename="main_gprof_dy_nccc10k.cpp" />
 		<Unit filename="main_gprof_dy_sd133.cpp">
 			<Option link="0" />
 		</Unit>
 		<Unit filename="main_gprof_pf.cpp">
 			<Option link="0" />
 		</Unit>
-		<Unit filename="main_new_meter_test.cpp" />
+		<Unit filename="main_new_meter_test.cpp">
+			<Option link="0" />
+		</Unit>
 		<Unit filename="main_powerflow.cpp">
 			<Option link="0" />
 		</Unit>
@@ -1107,6 +1107,9 @@
 				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="" />
 			</AutoVersioning>
 			<lib_finder disable_auto="1" />
+			<code_completion />
+			<envvars />
+			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

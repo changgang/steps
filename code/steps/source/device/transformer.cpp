@@ -422,6 +422,17 @@ bool TRANSFORMER::get_winding_breaker_status(TRANSFORMER_WINDING_SIDE winding) c
     return winding_breaker_status[winding];
 }
 
+unsigned int TRANSFORMER::get_in_service_winding_count() const
+{
+    if(is_two_winding_transformer())
+        return get_winding_breaker_status(PRIMARY_SIDE) +
+               get_winding_breaker_status(SECONDARY_SIDE);
+    else
+        return get_winding_breaker_status(PRIMARY_SIDE) +
+               get_winding_breaker_status(SECONDARY_SIDE) +
+               get_winding_breaker_status(TERTIARY_SIDE);
+}
+
 TRANSFORMER_WINDING_CONNECTION_TYPE TRANSFORMER::get_winding_connection_type(TRANSFORMER_WINDING_SIDE winding) const
 {
     return winding_connection_type[winding];

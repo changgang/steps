@@ -129,6 +129,12 @@ class NETWORK_MATRIX
         void add_ac_line_to_decoupled_network(const AC_LINE& line);
         void add_transformer_to_decoupled_network(const TRANSFORMER& trans);
         void add_three_winding_transformer_to_decoupled_network(const TRANSFORMER& trans);
+        void add_three_winding_transformer_to_decoupled_network_v2(const TRANSFORMER& trans);
+        void add_three_winding_transformer_to_decoupled_network_when_three_windings_are_in_service(const TRANSFORMER& trans);
+        void add_three_winding_transformer_to_decoupled_network_when_two_windings_are_in_service(const TRANSFORMER& trans);
+        void add_three_winding_transformer_to_decoupled_network_when_one_winding_is_out_of_service(const TRANSFORMER& trans, TRANSFORMER_WINDING_SIDE out_side);
+        void add_three_winding_transformer_to_decoupled_network_when_one_winding_is_in_service(const TRANSFORMER& trans);
+        void add_three_winding_transformer_to_decoupled_network_when_one_winding_is_in_service(const TRANSFORMER& trans, TRANSFORMER_WINDING_SIDE in_side);
         void add_two_winding_transformer_to_decoupled_network_v2(const TRANSFORMER& trans);
         void add_fixed_shunt_to_decoupled_network(const FIXED_SHUNT& shunt);
 

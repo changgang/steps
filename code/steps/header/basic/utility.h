@@ -136,6 +136,7 @@ string get_string_of_index(unsigned int index);
 STEPS_DEVICE_TYPE device_string2type(string device_type);
 string device_type2string(STEPS_DEVICE_TYPE device_type);
 TRANSFORMER_WINDING_SIDE transformer_winding_string2winding_side(string winding);
+string transformer_winding_side2winding_string(TRANSFORMER_WINDING_SIDE side);
 string dc_device_type2string(STEPS_DC_DEVICE_TYPE device_type);
 string converter_side2string(CONVERTER_SIDE converter);
 CONVERTER_SIDE converter_string2side(string converter);

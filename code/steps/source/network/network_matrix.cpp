@@ -1478,7 +1478,8 @@ void NETWORK_MATRIX::add_transformer_to_decoupled_network(const TRANSFORMER& tra
     if(trans.is_two_winding_transformer())
         add_two_winding_transformer_to_decoupled_network_v2(trans);
     else
-        add_three_winding_transformer_to_decoupled_network(trans);
+        //add_three_winding_transformer_to_decoupled_network(trans);
+        add_three_winding_transformer_to_decoupled_network_v2(trans);
 }
 
 void NETWORK_MATRIX::add_three_winding_transformer_to_decoupled_network(const TRANSFORMER& trans)
@@ -1909,7 +1910,7 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_decoupled_network(const TR
             V = 1.0;
             V = V/ks;
             Yeq = Ym + 1.0/Zt;
-            Zeq = Zp + 1.0/Yeq;
+            Zeq = Zs + 1.0/Yeq;
             I = V/Zeq;
             I /= conj(ks);
             yss = I;
@@ -1952,7 +1953,7 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_decoupled_network(const TR
             V = 1.0;
             V = V/ks;
             Yeq = Ym + 1.0/Zt;
-            Zeq = Zp + 1.0/Yeq;
+            Zeq = Zs + 1.0/Yeq;
             I = V/Zeq;
             I /= conj(ks);
             yss = I;
@@ -2071,6 +2072,456 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_decoupled_network(const TR
             return;
         }
     }
+}
+
+void NETWORK_MATRIX::add_three_winding_transformer_to_decoupled_network_v2(const TRANSFORMER& trans)
+{
+    if(trans.get_in_service_winding_count()==3)
+        add_three_winding_transformer_to_decoupled_network_when_three_windings_are_in_service(trans);
+    else if(trans.get_in_service_winding_count()==2)
+        add_three_winding_transformer_to_decoupled_network_when_two_windings_are_in_service(trans);
+    else if(trans.get_in_service_winding_count()==1)
+        add_three_winding_transformer_to_decoupled_network_when_one_winding_is_in_service(trans);
+    else
+        return;
+}
+
+void NETWORK_MATRIX::add_three_winding_transformer_to_decoupled_network_when_three_windings_are_in_service(const TRANSFORMER& trans)
+{
+    unsigned int p = inphno.get_internal_bus_number_of_physical_bus_number(trans.get_winding_bus(PRIMARY_SIDE));
+    unsigned int s = inphno.get_internal_bus_number_of_physical_bus_number(trans.get_winding_bus(SECONDARY_SIDE));
+    unsigned int t = inphno.get_internal_bus_number_of_physical_bus_number(trans.get_winding_bus(TERTIARY_SIDE));
+
+    complex<double> Zps = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
+    complex<double> Zst = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(SECONDARY_SIDE, TERTIARY_SIDE);
+    complex<double> Zpt = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, TERTIARY_SIDE);
+    complex<double> Ym = trans.get_magnetizing_admittance_based_on_winding_norminal_voltage_and_system_base_power_in_pu();
+
+    complex<double> Zp = 0.5*(Zps+Zpt-Zst),
+                    Zs = 0.5*(Zps+Zst-Zpt),
+                    Zt = 0.5*(Zpt+Zst-Zps);
+
+    if(toolkit->get_correct_three_winding_transformer_impedance_logic()==true)
+    {
+        if(abs(Zp)<0.001)
+        {
+            ostringstream osstream;
+            osstream<<transformer_winding_side2winding_string(PRIMARY_SIDE)<<" side leakage impedance of "<<trans.get_compound_device_name()<<"is almost ZERO."<<endl
+                    <<"Automatically corrected to (0+j0.001)";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+            Zp = complex<double>(0.0, 0.001);
+        }
+        if(abs(Zs)<0.001)
+        {
+            ostringstream osstream;
+            osstream<<transformer_winding_side2winding_string(SECONDARY_SIDE)<<" side leakage impedance of "<<trans.get_compound_device_name()<<"is almost ZERO."<<endl
+                    <<"Automatically corrected to (0+j0.001)";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+            Zs = complex<double>(0.0, 0.001);
+        }
+        if(abs(Zt)<0.001)
+        {
+            ostringstream osstream;
+            osstream<<transformer_winding_side2winding_string(TERTIARY_SIDE)<<" side leakage impedance of "<<trans.get_compound_device_name()<<"is almost ZERO."<<endl
+                    <<"Automatically corrected to (0+j0.001)";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+            Zt = complex<double>(0.0, 0.001);
+        }
+    }
+
+    double tap_p = trans.get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE);
+    double angle_p = deg2rad(trans.get_winding_angle_shift_in_deg(PRIMARY_SIDE));
+    double tap_s = trans.get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE);
+    double angle_s = deg2rad(trans.get_winding_angle_shift_in_deg(SECONDARY_SIDE));
+    double tap_t = trans.get_winding_off_nominal_turn_ratio_in_pu(TERTIARY_SIDE);
+    double angle_t = deg2rad(trans.get_winding_angle_shift_in_deg(TERTIARY_SIDE));
+
+    complex<double> kangle_p(steps_cos(angle_p),steps_sin(angle_p));
+    complex<double> kangle_s(steps_cos(angle_s),steps_sin(angle_s));
+    complex<double> kangle_t(steps_cos(angle_t),steps_sin(angle_t));
+    complex<double> kp(tap_p*kangle_p);
+    complex<double> ks(tap_s*kangle_s);
+    complex<double> kt(tap_t*kangle_t);
+
+    complex<double> V, I, Vstar;
+    complex<double> ypp, yps, ypt, ysp, yss, yst, ytp, yts, ytt, Yeq, Zeq;
+
+    complex<double> Ym_store = Ym;
+
+    Ym = 0.0;
+
+    // voltage at primary side.
+    V = 1.0;
+    V = V/kangle_p;
+    Yeq = Ym + 1.0/Zs + 1.0/Zt;
+    Zeq = Zp + 1.0/Yeq;
+    I = V/Zeq;
+    I /= conj(kangle_p);
+    ypp = I;
+
+    Vstar = V*(1.0/Yeq)/Zeq;
+    I = -Vstar/Zs;
+    I /= conj(kangle_s);
+    ysp = I;
+
+    I = -Vstar/Zt;
+    I /= conj(kangle_t);
+    ytp = I;
+
+    // voltage at secondary side
+    V = 1.0;
+    V = V/kangle_s;
+    Yeq = Ym + 1.0/Zp + 1.0/Zt;
+    Zeq = Zs + 1.0/Yeq;
+    I = V/Zeq;
+    I /= conj(kangle_s);
+    yss = I;
+
+    Vstar = V*(1.0/Yeq)/Zeq;
+    I = -Vstar/Zp;
+    I /= conj(kangle_p);
+    yps = I;
+
+    I = -Vstar/Zt;
+    I /= conj(kangle_t);
+    yts = I;
+
+    // voltage at tertiary side
+    V = 1.0;
+    V = V/kangle_t;
+    Yeq = Ym + 1.0/Zp + 1.0/Zs;
+    Zeq = Zt + 1.0/Yeq;
+    I = V/Zeq;
+    I /= conj(kangle_t);
+    ytt = I;
+
+    Vstar = V*(1.0/Yeq)/Zeq;
+    I = -Vstar/Zp;
+    I /= conj(kangle_p);
+    ypt = I;
+
+    I = -Vstar/Zs;
+    I /= conj(kangle_s);
+    yst = I;
+
+    network_BP_matrix.add_entry(p,p,ypp);
+    network_BP_matrix.add_entry(p,s,yps);
+    network_BP_matrix.add_entry(p,t,ypt);
+    network_BP_matrix.add_entry(s,p,ysp);
+    network_BP_matrix.add_entry(s,s,yss);
+    network_BP_matrix.add_entry(s,t,yst);
+    network_BP_matrix.add_entry(t,p,ytp);
+    network_BP_matrix.add_entry(t,s,yts);
+    network_BP_matrix.add_entry(t,t,ytt);
+
+    Ym = Ym_store;
+
+    Zp = complex<double>(0.0, Zp.imag());
+    Zs = complex<double>(0.0, Zs.imag());
+    Zt = complex<double>(0.0, Zt.imag());
+    Ym = complex<double>(0.0, Ym.imag());
+
+    // voltage at primary side.
+    V = 1.0;
+    V = V/tap_p;
+    Yeq = Ym + 1.0/Zs + 1.0/Zt;
+    Zeq = Zp + 1.0/Yeq;
+    I = V/Zeq;
+    I /= tap_p;
+    ypp = I;
+
+    Vstar = V*(1.0/Yeq)/Zeq;
+    I = -Vstar/Zs;
+    I /= tap_s;
+    ysp = I;
+
+    I = -Vstar/Zt;
+    I /= tap_t;
+    ytp = I;
+
+    // voltage at secondary side
+    V = 1.0;
+    V = V/tap_s;
+    Yeq = Ym + 1.0/Zp + 1.0/Zt;
+    Zeq = Zs + 1.0/Yeq;
+    I = V/Zeq;
+    I /= tap_s;
+    yss = I;
+
+    Vstar = V*(1.0/Yeq)/Zeq;
+    I = -Vstar/Zp;
+    I /= tap_p;
+    yps = I;
+
+    I = -Vstar/Zt;
+    I /= tap_t;
+    yts = I;
+
+    // voltage at tertiary side
+    V = 1.0;
+    V = V/tap_t;
+    Yeq = Ym + 1.0/Zp + 1.0/Zs;
+    Zeq = Zt + 1.0/Yeq;
+    I = V/Zeq;
+    I /= tap_t;
+    ytt = I;
+
+    Vstar = V*(1.0/Yeq)/Zeq;
+    I = -Vstar/Zp;
+    I /= tap_p;
+    ypt = I;
+
+    I = -Vstar/Zs;
+    I /= tap_s;
+    yst = I;
+
+    if(std::isnan(ypp.real()) or std::isnan(ypp.imag()) or
+       std::isnan(yps.real()) or std::isnan(yps.imag()) or
+       std::isnan(ypt.real()) or std::isnan(ypt.imag()) or
+       std::isnan(ysp.real()) or std::isnan(ysp.imag()) or
+       std::isnan(yss.real()) or std::isnan(yss.imag()) or
+       std::isnan(yst.real()) or std::isnan(yst.imag()) or
+       std::isnan(ytp.real()) or std::isnan(ytp.imag()) or
+       std::isnan(yts.real()) or std::isnan(yts.imag()) or
+       std::isnan(ytt.real()) or std::isnan(ytt.imag()) )
+        cout<<"NAN is detected when adding "<<trans.get_compound_device_name()<<" to BQ"<<endl;
+    network_BQ_matrix.add_entry(p,p,ypp);
+    network_BQ_matrix.add_entry(p,s,yps);
+    network_BQ_matrix.add_entry(p,t,ypt);
+    network_BQ_matrix.add_entry(s,p,ysp);
+    network_BQ_matrix.add_entry(s,s,yss);
+    network_BQ_matrix.add_entry(s,t,yst);
+    network_BQ_matrix.add_entry(t,p,ytp);
+    network_BQ_matrix.add_entry(t,s,yts);
+    network_BQ_matrix.add_entry(t,t,ytt);
+}
+
+void NETWORK_MATRIX::add_three_winding_transformer_to_decoupled_network_when_two_windings_are_in_service(const TRANSFORMER& trans)
+{
+    if(trans.get_winding_breaker_status(SECONDARY_SIDE) and trans.get_winding_breaker_status(TERTIARY_SIDE))
+        add_three_winding_transformer_to_decoupled_network_when_one_winding_is_out_of_service(trans, PRIMARY_SIDE);
+    else if(trans.get_winding_breaker_status(PRIMARY_SIDE) and trans.get_winding_breaker_status(TERTIARY_SIDE))
+        add_three_winding_transformer_to_decoupled_network_when_one_winding_is_out_of_service(trans, SECONDARY_SIDE);
+    else
+        add_three_winding_transformer_to_decoupled_network_when_one_winding_is_out_of_service(trans, TERTIARY_SIDE);
+}
+
+void NETWORK_MATRIX::add_three_winding_transformer_to_decoupled_network_when_one_winding_is_out_of_service(const TRANSFORMER& trans, TRANSFORMER_WINDING_SIDE out_side)
+{
+    TRANSFORMER_WINDING_SIDE in_side_i, in_side_j;
+    if(out_side==PRIMARY_SIDE)
+    {
+        in_side_i = SECONDARY_SIDE;
+        in_side_j = TERTIARY_SIDE;
+    }
+    else if(out_side==SECONDARY_SIDE)
+    {
+        in_side_i = TERTIARY_SIDE;
+        in_side_j = PRIMARY_SIDE;
+    }
+    else
+    {
+        in_side_i = PRIMARY_SIDE;
+        in_side_j = SECONDARY_SIDE;
+    }
+    unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(trans.get_winding_bus(in_side_i));
+    unsigned int j = inphno.get_internal_bus_number_of_physical_bus_number(trans.get_winding_bus(in_side_j));
+
+    complex<double> Zps = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
+    complex<double> Zst = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(SECONDARY_SIDE, TERTIARY_SIDE);
+    complex<double> Zpt = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, TERTIARY_SIDE);
+    complex<double> Ym = trans.get_magnetizing_admittance_based_on_winding_norminal_voltage_and_system_base_power_in_pu();
+
+    complex<double> Zp = 0.5*(Zps+Zpt-Zst),
+                    Zs = 0.5*(Zps+Zst-Zpt),
+                    Zt = 0.5*(Zpt+Zst-Zps);
+    complex<double> Zi = (in_side_i==PRIMARY_SIDE) ? Zp :((in_side_i==SECONDARY_SIDE)? Zs : Zt);
+    complex<double> Zj = (in_side_j==PRIMARY_SIDE) ? Zp :((in_side_j==SECONDARY_SIDE)? Zs : Zt);
+
+    if(toolkit->get_correct_three_winding_transformer_impedance_logic()==true)
+    {
+        if(abs(Zi)<0.001)
+        {
+            ostringstream osstream;
+            osstream<<transformer_winding_side2winding_string(in_side_i)<<" side leakage impedance of "<<trans.get_compound_device_name()<<"is almost ZERO."<<endl
+                    <<"Automatically corrected to (0+j0.001)";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+            Zi = complex<double>(0.0, 0.001);
+        }
+        if(abs(Zj)<0.001)
+        {
+            ostringstream osstream;
+            osstream<<transformer_winding_side2winding_string(in_side_j)<<" side leakage impedance of "<<trans.get_compound_device_name()<<"is almost ZERO."<<endl
+                    <<"Automatically corrected to (0+j0.001)";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+            Zj = complex<double>(0.0, 0.001);
+        }
+    }
+
+    double tap_i = trans.get_winding_off_nominal_turn_ratio_in_pu(in_side_i);
+    double angle_i = deg2rad(trans.get_winding_angle_shift_in_deg(in_side_i));
+    double tap_j = trans.get_winding_off_nominal_turn_ratio_in_pu(in_side_j);
+    double angle_j = deg2rad(trans.get_winding_angle_shift_in_deg(in_side_j));
+
+    complex<double> kangle_i(steps_cos(angle_i),steps_sin(angle_i));
+    complex<double> kangle_j(steps_cos(angle_j),steps_sin(angle_j));
+    complex<double> ki(tap_i*kangle_i);
+    complex<double> kj(tap_j*kangle_j);
+
+    complex<double> V, I, Vstar;
+    complex<double> yii, yij, yji, yjj, Yeq, Zeq;
+
+    complex<double> Ym_store = Ym;
+
+    Ym = 0.0;
+
+    V = 1.0;
+    V = V/kangle_i;
+    Yeq = Ym + 1.0/Zj;
+    Zeq = Zi + 1.0/Yeq;
+    I = V/Zeq;
+    I /= conj(kangle_i);
+    yii = I;
+
+    Vstar = V*(1.0/Yeq)/Zeq;
+    I = -Vstar/Zj;
+    I /= conj(kangle_j);
+    yji = I;
+
+    V = 1.0;
+    V = V/kangle_j;
+    Yeq = Ym + 1.0/Zi;
+    Zeq = Zj + 1.0/Yeq;
+    I = V/Zeq;
+    I /= conj(kangle_j);
+    yjj = I;
+
+    Vstar = V*(1.0/Yeq)/Zeq;
+    I = -Vstar/Zi;
+    I /= conj(kangle_i);
+    yij = I;
+
+    network_BP_matrix.add_entry(i,i,yii);
+    network_BP_matrix.add_entry(i,j,yij);
+    network_BP_matrix.add_entry(j,i,yji);
+    network_BP_matrix.add_entry(j,j,yjj);
+
+
+    Ym = Ym_store;
+
+    Zi = complex<double>(0.0, Zi.imag());
+    Zj = complex<double>(0.0, Zj.imag());
+    Ym = complex<double>(0.0, Ym.imag());
+
+    V = 1.0;
+    V = V/tap_i;
+    Yeq = Ym + 1.0/Zj;
+    Zeq = Zi + 1.0/Yeq;
+    I = V/Zeq;
+    I /= tap_i;
+    yii = I;
+
+    Vstar = V*(1.0/Yeq)/Zeq;
+    I = -Vstar/Zj;
+    I /= tap_j;
+    yji = I;
+
+    V = 1.0;
+    V = V/tap_j;
+    Yeq = Ym + 1.0/Zi;
+    Zeq = Zj + 1.0/Yeq;
+    I = V/Zeq;
+    I /= tap_j;
+    yjj = I;
+
+    Vstar = V*(1.0/Yeq)/Zeq;
+    I = -Vstar/Zi;
+    I /= tap_i;
+    yij = I;
+
+    network_BQ_matrix.add_entry(i,i,yii);
+    network_BQ_matrix.add_entry(i,j,yij);
+    network_BQ_matrix.add_entry(j,i,yji);
+    network_BQ_matrix.add_entry(j,j,yjj);
+}
+
+void NETWORK_MATRIX::add_three_winding_transformer_to_decoupled_network_when_one_winding_is_in_service(const TRANSFORMER& trans)
+{
+    if(trans.get_winding_breaker_status(PRIMARY_SIDE))
+        add_three_winding_transformer_to_decoupled_network_when_one_winding_is_in_service(trans, PRIMARY_SIDE);
+    else if(trans.get_winding_breaker_status(SECONDARY_SIDE))
+        add_three_winding_transformer_to_decoupled_network_when_one_winding_is_in_service(trans, SECONDARY_SIDE);
+    else
+        add_three_winding_transformer_to_decoupled_network_when_one_winding_is_in_service(trans, TERTIARY_SIDE);
+}
+
+void NETWORK_MATRIX::add_three_winding_transformer_to_decoupled_network_when_one_winding_is_in_service(const TRANSFORMER& trans, TRANSFORMER_WINDING_SIDE in_side)
+{
+    unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(trans.get_winding_bus(in_side));
+
+    complex<double> Zps = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
+    complex<double> Zst = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(SECONDARY_SIDE, TERTIARY_SIDE);
+    complex<double> Zpt = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, TERTIARY_SIDE);
+    complex<double> Ym = trans.get_magnetizing_admittance_based_on_winding_norminal_voltage_and_system_base_power_in_pu();
+
+    complex<double> Zp = 0.5*(Zps+Zpt-Zst),
+                    Zs = 0.5*(Zps+Zst-Zpt),
+                    Zt = 0.5*(Zpt+Zst-Zps);
+    complex<double> Zi;
+    switch(in_side)
+    {
+        case PRIMARY_SIDE:
+        {
+            Zi = Zp;
+            break;
+        }
+        case SECONDARY_SIDE:
+        {
+            Zi = Zs;
+            break;
+        }
+        case TERTIARY_SIDE:
+        default:
+        {
+            Zi = Zt;
+            break;
+        }
+    }
+
+    if(toolkit->get_correct_three_winding_transformer_impedance_logic()==true)
+    {
+        if(abs(Zi)<0.001)
+        {
+            ostringstream osstream;
+            osstream<<transformer_winding_side2winding_string(in_side)<<" side leakage impedance of "<<trans.get_compound_device_name()<<"is almost ZERO."<<endl
+                    <<"Automatically corrected to (0+j0.001)";
+            toolkit->show_information_with_leading_time_stamp(osstream);
+            Zi = complex<double>(0.0, 0.001);
+        }
+    }
+
+    double tap_i = trans.get_winding_off_nominal_turn_ratio_in_pu(in_side);
+    double angle_i = deg2rad(trans.get_winding_angle_shift_in_deg(in_side));
+
+    complex<double> kangle_i(steps_cos(angle_i),steps_sin(angle_i));
+    complex<double> ki(tap_i*kangle_i);
+
+    complex<double> V, I;
+    complex<double> yii, Yeq, Zeq;
+
+    network_BP_matrix.add_entry(i,i,0.0);
+
+    Zi = complex<double>(0.0, Zi.imag());
+    Ym = complex<double>(0.0, Ym.imag());
+
+    V = 1.0;
+    V = V/tap_i;
+    Zeq = Zi + 1.0/Ym;
+    I = V/Zeq;
+    I /= tap_i;
+    yii = I;
+
+    network_BQ_matrix.add_entry(i,i,yii);
 }
 
 void NETWORK_MATRIX::add_two_winding_transformer_to_decoupled_network_v2(const TRANSFORMER& trans)

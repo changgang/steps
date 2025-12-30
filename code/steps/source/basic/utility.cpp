@@ -1092,6 +1092,16 @@ TRANSFORMER_WINDING_SIDE transformer_winding_string2winding_side(string winding)
         return TERTIARY_SIDE;
 }
 
+string transformer_winding_side2winding_string(TRANSFORMER_WINDING_SIDE side)
+{
+    if(side==PRIMARY_SIDE)
+        return "PRIMARY";
+    else if(side==SECONDARY_SIDE)
+        return "SECONDARY";
+    else
+        return "TERTIARY";
+}
+
 string dc_device_type2string(STEPS_DC_DEVICE_TYPE device_type)
 {
     switch(device_type)

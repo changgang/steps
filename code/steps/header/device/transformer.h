@@ -62,6 +62,7 @@ class TRANSFORMER : public NONBUS_DEVICE
         TRANSFORMER_WINDING_SIDE get_winding_bus_side(unsigned int bus);
         //BUS* get_winding_bus_pointer(TRANSFORMER_WINDING_SIDE winding) const;
         bool get_winding_breaker_status(TRANSFORMER_WINDING_SIDE winding) const;
+        unsigned int get_in_service_winding_count() const;
         TRANSFORMER_WINDING_CONNECTION_TYPE get_winding_connection_type(TRANSFORMER_WINDING_SIDE winding) const;
         double get_winding_nominal_voltage_in_kV(TRANSFORMER_WINDING_SIDE winding) const;
         double get_winding_nominal_capacity_in_MVA(TRANSFORMER_WINDING_SIDE winding1, TRANSFORMER_WINDING_SIDE winding2) const;

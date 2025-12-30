@@ -1,6 +1,7 @@
 #include "header/meter/meter_builder.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
+#include <algorithm>
 using namespace std;
 
 METER_BUILDER::METER_BUILDER(STEPS& toolkit)
