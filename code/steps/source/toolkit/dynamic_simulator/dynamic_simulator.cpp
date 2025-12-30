@@ -62,6 +62,7 @@ void DYNAMICS_SIMULATOR::clear()
     set_max_event_update_iteration(10);
     set_max_network_solution_divergent_threshold(3);
     set_allowed_max_power_imbalance_in_MVA(0.001);
+    set_voltage_change_threshold_when_solving_network_in_pu(INFINITE_THRESHOLD);
     set_iteration_accelerator(1.0);
     set_non_divergent_solution_logic(false);
     set_automatic_iteration_accelerator_tune_logic(false);
@@ -195,6 +196,11 @@ void DYNAMICS_SIMULATOR::set_allowed_max_power_imbalance_in_MVA(double tol)
     }
 }
 
+void DYNAMICS_SIMULATOR::set_voltage_change_threshold_when_solving_network_in_pu(double v)
+{
+    v_change_threshold_pu = v;
+}
+
 void DYNAMICS_SIMULATOR::set_iteration_accelerator(double iter_alpha)
 {
     if(iter_alpha>0.0)
@@ -310,6 +316,11 @@ unsigned int DYNAMICS_SIMULATOR::get_max_network_solution_divergent_threshold() 
 double DYNAMICS_SIMULATOR::get_allowed_max_power_imbalance_in_MVA() const
 {
     return P_threshold_in_MW;
+}
+
+double DYNAMICS_SIMULATOR::get_voltage_change_threshold_when_solving_network_in_pu() const
+{
+    return v_change_threshold_pu;
 }
 
 double DYNAMICS_SIMULATOR::get_iteration_accelerator() const
@@ -435,6 +446,7 @@ void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
             <<"Maximum iteration for updating: "<<get_max_update_iteration()<<"\n"
             <<"Maximum iteration for event updating: "<<get_max_event_update_iteration()<<"\n"
             <<"Maximum network solution divergent threshold: "<<get_max_network_solution_divergent_threshold()<<"\n"
+            <<"Maximum network solution voltage change threshold: "<<get_voltage_change_threshold_when_solving_network_in_pu()<<" pu\n"
             <<"Network solution accelerator: "<<get_iteration_accelerator()<<"\n"
             <<"Rotor angle stability surveillance: "<<(get_rotor_angle_stability_surveillance_flag()?"Enabled":"Disabled")<<"\n"
             <<"Rotor angle stability threshold: "<<get_rotor_angle_stability_threshold_in_deg()<<" deg\n"
@@ -1260,9 +1272,17 @@ void DYNAMICS_SIMULATOR::run_a_step()
 
         if(ITER_DAE<=max_DAE_iteration)
         {
+            double smax_th_MVA_original = get_allowed_max_power_imbalance_in_MVA();
+            if(ITER_DAE==1)
+                set_allowed_max_power_imbalance_in_MVA(smax_th_MVA_original*100.0);
+            if(ITER_DAE==2)
+                set_allowed_max_power_imbalance_in_MVA(smax_th_MVA_original*10.0);
             integrate();
             bool network_converged = solve_network();
             run_bus_frequency_blocks(DYNAMIC_INTEGRATE_MODE);
+
+            if(ITER_DAE==1 or ITER_DAE==2)
+                set_allowed_max_power_imbalance_in_MVA(smax_th_MVA_original);
 
             ITER_NET += network_iteration_count;
 
@@ -1784,6 +1804,8 @@ bool DYNAMICS_SIMULATOR::solve_network()
                     toolkit->show_information_with_leading_time_stamp(osstream);
                     break;
                 }
+                if(network_iter_count>5)
+                    alpha = original_alpha*steps_pow(0.95, network_iter_count-5);
 
                 update_bus_voltage();
                 if(get_non_divergent_solution_logic()==true)
@@ -1792,7 +1814,6 @@ bool DYNAMICS_SIMULATOR::solve_network()
                     for(unsigned int i=0; i<n_delta_V; ++i)
                         delta_V[i] = -delta_V[i];
 
-                    double original_alpha = get_iteration_accelerator();
                     for(unsigned int i=0; i<5; ++i)
                     {
                         //++network_iter_count;
@@ -1852,6 +1873,8 @@ bool DYNAMICS_SIMULATOR::solve_network()
                 max_power_mismatch_MVA = new_smax;
                 if(max_power_mismatch_MVA>get_allowed_max_power_imbalance_in_MVA())
                 #else
+                osstream<<"At time "<<TIME<<" s, iter = "<<network_iter_count<<", new_imax/max_current_mismatch = "<<new_imax/max_current_mismatch_pu<<", new_imax = "<<new_imax<<endl;
+                toolkit->show_information_with_leading_time_stamp(osstream);
                 max_current_mismatch_pu = new_imax;
                 if(max_current_mismatch_pu>imax_th_pu)
                 #endif // USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
@@ -2345,7 +2368,7 @@ void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled())
+    if(get_toolkit().is_detailed_log_enabled() and ngen != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
@@ -2389,7 +2412,7 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled())
+    if(get_toolkit().is_detailed_log_enabled() and ngen != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
@@ -2436,7 +2459,7 @@ void DYNAMICS_SIMULATOR::add_pv_units_to_bus_current_mismatch()
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled())
+    if(get_toolkit().is_detailed_log_enabled() and npv != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
@@ -2482,7 +2505,7 @@ void DYNAMICS_SIMULATOR::add_energy_storage_to_bus_current_mismatch()
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled())
+    if(get_toolkit().is_detailed_log_enabled() and nes != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
@@ -2517,7 +2540,7 @@ void DYNAMICS_SIMULATOR::add_sv_source_to_bus_current_mismatch()
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled())
+    if(get_toolkit().is_detailed_log_enabled() and nsvs != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
@@ -2546,6 +2569,13 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
             {
                 model->synchronize_bus_voltage_and_frequency();
                 I_mismatch[internal_bus] -= load->get_dynamics_load_current_in_pu_based_on_system_base_power();
+                if(toolkit->is_detailed_log_enabled() and abs(load->get_dynamics_load_current_in_pu_based_on_system_base_power())>10)
+                {
+                    ostringstream osstream;
+                    osstream<<load->get_compound_device_name()<<" has current greater than 10 pu:"<<endl
+                            <<"I = "<<load->get_dynamics_load_current_in_pu_based_on_system_base_power()<<", V = "<<model->get_bus_positive_sequence_voltage_in_pu();
+                    get_toolkit().show_information_with_leading_time_stamp(osstream);
+                }
             }
             else if(model!=NULL and model->is_voltage_source())
                 I_mismatch[internal_bus] += load->get_dynamics_load_norton_current_in_pu_based_on_system_base_power();
@@ -2554,7 +2584,7 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled())
+    if(get_toolkit().is_detailed_log_enabled() and nload != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
@@ -2619,7 +2649,7 @@ void DYNAMICS_SIMULATOR::add_lcc_hvdc2ts_to_bus_current_mismatch()
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled())
+    if(get_toolkit().is_detailed_log_enabled() and nhvdc != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
@@ -2677,7 +2707,7 @@ void DYNAMICS_SIMULATOR::add_vsc_hvdcs_to_bus_current_mismatch()
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled())
+    if(get_toolkit().is_detailed_log_enabled() and nvsc != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
@@ -2769,7 +2799,7 @@ void DYNAMICS_SIMULATOR::add_mt_hvdcs_to_bus_current_mismatch()
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled())
+    if(get_toolkit().is_detailed_log_enabled() and nmtdc != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
@@ -2798,7 +2828,7 @@ void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled())
+    if(get_toolkit().is_detailed_log_enabled() and nedevice != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
@@ -2954,9 +2984,9 @@ void DYNAMICS_SIMULATOR::build_bus_current_mismatch_vector()
 
 void DYNAMICS_SIMULATOR::update_bus_voltage()
 {
-    unsigned int n = delta_V.size();
-
+    try_to_limit_delta_v_within_change_threshold();
     NETWORK_MATRIX& network = toolkit->get_network_matrix();
+    unsigned int n = delta_V.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         set_openmp_number_of_threads(toolkit->get_thread_number());
         #pragma omp parallel for schedule(static)
@@ -3022,6 +3052,38 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
     */
 }
 
+void DYNAMICS_SIMULATOR::try_to_limit_delta_v_within_change_threshold()
+{
+    double v_change_threshold = get_voltage_change_threshold_when_solving_network_in_pu();
+    if(fabs(v_change_threshold-INFINITE_THRESHOLD)<FLOAT_EPSILON)
+        return;
+    NETWORK_MATRIX& network = toolkit->get_network_matrix();
+    POWER_SYSTEM_DATABASE& psdb = get_toolkit().get_power_system_database();
+    unsigned int n = delta_V.size();
+    double max_delta_v = 0.0;
+    unsigned int max_delta_bus = 0;
+    for(unsigned int i=0; i<n; ++i)
+    {
+        double dv = fabs(delta_V[i]);
+        if(dv>max_delta_v)
+        {
+            max_delta_v = dv;
+            max_delta_bus = i;
+        }
+    }
+    if(max_delta_v>v_change_threshold)
+    {
+        ostringstream osstream;
+        unsigned int bus = network.get_physical_bus_number_of_internal_bus(max_delta_bus);
+        osstream<<"Maximum voltage change found at "<<psdb.get_bus_extended_name(bus)<<": "<<max_delta_v<<" pu"<<endl
+                <<"It will be limited to "<<v_change_threshold<<" pu";
+        toolkit->show_information_with_leading_time_stamp(osstream);
+
+        double scale = v_change_threshold/max_delta_v;
+        for(unsigned int i=0; i<n; ++i)
+            delta_V[i] *= scale;
+    }
+}
 
 void DYNAMICS_SIMULATOR::build_jacobian()
 {

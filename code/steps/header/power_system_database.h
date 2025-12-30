@@ -386,6 +386,10 @@ class POWER_SYSTEM_DATABASE
         string zone_number2zone_name(unsigned int number);
         string owner_number2owner_name(unsigned int number);
 
+        string get_bus_extended_name(unsigned int bus);
+        string get_device_extended_name(DEVICE_ID did);
+        string get_bus_name_and_base_voltage_in_square_brackets(unsigned int bus);
+
         void check_all_devices();
         void check_all_buses();
         void check_all_sources();

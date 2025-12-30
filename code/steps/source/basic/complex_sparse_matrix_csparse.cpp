@@ -436,6 +436,10 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::LU_factorization(int order, double tolerance
             snprintf(buffer, 256, "ALERT!  LU factorization for sparse matrix(CXSparse) failed! (line %d in file %s)\n",__LINE__,__FILE__);
             show_information_with_leading_time_stamp_with_default_toolkit(buffer);
             set_lu_factorization_failed_flag(true);
+            string filename = "lu_failed.csv";
+            ifstream file(filename);
+            if(not file.good())
+                save_matrix_to_file(filename);
         }
     }
     else

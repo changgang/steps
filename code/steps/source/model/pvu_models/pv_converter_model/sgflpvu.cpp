@@ -1065,8 +1065,11 @@ void SGFLPVU::check_limits_in_initialization()
 
 void SGFLPVU::run(DYNAMIC_MODE mode)
 {
-    check_lvrt_status();
-    check_hvrt_status();
+    if(mode == DYNAMIC_UPDATE_MODE)
+    {
+        check_lvrt_status();
+        check_hvrt_status();
+    }
     double input = 0.0;
     if(not is_P_elec_control_bypassed())
     {

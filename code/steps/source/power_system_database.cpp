@@ -489,7 +489,12 @@ void POWER_SYSTEM_DATABASE::append_generator(GENERATOR& generator)
     if(this->is_generator_exist(device_id))
     {
         osstream<<"Warning. "<<generator.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Generator."<<endl
-          <<"Duplicate copy is not allowed.";
+                <<"Duplicate copy is not allowed.";
+        unsigned int index = get_generator_index(device_id);
+        DEVICE_ID did_exist = Generator[index].get_device_id();
+        if(std::hash<DEVICE_ID>{}(device_id)==std::hash<DEVICE_ID>{}(did_exist) and did_exist!=device_id)
+            osstream<<endl<<"CAUTION! Different devices with the same hash DEVICE_ID detected: "<<device_id.get_compound_device_name()
+                    <<", "<<did_exist.get_compound_device_name();
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -541,7 +546,12 @@ void POWER_SYSTEM_DATABASE::append_wt_generator(WT_GENERATOR& wt_generator)
     if(this->is_wt_generator_exist(device_id))
     {
         osstream<<"Warning. "<<wt_generator.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': WT_Generator."<<endl
-          <<"Duplicate copy is not allowed.";
+                <<"Duplicate copy is not allowed.";
+        unsigned int index = get_wt_generator_index(device_id);
+        DEVICE_ID did_exist = WT_Generator[index].get_device_id();
+        if(std::hash<DEVICE_ID>{}(device_id)==std::hash<DEVICE_ID>{}(did_exist) and did_exist!=device_id)
+            osstream<<endl<<"CAUTION! Different devices with the same hash DEVICE_ID detected: "<<device_id.get_compound_device_name()
+                    <<", "<<did_exist.get_compound_device_name();
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -593,7 +603,12 @@ void POWER_SYSTEM_DATABASE::append_pv_unit(PV_UNIT& pv_unit)
     if(this->is_pv_unit_exist(device_id))
     {
         osstream<<"Warning. "<<pv_unit.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': PV_Unit."<<endl
-          <<"Duplicate copy is not allowed.";
+                <<"Duplicate copy is not allowed.";
+        unsigned int index = get_pv_unit_index(device_id);
+        DEVICE_ID did_exist = PV_Unit[index].get_device_id();
+        if(std::hash<DEVICE_ID>{}(device_id)==std::hash<DEVICE_ID>{}(did_exist) and did_exist!=device_id)
+            osstream<<endl<<"CAUTION! Different devices with the same hash DEVICE_ID detected: "<<device_id.get_compound_device_name()
+                    <<", "<<did_exist.get_compound_device_name();
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -645,7 +660,12 @@ void POWER_SYSTEM_DATABASE::append_energy_storage(ENERGY_STORAGE& estorage)
     if(this->is_energy_storage_exist(device_id))
     {
         osstream<<"Warning. "<<estorage.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Energy_storage.\n"
-          <<"Duplicate copy is not allowed.";
+                <<"Duplicate copy is not allowed.";
+        unsigned int index = get_energy_storage_index(device_id);
+        DEVICE_ID did_exist = Energy_storage[index].get_device_id();
+        if(std::hash<DEVICE_ID>{}(device_id)==std::hash<DEVICE_ID>{}(did_exist) and did_exist!=device_id)
+            osstream<<endl<<"CAUTION! Different devices with the same hash DEVICE_ID detected: "<<device_id.get_compound_device_name()
+                    <<", "<<did_exist.get_compound_device_name();
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -698,6 +718,11 @@ void POWER_SYSTEM_DATABASE::append_sv_source(SV_SOURCE& sv_source)
     {
         osstream<<"Warning. "<<sv_source.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': SV_source.\n"
                 <<"Duplicate copy is not allowed.";
+        unsigned int index = get_sv_source_index(device_id);
+        DEVICE_ID did_exist = SV_source[index].get_device_id();
+        if(std::hash<DEVICE_ID>{}(device_id)==std::hash<DEVICE_ID>{}(did_exist) and did_exist!=device_id)
+            osstream<<endl<<"CAUTION! Different devices with the same hash DEVICE_ID detected: "<<device_id.get_compound_device_name()
+                    <<", "<<did_exist.get_compound_device_name();
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -749,7 +774,12 @@ void POWER_SYSTEM_DATABASE::append_load(LOAD& load)
     if(is_load_exist(device_id))
     {
         osstream<<"Warning. "<<load.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Load."<<endl
-          <<"Duplicate copy is not allowed.";
+                <<"Duplicate copy is not allowed.";
+        unsigned int index = get_load_index(device_id);
+        DEVICE_ID did_exist = Load[index].get_device_id();
+        if(std::hash<DEVICE_ID>{}(device_id)==std::hash<DEVICE_ID>{}(did_exist) and did_exist!=device_id)
+            osstream<<endl<<"CAUTION! Different devices with the same hash DEVICE_ID detected: "<<device_id.get_compound_device_name()
+                    <<", "<<did_exist.get_compound_device_name();
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -801,7 +831,12 @@ void POWER_SYSTEM_DATABASE::append_fixed_shunt(FIXED_SHUNT& shunt)
     if(this->is_fixed_shunt_exist(device_id))
     {
         osstream<<"Warning. "<<shunt.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Fixed_shunt.\n"
-          <<"Duplicate copy is not allowed.";
+                <<"Duplicate copy is not allowed.";
+        unsigned int index = get_fixed_shunt_index(device_id);
+        DEVICE_ID did_exist = Fixed_shunt[index].get_device_id();
+        if(std::hash<DEVICE_ID>{}(device_id)==std::hash<DEVICE_ID>{}(did_exist) and did_exist!=device_id)
+            osstream<<endl<<"CAUTION! Different devices with the same hash DEVICE_ID detected: "<<device_id.get_compound_device_name()
+                    <<", "<<did_exist.get_compound_device_name();
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -862,7 +897,12 @@ void POWER_SYSTEM_DATABASE::append_ac_line(AC_LINE& line)
     if(this->is_ac_line_exist(device_id))
     {
         osstream<<"Warning. "<<line.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Ac_line."<<endl
-          <<"Duplicate copy is not allowed.";
+                <<"Duplicate copy is not allowed.";
+        unsigned int index = get_ac_line_index(device_id);
+        DEVICE_ID did_exist = Ac_line[index].get_device_id();
+        if(std::hash<DEVICE_ID>{}(device_id)==std::hash<DEVICE_ID>{}(did_exist) and did_exist!=device_id)
+            osstream<<endl<<"CAUTION! Different devices with the same hash DEVICE_ID detected: "<<device_id.get_compound_device_name()
+                    <<", "<<did_exist.get_compound_device_name();
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -931,7 +971,12 @@ void POWER_SYSTEM_DATABASE::append_transformer(TRANSFORMER& transformer)
     if(is_transformer_exist(device_id))
     {
         osstream<<"Warning. "<<transformer.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"':Transformer.\n"
-          <<"Duplicate copy is not allowed.";
+                <<"Duplicate copy is not allowed.";
+        unsigned int index = get_transformer_index(device_id);
+        DEVICE_ID did_exist = Transformer[index].get_device_id();
+        if(std::hash<DEVICE_ID>{}(device_id)==std::hash<DEVICE_ID>{}(did_exist) and did_exist!=device_id)
+            osstream<<endl<<"CAUTION! Different devices with the same hash DEVICE_ID detected: "<<device_id.get_compound_device_name()
+                    <<", "<<did_exist.get_compound_device_name();
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -992,7 +1037,12 @@ void POWER_SYSTEM_DATABASE::append_lcc_hvdc2t(LCC_HVDC2T& hvdc)
     if(this->is_lcc_hvdc2t_exist(device_id))
     {
         osstream<<"Warning. "<<hvdc.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Lcc_hvdc2t.\n"
-          <<"Duplicate copy is not allowed.";
+                <<"Duplicate copy is not allowed.";
+        unsigned int index = get_lcc_hvdc2t_index(device_id);
+        DEVICE_ID did_exist = Lcc_hvdc2t[index].get_device_id();
+        if(std::hash<DEVICE_ID>{}(device_id)==std::hash<DEVICE_ID>{}(did_exist) and did_exist!=device_id)
+            osstream<<endl<<"CAUTION! Different devices with the same hash DEVICE_ID detected: "<<device_id.get_compound_device_name()
+                    <<", "<<did_exist.get_compound_device_name();
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -1039,6 +1089,11 @@ void POWER_SYSTEM_DATABASE::append_vsc_hvdc(VSC_HVDC& vsc_hvdc)
     {
         osstream<<"Warning. "<<vsc_hvdc.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Vsc_hvdc.\n"
                 <<"Duplicate copy is not allowed.";
+        unsigned int index = get_vsc_hvdc_index(device_id);
+        DEVICE_ID did_exist = Vsc_hvdc[index].get_device_id();
+        if(std::hash<DEVICE_ID>{}(device_id)==std::hash<DEVICE_ID>{}(did_exist) and did_exist!=device_id)
+            osstream<<endl<<"CAUTION! Different devices with the same hash DEVICE_ID detected: "<<device_id.get_compound_device_name()
+                    <<", "<<did_exist.get_compound_device_name();
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -1077,6 +1132,11 @@ void POWER_SYSTEM_DATABASE::append_mt_hvdc(MT_HVDC& mt_hvdc)
     {
         osstream<<"Warning. "<<mt_hvdc.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Mt_hvdc.\n"
                 <<"Duplicate copy is not allowed.";
+        unsigned int index = get_mt_hvdc_index(device_id);
+        DEVICE_ID did_exist = Mt_hvdc[index].get_device_id();
+        if(std::hash<DEVICE_ID>{}(device_id)==std::hash<DEVICE_ID>{}(did_exist) and did_exist!=device_id)
+            osstream<<endl<<"CAUTION! Different devices with the same hash DEVICE_ID detected: "<<device_id.get_compound_device_name()
+                    <<", "<<did_exist.get_compound_device_name();
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -1128,6 +1188,11 @@ void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
     {
         osstream<<"Warning. "<<edevice.get_compound_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Equivalent_device.\n"
                 <<"Duplicate copy is not allowed.";
+        unsigned int index = get_equivalent_device_index(device_id);
+        DEVICE_ID did_exist = Equivalent_device[index].get_device_id();
+        if(std::hash<DEVICE_ID>{}(device_id)==std::hash<DEVICE_ID>{}(did_exist) and did_exist!=device_id)
+            osstream<<endl<<"CAUTION! Different devices with the same hash DEVICE_ID detected: "<<device_id.get_compound_device_name()
+                    <<", "<<did_exist.get_compound_device_name();
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -5419,6 +5484,51 @@ string POWER_SYSTEM_DATABASE::owner_number2owner_name(unsigned int number)
         return owner->get_owner_name();
     else
         return "";
+}
+
+string POWER_SYSTEM_DATABASE::get_bus_extended_name(unsigned int bus)
+{
+    ostringstream osstream;
+    osstream<<"BUS "<<bus<<get_bus_name_and_base_voltage_in_square_brackets(bus);
+    return osstream.str();
+}
+
+string POWER_SYSTEM_DATABASE::get_device_extended_name(DEVICE_ID did)
+{
+    if(did.get_device_type() != STEPS_BUS)
+    {
+        ostringstream osstream;
+        osstream<<did.get_compound_device_name();
+        TERMINAL terminal = did.get_device_terminal();
+        unsigned int n = terminal.get_bus_count();
+        if(n==1)
+            osstream<<get_bus_name_and_base_voltage_in_square_brackets(terminal[0]);
+        else
+        {
+            osstream<<"{";
+            for(unsigned int i=0; i<n; ++i)
+            {
+                unsigned int bus = terminal[i];
+                osstream<<get_bus_name_and_base_voltage_in_square_brackets(bus);
+                if(i+1<n)
+                    osstream<<"--";
+            }
+            osstream<<"}";
+        }
+        return osstream.str();
+    }
+    else
+    {
+        unsigned int bus = did.get_device_terminal()[0];
+        return get_bus_extended_name(bus);
+    }
+}
+
+string POWER_SYSTEM_DATABASE::get_bus_name_and_base_voltage_in_square_brackets(unsigned int bus)
+{
+    ostringstream osstream;
+    osstream<<"["<<bus_number2bus_name(bus)<<" "<<get_bus_base_voltage_in_kV(bus)<<"kV]";
+    return osstream.str();
 }
 
 void POWER_SYSTEM_DATABASE::check_powerflow_data()

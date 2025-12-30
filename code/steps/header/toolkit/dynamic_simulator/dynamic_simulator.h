@@ -47,6 +47,7 @@ class DYNAMICS_SIMULATOR
         void set_max_event_update_iteration(unsigned int iteration);
         void set_max_network_solution_divergent_threshold(unsigned int div_th);
         void set_allowed_max_power_imbalance_in_MVA(double tol);
+        void set_voltage_change_threshold_when_solving_network_in_pu(double v);
         void set_iteration_accelerator(double alpha);
         void set_non_divergent_solution_logic(bool logic);
         void set_automatic_iteration_accelerator_tune_logic(bool logic);
@@ -66,6 +67,7 @@ class DYNAMICS_SIMULATOR
         unsigned int get_max_event_update_iteration() const;
         unsigned int get_max_network_solution_divergent_threshold() const;
         double get_allowed_max_power_imbalance_in_MVA() const;
+        double get_voltage_change_threshold_when_solving_network_in_pu() const;
         double get_iteration_accelerator() const;
         bool get_non_divergent_solution_logic() const;
         bool get_automatic_iteration_accelerator_tune_logic() const;
@@ -264,6 +266,7 @@ class DYNAMICS_SIMULATOR
         void solve_bus_voltage_update();
 
         void update_bus_voltage();
+        void try_to_limit_delta_v_within_change_threshold();
 
         void update_network_dynamic_matrix();
 
@@ -300,7 +303,7 @@ class DYNAMICS_SIMULATOR
         unsigned int ITER_DAE, ITER_NET;
         size_t microseconds_elapse_of_differential_equations_in_a_step, microseconds_elapse_of_network_solution_in_a_step;
         double time_elapse_in_a_step, time_elapse_of_differential_equations_in_a_step, time_elapse_of_network_solution_in_a_step;
-        double P_threshold_in_MW, Q_threshold_in_MVar;
+        double P_threshold_in_MW, Q_threshold_in_MVar, v_change_threshold_pu;
         unsigned int network_iteration_count, DAE_iteration_count;
         unsigned int max_network_iteration, max_DAE_iteration, max_update_iteration, max_event_update_iteration, min_DAE_iteration, max_network_solution_divergent_threshold;
         unsigned int current_max_network_iteration;

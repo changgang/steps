@@ -72,6 +72,8 @@ double api_get_dynamic_simulator_float_parameter(char* parameter_name, unsigned 
         return api_get_min_dynamic_simulation_time_step(toolkit_index);
     if(PARAMETER_NAME=="MAX POWER IMBALANCE IN MVA")
         return ds.get_allowed_max_power_imbalance_in_MVA();
+    if(PARAMETER_NAME=="MAX VOLTAGE CHANGE IN PU")
+        return ds.get_voltage_change_threshold_when_solving_network_in_pu();
     if(PARAMETER_NAME=="ITERATION ACCELERATOR")
         return ds.get_iteration_accelerator();
     if(PARAMETER_NAME=="ANGLE STABILITY THRESHOLD IN DEG")
@@ -110,6 +112,8 @@ void api_set_dynamic_simulator_float_parameter(char* parameter_name, double valu
         return api_set_min_dynamic_simulation_time_step(value, toolkit_index);
     if(PARAMETER_NAME=="MAX POWER IMBALANCE IN MVA")
         return ds.set_allowed_max_power_imbalance_in_MVA(value);
+    if(PARAMETER_NAME=="MAX VOLTAGE CHANGE IN PU")
+        return ds.set_voltage_change_threshold_when_solving_network_in_pu(value);
     if(PARAMETER_NAME=="ITERATION ACCELERATOR")
         return ds.set_iteration_accelerator(value);
     if(PARAMETER_NAME=="ANGLE STABILITY THRESHOLD IN DEG")

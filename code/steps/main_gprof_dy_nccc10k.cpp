@@ -90,7 +90,8 @@ int main(int argc, char* argv[])
     simulator.set_allowed_max_power_imbalance_in_MVA(0.001);
     //simulator.set_max_DAE_iteration(20);
     //simulator.set_max_network_iteration(200);
-    default_toolkit.set_dynamic_simulation_time_step_in_s(0.0025);
+    //simulator.set_max_network_solution_divergent_threshold(4);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.005);
 
     simulator.start();
     simulator.run_to(0.1);
