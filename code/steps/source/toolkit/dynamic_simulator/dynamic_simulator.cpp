@@ -1873,8 +1873,15 @@ bool DYNAMICS_SIMULATOR::solve_network()
                 max_power_mismatch_MVA = new_smax;
                 if(max_power_mismatch_MVA>get_allowed_max_power_imbalance_in_MVA())
                 #else
-                osstream<<"At time "<<TIME<<" s, iter = "<<network_iter_count<<", new_imax/max_current_mismatch = "<<new_imax/max_current_mismatch_pu<<", new_imax = "<<new_imax<<endl;
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                if(toolkit->is_detailed_log_enabled())
+                {
+                    double scale = new_imax/max_current_mismatch_pu;
+                    if(scale>1.0)
+                    {
+                        osstream<<"At time "<<TIME<<" s, when calling DYNAMICS_SIMULATOR::solve_network() in iteration "<<network_iter_count<<", max current mismatch diverges to "<<new_imax<<" pu (increase scale: "<<scale<<").";
+                        toolkit->show_information_with_leading_time_stamp(osstream);
+                    }
+                }
                 max_current_mismatch_pu = new_imax;
                 if(max_current_mismatch_pu>imax_th_pu)
                 #endif // USE_DYNAMIC_CURRENT_MISMATCH_CONTROL

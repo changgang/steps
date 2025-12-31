@@ -689,9 +689,10 @@ void CDC6T::check_bypassing_logic()
             double t_unbypass = get_unbypassing_time();
             if(t_unbypass==INFINITE_THRESHOLD) // not unbypassing
             {
+                bool bypass_logic = false;
+
                 double vdc_i = get_converter_dc_voltage_in_kV(INVERTER);
                 double vdc_ibypass = get_inverter_dc_instantaneous_bypassing_voltage_in_kV();
-                bool bypass_logic = false;
                 if(vdc_i<vdc_ibypass)
                 {
                     osstream<<get_compound_device_name()<<" will be bypassed at time "<<TIME<<" s due to instantaneous drop of inverter DC voltage."<<endl;
@@ -705,9 +706,9 @@ void CDC6T::check_bypassing_logic()
                 double vac_i = get_converter_ac_voltage_in_pu(INVERTER);
                 double vaci_dbypass = get_inverter_ac_delayed_bypassing_voltage_in_pu();
                 //double ti_dbypass = get_inverter_ac_delayed_bypassing_time_in_s();
-                if(not inv_ac_bypassing_timer.is_started())
+                if(vac_i<=vaci_dbypass)
                 {
-                    if(vac_i<=vaci_dbypass)
+                    if(not inv_ac_bypassing_timer.is_started())
                     {
                         osstream<<get_compound_device_name()<<" inverter AC bypassing timer is started at time "<<TIME<<" s due to drop of inverter AC voltage."<<endl;
                         osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC bypassing voltage threshold is "<<vaci_dbypass<<" pu.";
@@ -715,27 +716,24 @@ void CDC6T::check_bypassing_logic()
 
                         inv_ac_bypassing_timer.start();
                     }
+                    if(inv_ac_bypassing_timer.is_timed_out())
+                    {
+                        osstream<<get_compound_device_name()<<" inverter AC bypassing timer is timed out and will be bypassed at time "<<TIME<<" s due to timed out timer of inverter AC voltage drop."<<endl;
+                        osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC bypassing voltage threshold is "<<vaci_dbypass<<" pu.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+
+                        bypass_logic = true;
+                    }
                 }
                 else
                 {
-                    if(vac_i>vaci_dbypass)
+                    if(inv_ac_bypassing_timer.is_started() and not inv_ac_bypassing_timer.is_timed_out())
                     {
                         osstream<<get_compound_device_name()<<" inverter AC bypassing timer is reset at time "<<TIME<<" s due to recovery of inverter AC voltage."<<endl;
                         osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC bypassing voltage threshold is "<<vaci_dbypass<<" pu.";
                         toolkit.show_information_with_leading_time_stamp(osstream);
 
                         inv_ac_bypassing_timer.reset();
-                    }
-                    else
-                    {
-                        if(inv_ac_bypassing_timer.is_timed_out())
-                        {
-                            osstream<<get_compound_device_name()<<" inverter AC bypassing timer is timed out and will be bypassed at time "<<TIME<<" s due to timed out timer of inverter AC voltage drop."<<endl;
-                            osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC bypassing voltage threshold is "<<vaci_dbypass<<" pu.";
-                            toolkit.show_information_with_leading_time_stamp(osstream);
-
-                            bypass_logic = true;
-                        }
                     }
                 }
                 if(bypass_logic==true)
@@ -744,49 +742,86 @@ void CDC6T::check_bypassing_logic()
                     inv_ac_bypassing_timer.reset(); // clear timer
                 }
             }
+            else
+            {
+                double vac_i = get_converter_ac_voltage_in_pu(INVERTER);
+                double vaci_dbypass = get_inverter_ac_delayed_bypassing_voltage_in_pu();
+
+                if(vac_i<=vaci_dbypass)
+                {
+                    //clear_unbypassing_time();
+                    if(not inv_ac_bypassing_timer.is_started())
+                    {
+                        osstream<<get_compound_device_name()<<" inverter AC bypassing timer is started at time "<<TIME<<" s during bypassing due to drop of inverter AC voltage."<<endl;
+                        osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC bypassing voltage threshold is "<<vaci_dbypass<<" pu.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+
+                        inv_ac_bypassing_timer.start();
+                    }
+                    if(inv_ac_bypassing_timer.is_timed_out())
+                    {
+                        osstream<<get_compound_device_name()<<" inverter AC bypassing timer is timed out and will be SUCCESSIVELY bypassed at time "<<TIME<<" s during bypassing due to timed out timer of inverter AC voltage drop."<<endl;
+                        osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC bypassing voltage threshold is "<<vaci_dbypass<<" pu.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+
+                        bypass_lcc_hvdc2t();
+                        inv_ac_bypassing_timer.reset(); // clear timer
+                    }
+                }
+                else
+                {
+                    if(inv_ac_bypassing_timer.is_started() and not inv_ac_bypassing_timer.is_timed_out())
+                    {
+                        osstream<<get_compound_device_name()<<" inverter AC bypassing timer is reset at time "<<TIME<<" s during unbypassing due to recovery of inverter AC voltage."<<endl;
+                        osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC bypassing voltage threshold is "<<vaci_dbypass<<" pu.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+
+                        inv_ac_bypassing_timer.reset();
+                    }
+                }
+            }
         }
         else
         {
             //unsigned int bus_i = hvdc->get_converter_bus(INVERTER);
             //double vac_i = psdb.get_bus_positive_sequence_voltage_in_pu(bus_i);
-            double vac_i = get_converter_ac_voltage_in_pu(INVERTER);
-
-            double vac_dunbypass = get_inverter_ac_delayed_unbypassing_voltage_in_pu();
-            //double t_dunbypass = get_inverter_ac_delayed_unbypassing_time_in_s();
-            if(not inv_ac_unbypassing_timer.is_started())
+            if(is_bypass_timer_timed_out())
             {
-                if(vac_i>vac_dunbypass and get_time_duration_to_the_last_bypass_in_s()>=get_mininum_bypassing_time_in_s())
+                double vac_i = get_converter_ac_voltage_in_pu(INVERTER);
+                double vac_dunbypass = get_inverter_ac_delayed_unbypassing_voltage_in_pu();
+                if(vac_i>vac_dunbypass)
                 {
-                    osstream<<get_compound_device_name()<<" inverter AC unbypassing timer is started at time "<<TIME<<" s due to recovery of inverter AC voltage and time to the last bypass exceeds."<<endl;
-                    osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and AC unbypassing voltage threshold is "<<vac_dunbypass<<" pu.\n"
-                            <<"The last bypass occurred at "<<get_time_of_the_last_bypass_in_s()<<" s.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    //double t_dunbypass = get_inverter_ac_delayed_unbypassing_time_in_s();
+                    if(not inv_ac_unbypassing_timer.is_started())
+                    {
+                        osstream<<get_compound_device_name()<<" inverter AC unbypassing timer is started at time "<<TIME<<" s due to recovery of inverter AC voltage and time to the last bypass exceeds."<<endl;
+                        osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and AC unbypassing voltage threshold is "<<vac_dunbypass<<" pu.\n"
+                                <<"The last bypass occurred at "<<get_time_of_the_last_bypass_in_s()<<" s.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
 
-                    inv_ac_unbypassing_timer.start();
+                        inv_ac_unbypassing_timer.start();
+                    }
+
+                    if(inv_ac_unbypassing_timer.is_timed_out())
+                    {
+                        osstream<<get_compound_device_name()<<" bypass timer and inverter AC unbypassing timer are timed out, and will be unbypassed at time "<<TIME<<" s due to recovery of inverter AC voltage."<<endl;
+                        osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC unbypassing voltage threshold is "<<vac_dunbypass<<" pu.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+
+                        unbypass_lcc_hvdc2t();
+                        inv_ac_unbypassing_timer.reset();
+                    }
                 }
-            }
-            else
-            {
-                if(vac_i<vac_dunbypass)
+                else
                 {
-                    osstream<<get_compound_device_name()<<" inverter AC unbypassing timer is reset at time "<<TIME<<" s due to drop of inverter AC voltage."<<endl;
-                    osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and AC unbypassing voltage threshold is "<<vac_dunbypass<<" pu.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    if(inv_ac_unbypassing_timer.is_started())
+                    {
+                        osstream<<get_compound_device_name()<<" inverter AC unbypassing timer is reset at time "<<TIME<<" s due to drop of inverter AC voltage."<<endl;
+                        osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and AC unbypassing voltage threshold is "<<vac_dunbypass<<" pu.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
 
-                    inv_ac_unbypassing_timer.reset();
-                }
-            }
-
-            if(inv_ac_unbypassing_timer.is_started())
-            {
-                if(is_bypass_timer_timed_out() and inv_ac_unbypassing_timer.is_timed_out())
-                {
-                    osstream<<get_compound_device_name()<<" bypass timer and inverter AC unbypassing timer are timed out, and will be unbypassed at time "<<TIME<<" s due to recovery of inverter AC voltage."<<endl;
-                    osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC unbypassing voltage threshold is "<<vac_dunbypass<<" pu.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-
-                    unbypass_lcc_hvdc2t();
-                    inv_ac_unbypassing_timer.reset();
+                        inv_ac_unbypassing_timer.reset();
+                    }
                 }
             }
         }

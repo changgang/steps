@@ -34,7 +34,8 @@ class LCC_HVDC2T_MODEL : public MODEL
         void set_minimum_dc_voltage_in_kV_following_unblocking_and_unbypassing(double V);
         void set_minimum_dc_current_in_kA_following_unblocking(double I);
 
-        void set_maximum_count_of_bypassing_before_blocked(unsigned int n);
+        void set_maximum_count_of_all_bypassing_before_blocked(unsigned int n);
+        void set_maximum_count_of_succesive_bypassing_before_blocked(unsigned int n);
 
         void set_mininum_blocking_time_in_s(double t);
         void set_mininum_bypassing_time_in_s(double t);
@@ -52,7 +53,8 @@ class LCC_HVDC2T_MODEL : public MODEL
         void set_minimum_dc_current_command_in_kA(double I);
         double get_minimum_dc_current_command_in_kA() const;
 
-        double get_maximum_count_of_bypassing_before_blocked() const;
+        double get_maximum_count_of_all_bypassing_before_blocked() const;
+        double get_maximum_count_of_succesive_bypassing_before_blocked() const;
 
         double get_mininum_blocking_time_in_s() const;
         double get_mininum_bypassing_time_in_s() const;
@@ -157,9 +159,12 @@ class LCC_HVDC2T_MODEL : public MODEL
 
     private:
         void solve_lcc_hvdc2t_as_bypassed(double Iset_kA);
-        void clear_record_of_bytime_time();
+        void clear_all_record_of_bypass_time();
         void append_bypass_record(double time);
-        unsigned int get_bypass_record_count() const;
+        unsigned int get_all_bypass_record_count() const;
+        void clear_succesive_bypass_count();
+        void increase_succesive_bypass_count();
+        unsigned int get_succesive_bypass_count() const;
 
         double firing_angle_max[2], firing_angle_min[2];
         double cos_firing_angle_max[2], cos_firing_angle_min[2];
@@ -178,8 +183,11 @@ class LCC_HVDC2T_MODEL : public MODEL
         double minimum_dc_current_command_in_kA;
         VDCOL vdcol_limiter;
 
-        double record_of_bypass_time[STEPS_MAX_HVDC_BYPASS_RECORD_SIZE];
-        unsigned int max_count_of_bypass_before_blocked;
+        double record_of_all_bypass_time[STEPS_MAX_HVDC_BYPASS_RECORD_SIZE];
+        unsigned int max_count_of_all_bypass_before_blocked;
+
+        unsigned int successive_bypass_count;
+        unsigned int max_count_of_successive_bypass_before_blocked;
 };
 
 #endif // LCC_HVDC2T_MODEL_H

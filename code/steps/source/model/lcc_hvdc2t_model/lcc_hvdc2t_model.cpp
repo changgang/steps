@@ -35,18 +35,25 @@ LCC_HVDC2T_MODEL::LCC_HVDC2T_MODEL(STEPS& toolkit) : MODEL(toolkit)
     set_minimum_dc_current_command_in_kA(0.0);
     vdcol_limiter.clear();
 
-    clear_record_of_bytime_time();
+    clear_all_record_of_bypass_time();
+    clear_succesive_bypass_count();
 
-    set_maximum_count_of_bypassing_before_blocked(999);
+    set_maximum_count_of_all_bypassing_before_blocked(INFINITE_THRESHOLD);
+    set_maximum_count_of_succesive_bypassing_before_blocked(5);
 
     manual_blocked = false;
     manual_bypassed = false;
 }
 
-void LCC_HVDC2T_MODEL::clear_record_of_bytime_time()
+void LCC_HVDC2T_MODEL::clear_all_record_of_bypass_time()
 {
     for(unsigned int i=0; i<STEPS_MAX_HVDC_BYPASS_RECORD_SIZE; ++i)
-        record_of_bypass_time[i] = INFINITE_THRESHOLD;
+        record_of_all_bypass_time[i] = INFINITE_THRESHOLD;
+}
+
+void LCC_HVDC2T_MODEL::clear_succesive_bypass_count()
+{
+    successive_bypass_count = 0;
 }
 
 LCC_HVDC2T_MODEL::~LCC_HVDC2T_MODEL()
@@ -157,12 +164,20 @@ void LCC_HVDC2T_MODEL::set_minimum_dc_current_in_kA_following_unblocking(double 
     minimum_dc_current_in_kA_following_unblocking = I;
 }
 
-void LCC_HVDC2T_MODEL::set_maximum_count_of_bypassing_before_blocked(unsigned int n)
+void LCC_HVDC2T_MODEL::set_maximum_count_of_all_bypassing_before_blocked(unsigned int n)
 {
     if(n==0)
         n = (unsigned int)(INFINITE_THRESHOLD);
 
-    max_count_of_bypass_before_blocked = n;
+    max_count_of_all_bypass_before_blocked = n;
+}
+
+void LCC_HVDC2T_MODEL::set_maximum_count_of_succesive_bypassing_before_blocked(unsigned int n)
+{
+    if(n==0)
+        n = (unsigned int)(INFINITE_THRESHOLD);
+
+    max_count_of_successive_bypass_before_blocked = n;
 }
 
 
@@ -203,9 +218,14 @@ double LCC_HVDC2T_MODEL::get_minimum_dc_current_command_in_kA() const
     return minimum_dc_current_command_in_kA;
 }
 
-double LCC_HVDC2T_MODEL::get_maximum_count_of_bypassing_before_blocked() const
+double LCC_HVDC2T_MODEL::get_maximum_count_of_all_bypassing_before_blocked() const
 {
-    return max_count_of_bypass_before_blocked;
+    return max_count_of_all_bypass_before_blocked;
+}
+
+double LCC_HVDC2T_MODEL::get_maximum_count_of_succesive_bypassing_before_blocked() const
+{
+    return max_count_of_successive_bypass_before_blocked;
 }
 
 double LCC_HVDC2T_MODEL::get_mininum_blocking_time_in_s() const
@@ -360,6 +380,11 @@ double LCC_HVDC2T_MODEL::get_inverter_dc_voltage_command_in_kV()
             {
                 Vcommand = Vset;
                 clear_unbypassing_time();
+                clear_succesive_bypass_count();
+
+                ostringstream osstream;
+                osstream<<get_compound_device_name()<<" unbypassing completed at time "<<TIME<<" s ."<<endl;
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
         else // mode switched or normal operation
@@ -393,7 +418,8 @@ void LCC_HVDC2T_MODEL::block_lcc_hvdc2t()
         time_when_unblocking = INFINITE_THRESHOLD;
 
         block_timer.start();
-        clear_record_of_bytime_time();
+        clear_all_record_of_bypass_time();
+        clear_succesive_bypass_count();
 
         STEPS& toolkit = get_toolkit();
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
@@ -536,6 +562,15 @@ void LCC_HVDC2T_MODEL::bypass_lcc_hvdc2t()
 
         if(not is_bypassed())
         {
+            ostringstream osstream;
+            osstream<<get_compound_device_name()<<" is bypassed at time "<<TIME<<" s.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+
+            append_bypass_record(TIME);
+
+            if(is_unbypassing())
+                increase_succesive_bypass_count();
+
             if(is_mode_switched())
             {
                 switch_lcc_hvdc2t_mode_back();
@@ -547,27 +582,30 @@ void LCC_HVDC2T_MODEL::bypass_lcc_hvdc2t()
             clear_unbypassing_time();
             bypass_timer.start();
 
-            ostringstream osstream;
-
-            osstream<<get_compound_device_name()<<" is bypassed at time "<<TIME<<" s.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-
-            append_bypass_record(TIME);
-            if(get_bypass_record_count()>=get_maximum_count_of_bypassing_before_blocked())
+            bool block_logic = false;
+            if(get_succesive_bypass_count() > get_maximum_count_of_succesive_bypassing_before_blocked())
+            {
+                osstream<<get_compound_device_name()<<" is blocked at time "<<TIME<<"s due to succesive commutation failure of more than "
+                        <<get_maximum_count_of_succesive_bypassing_before_blocked()<<" times.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                block_logic = true;
+             }
+            if(get_all_bypass_record_count()>=get_maximum_count_of_all_bypassing_before_blocked())
             {
                 osstream<<get_compound_device_name()<<" will be blocked at time "<<setprecision(5)<<fixed<<TIME
-                  <<" s since the max count of bypassing is reached ("<<get_maximum_count_of_bypassing_before_blocked()<<").";
+                        <<" s since the max count of all bypassing is reached ("<<get_maximum_count_of_all_bypassing_before_blocked()<<").";
                 toolkit.show_information_with_leading_time_stamp(osstream);
-
-                block_lcc_hvdc2t();
+                block_logic = true;
             }
+            if(block_logic == true)
+                block_lcc_hvdc2t();
         }
     }
 }
 
 void LCC_HVDC2T_MODEL::append_bypass_record(double time)
 {
-    unsigned int n = get_bypass_record_count();
+    unsigned int n = get_all_bypass_record_count();
     if(n==STEPS_MAX_HVDC_BYPASS_RECORD_SIZE)
     {
         ostringstream osstream;
@@ -577,21 +615,41 @@ void LCC_HVDC2T_MODEL::append_bypass_record(double time)
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
-    record_of_bypass_time[n]=time;
+    record_of_all_bypass_time[n]=time;
 }
 
-unsigned int LCC_HVDC2T_MODEL::get_bypass_record_count() const
+unsigned int LCC_HVDC2T_MODEL::get_all_bypass_record_count() const
 {
     unsigned int n = 0;
     for(unsigned int i=0; i<STEPS_MAX_HVDC_BYPASS_RECORD_SIZE; ++i)
     {
-        if(record_of_bypass_time[i]==INFINITE_THRESHOLD)
+        if(record_of_all_bypass_time[i]==INFINITE_THRESHOLD)
         {
             n = i;
             break;
         }
     }
     return n;
+}
+
+void LCC_HVDC2T_MODEL::increase_succesive_bypass_count()
+{
+    successive_bypass_count ++;
+
+    if(successive_bypass_count > 1)
+    {
+        STEPS& toolkit = get_toolkit();
+        double TIME = toolkit.get_dynamic_simulation_time_in_s();
+        ostringstream osstream;
+        osstream<<"Succesive commutation failure is detected at time "<<TIME<<" s for"<<get_compound_device_name()
+                <<". Succesive commutation failure count = "<<successive_bypass_count;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+unsigned int LCC_HVDC2T_MODEL::get_succesive_bypass_count() const
+{
+    return successive_bypass_count;
 }
 
 void LCC_HVDC2T_MODEL::unbypass_lcc_hvdc2t()
@@ -1574,25 +1632,25 @@ complex<double> LCC_HVDC2T_MODEL::get_converter_ac_complex_voltage_in_pu(CONVERT
 
 double LCC_HVDC2T_MODEL::get_time_duration_to_the_last_bypass_in_s() const
 {
-    unsigned int n = get_bypass_record_count();
+    unsigned int n = get_all_bypass_record_count();
     if(n==0)
         return 0.0;
     else
     {
         STEPS& toolkit = get_toolkit();
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
-        double time = record_of_bypass_time[n-1];
+        double time = record_of_all_bypass_time[n-1];
         return TIME - time;
     }
 }
 
 double LCC_HVDC2T_MODEL::get_time_of_the_last_bypass_in_s() const
 {
-    unsigned int n = get_bypass_record_count();
+    unsigned int n = get_all_bypass_record_count();
     if(n==0)
         return INFINITE_THRESHOLD;
     else
-        return record_of_bypass_time[n-1];
+        return record_of_all_bypass_time[n-1];
 }
 
 void LCC_HVDC2T_MODEL::set_common_timer_toolkit()
