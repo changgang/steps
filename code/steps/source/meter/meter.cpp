@@ -509,7 +509,15 @@ string METER::get_meter_name() const
     string meter_type = get_meter_type();
     if(meter_type!="")
     {
-        string name = meter_type;
+        string name;
+
+        if(device_type==STEPS_LCC_HVDC2T)
+        {
+            LCC_HVDC2T* hvdc = (LCC_HVDC2T*) get_device_pointer();
+            name = converter_side2string(hvdc->get_converter_side_at_bus(get_metered_side_bus())) + " ";
+        }
+
+        name += meter_type;
         if(meter_type.find("INTERNAL VARIABLE")!=string::npos)
             name += " " + get_internal_variable_name();
 
@@ -521,6 +529,7 @@ string METER::get_meter_name() const
 
         if(device_type==STEPS_AC_LINE or
            device_type==STEPS_TRANSFORMER or
+           device_type==STEPS_LCC_HVDC2T or
            device_type==STEPS_VSC_HVDC)
             name += " @ SIDE "+num2str(get_metered_side_bus());
         if(device_type==STEPS_HYBRID_DC)
