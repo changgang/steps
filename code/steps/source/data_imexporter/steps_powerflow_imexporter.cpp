@@ -3303,9 +3303,9 @@ void STEPS_IMEXPORTER::export_powerflow_data(string file, bool export_zero_imped
     ofs<<export_area_data();
     ofs<<"0 / END OF AREA DATA, BEGIN TWO-TERMINAL LCC_HVDC2T DATA"<<endl;
     ofs<<export_lcc_hvdc2t_data();
-    ofs<<"'0' / END OF TWO-TERMINAL LCC_HVDC2T DATA, BEGIN VSC LCC_HVDC2T LINE DATA"<<endl;
+    ofs<<"'0' / END OF TWO-TERMINAL LCC_HVDC2T DATA, BEGIN VSC HVDC LINE DATA"<<endl;
     ofs<<export_vsc_hvdc_data();
-    ofs<<"'0' / END OF VSC LCC_HVDC2T LINE DATA, BEGIN IMPEDANCE CORRECTION DATA"<<endl;
+    ofs<<"'0' / END OF VSC HVDC LINE DATA, BEGIN IMPEDANCE CORRECTION DATA"<<endl;
     ofs<<export_transformer_impedance_correction_table_data();
     ofs<<"0 / END OF IMPEDANCE CORRECTION DATA, BEGIN MULTI-TERMINAL LCC_HVDC2T DATA"<<endl;
     ofs<<export_multi_terminal_hvdc_data();

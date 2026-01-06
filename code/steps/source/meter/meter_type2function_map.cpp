@@ -334,8 +334,8 @@ void build_vsc_hvdc_meter_map()
     vsc_hvdc_meter_map.insert({"DC BUS VOLTAGE IN KV",                             get_dc_bus_voltage_in_kV});
     vsc_hvdc_meter_map.insert({"DC LINE CURRENT IN KA",                            get_dc_line_current_in_kA});
     vsc_hvdc_meter_map.insert({"DC LINE POWER IN MW",                              get_dc_line_power_in_MW});
-    vsc_hvdc_meter_map.insert({"VSC LCC_HVDC2T NETWORK MODEL INTERNAL VARIABLE",   get_vsc_hvdc_network_model_internal_variable});
-    vsc_hvdc_meter_map.insert({"VSC LCC_HVDC2T CONVERTER MODEL INTERNAL VARIABLE", get_vsc_hvdc_converter_model_internal_variable});
+    vsc_hvdc_meter_map.insert({"VSC HVDC NETWORK MODEL INTERNAL VARIABLE",   get_vsc_hvdc_network_model_internal_variable});
+    vsc_hvdc_meter_map.insert({"VSC HVDC CONVERTER MODEL INTERNAL VARIABLE", get_vsc_hvdc_converter_model_internal_variable});
 }
 
 void build_mt_hvdc_meter_map()

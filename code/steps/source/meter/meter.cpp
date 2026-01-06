@@ -251,9 +251,9 @@ bool METER::is_internal_variable_name_valid(string& name, unsigned int index) co
         if(device_type==STEPS_VSC_HVDC)
         {
             VSC_HVDC* ptr = (VSC_HVDC*)get_device_pointer();
-            if(meter_type=="VSC LCC_HVDC2T NETWORK MODEL INTERNAL VARIABLE")
+            if(meter_type=="VSC HVDC NETWORK MODEL INTERNAL VARIABLE")
                 model = ptr->get_vsc_hvdc_network_model();
-            if(meter_type=="VSC LCC_HVDC2T CONVERTER MODEL INTERNAL VARIABLE")
+            if(meter_type=="VSC HVDC CONVERTER MODEL INTERNAL VARIABLE")
                 model = ptr->get_vsc_hvdc_converter_model(index);
         }
         if(device_type==STEPS_HYBRID_DC)

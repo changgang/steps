@@ -21,7 +21,7 @@ VSC_HVDC_CONVERTER_MODEL::~VSC_HVDC_CONVERTER_MODEL()
 
 string VSC_HVDC_CONVERTER_MODEL::get_model_type() const
 {
-    return "VSC LCC_HVDC2T CONVERTER";
+    return "VSC HVDC CONVERTER";
 }
 
 void VSC_HVDC_CONVERTER_MODEL::set_converter_name(string name)

@@ -425,13 +425,13 @@ void DEVICE_ID_TEST::test_get_compound_device_name()
     terminal.append_bus(2);
     device_id.set_device_terminal(terminal);
     device_id.set_device_identifier_index(get_index_of_string("#1"));
-    TEST_ASSERT(device_id.get_compound_device_name()=="VSC LCC_HVDC2T #1 LINKING BUS 1 AND 2");
+    TEST_ASSERT(device_id.get_compound_device_name()=="VSC HVDC #1 LINKING BUS 1 AND 2");
 
     terminal.append_bus(3);
     terminal.append_bus(5);
     device_id.set_device_terminal(terminal);
     device_id.set_device_identifier_index(get_index_of_string("#1"));
-    TEST_ASSERT(device_id.get_compound_device_name()=="VSC LCC_HVDC2T #1 LINKING BUS 1 2 3 AND 5");
+    TEST_ASSERT(device_id.get_compound_device_name()=="VSC HVDC #1 LINKING BUS 1 2 3 AND 5");
 
     device_id.clear();
     terminal.clear();

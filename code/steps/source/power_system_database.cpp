@@ -1068,7 +1068,7 @@ void POWER_SYSTEM_DATABASE::append_vsc_hvdc(VSC_HVDC& vsc_hvdc)
 
     if(not vsc_hvdc.is_valid())
     {
-        osstream<<"Warning. Failed to append invalid VSC LCC_HVDC2T to power system database '"<<get_system_name()<<"'.";
+        osstream<<"Warning. Failed to append invalid VSC HVDC to power system database '"<<get_system_name()<<"'.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -1100,7 +1100,7 @@ void POWER_SYSTEM_DATABASE::append_vsc_hvdc(VSC_HVDC& vsc_hvdc)
 
     if(Vsc_hvdc.capacity()==Vsc_hvdc.size())
     {
-        osstream<<"Warning. Capacity limit ("<<Vsc_hvdc.capacity()<<") reached when appending VSC LCC_HVDC2T to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Capacity limit ("<<Vsc_hvdc.capacity()<<") reached when appending VSC HVDC to power system database '"<<get_system_name()<<"'."<<endl
                 <<"Increase capacity by modified steps_config.json.";
         toolkit->show_information_with_leading_time_stamp(osstream);
         return;
