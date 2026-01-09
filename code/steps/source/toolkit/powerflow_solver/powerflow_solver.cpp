@@ -2771,24 +2771,35 @@ void POWERFLOW_SOLVER::build_bus_Q_power_mismatch_vector_for_decoupled_solution(
 void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
 {
     STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
     ostringstream osstream;
     unsigned int nP = internal_P_equation_buses.size();
     unsigned int nQ = internal_Q_equation_buses.size();
 
     double max_dangle=0.0, max_dv = 0.0;
     unsigned int nv = update.size();
+    unsigned int max_delta_angle_bus = 0, max_delta_v_bus = 0;
     for(unsigned int i=0; i!=nP; ++i)
     {
         if(max_dangle<abs(update[i]))
+        {
             max_dangle = abs(update[i]);
+            max_delta_angle_bus = internal_P_equation_buses[i];
+        }
     }
     for(unsigned int i=nP; i!=nv; ++i)
     {
         if(max_dv<abs(update[i]))
+        {
             max_dv = abs(update[i]);
+            max_delta_v_bus = internal_Q_equation_buses[i-nP];
+        }
     }
-    osstream<<"Maximum angle   change is: "<<max_dangle<<" rad ("<<rad2deg(max_dangle)<<" deg).\n"
-            <<"Maximum voltage change is: "<<max_dv<<" pu.";
+    max_delta_angle_bus = network_matrix.get_physical_bus_number_of_internal_bus(max_delta_angle_bus);
+    max_delta_v_bus = network_matrix.get_physical_bus_number_of_internal_bus(max_delta_v_bus);
+    osstream<<"Maximum angle   change is: "<<max_dangle<<" rad ("<<rad2deg(max_dangle)<<" deg) at bus "<<max_delta_angle_bus<<"["<<psdb.bus_number2bus_name(max_delta_angle_bus)<<"].\n"
+            <<"Maximum voltage change is: "<<max_dv<<" pu at bus "<<max_delta_v_bus<<"["<<psdb.bus_number2bus_name(max_delta_v_bus)<<"].";
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     double limit = get_maximum_angle_change_in_rad();
