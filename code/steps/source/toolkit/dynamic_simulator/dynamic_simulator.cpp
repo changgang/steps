@@ -84,13 +84,13 @@ void DYNAMICS_SIMULATOR::clear()
     if(n>0)
     {
         for(unsigned int i=0; i<n; ++i)
-        delete buffer4buses_voltage_change_detection[i];
+            delete buffer4buses_voltage_change_detection[i];
     }
     n = buffer4generators_rotor_speed_change_detection.size();
     if(n>0)
     {
         for(unsigned int i=0; i<n; ++i)
-        delete buffer4generators_rotor_speed_change_detection[i];
+            delete buffer4generators_rotor_speed_change_detection[i];
     }
 }
 
@@ -106,15 +106,17 @@ void DYNAMICS_SIMULATOR::set_min_dynamic_simulation_time_step_in_s(double delt)
 
 void DYNAMICS_SIMULATOR::set_dynamic_simulation_time_step_in_s(double delt)
 {
+    STEPS& toolkit = get_toolkit();
     DELT = delt;
     ostringstream osstream;
     osstream<<"System dynamic simulation time step is set as :"<<DELT<<" s.";
-    toolkit->show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 NETWORK_MATRIX& DYNAMICS_SIMULATOR::get_network_matrix()
 {
-    return toolkit->get_network_matrix();
+    STEPS& toolkit = get_toolkit();
+    return toolkit.get_network_matrix();
 }
 
 void DYNAMICS_SIMULATOR::set_csv_file_export_enable_flag(bool flag)
@@ -150,7 +152,7 @@ bool DYNAMICS_SIMULATOR::is_bin_file_export_enabled() const
 void DYNAMICS_SIMULATOR::set_max_DAE_iteration(unsigned int iteration)
 {
     if(iteration>0)
-        this->max_DAE_iteration = iteration;
+        max_DAE_iteration = iteration;
 }
 
 void DYNAMICS_SIMULATOR::set_min_DAE_iteration(unsigned int iteration)
@@ -159,32 +161,32 @@ void DYNAMICS_SIMULATOR::set_min_DAE_iteration(unsigned int iteration)
     {
         if(iteration<2) iteration = 2;
 
-        this->min_DAE_iteration = iteration;
+        min_DAE_iteration = iteration;
     }
 }
 
 void DYNAMICS_SIMULATOR::set_max_network_iteration(unsigned int iteration)
 {
     if(iteration>0)
-        this->max_network_iteration = iteration;
+       max_network_iteration = iteration;
 }
 
 void DYNAMICS_SIMULATOR::set_max_update_iteration(unsigned int iteration)
 {
     if(iteration>0)
-        this->max_update_iteration = iteration;
+       max_update_iteration = iteration;
 }
 
 void DYNAMICS_SIMULATOR::set_max_event_update_iteration(unsigned int iteration)
 {
     if(iteration>0)
-        this->max_event_update_iteration = iteration;
+        max_event_update_iteration = iteration;
 }
 
 void DYNAMICS_SIMULATOR::set_max_network_solution_divergent_threshold(unsigned int div_th)
 {
     if(div_th>0)
-        this->max_network_solution_divergent_threshold = div_th;
+       max_network_solution_divergent_threshold = div_th;
 }
 
 void DYNAMICS_SIMULATOR::set_allowed_max_power_imbalance_in_MVA(double tol)
@@ -204,7 +206,7 @@ void DYNAMICS_SIMULATOR::set_voltage_change_threshold_when_solving_network_in_pu
 void DYNAMICS_SIMULATOR::set_iteration_accelerator(double iter_alpha)
 {
     if(iter_alpha>0.0)
-        this->alpha = iter_alpha;
+       alpha = iter_alpha;
 }
 
 void DYNAMICS_SIMULATOR::set_non_divergent_solution_logic(bool logic)
@@ -217,7 +219,7 @@ void DYNAMICS_SIMULATOR::set_automatic_iteration_accelerator_tune_logic(bool log
     automatic_iteration_accelerator_tune_enabled = logic;
     if(logic==true)
     {
-
+        STEPS& toolkit = get_toolkit();
         ostringstream osstream;
         osstream<<"*******************************\n"
                 <<"******************************\n"
@@ -228,19 +230,19 @@ void DYNAMICS_SIMULATOR::set_automatic_iteration_accelerator_tune_logic(bool log
                 <<"******************************\n"
                 <<"******************************\n"
                 <<"******************************";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::set_rotor_angle_stability_surveillance_flag(bool flag)
 {
-    this->flag_rotor_angle_stability_surveillance = flag;
+    flag_rotor_angle_stability_surveillance = flag;
 }
 
 void DYNAMICS_SIMULATOR::set_rotor_angle_stability_threshold_in_deg(double angle_th)
 {
     if(angle_th<0.0) angle_th = - angle_th;
-    this->rotor_angle_stability_threshold_in_deg = angle_th;
+    rotor_angle_stability_threshold_in_deg = angle_th;
 }
 
 void DYNAMICS_SIMULATOR::set_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s(double delt)
@@ -340,12 +342,12 @@ bool DYNAMICS_SIMULATOR::get_automatic_iteration_accelerator_tune_logic() const
 
 bool DYNAMICS_SIMULATOR::get_rotor_angle_stability_surveillance_flag() const
 {
-    return this->flag_rotor_angle_stability_surveillance;
+    return flag_rotor_angle_stability_surveillance;
 }
 
 double DYNAMICS_SIMULATOR::get_rotor_angle_stability_threshold_in_deg() const
 {
-    return this->rotor_angle_stability_threshold_in_deg;
+    return rotor_angle_stability_threshold_in_deg;
 }
 
 double DYNAMICS_SIMULATOR::get_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s() const
@@ -385,23 +387,25 @@ void DYNAMICS_SIMULATOR::add_buses_for_system_change_detection(vector<unsigned i
         add_bus_for_system_change_detection(buses[i]);
 }
 
-void DYNAMICS_SIMULATOR::add_bus_for_system_change_detection(unsigned int bus)
+void DYNAMICS_SIMULATOR::add_bus_for_system_change_detection(unsigned int bus_number)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    if(psdb.is_bus_exist(bus))
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    if(psdb.is_bus_exist(bus_number))
     {
         bool is_bus_monitored = false;
         unsigned int n = buses4change_detection.size();
         for(unsigned int i=0; i<n; ++i)
         {
-            if(buses4change_detection[i]->get_bus_number()==bus)
+            BUS& bus = *(buses4change_detection[i]);
+            if(bus.get_bus_number()==bus_number)
             {
                 is_bus_monitored = true;
                 break;
             }
         }
         if(not is_bus_monitored)
-            buses4change_detection.push_back(psdb.get_bus(bus));
+            buses4change_detection.push_back(psdb.get_bus(bus_number));
     }
 }
 
@@ -414,14 +418,16 @@ void DYNAMICS_SIMULATOR::add_generators_for_system_change_detection(vector<DEVIC
 
 void DYNAMICS_SIMULATOR::add_generator_for_system_change_detection(DEVICE_ID did)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     if(did.get_device_type()==STEPS_GENERATOR and psdb.is_generator_exist(did))
     {
         bool is_gen_monitored = false;
         unsigned int n = generators4change_detection.size();
         for(unsigned int i=0; i<n; ++i)
         {
-            if(generators4change_detection[i]->get_device_id()==did)
+            GENERATOR& gen = *(generators4change_detection[i]);
+            if(gen.get_device_id()==did)
             {
                 is_gen_monitored = true;
                 break;
@@ -434,7 +440,8 @@ void DYNAMICS_SIMULATOR::add_generator_for_system_change_detection(DEVICE_ID did
 
 void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     ostringstream osstream;
     osstream<<"Configuration of dynamic simulator:\n"
             <<"Fast sin/cos/tan function: "<<(use_steps_fast_math?"Enabled":"Disabled")<<"\n"
@@ -466,7 +473,7 @@ void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
     for(unsigned int i=0; i!=n; ++i)
         osstream<<"("<<setw(4)<<i+1<<") "<<meters[i].get_meter_name()<<"\n";
 
-    toolkit->show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     if(get_change_time_step_adaptively_logic()==true)
     {
@@ -474,15 +481,18 @@ void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
         n = buses4change_detection.size();
         osstream<<"Monitored bus count: "<<n<<"\n";
         for(unsigned int i=0; i!=n; ++i)
-            osstream<<"("<<setw(4)<<i+1<<") "<<buses4change_detection[i]->get_compound_device_name()<<" ["<<buses4change_detection[i]->get_bus_name()<<"]\n";
+        {
+            BUS& bus = *(buses4change_detection[i]);
+            osstream<<"("<<setw(4)<<i+1<<") "<<bus.get_compound_device_name()<<" ["<<bus.get_bus_name()<<"]\n";
+        }
         n = generators4change_detection.size();
         osstream<<"Monitored generator count: "<<n<<"\n";
         for(unsigned int i=0; i!=n; ++i)
         {
-            GENERATOR* gen = generators4change_detection[i];
-            osstream<<"("<<setw(4)<<i+1<<") "<<gen->get_compound_device_name()<<" ["<<psdb.bus_number2bus_name(gen->get_generator_bus())<<"]\n";
+            GENERATOR& gen = *(generators4change_detection[i]);
+            osstream<<"("<<setw(4)<<i+1<<") "<<gen.get_compound_device_name()<<" ["<<psdb.bus_number2bus_name(gen.get_generator_bus())<<"]\n";
         }
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -546,9 +556,10 @@ void DYNAMICS_SIMULATOR::install_meter(const METER& meter)
     }
     else
     {
+        STEPS& toolkit = get_toolkit();
         ostringstream osstream;
         osstream<<"Warning. Invalid meter is given. No meter will be set in DYNAMIC_SIMULATOR::"<<__FUNCTION__<<"().";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -574,6 +585,7 @@ METER DYNAMICS_SIMULATOR::get_meter(unsigned int i)
 
 void DYNAMICS_SIMULATOR::update_all_meters_value()
 {
+    STEPS& toolkit = get_toolkit();
     unsigned int n = meters.size();
     if(n!=0)
     {
@@ -581,7 +593,7 @@ void DYNAMICS_SIMULATOR::update_all_meters_value()
             meter_values.resize(n,0.0);
 
         #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-            set_openmp_number_of_threads(toolkit->get_thread_number());
+            set_openmp_number_of_threads(toolkit.get_thread_number());
             #pragma omp parallel for schedule(static)
             //#pragma omp parallel for num_threads(2)
         #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -652,26 +664,27 @@ string DYNAMICS_SIMULATOR::get_output_file() const
 
 void DYNAMICS_SIMULATOR::open_meter_output_files()
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     if(csv_output_file.is_open())
     {
         osstream<<"CSV meter output file stream was connected to some file. Stream will be closed before reopen for exporting dynamic simulation meter values.";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     if(json_output_file.is_open())
     {
         osstream<<"JSON meter output file stream was connected to some file. Stream will be closed before reopen for exporting dynamic simulation meter values.";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     if(bin_output_file.is_open())
     {
         osstream<<"BIN meter output file stream was connected to some file. Stream will be closed before reopen for exporting dynamic simulation meter values.";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     close_meter_output_files();
 
     //osstream<<"output file name is : "<<output_filename<<endl;
-    //toolkit->show_information_with_leading_time_stamp(osstream);
+    //toolkit.show_information_with_leading_time_stamp(osstream);
     if(output_filename!="")
     {
         if(is_bin_file_export_enabled())
@@ -681,7 +694,7 @@ void DYNAMICS_SIMULATOR::open_meter_output_files()
             if(not bin_output_file.is_open())
             {
                 osstream<<"BIN meter output file "<<bin_filename<<" cannot be opened for exporting dynamic simulation meter values.";
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
 
@@ -692,7 +705,7 @@ void DYNAMICS_SIMULATOR::open_meter_output_files()
             if(not csv_output_file.is_open())
             {
                 osstream<<"CSV meter output file "<<csv_filename<<" cannot be opened for exporting dynamic simulation meter values.";
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
 
@@ -703,7 +716,7 @@ void DYNAMICS_SIMULATOR::open_meter_output_files()
             if(not json_output_file.is_open())
             {
                 osstream<<"JSON meter output file "<<json_filename<<" cannot be opened for exporting dynamic simulation meter values.";
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
     }
@@ -721,7 +734,7 @@ void DYNAMICS_SIMULATOR::open_meter_output_files()
 
         osstream<<"Meter output filename is not properly set. Meters will be automatically exported to the following file:"<<endl
           <<output_filename;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -862,8 +875,9 @@ void DYNAMICS_SIMULATOR::save_meter_information()
 
 void DYNAMICS_SIMULATOR::save_meter_values()
 {
+    STEPS& toolkit = get_toolkit();
     #ifdef USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
-    max_power_mismatch_MVA = max_current_mismatch_pu*toolkit->get_power_system_database().get_bus_positive_sequence_voltage_in_pu(max_mismatch_bus)*toolkit->get_system_base_power_in_MVA();
+    max_power_mismatch_MVA = max_current_mismatch_pu*toolkit.get_power_system_database().get_bus_positive_sequence_voltage_in_pu(max_mismatch_bus)*toolkit.get_system_base_power_in_MVA();
     #endif // USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
 
     update_all_meters_value();
@@ -961,7 +975,8 @@ void DYNAMICS_SIMULATOR::optimize_network_ordering()
 
 void DYNAMICS_SIMULATOR::set_internal_bus_pointer()
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     unsigned int nbus = psdb.get_in_service_bus_count();
 
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -978,29 +993,35 @@ void DYNAMICS_SIMULATOR::set_internal_bus_pointer()
 
 void DYNAMICS_SIMULATOR::initialize_internal_bus_voltage_vector()
 {
+    STEPS& toolkit = get_toolkit();
     unsigned int nbus = internal_bus_complex_voltage_in_pu.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_bus_thread_number());
+        set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int internal_bus=0; internal_bus<nbus; ++internal_bus)
-        internal_bus_complex_voltage_in_pu[internal_bus] = internal_bus_pointers[internal_bus]->get_positive_sequence_complex_voltage_in_pu();
+    {
+        BUS& bus = *(internal_bus_pointers[internal_bus]);
+        internal_bus_complex_voltage_in_pu[internal_bus] = bus.get_positive_sequence_complex_voltage_in_pu();
+    }
 }
 
 void DYNAMICS_SIMULATOR::build_vsc_hvdc_dynamic_dc_network_matrix()
 {
+    STEPS& toolkit = get_toolkit();
     unsigned int nvsc_hvdc = vsc_hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_bus_thread_number());
+        set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<nvsc_hvdc; ++i)
     {
-        VSC_HVDC* vsc_hvdc = vsc_hvdcs[i];
-        VSC_HVDC_NETWORK_MODEL* model = vsc_hvdc->get_vsc_hvdc_network_model();
-        model->build_dynamic_dc_network_matrix();
+        VSC_HVDC& vsc_hvdc = *(vsc_hvdcs[i]);
+        VSC_HVDC_NETWORK_MODEL* model_ptr = vsc_hvdc.get_vsc_hvdc_network_model();
+        VSC_HVDC_NETWORK_MODEL& model = *model_ptr;
+        model.build_dynamic_dc_network_matrix();
     }
 }
 
@@ -1009,13 +1030,13 @@ complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_
     return internal_bus_complex_voltage_in_pu[internal_bus];
 
     /*
-    BUS* busptr = internal_bus_pointers[internal_bus];
-    complex<double> v= busptr->get_positive_sequence_complex_voltage_in_pu();
+    BUS& bus = *(internal_bus_pointers[internal_bus]);
+    complex<double> v= bus.get_positive_sequence_complex_voltage_in_pu();
     if(v!=internal_bus_complex_voltage_in_pu[internal_bus])
     {
         ostringstream osstream;
         osstream<<"voltage inconsistent of internal bus "<<internal_bus<<", v = "<<v<<", internal array = "<<internal_bus_complex_voltage_in_pu[internal_bus];
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     return v;
     */
@@ -1023,15 +1044,16 @@ complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_
 
 void DYNAMICS_SIMULATOR::start()
 {
+    STEPS& toolkit = get_toolkit();
     microseconds_elapse_of_differential_equations_in_a_step = 0;
     microseconds_elapse_of_network_solution_in_a_step = 0;
 
-    toolkit->update_device_thread_number();
+    toolkit.update_device_thread_number();
 
-    POWERFLOW_SOLVER& pf_solver = toolkit->get_powerflow_solver();
+    POWERFLOW_SOLVER& pf_solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    detailed_log_enabled = toolkit->is_detailed_log_enabled();
+    detailed_log_enabled = toolkit.is_detailed_log_enabled();
 
     show_dynamic_simulator_configuration();
 
@@ -1039,13 +1061,13 @@ void DYNAMICS_SIMULATOR::start()
 
     ostringstream osstream;
     osstream<<"Dynamics initialization starts.";
-    toolkit->show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     if(not pf_solver.is_converged())
     {
         osstream<<"Warning. Powerflow is not converged. Please go check powerflow solution.\n"
                 <<"Any further simulation cannot be trusted.";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     pf_solver.clear();
 
@@ -1085,13 +1107,13 @@ void DYNAMICS_SIMULATOR::start()
     {
 		++iter_count;
 		//osstream<<"Network iteration "<<iter_count;
-		//toolkit->show_information_with_leading_time_stamp(osstream);
+		//toolkit.show_information_with_leading_time_stamp(osstream);
 
         if(detailed_log_enabled)
         {
             ostringstream osstream;
             osstream<<"Initialization DAE iteration "<<iter_count<<":";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
         converged = solve_network();
         ITER_NET += network_iteration_count;
@@ -1103,13 +1125,13 @@ void DYNAMICS_SIMULATOR::start()
     {
         osstream<<"Warning. Network solution converged in "<<ITER_NET<<" iterations for dynamics simulation initialization.\n"
                 <<"Any solution with more than 1 iteration is indicating bad initial powerflow result or exceeding dynamic upper or lower limits.";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 
     initialize_buffers_for_system_change_detection();
 
     osstream<<"Dynamics initialization finished.";
-    toolkit->show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
 
     auto tduration = duration_cast<microseconds>(system_clock::now()-clock_start);
@@ -1123,7 +1145,8 @@ void DYNAMICS_SIMULATOR::start()
 
 void DYNAMICS_SIMULATOR::prepare_devices_for_run()
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     in_service_buses = psdb.get_all_in_service_buses();
     generators = psdb.get_all_generators();
@@ -1146,9 +1169,10 @@ void DYNAMICS_SIMULATOR::prepare_devices_for_run()
 void DYNAMICS_SIMULATOR::stop()
 {
     //if(TIME >0.0)
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     osstream<<"Dynamics simulation stops at simulation time: "<<TIME<<"s.";
-    toolkit->show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     if(json_output_file.is_open())
         json_output_file<<endl
@@ -1161,19 +1185,18 @@ void DYNAMICS_SIMULATOR::stop()
 double DYNAMICS_SIMULATOR::get_system_max_angle_difference_in_deg()
 {
     unsigned int n = generators.size();
-    GENERATOR* gen;
-    SYNC_GENERATOR_MODEL* model;
     double max_angle = -1e10, min_angle = 1e10;
     double angle;
     for(unsigned int i=0; i!=n; ++i)
     {
-        gen = generators[i];
-        if(gen->get_status()==true)
+        GENERATOR& gen = *(generators[i]);
+        if(gen.get_status()==true)
         {
-            model = gen->get_sync_generator_model();
-            if(model!=NULL)
+            SYNC_GENERATOR_MODEL* model_ptr = gen.get_sync_generator_model();
+            if(model_ptr!=NULL)
             {
-                angle = model->get_rotor_angle_in_deg();
+                SYNC_GENERATOR_MODEL& model = *model_ptr;
+                angle = model.get_rotor_angle_in_deg();
                 if(angle>max_angle)
                     max_angle = angle;
                 if(angle<min_angle)
@@ -1186,7 +1209,8 @@ double DYNAMICS_SIMULATOR::get_system_max_angle_difference_in_deg()
 
 void DYNAMICS_SIMULATOR::run_to(double time)
 {
-    NETWORK_MATRIX& network_matrix = toolkit->get_network_matrix();
+    STEPS& toolkit = get_toolkit();
+    NETWORK_MATRIX& network_matrix = toolkit.get_network_matrix();
 
     network_matrix.build_dynamic_network_Y_matrix();
     build_jacobian();
@@ -1227,7 +1251,7 @@ void DYNAMICS_SIMULATOR::run_to(double time)
                 osstream<<"At time "<<TIME<<"s, "
                         <<"system is detected to be unstable due to rotor angular stability surveillance logic."<<endl
                         <<"No further simulation will be performed.";
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 break;
             }
         }
@@ -1236,6 +1260,7 @@ void DYNAMICS_SIMULATOR::run_to(double time)
 
 void DYNAMICS_SIMULATOR::run_a_step()
 {
+    STEPS& toolkit = get_toolkit();
     auto clock_start = system_clock::now();
     microseconds_elapse_of_differential_equations_in_a_step = 0;
     microseconds_elapse_of_network_solution_in_a_step = 0;
@@ -1245,7 +1270,7 @@ void DYNAMICS_SIMULATOR::run_a_step()
     if(detailed_log_enabled)
     {
         osstream<<"Run dynamic simulation to time "<<TIME<<"s.";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     update_equivalent_devices_buffer();
     update_equivalent_devices_output();
@@ -1267,7 +1292,7 @@ void DYNAMICS_SIMULATOR::run_a_step()
         if(detailed_log_enabled)
         {
             osstream<<"Solve DAE with iteration "<<ITER_DAE<<" at time "<<TIME<<"s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
 
         if(ITER_DAE<=max_DAE_iteration)
@@ -1289,7 +1314,7 @@ void DYNAMICS_SIMULATOR::run_a_step()
             if(detailed_log_enabled and not network_converged)
             {
                 osstream<<"Failed to solve network in "<<max_network_iteration<<" iterations during DAE iteration "<<ITER_DAE<<" when integrating at time "<<TIME<<" s.";
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
             if(ITER_DAE>=get_min_DAE_iteration() and network_converged) // DAE solution converged
                 break;
@@ -1301,7 +1326,7 @@ void DYNAMICS_SIMULATOR::run_a_step()
                 char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
                 snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve DAE in %u iterations when integrating at time %f s.",
                          max_DAE_iteration, TIME);
-                toolkit->show_information_with_leading_time_stamp(buffer);
+                toolkit.show_information_with_leading_time_stamp(buffer);
             }
             --ITER_DAE;
             break;
@@ -1322,6 +1347,7 @@ void DYNAMICS_SIMULATOR::run_a_step()
 
 void DYNAMICS_SIMULATOR::update_with_event(DYNAMIC_EVENT_TYPE event_type)
 {
+    STEPS& toolkit = get_toolkit();
     auto clock_start = system_clock::now();
     microseconds_elapse_of_differential_equations_in_a_step = 0;
     microseconds_elapse_of_network_solution_in_a_step = 0;
@@ -1349,7 +1375,7 @@ void DYNAMICS_SIMULATOR::update_with_event(DYNAMIC_EVENT_TYPE event_type)
                 char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
                 snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve network in %u iterations when updating with event at time %f s.",
                          update_event_iter_max, TIME);
-                toolkit->show_information_with_leading_time_stamp(buffer);
+                toolkit.show_information_with_leading_time_stamp(buffer);
                 break;
             }
         }
@@ -1414,6 +1440,7 @@ void DYNAMICS_SIMULATOR::update_when_time_step_is_change()
 
 void DYNAMICS_SIMULATOR::update_with_specific_mode(DYNAMIC_MODE mode)
 {
+    STEPS& toolkit = get_toolkit();
     if(mode==DYNAMIC_UPDATE_MODE or mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
     {
         ostringstream osstream;
@@ -1447,7 +1474,7 @@ void DYNAMICS_SIMULATOR::update_with_specific_mode(DYNAMIC_MODE mode)
             else
                 snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve network in %u iterations when updating at time %f s in DYNAMIC_UPDATE_TIME_STEP_MODE.",
                          current_max_network_iteration, TIME);
-            toolkit->show_information_with_leading_time_stamp(buffer);
+            toolkit.show_information_with_leading_time_stamp(buffer);
         }
     }
 }
@@ -1463,6 +1490,7 @@ void DYNAMICS_SIMULATOR::check_relay_events()
 
 void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 {
+    STEPS& toolkit = get_toolkit();
     //ostringstream osstream;
     auto clock_start = steady_clock::now();
 
@@ -1471,171 +1499,190 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 
     n = generators.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_generator_thread_number());
-        set_openmp_number_of_threads(toolkit->get_thread_number());
+        //set_openmp_number_of_threads(toolkit.get_generator_thread_number());
+        set_openmp_number_of_threads(toolkit.get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
-        generators[i]->run(mode);
+    {
+        GENERATOR& gen = *(generators[i]);
+        gen.run(mode);
+    }
 
     /*auto clock_2 = steady_clock::now();
     auto tduration = duration_cast<nanoseconds>(clock_2-clock_1);
     osstream<<"at time "<<TIME<<", generator models run takes "<<tduration.count()<<" ns.";
-    toolkit->show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
     clock_1 = clock_2;*/
 
     n = wt_generators.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_wt_generator_thread_number());
-        set_openmp_number_of_threads(toolkit->get_thread_number());
+        //set_openmp_number_of_threads(toolkit.get_wt_generator_thread_number());
+        set_openmp_number_of_threads(toolkit.get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
-        wt_generators[i]->run(mode);
+    {
+        WT_GENERATOR& wtg = *(wt_generators[i]);
+        wtg.run(mode);
+    }
 
     /*clock_2 = steady_clock::now();
     tduration = duration_cast<nanoseconds>(clock_2-clock_1);
     osstream<<"at time "<<TIME<<", wt generator models run takes "<<tduration.count()<<" ns.";
-    toolkit->show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
     clock_1 = clock_2;*/
 
     n = pv_units.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_pv_unit_thread_number());
-        set_openmp_number_of_threads(toolkit->get_thread_number());
+        //set_openmp_number_of_threads(toolkit.get_pv_unit_thread_number());
+        set_openmp_number_of_threads(toolkit.get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
-        pv_units[i]->run(mode);
+    {
+        PV_UNIT& pvu = *(pv_units[i]);
+        pvu.run(mode);
+    }
 
     /*clock_2 = steady_clock::now();
     tduration = duration_cast<nanoseconds>(clock_2-clock_1);
     osstream<<"at time "<<TIME<<", pv models run takes "<<tduration.count()<<" ns.";
-    toolkit->show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
     clock_1 = clock_2;*/
 
     n = e_storages.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_energy_storage_thread_number());
-        set_openmp_number_of_threads(toolkit->get_thread_number());
+        //set_openmp_number_of_threads(toolkit.get_energy_storage_thread_number());
+        set_openmp_number_of_threads(toolkit.get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
-        e_storages[i]->run(mode);
+    {
+        ENERGY_STORAGE& es = *(e_storages[i]);
+        es.run(mode);
+
+    }
 
     n = sv_sources.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_sv_source_thread_number());
-        set_openmp_number_of_threads(toolkit->get_thread_number());
+        //set_openmp_number_of_threads(toolkit.get_sv_source_thread_number());
+        set_openmp_number_of_threads(toolkit.get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
-        sv_sources[i]->run(mode);
+    {
+        SV_SOURCE& svs = *(sv_sources[i]);
+        svs.run(mode);
+    }
 
     /*clock_2 = steady_clock::now();
     tduration = duration_cast<nanoseconds>(clock_2-clock_1);
     osstream<<"at time "<<TIME<<", pv models run takes "<<tduration.count()<<" ns.";
-    toolkit->show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
     clock_1 = clock_2;*/
 
     n = loads.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_load_thread_number());
-        set_openmp_number_of_threads(toolkit->get_thread_number());
+        //set_openmp_number_of_threads(toolkit.get_load_thread_number());
+        set_openmp_number_of_threads(toolkit.get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
-        loads[i]->run(mode);
+    {
+        LOAD& load = *(loads[i]);
+        load.run(mode);
+    }
 
     /*clock_2 = steady_clock::now();
     tduration = duration_cast<nanoseconds>(clock_2-clock_1);
     osstream<<"at time "<<TIME<<", load models run takes "<<tduration.count()<<" ns.";
-    toolkit->show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
     clock_1 = clock_2;*/
 
     n = hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_lcc_hvdc2t_thread_number());
-        set_openmp_number_of_threads(toolkit->get_thread_number());
+        //set_openmp_number_of_threads(toolkit.get_lcc_hvdc2t_thread_number());
+        set_openmp_number_of_threads(toolkit.get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
     {
-        LCC_HVDC2T* hvdc = hvdcs[i];
-        if(hvdc->get_status()==true)
-            hvdc->run(mode);
+        LCC_HVDC2T& hvdc = *(hvdcs[i]);
+        if(hvdc.get_status()==true)
+            hvdc.run(mode);
     }
 
     n = vsc_hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_lcc_hvdc2t_thread_number());
-        set_openmp_number_of_threads(toolkit->get_thread_number());
+        //set_openmp_number_of_threads(toolkit.get_lcc_hvdc2t_thread_number());
+        set_openmp_number_of_threads(toolkit.get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
     {
-        VSC_HVDC* vsc_hvdc = vsc_hvdcs[i];
-        if(vsc_hvdc->get_status()==true)
-            vsc_hvdc->run(mode);
+        VSC_HVDC& vsc_hvdc = *(vsc_hvdcs[i]);
+        if(vsc_hvdc.get_status()==true)
+            vsc_hvdc.run(mode);
     }
 
     n = mt_hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_mt_hvdc_thread_number());
-        set_openmp_number_of_threads(toolkit->get_thread_number());
+        //set_openmp_number_of_threads(toolkit.get_mt_hvdc_thread_number());
+        set_openmp_number_of_threads(toolkit.get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
     {
-        MT_HVDC* mt_hvdc = mt_hvdcs[i];
-        if(mt_hvdc->get_status()==true)
-            mt_hvdc->run(mode);
+        MT_HVDC& mt_hvdc = *(mt_hvdcs[i]);
+        if(mt_hvdc.get_status()==true)
+            mt_hvdc.run(mode);
     }
 
     /*clock_2 = steady_clock::now();
     tduration = duration_cast<nanoseconds>(clock_2-clock_1);
     osstream<<"at time "<<TIME<<", hvdc models run takes "<<tduration.count()<<" ns.";
-    toolkit->show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
     clock_1 = clock_2;*/
 
     n = e_devices.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_equivalent_device_thread_number());
-        set_openmp_number_of_threads(toolkit->get_thread_number());
+        //set_openmp_number_of_threads(toolkit.get_equivalent_device_thread_number());
+        set_openmp_number_of_threads(toolkit.get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
     {
-        EQUIVALENT_DEVICE* edevice = e_devices[i];
-        if(edevice->get_status()==true)
-            edevice->run(mode);
+        EQUIVALENT_DEVICE& edevice = *(e_devices[i]);
+        if(edevice.get_status()==true)
+            edevice.run(mode);
     }
 
     /*clock_2 = steady_clock::now();
     tduration = duration_cast<nanoseconds>(clock_2-clock_1);
     osstream<<"at time "<<TIME<<", equivalent device models run takes "<<tduration.count()<<" ns.";
-    toolkit->show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
     clock_1 = clock_2;*/
 
     /*clock_2 = steady_clock::now();
     tduration = duration_cast<nanoseconds>(clock_2-clock_1);
     osstream<<"at time "<<TIME<<", bus frequency models run takes "<<tduration.count()<<" ns.";
-    toolkit->show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
     clock_1 = clock_2;
 
     tduration = duration_cast<nanoseconds>(steady_clock::now()-clock_start);
     osstream<<"at time "<<TIME<<", all models run takes "<<tduration.count()<<" ns.";
-    toolkit->show_information_with_leading_time_stamp(osstream);*/
+    toolkit.show_information_with_leading_time_stamp(osstream);*/
 
     auto tdurationx = duration_cast<microseconds>(steady_clock::now()-clock_start);
     microseconds_elapse_of_differential_equations_in_a_step += tdurationx.count();
@@ -1643,42 +1690,42 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 
 void DYNAMICS_SIMULATOR::run_bus_frequency_blocks(DYNAMIC_MODE mode)
 {
+    STEPS& toolkit = get_toolkit();
     auto clock_start = steady_clock::now();
 
     unsigned int n = in_service_buses.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_bus_thread_number());
-        set_openmp_number_of_threads(toolkit->get_thread_number());
+        //set_openmp_number_of_threads(toolkit.get_bus_thread_number());
+        set_openmp_number_of_threads(toolkit.get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
     {
-        (in_service_buses[i]->get_bus_frequency_model())->run(mode);
-        /*BUS* bus = in_service_buses[i];
-        BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
-        model->run(mode);*/
+        BUS& in_service_buse = *(in_service_buses[i]);
+        BUS_FREQUENCY_MODEL& bus_frequency_model = *(in_service_buse.get_bus_frequency_model());
+        bus_frequency_model.run(mode);
     }
-    auto tdurationx = duration_cast<microseconds>(steady_clock::now()-clock_start);
-    microseconds_elapse_of_differential_equations_in_a_step += tdurationx.count();
+    auto tduration = duration_cast<microseconds>(steady_clock::now()-clock_start);
+    microseconds_elapse_of_differential_equations_in_a_step += tduration.count();
 }
 
 void DYNAMICS_SIMULATOR::update_bus_frequency_blocks_when_applying_event(DYNAMIC_EVENT_TYPE type)
 {
+    STEPS& toolkit = get_toolkit();
     unsigned int n = in_service_buses.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_bus_thread_number());
-        set_openmp_number_of_threads(toolkit->get_thread_number());
+        //set_openmp_number_of_threads(toolkit.get_bus_thread_number());
+        set_openmp_number_of_threads(toolkit.get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
     {
-        (in_service_buses[i]->get_bus_frequency_model())->update_for_applying_event(type);
-        /*BUS* bus = in_service_buses[i];
-        BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
-        model->update_for_applying_event();*/
+        BUS& in_service_buse = *(in_service_buses[i]);
+        BUS_FREQUENCY_MODEL& bus_frequency_model = *(in_service_buse.get_bus_frequency_model());
+        bus_frequency_model.update_for_applying_event(type);
     }
 }
 
@@ -1699,38 +1746,40 @@ bool DYNAMICS_SIMULATOR::is_relay_action_detected() const
 
 void DYNAMICS_SIMULATOR::update_equivalent_devices_buffer()
 {
+    STEPS& toolkit = get_toolkit();
     unsigned int n = e_devices.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_equivalent_device_thread_number());
-        set_openmp_number_of_threads(toolkit->get_thread_number());
+        //set_openmp_number_of_threads(toolkit.get_equivalent_device_thread_number());
+        set_openmp_number_of_threads(toolkit.get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
     {
-        EQUIVALENT_DEVICE* edevice = e_devices[i];
-        edevice->update_meter_buffer();
+        EQUIVALENT_DEVICE& edevice = *(e_devices[i]);
+        edevice.update_meter_buffer();
     }
 }
 
 void DYNAMICS_SIMULATOR::update_equivalent_devices_output()
 {
+    STEPS& toolkit = get_toolkit();
     unsigned int n = e_devices.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_equivalent_device_thread_number());
-        set_openmp_number_of_threads(toolkit->get_thread_number());
+        //set_openmp_number_of_threads(toolkit.get_equivalent_device_thread_number());
+        set_openmp_number_of_threads(toolkit.get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
     {
         ostringstream osstream;
-        EQUIVALENT_DEVICE* edevice = e_devices[i];
-        edevice->update_equivalent_outputs();
+        EQUIVALENT_DEVICE& edevice = *(e_devices[i]);
+        edevice.update_equivalent_outputs();
 
-        osstream<<"At time "<<TIME<<" s, equivalent load of "<<edevice->get_compound_device_name()<<" is: "<<edevice->get_total_equivalent_power_as_load_in_MVA()<<"MVA";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        osstream<<"At time "<<TIME<<" s, equivalent load of "<<edevice.get_compound_device_name()<<" is: "<<edevice.get_total_equivalent_power_as_load_in_MVA()<<"MVA";
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -1741,6 +1790,7 @@ bool DYNAMICS_SIMULATOR::get_system_angular_stable_flag() const
 
 bool DYNAMICS_SIMULATOR::solve_network()
 {
+    STEPS& toolkit = get_toolkit();
     auto clock_start = steady_clock::now();
 
     max_current_mismatch_pu = 0.0;
@@ -1758,7 +1808,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
     unsigned int network_solution_divergent_count = 0;
 
     double smax_th_MVA = get_allowed_max_power_imbalance_in_MVA();
-    double imax_th_pu = smax_th_MVA*toolkit->get_one_over_system_base_power_in_one_over_MVA()*0.5;
+    double imax_th_pu = smax_th_MVA*toolkit.get_one_over_system_base_power_in_one_over_MVA()*0.5;
 
     double original_alpha = get_iteration_accelerator();
 
@@ -1801,7 +1851,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
                 {
                     ostringstream osstream;
                     osstream<<"No further network solution will be attempted since LU factorization of dynamic Jacobian matrix is failed at time "<<TIME<<"s.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     break;
                 }
                 if(network_iter_count>5)
@@ -1873,13 +1923,13 @@ bool DYNAMICS_SIMULATOR::solve_network()
                 max_power_mismatch_MVA = new_smax;
                 if(max_power_mismatch_MVA>get_allowed_max_power_imbalance_in_MVA())
                 #else
-                if(toolkit->is_detailed_log_enabled())
+                if(toolkit.is_detailed_log_enabled())
                 {
                     double scale = new_imax/max_current_mismatch_pu;
                     if(scale>1.0)
                     {
                         osstream<<"At time "<<TIME<<" s, when calling DYNAMICS_SIMULATOR::solve_network() in iteration "<<network_iter_count<<", max current mismatch diverges to "<<new_imax<<" pu (increase scale: "<<scale<<").";
-                        toolkit->show_information_with_leading_time_stamp(osstream);
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                     }
                 }
                 max_current_mismatch_pu = new_imax;
@@ -1911,7 +1961,8 @@ bool DYNAMICS_SIMULATOR::solve_network()
 
 void DYNAMICS_SIMULATOR::tune_iteration_accelerator_based_on_maximum_current_mismatch(double imax)
 {
-    double mbase = toolkit->get_system_base_power_in_MVA();
+    STEPS& toolkit = get_toolkit();
+    double mbase = toolkit.get_system_base_power_in_MVA();
     double smax = imax*mbase;
     if(smax<0.1)
         set_iteration_accelerator(1.0);
@@ -1955,67 +2006,80 @@ void DYNAMICS_SIMULATOR::tune_iteration_accelerator_based_on_maximum_current_mis
     }
     //ostringstream osstream;
     //osstream<<"At time "<<TIME<<", dynamic simulation iteration accelerator is automatically tuned: ("<<smax<<"MVA, "<<get_iteration_accelerator()<<").";
-    //toolkit->show_information_with_leading_time_stamp(osstream);
+    //toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void DYNAMICS_SIMULATOR::solve_lcc_hvdc2ts_without_integration()
 {
+    STEPS& toolkit = get_toolkit();
     unsigned int n = hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_lcc_hvdc2t_thread_number());
-        set_openmp_number_of_threads(toolkit->get_thread_number());
+        //set_openmp_number_of_threads(toolkit.get_lcc_hvdc2t_thread_number());
+        set_openmp_number_of_threads(toolkit.get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
     {
-        LCC_HVDC2T_MODEL* model = hvdcs[i]->get_lcc_hvdc2t_model();
-        if(model!=NULL)
-            model->solve_lcc_hvdc2t_model_without_integration();
+        LCC_HVDC2T& hvdc = *(hvdcs[i]);
+        LCC_HVDC2T_MODEL* model_ptr = hvdc.get_lcc_hvdc2t_model();
+        if(model_ptr!=NULL)
+        {
+            LCC_HVDC2T_MODEL& model = *model_ptr;
+            model.solve_lcc_hvdc2t_model_without_integration();
+        }
     }
 }
 
 void DYNAMICS_SIMULATOR::update_vsc_hvdcs_converter_model()
 {
+    STEPS& toolkit = get_toolkit();
     unsigned int n = vsc_hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_lcc_hvdc2t_thread_number());
-        set_openmp_number_of_threads(toolkit->get_thread_number());
+        //set_openmp_number_of_threads(toolkit.get_lcc_hvdc2t_thread_number());
+        set_openmp_number_of_threads(toolkit.get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
     {
-        vector<VSC_HVDC_CONVERTER_MODEL*> models = vsc_hvdcs[i]->get_vsc_hvdc_converter_models();
+        VSC_HVDC& vsc_hvdc = *(vsc_hvdcs[i]);
+        vector<VSC_HVDC_CONVERTER_MODEL*> models = vsc_hvdc.get_vsc_hvdc_converter_models();
         unsigned int m = models.size();
         for(unsigned int j=0; j!=m ; ++j)
         {
             if(models[j]!=NULL)
-                models[j]->run(DYNAMIC_UPDATE_MODE);
+            {
+                VSC_HVDC_CONVERTER_MODEL& model = *(models[j]);
+                model.run(DYNAMIC_UPDATE_MODE);
+            }
         }
     }
 }
 
 void DYNAMICS_SIMULATOR::solve_mt_hvdc_systems()
 {
+     STEPS& toolkit = get_toolkit();
      unsigned int n = mt_hvdcs.size();
      #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit->get_mt_hvdc_thread_number());
-        set_openmp_number_of_threads(toolkit->get_thread_number());
+        //set_openmp_number_of_threads(toolkit.get_mt_hvdc_thread_number());
+        set_openmp_number_of_threads(toolkit.get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
 
     //osstream<<"Start to solve mt hvdc system in dynamic simulatiion";
-    //toolkit->show_information_with_leading_time_stamp(osstream);
+    //toolkit.show_information_with_leading_time_stamp(osstream);
     for(unsigned int i=0; i<n; ++i)
     {
-        mt_hvdcs[i]->solve_dynamic_dc_systems();
+        MT_HVDC& mt_hvdc = *(mt_hvdcs[i]);
+        mt_hvdc.solve_dynamic_dc_systems();
     }
  }
 
 void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     NETWORK_MATRIX& net = get_network_matrix();
 
@@ -2023,7 +2087,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
 
     unsigned int n = I_mismatch.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_bus_thread_number());
+        set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2047,7 +2111,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
                         osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
                     }
                 }
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 break;
             }
         }
@@ -2071,7 +2135,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
                         osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
                     }
                 }
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 break;
             }
         }
@@ -2094,7 +2158,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
                         osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
                     }
                 }
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 break;
             }
         }
@@ -2117,7 +2181,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
                         osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
                     }
                 }
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 break;
             }
         }
@@ -2140,7 +2204,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
                         osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
                     }
                 }
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 break;
             }
         }
@@ -2163,7 +2227,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
                         osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
                     }
                 }
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 break;
             }
         }
@@ -2186,7 +2250,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
                         osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
                     }
                 }
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 break;
             }
         }
@@ -2209,7 +2273,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
                         osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[j]<<endl;
                     }
                 }
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 break;
             }
         }
@@ -2232,7 +2296,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
                         osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[j]<<endl;
                     }
                 }
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 break;
             }
         }
@@ -2255,7 +2319,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
                         osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
                     }
                 }
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 break;
             }
         }
@@ -2278,19 +2342,19 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
                         osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
                     }
                 }
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 break;
             }
         }
     }
     /*
     osstream<<"bus current mismatch:"<<endl;
-    toolkit->show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
     for(unsigned int i=0; i<n; ++i)
     {
         unsigned int ibus = net.get_physical_bus_number_of_internal_bus(i);
         osstream<<ibus<<", "<<I_mismatch[i]<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     */
 
@@ -2308,19 +2372,19 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         }
     }
     osstream<<"max mismatch @ bus "<<busmax<<", "<<maxmismatch<<" or complex "<<cmaxmismatch<<", complex power = "<<psdb.get_bus_positive_sequence_complex_voltage_in_pu(busmax)*conj(cmaxmismatch)*psdb.get_system_base_power_in_MVA()<<setprecision(10)<<", v="<<psdb.get_bus_positive_sequence_voltage_in_pu(busmax)<<endl;
-    toolkit->show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     for(unsigned int i=0; i<n; ++i)
     {
         if(abs(I_mismatch[i])>0.0001)
         {
             osstream<<"mismatch @ bus "<<net.get_physical_bus_number_of_internal_bus(i)<<", "<<I_mismatch[i]<<">0.0001"<<endl;
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
         if(std::isnan(I_mismatch[i].real()) or std::isnan(I_mismatch[i].imag()))
         {
             osstream<<"NAN is detected in I_mismatch @ bus "<<net.get_physical_bus_number_of_internal_bus(i)<<", "<<I_mismatch[i]<<endl;
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     */
@@ -2339,466 +2403,483 @@ void DYNAMICS_SIMULATOR::get_bus_current_into_network()
 
 void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
 {
+    STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     unsigned int ngen = generators.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_generator_thread_number());
+        set_openmp_number_of_threads(toolkit.get_generator_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<ngen; ++i)
     {
-        GENERATOR* generator = generators[i];
+        GENERATOR& generator = *(generators[i]);
 
-        if(generator->get_status() == true)
+        if(generator.get_status() == true)
         {
-            unsigned int physical_bus = generator->get_generator_bus();
+            unsigned int physical_bus = generator.get_generator_bus();
 
             unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-            SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-            if(gen_model!=NULL)
+            SYNC_GENERATOR_MODEL* gen_model_ptr = generator.get_sync_generator_model();
+            if(gen_model_ptr!=NULL)
             {
-                //I = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
-                //complex<double> I = gen_model->get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
-                //I_mismatch[internal_bus] += I;
-                I_mismatch[internal_bus] += gen_model->get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
+                SYNC_GENERATOR_MODEL& gen_model = *gen_model_ptr;
+                I_mismatch[internal_bus] += gen_model.get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
                 /*os<< "Generator %u source current: %f + j%f",physical_bus, I.real(), I.imag());
-                toolkit->show_information_with_leading_time_stamp(osstream);
-                complex<double> Edq = gen_model->get_internal_voltage_in_pu_in_dq_axis();
-                complex<double> Exy = gen_model->get_internal_voltage_in_pu_in_xy_axis();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                complex<double> Edq = gen_model.get_internal_voltage_in_pu_in_dq_axis();
+                complex<double> Exy = gen_model.get_internal_voltage_in_pu_in_xy_axis();
                 osstream<<"Generator %u internal voltage: %f + j%f (dq), %f + j%f (xy)",physical_bus, Edq.real(), Edq.imag(), Exy.real(), Exy.imag());
-                toolkit->show_information_with_leading_time_stamp(osstream);*/
+                toolkit.show_information_with_leading_time_stamp(osstream);*/
             }
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled() and ngen != 0)
+    if(toolkit.is_detailed_log_enabled() and ngen != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
 {
+    STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     unsigned int ngen = wt_generators.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_wt_generator_thread_number());
+        set_openmp_number_of_threads(toolkit.get_wt_generator_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<ngen; ++i)
     {
-        WT_GENERATOR* generator = wt_generators[i];
+        WT_GENERATOR& generator = *(wt_generators[i]);
 
-        if(generator->get_status() == true)
+        if(generator.get_status() == true)
         {
-            unsigned int physical_bus = generator->get_generator_bus();
+            unsigned int physical_bus = generator.get_generator_bus();
 
             unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-            WT_GENERATOR_MODEL* gen_model = generator->get_wt_generator_model();
-            if(gen_model!=NULL)
+            WT_GENERATOR_MODEL* gen_model_ptr = generator.get_wt_generator_model();
+            if(gen_model_ptr!=NULL)
             {
-                if(gen_model->is_current_source())
-                    I_mismatch[internal_bus] += gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
+                WT_GENERATOR_MODEL& gen_model = *gen_model_ptr;
+                if(gen_model.is_current_source())
+                    I_mismatch[internal_bus] += gen_model.get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
                 else
-                    I_mismatch[internal_bus] += gen_model->get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
-                //cout<<generator->get_compound_device_name()<<" terminal or Norton current is: "<<I<<endl;
+                    I_mismatch[internal_bus] += gen_model.get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
+                //cout<<generator.get_compound_device_name()<<" terminal or Norton current is: "<<I<<endl;
 
                 /*os<< "Generator %u source current: %f + j%f",physical_bus, I.real(), I.imag());
-                toolkit->show_information_with_leading_time_stamp(osstream);
-                complex<double> Edq = gen_model->get_internal_voltage_in_pu_in_dq_axis();
-                complex<double> Exy = gen_model->get_internal_voltage_in_pu_in_xy_axis();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                complex<double> Edq = gen_model.get_internal_voltage_in_pu_in_dq_axis();
+                complex<double> Exy = gen_model.get_internal_voltage_in_pu_in_xy_axis();
                 osstream<<"Generator %u internal voltage: %f + j%f (dq), %f + j%f (xy)",physical_bus, Edq.real(), Edq.imag(), Exy.real(), Exy.imag());
-                toolkit->show_information_with_leading_time_stamp(osstream);*/
+                toolkit.show_information_with_leading_time_stamp(osstream);*/
             }
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled() and ngen != 0)
+    if(toolkit.is_detailed_log_enabled() and ngen != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::add_pv_units_to_bus_current_mismatch()
 {
+    STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     unsigned int npv = pv_units.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_pv_unit_thread_number());
+        set_openmp_number_of_threads(toolkit.get_pv_unit_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<npv; ++i)
     {
         complex<double> I;
-        PV_UNIT* pv = pv_units[i];
+        PV_UNIT& pv = *(pv_units[i]);
 
-        if(pv->get_status() == true)
+        if(pv.get_status() == true)
         {
-            unsigned int physical_bus = pv->get_unit_bus();
+            unsigned int physical_bus = pv.get_unit_bus();
 
             unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-            PV_CONVERTER_MODEL* conv_model = pv->get_pv_converter_model();
-            if(conv_model!=NULL)
+            PV_CONVERTER_MODEL* conv_model_ptr = pv.get_pv_converter_model();
+            if(conv_model_ptr!=NULL)
             {
-                if(conv_model->is_current_source())
-                    I = conv_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
+                PV_CONVERTER_MODEL& conv_model = *conv_model_ptr;
+                if(conv_model.is_current_source())
+                    I = conv_model.get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
                 else
-                    I = conv_model->get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
-                //cout<<generator->get_compound_device_name()<<" terminal or Norton current is: "<<I<<endl;
+                    I = conv_model.get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
+                //cout<<pv.get_compound_device_name()<<" terminal or Norton current is: "<<I<<endl;
 
                 I_mismatch[internal_bus] += I;
 
                 /*os<< "Generator %u source current: %f + j%f",physical_bus, I.real(), I.imag());
-                toolkit->show_information_with_leading_time_stamp(osstream);
-                complex<double> Edq = conv_model->get_internal_voltage_in_pu_in_dq_axis();
-                complex<double> Exy = conv_model->get_internal_voltage_in_pu_in_xy_axis();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                complex<double> Edq = conv_model.get_internal_voltage_in_pu_in_dq_axis();
+                complex<double> Exy = conv_model.get_internal_voltage_in_pu_in_xy_axis();
                 osstream<<"Generator %u internal voltage: %f + j%f (dq), %f + j%f (xy)",physical_bus, Edq.real(), Edq.imag(), Exy.real(), Exy.imag());
-                toolkit->show_information_with_leading_time_stamp(osstream);*/
+                toolkit.show_information_with_leading_time_stamp(osstream);*/
             }
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled() and npv != 0)
+    if(toolkit.is_detailed_log_enabled() and npv != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::add_energy_storage_to_bus_current_mismatch()
 {
+    STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     unsigned int nes = e_storages.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_energy_storage_thread_number());
+        set_openmp_number_of_threads(toolkit.get_energy_storage_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<nes; ++i)
     {
         complex<double> I;
-        ENERGY_STORAGE* es = e_storages[i];
+        ENERGY_STORAGE& es = *(e_storages[i]);
 
-        if(es->get_status() == true)
+        if(es.get_status() == true)
         {
-            unsigned int physical_bus = es->get_energy_storage_bus();
+            unsigned int physical_bus = es.get_energy_storage_bus();
 
             unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-            ES_CONVERTER_MODEL* conv_model = es->get_es_converter_model();
-            if(conv_model!=NULL)
+            ES_CONVERTER_MODEL* conv_model_ptr = es.get_es_converter_model();
+            if(conv_model_ptr!=NULL)
             {
-                if(conv_model->is_current_source())
-                    I = conv_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
+                ES_CONVERTER_MODEL& conv_model = *conv_model_ptr;
+                if(conv_model.is_current_source())
+                    I = conv_model.get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
                 else
-                    I = conv_model->get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
-                //cout<<generator->get_compound_device_name()<<" terminal or Norton current is: "<<I<<endl;
+                    I = conv_model.get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
+                //cout<<es.get_compound_device_name()<<" terminal or Norton current is: "<<I<<endl;
 
                 I_mismatch[internal_bus] += I;
                 /*os<< "Generator %u source current: %f + j%f",physical_bus, I.real(), I.imag());
-                toolkit->show_information_with_leading_time_stamp(osstream);
-                complex<double> Edq = gen_model->get_internal_voltage_in_pu_in_dq_axis();
-                complex<double> Exy = gen_model->get_internal_voltage_in_pu_in_xy_axis();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                complex<double> Edq = conv_model.get_internal_voltage_in_pu_in_dq_axis();
+                complex<double> Exy = conv_model.get_internal_voltage_in_pu_in_xy_axis();
                 osstream<<"Generator %u internal voltage: %f + j%f (dq), %f + j%f (xy)",physical_bus, Edq.real(), Edq.imag(), Exy.real(), Exy.imag());
-                toolkit->show_information_with_leading_time_stamp(osstream);*/
+                toolkit.show_information_with_leading_time_stamp(osstream);*/
             }
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled() and nes != 0)
+    if(toolkit.is_detailed_log_enabled() and nes != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::add_sv_source_to_bus_current_mismatch()
 {
+    STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     unsigned int nsvs = sv_sources.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_sv_source_thread_number());
+        set_openmp_number_of_threads(toolkit.get_sv_source_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<nsvs; ++i)
     {
         complex<double> I;
-        SV_SOURCE* svs = sv_sources[i];
+        SV_SOURCE& svs = *(sv_sources[i]);
 
-        if(svs->get_status() == true)
+        if(svs.get_status() == true)
         {
-            unsigned int physical_bus = svs->get_sv_source_bus();
+            unsigned int physical_bus = svs.get_sv_source_bus();
 
             unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-            SVS_CONTROL_MODEL* svs_ctrl_model = svs->get_svs_control_model();
-            if(svs_ctrl_model!=NULL)
+            SVS_CONTROL_MODEL* svs_ctrl_model_ptr = svs.get_svs_control_model();
+            if(svs_ctrl_model_ptr!=NULL)
             {
-                I = svs_ctrl_model->get_terminal_complex_current_in_pu_based_on_sbase();
+                SVS_CONTROL_MODEL& svs_ctrl_model = *svs_ctrl_model_ptr;
+                I = svs_ctrl_model.get_terminal_complex_current_in_pu_based_on_sbase();
                 I_mismatch[internal_bus] += I;
             }
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled() and nsvs != 0)
+    if(toolkit.is_detailed_log_enabled() and nsvs != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
 {
+    STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     unsigned int nload = loads.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_load_thread_number());
+        set_openmp_number_of_threads(toolkit.get_load_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<nload; ++i)
     {
-        LOAD* load = loads[i];
-        if(load->get_status()==true)
+        LOAD& load = *(loads[i]);
+        if(load.get_status()==true)
         {
-            unsigned int physical_bus = load->get_load_bus();
+            unsigned int physical_bus = load.get_load_bus();
 
             unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-            LOAD_MODEL* model = load->get_load_model();
-            if(model!=NULL and not model->is_voltage_source())
+            LOAD_MODEL* model_ptr = load.get_load_model();
+            if(model_ptr != NULL)
             {
-                model->synchronize_bus_voltage_and_frequency();
-                I_mismatch[internal_bus] -= load->get_dynamics_load_current_in_pu_based_on_system_base_power();
-                if(toolkit->is_detailed_log_enabled() and abs(load->get_dynamics_load_current_in_pu_based_on_system_base_power())>10)
+                LOAD_MODEL& model = *model_ptr;
+                if(not model.is_voltage_source())
                 {
-                    ostringstream osstream;
-                    osstream<<load->get_compound_device_name()<<" has current greater than 10 pu:"<<endl
-                            <<"I = "<<load->get_dynamics_load_current_in_pu_based_on_system_base_power()<<", V = "<<model->get_bus_positive_sequence_voltage_in_pu();
-                    get_toolkit().show_information_with_leading_time_stamp(osstream);
+                    model.synchronize_bus_voltage_and_frequency();
+                    I_mismatch[internal_bus] -= load.get_dynamics_load_current_in_pu_based_on_system_base_power();
+                    if(toolkit.is_detailed_log_enabled() and abs(load.get_dynamics_load_current_in_pu_based_on_system_base_power())>10)
+                    {
+                        ostringstream osstream;
+                        osstream<<load.get_compound_device_name()<<" has current greater than 10 pu:"<<endl
+                            <<"I = "<<load.get_dynamics_load_current_in_pu_based_on_system_base_power()<<", V = "<<model.get_bus_positive_sequence_voltage_in_pu();
+                        get_toolkit().show_information_with_leading_time_stamp(osstream);
+                    }
                 }
+                else
+                    I_mismatch[internal_bus] += load.get_dynamics_load_norton_current_in_pu_based_on_system_base_power();
             }
-            else if(model!=NULL and model->is_voltage_source())
-                I_mismatch[internal_bus] += load->get_dynamics_load_norton_current_in_pu_based_on_system_base_power();
             else
-                I_mismatch[internal_bus] -= load->get_dynamics_load_current_in_pu_based_on_system_base_power();
+                I_mismatch[internal_bus] -= load.get_dynamics_load_current_in_pu_based_on_system_base_power();
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled() and nload != 0)
+    if(toolkit.is_detailed_log_enabled() and nload != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::add_lcc_hvdc2ts_to_bus_current_mismatch()
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     unsigned int nhvdc = hvdcs.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_lcc_hvdc2t_thread_number());
+        set_openmp_number_of_threads(toolkit.get_lcc_hvdc2t_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<nhvdc; ++i)
     {
         complex<double> I;
-        LCC_HVDC2T* hvdc = hvdcs[i];
-        if(hvdc->get_status()==true)
+        LCC_HVDC2T& hvdc = *(hvdcs[i]);
+        if(hvdc.get_status()==true)
         {
-            unsigned int physical_bus = hvdcs[i]->get_converter_bus(RECTIFIER);
+            unsigned int physical_bus = hvdc.get_converter_bus(RECTIFIER);
 
             unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-            //I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(RECTIFIER);
+            //I = hvdc.get_converter_dynamic_current_in_pu_based_on_system_base_power(RECTIFIER);
 
             //I_mismatch[internal_bus] -= I;
-            I_mismatch[internal_bus] -= hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(RECTIFIER);
+            I_mismatch[internal_bus] -= hvdc.get_converter_dynamic_current_in_pu_based_on_system_base_power(RECTIFIER);
 
             if(not detailed_log_enabled)
                 ;
             else
             {
-                I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(RECTIFIER);
+                I = hvdc.get_converter_dynamic_current_in_pu_based_on_system_base_power(RECTIFIER);
                 I *= (psdb.get_system_base_power_in_MVA()/(SQRT3*psdb.get_bus_base_voltage_in_kV(physical_bus)));
-                osstream<<"Current at rectifier side of "<<hvdc->get_compound_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
+                osstream<<"Current at rectifier side of "<<hvdc.get_compound_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
                         <<"Complex power = "<<SQRT3*psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
 
-            physical_bus = hvdcs[i]->get_converter_bus(INVERTER);
+            physical_bus = hvdc.get_converter_bus(INVERTER);
 
             internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-            //I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(INVERTER);
+            //I = hvdc.get_converter_dynamic_current_in_pu_based_on_system_base_power(INVERTER);
 
             //I_mismatch[internal_bus] -= I;
-            I_mismatch[internal_bus] -= hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(INVERTER);
+            I_mismatch[internal_bus] -= hvdc.get_converter_dynamic_current_in_pu_based_on_system_base_power(INVERTER);
 
             if(not detailed_log_enabled)
                 ;
             else
             {
-                I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(INVERTER);
+                I = hvdc.get_converter_dynamic_current_in_pu_based_on_system_base_power(INVERTER);
                 I *= (psdb.get_system_base_power_in_MVA()/(SQRT3*psdb.get_bus_base_voltage_in_kV(physical_bus)));
-                osstream<<"Current at inverter side of "<<hvdc->get_compound_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
+                osstream<<"Current at inverter side of "<<hvdc.get_compound_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
                         <<"Complex power = "<<SQRT3*psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled() and nhvdc != 0)
+    if(toolkit.is_detailed_log_enabled() and nhvdc != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::add_vsc_hvdcs_to_bus_current_mismatch()
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     unsigned int nvsc = vsc_hvdcs.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_lcc_hvdc2t_thread_number());
+        set_openmp_number_of_threads(toolkit.get_lcc_hvdc2t_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<nvsc; ++i)
     {
         complex<double> I;
-        VSC_HVDC* vsc_hvdc = vsc_hvdcs[i];
-        if(vsc_hvdc->get_status()==true)
+        VSC_HVDC& vsc_hvdc = *(vsc_hvdcs[i]);
+        if(vsc_hvdc.get_status()==true)
         {
-            unsigned int ncon = vsc_hvdc->get_converter_count();
+            unsigned int ncon = vsc_hvdc.get_converter_count();
             for(unsigned int j=0; j!=ncon; ++j)
             {
-                unsigned int physical_bus = vsc_hvdc->get_converter_ac_bus(j);
+                unsigned int physical_bus = vsc_hvdc.get_converter_ac_bus(j);
                 unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-                if(vsc_hvdc->is_converter_a_dynamic_voltage_source(j))
-                    I_mismatch[internal_bus] += vsc_hvdc->get_converter_dynamic_Norton_current_to_ac_bus_in_pu_on_system_base_as_voltage_source(j);
+                if(vsc_hvdc.is_converter_a_dynamic_voltage_source(j))
+                    I_mismatch[internal_bus] += vsc_hvdc.get_converter_dynamic_Norton_current_to_ac_bus_in_pu_on_system_base_as_voltage_source(j);
                 else
-                    I_mismatch[internal_bus] += vsc_hvdc->get_converter_dynamic_current_to_ac_bus_in_pu_on_system_base_as_current_source(j);
+                    I_mismatch[internal_bus] += vsc_hvdc.get_converter_dynamic_current_to_ac_bus_in_pu_on_system_base_as_current_source(j);
                 if(not detailed_log_enabled)
                     ;
                 else
                 {
-                    if(vsc_hvdc->is_converter_a_dynamic_voltage_source(j))
+                    if(vsc_hvdc.is_converter_a_dynamic_voltage_source(j))
                     {
-                        I  = vsc_hvdc->get_converter_dynamic_Norton_current_to_ac_bus_in_pu_on_system_base_as_voltage_source(j);
+                        I  = vsc_hvdc.get_converter_dynamic_Norton_current_to_ac_bus_in_pu_on_system_base_as_voltage_source(j);
                         I *= (psdb.get_system_base_power_in_MVA()/(SQRT3*psdb.get_bus_base_voltage_in_kV(physical_bus)));
-                        osstream<<"Nortron current at vsc-hvdc ac side of "<<vsc_hvdc->get_compound_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
+                        osstream<<"Nortron current at vsc-hvdc ac side of "<<vsc_hvdc.get_compound_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
                                 <<"Complex power = "<<SQRT3*psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
-                        toolkit->show_information_with_leading_time_stamp(osstream);
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                     }
                     else
                     {
-                        I = vsc_hvdc->get_converter_dynamic_current_to_ac_bus_in_pu_on_system_base_as_current_source(j);
+                        I = vsc_hvdc.get_converter_dynamic_current_to_ac_bus_in_pu_on_system_base_as_current_source(j);
                         I *= (psdb.get_system_base_power_in_MVA()/(SQRT3*psdb.get_bus_base_voltage_in_kV(physical_bus)));
-                        osstream<<"Current at vsc-hvdc ac side of "<<vsc_hvdc->get_compound_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
+                        osstream<<"Current at vsc-hvdc ac side of "<<vsc_hvdc.get_compound_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
                                 <<"Complex power = "<<SQRT3*psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
-                        toolkit->show_information_with_leading_time_stamp(osstream);
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                     }
                 }
             }
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled() and nvsc != 0)
+    if(toolkit.is_detailed_log_enabled() and nvsc != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::add_mt_hvdcs_to_bus_current_mismatch()
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     unsigned int nmtdc = mt_hvdcs.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_mt_hvdc_thread_number());
+        set_openmp_number_of_threads(toolkit.get_mt_hvdc_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR;
     for(unsigned int i=0; i<nmtdc; ++i)
     {
         complex<double> I;
-        MT_HVDC* mtdc = mt_hvdcs[i];
-        if(mtdc->get_status()==true)
+        MT_HVDC& mtdc = *(mt_hvdcs[i]);
+        if(mtdc.get_status()==true)
         {
-            vector<HLCC*> lccs = mtdc->get_all_lcc_converters();
+            vector<HLCC*> lccs = mtdc.get_all_lcc_converters();
             unsigned int n_lcc = lccs.size();
             for(unsigned int j=0;j!=n_lcc;++j)
             {
-                if(lccs[j]->get_status()==true)
+                HLCC& lcc = *(lccs[j]);
+                if(lcc.get_status()==true)
                 {
-                    unsigned int physical_bus = lccs[j]->get_converter_ac_bus();
+                    unsigned int physical_bus = lcc.get_converter_ac_bus();
                     unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-                    I_mismatch[internal_bus] -= lccs[j]->get_converter_dynamic_ac_current_in_pu_on_system_base();
+                    I_mismatch[internal_bus] -= lcc.get_converter_dynamic_ac_current_in_pu_on_system_base();
 
                     /*
-                    I  = lccs[j]->get_converter_dynamic_ac_current_in_pu_on_system_base();
+                    I  = lcc.get_converter_dynamic_ac_current_in_pu_on_system_base();
                     I *= (psdb.get_system_base_power_in_MVA()/(SQRT3*psdb.get_bus_base_voltage_in_kV(physical_bus)));
-                    osstream<<"AC curent at mt-hvdc:"<<mtdc->get_compound_device_name()<<" at LCC side: "<<lccs[j]->get_converter_name()<<"to AC BUS: "<<physical_bus<<" IS :"<<I<<"kA or "<<abs(I)<<"kA"<<endl
+                    osstream<<"AC curent at mt-hvdc:"<<mtdc.get_compound_device_name()<<" at LCC side: "<<lcc.get_converter_name()<<"to AC BUS: "<<physical_bus<<" IS :"<<I<<"kA or "<<abs(I)<<"kA"<<endl
                             <<"UAC = "<<psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)<<endl
                             <<"Complex power = "<<SQRT3*psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     */
                     if(not detailed_log_enabled)
                         ;
                     else
                     {
-                        I  = lccs[j]->get_converter_dynamic_ac_current_in_pu_on_system_base();
+                        I  = lcc.get_converter_dynamic_ac_current_in_pu_on_system_base();
                         I *= (psdb.get_system_base_power_in_MVA()/(SQRT3*psdb.get_bus_base_voltage_in_kV(physical_bus)));
-                        osstream<<"AC curent at mt-hvdc:"<<mtdc->get_compound_device_name()<<" at LCC side "<<lccs[j]->get_converter_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
+                        osstream<<"AC curent at mt-hvdc:"<<mtdc.get_compound_device_name()<<" at LCC side "<<lcc.get_converter_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
                                 <<"Complex power = "<<SQRT3*psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
-                        toolkit->show_information_with_leading_time_stamp(osstream);
+                        toolkit.show_information_with_leading_time_stamp(osstream);
 
                     }
                 }
 
             }
 
-            vector<HVSC*> vscs = mtdc->get_all_vsc_converters();
+            vector<HVSC*> vscs = mtdc.get_all_vsc_converters();
             unsigned int n_vsc = vscs.size();
             for(unsigned int j=0;j!=n_vsc;++j)
             {
-                if(vscs[j]->get_status()==true)
+                HVSC& vsc = *(vscs[j]);
+                if(vsc.get_status()==true)
                 {
-                    unsigned int physical_bus = vscs[j]->get_converter_ac_bus();
+                    unsigned int physical_bus = vsc.get_converter_ac_bus();
                     unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-                    I_mismatch[internal_bus] -= vscs[j]->get_converter_dynamic_ac_current_in_pu_on_system_base();
+                    I_mismatch[internal_bus] -= vsc.get_converter_dynamic_ac_current_in_pu_on_system_base();
 
                     /*
-                    I  = vscs[j]->get_converter_dynamic_ac_current_in_pu_on_system_base();
+                    I  = vsc.get_converter_dynamic_ac_current_in_pu_on_system_base();
                     I *= (psdb.get_system_base_power_in_MVA()/(SQRT3*psdb.get_bus_base_voltage_in_kV(physical_bus)));
-                    osstream<<"AC curent at mt-hvdc:"<<mtdc->get_compound_device_name()<<" at VSC side "<<vscs[j]->get_converter_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
+                    osstream<<"AC curent at mt-hvdc:"<<mtdc.get_compound_device_name()<<" at VSC side "<<vsc.get_converter_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
                             <<"Complex power = "<<SQRT3*psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     */
 
                     if(not detailed_log_enabled)
                         ;
                     else
                     {
-                        I  = vscs[j]->get_converter_dynamic_ac_current_in_pu_on_system_base();
+                        I  = vsc.get_converter_dynamic_ac_current_in_pu_on_system_base();
                         I *= (psdb.get_system_base_power_in_MVA()/(SQRT3*psdb.get_bus_base_voltage_in_kV(physical_bus)));
-                        osstream<<"AC curent at mt-hvdc:"<<mtdc->get_compound_device_name()<<" at VSC side "<<vscs[j]->get_converter_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
+                        osstream<<"AC curent at mt-hvdc:"<<mtdc.get_compound_device_name()<<" at VSC side "<<vsc.get_converter_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
                                 <<"Complex power = "<<SQRT3*psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
-                        toolkit->show_information_with_leading_time_stamp(osstream);
+                        toolkit.show_information_with_leading_time_stamp(osstream);
 
                     }
                 }
@@ -2806,28 +2887,30 @@ void DYNAMICS_SIMULATOR::add_mt_hvdcs_to_bus_current_mismatch()
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled() and nmtdc != 0)
+    if(toolkit.is_detailed_log_enabled() and nmtdc != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
 {
+    STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    double one_over_sbase = toolkit->get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     unsigned int nedevice = e_devices.size();
 
     //The following codes should not be parallelized. If more than one device is connecting to the same bus, unintended sum of I_mismatch[internal_bus] will occur.
     for(unsigned int i=0; i<nedevice; ++i)
     {
-        if(e_devices[i]->get_status() == true)
+        EQUIVALENT_DEVICE& e_device = *(e_devices[i]);
+        if(e_device.get_status() == true)
         {
-            unsigned int physical_bus = e_devices[i]->get_equivalent_device_bus();
+            unsigned int physical_bus = e_device.get_equivalent_device_bus();
 
             unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-            complex<double> S = e_devices[i]->get_total_equivalent_power_as_load_in_MVA()*one_over_sbase;
+            complex<double> S = e_device.get_total_equivalent_power_as_load_in_MVA()*one_over_sbase;
 
             complex<double> V = get_bus_complex_voltage_in_pu_with_internal_bus_number(internal_bus);
 
@@ -2835,12 +2918,13 @@ void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
         }
     }
 
-    if(get_toolkit().is_detailed_log_enabled() and nedevice != 0)
+    if(toolkit.is_detailed_log_enabled() and nedevice != 0)
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
 void DYNAMICS_SIMULATOR::check_abnormal_current_mismatch_after_calling_function(string f)
 {
+    STEPS& toolkit = get_toolkit();
     GREATEST_POWER_CURRENT_MISMATCH_STRUCT greatest_mismatch_struct = get_max_current_mismatch_struct();
     double max_current_mismatch_pu = greatest_mismatch_struct.greatest_current_mismatch_in_pu;
     unsigned int max_mismatch_bus = greatest_mismatch_struct.bus_with_greatest_current_mismatch;
@@ -2848,8 +2932,8 @@ void DYNAMICS_SIMULATOR::check_abnormal_current_mismatch_after_calling_function(
     {
         ostringstream osstream;
         osstream<<"Abnormal bus current mismatch (>10^6 pu) is deteced: "<<max_current_mismatch_pu<<" at bus "<<max_mismatch_bus<<"["
-                <<toolkit->get_power_system_database().bus_number2bus_name(max_mismatch_bus)<<" after DYNAMIC_SIMULATOR::"<<f<<"() at time "<<TIME;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+                <<toolkit.get_power_system_database().bus_number2bus_name(max_mismatch_bus)<<" after DYNAMIC_SIMULATOR::"<<f<<"() at time "<<TIME;
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -2866,7 +2950,8 @@ bool DYNAMICS_SIMULATOR::is_converged()
 
 void DYNAMICS_SIMULATOR:: calculate_bus_power_mismatch_in_MVA()
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double sbase = psdb.get_system_base_power_in_MVA();
 
@@ -2875,7 +2960,7 @@ void DYNAMICS_SIMULATOR:: calculate_bus_power_mismatch_in_MVA()
     unsigned int n = I_mismatch.size();
     complex<double> V;
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_bus_thread_number());
+        set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2914,6 +2999,7 @@ GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_power_mismatc
 
 GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_current_mismatch_struct()
 {
+    STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     double Imax2 = 0.0;
@@ -2958,14 +3044,14 @@ GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_current_misma
     i_mismatch.greatest_current_mismatch_in_pu = Imax;
     i_mismatch.bus_with_greatest_current_mismatch = Imax_bus;
 
-    if(not toolkit->is_detailed_log_enabled())
+    if(not toolkit.is_detailed_log_enabled())
         return i_mismatch;
     else
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         ostringstream osstream;
         osstream<<"Maximum current mismatch at bus "<<Imax_bus<<"("<<psdb.bus_number2bus_name(Imax_bus)<<"): "<<Imax;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return i_mismatch;
     }
 }
@@ -2973,11 +3059,12 @@ GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_current_misma
 
 void DYNAMICS_SIMULATOR::build_bus_current_mismatch_vector()
 {
+    STEPS& toolkit = get_toolkit();
     unsigned int n = I_mismatch.size();
     I_vec.resize(n*2, 0.0);
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_bus_thread_number());
+        set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
@@ -2991,44 +3078,45 @@ void DYNAMICS_SIMULATOR::build_bus_current_mismatch_vector()
 
 void DYNAMICS_SIMULATOR::update_bus_voltage()
 {
+    STEPS& toolkit = get_toolkit();
     try_to_limit_delta_v_within_change_threshold();
-    NETWORK_MATRIX& network = toolkit->get_network_matrix();
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
     unsigned int n = delta_V.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        set_openmp_number_of_threads(toolkit->get_thread_number());
+        set_openmp_number_of_threads(toolkit.get_thread_number());
         #pragma omp parallel for schedule(static)
         //#pragma omp parallel for num_threads(2)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(unsigned int i=0; i<n; ++i)
     {
-        BUS* bus = in_service_buses[i];
+        BUS& bus = *(in_service_buses[i]);
 
-        unsigned int ex_bus = bus->get_bus_number();
+        unsigned int ex_bus = bus.get_bus_number();
         unsigned int in_bus = network.get_internal_bus_number_of_physical_bus(ex_bus);
 
-        complex<double> V0 = bus->get_positive_sequence_complex_voltage_in_pu();
+        complex<double> V0 = bus.get_positive_sequence_complex_voltage_in_pu();
         complex<double> V = V0+delta_V[in_bus]*alpha;
         internal_bus_complex_voltage_in_pu[in_bus] = V;
 
 		double vmag_new = steps_fast_complex_abs(V);
         //vmag_new = (vmag_new<3.0)?vmag_new:3.0;
-        bus->set_positive_sequence_voltage_in_pu(vmag_new);
+        bus.set_positive_sequence_voltage_in_pu(vmag_new);
 
 		double x = V.real(), y = V.imag();
 		double x0 = V0.real(), y0 = V0.imag();
 		complex<double> z(x*x0 + y*y0, x0*y - y0*x);
         double delta_vang = steps_fast_complex_arg(z);
-        double vang0 = bus->get_positive_sequence_angle_in_rad();
+        double vang0 = bus.get_positive_sequence_angle_in_rad();
         double vang_new = vang0+delta_vang;
 
-        bus->set_positive_sequence_angle_in_rad(vang_new, V/vmag_new);
+        bus.set_positive_sequence_angle_in_rad(vang_new, V/vmag_new);
     }
     /*
     for(unsigned int i=0; i<n; ++i)
     {
-        BUS* bus = internal_bus_pointers[i];
-        double vang0 = bus->get_positive_sequence_angle_in_rad();
-        complex<double> V0 = bus->get_positive_sequence_complex_voltage_in_pu();
+        BUS& bus = *(internal_bus_pointers[i]);
+        double vang0 = bus.get_positive_sequence_angle_in_rad();
+        complex<double> V0 = bus.get_positive_sequence_complex_voltage_in_pu();
 
         //complex<double> delta_v = complex<double>(delta_V[i], delta_V[i+n]); previous version for real matrix
         //complex<double> V = V0-delta_v*alpha;  previous version for real matrix
@@ -3051,21 +3139,22 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
             vmag_new = 3.0;
 
 
-        bus->set_positive_sequence_voltage_in_pu(vmag_new);
-        bus->set_positive_sequence_angle_in_rad(vang_new);
+        bus.set_positive_sequence_voltage_in_pu(vmag_new);
+        bus.set_positive_sequence_angle_in_rad(vang_new);
 
-        internal_bus_complex_voltage_in_pu[i] = bus->get_positive_sequence_complex_voltage_in_pu();
+        internal_bus_complex_voltage_in_pu[i] = bus.get_positive_sequence_complex_voltage_in_pu();
     }
     */
 }
 
 void DYNAMICS_SIMULATOR::try_to_limit_delta_v_within_change_threshold()
 {
+    STEPS& toolkit = get_toolkit();
     double v_change_threshold = get_voltage_change_threshold_when_solving_network_in_pu();
     if(fabs(v_change_threshold-INFINITE_THRESHOLD)<FLOAT_EPSILON)
         return;
-    NETWORK_MATRIX& network = toolkit->get_network_matrix();
-    POWER_SYSTEM_DATABASE& psdb = get_toolkit().get_power_system_database();
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     unsigned int n = delta_V.size();
     double max_delta_v = 0.0;
     unsigned int max_delta_bus = 0;
@@ -3084,7 +3173,7 @@ void DYNAMICS_SIMULATOR::try_to_limit_delta_v_within_change_threshold()
         unsigned int bus = network.get_physical_bus_number_of_internal_bus(max_delta_bus);
         osstream<<"Maximum voltage change found at "<<psdb.get_bus_extended_name(bus)<<": "<<max_delta_v<<" pu"<<endl
                 <<"It will be limited to "<<v_change_threshold<<" pu";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
 
         double scale = v_change_threshold/max_delta_v;
         for(unsigned int i=0; i<n; ++i)
@@ -3094,6 +3183,7 @@ void DYNAMICS_SIMULATOR::try_to_limit_delta_v_within_change_threshold()
 
 void DYNAMICS_SIMULATOR::build_jacobian()
 {
+    STEPS& toolkit = get_toolkit();
     clock_t tstart = clock();
     build_basic_jacobian_with_Y_matrix();
     if(true)
@@ -3103,7 +3193,7 @@ void DYNAMICS_SIMULATOR::build_jacobian()
     clock_t tfinished = clock();
     ostringstream osstream;
     osstream<<"Successful Jacobian build for dynamic simulation takes "<<(1000.0/double(CLOCKS_PER_SEC))*double(tfinished-tstart)<<" ms\n";
-    toolkit->show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void DYNAMICS_SIMULATOR::build_basic_jacobian_with_Y_matrix()
@@ -3144,37 +3234,39 @@ void DYNAMICS_SIMULATOR::build_basic_jacobian_with_Y_matrix()
 
 void DYNAMICS_SIMULATOR::update_jacobian_with_load_models()
 {
+    STEPS& toolkit = get_toolkit();
     clock_t tstart = clock();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
     unsigned int nload = loads.size();
     for(unsigned int i=0; i<nload; ++i)
     {
-        LOAD* load = loads[i];
-        if(load->get_status()==true)
+        LOAD& load = *(loads[i]);
+        if(load.get_status()==true)
         {
-            unsigned int physical_bus = load->get_load_bus();
+            unsigned int physical_bus = load.get_load_bus();
             unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
             unsigned int k = jacobian.get_entry_index(internal_bus, internal_bus);
             complex<double> s0 = jacobian.get_entry_value(k);
 
-            complex<double> s = load->get_derivative_of_load_current_wrt_voltage_on_SBASE();
+            complex<double> s = load.get_derivative_of_load_current_wrt_voltage_on_SBASE();
             jacobian.change_entry_value(k, s0-s);
         }
     }
     clock_t tfinished = clock();
     ostringstream osstream;
     osstream<<"Successful Jacobian update with load model for dynamic simulation takes "<<(1000.0/double(CLOCKS_PER_SEC))*double(tfinished-tstart)<<" ms\n";
-    toolkit->show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void DYNAMICS_SIMULATOR::change_dynamic_simulator_time_step_in_s(double delt)
 {
+    STEPS& toolkit = get_toolkit();
     if(fabs(DELT-delt)>FLOAT_EPSILON)
     {
         ostringstream osstream;
         osstream<<"At time "<<get_dynamic_simulation_time_in_s()<<" s, system dynamic simulation time step is changed from "<<DELT<<" s to "<<delt<<" s.";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
 
         set_dynamic_simulation_time_step_in_s(delt);
 
@@ -3183,96 +3275,102 @@ void DYNAMICS_SIMULATOR::change_dynamic_simulator_time_step_in_s(double delt)
 }
 
 
-void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(unsigned int bus, const FAULT& fault)
+void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(unsigned int bus_number, const FAULT& fault)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    BUS* busptr = psdb.get_bus(bus);
-    if(busptr->get_bus_type()==OUT_OF_SERVICE)
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    BUS* busptr = psdb.get_bus(bus_number);
+    BUS& bus = *busptr;
+    if(bus.get_bus_type()==OUT_OF_SERVICE)
         return;
 
     double fault_b = fault.get_fault_shunt_in_pu().imag();
-    double current_voltage = busptr->get_positive_sequence_voltage_in_pu();
-    double vbase = busptr->get_base_voltage_in_kV();
-    double one_over_sbase = toolkit->get_one_over_system_base_power_in_one_over_MVA();
+    double current_voltage = bus.get_positive_sequence_voltage_in_pu();
+    double vbase = bus.get_base_voltage_in_kV();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     double zbase = vbase*vbase*one_over_sbase;
     double fault_x = -zbase/fault_b;
 
     if(fault_x<1)
-        busptr->set_positive_sequence_voltage_in_pu(0.05);
+        bus.set_positive_sequence_voltage_in_pu(0.05);
     else
     {
         if(fault_x<5)
-            busptr->set_positive_sequence_voltage_in_pu(0.1);
+            bus.set_positive_sequence_voltage_in_pu(0.1);
         else
         {
             if(fault_x<10)
-                busptr->set_positive_sequence_voltage_in_pu(0.2);
+                bus.set_positive_sequence_voltage_in_pu(0.2);
             else
             {
                 if(fault_x<100)
-                    busptr->set_positive_sequence_voltage_in_pu(0.5);
+                    bus.set_positive_sequence_voltage_in_pu(0.5);
                 else
-                    busptr->set_positive_sequence_voltage_in_pu(current_voltage-0.1);
+                    bus.set_positive_sequence_voltage_in_pu(current_voltage-0.1);
             }
         }
     }
 
     NETWORK_MATRIX& network = get_network_matrix();
-    unsigned int internal_bus = network.get_internal_bus_number_of_physical_bus(bus);
-    internal_bus_complex_voltage_in_pu[internal_bus] = busptr->get_positive_sequence_complex_voltage_in_pu();
+    unsigned int internal_bus = network.get_internal_bus_number_of_physical_bus(bus_number);
+    internal_bus_complex_voltage_in_pu[internal_bus] = bus.get_positive_sequence_complex_voltage_in_pu();
 }
 
-void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_cleared(unsigned int bus, const FAULT& fault)
+void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_cleared(unsigned int bus_number, const FAULT& fault)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    BUS* busptr = psdb.get_bus(bus);
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    BUS* busptr = psdb.get_bus(bus_number);
+    BUS& bus = *busptr;
     double fault_b = fault.get_fault_shunt_in_pu().imag();
-    double current_voltage = busptr->get_positive_sequence_voltage_in_pu();
-    busptr->set_positive_sequence_voltage_in_pu(0.8);;
+    double current_voltage = bus.get_positive_sequence_voltage_in_pu();
+    bus.set_positive_sequence_voltage_in_pu(0.8);;
     return;
 
     if(fault_b<-2e8)
-        busptr->set_positive_sequence_voltage_in_pu(current_voltage+0.95);
+        bus.set_positive_sequence_voltage_in_pu(current_voltage+0.95);
     else
     {
         if(fault_b<-2e7)
-            busptr->set_positive_sequence_voltage_in_pu(current_voltage+0.9);
+            bus.set_positive_sequence_voltage_in_pu(current_voltage+0.9);
         else
         {
             if(fault_b<-2e6)
-                busptr->set_positive_sequence_voltage_in_pu(current_voltage+0.8);
+                bus.set_positive_sequence_voltage_in_pu(current_voltage+0.8);
             else
             {
                 if(fault_b<-2e5)
-                    busptr->set_positive_sequence_voltage_in_pu(current_voltage+0.7);
+                    bus.set_positive_sequence_voltage_in_pu(current_voltage+0.7);
                 else
                 {
                     if(fault_b<-2e4)
-                        busptr->set_positive_sequence_voltage_in_pu(current_voltage+0.6);
+                        bus.set_positive_sequence_voltage_in_pu(current_voltage+0.6);
                     else
-                        busptr->set_positive_sequence_voltage_in_pu(current_voltage+0.1);
+                        bus.set_positive_sequence_voltage_in_pu(current_voltage+0.1);
                 }
             }
         }
     }
     NETWORK_MATRIX& network = get_network_matrix();
-    unsigned int internal_bus = network.get_internal_bus_number_of_physical_bus(bus);
-    internal_bus_complex_voltage_in_pu[internal_bus] = busptr->get_positive_sequence_complex_voltage_in_pu();
+    unsigned int internal_bus = network.get_internal_bus_number_of_physical_bus(bus_number);
+    internal_bus_complex_voltage_in_pu[internal_bus] = bus.get_positive_sequence_complex_voltage_in_pu();
 }
 
 
 void DYNAMICS_SIMULATOR::guess_bus_voltage_with_ac_line_fault_set(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault)
 {
+    STEPS& toolkit = get_toolkit();
     if(location >=0.0 and location <= 1.0)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        AC_LINE* line = psdb.get_ac_line(did);
-        if(line!=NULL and line->is_connected_to_bus(side_bus))
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        AC_LINE* line_ptr = psdb.get_ac_line(did);
+        AC_LINE& line = *line_ptr;
+        if(line.is_connected_to_bus(side_bus))
         {
             if(location<=0.5)
             {
-                unsigned int ibus = line->get_sending_side_bus();
-                unsigned int jbus = line->get_receiving_side_bus();
+                unsigned int ibus = line.get_sending_side_bus();
+                unsigned int jbus = line.get_receiving_side_bus();
 
                 unsigned int this_bus = side_bus;
                 unsigned int other_bus = (ibus==side_bus? jbus:ibus);
@@ -3289,8 +3387,8 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_ac_line_fault_set(const DEVICE_I
             }
             else
             {
-                unsigned int ibus = line->get_sending_side_bus();
-                unsigned int jbus = line->get_receiving_side_bus();
+                unsigned int ibus = line.get_sending_side_bus();
+                unsigned int jbus = line.get_receiving_side_bus();
 
                 location = 1.0-location;
 
@@ -3304,16 +3402,18 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_ac_line_fault_set(const DEVICE_I
 
 void DYNAMICS_SIMULATOR::guess_bus_voltage_with_ac_line_fault_cleared(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault)
 {
+    STEPS& toolkit = get_toolkit();
     if(location >= 0.0 and location <= 1.0)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        AC_LINE* line = psdb.get_ac_line(did);
-        if(line!=NULL and line->is_connected_to_bus(side_bus))
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        AC_LINE* line_ptr = psdb.get_ac_line(did);
+        AC_LINE& line = *line_ptr;
+        if(line.is_connected_to_bus(side_bus))
         {
             if(location<=0.5)
             {
-                unsigned int ibus = line->get_sending_side_bus();
-                unsigned int jbus = line->get_receiving_side_bus();
+                unsigned int ibus = line.get_sending_side_bus();
+                unsigned int jbus = line.get_receiving_side_bus();
 
                 unsigned int this_bus = side_bus;
                 unsigned int other_bus = (ibus==side_bus? jbus:ibus);
@@ -3330,8 +3430,8 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_ac_line_fault_cleared(const DEVI
             }
             else
             {
-                unsigned int ibus = line->get_sending_side_bus();
-                unsigned int jbus = line->get_receiving_side_bus();
+                unsigned int ibus = line.get_sending_side_bus();
+                unsigned int jbus = line.get_receiving_side_bus();
 
                 location = 1.0-location;
 
@@ -3345,8 +3445,9 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_ac_line_fault_cleared(const DEVI
 
 void DYNAMICS_SIMULATOR::update_generators_in_islands()
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     vector< vector<unsigned int> > islands = network_matrix.get_islands_with_physical_bus_number();
@@ -3382,6 +3483,7 @@ void DYNAMICS_SIMULATOR::update_generators_in_islands()
 
 bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     bool system_is_stable = true;
     unsigned int nislands = generators_in_islands.size();
@@ -3395,11 +3497,12 @@ bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
 
         for(unsigned int i=0; i!=n; ++i)
         {
-            GENERATOR* generator = generators_in_island[i];
-            if(generator->get_status()==true)
+            GENERATOR& generator = *(generators_in_island[i]);
+            if(generator.get_status()==true)
             {
-                SYNC_GENERATOR_MODEL* genmodel = generator->get_sync_generator_model();
-                angles.push_back(genmodel->get_rotor_angle_in_deg());
+                SYNC_GENERATOR_MODEL* genmodel_ptr = generator.get_sync_generator_model();
+                SYNC_GENERATOR_MODEL& genmodel = *genmodel_ptr;
+                angles.push_back(genmodel.get_rotor_angle_in_deg());
             }
         }
         double angle_max = 0.0, angle_min = 0.0;
@@ -3427,7 +3530,7 @@ bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
         else
         {
             osstream<<"angle difference in island "<<island<<" is "<<scaled_angle_difference<<" deg at time "<<TIME<<"s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
         if(angle_difference>get_rotor_angle_stability_threshold_in_deg())
         {
@@ -3438,111 +3541,118 @@ bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
             unsigned int n = generators_in_island.size();
             for(unsigned int i=0; i!=n; ++i)
             {
-                GENERATOR* generator = generators_in_island[i];
-                if(generator->get_status()==true)
+                GENERATOR& generator = *(generators_in_island[i]);
+                if(generator.get_status()==true)
                 {
-                    SYNC_GENERATOR_MODEL* genmodel = generator->get_sync_generator_model();
-                    osstream<<generator->get_compound_device_name()<<"  "<<genmodel->get_rotor_angle_in_deg()<<endl;
+                    SYNC_GENERATOR_MODEL* genmodel_ptr = generator.get_sync_generator_model();
+                    SYNC_GENERATOR_MODEL& genmodel = *genmodel_ptr;
+                    osstream<<generator.get_compound_device_name()<<"  "<<genmodel.get_rotor_angle_in_deg()<<endl;
                 }
             }
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
             break;
         }
     }
     return system_is_stable;
 }
 
-void DYNAMICS_SIMULATOR::set_bus_fault(unsigned int bus, const complex<double>& fault_shunt)
+void DYNAMICS_SIMULATOR::set_bus_fault(unsigned int bus_number, const complex<double>& fault_shunt)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    BUS* busptr = psdb.get_bus(bus);
+    BUS* busptr = psdb.get_bus(bus_number);
     if(busptr!=NULL)
     {
-        string busname = busptr->get_bus_name();
+        BUS& bus = *busptr;
+        string busname = bus.get_bus_name();
         if(steps_fast_complex_abs(fault_shunt)>DOUBLE_EPSILON)
         {
             FAULT fault;
             fault.set_fault_type(THREE_PHASES_FAULT);
             fault.set_fault_shunt_in_pu(fault_shunt);
 
-            if(busptr->get_bus_type()==OUT_OF_SERVICE)
+            if(bus.get_bus_type()==OUT_OF_SERVICE)
             {
-                osstream<<"No "<<fault.get_fault_type_string()<<" will be set for bus "<<bus<<"["<<busname<<"] at time "<<TIME<<" s since it is out of service."<<endl;
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                osstream<<"No "<<fault.get_fault_type_string()<<" will be set for bus "<<bus_number<<"["<<busname<<"] at time "<<TIME<<" s since it is out of service."<<endl;
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 return;
             }
-            osstream<<fault.get_fault_type_string()<<" will be set for bus "<<bus<<"["<<busname<<"] at time "<<TIME<<" s."<<endl
+            osstream<<fault.get_fault_type_string()<<" will be set for bus "<<bus_number<<"["<<busname<<"] at time "<<TIME<<" s."<<endl
                    <<"Fault shunt is"<<fault_shunt<<" pu.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
 
-            busptr->set_fault(fault);
-            guess_bus_voltage_with_bus_fault_set(bus, fault);
+            bus.set_fault(fault);
+            guess_bus_voltage_with_bus_fault_set(bus_number, fault);
 
             //network_matrix.build_dynamic_network_Y_matrix();
             //build_jacobian();
         }
         else
         {
-            osstream<<"Zero fault shunt is given for bus "<<bus<<"["<<busname<<"]."<<endl
-                   <<"No fault will be set for bus "<<bus<<"["<<busname<<"] at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            osstream<<"Zero fault shunt is given for bus "<<bus_number<<"["<<busname<<"]."<<endl
+                   <<"No fault will be set for bus "<<bus_number<<"["<<busname<<"] at time "<<TIME<<" s.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
-        osstream<<"Bus "<<bus<<" does not exist in power system database."<<endl
+        osstream<<"Bus "<<bus_number<<" does not exist in power system database."<<endl
                <<"No bus fault will be set at time "<<TIME<<" s.";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
-void DYNAMICS_SIMULATOR::clear_bus_fault(unsigned int bus)
+void DYNAMICS_SIMULATOR::clear_bus_fault(unsigned int bus_number)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    BUS* busptr = psdb.get_bus(bus);
+    BUS* busptr = psdb.get_bus(bus_number);
     if(busptr!=NULL)
     {
-        string busname = busptr->get_bus_name();
+        BUS& bus = *busptr;
+        string busname = bus.get_bus_name();
         ostringstream osstream;
 
-        if(busptr->get_bus_type()==OUT_OF_SERVICE)
+        if(bus.get_bus_type()==OUT_OF_SERVICE)
         {
-            osstream<<"No fault will be cleared for bus "<<bus<<"["<<busname<<"] at time "<<TIME<<" s since it is out of service."<<endl;
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            osstream<<"No fault will be cleared for bus "<<bus_number<<"["<<busname<<"] at time "<<TIME<<" s since it is out of service."<<endl;
+            toolkit.show_information_with_leading_time_stamp(osstream);
             return;
         }
 
-        osstream<<"Fault at bus "<<bus<<"["<<busname<<"] will be cleared at time "<<TIME<<" s.";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        osstream<<"Fault at bus "<<bus_number<<"["<<busname<<"] will be cleared at time "<<TIME<<" s.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
 
-        FAULT fault = busptr->get_fault();
-        busptr->clear_fault();
-        guess_bus_voltage_with_bus_fault_cleared(bus, fault);
+        FAULT fault = bus.get_fault();
+        bus.clear_fault();
+        guess_bus_voltage_with_bus_fault_cleared(bus_number, fault);
 
         //network_matrix.build_dynamic_network_Y_matrix();
         //build_jacobian();
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_bus(unsigned int bus)
+void DYNAMICS_SIMULATOR::trip_bus(unsigned int bus_number)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     ostringstream osstream;
 
-    BUS* busptr = psdb.get_bus(bus);
+    BUS* busptr = psdb.get_bus(bus_number);
     if(busptr!=NULL)
     {
-        string busname = busptr->get_bus_name();
-        if(busptr->get_bus_type()!=OUT_OF_SERVICE)
+        BUS& bus = *busptr;
+        string busname = bus.get_bus_name();
+        if(bus.get_bus_type()!=OUT_OF_SERVICE)
         {
 
-            osstream<<"Bus "<<bus<<"["<<busname<<"] will be tripped at time "<<TIME<<" s. Devices connecting to bus "<<bus<<" will also be tripped.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            osstream<<"Bus "<<bus_number<<"["<<busname<<"] will be tripped at time "<<TIME<<" s. Devices connecting to bus "<<bus_number<<" will also be tripped.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
 
-            psdb.trip_bus(bus);
+            psdb.trip_bus(bus_number);
 
             in_service_buses = psdb.get_all_in_service_buses();
 
@@ -3552,8 +3662,8 @@ void DYNAMICS_SIMULATOR::trip_bus(unsigned int bus)
         }
         else
         {
-            osstream<<"Bus "<<bus<<"["<<busname<<"] will not be tripped at time "<<TIME<<" s since it is out of service."<<endl;
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            osstream<<"Bus "<<bus_number<<"["<<busname<<"] will not be tripped at time "<<TIME<<" s since it is out of service."<<endl;
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -3567,22 +3677,24 @@ void DYNAMICS_SIMULATOR::trip_buses(const vector<unsigned int>& buses)
 
 void DYNAMICS_SIMULATOR::set_ac_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location, const complex<double>& fault_shunt)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         AC_LINE* lineptr = psdb.get_ac_line(line_id);
         if(lineptr!=NULL)
         {
-            string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());
-            string jbusname = psdb.bus_number2bus_name(lineptr->get_receiving_side_bus());
-            if(lineptr->is_connected_to_bus(side_bus))
+            AC_LINE& line = *lineptr;
+            string ibusname = psdb.bus_number2bus_name(line.get_sending_side_bus());
+            string jbusname = psdb.bus_number2bus_name(line.get_receiving_side_bus());
+            if(line.is_connected_to_bus(side_bus))
             {
-                if(lineptr->get_sending_side_breaker_status()==false and lineptr->get_receiving_side_breaker_status()==false)
+                if(line.get_sending_side_breaker_status()==false and line.get_receiving_side_breaker_status()==false)
                 {
-                    osstream<<"No fault will be set for "<<lineptr->get_compound_device_name()<<" at time "<<TIME<<" s since it is out of service."<<endl;
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    osstream<<"No fault will be set for "<<line.get_compound_device_name()<<" at time "<<TIME<<" s since it is out of service."<<endl;
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     return;
                 }
                 if(location>=0.0 and location<=1.0)
@@ -3593,12 +3705,12 @@ void DYNAMICS_SIMULATOR::set_ac_line_fault(const DEVICE_ID& line_id, unsigned in
                         fault.set_fault_type(THREE_PHASES_FAULT);
                         fault.set_fault_shunt_in_pu(fault_shunt);
 
-                        osstream<<fault.get_fault_type_string()<<" will be set for "<<lineptr->get_compound_device_name()<<" at time "<<TIME<<" s."<<endl
+                        osstream<<fault.get_fault_type_string()<<" will be set for "<<line.get_compound_device_name()<<" at time "<<TIME<<" s."<<endl
                                <<"Fault shunt is "<<fault_shunt<<" pu at location "<<location<<" to bus "<<side_bus;
-                        toolkit->show_information_with_leading_time_stamp(osstream);
+                        toolkit.show_information_with_leading_time_stamp(osstream);
 
 
-                        lineptr->set_fault(side_bus,location, fault);
+                        line.set_fault(side_bus,location, fault);
                         guess_bus_voltage_with_ac_line_fault_set(line_id, side_bus, location, fault);
 
                         //network_matrix.build_dynamic_network_Y_matrix();
@@ -3606,68 +3718,70 @@ void DYNAMICS_SIMULATOR::set_ac_line_fault(const DEVICE_ID& line_id, unsigned in
                     }
                     else
                     {
-                        osstream<<"Zero fault shunt is given for "<<lineptr->get_compound_device_name()<<"."<<endl
-                               <<"No fault will be set for "<<lineptr->get_compound_device_name()<<" at time "<<TIME<<" s.";
-                        toolkit->show_information_with_leading_time_stamp(osstream);
+                        osstream<<"Zero fault shunt is given for "<<line.get_compound_device_name()<<"."<<endl
+                               <<"No fault will be set for "<<line.get_compound_device_name()<<" at time "<<TIME<<" s.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                     }
                 }
                 else
                 {
-                    osstream<<"Warning. Fault location ("<<location<<") is out of allowed range [0.0, 1.0] for "<<lineptr->get_compound_device_name()<<"."<<endl
+                    osstream<<"Warning. Fault location ("<<location<<") is out of allowed range [0.0, 1.0] for "<<line.get_compound_device_name()<<"."<<endl
                            <<"No fault will be set at time "<<TIME<<" s.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                 }
             }
             else
             {
-                osstream<<lineptr->get_compound_device_name()<<"is not connected to bus "<<side_bus<<endl
+                osstream<<line.get_compound_device_name()<<"is not connected to bus "<<side_bus<<endl
                        <<"No fault will be set at location "<<location<<" to bus "<<side_bus<<" at time "<<TIME<<" s.";
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
         else
         {
             osstream<<"Warning. "<<line_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                    <<"No fault will be set at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a LINE (it is a "<<line_id.get_device_type()<<") for setting line fault."<<endl
                <<"No line fault will be set at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::clear_ac_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         AC_LINE* lineptr = psdb.get_ac_line(line_id);
         if(lineptr!=NULL)
         {
-            string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());
-            string jbusname = psdb.bus_number2bus_name(lineptr->get_receiving_side_bus());
-            if(lineptr->is_connected_to_bus(side_bus))
+            AC_LINE& line = *lineptr;
+            string ibusname = psdb.bus_number2bus_name(line.get_sending_side_bus());
+            string jbusname = psdb.bus_number2bus_name(line.get_receiving_side_bus());
+            if(line.is_connected_to_bus(side_bus))
             {
-                if(lineptr->get_sending_side_breaker_status()==false and lineptr->get_receiving_side_breaker_status()==false)
+                if(line.get_sending_side_breaker_status()==false and line.get_receiving_side_breaker_status()==false)
                 {
-                    osstream<<"No fault will be cleared for "<<lineptr->get_compound_device_name()<<" at time "<<TIME<<" s since it is out of service."<<endl;
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    osstream<<"No fault will be cleared for "<<line.get_compound_device_name()<<" at time "<<TIME<<" s since it is out of service."<<endl;
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     return;
                 }
                 if(location>=0.0 and location<=1.0)
                 {
                     osstream<<"Fault at location "<<location<<" to bus "<<side_bus<<" will be cleared for "
-                           <<lineptr->get_compound_device_name()<<" at time "<<TIME<<" s.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                           <<line.get_compound_device_name()<<" at time "<<TIME<<" s.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
 
-                    FAULT fault = lineptr->get_fault_at_location(side_bus, location);
-                    lineptr->clear_fault_at_location(side_bus, location);
+                    FAULT fault = line.get_fault_at_location(side_bus, location);
+                    line.clear_fault_at_location(side_bus, location);
                     guess_bus_voltage_with_ac_line_fault_cleared(line_id, side_bus, location, fault);
 
                     //network_matrix.build_dynamic_network_Y_matrix();
@@ -3675,61 +3789,63 @@ void DYNAMICS_SIMULATOR::clear_ac_line_fault(const DEVICE_ID& line_id, unsigned 
                 }
                 else
                 {
-                    osstream<<"Warning. Fault location ("<<location<<") is out of allowed range [0.0, 1.0] for "<<lineptr->get_compound_device_name()<<"."<<endl
+                    osstream<<"Warning. Fault location ("<<location<<") is out of allowed range [0.0, 1.0] for "<<line.get_compound_device_name()<<"."<<endl
                            <<"No fault will be cleared at time "<<TIME<<" s.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     return;
                 }
             }
             else
             {
-                osstream<<lineptr->get_compound_device_name()<<"is not connected to bus "<<side_bus<<endl
+                osstream<<line.get_compound_device_name()<<"is not connected to bus "<<side_bus<<endl
                        <<"No fault will be cleared at location "<<location<<" to bus "<<side_bus<<" at time "<<TIME<<" s.";
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
         else
         {
             osstream<<"Warning. "<<line_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                    <<"No fault will be cleared at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a LINE (it is a "<<line_id.get_device_type()<<") for clearing line fault."<<endl
                <<"No line fault will be cleared at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::trip_ac_line(const DEVICE_ID& line_id)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         AC_LINE* lineptr = psdb.get_ac_line(line_id);
         if(lineptr!=NULL)
         {
-            string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());
-            string jbusname = psdb.bus_number2bus_name(lineptr->get_receiving_side_bus());
-            if(lineptr->get_sending_side_breaker_status()==true or lineptr->get_receiving_side_breaker_status()==true)
+            AC_LINE& line = *lineptr;
+            string ibusname = psdb.bus_number2bus_name(line.get_sending_side_bus());
+            string jbusname = psdb.bus_number2bus_name(line.get_receiving_side_bus());
+            if(line.get_sending_side_breaker_status()==true or line.get_receiving_side_breaker_status()==true)
             {
-                osstream<<lineptr->get_compound_device_name()<<" is tripped by taking the following actions at time "<<TIME<<" s."<<endl;
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                osstream<<line.get_compound_device_name()<<" is tripped by taking the following actions at time "<<TIME<<" s."<<endl;
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
-                if(lineptr->get_sending_side_breaker_status()==true)
-                    trip_ac_line_breaker(line_id, lineptr->get_sending_side_bus());
+                if(line.get_sending_side_breaker_status()==true)
+                    trip_ac_line_breaker(line_id, line.get_sending_side_bus());
 
-                if(lineptr->get_receiving_side_breaker_status()==true)
-                    trip_ac_line_breaker(line_id, lineptr->get_receiving_side_bus());
+                if(line.get_receiving_side_breaker_status()==true)
+                    trip_ac_line_breaker(line_id, line.get_receiving_side_bus());
             }
             else
             {
-                osstream<<lineptr->get_compound_device_name()<<" will not be tripped at time "<<TIME<<" s since it is out of service."<<endl;
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                osstream<<line.get_compound_device_name()<<" will not be tripped at time "<<TIME<<" s since it is out of service."<<endl;
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 return;
             }
         }
@@ -3737,53 +3853,55 @@ void DYNAMICS_SIMULATOR::trip_ac_line(const DEVICE_ID& line_id)
         {
             osstream<<"Warning. "<<line_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                    <<"No line will be tripped at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a LINE (it is a "<<line_id.get_device_type()<<") for tripping line."<<endl
                <<"No line will be tripped at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::trip_ac_line_breaker(const DEVICE_ID& line_id, unsigned int side_bus)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         AC_LINE* lineptr = psdb.get_ac_line(line_id);
         if(lineptr!=NULL)
         {
-            string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());
-            string jbusname = psdb.bus_number2bus_name(lineptr->get_receiving_side_bus());
-            if(lineptr->get_sending_side_bus()==side_bus)
+            AC_LINE& line = *lineptr;
+            string ibusname = psdb.bus_number2bus_name(line.get_sending_side_bus());
+            string jbusname = psdb.bus_number2bus_name(line.get_receiving_side_bus());
+            if(line.get_sending_side_bus()==side_bus)
             {
-                if(lineptr->get_sending_side_breaker_status()==true)
+                if(line.get_sending_side_breaker_status()==true)
                 {
-                    lineptr->set_sending_side_breaker_status(false);
+                    line.set_sending_side_breaker_status(false);
                     //network_matrix.build_dynamic_network_Y_matrix();
                     //build_jacobian();
 
-                    osstream<<lineptr->get_compound_device_name()<<" breaker at sending side (bus "<<lineptr->get_sending_side_bus()<<") is tripped at time "<<TIME<<" s.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    osstream<<line.get_compound_device_name()<<" breaker at sending side (bus "<<line.get_sending_side_bus()<<") is tripped at time "<<TIME<<" s.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                 }
             }
             else
             {
-                if(lineptr->get_receiving_side_bus()==side_bus)
+                if(line.get_receiving_side_bus()==side_bus)
                 {
-                    if(lineptr->get_receiving_side_breaker_status()==true)
+                    if(line.get_receiving_side_breaker_status()==true)
                     {
-                        lineptr->set_receiving_side_breaker_status(false);
+                        line.set_receiving_side_breaker_status(false);
                         //network_matrix.build_dynamic_network_Y_matrix();
                         //build_jacobian();
 
-                        osstream<<lineptr->get_compound_device_name()<<" breaker at receiving side (bus "<<lineptr->get_receiving_side_bus()<<") is tripped at time "<<TIME<<" s.";
-                        toolkit->show_information_with_leading_time_stamp(osstream);
+                        osstream<<line.get_compound_device_name()<<" breaker at receiving side (bus "<<line.get_receiving_side_bus()<<") is tripped at time "<<TIME<<" s.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                     }
                 }
             }
@@ -3792,90 +3910,94 @@ void DYNAMICS_SIMULATOR::trip_ac_line_breaker(const DEVICE_ID& line_id, unsigned
         {
             osstream<<"Warning. "<<line_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                    <<"No line breaker will be tripped at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a LINE (it is a "<<line_id.get_device_type()<<") for tripping line breaker."<<endl
                <<"No line breaker will be tripped at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::close_ac_line(const DEVICE_ID& line_id)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         AC_LINE* lineptr = psdb.get_ac_line(line_id);
         if(lineptr!=NULL)
         {
-            string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());
-            string jbusname = psdb.bus_number2bus_name(lineptr->get_receiving_side_bus());
-            if(lineptr->get_sending_side_breaker_status()==false or lineptr->get_receiving_side_breaker_status()==false)
+            AC_LINE& line = *lineptr;
+            string ibusname = psdb.bus_number2bus_name(line.get_sending_side_bus());
+            string jbusname = psdb.bus_number2bus_name(line.get_receiving_side_bus());
+            if(line.get_sending_side_breaker_status()==false or line.get_receiving_side_breaker_status()==false)
             {
-                osstream<<lineptr->get_compound_device_name()<<" is closed by taking the following actions at time "<<TIME<<" s."<<endl;
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                osstream<<line.get_compound_device_name()<<" is closed by taking the following actions at time "<<TIME<<" s."<<endl;
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
-                if(lineptr->get_sending_side_breaker_status()==false)
-                    close_ac_line_breaker(line_id, lineptr->get_sending_side_bus());
+                if(line.get_sending_side_breaker_status()==false)
+                    close_ac_line_breaker(line_id, line.get_sending_side_bus());
 
-                if(lineptr->get_receiving_side_breaker_status()==false)
-                    close_ac_line_breaker(line_id, lineptr->get_receiving_side_bus());
+                if(line.get_receiving_side_breaker_status()==false)
+                    close_ac_line_breaker(line_id, line.get_receiving_side_bus());
             }
         }
         else
         {
             osstream<<"Warning. "<<line_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                    <<"No line will be closed at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a LINE (it is a "<<line_id.get_device_type()<<") for closing line."<<endl
                <<"No line will be closed at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::close_ac_line_breaker(const DEVICE_ID& line_id, unsigned int side_bus)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         AC_LINE* lineptr = psdb.get_ac_line(line_id);
         if(lineptr!=NULL)
         {
-            string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());
-            string jbusname = psdb.bus_number2bus_name(lineptr->get_receiving_side_bus());
-            if(lineptr->get_sending_side_bus()==side_bus)
+            AC_LINE& line = *lineptr;
+            string ibusname = psdb.bus_number2bus_name(line.get_sending_side_bus());
+            string jbusname = psdb.bus_number2bus_name(line.get_receiving_side_bus());
+            if(line.get_sending_side_bus()==side_bus)
             {
-                if(lineptr->get_sending_side_breaker_status()==false)
+                if(line.get_sending_side_breaker_status()==false)
                 {
-                    lineptr->set_sending_side_breaker_status(true);
+                    line.set_sending_side_breaker_status(true);
                     //network_matrix.build_dynamic_network_Y_matrix();
                     //build_jacobian();
-                    osstream<<lineptr->get_compound_device_name()<<" breaker at sending side (bus "<<lineptr->get_sending_side_bus()<<") is closed at time "<<TIME<<" s.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    osstream<<line.get_compound_device_name()<<" breaker at sending side (bus "<<line.get_sending_side_bus()<<") is closed at time "<<TIME<<" s.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                 }
             }
             else
             {
-                if(lineptr->get_receiving_side_bus()==side_bus)
+                if(line.get_receiving_side_bus()==side_bus)
                 {
-                    if(lineptr->get_receiving_side_breaker_status()==false)
+                    if(line.get_receiving_side_breaker_status()==false)
                     {
-                        lineptr->set_receiving_side_breaker_status(true);
+                        line.set_receiving_side_breaker_status(true);
                         //network_matrix.build_dynamic_network_Y_matrix();
                         //build_jacobian();
-                        osstream<<lineptr->get_compound_device_name()<<" breaker at receiving side (bus "<<lineptr->get_sending_side_bus()<<") is closed at time "<<TIME<<" s.";
-                        toolkit->show_information_with_leading_time_stamp(osstream);
+                        osstream<<line.get_compound_device_name()<<" breaker at receiving side (bus "<<line.get_sending_side_bus()<<") is closed at time "<<TIME<<" s.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                     }
                 }
             }
@@ -3884,118 +4006,122 @@ void DYNAMICS_SIMULATOR::close_ac_line_breaker(const DEVICE_ID& line_id, unsigne
         {
             osstream<<"Warning. "<<line_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                    <<"No line breaker will be closed at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a LINE (it is a "<<line_id.get_device_type()<<") for closing line breaker"<<endl
                <<"No line breaker will be closed at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::trip_transformer(const DEVICE_ID& trans_id)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(trans_id.get_device_type()==STEPS_TRANSFORMER)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         TRANSFORMER* transptr = psdb.get_transformer(trans_id);
         if(transptr!=NULL)
         {
-            string ibusname = psdb.bus_number2bus_name(transptr->get_winding_bus(PRIMARY_SIDE));
-            string jbusname = psdb.bus_number2bus_name(transptr->get_winding_bus(SECONDARY_SIDE));
+            TRANSFORMER& trans = *transptr;
+            string ibusname = psdb.bus_number2bus_name(trans.get_winding_bus(PRIMARY_SIDE));
+            string jbusname = psdb.bus_number2bus_name(trans.get_winding_bus(SECONDARY_SIDE));
             string kbusname = "";
-            if(transptr->is_three_winding_transformer())
-                kbusname = psdb.bus_number2bus_name(transptr->get_winding_bus(TERTIARY_SIDE));
+            if(trans.is_three_winding_transformer())
+                kbusname = psdb.bus_number2bus_name(trans.get_winding_bus(TERTIARY_SIDE));
 
-            if(transptr->get_winding_breaker_status(PRIMARY_SIDE)==true or transptr->get_winding_breaker_status(SECONDARY_SIDE)==true or
-               (transptr->is_three_winding_transformer() and transptr->get_winding_breaker_status(TERTIARY_SIDE)==true) )
+            if(trans.get_winding_breaker_status(PRIMARY_SIDE)==true or trans.get_winding_breaker_status(SECONDARY_SIDE)==true or
+               (trans.is_three_winding_transformer() and trans.get_winding_breaker_status(TERTIARY_SIDE)==true) )
             {
-                osstream<<transptr->get_compound_device_name()<<" is tripped by taking the following actions at time "<<TIME<<" s."<<endl;
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                osstream<<trans.get_compound_device_name()<<" is tripped by taking the following actions at time "<<TIME<<" s."<<endl;
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
-                if(transptr->get_winding_breaker_status(PRIMARY_SIDE)==true)
-                    trip_transformer_breaker(trans_id, transptr->get_winding_bus(PRIMARY_SIDE));
+                if(trans.get_winding_breaker_status(PRIMARY_SIDE)==true)
+                    trip_transformer_breaker(trans_id, trans.get_winding_bus(PRIMARY_SIDE));
 
-                if(transptr->get_winding_breaker_status(SECONDARY_SIDE)==true)
-                    trip_transformer_breaker(trans_id, transptr->get_winding_bus(SECONDARY_SIDE));
+                if(trans.get_winding_breaker_status(SECONDARY_SIDE)==true)
+                    trip_transformer_breaker(trans_id, trans.get_winding_bus(SECONDARY_SIDE));
 
-                if(transptr->is_three_winding_transformer() and transptr->get_winding_breaker_status(TERTIARY_SIDE)==true)
-                    trip_transformer_breaker(trans_id, transptr->get_winding_bus(TERTIARY_SIDE));
+                if(trans.is_three_winding_transformer() and trans.get_winding_breaker_status(TERTIARY_SIDE)==true)
+                    trip_transformer_breaker(trans_id, trans.get_winding_bus(TERTIARY_SIDE));
             }
         }
         else
         {
             osstream<<"Warning. "<<trans_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                    <<"No transformer will be tripped at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a TRANSFORMER (it is a "<<trans_id.get_device_type()<<") for tripping transformer."<<endl
                <<"No transformer will be tripped at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::trip_transformer_breaker(const DEVICE_ID& trans_id, unsigned int side_bus)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(trans_id.get_device_type()==STEPS_TRANSFORMER)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         TRANSFORMER* transptr = psdb.get_transformer(trans_id);
         if(transptr!=NULL)
         {
-            string ibusname = psdb.bus_number2bus_name(transptr->get_winding_bus(PRIMARY_SIDE));
-            string jbusname = psdb.bus_number2bus_name(transptr->get_winding_bus(SECONDARY_SIDE));
+            TRANSFORMER& trans = *transptr;
+            string ibusname = psdb.bus_number2bus_name(trans.get_winding_bus(PRIMARY_SIDE));
+            string jbusname = psdb.bus_number2bus_name(trans.get_winding_bus(SECONDARY_SIDE));
             string kbusname = "";
-            if(transptr->is_three_winding_transformer())
-                kbusname = psdb.bus_number2bus_name(transptr->get_winding_bus(TERTIARY_SIDE));
+            if(trans.is_three_winding_transformer())
+                kbusname = psdb.bus_number2bus_name(trans.get_winding_bus(TERTIARY_SIDE));
 
-            if(transptr->get_winding_bus(PRIMARY_SIDE)==side_bus)
+            if(trans.get_winding_bus(PRIMARY_SIDE)==side_bus)
             {
-                if(transptr->get_winding_breaker_status(PRIMARY_SIDE)==true)
+                if(trans.get_winding_breaker_status(PRIMARY_SIDE)==true)
                 {
-                    transptr->set_winding_breaker_status(PRIMARY_SIDE, false);
+                    trans.set_winding_breaker_status(PRIMARY_SIDE, false);
                     //network_matrix.build_dynamic_network_Y_matrix();
                     //build_jacobian();
 
-                    osstream<<transptr->get_compound_device_name()<<" breaker at primary side (bus "<<side_bus<<") is tripped at time "<<TIME<<" s.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    osstream<<trans.get_compound_device_name()<<" breaker at primary side (bus "<<side_bus<<") is tripped at time "<<TIME<<" s.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                 }
             }
             else
             {
-                if(transptr->get_winding_bus(SECONDARY_SIDE)==side_bus)
+                if(trans.get_winding_bus(SECONDARY_SIDE)==side_bus)
                 {
-                    if(transptr->get_winding_breaker_status(SECONDARY_SIDE)==true)
+                    if(trans.get_winding_breaker_status(SECONDARY_SIDE)==true)
                     {
-                        transptr->set_winding_breaker_status(SECONDARY_SIDE, false);
+                        trans.set_winding_breaker_status(SECONDARY_SIDE, false);
                         //network_matrix.build_dynamic_network_Y_matrix();
                         //build_jacobian();
 
-                        osstream<<transptr->get_compound_device_name()<<" breaker at secondary side (bus "<<side_bus<<") is tripped at time "<<TIME<<" s.";
-                        toolkit->show_information_with_leading_time_stamp(osstream);
+                        osstream<<trans.get_compound_device_name()<<" breaker at secondary side (bus "<<side_bus<<") is tripped at time "<<TIME<<" s.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                     }
                 }
                 else
                 {
-                    if(transptr->is_three_winding_transformer() and transptr->get_winding_bus(TERTIARY_SIDE)==side_bus)
+                    if(trans.is_three_winding_transformer() and trans.get_winding_bus(TERTIARY_SIDE)==side_bus)
                     {
-                        if(transptr->get_winding_breaker_status(TERTIARY_SIDE)==true)
+                        if(trans.get_winding_breaker_status(TERTIARY_SIDE)==true)
                         {
-                            transptr->set_winding_breaker_status(TERTIARY_SIDE, false);
+                            trans.set_winding_breaker_status(TERTIARY_SIDE, false);
                             //network_matrix.build_dynamic_network_Y_matrix();
                             //build_jacobian();
 
-                            osstream<<transptr->get_compound_device_name()<<" breaker at tertiary side (bus "<<side_bus<<") is tripped at time "<<TIME<<" s.";
-                            toolkit->show_information_with_leading_time_stamp(osstream);
+                            osstream<<trans.get_compound_device_name()<<" breaker at tertiary side (bus "<<side_bus<<") is tripped at time "<<TIME<<" s.";
+                            toolkit.show_information_with_leading_time_stamp(osstream);
                         }
                     }
 
@@ -4006,116 +4132,120 @@ void DYNAMICS_SIMULATOR::trip_transformer_breaker(const DEVICE_ID& trans_id, uns
         {
             osstream<<"Warning. "<<trans_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                    <<"No transformer breaker will be tripped at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a TRANSFORMER (it is a "<<trans_id.get_device_type()<<") for tripping transformer breaker."<<endl
                <<"No transformer breaker will be tripped at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 }
 
 void DYNAMICS_SIMULATOR::close_transformer(const DEVICE_ID& trans_id)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(trans_id.get_device_type()==STEPS_TRANSFORMER)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         TRANSFORMER* transptr = psdb.get_transformer(trans_id);
         if(transptr!=NULL)
         {
-            string ibusname = psdb.bus_number2bus_name(transptr->get_winding_bus(PRIMARY_SIDE));
-            string jbusname = psdb.bus_number2bus_name(transptr->get_winding_bus(SECONDARY_SIDE));
+            TRANSFORMER& trans = *transptr;
+            string ibusname = psdb.bus_number2bus_name(trans.get_winding_bus(PRIMARY_SIDE));
+            string jbusname = psdb.bus_number2bus_name(trans.get_winding_bus(SECONDARY_SIDE));
             string kbusname = "";
-            if(transptr->is_three_winding_transformer())
-                kbusname = psdb.bus_number2bus_name(transptr->get_winding_bus(TERTIARY_SIDE));
+            if(trans.is_three_winding_transformer())
+                kbusname = psdb.bus_number2bus_name(trans.get_winding_bus(TERTIARY_SIDE));
 
-            if(transptr->get_winding_breaker_status(PRIMARY_SIDE)==false or transptr->get_winding_breaker_status(SECONDARY_SIDE)==false or
-               (transptr->is_three_winding_transformer() and transptr->get_winding_breaker_status(TERTIARY_SIDE)==false))
+            if(trans.get_winding_breaker_status(PRIMARY_SIDE)==false or trans.get_winding_breaker_status(SECONDARY_SIDE)==false or
+               (trans.is_three_winding_transformer() and trans.get_winding_breaker_status(TERTIARY_SIDE)==false))
             {
-                osstream<<transptr->get_compound_device_name()<<" is closed by taking the following actions at time "<<TIME<<" s."<<endl;
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                osstream<<trans.get_compound_device_name()<<" is closed by taking the following actions at time "<<TIME<<" s."<<endl;
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
-                if(transptr->get_winding_breaker_status(PRIMARY_SIDE)==false)
-                    close_transformer_breaker(trans_id, transptr->get_winding_bus(PRIMARY_SIDE));
+                if(trans.get_winding_breaker_status(PRIMARY_SIDE)==false)
+                    close_transformer_breaker(trans_id, trans.get_winding_bus(PRIMARY_SIDE));
 
-                if(transptr->get_winding_breaker_status(SECONDARY_SIDE)==false)
-                    close_transformer_breaker(trans_id, transptr->get_winding_bus(SECONDARY_SIDE));
+                if(trans.get_winding_breaker_status(SECONDARY_SIDE)==false)
+                    close_transformer_breaker(trans_id, trans.get_winding_bus(SECONDARY_SIDE));
 
-                if(transptr->is_three_winding_transformer() and transptr->get_winding_breaker_status(TERTIARY_SIDE)==false)
-                    close_transformer_breaker(trans_id, transptr->get_winding_bus(TERTIARY_SIDE));
+                if(trans.is_three_winding_transformer() and trans.get_winding_breaker_status(TERTIARY_SIDE)==false)
+                    close_transformer_breaker(trans_id, trans.get_winding_bus(TERTIARY_SIDE));
             }
         }
         else
         {
             osstream<<"Warning. "<<trans_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                    <<"No transformer will be closed at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a TRANSFORMER (it is a "<<trans_id.get_device_type()<<") for closing transformer."<<endl
                <<"No transformer will be closed at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::close_transformer_breaker(const DEVICE_ID& trans_id, unsigned int side_bus)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(trans_id.get_device_type()==STEPS_TRANSFORMER)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         TRANSFORMER* transptr = psdb.get_transformer(trans_id);
         if(transptr!=NULL)
         {
-            string ibusname = psdb.bus_number2bus_name(transptr->get_winding_bus(PRIMARY_SIDE));
-            string jbusname = psdb.bus_number2bus_name(transptr->get_winding_bus(SECONDARY_SIDE));
+            TRANSFORMER& trans = *transptr;
+            string ibusname = psdb.bus_number2bus_name(trans.get_winding_bus(PRIMARY_SIDE));
+            string jbusname = psdb.bus_number2bus_name(trans.get_winding_bus(SECONDARY_SIDE));
             string kbusname = "";
-            if(transptr->is_three_winding_transformer())
-                kbusname = psdb.bus_number2bus_name(transptr->get_winding_bus(TERTIARY_SIDE));
+            if(trans.is_three_winding_transformer())
+                kbusname = psdb.bus_number2bus_name(trans.get_winding_bus(TERTIARY_SIDE));
 
-            if(transptr->get_winding_bus(PRIMARY_SIDE)==side_bus)
+            if(trans.get_winding_bus(PRIMARY_SIDE)==side_bus)
             {
-                if(transptr->get_winding_breaker_status(PRIMARY_SIDE)==false)
+                if(trans.get_winding_breaker_status(PRIMARY_SIDE)==false)
                 {
-                    transptr->set_winding_breaker_status(PRIMARY_SIDE, true);
+                    trans.set_winding_breaker_status(PRIMARY_SIDE, true);
                     //network_matrix.build_dynamic_network_Y_matrix();
                     //build_jacobian();
-                    osstream<<transptr->get_compound_device_name()<<" breaker at primary side (bus "<<side_bus<<") is closed at time "<<TIME<<" s.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    osstream<<trans.get_compound_device_name()<<" breaker at primary side (bus "<<side_bus<<") is closed at time "<<TIME<<" s.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                 }
             }
             else
             {
-                if(transptr->get_winding_bus(SECONDARY_SIDE)==side_bus)
+                if(trans.get_winding_bus(SECONDARY_SIDE)==side_bus)
                 {
-                    if(transptr->get_winding_breaker_status(SECONDARY_SIDE)==false)
+                    if(trans.get_winding_breaker_status(SECONDARY_SIDE)==false)
                     {
-                        transptr->set_winding_breaker_status(SECONDARY_SIDE, true);
+                        trans.set_winding_breaker_status(SECONDARY_SIDE, true);
                         //network_matrix.build_dynamic_network_Y_matrix();
                         //build_jacobian();
-                        osstream<<transptr->get_compound_device_name()<<" breaker at secondary side (bus "<<side_bus<<") is closed at time "<<TIME<<" s.";
-                        toolkit->show_information_with_leading_time_stamp(osstream);
+                        osstream<<trans.get_compound_device_name()<<" breaker at secondary side (bus "<<side_bus<<") is closed at time "<<TIME<<" s.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                     }
                 }
                 else
                 {
-                    if(transptr->is_three_winding_transformer() and transptr->get_winding_bus(TERTIARY_SIDE)==side_bus)
+                    if(trans.is_three_winding_transformer() and trans.get_winding_bus(TERTIARY_SIDE)==side_bus)
                     {
-                        if(transptr->get_winding_breaker_status(TERTIARY_SIDE)==false)
+                        if(trans.get_winding_breaker_status(TERTIARY_SIDE)==false)
                         {
-                            transptr->set_winding_breaker_status(TERTIARY_SIDE, true);
+                            trans.set_winding_breaker_status(TERTIARY_SIDE, true);
                             //network_matrix.build_dynamic_network_Y_matrix();
                             //build_jacobian();
-                            osstream<<transptr->get_compound_device_name()<<" breaker at secondary side (bus "<<side_bus<<") is closed at time "<<TIME<<" s.";
-                            toolkit->show_information_with_leading_time_stamp(osstream);
+                            osstream<<trans.get_compound_device_name()<<" breaker at secondary side (bus "<<side_bus<<") is closed at time "<<TIME<<" s.";
+                            toolkit.show_information_with_leading_time_stamp(osstream);
                         }
                     }
                 }
@@ -4125,589 +4255,614 @@ void DYNAMICS_SIMULATOR::close_transformer_breaker(const DEVICE_ID& trans_id, un
         {
             osstream<<"Warning. "<<trans_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                    <<"No transformer breaker will be closed at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a TRANSFORMER (it is a "<<trans_id.get_device_type()<<") for closing transformer breaker"<<endl
                <<"No transformer breaker will be closed at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::trip_generator(const DEVICE_ID& gen_id)
 {
-
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(gen_id.get_device_type()==STEPS_GENERATOR)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        GENERATOR* generator = psdb.get_generator(gen_id);
-        if(generator!=NULL)
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+        if(generator_ptr!=NULL)
         {
-            string busname = psdb.bus_number2bus_name(generator->get_generator_bus());
+            GENERATOR& generator = *generator_ptr;
+            string busname = psdb.bus_number2bus_name(generator.get_generator_bus());
 
-            if(generator->get_status()==true)
+            if(generator.get_status()==true)
             {
-                generator->set_status(false);
+                generator.set_status(false);
 
                 //network_matrix.build_dynamic_network_Y_matrix();
                 //build_jacobian();
 
-                osstream<<generator->get_compound_device_name()<<" is tripped at time "<<TIME<<" s.";
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                osstream<<generator.get_compound_device_name()<<" is tripped at time "<<TIME<<" s.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
         else
         {
             osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                    <<"No generator will be tripped at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a GENERATOR (it is a "<<gen_id.get_device_type()<<") for tripping generator."<<endl
                <<"No generator will be tripped at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::shed_generator(const DEVICE_ID& gen_id,double percent)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(gen_id.get_device_type()==STEPS_GENERATOR)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        GENERATOR* generator = psdb.get_generator(gen_id);
-        if(generator!=NULL)
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+        if(generator_ptr!=NULL)
         {
-            string busname = psdb.bus_number2bus_name(generator->get_generator_bus());
+            GENERATOR& generator = *generator_ptr;
+            string busname = psdb.bus_number2bus_name(generator.get_generator_bus());
 
             if(fabs(percent)>DOUBLE_EPSILON)
             {
                 if(percent==1.0)
                 {
-                    osstream<<generator->get_compound_device_name()<<" is shed by "<<100.0<<"% at time "<<TIME<<" s."<<endl
+                    osstream<<generator.get_compound_device_name()<<" is shed by "<<100.0<<"% at time "<<TIME<<" s."<<endl
                             <<"Generator is to be tripped.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     trip_generator(gen_id);
                 }
                 else
                 {
-                    double mbase = generator->get_mbase_in_MVA();
-                    osstream<<generator->get_compound_device_name()<<" is shed by "<<percent*100.0<<"% at time "<<TIME<<" s."<<endl
+                    double mbase = generator.get_mbase_in_MVA();
+                    osstream<<generator.get_compound_device_name()<<" is shed by "<<percent*100.0<<"% at time "<<TIME<<" s."<<endl
                             <<"MBASE is changed from "<<mbase<<" MVA to ";
 
-                    generator->set_mbase_in_MVA(mbase*(1.0-percent));
-                    osstream<<generator->get_mbase_in_MVA()<<" MVA.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    generator.set_mbase_in_MVA(mbase*(1.0-percent));
+                    osstream<<generator.get_mbase_in_MVA()<<" MVA.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                 }
             }
             else
             {
-                osstream<<"Generator shed percent is 0.0 for "<<generator->get_compound_device_name()<<endl
+                osstream<<"Generator shed percent is 0.0 for "<<generator.get_compound_device_name()<<endl
                         <<"No generator will be shed at time "<<TIME<<" s."<<endl;
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
         else
         {
             osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                     <<"No generator will be shed at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a GENERATOR (it is a "<<gen_id.get_device_type()<<") for shedding generator."<<endl
                 <<"No generator will be shed at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 
 void DYNAMICS_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(gen_id.get_device_type()==STEPS_WT_GENERATOR)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        WT_GENERATOR* generator = psdb.get_wt_generator(gen_id);
-        if(generator!=NULL)
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        WT_GENERATOR* generator_ptr = psdb.get_wt_generator(gen_id);
+        if(generator_ptr!=NULL)
         {
-            string busname = psdb.bus_number2bus_name(generator->get_generator_bus());
+            WT_GENERATOR& generator = *generator_ptr;
+            string busname = psdb.bus_number2bus_name(generator.get_generator_bus());
 
-            if(generator->get_status()==true)
+            if(generator.get_status()==true)
             {
-                generator->set_status(false);
+                generator.set_status(false);
 
                 //network_matrix.build_dynamic_network_Y_matrix();
                 //build_jacobian();
 
-                osstream<<generator->get_compound_device_name()<<" is tripped at time "<<TIME<<" s.";
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                osstream<<generator.get_compound_device_name()<<" is tripped at time "<<TIME<<" s.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
         else
         {
             osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                     <<"No wt generator will be tripped at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a WT GENERATOR (it is a "<<gen_id.get_device_type()<<") for tripping wt generator."<<endl
                 <<"No wt generator will be tripped at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::shed_wt_generator(const DEVICE_ID& gen_id,double percent)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(gen_id.get_device_type()==STEPS_WT_GENERATOR)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        WT_GENERATOR* generator = psdb.get_wt_generator(gen_id);
-        if(generator!=NULL)
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        WT_GENERATOR* generator_ptr = psdb.get_wt_generator(gen_id);
+        if(generator_ptr!=NULL)
         {
-            string busname = psdb.bus_number2bus_name(generator->get_generator_bus());
+            WT_GENERATOR& generator = *generator_ptr;
+            string busname = psdb.bus_number2bus_name(generator.get_generator_bus());
 
             if(fabs(percent)>DOUBLE_EPSILON)
             {
                 if(percent==1.0)
                 {
-                    osstream<<generator->get_compound_device_name()<<" is shed by "<<100.0<<"% at time "<<TIME<<" s."<<endl
+                    osstream<<generator.get_compound_device_name()<<" is shed by "<<100.0<<"% at time "<<TIME<<" s."<<endl
                             <<"WT generator is to be tripped.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     trip_wt_generator(gen_id);
                 }
                 else
                 {
-                    double mbase = generator->get_mbase_in_MVA();
-                    osstream<<generator->get_compound_device_name()<<" is shed by "<<percent*100.0<<"% at time "<<TIME<<" s."<<endl
+                    double mbase = generator.get_mbase_in_MVA();
+                    osstream<<generator.get_compound_device_name()<<" is shed by "<<percent*100.0<<"% at time "<<TIME<<" s."<<endl
                             <<"MBASE is changed from "<<mbase<<" MVA to ";
 
-                    generator->set_mbase_in_MVA(mbase*(1.0-percent));
-                    osstream<<generator->get_mbase_in_MVA()<<" MVA.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    generator.set_mbase_in_MVA(mbase*(1.0-percent));
+                    osstream<<generator.get_mbase_in_MVA()<<" MVA.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                 }
             }
             else
             {
-                osstream<<"WT generator shed percent is 0.0 for "<<generator->get_compound_device_name()<<endl
+                osstream<<"WT generator shed percent is 0.0 for "<<generator.get_compound_device_name()<<endl
                         <<"No WT generator will be shed at time "<<TIME<<" s."<<endl;
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
         else
         {
             osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                     <<"No WT generator will be shed at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a WT GENERATOR (it is a "<<gen_id.get_device_type()<<") for shedding WT generator."<<endl
                 <<"No WT generator will be shed at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::trip_pv_unit(const DEVICE_ID& gen_id)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(gen_id.get_device_type()==STEPS_PV_UNIT)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        PV_UNIT* pv_unit = psdb.get_pv_unit(gen_id);
-        if(pv_unit!=NULL)
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        PV_UNIT* pv_unit_ptr = psdb.get_pv_unit(gen_id);
+        if(pv_unit_ptr!=NULL)
         {
-            string busname = psdb.bus_number2bus_name(pv_unit->get_unit_bus());
+            PV_UNIT& pv_unit = *pv_unit_ptr;
+            string busname = psdb.bus_number2bus_name(pv_unit.get_unit_bus());
 
-            if(pv_unit->get_status()==true)
+            if(pv_unit.get_status()==true)
             {
-                pv_unit->set_status(false);
+                pv_unit.set_status(false);
 
                 //network_matrix.build_dynamic_network_Y_matrix();
                 //build_jacobian();
 
-                osstream<<pv_unit->get_compound_device_name()<<" is tripped at time "<<TIME<<" s.";
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                osstream<<pv_unit.get_compound_device_name()<<" is tripped at time "<<TIME<<" s.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
         else
         {
             osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                     <<"No pv unit will be tripped at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a PV UNIT (it is a "<<gen_id.get_device_type()<<") for tripping pv unit."<<endl
                 <<"No pv unit will be tripped at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::shed_pv_unit(const DEVICE_ID& gen_id,double percent)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(gen_id.get_device_type()==STEPS_PV_UNIT)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        PV_UNIT* pv_unit = psdb.get_pv_unit(gen_id);
-        if(pv_unit!=NULL)
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        PV_UNIT* pv_unit_ptr = psdb.get_pv_unit(gen_id);
+        if(pv_unit_ptr!=NULL)
         {
-            string busname = psdb.bus_number2bus_name(pv_unit->get_unit_bus());
+            PV_UNIT& pv_unit = *pv_unit_ptr;
+            string busname = psdb.bus_number2bus_name(pv_unit.get_unit_bus());
 
             if(fabs(percent)>DOUBLE_EPSILON)
             {
                 if(percent==1.0)
                 {
-                    osstream<<pv_unit->get_compound_device_name()<<" is shed by "<<100.0<<"% at time "<<TIME<<" s."<<endl
+                    osstream<<pv_unit.get_compound_device_name()<<" is shed by "<<100.0<<"% at time "<<TIME<<" s."<<endl
                             <<"PV unit is to be tripped.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     trip_pv_unit(gen_id);
                 }
                 else
                 {
-                    double mbase = pv_unit->get_mbase_in_MVA();
-                    osstream<<pv_unit->get_compound_device_name()<<" is shed by "<<percent*100.0<<"% at time "<<TIME<<" s."<<endl
+                    double mbase = pv_unit.get_mbase_in_MVA();
+                    osstream<<pv_unit.get_compound_device_name()<<" is shed by "<<percent*100.0<<"% at time "<<TIME<<" s."<<endl
                             <<"MBASE is changed from "<<mbase<<" MVA to ";
 
-                    pv_unit->set_mbase_in_MVA(mbase*(1.0-percent));
-                    osstream<<pv_unit->get_mbase_in_MVA()<<" MVA.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    pv_unit.set_mbase_in_MVA(mbase*(1.0-percent));
+                    osstream<<pv_unit.get_mbase_in_MVA()<<" MVA.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                 }
             }
             else
             {
-                osstream<<"PV unit shed percent is 0.0 for "<<pv_unit->get_compound_device_name()<<endl
+                osstream<<"PV unit shed percent is 0.0 for "<<pv_unit.get_compound_device_name()<<endl
                         <<"No PV unit will be shed at time "<<TIME<<" s."<<endl;
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
         else
         {
             osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                     <<"No PV unit will be shed at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a PV UNIT (it is a "<<gen_id.get_device_type()<<") for shedding PV unit."<<endl
                 <<"No PV unit will be shed at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::trip_energy_storage(const DEVICE_ID& gen_id)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(gen_id.get_device_type()==STEPS_ENERGY_STORAGE)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        ENERGY_STORAGE* energy_storage = psdb.get_energy_storage(gen_id);
-        if(energy_storage!=NULL)
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        ENERGY_STORAGE* energy_storage_ptr = psdb.get_energy_storage(gen_id);
+        if(energy_storage_ptr!=NULL)
         {
-            string busname = psdb.bus_number2bus_name(energy_storage->get_energy_storage_bus());
+            ENERGY_STORAGE& energy_storage = *energy_storage_ptr;
+            string busname = psdb.bus_number2bus_name(energy_storage.get_energy_storage_bus());
 
-            if(energy_storage->get_status()==true)
+            if(energy_storage.get_status()==true)
             {
-                energy_storage->set_status(false);
+                energy_storage.set_status(false);
 
                 //network_matrix.build_dynamic_network_Y_matrix();
                 //build_jacobian();
 
-                osstream<<energy_storage->get_compound_device_name()<<" is tripped at time "<<TIME<<" s.";
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                osstream<<energy_storage.get_compound_device_name()<<" is tripped at time "<<TIME<<" s.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
         else
         {
             osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                     <<"No energy storage will be tripped at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a ENERGY STORAGE (it is a "<<gen_id.get_device_type()<<") for tripping energy storage."<<endl
                 <<"No energy storage will be tripped at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::shed_energy_storage(const DEVICE_ID& gen_id,double percent)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(gen_id.get_device_type()==STEPS_ENERGY_STORAGE)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        ENERGY_STORAGE* energy_storage = psdb.get_energy_storage(gen_id);
-        if(energy_storage!=NULL)
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        ENERGY_STORAGE* energy_storage_ptr = psdb.get_energy_storage(gen_id);
+        if(energy_storage_ptr!=NULL)
         {
-            string busname = psdb.bus_number2bus_name(energy_storage->get_energy_storage_bus());
+            ENERGY_STORAGE& energy_storage = *energy_storage_ptr;
+            string busname = psdb.bus_number2bus_name(energy_storage.get_energy_storage_bus());
 
             if(fabs(percent)>DOUBLE_EPSILON)
             {
                 if(percent==1.0)
                 {
-                    osstream<<energy_storage->get_compound_device_name()<<" is shed by "<<100.0<<"% at time "<<TIME<<" s."<<endl
+                    osstream<<energy_storage.get_compound_device_name()<<" is shed by "<<100.0<<"% at time "<<TIME<<" s."<<endl
                             <<"Energy storage is to be tripped.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     trip_energy_storage(gen_id);
                 }
                 else
                 {
-                    double mbase = energy_storage->get_mbase_in_MVA();
-                    osstream<<energy_storage->get_compound_device_name()<<" is shed by "<<percent*100.0<<"% at time "<<TIME<<" s."<<endl
+                    double mbase = energy_storage.get_mbase_in_MVA();
+                    osstream<<energy_storage.get_compound_device_name()<<" is shed by "<<percent*100.0<<"% at time "<<TIME<<" s."<<endl
                             <<"MBASE is changed from "<<mbase<<" MVA to ";
 
-                    energy_storage->set_mbase_in_MVA(mbase*(1.0-percent));
-                    osstream<<energy_storage->get_mbase_in_MVA()<<" MVA.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    energy_storage.set_mbase_in_MVA(mbase*(1.0-percent));
+                    osstream<<energy_storage.get_mbase_in_MVA()<<" MVA.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                 }
             }
             else
             {
-                osstream<<"Energy storage shed percent is 0.0 for "<<energy_storage->get_compound_device_name()<<endl
+                osstream<<"Energy storage shed percent is 0.0 for "<<energy_storage.get_compound_device_name()<<endl
                         <<"No energy storage will be shed at time "<<TIME<<" s."<<endl;
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
         else
         {
             osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                     <<"No energy storage will be shed at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a ENERGY STORAGE (it is a "<<gen_id.get_device_type()<<") for shedding energy storage."<<endl
                 <<"No energy storage will be shed at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::trip_sv_source(const DEVICE_ID& gen_id)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(gen_id.get_device_type()==STEPS_SV_SOURCE)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        SV_SOURCE* svs = psdb.get_sv_source(gen_id);
-        if(svs!=NULL)
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        SV_SOURCE* svs_ptr = psdb.get_sv_source(gen_id);
+        if(svs_ptr!=NULL)
         {
-            string busname = psdb.bus_number2bus_name(svs->get_sv_source_bus());
+            SV_SOURCE& svs = *svs_ptr;
+            string busname = psdb.bus_number2bus_name(svs.get_sv_source_bus());
 
-            if(svs->get_status()==true)
+            if(svs.get_status()==true)
             {
-                svs->set_status(false);
+                svs.set_status(false);
 
                 //network_matrix.build_dynamic_network_Y_matrix();
                 //build_jacobian();
 
-                osstream<<svs->get_compound_device_name()<<" is tripped at time "<<TIME<<" s.";
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                osstream<<svs.get_compound_device_name()<<" is tripped at time "<<TIME<<" s.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
         else
         {
             osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                     <<"No sv source will be tripped at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a SV SOURCE (it is a "<<gen_id.get_device_type()<<") for tripping sv source."<<endl
                 <<"No sv source will be tripped at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::shed_sv_source(const DEVICE_ID& gen_id,double percent)
 {/*
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(gen_id.get_device_type()==STEPS_SV_SOURCE)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        SV_SOURCE* svs = psdb.get_sv_source(gen_id);
-        if(svs!=NULL)
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        SV_SOURCE* svs_ptr = psdb.get_sv_source(gen_id);
+        if(svs_ptr!=NULL)
         {
-            string busname = psdb.bus_number2bus_name(svs->get_sv_source_bus());
+            SV_SOURCE& svs = *svs_ptr;
+            string busname = psdb.bus_number2bus_name(svs.get_sv_source_bus());
 
             if(fabs(percent)>DOUBLE_EPSILON)
             {
                 if(percent==1.0)
                 {
-                    osstream<<svs->get_compound_device_name()<<" is shed by "<<100.0<<"% at time "<<TIME<<" s."<<endl
+                    osstream<<svs.get_compound_device_name()<<" is shed by "<<100.0<<"% at time "<<TIME<<" s."<<endl
                             <<"SV source is to be tripped.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     trip_sv_source(gen_id);
                 }
                 else
                 {
-                    double mbase = svs->get_mbase_in_MVA();
-                    osstream<<svs->get_compound_device_name()<<" is shed by "<<percent*100.0<<"% at time "<<TIME<<" s."<<endl
+                    double mbase = svs.get_mbase_in_MVA();
+                    osstream<<svs.get_compound_device_name()<<" is shed by "<<percent*100.0<<"% at time "<<TIME<<" s."<<endl
                             <<"MBASE is changed from "<<mbase<<" MVA to ";
 
-                    svs->set_mbase_in_MVA(mbase*(1.0-percent));
-                    osstream<<svs->get_mbase_in_MVA()<<" MVA.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    svs.set_mbase_in_MVA(mbase*(1.0-percent));
+                    osstream<<svs.get_mbase_in_MVA()<<" MVA.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                 }
             }
             else
             {
-                osstream<<" SV source shed percent is 0.0 for "<<svs->get_compound_device_name()<<endl
+                osstream<<" SV source shed percent is 0.0 for "<<svs.get_compound_device_name()<<endl
                         <<"No sv source will be shed at time "<<TIME<<" s."<<endl;
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
         else
         {
             osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                     <<"No sv source will be shed at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a SV SOURCE (it is a "<<gen_id.get_device_type()<<") for shedding sv source."<<endl
                 <<"No sv source will be shed at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }*/
 }
 
 void DYNAMICS_SIMULATOR::trip_load(const DEVICE_ID& load_id)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(load_id.get_device_type()==STEPS_LOAD)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        LOAD* load = psdb.get_load(load_id);
-        if(load!=NULL)
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        LOAD* load_ptr = psdb.get_load(load_id);
+        if(load_ptr!=NULL)
         {
-            string busname = psdb.bus_number2bus_name(load->get_load_bus());
+            LOAD& load = *load_ptr;
+            string busname = psdb.bus_number2bus_name(load.get_load_bus());
 
-            if(load->get_status()==true)
+            if(load.get_status()==true)
             {
-                load->set_status(false);
+                load.set_status(false);
 
                 //network_matrix.build_dynamic_network_Y_matrix();
                 //build_jacobian();
 
-                osstream<<load->get_compound_device_name()<<" is tripped at time "<<TIME<<" s.";
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                osstream<<load.get_compound_device_name()<<" is tripped at time "<<TIME<<" s.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
         else
         {
             osstream<<"Warning. "<<load_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                    <<"No load will be tripped at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a LOAD (it is a "<<load_id.get_device_type()<<") for tripping load."<<endl
                <<"No load will be tripped at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::close_load(const DEVICE_ID& load_id)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(load_id.get_device_type()==STEPS_LOAD)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        LOAD* load = psdb.get_load(load_id);
-        if(load!=NULL)
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        LOAD* load_ptr = psdb.get_load(load_id);
+        if(load_ptr!=NULL)
         {
-            string busname = psdb.bus_number2bus_name(load->get_load_bus());
+            LOAD& load = *load_ptr;
+            string busname = psdb.bus_number2bus_name(load.get_load_bus());
 
-            if(load->get_status()==false)
+            if(load.get_status()==false)
             {
-                load->set_status(true);
-                load->get_load_model()->initialize_to_start();
-
+                load.set_status(true);
+                LOAD_MODEL& load_model = *(load.get_load_model());
+                load_model.initialize_to_start();
                 //network_matrix.build_dynamic_network_Y_matrix();
                 //build_jacobian();
 
-                osstream<<load->get_compound_device_name()<<" is closed at time "<<TIME<<" s.";
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                osstream<<load.get_compound_device_name()<<" is closed at time "<<TIME<<" s.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
         else
         {
             osstream<<"Warning. "<<load_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                    <<"No load will be closed at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a LOAD (it is a "<<load_id.get_device_type()<<") for closing load."<<endl
                <<"No load will be closed at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::scale_load(const DEVICE_ID& load_id, double percent)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(load_id.get_device_type()==STEPS_LOAD)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        LOAD* load = psdb.get_load(load_id);
-        if(load!=NULL)
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        LOAD* load_ptr = psdb.get_load(load_id);
+        if(load_ptr!=NULL)
         {
-            string busname = psdb.bus_number2bus_name(load->get_load_bus());
+            LOAD& load = *load_ptr;
+            string busname = psdb.bus_number2bus_name(load.get_load_bus());
 
             if(fabs(percent)>DOUBLE_EPSILON)
             {
-                if(load->get_status()==true)
+                if(load.get_status()==true)
                 {
-                    osstream<<load->get_compound_device_name()<<" is manually scaled "<<(percent>0.0?"up":"down")<<" by "<<percent*100.0<<"% at time "<<TIME<<" s."<<endl;
-                    double scale = load->get_load_manually_scale_factor_in_pu();
-                    load->set_load_manually_scale_factor_in_pu(scale+percent);
+                    osstream<<load.get_compound_device_name()<<" is manually scaled "<<(percent>0.0?"up":"down")<<" by "<<percent*100.0<<"% at time "<<TIME<<" s."<<endl;
+                    double scale = load.get_load_manually_scale_factor_in_pu();
+                    load.set_load_manually_scale_factor_in_pu(scale+percent);
                     osstream<<"Load manual scale is changed from "<<scale<<" to "<<scale+percent<<".";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                 }
                 else
                 {
-                    osstream<<load->get_compound_device_name()<<" is out of service. No load scale action can be applied at time "<<TIME<<" s.";
-                    toolkit->show_information_with_leading_time_stamp(osstream);
+                    osstream<<load.get_compound_device_name()<<" is out of service. No load scale action can be applied at time "<<TIME<<" s.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                 }
             }
             else
             {
-                osstream<<"Load scaling percent is 0.0 for "<<load->get_compound_device_name()<<endl
+                osstream<<"Load scaling percent is 0.0 for "<<load.get_compound_device_name()<<endl
                        <<"No load will be scaled at time "<<TIME<<" s."<<endl;
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 return;
             }
         }
@@ -4715,179 +4870,215 @@ void DYNAMICS_SIMULATOR::scale_load(const DEVICE_ID& load_id, double percent)
         {
             osstream<<"Warning. "<<load_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                    <<"No load will be scaled at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a LOAD (it is a "<<load_id.get_device_type()<<") for scaling load."<<endl
                <<"No single load will be scaled at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::scale_all_load(double percent)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     if(fabs(percent)>DOUBLE_EPSILON)
     {
         unsigned int n = loads.size();
         for(unsigned int i=0; i!=n; ++i)
         {
-            if(loads[i]->get_status()==true)
-                scale_load(loads[i]->get_device_id(), percent);
+            LOAD& load = *(loads[i]);
+            if(load.get_status()==true)
+                scale_load(load.get_device_id(), percent);
         }
     }
     else
     {
         osstream<<"Load scaling percent is 0.0."<<endl
                <<"No all load will be scaled at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 
 void DYNAMICS_SIMULATOR::trip_fixed_shunt(const DEVICE_ID& shunt_id)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(shunt_id.get_device_type()==STEPS_FIXED_SHUNT)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        FIXED_SHUNT* shunt = psdb.get_fixed_shunt(shunt_id);
-        if(shunt!=NULL)
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        FIXED_SHUNT* shunt_ptr = psdb.get_fixed_shunt(shunt_id);
+        if(shunt_ptr!=NULL)
         {
-            string busname = psdb.bus_number2bus_name(shunt->get_shunt_bus());
+            FIXED_SHUNT& shunt = *shunt_ptr;
+            string busname = psdb.bus_number2bus_name(shunt.get_shunt_bus());
 
-            if(shunt->get_status()==true)
+            if(shunt.get_status()==true)
             {
-                shunt->set_status(false);
+                shunt.set_status(false);
 
                 //network_matrix.build_dynamic_network_Y_matrix();
                 //build_jacobian();
 
-                osstream<<shunt->get_compound_device_name()<<" is tripped at time "<<TIME<<" s.";
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                osstream<<shunt.get_compound_device_name()<<" is tripped at time "<<TIME<<" s.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
         else
         {
             osstream<<"Warning. "<<shunt_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                    <<"No fixed shunt will be tripped at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a FIXED SHUNT (it is a "<<shunt_id.get_device_type()<<") for tripping fixed shunt."<<endl
                <<"No fixed shunt will be tripped at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::close_fixed_shunt(const DEVICE_ID& shunt_id)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     if(shunt_id.get_device_type()==STEPS_FIXED_SHUNT)
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-        FIXED_SHUNT* shunt = psdb.get_fixed_shunt(shunt_id);
-        if(shunt!=NULL)
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        FIXED_SHUNT* shunt_ptr = psdb.get_fixed_shunt(shunt_id);
+        if(shunt_ptr!=NULL)
         {
-            string busname = psdb.bus_number2bus_name(shunt->get_shunt_bus());
+            FIXED_SHUNT& shunt = *shunt_ptr;
+            string busname = psdb.bus_number2bus_name(shunt.get_shunt_bus());
 
-            if(shunt->get_status()==false)
+            if(shunt.get_status()==false)
             {
-                shunt->set_status(true);
+                shunt.set_status(true);
 
                 //network_matrix.build_dynamic_network_Y_matrix();
                 //build_jacobian();
 
-                osstream<<shunt->get_compound_device_name()<<" is closed at time "<<TIME<<" s.";
-                toolkit->show_information_with_leading_time_stamp(osstream);
+                osstream<<shunt.get_compound_device_name()<<" is closed at time "<<TIME<<" s.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
         else
         {
             osstream<<"Warning. "<<shunt_id.get_compound_device_name()<<" does not exist in power system database."<<endl
                    <<"No fixed shunt will be closed at time "<<TIME<<" s.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         osstream<<"The given device is not a FIXED SHUNT (it is a "<<shunt_id.get_device_type()<<") for closing fixed shunt."<<endl
                <<"No fixed shunt will be closed at time "<<TIME<<" s."<<endl;
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 
 void DYNAMICS_SIMULATOR::manual_bypass_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    LCC_HVDC2T* hvdc = psdb.get_lcc_hvdc2t(hvdc_id);
-    if(hvdc!=NULL)
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(hvdc_id);
+    if(hvdc_ptr!=NULL)
     {
-        LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
-        if(model!=NULL and (not model->is_blocked() and not model->is_bypassed()) )
-            model->manual_bypass_lcc_hvdc2t();
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
+        LCC_HVDC2T_MODEL* model_ptr = hvdc.get_lcc_hvdc2t_model();
+        if(model_ptr != NULL)
+        {
+            LCC_HVDC2T_MODEL& model = *model_ptr;
+            if(not model.is_blocked() and not model.is_bypassed())
+                model.manual_bypass_lcc_hvdc2t();
+        }
     }
 }
 
 void DYNAMICS_SIMULATOR::manual_unbypass_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    LCC_HVDC2T* hvdc = psdb.get_lcc_hvdc2t(hvdc_id);
-    if(hvdc!=NULL)
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(hvdc_id);
+    if(hvdc_ptr!=NULL)
     {
-        LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
-        if(model!=NULL and (not model->is_blocked() and model->is_manual_bypassed()))
-            model->manual_unbypass_lcc_hvdc2t();
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
+        LCC_HVDC2T_MODEL* model_ptr = hvdc.get_lcc_hvdc2t_model();
+        if(model_ptr != NULL)
+        {
+            LCC_HVDC2T_MODEL& model = *model_ptr;
+            if(not model.is_blocked() and model.is_manual_bypassed())
+                model.manual_unbypass_lcc_hvdc2t();
+        }
+
     }
 }
 
 void DYNAMICS_SIMULATOR::manual_block_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    LCC_HVDC2T* hvdc = psdb.get_lcc_hvdc2t(hvdc_id);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(hvdc_id);
 
-    if(hvdc!=NULL)
+    if(hvdc_ptr!=NULL)
     {
-        LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
-        if(model!=NULL and (not model->is_blocked()))
-            model->manual_block_lcc_hvdc2t();
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
+        LCC_HVDC2T_MODEL* model_ptr = hvdc.get_lcc_hvdc2t_model();
+        if(model_ptr != NULL)
+        {
+            LCC_HVDC2T_MODEL& model = *model_ptr;
+            if(not model.is_blocked())
+                model.manual_block_lcc_hvdc2t();
+        }
     }
 }
 
 void DYNAMICS_SIMULATOR::manual_unblock_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    LCC_HVDC2T* hvdc = psdb.get_lcc_hvdc2t(hvdc_id);
-    if(hvdc!=NULL)
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(hvdc_id);
+    if(hvdc_ptr!=NULL)
     {
-        LCC_HVDC2T_MODEL* model = hvdc->get_lcc_hvdc2t_model();
-        if(model!=NULL and model->is_manual_blocked())
-            model->manual_unblock_lcc_hvdc2t();
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
+        LCC_HVDC2T_MODEL* model_ptr = hvdc.get_lcc_hvdc2t_model();
+        if(model_ptr != NULL)
+        {
+            LCC_HVDC2T_MODEL& model = *model_ptr;
+            if(model.is_manual_blocked())
+                model.manual_unblock_lcc_hvdc2t();
+        }
     }
 }
 
 
 double DYNAMICS_SIMULATOR::get_generator_voltage_reference_in_pu(const DEVICE_ID& gen_id)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    GENERATOR* generator = psdb.get_generator(gen_id);
-    if(generator != NULL)
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    if(generator_ptr != NULL)
     {
-        EXCITER_MODEL* exciter = generator->get_exciter_model();
-        if(exciter!=NULL)
-            return exciter->get_voltage_reference_in_pu();
+        GENERATOR& generator = *generator_ptr;
+        EXCITER_MODEL* exciter_ptr = generator.get_exciter_model();
+        if(exciter_ptr!=NULL)
+        {
+            EXCITER_MODEL& exciter = *exciter_ptr;
+            return exciter.get_voltage_reference_in_pu();
+        }
         else
             return 0.0;
     }
@@ -4897,13 +5088,18 @@ double DYNAMICS_SIMULATOR::get_generator_voltage_reference_in_pu(const DEVICE_ID
 
 double DYNAMICS_SIMULATOR::get_generator_mechanical_power_reference_in_pu_based_on_mbase(const DEVICE_ID& gen_id)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    GENERATOR* generator = psdb.get_generator(gen_id);
-    if(generator != NULL)
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    if(generator_ptr != NULL)
     {
-        TURBINE_GOVERNOR_MODEL* tg = generator->get_turbine_governor_model();
-        if(tg!=NULL)
-            return tg->get_mechanical_power_reference_in_pu_based_on_mbase();
+        GENERATOR& generator = *generator_ptr;
+        TURBINE_GOVERNOR_MODEL* tg_ptr = generator.get_turbine_governor_model();
+        if(tg_ptr!=NULL)
+        {
+            TURBINE_GOVERNOR_MODEL& tg = *tg_ptr;
+            return tg.get_mechanical_power_reference_in_pu_based_on_mbase();
+        }
         else
             return 0.0;
     }
@@ -4913,15 +5109,13 @@ double DYNAMICS_SIMULATOR::get_generator_mechanical_power_reference_in_pu_based_
 
 double DYNAMICS_SIMULATOR::get_generator_mechanical_power_reference_in_MW(const DEVICE_ID& gen_id)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    GENERATOR* generator = psdb.get_generator(gen_id);
-    if(generator != NULL)
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    if(generator_ptr != NULL)
     {
-        TURBINE_GOVERNOR_MODEL* tg = generator->get_turbine_governor_model();
-        if(tg!=NULL)
-            return tg->get_mechanical_power_reference_in_pu_based_on_mbase()*generator->get_mbase_in_MVA();
-        else
-            return 0.0;
+        GENERATOR& generator = *generator_ptr;
+        return get_generator_mechanical_power_reference_in_pu_based_on_mbase(gen_id)*generator.get_mbase_in_MVA();
     }
     else
         return 0.0;
@@ -4929,18 +5123,26 @@ double DYNAMICS_SIMULATOR::get_generator_mechanical_power_reference_in_MW(const 
 
 double DYNAMICS_SIMULATOR::get_generator_excitation_voltage_in_pu(const DEVICE_ID& gen_id)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    GENERATOR* generator = psdb.get_generator(gen_id);
-    if(generator != NULL)
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    if(generator_ptr != NULL)
     {
-        EXCITER_MODEL* exciter = generator->get_exciter_model();
-        if(exciter!=NULL)
-            return exciter->get_excitation_voltage_in_pu();
+        GENERATOR& generator = *generator_ptr;
+        EXCITER_MODEL* exciter_ptr = generator.get_exciter_model();
+        if(exciter_ptr!=NULL)
+        {
+            EXCITER_MODEL& exciter = *exciter_ptr;
+            return exciter.get_excitation_voltage_in_pu();
+        }
         else
         {
-            SYNC_GENERATOR_MODEL* sg = generator->get_sync_generator_model();
-            if(sg!=NULL)
-                return sg->get_initial_excitation_voltage_in_pu();
+            SYNC_GENERATOR_MODEL* sg_ptr = generator.get_sync_generator_model();
+            if(sg_ptr!=NULL)
+            {
+                SYNC_GENERATOR_MODEL& sg = *sg_ptr;
+                return sg.get_initial_excitation_voltage_in_pu();
+            }
             else
                 return 0.0;
         }
@@ -4951,18 +5153,26 @@ double DYNAMICS_SIMULATOR::get_generator_excitation_voltage_in_pu(const DEVICE_I
 
 double DYNAMICS_SIMULATOR::get_generator_mechanical_power_in_pu_based_on_mbase(const DEVICE_ID& gen_id)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    GENERATOR* generator = psdb.get_generator(gen_id);
-    if(generator != NULL)
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    if(generator_ptr != NULL)
     {
-        TURBINE_GOVERNOR_MODEL* tg = generator->get_turbine_governor_model();
-        if(tg!=NULL)
-            return tg->get_mechanical_power_in_pu_based_on_mbase();
+        GENERATOR& generator = *generator_ptr;
+        TURBINE_GOVERNOR_MODEL* tg_ptr = generator.get_turbine_governor_model();
+        if(tg_ptr!=NULL)
+        {
+            TURBINE_GOVERNOR_MODEL& tg = *tg_ptr;
+            return tg.get_mechanical_power_in_pu_based_on_mbase();
+        }
         else
         {
-            SYNC_GENERATOR_MODEL* sg = generator->get_sync_generator_model();
-            if(sg!=NULL)
-                return sg->get_initial_mechanical_power_in_pu_based_on_mbase();
+            SYNC_GENERATOR_MODEL* sg_ptr = generator.get_sync_generator_model();
+            if(sg_ptr!=NULL)
+            {
+                SYNC_GENERATOR_MODEL& sg = *sg_ptr;
+                return sg.get_initial_mechanical_power_in_pu_based_on_mbase();
+            }
             else
                 return 0.0;
         }
@@ -4972,21 +5182,13 @@ double DYNAMICS_SIMULATOR::get_generator_mechanical_power_in_pu_based_on_mbase(c
 }
 double DYNAMICS_SIMULATOR::get_generator_mechanical_power_in_MW(const DEVICE_ID& gen_id)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    GENERATOR* generator = psdb.get_generator(gen_id);
-    if(generator != NULL)
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    if(generator_ptr != NULL)
     {
-        TURBINE_GOVERNOR_MODEL* tg = generator->get_turbine_governor_model();
-        if(tg!=NULL)
-            return tg->get_mechanical_power_in_pu_based_on_mbase()*generator->get_mbase_in_MVA();
-        else
-        {
-            SYNC_GENERATOR_MODEL* sg = generator->get_sync_generator_model();
-            if(sg!=NULL)
-                return sg->get_initial_mechanical_power_in_pu_based_on_mbase()*generator->get_mbase_in_MVA();
-            else
-                return 0.0;
-        }
+        GENERATOR& generator = *generator_ptr;
+        return get_generator_mechanical_power_in_pu_based_on_mbase(gen_id)*generator.get_mbase_in_MVA();
     }
     else
         return 0.0;
@@ -4995,227 +5197,283 @@ double DYNAMICS_SIMULATOR::get_generator_mechanical_power_in_MW(const DEVICE_ID&
 
 void DYNAMICS_SIMULATOR::change_generator_voltage_reference_in_pu(const DEVICE_ID& gen_id, double vref)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    GENERATOR* generator = psdb.get_generator(gen_id);
-    if(generator != NULL)
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    if(generator_ptr != NULL)
     {
-        string busname = psdb.bus_number2bus_name(generator->get_generator_bus());
+        GENERATOR& generator = *generator_ptr;
+        string busname = psdb.bus_number2bus_name(generator.get_generator_bus());
 
-        EXCITER_MODEL* exciter = generator->get_exciter_model();
-        if(exciter!=NULL)
+        EXCITER_MODEL* exciter_ptr = generator.get_exciter_model();
+        if(exciter_ptr!=NULL)
         {
-            exciter->set_voltage_reference_in_pu(vref);
+            EXCITER_MODEL& exciter = *exciter_ptr;
+            exciter.set_voltage_reference_in_pu(vref);
             ostringstream osstream;
             osstream<<"Voltage reference of "<<gen_id.get_compound_device_name()<<" does not exist when trying to change excitation voltage in pu. No change is made";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
     else
     {
         ostringstream osstream;
         osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist when trying to change excitation voltage in pu. No change is made";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::change_generator_mechanical_power_reference_in_pu_based_on_mbase(const DEVICE_ID& gen_id, double Pref)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    GENERATOR* generator = psdb.get_generator(gen_id);
-    if(generator != NULL)
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    if(generator_ptr != NULL)
     {
-        TURBINE_GOVERNOR_MODEL* tg = generator->get_turbine_governor_model();
-        if(tg!=NULL)
-            tg->set_initial_mechanical_power_reference_in_pu_based_on_mbase(Pref);
+        GENERATOR& generator = *generator_ptr;
+        TURBINE_GOVERNOR_MODEL* tg_ptr = generator.get_turbine_governor_model();
+        if(tg_ptr!=NULL)
+        {
+            TURBINE_GOVERNOR_MODEL& tg = *tg_ptr;
+            tg.set_initial_mechanical_power_reference_in_pu_based_on_mbase(Pref);
+        }
     }
     else
     {
         ostringstream osstream;
         osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist when trying to change mechanical power reference in pu based on MBASE. No change is made";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::change_generator_mechanical_power_reference_in_MW(const DEVICE_ID& gen_id, double Pref)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    GENERATOR* generator = psdb.get_generator(gen_id);
-    if(generator != NULL)
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    if(generator_ptr != NULL)
     {
-        double one_over_mbase = generator->get_one_over_mbase_in_one_over_MVA();
+        GENERATOR& generator = *generator_ptr;
+        double one_over_mbase = generator.get_one_over_mbase_in_one_over_MVA();
         change_generator_mechanical_power_reference_in_pu_based_on_mbase(gen_id, Pref*one_over_mbase);
     }
     else
     {
         ostringstream osstream;
         osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist when trying to change mechanical power reference in MW. No change is made";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::change_generator_excitation_voltage_in_pu(const DEVICE_ID& gen_id, double efd)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    GENERATOR* generator = psdb.get_generator(gen_id);
-    if(generator != NULL)
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    if(generator_ptr != NULL)
     {
-        EXCITER_MODEL* ex = generator->get_exciter_model();
+        GENERATOR& generator = *generator_ptr;
+        EXCITER_MODEL* ex = generator.get_exciter_model();
         if(ex!=NULL)
         {
             ostringstream osstream;
-            osstream<<"Warning. Exciter model exists for "<<generator->get_compound_device_name()<<". No manual change of excitation voltage is allowed.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            osstream<<"Warning. Exciter model exists for "<<generator.get_compound_device_name()<<". No manual change of excitation voltage is allowed.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
         else
         {
-            SYNC_GENERATOR_MODEL* sg = generator->get_sync_generator_model();
-            if(sg!=NULL)
-                sg->set_initial_excitation_voltage_in_pu(efd);
+            SYNC_GENERATOR_MODEL* sg_ptr = generator.get_sync_generator_model();
+            if(sg_ptr!=NULL)
+            {
+                SYNC_GENERATOR_MODEL& sg= *sg_ptr;
+                sg.set_initial_excitation_voltage_in_pu(efd);
+            }
         }
     }
     else
     {
         ostringstream osstream;
         osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist when trying to change excitation voltage. No change is made";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::change_generator_mechanical_power_in_pu_based_on_mbase(const DEVICE_ID& gen_id, double pmech)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    GENERATOR* generator = psdb.get_generator(gen_id);
-    if(generator != NULL)
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    if(generator_ptr != NULL)
     {
-        TURBINE_GOVERNOR_MODEL* tg = generator->get_turbine_governor_model();
+        GENERATOR& generator = *generator_ptr;
+        TURBINE_GOVERNOR_MODEL* tg = generator.get_turbine_governor_model();
         if(tg!=NULL)
         {
             ostringstream osstream;
-            osstream<<"Warning. Turbine governor model exists for "<<generator->get_compound_device_name()<<". No manual change of mechanical power is allowed.";
-            toolkit->show_information_with_leading_time_stamp(osstream);
+            osstream<<"Warning. Turbine governor model exists for "<<generator.get_compound_device_name()<<". No manual change of mechanical power is allowed.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
         else
         {
-            SYNC_GENERATOR_MODEL* sg = generator->get_sync_generator_model();
-            if(sg!=NULL)
-                sg->set_initial_mechanical_power_in_pu_based_on_mbase(pmech);
+            SYNC_GENERATOR_MODEL* sg_ptr = generator.get_sync_generator_model();
+            if(sg_ptr!=NULL)
+            {
+                SYNC_GENERATOR_MODEL& sg = *sg_ptr;
+                sg.set_initial_mechanical_power_in_pu_based_on_mbase(pmech);
+            }
         }
     }
     else
     {
         ostringstream osstream;
         osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist when trying to change mechanical power in pu based on MBASE. No change is made";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::change_generator_mechanical_power_in_MW(const DEVICE_ID& gen_id, double pmech)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    GENERATOR* generator = psdb.get_generator(gen_id);
-    if(generator != NULL)
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    if(generator_ptr != NULL)
     {
-        double one_over_mbase = generator->get_one_over_mbase_in_one_over_MVA();
+        GENERATOR& generator = *generator_ptr;
+        double one_over_mbase = generator.get_one_over_mbase_in_one_over_MVA();
         change_generator_mechanical_power_in_pu_based_on_mbase(gen_id, pmech*one_over_mbase);
     }
     else
     {
         ostringstream osstream;
         osstream<<"Warning. "<<gen_id.get_compound_device_name()<<" does not exist when trying to change mechanical power in MW. No change is made";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::change_energy_storage_active_power_reference_in_pu_based_on_mbase(const DEVICE_ID& es_id, double pref)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    ENERGY_STORAGE* energy_storage = psdb.get_energy_storage(es_id);
-    if(energy_storage != NULL)
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    ENERGY_STORAGE* energy_storage_ptr = psdb.get_energy_storage(es_id);
+    if(energy_storage_ptr != NULL)
     {
-        energy_storage->set_manual_power_in_pu(pref);
+        ENERGY_STORAGE& energy_storage = *energy_storage_ptr;
+        energy_storage.set_manual_power_in_pu(pref);
     }
     else
     {
         ostringstream osstream;
         osstream<<"Warning. "<<es_id.get_compound_device_name()<<" does not exist when trying to change energy storage power reference in pu based on mbase. No change is made";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 double DYNAMICS_SIMULATOR::get_lcc_hvdc2t_power_order_in_MW(const DEVICE_ID& hvdc_id)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    LCC_HVDC2T* hvdc = psdb.get_lcc_hvdc2t(hvdc_id);
-    if(hvdc != NULL)
-        return hvdc->get_nominal_dc_power_in_MW();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(hvdc_id);
+    if(hvdc_ptr != NULL)
+    {
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
+        return hvdc.get_nominal_dc_power_in_MW();
+    }
     else
         return 0.0;
 }
 
 void DYNAMICS_SIMULATOR::change_lcc_hvdc2t_power_order_in_MW(const DEVICE_ID& hvdc_id, double porder)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    LCC_HVDC2T* hvdc = psdb.get_lcc_hvdc2t(hvdc_id);
-    if(hvdc != NULL)
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(hvdc_id);
+    if(hvdc_ptr != NULL)
     {
-        hvdc->set_nominal_dc_power_in_MW(porder);
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
+        hvdc.set_nominal_dc_power_in_MW(porder);
     }
     else
     {
         ostringstream osstream;
         osstream<<"Warning. "<<hvdc_id.get_compound_device_name()<<" does not exist when trying to change hvdc power order in MW. No change is made";
-        toolkit->show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 
 void DYNAMICS_SIMULATOR::set_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did, unsigned int side_bus, double location, double fault_r)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_name);
-    unsigned int line_index = vsc_hvdc->get_dc_line_index(line_did);
-    if(line_index!=INDEX_NOT_EXIST)
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    VSC_HVDC* vsc_hvdc_ptr = psdb.get_vsc_hvdc(vsc_name);
+    if(vsc_hvdc_ptr != NULL)
     {
-        vsc_hvdc->set_dc_line_fault_location(line_index, side_bus, location);
-        vsc_hvdc->set_dc_line_fault_r_in_ohm(line_index, fault_r);
+        VSC_HVDC& vsc_hvdc = *vsc_hvdc_ptr;
+        unsigned int line_index = vsc_hvdc.get_dc_line_index(line_did);
+        if(line_index!=INDEX_NOT_EXIST)
+        {
+            vsc_hvdc.set_dc_line_fault_location(line_index, side_bus, location);
+            vsc_hvdc.set_dc_line_fault_r_in_ohm(line_index, fault_r);
+        }
+        else
+        {
+            osstream<<"Warning. "<<line_did.get_compound_device_name()<<" does not exist when trying to set line fault for VSC-HVDC "<<vsc_name<<". No change is made";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<"Warning. VSC-HVDC "<<vsc_name<<" does not exist when trying to set vsc-hvdc line fault. No change is made";
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void DYNAMICS_SIMULATOR::clear_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_name);
-    unsigned int line_index = vsc_hvdc->get_dc_line_index(line_did);
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    VSC_HVDC* vsc_hvdc_ptr = psdb.get_vsc_hvdc(vsc_name);
+    VSC_HVDC& vsc_hvdc = *vsc_hvdc_ptr;
+    unsigned int line_index = vsc_hvdc.get_dc_line_index(line_did);
     if(line_index!=INDEX_NOT_EXIST)
-        vsc_hvdc->clear_dc_line_fault(line_index);
+        vsc_hvdc.clear_dc_line_fault(line_index);
 }
 
 void DYNAMICS_SIMULATOR::trip_vsc_hvdc_line(string vsc_name, DC_DEVICE_ID line_did)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_name);
-    unsigned int line_index = vsc_hvdc->get_dc_line_index(line_did);
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    VSC_HVDC* vsc_hvdc_ptr = psdb.get_vsc_hvdc(vsc_name);
+    VSC_HVDC& vsc_hvdc = *vsc_hvdc_ptr;
+    unsigned int line_index = vsc_hvdc.get_dc_line_index(line_did);
     if(line_index!=INDEX_NOT_EXIST)
-        vsc_hvdc->set_dc_line_status(line_index, false);
+        vsc_hvdc.set_dc_line_status(line_index, false);
 }
 
 void DYNAMICS_SIMULATOR::close_vsc_hvdc_line(string vsc_name, DC_DEVICE_ID line_did)
 {
-    POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_name);
-    unsigned int line_index = vsc_hvdc->get_dc_line_index(line_did);
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    VSC_HVDC* vsc_hvdc_ptr = psdb.get_vsc_hvdc(vsc_name);
+    VSC_HVDC& vsc_hvdc = *vsc_hvdc_ptr;
+    unsigned int line_index = vsc_hvdc.get_dc_line_index(line_did);
     if(line_index!=INDEX_NOT_EXIST)
-        vsc_hvdc->set_dc_line_status(line_index, true);
+        vsc_hvdc.set_dc_line_status(line_index, true);
 }
 
 void DYNAMICS_SIMULATOR::switch_on_equivalent_device()
 {
+    STEPS& toolkit = get_toolkit();
     unsigned int n = e_devices.size();
     ostringstream osstream;
     osstream<<"There are "<<n<<" equivalent devices to switch on";
-    toolkit->show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
     for(unsigned int i=0; i!=n; ++i)
-        e_devices[i]->switch_on();
+    {
+        EQUIVALENT_DEVICE& e_device = *(e_devices[i]);
+        e_device.switch_on();
+    }
 }
 
 
@@ -5230,65 +5488,82 @@ void DYNAMICS_SIMULATOR::prepare_buffers_for_system_change_detection()
     n = buses4change_detection.size();
     for(unsigned int i=0; i<n; ++i)
     {
-        CONTINUOUS_BUFFER* buffer = new CONTINUOUS_BUFFER;
-        buffer->set_toolkit(*toolkit);
-        buffer->set_buffer_size(N);
-        buffer4buses_voltage_change_detection.push_back(buffer);
+        CONTINUOUS_BUFFER* buffer_ptr = new CONTINUOUS_BUFFER;
+        CONTINUOUS_BUFFER& buffer = *buffer_ptr;
+        buffer.set_toolkit(*toolkit);
+        buffer.set_buffer_size(N);
+        buffer4buses_voltage_change_detection.push_back(buffer_ptr);
     }
 
     n = generators4change_detection.size();
     for(unsigned int i=0; i<n; ++i)
     {
-        CONTINUOUS_BUFFER* buffer = new CONTINUOUS_BUFFER;
-        buffer->set_toolkit(*toolkit);
-        buffer->set_buffer_size(N);
-        buffer4generators_rotor_speed_change_detection.push_back(buffer);
+        CONTINUOUS_BUFFER* buffer_ptr = new CONTINUOUS_BUFFER;
+        CONTINUOUS_BUFFER& buffer = *buffer_ptr;
+        buffer.set_toolkit(*toolkit);
+        buffer.set_buffer_size(N);
+        buffer4generators_rotor_speed_change_detection.push_back(buffer_ptr);
     }
 }
 
 void DYNAMICS_SIMULATOR::initialize_buffers_for_system_change_detection()
 {
+    STEPS& toolkit = get_toolkit();
     unsigned int n = 0;
 
     n = buses4change_detection.size();
     for(unsigned int i=0; i<n; ++i)
     {
-        BUS* bus = buses4change_detection[i];
-        CONTINUOUS_BUFFER* buffer = buffer4buses_voltage_change_detection[i];
-        buffer->initialize_buffer(toolkit->get_dynamic_simulation_time_in_s(),
-                                  bus->get_positive_sequence_voltage_in_pu());
+        BUS& bus = *(buses4change_detection[i]);
+        CONTINUOUS_BUFFER& buffer = *(buffer4buses_voltage_change_detection[i]);
+        buffer.initialize_buffer(toolkit.get_dynamic_simulation_time_in_s(),
+                                  bus.get_positive_sequence_voltage_in_pu());
     }
 
     n = generators4change_detection.size();
     for(unsigned int i=0; i<n; ++i)
     {
-        GENERATOR* gen = generators4change_detection[i];
-        CONTINUOUS_BUFFER* buffer = buffer4generators_rotor_speed_change_detection[i];
-        buffer->initialize_buffer(toolkit->get_dynamic_simulation_time_in_s(),
-                                  gen->get_sync_generator_model()->get_rotor_speed_deviation_in_pu());
+        GENERATOR& gen = *(generators4change_detection[i]);
+        CONTINUOUS_BUFFER& buffer = *(buffer4generators_rotor_speed_change_detection[i]);
+        SYNC_GENERATOR_MODEL* gen_model_ptr = gen.get_sync_generator_model();
+        if(gen_model_ptr != NULL)
+        {
+            SYNC_GENERATOR_MODEL& gen_model = *gen_model_ptr;
+            buffer.initialize_buffer(toolkit.get_dynamic_simulation_time_in_s(),
+                                      gen_model.get_rotor_speed_deviation_in_pu());
+        }
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. "<<gen.get_compound_device_name()<<" has NO Sync Generator Model for initializing buffer for system change detection."
+                    <<"Check generators for detection.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
     }
 }
 
 void DYNAMICS_SIMULATOR::update_buffers_for_system_change_detection()
 {
+    STEPS& toolkit = get_toolkit();
     unsigned int n = 0;
 
     n = buses4change_detection.size();
     for(unsigned int i=0; i<n; ++i)
     {
-        BUS* bus = buses4change_detection[i];
-        CONTINUOUS_BUFFER* buffer = buffer4buses_voltage_change_detection[i];
-        buffer->append_data(toolkit->get_dynamic_simulation_time_in_s(),
-                            bus->get_positive_sequence_voltage_in_pu());
+        BUS& bus = *(buses4change_detection[i]);
+        CONTINUOUS_BUFFER& buffer = *(buffer4buses_voltage_change_detection[i]);
+        buffer.append_data(toolkit.get_dynamic_simulation_time_in_s(),
+                            bus.get_positive_sequence_voltage_in_pu());
     }
 
     n = generators4change_detection.size();
     for(unsigned int i=0; i<n; ++i)
     {
-        GENERATOR* gen = generators4change_detection[i];
-        CONTINUOUS_BUFFER* buffer = buffer4generators_rotor_speed_change_detection[i];
-        buffer->append_data(toolkit->get_dynamic_simulation_time_in_s(),
-                            gen->get_sync_generator_model()->get_rotor_speed_deviation_in_pu());
+        GENERATOR& gen = *(generators4change_detection[i]);
+        CONTINUOUS_BUFFER& buffer = *(buffer4generators_rotor_speed_change_detection[i]);
+        SYNC_GENERATOR_MODEL& gen_model = *(gen.get_sync_generator_model());
+        buffer.append_data(toolkit.get_dynamic_simulation_time_in_s(),
+                            gen_model.get_rotor_speed_deviation_in_pu());
     }
 }
 
@@ -5317,8 +5592,8 @@ bool DYNAMICS_SIMULATOR::is_buses_voltage_changing_suddenly() const
     unsigned int n = buses4change_detection.size();
     for(unsigned int i=0; i<n; ++i)
     {
-        CONTINUOUS_BUFFER* buffer = buffer4buses_voltage_change_detection[i];
-        double change = buffer->get_buffer_latest_change();
+        CONTINUOUS_BUFFER& buffer = *(buffer4buses_voltage_change_detection[i]);
+        double change = buffer.get_buffer_latest_change();
         if(change>get_system_change_detection_bus_voltage_threshold_in_pu())
         {
             voltage_changing_flag = true;
@@ -5387,8 +5662,8 @@ bool DYNAMICS_SIMULATOR::is_buses_voltage_not_changing_in_detection_time_range()
     double v_threshold = get_system_change_detection_bus_voltage_threshold_in_pu();
     for(unsigned int i=0; i<n; ++i)
     {
-        CONTINUOUS_BUFFER* buffer = buffer4buses_voltage_change_detection[i];
-        double range = buffer->get_buffer_range_in_latest_seconds(T);
+        CONTINUOUS_BUFFER& buffer = *(buffer4buses_voltage_change_detection[i]);
+        double range = buffer.get_buffer_range_in_latest_seconds(T);
         if(range>v_threshold)
         {
             voltage_changing_flag = true;
@@ -5406,8 +5681,8 @@ bool DYNAMICS_SIMULATOR::is_generators_rotor_speed_not_changing_in_detection_tim
     double w_threshold = get_system_change_detection_rotor_speed_threshold_in_pu();
     for(unsigned int i=0; i<n; ++i)
     {
-        CONTINUOUS_BUFFER* buffer = buffer4generators_rotor_speed_change_detection[i];
-        double range = buffer->get_buffer_range_in_latest_seconds(T);
+        CONTINUOUS_BUFFER& buffer = *(buffer4generators_rotor_speed_change_detection[i]);
+        double range = buffer.get_buffer_range_in_latest_seconds(T);
         if(range>w_threshold)
         {
             rotor_speed_changing_flag = true;

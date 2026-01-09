@@ -81,7 +81,7 @@ class DYNAMICS_SIMULATOR
         double get_system_change_detection_rotor_speed_threshold_in_pu() const;
 
         void add_buses_for_system_change_detection(vector<unsigned int> buss);
-        void add_bus_for_system_change_detection(unsigned int bus);
+        void add_bus_for_system_change_detection(unsigned int bus_number);
         void add_generators_for_system_change_detection(vector<DEVICE_ID> dids);
         void add_generator_for_system_change_detection(DEVICE_ID did);
 
@@ -125,9 +125,9 @@ class DYNAMICS_SIMULATOR
     public: // events
         void change_dynamic_simulator_time_step_in_s(double delt);
 
-        void set_bus_fault(unsigned int bus, const complex<double>& fault_shunt);
-        void clear_bus_fault(unsigned int bus);
-        void trip_bus(unsigned int bus);
+        void set_bus_fault(unsigned int bus_number, const complex<double>& fault_shunt);
+        void clear_bus_fault(unsigned int bus_number);
+        void trip_bus(unsigned int bus_number);
         void trip_buses(const vector<unsigned int>& buses);
 
         void set_ac_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location, const complex<double>& fault_shunt);
@@ -270,8 +270,8 @@ class DYNAMICS_SIMULATOR
 
         void update_network_dynamic_matrix();
 
-        void guess_bus_voltage_with_bus_fault_set(unsigned int bus, const FAULT& fault);
-        void guess_bus_voltage_with_bus_fault_cleared(unsigned int bus, const FAULT& fault);
+        void guess_bus_voltage_with_bus_fault_set(unsigned int bus_number, const FAULT& fault);
+        void guess_bus_voltage_with_bus_fault_cleared(unsigned int bus_number, const FAULT& fault);
 
         void guess_bus_voltage_with_ac_line_fault_set(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault);
         void guess_bus_voltage_with_ac_line_fault_cleared(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault);
