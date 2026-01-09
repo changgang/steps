@@ -60,7 +60,7 @@ class GENERATOR : public SOURCE
 
         virtual DEVICE_ID get_device_id() const;
 
-        virtual void set_model(MODEL* model);
+        virtual void set_model(MODEL* model_ptr);
         virtual MODEL* get_model_of_type(string model_type, unsigned int index=0);
         void disable_mode_of_type(string model_type);
         void enable_mode_of_type(string model_type);

@@ -358,45 +358,49 @@ DEVICE_ID GENERATOR::get_device_id() const
     return did;
 }
 
-void GENERATOR::set_model(MODEL* model)
+void GENERATOR::set_model(MODEL* model_ptr)
 {
-    if(model!=NULL and model->has_allowed_device_type(STEPS_GENERATOR))
+    if(model_ptr!=NULL)
     {
-        model->set_device_id(get_device_id());
-        if(model->get_model_type()=="SYNC GENERATOR")
+        MODEL& model = *model_ptr;
+        if(model.has_allowed_device_type(STEPS_GENERATOR))
         {
-            set_sync_generator_model((SYNC_GENERATOR_MODEL*) model);
-            return;
+            model.set_device_id(get_device_id());
+            if(model.get_model_type()=="SYNC GENERATOR")
+            {
+                set_sync_generator_model((SYNC_GENERATOR_MODEL*) model_ptr);
+                return;
+            }
+            if(model.get_model_type()=="COMPENSATOR")
+            {
+                set_compensator_model((COMPENSATOR_MODEL*) model_ptr);
+                return;
+            }
+            if(model.get_model_type()=="EXCITER")
+            {
+                set_exciter_model((EXCITER_MODEL*) model_ptr);
+                return;
+            }
+            if(model.get_model_type()=="STABILIZER")
+            {
+                set_stabilizer_model((STABILIZER_MODEL*) model_ptr);
+                return;
+            }
+            if(model.get_model_type()=="TURBINE GOVERNOR")
+            {
+                set_turbine_governor_model((TURBINE_GOVERNOR_MODEL*) model_ptr);
+                return;
+            }
+            if(model.get_model_type()=="TURBINE LOAD CONTROLLER")
+            {
+                set_turbine_load_controller_model((TURBINE_LOAD_CONTROLLER_MODEL*) model_ptr);
+                return;
+            }
+            ostringstream osstream;
+            osstream<<"Warning. Unsupported model type '"<<model.get_model_type()<<"' when setting up generator-related model.";
+            STEPS& toolkit = get_toolkit();
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
-        if(model->get_model_type()=="COMPENSATOR")
-        {
-            set_compensator_model((COMPENSATOR_MODEL*) model);
-            return;
-        }
-        if(model->get_model_type()=="EXCITER")
-        {
-            set_exciter_model((EXCITER_MODEL*) model);
-            return;
-        }
-        if(model->get_model_type()=="STABILIZER")
-        {
-            set_stabilizer_model((STABILIZER_MODEL*) model);
-            return;
-        }
-        if(model->get_model_type()=="TURBINE GOVERNOR")
-        {
-            set_turbine_governor_model((TURBINE_GOVERNOR_MODEL*) model);
-            return;
-        }
-        if(model->get_model_type()=="TURBINE LOAD CONTROLLER")
-        {
-            set_turbine_load_controller_model((TURBINE_LOAD_CONTROLLER_MODEL*) model);
-            return;
-        }
-        ostringstream osstream;
-        osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up generator-related model.";
-        STEPS& toolkit = get_toolkit();
-        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -575,62 +579,80 @@ TURBINE_LOAD_CONTROLLER_MODEL* GENERATOR::get_turbine_load_controller_model() co
 
 void GENERATOR::run(DYNAMIC_MODE mode)
 {
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     ostringstream osstream;
     if(get_status()==true)
     {
-        COMPENSATOR_MODEL* comp = get_compensator_model();
-        STABILIZER_MODEL* pss = get_stabilizer_model();
-        EXCITER_MODEL* exciter = get_exciter_model();
-        TURBINE_LOAD_CONTROLLER_MODEL* tlc = get_turbine_load_controller_model();
-        TURBINE_GOVERNOR_MODEL* tg = get_turbine_governor_model();
-        SYNC_GENERATOR_MODEL* gen = get_sync_generator_model();
+        COMPENSATOR_MODEL* comp_ptr = get_compensator_model();
+        STABILIZER_MODEL* pss_ptr = get_stabilizer_model();
+        EXCITER_MODEL* exciter_ptr = get_exciter_model();
+        TURBINE_LOAD_CONTROLLER_MODEL* tlc_ptr = get_turbine_load_controller_model();
+        TURBINE_GOVERNOR_MODEL* tg_ptr = get_turbine_governor_model();
+        SYNC_GENERATOR_MODEL* gen_ptr = get_sync_generator_model();
         switch(mode)
         {
             case DYNAMIC_INITIALIZE_MODE:
             {
-                if(gen!=NULL and gen->is_model_active())
-                    gen->initialize();
+                if(gen_ptr!=NULL and gen_ptr->is_model_active())
+                {
+                    SYNC_GENERATOR_MODEL& gen = *gen_ptr;
+                    gen.initialize();
+                }
                 else
+                {
+                    osstream<<"Error. Sync generator model is missing for "<<get_compound_device_name()<<"["<<psdb.bus_number2bus_name(get_generator_bus())<<"]\n"
+                            <<"No model initialization will be performed for "<<get_compound_device_name()<<".\n"
+                            <<"Further simulation may encounter fatal error.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     return;
-
-                STEPS& toolkit = gen->get_toolkit();
-                POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-                if(comp!=NULL and comp->is_model_active())
-                    comp->initialize();
-
-                if(pss!=NULL and pss->is_model_active())
-                {
-                    if(gen->get_model_name()=="GENCLS")
-                    {
-                        osstream<<"Warning. Stabilizer model "<<pss->get_model_name()<<" is incompatible with generator model GENCLS for "<<get_compound_device_name()<<"["<<psdb.bus_number2bus_name(get_generator_bus())<<"]\n"
-                                <<"Stabilizer model "<<pss->get_model_name()<<" will be removed.";
-                        toolkit.show_information_with_leading_time_stamp(osstream);
-                        pss->deactivate_model();
-                    }
-                    else
-                    {
-                        pss->initialize();
-                    }
                 }
 
-                if(exciter!=NULL and exciter->is_model_active())
+                if(comp_ptr!=NULL and comp_ptr->is_model_active())
                 {
-                    if(gen->get_model_name()=="GENCLS")
-                    {
-                        osstream<<"Warning. Exciter model "<<exciter->get_model_name()<<" is incompatible with generator model GENCLS for "<<get_compound_device_name()<<"["<<psdb.bus_number2bus_name(get_generator_bus())<<"]\n"
-                                <<"Exciter model "<<exciter->get_model_name()<<" will be removed.";
-                        toolkit.show_information_with_leading_time_stamp(osstream);
-                        exciter->deactivate_model();
-                    }
-                    else
-                        exciter->initialize();
+                    COMPENSATOR_MODEL& comp = *comp_ptr;
+                    comp.initialize();
                 }
 
-                if(tg!=NULL and tg->is_model_active())
-                    tg->initialize();
+                if(pss_ptr!=NULL and pss_ptr->is_model_active())
+                {
+                    STABILIZER_MODEL& pss = *pss_ptr;
+                    if(gen_ptr->get_model_name()=="GENCLS")
+                    {
+                        osstream<<"Warning. Stabilizer model "<<pss.get_model_name()<<" is incompatible with generator model GENCLS for "<<get_compound_device_name()<<"["<<psdb.bus_number2bus_name(get_generator_bus())<<"]\n"
+                                <<"Stabilizer model "<<pss.get_model_name()<<" will be removed.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                        pss.deactivate_model();
+                    }
+                    else
+                        pss.initialize();
+                }
 
-                if(tlc!=NULL and tlc->is_model_active())
-                    tlc->initialize();
+                if(exciter_ptr!=NULL and exciter_ptr->is_model_active())
+                {
+                    EXCITER_MODEL& exciter = *exciter_ptr;
+                    if(gen_ptr->get_model_name()=="GENCLS")
+                    {
+                        osstream<<"Warning. Exciter model "<<exciter.get_model_name()<<" is incompatible with generator model GENCLS for "<<get_compound_device_name()<<"["<<psdb.bus_number2bus_name(get_generator_bus())<<"]\n"
+                                <<"Exciter model "<<exciter.get_model_name()<<" will be removed.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                        exciter.deactivate_model();
+                    }
+                    else
+                        exciter.initialize();
+                }
+
+                if(tg_ptr!=NULL and tg_ptr->is_model_active())
+                {
+                    TURBINE_GOVERNOR_MODEL& tg = *tg_ptr;
+                    tg.initialize();
+                }
+
+                if(tlc_ptr!=NULL and tlc_ptr->is_model_active())
+                {
+                    TURBINE_LOAD_CONTROLLER_MODEL& tlc = *tlc_ptr;
+                    tlc.initialize();
+                }
 
                 break;
             }
@@ -638,23 +660,41 @@ void GENERATOR::run(DYNAMIC_MODE mode)
             case DYNAMIC_UPDATE_MODE:
             case DYNAMIC_UPDATE_TIME_STEP_MODE:
             {
-                if(comp!=NULL and comp->is_model_active())
-                    comp->run(mode);
+                if(comp_ptr!=NULL and comp_ptr->is_model_active())
+                {
+                    COMPENSATOR_MODEL& comp = *comp_ptr;
+                    comp.run(mode);
+                }
 
-                if(pss!=NULL and pss->is_model_active())
-                    pss->run(mode);
+                if(pss_ptr!=NULL and pss_ptr->is_model_active())
+                {
+                    STABILIZER_MODEL& pss = *pss_ptr;
+                    pss.run(mode);
+                }
 
-                if(exciter!=NULL and exciter->is_model_active())
-                    exciter->run(mode);
+                if(exciter_ptr!=NULL and exciter_ptr->is_model_active())
+                {
+                    EXCITER_MODEL& exciter = *exciter_ptr;
+                    exciter.run(mode);
+                }
 
-                if(tlc!=NULL and tlc->is_model_active())
-                    tlc->run(mode);
+                if(tlc_ptr!=NULL and tlc_ptr->is_model_active())
+                {
+                    TURBINE_LOAD_CONTROLLER_MODEL& tlc = *tlc_ptr;
+                    tlc.run(mode);
+                }
 
-                if(tg!=NULL and tg->is_model_active())
-                    tg->run(mode);
+                if(tg_ptr!=NULL and tg_ptr->is_model_active())
+                {
+                    TURBINE_GOVERNOR_MODEL& tg = *tg_ptr;
+                    tg.run(mode);
+                }
 
-                if(gen!=NULL and gen->is_model_active())
-                    gen->run(mode);
+                if(gen_ptr!=NULL and gen_ptr->is_model_active())
+                {
+                    SYNC_GENERATOR_MODEL& gen = *gen_ptr;
+                    gen.run(mode);
+                }
                 break;
             }
             case DYNAMIC_RELAY_MODE:
@@ -739,9 +779,12 @@ void GENERATOR::copy_basic_data_from_generator(const GENERATOR& gen)
 
 complex<double> GENERATOR::get_complex_internal_voltage_in_pu_in_xy_axis() const
 {
-    SYNC_GENERATOR_MODEL* generator_model = get_sync_generator_model();
-    if(generator_model!=NULL)
-        return generator_model->get_internal_voltage_in_pu_in_xy_axis();
+    SYNC_GENERATOR_MODEL* generator_model_ptr = get_sync_generator_model();
+    if(generator_model_ptr!=NULL)
+    {
+        SYNC_GENERATOR_MODEL& generator_model = *generator_model_ptr;
+        return generator_model.get_internal_voltage_in_pu_in_xy_axis();
+    }
     else
         return 0.0;
 }
@@ -751,14 +794,15 @@ complex<double> GENERATOR::get_source_dynamic_current_in_pu_based_on_system_base
 {
     ostringstream osstream;
 
-    SYNC_GENERATOR_MODEL* generator_model = get_sync_generator_model();
+    SYNC_GENERATOR_MODEL* generator_model_ptr = get_sync_generator_model();
 
-    if(get_status()==true and generator_model!=NULL)
+    if(get_status()==true and generator_model_ptr!=NULL)
     {
         STEPS& toolkit = get_toolkit();
         double mbase = get_mbase_in_MVA();
         double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
-        complex<double> I = generator_model->get_terminal_current_in_pu_based_on_mbase();
+        SYNC_GENERATOR_MODEL& generator_model = *generator_model_ptr;
+        complex<double> I = generator_model.get_terminal_current_in_pu_based_on_mbase();
         I *= (mbase*one_over_sbase);
         return I;
     }
