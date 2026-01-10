@@ -3111,7 +3111,7 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
 		complex<double> z(x*x0 + y*y0, x0*y - y0*x);
         double delta_vang = steps_fast_complex_arg(z);
         double vang0 = bus.get_positive_sequence_angle_in_rad();
-        double vang_new = vang0+delta_vang;
+        double vang_new = vang0+delta_vang*0.5;
 
         bus.set_positive_sequence_angle_in_rad(vang_new, V/vmag_new);
     }
