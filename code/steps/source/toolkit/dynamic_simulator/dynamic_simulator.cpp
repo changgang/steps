@@ -1297,17 +1297,21 @@ void DYNAMICS_SIMULATOR::run_a_step()
 
         if(ITER_DAE<=max_DAE_iteration)
         {
-            double smax_th_MVA_original = get_allowed_max_power_imbalance_in_MVA();
-            if(ITER_DAE==1)
-                set_allowed_max_power_imbalance_in_MVA(smax_th_MVA_original*100.0);
-            if(ITER_DAE==2)
-                set_allowed_max_power_imbalance_in_MVA(smax_th_MVA_original*10.0);
             integrate();
+
+            double smax_th_MVA_original = get_allowed_max_power_imbalance_in_MVA();
+            if(ITER_DAE==1 and smax_th_MVA_original<=0.01)
+                set_allowed_max_power_imbalance_in_MVA(smax_th_MVA_original*100.0);
+            if(ITER_DAE==2 and smax_th_MVA_original<=0.01)
+                set_allowed_max_power_imbalance_in_MVA(smax_th_MVA_original*10.0);
+
             bool network_converged = solve_network();
+
+            if(ITER_DAE==1 or ITER_DAE==2 and smax_th_MVA_original<=0.01)
+                set_allowed_max_power_imbalance_in_MVA(smax_th_MVA_original);
+
             run_bus_frequency_blocks(DYNAMIC_INTEGRATE_MODE);
 
-            if(ITER_DAE==1 or ITER_DAE==2)
-                set_allowed_max_power_imbalance_in_MVA(smax_th_MVA_original);
 
             ITER_NET += network_iteration_count;
 
@@ -3186,10 +3190,9 @@ void DYNAMICS_SIMULATOR::build_jacobian()
     STEPS& toolkit = get_toolkit();
     clock_t tstart = clock();
     build_basic_jacobian_with_Y_matrix();
-    if(true)
-    {
-        update_jacobian_with_load_models();
-    }
+
+    update_jacobian_with_load_models();
+
     clock_t tfinished = clock();
     ostringstream osstream;
     osstream<<"Successful Jacobian build for dynamic simulation takes "<<(1000.0/double(CLOCKS_PER_SEC))*double(tfinished-tstart)<<" ms\n";
