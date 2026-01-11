@@ -58,7 +58,7 @@ void DYNAMICS_SIMULATOR::clear()
     set_max_DAE_iteration(100);
     set_min_DAE_iteration(3);
     set_max_network_iteration(50);
-    set_max_update_iteration(10);
+    set_max_update_iteration(3);
     set_max_event_update_iteration(10);
     set_max_network_solution_divergent_threshold(3);
     set_allowed_max_power_imbalance_in_MVA(0.001);
@@ -1300,15 +1300,22 @@ void DYNAMICS_SIMULATOR::run_a_step()
             integrate();
 
             double smax_th_MVA_original = get_allowed_max_power_imbalance_in_MVA();
+            double alpha_original = get_iteration_accelerator();
             if(ITER_DAE==1 and smax_th_MVA_original<=0.01)
+            {
                 set_allowed_max_power_imbalance_in_MVA(smax_th_MVA_original*100.0);
+                set_iteration_accelerator(alpha_original*0.75);
+            }
             if(ITER_DAE==2 and smax_th_MVA_original<=0.01)
+            {
                 set_allowed_max_power_imbalance_in_MVA(smax_th_MVA_original*10.0);
+                set_iteration_accelerator(alpha_original*0.875);
+            }
 
             bool network_converged = solve_network();
 
-            if(ITER_DAE==1 or ITER_DAE==2 and smax_th_MVA_original<=0.01)
-                set_allowed_max_power_imbalance_in_MVA(smax_th_MVA_original);
+            set_allowed_max_power_imbalance_in_MVA(smax_th_MVA_original);
+            set_iteration_accelerator(alpha_original);
 
             run_bus_frequency_blocks(DYNAMIC_INTEGRATE_MODE);
 
@@ -1460,7 +1467,17 @@ void DYNAMICS_SIMULATOR::update_with_specific_mode(DYNAMIC_MODE mode)
         unsigned int iter = 0;
         while(iter<max_update_iter)
         {
+            double alpha_original = get_iteration_accelerator();
+            if(iter==1)
+            {
+                set_iteration_accelerator(alpha_original*0.75);
+            }
+            if(iter==2)
+            {
+                set_iteration_accelerator(alpha_original*0.875);
+            }
             network_converged = solve_network();
+            set_iteration_accelerator(alpha_original);
             ITER_NET += network_iteration_count;
 
             if(network_converged)
